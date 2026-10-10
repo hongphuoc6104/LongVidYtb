@@ -14,12 +14,16 @@
   - Write modular, type-hinted, and cleanly structured code adhering to production standards.
 - **6-Station No-Mistake Conveyor (`./pipeline run`)**:
   - All feature upgrades and bug fixes must pass the 6-station conveyor before handoff:
-    1. *Station 1 (Critique)*: Adversarial security and headless safety check (`sys/reports/critique_review.html`).
+    1. *Station 1 (Critique)*: Adversarial security and headless safety check (`sys/reports/critique_review.html`, reviewable via `lavish-axi`).
     2. *Station 2 (Test & AST Proof)*: 100% active assertions on test functions + immutable proof log.
     3. *Station 3 (Docs Sync)*: Schema validation of `PLAYBOOK.md` (6 mandatory fields).
     4. *Station 4 (Lint)*: `compileall` syntax check and `ruff check` (0 errors, 0 warnings).
-    5. *Station 5 (PR Preparation)*: Worktree isolation & conventional PR draft generation.
-    6. *Station 6 (CI / Green Certification)*: CI watch or local Green Certification verification.
+    5. *Station 5 (PR Preparation)*: `treehouse` worktree isolation & conventional PR draft generation (`gh-axi`).
+    6. *Station 6 (CI / Green Certification)*: CI watch (`gh-axi run watch`) or local Green Certification verification.
+- **Agent-Native Tooling Stack**:
+  - `treehouse`: Multi-agent Git worktree pooling and lock coordinator (`treehouse.json`).
+  - `gh-axi`: Token-optimized GitHub operations via TOON format.
+  - `lavish-axi`: Visual HTML review surface and human-in-the-loop inspector.
 
 ## 3. Execution Pipelines & Role Separation
 - **Video Rendering & Audio Processing (Colab GPU T4 Priority)**:

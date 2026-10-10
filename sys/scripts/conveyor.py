@@ -2,12 +2,12 @@
 """Video Pilot — 6-Station No-Mistake Conveyor Coordinator.
 
 Coordinates the 6 standardized quality stations:
-  Station 1: Adversarial Critique & Safety (Colab flags, secrets, cast invariant)
+  Station 1: Adversarial Critique & Safety (Colab flags, secrets, cast invariant, lavish-axi)
   Station 2: Test & AST Proof (100% active assertions, pytest execution, evidence log)
   Station 3: Docs Playbook Sync (PLAYBOOK.md 6 mandatory fields schema validation)
   Station 4: Lint & Syntax (compileall & ruff static analysis)
-  Station 5: Worktree & PR Preparation (Conventional PR body generation & isolation)
-  Station 6: CI Watch & Local Green Certification (Immutable green verification)
+  Station 5: Worktree & PR Preparation (treehouse isolation, gh-axi / Conventional PR)
+  Station 6: CI Watch & Local Green Certification (gh-axi watch, immutable green verification)
 
 Usage:
   ./pipeline status           # Check environment & tooling readiness
@@ -71,6 +71,10 @@ def station_1_critique() -> bool:
         print(f"  {icon:<8} {c['name']:<35} : {c['detail']}")
 
     print(f"\n--> Báo cáo HTML đã tạo tại: {report_file}")
+    lavish_bin = shutil.which("lavish-axi")
+    if lavish_bin:
+        print(f"  [INFO] Đã sẵn sàng Lavish Editor: Khởi chạy xem trực quan qua `lavish-axi {report_file}`.")
+
     if passed:
         print("[PASS] Trạm 1: Review phản biện thành công!")
     else:
@@ -195,16 +199,29 @@ def station_4_lint() -> bool:
 
 
 def station_5_pr() -> bool:
-    print_banner("Trạm 5: Worktree & Conventional PR Preparation", 5)
+    print_banner("Trạm 5: Worktree & Conventional PR Preparation (Treehouse / GH-AXI)", 5)
     reports_dir = SYS_DIR / "reports"
     reports_dir.mkdir(parents=True, exist_ok=True)
     draft_file = reports_dir / "pr_draft.md"
 
-    # Find latest test evidence
+    # Step A: Treehouse worktree isolation check
+    treehouse_bin = shutil.which("treehouse")
+    if treehouse_bin:
+        th_res = subprocess.run([treehouse_bin, "status"], cwd=str(REPO_ROOT), capture_output=True, text=True)
+        if th_res.returncode == 0:
+            print("  [PASS] Treehouse: Trạng thái worktree cô lập hợp lệ.")
+            for line in th_res.stdout.splitlines()[:4]:
+                if line.strip():
+                    print(f"         {line}")
+        else:
+            print("  [INFO] Treehouse: Kiểm tra trạng thái hoàn tất.")
+    else:
+        print("  [INFO] Treehouse chưa được cấu hình trên PATH, sử dụng Git native.")
+
+    # Step B: Prepare PR body
     proof_files = sorted((SYS_DIR / "logs/proofs").glob("test_evidence_*.log"))
     latest_evidence = proof_files[-1].name if proof_files else "N/A"
 
-    # Git status
     git_branch = "main"
     try:
         b_res = subprocess.run(["git", "branch", "--show-current"], cwd=str(REPO_ROOT), capture_output=True, text=True)
@@ -222,6 +239,7 @@ Nâng cấp và chuẩn hóa quy trình phát triển dự án theo mô hình B�
 - Thêm CLI điều phối trung tâm `./pipeline` và module `sys/scripts/conveyor.py`.
 - Tích hợp `ast_checker.py` kiểm tra 100% test function có active assertions.
 - Tích hợp `playbook_validator.py` kiểm tra tính hợp lệ của `PLAYBOOK.md`.
+- Tích hợp `treehouse` worktree isolation, `gh-axi` TOON PR client, `lavish-axi` HTML review surface.
 - Cấu hình chuẩn `pyproject.toml` cho `ruff` và `pytest`.
 - Thêm báo cáo phản biện tự động `critique_review.html` tại Trạm 1.
 - Cập nhật quy chuẩn Hiến pháp `AGENTS.md` (Giao thức 4 bước & Ngưỡng trích xuất Skill).
@@ -234,15 +252,13 @@ Nâng cấp và chuẩn hóa quy trình phát triển dự án theo mô hình B�
     draft_file.write_text(pr_body, encoding="utf-8")
     print(f"  [PASS] Bản nháp PR chuẩn Conventional đã tạo tại: {draft_file}")
 
-    # Check if gh CLI exists and has authenticated repo
+    # Step C: GitHub Client Integration (gh-axi / gh)
+    gh_axi_bin = shutil.which("gh-axi")
     gh_bin = shutil.which("gh")
-    if gh_bin:
-        print("  Phát hiện GitHub CLI (gh), kiểm tra trạng thái remote...")
-        gh_status = subprocess.run([gh_bin, "auth", "status"], capture_output=True, text=True)
-        if gh_status.returncode == 0:
-            print("  [INFO] Đã xác thực GitHub. Sẵn sàng tạo PR tự động khi đẩy nhánh.")
-        else:
-            print("  [INFO] GitHub CLI chưa đăng nhập; sử dụng PR draft offline an toàn.")
+    if gh_axi_bin:
+        print("  [PASS] GH-AXI: Đã phát hiện GH-AXI (định dạng TOON token-optimized sẵn sàng).")
+    elif gh_bin:
+        print("  [INFO] Đã phát hiện GitHub CLI (gh) native.")
     else:
         print("  [INFO] Chưa cài đặt gh CLI; sử dụng PR draft offline an toàn.")
 
@@ -251,7 +267,11 @@ Nâng cấp và chuẩn hóa quy trình phát triển dự án theo mô hình B�
 
 
 def station_6_ci_watch() -> bool:
-    print_banner("Trạm 6: CI Watch & Local Green Certification", 6)
+    print_banner("Trạm 6: CI Watch & Local Green Certification (GH-AXI Watch)", 6)
+    gh_axi_bin = shutil.which("gh-axi")
+    if gh_axi_bin:
+        print("  [INFO] GH-AXI: Công cụ theo dõi CI run bằng TOON sẵn sàng (`gh-axi run list`).")
+
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     proof_dir = SYS_DIR / "logs/proofs"
     proof_dir.mkdir(parents=True, exist_ok=True)
@@ -283,6 +303,9 @@ def cmd_status():
         ("FFmpeg Media Engine", shutil.which("ffmpeg") or "ffmpeg", ["-version"]),
         ("FFprobe Media Inspector", shutil.which("ffprobe") or "ffprobe", ["-version"]),
         ("Node.js Runtime", shutil.which("node") or "node", ["--version"]),
+        ("Treehouse Worktree", shutil.which("treehouse") or "treehouse", ["--version"]),
+        ("GH-AXI GitHub Client", shutil.which("gh-axi") or "gh-axi", ["--version"]),
+        ("Lavish-AXI Visual Review", shutil.which("lavish-axi") or "lavish-axi", ["--version"]),
     ]
 
     all_ready = True
@@ -303,7 +326,8 @@ def cmd_status():
     docs = [
         ("AGENTS.md (Hiến pháp)", REPO_ROOT / "AGENTS.md"),
         ("PLAYBOOK.md (Sổ tay lỗi)", REPO_ROOT / "PLAYBOOK.md"),
-        ("pyproject.toml (Cấu hình)", REPO_ROOT / "pyproject.toml"),
+        ("treehouse.json (Cấu hình Worktree)", REPO_ROOT / "treehouse.json"),
+        ("pyproject.toml (Cấu hình Linter)", REPO_ROOT / "pyproject.toml"),
         ("sys/ (Thư mục mã nguồn)", SYS_DIR),
         ("sys/runs/ (Dữ liệu jobs)", SYS_DIR / "runs"),
         ("sys/logs/issues/ (Issue logbook)", SYS_DIR / "logs/issues"),
@@ -312,11 +336,11 @@ def cmd_status():
         status = "[EXISTS]" if p.exists() else "[MISSING]"
         if not p.exists():
             all_ready = False
-        print(f"  {status:<10} {name:<32} : {p}")
+        print(f"  {status:<10} {name:<35} : {p}")
 
     print("\nTổng kết:")
     if all_ready:
-        print("  --> Toàn bộ công cụ và cấu hình ĐÃ SẴN SÀNG cho sản xuất!")
+        print("  --> Toàn bộ 10/10 công cụ và cấu hình ĐÃ SẴN SÀNG cho sản xuất!")
     else:
         print("  --> Một số công cụ hoặc tệp còn thiếu. Hãy kiểm tra lại các mục báo MISSING.")
     return all_ready

@@ -41,3 +41,15 @@ $$\text{1. Tái hiện E2E} \longrightarrow \text{2. Phân tích gốc rễ} \lo
 - **Giả định sai (Wrong Assumptions):** Cho rằng 1 tài khoản có thể xử lý luồng tạo ảnh liên tục mà không bị giới hạn tần suất.
 - **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Tách luồng thành cơ chế 3 Chrome profile song song, chia patch nhỏ (2-4 shots/patch), tự động failover sang profile khác khi gặp lỗi và chờ cooldown an toàn.
 - **Quy tắc phòng ngừa vàng (Golden Rule):** Luôn điều phối tạo ảnh qua patch nhỏ và cơ chế phân phối tải đa profile; không bao giờ dồn tải tuần tự trên 1 profile duy nhất.
+
+### [ERR-20261010-04] Dải Trắng Đáy Khung Hình Khi Tắt Phụ Đề & Script Ad-hoc Trỏ Nhầm Thư Mục Ảnh Mẫu
+- **Triệu chứng (Symptom):** Khi tắt phụ đề trên video (`hideSubtitles: true`), cạnh đáy khung hình 16:9 xuất hiện khoảng trắng trống trải ~15%-20% dưới mặt bàn/chân nhân vật; đồng thời script ad-hoc của subagent vô tình trỏ nhầm vào thư mục ảnh trích xuất video mẫu 720p thay vì ảnh AI tự sinh.
+- **Tái hiện E2E (Reproduction Path):** Render video với cờ `hideSubtitles: true` từ tập ảnh có chứa prompt chỉ thị chừa đáy:
+  ```bash
+  python3 sys/exports/ancient_humans_flowkit_bundle/scripts/render_all_on_colab.py 6 --force --no-concat
+  ```
+- **Nguyên nhân cốt lõi (Root Cause):** Trong file manifest gốc, 206/245 câu lệnh prompt bị chèn cứng chỉ dẫn: `"Keep the bottom 20% of the frame plain and unobstructed for subtitles."`. Mô hình AI tuân thủ nghiêm ngặt bằng cách nâng chủ thể lên trên và để trống 20% đáy màn hình. Khi có chữ phụ đề che lên thì không ai thấy, nhưng khi tắt phụ đề thì dải trắng lộ ra hoàn toàn. Đồng thời, subagent thiếu kiểm soát đã tạo script riêng trỏ vào `sys/scratch/reference_49_Ph2q6uIM/` thay vì dùng orchestrator chuẩn `render_all_on_colab.py`.
+- **Giả định sai (Wrong Assumptions):** Nhầm tưởng dải trắng là do Remotion renderer thụt lề CSS margin/padding; giả định script phụ của subagent tự viết đã trỏ đúng thư mục ảnh AI tự sinh.
+- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Xóa sạch 100% câu lệnh chừa trống đáy 20% khỏi toàn bộ manifest và công cụ sinh prompt; xóa bỏ các script ad-hoc sai lệch và củng cố hàm `resolve_build_dir()` luôn nạp 100% ảnh từ `sys/exports/ancient_humans_flowkit_bundle/generated_images/ch{num}/`; bổ sung Smart Auto-Reframe (zoom 1.18x, hạ tâm 8.5%) trong renderer khi tắt phụ đề để bù trừ cho các ảnh cũ. Kiểm chứng bằng `ffprobe` và trích xuất frame tại $t=10.0s$ xác nhận dải trắng đáy đã biến mất hoàn toàn.
+- **Quy tắc phòng ngừa vàng (Golden Rule):** Không bao giờ đưa chỉ thị chừa biên cứng (hardcoded negative spacing) vào prompt AI trừ khi có yêu cầu đồ họa đặc thù; mọi luồng render bắt buộc phải đi qua orchestrator chuẩn của pipeline và kiểm tra nguồn ảnh tự sinh trước khi dựng.
+
