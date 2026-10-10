@@ -1,0 +1,4 @@
+interface:
+  display_name: "Video Pilot Setup"
+  short_description: "Initialize and onboard Video Pilot environment within authorized scope"
+  default_prompt: "Use $vp-setup to execute the assigned task."

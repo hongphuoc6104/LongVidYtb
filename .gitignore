@@ -1,0 +1,184 @@
+# ==============================================================================
+# Video Pilot & Explainer Pipeline - Production .gitignore
+# ==============================================================================
+
+# --- 1. Large Pipeline Artifacts & Media Runs ---
+/video/
+/sys/maintenance/
+/sys/research/evidence/
+runs
+runs/
+exports/
+scratch
+scratch/
+out/
+bundle/
+/experiments/
+batches/
+/sys/batches/
+build_*/
+/sys/build_*/
+/sys/runs/
+sys/runs/
+/sys/reports/catch-*/
+*.bak
+*.bak_*
+
+
+# --- 2. Browser Automation & Google Flow Profiles ---
+.gflow
+.gflow/
+test-results/
+playwright-report/
+blob-report/
+chrome_debug.log
+Crashpad/
+
+# --- 3. Local Runtime State & SQLite Databases ---
+.state/
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# --- 4. Python Environment & Build Artifacts ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv*
+venv/
+env/
+ENV/
+.env/
+env.bak/
+venv.bak/
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+dist/
+build/
+
+# --- 5. Node.js & Remotion Build Outputs ---
+node_modules
+.remotion/
+.parcel-cache/
+.eslintcache
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- 6. AI Tooling & Assistant Workspaces ---
+.claude/
+.gemini/
+.antigravity/
+.cursor/
+
+# --- 7. Secrets, Environment & Credentials ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.token
+token.json
+tokens.json
+credentials.json
+*credentials*.json
+*service_account*.json
+client_secret*.json
+cookies*.json
+
+# --- 8. OS & Editor Artifacts ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+desktop.ini
+.idea/
+.vscode/*
+!.vscode/settings.json
+*.sublime-workspace
+*.sublime-project
+*.swp
+*.swo
+*~
+
+# --- 9. Vocabulary Bank Scratch ---
+# Kho từ (sources/, bank.jsonl, ledger.json, briefs/) được theo dõi trong git;
+# chỉ hàng đợi tạm của pilot batch là không.
+vocab/queue.json
+vocab/.ledger.lock
+sys/vocab/queue.json
+.ledger.lock
+
+# --- 10. Audio & Video Media Files (Exclude All Except assets/) ---
+*.wav
+*.mp3
+*.ogg
+*.m4a
+*.flac
+*.mp4
+!sys/assets/**
+!assets/**
+
+# Loose images in root and debug flow screenshots
+/*.png
+/*.jpg
+/*.jpeg
+/*.webp
+flow_*.png
+sys/flow_*.png
+*.png.tmp
+
+# --- 11. Ephemeral Reports & Audio Batch Samples ---
+sys/reports/audio_samples/
+sys/reports/audio_samples*/
+sys/reports/audio_batch*
+sys/reports/drama-*
+sys/reports/scripts-*
+sys/reports/opening-*
+sys/reports/vocab-learning-plan*
+sys/reports/*/tmp/
+sys/assets/voices/adam-bua*
+
+# --- 12. Agent Session Ephemeral Files ---
+.agents/sentinel*/
+.agents/ORIGINAL_REQUEST.md
+.agents/teamwork_*
+.agents/*preview*
+.agents/*_preview_*
+/*REQUEST*.md
+/*.tmp
+
+# --- 13. System Logs & Runtime Cache ---
+*.log
+logs/
+!/sys/logs/
+!/sys/logs/**
+/sys/.cache/
+
+# Per-machine Flow identity; never sync another machine profile.
+/sys/experiments/b2_illustrator/machine.*.json
+/sys/experiments/b2_illustrator/machine.local.json
+/sys/experiments/b2_illustrator/results/
+
+# Flow Kit runtime data
+sys/flowkit/runtime/
+sys/flowkit/logs/
+sys/flowkit/output/
+sys/flowkit/repo
+sys/flowkit/.venv
+sys/flowkit/extension
+
+# --- 14. Pipeline Conveyor Proofs & Reports ---
+/sys/logs/proofs/
+/sys/reports/
+.worktrees/

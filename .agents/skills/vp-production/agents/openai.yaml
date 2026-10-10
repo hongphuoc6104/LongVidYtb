@@ -1,0 +1,4 @@
+interface:
+  display_name: "Video Pilot Production"
+  short_description: "Produce Video Pilot videos within authorized scope and permissions"
+  default_prompt: "Use $vp-production to execute the assigned task."

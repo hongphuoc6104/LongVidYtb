@@ -1,0 +1,57 @@
+{
+  "type": "object",
+  "properties": {
+    "video": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stills": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "layout_report": {
+      "type": "string",
+      "minLength": 1
+    },
+    "duration": {
+      "type": "number",
+      "minimum": 0
+    },
+    "video_16x9": {
+      "type": "string",
+      "minLength": 1
+    },
+    "video_9x16": {
+      "type": "string",
+      "minLength": 1
+    },
+    "aspect_ratio": {
+      "type": "string"
+    },
+    "editorial_report": {
+      "type": "string",
+      "minLength": 1
+    },
+    "remote_report": {
+      "type": "string",
+      "minLength": 1
+    },
+    "language": {
+      "enum": [
+        "vi",
+        "en"
+      ]
+    }
+  },
+  "required": [
+    "video",
+    "stills",
+    "layout_report",
+    "duration"
+  ],
+  "additionalProperties": false
+}

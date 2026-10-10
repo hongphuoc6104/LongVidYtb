@@ -1,0 +1,4 @@
+interface:
+  display_name: "Video Pilot Development"
+  short_description: "Develop and upgrade Video Pilot within authorized scope"
+  default_prompt: "Use $vp-development to execute the assigned task."

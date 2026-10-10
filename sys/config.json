@@ -1,0 +1,94 @@
+{
+  "schema_version": "1.0",
+  "width": 1080,
+  "height": 1920,
+  "fps": 30,
+  "min_seconds": 180,
+  "max_seconds": 450,
+  "video_generation": false,
+  "credit_budget": 0,
+  "flow_batch": false,
+  "flow_image_engine": "cdp",
+  "flow_cdp_profiles": [
+    {"id": "profile_1", "port": 9222, "directory": "Profile 1"},
+    {"id": "profile_2", "port": 9223, "directory": "Profile 2"},
+    {"id": "profile_3", "port": 9224, "directory": "Profile 3"}
+  ],
+  "patch_size": 3,
+  "flow_require_ui_evidence": false,
+  "flow_queue_trial_enabled": true,
+  "flow_model": "Nano Banana 2 Lite",
+  "flow_prompt_version": "1.2.0",
+  "flow_profile": "video-pilot",
+  "flow_project": "Video Pilot",
+  "tts_package": "vieneu==3.8.1",
+  "tts_backend": "onnx",
+  "tts_precision": "fp32",
+  "tts_device": "auto",
+  "tts_gpu_dtype": "float32",
+  "tts_batch_size": 6,
+  "tts_voice": "Minh Quân Pro",
+  "tts_temperature": 0.65,
+  "tts_top_p": 0.95,
+  "tts_max_chars": 256,
+  "tts_scene_synthesis": true,
+  "tts_speed": 0.92,
+  "en_temperature": 0.3,
+  "en_device": "cpu",
+  "tts_pause": {
+    "para": 0.7,
+    "sentence": 0.5,
+    "minor": 0.3,
+    "tail": 0.35
+  },
+  "audio_lufs": -14.0,
+  "audio_peak_db": -1.5,
+  "renderer": "remotion",
+  "concurrency": 4,
+  "review": "three_stages",
+  "en_voice": "reference-narrator",
+  "en_quantize": true,
+  "en_threads": 4,
+  "en_seed": 42,
+  "workflow_mode": "review",
+  "render_concurrency": 4,
+  "canonical_character": null,
+  "auto_require_clean_code": true,
+  "auto_max_media_rejections": 3,
+  "auto_max_audio_retakes_per_scene": 2,
+  "auto_max_audio_retakes": 4,
+  "auto_max_repeat_failures": 3,
+  "flow_status_timeout_seconds": 30,
+  "flow_status_retries": 2,
+  "flow_status_backoff_seconds": 2,
+  "audio_english_spans_engine": "en",
+  "brief_policies": [
+    "vocab.policy:check"
+  ],
+  "colab_tts": {
+    "enabled": true,
+    "parallel_images": true,
+    "session": "video-pilot-tts",
+    "batch_size": 4,
+    "num_step": 32,
+    "timeout_seconds": 1800,
+    "voices": {
+      "vi": "assets/voices/minh-quan-pro/profile.json",
+      "en": "assets/voices/reference-narrator/profile.json"
+    },
+    "models": {
+      "vi": {
+        "id": "kjanh/KhanhTTS-OmniVoice",
+        "revision": "20d056b8ea5d8d578b4cbaf1f703012fa3798a84"
+      },
+      "en": {
+        "id": "kjanh/KhanhTTS-OmniVoice",
+        "revision": "20d056b8ea5d8d578b4cbaf1f703012fa3798a84"
+      }
+    },
+    "account": "auto",
+    "render_estimate_seconds": 60
+  },
+  "en_speed": 0.92,
+  "flow_profile_policy": "existing_only"
+}
