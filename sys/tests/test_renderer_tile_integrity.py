@@ -24,28 +24,39 @@ class RendererTileIntegrityTests(unittest.TestCase):
         self.assertIn("--run-all-compositor-stages-before-draw", content)
         self.assertIn("--disable-gpu-rasterization", content)
 
-    def test_render_mjs_xvfb_hardware_rasterization_support(self):
+    def test_render_mjs_nvenc_hardware_acceleration_and_headless_safety(self):
         content = (SYSTEM / 'renderer/render.mjs').read_text()
-        self.assertIn("--enable-gpu-rasterization", content)
-        self.assertIn("DISPLAY", content)
+        self.assertIn("videoBitrate: '6M'", content)
+        self.assertIn("hardwareAcceleration: 'if-possible'", content)
+        self.assertIn("--disable-gpu-rasterization", content)
+        self.assertNotIn("--enable-gpu-rasterization", content)
+        self.assertNotIn("--use-gl=angle", content)
 
-    def test_job_worker_xvfb_and_t4_strict_enforcement(self):
+    def test_job_worker_safe_headless_and_prohibits_xvfb(self):
         content = (SYSTEM / 'colab_bridge/job_worker.py').read_text()
-        self.assertIn("xvfb-run", content)
-        self.assertIn("--enable-gpu-rasterization", content)
-        self.assertIn("T4", content)
+        self.assertNotIn("xvfb-run", content)
+        self.assertNotIn("--enable-gpu-rasterization", content)
+        self.assertIn("env.pop('DISPLAY', None)", content)
+        self.assertIn("--disable-gpu-rasterization", content)
 
-    def test_render_all_on_colab_enforces_t4_and_xvfb(self):
+    def test_production_bundles_enforce_t4_and_clean_headless(self):
         for script_rel in (
-            'exports/motivation_v2_exp_bundle/scripts/render_all_on_colab.py',
-            'exports/ancient_humans_bundle/scripts/render_all_on_colab.py',
+            'exports/study_motivation_bundle/scripts/render_all_on_colab.py',
+            'exports/terrifying_humans_bundle/scripts/render_all_on_colab.py',
         ):
             script_path = SYSTEM / script_rel
             if script_path.is_file():
                 txt = script_path.read_text()
+                self.assertIn("del env['DISPLAY']", txt)
+                self.assertIn("pkill", txt)
+        for old_script_rel in (
+            'exports/motivation_v2_exp_bundle/scripts/render_all_on_colab.py',
+            'exports/ancient_humans_bundle/scripts/render_all_on_colab.py',
+        ):
+            old_path = SYSTEM / old_script_rel
+            if old_path.is_file():
+                txt = old_path.read_text()
                 self.assertIn("COLAB_T4_NOT_CONFIRMED", txt)
-                self.assertIn("xvfb-run", txt)
-                self.assertIn("--enable-gpu-rasterization", txt)
 
     def test_subtitles_z_index_and_caption_style(self):
         captions_js = (SYSTEM / 'renderer/captions.mjs').read_text()

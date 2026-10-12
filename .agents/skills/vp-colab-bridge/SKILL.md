@@ -128,33 +128,21 @@ PYTHONPATH=sys python3 -m colab_bridge stop --account account-01 --session video
 
 1. **Self-Healing Session Liveness (`ERR-20261009-02`)**:
    - Never assume `video-pilot-tts` is still alive before uploading bundles. Always check `sessions` first; if expired (`No active sessions found on server`), allocate a new `--gpu T4` session (failing over across `account-01..03` if needed) and verify `/content/render-runtime/chrome-wrapper.sh` exists.
-2. **Mandatory Chromium Wrapper & Xvfb Virtual Framebuffer (`COLAB-HEADLESS`)**:
-   - Colab T4 has no physical X11 display. Remotion and Chromium execute under `xvfb-run -a -s "-screen 0 1920x1080x24"` to unlock full GPU hardware rasterization on the Tesla T4.
-   - The wrapper script `/content/render-runtime/chrome-wrapper.sh` supports dual-mode execution with `VP_CHROME_PATH` and `DISABLE_FROM_SURFACE=true`:
+2. **Mandatory Chromium Wrapper & Safe Headless Render (`COLAB-HEADLESS` / `ERR-20261011-06`)**:
+   - Colab T4 lacks physical X11 display. Remotion and Chromium execute via runtime `chrome-wrapper.sh` with verified flags (`--no-sandbox`, `--disable-dev-shm-usage`, `--disable-gpu-rasterization`, `--run-all-compositor-stages-before-draw`), `VP_CHROME_PATH`, and `DISABLE_FROM_SURFACE=true`.
+   - **Prohibit `xvfb-run`**: `Xvfb` is pure CPU software framebuffer; attempting to force ANGLE GL over Xvfb causes socket deadlocks (>300s timeout) and white tile drops. Ensure `DISPLAY` is unset (`del env['DISPLAY']`) before running `node render.mjs`.
+   - **Hardware Acceleration via NVENC**: Remotion must configure `videoBitrate: '6M'` to trigger hardware H.264 encoding (`h264_nvenc`) on the Tesla T4 GPU.
+   - The wrapper script `/content/render-runtime/chrome-wrapper.sh` provides safe headless execution:
      ```bash
      #!/usr/bin/env bash
-     if [ -n "$DISPLAY" ]; then
-       exec "${chrome_path}" \
-         --no-sandbox \
-         --disable-dev-shm-usage \
-         --run-all-compositor-stages-before-draw \
-         --enable-gpu-rasterization \
-         --enable-zero-copy \
-         --enable-gpu \
-         --ignore-gpu-blocklist \
-         --use-gl=angle \
-         --use-angle=gl \
-         "$@"
-     else
-       exec "${chrome_path}" \
-         --no-sandbox \
-         --disable-dev-shm-usage \
-         --run-all-compositor-stages-before-draw \
-         --disable-gpu-rasterization \
-         --enable-gpu \
-         --ignore-gpu-blocklist \
-         "$@"
-     fi
+     exec "${chrome_path}" \
+       --no-sandbox \
+       --disable-dev-shm-usage \
+       --run-all-compositor-stages-before-draw \
+       --disable-gpu-rasterization \
+       --enable-gpu \
+       --ignore-gpu-blocklist \
+       "$@"
      ```
 3. **No Blanket Full-Frame `line_boil: true` on 1080p Plates (`ERR-20261009-01`)**:
    - Because `--disable-gpu-rasterization` is mandatory on headless Colab T4, SVG `<feTurbulence>` + `<feDisplacementMap>` runs on 2 CPU vCPUs across $1920 \times 1080$ pixels, causing a 10x render slowdown (14m for 64s) and black dashed border teeth. Use camera transitions (`zoom_in`, `pan_left`, `shake`) for full-frame plates; reserve `line_boil` / `boilJitter` strictly for cut-out stickers (`scene.layers`).

@@ -15,8 +15,8 @@
 - **Image Generation (`vp-flow-cdp`)**: 3 Chrome profiles pool (`sys/flow_cdp/`), patch partitioning (2-4 shots/patch), auto-failover on `PUBLIC_ERROR_UNUSUAL_ACTIVITY`, minimal contract (valid AI image + `.json` sidecar; never draw mock images with PIL).
 
 ## 4. Headless Colab Safety & Multi-T4 Parallel Acceleration
-- **Mandatory Headless Execution (Rule 4)**: Colab T4 lacks physical display (no X11). Remotion and Chromium must always execute via `sys/colab_bridge/chrome-wrapper.sh` with verified flags (`--no-sandbox`, `--disable-dev-shm-usage`, `--disable-gpu-rasterization`, `--run-all-compositor-stages-before-draw`, `DISABLE_FROM_SURFACE=true`). Prohibit ad-hoc virtual display hacks that trigger ANGLE/GL socket hangs and timeout aborts.
-- **High-Throughput Multi-T4 Pool**: Achieve parallel render acceleration by offloading multi-chapter workloads concurrently across isolated Colab T4 accounts (`ColabPoolManager` & `ColabPoolDispatcher`), ensuring clean orphan process cleanup (`pkill -9`) and automated quota failover.
+- **Mandatory Headless Execution (Rule 4)**: Colab T4 lacks physical X11 display. Remotion and Chromium must execute via runtime `chrome-wrapper.sh` (`VP_CHROME_PATH`, `DISABLE_FROM_SURFACE=true`) with flags (`--no-sandbox`, `--disable-dev-shm-usage`, `--disable-gpu-rasterization`, `--run-all-compositor-stages-before-draw`) and `videoBitrate: '6M'` (`h264_nvenc`). Prohibit `xvfb-run` / virtual display hacks that trigger ANGLE socket hangs.
+- **High-Throughput Multi-T4 Pool**: Accelerate multi-chapter renders concurrently across isolated Colab T4 accounts (`ColabPoolManager` & `ColabPoolDispatcher`), with orphan cleanup (`pkill -9`) and quota failover.
 
 ## 5. Execution Modes & Bug Discipline
 - **Modes**: Auto (autonomous E2E), Review (checkpoint pauses: script, audio, images, video), Stop & Handoff (immediate halt preserving assets).

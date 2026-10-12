@@ -131,35 +131,20 @@ def run(bundle_path, output_dir, expected_id, expected_worker):
         subprocess.run(['npx', '--no-install', 'playwright', 'install', '--with-deps', 'chromium'], cwd=runtime, check=True, timeout=900)
     wrapper = runtime / 'chrome-wrapper.sh'
     wrapper.write_text(f"""#!/usr/bin/env bash
-if [ -n "$DISPLAY" ]; then
-  exec "{chrome}" \\
-    --no-sandbox \\
-    --disable-dev-shm-usage \\
-    --run-all-compositor-stages-before-draw \\
-    --enable-gpu-rasterization \\
-    --enable-zero-copy \\
-    --enable-gpu \\
-    --ignore-gpu-blocklist \\
-    --use-gl=angle \\
-    --use-angle=gl \\
-    "$@"
-else
-  exec "{chrome}" \\
-    --no-sandbox \\
-    --disable-dev-shm-usage \\
-    --run-all-compositor-stages-before-draw \\
-    --disable-gpu-rasterization \\
-    --enable-gpu \\
-    --ignore-gpu-blocklist \\
-    "$@"
-fi
+exec "{chrome}" \\
+  --no-sandbox \\
+  --disable-dev-shm-usage \\
+  --run-all-compositor-stages-before-draw \\
+  --disable-gpu-rasterization \\
+  --enable-gpu \\
+  --ignore-gpu-blocklist \\
+  "$@"
 """)
     wrapper.chmod(0o755)
     env = dict(os.environ, VP_CHROME_PATH=str(wrapper), DISABLE_FROM_SURFACE='true')
+    env.pop('DISPLAY', None)
     started = time.monotonic()
     render_cmd = ['node', str(runtime / 'renderer/render.mjs'), str(output.resolve())]
-    if shutil.which('xvfb-run'):
-        render_cmd = ['xvfb-run', '-a', '-s', '-screen 0 1920x1080x24'] + render_cmd
     subprocess.run(render_cmd, cwd=runtime, env=env, check=True, timeout=3600)
     deliveries = []
     for plan in brief['outputs']:

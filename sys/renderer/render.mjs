@@ -37,28 +37,14 @@ function wrapChromeExecutable(rawPath) {
   fs.mkdirSync(wrapperDir, {recursive: true});
   const wrapper = path.join(wrapperDir, `chrome-wrapper-${process.pid}.sh`);
   const content = `#!/usr/bin/env bash
-if [ -n "$DISPLAY" ]; then
-  exec "${rawPath}" \\
-    --no-sandbox \\
-    --disable-dev-shm-usage \\
-    --run-all-compositor-stages-before-draw \\
-    --enable-gpu-rasterization \\
-    --enable-zero-copy \\
-    --enable-gpu \\
-    --ignore-gpu-blocklist \\
-    --use-gl=angle \\
-    --use-angle=gl \\
-    "$@"
-else
-  exec "${rawPath}" \\
-    --no-sandbox \\
-    --disable-dev-shm-usage \\
-    --run-all-compositor-stages-before-draw \\
-    --disable-gpu-rasterization \\
-    --enable-gpu \\
-    --ignore-gpu-blocklist \\
-    "$@"
-fi
+exec "${rawPath}" \\
+  --no-sandbox \\
+  --disable-dev-shm-usage \\
+  --run-all-compositor-stages-before-draw \\
+  --disable-gpu-rasterization \\
+  --enable-gpu \\
+  --ignore-gpu-blocklist \\
+  "$@"
 `;
   fs.writeFileSync(wrapper, content, {mode: 0o755});
   return wrapper;
@@ -84,14 +70,7 @@ const browser = await openBrowser('chrome', {
       '--no-sandbox',
       '--disable-dev-shm-usage',
       '--run-all-compositor-stages-before-draw',
-      ...(process.env.DISPLAY ? [
-        '--enable-gpu-rasterization',
-        '--enable-zero-copy',
-        '--use-gl=angle',
-        '--use-angle=gl'
-      ] : [
-        '--disable-gpu-rasterization'
-      ]),
+      '--disable-gpu-rasterization',
       '--enable-gpu',
       '--ignore-gpu-blocklist'
     ]

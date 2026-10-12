@@ -8,36 +8,22 @@ This reference covers remote video rendering on Google Colab T4 via both the sta
 
 Google Colab T4 VMs are headless Linux containers without an X11 display server and with constrained `/dev/shm` shared memory. Furthermore, Remotion's `openBrowser` drops custom flags passed via Node options.
 
-### Mandatory Wrapper Configuration & Xvfb Virtual Framebuffer
-Every Colab render runtime (`/content/render-runtime` or `/content/render-runtime-<lock_hash>`) resolves Playwright's Chromium binary and wraps it in `chrome-wrapper.sh` (`chmod 0755`) supporting both Xvfb GPU Hardware Acceleration and safe headless fallback:
+### Mandatory Headless Wrapper & NVENC Hardware Encoding
+Every Colab render runtime (`/content/render-runtime` or `/content/render-runtime-<lock_hash>`) resolves Playwright's Chromium binary and wraps it in `chrome-wrapper.sh` (`chmod 0755`) for safe headless rendering:
 
 ```bash
 #!/usr/bin/env bash
-if [ -n "$DISPLAY" ]; then
-  exec "${chrome_path}" \
-    --no-sandbox \
-    --disable-dev-shm-usage \
-    --run-all-compositor-stages-before-draw \
-    --enable-gpu-rasterization \
-    --enable-zero-copy \
-    --enable-gpu \
-    --ignore-gpu-blocklist \
-    --use-gl=angle \
-    --use-angle=gl \
-    "$@"
-else
-  exec "${chrome_path}" \
-    --no-sandbox \
-    --disable-dev-shm-usage \
-    --run-all-compositor-stages-before-draw \
-    --disable-gpu-rasterization \
-    --enable-gpu \
-    --ignore-gpu-blocklist \
-    "$@"
-fi
+exec "${chrome_path}" \
+  --no-sandbox \
+  --disable-dev-shm-usage \
+  --run-all-compositor-stages-before-draw \
+  --disable-gpu-rasterization \
+  --enable-gpu \
+  --ignore-gpu-blocklist \
+  "$@"
 ```
 
-And invoke Remotion through `xvfb-run` with these environment variables:
+And invoke Remotion directly in headless mode (strictly avoiding `xvfb-run` and unsetting `DISPLAY`):
 
 ```python
 env = dict(
@@ -45,19 +31,20 @@ env = dict(
     VP_CHROME_PATH="/content/render-runtime/chrome-wrapper.sh",
     DISABLE_FROM_SURFACE="true",
 )
-cmd = (['xvfb-run', '-a', '-s', '-screen 0 1920x1080x24'] if shutil.which('xvfb-run') else []) + [
-    'node', 'renderer/render.mjs', str(job_dir)
-]
+if "DISPLAY" in env:
+    del env["DISPLAY"]
+
+cmd = ["node", "renderer/render.mjs", str(job_dir)]
 subprocess.run(cmd, env=env, check=True)
 ```
 
-### Why Each Flag Is Mandatory
-- `xvfb-run -a -s "-screen 0 1920x1080x24"`: Creates an active 1080p 24bpp virtual X11 display context so Chromium can bind to NVIDIA OpenGL/EGL hardware drivers.
+### Why Each Setting Is Mandatory
+- **Pure Headless (No `xvfb-run`)**: Colab lacks a physical display. `Xvfb` is a CPU software framebuffer in RAM that cannot route to GPU T4; forcing ANGLE GL over Xvfb causes socket deadlocks (>300s timeout) and tile drops. Unsetting `DISPLAY` guarantees safe CPU 2D compositor execution.
 - `--no-sandbox`: Required inside containerized Colab root user environments.
 - `--disable-dev-shm-usage`: Forces Chromium IPC buffers into `/tmp` instead of `/dev/shm`, preventing sudden `TargetClosedError` OOM kills on 1080p renders.
 - `--run-all-compositor-stages-before-draw` + `DISABLE_FROM_SURFACE=true`: Forces Chromium to finish all compositor stages before frame readback, eliminating white rectangular tile drops.
-- `--enable-gpu-rasterization` (under `$DISPLAY`): Delivers 35–50+ fps render speed by offloading 2D rasterization to the Tesla T4 GPU.
-- `--disable-gpu-rasterization` (fallback without display): Prevents asymmetric hybrid GPU raster tile corruption on pure headless mode without X11.
+- `--disable-gpu-rasterization`: Ensures rock-solid 2D canvas and text rendering on headless Linux.
+- **NVENC Acceleration (`videoBitrate: '6M'`)**: Remotion selects hardware H.264 encoding (`h264_nvenc`) on the Tesla T4 GPU, offloading the encoding workload completely from the CPU.
 
 ---
 
