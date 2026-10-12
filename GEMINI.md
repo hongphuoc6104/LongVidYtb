@@ -1,3 +1,2 @@
-# Video Pilot — Gemini Configuration
-
-See [AGENTS.md](AGENTS.md) for architectural invariants, pipeline structure, and execution rules.
+# Video Pilot Governance
+See [AGENTS.md](AGENTS.md) for invariants and execution rules.

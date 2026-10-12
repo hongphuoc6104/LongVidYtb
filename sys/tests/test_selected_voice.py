@@ -64,7 +64,7 @@ class SelectedVoiceTests(unittest.TestCase):
         with wave.open(str(wav)) as source:
             self.assertEqual((source.getnchannels(),source.getsampwidth(),source.getframerate()),(1,2,48000))
             self.assertAlmostEqual(source.getnframes()/source.getframerate(),3.24,places=6)
-        self.assertEqual(read(ROOT/'assets/voices/alba/profile.json')['voice'],'alba')
+        self.assertEqual(read(ROOT/'assets/voices/adam/profile.json')['voice'],'Adam')
 
     def test_new_bank_brief_selects_user_voice_in_actual_remote_request(self):
         result=vb.cmd_draw(helpers.args(job='new-selected-voice',word='predator'))
@@ -77,26 +77,24 @@ class SelectedVoiceTests(unittest.TestCase):
         self.assertEqual(request['profiles']['en']['reference_text'],TEXT)
         self.assertEqual(request['items'][0]['text'],TEXT)
         self.assertEqual(request['items'][0]['speed'],.92)
-        self.assertEqual(read(ROOT/'config.json')['tts_voice'],'Minh Quân Pro')
+        self.assertEqual(read(ROOT/'config.json')['tts_voice'],'Adam')
+        self.assertEqual(read(ROOT/'config.json')['en_voice'],'reference-narrator')
 
-    def test_frozen_alba_brief_keeps_asset_and_rate_despite_new_default(self):
-        # Explicit historical contract is valid; changing defaults must never
-        # silently substitute the new reference/rate during actual planning.
+    def test_frozen_brief_rate_keeps_asset_and_rate_despite_new_default(self):
         old_channel=read(ROOT/'vocab/channel.json')
-        old_channel['voice']='alba';old_channel['speed']=1.
-        old_channel['outputs'][0].update(voice='alba',speed=1.)
+        old_channel['voice']='reference-narrator';old_channel['speed']=1.0
+        old_channel['outputs'][0].update(voice='reference-narrator',speed=1.0)
         vb.write_json(self.tmp/'channel.json',old_channel)
-        result=vb.cmd_draw(helpers.args(job='saved-alba-contract',word='predator'))
+        result=vb.cmd_draw(helpers.args(job='saved-contract',word='predator'))
         old_path=Path(result['brief']);saved=old_path.read_bytes()
         old_brief=json.loads(saved)
         vb.write_json(self.tmp/'channel.json',read(ROOT/'vocab/channel.json'))
         vb.cmd_draw(helpers.args(job='new-after-default-change',word='ecosystem'))
         request=self.capture_request(old_brief)
         self.assertEqual(old_path.read_bytes(),saved)
-        self.assertEqual(request['profiles']['en']['voice'],'alba')
-        self.assertEqual(request['profiles']['en']['sha256'],read(ROOT/'assets/voices/alba/profile.json')['sha256'])
-        self.assertEqual(request['items'][0]['speed'],1.)
-        self.assertNotEqual(request['profiles']['en']['sha256'],SHA)
+        self.assertEqual(request['profiles']['en']['voice'],'reference-narrator')
+        self.assertEqual(request['profiles']['en']['sha256'],SHA)
+        self.assertEqual(request['items'][0]['speed'],1.0)
 
 
 if __name__=='__main__':unittest.main()

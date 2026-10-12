@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Build exhaustive 245-shot storyboard manifest and export bundle for Flow Kit testing.
+Build exhaustive 245-shot storyboard manifest and export bundle for Flow CDP testing.
 Adheres strictly to Anonymous Stick-Figure Cast and Video Pilot visual invariants.
 """
 
@@ -10,7 +10,7 @@ import shutil
 import tarfile
 
 BASE_SCRATCH = "sys/scratch/reference_49_Ph2q6uIM"
-EXPORT_ROOT = "sys/exports/ancient_humans_flowkit_bundle"
+EXPORT_ROOT = "sys/exports/ancient_humans_bundle"
 
 def to_sec(t_str):
     h, m, s = t_str.split(':')
@@ -152,7 +152,7 @@ def main():
             "video_aspect_ratio": "16:9",
             "resolution": "1920x1080",
             "fps": 30,
-            "target_model_guideline": "NANO_BANANA_2_LITE / Flow Kit / Flux / SDXL line-art",
+            "target_model_guideline": "NANO_BANANA_2_LITE / Flow CDP / Flux / SDXL line-art",
             "shots": manifest_items
         }, f, indent=2, ensure_ascii=False)
     print(f"Saved JSON manifest: {json_path}")
@@ -199,9 +199,9 @@ def main():
         if os.path.exists(src_r):
             shutil.copy2(src_r, dst_r)
 
-    # 6. Generate Batch Automation Script for Flow Kit
-    print("=== Creating Flow Kit batch generation script ===")
-    create_flowkit_generator_script(f"{EXPORT_ROOT}/scripts/generate_flowkit_245.py")
+    # 6. Generate Batch Automation Script for Flow CDP
+    print("=== Creating Flow CDP batch generation script ===")
+    create_cdp_generator_script(f"{EXPORT_ROOT}/scripts/generate_cdp_245.py")
 
     # 7. Copy Colab Render Script and Concat Script
     print("=== Creating Colab & Concat scripts ===")
@@ -216,7 +216,7 @@ def main():
             return None
         return tarinfo
     with tarfile.open(tar_path, "w:gz") as tar:
-        tar.add(EXPORT_ROOT, arcname="ancient_humans_flowkit_bundle", filter=_tar_filter)
+        tar.add(EXPORT_ROOT, arcname="ancient_humans_bundle", filter=_tar_filter)
     print(f"Archive created ({os.path.getsize(tar_path) / 1024 / 1024:.2f} MB): {tar_path}")
 
     print("\n✅ ALL ASSETS & MANIFESTS PACKAGED SUCCESSFULLY!")
@@ -334,7 +334,7 @@ def generate_shot_prompt(global_idx, ch_num, slot_idx, total_in_ch, en_text, vi_
 def write_markdown_manifest(md_path, items):
     with open(md_path, "w", encoding="utf-8") as f:
         f.write("# Storyboard & Prompt Manifest — 245 Shots (Ancient Humans)\n\n")
-        f.write("**Format:** 16:9 Widescreen (1920x1080) | **Target Model:** Flow Kit / NANO_BANANA_2_LITE / Flux\n")
+        f.write("**Format:** 16:9 Widescreen (1920x1080) | **Target Model:** Flow CDP / NANO_BANANA_2_LITE / Flux\n")
         f.write("**Visual Cast:** Anonymous Stick-Figure Cast (Round head, black contour, stick limbs, 2D line-art)\n")
         f.write(f"**Total Shots:** {len(items)} shots across 8 chapters (652.44 seconds total)\n\n")
         f.write("---\n\n")
@@ -350,10 +350,10 @@ def write_markdown_manifest(md_path, items):
             action_preview = v["action_description"][:60] + "..." if len(v["action_description"]) > 60 else v["action_description"]
             f.write(f"| {it['shot_index']} | {it['chapter_number']} | {it['scene_id']} | `{it['target_filename']}` | {t['duration_seconds']}s | {t['remotion_at_seconds']}s | `{it['remotion_effect']}` | {vi_preview} | {action_preview} | {prompt_preview} |\n")
 
-def create_flowkit_generator_script(dest_path):
+def create_cdp_generator_script(dest_path):
     code = '''#!/usr/bin/env python3
 """
-Automated Batch Generator for 245 Shots via Flow Kit Backend.
+Automated Batch Generator for 245 Shots via Flow CDP Engine.
 Calls http://127.0.0.1:8100/api/flow/generate-image with IMAGE_ASPECT_RATIO_LANDSCAPE.
 """
 import os, sys, json, time, urllib.request, urllib.error

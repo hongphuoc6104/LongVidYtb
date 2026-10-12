@@ -264,7 +264,7 @@ def make_brief(entry, led, items, channel):
         'audience': channel['audience'],
         'goal': f'Người xem hiểu đúng nghĩa "{gloss}" của từ {display}, nhớ lâu và biết đặt câu tự nhiên',
         'video_type': channel['video_type'],
-        'duration': channel['duration'],
+        'duration': channel.get('duration'),
         'scene_count': channel.get('scene_count'),
         'required_points': [
             {'id': 'R1', 'text': f'Mở bằng một tình huống đời thường dẫn thẳng tới từ {display}'},
@@ -303,6 +303,8 @@ def make_brief(entry, led, items, channel):
                              for lang, rate in [('vi', 3.6), ('en', 2.5)]},
         },
     }
+    if channel.get('format_profile'):
+        brief['format_profile'] = channel['format_profile']
     if channel.get('outputs'):
         brief['outputs'] = json.loads(json.dumps(channel['outputs']))
         brief['channel_profile'] = {'id': channel.get('id', 'vocabulary'), 'version': channel['version'],
@@ -329,6 +331,8 @@ def channel_config(args):
     for key in ['style', 'tone', 'aspect_ratio']:
         if getattr(args, key, None):
             cfg[key] = getattr(args, key)
+    if 'format_profile' in cfg:
+        cfg['format_profile'] = {'9:16': 'short_9x16', '16:9': 'long_16x9', 'dual': 'dual'}.get(cfg['aspect_ratio'], cfg['format_profile'])
     if getattr(args, 'scene_count', None) is not None:
         if not 1 <= args.scene_count <= 100: raise Stop('scene_count phải từ 1 đến 100')
         cfg['scene_count'] = args.scene_count

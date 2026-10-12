@@ -10,9 +10,10 @@ def main():
         raise SystemExit('Profile owns authentication/session paths; overrides not allowed')
     try: folder.mkdir(parents=True,exist_ok=True,mode=0o700);os.chmod(folder,0o700)
     except OSError: pass
-    os.umask(0o077)
     import colab_cli.auth as auth
     from colab_cli.common import state
+    import colab_cli.common as common
+    common.setup_logging = lambda *a, **kw: None
     from colab_cli.history import HistoryLogger
     from colab_cli.cli import main as run
     auth.TOKEN_CONFIG_PATH=str(folder/'token.json')

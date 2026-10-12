@@ -6,9 +6,9 @@ No BetterBox, HTTP server, paid inference API, CPU fallback or torch.compile.
 import gc
 import hashlib
 import json
-from pathlib import Path
 import time
 import zipfile
+from pathlib import Path
 
 _MODEL = None
 _MODEL_KEY = None
@@ -16,13 +16,36 @@ _PROMPTS = {}
 SR = 48000
 
 
+def _trim_silence(w, sr=SR, threshold=0.012, lead_ms=25, trail_ms=30, fade_ms=8):
+    import numpy as np
+    w = np.asarray(w, dtype=np.float32).reshape(-1)
+    if not w.size:
+        return w
+    idx = np.where(np.abs(w) >= threshold)[0]
+    if not idx.size:
+        return w
+    lead = round(lead_ms * sr / 1000)
+    trail = round(trail_ms * sr / 1000)
+    start = max(0, int(idx[0]) - lead)
+    end = min(len(w), int(idx[-1]) + 1 + trail)
+    trimmed = w[start:end].copy()
+    fade = min(round(fade_ms * sr / 1000), len(trimmed) // 4)
+    fade_in = min(fade, int(idx[0]) - start)
+    fade_out = min(fade, end - 1 - int(idx[-1]))
+    if fade_in > 1:
+        trimmed[:fade_in] *= np.linspace(0.0, 1.0, fade_in, dtype=np.float32)
+    if fade_out > 1:
+        trimmed[-fade_out:] *= np.linspace(1.0, 0.0, fade_out, dtype=np.float32)
+    return trimmed
+
+
 def run(request_path, output_dir):
     import numpy as np
     import soundfile as sf
     import torch
-    from scipy.signal import resample_poly
-    from omnivoice import OmniVoice
     from huggingface_hub import snapshot_download
+    from omnivoice import OmniVoice
+    from scipy.signal import resample_poly
     global _MODEL, _MODEL_KEY, _PROMPTS
     req = json.loads(Path(request_path).read_text())
     output = Path(output_dir)
@@ -90,16 +113,16 @@ def run(request_path, output_dir):
                         voice_clone_prompt=[prompt] * len(batch),
                         speed=[x[1]['speed'] / profile['source_speed'] for x in batch],
                         num_step=req['num_step'])
-                except torch.cuda.OutOfMemoryError:
+                except torch.cuda.OutOfMemoryError as err:
                     if size == 1:
-                        raise RuntimeError('COLAB_GPU_OOM: exhausted bounded batch reduction')
+                        raise RuntimeError('COLAB_GPU_OOM: exhausted bounded batch reduction') from err
                     size = max(1, size // 2)
                     gc.collect()
                     torch.cuda.empty_cache()
                     continue
                 if len(generated) != len(batch):
                     raise RuntimeError('Model returned incomplete batch')
-                for (i, item, cached), w in zip(batch, generated):
+                for (i, _item, cached), w in zip(batch, generated, strict=False):
                     w = np.asarray(w, dtype=np.float32).reshape(-1)
                     if not w.size or not np.isfinite(w).all() or np.max(np.abs(w)) < 1e-5:
                         raise RuntimeError('Model returned empty/nonfinite/silent audio')
@@ -107,6 +130,7 @@ def run(request_path, output_dir):
                     peak = float(np.max(np.abs(w)))
                     if peak > .89:
                         w *= .89 / peak
+                    w = _trim_silence(w, sr=SR)
                     tmp = cached.with_suffix('.tmp.wav')
                     sf.write(tmp, w, SR, subtype='PCM_16')
                     tmp.replace(cached)
@@ -159,7 +183,8 @@ def run(request_path, output_dir):
         import importlib.util
         module_path = Path(request_path).parent / 'media_packaging.py'
         spec = importlib.util.spec_from_file_location('vp_media_packaging', module_path)
-        module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
         module.assemble(req, output, Path(request_path).parent)
     archive = output.with_suffix('.zip')
     with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED) as z:

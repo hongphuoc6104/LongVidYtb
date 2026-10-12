@@ -7,6 +7,9 @@ import math
 
 
 def outputs(brief):
+    if brief.get('format_profile') is not None:
+        from format_profiles import validate_format_separation
+        validate_format_separation(brief)
     ratio = brief.get('aspect_ratio', '9:16')
     expected = ['9:16', '16:9'] if ratio == 'dual' else [ratio]
     plans = brief.get('outputs')
@@ -31,6 +34,15 @@ def outputs(brief):
         if 'voice' in plan and (not isinstance(plan['voice'], str) or not plan['voice'].strip()):
             raise ValueError('OUTPUT_CONTRACT: voice must be a nonempty name')
     return [dict(x) for x in plans]
+
+
+def validate_explicit_outputs(brief):
+    """Require explicit outputs[] and format separation for new jobs (no implicit 16:9/9:16 defaults)."""
+    from format_profiles import validate_format_separation
+    validate_format_separation(brief)
+    if not brief.get('outputs'):
+        raise ValueError('OUTPUT_CONTRACT: explicit outputs[] required for format separation')
+    return outputs(brief)
 
 
 def languages(brief):

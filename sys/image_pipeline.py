@@ -315,6 +315,14 @@ def _template_request(p, j, target, prompt, corrections, ratio, refs, registrati
         purpose = 'layer_' + layer_kind
     desc = prompt
     preserve_items, change_items = [], []
+    brief_obj = p.brief(j)[0] if p.brief(j) else {}
+    has_format_profile = brief_obj.get('format_profile') is not None
+    if has_format_profile:
+        from format_profiles import clearance_for_output
+        from output_contract import outputs
+        out_plan = next((o for o in outputs(brief_obj) if o['aspect_ratio'] == ratio), None)
+        subtitled = out_plan['subtitles'] if out_plan else (ratio == '9:16')
+        format_clearance = clearance_for_output(ratio, subtitled)
     if scene and layer_kind in ('background', 'sticker'):
         original = next((image for parent in content(p, j)['scenes'] for image in parent.get('images', [])
                          if image['id'] == scene.get('image_id', scene['id'])), None)
@@ -323,7 +331,7 @@ def _template_request(p, j, target, prompt, corrections, ratio, refs, registrati
             desc = desc + ' Correction: ' + corrections
         data = {'description': desc, 'aspect_ratio': ratio, 'allowed_text': scene.get('visible_text', [])}
         if layer_kind == 'background':
-            data['caption_clearance'] = {'edge': 'bottom', 'fraction': 0.18}
+            data['caption_clearance'] = format_clearance if has_format_profile else {'edge': 'bottom', 'fraction': 0.18}
         result = compile_pinned(pin, purpose, data)
         metadata = {key: value for key, value in result.items() if key != 'prompt'}
         return result['prompt'], {**metadata, 'pin': pin, 'data': data}
@@ -343,6 +351,8 @@ def _template_request(p, j, target, prompt, corrections, ratio, refs, registrati
                 change_items = [change_raw]
     data = {'description': desc, 'aspect_ratio': ratio,
             'allowed_text': scene.get('visible_text', []) if scene else []}
+    if has_format_profile:
+        data['caption_clearance'] = format_clearance
     if image is not None:
         data['character_reference'] = {'media_id': media, 'sha256': digest(image)}
     if scene:

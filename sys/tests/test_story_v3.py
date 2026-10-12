@@ -270,7 +270,7 @@ class StoryIntegrationTests(unittest.TestCase):
         with patch.object(self.p,'brief',return_value=({'aspect_ratio':'dual','planning':read(ROOT/'examples/story-v3/brief.json')['planning']},1,'TEST')):
             units=image_pipeline.planned_units(self.p,self.job)
         self.assertEqual(len(units),12);self.assertEqual({x['ratio'] for x in units},{'9:16','16:9'})
-    @unittest.skip("Legacy ui-proof attachment check retired in favor of Flow Kit")
+    @unittest.skip("Legacy ui-proof attachment check retired in favor of Flow CDP")
     def test_missing_base_attachment_evidence_blocks_media(self):
         self.variant_job()
         with patch.object(self,'provider',side_effect=lambda p,*a,**k:workflow_tests.WorkflowTests.provider(self,p,*a,**k)):

@@ -18,6 +18,13 @@ UUID = re.compile(r'[a-fA-F0-9]{8}(?:-[a-fA-F0-9]{4}){3}-[a-fA-F0-9]{12}\Z')
 SHA = re.compile(r'[a-f0-9]{64}\Z')
 INJECTION = re.compile(r'(?i)(?:\b(?:ignore|disregard|override|bypass)\b.{0,70}\b(?:instructions?|rules?|system|developer|restrictions?|constraints?|polic(?:y|ies)|references?)\b|\b(?:system|developer)\s*(?:message\b|prompt\b|:)|<\|[^>]*\|>|\[/?INST\]|</?(?:system|developer|assistant)>|\{\{|\{%|\$\(|```)', re.S)
 MANAGEMENT = re.compile(r'(?i)(?:\bSC\d{2,}\b|\bCH\d{2,}\b|\b(?:job|request|template|media)[_-][a-z0-9_-]+\b|[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}|\b[\w.-]+\.(?:json|png|jpe?g|webp|wav|mp4)\b|\b[a-f0-9]{64}\b)')
+BANNED_CLICHES = [
+    (re.compile(r'(?i)\b(?:brain\s*cutaway|split\s*brain|exposed\s*brain|cerebrum|cross-section\s*of\s*(?:the\s*)?brain)\b'), 'brain cutaway cliché'),
+    (re.compile(r'(?i)\b(?:abacus|counting\s*frame)\b'), 'abacus cliché'),
+    (re.compile(r'(?i)\b(?:pipe\s*valve|plumbing\s*valve|industrial\s*faucet)\b'), 'pipe valve cliché'),
+    (re.compile(r'(?i)\b(?:iron\s*anchor|ship\s*anchor|heavy\s*anchor)\b'), 'iron anchor cliché'),
+    (re.compile(r'(?i)\b(?:split[- ]screen|split\s*composition|dichotomy\s*screen)\b'), 'split screen cliché'),
+]
 
 
 class PromptError(ValueError):
@@ -53,6 +60,9 @@ def _text(value, field, *, max_length=12000, empty=False):
         raise PromptError('FLOW_PROMPT_CONTROL_REJECTED: ' + field)
     if INJECTION.search(value):
         raise PromptError('FLOW_PROMPT_INJECTION_REJECTED: ' + field)
+    for pattern, name in BANNED_CLICHES:
+        if pattern.search(value):
+            raise PromptError('FLOW_CLICHE_FORBIDDEN: ' + field + ' contains banned ' + name)
     return value
 
 
@@ -99,7 +109,7 @@ def _data(data, purpose, version='1.0.0'):
     if not isinstance(data, dict) or set(data) - FIELDS or (cast and 'mascot_placement' in data):
         raise PromptError('FLOW_PROMPT_FIELDS_UNSUPPORTED: visual fields are allowlisted')
     description = _text(data.get('description'), 'description')
-    ratio = data.get('aspect_ratio', '9:16')
+    ratio = data.get('aspect_ratio')
     if ratio not in ('9:16', '16:9'):
         raise PromptError('FLOW_PROMPT_RATIO_UNSUPPORTED: explicit 9:16 or 16:9 required')
     if cast and data.get('character_reference') is None:
@@ -117,11 +127,15 @@ def _data(data, purpose, version='1.0.0'):
     placement = data.get('mascot_placement', 'above-caption-right')
     if not cast and placement not in PLACEMENTS:
         raise PromptError('FLOW_MASCOT_PLACEMENT_UNSUPPORTED: choose a supported attention margin')
-    clearance = data.get('caption_clearance', {'edge': 'bottom', 'fraction': 0.18})
-    if not isinstance(clearance, dict) or set(clearance) != {'edge', 'fraction'} or clearance['edge'] not in ('bottom', 'top') or type(clearance['fraction']) not in (int, float) or not 0.10 <= clearance['fraction'] <= 0.40:
-        raise PromptError('FLOW_CAPTION_CLEARANCE_INVALID: edge top/bottom and fraction 0.10–0.40 required')
+    if 'caption_clearance' in data and data['caption_clearance'] is None:
+        clearance = None
+    else:
+        clearance = data.get('caption_clearance', {'edge': 'bottom', 'fraction': 0.18})
+        if not isinstance(clearance, dict) or set(clearance) != {'edge', 'fraction'} or clearance['edge'] not in ('bottom', 'top') or type(clearance['fraction']) not in (int, float) or not 0.10 <= clearance['fraction'] <= 0.40:
+            raise PromptError('FLOW_CAPTION_CLEARANCE_INVALID: edge top/bottom and fraction 0.10–0.40 required')
+        clearance = dict(clearance)
     normalized = {'description': description, 'aspect_ratio': ratio, 'allowed_text': allowed,
-                  'preserve': preserve, 'change': change, 'caption_clearance': dict(clearance)}
+                  'preserve': preserve, 'change': change, 'caption_clearance': clearance}
     if not cast:
         normalized['mascot_placement'] = placement
     if 'composition' in data:
@@ -148,7 +162,7 @@ def compile(model, purpose, data, version=CURRENT_VERSION):
     template_id = 'flow.' + model_id + '.' + purpose
     sections = ['Requested aspect ratio: ' + visual['aspect_ratio'] + '. Render the requested still image.',
                 spec['models'][model_id]['strategy'], spec['purposes'][purpose], spec['layer_style'][purpose] if purpose in LAYER_PURPOSES else spec['style'], spec['cast_rule'] if version in CAST_VERSIONS else spec['identity'],
-                spec['reference_rule'], spec['data_boundary']] + ([] if purpose in LAYER_PURPOSES else [spec['clearance_rule']])
+                spec['reference_rule'], spec['data_boundary']] + ([] if (purpose in LAYER_PURPOSES or visual.get('caption_clearance') is None) else [spec['clearance_rule']])
     if references['base']:
         sections.append('A Base scene reference is declared and must be attached; use its camera and spatial relationships for the preservation instructions.')
     else:

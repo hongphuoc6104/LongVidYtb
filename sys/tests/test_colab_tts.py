@@ -27,7 +27,7 @@ def fake_result(folder, req):
             w.setparams((1, 2, 48000, 0, 'NONE', 'not compressed'))
             w.writeframes(b'\x00\x20' * 4800 + b'\0\0' * round(segment['pause'] * 48000))
         segments.append(dict(scene_id=segment['scene_id'], text=segment['text'], path=name, content_duration=.1))
-    write(folder / 'tts-result.json', dict(request_id=req['request_id'], voice='Minh Quân Pro', segments=segments, engine={'backend':'colab-omnivoice','models':req['models'],'device':'Tesla T4'}))
+    write(folder / 'tts-result.json', dict(request_id=req['request_id'], voice='Adam', segments=segments, engine={'backend':'colab-omnivoice','models':req['models'],'device':'Tesla T4'}))
 
 
 class ProtocolTests(unittest.TestCase):
@@ -36,10 +36,6 @@ class ProtocolTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         self.cfg = read(ROOT / 'config.json')
-        # This transport fixture retains the historical bilingual Alba 1.0
-        # contract. New channel defaults are exercised in test_selected_voice.
-        self.cfg.update(en_voice='alba', en_speed=1.)
-        self.cfg['colab_tts']['voices']['en'] = 'assets/voices/alba/profile.json'
         shutil.copytree(ROOT / 'assets/voices', self.root / 'assets/voices')
         self.scenes = [dict(scene_id='SC01', narration='Từ weather. I am happy.',
                            texts=['Từ weather.', 'I am happy.'],
@@ -50,9 +46,9 @@ class ProtocolTests(unittest.TestCase):
 
     def test_language_voice_speed_pause_and_text_preserved(self):
         self.assertEqual([x['language'] for x in self.req['items']], ['vi', 'en', 'en'])
-        self.assertEqual([x['speed'] for x in self.req['items']], [.92, 1., 1.])
-        self.assertEqual(self.req['profiles']['vi']['voice'], 'Minh Quân Pro')
-        self.assertEqual(self.req['profiles']['en']['voice'], 'alba')
+        self.assertEqual([x['speed'] for x in self.req['items']], [1.22, .92, .92])
+        self.assertEqual(self.req['profiles']['vi']['voice'], 'Adam')
+        self.assertEqual(self.req['profiles']['en']['voice'], 'reference-narrator')
         self.assertEqual(self.req['segments'][-1]['pause'], 2.)
         self.assertEqual(self.req['items'][-1]['text'], 'I am happy.')
 
@@ -68,7 +64,7 @@ class ProtocolTests(unittest.TestCase):
         self.assertEqual(self.req['request_id'], build_request(other, self.cfg, self.scenes)['request_id'])
 
     def test_changed_voice_reference_rejected(self):
-        (self.root / 'assets/voices/alba/reference.wav').write_bytes(b'changed')
+        (self.root / 'assets/voices/reference-narrator/reference.wav').write_bytes(b'changed')
         with self.assertRaisesRegex(ValueError, 'checksum'):
             build_request(self.root, self.cfg, self.scenes)
 

@@ -89,6 +89,13 @@ def station_2_test_ast() -> bool:
     test_targets = [
         SYS_DIR / "tests/test_tools_readiness.py",
         SYS_DIR / "tests/test_pipeline_stations.py",
+        SYS_DIR / "tests/test_research_story_architect.py",
+        SYS_DIR / "tests/test_script_cadence_checker.py",
+        SYS_DIR / "tests/test_option_b_manifest_and_templates.py",
+        SYS_DIR / "tests/test_colab_bridge_skill.py",
+        SYS_DIR / "tests/test_format_separation.py",
+        SYS_DIR / "tests/test_renderer_tile_integrity.py",
+        SYS_DIR / "tests/test_colab_worker.py",
     ]
     # Check AST on test directory
     ast_ok, ast_report = check_test_suite_integrity([SYS_DIR / "tests"])
@@ -187,7 +194,15 @@ def station_4_lint() -> bool:
     print("  2. Phân tích tĩnh mã nguồn qua Ruff...")
     ruff_bin = get_ruff_executable()
     # Check specific paths
-    ruff_cmd = [ruff_bin, "check", str(SYS_DIR / "conveyor"), str(SYS_DIR / "scripts/conveyor.py"), str(REPO_ROOT / "pilot.py")]
+    ruff_cmd = [
+        ruff_bin,
+        "check",
+        str(SYS_DIR / "conveyor"),
+        str(SYS_DIR / "scripts/conveyor.py"),
+        str(SYS_DIR / "format_profiles.py"),
+        str(SYS_DIR / "tests/test_format_separation.py"),
+        str(REPO_ROOT / "pilot.py"),
+    ]
     ruff_res = subprocess.run(ruff_cmd, cwd=str(REPO_ROOT), capture_output=True, text=True)
     if ruff_res.returncode != 0:
         print("[FAIL] Ruff phát hiện vi phạm linting:")

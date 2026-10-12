@@ -12,13 +12,25 @@ def has_words(text):
     return any(c.isalnum() for c in text)
 
 
-def phrase_chunks(text, max_len=MAX_CUE_CHARS):
+def _resolve_limits(aspect_ratio=None, max_line=None, max_cue=None):
+    if aspect_ratio is not None:
+        from format_profiles import caption_limits_for_aspect
+        prof_line, prof_cue = caption_limits_for_aspect(aspect_ratio)
+    else:
+        prof_line, prof_cue = MAX_LINE_CHARS, MAX_CUE_CHARS
+    return (max_line if max_line is not None else prof_line,
+            max_cue if max_cue is not None else prof_cue)
+
+
+def phrase_chunks(text, max_len=None, *, aspect_ratio=None):
     """Choose word boundaries globally; never split a token or drop punctuation.
 
     A short final fragment costs more than a slightly earlier balanced break.
     Punctuation stays attached to its token, including closing quotation marks.
     Long tokens are preserved and reported by QA rather than truncated.
     """
+    _, resolved_max_cue = _resolve_limits(aspect_ratio=aspect_ratio, max_cue=max_len)
+    max_len = resolved_max_cue
     words = text.split()
     if not words:
         return []
@@ -54,8 +66,10 @@ def phrase_chunks(text, max_len=MAX_CUE_CHARS):
     return result
 
 
-def wrap_phrase(text, max_len=MAX_LINE_CHARS):
+def wrap_phrase(text, max_len=None, *, aspect_ratio=None):
     """At most two balanced lines, favoring a grammatical boundary."""
+    resolved_max_line, _ = _resolve_limits(aspect_ratio=aspect_ratio, max_line=max_len)
+    max_len = resolved_max_line
     if len(text) <= max_len:
         return text
     words = text.split()
@@ -75,7 +89,8 @@ def wrap_phrase(text, max_len=MAX_LINE_CHARS):
     return min(candidates, default=(0, text))[1]
 
 
-def subtitle_cues(segments):
+def subtitle_cues(segments, *, aspect_ratio=None):
+    max_line, max_cue = _resolve_limits(aspect_ratio=aspect_ratio)
     cues = []
     for seg in segments:
         text = ' '.join((seg.get('text') or '').split())
@@ -89,10 +104,10 @@ def subtitle_cues(segments):
             continue  # An explicit silent interval is not a visible caption.
         scene = seg.get('scene_id')
         if not has_words(text) and cues and cues[-1]['scene_id'] == scene and abs(cues[-1]['end'] - start) < .001:
-            cues[-1]['text'] = wrap_phrase(' '.join((cues[-1]['text'] + ' ' + text).split()))
+            cues[-1]['text'] = wrap_phrase(' '.join((cues[-1]['text'] + ' ' + text).split()), max_len=max_line)
             cues[-1]['end'] = end
             continue
-        chunks = phrase_chunks(text)
+        chunks = phrase_chunks(text, max_len=max_cue)
         weights = [len(c) for c in chunks]
         total = sum(weights)
         used = 0
@@ -100,12 +115,13 @@ def subtitle_cues(segments):
             a = start + (content_end - start) * used / total
             used += weight
             z = end if used == total else start + (content_end - start) * used / total
-            cues.append({'text': wrap_phrase(chunk), 'start': a, 'end': z, 'scene_id': scene})
+            cues.append({'text': wrap_phrase(chunk, max_len=max_line), 'start': a, 'end': z, 'scene_id': scene})
     return cues
 
 
-def audit_cues(cues):
+def audit_cues(cues, *, aspect_ratio=None):
     """Technical defects and editorial warnings, never a semantic approval."""
+    max_line, _ = _resolve_limits(aspect_ratio=aspect_ratio)
     errors, warnings = [], []
     last = 0.
     for i, cue in enumerate(cues):
@@ -117,7 +133,7 @@ def audit_cues(cues):
         if not has_words(text):
             errors.append(dict(ref, code='CAPTION_ORPHAN', message='Phụ đề rỗng hoặc chỉ có dấu câu.'))
         lines = text.splitlines()
-        if len(lines) > 2 or any(len(line) > MAX_LINE_CHARS for line in lines):
+        if len(lines) > 2 or any(len(line) > max_line for line in lines):
             warnings.append(dict(ref, code='CAPTION_LAYOUT', message='Cần kiểm tra độ dài dòng trên khung thật.'))
         duration = end - start
         if duration > 0 and len(''.join(text.split())) / duration > 20:

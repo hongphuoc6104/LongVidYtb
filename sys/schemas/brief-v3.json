@@ -21,7 +21,10 @@
       "minLength": 1
     },
     "duration": {
-      "type": "object",
+      "type": [
+        "object",
+        "null"
+      ],
       "properties": {
         "min_seconds": {
           "type": "number",
@@ -88,6 +91,9 @@
       ]
     },
     "facts_required": {
+      "type": "boolean"
+    },
+    "conversational_facts": {
       "type": "boolean"
     },
     "sources": {
@@ -315,6 +321,13 @@
         "additionalProperties": false
       }
     },
+    "format_profile": {
+      "enum": [
+        "short_9x16",
+        "long_16x9",
+        "dual"
+      ]
+    },
     "channel_profile": {
       "type": "object",
       "properties": {
@@ -345,7 +358,6 @@
     "audience",
     "goal",
     "video_type",
-    "duration",
     "scene_count",
     "required_points",
     "language",

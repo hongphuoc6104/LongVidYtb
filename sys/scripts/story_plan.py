@@ -8,6 +8,7 @@ from output_contract import languages
 def normalize_brief(brief):
     if brief.get('schema_version') not in ('2.0','3.0'):
         raise ValueError('Unsupported brief schema version')
+    from format_profiles import default_text_style
     b = copy.deepcopy(brief)
     b['schema_version'] = '3.0'
     b.setdefault('planning', {
@@ -17,10 +18,7 @@ def normalize_brief(brief):
         'domain_requirements': [],
         'assumptions': ['Tiêu chí ban đầu lấy từ mục tiêu; cần kiểm tra khi duyệt kịch bản.',
                         'Tốc độ giọng là ước lượng ban đầu, chưa phải số đo hiệu chỉnh.'],
-        'text_style': {'font': 'sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt',
-                       'color': '#172033', 'outline': 'nền sáng tương phản',
-                       'size': 'dễ đọc trên điện thoại',
-                       'placement': 'cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%'},
+        'text_style': default_text_style(b.get('aspect_ratio', '9:16')),
         'speech_rates': {lang: {'units_per_second': rate, 'uncertainty': .25,
                               'includes_pauses': False, 'source': 'initial estimate; replace with measured voice rate'}
                          for lang, rate in [('vi', 3.6), ('en', 2.5)]}})
@@ -178,7 +176,7 @@ def estimates(b, c):
                 result['warnings'].append(sc['id']+': nhịp hình có thể quá nhanh ('+lang+')')
         lo=sum(x['min'] for x in rows);hi=sum(x['max'] for x in rows)
         result['languages'][lang]={'scenes':rows,'min':round(lo,2),'max':round(hi,2),'rate':rate}
-        if lo>b['duration']['max_seconds'] or hi<b['duration']['min_seconds']:
+        if b.get('duration') and (lo>b['duration']['max_seconds'] or hi<b['duration']['min_seconds']):
             result['warnings'].append(lang+': khoảng ước tính không giao với thời lượng yêu cầu')
     return result
 

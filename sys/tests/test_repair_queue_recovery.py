@@ -14,7 +14,7 @@ except ImportError:
 from pilot import Blocked, read, write
 
 
-@unittest.skipIf(b2_bridge is None, "B-2 bridge retired in favor of Flow Kit")
+@unittest.skipIf(b2_bridge is None, "B-2 bridge retired in favor of Flow CDP")
 class QueueRecoveryTests(unittest.TestCase):
     def test_partial_batch_preserves_known_results_and_unattempted_tail(self):
         with tempfile.TemporaryDirectory() as tmp:

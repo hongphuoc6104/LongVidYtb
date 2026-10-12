@@ -9,7 +9,7 @@ except ImportError:
     b2_bridge = None
 from pilot import Blocked
 
-@unittest.skipIf(b2_bridge is None, "B-2 Illustrator bridge retired in favor of Flow Kit")
+@unittest.skipIf(b2_bridge is None, "B-2 Illustrator bridge retired in favor of Flow CDP")
 class QueueTrialGate(unittest.TestCase):
     def test_trial_permission_is_separate_from_acceptance(self):
         with tempfile.TemporaryDirectory() as tmp:

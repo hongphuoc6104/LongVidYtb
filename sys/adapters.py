@@ -111,11 +111,12 @@ def gflow(p,*args,timeout=960,flow_job=None):
   prompt = _get_arg('--prompt', '')
   ratio = _get_arg('--ratio')
   if not ratio:
-   try:
-    ratio = p.brief(flow_job)[0].get('aspect_ratio', '16:9')
-    if ratio == 'dual': ratio = '9:16'
-   except Exception:
-    ratio = '16:9'
+   if flow_job and p.brief(flow_job):
+    ratio = p.brief(flow_job)[0].get('aspect_ratio')
+    if ratio == 'dual':
+     raise Blocked('FLOW_RATIO_REQUIRED: dual job must pass explicit --ratio (9:16 or 16:9) per image request')
+   if ratio not in ('9:16', '16:9'):
+    raise Blocked('FLOW_RATIO_REQUIRED: explicit --ratio (9:16 or 16:9) required; no implicit fallback')
   job_id = _get_arg('--id', f'gen-{int(time.time()*1000)}')
   base_img = _get_arg('--base-image')
   is_reg = (args_list[:2] == ['character', 'create'])
@@ -408,7 +409,8 @@ def generate_image(p,j,scene):
  s={'state':'submitted','key':key,'scene_id':scene['id'],'prompt':scene['prompt'],'submitted_at':time.time(),'output_dir':rel(p,j,folder)};write(attempt,s)
  try:
   model_arg = 'nano-banana-pro' if 'pro' in cfg['flow_model'].lower() else ('nano-banana-2' if '2' in cfg['flow_model'] else cfg['flow_model'])
-  r=gflow(p,'image','--id',scene['id'],'--prompt',scene['prompt'],'--model',model_arg,'--ratio','9:16','--outputs','1','--profile',cfg['flow_profile'],'--project',cfg['flow_project'],'--out',str(folder))
+  ratio_arg = p.brief(j)[0]['aspect_ratio'] if (p.brief(j) and p.brief(j)[0].get('aspect_ratio') in ('9:16', '16:9')) else scene.get('ratio', '9:16')
+  r=gflow(p,'image','--id',scene['id'],'--prompt',scene['prompt'],'--model',model_arg,'--ratio',ratio_arg,'--outputs','1','--profile',cfg['flow_profile'],'--project',cfg['flow_project'],'--out',str(folder))
   (folder/'command.log').write_text(r.stdout+'\n'+r.stderr)
   if r.returncode:raise Blocked('Flow command failed; inspect command.log')
   candidates=[]

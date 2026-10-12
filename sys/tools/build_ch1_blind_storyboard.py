@@ -12,7 +12,7 @@ import shutil
 from pathlib import Path
 
 PROJ_ROOT = Path(__file__).resolve().parent.parent.parent
-BUNDLE_ROOT = PROJ_ROOT / "sys" / "exports" / "ancient_humans_flowkit_bundle"
+BUNDLE_ROOT = PROJ_ROOT / "sys" / "exports" / "ancient_humans_bundle"
 MANIFEST_DIR = BUNDLE_ROOT / "manifest"
 TEMPLATES_DIR = BUNDLE_ROOT / "templates"
 CLEAN_VOICE_DIR = BUNDLE_ROOT / "audio" / "clean_voice"

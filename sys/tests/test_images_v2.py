@@ -838,7 +838,7 @@ class ImagesV2Tests(unittest.TestCase):
         self.references();self.preflight(operations=['image'])
         with self.assertRaisesRegex(Blocked,'character-register'):self.p.run(self.j,'images')
 
-    @unittest.skip("ui-proof.json dropped in favor of Flow Kit client pipeline")
+    @unittest.skip("ui-proof.json dropped in favor of Flow CDP client pipeline")
     def test_missing_attachment_ui_proof_fails(self):
         def no_proof(p,*args,**kw):
             r=self.provider(p,*args,**kw);Path(args[args.index('--out')+1]).parent.joinpath('ui-proof.json').unlink();return r

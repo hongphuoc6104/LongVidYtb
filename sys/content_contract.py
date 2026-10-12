@@ -26,12 +26,15 @@ def schema_errors(root,name,data):
 def validate_brief(root,b):
  errors=schema_errors(root,'brief-v3.json' if b.get('schema_version')=='3.0' else 'brief-v2.json',b)
  if errors: raise ContractError(errors)
+ from format_profiles import validate_format_separation
+ try: validate_format_separation(b)
+ except ValueError as ex: errors.append(error('FORMAT_PROFILE','format_profile',str(ex),'Chọn đúng format_profile tương ứng với aspect_ratio.'))
  from output_contract import outputs
  try: outputs(b)
  except ValueError as ex: errors.append(error('OUTPUT_CONTRACT','outputs',str(ex),'Sửa hợp đồng đầu ra.'))
  if b.get('scene_count') is None and not b.get('outputs'):
   errors.append(error('SCENE_PLAN_REQUIRED','scene_count','Job chưa có số cảnh và hợp đồng đầu ra mới.','Lập kế hoạch trước nội dung.'))
- if b['duration']['min_seconds']>b['duration']['max_seconds']:
+ if b.get('duration') and b['duration']['min_seconds']>b['duration']['max_seconds']:
   errors.append(error('DURATION','duration','Khoảng thời lượng đảo ngược','Sửa min/max.'))
  ids=[x['id'] for x in b['required_points']]
  if len(ids)!=len(set(ids)): errors.append(error('DUPLICATE','required_points','Trùng mã ý','Dùng mã riêng.'))
@@ -39,6 +42,14 @@ def validate_brief(root,b):
  if len(ids)!=len(set(ids)): errors.append(error('DUPLICATE','sources','Trùng mã nguồn','Dùng mã riêng.'))
  if b['facts_required'] and not b['sources']:
   errors.append(error('SOURCE_REQUIRED','sources','Chưa cung cấp dữ kiện','Bổ sung tài liệu và dữ kiện trước khi viết.'))
+ if b.get('schema_version') == '3.0' and b.get('sources') and b.get('conversational_facts', True) is not False:
+  try:
+   from research_story_architect import check_conversational_spoken_facts
+   spoken_fact_errs = check_conversational_spoken_facts(b.get('sources', []))
+   for sfe in spoken_fact_errs:
+    errors.append(error('FACT_NOT_CONVERSATIONAL', 'sources', sfe, 'Chuyển đổi dữ kiện thành văn nói <= 20 âm tiết, không dùng ký hiệu học thuật.'))
+  except ImportError:
+   pass
  if errors: raise ContractError(errors)
 
 def validate_content(root,b,revision,bhash,p):
@@ -48,7 +59,7 @@ def validate_content(root,b,revision,bhash,p):
   errors.append(error(code,path,msg,fix))
  if p['brief_revision']!=revision or p['brief_hash']!=bhash: fail('BRIEF_VERSION','brief_revision','Sai phiên bản yêu cầu')
  for key in ['topic','duration','style']:
-  if p[key]!=b[key]: fail('BRIEF_MISMATCH',key,'Khác yêu cầu đã lưu')
+  if p.get(key)!=b.get(key): fail('BRIEF_MISMATCH',key,'Khác yêu cầu đã lưu')
  req={x['id']:x['text'] for x in b['required_points']}
  if p['required_points']!=list(req.values()): fail('BRIEF_MISMATCH','required_points','Ý bắt buộc bị thay đổi')
  scenes={s['id']:s for s in p['scenes']}
@@ -82,7 +93,7 @@ def validate_content(root,b,revision,bhash,p):
  if needs_en:
   for s in p['scenes']:
    if not s.get('narration_en'): fail('NARRATION_EN',s['id'],'Thiếu lời dẫn tiếng Anh','Bổ sung narration_en cho đầu ra tiếng Anh đã chọn.')
- if p.get('schema_version')!='3.0':
+ if p.get('schema_version')!='3.0' and b.get('duration'):
   total=sum(s['estimated_seconds'] for s in p['scenes'])
   if not b['duration']['min_seconds']<=total<=b['duration']['max_seconds']: fail('ESTIMATE','scenes','Tổng thời lượng dự kiến ngoài khoảng')
  if errors: raise ContractError(errors)

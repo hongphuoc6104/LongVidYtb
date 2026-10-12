@@ -24,7 +24,7 @@ from flow_management import config, prompt_pin
 from flow_prompts import compile_pinned
 
 
-@unittest.skipIf(b2_bridge is None, "B-2 bridge retired in favor of Flow Kit")
+@unittest.skipIf(b2_bridge is None, "B-2 bridge retired in favor of Flow CDP")
 class FlowPromptIntegrationTests(unittest.TestCase):
  def setUp(self):
   self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup);self.root=Path(self.tmp.name)

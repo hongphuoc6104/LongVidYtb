@@ -20,6 +20,8 @@ build_*/
 /sys/build_*/
 /sys/runs/
 sys/runs/
+/sys/staging/
+sys/staging/
 /sys/reports/catch-*/
 *.bak
 *.bak_*
@@ -152,6 +154,7 @@ sys/assets/voices/adam-bua*
 # --- 12. Agent Session Ephemeral Files ---
 .agents/sentinel*/
 .agents/ORIGINAL_REQUEST.md
+.agents/teamwork/
 .agents/teamwork_*
 .agents/*preview*
 .agents/*_preview_*
@@ -169,14 +172,6 @@ logs/
 /sys/experiments/b2_illustrator/machine.*.json
 /sys/experiments/b2_illustrator/machine.local.json
 /sys/experiments/b2_illustrator/results/
-
-# Flow Kit runtime data
-sys/flowkit/runtime/
-sys/flowkit/logs/
-sys/flowkit/output/
-sys/flowkit/repo
-sys/flowkit/.venv
-sys/flowkit/extension
 
 # --- 14. Pipeline Conveyor Proofs & Reports ---
 /sys/logs/proofs/

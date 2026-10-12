@@ -1,6 +1,6 @@
 ---
 name: vp-flow-cdp
-description: Image generation engine using Chrome DevTools Protocol (CDP) for Google Flow, supporting 3 concurrent Chrome profiles, patch partitioning (2-4 shots/patch), auto-failover on abnormal activity/cooldown, and minimal verification without requiring UI screenshot proofs.
+description: "Generate images via Flow CDP across 3 Chrome profiles with patch partitioning and failover."
 ---
 
 # VP Flow CDP — Image Generation Skill

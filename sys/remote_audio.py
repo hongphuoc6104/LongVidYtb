@@ -38,7 +38,9 @@ def produce(pilot, job, out):
         if len(matches) != 1:
             raise Blocked('VOICE_REFERENCE_REQUIRED: missing or ambiguous ' + settings['voice'])
         path, profile = matches[0]
-        cfg['colab_tts']['voices'][language] = str(path.relative_to(pilot.root))
+        rel_path = str(path.relative_to(pilot.root))
+        cfg.setdefault('voices', {})[language] = rel_path
+        cfg.setdefault('colab_tts', {}).setdefault('voices', {})[language] = rel_path
         cfg['en_voice' if language == 'en' else 'tts_voice'] = profile['voice']
         cfg['en_speed' if language == 'en' else 'tts_speed'] = settings['speed']
     takes = retakes(pilot, job)

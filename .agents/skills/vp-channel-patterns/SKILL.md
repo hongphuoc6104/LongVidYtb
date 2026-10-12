@@ -1,13 +1,13 @@
 ---
 name: vp-channel-patterns
-description: Analyze public reference videos and a creator channel's high-performing examples, then turn repeatable storytelling and editing choices into an evidence-backed playbook for original videos. Use for channel breakdowns or style-adaptation guides; use vp-production for making the video itself.
+description: "Analyze reference videos to extract storytelling patterns and production playbooks."
 ---
 
 # Channel Patterns
 
 Use this skill when a user supplies a video or channel and asks for a detailed breakdown, comparable high-view examples, or a reusable method for making original work with related storytelling and editing logic.
 
-Read [the analysis rubric](references/analysis-rubric.md) before collecting evidence. Read [the adaptation playbook](references/adaptation-playbook.md) when converting findings into reusable production guidance.
+Read [the analysis rubric](references/analysis-rubric.md) before collecting evidence. Read [the adaptation playbook](references/adaptation-playbook.md) when converting findings into reusable production guidance. Use [the decision framework](references/decision-framework.md) for architectural trade-offs (Mode A vs Mode B, Scene splits vs Visual Beats, and voice selection) and [the voice, cadence and pacing guide](references/voice-cadence-pacing.md) for speech rate, pause compensation, and dialogue calibration.
 
 If the user asks to make and self-test an actual Video Pilot example, also read [the Video Pilot integration guide](references/video-pilot-integration.md) before authoring the job.
 

@@ -1,6 +1,6 @@
 ---
 name: vp-production
-description: Create, continue or repair assigned Video Pilot videos through auto/review and the saved job contract; excludes system upgrades.
+description: "Create, continue, or repair Video Pilot videos through auto/review job contracts."
 ---
 
 # Production
@@ -9,13 +9,13 @@ Use production scope and sys/docs/workflow.md. One task/role; current brief and 
 
 ## Read guidance by step
 
-- Bank/meaning: [vocabulary](references/vocabulary.md).
-- Outline/narration/coverage: [script](references/script.md) and [narration](references/narration-style.md).
+- New topic architecture (`brief.json` & `content.json` Schema 3.0): [vp-research-architect](../vp-research-architect/SKILL.md); vocabulary bank entry (`vocab/bank.py start`): [vocabulary](references/vocabulary.md).
+- Outline/narration/cadence: [script](references/script.md), [narration](references/narration-style.md), and [vp-scriptwriting](../vp-scriptwriting/SKILL.md) (`vn_text_normalizer.py` + `script_cadence_checker.py`).
 - Shot grammar & renderer limits (mandatory reading before creating beat/image plans — after dialogue is finalized, before writing prompts): [cinematography](references/cinematography.md) then [render-capabilities](../../../sys/docs/render-capabilities.md).
-- Image/beat planning and generation: [storyboard and visuals](references/visuals.md) ; layered cut-out video (background + timed stickers): also follow the vp-layered-motion skill (../vp-layered-motion/SKILL.md).
-- Request/WAV: [audio](references/audio.md).
-- Timeline/captions/MP4: [editing](references/editing.md).
-- Errors: [recovery](references/recovery.md).
+- Image/beat planning and generation: [storyboard and visuals](references/visuals.md) and [vp-flow-cdp](../vp-flow-cdp/SKILL.md); layered cut-out video (background + timed stickers): also follow [vp-layered-motion](../vp-layered-motion/SKILL.md).
+- Request/WAV: [audio](references/audio.md) and [vp-colab-bridge](../vp-colab-bridge/SKILL.md).
+- Timeline/captions/MP4: [editing](references/editing.md) and [vp-colab-bridge](../vp-colab-bridge/SKILL.md).
+- Errors: [recovery](references/recovery.md) and [Colab error matrix](../vp-colab-bridge/references/error-recovery-matrix.md).
 
 Profile sys/vocab/channel.json supplies channel choices; freeze its relevant fields in the brief. No fixed joke arc, image quota, learner-repeat count, provider, voice or aspect-to-language mapping from this skill. Never leak internal IDs/instructions into visible text.
 

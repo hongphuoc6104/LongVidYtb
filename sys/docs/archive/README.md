@@ -15,7 +15,7 @@ This directory stores historical trial notes, performance benchmark logs, local 
 - **`flow-pc-compatibility-fix.md`**: Patch record for preflight screenshot compatibility on PC.
 - **`flow-queue-operations.md`**: Historical guide for B-2 concurrent generation queue operations with legacy Flow project links.
 - **`flow-x4-results-20260922.md`**: Benchmark results for 4x concurrent image generations on Flow.
-- **`M2-FLOW.md`**: Milestone 2 Flow operations guide (superseded by `flow-prompts.md` and Flow Kit).
+- **`M2-FLOW.md`**: Milestone 2 Flow operations guide (superseded by `flow-prompts.md` and Flow CDP).
 
 ### 2. Rendering & Infrastructure Trials (September 2026)
 - **`render-performance-20260922.md`**: Benchmark testing of Remotion engine across SATA SSD, NVMe, and GPU setups.

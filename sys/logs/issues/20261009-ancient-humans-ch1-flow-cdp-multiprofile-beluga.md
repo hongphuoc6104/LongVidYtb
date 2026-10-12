@@ -1,8 +1,8 @@
-# Issue ancient-humans-day-ch1 — images (Flow Kit Multi-Profile Parallel & Nano Banana 2.1 `BELUGA`)
+# Issue ancient-humans-day-ch1 — images (Flow CDP Multi-Profile Parallel & Nano Banana 2.1 `BELUGA`)
 
 - **Date Recorded**: 2026-10-09 06:25:00
 - **Job ID**: ancient-humans-day-ch1-16x9
-- **Subsystem**: images (Flow Kit)
+- **Subsystem**: images (Flow CDP)
 - **Status**: Resolved
 
 ---
@@ -10,7 +10,7 @@
 ## 1. Concrete Symptoms
 - Triggering Command:
   ```bash
-  python3 sys/exports/ancient_humans_flowkit_bundle/scripts/generate_flowkit_245.py 1 --workers 2 --model NANO_BANANA_2_1
+  python3 sys/exports/ancient_humans_bundle/scripts/generate_cdp_245.py 1 --workers 2 --model NANO_BANANA_2_1
   ```
 - Error Messages / Tracebacks:
   1. Model resolution failure: `NANO_BANANA_2_1` not mapped to Google Flow's internal wire code (`BELUGA`).
@@ -36,15 +36,15 @@
 1. **Concrete Resolution Steps**:
    - **Step 1**: Map `NANO_BANANA_2_1` / `NANO_BANANA_2.1` $\rightarrow$ `"BELUGA"` in `flow_batch.py` and `models.json`, and match the exact `BELUGA` protobuf array layout (`slot12` client UUID when `base_media_id is None`, `slot12 = None` + `slot4 = [[base_media_id, 3]]` when `base_media_id` is present).
    - **Step 2**: Add per-profile concurrency slots (`session["slot"]`), per-profile rate gates (`session["rate_gate"]`), `list_all_profiles()`, and `profile_index` routing in `flow_client.py` and `api/flow.py`.
-   - **Step 3**: Group `based_on` continuity chains into atomic units in `generate_flowkit_245.py` so an entire parent $\rightarrow$ child chain executes on the same `profile_index` and persists its `media_id` in `_media_state.json`.
-   - **Step 4**: Remove automatic `reload_flow_tab` on cooldown (use in-place exponential backoff `20s -> 35s -> 50s` instead) and wrap `executeWithPristine` in `sys/flowkit/extension/injected.js` with the `Object.assign` neuter guard.
+   - **Step 3**: Group `based_on` continuity chains into atomic units in `generate_cdp_245.py` so an entire parent $\rightarrow$ child chain executes on the same `profile_index` and persists its `media_id` in `_media_state.json`.
+   - **Step 4**: Remove automatic `reload_flow_tab` on cooldown (use in-place exponential backoff `20s -> 35s -> 50s` instead) and wrap `executeWithPristine` in `sys/flow_cdp/cdp_direct_client.py` with the `Object.assign` neuter guard.
 2. **Diff or Code Modifications**:
-   - [`sys/flowkit/repo/agent/services/flow_batch.py`](file:///home/hongphuoc6104/Desktop/flowkit-video-pipeline/sys/flowkit/repo/agent/services/flow_batch.py)
-   - [`sys/flowkit/repo/agent/models.json`](file:///home/hongphuoc6104/Desktop/flowkit-video-pipeline/sys/flowkit/repo/agent/models.json)
-   - [`sys/flowkit/repo/agent/services/flow_client.py`](file:///home/hongphuoc6104/Desktop/flowkit-video-pipeline/sys/flowkit/repo/agent/services/flow_client.py)
-   - [`sys/flowkit/repo/agent/api/flow.py`](file:///home/hongphuoc6104/Desktop/flowkit-video-pipeline/sys/flowkit/repo/agent/api/flow.py)
-   - [`sys/flowkit/extension/injected.js`](file:///home/hongphuoc6104/Desktop/flowkit-video-pipeline/sys/flowkit/extension/injected.js)
-   - [`sys/exports/ancient_humans_flowkit_bundle/scripts/generate_flowkit_245.py`](file:///home/hongphuoc6104/Desktop/flowkit-video-pipeline/sys/exports/ancient_humans_flowkit_bundle/scripts/generate_flowkit_245.py)
+   - [`sys/flow_cdp/flow_rpc.py`](sys/flow_cdp/flow_rpc.py)
+   - [`sys/flow_cdp/flow_rpc.py`](sys/flow_cdp/flow_rpc.py)
+   - [`sys/flow_cdp/cdp_direct_client.py`](sys/flow_cdp/cdp_direct_client.py)
+   - [`sys/flow_cdp/bridge.py`](sys/flow_cdp/bridge.py)
+   - [`sys/flow_cdp/cdp_direct_client.py`](sys/flow_cdp/cdp_direct_client.py)
+   - [`sys/exports/ancient_humans_bundle/scripts/generate_cdp_245.py`](sys/exports/ancient_humans_bundle/scripts/generate_cdp_245.py)
 3. **Live Verification Evidence**:
-   - Successfully generated all **34/34 Chapter 1 Blind-Test images** across 2 Chrome profiles (`#0` and `#1`) at [`sys/exports/ancient_humans_flowkit_bundle/generated_images/ch1/`](file:///home/hongphuoc6104/Desktop/flowkit-video-pipeline/sys/exports/ancient_humans_flowkit_bundle/generated_images/ch1).
-   - Technical verification: 34/34 JPEG files (`Missing: 0`), resolution `1376x768` (16:9), total size `5.90 MB`, continuity chains verified in [`_media_state.json`](file:///home/hongphuoc6104/Desktop/flowkit-video-pipeline/sys/exports/ancient_humans_flowkit_bundle/generated_images/ch1/_media_state.json).
+   - Successfully generated all **34/34 Chapter 1 Blind-Test images** across 2 Chrome profiles (`#0` and `#1`) at [`sys/exports/ancient_humans_bundle/generated_images/ch1/`](sys/exports/ancient_humans_bundle/generated_images/ch1).
+   - Technical verification: 34/34 JPEG files (`Missing: 0`), resolution `1376x768` (16:9), total size `5.90 MB`, continuity chains verified in [`_media_state.json`](sys/exports/ancient_humans_bundle/generated_images/ch1/_media_state.json).

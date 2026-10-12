@@ -10,9 +10,13 @@ from scripts.subtitles import audit_cues
 
 
 def audit(props):
-    # Horizontal output deliberately hides Vietnamese captions.
-    applicable = props.get('aspect_ratio', '9:16') != '16:9'
-    report = audit_cues(props.get('cues', [])) if applicable else {
+    ratio = props.get('aspect_ratio', '9:16')
+    if props.get('outputs'):
+        applicable = any(o.get('subtitles') for o in props['outputs'])
+    else:
+        applicable = ratio != '16:9'
+    cue_aspect = ratio if ratio in ('9:16', '16:9') else None
+    report = audit_cues(props.get('cues', []), aspect_ratio=cue_aspect) if applicable else {
         'errors': [], 'warnings': [], 'quality_approval': False}
     report['captions_applicable'] = applicable
     report['beats'] = []

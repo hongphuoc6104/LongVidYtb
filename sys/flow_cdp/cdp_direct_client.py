@@ -1,0 +1,540 @@
+#!/usr/bin/env python3
+"""Direct 3-Profile Chrome CDP Client for Google Flow Image Generation (vp-flow-cdp).
+
+Connects directly to the 3 signed-in Chrome CDP profiles (ports 9225/9222, 9223, 9224),
+arms the document_start reCAPTCHA Enterprise guard via Page.addScriptToEvaluateOnNewDocument,
+and executes batchexecute image generation RPCs directly inside the browser tabs
+without any external daemon or extension.
+"""
+from __future__ import annotations
+
+import asyncio
+import json
+import os
+import re
+import socket
+import subprocess
+import time
+import urllib.request
+from pathlib import Path
+from typing import Any, Optional
+
+import websockets
+
+from . import flow_rpc
+
+SITE_KEY = "6LdsFiUsAAAAAIjVDZcuLhaHiDn5nnHVXVRQGeMV"
+
+CDP_RECAPTCHA_GUARD_JS = r"""
+(function () {
+  'use strict';
+  let _pristineExecute = null;
+  let _capturedTrapped = false;
+  let _captureSource = null;
+
+  function savePristine(fn, enterprise, source) {
+    if (_pristineExecute || typeof fn !== 'function') return false;
+    try {
+      const src = fn.toString();
+      if (src.includes('extension_hijack_detected')) {
+        _capturedTrapped = true;
+        return false;
+      }
+    } catch (e) {}
+    _pristineExecute = fn.bind(enterprise);
+    _captureSource = source;
+    Promise.resolve().then(cleanAllTraps);
+    return true;
+  }
+
+  function cleanTrap(obj, prop) {
+    try {
+      const desc = Object.getOwnPropertyDescriptor(obj, prop);
+      if (!desc || (!desc.get && !desc.set)) return;
+      Object.defineProperty(obj, prop, {
+        value: desc.get ? desc.get() : undefined,
+        writable: true,
+        configurable: true,
+        enumerable: true,
+      });
+    } catch (e) {}
+  }
+
+  let _cleanedUp = false;
+  function cleanAllTraps() {
+    if (_cleanedUp) return;
+    _cleanedUp = true;
+    try {
+      const gc = window.grecaptcha;
+      if (gc) {
+        const ent = gc.enterprise;
+        if (ent) cleanTrap(ent, 'execute');
+        cleanTrap(gc, 'enterprise');
+      }
+      cleanTrap(window, 'grecaptcha');
+    } catch (e) {}
+  }
+
+  function watchExecute(enterprise) {
+    let _val = enterprise.execute;
+    if (typeof _val === 'function' && savePristine(_val, enterprise, 'L3-immediate')) return;
+    try {
+      Object.defineProperty(enterprise, 'execute', {
+        get() { return _val; },
+        set(fn) { _val = fn; savePristine(fn, enterprise, 'L3-setter'); },
+        configurable: true,
+        enumerable: true,
+      });
+    } catch (e) {}
+  }
+
+  function watchEnterprise(grecaptcha) {
+    let _val = grecaptcha.enterprise;
+    if (_val && typeof _val === 'object') watchExecute(_val);
+    try {
+      Object.defineProperty(grecaptcha, 'enterprise', {
+        get() { return _val; },
+        set(obj) { _val = obj; if (obj && typeof obj === 'object') watchExecute(obj); },
+        configurable: true,
+        enumerable: true,
+      });
+    } catch (e) {}
+  }
+
+  function installCapture() {
+    let _val = window.grecaptcha;
+    if (_val && typeof _val === 'object') watchEnterprise(_val);
+    try {
+      Object.defineProperty(window, 'grecaptcha', {
+        get() { return _val; },
+        set(obj) { _val = obj; if (obj && typeof obj === 'object') watchEnterprise(obj); },
+        configurable: true,
+        enumerable: true,
+      });
+    } catch (e) {}
+
+    const pollId = setInterval(() => {
+      if (_pristineExecute) { clearInterval(pollId); return; }
+      try {
+        const exec = window.grecaptcha?.enterprise?.execute;
+        if (typeof exec === 'function') {
+          savePristine(exec, window.grecaptcha.enterprise, 'poll-2ms');
+          if (_pristineExecute) clearInterval(pollId);
+        }
+      } catch (e) {}
+    }, 2);
+    setTimeout(() => clearInterval(pollId), 30000);
+  }
+
+  installCapture();
+
+  try {
+    Object.defineProperty(window, '__vp_cdp_hijack', {
+      value: Object.freeze({
+        get pristine() { return _pristineExecute; },
+        get trapped() { return _capturedTrapped; },
+        get source()  { return _captureSource; },
+      }),
+      writable: false,
+      configurable: false,
+      enumerable: false,
+    });
+  } catch (e) {
+    window.__vp_cdp_hijack = {
+      get pristine() { return _pristineExecute; },
+      get trapped() { return _capturedTrapped; },
+      get source()  { return _captureSource; },
+    };
+  }
+
+  const SITE_KEY_FALLBACK = '6LdsFiUsAAAAAIjVDZcuLhaHiDn5nnHVXVRQGeMV';
+  const _realObjectAssign = Object.assign;
+  let captchaMintTail = Promise.resolve();
+
+  function resolveSitekey() {
+    try {
+      const clients = (window.___grecaptcha_cfg || {}).clients || {};
+      for (const k of Object.keys(clients)) {
+        if (clients[k] && clients[k].sitekey) return clients[k].sitekey;
+      }
+    } catch (e) {}
+    return SITE_KEY_FALLBACK;
+  }
+
+  function waitReady(timeout = 5000) {
+    return new Promise((resolve) => {
+      let done = false;
+      const fin = () => { if (!done) { done = true; resolve(); } };
+      try { window.grecaptcha?.enterprise?.ready?.(fin); } catch (e) {}
+      setTimeout(fin, timeout);
+    });
+  }
+
+  async function executeWithAssignNeuter(sitekey, action) {
+    const targetAction = action;
+    Object.assign = function (target, ...sources) {
+      const result = _realObjectAssign.call(this, target, ...sources);
+      if (result && typeof result === 'object' && result.action === 'extension_hijack_detected') {
+        result.action = targetAction;
+      }
+      return result;
+    };
+    try {
+      await waitReady(2500);
+      const fn = window.__vp_cdp_hijack?.pristine || window.grecaptcha.enterprise.execute;
+      const token = await Promise.race([
+        fn(sitekey, { action }),
+        new Promise((_, rej) => setTimeout(() => rej(new Error('execute_hang')), 8000)),
+      ]);
+      return token ? String(token) : null;
+    } finally {
+      Object.assign = _realObjectAssign;
+    }
+  }
+
+  window.mintCaptcha = async function (pageAction) {
+    const previous = captchaMintTail.catch(() => {});
+    let release;
+    captchaMintTail = new Promise((resolve) => { release = resolve; });
+    await previous;
+    try {
+      let lastErr = null;
+      for (let i = 0; i < 2; i++) {
+        try {
+          const token = await executeWithAssignNeuter(resolveSitekey(), pageAction);
+          if (token) return token;
+        } catch (e) {
+          lastErr = e;
+        }
+        await new Promise((r) => setTimeout(r, 600));
+      }
+      throw lastErr || new Error('captcha_mint_failed');
+    } finally {
+      release();
+    }
+  };
+})();
+"""
+
+PROFILES = [
+    {
+        "name": "profile_1",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-p1"),
+        "profile_dir": "Profile 1",
+        "cdp_port": 9225,
+        "url": "https://flow.google.com/project/eff3e118-0fd8-413a-8b94-ed08840543d5",
+        "project_id": "eff3e118-0fd8-413a-8b94-ed08840543d5",
+    },
+    {
+        "name": "profile_2",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-p2"),
+        "profile_dir": "Profile 2",
+        "cdp_port": 9223,
+        "url": "https://flow.google.com/project/c6b4b296-6c31-4d79-ae51-0619f374cf6a",
+        "project_id": "c6b4b296-6c31-4d79-ae51-0619f374cf6a",
+    },
+    {
+        "name": "profile_3",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-p3"),
+        "profile_dir": "Profile 3",
+        "cdp_port": 9224,
+        "url": "https://flow.google.com/project/05f80480-f4f3-4d4d-916f-e3820c84c6c4",
+        "project_id": "05f80480-f4f3-4d4d-916f-e3820c84c6c4",
+    },
+]
+
+
+def is_port_open(port: int) -> bool:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.settimeout(0.5)
+        return s.connect_ex(("127.0.0.1", port)) == 0
+
+
+def ensure_chrome_profiles_launched(profiles: list[dict[str, Any]] | None = None) -> None:
+    target_profiles = profiles or PROFILES
+    env = dict(os.environ, DISPLAY=os.environ.get("DISPLAY", ":0"))
+    chrome_bin = "/opt/google/chrome/chrome"
+    for p in target_profiles:
+        port = p["cdp_port"]
+        if is_port_open(port):
+            continue
+        udir = p["user_data_dir"]
+        for lock_name in ("SingletonLock", "SingletonCookie", "SingletonSocket"):
+            lp = os.path.join(udir, lock_name)
+            if os.path.lexists(lp):
+                try:
+                    os.unlink(lp)
+                except OSError:
+                    pass
+        subprocess.Popen(
+            [
+                chrome_bin,
+                f"--user-data-dir={udir}",
+                f"--profile-directory={p['profile_dir']}",
+                f"--remote-debugging-port={port}",
+                "--remote-allow-origins=*",
+                "--no-first-run",
+                "--no-default-browser-check",
+                p["url"],
+            ],
+            env=env,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            start_new_session=True,
+        )
+        time.sleep(1.5)
+
+    for p in target_profiles:
+        port = p["cdp_port"]
+        for _ in range(30):
+            if is_port_open(port):
+                break
+            time.sleep(0.5)
+
+
+def get_flow_target(cdp_port: int) -> dict[str, Any]:
+    req = urllib.request.Request(f"http://127.0.0.1:{cdp_port}/json")
+    with urllib.request.urlopen(req, timeout=5) as resp:
+        targets = json.loads(resp.read().decode("utf-8"))
+    pages = [t for t in targets if t.get("type") == "page"]
+    for t in pages:
+        u = t.get("url", "")
+        if "flow.google.com" in u or "labs.google" in u:
+            return t
+    if pages:
+        return pages[0]
+    raise RuntimeError(f"No page target found on CDP port {cdp_port}")
+
+
+class DirectCDPProfileSession:
+    """Direct CDP connection to a single Chrome profile's Google Flow tab."""
+
+    def __init__(self, profile_cfg: dict[str, Any]):
+        self.profile_cfg = profile_cfg
+        self.name = profile_cfg["name"]
+        self.cdp_port = int(profile_cfg["cdp_port"])
+        self.default_url = profile_cfg["url"]
+        self.project_id = profile_cfg.get("project_id") or self._extract_project_id(self.default_url)
+        self.ws = None
+        self.msg_id = 0
+        self.pending: dict[int, asyncio.Future] = {}
+        self._reader_task = None
+
+    @staticmethod
+    def _extract_project_id(url: str) -> str:
+        m = re.search(r"/project/([0-9a-fA-F-]{36})", url or "")
+        return m.group(1) if m else ""
+
+    async def connect(self, reload_for_guard: bool = False) -> None:
+        target = get_flow_target(self.cdp_port)
+        ws_url = target["webSocketDebuggerUrl"]
+        cur_url = target.get("url") or self.default_url
+        pid = self._extract_project_id(cur_url)
+        if pid:
+            self.project_id = pid
+        self.ws = await websockets.connect(ws_url, max_size=64 * 1024 * 1024)
+        self._reader_task = asyncio.create_task(self._reader())
+        await self.call("Page.enable")
+        await self.call("Runtime.enable")
+        await self.call("Page.addScriptToEvaluateOnNewDocument", {"source": CDP_RECAPTCHA_GUARD_JS})
+        has_pristine = await self.evaluate("!!window.__vp_cdp_hijack?.pristine", await_promise=False)
+        if reload_for_guard or not has_pristine:
+            try:
+                await self.call(
+                    "Storage.clearDataForOrigin",
+                    {
+                        "origin": "https://flow.google.com",
+                        "storageTypes": "appcache,cache_storage,file_systems,indexeddb,local_storage,service_workers,shader_cache,websql",
+                    },
+                )
+                all_cookies = (await self.call("Network.getAllCookies")).get("cookies", [])
+                for c in all_cookies:
+                    if "GRECAPTCHA" in c["name"] or c["name"].startswith("_ga"):
+                        await self.call(
+                            "Network.deleteCookies",
+                            {"name": c["name"], "domain": c["domain"], "path": c.get("path", "/")},
+                        )
+            except Exception:
+                pass
+            await self.call("Page.reload", {"ignoreCache": False})
+            await asyncio.sleep(6.0)
+        has_mint = await self.evaluate("typeof window.mintCaptcha === 'function'", await_promise=False)
+        if not has_mint:
+            await self.evaluate(CDP_RECAPTCHA_GUARD_JS, await_promise=False)
+
+    async def close(self) -> None:
+        if self._reader_task:
+            self._reader_task.cancel()
+        if self.ws:
+            await self.ws.close()
+
+    async def _reader(self) -> None:
+        try:
+            async for raw in self.ws:
+                msg = json.loads(raw)
+                mid = msg.get("id")
+                if mid is not None and mid in self.pending:
+                    fut = self.pending.pop(mid)
+                    if not fut.done():
+                        fut.set_result(msg)
+        except Exception as e:
+            for fut in self.pending.values():
+                if not fut.done():
+                    fut.set_exception(e)
+
+    async def call(self, method: str, params: dict | None = None, timeout: float = 60.0) -> dict:
+        self.msg_id += 1
+        mid = self.msg_id
+        fut = asyncio.get_running_loop().create_future()
+        self.pending[mid] = fut
+        await self.ws.send(json.dumps({"id": mid, "method": method, "params": params or {}}))
+        res = await asyncio.wait_for(fut, timeout=timeout)
+        if "error" in res:
+            raise RuntimeError(f"CDP error in {method}: {res['error']}")
+        return res.get("result", {})
+
+    async def evaluate(self, expression: str, await_promise: bool = True, timeout: float = 120.0) -> Any:
+        res = await self.call(
+            "Runtime.evaluate",
+            {"expression": expression, "awaitPromise": await_promise, "returnByValue": True},
+            timeout=timeout,
+        )
+        if "exceptionDetails" in res:
+            exc = res["exceptionDetails"]
+            raise RuntimeError(f"JS exception: {exc.get('text')} {exc.get('exception', {}).get('description', '')}")
+        return res.get("result", {}).get("value")
+
+    async def generate_image(
+        self,
+        prompt: str,
+        aspect: str = "16:9",
+        model: str = "BELUGA",
+        base_media_id: Optional[str] = None,
+        ref_media_ids: Optional[list[str]] = None,
+    ) -> dict[str, Any]:
+        freq = flow_rpc.image_request(
+            prompt=prompt,
+            project_id=self.project_id,
+            count=1,
+            aspect=aspect,
+            model=model,
+            base_media_id=base_media_id,
+            ref_media_ids=ref_media_ids,
+        )
+        js_code = f"""
+        (async () => {{
+            try {{
+                let freqStr = {json.dumps(freq)};
+                const token = await window.mintCaptcha("IMAGE_GENERATION");
+                if (!token) return {{ error: "CAPTCHA_FAILED: empty token" }};
+                freqStr = freqStr.split("__CAPTCHA__").join(token);
+                const wiz = globalThis.WIZ_global_data || {{}};
+                const at = wiz.SNlM0e;
+                const sid = wiz.FdrFJe;
+                const bl = wiz.cfb2h;
+                if (!at) return {{ error: "NO_AT_TOKEN" }};
+                const reqid = Math.floor(Math.random() * 900000) + 100000;
+                const sourcePath = location.pathname || "/";
+                const hl = (document.documentElement.lang || navigator.language || "en").split("-")[0];
+                const url = `/_/AiSandboxAngularFrontend/data/batchexecute?rpcids=ogiZ0b&source-path=${{encodeURIComponent(sourcePath)}}&bl=${{encodeURIComponent(bl || "")}}&f.sid=${{encodeURIComponent(sid || "")}}&hl=${{encodeURIComponent(hl)}}&_reqid=${{reqid}}&rt=c`;
+                const resp = await fetch(url, {{
+                    method: "POST",
+                    credentials: "include",
+                    headers: {{
+                        "content-type": "application/x-www-form-urlencoded;charset=UTF-8",
+                        "x-same-domain": "1"
+                    }},
+                    body: new URLSearchParams({{ "f.req": freqStr, at }})
+                }});
+                const text = await resp.text();
+                return {{ status: resp.status, text: text.slice(0, 32000000) }};
+            }} catch (err) {{
+                return {{ error: err.message || String(err) }};
+            }}
+        }})()
+        """
+        out = await self.evaluate(js_code, await_promise=True, timeout=180.0)
+        if not isinstance(out, dict) or out.get("error"):
+            raise RuntimeError(out.get("error") if isinstance(out, dict) else "NO_CDP_RESPONSE")
+        raw_text = out.get("text", "")
+        payload = flow_rpc.first_payload(raw_text, flow_rpc.RPC_GEN_IMAGE)
+        images = flow_rpc.read_images(payload)
+        if not images:
+            raise RuntimeError(f"No generated image URL in response (HTTP {out.get('status')})")
+        return {
+            "media_id": images[0].media_id,
+            "url": images[0].url,
+            "profile": self.name,
+            "project_id": self.project_id,
+        }
+
+    async def generate_images_batch(
+        self,
+        prompts: list[str],
+        aspect: str = "16:9",
+        model: str = "BELUGA",
+        base_media_id: Optional[str] = None,
+        ref_media_ids: Optional[list[str]] = None,
+    ) -> list[dict[str, Any]]:
+        if not prompts or len(prompts) > 4:
+            raise ValueError("prompts must contain 1 to 4 prompt strings")
+        freq = flow_rpc.image_request(
+            prompt=prompts[0],
+            prompts=prompts,
+            project_id=self.project_id,
+            count=len(prompts),
+            aspect=aspect,
+            model=model,
+            base_media_id=base_media_id,
+            ref_media_ids=ref_media_ids,
+        )
+        js_code = f"""
+        (async () => {{
+            try {{
+                let freqStr = {json.dumps(freq)};
+                const token = await window.mintCaptcha("IMAGE_GENERATION");
+                if (!token) return {{ error: "CAPTCHA_FAILED: empty token" }};
+                freqStr = freqStr.split("__CAPTCHA__").join(token);
+                const wiz = globalThis.WIZ_global_data || {{}};
+                const at = wiz.SNlM0e;
+                const sid = wiz.FdrFJe;
+                const bl = wiz.cfb2h;
+                if (!at) return {{ error: "NO_AT_TOKEN" }};
+                const reqid = Math.floor(Math.random() * 900000) + 100000;
+                const sourcePath = location.pathname || "/";
+                const hl = (document.documentElement.lang || navigator.language || "en").split("-")[0];
+                const url = `/_/AiSandboxAngularFrontend/data/batchexecute?rpcids=ogiZ0b&source-path=${{encodeURIComponent(sourcePath)}}&bl=${{encodeURIComponent(bl || "")}}&f.sid=${{encodeURIComponent(sid || "")}}&hl=${{encodeURIComponent(hl)}}&_reqid=${{reqid}}&rt=c`;
+                const resp = await fetch(url, {{
+                    method: "POST",
+                    credentials: "include",
+                    headers: {{
+                        "content-type": "application/x-www-form-urlencoded;charset=UTF-8",
+                        "x-same-domain": "1"
+                    }},
+                    body: new URLSearchParams({{ "f.req": freqStr, at }})
+                }});
+                const text = await resp.text();
+                return {{ status: resp.status, text: text.slice(0, 32000000) }};
+            }} catch (err) {{
+                return {{ error: err.message || String(err) }};
+            }}
+        }})()
+        """
+        out = await self.evaluate(js_code, await_promise=True, timeout=180.0)
+        if not isinstance(out, dict) or out.get("error"):
+            raise RuntimeError(out.get("error") if isinstance(out, dict) else "NO_CDP_RESPONSE")
+        raw_text = out.get("text", "")
+        payload = flow_rpc.first_payload(raw_text, flow_rpc.RPC_GEN_IMAGE)
+        images = flow_rpc.read_images(payload)
+        if not images:
+            raise RuntimeError(f"No generated image URL in response (HTTP {out.get('status')})")
+        return [
+            {
+                "media_id": im.media_id,
+                "url": im.url,
+                "profile": self.name,
+                "project_id": self.project_id,
+            }
+            for im in images
+        ]
+

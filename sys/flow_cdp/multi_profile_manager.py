@@ -105,9 +105,9 @@ class ChromeProfileWorker:
 
 
 DEFAULT_PROFILES = [
-    {"id": "profile_1", "port": 9222, "directory": "Profile 1"},
-    {"id": "profile_2", "port": 9223, "directory": "Profile 2"},
-    {"id": "profile_3", "port": 9224, "directory": "Profile 3"},
+    {"id": "profile_1", "port": 9222, "directory": "Profile 1", "user_data_dir": "~/.config/google-chrome-cdp-p1"},
+    {"id": "profile_2", "port": 9223, "directory": "Profile 2", "user_data_dir": "~/.config/google-chrome-cdp-p2"},
+    {"id": "profile_3", "port": 9224, "directory": "Profile 3", "user_data_dir": "~/.config/google-chrome-cdp-p3"},
 ]
 
 

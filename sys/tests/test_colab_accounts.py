@@ -41,3 +41,48 @@ class AccountTests(unittest.TestCase):
         argv=accounts.command(binary,'two',['sessions'])
         self.assertEqual(argv[0],'/usr/bin/python3')
         self.assertEqual(argv[-2:], [str(accounts.folder('two')),'sessions'])
+
+    def test_enable_disable_role_and_remove_lifecycle(self):
+        accounts.add('account-01', self.source)
+        accounts.add('account-02', self.source, role='render')
+        self.assertEqual(accounts.registry()['preferred'], 'account-01')
+
+        # Disabling preferred account shifts preferred to next enabled account
+        res = accounts.set_enabled('account-01', False)
+        self.assertFalse(res['enabled'])
+        self.assertEqual(accounts.registry()['preferred'], 'account-02')
+
+        # Re-enabling works
+        accounts.set_enabled('account-01', True)
+        accounts.set_role('account-01', 'tts')
+        self.assertEqual(accounts.select(role='tts'), 'account-01')
+        self.assertEqual(accounts.select(role='render'), 'account-02')
+
+        with self.assertRaises(ValueError):
+            accounts.set_role('account-01', 'invalid-role')
+
+        rem = accounts.remove('account-01', delete_files=True)
+        self.assertEqual(rem['removed'], 'account-01')
+        self.assertFalse(accounts.folder('account-01').exists())
+
+    def test_auto_idle_skips_busy_locked_session(self):
+        import fcntl
+        from colab_bridge.protocol import stamp
+        accounts.add('account-01', self.source)
+        accounts.add('account-02', self.source)
+        lock_dir = self.root / 'locks'
+        lock_dir.mkdir(parents=True, exist_ok=True)
+        lock_file = lock_dir / (stamp(['account-01', 'video-pilot-tts']) + '.lock')
+        with lock_file.open('a') as handle:
+            fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            self.assertTrue(accounts.is_session_busy('account-01', 'video-pilot-tts', lock_dir=lock_dir))
+            self.assertFalse(accounts.is_session_busy('account-02', 'video-pilot-tts', lock_dir=lock_dir))
+            # Standard 'auto' still picks preferred, while 'auto-idle' picks idle account-02
+            self.assertEqual(accounts.select('auto', lock_dir=lock_dir), 'account-01')
+            self.assertEqual(accounts.select('auto-idle', lock_dir=lock_dir), 'account-02')
+            pool = accounts.select_pool(lock_dir=lock_dir)
+            self.assertEqual(pool, ['account-02'])
+            st = accounts.status_all(lock_dir=lock_dir)
+            self.assertEqual(st['ready_for_pool'], 1)
+            fcntl.flock(handle, fcntl.LOCK_UN)
+

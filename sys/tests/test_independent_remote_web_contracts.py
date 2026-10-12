@@ -237,7 +237,7 @@ class IndependentRemoteWebContracts(unittest.TestCase):
         except ImportError:
             b2_bridge = None
         if b2_bridge is None:
-            self.skipTest("B-2 bridge retired in favor of Flow Kit")
+            self.skipTest("B-2 bridge retired in favor of Flow CDP")
         from PIL import Image
         for name in ('schemas','scripts','assets/characters/channel-mascot'):
             if (ROOT/name).exists(): shutil.copytree(ROOT/name,self.root/name)

@@ -61,7 +61,6 @@ function renderHighlightedText(text: string, targetWord?: string, modern = false
   });
 }
 
-// Cờ thử nghiệm phụ đề: khi p.hideSubtitles = true, áp dụng Smart Auto-Reframe
 const DISABLE_SUBTITLES = false;
 
 const Video: React.FC<any> = (p) => {
@@ -173,21 +172,9 @@ const Video: React.FC<any> = (p) => {
     shakeY = organicNoise(shakeTime * 1.5, 4.7) * 12 * decay;
   }
 
-  // Smart Auto-Reframe (Thử nghiệm khi hideSubtitles: true):
-  // Phóng nhẹ ảnh lên ~15-18% (1.18x) và hạ tâm ảnh xuống 8.5% để mặt bàn hạ sát xuống đáy khung hình tự nhiên.
-  // Kích hoạt khi p.autoReframe hoặc p.hideSubtitles = true.
-  const isAutoReframe = Boolean(p.autoReframe || p.hideSubtitles);
-  const autoReframeScale = isAutoReframe ? 1.18 : 1.0;
-  const autoReframeShiftY = isAutoReframe ? 8.5 : 0.0;
-
-  scale = scale * autoReframeScale;
-  translateY = translateY + autoReframeShiftY;
-
   const opacity = beat.effect === 'fade' ? transition : 1;
   const focusX = (beat.focus?.x ?? 0.5) * 100;
-  const focusY = isAutoReframe
-    ? Math.min(85, (beat.focus?.y ?? 0.42) * 100 + 20)
-    : (beat.focus?.y ?? 0.42) * 100;
+  const focusY = (beat.focus?.y ?? 0.42) * 100;
   const isVideoAsset = currentImageSrc && (currentImageSrc.endsWith('.mp4') || currentImageSrc.endsWith('.webm'));
 
   // 1. Procedural Line Boiling (8-12 fps hand-drawn organic jitter for stick figures)

@@ -1,6 +1,6 @@
 ---
 name: vp-setup
-description: First-time machine onboarding and environment bootstrap; install dependencies, configure accounts and run login scripts.
+description: "First-time environment bootstrap, account login scripts, and machine setup."
 ---
 
 # Setup and machine onboarding
@@ -12,7 +12,7 @@ Setup responsibilities:
 2. Initial account & credential onboarding: run interactive Colab CLI login scripts (`python3 -m colab_bridge.accounts login-many`), guide and configure Chrome browser profiles for Google Flow, and save account profiles to configured stores.
 3. System inventory & verification: report missing/configured/verified accounts and runtime tools; user completes OAuth/OTP/CAPTCHA during onboarding.
 
-Keep auth, profiles and credentials safely in their configured stores (`~/.config/video-pilot/`). Setup does not produce videos. Once dependencies and account stores are configured, routine execution and on-demand runtime management belong to production.
+Keep auth, profiles and credentials safely in their configured stores (`~/.config/video-pilot/`). Setup does not produce videos. Once dependencies and account stores are configured, routine execution and on-demand runtime management belong to production and [vp-colab-bridge](../vp-colab-bridge/SKILL.md).
 
 
 Layered video dependencies: `scipy`, `numpy`, `Pillow` in the management venv (tests for `sys/tools/matte_sticker.py`); the Colab render worker installs Remotion from `sys/package-lock.json`.

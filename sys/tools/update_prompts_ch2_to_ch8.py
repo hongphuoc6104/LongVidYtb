@@ -7,13 +7,12 @@ to adhere strictly to the Chapter 1 formula:
 - Clean uncluttered off-white paper background, 16:9 widescreen
 - Anonymous stick-figure character cast invariant
 - Expressive, context-rich visual actions matching the Vietnamese narration subtitles
-- Safe lower 20% margin for subtitles
 - Strictly no text, letters, watermarks, photorealistic faces, or 3D shading
 """
 import json
 from pathlib import Path
 
-MANIFEST_PATH = Path("sys/exports/ancient_humans_flowkit_bundle/manifest/manifest_245_shots.json")
+MANIFEST_PATH = Path("sys/exports/ancient_humans_bundle/manifest/manifest_245_shots.json")
 
 PREFIX = (
     "2D hand-drawn explainer illustration in bold black marker-pen outline with flat muted pastel and "

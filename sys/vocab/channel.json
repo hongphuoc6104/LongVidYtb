@@ -3,6 +3,7 @@
   "id": "english-explanatory-2d",
   "note": "English vocabulary Shorts; defaults apply only to new briefs. Choose scene/image counts after outline; no fixed comic framework.",
   "video_type": "vocabulary_explainer",
+  "format_profile": "short_9x16",
   "aspect_ratio": "9:16",
   "language": "en",
   "voice": "reference-narrator",
@@ -13,11 +14,8 @@
     "C1"
   ],
   "scene_count": null,
-  "duration": {
-    "min_seconds": 45.0,
-    "max_seconds": 90.0
-  },
-  "duration_note": "Initial planning window, adjustable per job before narration. Not a measurement or a claim about the reference channel.",
+  "duration": null,
+  "duration_note": "No fixed duration ceiling; length is determined by the authored scene script and measured WAV narration.",
   "tone": "Clear, curious explanatory narration in accessible English; one question with a meaningful payoff.",
   "style": "Hand-drawn 2D explainer illustration in a marker-pen look: thick black outlines, flat muted colors, full-bleed setting backgrounds, clear props and simple annotations (red circles/arrows). No main character, presenter or recurring protagonist: an anonymous stick-figure cast (round white heads, expressive simple faces, stick limbs) whose roles come from scene costume, hair and props.",
   "audience": "English learners at B1 and above learning one vocabulary sense through clear situations and explanatory pictures.",
@@ -29,7 +27,8 @@
     "Importing prehistoric topics as a required niche",
     "Reading lesson headings as disconnected definitions/pronunciation/grammar items",
     "Changing the selected sense, voice, character style or requested duration silently",
-    "Adding a recurring main character, presenter or narrator figure to scenes"
+    "Adding a recurring main character, presenter or narrator figure to scenes",
+    "Visual clichés: brain cutaway or split brains, abacus, pipe valves, iron anchors, split screens"
   ],
   "domain_requirements": [
     "Narration and learner-facing text are entirely English; explain meaning, usage and relevant grammar/pronunciation inside the same situation.",

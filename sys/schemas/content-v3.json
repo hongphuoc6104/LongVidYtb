@@ -17,7 +17,10 @@
       "minLength": 1
     },
     "duration": {
-      "type": "object",
+      "type": [
+        "object",
+        "null"
+      ],
       "properties": {
         "min_seconds": {
           "type": "number",
@@ -774,7 +777,6 @@
     "brief_revision",
     "brief_hash",
     "topic",
-    "duration",
     "style",
     "required_points",
     "characters",

@@ -26,10 +26,6 @@ class WorkerTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         shutil.copytree(ROOT / 'assets/voices', self.root / 'assets/voices')
         self.cfg = read(ROOT / 'config.json')
-        # Existing DSP/bilingual tests deliberately retain the saved Alba 1.0
-        # contract; the selected default gets its own clone-prompt test below.
-        self.cfg.update(en_voice='alba', en_speed=1.)
-        self.cfg['colab_tts']['voices']['en'] = 'assets/voices/alba/profile.json'
         self.cfg['colab_tts']['enabled'] = True
         write(self.root / 'config.json', self.cfg)
         self.generated = []
@@ -93,8 +89,8 @@ class WorkerTests(unittest.TestCase):
         self.run_worker(req,out)
         self.assertEqual(len(validate_result(out,req)),5)
         self.assertEqual(len(self.loaded),1)
-        self.assertEqual(len(self.prompts),2)
-        self.assertTrue(all(v==1. for batch in self.generated for v in batch['speed']))
+        self.assertEqual(len(self.prompts),1)
+        self.assertTrue(all(v in (1.22, .92) for batch in self.generated for v in batch['speed']))
         self.assertTrue(all(batch['num_step']==32 for batch in self.generated))
         count=len(self.generated)
         self.run_worker(req,self.root/'remote/job2/output')
@@ -132,8 +128,8 @@ class WorkerTests(unittest.TestCase):
         with patch('adapters.retakes',return_value={}), patch('adapters.master'), patch('colab_bridge.client.cli',return_value='/bin/true'), patch('colab_bridge.client.Client.synthesize',synth):
             payload=adapters.audio(p,'test',out)
         jsonschema.validate(payload,read(ROOT/'schemas/audio.json'))
-        self.assertEqual(payload['voice'],'Minh Quân Pro')
-        self.assertEqual(payload['en']['voice'],'alba')
+        self.assertEqual(payload['voice'],'Adam')
+        self.assertEqual(payload['en']['voice'],'reference-narrator')
         self.assertEqual(payload['backend'],'colab-omnivoice')
         self.assertEqual(payload['english_spans'][0]['text'],'weather.')
         self.assertAlmostEqual(payload['segments'][-1]['end']-payload['segments'][-1]['content_end'],2)
@@ -148,13 +144,13 @@ class WorkerTests(unittest.TestCase):
 
     def test_english_only_request_needs_no_vietnamese_reference(self):
         self.cfg['en_speed']=.92
-        shutil.rmtree(self.root/'assets/voices/minh-quan-pro')
+        shutil.rmtree(self.root/'assets/voices/adam')
         request=build_request(self.root,self.cfg,[dict(scene_id='SC01',texts=['I watch a predator.'],gaps=[],tail=1.5,retake=0)],primary_language='en')
         self.assertEqual(set(request['profiles']),{'en'})
         self.assertEqual([(x['language'],x['speed']) for x in request['items']],[('en',.92)])
         out=self.root/'remote/job/output';self.run_worker(request,out)
         validate_result(out,request)
-        self.assertEqual(read(out/'tts-result.json')['voice'],'alba')
+        self.assertEqual(read(out/'tts-result.json')['voice'],'reference-narrator')
         self.assertEqual(self.generated[0]['speed'],[.92])
 
     def test_explicit_english_audio_is_assembled_remotely_without_local_master(self):
@@ -162,7 +158,7 @@ class WorkerTests(unittest.TestCase):
         job=self.root/'runs/english';out=job/'revisions/audio/1';out.mkdir(parents=True)
         content={'scenes':[{'id':'SC01','narration':'Do not use this unrelated track.',
             'narration_en':'A predator hunts for food.','audio_direction':{'en':{'learner_pause_seconds':1.5}}}]}
-        brief={'aspect_ratio':'9:16','language':'en','duration':{'min_seconds':.1,'max_seconds':10.},'outputs':[{'aspect_ratio':'9:16','language':'en','subtitles':True,'voice':'alba','speed':.92}]}
+        brief={'aspect_ratio':'9:16','language':'en','duration':{'min_seconds':.1,'max_seconds':10.},'outputs':[{'aspect_ratio':'9:16','language':'en','subtitles':True,'voice':'reference-narrator','speed':.92}]}
         p=SimpleNamespace(root=self.root,job=lambda j:job,payload=lambda j,m:content,brief=lambda j:(brief,1,'hash'))
         seen=[]
         def synth(client,request,destination,cache,**kwargs):
@@ -174,7 +170,7 @@ class WorkerTests(unittest.TestCase):
         self.assertEqual(payload['language'],'en')
         self.assertEqual(set(payload['tracks']),{'en'})
         self.assertEqual(payload['segments'][0]['text'],'A predator hunts for food.')
-        self.assertEqual(payload['voice'],'alba')
+        self.assertEqual(payload['voice'],'reference-narrator')
         self.assertEqual(seen[0]['items'][0]['speed'],.92)
         self.assertEqual(set(seen[0]['profiles']),{'en'})
         self.assertTrue((job/payload['wav']).is_file())
@@ -205,7 +201,7 @@ class WorkerTests(unittest.TestCase):
         report = read(out/'audio-result.json')
         self.assertEqual(report['language'],'en')
         self.assertEqual(set(report['payload']['tracks']),{'en','vi'})
-        self.assertEqual(report['payload']['tracks']['vi']['voice'],'Minh Quân Pro')
+        self.assertEqual(report['payload']['tracks']['vi']['voice'],'Adam')
         self.assertEqual(report['payload']['tracks']['en']['language'],'en')
         self.assertEqual(report['payload']['tracks']['vi']['segments'][0]['text'],'Tôi nhìn thấy thú săn mồi.')
         self.assertAlmostEqual(report['payload']['tracks']['vi']['duration']-report['payload']['tracks']['vi']['segments'][0]['content_end'],2.)
@@ -216,5 +212,49 @@ class WorkerTests(unittest.TestCase):
             self.run_worker(req,self.root/'remote/job/output')
         self.assertFalse(self.loaded)
 
+    def test_omnivoice_leading_and_trailing_silence_trimmed_before_pause(self):
+        lead_24k = np.zeros(round(0.25 * 24000), dtype=np.float32)
+        active_24k = (0.25 * np.sin(np.arange(round(0.50 * 24000)) * 0.05)).astype(np.float32)
+        trail_24k = np.zeros(round(0.20 * 24000), dtype=np.float32)
+        raw_24k = np.concatenate([lead_24k, active_24k, trail_24k])
 
-if __name__=='__main__':unittest.main()
+        def load(*a, **kw):
+            return SimpleNamespace(
+                create_voice_clone_prompt=lambda **k: k,
+                generate=lambda **k: [raw_24k.copy() for _ in k['text']],
+            )
+
+        self.model.from_pretrained = load
+        req = build_request(
+            self.root,
+            self.cfg,
+            [dict(scene_id='SC01', narration='Xin chào.', texts=['Xin chào.'], gaps=[], tail=0.35, retake=0)],
+            primary_language='vi',
+        )
+        out = self.root / 'remote/trim-test/output'
+        self.run_worker(req, out)
+        validate_result(out, req)
+        res = read(out / 'tts-result.json')
+        content_dur = res['segments'][0]['content_duration']
+        # Active speech is 0.50s + 25ms lead + 30ms trail = ~0.555s (well below untrimmed 0.95s)
+        self.assertGreaterEqual(content_dur, 0.54)
+        self.assertLessEqual(content_dur, 0.57)
+
+        # Verify _trim_silence is 100% idempotent and preserves soft initial fricative pre-roll (< 0.012)
+        soft_fricative = np.full(round(0.015 * 48000), 0.008, dtype=np.float32)
+        lead_48k = np.zeros(round(0.20 * 48000), dtype=np.float32)
+        vowel_48k = (0.25 * np.sin(np.arange(round(0.30 * 48000)) * 0.05)).astype(np.float32)
+        trail_48k = np.zeros(round(0.18 * 48000), dtype=np.float32)
+        utterance = np.concatenate([lead_48k, soft_fricative, vowel_48k, trail_48k])
+        once = worker._trim_silence(utterance, sr=48000)
+        twice = worker._trim_silence(once, sr=48000)
+        np.testing.assert_array_equal(once, twice)
+        # Soft 15ms fricative resides inside the 25ms pre-roll window unattenuated by the 8ms fade
+        fric_start = len(lead_48k) - (np.where(np.abs(utterance) >= 0.012)[0][0] - round(0.025 * 48000))
+        fric_end = fric_start + len(soft_fricative)
+        self.assertTrue(np.allclose(once[fric_start:fric_end], 0.008))
+
+
+if __name__ == '__main__':
+    unittest.main()
+

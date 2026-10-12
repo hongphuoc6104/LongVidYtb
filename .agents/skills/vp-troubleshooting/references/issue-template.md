@@ -42,4 +42,4 @@ Standard template structure:
    - Measurement results from `ffprobe`: [Actual measured parameters]
 ```
 
-After creating the issue file, append a one-line summary entry into the index table at [`sys/logs/issues/INDEX.md`](file:///home/hongphuoc6104/Desktop/flowkit-video-pipeline/sys/logs/issues/INDEX.md).
+After creating the issue file, append a one-line summary entry into the index table at [`sys/logs/issues/INDEX.md`](../../../../sys/logs/issues/INDEX.md).

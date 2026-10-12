@@ -46,7 +46,7 @@
   - Chuyển hóa toàn bộ câu thoại của cả 8 chương thành văn nói sinh động, tự nhiên.
 
 ### 2.2. Bất Biến 100% Ảnh AI & Thực Thi Phương Án B
-- **Core User Invariant**: 100% hình ảnh trong video phải đến từ `sys/exports/ancient_humans_flowkit_bundle/generated_images/ch{num}/` (người que AI), tuyệt đối không lấy bất kỳ khung hình chụp mẫu nào từ video YouTube trong `sys/scratch/reference_49_Ph2q6uIM/`.
+- **Core User Invariant**: 100% hình ảnh trong video phải đến từ `sys/exports/ancient_humans_bundle/generated_images/ch{num}/` (người que AI), tuyệt đối không lấy bất kỳ khung hình chụp mẫu nào từ video YouTube trong `sys/scratch/reference_49_Ph2q6uIM/`.
 - **Chương 2**: Thay thế triệt để 3 shot đầu tiên (#40, #41, #42) bằng ảnh vẽ người que khảo cổ và sơ đồ hố khai quật. Cập nhật `_media_state.json` đạt 37/37 shot AI.
 - **Chương 6**: Xác minh toàn bộ 30/30 shot đạt chuẩn ảnh AI, không trùng lặp video mẫu.
 - **Chương 7 & Chương 8**: Sinh toàn bộ 35 ảnh còn lại của Ch7 (shots 190–224) và 21 ảnh của Ch8 (shots 225–245) theo đúng Visual Cast Invariant (người que đầu tròn trắng viền đen đậm, mắt chấm tròn, thân que đơn giản, nền kem sáng 16:9, không chữ/watermark).

@@ -28,14 +28,15 @@ def main():
     out.mkdir(parents=True, exist_ok=True)
     request = out / 'request.json'
     if args.action == 'prepare':
-        profiles = {k: json.loads((ROOT / v).read_text()) for k, v in cfg['colab_tts']['voices'].items()}
+        voice_map = cfg.get('voices') or cfg.get('colab_tts', {}).get('voices', {})
+        profiles = {k: json.loads((ROOT / v).read_text()) for k, v in voice_map.items()}
         vi, en = profiles['vi']['reference_text'], profiles['en']['reference_text']
         scenes = [dict(scene_id='AB01', narration=vi, texts=[vi], retake=0, gaps=[], tail=2.)]
         english = [dict(scene_id='AB01', narration_en=en, retake=0, tail=2.)]
         req = build_request(ROOT, cfg, scenes, english)
         request.write_text(json.dumps(req, ensure_ascii=False, indent=2))
-        baseline = {k: dict(path=str((ROOT / cfg['colab_tts']['voices'][k]).parent / v['reference_wav']),
-                           duration=duration((ROOT / cfg['colab_tts']['voices'][k]).parent / v['reference_wav']),
+        baseline = {k: dict(path=str((ROOT / voice_map[k]).parent / v['reference_wav']),
+                           duration=duration((ROOT / voice_map[k]).parent / v['reference_wav']),
                            voice=v['voice'], speed=v['source_speed']) for k, v in profiles.items()}
         (out / 'baseline.json').write_text(json.dumps(baseline, ensure_ascii=False, indent=2))
         print(request)

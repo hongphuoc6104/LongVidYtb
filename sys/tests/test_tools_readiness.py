@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Test Suite: Verification of Tooling Stack and System Readiness."""
 
-from pathlib import Path
+import re
 import shutil
 import subprocess
 import sys
+from pathlib import Path
 
 
 def test_python_and_venv_runtime():
@@ -79,3 +80,56 @@ def test_core_directory_and_doc_invariants():
     for required_dir in ["sys", "sys/runs", "sys/logs/issues", "sys/tests", "sys/conveyor"]:
         d = repo_root / required_dir
         assert d.is_dir(), f"Required directory missing: {required_dir}"
+
+
+def test_topic_to_video_skill_chain_and_token_budget():
+    """Verify Topic-to-Video 6-skill orchestration chain, link integrity, and AGENTS.md token budget."""
+    repo_root = Path(__file__).resolve().parents[2]
+    agents_md = repo_root / "AGENTS.md"
+    index_md = repo_root / "INDEX.md"
+    prod_skill_md = repo_root / ".agents/skills/vp-production/SKILL.md"
+
+    agents_text = agents_md.read_text(encoding="utf-8")
+    agents_lines = agents_text.splitlines()
+    assert len(agents_lines) <= 45, f"AGENTS.md exceeded compact line budget (got {len(agents_lines)} lines)"
+    assert len(agents_text.encode("utf-8")) <= 4096, "AGENTS.md exceeded 4KB token-economy budget"
+
+    core_skills = (
+        "vp-research-architect",
+        "vp-scriptwriting",
+        "vp-layered-motion",
+        "vp-production",
+        "vp-flow-cdp",
+        "vp-colab-bridge",
+    )
+    for skill_name in core_skills:
+        assert skill_name in agents_text, f"AGENTS.md missing core skill in chain: {skill_name}"
+        assert (repo_root / ".agents/skills" / skill_name / "SKILL.md").is_file(), f"Missing {skill_name}/SKILL.md"
+
+    assert "outline -> dialogue -> audio -> images -> video" in agents_text
+    assert "vocab/bank.py start" in agents_text
+
+    prod_text = prod_skill_md.read_text(encoding="utf-8")
+    for upstream_or_downstream in (
+        "../vp-research-architect/SKILL.md",
+        "../vp-scriptwriting/SKILL.md",
+        "../vp-layered-motion/SKILL.md",
+        "../vp-flow-cdp/SKILL.md",
+        "../vp-colab-bridge/SKILL.md",
+        "vocab/bank.py start",
+    ):
+        assert upstream_or_downstream in prod_text, f"vp-production/SKILL.md missing '{upstream_or_downstream}'"
+
+    index_text = index_md.read_text(encoding="utf-8")
+    for skill_name in core_skills:
+        assert skill_name in index_text, f"INDEX.md missing routing entry for {skill_name}"
+
+    for md_path in (index_md, prod_skill_md):
+        content = md_path.read_text(encoding="utf-8")
+        for target in re.findall(r"\]\(([^)]+)\)", content):
+            clean = target.strip("<>").split("#", 1)[0]
+            if not clean or re.match(r"^[A-Za-z]+:", clean):
+                continue
+            resolved = (md_path.parent / clean).resolve()
+            assert resolved.exists(), f"Broken link in {md_path.name}: {target} -> {resolved}"
+

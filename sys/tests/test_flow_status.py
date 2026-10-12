@@ -19,7 +19,7 @@ except ImportError:
 from pilot import Blocked
 
 
-@unittest.skipIf(b2_bridge is None, "B-2 Illustrator bridge retired in favor of Flow Kit")
+@unittest.skipIf(b2_bridge is None, "B-2 Illustrator bridge retired in favor of Flow CDP")
 class QueryStatusRetryTests(unittest.TestCase):
     """query_status() must retry a transient failure with backoff and use
     the configured timeout, since session.mjs answers 'status' immediately
@@ -68,7 +68,7 @@ class QueryStatusRetryTests(unittest.TestCase):
         self.assertEqual(send.call_args.kwargs.get('timeout'), 12.5)
 
 
-@unittest.skipIf(b2_bridge is None, "B-2 Illustrator bridge retired in favor of Flow Kit")
+@unittest.skipIf(b2_bridge is None, "B-2 Illustrator bridge retired in favor of Flow CDP")
 class PreSubmitClassificationTests(unittest.TestCase):
     """Anything that fails before generate_b2_batch's own socket submission
     call must be tagged generation_submitted=False (a clean, retryable

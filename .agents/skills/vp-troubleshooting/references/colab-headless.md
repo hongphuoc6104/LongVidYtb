@@ -11,19 +11,38 @@
 
 ## 2. Proven Remedies
 
-### Step 1: Always Wrap Chromium with an Executable Shell Wrapper
-Remotion's `openBrowser` frequently omits `chromiumOptions.args` passed from Node. Therefore, wrapping the Chromium executable with a shell wrapper script is mandatory:
+### Step 1: Wrap Chromium with Dual-Mode Shell Wrapper & Run Under Xvfb
+Remotion's `openBrowser` frequently omits `chromiumOptions.args` passed from Node. Furthermore, running under `xvfb-run` creates an active virtual X11 display context (`1920x1080x24`), allowing Chromium to unlock full GPU hardware rasterization on the Tesla T4:
 
 ```bash
 #!/usr/bin/env bash
-exec "${chrome_path}" \
-  --no-sandbox \
-  --disable-dev-shm-usage \
-  --run-all-compositor-stages-before-draw \
-  --disable-gpu-rasterization \
-  --enable-gpu \
-  --ignore-gpu-blocklist \
-  "$@"
+if [ -n "$DISPLAY" ]; then
+  exec "${chrome_path}" \
+    --no-sandbox \
+    --disable-dev-shm-usage \
+    --run-all-compositor-stages-before-draw \
+    --enable-gpu-rasterization \
+    --enable-zero-copy \
+    --enable-gpu \
+    --ignore-gpu-blocklist \
+    --use-gl=angle \
+    --use-angle=gl \
+    "$@"
+else
+  exec "${chrome_path}" \
+    --no-sandbox \
+    --disable-dev-shm-usage \
+    --run-all-compositor-stages-before-draw \
+    --disable-gpu-rasterization \
+    --enable-gpu \
+    --ignore-gpu-blocklist \
+    "$@"
+fi
+```
+
+Execute Remotion via `xvfb-run` on Colab:
+```bash
+xvfb-run -a -s "-screen 0 1920x1080x24" node renderer/render.mjs <job_dir>
 ```
 
 ### Step 2: Configure Mandatory Environment Variables

@@ -318,10 +318,11 @@ class Dashboard:
             public_flow['active'] = {key: value for key, value in public_flow['active'].items() if key != 'endpoint'}
         bridge = {'state': 'not_tested'}
         try:
-            import flowkit_client
-            is_healthy = flowkit_client.check_health()
-            bridge = {'state': 'connected' if is_healthy else 'missing', 'source': 'flowkit_health', 'live_verified': is_healthy}
-        except ImportError:
+            from flow_cdp.multi_profile_manager import MultiProfileManager
+            status_info = MultiProfileManager().get_status()
+            is_healthy = status_info.get('healthy_count', 0) > 0
+            bridge = {'state': 'connected' if is_healthy else 'missing', 'source': 'flow_cdp_health', 'live_verified': is_healthy}
+        except Exception:
             bridge = {'state': 'unsupported', 'source': 'management_dependencies_missing'}
         return safe({'grants': grants, 'flow': public_flow, 'flow_bridge': bridge})
 

@@ -132,6 +132,39 @@ def scan_critique(root_dir: Path) -> Tuple[bool, Dict[str, any]]:
         "detail": cast_detail if cast_ok else "Thiếu định nghĩa anonymous stick-figure trong flow_prompts.",
     })
 
+    # Check 5: Zero Legacy Bridge Terminology Invariant
+    legacy_dir = sys_dir / ("flow" + "kit")
+    legacy_pat = re.compile("flow" + r"[_ -]?kit", re.IGNORECASE)
+    legacy_hits = []
+    if legacy_dir.exists():
+        legacy_hits.append("sys/" + legacy_dir.name)
+    for scan_sub in (sys_dir / "flow_cdp", sys_dir / "tools", sys_dir / "scripts", root / ".agents/skills"):
+        if not scan_sub.exists():
+            continue
+        for fpath in scan_sub.rglob("*"):
+            if not fpath.is_file() or "__pycache__" in str(fpath):
+                continue
+            if legacy_pat.search(fpath.name):
+                legacy_hits.append(fpath.name)
+                continue
+            try:
+                txt = fpath.read_text(encoding="utf-8", errors="ignore")
+                if legacy_pat.search(txt):
+                    legacy_hits.append(str(fpath.relative_to(root)))
+            except Exception:
+                pass
+
+    checks.append({
+        "name": "Zero Legacy Bridge Terminology",
+        "category": "Architecture Invariant",
+        "status": "PASS" if not legacy_hits else "FAIL",
+        "detail": (
+            "100% kiến trúc chuẩn hóa trên Flow CDP độc lập, không còn dấu vết thành phần cũ."
+            if not legacy_hits
+            else f"Phát hiện dấu vết thành phần cũ: {', '.join(legacy_hits[:5])}"
+        ),
+    })
+
     # Overall Status
     has_fail = any(c["status"] == "FAIL" for c in checks)
     is_passed = not has_fail

@@ -1,6 +1,6 @@
 ---
 name: vp-maintenance
-description: Inventory, reproducible cleanup, verified archive and scoped Video Pilot Git checkpoints; excludes production logic changes.
+description: "Perform cleanup, verified archives, and Git checkpoints without logic changes."
 ---
 
 # Maintenance

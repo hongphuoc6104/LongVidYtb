@@ -7,8 +7,18 @@ from .client import Client, ColabError, issue
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('action', choices=['status', 'start', 'reconcile', 'setup', 'stop', 'synthesize', 'render', 'collect', 'reconcile-render-failure'])
+    parser.add_argument(
+        'action',
+        choices=[
+            'status', 'start', 'reconcile', 'setup', 'stop',
+            'synthesize', 'render', 'collect', 'reconcile-render-failure',
+            'pool-status', 'pool-start', 'pool-stop',
+        ],
+    )
     parser.add_argument('--account')
+    parser.add_argument('--accounts', help='Comma-separated account IDs for pool operations')
+    parser.add_argument('--max-workers', type=int, default=3)
+    parser.add_argument('--probe', action='store_true')
     parser.add_argument('--session')
     parser.add_argument('--request', type=Path)
     parser.add_argument('--out', type=Path)
@@ -17,6 +27,18 @@ def main():
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     cfg = json.loads((root / 'config.json').read_text())
+    if args.action in ('pool-status', 'pool-start', 'pool-stop'):
+        from .pool_manager import ColabPoolManager
+        session_name = args.session or cfg.get('colab_tts', {}).get('session', 'video-pilot-tts')
+        account_ids = [x.strip() for x in args.accounts.split(',') if x.strip()] if args.accounts else None
+        manager = ColabPoolManager(session_name=session_name)
+        if args.action == 'pool-status':
+            print(json.dumps(manager.get_status(probe_server=args.probe), ensure_ascii=False, indent=2))
+        elif args.action == 'pool-start':
+            print(json.dumps(manager.start_pool(account_ids, max_workers=args.max_workers), ensure_ascii=False, indent=2))
+        else:
+            print(json.dumps(manager.stop_pool(account_ids), ensure_ascii=False, indent=2))
+        return
     if args.account: cfg['colab_tts']['account'] = args.account
     if args.session is not None:
         cfg['colab_tts']['session'] = args.session

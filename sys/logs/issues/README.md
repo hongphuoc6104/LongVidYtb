@@ -1,6 +1,6 @@
 # Issue Logbook & Proven Remedies ("What Worked to Fix Bugs")
 
-This directory stores records of technical issues encountered during video production (Colab headless execution, Flow Kit generation, Remotion rendering, TTS alignment) and their verified real-world remedies.
+This directory stores records of technical issues encountered during video production (Colab headless execution, Flow CDP generation, Remotion rendering, TTS alignment) and their verified real-world remedies.
 
 ## Documentation Principles
 1. **Log issues upon occurrence**: Record symptoms, error codes, operational context, and evidence (logs, screenshots, exit codes).

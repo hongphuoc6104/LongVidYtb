@@ -24,6 +24,29 @@ class RendererTileIntegrityTests(unittest.TestCase):
         self.assertIn("--run-all-compositor-stages-before-draw", content)
         self.assertIn("--disable-gpu-rasterization", content)
 
+    def test_render_mjs_xvfb_hardware_rasterization_support(self):
+        content = (SYSTEM / 'renderer/render.mjs').read_text()
+        self.assertIn("--enable-gpu-rasterization", content)
+        self.assertIn("DISPLAY", content)
+
+    def test_job_worker_xvfb_and_t4_strict_enforcement(self):
+        content = (SYSTEM / 'colab_bridge/job_worker.py').read_text()
+        self.assertIn("xvfb-run", content)
+        self.assertIn("--enable-gpu-rasterization", content)
+        self.assertIn("T4", content)
+
+    def test_render_all_on_colab_enforces_t4_and_xvfb(self):
+        for script_rel in (
+            'exports/motivation_v2_exp_bundle/scripts/render_all_on_colab.py',
+            'exports/ancient_humans_bundle/scripts/render_all_on_colab.py',
+        ):
+            script_path = SYSTEM / script_rel
+            if script_path.is_file():
+                txt = script_path.read_text()
+                self.assertIn("COLAB_T4_NOT_CONFIRMED", txt)
+                self.assertIn("xvfb-run", txt)
+                self.assertIn("--enable-gpu-rasterization", txt)
+
     def test_subtitles_z_index_and_caption_style(self):
         captions_js = (SYSTEM / 'renderer/captions.mjs').read_text()
         self.assertIn("zIndex: 30", captions_js)

@@ -74,9 +74,14 @@ class Client:
             if not default.startswith('colab:'): raise ColabError('COLAB_SELECTION_INVALID')
             choice = default.removeprefix('colab:')
         if (STORE / 'accounts.json').exists():
-            try: self.account = select(choice)
+            try:
+                role = self.cfg.get('role')
+                if choice == 'auto-idle' or role:
+                    self.account = select(choice, session=self.session, role=role)
+                else:
+                    self.account = select(choice)
             except ValueError:
-                if choice == 'auto':
+                if choice in ('auto', 'auto-idle'):
                     from .accounts import registry
                     self.account = registry().get('preferred')
                 else:

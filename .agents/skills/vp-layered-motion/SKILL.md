@@ -1,6 +1,6 @@
 ---
 name: vp-layered-motion
-description: Plan and author layered cut-out videos (one background plate + timed stick-figure stickers) inside the Video Pilot engine 4 pipeline; used together with vp-production when a brief or user asks for layered/sticker/motion-graphics style.
+description: "Plan and render layered cut-out videos with stick-figure stickers on background plates."
 ---
 
 # Layered motion (cut-out stickers)
@@ -12,10 +12,10 @@ A scene is layered when it declares `layers`. Then its `images` contain exactly 
 
 ## Authoring steps (after dialogue is final)
 1. Split each sentence into visual beats → decide which sticker appears on which word ([layer-breakdown](references/layer-breakdown.md)).
-2. Write background description: the place only, no figures. Write sticker descriptions: one figure or one prop, pose/costume/props explicit.
+2. Write background description: the place only, no figures. Write sticker descriptions: one figure or one prop, pose/costume/props explicit. Follow **Editorial Graphic Visuals** (`ERR-20261011-03`): use clean architectural geometry, expressive posture, and single focal props instead of literal mechanical clichés (strictly avoid repeated brain cutaways, abacuses, pipe-valves, iron anchors, or generic split-screen comparisons).
 3. Reuse stickers from earlier scenes (`layers[].image_id` may point to any earlier sticker) — cheaper Flow quota and natural continuity.
-4. For each layer set `anchor` (exact narration quote + occurrence), `fx`, `x/y/w` (0–1, centre of sticker), optional `exit_anchor`/`exit_fx`, `shake_anchor`, `z` ([animation-presets](references/animation-presets.md)).
-5. Keep the bottom 18% for captions: sticker `y + height/2` should stay above ~0.80.
+4. For each layer set `anchor` (exact narration quote + occurrence), `fx`, `x/y/w` (0–1, centre of sticker — place single or dual stickers on **Rule-of-Thirds** horizontal coordinates `x ∈ [0.34, 0.38]` or `x ∈ [0.62, 0.66]`, default `RULE_OF_THIRDS_X = (0.35, 0.64)`, rather than dead-center `0.50`), optional `exit_anchor`/`exit_fx`, `shake_anchor`, `z` ([animation-presets](references/animation-presets.md)).
+5. Keep the bottom 18% for captions on `9:16` (`sticker y + height/2` stays above ~0.80); on `16:9` flat/multi-shot scenes, pair **Semantic Camera Motion** (`select_semantic_camera_effect` / `assign_scene_camera_effects`: wide/establishing → `zoom_out`, focus/detail → `zoom_in` or `punch_in`, lateral action → `pan_right` / `pan_left`) with zero consecutive duplicates — never use mechanical modulo-5 cycling (`(idx - 1) % 5`).
 6. `pilot.py author JOB dialogue --data …` then `run`. Validation codes `LAYER_*` explain every rejection.
 
 ## What the engine does

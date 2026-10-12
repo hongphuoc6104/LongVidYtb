@@ -1,10 +1,27 @@
 {
   "schema_version": "1.0",
-  "width": 1080,
-  "height": 1920,
+  "voices": {
+    "vi": "assets/voices/adam/profile.json",
+    "en": "assets/voices/reference-narrator/profile.json"
+  },
+  "tts_voice": "Adam",
+  "tts_speed": 1.22,
+  "tts_backend": "onnx",
+  "tts_precision": "fp32",
+  "tts_device": "auto",
+  "tts_gpu_dtype": "float32",
+  "tts_batch_size": 6,
+  "tts_temperature": 0.65,
+  "tts_top_p": 0.95,
+  "tts_max_chars": 256,
+  "tts_scene_synthesis": true,
+  "en_voice": "reference-narrator",
+  "en_speed": 0.92,
+  "en_temperature": 0.3,
+  "en_device": "cpu",
+  "en_quantize": true,
+  "en_threads": 4,
   "fps": 30,
-  "min_seconds": 180,
-  "max_seconds": 450,
   "video_generation": false,
   "credit_budget": 0,
   "flow_batch": false,
@@ -21,34 +38,23 @@
   "flow_prompt_version": "1.2.0",
   "flow_profile": "video-pilot",
   "flow_project": "Video Pilot",
-  "tts_package": "vieneu==3.8.1",
-  "tts_backend": "onnx",
-  "tts_precision": "fp32",
-  "tts_device": "auto",
-  "tts_gpu_dtype": "float32",
-  "tts_batch_size": 6,
-  "tts_voice": "Minh Quân Pro",
-  "tts_temperature": 0.65,
-  "tts_top_p": 0.95,
-  "tts_max_chars": 256,
-  "tts_scene_synthesis": true,
-  "tts_speed": 0.92,
-  "en_temperature": 0.3,
-  "en_device": "cpu",
   "tts_pause": {
     "para": 0.7,
     "sentence": 0.5,
     "minor": 0.3,
     "tail": 0.35
   },
+  "audio_trim_silence": true,
+  "tts_calibrated_pauses": {
+    "short_sentence": 0.20,
+    "normal_sentence": 0.28,
+    "dramatic_pivot": 0.48
+  },
   "audio_lufs": -14.0,
   "audio_peak_db": -1.5,
   "renderer": "remotion",
   "concurrency": 4,
   "review": "three_stages",
-  "en_voice": "reference-narrator",
-  "en_quantize": true,
-  "en_threads": 4,
   "en_seed": 42,
   "workflow_mode": "review",
   "render_concurrency": 4,
@@ -61,7 +67,6 @@
   "flow_status_timeout_seconds": 30,
   "flow_status_retries": 2,
   "flow_status_backoff_seconds": 2,
-  "audio_english_spans_engine": "en",
   "brief_policies": [
     "vocab.policy:check"
   ],
@@ -72,10 +77,6 @@
     "batch_size": 4,
     "num_step": 32,
     "timeout_seconds": 1800,
-    "voices": {
-      "vi": "assets/voices/minh-quan-pro/profile.json",
-      "en": "assets/voices/reference-narrator/profile.json"
-    },
     "models": {
       "vi": {
         "id": "kjanh/KhanhTTS-OmniVoice",
@@ -89,6 +90,5 @@
     "account": "auto",
     "render_estimate_seconds": 60
   },
-  "en_speed": 0.92,
   "flow_profile_policy": "existing_only"
 }

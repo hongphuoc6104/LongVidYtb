@@ -10,7 +10,7 @@
 ## 1. Concrete Symptoms
 - Triggering Command:
   ```bash
-  python3 sys/exports/ancient_humans_flowkit_bundle/scripts/render_all_on_colab.py 1 --force --no-concat
+  python3 sys/exports/ancient_humans_bundle/scripts/render_all_on_colab.py 1 --force --no-concat
   ```
 - Error Messages & Observed Defects:
   1. **Expired Colab Session Upload Failure**:
@@ -42,9 +42,9 @@
    - **Step 3 (Disable Blanket Full-Frame `line_boil` on 1080p Raster Plates)**: Remove `"line_boil": true` from full-frame 1080p raster beats in `ch1_props_template.json` and `ch1_blind_34_shots.json`, relying on Remotion's smooth camera transitions (`zoom_in`, `zoom_out`, `punch_in`, `pan_left`, `pan_right`, `slide_left`, `shake`, `fade`, `hold`).
    - **Step 4 (Strict Colab T4 Execution Discipline)**: Never propose or fall back to ad-hoc local CPU rendering when Colab is slow; diagnose the exact renderer/filter bottleneck on Colab first.
 2. **Diff or Code Modifications**:
-   - [`sys/exports/ancient_humans_flowkit_bundle/scripts/render_all_on_colab.py`](file:///home/hongphuoc6104/Desktop/flowkit-video-pipeline/sys/exports/ancient_humans_flowkit_bundle/scripts/render_all_on_colab.py)
-   - [`sys/exports/ancient_humans_flowkit_bundle/templates/ch1_props_template.json`](file:///home/hongphuoc6104/Desktop/flowkit-video-pipeline/sys/exports/ancient_humans_flowkit_bundle/templates/ch1_props_template.json)
-   - [`sys/exports/ancient_humans_flowkit_bundle/manifest/ch1_blind_34_shots.json`](file:///home/hongphuoc6104/Desktop/flowkit-video-pipeline/sys/exports/ancient_humans_flowkit_bundle/manifest/ch1_blind_34_shots.json)
+   - [`sys/exports/ancient_humans_bundle/scripts/render_all_on_colab.py`](sys/exports/ancient_humans_bundle/scripts/render_all_on_colab.py)
+   - [`sys/exports/ancient_humans_bundle/templates/ch1_props_template.json`](sys/exports/ancient_humans_bundle/templates/ch1_props_template.json)
+   - [`sys/exports/ancient_humans_bundle/manifest/ch1_blind_34_shots.json`](sys/exports/ancient_humans_bundle/manifest/ch1_blind_34_shots.json)
 3. **Live Verification Evidence**:
-   - Rendered output: [`video/ancient-humans-day-ch1-16x9/ancient-humans-day-ch1-16x9_blind_test.mp4`](file:///home/hongphuoc6104/Desktop/flowkit-video-pipeline/video/ancient-humans-day-ch1-16x9/ancient-humans-day-ch1-16x9_blind_test.mp4) and [`video/ancient-humans-day-ch1-16x9/ancient-humans-day-ch1-16x9_r1_final.mp4`](file:///home/hongphuoc6104/Desktop/flowkit-video-pipeline/video/ancient-humans-day-ch1-16x9/ancient-humans-day-ch1-16x9_r1_final.mp4).
+   - Rendered output: [`video/ancient-humans-day-ch1-16x9/ancient-humans-day-ch1-16x9_blind_test.mp4`](video/ancient-humans-day-ch1-16x9/ancient-humans-day-ch1-16x9_blind_test.mp4) and [`video/ancient-humans-day-ch1-16x9/ancient-humans-day-ch1-16x9_r1_final.mp4`](video/ancient-humans-day-ch1-16x9/ancient-humans-day-ch1-16x9_r1_final.mp4).
    - `ffprobe` verified: `1920x1080` (16:9), H.264 / AAC, `30/1` fps, `1928` frames, duration `64.27s`.

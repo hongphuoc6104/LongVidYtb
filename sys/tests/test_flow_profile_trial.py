@@ -26,7 +26,7 @@ URL='https://flow.google.com/project/46e4b782-6bf6-40c1-b484-c17fe6c0a936/tool/f
 MEDIA='de94a39b-155f-4afe-acbb-d9d4b59ad532'
 
 
-@unittest.skipIf(b2_bridge is None, "B-2 bridge retired in favor of Flow Kit")
+@unittest.skipIf(b2_bridge is None, "B-2 bridge retired in favor of Flow CDP")
 class FlowProfileTrialTests(unittest.TestCase):
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)

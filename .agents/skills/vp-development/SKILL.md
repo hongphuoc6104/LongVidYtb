@@ -1,6 +1,6 @@
 ---
 name: vp-development
-description: Upgrade Video Pilot code, Rules, Skills and guides within development scope, including compatibility, tests and migration.
+description: "Upgrade Video Pilot engine code, rules, skills, tests, and migration tools."
 ---
 
 # Development & Conveyor Quality Assurance

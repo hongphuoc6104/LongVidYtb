@@ -25,8 +25,7 @@ export function outputPlans(props, hasEnglish) {
       return {file: ratio === 'dual' ? `video_${vertical ? '9x16' : '16x9'}.mp4` : 'video.mp4',
         props: {...props, scenes, duration: track.duration, cues: track.cues || [],
           width: vertical ? 1080 : 1920, height: vertical ? 1920 : 1080,
-          hideSubtitles: !plan.subtitles, audioSrc: track.audioSrc, language: plan.language,
-          autoReframe: process.env.VP_SMART_AUTOREFRAME === 'true' || !plan.subtitles}};
+          hideSubtitles: !plan.subtitles, audioSrc: track.audioSrc, language: plan.language}};
     });
   }
   if (ratio !== '9:16' && (!hasEnglish || !props.en_scenes || !props.en_duration)) throw Error('English track and timeline required');

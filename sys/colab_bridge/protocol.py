@@ -36,8 +36,9 @@ def safe_id(value):
 def load_profiles(root, cfg, languages):
     profiles = {}
     expected = {'vi': cfg['tts_voice'], 'en': cfg['en_voice']}
+    voice_map = {**cfg.get('voices', {}), **cfg.get('colab_tts', {}).get('voices', {})}
     for lang in sorted(languages):
-        path = root / cfg['colab_tts']['voices'][lang]
+        path = root / voice_map[lang]
         profile = json.loads(path.read_text())
         if profile['voice'] != expected[lang] or profile['language'] != lang:
             raise ValueError(f'Colab reference does not match current {lang} voice')

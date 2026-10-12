@@ -19,7 +19,7 @@ All 6 chapters were rendered on **Colab Tesla T4 GPU** (`video-pilot-tts`), with
 - **Ch5**: `ancient-humans-day-ch5-16x9_r1_final.mp4` | 1920x1080 @ 30fps | H.264/AAC | 98.03s | 20.7 MB | 34 images
 - **Ch6**: `ancient-humans-day-ch6-16x9_r1_final.mp4` | 1920x1080 @ 30fps | H.264/AAC | 83.88s | 21.2 MB | 30 images
 
-### 1.3 Images Asset Status (`sys/exports/ancient_humans_flowkit_bundle/generated_images/`)
+### 1.3 Images Asset Status (`sys/exports/ancient_humans_bundle/generated_images/`)
 - **Ch1**: 34 / 34 images complete.
 - **Ch2**: 37 / 37 images complete (full-color pastel set).
 - **Ch3**: 28 / 28 images complete.
@@ -40,7 +40,7 @@ All 6 chapters were rendered on **Colab Tesla T4 GPU** (`video-pilot-tts`), with
 
 ### 2.2 Subagent Path Misdirection Fix
 - **Discovery**: A previously spawned subagent wrote ad-hoc scripts (`sys/scratch/render_ch2_colab.py`, `render_ch6_colab.py`) pointing to `sys/scratch/reference_49_Ph2q6uIM/` (which holds low-res 720p sample frames from the YouTube reference video), bypassing the AI-generated images.
-- **Action Taken**: Killed the subagent, deleted the rogue scripts, and ensured all builds strictly resolve images from `sys/exports/ancient_humans_flowkit_bundle/generated_images/ch{num}/` via `sys/exports/ancient_humans_flowkit_bundle/scripts/render_all_on_colab.py`.
+- **Action Taken**: Killed the subagent, deleted the rogue scripts, and ensured all builds strictly resolve images from `sys/exports/ancient_humans_bundle/generated_images/ch{num}/` via `sys/exports/ancient_humans_bundle/scripts/render_all_on_colab.py`.
 
 ### 2.3 Smart Auto-Reframe (Temporary Mechanism)
 - Added temporary Smart Auto-Reframe logic in `sys/renderer/index.tsx`:

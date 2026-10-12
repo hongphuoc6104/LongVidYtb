@@ -9,14 +9,14 @@ Visual standards, shot framing grammar, and cutting pace for explainer videos, a
 
 ---
 
-## 2. Frame Composition & Safe Margins
-Composition adapts dynamically to the target aspect ratio configured in the job brief:
-- **Vertical Framing (e.g., 9:16 portrait)**:
-  - **Top 30% (Upper Tier)**: Character head, facial expressions, speech bubbles, question/emotion icons.
-  - **Middle 40% (Golden Zone)**: Primary action, crucial props, character interactions. Viewers' eyes rest here most often.
-  - **Bottom 30% (Lower Tier - Safe Zone)**: Reserved strictly for dynamic captions and platform UI overlays. **Forbidden** to place key illustrative details or lesson text in this zone.
-- **Horizontal Framing (e.g., 16:9 landscape)**:
-  - Rule-of-thirds composition with focal action centered; lower area cleared for subtitle overlay.
+## 2. Frame Composition & Safe Margins (`sys/format_profiles.py`)
+Composition adapts dynamically to the target `format_profile` configured in the job brief:
+- **Vertical Framing (`short_9x16` — `1080x1920`)**:
+  - **Top & Middle Zone (Top 82%)**: Character posture, facial expressions, primary action, and single focal props placed on **Rule-of-Thirds** horizontal anchors (`x ∈ [0.34, 0.38]` or `[0.62, 0.66]`, default `0.35 / 0.64`).
+  - **Bottom 18% (`caption_clearance = 0.18`)**: Reserved for dynamic captions (`max_line_chars = 28`). Keep sticker bottom edges above `y = 0.80`.
+- **Horizontal Framing (`long_16x9` — `1920x1080`)**:
+  - Rule-of-thirds composition (`0.35 / 0.64`) with clean Editorial Graphic Visuals (no mechanical clichés or split-screen comparisons).
+  - **Bottom Clearance**: `10%` (`caption_clearance = 0.10`, `max_line_chars = 42`) when subtitles are enabled (`subtitles: true`), and **`None` (full-bleed 100% canvas, zero bottom margin instruction)** when subtitles are disabled (`subtitles: false`).
 - **Safe Margins**: Maintain adequate margins on lateral edges (at least 80px). Preserve eye-trace continuity between consecutive scenes.
 
 ---

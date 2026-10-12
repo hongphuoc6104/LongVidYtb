@@ -253,7 +253,7 @@ class Pilot:
    if rows[d]['state']!='approved':raise Blocked(f'{d} must be approved first')
   if m in ['images','audio','render'] and self.brief(j):
    b=self.brief(j)[0]
-   if b['scene_count']<1 or b['duration']['min_seconds']>b['duration']['max_seconds'] or b['aspect_ratio'] not in ('9:16','16:9','dual'):raise Blocked('DOWNSTREAM_UNSUPPORTED: invalid brief configuration')
+   if b['scene_count']<1 or (b.get('duration') and b['duration']['min_seconds']>b['duration']['max_seconds']) or b['aspect_ratio'] not in ('9:16','16:9','dual'):raise Blocked('DOWNSTREAM_UNSUPPORTED: invalid brief configuration')
   # Audio and images stay independent here so flow-login/flow-preflight remain
   # usable at any time; workflow.STAGES['media'] is what orders the media stage,
   # running the free local TTS first so a narration that misses the brief window
@@ -327,9 +327,10 @@ class Pilot:
      if audioop.rms(raw,wav.getsampwidth())<5:raise Blocked('Silent audio segment')
      if abs(duration-(x['end']-x['start']))>.03:raise Blocked('Segment duration mismatch')
     last=x['end'];files.append(x['path'])
-   min_sec,max_sec=45,60
-   if self.brief(j):b=self.brief(j)[0];min_sec,max_sec=b['duration']['min_seconds'],b['duration']['max_seconds']
-   if not min_sec<=last<=max_sec or abs(last-p['duration'])>.01:raise Blocked(f'Duration outside {min_sec}–{max_sec}s: revise content; no automatic cutting')
+   dur_cfg = self.brief(j)[0].get('duration') if self.brief(j) else {'min_seconds': 45, 'max_seconds': 60}
+   if abs(last-p['duration'])>.01 or (dur_cfg and not dur_cfg['min_seconds']<=last<=dur_cfg['max_seconds']):
+    min_sec,max_sec=(dur_cfg['min_seconds'],dur_cfg['max_seconds']) if dur_cfg else (0,0)
+    raise Blocked(f'Duration outside {min_sec}–{max_sec}s: revise content; no automatic cutting')
    from adapters import make_srt
    if self.path(j,p['srt']).read_text()!=make_srt(segs):raise Blocked('Subtitle mismatch')
    if abs(float(probe(self.path(j,p['wav']))['format']['duration'])-last)>.03:raise Blocked('Combined audio mismatch')
@@ -350,7 +351,9 @@ class Pilot:
       if audioop.rms(raw,wav.getsampwidth())<5:raise Blocked('Silent English scene')
       if abs(duration-(x['end']-x['start']))>.03:raise Blocked('English scene duration mismatch')
      last=x['end'];files.append(x['path'])
-    if abs(last-en['duration'])>.01 or not min_sec<=last<=max_sec:raise Blocked(f'English duration outside {min_sec}–{max_sec}s: revise narration_en')
+    if abs(last-en['duration'])>.01 or (dur_cfg and not dur_cfg['min_seconds']<=last<=dur_cfg['max_seconds']):
+     min_sec,max_sec=(dur_cfg['min_seconds'],dur_cfg['max_seconds']) if dur_cfg else (0,0)
+     raise Blocked(f'English duration outside {min_sec}–{max_sec}s: revise narration_en')
     if abs(float(probe(self.path(j,en['wav']))['format']['duration'])-last)>.03:raise Blocked('Combined English audio mismatch')
     files.append(en['wav'])
   elif m=='render':
@@ -359,13 +362,12 @@ class Pilot:
    valid_dims=[(720,1280),(1080,1920),(1920,1080),(1280,720)]
    if (vs['width'],vs['height']) not in valid_dims or Fraction(vs['avg_frame_rate'])!=30:raise Blocked('Video dimensions/FPS invalid')
    dur=float(vs['duration'])
-   min_sec,max_sec=45,60
-   if self.brief(j):b=self.brief(j)[0];min_sec,max_sec=b['duration']['min_seconds'],b['duration']['max_seconds']
+   dur_cfg = self.brief(j)[0].get('duration') if self.brief(j) else {'min_seconds': 45, 'max_seconds': 60}
    audio=self.payload(j,'audio');ratio=self.brief(j)[0]['aspect_ratio'] if self.brief(j) else '9:16'
    from output_contract import outputs
    language=outputs(self.brief(j)[0])[0]['language'] if self.brief(j) else 'vi'
    expected=audio.get('tracks',{}).get(language, audio.get('en') if language=='en' and audio.get('language','vi')!='en' else audio)['duration']
-   if not min_sec<=dur<=max_sec or abs(dur-float(a['duration']))>.1 or abs(dur-expected)>.1:raise Blocked('Video/audio duration mismatch')
+   if (dur_cfg and not dur_cfg['min_seconds']<=dur<=dur_cfg['max_seconds']) or abs(dur-float(a['duration']))>.1 or abs(dur-expected)>.1:raise Blocked('Video/audio duration mismatch')
    layout=read(self.path(j,p['layout_report']))
    checked=layout.get('checked_cues',layout.get('checked_frames',0))
    if not layout.get('passed') or (layout.get('applies') is not False and checked<1):raise Blocked('Layout check missing/failed')
@@ -390,6 +392,7 @@ class Pilot:
    raise Blocked('REMOTE_DURATION: measured duration must be positive and finite')
   from execution import is_job,settings
   if not is_job(self,j):
+   if brief.get('duration') is None:return
    required=brief['duration']
   else:
    policy=settings(self,j).get('duration_requirement',{'policy':'estimated'})
