@@ -42,12 +42,12 @@ Video Pilot offloads all heavy GPU/CPU media processing to remote Google Colab T
   "schema_version": "1.0",
   "voices": {
     "vi": "assets/voices/adam/profile.json",
-    "en": "assets/voices/reference-narrator/profile.json"
+    "en": "assets/voices/adam/profile.json"
   },
   "tts_voice": "Adam",
   "tts_speed": 1.22,
-  "en_voice": "reference-narrator",
-  "en_speed": 0.92,
+  "en_voice": "Adam",
+  "en_speed": 1.22,
   "colab_tts": {
     "enabled": true,
     "parallel_images": true,
@@ -97,11 +97,12 @@ PYTHONPATH=sys python3 -m colab_bridge.accounts select-idle
 PYTHONPATH=sys python3 -m colab_bridge.accounts select-idle render
 PYTHONPATH=sys python3 -m colab_bridge.accounts pool
 
-# 4. Multi-T4 Pool Lifecycle (open, inspect, and stop multiple T4 sessions at once)
+# 4. Multi-T4 Pool Lifecycle (open, inspect, stop, and full post-job teardown)
 PYTHONPATH=sys python3 -m colab_bridge pool-status --probe
 PYTHONPATH=sys python3 -m colab_bridge pool-start --max-workers 3
 PYTHONPATH=sys python3 -m colab_bridge pool-start --accounts account-01,account-02,account-03
 PYTHONPATH=sys python3 -m colab_bridge pool-stop --accounts account-01,account-02,account-03
+PYTHONPATH=sys python3 -m colab_bridge teardown
 
 # 5. Single-Account T4 Session Lifecycle (explicit or auto-idle)
 PYTHONPATH=sys python3 -m colab_bridge.accounts run account-01 sessions
@@ -128,32 +129,23 @@ PYTHONPATH=sys python3 -m colab_bridge stop --account account-01 --session video
 
 1. **Self-Healing Session Liveness (`ERR-20261009-02`)**:
    - Never assume `video-pilot-tts` is still alive before uploading bundles. Always check `sessions` first; if expired (`No active sessions found on server`), allocate a new `--gpu T4` session (failing over across `account-01..03` if needed) and verify `/content/render-runtime/chrome-wrapper.sh` exists.
-2. **Mandatory Chromium Wrapper & Safe Headless Render (`COLAB-HEADLESS` / `ERR-20261011-06`)**:
-   - Colab T4 lacks physical X11 display. Remotion and Chromium execute via runtime `chrome-wrapper.sh` with verified flags (`--no-sandbox`, `--disable-dev-shm-usage`, `--disable-gpu-rasterization`, `--run-all-compositor-stages-before-draw`), `VP_CHROME_PATH`, and `DISABLE_FROM_SURFACE=true`.
-   - **Prohibit `xvfb-run`**: `Xvfb` is pure CPU software framebuffer; attempting to force ANGLE GL over Xvfb causes socket deadlocks (>300s timeout) and white tile drops. Ensure `DISPLAY` is unset (`del env['DISPLAY']`) before running `node render.mjs`.
-   - **Hardware Acceleration via NVENC**: Remotion must configure `videoBitrate: '6M'` to trigger hardware H.264 encoding (`h264_nvenc`) on the Tesla T4 GPU.
-   - The wrapper script `/content/render-runtime/chrome-wrapper.sh` provides safe headless execution:
-     ```bash
-     #!/usr/bin/env bash
-     exec "${chrome_path}" \
-       --no-sandbox \
-       --disable-dev-shm-usage \
-       --run-all-compositor-stages-before-draw \
-       --disable-gpu-rasterization \
-       --enable-gpu \
-       --ignore-gpu-blocklist \
-       "$@"
-     ```
+2. **Mandatory Chromium Wrapper & Safe Headless Render (`COLAB-HEADLESS` / `ERR-20261011-05` / `ERR-20261011-06`)**:
+   - Colab T4 lacks physical X11 display. Remotion and Chromium execute via runtime `chrome-wrapper.sh` (`VP_CHROME_PATH`, `DISABLE_FROM_SURFACE=true`) with mandatory flags (`--no-sandbox`, `--disable-dev-shm-usage`, `--run-all-compositor-stages-before-draw`, `--disable-checker-imaging`, `--disable-new-content-rendering-timeout`), registering `/usr/share/glvnd/egl_vendor.d/10_nvidia.json` (`/usr/lib64-nvidia/libEGL_nvidia.so.0`) with `--use-gl=angle --use-angle=gl-egl --enable-gpu-rasterization --ignore-gpu-blocklist` (or falling back to `--disable-gpu-rasterization` when NVIDIA EGL is absent).
+   - **Prohibit `xvfb-run` & `--use-angle=gl`**: `Xvfb` is a CPU software framebuffer; forcing Desktop GL (`--use-angle=gl`) over Xvfb causes socket deadlocks (>300s timeout). Always unset `DISPLAY` (`env.pop('DISPLAY', None)`) before running `node render.mjs`.
+   - **Hardware Acceleration via NVENC & Sync Image Decoding**: Configure `videoBitrate: '6M'` and `gl: 'angle-egl'` in `sys/renderer/render.mjs` to activate `h264_nvenc`, and enforce `<Img decoding="sync">` in `sys/renderer/index.tsx`. Full wrapper specification in [remote-remotion-render.md](references/remote-remotion-render.md).
 3. **No Blanket Full-Frame `line_boil: true` on 1080p Plates (`ERR-20261009-01`)**:
-   - Because `--disable-gpu-rasterization` is mandatory on headless Colab T4, SVG `<feTurbulence>` + `<feDisplacementMap>` runs on 2 CPU vCPUs across $1920 \times 1080$ pixels, causing a 10x render slowdown (14m for 64s) and black dashed border teeth. Use camera transitions (`zoom_in`, `pan_left`, `shake`) for full-frame plates; reserve `line_boil` / `boilJitter` strictly for cut-out stickers (`scene.layers`).
+   - Full-screen SVG `<feTurbulence>` + `<feDisplacementMap>` across $1920 \times 1080$ pixels causes a 10x render slowdown and black dashed border teeth. Use camera transitions (`zoom_in`, `pan_left`, `shake`) for full-frame plates; reserve `line_boil` / `boilJitter` strictly for cut-out stickers (`scene.layers`) and keep full-frame Film Grain opt-in (`enable_film_grain: true`).
 4. **Mandatory Vietnamese Phonetic Normalization Before TTS (`ERR-20261010-08`)**:
-   - Always pass Vietnamese narration through `sys/tools/vn_text_normalizer.py` before submitting to OmniVoice or Edge-TTS so digits (`0-9`), `%`, `/`, foreign names (`Richard Lee` -> `Ri-chát Li`), and ellipses (`...`, `—`) are normalized into clean Vietnamese phonetic words and standard punctuation.
+   - Always pass Vietnamese narration through `sys/tools/vn_text_normalizer.py` before submitting to `OmniVoice` so digits (`0-9`), `%`, `/`, foreign names (`Richard Lee` -> `Ri-chát Li`), and ellipses (`...`, `—`) are normalized into clean Vietnamese phonetic words and standard punctuation.
 5. **Hard Subprocess Timeouts, Orphan Process Cleanup & `mtime` Verification (`ERR-20261010-10`)**:
    - Always pair Colab CLI `--timeout <sec>` with a Python `subprocess.run(..., timeout=<sec+40>)` guard and 3-attempt retry loop to defeat silent WebSocket hangs.
    - Before each remote chapter render, kill orphaned processes (`pkill -9 -f 'chrome-linux64/chrome|render.mjs'`).
    - Always verify `mp4.stat().st_mtime >= template.stat().st_mtime` and inspect streams with `ffprobe` (`1920x1080` or `1080x1920`, `h264`, `aac`).
 6. **Mandatory OmniVoice Boundary Silence Trimming Before Pause Insertion (`ERR-20261011-02`)**:
    - `OmniVoice.generate()` pads raw utterance tensors with `50–180ms` of leading silence and `180–420ms` of trailing silence. Always trim boundary silence (`_trim_silence` with `threshold=0.012`, `lead_ms=25`, `trail_ms=30`, `fade_ms=8`) before caching or appending inter-sentence pauses (`0.20s` short `< 8` words, `0.28s` regular, `0.48s` dramatic `[pause:800ms]`) to prevent double-padded hesitation/stutter.
+7. **Mandatory Post-Job Colab T4 Unassignment & Chrome CDP Teardown (`ERR-20261012-01`)**:
+   - Once all durable outputs (MP4 + SRT) of a job are collected and verified via `ffprobe`, immediately execute `ColabPoolManager().teardown_job_resources()` (`PYTHONPATH=sys python3 -m colab_bridge teardown` or automatic `release_job_resources()` at the end of `render_all_on_colab.py`, unless `--keep-warm` is explicitly requested).
+   - This reconciles both `~/.config/video-pilot/colab/profiles/<acc>/sessions.json` and `/tmp/vp_colab_profiles/<acc>/sessions.json`, calls `client.unassign(endpoint)` directly on the Google Colab server to stop idle T4 quota drain, and terminates isolated Chrome CDP instances (`google-chrome-cdp-p1..p3`) to free ~5GB of local RAM.
 
 ---
 
@@ -164,7 +156,7 @@ Open only the specific reference file needed for your active task or observed er
 | Domain | Reference Document | When to Read |
 |---|---|---|
 | **CLI, Accounts & Session Lifecycle** | [cli-and-accounts.md](references/cli-and-accounts.md) | Onboarding accounts, switching profiles, understanding `account_cli.py`, `assignment_probe.py`, internal budgets vs server assignments, or multi-account failover. |
-| **Remote TTS (`OmniVoice` on T4)** | [tts-omnivoice-worker.md](references/tts-omnivoice-worker.md) | Synthesizing audio via `worker.py`, configuring voice clone profiles (`adam`, `reference-narrator`), phonetic normalization, or debugging `COLAB_GPU_OOM`. |
+| **Remote TTS (`OmniVoice` on T4)** | [tts-omnivoice-worker.md](references/tts-omnivoice-worker.md) | Synthesizing audio via `worker.py`, configuring canonical voice profile (`adam`), phonetic normalization, or debugging `COLAB_GPU_OOM`. |
 | **Remote Video Render (`Remotion` on T4)** | [remote-remotion-render.md](references/remote-remotion-render.md) | Running `job_worker.py` or `render_all_on_colab.py`, bootstrapping `/content/render-runtime`, sticker matting, or Cue-Window Allocation. |
 | **Colab CLI Error & Recovery Matrix** | [error-recovery-matrix.md](references/error-recovery-matrix.md) | Diagnosing any `ColabError` (`COLAB_SESSION_NOT_FOUND`, `COLAB_TIMEOUT`, `COLAB_ALLOCATION_PENDING`, `COLAB_PROVIDER_BLOCKED`, etc.) or WebSocket hang. |
 | **System Docs & Playbook** | [colab-tts.md](../../../sys/docs/colab-tts.md) / [PLAYBOOK.md](../../../PLAYBOOK.md) | Reviewing architectural provenance and historical 6-field post-mortems. |

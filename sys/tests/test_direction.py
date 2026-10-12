@@ -10,14 +10,14 @@ from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import adapters
-import tts_worker
 from pilot import ROOT, Blocked, read
 from content_contract import validate_content, ContractError
 from scripts.subtitles import subtitle_cues, audit_cues, has_words
 from scripts.director_context import context
 from scripts.editorial_audit import audit
 from scripts.story_plan import estimates
-import test_audio as audio_helpers
+from tools.vn_text_normalizer import normalize_for_tts
+import numpy as np
 import soundfile as sf
 
 
@@ -131,29 +131,19 @@ class DirectionContractTests(unittest.TestCase):
 
 class SynthesisOnlyTests(unittest.TestCase):
     def test_pronunciation_does_not_mutate_script_or_caption_text(self):
-        text = 'I get up at seven. I\'m ready. AI và VIP.'
-        self.assertEqual(tts_worker.normalize_text_for_tts(text), "Ai get up at seven. Ai'm ready. AI và VIP.")
+        text = 'I get up at 7. I\'m ready. AI và VIP.'
+        normalized = normalize_for_tts(text)
+        self.assertIn('bảy', normalized)
         cues = subtitle_cues([dict(text=text, start=0, end=6, scene_id='SC01')])
         self.assertEqual(' '.join(' '.join(c['text'] for c in cues).split()), text)
 
-    def test_worker_adds_real_silence_without_synthesizing_metadata(self):
-        helper = audio_helpers.TTSWorkerCacheTests()
-        with audio_helpers.fake_vieneu() as fake, tempfile.TemporaryDirectory() as folder:
-            folder = Path(folder)
-            req = helper.req('I get up.', folder / 'cache')
-            req['scenes'][0]['tail'] = 2
-            result = helper.synth(req, folder / 'first')
-            wave, sr = sf.read(folder / 'first' / result['segments'][0]['path'])
-            self.assertGreaterEqual(len(wave), int(2.19 * sr))
-            self.assertTrue((wave[-int(2 * sr):] == 0).all())
-            self.assertEqual(fake.calls, ['Ai get up.'])
-            self.assertEqual(result['segments'][0]['text'], 'I get up.')
-            # Changing only the hold reuses speech, but assembles a longer WAV.
-            req['scenes'][0]['tail'] = 3
-            newer = helper.synth(req, folder / 'second')
-            wave2, _ = sf.read(folder / 'second' / newer['segments'][0]['path'])
-            self.assertEqual(len(fake.calls), 1)
-            self.assertEqual(len(wave2) - len(wave), sr)
+    def test_colab_protocol_preserves_learner_pause_tail_in_request(self):
+        from colab_bridge.protocol import build_request
+        cfg = read(ROOT / 'config.json')
+        scenes = [{'scene_id': 'SC01', 'narration': 'I get up.', 'texts': ['I get up.'], 'gaps': [], 'tail': 2.0, 'retake': 0}]
+        req = build_request(ROOT, cfg, scenes, [])
+        self.assertEqual(req['segments'][0]['pause'], 2.0)
+        self.assertEqual(req['profiles']['vi']['voice'], 'Adam')
 
 
 if __name__ == '__main__':

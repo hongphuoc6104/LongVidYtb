@@ -253,6 +253,7 @@ const Video: React.FC<any> = (p) => {
                 <AbsoluteFill key={l.id || `bg-${idx}`} style={{zIndex: l.z ?? 1}}>
                   <Img
                     src={staticFile(l.src)}
+                    decoding="sync"
                     style={{
                       width: '100%',
                       height: '100%',
@@ -315,7 +316,7 @@ const Video: React.FC<any> = (p) => {
                   pointerEvents: 'none',
                 }}
               >
-                <Img src={staticFile(l.src)} style={{width: '100%', display: 'block'}} />
+                <Img src={staticFile(l.src)} decoding="sync" style={{width: '100%', display: 'block'}} />
               </div>
             );
           })}
@@ -326,6 +327,7 @@ const Video: React.FC<any> = (p) => {
           {active > 0 && ['fade', 'slide_left'].includes(beat.effect) && transition < 1 && (
             <Img
               src={staticFile(imageList[active - 1].src)}
+              decoding="sync"
               style={{position: 'absolute', width: '100%', height: '100%', objectFit: 'contain'}}
             />
           )}
@@ -345,6 +347,7 @@ const Video: React.FC<any> = (p) => {
             ) : (
               <Img
                 src={staticFile(currentImageSrc)}
+                decoding="sync"
                 style={{
                   width: '100%',
                   height: '100%',
@@ -456,18 +459,20 @@ const Video: React.FC<any> = (p) => {
             }}
           />
 
-          {/* 2. Film Grain texture via inline SVG Filter overlay */}
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              pointerEvents: 'none',
-              opacity: 0.035,
-              mixBlendMode: 'overlay',
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-              zIndex: 13
-            }}
-          />
+          {/* 2. Film Grain texture via inline SVG Filter overlay (opt-in to avoid full-screen feTurbulence overhead) */}
+          {p.enable_film_grain && (
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                pointerEvents: 'none',
+                opacity: 0.035,
+                mixBlendMode: 'overlay',
+                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+                zIndex: 13
+              }}
+            />
+          )}
         </>
       )}
 

@@ -11,34 +11,45 @@
 
 ## 2. Proven Remedies
 
-### Step 1: Wrap Chromium with Safe Headless Shell Wrapper (No Xvfb)
-Remotion's `openBrowser` frequently omits `chromiumOptions.args` passed from Node. Chromium must execute via a shell wrapper with verified headless flags, while avoiding `xvfb-run` (which causes ANGLE GL socket deadlocks and tile drops on Colab T4):
+### Step 1: Wrap Chromium with Safe Headless Shell Wrapper (NVIDIA Headless EGL, No Xvfb)
+Remotion's `openBrowser` drops custom flags passed from Node, and Colab T4 images pre-install `/usr/lib64-nvidia/libEGL_nvidia.so.0` without `/usr/share/glvnd/egl_vendor.d/10_nvidia.json`. Chromium must execute via `chrome-wrapper.sh` which registers `10_nvidia.json` for hardware `gl-egl` (or falls back to `--disable-gpu-rasterization` when NVIDIA EGL is absent), enforces synchronous tile locks, and strictly avoids `xvfb-run` / `--use-angle=gl`:
 
 ```bash
 #!/usr/bin/env bash
+export LD_LIBRARY_PATH="/usr/lib64-nvidia:${LD_LIBRARY_PATH:-}"
+if [ -f "/usr/lib64-nvidia/libEGL_nvidia.so.0" ]; then
+  mkdir -p /usr/share/glvnd/egl_vendor.d 2>/dev/null || true
+  if [ ! -f "/usr/share/glvnd/egl_vendor.d/10_nvidia.json" ]; then
+    printf '{"file_format_version":"1.0.0","ICD":{"library_path":"/usr/lib64-nvidia/libEGL_nvidia.so.0"}}\n' > /usr/share/glvnd/egl_vendor.d/10_nvidia.json 2>/dev/null || true
+  fi
+  GPU_FLAGS="--use-gl=angle --use-angle=gl-egl --enable-gpu-rasterization --ignore-gpu-blocklist"
+else
+  GPU_FLAGS="--disable-gpu-rasterization"
+fi
 exec "${chrome_path}" \
   --no-sandbox \
   --disable-dev-shm-usage \
   --run-all-compositor-stages-before-draw \
-  --disable-gpu-rasterization \
-  --enable-gpu \
-  --ignore-gpu-blocklist \
+  --disable-checker-imaging \
+  --disable-new-content-rendering-timeout \
+  $GPU_FLAGS \
   "$@"
 ```
 
-Execute Remotion directly in headless mode on Colab:
+Execute Remotion directly in headless mode on Colab (`gl: 'angle-egl'`, `videoBitrate: '6M'` for `h264_nvenc`):
 ```bash
 node renderer/render.mjs <job_dir>
 ```
 
-### Step 2: Configure Mandatory Environment Variables
-Before invoking `node render.mjs`, configure the environment variables:
+### Step 2: Configure Mandatory Environment Variables (Unset `DISPLAY`)
+Before invoking `node render.mjs`, configure the environment variables and remove `DISPLAY`:
 ```python
 env = dict(
     os.environ,
     VP_CHROME_PATH=str(wrapper_script_path),
     DISABLE_FROM_SURFACE='true'
 )
+env.pop('DISPLAY', None)
 ```
 
 ### Step 3: Check Shared Memory `/dev/shm`

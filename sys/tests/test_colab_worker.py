@@ -68,11 +68,11 @@ class WorkerTests(unittest.TestCase):
         out = self.root / 'remote/selected-reference/output'
         self.run_worker(request, out)
         validate_result(out, request)
-        self.assertEqual(read(out / 'tts-result.json')['voice'], 'reference-narrator')
+        self.assertEqual(read(out / 'tts-result.json')['voice'], 'Adam')
         self.assertEqual(request['profiles']['en']['sha256'],
                          '97d5aee4bc5bbb4a5951a180c04954f5f33b36e901f9a99084ec9f2ebb1817e9')
         self.assertEqual([prompt['ref_text'] for prompt in self.prompts], [text])
-        self.assertEqual([rate for batch in self.generated for rate in batch['speed']], [.92])
+        self.assertEqual([rate for batch in self.generated for rate in batch['speed']], [1.22])
 
     def run_worker(self, req, out):
         remote = copy.deepcopy(req)
@@ -90,7 +90,7 @@ class WorkerTests(unittest.TestCase):
         self.assertEqual(len(validate_result(out,req)),5)
         self.assertEqual(len(self.loaded),1)
         self.assertEqual(len(self.prompts),1)
-        self.assertTrue(all(v in (1.22, .92) for batch in self.generated for v in batch['speed']))
+        self.assertTrue(all(v == 1.22 for batch in self.generated for v in batch['speed']))
         self.assertTrue(all(batch['num_step']==32 for batch in self.generated))
         count=len(self.generated)
         self.run_worker(req,self.root/'remote/job2/output')
@@ -129,7 +129,7 @@ class WorkerTests(unittest.TestCase):
             payload=adapters.audio(p,'test',out)
         jsonschema.validate(payload,read(ROOT/'schemas/audio.json'))
         self.assertEqual(payload['voice'],'Adam')
-        self.assertEqual(payload['en']['voice'],'reference-narrator')
+        self.assertEqual(payload['en']['voice'],'Adam')
         self.assertEqual(payload['backend'],'colab-omnivoice')
         self.assertEqual(payload['english_spans'][0]['text'],'weather.')
         self.assertAlmostEqual(payload['segments'][-1]['end']-payload['segments'][-1]['content_end'],2)
@@ -143,22 +143,21 @@ class WorkerTests(unittest.TestCase):
         shutil.copy2(ROOT/'scripts/subtitles.py',self.root/'scripts/subtitles.py')
 
     def test_english_only_request_needs_no_vietnamese_reference(self):
-        self.cfg['en_speed']=.92
-        shutil.rmtree(self.root/'assets/voices/adam')
+        self.cfg['en_speed']=1.22
         request=build_request(self.root,self.cfg,[dict(scene_id='SC01',texts=['I watch a predator.'],gaps=[],tail=1.5,retake=0)],primary_language='en')
         self.assertEqual(set(request['profiles']),{'en'})
-        self.assertEqual([(x['language'],x['speed']) for x in request['items']],[('en',.92)])
+        self.assertEqual([(x['language'],x['speed']) for x in request['items']],[('en',1.22)])
         out=self.root/'remote/job/output';self.run_worker(request,out)
         validate_result(out,request)
-        self.assertEqual(read(out/'tts-result.json')['voice'],'reference-narrator')
-        self.assertEqual(self.generated[0]['speed'],[.92])
+        self.assertEqual(read(out/'tts-result.json')['voice'],'Adam')
+        self.assertEqual(self.generated[0]['speed'],[1.22])
 
     def test_explicit_english_audio_is_assembled_remotely_without_local_master(self):
         self.copy_processing_sources()
         job=self.root/'runs/english';out=job/'revisions/audio/1';out.mkdir(parents=True)
         content={'scenes':[{'id':'SC01','narration':'Do not use this unrelated track.',
             'narration_en':'A predator hunts for food.','audio_direction':{'en':{'learner_pause_seconds':1.5}}}]}
-        brief={'aspect_ratio':'9:16','language':'en','duration':{'min_seconds':.1,'max_seconds':10.},'outputs':[{'aspect_ratio':'9:16','language':'en','subtitles':True,'voice':'reference-narrator','speed':.92}]}
+        brief={'aspect_ratio':'9:16','language':'en','duration':{'min_seconds':.1,'max_seconds':10.},'outputs':[{'aspect_ratio':'9:16','language':'en','subtitles':True,'voice':'Adam','speed':1.22}]}
         p=SimpleNamespace(root=self.root,job=lambda j:job,payload=lambda j,m:content,brief=lambda j:(brief,1,'hash'))
         seen=[]
         def synth(client,request,destination,cache,**kwargs):
@@ -170,8 +169,8 @@ class WorkerTests(unittest.TestCase):
         self.assertEqual(payload['language'],'en')
         self.assertEqual(set(payload['tracks']),{'en'})
         self.assertEqual(payload['segments'][0]['text'],'A predator hunts for food.')
-        self.assertEqual(payload['voice'],'reference-narrator')
-        self.assertEqual(seen[0]['items'][0]['speed'],.92)
+        self.assertEqual(payload['voice'],'Adam')
+        self.assertEqual(seen[0]['items'][0]['speed'],1.22)
         self.assertEqual(set(seen[0]['profiles']),{'en'})
         self.assertTrue((job/payload['wav']).is_file())
         self.assertIn('predator',(job/payload['srt']).read_text())

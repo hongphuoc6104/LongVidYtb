@@ -31,20 +31,55 @@ function resolveChromePath() {
   return chromium.executablePath();
 }
 
+const hasNvidiaEgl = fs.existsSync('/usr/lib64-nvidia/libEGL_nvidia.so.0');
+if (hasNvidiaEgl) {
+  try {
+    const vendorDir = '/usr/share/glvnd/egl_vendor.d';
+    fs.mkdirSync(vendorDir, {recursive: true});
+    const nvidiaIcd = path.join(vendorDir, '10_nvidia.json');
+    if (!fs.existsSync(nvidiaIcd)) {
+      fs.writeFileSync(nvidiaIcd, JSON.stringify({
+        file_format_version: '1.0.0',
+        ICD: {library_path: '/usr/lib64-nvidia/libEGL_nvidia.so.0'}
+      }, null, 2));
+    }
+    process.env.LD_LIBRARY_PATH = `/usr/lib64-nvidia:${process.env.LD_LIBRARY_PATH || ''}`;
+  } catch {}
+}
+
 function wrapChromeExecutable(rawPath) {
   if (rawPath.endsWith('-wrapper.sh')) return rawPath;
   const wrapperDir = path.join(os.tmpdir(), 'vp-chrome');
   fs.mkdirSync(wrapperDir, {recursive: true});
   const wrapper = path.join(wrapperDir, `chrome-wrapper-${process.pid}.sh`);
   const content = `#!/usr/bin/env bash
-exec "${rawPath}" \\
-  --no-sandbox \\
-  --disable-dev-shm-usage \\
-  --run-all-compositor-stages-before-draw \\
-  --disable-gpu-rasterization \\
-  --enable-gpu \\
-  --ignore-gpu-blocklist \\
-  "$@"
+if [ -f "/usr/lib64-nvidia/libEGL_nvidia.so.0" ]; then
+  export LD_LIBRARY_PATH="/usr/lib64-nvidia:\${LD_LIBRARY_PATH}"
+  exec "${rawPath}" \\
+    --no-sandbox \\
+    --disable-dev-shm-usage \\
+    --use-gl=angle \\
+    --use-angle=gl-egl \\
+    --enable-gpu \\
+    --enable-gpu-rasterization \\
+    --enable-zero-copy \\
+    --ignore-gpu-blocklist \\
+    --run-all-compositor-stages-before-draw \\
+    --disable-checker-imaging \\
+    --disable-new-content-rendering-timeout \\
+    "$@"
+else
+  exec "${rawPath}" \\
+    --no-sandbox \\
+    --disable-dev-shm-usage \\
+    --run-all-compositor-stages-before-draw \\
+    --disable-checker-imaging \\
+    --disable-new-content-rendering-timeout \\
+    --disable-gpu-rasterization \\
+    --enable-gpu \\
+    --ignore-gpu-blocklist \\
+    "$@"
+fi
 `;
   fs.writeFileSync(wrapper, content, {mode: 0o755});
   return wrapper;
@@ -66,11 +101,21 @@ process.env.DISABLE_FROM_SURFACE = 'true';
 const browser = await openBrowser('chrome', {
   browserExecutable: chromePath,
   chromiumOptions: {
+    ...(hasNvidiaEgl ? {gl: 'angle-egl'} : {}),
     args: [
       '--no-sandbox',
       '--disable-dev-shm-usage',
       '--run-all-compositor-stages-before-draw',
-      '--disable-gpu-rasterization',
+      '--disable-checker-imaging',
+      '--disable-new-content-rendering-timeout',
+      ...(hasNvidiaEgl ? [
+        '--use-gl=angle',
+        '--use-angle=gl-egl',
+        '--enable-gpu-rasterization',
+        '--enable-zero-copy'
+      ] : [
+        '--disable-gpu-rasterization'
+      ]),
       '--enable-gpu',
       '--ignore-gpu-blocklist'
     ]

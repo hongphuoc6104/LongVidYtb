@@ -341,24 +341,159 @@ class ColabPoolManager:
             "failed": sorted(failed, key=lambda x: x["account"]),
         }
 
-    def stop_pool(self, account_ids: list[str] | None = None) -> dict[str, Any]:
-        """Stop active T4 sessions across selected or all pool accounts."""
+    def _unassign_server_endpoints(self, account_id: str) -> list[str]:
+        """Directly unassign any active server-side Colab runtimes for this account."""
+        prof_dir = accounts.folder(account_id)
+        tok_file = prof_dir / "token.json"
+        if not tok_file.is_file() or not Path(self.binary).is_file():
+            return []
+        try:
+            tok_data = json.loads(tok_file.read_text())
+            if not isinstance(tok_data, dict) or "refresh_token" not in tok_data:
+                return []
+            first = Path(self.binary).read_text().splitlines()[0]
+            if not first.startswith("#!/") or " " in first[2:]:
+                return []
+            py_exe = first[2:]
+        except (OSError, ValueError):
+            return []
+
+        code = (
+            "import json, sys\n"
+            "from pathlib import Path\n"
+            "from google.oauth2.credentials import Credentials\n"
+            "from google.auth.transport.requests import AuthorizedSession\n"
+            "from colab_cli.common import Client, Prod\n"
+            "folder = Path(sys.argv[1])\n"
+            "creds = Credentials.from_authorized_user_file(str(folder / 'token.json'))\n"
+            "session = AuthorizedSession(creds)\n"
+            "client = Client(Prod(), session)\n"
+            "unassigned = []\n"
+            "for a in list(client.list_assignments()):\n"
+            "    try:\n"
+            "        client.unassign(a.endpoint)\n"
+            "        unassigned.append(a.endpoint)\n"
+            "    except Exception:\n"
+            "        pass\n"
+            "print('VP_UNASSIGNED=' + json.dumps(unassigned))\n"
+        )
+        try:
+            r = subprocess.run(
+                [py_exe, "-c", code, str(prof_dir)],
+                capture_output=True,
+                text=True,
+                timeout=45,
+                check=False,
+            )
+            for line in (r.stdout or "").splitlines():
+                if line.startswith("VP_UNASSIGNED="):
+                    return json.loads(line.split("=", 1)[1])
+        except Exception:
+            pass
+        return []
+
+    @staticmethod
+    def _clear_local_session_files(
+        account_id: str,
+        session_name: str,
+        tmp_profiles_dir: Path | None = None,
+    ) -> None:
+        """Sync and clear local sessions.json entries in both ~/.config and /tmp/vp_colab_profiles."""
+        tmp_base = tmp_profiles_dir if tmp_profiles_dir is not None else Path("/tmp/vp_colab_profiles")
+        candidates = [
+            accounts.folder(account_id) / "sessions.json",
+            tmp_base / account_id / "sessions.json",
+        ]
+        for sess_file in candidates:
+            if not sess_file.is_file():
+                continue
+            try:
+                raw = json.loads(sess_file.read_text())
+                if isinstance(raw, dict) and session_name in raw:
+                    raw.pop(session_name, None)
+                    sess_file.write_text(json.dumps(raw, indent=2) + "\n")
+            except (OSError, ValueError):
+                pass
+
+    def stop_pool(
+        self,
+        account_ids: list[str] | None = None,
+        *,
+        unassign_server: bool = True,
+        tmp_profiles_dir: Path | None = None,
+    ) -> dict[str, Any]:
+        """Stop active T4 sessions across selected or all pool accounts and clear split caches."""
+        tmp_base = tmp_profiles_dir if tmp_profiles_dir is not None else Path("/tmp/vp_colab_profiles")
         targets = [
             w for w in self.workers.values()
             if (account_ids is None or w.account_id in account_ids)
         ]
         stopped: list[str] = []
+        unassigned_map: dict[str, list[str]] = {}
         errors: list[dict[str, str]] = []
         for w in targets:
+            # Reconcile /tmp/vp_colab_profiles/<acc>/sessions.json into canonical folder before stop
+            tmp_sess = tmp_base / w.account_id / "sessions.json"
+            canon_sess = accounts.folder(w.account_id) / "sessions.json"
+            if tmp_sess.is_file() and tmp_sess.stat().st_size > 5:
+                try:
+                    tmp_data = json.loads(tmp_sess.read_text())
+                    canon_data = json.loads(canon_sess.read_text()) if canon_sess.is_file() else {}
+                    if isinstance(tmp_data, dict) and w.session_name in tmp_data and w.session_name not in canon_data:
+                        canon_data[w.session_name] = tmp_data[w.session_name]
+                        canon_sess.write_text(json.dumps(canon_data, indent=2) + "\n")
+                except (OSError, ValueError):
+                    pass
+
             res = self.run_account_cmd(w.account_id, ["stop", "-s", w.session_name], timeout=60, check=False)
+            unassigned = self._unassign_server_endpoints(w.account_id) if unassign_server else []
+            if unassigned:
+                unassigned_map[w.account_id] = unassigned
+            self._clear_local_session_files(w.account_id, w.session_name, tmp_profiles_dir=tmp_base)
+
             w.t4_confirmed = False
             w.render_runtime_ready = False
             w.tts_runtime_ready = False
-            if res.returncode == 0:
+            stderr_msg = (res.stderr or res.stdout or "").strip()
+            already_gone = any(
+                k in stderr_msg.lower()
+                for k in ("not found", "no active session", "no session")
+            )
+            if res.returncode == 0 or unassigned or already_gone:
                 stopped.append(w.account_id)
             else:
-                errors.append({"account": w.account_id, "stderr": (res.stderr or res.stdout or "").strip()})
-        return {"stopped": stopped, "errors": errors}
+                errors.append({"account": w.account_id, "stderr": stderr_msg})
+        return {
+            "stopped": stopped,
+            "unassigned_endpoints": unassigned_map,
+            "errors": errors,
+        }
+
+    def teardown_job_resources(
+        self,
+        account_ids: list[str] | None = None,
+        *,
+        close_chrome: bool = True,
+        tmp_profiles_dir: Path | None = None,
+    ) -> dict[str, Any]:
+        """Post-job teardown: unassign Colab T4 sessions, clear /tmp caches, and stop Chrome CDP."""
+        colab_res = self.stop_pool(
+            account_ids,
+            unassign_server=True,
+            tmp_profiles_dir=tmp_profiles_dir,
+        )
+        chrome_res: dict[str, Any] = {}
+        if close_chrome:
+            try:
+                from flow_cdp.multi_profile_manager import MultiProfileManager
+                chrome_res = MultiProfileManager().stop_all_profiles()
+            except Exception as exc:
+                chrome_res = {"error": str(exc)}
+        return {
+            "colab": colab_res,
+            "chrome_cdp": chrome_res,
+        }
+
 
 
 class ColabPoolDispatcher:

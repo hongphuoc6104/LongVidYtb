@@ -49,14 +49,11 @@ Kênh Ink Explainer đạt hàng chục triệu lượt xem nhờ phong cách k�
 - **Tông giọng:** Ấm áp, điềm đạm (*unhurried*), tò mò chân thành, có độ tin cậy khoa học cao.
 - **Không kịch hóa quá đà:** Không phấn khích kiểu YouTuber thử thách/giải trí, không đao to búa lớn giật gân, và không khô cứng như AI đọc bản tin thời sự.
 
-### 3.2. Cấu hình Voice Model chuẩn trong Video Pilot
+### 3.2. Cấu hình Voice Chuẩn Duy Nhất (SSOT)
 
-| Định dạng / Mục đích | Voice Model / Preset | Tốc độ (Speed / Rate) | Nền tảng tổng hợp | Đặc điểm âm học |
+| Voice | Profile | Speed | Engine | Mastering & Định dạng |
 |:---|:---|:---:|:---|:---|
-| **English 9:16 (Shorts)** | `reference-narrator` | `0.92x` | Colab OmniVoice | Giọng nam trầm, clone 3.24s từ video mẫu Ink Explainer. Chuẩn mặc định cho giải thích từ vựng tiếng Anh. |
-| **English Historical** | `Alba MacKenna (casual)` | `0.92x` | Colab Pocket/OmniVoice (CC BY 4.0) | Kế thừa các job v3 lịch sử. |
-| **Vietnamese Benchmark (16:9)** | `vi-VN-NamMinhNeural` | `+22%` (`rate="+22%"`) | Edge-TTS / Colab | Giọng nam đĩnh đạc, ấm, âm lượng đồng đều, tối ưu cho tài liệu giải thích khoa học nhanh. |
-| **Vietnamese Single-Job** | `Adam` | `0.95x` | Colab OmniVoice | Thử nghiệm đối chứng kiểm tra âm học đơn cảnh theo phong cách tâm sự. |
+| `Adam` | `assets/voices/adam/profile.json` | `1.22x` | Colab `kjanh/KhanhTTS-OmniVoice` (`num_step=32`, `batch_size=4`) | `48kHz` Mono PCM16, EQ `+1.5dB @ 200Hz`, `-2.5dB @ 7000Hz`, `-14.0 LUFS`, `-1.5 dBTP` |
 
 ---
 

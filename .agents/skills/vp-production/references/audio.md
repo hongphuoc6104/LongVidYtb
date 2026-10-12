@@ -17,15 +17,13 @@ To eliminate double-padding stutter and unnatural acoustic gaps:
   - Standard sentences: `0.28s` pause (total acoustic gap ~0.33s).
   - Dramatic pivots (`[pause:...]`): `0.48s` pause (total acoustic gap ~0.53s).
 
-All script lines must be pre-validated with `sys/tools/script_cadence_checker.py` to ensure the measured/predicted audio duration aligns with scene budgets within $\pm 0.5\text{s}$.
+All script lines must be pre-validated with `sys/tools/script_cadence_checker.py` to ensure the measured/predicted audio duration aligns with scene budgets within $\pm 0.3\text{s}$ (`<= 0.25s` physical drift between final rendered MP4 and WAV).
 
 ## 3. Dynamic Pacing & Voice Matrix
 - **Hook & Empathy (Phase 1):** ~4.2 syl/s (Vietnamese) / ~145–150 wpm (English).
 - **Causal Evidence & Mechanism (Phase 2):** ~4.0 syl/s (Vietnamese) / ~135–140 wpm (English).
 - **Philosophical Payoff (Phase 3):** ~3.6–3.8 syl/s (Vietnamese) / ~120–125 wpm (English).
-- **Channel Voice Models:**
-  - Vietnamese Benchmark (16:9): `vi-VN-NamMinhNeural` with `rate="+22%"` (warm, authoritative, optimal for causal explanation).
-  - English 9:16 Portrait: `reference-narrator` at `0.92x` via OmniVoice on Colab; edge-tts is not a channel voice. Preserve `.92` when that is the job's chosen rate.
+- **Canonical Voice (`sys/config.json`):** `Adam` (`assets/voices/adam/profile.json`, `speed: 1.22`, `num_step: 32`, `batch_size: 4`, `-14.0 LUFS`, `-1.5 dBTP`, `48kHz` Mono PCM16) for all outputs (`vi` and `en`) via `kjanh/KhanhTTS-OmniVoice` on Colab T4. No local TTS fallback.
 
 ## 4. Remote Delivery & Audio Invariants
 Specify intent and pronunciation risks as craft notes. Only `learner_pause_seconds` has the existing scene-tail hold behavior; intent notes do not guarantee emotion and images do not demonstrate moving lips. Practice holds only when requested/useful, with question/model at the scene boundary and feedback after.

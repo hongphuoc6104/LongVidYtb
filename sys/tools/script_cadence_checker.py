@@ -529,6 +529,7 @@ class SceneCadenceReport:
         compensate_commas: bool = False,
         lang: str = "auto",
         max_sentences: int = 5,
+        max_syllables: Optional[int] = None,
     ):
         self.scene_id = scene_id
         self.duration = duration
@@ -539,6 +540,7 @@ class SceneCadenceReport:
         self.compensate_commas = compensate_commas
         self.lang = lang
         self.max_sentences = max_sentences
+        self.max_syllables = max_syllables
 
         # Analysis
         self.pause_seconds, self.pauses, self.clean_narration = extract_pauses(narration)
@@ -615,6 +617,10 @@ class SceneCadenceReport:
                 f"SENTENCE_FRAGMENTATION: Scene has {self.sentence_count} sentences "
                 f"({self.short_sentence_count} short sentences < 6 syl), risking TTS boundary pause buildup"
             )
+        if self.max_syllables is not None and self.syllable_count > self.max_syllables:
+            self.warnings.append(
+                f"SCENE_TOO_LONG: Scene has {self.syllable_count} syllables (exceeds concise limit of {self.max_syllables}); split into shorter scenes"
+            )
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -646,6 +652,7 @@ class ScriptCadenceChecker:
         compensate_commas: bool = False,
         lang: str = "auto",
         max_sentences: int = 5,
+        max_syllables: Optional[int] = None,
     ):
         self.nominal_rate = nominal_rate
         self.p_tail_para = p_tail_para
@@ -653,6 +660,7 @@ class ScriptCadenceChecker:
         self.compensate_commas = compensate_commas
         self.lang = lang
         self.max_sentences = max_sentences
+        self.max_syllables = max_syllables
 
     def check_scenes(self, scenes: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Analyze a list of scene dictionaries."""
@@ -686,6 +694,7 @@ class ScriptCadenceChecker:
                 compensate_commas=self.compensate_commas,
                 lang=self.lang,
                 max_sentences=self.max_sentences,
+                max_syllables=self.max_syllables,
             )
             reports.append(report)
 
@@ -764,6 +773,7 @@ def main() -> int:
     parser.add_argument("--p-tail-last", type=float, default=DEFAULT_P_TAIL_LAST, help="P_tail for final scene")
     parser.add_argument("--compensate-commas", action="store_true", help="Compensate minor pauses for commas")
     parser.add_argument("--lang", default="auto", choices=["auto", "vi", "en"], help="Narration language")
+    parser.add_argument("--max-syllables", type=int, default=None, help="Maximum syllables per scene (e.g. 36 for concise scenes)")
     parser.add_argument("--json", action="store_true", help="Output analysis in JSON format")
     parser.add_argument("--strict", action="store_true", help="Exit with non-zero code if any warning is found")
 
@@ -775,6 +785,7 @@ def main() -> int:
         p_tail_last=args.p_tail_last,
         compensate_commas=args.compensate_commas,
         lang=args.lang,
+        max_syllables=args.max_syllables,
     )
 
     try:

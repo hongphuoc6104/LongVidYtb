@@ -51,7 +51,7 @@
     "domain_requirements": [
       "Nhân vật chính CH01 dùng đúng mascot chuẩn assets/characters/channel-mascot/reference-v1.png (áo xanh biển nhạt #8CCFE8, đầu tròn trắng viền navy, tay chân que). Áp dụng quy tắc dung sai 80/20: chấp nhận biểu cảm cường điệu như rớt cằm shock, mắt cún con năn nỉ, mồ hôi văng tung tóe.",
       "Cấu trúc Micro-Drama 4 hồi chuẩn: (1) 0-4s: Tình huống rắc rối đời thường của Mascot -> (2) 4-8s: Từ vựng tiếng Anh là chìa khóa gỡ rối -> (3) 8-13s: Luyện nói phản xạ ngắn kèm đếm nhịp 3-2-1 -> (4) 13-17s: Cú twist meme hài hước kết màn.",
-      "Giọng đọc solo duy nhất: Adam bựa (Vieneu GPU, tốc độ 1.05x-1.1x), tếu táo, nhập vai trực tiếp vào Mascot ở ngôi thứ nhất ('tui').",
+      "Giọng đọc solo duy nhất: Adam (OmniVoice Colab T4, tốc độ 1.22x), tếu táo, nhập vai trực tiếp vào Mascot ở ngôi thứ nhất ('tui').",
       "Tích hợp bộ 6 Foley SFX khớp nhịp hành động: click/pop (thao tác), whoosh (lia cảnh), ding (sáng từ vựng), tick (đếm nhịp), crunch (nhai bánh/twist).",
       "Hiệu ứng Remotion Motion: Cú giật punch-in ở frame đầu, screen_shake khi có va chạm/shock, phụ đề 1-2 dòng chữ to rõ highlight từ khóa tiếng Anh màu vàng #FACC15, không dùng header badge.",
       "Thời lượng xuất xưởng nghiêm ngặt trong khoảng 15.0 - 20.0 giây.",

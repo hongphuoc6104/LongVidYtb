@@ -12,7 +12,7 @@ def main():
         choices=[
             'status', 'start', 'reconcile', 'setup', 'stop',
             'synthesize', 'render', 'collect', 'reconcile-render-failure',
-            'pool-status', 'pool-start', 'pool-stop',
+            'pool-status', 'pool-start', 'pool-stop', 'teardown',
         ],
     )
     parser.add_argument('--account')
@@ -27,7 +27,7 @@ def main():
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     cfg = json.loads((root / 'config.json').read_text())
-    if args.action in ('pool-status', 'pool-start', 'pool-stop'):
+    if args.action in ('pool-status', 'pool-start', 'pool-stop', 'teardown'):
         from .pool_manager import ColabPoolManager
         session_name = args.session or cfg.get('colab_tts', {}).get('session', 'video-pilot-tts')
         account_ids = [x.strip() for x in args.accounts.split(',') if x.strip()] if args.accounts else None
@@ -36,6 +36,8 @@ def main():
             print(json.dumps(manager.get_status(probe_server=args.probe), ensure_ascii=False, indent=2))
         elif args.action == 'pool-start':
             print(json.dumps(manager.start_pool(account_ids, max_workers=args.max_workers), ensure_ascii=False, indent=2))
+        elif args.action == 'teardown':
+            print(json.dumps(manager.teardown_job_resources(account_ids, close_chrome=True), ensure_ascii=False, indent=2))
         else:
             print(json.dumps(manager.stop_pool(account_ids), ensure_ascii=False, indent=2))
         return

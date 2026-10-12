@@ -8,18 +8,28 @@ This reference covers remote video rendering on Google Colab T4 via both the sta
 
 Google Colab T4 VMs are headless Linux containers without an X11 display server and with constrained `/dev/shm` shared memory. Furthermore, Remotion's `openBrowser` drops custom flags passed via Node options.
 
-### Mandatory Headless Wrapper & NVENC Hardware Encoding
-Every Colab render runtime (`/content/render-runtime` or `/content/render-runtime-<lock_hash>`) resolves Playwright's Chromium binary and wraps it in `chrome-wrapper.sh` (`chmod 0755`) for safe headless rendering:
+### Mandatory Headless Wrapper, NVIDIA EGL & NVENC Hardware Encoding
+Every Colab render runtime (`/content/render-runtime` or `/content/render-runtime-<lock_hash>`) registers `/usr/share/glvnd/egl_vendor.d/10_nvidia.json` (so `libGLdispatch` discovers `/usr/lib64-nvidia/libEGL_nvidia.so.0`) and wraps Playwright's Chromium binary in `chrome-wrapper.sh` (`chmod 0755`):
 
 ```bash
 #!/usr/bin/env bash
+export LD_LIBRARY_PATH="/usr/lib64-nvidia:${LD_LIBRARY_PATH:-}"
+if [ -f "/usr/lib64-nvidia/libEGL_nvidia.so.0" ]; then
+  mkdir -p /usr/share/glvnd/egl_vendor.d 2>/dev/null || true
+  if [ ! -f "/usr/share/glvnd/egl_vendor.d/10_nvidia.json" ]; then
+    printf '{"file_format_version":"1.0.0","ICD":{"library_path":"/usr/lib64-nvidia/libEGL_nvidia.so.0"}}\n' > /usr/share/glvnd/egl_vendor.d/10_nvidia.json 2>/dev/null || true
+  fi
+  GPU_FLAGS="--use-gl=angle --use-angle=gl-egl --enable-gpu-rasterization --ignore-gpu-blocklist"
+else
+  GPU_FLAGS="--disable-gpu-rasterization"
+fi
 exec "${chrome_path}" \
   --no-sandbox \
   --disable-dev-shm-usage \
   --run-all-compositor-stages-before-draw \
-  --disable-gpu-rasterization \
-  --enable-gpu \
-  --ignore-gpu-blocklist \
+  --disable-checker-imaging \
+  --disable-new-content-rendering-timeout \
+  $GPU_FLAGS \
   "$@"
 ```
 
@@ -31,28 +41,26 @@ env = dict(
     VP_CHROME_PATH="/content/render-runtime/chrome-wrapper.sh",
     DISABLE_FROM_SURFACE="true",
 )
-if "DISPLAY" in env:
-    del env["DISPLAY"]
+env.pop("DISPLAY", None)
 
 cmd = ["node", "renderer/render.mjs", str(job_dir)]
 subprocess.run(cmd, env=env, check=True)
 ```
 
 ### Why Each Setting Is Mandatory
-- **Pure Headless (No `xvfb-run`)**: Colab lacks a physical display. `Xvfb` is a CPU software framebuffer in RAM that cannot route to GPU T4; forcing ANGLE GL over Xvfb causes socket deadlocks (>300s timeout) and tile drops. Unsetting `DISPLAY` guarantees safe CPU 2D compositor execution.
+- **NVIDIA Headless EGL (`10_nvidia.json` + `--use-gl=angle --use-angle=gl-egl`, No `xvfb-run`)**: Colab T4 containers pre-install `/usr/lib64-nvidia/libEGL_nvidia.so.0` but omit `10_nvidia.json` in `/usr/share/glvnd/egl_vendor.d/`. Writing `10_nvidia.json` and selecting `gl-egl` binds headless Chromium directly to `ANGLE (NVIDIA Corporation, Tesla T4/PCIe/SSE2, OpenGL ES 3.2)` without X11. `Xvfb` and `--use-angle=gl` are strictly prohibited because Xvfb is a CPU RAM framebuffer that deadlocks ANGLE GLX sockets (>300s timeout).
 - `--no-sandbox`: Required inside containerized Colab root user environments.
 - `--disable-dev-shm-usage`: Forces Chromium IPC buffers into `/tmp` instead of `/dev/shm`, preventing sudden `TargetClosedError` OOM kills on 1080p renders.
-- `--run-all-compositor-stages-before-draw` + `DISABLE_FROM_SURFACE=true`: Forces Chromium to finish all compositor stages before frame readback, eliminating white rectangular tile drops.
-- `--disable-gpu-rasterization`: Ensures rock-solid 2D canvas and text rendering on headless Linux.
-- **NVENC Acceleration (`videoBitrate: '6M'`)**: Remotion selects hardware H.264 encoding (`h264_nvenc`) on the Tesla T4 GPU, offloading the encoding workload completely from the CPU.
+- **4-Layer Synchronous Tile Lock (`--run-all-compositor-stages-before-draw` + `--disable-checker-imaging` + `--disable-new-content-rendering-timeout` + `DISABLE_FROM_SURFACE=true` + `<Img decoding="sync">`)**: Prevents Chromium's compositor from capturing a frame before all GPU raster tiles and image decodes complete, eliminating rectangular missing-tile (checkerboarding) artifacts.
+- **NVENC Acceleration (`videoBitrate: '6M'` + `hardwareAcceleration: 'if-possible'`)**: Explicitly setting `videoBitrate: '6M'` disables Remotion's default CRF flag so `h264_nvenc` hardware encoding activates on the Tesla T4 GPU.
 
 ---
 
 ## 2. Visual Effect & Performance Invariants on Colab T4
 
 ### 2.1. Never Enable Blanket Full-Frame `line_boil: true` on 1080p Raster Plates (`ERR-20261009-01`)
-- Because `--disable-gpu-rasterization` is active on headless Colab T4, setting `"line_boil": true` on full-screen $1920 \times 1080$ raster beats forces Chromium to evaluate 2-octave SVG `<feTurbulence>` and `<feDisplacementMap scale={3}>` in **CPU software across 2,073,600 pixels per frame** on only 2 vCPUs.
-- **Consequences**: 10x render slowdown (~14 minutes for a 64s chapter), bloated MP4 bitrate, and black dashed displacement artifacts along top/left borders at `scale = 1.0`.
+- Setting `"line_boil": true` on full-screen $1920 \times 1080$ raster beats forces Chromium to evaluate 2-octave SVG `<feTurbulence>` and `<feDisplacementMap scale={3}>` across 2,073,600 pixels per frame and pulls out-of-bounds pixels into top/left borders. Likewise, full-screen SVG `<feTurbulence>` Film Grain is opt-in only (`enable_film_grain: true`).
+- **Consequences**: Severe render slowdown, bloated MP4 bitrate, and black dashed displacement artifacts along top/left borders at `scale = 1.0`.
 - **Rule**: Keep `"line_boil": false` (or omitted) on full-frame 1080p background plates; use Remotion camera transitions (`zoom_in`, `zoom_out`, `punch_in`, `pan_left`, `pan_right`, `slide_left`, `shake`, `fade`, `hold`). Reserve `line_boil` / CSS `boilJitter` strictly for cut-out stickers (`scene.layers`).
 
 ### 2.2. Remote Sticker Matting ([`matte_sticker.py`](../../../../sys/tools/matte_sticker.py))

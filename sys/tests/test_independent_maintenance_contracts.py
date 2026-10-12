@@ -188,8 +188,8 @@ class IndependentDocumentation(unittest.TestCase):
         channel=json.loads((ROOT/'vocab/channel.json').read_text())
         self.assertEqual(channel['language'],'en');self.assertEqual(channel['aspect_ratio'],'9:16')
         self.assertEqual(channel['allowed_levels'],['B1','B2','C1']);self.assertIsNone(channel['scene_count'])
-        self.assertEqual(channel['outputs'][0]['speed'],0.92)
-        self.assertEqual(channel['outputs'][0]['voice'],'reference-narrator')
+        self.assertEqual(channel['outputs'][0]['speed'],1.22)
+        self.assertEqual(channel['outputs'][0]['voice'],'Adam')
         workflow_doc=(ROOT/'docs/workflow.md').read_text()
         for token in ('outline','dialogue','audio','images','video','without a machine reviewer','connected agent/author'):
             self.assertIn(token,workflow_doc)

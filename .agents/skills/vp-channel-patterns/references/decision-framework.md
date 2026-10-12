@@ -11,8 +11,7 @@ Tài liệu này cung cấp **Ma trận Ra Quyết định (Decision Matrix)** c
 | **Chế độ sản xuất** | **Mode A** *(Structural Replication)* | **Mode B** *(Original Adaptation)* | Dùng **Mode A** khi chạy benchmark nội bộ, đo độ lệch timeline và kiểm thử động cơ kỹ thuật. Dùng **Mode B** khi sản xuất video mới ra kênh. | Chọn sai Mode A cho sản xuất công khai sẽ vi phạm bản quyền nội dung. |
 | **Nhịp thay đổi hình ảnh** | **Tách Scene mới** *(Scene Cut)* | **Visual Beats** *(beats[] trong Scene)* | Dùng **Tách Scene** khi đổi hoàn toàn bối cảnh/địa điểm hoặc chuyển chương lớn ($D \ge 5\text{s}$). Dùng **Visual Beats** khi đổi đạo cụ, zoom/pan camera, phản ứng sticker ($D \le 3\text{s}$). | Cắt nhỏ Scene gây tích lũy đuôi $P_{\text{tail}} = 0.70\text{s}$, làm audio bị phình to (+35% đến +70%) và vỡ nhịp kịch bản. |
 | **Dàn dựng Visual** | **Static Background Plate** | **Layered Motion** *(Plate + Stickers)* | Dùng **Static Plate** khi cảnh là biểu đồ toàn cảnh, bản đồ tĩnh, hoặc phong cảnh không nhân vật. Dùng **Layered Motion** khi có nhân vật que hành động, xuất hiện đồ vật hoặc tương tác. | Lạm dụng Static Plate gây hiện tượng "đơ hình AI" (Scene Hold Stagnation); lạm dụng Sticker không cần thiết gây chậm render. |
-| **Giọng đọc tiếng Việt** | `vi-VN-NamMinhNeural` *(rate="+22%")* | `Adam` *(0.95x)* | Dùng `NamMinhNeural` cho video tài liệu 16:9, nhịp nhanh, thông tin dày đặc, benchmark. Dùng `Adam` cho câu chuyện tâm sự sâu lắng, video đơn cảnh hoặc thử nghiệm cảm xúc. | Dùng nhầm tốc độ khiến video bị lê thê (< 3.2 syl/s) hoặc dồn dập (> 4.5 syl/s). |
-| **Giọng đọc tiếng Anh** | `reference-narrator` *(0.92x)* | `Alba MacKenna` *(0.92x)* | Dùng `reference-narrator` cho định dạng 9:16 giải thích từ vựng thương mại. Dùng `Alba MacKenna` khi kế thừa pipeline lịch sử v3. | Sai giọng clone làm mất tính nhất quán thương hiệu của kênh. |
+| **Giọng đọc chuẩn (SSOT)** | `Adam` *(1.22x, Colab OmniVoice)* | *(Không dùng giọng khác / local TTS)* | Mặc định duy nhất cho mọi định dạng (`vi` & `en`): `assets/voices/adam/profile.json`, `speed: 1.22`, `num_step: 32`, `batch_size: 4`, `-14.0 LUFS`, `-1.5 dBTP`. | Dùng giọng khác hoặc TTS local làm lệch chuẩn âm sắc kênh. |
 | **Khoảng lặng âm thanh** | **Dramatic Pause** *(pause:900ms)* | **Engine Default Pauses** | Dùng `[pause:900ms]` trước điểm ngoặt bất ngờ, số liệu gây sốc hoặc câu hỏi tu từ. Dùng mặc định cho ngắt phẩy ($0.30\text{s}$) và ngắt đoạn ($0.70\text{s}$). | Lạm dụng dramatic pause làm loãng nhịp; thiếu dramatic pause gây cảm giác đọc như máy đếm nhịp. |
 | **Phụ đề hiển thị** | **2 dòng cân bằng (Midpoint)** | **1 dòng ngắn** | Dùng **2 dòng** khi câu có 4–8 từ (ngắt giữa câu). Dùng **1 dòng** khi câu chỉ có 1–3 từ nhấn mạnh. | Để phụ đề tràn 3 dòng che mất hình vẽ hoặc va chạm giao diện. |
 
@@ -44,12 +43,11 @@ Tài liệu này cung cấp **Ma trận Ra Quyết định (Decision Matrix)** c
 
 ---
 
-### 2.3. Trục 3: Động cơ Tổng hợp Âm thanh & Giọng đọc
-- **Bảng ma trận chọn Voice:**
-  - **Mục tiêu Benchmark 16:9 / Tài liệu học thuật tiếng Việt:** Chọn `vi-VN-NamMinhNeural` tại tốc độ `+22%`. Tốc độ đạt chuẩn 4.0 âm tiết/giây, âm sắc rõ nét, phát âm từ ngữ khoa học chuẩn xác.
-  - **Mục tiêu Tự sự / Kể chuyện cảm xúc tiếng Việt:** Chọn `Adam` tại tốc độ `0.95x` qua Colab OmniVoice.
-  - **Mục tiêu Tiếng Anh 9:16 Shorts:** Chọn `reference-narrator` tại tốc độ `0.92x` (giọng clone chuẩn từ video mẫu Ink Explainer).
-  - **Xử lý thuật ngữ song ngữ (Vietnamese narration có từ tiếng Anh):** Bọc từ tiếng Anh trong dấu ngoặc kép `""` để router kích hoạt `english_parts` qua `reference-narrator`, phần còn lại chạy qua voice tiếng Việt.
+### 2.3. Trục 3: Động cơ Tổng hợp Âm thanh & Giọng đọc (SSOT)
+- **Voice duy nhất:** `Adam` (`assets/voices/adam/profile.json`, SHA-256 `97d5aee4bc5bbb4a5951a180c04954f5f33b36e901f9a99084ec9f2ebb1817e9`).
+- **Thông số cố định (`sys/config.json`):** `tts_voice: "Adam"`, `en_voice: "Adam"`, `tts_speed: 1.22`, `en_speed: 1.22`, `num_step: 32`, `batch_size: 4`, model `kjanh/KhanhTTS-OmniVoice` trên Colab T4.
+- **Hậu kỳ âm thanh (`sys/audio_processing.py:master`):** `48kHz` Mono PCM16, EQ `+1.5dB @ 200Hz`, `-2.5dB @ 7000Hz`, chuẩn hóa `-14.0 LUFS`, `-1.5 dBTP`.
+- **Thuật ngữ song ngữ:** Bọc cụm từ tiếng Anh trong dấu ngoặc kép `""` để `english_parts` tách span ngôn ngữ trên cùng giọng `Adam` (`1.22x`).
 
 ---
 

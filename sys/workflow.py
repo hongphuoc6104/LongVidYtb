@@ -356,7 +356,7 @@ def prepare(p, job, stage):
         audio = p.payload(job, 'audio')
         lines += [f"Tiếng Việt: {audio['duration']:.2f} giây", f"![Nghe tiếng Việt]({p.path(job, audio['wav'])})"]
         if audio.get('en'):
-            lines += [f"Tiếng Anh: {audio['en']['duration']:.2f} giây", f"![Nghe Alba]({p.path(job, audio['en']['wav'])})"]
+            lines += [f"Tiếng Anh: {audio['en']['duration']:.2f} giây", f"![Nghe tiếng Anh]({p.path(job, audio['en']['wav'])})"]
         from scripts.story_plan import timeline
         payload = p.payload(job, 'content')
         if payload.get('schema_version') == '3.0':

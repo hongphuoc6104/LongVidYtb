@@ -13,7 +13,7 @@ import logging
 import re
 import threading
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 from typing import Any, Callable
@@ -105,7 +105,7 @@ class ChromeProfileWorker:
 
 
 DEFAULT_PROFILES = [
-    {"id": "profile_1", "port": 9222, "directory": "Profile 1", "user_data_dir": "~/.config/google-chrome-cdp-p1"},
+    {"id": "profile_1", "port": 9225, "directory": "Profile 1", "user_data_dir": "~/.config/google-chrome-cdp-p1"},
     {"id": "profile_2", "port": 9223, "directory": "Profile 2", "user_data_dir": "~/.config/google-chrome-cdp-p2"},
     {"id": "profile_3", "port": 9224, "directory": "Profile 3", "user_data_dir": "~/.config/google-chrome-cdp-p3"},
 ]
@@ -176,6 +176,52 @@ class MultiProfileManager:
             else:
                 worker.mark_error(error or "Unknown error", self.cooldown_seconds)
 
+    def stop_all_profiles(self) -> dict[str, Any]:
+        """Terminate all isolated Chrome CDP profile instances and clean Singleton locks."""
+        import subprocess
+
+        stopped_profiles: list[str] = []
+        cleaned_locks: list[str] = []
+        with self._lock:
+            for w in self.workers.values():
+                user_dir = Path(w.user_data_dir).expanduser()
+                if "google-chrome-cdp" in str(user_dir):
+                    subprocess.run(
+                        ["pkill", "-f", "--", f"user-data-dir={user_dir}"],
+                        capture_output=True,
+                        text=True,
+                        check=False,
+                    )
+                subprocess.run(
+                    ["pkill", "-f", "--", f"remote-debugging-port={w.port}"],
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+                for lock_name in ("SingletonLock", "SingletonCookie", "SingletonSocket"):
+                    for candidate in (user_dir / lock_name, user_dir / w.directory / lock_name):
+                        if candidate.exists() or candidate.is_symlink():
+                            try:
+                                candidate.unlink()
+                                cleaned_locks.append(str(candidate))
+                            except OSError:
+                                pass
+                w.state = ProfileState.HEALTHY
+                w.assigned_patch_id = None
+                stopped_profiles.append(w.profile_id)
+
+        subprocess.run(["pkill", "-f", "--", "port_forwarder.py"], capture_output=True, text=True, check=False)
+        for _ in range(10):
+            if not any(w.is_port_open(timeout=0.15) for w in self.workers.values()):
+                break
+            time.sleep(0.2)
+        ports_still_open = [w.port for w in self.workers.values() if w.is_port_open(timeout=0.2)]
+        return {
+            "stopped_profiles": stopped_profiles,
+            "cleaned_locks_count": len(cleaned_locks),
+            "ports_still_open": ports_still_open,
+        }
+
 
 class MultiProfileDispatcher:
     """Dispatches patches across the multi-profile pool in parallel with auto-failover."""
@@ -222,7 +268,7 @@ class MultiProfileDispatcher:
                     patch.patch_id, len(pending_items), worker.profile_id, worker.port
                 )
                 results = executor_func(worker, pending_items)
-                for item, res in zip(pending_items, results):
+                for item, res in zip(pending_items, results, strict=False):
                     item_id = str(item.get("testCase") or item.get("id") or "")
                     patch.mark_item_success(item_id, res)
 
@@ -287,6 +333,10 @@ if __name__ == "__main__":
     cfg = json.loads(cfg_file.read_text()) if cfg_file.is_file() else {}
     profiles = cfg.get("flow_cdp_profiles", DEFAULT_PROFILES)
     manager = MultiProfileManager(profiles_config=profiles)
-    probe = "--probe" in sys.argv or "status" in sys.argv or "-p" in sys.argv
-    print(json.dumps(manager.get_status(probe_ports=probe), indent=2))
+    if "stop" in sys.argv or "--stop" in sys.argv:
+        print(json.dumps(manager.stop_all_profiles(), indent=2))
+    else:
+        probe = "--probe" in sys.argv or "status" in sys.argv or "-p" in sys.argv
+        print(json.dumps(manager.get_status(probe_ports=probe), indent=2))
+
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Vietnamese Text Normalizer for TTS (OmniVoice / Edge-TTS).
+Vietnamese Text Normalizer for TTS (Colab OmniVoice — Adam).
 Converts numbers, dates, percentages, symbols, and foreign loanwords/names
 into 100% natural Vietnamese phonetic spellings.
 """

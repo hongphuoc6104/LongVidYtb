@@ -16,7 +16,6 @@ import socket
 import subprocess
 import time
 import urllib.request
-from pathlib import Path
 from typing import Any, Optional
 
 import websockets
@@ -325,6 +324,50 @@ class DirectCDPProfileSession:
         m = re.search(r"/project/([0-9a-fA-F-]{36})", url or "")
         return m.group(1) if m else ""
 
+    async def _wait_for_flow_ready(self, timeout: float = 25.0) -> dict[str, Any]:
+        """Actively poll the Flow tab until document, WIZ CSRF token, and reCAPTCHA Enterprise are ready."""
+        deadline = time.monotonic() + timeout
+        probe_js = """
+        (() => {
+            const readyState = document.readyState;
+            const wiz = globalThis.WIZ_global_data || {};
+            const hasAt = Boolean(wiz.SNlM0e);
+            const hasPristine = Boolean(window.__vp_cdp_hijack?.pristine);
+            const execFn = window.grecaptcha?.enterprise?.execute;
+            const hasExec = typeof execFn === 'function';
+            let trapped = Boolean(window.__vp_cdp_hijack?.trapped);
+            if (hasExec && !hasPristine) {
+                try {
+                    if (String(execFn).includes('extension_hijack_detected')) trapped = true;
+                } catch (e) {}
+            }
+            return {
+                readyState,
+                hasAt,
+                hasPristine,
+                hasExec,
+                trapped,
+                hasMint: typeof window.mintCaptcha === 'function'
+            };
+        })()
+        """
+        last_state: dict[str, Any] = {}
+        while time.monotonic() < deadline:
+            try:
+                state = await self.evaluate(probe_js, await_promise=False, timeout=5.0)
+                if isinstance(state, dict):
+                    last_state = state
+                    if (
+                        state.get("readyState") == "complete"
+                        and state.get("hasAt")
+                        and (state.get("hasPristine") or (state.get("hasExec") and not state.get("trapped")))
+                    ):
+                        return state
+            except Exception:
+                pass
+            await asyncio.sleep(0.5)
+        return last_state
+
     async def connect(self, reload_for_guard: bool = False) -> None:
         target = get_flow_target(self.cdp_port)
         ws_url = target["webSocketDebuggerUrl"]
@@ -337,8 +380,17 @@ class DirectCDPProfileSession:
         await self.call("Page.enable")
         await self.call("Runtime.enable")
         await self.call("Page.addScriptToEvaluateOnNewDocument", {"source": CDP_RECAPTCHA_GUARD_JS})
-        has_pristine = await self.evaluate("!!window.__vp_cdp_hijack?.pristine", await_promise=False)
-        if reload_for_guard or not has_pristine:
+
+        need_reload = reload_for_guard
+        if not need_reload:
+            has_mint = await self.evaluate("typeof window.mintCaptcha === 'function'", await_promise=False)
+            if not has_mint:
+                await self.evaluate(CDP_RECAPTCHA_GUARD_JS, await_promise=False)
+            state = await self._wait_for_flow_ready(timeout=8.0)
+            if state.get("trapped") or not (state.get("hasPristine") or state.get("hasExec")):
+                need_reload = True
+
+        if need_reload:
             try:
                 await self.call(
                     "Storage.clearDataForOrigin",
@@ -357,7 +409,8 @@ class DirectCDPProfileSession:
             except Exception:
                 pass
             await self.call("Page.reload", {"ignoreCache": False})
-            await asyncio.sleep(6.0)
+            await self._wait_for_flow_ready(timeout=25.0)
+
         has_mint = await self.evaluate("typeof window.mintCaptcha === 'function'", await_promise=False)
         if not has_mint:
             await self.evaluate(CDP_RECAPTCHA_GUARD_JS, await_promise=False)

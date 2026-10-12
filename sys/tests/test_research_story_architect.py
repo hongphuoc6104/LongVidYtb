@@ -123,14 +123,14 @@ class TestResearchStoryArchitect(unittest.TestCase):
         assert self.brief_data["outputs"][0]["voice"] == "Adam"
 
         cfg = json.loads((SYS_DIR / "config.json").read_text(encoding="utf-8"))
-        self.assertEqual(cfg["voices"], {"vi": "assets/voices/adam/profile.json", "en": "assets/voices/reference-narrator/profile.json"})
+        self.assertEqual(cfg["voices"], {"vi": "assets/voices/adam/profile.json", "en": "assets/voices/adam/profile.json"})
         self.assertEqual(cfg["tts_voice"], "Adam")
         self.assertEqual(cfg["tts_speed"], 1.22)
-        self.assertEqual(cfg["en_voice"], "reference-narrator")
-        self.assertEqual(cfg["en_speed"], 0.92)
+        self.assertEqual(cfg["en_voice"], "Adam")
+        self.assertEqual(cfg["en_speed"], 1.22)
         voice_dirs = sorted(p.name for p in (SYS_DIR / "assets/voices").iterdir() if p.is_dir())
-        self.assertEqual(voice_dirs, ["adam", "reference-narrator"])
-        assert voice_dirs == ["adam", "reference-narrator"]
+        self.assertEqual(voice_dirs, ["adam"])
+        assert voice_dirs == ["adam"]
 
     def test_build_content_v3_schema_compliance(self):
         """Verify content.json satisfies validate_content contract with 0 errors."""

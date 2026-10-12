@@ -33,7 +33,8 @@ def produce(pilot, job, out):
         matches = []
         for path in (pilot.root / 'assets/voices').glob('*/profile.json'):
             profile = read(path)
-            if profile.get('language') == language and profile.get('voice', '').casefold() == settings['voice'].casefold():
+            allowed_langs = set(profile.get('languages') or [profile.get('language')])
+            if language in allowed_langs and profile.get('voice', '').casefold() == settings['voice'].casefold():
                 matches.append((path, profile))
         if len(matches) != 1:
             raise Blocked('VOICE_REFERENCE_REQUIRED: missing or ambiguous ' + settings['voice'])

@@ -25,13 +25,7 @@ All code modifications, new features, and bug fixes must pass the 6-station deve
 When encountering or fixing any defect, adhere to the 4-step protocol:
 $$\text{1. E2E Reproduction} \longrightarrow \text{2. Root Cause Analysis} \longrightarrow \text{3. Architectural Fix} \longrightarrow \text{4. E2E Verification & Playbook Entry}$$
 
-Every resolved bug must be documented in `PLAYBOOK.md` conforming strictly to the 6 mandatory fields:
-1. `Triệu chứng (Symptom)`
-2. `Tái hiện E2E (Reproduction Path)`
-3. `Nguyên nhân cốt lõi (Root Cause)`
-4. `Giả định sai (Wrong Assumptions)`
-5. `Giải pháp & Kiểm chứng (Resolution & E2E Proof)`
-6. `Quy tắc phòng ngừa vàng (Golden Rule)`
+Every resolved bug must be documented in [PLAYBOOK.md](../../../PLAYBOOK.md) conforming strictly to all 6 mandatory schema fields (verified via `playbook_validator.py`).
 
 **Skill Extraction Threshold**: When `PLAYBOOK.md` exceeds 200 lines or accumulates $\ge 3$ lessons on the same topic, the knowledge must be modularized into a dedicated Skill in `.agents/skills/`.
 

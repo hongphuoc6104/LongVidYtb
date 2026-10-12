@@ -467,11 +467,7 @@ def chunks(text):
 DEFAULT_PAUSE={'para':.70,'sentence':.50,'minor':.30,'tail':.35}
 
 def gap_after(text,g):
- """Pause following a chunk inside a scene; mirrors vieneu's own gap table.
-
- Only used on the per-sentence fallback path -- scene-level synthesis gets
- these gaps from the model itself.
- """
+ """Pause following a chunk inside a scene based on terminal punctuation."""
  return g.get('sentence',DEFAULT_PAUSE['sentence']) if text.rstrip()[-1:] in '.!?…' else g.get('minor',DEFAULT_PAUSE['minor'])
 
 from audio_processing import frames_of, run_ffmpeg, AudioProcessingError
@@ -550,50 +546,10 @@ def span_take(cfg,retake):
          'temperature':round(max(.1,float(cfg.get('en_temperature',.3))-.05*r),3),
          'rate':round(max(.8,float(cfg.get('audio_english_spans_rate',1.))-.05*r),3)}
 
-def english_spans(p,j,out,cfg,scenes):
- """Voice the English parts of Vietnamese narration with the English engine.
-
- VieNeu has no English final clusters: in vocab-scold-002 the reviewer kept
- hearing "Please don't scold me!" as "sco"/"scood". Identical text with an
- identical take is synthesized once and reused, so a word sounds the same in
- every scene. Fills each English part with its WAV, take and rate in place."""
- py=p.root/'.venv-en/bin/python'
- if not py.exists():raise Blocked('Thiếu môi trường TTS tiếng Anh (.venv-en) để đọc từ/câu tiếng Anh; cài .venv-en hoặc đặt audio_english_spans_engine khác "en"')
- items=[];ids={}
- for sc in scenes:
-  take=span_take(cfg,sc['retake'])
-  for x in (x for c in sc.get('parts',[]) for x in c if x['lang']=='en'):
-   k=(x['text'],take['seed'],take['temperature'])
-   if k not in ids:ids[k]=f'S{len(items):03}';items.append({'id':ids[k],'text':x['text'],'retake':sc['retake'],'take':take})
-   x.update(id=ids[k],rate=take['rate'])
- keys=('en_voice','en_device','en_quantize','en_temperature','en_threads','en_seed')
- request=out/'request-en-spans.json';write(request,{'mode':'spans','settings':{k:cfg.get(k) for k in keys if cfg.get(k) is not None},'cache_dir':str(p.job(j)/'cache/tts-en-spans'),'spans':items})
- r=subprocess.run([str(py),str(p.root/'scripts/en_worker.py'),str(request),str(out)],capture_output=True,text=True,timeout=7200)
- (out/'tts-en-spans.log').write_text(r.stdout+'\n'+r.stderr)
- if r.returncode:raise Blocked('TTS tiếng Anh cho từ/câu mẫu thất bại; xem tts-en-spans.log')
- meta=read(out/'en-spans-result.json');done={x['id']:x for x in meta['spans']}
- for x in (x for sc in scenes for c in sc.get('parts',[]) for x in c if x['lang']=='en'):
-  d=done[x.pop('id')]
-  x.update(wav=str(out/d['path']),take=dict(engine=meta['engine'],voice=meta['voice'],seed=d['seed'],temperature=d['temperature'],rate=x['rate']))
-
-def english(p,j,out,cfg,scenes,remote=False):
- py=p.root/'.venv-en/bin/python'
- if not remote and not py.exists():raise Blocked('Install the English TTS environment (.venv-en)')
+def english(p,j,out,cfg,scenes,remote=True):
+ if not remote:raise Blocked('COLAB_REQUIRED: local TTS removed')
  missing=[s['id'] for s in scenes if not s.get('narration_en')]
  if missing:raise Blocked('Missing narration_en for '+', '.join(missing))
- g=cfg.get('tts_pause',DEFAULT_PAUSE)
- retake=retakes(p,j)
- items=[{'scene_id':s['id'],'narration_en':s['narration_en'],'retake':retake.get(s['id'],0),
-         'take':{x:v for x,v in span_take(cfg,retake.get(s['id'],0)).items() if x!='rate'},
-         'tail':scene_tail(s,'en',g,k==len(scenes)-1)}
-        for k,s in enumerate(scenes)]
- keys=('en_voice','en_device','en_quantize','en_temperature','en_threads','en_seed')
- # Job-level cache dir so it survives pilot.run()'s fresh per-revision folders.
- request=out/'request-en.json';write(request,{'settings':{k:cfg.get(k) for k in keys if cfg.get(k) is not None},'cache_dir':str(p.job(j)/'cache/tts-en'),'scenes':items})
- if not remote:
-  r=subprocess.run([str(py),str(p.root/'scripts/en_worker.py'),str(request),str(out)],capture_output=True,text=True,timeout=7200)
-  (out/'tts-en.log').write_text(r.stdout+'\n'+r.stderr)
-  if r.returncode:raise Blocked('English TTS failed; see tts-en.log')
  meta=read(out/'en-result.json');cursor=0.;frames=[];params=None;done=[]
  for x in meta['scenes']:
   f=out/x['path']
@@ -610,59 +566,34 @@ def english(p,j,out,cfg,scenes,remote=False):
  master(combined,out/'narration_en_eq.wav',cfg)
  return {'engine':meta['engine'],'voice':meta['voice'],'wav':rel(p,j,combined),'duration':cursor,'scenes':done}
 
-def tts_python(root,cfg):
- """.venv-tts-gpu (torch cu126 + VieNeu) when installed and tts_device allows a
- GPU; the worker itself still falls back to ONNX/CPU if CUDA is unusable."""
- gpu=root/'.venv-tts-gpu/bin/python'
- return gpu if cfg.get('tts_device','auto')!='cpu' and gpu.exists() else root/'.venv-tts/bin/python'
-
 def audio(p,j,out):
  if p.brief(j) and p.brief(j)[0].get('outputs'):
   from remote_audio import produce
   return produce(p,j,out)
  content=p.payload(j,'content');cfg=config(p);g=cfg.get('tts_pause',DEFAULT_PAUSE)
- from colab_bridge.client import enabled
- remote=enabled(cfg)
- py=tts_python(p.root,cfg)
- if not remote and not py.exists():raise Blocked('Install local TTS environment')
+ from colab_bridge.client import Client, ColabError, enabled
+ from colab_bridge.protocol import build_request
+ if not enabled(cfg):raise Blocked('COLAB_REQUIRED: local TTS removed')
  retake=retakes(p,j)
  scenes=[{'scene_id':s['id'],'narration':s['narration'],'texts':chunks(s['narration']),'retake':retake.get(s['id'],0)} for s in content['scenes']]
  for k,sc in enumerate(scenes):
   sc['gaps']=[gap_after(t,g) for t in sc['texts'][:-1]]
   sc['tail']=scene_tail(content['scenes'][k],'vi',g,k==len(scenes)-1)
   words=[v['word'] for v in content['scenes'][k].get('vocabulary') or [] if is_english(v.get('word',''))]
-  # audio_english_spans_engine: 'en' (default) voices English inside Vietnamese
-  # narration with the English engine; any other value keeps it on VieNeu.
   if words and cfg.get('audio_english_spans_engine','en')=='en':
    parts=[english_parts(t,words) for t in sc['texts']]
    if any(x['lang']=='en' for c in parts for x in c):sc['parts']=parts
- if not remote and any('parts' in sc for sc in scenes):english_spans(p,j,out,cfg,scenes)
- keys=('tts_voice','tts_temperature','tts_top_p','tts_max_chars','tts_scene_synthesis','tts_backend','tts_precision','tts_speed','tts_device','tts_gpu_dtype','tts_batch_size','audio_english_spans_gap')
- # Job-level cache dir (not per-revision): pilot.run() always mkdirs a fresh
- # revisions/audio/N, so a cache rooted there could never hit across runs.
- # tts_worker.py now keys cache entries by content hash (text+settings+model
- # version), so sharing this directory across revisions is safe -- editing
- # one scene's narration cannot resurrect another scene's stale audio.
- cache_dir=p.job(j)/'cache/tts'
- request=out/'request.json';write(request,{'settings':{k:cfg.get(k) for k in keys if cfg.get(k) is not None},'cache_dir':str(cache_dir),'scenes':scenes})
- if remote:
-  from colab_bridge.client import Client, ColabError
-  from colab_bridge.protocol import build_request
-  en_scenes=[]
-  if needs_en(p,j):
-   for k,s in enumerate(content['scenes']):
-    if not s.get('narration_en'):raise Blocked('Missing narration_en for '+s['id'])
-    en_scenes.append({'scene_id':s['id'],'narration_en':s['narration_en'],'retake':retake.get(s['id'],0),
-                      'tail':scene_tail(s,'en',g,k==len(content['scenes'])-1)})
-  try:
-   req=build_request(p.root,cfg,scenes,en_scenes)
-   write(out/'request-colab.json',req)
-   Client(p.root,cfg).synthesize(req,out,p.job(j)/'cache/colab-tts')
-  except (ColabError,ValueError,OSError) as ex:raise Blocked(str(ex)) from ex
- else:
-  result=subprocess.run([str(py),str(p.root/'tts_worker.py'),str(request),str(out)],capture_output=True,text=True,timeout=7200)
-  (out/'tts.log').write_text(result.stdout+'\n'+result.stderr)
-  if result.returncode:raise Blocked('Local TTS failed; see tts.log; no cloud fallback')
+ en_scenes=[]
+ if needs_en(p,j):
+  for k,s in enumerate(content['scenes']):
+   if not s.get('narration_en'):raise Blocked('Missing narration_en for '+s['id'])
+   en_scenes.append({'scene_id':s['id'],'narration_en':s['narration_en'],'retake':retake.get(s['id'],0),
+                     'tail':scene_tail(s,'en',g,k==len(content['scenes'])-1)})
+ try:
+  req=build_request(p.root,cfg,scenes,en_scenes)
+  write(out/'request-colab.json',req)
+  Client(p.root,cfg).synthesize(req,out,p.job(j)/'cache/colab-tts')
+ except (ColabError,ValueError,OSError) as ex:raise Blocked(str(ex)) from ex
  meta=read(out/'tts-result.json');segments=[];cursor=0.;frames=[];params=None
  for x in meta['segments']:
   file=out/x['path']
@@ -677,10 +608,9 @@ def audio(p,j,out):
  with wave.open(str(combined),'wb') as wav:wav.setnchannels(params[0]);wav.setsampwidth(params[1]);wav.setframerate(params[2]);wav.writeframes(b''.join(frames))
  master(combined,out/'narration_eq.wav',cfg)
  srt=out/'subtitles.srt';srt.write_text(make_srt(segments))
- payload={'voice':meta['voice'],'backend':meta.get('engine',{}).get('backend','onnx'),'wav':rel(p,j,combined),'srt':rel(p,j,srt),'duration':cursor,'segments':segments}
- if remote:payload['generation_report']=rel(p,j,out/'tts-result.json')
+ payload={'voice':meta['voice'],'backend':meta.get('engine',{}).get('backend','colab-omnivoice'),'wav':rel(p,j,combined),'srt':rel(p,j,srt),'duration':cursor,'segments':segments,'generation_report':rel(p,j,out/'tts-result.json')}
  if meta.get('english_spans'):payload['english_spans']=meta['english_spans']
- if needs_en(p,j):payload['en']=english(p,j,out,cfg,content['scenes'],remote=remote)
+ if needs_en(p,j):payload['en']=english(p,j,out,cfg,content['scenes'],remote=True)
  return payload
 
 def render(p,j,out):

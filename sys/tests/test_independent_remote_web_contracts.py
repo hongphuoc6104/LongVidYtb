@@ -99,7 +99,7 @@ class IndependentRemoteWebContracts(unittest.TestCase):
         import re
         cfg=json.loads((ROOT/'config.json').read_text())
         (self.root/'image.png').write_bytes(b'QA-synthetic-image');(self.root/'en.wav').write_bytes(b'QA-synthetic-audio')
-        brief={'aspect_ratio':'9:16','outputs':[{'aspect_ratio':'9:16','language':'en','subtitles':True,'voice':'alba','speed':.87}]}
+        brief={'aspect_ratio':'9:16','outputs':[{'aspect_ratio':'9:16','language':'en','subtitles':True,'voice':'Adam','speed':1.22}]}
         images={'items':[{'path':'image.png','scene_id':'SC01','image_id':'IM01','ratio':'9:16'}]}
         audio={'wav':'en.wav','tracks':{'en':{'wav':'en.wav','duration':1.}}}
         req=build_render_request(ROOT,brief,{'scenes':[]},images,audio,lambda x:self.root/x)
@@ -319,7 +319,7 @@ class IndependentRemoteWebContracts(unittest.TestCase):
         cfg=read(self.root/'config.json');cfg['colab_tts']['enabled']=True;write(self.root/'config.json',cfg)
         job=self.root/'runs/synthetic-english';job.mkdir(parents=True)
         (job/'image.png').write_bytes(base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9Zl6AAAAAASUVORK5CYII='))
-        brief={'aspect_ratio':'9:16','language':'en','outputs':[{'aspect_ratio':'9:16','language':'en','subtitles':True,'voice':'alba','speed':.87}]}
+        brief={'aspect_ratio':'9:16','language':'en','outputs':[{'aspect_ratio':'9:16','language':'en','subtitles':True,'voice':'Adam','speed':.87}]}
         text='I see a predator.'
         content={'schema_version':'3.0','scenes':[{'id':'SC01','title':'Synthetic scene','narration':'WRONG VI TRACK MUST NOT WIN',
                  'narration_en':text,'audio_direction':{'en':{'learner_pause_seconds':.75}},

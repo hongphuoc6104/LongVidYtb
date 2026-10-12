@@ -4,11 +4,9 @@ This reference documents the remote voice-cloning and audio assembly pipeline im
 
 ---
 
-## 1. Mandatory Pre-Synthesis Vietnamese Phonetic Normalization (`ERR-20261010-08` & `ERR-20261010-06`)
+## 1. Mandatory Pre-Synthesis Vietnamese Phonetic Normalization (`ERR-20261010-08`)
 
-Multilingual voice-clone models (`kjanh/KhanhTTS-OmniVoice`) and Azure `edge-tts` suffer from two critical frontend tokenizer issues when given raw Vietnamese scripts:
-1. **OmniVoice English Phoneme Fallback (`ERR-20261010-08`)**: Digits (`50.000`, `1963`, `17`, `81%`), slashes (`/`), and unaccented foreign proper nouns (`Richard Lee`, `Ju/'hoansi`, `Kalahari`, `Botswana`) trigger the English phoneme dictionary inside Vietnamese sentences.
-2. **Edge-TTS Empty Audio Payload (`ERR-20261010-06`)**: Mid-sentence ellipses (`...`, `…`) or em-dashes (`—`, `–`) crash the Azure `vi-VN` SSML tokenizer with `NoAudioReceived`.
+Multilingual voice-clone model `kjanh/KhanhTTS-OmniVoice` falls back to English phonemes when given raw digits (`50.000`, `1963`, `17`, `81%`), slashes (`/`), or unaccented foreign proper nouns (`Richard Lee`, `Ju/'hoansi`, `Kalahari`, `Botswana`), and produces unstable prosody on mid-sentence ellipses (`...`, `…`) or em-dashes (`—`, `–`).
 
 ### Mandatory Rule
 Before constructing any TTS request or invoking synthesis, pass all Vietnamese text through [`sys/tools/vn_text_normalizer.py`](../../../../sys/tools/vn_text_normalizer.py):
@@ -18,11 +16,11 @@ Before constructing any TTS request or invoking synthesis, pass all Vietnamese t
 
 ---
 
-## 2. Voice Profiles & Reference Checksums (`protocol.py`)
+## 2. Voice Profile & Reference Checksums (`protocol.py`)
 
-Voice clone profiles reside in `sys/assets/voices/<voice_name>/profile.json` (`adam` for Vietnamese, `reference-narrator` for English) and are mapped at the top level of `sys/config.json` under `voices`.
+The sole canonical voice profile resides in `sys/assets/voices/adam/profile.json` (`"voice": "Adam"`, `"languages": ["vi", "en"]`, `speed: 1.22`) and is mapped in `sys/config.json` under `voices.vi` and `voices.en`.
 `load_profiles()` enforces strict validation before uploading to Colab:
-- `profile['voice']` and `profile['language']` must match the active configuration.
+- `profile['voice']` and `lang in profile['languages']` must match the active configuration.
 - `reference_wav` must exist, match its SHA-256 `profile['sha256']`, and have a duration strictly between **3 and 15 seconds** (`3 <= frames / framerate <= 15`).
 - `source_speed` must be positive and finite. Effective generation speed passed to OmniVoice is scaled as `item['speed'] / profile['source_speed']` to prevent double-slowdown.
 - Model revision (`models[lang]['revision']`) must be a pinned 40-character hexadecimal Hugging Face commit hash (`20d056b8ea5d8d578b4cbaf1f703012fa3798a84`).

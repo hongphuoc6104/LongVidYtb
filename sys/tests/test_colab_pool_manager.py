@@ -154,6 +154,36 @@ class ColabPoolManagerTests(unittest.TestCase):
             self.assertEqual(sorted(stopped["stopped"]), ["account-01", "account-02"])
             self.assertFalse(manager.workers["account-01"].t4_confirmed)
 
+    def test_stop_pool_reconciles_tmp_profiles_and_teardown_closes_chrome(self) -> None:
+        tmp_profiles = self.root / "tmp_vp_colab_profiles"
+        acc2_tmp = tmp_profiles / "account-02"
+        acc2_tmp.mkdir(parents=True, exist_ok=True)
+        (acc2_tmp / "sessions.json").write_text(
+            '{"video-pilot-tts": {"endpoint": "ep-test-02", "accelerator": "T4"}}'
+        )
+
+        manager = ColabPoolManager(
+            accounts_config=[{"id": "account-02", "role": "render"}],
+            lock_dir=self.lock_dir,
+        )
+
+        def fake_run(account_id: str, args: list[str], **kwargs):
+            return subprocess.CompletedProcess(args, 0, stdout="Stopped\n", stderr="")
+
+        with patch.object(manager, "run_account_cmd", side_effect=fake_run):
+            res = manager.teardown_job_resources(
+                ["account-02"],
+                close_chrome=True,
+                tmp_profiles_dir=tmp_profiles,
+            )
+            self.assertEqual(res["colab"]["stopped"], ["account-02"])
+            self.assertIn("stopped_profiles", res["chrome_cdp"])
+            # Both canonical and /tmp sessions.json must have 'video-pilot-tts' cleared
+            self.assertEqual((acc2_tmp / "sessions.json").read_text().strip(), "{}")
+            canon_sess = accounts.folder("account-02") / "sessions.json"
+            self.assertEqual(canon_sess.read_text().strip(), "{}")
+
 
 if __name__ == "__main__":
     unittest.main()
+

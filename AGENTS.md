@@ -1,33 +1,29 @@
 # Video Pilot — Agent Invariants & Governance
 
 ## 1. Architecture & Layout (SSOT)
-- **Mission**: Automate short and long-form explainer video production per brief specs.
-- **Directory Invariant**: `sys/` (engine/tools/data), `sys/runs/<job>/` (assets), `video/<job>/` (final MP4/SRT). Keep root clean of temporary files.
+- **Mission**: Automate short (`9:16`) and long-form (`16:9`) explainer videos per brief specs (`sys/format_profiles.py`).
+- **Directory Invariant**: `sys/` (engine/tools), `sys/runs/<job>/` (assets), `video/<job>/` (final MP4/SRT). Keep root clean.
 
-## 2. Technical Ethos & Conveyor
-- **Code Standards**: No monkey-patches, fake test passes, or manual DB edits. Modular, type-hinted code only.
-- **6-Station Conveyor (`./pipeline run`)**: St1 (Critique via `critique_review.html` & `lavish-axi`) -> St2 (AST Proof & Pytest) -> St3 (Docs Sync / `PLAYBOOK.md`) -> St4 (Lint / `ruff`) -> St5 (PR Prep / `treehouse` & `gh-axi`) -> St6 (CI Watch / Green Certification).
-- **Tooling Stack**: `treehouse` (worktrees), `gh-axi` (TOON GitHub CLI), `lavish-axi` (HTML review surface).
+## 2. Technical Ethos & 6-Station Conveyor (`./pipeline run`)
+- **Code Standards**: Modular, type-hinted code only. No monkey-patches, fake test passes, or manual DB/state edits.
+- **Conveyor**: St1 Critique (`critique_review.html` / `lavish-axi`) -> St2 AST Proof & `pytest` -> St3 `PLAYBOOK.md` Sync -> St4 `ruff` Lint -> St5 PR (`treehouse` / `gh-axi`) -> St6 Green CI.
 
 ## 3. Pipelines & Role Separation
-- **Topic-to-Video Chain (`vp-production`)**: New explainer topics run `vp-research-architect` (Schema 3.0 `brief.json`/`content.json`, `sys/format_profiles.py`) -> `vp-scriptwriting` (`vn_text_normalizer.py` + `script_cadence_checker.py` drift <= 0.3s) -> `vp-layered-motion` (`background` + `sticker` layers/beats) -> `pilot.py` Engine 4 (`outline -> dialogue -> audio -> images -> video`; vocab jobs start via `vocab/bank.py start`).
-- **Video & Audio (Colab T4 GPU Priority — vp-colab-bridge)**: Launch via python3 pilot.py or sys/colab_bridge/. Standard engine: sys/renderer/render.mjs (strictly no ad-hoc ffmpeg scripts).
-- **Image Generation (`vp-flow-cdp`)**: 3 Chrome profiles pool (`sys/flow_cdp/`), patch partitioning (2-4 shots/patch), auto-failover on `PUBLIC_ERROR_UNUSUAL_ACTIVITY`, minimal contract (valid AI image + `.json` sidecar; never draw mock images with PIL).
+- **Topic-to-Video Chain (`vp-production`)**: `vp-research-architect` (Schema 3.0 `brief.json`/`content.json`) -> `vp-scriptwriting` (`vn_text_normalizer.py` + `script_cadence_checker.py`) -> `vp-layered-motion` (`background` + `sticker` layers) -> `pilot.py` Engine 4 (`outline -> dialogue -> audio -> images -> video`; vocab jobs start via `vocab/bank.py start`).
+- **Remote GPU TTS & Video (`vp-colab-bridge`)**: Execute via `pilot.py` or `sys/colab_bridge/` + `sys/renderer/render.mjs` (no ad-hoc ffmpeg/local render).
+- **AI Image Generation (`vp-flow-cdp`)**: 3 Chrome profiles pool (`sys/flow_cdp/`) with patch failover. Valid AI image + `.json` sidecar required (never draw mocks with PIL).
 
-## 4. Headless Colab Safety & Multi-T4 Parallel Acceleration
-- **Mandatory Headless Execution (Rule 4)**: Colab T4 lacks physical X11 display. Remotion and Chromium must execute via runtime `chrome-wrapper.sh` (`VP_CHROME_PATH`, `DISABLE_FROM_SURFACE=true`) with flags (`--no-sandbox`, `--disable-dev-shm-usage`, `--disable-gpu-rasterization`, `--run-all-compositor-stages-before-draw`) and `videoBitrate: '6M'` (`h264_nvenc`). Prohibit `xvfb-run` / virtual display hacks that trigger ANGLE socket hangs.
-- **High-Throughput Multi-T4 Pool**: Accelerate multi-chapter renders concurrently across isolated Colab T4 accounts (`ColabPoolManager` & `ColabPoolDispatcher`), with orphan cleanup (`pkill -9`) and quota failover.
+## 4. Headless Colab GPU & Multi-T4 Pool (`vp-colab-bridge`)
+- **Headless EGL + NVENC (Rule 4)**: Run Chromium via `chrome-wrapper.sh` (`VP_CHROME_PATH`, `DISABLE_FROM_SURFACE=true`) with NVIDIA Headless EGL (`10_nvidia.json` + `gl-egl`, fallback `--disable-gpu-rasterization`), 4-layer sync tile locks (`<Img decoding="sync">`), and `videoBitrate: '6M'` (`h264_nvenc`). Strictly prohibit `xvfb-run` and `--use-angle=gl`.
+- **Multi-T4 Pool**: Dispatch multi-chapter renders in parallel across Colab T4 accounts (`ColabPoolManager` / `ColabPoolDispatcher`) with orphan cleanup (`pkill -9`).
 
 ## 5. Execution Modes & Bug Discipline
-- **Modes**: Auto (autonomous E2E), Review (checkpoint pauses: script, audio, images, video), Stop & Handoff (immediate halt preserving assets).
-- **Bug Protocol**: 4-step protocol (Reproduction -> Root Cause -> Fix -> Playbook) and 6 fields in `PLAYBOOK.md`. No mocks/tampering. Extract to `.agents/skills/` when `PLAYBOOK.md` > 200 lines or >= 3 lessons/topic.
+- **Modes**: Auto (E2E without reviewer), Review (pause at outline/dialogue/audio/images/video), Stop & Handoff (halt immediately preserving assets).
+- **Bug Protocol**: Reproduction -> Root Cause -> Fix -> `PLAYBOOK.md` (6 mandatory fields). Extract to `.agents/skills/` if `PLAYBOOK.md` > 200 lines.
 
-## 6. Anti-Hallucination & Anti-Laziness Guard
-- **Script & Diversity Fidelity**: Preserve 100% vocabulary, facts (`<= 20` syllables), captions, and templates in `sys/prompt_templates.py`. Strict Forward Chronology and zero formulaic bridges; 100% PASS on `sys/tools/script_diversity_linter.py`.
-- **Visual Cast Invariant**: Anonymous stick-figures only (round white head, thick black outline, dot/oval eyes, thin limbs, bright background). Rule-of-Thirds stickers (`0.35`, `0.64`) and semantic camera motion (no `% 5` cycling or mechanical clichés).
-- **Verification Integrity**: File existence != valid content. Inspect outputs via `ffprobe` (dimensions, audio sync, H.264/AAC). Report genuine stdout/stderr.
+## 6. Quality & Verification Guards
+- **Fidelity & Direct Pacing**: Split into short scenes (`1-2` concise sentences/scene), go straight to the point (zero greetings/fillers, zero `Prof. X at Univ. Y` name-drops in narration — keep citations in `brief.json` only), spoken facts `<= 20` syllables, forward chronology, and `sys/prompt_templates.py`; pass `script_diversity_linter.py`.
+- **Visuals & Verification**: Anonymous stick-figures only, Rule-of-Thirds stickers, semantic camera motion (no `% 5` cycling). Verify outputs via `ffprobe` (file existence != valid content).
 
-## 7. Communication & Language Standards
-- **User Communication**: Natural, concise **Vietnamese**, addressing core tasks directly.
-- **Technical & Source**: **English** for code, variables, commits, schemas, and prompts; **English/Vietnamese** permitted for playbooks and storytelling skills.
-- **Script Materials**: Preserve 100% exact English spelling (including pronoun `I`).
+## 7. Language Standards
+- **User**: Concise, natural **Vietnamese**. **Code/Commits/Prompts**: **English** (preserve exact English spelling including `I`).

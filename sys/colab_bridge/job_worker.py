@@ -129,16 +129,42 @@ def run(bundle_path, output_dir, expected_id, expected_worker):
     chrome = subprocess.check_output(['node', '--input-type=module', '-e', "import {chromium} from 'playwright'; console.log(chromium.executablePath())"], cwd=runtime, text=True).strip()
     if not Path(chrome).is_file():
         subprocess.run(['npx', '--no-install', 'playwright', 'install', '--with-deps', 'chromium'], cwd=runtime, check=True, timeout=900)
+    if Path('/usr/lib64-nvidia/libEGL_nvidia.so.0').is_file():
+        vendor_dir = Path('/usr/share/glvnd/egl_vendor.d')
+        vendor_dir.mkdir(parents=True, exist_ok=True)
+        (vendor_dir / '10_nvidia.json').write_text(json.dumps({
+            'file_format_version': '1.0.0',
+            'ICD': {'library_path': '/usr/lib64-nvidia/libEGL_nvidia.so.0'}
+        }, indent=2))
     wrapper = runtime / 'chrome-wrapper.sh'
     wrapper.write_text(f"""#!/usr/bin/env bash
-exec "{chrome}" \\
-  --no-sandbox \\
-  --disable-dev-shm-usage \\
-  --run-all-compositor-stages-before-draw \\
-  --disable-gpu-rasterization \\
-  --enable-gpu \\
-  --ignore-gpu-blocklist \\
-  "$@"
+if [ -f "/usr/lib64-nvidia/libEGL_nvidia.so.0" ]; then
+  export LD_LIBRARY_PATH="/usr/lib64-nvidia:${{LD_LIBRARY_PATH}}"
+  exec "{chrome}" \\
+    --no-sandbox \\
+    --disable-dev-shm-usage \\
+    --use-gl=angle \\
+    --use-angle=gl-egl \\
+    --enable-gpu \\
+    --enable-gpu-rasterization \\
+    --enable-zero-copy \\
+    --ignore-gpu-blocklist \\
+    --run-all-compositor-stages-before-draw \\
+    --disable-checker-imaging \\
+    --disable-new-content-rendering-timeout \\
+    "$@"
+else
+  exec "{chrome}" \\
+    --no-sandbox \\
+    --disable-dev-shm-usage \\
+    --run-all-compositor-stages-before-draw \\
+    --disable-checker-imaging \\
+    --disable-new-content-rendering-timeout \\
+    --disable-gpu-rasterization \\
+    --enable-gpu \\
+    --ignore-gpu-blocklist \\
+    "$@"
+fi
 """)
     wrapper.chmod(0o755)
     env = dict(os.environ, VP_CHROME_PATH=str(wrapper), DISABLE_FROM_SURFACE='true')

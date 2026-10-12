@@ -312,6 +312,27 @@ class ThresholdWarningTests(unittest.TestCase):
         self.assertEqual(res_micro["scenes"][0]["sentence_count"], 4)
         self.assertTrue(any("SENTENCE_FRAGMENTATION" in w for w in res_micro["scenes"][0]["warnings"]))
 
+    def test_concise_scene_max_syllables_warning(self):
+        checker = ScriptCadenceChecker(max_syllables=20)
+        long_scene = {
+            "id": "LONG",
+            "duration": 10.0,
+            "narration": "Đây là một câu chuyện rất dài dòng về nghiên cứu khoa học xã hội và hành vi con người trong xã hội hiện đại ngày nay.",
+        }
+        res = checker.check_scenes([long_scene])
+        self.assertEqual(res["status"], "WARN")
+        self.assertTrue(any("SCENE_TOO_LONG" in w for w in res["scenes"][0]["warnings"]))
+        assert any("SCENE_TOO_LONG" in w for w in res["scenes"][0]["warnings"])
+
+        short_scene = {
+            "id": "SHORT",
+            "duration": 5.0,
+            "narration": "Hạch hạnh nhân lập tức kích hoạt phản xạ trốn chạy.",
+        }
+        res_ok = checker.check_scenes([short_scene])
+        self.assertFalse(any("SCENE_TOO_LONG" in w for w in res_ok["scenes"][0]["warnings"]))
+        assert not any("SCENE_TOO_LONG" in w for w in res_ok["scenes"][0]["warnings"])
+
 
 
 class ScriptParserTests(unittest.TestCase):
@@ -468,6 +489,71 @@ class CliExecutionTests(unittest.TestCase):
             self.assertEqual(proc.returncode, 1)
         finally:
             Path(tmp_path).unlink(missing_ok=True)
+
+    def test_cli_max_syllables_flag(self):
+        scene = [{"id": "TEST", "duration": 8.0, "narration": "Đây là một câu thoại có độ dài vượt qua mười lăm âm tiết quy định trong bài kiểm tra này."}]
+        with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+            json.dump(scene, f, ensure_ascii=False)
+            tmp_path = f.name
+
+        try:
+            cli_script = ROOT / "tools/script_cadence_checker.py"
+            proc = subprocess.run(
+                [sys.executable, str(cli_script), tmp_path, "--max-syllables", "10", "--json"],
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(proc.returncode, 0, proc.stderr)
+            data = json.loads(proc.stdout)
+            self.assertEqual(data["status"], "WARN")
+            self.assertTrue(any("SCENE_TOO_LONG" in w for w in data["scenes"][0]["warnings"]))
+            assert any("SCENE_TOO_LONG" in w for w in data["scenes"][0]["warnings"])
+        finally:
+            Path(tmp_path).unlink(missing_ok=True)
+
+
+class ScriptDiversityLinterTests(unittest.TestCase):
+    """Test script diversity linter for direct pacing, greetings ban, and academic name-drop ban."""
+
+    def test_banned_greetings_and_filler_transitions(self):
+        from script_diversity_linter import check_formulaic_transitions
+
+        scenes = [
+            {"id": "SC01", "narration": "Xin chào các bạn đã quay trở lại."},
+            {"id": "SC02", "narration": "Chào mừng quý vị đến với kênh hôm nay."},
+            {"id": "SC03", "narration": "Hãy nghĩ về một buổi sáng quen thuộc của bạn."},
+            {"id": "SC04", "narration": "Để tìm câu trả lời cho hiện tượng này."},
+        ]
+        violations = check_formulaic_transitions(scenes)
+        self.assertEqual(len(violations), 4)
+        types = [v["type"] for v in violations]
+        self.assertTrue(all(t == "FORMULAIC_TRANSITION" for t in types))
+        assert len(violations) == 4
+
+    def test_banned_academic_namedrops(self):
+        from script_diversity_linter import check_formulaic_transitions
+
+        scenes = [
+            {"id": "SC01", "narration": "Giáo sư Robert Sapolsky đã chứng minh điều này."},
+            {"id": "SC02", "narration": "Tiến sĩ Timothy Pychyl tại trường Đại học Carleton phát hiện ra."},
+            {"id": "SC03", "narration": "Nghiên cứu năm 2018 của viện tâm lý cho thấy."},
+        ]
+        violations = check_formulaic_transitions(scenes)
+        self.assertGreaterEqual(len(violations), 3)
+        namedrop_violations = [v for v in violations if v["type"] == "ACADEMIC_NAMEDROP_BLOAT"]
+        self.assertGreaterEqual(len(namedrop_violations), 3)
+        assert len(namedrop_violations) >= 3
+
+    def test_direct_concise_narration_passes_cleanly(self):
+        from script_diversity_linter import check_formulaic_transitions
+
+        scenes = [
+            {"id": "SC01", "narration": "Mỗi lần trì hoãn, não bạn đang kích hoạt cơ chế sinh tồn."},
+            {"id": "SC02", "narration": "Hạch hạnh nhân xem áp lực công việc như mối đe dọa trực tiếp."},
+        ]
+        violations = check_formulaic_transitions(scenes)
+        self.assertEqual(len(violations), 0)
+        assert len(violations) == 0
 
 
 if __name__ == "__main__":

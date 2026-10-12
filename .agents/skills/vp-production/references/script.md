@@ -14,12 +14,11 @@ To eliminate acoustic dead-air and maintain exact audio synchronization:
   where $P_{\text{tail}} = 0.70\text{s}$ for intermediate scenes (`para`) and $0.35\text{s}$ for the final scene (`tail`).
 - Enforce strict timeline tolerance: absolute drift must be within **$\pm 0.5\text{s}$** (optimal drift $\le 0.30\text{s}$). See [voice-cadence-pacing.md](../../vp-channel-patterns/references/voice-cadence-pacing.md) and [adaptation-playbook.md](../../vp-channel-patterns/references/adaptation-playbook.md).
 - Validate scripts before synthesis using `sys/tools/script_cadence_checker.py`. Reject scripts with speech rate outside 3.2 – 4.5 syllables/s or drift exceeding $\pm 0.5\text{s}$.
-- **Conversational Spoken Facts (ERR-20261011-03):** Every source fact and claim must be spoken Vietnamese $\le 20$ syllables (hard threshold $22$). Dry academic notation (`DOI:`, `et al.`, `ISBN:`, `%`, `/`) is strictly prohibited.
-- **Sentence Fragmentation Guard:** Avoid chopping scenes into $> 2$ micro-sentences ($< 6$ syllables) or $> 4$ sentences within a $\le 16.0s$ scene to prevent vocal stuttering.
+- **Direct & Concise Narration:** Start immediately with the core point (zero greetings, zero filler intros like *"Hãy nghĩ về..."* / *"Hãy hình dung..."*). Keep academic credentials (`Prof. A at Univ. B`, year, DOI) in `brief.json` (`sources[].reference`) only—never read researcher titles or universities in spoken narration. Every source fact and claim must be spoken Vietnamese $\le 20$ syllables (hard threshold $22$) with no `DOI:`, `et al.`, `ISBN:`, `%`, `/`.
+- **Sentence Fragmentation Guard:** Avoid chopping scenes into $> 2$ micro-sentences ($< 6$ syllables) to prevent vocal stuttering.
 
-## 2. Visual Beats vs Scene Splitting
-- **Never chop continuous speech into micro-scenes ($D \le 2.5\text{s}$):** Accumulated $P_{\text{tail}}$ padding will inflate the overall timeline by +35% to +70% and fragment vocal naturalness.
-- Maintain coherent 10–14s parent scenes and organize internal visual transitions using `beats[]` with semantic anchors mapped to specific narration keywords.
+## 2. Short Scene Splitting & Visual Beats
+- **Prefer multiple short scenes (`5.0s–9.0s`, `1–2` concise sentences, `16–32` syllables) over long monologues:** Deliver one crisp idea per scene and split multi-idea paragraphs into separate scenes (keep floor $> 2.5\text{s}$ to avoid $P_{\text{tail}}$ padding inflation), paired with `beats[]` ($\le 3.8\text{s}$/shot) anchored to narration keywords.
 
 ## 3. Script Invariants & Repair Discipline
 - Author outline purpose/transition and visible action before selecting scene/image counts for this job. Write complete narration first; freeze it before coverage, claims and verbatim anchors. A scene count stored after planning is a contract, not a universal recipe.

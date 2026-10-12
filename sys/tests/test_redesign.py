@@ -57,12 +57,9 @@ class RedesignTests(unittest.TestCase):
                 self.assertEqual(cleanup.clean_system_and_browser_cache(False),0)
             self.assertEqual(model.read_bytes(),b'keep')
 
-    def test_legacy_renderer_stops_before_synthesis(self):
-        from scripts import rerender_16x9
-        with patch.object(rerender_16x9,'synthesize_vieneu') as synth:
-            with self.assertRaisesRegex(SystemExit,'LEGACY_RENDER_DISABLED'):
-                rerender_16x9.main()
-            synth.assert_not_called()
+    def test_only_adam_voice_profile_exists(self):
+        profiles = sorted(p.parent.name for p in (ROOT / 'assets/voices').glob('*/profile.json'))
+        self.assertEqual(profiles, ['adam'])
 
     def test_cleanup_validation_reads_sqlite_without_writes(self):
         import sqlite3

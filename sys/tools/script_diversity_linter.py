@@ -20,7 +20,6 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List, Set, Tuple
 
-
 BANNED_FORMULAIC_TRANSITIONS = [
     r"^\s*nhưng rồi\b",
     r"^\s*thế nhưng rồi\b",
@@ -29,6 +28,19 @@ BANNED_FORMULAIC_TRANSITIONS = [
     r"^\s*hãy cùng khám phá\b",
     r"^\s*nhưng câu chuyện(?: áp lực)? chưa dừng lại ở đó\b",
     r"^\s*hãy thử ngẫm nghĩ\b",
+    r"^\s*(?:xin\s+)?chào\b",
+    r"^\s*chào\s+mừng\b",
+    r"\bhôm\s+nay\s+chúng\s+ta\b",
+    r"\btrong\s+video\s+này\b",
+    r"^\s*hãy\s+(?:nghĩ\s+về|hình\s+dung|tưởng\s+tượng)\b",
+    r"^\s*giờ\s+đây\s*,?\s*hãy\b",
+    r"\bđể\s+tìm\s+câu\s+trả\s+lời\b",
+]
+
+BANNED_ACADEMIC_NAMEDROPS = [
+    r"\b(?:giáo\s+sư|tiến\s+sĩ)\s+[a-zA-ZÀ-ỹ]+\s+[a-zA-ZÀ-ỹ]+",
+    r"\btại\s+(?:trường\s+)?đại\s+học\b",
+    r"\bnghiên\s+cứu\s+năm\s+(?:\d+|một\s+nghìn|hai\s+nghìn)\s+của\b",
 ]
 
 # Strict Forward Chronology Forbidden Keywords per Chapter
@@ -107,7 +119,7 @@ def check_formulaic_transitions(scenes: List[Dict[str, Any]]) -> List[Dict[str, 
     for sc in scenes:
         sc_id = sc.get("scene_id") or sc.get("id") or "UNKNOWN"
         narration = sc.get("narration") or sc.get("text") or ""
-        # Check start of sentences
+        # Check start of sentences and academic name-drop bloat
         sents = re.split(r"[.!?…]+", narration)
         for s_idx, s in enumerate(sents):
             s_clean = s.strip().lower()
@@ -122,6 +134,17 @@ def check_formulaic_transitions(scenes: List[Dict[str, Any]]) -> List[Dict[str, 
                         "pattern": pattern,
                         "snippet": s.strip(),
                     })
+                    break
+            for pattern in BANNED_ACADEMIC_NAMEDROPS:
+                if re.search(pattern, s_clean, flags=re.IGNORECASE):
+                    violations.append({
+                        "type": "ACADEMIC_NAMEDROP_BLOAT",
+                        "scene_id": sc_id,
+                        "sentence_index": s_idx + 1,
+                        "pattern": pattern,
+                        "snippet": s.strip(),
+                    })
+                    break
     return violations
 
 
@@ -385,7 +408,7 @@ def main() -> None:
                 print(f"[{idx}] {v_type} in {v['scene_id']} (Ch{v['chapter']}):")
                 print(f"    Forbidden keyword found: '{v['keyword']}'")
                 print(f"    Snippet: {v['snippet']}")
-            elif v_type == "FORMULAIC_TRANSITION":
+            elif v_type in ("FORMULAIC_TRANSITION", "ACADEMIC_NAMEDROP_BLOAT"):
                 print(f"[{idx}] {v_type} in {v['scene_id']} cue #{v['sentence_index']}:")
                 print(f"    Pattern: {v['pattern']}")
                 print(f"    Snippet: {v['snippet']}")

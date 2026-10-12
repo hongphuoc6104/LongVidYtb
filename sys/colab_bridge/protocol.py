@@ -40,7 +40,8 @@ def load_profiles(root, cfg, languages):
     for lang in sorted(languages):
         path = root / voice_map[lang]
         profile = json.loads(path.read_text())
-        if profile['voice'] != expected[lang] or profile['language'] != lang:
+        allowed_langs = set(profile.get('languages') or [profile.get('language')])
+        if profile['voice'] != expected[lang] or lang not in allowed_langs:
             raise ValueError(f'Colab reference does not match current {lang} voice')
         wav = path.parent / profile['reference_wav']
         if not profile.get('reference_text', '').strip() or file_hash(wav) != profile['sha256']:
@@ -49,7 +50,7 @@ def load_profiles(root, cfg, languages):
         with wave.open(str(wav)) as handle:
             if not 3 <= handle.getnframes() / handle.getframerate() <= 15:
                 raise ValueError('Voice reference must be 3–15 seconds')
-        profiles[lang] = dict(profile, local_wav=str(wav.resolve()))
+        profiles[lang] = dict(profile, language=lang, local_wav=str(wav.resolve()))
     return profiles
 
 

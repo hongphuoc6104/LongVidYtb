@@ -2,7 +2,7 @@
 
 Engine 4 sends TTS/assembly/mastering/timeline/subtitles/props/render/encode to Colab. The machine packages source/metadata, manages sessions and collects results; Flow generates images. Remote errors do not trigger heavy local fallback. Voice/rate come from each brief and actual request, never unrelated defaults overriding a contract.
 
-New English briefs use **reference-narrator at 0.92**, the exact user-selected 3.24-second clone sample; see its [profile](../assets/voices/reference-narrator/profile.json). Vietnamese Minh Quân Pro stays unchanged. Existing jobs retain their saved choices, including Alba. Default changes do not edit saved briefs/requests/WAV.
+Canonical voice contract: **`Adam` (`speed: 1.22`, `num_step: 32`, `batch_size: 4`, `-14.0 LUFS`, `-1.5 dBTP`)** for both `vi` and `en` via [profile.json](../assets/voices/adam/profile.json). No local TTS fallback.
 
 ## Setup and lifecycle
 

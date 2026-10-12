@@ -12,8 +12,8 @@ description: "Author and transform explainer video scripts into natural conversa
 ## 1. Sứ Mệnh & Bản Sắc Giọng Kể (Core Mission & Archetype)
 
 - **Hình tượng (The Voice Archetype):** **Conversational Essayist (Nhà luận thuyết trò chuyện)** — điềm đạm, ấm áp, tò mò chân thành, đạt **Phép thử chiếc bàn cà phê (The Coffee Table Test)**.
-- **Nguyên tắc "4 Không":** (1) Không giáo điều/định nghĩa từ điển; (2) Không liệt kê kiểu Wikipedia; (3) Không từ đệm sáo rỗng (*"Như chúng ta đã biết"*, *"Thưa quý vị"*); (4) Không câu bị động gượng gạo.
-- **Bất biến 100% về sự thật (100% Factual & Vocabulary Fidelity):** Giữ nguyên 100% số liệu, tên nhà khoa học, địa danh và thuật ngữ trọng tâm của brief.
+- **Direct & Concise Opening (Zero Greeting / Zero Throat-Clearing):** Go straight to the core point from second `0:00`. Strictly prohibit greetings (*"Xin chào"*), topic announcements (*"Hôm nay chúng ta..."*), filler prompts (*"Hãy nghĩ về..."*, *"Hãy hình dung..."*, *"Để tìm câu trả lời..."*), dictionary definitions, and Wikipedia-style lists.
+- **100% Factual Fidelity & Zero Academic Name-Drop Bloat:** Preserve 100% of core statistics and required vocabulary, but keep academic credentials (`Prof. A at University B`, publication year, DOI) strictly in `brief.json` (`sources[].reference`)—never read lengthy researcher titles or university names in spoken `narration`.
 
 ---
 
@@ -42,7 +42,7 @@ Trong hệ thống Video Pilot (`sys/adapters.py`), động cơ tổng hợp TTS
 - **Dấu phẩy (ngắt hơi nhỏ):** $P_{\text{comma}} = 0.30\text{s}$ (`DEFAULT_PAUSE['minor']`).
 
 ### 3.2. Công thức tính số âm tiết mục tiêu (Target Syllables)
-Để thời lượng audio thực tế khớp chính xác với dòng thời gian cảnh trong dung sai khắt khe **$\pm 0.5\text{s}$**:
+Để thời lượng audio thực tế khớp chính xác với dòng thời gian cảnh trong dung sai khắt khe **$\le 0.3\text{s}$**:
 
 $$\text{Target Syllables} = \text{round}\Big((\text{Scene Duration} - P_{\text{tail}} - T_{\text{pause}}) \times 4.0\Big)$$
 
@@ -65,10 +65,8 @@ Chi tiết xem tại: [Quy chuẩn Giọng đọc, Tốc độ và Ngắt nhịp
 
 Để tránh hiện tượng **Scene Hold Stagnation (hình ảnh bị giữ đơ quá lâu)** mà không làm hỏng dòng chảy âm thanh:
 
-1. **Cấm chia nhỏ Scene dưới 2.5s:** Tuyệt đối không cắt câu thoại liên tục thành các Scene micro ($D \le 2.5\text{s}$) vì việc tích lũy các đuôi $P_{\text{tail}} = 0.70\text{s}$ sẽ làm tổng thời lượng audio bị phình to (+35% đến +70%) và làm đứt đoạn ngữ điệu tự nhiên.
-2. **Tổ chức thành Visual Beats (`beats[]`):** Trong mỗi Scene dài (10–14s), giữ nguyên một tệp audio liền mạch, nhưng cấu hình 3–4 nhịp hình ảnh xuất hiện so le trong mảng `beats[]`:
-   - `offset: 0.0s`, `3.5s`, `7.2s`...
-   - Khóa chặt từ neo thoại (*semantic anchors*) vào hành động camera (`zoom_in`, `pan_left`, `ken_burns`) hoặc hiệu ứng sticker nảy lên.
+1. **Short Scene Splitting (`5.0s–9.0s`/scene, `1–2` concise sentences, `16–32` syllables):** Deliver one core point per scene and split multi-idea paragraphs into separate short scenes instead of long monologues (keep floor $> 2.5\text{s}$ to avoid $P_{\text{tail}} = 0.70\text{s}$ padding inflation).
+2. **Visual Beats Synchronization (`beats[]`):** Keep each visual beat hold $\le 3.8\text{s}$, locking narration semantic anchors to camera actions (`zoom_in`, `pan_left`, `ken_burns`) or sticker pop-ins.
 
 ---
 
@@ -80,11 +78,7 @@ Mọi kịch bản sau khi soạn thảo phải được kiểm tra thông qua c
 python3 sys/tools/script_cadence_checker.py path/to/script.json
 ```
 
-Công cụ sẽ tự động:
-1. Đếm chính xác số âm tiết tiếng Việt / tiếng Anh.
-2. Áp dụng công thức trừ bù $P_{\text{tail}}$ và khoảng ngắt kịch tính `[pause:800ms]` / `[pause:900ms]`.
-3. Đo lường tốc độ đọc danh định và cảnh báo nếu vượt ngưỡng ($> 4.5$ hoặc $< 3.2$ âm tiết/s).
-4. Cảnh báo độ lệch dòng thời gian (drift) nếu vượt quá dung sai $\pm 0.5\text{s}$ và cảnh báo `SENTENCE_FRAGMENTATION` nếu cảnh bị băm vụn thành nhiều câu quá ngắn.
+Kiểm tra tự động số âm tiết, bù trừ $P_{\text{tail}}$, tốc độ đọc (3.2–4.5 âm tiết/s), cảnh báo drift $> 0.3\text{s}$ và chống vụn câu (`SENTENCE_FRAGMENTATION`).
 
 ### 5.1. Bộ Kiểm Định Kịch Bản Đa Dạng (Script Diversity & Zero-Backtracking Linter)
 

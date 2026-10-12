@@ -34,7 +34,7 @@ class EnglishChannelTests(unittest.TestCase):
         validate_brief(ROOT, brief)
         self.assertEqual(brief['language'], 'en')
         self.assertIsNone(brief['scene_count'])
-        self.assertEqual(brief['outputs'], [dict(aspect_ratio='9:16', language='en', subtitles=True, voice='reference-narrator', speed=.92)])
+        self.assertEqual(brief['outputs'], [dict(aspect_ratio='9:16', language='en', subtitles=True, voice='Adam', speed=1.22)])
         self.assertEqual(brief['channel_profile']['id'], 'english-explanatory-2d')
         self.assertIn('predator.n', ' '.join(brief['planning']['domain_requirements']))
         self.assertFalse(any('Micro-Drama' in x or 'Foley' in x for x in brief['planning']['domain_requirements']))

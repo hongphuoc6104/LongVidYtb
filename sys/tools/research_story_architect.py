@@ -231,8 +231,8 @@ def build_brief_v3(topic: ResearchedTopic, system_root: Optional[Path] = None) -
     lang = getattr(topic, "language", "vi")
     cfg_voice = "Adam"
     cfg_speed = 1.22
-    cfg_en_voice = "reference-narrator"
-    cfg_en_speed = 0.92
+    cfg_en_voice = "Adam"
+    cfg_en_speed = 1.22
     root_dir = system_root or SYS_DIR
     cfg_path = root_dir / "config.json"
     if cfg_path.is_file():
@@ -737,8 +737,8 @@ def create_demo_trial_topic() -> ResearchedTopic:
             title="Cơ chế hạch hạnh nhân kích hoạt phản xạ sinh tồn",
             purpose="Hạch hạnh nhân và cơ chế phản ứng trước mối đe dọa",
             duration=13.0,
-            narration="Tiến sĩ Timothy Pychyl phát hiện ra rằng: hạch hạnh nhân trong não bộ xem bản báo cáo đầy áp lực như một mối đe dọa sinh tồn. Để bảo vệ bạn khỏi cảm giác căng thẳng tột cùng, nó lập tức kích hoạt phản xạ trốn chạy quen thuộc.",
-            narration_en="Doctor Timothy Pychyl discovered that the human amygdala treats a stressful report as an existential threat. To shield you from intense anxiety, it triggers a flight reflex.",
+            narration="Thực nghiệm thần kinh phát hiện ra rằng: hạch hạnh nhân trong não bộ xem bản báo cáo đầy áp lực như một mối đe dọa sinh tồn. Để bảo vệ bạn khỏi cảm giác căng thẳng tột cùng, nó lập tức kích hoạt phản xạ trốn chạy quen thuộc.",
+            narration_en="Modern brain experiments discovered that the human amygdala treats a stressful report as an existential threat. To shield you from intense anxiety, it triggers a flight reflex.",
             requirements=["R03"],
             source_ids=["SRC01"],
             character_ids=["CH01"],

@@ -96,8 +96,8 @@
       "aspect_ratio": "9:16",
       "language": "en",
       "subtitles": true,
-      "voice": "reference-narrator",
-      "speed": 0.92
+      "voice": "Adam",
+      "speed": 1.22
     }
   ],
   "channel_profile": {

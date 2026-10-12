@@ -1,11 +1,12 @@
 """Unit tests for MultiProfileManager and failover dispatcher."""
 import time
 import unittest
+
 from flow_cdp.multi_profile_manager import (
-    MultiProfileManager,
-    MultiProfileDispatcher,
-    ProfileState,
     ChromeProfileWorker,
+    MultiProfileDispatcher,
+    MultiProfileManager,
+    ProfileState,
 )
 from flow_cdp.patch_partitioner import Patch
 
@@ -70,16 +71,16 @@ class TestMultiProfileManager(unittest.TestCase):
             return [{"path": f"/tmp/{x['testCase']}.png", "media_id": f"m-{x['testCase']}"} for x in items]
 
         results = dispatcher.execute_patch_with_failover(patch, mock_executor)
-        
+
         # Verify p1 was tried first, then another worker took over only the remaining items (shot-2)
         self.assertGreaterEqual(len(attempts), 2)
         self.assertEqual(attempts[0][0], "p1")
         self.assertIn("shot-1", attempts[0][1])
-        
+
         # Second attempt should NOT be p1, and only needs shot-2
         self.assertNotEqual(attempts[1][0], "p1")
         self.assertEqual(attempts[1][1], ["shot-2"])
-        
+
         # Final result should be completed with 2 items
         self.assertTrue(patch.is_completed)
         self.assertEqual(len(results), 2)
@@ -111,7 +112,7 @@ class TestMultiProfileManager(unittest.TestCase):
     def test_all_workers_blocked_raises_error(self):
         dispatcher = MultiProfileDispatcher(self.manager, max_retries_per_patch=1)
         patch = Patch(patch_id="p-fail-all", items=[{"testCase": "t-1"}])
-        
+
         def always_fail(worker: ChromeProfileWorker, items: list[dict]):
             raise RuntimeError("PUBLIC_ERROR_UNUSUAL_ACTIVITY")
 
@@ -119,6 +120,79 @@ class TestMultiProfileManager(unittest.TestCase):
             dispatcher.execute_patch_with_failover(patch, always_fail)
         self.assertIn("failed after", str(ctx.exception).lower())
 
+    def test_default_profiles_sync_with_config_and_cdp_client(self):
+        import json
+        from pathlib import Path
+
+        from flow_cdp.cdp_direct_client import PROFILES
+        from flow_cdp.multi_profile_manager import DEFAULT_PROFILES
+
+        cfg_path = Path(__file__).resolve().parents[1] / "config.json"
+        cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
+        cfg_profiles = cfg["flow_cdp_profiles"]
+
+        self.assertEqual(len(cfg_profiles), 3)
+        self.assertEqual(len(DEFAULT_PROFILES), 3)
+        self.assertEqual(len(PROFILES), 3)
+
+        expected_ports = [9225, 9223, 9224]
+        self.assertEqual([p["port"] for p in cfg_profiles], expected_ports)
+        self.assertEqual([p["port"] for p in DEFAULT_PROFILES], expected_ports)
+        self.assertEqual([p["cdp_port"] for p in PROFILES], expected_ports)
+
+    def test_direct_cdp_connect_skips_reload_when_untrapped_and_polls_on_reload(self):
+        import asyncio
+        from unittest.mock import AsyncMock, patch
+
+        from flow_cdp.cdp_direct_client import PROFILES, DirectCDPProfileSession
+
+        session = DirectCDPProfileSession(PROFILES[1])
+        called_methods = []
+
+        async def fake_call(method: str, params: dict | None = None, timeout: float = 60.0):
+            called_methods.append(method)
+            if method == "Network.getAllCookies":
+                return {"cookies": [{"name": "_GRECAPTCHA", "domain": "flow.google.com", "path": "/"}]}
+            return {}
+
+        eval_states = [
+            False,  # initial typeof window.mintCaptcha === 'function'
+            None,   # evaluate CDP_RECAPTCHA_GUARD_JS
+            {       # _wait_for_flow_ready probe
+                "readyState": "complete",
+                "hasAt": True,
+                "hasPristine": True,
+                "hasExec": True,
+                "trapped": False,
+                "hasMint": True,
+            },
+            True,   # final typeof window.mintCaptcha === 'function'
+        ]
+
+        async def fake_eval(expr: str, await_promise: bool = True, timeout: float = 120.0):
+            return eval_states.pop(0) if eval_states else True
+
+        class DummyWS:
+            async def close(self):
+                pass
+            def __aiter__(self):
+                return self
+            async def __anext__(self):
+                raise StopAsyncIteration
+
+        with patch("flow_cdp.cdp_direct_client.get_flow_target", return_value={
+            "webSocketDebuggerUrl": "ws://127.0.0.1:9223/devtools/page/1",
+            "url": PROFILES[1]["url"],
+        }), patch("flow_cdp.cdp_direct_client.websockets.connect", new=AsyncMock(return_value=DummyWS())):
+            session.call = fake_call
+            session.evaluate = fake_eval
+            asyncio.run(session.connect(reload_for_guard=False))
+            asyncio.run(session.close())
+
+        self.assertNotIn("Page.reload", called_methods)
+        self.assertNotIn("Storage.clearDataForOrigin", called_methods)
+
 
 if __name__ == "__main__":
     unittest.main()
+

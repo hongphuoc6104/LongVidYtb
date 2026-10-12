@@ -1,6 +1,6 @@
 """
 Bộ Kịch Bản Micro-Drama 4 Hồi Cho Lô 50 Từ Vựng (#32 đến #81)
-Phong cách: Micro-Drama đời thường, hài hước, tếu táo của Mascot CH01 qua giọng đọc Adam bựa.
+Phong cách: Micro-Drama đời thường, hài hước, tếu táo của Mascot CH01 qua giọng đọc Adam (1.22x).
 Đảm bảo:
 - Hồi 1 (SC01): Tình huống khẩn cấp / oái oăm (3.0-3.5s)
 - Hồi 2 (SC02): Giới thiệu từ vựng tiếng Anh tự nhiên (3.5-4.0s)

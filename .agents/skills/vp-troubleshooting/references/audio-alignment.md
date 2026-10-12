@@ -10,14 +10,15 @@
 ## 2. Proven Remedies
 
 ### 1. Calibrate Speech Rates
-- Standard English voiceover is calibrated at rate `0.92` (clear, unhurried learner pace).
-- Run the calibration script when updating voice models:
+- Canonical voice (`Adam`, `assets/voices/adam/profile.json`) is fixed at `speed: 1.22` (`sys/config.json`) for both `vi` and `en`.
+- Run the calibration script when verifying speech rates:
   ```bash
   python3 sys/scripts/calibrate_speech_rates.py
   ```
 
-### 2. Handle Silence Padding
-- Each dialogue beat between scenes requires a natural pause of at least `0.25s - 0.4s` to allow Remotion to cut visual beats cleanly with spoken lines.
+### 2. Trim Boundary Silence & Apply Calibrated Pauses (`ERR-20261011-02`)
+- `OmniVoice.generate()` emits `50–180ms` leading and `180–420ms` trailing silence. Always trim boundary silence via `_trim_silence(w, sr=48000, threshold=0.012, lead_ms=25, trail_ms=30, fade_ms=8)` before caching or stitching.
+- After trimming, apply calibrated inter-sentence pauses: `0.20s` for short sentences (`< 8` words), `0.28s` for standard sentences, and `0.48s` for dramatic pivots (`[pause:...]`).
 - For interactive learner practice/repetition scenes, maintain a trailing silence buffer of `3.0s - 5.0s`.
 
 ### 3. Physical Duration Measurement

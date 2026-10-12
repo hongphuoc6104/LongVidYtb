@@ -48,7 +48,6 @@ DEFAULT_MIN_SEC, DEFAULT_MAX_SEC = 45, 60  # pilot.checks() fallback when a job 
 # Hard ceilings from adapters.py subprocess calls; a stage creeping toward
 # these in a *rehearsal* is the whole point of measuring wall time at all.
 STAGE_TIMEOUT_S = {'audio': 1800, 'images': None, 'render': 3600, 'control': None, 'content': None}
-EN_WORKER_TIMEOUT_S = 7200  # adapters.english() -> scripts/en_worker.py subprocess
 
 
 # ---------- generic helpers ----------

@@ -39,7 +39,7 @@ Kỹ năng này hoạt động như cầu nối giữa **nghiên cứu khoa họ
   2. **Editorial Graphic Visuals:** Ưu tiên hình học kiến trúc và tư thế biểu cảm; cấm lặp lại các ẩn dụ cơ khí sáo rỗng (`brain cutaway`, bàn tính, van ống nước, mỏ neo sắt, chia đôi màn hình so sánh).
   3. **Rule-of-Thirds Layering:** Tách biệt Background Plates (`kind: "background"`) và Cut-out Stickers (`kind: "sticker"`), đặt sticker tại tọa độ Quy tắc 1/3 (`x ∈ [0.34, 0.38]` hoặc `[0.62, 0.66]`, chuẩn `RULE_OF_THIRDS_X = (0.35, 0.64)`) thay vì chính giữa `0.50`.
   4. **Semantic Camera Motion:** Gán hiệu ứng qua `select_semantic_camera_effect()` và `assign_scene_camera_effects()`, cấm lặp liên tiếp và cấm xoay vòng `% 5`.
-- Khóa từ neo chính xác trong `beats[]` (hoặc **Cue-Window Allocation** `0.000s` drift cho video đa chương, `hold <= 3.70s`) và lập bảng truy vết `coverage` + `claims` 100%. Chi tiết: [Pipeline Blueprint Spec](references/pipeline-blueprint-spec.md).
+- Khóa từ neo chính xác trong `beats[]` / `layers[]` theo quy tắc **See-Say Sync** (mọi đồ vật, nhân vật, mốc thời gian/con số được nhắc tới trong thoại phải bật sticker/hình ảnh đúng tại cụm từ đó; xem [layer-breakdown](../vp-layered-motion/references/layer-breakdown.md)) và lập bảng truy vết `coverage` + `claims` 100%. Chi tiết: [Pipeline Blueprint Spec](references/pipeline-blueprint-spec.md).
 
 ---
 

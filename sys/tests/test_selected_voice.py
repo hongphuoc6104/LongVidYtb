@@ -55,16 +55,16 @@ class SelectedVoiceTests(unittest.TestCase):
         return captured[0]
 
     def test_selected_asset_identity_checksum_and_real_wav_header(self):
-        profile=read(ROOT/'assets/voices/reference-narrator/profile.json')
-        wav=ROOT/'assets/voices/reference-narrator/reference.wav'
-        self.assertEqual(profile['voice'],'reference-narrator')
+        profile=read(ROOT/'assets/voices/adam/profile.json')
+        wav=ROOT/'assets/voices/adam/reference.wav'
+        self.assertEqual(profile['voice'],'Adam')
+        self.assertEqual(profile['languages'],['vi','en'])
         self.assertEqual(profile['reference_text'],TEXT)
         self.assertEqual(profile['sha256'],SHA)
         self.assertEqual(hashlib.sha256(wav.read_bytes()).hexdigest(),SHA)
         with wave.open(str(wav)) as source:
             self.assertEqual((source.getnchannels(),source.getsampwidth(),source.getframerate()),(1,2,48000))
             self.assertAlmostEqual(source.getnframes()/source.getframerate(),3.24,places=6)
-        self.assertEqual(read(ROOT/'assets/voices/adam/profile.json')['voice'],'Adam')
 
     def test_new_bank_brief_selects_user_voice_in_actual_remote_request(self):
         result=vb.cmd_draw(helpers.args(job='new-selected-voice',word='predator'))
@@ -72,18 +72,18 @@ class SelectedVoiceTests(unittest.TestCase):
         request=self.capture_request(brief)
         self.assertEqual(request['primary_language'],'en')
         self.assertEqual(set(request['profiles']),{'en'})
-        self.assertEqual(request['profiles']['en']['voice'],'reference-narrator')
+        self.assertEqual(request['profiles']['en']['voice'],'Adam')
         self.assertEqual(request['profiles']['en']['sha256'],SHA)
         self.assertEqual(request['profiles']['en']['reference_text'],TEXT)
         self.assertEqual(request['items'][0]['text'],TEXT)
-        self.assertEqual(request['items'][0]['speed'],.92)
+        self.assertEqual(request['items'][0]['speed'],1.22)
         self.assertEqual(read(ROOT/'config.json')['tts_voice'],'Adam')
-        self.assertEqual(read(ROOT/'config.json')['en_voice'],'reference-narrator')
+        self.assertEqual(read(ROOT/'config.json')['en_voice'],'Adam')
 
     def test_frozen_brief_rate_keeps_asset_and_rate_despite_new_default(self):
         old_channel=read(ROOT/'vocab/channel.json')
-        old_channel['voice']='reference-narrator';old_channel['speed']=1.0
-        old_channel['outputs'][0].update(voice='reference-narrator',speed=1.0)
+        old_channel['voice']='Adam';old_channel['speed']=1.0
+        old_channel['outputs'][0].update(voice='Adam',speed=1.0)
         vb.write_json(self.tmp/'channel.json',old_channel)
         result=vb.cmd_draw(helpers.args(job='saved-contract',word='predator'))
         old_path=Path(result['brief']);saved=old_path.read_bytes()
@@ -92,7 +92,7 @@ class SelectedVoiceTests(unittest.TestCase):
         vb.cmd_draw(helpers.args(job='new-after-default-change',word='ecosystem'))
         request=self.capture_request(old_brief)
         self.assertEqual(old_path.read_bytes(),saved)
-        self.assertEqual(request['profiles']['en']['voice'],'reference-narrator')
+        self.assertEqual(request['profiles']['en']['voice'],'Adam')
         self.assertEqual(request['profiles']['en']['sha256'],SHA)
         self.assertEqual(request['items'][0]['speed'],1.0)
 

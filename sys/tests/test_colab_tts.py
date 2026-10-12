@@ -46,9 +46,9 @@ class ProtocolTests(unittest.TestCase):
 
     def test_language_voice_speed_pause_and_text_preserved(self):
         self.assertEqual([x['language'] for x in self.req['items']], ['vi', 'en', 'en'])
-        self.assertEqual([x['speed'] for x in self.req['items']], [1.22, .92, .92])
+        self.assertEqual([x['speed'] for x in self.req['items']], [1.22, 1.22, 1.22])
         self.assertEqual(self.req['profiles']['vi']['voice'], 'Adam')
-        self.assertEqual(self.req['profiles']['en']['voice'], 'reference-narrator')
+        self.assertEqual(self.req['profiles']['en']['voice'], 'Adam')
         self.assertEqual(self.req['segments'][-1]['pause'], 2.)
         self.assertEqual(self.req['items'][-1]['text'], 'I am happy.')
 
@@ -64,7 +64,7 @@ class ProtocolTests(unittest.TestCase):
         self.assertEqual(self.req['request_id'], build_request(other, self.cfg, self.scenes)['request_id'])
 
     def test_changed_voice_reference_rejected(self):
-        (self.root / 'assets/voices/reference-narrator/reference.wav').write_bytes(b'changed')
+        (self.root / 'assets/voices/adam/reference.wav').write_bytes(b'changed')
         with self.assertRaisesRegex(ValueError, 'checksum'):
             build_request(self.root, self.cfg, self.scenes)
 
