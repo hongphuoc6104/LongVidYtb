@@ -199,7 +199,7 @@ class IndependentEngineContracts(unittest.TestCase):
     def test_production_grant_denies_all_protected_definitions_and_other_jobs(self):
         store=Grants(self.root)
         broad=store.grant('production',source='TEST content scope wildcard must not grant system edits',jobs=[self.job],paths=['**'])
-        for path in ('AGENTS.md','.agents/rules/permissions.md','sys/config.json','sys/vocab/bank.py','sys/renderer/outputs.mjs','sys/schemas/brief.json','sys/runs/'+self.job+'/workflow.json'):
+        for path in ('AGENTS.md','.agents/rules/permissions.md','sys/config.json','sys/format_profiles.py','sys/renderer/outputs.mjs','sys/schemas/brief.json','sys/runs/'+self.job+'/workflow.json'):
             with self.assertRaises(PermissionDenied,msg=path):store.require(broad['id'],'production','content',path=path)
         with self.assertRaises(PermissionDenied):store.require(self.grant['id'],'production','execute',job='other-video')
 

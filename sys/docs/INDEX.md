@@ -6,7 +6,7 @@ Root INDEX remains the entry point. Specifications do not prove that a service c
 |---|---|
 | [getting-started](getting-started.md), [session-start](session-start.md) | New-machine bootstrap, per-machine profiles and grant/checkpoint/request handoff |
 | [workflow](workflow.md), [contracts](contracts.md) | Engine 4, auto/review, five outputs, scope/version/impact/ownership |
-| [vocabulary](vocabulary.md), [channel profile](../vocab/channel.json) | One bank sense, B1+ English, job-bound style/voice/rate/aspect ratio |
+| [format profiles](../format_profiles.py) | 13m Explainer Blueprint, 16:9 widescreen, OmniVoice Adam, Flow CDP |
 | [story-planning](story-planning.md), [narration-length](narration-length-guidance.md), [director-system](director-system.md) | Craft/storyboard/anchors and vp-production references |
 | [colab-tts](colab-tts.md), [image-repair-loops](image-repair-loops.md) | Remote heavy processing, voice provenance, request/session and progressing image repair |
 | [render-capabilities](render-capabilities.md) | Current Remotion engine effects, supported transitions, timeline vs prompt features |

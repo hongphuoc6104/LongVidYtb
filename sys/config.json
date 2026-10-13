@@ -55,9 +55,7 @@
   "flow_status_timeout_seconds": 30,
   "flow_status_retries": 2,
   "flow_status_backoff_seconds": 2,
-  "brief_policies": [
-    "vocab.policy:check"
-  ],
+  "brief_policies": [],
   "colab_tts": {
     "enabled": true,
     "parallel_images": true,

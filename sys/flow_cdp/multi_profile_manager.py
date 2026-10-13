@@ -244,6 +244,7 @@ class MultiProfileDispatcher:
         """
         excluded_workers: set[str] = set()
 
+        last_exc: Exception | None = None
         while not patch.is_completed and patch.retry_count <= self.max_retries_per_patch:
             pending_items = patch.get_pending_items()
             if not pending_items:
@@ -256,6 +257,8 @@ class MultiProfileDispatcher:
                 time.sleep(1.0)
                 worker = self.manager.acquire_healthy_worker()
                 if not worker:
+                    if last_exc is not None:
+                        raise last_exc
                     raise RuntimeError(
                         f"All Chrome profiles in cooldown or blocked: {self.manager.get_status()}"
                     )
@@ -275,12 +278,16 @@ class MultiProfileDispatcher:
                 self.manager.release_worker(worker, success=True)
                 break
             except Exception as ex:
+                last_exc = ex
                 error_str = str(ex)
                 logger.warning(
                     "Patch %s encountered error on profile %s: %s",
                     patch.patch_id, worker.profile_id, error_str
                 )
                 self.manager.release_worker(worker, success=False, error=error_str)
+                # If the failure is a fundamental pre-submission contract violation, fail immediately
+                if getattr(ex, "generation_submitted", None) is False:
+                    raise ex
                 excluded_workers.add(worker.profile_id)
                 patch.retry_count += 1
                 # Mark individual failed item if identified, leaving completed items intact
@@ -290,6 +297,8 @@ class MultiProfileDispatcher:
                         patch.mark_item_failure(item_id, error_str)
 
         if not patch.is_completed:
+            if last_exc is not None:
+                raise last_exc
             raise RuntimeError(
                 f"Patch {patch.patch_id} failed after {patch.retry_count} attempts: {patch.error}"
             )
@@ -322,7 +331,12 @@ class MultiProfileDispatcher:
                     errors.append(ex)
 
         if errors:
-            raise RuntimeError(f"Parallel dispatch failed with {len(errors)} errors: {errors[0]}")
+            if len(errors) == 1:
+                raise errors[0]
+            for err in errors:
+                if getattr(err, "generation_submitted", None) is False:
+                    raise err
+            raise errors[0]
 
         return all_results
 

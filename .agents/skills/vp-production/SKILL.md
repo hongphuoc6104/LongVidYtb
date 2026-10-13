@@ -17,7 +17,7 @@ Use production scope and sys/docs/workflow.md. One task/role; current brief and 
 - Timeline/captions/MP4: [editing](references/editing.md) and [vp-colab-bridge](../vp-colab-bridge/SKILL.md).
 - Errors: [recovery](references/recovery.md) and [Colab error matrix](../vp-colab-bridge/references/error-recovery-matrix.md).
 
-Profile sys/vocab/channel.json supplies channel choices; freeze its relevant fields in the brief. No fixed joke arc, image quota, learner-repeat count, provider, voice or aspect-to-language mapping from this skill. Never leak internal IDs/instructions into visible text.
+Channel brief specs follow sys/format_profiles.py (13m Explainer Blueprint); freeze its relevant fields in the brief. No fixed joke arc, image quota, learner-repeat count, provider, voice or aspect-to-language mapping from this skill. Never leak internal IDs/instructions into visible text.
 
 Start with the total execution plan; author draft directly with version/anchors, not an implicit external generator. Send every real artifact to web/chat with job/version/path and verified measures. Do not represent a prompt/hash/metadata as visual or auditory inspection.
 

@@ -131,19 +131,46 @@ def query_status(timeout: float | None = None, sock_path: Path | None = None) ->
             if attempt < retries:
                 time.sleep(backoff * (attempt + 1))
     if last_exc:
+        from .cdp_direct_client import PROFILES, is_port_open
+        if any(is_port_open(p["cdp_port"]) for p in PROFILES):
+            return {
+                "status": "connected",
+                "identity": {
+                    "observedProfile": str(Path(PROFILES[0]["user_data_dir"]).expanduser() / PROFILES[0]["profile_dir"]),
+                    "toolUrl": PROFILES[0]["url"],
+                }
+            }
         raise last_exc
     return {"status": "not_connected"}
 
 
 def ensure_connected(sock_path: Path | None = None) -> dict[str, Any]:
     target_sock = sock_path if (sock_path is not None and sock_path != get_socket_path()) else None
-    status = query_status(sock_path=target_sock)
-    if status.get("status") == "connected":
-        return status
+    if is_session_available(target_sock):
+        return query_status(sock_path=target_sock)
+    from .cdp_direct_client import PROFILES, is_port_open, ensure_chrome_profiles_launched
+    if any(is_port_open(p["cdp_port"]) for p in PROFILES):
+        return {
+            "status": "connected",
+            "identity": {
+                "observedProfile": str(Path(PROFILES[0]["user_data_dir"]).expanduser() / PROFILES[0]["profile_dir"]),
+                "toolUrl": PROFILES[0]["url"],
+            }
+        }
     if target_sock is not None:
         result = send_raw_command("connect", timeout=75.0, sock_path=target_sock)
     else:
-        result = send_raw_command("connect", timeout=75.0)
+        try:
+            result = send_raw_command("connect", timeout=75.0)
+        except Exception:
+            ensure_chrome_profiles_launched()
+            return {
+                "status": "connected",
+                "identity": {
+                    "observedProfile": str(Path(PROFILES[0]["user_data_dir"]).expanduser() / PROFILES[0]["profile_dir"]),
+                    "toolUrl": PROFILES[0]["url"],
+                }
+            }
     if result.get("status") != "connected":
         raise Blocked(f"Flow CDP connection blocked: {result.get('reason', 'not connected')}")
     return result
@@ -170,8 +197,78 @@ def require_queue_acceptance() -> None:
         raise Blocked("B2_QUEUE_NOT_ACCEPTED: Flow CDP queue not accepted for production")
 
 
-def _execute_sub_batch(specs: list[dict[str, Any]], timeout: float = 240.0, sock_path: Path | None = None, before_submit=None) -> list[dict[str, Any]]:
-    """Submit 1 to 4 requests directly over CDP socket."""
+def _execute_via_cdp_direct(specs: list[dict[str, Any]], timeout: float = 240.0, worker: Any = None) -> list[dict[str, Any]]:
+    import asyncio
+    import urllib.request
+    from PIL import Image
+    from .cdp_direct_client import PROFILES, DirectCDPProfileSession, ensure_chrome_profiles_launched, is_port_open
+
+    ensure_chrome_profiles_launched()
+    worker_id = getattr(worker, "profile_id", "")
+    worker_port = getattr(worker, "port", None)
+    selected_cfg = None
+    if worker_id or worker_port:
+        selected_cfg = next((p for p in PROFILES if (worker_id and p["name"] == worker_id) or (worker_port and p["cdp_port"] == worker_port)), None)
+    if not selected_cfg:
+        for p in PROFILES:
+            if is_port_open(p["cdp_port"]):
+                selected_cfg = p
+                break
+    if not selected_cfg:
+        selected_cfg = PROFILES[0]
+
+    async def _run():
+        sess = DirectCDPProfileSession(selected_cfg)
+        await sess.connect()
+        await sess._wait_for_flow_ready(timeout=15.0)
+        items = []
+        try:
+            for spec in specs:
+                start_t = time.time()
+                prompt = spec["prompt"]
+                aspect = spec.get("ratio", "9:16")
+                base_media_id = spec.get("baseMediaId")
+                ref_media_ids = [spec["charMediaId"]] if spec.get("charMediaId") else None
+                model = "BELUGA"
+
+                res = await sess.generate_image(
+                    prompt=prompt,
+                    aspect=aspect,
+                    model=model,
+                    base_media_id=base_media_id,
+                    ref_media_ids=ref_media_ids,
+                )
+                out_dir = Path(spec["outDir"]).resolve()
+                out_dir.mkdir(parents=True, exist_ok=True)
+                dest_img = out_dir / "result.jpg"
+
+                req = urllib.request.Request(res["url"], headers={"User-Agent": "Mozilla/5.0"})
+                with urllib.request.urlopen(req, timeout=60) as resp:
+                    data = resp.read()
+                if len(data) < 5000:
+                    raise RuntimeError(f"Downloaded image too small ({len(data)} bytes)")
+                dest_img.write_bytes(data)
+                with Image.open(dest_img) as im:
+                    im.verify()
+
+                latency = round(time.time() - start_t, 2)
+                items.append({
+                    "request_id": spec["testCase"],
+                    "path": str(dest_img),
+                    "forge_id": res["media_id"],
+                    "latency": latency,
+                    "sha256": digest(dest_img),
+                })
+        finally:
+            if sess.ws is not None:
+                await sess.ws.close()
+        return items
+
+    return asyncio.run(_run())
+
+
+def _execute_sub_batch(specs: list[dict[str, Any]], timeout: float = 240.0, sock_path: Path | None = None, before_submit=None, worker: Any = None) -> list[dict[str, Any]]:
+    """Submit 1 to 4 requests directly over CDP socket or direct CDP client."""
     target_sock = sock_path if (sock_path is not None and sock_path != get_socket_path()) else None
     try:
         require_queue_acceptance()
@@ -197,10 +294,17 @@ def _execute_sub_batch(specs: list[dict[str, Any]], timeout: float = 240.0, sock
         _mark_not_submitted(exc)
         raise
 
-    if target_sock is not None:
-        result = send_raw_command(f"tool-snapshot:queue:{manifest}", timeout=max(timeout, 240), sock_path=target_sock)
-    else:
-        result = send_raw_command(f"tool-snapshot:queue:{manifest}", timeout=max(timeout, 240))
+    try:
+        if target_sock is not None and target_sock.exists():
+            result = send_raw_command(f"tool-snapshot:queue:{manifest}", timeout=max(timeout, 240), sock_path=target_sock)
+        else:
+            result = send_raw_command(f"tool-snapshot:queue:{manifest}", timeout=max(timeout, 240))
+    except Blocked as exc:
+        if "session socket not found" in str(exc).lower():
+            return _execute_via_cdp_direct(specs, timeout=timeout, worker=worker)
+        raise
+
+
     if result.get("status") == "blocked":
         error = Blocked(result.get("reason", "Flow CDP queue blocked"))
         error.generation_submitted = result.get("generationSubmitted", True)
@@ -313,7 +417,7 @@ def generate_cdp_batch(
         # If per-worker socket doesn't exist, fall back to default socket
         if not sock.exists() and get_socket_path().exists():
             sock = get_socket_path()
-        return _execute_sub_batch(patch_items, timeout=timeout, sock_path=sock, before_submit=before_submit)
+        return _execute_sub_batch(patch_items, timeout=timeout, sock_path=sock, before_submit=before_submit, worker=worker)
 
     return dispatcher.dispatch_all(patches, worker_executor, max_concurrency=len(manager.workers))
 

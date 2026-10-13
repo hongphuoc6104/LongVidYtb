@@ -310,7 +310,7 @@ def _template_request(p, j, target, prompt, corrections, ratio, refs, registrati
     layer_kind = (scene or {}).get('kind', 'scene')
     if layer_kind in ('background', 'sticker'):
         # Layered cut-out assets: independent single-purpose images, never Base variations.
-        if base_image or refs or registration:
+        if base_image or (layer_kind == 'background' and refs) or registration:
             raise Blocked('FLOW_LAYER_INVALID: layered assets take no Base/Character reference')
         purpose = 'layer_' + layer_kind
     desc = prompt
@@ -540,6 +540,8 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None):
     out.mkdir(exist_ok=True)
     common = ['--profile', cfg['flow_profile'], '--project', cfg['flow_project'], '--out', str(out)]
     model_arg = 'nano-banana-pro' if 'pro' in cfg['flow_model'].lower() else ('nano-banana-2' if '2' in cfg['flow_model'] else cfg['flow_model'])
+    scene = next((x for x in planned_units(p, j) if x['id'] == target), None)
+    is_layered = bool(scene and scene.get('kind') in ('background', 'sticker'))
     if registration:
         args = ['character', 'create', '--name', registration['name'], '--prompt', actual_prompt,
                 '--model', model_arg,
@@ -553,7 +555,7 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None):
             args += ['--evidence-out',str(folder)]
         if base_image:
             args += ['--base-image', str(p.path(j,base_image['path']))]
-        if refs:
+        if refs and not is_layered:
             args += ['--character'] + [x['name'] for x in refs]
     result = {'key': key, 'identity': identity, 'state': 'generated' if collection_only else 'submitted', 'submitted_at': time.time(),
               'args': args, 'journal': str(record.relative_to(p.job(j)))}
@@ -582,11 +584,12 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None):
                     pass
         if len(candidates) != 1:
             raise Blocked('Cannot identify exactly one downloaded result')
+        expected_chars = [] if is_layered else [x['name'] for x in refs]
         proof_file = folder / 'ui-proof.json'
         if proof_file.is_file():
             proof = read(proof_file)
             _check_template_attachment(identity, proof)
-            if proof.get('passed') is not True or proof.get('characters') != [x['name'] for x in refs]:
+            if proof.get('passed') is not True or proof.get('characters') != expected_chars:
                 raise Blocked('Flow UI attachment/mode evidence missing')
             if base_image and proof.get('base_image') != str(p.path(j,base_image['path'])):
                 raise Blocked('M2_BASE_IMAGE: UI attachment evidence missing')
@@ -603,7 +606,7 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None):
             metadata = read(f.with_suffix('.json'))
             if (metadata.get('jobId') != key[:16] or metadata.get('type') != 'image'
                 or metadata.get('prompt') != actual_prompt or metadata.get('ratio') != ratio
-                or metadata.get('characters', []) != [x['name'] for x in refs]
+                or metadata.get('characters', []) != expected_chars
                 or metadata.get('source') != 'google-flow-browser' or metadata.get('status') != 'downloaded'):
                 raise Blocked('Downloaded metadata does not match request')
         result.update(state='downloaded', path=str(f.relative_to(p.job(j))), sha256=digest(f))
@@ -678,9 +681,10 @@ def batch_submit(p, j, units, registrations):
         folder.mkdir(parents=True, exist_ok=True)
         write(folder / 'preflight.json', evidence)
         if requires_ui_evidence(p): shutil.copy(p.path(j, evidence['screenshot']), folder / 'preflight.png')
+        is_layered = plan['unit'].get('kind') in ('background', 'sticker')
         jobs.append({'id': plan['key'][:16], 'request_key': plan['key'], 'type': 'image', 'project': cfg['flow_project'],
                      'prompt': plan['actual_prompt'], 'model': model_arg, 'ratio': plan['ratio'],
-                     'outputs': 1, 'character': [x['name'] for x in plan['linked']], 'out': str(batch_dir)})
+                     'outputs': 1, 'character': ([] if is_layered else [x['name'] for x in plan['linked']]), 'out': str(batch_dir)})
         plan['folder'], plan['job_id'] = folder, plan['key'][:16]
     jobs_by_id = {job['id']: (job, plan) for job, plan in zip(jobs, plans)}
     jobs_file = batch_dir / 'jobs.json'
@@ -728,7 +732,8 @@ def batch_submit(p, j, units, registrations):
         try:
             job_evidence_dir = batch_dir / '.evidence' / plan['job_id']
             ui_proof_path, before_submit_path = job_evidence_dir / 'ui-proof.json', job_evidence_dir / 'before-submit.png'
-            expected_names = [x['name'] for x in plan['linked']]
+            is_layered = plan['unit'].get('kind') in ('background', 'sticker')
+            expected_names = [] if is_layered else [x['name'] for x in plan['linked']]
             if ui_proof_path.is_file():
                 proof = read(ui_proof_path)
                 _check_template_attachment(identity, proof)
@@ -1068,7 +1073,13 @@ def check(p, j, data):
             if digest(p.path(j,base_image['path'])) != base_image['sha256'] or ui.get('base_image') != str(p.path(j,base_image['path'])):
                 raise Blocked('M2_BASE_IMAGE: reference or evidence changed')
             files.append(base_image['path'])
-        if ui.get('passed') is not True or ui.get('mode') != 'image' or ui.get('characters') != [x['name'] for x in item['references']]:
+        unit = next((x for x in planned_units(p, j) if x['id'] == req['identity']['target']), None)
+        is_layered = bool(
+            (unit and unit.get('kind') in ('background', 'sticker'))
+            or req['identity'].get('prompt_template', {}).get('purpose', '').startswith('layer_')
+        )
+        expected_chars = [] if is_layered else [x['name'] for x in item['references']]
+        if ui.get('passed') is not True or ui.get('mode') != 'image' or ui.get('characters') != expected_chars:
             raise Blocked('M2_UI_EVIDENCE: image mode/reference attachment not verified')
         for ref in item['references']:
             original = next((x for x in data['references'] if x['character_id'] == ref['character_id']), None)

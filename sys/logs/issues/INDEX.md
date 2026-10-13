@@ -21,3 +21,32 @@ List of technical issues recorded during pipeline operation:
 - [colab-1791818378068968011.md](colab-1791818378068968011.md) — Colab TTS cần kiểm tra.
 - [academic-detective-9x16-001 — audio](1791818378069316937-academic-detective-9x16-001-audio.md)
 - [academic-detective-9x16-001 — images](1791818660042404310-academic-detective-9x16-001-images.md)
+- [academic-detective-9x16-001 — images](1791855778262068904-academic-detective-9x16-001-images.md)
+- [academic-detective-9x16-001 — images](1791855832631763485-academic-detective-9x16-001-images.md)
+- [academic-detective-9x16-001 — images](1791856506549260469-academic-detective-9x16-001-images.md)
+- [academic-detective-9x16-001 — images](1791857265486599976-academic-detective-9x16-001-images.md)
+- [academic-detective-9x16-001 — images](1791857430988310265-academic-detective-9x16-001-images.md)
+
+- [colab-1791857531929922446.md](colab-1791857531929922446.md) — Colab TTS cần kiểm tra.
+- [academic-detective-9x16-001 — render](1791857531930254692-academic-detective-9x16-001-render.md)
+
+- [colab-1791857570303681985.md](colab-1791857570303681985.md) — Colab TTS cần kiểm tra.
+
+- [colab-1791857580577755022.md](colab-1791857580577755022.md) — Colab TTS cần kiểm tra.
+
+- [colab-1791857772373505704.md](colab-1791857772373505704.md) — Colab TTS cần kiểm tra.
+- [academic-detective-9x16-001 — render](1791857772373771105-academic-detective-9x16-001-render.md)
+
+- [colab-1791858013173224428.md](colab-1791858013173224428.md) — Colab TTS cần kiểm tra.
+- [academic-detective-9x16-001 — render](1791858013173735289-academic-detective-9x16-001-render.md)
+
+
+
+- [colab-1791867208573731323.md](colab-1791867208573731323.md) — Colab TTS cần kiểm tra.
+- [attention-architect-16x9-001 — audio](1791867208574085350-attention-architect-16x9-001-audio.md)
+- [attention-architect-16x9-001 — images](1791868022626088593-attention-architect-16x9-001-images.md)
+- [attention-architect-16x9-001 — images](1791868316529125173-attention-architect-16x9-001-images.md)
+- [attention-architect-16x9-001 — images](1791868538073801136-attention-architect-16x9-001-images.md)
+
+- [colab-1791869199968810514.md](colab-1791869199968810514.md) — Colab TTS cần kiểm tra.
+- [attention-architect-16x9-001 — render](1791869199969371332-attention-architect-16x9-001-render.md)

@@ -172,7 +172,6 @@ class IndependentDocumentation(unittest.TestCase):
             ('pilot.py','--help'):('observe','author','stop','takeover','mode','bind-session','micro-plan','micro-result','grant','migrate','rollback-migration','adopt-code'),
             ('maintenance.py','--help'):('cleanup','archive','archive-scope','git-scope','git','--review-hash','--execute','--root'),
             ('scripts/bootstrap.py','--help'):('plan','check','apply','resume','--install'),
-            ('vocab/bank.py','--help'):('start','draw','mark','release','audit','--source','--grant','--session','--scene-count'),
             ('-m','colab_bridge','--help'):('status','start','reconcile','setup','stop','synthesize','render','collect','--account','--session'),
             ('-m','dashboard.server','--help'):('--root','--port','--python'),
         }
@@ -185,16 +184,11 @@ class IndependentDocumentation(unittest.TestCase):
         skills=ROOT.parent/'.agents/skills'
         actual=sorted(p.parent.name for p in skills.glob('*/SKILL.md'))
         self.assertEqual(actual, ['gh-axi', 'lavish', 'treehouse', 'vp-channel-patterns', 'vp-colab-bridge', 'vp-development', 'vp-flow-cdp', 'vp-layered-motion', 'vp-maintenance', 'vp-production', 'vp-research-architect', 'vp-scriptwriting', 'vp-setup', 'vp-troubleshooting'])
-        channel=json.loads((ROOT/'vocab/channel.json').read_text())
-        self.assertEqual(channel['language'],'en');self.assertEqual(channel['aspect_ratio'],'9:16')
-        self.assertEqual(channel['allowed_levels'],['B1','B2','C1']);self.assertIsNone(channel['scene_count'])
-        self.assertEqual(channel['outputs'][0]['speed'],1.22)
-        self.assertEqual(channel['outputs'][0]['voice'],'Adam')
         workflow_doc=(ROOT/'docs/workflow.md').read_text()
         for token in ('outline','dialogue','audio','images','video','without a machine reviewer','connected agent/author'):
             self.assertIn(token,workflow_doc)
         production=(skills/'vp-production/SKILL.md').read_text()
-        self.assertIn('Profile sys/vocab/channel.json',production)
+        self.assertIn('sys/format_profiles.py',production)
         from scripts import director_context
         for stage in director_context.REFERENCES:
             context=director_context.context(ROOT,stage,{'video_type':'vocabulary'})

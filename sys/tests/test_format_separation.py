@@ -73,12 +73,6 @@ class TestFormatSeparation(unittest.TestCase):
         assert "min_seconds" not in cfg
         assert "max_seconds" not in cfg
 
-        # Verify sys/vocab/channel.json has explicit format_profile and no fixed duration window
-        channel = json.loads((SYS_DIR / "vocab/channel.json").read_text(encoding="utf-8"))
-        assert channel["format_profile"] == "short_9x16"
-        assert channel["aspect_ratio"] == "9:16"
-        assert channel["duration"] is None
-
     def test_format_separation_rejects_cross_contamination(self):
         """Verify cross-mixed format_profile, aspect_ratio, and outputs are rejected."""
         with self.assertRaises(ValueError):

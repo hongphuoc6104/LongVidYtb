@@ -107,7 +107,7 @@ def test_topic_to_video_skill_chain_and_token_budget():
         assert (repo_root / ".agents/skills" / skill_name / "SKILL.md").is_file(), f"Missing {skill_name}/SKILL.md"
 
     assert "outline -> dialogue -> audio -> images -> video" in agents_text
-    assert "vocab/bank.py start" in agents_text
+    assert "13m Explainer Blueprint" in agents_text
 
     prod_text = prod_skill_md.read_text(encoding="utf-8")
     for upstream_or_downstream in (

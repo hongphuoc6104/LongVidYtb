@@ -46,37 +46,39 @@ setup_profile_dir "$P2_DIR" "Profile 2"
 setup_profile_dir "$P3_DIR" "Profile 3"
 
 echo "Launching Chrome Profile 1 on port 9225..."
-"$CHROME_BIN" \
+nohup "$CHROME_BIN" \
   --user-data-dir="$P1_DIR" \
   --profile-directory="Profile 1" \
   --remote-debugging-port=9225 \
   --remote-allow-origins="*" \
   --no-first-run \
-  "https://flow.google.com/" > /dev/null 2>&1 &
+  "https://flow.google.com/" </dev/null > /dev/null 2>&1 &
 
 sleep 2
 
 echo "Launching Chrome Profile 2 on port 9223..."
-"$CHROME_BIN" \
+nohup "$CHROME_BIN" \
   --user-data-dir="$P2_DIR" \
   --profile-directory="Profile 2" \
   --remote-debugging-port=9223 \
   --remote-allow-origins="*" \
   --no-first-run \
-  "https://flow.google.com/" > /dev/null 2>&1 &
+  "https://flow.google.com/" </dev/null > /dev/null 2>&1 &
 
 sleep 2
 
 echo "Launching Chrome Profile 3 on port 9224..."
-"$CHROME_BIN" \
+nohup "$CHROME_BIN" \
   --user-data-dir="$P3_DIR" \
   --profile-directory="Profile 3" \
   --remote-debugging-port=9224 \
   --remote-allow-origins="*" \
   --no-first-run \
-  "https://flow.google.com/" > /dev/null 2>&1 &
+  "https://flow.google.com/" </dev/null > /dev/null 2>&1 &
 
+disown -a 2>/dev/null || true
 sleep 3
+
 
 echo "=== Verifying CDP Remote Debugging Ports ==="
 python3 -c "

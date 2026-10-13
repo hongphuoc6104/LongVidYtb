@@ -381,6 +381,14 @@ class DirectCDPProfileSession:
         await self.call("Runtime.enable")
         await self.call("Page.addScriptToEvaluateOnNewDocument", {"source": CDP_RECAPTCHA_GUARD_JS})
 
+        if "/project/" not in str(cur_url) and "/project/" in self.default_url:
+            await self.call("Page.navigate", {"url": self.default_url})
+            cur_url = self.default_url
+            pid = self._extract_project_id(cur_url)
+            if pid:
+                self.project_id = pid
+            await asyncio.sleep(4.0)
+
         need_reload = reload_for_guard
         if not need_reload:
             has_mint = await self.evaluate("typeof window.mintCaptcha === 'function'", await_promise=False)

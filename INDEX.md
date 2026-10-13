@@ -20,7 +20,7 @@ Read [AGENTS.md](AGENTS.md), identify the task and authority, then select the ro
 ## Layout
 
 - `sys/`: code, docs, schemas, configuration and operational data.
-- `sys/vocab/`: one sense per bank entry; [channel profile](sys/vocab/channel.json).
+- `sys/format_profiles.py`: single source of truth for 13m Explainer video profiles.
 - `sys/runs/<job>/`: content, versions, requests and artifacts.
 - `sys/.state/`: local state; `~/.config/google-chrome`: Flow CDP browser profiles, excluded from Git.
 - `sys/assets/`: visual/voice references; `video/<job>/`: collected products.

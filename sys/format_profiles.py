@@ -138,14 +138,14 @@ def validate_format_separation(brief: Dict[str, Any]) -> None:
             )
 
 
-def caption_limits_for_aspect(aspect_ratio: str = "9:16") -> Tuple[int, int]:
+def caption_limits_for_aspect(aspect_ratio: str = "16:9") -> Tuple[int, int]:
     """Return (max_line_chars, max_cue_chars) for the given aspect ratio."""
     prof = get_profile(aspect_ratio)
     layout = prof["caption_layout"]
     return int(layout["max_line_chars"]), int(layout["max_cue_chars"])
 
 
-def clearance_for_output(aspect_ratio: str, subtitles: bool = True) -> Optional[Dict[str, Any]]:
+def clearance_for_output(aspect_ratio: str = "16:9", subtitles: bool = True) -> Optional[Dict[str, Any]]:
     """Return caption_clearance dict when subtitled, or None when unsubtitled."""
     prof = get_profile(aspect_ratio)
     if subtitles:
@@ -155,8 +155,9 @@ def clearance_for_output(aspect_ratio: str, subtitles: bool = True) -> Optional[
     return dict(clearance) if clearance else None
 
 
-def default_text_style(aspect_ratio: str) -> Dict[str, str]:
-    """Return the format-appropriate planning.text_style for '9:16', '16:9', or 'dual'."""
-    if aspect_ratio == "16:9":
+def default_text_style(aspect_ratio: str = "16:9") -> Dict[str, str]:
+    """Return the format-appropriate planning.text_style for '16:9' or given aspect."""
+    if aspect_ratio in ("16:9", "long_16x9", "dual"):
         return dict(PROFILES["long_16x9"]["text_style"])
-    return dict(PROFILES["short_9x16"]["text_style"])
+    prof = get_profile(aspect_ratio)
+    return dict(prof["text_style"])

@@ -90,6 +90,15 @@ def budgets(p, job):
 
 
 def before_send(p, job, folders, connection):
+    try:
+        _before_send_body(p, job, folders, connection)
+    except Exception as ex:
+        if getattr(ex, 'generation_submitted', None) is None:
+            ex.generation_submitted = False
+        raise
+
+
+def _before_send_body(p, job, folders, connection):
     from execution import before_submit, runtime_ready
     folders = [Path(folder) for folder in folders]
     records = [read(folder / 'request.json') for folder in folders]
@@ -101,6 +110,7 @@ def before_send(p, job, folders, connection):
                 raise Blocked('FLOW_OWNER_MISMATCH: collection must use the original verified profile')
         return
     before_submit(p, job)
+
     session = runtime_ready(p, job, 'flow')
     identity = connection.get('identity') or {}
     observed = identity.get('observedProfile')

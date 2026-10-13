@@ -1,7 +1,7 @@
 # Video Pilot — Agent Invariants & Governance
 
 ## 1. Architecture & Layout (SSOT)
-- **Mission**: Automate short (`9:16`) and long-form (`16:9`) explainer videos per brief specs (`sys/format_profiles.py`).
+- **Mission**: Automate long-form (`16:9`, 11–13 minutes, 8 chapters / 48 scenes) explainer videos per 13m Explainer Blueprint specs (`sys/format_profiles.py`).
 - **Directory Invariant**: `sys/` (engine/tools), `sys/runs/<job>/` (assets), `video/<job>/` (final MP4/SRT). Keep root clean.
 
 ## 2. Technical Ethos & 6-Station Conveyor (`./pipeline run`)
@@ -9,7 +9,7 @@
 - **Conveyor**: St1 Critique (`critique_review.html` / `lavish-axi`) -> St2 AST Proof & `pytest` -> St3 `PLAYBOOK.md` Sync -> St4 `ruff` Lint -> St5 PR (`treehouse` / `gh-axi`) -> St6 Green CI.
 
 ## 3. Pipelines & Role Separation
-- **Topic-to-Video Chain (`vp-production`)**: `vp-research-architect` (Schema 3.0 `brief.json`/`content.json`) -> `vp-scriptwriting` (`vn_text_normalizer.py` + `script_cadence_checker.py`) -> `vp-layered-motion` (`background` + `sticker` layers) -> `pilot.py` Engine 4 (`outline -> dialogue -> audio -> images -> video`; vocab jobs start via `vocab/bank.py start`).
+- **Topic-to-Video Chain (`vp-production`)**: `vp-research-architect` (Schema 3.0 `brief.json`/`content.json` 8-chapter 48-scene architecture) -> `vp-scriptwriting` (`vn_text_normalizer.py` + `script_cadence_checker.py`) -> `vp-layered-motion` (Rule-of-Thirds stickers & editorial backgrounds) -> Multi-T4 Orchestrator (`ColabPoolDispatcher` / `pilot.py` outline -> dialogue -> audio -> images -> video).
 - **Remote GPU TTS & Video (`vp-colab-bridge`)**: Execute via `pilot.py` or `sys/colab_bridge/` + `sys/renderer/render.mjs` (no ad-hoc ffmpeg/local render).
 - **AI Image Generation (`vp-flow-cdp`)**: 3 Chrome profiles pool (`sys/flow_cdp/`) with patch failover. Valid AI image + `.json` sidecar required (never draw mocks with PIL).
 

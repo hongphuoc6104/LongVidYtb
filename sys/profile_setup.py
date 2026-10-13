@@ -60,7 +60,7 @@ def _url(url):
     parsed = urlparse(url)
     if parsed.scheme != 'https' or parsed.hostname != 'flow.google.com' or parsed.username or parsed.password or parsed.port:
         raise ValueError('An exact HTTPS Flow tool URL is required')
-    if not re.fullmatch(r'/project/[a-zA-Z0-9-]+/tool/[a-zA-Z0-9-]+', parsed.path) or parsed.query or parsed.fragment:
+    if not re.fullmatch(r'/project/[a-zA-Z0-9-]+(?:/(?:tool|edit)/[a-zA-Z0-9-]+)?', parsed.path) or parsed.query or parsed.fragment:
         raise ValueError('Select the exact project/tool URL; a landing page is insufficient')
     return url
 

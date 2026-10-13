@@ -60,16 +60,12 @@ class Pilot:
    return {r['module']:dict(r) for r in self.db.execute('SELECT * FROM modules WHERE job=?',(j,))}
  def protected(self):
   paths=[self.root/x for x in PROTECTED_FILES]
-  paths += list((self.root/'vocab').glob('*.py'))
-  engine = self.root/'experiments/b2_illustrator'
-  paths += [x for x in engine.glob('*') if x.suffix in ('.py','.mjs') and not x.name.startswith('test')]
-  paths += [engine/x for x in ('config.json','acceptance.json','browser-profiles.json')]
   for folder in PROTECTED_DIRS:
    paths+=list((self.root/folder).rglob('*'))
   return {str(p.relative_to(self.root)):digest(p) for p in sorted(paths) if p.is_file() and '__pycache__' not in str(p)}
  def git_state(self):
   """HEAD and uncommitted protected changes for provenance; None fields when git is unavailable."""
-  specs=PROTECTED_FILES+PROTECTED_DIRS+[':(glob)vocab/*.py',':(glob)experiments/b2_illustrator/*.py',':(glob)experiments/b2_illustrator/*.mjs',':(exclude,glob)experiments/b2_illustrator/test*']+[f'experiments/b2_illustrator/{x}' for x in ('config.json','acceptance.json','browser-profiles.json')]
+  specs=PROTECTED_FILES+PROTECTED_DIRS
   git=lambda *a:subprocess.run(['git','-C',str(self.root),*a],capture_output=True,text=True,timeout=60)
   try:
    head=git('rev-parse','HEAD')

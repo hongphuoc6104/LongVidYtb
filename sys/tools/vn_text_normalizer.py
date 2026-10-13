@@ -115,7 +115,8 @@ def normalize_for_tts(text: str) -> str:
     - Foreign names & proper nouns phonetic transliteration
     - Punctuation sanitization for natural breathing pauses
     """
-    res = text
+    # 0. Strip technical breath markers [pause:...] to a natural breathing comma pause
+    res = re.sub(r"\[pause:[^\]]+\]", " , ", text)
 
     # 1. Foreign proper nouns & names replacement (case-insensitive regex)
     for pattern, replacement in FOREIGN_NAMES_MAP.items():

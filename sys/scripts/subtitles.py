@@ -29,6 +29,8 @@ def phrase_chunks(text, max_len=None, *, aspect_ratio=None):
     Punctuation stays attached to its token, including closing quotation marks.
     Long tokens are preserved and reported by QA rather than truncated.
     """
+    text = re.sub(r"\[pause:[^\]]+\]", " ", text)
+    text = re.sub(r"\s+", " ", text).strip()
     _, resolved_max_cue = _resolve_limits(aspect_ratio=aspect_ratio, max_cue=max_len)
     max_len = resolved_max_cue
     words = text.split()
