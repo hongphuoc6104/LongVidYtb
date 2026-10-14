@@ -333,6 +333,87 @@ class ThresholdWarningTests(unittest.TestCase):
         self.assertFalse(any("SCENE_TOO_LONG" in w for w in res_ok["scenes"][0]["warnings"]))
         assert not any("SCENE_TOO_LONG" in w for w in res_ok["scenes"][0]["warnings"])
 
+    def test_sentence_too_long_warning(self):
+        checker = ScriptCadenceChecker(max_sentence_syllables=25)
+        # 31-syllable sentence from Attention Architect SC01 Cue 2
+        scene = {
+            "id": "LONG_SENT",
+            "duration": 15.0,
+            "narration": "Dòng dữ liệu thời gian thực báo hiệu người dùng mang mã số tám bốn chín hai bắt đầu cựa mình thức giấc sau một đêm dài say ngủ thật sự.",
+        }
+        res = checker.check_scenes([scene])
+        self.assertEqual(res["status"], "WARN")
+        self.assertTrue(any("SENTENCE_TOO_LONG" in w for w in res["scenes"][0]["warnings"]))
+
+        # Sentence with <= 25 syllables should not trigger warning
+        scene_ok = {
+            "id": "OK_SENT",
+            "duration": 6.0,
+            "narration": "Trên màn hình, mã số tám bốn chín hai bắt đầu cựa mình thức giấc.",
+        }
+        res_ok = checker.check_scenes([scene_ok])
+        self.assertFalse(any("SENTENCE_TOO_LONG" in w for w in res_ok["scenes"][0]["warnings"]))
+
+    def test_breathless_clause_warning(self):
+        checker = ScriptCadenceChecker(max_clause_syllables=18)
+        # 24-syllable clause without comma
+        scene = {
+            "id": "NO_COMMA",
+            "duration": 8.0,
+            "narration": "Đây chính là khoảnh khắc vàng khi sức đề kháng tâm lý của con người rơi xuống điểm thấp nhất trong một ngày dài.",
+        }
+        res = checker.check_scenes([scene])
+        self.assertEqual(res["status"], "WARN")
+        self.assertTrue(any("BREATHLESS_CLAUSE" in w for w in res["scenes"][0]["warnings"]))
+
+        # Clause properly separated with commas into short chunks
+        scene_ok = {
+            "id": "WITH_COMMA",
+            "duration": 8.0,
+            "narration": "Đây chính là khoảnh khắc vàng, khi sức đề kháng tâm lý, rơi xuống điểm thấp nhất trong ngày.",
+        }
+        res_ok = checker.check_scenes([scene_ok])
+        self.assertFalse(any("BREATHLESS_CLAUSE" in w for w in res_ok["scenes"][0]["warnings"]))
+
+    def test_excessive_dramatic_pauses_warning(self):
+        checker = ScriptCadenceChecker(max_dramatic_pauses=2)
+        scenes = [
+            {"id": "SC01", "duration": 8.0, "narration": "Câu một. [pause:800ms] Câu hai."},
+            {"id": "SC02", "duration": 8.0, "narration": "Câu ba. [pause:800ms] Câu bốn."},
+            {"id": "SC03", "duration": 8.0, "narration": "Câu năm. [pause:800ms] Câu sáu."},
+        ]
+        res = checker.check_scenes(scenes)
+        self.assertEqual(res["status"], "WARN")
+        # All scenes with pauses should flag EXCESSIVE_DRAMATIC_PAUSES because total (3) > max (2)
+        for sc in res["scenes"]:
+            self.assertTrue(any("EXCESSIVE_DRAMATIC_PAUSES" in w for w in sc["warnings"]))
+
+    def test_reproduction_err_20261014_01(self):
+        """End-to-end reproduction of ERR-20261014-01 cadence gaming."""
+        checker = ScriptCadenceChecker(
+            max_sentence_syllables=25,
+            max_clause_syllables=18,
+            max_dramatic_pauses=1,
+        )
+        attention_sample = [
+            {
+                "id": "SC01",
+                "duration": 15.0,
+                "narration": "Sáu giờ ba mươi phút sáng tại Thung lũng Silicon, màn hình máy chủ trung tâm rực sáng ánh đèn tín hiệu. [pause:800ms] Dòng dữ liệu thời gian thực báo hiệu người dùng mang mã số tám bốn chín hai bắt đầu cựa mình thức giấc sau một đêm dài say ngủ thật sự.",
+            },
+            {
+                "id": "SC02",
+                "duration": 15.0,
+                "narration": "Đây chính là khoảnh khắc vàng khi sức đề kháng tâm lý của con người rơi xuống điểm thấp nhất trong một ngày dài. [pause:800ms] Lượng hormone tỉnh táo này chưa kịp dâng lên trong máu, khiến vùng não lý trí hoàn toàn buông lỏng mọi cơ chế cảnh giác và đề phòng tự nhiên.",
+            },
+        ]
+        res = checker.check_scenes(attention_sample)
+        self.assertEqual(res["status"], "WARN")
+        all_warnings = [w for sc in res["scenes"] for w in sc["warnings"]]
+        self.assertTrue(any("SENTENCE_TOO_LONG" in w for w in all_warnings))
+        self.assertTrue(any("BREATHLESS_CLAUSE" in w for w in all_warnings))
+        self.assertTrue(any("EXCESSIVE_DRAMATIC_PAUSES" in w for w in all_warnings))
+
 
 
 class ScriptParserTests(unittest.TestCase):

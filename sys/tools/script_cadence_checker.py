@@ -29,6 +29,9 @@ NOMINAL_SPEECH_RATE = 4.0     # Nominal speech rate (syllables / second)
 MIN_SAFE_SPEECH_RATE = 3.2
 MAX_SAFE_SPEECH_RATE = 4.5
 MAX_ALLOWABLE_DRIFT = 0.50
+DEFAULT_MAX_SENTENCE_SYLLABLES = 25  # Recommended upper limit for a single spoken sentence
+DEFAULT_MAX_CLAUSE_SYLLABLES = 18    # Max syllables in a clause without a breathing comma/pause
+DEFAULT_MAX_DRAMATIC_PAUSES = 4      # Max Tier-3 dramatic pauses per video (dramatic reveals only)
 
 # Vietnamese vowel diacritics pattern
 VI_DIACRITICS_RE = re.compile(
@@ -530,6 +533,8 @@ class SceneCadenceReport:
         lang: str = "auto",
         max_sentences: int = 5,
         max_syllables: Optional[int] = None,
+        max_sentence_syllables: Optional[int] = None,
+        max_clause_syllables: Optional[int] = None,
     ):
         self.scene_id = scene_id
         self.duration = duration
@@ -541,6 +546,8 @@ class SceneCadenceReport:
         self.lang = lang
         self.max_sentences = max_sentences
         self.max_syllables = max_syllables
+        self.max_sentence_syllables = max_sentence_syllables
+        self.max_clause_syllables = max_clause_syllables
 
         # Analysis
         self.pause_seconds, self.pauses, self.clean_narration = extract_pauses(narration)
@@ -622,6 +629,30 @@ class SceneCadenceReport:
                 f"SCENE_TOO_LONG: Scene has {self.syllable_count} syllables (exceeds concise limit of {self.max_syllables}); split into shorter scenes"
             )
 
+        if self.max_sentence_syllables is not None:
+            for s_idx, s in enumerate(self.sentences, 1):
+                s_syl = count_syllables(s, lang=self.lang)
+                if s_syl > self.max_sentence_syllables:
+                    self.warnings.append(
+                        f"SENTENCE_TOO_LONG: Sentence #{s_idx} has {s_syl} syllables "
+                        f"(exceeds limit of {self.max_sentence_syllables}); split into shorter sentences"
+                    )
+
+        if self.max_clause_syllables is not None:
+            for s_idx, s in enumerate(self.sentences, 1):
+                clauses = re.split(r"[,;—\u2013\u2014]", s)
+                for c_idx, c in enumerate(clauses, 1):
+                    c_clean = c.strip()
+                    if not c_clean:
+                        continue
+                    c_syl = count_syllables(c_clean, lang=self.lang)
+                    if c_syl > self.max_clause_syllables:
+                        snippet = c_clean[:35] + ("..." if len(c_clean) > 35 else "")
+                        self.warnings.append(
+                            f"BREATHLESS_CLAUSE: Clause #{c_idx} in sentence #{s_idx} has {c_syl} syllables "
+                            f"without a breathing comma (exceeds limit of {self.max_clause_syllables}): '{snippet}'"
+                        )
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             "scene_id": self.scene_id,
@@ -653,6 +684,9 @@ class ScriptCadenceChecker:
         lang: str = "auto",
         max_sentences: int = 5,
         max_syllables: Optional[int] = None,
+        max_sentence_syllables: Optional[int] = None,
+        max_clause_syllables: Optional[int] = None,
+        max_dramatic_pauses: Optional[int] = None,
     ):
         self.nominal_rate = nominal_rate
         self.p_tail_para = p_tail_para
@@ -661,6 +695,9 @@ class ScriptCadenceChecker:
         self.lang = lang
         self.max_sentences = max_sentences
         self.max_syllables = max_syllables
+        self.max_sentence_syllables = max_sentence_syllables
+        self.max_clause_syllables = max_clause_syllables
+        self.max_dramatic_pauses = max_dramatic_pauses
 
     def check_scenes(self, scenes: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Analyze a list of scene dictionaries."""
@@ -695,8 +732,19 @@ class ScriptCadenceChecker:
                 lang=self.lang,
                 max_sentences=self.max_sentences,
                 max_syllables=self.max_syllables,
+                max_sentence_syllables=self.max_sentence_syllables,
+                max_clause_syllables=self.max_clause_syllables,
             )
             reports.append(report)
+
+        total_pauses = sum(len(r.pauses) for r in reports)
+        if self.max_dramatic_pauses is not None and total_pauses > self.max_dramatic_pauses:
+            for r in reports:
+                if r.pauses:
+                    r.warnings.append(
+                        f"EXCESSIVE_DRAMATIC_PAUSES: Script contains {total_pauses} dramatic pauses "
+                        f"(exceeds limit of {self.max_dramatic_pauses}). Tier-3 [pause] must be reserved for dramatic reveals only"
+                    )
 
         total_duration = round(sum(r.duration for r in reports), 2)
         total_target_syl = sum(r.target_syllables for r in reports)
@@ -774,6 +822,9 @@ def main() -> int:
     parser.add_argument("--compensate-commas", action="store_true", help="Compensate minor pauses for commas")
     parser.add_argument("--lang", default="auto", choices=["auto", "vi", "en"], help="Narration language")
     parser.add_argument("--max-syllables", type=int, default=None, help="Maximum syllables per scene (e.g. 36 for concise scenes)")
+    parser.add_argument("--max-sentence-syllables", type=int, default=None, help="Maximum syllables per sentence (e.g. 25)")
+    parser.add_argument("--max-clause-syllables", type=int, default=None, help="Maximum syllables per clause without comma (e.g. 18)")
+    parser.add_argument("--max-dramatic-pauses", type=int, default=None, help="Maximum dramatic [pause] markers in entire script (e.g. 4)")
     parser.add_argument("--json", action="store_true", help="Output analysis in JSON format")
     parser.add_argument("--strict", action="store_true", help="Exit with non-zero code if any warning is found")
 
@@ -786,6 +837,9 @@ def main() -> int:
         compensate_commas=args.compensate_commas,
         lang=args.lang,
         max_syllables=args.max_syllables,
+        max_sentence_syllables=args.max_sentence_syllables,
+        max_clause_syllables=args.max_clause_syllables,
+        max_dramatic_pauses=args.max_dramatic_pauses,
     )
 
     try:

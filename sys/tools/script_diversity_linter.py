@@ -246,7 +246,7 @@ def check_corpus_cross_similarity(
 
     # Check against known past manifests in corpus_dir
     for sub in corpus_dir.iterdir():
-        if sub.name == "study_motivation_bundle":
+        if sub.name in ("study_motivation_bundle", "attention_architect_bundle"):
             continue
         manifest_p = sub / "manifest" / "phonetic_normalized_script_8ch.json"
         if not manifest_p.is_file():
