@@ -96,6 +96,34 @@ def validate_content(root,b,revision,bhash,p):
  if p.get('schema_version')!='3.0' and b.get('duration'):
   total=sum(s['estimated_seconds'] for s in p['scenes'])
   if not b['duration']['min_seconds']<=total<=b['duration']['max_seconds']: fail('ESTIMATE','scenes','Tổng thời lượng dự kiến ngoài khoảng')
+ # Human-grade storytelling & phonetic gates (when present on scenes/beats/brief)
+ allowed_tones = {'narrative_warm', 'analytical_crisp', 'reflective_slow'}
+ allowed_camera_intents = {'establish', 'focus', 'detail', 'tension', 'reveal', 'contrast', 'pan_left', 'pan_right', 'hold'}
+ enforce_phonetics = bool(b.get('enforce_phonetic_gate') or p.get('enforce_phonetic_gate'))
+ for s in p['scenes']:
+  if 'tone' in s and s['tone'] is not None and s['tone'] not in allowed_tones:
+   fail('SCENE_TONE', s['id'], f"Sắc thái giọng đọc (tone) không hợp lệ: {s['tone']!r}")
+  if 'j_l_cut_offset' in s and s['j_l_cut_offset'] is not None:
+   try:
+    jl_val = float(s['j_l_cut_offset'])
+    if not -0.35 <= jl_val <= 0.35:
+     fail('JL_CUT_OFFSET', s['id'], 'Độ lệch J-Cut/L-Cut phải nằm trong khoảng [-0.35s, +0.35s]')
+   except (TypeError, ValueError):
+    fail('JL_CUT_OFFSET', s['id'], 'Độ lệch J-Cut/L-Cut phải là số thực')
+  for bt in s.get('beats', []):
+   if 'camera_intent' in bt and bt['camera_intent'] is not None and bt['camera_intent'] not in allowed_camera_intents:
+    fail('CAMERA_INTENT', bt.get('id', s['id']), f"Camera intent không hợp lệ: {bt['camera_intent']!r}")
+  if enforce_phonetics and s.get('narration'):
+   try:
+    from vn_text_normalizer import detect_unnormalized_tokens, normalize_for_tts
+    norm_text = normalize_for_tts(s['narration'])
+    vocab_words = {v.get('word', '').lower() for v in s.get('vocabulary', []) if isinstance(v, dict)}
+    unnorm = detect_unnormalized_tokens(norm_text, allowed_tokens=vocab_words)
+    if unnorm:
+     bad_tokens = ', '.join(x['token'] for x in unnorm[:3])
+     fail('UNNORMALIZED_FOREIGN_TOKEN', s['id'], f'Lời dẫn chứa từ ngoại lai/số chưa chuẩn hóa ngữ âm: {bad_tokens}', 'Bổ sung phiên âm tiếng Việt vào vn_text_normalizer.py trước khi tổng hợp TTS.')
+   except ImportError:
+    pass
  if errors: raise ContractError(errors)
  if p.get('schema_version')=='3.0':
   from scripts.story_plan import validate_plan

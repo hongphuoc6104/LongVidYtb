@@ -345,6 +345,9 @@
                     "y"
                   ],
                   "additionalProperties": false
+                },
+                "camera_intent": {
+                  "type": "string"
                 }
               },
               "required": [
@@ -602,6 +605,12 @@
               ],
               "additionalProperties": false
             }
+          },
+          "tone": {
+            "type": "string"
+          },
+          "j_l_cut_offset": {
+            "type": "number"
           }
         },
         "required": [
@@ -770,6 +779,9 @@
         "type": "string",
         "minLength": 1
       }
+    },
+    "enforce_phonetic_gate": {
+      "type": "boolean"
     }
   },
   "required": [

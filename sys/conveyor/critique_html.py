@@ -29,7 +29,7 @@ def scan_critique(root_dir: Path) -> Tuple[bool, Dict[str, any]]:
     ]
     allowed_root_files = {
         "AGENTS.md", "GEMINI.md", "INDEX.md", "README.md", "PLAYBOOK.md",
-        "pilot.py", "pipeline", "pyproject.toml", "implementation_plan.md", "treehouse.json"
+        "pilot.py", "pipeline", "pyproject.toml", "implementation_plan.md", "treehouse.json", "uv.lock"
     }
     unexpected_root = [f for f in root_files if f not in allowed_root_files]
     checks.append({
@@ -91,8 +91,8 @@ def scan_critique(root_dir: Path) -> Tuple[bool, Dict[str, any]]:
     ]
     leaks_found = []
     for text_file in list(sys_dir.rglob("*.py"))[:100]:
-        # Exclude venv, cache, and conveyor's own scanner
-        if "venv" in str(text_file) or ".cache" in str(text_file) or "conveyor" in str(text_file):
+        # Exclude venv, cache, unit test fixtures, and conveyor's own scanner
+        if any(part in str(text_file) for part in ("venv", ".cache", "conveyor", "/tests/")):
             continue
         try:
             content = text_file.read_text(encoding="utf-8", errors="ignore")

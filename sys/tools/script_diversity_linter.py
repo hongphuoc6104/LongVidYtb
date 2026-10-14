@@ -148,9 +148,56 @@ def check_formulaic_transitions(scenes: List[Dict[str, Any]]) -> List[Dict[str, 
     return violations
 
 
+def compute_sentence_rhythm_metrics(scenes: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """Calculates human storytelling cadence variation (sentence length stddev & short punchy sentences)."""
+    import math
+    lengths: List[int] = []
+    short_punchy_count = 0
+    for sc in scenes:
+        narration = sc.get("narration") or sc.get("text") or ""
+        sents = [s.strip() for s in re.split(r"[.!?…]+", narration) if s.strip()]
+        for s in sents:
+            words = get_words(s)
+            if not words:
+                continue
+            wc = len(words)
+            lengths.append(wc)
+            if 2 <= wc <= 8:
+                short_punchy_count += 1
+    if not lengths:
+        return {"sentence_count": 0, "mean_syllables": 0.0, "stddev_syllables": 0.0, "short_punchy_count": 0}
+    mean = sum(lengths) / len(lengths)
+    variance = sum((x - mean) ** 2 for x in lengths) / len(lengths)
+    return {
+        "sentence_count": len(lengths),
+        "mean_syllables": round(mean, 2),
+        "stddev_syllables": round(math.sqrt(variance), 2),
+        "short_punchy_count": short_punchy_count,
+    }
+
+
+def check_sentence_rhythm_variance(
+    scenes: List[Dict[str, Any]],
+    min_stddev_syllables: float = 1.8,
+) -> List[Dict[str, Any]]:
+    """Flags chapters or scripts where every sentence has nearly identical robotic length."""
+    metrics = compute_sentence_rhythm_metrics(scenes)
+    violations: List[Dict[str, Any]] = []
+    if metrics["sentence_count"] >= 8 and metrics["stddev_syllables"] < min_stddev_syllables:
+        violations.append({
+            "type": "ROBOTIC_SENTENCE_CADENCE",
+            "scene_id": "GLOBAL",
+            "stddev_syllables": metrics["stddev_syllables"],
+            "min_required_stddev": min_stddev_syllables,
+            "snippet": f"Độ lệch chuẩn độ dài câu quá thấp ({metrics['stddev_syllables']} âm tiết); cần xen kẽ câu ngắn (3-7 chữ) và câu phân tích dài.",
+        })
+    return violations
+
+
 def check_historical_backtracking(
     scenes: List[Dict[str, Any]],
     topic_title: str = "",
+    custom_chronology_rules: Dict[int, List[str]] | None = None,
 ) -> List[Dict[str, Any]]:
     violations = []
     is_ancient_humans = any(
@@ -167,16 +214,25 @@ def check_historical_backtracking(
                 idx = int(m.group(1))
                 ch_num = (idx - 1) // 6 + 1
 
-        if is_ancient_humans:
+        active_rules = (
+            {int(k): v for k, v in custom_chronology_rules.items()}
+            if custom_chronology_rules is not None
+            else HISTORICAL_BACKTRACK_RULES
+        )
+        if custom_chronology_rules is not None:
+            if not ch_num or ch_num not in active_rules:
+                continue
+            forbidden_words = active_rules[ch_num]
+        elif is_ancient_humans:
             # For Ancient Humans topics, Ch1-Ch7 are set in prehistoric savannah/hunting.
             # Only Ch8 (Contemporary modern room) enforces forward chronology partition.
             if ch_num != 8:
                 continue
             forbidden_words = ["đống lửa", "lửa trại", "nguyên thủy", "vạn năm trước"]
         else:
-            if not ch_num or ch_num not in HISTORICAL_BACKTRACK_RULES:
+            if not ch_num or ch_num not in active_rules:
                 continue
-            forbidden_words = HISTORICAL_BACKTRACK_RULES[ch_num]
+            forbidden_words = active_rules[ch_num]
 
         narration = (sc.get("narration") or sc.get("text") or "").lower()
         for kw in forbidden_words:
@@ -308,6 +364,8 @@ def lint_script(
     corpus_dir: Path | None = None,
     claim_facts: Set[str] | None = None,
     topic_title: str = "",
+    custom_chronology_rules: Dict[int, List[str]] | None = None,
+    enforce_rhythm_variance: bool = False,
 ) -> Dict[str, Any]:
     all_violations: List[Dict[str, Any]] = []
 
@@ -315,8 +373,12 @@ def lint_script(
     ft_violations = check_formulaic_transitions(scenes)
     all_violations.extend(ft_violations)
 
-    # 2. Historical backtracking
-    hb_violations = check_historical_backtracking(scenes, topic_title=topic_title)
+    # 2. Historical backtracking (topic-aware or custom brief rules)
+    hb_violations = check_historical_backtracking(
+        scenes,
+        topic_title=topic_title,
+        custom_chronology_rules=custom_chronology_rules,
+    )
     all_violations.extend(hb_violations)
 
     # 3. Intra-video repetitions
@@ -328,10 +390,16 @@ def lint_script(
         cs_violations = check_corpus_cross_similarity(scenes, corpus_dir)
         all_violations.extend(cs_violations)
 
+    # 5. Human sentence rhythm metrics & optional hard enforcement
+    rhythm_metrics = compute_sentence_rhythm_metrics(scenes)
+    if enforce_rhythm_variance:
+        all_violations.extend(check_sentence_rhythm_variance(scenes))
+
     return {
         "status": "PASS" if not all_violations else "FAIL",
         "total_violations": len(all_violations),
         "violations": all_violations,
+        "rhythm_metrics": rhythm_metrics,
     }
 
 
