@@ -350,6 +350,12 @@
         "sha256"
       ],
       "additionalProperties": false
+    },
+    "enforce_phonetic_gate": {
+      "type": "boolean"
+    },
+    "chronology_rules": {
+      "type": "object"
     }
   },
   "required": [

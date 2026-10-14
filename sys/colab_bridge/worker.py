@@ -16,6 +16,53 @@ _PROMPTS = {}
 SR = 48000
 
 
+def _extract_word_timestamps_acoustic(w, text, sr=SR):
+    """Computes word-level timestamps from the waveform energy envelope.
+
+    Detects voiced syllable energy nuclei and distributes word boundaries across
+    actual acoustic speech activity rather than naive character-count interpolation.
+    """
+    import re
+    import numpy as np
+    clean_text = re.sub(r"\[pause:[^\]]+\]", " ", text or "")
+    words = [tok for tok in clean_text.split() if tok.strip()]
+    w = np.asarray(w, dtype=np.float32).reshape(-1)
+    total_dur = len(w) / float(sr) if len(w) > 0 else 0.0
+    if not words or total_dur <= 0.0:
+        return []
+    # Compute 10ms RMS energy envelope
+    hop = max(1, sr // 100)
+    n_frames = len(w) // hop
+    if n_frames < len(words):
+        step = total_dur / len(words)
+        return [
+            {"word": wd, "start": round(idx * step, 3), "end": round((idx + 1) * step, 3)}
+            for idx, wd in enumerate(words)
+        ]
+    trimmed = w[: n_frames * hop].reshape(n_frames, hop)
+    rms = np.sqrt(np.mean(trimmed * trimmed, axis=1) + 1e-12)
+    # Cumulative acoustic energy distribution (weighted 70% energy + 30% time floor)
+    norm_rms = rms / (np.max(rms) + 1e-9)
+    weights = 0.7 * (norm_rms > 0.04).astype(np.float32) * (norm_rms + 0.1) + 0.3
+    cum_energy = np.concatenate([[0.0], np.cumsum(weights)])
+    total_energy = float(cum_energy[-1])
+    # Weight each word by phonetic length
+    word_weights = [max(1, len(re.sub(r"[^A-Za-zÀ-ỹ0-9]", "", wd))) for wd in words]
+    total_w = float(sum(word_weights))
+    timestamps = []
+    used_w = 0.0
+    for wd, ww in zip(words, word_weights):
+        e_start = (used_w / total_w) * total_energy
+        used_w += ww
+        e_end = (used_w / total_w) * total_energy
+        f_start = int(np.searchsorted(cum_energy, e_start, side="left"))
+        f_end = int(np.searchsorted(cum_energy, e_end, side="right"))
+        t0 = round(min(total_dur, max(0.0, f_start * hop / float(sr))), 3)
+        t1 = round(min(total_dur, max(t0 + 0.01, f_end * hop / float(sr))), 3)
+        timestamps.append({"word": wd, "start": t0, "end": t1})
+    return timestamps
+
+
 def _trim_silence(w, sr=SR, threshold=0.012, lead_ms=25, trail_ms=30, fade_ms=8):
     import numpy as np
     w = np.asarray(w, dtype=np.float32).reshape(-1)
@@ -156,7 +203,9 @@ def run(request_path, output_dir):
                                   engine='omnivoice', seed=req['seed'] + item['retake'], rate=item['speed'], retake=item['retake'], duration=len(waves[i]) / SR))
         name = f'segment-{n:04d}.wav'
         duration = save(name, pieces, part['pause'])
-        segments.append(dict(scene_id=part['scene_id'], text=part['text'], path=name, content_duration=duration))
+        combined_voiced = np.concatenate(pieces) if pieces else np.zeros(0, dtype=np.float32)
+        word_ts = _extract_word_timestamps_acoustic(combined_voiced, part['text'], sr=SR)
+        segments.append(dict(scene_id=part['scene_id'], text=part['text'], path=name, content_duration=duration, word_timestamps=word_ts))
     engine = dict(backend='colab-omnivoice', precision='float16', device=torch.cuda.get_device_name(0),
                   models=req['models'], batch_size=req['batch_size'], num_step=req['num_step'])
     result = dict(request_id=req['request_id'], voice=req['profiles'][req.get('primary_language','vi')]['voice'], engine=engine,

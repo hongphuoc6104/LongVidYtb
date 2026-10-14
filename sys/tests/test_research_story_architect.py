@@ -397,8 +397,14 @@ class TestResearchStoryArchitect(unittest.TestCase):
         self.assertEqual(cadence["warnings_count"], 0)
         self.assertLessEqual(cadence["max_drift"], 0.30)
 
-        # Verify trim_pcm16_stereo_silence right-channel detection & idempotency
+        playbook_txt = (SYS_DIR.parent / "PLAYBOOK.md").read_text(encoding="utf-8")
+        self.assertNotIn("600.0", playbook_txt)
+        self.assertNotIn("10–15", playbook_txt)
+
+        # Verify trim_pcm16_stereo_silence right-channel detection & idempotency when gitignored export bundle exists locally
         v2_gen_path = SYS_DIR / "exports" / "motivation_v2_exp_bundle" / "scripts" / "generate_spoken_narration.py"
+        if not v2_gen_path.is_file():
+            return
         spec = importlib.util.spec_from_file_location("v2_gen_spoken", v2_gen_path)
         v2_mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(v2_mod)

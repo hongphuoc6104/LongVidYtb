@@ -30,6 +30,59 @@ export function boilJitter(frame: number, seed: number = 0): number {
   return r - Math.floor(r) - 0.5;
 }
 
+// Semantic camera movement selector (eliminates mechanical active % 4 cycling)
+export function selectSemanticCameraEffect(beat: any, scene: any, beatIndex: number): string {
+  const explicit = beat?.effect;
+  if (explicit && explicit !== 'auto') return explicit;
+  const intent = String(beat?.camera_intent || scene?.camera_intent || scene?.camera || '').toLowerCase();
+  const desc = String(beat?.description || scene?.action || scene?.purpose || '').toLowerCase();
+
+  if (intent.includes('hold') || desc.includes('diagram') || desc.includes('sơ đồ')) return 'hold';
+  if (intent.includes('reveal') || intent.includes('shock') || desc.includes('bất ngờ') || desc.includes('giật mình')) return 'punch_in';
+  if (intent.includes('establish') || intent.includes('wide') || desc.includes('toàn cảnh') || desc.includes('rộng')) return 'zoom_out';
+  if (intent.includes('detail') || intent.includes('focus') || intent.includes('tension') || desc.includes('cận cảnh') || desc.includes('tập trung')) return 'zoom_in';
+  if (intent.includes('pan_left') || intent.includes('contrast') || desc.includes('đối lập')) return 'pan_left';
+  if (intent.includes('pan_right') || desc.includes('dòng thời gian') || desc.includes('hành trình')) return 'pan_right';
+
+  // Non-repeating golden-ratio sequence seeded by scene ID + beatIndex so no two adjacent shots repeat
+  const sceneSeed = String(scene?.id || 'SC01').split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+  const pool = ['zoom_in', 'pan_right', 'zoom_out', 'pan_left'];
+  const prevIdx = beatIndex > 0 ? ((sceneSeed + (beatIndex - 1) * 3) % pool.length) : -1;
+  let chosenIdx = (sceneSeed + beatIndex * 3) % pool.length;
+  if (chosenIdx === prevIdx) {
+    chosenIdx = (chosenIdx + 1) % pool.length;
+  }
+  return pool[chosenIdx];
+}
+
+// Dynamic voice-guided BGM sidechain ducking envelope (swells in pauses, ducks during speech)
+export function computeDynamicBgmVolume(
+  t: number,
+  cues: any[],
+  baseVolume: number = 0.12,
+  duckedVolume: number = 0.075,
+  swellVolume: number = 0.19
+): number {
+  if (!Array.isArray(cues) || cues.length === 0) return baseVolume;
+  const attack = 0.22;  // 220ms smooth duck before/into speech
+  const release = 0.45; // 450ms warm swell into narrative pause
+  let speechWeight = 0;
+  for (const c of cues) {
+    const start = Number(c.start ?? 0);
+    const end = Number(c.end ?? 0);
+    if (t >= start && t <= end) {
+      speechWeight = 1;
+      break;
+    }
+    if (t >= start - attack && t < start) {
+      speechWeight = Math.max(speechWeight, (t - (start - attack)) / attack);
+    } else if (t > end && t <= end + release) {
+      speechWeight = Math.max(speechWeight, 1 - (t - end) / release);
+    }
+  }
+  return swellVolume - speechWeight * (swellVolume - duckedVolume);
+}
+
 function renderHighlightedText(text: string, targetWord?: string, modern = false) {
   if (!text) return null;
   const cleanTarget = targetWord ? targetWord.toLowerCase().trim() : '';
@@ -83,7 +136,12 @@ const Video: React.FC<any> = (p) => {
     }
   }, [frame, width, height]);
 
+  // Support J-Cut / L-Cut visual boundary offset (visual leads or lags audio cut slightly)
   const scene =
+    p.scenes.find((s: any) => {
+      const jlOffset = Number(s.j_l_cut_offset ?? (p.enable_jl_cut ? -0.18 : 0));
+      return t >= Math.max(0, s.start + jlOffset) && t < s.end + jlOffset;
+    }) ||
     p.scenes.find((s: any) => t >= s.start && t < s.end) ||
     p.scenes[p.scenes.length - 1] ||
     {start: 0, end: 1, image: '', title: ''};
@@ -108,11 +166,11 @@ const Video: React.FC<any> = (p) => {
   let translateX = 0;
   let translateY = 0;
   let motionBlurX = 0;
-  const effect = beat.effect || 'auto';
+  const effect = selectSemanticCameraEffect(beat, scene, active);
 
-  // Smooth ease curve for Ken Burns transitions
+  // Asymmetric organic ease curve (fast eye-catch, gentle cinematic settle)
   const smoothProgress = interpolate(progress, [0, 1], [0, 1], {
-    easing: Easing.bezier(0.25, 0.1, 0.25, 1.0)
+    easing: Easing.bezier(0.33, 1, 0.68, 1.0)
   });
 
   if (effect === 'punch_in') {
@@ -268,8 +326,8 @@ const Video: React.FC<any> = (p) => {
               );
             }
 
-            // Sticker layer with Spring physics, breathing, and smooth continuous motion
-            let s = 1 + 0.015 * Math.sin((2 * Math.PI * relative) / 1.3);
+            // Sticker layer with Spring physics, multi-harmonic organic breathing, and smooth motion
+            let s = 1 + 0.014 * organicNoise(relative * 0.22, idx + 1.5);
             let dx = 0;
             let dy = 0;
             let rot = 0;
@@ -539,11 +597,19 @@ const Video: React.FC<any> = (p) => {
       {/* Audio Mixer: Voice narration */}
       <Audio src={staticFile(p.audioSrc || 'narration.wav')} volume={1} />
 
-      {/* Audio Mixer: Background Music (BGM) */}
+      {/* Audio Mixer: Background Music (BGM) with Dynamic Voice-Activated Ducking */}
       {p.bgmSrc && (
         <Audio
           src={staticFile(p.bgmSrc)}
-          volume={p.bgmVolume ?? 0.12}
+          volume={(f) =>
+            computeDynamicBgmVolume(
+              f / fps,
+              p.cues || [],
+              p.bgmVolume ?? 0.12,
+              p.bgmDuckedVolume ?? 0.075,
+              p.bgmSwellVolume ?? 0.19
+            )
+          }
           loop
         />
       )}

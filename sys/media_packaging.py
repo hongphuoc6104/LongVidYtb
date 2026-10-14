@@ -62,6 +62,8 @@ def assemble(request, folder, support_folder):
             segment = {'scene_id': part['scene_id'], 'text': text, 'path': part['path'],
                        'start': cursor, 'end': cursor + seconds,
                        'content_end': cursor + part['content_duration']}
+            if 'word_timestamps' in part and isinstance(part['word_timestamps'], list):
+                segment['word_timestamps'] = part['word_timestamps']
             segments.append(segment)
             cursor += seconds
         name = 'narration.wav' if language == primary else 'narration_' + language + '.wav'

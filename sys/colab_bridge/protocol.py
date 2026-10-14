@@ -27,6 +27,21 @@ def positive(value, name):
     return value
 
 
+TONE_SPEED_MULTIPLIERS = {
+    'narrative_warm': 0.98,
+    'analytical_crisp': 1.02,
+    'reflective_slow': 0.92,
+}
+
+
+def resolve_tone_speed(base_speed, tone=None):
+    """Modulates synthesis speed by narrative tone when explicitly declared on a scene."""
+    base = positive(base_speed, 'speed')
+    if not tone or tone not in TONE_SPEED_MULTIPLIERS:
+        return base
+    return round(base * TONE_SPEED_MULTIPLIERS[tone], 3)
+
+
 def safe_id(value):
     if not isinstance(value, str) or not re.fullmatch(r'[A-Za-z0-9_-]+', value):
         raise ValueError('Invalid scene ID')
@@ -75,8 +90,10 @@ def build_request(root, cfg, scenes, english_scenes=(), *, primary_language='vi'
             raise ValueError('Language parts do not match subtitle chunks')
         for n, text in enumerate(sc['texts']):
             chunks = parts[n] if parts else [{'text': text, 'lang': primary_language}]
+            sc_tone = sc.get('tone')
             indexes = [item(x['text'], x['lang'], sc.get('retake', 0),
-                            cfg['tts_speed'] if x['lang'] == 'vi' else cfg.get('en_speed', cfg.get('audio_english_spans_rate', 1.)))
+                            resolve_tone_speed(cfg['tts_speed'], sc_tone) if x['lang'] == 'vi'
+                            else resolve_tone_speed(cfg.get('en_speed', cfg.get('audio_english_spans_rate', 1.)), sc_tone))
                        for x in chunks]
             pause = sc['tail'] if n == len(sc['texts']) - 1 else sc['gaps'][n]
             if not math.isfinite(float(pause)) or not 0 <= float(pause) <= 8:

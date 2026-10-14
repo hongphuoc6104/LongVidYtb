@@ -1,4 +1,4 @@
-"""Lossless, phrase-aware captions. Timing remains an explicit interpolation."""
+"""Lossless, phrase-aware captions with acoustic word-timestamp alignment support."""
 import math
 import re
 
@@ -91,6 +91,46 @@ def wrap_phrase(text, max_len=None, *, aspect_ratio=None):
     return min(candidates, default=(0, text))[1]
 
 
+def resolve_anchor_timestamp(segment: dict, anchor_quote: str, occurrence: int = 1) -> float:
+    """Resolves the exact spoken start timestamp of `anchor_quote` inside `segment`.
+
+    Uses `segment['word_timestamps']` from acoustic/forced alignment when present,
+    falling back to proportional character interpolation when absent.
+    """
+    start = float(segment.get('start', 0.0))
+    content_end = float(segment.get('content_end', segment.get('end', start)))
+    text = re.sub(r"\[pause:[^\]]+\]", " ", segment.get('text') or '')
+    text = re.sub(r"\s+", " ", text).strip()
+    if not text or not anchor_quote:
+        return start
+
+    word_ts = segment.get('word_timestamps')
+    if isinstance(word_ts, list) and word_ts:
+        strip_chars = '.,!?;:"\'“”‘’()[]'
+        clean_target_words = [w.strip(strip_chars).lower() for w in anchor_quote.split() if w.strip(strip_chars)]
+        if clean_target_words:
+            seg_words = [str(w.get('word', '')).strip(strip_chars).lower() for w in word_ts]
+            found = 0
+            t_len = len(clean_target_words)
+            for idx in range(len(seg_words) - t_len + 1):
+                if seg_words[idx:idx + t_len] == clean_target_words:
+                    found += 1
+                    if found == max(1, occurrence):
+                        rel_start = float(word_ts[idx].get('start', 0.0))
+                        return rel_start if rel_start >= start else round(start + rel_start, 3)
+
+    # Fallback: character offset interpolation
+    pos = 0
+    for _ in range(max(1, occurrence)):
+        idx = text.find(anchor_quote, pos)
+        if idx < 0:
+            break
+        pos = idx
+    else:
+        return round(start + (content_end - start) * (pos / max(1, len(text))), 3)
+    return start
+
+
 def subtitle_cues(segments, *, aspect_ratio=None):
     max_line, max_cue = _resolve_limits(aspect_ratio=aspect_ratio)
     cues = []
@@ -110,6 +150,22 @@ def subtitle_cues(segments, *, aspect_ratio=None):
             cues[-1]['end'] = end
             continue
         chunks = phrase_chunks(text, max_len=max_cue)
+        word_ts = seg.get('word_timestamps')
+        if isinstance(word_ts, list) and len(word_ts) >= sum(len(c.split()) for c in chunks) and chunks:
+            w_cursor = 0
+            for idx_c, chunk in enumerate(chunks):
+                w_count = len(chunk.split())
+                first_w = word_ts[w_cursor]
+                last_w = word_ts[min(len(word_ts) - 1, w_cursor + w_count - 1)]
+                w_cursor += w_count
+                rel_a = float(first_w.get('start', 0.0))
+                rel_z = float(last_w.get('end', content_end - start))
+                a = start if idx_c == 0 else (rel_a if rel_a >= start else start + rel_a)
+                z = end if idx_c == len(chunks) - 1 else (rel_z if rel_z >= start else start + rel_z)
+                a = max(start, min(content_end, a))
+                z = max(a + 0.01, min(end, z))
+                cues.append({'text': wrap_phrase(chunk, max_len=max_line), 'start': a, 'end': z, 'scene_id': scene})
+            continue
         weights = [len(c) for c in chunks]
         total = sum(weights)
         used = 0
