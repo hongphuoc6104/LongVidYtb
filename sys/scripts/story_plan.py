@@ -3,6 +3,7 @@ import copy
 import json
 import math
 import re
+
 from output_contract import languages
 
 
@@ -74,6 +75,14 @@ def validate_plan(b, c):
         kinds = {im['id']: im.get('kind', 'scene') for im in s['images']}
         if any(kind != 'scene' for kind in kinds.values()) or s.get('layers'):
             fail('LAYERING_DISABLED', s['id'], 'Ảnh background/sticker và layers không còn được hỗ trợ; dùng ảnh scene toàn khung và beats')
+        if b.get('visual_pacing_profile') == 'full_frame_v1':
+            from scripts.camera_motion import scene_camera_motions
+            motions = scene_camera_motions(s)
+            if len(motions) >= 2 and len(set(motions)) == 1:
+                fail('CAMERA_MOTION_MONOTONY', s['id'], 'All beats use the same camera motion; vary authored intent.')
+            for image in s['images']:
+                if image.get('based_on') and not re.search(r'expression|facial|biểu cảm', image.get('preserve', ''), re.I):
+                    fail('EXPRESSION_LOCK_REQUIRED', image['id'], 'Preserve facial expression unless change explicitly requests a shift.')
         used = {x['image_id'] for x in s['beats']}
         if used != scene_images: fail('IMAGE_USAGE', s['id'], 'Mỗi ảnh scene phải được dùng đúng một lần trong beats')
         for lang in languages(b):
@@ -277,7 +286,8 @@ def timeline(c, images, audio, language, ratio):
         if c.get('schema_version')!='3.0':
             im=by_id[(sc['id'],ratio)];output.append({'id':sc['id'],'title':sc['title'],'image':im['path'],'start':start,'end':end});continue
         text=sc['narration_en' if language=='en' else 'narration'];beats=[]
-        for bt in sc['beats']:
+        from scripts.camera_motion import scene_camera_motions
+        for bt, motion in zip(sc['beats'], scene_camera_motions(sc), strict=True):
             offset=occurrence(text,bt['anchor'][language])
             # Use actual chunk bounds when available; interpolate within the chunk.
             at=start+offset/max(1,len(text))*(spans[-1].get('content_end',end)-start)
@@ -296,9 +306,14 @@ def timeline(c, images, audio, language, ratio):
                             at=seg['start']+(offset-pos)/max(1,len(seg['text']))*(seg.get('content_end',seg['end'])-seg['start'])
                         break
                     cursor=pos+len(seg['text'])
-            im=by_id[(bt['image_id'],ratio)]
-            beats.append({'id':bt['id'],'src':im['path'],'at':round(at-start,4),'effect':bt['effect'],'focus':bt['focus'],
-                          'timing_method': timing_method})
+            im=by_id.get((bt['image_id'],ratio))
+            if im is None and images.get('reframe_mode'):
+                im=by_id[(bt['image_id'],'16:9')]
+            if im is None:
+                raise ValueError('Missing requested image aspect: '+bt['image_id'])
+            beats.append({'id':bt['id'],'src':im['path'],'at':round(at-start,4),'effect':motion,'camera_motion':motion,'transition':'cut','focus':bt['focus'],
+                          'timing_method': timing_method,
+                          'shot_type': next((image.get('shot_type', 'full_scene') for image in sc.get('images', []) if image['id'] == bt['image_id']), 'full_scene')})
         beats[0]['at']=0
         if any(round(a['at']*30)>=round(z['at']*30) for a,z in zip(beats,beats[1:])):
             raise ValueError('Visual beats collide at 30 fps; revise content anchors')

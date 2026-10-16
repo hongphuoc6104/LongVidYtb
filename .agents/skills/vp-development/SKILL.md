@@ -34,3 +34,7 @@ Every resolved bug must be documented in [PLAYBOOK.md](../../../PLAYBOOK.md) con
 - Remote/local boundary and English portrait audio/timeline require actual routing tests. Keep legacy data read-compatible and migrate via official commands with old/new provenance and rollback.
 - Do not claim live Flow/T4/media from fixtures or delete failing tests to simulate compliance. Never fake a human TTY or edit baseline/DB/journal by hand.
 - Full-frame beat changes must keep the architect, Flow prompt, timeline, and remote render contracts aligned. Verify that generated images are `kind: "scene"`, `beats[]` anchors are ordered, in-place variations carry valid `based_on`/`preserve`/`change`, and no standard render path imports or bundles `matte_sticker.py`. Prove the cold-open cut timing in a real rendered sample before claiming visual quality.
+
+## Full-frame regression lessons
+
+When modifying full-frame authoring, audio or render contracts, read [Full-frame quality](../vp-full-frame-quality/SKILL.md). Regression coverage lives in `sys/tests/test_full_frame_pipeline.py` and is included in Station 2. New runtime imports must be included in the Colab source manifest; a desktop-only passing timeline test does not verify remote packaging.

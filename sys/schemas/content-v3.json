@@ -358,6 +358,25 @@
                 },
                 "camera_intent": {
                   "type": "string"
+                },
+                "camera_motion": {
+                  "enum": [
+                    "hold",
+                    "zoom_in",
+                    "zoom_out",
+                    "punch_in",
+                    "pan_left",
+                    "pan_right",
+                    "shake"
+                  ]
+                },
+                "transition": {
+                  "enum": [
+                    "cut"
+                  ]
+                },
+                "foley_cue": {
+                  "type": "string"
                 }
               },
               "required": [
@@ -621,6 +640,9 @@
           },
           "j_l_cut_offset": {
             "type": "number"
+          },
+          "foley_cue": {
+            "type": "string"
           }
         },
         "required": [

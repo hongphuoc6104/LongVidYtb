@@ -181,6 +181,16 @@ try {
     });
   }
 
+  if (props.omni_platform) {
+    const text = props.thumbnail_spec?.text_overlay;
+    if (!text || text !== text.toUpperCase() || text.trim().split(/\s+/u).length < 2 || text.trim().split(/\s+/u).length > 4) throw Error('Invalid thumbnail text: 2–4 uppercase words required');
+    for (const [width, height, file] of [[1920, 1080, 'thumbnail_youtube_16x9.png'], [1080, 1920, 'cover_tiktok_reels_9x16.png']]) {
+      const inputProps = {width, height, text, image: plans[0].props.scenes[0].image};
+      const composition = await selectComposition({serveUrl: url, id: 'Thumbnail', inputProps, puppeteerInstance: browser});
+      await renderStill({serveUrl: url, composition, inputProps, puppeteerInstance: browser, frame: 0, output: path.join(dir, file)});
+    }
+  }
+
   for (const plan of plans) {
     const composition = await selectComposition({serveUrl: url, id: 'Pilot', inputProps: plan.props, puppeteerInstance: browser});
     await renderMedia({

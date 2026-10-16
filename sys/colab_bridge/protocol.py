@@ -69,7 +69,7 @@ def load_profiles(root, cfg, languages):
     return profiles
 
 
-def build_request(root, cfg, scenes, english_scenes=(), *, primary_language='vi', assemble=False, secondary_scenes=()):
+def build_request(root, cfg, scenes, english_scenes=(), *, primary_language='vi', assemble=False, secondary_scenes=(), spinoff_hooks=()):
     """Keep subtitle chunks, language switches, retakes and learner holds intact."""
     if primary_language not in ('vi', 'en'): raise ValueError('Unsupported primary language')
     items, lookup, segments, english = [], {}, [], []
@@ -112,6 +112,7 @@ def build_request(root, cfg, scenes, english_scenes=(), *, primary_language='vi'
         if not math.isfinite(pause) or not 0 <= pause <= 8: raise ValueError('Invalid secondary pause')
         secondary.append(dict(scene_id=safe_id(sc['scene_id']), language=language, text=sc['text'],
                               items=[item(sc['text'], language, sc.get('retake', 0), cfg['tts_speed'] if language == 'vi' else cfg.get('en_speed', 1.))], pause=pause))
+    hooks = [dict(id=safe_id(plan['id']), text=plan['opening_hook'], item=item(plan['opening_hook'], 'vi', 0, 1.26)) for plan in spinoff_hooks]
     profiles = load_profiles(root, cfg, {x['language'] for x in items} | {primary_language})
     models = cfg['colab_tts']['models']
     for lang in profiles:
@@ -123,6 +124,7 @@ def build_request(root, cfg, scenes, english_scenes=(), *, primary_language='vi'
                    span_gap=float(cfg.get('audio_english_spans_gap', .18)))
     if not 1 <= request['batch_size'] <= 8 or not 8 <= request['num_step'] <= 64:
         raise ValueError('Unsupported batch size or diffusion steps')
+    if hooks: request['spinoff_hooks'] = hooks
     if secondary: request['secondary'] = secondary
     if primary_language != 'vi': request['primary_language'] = primary_language
     if assemble:
@@ -257,6 +259,18 @@ def validate_result(folder, req):
                 raise ValueError('Invalid assembled audio format')
             if abs(handle.getnframes() / handle.getframerate() - payload['duration']) > 2 / 48000:
                 raise ValueError('Assembled duration mismatch')
+    wanted_hooks = req.get('spinoff_hooks', [])
+    got_hooks = result.get('spinoff_hooks', [])
+    if len(wanted_hooks) != len(got_hooks):
+        raise ValueError('Missing standalone hook audio')
+    for got, expected in zip(got_hooks, wanted_hooks, strict=True):
+        if (got.get('id'), got.get('text')) != (expected['id'], expected['text']) or not 0 < got.get('duration', 0) <= 3:
+            raise ValueError('Standalone hook identity/duration mismatch')
+        wav(got['path'], got['duration'], 0)
+        if req.get('assemble') and got not in assembled['payload'].get('spinoff_hooks', []):
+            raise ValueError('Assembled standalone hook mismatch')
+        if got['path'] not in names:
+            names.append(got['path'])
     if len(names) != len(set(names)):
         raise ValueError('Duplicate remote output path')
     return names

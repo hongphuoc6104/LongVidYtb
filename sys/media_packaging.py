@@ -101,10 +101,14 @@ def assemble(request, folder, support_folder):
         for language in dict.fromkeys(part['language'] for part in request['secondary']):
             grouped = [part for part in pieces if part['language'] == language]
             tracks[language] = make_track(language, grouped, [part['text'] for part in grouped])
+    hooks = meta.get('spinoff_hooks', [])
+    artifacts.extend(hook['path'] for hook in hooks)
     selected = tracks[primary]
     payload = {key: selected[key] for key in ('voice', 'wav', 'srt', 'duration', 'segments')}
     payload.update(language=primary, backend='colab-omnivoice', tracks=tracks,
                    generation_report='tts-result.json')
+    if hooks:
+        payload['spinoff_hooks'] = hooks
     if 'en' in tracks:
         payload['en'] = {key: tracks['en'][key] for key in ('engine', 'voice', 'wav', 'duration', 'scenes')}
     report = {'request_id': request['request_id'], 'processing_location': 'colab',

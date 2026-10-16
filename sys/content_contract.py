@@ -1,7 +1,9 @@
 """Versioned M1 contracts. Structural evidence is not a semantic approval."""
 import json
 from pathlib import Path
+
 import jsonschema
+
 
 class ContractError(ValueError):
  def __init__(self, errors):
@@ -134,6 +136,17 @@ def validate_content(root,b,revision,bhash,p):
     pass
  if errors: raise ContractError(errors)
  if p.get('schema_version')=='3.0':
+  from scripts.visual_quality import (
+   check_instructional_manual_loop,
+   check_scene_narrative_progression,
+   check_visual_setting_diversity,
+  )
+  checks = (check_visual_setting_diversity, check_instructional_manual_loop, check_scene_narrative_progression) if b.get('visual_pacing_profile') == 'full_frame_v1' else ()
+  for check in checks:
+   for violation in check(p['scenes']):
+    fail(violation['type'], str(violation.get('scene_id', 'scenes')), str(violation))
+  if errors:
+   raise ContractError(errors)
   from scripts.story_plan import validate_plan
   validate_plan(b,p)
 

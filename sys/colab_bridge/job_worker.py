@@ -2,12 +2,12 @@
 import hashlib
 import json
 import os
-from pathlib import Path
 import shutil
 import subprocess
 import sys
 import time
 import zipfile
+from pathlib import Path
 
 
 def run(bundle_path, output_dir, expected_id, expected_worker):
@@ -66,7 +66,7 @@ def run(bundle_path, output_dir, expected_id, expected_worker):
         cues = captions.subtitle_cues(track['segments'])
         audit = captions.audit_cues(cues)
         audits[language] = audit
-        if any(plan['subtitles'] for plan in brief['outputs'] if plan['language'] == language) and audit['errors']:
+        if audit['errors']:
             raise ValueError('Subtitle technical defects: ' + json.dumps(audit['errors']))
         def timestamp(seconds):
             ms = round(seconds * 1000)
@@ -92,9 +92,31 @@ def run(bundle_path, output_dir, expected_id, expected_worker):
                 shutil.copy2(inputs / scene['image'], public / name)
                 scene['image'] = name
             by_aspect[plan['aspect_ratio']] = scenes
-        tracks[language] = {'audioSrc': wav, 'duration': track['duration'], 'cues': cues, 'scenesByAspect': by_aspect}
+        tracks[language] = {'audioSrc': wav, 'duration': track['duration'], 'cues': cues, 'scenesByAspect': by_aspect, 'words': [dict(word=word['word'], start=segment['start'] + word['start'], end=segment['start'] + word['end']) for segment in track['segments'] for word in segment.get('word_timestamps', [])]}
     props = {'aspect_ratio': brief['aspect_ratio'], 'outputs': brief['outputs'], 'primary_language': contract.primary_language(brief),
-             'tracks': tracks, 'render_concurrency': 4, 'modern_style': True}
+             'tracks': tracks, 'render_concurrency': 4, 'modern_style': True,
+             'reframe_mode': brief.get('reframe_mode', False), 'omni_platform': brief.get('omni_platform', False),
+             'hook_title': brief.get('youtube_title', brief.get('topic', '')), 'thumbnail_spec': brief.get('thumbnail_spec', {})}
+    if brief.get('omni_platform'):
+        omni = load('vp_omni_render', 'omni_render.py')
+        props['short_deliveries'] = omni.prepare_shorts(brief, request['content'], audio, request['images'], inputs, public, captions, tracks['vi']['scenesByAspect']['16:9'])
+        for sound in (source / 'assets/sfx').glob('*.wav'):
+            shutil.copy2(sound, public / sound.name)
+        props['bgmSrc'] = 'ambient_focus_loop.wav'
+        props['bgmDuckedVolume'] = 10 ** (-28 / 20)
+        props['bgmSwellVolume'] = 10 ** (-22 / 20)
+        props['sfx_events'] = [{'at': 0, 'src': 'pop_clean.wav'}]
+        cue_map = {'pop': 'pop_clean', 'whoosh': 'whoosh_soft', 'page_turn': 'page_flip', 'pen_scratch': 'pen_highlight', 'clock_tick': 'clock_tick', 'ding': 'ding_insight'}
+        master = tracks[contract.primary_language(brief)]
+        scene_times = next(iter(master['scenesByAspect'].values()))
+        for scene, timed in zip(request['content']['scenes'], scene_times, strict=True):
+            for beat, timing in zip(scene.get('beats', []), timed.get('images', []), strict=True):
+                cue = beat.get('foley_cue', scene.get('foley_cue', ''))
+                if not beat.get('foley_cue') and timing['at'] != 0:
+                    continue
+                key = cue if cue in cue_map else next((key for phrase, key in [('lật', 'page_turn'), ('giấy', 'page_turn'), ('bút', 'pen_scratch'), ('đồng hồ', 'clock_tick'), ('tích tắc', 'clock_tick'), ('whoosh', 'whoosh'), ('click', 'pop'), ('hoàn tất', 'ding')] if phrase in cue.lower()), None)
+                if key:
+                    props['sfx_events'].append({'at': timed['start'] + timing['at'], 'src': cue_map[key] + '.wav'})
     (output / 'editorial-audit.json').write_text(json.dumps({'tracks': audits, 'processing_location': 'colab', 'quality_approval': False}, ensure_ascii=False, indent=2))
     (output / 'props.json').write_text(json.dumps(props, ensure_ascii=False, indent=2))
     # Remote dependencies are cached by the pinned source package lock.
@@ -164,10 +186,32 @@ fi
             raise ValueError('Encoded MP4 duration mismatch')
         deliveries.append(dict(plan, file=file, width=video[0]['width'], height=video[0]['height'], duration=float(probe['format']['duration']),
                                video_codec=video[0]['codec_name'], audio_codec=sound[0]['codec_name']))
+    supplemental = []
+    if brief.get('omni_platform'):
+        main = next(plan for plan in deliveries if plan['aspect_ratio'] == '16:9')
+        for file, subtitles in [('video_youtube_16x9.mp4', False), ('video_facebook_16x9.mp4', True)]:
+            probe = json.loads(subprocess.check_output(['ffprobe', '-v', 'error', '-show_streams', '-show_format', '-of', 'json', str(output / file)], text=True))
+            video = next(stream for stream in probe['streams'] if stream['codec_type'] == 'video')
+            sound = next(stream for stream in probe['streams'] if stream['codec_type'] == 'audio')
+            if (video['width'], video['height'], video['codec_name'], sound['codec_name']) != (1920, 1080, 'h264', 'aac') or abs(float(probe['format']['duration']) - main['duration']) > .25:
+                raise ValueError('Invalid supplemental delivery streams')
+            supplemental.append(dict(main, file=file, subtitles=subtitles))
+        for short in props['short_deliveries']:
+            file = short['file']
+            probe = json.loads(subprocess.check_output(['ffprobe', '-v', 'error', '-show_streams', '-show_format', '-of', 'json', str(output / file)], text=True))
+            video = next(stream for stream in probe['streams'] if stream['codec_type'] == 'video')
+            sound = next(stream for stream in probe['streams'] if stream['codec_type'] == 'audio')
+            duration = float(probe['format']['duration'])
+            if (video['width'], video['height'], video['codec_name'], sound['codec_name']) != (1080, 1920, 'h264', 'aac') or abs(duration - short['props']['duration']) > .25:
+                raise ValueError('Invalid short delivery streams')
+            supplemental.append(dict(file=file, language='vi', aspect_ratio='9:16', subtitles=True, width=1080, height=1920, duration=duration, video_codec='h264', audio_codec='aac'))
+        social = load('vp_social_pack', 'tools/social_pack_generator.py')
+        master_scenes = tracks[main['language']]['scenesByAspect']['16:9']
+        (output / 'SOCIAL_POST_KIT.md').write_text(social.social_post_kit(brief, master_scenes, supplemental, request['content']), encoding='utf-8')
     files = {p.name: {'sha256': hashlib.sha256(p.read_bytes()).hexdigest(), 'size': p.stat().st_size}
-             for p in output.iterdir() if p.is_file() and p.suffix in ('.mp4', '.png', '.srt', '.json') and p.name != 'render-result.json'}
+             for p in output.iterdir() if p.is_file() and p.suffix in ('.mp4', '.png', '.srt', '.json', '.md') and p.name != 'render-result.json'}
     result = {'request_id': expected_id, 'operation': 'render', 'processing_location': 'colab', 'outputs': deliveries,
-              'device': device, 'files': files, 'elapsed_seconds': time.monotonic() - started,
+              'device': device, 'files': files, 'supplemental_outputs': supplemental, 'elapsed_seconds': time.monotonic() - started,
               'processing': ['timeline', 'subtitles', 'layout', 'render', 'encode', 'ffprobe'], 'quality_approval': False}
     (output / 'render-result.json').write_text(json.dumps(result, ensure_ascii=False, indent=2))
     with zipfile.ZipFile(output.with_suffix('.zip'), 'w', zipfile.ZIP_DEFLATED) as archive:

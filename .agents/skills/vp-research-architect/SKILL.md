@@ -84,3 +84,7 @@ python3 sys/tools/research_story_architect.py --topic academic-paradox-q1 --spin
 # Kiểm tra nhịp âm học, chốt chặn pause SC01 và độ dài câu mở đầu <= 18 âm tiết
 python3 sys/tools/script_cadence_checker.py path/to/content.json --forbid-opening-pause --max-opening-hook-syllables 18
 ```
+
+## Full-frame visual journey gate
+
+For new jobs, declare `visual_pacing_profile: full_frame_v1` and follow [Full-frame quality contracts](../vp-full-frame-quality/SKILL.md). Plan local experience → experimental evidence → mechanism/metaphor → practical return. Use at most two consecutive scenes per physical setting; for ten or more scenes, keep each setting at or below 30%. Author source-backed comparisons without inventing numeric results. Preserve room and expression through `based_on` return shots; distinguish hard cuts from in-frame camera movement.

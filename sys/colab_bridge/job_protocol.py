@@ -2,9 +2,10 @@
 import hashlib
 import json
 import math
-from pathlib import Path, PurePosixPath
 import zipfile
-from .protocol import stamp, file_hash
+from pathlib import Path, PurePosixPath
+
+from .protocol import file_hash, stamp
 
 MAX_BUNDLE = 1_000_000_000
 MAX_FILES = 512
@@ -33,15 +34,23 @@ def build_render_request(root, brief, content, images, audio, resolve):
             assets.append({'name': dest, 'local_path': str(src.resolve()), 'sha256': file_hash(src), 'size': src.stat().st_size})
         return mapped[name]
     images = json.loads(json.dumps(images))
+    if brief.get('reframe_mode'):
+        images['reframe_mode'] = True
     for item in images['items']: item['path'] = asset(item['path'])
+    from omni_platform import short_plans
+    short_plans(brief, content)
     audio = json.loads(json.dumps(audio))
+    for hook in audio.get('spinoff_hooks', []):
+        hook['path'] = asset(hook['path'])
     for track in [audio] + list(audio.get('tracks', {}).values()) + ([audio['en']] if audio.get('en') else []):
         track['wav'] = asset(track['wav'])
     sources = []
-    names = ['output_contract.py', 'format_profiles.py', 'visual_pacing.py', 'scripts/story_plan.py', 'scripts/subtitles.py',
+    names = ['omni_platform.py', 'omni_render.py', 'output_contract.py', 'format_profiles.py', 'visual_pacing.py', 'scripts/story_plan.py', 'scripts/subtitles.py', 'scripts/camera_motion.py',
              'renderer/render.mjs', 'renderer/index.tsx', 'renderer/outputs.mjs', 'renderer/captions.mjs',
-             'renderer/brand_logo.ts',
+             'renderer/brand_logo.ts', 'renderer/thumbnail.tsx', 'tools/social_pack_generator.py', 'renderer/camera.mjs',
              'package.json', 'package-lock.json']
+    if brief.get('omni_platform'):
+        names += ['assets/sfx/' + name + '.wav' for name in ('pop_clean', 'whoosh_soft', 'page_flip', 'pen_highlight', 'clock_tick', 'ding_insight', 'ambient_focus_loop')]
     for name in names:
         path = root / name
         if not path.is_file() or path.is_symlink(): raise ValueError('Missing remote source: ' + name)
@@ -91,7 +100,7 @@ def validate_render_result(folder, request):
     if not {'video.mp4', 'layout.json', 'editorial-audit.json', 'props.json'} <= files.keys() or len(files) > MAX_FILES: raise ValueError('Incomplete remote render manifest')
     for name, record in files.items():
         path = folder / name
-        if Path(name).name != name or path.is_symlink() or path.suffix not in ('.mp4', '.png', '.json', '.srt'):
+        if Path(name).name != name or path.is_symlink() or path.suffix not in ('.mp4', '.png', '.json', '.srt', '.md'):
             raise ValueError('Unsafe remote render artifact')
         if not path.is_file() or not path.stat().st_size or path.stat().st_size != record['size'] or file_hash(path) != record['sha256']:
             raise ValueError('Remote render artifact changed or missing')
@@ -100,6 +109,8 @@ def validate_render_result(folder, request):
     props = json.loads((folder / 'props.json').read_text())
     if props.get('outputs') != request['brief']['outputs'] or props.get('aspect_ratio') != request['brief']['aspect_ratio']:
         raise ValueError('Remote props output contract mismatch')
+    if props.get('reframe_mode', False) != request['brief'].get('reframe_mode', False) or props.get('omni_platform', False) != request['brief'].get('omni_platform', False):
+        raise ValueError('Remote props framing mode mismatch')
     plans = request['brief']['outputs']
     requested_languages = list(dict.fromkeys(plan['language'] for plan in plans))
     if props.get('primary_language') != requested_languages[0] or set(props.get('tracks', {})) != set(requested_languages):
@@ -130,7 +141,8 @@ def validate_render_result(folder, request):
                     if len(actual_beats) != len(wanted_beats): raise ValueError('Remote props visual beat count mismatch')
                     last = -1
                     for beat, wanted in zip(actual_beats, wanted_beats):
-                        expected_asset = Path(images[(wanted['image_id'], aspect)]['path']).name
+                        asset_aspect = '16:9' if request['brief'].get('reframe_mode') else aspect
+                        expected_asset = Path(images[(wanted['image_id'], asset_aspect)]['path']).name
                         at = beat.get('at')
                         if (beat.get('id'), beat.get('src'), beat.get('effect'), beat.get('focus')) != (wanted['id'], expected_asset, wanted['effect'], wanted['focus']):
                             raise ValueError('Remote props visual asset/beat mismatch')
@@ -159,4 +171,19 @@ def validate_render_result(folder, request):
             raise ValueError('Remote MP4 duration mismatch')
     if files['video.mp4']['sha256'] != files[deliveries[0]['file']]['sha256']:
         raise ValueError('Primary video differs from first delivery')
+    if request['brief'].get('omni_platform'):
+        required = {'video_youtube_16x9.mp4', 'video_facebook_16x9.mp4', 'thumbnail_youtube_16x9.png', 'cover_tiktok_reels_9x16.png', 'SOCIAL_POST_KIT.md'}
+        if not required <= files.keys():
+            raise ValueError('Missing omni-platform deliverables')
+        supplemental = result.get('supplemental_outputs', [])
+        short_files = [f'video_tiktok_short_{index:02}_9x16.mp4' for index in range(1, len(request['brief']['spinoff_shorts']) + 1)]
+        if [item.get('file') for item in supplemental] != ['video_youtube_16x9.mp4', 'video_facebook_16x9.mp4', *short_files] or not set(short_files) <= files.keys():
+            raise ValueError('Supplemental output contract mismatch')
+        main = next(plan for plan in deliveries if plan['aspect_ratio'] == '16:9')
+        for item, subtitles in zip(supplemental[:2], (False, True), strict=True):
+            if any(item.get(key) != value for key, value in dict(main, file=item['file'], subtitles=subtitles).items()):
+                raise ValueError('Supplemental output metadata mismatch')
+        for item in supplemental[2:]:
+            if (item.get('width'), item.get('height'), item.get('aspect_ratio'), item.get('language'), item.get('subtitles'), item.get('video_codec'), item.get('audio_codec')) != (1080, 1920, '9:16', 'vi', True, 'h264', 'aac') or not 45 <= item.get('duration', 0) <= 60.25:
+                raise ValueError('Short output metadata mismatch')
     return ['render-result.json', *files]

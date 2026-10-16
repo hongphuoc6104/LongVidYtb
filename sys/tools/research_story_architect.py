@@ -77,39 +77,7 @@ _SELF_ANSWERING_TITLE_RE = re.compile(
 )
 
 
-def select_semantic_camera_effect(
-    framing_or_camera: str,
-    prev_effect: Optional[str] = None,
-) -> str:
-    """Map framing or camera direction to a semantic Remotion camera effect without consecutive duplicates."""
-    text = (framing_or_camera or "").strip().lower()
-    if text in ("zoom_in", "zoom_out", "punch_in", "pan_left", "pan_right"):
-        eff = text
-    elif any(k in text for k in ("extreme", "macro", "đặc tả", "nhấn", "punch")):
-        eff = "punch_in"
-    elif any(k in text for k in ("wide", "establishing", "pull", "zoom_out", "zoom out", "toàn cảnh", "rộng", "mở rộng")):
-        eff = "zoom_out"
-    elif any(k in text for k in ("left", "trái", "ngược", "quay lại", "đối lập")):
-        eff = "pan_left"
-    elif any(k in text for k in ("pan", "tracking", "quét", "lia", "đối xứng", "ngang")):
-        eff = "pan_right"
-    else:
-        eff = "zoom_in"
-
-    if prev_effect is not None and eff == prev_effect:
-        eff = "pan_right" if prev_effect != "pan_right" else "zoom_in"
-    return eff
-
-
-def assign_scene_camera_effects(camera_descriptions: List[str]) -> List[str]:
-    """Assign semantic camera effects across a sequence of shots with zero consecutive duplicates."""
-    effects: List[str] = []
-    prev: Optional[str] = None
-    for desc in camera_descriptions:
-        eff = select_semantic_camera_effect(desc, prev_effect=prev)
-        effects.append(eff)
-        prev = eff
-    return effects
+from scripts.camera_motion import assign_scene_camera_effects, select_semantic_camera_effect  # noqa: F401
 
 
 def check_conversational_spoken_facts(
@@ -742,6 +710,14 @@ def build_content_v3(
                 "focus": {"x": visual.focus_x, "y": visual.focus_y},
             })
 
+        from scripts.visual_quality import apply_room_continuity
+        apply_room_continuity(images)
+        previous_effect = None
+        for beat, image in zip(beats, images, strict=True):
+            if beat['effect'] in ('auto', 'cut', 'fade'):
+                beat['effect'] = select_semantic_camera_effect(image['description'] + ' ' + sc.camera, previous_effect)
+            previous_effect = beat['effect']
+
         scene_dict = {
             "id": s_id,
             "title": sc.title,
@@ -757,6 +733,8 @@ def build_content_v3(
             "beats": beats,
             "layers": [],
         }
+        if sc.foley_cue:
+            scene_dict["foley_cue"] = sc.foley_cue
         if sc.narration_en:
             scene_dict["narration_en"] = sc.narration_en
 
@@ -1631,6 +1609,7 @@ def write_production_package(
     system_root: Path = SYS_DIR,
     brief_revision: int = 1,
     include_spinoffs: bool = False,
+    omni_plan: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """Assemble and write brief.json, content.json, script.json, cadence_report.json, and optional short_9x16 spin-offs."""
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -1650,8 +1629,15 @@ def write_production_package(
         ]
 
     brief_data = build_brief_v3(topic, system_root=system_root)
+    if omni_plan is not None:
+        brief_data.update(omni_platform=True, reframe_mode=True, spinoff_shorts=omni_plan['spinoff_shorts'])
+        if 'social_copy' in omni_plan:
+            brief_data['social_copy'] = omni_plan['social_copy']
     brief_hash = compute_brief_hash(brief_data)
     content_data = build_content_v3(topic, brief_data, brief_hash, brief_revision=brief_revision)
+    if omni_plan is not None:
+        from omni_platform import short_plans
+        short_plans(brief_data, content_data)
     script_data = generate_script_json(topic)
 
     # Cadence checker validation
@@ -1726,6 +1712,7 @@ def main() -> int:
     parser.add_argument("--validate", action="store_true", help="Run contract and cadence validation")
     parser.add_argument("--aspect-ratio", choices=["16:9", "9:16", "dual"], default="16:9", help="Video aspect ratio")
     parser.add_argument("--subtitles", action="store_true", help="Force enable subtitles on output")
+    parser.add_argument("--omni-plan", help="Authored standalone short references JSON; enables shared-image omni-platform outputs")
     parser.add_argument("--spinoff-shorts", action="store_true", help="Also generate standalone short_9x16 spin-off packages")
 
     args = parser.parse_args()
@@ -1764,7 +1751,7 @@ def main() -> int:
             if args.subtitles:
                 topic.subtitles = True
 
-        result = write_production_package(out_dir, topic, system_root=SYS_DIR, include_spinoffs=args.spinoff_shorts)
+        result = write_production_package(out_dir, topic, system_root=SYS_DIR, include_spinoffs=args.spinoff_shorts, omni_plan=json.loads(Path(args.omni_plan).read_text()) if args.omni_plan else None)
 
         print(f"  [+] Đã xuất brief.json: {result['brief_file']}")
         print(f"  [+] Đã xuất content.json: {result['content_file']}")

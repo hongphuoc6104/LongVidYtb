@@ -143,7 +143,7 @@ class TestFormatSeparation(unittest.TestCase):
         c_short = clearance_for_output("9:16", subtitles=True)
         c_long = clearance_for_output("16:9", subtitles=True)
         assert c_short == {"edge": "bottom", "fraction": 0.18}
-        assert c_long == {"edge": "bottom", "fraction": 0.10}
+        assert c_long is None
 
     def test_subtitles_wrapping_and_audit_by_aspect_ratio(self):
         """Verify 9:16 wraps at 28/54 chars while 16:9 wraps at 42/84 chars."""

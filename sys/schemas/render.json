@@ -45,6 +45,13 @@
         "vi",
         "en"
       ]
+    },
+    "social_assets": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      }
     }
   },
   "required": [

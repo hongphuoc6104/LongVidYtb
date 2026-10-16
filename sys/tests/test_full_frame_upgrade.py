@@ -53,6 +53,9 @@ def test_timeline_prefers_acoustic_time_and_labels_fallback() -> None:
     result = timeline(content, images, audio, 'vi', '16:9')[0]
     assert result['images'][1]['at'] == 2.7
     assert result['timing_method'] == 'acoustic_word_timestamps'
+    assert result['images'][0]['transition'] == 'cut'
+    assert result['images'][0]['camera_motion'] != 'cut'
+    assert result['images'][0]['camera_motion'] != result['images'][1]['camera_motion']
     del seg['word_timestamps']
     fallback = timeline(content, images, audio, 'vi', '16:9')[0]
     assert fallback['images'][1]['at'] != 2.7

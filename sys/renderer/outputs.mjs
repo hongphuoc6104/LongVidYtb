@@ -11,7 +11,7 @@ export function outputPlans(props, hasEnglish) {
   if (props.outputs) {
     const expected = ratio === 'dual' ? ['9:16', '16:9'] : [ratio];
     if (!Array.isArray(props.outputs) || props.outputs.length !== expected.length) throw Error('Explicit output contract required');
-    return props.outputs.map((plan, i) => {
+    const plans = props.outputs.map((plan, i) => {
       if (plan.aspect_ratio !== expected[i] || !['vi', 'en'].includes(plan.language) || typeof plan.subtitles !== 'boolean') throw Error('Invalid output contract');
       let track = props.tracks?.[plan.language];
       if (!track && props.primary_language === plan.language) {
@@ -25,8 +25,16 @@ export function outputPlans(props, hasEnglish) {
       return {file: ratio === 'dual' ? `video_${vertical ? '9x16' : '16x9'}.mp4` : 'video.mp4',
         props: {...props, scenes, duration: track.duration, cues: track.cues || [],
           width: vertical ? 1080 : 1920, height: vertical ? 1920 : 1080,
-          hideSubtitles: !plan.subtitles, audioSrc: track.audioSrc, language: plan.language}};
+          words: track.words || [], hideSubtitles: !plan.subtitles, audioSrc: track.audioSrc, language: plan.language}};
     });
+    if (props.omni_platform) {
+      const main = plans.find(plan => plan.props.width === 1920);
+      if (!main) throw Error('Omni-platform requires a landscape master');
+      plans.push({file: 'video_youtube_16x9.mp4', props: {...main.props, hideSubtitles: true}});
+      plans.push({file: 'video_facebook_16x9.mp4', props: {...main.props, hideSubtitles: false}});
+      for (const short of props.short_deliveries || []) plans.push({file: short.file, props: {...props, ...short.props, sfx_events: [{at: 0, src: 'pop_clean.wav'}]}});
+    }
+    return plans;
   }
   if (ratio !== '9:16' && (!hasEnglish || !props.en_scenes || !props.en_duration)) throw Error('English track and timeline required');
   const vertical = {...props, width: 1080, height: 1920, hideSubtitles: false, audioSrc: 'narration.wav'};

@@ -22,8 +22,9 @@ PROFILES: Dict[str, Dict[str, Any]] = {
         "caption_layout": {
             "max_line_chars": 28,
             "max_cue_chars": 54,
-            "bottom": 280,
-            "width": 940,
+            "bottom": 400,
+            "width": 820,
+            "left_offset": 56,
             "font_size": 48,
         },
         "caption_clearance_when_subtitled": {"edge": "bottom", "fraction": 0.18},
@@ -37,8 +38,8 @@ PROFILES: Dict[str, Dict[str, Any]] = {
         },
         "watermark": {
             "size_ratio_w": 100 / 1080,
-            "right_ratio_w": 24 / 1080,
-            "bottom_ratio_h": 50 / 1920,
+            "right_ratio_w": 32 / 1080,
+            "top_ratio_h": 120 / 1920,
         },
     },
     "long_16x9": {
@@ -56,7 +57,7 @@ PROFILES: Dict[str, Dict[str, Any]] = {
             "width": 1400,
             "font_size": 38,
         },
-        "caption_clearance_when_subtitled": {"edge": "bottom", "fraction": 0.10},
+        "caption_clearance_when_subtitled": None,
         "caption_clearance_when_unsubtitled": None,
         "text_style": {
             "font": "sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt",

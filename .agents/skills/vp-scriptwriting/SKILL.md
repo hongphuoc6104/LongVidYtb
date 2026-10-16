@@ -103,3 +103,7 @@ python3 sys/tools/script_diversity_linter.py path/to/content.json
 - [Quy Chuẩn Giọng Đọc, Tốc Độ & Ngắt Nhịp](../vp-channel-patterns/references/voice-cadence-pacing.md)
 - [Chỉ Dẫn Kịch Bản Sản Xuất](../vp-production/references/script.md)
 - [Chỉ Dẫn Âm Thanh Sản Xuất](../vp-production/references/audio.md)
+
+## Anti-manual narrative gate
+
+Follow [Full-frame quality contracts](../vp-full-frame-quality/SKILL.md) for new full-frame jobs. Spend the first 80–85% developing the paradox, evidence and causal explanation; use the final 15–20% for practice. Do not repeat the same operation pair in more than three scenes. Vietnamese Adam defaults to `1.22` for long videos; retain `1.26` for short spin-offs. Sentence chunks and acoustic checks govern delivery; speed alone does not certify pacing.

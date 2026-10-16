@@ -2,8 +2,8 @@
 import copy
 import hashlib
 import json
-from pathlib import Path
 import re
+from pathlib import Path
 
 CURRENT_VERSION = '1.1.0'
 SUPPORTED_VERSIONS = ('1.0.0', '1.0.1', '1.1.0', '1.2.0', '1.3.0')
@@ -133,6 +133,8 @@ def _data(data, purpose, version='1.0.0'):
         if not isinstance(clearance, dict) or set(clearance) != {'edge', 'fraction'} or clearance['edge'] not in ('bottom', 'top') or type(clearance['fraction']) not in (int, float) or not 0.10 <= clearance['fraction'] <= 0.40:
             raise PromptError('FLOW_CAPTION_CLEARANCE_INVALID: edge top/bottom and fraction 0.10–0.40 required')
         clearance = dict(clearance)
+    if version == '1.3.0':
+        clearance = None  # Full-frame art never reserves a caption band.
     normalized = {'description': description, 'aspect_ratio': ratio, 'allowed_text': allowed,
                   'preserve': preserve, 'change': change, 'caption_clearance': clearance}
     if 'shot_type' in data:
@@ -165,7 +167,7 @@ def compile(model, purpose, data, version=CURRENT_VERSION):
     template_id = 'flow.' + model_id + '.' + purpose
     sections = ['Requested aspect ratio: ' + visual['aspect_ratio'] + '. Render the requested still image.',
                 spec['models'][model_id]['strategy'], spec['purposes'][purpose], spec['style'], spec['cast_rule'] if version in CAST_VERSIONS else spec['identity'],
-                spec['reference_rule'], spec['data_boundary']] + ([] if visual.get('caption_clearance') is None else [spec['clearance_rule']])
+                spec['reference_rule'], spec['data_boundary']] + ([spec['clearance_rule']] if version == '1.3.0' or visual.get('caption_clearance') is not None else [])
     if version == '1.3.0' and visual.get('shot_type'):
         sections.append(spec['shot_types'][visual['shot_type']])
     if references['base']:

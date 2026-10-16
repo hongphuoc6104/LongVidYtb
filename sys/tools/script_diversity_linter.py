@@ -369,6 +369,15 @@ def lint_script(
 ) -> Dict[str, Any]:
     all_violations: List[Dict[str, Any]] = []
 
+    from scripts.visual_quality import (
+        check_instructional_manual_loop,
+        check_scene_narrative_progression,
+        check_visual_setting_diversity,
+    )
+    all_violations.extend(check_visual_setting_diversity(scenes))
+    all_violations.extend(check_instructional_manual_loop(scenes))
+    all_violations.extend(check_scene_narrative_progression(scenes))
+
     # 1. Formulaic transitions
     ft_violations = check_formulaic_transitions(scenes)
     all_violations.extend(ft_violations)

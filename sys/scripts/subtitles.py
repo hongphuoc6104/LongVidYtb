@@ -22,7 +22,32 @@ def _resolve_limits(aspect_ratio=None, max_line=None, max_cue=None):
             max_cue if max_cue is not None else prof_cue)
 
 
-def phrase_chunks(text, max_len=None, *, aspect_ratio=None):
+# Sentence punctuation followed by whitespace; decimals remain inside a token.
+_SENTENCE_BOUNDARY = re.compile(r'(?<=[.!?…])["”’\']*\s+')
+
+
+def sentence_units(text: str) -> list[str]:
+    """Preserve terminal quotes while splitting sentence boundaries."""
+    clean = re.sub(r"\[pause:[^\]]+\]", " ", text)
+    clean = ' '.join(clean.split())
+    result: list[str] = []
+    cursor = 0
+    for match in _SENTENCE_BOUNDARY.finditer(clean):
+        end = match.end() - len(match.group().lstrip('"”’\''))
+        result.append(clean[cursor:end].strip())
+        cursor = match.end()
+    if clean[cursor:]:
+        result.append(clean[cursor:])
+    return result
+
+
+def phrase_chunks(text: str, max_len: int | None = None, *, aspect_ratio: str | None = None) -> list[str]:
+    """Balance phrases inside each sentence, never across sentence boundaries."""
+    return [phrase for unit in sentence_units(text)
+            for phrase in _phrase_chunks(unit, max_len, aspect_ratio=aspect_ratio)]
+
+
+def _phrase_chunks(text, max_len=None, *, aspect_ratio=None):
     """Choose word boundaries globally; never split a token or drop punctuation.
 
     A short final fragment costs more than a slightly earlier balanced break.
@@ -169,7 +194,7 @@ def subtitle_cues(segments, *, aspect_ratio=None):
         weights = [len(c) for c in chunks]
         total = sum(weights)
         used = 0
-        for chunk, weight in zip(chunks, weights):
+        for chunk, weight in zip(chunks, weights, strict=True):
             a = start + (content_end - start) * used / total
             used += weight
             z = end if used == total else start + (content_end - start) * used / total
@@ -190,6 +215,8 @@ def audit_cues(cues, *, aspect_ratio=None):
             errors.append(dict(ref, code='CAPTION_TIMELINE', message='Thời gian phụ đề không hợp lệ hoặc chồng lấn.'))
         if not has_words(text):
             errors.append(dict(ref, code='CAPTION_ORPHAN', message='Phụ đề rỗng hoặc chỉ có dấu câu.'))
+        if len(sentence_units(text)) > 1:
+            errors.append(dict(ref, code='CAPTION_CROSS_SENTENCE', message='Cue crosses a sentence boundary.'))
         lines = text.splitlines()
         if len(lines) > 2 or any(len(line) > max_line for line in lines):
             warnings.append(dict(ref, code='CAPTION_LAYOUT', message='Cần kiểm tra độ dài dòng trên khung thật.'))

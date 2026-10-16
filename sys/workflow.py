@@ -184,6 +184,7 @@ def assets(p, job, stage):
         if media:
             files += [x for x in media['assets'] if x.endswith('visual-timing.json')]
         video = p.payload(job, 'render')
+        files += list(video.get('social_assets', {}).values())
         files += [video[k] for k in ('video', 'video_9x16', 'video_16x9', 'editorial_report') if video.get(k)]
     return list(dict.fromkeys(files))
 
@@ -441,6 +442,13 @@ def published_videos(p, job):
         if target.is_symlink() or not target.is_file() or digest(source) != digest(target):
             raise Blocked('Published video missing or changed; resume/check publication before mark')
         paths.append(str(target))
+    for name, relative in payload.get('social_assets', {}).items():
+        if Path(name).name != name:
+            raise Blocked('Unsafe published social filename')
+        target = folder / name
+        if target.is_symlink() or not target.is_file() or digest(p.path(job, relative)) != digest(target):
+            raise Blocked('Published social asset missing or changed')
+        paths.append(str(target))
     return paths
 
 
@@ -488,6 +496,17 @@ def _publish_videos(p, job):
         stamp = digest(source)
         if target.is_symlink() or (target.exists() and (not target.is_file() or digest(target) != stamp)):
             raise Blocked(f'Refusing to overwrite a different video: {target}')
+        plans.append((source, target, stamp))
+    for name, relative in payload.get('social_assets', {}).items():
+        if Path(name).name != name or Path(name).suffix not in ('.mp4', '.png', '.srt', '.md'):
+            raise Blocked('Unsafe social deliverable filename')
+        source = p.path(job, relative)
+        target = folder / name
+        if not source.is_file() or source.is_symlink():
+            raise Blocked('Missing social deliverable')
+        stamp = digest(source)
+        if target.is_symlink() or (target.exists() and (not target.is_file() or digest(target) != stamp)):
+            raise Blocked(f'Refusing to overwrite a different social deliverable: {target}')
         plans.append((source, target, stamp))
     folder.mkdir(parents=True, exist_ok=True)
     for source, target, stamp in plans:

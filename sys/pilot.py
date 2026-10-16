@@ -476,6 +476,7 @@ class Pilot:
      for item in value.get(field,[]):item['path']=str((folder/item['path']).relative_to(self.job(j)))
     return value
    wanted=localize(raw)
+   for hook in wanted.get('spinoff_hooks',[]):hook['path']=str((folder/hook['path']).relative_to(self.job(j)))
    wanted['tracks']={lang:localize(track) for lang,track in raw.get('tracks',{}).items()}
    if raw.get('en'):wanted['en']=localize(raw['en'])
    if payload!=wanted:raise Blocked('REMOTE_PAYLOAD: imported audio differs from immutable result')
@@ -499,6 +500,9 @@ class Pilot:
    if request['brief']!=brief:raise Blocked('REMOTE_PROVENANCE: render brief differs from current contract')
    if request['content']!=content:raise Blocked('REMOTE_PROVENANCE: render dialogue differs from current content')
    report=read(self.path(j,payload['remote_report']))
+   if brief.get('omni_platform'):
+    social={name:str((folder/name).relative_to(self.job(j))) for name in report['files'] if name in {'video_youtube_16x9.mp4','video_facebook_16x9.mp4','thumbnail_youtube_16x9.png','cover_tiktok_reels_9x16.png','SOCIAL_POST_KIT.md'} or name.startswith('subtitles_') or name.startswith('video_tiktok_short_')}
+    if payload.get('social_assets')!=social:raise Blocked('REMOTE_ARTIFACT: social assets differ from verified manifest')
    delivered=report['outputs'][0]['duration']
    if type(payload.get('duration')) not in (int,float) or not math.isfinite(payload['duration']) or delivered<=0 or abs(payload['duration']-delivered)>1e-8:raise Blocked('REMOTE_DURATION: imported video differs from measured remote result')
    for name in ('video','layout_report','editorial_report'):

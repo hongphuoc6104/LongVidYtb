@@ -230,6 +230,17 @@ def run(request_path, output_dir):
             extra.append(dict(scene_id=part['scene_id'], language=part['language'], text=part['text'], path=name, content_duration=duration,
                               word_timestamps=_extract_word_timestamps_acoustic(np.concatenate([waves[i] for i in part['items']]), part['text'], sr=SR)))
         (output / 'secondary-result.json').write_text(json.dumps({'request_id': req['request_id'], 'segments': extra}, ensure_ascii=False, indent=2))
+    if req.get('spinoff_hooks'):
+        hooks = []
+        for index, hook in enumerate(req['spinoff_hooks']):
+            name = f'spinoff-hook-{index:02d}.wav'
+            duration = save(name, [waves[hook['item']]], 0)
+            if duration > 3:
+                raise ValueError('OMNI_HOOK_DURATION: independent hook exceeds 3 seconds')
+            hooks.append(dict(id=hook['id'], text=hook['text'], path=name, duration=duration,
+                              word_timestamps=_extract_word_timestamps_acoustic(waves[hook['item']], hook['text'], sr=SR)))
+        result['spinoff_hooks'] = hooks
+        (output / 'tts-result.json').write_text(json.dumps(result, ensure_ascii=False, indent=2))
     if req.get('assemble'):
         import importlib.util
         module_path = Path(request_path).parent / 'media_packaging.py'

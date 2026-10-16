@@ -1,9 +1,12 @@
+import {selectSemanticCameraEffect, overscanScale} from './camera.mjs';
+import {Thumbnail} from './thumbnail';
 import React, {useLayoutEffect} from 'react';
-import {captionStyle, captionMaxHeight} from './captions.mjs';
+import {karaokeTokens, captionStyle, captionMaxHeight} from './captions.mjs';
 import {BRAND_LOGO_DATA_URI} from './brand_logo';
 import {
   AbsoluteFill,
   Audio,
+  Sequence,
   Composition,
   Easing,
   Img,
@@ -30,30 +33,7 @@ export function boilJitter(frame: number, seed: number = 0): number {
   return r - Math.floor(r) - 0.5;
 }
 
-// Semantic camera movement selector (eliminates mechanical active % 4 cycling)
-export function selectSemanticCameraEffect(beat: any, scene: any, beatIndex: number): string {
-  const explicit = beat?.effect;
-  if (explicit && explicit !== 'auto') return explicit;
-  const intent = String(beat?.camera_intent || scene?.camera_intent || scene?.camera || '').toLowerCase();
-  const desc = String(beat?.description || scene?.action || scene?.purpose || '').toLowerCase();
-
-  if (intent.includes('hold') || desc.includes('diagram') || desc.includes('sơ đồ')) return 'hold';
-  if (intent.includes('reveal') || intent.includes('shock') || desc.includes('bất ngờ') || desc.includes('giật mình')) return 'punch_in';
-  if (intent.includes('establish') || intent.includes('wide') || desc.includes('toàn cảnh') || desc.includes('rộng')) return 'zoom_out';
-  if (intent.includes('detail') || intent.includes('focus') || intent.includes('tension') || desc.includes('cận cảnh') || desc.includes('tập trung')) return 'zoom_in';
-  if (intent.includes('pan_left') || intent.includes('contrast') || desc.includes('đối lập')) return 'pan_left';
-  if (intent.includes('pan_right') || desc.includes('dòng thời gian') || desc.includes('hành trình')) return 'pan_right';
-
-  // Non-repeating golden-ratio sequence seeded by scene ID + beatIndex so no two adjacent shots repeat
-  const sceneSeed = String(scene?.id || 'SC01').split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
-  const pool = ['zoom_in', 'pan_right', 'zoom_out', 'pan_left'];
-  const prevIdx = beatIndex > 0 ? ((sceneSeed + (beatIndex - 1) * 3) % pool.length) : -1;
-  let chosenIdx = (sceneSeed + beatIndex * 3) % pool.length;
-  if (chosenIdx === prevIdx) {
-    chosenIdx = (chosenIdx + 1) % pool.length;
-  }
-  return pool[chosenIdx];
-}
+export {selectSemanticCameraEffect} from './camera.mjs';
 
 // Dynamic voice-guided BGM sidechain ducking envelope (swells in pauses, ducks during speech)
 export function computeDynamicBgmVolume(
@@ -220,6 +200,10 @@ const Video: React.FC<any> = (p) => {
     }
   }
 
+  // Overscan applies after every motion branch; 4.5% zoom crops ~2.15% per edge.
+  // This is a framing margin, not proof that a provider watermark is removed.
+  scale = overscanScale(scale);
+
   // Organic Camera Shake (Handheld multi-frequency camera vibration)
   let shakeX = 0;
   let shakeY = 0;
@@ -233,6 +217,7 @@ const Video: React.FC<any> = (p) => {
   const opacity = beat.effect === 'fade' ? transition : 1;
   const focusX = (beat.focus?.x ?? 0.5) * 100;
   const focusY = (beat.focus?.y ?? 0.42) * 100;
+  const editorial = p.reframe_mode && height > width && !['macro_prop', 'white_card', 'white_isolated'].includes(beat.shot_type);
   const isVideoAsset = currentImageSrc && (currentImageSrc.endsWith('.mp4') || currentImageSrc.endsWith('.webm'));
 
   // 1. Procedural Line Boiling (8-12 fps hand-drawn organic jitter for stick figures)
@@ -259,7 +244,7 @@ const Video: React.FC<any> = (p) => {
   ].filter(Boolean).join(' ') || undefined;
 
   return (
-    <AbsoluteFill style={{background: p.modern_style ? '#F8FAFC' : '#090D16', fontFamily: 'Arial, sans-serif', color: 'white', width, height, overflow: 'hidden'}}>
+    <AbsoluteFill style={{background: editorial ? '#0F172A' : p.modern_style ? '#F8FAFC' : '#090D16', fontFamily: 'Arial, sans-serif', color: 'white', width, height, overflow: 'hidden'}}>
       {/* Procedural Line Boiling SVG Displacement Filters */}
       <svg style={{position: 'absolute', width: 0, height: 0, pointerEvents: 'none'}}>
         <defs>
@@ -409,8 +394,10 @@ const Video: React.FC<any> = (p) => {
                 style={{
                   width: '100%',
                   height: '100%',
-                  objectFit: 'cover',
-                  transform: `translate(calc(${translateX}% + ${shakeX}px), calc(${translateY}% + ${shakeY}px)) scale(${scale})`,
+                  objectFit: editorial ? 'contain' : 'cover',
+                  objectPosition: `${focusX}% ${focusY}%`,
+                  ...(editorial ? {position: 'absolute', top: '25%', height: '48%', borderRadius: 24, boxShadow: '0 12px 32px #0008'} : {}),
+                  transform: `translate(calc(${translateX}% + ${shakeX}px), calc(${translateY}% + ${shakeY}px)) scale(${editorial ? 1 : scale})`,
                   transformOrigin: `${focusX}% ${focusY}%`,
                   opacity,
                   filter: combinedFilter,
@@ -423,6 +410,8 @@ const Video: React.FC<any> = (p) => {
         </>
       )}
 
+      {editorial && p.hook_title && <div style={{position: 'absolute', top: 230, left: 56, width: 820, fontSize: 58, fontWeight: 900, textAlign: 'center', color: '#FACC15'}}>{p.hook_title}</div>}
+      {p.cover_text && t < (p.cover_duration || 0) && <Thumbnail image={scene.image} text={p.cover_text} width={width} height={height} />}
       {/* Stroke Draw-on Pencil Guide Indicator */}
       {isDrawOn && drawEase > 0 && drawEase < 0.96 && (
         <div
@@ -540,7 +529,7 @@ const Video: React.FC<any> = (p) => {
         const targetWord = p.target_word;
         return (
           <div data-check="subtitle" style={{...captionStyle(width, height), zIndex: 30} as React.CSSProperties}>
-            {renderHighlightedText(lineText, targetWord, p.modern_style)}
+            {height > width && p.words?.length ? karaokeTokens(cue, p.words, t).map((token: any, index: number) => <span key={index} style={{color: token.active ? '#FACC15' : 'white', display: 'inline-block', transform: token.active ? 'scale(1.06)' : undefined, marginRight: '0.25em'}}>{token.text}</span>) : renderHighlightedText(lineText, targetWord, p.modern_style)}
           </div>
         );
       })()}
@@ -563,7 +552,7 @@ const Video: React.FC<any> = (p) => {
       {!p.hide_logo && (() => {
         const isHorizontal = width >= height;
         const logoSize = isHorizontal ? Math.round(width * (108 / 1920)) : Math.round(width * (100 / 1080));
-        const logoRight = isHorizontal ? Math.round(width * (23 / 1920)) : Math.round(width * (24 / 1080));
+        const logoRight = isHorizontal ? Math.round(width * (23 / 1920)) : Math.round(width * (32 / 1080));
         const logoBottom = isHorizontal ? Math.round(height * (38 / 1080)) : Math.round(height * (50 / 1920));
         const logoRadius = Math.round(logoSize * (16 / 108));
         return (
@@ -571,7 +560,8 @@ const Video: React.FC<any> = (p) => {
             style={{
               position: 'absolute',
               right: logoRight,
-              bottom: logoBottom,
+              bottom: isHorizontal ? logoBottom : undefined,
+              top: isHorizontal ? undefined : Math.round(height * (120 / 1920)),
               width: logoSize,
               height: logoSize,
               borderRadius: logoRadius,
@@ -594,6 +584,7 @@ const Video: React.FC<any> = (p) => {
         );
       })()}
 
+      {(p.sfx_events || []).map((event: any, index: number) => <Sequence key={index} from={Math.round(event.at * fps)} durationInFrames={Math.round(.3 * fps)}><Audio src={staticFile(event.src)} volume={0.5} /></Sequence>)}
       {/* Audio Mixer: Voice narration */}
       <Audio src={staticFile(p.audioSrc || 'narration.wav')} volume={1} />
 
@@ -618,6 +609,7 @@ const Video: React.FC<any> = (p) => {
 };
 
 registerRoot(() => (
+  <>
   <Composition
     id="Pilot"
     component={Video}
@@ -635,4 +627,6 @@ registerRoot(() => (
       };
     }}
   />
+  <Composition id="Thumbnail" component={Thumbnail} width={1920} height={1080} fps={30} durationInFrames={1} defaultProps={{image: "", text: ""}} calculateMetadata={({props}: any) => ({width: props.width || 1920, height: props.height || 1080})} />
+  </>
 ));

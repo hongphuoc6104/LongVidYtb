@@ -480,6 +480,34 @@
             "type": "integer",
             "minimum": 3,
             "maximum": 6
+          },
+          "body": {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 4,
+            "items": {
+              "type": "object",
+              "properties": {
+                "parent_scene_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "image_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "segment_text": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "parent_scene_id",
+                "image_id",
+                "segment_text"
+              ],
+              "additionalProperties": false
+            }
           }
         },
         "required": [
@@ -492,6 +520,24 @@
     },
     "visual_pacing_profile": {
       "const": "full_frame_v1"
+    },
+    "reframe_mode": {
+      "type": "boolean"
+    },
+    "omni_platform": {
+      "type": "boolean"
+    },
+    "social_copy": {
+      "type": "object",
+      "properties": {
+        "youtube_description": {
+          "type": "string"
+        },
+        "facebook_post": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
     }
   },
   "required": [

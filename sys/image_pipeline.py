@@ -4,8 +4,10 @@ import json
 import shutil
 import time
 from pathlib import Path
+
 import jsonschema
 from PIL import Image, ImageDraw
+
 from pilot import Blocked, digest, hashobj, read, write
 
 STAGES = ('references', 'final')
@@ -39,7 +41,7 @@ def planned_units(p, j):
     units = image_units(c)
     if c.get('schema_version') != '3.0': return units
     brief = p.brief(j)[0]
-    ratios = ['9:16','16:9'] if brief['aspect_ratio']=='dual' else [brief['aspect_ratio']]
+    ratios = ['16:9'] if brief.get('reframe_mode') else (['9:16','16:9'] if brief['aspect_ratio']=='dual' else [brief['aspect_ratio']])
     return [dict(u, id=u['id']+'_'+ratio.replace(':','x'), image_id=u['id'], ratio=ratio,
                  based_on=(u['based_on']+'_'+ratio.replace(':','x')) if u['based_on'] else None,
                  prompt=text_prompt(u['prompt'],u['visible_text'],brief['planning']['text_style']))
@@ -221,7 +223,7 @@ def image_check(p, j, path, expected_hash=None, full=True):
             im.load()
         if full:
             b = p.brief(j)[0] if p.brief(j) else None
-            ratio = b.get('aspect_ratio', '9:16') if b else '9:16'
+            ratio = ('16:9' if b.get('reframe_mode') else b.get('aspect_ratio', '9:16')) if b else '9:16'
             if ratio == '16:9':
                 if abs(im.width / im.height - 16 / 9) > .04 or im.width < 720 or im.height < 400:
                     raise Blocked('M2_IMAGE: require 16:9: ' + path)
@@ -239,8 +241,8 @@ def image_check(p, j, path, expected_hash=None, full=True):
 
 
 def requested_prompt(p, j, target, prompt, notes, ratio, registration=False):
-    from scripts.story_plan import safe_corrections
     from prompt_templates import image_prompt
+    from scripts.story_plan import safe_corrections
     c = content(p,j)
     corrections = safe_corrections(c, notes)
     unit = next((x for x in planned_units(p,j) if x['id']==target),None)
@@ -272,8 +274,8 @@ def _template_request(p, j, target, prompt, corrections, ratio, refs, registrati
     pin = prompt_pin(p, j)
     if pin is None:
         return None
-    from flow_prompts import compile_pinned
     from adapters import _flow_media_reference
+    from flow_prompts import compile_pinned
     canonical = p.root / 'assets/characters/channel-mascot/reference-v1.png'
     if registration:
         image = p.path(j, registration['path'])
@@ -319,7 +321,7 @@ def _template_request(p, j, target, prompt, corrections, ratio, refs, registrati
         from output_contract import outputs
         out_plan = next((o for o in outputs(brief_obj) if o['aspect_ratio'] == ratio), None)
         subtitled = out_plan['subtitles'] if out_plan else (ratio == '9:16')
-        format_clearance = clearance_for_output(ratio, subtitled)
+        format_clearance = None if pin['version'] == '1.3.0' else clearance_for_output(ratio, subtitled)
     if scene:
         original = next((image for parent in content(p, j)['scenes'] for image in parent.get('images', [])
                          if image['id'] == scene.get('image_id', scene['id'])), None)
@@ -487,7 +489,7 @@ def reconcile_stuck_conflict(p, j, target, reason="auto recovery failover"):
 
 
 def _before_generation(p, j):
-    from execution import is_job, before_submit
+    from execution import before_submit, is_job
     if is_job(p, j):
         try:
             before_submit(p, j)
@@ -852,8 +854,8 @@ def produce(p, j, out):
             except Blocked as ex:
                 _reraise_if_expired(ex, i, len(refs))
         scenes = planned_units(p,j)
-        import concurrent.futures
         import collections
+        import concurrent.futures
         import threading
         cfg = read(p.root / 'config.json')
         concurrency = cfg.get('concurrency', 3)
