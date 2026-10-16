@@ -33,7 +33,7 @@ if str(SYS_DIR / "tools") not in sys.path:
 
 from research_story_architect import (
     ResearchedScene,
-    ResearchedSticker,
+    compose_full_frame_description,
     ResearchedTopic,
     write_production_package,
 )
@@ -107,8 +107,8 @@ RAW_SCENES_METADATA = [
         "action": "Linh dương gặm cỏ ngẩng đầu nhìn về phía xa",
         "setting": "Thảo nguyên mênh mông dưới ánh nắng sớm",
         "camera": "Toàn cảnh góc rộng",
-        "bg": "Thảo nguyên châu Phi với cây keo cô đơn và đường chân trời xa xăm",
-        "sticker": "Hình tượng người que stick-figure đứng thẳng trên đường chân trời",
+        "scene_description": "Thảo nguyên châu Phi với cây keo cô đơn và đường chân trời xa xăm",
+        "figure_action": "Hình tượng người que stick-figure đứng thẳng trên đường chân trời",
         "anchor": "đàn linh dương đang cảnh giác",
     },
     {
@@ -122,8 +122,8 @@ RAW_SCENES_METADATA = [
         "action": "Bóng đen hai chân xuất hiện chậm rãi ở phía xa",
         "setting": "Đường chân trời sa mạc cát vàng",
         "camera": "Góc máy trung toàn cảnh",
-        "bg": "Đường chân trời xa xôi với bóng dáng hai chân lững thững bước đi",
-        "sticker": "Người que bước từng bước điềm tĩnh không vội vã",
+        "scene_description": "Đường chân trời xa xôi với bóng dáng hai chân lững thững bước đi",
+        "figure_action": "Người que bước từng bước điềm tĩnh không vội vã",
         "anchor": "Nó đứng thẳng trên hai chân",
     },
     {
@@ -137,8 +137,8 @@ RAW_SCENES_METADATA = [
         "action": "Linh dương chạy trốn rồi ngoái lại nhìn thấy bóng người kiên trì tiến tới",
         "setting": "Bụi rậm xavan giữa ban trưa",
         "camera": "Góc lia theo hướng di chuyển",
-        "bg": "Khung cảnh bụi cây thấp nơi linh dương ẩn nấp",
-        "sticker": "Người que kiên trì chạy bước nhỏ theo dấu vết",
+        "scene_description": "Khung cảnh bụi cây thấp nơi linh dương ẩn nấp",
+        "figure_action": "Người que kiên trì chạy bước nhỏ theo dấu vết",
         "anchor": "bóng dáng hai chân ấy lại lững thững",
     },
     {
@@ -152,8 +152,8 @@ RAW_SCENES_METADATA = [
         "action": "Biểu tượng người thợ săn tiền sử đứng hiên ngang",
         "setting": "Hoàng hôn rực rỡ trên đỉnh đồi",
         "camera": "Cận cảnh nhấn mạnh biểu cảm",
-        "bg": "Vầng sáng hoàng hôn chiếu rọi hình bóng thợ săn",
-        "sticker": "Người que cầm giáo giương cao biểu thị sức mạnh",
+        "scene_description": "Vầng sáng hoàng hôn chiếu rọi hình bóng thợ săn",
+        "figure_action": "Người que cầm giáo giương cao biểu thị sức mạnh",
         "anchor": "tổ tiên chúng ta chính là cơn ác mộng",
     },
 
@@ -169,8 +169,8 @@ RAW_SCENES_METADATA = [
         "action": "So sánh lớp lông thú dày và làn da trần",
         "setting": "Không gian giải phẫu minh họa 2D",
         "camera": "Cận cảnh phân tích",
-        "bg": "Bản vẽ cấu tạo da và lông động vật săn mồi",
-        "sticker": "Hình tượng thú bốn chân bốc khói nhiệt",
+        "scene_description": "Bản vẽ cấu tạo da và lông động vật săn mồi",
+        "figure_action": "Hình tượng thú bốn chân bốc khói nhiệt",
         "anchor": "vũ khí sinh học ẩn giấu dưới làn da",
     },
     {
@@ -184,8 +184,8 @@ RAW_SCENES_METADATA = [
         "action": "Sơ đồ chuyển động nén ép phổi khi thú bốn chân chạy nước rút",
         "setting": "Biểu đồ sinh học vận động",
         "camera": "Đặc tả lồng ngực và sải chân",
-        "bg": "Biểu đồ cơ học chuyển động bốn chân bị khóa nhịp thở",
-        "sticker": "Người que chỉ vào biểu đồ áp suất nhiệt tăng vọt",
+        "scene_description": "Biểu đồ cơ học chuyển động bốn chân bị khóa nhịp thở",
+        "figure_action": "Người que chỉ vào biểu đồ áp suất nhiệt tăng vọt",
         "anchor": "Thú bốn chân bị khóa nhịp thở",
     },
     {
@@ -199,8 +199,8 @@ RAW_SCENES_METADATA = [
         "action": "Hình minh họa hàng triệu giọt mồ hôi bốc hơi tản nhiệt",
         "setting": "Mặt cắt vi mô lớp biểu bì người",
         "camera": "Cận cảnh tuyến mồ hôi tiết giọt nước",
-        "bg": "Cấu tạo tuyến mồ hôi li ti dưới da người",
-        "sticker": "Người que chạy bền bỉ với luồng khí mát bao quanh",
+        "scene_description": "Cấu tạo tuyến mồ hôi li ti dưới da người",
+        "figure_action": "Người que chạy bền bỉ với luồng khí mát bao quanh",
         "anchor": "Người có hàng triệu tuyến mồ hôi",
     },
     {
@@ -214,8 +214,8 @@ RAW_SCENES_METADATA = [
         "action": "Mặt trời rực lửa giữa trưa chiếu xuống thợ săn đơn độc",
         "setting": "Sa mạc bỏng rát mười hai giờ trưa",
         "camera": "Toàn cảnh góc thấp nhìn lên mặt trời",
-        "bg": "Mặt trời chói chang trên nền trời vàng rực",
-        "sticker": "Người que kiên cường sải bước dưới nắng gắt",
+        "scene_description": "Mặt trời chói chang trên nền trời vàng rực",
+        "figure_action": "Người que kiên cường sải bước dưới nắng gắt",
         "anchor": "Tổ tiên săn mồi giữa trưa nắng thiêu đốt",
     },
 
@@ -231,8 +231,8 @@ RAW_SCENES_METADATA = [
         "action": "Thợ săn chạy bước nhỏ nhịp nhàng qua cồn cát",
         "setting": "Thảo nguyên nắng gắt 40 độ C",
         "camera": "Góc quay ngang theo bước chạy đều đặn",
-        "bg": "Cồn cát và sóng nhiệt bập bùng trên đường chân trời",
-        "sticker": "Người que chạy nhịp nhàng với đồng hồ đếm tốc độ",
+        "scene_description": "Cồn cát và sóng nhiệt bập bùng trên đường chân trời",
+        "figure_action": "Người que chạy nhịp nhàng với đồng hồ đếm tốc độ",
         "anchor": "chạy việt dã đều đặn mười cây số",
     },
     {
@@ -246,8 +246,8 @@ RAW_SCENES_METADATA = [
         "action": "Linh dương kiệt sức thở dốc dưới gốc cây rồi lại phải bật dậy chạy",
         "setting": "Gốc cây khô héo giữa trưa hè",
         "camera": "Góc lia chuyển tiếp giữa con mồi và thợ săn",
-        "bg": "Gốc cây keo trơ trụi với bóng râm ít ỏi",
-        "sticker": "Linh dương thè lưỡi thở dốc trong tuyệt vọng",
+        "scene_description": "Gốc cây keo trơ trụi với bóng râm ít ỏi",
+        "figure_action": "Linh dương thè lưỡi thở dốc trong tuyệt vọng",
         "anchor": "thợ săn lại lừng lững xuất hiện",
     },
     {
@@ -261,8 +261,8 @@ RAW_SCENES_METADATA = [
         "action": "Con thú loạng choạng gục ngã xuống nền đất",
         "setting": "Bãi đất nứt nẻ vì nắng hạn",
         "camera": "Cận cảnh chân run rẩy rồi gục ngã",
-        "bg": "Mặt đất nứt nẻ và vạch nhiệt kế chỉ 42 độ C đỏ rực",
-        "sticker": "Linh dương nằm gục hoàn toàn mất khả năng phản kháng",
+        "scene_description": "Mặt đất nứt nẻ và vạch nhiệt kế chỉ 42 độ C đỏ rực",
+        "figure_action": "Linh dương nằm gục hoàn toàn mất khả năng phản kháng",
         "anchor": "gục ngã xuống đất bỏng rát",
     },
     {
@@ -276,8 +276,8 @@ RAW_SCENES_METADATA = [
         "action": "Thợ săn tiến lại gần con mồi một cách bình thản",
         "setting": "Khung cảnh tĩnh lặng sau cuộc săn",
         "camera": "Toàn cảnh trang nghiêm",
-        "bg": "Bầu trời quang đãng và thảm cỏ xavan tĩnh lặng",
-        "sticker": "Người que đứng cúi đầu tôn kính con mồi",
+        "scene_description": "Bầu trời quang đãng và thảm cỏ xavan tĩnh lặng",
+        "figure_action": "Người que đứng cúi đầu tôn kính con mồi",
         "anchor": "bằng sự bền bỉ vô tận",
     },
 
@@ -293,8 +293,8 @@ RAW_SCENES_METADATA = [
         "action": "Đối chiếu khớp vai vượn người và khớp vai người đứng thẳng",
         "setting": "Phòng thí nghiệm giải phẫu tiến hóa 2D",
         "camera": "So sánh đối xứng hai nửa khung hình",
-        "bg": "Sơ đồ so sánh giải phẫu xương vai vượn và người",
-        "sticker": "Người que so sánh tư thế vung tay",
+        "scene_description": "Sơ đồ so sánh giải phẫu xương vai vượn và người",
+        "figure_action": "Người que so sánh tư thế vung tay",
         "anchor": "Vượn không thể ném xa chính xác",
     },
     {
@@ -308,8 +308,8 @@ RAW_SCENES_METADATA = [
         "action": "Thợ săn kéo căng khớp vai như dây cung rồi phóng giáo",
         "setting": "Bìa rừng thời tiền sử",
         "camera": "Đặc tả động tác vung tay tích trữ thế năng",
-        "bg": "Các đường cung lực thế năng đàn hồi quanh khớp vai",
-        "sticker": "Người que vung tay phóng giáo cực mạnh",
+        "scene_description": "Các đường cung lực thế năng đàn hồi quanh khớp vai",
+        "figure_action": "Người que vung tay phóng giáo cực mạnh",
         "anchor": "Vai người co giãn tích trữ thế năng",
     },
     {
@@ -323,8 +323,8 @@ RAW_SCENES_METADATA = [
         "action": "Ngọn giáo gỗ xé gió bay qua không trung găm trúng hồng tâm",
         "setting": "Khu khảo cổ Schöningen nước Đức",
         "camera": "Chuyển động camera theo đường bay ngọn giáo",
-        "bg": "Bản vẽ khảo cổ ngọn giáo gỗ Schöningen",
-        "sticker": "Mũi giáo gỗ bay thẳng theo đường đạn đạo chuẩn xác",
+        "scene_description": "Bản vẽ khảo cổ ngọn giáo gỗ Schöningen",
+        "figure_action": "Mũi giáo gỗ bay thẳng theo đường đạn đạo chuẩn xác",
         "anchor": "ngọn giáo Schöningen ba trăm nghìn năm tuổi",
     },
 
@@ -340,8 +340,8 @@ RAW_SCENES_METADATA = [
         "action": "Cận cảnh đôi mắt người với tròng trắng sáng rõ",
         "setting": "Khung hình cận cảnh đôi mắt",
         "camera": "Macro đặc tả ánh mắt",
-        "bg": "Đồ họa phân tích cấu trúc củng mạc mắt người",
-        "sticker": "Người que chỉ tay vào ánh mắt sáng",
+        "scene_description": "Đồ họa phân tích cấu trúc củng mạc mắt người",
+        "figure_action": "Người que chỉ tay vào ánh mắt sáng",
         "anchor": "Chỉ con người có tròng trắng mắt",
     },
     {
@@ -355,8 +355,8 @@ RAW_SCENES_METADATA = [
         "action": "So sánh mắt tối của chó sói và mắt có tròng trắng của người",
         "setting": "Bảng đối chiếu thị giác săn mồi",
         "camera": "Đối chiếu hai cặp mắt",
-        "bg": "Bản vẽ mắt chó sói màu nâu đen giấu ánh nhìn",
-        "sticker": "Người que nghiêng đầu thắc mắc",
+        "scene_description": "Bản vẽ mắt chó sói màu nâu đen giấu ánh nhìn",
+        "figure_action": "Người que nghiêng đầu thắc mắc",
         "anchor": "Động vật săn mồi có mắt sẫm",
     },
     {
@@ -370,8 +370,8 @@ RAW_SCENES_METADATA = [
         "action": "Ba người thợ săn liếc mắt nhìn nhau phối hợp sau tảng đá",
         "setting": "Tảng đá che chắn vị trí phục kích",
         "camera": "Góc máy trung ba nhân vật",
-        "bg": "Tảng đá lớn nơi nhóm thợ săn ẩn nấp",
-        "sticker": "Ba người que nhìn nhau qua ánh mắt đồng thuận",
+        "scene_description": "Tảng đá lớn nơi nhóm thợ săn ẩn nấp",
+        "figure_action": "Ba người que nhìn nhau qua ánh mắt đồng thuận",
         "anchor": "Bầy thợ săn ra hiệu bằng ánh mắt",
     },
     {
@@ -385,8 +385,8 @@ RAW_SCENES_METADATA = [
         "action": "Vòng vây khép chặt con thú từ các hướng",
         "setting": "Thung lũng hẹp",
         "camera": "Góc nhìn từ trên cao bao quát thế trận",
-        "bg": "Bản đồ chiến thuật gọng kìm vây kín con mồi",
-        "sticker": "Các mũi tên chiến thuật vây tròn con thú",
+        "scene_description": "Bản đồ chiến thuật gọng kìm vây kín con mồi",
+        "figure_action": "Các mũi tên chiến thuật vây tròn con thú",
         "anchor": "phục kích đón đầu và bao vây",
     },
 
@@ -402,8 +402,8 @@ RAW_SCENES_METADATA = [
         "action": "Đôi mắt mèo răng kiếm phát sáng trong đêm tối",
         "setting": "Rừng đêm u ám thời tiền sử",
         "camera": "Cận cảnh đôi mắt lóe sáng trong bóng tối",
-        "bg": "Bóng tối bao trùm với ánh trăng lờ mờ",
-        "sticker": "Hình tượng mèo răng kiếm rình rập",
+        "scene_description": "Bóng tối bao trùm với ánh trăng lờ mờ",
+        "figure_action": "Hình tượng mèo răng kiếm rình rập",
         "anchor": "bóng đêm luôn là lãnh địa",
     },
     {
@@ -417,8 +417,8 @@ RAW_SCENES_METADATA = [
         "action": "Ngọn lửa bùng lên trong hang đá xua tan thú dữ",
         "setting": "Cửa hang đá ấm cúng bập bùng ánh lửa",
         "camera": "Toàn cảnh ánh lửa ấm áp đối lập bóng tối ngoài hang",
-        "bg": "Đống lửa trại rực rỡ chiếu sáng vách đá hang",
-        "sticker": "Người que cầm đuốc xua đuổi bóng đen ngoài cửa hang",
+        "scene_description": "Đống lửa trại rực rỡ chiếu sáng vách đá hang",
+        "figure_action": "Người que cầm đuốc xua đuổi bóng đen ngoài cửa hang",
         "anchor": "con người thuần hóa ngọn lửa",
     },
     {
@@ -432,8 +432,8 @@ RAW_SCENES_METADATA = [
         "action": "Bức tường lửa dồn bầy thú về phía hẻm vực sâu",
         "setting": "Vạt cỏ thảo nguyên bốc cháy ngùn ngụt",
         "camera": "Toàn cảnh hoành tráng bức tường lửa",
-        "bg": "Bức tường lửa đỏ rực đẩy đàn thú chạy tán loạn",
-        "sticker": "Đàn thú chạy về phía hẻm núi dưới sự điều hướng của lửa",
+        "scene_description": "Bức tường lửa đỏ rực đẩy đàn thú chạy tán loạn",
+        "figure_action": "Đàn thú chạy về phía hẻm núi dưới sự điều hướng của lửa",
         "anchor": "bức tường lửa khổng lồ gầm rú",
     },
 
@@ -449,8 +449,8 @@ RAW_SCENES_METADATA = [
         "action": "Bản đồ các tuyến di cư của loài người tỏa ra khắp thế giới",
         "setting": "Bản đồ địa lý thế giới cổ đại",
         "camera": "Lia toàn cảnh các mũi tên di cư",
-        "bg": "Bản đồ các lục địa với các tuyến đường di cư",
-        "sticker": "Người que bước đi mang theo ngọn đuốc tiến vào vùng đất mới",
+        "scene_description": "Bản đồ các lục địa với các tuyến đường di cư",
+        "figure_action": "Người que bước đi mang theo ngọn đuốc tiến vào vùng đất mới",
         "anchor": "loài người bắt đầu rời khỏi châu Phi",
     },
     {
@@ -464,8 +464,8 @@ RAW_SCENES_METADATA = [
         "action": "Bóng voi ma mút khổng lồ dần tan biến thành hư không",
         "setting": "Cánh đồng tuyết trắng Kỷ Băng Hà",
         "camera": "Toàn cảnh gã khổng lồ đơn độc",
-        "bg": "Cánh đồng băng tuyết với dấu chân người que in sâu",
-        "sticker": "Voi ma mút lông dài sừng sững",
+        "scene_description": "Cánh đồng băng tuyết với dấu chân người que in sâu",
+        "figure_action": "Voi ma mút lông dài sừng sững",
         "anchor": "Dấu chân người tới đâu thú khổng lồ biến mất",
     },
     {
@@ -479,8 +479,8 @@ RAW_SCENES_METADATA = [
         "action": "Biểu đồ sụt giảm thảm khốc của các loài động vật khổng lồ",
         "setting": "Biểu đồ thống kê tuyệt chủng toàn cầu",
         "camera": "Lướt qua các cột mốc tuyệt chủng",
-        "bg": "Biểu đồ đường cong tuyệt chủng dốc đứng sau khi người xuất hiện",
-        "sticker": "Người que đứng trên đỉnh ngọn đồi nhìn cảnh tượng hoang tàn",
+        "scene_description": "Biểu đồ đường cong tuyệt chủng dốc đứng sau khi người xuất hiện",
+        "figure_action": "Người que đứng trên đỉnh ngọn đồi nhìn cảnh tượng hoang tàn",
         "anchor": "Hơn bảy mươi phần trăm thú lớn tuyệt chủng",
     },
 
@@ -496,8 +496,8 @@ RAW_SCENES_METADATA = [
         "action": "Người que ngồi làm việc trong văn phòng hiện đại với bóng phản chiếu",
         "setting": "Căn phòng làm việc hiện đại với màn hình máy tính",
         "camera": "Góc máy trung từ sau lưng nhân vật",
-        "bg": "Căn phòng hiện đại với cửa kính phản chiếu bóng thợ săn cổ xưa",
-        "sticker": "Người que hiện đại nhìn bóng mình trong gương",
+        "scene_description": "Căn phòng hiện đại với cửa kính phản chiếu bóng thợ săn cổ xưa",
+        "figure_action": "Người que hiện đại nhìn bóng mình trong gương",
         "anchor": "Sâu thẳm trong từng tế bào của bạn",
     },
     {
@@ -511,8 +511,8 @@ RAW_SCENES_METADATA = [
         "action": "Hình tượng tổ tiên truyền ngọn đuốc tri thức cho thế hệ hôm nay",
         "setting": "Không gian chuyển giao giữa quá khứ và hiện tại",
         "camera": "Toàn cảnh ấm áp",
-        "bg": "Sự hòa quyện giữa thảo nguyên xưa và bầu trời sao hiện tại",
-        "sticker": "Hai người que cổ xưa và hiện đại bắt tay nhau",
+        "scene_description": "Sự hòa quyện giữa thảo nguyên xưa và bầu trời sao hiện tại",
+        "figure_action": "Hai người que cổ xưa và hiện đại bắt tay nhau",
         "anchor": "Họ chiến thắng bằng sự kiên trì",
     },
     {
@@ -526,8 +526,8 @@ RAW_SCENES_METADATA = [
         "action": "Người que nâng niu mầm cây xanh biểu tượng của sự sống và bảo tồn",
         "setting": "Cánh đồng xanh tươi ngập tràn ánh nắng",
         "camera": "Góc quay tĩnh ấm áp tràn đầy hy vọng",
-        "bg": "Bầu trời xanh bao la và Trái Đất tươi đẹp",
-        "sticker": "Người que nâng niu mầm cây xanh mọc trên lòng bàn tay",
+        "scene_description": "Bầu trời xanh bao la và Trái Đất tươi đẹp",
+        "figure_action": "Người que nâng niu mầm cây xanh mọc trên lòng bàn tay",
         "anchor": "Khép vòng lặp và trách nhiệm bảo tồn Trái Đất",
     },
 ]
@@ -561,20 +561,6 @@ def create_terrifying_humans_28scenes_topic() -> ResearchedTopic:
             quote, src_id, fact = meta["claim"]
             claim_facts.append((quote, src_id, fact))
 
-        stickers = [
-            ResearchedSticker(
-                id=f"{meta['id']}_ST1",
-                description=meta["sticker"],
-                character_ids=["CH01"],
-                anchor_quote=meta["anchor"],
-                anchor_quote_en="Ancient human persistence hunter",
-                fx="pop" if i % 2 == 0 else "bounce",
-                x=0.35 if i % 2 == 0 else 0.64,
-                y=0.65,
-                w=0.35,
-                z=2,
-            )
-        ]
 
         sc = ResearchedScene(
             scene_id=meta["id"],
@@ -589,8 +575,7 @@ def create_terrifying_humans_28scenes_topic() -> ResearchedTopic:
             action=meta["action"],
             setting=meta["setting"],
             camera=meta["camera"],
-            bg_description=meta["bg"],
-            stickers=stickers,
+            scene_description=compose_full_frame_description(meta["scene_description"], meta["figure_action"]),
             claim_facts=claim_facts,
         )
         researched_scenes.append(sc)

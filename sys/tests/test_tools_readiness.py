@@ -97,7 +97,6 @@ def test_topic_to_video_skill_chain_and_token_budget():
     core_skills = (
         "vp-research-architect",
         "vp-scriptwriting",
-        "vp-layered-motion",
         "vp-production",
         "vp-flow-cdp",
         "vp-colab-bridge",
@@ -113,7 +112,6 @@ def test_topic_to_video_skill_chain_and_token_budget():
     for upstream_or_downstream in (
         "../vp-research-architect/SKILL.md",
         "../vp-scriptwriting/SKILL.md",
-        "../vp-layered-motion/SKILL.md",
         "../vp-flow-cdp/SKILL.md",
         "../vp-colab-bridge/SKILL.md",
         "vocab/bank.py start",
@@ -123,6 +121,8 @@ def test_topic_to_video_skill_chain_and_token_budget():
     index_text = index_md.read_text(encoding="utf-8")
     for skill_name in core_skills:
         assert skill_name in index_text, f"INDEX.md missing routing entry for {skill_name}"
+    assert "vp-layered-motion" not in agents_text
+    assert "vp-layered-motion" not in index_text
 
     for md_path in (index_md, prod_skill_md):
         content = md_path.read_text(encoding="utf-8")
@@ -132,4 +132,3 @@ def test_topic_to_video_skill_chain_and_token_budget():
                 continue
             resolved = (md_path.parent / clean).resolve()
             assert resolved.exists(), f"Broken link in {md_path.name}: {target} -> {resolved}"
-

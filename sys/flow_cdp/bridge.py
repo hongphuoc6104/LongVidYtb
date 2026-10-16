@@ -418,6 +418,26 @@ def generate_cdp_batch(
     if specs and isinstance(specs[0], dict):
         job_id = specs[0].get("job_id") or specs[0].get("jobId") or specs[0].get("testCase")
 
+    if profiles_cfg and job_id:
+        try:
+            from execution import is_job, settings
+
+            from pilot import Pilot
+            p_obj = Pilot()
+            if is_job(p_obj, job_id):
+                binding = settings(p_obj, job_id).get("management_session", {}).get("runtime_bindings", {}).get("flow", {})
+                target_path = binding.get("target", {}).get("profile_path")
+                if target_path:
+                    target_resolved = Path(target_path).resolve()
+                    matched = [
+                        prof for prof in profiles_cfg
+                        if (Path(prof.get("user_data_dir", "")).expanduser() / prof.get("directory", "")).resolve() == target_resolved
+                    ]
+                    if matched:
+                        profiles_cfg = matched
+        except Exception:
+            pass
+
     workers_needed = max(1, min(len(patches), len(profiles_cfg))) if patches else 1
     manager = MultiProfileManager(profiles_config=profiles_cfg, job_id=job_id, max_workers_per_job=workers_needed)
     try:

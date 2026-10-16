@@ -1,6 +1,7 @@
 """Topic-independent story contracts, image prompts and narration-bound visual beats."""
 import copy
 import json
+import math
 import re
 from output_contract import languages
 
@@ -114,7 +115,8 @@ def image_units(c):
                                 'Giữ nguyên: '+im['preserve'], 'Thay đổi: '+im['change']])
             units.append({'id': im['id'], 'scene_id': scene['id'], 'prompt': prompt,
                           'character_ids': im['character_ids'], 'based_on': im['based_on'],
-                          'visible_text': im['visible_text'], 'kind': im.get('kind', 'scene')})
+                          'visible_text': im['visible_text'], 'kind': im.get('kind', 'scene'),
+                          **({'shot_type': im['shot_type']} if 'shot_type' in im else {})})
     return units
 
 
@@ -231,8 +233,40 @@ def review_plan(b, c, previous=None, requests=()):
     return '\n\n'.join(lines)
 
 
+def _word_anchor_time(segment: dict, offset: int) -> float | None:
+    """Resolve a character offset using segment-relative acoustic word timestamps.
+
+    Never infer whether timestamps are absolute from their numeric magnitude.
+    The worker emits relative seconds; malformed or unmatched data uses fallback.
+    """
+    tokens = list(re.finditer(r'\S+', segment.get('text', '')))
+    stamps = segment.get('word_timestamps')
+    if not isinstance(stamps, list) or len(stamps) != len(tokens):
+        return None
+    duration = float(segment.get('content_end', segment['end'])) - float(segment['start'])
+    previous_end = 0.0
+    previous_start = 0.0
+    for token, stamp in zip(tokens, stamps, strict=True):
+        if not isinstance(stamp, dict) or stamp.get('word') != token.group():
+            return None
+        try:
+            left, right = float(stamp['start']), float(stamp['end'])
+        except (KeyError, TypeError, ValueError):
+            return None
+        if (not all(math.isfinite(value) for value in (left, right))
+                or not 0 <= previous_start <= left < right <= duration + .002
+                or left + .02 < previous_end):
+            return None
+        previous_start = left
+        previous_end = right
+    for index, token in enumerate(tokens):
+        if token.start() <= offset < token.end():
+            return float(segment['start']) + float(stamps[index]['start'])
+    return None
+
+
 def timeline(c, images, audio, language, ratio):
-    """Anchor interpolation is explicit, not a claim of forced word alignment."""
+    """Prefer acoustic word starts, recording interpolation fallbacks per beat."""
     by_id={(im.get('image_id',im['scene_id']),im.get('ratio',ratio)):im for im in images['items']}
     output=[]
     for sc in c['scenes']:
@@ -247,21 +281,30 @@ def timeline(c, images, audio, language, ratio):
             offset=occurrence(text,bt['anchor'][language])
             # Use actual chunk bounds when available; interpolate within the chunk.
             at=start+offset/max(1,len(text))*(spans[-1].get('content_end',end)-start)
+            timing_method = 'narration_anchor_interpolated'
             if all('text' in seg for seg in spans):
                 cursor=0
                 for seg in spans:
                     pos=text.find(seg['text'],cursor)
                     if pos<0: continue
                     if pos<=offset<pos+len(seg['text']):
-                        at=seg['start']+(offset-pos)/max(1,len(seg['text']))*(seg.get('content_end',seg['end'])-seg['start']);break
+                        measured = _word_anchor_time(seg, offset-pos)
+                        if measured is not None:
+                            at = measured
+                            timing_method = 'acoustic_word_timestamps'
+                        else:
+                            at=seg['start']+(offset-pos)/max(1,len(seg['text']))*(seg.get('content_end',seg['end'])-seg['start'])
+                        break
                     cursor=pos+len(seg['text'])
             im=by_id[(bt['image_id'],ratio)]
-            beats.append({'id':bt['id'],'src':im['path'],'at':round(at-start,4),'effect':bt['effect'],'focus':bt['focus']})
+            beats.append({'id':bt['id'],'src':im['path'],'at':round(at-start,4),'effect':bt['effect'],'focus':bt['focus'],
+                          'timing_method': timing_method})
         beats[0]['at']=0
         if any(round(a['at']*30)>=round(z['at']*30) for a,z in zip(beats,beats[1:])):
             raise ValueError('Visual beats collide at 30 fps; revise content anchors')
+        methods = {beat['timing_method'] for beat in beats}
         scene_out={'id':sc['id'],'title':sc['title'],'start':start,'end':end,'image':beats[0]['src'],'images':beats,
-                   'timing_method':'narration_anchor_interpolated; verify against audio at media review'}
+                   'timing_method': next(iter(methods)) if len(methods) == 1 else 'mixed_word_timestamps_and_interpolation'}
         output.append(scene_out)
     return output
 

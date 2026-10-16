@@ -1,5 +1,7 @@
 # Sticker matting
 
+> Retired reference for historical jobs only. The standard production and render path does not run this tool.
+
 Tool: `sys/tools/matte_sticker.py` (bundled to Colab by the render request; runs in `job_worker.py`).
 
 1. Near-white, neutral pixels (min channel > 225, spread < 22) are labelled; only components touching the image border are background.

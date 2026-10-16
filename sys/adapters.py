@@ -569,6 +569,7 @@ def english(p,j,out,cfg,scenes,remote=True):
    params=fmt;d=wav.getnframes()/wav.getframerate();frames.append(wav.readframes(wav.getnframes()))
   item={'scene_id':x['scene_id'],'start':cursor,'end':cursor+d,'path':rel(p,j,f)}
   if 'content_duration' in x:item['content_end']=cursor+x['content_duration']
+  if 'word_timestamps' in x:item['word_timestamps']=x['word_timestamps']
   if 'take' in x:item['take']=x['take']
   done.append(item);cursor+=d
  combined=out/'narration_en.wav'
@@ -613,6 +614,7 @@ def audio(p,j,out):
    params=fmt;duration=wav.getnframes()/wav.getframerate();frames.append(wav.readframes(wav.getnframes()))
   item={'scene_id':x['scene_id'],'text':x['text'],'start':cursor,'end':cursor+duration,'path':rel(p,j,file)}
   if 'content_duration' in x:item['content_end']=cursor+x['content_duration']
+  if 'word_timestamps' in x:item['word_timestamps']=x['word_timestamps']
   segments.append(item);cursor+=duration
  combined=out/'narration.wav'
  with wave.open(str(combined),'wb') as wav:wav.setnchannels(params[0]);wav.setsampwidth(params[1]);wav.setframerate(params[2]);wav.writeframes(b''.join(frames))

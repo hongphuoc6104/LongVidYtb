@@ -27,7 +27,7 @@ These effects are implemented in `sys/renderer/index.tsx` and triggered via the 
 | **Cinematic Overlays** | Supported | Subtle 4-corner vignette shading and film grain across the frame. | Blends 2D sketches into visual space, eliminating raw digital image feel. |
 | **Kinetic Keyword Typography** | Supported | Tokenizes captions, automatically highlighting target vocabulary (`target_word`) or uppercase English words in glowing yellow `#FACC15` with black drop shadows. | Highlights key terms without requiring static text drawn into illustrations. |
 | **Interactive Practice Counter** | Supported | Floating countdown bubble "3... 2... 1... 🎙️" automatically shown when cue has `practice` flag or contains repeat prompts. | Engages learners without manual per-frame compositing. |
-| **Layered Motion Animation (`scene.layers`)** | Supported | Multi-layer rendering (1 Background + N independent Stickers). Automatically triggers Spring dynamics (`pop`, `pop_wobble`, `bounce`, `drop`, `slide_left`, `spin_grow`), organic `line_boil`, `suck` vortex, `bg_flash`, and `shakeAt` jitter. | Turns static scenes into lively 2.5D animation where figures and props bounce naturally on word beats. Content declared via `scenes[].layers` + `images[].kind` (schema content-v3), prompt registry 1.2.0; stickers matted on Colab via `tools/matte_sticker.py`. See skill `vp-layered-motion`. |
+| **Layered Cut-out Motion (`scene.layers`)** | **Deprecated for new jobs** | Standard authoring and render validation accept full-frame `kind: "scene"` images with narration-anchored `beats[]`; `kind: "background"`, `kind: "sticker"`, and non-empty `layers[]` are rejected. `matte_sticker.py` is not bundled or invoked. | Use multi-beat full-frame scene images and `based_on` variations for continuity. Existing renderer code is retained only as dormant legacy code. |
 
 ---
 
@@ -56,4 +56,4 @@ Camera angles and framing are established in the static image prompt for Flow, n
 
 | Technique | Status | Current Recommended Alternative |
 |---|---|---|
-| **True 3D Spatial Parallax / 3D Mesh Warping** | **Unsupported (Chưa hỗ trợ)**. The renderer supports 2.5D layered animation via `scene.layers`, but does not support true 3D spatial camera simulation or 3D mesh warping. | Use 2.5D layered animation via `scene.layers` (see `vp-layered-motion` skill) or illustrate compositions with deep 2D perspective. |
+| **True 3D Spatial Parallax / 3D Mesh Warping** | **Unsupported (Chưa hỗ trợ)**. The renderer does not support true 3D spatial camera simulation or 3D mesh warping. | Use semantic camera movement between full-frame images or illustrate compositions with deep 2D perspective. |

@@ -117,7 +117,7 @@ def resolve_anchor_timestamp(segment: dict, anchor_quote: str, occurrence: int =
                     found += 1
                     if found == max(1, occurrence):
                         rel_start = float(word_ts[idx].get('start', 0.0))
-                        return rel_start if rel_start >= start else round(start + rel_start, 3)
+                        return round(start + rel_start, 3)
 
     # Fallback: character offset interpolation
     pos = 0
@@ -125,9 +125,9 @@ def resolve_anchor_timestamp(segment: dict, anchor_quote: str, occurrence: int =
         idx = text.find(anchor_quote, pos)
         if idx < 0:
             break
-        pos = idx
+        pos = idx + len(anchor_quote)
     else:
-        return round(start + (content_end - start) * (pos / max(1, len(text))), 3)
+        return round(start + (content_end - start) * (idx / max(1, len(text))), 3)
     return start
 
 
@@ -160,8 +160,8 @@ def subtitle_cues(segments, *, aspect_ratio=None):
                 w_cursor += w_count
                 rel_a = float(first_w.get('start', 0.0))
                 rel_z = float(last_w.get('end', content_end - start))
-                a = start if idx_c == 0 else (rel_a if rel_a >= start else start + rel_a)
-                z = end if idx_c == len(chunks) - 1 else (rel_z if rel_z >= start else start + rel_z)
+                a = start if idx_c == 0 else start + rel_a
+                z = end if idx_c == len(chunks) - 1 else start + rel_z
                 a = max(start, min(content_end, a))
                 z = max(a + 0.01, min(end, z))
                 cues.append({'text': wrap_phrase(chunk, max_len=max_line), 'start': a, 'end': z, 'scene_id': scene})

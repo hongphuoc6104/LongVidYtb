@@ -121,5 +121,5 @@ $$\text{Target Syllables} = \text{round}\Big((\text{Scene Duration} - P_{\text{t
 - **Giới hạn theo hồ sơ định dạng (`sys/format_profiles.py`):** Tối đa **2 dòng/cue**; hồ sơ ngang `long_16x9` tối đa **42 ký tự/dòng** (`84` ký tự/cue); hồ sơ dọc `short_9x16` tối đa **28 ký tự/dòng** (`54` ký tự/cue) căn chỉnh theo năng lượng âm học `word_timestamps`.
 
 ### 7.2. Thuật toán Khóa Hình Cấp Độ Câu Thoại & Vùng Nguy Hiểm 15s Đầu
-1. **Vùng Nguy Hiểm (`0:00 – 0:15` / `SC01–SC02`):** Đổi beat camera (`zoom_in`, `punch_in`, `pan_right`) hoặc nảy Sticker Nghiên Cứu mỗi **`1.2s – 1.8s`**.
+1. **Cold open (`0:00–0:12.5`):** Khi lời thoại hỗ trợ, hướng tới 8–9 ảnh toàn khung và khoảng 4 ảnh trong 5 giây đầu; neo cut vào cụm từ cụ thể và kiểm tra theo WAV.
 2. **Vùng Thân Bài (`sau 0:15` / `SC03+`):** Phân bổ thời lượng theo *Cue-Window Allocation* (`0.000s` drift tại mọi `cue_i.start`), giữ mọi bức ảnh trong ngưỡng **`0.83s – 3.80s`**.

@@ -25,7 +25,7 @@ Hồ sơ bàn giao đặt trong thư mục `sys/runs/<job>/` gồm:
   "funnel_tier": "tier_1_broad",
   "youtube_title": "Ảo Giác Năng Lực: Vì Sao Đọc Lại Sách Làm Não Ngừng Tư Duy?",
   "thumbnail_spec": {
-    "visual_hook": "Sơ đồ Tháp Học Thuật nền tối tương phản với nhân vật Sticker Nghiên Cứu cầm kính lúp gạch chéo cuốn giáo trình highlight kín chữ",
+    "visual_hook": "Nhân vật người que dùng kính lúp kiểm tra Sơ đồ Tháp Học Thuật trong cùng khung với cuốn giáo trình highlight kín chữ",
     "text_overlay": "BIẾT TÍNH ≠ HIỂU!",
     "contrast_pair": "Học vẹt cơ học vs. Tư duy gốc rễ Q1"
   },

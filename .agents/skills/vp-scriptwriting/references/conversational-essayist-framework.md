@@ -29,13 +29,13 @@ Mọi kịch bản chuẩn mực của Video Pilot đều được xây dựng t
 
 ```
 [Phần 1: Truth-Slap Hook & Empathy] (0 - 15%)
-       │  4.2-4.4 syl/s | Câu đầu <= 18 âm tiết, 0 pause ở SC01, Việt hóa 100%, cắt hình 1.2s-1.8s
+       │  4.2-4.4 syl/s | Câu đầu <= 18 âm tiết, 0 pause ở SC01, Việt hóa 100%, hình toàn khung theo cụm ý
        ▼
 [Phần 2: Reframe & Dilemma] (15 - 35%)
        │  ~4.0-4.2 syl/s | Đập tan định kiến cũ, đặt câu hỏi nghịch lý + tối đa 1 [pause:900ms]
        ▼
 [Phần 3: Causal Evidence (70/30)] (35 - 65%)
-       │  ~4.0 syl/s | 70% dẫn dắt Sơ đồ Học thuật + Sticker Nghiên Cứu + 30% dữ kiện văn nói <= 20 syl
+       │  ~4.0 syl/s | 70% dẫn dắt bằng sơ đồ/hình toàn khung + 30% dữ kiện văn nói <= 20 syl
        ▼
 [Phần 4: Direct Contrast] (65 - 85%)
        │  ~4.0 syl/s | Tương phản trực diện Quy tắc 1/3 (x = 0.35 vs x = 0.64)
@@ -76,7 +76,7 @@ Mọi kịch bản chuẩn mực của Video Pilot đều được xây dựng t
 ### Phần 3: Causal Evidence 70/30 (Bằng chứng nhân quả — 35–65% thời lượng)
 - **Mục tiêu:** Cung cấp câu trả lời khoa học thuyết phục thông qua chuỗi nhân quả mạch lạc và sơ đồ hệ thống.
 - **Quy tắc tỷ lệ vàng 70/30:**
-  - **70% thời lượng:** Lời dẫn giải phẫu cơ chế kết hợp **Background Plate vẽ Sơ đồ Học thuật** (*Academic Pyramid*, chuỗi `Question → Gap → Method → Evidence`) và **Sticker Nghiên Cứu** cầm kính lúp tương tác.
+  - **70% thời lượng:** Lời dẫn giải phẫu cơ chế kết hợp ảnh toàn khung có Sơ đồ Học thuật (*Academic Pyramid*, chuỗi `Question → Gap → Method → Evidence`) và nhân vật/đạo cụ cùng trong một không gian.
   - **30% thời lượng:** Dành cho dữ kiện khoa học văn nói đắt giá ($\le 20$ âm tiết, chuẩn hóa 100% số liệu qua `vn_text_normalizer.py`).
 - **Ví dụ chuẩn mực:**
   > *"Thực nghiệm nhận thức phát hiện ra rằng, việc đọc lại tài liệu nhiều lần chỉ kích hoạt vùng nhận diện mặt chữ bề mặt. Não bộ thấy các thuật ngữ quen mắt liền phát tín hiệu an tâm giả tạo, trong khi mạng lưới thần kinh liên kết nhân quả hoàn toàn đứng yên."*
@@ -87,7 +87,7 @@ Mọi kịch bản chuẩn mực của Video Pilot đều được xây dựng t
 - **Mục tiêu:** Tạo tác động thị giác và tư duy mạnh mẽ nhất bằng cách đặt hai phương pháp hoặc hai thế giới đối lập cạnh nhau.
 - **Kỹ thuật:**
   - Cấu trúc câu đối xứng song song: *"Trong khi... thì..."*, *"Một bên là... một bên là..."*.
-  - Bố trí Sticker tại hai tọa độ **Quy tắc 1/3 (`x = 0.35` và `x = 0.64`)** trên nền sơ đồ đối sánh:
+  - Đặt các thực tại đối lập trong ảnh toàn khung hoặc bằng hai beat scene liên tiếp; không tách nhân vật thành sticker:
     - *Sao chép cơ học (`x = 0.35`):* Chép lại hàng chục định nghĩa rời rạc, mở Word gõ ngay khi chưa có câu hỏi nghiên cứu $\longleftrightarrow$ bế tắc trước câu hỏi đầu tiên của hội đồng bảo vệ.
     - *Tư duy gốc rễ Q1 (`x = 0.64`):* Khoanh vùng lỗ hổng tri thức (*Research Gap Matrix*), kiểm chứng bằng chứng trước khi viết $\longleftrightarrow$ làm chủ hoàn toàn phòng bảo vệ khóa luận trong 120 giây đầu.
 
@@ -116,7 +116,7 @@ Mọi kịch bản chuẩn mực của Video Pilot đều được xây dựng t
 
 ## 4. Phối hợp Visual Beats (`beats[]`) Theo 2 Vùng Nhịp Độ
 
-1. **Vùng Nguy Hiểm (`0:00 – 0:15` / `SC01–SC02`):** Đổi beat camera (`zoom_in`, `punch_in`, `pan_right`) hoặc nảy Sticker Nghiên Cứu mỗi **`1.2s – 1.8s`**.
+1. **Cold open (`0:00–0:12.5`):** Khi lời thoại hỗ trợ, hướng tới 8–9 ảnh toàn khung và khoảng 4 ảnh trong 5 giây đầu; neo cut vào cụm từ cụ thể.
 2. **Vùng Thân Bài (`sau 0:15` / `SC03+`):** Giữ mỗi beat trong ngưỡng **`0.83s – 3.80s`**, khóa chặt từ neo ngữ nghĩa (*See-Say Sync*) mà không cắt vụn Scene audio dưới $2.5\text{s}$.
 
 ---

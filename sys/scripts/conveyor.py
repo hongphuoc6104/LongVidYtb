@@ -97,6 +97,7 @@ def station_2_test_ast() -> bool:
         SYS_DIR / "tests/test_renderer_tile_integrity.py",
         SYS_DIR / "tests/test_colab_worker.py",
         SYS_DIR / "tests/test_human_naturalness_upgrades.py",
+        SYS_DIR / "tests/test_full_frame_upgrade.py",
     ]
     # Check AST on test directory
     ast_ok, ast_report = check_test_suite_integrity([SYS_DIR / "tests"])
@@ -118,7 +119,7 @@ def station_2_test_ast() -> bool:
     if not test_files_to_run:
         test_files_to_run = [str(SYS_DIR / "tests/test_flow_cdp_bridge.py")]
 
-    cmd = [pytest_bin, "-v", "--tb=short"] + test_files_to_run
+    cmd = [pytest_bin, "-v", "--tb=short", "--continue-on-collection-errors"] + test_files_to_run
     res = subprocess.run(cmd, cwd=str(REPO_ROOT), capture_output=True, text=True)
     duration = time.time() - start_time
 
@@ -136,10 +137,13 @@ def station_2_test_ast() -> bool:
     except Exception:
         pass
 
+    dirty = subprocess.run(['git', 'status', '--porcelain'], cwd=REPO_ROOT, capture_output=True, text=True, check=True)
     evidence_content = (
         f"=== Video Pilot Test Evidence Log ===\n"
         f"Timestamp: {datetime.now().isoformat()}\n"
         f"Commit: {git_hash}\n"
+        f"WorkingTreeDirty: {str(bool(dirty.stdout.strip())).lower()}\n"
+        f"TestFiles: {len(test_files_to_run)}\n"
         f"Duration: {duration:.2f}s\n"
         f"Return Code: {res.returncode}\n\n"
         f"--- STDOUT ---\n{res.stdout}\n"
@@ -285,8 +289,30 @@ Nâng cấp và chuẩn hóa quy trình phát triển dự án theo mô hình B�
 def station_6_ci_watch() -> bool:
     print_banner("Trạm 6: CI Watch & Local Green Certification (GH-AXI Watch)", 6)
     gh_axi_bin = shutil.which("gh-axi")
-    if gh_axi_bin:
-        print("  [INFO] GH-AXI: Công cụ theo dõi CI run bằng TOON sẵn sàng (`gh-axi run list`).")
+    from conveyor.ci_evidence import validate_ci_runs
+    dirty = subprocess.run(['git', 'status', '--porcelain'], cwd=REPO_ROOT, capture_output=True, text=True, check=True)
+    if dirty.stdout.strip() or not gh_axi_bin:
+        print('[FAIL] CI certification requires a committed tree and the GitHub client.')
+        return False
+    head = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=REPO_ROOT, capture_output=True, text=True, check=True).stdout.strip()
+    proofs = sorted((SYS_DIR / 'logs/proofs').glob('test_evidence_*.log'))
+    proof = proofs[-1].read_text() if proofs else ''
+    if f'Commit: {head}\n' not in proof or 'Return Code: 0\n' not in proof or 'WorkingTreeDirty: false\n' not in proof:
+        print('[FAIL] Missing successful clean-tree test evidence for this revision.')
+        return False
+    try:
+        # The configured repository is resolved by gh-axi; no hard-coded host.
+        result = subprocess.run([
+            gh_axi_bin, 'api', '/repos/{owner}/{repo}/actions/runs?head_sha=' + head + '&per_page=100',
+            '--jq', '[.workflow_runs[] | {id,head_sha,status,conclusion,html_url}]', '--full',
+        ], cwd=REPO_ROOT, capture_output=True, text=True, timeout=60, check=True)
+        runs = json.loads(result.stdout)
+    except (subprocess.SubprocessError, OSError, ValueError):
+        print('[FAIL] Actual CI evidence is unavailable or unreadable.')
+        return False
+    if not validate_ci_runs(runs, head) or len(runs) == 100:
+        print('[FAIL] CI is missing, unfinished, unsuccessful, or incompletely paginated.')
+        return False
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     proof_dir = SYS_DIR / "logs/proofs"
@@ -298,6 +324,9 @@ def station_6_ci_watch() -> bool:
         "timestamp": datetime.now().isoformat(),
         "stations_passed": [1, 2, 3, 4, 5, 6],
         "verdict": "GREEN_CERTIFIED_NO_MISTAKE",
+        "commit": head,
+        "test_evidence": proofs[-1].name,
+        "ci_runs": runs,
     }
     cert_file.write_text(json.dumps(cert_data, indent=2), encoding="utf-8")
 

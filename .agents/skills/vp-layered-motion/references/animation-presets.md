@@ -1,5 +1,7 @@
 # Animation presets (`layers[].fx`)
 
+> Retired reference for historical jobs only. Do not use these layer effects in new production; follow the [full-frame visual beat guide](../../vp-production/references/visuals.md).
+
 | fx | Motion | Use |
 |---|---|---|
 | `pop` | spring scale-in | props, signs, bubbles |

@@ -77,7 +77,6 @@ class ColabBridgeSkillTests(unittest.TestCase):
             "COLAB_T4_NOT_CONFIRMED",
             "Colab reference does not match current",
             "COLAB_GPU_OOM",
-            "STICKER_MATTE_FAILED",
         )
         for code in expected_error_codes:
             self.assertIn(code, matrix_text, f"Error code missing from error-recovery-matrix.md: {code}")

@@ -38,7 +38,7 @@ def build_render_request(root, brief, content, images, audio, resolve):
     for track in [audio] + list(audio.get('tracks', {}).values()) + ([audio['en']] if audio.get('en') else []):
         track['wav'] = asset(track['wav'])
     sources = []
-    names = ['output_contract.py', 'format_profiles.py', 'scripts/story_plan.py', 'scripts/subtitles.py',
+    names = ['output_contract.py', 'format_profiles.py', 'visual_pacing.py', 'scripts/story_plan.py', 'scripts/subtitles.py',
              'renderer/render.mjs', 'renderer/index.tsx', 'renderer/outputs.mjs', 'renderer/captions.mjs',
              'renderer/brand_logo.ts',
              'package.json', 'package-lock.json']

@@ -1,176 +1,175 @@
-"""Layered (background + cut-out sticker) pipeline contracts: registry 1.2.0, plan validation, timeline, remote protocol."""
+"""Full-frame beat contracts replacing the former cut-out sticker workflow."""
 import copy
+import re
+import tempfile
 import unittest
+from pathlib import Path
+
+import colab_bridge.job_protocol as job_protocol
+from content_contract import ContractError, validate_brief, validate_content
+from flow_prompts import PromptError
+from flow_prompts import compile as compile_prompt
+from scripts.story_plan import image_units, languages, timeline
 
 from pilot import ROOT, read
-from content_contract import validate_brief, validate_content, ContractError
-from flow_prompts import compile as compile_prompt, PromptError
-from scripts.story_plan import image_units, timeline, languages
-import colab_bridge.job_protocol as job_protocol
 
 
 def fixture():
-    b = read(ROOT / 'examples/story-v3/brief.json')
-    c = read(ROOT / 'examples/story-v3/content.json')
-    c['brief_hash'] = 'TEST'
-    return b, c
+    brief = read(ROOT / 'examples/story-v3/brief.json')
+    content = read(ROOT / 'examples/story-v3/content.json')
+    content['brief_hash'] = 'TEST'
+    return brief, content
 
 
-def words(text, count):
-    parts = text.split()
-    return [parts[min(i * max(1, len(parts) // (count + 1)), len(parts) - 1)] for i in range(count)]
+def quote_at(text, fraction):
+    words = list(re.finditer(r'\S+', text))
+    start = min(len(words) - 1, int((len(words) - 1) * fraction))
+    for index in range(start, max(start - 8, -1), -1):
+        left = words[index].start()
+        right = words[min(index + 3, len(words) - 1)].end()
+        quote = text[left:right]
+        if text.find(quote) == left:
+            return {'quote': quote, 'occurrence': 1}
+    raise AssertionError('could not find a unique narration anchor')
 
 
-def anchor_for(b, scene, word_index):
-    out = {}
-    for lang in languages(b):
-        text = scene.get('narration_en' if lang == 'en' else 'narration', '')
-        out[lang] = {'quote': words(text, 4)[word_index], 'occurrence': 1}
-    return out
+def make_variation(brief, content):
+    scene = content['scenes'][0]
+    base = copy.deepcopy(scene['images'][0])
+    base.update({'id': 'SC01_BASE', 'kind': 'scene', 'based_on': None, 'preserve': '', 'change': 'Establish the scene.'})
+    variation = copy.deepcopy(base)
+    variation.update({
+        'id': 'SC01_VARIANT',
+        'description': 'The same room and camera, with the character reaching for a phone.',
+        'based_on': 'SC01_BASE',
+        'preserve': 'Keep the same room, bed, clock, and camera position.',
+        'change': 'Show the character raising a phone.',
+    })
+    scene['images'] = [base, variation]
+    scene['beats'] = [
+        {'id': 'SC01_B1', 'image_id': 'SC01_BASE', 'purpose': scene['purpose'],
+         'anchor': {lang: quote_at(scene.get('narration_en' if lang == 'en' else 'narration', ''), 0.0) for lang in languages(brief)},
+         'effect': 'hold', 'focus': {'x': 0.5, 'y': 0.5}},
+        {'id': 'SC01_B2', 'image_id': 'SC01_VARIANT', 'purpose': scene['purpose'],
+         'anchor': {lang: quote_at(scene.get('narration_en' if lang == 'en' else 'narration', ''), 0.65) for lang in languages(brief)},
+         'effect': 'cut', 'focus': {'x': 0.5, 'y': 0.5}},
+    ]
+    scene['layers'] = []
+    return content
 
 
-def make_layered(b, c):
-    """Turn scene 0 into one background plus two stickers; scene 1 reuses the first sticker."""
-    sc = c['scenes'][0]
-    base = sc['images'][0]
-    tmpl = dict(base, based_on=None, preserve='', visible_text=[], character_ids=[])
-    sc['images'] = [dict(tmpl, id='BG_ONE', kind='background', description='Empty imperial hall with red pillars',
-                         change='Empty background plate'),
-                    dict(tmpl, id='STK_A', kind='sticker', description='One stick figure emperor in a yellow robe',
-                         change='Emperor sticker'),
-                    dict(tmpl, id='STK_B', kind='sticker', description='One stick figure goose with a red scarf',
-                         change='Goose sticker')]
-    sc['beats'] = [dict(sc['beats'][0], id='BEAT_BG', image_id='BG_ONE', effect='hold',
-                        anchor=anchor_for(b, sc, 0))]
-    sc['layers'] = [
-        {'id': 'emperor', 'image_id': 'STK_A', 'anchor': anchor_for(b, sc, 0), 'fx': 'pop_wobble', 'x': 0.4, 'y': 0.55, 'w': 0.4},
-        {'id': 'goose', 'image_id': 'STK_B', 'anchor': anchor_for(b, sc, 2), 'fx': 'slide_left', 'x': 0.7, 'y': 0.6, 'w': 0.3,
-         'exit_anchor': anchor_for(b, sc, 3), 'exit_fx': 'suck'}]
-    sc2 = c['scenes'][1]
-    sc2['images'] = [dict(tmpl, id='BG_TWO', kind='background', description='Empty palace garden with pond', change='Empty plate')]
-    sc2['beats'] = [dict(sc2['beats'][0], id='BEAT_BG2', image_id='BG_TWO', effect='hold', anchor=anchor_for(b, sc2, 0))]
-    sc2['layers'] = [{'id': 'emperor2', 'image_id': 'STK_A', 'anchor': anchor_for(b, sc2, 1), 'fx': 'bounce', 'x': 0.5, 'y': 0.6, 'w': 0.4}]
-    return c
+class FullFramePromptTests(unittest.TestCase):
+    data = {'description': 'A complete kitchen scene with a person at the open refrigerator.', 'aspect_ratio': '9:16'}
 
+    def test_full_frame_scene_and_variation_prompts_compile(self):
+        scene = compile_prompt('NanoBanana2Lite', 'scene', dict(self.data), '1.2.0')
+        variation = compile_prompt(
+            'NanoBanana2Lite', 'variation',
+            dict(self.data, preserve=['Keep the room and camera.'], change=['Raise the phone.'], base_reference={'media_id': 'de94a39b-155f-4afe-acbb-d9d4b59ad532', 'sha256': 'a' * 64}),
+            '1.2.0',
+        )
+        self.assertEqual(scene['purpose'], 'scene')
+        self.assertEqual(variation['purpose'], 'variation')
 
-class LayerPromptTests(unittest.TestCase):
-    data = {'description': 'Empty imperial hall', 'aspect_ratio': '9:16'}
-
-    def test_layer_purposes_compile_under_1_2_0(self):
+    def test_cutout_prompt_purposes_are_disabled(self):
         for purpose in ('layer_background', 'layer_sticker'):
-            result = compile_prompt('NanoBanana2Lite', purpose, dict(self.data), '1.2.0')
-            self.assertEqual(result['template_id'], 'flow.NanoBanana2Lite.' + purpose)
-            self.assertIn('No Base scene reference is declared', result['prompt'])
-        sticker = compile_prompt('NanoBanana2Lite', 'layer_sticker', dict(self.data), '1.2.0')['prompt']
-        self.assertIn('pure white', sticker)
-        self.assertNotIn('Reserve the specified caption band', sticker)
-        background = compile_prompt('NanoBanana2Lite', 'layer_background', dict(self.data), '1.2.0')['prompt']
-        self.assertIn('no people', background)
+            with self.subTest(purpose=purpose), self.assertRaisesRegex(PromptError, 'FLOW_LAYERING_DISABLED'):
+                compile_prompt('NanoBanana2Lite', purpose, dict(self.data), '1.2.0')
 
-    def test_layer_purposes_rejected_before_1_2_0_and_with_base(self):
-        with self.assertRaisesRegex(PromptError, 'FLOW_PURPOSE_UNSUPPORTED'):
-            compile_prompt('NanoBanana2Lite', 'layer_sticker', dict(self.data), '1.1.0')
-        with self.assertRaisesRegex(PromptError, 'FLOW_LAYER_INVALID'):
-            compile_prompt('NanoBanana2Lite', 'layer_sticker', dict(self.data, change=['x']), '1.2.0')
-
-    def test_legacy_versions_unchanged(self):
+    def test_legacy_scene_prompt_versions_remain_stable(self):
         before = compile_prompt('NanoBanana2', 'scene', dict(self.data), '1.1.0')
         again = compile_prompt('NanoBanana2', 'scene', dict(self.data), '1.1.0')
         self.assertEqual(before['sha256'], again['sha256'])
 
 
-class LayeredPlanTests(unittest.TestCase):
-    def check(self, b, c):
-        validate_brief(ROOT, b)
-        validate_content(ROOT, b, 1, 'TEST', c)
+class FullFramePlanTests(unittest.TestCase):
+    def check(self, brief, content):
+        validate_brief(ROOT, brief)
+        validate_content(ROOT, brief, 1, 'TEST', content)
 
-    def test_valid_layered_plan(self):
-        b, c = fixture()
-        make_layered(b, c)
-        self.check(b, c)
-        kinds = [u['kind'] for u in image_units(c)]
-        self.assertEqual(kinds.count('background'), 2)
-        self.assertEqual(kinds.count('sticker'), 2)
+    def test_standard_example_uses_full_frame_images_only(self):
+        brief, content = fixture()
+        self.check(brief, content)
+        units = image_units(content)
+        self.assertTrue(all(unit['kind'] == 'scene' for unit in units))
+        for scene in content['scenes']:
+            self.assertEqual(scene.get('layers', []), [])
+            self.assertEqual({image['id'] for image in scene['images']}, {beat['image_id'] for beat in scene['beats']})
 
-    def test_flat_scenes_unchanged(self):
-        b, c = fixture()
-        self.check(b, c)
-        self.assertTrue(all(u['kind'] == 'scene' for u in image_units(c)))
+    def test_based_on_variation_is_valid_and_stays_a_scene_beat(self):
+        brief, content = fixture()
+        make_variation(brief, content)
+        self.check(brief, content)
+        first = content['scenes'][0]
+        self.assertEqual(first['images'][1]['based_on'], 'SC01_BASE')
+        self.assertTrue(first['images'][1]['preserve'])
+        self.assertTrue(first['images'][1]['change'])
+        self.assertEqual(first['layers'], [])
 
-    def test_two_backgrounds_rejected(self):
-        b, c = fixture()
-        make_layered(b, c)
-        c['scenes'][0]['images'][1]['kind'] = 'background'
-        with self.assertRaises(ContractError):
-            self.check(b, c)
+    def test_layered_content_is_rejected(self):
+        brief, content = fixture()
+        content['scenes'][0]['images'][0]['kind'] = 'background'
+        with self.assertRaisesRegex(ContractError, 'LAYERING_DISABLED'):
+            self.check(brief, content)
 
-    def test_sticker_must_be_used_by_a_layer(self):
-        b, c = fixture()
-        make_layered(b, c)
-        c['scenes'][0]['layers'].pop()
-        with self.assertRaisesRegex(ContractError, 'LAYER_UNUSED'):
-            self.check(b, c)
+    def test_nonempty_layers_are_rejected(self):
+        brief, content = fixture()
+        scene = content['scenes'][0]
+        scene['layers'] = [{
+            'id': 'old-layer',
+            'image_id': scene['images'][0]['id'],
+            'anchor': copy.deepcopy(scene['beats'][0]['anchor']),
+            'fx': 'pop',
+            'x': 0.35,
+            'y': 0.6,
+            'w': 0.35,
+        }]
+        with self.assertRaisesRegex(ContractError, 'LAYERING_DISABLED'):
+            self.check(brief, content)
 
-    def test_layer_cannot_reference_future_or_unknown_sticker(self):
-        b, c = fixture()
-        make_layered(b, c)
-        c['scenes'][0]['layers'][0]['image_id'] = 'NOPE'
-        with self.assertRaisesRegex(ContractError, 'LAYER_IMAGE'):
-            self.check(b, c)
-
-    def test_layer_anchor_must_exist_in_narration(self):
-        b, c = fixture()
-        make_layered(b, c)
-        for lang in languages(b):
-            c['scenes'][0]['layers'][0]['anchor'][lang]['quote'] = 'zzzzqqqq'
-        with self.assertRaisesRegex(ContractError, 'LAYER_ANCHOR'):
-            self.check(b, c)
-
-    def test_sticker_quota_per_scene(self):
-        b, c = fixture()
-        make_layered(b, c)
-        sc = c['scenes'][0]
-        for i in range(4):
-            sc['images'].append(dict(sc['images'][1], id='STK_X%d' % i))
-            sc['layers'].append(dict(sc['layers'][0], id='lx%d' % i, image_id='STK_X%d' % i))
-        with self.assertRaisesRegex(ContractError, 'LAYER_QUOTA'):
-            self.check(b, c)
-
-
-class LayeredTimelineTests(unittest.TestCase):
-    def test_timeline_emits_background_and_timed_stickers(self):
-        b, c = fixture()
-        make_layered(b, c)
-        lang = languages(b)[0]
+    def test_timeline_preserves_multiple_full_frame_beats(self):
+        brief, content = fixture()
+        make_variation(brief, content)
+        lang = languages(brief)[0]
         items = []
         segments = []
-        t = 0.0
-        for sc in c['scenes']:
-            segments.append({'scene_id': sc['id'], 'start': t, 'end': t + 10.0,
-                             'text': sc.get('narration_en' if lang == 'en' else 'narration', '')})
-            t += 10.0
-            for im in sc['images']:
-                items.append({'scene_id': sc['id'], 'image_id': im['id'], 'ratio': '9:16', 'path': 'assets/%s.jpg' % im['id']})
-        audio = {'tracks': {lang: {'segments': segments, 'duration': t}}}
-        scenes = timeline(c, {'items': items}, audio, lang, '9:16')
-        layers = scenes[0]['layers']
-        self.assertTrue(layers[0]['bg'])
-        self.assertEqual([x['id'] for x in layers[1:]], ['emperor', 'goose'])
-        self.assertEqual(layers[1]['start'], 0.0)
-        self.assertGreater(layers[2]['start'], layers[1]['start'])
-        self.assertGreater(layers[2]['end'], layers[2]['start'])
-        self.assertEqual(layers[2]['exitFx'], 'suck')
-        self.assertEqual(scenes[1]['layers'][1]['src'], 'assets/STK_A.jpg')  # sticker reused across scenes
-        self.assertEqual(len(scenes[0]['images']), 1)
-        self.assertNotIn('layers', scenes[2])
+        at = 0.0
+        for scene in content['scenes']:
+            text = scene.get('narration_en' if lang == 'en' else 'narration', '')
+            segments.append({'scene_id': scene['id'], 'start': at, 'end': at + 10.0, 'text': text})
+            at += 10.0
+            for image in scene['images']:
+                items.append({'scene_id': scene['id'], 'image_id': image['id'], 'ratio': '9:16', 'path': f"assets/{image['id']}.jpg"})
+        audio = {'tracks': {lang: {'segments': segments, 'duration': at}}}
+        scenes = timeline(content, {'items': items}, audio, lang, '9:16')
+        self.assertEqual([beat['id'] for beat in scenes[0]['images']], ['SC01_B1', 'SC01_B2'])
+        self.assertLess(scenes[0]['images'][0]['at'], scenes[0]['images'][1]['at'])
+        self.assertNotIn('layers', scenes[0])
 
 
-class LayeredProtocolTests(unittest.TestCase):
-    def test_matte_source_bundled_only_for_layered_jobs(self):
-        import inspect
-        src = inspect.getsource(job_protocol.build_render_request)
-        self.assertIn("tools/matte_sticker.py", src)
-        self.assertIn("scene.get('layers')", src)
+class FullFrameRenderProtocolTests(unittest.TestCase):
+    def test_layered_content_is_blocked_before_remote_bundle_creation(self):
+        _, content = fixture()
+        content['scenes'][0]['layers'] = [{'id': 'old-layer'}]
+        with self.assertRaisesRegex(ValueError, 'LAYERING_DISABLED'):
+            job_protocol.build_render_request(ROOT, {}, content, {}, {}, lambda _: '')
+
+    def test_remote_bundle_does_not_include_matte_tool(self):
+        _, content = fixture()
+        with tempfile.TemporaryDirectory() as temp_dir:
+            audio_file = Path(temp_dir) / 'audio.wav'
+            audio_file.write_bytes(b'fixture')
+            request = job_protocol.build_render_request(
+                ROOT, {}, content, {'items': []}, {'wav': 'audio.wav', 'tracks': {}}, lambda _: audio_file
+            )
+        names = {source['name'] for source in request['files']}
+        self.assertNotIn('source/tools/matte_sticker.py', names)
+
+    def test_standard_render_workers_do_not_import_or_run_matte(self):
+        worker = (ROOT / 'colab_bridge/job_worker.py').read_text()
+        adapters = (ROOT / 'adapters.py').read_text()
+        self.assertNotIn('tools/matte_sticker.py', worker)
+        self.assertNotIn('tools.matte_sticker', adapters)
 
 
 if __name__ == '__main__':

@@ -1,5 +1,7 @@
 # Layer breakdown
 
+> Retired reference for historical jobs only. For new jobs, author narration-anchored full-frame images as `beats[]`.
+
 For each scene, list: setting → background; actors/props that *change* during narration → stickers.
 
 | Narration fragment | Visual event | Layer |

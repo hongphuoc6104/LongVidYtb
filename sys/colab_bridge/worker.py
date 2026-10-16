@@ -218,6 +218,7 @@ def run(request_path, output_dir):
             name = f'en-{sc["scene_id"]}.wav'
             duration = save(name, [waves[sc['item']]], sc['pause'])
             scenes.append(dict(scene_id=sc['scene_id'], path=name, content_duration=duration,
+                               word_timestamps=_extract_word_timestamps_acoustic(waves[sc['item']], req['items'][sc['item']]['text'], sr=SR),
                                take=dict(retake=sc['retake'], seed=req['seed'] + sc['retake'])))
         en = dict(request_id=req['request_id'], voice=req['profiles']['en']['voice'], engine='colab-omnivoice', scenes=scenes)
         (output / 'en-result.json').write_text(json.dumps(en, ensure_ascii=False, indent=2))
@@ -226,7 +227,8 @@ def run(request_path, output_dir):
         for n, part in enumerate(req['secondary']):
             name = f'secondary-{n:04d}.wav'
             duration = save(name, [waves[i] for i in part['items']], part['pause'])
-            extra.append(dict(scene_id=part['scene_id'], language=part['language'], text=part['text'], path=name, content_duration=duration))
+            extra.append(dict(scene_id=part['scene_id'], language=part['language'], text=part['text'], path=name, content_duration=duration,
+                              word_timestamps=_extract_word_timestamps_acoustic(np.concatenate([waves[i] for i in part['items']]), part['text'], sr=SR)))
         (output / 'secondary-result.json').write_text(json.dumps({'request_id': req['request_id'], 'segments': extra}, ensure_ascii=False, indent=2))
     if req.get('assemble'):
         import importlib.util

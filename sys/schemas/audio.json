@@ -151,6 +151,31 @@
                   }
                 },
                 "additionalProperties": false
+              },
+              "word_timestamps": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "word": {
+                      "type": "string"
+                    },
+                    "start": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "end": {
+                      "type": "number",
+                      "minimum": 0
+                    }
+                  },
+                  "required": [
+                    "word",
+                    "start",
+                    "end"
+                  ],
+                  "additionalProperties": false
+                }
               }
             },
             "required": [

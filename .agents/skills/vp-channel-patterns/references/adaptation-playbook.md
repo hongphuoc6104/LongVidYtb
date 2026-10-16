@@ -16,7 +16,7 @@ Tài liệu này hướng dẫn cách chuyển hóa các quy luật kể chuyệ
 | **3 giây đầu (`SC01` Câu 1)** | Dẫn nhập chậm rãi kiểu *"Hãy nghĩ về một buổi sáng..."*, *"Hãy tưởng tượng..."* | **Counter-Intuitive / Truth-Slap Hook ($\le 18$ âm tiết):** Đập thẳng vào nghịch lý nhận thức (*"Đọc lại giáo trình năm lần chỉ đang ru ngủ não bạn."*). |
 | **Khoảng ngắt 15s đầu (`SC01`)** | Có thể ngắt nghỉ 0.8s–1.0s giữa các câu đầu để tạo chất thơ | **Zero Pause in First 15s (`OPENING_SCENE_PAUSE_FORBIDDEN`):** Tuyệt đối 0 thẻ `[pause:...]` trong `SC01`. |
 | **Tốc độ 30s đầu (`SC01–SC02`)** | Đọc đều ~3.8–4.0 âm tiết/giây từ đầu đến cuối | **Dynamic Pacing `4.2 – 4.4` âm tiết/giây** (`speed: 1.26x` trên `short_9x16`) để tạo lực cuốn tức thì, sau đó mới hạ về `4.0` syl/s ở thân bài. |
-| **Mật độ thị giác 15s đầu** | Giữ 1 khung hình tĩnh 3.5s–5.0s | **Danger Zone Pacing (`1.2s – 1.8s`/beat):** Đổi góc camera (`zoom_in`, `punch_in`, `pan_right`) hoặc nảy Sticker Nghiên Cứu mỗi `1.2s–1.8s`. |
+| **Mật độ thị giác mở đầu** | Giữ 1 khung hình tĩnh 3.5s–5.0s | Khi lời thoại hỗ trợ, hướng tới 8–9 ảnh scene toàn khung trong 12–12,5 giây đầu, khoảng 4 ảnh trong 5 giây đầu. Neo cut vào cụm từ cụ thể và kiểm tra theo WAV. |
 | **Bối cảnh văn hóa 60s đầu** | Dùng ngay bối cảnh Âu Mỹ hoặc cổ đại xa lạ (*Sumer, Edubba, Phổ*) | **Việt hóa 100% trong 60 giây đầu (`Vietnamese Cultural Localization`):** Ôn thi đêm, highlight giáo trình, mở Word làm khóa luận, 120s trước hội đồng bảo vệ; chỉ đưa dẫn chứng ngoại vào từ Chương 3 trở đi. |
 
 ---
@@ -48,7 +48,7 @@ flowchart LR
 
 - **Phần 1 — Counter-Intuitive Hook & Empathy (0–15%):** Câu đầu tiên $\le 18$ âm tiết lật tẩy ảo giác học thuật + bối cảnh Việt hóa sát sườn, `0 pause`, nhịp cắt thị giác `1.2s–1.8s`.
 - **Phần 2 — Reframe & Dilemma (15–35%):** Đặt niềm tin sai lầm của số đông đối diện với luật ngầm học thuật Q1 / phát hiện thần kinh học; tối đa 1 thẻ `[pause:900ms]` trước câu tiết lộ.
-- **Phần 3 — Causal Evidence & Academic Diagram (35–65%):** Tỷ lệ 70/30 — 70% dẫn dắt qua **Sơ đồ Tháp học thuật / Flowchart trên Background Plate** kết hợp **Sticker Nghiên Cứu** cầm kính lúp tương tác + 30% dữ kiện văn nói $\le 20$ âm tiết.
+- **Phần 3 — Causal Evidence & Academic Diagram (35–65%):** Tỷ lệ 70/30 — 70% dẫn dắt qua **Sơ đồ Tháp học thuật / Flowchart trong ảnh toàn khung** với nhân vật/đạo cụ tương tác trong cùng bố cục + 30% dữ kiện văn nói $\le 20$ âm tiết.
 - **Phần 4 — Direct Contrast (65–85%):** Đặt hai phương pháp đối lập tại tọa độ **Quy tắc 1/3 (`x = 0.35` và `x = 0.64`)** (ví dụ: *Mở Word gõ ngay* vs. *Xây dựng Research Gap Matrix*).
 - **Phần 5 — Philosophical Payoff & Loop Closure (85–100%):** Quay lại hình ảnh ở giây đầu tiên với tâm thế làm chủ tri thức, hạ tốc độ xuống `3.6–3.8` âm tiết/s, $P_{\text{tail}} = 0.35\text{s}$.
 
@@ -70,4 +70,4 @@ flowchart LR
 - [ ] **Đúng ngách học thuật & Phễu 3 Tầng:** Thuộc ngách *"Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật"*, 0 từ khóa mẹo văn phòng (Excel/Slide/Na).
 - [ ] **Đóng gói CTR chuẩn (`brief.json`):** `youtube_title <= 55` ký tự (từ khóa tò mò trong 5 chữ đầu, không tự trả lời), `thumbnail_spec` có `text_overlay` 2–4 từ in hoa.
 - [ ] **Cold-Audience Hook & Việt hóa 60s đầu:** Câu đầu `SC01 <= 18` âm tiết, `0` thẻ pause ở `SC01`, bối cảnh Việt Nam 100% trong 60s đầu, không có mẫu câu cấm *"Hãy nghĩ về..."*.
-- [ ] **Mật độ thị giác Vùng Nguy Hiểm:** 15s đầu đổi beat/sticker mỗi `1.2s–1.8s`; kết hợp Sơ đồ Học thuật (`kind: "background"`) + Sticker Nghiên Cứu (`kind: "sticker"` ở `x = 0.35 / 0.64`).
+- [ ] **Mật độ thị giác cold open:** Hướng tới 8–9 ảnh toàn khung trong 12–12,5 giây đầu khi nội dung hỗ trợ; nhân vật, sơ đồ và đạo cụ cùng trong ảnh scene.

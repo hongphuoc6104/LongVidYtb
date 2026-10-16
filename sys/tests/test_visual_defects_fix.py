@@ -304,11 +304,11 @@ console.log('ZINDEX_OK:' + style.zIndex);
         index_tsx = (ROOT / "sys/renderer/index.tsx").read_text()
         self.assertIn("l.bg || l.kind === 'background'", index_tsx)
 
-    def test_adapters_handles_sticker_layers(self):
-        """Verify adapters.py handles sticker layers with process_image and copy_sticker."""
+    def test_adapters_block_layered_render_inputs_without_running_matte(self):
+        """Verify the standard local render path rejects old layers without importing matte code."""
         adapters_py = (ROOT / "sys/adapters.py").read_text()
-        self.assertIn("elif layer.get('kind') == 'sticker':", adapters_py)
-        self.assertIn("process_image(src,dest,create_sticker=True,border=10)", adapters_py)
+        self.assertIn("LAYERING_DISABLED", adapters_py)
+        self.assertNotIn("tools.matte_sticker", adapters_py)
 
     def test_crop_background_plate_top_and_bottom_clearance(self):
         """Verify that background with both top and bottom clearance bands is cropped cleanly."""
@@ -381,4 +381,3 @@ console.log('ZINDEX_OK:' + style.zIndex);
 
 if __name__ == "__main__":
     unittest.main()
-

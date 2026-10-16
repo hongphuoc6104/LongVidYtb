@@ -69,3 +69,9 @@ List of technical issues recorded during pipeline operation:
 - [academic-research-paradox-16x9-13m — render](1792098649024113905-academic-research-paradox-16x9-13m-render.md)
 
 - [colab-1792098725558574943.md](colab-1792098725558574943.md) — Colab TTS cần kiểm tra.
+- [full-frame-acceptance-video-20261016 — images](1792150310043430046-full-frame-acceptance-video-20261016-images.md)
+- [full-frame-acceptance-video-20261016 — images](1792150810088230830-full-frame-acceptance-video-20261016-images.md)
+- [full-frame-acceptance-video-20261016 — images](1792151055258637759-full-frame-acceptance-video-20261016-images.md)
+
+- [colab-1792153087520226299.md](colab-1792153087520226299.md) — Colab TTS cần kiểm tra.
+- [full-frame-acceptance-video-20261016 — render](1792153087520656600-full-frame-acceptance-video-20261016-render.md)

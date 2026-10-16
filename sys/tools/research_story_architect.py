@@ -17,6 +17,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import os
 import re
 import sys
@@ -47,7 +48,6 @@ from script_cadence_checker import (  # noqa: E402
     split_sentences,
 )
 
-RULE_OF_THIRDS_X: Tuple[float, float] = (0.35, 0.64)
 DEFAULT_CHANNEL_PILLAR = "Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật"
 ALLOWED_FUNNEL_TIERS: Tuple[str, str, str] = ("tier_1_broad", "tier_2_mid", "tier_3_conversion")
 MAX_YOUTUBE_TITLE_CHARS = 55
@@ -262,7 +262,7 @@ class ResearchedSticker:
 
 
 @dataclass
-class ResearchedVisualBeat:
+class ResearchedBeat:
     """One complete full-frame image and its narration-anchored beat."""
 
     image_id: str
@@ -280,6 +280,17 @@ class ResearchedVisualBeat:
     preserve: str = ""
     change: str = "Show the described full-frame scene."
     visible_text: List[Dict[str, str]] = field(default_factory=list)
+    shot_type: str = "full_scene"
+
+    def __post_init__(self) -> None:
+        if self.shot_type not in {"macro_prop", "full_scene", "variation", "white_card", "white_isolated"}:
+            raise ValueError(f"Unsupported full-frame shot type: {self.shot_type}")
+        if self.shot_type == "variation" and not (self.based_on and self.preserve.strip() and self.change.strip()):
+            raise ValueError("A variation requires based_on, preserve, and change")
+
+
+# Read compatibility for authored briefs and older builder imports.
+ResearchedVisualBeat = ResearchedBeat
 
 
 @dataclass
@@ -295,13 +306,14 @@ class ResearchedScene:
     action: str
     setting: str
     camera: str
-    bg_description: str
+    bg_description: str = ""  # Legacy source compatibility only.
     stickers: List[ResearchedSticker] = field(default_factory=list)
     reused_sticker_ids: List[Tuple[Any, ...]] = field(default_factory=list)  # (sticker_id, anchor_quote, fx, [anchor_quote_en])
     foley_cue: Optional[str] = None
     claim_facts: List[Tuple[str, str, str]] = field(default_factory=list)  # (quote, source_id, fact)
     narration_en: Optional[str] = None
     visual_beats: List[ResearchedVisualBeat] = field(default_factory=list)
+    scene_description: str = ""
 
 
 @dataclass
@@ -327,6 +339,7 @@ class ResearchedTopic:
     conversational_facts: Optional[bool] = None
     packaging: Optional[PackagingSpec] = None
     spinoff_shorts: Optional[List[Dict[str, Any]]] = None
+    visual_pacing_profile: Optional[str] = None
 
 
 def serialize_brief_json(brief_dict: Dict[str, Any]) -> str:
@@ -523,9 +536,19 @@ def build_brief_v3(topic: ResearchedTopic, system_root: Optional[Path] = None) -
         brief["funnel_tier"] = pkg_dict["funnel_tier"]
         if pkg_dict.get("seo_keywords"):
             brief["seo_keywords"] = list(pkg_dict["seo_keywords"])
+    if topic.visual_pacing_profile is not None:
+        brief['visual_pacing_profile'] = topic.visual_pacing_profile
     if getattr(topic, "spinoff_shorts", None):
         brief["spinoff_shorts"] = list(topic.spinoff_shorts)
     return brief
+
+
+def compose_full_frame_description(environment: str, figure_action: str) -> str:
+    """Combine a setting and visible action without cutout background instructions."""
+    environment = re.sub(r'(?i)(?:,?\s*)(?:không có nhân vật(?: nào)?|no characters(?: anywhere)?)\.?$', '', environment.strip())
+    figure_action = re.sub(r'(?i)(?:trên|với)\s+nền\s+trắng(?:\s+tinh)?|on\s+(?:a\s+)?(?:pure\s+)?white\s+background', '', figure_action)
+    figure_action = re.sub(r'(?i)sticker\s+nghiên\s+cứu|sticker|cut[- ]?out', 'anonymous stick figure', figure_action)
+    return f'{environment}. {figure_action}. Render one integrated full-frame composition with figures and props physically grounded in the setting.'
 
 
 def _legacy_full_frame_description(scene: ResearchedScene) -> str:
@@ -533,7 +556,7 @@ def _legacy_full_frame_description(scene: ResearchedScene) -> str:
     environment = re.sub(
         r"(?i)(?:,?\s*)(?:không có nhân vật(?: nào)?|no characters(?: anywhere)?)\.?$",
         "",
-        scene.bg_description.strip(),
+        (scene.scene_description or scene.bg_description).strip(),
     )
     action = re.sub(r"(?i)sticker\s+nghiên\s+cứu|sticker", "nhân vật người que", scene.action)
     pose_details = []
@@ -561,6 +584,95 @@ def _legacy_full_frame_description(scene: ResearchedScene) -> str:
     )
 
 
+def _phrase_anchors(text: str, count: int) -> List[Tuple[str, int]]:
+    """Split narration into ordered, exact-word anchors for legacy scene briefs."""
+    tokens = [match for match in re.finditer(r"\S+", text) if not match.group().lower().startswith("[pause:")]
+    if not tokens:
+        raise ValueError("A full-frame visual beat needs narration text")
+    count = max(1, min(count, len(tokens)))
+    anchors: List[Tuple[str, int]] = []
+    last_end = -1
+    for index in range(count):
+        target_offset = round(index * len(text) / count)
+        target = next(
+            (token_index for token_index, token in enumerate(tokens) if token.start() >= target_offset),
+            len(tokens) - 1,
+        )
+        selected = None
+        for start in range(target, len(tokens)):
+            end = min(start + 1, len(tokens) - 1)
+            quote = text[tokens[start].start():tokens[end].end()]
+            if "[pause:" in quote.lower():
+                quote = tokens[start].group()
+            position = text.find(quote, last_end + 1)
+            if position <= last_end:
+                continue
+            occurrence = 0
+            cursor = 0
+            while True:
+                found = text.find(quote, cursor)
+                if found < 0 or found > position:
+                    break
+                occurrence += 1
+                if found == position:
+                    break
+                cursor = found + len(quote)
+            if occurrence:
+                selected = (quote, occurrence, position)
+                break
+        if selected is None:
+            break
+        quote, occurrence, position = selected
+        anchors.append((quote, occurrence))
+        last_end = position + len(quote) - 1
+    return anchors
+
+
+def _default_full_frame_beats(scene: ResearchedScene, elapsed: float) -> List[ResearchedVisualBeat]:
+    """Create full-frame beats from legacy scene briefs using opening/body hold targets."""
+    opening_seconds = max(0.0, min(scene.duration, 15.0 - elapsed))
+    body_seconds = max(0.0, scene.duration - opening_seconds)
+    count = max(1, math.ceil(opening_seconds / 1.5) + math.ceil(body_seconds / 2.5))
+    vi_anchors = _phrase_anchors(scene.narration, count)
+    en_anchors = _phrase_anchors(scene.narration_en, len(vi_anchors)) if scene.narration_en else []
+    if en_anchors and len(en_anchors) < len(vi_anchors):
+        vi_anchors = vi_anchors[:len(en_anchors)]
+    base_description = _legacy_full_frame_description(scene)
+    beats = []
+    for index, (quote, occurrence) in enumerate(vi_anchors):
+        image_id = f"{scene.scene_id}_I{index + 1}"
+        focus_kind = (
+            "punch_in" if re.search(r"\d|\b(giờ|phút|lần|tầng|số|năm)\b", quote, re.I)
+            else "cut"
+        )
+        variation = index > 0
+        description = (
+            f"{base_description} Visual focus: {quote}. "
+            "Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering."
+        )
+        beats.append(ResearchedVisualBeat(
+            image_id=image_id,
+            description=description,
+            anchor_quote=quote,
+            anchor_occurrence=occurrence,
+            anchor_quote_en=en_anchors[index][0] if en_anchors else None,
+            anchor_occurrence_en=en_anchors[index][1] if en_anchors else 1,
+            reason="Full-frame visual beat tied to a concrete narration phrase.",
+            character_ids=list(scene.character_ids),
+            effect=focus_kind if not variation else ("cut" if focus_kind == "punch_in" else "fade"),
+            based_on=f"{scene.scene_id}_I{index}" if variation else None,
+            preserve=(
+                f"Keep the same setting ({scene.setting}), character design, and surrounding props."
+                if variation else ""
+            ),
+            change=(
+                f"Shift the full-frame emphasis to this next narrated action or object: {quote}."
+                if variation else "Establish the complete scene and its opening action."
+            ),
+        ))
+    return beats
+
+
 def build_content_v3(
     topic: ResearchedTopic,
     brief_data: Dict[str, Any],
@@ -575,24 +687,12 @@ def build_content_v3(
     brief_langs = [x["language"] for x in brief_data.get("outputs", [])]
     brief_langs = list(dict.fromkeys(brief_langs)) or [brief_data.get("language", "vi")]
     needs_en = "en" in brief_langs
+    elapsed = 0.0
 
     for sc in topic.scenes:
         s_id = sc.scene_id
 
-        visual_beats = sc.visual_beats or [
-            ResearchedVisualBeat(
-                image_id=f"{s_id}_I1",
-                description=_legacy_full_frame_description(sc),
-                anchor_quote=" ".join(sc.narration.split()[:4]).rstrip(".,;:!?"),
-                anchor_quote_en=(
-                    " ".join(sc.narration_en.split()[:4]).rstrip(".,;:!?")
-                    if sc.narration_en
-                    else None
-                ),
-                character_ids=list(sc.character_ids),
-                reason="Full-frame scene migrated from the previous storyboard format",
-            )
-        ]
+        visual_beats = sc.visual_beats or _default_full_frame_beats(sc, elapsed)
         images: List[Dict[str, Any]] = []
         beats: List[Dict[str, Any]] = []
         for beat_idx, visual in enumerate(visual_beats, 1):
@@ -613,6 +713,7 @@ def build_content_v3(
                 "reason": visual.reason,
                 "visible_text": list(visual.visible_text),
                 "kind": "scene",
+                "shot_type": "variation" if visual.based_on else visual.shot_type,
             })
             anchor_payload: Dict[str, Any] = {
                 "vi": {
@@ -660,6 +761,7 @@ def build_content_v3(
             scene_dict["narration_en"] = sc.narration_en
 
         content_scenes.append(scene_dict)
+        elapsed += sc.duration
 
         # Coverage: link requirements to scene quotes
         for r_id in sc.requirements:
@@ -729,13 +831,16 @@ def build_content_v3(
 def generate_script_json(topic: ResearchedTopic) -> List[Dict[str, Any]]:
     """Generate standardized script array for cadence checker."""
     script_items = []
+    elapsed = 0.0
     for s in topic.scenes:
+        visuals = s.visual_beats or _default_full_frame_beats(s, elapsed)
         script_items.append({
             "id": s.scene_id,
             "duration": s.duration,
             "narration": s.narration,
-            "beats": [],
+            "beats": [{"image_id": beat.image_id, "anchor_quote": beat.anchor_quote} for beat in visuals],
         })
+        elapsed += s.duration
     return script_items
 
 
@@ -824,21 +929,7 @@ def create_demo_trial_topic() -> ResearchedTopic:
             action="Người que đứng trước tủ lạnh mở sáng loáng lúc nửa đêm",
             setting="Căn bếp gia đình tĩnh mịch đêm khuya với ánh sáng từ cánh cửa tủ lạnh",
             camera="Trung cảnh ngang tầm mắt, góc nhìn trực diện",
-            bg_description="Căn bếp gia đình tĩnh mịch lúc đêm muộn với tủ lạnh đang mở toang tỏa ra ánh sáng vàng nhạt, không có nhân vật",
-            stickers=[
-                ResearchedSticker(
-                    id="SC01_ST1",
-                    description="Hình tượng người que stick-figure đầu tròn trắng viền đen dày, biểu cảm bối rối đưa tay gãi đầu, đứng nhìn vào ánh sáng",
-                    character_ids=["CH01"],
-                    anchor_quote="bạn lại đứng ngơ ngác",
-                    anchor_quote_en="blankly open the fridge",
-                    fx="pop",
-                    x=0.35,
-                    y=0.65,
-                    w=0.35,
-                    z=2,
-                )
-            ],
+            scene_description=compose_full_frame_description("Căn bếp gia đình tĩnh mịch lúc đêm muộn với tủ lạnh đang mở toang tỏa ra ánh sáng vàng nhạt, không có nhân vật", "Hình tượng người que stick-figure đầu tròn trắng viền đen dày, biểu cảm bối rối đưa tay gãi đầu, đứng nhìn vào ánh sáng"),
             foley_cue="Click cửa tủ lạnh mở nhẹ nhàng, tiếng vo ve máy nén đêm khuya",
             claim_facts=[],
         ),
@@ -855,22 +946,7 @@ def create_demo_trial_topic() -> ResearchedTopic:
             action="Người que nhìn chồng sách tự lực rồi quay sang biểu đồ não bộ ngạc nhiên",
             setting="Không gian tối giản phân chia giữa cuốn sách và biểu tượng não bộ phát sáng",
             camera="Toàn cảnh góc rộng",
-            bg_description="Bàn học với chồng sách kỹ năng sống và biểu tượng sơ đồ não bộ phát sáng dịu nhẹ trên tường, không có nhân vật",
-            stickers=[
-                ResearchedSticker(
-                    id="SC02_ST1",
-                    description="Hình tượng người que stick-figure chỉ tay vào biểu đồ não bộ với nét mặt bừng sáng phát hiện điều mới",
-                    character_ids=["CH01"],
-                    anchor_quote="khoa học thần kinh hiện đại",
-                    anchor_quote_en="modern neuroscience reveals a",
-                    fx="bounce",
-                    x=0.64,
-                    y=0.65,
-                    w=0.35,
-                    z=2,
-                )
-            ],
-            reused_sticker_ids=[("SC01_ST1", "kẻ lười biếng và thiếu kỷ luật", "pop", "lazy and undisciplined")],
+            scene_description=compose_full_frame_description("Bàn học với chồng sách kỹ năng sống và biểu tượng sơ đồ não bộ phát sáng dịu nhẹ trên tường, không có nhân vật", "Hình tượng người que stick-figure chỉ tay vào biểu đồ não bộ với nét mặt bừng sáng phát hiện điều mới"),
             foley_cue="Tiếng lật sách soàn soạt, sau đó là khoảng lặng sau pause",
             claim_facts=[
                 (
@@ -893,21 +969,7 @@ def create_demo_trial_topic() -> ResearchedTopic:
             action="Hạch hạnh nhân phát sáng còi báo động trước bản báo cáo deadline",
             setting="Minh họa sơ đồ não bộ với vùng hạch hạnh nhân nổi bật màu cam cảnh báo",
             camera="Cận cảnh vùng hạch hạnh nhân",
-            bg_description="Sơ đồ cấu trúc bộ não con người vẽ bằng nét đen tối giản trên nền giấy trắng sáng, vùng hạch hạnh nhân nổi bật",
-            stickers=[
-                ResearchedSticker(
-                    id="SC03_ST1",
-                    description="Hình tượng người que stick-figure ôm đầu hốt hoảng trước biểu tượng còi báo động mini chớp sáng",
-                    character_ids=["CH01"],
-                    anchor_quote="kích hoạt phản xạ trốn chạy",
-                    anchor_quote_en="triggers a flight reflex",
-                    fx="slide_left",
-                    x=0.35,
-                    y=0.65,
-                    w=0.35,
-                    z=2,
-                )
-            ],
+            scene_description=compose_full_frame_description("Sơ đồ cấu trúc bộ não con người vẽ bằng nét đen tối giản trên nền giấy trắng sáng, vùng hạch hạnh nhân nổi bật", "Hình tượng người que stick-figure ôm đầu hốt hoảng trước biểu tượng còi báo động mini chớp sáng"),
             foley_cue="Âm thanh nhịp tim đập thình thịch, tiếng còi báo động tần số thấp",
             claim_facts=[
                 (
@@ -930,21 +992,7 @@ def create_demo_trial_topic() -> ResearchedTopic:
             action="Hai nửa khung hình so sánh người chờ cảm hứng và người chia nhỏ 5 phút",
             setting="Bàn làm việc chia đôi với hai trạng thái tâm lý đối lập",
             camera="Trung cảnh đối xứng hai bên",
-            bg_description="Bàn làm việc tối giản đặt chiếc đồng hồ cát đứng yên ở góc trái và đồng hồ bấm giờ năm phút ở góc phải",
-            stickers=[
-                ResearchedSticker(
-                    id="SC04_ST1",
-                    description="Hình tượng người que stick-figure mỉm cười tự tin cầm bút bắt đầu viết vào cuốn sổ nhỏ",
-                    character_ids=["CH01"],
-                    anchor_quote="bắt đầu bằng một hành động nhỏ",
-                    anchor_quote_en="simple five-minute action step",
-                    fx="pop_wobble",
-                    x=0.64,
-                    y=0.65,
-                    w=0.35,
-                    z=2,
-                )
-            ],
+            scene_description=compose_full_frame_description("Bàn làm việc tối giản đặt chiếc đồng hồ cát đứng yên ở góc trái và đồng hồ bấm giờ năm phút ở góc phải", "Hình tượng người que stick-figure mỉm cười tự tin cầm bút bắt đầu viết vào cuốn sổ nhỏ"),
             foley_cue="Tiếng tích tắc đồng hồ nhịp nhàng 5 phút, tiếng ngòi bút chạm giấy",
             claim_facts=[
                 (
@@ -967,10 +1015,7 @@ def create_demo_trial_topic() -> ResearchedTopic:
             action="Người que đóng nhẹ cửa tủ lạnh, mỉm cười thư thái trở lại bàn làm việc",
             setting="Căn bếp ấm áp trở về không gian tĩnh lặng bình yên",
             camera="Trung cảnh rộng dần ra",
-            bg_description="Căn bếp tĩnh lặng với cánh cửa tủ lạnh vừa đóng lại, ánh đèn học vàng ấm áp tỏa sáng trên bàn làm việc phía xa",
-            reused_sticker_ids=[
-                ("SC04_ST1", "não bạn chỉ đang lo lắng", "pop", "your brain is only anxious"),
-            ],
+            scene_description=compose_full_frame_description("Căn bếp tĩnh lặng với cánh cửa tủ lạnh vừa đóng lại, ánh đèn học vàng ấm áp tỏa sáng trên bàn làm việc phía xa", "Người que đóng nhẹ cửa tủ lạnh, mỉm cười thư thái trở lại bàn làm việc"),
             foley_cue="Tiếng đóng tủ lạnh êm ái 'cạch', tiếng thở phào nhẹ nhõm, nốt nhạc piano dịu dàng",
             claim_facts=[],
         ),
@@ -1037,8 +1082,8 @@ def create_academic_research_paradox_topic(
     characters = [
         {
             "id": "CH01",
-            "name": "Sticker Nghiên Cứu",
-            "appearance": "Hình tượng stick-figure Sticker Nghiên Cứu chuẩn Avatar kênh, đầu tròn trắng viền đen dày khép kín, mắt oval tối giản",
+            "name": "Nhân vật người que nghiên cứu",
+            "appearance": "Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong các ảnh toàn khung",
             "outfit": "Áo sơ mi học thuật tối giản nét mực đen trên nền trắng tách lớp",
         }
     ]
@@ -1057,21 +1102,7 @@ def create_academic_research_paradox_topic(
             action="Sticker Nghiên Cứu ngồi trước trang Word trắng tinh và chồng giáo trình tô bút dạ quang kín chữ",
             setting="Bàn học sinh viên Việt Nam lúc hai giờ sáng với đèn bàn vàng ấm và chồng đề cương khóa luận",
             camera="Cận cảnh nhấn mạnh rồi đẩy nhanh vào màn hình",
-            bg_description="Sơ đồ Editorial Graphic đối chiếu trang giáo trình phủ kín vệt bút dạ quang với màn hình soạn thảo trống rỗng trên bàn học đêm khuya, không có nhân vật",
-            stickers=[
-                ResearchedSticker(
-                    id="SC01_ST1",
-                    description="Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày khép kín, hai tay ôm đầu hoang mang trước chồng sách dày trên nền trắng tinh",
-                    character_ids=["CH01"],
-                    anchor_quote="ảo giác rằng bạn hiểu bài",
-                    anchor_quote_en="illusion of competence",
-                    fx="pop",
-                    x=0.35,
-                    y=0.64,
-                    w=0.35,
-                    z=2,
-                )
-            ],
+            scene_description=compose_full_frame_description("Sơ đồ Editorial Graphic đối chiếu trang giáo trình phủ kín vệt bút dạ quang với màn hình soạn thảo trống rỗng trên bàn học đêm khuya, không có nhân vật", "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày khép kín, hai tay ôm đầu hoang mang trước chồng sách dày trên nền trắng tinh"),
             foley_cue="Tiếng bút dạ quang gạch nhanh trên giấy, tiếng đồng hồ điểm hai giờ sáng",
             claim_facts=[
                 (
@@ -1094,22 +1125,7 @@ def create_academic_research_paradox_topic(
             action="Sticker Nghiên Cứu dùng bút đỏ gạch chéo biểu tượng mở Word gõ ngay",
             setting="Bảng sơ đồ học thuật phân tách thói quen gõ chữ cơ học và tư duy nghiên cứu chuẩn quốc tế",
             camera="Toàn cảnh góc rộng mở ra sơ đồ",
-            bg_description="Sơ đồ Editorial Graphic sắc nét hiển thị chuỗi mũi tên quyết định từ Câu hỏi nghiên cứu đến Khoảng trống tri thức và Bằng chứng, không có nhân vật",
-            stickers=[
-                ResearchedSticker(
-                    id="SC02_ST1",
-                    description="Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm bút đỏ gạch chéo tấm thẻ trang giấy trắng trên nền trắng đồng nhất",
-                    character_ids=["CH01"],
-                    anchor_quote="không bao giờ bắt đầu ở đó",
-                    anchor_quote_en="scientific paper never begins there",
-                    fx="bounce",
-                    x=0.64,
-                    y=0.64,
-                    w=0.35,
-                    z=2,
-                )
-            ],
-            reused_sticker_ids=[("SC01_ST1", "mở Word gõ ngay từ trang đầu", "pop", "opening Word and typing")],
+            scene_description=compose_full_frame_description("Sơ đồ Editorial Graphic sắc nét hiển thị chuỗi mũi tên quyết định từ Câu hỏi nghiên cứu đến Khoảng trống tri thức và Bằng chứng, không có nhân vật", "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm bút đỏ gạch chéo tấm thẻ trang giấy trắng trên nền trắng đồng nhất"),
             foley_cue="Tiếng còi báo lỗi nhẹ, tiếp nối bằng tiếng gạch bút dứt khoát sau nhịp ngắt",
             claim_facts=[
                 (
@@ -1132,21 +1148,7 @@ def create_academic_research_paradox_topic(
             action="Sticker Nghiên Cứu cầm kính lúp soi trực tiếp vào tầng Khoảng trống tri thức trên Tháp Học Thuật",
             setting="Sơ đồ Tháp Học Thuật 9 tầng kết hợp chuỗi tiến trình nghiên cứu khoa học",
             camera="Đẩy cận cảnh vào điểm giao cắt khoảng trống nghiên cứu",
-            bg_description="Đồ họa Editorial Graphic vẽ Tháp Học Thuật phân cấp 9 nguồn tài liệu và sơ đồ chuỗi tiến trình nghiên cứu khoa học rõ nét, không có nhân vật",
-            stickers=[
-                ResearchedSticker(
-                    id="SC03_ST1",
-                    description="Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm chiếc kính lúp lớn soi tập trung vào khe hở sơ đồ trên nền trắng",
-                    character_ids=["CH01"],
-                    anchor_quote="soi vào khoảng trống tri thức",
-                    anchor_quote_en="knowledge gap before choosing",
-                    fx="slide_left",
-                    x=0.35,
-                    y=0.64,
-                    w=0.35,
-                    z=2,
-                )
-            ],
+            scene_description=compose_full_frame_description("Đồ họa Editorial Graphic vẽ Tháp Học Thuật phân cấp 9 nguồn tài liệu và sơ đồ chuỗi tiến trình nghiên cứu khoa học rõ nét, không có nhân vật", "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm chiếc kính lúp lớn soi tập trung vào khe hở sơ đồ trên nền trắng"),
             foley_cue="Tiếng kính lúp phóng đại 'whoosh', tiếng khóa mục tiêu sắc nét",
             claim_facts=[
                 (
@@ -1169,22 +1171,7 @@ def create_academic_research_paradox_topic(
             action="Đặt đối xứng nhân vật ngợp trong bão tài liệu ở bên trái và nhân vật chỉ tay vào Ma trận Khoảng trống ở bên phải",
             setting="Bố cục đồ họa biên tập đối sánh cơn bão thông tin và bảng Ma trận Khoảng trống Nghiên cứu",
             camera="Lia ngang từ góc trái hỗn loạn sang góc phải cấu trúc",
-            bg_description="Bảng Ma trận Khoảng trống Nghiên cứu kẻ ô ngăn nắp với điểm giao phát sáng nổi bật trên nền giấy biên tập, không có nhân vật",
-            stickers=[
-                ResearchedSticker(
-                    id="SC04_ST1",
-                    description="Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày đứng thẳng tự tin chỉ cây bút vào ô giao cắt của bảng ma trận trên nền trắng",
-                    character_ids=["CH01"],
-                    anchor_quote="lập ma trận đối chiếu",
-                    anchor_quote_en="build a comparison matrix",
-                    fx="pop_wobble",
-                    x=0.64,
-                    y=0.64,
-                    w=0.35,
-                    z=2,
-                )
-            ],
-            reused_sticker_ids=[("SC01_ST1", "bị nhấn chìm giữa ba mươi bài báo", "pop", "drown in thirty scattered papers")],
+            scene_description=compose_full_frame_description("Bảng Ma trận Khoảng trống Nghiên cứu kẻ ô ngăn nắp với điểm giao phát sáng nổi bật trên nền giấy biên tập, không có nhân vật", "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày đứng thẳng tự tin chỉ cây bút vào ô giao cắt của bảng ma trận trên nền trắng"),
             foley_cue="Tiếng giấy bay xào xạc chuyển sang tiếng kẻ bảng nhịp nhàng",
             claim_facts=[],
         ),
@@ -1201,10 +1188,7 @@ def create_academic_research_paradox_topic(
             action="Sticker Nghiên Cứu đứng tự tin trước bục bảo vệ khóa luận với sơ đồ chuỗi nghiên cứu tỏa sáng phía sau",
             setting="Phòng bảo vệ khóa luận trang trọng với đồng hồ 120 giây và sơ đồ nghiên cứu chuẩn mực",
             camera="Trung cảnh mở rộng tôn vinh tư thế tự tin",
-            bg_description="Bục thuyết trình phòng bảo vệ khóa luận với màn chiếu hiển thị sơ đồ khoảng trống nghiên cứu rõ nét, không có nhân vật",
-            reused_sticker_ids=[
-                ("SC04_ST1", "Một trăm hai mươi giây đầu tiên", "pop", "first one hundred twenty seconds"),
-            ],
+            scene_description=compose_full_frame_description("Bục thuyết trình phòng bảo vệ khóa luận với màn chiếu hiển thị sơ đồ khoảng trống nghiên cứu rõ nét, không có nhân vật", "Sticker Nghiên Cứu đứng tự tin trước bục bảo vệ khóa luận với sơ đồ chuỗi nghiên cứu tỏa sáng phía sau"),
             foley_cue="Tiếng gõ bút đồng thuận của hội đồng, âm hưởng piano trầm ấm kết thúc",
             claim_facts=[
                 (
@@ -1299,8 +1283,8 @@ def build_short_spinoff_topics(
     chars_t2 = [
         {
             "id": "CH01",
-            "name": "Sticker Nghiên Cứu",
-            "appearance": "Hình tượng stick-figure Sticker Nghiên Cứu chuẩn Avatar kênh, đầu tròn trắng viền đen dày khép kín, mắt oval tối giản",
+            "name": "Nhân vật người que nghiên cứu",
+            "appearance": "Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong các ảnh toàn khung",
             "outfit": "Áo sơ mi học thuật tối giản nét mực đen trên nền trắng tách lớp",
         }
     ]
@@ -1318,21 +1302,7 @@ def build_short_spinoff_topics(
             action="Sticker Nghiên Cứu đứng trên bục bảo vệ đối diện bàn hội đồng và đồng hồ 120 giây",
             setting="Phòng bảo vệ khóa luận đại học tại Việt Nam với đồng hồ đếm ngược 120 giây",
             camera="Đẩy cận cảnh vào đồng hồ 120 giây và ánh mắt hội đồng",
-            bg_description="Đồ họa Editorial Graphic vẽ bàn hội đồng bảo vệ khóa luận và đồng hồ 120 giây phát sáng trên nền tối tương phản, không có nhân vật",
-            stickers=[
-                ResearchedSticker(
-                    id="SC01_ST1",
-                    description="Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày khép kín, đứng thẳng nắm tập khóa luận trước bục thuyết trình trên nền trắng",
-                    character_ids=["CH01"],
-                    anchor_quote="ngay trong hai phút đầu tiên",
-                    anchor_quote_en="within the first two minutes",
-                    fx="pop",
-                    x=0.35,
-                    y=0.64,
-                    w=0.35,
-                    z=2,
-                )
-            ],
+            scene_description=compose_full_frame_description("Đồ họa Editorial Graphic vẽ bàn hội đồng bảo vệ khóa luận và đồng hồ 120 giây phát sáng trên nền tối tương phản, không có nhân vật", "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày khép kín, đứng thẳng nắm tập khóa luận trước bục thuyết trình trên nền trắng"),
             foley_cue="Tiếng đồng hồ tích tắc dồn dập 120 giây",
             claim_facts=[
                 (
@@ -1355,21 +1325,7 @@ def build_short_spinoff_topics(
             action="Sticker Nghiên Cứu chỉ kính lúp vào trang Danh mục tài liệu tham khảo ở cuối cuốn khóa luận",
             setting="Sơ đồ X-quang cuốn khóa luận làm nổi bật trang Tài liệu tham khảo",
             camera="Toàn cảnh lật ngược cuốn khóa luận về trang cuối",
-            bg_description="Sơ đồ Editorial Graphic hiển thị cuốn khóa luận mở sẵn ở trang Danh mục tài liệu tham khảo với dấu kiểm định nguồn Q1, không có nhân vật",
-            stickers=[
-                ResearchedSticker(
-                    id="SC02_ST1",
-                    description="Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm kính lúp soi vào trang tài liệu tham khảo trên nền trắng",
-                    character_ids=["CH01"],
-                    anchor_quote="lật trang tài liệu tham khảo",
-                    anchor_quote_en="flip straight to the reference",
-                    fx="bounce",
-                    x=0.64,
-                    y=0.64,
-                    w=0.35,
-                    z=2,
-                )
-            ],
+            scene_description=compose_full_frame_description("Sơ đồ Editorial Graphic hiển thị cuốn khóa luận mở sẵn ở trang Danh mục tài liệu tham khảo với dấu kiểm định nguồn Q1, không có nhân vật", "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm kính lúp soi vào trang tài liệu tham khảo trên nền trắng"),
             foley_cue="Tiếng lật giấy nhanh về cuối sách, nhịp dừng 900ms",
             claim_facts=[
                 (
@@ -1392,21 +1348,7 @@ def build_short_spinoff_topics(
             action="Sticker Nghiên Cứu gạch chéo slide định nghĩa dài dòng và bảng số liệu hỗn độn",
             setting="Sơ đồ cảnh báo hai lỗi chí mạng trên bục bảo vệ khóa luận",
             camera="Cận cảnh tấm bảng lỗi thuyết trình bị gạch đỏ",
-            bg_description="Đồ họa Editorial Graphic vẽ khung trình chiếu chật kín định nghĩa sách giáo khoa bị gạch đỏ cảnh báo, không có nhân vật",
-            stickers=[
-                ResearchedSticker(
-                    id="SC03_ST1",
-                    description="Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm bút đỏ gạch chéo tấm thẻ định nghĩa cũ trên nền trắng",
-                    character_ids=["CH01"],
-                    anchor_quote="mất điểm ngay từ mở bài",
-                    anchor_quote_en="loses points right from the opening",
-                    fx="slide_left",
-                    x=0.35,
-                    y=0.64,
-                    w=0.35,
-                    z=2,
-                )
-            ],
+            scene_description=compose_full_frame_description("Đồ họa Editorial Graphic vẽ khung trình chiếu chật kín định nghĩa sách giáo khoa bị gạch đỏ cảnh báo, không có nhân vật", "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm bút đỏ gạch chéo tấm thẻ định nghĩa cũ trên nền trắng"),
             foley_cue="Tiếng còi cảnh báo nhẹ và tiếng gạch bút",
             claim_facts=[
                 (
@@ -1429,22 +1371,7 @@ def build_short_spinoff_topics(
             action="Đặt đối xứng nhân vật lúng túng bên trái và nhân vật chỉ vào Sơ đồ 3 Bước bên phải",
             setting="Sơ đồ Cấu trúc Phản biện 3 Bước: Đã biết -> Lỗ hổng bỏ ngỏ -> Giải pháp đo đạc",
             camera="Lia ngang sang Sơ đồ 3 Bước phát sáng",
-            bg_description="Sơ đồ Editorial Graphic 3 khối mũi tên sắc nét: Công trình trước -> Khoảng trống bỏ ngỏ -> Phương pháp giải quyết mới, không có nhân vật",
-            stickers=[
-                ResearchedSticker(
-                    id="SC04_ST1",
-                    description="Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày tự tin chỉ tay vào sơ đồ 3 bước trên nền trắng",
-                    character_ids=["CH01"],
-                    anchor_quote="cấu trúc phản biện ba bước",
-                    anchor_quote_en="three-step rebuttal structure",
-                    fx="pop_wobble",
-                    x=0.64,
-                    y=0.64,
-                    w=0.35,
-                    z=2,
-                )
-            ],
-            reused_sticker_ids=[("SC01_ST1", "liệt kê mình đã chạy bao nhiêu", "pop", "list how many samples")],
+            scene_description=compose_full_frame_description("Sơ đồ Editorial Graphic 3 khối mũi tên sắc nét: Công trình trước -> Khoảng trống bỏ ngỏ -> Phương pháp giải quyết mới, không có nhân vật", "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày tự tin chỉ tay vào sơ đồ 3 bước trên nền trắng"),
             foley_cue="Tiếng ba nhịp khóa mục tiêu sắc gọn",
             claim_facts=[
                 (
@@ -1467,10 +1394,7 @@ def build_short_spinoff_topics(
             action="Sticker Nghiên Cứu mỉm cười tự tin trên bục bảo vệ khi đồng hồ 120 giây chuyển sang ánh sáng xanh đồng thuận",
             setting="Phòng bảo vệ khóa luận khép lại vòng lặp với sự tán thưởng của hội đồng",
             camera="Trung cảnh mở rộng tôn vinh người thuyết trình",
-            bg_description="Phòng bảo vệ khóa luận sáng rõ với sơ đồ 3 bước phản biện trên màn chiếu và đồng hồ 120 giây hoàn tất, không có nhân vật",
-            reused_sticker_ids=[
-                ("SC04_ST1", "thuyết phục trọn vẹn hội đồng", "pop", "win over the entire committee"),
-            ],
+            scene_description=compose_full_frame_description("Phòng bảo vệ khóa luận sáng rõ với sơ đồ 3 bước phản biện trên màn chiếu và đồng hồ 120 giây hoàn tất, không có nhân vật", "Sticker Nghiên Cứu mỉm cười tự tin trên bục bảo vệ khi đồng hồ 120 giây chuyển sang ánh sáng xanh đồng thuận"),
             foley_cue="Tiếng gõ bút đồng thuận, âm nhạc kết thúc đĩnh đạc",
             claim_facts=[],
         ),
@@ -1544,8 +1468,8 @@ def build_short_spinoff_topics(
     chars_t3 = [
         {
             "id": "CH01",
-            "name": "Sticker Nghiên Cứu",
-            "appearance": "Hình tượng stick-figure Sticker Nghiên Cứu chuẩn Avatar kênh, đầu tròn trắng viền đen dày khép kín, mắt oval tối giản",
+            "name": "Nhân vật người que nghiên cứu",
+            "appearance": "Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong các ảnh toàn khung",
             "outfit": "Áo sơ mi học thuật tối giản nét mực đen trên nền trắng tách lớp",
         }
     ]
@@ -1563,21 +1487,7 @@ def build_short_spinoff_topics(
             action="Sticker Nghiên Cứu choáng váng giữa hàng chục tập tài liệu PDF bay quanh bàn học",
             setting="Bàn làm việc sinh viên Việt Nam đêm khuya với màn hình mở hàng chục tab bài báo khoa học",
             camera="Đẩy cận cảnh nhanh vào chồng tài liệu phân mảnh",
-            bg_description="Đồ họa Editorial Graphic vẽ hàng chục thẻ bài báo khoa học xếp chồng hỗn loạn tạo thành cơn bão thông tin trên nền tối tương phản, không có nhân vật",
-            stickers=[
-                ResearchedSticker(
-                    id="SC01_ST1",
-                    description="Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày khép kín, hai tay đỡ chồng tài liệu cao ngất với biểu cảm quá tải trên nền trắng",
-                    character_ids=["CH01"],
-                    anchor_quote="tê liệt vì quá tải",
-                    anchor_quote_en="freezes from overload",
-                    fx="pop",
-                    x=0.35,
-                    y=0.64,
-                    w=0.35,
-                    z=2,
-                )
-            ],
+            scene_description=compose_full_frame_description("Đồ họa Editorial Graphic vẽ hàng chục thẻ bài báo khoa học xếp chồng hỗn loạn tạo thành cơn bão thông tin trên nền tối tương phản, không có nhân vật", "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày khép kín, hai tay đỡ chồng tài liệu cao ngất với biểu cảm quá tải trên nền trắng"),
             foley_cue="Tiếng thông báo tải file dồn dập, tiếng gió xoáy nhẹ",
             claim_facts=[
                 (
@@ -1600,21 +1510,7 @@ def build_short_spinoff_topics(
             action="Sticker Nghiên Cứu gạch chéo đoạn văn tổng quan liệt kê rời rạc bị đóng dấu cảnh báo đỏ",
             setting="Sơ đồ so sánh văn bản liệt kê bề mặt và cấu trúc phản biện học thuật",
             camera="Toàn cảnh đối chiếu",
-            bg_description="Sơ đồ Editorial Graphic hiển thị các khối văn bản liệt kê rời rạc bị gạch đỏ đối diện cấu trúc mạng lưới phản biện lý thuyết, không có nhân vật",
-            stickers=[
-                ResearchedSticker(
-                    id="SC02_ST1",
-                    description="Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm kính lúp soi vào vết nứt trên tờ văn bản mẫu trên nền trắng",
-                    character_ids=["CH01"],
-                    anchor_quote="văn phong liệt kê sáo rỗng",
-                    anchor_quote_en="immediately spot hollow summaries",
-                    fx="bounce",
-                    x=0.64,
-                    y=0.64,
-                    w=0.35,
-                    z=2,
-                )
-            ],
+            scene_description=compose_full_frame_description("Sơ đồ Editorial Graphic hiển thị các khối văn bản liệt kê rời rạc bị gạch đỏ đối diện cấu trúc mạng lưới phản biện lý thuyết, không có nhân vật", "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm kính lúp soi vào vết nứt trên tờ văn bản mẫu trên nền trắng"),
             foley_cue="Tiếng còi cảnh báo nhẹ, nhịp dừng 900ms rồi tiếng đóng dấu",
             claim_facts=[
                 (
@@ -1637,21 +1533,7 @@ def build_short_spinoff_topics(
             action="Sticker Nghiên Cứu sắp xếp các mảnh dữ liệu vào bảng Ma trận 4 cột Question - Gap - Method - Evidence",
             setting="Bảng Ma trận Khoảng trống Nghiên cứu 4 cột phát sáng rõ nét",
             camera="Cận cảnh theo từng cột của ma trận",
-            bg_description="Bảng đồ họa Editorial Graphic 4 cột biểu diễn chuỗi Câu hỏi, Khoảng trống, Phương pháp và Bằng chứng với các nút liên kết sắc nét, không có nhân vật",
-            stickers=[
-                ResearchedSticker(
-                    id="SC03_ST1",
-                    description="Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm thước chỉ vào cột giới hạn chưa giải quyết trên nền trắng",
-                    character_ids=["CH01"],
-                    anchor_quote="ma trận khoảng trống nghiên cứu",
-                    anchor_quote_en="research gap matrix",
-                    fx="slide_left",
-                    x=0.35,
-                    y=0.64,
-                    w=0.35,
-                    z=2,
-                )
-            ],
+            scene_description=compose_full_frame_description("Bảng đồ họa Editorial Graphic 4 cột biểu diễn chuỗi Câu hỏi, Khoảng trống, Phương pháp và Bằng chứng với các nút liên kết sắc nét, không có nhân vật", "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm thước chỉ vào cột giới hạn chưa giải quyết trên nền trắng"),
             foley_cue="Tiếng các ô dữ liệu khớp vào bảng ma trận 'click' gọn gàng",
             claim_facts=[
                 (
@@ -1674,22 +1556,7 @@ def build_short_spinoff_topics(
             action="Đặt đối xứng nhân vật tóm tắt rời rạc ở bên trái và nhân vật soi giao điểm phản biện chéo ở bên phải",
             setting="Đồ họa đối sánh hai cấp độ khai thác tài liệu khoa học",
             camera="Lia ngang từ trái sang phải",
-            bg_description="Đồ họa Editorial Graphic đối chiếu các tờ ghi chú rời rạc bên trái với sơ đồ giao thoa ba vòng tròn lý thuyết phát sáng bên phải, không có nhân vật",
-            stickers=[
-                ResearchedSticker(
-                    id="SC04_ST1",
-                    description="Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày mỉm cười nâng mảnh ghép trung tâm tỏa sáng trên nền trắng",
-                    character_ids=["CH01"],
-                    anchor_quote="phản biện chéo các trường phái",
-                    anchor_quote_en="cross-examine schools of thought",
-                    fx="pop_wobble",
-                    x=0.64,
-                    y=0.64,
-                    w=0.35,
-                    z=2,
-                )
-            ],
-            reused_sticker_ids=[("SC01_ST1", "tóm tắt từng bài riêng lẻ", "pop", "summarize papers one by one")],
+            scene_description=compose_full_frame_description("Đồ họa Editorial Graphic đối chiếu các tờ ghi chú rời rạc bên trái với sơ đồ giao thoa ba vòng tròn lý thuyết phát sáng bên phải, không có nhân vật", "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày mỉm cười nâng mảnh ghép trung tâm tỏa sáng trên nền trắng"),
             foley_cue="Tiếng tia sáng hội tụ tại tâm sơ đồ giao thoa",
             claim_facts=[
                 (
@@ -1712,10 +1579,7 @@ def build_short_spinoff_topics(
             action="Sticker Nghiên Cứu đứng trên đỉnh Tháp Học Thuật nhìn toàn cảnh ma trận nghiên cứu hoàn chỉnh",
             setting="Bàn học sáng rõ với bảng Ma trận Khoảng trống Nghiên cứu hoàn chỉnh trên màn hình lớn",
             camera="Trung cảnh mở rộng",
-            bg_description="Bàn làm việc học thuật ngăn nắp với màn hình hiển thị Ma trận Khoảng trống Nghiên cứu hoàn chỉnh và Tháp Học Thuật vững chãi, không có nhân vật",
-            reused_sticker_ids=[
-                ("SC04_ST1", "bệ phóng vững chắc, cho công trình", "pop", "solid launchpad for your own"),
-            ],
+            scene_description=compose_full_frame_description("Bàn làm việc học thuật ngăn nắp với màn hình hiển thị Ma trận Khoảng trống Nghiên cứu hoàn chỉnh và Tháp Học Thuật vững chãi, không có nhân vật", "Sticker Nghiên Cứu đứng trên đỉnh Tháp Học Thuật nhìn toàn cảnh ma trận nghiên cứu hoàn chỉnh"),
             foley_cue="Âm thanh hoàn tất ấm áp, nốt nhạc kết thúc truyền cảm hứng",
             claim_facts=[],
         ),
@@ -1792,15 +1656,7 @@ def write_production_package(
 
     # Cadence checker validation
     checker = ScriptCadenceChecker(nominal_rate=NOMINAL_SPEECH_RATE)
-    standardized_scenes = [
-        {
-            "id": s.scene_id,
-            "duration": s.duration,
-            "narration": s.narration,
-            "beats": [],
-        }
-        for s in topic.scenes
-    ]
+    standardized_scenes = script_data
     cadence_report = checker.check_scenes(standardized_scenes)
 
     # Write files to disk with identical serialization to Video Pilot (idempotent mtime)
@@ -1884,10 +1740,8 @@ def main() -> int:
             print("[*] Đang kiến trúc bộ hồ sơ kỹ thuật 13 phút cho chủ đề: 'Lịch sử tiến hóa của Động lực'...")
             topic = create_motivation_history_13m_topic(aspect_ratio=args.aspect_ratio, subtitles=args.subtitles)
         elif selected_topic == "academic-research-13m":
-            from build_academic_research_paradox_13m import (
-                build_multi_chapter_bundle as build_academic_bundle,
-                create_academic_research_13m_topic,
-            )
+            from build_academic_research_paradox_13m import build_multi_chapter_bundle as build_academic_bundle
+            from build_academic_research_paradox_13m import create_academic_research_13m_topic
 
             job_id = args.job_id or f"academic-research-paradox-{args.aspect_ratio.replace(':', 'x')}-13m"
             out_dir = Path(args.output_dir) if args.output_dir else SYS_DIR / f"runs/{job_id}"

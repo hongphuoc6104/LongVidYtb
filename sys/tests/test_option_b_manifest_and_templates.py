@@ -4,10 +4,16 @@ import subprocess
 import wave
 from pathlib import Path
 from PIL import Image
+import pytest
 
 PROJ_ROOT = Path(__file__).resolve().parents[2]
 BUNDLE_DIR = PROJ_ROOT / "sys" / "exports" / "ancient_humans_bundle"
 VIDEO_DIR = PROJ_ROOT / "video"
+
+SKIP_IF_NO_BUNDLE = pytest.mark.skipif(
+    not BUNDLE_DIR.exists(),
+    reason="Historical ancient_humans_bundle media fixtures are not present in this checkout",
+)
 
 EXPECTED_CHAPTER_SHOTS = {
     1: 43,
@@ -59,6 +65,7 @@ def _collect_chapter_timeline(ch: int) -> list[dict]:
     return timeline
 
 
+@SKIP_IF_NO_BUNDLE
 def test_option_b_templates_and_pacing_invariant():
     """Verify all 8 chapter templates enforce subtitles=false, cue-anchored scenes, and max_hold <= 4.0s across 382 shots."""
     manifest_path = BUNDLE_DIR / "manifest" / "manifest_option_b_full.json"
@@ -115,6 +122,7 @@ def test_option_b_templates_and_pacing_invariant():
     assert total_shots == 382, f"Expected 382 total rendered shots across Ch1-8, got {total_shots}"
 
 
+@SKIP_IF_NO_BUNDLE
 def test_every_spoken_cue_has_exact_shot_boundary():
     """Verify all 149 spoken cues across Ch1..8 have an exact shot boundary at cue['start'] (drift <= 0.05s)."""
     cue_map_path = BUNDLE_DIR / "manifest" / "cue_shot_mapping_8ch.json"
@@ -142,6 +150,7 @@ def test_every_spoken_cue_has_exact_shot_boundary():
     assert total_cues_checked == 149
 
 
+@SKIP_IF_NO_BUNDLE
 def test_semantic_cue_shot_alignment_invariants():
     """Verify semantic shot placement invariants across Ch1..8 against cue_shot_mapping_8ch.json and templates."""
     cue_map_path = BUNDLE_DIR / "manifest" / "cue_shot_mapping_8ch.json"
@@ -202,6 +211,7 @@ def test_semantic_cue_shot_alignment_invariants():
     assert "shot_06e_635.90s.jpg" in by_ch_cue[(8, 11)]
 
 
+@SKIP_IF_NO_BUNDLE
 def test_option_b_images_unique_and_genuine_flow_ai():
     """Verify all 382 rendered shots exist, are 1376x768 Flow AI images, have unique MD5s, and have non-fallback JSON sidecars."""
     seen_hashes: dict[str, str] = {}
@@ -239,6 +249,7 @@ def test_option_b_images_unique_and_genuine_flow_ai():
     assert len(seen_hashes) == 382
 
 
+@SKIP_IF_NO_BUNDLE
 def test_adam_spoken_audio_and_cues_present():
     """Verify all 8 chapters have Adam spoken WAV audio and cues JSON."""
     for ch in range(1, 9):
@@ -250,6 +261,7 @@ def test_adam_spoken_audio_and_cues_present():
         assert len(cues) >= 10, f"Too few cues in {cues_path}"
 
 
+@SKIP_IF_NO_BUNDLE
 def test_rendered_chapter_and_master_videos_ffprobe():
     """Verify all 8 chapter MP4s, master 12m MP4, and master SRT are newer than templates and valid via ffprobe."""
     total_ch_dur = 0.0

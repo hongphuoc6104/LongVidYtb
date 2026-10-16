@@ -77,11 +77,12 @@ class RendererTileIntegrityTests(unittest.TestCase):
         index_tsx = (SYSTEM / 'renderer/index.tsx').read_text()
         self.assertNotIn("[1, 0]", [line.strip() for line in index_tsx.splitlines() if 'bg_flash' in line])
 
-    def test_flow_compiler_layer_background_has_no_caption_clearance_rule(self):
+    def test_flow_compiler_rejects_deprecated_layer_asset_prompts(self):
         from flow_prompts import compile as compile_prompt
-        data = {'description': 'Empty palace hall', 'aspect_ratio': '9:16'}
-        result = compile_prompt('NanoBanana2Lite', 'layer_background', data, '1.2.0')
-        self.assertNotIn('Reserve the specified caption band', result['prompt'])
+        data = {'description': 'Complete scene in a palace hall', 'aspect_ratio': '9:16'}
+        for purpose in ('layer_background', 'layer_sticker'):
+            with self.subTest(purpose=purpose), self.assertRaisesRegex(ValueError, 'FLOW_LAYERING_DISABLED'):
+                compile_prompt('NanoBanana2Lite', purpose, data, '1.2.0')
 
 
 

@@ -336,6 +336,8 @@ def _template_request(p, j, target, prompt, corrections, ratio, refs, registrati
                 change_items = [change_raw]
     data = {'description': desc, 'aspect_ratio': ratio,
             'allowed_text': scene.get('visible_text', []) if scene else []}
+    if scene and pin['version'] == '1.3.0' and scene.get('shot_type'):
+        data['shot_type'] = scene['shot_type']
     if has_format_profile:
         data['caption_clearance'] = format_clearance
     if image is not None:

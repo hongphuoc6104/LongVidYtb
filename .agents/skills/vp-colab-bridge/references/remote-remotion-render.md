@@ -1,6 +1,6 @@
-# Remote Video Rendering & Sticker Matting (`Remotion` on Colab T4)
+# Remote Full-frame Video Rendering (`Remotion` on Colab T4)
 
-This reference covers remote video rendering on Google Colab T4 via both the standard job worker ([`sys/colab_bridge/job_worker.py`](../../../../sys/colab_bridge/job_worker.py) & [`sys/colab_bridge/job_protocol.py`](../../../../sys/colab_bridge/job_protocol.py)) and the multi-chapter batch orchestrator ([`render_all_on_colab.py`](../../../../sys/exports/ancient_humans_bundle/scripts/render_all_on_colab.py)).
+This reference covers the standard Google Colab T4 render contract through [`job_worker.py`](../../../../sys/colab_bridge/job_worker.py) and [`job_protocol.py`](../../../../sys/colab_bridge/job_protocol.py). Multi-output jobs use the same request and validation path.
 
 ---
 
@@ -61,13 +61,11 @@ subprocess.run(cmd, env=env, check=True)
 ### 2.1. Never Enable Blanket Full-Frame `line_boil: true` on 1080p Raster Plates (`ERR-20261009-01`)
 - Setting `"line_boil": true` on full-screen $1920 \times 1080$ raster beats forces Chromium to evaluate 2-octave SVG `<feTurbulence>` and `<feDisplacementMap scale={3}>` across 2,073,600 pixels per frame and pulls out-of-bounds pixels into top/left borders. Likewise, full-screen SVG `<feTurbulence>` Film Grain is opt-in only (`enable_film_grain: true`).
 - **Consequences**: Severe render slowdown, bloated MP4 bitrate, and black dashed displacement artifacts along top/left borders at `scale = 1.0`.
-- **Rule**: Keep `"line_boil": false` (or omitted) on full-frame 1080p background plates; use Remotion camera transitions (`zoom_in`, `zoom_out`, `punch_in`, `pan_left`, `pan_right`, `slide_left`, `shake`, `fade`, `hold`). Reserve `line_boil` / CSS `boilJitter` strictly for cut-out stickers (`scene.layers`).
+- **Rule**: Keep `"line_boil": false` (or omitted) on full-frame 1080p scene images; use Remotion camera transitions (`zoom_in`, `zoom_out`, `punch_in`, `pan_left`, `pan_right`, `slide_left`, `shake`, `fade`, `hold`).
 
-### 2.2. Remote Sticker Matting ([`matte_sticker.py`](../../../../sys/tools/matte_sticker.py))
-- For layered scenes (`scene.layers`), `job_worker.py` loads `tools/matte_sticker.py` on Colab:
-  - Flood-fills background transparency from borders and adds a 10px white sticker halo (`create_sticker=True, border=10`).
-  - Verifies non-empty alpha bounding box (`im.width >= 40`, `im.height >= 40`, `alpha.getbbox() is not None`) or raises `STICKER_MATTE_FAILED`.
-  - Records dimensions and transparency fraction in `layers-report.json`.
+### 2.2. Full-frame Scene Assets
+- The render worker copies each validated `kind: "scene"` image into the public render directory unchanged.
+- New render requests reject `kind: "background"`, `kind: "sticker"`, and non-empty `layers[]` before building or uploading a bundle.
 
 ### 2.3. Cue-Window Allocation & Full-Bleed Framing (`ERR-20261010-04` & `ERR-20261010-10`)
 - Multi-chapter explainer videos must anchor shots directly to each spoken cue (`Cue-Window Allocation` with `0.000s` start drift and `0.83s <= hold <= 3.80s`).
@@ -78,31 +76,10 @@ subprocess.run(cmd, env=env, check=True)
 ## 3. Execution Workflows
 
 ### Workflow A: Standard Single-Job Contract (`pilot.py` / `job_worker.py`)
-1. `job_protocol.py:build_render_request()` hashes all source files (`output_contract.py`, `story_plan.py`, `subtitles.py`, `renderer/*`, `package.json`, `package-lock.json`, optional `matte_sticker.py`) and media assets into `input.zip` (`<= 512` files, `<= 1GB`).
+1. `job_protocol.py:build_render_request()` hashes the render contract, story planner, subtitles, renderer, package files, and media assets into `input.zip` (`<= 512` files, `<= 1GB`). It does not include `matte_sticker.py`.
 2. `client.py:render()` uploads `input.zip` and `job_worker.py` to `/content/video-pilot-jobs/<request_id>/` and executes `job_worker.run(...)`.
 3. `job_worker.py` renders the outputs, verifies every MP4 with `ffprobe` (`h264`, `aac`, exact `1920x1080` or `1080x1920` dimensions, duration drift `<= 0.25s`), packages `output.zip`, and `validate_render_result()` validates all hashes on the host.
 
-### Workflow B: Multi-Chapter Parallel Batch Orchestrator ([`render_all_on_colab.py`](../../../../sys/exports/ancient_humans_bundle/scripts/render_all_on_colab.py))
+### Workflow B: Multi-output Jobs
 
-```bash
-# Render a single chapter on a specific Colab T4 account (with force overwrite, no concat)
-python3 sys/exports/ancient_humans_bundle/scripts/render_all_on_colab.py 1 --force --no-concat --account account-01
-
-# Render all 8 chapters in PARALLEL across 3 Colab T4 accounts simultaneously and concatenate
-python3 sys/exports/ancient_humans_bundle/scripts/render_all_on_colab.py --force --parallel 3 --accounts account-01,account-02,account-03
-
-# Render all 8 chapters using auto-discovered pool accounts (defaults to --parallel 3)
-python3 sys/exports/ancient_humans_bundle/scripts/render_all_on_colab.py --force
-
-# Render sequentially on 1 account only (legacy single-session mode)
-python3 sys/exports/ancient_humans_bundle/scripts/render_all_on_colab.py --force --parallel 1
-
-# Concatenate already-rendered chapters only
-python3 sys/exports/ancient_humans_bundle/scripts/render_all_on_colab.py --concat-only
-```
-
-Safeguards built into `render_all_on_colab.py`:
-- **Multi-Account T4 Parallel Dispatch (`render_chapters_parallel`)**: Uses `ColabPoolManager` and `ColabPoolDispatcher` (`sys/colab_bridge/pool_manager.py`) to open concurrent T4 sessions across `account-01..03` (staggered by `3.0s`) and distribute chapters in parallel with automatic work-stealing failover if any account disconnects or exhausts quota.
-- **Orphan Process Cleanup**: Runs `pkill -9 -f 'chrome-linux64/chrome|render.mjs'` on Colab before each chapter build so hung browsers from prior attempts never block GPU/CPU resources.
-- **Self-Healing Retry Loop**: Wraps upload, `exec` (`timeout=1000s` on Python `subprocess.run` wrapping `--timeout 960` on Colab CLI), and download (`timeout=180s`). On failure, forces a fresh runtime sync (`ensure_colab_render_runtime(force_sync=True)`).
-- **Post-Render Freshness Verification**: Always verify `mp4.stat().st_mtime >= template.stat().st_mtime` and inspect the downloaded MP4 via `ffprobe`.
+The orchestrator submits each requested language/aspect-ratio output through the same `build_render_request()` contract. The worker rejects cut-out kinds and non-empty `layers[]`, copies full-frame scene assets unchanged, renders the narration-anchored `beats[]`, and verifies the collected MP4 with `ffprobe`.

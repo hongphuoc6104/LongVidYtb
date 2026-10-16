@@ -18,18 +18,17 @@ Mandatory flags and DOM attributes across `chrome-wrapper.sh`, `sys/renderer/ren
 - `--run-all-compositor-stages-before-draw` + `DISABLE_FROM_SURFACE=true`: Forces Chromium to finish all compositor pipeline stages before permitting pixel readback.
 - `--disable-checker-imaging`: Prohibits Chromium's compositor from deferring large `1920x1080` image decode tiles to background worker threads (which causes missing rectangular tiles on fast camera transitions).
 - `--disable-new-content-rendering-timeout`: Prevents the compositor from flushing an incomplete frame when a newly mounted GPU/CPU tile takes >5ms to rasterize.
-- `<Img decoding="sync">` (`sys/renderer/index.tsx`): Forces synchronous DOM image decoding on all background plates and cut-out stickers before frame capture.
+- `<Img decoding="sync">` (`sys/renderer/index.tsx`): Forces synchronous DOM image decoding on full-frame scene images before frame capture.
 - **GPU Backend (`gl-egl` vs CPU Fallback)**: Use NVIDIA Headless EGL (`10_nvidia.json` + `--use-gl=angle --use-angle=gl-egl --enable-gpu-rasterization`) on Colab T4, or automatically fall back to `--disable-gpu-rasterization` when no NVIDIA EGL ICD is present. Never use `xvfb-run` or `--use-angle=gl`.
 
-### 2. Fix Z-Index Layering for Captions and Stickers
+### 2. Fix Z-Index Ordering for Captions and Overlays
 Verify `sys/renderer/captions.mjs` and `sys/renderer/index.tsx`:
 - `zIndex` of the caption container (`captions`) must be `30`.
-- Sticker layers must have `zIndex` between `10` and `20`.
-- Background plate must have `zIndex` of `1` with `objectFit: 'cover'`.
+- Full-frame scene images render in the main visual canvas; captions and UI overlays retain their explicit higher z-index values.
 
 ### 3. Never Enable Blanket Full-Frame `line_boil: true` or Default Full-Screen SVG `<feTurbulence>` on 1080p Plates
 - Full-screen SVG `<feTurbulence>` + `<feDisplacementMap scale={3}>` (`line_boil: true`) runs in **CPU software across 2,073,600 pixels per frame**, slowing 1080p rendering by **4x–10x** and pulling dashed black out-of-bounds pixels into the top/left borders at `scale = 1.0`.
-- **Remedy**: Do **not** set `"line_boil": true` on full-screen `1920x1080` raster beats in `props.json`, and keep full-screen SVG Film Grain opt-in (`enable_film_grain: true`). Use camera motion effects (`zoom_in`, `zoom_out`, `punch_in`, `pan_left`, `pan_right`, `slide_left`, `shake`, `fade`, `hold`) for full-frame plates, and reserve `line_boil` / `boilJitter` for cut-out stickers (`scene.layers`).
+- **Remedy**: Do **not** set `"line_boil": true` on full-screen `1920x1080` raster beats in `props.json`, and keep full-screen SVG Film Grain opt-in (`enable_film_grain: true`). Use supported camera motion effects (`zoom_in`, `zoom_out`, `punch_in`, `pan_left`, `pan_right`, `slide_left`, `shake`, `fade`, `hold`) for full-frame scene images.
 
 ### 4. Verification Test
 Run the integrity test suite:

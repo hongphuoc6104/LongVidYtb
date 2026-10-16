@@ -69,12 +69,12 @@ Chi tiết xem tại: [Quy chuẩn Giọng đọc, Tốc độ và Ngắt nhịp
 
 ---
 
-## 4. Đồng Bộ Visual Beats (`beats[]`) & Vùng Nguy Hiểm 15s Đầu
+## 4. Đồng Bộ Lời Thoại Với Full-frame Visual Beats
 
-Để triệt tiêu hiện tượng **Scene Hold Stagnation (đứng hình 2.5s–3.8s ở 15 giây đầu)**:
+Ưu tiên cụm từ cụ thể, đồ vật và hành động nhìn thấy được để visual planner có thể gắn từng beat vào đúng lời thoại. Giữ nhịp nói tự nhiên; không ép một vật thể vào mọi vế câu và không dùng số lượng beat để thay cho kiểm tra âm học.
 
-1. **Vùng Nguy Hiểm 15 Giây Đầu (`0:00 – 0:15` / `SC01–SC02`):** Bắt buộc chia nhịp thị giác dày **`1.2s – 1.8s`/beat** (đổi góc máy `zoom_in`, `punch_in`, `pan_right` hoặc nảy Sticker Nghiên Cứu tương tác trực tiếp với Sơ đồ Học thuật trên Background Plate).
-2. **Vùng Thân Bài (`sau 0:15` / `SC03+`):** Giữ mỗi beat thị giác trong dải **`0.83s – 3.80s`** theo *Cue-Window Allocation*, khóa từ neo ngữ nghĩa vào hành động camera hoặc sticker pop-in.
+1. **Cold open (`0:00–0:12.5`):** Khi lời thoại có đủ thay đổi hình ảnh, hướng tới 8–9 ảnh toàn khung, khoảng 4 ảnh trong 5 giây đầu. Neo mỗi ảnh vào đúng cụm từ hoặc hành động; xác nhận cut theo WAV.
+2. **Thân bài (`sau 0:15`):** Dùng *Cue-Window Allocation* để giữ mỗi ảnh khoảng **`0.83s–3.80s`**, với anchor ngữ nghĩa và chuyển cảnh phù hợp.
 
 ---
 

@@ -4,7 +4,7 @@ Read the brief/profile, packaging contract, audience and required points. Every 
 1. **Counter-Intuitive / Truth-Slap Hook & Empathy (0–15%):** Open with a counter-intuitive truth-slap statement ($\le 18$ syllables in the first sentence of `SC01`), **zero `[pause:...]` tags in `SC01`**, `4.2–4.4` syl/s pacing (`1.26x` on `short_9x16`), and 100% Vietnamese cultural localization in the first 60s (exam/thesis night, highlighting textbooks, opening Word at 2 AM, 120s before the defense committee).
 2. **Reframe & Dilemma (15–35%):** Challenge conventional assumptions with an intriguing scientific/academic paradox + at most 1 `[pause:900ms]` before the reveal.
 3. **Causal Evidence 70/30 (35–65%):** Balance 70% visual diagram-driven flow (*Academic Pyramid*, `Question → Gap → Method → Evidence` flowchart) with 30% verified spoken facts ($\le 20$ syllables).
-4. **Direct Contrast (65–85%):** Contrast two opposing approaches side-by-side at Rule-of-Thirds coordinates (`x = 0.35` vs `x = 0.64`).
+4. **Direct Contrast (65–85%):** Contrast two concrete approaches using integrated full-frame compositions or successive scene beats.
 5. **Loop Closure & Payoff (85–100%):** Revisit the opening scene at `3.6–3.8` syl/s to resolve the narrative arc and trigger Save/Bookmark actions.
 
 ## 1. Cadence, Syllable Formula & Hard Guards
@@ -23,7 +23,7 @@ To eliminate acoustic dead-air and maintain exact audio synchronization:
 
 ## 2. Short Scene Splitting & Dual-Zone Visual Beats
 - **Prefer concise scenes (`5.0s–15.0s`, floor $> 2.5\text{s}$ to avoid $P_{\text{tail}}$ padding inflation) paired with Dual-Zone Visual Beats:**
-  - **Danger Zone (`0:00–0:15` / `SC01–SC02`):** Change camera beats or pop in stickers every **`1.2s–1.8s`**.
+  - **Danger Zone (`0:00–0:15` / `SC01–SC02`):** Use narration-anchored full-frame images; verify four starts in the first five seconds and eight to nine in the first 12.5 seconds against measured audio.
   - **Body Zone (`after 0:15` / `SC03+`):** Keep each visual beat hold within **`0.83s–3.80s`** anchored to narration keywords.
 
 ## 3. Script Invariants & Repair Discipline

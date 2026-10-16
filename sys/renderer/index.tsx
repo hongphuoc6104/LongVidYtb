@@ -291,7 +291,7 @@ const Video: React.FC<any> = (p) => {
         </defs>
       </svg>
 
-      {/* Layered Multi-Track Scene Engine (Background + Stickers) */}
+      {/* Legacy renderer compatibility only; standard content validation rejects scene.layers. */}
       {scene.layers && scene.layers.length > 0 ? (
         <AbsoluteFill style={{zIndex: 5}}>
           {scene.layers.map((l: any, idx: number) => {

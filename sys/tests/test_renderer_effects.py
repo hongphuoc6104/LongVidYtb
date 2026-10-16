@@ -99,11 +99,10 @@ console.log('OK');
         self.assertIn("Parallax 3D đa lớp", cinema_text)
         self.assertIn("Chưa hỗ trợ", cap_text)
 
-        # Layered motion graphics 2.5D support check
-        self.assertIn("scene.layers", cap_text)
-        self.assertIn("vp-layered-motion", cap_text)
-        layered_doc = ROOT / ".agents/skills/vp-layered-motion/SKILL.md"
-        self.assertTrue(layered_doc.exists(), "vp-layered-motion skill must exist")
+        # New jobs use full-frame beats; cut-out layers are deprecated.
+        self.assertIn("Deprecated for new jobs", cap_text)
+        self.assertIn('kind: "scene"', cap_text)
+        self.assertNotIn("vp-layered-motion", cap_text)
 
 
 if __name__ == "__main__":

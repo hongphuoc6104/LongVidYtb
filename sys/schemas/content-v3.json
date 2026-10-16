@@ -236,6 +236,16 @@
                     "background",
                     "sticker"
                   ]
+                },
+                "shot_type": {
+                  "type": "string",
+                  "enum": [
+                    "macro_prop",
+                    "full_scene",
+                    "variation",
+                    "white_card",
+                    "white_isolated"
+                  ]
                 }
               },
               "required": [

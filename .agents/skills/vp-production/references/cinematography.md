@@ -12,8 +12,8 @@ Visual standards, shot framing grammar, and cutting pace for explainer videos, a
 ## 2. Frame Composition & Safe Margins (`sys/format_profiles.py`)
 Composition adapts dynamically to the target `format_profile` configured in the job brief:
 - **Vertical Framing (`short_9x16` — `1080x1920`)**:
-  - **Top & Middle Zone (Top 82%)**: Character posture, facial expressions, primary action, and single focal props placed on **Rule-of-Thirds** horizontal anchors (`x ∈ [0.34, 0.38]` or `[0.62, 0.66]`, default `0.35 / 0.64`).
-  - **Bottom 18% (`caption_clearance = 0.18`)**: Reserved for dynamic captions (`max_line_chars = 28`). Keep sticker bottom edges above `y = 0.80`.
+  - **Top & Middle Zone (Top 82%)**: Compose character posture, expressions, action and focal props together in the physical scene. Choose framing from the narrated action.
+  - **Bottom 18% (`caption_clearance = 0.18`)**: Reserved for dynamic captions (`max_line_chars = 28`). Keep essential scene action and lettering outside the caption band defined by the format profile.
 - **Horizontal Framing (`long_16x9` — `1920x1080`)**:
   - Rule-of-thirds composition (`0.35 / 0.64`) with clean Editorial Graphic Visuals (no mechanical clichés or split-screen comparisons).
   - **Bottom Clearance**: `10%` (`caption_clearance = 0.10`, `max_line_chars = 42`) when subtitles are enabled (`subtitles: true`), and **`None` (full-bleed 100% canvas, zero bottom margin instruction)** when subtitles are disabled (`subtitles: false`).
@@ -50,4 +50,4 @@ Refer to detailed parameters in [render-capabilities](../../../../sys/docs/rende
 - **L-cut / J-cut**: Narration runs continuously; offset image beat timestamps (`at`) by 0.2s - 0.5s relative to dialogue start.
 - **Hand-drawn call-outs**: Request "red hand-drawn circle/arrow" directly in prompt adhering to brand tolerance.
 - **Highlighted vocabulary**: Captions automatically highlight target words (`target_word`) in vibrant yellow `#FACC15`; do not draw static text on images.
-- **Renderer boundaries**: **Do not select multi-layer 3D parallax (Parallax 3D đa lớp)** because standard single-frame rendering expects a single 2D bitmap per beat (unless using `scene.layers`). Whip pan is natively supported via `slide_left` with dynamic motion blur and inertia.
+- **Renderer boundaries**: **Do not select multi-layer 3D parallax (Parallax 3D đa lớp)** because standard rendering uses one complete 2D bitmap per beat. Use `based_on` variations for continuity between full-frame images. Whip pan is natively supported via `slide_left` with dynamic motion blur and inertia.

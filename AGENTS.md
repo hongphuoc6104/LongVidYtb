@@ -24,7 +24,7 @@
 
 ## 6. Quality & Verification Guards
 - **Fidelity, Packaging & Direct Pacing**: Enforce `youtube_title <= 55` chars + `thumbnail_spec` (2–4 uppercase words), VN 60s localization (defer Sumer/Edubba/Kalahari to Ch3+), `SC01` hook `<= 18` syl with zero `[pause:...]` (`OPENING_SCENE_PAUSE_FORBIDDEN`), 4.2–4.4 syl/s opening pace, spoken facts `<= 20` syl, forward chronology; pass `script_diversity_linter.py`.
-- **Visuals & Verification**: Generate complete full-frame images (`kind: "scene"`) for each narration-anchored beat; use `based_on` + `preserve`/`change` for same-location variations. Cold open target: about 8–9 images in the first 12–12.5s (roughly 4 in the first 5s); use semantic pacing and allow anchor-driven timing. After 0:15, keep image holds within `0.83s–3.80s`. Do not author `kind: "background"`/`kind: "sticker"` assets or run `matte_sticker.py`. Verify outputs via `ffprobe` (file existence != valid content).
+- **Visuals & Verification**: Use complete `kind: "scene"` images with narration-anchored beats; use `based_on` + `preserve`/`change` for in-place variations. Cold open target: 8–9 images/12.5s (~4/5s); body holds `0.83s–3.80s`. No background/sticker assets, layers, or `matte_sticker.py`. Verify MP4 with `ffprobe`.
 
 ## 7. Language Standards
 - **User**: Concise, natural **Vietnamese**. **Code/Commits/Prompts**: **English** (preserve exact English spelling including `I`).

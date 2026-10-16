@@ -22,9 +22,8 @@ import math
 import os
 import re
 import sys
-import wave
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Tuple
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 SYS_DIR = ROOT_DIR / "sys"
@@ -41,7 +40,7 @@ from research_story_architect import (  # noqa: E402
     DEFAULT_CHANNEL_PILLAR,
     PackagingSpec,
     ResearchedScene,
-    ResearchedSticker,
+    compose_full_frame_description,
     ResearchedTopic,
     assign_scene_camera_effects,
     write_production_package,
@@ -51,9 +50,9 @@ from vn_text_normalizer import normalize_for_tts  # noqa: E402
 
 PAUSE_TAG_RE = re.compile(r"\[pause:\s*(\d+(?:\.\d+)?)\s*(ms|s)?\s*\]", re.IGNORECASE)
 STYLE_PREFIX = (
-    "Editorial 2D academic diagram illustration in clean architectural linework on warm cream editorial paper, "
-    "high-contrast slate ink geometry, combined with anonymous Sticker Nghiên Cứu (round white head, continuous closed thick black outline), "
-    "16:9 widescreen composition, no decorative clutter"
+    "Editorial 2D full-frame explainer illustration in clean architectural linework on warm cream editorial paper, "
+    "high-contrast slate ink geometry, anonymous stick-figure character integrated into the physical environment, "
+    "16:9 widescreen composition, no detached cutout, no sticker border, no decorative clutter"
 )
 
 
@@ -251,8 +250,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu ngồi trước cuốn giáo trình highlight vàng rực nhưng ôm đầu bối rối khi gấp sách lại",
         "setting": "Bàn học sinh viên Việt Nam lúc hai giờ sáng dưới ánh đèn bàn vàng ấm",
         "camera": "Đặc tả trang giáo trình tô màu rồi kéo rộng ra nhân vật ôm đầu",
-        "bg_description": "Đồ họa Editorial Graphic vẽ bàn học đêm khuya với cuốn giáo trình phủ kín vệt bút dạ quang và đồng hồ chỉ hai giờ sáng trên nền giấy kem, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày khép kín, hai tay ôm đầu hoang mang nhìn cuốn sách gấp lại trên nền trắng",
+        "scene_description": "Đồ họa Editorial Graphic vẽ bàn học đêm khuya với cuốn giáo trình phủ kín vệt bút dạ quang và đồng hồ chỉ hai giờ sáng trên nền giấy kem, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày khép kín, hai tay ôm đầu hoang mang nhìn cuốn sách gấp lại trên nền trắng",
         "anchor_quote": "ảo giác hiểu bài",
         "fx": "pop",
         "x": 0.35,
@@ -269,8 +268,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu nhìn chằm chằm vào con trỏ chuột nhấp nháy trên trang Word trắng tinh",
         "setting": "Màn hình laptop mở trang Word trống rỗng bên cạnh chồng sổ ghi chép dày",
         "camera": "Trung cảnh đẩy dần vào màn hình trắng tinh",
-        "bg_description": "Màn hình máy tính hiển thị giao diện trang soạn thảo trắng tinh với dòng tiêu đề Chương 1 bỏ dở bên cạnh ba cuốn sổ ghi chép, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày ngồi chống cằm thở dài trước bàn phím trên nền trắng",
+        "scene_description": "Màn hình máy tính hiển thị giao diện trang soạn thảo trắng tinh với dòng tiêu đề Chương 1 bỏ dở bên cạnh ba cuốn sổ ghi chép, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày ngồi chống cằm thở dài trước bàn phím trên nền trắng",
         "anchor_quote": "con trỏ chuột nhấp nháy",
         "fx": "slide_left",
         "x": 0.64,
@@ -287,8 +286,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu xếp chồng sách cao ngất nhưng sững sờ khi gặp một câu hỏi biến thiên",
         "setting": "Không gian học tập đối lập giữa chồng sách chép tay và dấu hỏi lớn trên bảng",
         "camera": "Lia ngang từ chồng sách sang biểu đồ dấu hỏi",
-        "bg_description": "Sơ đồ Editorial Graphic đối chiếu chồng vở ghi chép dày cộp bên trái với biểu tượng dấu hỏi lớn chặn ngang lối đi bên phải, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày giơ hai tay bất lực trước tấm biển câu hỏi lạ trên nền trắng",
+        "scene_description": "Sơ đồ Editorial Graphic đối chiếu chồng vở ghi chép dày cộp bên trái với biểu tượng dấu hỏi lớn chặn ngang lối đi bên phải, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày giơ hai tay bất lực trước tấm biển câu hỏi lạ trên nền trắng",
         "anchor_quote": "mọi công thức lập tức sụp đổ",
         "fx": "bounce",
         "x": 0.35,
@@ -305,8 +304,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu cầm kính lúp soi vào hai đường tín hiệu Nhận diện quen mắt vs Nắm giữ cấu trúc",
         "setting": "Sơ đồ hai đường cong nhận thức: Đường quen mặt chữ tăng vọt và đường hiểu bản chất đi ngang",
         "camera": "Cận cảnh biểu đồ hai đường cong phân kỳ",
-        "bg_description": "Biểu đồ Editorial Graphic vẽ hai đường cong phân kỳ: đường nét đứt Cảm giác quen mắt đi lên và đường nét liền Năng lực tự giải quyết đi ngang, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày chỉ thước vào khoảng cách giữa hai đường đồ thị trên nền trắng",
+        "scene_description": "Biểu đồ Editorial Graphic vẽ hai đường cong phân kỳ: đường nét đứt Cảm giác quen mắt đi lên và đường nét liền Năng lực tự giải quyết đi ngang, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày chỉ thước vào khoảng cách giữa hai đường đồ thị trên nền trắng",
         "anchor_quote": "ảo giác năng lực trong học tập",
         "fx": "pop",
         "x": 0.64,
@@ -323,8 +322,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Đối sánh nhóm đọc lại bốn lần bị quên sạch và nhóm tự vẽ sơ đồ giữ vững kiến thức",
         "setting": "Bảng kết quả thực nghiệm đối chiếu tỷ lệ ghi nhớ sau một tuần",
         "camera": "Toàn cảnh bảng đối sánh hai cột thực nghiệm",
-        "bg_description": "Đồ họa Editorial Graphic hiển thị hai cột kết quả thực nghiệm: cột Đọc thụ động 4 lần tụt thấp và cột Tự truy xuất sơ đồ vươn cao, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm bút tự vẽ sơ đồ nhánh cây trên bảng trắng",
+        "scene_description": "Đồ họa Editorial Graphic hiển thị hai cột kết quả thực nghiệm: cột Đọc thụ động 4 lần tụt thấp và cột Tự truy xuất sơ đồ vươn cao, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm bút tự vẽ sơ đồ nhánh cây trên bảng trắng",
         "anchor_quote": "tự truy xuất thông tin",
         "fx": "pop_wobble",
         "x": 0.35,
@@ -341,8 +340,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu bước qua tấm kính ảo giác vỡ vụn để tiến tới Tháp 4 Cấp Độ Tri Thức",
         "setting": "Hành lang chuyển tiếp dẫn tới sơ đồ 4 bậc thang tri thức phát sáng",
         "camera": "Góc máy mở rộng tạo chiều sâu kịch tính",
-        "bg_description": "Bậc thang kiến trúc 4 tầng đại diện cho 4 cấp độ tiếp cận tri thức vươn lên trên nền giấy biên tập sắc nét, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm đèn pin chiếu thẳng lên bậc thang bốn tầng trên nền trắng",
+        "scene_description": "Bậc thang kiến trúc 4 tầng đại diện cho 4 cấp độ tiếp cận tri thức vươn lên trên nền giấy biên tập sắc nét, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm đèn pin chiếu thẳng lên bậc thang bốn tầng trên nền trắng",
         "anchor_quote": "bốn cấp độ của tri thức",
         "fx": "bounce",
         "x": 0.64,
@@ -361,8 +360,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu đứng trên đồ thị hàm số đặt câu hỏi Biết tính có bằng Hiểu bản chất?",
         "setting": "Đồ thị hàm số toán học kết hợp thẻ đối sánh Biết tính != Hiểu",
         "camera": "Đặc tả biểu tượng dấu khác biệt trên đồ thị",
-        "bg_description": "Đồ họa Editorial Graphic vẽ đường cong đồ thị đạo hàm tích phân sắc nét cùng ký hiệu Biết tính khác Hiểu trên nền sáng, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày đứng trên trục tọa độ tay chỉ vào dấu khác biệt trên nền trắng",
+        "scene_description": "Đồ họa Editorial Graphic vẽ đường cong đồ thị đạo hàm tích phân sắc nét cùng ký hiệu Biết tính khác Hiểu trên nền sáng, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày đứng trên trục tọa độ tay chỉ vào dấu khác biệt trên nền trắng",
         "anchor_quote": "hoàn toàn khác với hiểu bản chất",
         "fx": "pop",
         "x": 0.35,
@@ -379,8 +378,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu soi đèn vào bậc 1 (Lưu trữ thô) và bậc 2 (Bắt chước cơ học)",
         "setting": "Thước đo 4 cấp độ tri thức với hai tầng đáy được tô màu xám cảnh báo",
         "camera": "Lia dọc từ bậc 1 lên bậc 2 của thước đo",
-        "bg_description": "Thước đo phân cấp 4 tầng Editorial Graphic với tầng 1 Lưu trữ dữ liệu và tầng 2 Sao chép quy trình nổi bật ở nửa dưới, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm bảng kiểm đánh dấu hai tầng dưới cùng trên nền trắng",
+        "scene_description": "Thước đo phân cấp 4 tầng Editorial Graphic với tầng 1 Lưu trữ dữ liệu và tầng 2 Sao chép quy trình nổi bật ở nửa dưới, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm bảng kiểm đánh dấu hai tầng dưới cùng trên nền trắng",
         "anchor_quote": "thước đo bốn cấp độ tiếp cận",
         "fx": "slide_left",
         "x": 0.64,
@@ -397,8 +396,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu bước đi trong đường ray khép kín của lời giải mẫu",
         "setting": "Sơ đồ đường ray vòng tròn khép kín đối lập với vùng đất tri thức mở rộng bên ngoài",
         "camera": "Góc máy từ trên cao nhìn xuống đường ray khép kín",
-        "bg_description": "Sơ đồ Editorial Graphic vẽ đường ray hình tròn khép kín biểu trưng cho lối mòn bài tập mẫu bên cạnh không gian mở, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày dừng lại nhìn ra ngoài đường ray với ánh mắt suy tư trên nền trắng",
+        "scene_description": "Sơ đồ Editorial Graphic vẽ đường ray hình tròn khép kín biểu trưng cho lối mòn bài tập mẫu bên cạnh không gian mở, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày dừng lại nhìn ra ngoài đường ray với ánh mắt suy tư trên nền trắng",
         "anchor_quote": "tê liệt khả năng tự đặt câu hỏi",
         "fx": "pop",
         "x": 0.35,
@@ -415,8 +414,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu mở nắp hộp đen công thức để lộ mạng lưới bánh răng nhân quả bên trong",
         "setting": "Tầng 3 của Thước đo Tri thức hiển thị mạng lưới liên kết nguyên nhân và hệ quả",
         "camera": "Đẩy cận vào mạng lưới liên kết nhân quả",
-        "bg_description": "Sơ đồ mạng lưới nút giao nhân quả sắc nét nối các biến số gốc rễ ở tầng 3 của thước đo tri thức, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày nối hai điểm nút sơ đồ bằng cây bút sáng trên nền trắng",
+        "scene_description": "Sơ đồ mạng lưới nút giao nhân quả sắc nét nối các biến số gốc rễ ở tầng 3 của thước đo tri thức, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày nối hai điểm nút sơ đồ bằng cây bút sáng trên nền trắng",
         "anchor_quote": "cấu trúc nhân quả gốc rễ",
         "fx": "bounce",
         "x": 0.64,
@@ -433,8 +432,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu đặt mảnh ghép mới phát sáng vào đỉnh Tháp 4 Cấp Độ Tri Thức",
         "setting": "Tầng 4 đỉnh tháp tri thức tỏa sáng với mảnh ghép hoàn thiện bức tranh khoa học",
         "camera": "Toàn cảnh tôn vinh tầng 4 đỉnh cao",
-        "bg_description": "Đỉnh thước đo 4 cấp độ tri thức với ô trống phát sáng chờ mảnh ghép phát kiến mới hoàn thiện, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày nâng cao mảnh ghép phát sáng đặt vào đỉnh sơ đồ trên nền trắng",
+        "scene_description": "Đỉnh thước đo 4 cấp độ tri thức với ô trống phát sáng chờ mảnh ghép phát kiến mới hoàn thiện, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày nâng cao mảnh ghép phát sáng đặt vào đỉnh sơ đồ trên nền trắng",
         "anchor_quote": "kiến tạo tri thức mới",
         "fx": "pop_wobble",
         "x": 0.35,
@@ -451,8 +450,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu gỡ bỏ lớp mặt nạ chữ nghĩa hàn lâm phức tạp",
         "setting": "Bàn làm việc tối giản với tấm bảng phép thử ngôn từ giản dị",
         "camera": "Trung cảnh đẩy vào tấm bảng phép thử",
-        "bg_description": "Đồ họa Editorial Graphic vẽ một tấm khiên chữ nghĩa rườm rà đang tách mở để lộ lõi nguyên lý tối giản bên trong, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm chiếc chổi nhỏ quét sạch lớp chữ rườm rà trên nền trắng",
+        "scene_description": "Đồ họa Editorial Graphic vẽ một tấm khiên chữ nghĩa rườm rà đang tách mở để lộ lõi nguyên lý tối giản bên trong, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm chiếc chổi nhỏ quét sạch lớp chữ rườm rà trên nền trắng",
         "anchor_quote": "tước bỏ lớp từ ngữ bóng bẩy",
         "fx": "slide_left",
         "x": 0.64,
@@ -471,8 +470,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu đứng sau bức tường thuật ngữ cao ngất nhưng lúng túng trước câu hỏi trực diện",
         "setting": "Sơ đồ đối sánh vỏ bọc thuật ngữ rỗng và lõi cơ chế thực chất",
         "camera": "Cận cảnh vết nứt trên khối thuật ngữ hàn lâm",
-        "bg_description": "Đồ họa Editorial Graphic vẽ một khối hộp lớn dán nhãn Thuật ngữ phức tạp nhưng bên trong rỗng tuếch trên nền sáng, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày gõ nhẹ vào khối hộp rỗng với vẻ mặt giật mình trên nền trắng",
+        "scene_description": "Đồ họa Editorial Graphic vẽ một khối hộp lớn dán nhãn Thuật ngữ phức tạp nhưng bên trong rỗng tuếch trên nền sáng, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày gõ nhẹ vào khối hộp rỗng với vẻ mặt giật mình trên nền trắng",
         "anchor_quote": "vỏ bọc của việc chưa hiểu",
         "fx": "pop",
         "x": 0.35,
@@ -489,8 +488,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu nhìn năm tấm thẻ tên ngoại ngữ đối lập với sơ đồ cơ học đôi cánh chim",
         "setting": "Bảng đối sánh Nhãn dán ngôn từ vs Cơ chế vận hành thực tế",
         "camera": "Lia ngang từ các thẻ nhãn dán sang bản vẽ cơ chế",
-        "bg_description": "Sơ đồ Editorial Graphic đặt năm thẻ nhãn chữ bên trái đối diện bản vẽ giải phẫu khí động học sắc nét bên phải, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày đặt thẻ tên xuống và chỉ tay vào bản vẽ cơ chế trên nền trắng",
+        "scene_description": "Sơ đồ Editorial Graphic đặt năm thẻ nhãn chữ bên trái đối diện bản vẽ giải phẫu khí động học sắc nét bên phải, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày đặt thẻ tên xuống và chỉ tay vào bản vẽ cơ chế trên nền trắng",
         "anchor_quote": "nắm được quy luật của nó",
         "fx": "bounce",
         "x": 0.64,
@@ -507,8 +506,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu viết sơ đồ 4 bước Feynman ngắn gọn trên tờ giấy trắng",
         "setting": "Sơ đồ 4 bước Feynman: Viết giản dị -> Phát hiện điểm vấp -> Quay lại nguồn gốc -> Tinh gọn ẩn dụ",
         "camera": "Toàn cảnh sơ đồ 4 bước rõ ràng",
-        "bg_description": "Sơ đồ vòng lặp 4 bước Kỹ thuật Feynman vẽ bằng nét mực đen sắc nét trên nền giấy kem thoáng đãng, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm bút mực vẽ mũi tên nối 4 bước trên nền trắng",
+        "scene_description": "Sơ đồ vòng lặp 4 bước Kỹ thuật Feynman vẽ bằng nét mực đen sắc nét trên nền giấy kem thoáng đãng, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm bút mực vẽ mũi tên nối 4 bước trên nền trắng",
         "anchor_quote": "ngôn từ giản dị",
         "fx": "pop",
         "x": 0.35,
@@ -525,8 +524,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu khoanh tròn đỏ vào đúng mắt xích bị đứt trên dòng lập luận",
         "setting": "Trang giấy lập luận với một mắt xích đứt đoạn được khoanh tròn đỏ nổi bật",
         "camera": "Đặc tả vòng tròn đỏ tại điểm đứt mạch logic",
-        "bg_description": "Sơ đồ chuỗi mắt xích logic với một mắt xích trung tâm đang hở được đánh dấu vòng tròn đỏ biên tập, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm kính lúp soi vào mắt xích hở với ánh mắt tập trung trên nền trắng",
+        "scene_description": "Sơ đồ chuỗi mắt xích logic với một mắt xích trung tâm đang hở được đánh dấu vòng tròn đỏ biên tập, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm kính lúp soi vào mắt xích hở với ánh mắt tập trung trên nền trắng",
         "anchor_quote": "lỗ hổng nhận thức đã lộ diện",
         "fx": "slide_left",
         "x": 0.64,
@@ -543,8 +542,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Đối sánh hai nhân vật ở hai đầu thước đo Sao chép cơ học (x=0.35) và Lý thuyết gốc (x=0.64)",
         "setting": "Thước đo phân cấp Lý thuyết gốc vs Sao chép cơ học chuẩn Editorial Graphic",
         "camera": "Trung cảnh đối xứng theo Quy tắc 1/3",
-        "bg_description": "Thước đo đối sánh hai cột: bên trái Khung sao chép mong manh và bên phải Kết cấu trụ cột lý thuyết gốc vững chãi, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày đứng vững bên trụ cột lý thuyết gốc tay cầm bản thiết kế trên nền trắng",
+        "scene_description": "Thước đo đối sánh hai cột: bên trái Khung sao chép mong manh và bên phải Kết cấu trụ cột lý thuyết gốc vững chãi, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày đứng vững bên trụ cột lý thuyết gốc tay cầm bản thiết kế trên nền trắng",
         "anchor_quote": "người nắm lý thuyết gốc",
         "fx": "pop_wobble",
         "x": 0.64,
@@ -561,8 +560,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu đứng trước ngã ba đường ngập tràn các luồng tài liệu hỗn loạn",
         "setting": "Không gian chuyển tiếp từ bàn học cá nhân ra thư viện dữ liệu khổng lồ",
         "camera": "Kéo rộng toàn cảnh biển dữ liệu",
-        "bg_description": "Đồ họa Editorial Graphic vẽ hàng trăm luồng dữ liệu phân mảnh đổ về một phễu lọc trung tâm, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm bộ lọc phân tầng đứng trước luồng dữ liệu trên nền trắng",
+        "scene_description": "Đồ họa Editorial Graphic vẽ hàng trăm luồng dữ liệu phân mảnh đổ về một phễu lọc trung tâm, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm bộ lọc phân tầng đứng trước luồng dữ liệu trên nền trắng",
         "anchor_quote": "chọn sai nguyên liệu đầu vào",
         "fx": "bounce",
         "x": 0.35,
@@ -581,8 +580,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu bị vây quanh bởi các mảnh dữ liệu rời rạc gây quá tải nhận thức",
         "setting": "Sơ đồ bộ nhớ làm việc bị tràn bởi các mảnh thông tin không phân loại",
         "camera": "Cận cảnh đồng hồ đo tải nhận thức vượt vạch đỏ",
-        "bg_description": "Sơ đồ Editorial Graphic minh họa phễu bộ nhớ làm việc bị tắc nghẽn bởi hàng chục mảnh thông tin rời rạc, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày giơ tay chặn các mảnh giấy hỗn loạn bay tới trên nền trắng",
+        "scene_description": "Sơ đồ Editorial Graphic minh họa phễu bộ nhớ làm việc bị tắc nghẽn bởi hàng chục mảnh thông tin rời rạc, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày giơ tay chặn các mảnh giấy hỗn loạn bay tới trên nền trắng",
         "anchor_quote": "sập bộ nhớ làm việc của não",
         "fx": "pop",
         "x": 0.35,
@@ -599,8 +598,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu rút một viên gạch mục nát ở đáy làm nghiêng cả tòa tháp lập luận",
         "setting": "Sơ đồ khối lập luận bị nghiêng do đặt trên nền tảng nguồn trích dẫn yếu",
         "camera": "Trung cảnh góc nghiêng nhấn mạnh sự mất cân bằng",
-        "bg_description": "Đồ họa Editorial Graphic vẽ một cấu trúc cột trụ học thuật bị nghiêng vì viên gạch đáy ghi Nguồn trôi nổi bị nứt vỡ, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày chỉ tay cảnh báo vào viên gạch nứt ở chân cột trên nền trắng",
+        "scene_description": "Đồ họa Editorial Graphic vẽ một cấu trúc cột trụ học thuật bị nghiêng vì viên gạch đáy ghi Nguồn trôi nổi bị nứt vỡ, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày chỉ tay cảnh báo vào viên gạch nứt ở chân cột trên nền trắng",
         "anchor_quote": "uy tín của toàn bộ khóa luận",
         "fx": "slide_left",
         "x": 0.64,
@@ -617,8 +616,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu gạch ranh giới phân tách 3 tầng đáy của Tháp Học Thuật 9 tầng",
         "setting": "Sơ đồ Tháp Học Thuật 9 tầng (Academic Pyramid) với 3 tầng đáy được khoanh vùng cảnh báo",
         "camera": "Toàn cảnh Tháp Học Thuật rồi zoom vào 3 tầng đáy",
-        "bg_description": "Sơ đồ Tháp Học Thuật 9 tầng sắc nét theo phong cách Editorial Graphic với 3 tầng đáy được tô sắc độ xám nhạt tách biệt, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm thanh chắn đặt ngang phía trên tầng thứ ba của tháp trên nền trắng",
+        "scene_description": "Sơ đồ Tháp Học Thuật 9 tầng sắc nét theo phong cách Editorial Graphic với 3 tầng đáy được tô sắc độ xám nhạt tách biệt, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm thanh chắn đặt ngang phía trên tầng thứ ba của tháp trên nền trắng",
         "anchor_quote": "lọc bỏ nguồn rác ngay từ đầu",
         "fx": "bounce",
         "x": 0.35,
@@ -635,8 +634,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu bước lên tầng 4, 5, 6 của Tháp Học Thuật cầm cuốn sách chuyên khảo",
         "setting": "Ba tầng giữa của Tháp Học Thuật 9 tầng phát sáng màu xanh lam học thuật",
         "camera": "Lia dọc theo ba tầng giữa của tháp",
-        "bg_description": "Phần thân giữa của Tháp Học Thuật 9 tầng hiển thị rõ biểu tượng Sách chuyên khảo, Luận văn và Kỷ yếu hội nghị, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày ôm cuốn sách chuyên khảo đứng bên tầng giữa của tháp trên nền trắng",
+        "scene_description": "Phần thân giữa của Tháp Học Thuật 9 tầng hiển thị rõ biểu tượng Sách chuyên khảo, Luận văn và Kỷ yếu hội nghị, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày ôm cuốn sách chuyên khảo đứng bên tầng giữa của tháp trên nền trắng",
         "anchor_quote": "ba tầng giữa của tháp",
         "fx": "pop",
         "x": 0.64,
@@ -653,8 +652,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu chỉ ngọn cờ vào 3 tầng đỉnh vàng của Tháp Học Thuật",
         "setting": "Ba tầng đỉnh của Tháp Học Thuật 9 tầng tỏa sáng sắc nét",
         "camera": "Đẩy cận cảnh vào đỉnh Tháp Học Thuật",
-        "bg_description": "Ba tầng đỉnh của Tháp Học Thuật 9 tầng nổi bật với biểu tượng Tạp chí Q1, Tổng quan hệ thống và Phân tích gộp, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày giơ cao kính lúp soi vào tầng đỉnh tháp trên nền trắng",
+        "scene_description": "Ba tầng đỉnh của Tháp Học Thuật 9 tầng nổi bật với biểu tượng Tạp chí Q1, Tổng quan hệ thống và Phân tích gộp, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày giơ cao kính lúp soi vào tầng đỉnh tháp trên nền trắng",
         "anchor_quote": "ba tầng đỉnh của tháp học thuật",
         "fx": "pop_wobble",
         "x": 0.35,
@@ -671,8 +670,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu dừng tay trước biểu tượng Word để nhìn sang bản thiết kế kiến trúc nghiên cứu",
         "setting": "Ngã rẽ giữa thói quen mở Word gõ ngay và sơ đồ thiết kế nghiên cứu",
         "camera": "Góc máy kéo lùi mở ra chuỗi quyết định",
-        "bg_description": "Đồ họa Editorial Graphic đặt biểu tượng trình soạn thảo bị khóa bên cạnh bản vẽ quy trình nghiên cứu 5 bước, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày giơ tay ra hiệu dừng lại trước biểu tượng soạn thảo trên nền trắng",
+        "scene_description": "Đồ họa Editorial Graphic đặt biểu tượng trình soạn thảo bị khóa bên cạnh bản vẽ quy trình nghiên cứu 5 bước, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày giơ tay ra hiệu dừng lại trước biểu tượng soạn thảo trên nền trắng",
         "anchor_quote": "tự đẩy mình vào ngõ cụt",
         "fx": "slide_left",
         "x": 0.64,
@@ -691,8 +690,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu gạch chéo mũi tên Mở Word đầu tiên và đặt nó về vị trí thứ 5 cuối chuỗi",
         "setting": "Sơ đồ Flowchart 5 bước: Question -> Gap -> Method -> Evidence -> Paper",
         "camera": "Toàn cảnh chuỗi Flowchart 5 bước ngang màn hình",
-        "bg_description": "Sơ đồ Flowchart 5 khối rõ nét trên nền sáng: Câu hỏi -> Khoảng trống -> Phương pháp -> Bằng chứng -> Bài báo hoàn chỉnh, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày chỉ thước dọc theo 5 mắt xích của sơ đồ trên nền trắng",
+        "scene_description": "Sơ đồ Flowchart 5 khối rõ nét trên nền sáng: Câu hỏi -> Khoảng trống -> Phương pháp -> Bằng chứng -> Bài báo hoàn chỉnh, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày chỉ thước dọc theo 5 mắt xích của sơ đồ trên nền trắng",
         "anchor_quote": "khoảng trống tri thức chứ không phải Word",
         "fx": "pop",
         "x": 0.35,
@@ -709,8 +708,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu rọi đèn vào hai khối đầu tiên Question và Gap trên Flowchart",
         "setting": "Cận cảnh hai khối Question và Gap nối với nhau bằng mũi tên nhân quả",
         "camera": "Đẩy cận cảnh vào khối Khoảng trống tri thức",
-        "bg_description": "Đồ họa Editorial Graphic phóng lớn hai khối đầu của Flowchart: Câu hỏi cốt lõi và Khoảng trống nghiên cứu phát sáng, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm kính lúp soi vào khe hở giữa các khối lý thuyết trên nền trắng",
+        "scene_description": "Đồ họa Editorial Graphic phóng lớn hai khối đầu của Flowchart: Câu hỏi cốt lõi và Khoảng trống nghiên cứu phát sáng, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm kính lúp soi vào khe hở giữa các khối lý thuyết trên nền trắng",
         "anchor_quote": "vùng trống nhận thức",
         "fx": "bounce",
         "x": 0.64,
@@ -727,8 +726,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu lắp bộ thước đo chuẩn xác vào khối thứ ba Method",
         "setting": "Khối thứ ba Phương pháp nghiên cứu với các tiêu chuẩn kiểm soát biến số",
         "camera": "Lia ngang từ khối Khoảng trống sang khối Phương pháp",
-        "bg_description": "Sơ đồ Editorial Graphic vẽ khối Phương pháp đo đạc với cân chuẩn và sơ đồ kiểm soát biến số độc lập, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm compa và thước đo kiểm tra sơ đồ trên nền trắng",
+        "scene_description": "Sơ đồ Editorial Graphic vẽ khối Phương pháp đo đạc với cân chuẩn và sơ đồ kiểm soát biến số độc lập, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm compa và thước đo kiểm tra sơ đồ trên nền trắng",
         "anchor_quote": "thiết kế phương pháp",
         "fx": "slide_left",
         "x": 0.35,
@@ -745,8 +744,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu đặt khối Bằng chứng thực nghiệm khớp hoàn hảo với Câu hỏi ban đầu",
         "setting": "Khối thứ tư Bằng chứng hiển thị biểu đồ dữ liệu thực nghiệm sắc nét",
         "camera": "Cận cảnh khối Bằng chứng thực nghiệm",
-        "bg_description": "Đồ họa Editorial Graphic vẽ khối Bằng chứng thực nghiệm với biểu đồ phân tán và đường hồi quy chuẩn xác, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày chỉ tay vào điểm hội tụ trên biểu đồ dữ liệu trên nền trắng",
+        "scene_description": "Đồ họa Editorial Graphic vẽ khối Bằng chứng thực nghiệm với biểu đồ phân tán và đường hồi quy chuẩn xác, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày chỉ tay vào điểm hội tụ trên biểu đồ dữ liệu trên nền trắng",
         "anchor_quote": "bằng chứng thực nghiệm",
         "fx": "pop",
         "x": 0.64,
@@ -763,8 +762,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu ung dung ghép 4 khối đã hoàn chỉnh thành bản thảo bài báo",
         "setting": "Toàn bộ chuỗi 5 mắt xích phát sáng đồng bộ dẫn tới bản thảo hoàn chỉnh",
         "camera": "Toàn cảnh chuỗi 5 mắt xích hoàn tất",
-        "bg_description": "Chuỗi Flowchart 5 bước hoàn chỉnh tỏa sáng liền mạch dẫn tới biểu tượng bài báo khoa học xuất bản, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày mỉm cười tự tin đặt bút ký hoàn tất bản thảo trên nền trắng",
+        "scene_description": "Chuỗi Flowchart 5 bước hoàn chỉnh tỏa sáng liền mạch dẫn tới biểu tượng bài báo khoa học xuất bản, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày mỉm cười tự tin đặt bút ký hoàn tất bản thảo trên nền trắng",
         "anchor_quote": "bốn mắt xích trên đã khóa chặt",
         "fx": "pop_wobble",
         "x": 0.35,
@@ -781,8 +780,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu lật ngược chiều mũi tên đọc bài báo khoa học",
         "setting": "Sơ đồ cấu trúc một bài báo Q1 với các mũi tên nhảy cóc chiến lược",
         "camera": "Đẩy cận cảnh vào sơ đồ thứ tự đọc ngược",
-        "bg_description": "Đồ họa Editorial Graphic vẽ một bài báo khoa học với đường mũi tên nhảy từ Tiêu đề xuống Kết luận rồi vòng lên Phương pháp, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm bút vẽ đường vòng cung đảo chiều đọc trên nền trắng",
+        "scene_description": "Đồ họa Editorial Graphic vẽ một bài báo khoa học với đường mũi tên nhảy từ Tiêu đề xuống Kết luận rồi vòng lên Phương pháp, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm bút vẽ đường vòng cung đảo chiều đọc trên nền trắng",
         "anchor_quote": "thứ tự hoàn toàn ngược lại",
         "fx": "bounce",
         "x": 0.64,
@@ -801,8 +800,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu gạch bỏ mũi tên đọc thẳng từ trang 1 đến trang 20",
         "setting": "Sơ đồ đối sánh Cách đọc tuyến tính kiệt sức vs Chiến lược đọc 3 vòng (Three-Pass Approach)",
         "camera": "Toàn cảnh đối sánh hai cách đọc bài báo",
-        "bg_description": "Đồ họa Editorial Graphic đối chiếu đường thẳng đọc tuần tự bị đứt gãy với sơ đồ 3 vòng quét chiến lược, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm tấm bảng chiến thuật 3 vòng đọc trên nền trắng",
+        "scene_description": "Đồ họa Editorial Graphic đối chiếu đường thẳng đọc tuần tự bị đứt gãy với sơ đồ 3 vòng quét chiến lược, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm tấm bảng chiến thuật 3 vòng đọc trên nền trắng",
         "anchor_quote": "không bao giờ đọc bài báo theo thứ tự xuôi",
         "fx": "pop",
         "x": 0.35,
@@ -819,8 +818,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu nối trực tiếp đoạn Mở đầu với phần Kết luận ở trang cuối",
         "setting": "Sơ đồ Vòng quét 1 làm nổi bật 3 điểm chạm: Title/Abstract -> Section Headings -> Conclusions",
         "camera": "Lia nhanh từ trang đầu xuống trang cuối bài báo",
-        "bg_description": "Sơ đồ Editorial Graphic làm sáng rõ 3 vùng trên bản thiết kế bài báo: Tóm tắt đầu trang, Tiêu đề mục và Kết luận cuối bài, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm đồng hồ bấm giờ năm phút chỉ vào trang cuối trên nền trắng",
+        "scene_description": "Sơ đồ Editorial Graphic làm sáng rõ 3 vùng trên bản thiết kế bài báo: Tóm tắt đầu trang, Tiêu đề mục và Kết luận cuối bài, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm đồng hồ bấm giờ năm phút chỉ vào trang cuối trên nền trắng",
         "anchor_quote": "soi câu hỏi và kết luận trước",
         "fx": "slide_left",
         "x": 0.64,
@@ -837,8 +836,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu dùng kính lúp kiểm tra các trục tọa độ và cỡ mẫu trên biểu đồ bài báo",
         "setting": "Cận cảnh các bảng biểu và đồ thị thực nghiệm được tách riêng khỏi khối chữ",
         "camera": "Đặc tả vào biểu đồ kết quả thực nghiệm",
-        "bg_description": "Đồ họa Editorial Graphic phóng lớn các biểu đồ cột, đường sai số chuẩn và bảng thông số thực nghiệm trên trang báo, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm kính lúp soi kỹ trục tọa độ đồ thị trên nền trắng",
+        "scene_description": "Đồ họa Editorial Graphic phóng lớn các biểu đồ cột, đường sai số chuẩn và bảng thông số thực nghiệm trên trang báo, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm kính lúp soi kỹ trục tọa độ đồ thị trên nền trắng",
         "anchor_quote": "đọc được câu chuyện từ biểu đồ",
         "fx": "bounce",
         "x": 0.35,
@@ -855,8 +854,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu tìm thấy viên kim cương ý tưởng ngay tại mục Giới hạn nghiên cứu (Limitations)",
         "setting": "Mục Limitations & Future Work cuối bài báo phát sáng như kho báu",
         "camera": "Đẩy cận cảnh vào ô Limitations & Future Work",
-        "bg_description": "Đồ họa Editorial Graphic làm nổi bật khung Giới hạn nghiên cứu ở cuối bài báo với biểu tượng tia sáng ý tưởng mới, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày mỉm cười nâng mảnh ghép phát sáng lấy ra từ ô giới hạn trên nền trắng",
+        "scene_description": "Đồ họa Editorial Graphic làm nổi bật khung Giới hạn nghiên cứu ở cuối bài báo với biểu tượng tia sáng ý tưởng mới, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày mỉm cười nâng mảnh ghép phát sáng lấy ra từ ô giới hạn trên nền trắng",
         "anchor_quote": "mỏ vàng gợi mở đề tài mới",
         "fx": "pop",
         "x": 0.64,
@@ -873,8 +872,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu tháo lắp lại từng khối giả định của bài báo trụ cột trên bàn thiết kế",
         "setting": "Bàn thiết kế tư duy phân rã bài báo gốc thành các khối giả định để thử nghiệm",
         "camera": "Trung cảnh góc nhìn ngang bàn thiết kế",
-        "bg_description": "Sơ đồ Editorial Graphic vẽ cấu trúc giải phẫu 3D của một bài báo trụ cột đang được tháo rời từng tầng giả định, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm cờ-lê tư duy điều chỉnh khối giả định gốc trên nền trắng",
+        "scene_description": "Sơ đồ Editorial Graphic vẽ cấu trúc giải phẫu 3D của một bài báo trụ cột đang được tháo rời từng tầng giả định, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm cờ-lê tư duy điều chỉnh khối giả định gốc trên nền trắng",
         "anchor_quote": "tái dựng lại toàn bộ chuỗi lập luận",
         "fx": "pop_wobble",
         "x": 0.35,
@@ -891,8 +890,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu đứng trước 30 bài báo Q1 xếp thành hàng chờ được đưa vào Ma trận",
         "setting": "Không gian chuyển giao từ 1 bài báo đơn lẻ sang mạng lưới 30 bài báo Q1",
         "camera": "Kéo rộng toàn cảnh 30 bài báo liên kết thành lưới",
-        "bg_description": "Đồ họa Editorial Graphic vẽ 30 thẻ bài báo Q1 đang hội tụ về một bảng ma trận trung tâm lớn, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày đứng trước bảng điều khiển ma trận phân tích trên nền trắng",
+        "scene_description": "Đồ họa Editorial Graphic vẽ 30 thẻ bài báo Q1 đang hội tụ về một bảng ma trận trung tâm lớn, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày đứng trước bảng điều khiển ma trận phân tích trên nền trắng",
         "anchor_quote": "vũ khí tư duy của kỷ nguyên mới",
         "fx": "slide_left",
         "x": 0.64,
@@ -911,8 +910,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu cầm bút đỏ gạch chéo văn bản tổng quan liệt kê rời rạc A nói - B nói - C nói",
         "setting": "Sơ đồ bóc tách lỗi liệt kê vô hồn khi dùng AI viết hộ tổng quan tài liệu",
         "camera": "Đặc tả các dòng liệt kê bị gạch đỏ",
-        "bg_description": "Đồ họa Editorial Graphic hiển thị trang văn bản liệt kê rời rạc Tác giả A, Tác giả B bị đóng dấu Lỗi sáo rỗng, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày lắc đầu gạch chéo tờ văn bản liệt kê trên nền trắng",
+        "scene_description": "Đồ họa Editorial Graphic hiển thị trang văn bản liệt kê rời rạc Tác giả A, Tác giả B bị đóng dấu Lỗi sáo rỗng, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày lắc đầu gạch chéo tờ văn bản liệt kê trên nền trắng",
         "anchor_quote": "luôn lộ lỗi sáo rỗng",
         "fx": "pop",
         "x": 0.35,
@@ -929,8 +928,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu điều phối cuộc đối thoại phản biện chéo giữa ba nhóm trường phái lý thuyết",
         "setting": "Sơ đồ bàn tròn phản biện chéo giữa Trường phái A, Trường phái B và Thực nghiệm C",
         "camera": "Toàn cảnh sơ đồ giao thoa và xung đột lý thuyết",
-        "bg_description": "Sơ đồ Editorial Graphic vẽ ba vòng tròn trường phái lý thuyết giao nhau với các mũi tên phản biện chéo tại tâm, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày chỉ tay vào vùng giao thoa trung tâm của ba vòng tròn trên nền trắng",
+        "scene_description": "Sơ đồ Editorial Graphic vẽ ba vòng tròn trường phái lý thuyết giao nhau với các mũi tên phản biện chéo tại tâm, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày chỉ tay vào vùng giao thoa trung tâm của ba vòng tròn trên nền trắng",
         "anchor_quote": "tranh luận với nhau",
         "fx": "bounce",
         "x": 0.64,
@@ -947,8 +946,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu dựng bảng Ma trận Khoảng trống Nghiên cứu 5 cột sắc nét",
         "setting": "Bảng Research Gap Matrix 5 cột: Bối cảnh mẫu, Biến độc lập, Phương pháp đo, Kết quả chính, Giới hạn bỏ ngỏ",
         "camera": "Đẩy cận cảnh vào cấu trúc 5 cột của Ma trận",
-        "bg_description": "Bảng Ma trận Khoảng trống Nghiên cứu 5 cột kẻ ô chuẩn mực theo phong cách Editorial Graphic với cột thứ 5 Giới hạn bỏ ngỏ phát sáng, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm thước chỉ dọc cột Giới hạn bỏ ngỏ của bảng ma trận trên nền trắng",
+        "scene_description": "Bảng Ma trận Khoảng trống Nghiên cứu 5 cột kẻ ô chuẩn mực theo phong cách Editorial Graphic với cột thứ 5 Giới hạn bỏ ngỏ phát sáng, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm thước chỉ dọc cột Giới hạn bỏ ngỏ của bảng ma trận trên nền trắng",
         "anchor_quote": "thành khoảng trống rõ nét",
         "fx": "pop",
         "x": 0.35,
@@ -965,8 +964,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu chiếu tia sáng truy vấn làm bật lên các điểm xung đột giữa 30 bài báo",
         "setting": "Giao diện sơ đồ ngữ cảnh lớn kết nối 30 tài liệu và làm nổi bật các nút xung đột",
         "camera": "Lia ngang qua mạng lưới truy vấn chéo",
-        "bg_description": "Đồ họa Editorial Graphic vẽ mạng lưới 30 tài liệu được quét qua lăng kính phân tích làm sáng lên 3 điểm đứt gãy phương pháp, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm kính lúp lớn khóa mục tiêu vào điểm đứt gãy trên nền trắng",
+        "scene_description": "Đồ họa Editorial Graphic vẽ mạng lưới 30 tài liệu được quét qua lăng kính phân tích làm sáng lên 3 điểm đứt gãy phương pháp, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm kính lúp lớn khóa mục tiêu vào điểm đứt gãy trên nền trắng",
         "anchor_quote": "xung đột trực tiếp với nhau",
         "fx": "slide_left",
         "x": 0.64,
@@ -983,8 +982,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu chỉ vào 3 nhánh khoảng trống: Bằng chứng (Evidence Gap), Phương pháp (Method Gap), Bối cảnh (Context Gap)",
         "setting": "Sơ đồ 3 trụ cột Research Gap tách ra từ Ma trận Khoảng trống Nghiên cứu",
         "camera": "Toàn cảnh 3 trụ cột Khoảng trống nghiên cứu",
-        "bg_description": "Sơ đồ Editorial Graphic chia 3 nhánh rõ nét: Khoảng trống bằng chứng, Khoảng trống phương pháp và Khoảng trống bối cảnh thực tiễn, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày đánh dấu tích chọn nhánh khoảng trống phù hợp trên nền trắng",
+        "scene_description": "Sơ đồ Editorial Graphic chia 3 nhánh rõ nét: Khoảng trống bằng chứng, Khoảng trống phương pháp và Khoảng trống bối cảnh thực tiễn, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày đánh dấu tích chọn nhánh khoảng trống phù hợp trên nền trắng",
         "anchor_quote": "ba loại khoảng trống đắt giá nhất",
         "fx": "pop_wobble",
         "x": 0.35,
@@ -1001,8 +1000,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu cầm tấm bản đồ Ma trận Khoảng trống tiến thẳng tới cánh cửa Phòng Bảo Vệ",
         "setting": "Cánh cửa phòng bảo vệ khóa luận mở ra với đồng hồ đếm ngược 120 giây",
         "camera": "Đẩy thẳng qua cánh cửa phòng bảo vệ",
-        "bg_description": "Cánh cửa phòng hội đồng bảo vệ khóa luận mở rộng với đồng hồ 120 giây nổi bật phía trên bục thuyết trình, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm tập hồ sơ ma trận bước đi đĩnh đạc trên nền trắng",
+        "scene_description": "Cánh cửa phòng hội đồng bảo vệ khóa luận mở rộng với đồng hồ 120 giây nổi bật phía trên bục thuyết trình, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày cầm tập hồ sơ ma trận bước đi đĩnh đạc trên nền trắng",
         "anchor_quote": "thời khắc mở màn sẽ định đoạt",
         "fx": "bounce",
         "x": 0.64,
@@ -1021,8 +1020,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Góc nhìn từ bàn Hội đồng bảo vệ lật nhanh tập khóa luận trong cửa sổ 120 giây đầu",
         "setting": "Phòng bảo vệ khóa luận với đồng hồ 120 giây và góc nhìn trực diện từ bàn giám khảo",
         "camera": "Góc nhìn qua vai hội đồng hướng lên bục bảo vệ",
-        "bg_description": "Đồ họa Editorial Graphic vẽ bàn hội đồng phản biện với tập khóa luận đang mở ở trang Danh mục tài liệu và đồng hồ 120 giây, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày đứng thẳng tự tin trên bục thuyết trình trên nền trắng",
+        "scene_description": "Đồ họa Editorial Graphic vẽ bàn hội đồng phản biện với tập khóa luận đang mở ở trang Danh mục tài liệu và đồng hồ 120 giây, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày đứng thẳng tự tin trên bục thuyết trình trên nền trắng",
         "anchor_quote": "ngay trong hai phút đầu tiên",
         "fx": "pop",
         "x": 0.35,
@@ -1039,8 +1038,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu chỉ vào 3 điểm kiểm tra của giám khảo: Tài liệu tham khảo Q1 -> Câu hỏi & Gap -> Mô hình đo đạc",
         "setting": "Sơ đồ X-quang cuốn khóa luận làm sáng 3 vị trí quyết định",
         "camera": "Cận cảnh 3 điểm sáng trên sơ đồ cuốn khóa luận",
-        "bg_description": "Sơ đồ Editorial Graphic cắt lớp cuốn khóa luận làm nổi bật 3 vùng: Nguồn trích dẫn Q1, Khoảng trống nghiên cứu và Thiết kế phương pháp, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày chỉ cây bút vào ba điểm kiểm định trên nền trắng",
+        "scene_description": "Sơ đồ Editorial Graphic cắt lớp cuốn khóa luận làm nổi bật 3 vùng: Nguồn trích dẫn Q1, Khoảng trống nghiên cứu và Thiết kế phương pháp, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày chỉ cây bút vào ba điểm kiểm định trên nền trắng",
         "anchor_quote": "danh mục tài liệu tham khảo",
         "fx": "slide_left",
         "x": 0.64,
@@ -1057,8 +1056,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu đổ mồ hôi khi chiếu slide chữ dày đặc trước câu hỏi Đề tài có gì mới?",
         "setting": "Đối sánh Slide chữ dày đặc gây ngợp vs Sơ đồ định vị khoảng trống gọn sắc",
         "camera": "Trung cảnh đối chiếu phản ứng phòng bảo vệ",
-        "bg_description": "Đồ họa Editorial Graphic đặt khung trình chiếu nhồi nhét chữ bị gạch chéo bên cạnh khung định vị khoảng trống 3 bước tinh gọn, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày lau mồ hôi trước tấm bảng nhồi nhét chữ trên nền trắng",
+        "scene_description": "Đồ họa Editorial Graphic đặt khung trình chiếu nhồi nhét chữ bị gạch chéo bên cạnh khung định vị khoảng trống 3 bước tinh gọn, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày lau mồ hôi trước tấm bảng nhồi nhét chữ trên nền trắng",
         "anchor_quote": "đề tài này có gì mới",
         "fx": "bounce",
         "x": 0.35,
@@ -1075,8 +1074,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu trình bày rõ 3 khối: (1) Đã biết -> (2) Khoảng trống bỏ ngỏ -> (3) Đóng góp mới của đề tài",
         "setting": "Sơ đồ Cấu trúc Phản biện 3 Bước hiển thị sắc nét trên màn chiếu phòng bảo vệ",
         "camera": "Đẩy cận cảnh vào sơ đồ 3 bước phản biện",
-        "bg_description": "Sơ đồ 3 bước phản biện chuẩn Editorial Graphic: Bước 1 Nền tảng đi trước -> Bước 2 Lỗ hổng bỏ ngỏ -> Bước 3 Giải pháp đo đạc mới, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày chỉ tay dứt khoát vào Bước 3 Giải pháp mới trên nền trắng",
+        "scene_description": "Sơ đồ 3 bước phản biện chuẩn Editorial Graphic: Bước 1 Nền tảng đi trước -> Bước 2 Lỗ hổng bỏ ngỏ -> Bước 3 Giải pháp đo đạc mới, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày chỉ tay dứt khoát vào Bước 3 Giải pháp mới trên nền trắng",
         "anchor_quote": "làm chủ hội đồng",
         "fx": "pop",
         "x": 0.64,
@@ -1093,8 +1092,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Toàn cảnh 4 sơ đồ trụ cột kết nối thành hệ thống Tư Duy Nghiên Cứu hoàn chỉnh",
         "setting": "Bản đồ tổng kết 4 trụ cột: Truy xuất chủ động -> Kỹ thuật Feynman -> Tháp Học Thuật & Gap Matrix -> Cấu trúc 120s",
         "camera": "Toàn cảnh mở rộng bốn trụ cột tư duy",
-        "bg_description": "Bản đồ tổng hợp 4 trụ cột Tư Duy Nghiên Cứu vẽ bằng đường nét kiến trúc sắc sảo trên nền giấy biên tập ấm áp, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày đứng ở vị trí trung tâm kết nối bốn trụ cột trên nền trắng",
+        "scene_description": "Bản đồ tổng hợp 4 trụ cột Tư Duy Nghiên Cứu vẽ bằng đường nét kiến trúc sắc sảo trên nền giấy biên tập ấm áp, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày đứng ở vị trí trung tâm kết nối bốn trụ cột trên nền trắng",
         "anchor_quote": "ma trận khoảng trống trước khi mở Word",
         "fx": "pop_wobble",
         "x": 0.35,
@@ -1111,8 +1110,8 @@ RAW_SCENES_DATA: List[Dict[str, Any]] = [
         "action": "Sticker Nghiên Cứu mỉm cười đặt bút vẽ sơ đồ Question -> Gap -> Method lên trang giấy dưới ánh đèn bàn ấm áp",
         "setting": "Bàn học sinh viên Việt Nam ấm áp khép lại vòng lặp với sơ đồ nghiên cứu sáng rõ",
         "camera": "Từ cận cảnh ngòi bút kéo lùi nhẹ nhàng kết thúc",
-        "bg_description": "Bàn học tĩnh lặng dưới ánh đèn vàng ấm áp với cuốn giáo trình đã gấp gọn và tờ sơ đồ khoảng trống nghiên cứu hoàn chỉnh, không có nhân vật",
-        "sticker_description": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày mỉm cười thư thái đặt bút hoàn tất sơ đồ trên nền trắng",
+        "scene_description": "Bàn học tĩnh lặng dưới ánh đèn vàng ấm áp với cuốn giáo trình đã gấp gọn và tờ sơ đồ khoảng trống nghiên cứu hoàn chỉnh, không có nhân vật",
+        "figure_action": "Hình tượng Sticker Nghiên Cứu đầu tròn trắng viền đen dày mỉm cười thư thái đặt bút hoàn tất sơ đồ trên nền trắng",
         "anchor_quote": "khoảng trống tri thức của riêng mình",
         "fx": "pop",
         "x": 0.64,
@@ -1130,9 +1129,9 @@ def create_academic_research_13m_topic(
     characters = [
         {
             "id": "CH01",
-            "name": "Sticker Nghiên Cứu",
-            "appearance": "Hình tượng stick-figure Sticker Nghiên Cứu chuẩn Avatar kênh, đầu tròn trắng viền đen dày khép kín, mắt chấm oval tối giản, thân nét mực mảnh",
-            "outfit": "Trang phục học thuật tối giản nét vẽ mực đen trên nền trắng tách lớp",
+            "name": "Nhân vật người que nghiên cứu",
+            "appearance": "Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt chấm oval tối giản, thân nét mực mảnh, tạo hình thống nhất trong các ảnh toàn khung",
+            "outfit": "Trang phục học thuật tối giản nét vẽ mực đen, tạo hình thống nhất giữa các ảnh toàn khung",
         }
     ]
 
@@ -1146,17 +1145,6 @@ def create_academic_research_13m_topic(
         syl = count_syllables(item["narration"], lang="vi")
         calibrated_dur = round(pause_sec + (syl / 4.0) + p_tail, 2)
 
-        sticker = ResearchedSticker(
-            id=f"{s_id}_ST1",
-            description=item["sticker_description"],
-            character_ids=["CH01"],
-            anchor_quote=item["anchor_quote"],
-            fx=item["fx"],
-            x=float(item.get("x", 0.35)),
-            y=0.64,
-            w=0.35,
-            z=2,
-        )
         claim_facts = [item["claim"]] if item["claim"] is not None else []
         scenes.append(
             ResearchedScene(
@@ -1171,9 +1159,7 @@ def create_academic_research_13m_topic(
                 action=item["action"],
                 setting=item["setting"],
                 camera=item["camera"],
-                bg_description=item["bg_description"],
-                stickers=[sticker],
-                reused_sticker_ids=[],
+                scene_description=compose_full_frame_description(item["scene_description"], item["figure_action"]),
                 foley_cue="Tiếng bút dạ quang gạch giấy, tiếng lật trang tài liệu, tiếng tích tắc đồng hồ phòng bảo vệ và âm thanh khóa mục tiêu",
                 claim_facts=claim_facts,
             )
@@ -1186,7 +1172,7 @@ def create_academic_research_13m_topic(
         video_type="science_history_explainer",
         min_duration=480.0,
         max_duration=960.0,
-        style="Minh hoạ Editorial Graphic 2D kết hợp Sơ đồ Tháp Học Thuật, Flowchart Question -> Gap -> Method -> Evidence và Ma trận Khoảng trống trên Background Plate với nhân vật Sticker Nghiên Cứu ở tọa độ Quy tắc 1/3, khung ngang 16:9.",
+        style="Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que tương tác vật lý với Sơ đồ Tháp Học Thuật, Flowchart Question -> Gap -> Method -> Evidence và Ma trận Khoảng trống trong cùng bố cục ngang 16:9; không tách sticker.",
         aspect_ratio=aspect_ratio,
         format_profile="long_16x9" if aspect_ratio == "16:9" else None,
         sources=sources,
@@ -1201,7 +1187,7 @@ def create_academic_research_13m_topic(
         conversational_facts=True,
         packaging=PackagingSpec(
             youtube_title="Nghịch Lý Tri Thức: Vì Sao Học Chăm Vẫn Bế Tắc Ở NCKH?",
-            visual_hook="Sơ đồ Tháp Học Thuật 9 tầng và chuỗi Question -> Gap đối lập với Sticker Nghiên Cứu cầm bút đỏ gạch chéo trang Word trắng lúc 2 giờ sáng",
+            visual_hook="Nhân vật người que dùng bút đỏ gạch chéo trang Word lúc 2 giờ sáng trước Sơ đồ Tháp Học Thuật 9 tầng",
             text_overlay="BIẾT TÍNH ≠ HIỂU!",
             contrast_pair="Học vẹt mở Word gõ ngay vs. Ma trận Khoảng trống Q1",
             channel_pillar=DEFAULT_CHANNEL_PILLAR,
@@ -1218,14 +1204,52 @@ def create_academic_research_13m_topic(
     )
 
 
+def _semantic_full_frame_shot(
+    scene: ResearchedScene,
+    cue_text: str,
+    shot_index: int,
+    shots_in_cue: int,
+) -> Tuple[str, str]:
+    """Choose a complete-frame view from the spoken concept, without a fixed shot cycle."""
+    cue = cue_text.casefold()
+    action = re.sub(r"(?i)sticker\s+nghiên\s+cứu|sticker", "nhân vật người que", scene.action)
+    environment = re.sub(r"(?i)(?:,?\s*)(?:không có nhân vật(?: nào)?|no characters(?: anywhere)?)\.?$", "", scene.scene_description)
+    if shot_index > 0 and shots_in_cue > 1:
+        framing = "In-place Action Variation"
+        focus = "Keep the same setting and camera relationship; change the visible hand action, expression, or focal prop for this spoken beat."
+    elif re.search(r"\d|\b(giờ|phút|lần|tầng|số|năm)\b", cue):
+        framing = "Macro Prop Close-up"
+        focus = "Use a close full-frame view of the concrete number-bearing object or diagram detail in this phrase."
+    elif any(term in cue for term in ("?", "là gì", "what is", "vs", "khác biệt", "nghịch lý")):
+        framing = "White Concept Card"
+        focus = "Use a complete, uncluttered white-background scene card to isolate the concept; do not create a cutout or sticker element."
+    elif any(term in cue for term in ("question", "gap", "method", "evidence", "tháp", "ma trận", "sơ đồ", "bằng chứng")):
+        framing = "Diagram Detail in Full Scene"
+        focus = "Make the named diagram node or relationship the clear focal point, with the figure still part of the same scene."
+    else:
+        framing = "Wide Full-frame Scene"
+        focus = "Show the complete physical setting and integrate the figure, furniture, and props naturally in it."
+    if framing == "White Concept Card":
+        description = (
+            f"Full-frame white concept card for the idea in this spoken phrase: {cue_text}. "
+            f"Use simple editorial symbols related to {scene.title}; {focus} "
+            "The white background fills the whole image; do not add a detached cutout, sticker border, or narration lettering."
+        )
+    else:
+        description = (
+            f"{environment}. Setting: {scene.setting}. Action: {action}. "
+            f"Visual focus from this spoken phrase: {cue_text}. {focus} "
+            "Render one cohesive full-frame illustration; do not isolate any foreground subject, add a white sticker border, or draw the narration as text."
+        )
+    return framing, description
+
+
 def build_multi_chapter_bundle(
     bundle_dir: Path,
     topic: ResearchedTopic,
 ) -> Dict[str, Any]:
     """Generate the 8-chapter execution bundle in `sys/exports/academic_research_paradox_bundle/`
-    with Dual-Zone Cue-Window Allocation:
-      - Danger Zone (0:00 - 0:15 / SC01-SC02): visual hold strictly 1.20s - 1.80s per beat
-      - Body & Payoff Zone (after 0:15 / SC03-SC48): visual hold strictly 1.20s - 3.70s per beat
+    with narration-anchored full-frame beat timing and no background/sticker layers.
     """
     manifest_dir = bundle_dir / "manifest"
     scripts_dir = bundle_dir / "scripts"
@@ -1295,24 +1319,21 @@ def build_multi_chapter_bundle(
             sc_start = 0.0 if sc_pos == 0 else sc_cues[0]["win_start"]
             sc_end = ch_duration if sc_pos == len(ch_scenes) - 1 else sc_cues[-1]["win_end"]
 
-            is_danger_zone = (ch_num == 1 and sc.scene_id in ("SC01", "SC02"))
-            active_max_hold = danger_zone_max_hold if is_danger_zone else body_zone_max_hold
-
-            cue_shot_counts = [max(1, math.ceil(c["win_dur"] / active_max_hold)) for c in sc_cues]
-            total_sc_shots = sum(cue_shot_counts)
-
-            framings = [
-                ("Wide Editorial Diagram Shot", f"{sc.bg_description} — establishing layout"),
-                ("Medium Rule-of-Thirds Focus", f"{sc.action} — Sticker Nghiên Cứu at x={sc.stickers[0].x if sc.stickers else 0.35}"),
-                ("Extreme Macro Detail Shot", f"Close-up focus on core node in {sc.setting}"),
-                ("Lateral Tracking Comparison", f"Side-by-side analytical progression in {sc.setting}"),
-                ("Counter-Angle Reveal Shot", f"Reverse perspective highlighting the paradox in {sc.title}"),
+            cue_shot_counts = []
+            for cue in sc_cues:
+                cue_in_cold_open = ch_num == 1 and cue["win_start"] < 15.0
+                max_hold = danger_zone_max_hold if cue_in_cold_open else body_zone_max_hold
+                cue_shot_counts.append(max(1, math.ceil(cue["win_dur"] / max_hold)))
+            semantic_shots = [
+                _semantic_full_frame_shot(sc, cue["text"], shot_index, shot_count)
+                for cue, shot_count in zip(sc_cues, cue_shot_counts, strict=False)
+                for shot_index in range(shot_count)
             ]
-            cam_Pool = ["zoom_out", "zoom_in", "punch_in", "pan_right", "pan_left"]
+            semantic_effects = assign_scene_camera_effects([framing for framing, _ in semantic_shots])
             sc_beat_images: List[Dict[str, Any]] = []
             sc_root_shot_idx = global_shot_idx
             b_cursor = 0
-            prev_eff: Optional[str] = None
+            semantic_cursor = 0
 
             for c_obj, k_shots in zip(sc_cues, cue_shot_counts, strict=False):
                 w_start = c_obj["win_start"]
@@ -1322,11 +1343,9 @@ def build_multi_chapter_bundle(
                 cue_shot_entries: List[Dict[str, Any]] = []
 
                 for s_i in range(k_shots):
-                    framing_label, beat_desc = framings[b_cursor % len(framings)]
-                    eff = cam_Pool[b_cursor % len(cam_Pool)]
-                    if prev_eff is not None and eff == prev_eff:
-                        eff = "pan_right" if eff != "pan_right" else "zoom_in"
-                    prev_eff = eff
+                    framing_label, beat_desc = semantic_shots[semantic_cursor]
+                    eff = semantic_effects[semantic_cursor]
+                    semantic_cursor += 1
                     b_idx = b_cursor + 1
                     b_cursor += 1
 
@@ -1334,11 +1353,12 @@ def build_multi_chapter_bundle(
                     next_abs = w_end if s_i == k_shots - 1 else round(w_start + (s_i + 1) * step, 3)
                     hold_dur = round(next_abs - abs_at, 3)
                     rel_at = 0.0 if not sc_beat_images else round(abs_at - sc_start, 3)
+                    shot_in_cold_open = ch_num == 1 and abs_at < 15.0
 
                     shot_id = f"CH{ch_num:02d}_{sc.scene_id}_B{b_idx:02d}"
                     img_filename = f"ch{ch_num}_{sc.scene_id.lower()}_b{b_idx:02d}.jpg"
                     full_prompt = f"{STYLE_PREFIX}. {framing_label}: {beat_desc}."
-                    parent_shot = None if b_idx == 1 else sc_root_shot_idx
+                    parent_shot = None if b_idx == 1 or framing_label == "White Concept Card" else sc_root_shot_idx
 
                     shot_entry = {
                         "shot_index": global_shot_idx,
@@ -1354,7 +1374,7 @@ def build_multi_chapter_bundle(
                         "abs_at_seconds": abs_at,
                         "duration_seconds": hold_dur,
                         "hold_duration": hold_dur,
-                        "pacing_zone": "danger_zone_15s" if is_danger_zone else "body_zone",
+                        "pacing_zone": "danger_zone_15s" if shot_in_cold_open else "body_zone",
                         "effect": eff,
                         "framing": framing_label,
                         "prompt": full_prompt,

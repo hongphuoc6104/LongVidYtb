@@ -76,6 +76,13 @@ def run(bundle_path, output_dir, expected_id, expected_worker):
         for plan in brief['outputs']:
             if plan['language'] != language: continue
             scenes = story.timeline(request['content'], request['images'], audio, language, plan['aspect_ratio'])
+            if brief.get('visual_pacing_profile') == 'full_frame_v1':
+                pacing = load('vp_visual_pacing', 'visual_pacing.py')
+                errors = pacing.check_see_say_beat_density(scenes)
+                (output / f'pacing-{language}-{plan["aspect_ratio"].replace(":", "x")}.json').write_text(
+                    json.dumps({'profile': 'full_frame_v1', 'errors': errors, 'timeline': scenes}, ensure_ascii=False, indent=2))
+                if errors:
+                    raise ValueError('VISUAL_PACING_FAILED: ' + '; '.join(errors))
             for scene in scenes:
                 for beat in scene.get('images', []):
                     name = Path(beat['src']).name

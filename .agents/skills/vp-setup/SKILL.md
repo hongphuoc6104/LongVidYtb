@@ -15,4 +15,4 @@ Setup responsibilities:
 Keep auth, profiles and credentials safely in their configured stores (`~/.config/video-pilot/`). Setup does not produce videos. Once dependencies and account stores are configured, routine execution and on-demand runtime management belong to production and [vp-colab-bridge](../vp-colab-bridge/SKILL.md).
 
 
-Layered video dependencies: `scipy`, `numpy`, `Pillow` in the management venv (tests for `sys/tools/matte_sticker.py`); the Colab render worker installs Remotion from `sys/package-lock.json`.
+`scipy`, `numpy`, and `Pillow` support standalone image utility tests. Standard Colab rendering copies validated full-frame scene images and does not install or invoke `matte_sticker.py`; Remotion dependencies come from `sys/package-lock.json`.

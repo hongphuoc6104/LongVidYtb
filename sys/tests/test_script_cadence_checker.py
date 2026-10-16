@@ -287,7 +287,7 @@ class ThresholdWarningTests(unittest.TestCase):
         res = checker.check_scenes([scene])
         self.assertEqual(res["status"], "WARN")
         self.assertEqual(res["scenes"][0]["sentence_count"], 5)
-        self.assertTrue(any("SENTENCE_FRAGMENTATION" in w for w in res["scenes"][0]["warnings"]))
+        self.assertFalse(any("SENTENCE_FRAGMENTATION" in w for w in res["scenes"][0]["warnings"]))
 
         micro_scene = {
             "id": "MICRO_FRAG",
@@ -297,7 +297,7 @@ class ThresholdWarningTests(unittest.TestCase):
         res_micro = checker.check_scenes([micro_scene])
         self.assertEqual(res_micro["status"], "WARN")
         self.assertEqual(res_micro["scenes"][0]["sentence_count"], 4)
-        self.assertTrue(any("SENTENCE_FRAGMENTATION" in w for w in res_micro["scenes"][0]["warnings"]))
+        self.assertFalse(any("SENTENCE_FRAGMENTATION" in w for w in res_micro["scenes"][0]["warnings"]))
 
     def test_concise_scene_max_syllables_warning(self):
         checker = ScriptCadenceChecker(max_syllables=20)

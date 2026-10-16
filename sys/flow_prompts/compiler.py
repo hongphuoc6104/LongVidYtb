@@ -6,12 +6,12 @@ from pathlib import Path
 import re
 
 CURRENT_VERSION = '1.1.0'
-SUPPORTED_VERSIONS = ('1.0.0', '1.0.1', '1.1.0', '1.2.0')
+SUPPORTED_VERSIONS = ('1.0.0', '1.0.1', '1.1.0', '1.2.0', '1.3.0')
 # 1.1.0+: anonymous stick-figure cast, optional Character/style reference, no recurring presenter.
-CAST_VERSIONS = ('1.1.0', '1.2.0')
+CAST_VERSIONS = ('1.1.0', '1.2.0', '1.3.0')
 DEPRECATED_PURPOSES = ('layer_background', 'layer_sticker')
 FIELDS = {'description', 'aspect_ratio', 'allowed_text', 'character_reference', 'base_reference',
-          'preserve', 'change', 'composition', 'mascot_placement', 'caption_clearance'}
+          'preserve', 'change', 'composition', 'mascot_placement', 'caption_clearance', 'shot_type'}
 PLACEMENTS = {'upper-left', 'upper-right', 'left-margin', 'right-margin', 'above-caption-left', 'above-caption-right'}
 UUID = re.compile(r'[a-fA-F0-9]{8}(?:-[a-fA-F0-9]{4}){3}-[a-fA-F0-9]{12}\Z')
 SHA = re.compile(r'[a-f0-9]{64}\Z')
@@ -135,6 +135,12 @@ def _data(data, purpose, version='1.0.0'):
         clearance = dict(clearance)
     normalized = {'description': description, 'aspect_ratio': ratio, 'allowed_text': allowed,
                   'preserve': preserve, 'change': change, 'caption_clearance': clearance}
+    if 'shot_type' in data:
+        if version != '1.3.0' or data['shot_type'] not in ('macro_prop', 'full_scene', 'variation', 'white_card', 'white_isolated'):
+            raise PromptError('FLOW_SHOT_TYPE_UNSUPPORTED: shot types require registry 1.3.0')
+        normalized['shot_type'] = data['shot_type']
+        if data['shot_type'] == 'variation' and purpose != 'variation':
+            raise PromptError('FLOW_BASE_REFERENCE_REQUIRED: variation shot requires its Base reference')
     if not cast:
         normalized['mascot_placement'] = placement
     if 'composition' in data:
@@ -160,6 +166,8 @@ def compile(model, purpose, data, version=CURRENT_VERSION):
     sections = ['Requested aspect ratio: ' + visual['aspect_ratio'] + '. Render the requested still image.',
                 spec['models'][model_id]['strategy'], spec['purposes'][purpose], spec['style'], spec['cast_rule'] if version in CAST_VERSIONS else spec['identity'],
                 spec['reference_rule'], spec['data_boundary']] + ([] if visual.get('caption_clearance') is None else [spec['clearance_rule']])
+    if version == '1.3.0' and visual.get('shot_type'):
+        sections.append(spec['shot_types'][visual['shot_type']])
     if references['base']:
         sections.append('A Base scene reference is declared and must be attached; use its camera and spatial relationships for the preservation instructions.')
     else:

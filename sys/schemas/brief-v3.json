@@ -489,6 +489,9 @@
         ],
         "additionalProperties": false
       }
+    },
+    "visual_pacing_profile": {
+      "const": "full_frame_v1"
     }
   },
   "required": [

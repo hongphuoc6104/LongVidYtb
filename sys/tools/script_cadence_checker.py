@@ -332,7 +332,7 @@ def parse_json_script(content: str) -> List[Dict[str, Any]]:
             "id": str(scene_id),
             "duration": float(dur),
             "narration": str(narration),
-            "beats": beats,
+            **({"beats": beats} if "beats" in sc or "visual_beats" in sc else {}),
         })
     return standardized
 
@@ -395,7 +395,6 @@ def parse_markdown_script(content: str) -> List[Dict[str, Any]]:
                         "id": sc_id,
                         "duration": dur,
                         "narration": narr,
-                        "beats": [],
                     })
             if tbl_scenes:
                 candidate_tables.append(tbl_scenes)
@@ -434,7 +433,6 @@ def parse_markdown_script(content: str) -> List[Dict[str, Any]]:
                     "id": h_m.group(1).strip(),
                     "duration": float(h_m.group(2)),
                     "narration": "",
-                    "beats": [],
                 }
             else:
                 # Non-scene heading e.g. ## Notes, ## Overview
@@ -457,7 +455,6 @@ def parse_markdown_script(content: str) -> List[Dict[str, Any]]:
                 "id": b_m.group(1).strip(),
                 "duration": float(b_m.group(2)),
                 "narration": b_m.group(3).strip().strip('"'),
-                "beats": [],
             })
             continue
 
@@ -624,11 +621,10 @@ class SceneCadenceReport:
                     f"TIMELINE_DRIFT: Audio exceeds scene duration by {self.drift:.2f}s (tolerance: ±{MAX_ALLOWABLE_DRIFT}s)"
                 )
 
-        if (
-            self.sentence_count > self.max_sentences
-            or self.short_sentence_count > 2
-            or (self.sentence_count > 4 and self.short_sentence_count >= 2)
-        ):
+        # Longer scenes can carry more natural short sentences. Flag only a
+        # genuinely compressed sequence, not short wording by itself.
+        sentence_limit = max(self.max_sentences, int(self.duration / 1.5))
+        if self.sentence_count > sentence_limit:
             self.warnings.append(
                 f"SENTENCE_FRAGMENTATION: Scene has {self.sentence_count} sentences "
                 f"({self.short_sentence_count} short sentences < 6 syl), risking TTS boundary pause buildup"
@@ -768,6 +764,11 @@ class ScriptCadenceChecker:
                 forbid_opening_pause=self.forbid_opening_pause,
                 max_opening_hook_syllables=self.max_opening_hook_syllables,
             )
+            if 'beats' in sc and report.duration / max(1, len(sc['beats'])) > 2.8:
+                report.warnings.append(
+                    f"LOW_VISUAL_BEAT_DENSITY: {report.scene_id} averages "
+                    f"{report.duration / max(1, len(sc['beats'])):.2f}s per visual beat (maximum 2.8s)"
+                )
             reports.append(report)
 
         total_pauses = sum(len(r.pauses) for r in reports)

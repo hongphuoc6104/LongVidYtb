@@ -190,7 +190,7 @@ class TestResearchStoryArchitect(unittest.TestCase):
             assert len(sc["warnings"]) == 0
 
         scenes_en = [
-            {"id": s.scene_id, "duration": s.duration, "narration": s.narration_en, "beats": []}
+            {"id": s.scene_id, "duration": s.duration, "narration": s.narration_en}
             for s in self.topic.scenes
         ]
         result_en = checker.check_scenes(scenes_en)
@@ -285,18 +285,51 @@ class TestResearchStoryArchitect(unittest.TestCase):
         self.assertEqual(len(dry_warns), 1)
         self.assertIn("dry academic notation", dry_warns[0])
         long_warns = check_conversational_spoken_facts(
-            [
-                {
-                    "id": "SRC01",
-                    "facts": [
-                        "Đây là một mệnh đề học thuật rất dài vượt quá giới hạn hai mươi hai âm tiết được phép phát âm tự nhiên trong một hơi thở của người dẫn chuyện."
-                    ],
-                }
-            ]
+            [{"id": "SRC01", "facts": ["Đây là một mệnh đề học thuật rất dài vượt quá giới hạn hai mươi hai âm tiết được phép phát âm tự nhiên trong một hơi thở của người dẫn chuyện."]}]
         )
         self.assertEqual(len(long_warns), 1)
         assert len(dry_warns) == 1
         assert len(long_warns) == 1
+
+    def test_default_cold_open_uses_about_nine_full_frame_beats(self):
+        from scripts.story_plan import estimates, languages, timeline
+
+        language = languages(self.brief_data)[0]
+        images = []
+        segments = []
+        cursor = 0.0
+        aspect_ratio = self.brief_data["outputs"][0]["aspect_ratio"]
+        for scene in self.content_data["scenes"]:
+            duration = next(item.duration for item in self.topic.scenes if item.scene_id == scene["id"])
+            text = scene.get("narration_en" if language == "en" else "narration", "")
+            segments.append({
+                "scene_id": scene["id"],
+                "start": cursor,
+                "end": cursor + duration,
+                "content_end": cursor + duration,
+                "text": text,
+            })
+            cursor += duration
+            images.extend({
+                "scene_id": scene["id"],
+                "image_id": image["id"],
+                "ratio": aspect_ratio,
+                "path": f"assets/{image['id']}.jpg",
+            } for image in scene["images"])
+        audio = {"tracks": {language: {"segments": segments, "duration": cursor}}}
+        planned = timeline(self.content_data, {"items": images}, audio, language, aspect_ratio)
+        opening_count = sum(
+            1 for scene in planned for beat in scene["images"] if scene["start"] + beat["at"] < 12.5
+        )
+        first_five_count = sum(
+            1 for scene in planned for beat in scene["images"] if scene["start"] + beat["at"] < 5.0
+        )
+        self.assertGreaterEqual(opening_count, 8)
+        self.assertLessEqual(opening_count, 10)
+        self.assertGreaterEqual(first_five_count, 3)
+        self.assertLessEqual(first_five_count, 5)
+        visual_warnings = [warning for warning in estimates(self.brief_data, self.content_data)["warnings"] if "beat hold" in warning]
+        self.assertEqual(visual_warnings, [])
 
     def test_academic_research_paradox_packaging_localization_and_spinoffs(self):
         """Verify Academic Research Q1 topic, Packaging Contract, VN 60s Localization, and Short-Form Spin-offs."""

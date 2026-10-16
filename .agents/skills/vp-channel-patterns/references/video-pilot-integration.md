@@ -28,7 +28,7 @@ If any Flow request is `submitted`, `ambiguous`, `unknown` or still queued, coll
 
 ## Synchronize visual effects to narration
 
-Engine 4 supports narration-anchored visual beats. Each beat carries an exact `anchor` quote, an `effect` such as `zoom_in`, `punch_in`, `pan_left`, `pan_right`, `shake` or `hold`, and a focus point. The timeline builder maps the anchor into the measured audio segment and then interpolates within its text span; the renderer starts the selected beat/effect at that time. Layered sticker motion can also use narration anchors for appearance, exit and shake.
+Engine 4 supports narration-anchored visual beats. Each beat carries an exact `anchor` quote, an `effect` such as `zoom_in`, `punch_in`, `pan_left`, `pan_right`, `shake` or `hold`, and a focus point. The timeline builder prefers segment-relative acoustic word timestamps and records an explicit interpolation fallback when timestamps are missing or invalid. The renderer starts the complete scene beat at that time; layered sticker motion is disabled.
 
 This is phrase/segment synchronization, not automatic beat detection from waveform energy, emotion or music. The interpolation is approximate word timing, not forced alignment. Preserve exact narration quotes, use anchors in increasing order, then verify the rendered motion against the actual WAV and captions. Do not claim an effect is synchronized just because a prompt or timeline contains an anchor.
 
