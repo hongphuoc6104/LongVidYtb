@@ -417,12 +417,52 @@ def cmd_video(args):
     sys.exit(res.returncode)
 
 
+def cmd_flow(args):
+    subaction = args.flow_action or "status"
+    script = SYS_DIR / "flow_cdp/accounts.py"
+    cmd = [get_python_executable(), str(script), subaction]
+    if getattr(args, "target", None) and args.target != "all":
+        cmd.append(args.target)
+    if getattr(args, "total", None):
+        cmd.extend(["--total", str(args.total)])
+    res = subprocess.run(cmd, cwd=str(REPO_ROOT))
+    sys.exit(res.returncode)
+
+
+def cmd_setup(args):
+    script = SYS_DIR / "scripts/setup_onboarding.py"
+    cmd = [get_python_executable(), str(script)]
+    if getattr(args, "skip_colab", False):
+        cmd.append("--skip-colab")
+    if getattr(args, "skip_flow", False):
+        cmd.append("--skip-flow")
+    if getattr(args, "force", False):
+        cmd.append("--force")
+    res = subprocess.run(cmd, cwd=str(REPO_ROOT))
+    sys.exit(res.returncode)
+
+
+def cmd_colab(args):
+    subaction = args.colab_action or "list"
+    script = SYS_DIR / "colab_bridge/accounts.py"
+    cmd = [get_python_executable(), str(script), subaction]
+    if getattr(args, "account", None) and args.account != "auto":
+        cmd.append(args.account)
+    res = subprocess.run(cmd, cwd=str(REPO_ROOT))
+    sys.exit(res.returncode)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Video Pilot 6-Station No-Mistake Conveyor")
     subparsers = parser.add_subparsers(dest="command", help="Lệnh điều phối")
 
     subparsers.add_parser("status", help="Kiểm tra tính sẵn sàng của môi trường và công cụ")
     subparsers.add_parser("run", help="Chạy toàn bộ băng chuyền 6 trạm No-Mistake")
+
+    setup_parser = subparsers.add_parser("setup", help="Khởi tạo môi trường, cài Colab CLI và đăng nhập tài khoản Colab + Flow")
+    setup_parser.add_argument("--skip-colab", action="store_true", help="Bỏ qua bước đăng nhập Colab")
+    setup_parser.add_argument("--skip-flow", action="store_true", help="Bỏ qua bước thiết lập Flow")
+    setup_parser.add_argument("--force", action="store_true", help="Bắt buộc chạy lại wizard đăng nhập")
 
     station_parser = subparsers.add_parser("station", help="Chạy riêng một trạm cụ thể (1..6)")
     station_parser.add_argument("number", type=int, choices=range(1, 7), help="Số thứ tự trạm (1..6)")
@@ -431,17 +471,32 @@ def main():
     video_parser.add_argument("--job", type=str, help="Mã định danh job")
     video_parser.add_argument("--step", type=str, help="Bước sản xuất (control/content/audio/images/render)")
 
+    flow_parser = subparsers.add_parser("flow", help="Quản lý Profile & Đăng nhập Google Flow CDP")
+    flow_parser.add_argument("flow_action", choices=["status", "launch", "login-many", "stop", "list", "scan", "leases", "release"], nargs="?", default="status")
+    flow_parser.add_argument("target", nargs="?", default="all", help="Profile ID, job ID, hoặc 'all'")
+    flow_parser.add_argument("--total", type=int, help="Tổng số Profile khi chạy login-many")
+
+    colab_parser = subparsers.add_parser("colab", help="Quản lý tài khoản Google Colab CLI")
+    colab_parser.add_argument("colab_action", choices=["list", "status-all", "login", "login-many", "enable", "disable", "role", "remove"], nargs="?", default="list")
+    colab_parser.add_argument("account", nargs="?", default="auto", help="ID tài khoản Colab")
+
     args = parser.parse_args()
 
     if args.command == "status":
         ok = cmd_status()
         sys.exit(0 if ok else 1)
+    elif args.command == "setup":
+        cmd_setup(args)
     elif args.command == "run":
         cmd_run()
     elif args.command == "station":
         cmd_station(args.number)
     elif args.command == "video":
         cmd_video(args)
+    elif args.command == "flow":
+        cmd_flow(args)
+    elif args.command == "colab":
+        cmd_colab(args)
     else:
         parser.print_help()
         sys.exit(1)

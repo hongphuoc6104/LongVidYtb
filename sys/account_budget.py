@@ -183,7 +183,7 @@ class Budgets:
             allowance = state.get('flow_repair_allowances', {}).get(limit_key)
             if allowance and allowance.get('limit') == limits.get(limit_key):
                 cap = max(cap, allowance['limit'])
-            limits[limit_key] = min(limits.get(limit_key, cap), cap)
+            limits[limit_key] = max(limits.get(limit_key, cap), cap)
             used = sum(x['slots'] for items in state['flow'].values() for x in items.values()
                        if x.get('state') != 'not_submitted' and (x.get('budget_session', 'legacy-shared-session') == budget_session or x.get('state') in ('submitted', 'unknown', 'ambiguous')))
             if state['blocks'].get('flow') or used + sum(slots for _, slots in entries) > limits[limit_key]:

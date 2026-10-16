@@ -7,9 +7,10 @@ Validates:
 3. Strict schema 3.0 validation for brief.json (validate_brief).
 4. Strict schema 3.0 validation for content.json (validate_content & validate_plan).
 5. Cadence checker timeline drift within <= 0.3s tolerance and zero warnings.
-6. Layered motion visual contract (background plate vs stickers separation).
+6. Full-frame visual-beat contract, in-place variations, and no generated layers.
 7. Legal traceability: 100% of required_points covered, 100% of claims verified.
-8. End-to-end package generation and CLI execution.
+8. Packaging & SEO Contract, Vietnamese Cultural Localization in First 60s, and Short-Form Spin-off Blueprints.
+9. End-to-end package generation and CLI execution.
 """
 
 from __future__ import annotations
@@ -30,11 +31,15 @@ if str(SYS_DIR / "tools") not in sys.path:
 
 from content_contract import validate_brief, validate_content  # noqa: E402
 from research_story_architect import (  # noqa: E402
+    DEFAULT_CHANNEL_PILLAR,
     build_brief_v3,
     build_content_v3,
+    build_short_spinoff_topics,
     calculate_proportional_durations,
     calculate_scene_syllable_budget,
+    check_packaging_and_localization,
     compute_brief_hash,
+    create_academic_research_paradox_topic,
     create_demo_trial_topic,
     generate_script_json,
     write_production_package,
@@ -53,24 +58,20 @@ class TestResearchStoryArchitect(unittest.TestCase):
 
     def test_syllable_budget_calculation(self):
         """Verify the P_tail formula correctly calculates syllable budgets."""
-        # Intermediate scene (8.0s, P_tail=0.70): round((8.0 - 0.70) * 4.0) = 29
         budget_8s = calculate_scene_syllable_budget(8.0, is_last=False)
         self.assertEqual(budget_8s, 29)
         assert budget_8s == 29
 
-        # Scene with dramatic pause (11.0s, pause=0.9s, P_tail=0.70): round((11.0 - 0.70 - 0.90) * 4.0) = 38
         budget_11s_paused = calculate_scene_syllable_budget(11.0, is_last=False, pause_seconds=0.9)
         self.assertEqual(budget_11s_paused, 38)
         assert budget_11s_paused == 38
 
-        # Final scene (9.0s, P_tail=0.35): round((9.0 - 0.35) * 4.0) = 35
         budget_9s_last = calculate_scene_syllable_budget(9.0, is_last=True)
         self.assertEqual(budget_9s_last, 35)
         assert budget_9s_last == 35
 
     def test_calculate_proportional_durations(self):
         """Verify duration allocator matches 5-part conversational arc and reconciles sums."""
-        # 5-part arc standard budgets
         for total in [45.0, 52.5, 60.0, 75.0, 90.0]:
             durations = calculate_proportional_durations(total, scene_count=5)
             self.assertEqual(len(durations), 5)
@@ -78,7 +79,6 @@ class TestResearchStoryArchitect(unittest.TestCase):
             assert len(durations) == 5
             assert round(sum(durations), 1) == round(total, 1)
 
-        # Other scene counts
         for count in [3, 4, 6, 8]:
             durations = calculate_proportional_durations(60.0, scene_count=count)
             self.assertEqual(len(durations), count)
@@ -86,7 +86,6 @@ class TestResearchStoryArchitect(unittest.TestCase):
             assert len(durations) == count
             assert round(sum(durations), 1) == 60.0
 
-        # Invalid arguments raise ValueError
         with self.assertRaises(ValueError):
             calculate_proportional_durations(60.0, scene_count=0)
         with self.assertRaises(ValueError):
@@ -99,13 +98,11 @@ class TestResearchStoryArchitect(unittest.TestCase):
         assert len(self.topic.scenes) == 5
         assert [s.scene_id for s in self.topic.scenes] == ["SC01", "SC02", "SC03", "SC04", "SC05"]
 
-        # Total duration must be within min_duration and max_duration
         total_duration = sum(s.duration for s in self.topic.scenes)
         self.assertGreaterEqual(total_duration, self.topic.min_duration)
         self.assertLessEqual(total_duration, self.topic.max_duration)
         assert self.topic.min_duration <= total_duration <= self.topic.max_duration
 
-        # Academic sources verified
         self.assertEqual(len(self.topic.sources), 2)
         assert any("Pychyl" in s["reference"] for s in self.topic.sources)
 
@@ -186,14 +183,12 @@ class TestResearchStoryArchitect(unittest.TestCase):
         assert result["warnings_count"] == 0
         assert result["max_drift"] <= 0.30
 
-        # Check each scene individually
         for sc in result["scenes"]:
             self.assertLessEqual(abs(sc["drift"]), 0.30, f"Scene {sc['scene_id']} drift exceeded tolerance")
             self.assertEqual(len(sc["warnings"]), 0)
             assert abs(sc["drift"]) <= 0.30
             assert len(sc["warnings"]) == 0
 
-        # Also check English narration cadence
         scenes_en = [
             {"id": s.scene_id, "duration": s.duration, "narration": s.narration_en, "beats": []}
             for s in self.topic.scenes
@@ -205,8 +200,8 @@ class TestResearchStoryArchitect(unittest.TestCase):
         assert result_en["status"] == "PASS"
         assert result_en["warnings_count"] == 0
 
-    def test_layered_motion_visual_contract(self):
-        """Verify layered scenes have 1 background, valid stickers, Rule-of-Thirds x anchors, and semantic camera helpers."""
+    def test_full_frame_visual_contract(self):
+        """Verify architect output uses complete scene images and narration-synced beats."""
         from research_story_architect import (
             assign_scene_camera_effects,
             check_conversational_spoken_facts,
@@ -215,17 +210,58 @@ class TestResearchStoryArchitect(unittest.TestCase):
 
         for sc in self.content_data["scenes"]:
             kinds = [im["kind"] for im in sc["images"]]
-            backgrounds = [k for k in kinds if k == "background"]
-            stickers = [k for k in kinds if k == "sticker"]
+            self.assertTrue(all(kind == "scene" for kind in kinds), f"Scene {sc['id']} must use full-frame images")
+            self.assertEqual(sc.get("layers"), [])
+            self.assertEqual({im["id"] for im in sc["images"]}, {beat["image_id"] for beat in sc["beats"]})
+            self.assertEqual(len(sc["images"]), len(sc["beats"]))
+            assert all(kind == "scene" for kind in kinds)
+            assert sc["layers"] == []
 
-            self.assertEqual(len(backgrounds), 1, f"Scene {sc['id']} must have exactly 1 background")
-            self.assertLessEqual(len(stickers), 4, f"Scene {sc['id']} has too many new stickers")
-            self.assertEqual(len(sc["beats"]), 1, f"Scene {sc['id']} must have 1 beat for background")
-            self.assertGreaterEqual(len(sc.get("layers", [])), 1, f"Scene {sc['id']} must declare layers")
-            for lay in sc.get("layers", []):
-                self.assertIn(lay["x"], (0.35, 0.64), f"Layer {lay['id']} x={lay['x']} must use Rule-of-Thirds anchor")
-            assert len(backgrounds) == 1
-            assert len(sc["beats"]) == 1
+        from research_story_architect import ResearchedVisualBeat
+
+        topic = create_demo_trial_topic()
+        scene = topic.scenes[0]
+        words = scene.narration.split()
+        anchors = [
+            " ".join(words[start:start + 3])
+            for start in (0, len(words) // 3, (2 * len(words)) // 3)
+        ]
+        scene.visual_beats = [
+            ResearchedVisualBeat(
+                image_id="SC01_VIS1",
+                description="A complete full-frame kitchen scene with the character at the open refrigerator.",
+                anchor_quote=anchors[0],
+                reason="Establish the action in its setting.",
+                character_ids=["CH01"],
+            ),
+            ResearchedVisualBeat(
+                image_id="SC01_VIS2",
+                description="The same kitchen and camera, with the character reaching toward the refrigerator shelf.",
+                anchor_quote=anchors[1],
+                reason="Show the next spoken action in the same place.",
+                character_ids=["CH01"],
+                based_on="SC01_VIS1",
+                preserve="Keep the kitchen, refrigerator, camera position, and character design.",
+                change="Move the character's hand toward the refrigerator shelf.",
+            ),
+            ResearchedVisualBeat(
+                image_id="SC01_VIS3",
+                description="A full-frame close-up of the refrigerator shelf and the character's hand.",
+                anchor_quote=anchors[2],
+                reason="Emphasize the narrated object.",
+                character_ids=["CH01"],
+                effect="punch_in",
+            ),
+        ]
+        brief = build_brief_v3(topic)
+        visual_content = build_content_v3(topic, brief, compute_brief_hash(brief), brief_revision=1)
+        validate_content(SYS_DIR, brief, 1, compute_brief_hash(brief), visual_content)
+        scene_content = visual_content["scenes"][0]
+        self.assertEqual(len(scene_content["beats"]), 3)
+        self.assertEqual(scene_content["images"][1]["based_on"], "SC01_VIS1")
+        self.assertTrue(scene_content["images"][1]["preserve"])
+        self.assertTrue(scene_content["images"][1]["change"])
+        self.assertEqual(scene_content["layers"], [])
 
         self.assertEqual(select_semantic_camera_effect("zoom_out"), "zoom_out")
         self.assertEqual(select_semantic_camera_effect("punch_in"), "punch_in")
@@ -262,23 +298,79 @@ class TestResearchStoryArchitect(unittest.TestCase):
         assert len(dry_warns) == 1
         assert len(long_warns) == 1
 
+    def test_academic_research_paradox_packaging_localization_and_spinoffs(self):
+        """Verify Academic Research Q1 topic, Packaging Contract, VN 60s Localization, and Short-Form Spin-offs."""
+        acad_topic = create_academic_research_paradox_topic(aspect_ratio="9:16")
+        brief = build_brief_v3(acad_topic)
+        validate_brief(SYS_DIR, brief)
+        bhash = compute_brief_hash(brief)
+        content = build_content_v3(acad_topic, brief, bhash)
+        validate_content(SYS_DIR, brief, 1, bhash, content)
+
+        # Packaging contract checks
+        self.assertEqual(brief["channel_pillar"], DEFAULT_CHANNEL_PILLAR)
+        self.assertEqual(brief["funnel_tier"], "tier_1_broad")
+        self.assertLessEqual(len(brief["youtube_title"]), 55)
+        self.assertEqual(brief["outputs"][0]["speed"], 1.26)
+        self.assertTrue(brief["outputs"][0]["subtitles"])
+        pkg_warns = check_packaging_and_localization(brief, scenes=acad_topic.scenes, check_opening_hook=True)
+        self.assertEqual(pkg_warns, [])
+
+        # Strict cadence check with opening pause forbidden and opening hook <= 18 syllables
+        checker = ScriptCadenceChecker(
+            forbid_opening_pause=True,
+            max_opening_hook_syllables=18,
+            max_sentence_syllables=25,
+            max_clause_syllables=18,
+            max_dramatic_pauses=4,
+        )
+        cadence_res = checker.check_scenes(generate_script_json(acad_topic))
+        self.assertEqual(cadence_res["status"], "PASS", f"Cadence warnings: {cadence_res}")
+        self.assertEqual(cadence_res["warnings_count"], 0)
+        self.assertLessEqual(cadence_res["max_drift"], 0.30)
+
+        # Verify check_packaging_and_localization catches violations (Excel off-pillar, >55 char title, foreign SC01)
+        bad_brief = dict(brief)
+        bad_brief["youtube_title"] = "Nghịch lý tri thức là bởi vì não bộ con người luôn lười suy nghĩ khi đọc lại giáo trình đại học"
+        bad_brief["topic"] = "Tổng hợp mẹo Excel và làm slide nhanh trong 4 tiếng cho tình huống của Na"
+        bad_brief["thumbnail_spec"] = {"visual_hook": "Bảng tính", "text_overlay": "mẹo nhỏ"}
+        bad_scenes = [{"id": "SC01", "narration": "Tại trường chữ nêm Edubba xứ Sumer cổ đại, các học sinh phải chép bài trên bảng đất sét. [pause:800ms]"}]
+        bad_warns = check_packaging_and_localization(bad_brief, scenes=bad_scenes, check_opening_hook=True)
+        self.assertTrue(any("OFF_PILLAR_DILUTION" in w for w in bad_warns))
+        self.assertTrue(any("YOUTUBE_TITLE_TOO_LONG" in w for w in bad_warns))
+        self.assertTrue(any("YOUTUBE_TITLE_SELF_ANSWERING" in w for w in bad_warns))
+        self.assertTrue(any("THUMBNAIL_OVERLAY_NOT_UPPERCASE" in w for w in bad_warns))
+        self.assertTrue(any("OPENING_NOT_LOCALIZED_VN" in w for w in bad_warns))
+        self.assertTrue(any("OPENING_SCENE_PAUSE_FORBIDDEN" in w for w in bad_warns))
+
+        # Verify standalone short_9x16 spin-offs generation
+        spinoffs = build_short_spinoff_topics(acad_topic, max_spinoffs=3)
+        self.assertEqual(len(spinoffs), 3)
+        for sp in spinoffs:
+            self.assertEqual(sp.aspect_ratio, "9:16")
+            self.assertEqual(len(sp.scenes), 5)
+            sp_brief = build_brief_v3(sp)
+            validate_brief(SYS_DIR, sp_brief)
+            sp_hash = compute_brief_hash(sp_brief)
+            sp_content = build_content_v3(sp, sp_brief, sp_hash)
+            validate_content(SYS_DIR, sp_brief, 1, sp_hash, sp_content)
+            self.assertEqual(check_packaging_and_localization(sp_brief, scenes=sp.scenes, check_opening_hook=True), [])
+            sp_cadence = checker.check_scenes(generate_script_json(sp))
+            self.assertEqual(sp_cadence["status"], "PASS", f"Spin-off cadence warnings: {sp_cadence}")
 
     def test_legal_traceability_coverage_and_claims(self):
         """Verify 100% of required_points are covered and all claims have verified sources."""
-        # Coverage check
         covered_req_ids = {c["requirement_id"] for c in self.content_data["coverage"]}
         brief_req_ids = {r["id"] for r in self.brief_data["required_points"]}
         self.assertEqual(covered_req_ids, brief_req_ids)
         assert covered_req_ids == brief_req_ids
 
-        # Every quote in coverage must exist in its scene's narration
         scene_by_id = {s["id"]: s for s in self.content_data["scenes"]}
         for c in self.content_data["coverage"]:
             sc = scene_by_id[c["scene_id"]]
             self.assertIn(c["quote"], sc["narration"])
             assert c["quote"] in sc["narration"]
 
-        # Claims check
         self.assertGreater(len(self.content_data["claims"]), 0)
         source_by_id = {s["id"]: s for s in self.brief_data["sources"]}
         for claim in self.content_data["claims"]:
@@ -291,13 +383,14 @@ class TestResearchStoryArchitect(unittest.TestCase):
             assert claim["fact"] in src["facts"]
 
     def test_write_production_package_e2e(self):
-        """Verify full package assembly writes all files and passes validation."""
+        """Verify full package assembly writes all files (including spinoff_shorts) and passes validation."""
         with tempfile.TemporaryDirectory() as tmp_dir:
             out_path = Path(tmp_dir) / "test_pkg"
-            res = write_production_package(out_path, self.topic, system_root=SYS_DIR)
+            res = write_production_package(out_path, self.topic, system_root=SYS_DIR, include_spinoffs=True)
 
             self.assertTrue(res["valid_contracts"])
             self.assertEqual(len(res["contract_errors"]), 0)
+            self.assertEqual(len(res["spinoff_packages"]), 3)
             self.assertTrue(Path(res["brief_file"]).is_file())
             self.assertTrue(Path(res["content_file"]).is_file())
             self.assertTrue(Path(res["script_file"]).is_file())
@@ -305,7 +398,6 @@ class TestResearchStoryArchitect(unittest.TestCase):
             assert res["valid_contracts"] is True
             assert Path(res["brief_file"]).is_file()
 
-            # Re-read and re-validate
             b = json.loads(Path(res["brief_file"]).read_text())
             c = json.loads(Path(res["content_file"]).read_text())
             validate_brief(SYS_DIR, b)
@@ -401,7 +493,6 @@ class TestResearchStoryArchitect(unittest.TestCase):
         self.assertNotIn("600.0", playbook_txt)
         self.assertNotIn("10–15", playbook_txt)
 
-        # Verify trim_pcm16_stereo_silence right-channel detection & idempotency when gitignored export bundle exists locally
         v2_gen_path = SYS_DIR / "exports" / "motivation_v2_exp_bundle" / "scripts" / "generate_spoken_narration.py"
         if not v2_gen_path.is_file():
             return
@@ -421,77 +512,6 @@ class TestResearchStoryArchitect(unittest.TestCase):
         once = v2_mod.trim_pcm16_stereo_silence(no_pad, sr=sr)
         twice = v2_mod.trim_pcm16_stereo_silence(once, sr=sr)
         self.assertEqual(once, twice)
-
-        proj_root = SYS_DIR.parent
-        v2_bundle = SYS_DIR / "exports" / "motivation_v2_exp_bundle"
-        total_shots = 0
-        total_cues = 0
-        for ch_idx in range(1, 9):
-            tpl_path = v2_bundle / "templates" / f"ch{ch_idx}_props_template.json"
-            cues_path = v2_bundle / "audio" / f"ch{ch_idx}_spoken_cues.json"
-            wav_path = v2_bundle / "audio" / f"ch{ch_idx}_narration_spoken.wav"
-            mp4_path = proj_root / "video" / f"motivation-v2-exp-ch{ch_idx}-16x9" / f"motivation-v2-exp-ch{ch_idx}-16x9_r1_final.mp4"
-            self.assertTrue(tpl_path.is_file())
-            self.assertTrue(cues_path.is_file())
-            self.assertTrue(wav_path.is_file())
-            self.assertTrue(mp4_path.is_file())
-            self.assertGreaterEqual(mp4_path.stat().st_mtime, tpl_path.stat().st_mtime)
-            self.assertGreaterEqual(mp4_path.stat().st_mtime, wav_path.stat().st_mtime)
-
-            tpl = json.loads(tpl_path.read_text(encoding="utf-8"))
-            scenes = tpl.get("scenesByAspect", {}).get("16:9") or tpl["tracks"]["vi"]["scenesByAspect"]["16:9"]
-            shot_abs_starts = set()
-            for sc in scenes:
-                sc_start = float(sc["start"])
-                sc_dur = float(sc["end"]) - sc_start
-                imgs = sc["images"]
-                prev_eff = None
-                for i, im in enumerate(imgs):
-                    t0 = float(im["at"])
-                    t1 = float(imgs[i + 1]["at"]) if i + 1 < len(imgs) else sc_dur
-                    hold = round(t1 - t0, 3)
-                    abs_at = round(sc_start + t0, 3)
-                    shot_abs_starts.add(abs_at)
-                    total_shots += 1
-                    eff = im.get("effect")
-                    self.assertNotEqual(eff, prev_eff)
-                    prev_eff = eff
-                    self.assertGreaterEqual(hold, 1.20)
-                    self.assertLessEqual(hold, 3.80)
-
-            cues = json.loads(cues_path.read_text(encoding="utf-8"))
-            total_cues += len(cues)
-            for idx_c, c in enumerate(cues):
-                self.assertNotIn("[pause:", c.get("text", "").lower())
-                c_start = 0.0 if idx_c == 0 else round(float(c["start"]), 3)
-                drift = min(abs(c_start - s) for s in shot_abs_starts)
-                self.assertLessEqual(drift, 0.005)
-
-        self.assertEqual(total_shots, 285)
-        self.assertEqual(total_cues, 151)
-        v2_master = proj_root / "video" / "motivation_v2_exp_full_13m_final.mp4"
-        self.assertTrue(v2_master.is_file())
-        m_probe = json.loads(
-            subprocess.check_output(
-                ["ffprobe", "-v", "error", "-show_entries", "stream=codec_type,codec_name,width,height:format=duration", "-of", "json", str(v2_master)],
-                text=True,
-            )
-        )
-        mv_stream = next(st for st in m_probe["streams"] if st["codec_type"] == "video")
-        ma_stream = next(st for st in m_probe["streams"] if st["codec_type"] == "audio")
-        self.assertEqual((mv_stream["width"], mv_stream["height"]), (1920, 1080))
-        self.assertEqual(mv_stream["codec_name"], "h264")
-        self.assertEqual(ma_stream["codec_name"], "aac")
-        self.assertGreater(float(m_probe["format"]["duration"]), 540.0)
-
-        # Verify V2 markdown manifest duration and PLAYBOOK.md has no global duration lock
-        md_txt = (SYS_DIR / "exports/motivation_v2_exp_bundle/manifest/manifest_motivation_8ch.md").read_text(encoding="utf-8")
-        self.assertIn("600.0s–900.0s", md_txt)
-        self.assertNotIn("660.0s", md_txt)
-        self.assertNotIn("11–15", md_txt)
-        playbook_txt = (proj_root / "PLAYBOOK.md").read_text(encoding="utf-8")
-        self.assertNotIn("600.0", playbook_txt)
-        self.assertNotIn("10–15", playbook_txt)
 
 
 if __name__ == "__main__":

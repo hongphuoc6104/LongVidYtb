@@ -8,16 +8,16 @@ execute in parallel without waiting on a single shared session.
 from __future__ import annotations
 
 import concurrent.futures
-from dataclasses import dataclass
-from enum import Enum
 import json
 import logging
-from pathlib import Path
 import re
 import shutil
 import subprocess
 import threading
 import time
+from dataclasses import dataclass
+from enum import Enum
+from pathlib import Path
 from typing import Any, Callable
 
 from . import accounts
@@ -69,6 +69,8 @@ class ColabAccountWorker:
         if self.state != ColabWorkerState.HEALTHY:
             return False
         if accounts.is_session_busy(self.account_id, self.session_name, lock_dir=lock_dir):
+            return False
+        if accounts.has_external_session(self.account_id):
             return False
         return True
 
@@ -341,8 +343,12 @@ class ColabPoolManager:
             "failed": sorted(failed, key=lambda x: x["account"]),
         }
 
-    def _unassign_server_endpoints(self, account_id: str) -> list[str]:
-        """Directly unassign any active server-side Colab runtimes for this account."""
+    def _unassign_server_endpoints(
+        self,
+        account_id: str,
+        target_endpoints: list[str] | set[str] | None = None,
+    ) -> list[str]:
+        """Directly unassign specific Colab runtimes owned by Video Pilot, protecting user personal notebooks."""
         prof_dir = accounts.folder(account_id)
         tok_file = prof_dir / "token.json"
         if not tok_file.is_file() or not Path(self.binary).is_file():
@@ -358,6 +364,12 @@ class ColabPoolManager:
         except (OSError, ValueError):
             return []
 
+        # If target_endpoints is explicitly provided as empty list/set, do nothing to avoid killing unknown user sessions
+        if target_endpoints is not None and not target_endpoints:
+            return []
+
+        allowed_json = json.dumps(list(target_endpoints)) if target_endpoints is not None else "null"
+
         code = (
             "import json, sys\n"
             "from pathlib import Path\n"
@@ -365,11 +377,14 @@ class ColabPoolManager:
             "from google.auth.transport.requests import AuthorizedSession\n"
             "from colab_cli.common import Client, Prod\n"
             "folder = Path(sys.argv[1])\n"
+            f"allowed = {allowed_json}\n"
             "creds = Credentials.from_authorized_user_file(str(folder / 'token.json'))\n"
             "session = AuthorizedSession(creds)\n"
             "client = Client(Prod(), session)\n"
             "unassigned = []\n"
             "for a in list(client.list_assignments()):\n"
+            "    if allowed is not None and a.endpoint not in allowed:\n"
+            "        continue  # Protect active user notebooks / other external sessions\n"
             "    try:\n"
             "        client.unassign(a.endpoint)\n"
             "        unassigned.append(a.endpoint)\n"
@@ -445,8 +460,20 @@ class ColabPoolManager:
                 except (OSError, ValueError):
                     pass
 
+            known_endpoints: list[str] = []
+            for sf in (canon_sess, tmp_sess):
+                if sf.is_file():
+                    try:
+                        s_data = json.loads(sf.read_text())
+                        if isinstance(s_data, dict):
+                            ep = s_data.get(w.session_name, {}).get("endpoint")
+                            if ep and ep not in known_endpoints:
+                                known_endpoints.append(ep)
+                    except (OSError, ValueError):
+                        pass
+
             res = self.run_account_cmd(w.account_id, ["stop", "-s", w.session_name], timeout=60, check=False)
-            unassigned = self._unassign_server_endpoints(w.account_id) if unassign_server else []
+            unassigned = self._unassign_server_endpoints(w.account_id, target_endpoints=known_endpoints) if unassign_server else []
             if unassigned:
                 unassigned_map[w.account_id] = unassigned
             self._clear_local_session_files(w.account_id, w.session_name, tmp_profiles_dir=tmp_base)
@@ -475,8 +502,9 @@ class ColabPoolManager:
         *,
         close_chrome: bool = True,
         tmp_profiles_dir: Path | None = None,
+        job_id: str | None = None,
     ) -> dict[str, Any]:
-        """Post-job teardown: unassign Colab T4 sessions, clear /tmp caches, and stop Chrome CDP."""
+        """Post-job teardown: unassign Colab T4 sessions, clear /tmp caches, stop Chrome CDP, and release leases."""
         colab_res = self.stop_pool(
             account_ids,
             unassign_server=True,
@@ -489,9 +517,17 @@ class ColabPoolManager:
                 chrome_res = MultiProfileManager().stop_all_profiles()
             except Exception as exc:
                 chrome_res = {"error": str(exc)}
+        released_leases: list[str] = []
+        if job_id:
+            try:
+                from flow_cdp.lease_manager import FlowJobLeaseManager
+                released_leases = FlowJobLeaseManager().release_all_for_job(job_id)
+            except Exception:
+                pass
         return {
             "colab": colab_res,
             "chrome_cdp": chrome_res,
+            "released_leases": released_leases,
         }
 
 

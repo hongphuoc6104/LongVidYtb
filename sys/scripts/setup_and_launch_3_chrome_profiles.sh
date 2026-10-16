@@ -8,6 +8,9 @@ CHROME_BIN="/opt/google/chrome/google-chrome"
 if [ ! -f "$CHROME_BIN" ]; then
   CHROME_BIN="/opt/google/chrome/chrome"
 fi
+if [ ! -f "$CHROME_BIN" ]; then
+  CHROME_BIN="$(which google-chrome 2>/dev/null || which google-chrome-stable 2>/dev/null || which chromium 2>/dev/null || echo '/opt/google/chrome/chrome')"
+fi
 
 ORIG_DIR="$HOME/.config/google-chrome"
 P1_DIR="$HOME/.config/google-chrome-cdp-p1"
@@ -41,14 +44,14 @@ setup_profile_dir() {
   rm -f "$target_dir/$prof_name"/Singleton* 2>/dev/null || true
 }
 
-setup_profile_dir "$P1_DIR" "Profile 1"
-setup_profile_dir "$P2_DIR" "Profile 2"
-setup_profile_dir "$P3_DIR" "Profile 3"
+setup_profile_dir "$P1_DIR" "Profile 106"
+setup_profile_dir "$P2_DIR" "Profile 127"
+setup_profile_dir "$P3_DIR" "Profile 13"
 
-echo "Launching Chrome Profile 1 on port 9225..."
+echo "Launching Chrome Profile 106 on port 9225..."
 nohup "$CHROME_BIN" \
   --user-data-dir="$P1_DIR" \
-  --profile-directory="Profile 1" \
+  --profile-directory="Profile 106" \
   --remote-debugging-port=9225 \
   --remote-allow-origins="*" \
   --no-first-run \
@@ -56,10 +59,10 @@ nohup "$CHROME_BIN" \
 
 sleep 2
 
-echo "Launching Chrome Profile 2 on port 9223..."
+echo "Launching Chrome Profile 127 on port 9223..."
 nohup "$CHROME_BIN" \
   --user-data-dir="$P2_DIR" \
-  --profile-directory="Profile 2" \
+  --profile-directory="Profile 127" \
   --remote-debugging-port=9223 \
   --remote-allow-origins="*" \
   --no-first-run \
@@ -67,10 +70,10 @@ nohup "$CHROME_BIN" \
 
 sleep 2
 
-echo "Launching Chrome Profile 3 on port 9224..."
+echo "Launching Chrome Profile 13 on port 9224..."
 nohup "$CHROME_BIN" \
   --user-data-dir="$P3_DIR" \
-  --profile-directory="Profile 3" \
+  --profile-directory="Profile 13" \
   --remote-debugging-port=9224 \
   --remote-allow-origins="*" \
   --no-first-run \

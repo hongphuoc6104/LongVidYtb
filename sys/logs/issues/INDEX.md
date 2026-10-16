@@ -50,3 +50,22 @@ List of technical issues recorded during pipeline operation:
 
 - [colab-1791869199968810514.md](colab-1791869199968810514.md) — Colab TTS cần kiểm tra.
 - [attention-architect-16x9-001 — render](1791869199969371332-attention-architect-16x9-001-render.md)
+
+- [colab-1792092071643397637.md](colab-1792092071643397637.md) — Colab TTS cần kiểm tra.
+- [academic-research-paradox-16x9-13m — audio](1792092071643728895-academic-research-paradox-16x9-13m-audio.md)
+- [academic-research-paradox-16x9-13m — images](1792092439778141157-academic-research-paradox-16x9-13m-images.md)
+- [academic-research-paradox-16x9-13m — images](1792093162977397304-academic-research-paradox-16x9-13m-images.md)
+- [academic-research-paradox-16x9-13m — images](1792093671674156964-academic-research-paradox-16x9-13m-images.md)
+- [academic-research-paradox-16x9-13m — images](1792094805975879628-academic-research-paradox-16x9-13m-images.md)
+- [academic-research-paradox-16x9-13m — images](1792095300922428310-academic-research-paradox-16x9-13m-images.md)
+- [academic-research-paradox-16x9-13m — images](1792095645105889311-academic-research-paradox-16x9-13m-images.md)
+- [academic-research-paradox-16x9-13m — images](1792096346016532400-academic-research-paradox-16x9-13m-images.md)
+- [academic-research-paradox-16x9-13m — images](1792096802675221004-academic-research-paradox-16x9-13m-images.md)
+- [academic-research-paradox-16x9-13m — images](1792097408290966545-academic-research-paradox-16x9-13m-images.md)
+- [academic-research-paradox-16x9-13m — images](1792097933116655394-academic-research-paradox-16x9-13m-images.md)
+- [academic-research-paradox-16x9-13m — images](1792098158227869286-academic-research-paradox-16x9-13m-images.md)
+
+- [colab-1792098649023812170.md](colab-1792098649023812170.md) — Colab TTS cần kiểm tra.
+- [academic-research-paradox-16x9-13m — render](1792098649024113905-academic-research-paradox-16x9-13m-render.md)
+
+- [colab-1792098725558574943.md](colab-1792098725558574943.md) — Colab TTS cần kiểm tra.

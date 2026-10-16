@@ -16,12 +16,12 @@ import struct
 import tempfile
 import time
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 from pilot import Blocked, digest
 
-from .multi_profile_manager import MultiProfileDispatcher, MultiProfileManager, ChromeProfileWorker
-from .patch_partitioner import PatchPartitioner, Patch
+from .multi_profile_manager import ChromeProfileWorker, MultiProfileDispatcher, MultiProfileManager
+from .patch_partitioner import PatchPartitioner
 
 logger = logging.getLogger("flow_cdp.bridge")
 
@@ -105,12 +105,12 @@ def send_raw_command(command: str, timeout: float = 120.0, sock_path: Path | Non
         exc = Blocked(f"Flow CDP session command timed out after {timeout}s: {command[:50]}")
         if not command.startswith("tool-snapshot:queue:"):
             exc = _mark_not_submitted(exc)
-        raise exc
+        raise exc from exc
     except (json.JSONDecodeError, OSError) as exc:
         err = Blocked(f"Flow CDP session communication error: {exc}")
         if not command.startswith("tool-snapshot:queue:"):
             err = _mark_not_submitted(err)
-        raise err
+        raise err from exc
     finally:
         client.close()
 
@@ -148,7 +148,7 @@ def ensure_connected(sock_path: Path | None = None) -> dict[str, Any]:
     target_sock = sock_path if (sock_path is not None and sock_path != get_socket_path()) else None
     if is_session_available(target_sock):
         return query_status(sock_path=target_sock)
-    from .cdp_direct_client import PROFILES, is_port_open, ensure_chrome_profiles_launched
+    from .cdp_direct_client import PROFILES, ensure_chrome_profiles_launched, is_port_open
     if any(is_port_open(p["cdp_port"]) for p in PROFILES):
         return {
             "status": "connected",
@@ -200,10 +200,11 @@ def require_queue_acceptance() -> None:
 def _execute_via_cdp_direct(specs: list[dict[str, Any]], timeout: float = 240.0, worker: Any = None) -> list[dict[str, Any]]:
     import asyncio
     import urllib.request
+
     from PIL import Image
+
     from .cdp_direct_client import PROFILES, DirectCDPProfileSession, ensure_chrome_profiles_launched, is_port_open
 
-    ensure_chrome_profiles_launched()
     worker_id = getattr(worker, "profile_id", "")
     worker_port = getattr(worker, "port", None)
     selected_cfg = None
@@ -216,6 +217,9 @@ def _execute_via_cdp_direct(specs: list[dict[str, Any]], timeout: float = 240.0,
                 break
     if not selected_cfg:
         selected_cfg = PROFILES[0]
+
+    # Only launch the specifically assigned profile to avoid high RAM/CPU usage and lag
+    ensure_chrome_profiles_launched([selected_cfg])
 
     async def _run():
         sess = DirectCDPProfileSession(selected_cfg)
@@ -316,7 +320,7 @@ def _execute_sub_batch(specs: list[dict[str, Any]], timeout: float = 240.0, sock
     if len(items) != len(specs):
         raise Blocked("Flow CDP incomplete batch; reconcile before retry")
 
-    for spec, item in zip(specs, items):
+    for spec, item in zip(specs, items, strict=False):
         if item.get("request_id") != spec["testCase"] or not Path(item["path"]).is_file():
             raise Blocked("Flow CDP result mapping failed")
         item["sha256"] = digest(Path(item["path"]))
@@ -409,17 +413,26 @@ def generate_cdp_batch(
     # Multi-patch & multi-profile parallel execution
     partitioner = PatchPartitioner(target_size=patch_size, min_size=2, max_size=4)
     patches = partitioner.partition(specs)
-    manager = MultiProfileManager(profiles_config=profiles_cfg)
-    dispatcher = MultiProfileDispatcher(profile_manager=manager)
 
-    def worker_executor(worker: ChromeProfileWorker, patch_items: list[dict[str, Any]]) -> list[dict[str, Any]]:
-        sock = get_socket_path(worker.profile_id)
-        # If per-worker socket doesn't exist, fall back to default socket
-        if not sock.exists() and get_socket_path().exists():
-            sock = get_socket_path()
-        return _execute_sub_batch(patch_items, timeout=timeout, sock_path=sock, before_submit=before_submit, worker=worker)
+    job_id = None
+    if specs and isinstance(specs[0], dict):
+        job_id = specs[0].get("job_id") or specs[0].get("jobId") or specs[0].get("testCase")
 
-    return dispatcher.dispatch_all(patches, worker_executor, max_concurrency=len(manager.workers))
+    workers_needed = max(1, min(len(patches), len(profiles_cfg))) if patches else 1
+    manager = MultiProfileManager(profiles_config=profiles_cfg, job_id=job_id, max_workers_per_job=workers_needed)
+    try:
+        dispatcher = MultiProfileDispatcher(profile_manager=manager)
+
+        def worker_executor(worker: ChromeProfileWorker, patch_items: list[dict[str, Any]]) -> list[dict[str, Any]]:
+            sock = get_socket_path(worker.profile_id)
+            # If per-worker socket doesn't exist, fall back to default socket
+            if not sock.exists() and get_socket_path().exists():
+                sock = get_socket_path()
+            return _execute_sub_batch(patch_items, timeout=timeout, sock_path=sock, before_submit=before_submit, worker=worker)
+
+        return dispatcher.dispatch_all(patches, worker_executor, max_concurrency=max(1, len(manager.workers)))
+    finally:
+        manager.close()
 
 
 # Backward compatibility aliases for B-2 Illustrator

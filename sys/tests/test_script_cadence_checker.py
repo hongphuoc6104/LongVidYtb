@@ -3,12 +3,13 @@
 
 Validates:
 1. Exact syllable counting and dead-air calculations on the 6 benchmark scenes (SC01-SC06)
-   from voice-cadence-pacing.md.
+   from voice-cadence-pacing.md (updated with Truth-Slap Hook, 0 banned phrases).
 2. Dramatic pause extraction ([pause:900ms]).
 3. Detection of speech rate warnings (> 4.5 syl/s, < 3.2 syl/s).
 4. Detection of dead-air / timeline drift (> 0.5s) and duration too short overhead.
-5. JSON and Markdown parser compatibility (tables, headings with spaces, Vietnamese headers, non-scene sections).
-6. CLI interface execution.
+5. Detection of OPENING_SCENE_PAUSE_FORBIDDEN and OPENING_HOOK_TOO_LONG.
+6. JSON and Markdown parser compatibility (tables, headings with spaces, Vietnamese headers, non-scene sections).
+7. CLI interface execution.
 """
 
 import json
@@ -37,7 +38,7 @@ BENCHMARK_SCENES = [
     {
         "id": "SC01",
         "duration": 12.0,
-        "narration": "Hãy nghĩ về một buổi sáng quen thuộc của bạn: tiếng chuông báo thức réo vang inh ỏi phá tan giấc ngủ, bạn thức dậy trong mệt mỏi, và ngay tối nay bạn lại nơm nớp lo sợ ngày mai sẽ tiếp tục lặp lại.",
+        "narration": "Chuông báo thức sáu giờ sáng thực chất là tờ hóa đơn đòi nợ thời gian của bạn. Tiếng chuông réo vang inh ỏi phá tan giấc ngủ ngon. Bạn thức dậy mệt mỏi, và tối nay lại nơm nớp lo ngày mai lặp lại.",
         "expected_target_syl": 45,
         "expected_actual_syl": 45,
         "expected_p_tail": 0.70,
@@ -47,7 +48,7 @@ BENCHMARK_SCENES = [
     {
         "id": "SC02",
         "duration": 12.0,
-        "narration": "Giờ đây, hãy thử quay ngược dòng thời gian về năm mươi ngàn năm trước. Liệu tổ tiên săn bắt hái lượm của chúng ta có thực sự phải trải qua một kiếp sống khốn khổ và mệt mỏi như chúng ta vẫn hằng tưởng tượng?",
+        "narration": "Quay ngược dòng thời gian về năm mươi ngàn năm trước, một nghịch lý lớn chợt hiện ra. Tổ tiên săn bắt hái lượm nơi hoang dã đã sống ra sao? Liệu họ có thực sự sống kiếp khốn khổ, mệt mỏi như ta lầm tưởng?",
         "expected_target_syl": 45,
         "expected_actual_syl": 46,
         "expected_p_tail": 0.70,
@@ -101,7 +102,7 @@ class BenchmarkCadenceTests(unittest.TestCase):
     """Test the 6 canonical benchmark scenes from voice-cadence-pacing.md."""
 
     def test_individual_benchmark_scenes_match_empirical_table(self):
-        checker = ScriptCadenceChecker()
+        checker = ScriptCadenceChecker(forbid_opening_pause=True, max_opening_hook_syllables=18)
         input_scenes = [{"id": s["id"], "duration": s["duration"], "narration": s["narration"]} for s in BENCHMARK_SCENES]
         result = checker.check_scenes(input_scenes)
 
@@ -121,7 +122,7 @@ class BenchmarkCadenceTests(unittest.TestCase):
             self.assertEqual(scene_res["status"], "PASS")
 
     def test_benchmark_aggregate_totals(self):
-        checker = ScriptCadenceChecker()
+        checker = ScriptCadenceChecker(forbid_opening_pause=True, max_opening_hook_syllables=18)
         input_scenes = [{"id": s["id"], "duration": s["duration"], "narration": s["narration"]} for s in BENCHMARK_SCENES]
         result = checker.check_scenes(input_scenes)
 
@@ -134,8 +135,10 @@ class BenchmarkCadenceTests(unittest.TestCase):
         self.assertEqual(result["status"], "PASS")
 
     def test_parse_and_check_live_voice_cadence_pacing_doc(self):
+        from script_diversity_linter import check_formulaic_transitions
+
         playbook_path = ROOT.parent / ".agents/skills/vp-channel-patterns/references/voice-cadence-pacing.md"
-        checker = ScriptCadenceChecker()
+        checker = ScriptCadenceChecker(forbid_opening_pause=True, max_opening_hook_syllables=18)
         result = checker.check_file(playbook_path)
 
         self.assertEqual(result["status"], "PASS")
@@ -144,6 +147,9 @@ class BenchmarkCadenceTests(unittest.TestCase):
         self.assertEqual(result["total_actual_syllables"], 284)
         self.assertLessEqual(result["max_drift"], 0.30)
 
+        # Ensure live voice-cadence-pacing.md has 0 banned formulaic transitions ("Hãy nghĩ về...")
+        parsed_scenes = parse_markdown_script(playbook_path.read_text(encoding="utf-8"))
+        self.assertEqual(check_formulaic_transitions(parsed_scenes), [])
 
 
 class SyllableAndPauseTests(unittest.TestCase):
@@ -191,47 +197,35 @@ class SyllableAndPauseTests(unittest.TestCase):
         self.assertEqual(count_english_syllables_in_word("creation"), 3)
 
     def test_vietnamese_compounds_numbers_and_slashes(self):
-        # 17 (2) + giờ (1) + tuần (1) = 4
         self.assertEqual(count_syllables("17 giờ/tuần", lang="vi"), 4)
-        # 2.4 (3: hai phẩy bốn) + giờ (1) + ngày (1) = 5
         self.assertEqual(count_syllables("2.4 giờ/ngày", lang="vi"), 5)
-        # 50.000 (3: năm mươi nghìn) + năm (1) + trước (1) = 5
         self.assertEqual(count_syllables("50.000 năm trước", lang="vi"), 5)
-        # 90.000 (3: chín mươi nghìn) + giờ (1) + làm (1) + việc (1) + trong (1) + đời (1) = 8
         self.assertEqual(count_syllables("90.000 giờ làm việc trong đời", lang="vi"), 8)
-        # 40-50 (4: bốn mươi năm mươi) + giờ (1) = 5
         self.assertEqual(count_syllables("40-50 giờ", lang="vi"), 5)
-        # English loan words and acronyms
         self.assertEqual(count_syllables("smartphone", lang="vi"), 2)
         self.assertEqual(count_syllables("wifi", lang="vi"), 2)
         self.assertEqual(count_syllables("data", lang="vi"), 2)
         self.assertEqual(count_syllables("AI", lang="vi"), 2)
 
     def test_count_commas_ignores_numbers(self):
-        # Decimal and thousands commas should not be counted as speech pauses
         self.assertEqual(count_commas("chiếm 2,4 giờ mỗi ngày và 50,000 năm"), 0)
-        # Natural clause commas and semicolons should be counted
         self.assertEqual(count_commas("Chào bạn, đây là 2,4 giờ, và 50,000 năm; bạn hiểu chưa?"), 3)
 
     def test_calculate_target_syllables_formula(self):
-        # Normal intermediate scene: (12.0 - 0.70) * 4.0 = 45.2 -> 45
         self.assertEqual(calculate_target_syllables(12.0, is_last=False), 45)
-        # Final scene: (11.0 - 0.35) * 4.0 = 42.6 -> 43
         self.assertEqual(calculate_target_syllables(11.0, is_last=True), 43)
-        # Scene with dramatic pause 0.9s: (12.0 - 0.70 - 0.90) * 4.0 = 10.4 * 4.0 = 41.6 -> 42
         self.assertEqual(calculate_target_syllables(12.0, is_last=False, pause_seconds=0.9), 42)
 
 
 class ThresholdWarningTests(unittest.TestCase):
-    """Test detection of speech rate and timeline drift warnings."""
+    """Test detection of speech rate, timeline drift, opening pause, and opening hook warnings."""
 
     def test_speech_rate_too_fast_warning(self):
         checker = ScriptCadenceChecker()
-        # 45 syllables in 8.0s -> net duration = 8.0 - 0.7 = 7.3s -> rate = 45 / 7.3 = 6.16 syl/s (> 4.5)
         scene = {
             "id": "FAST",
             "duration": 8.0,
-            "narration": "Hãy nghĩ về một buổi sáng quen thuộc của bạn: tiếng chuông báo thức réo vang inh ỏi phá tan giấc ngủ, bạn thức dậy trong mệt mỏi, và ngay tối nay bạn lại nơm nớp lo sợ ngày mai sẽ tiếp tục lặp lại.",
+            "narration": "Chuông báo thức sáu giờ sáng thực chất là tờ hóa đơn đòi nợ thời gian của bạn. Tiếng chuông réo vang inh ỏi phá tan giấc ngủ ngon. Bạn thức dậy mệt mỏi, và tối nay lại nơm nớp lo ngày mai lặp lại.",
         }
         res = checker.check_scenes([scene])
         self.assertEqual(res["status"], "WARN")
@@ -240,11 +234,10 @@ class ThresholdWarningTests(unittest.TestCase):
 
     def test_speech_rate_too_slow_warning(self):
         checker = ScriptCadenceChecker()
-        # 10 syllables in 12.0s -> net = 11.3s -> rate = 10 / 11.3 = 0.88 syl/s (< 3.2)
         scene = {
             "id": "SLOW",
             "duration": 12.0,
-            "narration": "Hãy nghĩ về một buổi sáng quen thuộc của bạn.",
+            "narration": "Đọc lại giáo trình năm lần chỉ ru ngủ não bạn.",
         }
         res = checker.check_scenes([scene])
         self.assertEqual(res["status"], "WARN")
@@ -252,7 +245,6 @@ class ThresholdWarningTests(unittest.TestCase):
 
     def test_short_duration_overhead_warning(self):
         checker = ScriptCadenceChecker()
-        # Intermediate scene: 0.5s duration with 8 syllables (p_tail is 0.7s) -> duration <= p_tail, overhead exceeded
         scenes = [
             {"id": "SHORT", "duration": 0.5, "narration": "Xin chào tất cả các bạn hôm nay."},
             {"id": "FINAL", "duration": 10.0, "narration": "Câu chuyện tiếp tục ở phân cảnh tiếp theo của chúng ta."},
@@ -260,16 +252,14 @@ class ThresholdWarningTests(unittest.TestCase):
         res = checker.check_scenes(scenes)
         self.assertEqual(res["status"], "WARN")
         self.assertTrue(any("DURATION_TOO_SHORT" in w for w in res["scenes"][0]["warnings"]))
-        # Should not falsely trigger RATE_TOO_SLOW
         self.assertFalse(any("RATE_TOO_SLOW" in w for w in res["scenes"][0]["warnings"]))
 
     def test_dead_air_warning(self):
         checker = ScriptCadenceChecker()
-        # Scene duration is 15.0s, but only has 10 syllables -> est audio = 10/4 + 0.7 = 3.2s -> drift = -11.8s (< -0.5s)
         scene = {
             "id": "DEAD",
             "duration": 15.0,
-            "narration": "Hãy nghĩ về một buổi sáng quen thuộc của bạn.",
+            "narration": "Đọc lại giáo trình năm lần chỉ ru ngủ não bạn.",
         }
         res = checker.check_scenes([scene])
         self.assertEqual(res["status"], "WARN")
@@ -277,7 +267,6 @@ class ThresholdWarningTests(unittest.TestCase):
 
     def test_timeline_drift_overflow_warning(self):
         checker = ScriptCadenceChecker()
-        # Scene duration is 10.0s, but has 60 syllables -> est audio = 60/4 + 0.7 = 15.7s -> drift = +5.7s (> 0.5s)
         words = " ".join(["từ"] * 60)
         scene = {
             "id": "OVERFLOW",
@@ -290,7 +279,6 @@ class ThresholdWarningTests(unittest.TestCase):
 
     def test_sentence_fragmentation_warning(self):
         checker = ScriptCadenceChecker()
-        # 5 sentences with 2+ short hooks (< 6 syl) triggers SENTENCE_FRAGMENTATION
         scene = {
             "id": "FRAG",
             "duration": 10.0,
@@ -301,7 +289,6 @@ class ThresholdWarningTests(unittest.TestCase):
         self.assertEqual(res["scenes"][0]["sentence_count"], 5)
         self.assertTrue(any("SENTENCE_FRAGMENTATION" in w for w in res["scenes"][0]["warnings"]))
 
-        # <= 4 sentences with > 2 micro-sentences (< 6 syl) also triggers SENTENCE_FRAGMENTATION
         micro_scene = {
             "id": "MICRO_FRAG",
             "duration": 8.0,
@@ -322,7 +309,6 @@ class ThresholdWarningTests(unittest.TestCase):
         res = checker.check_scenes([long_scene])
         self.assertEqual(res["status"], "WARN")
         self.assertTrue(any("SCENE_TOO_LONG" in w for w in res["scenes"][0]["warnings"]))
-        assert any("SCENE_TOO_LONG" in w for w in res["scenes"][0]["warnings"])
 
         short_scene = {
             "id": "SHORT",
@@ -331,11 +317,9 @@ class ThresholdWarningTests(unittest.TestCase):
         }
         res_ok = checker.check_scenes([short_scene])
         self.assertFalse(any("SCENE_TOO_LONG" in w for w in res_ok["scenes"][0]["warnings"]))
-        assert not any("SCENE_TOO_LONG" in w for w in res_ok["scenes"][0]["warnings"])
 
     def test_sentence_too_long_warning(self):
         checker = ScriptCadenceChecker(max_sentence_syllables=25)
-        # 31-syllable sentence from Attention Architect SC01 Cue 2
         scene = {
             "id": "LONG_SENT",
             "duration": 15.0,
@@ -345,7 +329,6 @@ class ThresholdWarningTests(unittest.TestCase):
         self.assertEqual(res["status"], "WARN")
         self.assertTrue(any("SENTENCE_TOO_LONG" in w for w in res["scenes"][0]["warnings"]))
 
-        # Sentence with <= 25 syllables should not trigger warning
         scene_ok = {
             "id": "OK_SENT",
             "duration": 6.0,
@@ -356,7 +339,6 @@ class ThresholdWarningTests(unittest.TestCase):
 
     def test_breathless_clause_warning(self):
         checker = ScriptCadenceChecker(max_clause_syllables=18)
-        # 24-syllable clause without comma
         scene = {
             "id": "NO_COMMA",
             "duration": 8.0,
@@ -366,7 +348,6 @@ class ThresholdWarningTests(unittest.TestCase):
         self.assertEqual(res["status"], "WARN")
         self.assertTrue(any("BREATHLESS_CLAUSE" in w for w in res["scenes"][0]["warnings"]))
 
-        # Clause properly separated with commas into short chunks
         scene_ok = {
             "id": "WITH_COMMA",
             "duration": 8.0,
@@ -384,9 +365,31 @@ class ThresholdWarningTests(unittest.TestCase):
         ]
         res = checker.check_scenes(scenes)
         self.assertEqual(res["status"], "WARN")
-        # All scenes with pauses should flag EXCESSIVE_DRAMATIC_PAUSES because total (3) > max (2)
         for sc in res["scenes"]:
             self.assertTrue(any("EXCESSIVE_DRAMATIC_PAUSES" in w for w in sc["warnings"]))
+
+    def test_opening_scene_pause_forbidden_and_hook_length_warnings(self):
+        checker = ScriptCadenceChecker(forbid_opening_pause=True, max_opening_hook_syllables=18)
+        bad_opening = [
+            {
+                "id": "SC01",
+                "duration": 10.0,
+                "narration": "Việc đọc đi đọc lại một cuốn giáo trình đại học tới năm lần liên tiếp thực chất chỉ đang tạo ra ảo giác năng lực giả tạo. [pause:800ms] Bạn vẫn không hiểu bản chất.",
+            },
+            {
+                "id": "SC02",
+                "duration": 9.0,
+                "narration": "Tám mươi phần trăm sinh viên mở Word gõ ngay. [pause:900ms] Nhưng giáo sư đọc ngược lại.",
+            },
+        ]
+        res = checker.check_scenes(bad_opening)
+        self.assertEqual(res["status"], "WARN")
+        sc1_warns = res["scenes"][0]["warnings"]
+        sc2_warns = res["scenes"][1]["warnings"]
+        self.assertTrue(any("OPENING_SCENE_PAUSE_FORBIDDEN" in w for w in sc1_warns))
+        self.assertTrue(any("OPENING_HOOK_TOO_LONG" in w for w in sc1_warns))
+        # SC02 is allowed to have a dramatic pause
+        self.assertFalse(any("OPENING_SCENE_PAUSE_FORBIDDEN" in w for w in sc2_warns))
 
     def test_reproduction_err_20261014_01(self):
         """End-to-end reproduction of ERR-20261014-01 cadence gaming."""
@@ -394,6 +397,7 @@ class ThresholdWarningTests(unittest.TestCase):
             max_sentence_syllables=25,
             max_clause_syllables=18,
             max_dramatic_pauses=1,
+            forbid_opening_pause=True,
         )
         attention_sample = [
             {
@@ -413,7 +417,7 @@ class ThresholdWarningTests(unittest.TestCase):
         self.assertTrue(any("SENTENCE_TOO_LONG" in w for w in all_warnings))
         self.assertTrue(any("BREATHLESS_CLAUSE" in w for w in all_warnings))
         self.assertTrue(any("EXCESSIVE_DRAMATIC_PAUSES" in w for w in all_warnings))
-
+        self.assertTrue(any("OPENING_SCENE_PAUSE_FORBIDDEN" in w for w in all_warnings))
 
 
 class ScriptParserTests(unittest.TestCase):
@@ -436,17 +440,17 @@ class ScriptParserTests(unittest.TestCase):
 # Kịch bản Mẫu
 
 ## SC01 (12.0s)
-Hãy nghĩ về một buổi sáng quen thuộc của bạn.
+Đọc lại giáo trình năm lần chỉ ru ngủ não bạn.
 [Visual: Stick figure thức dậy]
 
 ## SC02 (14.0s)
-Giờ đây, hãy thử quay ngược dòng thời gian về năm mươi ngàn năm trước.
+Quay ngược dòng thời gian về năm mươi ngàn năm trước.
         """
         parsed = parse_markdown_script(md)
         self.assertEqual(len(parsed), 2)
         self.assertEqual(parsed[0]["id"], "SC01")
         self.assertEqual(parsed[0]["duration"], 12.0)
-        self.assertIn("Hãy nghĩ về một buổi sáng", parsed[0]["narration"])
+        self.assertIn("Đọc lại giáo trình", parsed[0]["narration"])
         self.assertNotIn("[Visual:", parsed[0]["narration"])
 
         self.assertEqual(parsed[1]["id"], "SC02")
@@ -455,10 +459,10 @@ Giờ đây, hãy thử quay ngược dòng thời gian về năm mươi ngàn n
     def test_parse_markdown_header_with_spaces_and_diacritics(self):
         md = """
 ### Scene 1 [12s]
-Hãy nghĩ về một buổi sáng quen thuộc.
+Đọc lại giáo trình năm lần chỉ ru ngủ não bạn.
 
 ## Phân cảnh 02 (14.5s)
-Giờ đây hãy thử quay ngược dòng thời gian.
+Quay ngược dòng thời gian về năm mươi ngàn năm trước.
         """
         parsed = parse_markdown_script(md)
         self.assertEqual(len(parsed), 2)
@@ -484,7 +488,7 @@ Lưu ý quan trọng: không được chèn phần này vào kịch bản audio.
         md = """
 | Scene | Duration | Narration |
 |---|---|---|
-| SC01 | 12.0s | Hãy nghĩ về một buổi sáng. |
+| SC01 | 12.0s | Chuông báo thức sáu giờ sáng. |
 | SC02 | 11.0s | Bạn kiệt sức gục ngã. |
         """
         parsed = parse_markdown_script(md)
@@ -524,7 +528,6 @@ Lưu ý quan trọng: không được chèn phần này vào kịch bản audio.
 | SC03 | 11.0s | Câu thoại 3. |
         """
         parsed = parse_markdown_script(md)
-        # Should pick the 3-scene table over the 1-scene summary table
         self.assertEqual(len(parsed), 3)
         self.assertEqual(parsed[0]["id"], "SC01")
         self.assertEqual(parsed[2]["id"], "SC03")
@@ -541,7 +544,7 @@ class CliExecutionTests(unittest.TestCase):
         try:
             cli_script = ROOT / "tools/script_cadence_checker.py"
             proc = subprocess.run(
-                [sys.executable, str(cli_script), tmp_path, "--json", "--strict"],
+                [sys.executable, str(cli_script), tmp_path, "--json", "--strict", "--forbid-opening-pause", "--max-opening-hook-syllables", "18"],
                 capture_output=True,
                 text=True,
             )
@@ -566,7 +569,6 @@ class CliExecutionTests(unittest.TestCase):
                 capture_output=True,
                 text=True,
             )
-            # Should fail with non-zero exit code due to --strict on rate warning
             self.assertEqual(proc.returncode, 1)
         finally:
             Path(tmp_path).unlink(missing_ok=True)
@@ -588,7 +590,6 @@ class CliExecutionTests(unittest.TestCase):
             data = json.loads(proc.stdout)
             self.assertEqual(data["status"], "WARN")
             self.assertTrue(any("SCENE_TOO_LONG" in w for w in data["scenes"][0]["warnings"]))
-            assert any("SCENE_TOO_LONG" in w for w in data["scenes"][0]["warnings"])
         finally:
             Path(tmp_path).unlink(missing_ok=True)
 
@@ -609,7 +610,6 @@ class ScriptDiversityLinterTests(unittest.TestCase):
         self.assertEqual(len(violations), 4)
         types = [v["type"] for v in violations]
         self.assertTrue(all(t == "FORMULAIC_TRANSITION" for t in types))
-        assert len(violations) == 4
 
     def test_banned_academic_namedrops(self):
         from script_diversity_linter import check_formulaic_transitions
@@ -623,7 +623,6 @@ class ScriptDiversityLinterTests(unittest.TestCase):
         self.assertGreaterEqual(len(violations), 3)
         namedrop_violations = [v for v in violations if v["type"] == "ACADEMIC_NAMEDROP_BLOAT"]
         self.assertGreaterEqual(len(namedrop_violations), 3)
-        assert len(namedrop_violations) >= 3
 
     def test_direct_concise_narration_passes_cleanly(self):
         from script_diversity_linter import check_formulaic_transitions
@@ -634,7 +633,6 @@ class ScriptDiversityLinterTests(unittest.TestCase):
         ]
         violations = check_formulaic_transitions(scenes)
         self.assertEqual(len(violations), 0)
-        assert len(violations) == 0
 
 
 if __name__ == "__main__":

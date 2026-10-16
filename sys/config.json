@@ -15,11 +15,12 @@
   "flow_batch": false,
   "flow_image_engine": "cdp",
   "flow_cdp_profiles": [
-    {"id": "profile_1", "port": 9225, "directory": "Profile 1", "user_data_dir": "~/.config/google-chrome-cdp-p1"},
-    {"id": "profile_2", "port": 9223, "directory": "Profile 2", "user_data_dir": "~/.config/google-chrome-cdp-p2"},
-    {"id": "profile_3", "port": 9224, "directory": "Profile 3", "user_data_dir": "~/.config/google-chrome-cdp-p3"}
+    {"id": "profile_1", "port": 9225, "directory": "Profile 106", "user_data_dir": "~/.config/google-chrome-cdp-p1"},
+    {"id": "profile_2", "port": 9223, "directory": "Profile 127", "user_data_dir": "~/.config/google-chrome-cdp-p2"},
+    {"id": "profile_3", "port": 9224, "directory": "Profile 13", "user_data_dir": "~/.config/google-chrome-cdp-p3"}
   ],
   "patch_size": 3,
+  "flow_session_image_cap": 200,
   "flow_require_ui_evidence": false,
   "flow_queue_trial_enabled": true,
   "flow_model": "Nano Banana 2 Lite",
@@ -41,7 +42,7 @@
   "audio_lufs": -14.0,
   "audio_peak_db": -1.5,
   "renderer": "remotion",
-  "concurrency": 4,
+  "concurrency": 3,
   "review": "three_stages",
   "en_seed": 42,
   "workflow_mode": "review",

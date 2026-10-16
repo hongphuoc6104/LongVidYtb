@@ -161,7 +161,7 @@ def _before_send_body(p, job, folders, connection):
         records.append((record['key'], 1))
     try:
         ledger.flow_submit_many(account, session['session_id'], records,
-                                cap=config(p, job).get('flow_session_image_cap', 100),
+                                cap=read(p.root / 'config.json').get('flow_session_image_cap', 200),
                                 budget_session=session['session_id'],
                                 evidence='verified browser profile; send boundary for ' + job)
     except ValueError as error:

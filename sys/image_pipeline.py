@@ -308,11 +308,8 @@ def _template_request(p, j, target, prompt, corrections, ratio, refs, registrati
     # The generated character-reference purpose deliberately allows full-body
     # inspection framing; final scene frames keep the canonical mascot small.
     layer_kind = (scene or {}).get('kind', 'scene')
-    if layer_kind in ('background', 'sticker'):
-        # Layered cut-out assets: independent single-purpose images, never Base variations.
-        if base_image or (layer_kind == 'background' and refs) or registration:
-            raise Blocked('FLOW_LAYER_INVALID: layered assets take no Base/Character reference')
-        purpose = 'layer_' + layer_kind
+    if layer_kind != 'scene':
+        raise Blocked('FLOW_LAYERING_DISABLED: generate complete full-frame scene images')
     desc = prompt
     preserve_items, change_items = [], []
     brief_obj = p.brief(j)[0] if p.brief(j) else {}
@@ -323,18 +320,6 @@ def _template_request(p, j, target, prompt, corrections, ratio, refs, registrati
         out_plan = next((o for o in outputs(brief_obj) if o['aspect_ratio'] == ratio), None)
         subtitled = out_plan['subtitles'] if out_plan else (ratio == '9:16')
         format_clearance = clearance_for_output(ratio, subtitled)
-    if scene and layer_kind in ('background', 'sticker'):
-        original = next((image for parent in content(p, j)['scenes'] for image in parent.get('images', [])
-                         if image['id'] == scene.get('image_id', scene['id'])), None)
-        desc = original['description'] if original and original.get('description') else desc
-        if corrections:
-            desc = desc + ' Correction: ' + corrections
-        data = {'description': desc, 'aspect_ratio': ratio, 'allowed_text': scene.get('visible_text', [])}
-        if layer_kind == 'background':
-            data['caption_clearance'] = format_clearance if has_format_profile else {'edge': 'bottom', 'fraction': 0.18}
-        result = compile_pinned(pin, purpose, data)
-        metadata = {key: value for key, value in result.items() if key != 'prompt'}
-        return result['prompt'], {**metadata, 'pin': pin, 'data': data}
     if scene:
         original = next((image for parent in content(p, j)['scenes'] for image in parent.get('images', [])
                          if image['id'] == scene.get('image_id', scene['id'])), None)
@@ -541,7 +526,8 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None):
     common = ['--profile', cfg['flow_profile'], '--project', cfg['flow_project'], '--out', str(out)]
     model_arg = 'nano-banana-pro' if 'pro' in cfg['flow_model'].lower() else ('nano-banana-2' if '2' in cfg['flow_model'] else cfg['flow_model'])
     scene = next((x for x in planned_units(p, j) if x['id'] == target), None)
-    is_layered = bool(scene and scene.get('kind') in ('background', 'sticker'))
+    if scene and scene.get('kind', 'scene') != 'scene':
+        raise Blocked('FLOW_LAYERING_DISABLED: generate complete full-frame scene images')
     if registration:
         args = ['character', 'create', '--name', registration['name'], '--prompt', actual_prompt,
                 '--model', model_arg,
@@ -555,7 +541,7 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None):
             args += ['--evidence-out',str(folder)]
         if base_image:
             args += ['--base-image', str(p.path(j,base_image['path']))]
-        if refs and not is_layered:
+        if refs:
             args += ['--character'] + [x['name'] for x in refs]
     result = {'key': key, 'identity': identity, 'state': 'generated' if collection_only else 'submitted', 'submitted_at': time.time(),
               'args': args, 'journal': str(record.relative_to(p.job(j)))}
@@ -584,7 +570,7 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None):
                     pass
         if len(candidates) != 1:
             raise Blocked('Cannot identify exactly one downloaded result')
-        expected_chars = [] if is_layered else [x['name'] for x in refs]
+        expected_chars = [x['name'] for x in refs]
         proof_file = folder / 'ui-proof.json'
         if proof_file.is_file():
             proof = read(proof_file)
@@ -677,14 +663,15 @@ def batch_submit(p, j, units, registrations):
     batch_dir.mkdir(parents=True, exist_ok=True)
     jobs = []
     for plan in plans:
+        if plan['unit'].get('kind', 'scene') != 'scene':
+            raise Blocked('FLOW_LAYERING_DISABLED: generate complete full-frame scene images')
         folder = p.job(j) / 'flow/attempts' / plan['key']
         folder.mkdir(parents=True, exist_ok=True)
         write(folder / 'preflight.json', evidence)
         if requires_ui_evidence(p): shutil.copy(p.path(j, evidence['screenshot']), folder / 'preflight.png')
-        is_layered = plan['unit'].get('kind') in ('background', 'sticker')
         jobs.append({'id': plan['key'][:16], 'request_key': plan['key'], 'type': 'image', 'project': cfg['flow_project'],
                      'prompt': plan['actual_prompt'], 'model': model_arg, 'ratio': plan['ratio'],
-                     'outputs': 1, 'character': ([] if is_layered else [x['name'] for x in plan['linked']]), 'out': str(batch_dir)})
+                     'outputs': 1, 'character': [x['name'] for x in plan['linked']], 'out': str(batch_dir)})
         plan['folder'], plan['job_id'] = folder, plan['key'][:16]
     jobs_by_id = {job['id']: (job, plan) for job, plan in zip(jobs, plans)}
     jobs_file = batch_dir / 'jobs.json'
@@ -732,8 +719,9 @@ def batch_submit(p, j, units, registrations):
         try:
             job_evidence_dir = batch_dir / '.evidence' / plan['job_id']
             ui_proof_path, before_submit_path = job_evidence_dir / 'ui-proof.json', job_evidence_dir / 'before-submit.png'
-            is_layered = plan['unit'].get('kind') in ('background', 'sticker')
-            expected_names = [] if is_layered else [x['name'] for x in plan['linked']]
+            if plan['unit'].get('kind', 'scene') != 'scene':
+                raise Blocked('FLOW_LAYERING_DISABLED: generate complete full-frame scene images')
+            expected_names = [x['name'] for x in plan['linked']]
             if ui_proof_path.is_file():
                 proof = read(ui_proof_path)
                 _check_template_attachment(identity, proof)
@@ -1074,11 +1062,11 @@ def check(p, j, data):
                 raise Blocked('M2_BASE_IMAGE: reference or evidence changed')
             files.append(base_image['path'])
         unit = next((x for x in planned_units(p, j) if x['id'] == req['identity']['target']), None)
-        is_layered = bool(
-            (unit and unit.get('kind') in ('background', 'sticker'))
-            or req['identity'].get('prompt_template', {}).get('purpose', '').startswith('layer_')
-        )
-        expected_chars = [] if is_layered else [x['name'] for x in item['references']]
+        if unit and unit.get('kind', 'scene') != 'scene':
+            raise Blocked('FLOW_LAYERING_DISABLED: generate complete full-frame scene images')
+        if req['identity'].get('prompt_template', {}).get('purpose', '').startswith('layer_'):
+            raise Blocked('FLOW_LAYERING_DISABLED: generate complete full-frame scene images')
+        expected_chars = [x['name'] for x in item['references']]
         if ui.get('passed') is not True or ui.get('mode') != 'image' or ui.get('characters') != expected_chars:
             raise Blocked('M2_UI_EVIDENCE: image mode/reference attachment not verified')
         for ref in item['references']:

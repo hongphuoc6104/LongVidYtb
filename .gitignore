@@ -25,6 +25,8 @@ sys/staging/
 /sys/reports/catch-*/
 *.bak
 *.bak_*
+*.zip
+*.tar.gz
 
 
 # --- 2. Browser Automation & Google Flow Profiles ---

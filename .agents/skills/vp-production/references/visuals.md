@@ -1,21 +1,15 @@
-# Storyboard and 2D explanatory images
+# Storyboard and Full-frame Visual Beats
 
 ## Beat & Image Planning Checklist (mandatory before prompt authoring)
-- How many beats is each dialogue line broken into, and what shot framing is chosen?
-- Are all chosen effects supported in [render-capabilities](../../../../sys/docs/render-capabilities.md); for layered video (background + sticker), follow [vp-layered-motion](../../vp-layered-motion/SKILL.md).
-- Captions must not obscure key image focal points (reserve the designated lower safe zone strictly for subtitles).
+- Does the cold open use enough narration-anchored full-frame images to show each important object or action? As a starting target, use about 8–9 images in the first 12–12.5 seconds and about 4 in the first 5 seconds when the narration supports it.
+- Are all chosen effects supported in [render-capabilities](../../../../sys/docs/render-capabilities.md)? Keep body holds within `0.83s–3.80s`; inspect actual cut timing against the WAV.
+- Captions must not obscure key image focal points (reserve the bottom `18%` safe zone on `short_9x16` when `subtitles: true`; full-bleed `None` clearance on unsubtitled `long_16x9`).
 - Author image prompts only after the beat plan is finalized.
 
 Before choosing framing/beats, review [cinematography](cinematography.md) to apply framing grammar and [render-capabilities](../../../../sys/docs/render-capabilities.md) to check available effects.
 
-Give each image a function: situation, action/state change, diagram, contrast, explanation or payoff. Specify what must be noticed, permitted text, shot/attention, and change from the prior frame in existing images/beats fields.
+Give each image a clear cognitive function: **Academic Pyramid (9 research sources)**, **Original Theory vs. Mechanical Copying Scale**, **Q1 Decision Flowchart (`Question → Gap → Method → Evidence → Paper`)**, **Research Gap Matrix**, direct contrast, or loop payoff. Prohibit mechanical clichés (`ERR-20261011-03`: no brain cutaways, abacuses, pipe-valves, iron anchors, or raw split-screens).
 
-Current channel: hand-drawn bold outlines, flat colors, bright uncluttered background, recognizable props/diagrams. Avoid textured photorealistic natural-history paintings or dark cinematic lighting. Investment is causal storyboard and useful state changes, not decorative detail or image count.
+Use a palette of complete `kind: "scene"` images: macro prop close-ups, wide scenes with figures physically grounded in the setting, in-place variations, and white concept cards. The figure, furniture, props, and environment belong to the same composition. Do not create separate background/sticker assets or add a sticker halo.
 
-No main character or recurring presenter inside scenes (prompt registry 1.1.0). Cast consists of anonymous stick figures sharing one construction: large round white head with thick black outline, simple dot/oval eyes with expressive brows/mouth, thin black stick limbs, exactly one torso. Each figure's role comes only from the scene (costume, hair, skin tone, age/size, props). Allowed: exaggerated expressions, sweat drops, simple ?, red hand-drawn focus circles/arrows. Not allowed: anime eyes, realistic faces, muscular bodies, doubled torsos, recurring protagonist/narrator.
-
-Character/style reference is optional and only guides drawing style. Use Base reference for shot/background continuity and based_on only when continuity is needed. Independent composition uses independent generation. No prompt/ref ID alone proves identity. Preserve exact allowed text and caption clearance; no forced yellow highlight/screen shake/comic effect. Historical character assets remain only for legacy 1.0.x/v3 jobs.
-
-Flow remains the image provider. Unknown submissions must reconcile/collect on their owning session, never resend under a renamed target. Report real image IDs/version and evidence; visual sampling during development is not a new auto quality gate.
-
-Layered scenes (`layers` declared): one `kind: background` plate without figures plus `kind: sticker` cut-outs on flat pure white; stickers are independent (no based_on) and motion comes from layers, not from new flat frames. Rules/presets: [vp-layered-motion](../../vp-layered-motion/SKILL.md).
+Character/style reference is optional and only guides drawing style. Use Base reference for shot continuity and set `based_on`, `preserve`, and `change` for a variation that stays in the same place. Use an independent image for a scene cut or a substantial camera change. Do not force a fixed rotation of shot types. Flow CDP (`sys/flow_cdp/`) is the sole image provider (never draw mocks with PIL).

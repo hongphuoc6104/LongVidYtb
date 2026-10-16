@@ -50,6 +50,14 @@ def validate_brief(root,b):
     errors.append(error('FACT_NOT_CONVERSATIONAL', 'sources', sfe, 'Chuyển đổi dữ kiện thành văn nói <= 20 âm tiết, không dùng ký hiệu học thuật.'))
   except ImportError:
    pass
+ if b.get('schema_version') == '3.0' and any(k in b for k in ('packaging', 'youtube_title', 'thumbnail_spec', 'channel_pillar')):
+  try:
+   from research_story_architect import check_packaging_and_localization
+   pkg_warns = check_packaging_and_localization(b)
+   for pw in pkg_warns:
+    errors.append(error('PACKAGING_CONTRACT', 'packaging', pw, 'Đảm bảo youtube_title <= 55 ký tự, thumbnail_spec có text_overlay 2-4 từ in hoa và đúng ngách học thuật.'))
+  except ImportError:
+   pass
  if errors: raise ContractError(errors)
 
 def validate_content(root,b,revision,bhash,p):

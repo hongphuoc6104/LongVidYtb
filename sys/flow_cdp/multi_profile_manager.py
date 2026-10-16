@@ -105,23 +105,57 @@ class ChromeProfileWorker:
 
 
 DEFAULT_PROFILES = [
-    {"id": "profile_1", "port": 9225, "directory": "Profile 1", "user_data_dir": "~/.config/google-chrome-cdp-p1"},
-    {"id": "profile_2", "port": 9223, "directory": "Profile 2", "user_data_dir": "~/.config/google-chrome-cdp-p2"},
-    {"id": "profile_3", "port": 9224, "directory": "Profile 3", "user_data_dir": "~/.config/google-chrome-cdp-p3"},
+    {"id": "profile_1", "port": 9225, "directory": "Profile 106", "user_data_dir": "~/.config/google-chrome-cdp-p1"},
+    {"id": "profile_2", "port": 9223, "directory": "Profile 127", "user_data_dir": "~/.config/google-chrome-cdp-p2"},
+    {"id": "profile_3", "port": 9224, "directory": "Profile 13", "user_data_dir": "~/.config/google-chrome-cdp-p3"},
 ]
 
 
 class MultiProfileManager:
-    """Manages up to 3 Chrome profile workers and handles failover / cooldown."""
+    """Manages Chrome profile workers, dynamic job leasing, and handles failover / cooldown."""
 
     def __init__(
         self,
         profiles_config: list[dict[str, Any]] | None = None,
-        cooldown_seconds: float = 60.0,
+        cooldown_seconds: float = 15.0,
+        job_id: str | None = None,
+        max_workers_per_job: int = 2,
+        lock_dir: Path | None = None,
     ):
-        raw_profiles = profiles_config or DEFAULT_PROFILES
+        raw_profiles = profiles_config
+        if raw_profiles is None:
+            try:
+                from .accounts import registry
+                reg = registry()
+                raw_profiles = reg.get("profiles", DEFAULT_PROFILES)
+            except Exception:
+                raw_profiles = DEFAULT_PROFILES
+
+        self.pool_profiles = list(raw_profiles)
+        self.cooldown_seconds = cooldown_seconds
+        self.job_id = job_id
+        self.max_workers_per_job = max_workers_per_job
+        self._lock = threading.Lock()
+
+        # Job lease management
+        self.lease_manager = None
+        if self.job_id:
+            try:
+                from .lease_manager import FlowJobLeaseManager
+            except ImportError:
+                from lease_manager import FlowJobLeaseManager
+            self.lease_manager = FlowJobLeaseManager(lock_dir=lock_dir)
+            active_profiles = self.lease_manager.lease_profiles(
+                job_id=self.job_id,
+                pool_profiles=self.pool_profiles,
+                count=self.max_workers_per_job,
+                max_profiles_per_job=self.max_workers_per_job,
+            )
+        else:
+            active_profiles = self.pool_profiles
+
         self.workers: dict[str, ChromeProfileWorker] = {}
-        for p in raw_profiles:
+        for p in active_profiles:
             w = ChromeProfileWorker(
                 profile_id=p["id"],
                 port=int(p.get("port", 9222)),
@@ -130,8 +164,48 @@ class MultiProfileManager:
             )
             self.workers[w.profile_id] = w
 
-        self.cooldown_seconds = cooldown_seconds
-        self._lock = threading.Lock()
+    def __enter__(self) -> MultiProfileManager:
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+        self.close()
+
+    def close(self) -> None:
+        """Release all leased profiles for this job."""
+        if self.lease_manager and self.job_id:
+            self.lease_manager.release_all_for_job(self.job_id)
+
+    def replace_worker_for_job(
+        self,
+        failed_worker: ChromeProfileWorker,
+        reason: str = "",
+    ) -> ChromeProfileWorker | None:
+        """Dynamically replace a degraded profile worker with a registered healthy idle pool profile."""
+        if not self.lease_manager or not self.job_id:
+            return None
+
+        with self._lock:
+            replacement_meta = self.lease_manager.replace_profile(
+                job_id=self.job_id,
+                failed_profile_id=failed_worker.profile_id,
+                pool_profiles=self.pool_profiles,
+                reason=reason,
+            )
+            if not replacement_meta:
+                return None
+
+            # Remove failed worker from active job pool
+            self.workers.pop(failed_worker.profile_id, None)
+
+            # Register new worker
+            new_worker = ChromeProfileWorker(
+                profile_id=replacement_meta["id"],
+                port=int(replacement_meta.get("port", 9222)),
+                directory=replacement_meta.get("directory", "Default"),
+                user_data_dir=replacement_meta.get("user_data_dir", "~/.config/google-chrome"),
+            )
+            self.workers[new_worker.profile_id] = new_worker
+            return new_worker
 
     def get_status(self, probe_ports: bool = False) -> dict[str, Any]:
         """Return diagnostic status of all profiles."""
@@ -253,9 +327,13 @@ class MultiProfileDispatcher:
 
             worker = self.manager.acquire_healthy_worker(exclude_ids=excluded_workers)
             if not worker:
-                # If all excluded or in cooldown, wait or raise error
-                time.sleep(1.0)
-                worker = self.manager.acquire_healthy_worker()
+                # If all excluded or in cooldown, wait up to 65s for worker/cooldown to pass
+                wait_start = time.time()
+                while not worker and (time.time() - wait_start < 65.0):
+                    time.sleep(2.0)
+                    worker = self.manager.acquire_healthy_worker(exclude_ids=excluded_workers)
+                    if not worker and (time.time() - wait_start > 30.0):
+                        worker = self.manager.acquire_healthy_worker()
                 if not worker:
                     if last_exc is not None:
                         raise last_exc
@@ -285,6 +363,9 @@ class MultiProfileDispatcher:
                     patch.patch_id, worker.profile_id, error_str
                 )
                 self.manager.release_worker(worker, success=False, error=error_str)
+                # If managed under a specific job, dynamically lease a replacement from pool
+                if getattr(self.manager, "job_id", None):
+                    self.manager.replace_worker_for_job(worker, reason=error_str)
                 # If the failure is a fundamental pre-submission contract violation, fail immediately
                 if getattr(ex, "generation_submitted", None) is False:
                     raise ex
@@ -297,11 +378,9 @@ class MultiProfileDispatcher:
                         patch.mark_item_failure(item_id, error_str)
 
         if not patch.is_completed:
-            if last_exc is not None:
-                raise last_exc
             raise RuntimeError(
-                f"Patch {patch.patch_id} failed after {patch.retry_count} attempts: {patch.error}"
-            )
+                f"Patch {patch.patch_id} failed after {patch.retry_count} attempts: {patch.error or last_exc}"
+            ) from last_exc
 
         return list(patch.completed_items.values())
 
@@ -315,10 +394,17 @@ class MultiProfileDispatcher:
         if not patches:
             return []
 
+        if not self.manager.workers:
+            raise RuntimeError(
+                f"No Chrome profile workers available for job {getattr(self.manager, 'job_id', 'unknown')}. "
+                f"Ensure profiles are running and not locked."
+            )
+
         all_results: list[dict[str, Any]] = []
         errors: list[Exception] = []
 
-        with concurrent.futures.ThreadPoolExecutor(max_workers=max_concurrency) as pool:
+        max_workers = max(1, min(max_concurrency, len(self.manager.workers)))
+        with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as pool:
             futures = {
                 pool.submit(self.execute_patch_with_failover, patch, executor_func): patch
                 for patch in patches

@@ -120,6 +120,15 @@ class TestMultiProfileManager(unittest.TestCase):
             dispatcher.execute_patch_with_failover(patch, always_fail)
         self.assertIn("failed after", str(ctx.exception).lower())
 
+    def test_empty_workers_dispatch_all_raises_clean_error(self):
+        empty_mgr = MultiProfileManager([])
+        empty_mgr.workers = {}
+        dispatcher = MultiProfileDispatcher(empty_mgr)
+        patch = Patch(patch_id="p-empty", items=[{"testCase": "t-1"}])
+        with self.assertRaises(RuntimeError) as ctx:
+            dispatcher.dispatch_all([patch], lambda w, it: [])
+        self.assertIn("No Chrome profile workers available", str(ctx.exception))
+
     def test_default_profiles_sync_with_config_and_cdp_client(self):
         import json
         from pathlib import Path

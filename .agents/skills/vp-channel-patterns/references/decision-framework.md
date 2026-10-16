@@ -1,6 +1,6 @@
-# Ma trận Ra Quyết định Kỹ thuật & Sản xuất (Decision Framework)
+# Ma trận Ra Quyết định Kỹ thuật, Hợp Nhất Hình Ảnh & Chuyển Thể Spin-off (Decision Framework)
 
-Tài liệu này cung cấp **Ma trận Ra Quyết định (Decision Matrix)** chuẩn hóa cho toàn bộ quy trình sản xuất video trong Video Pilot: từ khâu phân tích kênh tham chiếu, biên kịch, lựa chọn giọng đọc, ngắt nhịp đến dàn dựng hình ảnh và kỹ thuật dựng.
+Tài liệu này cung cấp **Ma trận Ra Quyết định (Decision Matrix)** chuẩn hóa cho toàn bộ quy trình sản xuất video trong Video Pilot: từ khâu định vị phễu nội dung, đóng gói CTR, biên kịch, lựa chọn giọng đọc, ngắt nhịp đến dàn dựng hình ảnh phân lớp và chuyển thể **Long-to-Short Spin-off (`short_9x16`)**.
 
 ---
 
@@ -8,101 +8,89 @@ Tài liệu này cung cấp **Ma trận Ra Quyết định (Decision Matrix)** c
 
 | Vấn đề cần quyết định | Lựa chọn A | Lựa chọn B | Tiêu chí quyết định (Khi nào dùng?) | Rủi ro nếu chọn sai |
 |:---|:---|:---|:---|:---|
-| **Chế độ sản xuất** | **Mode A** *(Structural Replication)* | **Mode B** *(Original Adaptation)* | Dùng **Mode A** khi chạy benchmark nội bộ, đo độ lệch timeline và kiểm thử động cơ kỹ thuật. Dùng **Mode B** khi sản xuất video mới ra kênh. | Chọn sai Mode A cho sản xuất công khai sẽ vi phạm bản quyền nội dung. |
-| **Nhịp thay đổi hình ảnh** | **Tách Scene mới** *(Scene Cut)* | **Visual Beats** *(beats[] trong Scene)* | Dùng **Tách Scene** khi đổi hoàn toàn bối cảnh/địa điểm hoặc chuyển chương lớn ($D \ge 5\text{s}$). Dùng **Visual Beats** khi đổi đạo cụ, zoom/pan camera, phản ứng sticker ($D \le 3\text{s}$). | Cắt nhỏ Scene gây tích lũy đuôi $P_{\text{tail}} = 0.70\text{s}$, làm audio bị phình to (+35% đến +70%) và vỡ nhịp kịch bản. |
-| **Dàn dựng Visual** | **Static Background Plate** | **Layered Motion** *(Plate + Stickers)* | Dùng **Static Plate** khi cảnh là biểu đồ toàn cảnh, bản đồ tĩnh, hoặc phong cảnh không nhân vật. Dùng **Layered Motion** khi có nhân vật que hành động, xuất hiện đồ vật hoặc tương tác. | Lạm dụng Static Plate gây hiện tượng "đơ hình AI" (Scene Hold Stagnation); lạm dụng Sticker không cần thiết gây chậm render. |
-| **Giọng đọc chuẩn (SSOT)** | `Adam` *(1.22x, Colab OmniVoice)* | *(Không dùng giọng khác / local TTS)* | Mặc định duy nhất cho mọi định dạng (`vi` & `en`): `assets/voices/adam/profile.json`, `speed: 1.22`, `num_step: 32`, `batch_size: 4`, `-14.0 LUFS`, `-1.5 dBTP`. | Dùng giọng khác hoặc TTS local làm lệch chuẩn âm sắc kênh. |
-| **Khoảng lặng âm thanh** | **Dramatic Pause** *(pause:900ms)* | **Engine Default Pauses** | Dùng `[pause:900ms]` trước điểm ngoặt bất ngờ, số liệu gây sốc hoặc câu hỏi tu từ. Dùng mặc định cho ngắt phẩy ($0.30\text{s}$) và ngắt đoạn ($0.70\text{s}$). | Lạm dụng dramatic pause làm loãng nhịp; thiếu dramatic pause gây cảm giác đọc như máy đếm nhịp. |
-| **Phụ đề hiển thị** | **2 dòng cân bằng (Midpoint)** | **1 dòng ngắn** | Dùng **2 dòng** khi câu có 4–8 từ (ngắt giữa câu). Dùng **1 dòng** khi câu chỉ có 1–3 từ nhấn mạnh. | Để phụ đề tràn 3 dòng che mất hình vẽ hoặc va chạm giao diện. |
+| **Chế độ sản xuất** | **Mode A** *(Structural Replication)* | **Mode B** *(Original Adaptation)* | Dùng **Mode A** khi chạy benchmark nội bộ, đo độ lệch timeline. Dùng **Mode B** khi sản xuất video mới ra kênh. | Chọn sai Mode A cho sản xuất công khai sẽ vi phạm bản quyền nội dung. |
+| **Định dạng xuất bản (`sys/format_profiles.py`)** | **`long_16x9`** *(1920x1080, 11–13m, 8 chương / 48 cảnh)* | **`short_9x16`** *(1080x1920, 45–60s, 5 cảnh độc lập)* | Dùng **`long_16x9`** (`subtitles: false`, `speed: 1.22`) cho YouTube Long-form. Dùng **`short_9x16`** (`subtitles: true`, `speed: 1.26`, `max_line_chars: 28`) cho TikTok/YouTube Shorts. | Cắt ngang Chương 2–8 của video 16:9 đem đăng TikTok khiến video mất Hook 3 giây và kịch trần 200 view. |
+| **Mật độ giữ hình (`Visual Hold`)** | **Vùng Nguy Hiểm `0:00–0:15`** *(`1.2s – 1.8s`/beat)* | **Vùng Thân Bài `> 0:15`** *(`0.83s – 3.80s`/beat)* | Trong **15 giây đầu (`SC01–SC02`)**, bắt buộc đổi beat camera hoặc nảy sticker mỗi **`1.2s – 1.8s`**. Từ `SC03` trở đi dùng ngưỡng chuẩn `0.83s – 3.80s`. | Để khung hình đứng yên 2.5s–3.8s ngay ở 15 giây đầu làm khán giả lạnh lướt bỏ ngay lập tức. |
+| **Dàn dựng Visual Hợp Nhất** | **Editorial Diagram Background Plate** *(`kind: "background"`)* | **Sticker Nghiên Cứu Cut-out** *(`kind: "sticker"`, `x = 0.35 / 0.64`)* | Kết hợp cả hai trong **Layered Motion**: Background vẽ Sơ đồ Tháp học thuật (*Academic Pyramid*) / Flowchart `Question → Gap → Method → Evidence`; Sticker Nghiên Cứu đặt ở Quy tắc 1/3 tương tác trực tiếp với sơ đồ. | Dùng hình ẩn dụ cơ khí sáo rỗng (`brain cutaway`, bàn tính) hoặc đặt sticker chết cứng giữa màn hình `x = 0.50` gây "AI Feel". |
+| **Giọng đọc & Tốc độ (SSOT)** | `Adam` `1.22x` *(Thân bài / `long_16x9`)* | `Adam` `1.26x` / `4.2–4.4` syl/s *(30s đầu / `short_9x16`)* | Mặc định duy nhất: `assets/voices/adam/profile.json` trên Colab T4 (`-14.0 LUFS`, `-1.5 dBTP`). Đẩy nhịp 30s đầu lên `4.2–4.4` âm tiết/s (`1.26x` cho `short_9x16`). | Đọc chậm đều đều ở 15s đầu hoặc dùng TTS local làm rớt Retention. |
+| **Khoảng lặng âm thanh (`[pause:...]`)** | **Cấm tuyệt đối ở `SC01`** *(`OPENING_SCENE_PAUSE_FORBIDDEN`)* | **Tier-3 Dramatic Pause** *(Tối đa 1–3 lần ở `SC02+`)* | Tuyệt đối **0 thẻ `[pause:...]` trong `SC01`**. Chỉ dùng `[pause:800ms]` / `[pause:900ms]` tối đa 1–3 lần toàn video trước điểm lật ngược định kiến lớn. | Rải 48 thẻ pause cơ học vào mọi cảnh hoặc đặt pause ngay `SC01` làm rề rà nhịp đọc. |
 
 ---
 
-## 2. Chi tiết 7 Trục Quyết định Kỹ thuật
+## 2. Chi tiết 8 Trục Quyết định Kỹ thuật
 
 ### 2.1. Trục 1: Chế độ Vận hành (Mode A vs Mode B)
-- **Khi nào chọn Mode A (Structural Replication & Control Benchmark):**
-  - Mục tiêu: Kiểm tra độ chính xác của timeline, đo độ lệch dead-air audio, benchmark năng lực tách lớp sticker Remotion và render Colab T4.
-  - Invariant: Sử dụng cấu trúc phân cảnh đối chứng gốc. **Tuyệt đối lưu hành nội bộ** (`sys/runs/`), nghiêm cấm phát hành công khai vì lý do bản quyền.
-- **Khi nào chọn Mode B (Original Adaptation & Production):**
-  - Mục tiêu: Tạo ra một sản phẩm video độc lập, nguyên bản, sẵn sàng xuất bản ra công chúng.
-  - Invariant: Giữ nguyên khung cấu trúc 5 phần (Hook $\rightarrow$ Reframe $\rightarrow$ Causal Evidence $\rightarrow$ Direct Contrast $\rightarrow$ Loop Payoff), nhưng **thay đổi 100% đề tài, nhân vật, lời dẫn, số liệu và hình minh họa**.
+- **Mode A (Structural Replication & Control Benchmark):** Chỉ dùng nội bộ (`sys/runs/`) để kiểm tra độ chính xác của timeline và động cơ render.
+- **Mode B (Original Adaptation & Production):** Sản phẩm xuất bản chính thức. Giữ khung nhân quả 5 hồi nhưng thay đổi 100% đề tài, dữ liệu, lời dẫn và sơ đồ minh họa theo ngách **"Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật"**.
 
 ---
 
-### 2.2. Trục 2: Cắt Phân cảnh (Scene Split) vs Nhịp Trực quan (Visual Beats)
-- **Quy tắc vàng:** *Đơn vị Scene là ranh giới câu thoại và không gian; đơn vị Beat là ranh giới chú ý thị giác.*
-- **Chọn Tách Scene khi:**
-  1. Thay đổi hoàn toàn không gian môi trường (Ví dụ: từ phòng ngủ hiện đại chuyển sang thảo nguyên tiền sử).
-  2. Kết thúc một luận điểm lớn (Chapter boundary).
-  3. Thời lượng câu thoại tự nhiên $\ge 5.0\text{s}$.
-- **Chọn Visual Beats (`beats[]`) khi:**
-  1. Câu thoại dài 8–14s nhưng cần thay đổi thị giác mỗi 2–3s để giữ chân người xem.
-  2. Bổ sung đạo cụ mới vào tay nhân vật que (Ví dụ: giáo săn, cuốc đất, đồng hồ cát).
-  3. Thay đổi tiêu cự camera: `zoom_in` vào khuôn mặt nhân vật, `pan_left` sang biểu đồ số liệu.
-  4. Hiệu ứng rung giật (`shake`) khi có tác động mạnh (chuông reo, sấm chớp).
+### 2.2. Trục 2: Cắt Phân cảnh (Scene Split) vs Nhịp Trực quan (Visual Beats) & Vùng Nguy Hiểm 15s Đầu
+- **Quy tắc vàng:** *Đơn vị Scene là ranh giới câu thoại và không gian ($D \ge 5.0\text{s}$); đơn vị Beat là ranh giới chú ý thị giác.*
+- **Phân tách 2 vùng tốc độ thị giác:**
+  1. **Vùng Nguy Hiểm (`0:00 – 0:15` / `SC01–SC02`):** Bắt buộc bố trí các nhịp `beats[]` và `layers[]` xuất hiện dày đặc mỗi **`1.2s – 1.8s`** (`zoom_in`, `punch_in`, `pan_right`, sticker `pop`/`bounce`).
+  2. **Vùng Thân Bài (`sau 0:15` / `SC03+`):** Phân bổ thời lượng theo *Cue-Window Allocation* trong dải **`0.83s – 3.80s`** (sai số `0.000s` tại mọi đầu câu thoại `cue.start`).
 
 ---
 
 ### 2.3. Trục 3: Động cơ Tổng hợp Âm thanh & Giọng đọc (SSOT)
-- **Voice duy nhất:** `Adam` (`assets/voices/adam/profile.json`, SHA-256 `97d5aee4bc5bbb4a5951a180c04954f5f33b36e901f9a99084ec9f2ebb1817e9`).
-- **Thông số cố định (`sys/config.json`):** `tts_voice: "Adam"`, `en_voice: "Adam"`, `tts_speed: 1.22`, `en_speed: 1.22`, `num_step: 32`, `batch_size: 4`, model `kjanh/KhanhTTS-OmniVoice` trên Colab T4.
-- **Hậu kỳ âm thanh (`sys/audio_processing.py:master`):** `48kHz` Mono PCM16, EQ `+1.5dB @ 200Hz`, `-2.5dB @ 7000Hz`, chuẩn hóa `-14.0 LUFS`, `-1.5 dBTP`.
-- **Thuật ngữ song ngữ:** Bọc cụm từ tiếng Anh trong dấu ngoặc kép `""` để `english_parts` tách span ngôn ngữ trên cùng giọng `Adam` (`1.22x`).
+- **Voice duy nhất:** `Adam` (`assets/voices/adam/profile.json`, model `kjanh/KhanhTTS-OmniVoice` trên Colab T4).
+- **Tốc độ chuẩn hóa:** `1.22x` cho `long_16x9` (riêng 30s đầu viết câu ngắn gọn tạo nhịp `4.2–4.4` âm tiết/s) và `1.26x` cho kịch bản `short_9x16` độc lập.
+- **Hậu kỳ âm thanh (`sys/audio_processing.py:master`):** `48kHz` Mono PCM16, cắt khoảng lặng nội sinh đầu/cuối (`lead_ms=25`, `trail_ms=30`), chuẩn hóa `-14.0 LUFS`, `-1.5 dBTP`, trộn Sidechain Ducking + Micro-SFX.
 
 ---
 
-### 2.4. Trục 4: Dàn dựng Thị giác (Static Plate vs Layered Motion)
-- **Chọn Static Plate khi:**
-  - Cần hiển thị sơ đồ phân nhánh, bảng đối chiếu 2 cột dữ liệu, bản đồ khảo cổ học hoặc cảnh đại cảnh tĩnh.
-  - Không có nhân vật chuyển động riêng lẻ.
-- **Chọn Layered Motion (Background Plate + Sticker Layers) khi:**
-  - Có nhân vật que đóng vai trò chủ thể hành động (thức dậy, chạy trốn, kéo cày, gục ngã).
-  - Cần hiệu ứng vật lý Remotion Spring (`damping: 12`) để sticker nảy vào khung hình tự nhiên.
-  - Cần áp dụng chuyển động sống động (*Organic Motion*): nhịp thở nhẹ (*idle breathing*), hoặc rung lắc vi mô (*jitter*).
+### 2.4. Trục 4: Hợp Nhất 2 Phong Cách Hình Ảnh Ăn View Trên Kênh (Unified Diagram Plate + Sticker Nghiên Cứu)
+Thay vì tách rời 2 kiểu hình ảnh trên kênh — (A) *Sơ đồ Tư duy / Thước đo phân cấp* (ăn `22.1K`, `16.8K`, `3.042` view) và (B) *Nhân vật người que + Thẻ so sánh nền kem* (ăn `883` và `749` view) — bộ pipeline `vp-layered-motion` + Remotion hợp nhất cả hai thành một cấu trúc duy nhất:
+1. **Background Plate (`kind: "background"`):**
+   - Vẽ chính các **Sơ đồ Tháp học thuật (*Academic Pyramid 9 nguồn nghiên cứu*)**, **Thước đo phân cấp Lý thuyết gốc vs. Sao chép cơ học**, **Đồ thị hàm số tư duy ngược**, hoặc **Sơ đồ chuỗi quyết định `Question → Gap → Method → Evidence → Paper`** theo phong cách **Editorial Graphic** sắc nét (hỗ trợ cả bản nền tối tương phản cao lẫn nền giấy kem ấm áp, tuyệt đối không vẽ nhân vật dính cứng vào nền).
+2. **Cut-out Stickers (`kind: "sticker"`):**
+   - Đưa nhân vật **Sticker Nghiên Cứu** (đúng hình tượng Avatar kênh: đầu tròn trắng viền đen dày khép kín liên tục) xuất hiện tại tọa độ **Quy tắc 1/3 (`x = 0.35` hoặc `0.64`)** để tương tác trực tiếp với sơ đồ trên Background Plate:
+     - Cầm kính lúp soi vào lỗ hổng *Research Gap* trên sơ đồ chuỗi quyết định;
+     - Dùng bút đỏ gạch chéo thói quen *Mở Word gõ ngay* hoặc cuốn sách highlight thụ động;
+     - Đổ mồ hôi hột trước *Bục Hội Đồng Bảo Vệ Khóa Luận* trong cửa sổ 120 giây đầu.
 
 ---
 
-### 2.5. Trục 5: Quản lý Khoảng lặng (Pauses & Cadence)
-- **Công thức bắt buộc:**
-  $$\text{Target Syllables} = \text{round}\Big((\text{Scene Duration} - P_{\text{tail}}) \times 4.0\Big)$$
-- **Quy tắc gán Pause:**
-  - Gán `[pause:900ms]` khi: Đang chuyển từ mệnh đề "sách vở nói..." sang "thực tế khai quật chứng minh...".
-  - Giữ $P_{\text{tail}} = 0.70\text{s}$ cho tất cả Scene giữa chừng để người xem kịp ngấm thông tin trước khi sang cảnh mới.
-  - Giữ $P_{\text{tail}} = 0.35\text{s}$ cho Scene kết thúc để video kết lại dứt khoát, không bị dead-air cuối clip.
+### 2.5. Trục 5: Quản lý Khoảng lặng & Chốt Chặn `SC01` (Pauses & Cadence)
+- **Công thức bắt buộc:** $\text{Target Syllables} = \text{round}\Big((\text{Scene Duration} - P_{\text{tail}} - T_{\text{pause}}) \times 4.0\Big)$.
+- **Chốt chặn cứng:**
+  - **Cấm `[pause:...]` ở `SC01` (`OPENING_SCENE_PAUSE_FORBIDDEN`):** Cảnh mở đầu 15 giây đầu tiên phải liền mạch 100%.
+  - **Trần câu đầu `SC01` (`OPENING_HOOK_TOO_LONG`):** Câu đầu tiên của `SC01` bắt buộc $\le 18$ âm tiết.
+  - **Giới hạn Tier-3 Pause (`EXCESSIVE_DRAMATIC_PAUSES`):** Toàn bộ kịch bản chỉ dùng tối đa **1–3 thẻ `[pause:800ms]` / `[pause:900ms]`** tại điểm lật ngược định kiến lớn.
 
 ---
 
-### 2.6. Trục 6: Ma trận Biểu cảm Nhân vật (Character Expression & Pose)
+### 2.6. Trục 6: Ma trận Biểu cảm Nhân vật Sticker Nghiên Cứu (Character Expression & Pose)
 
-| Trạng thái kịch bản | Biểu cảm khuôn mặt | Tư thế cơ thể (Stick Figure Pose) | Ứng dụng điển hình |
+| Trạng thái kịch bản học thuật | Biểu cảm khuôn mặt | Tư thế cơ thể (Sticker Nghiên Cứu Pose) | Ứng dụng điển hình trên Sơ đồ Background |
 |:---|:---|:---|:---|
-| **Báo thức / Kiệt sức** | Mắt nhắm nghiền gạch ngang (`- -`), miệng rũ sóng | Dáng ngồi bật dậy trên giường, hai vai buông thõng gù xuống | Mở đầu video hiện đại, áp lực công việc |
-| **Nghi vấn / Hoài nghi** | Lông mày xếch, một mắt to một mắt nhỏ | Một tay chống cằm, đầu nghiêng 15 độ | Câu hỏi tu từ, lật lại định kiến sách giáo khoa |
-| **Kinh ngạc / Phát hiện** | Mắt trợn tròn (`O O`), miệng chữ O | Hai tay giơ ngang ngực, thân hơi ngả về sau | Tiết lộ con số 17 giờ/tuần, phát hiện bộ xương |
-| **Lao động cực nhọc** | Mắt nhắm nghiền nhăn nhó, giọt mồ hôi rơi | Dáng gập lưng kéo cày, hai tay nắm chặt dây kéo | Minh họa cái bẫy nông nghiệp sơ khai |
-| **Thảnh thơi / Tự do** | Mắt cong hình vòng cung cười mỉm, miệng cười nhẹ | Dáng nằm ngả lưng trên bãi cỏ, hai tay gối sau đầu | Minh họa đời sống săn bắt hái lượm bên đống lửa |
+| **Ảo giác hiểu biết / Học vẹt** | Mắt nhắm nghiền gạch ngang (`- -`), miệng rũ sóng | Ôm chồng giáo trình highlight kín chữ, hai vai rũ xuống mệt mỏi (`x = 0.35`) | Mở đầu `SC01`: Đọc lại sách 5 lần hay mở Word gõ ngay lúc 2 giờ sáng |
+| **Phản biện / Hoài nghi khoa học** | Lông mày xếch, một mắt to một mắt nhỏ | Tay cầm kính lúp soi thẳng vào khe hở trên sơ đồ, đầu nghiêng 15 độ (`x = 0.64`) | `SC02–SC03`: Phát hiện lỗ hổng *Research Gap* hoặc lật tẩy định kiến học vẹt |
+| **Áp lực Hội đồng Bảo vệ 120s** | Mắt mở to căng thẳng, giọt mồ hôi rơi bên thái dương | Đứng thẳng trước bục bảo vệ, hai tay nắm chặt tập khóa luận (`x = 0.35`) | Giải phẫu tâm lý Hội đồng bảo vệ khóa luận trong 120 giây đầu tiên |
+| **Bừng tỉnh / Nắm bản chất Q1** | Mắt sáng rõ (`O O`), miệng mỉm cười tự tin | Tay cầm bút chỉ thẳng lên đỉnh Tháp Học Thuật (*Academic Pyramid*) (`x = 0.64`) | `SC04–SC05`: Làm chủ chuỗi `Question → Gap → Method → Evidence → Paper` |
 
 ---
 
 ### 2.7. Trục 7: Thiết kế Âm thanh & Micro-Foley
-- **Khi nào chèn Foley SFX:**
-  - Chỉ chèn khi kịch bản có **từ neo cụ thể (Semantic Anchor)**:
-    - Từ *"chuông báo thức"* $\longrightarrow$ Kích hoạt `sfx_alarm_bell.wav` (0.0s – 1.2s, volume -12dB).
-    - Từ *"trang sách giáo khoa"* $\longrightarrow$ Kích hoạt `sfx_page_turn.wav` (-15dB).
-    - Từ *"đống lửa sưởi ấm"* $\longrightarrow$ Kích hoạt `sfx_fire_crackle.wav` loop (-24dB diegetic).
-    - Từ *"đồng hồ tích tắc"* $\longrightarrow$ Kích hoạt `sfx_clock_tick.wav` (-18dB).
-- **Quy tắc nhạc nền (BGM):**
-  - Luôn ducking nhạc nền xuống **-20dB đến -24dB** khi có giọng đọc thoại.
-  - Nâng nhẹ nhạc nền lên **-14dB** tại các khoảng nghỉ kịch tính (`[pause:900ms]`) hoặc đoạn kết payoff.
+- **Từ neo âm thanh (Semantic Anchor):** Tiếng bút dạ quang gạch giấy, tiếng gõ phím xóa dòng chữ trên Word, tiếng đồng hồ đếm ngược 120 giây phòng bảo vệ (`sfx_clock_tick.wav`), tiếng `pop` khi Sticker Nghiên Cứu xuất hiện và `whoosh` khi chuyển tầng Tháp Học Thuật.
+- **Sidechain Ducking BGM:** Hạ nhạc nền xuống **-20dB đến -24dB** khi có giọng đọc, nâng nhẹ lên **-14dB** tại khoảng nghỉ kịch tính (`[pause:900ms]`) hoặc đoạn kết payoff.
+
+---
+
+### 2.8. Trục 8: Chuyển Thể Video Dài Sang Ngắn (`Long-to-Short Spin-off Repurposing` — Giải quyết Bẫy 2)
+- **Quy tắc Nghiêm Cấm:** **Tuyệt đối KHÔNG cắt ngang các chương giữa (`CH02..CH08`) của video `long_16x9` (11–13 phút) để đăng lên TikTok/Shorts.** Một đoạn cắt giữa chừng không có Hook phản trực giác trong 3 giây đầu, thiếu ngữ cảnh mở bài và sai bố cục khung hình dọc sẽ bị thuật toán TikTok chặn đứng ở ngưỡng ~200 view.
+- **Quy trình Spin-off Độc Lập (`build_short_spinoff_topics`):**
+  1. Từ 1 hồ sơ nghiên cứu gốc (`long_16x9`), chọn ra **2–3 nghịch lý đắt giá nhất** (mỗi nghịch lý tương ứng với 1 điểm chạm Lưu/Share cao).
+  2. Kiến trúc từng nghịch lý thành một gói kịch bản **`short_9x16` độc lập** (`1080x1920`, thời lượng `45–60s`, đúng 5 cảnh `SC01..SC05`).
+  3. Viết lại hoàn toàn **`SC01` bằng câu Counter-Intuitive Hook $\le 18$ âm tiết** độc lập, đặt tốc độ `speed: 1.26` (`4.2–4.4` âm tiết/s ở 30s đầu), bật phụ đề nhảy chữ theo `word_timestamps` (`subtitles: true`, `max_line_chars: 28`, chừa đáy `18%`).
 
 ---
 
 ## 3. Bảng Tự kiểm tra Trước khi Duyệt Kịch bản (Pre-flight Checklist)
 
-Trước khi chuyển kịch bản sang bước tạo âm thanh và hình ảnh, Agent kiểm tra 5 điều kiện tiên quyết:
-
-- [ ] **Đã tính toán số âm tiết:** Tất cả các Scene đều tuân thủ công thức $\text{Syllables} = (D - P_{\text{tail}}) \times 4.0 \pm 1$ âm tiết.
-- [ ] **Không có micro-scene audio:** Không có phân cảnh audio nào có thời lượng $D \le 2.5\text{s}$.
-- [ ] **Đầy đủ Visual Beats:** Mỗi Scene dài $\ge 8\text{s}$ phải có ít nhất 2–3 mốc `beats[]` đổi góc quay hoặc đạo cụ.
-- [ ] **Định dạng phụ đề an toàn (`sys/format_profiles.py`):** Tối đa 2 dòng/cue; không vượt quá `42` ký tự/dòng (`long_16x9`) hoặc `28` ký tự/dòng (`short_9x16`).
-- [ ] **Vòng lặp kết thúc:** Câu kết bài ở Scene cuối cùng có liên kết ngữ nghĩa hoặc hình ảnh trở lại Scene mở đầu.
+- [ ] **Đóng gói CTR & Ngách chuẩn (`brief.json`):** `youtube_title <= 55` ký tự, `thumbnail_spec` (2–4 từ in hoa), đúng ngách Tư Duy Nghiên Cứu (không có từ khóa Excel/Slide/Na).
+- [ ] **Chốt chặn 15s đầu (`SC01`):** Câu đầu $\le 18$ âm tiết, 0 thẻ `[pause:...]`, Việt hóa 100% trong 60s đầu, mật độ đổi hình `1.2s–1.8s`.
+- [ ] **Đã tính toán số âm tiết & trần câu:** Mọi câu đơn $\le 25$ âm tiết, vế câu $\le 18$ âm tiết, tổng thẻ `[pause:...]` toàn video $\le 3$, $|\text{drift}| \le 0.30\text{s}$.
+- [ ] **Hợp nhất Sơ đồ + Sticker Nghiên Cứu:** Background Plate vẽ Sơ đồ Học thuật sắc nét; Sticker Nghiên Cứu đặt tại Quy tắc 1/3 (`x = 0.35` hoặc `0.64`).
+- [ ] **Tách biệt `long_16x9` và `short_9x16` Spin-offs:** Mọi video đăng TikTok đều là kịch bản `short_9x16` 5 cảnh độc lập có phụ đề nhảy chữ.

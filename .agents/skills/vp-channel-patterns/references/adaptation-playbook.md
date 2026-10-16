@@ -1,93 +1,73 @@
-# Cẩm nang Chuyển thể Video Nguyên bản Mới (Original Adaptation Playbook)
+# Cẩm nang Chuyển thể Video Nguyên bản, Nhịp Độ Khán Giả Lạnh & Phễu 3 Tầng Học Thuật (Original Adaptation Playbook)
 
-Tài liệu này hướng dẫn cách chuyển hóa các quy luật kể chuyện và hình ảnh rút ra từ phân tích video mẫu tham chiếu thành một **kịch bản và sản phẩm video hoàn toàn nguyên bản (Mode B)** trong Video Pilot.
+Tài liệu này hướng dẫn cách chuyển hóa các quy luật kể chuyện và hình ảnh rút ra từ phân tích video mẫu tham chiếu (như `@Inkexplainer96` và Top 12 Video Thịnh Hành của kênh) thành **kịch bản và sản phẩm video hoàn toàn nguyên bản (Mode B)** trong Video Pilot, được tối ưu hóa đặc biệt cho **khán giả lạnh (Cold Audience)** và ngách **"Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật"**.
 
 > [!IMPORTANT]
-> **Nguyên tắc chuyển thể độc lập (Mode B):**
-> Kế thừa *chức năng kể chuyện* (câu hỏi gợi mở, tương phản nhận thức, chuỗi nhân quả, vòng lặp kết thúc) chứ **tuyệt đối không sao chép** câu chữ, tình huống cụ thể, nhân vật, hình vẽ, âm nhạc hay cấu trúc câu thoại nguyên văn của kênh tham chiếu.
+> **Nguyên tắc chuyển thể độc lập (Mode B) & Cold-Audience Pacing:**
+> 1. Kế thừa *cấu trúc tư duy* (nghịch lý nhận thức, sơ đồ hệ thống, chuỗi nhân quả, vòng lặp kết thúc) chứ **tuyệt đối không sao chép** câu chữ, tình huống hay hình vẽ của kênh tham chiếu.
+> 2. **Cấm bắt chước nhịp mở bài chậm của kênh triệu sub:** Các kênh lớn đã có uy tín thương hiệu nên có thể dẫn chuyện thong thả trong 30 giây đầu; ngược lại, kênh mới (hoặc khi tiếp cận tệp khán giả lạnh trên TikTok/YouTube) **bắt buộc phải đảo kết luận/nghịch lý gay cấn nhất lên 2.5–3 giây đầu tiên** (`Counter-Intuitive Hook <= 18 âm tiết`, `0 pause` ở `SC01`, tốc độ `4.2–4.4` âm tiết/s, đổi nhịp hình `1.2s–1.8s`).
 
 ---
 
-## 1. Khung Kể chuyện 5 Phần cho Video Nguyên bản Mới (5-Part Storytelling Framework)
+## 1. Nguyên Tắc Thích Nghi Cho Kênh Mới (`Cold-Audience Pacing` vs. `Big-Channel Pacing`)
 
-Dành cho video giải thích ngắn (thời lượng 45s – 90s hoặc các macro-chapter của video dài 8–11 phút):
+| Tiêu chí | Kênh Lớn Triệu Sub (Không được bắt chước máy móc) | Quy Chuẩn Cold-Audience Pacing Trong Video Pilot (Bắt buộc) |
+|:---|:---|:---|
+| **3 giây đầu (`SC01` Câu 1)** | Dẫn nhập chậm rãi kiểu *"Hãy nghĩ về một buổi sáng..."*, *"Hãy tưởng tượng..."* | **Counter-Intuitive / Truth-Slap Hook ($\le 18$ âm tiết):** Đập thẳng vào nghịch lý nhận thức (*"Đọc lại giáo trình năm lần chỉ đang ru ngủ não bạn."*). |
+| **Khoảng ngắt 15s đầu (`SC01`)** | Có thể ngắt nghỉ 0.8s–1.0s giữa các câu đầu để tạo chất thơ | **Zero Pause in First 15s (`OPENING_SCENE_PAUSE_FORBIDDEN`):** Tuyệt đối 0 thẻ `[pause:...]` trong `SC01`. |
+| **Tốc độ 30s đầu (`SC01–SC02`)** | Đọc đều ~3.8–4.0 âm tiết/giây từ đầu đến cuối | **Dynamic Pacing `4.2 – 4.4` âm tiết/giây** (`speed: 1.26x` trên `short_9x16`) để tạo lực cuốn tức thì, sau đó mới hạ về `4.0` syl/s ở thân bài. |
+| **Mật độ thị giác 15s đầu** | Giữ 1 khung hình tĩnh 3.5s–5.0s | **Danger Zone Pacing (`1.2s – 1.8s`/beat):** Đổi góc camera (`zoom_in`, `punch_in`, `pan_right`) hoặc nảy Sticker Nghiên Cứu mỗi `1.2s–1.8s`. |
+| **Bối cảnh văn hóa 60s đầu** | Dùng ngay bối cảnh Âu Mỹ hoặc cổ đại xa lạ (*Sumer, Edubba, Phổ*) | **Việt hóa 100% trong 60 giây đầu (`Vietnamese Cultural Localization`):** Ôn thi đêm, highlight giáo trình, mở Word làm khóa luận, 120s trước hội đồng bảo vệ; chỉ đưa dẫn chứng ngoại vào từ Chương 3 trở đi. |
+
+---
+
+## 2. Quy Hoạch Ngách "Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật" Theo Phễu 3 Tầng
+
+Để vừa nổ view đại chúng (10K–100K+ view), vừa có tỷ lệ Lưu/Bookmark cực cao và chuyển đổi khách hàng mua **Gemini Pro 18 tháng** mà không bị tụt xuống 200 view:
+
+1. **Tầng 1 — Phễu Rộng (`tier_1_broad`, mục tiêu 10K – 100K+ view): "Ảo Giác Hiểu Biết & Nghịch Lý Học Thuật"**
+   - *Công thức cốt lõi:* Kế thừa bài *Nghịch lý tri thức* (`22.1K` & `16.8K` view), *Lý thuyết gốc vs Sao chép cơ học* (`1.877` view) và *Biết tính $\neq$ Hiểu* (`883` view).
+   - *Điểm chạm tâm lý:* Giải thích bằng khoa học nhận thức vì sao học sinh, sinh viên, kỹ sư học vẹt/chép tài liệu rất chăm nhưng không hiểu bản chất gốc rễ (*Illusion of Competence*, *Kỹ thuật Feynman & cái bẫy thuật ngữ*).
+2. **Tầng 2 — Phễu Giữa (`tier_2_mid`, mục tiêu 3K – 20K view, Lưu/Share cực cao): "Giải Phẫu Quy Trình Nghiên Cứu Chuẩn Q1 & Tâm Lý Hội Đồng"**
+   - *Công thức cốt lõi:* Kế thừa bài *Academic Pyramid 9 nguồn nghiên cứu* (`3.042` view), *Tâm lý hội đồng 120s* (`881` view) và *Bài báo không bắt đầu ở Word* (`749` view).
+   - *Điểm chạm tâm lý:* Cung cấp khung tư duy hệ thống (*Framework / Pyramid / Flowchart `Question → Gap → Method → Evidence → Paper`*) và góc nhìn "bên kia chiến tuyến" của giám khảo phản biện.
+3. **Tầng 3 — Phễu Chuyển Đổi (`tier_3_conversion`, chuyển đổi Gemini Pro 18 tháng): "Vũ Khí Tư Duy Học Thuật (AI for Deep Research)"**
+   - *Quy tắc vàng:* **Tuyệt đối cấm** dùng từ khóa văn phòng (*mẹo Excel, gõ hàm Excel, làm Slide nhanh 4 tiếng, tình huống của Na/Nam*). Mọi bài có yếu tố AI phải gắn chặt với Chuỗi nghiên cứu (`Question → Gap → Method → Evidence`): biến 30 bài báo Q1 rời rạc thành *Ma trận Khoảng trống Nghiên cứu (Research Gap Matrix)*, hoặc dùng AI để phản biện chéo lý thuyết ở mục *Tổng quan tài liệu* thay vì viết hộ.
+
+---
+
+## 3. Khung Kể Chuyện 5 Phần Cho Video Nguyên Bản Mới (5-Part Storytelling Framework)
 
 ```mermaid
 flowchart LR
-    A["1. Hook & Empathy<br/>(0–15%)"] --> B["2. Reframe & Dilemma<br/>(15–30%)"]
-    B --> C["3. Causal Evidence<br/>(30–70%)"]
-    C --> D["4. Direct Contrast<br/>(70–85%)"]
-    D --> E["5. Loop Payoff<br/>(85–100%)"]
+    A["1. Truth-Slap Hook<br/>(0–15% | 4.2-4.4 syl/s)"] --> B["2. Reframe & Dilemma<br/>(15–35% | 1 Pause max)"]
+    B --> C["3. Causal 70/30 & Diagram<br/>(35–65% | 4.0 syl/s)"]
+    C --> D["4. Direct Contrast 1/3<br/>(65–85% | 4.0 syl/s)"]
+    D --> E["5. Loop Payoff<br/>(85–100% | 3.6-3.8 syl/s)"]
 ```
 
-### Phần 1: Mở đầu & Trải nghiệm Đồng cảm (Hook & Empathy - 0–15% thời lượng)
-- **Mục tiêu tâm lý:** Kéo người xem thoát khỏi trạng thái lướt vô thức bằng một hiện tượng đời thường quen thuộc mà họ trực tiếp trải qua.
-- **Quy tắc biên kịch:**
-  - Không mở bài bằng định nghĩa từ điển hay giọng điệu giảng bài lý thuyết khô khan.
-  - Neo vào một hình ảnh cụ thể: tiếng chuông báo thức 6:00 sáng, chiếc cốc cà phê thứ ba trong ngày, sự kiệt sức nơi công sở.
-  - Tốc độ đọc: Nhanh, dồn dập (~4.2 âm tiết/s tiếng Việt hoặc ~145–150 wpm tiếng Anh).
-- **Hành động thị giác:** 1 hành động rõ nét, dễ nhận biết (nhân vật que ngồi bật dậy, nhìn đồng hồ cát hoặc đồ vật quen thuộc).
-
-### Phần 2: Tái định hình & Lật lại Định kiến (Reframe & Dilemma - 15–30% thời lượng)
-- **Mục tiêu tâm lý:** Tạo xung đột nhận thức (*cognitive dissonance*) bằng cách chỉ ra lỗ hổng trong những niềm tin mặc định.
-- **Quy tắc biên kịch:**
-  - Cấu trúc: *"Chúng ta luôn tin rằng [Định kiến A]... nhưng sự thật có phải như vậy?"*
-  - Đặt ra câu hỏi tu từ lôi kéo tư duy: *"Ai mới thực sự là người phải làm việc nhiều hơn?"*
-  - Ngắt nhịp: Chèn khoảng ngắt kịch tính `[pause:900ms]` trước khi lật ngược vấn đề.
-- **Hành động thị giác:** Dấu gạch chéo định kiến cũ, biểu tượng đồng hồ quay ngược thời gian, hoặc sticker người que ôm đầu thắc mắc.
-
-### Phần 3: Dẫn chứng Nhân quả & Cơ chế Khoa học (Causal Evidence & Mechanism - 30–70% thời lượng)
-- **Mục tiêu tâm lý:** Cung cấp câu trả lời thỏa đáng, dựa trên bằng chứng khoa học vững chắc nhưng dễ hiểu.
-- **Quy tắc biên kịch:**
-  - Chia nhỏ thành chuỗi nhân quả 2–3 mắt xích logic liên tiếp. Mỗi mắt xích chỉ mang một thông điệp cốt lõi.
-  - **Tỷ lệ 70/30:** 70% lời dẫn khơi gợi sự thú vị, 30% dành cho các dữ liệu/số liệu đắt giá (ví dụ: *nghiên cứu năm 2014*, *17 giờ mỗi tuần*, *hài cốt thoái hóa*).
-  - Tốc độ đọc: Cân bằng, mạch lạc (~4.0 âm tiết/s).
-- **Hành động thị giác:** Sơ đồ dòng thời gian, bảng phân loại dữ liệu, thước đo so sánh. Sử dụng **Visual Beats (`beats[]`)** mỗi 2.5s – 3.5s để đổi đạo cụ mà không cắt vụn audio.
-
-### Phần 4: Tương phản Trực diện & Đúc kết Nghịch lý (Direct Contrast & Synthesis - 70–85% thời lượng)
-- **Mục tiêu tâm lý:** Đưa mâu thuẫn lên đỉnh điểm để người xem tự rút ra kết luận logic.
-- **Quy tắc biên kịch:**
-  - Đặt hai thực tại đối lập cạnh nhau:
-    - Tiện nghi công nghệ vs Kiệt sức thời gian.
-    - Công cụ thô sơ vs Tự do sinh hoạt.
-  - Nhấn trọng âm ngữ nghĩa (*semantic stress*) vào các từ đối lập: *thực sự*, *ngược lại*, *cái bẫy*.
-- **Hành động thị giác:** Tuân thủ **Editorial Graphic Visuals (`ERR-20261011-03`)**: đặt hai nhân vật que/đạo cụ ở hai tọa độ **Quy tắc 1/3** (`x = 0.35` và `x = 0.64`) hoặc cắt cảnh đối xứng liên tiếp (tuyệt đối không dùng chia đôi màn hình `split-screen comparisons`).
-
-### Phần 5: Đúc kết Triết lý & Khép vòng Lặp (Philosophical Payoff & Loop Closure - 85–100% thời lượng)
-- **Mục tiêu tâm lý:** Mang lại cảm giác thỏa mãn trọn vẹn và tạo dư âm suy ngẫm sâu sắc cho người xem sau khi video kết thúc.
-- **Quy tắc biên kịch:**
-  - **Khép vòng lặp hoàn hảo (Loop Closure):** Câu kết luận phải quay trở lại hình ảnh hoặc câu hỏi ở giây đầu tiên (chiếc đồng hồ báo thức, buổi sáng thức dậy).
-  - Tốc độ đọc: Chậm rãi, sâu lắng (~3.6–3.8 âm tiết/s).
-  - Sử dụng hằng số đuôi âm học kết thúc $P_{\text{tail}} = 0.35\text{s}$ để video đóng dứt khoát.
-- **Hành động thị giác:** Giữ khung hình tĩnh đủ lâu (hold beat) để người xem kịp đọc và thẩm thấu thông điệp cuối cùng.
+- **Phần 1 — Counter-Intuitive Hook & Empathy (0–15%):** Câu đầu tiên $\le 18$ âm tiết lật tẩy ảo giác học thuật + bối cảnh Việt hóa sát sườn, `0 pause`, nhịp cắt thị giác `1.2s–1.8s`.
+- **Phần 2 — Reframe & Dilemma (15–35%):** Đặt niềm tin sai lầm của số đông đối diện với luật ngầm học thuật Q1 / phát hiện thần kinh học; tối đa 1 thẻ `[pause:900ms]` trước câu tiết lộ.
+- **Phần 3 — Causal Evidence & Academic Diagram (35–65%):** Tỷ lệ 70/30 — 70% dẫn dắt qua **Sơ đồ Tháp học thuật / Flowchart trên Background Plate** kết hợp **Sticker Nghiên Cứu** cầm kính lúp tương tác + 30% dữ kiện văn nói $\le 20$ âm tiết.
+- **Phần 4 — Direct Contrast (65–85%):** Đặt hai phương pháp đối lập tại tọa độ **Quy tắc 1/3 (`x = 0.35` và `x = 0.64`)** (ví dụ: *Mở Word gõ ngay* vs. *Xây dựng Research Gap Matrix*).
+- **Phần 5 — Philosophical Payoff & Loop Closure (85–100%):** Quay lại hình ảnh ở giây đầu tiên với tâm thế làm chủ tri thức, hạ tốc độ xuống `3.6–3.8` âm tiết/s, $P_{\text{tail}} = 0.35\text{s}$.
 
 ---
 
-## 2. Quy chuẩn Tách Tầng Kịch bản & Âm thanh
+## 4. Quy Chuẩn Tách Tầng Kịch Bản, Âm Thanh & Spin-off Ngắn
 
-Xử lý phụ đề, âm thanh và chuyển động thành các track độc lập trong bản mô tả sản xuất (production brief):
 1. **Phụ đề an toàn (`sys/format_profiles.py`):**
-   - Tối đa 2 dòng/cue; $\le 42$ ký tự/dòng (`84` ký tự/cue) cho `long_16x9` và $\le 28$ ký tự/dòng (`54` ký tự/cue) cho `short_9x16`. Cắt dòng cân bằng ở vị trí giữa câu (`len(words) // 2`).
-2. **Âm thanh & Foley:**
-   - Khóa các từ neo (*semantic anchors*) trong kịch bản thoại với các tệp âm thanh hiệu ứng CC0 tương ứng (ví dụ: *"chuông báo thức"* $\longrightarrow$ `sfx_alarm_bell`).
-   - Nhạc nền (BGM) ducking xuống **-20dB** trong suốt lời dẫn thoại và nâng lên **-14dB** ở khoảng nghỉ kịch tính.
+   - Tối đa 2 dòng/cue; $\le 42$ ký tự/dòng (`84` ký tự/cue) cho `long_16x9` và $\le 28$ ký tự/dòng (`54` ký tự/cue) cho `short_9x16`, đồng bộ nhảy chữ theo `word_timestamps` âm học.
+2. **Chuyển thể Long-to-Short Spin-off (`short_9x16`):**
+   - Tuyệt đối không cắt ngang Chương 2–8 của video `16:9` đem đăng TikTok. Phải rút trích 2–3 nghịch lý đắt giá nhất thành các kịch bản `short_9x16` độc lập (5 cảnh, 45–60s, `subtitles: true`, `speed: 1.26`) có câu mở đầu Truth-Slap Hook $\le 18$ âm tiết riêng.
+3. **Âm thanh & Foley:**
+   - Khóa từ neo (*semantic anchors*) với Micro-SFX (`pop`, `whoosh`, tiếng lật trang giấy, tiếng đồng hồ) và Sidechain Ducking BGM (`-20dB` khi có thoại, `-14dB` khi nghỉ).
 
 ---
 
-## 3. Liên kết Tài liệu Tham chiếu Kỹ năng
+## 5. Danh Mục Kiểm Tra Chuyển Thể Hoàn Tất (Adaptation QC Checklist)
 
-Để triển khai chi tiết từng công đoạn kỹ thuật trong Video Pilot, tham khảo các tài liệu chuyên biệt:
-- **[Ma trận ra quyết định kỹ thuật](decision-framework.md):** Bảng tra cứu khi nào dùng Mode A/B, khi nào tách Scene vs dùng Visual Beats, và cách chọn Voice Model phù hợp.
-- **[Quy chuẩn lời văn, giọng đọc và ngắt nhịp](voice-cadence-pacing.md):** Công thức tính âm tiết mục tiêu $\text{Syllables} = (D - P_{\text{tail}}) \times 4.0$, bảng kiểm chứng sai số thực nghiệm $\le 0.30\text{s}$, và dải tốc độ động học.
-- **[Quy trình tích hợp Video Pilot](video-pilot-integration.md):** Hướng dẫn đóng gói brief, ủy quyền grant, sinh sticker phân tầng và render qua Remotion.
-
----
-
-## 4. Danh mục Kiểm tra Chuyển thể Hoàn tất (Adaptation QC Checklist)
-
-Trước khi chuyển giao kịch bản sang quy trình sản xuất của `vp-production`, xác nhận các tiêu chí sau:
-
-- [ ] **Độc lập bản quyền 100%:** Đề tài, số liệu nghiên cứu, câu từ kịch bản, và hình ảnh hoàn toàn mới mẻ, không sao chép nguyên văn kênh mẫu.
-- [ ] **Tuân thủ khung 5 phần:** Đủ 5 giai đoạn: Hook $\rightarrow$ Reframe $\rightarrow$ Causal Evidence $\rightarrow$ Direct Contrast $\rightarrow$ Loop Payoff.
-- [ ] **Khớp dung sai thời lượng $\pm 0.5\text{s}$:** Số âm tiết kịch bản đã được đo đạc theo công thức triệt tiêu dead-air trong [voice-cadence-pacing.md](voice-cadence-pacing.md).
-- [ ] **Visual Beats đồng bộ:** Mỗi phân cảnh dài $\ge 8\text{s}$ đều có các nhịp `beats[]` xuất hiện so le để chống hiện tượng đơ hình (Scene Hold Stagnation).
+- [ ] **Đúng ngách học thuật & Phễu 3 Tầng:** Thuộc ngách *"Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật"*, 0 từ khóa mẹo văn phòng (Excel/Slide/Na).
+- [ ] **Đóng gói CTR chuẩn (`brief.json`):** `youtube_title <= 55` ký tự (từ khóa tò mò trong 5 chữ đầu, không tự trả lời), `thumbnail_spec` có `text_overlay` 2–4 từ in hoa.
+- [ ] **Cold-Audience Hook & Việt hóa 60s đầu:** Câu đầu `SC01 <= 18` âm tiết, `0` thẻ pause ở `SC01`, bối cảnh Việt Nam 100% trong 60s đầu, không có mẫu câu cấm *"Hãy nghĩ về..."*.
+- [ ] **Mật độ thị giác Vùng Nguy Hiểm:** 15s đầu đổi beat/sticker mỗi `1.2s–1.8s`; kết hợp Sơ đồ Học thuật (`kind: "background"`) + Sticker Nghiên Cứu (`kind: "sticker"` ở `x = 0.35 / 0.64`).

@@ -6,7 +6,9 @@ Conversational Essayist acoustic model. Calculates target syllables using
 the exact dead-air elimination formula:
     Target Syllables = round((Duration - P_tail - T_pause) * 4.0)
 
-Detects speech rate warnings (> 4.5 or < 3.2 syl/s) and timeline drift (> 0.5s).
+Detects speech rate warnings (> 4.5 or < 3.2 syl/s), timeline drift (> 0.5s),
+opening scene pause violations (OPENING_SCENE_PAUSE_FORBIDDEN), and opening hook
+length violations (OPENING_HOOK_TOO_LONG > 18 syllables).
 Supports both JSON and Markdown script formats.
 """
 
@@ -24,14 +26,16 @@ DEFAULT_P_TAIL_PARA = 0.70    # Intermediate scenes: DEFAULT_PAUSE['para']
 DEFAULT_P_TAIL_LAST = 0.35    # Final scene: DEFAULT_PAUSE['tail']
 DEFAULT_P_COMMA = 0.30        # Comma / minor pause: DEFAULT_PAUSE['minor']
 NOMINAL_SPEECH_RATE = 4.0     # Nominal speech rate (syllables / second)
+OPENING_DYNAMIC_RATE_RANGE: Tuple[float, float] = (4.2, 4.4)  # First 30s dynamic pacing target (1.26x on short_9x16)
 
 # Warning thresholds
 MIN_SAFE_SPEECH_RATE = 3.2
 MAX_SAFE_SPEECH_RATE = 4.5
 MAX_ALLOWABLE_DRIFT = 0.50
-DEFAULT_MAX_SENTENCE_SYLLABLES = 25  # Recommended upper limit for a single spoken sentence
-DEFAULT_MAX_CLAUSE_SYLLABLES = 18    # Max syllables in a clause without a breathing comma/pause
-DEFAULT_MAX_DRAMATIC_PAUSES = 4      # Max Tier-3 dramatic pauses per video (dramatic reveals only)
+DEFAULT_MAX_SENTENCE_SYLLABLES = 25       # Recommended upper limit for a single spoken sentence
+DEFAULT_MAX_CLAUSE_SYLLABLES = 18         # Max syllables in a clause without a breathing comma/pause
+DEFAULT_MAX_DRAMATIC_PAUSES = 4           # Max Tier-3 dramatic pauses per video (dramatic reveals only)
+DEFAULT_MAX_OPENING_HOOK_SYLLABLES = 18   # Max syllables for the first sentence of SC01 (Counter-Intuitive Hook)
 
 # Vietnamese vowel diacritics pattern
 VI_DIACRITICS_RE = re.compile(
@@ -273,7 +277,6 @@ def split_sentences(text: str) -> List[str]:
     _, _, clean = extract_pauses(text)
     parts = re.split(r"(?<!\d)[.!?…]+(?!\d)", clean)
     return [p.strip() for p in parts if p.strip()]
-
 
 
 def calculate_target_syllables(
@@ -535,11 +538,17 @@ class SceneCadenceReport:
         max_syllables: Optional[int] = None,
         max_sentence_syllables: Optional[int] = None,
         max_clause_syllables: Optional[int] = None,
+        is_first: bool = False,
+        forbid_opening_pause: bool = False,
+        max_opening_hook_syllables: Optional[int] = None,
     ):
         self.scene_id = scene_id
         self.duration = duration
         self.narration = narration
         self.is_last = is_last
+        self.is_first = is_first
+        self.forbid_opening_pause = forbid_opening_pause
+        self.max_opening_hook_syllables = max_opening_hook_syllables
         self.nominal_rate = nominal_rate
         self.p_tail = p_tail_last if is_last else p_tail_para
         self.compensate_commas = compensate_commas
@@ -629,6 +638,22 @@ class SceneCadenceReport:
                 f"SCENE_TOO_LONG: Scene has {self.syllable_count} syllables (exceeds concise limit of {self.max_syllables}); split into shorter scenes"
             )
 
+        # Opening scene specific guards: Zero Pause in First 15s (SC01) & Counter-Intuitive Hook <= 18 syl
+        is_opening_scene = self.is_first or str(self.scene_id).strip().upper() in ("SC01", "SCENE 1", "PHÂN CẢNH 01")
+        if self.forbid_opening_pause and is_opening_scene and self.pauses:
+            self.warnings.append(
+                f"OPENING_SCENE_PAUSE_FORBIDDEN: Opening scene {self.scene_id} contains {len(self.pauses)} pause tag(s) "
+                f"({self.pause_seconds:.2f}s); zero [pause:...] allowed in first 15 seconds (SC01)"
+            )
+
+        if self.max_opening_hook_syllables is not None and is_opening_scene and self.sentences:
+            first_sent_syl = count_syllables(self.sentences[0], lang=self.lang)
+            if first_sent_syl > self.max_opening_hook_syllables:
+                self.warnings.append(
+                    f"OPENING_HOOK_TOO_LONG: Opening hook sentence in {self.scene_id} has {first_sent_syl} syllables "
+                    f"(exceeds Counter-Intuitive Hook limit of {self.max_opening_hook_syllables}): '{self.sentences[0][:40]}...'"
+                )
+
         if self.max_sentence_syllables is not None:
             for s_idx, s in enumerate(self.sentences, 1):
                 s_syl = count_syllables(s, lang=self.lang)
@@ -687,6 +712,8 @@ class ScriptCadenceChecker:
         max_sentence_syllables: Optional[int] = None,
         max_clause_syllables: Optional[int] = None,
         max_dramatic_pauses: Optional[int] = None,
+        forbid_opening_pause: bool = False,
+        max_opening_hook_syllables: Optional[int] = None,
     ):
         self.nominal_rate = nominal_rate
         self.p_tail_para = p_tail_para
@@ -698,6 +725,8 @@ class ScriptCadenceChecker:
         self.max_sentence_syllables = max_sentence_syllables
         self.max_clause_syllables = max_clause_syllables
         self.max_dramatic_pauses = max_dramatic_pauses
+        self.forbid_opening_pause = forbid_opening_pause
+        self.max_opening_hook_syllables = max_opening_hook_syllables
 
     def check_scenes(self, scenes: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Analyze a list of scene dictionaries."""
@@ -720,6 +749,7 @@ class ScriptCadenceChecker:
 
         for idx, sc in enumerate(scenes):
             is_last = (idx == total_scenes - 1)
+            is_first = (idx == 0)
             report = SceneCadenceReport(
                 scene_id=sc.get("id", f"SC{idx+1:02d}"),
                 duration=float(sc.get("duration", 0.0)),
@@ -734,6 +764,9 @@ class ScriptCadenceChecker:
                 max_syllables=self.max_syllables,
                 max_sentence_syllables=self.max_sentence_syllables,
                 max_clause_syllables=self.max_clause_syllables,
+                is_first=is_first,
+                forbid_opening_pause=self.forbid_opening_pause,
+                max_opening_hook_syllables=self.max_opening_hook_syllables,
             )
             reports.append(report)
 
@@ -825,6 +858,8 @@ def main() -> int:
     parser.add_argument("--max-sentence-syllables", type=int, default=None, help="Maximum syllables per sentence (e.g. 25)")
     parser.add_argument("--max-clause-syllables", type=int, default=None, help="Maximum syllables per clause without comma (e.g. 18)")
     parser.add_argument("--max-dramatic-pauses", type=int, default=None, help="Maximum dramatic [pause] markers in entire script (e.g. 4)")
+    parser.add_argument("--forbid-opening-pause", action="store_true", help="Forbid any [pause:...] tag in opening scene SC01 (first 15s)")
+    parser.add_argument("--max-opening-hook-syllables", type=int, default=None, help="Maximum syllables in the first sentence of SC01 (e.g. 18)")
     parser.add_argument("--json", action="store_true", help="Output analysis in JSON format")
     parser.add_argument("--strict", action="store_true", help="Exit with non-zero code if any warning is found")
 
@@ -840,6 +875,8 @@ def main() -> int:
         max_sentence_syllables=args.max_sentence_syllables,
         max_clause_syllables=args.max_clause_syllables,
         max_dramatic_pauses=args.max_dramatic_pauses,
+        forbid_opening_pause=args.forbid_opening_pause,
+        max_opening_hook_syllables=args.max_opening_hook_syllables,
     )
 
     try:

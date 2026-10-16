@@ -1,35 +1,39 @@
 ---
 name: vp-scriptwriting
-description: "Author and transform explainer video scripts into natural conversational spoken storytelling."
+description: "Author and transform explainer video scripts into natural conversational spoken storytelling with counter-intuitive 3-second hooks and calibrated acoustic cadence."
 ---
 
-# VP Scriptwriting — Conversational Essayist & Voice Cadence Skill
+# VP Scriptwriting — Conversational Essayist, Truth-Slap Hook & Voice Cadence Skill
 
-`vp-scriptwriting` là bộ kỹ năng và quy chuẩn cốt lõi dùng để sáng tác, thẩm định và chuyển hóa kịch bản video trong Video Pilot. Bộ kỹ năng này xóa bỏ triệt để văn phong bách khoa thư hàn lâm ("văn viết khô khan"), thay thế bằng phong cách kể chuyện tự nhiên, cuốn hút của một **Conversational Essayist (Nhà luận thuyết trò chuyện)**, bảo đảm người nghe có cảm giác như một người bạn tri kỷ uyên bác đang tâm sự và cùng họ khám phá những chân trời mới.
+`vp-scriptwriting` là bộ kỹ năng và quy chuẩn cốt lõi dùng để sáng tác, thẩm định và chuyển hóa kịch bản video trong Video Pilot (cho cả `long_16x9` và `short_9x16`). Bộ kỹ năng này xóa bỏ triệt để văn phong bách khoa thư hàn lâm ("văn viết khô khan") và lối dẫn nhập rề rà, thay thế bằng **Counter-Intuitive / Truth-Slap Hook (Cú tát sự thật trong 2.5 giây đầu)** kết hợp phong cách kể chuyện sắc bén, ấm áp của một **Conversational Essayist (Nhà luận thuyết trò chuyện)**.
 
 ---
 
-## 1. Sứ Mệnh & Bản Sắc Giọng Kể (Core Mission & Archetype)
+## 1. Sứ Mệnh, Bản Sắc Giọng Kể & Cú Tát Sự Thật Mở Màn (Core Mission & Opening Hook)
 
-- **Hình tượng (The Voice Archetype):** **Conversational Essayist (Nhà luận thuyết trò chuyện)** — điềm đạm, ấm áp, tò mò chân thành, đạt **Phép thử chiếc bàn cà phê (The Coffee Table Test)**.
-- **Direct & Concise Opening (Zero Greeting / Zero Throat-Clearing):** Go straight to the core point from second `0:00`. Strictly prohibit greetings (*"Xin chào"*), topic announcements (*"Hôm nay chúng ta..."*), filler prompts (*"Hãy nghĩ về..."*, *"Hãy hình dung..."*, *"Để tìm câu trả lời..."*), dictionary definitions, and Wikipedia-style lists.
-- **100% Factual Fidelity & Zero Academic Name-Drop Bloat:** Preserve 100% of core statistics and required vocabulary, but keep academic credentials (`Prof. A at University B`, publication year, DOI) strictly in `brief.json` (`sources[].reference`)—never read lengthy researcher titles or university names in spoken `narration`.
+- **Hình tượng (The Voice Archetype):** **Conversational Essayist (Nhà luận thuyết trò chuyện)** — điềm đạm, ấm áp, sắc sảo, đạt **Phép thử chiếc bàn cà phê (The Coffee Table Test)** và giữ vững vị thế ngách **"Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật"**.
+- **Counter-Intuitive / Truth-Slap Hook (Cú tát sự thật trong 2.5 giây đầu — Giải quyết Bẫy 1):**
+  - Câu đầu tiên của `SC01` bắt buộc **$\le 18$ âm tiết** (`OPENING_HOOK_TOO_LONG`), đánh thẳng vào một nghịch lý phản trực giác hoặc lật tẩy ảo giác học thuật của người xem (ví dụ: *"Đọc lại giáo trình năm lần không giúp bạn hiểu bài, nó chỉ ru ngủ não bạn."* — 17 âm tiết; hoặc *"Bài báo khoa học chuẩn quốc tế không bao giờ bắt đầu bằng việc mở Word."* — 15 âm tiết).
+  - **Tuyệt đối cấm** mở đầu bằng lời chào (*"Xin chào"*), giới thiệu đề tài (*"Hôm nay chúng ta..."*), câu dẫn nhập chậm (*"Hãy nghĩ về..."*, *"Hãy hình dung..."*, *"Hãy tưởng tượng..."*, *"Giờ đây, hãy thử..."*, *"Để tìm câu trả lời..."*), định nghĩa từ điển hoặc danh sách kiểu Wikipedia.
+- **Zero Pause in First 15 Seconds (`SC01` — `OPENING_SCENE_PAUSE_FORBIDDEN`):**
+  - **Nghiêm cấm** chèn bất kỳ thẻ `[pause:...]` nào trong cảnh mở đầu `SC01` (15 giây đầu tiên). Mọi khoảng khựng ở 15 giây đầu đều làm đứt đà cuốn hút và khiến khán giả lạnh (0 sub) lướt qua ngay lập tức.
+- **100% Factual Fidelity & Zero Academic Name-Drop Bloat:** Giữ nguyên 100% số liệu cốt lõi và từ vựng bắt buộc, nhưng cất toàn bộ danh xưng rườm rà (`Giáo sư A tại Đại học B`, năm xuất bản, mã `DOI`) vào `brief.json` (`sources[].reference`) — không bao giờ đọc danh xưng học thuật dài dòng trong `narration`.
 
 ---
 
 ## 2. Khung Kể Chuyện 5 Phần & Chuyển Cảnh Một Chiều
 
 1. **Cấu trúc 5 hồi nhân quả** (Chi tiết tại [Khung Kể Chuyện Conversational Essayist](references/conversational-essayist-framework.md)):
-   - **Hồi 1 — Hook & Empathy (0–15%):** Chạm ngay vào thói quen/nỗi niềm đời thường (~4.2 âm tiết/s).
-   - **Hồi 2 — Reframe & Dilemma (15–35%):** Lật ngược định kiến số đông bằng nghịch lý khoa học + `[pause:900ms]`.
-   - **Hồi 3 — Causal Evidence 70/30 (35–65%):** 70% dẫn dắt hình ảnh/cảm xúc $\leftrightarrow$ 30% dữ liệu thực nghiệm (~4.0 âm tiết/s).
-   - **Hồi 4 — Direct Contrast (65–85%):** Đặt hai thực tại đối lập cạnh nhau.
-   - **Hồi 5 — Loop Closure & Payoff (85–100%):** Quay lại hình ảnh mở đầu, hạ nhịp sâu lắng (~3.6–3.8 âm tiết/s).
+   - **Hồi 1 — Counter-Intuitive Hook & Empathy (0–15%):** Cú tát sự thật $\le 18$ âm tiết + bối cảnh Việt hóa sát sườn, **0 thẻ pause**, nhịp đọc cuốn **`4.2 – 4.4` âm tiết/s** (`1.26x` cho `short_9x16`).
+   - **Hồi 2 — Reframe & Dilemma (15–35%):** Lật ngược định kiến số đông bằng nghịch lý khoa học + tối đa 1 thẻ `[pause:900ms]` trước điểm bùng nổ.
+   - **Hồi 3 — Causal Evidence 70/30 (35–65%):** 70% dẫn dắt sơ đồ trực quan (Academic Pyramid / Flowchart `Question → Gap → Method → Evidence`) $\leftrightarrow$ 30% dữ liệu thực nghiệm (~`4.0` âm tiết/s).
+   - **Hồi 4 — Direct Contrast (65–85%):** Đặt hai thực tại đối lập cạnh nhau (Học vẹt / Mở Word gõ ngay vs. Tư duy gốc rễ Q1).
+   - **Hồi 5 — Loop Closure & Payoff (85–100%):** Quay lại hình ảnh mở đầu, hạ nhịp sâu lắng (~`3.6–3.8` âm tiết/s).
 2. **Luân phiên 5 thế chuyển cảnh động (Rotating Transition Grammar):**
    - Tuyệt đối cấm các câu dẫn sáo rỗng (*"Nhưng rồi..."*, *"Bước sang..."*, *"Hãy cùng bước vào..."*, *"Hãy nhìn lại..."*, *"Nhưng câu chuyện chưa dừng lại ở đó..."*).
-   - Bắt buộc luân chuyển: (1) **Sensory Jump** (bước nhảy giác quan); (2) **Paradox Pivot** (nghịch lý lật ngược); (3) **Perspective Shift** (đổi góc nhìn vĩ mô $\to$ cá thể); (4) **Micro-Moment Focus** (tiêu cự hành động nhỏ biểu tượng); (5) **Causal Hook** (móc xích nhân quả trực tiếp).
+   - Bắt buộc luân chuyển: (1) **Sensory Jump**; (2) **Paradox Pivot**; (3) **Perspective Shift**; (4) **Micro-Moment Focus**; (5) **Causal Hook**.
 3. **Phân vùng lịch sử một chiều (Strict Forward Chronology):**
-   - Khi đã bước sang thời kỳ mới (Nông nghiệp, Trung cổ, Công nghiệp, Kỷ nguyên số), **nghiêm cấm** kéo ngược bối cảnh về quá khứ (*"thời tiền sử"*, *"thợ săn"*, *"bộ não 300.000 năm"*).
+   - Khi đã bước sang thời kỳ mới, **nghiêm cấm** kéo ngược bối cảnh về thời kỳ cũ. Trong 60 giây đầu (`CH01` / `SC01–SC02`), bắt buộc giữ bối cảnh đời sống Việt Nam hiện đại trước khi dẫn sang các bối cảnh quốc tế/lịch sử từ Chương 3 trở đi.
 
 ---
 
@@ -46,54 +50,49 @@ Trong hệ thống Video Pilot (`sys/adapters.py`), động cơ tổng hợp TTS
 
 $$\text{Target Syllables} = \text{round}\Big((\text{Scene Duration} - P_{\text{tail}} - T_{\text{pause}}) \times 4.0\Big)$$
 
-- Khi kịch bản có nhiều dấu phẩy, mỗi dấu phẩy chiếm khoảng $0.30\text{s} \times 4.0 \approx 1.2$ âm tiết; chủ động trừ bớt 1 âm tiết trên mỗi dấu phẩy nếu cần tinh chỉnh sâu.
-- Các khoảng ngắt kịch tính chủ đích được viết dưới dạng `[pause:800ms]` hoặc `[pause:900ms]` (Tier 3 Dramatic Pause) chỉ dành riêng cho khoảnh khắc lật ngược vấn đề (Dramatic Reveal) với **tối đa 1–3 lần trong toàn bộ video**. Tuyệt đối **cấm rải cơ học vào mọi cảnh** để ăn gian thời lượng (`EXCESSIVE_DRAMATIC_PAUSES` — `ERR-20261014-01`). Trong audio, thẻ này được chuẩn hóa thành `0.48s` sau khi cắt khoảng lặng nội sinh `OmniVoice` theo `ERR-20261011-02`, trong khi câu ngắn `< 8` từ dùng `0.20s` và câu thường dùng `0.28s`, và được trừ hoàn toàn khỏi văn bản hiển thị phụ đề.
-- **Trần độ dài câu & Nhịp thở vế câu (`SENTENCE_TOO_LONG` & `BREATHLESS_CLAUSE` — `ERR-20261014-01`):** Mọi câu thoại đơn phải nằm trong khoảng **15–25 âm tiết** (trần tối đa $\le 25$). Tuyệt đối không viết câu dài lê thê $> 25$ âm tiết hoặc vế câu $> 18$ âm tiết mà không có dấu phẩy lấy hơi sinh lý (`,`). Với cảnh dài 14–16s, bắt buộc chia thành 3–4 câu ngắn kết hợp `beats[]` thị giác thay vì nhồi 2 câu dài ngoằng.
-- **Chống vụn nhịp câu ngắn (`SENTENCE_FRAGMENTATION`):** Không đặt quá 2 câu siêu ngắn (`< 6` âm tiết) hoặc quá 4 câu trong một cảnh trung bình; ưu tiên ghép các mệnh đề ngắn cùng ý bằng dấu phẩy (`,`) để giọng đọc `OmniVoice` liền mạch, tự nhiên.
-- **Giao thức Dữ kiện Văn nói (`Conversational Spoken Fact Protocol` — `ERR-20261011-03`):** Toàn bộ dữ kiện nguồn trong `brief.json` (`research_sources[].facts` và `required_points`) phải được chuyển hóa trước thành các câu văn nói ngắn gọn, đanh thép **$\le 20$ âm tiết** (ngưỡng cảnh báo nghiêm ngặt $\le 22$), tuyệt đối không copy-paste nguyên văn trích dẫn sách báo học thuật khô khan chứa mã DOI, ISBN, `et al.`, phần trăm hoặc công thức toán học (`check_conversational_spoken_facts()`).
+- **Quy tắc Tier-3 Dramatic Pause (`[pause:800ms]` / `[pause:900ms]`):**
+  - **Cấm tuyệt đối ở `SC01` (15 giây đầu):** Vi phạm sẽ kích hoạt cờ `OPENING_SCENE_PAUSE_FORBIDDEN`.
+  - **Giới hạn toàn video:** Tối đa **1–3 lần** trong toàn bộ video (ngưỡng chặn cứng `DEFAULT_MAX_DRAMATIC_PAUSES = 4`, cảnh báo `EXCESSIVE_DRAMATIC_PAUSES` — `ERR-20261014-01`), chỉ đặt tại bước ngoặt lật ngược định kiến từ `SC02` trở đi.
+- **Trần độ dài câu Mở đầu & Câu Thường (`OPENING_HOOK_TOO_LONG`, `SENTENCE_TOO_LONG` & `BREATHLESS_CLAUSE`):**
+  - Câu đầu tiên của `SC01` phải **$\le 18$ âm tiết**.
+  - Mọi câu thoại đơn trong kịch bản phải nằm trong khoảng **15–25 âm tiết** (trần tối đa $\le 25$), không có vế câu không dấu phẩy nào vượt quá **18 âm tiết**.
+- **Chống vụn nhịp câu ngắn (`SENTENCE_FRAGMENTATION`):** Không đặt quá 2 câu siêu ngắn (`< 6` âm tiết) hoặc quá 4 câu trong một cảnh trung bình.
+- **Giao thức Dữ kiện Văn nói (`Conversational Spoken Fact Protocol` — `ERR-20261011-03`):** Toàn bộ dữ kiện trong `brief.json` (`sources[].facts` và `required_points`) phải $\le 20$ âm tiết (ngưỡng cứng $22$), không chứa `DOI`, `ISBN`, `et al.`, `%`, `/`.
 
 ### 3.3. Dải tốc độ động học 3 giai đoạn (Dynamic Pacing)
-- **Giai đoạn Mở đầu (Hook & Empathy):** ~4.2 âm tiết/s (Tiếng Việt) / ~145–150 wpm (Tiếng Anh).
-- **Giai đoạn Cơ chế (Causal Explanation):** ~4.0 âm tiết/s (Tiếng Việt) / ~135–140 wpm (Tiếng Anh).
-- **Giai đoạn Đúc kết (Philosophical Payoff):** ~3.6–3.8 âm tiết/s (Tiếng Việt) / ~120–125 wpm (Tiếng Anh).
+- **Giai đoạn Mở đầu — 30 giây đầu (Truth-Slap Hook & Empathy):** **`4.2 – 4.4` âm tiết/s** (Tiếng Việt, tương đương `speed: 1.26x` cho `short_9x16` và nhịp cắt nhanh cho `long_16x9`) / ~150–155 wpm (Tiếng Anh) để tạo nhịp cuốn tức thì từ giây `0:00`.
+- **Giai đoạn Cơ chế (Causal Explanation):** ~`4.0` âm tiết/s (Tiếng Việt, `speed: 1.22x`) / ~135–140 wpm (Tiếng Anh).
+- **Giai đoạn Đúc kết (Philosophical Payoff):** ~`3.6–3.8` âm tiết/s (Tiếng Việt) / ~120–125 wpm (Tiếng Anh).
 - **Ngưỡng cảnh báo kỹ thuật:** $> 4.5$ âm tiết/giây (quá vội, dồn ép); $< 3.2$ âm tiết/giây (chậm chạp, ru ngủ).
 
 Chi tiết xem tại: [Quy chuẩn Giọng đọc, Tốc độ và Ngắt nhịp](../vp-channel-patterns/references/voice-cadence-pacing.md).
 
 ---
 
-## 4. Đồng Bộ Visual Beats (`beats[]`) Triệt Tiêu Đơ Hình
+## 4. Đồng Bộ Visual Beats (`beats[]`) & Vùng Nguy Hiểm 15s Đầu
 
-Để tránh hiện tượng **Scene Hold Stagnation (hình ảnh bị giữ đơ quá lâu)** mà không làm hỏng dòng chảy âm thanh:
+Để triệt tiêu hiện tượng **Scene Hold Stagnation (đứng hình 2.5s–3.8s ở 15 giây đầu)**:
 
-1. **Short Scene Splitting (`5.0s–9.0s`/scene, `1–2` concise sentences, `16–32` syllables):** Deliver one core point per scene and split multi-idea paragraphs into separate short scenes instead of long monologues (keep floor $> 2.5\text{s}$ to avoid $P_{\text{tail}} = 0.70\text{s}$ padding inflation).
-2. **Visual Beats Synchronization (`beats[]`):** Keep each visual beat hold $\le 3.8\text{s}$, locking narration semantic anchors to camera actions (`zoom_in`, `pan_left`, `ken_burns`) or sticker pop-ins.
+1. **Vùng Nguy Hiểm 15 Giây Đầu (`0:00 – 0:15` / `SC01–SC02`):** Bắt buộc chia nhịp thị giác dày **`1.2s – 1.8s`/beat** (đổi góc máy `zoom_in`, `punch_in`, `pan_right` hoặc nảy Sticker Nghiên Cứu tương tác trực tiếp với Sơ đồ Học thuật trên Background Plate).
+2. **Vùng Thân Bài (`sau 0:15` / `SC03+`):** Giữ mỗi beat thị giác trong dải **`0.83s – 3.80s`** theo *Cue-Window Allocation*, khóa từ neo ngữ nghĩa vào hành động camera hoặc sticker pop-in.
 
 ---
 
 ## 5. Quy Trình Sản Xuất & Công Cụ Kiểm Tra Tự Động
 
-Mọi kịch bản sau khi soạn thảo phải được kiểm tra thông qua công cụ tự động:
-
 ```bash
-python3 sys/tools/script_cadence_checker.py path/to/script.json
-```
+# Kiểm tra toàn diện âm học, cấm pause ở SC01, trần câu mở đầu <= 18 âm tiết, trần câu <= 25 âm tiết
+python3 sys/tools/script_cadence_checker.py path/to/content.json \
+  --forbid-opening-pause \
+  --max-opening-hook-syllables 18 \
+  --max-sentence-syllables 25 \
+  --max-clause-syllables 18 \
+  --max-dramatic-pauses 4 \
+  --strict
 
-Kiểm tra tự động số âm tiết, bù trừ $P_{\text{tail}}$, tốc độ đọc (3.2–4.5 âm tiết/s), cảnh báo drift $> 0.3\text{s}$ và chống vụn câu (`SENTENCE_FRAGMENTATION`).
-
-### 5.1. Bộ Kiểm Định Kịch Bản Đa Dạng (Script Diversity & Zero-Backtracking Linter)
-
-Mọi kịch bản trước khi đưa vào sản xuất và thu âm bắt buộc phải vượt qua công cụ kiểm định tự động:
-
-```bash
+# Kiểm định tính đa dạng kịch bản, cấm mẫu câu "Hãy nghĩ về..." và chống lặp cấu trúc
 python3 sys/tools/script_diversity_linter.py path/to/content.json
 ```
-
-**Các tiêu chuẩn bắt buộc (Hard Constraints):**
-1. `check_formulaic_transitions`: 0 vi phạm các mẫu câu chuyển cảnh rập khuôn.
-2. `check_historical_backtracking`: 0 từ khóa thời kỳ cũ xuất hiện ở các chương sau (Strict Forward Chronology).
-3. `check_intra_video_repetitions`: 0 cụm n-gram (3-4 từ) lặp lại trong phạm vi 4 cảnh liền kề (trừ các câu fact học thuật bắt buộc).
-4. `check_corpus_cross_similarity`: 0 sự trùng lặp cấu trúc mở đầu với các video đã xuất bản trong `sys/exports/`.
 
 ---
 

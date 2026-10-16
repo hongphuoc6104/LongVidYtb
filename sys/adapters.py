@@ -71,16 +71,23 @@ def _flow_media_reference(p, job, *, name=None, image=None):
   metadata=read(sidecar)
   if metadata.get('source')!='google-flow-browser' or metadata.get('status')!='downloaded' or not metadata.get('forgeId'):continue
   owner_file = record.parent / 'owner.json'
-  owner_account = read(owner_file).get('account') if owner_file.is_file() else None
-  candidates.append((str(path),metadata['forgeId'], owner_account))
+  owner_data = read(owner_file) if owner_file.is_file() else {}
+  owner_account = owner_data.get('account')
+  owner_tool_url = owner_data.get('tool_url')
+  candidates.append((str(path),metadata['forgeId'], owner_account, owner_tool_url, data.get('submitted_at', 0)))
  unique_refs = list({(c[0], c[1]) for c in candidates})
  if len(unique_refs) > 1:
   try:
    from execution import settings
-   current_account = settings(p, job).get('management_session', {}).get('runtime_bindings', {}).get('flow', {}).get('account')
-   filtered = list({(c[0], c[1]) for c in candidates if c[2] == current_account})
+   current_binding = settings(p, job).get('management_session', {}).get('runtime_bindings', {}).get('flow', {})
+   current_account = current_binding.get('account')
+   current_tool_url = current_binding.get('target', {}).get('tool_url')
+   filtered = [(c[0], c[1], c[4]) for c in candidates if c[2] == current_account and (not current_tool_url or not c[3] or c[3] == current_tool_url)]
    if len(filtered) == 1:
-    return filtered[0]
+    return (filtered[0][0], filtered[0][1])
+   if len(filtered) > 1:
+    filtered.sort(key=lambda x: x[2], reverse=True)
+    return (filtered[0][0], filtered[0][1])
   except Exception:
    pass
  if len(unique_refs) != 1:
@@ -621,6 +628,8 @@ def render(p,j,out):
   from remote_audio import render as render_remote
   return render_remote(p,j,out)
  content=p.payload(j,'content');imgs=p.payload(j,'images');snd=p.payload(j,'audio')
+ if any(scene.get('layers') or any(image.get('kind','scene')!='scene' for image in scene.get('images',[])) for scene in content.get('scenes',[])):
+  raise Blocked('LAYERING_DISABLED: render accepts full-frame scene images and beats only')
  public=out/'public';public.mkdir(exist_ok=True);shutil.copy(p.path(j,snd['wav']),public/'narration.wav')
  en=snd.get('en')
  if en:shutil.copy(p.path(j,en['wav']),public/'narration_en.wav')
@@ -636,32 +645,8 @@ def render(p,j,out):
     shutil.copy(src,dest);copied[path]=dest.name
    return copied[path]
   for scene in planned:
-   has_layers=bool(scene.get('layers'))
-   if has_layers:
-    from tools.matte_sticker import process_background
-    def copy_bg(path):
-     if path not in copied:
-      src=p.path(j,path);dest=public/(str(len(copied))+'-'+src.name)
-      process_background(src,dest);copied[path]=dest.name
-     return copied[path]
-    scene['image']=copy_bg(scene['image'])
-    for beat in scene.get('images',[]):beat['src']=copy_bg(beat['src'])
-    for layer in scene.get('layers',[]):
-     if layer.get('bg') or layer.get('kind') == 'background':
-      layer['src']=copy_bg(layer['src'])
-     elif layer.get('kind') == 'sticker':
-      from tools.matte_sticker import process_image
-      def copy_sticker(path):
-       if path not in copied:
-        src=p.path(j,path);dest=public/(str(len(copied))+'-stk-'+src.stem+'.png')
-        process_image(src,dest,create_sticker=True,border=10);copied[path]=dest.name
-       return copied[path]
-      layer['src']=copy_sticker(layer['src'])
-     else:
-      layer['src']=copy_asset(layer['src'])
-   else:
-    scene['image']=copy_asset(scene['image'])
-    for beat in scene.get('images',[]):beat['src']=copy_asset(beat['src'])
+   scene['image']=copy_asset(scene['image'])
+   for beat in scene.get('images',[]):beat['src']=copy_asset(beat['src'])
   return planned
  scenes=render_scenes('en',ratio) if (ratio=='16:9' or (b and b.get('language')=='en')) else render_scenes('vi','9:16')
  props={'duration':snd['duration'],'scenes':scenes,'segments':snd['segments'],'cues':subtitle_cues(snd['segments']),'aspect_ratio':ratio,'render_concurrency':config(p).get('render_concurrency',4)}

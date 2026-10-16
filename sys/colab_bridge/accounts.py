@@ -3,11 +3,11 @@ import argparse
 import fcntl
 import json
 import os
-from pathlib import Path
 import re
 import shutil
 import subprocess
 import sys
+from pathlib import Path
 from typing import Any
 
 STORE = Path.home() / '.config/video-pilot/colab'
@@ -123,7 +123,13 @@ def is_session_busy(
     lock_dir: Path | None = None,
 ) -> bool:
     """Return True if another process holds the local session execution lock."""
-    from .protocol import stamp
+    try:
+        from .protocol import stamp
+    except (ImportError, ValueError):
+        try:
+            from protocol import stamp
+        except ImportError:
+            from sys.colab_bridge.protocol import stamp
     base = Path(lock_dir) if lock_dir is not None else (Path.home() / '.cache/video-pilot-colab')
     lock_path = base / (stamp([name, session]) + '.lock')
     if not lock_path.is_file():
@@ -150,6 +156,15 @@ def local_sessions(name: str) -> list[str]:
     except (OSError, ValueError):
         pass
     return []
+
+
+def has_external_session(name: str, allowed_prefixes: tuple[str, ...] = ('video-pilot',)) -> bool:
+    """Return True if account has active sessions belonging to other external projects."""
+    sess_names = local_sessions(name)
+    for s in sess_names:
+        if not any(s.startswith(p) for p in allowed_prefixes):
+            return True
+    return False
 
 
 def select(
@@ -192,6 +207,9 @@ def select(
         acc_role = item.get('role', 'any')
         if role and role != 'any' and acc_role not in ('any', role):
             continue
+        # Protect accounts running external projects (e.g. histology, training notebooks)
+        if has_external_session(acc_id):
+            continue
         if (folder(acc_id) / 'token.json').is_file():
             if name == 'auto-idle' and is_session_busy(acc_id, session, lock_dir=lock_dir):
                 continue
@@ -225,6 +243,9 @@ def select_pool(
             continue
         acc_role = item.get('role', 'any')
         if role and role != 'any' and acc_role not in ('any', role):
+            continue
+        # Protect accounts running external projects
+        if has_external_session(acc_id):
             continue
         if not (folder(acc_id) / 'token.json').is_file():
             continue
@@ -409,5 +430,5 @@ if __name__ == '__main__':
         main()
     except ValueError as ex:
         print(str(ex), file=sys.stderr)
-        raise SystemExit(2)
+        raise SystemExit(2) from ex
 

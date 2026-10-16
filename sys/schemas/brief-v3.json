@@ -356,6 +356,139 @@
     },
     "chronology_rules": {
       "type": "object"
+    },
+    "channel_pillar": {
+      "type": "string",
+      "minLength": 1
+    },
+    "funnel_tier": {
+      "enum": [
+        "tier_1_broad",
+        "tier_2_mid",
+        "tier_3_conversion"
+      ]
+    },
+    "youtube_title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 65
+    },
+    "thumbnail_spec": {
+      "type": "object",
+      "properties": {
+        "visual_hook": {
+          "type": "string",
+          "minLength": 1
+        },
+        "text_overlay": {
+          "type": "string",
+          "minLength": 1
+        },
+        "contrast_pair": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "visual_hook",
+        "text_overlay"
+      ],
+      "additionalProperties": false
+    },
+    "seo_keywords": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "packaging": {
+      "type": "object",
+      "properties": {
+        "youtube_title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 65
+        },
+        "thumbnail_spec": {
+          "type": "object",
+          "properties": {
+            "visual_hook": {
+              "type": "string",
+              "minLength": 1
+            },
+            "text_overlay": {
+              "type": "string",
+              "minLength": 1
+            },
+            "contrast_pair": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "visual_hook",
+            "text_overlay"
+          ],
+          "additionalProperties": false
+        },
+        "channel_pillar": {
+          "type": "string",
+          "minLength": 1
+        },
+        "funnel_tier": {
+          "enum": [
+            "tier_1_broad",
+            "tier_2_mid",
+            "tier_3_conversion"
+          ]
+        },
+        "seo_keywords": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "youtube_title",
+        "thumbnail_spec",
+        "channel_pillar"
+      ],
+      "additionalProperties": false
+    },
+    "spinoff_shorts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "hook_title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "opening_hook": {
+            "type": "string",
+            "minLength": 1
+          },
+          "format_profile": {
+            "const": "short_9x16"
+          },
+          "scene_count": {
+            "type": "integer",
+            "minimum": 3,
+            "maximum": 6
+          }
+        },
+        "required": [
+          "id",
+          "hook_title",
+          "opening_hook"
+        ],
+        "additionalProperties": false
+      }
     }
   },
   "required": [

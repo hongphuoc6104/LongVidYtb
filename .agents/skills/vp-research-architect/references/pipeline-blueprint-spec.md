@@ -1,81 +1,90 @@
-# Đặc Tả Bộ Hồ Sơ Kỹ Thuật Pipeline (Pipeline Blueprint Specification)
+# Đặc Tả Bộ Hồ Sơ Kỹ Thuật Pipeline, Đóng Gói CTR & Spin-off Ngắn (Pipeline Blueprint Specification)
 
-Tài liệu quy định các tiêu chuẩn kỹ thuật bắt buộc khi **Research & Narrative Architect** đóng gói hồ sơ sản xuất (`brief.json` và `content.json` chuẩn Schema 3.0) để chuyển giao cho các khâu tiếp theo của Video Pilot.
+Tài liệu quy định các tiêu chuẩn kỹ thuật bắt buộc khi **Research & Narrative Architect** đóng gói hồ sơ sản xuất (`brief.json`, `content.json` chuẩn Schema 3.0 và bộ kịch bản Spin-off `short_9x16`) để chuyển giao cho các khâu tiếp theo của Video Pilot.
 
 ---
 
 ## 1. Cấu Trúc Tổng Quan Của Hồ Sơ Kỹ Thuật (Blueprint Architecture)
 
-Hồ sơ bàn giao gồm 2 tệp JSON chính đặt trong thư mục `sys/runs/<job>/`:
-1. `brief.json`: Định nghĩa yêu cầu đề tài, đối tượng, thời lượng, dữ liệu nguồn (`sources`) và các ý bắt buộc (`required_points`).
-2. `content.json`: Định nghĩa kịch bản 5 hồi, nhân vật, phân cảnh, phân tầng hình ảnh, các nhịp chuyển động (`beats[]`), bảng ánh xạ `coverage` và các khẳng định dữ kiện `claims`.
+Hồ sơ bàn giao đặt trong thư mục `sys/runs/<job>/` gồm:
+1. `brief.json`: Định nghĩa đề tài nghiên cứu nội bộ (`topic`), trạm đóng gói hiển thị (`packaging`: `youtube_title`, `thumbnail_spec`, `channel_pillar`, `funnel_tier`, `seo_keywords`), đối tượng, thời lượng, nguồn học thuật (`sources`) và các ý bắt buộc (`required_points`).
+2. `content.json`: Định nghĩa kịch bản (8 chương / 48 cảnh cho `long_16x9` hoặc 5 hồi `SC01..SC05` cho `short_9x16`), nhân vật, phân tầng hình ảnh, các nhịp chuyển động (`beats[]`), bảng ánh xạ `coverage` và các khẳng định dữ kiện `claims`.
+3. `spinoff_shorts/` *(khi bật chế độ Spin-off)*: Chứa 2–3 gói kịch bản `short_9x16` độc lập (`spinoff_01/`, `spinoff_02/`...) được rút trích từ các nghịch lý đắt giá nhất của hồ sơ nghiên cứu gốc.
 
 ---
 
 ## 2. Tiêu Chuẩn Kỹ Thuật Cho Từng Khâu Downstream
 
-### 2.1. Hợp đồng Âm thanh (Audio & TTS Contract)
+### 2.1. Hợp đồng Đóng Gói YouTube & Định Vị Kênh (`Packaging & SEO Contract` — Giải quyết Bẫy 3 & Bẫy 4)
+Để ngăn chặn tình trạng lấy nguyên tên đề tài nghiên cứu dài 30–40 chữ làm tiêu đề video gây `0 view` trên YouTube, `brief.json` bắt buộc tách bạch `topic` (nội bộ) với đối tượng `packaging`:
+
+```json
+{
+  "topic": "Nghịch lý Tri thức và Ảo giác Năng lực: Giải phẫu cơ chế nhận thức khiến việc đọc lại giáo trình thụ động và mở Word gõ ngay làm tê liệt tư duy nghiên cứu khoa học chuẩn Q1",
+  "channel_pillar": "Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật",
+  "funnel_tier": "tier_1_broad",
+  "youtube_title": "Ảo Giác Năng Lực: Vì Sao Đọc Lại Sách Làm Não Ngừng Tư Duy?",
+  "thumbnail_spec": {
+    "visual_hook": "Sơ đồ Tháp Học Thuật nền tối tương phản với nhân vật Sticker Nghiên Cứu cầm kính lúp gạch chéo cuốn giáo trình highlight kín chữ",
+    "text_overlay": "BIẾT TÍNH ≠ HIỂU!",
+    "contrast_pair": "Học vẹt cơ học vs. Tư duy gốc rễ Q1"
+  },
+  "seo_keywords": [
+    "tư duy nghiên cứu khoa học",
+    "ảo giác năng lực",
+    "cách đọc bài báo Q1",
+    "nghiên cứu khoa học sinh viên",
+    "bản chất tri thức"
+  ]
+}
+```
+
+- **Quy tắc kiểm định cứng (`check_packaging_and_localization`):**
+  1. `youtube_title`: Độ dài lý tưởng **$\le 55$ ký tự** (ngưỡng cảnh báo cứng $60$ ký tự); phải đặt từ khóa kích thích tò mò (*Ảo Giác Năng Lực*, *Tâm Lý Hội Đồng*, *Nghịch Lý Tri Thức*, *Giải Phẫu Bài Báo Q1*) ngay trong **5 chữ đầu tiên**; **tuyệt đối cấm tự trả lời câu hỏi ngay trong tiêu đề**.
+  2. `thumbnail_spec`: Gồm 1 hình ảnh tương phản trực diện (`visual_hook`) + dòng chữ đè (`text_overlay`) ngắn gọn **2–4 từ in hoa** (không lặp lại nguyên văn tiêu đề video).
+  3. `channel_pillar` & `funnel_tier`: Khóa cố định vào ngách *"Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật"*, phân tầng rõ `tier_1_broad`, `tier_2_mid`, hoặc `tier_3_conversion`. Nghiêm cấm chứa từ khóa lệch ngách văn phòng (*mẹo Excel, hàm Excel, làm Slide nhanh, tình huống của Na*).
+
+### 2.2. Hợp đồng Âm thanh & Chốt Chặn 15 Giây Đầu (Audio & TTS Contract)
 - **Công thức tính âm tiết:**
   $$\text{Target Syllables} = \text{round}\Big((\text{Scene Duration} - P_{\text{tail}} - T_{\text{pause}}) \times 4.0\Big)$$
 - **Tham số đuôi audio ($P_{\text{tail}}$):**
-  - Cảnh trung gian (SC01 – SC04): $0.70\text{s}$ (`DEFAULT_PAUSE['para']`).
-  - Cảnh kết thúc (SC05): $0.35\text{s}$ (`DEFAULT_PAUSE['tail']`).
-- **Ký hiệu ngắt giọng kịch tính:**
-  - Viết rõ ràng dưới dạng `[pause:800ms]` hoặc `[pause:900ms]`.
-  - Bộ kiểm định âm học tự động trừ thời lượng pause vào ngân sách âm tiết.
-- **Tiêu chuẩn chất lượng:**
-  - Tốc độ đọc: $3.2 \le \text{Rate} \le 4.5$ âm tiết/s.
-  - Độ lệch timeline so với target duration: $\le 0.3\text{s}$.
+  - Cảnh trung gian: $0.70\text{s}$ (`DEFAULT_PAUSE['para']`).
+  - Cảnh kết thúc: $0.35\text{s}$ (`DEFAULT_PAUSE['tail']`).
+- **Quy tắc Cú Tát Sự Thật & Cấm Pause ở `SC01` (`Zero Pause in First 15 Seconds`):**
+  - Câu đầu tiên của `SC01` bắt buộc **$\le 18$ âm tiết** (*Counter-Intuitive / Truth-Slap Hook*), đi thẳng vào nghịch lý học thuật.
+  - **Nghiêm cấm** chèn bất kỳ thẻ `[pause:...]` nào trong cảnh mở đầu `SC01` (`OPENING_SCENE_PAUSE_FORBIDDEN`).
+  - Toàn bộ video chỉ được dùng tối đa **1–3 thẻ `[pause:800ms]` / `[pause:900ms]`** tại các khoảnh khắc lật ngược định kiến lớn (`DEFAULT_MAX_DRAMATIC_PAUSES = 4`).
+- **Dải tốc độ động học (`Dynamic Pacing`):**
+  - **30 giây đầu (`SC01–SC02`):** Đẩy lên **`4.2 – 4.4` âm tiết/giây** (tương đương `speed: 1.26x` cho `short_9x16`) để cuốn người xem ngay từ giây `0:00`.
+  - **Phần thân & kết:** `4.0` âm tiết/s ở phần giải phẫu cơ chế và `3.6 – 3.8` âm tiết/s ở phần đúc kết triết lý.
 
-### 2.2. Hợp đồng Tạo hình (Flow CDP & Visual Layering Contract)
-Để hỗ trợ hiệu ứng phân lớp cắt dán (Layered Cut-out Motion):
-- **Phân tách Plate vs Sticker:**
-  - **Background Plate (`kind: "background"`):** Ảnh nền bối cảnh thuần túy, tuyệt đối không chứa người hoặc đạo cụ chuyển động. Ví dụ: *"Góc bàn làm việc đêm muộn với ánh đèn học vàng ấm và màn hình laptop mở, phòng tối tĩnh mịch."*
-  - **Cut-out Sticker (`kind: "sticker"`):** Chủ thể nhân vật stick-figure hoặc đạo cụ độc lập. Ví dụ: *"Người que stick-figure đầu tròn trắng viền đen dày, biểu cảm bối rối ôm đầu, tay cầm tách cà phê."*
-- **Quy chuẩn Stick-Figure Cast Invariant:**
-  - Nhân vật stick-figure chuẩn mực: Đầu tròn trắng viền đen dày, mắt chấm/bầu dục tối giản, thân mình một nét mực, tứ chi mảnh khảnh.
-  - Vẽ trên nền trắng sáng đồng nhất (isolated on solid white background) với đường viền đen khép kín liên tục (continuous closed black outline) để thuật toán flood-fill bóc nền trong suốt sạch sẽ 100%.
-- **Giới hạn Quota Flow:**
-  - Mỗi cảnh tạo mới tối đa 4 sticker (`MAX_NEW_STICKERS_PER_SCENE = 4`).
-  - Tái sử dụng sticker từ các cảnh trước (`layers[].image_id` trỏ về sticker đã có) để tiết kiệm quota và tạo tính nhất quán.
-- **Quy tắc cấm nhãn nội bộ (No Internal Labels In Visible Prompts):**
-  - Tuyệt đối không để lộ mã định danh như `SC01`, `CH01`, `SC01_I1` trong trường `description`, `preserve`, `change`, hoặc `visible_text`.
+### 2.3. Hợp đồng Tạo hình: Full-frame Visual Beats & Continuity (Flow CDP)
+- Mỗi beat là một ảnh hoàn chỉnh `kind: "scene"`, có chủ thể và môi trường trong cùng khung hình. Dùng sơ đồ biên tập, cận cảnh đạo cụ, cảnh rộng có nhân vật tương tác vật lý với bối cảnh, hoặc thẻ khái niệm nền trắng; tất cả vẫn là ảnh toàn khung.
+- Với cùng địa điểm và bố cục, dùng `based_on` trỏ tới ảnh trước, nêu rõ phần giữ lại trong `preserve` và thay đổi trong `change`. Với chuyển cảnh hoặc đổi góc lớn, dùng ảnh độc lập.
+- Trong cold open, hướng tới 8–9 hình trong 12–12,5 giây và khoảng 4 hình trong 5 giây đầu khi lời thoại có đủ ý hình ảnh. Đây là mục tiêu dựng cho phần mở đầu, không phải quota cho mọi cảnh. Các beat phải neo vào đúng cụm lời thoại và được kiểm tra theo WAV.
+- Không tạo `kind: "background"`/`kind: "sticker"`, `layers[]`, ảnh cut-out nền trắng hay viền sticker. Không dùng cơ khí sáo rỗng (`brain cutaway`, bàn tính, van ống nước, mỏ neo sắt).
+- Tuyệt đối không để lộ mã định danh (`SC01`, `CH01`, `SC01_I1`) trong `description`, `preserve`, `change`, hoặc `visible_text`.
 
-### 2.3. Hợp đồng Dựng Video (Remotion Composition & Visual Beats)
-- Để tránh hiện tượng đơ hình (Scene Hold Stagnation), mỗi cảnh dài phải chia thành các nhịp thị giác trong mảng `beats[]`:
-  - `anchor.vi.quote`: Trích nguyên văn cụm từ trong lời thoại làm điểm kích hoạt xuất hiện.
-  - `occurrence`: Thứ tự xuất hiện của từ/cụm từ trong lời thoại (thường là 1).
-  - `effect`: Hiệu ứng chuyển động camera hoặc lớp (`hold`, `zoom_in`, `pan_left`, `pan_right`, `ken_burns`).
-  - `focus`: Tọa độ tâm điểm chú ý `{ "x": 0.5, "y": 0.5 }`.
-- Điểm neo đầu tiên bắt buộc phải bắt đầu ngay từ đầu lời dẫn (`occurrence: 1`, vị trí ký tự 0). Các nhịp tiếp theo tăng dần theo thứ tự lời thoại.
+### 2.4. Hợp đồng Dựng Video & Vùng Nguy Hiểm 15s Đầu (Remotion Composition & Visual Beats)
+- **Tách ngưỡng giữ hình thành 2 vùng:**
+  1. **Cold open (`0:00–0:12.5`):** Tạo khoảng 8–9 hình khi lời thoại hỗ trợ; dùng ngưỡng thời gian linh hoạt theo anchor và duyệt với WAV.
+  2. **Vùng Thân Bài (`sau 0:15` / `SC03+`):** Giữ ngưỡng chuẩn **`0.83s – 3.80s`** theo thuật toán *Cue-Window Allocation* (`0.000s` drift tại mọi đầu câu thoại).
 
-### 2.4. Hợp đồng Âm thanh Hiệu ứng (Semantic SFX / Foley Cues)
-- Xác định các điểm neo âm thanh đặc trưng trong lời dẫn:
-  - Tiếng tích tắc đồng hồ hoặc gõ phím gấp gáp ở SC01.
-  - Tiếng còi báo động hoặc tiếng hổ gầm trầm thấp ở SC03.
-  - Tiếng mở cửa tủ lạnh hoặc tiếng thở phào nhẹ nhõm ở SC05.
+### 2.5. Kiến Trúc Chuyển Thể `Short-Form Spin-off Blueprint` (Giải quyết Bẫy 2)
+- **Nghiêm cấm cắt ngang video dài đem đăng TikTok:** Tuyệt đối không cắt thô Chương 2, Chương 3 của video `long_16x9` để đăng TikTok vì thiếu Hook độc lập và sai khung hình.
+- **Quy trình Spin-off chuẩn (`build_short_spinoff_topics`):**
+  - Từ 1 hồ sơ nghiên cứu gốc, kiến trúc sư trích xuất **2–3 nghịch lý đắt giá nhất** (ví dụ: Nghịch lý 1: *Đọc lại 5 lần vs. Truy xuất chủ động*; Nghịch lý 2: *Mở Word gõ ngay vs. Chuỗi quyết định Q1*; Nghịch lý 3: *120 giây đầu trước Hội đồng bảo vệ*).
+  - Mỗi bản Spin-off được đóng gói thành một hồ sơ `short_9x16` độc lập (`aspect_ratio: "9:16"`, `format_profile: "short_9x16"`, `subtitles: true`, `speed: 1.26`, 5 cảnh `SC01..SC05`, thời lượng `45–60s`), có câu mở đầu **Counter-Intuitive Hook $\le 18$ âm tiết** viết mới hoàn toàn và phụ đề nhảy chữ theo `word_timestamps` (`max_line_chars: 28`).
 
-### 2.5. Hợp đồng Pháp lý, Tính Toàn Vẹn & Tỷ Lệ Đa Dạng (Legal, Integrity & Multi-Output Contract)
-- **Tính toán mã băm Brief Hash bất biến (`brief_hash`):**
-  - `brief_hash` trong `content.json` bắt buộc phải là mã SHA-256 tính trên chuỗi JSON tuần tự hóa canonical của `brief.json` (`indent=2`, `ensure_ascii=False`).
-  - Khớp 100% với hàm `digest(p/'briefs/1.json')` của bộ điều phối `pilot.py`, ngăn chặn hoàn toàn lỗi từ chối bản nháp `BRIEF_VERSION: Sai phiên bản yêu cầu`.
-- **Hỗ trợ Tỷ lệ Kép (`aspect_ratio: "dual"`) & Đa Ngữ (Bilingual):**
-  - Khi cấu hình `aspect_ratio: "dual"`, mảng `outputs` trong `brief.json` phải tách bạch thành 2 bản ghi: `9:16` (subtitles: true) và `16:9` (subtitles: false) theo đúng chuẩn `output_contract.py`.
-  - Khi có kênh ngôn ngữ tiếng Anh (`en`), mọi `beats[]` và `layers[]` phải có cả 2 điểm neo `vi` và `en`, và bảng `coverage` phải cung cấp `quote_en` trích nguyên văn từ `narration_en`.
-- **Bảng `sources` trong `brief.json`:** Khai báo đầy đủ `id`, `title`, `author`, `year`, `reference`, và mảng `facts`.
-- **Bảng `required_points` trong `brief.json`:** Mỗi ý có một `id` duy nhất (`R01`, `R02`...) và nội dung tóm tắt.
-- **Bảng `coverage` trong `content.json`:**
-  - Mỗi ý bắt buộc phải được ánh xạ tới ít nhất một cảnh.
-  - Trường `quote` phải trích dẫn nguyên văn 100% từ `narration` của cảnh đó.
-- **Bảng `claims` trong `content.json`:**
-  - Mọi phát biểu khoa học phải có bản ghi claim trỏ tới `scene_id`, `source_id`, `fact`, và `quote`.
-  - Khẳng định tính trung thực học thuật 100%.
+### 2.6. Hợp đồng Pháp lý & Tính Toàn Vẹn (Legal & Integrity Contract)
+- **`brief_hash` bất biến:** Tính SHA-256 trên chuỗi JSON tuần tự hóa canonical (`serialize_brief_json`, `indent=2`, `ensure_ascii=False`), khớp 100% với `pilot.py`.
+- **Truy vết `coverage` & `claims` 100%:** Mọi `required_points` phải có `quote` nguyên văn trong `coverage`; mọi phát biểu khoa học phải có bản ghi trong `claims` trỏ tới `scene_id`, `source_id`, `fact`, và `quote`.
 
 ---
 
 ## 3. Quy Trình Kiểm Thử & Nghiệm Thu Blueprint
 
-Trước khi chuyển giao hồ sơ cho khâu sản xuất, công cụ kiến trúc phải tự động chạy thẩm định:
-1. `validate_brief(ROOT, brief_data)` trong `sys/content_contract.py`.
-2. `validate_content(ROOT, brief_data, 1, brief_hash, content_data)` trong `sys/content_contract.py`.
-3. `script_cadence_checker.py` kiểm định độ lệch âm học ($\le 0.3\text{s}$) và tốc độ nói.
+Trước khi chuyển giao hồ sơ cho khâu sản xuất, công cụ kiến trúc tự động chạy thẩm định:
+1. `validate_brief(ROOT, brief_data)` và `validate_content(ROOT, brief_data, 1, brief_hash, content_data)` trong `sys/content_contract.py`.
+2. `check_packaging_and_localization(brief_data, scenes)` trong `sys/tools/research_story_architect.py`.
+3. `script_cadence_checker.py` với chốt chặn `forbid_opening_pause=True` và `max_opening_hook_syllables=18`.

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import logging
 import os
 import re
 import socket
@@ -21,6 +22,8 @@ from typing import Any, Optional
 import websockets
 
 from . import flow_rpc
+
+logger = logging.getLogger("flow_cdp.direct_client")
 
 SITE_KEY = "6LdsFiUsAAAAAIjVDZcuLhaHiDn5nnHVXVRQGeMV"
 
@@ -219,26 +222,26 @@ PROFILES = [
     {
         "name": "profile_1",
         "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-p1"),
-        "profile_dir": "Profile 1",
+        "profile_dir": "Profile 106",
         "cdp_port": 9225,
-        "url": "https://flow.google.com/project/eff3e118-0fd8-413a-8b94-ed08840543d5",
-        "project_id": "eff3e118-0fd8-413a-8b94-ed08840543d5",
+        "url": "https://flow.google.com/project/b3563082-1ea0-4c17-b5f8-b14903b5fbb9",
+        "project_id": "b3563082-1ea0-4c17-b5f8-b14903b5fbb9",
     },
     {
         "name": "profile_2",
         "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-p2"),
-        "profile_dir": "Profile 2",
+        "profile_dir": "Profile 127",
         "cdp_port": 9223,
-        "url": "https://flow.google.com/project/c6b4b296-6c31-4d79-ae51-0619f374cf6a",
-        "project_id": "c6b4b296-6c31-4d79-ae51-0619f374cf6a",
+        "url": "https://flow.google.com/project/689aebeb-6fc3-4b96-a84e-67095cd0aae3",
+        "project_id": "689aebeb-6fc3-4b96-a84e-67095cd0aae3",
     },
     {
         "name": "profile_3",
         "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-p3"),
-        "profile_dir": "Profile 3",
+        "profile_dir": "Profile 13",
         "cdp_port": 9224,
-        "url": "https://flow.google.com/project/05f80480-f4f3-4d4d-916f-e3820c84c6c4",
-        "project_id": "05f80480-f4f3-4d4d-916f-e3820c84c6c4",
+        "url": "https://flow.google.com/project/afc36132-bdc0-4d3c-9440-a4a63d8cdfbf",
+        "project_id": "afc36132-bdc0-4d3c-9440-a4a63d8cdfbf",
     },
 ]
 
@@ -518,7 +521,20 @@ class DirectCDPProfileSession:
         if not isinstance(out, dict) or out.get("error"):
             raise RuntimeError(out.get("error") if isinstance(out, dict) else "NO_CDP_RESPONSE")
         raw_text = out.get("text", "")
-        payload = flow_rpc.first_payload(raw_text, flow_rpc.RPC_GEN_IMAGE)
+        try:
+            payload = flow_rpc.first_payload(raw_text, flow_rpc.RPC_GEN_IMAGE)
+        except Exception as ex:
+            if "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in str(ex) or "CAPTCHA" in str(ex):
+                logger.warning("Abnormal activity / CAPTCHA on %s, refreshing session guard...", self.name)
+                await self.connect(reload_for_guard=True)
+                await self._wait_for_flow_ready(timeout=15.0)
+                out = await self.evaluate(js_code, await_promise=True, timeout=180.0)
+                if not isinstance(out, dict) or out.get("error"):
+                    raise RuntimeError(out.get("error") if isinstance(out, dict) else "NO_CDP_RESPONSE")
+                raw_text = out.get("text", "")
+                payload = flow_rpc.first_payload(raw_text, flow_rpc.RPC_GEN_IMAGE)
+            else:
+                raise
         images = flow_rpc.read_images(payload)
         if not images:
             raise RuntimeError(f"No generated image URL in response (HTTP {out.get('status')})")
@@ -585,7 +601,20 @@ class DirectCDPProfileSession:
         if not isinstance(out, dict) or out.get("error"):
             raise RuntimeError(out.get("error") if isinstance(out, dict) else "NO_CDP_RESPONSE")
         raw_text = out.get("text", "")
-        payload = flow_rpc.first_payload(raw_text, flow_rpc.RPC_GEN_IMAGE)
+        try:
+            payload = flow_rpc.first_payload(raw_text, flow_rpc.RPC_GEN_IMAGE)
+        except Exception as ex:
+            if "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in str(ex) or "CAPTCHA" in str(ex):
+                logger.warning("Abnormal activity / CAPTCHA on %s, refreshing session guard...", self.name)
+                await self.connect(reload_for_guard=True)
+                await self._wait_for_flow_ready(timeout=15.0)
+                out = await self.evaluate(js_code, await_promise=True, timeout=180.0)
+                if not isinstance(out, dict) or out.get("error"):
+                    raise RuntimeError(out.get("error") if isinstance(out, dict) else "NO_CDP_RESPONSE")
+                raw_text = out.get("text", "")
+                payload = flow_rpc.first_payload(raw_text, flow_rpc.RPC_GEN_IMAGE)
+            else:
+                raise
         images = flow_rpc.read_images(payload)
         if not images:
             raise RuntimeError(f"No generated image URL in response (HTTP {out.get('status')})")
