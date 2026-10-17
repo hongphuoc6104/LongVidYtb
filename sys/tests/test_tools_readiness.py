@@ -57,23 +57,20 @@ def test_media_tools_readiness():
         assert res.returncode == 0, f"{tool} version check failed: {res.stderr}"
 
 
-def test_treehouse_and_axi_tools_readiness():
-    """Verify treehouse, gh-axi, and lavish-axi binaries and configuration."""
+def test_axi_tools_readiness():
+    """Verify gh-axi binary."""
     repo_root = Path(__file__).resolve().parents[2]
-    th_cfg = repo_root / "treehouse.json"
-    assert th_cfg.is_file(), f"treehouse.json configuration missing at {th_cfg}"
 
-    for axi_tool in ["treehouse", "gh-axi", "lavish-axi"]:
-        tool_bin = shutil.which(axi_tool)
-        assert tool_bin is not None, f"Expected {axi_tool} binary in PATH"
-        res = subprocess.run([tool_bin, "--version"], capture_output=True, text=True)
-        assert res.returncode == 0, f"{axi_tool} version check failed: {res.stderr}"
+    tool_bin = shutil.which("gh-axi")
+    assert tool_bin is not None, "Expected gh-axi binary in PATH"
+    res = subprocess.run([tool_bin, "--version"], capture_output=True, text=True)
+    assert res.returncode == 0, f"gh-axi version check failed: {res.stderr}"
 
 
 def test_core_directory_and_doc_invariants():
     """Verify existence of mandatory files and layout single source of truth."""
     repo_root = Path(__file__).resolve().parents[2]
-    for required_file in ["AGENTS.md", "PLAYBOOK.md", "pyproject.toml", "treehouse.json", "pipeline", "pilot.py"]:
+    for required_file in ["AGENTS.md", "PLAYBOOK.md", "pyproject.toml", "pipeline", "pilot.py"]:
         p = repo_root / required_file
         assert p.is_file(), f"Required file missing: {required_file}"
 

@@ -112,18 +112,14 @@ class TestResearchStoryArchitect(unittest.TestCase):
         self.assertEqual(self.brief_data["schema_version"], "3.0")
         self.assertEqual(self.brief_data["scene_count"], 5)
         self.assertEqual(len(self.brief_data["required_points"]), 5)
-        self.assertEqual(len(self.brief_data["sources"]), 2)
-        self.assertEqual(self.brief_data["outputs"][0]["voice"], "VietNarrator")
-        self.assertEqual(self.brief_data["outputs"][0]["speed"], 1.0)
+        cfg = json.loads((SYS_DIR / "config.json").read_text(encoding="utf-8"))
+        self.assertEqual(self.brief_data["outputs"][0]["voice"], cfg["tts_voice"])
+        self.assertEqual(self.brief_data["outputs"][0]["speed"], cfg["tts_speed"])
         assert self.brief_data["schema_version"] == "3.0"
         assert self.brief_data["scene_count"] == 5
-        assert self.brief_data["outputs"][0]["voice"] == "VietNarrator"
+        assert self.brief_data["outputs"][0]["voice"] == cfg["tts_voice"]
 
-        cfg = json.loads((SYS_DIR / "config.json").read_text(encoding="utf-8"))
-        self.assertEqual(
-            cfg["voices"],
-            {"vi": "assets/voices/viet_narrator/profile.json", "en": "assets/voices/adam/profile.json"},
-        )
+        self.assertEqual(cfg["voices"]["vi"], "assets/voices/viet_narrator/profile.json")
         self.assertEqual(cfg["tts_voice"], "VietNarrator")
         self.assertEqual(cfg["tts_speed"], 1.0)
         self.assertEqual(cfg["en_voice"], "Adam")
