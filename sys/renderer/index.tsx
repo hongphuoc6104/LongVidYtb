@@ -1,7 +1,7 @@
 import {selectSemanticCameraEffect, overscanScale, BASE_OVERSCAN} from './camera.mjs';
 import {Thumbnail} from './thumbnail';
 import React, {useLayoutEffect} from 'react';
-import {karaokeTokens, captionStyle, captionMaxHeight} from './captions.mjs';
+import {portraitCaptionTokens, PORTRAIT_CAPTION_ACTIVE_COLOR, captionStyle, captionMaxHeight} from './captions.mjs';
 import {BRAND_LOGO_DATA_URI} from './brand_logo';
 import {
   AbsoluteFill,
@@ -507,7 +507,7 @@ const Video: React.FC<any> = (p) => {
         const targetWord = p.target_word;
         return (
           <div data-check="subtitle" style={{...captionStyle(width, height), zIndex: 30} as React.CSSProperties}>
-            {height > width && p.words?.length ? karaokeTokens(cue, p.words, t).map((token: any, index: number) => <span key={index} style={{color: token.active ? '#FACC15' : 'white', display: 'inline-block', transform: token.active ? 'scale(1.06)' : undefined, marginRight: '0.25em'}}>{token.text}</span>) : renderHighlightedText(lineText, targetWord, p.modern_style)}
+            {height > width ? portraitCaptionTokens(cue, p.words || [], t).map((token: {text: string; active: boolean}, index: number) => <React.Fragment key={index}>{index > 0 ? ' ' : ''}<span style={{color: token.active ? PORTRAIT_CAPTION_ACTIVE_COLOR : '#FFFFFF'}}>{token.text}</span></React.Fragment>) : renderHighlightedText(lineText, targetWord, p.modern_style)}
           </div>
         );
       })()}

@@ -58,6 +58,10 @@ class RenderTests(unittest.TestCase):
             self.assertTrue(all('local_path' not in x for x in manifest['files']))
             self.assertEqual(manifest['brief']['outputs'][0]['speed'], 1.0)
             self.assertIn('source/renderer/outputs.mjs', z.namelist())
+            self.assertEqual(z.read('source/renderer/captions.mjs'),
+                             (ROOT / 'renderer/captions.mjs').read_bytes())
+            self.assertEqual(z.read('source/renderer/index.tsx'),
+                             (ROOT / 'renderer/index.tsx').read_bytes())
         (self.root / 'image.png').write_bytes(b'changed')
         with self.assertRaisesRegex(ValueError, 'changed'): bundle(self.req, self.root / 'changed.zip')
 

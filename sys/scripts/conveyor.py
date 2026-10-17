@@ -99,6 +99,8 @@ def station_2_test_ast() -> bool:
         SYS_DIR / "tests/test_full_frame_upgrade.py",
         SYS_DIR / "tests/test_full_frame_pipeline.py",
         SYS_DIR / "tests/test_omni_platform.py",
+        SYS_DIR / "tests/test_caption_profile_07.py",
+        SYS_DIR / "tests/test_remote_render.py",
         SYS_DIR / "tests/test_anti_formulaic_storytelling.py",
         SYS_DIR / "tests/test_independent_maintenance_contracts.py",
     ]
@@ -222,6 +224,7 @@ def station_4_lint() -> bool:
         str(SYS_DIR / "tests/test_full_frame_pipeline.py"),
         str(SYS_DIR / "tests/test_full_frame_upgrade.py"),
         str(SYS_DIR / "tests/test_omni_platform.py"),
+        str(SYS_DIR / "tests/test_caption_profile_07.py"),
         str(SYS_DIR / "tests/test_anti_formulaic_storytelling.py"),
         str(REPO_ROOT / "pilot.py"),
     ]

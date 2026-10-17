@@ -73,7 +73,9 @@ def test_karaoke_repeat_words_and_safe_zone() -> None:
     output = json.loads(subprocess.check_output(['node', '--input-type=module', '-e', script], cwd=ROOT, text=True))
     assert [token['active'] for token in output['tokens']] == [False, True]
     assert output['style']['bottom'] == 400
-    assert output['style']['left'] + output['style']['width'] <= 900
+    assert output['style']['left'] == '50%'
+    assert output['style']['transform'] == 'translateX(-50%)'
+    assert (1080 + output['style']['width']) / 2 <= 950
 
 
 def test_social_kit_uses_measured_starts_and_sources() -> None:

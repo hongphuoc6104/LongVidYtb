@@ -88,7 +88,8 @@ console.log(JSON.stringify({
     assert data['minScale'] == 1.045
     assert data['landscape']['background'] == 'transparent'
     assert data['landscape']['border'] == 'none'
-    assert data['portrait']['background'] != 'transparent'
+    assert data['portrait']['background'] == 'transparent'
+    assert data['portrait']['border'] == 'none'
 
 
 @pytest.mark.parametrize('speed', [0.85, 1.16, 1.39])

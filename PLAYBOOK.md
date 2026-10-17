@@ -12,6 +12,14 @@ $$\text{1. Tái hiện E2E} \longrightarrow \text{2. Phân tích gốc rễ} \lo
 
 ## II. Danh Mục Bài Học & Sự Cố Chuẩn Hóa
 
+### [ERR-20261017-03] Centered Portrait Caption Profile 07
+- **Triệu chứng (Symptom):** Portrait captions drift left and obscure the illustration with a large opaque panel.
+- **Tái hiện E2E (Reproduction Path):** At 1080×1920, the former 56 px left offset plus half the 820 px width puts the caption center at 466 px rather than 540 px. Run `pytest sys/tests/test_caption_profile_07.py` for the replacement contract.
+- **Nguyên nhân cốt lõi (Root Cause):** Fixed left anchoring, opaque background, trailing token margins and full-cue karaoke increase visual imbalance and density.
+- **Giả định sai (Wrong Assumptions):** Centered text inside a left-anchored box does not center the box within the frame.
+- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Profile 07 uses centered layout, white/amber text, transparent background, thin text outline, no word scaling and compact groups from measured word starts. Regression tests verify token preservation, alignment fallback and responsive styles; static preview verifies appearance without rendering video.
+- **Quy tắc phòng ngừa vàng (Golden Rule):** Center the entire caption group; preserve transcript tokens and measured timing. Missing alignment must retain the full cue instead of inventing word timings. Static previews do not prove audiovisual sync.
+
 ### [ERR-20261010-08] Chuẩn Hóa Ngữ Âm Tiếng Việt & Cắt Khoảng Lặng Nội Sinh OmniVoice
 - **Triệu chứng (Symptom):** Giọng đọc `OmniVoice` (`VietNarrator`) phát âm sai chữ số/từ mượn tiếng Anh và bị khựng nhịp (`0.65s–1.35s`) giữa các câu.
 - **Tái hiện E2E (Reproduction Path):** Chạy `pytest sys/tests/test_colab_worker.py sys/tests/test_script_cadence_checker.py -v` với văn bản chứa số hoặc WAV chưa cắt lặng.
