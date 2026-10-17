@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "voices": {
+    "vi": "runs/voice-trial-Z63FteI6EeE/profile.json",
+    "en": "assets/voices/adam/profile.json"
+  },
+  "tts_voice": "TrialZ63",
+  "tts_speed": 1.0,
+  "tts_max_chars": 256,
+  "en_voice": "Adam",
+  "en_speed": 1.22,
+  "fps": 30,
+  "video_generation": false,
+  "credit_budget": 0,
+  "flow_batch": false,
+  "flow_image_engine": "cdp",
+  "flow_cdp_profiles": [
+    {
+      "id": "profile_1",
+      "port": 9225,
+      "directory": "Profile 106",
+      "user_data_dir": "~/.config/google-chrome-cdp-p1"
+    },
+    {
+      "id": "profile_2",
+      "port": 9223,
+      "directory": "Profile 127",
+      "user_data_dir": "~/.config/google-chrome-cdp-p2"
+    },
+    {
+      "id": "profile_3",
+      "port": 9224,
+      "directory": "Profile 13",
+      "user_data_dir": "~/.config/google-chrome-cdp-p3"
+    }
+  ],
+  "patch_size": 3,
+  "flow_session_image_cap": 200,
+  "flow_require_ui_evidence": false,
+  "flow_queue_trial_enabled": true,
+  "flow_model": "Nano Banana 2 Lite",
+  "flow_prompt_version": "1.3.0",
+  "flow_profile": "video-pilot",
+  "flow_project": "Video Pilot",
+  "tts_pause": {
+    "para": 0.7,
+    "sentence": 0.5,
+    "minor": 0.3,
+    "tail": 0.35
+  },
+  "audio_trim_silence": true,
+  "tts_calibrated_pauses": {
+    "short_sentence": 0.2,
+    "normal_sentence": 0.28,
+    "dramatic_pivot": 0.48
+  },
+  "audio_lufs": -14.0,
+  "audio_peak_db": -1.5,
+  "renderer": "remotion",
+  "concurrency": 3,
+  "review": "three_stages",
+  "en_seed": 42,
+  "workflow_mode": "review",
+  "render_concurrency": 4,
+  "canonical_character": null,
+  "auto_require_clean_code": true,
+  "auto_max_media_rejections": 3,
+  "auto_max_audio_retakes_per_scene": 2,
+  "auto_max_audio_retakes": 4,
+  "auto_max_repeat_failures": 3,
+  "flow_status_timeout_seconds": 30,
+  "flow_status_retries": 2,
+  "flow_status_backoff_seconds": 2,
+  "brief_policies": [],
+  "colab_tts": {
+    "enabled": true,
+    "parallel_images": true,
+    "session": "voice-trial-Z63FteI6EeE",
+    "batch_size": 4,
+    "num_step": 32,
+    "timeout_seconds": 1800,
+    "models": {
+      "vi": {
+        "id": "kjanh/KhanhTTS-OmniVoice",
+        "revision": "20d056b8ea5d8d578b4cbaf1f703012fa3798a84"
+      },
+      "en": {
+        "id": "kjanh/KhanhTTS-OmniVoice",
+        "revision": "20d056b8ea5d8d578b4cbaf1f703012fa3798a84"
+      }
+    },
+    "account": "primary",
+    "render_estimate_seconds": 60,
+    "_session_explicit": true
+  },
+  "flow_profile_policy": "existing_only"
+}

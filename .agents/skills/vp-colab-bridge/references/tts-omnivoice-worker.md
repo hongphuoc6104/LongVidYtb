@@ -18,7 +18,7 @@ Before constructing any TTS request or invoking synthesis, pass all Vietnamese t
 
 ## 2. Voice Profile & Reference Checksums (`protocol.py`)
 
-The sole canonical voice profile resides in `sys/assets/voices/adam/profile.json` (`"voice": "Adam"`, `"languages": ["vi", "en"]`, `speed: 1.22`) and is mapped in `sys/config.json` under `voices.vi` and `voices.en`.
+The default Vietnamese profile is `sys/assets/voices/viet_narrator/profile.json` (`"voice": "VietNarrator"`, `"languages": ["vi"]`, speed `1.00`). English retains `sys/assets/voices/adam/profile.json` (`"voice": "Adam"`, speed `1.22`). `sys/config.json` maps them under `voices.vi` and `voices.en`. The new profile retains the denoised 12-second reference, source provenance and user-approved `sample.wav`; the generated sample's boundary repair is not a change to the reference audio or a general artifact-prevention guarantee.
 `load_profiles()` enforces strict validation before uploading to Colab:
 - `profile['voice']` and `lang in profile['languages']` must match the active configuration.
 - `reference_wav` must exist, match its SHA-256 `profile['sha256']`, and have a duration strictly between **3 and 15 seconds** (`3 <= frames / framerate <= 15`).
@@ -62,4 +62,3 @@ The sole canonical voice profile resides in `sys/assets/voices/adam/profile.json
      - Minor clause / comma pause: $P_{\text{comma}} = 0.30\text{s}$ (`minor`).
    - **Result Verification (`validate_result`)**:
      - Downloads `/content/video-pilot-tts/<request_id>/output.zip`, verifies no symlinks or unexpected file extensions, validates finite positive durations for every WAV and segment, and writes `tts.log`.
-

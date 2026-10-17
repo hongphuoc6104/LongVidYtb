@@ -7,13 +7,13 @@ from output_contract import languages, narration, primary_language, voice_settin
 
 def primary_scene_request(scene: dict, text: str, language: str, pauses: dict,
                           retake: int, last: bool) -> dict:
-    """Keep sentence chunks, gaps, tone and bilingual spans aligned one-to-one."""
-    from adapters import chunks, english_parts, gap_after, is_english, scene_tail
+    """Keep sentence chunks, explicit [pause:...] gaps, tone and bilingual spans aligned one-to-one."""
+    from adapters import chunks_with_gaps, english_parts, is_english, scene_tail
 
-    texts = chunks(text)
+    texts, gaps = chunks_with_gaps(text, pauses)
     item = {'scene_id': scene['id'], 'narration': text, 'texts': texts,
             'tone': scene.get('tone'), 'retake': retake,
-            'gaps': [gap_after(part, pauses) for part in texts[:-1]],
+            'gaps': gaps,
             'tail': scene_tail(scene, language, pauses, last)}
     if language == 'vi':
         words = [v['word'] for v in scene.get('vocabulary', []) if is_english(v.get('word', ''))]

@@ -1,0 +1,51 @@
+{
+  "narration.wav": {
+    "duration_seconds": 19.086666666666666,
+    "sample_rate": 48000,
+    "channels": 1,
+    "peak_dbfs": -1.5,
+    "clipped_samples": 0
+  },
+  "segment-0000.wav": {
+    "duration_seconds": 5.611479166666666,
+    "sample_rate": 48000,
+    "channels": 1,
+    "peak_dbfs": -1.01,
+    "clipped_samples": 0
+  },
+  "segment-0001.wav": {
+    "duration_seconds": 7.439291666666667,
+    "sample_rate": 48000,
+    "channels": 1,
+    "peak_dbfs": -1.19,
+    "clipped_samples": 0
+  },
+  "segment-0002.wav": {
+    "duration_seconds": 6.035895833333333,
+    "sample_rate": 48000,
+    "channels": 1,
+    "peak_dbfs": -1.01,
+    "clipped_samples": 0
+  },
+  "vi-ANALYSIS-assembled.wav": {
+    "duration_seconds": 7.439291666666667,
+    "sample_rate": 48000,
+    "channels": 1,
+    "peak_dbfs": -1.19,
+    "clipped_samples": 0
+  },
+  "vi-HOOK-assembled.wav": {
+    "duration_seconds": 5.611479166666666,
+    "sample_rate": 48000,
+    "channels": 1,
+    "peak_dbfs": -1.01,
+    "clipped_samples": 0
+  },
+  "vi-REFLECTION-assembled.wav": {
+    "duration_seconds": 6.035895833333333,
+    "sample_rate": 48000,
+    "channels": 1,
+    "peak_dbfs": -1.01,
+    "clipped_samples": 0
+  }
+}

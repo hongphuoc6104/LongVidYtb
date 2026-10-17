@@ -374,9 +374,11 @@ def lint_script(
         check_scene_narrative_progression,
         check_visual_setting_diversity,
     )
-    all_violations.extend(check_visual_setting_diversity(scenes))
+    has_visual_fields = any(sc.get("setting") or sc.get("images") for sc in scenes)
+    if has_visual_fields:
+        all_violations.extend(check_visual_setting_diversity(scenes))
+        all_violations.extend(check_scene_narrative_progression(scenes))
     all_violations.extend(check_instructional_manual_loop(scenes))
-    all_violations.extend(check_scene_narrative_progression(scenes))
 
     # 1. Formulaic transitions
     ft_violations = check_formulaic_transitions(scenes)
@@ -497,6 +499,8 @@ def main() -> None:
                 print(f"    Overlap words: {v['overlap_words']}")
                 print(f"    Target opening: {v['target_opening']}")
                 print(f"    Corpus opening: {v['corpus_opening']}")
+            else:
+                print(f"[{idx}] {v_type}: {v}")
         print("=" * 80)
         sys.exit(1)
     else:

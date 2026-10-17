@@ -859,6 +859,9 @@ def produce(p, j, out):
         import threading
         cfg = read(p.root / 'config.json')
         concurrency = cfg.get('concurrency', 3)
+        from execution import settings as execution_settings, is_job
+        if is_job(p, j) and execution_settings(p, j).get('management_session', {}).get('runtime_bindings', {}).get('flow', {}).get('target', {}).get('profile_path'):
+            concurrency = 1  # One bound browser owns one UI queue and profile lease.
 
         completed = {}
 

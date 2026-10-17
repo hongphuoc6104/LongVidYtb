@@ -1,0 +1,21 @@
+{
+  "source_url": "https://www.youtube.com/watch?v=Z63FteI6EeE",
+  "source_start_seconds": 2,
+  "source_end_seconds": 14,
+  "sha256": "4462a5cca5f6c7224d457217d85e090afad158e0c75f81ba1ce88bdc44a242bd",
+  "audio": {
+    "duration_seconds": 12.0,
+    "sample_rate": 24000,
+    "channels": 1,
+    "sample_width": 2
+  },
+  "plan": [
+    "Transcribe exact reference boundaries on Colab T4.",
+    "Create an isolated Vietnamese voice profile.",
+    "Synthesize hook, analytical, and reflective samples at base speed 1.0.",
+    "Verify WAV streams and transcribe generated speech.",
+    "Collect durable outputs and release the dedicated Colab session."
+  ],
+  "canonical_config_modified": false,
+  "reference_text": "Chúng ta nói về tự do như một khái niệm trừu tượng. Tự do trong tâm trí khi có quá nhiều lời thì thầm nói rằng chúng ta nên làm gì và không nên làm gì. Hoặc tự do trong hành động khi đang sống trong một xã hội với nhiều định"
+}

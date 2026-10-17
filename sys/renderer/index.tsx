@@ -1,4 +1,4 @@
-import {selectSemanticCameraEffect, overscanScale} from './camera.mjs';
+import {selectSemanticCameraEffect, overscanScale, BASE_OVERSCAN} from './camera.mjs';
 import {Thumbnail} from './thumbnail';
 import React, {useLayoutEffect} from 'react';
 import {karaokeTokens, captionStyle, captionMaxHeight} from './captions.mjs';
@@ -140,6 +140,11 @@ const Video: React.FC<any> = (p) => {
   const beatDuration = Math.max(0.001, nextAt - beat.at);
   const progress = Math.max(0, Math.min(1, (relative - beat.at) / beatDuration));
   const transition = Math.max(0, Math.min(1, (relative - beat.at) / Math.min(0.3, beatDuration / 2)));
+  // Smooth 85ms flipbook micro-dissolve for in-place variation shots
+  const isVariationCut = active > 0 && beat.shot_type === 'variation' && beat.effect !== 'slide_left';
+  const variationCrossfade = isVariationCut
+    ? Math.max(0, Math.min(1, (relative - beat.at) / Math.min(0.085, beatDuration / 3)))
+    : 1;
 
   // Motion Engine with Spring Physics, Bezier Easing & Dynamic Motion Blur
   let scale = 1;
@@ -204,30 +209,37 @@ const Video: React.FC<any> = (p) => {
   // This is a framing margin, not proof that a provider watermark is removed.
   scale = overscanScale(scale);
 
-  // Organic Camera Shake (Handheld multi-frequency camera vibration)
+  // Organic Camera Shake + Subtle Handheld Micro-Breathing (GPU transform only, zero overlay clutter)
   let shakeX = 0;
   let shakeY = 0;
+  let microRot = 0;
   if (effect === 'shake' || (effect === 'punch_in' && (relative - beat.at) < 0.28)) {
     const shakeTime = relative - beat.at;
     const decay = Math.max(0, 1 - shakeTime / 0.28);
     shakeX = organicNoise(shakeTime * 1.5, 1.2) * 14 * decay;
     shakeY = organicNoise(shakeTime * 1.5, 4.7) * 12 * decay;
+  } else if (effect !== 'hold') {
+    shakeX = organicNoise(t * 0.14, active + 1.1) * 3.2;
+    shakeY = organicNoise(t * 0.14, active + 3.7) * 2.4;
+    microRot = organicNoise(t * 0.11, active + 7.3) * 0.18;
   }
 
-  const opacity = beat.effect === 'fade' ? transition : 1;
-  const focusX = (beat.focus?.x ?? 0.5) * 100;
-  const focusY = (beat.focus?.y ?? 0.42) * 100;
+  const opacity = beat.effect === 'fade' ? transition : variationCrossfade;
+  // Clamp focal center to safe central viewport so model coordinate guesses never zoom into blank corners
+  const focusX = Math.min(65, Math.max(35, (beat.focus?.x ?? 0.5) * 100));
+  const focusY = Math.min(58, Math.max(35, (beat.focus?.y ?? 0.42) * 100));
   const editorial = p.reframe_mode && height > width && !['macro_prop', 'white_card', 'white_isolated'].includes(beat.shot_type);
+  const editorialScale = 1 + (scale / BASE_OVERSCAN - 1) * 0.65;
   const isVideoAsset = currentImageSrc && (currentImageSrc.endsWith('.mp4') || currentImageSrc.endsWith('.webm'));
 
-  // 1. Procedural Line Boiling (8-12 fps hand-drawn organic jitter for stick figures)
-  const isLineBoil = beat.line_boil || beat.effect === 'line_boil' || p.line_boil;
+  // Procedural Line Boiling (opt-in only for isolated assets; disabled on full-bleed 1080p)
+  const isLineBoil = Boolean(beat.line_boil || beat.effect === 'line_boil' || p.line_boil);
   const boilFps = 10;
   const boilIndex = Math.floor((frame / fps) * boilFps) % 4;
   const lineBoilFilter = isLineBoil ? `url(#line-boil-${boilIndex})` : '';
 
-  // 2. Stroke Draw-on (Organic hand-drawn stroke sweep from top to bottom)
-  const isDrawOn = beat.draw_on || beat.effect === 'draw_on';
+  // Stroke Draw-on restricted to white_card shots when explicitly requested
+  const isDrawOn = Boolean((beat.draw_on || beat.effect === 'draw_on') && beat.shot_type === 'white_card');
   const drawDuration = beat.draw_duration || 1.3;
   const drawProgress = isDrawOn ? Math.min(1, Math.max(0, (relative - beat.at) / drawDuration)) : 1;
   const drawEase = interpolate(drawProgress, [0, 1], [0, 1], {
@@ -366,16 +378,25 @@ const Video: React.FC<any> = (p) => {
         </AbsoluteFill>
       ) : (
         <>
-          {/* Background layer transition */}
-          {active > 0 && ['fade', 'slide_left'].includes(beat.effect) && transition < 1 && (
+          {/* Background layer transition (supports fade, slide_left, and 85ms flipbook variation cross-dissolve) */}
+          {active > 0 && ((['fade', 'slide_left'].includes(beat.effect) && transition < 1) || (isVariationCut && variationCrossfade < 1)) && (
             <Img
               src={staticFile(imageList[active - 1].src)}
               decoding="sync"
-              style={{position: 'absolute', width: '100%', height: '100%', objectFit: 'contain'}}
+              style={{
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+                objectFit: editorial ? 'contain' : 'cover',
+                objectPosition: `${focusX}% ${focusY}%`,
+                ...(editorial ? {top: '25%', height: '48%', borderRadius: 24} : {}),
+                transform: `translate(calc(${translateX}% + ${shakeX}px), calc(${translateY}% + ${shakeY}px)) scale(${editorial ? editorialScale : scale}) rotate(${microRot.toFixed(3)}deg)`,
+                transformOrigin: `${focusX}% ${focusY}%`,
+              }}
             />
           )}
 
-          {/* Main Visual Layer: Image with Ken Burns or Video Clip */}
+          {/* Main Visual Layer: Image with Ken Burns + Handheld Micro-Motion or Video Clip */}
           {currentImageSrc && (
             isVideoAsset ? (
               <RemotionVideo
@@ -397,7 +418,7 @@ const Video: React.FC<any> = (p) => {
                   objectFit: editorial ? 'contain' : 'cover',
                   objectPosition: `${focusX}% ${focusY}%`,
                   ...(editorial ? {position: 'absolute', top: '25%', height: '48%', borderRadius: 24, boxShadow: '0 12px 32px #0008'} : {}),
-                  transform: `translate(calc(${translateX}% + ${shakeX}px), calc(${translateY}% + ${shakeY}px)) scale(${editorial ? 1 : scale})`,
+                  transform: `translate(calc(${translateX}% + ${shakeX}px), calc(${translateY}% + ${shakeY}px)) scale(${editorial ? editorialScale : scale}) rotate(${microRot.toFixed(3)}deg)`,
                   transformOrigin: `${focusX}% ${focusY}%`,
                   opacity,
                   filter: combinedFilter,
@@ -412,51 +433,8 @@ const Video: React.FC<any> = (p) => {
 
       {editorial && p.hook_title && <div style={{position: 'absolute', top: 230, left: 56, width: 820, fontSize: 58, fontWeight: 900, textAlign: 'center', color: '#FACC15'}}>{p.hook_title}</div>}
       {p.cover_text && t < (p.cover_duration || 0) && <Thumbnail image={scene.image} text={p.cover_text} width={width} height={height} />}
-      {/* Stroke Draw-on Pencil Guide Indicator */}
-      {isDrawOn && drawEase > 0 && drawEase < 0.96 && (
-        <div
-          style={{
-            position: 'absolute',
-            left: `${drawEase * 68 + 12}%`,
-            top: `${drawEase * 68 + 10}%`,
-            transform: 'translate(-50%, -50%) rotate(-45deg)',
-            fontSize: 34,
-            zIndex: 16,
-            filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.5))',
-            pointerEvents: 'none',
-          }}
-        >
-          ✏️
-        </div>
-      )}
 
-      {/* 2D Comic Doodle Visual Accents */}
-      {/* 1. Dấu chấm than giật mình (tùy chọn khi tranh chưa có sẵn biểu cảm) */}
-      {!p.modern_style && (scene.show_exclamation || beat.show_exclamation || (p.show_exclamation && scene.id === 'SC01')) && relative >= 0.2 && relative <= 2.2 && (
-        <div
-          style={{
-            position: 'absolute',
-            top: '22%',
-            left: '20%',
-            transform: `scale(${Math.min(1.15, 0.4 + (relative - 0.5) * 5)}) rotate(${Math.sin((relative - 0.5) * 16) * 10}deg)`,
-            zIndex: 15,
-            filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.4))'
-          }}
-        >
-          <svg width="65" height="85" viewBox="0 0 65 85">
-            <path
-              d="M 22 8 L 43 8 L 36 48 L 29 48 Z"
-              fill="#EF4444"
-              stroke="#0F172A"
-              strokeWidth="5"
-              strokeLinejoin="round"
-            />
-            <circle cx="32.5" cy="70" r="8" fill="#EF4444" stroke="#0F172A" strokeWidth="5" />
-          </svg>
-        </div>
-      )}
-
-      {/* 2. Interactive Practice Indicator: Đếm nhịp luyện nói tự động đồng bộ theo Cue */}
+      {/* Interactive Practice Indicator: Đếm nhịp luyện nói tự động đồng bộ theo Cue */}
       {!p.modern_style && cue && (cue.practice || cue.text?.includes('Cùng nhắc lại nhé')) && (() => {
         const pDur = cue.end - cue.start;
         const pRel = t - cue.start;
@@ -523,7 +501,7 @@ const Video: React.FC<any> = (p) => {
         </>
       )}
 
-      {/* Subtitles (Phụ đề động bắt mắt) - Tạm thời tắt, không hiển thị trên video */}
+      {/* Subtitles (Phụ đề động bắt mắt) */}
       {!DISABLE_SUBTITLES && !p.hideSubtitles && cue && (() => {
         const lineText = cue.text;
         const targetWord = p.target_word;

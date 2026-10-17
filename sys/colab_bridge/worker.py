@@ -6,6 +6,7 @@ No BetterBox, HTTP server, paid inference API, CPU fallback or torch.compile.
 import gc
 import hashlib
 import json
+import re
 import time
 import zipfile
 from pathlib import Path
@@ -15,6 +16,96 @@ _MODEL_KEY = None
 _PROMPTS = {}
 SR = 48000
 
+_VI_ONES = ["không", "một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín"]
+_VI_LOANWORD_MAP = {
+    r"\bRichard P\. Feynman\b": "Ri-chát Phây-man",
+    r"\bRichard Lee\b": "Ri-chát Li",
+    r"\bFeynman\b": "Phây-man",
+    r"\bJu/'hoansi\b": "Giu-hoan-si",
+    r"\bKalahari\b": "Ka-la-ha-ri",
+    r"\bBotswana\b": "Bốt-xoa-na",
+    r"\bHadza\b": "Hát-da",
+    r"\bSumer\b": "Su-me",
+    r"\bEdubba\b": "Ê-đu-ba",
+    r"\bMesopotamia\b": "Mê-sô-pô-ta-mi-a",
+    r"\bJaak Panksepp\b": "Giác Păng-xép",
+    r"\bPanksepp\b": "Păng-xép",
+    r"\bdopamine\b": "đô-pa-min",
+    r"\bcortisol\b": "cóc-ti-dôn",
+    r"\badrenaline\b": "a-đrê-na-lin",
+    r"\bserotonin\b": "sê-rô-tô-nin",
+    r"\boxytocin\b": "ô-xi-tô-xin",
+    r"\bendorphin\b": "en-đô-phin",
+    r"\bglucose\b": "glu-cô-dơ",
+    r"\bamygdala\b": "hạch hạnh nhân",
+    r"\bhippocampus\b": "hồi hải mã",
+    r"\bQ1\b": "quy một",
+    r"\bWord\b": "Guốc",
+    r"\bExcel\b": "Ếch-xen",
+    r"\bhighlight\b": "hai-lai",
+    r"\bdeadline\b": "đét-lai",
+    r"\bsmartphone\b": "điện thoại thông minh",
+    r"\bpodcast\b": "pót-cát",
+    r"\bvideo\b": "vi-đê-ô",
+    r"\bemail\b": "i-meo",
+    r"\binternet\b": "in-tơ-nét",
+    r"\bwifi\b": "oai-phai",
+    r"\bTikTok\b": "Tích-tốc",
+    r"\bYouTube\b": "Diu-túp",
+    r"\bShopee\b": "Sóp-pi",
+}
+
+
+def _num_to_vi(n: int) -> str:
+    if n < 0:
+        return "âm " + _num_to_vi(-n)
+    if n < 10:
+        return _VI_ONES[n]
+    if n < 20:
+        return "mười" if n == 10 else ("mười lăm" if n == 15 else "mười " + _VI_ONES[n % 10])
+    if n < 100:
+        tens, units = divmod(n, 10)
+        t_str = (_VI_ONES[tens] + " mươi") if tens > 1 else "mười"
+        if units == 0:
+            return t_str
+        if units == 1:
+            return t_str + (" mốt" if tens > 1 else " một")
+        if units == 4:
+            return t_str + " tư"
+        if units == 5:
+            return t_str + " lăm"
+        return f"{t_str} {_VI_ONES[units]}"
+    if n < 1000:
+        h, rem = divmod(n, 100)
+        h_str = f"{_VI_ONES[h]} trăm"
+        if rem == 0:
+            return h_str
+        return f"{h_str} lẻ {_VI_ONES[rem]}" if rem < 10 else f"{h_str} {_num_to_vi(rem)}"
+    if n < 1_000_000:
+        th, rem = divmod(n, 1000)
+        th_str = f"{_num_to_vi(th)} nghìn"
+        if rem == 0:
+            return th_str
+        if rem < 10:
+            return f"{th_str} không trăm lẻ {_VI_ONES[rem]}"
+        if rem < 100:
+            return f"{th_str} không trăm {_num_to_vi(rem)}"
+        return f"{th_str} {_num_to_vi(rem)}"
+    return str(n)
+
+
+def _normalize_vi_tts_text(text: str) -> str:
+    """Sanitize pause tags, numbers, and loanwords for Vietnamese OmniVoice synthesis only."""
+    res = re.sub(r"\[pause:[^\]]+\]", " , ", text or "", flags=re.IGNORECASE)
+    for pat, repl in _VI_LOANWORD_MAP.items():
+        res = re.sub(pat, repl, res, flags=re.IGNORECASE)
+    res = re.sub(r"\b(\d+)%", lambda m: f"{_num_to_vi(int(m.group(1)))} phần trăm", res)
+    res = re.sub(r"\b\d{1,3}(?:\.\d{3})+\b", lambda m: _num_to_vi(int(m.group(0).replace(".", ""))), res)
+    res = re.sub(r"\b(\d+),(\d+)\b", lambda m: f"{_num_to_vi(int(m.group(1)))} phẩy {_num_to_vi(int(m.group(2)))}", res)
+    res = re.sub(r"\b\d+\b", lambda m: _num_to_vi(int(m.group(0))) if len(m.group(0)) <= 6 else m.group(0), res)
+    res = re.sub(r"\s+", " ", res).strip()
+    return res or text
+
 
 def _extract_word_timestamps_acoustic(w, text, sr=SR):
     """Computes word-level timestamps from the waveform energy envelope.
@@ -22,7 +113,6 @@ def _extract_word_timestamps_acoustic(w, text, sr=SR):
     Detects voiced syllable energy nuclei and distributes word boundaries across
     actual acoustic speech activity rather than naive character-count interpolation.
     """
-    import re
     import numpy as np
     clean_text = re.sub(r"\[pause:[^\]]+\]", " ", text or "")
     words = [tok for tok in clean_text.split() if tok.strip()]
@@ -155,8 +245,12 @@ def run(request_path, output_dir):
                 batch = group[offset:offset + size]
                 torch.manual_seed(req['seed'] + take)
                 try:
+                    synth_texts = [
+                        _normalize_vi_tts_text(x[1]['text']) if lang == 'vi' else x[1]['text']
+                        for x in batch
+                    ]
                     generated = _MODEL.generate(
-                        text=[x[1]['text'] for x in batch], language=[lang] * len(batch),
+                        text=synth_texts, language=[lang] * len(batch),
                         voice_clone_prompt=[prompt] * len(batch),
                         speed=[x[1]['speed'] / profile['source_speed'] for x in batch],
                         num_step=req['num_step'])

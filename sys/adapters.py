@@ -207,7 +207,7 @@ def gflow(p,*args,timeout=960,flow_job=None):
     timeout=timeout,
     collection_only='--collect-only' in args_list,
     before_submit=(lambda connection: __import__('flow_management').before_send(p, flow_job, [Path(_get_arg('--evidence-out', str(out_folder.parent)))], connection)) if modern else None,
-    **({'model': frozen_flow['flow_model'], 'project': frozen_flow['flow_project'], 'tool_url': frozen_flow.get('flow_tool_url')} if modern else {}),
+    **({'model': frozen_flow['flow_model'], 'project': frozen_flow['flow_project'], 'tool_url': frozen_flow.get('flow_tool_url'), 'job_id': flow_job} if modern else {}),
    )
    src_img = Path(b2_res['path'])
    # The queue journal owns this stable path; preserve it for replay.
@@ -296,7 +296,7 @@ def gflow(p,*args,timeout=960,flow_job=None):
       ex=Blocked('FLOW_REFERENCE_UNSUPPORTED: modern batch needs exactly one registered character reference')
       ex.generation_submitted=False
       raise ex
-     spec.update(model=frozen_flow['flow_model'], project=frozen_flow['flow_project'], toolUrl=frozen_flow.get('flow_tool_url'), managementContract=1)
+     spec.update(jobId=flow_job, model=frozen_flow['flow_model'], project=frozen_flow['flow_project'], toolUrl=frozen_flow.get('flow_tool_url'), managementContract=1)
    # Persist attempted membership BEFORE the external call. Ambiguous groups cannot fall through to serial retries.
    entries = run_jobs[offset:offset+4]
    for entry in entries: entry.update(status='failed',error='Submission pending; reconcile before retry')
@@ -460,25 +460,64 @@ def split_into_phrases(text, max_len=32):
 def make_srt(segs):
  cues=subtitle_cues(segs)
  return '\n'.join(f"{i}\n{timestamp(c['start'])} --> {timestamp(c['end'])}\n{c['text']}\n" for i,c in enumerate(cues,1))
-def chunks(text):
- import re
- raw=re.split(r'(?<=[.!?])\s+|(?<=[.!?][\"\'”’])\s+', text.strip())
- parts=[]
- for s in raw:
-  s=s.strip()
-  if not s:continue
-  if len(s)>180:
-   sub=re.split(r'(?<=[,;:\-])\s+', s)
-   parts.extend([x.strip() for x in sub if x.strip()])
-  else:
-   parts.append(s)
- return parts if parts else [text.strip()]
-
 DEFAULT_PAUSE={'para':.70,'sentence':.50,'minor':.30,'tail':.35}
+_PAUSE_TAG_RE=re.compile(r'\[pause:\s*([0-9.]+)\s*(ms|s)?\s*\]',re.IGNORECASE)
+
+def _parse_pause_tag_sec(m):
+ val=float(m.group(1))
+ unit=(m.group(2) or '').lower()
+ return round(val/1000.0 if (unit=='ms' or (not unit and val>10)) else val,3)
 
 def gap_after(text,g):
  """Pause following a chunk inside a scene based on terminal punctuation."""
  return g.get('sentence',DEFAULT_PAUSE['sentence']) if text.rstrip()[-1:] in '.!?…' else g.get('minor',DEFAULT_PAUSE['minor'])
+
+def chunks_with_gaps(text,g=None):
+ """Split narration into sentence/pause chunks and extract exact inter-chunk pauses."""
+ g = g or DEFAULT_PAUSE
+ raw_text = (text or '').strip()
+ if not raw_text:
+  return [], []
+ segments = []
+ last_idx = 0
+ for m in _PAUSE_TAG_RE.finditer(raw_text):
+  seg = raw_text[last_idx:m.start()].strip()
+  p_sec = _parse_pause_tag_sec(m)
+  if seg:
+   segments.append((seg, p_sec))
+  elif segments:
+   segments[-1] = (segments[-1][0], round(segments[-1][1] + p_sec, 3))
+  last_idx = m.end()
+ tail_seg = raw_text[last_idx:].strip()
+ if tail_seg:
+  segments.append((tail_seg, None))
+ out_chunks = []
+ out_gaps = []
+ for seg_text, explicit_pause in segments:
+  raw_sents = re.split(r'(?<=[.!?])\s+|(?<=[.!?][\"\'”’])\s+', seg_text)
+  sub_parts = []
+  for s in raw_sents:
+   s = _PAUSE_TAG_RE.sub(' ', s).strip()
+   if not s:
+    continue
+   if len(s) > 180:
+    sub = re.split(r'(?<=[,;:\-])\s+', s)
+    sub_parts.extend([x.strip() for x in sub if x.strip()])
+   else:
+    sub_parts.append(s)
+  for idx, part in enumerate(sub_parts):
+   out_chunks.append(part)
+   if idx < len(sub_parts) - 1:
+    out_gaps.append(gap_after(part, g))
+   else:
+    out_gaps.append(explicit_pause if explicit_pause is not None else gap_after(part, g))
+ if not out_chunks:
+  cleaned = _PAUSE_TAG_RE.sub(' ', raw_text).strip()
+  return [cleaned], []
+ return out_chunks, out_gaps[:-1]
+
+def chunks(text):
+ return chunks_with_gaps(text, DEFAULT_PAUSE)[0]
 
 from audio_processing import frames_of, run_ffmpeg, AudioProcessingError
 
@@ -586,14 +625,16 @@ def audio(p,j,out):
  from colab_bridge.protocol import build_request
  if not enabled(cfg):raise Blocked('COLAB_REQUIRED: local TTS removed')
  retake=retakes(p,j)
- scenes=[{'scene_id':s['id'],'narration':s['narration'],'texts':chunks(s['narration']),'retake':retake.get(s['id'],0)} for s in content['scenes']]
- for k,sc in enumerate(scenes):
-  sc['gaps']=[gap_after(t,g) for t in sc['texts'][:-1]]
-  sc['tail']=scene_tail(content['scenes'][k],'vi',g,k==len(scenes)-1)
-  words=[v['word'] for v in content['scenes'][k].get('vocabulary') or [] if is_english(v.get('word',''))]
+ scenes=[]
+ for k,s in enumerate(content['scenes']):
+  sc_texts, sc_gaps = chunks_with_gaps(s['narration'], g)
+  sc = {'scene_id':s['id'],'narration':s['narration'],'texts':sc_texts,'gaps':sc_gaps,'retake':retake.get(s['id'],0),
+        'tone':s.get('tone'),'tail':scene_tail(s,'vi',g,k==len(content['scenes'])-1)}
+  words=[v['word'] for v in s.get('vocabulary') or [] if is_english(v.get('word',''))]
   if words and cfg.get('audio_english_spans_engine','en')=='en':
    parts=[english_parts(t,words) for t in sc['texts']]
    if any(x['lang']=='en' for c in parts for x in c):sc['parts']=parts
+  scenes.append(sc)
  en_scenes=[]
  if needs_en(p,j):
   for k,s in enumerate(content['scenes']):
@@ -651,7 +692,7 @@ def render(p,j,out):
    for beat in scene.get('images',[]):beat['src']=copy_asset(beat['src'])
   return planned
  scenes=render_scenes('en',ratio) if (ratio=='16:9' or (b and b.get('language')=='en')) else render_scenes('vi','9:16')
- props={'duration':snd['duration'],'scenes':scenes,'segments':snd['segments'],'cues':subtitle_cues(snd['segments']),'aspect_ratio':ratio,'render_concurrency':config(p).get('render_concurrency',4)}
+ props={'duration':snd['duration'],'scenes':scenes,'segments':snd['segments'],'cues':subtitle_cues(snd['segments'],aspect_ratio=ratio if ratio in ('9:16','16:9') else None),'aspect_ratio':ratio,'render_concurrency':config(p).get('render_concurrency',4)}
  if en:
   props['en_duration']=en['duration']
   props['en_scenes']=scenes if ratio=='16:9' else render_scenes('en','16:9')

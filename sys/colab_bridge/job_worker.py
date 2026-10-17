@@ -60,11 +60,12 @@ def run(bundle_path, output_dir, expected_id, expected_worker):
     tracks = {}
     audits = {}
     brief, audio = request['brief'], request['audio']
+    cue_aspect = brief.get('aspect_ratio') if brief.get('aspect_ratio') in ('9:16', '16:9') else None
     for language in contract.languages(brief):
         track = audio['tracks'][language]
         wav = language + '.wav'; shutil.copy2(inputs / track['wav'], public / wav)
-        cues = captions.subtitle_cues(track['segments'])
-        audit = captions.audit_cues(cues)
+        cues = track['cues'] if 'cues' in track else captions.subtitle_cues(track['segments'], aspect_ratio=cue_aspect)
+        audit = captions.audit_cues(cues, aspect_ratio=cue_aspect)
         audits[language] = audit
         if audit['errors']:
             raise ValueError('Subtitle technical defects: ' + json.dumps(audit['errors']))
@@ -100,6 +101,8 @@ def run(bundle_path, output_dir, expected_id, expected_worker):
     if brief.get('omni_platform'):
         omni = load('vp_omni_render', 'omni_render.py')
         props['short_deliveries'] = omni.prepare_shorts(brief, request['content'], audio, request['images'], inputs, public, captions, tracks['vi']['scenesByAspect']['16:9'])
+    wants_sound_design = bool(brief.get('omni_platform') or brief.get('visual_pacing_profile') == 'full_frame_v1' or brief.get('enable_sound_design'))
+    if wants_sound_design and (source / 'assets/sfx/ambient_focus_loop.wav').is_file():
         for sound in (source / 'assets/sfx').glob('*.wav'):
             shutil.copy2(sound, public / sound.name)
         props['bgmSrc'] = 'ambient_focus_loop.wav'
@@ -108,15 +111,15 @@ def run(bundle_path, output_dir, expected_id, expected_worker):
         props['sfx_events'] = [{'at': 0, 'src': 'pop_clean.wav'}]
         cue_map = {'pop': 'pop_clean', 'whoosh': 'whoosh_soft', 'page_turn': 'page_flip', 'pen_scratch': 'pen_highlight', 'clock_tick': 'clock_tick', 'ding': 'ding_insight'}
         master = tracks[contract.primary_language(brief)]
-        scene_times = next(iter(master['scenesByAspect'].values()))
-        for scene, timed in zip(request['content']['scenes'], scene_times, strict=True):
-            for beat, timing in zip(scene.get('beats', []), timed.get('images', []), strict=True):
-                cue = beat.get('foley_cue', scene.get('foley_cue', ''))
+        scene_times = next(iter(master['scenesByAspect'].values()), [])
+        for scene, timed in zip(request['content'].get('scenes', []), scene_times):
+            for beat, timing in zip(scene.get('beats', []), timed.get('images', [])):
+                cue = beat.get('foley_cue') or scene.get('foley_cue') or beat.get('purpose') or scene.get('action') or ''
                 if not beat.get('foley_cue') and timing['at'] != 0:
                     continue
-                key = cue if cue in cue_map else next((key for phrase, key in [('lật', 'page_turn'), ('giấy', 'page_turn'), ('bút', 'pen_scratch'), ('đồng hồ', 'clock_tick'), ('tích tắc', 'clock_tick'), ('whoosh', 'whoosh'), ('click', 'pop'), ('hoàn tất', 'ding')] if phrase in cue.lower()), None)
+                key = cue if cue in cue_map else next((key for phrase, key in [('lật', 'page_turn'), ('sách', 'page_turn'), ('giấy', 'page_turn'), ('bút', 'pen_scratch'), ('gạch', 'pen_scratch'), ('viết', 'pen_scratch'), ('đồng hồ', 'clock_tick'), ('tích tắc', 'clock_tick'), ('whoosh', 'whoosh'), ('click', 'pop'), ('hoàn tất', 'ding')] if phrase in cue.lower()), None)
                 if key:
-                    props['sfx_events'].append({'at': timed['start'] + timing['at'], 'src': cue_map[key] + '.wav'})
+                    props['sfx_events'].append({'at': round(timed['start'] + timing['at'], 3), 'src': cue_map[key] + '.wav'})
     (output / 'editorial-audit.json').write_text(json.dumps({'tracks': audits, 'processing_location': 'colab', 'quality_approval': False}, ensure_ascii=False, indent=2))
     (output / 'props.json').write_text(json.dumps(props, ensure_ascii=False, indent=2))
     # Remote dependencies are cached by the pinned source package lock.

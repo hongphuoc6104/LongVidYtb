@@ -1,34 +1,33 @@
-# Cinematography and Shot Grammar for Explainer Videos
+# Cinematography and Shot Grammar for Full-Frame Explainer Videos (`full_frame_v1`)
 
-Visual standards, shot framing grammar, and cutting pace for explainer videos, adapting composition to target aspect ratios (e.g. 9:16, 16:9) specified in the job brief. Read before planning visual beats and prompt authoring.
+Visual standards, shot framing grammar, and cutting pace for full-frame explainer videos (`flow_prompts 1.3.0`), adapting composition to target aspect ratios (`9:16`, `16:9`) specified in `sys/format_profiles.py`. Read before planning visual beats and prompt authoring.
 
-## 1. Mandatory Three-Step Process
-1. **Analyze dialogue pacing**: Identify target vocabulary anchors, vocal emphasis, and emotional tone.
-2. **Select framing grammar & effects**: Determine shot size, camera angle, focal eye-trace, and transitions compatible with the renderer.
-3. **Author prompts for Flow**: Generate static illustrations adhering strictly to chosen framing and anonymous stick-figure standards (bright background, bold outlines, dedicated caption safe zone).
+## 1. Mandatory Three-Step Process (Flash-Agent Simplified)
+1. **Author natural sentence-beat pairs**: Pair each spoken sentence with one concrete visual action (`shot_type|visual_action`), alternating short punchy sentences (`3–8` words) with explanatory sentences (`15–24` words).
+2. **Select full-frame `shot_type`**: Choose from `full_scene`, `macro_prop`, `variation`, `white_card`, or `white_isolated`. Never guess manual `(x, y)` coordinates—code automatically centers `focus` safely and assigns non-repeating semantic camera movements (`select_semantic_camera_effect`).
+3. **Author full-bleed prompts for Flow**: Generate one integrated 2D illustration per beat where anonymous stick figures, furniture, and props belong naturally to the same physical environment (no detached stickers, no white cutout borders).
 
 ---
 
 ## 2. Frame Composition & Safe Margins (`sys/format_profiles.py`)
 Composition adapts dynamically to the target `format_profile` configured in the job brief:
+- **Horizontal Framing (`long_16x9` — `1920x1080`, `full_frame_v1`)**:
+  - **100% Full-Bleed Canvas (`caption_clearance = null`)**: Landscape videos use external `.srt` (`subtitles: false` by default). Never instruct the AI to leave a blank bottom band.
+  - **Setting Diversity & Continuity**: Use at most 2 consecutive scenes in the same physical room; across $\ge 10$ scenes no single setting may exceed 30%. Within one room, use `variation` (`based_on`) with `Expression lock` to animate character posture changes smoothly.
 - **Vertical Framing (`short_9x16` — `1080x1920`)**:
-  - **Top & Middle Zone (Top 82%)**: Compose character posture, expressions, action and focal props together in the physical scene. Choose framing from the narrated action.
-  - **Bottom 18% (`caption_clearance = 0.18`)**: Reserved for dynamic captions (`max_line_chars = 28`). Keep essential scene action and lettering outside the caption band defined by the format profile.
-- **Horizontal Framing (`long_16x9` — `1920x1080`)**:
-  - Rule-of-thirds composition (`0.35 / 0.64`) with clean Editorial Graphic Visuals (no mechanical clichés or split-screen comparisons).
-  - **Bottom Clearance**: `10%` (`caption_clearance = 0.10`, `max_line_chars = 42`) when subtitles are enabled (`subtitles: true`), and **`None` (full-bleed 100% canvas, zero bottom margin instruction)** when subtitles are disabled (`subtitles: false`).
-- **Safe Margins**: Maintain adequate margins on lateral edges (at least 80px). Preserve eye-trace continuity between consecutive scenes.
+  - **Top & Middle Zone (Top 82%)**: Compose character posture, expressions, action and focal props together in the physical scene, or use `reframe_mode: true` from a `16:9` master.
+  - **Bottom 18% (`caption_clearance = 0.18`)**: Reserved for burn-in dynamic captions (`max_line_chars = 28`).
 
 ---
 
-## 3. Standard Shot Grammar Table
-| Shot Framing / Camera Angle | Purpose & Screen Placement | Practical Production Application |
+## 3. Standard Full-Frame Shot Types (`flow_prompts 1.3.0`)
+| Shot Type | Purpose & Composition Rule | Practical Production Application |
 |---|---|---|
-| **Establishing shot** | Wide establishing view; stacked scenery according to target aspect ratio. | Scene transitions, establishing character environment. |
-| **Medium / OTS** | Medium shot or over-the-shoulder conversation; foreground figure in lower corner, speaking partner in upper/opposite half. | Dialogue, explanation, interaction between two characters. |
-| **Close-up / Extreme close-up** | Close-up / extreme close-up; center character face/mouth at focal screen area. | Shock/joy/sorrow expressions, pronunciation of target vocabulary. |
-| **POV shot** | First-person point of view; stick hands or held prop extending from screen edge into center. | Immersion, hands-on manipulation of objects. |
-| **High / Low / Dutch angle** | High angle (looking down), low angle (looking up), or 15–25° tilted horizon. | Convey feeling small/pressured (high), massive (low), or disoriented/quirky (Dutch). |
+| **`full_scene`** | Integrated physical environment with anonymous stick figure(s), furniture, and props drawn together. | Establishing rooms, experiments, lecture halls, cafes, or metaphorical landscapes. |
+| **`variation`** | Attached to prior `based_on` image; preserves exact room geometry, camera, and facial expression (`Expression lock`), changing only the declared action/prop. | Flipbook-style character pose changes (e.g., closing a book, lifting a pen) within the same room. |
+| **`macro_prop`** | Close-up on a concrete object, hand action, or diagram detail (simplified white four-finger cartoon hands with black outlines). | Highlighting a textbook, correcting an error with a red pen, inspecting a clock or gauge. |
+| **`white_card`** | Clean pure white `#FFFFFF` concept card with no room, floor, or scenery; renders only the requested icon/diagram and `allowed_text`. | Isolating a core paradox, comparison icon, or minimal conceptual diagram. |
+| **`white_isolated`** | Clean pure white `#FFFFFF` field with the requested figure or object integrated into a complete frame (no sticker border). | Single-subject conceptual emphasis without environmental distractions. |
 
 ---
 
@@ -37,17 +36,13 @@ Refer to detailed parameters in [render-capabilities](../../../../sys/docs/rende
 
 | Scene Effect | Operating Mechanism | Recommended Use Case |
 |---|---|---|
-| `cut` / `hold` | Hard cut to new image immediately. `hold` keeps camera completely motionless. | Match cut, Jump cut, Smash cut, fast pacing, or preserving diagrams. |
-| `fade` | Dissolve opacity transition up to 0.3s overlaying previous image. | Passage of time, flashbacks, softening scene transitions. |
-| `slide_left` | Slides new image horizontally right-to-left within 0.3s. | Page turns, advancing to a new topic or narrative section. |
-| `zoom_in` / `zoom_out` | Smoothly scales 1.0 $\to$ 1.08 or scales down 1.08 $\to$ 1.0. | Push-in (focusing on vocabulary) or Pull-out (revealing context). |
-| `punch_in` | Sudden snap zoom 1.25x in 0.35s with subtle vibration. | Emphasizes sudden discovery, shock, or eureka moments. |
-| `pan_left` / `pan_right` | Subtle 3% horizontal shift at 1.06 scale. | Sweeping across wide landscapes or reviewing multiple horizontal elements. |
-| Auto Ken Burns | Cycles zoom in $\to$ pan $\to$ zoom out when effect is unset. | Prevents dead or static frames (Never a static frame). |
-| `focus: {x, y}` | Normalized focal center coordinates (default `{x: 0.5, y: 0.42}`). | Directs zoom/pan motions accurately onto character faces or focal props. |
-| `shake` | 55Hz screen shake decaying over 0.28s. | Impact, sudden fright, explosion, or forceful knock. |
+| `cut` / `hold` | `transition: cut` switches beats cleanly (with automatic 85ms micro-dissolve on `variation` shots); `hold` keeps camera motionless for dense diagrams. | Standard beat cuts and diagram inspection. |
+| `zoom_in` / `zoom_out` | Smoothly scales `1.0 -> 1.08` or `1.08 -> 1.0` with subtle GPU handheld micro-breathing (`organicNoise`). | Push-in (focusing on action/detail) or Pull-out (revealing context). |
+| `punch_in` | Snappy spring zoom `1.22x -> 1.08x` with subtle decay shake. | Opening hook (`SC01`), sudden discovery, shock, or eureka moments. |
+| `pan_left` / `pan_right` | Smooth 3% horizontal sweep at `1.06` scale (+ `1.045` overscan). | Contrasting two groups, timeline progression, or wide environments. |
+| `slide_left` | Bezier horizontal slide with directional motion blur (Whip pan). | Fast topic transitions. |
+| `shake` | Multi-frequency Perlin camera vibration decaying over 0.28s. | Impact or sudden realization. |
 
-- **L-cut / J-cut**: Narration runs continuously; offset image beat timestamps (`at`) by 0.2s - 0.5s relative to dialogue start.
-- **Hand-drawn call-outs**: Request "red hand-drawn circle/arrow" directly in prompt adhering to brand tolerance.
-- **Highlighted vocabulary**: Captions automatically highlight target words (`target_word`) in vibrant yellow `#FACC15`; do not draw static text on images.
-- **Renderer boundaries**: **Do not select multi-layer 3D parallax (Parallax 3D đa lớp)** because standard rendering uses one complete 2D bitmap per beat. Use `based_on` variations for continuity between full-frame images. Whip pan is natively supported via `slide_left` with dynamic motion blur and inertia.
+- **Hand-drawn call-outs inside the AI art**: Request `"red hand-drawn circle or arrow pointing at..."` directly inside the image description when needed; **never** add external React/SVG floating callouts or coordinate overlays on top of the video.
+- **Clean papers & books**: When `allowed_text` is empty, books and sheets must contain only abstract wavy ink lines—never invented words, titles, or equations.
+- **Renderer boundaries**: **Do not select multi-layer 3D parallax (Parallax 3D đa lớp)** or cutout sticker layers (`layers[]`) because standard rendering uses one complete 2D full-frame bitmap per beat. Whip pan is natively supported via `slide_left` with dynamic motion blur and inertia.

@@ -64,10 +64,10 @@ def check_scene_narrative_progression(scenes: list[dict[str, Any]]) -> list[dict
     """Check declared visual evidence in order for long narratives, not exact percentages."""
     if len(scenes) < 10:
         return []
-    patterns = (r'study|desk|room|cafe|lecture|bàn học|phòng trọ|giảng đường|đời thực',
-                r'laborator|experiment|control group|thí nghiệm|đối chứng',
-                r'brain|neural|metaphor|bridge|map|histor|não|thần kinh|ẩn dụ|cầu|bản đồ|lịch sử',
-                r'study|desk|paper|article|application|bàn học|bài báo|ứng dụng|đời thực')
+    patterns = (r'study|desk|room|cafe|lecture|bàn học|phòng trọ|giảng đường|đời thực|ký túc xá|sinh viên',
+                r'laborator|experiment|control group|thí nghiệm|thực nghiệm|đối chứng|đối chiếu|kiểm chứng',
+                r'brain|neural|metaphor|bridge|map|histor|pyramid|matrix|não|thần kinh|ẩn dụ|cầu|bản đồ|lịch sử|tháp|ma trận|sơ đồ',
+                r'study|desk|paper|article|application|defense|committee|bàn học|bài báo|ứng dụng|đời thực|bảo vệ|hội đồng|khóa luận')
     next_zone = 0
     for scene in scenes:
         # Only visual fields count; mentioning a lab in speech does not change the room.

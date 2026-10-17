@@ -81,3 +81,7 @@ PYTHONPATH=sys python3 -m flow_cdp.multi_profile_manager stop
 - **Metadata Sidecar**: Accompanied by `{image_stem}.json` containing `jobId`, `prompt`, `ratio`, `characters`, `source`, `status: "downloaded"`, and `forgeId` (or `media_id`).
 - **No Synthetic Proof Hack**: Never fake screenshot proof files. The relaxed contract strictly relies on valid image binaries and sidecars.
 
+
+## Bound-profile dispatch regression
+
+Keep production `jobId` distinct from an image `testCase` in single and batch specs. Jobs bound to one exact browser profile use a serial image queue; parallel managers must not compete for the same browser lease. Treat an empty worker pool as a proven pre-send failure only when dispatch evidence confirms no worker/provider submission. Preserve downloaded assets and original request ownership during recovery.

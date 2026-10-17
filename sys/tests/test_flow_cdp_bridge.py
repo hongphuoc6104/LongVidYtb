@@ -58,15 +58,18 @@ class FlowCdpBridgeTests(unittest.TestCase):
             
             with patch("flow_cdp.bridge.require_queue_acceptance"), \
                  patch("flow_cdp.bridge.ensure_connected"), \
-                 patch("flow_cdp.bridge.generate_cdp_batch", return_value=fake_batch_result):
+                 patch("flow_cdp.bridge.generate_cdp_batch", return_value=fake_batch_result) as batch:
                 res = generate_cdp_image(
                     prompt="A test stick figure",
                     ratio="16:9",
                     test_case="shot-01",
+                    job_id="real-production-job",
                     out_dir=out_dir,
                 )
                 self.assertEqual(res["request_id"], "shot-01")
                 self.assertEqual(res["media_id"], "forge-123")
+                self.assertEqual(batch.call_args.args[0][0]["jobId"], "real-production-job")
+                self.assertEqual(batch.call_args.args[0][0]["testCase"], "shot-01")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,13 @@
+{
+  "source": "output-retake/narration.wav",
+  "restored_full_opening_byte_identical": true,
+  "removed_source_interval_seconds": [
+    5.8918333333333335,
+    6.311833333333333
+  ],
+  "method": "Remove 420 ms leading artifact and silence from ANALYSIS; preserve original HOOK including the complete final word. Apply 8 ms fade-in at the new segment entry.",
+  "cropped_analysis_asr": "Khi đọc lại một tài liệu, chúng ta thường thấy mọi thứ rất rõ ràng.",
+  "duration_seconds": 18.947020833333333,
+  "all_audio_after_entry_fade_byte_identical": true,
+  "sha256": "ccba2d390e5ce75644cd42c03d20c39a566d7a708b86fa6c6411822187326eb5"
+}

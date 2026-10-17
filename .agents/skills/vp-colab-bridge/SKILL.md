@@ -41,11 +41,11 @@ Video Pilot offloads all heavy GPU/CPU media processing to remote Google Colab T
 {
   "schema_version": "1.0",
   "voices": {
-    "vi": "assets/voices/adam/profile.json",
+    "vi": "assets/voices/viet_narrator/profile.json",
     "en": "assets/voices/adam/profile.json"
   },
-  "tts_voice": "Adam",
-  "tts_speed": 1.22,
+  "tts_voice": "VietNarrator",
+  "tts_speed": 1.0,
   "en_voice": "Adam",
   "en_speed": 1.22,
   "colab_tts": {

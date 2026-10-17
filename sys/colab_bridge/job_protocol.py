@@ -49,7 +49,8 @@ def build_render_request(root, brief, content, images, audio, resolve):
              'renderer/render.mjs', 'renderer/index.tsx', 'renderer/outputs.mjs', 'renderer/captions.mjs',
              'renderer/brand_logo.ts', 'renderer/thumbnail.tsx', 'tools/social_pack_generator.py', 'renderer/camera.mjs',
              'package.json', 'package-lock.json']
-    if brief.get('omni_platform'):
+    wants_sound_design = bool(brief.get('omni_platform') or brief.get('visual_pacing_profile') == 'full_frame_v1' or brief.get('enable_sound_design'))
+    if wants_sound_design and (root / 'assets/sfx').is_dir():
         names += ['assets/sfx/' + name + '.wav' for name in ('pop_clean', 'whoosh_soft', 'page_flip', 'pen_highlight', 'clock_tick', 'ding_insight', 'ambient_focus_loop')]
     for name in names:
         path = root / name
@@ -116,11 +117,13 @@ def validate_render_result(folder, request):
     if props.get('primary_language') != requested_languages[0] or set(props.get('tracks', {})) != set(requested_languages):
         raise ValueError('Remote props primary language/tracks mismatch')
     # Metadata reconciliation only: no local audio, image or render processing.
+    from scripts.camera_motion import scene_camera_motions
     from scripts.subtitles import subtitle_cues
+    cue_aspect = request['brief'].get('aspect_ratio') if request['brief'].get('aspect_ratio') in ('9:16', '16:9') else None
     for language in requested_languages:
         track = props['tracks'][language]
         source = request['audio']['tracks'][language]
-        expected_cues = source['cues'] if 'cues' in source else subtitle_cues(source.get('segments', []))
+        expected_cues = source['cues'] if 'cues' in source else subtitle_cues(source.get('segments', []), aspect_ratio=cue_aspect)
         expected_aspects = {plan['aspect_ratio'] for plan in plans if plan['language'] == language}
         if (track.get('audioSrc') != language + '.wav' or track.get('duration') != source['duration']
                 or track.get('cues') != expected_cues or set(track.get('scenesByAspect', {})) != expected_aspects):
@@ -139,12 +142,14 @@ def validate_render_result(folder, request):
                 actual_beats = got.get('images', [])
                 if wanted_beats:
                     if len(actual_beats) != len(wanted_beats): raise ValueError('Remote props visual beat count mismatch')
+                    expected_motions = scene_camera_motions(scene)
                     last = -1
-                    for beat, wanted in zip(actual_beats, wanted_beats):
+                    for beat, wanted, resolved_motion in zip(actual_beats, wanted_beats, expected_motions):
                         asset_aspect = '16:9' if request['brief'].get('reframe_mode') else aspect
                         expected_asset = Path(images[(wanted['image_id'], asset_aspect)]['path']).name
                         at = beat.get('at')
-                        if (beat.get('id'), beat.get('src'), beat.get('effect'), beat.get('focus')) != (wanted['id'], expected_asset, wanted['effect'], wanted['focus']):
+                        valid_effects = {wanted.get('effect'), resolved_motion}
+                        if (beat.get('id'), beat.get('src'), beat.get('focus')) != (wanted['id'], expected_asset, wanted['focus']) or beat.get('effect') not in valid_effects:
                             raise ValueError('Remote props visual asset/beat mismatch')
                         if isinstance(at, bool) or not isinstance(at, (int, float)) or not math.isfinite(at) or at <= last or not 0 <= at < got['end'] - got['start']:
                             raise ValueError('Remote props visual beat timing mismatch')

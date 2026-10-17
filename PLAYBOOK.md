@@ -224,3 +224,11 @@ $$\text{1. Tái hiện E2E} \longrightarrow \text{2. Phân tích gốc rễ} \lo
 - **Wrong Assumptions:** A raw chapter crop is a standalone short; relative audio gain establishes LUFS; local tests certify remote output or engagement.
 - **Resolution & E2E Proof:** Add opt-in image reuse, standalone hook synthesis, Colab body reuse, measured duration/pacing guards, safe captions, thumbnails and atomic manifest-based social publication. Provider-free tests exercise contracts and PCM assembly; real T4/Flow media remains unverified.
 - **Golden Rule:** Follow [Omni-platform contracts](.agents/skills/vp-omni-platform/SKILL.md); require authored scene/image/speech references and preserve existing job decisions.
+
+### [ERR-20261017-03] Bound Flow jobs lost production identity and raced browser leases
+- **Symptom:** The fresh end-to-end short routed image requests outside its frozen profile, then produced an empty-worker lease failure under concurrent single-profile submissions.
+- **Reproduction Path:** Run `pipeline-e2e-short-20261017` with one job-specific Flow binding and concurrent image production; inspect its evidence/pre-fix-flow.log and evidence/profile-lease-failure.log.
+- **Root Cause:** Single and batch adapters propagated only image testCase IDs; the bridge used those IDs as production jobs and missed the binding. Concurrent image managers subsequently competed for one bound browser lease.
+- **Wrong Assumptions:** An image request ID identifies its production job; a fixed browser can safely own multiple concurrent UI queues; an empty worker pool means a provider request was sent.
+- **Resolution & E2E Proof:** Propagate jobId separately from testCase and serialize image production when an exact browser is bound. Nine routing tests and 24 combined routing/full-frame regressions passed. The real trial collected its 56.4800208333-second T4 WAV and all 28 Flow scene images; render verification is recorded in the job evidence.
+- **Golden Rule:** Preserve the production job ID and frozen browser owner across dispatch. Reconcile only proven unsent failures through the official recovery API, retain downloaded artifacts, and never rotate to evade a provider challenge.

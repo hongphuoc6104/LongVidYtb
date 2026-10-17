@@ -347,6 +347,7 @@ def generate_cdp_image(
     tool_url=None,
     use_character_ref: bool = True,
     profile_id: str = "",
+    job_id: str | None = None,
 ) -> dict[str, Any]:
     """Generate a single image via Flow CDP."""
     try:
@@ -386,6 +387,8 @@ def generate_cdp_image(
         spec["useCharacterRef"] = False
     if model is not None:
         spec.update(model=model, project=project, toolUrl=tool_url, managementContract=1)
+    if job_id is not None:
+        spec["jobId"] = job_id
 
     spec_file = target_dir / f".spec-{test_case}-{int(time.time() * 1000)}.json"
     spec_file.write_text(json.dumps(spec, indent=2), encoding="utf-8")

@@ -1,0 +1,468 @@
+{
+  "request_id": "c77a43f6eb13f4a5676fe27e964bb0ab3f3c28dbb3bf75e2220aad54ab22d44b",
+  "voice": "TrialZ63Clean",
+  "engine": {
+    "backend": "colab-omnivoice",
+    "precision": "float16",
+    "device": "Tesla T4",
+    "models": {
+      "vi": {
+        "id": "kjanh/KhanhTTS-OmniVoice",
+        "revision": "20d056b8ea5d8d578b4cbaf1f703012fa3798a84"
+      },
+      "en": {
+        "id": "kjanh/KhanhTTS-OmniVoice",
+        "revision": "20d056b8ea5d8d578b4cbaf1f703012fa3798a84"
+      }
+    },
+    "batch_size": 4,
+    "num_step": 32
+  },
+  "segments": [
+    {
+      "scene_id": "HOOK",
+      "text": "Bạn có chắc mình đã hiểu? Đôi khi, cảm giác quen thuộc khiến chúng ta tưởng rằng mình biết nhiều hơn thực tế.",
+      "path": "segment-0000.wav",
+      "content_duration": 5.111479166666666,
+      "word_timestamps": [
+        {
+          "word": "Bạn",
+          "start": 0.0,
+          "end": 0.23
+        },
+        {
+          "word": "có",
+          "start": 0.23,
+          "end": 0.36
+        },
+        {
+          "word": "chắc",
+          "start": 0.36,
+          "end": 0.61
+        },
+        {
+          "word": "mình",
+          "start": 0.61,
+          "end": 0.81
+        },
+        {
+          "word": "đã",
+          "start": 0.81,
+          "end": 0.9
+        },
+        {
+          "word": "hiểu?",
+          "start": 0.9,
+          "end": 1.31
+        },
+        {
+          "word": "Đôi",
+          "start": 1.31,
+          "end": 1.49
+        },
+        {
+          "word": "khi,",
+          "start": 1.49,
+          "end": 1.65
+        },
+        {
+          "word": "cảm",
+          "start": 1.65,
+          "end": 1.78
+        },
+        {
+          "word": "giác",
+          "start": 1.78,
+          "end": 2.17
+        },
+        {
+          "word": "quen",
+          "start": 2.17,
+          "end": 2.39
+        },
+        {
+          "word": "thuộc",
+          "start": 2.39,
+          "end": 2.68
+        },
+        {
+          "word": "khiến",
+          "start": 2.68,
+          "end": 2.98
+        },
+        {
+          "word": "chúng",
+          "start": 2.98,
+          "end": 3.28
+        },
+        {
+          "word": "ta",
+          "start": 3.28,
+          "end": 3.43
+        },
+        {
+          "word": "tưởng",
+          "start": 3.43,
+          "end": 3.69
+        },
+        {
+          "word": "rằng",
+          "start": 3.69,
+          "end": 3.94
+        },
+        {
+          "word": "mình",
+          "start": 3.94,
+          "end": 4.15
+        },
+        {
+          "word": "biết",
+          "start": 4.15,
+          "end": 4.37
+        },
+        {
+          "word": "nhiều",
+          "start": 4.37,
+          "end": 4.62
+        },
+        {
+          "word": "hơn",
+          "start": 4.62,
+          "end": 4.82
+        },
+        {
+          "word": "thực",
+          "start": 4.82,
+          "end": 4.98
+        },
+        {
+          "word": "tế.",
+          "start": 4.98,
+          "end": 5.111
+        }
+      ]
+    },
+    {
+      "scene_id": "ANALYSIS",
+      "text": "Khi đọc lại một tài liệu, chúng ta thường thấy mọi thứ rất rõ ràng. Nhưng thử đóng sách và tự giải thích, bạn sẽ nhận ra những khoảng trống.",
+      "path": "segment-0001.wav",
+      "content_duration": 6.939291666666667,
+      "word_timestamps": [
+        {
+          "word": "Khi",
+          "start": 0.0,
+          "end": 0.31
+        },
+        {
+          "word": "đọc",
+          "start": 0.31,
+          "end": 0.57
+        },
+        {
+          "word": "lại",
+          "start": 0.57,
+          "end": 0.72
+        },
+        {
+          "word": "một",
+          "start": 0.72,
+          "end": 0.91
+        },
+        {
+          "word": "tài",
+          "start": 0.91,
+          "end": 1.11
+        },
+        {
+          "word": "liệu,",
+          "start": 1.11,
+          "end": 1.3
+        },
+        {
+          "word": "chúng",
+          "start": 1.3,
+          "end": 1.65
+        },
+        {
+          "word": "ta",
+          "start": 1.65,
+          "end": 1.82
+        },
+        {
+          "word": "thường",
+          "start": 1.82,
+          "end": 2.15
+        },
+        {
+          "word": "thấy",
+          "start": 2.15,
+          "end": 2.38
+        },
+        {
+          "word": "mọi",
+          "start": 2.38,
+          "end": 2.54
+        },
+        {
+          "word": "thứ",
+          "start": 2.54,
+          "end": 2.73
+        },
+        {
+          "word": "rất",
+          "start": 2.73,
+          "end": 2.93
+        },
+        {
+          "word": "rõ",
+          "start": 2.93,
+          "end": 3.05
+        },
+        {
+          "word": "ràng.",
+          "start": 3.05,
+          "end": 3.24
+        },
+        {
+          "word": "Nhưng",
+          "start": 3.24,
+          "end": 3.69
+        },
+        {
+          "word": "thử",
+          "start": 3.69,
+          "end": 3.89
+        },
+        {
+          "word": "đóng",
+          "start": 3.89,
+          "end": 4.09
+        },
+        {
+          "word": "sách",
+          "start": 4.09,
+          "end": 4.34
+        },
+        {
+          "word": "và",
+          "start": 4.34,
+          "end": 4.45
+        },
+        {
+          "word": "tự",
+          "start": 4.45,
+          "end": 4.66
+        },
+        {
+          "word": "giải",
+          "start": 4.66,
+          "end": 4.93
+        },
+        {
+          "word": "thích,",
+          "start": 4.93,
+          "end": 5.2
+        },
+        {
+          "word": "bạn",
+          "start": 5.2,
+          "end": 5.55
+        },
+        {
+          "word": "sẽ",
+          "start": 5.55,
+          "end": 5.67
+        },
+        {
+          "word": "nhận",
+          "start": 5.67,
+          "end": 5.9
+        },
+        {
+          "word": "ra",
+          "start": 5.9,
+          "end": 6.03
+        },
+        {
+          "word": "những",
+          "start": 6.03,
+          "end": 6.28
+        },
+        {
+          "word": "khoảng",
+          "start": 6.28,
+          "end": 6.67
+        },
+        {
+          "word": "trống.",
+          "start": 6.67,
+          "end": 6.939
+        }
+      ]
+    },
+    {
+      "scene_id": "REFLECTION",
+      "text": "Có lẽ, học sâu bắt đầu từ một khoảnh khắc rất nhỏ. Đó là khi chúng ta đủ bình tĩnh để thừa nhận rằng, mình vẫn chưa hiểu.",
+      "path": "segment-0002.wav",
+      "content_duration": 5.535895833333333,
+      "word_timestamps": [
+        {
+          "word": "Có",
+          "start": 0.0,
+          "end": 0.12
+        },
+        {
+          "word": "lẽ,",
+          "start": 0.12,
+          "end": 0.21
+        },
+        {
+          "word": "học",
+          "start": 0.21,
+          "end": 0.39
+        },
+        {
+          "word": "sâu",
+          "start": 0.39,
+          "end": 0.69
+        },
+        {
+          "word": "bắt",
+          "start": 0.69,
+          "end": 0.88
+        },
+        {
+          "word": "đầu",
+          "start": 0.88,
+          "end": 1.03
+        },
+        {
+          "word": "từ",
+          "start": 1.03,
+          "end": 1.15
+        },
+        {
+          "word": "một",
+          "start": 1.15,
+          "end": 1.28
+        },
+        {
+          "word": "khoảnh",
+          "start": 1.28,
+          "end": 1.65
+        },
+        {
+          "word": "khắc",
+          "start": 1.65,
+          "end": 1.95
+        },
+        {
+          "word": "rất",
+          "start": 1.95,
+          "end": 2.11
+        },
+        {
+          "word": "nhỏ.",
+          "start": 2.11,
+          "end": 2.29
+        },
+        {
+          "word": "Đó",
+          "start": 2.29,
+          "end": 2.54
+        },
+        {
+          "word": "là",
+          "start": 2.54,
+          "end": 2.68
+        },
+        {
+          "word": "khi",
+          "start": 2.68,
+          "end": 2.82
+        },
+        {
+          "word": "chúng",
+          "start": 2.82,
+          "end": 3.14
+        },
+        {
+          "word": "ta",
+          "start": 3.14,
+          "end": 3.26
+        },
+        {
+          "word": "đủ",
+          "start": 3.26,
+          "end": 3.36
+        },
+        {
+          "word": "bình",
+          "start": 3.36,
+          "end": 3.56
+        },
+        {
+          "word": "tĩnh",
+          "start": 3.56,
+          "end": 3.81
+        },
+        {
+          "word": "để",
+          "start": 3.81,
+          "end": 3.91
+        },
+        {
+          "word": "thừa",
+          "start": 3.91,
+          "end": 4.14
+        },
+        {
+          "word": "nhận",
+          "start": 4.14,
+          "end": 4.39
+        },
+        {
+          "word": "rằng,",
+          "start": 4.39,
+          "end": 4.67
+        },
+        {
+          "word": "mình",
+          "start": 4.67,
+          "end": 4.95
+        },
+        {
+          "word": "vẫn",
+          "start": 4.95,
+          "end": 5.15
+        },
+        {
+          "word": "chưa",
+          "start": 5.15,
+          "end": 5.32
+        },
+        {
+          "word": "hiểu.",
+          "start": 5.32,
+          "end": 5.536
+        }
+      ]
+    }
+  ],
+  "english_spans": [],
+  "batches": [
+    {
+      "language": "vi",
+      "batch_size": 3,
+      "retake": 0
+    }
+  ],
+  "voice_references": {
+    "vi": {
+      "voice": "TrialZ63Clean",
+      "sha256": "ec54c744434ab5569f3d7a3c542607ddbfd3bd02023a1d0232a17523fce32681",
+      "source_speed": 1.0
+    }
+  },
+  "elapsed_seconds": 12.329300914999976
+}

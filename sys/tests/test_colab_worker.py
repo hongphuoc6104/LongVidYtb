@@ -26,6 +26,9 @@ class WorkerTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         shutil.copytree(ROOT / 'assets/voices', self.root / 'assets/voices')
         self.cfg = read(ROOT / 'config.json')
+        # Keep the synthetic Adam regression fixture independent of user defaults.
+        self.cfg.update(tts_voice='Adam', tts_speed=1.22)
+        self.cfg['voices']['vi'] = 'assets/voices/adam/profile.json'
         self.cfg['colab_tts']['enabled'] = True
         write(self.root / 'config.json', self.cfg)
         self.generated = []
@@ -73,6 +76,21 @@ class WorkerTests(unittest.TestCase):
                          '97d5aee4bc5bbb4a5951a180c04954f5f33b36e901f9a99084ec9f2ebb1817e9')
         self.assertEqual([prompt['ref_text'] for prompt in self.prompts], [text])
         self.assertEqual([rate for batch in self.generated for rate in batch['speed']], [1.22])
+
+    def test_vietnamese_default_reaches_remote_clone_prompt(self):
+        cfg = read(ROOT / 'config.json')
+        profile = read(ROOT / cfg['voices']['vi'])
+        request = build_request(self.root, cfg,
+            [dict(scene_id='SC01', texts=['Bạn có chắc mình đã hiểu?'], gaps=[], tail=.2)])
+        out = self.root / 'remote/vietnamese-default/output'
+        self.run_worker(request, out)
+        validate_result(out, request)
+        self.assertEqual(request['profiles']['vi']['voice'], 'VietNarrator')
+        self.assertEqual(read(out / 'tts-result.json')['voice'], 'VietNarrator')
+        self.assertEqual(request['profiles']['vi']['sha256'], profile['sha256'])
+        self.assertEqual([prompt['ref_text'] for prompt in self.prompts],
+                         [profile['reference_text']])
+        self.assertEqual([rate for batch in self.generated for rate in batch['speed']], [1.0])
 
     def run_worker(self, req, out):
         remote = copy.deepcopy(req)
@@ -256,4 +274,3 @@ class WorkerTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-

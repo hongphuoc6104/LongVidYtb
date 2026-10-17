@@ -282,6 +282,7 @@ class ResearchedScene:
     narration_en: Optional[str] = None
     visual_beats: List[ResearchedVisualBeat] = field(default_factory=list)
     scene_description: str = ""
+    tone: Optional[str] = None
 
 
 @dataclass
@@ -641,6 +642,76 @@ def _default_full_frame_beats(scene: ResearchedScene, elapsed: float) -> List[Re
     return beats
 
 
+
+
+def build_scenes_from_story_rows(
+    story_rows: List[Tuple[str, str, List[Tuple[str, str]]]],
+    character_id: str = "CH01",
+    nominal_rate: float = NOMINAL_SPEECH_RATE,
+) -> List[ResearchedScene]:
+    """Flash-agent friendly builder: converts (title, setting, [(sentence, "shot_type|visual_action")]) rows
+    into fully anchored, cadence-calibrated ResearchedScene objects without manual coordinate or offset math.
+    """
+    built_scenes: List[ResearchedScene] = []
+    total = len(story_rows)
+    for index, (title, setting, rows) in enumerate(story_rows, 1):
+        scene_id = f"SC{index:02d}"
+        narration = " ".join(sent.strip() for sent, _ in rows if sent.strip())
+        beats: List[ResearchedBeat] = []
+        base_id: Optional[str] = None
+        seen_quotes: Dict[str, int] = {}
+        for beat_idx, (sentence, spec) in enumerate(rows, 1):
+            shot_type, _, action_desc = spec.partition("|")
+            shot_type = shot_type.strip() or "full_scene"
+            action_desc = action_desc.strip() or spec.strip()
+            image_id = f"{scene_id}_I{beat_idx}"
+            quote = sentence.strip()
+            seen_quotes[quote] = seen_quotes.get(quote, 0) + 1
+            if shot_type == "full_scene" and base_id is None:
+                base_id = image_id
+            based_on = (base_id or f"{scene_id}_I{max(1, beat_idx - 1)}") if shot_type == "variation" else None
+            preserve = (
+                f"Keep the exact camera angle, room geometry and props from {based_on} in {setting}. "
+                "Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift."
+                if based_on else ""
+            )
+            beats.append(ResearchedBeat(
+                image_id=image_id,
+                description=f"{setting} {action_desc}",
+                anchor_quote=quote,
+                anchor_occurrence=seen_quotes[quote],
+                reason="Narration-locked full-frame beat.",
+                character_ids=[character_id],
+                effect="cut",
+                based_on=based_on,
+                preserve=preserve,
+                change=action_desc,
+                shot_type=shot_type,
+            ))
+        is_last = index == total
+        p_tail = DEFAULT_P_TAIL_LAST if is_last else DEFAULT_P_TAIL_PARA
+        pause_sec, _, _ = extract_pauses(narration)
+        syl = count_syllables(narration, lang="vi")
+        duration = round(pause_sec + (syl / nominal_rate) + p_tail, 2)
+        tone = "narrative_warm" if index <= max(1, total // 5) else ("reflective_slow" if index > total - max(1, total // 5) else "analytical_crisp")
+        built_scenes.append(ResearchedScene(
+            scene_id=scene_id,
+            title=title,
+            purpose=f"Triển khai bước {index}: {title.lower()}",
+            duration=duration,
+            narration=narration,
+            requirements=[],
+            source_ids=[],
+            character_ids=[character_id],
+            action=rows[0][1].partition("|")[2].strip() if rows else title,
+            setting=setting,
+            camera="Semantic full-frame sequence",
+            visual_beats=beats,
+            tone=tone,
+        ))
+    return built_scenes
+
+
 def build_content_v3(
     topic: ResearchedTopic,
     brief_data: Dict[str, Any],
@@ -701,13 +772,15 @@ def build_content_v3(
                     "quote": quote_en,
                     "occurrence": visual.anchor_occurrence_en,
                 }
+            safe_fx = round(min(0.65, max(0.35, float(visual.focus_x))), 2) if visual.focus_x != 0.5 else 0.5
+            safe_fy = round(min(0.58, max(0.35, float(visual.focus_y))), 2) if visual.focus_y != 0.5 else 0.5
             beats.append({
                 "id": f"{s_id}_B{beat_idx}",
                 "image_id": visual.image_id,
                 "purpose": sc.purpose,
                 "anchor": anchor_payload,
                 "effect": visual.effect,
-                "focus": {"x": visual.focus_x, "y": visual.focus_y},
+                "focus": {"x": safe_fx, "y": safe_fy},
             })
 
         from scripts.visual_quality import apply_room_continuity
@@ -735,6 +808,8 @@ def build_content_v3(
         }
         if sc.foley_cue:
             scene_dict["foley_cue"] = sc.foley_cue
+        if getattr(sc, "tone", None):
+            scene_dict["tone"] = sc.tone
         if sc.narration_en:
             scene_dict["narration_en"] = sc.narration_en
 

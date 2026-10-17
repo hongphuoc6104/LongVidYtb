@@ -1,11 +1,11 @@
 {
   "schema_version": "1.0",
   "voices": {
-    "vi": "assets/voices/adam/profile.json",
+    "vi": "assets/voices/viet_narrator/profile.json",
     "en": "assets/voices/adam/profile.json"
   },
-  "tts_voice": "Adam",
-  "tts_speed": 1.22,
+  "tts_voice": "VietNarrator",
+  "tts_speed": 1.0,
   "tts_max_chars": 256,
   "en_voice": "Adam",
   "en_speed": 1.22,

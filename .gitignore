@@ -127,6 +127,8 @@ sys/vocab/queue.json
 
 # --- 10. Audio & Video Media Files (Exclude All Except assets/) ---
 *.wav
+!sys/assets/voices/viet_narrator/reference.wav
+!sys/assets/voices/viet_narrator/sample.wav
 *.mp3
 *.ogg
 *.m4a

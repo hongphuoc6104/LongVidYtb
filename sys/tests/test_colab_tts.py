@@ -36,6 +36,9 @@ class ProtocolTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         self.cfg = read(ROOT / 'config.json')
+        # Keep the synthetic Adam regression fixture independent of user defaults.
+        self.cfg.update(tts_voice='Adam', tts_speed=1.22)
+        self.cfg['voices']['vi'] = 'assets/voices/adam/profile.json'
         shutil.copytree(ROOT / 'assets/voices', self.root / 'assets/voices')
         self.scenes = [dict(scene_id='SC01', narration='Từ weather. I am happy.',
                            texts=['Từ weather.', 'I am happy.'],

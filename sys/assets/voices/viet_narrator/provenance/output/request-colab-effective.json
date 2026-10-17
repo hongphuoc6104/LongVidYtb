@@ -1,0 +1,114 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "text": "Bạn có chắc mình đã hiểu? Đôi khi, cảm giác quen thuộc khiến chúng ta tưởng rằng mình biết nhiều hơn thực tế.",
+      "language": "vi",
+      "retake": 0,
+      "speed": 1.0,
+      "id": "u00000"
+    },
+    {
+      "text": "Khi đọc lại một tài liệu, chúng ta thường thấy mọi thứ rất rõ ràng. Nhưng thử đóng sách và tự giải thích, bạn sẽ nhận ra những khoảng trống.",
+      "language": "vi",
+      "retake": 0,
+      "speed": 1.0,
+      "id": "u00001"
+    },
+    {
+      "text": "Có lẽ, học sâu bắt đầu từ một khoảnh khắc rất nhỏ. Đó là khi chúng ta đủ bình tĩnh để thừa nhận rằng, mình vẫn chưa hiểu.",
+      "language": "vi",
+      "retake": 0,
+      "speed": 1.0,
+      "id": "u00002"
+    }
+  ],
+  "segments": [
+    {
+      "scene_id": "HOOK",
+      "text": "Bạn có chắc mình đã hiểu? Đôi khi, cảm giác quen thuộc khiến chúng ta tưởng rằng mình biết nhiều hơn thực tế.",
+      "items": [
+        0
+      ],
+      "pause": 0.5
+    },
+    {
+      "scene_id": "ANALYSIS",
+      "text": "Khi đọc lại một tài liệu, chúng ta thường thấy mọi thứ rất rõ ràng. Nhưng thử đóng sách và tự giải thích, bạn sẽ nhận ra những khoảng trống.",
+      "items": [
+        1
+      ],
+      "pause": 0.5
+    },
+    {
+      "scene_id": "REFLECTION",
+      "text": "Có lẽ, học sâu bắt đầu từ một khoảnh khắc rất nhỏ. Đó là khi chúng ta đủ bình tĩnh để thừa nhận rằng, mình vẫn chưa hiểu.",
+      "items": [
+        2
+      ],
+      "pause": 0.5
+    }
+  ],
+  "english": [],
+  "profiles": {
+    "vi": {
+      "voice": "TrialZ63",
+      "language": "vi",
+      "languages": [
+        "vi"
+      ],
+      "reference_wav": "reference.wav",
+      "reference_text": "Chúng ta nói về tự do như một khái niệm trừu tượng. Tự do trong tâm trí khi có quá nhiều lời thì thầm nói rằng chúng ta nên làm gì và không nên làm gì. Hoặc tự do trong hành động khi đang sống trong một xã hội với nhiều định",
+      "source_speed": 1.0,
+      "sha256": "4462a5cca5f6c7224d457217d85e090afad158e0c75f81ba1ce88bdc44a242bd",
+      "sources": [
+        {
+          "url": "https://www.youtube.com/watch?v=Z63FteI6EeE",
+          "reference_time": "00:02–00:14"
+        }
+      ],
+      "listening_verified": false,
+      "note": "Experimental profile. Transcript derived from source captions and Whisper; the requested window ends mid-sentence.",
+      "local_wav": "/home/hongphuoc/Desktop/LongVidYtb-main/sys/runs/voice-trial-Z63FteI6EeE/reference.wav"
+    }
+  },
+  "models": {
+    "vi": {
+      "id": "kjanh/KhanhTTS-OmniVoice",
+      "revision": "20d056b8ea5d8d578b4cbaf1f703012fa3798a84"
+    },
+    "en": {
+      "id": "kjanh/KhanhTTS-OmniVoice",
+      "revision": "20d056b8ea5d8d578b4cbaf1f703012fa3798a84"
+    }
+  },
+  "batch_size": 4,
+  "num_step": 32,
+  "seed": 42,
+  "span_gap": 0.18,
+  "assemble": true,
+  "assembly_settings": {
+    "audio_lufs": -14.0,
+    "audio_peak_db": -1.5
+  },
+  "support_files": [
+    {
+      "name": "audio_processing.py",
+      "local_path": "/home/hongphuoc/Desktop/LongVidYtb-main/sys/audio_processing.py",
+      "sha256": "d70168c7c22cb12a165529b80381a9ea4f1075650f620ffb6505a18fccd14d56"
+    },
+    {
+      "name": "subtitles.py",
+      "local_path": "/home/hongphuoc/Desktop/LongVidYtb-main/sys/scripts/subtitles.py",
+      "sha256": "387bcd07e178fd4029a30834dce2be615ff84806a4fed9736960f7200c682f1b"
+    },
+    {
+      "name": "media_packaging.py",
+      "local_path": "/home/hongphuoc/Desktop/LongVidYtb-main/sys/media_packaging.py",
+      "sha256": "633742ecc338210ce6356338a725d6e73d0a951eb048581445431da3dba56262"
+    }
+  ],
+  "request_id": "b78dc2578c3fa231cd4baeef06ccea47a793e4f86f93cd98af0a2d42b0ac79c6",
+  "source_request_id": "695204cafc99881c1100d41725aa82824541ce64f407c76909a20445ee3785fc",
+  "worker_sha256": "893960ce68766f4f12600567d8a5b1b0669f89a710eb2bb45a481f1c52dd044d"
+}

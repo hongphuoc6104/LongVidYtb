@@ -8,6 +8,7 @@ import wave
 from pathlib import Path
 
 from omni_platform import short_plans
+from scripts.camera_motion import select_semantic_camera_effect
 
 
 def parent_span(segments: list[dict], parent_scene_id: str, text: str) -> dict:
@@ -44,6 +45,7 @@ def prepare_shorts(brief: dict, content: dict, audio: dict, images: dict,
         pieces = [(hook, None)]
         for part in plan['body']:
             pieces.append((parent_span(master['segments'], part['parent_scene_id'], part['segment_text']), part))
+        prev_short_eff = None
         for number, (piece, part) in enumerate(pieces, 1):
             scene_id = f'SC{number:02}'
             if part is None:
@@ -80,7 +82,9 @@ def prepare_shorts(brief: dict, content: dict, audio: dict, images: dict,
             # Parent master has already copied this source to the public directory.
             if not (public / name).is_file():
                 raise ValueError('OMNI_IMAGE: master image missing from public directory')
-            beats = [{'src': name, 'at': 0, 'shot_type': 'full_scene', 'effect': 'hold', 'focus': {'x': .5, 'y': .5}}]
+            first_eff = 'punch_in' if part is None else select_semantic_camera_effect(str(image.get('description', '') or text), prev_short_eff)
+            prev_short_eff = first_eff
+            beats = [{'src': name, 'at': 0, 'shot_type': 'full_scene', 'effect': first_eff, 'camera_motion': first_eff, 'focus': {'x': .5, 'y': .5}}]
             if part is not None:
                 parent_scene = next(scene for scene in parent_timeline if scene['id'] == part['parent_scene_id'])
                 beats += [dict(beat, at=(parent_scene['start'] + beat['at'] - piece['start']) / factor)

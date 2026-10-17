@@ -75,3 +75,37 @@ List of technical issues recorded during pipeline operation:
 
 - [colab-1792153087520226299.md](colab-1792153087520226299.md) — Colab TTS cần kiểm tra.
 - [full-frame-acceptance-video-20261016 — render](1792153087520656600-full-frame-acceptance-video-20261016-render.md)
+
+- [colab-1792178335693282691.md](colab-1792178335693282691.md) — Colab TTS cần kiểm tra.
+
+- [colab-1792178493349024115.md](colab-1792178493349024115.md) — Colab TTS cần kiểm tra.
+- [pipeline-e2e-short-20261017 — images](1792179185731142638-pipeline-e2e-short-20261017-images.md)
+- [pipeline-e2e-short-20261017 — images](1792179907775817348-pipeline-e2e-short-20261017-images.md)
+- [pipeline-e2e-short-20261017 — images](1792180494483290963-pipeline-e2e-short-20261017-images.md)
+- [pipeline-e2e-short-20261017 — images](1792180972837714676-pipeline-e2e-short-20261017-images.md)
+
+- [colab-1792181345006611990.md](colab-1792181345006611990.md) — Colab TTS cần kiểm tra.
+- [pipeline-e2e-short-20261017 — render](1792181345006910023-pipeline-e2e-short-20261017-render.md)
+
+- [colab-1792186273759852691.md](colab-1792186273759852691.md) — Colab TTS cần kiểm tra.
+- [pipeline-e2e-short-20261017 — content](1792188538285612920-pipeline-e2e-short-20261017-content.md)
+- [pipeline-e2e-short-20261017 — content](1792188633116606576-pipeline-e2e-short-20261017-content.md)
+- [pipeline-e2e-short-20261017 — content](1792188656329154096-pipeline-e2e-short-20261017-content.md)
+- [pipeline-e2e-short-20261017 — images](1792189045260553705-pipeline-e2e-short-20261017-images.md)
+
+- [colab-1792189692217819338.md](colab-1792189692217819338.md) — Colab TTS cần kiểm tra.
+- [pipeline-e2e-short-20261017 — render](1792189692218228642-pipeline-e2e-short-20261017-render.md)
+
+- [colab-1792189923048209683.md](colab-1792189923048209683.md) — Colab TTS cần kiểm tra.
+- [pipeline-e2e-short-20261017 — render](1792189923049234571-pipeline-e2e-short-20261017-render.md)
+
+- [colab-1792189979778608350.md](colab-1792189979778608350.md) — Colab TTS cần kiểm tra.
+- [pipeline-e2e-short-20261017 — render](1792189979778939286-pipeline-e2e-short-20261017-render.md)
+- [pipeline-e2e-short-20261017 — images](1792190290355636164-pipeline-e2e-short-20261017-images.md)
+- [pipeline-e2e-short-20261017 — render](1792191461348140009-pipeline-e2e-short-20261017-render.md)
+
+- [colab-1792191667141126906.md](colab-1792191667141126906.md) — Colab TTS cần kiểm tra.
+
+- [colab-1792191794766856678.md](colab-1792191794766856678.md) — Colab TTS cần kiểm tra.
+
+- [colab-1792191794767056290.md](colab-1792191794767056290.md) — Colab TTS cần kiểm tra.
