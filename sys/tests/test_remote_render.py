@@ -35,7 +35,7 @@ class RenderTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory(); self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         self.cfg = read(ROOT / 'config.json')
-        self.brief = {'aspect_ratio': '9:16', 'outputs': [{'aspect_ratio': '9:16', 'language': 'en', 'subtitles': True, 'voice': 'Adam', 'speed': 1.22}]}
+        self.brief = {'aspect_ratio': '9:16', 'outputs': [{'aspect_ratio': '9:16', 'language': 'en', 'subtitles': True, 'voice': 'VietNarrator', 'speed': 1.0}]}
         (self.root / 'image.png').write_bytes(b'imagefixture')
         (self.root / 'en.wav').write_bytes(b'audiofixture')
         self.images = {'items': [{'scene_id': 'SC01', 'image_id': 'IM01', 'ratio': '9:16', 'path': 'image.png'}]}
@@ -56,7 +56,7 @@ class RenderTests(unittest.TestCase):
             self.assertNotIn('token.json', z.namelist())
             manifest = json.loads(z.read('request.json'))
             self.assertTrue(all('local_path' not in x for x in manifest['files']))
-            self.assertEqual(manifest['brief']['outputs'][0]['speed'], 1.22)
+            self.assertEqual(manifest['brief']['outputs'][0]['speed'], 1.0)
             self.assertIn('source/renderer/outputs.mjs', z.namelist())
         (self.root / 'image.png').write_bytes(b'changed')
         with self.assertRaisesRegex(ValueError, 'changed'): bundle(self.req, self.root / 'changed.zip')
@@ -154,11 +154,11 @@ class WorkerRoutingTests(unittest.TestCase):
             folder = Path(temp)
             (folder/'image.png').write_bytes(b'fixture')
             (folder/'audio.wav').write_bytes(b'fixture')
-            brief = {'aspect_ratio': '9:16', 'outputs': [{'aspect_ratio':'9:16','language':'en','subtitles':True,'voice':'Adam','speed':1.22}]}
+            brief = {'aspect_ratio': '9:16', 'outputs': [{'aspect_ratio':'9:16','language':'en','subtitles':True,'voice':'VietNarrator','speed':1.0}]}
             content = {'schema_version':'3.0', 'scenes':[{'id':'SC01','title':'A question', 'narration_en':'I see a predator.',
                        'beats':[{'id':'BT01','image_id':'IM01','anchor':{'en':{'quote':'I','occurrence':1}},'effect':'hold','focus':{'x':.5,'y':.5}}]}]}
             images = {'items':[{'scene_id':'SC01','image_id':'IM01','ratio':'9:16','path':'image.png'}]}
-            track = {'language':'en','voice':'Adam','speed':1.22,'wav':'audio.wav','duration':5.,
+            track = {'language':'en','voice':'VietNarrator','speed':1.0,'wav':'audio.wav','duration':5.,
                      'segments':[{'scene_id':'SC01','text':'I see a predator.','start':0.,'end':5.,'content_end':4.5,'path':'audio.wav'}]}
             audio = dict(track, tracks={'en':track})
             req = build_render_request(ROOT, brief, content, images, audio, lambda x:folder/x)

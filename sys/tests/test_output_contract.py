@@ -15,7 +15,7 @@ class OutputContractTests(unittest.TestCase):
         brief = read(ROOT / 'examples/story-v3/brief.json')
         content = read(ROOT / 'examples/story-v3/content.json')
         brief.update(language='en', aspect_ratio='9:16', outputs=[
-            {'aspect_ratio': '9:16', 'language': 'en', 'subtitles': True, 'voice': 'Adam', 'speed': .92}])
+            {'aspect_ratio': '9:16', 'language': 'en', 'subtitles': True, 'voice': 'VietNarrator', 'speed': .92}])
         content.update(brief_hash='TEST')
         messages = ['A predator hunts other animals for food.', 'The crocodile waits quietly near the water.', 'Small fish move away when danger comes.', 'The hunter needs food to survive.', 'A hawk can also hunt smaller animals.', 'Which animal is the predator in this story?']
         for scene, text in zip(content['scenes'], messages):
@@ -48,8 +48,8 @@ class OutputContractTests(unittest.TestCase):
 
     def test_job_voice_rate_override_unrelated_defaults(self):
         brief, _ = self.fixture()
-        self.assertEqual(voice_settings(brief, 'en', {'en_voice': 'Adam', 'en_speed': 1.22}),
-                         {'voice': 'Adam', 'speed': .92})
+        self.assertEqual(voice_settings(brief, 'en', {'en_voice': 'VietNarrator', 'en_speed': 1.0}),
+                         {'voice': 'VietNarrator', 'speed': .92})
 
     def test_aspect_does_not_choose_language_for_explicit_contract(self):
         for aspect in ('9:16', '16:9'):

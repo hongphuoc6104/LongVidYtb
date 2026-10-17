@@ -120,13 +120,14 @@ class TestResearchStoryArchitect(unittest.TestCase):
         assert self.brief_data["outputs"][0]["voice"] == cfg["tts_voice"]
 
         self.assertEqual(cfg["voices"]["vi"], "assets/voices/viet_narrator/profile.json")
+        self.assertEqual(cfg["voices"]["en"], "assets/voices/viet_narrator/profile.json")
         self.assertEqual(cfg["tts_voice"], "VietNarrator")
         self.assertEqual(cfg["tts_speed"], 1.0)
-        self.assertEqual(cfg["en_voice"], "Adam")
-        self.assertEqual(cfg["en_speed"], 1.22)
+        self.assertEqual(cfg["en_voice"], "VietNarrator")
+        self.assertEqual(cfg["en_speed"], 1.0)
         voice_dirs = sorted(p.name for p in (SYS_DIR / "assets/voices").iterdir() if p.is_dir())
-        self.assertEqual(voice_dirs, ["adam", "viet_narrator"])
-        assert voice_dirs == ["adam", "viet_narrator"]
+        self.assertEqual(voice_dirs, ["viet_narrator"])
+        assert voice_dirs == ["viet_narrator"]
 
     def test_build_content_v3_schema_compliance(self):
         """Verify content.json satisfies validate_content contract with 0 errors."""
@@ -343,7 +344,7 @@ class TestResearchStoryArchitect(unittest.TestCase):
         self.assertEqual(brief["channel_pillar"], DEFAULT_CHANNEL_PILLAR)
         self.assertEqual(brief["funnel_tier"], "tier_1_broad")
         self.assertLessEqual(len(brief["youtube_title"]), 55)
-        self.assertEqual(brief["outputs"][0]["speed"], 1.26)
+        self.assertEqual(brief["outputs"][0]["speed"], 1.0)
         self.assertTrue(brief["outputs"][0]["subtitles"])
         pkg_warns = check_packaging_and_localization(brief, scenes=acad_topic.scenes, check_opening_hook=True)
         self.assertEqual(pkg_warns, [])

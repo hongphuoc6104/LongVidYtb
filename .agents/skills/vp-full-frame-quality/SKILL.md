@@ -7,7 +7,7 @@ description: Author or repair Video Pilot full-frame visual journeys, continuity
 
 - New full-frame jobs declare `visual_pacing_profile: full_frame_v1`. Older snapshots remain readable; do not edit saved revisions or journals to migrate them.
 - Landscape defaults to external SRT (`subtitles: false`); portrait keeps burn-in subtitles and its renderer safe area. Full-frame image prompts reserve no caption band in either aspect. Keep backgrounds continuous to the canvas edges.
-- Vietnamese Adam uses canonical `speed: 1.22` for long videos, `1.26` for short spin-offs. The contract permits `[1.12, 1.38]`; tone modulation is separate. A speed multiplier is not a measured syllable rate.
+- Canonical `VietNarrator` uses `speed: 1.0` across both long videos (`long_16x9`) and short spin-offs (`short_9x16`). The contract permits `[0.90, 1.15]`; scene-level `tone` modulation (`0.98`, `1.02`, `0.92` via `resolve_tone_speed`) is validated against `allowed_speeds`. A speed multiplier is not a measured syllable rate.
 - A sentence is a TTS boundary. Keep bilingual parts and gaps aligned with sentence chunks. SRT cues never append the opening words of the next sentence.
 - Author distinct visual settings: no more than two consecutive scenes in one setting; for ten or more scenes no setting exceeds 30%. Progress across the 4 functional cognitive phases (`narrative_phase`: `lived_friction` → `empirical_conflict` → `structural_model` → `actionable_resolution`) without requiring hardcoded school-room nouns.
 - Reserve roughly the final 15–20% for practical instructions. Do not repeat the same pair of operations in more than three scenes. Cite actual experiments; never invent retention percentages or brain localization to populate a visual zone.

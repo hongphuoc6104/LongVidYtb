@@ -3,7 +3,7 @@
 Bộ Quản Lý Lô Sản Xuất Video Micro-Drama (Hybrid Batch Manager) v3.0
 Mô hình Phân Tầng Bất Đối Xứng (Two-Tier Asymmetric Hybrid Batching):
 - Máy Local (Zero Heavy Lift): Tạo kịch bản nhanh, kiểm định chất lượng (audit), gom lỗi, lắp ráp & render.
-- Colab CLI (Cloud Workhorse): GPU T4 16GB VRAM xử lý 100% TTS OmniVoice Adam (1.22x) và sửa chữa hàng loạt tập trung (Batch Retake).
+- Colab CLI (Cloud Workhorse): GPU T4 16GB VRAM xử lý 100% TTS OmniVoice VietNarrator (1.0x) và sửa chữa hàng loạt tập trung (Batch Retake).
 """
 
 import argparse
@@ -121,7 +121,7 @@ def sanitize_cues(raw_cues):
 
 def run_colab_batch_tts(batch_name="batch-02-words-32-81"):
     """
-    Đẩy toàn bộ 50 từ (200 câu thoại) lên Colab GPU T4 xử lý TTS OmniVoice Adam (1.22x).
+    Đẩy toàn bộ 50 từ (200 câu thoại) lên Colab GPU T4 xử lý TTS OmniVoice VietNarrator (1.0x).
     """
     batch_path = BATCH_DIR / batch_name
     req_file = batch_path / 'request.json'
@@ -144,7 +144,7 @@ def run_colab_batch_tts(batch_name="batch-02-words-32-81"):
     subprocess.run(cmd_upload, cwd=str(ROOT), check=True)
     
     # 3. Exec worker
-    print("3. Tổng hợp 200 câu thoại giọng Adam (1.22x) trên Tesla T4...")
+    print("3. Tổng hợp 200 câu thoại giọng VietNarrator (1.0x) trên Tesla T4...")
     worker_file = ROOT / "scratch/remote_batch_tts_worker.py"
     cmd_exec = ["python3", "-m", "colab_bridge.accounts", "run", COLAB_ACCOUNT, "exec", "-s", COLAB_SESSION, "--timeout", "600", "-f", str(worker_file)]
     subprocess.run(cmd_exec, cwd=str(ROOT), check=True)
@@ -539,7 +539,7 @@ def mark_batch_in_ledger(batch_name="batch-02-words-32-81"):
             'job': f"vocab-{base_word}-micro",
             'at': now_str,
             'format': 'micro-drama-4-acts',
-            'voice': 'Adam'
+            'voice': 'VietNarrator'
         }
         count += 1
     ledger_file.write_text(json.dumps(led, ensure_ascii=False, indent=2))

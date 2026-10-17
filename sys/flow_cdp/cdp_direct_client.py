@@ -243,6 +243,30 @@ PROFILES = [
         "url": "https://flow.google.com/project/afc36132-bdc0-4d3c-9440-a4a63d8cdfbf",
         "project_id": "afc36132-bdc0-4d3c-9440-a4a63d8cdfbf",
     },
+    {
+        "name": "profile_4",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-p4"),
+        "profile_dir": "Profile 130",
+        "cdp_port": 9222,
+        "url": "https://flow.google.com/project/45f66f11-b15f-4fc5-bcfc-fa46f874f57f",
+        "project_id": "45f66f11-b15f-4fc5-bcfc-fa46f874f57f",
+    },
+    {
+        "name": "profile_5",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-p5"),
+        "profile_dir": "Profile 102",
+        "cdp_port": 9226,
+        "url": "https://flow.google.com/project/ecc61241-f9a6-40f4-bc63-8a50c8f94672",
+        "project_id": "ecc61241-f9a6-40f4-bc63-8a50c8f94672",
+    },
+    {
+        "name": "profile_6",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-p6"),
+        "profile_dir": "Profile 98",
+        "cdp_port": 9227,
+        "url": "https://flow.google.com/project/8cc6cb2b-8a51-4f86-8772-63f31b1947df",
+        "project_id": "8cc6cb2b-8a51-4f86-8772-63f31b1947df",
+    },
 ]
 
 
@@ -458,15 +482,22 @@ class DirectCDPProfileSession:
         return res.get("result", {})
 
     async def evaluate(self, expression: str, await_promise: bool = True, timeout: float = 120.0) -> Any:
-        res = await self.call(
-            "Runtime.evaluate",
-            {"expression": expression, "awaitPromise": await_promise, "returnByValue": True},
-            timeout=timeout,
-        )
-        if "exceptionDetails" in res:
-            exc = res["exceptionDetails"]
-            raise RuntimeError(f"JS exception: {exc.get('text')} {exc.get('exception', {}).get('description', '')}")
-        return res.get("result", {}).get("value")
+        for attempt in range(3):
+            try:
+                res = await self.call(
+                    "Runtime.evaluate",
+                    {"expression": expression, "awaitPromise": await_promise, "returnByValue": True},
+                    timeout=timeout,
+                )
+                if "exceptionDetails" in res:
+                    exc = res["exceptionDetails"]
+                    raise RuntimeError(f"JS exception: {exc.get('text')} {exc.get('exception', {}).get('description', '')}")
+                return res.get("result", {}).get("value")
+            except RuntimeError as err:
+                if "navigated or closed" in str(err).lower() and attempt < 2:
+                    await asyncio.sleep(2.0)
+                    continue
+                raise
 
     async def generate_image(
         self,

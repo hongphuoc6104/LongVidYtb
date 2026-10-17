@@ -2,9 +2,7 @@
 
 Engine 4 sends TTS/assembly/mastering/timeline/subtitles/props/render/encode to Colab. The machine packages source/metadata, manages sessions and collects results; Flow generates images. Remote errors do not trigger heavy local fallback. Voice/rate come from each brief and actual request, never unrelated defaults overriding a contract.
 
-Default Vietnamese voice: **`VietNarrator`, speed `1.00`**, via [profile.json](../assets/voices/viet_narrator/profile.json). Its 12-second reference is Demucs-separated speech from source time `00:02–00:14`; [sample.wav](../assets/voices/viet_narrator/sample.wav) is the user-approved generated sample after a targeted boundary repair. Approval applies to this sample, not a guarantee that future generations cannot contain artifacts. The original reference was not separately listening-approved.
-
-English retains **`Adam`, speed `1.22`**, via [profile.json](../assets/voices/adam/profile.json). Shared synthesis settings remain `num_step: 32`, `batch_size: 4`, `-14.0 LUFS`, `-1.5 dBTP`. No local TTS fallback.
+Default canonical voice (`vi` & `en`): **`VietNarrator`, speed `1.00`** (`[0.90, 1.15]` allowed range, with scene-level `tone` multipliers `0.98`, `1.02`, `0.92`), via [profile.json](../assets/voices/viet_narrator/profile.json). Its 12-second reference is Demucs-separated speech from source time `00:02–00:14`; [sample.wav](../assets/voices/viet_narrator/sample.wav) is the user-approved generated sample after a targeted boundary repair. Approval applies to this sample, not a guarantee that future generations cannot contain artifacts. The original reference was not separately listening-approved. Shared synthesis settings remain `num_step: 32`, `batch_size: 4`, `-14.0 LUFS`, `-1.5 dBTP`. No local TTS fallback.
 
 ## Setup and lifecycle
 

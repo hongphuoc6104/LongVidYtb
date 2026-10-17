@@ -11,7 +11,7 @@ def classify(error):
     text=str(error).lower()
     if status==401 or any(term in text for term in ('invalid_grant','unauthenticated','token expired','token revoked')):return 'login_required'
     if status==429 or 'quota' in text or 'resource_exhausted' in text:return 'quota'
-    if status==503:return 'capacity'
+    if status==503 or 'capacity' in text or 'unavailable' in text:return 'capacity'
     if status==403:return 'permission_unknown'
     return 'network_unknown'
 

@@ -864,10 +864,14 @@ def produce(p, j, out):
         import concurrent.futures
         import threading
         cfg = read(p.root / 'config.json')
-        concurrency = cfg.get('concurrency', 3)
+        concurrency = cfg.get('concurrency', 6)
         from execution import settings as execution_settings, is_job
-        if is_job(p, j) and execution_settings(p, j).get('management_session', {}).get('runtime_bindings', {}).get('flow', {}).get('target', {}).get('profile_path'):
-            concurrency = 1  # One bound browser owns one UI queue and profile lease.
+        # Multi-profile concurrency is enabled across pool profiles. If only 1 profile configured, limit to 1.
+        pool_profiles = cfg.get('flow_cdp_profiles', [])
+        if pool_profiles and len(pool_profiles) > 1:
+            concurrency = min(concurrency, len(pool_profiles))
+        elif is_job(p, j) and execution_settings(p, j).get('management_session', {}).get('runtime_bindings', {}).get('flow', {}).get('target', {}).get('profile_path'):
+            concurrency = 1
 
         completed = {}
 

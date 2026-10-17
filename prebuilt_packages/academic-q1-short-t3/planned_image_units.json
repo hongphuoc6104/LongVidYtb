@@ -1,0 +1,394 @@
+[
+  {
+    "id": "SC01_I1_9x16",
+    "scene_id": "SC01",
+    "prompt": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.\nBàn làm việc sinh viên Việt Nam đêm khuya với màn hình mở hàng chục bài báo khoa học. Nhân vật người que choáng váng giữa hàng chục tập tài liệu bài báo xếp chồng quanh bàn học. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: Tải ba. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.\nNhân vật: Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung; trang phục: Áo sơ mi học thuật tối giản nét mực đen\nGiữ nguyên: \nThay đổi: Establish the complete scene and its opening action.\nKhông có bất kỳ chữ hoặc số nào trong hình.\nKhông thêm nhãn, mã quản lý, logo, watermark, tiêu đề hay chữ trang trí ngoài danh sách.\nPhong cách chữ chung: {\"font\": \"sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt\", \"color\": \"#172033\", \"outline\": \"nền sáng tương phản\", \"size\": \"dễ đọc trên điện thoại (khung dọc 9:16)\", \"placement\": \"cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%\"}",
+    "character_ids": [
+      "CH01"
+    ],
+    "based_on": null,
+    "visible_text": [],
+    "kind": "scene",
+    "shot_type": "full_scene",
+    "image_id": "SC01_I1",
+    "ratio": "9:16"
+  },
+  {
+    "id": "SC01_I2_9x16",
+    "scene_id": "SC01",
+    "prompt": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.\nBàn làm việc sinh viên Việt Nam đêm khuya với màn hình mở hàng chục bài báo khoa học. Nhân vật người que choáng váng giữa hàng chục tập tài liệu bài báo xếp chồng quanh bàn học. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: quốc tế. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.\nNhân vật: Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung; trang phục: Áo sơ mi học thuật tối giản nét mực đen\nGiữ nguyên: Keep the same setting (Bàn làm việc sinh viên Việt Nam đêm khuya với màn hình mở hàng chục bài báo khoa học), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.\nThay đổi: Shift the full-frame emphasis to this next narrated action or object: quốc tế.\nKhông có bất kỳ chữ hoặc số nào trong hình.\nKhông thêm nhãn, mã quản lý, logo, watermark, tiêu đề hay chữ trang trí ngoài danh sách.\nPhong cách chữ chung: {\"font\": \"sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt\", \"color\": \"#172033\", \"outline\": \"nền sáng tương phản\", \"size\": \"dễ đọc trên điện thoại (khung dọc 9:16)\", \"placement\": \"cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%\"}",
+    "character_ids": [
+      "CH01"
+    ],
+    "based_on": "SC01_I1_9x16",
+    "visible_text": [],
+    "kind": "scene",
+    "shot_type": "variation",
+    "image_id": "SC01_I2",
+    "ratio": "9:16"
+  },
+  {
+    "id": "SC01_I3_9x16",
+    "scene_id": "SC01",
+    "prompt": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.\nBàn làm việc sinh viên Việt Nam đêm khuya với màn hình mở hàng chục bài báo khoa học. Nhân vật người que choáng váng giữa hàng chục tập tài liệu bài báo xếp chồng quanh bàn học. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: bạn có. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.\nNhân vật: Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung; trang phục: Áo sơ mi học thuật tối giản nét mực đen\nGiữ nguyên: Keep the same setting (Bàn làm việc sinh viên Việt Nam đêm khuya với màn hình mở hàng chục bài báo khoa học), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.\nThay đổi: Shift the full-frame emphasis to this next narrated action or object: bạn có.\nKhông có bất kỳ chữ hoặc số nào trong hình.\nKhông thêm nhãn, mã quản lý, logo, watermark, tiêu đề hay chữ trang trí ngoài danh sách.\nPhong cách chữ chung: {\"font\": \"sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt\", \"color\": \"#172033\", \"outline\": \"nền sáng tương phản\", \"size\": \"dễ đọc trên điện thoại (khung dọc 9:16)\", \"placement\": \"cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%\"}",
+    "character_ids": [
+      "CH01"
+    ],
+    "based_on": "SC01_I2_9x16",
+    "visible_text": [],
+    "kind": "scene",
+    "shot_type": "variation",
+    "image_id": "SC01_I3",
+    "ratio": "9:16"
+  },
+  {
+    "id": "SC01_I4_9x16",
+    "scene_id": "SC01",
+    "prompt": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.\nBàn làm việc sinh viên Việt Nam đêm khuya với màn hình mở hàng chục bài báo khoa học. Nhân vật người que choáng váng giữa hàng chục tập tài liệu bài báo xếp chồng quanh bàn học. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: Đêm khuya. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.\nNhân vật: Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung; trang phục: Áo sơ mi học thuật tối giản nét mực đen\nGiữ nguyên: Keep the same setting (Bàn làm việc sinh viên Việt Nam đêm khuya với màn hình mở hàng chục bài báo khoa học), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.\nThay đổi: Shift the full-frame emphasis to this next narrated action or object: Đêm khuya.\nKhông có bất kỳ chữ hoặc số nào trong hình.\nKhông thêm nhãn, mã quản lý, logo, watermark, tiêu đề hay chữ trang trí ngoài danh sách.\nPhong cách chữ chung: {\"font\": \"sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt\", \"color\": \"#172033\", \"outline\": \"nền sáng tương phản\", \"size\": \"dễ đọc trên điện thoại (khung dọc 9:16)\", \"placement\": \"cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%\"}",
+    "character_ids": [
+      "CH01"
+    ],
+    "based_on": "SC01_I3_9x16",
+    "visible_text": [],
+    "kind": "scene",
+    "shot_type": "variation",
+    "image_id": "SC01_I4",
+    "ratio": "9:16"
+  },
+  {
+    "id": "SC01_I5_9x16",
+    "scene_id": "SC01",
+    "prompt": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.\nBàn làm việc sinh viên Việt Nam đêm khuya với màn hình mở hàng chục bài báo khoa học. Nhân vật người que choáng váng giữa hàng chục tập tài liệu bài báo xếp chồng quanh bàn học. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: tài liệu,. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.\nNhân vật: Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung; trang phục: Áo sơ mi học thuật tối giản nét mực đen\nGiữ nguyên: Keep the same setting (Bàn làm việc sinh viên Việt Nam đêm khuya với màn hình mở hàng chục bài báo khoa học), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.\nThay đổi: Shift the full-frame emphasis to this next narrated action or object: tài liệu,.\nKhông có bất kỳ chữ hoặc số nào trong hình.\nKhông thêm nhãn, mã quản lý, logo, watermark, tiêu đề hay chữ trang trí ngoài danh sách.\nPhong cách chữ chung: {\"font\": \"sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt\", \"color\": \"#172033\", \"outline\": \"nền sáng tương phản\", \"size\": \"dễ đọc trên điện thoại (khung dọc 9:16)\", \"placement\": \"cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%\"}",
+    "character_ids": [
+      "CH01"
+    ],
+    "based_on": "SC01_I4_9x16",
+    "visible_text": [],
+    "kind": "scene",
+    "shot_type": "variation",
+    "image_id": "SC01_I5",
+    "ratio": "9:16"
+  },
+  {
+    "id": "SC01_I6_9x16",
+    "scene_id": "SC01",
+    "prompt": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.\nBàn làm việc sinh viên Việt Nam đêm khuya với màn hình mở hàng chục bài báo khoa học. Nhân vật người que choáng váng giữa hàng chục tập tài liệu bài báo xếp chồng quanh bàn học. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: tê liệt. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.\nNhân vật: Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung; trang phục: Áo sơ mi học thuật tối giản nét mực đen\nGiữ nguyên: Keep the same setting (Bàn làm việc sinh viên Việt Nam đêm khuya với màn hình mở hàng chục bài báo khoa học), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.\nThay đổi: Shift the full-frame emphasis to this next narrated action or object: tê liệt.\nKhông có bất kỳ chữ hoặc số nào trong hình.\nKhông thêm nhãn, mã quản lý, logo, watermark, tiêu đề hay chữ trang trí ngoài danh sách.\nPhong cách chữ chung: {\"font\": \"sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt\", \"color\": \"#172033\", \"outline\": \"nền sáng tương phản\", \"size\": \"dễ đọc trên điện thoại (khung dọc 9:16)\", \"placement\": \"cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%\"}",
+    "character_ids": [
+      "CH01"
+    ],
+    "based_on": "SC01_I5_9x16",
+    "visible_text": [],
+    "kind": "scene",
+    "shot_type": "variation",
+    "image_id": "SC01_I6",
+    "ratio": "9:16"
+  },
+  {
+    "id": "SC02_I1_9x16",
+    "scene_id": "SC02",
+    "prompt": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.\nPhòng học với sơ đồ đối sánh văn bản liệt kê bề mặt và mạng lưới phản biện học thuật. Nhân vật người que gạch chéo đoạn văn tổng quan liệt kê rời rạc bị đóng dấu cảnh báo. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: Nhiều bạn. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.\nNhân vật: Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung; trang phục: Áo sơ mi học thuật tối giản nét mực đen\nGiữ nguyên: \nThay đổi: Establish the complete scene and its opening action.\nKhông có bất kỳ chữ hoặc số nào trong hình.\nKhông thêm nhãn, mã quản lý, logo, watermark, tiêu đề hay chữ trang trí ngoài danh sách.\nPhong cách chữ chung: {\"font\": \"sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt\", \"color\": \"#172033\", \"outline\": \"nền sáng tương phản\", \"size\": \"dễ đọc trên điện thoại (khung dọc 9:16)\", \"placement\": \"cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%\"}",
+    "character_ids": [
+      "CH01"
+    ],
+    "based_on": null,
+    "visible_text": [],
+    "kind": "scene",
+    "shot_type": "full_scene",
+    "image_id": "SC02_I1",
+    "ratio": "9:16"
+  },
+  {
+    "id": "SC02_I2_9x16",
+    "scene_id": "SC02",
+    "prompt": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.\nPhòng học với sơ đồ đối sánh văn bản liệt kê bề mặt và mạng lưới phản biện học thuật. Nhân vật người que gạch chéo đoạn văn tổng quan liệt kê rời rạc bị đóng dấu cảnh báo. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: yêu cầu. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.\nNhân vật: Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung; trang phục: Áo sơ mi học thuật tối giản nét mực đen\nGiữ nguyên: Keep the same setting (Phòng học với sơ đồ đối sánh văn bản liệt kê bề mặt và mạng lưới phản biện học thuật), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.\nThay đổi: Shift the full-frame emphasis to this next narrated action or object: yêu cầu.\nKhông có bất kỳ chữ hoặc số nào trong hình.\nKhông thêm nhãn, mã quản lý, logo, watermark, tiêu đề hay chữ trang trí ngoài danh sách.\nPhong cách chữ chung: {\"font\": \"sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt\", \"color\": \"#172033\", \"outline\": \"nền sáng tương phản\", \"size\": \"dễ đọc trên điện thoại (khung dọc 9:16)\", \"placement\": \"cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%\"}",
+    "character_ids": [
+      "CH01"
+    ],
+    "based_on": "SC02_I1_9x16",
+    "visible_text": [],
+    "kind": "scene",
+    "shot_type": "variation",
+    "image_id": "SC02_I2",
+    "ratio": "9:16"
+  },
+  {
+    "id": "SC02_I3_9x16",
+    "scene_id": "SC02",
+    "prompt": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.\nPhòng học với sơ đồ đối sánh văn bản liệt kê bề mặt và mạng lưới phản biện học thuật. Nhân vật người que gạch chéo đoạn văn tổng quan liệt kê rời rạc bị đóng dấu cảnh báo. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: tạo viết. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.\nNhân vật: Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung; trang phục: Áo sơ mi học thuật tối giản nét mực đen\nGiữ nguyên: Keep the same setting (Phòng học với sơ đồ đối sánh văn bản liệt kê bề mặt và mạng lưới phản biện học thuật), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.\nThay đổi: Shift the full-frame emphasis to this next narrated action or object: tạo viết.\nKhông có bất kỳ chữ hoặc số nào trong hình.\nKhông thêm nhãn, mã quản lý, logo, watermark, tiêu đề hay chữ trang trí ngoài danh sách.\nPhong cách chữ chung: {\"font\": \"sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt\", \"color\": \"#172033\", \"outline\": \"nền sáng tương phản\", \"size\": \"dễ đọc trên điện thoại (khung dọc 9:16)\", \"placement\": \"cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%\"}",
+    "character_ids": [
+      "CH01"
+    ],
+    "based_on": "SC02_I2_9x16",
+    "visible_text": [],
+    "kind": "scene",
+    "shot_type": "variation",
+    "image_id": "SC02_I3",
+    "ratio": "9:16"
+  },
+  {
+    "id": "SC02_I4_9x16",
+    "scene_id": "SC02",
+    "prompt": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.\nPhòng học với sơ đồ đối sánh văn bản liệt kê bề mặt và mạng lưới phản biện học thuật. Nhân vật người que gạch chéo đoạn văn tổng quan liệt kê rời rạc bị đóng dấu cảnh báo. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: quan.. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.\nNhân vật: Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung; trang phục: Áo sơ mi học thuật tối giản nét mực đen\nGiữ nguyên: Keep the same setting (Phòng học với sơ đồ đối sánh văn bản liệt kê bề mặt và mạng lưới phản biện học thuật), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.\nThay đổi: Shift the full-frame emphasis to this next narrated action or object: quan..\nKhông có bất kỳ chữ hoặc số nào trong hình.\nKhông thêm nhãn, mã quản lý, logo, watermark, tiêu đề hay chữ trang trí ngoài danh sách.\nPhong cách chữ chung: {\"font\": \"sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt\", \"color\": \"#172033\", \"outline\": \"nền sáng tương phản\", \"size\": \"dễ đọc trên điện thoại (khung dọc 9:16)\", \"placement\": \"cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%\"}",
+    "character_ids": [
+      "CH01"
+    ],
+    "based_on": "SC02_I3_9x16",
+    "visible_text": [],
+    "kind": "scene",
+    "shot_type": "variation",
+    "image_id": "SC02_I4",
+    "ratio": "9:16"
+  },
+  {
+    "id": "SC02_I5_9x16",
+    "scene_id": "SC02",
+    "prompt": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.\nPhòng học với sơ đồ đối sánh văn bản liệt kê bề mặt và mạng lưới phản biện học thuật. Nhân vật người que gạch chéo đoạn văn tổng quan liệt kê rời rạc bị đóng dấu cảnh báo. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: trên thực. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.\nNhân vật: Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung; trang phục: Áo sơ mi học thuật tối giản nét mực đen\nGiữ nguyên: Keep the same setting (Phòng học với sơ đồ đối sánh văn bản liệt kê bề mặt và mạng lưới phản biện học thuật), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.\nThay đổi: Shift the full-frame emphasis to this next narrated action or object: trên thực.\nKhông có bất kỳ chữ hoặc số nào trong hình.\nKhông thêm nhãn, mã quản lý, logo, watermark, tiêu đề hay chữ trang trí ngoài danh sách.\nPhong cách chữ chung: {\"font\": \"sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt\", \"color\": \"#172033\", \"outline\": \"nền sáng tương phản\", \"size\": \"dễ đọc trên điện thoại (khung dọc 9:16)\", \"placement\": \"cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%\"}",
+    "character_ids": [
+      "CH01"
+    ],
+    "based_on": "SC02_I4_9x16",
+    "visible_text": [],
+    "kind": "scene",
+    "shot_type": "variation",
+    "image_id": "SC02_I5",
+    "ratio": "9:16"
+  },
+  {
+    "id": "SC02_I6_9x16",
+    "scene_id": "SC02",
+    "prompt": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.\nPhòng học với sơ đồ đối sánh văn bản liệt kê bề mặt và mạng lưới phản biện học thuật. Nhân vật người que gạch chéo đoạn văn tổng quan liệt kê rời rạc bị đóng dấu cảnh báo. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: vệ luôn. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.\nNhân vật: Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung; trang phục: Áo sơ mi học thuật tối giản nét mực đen\nGiữ nguyên: Keep the same setting (Phòng học với sơ đồ đối sánh văn bản liệt kê bề mặt và mạng lưới phản biện học thuật), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.\nThay đổi: Shift the full-frame emphasis to this next narrated action or object: vệ luôn.\nKhông có bất kỳ chữ hoặc số nào trong hình.\nKhông thêm nhãn, mã quản lý, logo, watermark, tiêu đề hay chữ trang trí ngoài danh sách.\nPhong cách chữ chung: {\"font\": \"sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt\", \"color\": \"#172033\", \"outline\": \"nền sáng tương phản\", \"size\": \"dễ đọc trên điện thoại (khung dọc 9:16)\", \"placement\": \"cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%\"}",
+    "character_ids": [
+      "CH01"
+    ],
+    "based_on": "SC02_I5_9x16",
+    "visible_text": [],
+    "kind": "scene",
+    "shot_type": "variation",
+    "image_id": "SC02_I6",
+    "ratio": "9:16"
+  },
+  {
+    "id": "SC02_I7_9x16",
+    "scene_id": "SC02",
+    "prompt": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.\nPhòng học với sơ đồ đối sánh văn bản liệt kê bề mặt và mạng lưới phản biện học thuật. Nhân vật người que gạch chéo đoạn văn tổng quan liệt kê rời rạc bị đóng dấu cảnh báo. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: phong liệt. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.\nNhân vật: Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung; trang phục: Áo sơ mi học thuật tối giản nét mực đen\nGiữ nguyên: Keep the same setting (Phòng học với sơ đồ đối sánh văn bản liệt kê bề mặt và mạng lưới phản biện học thuật), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.\nThay đổi: Shift the full-frame emphasis to this next narrated action or object: phong liệt.\nKhông có bất kỳ chữ hoặc số nào trong hình.\nKhông thêm nhãn, mã quản lý, logo, watermark, tiêu đề hay chữ trang trí ngoài danh sách.\nPhong cách chữ chung: {\"font\": \"sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt\", \"color\": \"#172033\", \"outline\": \"nền sáng tương phản\", \"size\": \"dễ đọc trên điện thoại (khung dọc 9:16)\", \"placement\": \"cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%\"}",
+    "character_ids": [
+      "CH01"
+    ],
+    "based_on": "SC02_I6_9x16",
+    "visible_text": [],
+    "kind": "scene",
+    "shot_type": "variation",
+    "image_id": "SC02_I7",
+    "ratio": "9:16"
+  },
+  {
+    "id": "SC03_I1_9x16",
+    "scene_id": "SC03",
+    "prompt": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.\nPhòng nghiên cứu với bảng Ma trận Khoảng trống Nghiên cứu 4 cột phát sáng. Nhân vật người que sắp xếp các thẻ dữ liệu vào bảng Ma trận 4 cột rõ nét. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: Thay vì. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.\nNhân vật: Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung; trang phục: Áo sơ mi học thuật tối giản nét mực đen\nGiữ nguyên: \nThay đổi: Establish the complete scene and its opening action.\nKhông có bất kỳ chữ hoặc số nào trong hình.\nKhông thêm nhãn, mã quản lý, logo, watermark, tiêu đề hay chữ trang trí ngoài danh sách.\nPhong cách chữ chung: {\"font\": \"sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt\", \"color\": \"#172033\", \"outline\": \"nền sáng tương phản\", \"size\": \"dễ đọc trên điện thoại (khung dọc 9:16)\", \"placement\": \"cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%\"}",
+    "character_ids": [
+      "CH01"
+    ],
+    "based_on": null,
+    "visible_text": [],
+    "kind": "scene",
+    "shot_type": "full_scene",
+    "image_id": "SC03_I1",
+    "ratio": "9:16"
+  },
+  {
+    "id": "SC03_I2_9x16",
+    "scene_id": "SC03",
+    "prompt": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.\nPhòng nghiên cứu với bảng Ma trận Khoảng trống Nghiên cứu 4 cột phát sáng. Nhân vật người que sắp xếp các thẻ dữ liệu vào bảng Ma trận 4 cột rõ nét. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: bài báo. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.\nNhân vật: Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung; trang phục: Áo sơ mi học thuật tối giản nét mực đen\nGiữ nguyên: Keep the same setting (Phòng nghiên cứu với bảng Ma trận Khoảng trống Nghiên cứu 4 cột phát sáng), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.\nThay đổi: Shift the full-frame emphasis to this next narrated action or object: bài báo.\nKhông có bất kỳ chữ hoặc số nào trong hình.\nKhông thêm nhãn, mã quản lý, logo, watermark, tiêu đề hay chữ trang trí ngoài danh sách.\nPhong cách chữ chung: {\"font\": \"sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt\", \"color\": \"#172033\", \"outline\": \"nền sáng tương phản\", \"size\": \"dễ đọc trên điện thoại (khung dọc 9:16)\", \"placement\": \"cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%\"}",
+    "character_ids": [
+      "CH01"
+    ],
+    "based_on": "SC03_I1_9x16",
+    "visible_text": [],
+    "kind": "scene",
+    "shot_type": "variation",
+    "image_id": "SC03_I2",
+    "ratio": "9:16"
+  },
+  {
+    "id": "SC03_I3_9x16",
+    "scene_id": "SC03",
+    "prompt": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.\nPhòng nghiên cứu với bảng Ma trận Khoảng trống Nghiên cứu 4 cột phát sáng. Nhân vật người que sắp xếp các thẻ dữ liệu vào bảng Ma trận 4 cột rõ nét. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: trống nghiên. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.\nNhân vật: Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung; trang phục: Áo sơ mi học thuật tối giản nét mực đen\nGiữ nguyên: Keep the same setting (Phòng nghiên cứu với bảng Ma trận Khoảng trống Nghiên cứu 4 cột phát sáng), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.\nThay đổi: Shift the full-frame emphasis to this next narrated action or object: trống nghiên.\nKhông có bất kỳ chữ hoặc số nào trong hình.\nKhông thêm nhãn, mã quản lý, logo, watermark, tiêu đề hay chữ trang trí ngoài danh sách.\nPhong cách chữ chung: {\"font\": \"sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt\", \"color\": \"#172033\", \"outline\": \"nền sáng tương phản\", \"size\": \"dễ đọc trên điện thoại (khung dọc 9:16)\", \"placement\": \"cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%\"}",
+    "character_ids": [
+      "CH01"
+    ],
+    "based_on": "SC03_I2_9x16",
+    "visible_text": [],
+    "kind": "scene",
+    "shot_type": "variation",
+    "image_id": "SC03_I3",
+    "ratio": "9:16"
+  },
+  {
+    "id": "SC03_I4_9x16",
+    "scene_id": "SC03",
+    "prompt": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.\nPhòng nghiên cứu với bảng Ma trận Khoảng trống Nghiên cứu 4 cột phát sáng. Nhân vật người que sắp xếp các thẻ dữ liệu vào bảng Ma trận 4 cột rõ nét. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: bóc tách. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.\nNhân vật: Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung; trang phục: Áo sơ mi học thuật tối giản nét mực đen\nGiữ nguyên: Keep the same setting (Phòng nghiên cứu với bảng Ma trận Khoảng trống Nghiên cứu 4 cột phát sáng), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.\nThay đổi: Shift the full-frame emphasis to this next narrated action or object: bóc tách.\nKhông có bất kỳ chữ hoặc số nào trong hình.\nKhông thêm nhãn, mã quản lý, logo, watermark, tiêu đề hay chữ trang trí ngoài danh sách.\nPhong cách chữ chung: {\"font\": \"sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt\", \"color\": \"#172033\", \"outline\": \"nền sáng tương phản\", \"size\": \"dễ đọc trên điện thoại (khung dọc 9:16)\", \"placement\": \"cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%\"}",
+    "character_ids": [
+      "CH01"
+    ],
+    "based_on": "SC03_I3_9x16",
+    "visible_text": [],
+    "kind": "scene",
+    "shot_type": "variation",
+    "image_id": "SC03_I4",
+    "ratio": "9:16"
+  },
+  {
+    "id": "SC03_I5_9x16",
+    "scene_id": "SC03",
+    "prompt": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.\nPhòng nghiên cứu với bảng Ma trận Khoảng trống Nghiên cứu 4 cột phát sáng. Nhân vật người que sắp xếp các thẻ dữ liệu vào bảng Ma trận 4 cột rõ nét. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: câu hỏi. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.\nNhân vật: Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung; trang phục: Áo sơ mi học thuật tối giản nét mực đen\nGiữ nguyên: Keep the same setting (Phòng nghiên cứu với bảng Ma trận Khoảng trống Nghiên cứu 4 cột phát sáng), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.\nThay đổi: Shift the full-frame emphasis to this next narrated action or object: câu hỏi.\nKhông có bất kỳ chữ hoặc số nào trong hình.\nKhông thêm nhãn, mã quản lý, logo, watermark, tiêu đề hay chữ trang trí ngoài danh sách.\nPhong cách chữ chung: {\"font\": \"sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt\", \"color\": \"#172033\", \"outline\": \"nền sáng tương phản\", \"size\": \"dễ đọc trên điện thoại (khung dọc 9:16)\", \"placement\": \"cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%\"}",
+    "character_ids": [
+      "CH01"
+    ],
+    "based_on": "SC03_I4_9x16",
+    "visible_text": [],
+    "kind": "scene",
+    "shot_type": "variation",
+    "image_id": "SC03_I5",
+    "ratio": "9:16"
+  },
+  {
+    "id": "SC03_I6_9x16",
+    "scene_id": "SC03",
+    "prompt": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.\nPhòng nghiên cứu với bảng Ma trận Khoảng trống Nghiên cứu 4 cột phát sáng. Nhân vật người que sắp xếp các thẻ dữ liệu vào bảng Ma trận 4 cột rõ nét. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: dữ liệu,. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.\nNhân vật: Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung; trang phục: Áo sơ mi học thuật tối giản nét mực đen\nGiữ nguyên: Keep the same setting (Phòng nghiên cứu với bảng Ma trận Khoảng trống Nghiên cứu 4 cột phát sáng), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.\nThay đổi: Shift the full-frame emphasis to this next narrated action or object: dữ liệu,.\nKhông có bất kỳ chữ hoặc số nào trong hình.\nKhông thêm nhãn, mã quản lý, logo, watermark, tiêu đề hay chữ trang trí ngoài danh sách.\nPhong cách chữ chung: {\"font\": \"sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt\", \"color\": \"#172033\", \"outline\": \"nền sáng tương phản\", \"size\": \"dễ đọc trên điện thoại (khung dọc 9:16)\", \"placement\": \"cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%\"}",
+    "character_ids": [
+      "CH01"
+    ],
+    "based_on": "SC03_I5_9x16",
+    "visible_text": [],
+    "kind": "scene",
+    "shot_type": "variation",
+    "image_id": "SC03_I6",
+    "ratio": "9:16"
+  },
+  {
+    "id": "SC04_I1_9x16",
+    "scene_id": "SC04",
+    "prompt": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.\nKhông gian đồ họa đối sánh các tờ ghi chú rời rạc với sơ đồ giao thoa ba vòng tròn lý thuyết. Nhân vật người que nâng mảnh ghép trung tâm tại giao điểm ba vòng tròn lý thuyết. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: Người nghiệp. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.\nNhân vật: Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung; trang phục: Áo sơ mi học thuật tối giản nét mực đen\nGiữ nguyên: \nThay đổi: Establish the complete scene and its opening action.\nKhông có bất kỳ chữ hoặc số nào trong hình.\nKhông thêm nhãn, mã quản lý, logo, watermark, tiêu đề hay chữ trang trí ngoài danh sách.\nPhong cách chữ chung: {\"font\": \"sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt\", \"color\": \"#172033\", \"outline\": \"nền sáng tương phản\", \"size\": \"dễ đọc trên điện thoại (khung dọc 9:16)\", \"placement\": \"cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%\"}",
+    "character_ids": [
+      "CH01"
+    ],
+    "based_on": null,
+    "visible_text": [],
+    "kind": "scene",
+    "shot_type": "full_scene",
+    "image_id": "SC04_I1",
+    "ratio": "9:16"
+  },
+  {
+    "id": "SC04_I2_9x16",
+    "scene_id": "SC04",
+    "prompt": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.\nKhông gian đồ họa đối sánh các tờ ghi chú rời rạc với sơ đồ giao thoa ba vòng tròn lý thuyết. Nhân vật người que nâng mảnh ghép trung tâm tại giao điểm ba vòng tròn lý thuyết. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: lẻ, nên. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.\nNhân vật: Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung; trang phục: Áo sơ mi học thuật tối giản nét mực đen\nGiữ nguyên: Keep the same setting (Không gian đồ họa đối sánh các tờ ghi chú rời rạc với sơ đồ giao thoa ba vòng tròn lý thuyết), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.\nThay đổi: Shift the full-frame emphasis to this next narrated action or object: lẻ, nên.\nKhông có bất kỳ chữ hoặc số nào trong hình.\nKhông thêm nhãn, mã quản lý, logo, watermark, tiêu đề hay chữ trang trí ngoài danh sách.\nPhong cách chữ chung: {\"font\": \"sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt\", \"color\": \"#172033\", \"outline\": \"nền sáng tương phản\", \"size\": \"dễ đọc trên điện thoại (khung dọc 9:16)\", \"placement\": \"cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%\"}",
+    "character_ids": [
+      "CH01"
+    ],
+    "based_on": "SC04_I1_9x16",
+    "visible_text": [],
+    "kind": "scene",
+    "shot_type": "variation",
+    "image_id": "SC04_I2",
+    "ratio": "9:16"
+  },
+  {
+    "id": "SC04_I3_9x16",
+    "scene_id": "SC04",
+    "prompt": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.\nKhông gian đồ họa đối sánh các tờ ghi chú rời rạc với sơ đồ giao thoa ba vòng tròn lý thuyết. Nhân vật người que nâng mảnh ghép trung tâm tại giao điểm ba vòng tròn lý thuyết. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: độn. Ngược. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.\nNhân vật: Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung; trang phục: Áo sơ mi học thuật tối giản nét mực đen\nGiữ nguyên: Keep the same setting (Không gian đồ họa đối sánh các tờ ghi chú rời rạc với sơ đồ giao thoa ba vòng tròn lý thuyết), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.\nThay đổi: Shift the full-frame emphasis to this next narrated action or object: độn. Ngược.\nKhông có bất kỳ chữ hoặc số nào trong hình.\nKhông thêm nhãn, mã quản lý, logo, watermark, tiêu đề hay chữ trang trí ngoài danh sách.\nPhong cách chữ chung: {\"font\": \"sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt\", \"color\": \"#172033\", \"outline\": \"nền sáng tương phản\", \"size\": \"dễ đọc trên điện thoại (khung dọc 9:16)\", \"placement\": \"cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%\"}",
+    "character_ids": [
+      "CH01"
+    ],
+    "based_on": "SC04_I2_9x16",
+    "visible_text": [],
+    "kind": "scene",
+    "shot_type": "variation",
+    "image_id": "SC04_I3",
+    "ratio": "9:16"
+  },
+  {
+    "id": "SC04_I4_9x16",
+    "scene_id": "SC04",
+    "prompt": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.\nKhông gian đồ họa đối sánh các tờ ghi chú rời rạc với sơ đồ giao thoa ba vòng tròn lý thuyết. Nhân vật người que nâng mảnh ghép trung tâm tại giao điểm ba vòng tròn lý thuyết. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: tuệ nhân. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.\nNhân vật: Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung; trang phục: Áo sơ mi học thuật tối giản nét mực đen\nGiữ nguyên: Keep the same setting (Không gian đồ họa đối sánh các tờ ghi chú rời rạc với sơ đồ giao thoa ba vòng tròn lý thuyết), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.\nThay đổi: Shift the full-frame emphasis to this next narrated action or object: tuệ nhân.\nKhông có bất kỳ chữ hoặc số nào trong hình.\nKhông thêm nhãn, mã quản lý, logo, watermark, tiêu đề hay chữ trang trí ngoài danh sách.\nPhong cách chữ chung: {\"font\": \"sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt\", \"color\": \"#172033\", \"outline\": \"nền sáng tương phản\", \"size\": \"dễ đọc trên điện thoại (khung dọc 9:16)\", \"placement\": \"cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%\"}",
+    "character_ids": [
+      "CH01"
+    ],
+    "based_on": "SC04_I3_9x16",
+    "visible_text": [],
+    "kind": "scene",
+    "shot_type": "variation",
+    "image_id": "SC04_I4",
+    "ratio": "9:16"
+  },
+  {
+    "id": "SC04_I5_9x16",
+    "scene_id": "SC04",
+    "prompt": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.\nKhông gian đồ họa đối sánh các tờ ghi chú rời rạc với sơ đồ giao thoa ba vòng tròn lý thuyết. Nhân vật người que nâng mảnh ghép trung tâm tại giao điểm ba vòng tròn lý thuyết. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: phái, và. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.\nNhân vật: Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung; trang phục: Áo sơ mi học thuật tối giản nét mực đen\nGiữ nguyên: Keep the same setting (Không gian đồ họa đối sánh các tờ ghi chú rời rạc với sơ đồ giao thoa ba vòng tròn lý thuyết), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.\nThay đổi: Shift the full-frame emphasis to this next narrated action or object: phái, và.\nKhông có bất kỳ chữ hoặc số nào trong hình.\nKhông thêm nhãn, mã quản lý, logo, watermark, tiêu đề hay chữ trang trí ngoài danh sách.\nPhong cách chữ chung: {\"font\": \"sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt\", \"color\": \"#172033\", \"outline\": \"nền sáng tương phản\", \"size\": \"dễ đọc trên điện thoại (khung dọc 9:16)\", \"placement\": \"cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%\"}",
+    "character_ids": [
+      "CH01"
+    ],
+    "based_on": "SC04_I4_9x16",
+    "visible_text": [],
+    "kind": "scene",
+    "shot_type": "variation",
+    "image_id": "SC04_I5",
+    "ratio": "9:16"
+  },
+  {
+    "id": "SC05_I1_9x16",
+    "scene_id": "SC05",
+    "prompt": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.\nBàn làm việc học thuật ngăn nắp với màn hình lớn hiển thị Ma trận Khoảng trống hoàn chỉnh. Nhân vật người que đứng tự tin trước bảng Ma trận Khoảng trống Nghiên cứu hoàn chỉnh. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: Khi biến. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.\nNhân vật: Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung; trang phục: Áo sơ mi học thuật tối giản nét mực đen\nGiữ nguyên: \nThay đổi: Establish the complete scene and its opening action.\nKhông có bất kỳ chữ hoặc số nào trong hình.\nKhông thêm nhãn, mã quản lý, logo, watermark, tiêu đề hay chữ trang trí ngoài danh sách.\nPhong cách chữ chung: {\"font\": \"sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt\", \"color\": \"#172033\", \"outline\": \"nền sáng tương phản\", \"size\": \"dễ đọc trên điện thoại (khung dọc 9:16)\", \"placement\": \"cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%\"}",
+    "character_ids": [
+      "CH01"
+    ],
+    "based_on": null,
+    "visible_text": [],
+    "kind": "scene",
+    "shot_type": "full_scene",
+    "image_id": "SC05_I1",
+    "ratio": "9:16"
+  },
+  {
+    "id": "SC05_I2_9x16",
+    "scene_id": "SC05",
+    "prompt": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.\nBàn làm việc học thuật ngăn nắp với màn hình lớn hiển thị Ma trận Khoảng trống hoàn chỉnh. Nhân vật người que đứng tự tin trước bảng Ma trận Khoảng trống Nghiên cứu hoàn chỉnh. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: khoảng trống. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.\nNhân vật: Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung; trang phục: Áo sơ mi học thuật tối giản nét mực đen\nGiữ nguyên: Keep the same setting (Bàn làm việc học thuật ngăn nắp với màn hình lớn hiển thị Ma trận Khoảng trống hoàn chỉnh), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.\nThay đổi: Shift the full-frame emphasis to this next narrated action or object: khoảng trống.\nKhông có bất kỳ chữ hoặc số nào trong hình.\nKhông thêm nhãn, mã quản lý, logo, watermark, tiêu đề hay chữ trang trí ngoài danh sách.\nPhong cách chữ chung: {\"font\": \"sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt\", \"color\": \"#172033\", \"outline\": \"nền sáng tương phản\", \"size\": \"dễ đọc trên điện thoại (khung dọc 9:16)\", \"placement\": \"cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%\"}",
+    "character_ids": [
+      "CH01"
+    ],
+    "based_on": "SC05_I1_9x16",
+    "visible_text": [],
+    "kind": "scene",
+    "shot_type": "variation",
+    "image_id": "SC05_I2",
+    "ratio": "9:16"
+  },
+  {
+    "id": "SC05_I3_9x16",
+    "scene_id": "SC05",
+    "prompt": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.\nBàn làm việc học thuật ngăn nắp với màn hình lớn hiển thị Ma trận Khoảng trống hoàn chỉnh. Nhân vật người que đứng tự tin trước bảng Ma trận Khoảng trống Nghiên cứu hoàn chỉnh. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: Ba mươi. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.\nNhân vật: Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung; trang phục: Áo sơ mi học thuật tối giản nét mực đen\nGiữ nguyên: Keep the same setting (Bàn làm việc học thuật ngăn nắp với màn hình lớn hiển thị Ma trận Khoảng trống hoàn chỉnh), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.\nThay đổi: Shift the full-frame emphasis to this next narrated action or object: Ba mươi.\nKhông có bất kỳ chữ hoặc số nào trong hình.\nKhông thêm nhãn, mã quản lý, logo, watermark, tiêu đề hay chữ trang trí ngoài danh sách.\nPhong cách chữ chung: {\"font\": \"sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt\", \"color\": \"#172033\", \"outline\": \"nền sáng tương phản\", \"size\": \"dễ đọc trên điện thoại (khung dọc 9:16)\", \"placement\": \"cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%\"}",
+    "character_ids": [
+      "CH01"
+    ],
+    "based_on": "SC05_I2_9x16",
+    "visible_text": [],
+    "kind": "scene",
+    "shot_type": "variation",
+    "image_id": "SC05_I3",
+    "ratio": "9:16"
+  },
+  {
+    "id": "SC05_I4_9x16",
+    "scene_id": "SC05",
+    "prompt": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.\nBàn làm việc học thuật ngăn nắp với màn hình lớn hiển thị Ma trận Khoảng trống hoàn chỉnh. Nhân vật người que đứng tự tin trước bảng Ma trận Khoảng trống Nghiên cứu hoàn chỉnh. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: phóng vững. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.\nNhân vật: Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung; trang phục: Áo sơ mi học thuật tối giản nét mực đen\nGiữ nguyên: Keep the same setting (Bàn làm việc học thuật ngăn nắp với màn hình lớn hiển thị Ma trận Khoảng trống hoàn chỉnh), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.\nThay đổi: Shift the full-frame emphasis to this next narrated action or object: phóng vững.\nKhông có bất kỳ chữ hoặc số nào trong hình.\nKhông thêm nhãn, mã quản lý, logo, watermark, tiêu đề hay chữ trang trí ngoài danh sách.\nPhong cách chữ chung: {\"font\": \"sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt\", \"color\": \"#172033\", \"outline\": \"nền sáng tương phản\", \"size\": \"dễ đọc trên điện thoại (khung dọc 9:16)\", \"placement\": \"cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%\"}",
+    "character_ids": [
+      "CH01"
+    ],
+    "based_on": "SC05_I3_9x16",
+    "visible_text": [],
+    "kind": "scene",
+    "shot_type": "variation",
+    "image_id": "SC05_I4",
+    "ratio": "9:16"
+  }
+]

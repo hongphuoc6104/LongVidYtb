@@ -23,7 +23,7 @@ All script lines must be pre-validated with `sys/tools/script_cadence_checker.py
 - **Hook & Empathy (Phase 1):** ~4.2 syl/s (Vietnamese) / ~145–150 wpm (English).
 - **Causal Evidence & Mechanism (Phase 2):** ~4.0 syl/s (Vietnamese) / ~135–140 wpm (English).
 - **Philosophical Payoff (Phase 3):** ~3.6–3.8 syl/s (Vietnamese) / ~120–125 wpm (English).
-- **Default Voices (`sys/config.json`):** Vietnamese uses `VietNarrator` (`assets/voices/viet_narrator/profile.json`, speed `1.00`); English retains `Adam` (`assets/voices/adam/profile.json`, speed `1.22`). Shared settings: `num_step: 32`, `batch_size: 4`, `-14.0 LUFS`, `-1.5 dBTP`, `48kHz` Mono PCM16 via `kjanh/KhanhTTS-OmniVoice` on Colab T4. Honor explicit brief voice/rate choices. No local TTS fallback.
+- **Default Canonical Voice (`sys/config.json`):** Both Vietnamese (`vi`) and English (`en`) use `VietNarrator` (`assets/voices/viet_narrator/profile.json`, canonical speed `1.00`, contract range `[0.90, 1.15]`, with scene-level `tone` multipliers `0.98`, `1.02`, `0.92`). Shared settings: `num_step: 32`, `batch_size: 4`, `-14.0 LUFS`, `-1.5 dBTP`, `48kHz` Mono PCM16 via `kjanh/KhanhTTS-OmniVoice` on Colab T4. Honor explicit brief voice/rate choices. No local TTS fallback.
 
 ## 4. Remote Delivery & Audio Invariants
 Specify intent and pronunciation risks as craft notes. Only `learner_pause_seconds` has the existing scene-tail hold behavior; intent notes do not guarantee emotion and images do not demonstrate moving lips. Practice holds only when requested/useful, with question/model at the scene boundary and feedback after.

@@ -46,13 +46,13 @@ Phong cách kể chuyện **Conversational Essayist (Nhà luận thuyết trò c
 
 ### 3.1. Bản sắc giọng đọc (Vocal Persona)
 - **Tông giọng:** Ấm áp, điềm đạm, sắc bén, có độ tin cậy học thuật cao.
-- **Điều biến sắc thái (`tone`):** Hỗ trợ `narrative_warm` (mặc định `1.00x`), `analytical_crisp` (`1.02x` khi bóc tách sơ đồ/số liệu), và `reflective_slow` (`0.92x` khi đúc kết triết lý cuối bài).
+- **Điều biến sắc thái (`tone`):** Hỗ trợ `narrative_warm` (`0.98x`), `analytical_crisp` (`1.02x` khi bóc tách sơ đồ/số liệu), và `reflective_slow` (`0.92x` khi đúc kết triết lý cuối bài) qua `resolve_tone_speed()`.
 
 ### 3.2. Cấu hình Voice Chuẩn Duy Nhất (SSOT)
 
 | Voice | Profile | Speed (`long_16x9` / `short_9x16`) | Engine | Mastering & Định dạng |
 |:---|:---|:---:|:---|:---|
-| `Adam` | `assets/voices/adam/profile.json` | `1.22x` (`16:9`) / `1.26x` (`9:16`) | Colab `kjanh/KhanhTTS-OmniVoice` (`num_step=32`, `batch_size=4`) | `48kHz` Mono PCM16, EQ `+1.5dB @ 200Hz`, `-2.5dB @ 7000Hz`, `-14.0 LUFS`, `-1.5 dBTP` |
+| `VietNarrator` | `assets/voices/viet_narrator/profile.json` | `1.00x` (`16:9` & `9:16`, dải `[0.90, 1.15]`) | Colab `kjanh/KhanhTTS-OmniVoice` (`num_step=32`, `batch_size=4`) | `48kHz` Mono PCM16, EQ `+1.5dB @ 200Hz`, `-2.5dB @ 7000Hz`, `-14.0 LUFS`, `-1.5 dBTP` |
 
 ---
 
@@ -67,10 +67,10 @@ Phong cách kể chuyện **Conversational Essayist (Nhà luận thuyết trò c
 
 ### 4.2. Biến thiên nhịp điệu theo cấu trúc câu chuyện (Dynamic Pacing)
 1. **Phân đoạn Mở đầu — 30 giây đầu (Truth-Slap Hook & Empathy - 0–15% thời lượng):**
-   - Tốc độ: **`4.2 – 4.4` âm tiết/s** (Tiếng Việt, tương đương `speed: 1.26x` cho video ngắn `short_9x16`) / ~150–155 wpm (Tiếng Anh).
+   - Tốc độ: **`4.2 – 4.4` âm tiết/s** (Tiếng Việt, giọng `VietNarrator` `speed: 1.0x`) / ~150–155 wpm (Tiếng Anh).
    - **Zero Pause in `SC01`:** Tuyệt đối không chèn `[pause:...]` trong 15 giây đầu tiên để tạo nhịp cuốn tức thì từ giây `0:00`.
 2. **Phân đoạn Giải thích & Cơ chế (Causal Explanation - 15–80% thời lượng):**
-   - Tốc độ: ~`4.0` âm tiết/s (Tiếng Việt, `speed: 1.22x`) / ~135–140 wpm (Tiếng Anh).
+   - Tốc độ: ~`4.0` âm tiết/s (Tiếng Việt, `VietNarrator` `speed: 1.0x`) / ~135–140 wpm (Tiếng Anh).
    - Nhịp điệu cân bằng, rõ ràng từng chi tiết để người nghe kịp tiếp thu sơ đồ học thuật và số liệu.
 3. **Phân đoạn Đúc kết & Triết lý (Philosophical Payoff - 80–100% thời lượng):**
    - Tốc độ: ~`3.6–3.8` âm tiết/s (Tiếng Việt) / ~120–125 wpm (Tiếng Anh).

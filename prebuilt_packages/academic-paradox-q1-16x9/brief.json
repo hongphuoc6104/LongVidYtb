@@ -1,0 +1,156 @@
+{
+  "schema_version": "3.0",
+  "topic": "Nghịch lý Tri thức và Ảo giác Năng lực: Giải phẫu cơ chế nhận thức khiến việc đọc lại giáo trình thụ động làm tê liệt tư duy nghiên cứu chuẩn Q1",
+  "audience": "Sinh viên, học viên cao học và người tự học tại Việt Nam muốn hiểu bản chất tri thức và quy trình nghiên cứu",
+  "goal": "Phá vỡ ảo giác năng lực khi học vẹt, chuyển sang chuỗi Question -> Gap -> Method -> Evidence và làm chủ 120s đầu phòng bảo vệ",
+  "video_type": "science",
+  "duration": {
+    "min_seconds": 45.0,
+    "max_seconds": 60.0
+  },
+  "scene_count": 5,
+  "required_points": [
+    {
+      "id": "R01",
+      "text": "Ảo giác năng lực khi tô màu kín giáo trình và mở Word lúc hai giờ sáng"
+    },
+    {
+      "id": "R02",
+      "text": "Sai lầm mở Word gõ ngay chương một thay vì xác định chuỗi quyết định Q1"
+    },
+    {
+      "id": "R03",
+      "text": "Cơ chế nhận diện mặt chữ giả tạo và chuỗi câu hỏi đến khoảng trống tri thức"
+    },
+    {
+      "id": "R04",
+      "text": "Đối lập giữa sao chép tài liệu rời rạc và ma trận khoảng trống nghiên cứu"
+    },
+    {
+      "id": "R05",
+      "text": "Làm chủ một trăm hai mươi giây đầu trước hội đồng bảo vệ khóa luận"
+    }
+  ],
+  "language": "vi",
+  "tone": "Điềm đạm, sắc sảo, thông tuệ, chạm trúng tâm lý học thuật",
+  "style": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que viền đen dày tương tác vật lý với sơ đồ trong cùng bố cục, không chữ thừa trong ảnh.",
+  "aspect_ratio": "16:9",
+  "format_profile": "long_16x9",
+  "facts_required": true,
+  "sources": [
+    {
+      "id": "SRC01",
+      "title": "The Critical Importance of Retrieval for Learning",
+      "reference": "Dr. Jeffrey D. Karpicke & Dr. Henry L. Roediger (2008). Science, 319(5865), 966-968. DOI: 10.1126/science.1152408",
+      "facts": [
+        "Đọc lại giáo trình nhiều lần chỉ tạo ra ảo giác hiểu bài.",
+        "Não bộ chỉ thực sự nắm bản chất khi tự truy xuất thông tin."
+      ]
+    },
+    {
+      "id": "SRC02",
+      "title": "Genre Analysis: English in Academic and Research Settings (CARS Model)",
+      "reference": "Dr. John M. Swales (1990). Cambridge University Press. ISBN: 978-0521338134",
+      "facts": [
+        "Bài báo quốc tế bắt đầu từ khoảng trống tri thức chứ không phải Word.",
+        "Hội đồng bảo vệ luôn soi khoảng trống nghiên cứu trong hai phút đầu."
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "aspect_ratio": "16:9",
+      "language": "vi",
+      "subtitles": false,
+      "voice": "VietNarrator",
+      "speed": 1.0
+    }
+  ],
+  "planning": {
+    "success_criteria": [
+      "Phá vỡ ảo giác năng lực khi học vẹt, chuyển sang chuỗi Question -> Gap -> Method -> Evidence và làm chủ 120s đầu phòng bảo vệ"
+    ],
+    "avoid": [
+      "Tránh lối diễn đạt giáo điều, sáo rỗng hoặc thuật ngữ hàn lâm không giải thích."
+    ],
+    "prior_knowledge": "Không đòi hỏi kiến thức chuyên sâu từ trước.",
+    "pacing": "Theo lời dẫn tự nhiên Conversational Essayist, cân chỉnh triệt tiêu dead-air.",
+    "domain_requirements": [],
+    "assumptions": [
+      "Mỗi phân cảnh được cân chỉnh theo công thức âm học P_tail và dung sai drift <= 0.3s."
+    ],
+    "text_style": {
+      "font": "sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt",
+      "color": "#172033",
+      "outline": "nền sáng tương phản",
+      "size": "dễ đọc trên màn hình ngang (khung 16:9)",
+      "placement": "cách mép ít nhất 10%; bố cục ngang thoáng, không ép lề dọc điện thoại"
+    },
+    "speech_rates": {
+      "vi": {
+        "units_per_second": 4.0,
+        "uncertainty": 0.15,
+        "source": "Acoustic calibrated cadence"
+      },
+      "en": {
+        "units_per_second": 2.5,
+        "uncertainty": 0.25,
+        "source": "Estimated English reading rate"
+      }
+    }
+  },
+  "conversational_facts": true,
+  "packaging": {
+    "youtube_title": "Ảo Giác Năng Lực: Vì Sao Đọc Lại Sách Làm Não Tê Liệt?",
+    "thumbnail_spec": {
+      "visual_hook": "Nhân vật người que cầm bút đỏ gạch chéo biểu tượng trang soạn thảo trống trước sơ đồ chuỗi Question -> Gap",
+      "text_overlay": "BIẾT TÍNH ≠ HIỂU!",
+      "contrast_pair": "Mở Word gõ ngay vs. Ma trận Khoảng trống Q1"
+    },
+    "channel_pillar": "Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật",
+    "funnel_tier": "tier_1_broad",
+    "seo_keywords": [
+      "ảo giác năng lực",
+      "tư duy nghiên cứu khoa học",
+      "cách đọc bài báo Q1",
+      "bảo vệ khóa luận tốt nghiệp"
+    ]
+  },
+  "youtube_title": "Ảo Giác Năng Lực: Vì Sao Đọc Lại Sách Làm Não Tê Liệt?",
+  "thumbnail_spec": {
+    "visual_hook": "Nhân vật người que cầm bút đỏ gạch chéo biểu tượng trang soạn thảo trống trước sơ đồ chuỗi Question -> Gap",
+    "text_overlay": "BIẾT TÍNH ≠ HIỂU!",
+    "contrast_pair": "Mở Word gõ ngay vs. Ma trận Khoảng trống Q1"
+  },
+  "channel_pillar": "Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật",
+  "funnel_tier": "tier_1_broad",
+  "seo_keywords": [
+    "ảo giác năng lực",
+    "tư duy nghiên cứu khoa học",
+    "cách đọc bài báo Q1",
+    "bảo vệ khóa luận tốt nghiệp"
+  ],
+  "spinoff_shorts": [
+    {
+      "id": "SPINOFF_01",
+      "hook_title": "Ảo Giác Năng Lực: Vì Sao Đọc Lại Sách Làm Não Tê Liệt?",
+      "opening_hook": "Đọc lại giáo trình năm lần chỉ tạo ra ảo giác rằng bạn hiểu bài",
+      "format_profile": "short_9x16",
+      "scene_count": 5
+    },
+    {
+      "id": "SPINOFF_02",
+      "hook_title": "Tâm Lý Hội Đồng: Cửa Sổ 120 Giây Định Đoạt Khóa Luận",
+      "opening_hook": "Hội đồng bảo vệ định hình phán quyết ngay trong hai phút đầu tiên",
+      "format_profile": "short_9x16",
+      "scene_count": 5
+    },
+    {
+      "id": "SPINOFF_03",
+      "hook_title": "Ma Trận Research Gap: Đọc 30 Bài Báo Q1 Không Quá Tải",
+      "opening_hook": "Tải ba mươi bài báo quốc tế chẳng giúp bạn có đề tài mới",
+      "format_profile": "short_9x16",
+      "scene_count": 5
+    }
+  ]
+}

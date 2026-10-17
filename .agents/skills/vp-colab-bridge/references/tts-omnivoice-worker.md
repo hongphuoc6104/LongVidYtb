@@ -16,13 +16,14 @@ Before constructing any TTS request or invoking synthesis, pass all Vietnamese t
 
 ---
 
-## 2. Voice Profile & Reference Checksums (`protocol.py`)
+## 2. Voice Profile, Tone Speed Modulation & Reference Checksums (`protocol.py`)
 
-The default Vietnamese profile is `sys/assets/voices/viet_narrator/profile.json` (`"voice": "VietNarrator"`, `"languages": ["vi"]`, speed `1.00`). English retains `sys/assets/voices/adam/profile.json` (`"voice": "Adam"`, speed `1.22`). `sys/config.json` maps them under `voices.vi` and `voices.en`. The new profile retains the denoised 12-second reference, source provenance and user-approved `sample.wav`; the generated sample's boundary repair is not a change to the reference audio or a general artifact-prevention guarantee.
-`load_profiles()` enforces strict validation before uploading to Colab:
+The sole canonical voice profile across both Vietnamese (`vi`) and English (`en`) is `sys/assets/voices/viet_narrator/profile.json` (`"voice": "VietNarrator"`, `"languages": ["vi", "en"]`, nominal speed `1.00`, contract range `[0.90, 1.15]`). `sys/config.json` maps both `voices.vi` and `voices.en` to `assets/voices/viet_narrator/profile.json` with `tts_voice: "VietNarrator"`, `tts_speed: 1.0`, `en_voice: "VietNarrator"`, and `en_speed: 1.0`. The profile retains the denoised 12-second reference, source provenance and user-approved `sample.wav`; the generated sample's boundary repair is not a change to the reference audio or a general artifact-prevention guarantee.
+`load_profiles()` and `build_request()` enforce strict validation before uploading to Colab:
 - `profile['voice']` and `lang in profile['languages']` must match the active configuration.
 - `reference_wav` must exist, match its SHA-256 `profile['sha256']`, and have a duration strictly between **3 and 15 seconds** (`3 <= frames / framerate <= 15`).
 - `source_speed` must be positive and finite. Effective generation speed passed to OmniVoice is scaled as `item['speed'] / profile['source_speed']` to prevent double-slowdown.
+- Scene-level `tone` (`narrative_warm`: `0.98`, `analytical_crisp`: `1.02`, `reflective_slow`: `0.92`) modulates utterance speed via `resolve_tone_speed(base_speed, tone)` while `request['base_speeds']` preserves the nominal base speed (`1.0`) for `media_packaging.py`, `validate_result()`, and `pilot.py:remote_checks()`.
 - Model revision (`models[lang]['revision']`) must be a pinned 40-character hexadecimal Hugging Face commit hash (`20d056b8ea5d8d578b4cbaf1f703012fa3798a84`).
 
 ---

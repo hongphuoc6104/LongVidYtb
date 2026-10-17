@@ -1,0 +1,149 @@
+[
+  {
+    "id": "SC01",
+    "duration": 8.0,
+    "narration": "Tải ba mươi bài báo quốc tế chẳng giúp bạn có đề tài mới. Đêm khuya mở thư mục tài liệu, não bạn tê liệt vì quá tải.",
+    "beats": [
+      {
+        "image_id": "SC01_I1",
+        "anchor_quote": "Tải ba"
+      },
+      {
+        "image_id": "SC01_I2",
+        "anchor_quote": "quốc tế"
+      },
+      {
+        "image_id": "SC01_I3",
+        "anchor_quote": "bạn có"
+      },
+      {
+        "image_id": "SC01_I4",
+        "anchor_quote": "Đêm khuya"
+      },
+      {
+        "image_id": "SC01_I5",
+        "anchor_quote": "tài liệu,"
+      },
+      {
+        "image_id": "SC01_I6",
+        "anchor_quote": "tê liệt"
+      }
+    ]
+  },
+  {
+    "id": "SC02",
+    "duration": 11.0,
+    "narration": "Nhiều bạn hoảng loạn liền yêu cầu công cụ trí tuệ nhân tạo viết hộ mục tổng quan. [pause:900ms] Nhưng trên thực tế, hội đồng bảo vệ luôn nhận ra ngay văn phong liệt kê sáo rỗng.",
+    "beats": [
+      {
+        "image_id": "SC02_I1",
+        "anchor_quote": "Nhiều bạn"
+      },
+      {
+        "image_id": "SC02_I2",
+        "anchor_quote": "yêu cầu"
+      },
+      {
+        "image_id": "SC02_I3",
+        "anchor_quote": "tạo viết"
+      },
+      {
+        "image_id": "SC02_I4",
+        "anchor_quote": "quan."
+      },
+      {
+        "image_id": "SC02_I5",
+        "anchor_quote": "trên thực"
+      },
+      {
+        "image_id": "SC02_I6",
+        "anchor_quote": "vệ luôn"
+      },
+      {
+        "image_id": "SC02_I7",
+        "anchor_quote": "phong liệt"
+      }
+    ]
+  },
+  {
+    "id": "SC03",
+    "duration": 13.0,
+    "narration": "Thay vì bảo máy viết hộ, hãy biến ba mươi bài báo kia thành một ma trận khoảng trống nghiên cứu. Bạn yêu cầu hệ thống bóc tách từng bài theo bốn cột, gồm câu hỏi và phương pháp. Cuối cùng là dữ liệu, và giới hạn chưa giải quyết.",
+    "beats": [
+      {
+        "image_id": "SC03_I1",
+        "anchor_quote": "Thay vì"
+      },
+      {
+        "image_id": "SC03_I2",
+        "anchor_quote": "bài báo"
+      },
+      {
+        "image_id": "SC03_I3",
+        "anchor_quote": "trống nghiên"
+      },
+      {
+        "image_id": "SC03_I4",
+        "anchor_quote": "bóc tách"
+      },
+      {
+        "image_id": "SC03_I5",
+        "anchor_quote": "câu hỏi"
+      },
+      {
+        "image_id": "SC03_I6",
+        "anchor_quote": "dữ liệu,"
+      }
+    ]
+  },
+  {
+    "id": "SC04",
+    "duration": 11.5,
+    "narration": "Người nghiệp dư chỉ tóm tắt từng bài riêng lẻ, nên mãi dậm chân tại chỗ trong mớ hỗn độn. Ngược lại, nhà nghiên cứu dùng trí tuệ nhân tạo để phản biện chéo các trường phái, và khoanh vùng lỗ hổng phương pháp.",
+    "beats": [
+      {
+        "image_id": "SC04_I1",
+        "anchor_quote": "Người nghiệp"
+      },
+      {
+        "image_id": "SC04_I2",
+        "anchor_quote": "lẻ, nên"
+      },
+      {
+        "image_id": "SC04_I3",
+        "anchor_quote": "độn. Ngược"
+      },
+      {
+        "image_id": "SC04_I4",
+        "anchor_quote": "tuệ nhân"
+      },
+      {
+        "image_id": "SC04_I5",
+        "anchor_quote": "phái, và"
+      }
+    ]
+  },
+  {
+    "id": "SC05",
+    "duration": 9.0,
+    "narration": "Khi biến cơn bão thông tin thành ma trận khoảng trống rõ ràng, bế tắc sẽ tan biến. Ba mươi bài báo kia trở thành bệ phóng vững chắc cho công trình của bạn.",
+    "beats": [
+      {
+        "image_id": "SC05_I1",
+        "anchor_quote": "Khi biến"
+      },
+      {
+        "image_id": "SC05_I2",
+        "anchor_quote": "khoảng trống"
+      },
+      {
+        "image_id": "SC05_I3",
+        "anchor_quote": "Ba mươi"
+      },
+      {
+        "image_id": "SC05_I4",
+        "anchor_quote": "phóng vững"
+      }
+    ]
+  }
+]

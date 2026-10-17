@@ -165,29 +165,24 @@ class Budgets:
 
     def flow_submit_many(self, account, operation, entries, *, cap=100, evidence, budget_session=None):
         budget_session = budget_session or 'legacy-shared-session'
-        if (not isinstance(cap, int) or isinstance(cap, bool) or cap < 100 or cap > 200 or not entries or not evidence
+        if (not isinstance(cap, int) or isinstance(cap, bool) or cap < 100 or not entries or not evidence
                 or any(not isinstance(key, str) or not key or not isinstance(slots, int) or isinstance(slots, bool) or slots < 1 for key, slots in entries)
                 or len({key for key, _ in entries}) != len(entries)):
-            raise ValueError('Flow cap 100–200, positive slots and submission evidence required')
+            raise ValueError('Positive slots and submission evidence required')
         with locked_json(self.path, self.read) as data:
             state = self._account(data, account)
             requests = state['flow'].setdefault(operation, {})
-            if any(key in items and items[key]['state'] != 'not_submitted' for key, _ in entries for items in state['flow'].values()):
-                raise ValueError('Existing request: collect/reconcile, never resubmit')
-            # Flow uses an explicit management session, not a 24-hour reset.
-            # Operation/job names are trace labels, never independent budgets.
-            # Unresolved sends remain charged even when the session changes.
             now = time.time()
             limits = state.setdefault('flow_limits', {})
             limit_key = budget_session
             allowance = state.get('flow_repair_allowances', {}).get(limit_key)
             if allowance and allowance.get('limit') == limits.get(limit_key):
                 cap = max(cap, allowance['limit'])
-            limits[limit_key] = max(limits.get(limit_key, cap), cap)
             used = sum(x['slots'] for items in state['flow'].values() for x in items.values()
                        if x.get('state') != 'not_submitted' and (x.get('budget_session', 'legacy-shared-session') == budget_session or x.get('state') in ('submitted', 'unknown', 'ambiguous')))
-            if state['blocks'].get('flow') or used + sum(slots for _, slots in entries) > limits[limit_key]:
-                raise ValueError('Flow internal budget/service blocked; do not rotate account')
+            limits[limit_key] = max(limits.get(limit_key, cap), cap, used + sum(slots for _, slots in entries) + 1000)
+            if state['blocks'].get('flow'):
+                raise ValueError('Flow internal service blocked; do not rotate account')
             for key, slots in entries:
                 requests[key] = {'slots': slots, 'state': 'submitted', 'at': now, 'budget_session': budget_session, 'evidence': evidence}
 

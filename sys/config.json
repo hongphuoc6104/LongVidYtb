@@ -2,13 +2,13 @@
   "schema_version": "1.0",
   "voices": {
     "vi": "assets/voices/viet_narrator/profile.json",
-    "en": "assets/voices/adam/profile.json"
+    "en": "assets/voices/viet_narrator/profile.json"
   },
   "tts_voice": "VietNarrator",
   "tts_speed": 1.0,
   "tts_max_chars": 256,
-  "en_voice": "Adam",
-  "en_speed": 1.22,
+  "en_voice": "VietNarrator",
+  "en_speed": 1.0,
   "fps": 30,
   "video_generation": false,
   "credit_budget": 0,
@@ -17,7 +17,10 @@
   "flow_cdp_profiles": [
     {"id": "profile_1", "port": 9225, "directory": "Profile 106", "user_data_dir": "~/.config/google-chrome-cdp-p1"},
     {"id": "profile_2", "port": 9223, "directory": "Profile 127", "user_data_dir": "~/.config/google-chrome-cdp-p2"},
-    {"id": "profile_3", "port": 9224, "directory": "Profile 13", "user_data_dir": "~/.config/google-chrome-cdp-p3"}
+    {"id": "profile_3", "port": 9224, "directory": "Profile 13", "user_data_dir": "~/.config/google-chrome-cdp-p3"},
+    {"id": "profile_4", "port": 9222, "directory": "Profile 130", "user_data_dir": "~/.config/google-chrome-cdp-p4"},
+    {"id": "profile_5", "port": 9226, "directory": "Profile 102", "user_data_dir": "~/.config/google-chrome-cdp-p5"},
+    {"id": "profile_6", "port": 9227, "directory": "Profile 98", "user_data_dir": "~/.config/google-chrome-cdp-p6"}
   ],
   "patch_size": 3,
   "flow_session_image_cap": 200,
@@ -42,7 +45,7 @@
   "audio_lufs": -14.0,
   "audio_peak_db": -1.5,
   "renderer": "remotion",
-  "concurrency": 3,
+  "concurrency": 6,
   "review": "three_stages",
   "en_seed": 42,
   "workflow_mode": "review",

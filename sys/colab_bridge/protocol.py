@@ -112,16 +112,19 @@ def build_request(root, cfg, scenes, english_scenes=(), *, primary_language='vi'
         if not math.isfinite(pause) or not 0 <= pause <= 8: raise ValueError('Invalid secondary pause')
         secondary.append(dict(scene_id=safe_id(sc['scene_id']), language=language, text=sc['text'],
                               items=[item(sc['text'], language, sc.get('retake', 0), cfg['tts_speed'] if language == 'vi' else cfg.get('en_speed', 1.))], pause=pause))
-    hooks = [dict(id=safe_id(plan['id']), text=plan['opening_hook'], item=item(plan['opening_hook'], 'vi', 0, 1.26)) for plan in spinoff_hooks]
+    hooks = [dict(id=safe_id(plan['id']), text=plan['opening_hook'], item=item(plan['opening_hook'], 'vi', 0, cfg.get('tts_speed', 1.0))) for plan in spinoff_hooks]
     profiles = load_profiles(root, cfg, {x['language'] for x in items} | {primary_language})
     models = cfg['colab_tts']['models']
     for lang in profiles:
         if not re.fullmatch(r'[a-f0-9]{40}', models[lang]['revision']):
             raise ValueError('Model revision must be a pinned Hugging Face commit')
+    base_speeds = {}
+    for lang in profiles:
+        base_speeds[lang] = positive(cfg['tts_speed'] if lang == 'vi' else cfg.get('en_speed', 1.), 'speed')
     request = dict(version=VERSION, items=items, segments=segments, english=english,
                    profiles=profiles, models=models, batch_size=int(cfg['colab_tts'].get('batch_size', 4)),
                    num_step=int(cfg['colab_tts'].get('num_step', 32)), seed=int(cfg.get('en_seed', 42)),
-                   span_gap=float(cfg.get('audio_english_spans_gap', .18)))
+                   span_gap=float(cfg.get('audio_english_spans_gap', .18)), base_speeds=base_speeds)
     if not 1 <= request['batch_size'] <= 8 or not 8 <= request['num_step'] <= 64:
         raise ValueError('Unsupported batch size or diffusion steps')
     if hooks: request['spinoff_hooks'] = hooks
@@ -212,8 +215,9 @@ def validate_result(folder, req):
         for language, track in payload['tracks'].items():
             if track.get('language') != language or track.get('voice') != req['profiles'][language]['voice']:
                 raise ValueError('Remote track language/voice mismatch')
-            expected_speed = next(item['speed'] for item in req['items'] if item['language'] == language)
-            if track.get('speed') != expected_speed: raise ValueError('Remote track speed mismatch')
+            nominal_speed = req.get('base_speeds', {}).get(language, next(item['speed'] for item in req['items'] if item['language'] == language))
+            allowed_track_speeds = {resolve_tone_speed(nominal_speed, t) for t in (None, *TONE_SPEED_MULTIPLIERS)} | {item['speed'] for item in req['items'] if item['language'] == language}
+            if not any(abs(track.get('speed', 0) - s) <= 1e-8 for s in allowed_track_speeds): raise ValueError('Remote track speed mismatch')
             if Path(track['wav']).name != track['wav'] or track['wav'] not in assembled.get('files', {}) or not math.isfinite(track['duration']):
                 raise ValueError('Unsafe remote track WAV or duration')
             track_path = folder / track['wav']

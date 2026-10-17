@@ -2,7 +2,8 @@
   "voice": "VietNarrator",
   "language": "vi",
   "languages": [
-    "vi"
+    "vi",
+    "en"
   ],
   "reference_wav": "reference.wav",
   "reference_text": "Chúng ta nói về tự do như một khái niệm trừu tượng. Tự do trong tâm trí khi có quá nhiều lời thì thầm nói rằng chúng ta nên làm gì và không nên làm gì. Hoặc tự do trong hành động khi đang sống trong một xã hội với nhiều định",
@@ -21,7 +22,7 @@
     }
   ],
   "listening_verified": false,
-  "note": "Default Vietnamese narrator. The denoised 12-second reference was tested on Colab T4; the repaired generated sample was listened to and approved by the user. The source window ends mid-sentence.",
+  "note": "Sole canonical narrator profile (VietNarrator, OmniVoice on Colab T4, speed 1.0). The denoised 12-second reference was tested on Colab T4; the repaired generated sample was listened to and approved by the user.",
   "processing": {
     "separator": "demucs 4.0.1",
     "model": "htdemucs",

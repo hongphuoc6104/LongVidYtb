@@ -37,7 +37,7 @@ Tài liệu này cung cấp bộ quy tắc chuyển ngữ, công thức viết c
 
 ## 2. Quy Tắc Dấu Câu và Điều Khiển Hơi Thở (Punctuation as Breath Control)
 
-Trong quá trình tổng hợp giọng đọc TTS (`OmniVoice` giọng `Adam`) và biểu đạt cảm xúc, dấu câu đóng vai trò như các chỉ thị âm học điều phối luồng hơi:
+Trong quá trình tổng hợp giọng đọc TTS (`OmniVoice` giọng `VietNarrator`, `speed: 1.0`) và biểu đạt cảm xúc, dấu câu đóng vai trò như các chỉ thị âm học điều phối luồng hơi:
 
 1. **Dấu phẩy (`,`) — Nhịp lấy hơi ngắn ($0.30\text{s}$):**
    - Đặt sau trạng từ đầu câu hoặc giữa các vế câu từ **6 đến 14 âm tiết** (tuyệt đối không để vế câu không phẩy dài quá **18 âm tiết** — `BREATHLESS_CLAUSE`).
@@ -56,7 +56,7 @@ Trong quá trình tổng hợp giọng đọc TTS (`OmniVoice` giọng `Adam`) v
 
 ### 3.1. Công thức Cú Tát Sự Thật Mở Màn (`Counter-Intuitive Hook <= 18 âm tiết`) & Nhịp Cuốn `4.2 – 4.4` syl/s
 - **2.5 giây đầu (`SC01` câu 1):** Phải là một câu khẳng định nghịch lý đanh thép **$\le 18$ âm tiết**, không rào đón, không `[pause:...]`.
-- **30 giây đầu (`SC01–SC02`):** Đẩy tốc độ đọc lên **`4.2 – 4.4` âm tiết/giây** (tương đương `speed: 1.26x` cho video ngắn `short_9x16`) và dùng lời thoại cụ thể để gợi nhịp cắt ảnh toàn khung. Cold open có thể hướng tới 8–9 hình trong 12–12,5 giây khi nội dung hỗ trợ; xác nhận timing theo WAV.
+- **30 giây đầu (`SC01–SC02`):** Đẩy nhịp câu lên **`4.2 – 4.4` âm tiết/giây** (với giọng `VietNarrator` `speed: 1.0`) và dùng lời thoại cụ thể để gợi nhịp cắt ảnh toàn khung. Cold open có thể hướng tới 8–9 hình trong 12–12,5 giây khi nội dung hỗ trợ; xác nhận timing theo WAV.
 
 ### 3.2. Quy tắc bộ ba nhịp điệu (The Three-Beat Rule)
 Nhóm các chi tiết thành bộ ba đối xứng để tạo nhịp điệu dồn dập, dễ nhớ:

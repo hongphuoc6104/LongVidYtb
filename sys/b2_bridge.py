@@ -1,4 +1,6 @@
 """Backward compatibility bridge for B-2 Illustrator delegating to flow_cdp."""
+import socket
+import tempfile
 import time
 from pathlib import Path
 from typing import Any
@@ -7,8 +9,17 @@ import flow_cdp.bridge as _cdp
 
 ROOT = _cdp.ROOT
 SOCKET_PATH = _cdp.SOCKET_PATH
-session_socket_path = _cdp.session_socket_path
-get_socket_path = _cdp.get_socket_path
+
+
+def session_socket_path(root: Path = ROOT, profile_id: str = "") -> Path:
+    _cdp.tempfile = tempfile
+    return _cdp.session_socket_path(root=root, profile_id=profile_id)
+
+
+def get_socket_path(profile_id: str = "") -> Path:
+    if profile_id:
+        return session_socket_path(ROOT, profile_id)
+    return SOCKET_PATH
 is_session_available = _cdp.is_session_available
 _mark_not_submitted = _cdp._mark_not_submitted
 _config = _cdp._config
@@ -22,9 +33,10 @@ _real_ensure_connected = _cdp.ensure_connected
 
 
 def send_raw_command(command: str, timeout: float = 120.0, **kwargs) -> dict[str, Any]:
-    if kwargs.get("sock_path") is not None and kwargs["sock_path"] != get_socket_path():
-        return _real_send_raw_command(command, timeout=timeout, sock_path=kwargs["sock_path"])
-    return _real_send_raw_command(command, timeout=timeout)
+    _cdp.SOCKET_PATH = SOCKET_PATH
+    _cdp.socket = socket
+    target = kwargs.get("sock_path") or SOCKET_PATH
+    return _real_send_raw_command(command, timeout=timeout, sock_path=target)
 
 
 def require_queue_acceptance():

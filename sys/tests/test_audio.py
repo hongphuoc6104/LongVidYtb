@@ -22,7 +22,7 @@ def fake_colab_synth(emit,voice=None):
   for seg in req['segments']:
    emit(out,len(segs),seg,seg['text'])
    segs.append({'scene_id':seg['scene_id'],'text':voice(seg['text']) if voice else seg['text'],'path':f'segment-{len(segs):03}.wav'})
-  write(out/'tts-result.json',{'voice':'Adam','engine':{'backend':'colab-omnivoice','model':'kjanh/KhanhTTS-OmniVoice'},'segments':segs})
+  write(out/'tts-result.json',{'voice':'VietNarrator','engine':{'backend':'colab-omnivoice','model':'kjanh/KhanhTTS-OmniVoice'},'segments':segs})
  return synth
 
 class PureHelperTests(unittest.TestCase):
@@ -98,7 +98,7 @@ class AudioStageTests(unittest.TestCase):
  def setUp(self):
   self.tmp=tempfile.TemporaryDirectory();self.root=Path(self.tmp.name)
   for name in ['schemas','.agents','tests','examples']:shutil.copytree(ROOT/name,self.root/name)
-  shutil.copytree(ROOT/'assets/voices/adam',self.root/'assets/voices/adam')
+  shutil.copytree(ROOT/'assets/voices/viet_narrator',self.root/'assets/voices/viet_narrator')
   (self.root/'renderer').mkdir();shutil.copy(ROOT/'renderer/render.mjs',self.root/'renderer/render.mjs')
   for name in ['config.json','AGENTS.md','GEMINI.md','pilot.py','workflow.py','machine_review.py','image_pipeline.py','prompt_templates.py','adapters.py','package.json','package-lock.json','requirements.txt']:
    if (ROOT/name).exists():shutil.copy(ROOT/name,self.root/name)
@@ -118,7 +118,7 @@ class AudioStageTests(unittest.TestCase):
   self.assertEqual(r['state'],'awaiting_review')
   self.p.validate('test','audio')
   pay=read(self.p.path('test',r['envelope']))['payload']
-  self.assertEqual(pay['voice'],'Adam')
+  self.assertEqual(pay['voice'],'VietNarrator')
   self.assertEqual(len(pay['segments']),sum(len(adapters.chunks(s['narration'])) for s in self.p.payload('test','content')['scenes']))
   last=0
   for s in pay['segments']:
@@ -141,15 +141,15 @@ class AudioStageTests(unittest.TestCase):
   self.assertEqual(retakes_by_scene['SC02'],1)
   self.assertEqual({v for k,v in retakes_by_scene.items() if k!='SC02'},{0})
 
- def test_request_carries_pauses_and_adam_voice(self):
+ def test_request_carries_pauses_and_viet_narrator_voice(self):
   seen={};inner=self.fake_worker()
   def spy(client_self,req,out,cache_dir,before_submit=None):
    seen.update(req)
    return inner(client_self,req,out,cache_dir,before_submit)
   with patch.object(Client,'synthesize',spy):self.p.run('test','audio')
   cfg=read(self.root/'config.json')
-  self.assertEqual(seen['profiles']['vi']['voice'],'Adam')
-  self.assertEqual(seen['items'][0]['speed'],1.22)
+  self.assertEqual(seen['profiles']['vi']['voice'],'VietNarrator')
+  self.assertEqual(seen['items'][0]['speed'],1.0)
   self.assertEqual(seen['segments'][-1]['pause'],cfg['tts_pause']['tail'])
 
  def test_silent_segment_is_blocked(self):
@@ -167,7 +167,7 @@ class EnglishTrackTests(unittest.TestCase):
  def setUp(self):
   self.tmp=tempfile.TemporaryDirectory();self.root=Path(self.tmp.name)
   for n in ['schemas','.agents','tests','examples']:shutil.copytree(ROOT/n,self.root/n)
-  shutil.copytree(ROOT/'assets/voices/adam',self.root/'assets/voices/adam')
+  shutil.copytree(ROOT/'assets/voices/viet_narrator',self.root/'assets/voices/viet_narrator')
   (self.root/'renderer').mkdir();shutil.copy(ROOT/'renderer/render.mjs',self.root/'renderer/render.mjs')
   for n in ['pilot.py','workflow.py','machine_review.py','image_pipeline.py','prompt_templates.py','content_contract.py','adapters.py','config.json','AGENTS.md','GEMINI.md','package.json','package-lock.json','requirements.txt']:
    if (ROOT/n).exists():shutil.copy(ROOT/n,self.root/n)
@@ -195,13 +195,13 @@ class EnglishTrackTests(unittest.TestCase):
    for seg in req['segments']:
     tone(out/f'segment-{len(segs):03}.wav',vi)
     segs.append({'scene_id':seg['scene_id'],'text':seg['text'],'path':f'segment-{len(segs):03}.wav'})
-   write(out/'tts-result.json',{'voice':'Adam','engine':{'backend':'colab-omnivoice','model':'kjanh/KhanhTTS-OmniVoice'},'segments':segs})
+   write(out/'tts-result.json',{'voice':'VietNarrator','engine':{'backend':'colab-omnivoice','model':'kjanh/KhanhTTS-OmniVoice'},'segments':segs})
    if req.get('english'):
     scs=[]
     for sc in req['english']:
      path=f"en-{sc['scene_id']}.wav";tone(out/path,en)
      scs.append({'scene_id':sc['scene_id'],'path':path})
-    write(out/'en-result.json',{'engine':'colab-omnivoice','voice':'Adam','scenes':scs})
+    write(out/'en-result.json',{'engine':'colab-omnivoice','voice':'VietNarrator','scenes':scs})
   return synth
 
  def test_dual_job_produces_english_track(self):
@@ -210,7 +210,7 @@ class EnglishTrackTests(unittest.TestCase):
   self.p.validate('m1','audio')
   pay=read(self.p.path('m1',self.p.rows('m1')['audio']['envelope']))['payload']
   en=pay['en']
-  self.assertEqual(en['engine'],'colab-omnivoice');self.assertEqual(en['voice'],'Adam')
+  self.assertEqual(en['engine'],'colab-omnivoice');self.assertEqual(en['voice'],'VietNarrator')
   self.assertEqual([s['scene_id'] for s in en['scenes']],[s['id'] for s in content['scenes']])
   last=0
   for s in en['scenes']:
@@ -218,15 +218,15 @@ class EnglishTrackTests(unittest.TestCase):
   self.assertAlmostEqual(en['duration'],last,places=3)
   self.assertNotAlmostEqual(en['duration'],pay['duration'],places=1)
 
- def test_english_request_uses_adam_omnivoice_settings(self):
+ def test_english_request_uses_viet_narrator_omnivoice_settings(self):
   self.start('dual');seen={};inner=self.fake()
   def spy(client_self,req,out,cache_dir,before_submit=None):
    seen.update(req)
    return inner(client_self,req,out,cache_dir,before_submit)
   with patch.object(Client,'synthesize',spy):self.p.run('m1','audio')
-  self.assertEqual(seen['profiles']['en']['voice'],'Adam')
+  self.assertEqual(seen['profiles']['en']['voice'],'VietNarrator')
   en_items=[x for x in seen['items'] if x['language']=='en']
-  self.assertEqual(en_items[0]['speed'],1.22)
+  self.assertEqual(en_items[0]['speed'],1.0)
   self.assertEqual(seen['models']['en']['id'],'kjanh/KhanhTTS-OmniVoice')
 
  def test_colab_failure_blocks_audio(self):

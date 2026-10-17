@@ -51,7 +51,7 @@ Mọi kịch bản chuẩn mực của Video Pilot đều được xây dựng t
 - **Công thức bắt buộc:**
   - **Câu 1 (Truth-Slap Hook $\le 18$ âm tiết):** Phủ định trực diện một thói quen sai lầm mà 90% sinh viên/người đi làm đang mắc phải.
   - **Câu 2–3 (Vietnamese Relatability Anchor):** Mô tả khoảnh khắc thật (đêm trước ngày nộp khóa luận, cuốn giáo trình highlight vàng rực nhưng đầu trống rỗng, hoặc tiếng chuông báo thức đòi nợ thời gian).
-  - **Zero Pause & High Pacing:** Tuyệt đối **không chèn `[pause:...]`** trong `SC01`; tốc độ đọc đẩy lên **`4.2 – 4.4` âm tiết/giây** (`speed: 1.26x` cho `short_9x16`).
+  - **Zero Pause & High Pacing:** Tuyệt đối **không chèn `[pause:...]`** trong `SC01`; tốc độ đọc đẩy lên **`4.2 – 4.4` âm tiết/giây** (`VietNarrator` `speed: 1.0` cho cả `short_9x16` và `long_16x9`).
 - **Ví dụ chuẩn mực (Đã thay thế hoàn toàn mẫu câu cấm *"Hãy nghĩ về..."*):**
   - *Mẫu A (Ngách Tư Duy Nghiên Cứu & Học Thuật):*
     > *"Đọc lại giáo trình năm lần chỉ tạo ra ảo giác rằng bạn đã hiểu bài. Hai giờ sáng trước kỳ thi, cuốn sách của bạn phủ kín bút dạ quang rực rỡ, nhưng khi gấp trang giấy lại, bạn không thể tự giải thích nổi một nguyên lý gốc rễ."*

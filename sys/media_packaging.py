@@ -83,7 +83,7 @@ def assemble(request, folder, support_folder):
             scenes.append({'scene_id': scene_id, 'path': scene_name, 'start': grouped[0]['start'],
                            'end': grouped[-1]['end'], 'content_end': grouped[-1]['content_end']})
         return {'voice': request['profiles'][language]['voice'], 'engine': 'colab-omnivoice',
-                'language': language, 'speed': next(x['speed'] for x in request['items'] if x['language'] == language),
+                'language': language, 'speed': request.get('base_speeds', {}).get(language, next(x['speed'] for x in request['items'] if x['language'] == language)),
                 'wav': name, 'srt': srt_name, 'duration': cursor, 'segments': segments,
                 'scenes': scenes, 'cues': cues}
 

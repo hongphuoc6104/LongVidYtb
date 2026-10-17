@@ -48,7 +48,7 @@ def test_short_assembly_rebases_five_scenes_and_pcm(tmp_path: Path) -> None:
     wav('hook.wav', 2)
     (public / 'parent.png').write_bytes(b'fixture-only-not-provider-evidence')
     segment = dict(scene_id='P01', text='A complete parent sentence.', start=0., end=12.)
-    audio = {'tracks': {'vi': dict(wav='parent.wav', speed=1.26, segments=[segment])},
+    audio = {'tracks': {'vi': dict(wav='parent.wav', speed=1.0, segments=[segment])},
              'spinoff_hooks': [dict(id=f'S{i}', text='Knowledge can deceive you.', path='hook.wav') for i in range(2)]}
     images = {'items': [dict(image_id='I01', ratio='16:9', path='parent.png')]}
     timeline = [dict(id='P01', start=0, images=[dict(at=t, src='parent.png') for t in (0, 3, 6, 9)])]

@@ -91,16 +91,16 @@ console.log(JSON.stringify({
     assert data['portrait']['background'] != 'transparent'
 
 
-@pytest.mark.parametrize('speed', [1., 1.11, 1.39])
-def test_vietnamese_adam_rejects_uncalibrated_speed(speed: float) -> None:
+@pytest.mark.parametrize('speed', [0.85, 1.16, 1.39])
+def test_viet_narrator_rejects_uncalibrated_speed(speed: float) -> None:
     brief = {'aspect_ratio': '16:9', 'outputs': [
-        {'language': 'vi', 'aspect_ratio': '16:9', 'subtitles': False, 'voice': 'Adam', 'speed': speed}]}
+        {'language': 'vi', 'aspect_ratio': '16:9', 'subtitles': False, 'voice': 'VietNarrator', 'speed': speed}]}
     with pytest.raises(ValueError, match='OUTPUT_CONTRACT'):
         outputs(brief)
     del brief['outputs'][0]['speed']
     with pytest.raises(ValueError, match='OUTPUT_CONTRACT'):
-        voice_settings(brief, 'vi', {'tts_voice': 'Adam', 'tts_speed': speed})
-    assert voice_settings(brief, 'vi', {'tts_voice': 'Adam'})['speed'] == 1.22
+        voice_settings(brief, 'vi', {'tts_voice': 'VietNarrator', 'tts_speed': speed})
+    assert voice_settings(brief, 'vi', {'tts_voice': 'VietNarrator'})['speed'] == 1.0
 
 
 def test_room_return_retains_base_and_expression_lock() -> None:
@@ -134,7 +134,7 @@ def test_acceptance_contract_enforces_visual_journey_before_provider_calls() -> 
     content = build_content_v3(topic, brief, 'TEST')
     validate_content(SYSTEM, brief, 1, 'TEST', content)
     assert brief['outputs'][0]['subtitles'] is False
-    assert brief['outputs'][0]['speed'] == 1.22
+    assert brief['outputs'][0]['speed'] == 1.0
     assert all(beat['effect'] != 'cut' for scene in content['scenes'] for beat in scene['beats'])
     for scene in content['scenes']:
         scene['setting'] = 'A study desk at night.'

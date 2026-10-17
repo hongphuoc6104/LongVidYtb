@@ -1,0 +1,44 @@
+{
+  "outline": [
+    {
+      "scene_id": "SC01",
+      "purpose": "Cơn bão thông tin khi tải hàng chục bài báo Q1 về máy nhưng không biết đọc từ đâu",
+      "requirements": [
+        "R01"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC02",
+      "purpose": "Sai lầm nhờ công cụ viết hộ tổng quan tài liệu khiến hội đồng phát hiện ngay",
+      "requirements": [
+        "R02"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC03",
+      "purpose": "Cơ chế gom 30 bài báo rời rạc thành Ma trận Khoảng trống Nghiên cứu",
+      "requirements": [
+        "R03"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC04",
+      "purpose": "Đối lập giữa tóm tắt từng bài rời rạc và phản biện chéo tìm lỗ hổng phương pháp",
+      "requirements": [
+        "R04"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC05",
+      "purpose": "Làm chủ vũ khí tư duy học thuật để biến dữ liệu phân mảnh thành đề tài xuất sắc",
+      "requirements": [
+        "R05"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    }
+  ]
+}

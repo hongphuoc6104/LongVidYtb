@@ -108,6 +108,9 @@ DEFAULT_PROFILES = [
     {"id": "profile_1", "port": 9225, "directory": "Profile 106", "user_data_dir": "~/.config/google-chrome-cdp-p1"},
     {"id": "profile_2", "port": 9223, "directory": "Profile 127", "user_data_dir": "~/.config/google-chrome-cdp-p2"},
     {"id": "profile_3", "port": 9224, "directory": "Profile 13", "user_data_dir": "~/.config/google-chrome-cdp-p3"},
+    {"id": "profile_4", "port": 9222, "directory": "Profile 130", "user_data_dir": "~/.config/google-chrome-cdp-p4"},
+    {"id": "profile_5", "port": 9226, "directory": "Profile 102", "user_data_dir": "~/.config/google-chrome-cdp-p5"},
+    {"id": "profile_6", "port": 9227, "directory": "Profile 98", "user_data_dir": "~/.config/google-chrome-cdp-p6"},
 ]
 
 
@@ -119,7 +122,7 @@ class MultiProfileManager:
         profiles_config: list[dict[str, Any]] | None = None,
         cooldown_seconds: float = 15.0,
         job_id: str | None = None,
-        max_workers_per_job: int = 2,
+        max_workers_per_job: int = 6,
         lock_dir: Path | None = None,
     ):
         raw_profiles = profiles_config
@@ -388,7 +391,7 @@ class MultiProfileDispatcher:
         self,
         patches: list[Any],
         executor_func: Callable[[ChromeProfileWorker, list[dict[str, Any]]], list[dict[str, Any]]],
-        max_concurrency: int = 3,
+        max_concurrency: int = 6,
     ) -> list[dict[str, Any]]:
         """Dispatch all patches in parallel across up to max_concurrency workers."""
         if not patches:

@@ -55,7 +55,7 @@ Hồ sơ bàn giao đặt trong thư mục `sys/runs/<job>/` gồm:
   - **Nghiêm cấm** chèn bất kỳ thẻ `[pause:...]` nào trong cảnh mở đầu `SC01` (`OPENING_SCENE_PAUSE_FORBIDDEN`).
   - Toàn bộ video chỉ được dùng tối đa **1–3 thẻ `[pause:800ms]` / `[pause:900ms]`** tại các khoảnh khắc lật ngược định kiến lớn (`DEFAULT_MAX_DRAMATIC_PAUSES = 4`).
 - **Dải tốc độ động học (`Dynamic Pacing`):**
-  - **30 giây đầu (`SC01–SC02`):** Đẩy lên **`4.2 – 4.4` âm tiết/giây** (tương đương `speed: 1.26x` cho `short_9x16`) để cuốn người xem ngay từ giây `0:00`.
+  - **30 giây đầu (`SC01–SC02`):** Đẩy lên **`4.2 – 4.4` âm tiết/giây** (với giọng `VietNarrator` `speed: 1.0`) để cuốn người xem ngay từ giây `0:00`.
   - **Phần thân & kết:** `4.0` âm tiết/s ở phần giải phẫu cơ chế và `3.6 – 3.8` âm tiết/s ở phần đúc kết triết lý.
 
 ### 2.3. Hợp đồng Tạo hình: Full-frame Visual Beats & Continuity (Flow CDP)
@@ -74,7 +74,7 @@ Hồ sơ bàn giao đặt trong thư mục `sys/runs/<job>/` gồm:
 - **Nghiêm cấm cắt ngang video dài đem đăng TikTok:** Tuyệt đối không cắt thô Chương 2, Chương 3 của video `long_16x9` để đăng TikTok vì thiếu Hook độc lập và sai khung hình.
 - **Quy trình Spin-off chuẩn (`build_short_spinoff_topics`):**
   - Từ 1 hồ sơ nghiên cứu gốc, kiến trúc sư trích xuất **2–3 nghịch lý đắt giá nhất** (ví dụ: Nghịch lý 1: *Đọc lại 5 lần vs. Truy xuất chủ động*; Nghịch lý 2: *Mở Word gõ ngay vs. Chuỗi quyết định Q1*; Nghịch lý 3: *120 giây đầu trước Hội đồng bảo vệ*).
-  - Mỗi bản Spin-off được đóng gói thành một hồ sơ `short_9x16` độc lập (`aspect_ratio: "9:16"`, `format_profile: "short_9x16"`, `subtitles: true`, `speed: 1.26`, 5 cảnh `SC01..SC05`, thời lượng `45–60s`), có câu mở đầu **Counter-Intuitive Hook $\le 18$ âm tiết** viết mới hoàn toàn và phụ đề nhảy chữ theo `word_timestamps` (`max_line_chars: 28`).
+  - Mỗi bản Spin-off được đóng gói thành một hồ sơ `short_9x16` độc lập (`aspect_ratio: "9:16"`, `format_profile: "short_9x16"`, `subtitles: true`, `voice: "VietNarrator"`, `speed: 1.0`, 5 cảnh `SC01..SC05`, thời lượng `45–60s`), có câu mở đầu **Counter-Intuitive Hook $\le 18$ âm tiết** viết mới hoàn toàn và phụ đề nhảy chữ theo `word_timestamps` (`max_line_chars: 28`).
 
 ### 2.6. Hợp đồng Pháp lý & Tính Toàn Vẹn (Legal & Integrity Contract)
 - **`brief_hash` bất biến:** Tính SHA-256 trên chuỗi JSON tuần tự hóa canonical (`serialize_brief_json`, `indent=2`, `ensure_ascii=False`), khớp 100% với `pilot.py`.

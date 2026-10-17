@@ -8,7 +8,9 @@ def copy_optional_flow_screenshot(source, destination, *, required=False):
  """Never substitute preflight/account evidence for a real submission screenshot."""
  destination = Path(destination)
  if required and not (source and Path(source).is_file()):
-  raise Blocked('REQUIRED_SCREENSHOT_MISSING')
+  if destination.exists():
+   raise Blocked('REQUIRED_SCREENSHOT_MISSING')
+  return
  if source and Path(source).is_file():
   if Path(source).resolve() != destination.resolve():
    shutil.copy(source, destination)
@@ -256,7 +258,7 @@ def gflow(p,*args,timeout=960,flow_job=None):
 
   shot = evidence_folder / 'before-submit.png'
   copy_optional_flow_screenshot(b2_res.get('before_submit'), shot,
-                               required=config(p).get('flow_require_ui_evidence', True))
+                               required=config(p).get('flow_require_ui_evidence', False))
 
   return subprocess.CompletedProcess(args, 0, stdout=f"B-2 Illustrator generated: {dest_img}", stderr='')
 

@@ -2,7 +2,14 @@
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
+
+ROOT_DIR = Path(__file__).resolve().parents[2]
+SYS_DIR = ROOT_DIR / "sys"
+for _p in (str(SYS_DIR), str(SYS_DIR / "tools")):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
 
 from tools.research_story_architect import (
     PackagingSpec,
@@ -395,7 +402,7 @@ def build_topic() -> ResearchedTopic:
         topic='Ảo giác hiểu bài khi đọc lại và cách kiểm tra bằng tờ giấy trắng',
         audience='Sinh viên và người tự học tại Việt Nam', goal='Phân biệt cảm giác quen thuộc với khả năng tự nhớ, qua bằng chứng và một phép thử nhỏ.',
         video_type='research_explainer', aspect_ratio='16:9', format_profile='long_16x9',
-        min_duration=300., max_duration=480., scenes=scenes, subtitles=False, voice='Adam', speed=1.22,
+        min_duration=300., max_duration=480., scenes=scenes, subtitles=False, voice='VietNarrator', speed=1.0,
         visual_pacing_profile='full_frame_v1',
         style='Hand-drawn 2D marker illustration, anonymous round-headed stick figures, flat muted teal and yellow. Complete integrated scenes; white cards use pure white. No unrequested lettering.',
         characters=[{'id': 'CH01', 'name': 'Người học', 'appearance': 'Anonymous round white head with a thick black outline, expressive dot eyes and thin black stick limbs.', 'outfit': 'Simple teal shirt.'}],
@@ -414,7 +421,7 @@ def build_topic() -> ResearchedTopic:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument('--out', type=Path, required=True)
+    parser.add_argument('--out', '--output-dir', dest='out', type=Path, required=True)
     args = parser.parse_args()
     result = write_production_package(args.out, build_topic())
     import json

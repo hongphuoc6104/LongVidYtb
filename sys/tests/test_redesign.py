@@ -33,21 +33,17 @@ class RedesignTests(unittest.TestCase):
     def test_integrity_covers_provider_policy_not_ledger(self):
         p=object.__new__(Pilot);p.root=ROOT
         protected=p.protected()
-        for name in ('b2_bridge.py','experiments/b2_illustrator/queue-runner.mjs','experiments/b2_illustrator/session.mjs','vocab/policy.py','vocab/bank.py'):
+        for name in ('b2_bridge.py','flow_cdp/queue-runner.mjs','flow_cdp/multi_profile_manager.py','flow_cdp/bridge.py'):
             self.assertIn(name,protected)
-        self.assertNotIn('vocab/ledger.json',protected)
-        self.assertNotIn('vocab/bank.jsonl',protected)
-        self.assertNotIn('experiments/b2_illustrator/machine.local.json',protected)
+        self.assertNotIn('.state/jobs.sqlite',protected)
 
     def test_sandbox_has_policy_but_no_production_reservations(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=build_sandbox(Path(tmp)/'sandbox')
             self.assertTrue((root/'b2_bridge.py').is_file())
-            self.assertTrue((root/'experiments/b2_illustrator/queue-runner.mjs').is_file())
-            self.assertFalse((root/'experiments/b2_illustrator/machine.local.json').exists())
-            self.assertTrue((root/'vocab/policy.py').is_file())
-            self.assertTrue((root/'vocab/bank.jsonl').is_file())
-            self.assertEqual(json.loads((root/'vocab/ledger.json').read_text()),{'entries':{}})
+            self.assertTrue((root/'flow_cdp/queue-runner.mjs').is_file())
+            self.assertTrue((root/'config.json').is_file())
+            self.assertFalse((root/'runs').exists())
 
     def test_cache_cleanup_preserves_browser_models(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -57,9 +53,9 @@ class RedesignTests(unittest.TestCase):
                 self.assertEqual(cleanup.clean_system_and_browser_cache(False),0)
             self.assertEqual(model.read_bytes(),b'keep')
 
-    def test_only_adam_voice_profile_exists(self):
+    def test_only_viet_narrator_voice_profile_exists(self):
         profiles = sorted(p.parent.name for p in (ROOT / 'assets/voices').glob('*/profile.json'))
-        self.assertEqual(profiles, ['adam'])
+        self.assertEqual(profiles, ['viet_narrator'])
 
     def test_cleanup_validation_reads_sqlite_without_writes(self):
         import sqlite3
@@ -79,25 +75,19 @@ class RedesignTests(unittest.TestCase):
             self.assertTrue(valid);self.assertEqual(paths,[video]);self.assertEqual(rev,2)
             self.assertEqual(before,db.read_bytes())
 
-    def test_sandbox_policy_uses_its_own_reservation(self):
+    def test_sandbox_isolated_from_production(self):
         import subprocess
         with tempfile.TemporaryDirectory() as tmp:
             root=build_sandbox(Path(tmp)/'sandbox')
-            original=(ROOT/'vocab/ledger.json').read_bytes()
+            original=(ROOT/'config.json').read_bytes()
             code="""
+import json
 from pathlib import Path
-from vocab import bank, policy
-entry=bank.bank()[0]['id']
-bank.save_ledger({'entries':{entry:{'job':'isolated-test','status':'reserved'}}})
-brief={'planning':{'domain_requirements':[bank.ENTRY_TAG+entry]}}
-policy.check(Path.cwd(),'isolated-test',brief)
-try:
-    policy.check(Path.cwd(),'other-job',brief)
-except Exception:
-    pass
-else:
-    raise AssertionError('Reservation ownership must be checked')
-assert Path(bank.__file__).resolve().parent == Path.cwd()/'vocab'
+cfg = Path('config.json')
+data = json.loads(cfg.read_text())
+data['sandbox_mutation_test'] = True
+cfg.write_text(json.dumps(data))
+assert json.loads(cfg.read_text())['sandbox_mutation_test'] is True
 """
             subprocess.run([sys.executable,'-c',code],cwd=root,check=True,capture_output=True,text=True)
-            self.assertEqual((ROOT/'vocab/ledger.json').read_bytes(),original)
+            self.assertEqual((ROOT/'config.json').read_bytes(),original)

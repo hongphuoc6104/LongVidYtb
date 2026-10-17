@@ -1,7 +1,7 @@
 # Video Pilot — Agent Invariants & Governance
 
 ## 1. Architecture, Dual-Format SSOT & Niche Pillar
-- **Dual-Format Mission (`sys/format_profiles.py`)**: Automate **`long_16x9`** (11–13m, 8ch/48sc for YouTube per 13m Explainer Blueprint, or 5–8m `full_frame_v1` explainers) and **`short_9x16`** (45–60s, 5 standalone scenes `SC01..SC05`, `subtitles: true`, `speed: 1.26` for TikTok/Shorts Spin-offs). Never cut middle chapters (`CH02..CH08`) of 16:9 for TikTok.
+- **Dual-Format Mission (`sys/format_profiles.py`)**: Automate **`long_16x9`** (11–13m, 8ch/48sc for YouTube per 13m Explainer Blueprint, or 5–8m `full_frame_v1` explainers) and **`short_9x16`** (45–60s, 5 standalone scenes `SC01..SC05`, `subtitles: true`, `speed: 1.0` with `VietNarrator` for TikTok/Shorts Spin-offs). Never cut middle chapters (`CH02..CH08`) of 16:9 for TikTok.
 - **Channel Pillar Lock**: Lock content to **"Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật"** across 3-Tier Funnel (`tier_1_broad` Illusion of Competence, `tier_2_mid` Q1 Process & 120s Defense Psychology, `tier_3_conversion` AI for Deep Research / Gap Matrix). No office tips (Excel, slides, Na's English).
 - **Directory Invariant**: `sys/` (engine/tools), `sys/runs/<job>/` (assets), `video/<job>/` (final MP4/SRT). Keep root clean.
 
@@ -10,7 +10,7 @@
 - **Conveyor**: St1 Critique (`critique_review.html`) -> St2 AST Proof & `pytest` -> St3 `PLAYBOOK.md` Sync -> St4 `ruff` Lint -> St5 PR (`gh-axi`) -> St6 Green CI.
 
 ## 3. Pipelines & Role Separation (Flash-Agent Simplified)
-- **Topic-to-Video Chain (`vp-production`)**: `vp-research-architect` (Schema 3.0 `brief.json`/`content.json`, Packaging Contract, VN 60s Localization, `build_scenes_from_story_rows`) -> `vp-scriptwriting` (Truth-Slap Hook `<= 18` syl, Zero Pause in `SC01`, mix 3–8 & 15–24 word sentences; `vn_text_normalizer.py` & `chunks_with_gaps`) -> `vp-full-frame-quality` (`kind: "scene"`, `shot_type` in `full_scene|macro_prop|variation|white_card`, `based_on`, `narrative_phase`, camera assignment) -> `vp-omni-platform` (`sys/omni_platform.py`) -> Multi-T4 Orchestrator (`ColabPoolDispatcher` / `pilot.py` outline -> dialogue -> audio -> images -> video).
+- **Topic-to-Video Chain (`vp-production`)**: `vp-research-architect` (Schema 3.0 `brief.json`/`content.json`, Packaging Contract, VN 60s, `build_scenes_from_story_rows`) -> `vp-scriptwriting` (Truth-Slap Hook `<= 18` syl, Zero Pause in `SC01`, mix 3–8 & 15–24 word sentences; `vn_text_normalizer.py`) -> `vp-full-frame-quality` (`kind: "scene"`, `shot_type` in `full_scene|macro_prop|variation|white_card`, `based_on`, camera assignment) -> `vp-omni-platform` (`sys/omni_platform.py`) -> Multi-T4 Orchestrator (`ColabPoolDispatcher` / `pilot.py` outline -> dialogue -> audio -> images -> video).
 - **Remote GPU TTS & Video (`vp-colab-bridge`)**: Execute via `pilot.py` or `sys/colab_bridge/` + `sys/renderer/render.mjs` (no ad-hoc ffmpeg/local render).
 - **AI Image Generation (`vp-flow-cdp`)**: 3 Chrome profiles pool (`sys/flow_cdp/`) with patch failover. Valid AI image + `.json` sidecar required (no PIL mocks).
 

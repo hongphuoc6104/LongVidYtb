@@ -200,6 +200,7 @@ class IndependentShortSocket(unittest.TestCase):
         self.assertTrue(peer_checks);self.assertEqual(sent,[])
         self.assertIs(getattr(blocked.exception,'generation_submitted',None),False)
 
+    @unittest.skipUnless((ROOT/'experiments/b2_illustrator/session.mjs').is_file(), 'experiments/b2_illustrator retired in favor of Flow CDP')
     def test_official_node_short_socket_server_and_python_hash_correspond(self):
         engine=self.root/'experiments/b2_illustrator';engine.mkdir(parents=True);(engine/'results').mkdir()
         for name in ('session.mjs','controller.mjs','attempt-store.mjs'):shutil.copy(ROOT/'experiments/b2_illustrator'/name,engine/name)
@@ -226,6 +227,7 @@ class IndependentShortSocket(unittest.TestCase):
         finally:
             child.terminate();child.wait(timeout=5);child.stdout.close();child.stderr.close()
 
+    @unittest.skipUnless((ROOT/'experiments/b2_illustrator/session.mjs').is_file(), 'experiments/b2_illustrator retired in favor of Flow CDP')
     def test_official_bootstrap_clean_control_start_creates_listener_without_connection(self):
         from scripts import bootstrap
         engine=self.root/'experiments/b2_illustrator';engine.mkdir(parents=True);(engine/'results').mkdir()

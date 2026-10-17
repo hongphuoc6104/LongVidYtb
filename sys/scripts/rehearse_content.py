@@ -38,7 +38,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
-PROTECTED_DIRS = ['schemas', '.agents', 'renderer', 'tests', 'examples', 'scripts']
+PROTECTED_DIRS = ['schemas', '.agents', 'renderer', 'tests', 'examples', 'scripts', 'flow_cdp']
 PROTECTED_FILES = [
     'pilot.py', 'workflow.py', 'machine_review.py', 'content_contract.py',
     'image_pipeline.py', 'prompt_templates.py', 'adapters.py', 'b2_bridge.py',
@@ -83,12 +83,13 @@ def build_sandbox(sandbox_root: Path) -> Path:
         if src.exists():
             shutil.copy(src, sandbox_root / name)
     engine = REPO_ROOT / 'experiments/b2_illustrator'
-    target_engine = sandbox_root / 'experiments/b2_illustrator'
-    target_engine.mkdir(parents=True)
-    for src in engine.glob('*'):
-        if src.is_file() and ((src.suffix in ('.py', '.mjs') and not src.name.startswith('test'))
-                              or src.name in ('config.json', 'acceptance.json', 'browser-profiles.json')):
-            shutil.copy(src, target_engine/src.name)
+    if engine.is_dir():
+        target_engine = sandbox_root / 'experiments/b2_illustrator'
+        target_engine.mkdir(parents=True)
+        for src in engine.glob('*'):
+            if src.is_file() and ((src.suffix in ('.py', '.mjs') and not src.name.startswith('test'))
+                                  or src.name in ('config.json', 'acceptance.json', 'browser-profiles.json')):
+                shutil.copy(src, target_engine/src.name)
     vocab = REPO_ROOT / 'vocab'
     if vocab.is_dir():
         target = sandbox_root / 'vocab'

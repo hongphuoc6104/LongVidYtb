@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
 Regenerates ch1_voice_comparison_review.html:
-- Sets Adam (+22%) as the chosen SSOT default voice.
+- Sets VietNarrator (1.0x) as the chosen SSOT default voice.
 - Demonstrates 100% Vietnamese phonetic normalization (No English numbers or foreign tokens).
-- Completely purges Nam Minh.
+- Completely purges legacy voice profiles.
 - Embeds fresh Base64 audio for instant offline playback.
 """
 import base64
@@ -14,11 +14,11 @@ PROJ_ROOT = Path(__file__).resolve().parents[2]
 BUNDLE_AUDIO = PROJ_ROOT / "sys" / "exports" / "ancient_humans_bundle" / "audio"
 ART_DIR = Path("/home/hongphuoc6104/.gemini/antigravity/brain/ebb9330c-b49f-4fbc-930b-c1c2129f2704")
 
-adam_mp3_path = BUNDLE_AUDIO / "ch1_adam_p22.mp3"
-adam_b64 = base64.b64encode(adam_mp3_path.read_bytes()).decode('ascii')
+narrator_mp3_path = BUNDLE_AUDIO / "ch1_viet_narrator.mp3"
+narrator_b64 = base64.b64encode(narrator_mp3_path.read_bytes()).decode('ascii')
 
 # Load updated cues
-cues_path = BUNDLE_AUDIO / "ch1_adam_p22_cues.json"
+cues_path = BUNDLE_AUDIO / "ch1_viet_narrator_cues.json"
 cues = json.loads(cues_path.read_text(encoding="utf-8"))
 
 html = f"""<!DOCTYPE html>
@@ -26,7 +26,7 @@ html = f"""<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Giọng Đọc Mặc Định: Adam (+22%) — Đã Chuẩn Hóa Ngữ Âm Tiếng Việt 100%</title>
+  <title>Giọng Đọc Mặc Định: VietNarrator (1.0x) — Đã Chuẩn Hóa Ngữ Âm Tiếng Việt 100%</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -276,23 +276,23 @@ html = f"""<!DOCTYPE html>
   <div class="container">
     <div class="header">
       <span class="badge">Băng Chuyền SSOT • Lựa Chọn Giọng Đọc Chính Thức</span>
-      <h1 class="title">Giọng Đọc Mặc Định: Adam (+22% Tốc Độ)</h1>
-      <p class="subtitle">Đã xóa hoàn toàn giọng Nam Minh • Tái tạo bản Adam chuẩn hóa 100% ngữ âm tiếng Việt (Xóa bỏ hoàn toàn số & từ đọc tiếng Anh)</p>
+      <h1 class="title">Giọng Đọc Mặc Định: VietNarrator (1.0x Tốc Độ Chuẩn)</h1>
+      <p class="subtitle">Đã xóa hoàn toàn các giọng đọc cũ • Tái tạo bản VietNarrator chuẩn hóa 100% ngữ âm tiếng Việt (Xóa bỏ hoàn toàn số & từ đọc tiếng Anh)</p>
     </div>
 
-    <!-- Hero Card: Adam Official Default -->
+    <!-- Hero Card: VietNarrator Official Default -->
     <div class="hero-card">
       <div class="hero-top">
         <div>
           <h2 class="hero-title">
-            <span>🎙️ Adam</span>
+            <span>🎙️ VietNarrator</span>
             <span class="tag-selected">⭐ Giọng Đọc Mặc Định</span>
           </h2>
           <p style="font-size: 13.5px; color: var(--text-muted); margin-top: 4px;">
-            Mô hình: OmniVoice trên Colab Tesla T4 GPU • Voice Clone chuẩn từ Ink Explainer
+            Mô hình: OmniVoice trên Colab Tesla T4 GPU • Voice Clone chuẩn VietNarrator
           </p>
         </div>
-        <span style="font-family:'JetBrains Mono',monospace; font-size: 14px; color: var(--accent-amber); font-weight: 700;">Rate: +22%</span>
+        <span style="font-family:'JetBrains Mono',monospace; font-size: 14px; color: var(--accent-amber); font-weight: 700;">Rate: 1.0x</span>
       </div>
 
       <div class="meta-grid">
@@ -319,15 +319,15 @@ html = f"""<!DOCTYPE html>
           ▶ Nghe Thử Trực Tiếp (Đã nhúng Base64 - Không lỗi mạng / Offline 100%):
         </p>
         <audio controls preload="auto">
-          <source src="data:audio/mp3;base64,{adam_b64}" type="audio/mp3">
+          <source src="data:audio/mp3;base64,{narrator_b64}" type="audio/mp3">
           Trình duyệt không hỗ trợ thẻ audio.
         </audio>
       </div>
 
       <div class="pill-list">
         <span class="pill pill-green">✓ Không còn đọc số tiếng Anh</span>
-        <span class="pill pill-green">✓ Tốc độ +22% ăn khớp nhịp cắt hình 1.7s</span>
-        <span class="pill pill-green">✓ Xóa sạch 100% tệp giọng Nam Minh</span>
+        <span class="pill pill-green">✓ Tốc độ 1.0x ăn khớp nhịp cắt hình</span>
+        <span class="pill pill-green">✓ Xóa sạch 100% tệp giọng cũ</span>
         <span class="pill">Colab Tesla T4 GPU</span>
         <span class="pill">sys/config.json updated</span>
       </div>
@@ -344,7 +344,7 @@ html = f"""<!DOCTYPE html>
           <tr>
             <th style="width: 80px;">Câu</th>
             <th>Văn bản gốc</th>
-            <th>Văn bản đã sửa (Được Adam đọc trong file này)</th>
+            <th>Văn bản đã sửa (Được VietNarrator đọc trong file này)</th>
             <th>Kết quả âm thanh</th>
           </tr>
         </thead>
@@ -374,7 +374,7 @@ html = f"""<!DOCTYPE html>
     <!-- Full Cues Table for Chapter 1 -->
     <div class="cues-container">
       <div class="cues-header">
-        <span>📜 Bảng Cues Đồng Bộ 19 Câu Thoại — Chương 1 (Adam +22%)</span>
+        <span>📜 Bảng Cues Đồng Bộ 19 Câu Thoại — Chương 1 (VietNarrator 1.0x)</span>
         <span style="font-size: 12px; color: var(--text-dim); font-weight: normal;">Nhấp Play ở trên để nghe theo mốc thời gian</span>
       </div>
       <div>

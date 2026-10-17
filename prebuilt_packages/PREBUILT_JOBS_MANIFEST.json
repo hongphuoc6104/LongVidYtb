@@ -1,0 +1,128 @@
+[
+  {
+    "job_id": "full-frame-16x9-001",
+    "topic": "Ảo giác hiểu bài khi đọc lại và cách kiểm tra bằng tờ giấy trắng",
+    "youtube_title": "Đọc Rất Chăm, Vì Sao Gấp Sách Lại Quên?",
+    "aspect_ratio": "16:9",
+    "format_profile": "long_16x9",
+    "visual_pacing_profile": "full_frame_v1",
+    "scene_count": 19,
+    "image_beat_count": 153,
+    "tts_utterance_count": 135,
+    "estimated_duration_sec": 389.2,
+    "cadence_status": "PASS",
+    "diversity_status": "PASS",
+    "completed_checkpoints": [
+      "outline",
+      "dialogue"
+    ],
+    "next_checkpoint_on_target_machine": "audio",
+    "run_dir": "sys/runs/full-frame-16x9-001",
+    "prebuilt_dir": "prebuilt_packages/full-frame-16x9-001"
+  },
+  {
+    "job_id": "academic-paradox-q1-16x9",
+    "topic": "Nghịch lý Tri thức và Ảo giác Năng lực: Giải phẫu cơ chế nhận thức khiến việc đọc lại giáo trình thụ động làm tê liệt tư duy nghiên cứu chuẩn Q1",
+    "youtube_title": "Ảo Giác Năng Lực: Vì Sao Đọc Lại Sách Làm Não Tê Liệt?",
+    "aspect_ratio": "16:9",
+    "format_profile": "long_16x9",
+    "visual_pacing_profile": null,
+    "scene_count": 5,
+    "image_beat_count": 28,
+    "tts_utterance_count": 11,
+    "estimated_duration_sec": 52.5,
+    "cadence_status": "PASS",
+    "diversity_status": "PASS",
+    "completed_checkpoints": [
+      "outline",
+      "dialogue"
+    ],
+    "next_checkpoint_on_target_machine": "audio",
+    "run_dir": "sys/runs/academic-paradox-q1-16x9",
+    "prebuilt_dir": "prebuilt_packages/academic-paradox-q1-16x9"
+  },
+  {
+    "job_id": "academic-q1-short-t1",
+    "topic": "Nghịch lý Tri thức và Ảo giác Năng lực: Giải phẫu cơ chế nhận thức khiến việc đọc lại giáo trình thụ động làm tê liệt tư duy nghiên cứu chuẩn Q1",
+    "youtube_title": "Ảo Giác Năng Lực: Vì Sao Đọc Lại Sách Làm Não Tê Liệt?",
+    "aspect_ratio": "9:16",
+    "format_profile": "short_9x16",
+    "visual_pacing_profile": null,
+    "scene_count": 5,
+    "image_beat_count": 28,
+    "tts_utterance_count": 11,
+    "estimated_duration_sec": 52.5,
+    "cadence_status": "PASS",
+    "diversity_status": "PASS",
+    "completed_checkpoints": [
+      "outline",
+      "dialogue"
+    ],
+    "next_checkpoint_on_target_machine": "audio",
+    "run_dir": "sys/runs/academic-q1-short-t1",
+    "prebuilt_dir": "prebuilt_packages/academic-q1-short-t1"
+  },
+  {
+    "job_id": "academic-q1-short-t2",
+    "topic": "Nghịch lý Tri thức và Ảo giác Năng lực: Giải phẫu cơ chế nhận thức khiến việc đọc lại giáo trình thụ động làm tê liệt tư duy nghiên cứu chuẩn Q1 — Spin-off: Tâm lý Hội đồng Bảo vệ trong 120 Giây Đầu",
+    "youtube_title": "Tâm Lý Hội Đồng: Cửa Sổ 120 Giây Định Đoạt Khóa Luận",
+    "aspect_ratio": "9:16",
+    "format_profile": "short_9x16",
+    "visual_pacing_profile": null,
+    "scene_count": 5,
+    "image_beat_count": 28,
+    "tts_utterance_count": 12,
+    "estimated_duration_sec": 52.5,
+    "cadence_status": "PASS",
+    "diversity_status": "PASS",
+    "completed_checkpoints": [
+      "outline",
+      "dialogue"
+    ],
+    "next_checkpoint_on_target_machine": "audio",
+    "run_dir": "sys/runs/academic-q1-short-t2",
+    "prebuilt_dir": "prebuilt_packages/academic-q1-short-t2"
+  },
+  {
+    "job_id": "academic-q1-short-t3",
+    "topic": "Nghịch lý Tri thức và Ảo giác Năng lực: Giải phẫu cơ chế nhận thức khiến việc đọc lại giáo trình thụ động làm tê liệt tư duy nghiên cứu chuẩn Q1 — Spin-off: Ma trận Khoảng trống Nghiên cứu (Research Gap Matrix)",
+    "youtube_title": "Ma Trận Research Gap: Đọc 30 Bài Báo Q1 Không Quá Tải",
+    "aspect_ratio": "9:16",
+    "format_profile": "short_9x16",
+    "visual_pacing_profile": null,
+    "scene_count": 5,
+    "image_beat_count": 28,
+    "tts_utterance_count": 11,
+    "estimated_duration_sec": 52.5,
+    "cadence_status": "PASS",
+    "diversity_status": "PASS",
+    "completed_checkpoints": [
+      "outline",
+      "dialogue"
+    ],
+    "next_checkpoint_on_target_machine": "audio",
+    "run_dir": "sys/runs/academic-q1-short-t3",
+    "prebuilt_dir": "prebuilt_packages/academic-q1-short-t3"
+  },
+  {
+    "job_id": "procrastination-paradox-16x9-001",
+    "topic": "Nghịch lý của sự Trì hoãn: Vì sao não bộ đông cứng trước deadline?",
+    "youtube_title": "Nghịch lý của sự Trì hoãn: Vì sao não bộ đông cứng trước deadline?",
+    "aspect_ratio": "16:9",
+    "format_profile": "long_16x9",
+    "visual_pacing_profile": null,
+    "scene_count": 5,
+    "image_beat_count": 28,
+    "tts_utterance_count": 8,
+    "estimated_duration_sec": 52.5,
+    "cadence_status": "PASS",
+    "diversity_status": "PASS",
+    "completed_checkpoints": [
+      "outline",
+      "dialogue"
+    ],
+    "next_checkpoint_on_target_machine": "audio",
+    "run_dir": "sys/runs/procrastination-paradox-16x9-001",
+    "prebuilt_dir": "prebuilt_packages/procrastination-paradox-16x9-001"
+  }
+]

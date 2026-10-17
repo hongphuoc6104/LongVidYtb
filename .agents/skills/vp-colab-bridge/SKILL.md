@@ -42,12 +42,12 @@ Video Pilot offloads all heavy GPU/CPU media processing to remote Google Colab T
   "schema_version": "1.0",
   "voices": {
     "vi": "assets/voices/viet_narrator/profile.json",
-    "en": "assets/voices/adam/profile.json"
+    "en": "assets/voices/viet_narrator/profile.json"
   },
   "tts_voice": "VietNarrator",
   "tts_speed": 1.0,
-  "en_voice": "Adam",
-  "en_speed": 1.22,
+  "en_voice": "VietNarrator",
+  "en_speed": 1.0,
   "colab_tts": {
     "enabled": true,
     "parallel_images": true,
@@ -160,7 +160,7 @@ Open only the specific reference file needed for your active task or observed er
 | Domain | Reference Document | When to Read |
 |---|---|---|
 | **CLI, Accounts & Session Lifecycle** | [cli-and-accounts.md](references/cli-and-accounts.md) | Onboarding accounts, switching profiles, understanding `account_cli.py`, `assignment_probe.py`, internal budgets vs server assignments, or multi-account failover. |
-| **Remote TTS (`OmniVoice` on T4)** | [tts-omnivoice-worker.md](references/tts-omnivoice-worker.md) | Synthesizing audio via `worker.py`, configuring canonical voice profile (`adam`), phonetic normalization, or debugging `COLAB_GPU_OOM`. |
+| **Remote TTS (`OmniVoice` on T4)** | [tts-omnivoice-worker.md](references/tts-omnivoice-worker.md) | Synthesizing audio via `worker.py`, configuring canonical voice profile (`viet_narrator`), phonetic normalization, or debugging `COLAB_GPU_OOM`. |
 | **Remote Video Render (`Remotion` on T4)** | [remote-remotion-render.md](references/remote-remotion-render.md) | Running `job_worker.py` or `render_all_on_colab.py`, bootstrapping `/content/render-runtime`, full-frame image timelines, or Cue-Window Allocation. |
 | **Colab CLI Error & Recovery Matrix** | [error-recovery-matrix.md](references/error-recovery-matrix.md) | Diagnosing any `ColabError` (`COLAB_SESSION_NOT_FOUND`, `COLAB_TIMEOUT`, `COLAB_ALLOCATION_PENDING`, `COLAB_PROVIDER_BLOCKED`, etc.) or WebSocket hang. |
 | **System Docs & Playbook** | [colab-tts.md](../../../sys/docs/colab-tts.md) / [PLAYBOOK.md](../../../PLAYBOOK.md) | Reviewing architectural provenance and historical 6-field post-mortems. |

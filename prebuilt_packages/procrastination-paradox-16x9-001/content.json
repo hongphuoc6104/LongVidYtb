@@ -1,0 +1,1085 @@
+{
+  "schema_version": "3.0",
+  "brief_revision": 1,
+  "brief_hash": "ca763090700d43b4b6cd30370f6c633c470d5fb09161bdffb39ec6120238d4bc",
+  "topic": "Nghịch lý của sự Trì hoãn: Vì sao não bộ đông cứng trước deadline?",
+  "duration": {
+    "min_seconds": 45.0,
+    "max_seconds": 60.0
+  },
+  "style": "Minh hoạ biên tập 2D toàn khung, phong cách người que đầu tròn trắng viền đen dày, không chữ thừa trong ảnh.",
+  "required_points": [
+    "Khoảnh khắc mở tủ lạnh lúc nửa đêm",
+    "Nghịch lý: không phải lười biếng mà là điều hòa cảm xúc",
+    "Hạch hạnh nhân và cơ chế phản ứng trước mối đe dọa",
+    "Đối lập giữa người cầu toàn và quy tắc hành động 5 phút",
+    "Khép vòng lặp và thông điệp thấu hiểu bản thân"
+  ],
+  "characters": [
+    {
+      "id": "CH01",
+      "name": "Nhân vật người que trải nghiệm",
+      "appearance": "Hình tượng người que đầu tròn trắng viền đen dày, mắt chấm oval, thân nét mực mảnh",
+      "outfit": "Áo thun nét vẽ đen đơn giản trong bối cảnh toàn khung"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "SC01",
+      "title": "Khoảnh khắc mở tủ lạnh lúc nửa đêm",
+      "purpose": "Khoảnh khắc mở tủ lạnh lúc nửa đêm",
+      "action": "Nhân vật người que đứng ngơ ngác trước cánh cửa tủ lạnh mở sáng lúc nửa đêm",
+      "setting": "Căn bếp gia đình tĩnh mịch đêm khuya với ánh sáng vàng nhạt từ tủ lạnh",
+      "camera": "Trung cảnh ngang tầm mắt",
+      "narration": "Đúng mười một giờ ba mươi đêm ngay trước hạn chót, bạn lại đứng ngơ ngác mở tủ lạnh lần thứ tư dù bụng thực sự không hề thấy đói.",
+      "requirements": [
+        "R01"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC01_I1",
+          "description": "Căn bếp gia đình tĩnh mịch đêm khuya với ánh sáng vàng nhạt từ tủ lạnh. Nhân vật người que đứng ngơ ngác trước cánh cửa tủ lạnh mở sáng lúc nửa đêm. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: Đúng mười. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Establish the complete scene and its opening action.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC01_I2",
+          "description": "Căn bếp gia đình tĩnh mịch đêm khuya với ánh sáng vàng nhạt từ tủ lạnh. Nhân vật người que đứng ngơ ngác trước cánh cửa tủ lạnh mở sáng lúc nửa đêm. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: đêm ngay. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC01_I1",
+          "preserve": "Keep the same setting (Căn bếp gia đình tĩnh mịch đêm khuya với ánh sáng vàng nhạt từ tủ lạnh), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: đêm ngay.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC01_I3",
+          "description": "Căn bếp gia đình tĩnh mịch đêm khuya với ánh sáng vàng nhạt từ tủ lạnh. Nhân vật người que đứng ngơ ngác trước cánh cửa tủ lạnh mở sáng lúc nửa đêm. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: chót, bạn. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC01_I2",
+          "preserve": "Keep the same setting (Căn bếp gia đình tĩnh mịch đêm khuya với ánh sáng vàng nhạt từ tủ lạnh), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: chót, bạn.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC01_I4",
+          "description": "Căn bếp gia đình tĩnh mịch đêm khuya với ánh sáng vàng nhạt từ tủ lạnh. Nhân vật người que đứng ngơ ngác trước cánh cửa tủ lạnh mở sáng lúc nửa đêm. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: ngơ ngác. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC01_I3",
+          "preserve": "Keep the same setting (Căn bếp gia đình tĩnh mịch đêm khuya với ánh sáng vàng nhạt từ tủ lạnh), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: ngơ ngác.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC01_I5",
+          "description": "Căn bếp gia đình tĩnh mịch đêm khuya với ánh sáng vàng nhạt từ tủ lạnh. Nhân vật người que đứng ngơ ngác trước cánh cửa tủ lạnh mở sáng lúc nửa đêm. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: thứ tư. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC01_I4",
+          "preserve": "Keep the same setting (Căn bếp gia đình tĩnh mịch đêm khuya với ánh sáng vàng nhạt từ tủ lạnh), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: thứ tư.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC01_I6",
+          "description": "Căn bếp gia đình tĩnh mịch đêm khuya với ánh sáng vàng nhạt từ tủ lạnh. Nhân vật người que đứng ngơ ngác trước cánh cửa tủ lạnh mở sáng lúc nửa đêm. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: sự không. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC01_I5",
+          "preserve": "Keep the same setting (Căn bếp gia đình tĩnh mịch đêm khuya với ánh sáng vàng nhạt từ tủ lạnh), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: sự không.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC01_B1",
+          "image_id": "SC01_I1",
+          "purpose": "Khoảnh khắc mở tủ lạnh lúc nửa đêm",
+          "anchor": {
+            "vi": {
+              "quote": "Đúng mười",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B2",
+          "image_id": "SC01_I2",
+          "purpose": "Khoảnh khắc mở tủ lạnh lúc nửa đêm",
+          "anchor": {
+            "vi": {
+              "quote": "đêm ngay",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B3",
+          "image_id": "SC01_I3",
+          "purpose": "Khoảnh khắc mở tủ lạnh lúc nửa đêm",
+          "anchor": {
+            "vi": {
+              "quote": "chót, bạn",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B4",
+          "image_id": "SC01_I4",
+          "purpose": "Khoảnh khắc mở tủ lạnh lúc nửa đêm",
+          "anchor": {
+            "vi": {
+              "quote": "ngơ ngác",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B5",
+          "image_id": "SC01_I5",
+          "purpose": "Khoảnh khắc mở tủ lạnh lúc nửa đêm",
+          "anchor": {
+            "vi": {
+              "quote": "thứ tư",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B6",
+          "image_id": "SC01_I6",
+          "purpose": "Khoảnh khắc mở tủ lạnh lúc nửa đêm",
+          "anchor": {
+            "vi": {
+              "quote": "sự không",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "foley_cue": "Click cửa tủ lạnh mở nhẹ nhàng",
+      "narration_en": "Right at eleven thirty at night before deadline, you blankly open the fridge again, although you are not hungry."
+    },
+    {
+      "id": "SC02",
+      "title": "Nghịch lý: không phải lười biếng mà là điều hòa cảm xúc",
+      "purpose": "Nghịch lý: không phải lười biếng mà là điều hòa cảm xúc",
+      "action": "Nhân vật người que nhìn chồng sách tự lực rồi quay sang biểu đồ não bộ ngạc nhiên",
+      "setting": "Phòng học với chồng sách kỹ năng sống và sơ đồ não bộ phát sáng trên bảng",
+      "camera": "Toàn cảnh góc rộng",
+      "narration": "Những cuốn sách dạy thành công ngoài kia vẫn thường chỉ trích bạn là kẻ lười biếng và thiếu kỷ luật. [pause:900ms] Nhưng khoa học thần kinh hiện đại đã chứng minh một nghịch lý hoàn toàn ngược lại.",
+      "requirements": [
+        "R02"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC01"
+      ],
+      "images": [
+        {
+          "id": "SC02_I1",
+          "description": "Phòng học với chồng sách kỹ năng sống và sơ đồ não bộ phát sáng trên bảng. Nhân vật người que nhìn chồng sách tự lực rồi quay sang biểu đồ não bộ ngạc nhiên. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: Những cuốn. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Establish the complete scene and its opening action.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC02_I2",
+          "description": "Phòng học với chồng sách kỹ năng sống và sơ đồ não bộ phát sáng trên bảng. Nhân vật người que nhìn chồng sách tự lực rồi quay sang biểu đồ não bộ ngạc nhiên. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: ngoài kia. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC02_I1",
+          "preserve": "Keep the same setting (Phòng học với chồng sách kỹ năng sống và sơ đồ não bộ phát sáng trên bảng), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: ngoài kia.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC02_I3",
+          "description": "Phòng học với chồng sách kỹ năng sống và sơ đồ não bộ phát sáng trên bảng. Nhân vật người que nhìn chồng sách tự lực rồi quay sang biểu đồ não bộ ngạc nhiên. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: trích bạn. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC02_I2",
+          "preserve": "Keep the same setting (Phòng học với chồng sách kỹ năng sống và sơ đồ não bộ phát sáng trên bảng), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: trích bạn.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC02_I4",
+          "description": "Phòng học với chồng sách kỹ năng sống và sơ đồ não bộ phát sáng trên bảng. Nhân vật người que nhìn chồng sách tự lực rồi quay sang biểu đồ não bộ ngạc nhiên. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: thiếu kỷ. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC02_I3",
+          "preserve": "Keep the same setting (Phòng học với chồng sách kỹ năng sống và sơ đồ não bộ phát sáng trên bảng), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: thiếu kỷ.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC02_I5",
+          "description": "Phòng học với chồng sách kỹ năng sống và sơ đồ não bộ phát sáng trên bảng. Nhân vật người que nhìn chồng sách tự lực rồi quay sang biểu đồ não bộ ngạc nhiên. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: Nhưng khoa. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC02_I4",
+          "preserve": "Keep the same setting (Phòng học với chồng sách kỹ năng sống và sơ đồ não bộ phát sáng trên bảng), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: Nhưng khoa.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC02_I6",
+          "description": "Phòng học với chồng sách kỹ năng sống và sơ đồ não bộ phát sáng trên bảng. Nhân vật người que nhìn chồng sách tự lực rồi quay sang biểu đồ não bộ ngạc nhiên. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: đại đã. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC02_I5",
+          "preserve": "Keep the same setting (Phòng học với chồng sách kỹ năng sống và sơ đồ não bộ phát sáng trên bảng), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: đại đã.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC02_I7",
+          "description": "Phòng học với chồng sách kỹ năng sống và sơ đồ não bộ phát sáng trên bảng. Nhân vật người que nhìn chồng sách tự lực rồi quay sang biểu đồ não bộ ngạc nhiên. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: lý hoàn. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC02_I6",
+          "preserve": "Keep the same setting (Phòng học với chồng sách kỹ năng sống và sơ đồ não bộ phát sáng trên bảng), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: lý hoàn.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC02_B1",
+          "image_id": "SC02_I1",
+          "purpose": "Nghịch lý: không phải lười biếng mà là điều hòa cảm xúc",
+          "anchor": {
+            "vi": {
+              "quote": "Những cuốn",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B2",
+          "image_id": "SC02_I2",
+          "purpose": "Nghịch lý: không phải lười biếng mà là điều hòa cảm xúc",
+          "anchor": {
+            "vi": {
+              "quote": "ngoài kia",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B3",
+          "image_id": "SC02_I3",
+          "purpose": "Nghịch lý: không phải lười biếng mà là điều hòa cảm xúc",
+          "anchor": {
+            "vi": {
+              "quote": "trích bạn",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B4",
+          "image_id": "SC02_I4",
+          "purpose": "Nghịch lý: không phải lười biếng mà là điều hòa cảm xúc",
+          "anchor": {
+            "vi": {
+              "quote": "thiếu kỷ",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B5",
+          "image_id": "SC02_I5",
+          "purpose": "Nghịch lý: không phải lười biếng mà là điều hòa cảm xúc",
+          "anchor": {
+            "vi": {
+              "quote": "Nhưng khoa",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B6",
+          "image_id": "SC02_I6",
+          "purpose": "Nghịch lý: không phải lười biếng mà là điều hòa cảm xúc",
+          "anchor": {
+            "vi": {
+              "quote": "đại đã",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B7",
+          "image_id": "SC02_I7",
+          "purpose": "Nghịch lý: không phải lười biếng mà là điều hòa cảm xúc",
+          "anchor": {
+            "vi": {
+              "quote": "lý hoàn",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "foley_cue": "Tiếng lật sách soàn soạt",
+      "narration_en": "Popular self-help bestsellers blame you for being lazy and undisciplined. [pause:900ms] Yet modern neuroscience reveals a completely opposite paradox."
+    },
+    {
+      "id": "SC03",
+      "title": "Hạch hạnh nhân và cơ chế phản ứng trước mối đe dọa",
+      "purpose": "Hạch hạnh nhân và cơ chế phản ứng trước mối đe dọa",
+      "action": "Nhân vật người que hốt hoảng trước sơ đồ vùng hạch hạnh nhân phát sáng cảnh báo",
+      "setting": "Phòng thí nghiệm thần kinh với mô hình não bộ làm nổi bật vùng hạch hạnh nhân",
+      "camera": "Cận cảnh vùng hạch hạnh nhân",
+      "narration": "Thực nghiệm thần kinh phát hiện ra rằng: hạch hạnh nhân trong não bộ xem bản báo cáo đầy áp lực như một mối đe dọa sinh tồn. Để bảo vệ bạn khỏi cảm giác căng thẳng tột cùng, nó lập tức kích hoạt phản xạ trốn chạy quen thuộc.",
+      "requirements": [
+        "R03"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC01"
+      ],
+      "images": [
+        {
+          "id": "SC03_I1",
+          "description": "Phòng thí nghiệm thần kinh với mô hình não bộ làm nổi bật vùng hạch hạnh nhân. Nhân vật người que hốt hoảng trước sơ đồ vùng hạch hạnh nhân phát sáng cảnh báo. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: Thực nghiệm. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Establish the complete scene and its opening action.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC03_I2",
+          "description": "Phòng thí nghiệm thần kinh với mô hình não bộ làm nổi bật vùng hạch hạnh nhân. Nhân vật người que hốt hoảng trước sơ đồ vùng hạch hạnh nhân phát sáng cảnh báo. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: hạch hạnh. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC03_I1",
+          "preserve": "Keep the same setting (Phòng thí nghiệm thần kinh với mô hình não bộ làm nổi bật vùng hạch hạnh nhân), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: hạch hạnh.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC03_I3",
+          "description": "Phòng thí nghiệm thần kinh với mô hình não bộ làm nổi bật vùng hạch hạnh nhân. Nhân vật người que hốt hoảng trước sơ đồ vùng hạch hạnh nhân phát sáng cảnh báo. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: báo cáo. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC03_I2",
+          "preserve": "Keep the same setting (Phòng thí nghiệm thần kinh với mô hình não bộ làm nổi bật vùng hạch hạnh nhân), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: báo cáo.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC03_I4",
+          "description": "Phòng thí nghiệm thần kinh với mô hình não bộ làm nổi bật vùng hạch hạnh nhân. Nhân vật người que hốt hoảng trước sơ đồ vùng hạch hạnh nhân phát sáng cảnh báo. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: sinh tồn.. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC03_I3",
+          "preserve": "Keep the same setting (Phòng thí nghiệm thần kinh với mô hình não bộ làm nổi bật vùng hạch hạnh nhân), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: sinh tồn..",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC03_I5",
+          "description": "Phòng thí nghiệm thần kinh với mô hình não bộ làm nổi bật vùng hạch hạnh nhân. Nhân vật người que hốt hoảng trước sơ đồ vùng hạch hạnh nhân phát sáng cảnh báo. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: căng thẳng. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC03_I4",
+          "preserve": "Keep the same setting (Phòng thí nghiệm thần kinh với mô hình não bộ làm nổi bật vùng hạch hạnh nhân), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: căng thẳng.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC03_I6",
+          "description": "Phòng thí nghiệm thần kinh với mô hình não bộ làm nổi bật vùng hạch hạnh nhân. Nhân vật người que hốt hoảng trước sơ đồ vùng hạch hạnh nhân phát sáng cảnh báo. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: hoạt phản. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC03_I5",
+          "preserve": "Keep the same setting (Phòng thí nghiệm thần kinh với mô hình não bộ làm nổi bật vùng hạch hạnh nhân), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: hoạt phản.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC03_B1",
+          "image_id": "SC03_I1",
+          "purpose": "Hạch hạnh nhân và cơ chế phản ứng trước mối đe dọa",
+          "anchor": {
+            "vi": {
+              "quote": "Thực nghiệm",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B2",
+          "image_id": "SC03_I2",
+          "purpose": "Hạch hạnh nhân và cơ chế phản ứng trước mối đe dọa",
+          "anchor": {
+            "vi": {
+              "quote": "hạch hạnh",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B3",
+          "image_id": "SC03_I3",
+          "purpose": "Hạch hạnh nhân và cơ chế phản ứng trước mối đe dọa",
+          "anchor": {
+            "vi": {
+              "quote": "báo cáo",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B4",
+          "image_id": "SC03_I4",
+          "purpose": "Hạch hạnh nhân và cơ chế phản ứng trước mối đe dọa",
+          "anchor": {
+            "vi": {
+              "quote": "sinh tồn.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B5",
+          "image_id": "SC03_I5",
+          "purpose": "Hạch hạnh nhân và cơ chế phản ứng trước mối đe dọa",
+          "anchor": {
+            "vi": {
+              "quote": "căng thẳng",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B6",
+          "image_id": "SC03_I6",
+          "purpose": "Hạch hạnh nhân và cơ chế phản ứng trước mối đe dọa",
+          "anchor": {
+            "vi": {
+              "quote": "hoạt phản",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "foley_cue": "Âm thanh nhịp tim đập",
+      "narration_en": "Modern brain experiments discovered that the human amygdala treats a stressful report as an existential threat. To shield you from intense anxiety, it triggers a flight reflex."
+    },
+    {
+      "id": "SC04",
+      "title": "Đối lập giữa người cầu toàn và quy tắc hành động 5 phút",
+      "purpose": "Đối lập giữa người cầu toàn và quy tắc hành động 5 phút",
+      "action": "Nhân vật người que tự tin bấm đồng hồ hẹn giờ năm phút và bắt đầu viết",
+      "setting": "Bàn làm việc đặt đồng hồ bấm giờ năm phút cạnh cuốn sổ ghi chú mở sẵn",
+      "camera": "Trung cảnh đối sánh",
+      "narration": "Người cầu toàn luôn chờ đợi cảm hứng hoàn hảo để làm việc, và rồi bị tê liệt. Trong khi đó, người khôn ngoan chỉ bắt đầu bằng một hành động nhỏ kéo dài vỏn vẹn năm phút để đánh lừa bộ não.",
+      "requirements": [
+        "R04"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC02"
+      ],
+      "images": [
+        {
+          "id": "SC04_I1",
+          "description": "Bàn làm việc đặt đồng hồ bấm giờ năm phút cạnh cuốn sổ ghi chú mở sẵn. Nhân vật người que tự tin bấm đồng hồ hẹn giờ năm phút và bắt đầu viết. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: Người cầu. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Establish the complete scene and its opening action.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC04_I2",
+          "description": "Bàn làm việc đặt đồng hồ bấm giờ năm phút cạnh cuốn sổ ghi chú mở sẵn. Nhân vật người que tự tin bấm đồng hồ hẹn giờ năm phút và bắt đầu viết. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: hảo để. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC04_I1",
+          "preserve": "Keep the same setting (Bàn làm việc đặt đồng hồ bấm giờ năm phút cạnh cuốn sổ ghi chú mở sẵn), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: hảo để.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC04_I3",
+          "description": "Bàn làm việc đặt đồng hồ bấm giờ năm phút cạnh cuốn sổ ghi chú mở sẵn. Nhân vật người que tự tin bấm đồng hồ hẹn giờ năm phút và bắt đầu viết. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: Trong khi. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC04_I2",
+          "preserve": "Keep the same setting (Bàn làm việc đặt đồng hồ bấm giờ năm phút cạnh cuốn sổ ghi chú mở sẵn), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: Trong khi.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC04_I4",
+          "description": "Bàn làm việc đặt đồng hồ bấm giờ năm phút cạnh cuốn sổ ghi chú mở sẵn. Nhân vật người que tự tin bấm đồng hồ hẹn giờ năm phút và bắt đầu viết. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: bắt đầu. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC04_I3",
+          "preserve": "Keep the same setting (Bàn làm việc đặt đồng hồ bấm giờ năm phút cạnh cuốn sổ ghi chú mở sẵn), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: bắt đầu.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC04_I5",
+          "description": "Bàn làm việc đặt đồng hồ bấm giờ năm phút cạnh cuốn sổ ghi chú mở sẵn. Nhân vật người que tự tin bấm đồng hồ hẹn giờ năm phút và bắt đầu viết. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: vỏn vẹn. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC04_I4",
+          "preserve": "Keep the same setting (Bàn làm việc đặt đồng hồ bấm giờ năm phút cạnh cuốn sổ ghi chú mở sẵn), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: vỏn vẹn.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC04_B1",
+          "image_id": "SC04_I1",
+          "purpose": "Đối lập giữa người cầu toàn và quy tắc hành động 5 phút",
+          "anchor": {
+            "vi": {
+              "quote": "Người cầu",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B2",
+          "image_id": "SC04_I2",
+          "purpose": "Đối lập giữa người cầu toàn và quy tắc hành động 5 phút",
+          "anchor": {
+            "vi": {
+              "quote": "hảo để",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B3",
+          "image_id": "SC04_I3",
+          "purpose": "Đối lập giữa người cầu toàn và quy tắc hành động 5 phút",
+          "anchor": {
+            "vi": {
+              "quote": "Trong khi",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B4",
+          "image_id": "SC04_I4",
+          "purpose": "Đối lập giữa người cầu toàn và quy tắc hành động 5 phút",
+          "anchor": {
+            "vi": {
+              "quote": "bắt đầu",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B5",
+          "image_id": "SC04_I5",
+          "purpose": "Đối lập giữa người cầu toàn và quy tắc hành động 5 phút",
+          "anchor": {
+            "vi": {
+              "quote": "vỏn vẹn",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "foley_cue": "Tiếng tích tắc đồng hồ 5 phút",
+      "narration_en": "Perfectionists always wait for inspiration and stay paralyzed. Meanwhile, smart thinkers begin with a simple five-minute action step that easily outsmarts the brain."
+    },
+    {
+      "id": "SC05",
+      "title": "Khép vòng lặp và thông điệp thấu hiểu bản thân",
+      "purpose": "Khép vòng lặp và thông điệp thấu hiểu bản thân",
+      "action": "Nhân vật người que đóng nhẹ cửa tủ lạnh và mỉm cười thư thái quay về bàn làm việc",
+      "setting": "Căn bếp ấm áp với ánh đèn bàn học tỏa sáng dịu nhẹ phía xa",
+      "camera": "Trung cảnh mở rộng",
+      "narration": "Lần tới khi bạn muốn mở tủ lạnh lúc nửa đêm, hãy mỉm cười và nhớ rằng: bạn không hề lười biếng, mà não bạn chỉ đang lo lắng và cần được vỗ về.",
+      "requirements": [
+        "R05"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC01"
+      ],
+      "images": [
+        {
+          "id": "SC05_I1",
+          "description": "Căn bếp ấm áp với ánh đèn bàn học tỏa sáng dịu nhẹ phía xa. Nhân vật người que đóng nhẹ cửa tủ lạnh và mỉm cười thư thái quay về bàn làm việc. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: Lần tới. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Establish the complete scene and its opening action.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC05_I2",
+          "description": "Căn bếp ấm áp với ánh đèn bàn học tỏa sáng dịu nhẹ phía xa. Nhân vật người que đóng nhẹ cửa tủ lạnh và mỉm cười thư thái quay về bàn làm việc. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: nửa đêm,. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC05_I1",
+          "preserve": "Keep the same setting (Căn bếp ấm áp với ánh đèn bàn học tỏa sáng dịu nhẹ phía xa), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: nửa đêm,.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC05_I3",
+          "description": "Căn bếp ấm áp với ánh đèn bàn học tỏa sáng dịu nhẹ phía xa. Nhân vật người que đóng nhẹ cửa tủ lạnh và mỉm cười thư thái quay về bàn làm việc. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: bạn không. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC05_I2",
+          "preserve": "Keep the same setting (Căn bếp ấm áp với ánh đèn bàn học tỏa sáng dịu nhẹ phía xa), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: bạn không.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC05_I4",
+          "description": "Căn bếp ấm áp với ánh đèn bàn học tỏa sáng dịu nhẹ phía xa. Nhân vật người que đóng nhẹ cửa tủ lạnh và mỉm cười thư thái quay về bàn làm việc. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: chỉ đang. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC05_I3",
+          "preserve": "Keep the same setting (Căn bếp ấm áp với ánh đèn bàn học tỏa sáng dịu nhẹ phía xa), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: chỉ đang.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC05_B1",
+          "image_id": "SC05_I1",
+          "purpose": "Khép vòng lặp và thông điệp thấu hiểu bản thân",
+          "anchor": {
+            "vi": {
+              "quote": "Lần tới",
+              "occurrence": 1
+            }
+          },
+          "effect": "punch_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B2",
+          "image_id": "SC05_I2",
+          "purpose": "Khép vòng lặp và thông điệp thấu hiểu bản thân",
+          "anchor": {
+            "vi": {
+              "quote": "nửa đêm,",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B3",
+          "image_id": "SC05_I3",
+          "purpose": "Khép vòng lặp và thông điệp thấu hiểu bản thân",
+          "anchor": {
+            "vi": {
+              "quote": "bạn không",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B4",
+          "image_id": "SC05_I4",
+          "purpose": "Khép vòng lặp và thông điệp thấu hiểu bản thân",
+          "anchor": {
+            "vi": {
+              "quote": "chỉ đang",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "foley_cue": "Tiếng đóng tủ lạnh êm ái",
+      "narration_en": "Next time you want to open that fridge door late at night, smile and remember: you are not lazy, your brain is only anxious and needs care."
+    }
+  ],
+  "coverage": [
+    {
+      "requirement_id": "R01",
+      "scene_id": "SC01",
+      "quote": "Đúng mười một giờ ba mươi đêm ngay trước hạn chót, bạn lại đứng ngơ ngác mở tủ lạnh lần thứ tư dù bụng thực sự không hề thấy đói"
+    },
+    {
+      "requirement_id": "R02",
+      "scene_id": "SC02",
+      "quote": "Những cuốn sách dạy thành công ngoài kia vẫn thường chỉ trích bạn là kẻ lười biếng và thiếu kỷ luật"
+    },
+    {
+      "requirement_id": "R03",
+      "scene_id": "SC03",
+      "quote": "Thực nghiệm thần kinh phát hiện ra rằng: hạch hạnh nhân trong não bộ xem bản báo cáo đầy áp lực như một mối đe dọa sinh tồn"
+    },
+    {
+      "requirement_id": "R04",
+      "scene_id": "SC04",
+      "quote": "Trong khi đó, người khôn ngoan chỉ bắt đầu bằng một hành động nhỏ kéo dài vỏn vẹn năm phút để đánh lừa bộ não"
+    },
+    {
+      "requirement_id": "R05",
+      "scene_id": "SC05",
+      "quote": "Lần tới khi bạn muốn mở tủ lạnh lúc nửa đêm, hãy mỉm cười và nhớ rằng: bạn không hề lười biếng, mà não bạn chỉ đang lo lắng và cần được vỗ về"
+    }
+  ],
+  "outline": [
+    {
+      "scene_id": "SC01",
+      "purpose": "Khoảnh khắc mở tủ lạnh lúc nửa đêm",
+      "requirements": [
+        "R01"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC02",
+      "purpose": "Nghịch lý: không phải lười biếng mà là điều hòa cảm xúc",
+      "requirements": [
+        "R02"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC03",
+      "purpose": "Hạch hạnh nhân và cơ chế phản ứng trước mối đe dọa",
+      "requirements": [
+        "R03"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC04",
+      "purpose": "Đối lập giữa người cầu toàn và quy tắc hành động 5 phút",
+      "requirements": [
+        "R04"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC05",
+      "purpose": "Khép vòng lặp và thông điệp thấu hiểu bản thân",
+      "requirements": [
+        "R05"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    }
+  ],
+  "claims": [
+    {
+      "scene_id": "SC02",
+      "quote": "khoa học thần kinh hiện đại đã chứng minh một nghịch lý hoàn toàn ngược lại",
+      "language": "vi",
+      "source_id": "SRC01",
+      "fact": "Trì hoãn thực chất là né tránh căng thẳng, không phải vì lười biếng."
+    },
+    {
+      "scene_id": "SC03",
+      "quote": "hạch hạnh nhân trong não bộ xem bản báo cáo đầy áp lực như một mối đe dọa sinh tồn",
+      "language": "vi",
+      "source_id": "SRC01",
+      "fact": "Hạch hạnh nhân xem áp lực công việc là mối đe dọa sinh tồn trực tiếp."
+    },
+    {
+      "scene_id": "SC04",
+      "quote": "vỏn vẹn năm phút để đánh lừa bộ não",
+      "language": "vi",
+      "source_id": "SRC02",
+      "fact": "Quy tắc 5 phút giúp hạ thấp nỗi sợ và bắt đầu dễ dàng."
+    }
+  ],
+  "revision_response": [],
+  "open_questions": []
+}

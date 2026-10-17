@@ -366,10 +366,10 @@ def build_brief_v3(topic: ResearchedTopic, system_root: Optional[Path] = None) -
         })
 
     lang = getattr(topic, "language", "vi")
-    cfg_voice = "Adam"
-    cfg_speed = 1.22
-    cfg_en_voice = "Adam"
-    cfg_en_speed = 1.22
+    cfg_voice = "VietNarrator"
+    cfg_speed = 1.0
+    cfg_en_voice = "VietNarrator"
+    cfg_en_speed = 1.0
     root_dir = system_root or SYS_DIR
     cfg_path = root_dir / "config.json"
     if cfg_path.is_file():
@@ -1104,7 +1104,7 @@ def create_academic_research_paradox_topic(
          [("Một trăm hai mươi giây đầu tiên trước hội đồng khóa luận", "SRC02", "Hội đồng bảo vệ luôn soi khoảng trống nghiên cứu trong hai phút đầu.")]),
     ])
     use_subs = True if subtitles is None and aspect_ratio == "9:16" else bool(subtitles)
-    use_speed = 1.26 if aspect_ratio == "9:16" else 1.22
+    use_speed = 1.0
     return ResearchedTopic(
         topic="Nghịch lý Tri thức và Ảo giác Năng lực: Giải phẫu cơ chế nhận thức khiến việc đọc lại giáo trình thụ động làm tê liệt tư duy nghiên cứu chuẩn Q1",
         audience="Sinh viên, học viên cao học và người tự học tại Việt Nam muốn hiểu bản chất tri thức và quy trình nghiên cứu",
@@ -1121,7 +1121,7 @@ def create_academic_research_paradox_topic(
         tone="Điềm đạm, sắc sảo, thông tuệ, chạm trúng tâm lý học thuật",
         language="vi",
         subtitles=use_subs,
-        voice="Adam",
+        voice="VietNarrator",
         speed=use_speed,
         conversational_facts=True,
         packaging=PackagingSpec(
@@ -1140,7 +1140,7 @@ def build_short_spinoff_topics(
     parent_topic: ResearchedTopic,
     max_spinoffs: int = 3,
 ) -> List[ResearchedTopic]:
-    """Generate 2-3 standalone short_9x16 spin-off topics (45-60s, 5 scenes, subtitles=True, speed=1.26)
+    """Generate 2-3 standalone short_9x16 spin-off topics (45-60s, 5 scenes, subtitles=True, speed=1.0)
     from a researched dossier, each with its own independent Counter-Intuitive Hook <= 18 syllables.
     """
     spinoff_1 = create_academic_research_paradox_topic(aspect_ratio="9:16", subtitles=True)
@@ -1226,8 +1226,8 @@ def build_short_spinoff_topics(
         tone="Sắc sảo, kịch tính, chạm đúng tâm lý phòng bảo vệ",
         language="vi",
         subtitles=True,
-        voice="Adam",
-        speed=1.26,
+        voice="VietNarrator",
+        speed=1.0,
         conversational_facts=True,
         packaging=PackagingSpec(
             youtube_title="Tâm Lý Hội Đồng: Cửa Sổ 120 Giây Định Đoạt Khóa Luận",
@@ -1320,8 +1320,8 @@ def build_short_spinoff_topics(
         tone="Sắc bén, thực chiến, chuẩn mực học thuật Q1",
         language="vi",
         subtitles=True,
-        voice="Adam",
-        speed=1.26,
+        voice="VietNarrator",
+        speed=1.0,
         conversational_facts=True,
         packaging=PackagingSpec(
             youtube_title="Ma Trận Research Gap: Đọc 30 Bài Báo Q1 Không Quá Tải",
@@ -1375,8 +1375,11 @@ def write_production_package(
 
     checker = ScriptCadenceChecker(nominal_rate=NOMINAL_SPEECH_RATE)
     cadence_report = checker.check_scenes(script_data)
-    from tools.script_diversity_linter import lint_script
-    diversity_report = lint_script(content_data["scenes"], topic_title=brief_data.get("topic", ""))
+    from tools.script_diversity_linter import clean_sentence, lint_script
+    _claim_facts = {clean_sentence(f) for src in brief_data.get("sources", []) for f in src.get("facts", [])}
+    _claim_facts.update(clean_sentence(c.get("fact", "")) for c in content_data.get("claims", []) if c.get("fact"))
+    _claim_facts.update(clean_sentence(c.get("quote", "")) for c in content_data.get("claims", []) if c.get("quote"))
+    diversity_report = lint_script(content_data["scenes"], claim_facts=_claim_facts, topic_title=brief_data.get("topic", ""))
 
     def _write_if_changed(path: Path, text: str) -> None:
         if path.is_file() and path.read_text(encoding="utf-8") == text:

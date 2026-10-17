@@ -1,0 +1,257 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "text": "Tải ba mươi bài báo quốc tế chẳng giúp bạn có đề tài mới.",
+      "language": "vi",
+      "retake": 0,
+      "speed": 1.0,
+      "id": "u00000"
+    },
+    {
+      "text": "Đêm khuya mở thư mục tài liệu, não bạn tê liệt vì quá tải.",
+      "language": "vi",
+      "retake": 0,
+      "speed": 1.0,
+      "id": "u00001"
+    },
+    {
+      "text": "Nhiều bạn hoảng loạn liền yêu cầu công cụ trí tuệ nhân tạo viết hộ mục tổng quan.",
+      "language": "vi",
+      "retake": 0,
+      "speed": 1.0,
+      "id": "u00002"
+    },
+    {
+      "text": "Nhưng trên thực tế, hội đồng bảo vệ luôn nhận ra ngay văn phong liệt kê sáo rỗng.",
+      "language": "vi",
+      "retake": 0,
+      "speed": 1.0,
+      "id": "u00003"
+    },
+    {
+      "text": "Thay vì bảo máy viết hộ, hãy biến ba mươi bài báo kia thành một ma trận khoảng trống nghiên cứu.",
+      "language": "vi",
+      "retake": 0,
+      "speed": 1.0,
+      "id": "u00004"
+    },
+    {
+      "text": "Bạn yêu cầu hệ thống bóc tách từng bài theo bốn cột, gồm câu hỏi và phương pháp.",
+      "language": "vi",
+      "retake": 0,
+      "speed": 1.0,
+      "id": "u00005"
+    },
+    {
+      "text": "Cuối cùng là dữ liệu, và giới hạn chưa giải quyết.",
+      "language": "vi",
+      "retake": 0,
+      "speed": 1.0,
+      "id": "u00006"
+    },
+    {
+      "text": "Người nghiệp dư chỉ tóm tắt từng bài riêng lẻ, nên mãi dậm chân tại chỗ trong mớ hỗn độn.",
+      "language": "vi",
+      "retake": 0,
+      "speed": 1.0,
+      "id": "u00007"
+    },
+    {
+      "text": "Ngược lại, nhà nghiên cứu dùng trí tuệ nhân tạo để phản biện chéo các trường phái, và khoanh vùng lỗ hổng phương pháp.",
+      "language": "vi",
+      "retake": 0,
+      "speed": 1.0,
+      "id": "u00008"
+    },
+    {
+      "text": "Khi biến cơn bão thông tin thành ma trận khoảng trống rõ ràng, bế tắc sẽ tan biến.",
+      "language": "vi",
+      "retake": 0,
+      "speed": 1.0,
+      "id": "u00009"
+    },
+    {
+      "text": "Ba mươi bài báo kia trở thành bệ phóng vững chắc cho công trình của bạn.",
+      "language": "vi",
+      "retake": 0,
+      "speed": 1.0,
+      "id": "u00010"
+    }
+  ],
+  "segments": [
+    {
+      "scene_id": "SC01",
+      "text": "Tải ba mươi bài báo quốc tế chẳng giúp bạn có đề tài mới.",
+      "items": [
+        0
+      ],
+      "pause": 0.5
+    },
+    {
+      "scene_id": "SC01",
+      "text": "Đêm khuya mở thư mục tài liệu, não bạn tê liệt vì quá tải.",
+      "items": [
+        1
+      ],
+      "pause": 0.7
+    },
+    {
+      "scene_id": "SC02",
+      "text": "Nhiều bạn hoảng loạn liền yêu cầu công cụ trí tuệ nhân tạo viết hộ mục tổng quan.",
+      "items": [
+        2
+      ],
+      "pause": 0.9
+    },
+    {
+      "scene_id": "SC02",
+      "text": "Nhưng trên thực tế, hội đồng bảo vệ luôn nhận ra ngay văn phong liệt kê sáo rỗng.",
+      "items": [
+        3
+      ],
+      "pause": 0.7
+    },
+    {
+      "scene_id": "SC03",
+      "text": "Thay vì bảo máy viết hộ, hãy biến ba mươi bài báo kia thành một ma trận khoảng trống nghiên cứu.",
+      "items": [
+        4
+      ],
+      "pause": 0.5
+    },
+    {
+      "scene_id": "SC03",
+      "text": "Bạn yêu cầu hệ thống bóc tách từng bài theo bốn cột, gồm câu hỏi và phương pháp.",
+      "items": [
+        5
+      ],
+      "pause": 0.5
+    },
+    {
+      "scene_id": "SC03",
+      "text": "Cuối cùng là dữ liệu, và giới hạn chưa giải quyết.",
+      "items": [
+        6
+      ],
+      "pause": 0.7
+    },
+    {
+      "scene_id": "SC04",
+      "text": "Người nghiệp dư chỉ tóm tắt từng bài riêng lẻ, nên mãi dậm chân tại chỗ trong mớ hỗn độn.",
+      "items": [
+        7
+      ],
+      "pause": 0.5
+    },
+    {
+      "scene_id": "SC04",
+      "text": "Ngược lại, nhà nghiên cứu dùng trí tuệ nhân tạo để phản biện chéo các trường phái, và khoanh vùng lỗ hổng phương pháp.",
+      "items": [
+        8
+      ],
+      "pause": 0.7
+    },
+    {
+      "scene_id": "SC05",
+      "text": "Khi biến cơn bão thông tin thành ma trận khoảng trống rõ ràng, bế tắc sẽ tan biến.",
+      "items": [
+        9
+      ],
+      "pause": 0.5
+    },
+    {
+      "scene_id": "SC05",
+      "text": "Ba mươi bài báo kia trở thành bệ phóng vững chắc cho công trình của bạn.",
+      "items": [
+        10
+      ],
+      "pause": 0.35
+    }
+  ],
+  "english": [],
+  "profiles": {
+    "vi": {
+      "voice": "VietNarrator",
+      "language": "vi",
+      "languages": [
+        "vi"
+      ],
+      "reference_wav": "reference.wav",
+      "reference_text": "Chúng ta nói về tự do như một khái niệm trừu tượng. Tự do trong tâm trí khi có quá nhiều lời thì thầm nói rằng chúng ta nên làm gì và không nên làm gì. Hoặc tự do trong hành động khi đang sống trong một xã hội với nhiều định",
+      "source_speed": 1.0,
+      "sha256": "ec54c744434ab5569f3d7a3c542607ddbfd3bd02023a1d0232a17523fce32681",
+      "sources": [
+        {
+          "url": "https://www.youtube.com/watch?v=Z63FteI6EeE",
+          "reference_time": "00:02–00:14",
+          "path": "assets/voices/viet_narrator/source.webm",
+          "source_window_seconds": [
+            2,
+            14
+          ],
+          "sha256": "e5207a2b5870f9bdc0a444270d89e21f6ab4001ee6f1c3d7fc993fcc6a0d311b"
+        }
+      ],
+      "listening_verified": false,
+      "note": "Default Vietnamese narrator. The denoised 12-second reference was tested on Colab T4; the repaired generated sample was listened to and approved by the user. The source window ends mid-sentence.",
+      "processing": {
+        "separator": "demucs 4.0.1",
+        "model": "htdemucs",
+        "device": "Tesla T4",
+        "shifts": 1,
+        "input": "source.webm, precisely decode source time 00:02–00:14 to stereo 44.1 kHz before Demucs"
+      },
+      "sample_wav": "sample.wav",
+      "sample_sha256": "ccba2d390e5ce75644cd42c03d20c39a566d7a708b86fa6c6411822187326eb5",
+      "sample_listening_verified": true,
+      "recommended_speed": 1.0,
+      "approval": {
+        "status": "user_approved",
+        "scope": "sample.wav",
+        "user_feedback": "chính xác bay giờ đã hoàn chỉn rồi đó không còn bị lỗi nửa file này âm thanh sạch."
+      },
+      "local_wav": "/tmp/staged_project/LongVidYtb-refactor-anti-flop-lean-pipeline/sys/assets/voices/viet_narrator/reference.wav"
+    }
+  },
+  "models": {
+    "vi": {
+      "id": "kjanh/KhanhTTS-OmniVoice",
+      "revision": "20d056b8ea5d8d578b4cbaf1f703012fa3798a84"
+    },
+    "en": {
+      "id": "kjanh/KhanhTTS-OmniVoice",
+      "revision": "20d056b8ea5d8d578b4cbaf1f703012fa3798a84"
+    }
+  },
+  "batch_size": 4,
+  "num_step": 32,
+  "seed": 42,
+  "span_gap": 0.18,
+  "base_speeds": {
+    "vi": 1.0
+  },
+  "assemble": true,
+  "assembly_settings": {
+    "audio_lufs": -14.0,
+    "audio_peak_db": -1.5
+  },
+  "support_files": [
+    {
+      "name": "audio_processing.py",
+      "local_path": "/tmp/staged_project/LongVidYtb-refactor-anti-flop-lean-pipeline/sys/audio_processing.py",
+      "sha256": "d70168c7c22cb12a165529b80381a9ea4f1075650f620ffb6505a18fccd14d56"
+    },
+    {
+      "name": "subtitles.py",
+      "local_path": "/tmp/staged_project/LongVidYtb-refactor-anti-flop-lean-pipeline/sys/scripts/subtitles.py",
+      "sha256": "387bcd07e178fd4029a30834dce2be615ff84806a4fed9736960f7200c682f1b"
+    },
+    {
+      "name": "media_packaging.py",
+      "local_path": "/tmp/staged_project/LongVidYtb-refactor-anti-flop-lean-pipeline/sys/media_packaging.py",
+      "sha256": "59c460a8a155119506505eef58a3a829f5b282b49cbcb8819190790facbaf87f"
+    }
+  ],
+  "request_id": "e2690d4850deb97e9aeeb0a3dc0918aa7493fe6e54e8e97b8b03bf1aacf27f31"
+}

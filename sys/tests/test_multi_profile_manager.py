@@ -140,11 +140,11 @@ class TestMultiProfileManager(unittest.TestCase):
         cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
         cfg_profiles = cfg["flow_cdp_profiles"]
 
-        self.assertEqual(len(cfg_profiles), 3)
-        self.assertEqual(len(DEFAULT_PROFILES), 3)
-        self.assertEqual(len(PROFILES), 3)
+        self.assertEqual(len(cfg_profiles), 6)
+        self.assertEqual(len(DEFAULT_PROFILES), 6)
+        self.assertEqual(len(PROFILES), 6)
 
-        expected_ports = [9225, 9223, 9224]
+        expected_ports = [9225, 9223, 9224, 9222, 9226, 9227]
         self.assertEqual([p["port"] for p in cfg_profiles], expected_ports)
         self.assertEqual([p["port"] for p in DEFAULT_PROFILES], expected_ports)
         self.assertEqual([p["cdp_port"] for p in PROFILES], expected_ports)

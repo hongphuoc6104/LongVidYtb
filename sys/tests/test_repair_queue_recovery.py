@@ -11,6 +11,7 @@ try:
     import b2_bridge
 except ImportError:
     b2_bridge = None
+import adapters
 from pilot import Blocked, read, write
 
 

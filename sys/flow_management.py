@@ -37,7 +37,7 @@ def config(p, job):
 def prompt_pin(p, job):
     """Read/validate an official immutable pin; legacy jobs stay legacy."""
     from execution import is_job, settings
-    if not is_job(p, job):
+    if not is_job(p, job) or not hasattr(p, 'payload'):
         return None
     frozen = p.payload(job, 'control')
     if frozen.get('flow_prompt_version') is None:

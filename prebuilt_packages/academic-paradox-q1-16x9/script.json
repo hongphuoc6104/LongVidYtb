@@ -1,0 +1,149 @@
+[
+  {
+    "id": "SC01",
+    "duration": 8.0,
+    "narration": "Đọc lại giáo trình năm lần chỉ tạo ra ảo giác rằng bạn hiểu bài. Hai giờ sáng trước hạn nộp bài, bạn vẫn nhìn trang Word trắng tinh.",
+    "beats": [
+      {
+        "image_id": "SC01_I1",
+        "anchor_quote": "Đọc lại"
+      },
+      {
+        "image_id": "SC01_I2",
+        "anchor_quote": "lần chỉ"
+      },
+      {
+        "image_id": "SC01_I3",
+        "anchor_quote": "rằng bạn"
+      },
+      {
+        "image_id": "SC01_I4",
+        "anchor_quote": "giờ sáng"
+      },
+      {
+        "image_id": "SC01_I5",
+        "anchor_quote": "nộp bài,"
+      },
+      {
+        "image_id": "SC01_I6",
+        "anchor_quote": "trang Word"
+      }
+    ]
+  },
+  {
+    "id": "SC02",
+    "duration": 11.0,
+    "narration": "Tám mươi phần trăm sinh viên làm khóa luận đều mở Word gõ ngay từ trang đầu tiên. [pause:900ms] Nhưng các giáo sư quốc tế khẳng định, bài báo khoa học không bao giờ bắt đầu ở đó.",
+    "beats": [
+      {
+        "image_id": "SC02_I1",
+        "anchor_quote": "Tám mươi"
+      },
+      {
+        "image_id": "SC02_I2",
+        "anchor_quote": "làm khóa"
+      },
+      {
+        "image_id": "SC02_I3",
+        "anchor_quote": "gõ ngay"
+      },
+      {
+        "image_id": "SC02_I4",
+        "anchor_quote": "tiên."
+      },
+      {
+        "image_id": "SC02_I5",
+        "anchor_quote": "các giáo"
+      },
+      {
+        "image_id": "SC02_I6",
+        "anchor_quote": "định, bài"
+      },
+      {
+        "image_id": "SC02_I7",
+        "anchor_quote": "bao giờ"
+      }
+    ]
+  },
+  {
+    "id": "SC03",
+    "duration": 13.0,
+    "narration": "Khi bạn chép lại lý thuyết cũ, não bộ chỉ nhận diện mặt chữ quen thuộc, chứ chưa hề tư duy. Nghiên cứu chuẩn quốc tế luôn đi từ câu hỏi cốt lõi, soi vào khoảng trống tri thức. Từ đó, họ mới chọn phương pháp đo đạc.",
+    "beats": [
+      {
+        "image_id": "SC03_I1",
+        "anchor_quote": "Khi bạn"
+      },
+      {
+        "image_id": "SC03_I2",
+        "anchor_quote": "chỉ nhận"
+      },
+      {
+        "image_id": "SC03_I3",
+        "anchor_quote": "chứ chưa"
+      },
+      {
+        "image_id": "SC03_I4",
+        "anchor_quote": "quốc tế"
+      },
+      {
+        "image_id": "SC03_I5",
+        "anchor_quote": "soi vào"
+      },
+      {
+        "image_id": "SC03_I6",
+        "anchor_quote": "đó, họ"
+      }
+    ]
+  },
+  {
+    "id": "SC04",
+    "duration": 11.5,
+    "narration": "Người học vẹt bị nhấn chìm giữa ba mươi bài báo rời rạc, vì cố tóm tắt từng trang một. Ngược lại, người hiểu bản chất lập ma trận đối chiếu, để tìm ra đúng lỗ hổng mà giới học thuật bỏ sót.",
+    "beats": [
+      {
+        "image_id": "SC04_I1",
+        "anchor_quote": "Người học"
+      },
+      {
+        "image_id": "SC04_I2",
+        "anchor_quote": "bài báo"
+      },
+      {
+        "image_id": "SC04_I3",
+        "anchor_quote": "trang một."
+      },
+      {
+        "image_id": "SC04_I4",
+        "anchor_quote": "chất lập"
+      },
+      {
+        "image_id": "SC04_I5",
+        "anchor_quote": "đúng lỗ"
+      }
+    ]
+  },
+  {
+    "id": "SC05",
+    "duration": 9.0,
+    "narration": "Khi nắm vững khoảng trống tri thức trước lúc mở Word, bạn làm chủ phòng bảo vệ. Một trăm hai mươi giây đầu tiên trước hội đồng khóa luận luôn nằm trọn trong tay bạn.",
+    "beats": [
+      {
+        "image_id": "SC05_I1",
+        "anchor_quote": "Khi nắm"
+      },
+      {
+        "image_id": "SC05_I2",
+        "anchor_quote": "lúc mở"
+      },
+      {
+        "image_id": "SC05_I3",
+        "anchor_quote": "trăm hai"
+      },
+      {
+        "image_id": "SC05_I4",
+        "anchor_quote": "khóa luận"
+      }
+    ]
+  }
+]

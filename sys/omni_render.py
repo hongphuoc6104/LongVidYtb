@@ -62,7 +62,7 @@ def prepare_shorts(brief: dict, content: dict, audio: dict, images: dict,
                     with wave.open(str(raw), 'wb') as target:
                         target.setparams(source.getparams())
                         target.writeframes(data)
-                factor = 1.26 / master.get('speed', 1.22)
+                factor = 1.0 / master.get('speed', 1.0)
                 path = public / f'short-{index}-{number}.wav'
                 if factor == 1:
                     shutil.copyfile(raw, path)

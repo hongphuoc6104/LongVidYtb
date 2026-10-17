@@ -1,0 +1,131 @@
+{
+  "schema_version": "3.0",
+  "topic": "Nghịch lý Tri thức và Ảo giác Năng lực: Giải phẫu cơ chế nhận thức khiến việc đọc lại giáo trình thụ động làm tê liệt tư duy nghiên cứu chuẩn Q1 — Spin-off: Tâm lý Hội đồng Bảo vệ trong 120 Giây Đầu",
+  "audience": "Sinh viên, học viên cao học và người tự học tại Việt Nam muốn hiểu bản chất tri thức và quy trình nghiên cứu",
+  "goal": "Giải mã tâm lý hội đồng bảo vệ khóa luận trong 120 giây đầu và áp dụng cấu trúc phản biện 3 bước",
+  "video_type": "science",
+  "duration": {
+    "min_seconds": 45.0,
+    "max_seconds": 60.0
+  },
+  "scene_count": 5,
+  "required_points": [
+    {
+      "id": "R01",
+      "text": "Cửa sổ một trăm hai mươi giây đầu tiên khi bước lên bục bảo vệ khóa luận"
+    },
+    {
+      "id": "R02",
+      "text": "Hành động đầu tiên của giám khảo là lật trang danh mục tài liệu tham khảo"
+    },
+    {
+      "id": "R03",
+      "text": "Sai lầm đốt năm phút đầu đọc lại định nghĩa và trả lời tính mới bằng số liệu rời rạc"
+    },
+    {
+      "id": "R04",
+      "text": "Đối lập giữa liệt kê số liệu lan man và cấu trúc phản biện ba bước sắc bén"
+    },
+    {
+      "id": "R05",
+      "text": "Khép vòng lặp làm chủ hoàn toàn phòng bảo vệ khóa luận ngay từ hai phút đầu"
+    }
+  ],
+  "language": "vi",
+  "tone": "Sắc sảo, kịch tính, chạm đúng tâm lý phòng bảo vệ",
+  "style": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que tương tác trực tiếp với Sơ đồ 3 Bước Phản Biện trong cùng bối cảnh, khung dọc 9:16.",
+  "aspect_ratio": "9:16",
+  "format_profile": "short_9x16",
+  "facts_required": true,
+  "sources": [
+    {
+      "id": "SRC01",
+      "title": "The Elaboration Likelihood Model of Persuasion in Academic Evaluation",
+      "reference": "Dr. Richard E. Petty & Dr. John T. Cacioppo (1986). Advances in Experimental Social Psychology, 19, 123-205.",
+      "facts": [
+        "Hội đồng bảo vệ định hình phán quyết ngay trong hai phút đầu tiên.",
+        "Giám khảo luôn lật trang tài liệu tham khảo trước khi nghe bạn nói."
+      ]
+    },
+    {
+      "id": "SRC02",
+      "title": "Genre Analysis: English in Academic and Research Settings (CARS Model)",
+      "reference": "Dr. John M. Swales (1990). Cambridge University Press. ISBN: 978-0521338134",
+      "facts": [
+        "Đọc lại định nghĩa giáo trình làm mất điểm ngay từ mở bài.",
+        "Cấu trúc phản biện ba bước giúp làm chủ câu hỏi tính mới."
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "aspect_ratio": "9:16",
+      "language": "vi",
+      "subtitles": true,
+      "voice": "VietNarrator",
+      "speed": 1.0
+    }
+  ],
+  "planning": {
+    "success_criteria": [
+      "Giải mã tâm lý hội đồng bảo vệ khóa luận trong 120 giây đầu và áp dụng cấu trúc phản biện 3 bước"
+    ],
+    "avoid": [
+      "Tránh lối diễn đạt giáo điều, sáo rỗng hoặc thuật ngữ hàn lâm không giải thích."
+    ],
+    "prior_knowledge": "Không đòi hỏi kiến thức chuyên sâu từ trước.",
+    "pacing": "Theo lời dẫn tự nhiên Conversational Essayist, cân chỉnh triệt tiêu dead-air.",
+    "domain_requirements": [],
+    "assumptions": [
+      "Mỗi phân cảnh được cân chỉnh theo công thức âm học P_tail và dung sai drift <= 0.3s."
+    ],
+    "text_style": {
+      "font": "sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt",
+      "color": "#172033",
+      "outline": "nền sáng tương phản",
+      "size": "dễ đọc trên điện thoại (khung dọc 9:16)",
+      "placement": "cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%"
+    },
+    "speech_rates": {
+      "vi": {
+        "units_per_second": 4.0,
+        "uncertainty": 0.15,
+        "source": "Acoustic calibrated cadence"
+      },
+      "en": {
+        "units_per_second": 2.5,
+        "uncertainty": 0.25,
+        "source": "Estimated English reading rate"
+      }
+    }
+  },
+  "conversational_facts": true,
+  "packaging": {
+    "youtube_title": "Tâm Lý Hội Đồng: Cửa Sổ 120 Giây Định Đoạt Khóa Luận",
+    "thumbnail_spec": {
+      "visual_hook": "Đồng hồ 120 giây phía trên bàn Hội đồng khi nhân vật người que mở trang Tài liệu tham khảo",
+      "text_overlay": "120 GIÂY ĐẦU!",
+      "contrast_pair": "Đọc lại lý thuyết vs. Phản biện 3 bước"
+    },
+    "channel_pillar": "Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật",
+    "funnel_tier": "tier_2_mid",
+    "seo_keywords": [
+      "bảo vệ khóa luận tốt nghiệp",
+      "tâm lý hội đồng bảo vệ",
+      "cách trả lời phản biện khóa luận"
+    ]
+  },
+  "youtube_title": "Tâm Lý Hội Đồng: Cửa Sổ 120 Giây Định Đoạt Khóa Luận",
+  "thumbnail_spec": {
+    "visual_hook": "Đồng hồ 120 giây phía trên bàn Hội đồng khi nhân vật người que mở trang Tài liệu tham khảo",
+    "text_overlay": "120 GIÂY ĐẦU!",
+    "contrast_pair": "Đọc lại lý thuyết vs. Phản biện 3 bước"
+  },
+  "channel_pillar": "Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật",
+  "funnel_tier": "tier_2_mid",
+  "seo_keywords": [
+    "bảo vệ khóa luận tốt nghiệp",
+    "tâm lý hội đồng bảo vệ",
+    "cách trả lời phản biện khóa luận"
+  ]
+}

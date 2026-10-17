@@ -15,7 +15,7 @@ Tài liệu này hướng dẫn cách chuyển hóa các quy luật kể chuyệ
 |:---|:---|:---|
 | **3 giây đầu (`SC01` Câu 1)** | Dẫn nhập chậm rãi kiểu *"Hãy nghĩ về một buổi sáng..."*, *"Hãy tưởng tượng..."* | **Counter-Intuitive / Truth-Slap Hook ($\le 18$ âm tiết):** Đập thẳng vào nghịch lý nhận thức (*"Đọc lại giáo trình năm lần chỉ đang ru ngủ não bạn."*). |
 | **Khoảng ngắt 15s đầu (`SC01`)** | Có thể ngắt nghỉ 0.8s–1.0s giữa các câu đầu để tạo chất thơ | **Zero Pause in First 15s (`OPENING_SCENE_PAUSE_FORBIDDEN`):** Tuyệt đối 0 thẻ `[pause:...]` trong `SC01`. |
-| **Tốc độ 30s đầu (`SC01–SC02`)** | Đọc đều ~3.8–4.0 âm tiết/giây từ đầu đến cuối | **Dynamic Pacing `4.2 – 4.4` âm tiết/giây** (`speed: 1.26x` trên `short_9x16`) để tạo lực cuốn tức thì, sau đó mới hạ về `4.0` syl/s ở thân bài. |
+| **Tốc độ 30s đầu (`SC01–SC02`)** | Đọc đều ~3.8–4.0 âm tiết/giây từ đầu đến cuối | **Dynamic Pacing `4.2 – 4.4` âm tiết/giây** (`VietNarrator` `speed: 1.0`) để tạo lực cuốn tức thì, sau đó mới hạ về `4.0` syl/s ở thân bài. |
 | **Mật độ thị giác mở đầu** | Giữ 1 khung hình tĩnh 3.5s–5.0s | Khi lời thoại hỗ trợ, hướng tới 8–9 ảnh scene toàn khung trong 12–12,5 giây đầu, khoảng 4 ảnh trong 5 giây đầu. Neo cut vào cụm từ cụ thể và kiểm tra theo WAV. |
 | **Bối cảnh văn hóa 60s đầu** | Dùng ngay bối cảnh Âu Mỹ hoặc cổ đại xa lạ (*Sumer, Edubba, Phổ*) | **Việt hóa 100% trong 60 giây đầu (`Vietnamese Cultural Localization`):** Ôn thi đêm, highlight giáo trình, mở Word làm khóa luận, 120s trước hội đồng bảo vệ; chỉ đưa dẫn chứng ngoại vào từ Chương 3 trở đi. |
 
@@ -59,7 +59,7 @@ flowchart LR
 1. **Phụ đề an toàn (`sys/format_profiles.py`):**
    - Tối đa 2 dòng/cue; $\le 42$ ký tự/dòng (`84` ký tự/cue) cho `long_16x9` và $\le 28$ ký tự/dòng (`54` ký tự/cue) cho `short_9x16`, đồng bộ nhảy chữ theo `word_timestamps` âm học.
 2. **Chuyển thể Long-to-Short Spin-off (`short_9x16`):**
-   - Tuyệt đối không cắt ngang Chương 2–8 của video `16:9` đem đăng TikTok. Phải rút trích 2–3 nghịch lý đắt giá nhất thành các kịch bản `short_9x16` độc lập (5 cảnh, 45–60s, `subtitles: true`, `speed: 1.26`) có câu mở đầu Truth-Slap Hook $\le 18$ âm tiết riêng.
+   - Tuyệt đối không cắt ngang Chương 2–8 của video `16:9` đem đăng TikTok. Phải rút trích 2–3 nghịch lý đắt giá nhất thành các kịch bản `short_9x16` độc lập (5 cảnh, 45–60s, `subtitles: true`, `voice: "VietNarrator"`, `speed: 1.0`) có câu mở đầu Truth-Slap Hook $\le 18$ âm tiết riêng.
 3. **Âm thanh & Foley:**
    - Khóa từ neo (*semantic anchors*) với Micro-SFX (`pop`, `whoosh`, tiếng lật trang giấy, tiếng đồng hồ) và Sidechain Ducking BGM (`-20dB` khi có thoại, `-14dB` khi nghỉ).
 

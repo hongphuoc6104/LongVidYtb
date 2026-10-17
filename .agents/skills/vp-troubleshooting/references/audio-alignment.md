@@ -10,7 +10,7 @@
 ## 2. Proven Remedies
 
 ### 1. Calibrate Speech Rates
-- Canonical voice (`Adam`, `assets/voices/adam/profile.json`) is fixed at `speed: 1.22` (`sys/config.json`) for both `vi` and `en`.
+- Canonical voice (`VietNarrator`, `assets/voices/viet_narrator/profile.json`) is fixed at `speed: 1.0` (`sys/config.json`) for both `vi` and `en` (with scene `tone` multipliers `0.98`, `1.02`, `0.92`).
 - Run the calibration script when verifying speech rates:
   ```bash
   python3 sys/scripts/calibrate_speech_rates.py

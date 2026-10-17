@@ -157,20 +157,20 @@ def ensure_connected(sock_path: Path | None = None) -> dict[str, Any]:
                 "toolUrl": PROFILES[0]["url"],
             }
         }
-    if target_sock is not None:
-        result = send_raw_command("connect", timeout=75.0, sock_path=target_sock)
-    else:
-        try:
+    try:
+        if target_sock is not None and target_sock.exists():
+            result = send_raw_command("connect", timeout=75.0, sock_path=target_sock)
+        else:
             result = send_raw_command("connect", timeout=75.0)
-        except Exception:
-            ensure_chrome_profiles_launched()
-            return {
-                "status": "connected",
-                "identity": {
-                    "observedProfile": str(Path(PROFILES[0]["user_data_dir"]).expanduser() / PROFILES[0]["profile_dir"]),
-                    "toolUrl": PROFILES[0]["url"],
-                }
+    except Exception:
+        ensure_chrome_profiles_launched()
+        return {
+            "status": "connected",
+            "identity": {
+                "observedProfile": str(Path(PROFILES[0]["user_data_dir"]).expanduser() / PROFILES[0]["profile_dir"]),
+                "toolUrl": PROFILES[0]["url"],
             }
+        }
     if result.get("status") != "connected":
         raise Blocked(f"Flow CDP connection blocked: {result.get('reason', 'not connected')}")
     return result
@@ -297,6 +297,9 @@ def _execute_sub_batch(specs: list[dict[str, Any]], timeout: float = 240.0, sock
     except Blocked as exc:
         _mark_not_submitted(exc)
         raise
+
+    if (target_sock is None or not target_sock.exists()) and not get_socket_path().exists():
+        return _execute_via_cdp_direct(specs, timeout=timeout, worker=worker)
 
     try:
         if target_sock is not None and target_sock.exists():
@@ -436,8 +439,12 @@ def generate_cdp_batch(
                         prof for prof in profiles_cfg
                         if (Path(prof.get("user_data_dir", "")).expanduser() / prof.get("directory", "")).resolve() == target_resolved
                     ]
+                    others = [
+                        prof for prof in profiles_cfg
+                        if (Path(prof.get("user_data_dir", "")).expanduser() / prof.get("directory", "")).resolve() != target_resolved
+                    ]
                     if matched:
-                        profiles_cfg = matched
+                        profiles_cfg = matched + others
         except Exception:
             pass
 

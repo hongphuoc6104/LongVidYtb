@@ -41,7 +41,7 @@ BANNED_ACADEMIC_NAMEDROPS = [
     r"\bet\s+al\.",
     r"\bdoi\s*:",
     r"\(\d{4}\)",
-    r"\b(?:giáo\s+sư|tiến\s+sĩ)\s+[a-zA-ZÀ-ỹ]+\s+[a-zA-ZÀ-ỹ]+",
+    r"\b(?:giáo\s+sư|tiến\s+sĩ)\s+(?!quốc\s+tế\b|đại\s+học\b|hội\s+đồng\b|hướng\s+dẫn\b|phản\s+biện\b|đầu\s+ngành\b)[a-zA-ZÀ-ỹ]+\s+[a-zA-ZÀ-ỹ]+",
     r"\bnghiên\s+cứu\s+năm\s+(?:\d+|một\s+nghìn|hai\s+nghìn)\s+của\b",
 ]
 

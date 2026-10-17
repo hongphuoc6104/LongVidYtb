@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Vietnamese Text Normalizer & Phonetic Gatekeeper for TTS (Colab OmniVoice — Adam).
+Vietnamese Text Normalizer & Phonetic Gatekeeper for TTS (Colab OmniVoice — VietNarrator).
 Converts numbers, dates, percentages, symbols, and foreign loanwords/names
 into 100% natural Vietnamese phonetic spellings, extracts exact [pause:Xms]
 utterance boundaries, and blocks un-transliterated foreign tokens before TTS.

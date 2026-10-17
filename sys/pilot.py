@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Video Pilot: review-gated local orchestration. Not a security sandbox."""
-import argparse, contextlib, fcntl, hashlib, json, shutil, sqlite3, subprocess, sys, time
+import argparse, contextlib, fcntl, hashlib, json, re, shutil, sqlite3, subprocess, sys, time
 from pathlib import Path
 import jsonschema
 from PIL import Image
@@ -443,9 +443,11 @@ class Pilot:
    if type(imported_duration) not in (int,float) or not math.isfinite(imported_duration) or imported_duration<=0 or imported_duration!=primary.get('duration') or payload.get('wav')!=primary.get('wav'):raise Blocked('REMOTE_DURATION: primary imported duration/WAV differs from the selected track')
    for language,track in tracks.items():
     expected_voice=voice_settings(brief,language,read(self.root/'config.json'))
-    if track.get('language')!=language or track.get('voice')!=expected_voice['voice'] or abs(track.get('speed',0)-expected_voice['speed'])>1e-8:raise Blocked('REMOTE_VOICE: track identity/rate differs from contract')
+    from colab_bridge.protocol import TONE_SPEED_MULTIPLIERS, resolve_tone_speed
+    allowed_speeds = {resolve_tone_speed(expected_voice['speed'], t) for t in (None, *TONE_SPEED_MULTIPLIERS)}
+    if track.get('language')!=language or track.get('voice')!=expected_voice['voice'] or not any(abs(track.get('speed',0)-s)<=1e-8 for s in allowed_speeds):raise Blocked('REMOTE_VOICE: track identity/rate differs from contract')
     if request.get('profiles',{}).get(language,{}).get('voice')!=expected_voice['voice']:raise Blocked('REMOTE_VOICE: effective request identity differs from contract')
-    if any(abs(item['speed']-expected_voice['speed'])>1e-8 for item in request.get('items',[]) if item['language']==language):raise Blocked('REMOTE_VOICE: effective request rate differs from contract')
+    if any(not any(abs(item['speed']-s)<=1e-8 for s in allowed_speeds) for item in request.get('items',[]) if item['language']==language):raise Blocked('REMOTE_VOICE: effective request rate differs from contract')
     duration=track.get('duration',0)
     self.duration_requirement(j,duration,brief)
     measured=self.measured_wav_duration(j,track['wav'])
@@ -464,7 +466,8 @@ class Pilot:
     if {x['scene_id'] for x in segments}!={s['id'] for s in content['scenes']}:raise Blocked('REMOTE_NARRATION: scene mismatch')
     for scene in content['scenes']:
      actual=' '.join(x['text'] for x in segments if x['scene_id']==scene['id'])
-     if ' '.join(actual.split())!=' '.join(narration(scene,language).split()):raise Blocked('REMOTE_NARRATION: omitted or changed words')
+     expected=re.sub(r'\[pause:[^\]]+\]',' ',narration(scene,language),flags=re.IGNORECASE)
+     if ' '.join(actual.split())!=' '.join(expected.split()):raise Blocked('REMOTE_NARRATION: omitted or changed words')
     for name in ('wav','srt'):
      if track[name] not in files:raise Blocked('REMOTE_ARTIFACT: track missing from manifest')
    raw=report['payload']

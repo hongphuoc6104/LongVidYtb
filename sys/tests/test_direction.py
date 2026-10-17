@@ -143,7 +143,7 @@ class SynthesisOnlyTests(unittest.TestCase):
         scenes = [{'scene_id': 'SC01', 'narration': 'I get up.', 'texts': ['I get up.'], 'gaps': [], 'tail': 2.0, 'retake': 0}]
         req = build_request(ROOT, cfg, scenes, [])
         self.assertEqual(req['segments'][0]['pause'], 2.0)
-        self.assertEqual(req['profiles']['vi']['voice'], 'Adam')
+        self.assertEqual(req['profiles']['vi']['voice'], 'VietNarrator')
 
 
 if __name__ == '__main__':

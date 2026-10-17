@@ -99,7 +99,7 @@ class IndependentRemoteWebContracts(unittest.TestCase):
         import re
         cfg=json.loads((ROOT/'config.json').read_text())
         (self.root/'image.png').write_bytes(b'QA-synthetic-image');(self.root/'en.wav').write_bytes(b'QA-synthetic-audio')
-        brief={'aspect_ratio':'9:16','outputs':[{'aspect_ratio':'9:16','language':'en','subtitles':True,'voice':'Adam','speed':1.22}]}
+        brief={'aspect_ratio':'9:16','outputs':[{'aspect_ratio':'9:16','language':'en','subtitles':True,'voice':'VietNarrator','speed':1.0}]}
         images={'items':[{'path':'image.png','scene_id':'SC01','image_id':'IM01','ratio':'9:16'}]}
         audio={'wav':'en.wav','tracks':{'en':{'wav':'en.wav','duration':1.}}}
         req=build_render_request(ROOT,brief,{'scenes':[]},images,audio,lambda x:self.root/x)
@@ -319,7 +319,7 @@ class IndependentRemoteWebContracts(unittest.TestCase):
         cfg=read(self.root/'config.json');cfg['colab_tts']['enabled']=True;write(self.root/'config.json',cfg)
         job=self.root/'runs/synthetic-english';job.mkdir(parents=True)
         (job/'image.png').write_bytes(base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9Zl6AAAAAASUVORK5CYII='))
-        brief={'aspect_ratio':'9:16','language':'en','outputs':[{'aspect_ratio':'9:16','language':'en','subtitles':True,'voice':'Adam','speed':.87}]}
+        brief={'aspect_ratio':'9:16','language':'en','outputs':[{'aspect_ratio':'9:16','language':'en','subtitles':True,'voice':'VietNarrator','speed':.92}]}
         text='I see a predator.'
         content={'schema_version':'3.0','scenes':[{'id':'SC01','title':'Synthetic scene','narration':'WRONG VI TRACK MUST NOT WIN',
                  'narration_en':text,'audio_direction':{'en':{'learner_pause_seconds':.75}},
@@ -369,14 +369,14 @@ class IndependentRemoteWebContracts(unittest.TestCase):
             jsonschema.validate(data['audio'],read(ROOT/'schemas/audio.json'))
             video_out=job/'render';video_out.mkdir();result=adapters.render(p,'synthetic-english',video_out)
         self.assertEqual(set(data['audio']['tracks']),{'en'})
-        self.assertEqual(seen['audio']['items'][0]['text'],text);self.assertEqual(seen['audio']['items'][0]['speed'],.87)
-        self.assertEqual(generated[0]['speed'],[.87]);self.assertEqual(result['language'],'en')
+        self.assertEqual(seen['audio']['items'][0]['text'],text);self.assertEqual(seen['audio']['items'][0]['speed'],.92)
+        self.assertEqual(generated[0]['speed'],[.92]);self.assertEqual(result['language'],'en')
         props=read(video_out/'props.json');track=props['tracks']['en']
         self.assertEqual(track['audioSrc'],'en.wav');self.assertEqual(track['cues'][0]['text'],text)
         self.assertEqual(track['scenesByAspect']['9:16'][0]['end'],data['audio']['duration'])
         self.assertNotIn('vi',props['tracks']);self.assertEqual(seen['render']['brief']['outputs'],brief['outputs'])
         write(ROOT/'reports/normalization/qa-remote-web-chain.json',{'fixture':True,'live_provider':False,'actual_remote':False,
-            'text':text,'language':'en','aspect_ratio':'9:16','speed':.87,'waveform_seconds':data['audio']['duration'],
+            'text':text,'language':'en','aspect_ratio':'9:16','speed':.92,'waveform_seconds':data['audio']['duration'],
             'cues':track['cues'],'timeline_end':track['scenesByAspect']['9:16'][0]['end'],'audio_schema_passed':True,'fake_encoder':True})
 
 

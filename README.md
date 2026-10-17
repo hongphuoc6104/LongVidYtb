@@ -2,7 +2,7 @@
 
 Produce one-sense vocabulary lessons through narration and explanatory illustrations. Target aspect ratio (e.g. 9:16, 16:9, or dual) is configured per job brief, featuring bright backgrounds, bold outlines, flat colors and anonymous stick figures. One question/situation leads to a payoff; choose scene/image counts per video instead of a fixed comedy template.
 
-Canonical narrator voice: **`Adam` (`1.22x`, `kjanh/KhanhTTS-OmniVoice` on Colab T4)** via [`sys/assets/voices/adam/profile.json`](sys/assets/voices/adam/profile.json).
+Canonical narrator voice: **`VietNarrator` (`1.0x`, `kjanh/KhanhTTS-OmniVoice` on Colab T4)** via [`sys/assets/voices/viet_narrator/profile.json`](sys/assets/voices/viet_narrator/profile.json).
 
 ## Getting started
 

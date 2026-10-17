@@ -139,8 +139,8 @@ def test_non_desk_topic_passes_narrative_progression_and_diversity() -> None:
         max_duration=360.0,
         scenes=scenes,
         subtitles=False,
-        voice="Adam",
-        speed=1.22,
+        voice="VietNarrator",
+        speed=1.0,
         visual_pacing_profile="full_frame_v1",
         style="Hand-drawn 2D marker illustration, anonymous round-headed stick figures, flat muted teal and amber.",
         characters=[

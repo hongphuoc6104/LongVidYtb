@@ -31,9 +31,9 @@ def outputs(brief):
             speed = plan['speed']
             if isinstance(speed, bool) or not isinstance(speed, (int, float)) or not math.isfinite(speed) or speed <= 0:
                 raise ValueError('OUTPUT_CONTRACT: speed must be positive and finite')
-        if (plan.get('language') == 'vi' and str(plan.get('voice', 'Adam')).casefold() == 'adam'
-                and 'speed' in plan and not 1.12 <= plan['speed'] <= 1.38):
-            raise ValueError('OUTPUT_CONTRACT: Vietnamese Adam speed must be within [1.12, 1.38] (canonical 1.22)')
+        if (plan.get('language') == 'vi' and str(plan.get('voice', 'VietNarrator')).casefold() == 'vietnarrator'
+                and 'speed' in plan and not 0.90 <= plan['speed'] <= 1.15):
+            raise ValueError('OUTPUT_CONTRACT: VietNarrator speed must be within [0.90, 1.15] (canonical 1.0)')
         if 'voice' in plan and (not isinstance(plan['voice'], str) or not plan['voice'].strip()):
             raise ValueError('OUTPUT_CONTRACT: voice must be a nonempty name')
     return [dict(x) for x in plans]
@@ -66,8 +66,8 @@ def voice_settings(brief, language, config):
     if len(values) > 1:
         raise ValueError('OUTPUT_CONTRACT: one language track cannot have conflicting voice/rate')
     plan = selected[0]
-    voice = plan.get('voice', config.get('en_voice' if language == 'en' else 'tts_voice'))
-    speed = plan.get('speed', config.get('en_speed', 1.) if language == 'en' else config.get('tts_speed', 1.22))
-    if language == 'vi' and str(voice).casefold() == 'adam' and not 1.12 <= speed <= 1.38:
-        raise ValueError('OUTPUT_CONTRACT: Vietnamese Adam speed must be within [1.12, 1.38] (canonical 1.22)')
+    voice = plan.get('voice', config.get('en_voice' if language == 'en' else 'tts_voice', 'VietNarrator'))
+    speed = plan.get('speed', config.get('en_speed', 1.0) if language == 'en' else config.get('tts_speed', 1.0))
+    if language == 'vi' and str(voice).casefold() == 'vietnarrator' and not 0.90 <= speed <= 1.15:
+        raise ValueError('OUTPUT_CONTRACT: VietNarrator speed must be within [0.90, 1.15] (canonical 1.0)')
     return {'voice': voice, 'speed': speed}

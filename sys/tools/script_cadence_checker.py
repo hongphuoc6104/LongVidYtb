@@ -26,7 +26,7 @@ DEFAULT_P_TAIL_PARA = 0.70    # Intermediate scenes: DEFAULT_PAUSE['para']
 DEFAULT_P_TAIL_LAST = 0.35    # Final scene: DEFAULT_PAUSE['tail']
 DEFAULT_P_COMMA = 0.30        # Comma / minor pause: DEFAULT_PAUSE['minor']
 NOMINAL_SPEECH_RATE = 4.0     # Nominal speech rate (syllables / second)
-OPENING_DYNAMIC_RATE_RANGE: Tuple[float, float] = (4.2, 4.4)  # First 30s dynamic pacing target (1.26x on short_9x16)
+OPENING_DYNAMIC_RATE_RANGE: Tuple[float, float] = (4.2, 4.4)  # First 30s dynamic pacing target (VietNarrator speed 1.0x)
 
 # Warning thresholds
 MIN_SAFE_SPEECH_RATE = 3.2

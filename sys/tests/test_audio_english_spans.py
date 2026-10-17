@@ -1,5 +1,5 @@
 """English words/sentences inside Vietnamese narration are split into spans and
-routed to Colab OmniVoice (Adam 1.22x); retakes change a recorded knob."""
+routed to Colab OmniVoice (VietNarrator 1.0x); retakes change a recorded knob."""
 import sqlite3,sys,tempfile,unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -52,7 +52,7 @@ class FakeP:
  def __init__(self,root,content,cfg):
   self.root=root;self.content=content;(root/'jobs/j').mkdir(parents=True)
   write(root/'config.json',cfg)
-  for sub in ['assets/voices/adam']:
+  for sub in ['assets/voices/viet_narrator']:
    (root/sub).mkdir(parents=True,exist_ok=True)
    for f in (ROOT/sub).iterdir():
     if f.is_file():(root/sub/f.name).write_bytes(f.read_bytes())
@@ -84,17 +84,17 @@ class AudioAdapterTests(unittest.TestCase):
     wav_name=f'segment-{idx:03}.wav'
     sine(out/wav_name,.8,.2)
     segs.append({'scene_id':seg['scene_id'],'text':seg['text'],'path':wav_name,'content_duration':.6})
-   res={'voice':'Adam','engine':{'backend':'colab-omnivoice','model':'kjanh/KhanhTTS-OmniVoice'},'segments':segs}
+   res={'voice':'VietNarrator','engine':{'backend':'colab-omnivoice','model':'kjanh/KhanhTTS-OmniVoice'},'segments':segs}
    write(out/'tts-result.json',res)
   out=p.job('j')/'revisions/audio/1';out.mkdir(parents=True)
   with patch.object(Client,'synthesize',fake_synthesize):return adapters.audio(p,'j',out)
 
- def test_scold_practice_line_uses_adam_omnivoice_and_valid_timeline(self):
+ def test_scold_practice_line_uses_viet_narrator_omnivoice_and_valid_timeline(self):
   pay=self.run_audio()
   jsonschema.validate(pay,read(ROOT/'schemas/audio.json'))
   req=self.calls[0]
-  self.assertEqual(req['profiles']['vi']['voice'],'Adam')
-  self.assertEqual(req['profiles']['en']['voice'],'Adam')
+  self.assertEqual(req['profiles']['vi']['voice'],'VietNarrator')
+  self.assertEqual(req['profiles']['en']['voice'],'VietNarrator')
   en_items=[x for x in req['items'] if x['language']=='en']
   self.assertEqual([x['text'] for x in en_items],["Please don't scold me!"])
   for sc in self.content['scenes']:
@@ -111,7 +111,7 @@ class AudioAdapterTests(unittest.TestCase):
   req=self.calls[0]
   en_items=[x for x in req['items'] if x['language']=='en']
   self.assertEqual(en_items[0]['retake'],2)
-  self.assertEqual(en_items[0]['speed'],1.22)
+  self.assertEqual(en_items[0]['speed'],1.0)
 
  def test_scenes_without_vocabulary_have_no_english_parts(self):
   for s in self.content['scenes']:s.pop('vocabulary',None)

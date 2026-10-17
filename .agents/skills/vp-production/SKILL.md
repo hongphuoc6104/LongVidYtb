@@ -17,7 +17,7 @@ Use production scope and sys/docs/workflow.md. One task/role; current brief and 
 - Timeline/captions/MP4: [editing](references/editing.md) and [vp-colab-bridge](../vp-colab-bridge/SKILL.md).
 - Errors: [recovery](references/recovery.md) and [Colab error matrix](../vp-colab-bridge/references/error-recovery-matrix.md).
 
-Channel brief specs follow sys/format_profiles.py across both official formats: `long_16x9` (13m Explainer Blueprint, 8 chapters / 48 scenes for YouTube) and `short_9x16` (45–60s, 5 standalone scenes `SC01..SC05`, `subtitles: true`, `speed: 1.26` for TikTok/Shorts Spin-offs); freeze its relevant fields in the brief. Never raw-cut middle chapters (`CH02..CH08`) of a 16:9 video for TikTok. Never leak internal IDs/instructions into visible text.
+Channel brief specs follow sys/format_profiles.py across both official formats: `long_16x9` (13m Explainer Blueprint, 8 chapters / 48 scenes for YouTube) and `short_9x16` (45–60s, 5 standalone scenes `SC01..SC05`, `subtitles: true`, `speed: 1.0` with `VietNarrator` for TikTok/Shorts Spin-offs); freeze its relevant fields in the brief. Never raw-cut middle chapters (`CH02..CH08`) of a 16:9 video for TikTok. Never leak internal IDs/instructions into visible text.
 
 Start with the total execution plan; author draft directly with version/anchors, not an implicit external generator. Send every real artifact to web/chat with job/version/path and verified measures. Do not represent a prompt/hash/metadata as visual or auditory inspection.
 

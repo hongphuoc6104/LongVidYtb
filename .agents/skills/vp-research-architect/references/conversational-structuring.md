@@ -19,7 +19,7 @@ Mọi video ngắn độc lập (`short_9x16`) và mỗi chương lớn của vi
   1. **Câu đầu tiên $\le 18$ âm tiết (`Counter-Intuitive / Truth-Slap Hook`):** Đi thẳng vào nghịch lý phản trực giác hoặc lật tẩy sai lầm học thuật phổ biến (ví dụ: *"Đọc lại giáo trình năm lần chỉ đang ru ngủ bộ não của bạn."* — 14 âm tiết; hoặc *"Bài báo khoa học quốc tế không bao giờ bắt đầu bằng việc mở Word."* — 15 âm tiết). Tuyệt đối cấm mở đầu bằng *"Hãy nghĩ về..."*, *"Hãy tưởng tượng..."*, *"Hãy hình dung..."*.
   2. **Zero Pause in First 15 Seconds (`OPENING_SCENE_PAUSE_FORBIDDEN`):** Nghiêm cấm chèn bất kỳ thẻ `[pause:...]` nào trong `SC01`.
   3. **Bối cảnh Việt hóa 100% & Mật độ hình ảnh mở đầu:** Neo thẳng vào đời sống sinh viên/người đi làm Việt Nam; khi lời thoại hỗ trợ, hướng tới 8–9 ảnh toàn khung trong 12–12,5 giây đầu, mỗi ảnh bám một vật thể hoặc hành động được nhắc.
-- **Tốc độ nói:** Nhanh, sắc bén, cuốn hút (**`4.2 – 4.4` âm tiết/giây**, tương đương `speed: 1.26x` cho `short_9x16`).
+- **Tốc độ nói:** Nhanh, sắc bén, cuốn hút (**`4.2 – 4.4` âm tiết/giây**, với giọng chuẩn `VietNarrator` `speed: 1.0` cho cả `short_9x16` và `long_16x9`).
 
 ### SC02: Reframe & The Dilemma (Lật ngược định kiến & Nghịch lý — 15–35%)
 - **Mục đích:** Xóa bỏ niềm tin sai lầm của số đông và mở ra khoảng trống tò mò (*Curiosity Gap*).

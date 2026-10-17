@@ -1,0 +1,169 @@
+{
+  "schema_version": "3.0",
+  "topic": "Ảo giác hiểu bài khi đọc lại và cách kiểm tra bằng tờ giấy trắng",
+  "audience": "Sinh viên và người tự học tại Việt Nam",
+  "goal": "Phân biệt cảm giác quen thuộc với khả năng tự nhớ, qua bằng chứng và một phép thử nhỏ.",
+  "video_type": "research_explainer",
+  "duration": {
+    "min_seconds": 300.0,
+    "max_seconds": 480.0
+  },
+  "scene_count": 19,
+  "required_points": [
+    {
+      "id": "R01",
+      "text": "Trang sách vàng"
+    },
+    {
+      "id": "R02",
+      "text": "Câu hỏi giữa giảng đường"
+    },
+    {
+      "id": "R03",
+      "text": "Hai lối học"
+    },
+    {
+      "id": "R04",
+      "text": "Mốc kiểm tra"
+    },
+    {
+      "id": "R05",
+      "text": "Lợi thế trước mắt"
+    },
+    {
+      "id": "R06",
+      "text": "Đổi ngôi sau trì hoãn"
+    },
+    {
+      "id": "R07",
+      "text": "Tự tin và kết quả"
+    },
+    {
+      "id": "R08",
+      "text": "Tấm bản đồ"
+    },
+    {
+      "id": "R09",
+      "text": "Chiếc cầu thiếu nhịp"
+    },
+    {
+      "id": "R10",
+      "text": "Cánh cửa gợi ý"
+    },
+    {
+      "id": "R11",
+      "text": "Một lỗi hữu ích"
+    },
+    {
+      "id": "R12",
+      "text": "Giới hạn bằng chứng"
+    },
+    {
+      "id": "R13",
+      "text": "Bài báo khó"
+    },
+    {
+      "id": "R14",
+      "text": "Câu hỏi phản biện"
+    },
+    {
+      "id": "R15",
+      "text": "Chọn một phép thử"
+    },
+    {
+      "id": "R16",
+      "text": "Trở lại bàn học"
+    },
+    {
+      "id": "R17",
+      "text": "Tài liệu vẫn cần"
+    },
+    {
+      "id": "R18",
+      "text": "Trở lại trang vàng"
+    },
+    {
+      "id": "R19",
+      "text": "Một câu hỏi mang theo"
+    }
+  ],
+  "language": "vi",
+  "tone": "Điềm đạm, ấm áp, thông tuệ, gần gũi",
+  "style": "Hand-drawn 2D marker illustration, anonymous round-headed stick figures, flat muted teal and yellow. Complete integrated scenes; white cards use pure white. No unrequested lettering.",
+  "aspect_ratio": "16:9",
+  "format_profile": "long_16x9",
+  "facts_required": true,
+  "sources": [
+    {
+      "id": "SRC01",
+      "title": "Test-Enhanced Learning: Taking Memory Tests Improves Long-Term Retention",
+      "reference": "Roediger & Karpicke (2006), Psychological Science 17(3), 249–255. https://doi.org/10.1111/j.1467-9280.2006.01693.x; accessed 2026-10-16.",
+      "facts": [
+        "Tự kiểm tra có thể giúp ghi nhớ lâu hơn đọc lại."
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "aspect_ratio": "16:9",
+      "language": "vi",
+      "subtitles": false,
+      "voice": "VietNarrator",
+      "speed": 1.0
+    }
+  ],
+  "planning": {
+    "success_criteria": [
+      "Phân biệt cảm giác quen thuộc với khả năng tự nhớ, qua bằng chứng và một phép thử nhỏ."
+    ],
+    "avoid": [
+      "Tránh lối diễn đạt giáo điều, sáo rỗng hoặc thuật ngữ hàn lâm không giải thích."
+    ],
+    "prior_knowledge": "Không đòi hỏi kiến thức chuyên sâu từ trước.",
+    "pacing": "Theo lời dẫn tự nhiên Conversational Essayist, cân chỉnh triệt tiêu dead-air.",
+    "domain_requirements": [],
+    "assumptions": [
+      "Mỗi phân cảnh được cân chỉnh theo công thức âm học P_tail và dung sai drift <= 0.3s."
+    ],
+    "text_style": {
+      "font": "sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt",
+      "color": "#172033",
+      "outline": "nền sáng tương phản",
+      "size": "dễ đọc trên màn hình ngang (khung 16:9)",
+      "placement": "cách mép ít nhất 10%; bố cục ngang thoáng, không ép lề dọc điện thoại"
+    },
+    "speech_rates": {
+      "vi": {
+        "units_per_second": 4.0,
+        "uncertainty": 0.15,
+        "source": "Acoustic calibrated cadence"
+      },
+      "en": {
+        "units_per_second": 2.5,
+        "uncertainty": 0.25,
+        "source": "Estimated English reading rate"
+      }
+    }
+  },
+  "conversational_facts": true,
+  "packaging": {
+    "youtube_title": "Đọc Rất Chăm, Vì Sao Gấp Sách Lại Quên?",
+    "thumbnail_spec": {
+      "visual_hook": "An open highlighted textbook beside a blank recall sheet.",
+      "text_overlay": "HIỂU THẬT CHƯA",
+      "contrast_pair": "Trang sách quen mắt và tờ giấy tự nhớ"
+    },
+    "channel_pillar": "Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật",
+    "funnel_tier": "tier_1_broad",
+    "seo_keywords": []
+  },
+  "youtube_title": "Đọc Rất Chăm, Vì Sao Gấp Sách Lại Quên?",
+  "thumbnail_spec": {
+    "visual_hook": "An open highlighted textbook beside a blank recall sheet.",
+    "text_overlay": "HIỂU THẬT CHƯA",
+    "contrast_pair": "Trang sách quen mắt và tờ giấy tự nhớ"
+  },
+  "channel_pillar": "Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật",
+  "funnel_tier": "tier_1_broad",
+  "visual_pacing_profile": "full_frame_v1"
+}

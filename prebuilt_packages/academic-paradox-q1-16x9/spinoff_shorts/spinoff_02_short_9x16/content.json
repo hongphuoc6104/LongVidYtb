@@ -1,0 +1,1094 @@
+{
+  "schema_version": "3.0",
+  "brief_revision": 1,
+  "brief_hash": "7c2a91f7063763c7ebedda38f9dd7ed48c993c6e348a62f37c702d21a9e6ef9e",
+  "topic": "Nghịch lý Tri thức và Ảo giác Năng lực: Giải phẫu cơ chế nhận thức khiến việc đọc lại giáo trình thụ động làm tê liệt tư duy nghiên cứu chuẩn Q1 — Spin-off: Tâm lý Hội đồng Bảo vệ trong 120 Giây Đầu",
+  "duration": {
+    "min_seconds": 45.0,
+    "max_seconds": 60.0
+  },
+  "style": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que tương tác trực tiếp với Sơ đồ 3 Bước Phản Biện trong cùng bối cảnh, khung dọc 9:16.",
+  "required_points": [
+    "Cửa sổ một trăm hai mươi giây đầu tiên khi bước lên bục bảo vệ khóa luận",
+    "Hành động đầu tiên của giám khảo là lật trang danh mục tài liệu tham khảo",
+    "Sai lầm đốt năm phút đầu đọc lại định nghĩa và trả lời tính mới bằng số liệu rời rạc",
+    "Đối lập giữa liệt kê số liệu lan man và cấu trúc phản biện ba bước sắc bén",
+    "Khép vòng lặp làm chủ hoàn toàn phòng bảo vệ khóa luận ngay từ hai phút đầu"
+  ],
+  "characters": [
+    {
+      "id": "CH01",
+      "name": "Nhân vật người que nghiên cứu",
+      "appearance": "Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung",
+      "outfit": "Áo sơ mi học thuật tối giản nét mực đen"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "SC01",
+      "title": "Cửa sổ một trăm hai mươi giây đầu tiên khi bước lên bục bảo vệ khóa luận",
+      "purpose": "Cửa sổ một trăm hai mươi giây đầu tiên khi bước lên bục bảo vệ khóa luận",
+      "action": "Nhân vật người que đứng trên bục bảo vệ đối diện bàn hội đồng và đồng hồ 120 giây",
+      "setting": "Phòng bảo vệ khóa luận đại học tại Việt Nam với đồng hồ đếm ngược 120 giây",
+      "camera": "Đẩy cận cảnh vào đồng hồ 120 giây",
+      "narration": "Hội đồng bảo vệ định hình phán quyết ngay trong hai phút đầu tiên. Khi bạn bước lên bục thuyết trình, đồng hồ tâm lý đã bắt đầu đếm ngược.",
+      "requirements": [
+        "R01"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC01"
+      ],
+      "images": [
+        {
+          "id": "SC01_I1",
+          "description": "Phòng bảo vệ khóa luận đại học tại Việt Nam với đồng hồ đếm ngược 120 giây. Nhân vật người que đứng trên bục bảo vệ đối diện bàn hội đồng và đồng hồ 120 giây. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: Hội đồng. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Establish the complete scene and its opening action.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC01_I2",
+          "description": "Phòng bảo vệ khóa luận đại học tại Việt Nam với đồng hồ đếm ngược 120 giây. Nhân vật người que đứng trên bục bảo vệ đối diện bàn hội đồng và đồng hồ 120 giây. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: phán quyết. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC01_I1",
+          "preserve": "Keep the same setting (Phòng bảo vệ khóa luận đại học tại Việt Nam với đồng hồ đếm ngược 120 giây), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: phán quyết.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC01_I3",
+          "description": "Phòng bảo vệ khóa luận đại học tại Việt Nam với đồng hồ đếm ngược 120 giây. Nhân vật người que đứng trên bục bảo vệ đối diện bàn hội đồng và đồng hồ 120 giây. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: hai phút. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC01_I2",
+          "preserve": "Keep the same setting (Phòng bảo vệ khóa luận đại học tại Việt Nam với đồng hồ đếm ngược 120 giây), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: hai phút.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC01_I4",
+          "description": "Phòng bảo vệ khóa luận đại học tại Việt Nam với đồng hồ đếm ngược 120 giây. Nhân vật người que đứng trên bục bảo vệ đối diện bàn hội đồng và đồng hồ 120 giây. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: bạn bước. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC01_I3",
+          "preserve": "Keep the same setting (Phòng bảo vệ khóa luận đại học tại Việt Nam với đồng hồ đếm ngược 120 giây), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: bạn bước.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC01_I5",
+          "description": "Phòng bảo vệ khóa luận đại học tại Việt Nam với đồng hồ đếm ngược 120 giây. Nhân vật người que đứng trên bục bảo vệ đối diện bàn hội đồng và đồng hồ 120 giây. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: trình, đồng. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC01_I4",
+          "preserve": "Keep the same setting (Phòng bảo vệ khóa luận đại học tại Việt Nam với đồng hồ đếm ngược 120 giây), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: trình, đồng.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC01_I6",
+          "description": "Phòng bảo vệ khóa luận đại học tại Việt Nam với đồng hồ đếm ngược 120 giây. Nhân vật người que đứng trên bục bảo vệ đối diện bàn hội đồng và đồng hồ 120 giây. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: đã bắt. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC01_I5",
+          "preserve": "Keep the same setting (Phòng bảo vệ khóa luận đại học tại Việt Nam với đồng hồ đếm ngược 120 giây), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: đã bắt.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC01_B1",
+          "image_id": "SC01_I1",
+          "purpose": "Cửa sổ một trăm hai mươi giây đầu tiên khi bước lên bục bảo vệ khóa luận",
+          "anchor": {
+            "vi": {
+              "quote": "Hội đồng",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B2",
+          "image_id": "SC01_I2",
+          "purpose": "Cửa sổ một trăm hai mươi giây đầu tiên khi bước lên bục bảo vệ khóa luận",
+          "anchor": {
+            "vi": {
+              "quote": "phán quyết",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B3",
+          "image_id": "SC01_I3",
+          "purpose": "Cửa sổ một trăm hai mươi giây đầu tiên khi bước lên bục bảo vệ khóa luận",
+          "anchor": {
+            "vi": {
+              "quote": "hai phút",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B4",
+          "image_id": "SC01_I4",
+          "purpose": "Cửa sổ một trăm hai mươi giây đầu tiên khi bước lên bục bảo vệ khóa luận",
+          "anchor": {
+            "vi": {
+              "quote": "bạn bước",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B5",
+          "image_id": "SC01_I5",
+          "purpose": "Cửa sổ một trăm hai mươi giây đầu tiên khi bước lên bục bảo vệ khóa luận",
+          "anchor": {
+            "vi": {
+              "quote": "trình, đồng",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B6",
+          "image_id": "SC01_I6",
+          "purpose": "Cửa sổ một trăm hai mươi giây đầu tiên khi bước lên bục bảo vệ khóa luận",
+          "anchor": {
+            "vi": {
+              "quote": "đã bắt",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "foley_cue": "Tiếng đồng hồ tích tắc",
+      "narration_en": "Defense committees form their verdict within the first two minutes. When you step up to the podium, the psychological clock starts ticking."
+    },
+    {
+      "id": "SC02",
+      "title": "Hành động đầu tiên của giám khảo là lật trang danh mục tài liệu tham khảo",
+      "purpose": "Hành động đầu tiên của giám khảo là lật trang danh mục tài liệu tham khảo",
+      "action": "Nhân vật người que soi kính lúp vào trang Danh mục tài liệu tham khảo ở cuối cuốn khóa luận",
+      "setting": "Bàn hội đồng với cuốn khóa luận mở sẵn ở trang Danh mục tài liệu tham khảo",
+      "camera": "Toàn cảnh lật về trang cuối",
+      "narration": "Tám mươi phần trăm sinh viên tưởng thầy cô đang chăm chú đọc màn chiếu mở đầu. [pause:900ms] Thực tế trong phòng bảo vệ, giám khảo luôn lật trang tài liệu tham khảo trước khi nghe bạn nói.",
+      "requirements": [
+        "R02"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC01"
+      ],
+      "images": [
+        {
+          "id": "SC02_I1",
+          "description": "Bàn hội đồng với cuốn khóa luận mở sẵn ở trang Danh mục tài liệu tham khảo. Nhân vật người que soi kính lúp vào trang Danh mục tài liệu tham khảo ở cuối cuốn khóa luận. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: Tám mươi. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Establish the complete scene and its opening action.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC02_I2",
+          "description": "Bàn hội đồng với cuốn khóa luận mở sẵn ở trang Danh mục tài liệu tham khảo. Nhân vật người que soi kính lúp vào trang Danh mục tài liệu tham khảo ở cuối cuốn khóa luận. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: tưởng thầy. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC02_I1",
+          "preserve": "Keep the same setting (Bàn hội đồng với cuốn khóa luận mở sẵn ở trang Danh mục tài liệu tham khảo), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: tưởng thầy.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC02_I3",
+          "description": "Bàn hội đồng với cuốn khóa luận mở sẵn ở trang Danh mục tài liệu tham khảo. Nhân vật người que soi kính lúp vào trang Danh mục tài liệu tham khảo ở cuối cuốn khóa luận. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: đọc màn. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC02_I2",
+          "preserve": "Keep the same setting (Bàn hội đồng với cuốn khóa luận mở sẵn ở trang Danh mục tài liệu tham khảo), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: đọc màn.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC02_I4",
+          "description": "Bàn hội đồng với cuốn khóa luận mở sẵn ở trang Danh mục tài liệu tham khảo. Nhân vật người que soi kính lúp vào trang Danh mục tài liệu tham khảo ở cuối cuốn khóa luận. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: Thực tế. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC02_I3",
+          "preserve": "Keep the same setting (Bàn hội đồng với cuốn khóa luận mở sẵn ở trang Danh mục tài liệu tham khảo), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: Thực tế.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC02_I5",
+          "description": "Bàn hội đồng với cuốn khóa luận mở sẵn ở trang Danh mục tài liệu tham khảo. Nhân vật người que soi kính lúp vào trang Danh mục tài liệu tham khảo ở cuối cuốn khóa luận. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: phòng bảo. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC02_I4",
+          "preserve": "Keep the same setting (Bàn hội đồng với cuốn khóa luận mở sẵn ở trang Danh mục tài liệu tham khảo), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: phòng bảo.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC02_I6",
+          "description": "Bàn hội đồng với cuốn khóa luận mở sẵn ở trang Danh mục tài liệu tham khảo. Nhân vật người que soi kính lúp vào trang Danh mục tài liệu tham khảo ở cuối cuốn khóa luận. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: lật trang. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC02_I5",
+          "preserve": "Keep the same setting (Bàn hội đồng với cuốn khóa luận mở sẵn ở trang Danh mục tài liệu tham khảo), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: lật trang.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC02_I7",
+          "description": "Bàn hội đồng với cuốn khóa luận mở sẵn ở trang Danh mục tài liệu tham khảo. Nhân vật người que soi kính lúp vào trang Danh mục tài liệu tham khảo ở cuối cuốn khóa luận. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: trước khi. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC02_I6",
+          "preserve": "Keep the same setting (Bàn hội đồng với cuốn khóa luận mở sẵn ở trang Danh mục tài liệu tham khảo), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: trước khi.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC02_B1",
+          "image_id": "SC02_I1",
+          "purpose": "Hành động đầu tiên của giám khảo là lật trang danh mục tài liệu tham khảo",
+          "anchor": {
+            "vi": {
+              "quote": "Tám mươi",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B2",
+          "image_id": "SC02_I2",
+          "purpose": "Hành động đầu tiên của giám khảo là lật trang danh mục tài liệu tham khảo",
+          "anchor": {
+            "vi": {
+              "quote": "tưởng thầy",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B3",
+          "image_id": "SC02_I3",
+          "purpose": "Hành động đầu tiên của giám khảo là lật trang danh mục tài liệu tham khảo",
+          "anchor": {
+            "vi": {
+              "quote": "đọc màn",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B4",
+          "image_id": "SC02_I4",
+          "purpose": "Hành động đầu tiên của giám khảo là lật trang danh mục tài liệu tham khảo",
+          "anchor": {
+            "vi": {
+              "quote": "Thực tế",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B5",
+          "image_id": "SC02_I5",
+          "purpose": "Hành động đầu tiên của giám khảo là lật trang danh mục tài liệu tham khảo",
+          "anchor": {
+            "vi": {
+              "quote": "phòng bảo",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B6",
+          "image_id": "SC02_I6",
+          "purpose": "Hành động đầu tiên của giám khảo là lật trang danh mục tài liệu tham khảo",
+          "anchor": {
+            "vi": {
+              "quote": "lật trang",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B7",
+          "image_id": "SC02_I7",
+          "purpose": "Hành động đầu tiên của giám khảo là lật trang danh mục tài liệu tham khảo",
+          "anchor": {
+            "vi": {
+              "quote": "trước khi",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "foley_cue": "Tiếng lật giấy nhanh",
+      "narration_en": "Eighty percent of students think professors are reading the opening slide. [pause:900ms] In reality, examiners flip straight to the reference list before listening."
+    },
+    {
+      "id": "SC03",
+      "title": "Sai lầm đốt năm phút đầu đọc lại định nghĩa và trả lời tính mới bằng số liệu rời rạc",
+      "purpose": "Sai lầm đốt năm phút đầu đọc lại định nghĩa và trả lời tính mới bằng số liệu rời rạc",
+      "action": "Nhân vật người que gạch chéo khung trình chiếu định nghĩa dài dòng và bảng số liệu hỗn độn",
+      "setting": "Phòng thuyết trình với bảng cảnh báo hai lỗi mở bài kinh điển trên bục bảo vệ",
+      "camera": "Cận cảnh tấm bảng lỗi",
+      "narration": "Đọc lại định nghĩa giáo trình làm mất điểm ngay từ mở bài. Khi hội đồng hỏi đề tài này có gì mới, nhiều bạn lại cuống cuồng đọc hàng loạt bảng số liệu. Nhưng số liệu dày đặc kia không bao giờ thay thế được khoảng trống nghiên cứu.",
+      "requirements": [
+        "R03"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC02"
+      ],
+      "images": [
+        {
+          "id": "SC03_I1",
+          "description": "Phòng thuyết trình với bảng cảnh báo hai lỗi mở bài kinh điển trên bục bảo vệ. Nhân vật người que gạch chéo khung trình chiếu định nghĩa dài dòng và bảng số liệu hỗn độn. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: Đọc lại. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Establish the complete scene and its opening action.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC03_I2",
+          "description": "Phòng thuyết trình với bảng cảnh báo hai lỗi mở bài kinh điển trên bục bảo vệ. Nhân vật người que gạch chéo khung trình chiếu định nghĩa dài dòng và bảng số liệu hỗn độn. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: điểm ngay. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC03_I1",
+          "preserve": "Keep the same setting (Phòng thuyết trình với bảng cảnh báo hai lỗi mở bài kinh điển trên bục bảo vệ), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: điểm ngay.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC03_I3",
+          "description": "Phòng thuyết trình với bảng cảnh báo hai lỗi mở bài kinh điển trên bục bảo vệ. Nhân vật người que gạch chéo khung trình chiếu định nghĩa dài dòng và bảng số liệu hỗn độn. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: tài này. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC03_I2",
+          "preserve": "Keep the same setting (Phòng thuyết trình với bảng cảnh báo hai lỗi mở bài kinh điển trên bục bảo vệ), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: tài này.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC03_I4",
+          "description": "Phòng thuyết trình với bảng cảnh báo hai lỗi mở bài kinh điển trên bục bảo vệ. Nhân vật người que gạch chéo khung trình chiếu định nghĩa dài dòng và bảng số liệu hỗn độn. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: cuồng đọc. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC03_I3",
+          "preserve": "Keep the same setting (Phòng thuyết trình với bảng cảnh báo hai lỗi mở bài kinh điển trên bục bảo vệ), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: cuồng đọc.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC03_I5",
+          "description": "Phòng thuyết trình với bảng cảnh báo hai lỗi mở bài kinh điển trên bục bảo vệ. Nhân vật người que gạch chéo khung trình chiếu định nghĩa dài dòng và bảng số liệu hỗn độn. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: số liệu. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC03_I4",
+          "preserve": "Keep the same setting (Phòng thuyết trình với bảng cảnh báo hai lỗi mở bài kinh điển trên bục bảo vệ), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: số liệu.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC03_I6",
+          "description": "Phòng thuyết trình với bảng cảnh báo hai lỗi mở bài kinh điển trên bục bảo vệ. Nhân vật người que gạch chéo khung trình chiếu định nghĩa dài dòng và bảng số liệu hỗn độn. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: thay thế. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC03_I5",
+          "preserve": "Keep the same setting (Phòng thuyết trình với bảng cảnh báo hai lỗi mở bài kinh điển trên bục bảo vệ), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: thay thế.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC03_B1",
+          "image_id": "SC03_I1",
+          "purpose": "Sai lầm đốt năm phút đầu đọc lại định nghĩa và trả lời tính mới bằng số liệu rời rạc",
+          "anchor": {
+            "vi": {
+              "quote": "Đọc lại",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B2",
+          "image_id": "SC03_I2",
+          "purpose": "Sai lầm đốt năm phút đầu đọc lại định nghĩa và trả lời tính mới bằng số liệu rời rạc",
+          "anchor": {
+            "vi": {
+              "quote": "điểm ngay",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B3",
+          "image_id": "SC03_I3",
+          "purpose": "Sai lầm đốt năm phút đầu đọc lại định nghĩa và trả lời tính mới bằng số liệu rời rạc",
+          "anchor": {
+            "vi": {
+              "quote": "tài này",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B4",
+          "image_id": "SC03_I4",
+          "purpose": "Sai lầm đốt năm phút đầu đọc lại định nghĩa và trả lời tính mới bằng số liệu rời rạc",
+          "anchor": {
+            "vi": {
+              "quote": "cuồng đọc",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B5",
+          "image_id": "SC03_I5",
+          "purpose": "Sai lầm đốt năm phút đầu đọc lại định nghĩa và trả lời tính mới bằng số liệu rời rạc",
+          "anchor": {
+            "vi": {
+              "quote": "số liệu",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B6",
+          "image_id": "SC03_I6",
+          "purpose": "Sai lầm đốt năm phút đầu đọc lại định nghĩa và trả lời tính mới bằng số liệu rời rạc",
+          "anchor": {
+            "vi": {
+              "quote": "thay thế",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "foley_cue": "Tiếng còi cảnh báo nhẹ",
+      "narration_en": "Reading textbook definitions loses points right from the opening. When asked what is new, many students frantically recite raw data tables. Yet numbers never replace a clear research gap."
+    },
+    {
+      "id": "SC04",
+      "title": "Đối lập giữa liệt kê số liệu lan man và cấu trúc phản biện ba bước sắc bén",
+      "purpose": "Đối lập giữa liệt kê số liệu lan man và cấu trúc phản biện ba bước sắc bén",
+      "action": "Nhân vật người que chỉ tay vào sơ đồ 3 khối mũi tên phản biện rõ nét",
+      "setting": "Bảng sơ đồ Cấu trúc Phản biện 3 Bước: Đã biết -> Lỗ hổng bỏ ngỏ -> Giải pháp đo đạc",
+      "camera": "Lia ngang sang sơ đồ 3 bước",
+      "narration": "Người lúng túng chỉ liệt kê mình đã chạy bao nhiêu mẫu khảo sát. Ngược lại, cấu trúc phản biện ba bước giúp làm chủ câu hỏi tính mới. Hãy nêu rõ người trước làm gì, bỏ ngỏ gì, và bạn đo đạc ra sao.",
+      "requirements": [
+        "R04"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC02"
+      ],
+      "images": [
+        {
+          "id": "SC04_I1",
+          "description": "Bảng sơ đồ Cấu trúc Phản biện 3 Bước: Đã biết -> Lỗ hổng bỏ ngỏ -> Giải pháp đo đạc. Nhân vật người que chỉ tay vào sơ đồ 3 khối mũi tên phản biện rõ nét. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: Người lúng. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Establish the complete scene and its opening action.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC04_I2",
+          "description": "Bảng sơ đồ Cấu trúc Phản biện 3 Bước: Đã biết -> Lỗ hổng bỏ ngỏ -> Giải pháp đo đạc. Nhân vật người que chỉ tay vào sơ đồ 3 khối mũi tên phản biện rõ nét. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: bao nhiêu. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC04_I1",
+          "preserve": "Keep the same setting (Bảng sơ đồ Cấu trúc Phản biện 3 Bước: Đã biết -> Lỗ hổng bỏ ngỏ -> Giải pháp đo đạc), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: bao nhiêu.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC04_I3",
+          "description": "Bảng sơ đồ Cấu trúc Phản biện 3 Bước: Đã biết -> Lỗ hổng bỏ ngỏ -> Giải pháp đo đạc. Nhân vật người que chỉ tay vào sơ đồ 3 khối mũi tên phản biện rõ nét. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: trúc phản. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC04_I2",
+          "preserve": "Keep the same setting (Bảng sơ đồ Cấu trúc Phản biện 3 Bước: Đã biết -> Lỗ hổng bỏ ngỏ -> Giải pháp đo đạc), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: trúc phản.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC04_I4",
+          "description": "Bảng sơ đồ Cấu trúc Phản biện 3 Bước: Đã biết -> Lỗ hổng bỏ ngỏ -> Giải pháp đo đạc. Nhân vật người que chỉ tay vào sơ đồ 3 khối mũi tên phản biện rõ nét. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: hỏi tính. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC04_I3",
+          "preserve": "Keep the same setting (Bảng sơ đồ Cấu trúc Phản biện 3 Bước: Đã biết -> Lỗ hổng bỏ ngỏ -> Giải pháp đo đạc), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: hỏi tính.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC04_I5",
+          "description": "Bảng sơ đồ Cấu trúc Phản biện 3 Bước: Đã biết -> Lỗ hổng bỏ ngỏ -> Giải pháp đo đạc. Nhân vật người que chỉ tay vào sơ đồ 3 khối mũi tên phản biện rõ nét. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: gì, bỏ. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC04_I4",
+          "preserve": "Keep the same setting (Bảng sơ đồ Cấu trúc Phản biện 3 Bước: Đã biết -> Lỗ hổng bỏ ngỏ -> Giải pháp đo đạc), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: gì, bỏ.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC04_B1",
+          "image_id": "SC04_I1",
+          "purpose": "Đối lập giữa liệt kê số liệu lan man và cấu trúc phản biện ba bước sắc bén",
+          "anchor": {
+            "vi": {
+              "quote": "Người lúng",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B2",
+          "image_id": "SC04_I2",
+          "purpose": "Đối lập giữa liệt kê số liệu lan man và cấu trúc phản biện ba bước sắc bén",
+          "anchor": {
+            "vi": {
+              "quote": "bao nhiêu",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B3",
+          "image_id": "SC04_I3",
+          "purpose": "Đối lập giữa liệt kê số liệu lan man và cấu trúc phản biện ba bước sắc bén",
+          "anchor": {
+            "vi": {
+              "quote": "trúc phản",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B4",
+          "image_id": "SC04_I4",
+          "purpose": "Đối lập giữa liệt kê số liệu lan man và cấu trúc phản biện ba bước sắc bén",
+          "anchor": {
+            "vi": {
+              "quote": "hỏi tính",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B5",
+          "image_id": "SC04_I5",
+          "purpose": "Đối lập giữa liệt kê số liệu lan man và cấu trúc phản biện ba bước sắc bén",
+          "anchor": {
+            "vi": {
+              "quote": "gì, bỏ",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "foley_cue": "Tiếng khóa mục tiêu sắc gọn",
+      "narration_en": "Confused speakers only list how many samples they surveyed. Conversely, a three-step rebuttal structure commands the novelty question. State what prior work did, what gap remained, and how your method solves it."
+    },
+    {
+      "id": "SC05",
+      "title": "Khép vòng lặp làm chủ hoàn toàn phòng bảo vệ khóa luận ngay từ hai phút đầu",
+      "purpose": "Khép vòng lặp làm chủ hoàn toàn phòng bảo vệ khóa luận ngay từ hai phút đầu",
+      "action": "Nhân vật người que mỉm cười tự tin trên bục bảo vệ khi đồng hồ 120 giây sáng đèn xanh",
+      "setting": "Phòng bảo vệ khóa luận sáng rõ với sự đồng thuận của hội đồng",
+      "camera": "Trung cảnh mở rộng",
+      "narration": "Khi mở màn trực diện bằng khoảng trống tri thức, bạn sẽ thuyết phục trọn vẹn hội đồng. Một trăm hai mươi giây đầu tiên trên bục bảo vệ giờ nằm trọn trong tay bạn.",
+      "requirements": [
+        "R05"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC01"
+      ],
+      "images": [
+        {
+          "id": "SC05_I1",
+          "description": "Phòng bảo vệ khóa luận sáng rõ với sự đồng thuận của hội đồng. Nhân vật người que mỉm cười tự tin trên bục bảo vệ khi đồng hồ 120 giây sáng đèn xanh. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: Khi mở. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Establish the complete scene and its opening action.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC05_I2",
+          "description": "Phòng bảo vệ khóa luận sáng rõ với sự đồng thuận của hội đồng. Nhân vật người que mỉm cười tự tin trên bục bảo vệ khi đồng hồ 120 giây sáng đèn xanh. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: thức, bạn. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC05_I1",
+          "preserve": "Keep the same setting (Phòng bảo vệ khóa luận sáng rõ với sự đồng thuận của hội đồng), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: thức, bạn.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC05_I3",
+          "description": "Phòng bảo vệ khóa luận sáng rõ với sự đồng thuận của hội đồng. Nhân vật người que mỉm cười tự tin trên bục bảo vệ khi đồng hồ 120 giây sáng đèn xanh. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: đồng. Một. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC05_I2",
+          "preserve": "Keep the same setting (Phòng bảo vệ khóa luận sáng rõ với sự đồng thuận của hội đồng), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: đồng. Một.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC05_I4",
+          "description": "Phòng bảo vệ khóa luận sáng rõ với sự đồng thuận của hội đồng. Nhân vật người que mỉm cười tự tin trên bục bảo vệ khi đồng hồ 120 giây sáng đèn xanh. Render one integrated full-frame composition with figures and props physically grounded in the setting. Visual focus: bục bảo. Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC05_I3",
+          "preserve": "Keep the same setting (Phòng bảo vệ khóa luận sáng rõ với sự đồng thuận của hội đồng), character design, and surrounding props. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shift the full-frame emphasis to this next narrated action or object: bục bảo.",
+          "reason": "Full-frame visual beat tied to a concrete narration phrase.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC05_B1",
+          "image_id": "SC05_I1",
+          "purpose": "Khép vòng lặp làm chủ hoàn toàn phòng bảo vệ khóa luận ngay từ hai phút đầu",
+          "anchor": {
+            "vi": {
+              "quote": "Khi mở",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B2",
+          "image_id": "SC05_I2",
+          "purpose": "Khép vòng lặp làm chủ hoàn toàn phòng bảo vệ khóa luận ngay từ hai phút đầu",
+          "anchor": {
+            "vi": {
+              "quote": "thức, bạn",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B3",
+          "image_id": "SC05_I3",
+          "purpose": "Khép vòng lặp làm chủ hoàn toàn phòng bảo vệ khóa luận ngay từ hai phút đầu",
+          "anchor": {
+            "vi": {
+              "quote": "đồng. Một",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B4",
+          "image_id": "SC05_I4",
+          "purpose": "Khép vòng lặp làm chủ hoàn toàn phòng bảo vệ khóa luận ngay từ hai phút đầu",
+          "anchor": {
+            "vi": {
+              "quote": "bục bảo",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "foley_cue": "Tiếng gõ bút đồng thuận",
+      "narration_en": "When you open directly with a clear research gap and top-tier sources, you win over the entire committee within the first one hundred twenty seconds."
+    }
+  ],
+  "coverage": [
+    {
+      "requirement_id": "R01",
+      "scene_id": "SC01",
+      "quote": "Khi bạn bước lên bục thuyết trình, đồng hồ tâm lý đã bắt đầu đếm ngược"
+    },
+    {
+      "requirement_id": "R02",
+      "scene_id": "SC02",
+      "quote": "[pause:900ms] Thực tế trong phòng bảo vệ, giám khảo luôn lật trang tài liệu tham khảo trước khi nghe bạn nói"
+    },
+    {
+      "requirement_id": "R03",
+      "scene_id": "SC03",
+      "quote": "Đọc lại định nghĩa giáo trình làm mất điểm ngay từ mở bài"
+    },
+    {
+      "requirement_id": "R04",
+      "scene_id": "SC04",
+      "quote": "Ngược lại, cấu trúc phản biện ba bước giúp làm chủ câu hỏi tính mới"
+    },
+    {
+      "requirement_id": "R05",
+      "scene_id": "SC05",
+      "quote": "Một trăm hai mươi giây đầu tiên trên bục bảo vệ giờ nằm trọn trong tay bạn"
+    }
+  ],
+  "outline": [
+    {
+      "scene_id": "SC01",
+      "purpose": "Cửa sổ một trăm hai mươi giây đầu tiên khi bước lên bục bảo vệ khóa luận",
+      "requirements": [
+        "R01"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC02",
+      "purpose": "Hành động đầu tiên của giám khảo là lật trang danh mục tài liệu tham khảo",
+      "requirements": [
+        "R02"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC03",
+      "purpose": "Sai lầm đốt năm phút đầu đọc lại định nghĩa và trả lời tính mới bằng số liệu rời rạc",
+      "requirements": [
+        "R03"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC04",
+      "purpose": "Đối lập giữa liệt kê số liệu lan man và cấu trúc phản biện ba bước sắc bén",
+      "requirements": [
+        "R04"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC05",
+      "purpose": "Khép vòng lặp làm chủ hoàn toàn phòng bảo vệ khóa luận ngay từ hai phút đầu",
+      "requirements": [
+        "R05"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    }
+  ],
+  "claims": [
+    {
+      "scene_id": "SC01",
+      "quote": "Hội đồng bảo vệ định hình phán quyết ngay trong hai phút đầu tiên",
+      "language": "vi",
+      "source_id": "SRC01",
+      "fact": "Hội đồng bảo vệ định hình phán quyết ngay trong hai phút đầu tiên."
+    },
+    {
+      "scene_id": "SC02",
+      "quote": "giám khảo luôn lật trang tài liệu tham khảo trước khi nghe bạn nói",
+      "language": "vi",
+      "source_id": "SRC01",
+      "fact": "Giám khảo luôn lật trang tài liệu tham khảo trước khi nghe bạn nói."
+    },
+    {
+      "scene_id": "SC03",
+      "quote": "Đọc lại định nghĩa giáo trình làm mất điểm ngay từ mở bài",
+      "language": "vi",
+      "source_id": "SRC02",
+      "fact": "Đọc lại định nghĩa giáo trình làm mất điểm ngay từ mở bài."
+    },
+    {
+      "scene_id": "SC04",
+      "quote": "cấu trúc phản biện ba bước giúp làm chủ câu hỏi tính mới",
+      "language": "vi",
+      "source_id": "SRC02",
+      "fact": "Cấu trúc phản biện ba bước giúp làm chủ câu hỏi tính mới."
+    }
+  ],
+  "revision_response": [],
+  "open_questions": []
+}

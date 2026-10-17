@@ -180,9 +180,10 @@ class TestHumanNaturalnessUpgrades(unittest.TestCase):
             validate_content(SYS_DIR, brief, 1, bhash, bad_content)
 
     def test_protocol_tone_speed_modulation_and_acoustic_word_alignment(self):
-        self.assertEqual(protocol.resolve_tone_speed(1.22, None), 1.22)
-        self.assertAlmostEqual(protocol.resolve_tone_speed(1.22, "reflective_slow"), round(1.22 * 0.92, 3), places=3)
-        self.assertAlmostEqual(protocol.resolve_tone_speed(1.22, "analytical_crisp"), round(1.22 * 1.02, 3), places=3)
+        self.assertEqual(protocol.resolve_tone_speed(1.0, None), 1.0)
+        self.assertAlmostEqual(protocol.resolve_tone_speed(1.0, "narrative_warm"), 0.98, places=3)
+        self.assertAlmostEqual(protocol.resolve_tone_speed(1.0, "reflective_slow"), 0.92, places=3)
+        self.assertAlmostEqual(protocol.resolve_tone_speed(1.0, "analytical_crisp"), 1.02, places=3)
 
         # Synthetic 2-second speech waveform at 48kHz
         import numpy as np

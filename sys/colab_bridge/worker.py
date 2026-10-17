@@ -18,41 +18,89 @@ SR = 48000
 
 _VI_ONES = ["không", "một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín"]
 _VI_LOANWORD_MAP = {
-    r"\bRichard P\. Feynman\b": "Ri-chát Phây-man",
-    r"\bRichard Lee\b": "Ri-chát Li",
-    r"\bFeynman\b": "Phây-man",
-    r"\bJu/'hoansi\b": "Giu-hoan-si",
-    r"\bKalahari\b": "Ka-la-ha-ri",
-    r"\bBotswana\b": "Bốt-xoa-na",
-    r"\bHadza\b": "Hát-da",
-    r"\bSumer\b": "Su-me",
-    r"\bEdubba\b": "Ê-đu-ba",
-    r"\bMesopotamia\b": "Mê-sô-pô-ta-mi-a",
-    r"\bJaak Panksepp\b": "Giác Păng-xép",
-    r"\bPanksepp\b": "Păng-xép",
-    r"\bdopamine\b": "đô-pa-min",
-    r"\bcortisol\b": "cóc-ti-dôn",
-    r"\badrenaline\b": "a-đrê-na-lin",
-    r"\bserotonin\b": "sê-rô-tô-nin",
-    r"\boxytocin\b": "ô-xi-tô-xin",
-    r"\bendorphin\b": "en-đô-phin",
-    r"\bglucose\b": "glu-cô-dơ",
-    r"\bamygdala\b": "hạch hạnh nhân",
-    r"\bhippocampus\b": "hồi hải mã",
-    r"\bQ1\b": "quy một",
-    r"\bWord\b": "Guốc",
-    r"\bExcel\b": "Ếch-xen",
-    r"\bhighlight\b": "hai-lai",
-    r"\bdeadline\b": "đét-lai",
-    r"\bsmartphone\b": "điện thoại thông minh",
-    r"\bpodcast\b": "pót-cát",
-    r"\bvideo\b": "vi-đê-ô",
-    r"\bemail\b": "i-meo",
-    r"\binternet\b": "in-tơ-nét",
-    r"\bwifi\b": "oai-phai",
-    r"\bTikTok\b": "Tích-tốc",
-    r"\bYouTube\b": "Diu-túp",
-    r"\bShopee\b": "Sóp-pi",
+    '\\bRichard P\\. Feynman\\b': 'Ri-chát Phây-man',
+    '\\bRichard Lee\\b': 'Ri-chát Li',
+    '\\bRichard\\b': 'Ri-chát',
+    '\\bFeynman\\b': 'Phây-man',
+    '\\bLee\\b': 'Li',
+    "\\bJu/'hoansi\\b": 'Giu-hoan-si',
+    "\\bJu/'\\b": 'Giu',
+    '\\bKalahari\\b': 'Ka-la-ha-ri',
+    '\\bBotswana\\b': 'Bốt-xoa-na',
+    '\\bHadza\\b': 'Hát-da',
+    '\\bTanzania\\b': 'Tan-da-ni-a',
+    '\\bAche\\b': 'A-sê',
+    '\\bParaguay\\b': 'Pa-ra-goay',
+    '\\bMartu\\b': 'Mác-tu',
+    '\\bBlombos\\b': 'Bờ-lôm-bốt',
+    '\\bPolly Wiessner\\b': 'Pô-li Uýt-nơ',
+    '\\bPolly\\b': 'Pô-li',
+    '\\bWiessner\\b': 'Uýt-nơ',
+    '\\bJames Suzman\\b': 'Giêm Xút-man',
+    '\\bJames\\b': 'Giêm',
+    '\\bSuzman\\b': 'Xút-man',
+    '\\bJeffrey D\\. Karpicke\\b': 'Giép-phri Ca-pích',
+    '\\bKarpicke\\b': 'Ca-pích',
+    '\\bHenry L\\. Roediger\\b': 'Hen-ri Rô-đi-gơ',
+    '\\bRoediger\\b': 'Rô-đi-gơ',
+    '\\bPaul Lockhart\\b': 'Pôn Lốc-hát',
+    '\\bLockhart\\b': 'Lốc-hát',
+    '\\bJohn Sweller\\b': 'Giôn Xoan-lơ',
+    '\\bSweller\\b': 'Xoan-lơ',
+    '\\bJohn M\\. Swales\\b': 'Giôn Xoeo',
+    '\\bSwales\\b': 'Xoeo',
+    '\\bSrinivasan Keshav\\b': 'Kê-sáp',
+    '\\bKeshav\\b': 'Kê-sáp',
+    '\\bCARS\\b': 'Ca',
+    '\\bdopamine\\b': 'đô-pa-min',
+    '\\bcortisol\\b': 'cóc-ti-dôn',
+    '\\badrenaline\\b': 'a-đrê-na-lin',
+    '\\bserotonin\\b': 'sê-rô-tô-nin',
+    '\\boxytocin\\b': 'ô-xi-tô-xin',
+    '\\bendorphin\\b': 'en-đô-phin',
+    '\\bglucose\\b': 'glu-cô-dơ',
+    '\\bprefrontal cortex\\b': 'vỏ não trước trán',
+    '\\bamygdala\\b': 'hạch hạnh nhân',
+    '\\bhippocampus\\b': 'hồi hải mã',
+    '\\bSumer\\b': 'Su-me',
+    '\\bEdubba\\b': 'Ê-đu-ba',
+    '\\bMesopotamia\\b': 'Mê-sô-pô-ta-mi-a',
+    '\\bPrussia\\b': 'Phổ',
+    '\\bJaak Panksepp\\b': 'Giác Păng-xép',
+    '\\bJaak\\b': 'Giác',
+    '\\bPanksepp\\b': 'Păng-xép',
+    '\\bTim Pychyl\\b': 'Tim Pi-chin',
+    '\\bPychyl\\b': 'Pi-chin',
+    '\\bFuschia Sirois\\b': 'Phu-si-a Si-roa',
+    '\\bSirois\\b': 'Si-roa',
+    '\\bYuval Noah Harari\\b': 'Giu-van Nô-a Ha-ra-ri',
+    '\\bHarari\\b': 'Ha-ra-ri',
+    '\\bDarwin\\b': 'Đác-uyn',
+    '\\bNewton\\b': 'Niu-tơn',
+    '\\bEinstein\\b': 'Anh-xtanh',
+    '\\bAristotle\\b': 'A-ri-xtốt',
+    '\\bSocrates\\b': 'Xô-crát',
+    '\\bPlato\\b': 'Pla-tông',
+    '\\bHomo sapiens\\b': 'Hô-mô sa-pi-en',
+    '\\bNeanderthal\\b': 'Nê-an-đơ-than',
+    '\\bsmartphone\\b': 'điện thoại thông minh',
+    '\\bpodcast\\b': 'pót-cát',
+    '\\bvideo\\b': 'vi-đê-ô',
+    '\\bemail\\b': 'i-meo',
+    '\\binternet\\b': 'in-tơ-nét',
+    '\\bwifi\\b': 'oai-phai',
+    '\\bQ1\\b': 'quy một',
+    '\\bWord\\b': 'Guốc',
+    '\\bExcel\\b': 'Ếch-xen',
+    '\\bslide\\b': 'xờ-lai',
+    '\\bhighlight\\b': 'hai-lai',
+    '\\bdeadline\\b': 'đét-lai',
+    '\\blaptop\\b': 'láp-tóp',
+    '\\bTikTok\\b': 'Tích-tốc',
+    '\\bYouTube\\b': 'Diu-túp',
+    '\\bShopee\\b': 'Sóp-pi',
+    '\\bblog\\b': 'bờ-lốc',
+    '\\bweb\\b': 'gép',
 }
 
 
@@ -91,18 +139,30 @@ def _num_to_vi(n: int) -> str:
         if rem < 100:
             return f"{th_str} không trăm {_num_to_vi(rem)}"
         return f"{th_str} {_num_to_vi(rem)}"
+    if n < 1_000_000_000:
+        m, rem = divmod(n, 1_000_000)
+        m_str = f"{_num_to_vi(m)} triệu"
+        return m_str if rem == 0 else f"{m_str} {_num_to_vi(rem)}"
     return str(n)
 
 
 def _normalize_vi_tts_text(text: str) -> str:
     """Sanitize pause tags, numbers, and loanwords for Vietnamese OmniVoice synthesis only."""
+    try:
+        from vn_text_normalizer import normalize_for_tts
+        return normalize_for_tts(text or "")
+    except ImportError:
+        pass
     res = re.sub(r"\[pause:[^\]]+\]", " , ", text or "", flags=re.IGNORECASE)
     for pat, repl in _VI_LOANWORD_MAP.items():
         res = re.sub(pat, repl, res, flags=re.IGNORECASE)
+    res = re.sub(r"(Năm|năm)\s+(\d{4})\b", lambda m: f"{m.group(1)} {_num_to_vi(int(m.group(2)))}", res)
     res = re.sub(r"\b(\d+)%", lambda m: f"{_num_to_vi(int(m.group(1)))} phần trăm", res)
     res = re.sub(r"\b\d{1,3}(?:\.\d{3})+\b", lambda m: _num_to_vi(int(m.group(0).replace(".", ""))), res)
     res = re.sub(r"\b(\d+),(\d+)\b", lambda m: f"{_num_to_vi(int(m.group(1)))} phẩy {_num_to_vi(int(m.group(2)))}", res)
-    res = re.sub(r"\b\d+\b", lambda m: _num_to_vi(int(m.group(0))) if len(m.group(0)) <= 6 else m.group(0), res)
+    res = re.sub(r"\b\d+\b", lambda m: _num_to_vi(int(m.group(0))) if len(m.group(0)) <= 9 else m.group(0), res)
+    res = res.replace("...", ",").replace("…", ",").replace("—", ",").replace("–", ",").replace(":", ",").replace(";", ",")
+    res = re.sub(r",\s*,", ",", res)
     res = re.sub(r"\s+", " ", res).strip()
     return res or text
 
