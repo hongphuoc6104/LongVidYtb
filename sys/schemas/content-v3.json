@@ -236,6 +236,16 @@
                     "background",
                     "sticker"
                   ]
+                },
+                "shot_type": {
+                  "type": "string",
+                  "enum": [
+                    "macro_prop",
+                    "full_scene",
+                    "variation",
+                    "white_card",
+                    "white_isolated"
+                  ]
                 }
               },
               "required": [
@@ -347,6 +357,9 @@
                   "additionalProperties": false
                 },
                 "camera_intent": {
+                  "type": "string"
+                },
+                "foley_cue": {
                   "type": "string"
                 }
               },
@@ -611,6 +624,9 @@
           },
           "j_l_cut_offset": {
             "type": "number"
+          },
+          "foley_cue": {
+            "type": "string"
           }
         },
         "required": [

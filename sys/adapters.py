@@ -71,16 +71,23 @@ def _flow_media_reference(p, job, *, name=None, image=None):
   metadata=read(sidecar)
   if metadata.get('source')!='google-flow-browser' or metadata.get('status')!='downloaded' or not metadata.get('forgeId'):continue
   owner_file = record.parent / 'owner.json'
-  owner_account = read(owner_file).get('account') if owner_file.is_file() else None
-  candidates.append((str(path),metadata['forgeId'], owner_account))
+  owner_data = read(owner_file) if owner_file.is_file() else {}
+  owner_account = owner_data.get('account')
+  owner_tool_url = owner_data.get('tool_url')
+  candidates.append((str(path),metadata['forgeId'], owner_account, owner_tool_url, data.get('submitted_at', 0)))
  unique_refs = list({(c[0], c[1]) for c in candidates})
  if len(unique_refs) > 1:
   try:
    from execution import settings
-   current_account = settings(p, job).get('management_session', {}).get('runtime_bindings', {}).get('flow', {}).get('account')
-   filtered = list({(c[0], c[1]) for c in candidates if c[2] == current_account})
+   current_binding = settings(p, job).get('management_session', {}).get('runtime_bindings', {}).get('flow', {})
+   current_account = current_binding.get('account')
+   current_tool_url = current_binding.get('target', {}).get('tool_url')
+   filtered = [(c[0], c[1], c[4]) for c in candidates if c[2] == current_account and (not current_tool_url or not c[3] or c[3] == current_tool_url)]
    if len(filtered) == 1:
-    return filtered[0]
+    return (filtered[0][0], filtered[0][1])
+   if len(filtered) > 1:
+    filtered.sort(key=lambda x: x[2], reverse=True)
+    return (filtered[0][0], filtered[0][1])
   except Exception:
    pass
  if len(unique_refs) != 1:
@@ -453,25 +460,64 @@ def split_into_phrases(text, max_len=32):
 def make_srt(segs):
  cues=subtitle_cues(segs)
  return '\n'.join(f"{i}\n{timestamp(c['start'])} --> {timestamp(c['end'])}\n{c['text']}\n" for i,c in enumerate(cues,1))
-def chunks(text):
- import re
- raw=re.split(r'(?<=[.!?])\s+|(?<=[.!?][\"\'”’])\s+', text.strip())
- parts=[]
- for s in raw:
-  s=s.strip()
-  if not s:continue
-  if len(s)>180:
-   sub=re.split(r'(?<=[,;:\-])\s+', s)
-   parts.extend([x.strip() for x in sub if x.strip()])
-  else:
-   parts.append(s)
- return parts if parts else [text.strip()]
-
 DEFAULT_PAUSE={'para':.70,'sentence':.50,'minor':.30,'tail':.35}
+_PAUSE_TAG_RE=re.compile(r'\[pause:\s*([0-9.]+)\s*(ms|s)?\s*\]',re.IGNORECASE)
+
+def _parse_pause_tag_sec(m):
+ val=float(m.group(1))
+ unit=(m.group(2) or '').lower()
+ return round(val/1000.0 if (unit=='ms' or (not unit and val>10)) else val,3)
 
 def gap_after(text,g):
  """Pause following a chunk inside a scene based on terminal punctuation."""
  return g.get('sentence',DEFAULT_PAUSE['sentence']) if text.rstrip()[-1:] in '.!?…' else g.get('minor',DEFAULT_PAUSE['minor'])
+
+def chunks_with_gaps(text,g=None):
+ """Split narration into sentence/pause chunks and extract exact inter-chunk pauses."""
+ g = g or DEFAULT_PAUSE
+ raw_text = (text or '').strip()
+ if not raw_text:
+  return [], []
+ segments = []
+ last_idx = 0
+ for m in _PAUSE_TAG_RE.finditer(raw_text):
+  seg = raw_text[last_idx:m.start()].strip()
+  p_sec = _parse_pause_tag_sec(m)
+  if seg:
+   segments.append((seg, p_sec))
+  elif segments:
+   segments[-1] = (segments[-1][0], round(segments[-1][1] + p_sec, 3))
+  last_idx = m.end()
+ tail_seg = raw_text[last_idx:].strip()
+ if tail_seg:
+  segments.append((tail_seg, None))
+ out_chunks = []
+ out_gaps = []
+ for seg_text, explicit_pause in segments:
+  raw_sents = re.split(r'(?<=[.!?])\s+|(?<=[.!?][\"\'”’])\s+', seg_text)
+  sub_parts = []
+  for s in raw_sents:
+   s = _PAUSE_TAG_RE.sub(' ', s).strip()
+   if not s:
+    continue
+   if len(s) > 180:
+    sub = re.split(r'(?<=[,;:\-])\s+', s)
+    sub_parts.extend([x.strip() for x in sub if x.strip()])
+   else:
+    sub_parts.append(s)
+  for idx, part in enumerate(sub_parts):
+   out_chunks.append(part)
+   if idx < len(sub_parts) - 1:
+    out_gaps.append(gap_after(part, g))
+   else:
+    out_gaps.append(explicit_pause if explicit_pause is not None else gap_after(part, g))
+ if not out_chunks:
+  cleaned = _PAUSE_TAG_RE.sub(' ', raw_text).strip()
+  return [cleaned], []
+ return out_chunks, out_gaps[:-1]
+
+def chunks(text):
+ return chunks_with_gaps(text, DEFAULT_PAUSE)[0]
 
 from audio_processing import frames_of, run_ffmpeg, AudioProcessingError
 
@@ -562,6 +608,7 @@ def english(p,j,out,cfg,scenes,remote=True):
    params=fmt;d=wav.getnframes()/wav.getframerate();frames.append(wav.readframes(wav.getnframes()))
   item={'scene_id':x['scene_id'],'start':cursor,'end':cursor+d,'path':rel(p,j,f)}
   if 'content_duration' in x:item['content_end']=cursor+x['content_duration']
+  if 'word_timestamps' in x:item['word_timestamps']=x['word_timestamps']
   if 'take' in x:item['take']=x['take']
   done.append(item);cursor+=d
  combined=out/'narration_en.wav'
@@ -578,14 +625,16 @@ def audio(p,j,out):
  from colab_bridge.protocol import build_request
  if not enabled(cfg):raise Blocked('COLAB_REQUIRED: local TTS removed')
  retake=retakes(p,j)
- scenes=[{'scene_id':s['id'],'narration':s['narration'],'texts':chunks(s['narration']),'retake':retake.get(s['id'],0)} for s in content['scenes']]
- for k,sc in enumerate(scenes):
-  sc['gaps']=[gap_after(t,g) for t in sc['texts'][:-1]]
-  sc['tail']=scene_tail(content['scenes'][k],'vi',g,k==len(scenes)-1)
-  words=[v['word'] for v in content['scenes'][k].get('vocabulary') or [] if is_english(v.get('word',''))]
+ scenes=[]
+ for k,s in enumerate(content['scenes']):
+  sc_texts, sc_gaps = chunks_with_gaps(s['narration'], g)
+  sc = {'scene_id':s['id'],'narration':s['narration'],'texts':sc_texts,'gaps':sc_gaps,'retake':retake.get(s['id'],0),
+        'tone':s.get('tone'),'tail':scene_tail(s,'vi',g,k==len(content['scenes'])-1)}
+  words=[v['word'] for v in s.get('vocabulary') or [] if is_english(v.get('word',''))]
   if words and cfg.get('audio_english_spans_engine','en')=='en':
    parts=[english_parts(t,words) for t in sc['texts']]
    if any(x['lang']=='en' for c in parts for x in c):sc['parts']=parts
+  scenes.append(sc)
  en_scenes=[]
  if needs_en(p,j):
   for k,s in enumerate(content['scenes']):
@@ -606,6 +655,7 @@ def audio(p,j,out):
    params=fmt;duration=wav.getnframes()/wav.getframerate();frames.append(wav.readframes(wav.getnframes()))
   item={'scene_id':x['scene_id'],'text':x['text'],'start':cursor,'end':cursor+duration,'path':rel(p,j,file)}
   if 'content_duration' in x:item['content_end']=cursor+x['content_duration']
+  if 'word_timestamps' in x:item['word_timestamps']=x['word_timestamps']
   segments.append(item);cursor+=duration
  combined=out/'narration.wav'
  with wave.open(str(combined),'wb') as wav:wav.setnchannels(params[0]);wav.setsampwidth(params[1]);wav.setframerate(params[2]);wav.writeframes(b''.join(frames))
@@ -621,6 +671,8 @@ def render(p,j,out):
   from remote_audio import render as render_remote
   return render_remote(p,j,out)
  content=p.payload(j,'content');imgs=p.payload(j,'images');snd=p.payload(j,'audio')
+ if any(scene.get('layers') or any(image.get('kind','scene')!='scene' for image in scene.get('images',[])) for scene in content.get('scenes',[])):
+  raise Blocked('LAYERING_DISABLED: render accepts full-frame scene images and beats only')
  public=out/'public';public.mkdir(exist_ok=True);shutil.copy(p.path(j,snd['wav']),public/'narration.wav')
  en=snd.get('en')
  if en:shutil.copy(p.path(j,en['wav']),public/'narration_en.wav')
@@ -636,35 +688,11 @@ def render(p,j,out):
     shutil.copy(src,dest);copied[path]=dest.name
    return copied[path]
   for scene in planned:
-   has_layers=bool(scene.get('layers'))
-   if has_layers:
-    from tools.matte_sticker import process_background
-    def copy_bg(path):
-     if path not in copied:
-      src=p.path(j,path);dest=public/(str(len(copied))+'-'+src.name)
-      process_background(src,dest);copied[path]=dest.name
-     return copied[path]
-    scene['image']=copy_bg(scene['image'])
-    for beat in scene.get('images',[]):beat['src']=copy_bg(beat['src'])
-    for layer in scene.get('layers',[]):
-     if layer.get('bg') or layer.get('kind') == 'background':
-      layer['src']=copy_bg(layer['src'])
-     elif layer.get('kind') == 'sticker':
-      from tools.matte_sticker import process_image
-      def copy_sticker(path):
-       if path not in copied:
-        src=p.path(j,path);dest=public/(str(len(copied))+'-stk-'+src.stem+'.png')
-        process_image(src,dest,create_sticker=True,border=10);copied[path]=dest.name
-       return copied[path]
-      layer['src']=copy_sticker(layer['src'])
-     else:
-      layer['src']=copy_asset(layer['src'])
-   else:
-    scene['image']=copy_asset(scene['image'])
-    for beat in scene.get('images',[]):beat['src']=copy_asset(beat['src'])
+   scene['image']=copy_asset(scene['image'])
+   for beat in scene.get('images',[]):beat['src']=copy_asset(beat['src'])
   return planned
  scenes=render_scenes('en',ratio) if (ratio=='16:9' or (b and b.get('language')=='en')) else render_scenes('vi','9:16')
- props={'duration':snd['duration'],'scenes':scenes,'segments':snd['segments'],'cues':subtitle_cues(snd['segments']),'aspect_ratio':ratio,'render_concurrency':config(p).get('render_concurrency',4)}
+ props={'duration':snd['duration'],'scenes':scenes,'segments':snd['segments'],'cues':subtitle_cues(snd['segments'],aspect_ratio=ratio if ratio in ('9:16','16:9') else None),'aspect_ratio':ratio,'render_concurrency':config(p).get('render_concurrency',4)}
  if en:
   props['en_duration']=en['duration']
   props['en_scenes']=scenes if ratio=='16:9' else render_scenes('en','16:9')

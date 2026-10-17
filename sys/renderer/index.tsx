@@ -1,9 +1,20 @@
+import {
+  selectSemanticCameraEffect,
+  computeCinematicCameraVector,
+  resolveCameraAnchorGroup,
+  resolveBeatFocus,
+  isContinuousCameraBeat,
+  overscanScale,
+  BASE_OVERSCAN
+} from './camera.mjs';
+import {Thumbnail} from './thumbnail';
 import React, {useLayoutEffect} from 'react';
-import {captionStyle, captionMaxHeight} from './captions.mjs';
+import {karaokeTokens, captionStyle, captionMaxHeight} from './captions.mjs';
 import {BRAND_LOGO_DATA_URI} from './brand_logo';
 import {
   AbsoluteFill,
   Audio,
+  Sequence,
   Composition,
   Easing,
   Img,
@@ -30,30 +41,13 @@ export function boilJitter(frame: number, seed: number = 0): number {
   return r - Math.floor(r) - 0.5;
 }
 
-// Semantic camera movement selector (eliminates mechanical active % 4 cycling)
-export function selectSemanticCameraEffect(beat: any, scene: any, beatIndex: number): string {
-  const explicit = beat?.effect;
-  if (explicit && explicit !== 'auto') return explicit;
-  const intent = String(beat?.camera_intent || scene?.camera_intent || scene?.camera || '').toLowerCase();
-  const desc = String(beat?.description || scene?.action || scene?.purpose || '').toLowerCase();
-
-  if (intent.includes('hold') || desc.includes('diagram') || desc.includes('sơ đồ')) return 'hold';
-  if (intent.includes('reveal') || intent.includes('shock') || desc.includes('bất ngờ') || desc.includes('giật mình')) return 'punch_in';
-  if (intent.includes('establish') || intent.includes('wide') || desc.includes('toàn cảnh') || desc.includes('rộng')) return 'zoom_out';
-  if (intent.includes('detail') || intent.includes('focus') || intent.includes('tension') || desc.includes('cận cảnh') || desc.includes('tập trung')) return 'zoom_in';
-  if (intent.includes('pan_left') || intent.includes('contrast') || desc.includes('đối lập')) return 'pan_left';
-  if (intent.includes('pan_right') || desc.includes('dòng thời gian') || desc.includes('hành trình')) return 'pan_right';
-
-  // Non-repeating golden-ratio sequence seeded by scene ID + beatIndex so no two adjacent shots repeat
-  const sceneSeed = String(scene?.id || 'SC01').split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
-  const pool = ['zoom_in', 'pan_right', 'zoom_out', 'pan_left'];
-  const prevIdx = beatIndex > 0 ? ((sceneSeed + (beatIndex - 1) * 3) % pool.length) : -1;
-  let chosenIdx = (sceneSeed + beatIndex * 3) % pool.length;
-  if (chosenIdx === prevIdx) {
-    chosenIdx = (chosenIdx + 1) % pool.length;
-  }
-  return pool[chosenIdx];
-}
+export {
+  selectSemanticCameraEffect,
+  computeCinematicCameraVector,
+  resolveCameraAnchorGroup,
+  resolveBeatFocus,
+  isContinuousCameraBeat
+} from './camera.mjs';
 
 // Dynamic voice-guided BGM sidechain ducking envelope (swells in pauses, ducks during speech)
 export function computeDynamicBgmVolume(
@@ -156,93 +150,140 @@ const Video: React.FC<any> = (p) => {
   }
   const beat = imageList[active] || {src: scene.image, at: 0, effect: 'auto'};
   const currentImageSrc = beat?.src || scene.image;
-  const nextAt = imageList[active + 1]?.at ?? (scene.end - scene.start);
+  const sceneSpan = Math.max(0.001, scene.end - scene.start);
+  const nextAt = imageList[active + 1]?.at ?? sceneSpan;
   const beatDuration = Math.max(0.001, nextAt - beat.at);
-  const progress = Math.max(0, Math.min(1, (relative - beat.at) / beatDuration));
   const transition = Math.max(0, Math.min(1, (relative - beat.at) / Math.min(0.3, beatDuration / 2)));
 
-  // Motion Engine with Spring Physics, Bezier Easing & Dynamic Motion Blur
-  let scale = 1;
-  let translateX = 0;
-  let translateY = 0;
-  let motionBlurX = 0;
-  const effect = selectSemanticCameraEffect(beat, scene, active);
+  const sceneIndex = Math.max(0, (p.scenes || []).indexOf(scene));
+  const isPortrait = height > width;
 
-  // Asymmetric organic ease curve (fast eye-catch, gentle cinematic settle)
-  const smoothProgress = interpolate(progress, [0, 1], [0, 1], {
-    easing: Easing.bezier(0.33, 1, 0.68, 1.0)
-  });
+  // Compute Anchor-Group continuous camera state for any beat index in imageList
+  const computeCameraStateForIndex = (targetIdx: number) => {
+    const targetBeat = imageList[targetIdx] || beat;
+    const group = resolveCameraAnchorGroup(imageList, targetIdx, sceneSpan);
+    const groupEffect = selectSemanticCameraEffect(group.anchorBeat, scene, sceneIndex + group.groupIndex);
+    const beatEffect = selectSemanticCameraEffect(targetBeat, scene, targetIdx);
+    const camVec = computeCinematicCameraVector(
+      groupEffect,
+      scene,
+      sceneIndex,
+      isPortrait,
+      group.groupIndex,
+      group.span
+    );
 
-  if (effect === 'punch_in') {
-    // Spring physics with snappy elasticity and gentle settle
-    const punchFrame = Math.round((relative - beat.at) * fps);
-    const punchSpring = spring({
-      frame: Math.max(0, punchFrame),
-      fps,
-      config: { damping: 12, mass: 0.5, stiffness: 120 }
+    const groupProgressRaw = Math.max(0, Math.min(1, (relative - group.startAt) / group.span));
+    const groupSmoothProgress = interpolate(groupProgressRaw, [0, 1], [0, 1], {
+      easing: Easing.bezier(camVec.bezier[0], camVec.bezier[1], camVec.bezier[2], camVec.bezier[3])
     });
-    scale = interpolate(punchSpring, [0, 1], [1.22, 1.08]);
-  } else if (effect === 'zoom_in') {
-    scale = 1 + 0.08 * smoothProgress;
-  } else if (effect === 'zoom_out') {
-    scale = 1.08 - 0.08 * smoothProgress;
-  } else if (effect === 'pan_left') {
-    scale = 1.06;
-    translateX = (0.5 - smoothProgress) * 3;
-  } else if (effect === 'pan_right') {
-    scale = 1.06;
-    translateX = (smoothProgress - 0.5) * 3;
-  } else if (effect === 'shake') {
-    scale = 1.06; // Đệm phóng to 6% để triệt tiêu viền đen khi rung chấn màn hình (14px shake)
-  } else if (effect === 'slide_left') {
-    // Bezier deceleration curve for natural slide momentum
-    const slideEase = interpolate(transition, [0, 1], [0, 1], {
-      easing: Easing.bezier(0.16, 1, 0.3, 1)
-    });
-    translateX = (1 - slideEase) * 100;
-    // Whip Pan: Optical directional motion blur peaks at the fastest motion point
-    if (transition > 0 && transition < 1) {
-      motionBlurX = Math.sin(transition * Math.PI) * 18;
-    }
-  } else if (!p.modern_style && effect !== 'hold') {
-    // AUTO KEN BURNS (Chu kỳ chuyển động camera êm ái chống nhàm chán)
-    const cycle = active % 4;
-    if (cycle === 0) {
-      scale = 1.0 + 0.06 * smoothProgress; // Smooth zoom in
-    } else if (cycle === 1) {
-      scale = 1.05;
-      translateX = (smoothProgress - 0.5) * 2.5; // Smooth pan right
-    } else if (cycle === 2) {
-      scale = 1.06 - 0.06 * smoothProgress; // Smooth zoom out
-    } else {
-      scale = 1.05;
-      translateX = (0.5 - smoothProgress) * 2.5; // Smooth pan left
-    }
-  }
 
-  // Organic Camera Shake (Handheld multi-frequency camera vibration)
+    let sc = interpolate(groupSmoothProgress, [0, 1], [camVec.scaleStart, camVec.scaleEnd]);
+    let tx = interpolate(groupSmoothProgress, [0, 1], [camVec.txStart, camVec.txEnd]);
+    let ty = interpolate(groupSmoothProgress, [0, 1], [camVec.tyStart, camVec.tyEnd]);
+    let blurX = 0;
+
+    // Accumulate punch_in across the Anchor Group so subsequent variation beats never snap backward (-1.6%)
+    if (groupEffect !== 'hold' && beatEffect !== 'hold') {
+      for (let i = group.startIndex; i <= targetIdx; i++) {
+        const iBeat = imageList[i];
+        const iEff = selectSemanticCameraEffect(iBeat, scene, i);
+        if (iEff === 'punch_in' && relative >= (iBeat?.at ?? 0)) {
+          const punchFrame = Math.round((relative - (iBeat?.at ?? 0)) * fps);
+          const punchSpring = spring({
+            frame: Math.max(0, punchFrame),
+            fps,
+            config: { damping: 28, mass: 0.9, stiffness: 80 }
+          });
+          sc += interpolate(punchSpring, [0, 1], [0.0, 0.016]);
+        }
+      }
+    }
+
+    if (beatEffect === 'slide_left' && targetIdx === active) {
+      const slideEase = interpolate(transition, [0, 1], [0, 1], {
+        easing: Easing.bezier(0.16, 1, 0.3, 1)
+      });
+      tx = (1 - slideEase) * 100;
+      if (transition > 0 && transition < 1) {
+        blurX = Math.sin(transition * Math.PI) * 18;
+      }
+    }
+
+    sc = overscanScale(sc);
+    const edScale = 1 + (sc / BASE_OVERSCAN - 1) * 0.65;
+    const { focusX: fx, focusY: fy } = resolveBeatFocus(targetBeat, group.anchorBeat, isPortrait);
+    const isEd = Boolean(
+      p.reframe_mode && isPortrait && !['macro_prop', 'white_card', 'white_isolated'].includes(targetBeat?.shot_type)
+    );
+
+    return {
+      group,
+      groupEffect,
+      beatEffect,
+      scale: sc,
+      editorialScale: edScale,
+      translateX: tx,
+      translateY: ty,
+      motionBlurX: blurX,
+      focusX: fx,
+      focusY: fy,
+      editorial: isEd
+    };
+  };
+
+  const currentCam = computeCameraStateForIndex(active);
+  const prevCam = active > 0 ? computeCameraStateForIndex(active - 1) : currentCam;
+
+  const {
+    groupEffect: sceneEffect,
+    beatEffect: effect,
+    scale,
+    editorialScale,
+    translateX,
+    translateY,
+    motionBlurX,
+    focusX,
+    focusY,
+    editorial
+  } = currentCam;
+
+  // Soft 75ms (2-frame) optical crossfade ONLY for in-room continuous variation cuts (prevents ghosting on white_card/macro cuts)
+  const isVariationCut =
+    active > 0 &&
+    isContinuousCameraBeat(imageList[active - 1], beat) &&
+    beat.effect !== 'slide_left' &&
+    beat.effect !== 'fade';
+  const variationCrossfade = isVariationCut
+    ? Math.max(0, Math.min(1, (relative - beat.at) / Math.min(0.075, beatDuration / 3)))
+    : 1;
+
+  // Subtle Tripod Micro-Breathing (zero horizon rotation to prevent 2D line aliasing, continuous scene seed)
   let shakeX = 0;
   let shakeY = 0;
-  if (effect === 'shake' || (effect === 'punch_in' && (relative - beat.at) < 0.28)) {
-    const shakeTime = relative - beat.at;
+  const microRot = 0;
+  const sceneSeed = Math.round((scene.start || 0) * 10) + 1.1;
+  if (effect === 'shake') {
+    const shakeTime = Math.max(0, relative - beat.at);
     const decay = Math.max(0, 1 - shakeTime / 0.28);
-    shakeX = organicNoise(shakeTime * 1.5, 1.2) * 14 * decay;
-    shakeY = organicNoise(shakeTime * 1.5, 4.7) * 12 * decay;
+    shakeX = organicNoise(shakeTime * 1.2, 1.2) * 5.0 * decay;
+    shakeY = organicNoise(shakeTime * 1.2, 4.7) * 3.8 * decay;
+  } else if (sceneEffect !== 'hold' && effect !== 'hold') {
+    shakeX = organicNoise(t * 0.05, sceneSeed) * 0.9;
+    shakeY = organicNoise(t * 0.05, sceneSeed + 2.6) * 0.65;
   }
 
-  const opacity = beat.effect === 'fade' ? transition : 1;
-  const focusX = (beat.focus?.x ?? 0.5) * 100;
-  const focusY = (beat.focus?.y ?? 0.42) * 100;
+  const opacity = beat.effect === 'fade' ? transition : variationCrossfade;
   const isVideoAsset = currentImageSrc && (currentImageSrc.endsWith('.mp4') || currentImageSrc.endsWith('.webm'));
 
-  // 1. Procedural Line Boiling (8-12 fps hand-drawn organic jitter for stick figures)
-  const isLineBoil = beat.line_boil || beat.effect === 'line_boil' || p.line_boil;
+  // Procedural Line Boiling (opt-in only for isolated assets; disabled on full-bleed 1080p)
+  const isLineBoil = Boolean(beat.line_boil || beat.effect === 'line_boil' || p.line_boil);
   const boilFps = 10;
   const boilIndex = Math.floor((frame / fps) * boilFps) % 4;
   const lineBoilFilter = isLineBoil ? `url(#line-boil-${boilIndex})` : '';
 
-  // 2. Stroke Draw-on (Organic hand-drawn stroke sweep from top to bottom)
-  const isDrawOn = beat.draw_on || beat.effect === 'draw_on';
+  // Stroke Draw-on restricted to white_card shots when explicitly requested
+  const isDrawOn = Boolean((beat.draw_on || beat.effect === 'draw_on') && beat.shot_type === 'white_card');
   const drawDuration = beat.draw_duration || 1.3;
   const drawProgress = isDrawOn ? Math.min(1, Math.max(0, (relative - beat.at) / drawDuration)) : 1;
   const drawEase = interpolate(drawProgress, [0, 1], [0, 1], {
@@ -259,7 +300,7 @@ const Video: React.FC<any> = (p) => {
   ].filter(Boolean).join(' ') || undefined;
 
   return (
-    <AbsoluteFill style={{background: p.modern_style ? '#F8FAFC' : '#090D16', fontFamily: 'Arial, sans-serif', color: 'white', width, height, overflow: 'hidden'}}>
+    <AbsoluteFill style={{background: editorial ? '#0F172A' : p.modern_style ? '#F8FAFC' : '#090D16', fontFamily: 'Arial, sans-serif', color: 'white', width, height, overflow: 'hidden'}}>
       {/* Procedural Line Boiling SVG Displacement Filters */}
       <svg style={{position: 'absolute', width: 0, height: 0, pointerEvents: 'none'}}>
         <defs>
@@ -291,7 +332,7 @@ const Video: React.FC<any> = (p) => {
         </defs>
       </svg>
 
-      {/* Layered Multi-Track Scene Engine (Background + Stickers) */}
+      {/* Legacy renderer compatibility only; standard content validation rejects scene.layers. */}
       {scene.layers && scene.layers.length > 0 ? (
         <AbsoluteFill style={{zIndex: 5}}>
           {scene.layers.map((l: any, idx: number) => {
@@ -381,16 +422,25 @@ const Video: React.FC<any> = (p) => {
         </AbsoluteFill>
       ) : (
         <>
-          {/* Background layer transition */}
-          {active > 0 && ['fade', 'slide_left'].includes(beat.effect) && transition < 1 && (
+          {/* Background layer transition (supports fade, slide_left, and 75ms in-room variation cross-dissolve) */}
+          {active > 0 && ((['fade', 'slide_left'].includes(beat.effect) && transition < 1) || (isVariationCut && variationCrossfade < 1)) && (
             <Img
               src={staticFile(imageList[active - 1].src)}
               decoding="sync"
-              style={{position: 'absolute', width: '100%', height: '100%', objectFit: 'contain'}}
+              style={{
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+                objectFit: prevCam.editorial ? 'contain' : 'cover',
+                objectPosition: `${prevCam.focusX}% ${prevCam.focusY}%`,
+                ...(prevCam.editorial ? {top: '25%', height: '48%', borderRadius: 24} : {}),
+                transform: `translate(calc(${prevCam.translateX}% + ${shakeX}px), calc(${prevCam.translateY}% + ${shakeY}px)) scale(${prevCam.editorial ? prevCam.editorialScale : prevCam.scale}) rotate(${microRot.toFixed(3)}deg)`,
+                transformOrigin: `${prevCam.focusX}% ${prevCam.focusY}%`,
+              }}
             />
           )}
 
-          {/* Main Visual Layer: Image with Ken Burns or Video Clip */}
+          {/* Main Visual Layer: Image with Ken Burns + Handheld Micro-Motion or Video Clip */}
           {currentImageSrc && (
             isVideoAsset ? (
               <RemotionVideo
@@ -409,8 +459,10 @@ const Video: React.FC<any> = (p) => {
                 style={{
                   width: '100%',
                   height: '100%',
-                  objectFit: 'cover',
-                  transform: `translate(calc(${translateX}% + ${shakeX}px), calc(${translateY}% + ${shakeY}px)) scale(${scale})`,
+                  objectFit: editorial ? 'contain' : 'cover',
+                  objectPosition: `${focusX}% ${focusY}%`,
+                  ...(editorial ? {position: 'absolute', top: '25%', height: '48%', borderRadius: 24, boxShadow: '0 12px 32px #0008'} : {}),
+                  transform: `translate(calc(${translateX}% + ${shakeX}px), calc(${translateY}% + ${shakeY}px)) scale(${editorial ? editorialScale : scale}) rotate(${microRot.toFixed(3)}deg)`,
                   transformOrigin: `${focusX}% ${focusY}%`,
                   opacity,
                   filter: combinedFilter,
@@ -423,51 +475,10 @@ const Video: React.FC<any> = (p) => {
         </>
       )}
 
-      {/* Stroke Draw-on Pencil Guide Indicator */}
-      {isDrawOn && drawEase > 0 && drawEase < 0.96 && (
-        <div
-          style={{
-            position: 'absolute',
-            left: `${drawEase * 68 + 12}%`,
-            top: `${drawEase * 68 + 10}%`,
-            transform: 'translate(-50%, -50%) rotate(-45deg)',
-            fontSize: 34,
-            zIndex: 16,
-            filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.5))',
-            pointerEvents: 'none',
-          }}
-        >
-          ✏️
-        </div>
-      )}
+      {editorial && p.hook_title && <div style={{position: 'absolute', top: 210, left: 80, width: 920, fontSize: 54, fontWeight: 900, lineHeight: 1.24, textAlign: 'center', color: '#FACC15', textShadow: '0 4px 16px rgba(0, 0, 0, 0.85)'}}>{p.hook_title}</div>}
+      {p.cover_text && t < (p.cover_duration || 0) && <Thumbnail image={scene.image} text={p.cover_text} width={width} height={height} />}
 
-      {/* 2D Comic Doodle Visual Accents */}
-      {/* 1. Dấu chấm than giật mình (tùy chọn khi tranh chưa có sẵn biểu cảm) */}
-      {!p.modern_style && (scene.show_exclamation || beat.show_exclamation || (p.show_exclamation && scene.id === 'SC01')) && relative >= 0.2 && relative <= 2.2 && (
-        <div
-          style={{
-            position: 'absolute',
-            top: '22%',
-            left: '20%',
-            transform: `scale(${Math.min(1.15, 0.4 + (relative - 0.5) * 5)}) rotate(${Math.sin((relative - 0.5) * 16) * 10}deg)`,
-            zIndex: 15,
-            filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.4))'
-          }}
-        >
-          <svg width="65" height="85" viewBox="0 0 65 85">
-            <path
-              d="M 22 8 L 43 8 L 36 48 L 29 48 Z"
-              fill="#EF4444"
-              stroke="#0F172A"
-              strokeWidth="5"
-              strokeLinejoin="round"
-            />
-            <circle cx="32.5" cy="70" r="8" fill="#EF4444" stroke="#0F172A" strokeWidth="5" />
-          </svg>
-        </div>
-      )}
-
-      {/* 2. Interactive Practice Indicator: Đếm nhịp luyện nói tự động đồng bộ theo Cue */}
+      {/* Interactive Practice Indicator: Đếm nhịp luyện nói tự động đồng bộ theo Cue */}
       {!p.modern_style && cue && (cue.practice || cue.text?.includes('Cùng nhắc lại nhé')) && (() => {
         const pDur = cue.end - cue.start;
         const pRel = t - cue.start;
@@ -534,13 +545,13 @@ const Video: React.FC<any> = (p) => {
         </>
       )}
 
-      {/* Subtitles (Phụ đề động bắt mắt) - Tạm thời tắt, không hiển thị trên video */}
+      {/* Subtitles (Phụ đề động bắt mắt) */}
       {!DISABLE_SUBTITLES && !p.hideSubtitles && cue && (() => {
         const lineText = cue.text;
         const targetWord = p.target_word;
         return (
           <div data-check="subtitle" style={{...captionStyle(width, height), zIndex: 30} as React.CSSProperties}>
-            {renderHighlightedText(lineText, targetWord, p.modern_style)}
+            {height > width && p.words?.length ? karaokeTokens(cue, p.words, t).map((token: any, index: number) => <span key={index} style={{color: token.active ? '#FACC15' : 'white', display: 'inline-block', transform: token.active ? 'scale(1.06)' : undefined, marginRight: '0.25em'}}>{token.text}</span>) : renderHighlightedText(lineText, targetWord, p.modern_style)}
           </div>
         );
       })()}
@@ -563,7 +574,7 @@ const Video: React.FC<any> = (p) => {
       {!p.hide_logo && (() => {
         const isHorizontal = width >= height;
         const logoSize = isHorizontal ? Math.round(width * (108 / 1920)) : Math.round(width * (100 / 1080));
-        const logoRight = isHorizontal ? Math.round(width * (23 / 1920)) : Math.round(width * (24 / 1080));
+        const logoRight = isHorizontal ? Math.round(width * (23 / 1920)) : Math.round(width * (32 / 1080));
         const logoBottom = isHorizontal ? Math.round(height * (38 / 1080)) : Math.round(height * (50 / 1920));
         const logoRadius = Math.round(logoSize * (16 / 108));
         return (
@@ -571,7 +582,8 @@ const Video: React.FC<any> = (p) => {
             style={{
               position: 'absolute',
               right: logoRight,
-              bottom: logoBottom,
+              bottom: isHorizontal ? logoBottom : undefined,
+              top: isHorizontal ? undefined : Math.round(height * (120 / 1920)),
               width: logoSize,
               height: logoSize,
               borderRadius: logoRadius,
@@ -594,6 +606,7 @@ const Video: React.FC<any> = (p) => {
         );
       })()}
 
+      {(p.sfx_events || []).map((event: any, index: number) => <Sequence key={index} from={Math.round(event.at * fps)} durationInFrames={Math.round(.3 * fps)}><Audio src={staticFile(event.src)} volume={0.5} /></Sequence>)}
       {/* Audio Mixer: Voice narration */}
       <Audio src={staticFile(p.audioSrc || 'narration.wav')} volume={1} />
 
@@ -618,6 +631,7 @@ const Video: React.FC<any> = (p) => {
 };
 
 registerRoot(() => (
+  <>
   <Composition
     id="Pilot"
     component={Video}
@@ -635,4 +649,6 @@ registerRoot(() => (
       };
     }}
   />
+  <Composition id="Thumbnail" component={Thumbnail} width={1920} height={1080} fps={30} durationInFrames={1} defaultProps={{image: "", text: ""}} calculateMetadata={({props}: any) => ({width: props.width || 1920, height: props.height || 1080})} />
+  </>
 ));

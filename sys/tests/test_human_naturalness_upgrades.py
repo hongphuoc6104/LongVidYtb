@@ -17,13 +17,16 @@ for p in (str(ROOT_DIR), str(SYS_DIR), str(SYS_DIR / "tools")):
     if p not in sys.path:
         sys.path.insert(0, p)
 
+import adapters  # noqa: E402
 import audio_processing  # noqa: E402
-from colab_bridge import protocol, worker  # noqa: E402
+import remote_audio  # noqa: E402
+from colab_bridge import job_protocol, protocol, worker  # noqa: E402
 from content_contract import ContractError, validate_content  # noqa: E402
 from flow_cdp.validate_asset import check_bottom_blank_gap, validate_asset  # noqa: E402
 from research_story_architect import (  # noqa: E402
     build_brief_v3,
     build_content_v3,
+    build_scenes_from_story_rows,
     compute_brief_hash,
     create_demo_trial_topic,
 )
@@ -62,6 +65,63 @@ class TestHumanNaturalnessUpgrades(unittest.TestCase):
         # Un-transliterated English token must trigger gate
         with self.assertRaisesRegex(ValueError, "UNNORMALIZED_FOREIGN_TOKEN"):
             enforce_tts_normalization_gate("Bộ não thực hiện quá trình neuroplasticity mạnh mẽ.")
+
+    def test_primary_scene_request_and_worker_tts_normalization_pipeline(self):
+        scene = {
+            "id": "SC02",
+            "tone": "reflective_slow",
+            "narration": "Tám mươi phần trăm sinh viên mở Word gõ ngay. [pause:900ms] Nhưng bài báo Q1 của Feynman không bắt đầu ở đó.",
+        }
+        req = remote_audio.primary_scene_request(scene, scene["narration"], "vi", adapters.DEFAULT_PAUSE, 0, False)
+        self.assertEqual(
+            req["texts"],
+            [
+                "Tám mươi phần trăm sinh viên mở Word gõ ngay.",
+                "Nhưng bài báo Q1 của Feynman không bắt đầu ở đó.",
+            ],
+        )
+        self.assertEqual(req["gaps"], [0.9])
+        self.assertEqual(req["tone"], "reflective_slow")
+
+        # Worker-side synthesis normalizer converts loanwords and numbers without mutating segment text
+        synth_text = worker._normalize_vi_tts_text("Năm 2026, 80% bài báo Q1 không dùng Word hay Feynman [pause:900ms] đâu.")
+        self.assertNotIn("[pause", synth_text)
+        self.assertIn("tám mươi phần trăm", synth_text)
+        self.assertIn("quy một", synth_text)
+        self.assertIn("Guốc", synth_text)
+        self.assertIn("Phây-man", synth_text)
+
+    def test_flash_agent_story_rows_builder_and_focus_clamping(self):
+        rows = [
+            (
+                "Trang sách vàng",
+                "A Vietnamese student desk at night with a yellow highlighter.",
+                [
+                    ("Trang sách vàng kín, đầu bạn vẫn trống.", "macro_prop|An open highlighted textbook."),
+                    ("Bạn gạch thêm một dòng.", "full_scene|A student highlights one more line at the desk."),
+                    ("Rồi gấp cuốn sách lại.", "variation|The same student closes the textbook."),
+                ],
+            )
+        ]
+        scenes = build_scenes_from_story_rows(rows)
+        self.assertEqual(len(scenes), 1)
+        self.assertEqual(len(scenes[0].visual_beats), 3)
+        self.assertEqual(scenes[0].visual_beats[2].based_on, "SC01_I2")
+        self.assertIn("Expression lock", scenes[0].visual_beats[2].preserve)
+
+        # Out-of-bounds focus coordinates from Flash agent are clamped safely to central region
+        scenes[0].visual_beats[0].focus_x = 0.05
+        scenes[0].visual_beats[0].focus_y = 0.95
+        topic = create_demo_trial_topic()
+        topic.scenes[0] = scenes[0]
+        topic.scenes[0].requirements = ["R01"]
+        brief = build_brief_v3(topic)
+        content = build_content_v3(topic, brief, compute_brief_hash(brief))
+        beat_focus = content["scenes"][0]["beats"][0]["focus"]
+        self.assertGreaterEqual(beat_focus["x"], 0.35)
+        self.assertLessEqual(beat_focus["x"], 0.65)
+        self.assertGreaterEqual(beat_focus["y"], 0.35)
+        self.assertLessEqual(beat_focus["y"], 0.58)
 
     def test_script_diversity_linter_custom_chronology_and_rhythm_variance(self):
         robotic_scenes = [

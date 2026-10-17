@@ -33,3 +33,21 @@ export function captionMaxHeight(width = 1080, height = 1920) {
   return Math.ceil(s.fontSize * s.lineHeight * 2 + verticalPadding + 12);
 }
 
+export function karaokeTokens(cue, words = [], t = 0) {
+  if (!cue || !cue.text) return [];
+  const textWords = cue.text.split(/\s+/).filter(Boolean);
+  if (!Array.isArray(words) || words.length === 0) {
+    return textWords.map(text => ({text, active: false}));
+  }
+
+  const currentWord = words.find(w => t >= (w.start ?? 0) && t <= (w.end ?? 0));
+  const currentClean = currentWord ? String(currentWord.word).toLowerCase().replace(/^[^\w\u00C0-\u1EF9]+|[^\w\u00C0-\u1EF9]+$/g, '') : null;
+
+  return textWords.map(text => {
+    const clean = String(text).toLowerCase().replace(/^[^\w\u00C0-\u1EF9]+|[^\w\u00C0-\u1EF9]+$/g, '');
+    const isActive = Boolean(currentClean && clean === currentClean);
+    return {text, active: isActive};
+  });
+}
+
+

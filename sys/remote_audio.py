@@ -1,16 +1,34 @@
 """Desktop control for explicit output contracts; all audio processing is remote."""
 import copy
-import json
 from pathlib import Path
 
-from output_contract import languages, primary_language, narration, voice_settings
+from output_contract import languages, narration, primary_language, voice_settings
+
+
+def primary_scene_request(scene: dict, text: str, language: str, pauses: dict,
+                          retake: int, last: bool) -> dict:
+    """Keep sentence chunks, explicit [pause:...] gaps, tone and bilingual spans aligned one-to-one."""
+    from adapters import chunks_with_gaps, english_parts, is_english, scene_tail
+
+    texts, gaps = chunks_with_gaps(text, pauses)
+    item = {'scene_id': scene['id'], 'narration': text, 'texts': texts,
+            'tone': scene.get('tone'), 'retake': retake,
+            'gaps': gaps,
+            'tail': scene_tail(scene, language, pauses, last)}
+    if language == 'vi':
+        words = [v['word'] for v in scene.get('vocabulary', []) if is_english(v.get('word', ''))]
+        parts = [english_parts(part, words) for part in texts]
+        if any(x['lang'] == 'en' for part in parts for x in part):
+            item['parts'] = parts
+    return item
 
 
 def produce(pilot, job, out):
-    from pilot import Blocked, read, write
-    from adapters import config, retakes, scene_tail, DEFAULT_PAUSE, english_parts, is_english
+    from adapters import DEFAULT_PAUSE, config, retakes, scene_tail
     from colab_bridge.client import Client, ColabError, enabled
     from colab_bridge.protocol import build_request
+
+    from pilot import Blocked, read, write
 
     brief = pilot.brief(job)[0]
     content = pilot.payload(job, 'content')
@@ -51,14 +69,7 @@ def produce(pilot, job, out):
         text = narration(scene, primary)
         if not text.strip():
             raise Blocked('NARRATION_REQUIRED: ' + primary + '/' + scene['id'])
-        item = {'scene_id': scene['id'], 'narration': text, 'texts': [text],
-                'retake': takes.get(scene['id'], 0), 'gaps': [],
-                'tail': scene_tail(scene, primary, gaps, i == len(content['scenes']) - 1)}
-        if primary == 'vi':
-            words = [v['word'] for v in scene.get('vocabulary', []) if is_english(v.get('word', ''))]
-            parts = english_parts(text, words)
-            if any(x['lang'] == 'en' for x in parts):
-                item['parts'] = [parts]
+        item = primary_scene_request(scene, text, primary, gaps, takes.get(scene['id'], 0), i == len(content['scenes']) - 1)
         scenes.append(item)
     secondary = []
     if primary != 'en' and 'en' in requested:
@@ -72,9 +83,13 @@ def produce(pilot, job, out):
                          'retake': takes.get(scene['id'], 0),
                          'tail': scene_tail(scene, 'vi', gaps, i == len(content['scenes']) - 1)}
                         for i,scene in enumerate(content['scenes'])]
+    from omni_platform import short_plans
+    shorts = short_plans(brief, content)
+    if shorts and primary != 'vi':
+        raise Blocked('OMNI_LANGUAGE: Vietnamese primary narration required for reused spin-off audio')
     try:
         request = build_request(pilot.root, cfg, scenes, secondary,
-                                primary_language=primary, assemble=True, secondary_scenes=secondary_vi)
+                                primary_language=primary, assemble=True, secondary_scenes=secondary_vi, spinoff_hooks=shorts)
         write(out / 'request-colab.json', request)
         import execution
         guard = (lambda: execution.before_submit(pilot, job)) if execution.is_job(pilot, job) else None
@@ -99,6 +114,8 @@ def produce(pilot, job, out):
             for item in track.get(field, []):
                 item['path'] = asset(item['path'])
 
+    for hook in payload.get('spinoff_hooks', []):
+        hook['path'] = asset(hook['path'])
     convert(payload)
     for track in payload['tracks'].values():
         convert(track)
@@ -109,10 +126,11 @@ def produce(pilot, job, out):
 
 def render(pilot, job, out):
     """Control/collect only; remote worker owns timeline, captions, media and encoding."""
-    from pilot import Blocked, read, write
     from adapters import config
     from colab_bridge.client import Client, ColabError, enabled
     from colab_bridge.job_protocol import build_render_request
+
+    from pilot import Blocked, read, write
     cfg = copy.deepcopy(config(pilot))
     cfg.setdefault('colab_tts', {})['job_id'] = job
     import execution
@@ -122,7 +140,8 @@ def render(pilot, job, out):
         selected = selection.get('runtime_bindings', {}).get('colab', {}).get('account') or selection.get('defaults', {}).get('colab')
         if selected:
             cfg['colab_tts']['account'] = selected.removeprefix('colab:')
-    if not enabled(cfg): raise Blocked('COLAB_REQUIRED: explicit outputs never render locally')
+    if not enabled(cfg):
+        raise Blocked('COLAB_REQUIRED: explicit outputs never render locally')
     try:
         request = build_render_request(pilot.root, pilot.brief(job)[0], pilot.payload(job, 'content'),
                                        pilot.payload(job, 'images'), pilot.payload(job, 'audio'),
@@ -132,7 +151,8 @@ def render(pilot, job, out):
         guard = (lambda: execution.before_submit(pilot, job)) if execution.is_job(pilot, job) else None
         Client(pilot.root, cfg).render(request, out, pilot.job(job) / 'cache/colab-render', before_submit=guard)
         report = read(out / 'render-result.json')
-    except (ColabError, ValueError, OSError) as ex: raise Blocked(str(ex)) from ex
+    except (ColabError, ValueError, OSError) as ex:
+        raise Blocked(str(ex)) from ex
     def path(name): return str((out / name).relative_to(pilot.job(job)))
     result = {'video': path('video.mp4'), 'stills': [path(name) for name in report['files'] if name.endswith('.png')],
               'layout_report': path('layout.json'), 'editorial_report': path('editorial-audit.json'),
@@ -141,4 +161,6 @@ def render(pilot, job, out):
     for delivery in report['outputs']:
         if len(report['outputs']) > 1:
             result['video_9x16' if delivery['aspect_ratio'] == '9:16' else 'video_16x9'] = path(delivery['file'])
+    if pilot.brief(job)[0].get('omni_platform'):
+        result['social_assets'] = {name: path(name) for name in report['files'] if name in {'video_youtube_16x9.mp4', 'video_facebook_16x9.mp4', 'thumbnail_youtube_16x9.png', 'cover_tiktok_reels_9x16.png', 'SOCIAL_POST_KIT.md'} or name.startswith('subtitles_') or name.startswith('video_tiktok_short_')}
     return result

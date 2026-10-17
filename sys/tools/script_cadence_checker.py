@@ -31,6 +31,7 @@ MAX_SAFE_SPEECH_RATE = 4.5
 MAX_ALLOWABLE_DRIFT = 0.50
 DEFAULT_MAX_SENTENCE_SYLLABLES = 25  # Recommended upper limit for a single spoken sentence
 DEFAULT_MAX_CLAUSE_SYLLABLES = 18    # Max syllables in a clause without a breathing comma/pause
+DEFAULT_MAX_OPENING_HOOK_SYLLABLES = 18  # Max syllables for opening truth-slap hook in SC01
 DEFAULT_MAX_DRAMATIC_PAUSES = 4      # Max Tier-3 dramatic pauses per video (dramatic reveals only)
 
 # Vietnamese vowel diacritics pattern
