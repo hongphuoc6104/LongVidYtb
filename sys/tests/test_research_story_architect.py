@@ -113,21 +113,24 @@ class TestResearchStoryArchitect(unittest.TestCase):
         self.assertEqual(self.brief_data["scene_count"], 5)
         self.assertEqual(len(self.brief_data["required_points"]), 5)
         self.assertEqual(len(self.brief_data["sources"]), 2)
-        self.assertEqual(self.brief_data["outputs"][0]["voice"], "Adam")
-        self.assertEqual(self.brief_data["outputs"][0]["speed"], 1.22)
+        self.assertEqual(self.brief_data["outputs"][0]["voice"], "VietNarrator")
+        self.assertEqual(self.brief_data["outputs"][0]["speed"], 1.0)
         assert self.brief_data["schema_version"] == "3.0"
         assert self.brief_data["scene_count"] == 5
-        assert self.brief_data["outputs"][0]["voice"] == "Adam"
+        assert self.brief_data["outputs"][0]["voice"] == "VietNarrator"
 
         cfg = json.loads((SYS_DIR / "config.json").read_text(encoding="utf-8"))
-        self.assertEqual(cfg["voices"], {"vi": "assets/voices/adam/profile.json", "en": "assets/voices/adam/profile.json"})
-        self.assertEqual(cfg["tts_voice"], "Adam")
-        self.assertEqual(cfg["tts_speed"], 1.22)
+        self.assertEqual(
+            cfg["voices"],
+            {"vi": "assets/voices/viet_narrator/profile.json", "en": "assets/voices/adam/profile.json"},
+        )
+        self.assertEqual(cfg["tts_voice"], "VietNarrator")
+        self.assertEqual(cfg["tts_speed"], 1.0)
         self.assertEqual(cfg["en_voice"], "Adam")
         self.assertEqual(cfg["en_speed"], 1.22)
         voice_dirs = sorted(p.name for p in (SYS_DIR / "assets/voices").iterdir() if p.is_dir())
-        self.assertEqual(voice_dirs, ["adam"])
-        assert voice_dirs == ["adam"]
+        self.assertEqual(voice_dirs, ["adam", "viet_narrator"])
+        assert voice_dirs == ["adam", "viet_narrator"]
 
     def test_build_content_v3_schema_compliance(self):
         """Verify content.json satisfies validate_content contract with 0 errors."""

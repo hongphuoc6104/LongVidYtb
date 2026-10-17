@@ -204,6 +204,70 @@ console.log('ASPECT_AND_ANCHOR_OK');
         self.assertEqual(result.returncode, 0, f"Aspect/Anchor test failed (code {result.returncode}): {result.stderr}")
         self.assertIn("ASPECT_AND_ANCHOR_OK", result.stdout)
 
+    def test_karaoke_repeated_word_highlights_only_current_position(self):
+        cmd = [
+            "node",
+            "--input-type=module",
+            "-e",
+            """
+import {karaokeTokens} from './renderer/captions.mjs';
+const cue = {text: 'học học', start: 0.0, end: 1.0};
+const words = [
+  {word: 'học', start: 0.0, end: 0.45},
+  {word: 'học', start: 0.5, end: 0.95}
+];
+const tokens = karaokeTokens(cue, words, 0.7);
+const activeFlags = tokens.map(t => t.active);
+if (JSON.stringify(activeFlags) !== JSON.stringify([false, true])) {
+  console.error('Unexpected activeFlags:', activeFlags);
+  process.exit(1);
+}
+console.log('KARAOKE_REPEATED_OK');
+""",
+        ]
+        result = subprocess.run(cmd, cwd=str(ROOT / "sys"), capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, f"Karaoke repeated word test failed: {result.stderr}")
+        self.assertIn("KARAOKE_REPEATED_OK", result.stdout)
+
+    def test_python_and_js_camera_selection_parity_and_punch_cap(self):
+        import json
+        from scripts.camera_motion import scene_camera_motions
+
+        scene = {
+            "id": "SC02",
+            "camera": "Medium shot in study room",
+            "images": [
+                {"id": "I1", "shot_type": "white_card", "description": "White card formula diagram"},
+                {"id": "I2", "shot_type": "full_scene", "description": "Extreme close-up macro hand"},
+                {"id": "I3", "shot_type": "variation", "based_on": "I2", "description": "Wide room overview context"},
+            ],
+            "beats": [
+                {"id": "B1", "image_id": "I1", "effect": "auto"},
+                {"id": "B2", "image_id": "I2", "effect": "punch_in"},
+                {"id": "B3", "image_id": "I3", "effect": "zoom_out"},
+            ],
+        }
+        py_motions = scene_camera_motions(scene)
+        self.assertEqual(py_motions, ["hold", "punch_in", "zoom_out"])
+
+        cmd = [
+            "node",
+            "--input-type=module",
+            "-e",
+            """
+import {selectSemanticCameraEffect} from './renderer/camera.mjs';
+const sc = {id: 'SC02', start: 0, end: 12};
+const b1 = selectSemanticCameraEffect({shot_type: 'white_card', effect: 'auto'}, sc, 0);
+const b2 = selectSemanticCameraEffect({shot_type: 'full_scene', effect: 'punch_in'}, sc, 1);
+const b3 = selectSemanticCameraEffect({shot_type: 'variation', effect: 'zoom_out'}, sc, 2);
+console.log(JSON.stringify([b1, b2, b3]));
+""",
+        ]
+        result = subprocess.run(cmd, cwd=str(ROOT / "sys"), capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        js_motions = json.loads(result.stdout.strip())
+        self.assertEqual(py_motions, js_motions)
+
 
 if __name__ == "__main__":
     unittest.main()
