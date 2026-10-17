@@ -36,12 +36,7 @@
     "minor": 0.3,
     "tail": 0.35
   },
-  "audio_trim_silence": true,
-  "tts_calibrated_pauses": {
-    "short_sentence": 0.20,
-    "normal_sentence": 0.28,
-    "dramatic_pivot": 0.48
-  },
+  "tts_pause_policy": "format_v1",
   "audio_lufs": -14.0,
   "audio_peak_db": -1.5,
   "renderer": "remotion",

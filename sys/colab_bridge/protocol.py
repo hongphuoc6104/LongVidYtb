@@ -69,7 +69,7 @@ def load_profiles(root, cfg, languages):
     return profiles
 
 
-def build_request(root, cfg, scenes, english_scenes=(), *, primary_language='vi', assemble=False, secondary_scenes=(), spinoff_hooks=()):
+def build_request(root, cfg, scenes, english_scenes=(), *, primary_language='vi', assemble=False, secondary_scenes=(), spinoff_hooks=(), pause_plan=None):
     """Keep subtitle chunks, language switches, retakes and learner holds intact."""
     if primary_language not in ('vi', 'en'): raise ValueError('Unsupported primary language')
     items, lookup, segments, english = [], {}, [], []
@@ -111,7 +111,8 @@ def build_request(root, cfg, scenes, english_scenes=(), *, primary_language='vi'
         pause = float(sc['tail'])
         if not math.isfinite(pause) or not 0 <= pause <= 8: raise ValueError('Invalid secondary pause')
         secondary.append(dict(scene_id=safe_id(sc['scene_id']), language=language, text=sc['text'],
-                              items=[item(sc['text'], language, sc.get('retake', 0), cfg['tts_speed'] if language == 'vi' else cfg.get('en_speed', 1.))], pause=pause))
+                              items=[item(sc['text'], language, sc.get('retake', 0), resolve_tone_speed(
+                                  cfg['tts_speed'] if language == 'vi' else cfg.get('en_speed', 1.), sc.get('tone')))], pause=pause))
     hooks = [dict(id=safe_id(plan['id']), text=plan['opening_hook'], item=item(plan['opening_hook'], 'vi', 0, cfg.get('tts_speed', 1.0))) for plan in spinoff_hooks]
     profiles = load_profiles(root, cfg, {x['language'] for x in items} | {primary_language})
     models = cfg['colab_tts']['models']
@@ -130,6 +131,8 @@ def build_request(root, cfg, scenes, english_scenes=(), *, primary_language='vi'
     if hooks: request['spinoff_hooks'] = hooks
     if secondary: request['secondary'] = secondary
     if primary_language != 'vi': request['primary_language'] = primary_language
+    if pause_plan is not None:
+        request['pause_plan'] = pause_plan
     if assemble:
         support = []
         for name, source in [('audio_processing.py', 'audio_processing.py'), ('subtitles.py', 'scripts/subtitles.py'), ('media_packaging.py', 'media_packaging.py')]:

@@ -2,22 +2,35 @@
 
 Voice/reference/rate come from the current brief, with request provenance. Synthesized audio must adhere to the vocal persona matrix and pacing standards documented in [voice-cadence-pacing.md](../../vp-channel-patterns/references/voice-cadence-pacing.md) and [vp-scriptwriting](../../vp-scriptwriting/SKILL.md).
 
-## 1. Acoustic Constants & Tail Buffer Compensation
-The synthesis engine (`sys/adapters.py`) automatically appends trailing silence gaps:
-- **Intermediate scene boundary:** $P_{\text{tail}} = 0.70\text{s}$ (`DEFAULT_PAUSE['para']`).
-- **Final scene boundary:** $P_{\text{tail}} = 0.35\text{s}$ (`DEFAULT_PAUSE['tail']`).
-- **Comma / minor clause pause:** $P_{\text{comma}} = 0.30\text{s}$ (`DEFAULT_PAUSE['minor']`).
-- **Dramatic pause markers:** Intentional suspense breaks written as `[pause:900ms]` (0.8s–1.2s) must be preserved in narration text and accounted for in timeline budgets.
+## 1. Format-aware pause policy
 
-## 2. OmniVoice Boundary Silence Trimming & Calibrated Pauses (ERR-20261011-02)
-To eliminate double-padding stutter and unnatural acoustic gaps:
-- **Automatic boundary trimming (`_trim_silence`):** OmniVoice generates internal leading (`50–180ms`) and trailing (`180–420ms`) silence. The worker trims leading silence to 25ms and trailing silence to 30ms with an 8ms linear fade ramp before saving/stitching.
-- **Calibrated sentence pauses:**
-  - Short sentences (`< 8` words): `0.20s` pause (total acoustic gap ~0.25s).
-  - Standard sentences: `0.28s` pause (total acoustic gap ~0.33s).
-  - Dramatic pivots (`[pause:...]`): `0.48s` pause (total acoustic gap ~0.53s).
+Explicit-output jobs with `tts_pause_policy: format_v1` use the defaults in
+`sys/format_profiles.py`: short/regular sentences are 0.16/0.22 s for short_9x16
+and 0.20/0.28 s for long_16x9; scene/video tails are 0.30/0.15 s and 0.40/0.25 s.
+SC01 sentence gaps are shorter (0.12/0.16 s short; 0.16/0.20 s long). No explicit
+tags are allowed in SC01. Profile selection follows each language's outputs;
+a shared-language dual track uses long timing. Reused excerpts keep source timing.
 
-All script lines must be pre-validated with `sys/tools/script_cadence_checker.py` to ensure the measured/predicted audio duration aligns with scene budgets within $\pm 0.3\text{s}$ (`<= 0.25s` physical drift between final rendered MP4 and WAV).
+Explicit `[pause:...]` tags retain their exact duration, including terminal tags;
+they replace automatic defaults. Learner holds use max, not additive padding.
+Suggested authored pivots are 0.45 s short / 0.60 s long, never an automatic remap
+of an existing 900 ms tag. No pause is required just because the picture changes.
+Ordinary commas stay inside an utterance; only sentences over 180 characters may
+be split at clause punctuation. Preserve model-internal natural timing.
+
+See [implementation and acceptance plan](../../../../sys/docs/narration-pause-implementation-plan.md)
+and `sys/tools/preview_narration_pauses.py` for exact boundary budgets. Saved
+WAVs/requests are immutable; regenerate audio, SRT and timelines together.
+Legacy routing/selector keeps 0.50 s sentences, 0.70 s scenes, 0.35 s final tail.
+
+## 2. Boundary trimming and timing evidence
+
+The Colab worker always trims each utterance to 25 ms lead / 30 ms trail, with an
+8 ms fade. These buffers add about 55 ms to a join; they are separate from the
+inserted pause. The retired `tts_calibrated_pauses` and `audio_trim_silence` config
+fields were inactive. Request pause_plan proves planned silence only; PCM and
+actual listening are needed to verify output timing and perceived naturalness.
+Legacy cadence duration formulas remain approximate, not format_v1 budgets.
 
 ## 3. Dynamic Pacing & Voice Matrix
 - **Hook & Empathy (Phase 1):** ~4.2 syl/s (Vietnamese) / ~145–150 wpm (English).

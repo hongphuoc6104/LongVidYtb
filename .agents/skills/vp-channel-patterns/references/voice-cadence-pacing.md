@@ -86,12 +86,29 @@ Khắc phục triệt để hiện tượng **"Metronomic Cadence" (nhịp máy 
 
 ---
 
-## 6. Ngắt câu, Khoảng lặng & Trừ bù Đuôi Động cơ (Pauses & Dead-Air Elimination)
+## 6. Active pause policy and legacy estimates
 
-### 6.1. Hằng số Âm học Đuôi Động cơ ($P_{\text{tail}}$)
-- **Cảnh thường (SC01–SC05):** $P_{\text{tail}} = 0.70\text{s}$ (`DEFAULT_PAUSE['para']`).
-- **Cảnh kết thúc (SC06):** $P_{\text{tail}} = 0.35\text{s}$ (`DEFAULT_PAUSE['tail']`).
-- **Dấu phẩy (minor pause):** $P_{\text{comma}} = 0.30\text{s}$ (`DEFAULT_PAUSE['minor']`).
+Explicit-output jobs default to `tts_pause_policy: format_v1`; defaults live in
+`sys/format_profiles.py`. Short/regular sentences use 0.16/0.22 s for portrait
+and 0.20/0.28 s for landscape. SC01 uses 0.12/0.16 s and 0.16/0.20 s respectively.
+Intermediate/final tails use 0.30/0.15 s (short) and 0.40/0.25 s (long).
+
+These are additional gaps; worker buffers add approximately 55 ms at a join.
+Ordinary commas and model-internal breathing have no fixed extra insertion.
+Retain exact authored tags and minimum learner holds; never scale a 900 ms tag
+silently. Use semantic transitions, not picture cuts, to decide intentional holds.
+SC01 forbids explicit tags, not all automatic breaths. Start with at most one
+purposeful pivot in a short; long videos may need several meaningful pivots.
+
+Legacy jobs and `legacy` selector retain 0.50/0.70/0.30/0.35 s settings. Historical
+cadence-checker formulas do not calculate the new runtime budget. Preview with
+`sys/tools/preview_narration_pauses.py`, then use actual WAV duration for SRT and
+rendering. See [implementation plan](../../../../sys/docs/narration-pause-implementation-plan.md).
+
+### Historical benchmark fixture (legacy timing only)
+
+The following table is preserved for regression tests of the historical cadence
+parser. Its durations/tails are not format_v1 runtime settings.
 
 ### 6.2. Công thức Tính Âm tiết Mục tiêu Triệt tiêu Dead-Air
 
@@ -108,12 +125,6 @@ $$\text{Target Syllables} = \text{round}\Big((\text{Scene Duration} - P_{\text{t
 | **SC05** | 12.0s | 0.70s | 11.30s | 45 | "Thời hiện đại chúng ta tự hào sở hữu máy giặt tự động, xe hơi tiện nghi và siêu thị đầy ắp thức ăn — nhưng đã bao giờ bạn tự hỏi ai mới thực sự là người phải lao động vất vả nhiều giờ hơn?" | 45 | 11.95s | **-0.05s** |
 | **SC06** | 11.0s | 0.35s | 10.65s | 43 | "Bạn kiệt sức gục ngã trước những núi hồ sơ giấy tờ dưới tiếng đồng hồ tích tắc, trong khi người tiền sử đang nằm thảnh thơi tận hưởng buổi hoàng hôn êm đềm bên đống lửa ấm áp của bộ tộc." | 42 | 10.85s | **-0.15s** |
 | **TỔNG** | **75.0s** | — | **71.15s** | **284** | — | **284** | **74.85s** | **-0.15s** |
-
-### 6.4. Khoảng ngắt kịch tính (Tier-3 Dramatic Pauses & Zero Pause in `SC01`)
-- **Cấm tuyệt đối trong `SC01` (15 giây đầu tiên):** Mọi thẻ `[pause:...]` trong `SC01` đều bị chặn bởi `OPENING_SCENE_PAUSE_FORBIDDEN`.
-- **Giới hạn 1–3 lần toàn video (`DEFAULT_MAX_DRAMATIC_PAUSES = 4`):** Chỉ chèn `[pause:800ms]` hoặc `[pause:900ms]` tại các bước ngoặt tư duy bất ngờ từ `SC02` trở đi.
-
----
 
 ## 7. Quy chuẩn Phụ đề An toàn & Đồng bộ Nhịp Trực quan 2 Vùng (Safe Subtitles & Dual-Zone Visual Beats)
 

@@ -77,19 +77,38 @@ def produce(pilot, job, out):
                       'retake': takes.get(scene['id'], 0),
                       'tail': scene_tail(scene, 'en', gaps, i == len(content['scenes']) - 1)}
                      for i, scene in enumerate(content['scenes'])]
-    secondary_vi = []
+    secondary_segments = []
     if primary == 'en' and 'vi' in requested:
-        secondary_vi = [{'scene_id': scene['id'], 'language': 'vi', 'text': narration(scene, 'vi'),
+        secondary_segments = [{'scene_id': scene['id'], 'language': 'vi', 'text': narration(scene, 'vi'),
                          'retake': takes.get(scene['id'], 0),
                          'tail': scene_tail(scene, 'vi', gaps, i == len(content['scenes']) - 1)}
                         for i,scene in enumerate(content['scenes'])]
+    pause_plan = None
+    policy = cfg.get('tts_pause_policy', 'legacy')
+    if policy not in ('legacy', 'format_v1'):
+        raise Blocked('PAUSE_POLICY: unsupported tts_pause_policy')
+    if policy == 'format_v1':
+        from narration_pauses import plan_tracks
+        from adapters import english_parts, is_english
+        try:
+            scenes, secondary_segments, pause_plan = plan_tracks(brief, content, takes, primary)
+        except ValueError as ex:
+            raise Blocked(str(ex)) from ex
+        secondary = []
+        if primary == 'vi':
+            for scene, item in zip(content['scenes'], scenes, strict=True):
+                words = [v['word'] for v in scene.get('vocabulary', []) if is_english(v.get('word', ''))]
+                parts = [english_parts(text, words) for text in item['texts']]
+                if any(part['lang'] == 'en' for group in parts for part in group):
+                    item['parts'] = parts
     from omni_platform import short_plans
     shorts = short_plans(brief, content)
     if shorts and primary != 'vi':
         raise Blocked('OMNI_LANGUAGE: Vietnamese primary narration required for reused spin-off audio')
     try:
         request = build_request(pilot.root, cfg, scenes, secondary,
-                                primary_language=primary, assemble=True, secondary_scenes=secondary_vi, spinoff_hooks=shorts)
+                                primary_language=primary, assemble=True, secondary_scenes=secondary_segments,
+                                spinoff_hooks=shorts, pause_plan=pause_plan)
         write(out / 'request-colab.json', request)
         import execution
         guard = (lambda: execution.before_submit(pilot, job)) if execution.is_job(pilot, job) else None
