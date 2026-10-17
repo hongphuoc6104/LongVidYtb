@@ -20,6 +20,9 @@ All code modifications, new features, and bug fixes must pass the 6-station deve
   6. **Station 6 (CI Watch & Green Certification)**: Generates immutable `green_certified_<timestamp>.json` verification.
 - `./pipeline station <1..6>`: Run any station independently for isolated debugging.
 - `./pipeline video [--job ID] [--step STEP]`: Production runner for Video Pilot tasks.
+- `./pipeline setup [args...]`: Machine setup & credential onboarding (`vp-setup`).
+- `./pipeline flow [status|stop]`: Flow CDP Chrome profile pool status & teardown (`vp-flow-cdp`).
+- `./pipeline colab [args...]`: Remote Colab T4 pool & session management (`vp-colab-bridge`).
 
 ## 2. Supreme 4-Step Bug Resolution Protocol & Playbook Discipline
 When encountering or fixing any defect, adhere to the 4-step protocol:

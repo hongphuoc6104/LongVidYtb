@@ -246,6 +246,9 @@
                     "white_card",
                     "white_isolated"
                   ]
+                },
+                "allow_expression_shift": {
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -643,6 +646,15 @@
           },
           "foley_cue": {
             "type": "string"
+          },
+          "narrative_phase": {
+            "type": "string",
+            "enum": [
+              "lived_friction",
+              "empirical_conflict",
+              "structural_model",
+              "actionable_resolution"
+            ]
           }
         },
         "required": [

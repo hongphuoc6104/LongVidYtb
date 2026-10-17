@@ -115,9 +115,11 @@ def scan_critique(root_dir: Path) -> Tuple[bool, Dict[str, any]]:
 
     # Check 4: Stick-figure Visual Cast Invariant
     compiler_path = sys_dir / "flow_prompts/compiler.py"
-    registry_path = sys_dir / "flow_prompts/versions/1.2.0/registry.json"
+    registry_path = sys_dir / "flow_prompts/versions/1.3.0/registry.json"
+    if not registry_path.is_file():
+        registry_path = sys_dir / "flow_prompts/versions/1.2.0/registry.json"
     cast_ok = False
-    cast_detail = "Visual cast tuân thủ chuẩn anonymous stick-figure."
+    cast_detail = "Visual cast tuân thủ chuẩn anonymous stick-figure (flow_prompts 1.3.0)."
 
     if compiler_path.is_file() and registry_path.is_file():
         compiler_code = compiler_path.read_text(encoding="utf-8", errors="ignore")

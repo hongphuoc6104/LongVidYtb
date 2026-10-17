@@ -76,9 +76,13 @@ Video Pilot offloads all heavy GPU/CPU media processing to remote Google Colab T
 
 ## 3. Core CLI Commands, Account Management & Multi-T4 Pool Lifecycle
 
-Run all `colab_bridge` module commands from `sys/` (or pass `PYTHONPATH=sys`):
+Run all `colab_bridge` module commands via `./pipeline colab <subcommand>` from the repo root, or from `sys/` (with `PYTHONPATH=sys`):
 
 ```bash
+# Quick conveyor wrapper from repo root:
+./pipeline colab pool-status --probe
+./pipeline colab teardown
+
 # 1. Inspect configured accounts, busy locks, roles, and live server assignments
 PYTHONPATH=sys python3 -m colab_bridge.accounts list
 PYTHONPATH=sys python3 -m colab_bridge.accounts status-all --probe

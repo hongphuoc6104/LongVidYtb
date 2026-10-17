@@ -10,10 +10,13 @@ Coordinates the 6 standardized quality stations:
   Station 6: CI Watch & Local Green Certification (gh-axi watch, immutable green verification)
 
 Usage:
-  ./pipeline status           # Check environment & tooling readiness
-  ./pipeline run              # Run all 6 stations in sequence (fail-fast)
-  ./pipeline station <1..6>   # Run a single station
-  ./pipeline video [--job ID] # Execute Video Pilot production steps
+  ./pipeline status                    # Check environment & tooling readiness
+  ./pipeline setup [--force]           # Bootstrap environment & login Colab/Flow accounts
+  ./pipeline run                       # Run all 6 stations in sequence (fail-fast)
+  ./pipeline station <1..6>            # Run a single station
+  ./pipeline video [--job ID]          # Execute Video Pilot production steps
+  ./pipeline flow [status|launch|...]  # Manage Google Flow CDP Chrome profiles
+  ./pipeline colab [list|login|...]    # Manage Google Colab T4 CLI accounts
 """
 
 import argparse
@@ -96,6 +99,7 @@ def station_2_test_ast() -> bool:
         SYS_DIR / "tests/test_full_frame_upgrade.py",
         SYS_DIR / "tests/test_full_frame_pipeline.py",
         SYS_DIR / "tests/test_omni_platform.py",
+        SYS_DIR / "tests/test_anti_formulaic_storytelling.py",
         SYS_DIR / "tests/test_independent_maintenance_contracts.py",
     ]
     # Check AST on test directory
@@ -208,8 +212,17 @@ def station_4_lint() -> bool:
         str(SYS_DIR / "tools"),
         str(SYS_DIR / "scripts/conveyor.py"),
         str(SYS_DIR / "scripts/clean_production.py"),
+        str(SYS_DIR / "scripts/camera_motion.py"),
+        str(SYS_DIR / "scripts/visual_quality.py"),
         str(SYS_DIR / "format_profiles.py"),
+        str(SYS_DIR / "visual_pacing.py"),
+        str(SYS_DIR / "omni_platform.py"),
+        str(SYS_DIR / "omni_render.py"),
         str(SYS_DIR / "tests/test_format_separation.py"),
+        str(SYS_DIR / "tests/test_full_frame_pipeline.py"),
+        str(SYS_DIR / "tests/test_full_frame_upgrade.py"),
+        str(SYS_DIR / "tests/test_omni_platform.py"),
+        str(SYS_DIR / "tests/test_anti_formulaic_storytelling.py"),
         str(REPO_ROOT / "pilot.py"),
     ]
     ruff_res = subprocess.run(ruff_cmd, cwd=str(REPO_ROOT), capture_output=True, text=True)

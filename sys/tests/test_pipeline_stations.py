@@ -57,6 +57,10 @@ def test_station_2_ast_integrity_on_real_suite():
         repo_root / "sys/tests/test_research_story_architect.py",
         repo_root / "sys/tests/test_script_cadence_checker.py",
         repo_root / "sys/tests/test_format_separation.py",
+        repo_root / "sys/tests/test_full_frame_pipeline.py",
+        repo_root / "sys/tests/test_full_frame_upgrade.py",
+        repo_root / "sys/tests/test_omni_platform.py",
+        repo_root / "sys/tests/test_anti_formulaic_storytelling.py",
     ]
     ok, report = check_test_suite_integrity(target_tests)
     assert ok, f"Expected active assertions in all test functions, violations: {report['violations']}"

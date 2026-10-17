@@ -40,6 +40,8 @@ Configure the engine and profile endpoints:
 Before generating, inspect the readiness of all 3 Chrome profiles:
 
 ```bash
+./pipeline flow status
+# or directly:
 python3 -c "from flow_cdp.multi_profile_manager import MultiProfileManager; import json; print(json.dumps(MultiProfileManager().get_status(), indent=2))"
 ```
 
@@ -72,6 +74,8 @@ If generation encounters an error or abnormal activity on one profile:
 Once all required images for a job are downloaded and verified, close the 3 isolated Chrome CDP instances (`~/.config/google-chrome-cdp-p{1,2,3}` on ports `9225`, `9223`, `9224`) to reclaim ~5GB of local RAM without affecting any personal browser windows:
 
 ```bash
+./pipeline flow stop
+# or directly:
 PYTHONPATH=sys python3 -m flow_cdp.multi_profile_manager stop
 ```
 

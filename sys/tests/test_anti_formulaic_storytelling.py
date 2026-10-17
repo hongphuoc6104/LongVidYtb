@@ -183,13 +183,28 @@ def test_non_desk_topic_passes_narrative_progression_and_diversity() -> None:
         )
     ]
 
+    # Attach explicit narrative_phase, allow_expression_shift, and enable_sound_design to verify schema v3 serialization
+    topic.enable_sound_design = True
+    topic.scenes[0].narrative_phase = "lived_friction"
+    topic.scenes[2].narrative_phase = "empirical_conflict"
+    topic.scenes[4].narrative_phase = "structural_model"
+    topic.scenes[9].narrative_phase = "actionable_resolution"
+    topic.scenes[0].visual_beats[1].allow_expression_shift = True
+
+    from content_contract import validate_brief
+    from tools.research_story_architect import compute_brief_hash
     brief = build_brief_v3(topic)
-    content = build_content_v3(topic, brief, "BENCHMARK")
+    validate_brief(SYSTEM, brief)
+    assert brief.get("enable_sound_design") is True
+    b_hash = compute_brief_hash(brief)
+    content = build_content_v3(topic, brief, b_hash)
+    assert content["scenes"][0].get("narrative_phase") == "lived_friction"
+    assert content["scenes"][0]["images"][1].get("allow_expression_shift") is True
 
     # 1. Scene Narrative Progression must pass even without 'study_desk' or 'laboratory'
     assert check_scene_narrative_progression(content["scenes"]) == []
     assert check_visual_setting_diversity(content["scenes"]) == []
-    validate_content(SYSTEM, brief, 1, "BENCHMARK", content)
+    validate_content(SYSTEM, brief, 1, b_hash, content)
 
     # 4. Dynamic Prosody Wave: middle scenes (SC03..SC08) must NOT be 100% locked to 'analytical_crisp'
     middle_tones = [sc.get("tone") for sc in content["scenes"][2:8]]

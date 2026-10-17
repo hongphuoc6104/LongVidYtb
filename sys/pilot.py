@@ -7,8 +7,8 @@ from PIL import Image
 ROOT=Path(__file__).resolve().parent
 ORDER=['control','content','audio','images','render']
 DEPS={'control':[],'content':['control'],'images':['control','content'],'audio':['control','content'],'render':['control','content','images','audio']}
-PROTECTED_FILES=['pilot.py','workflow.py','machine_review.py','content_contract.py','image_pipeline.py','prompt_templates.py','adapters.py','config.json','AGENTS.md','GEMINI.md','package.json','package-lock.json','requirements.txt','b2_bridge.py']
-PROTECTED_DIRS=['assets/voices','colab_bridge','schemas','.agents','renderer','tests','examples','scripts']
+PROTECTED_FILES=['pilot.py','workflow.py','execution.py','machine_review.py','content_contract.py','output_contract.py','format_profiles.py','visual_pacing.py','omni_platform.py','omni_render.py','remote_audio.py','media_packaging.py','image_pipeline.py','prompt_templates.py','adapters.py','config.json','AGENTS.md','GEMINI.md','package.json','package-lock.json','requirements.txt','b2_bridge.py']
+PROTECTED_DIRS=['assets/voices','assets/sfx','colab_bridge','flow_cdp','flow_prompts','schemas','.agents','renderer','tests','examples','scripts','tools']
 class Blocked(Exception):pass
 def read(p):return json.loads(Path(p).read_text())
 def write(p,x):

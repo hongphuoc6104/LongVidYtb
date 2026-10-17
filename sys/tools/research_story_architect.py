@@ -235,6 +235,7 @@ class ResearchedBeat:
     change: str = "Show the described full-frame scene."
     visible_text: List[Dict[str, str]] = field(default_factory=list)
     shot_type: str = "full_scene"
+    allow_expression_shift: Optional[bool] = None
 
     def __post_init__(self) -> None:
         if self.shot_type not in {"macro_prop", "full_scene", "variation", "white_card", "white_isolated"}:
@@ -267,6 +268,7 @@ class ResearchedScene:
     visual_beats: List[ResearchedVisualBeat] = field(default_factory=list)
     scene_description: str = ""
     tone: Optional[str] = None
+    narrative_phase: Optional[str] = None
 
 
 @dataclass
@@ -293,6 +295,7 @@ class ResearchedTopic:
     packaging: Optional[PackagingSpec] = None
     spinoff_shorts: Optional[List[Dict[str, Any]]] = None
     visual_pacing_profile: Optional[str] = None
+    enable_sound_design: Optional[bool] = None
 
 
 def serialize_brief_json(brief_dict: Dict[str, Any]) -> str:
@@ -491,6 +494,8 @@ def build_brief_v3(topic: ResearchedTopic, system_root: Optional[Path] = None) -
             brief["seo_keywords"] = list(pkg_dict["seo_keywords"])
     if topic.visual_pacing_profile is not None:
         brief['visual_pacing_profile'] = topic.visual_pacing_profile
+    if getattr(topic, "enable_sound_design", None) is not None:
+        brief["enable_sound_design"] = bool(topic.enable_sound_design)
     if getattr(topic, "spinoff_shorts", None):
         brief["spinoff_shorts"] = list(topic.spinoff_shorts)
     return brief
@@ -723,7 +728,7 @@ def build_content_v3(
             if not visual.change.strip():
                 raise ValueError(f"{s_id}/{visual.image_id}: visual beat needs a change description")
 
-            images.append({
+            image_entry: Dict[str, Any] = {
                 "id": visual.image_id,
                 "description": visual.description,
                 "character_ids": list(visual.character_ids or sc.character_ids),
@@ -734,7 +739,10 @@ def build_content_v3(
                 "visible_text": list(visual.visible_text),
                 "kind": "scene",
                 "shot_type": "variation" if visual.based_on else visual.shot_type,
-            })
+            }
+            if getattr(visual, "allow_expression_shift", None) is not None:
+                image_entry["allow_expression_shift"] = bool(visual.allow_expression_shift)
+            images.append(image_entry)
             anchor_payload: Dict[str, Any] = {
                 "vi": {
                     "quote": visual.anchor_quote,
@@ -795,6 +803,8 @@ def build_content_v3(
             scene_dict["foley_cue"] = sc.foley_cue
         if getattr(sc, "tone", None):
             scene_dict["tone"] = sc.tone
+        if getattr(sc, "narrative_phase", None):
+            scene_dict["narrative_phase"] = sc.narrative_phase
         if sc.narration_en:
             scene_dict["narration_en"] = sc.narration_en
 
@@ -1365,6 +1375,8 @@ def write_production_package(
 
     checker = ScriptCadenceChecker(nominal_rate=NOMINAL_SPEECH_RATE)
     cadence_report = checker.check_scenes(script_data)
+    from tools.script_diversity_linter import lint_script
+    diversity_report = lint_script(content_data["scenes"], topic_title=brief_data.get("topic", ""))
 
     def _write_if_changed(path: Path, text: str) -> None:
         if path.is_file() and path.read_text(encoding="utf-8") == text:
@@ -1411,6 +1423,7 @@ def write_production_package(
         "contract_errors": contract_errors,
         "packaging_warnings": packaging_warnings,
         "cadence_report": cadence_report,
+        "diversity_report": diversity_report,
         "spinoff_packages": spinoff_packages,
     }
 

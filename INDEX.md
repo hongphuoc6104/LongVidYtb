@@ -9,6 +9,8 @@ Read [AGENTS.md](AGENTS.md), identify the task and authority, then select the ro
 | Architect a new research topic, Packaging Contract & Spin-offs (`brief.json` & `content.json` v3.0) | [Research architect](.agents/skills/vp-research-architect/SKILL.md) | vp-research-architect |
 | Author conversational narration, Truth-Slap Hooks & verify acoustic cadence | [Scriptwriting guide](.agents/skills/vp-scriptwriting/SKILL.md) | vp-scriptwriting |
 | Create or repair a video (`long_16x9` or `short_9x16`) | [Workflow](sys/docs/workflow.md) | vp-production |
+| Author or repair full-frame visual beats, continuity & camera motion (`full_frame_v1`) | [Full-frame quality guide](.agents/skills/vp-full-frame-quality/SKILL.md) | vp-full-frame-quality |
+| Package shared-image YouTube, Facebook & standalone Reels/TikTok deliverables | [Omni-platform guide](.agents/skills/vp-omni-platform/SKILL.md) | vp-omni-platform |
 | Automated image generation via Flow CDP | [Flow CDP Guide](.agents/skills/vp-flow-cdp/SKILL.md) | vp-flow-cdp |
 | Remote Colab T4 TTS synthesis & headless Remotion render | [Colab Bridge Guide](.agents/skills/vp-colab-bridge/SKILL.md) | vp-colab-bridge |
 | Troubleshooting technical issues & proven remedies | [Troubleshooting handbook](.agents/skills/vp-troubleshooting/SKILL.md) | vp-troubleshooting |

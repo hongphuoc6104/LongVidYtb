@@ -141,7 +141,8 @@ def validate_content(root,b,revision,bhash,p):
    check_scene_narrative_progression,
    check_visual_setting_diversity,
   )
-  checks = (check_visual_setting_diversity, check_instructional_manual_loop, check_scene_narrative_progression) if b.get('visual_pacing_profile') == 'full_frame_v1' else ()
+  from tools.script_diversity_linter import check_micro_action_filler
+  checks = (check_visual_setting_diversity, check_instructional_manual_loop, check_scene_narrative_progression, check_micro_action_filler) if b.get('visual_pacing_profile') == 'full_frame_v1' else ()
   for check in checks:
    for violation in check(p['scenes']):
     fail(violation['type'], str(violation.get('scene_id', 'scenes')), str(violation))

@@ -41,9 +41,11 @@ Bộ kỹ năng này được thiết kế để **tự động hóa 100% phần
   - Chọn `shot_type` trong 5 loại chuẩn: `full_scene`, `variation`, `macro_prop`, `white_card`, `white_isolated`.
   - Code Python trong `build_content_v3()` sẽ **tự động**:
     - Ghép câu, tính thời lượng chuẩn và trích xuất `anchor_quote` chính xác 100%.
-    - Nối `based_on` + `Expression lock` qua `apply_room_continuity()` cho các cảnh cùng phòng.
-    - Chọn chuyển động camera ngữ nghĩa không lặp qua `select_semantic_camera_effect()`.
-    - Khóa tâm `focus` trong vùng an toàn trung tâm (`0.35..0.65`) và gắn sắc thái giọng `tone` (`narrative_warm`, `analytical_crisp`, `reflective_slow`).
+    - Khớp câu `coverage[].quote` với `required_points` theo độ chồng lấp từ vựng cao nhất (`_select_best_coverage_quote()`) thay vì lấy mù quáng câu đầu tiên.
+    - Nối `based_on` + `Expression lock` qua `apply_room_continuity()` cho các cảnh cùng phòng (và tôn trọng `allow_expression_shift: true` khi cần đổi biểu cảm).
+    - Chọn chuyển động camera ngữ nghĩa 4 hướng không lặp qua `select_semantic_camera_effect()` (`entropy >= 1.5` bits).
+    - Khóa tâm `focus` trong vùng an toàn trung tâm (`0.35..0.65`), gắn `narrative_phase` (`lived_friction`, `empirical_conflict`, `structural_model`, `actionable_resolution`) và điều biến giọng `tone` động qua `_infer_scene_tone()`.
+    - Kiểm định tự động `diversity_report` (`lint_script`) trong `write_production_package()`.
 - Chi tiết: [Conversational Structuring](references/conversational-structuring.md) và [Pipeline Blueprint Spec](references/pipeline-blueprint-spec.md).
 
 ---
@@ -63,4 +65,4 @@ python3 sys/tools/build_full_frame_acceptance.py --output-dir sys/runs/full-fram
 
 ## Full-frame visual journey gate
 
-For new jobs, declare `visual_pacing_profile: full_frame_v1` and follow [Full-frame quality contracts](../vp-full-frame-quality/SKILL.md). Plan local experience → experimental evidence → mechanism/metaphor → practical return. Use at most two consecutive scenes per physical setting; for ten or more scenes, keep each setting at or below 30%. Author source-backed comparisons without inventing numeric results. Preserve room and expression through `based_on` return shots; distinguish hard cuts from in-frame camera movement.
+For new jobs, declare `visual_pacing_profile: full_frame_v1` and follow [Full-frame quality contracts](../vp-full-frame-quality/SKILL.md). Plan across the 4 functional cognitive phases (`lived_friction` → `empirical_conflict` → `structural_model` → `actionable_resolution`). Use at most two consecutive scenes per physical setting; for ten or more scenes, keep each setting at or below 30%. Author source-backed comparisons without inventing numeric results. Preserve room and expression through `based_on` return shots (or set `allow_expression_shift: true` for intentional emotional turns); distinguish hard cuts from in-frame camera movement.

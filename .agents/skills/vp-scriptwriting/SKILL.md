@@ -24,17 +24,18 @@ description: "Author and transform explainer video scripts into natural conversa
 
 ---
 
-## 2. Khung Kể Chuyện Nhân Quả & Chuyển Cảnh Một Chiều
+## 2. Khung Kể Chuyện Nhân Quả (`narrative_phase`) & Điều Biến Giọng Động
 
-1. **Hành trình nhân quả (`full_frame_v1`):**
-   - **Giai đoạn 1 — Trải nghiệm bản địa Việt Nam (0–20%, `tone: "narrative_warm"`):** Bối cảnh sát sườn với sinh viên/người nghiên cứu Việt Nam (bàn học 2 giờ sáng, tô bút dạ quang kín giáo trình, giảng đường, mở Word trắng tinh).
-   - **Giai đoạn 2 — Thực nghiệm & Bằng chứng đối chứng (20–50%, `tone: "analytical_crisp"`):** Đặt hai nhóm học tập/nghiên cứu lên bàn cân thực nghiệm khoa học; trích dẫn dữ kiện văn nói $\le 20$ âm tiết.
-   - **Giai đoạn 3 — Cơ chế & Ẩn dụ trực quan (50–80%, `tone: "analytical_crisp"`):** Giải phẫu cơ chế bằng ẩn dụ vật lý cụ thể (bản đồ bị sương mù che, cây cầu thiếu nhịp, Tháp Học Thuật 9 tầng, chuỗi `Question → Gap → Method → Evidence`, Ma trận Khoảng trống).
-   - **Giai đoạn 4 — Ứng dụng thực chiến & Khép vòng lặp (80–100%, `tone: "reflective_slow"`):** Quay lại phòng bảo vệ khóa luận 120 giây đầu và bàn học mở màn với giải pháp hành động rõ ràng.
+1. **Hành trình nhân quả 4 Pha Chức Năng (`narrative_phase` trên `full_frame_v1`):**
+   - **Pha 1 — `lived_friction` (Trải nghiệm ma sát thực tế, `tone: "narrative_warm"`):** Bối cảnh sát sườn tại Việt Nam (bàn học 2 giờ sáng, tô bút dạ quang kín giáo trình, giảng đường, kẹt xe đại lộ, mở Word trắng tinh).
+   - **Pha 2 — `empirical_conflict` (Thực nghiệm & Bằng chứng đối chứng):** Đặt hai nhóm học tập/hành vi lên bàn cân thực nghiệm khoa học; trích dẫn dữ kiện văn nói $\le 20$ âm tiết.
+   - **Pha 3 — `structural_model` (Cơ chế & Mô hình cấu trúc):** Giải phẫu cơ chế bằng ẩn dụ vật lý hoặc mô hình hệ thống (bản đồ sương mù, mạng lưới cầu tắt, Tháp Học Thuật 9 tầng, chuỗi `Question → Gap → Method → Evidence`, Ma trận Khoảng trống).
+   - **Pha 4 — `actionable_resolution` (Ứng dụng thực chiến & Khép vòng lặp, `tone: "reflective_slow"`):** Quay lại bối cảnh mở màn với nguyên tắc thiết kế/hành động rõ ràng.
+   - **Điều biến `tone` động (`_infer_scene_tone`):** Ở 60% thân bài (Pha 2–3), không khóa cứng 100% vào `analytical_crisp`; hệ thống tự động xen kẽ `reflective_slow` hoặc `narrative_warm` ở các cảnh đặt câu hỏi bản chất (`?`, `tại sao`, `nghịch lý`, `sụp đổ`, `ảo giác`) để giữ sóng cảm xúc.
 2. **Luân phiên thế chuyển cảnh động:**
    - Tuyệt đối cấm các câu dẫn sáo rỗng (*"Nhưng rồi..."*, *"Bước sang..."*, *"Hãy cùng bước vào..."*, *"Nhưng câu chuyện chưa dừng lại ở đó..."*).
 3. **Phân vùng lịch sử một chiều (Strict Forward Chronology):**
-   - Khi đã bước sang thời kỳ mới, nghiêm cấm kéo ngược bối cảnh về thời kỳ cũ. Trong 60 giây đầu (`SC01–SC02`), bắt buộc giữ 100% bối cảnh Việt Nam hiện đại.
+   - Khi đã bước sang thời kỳ mới, nghiêm cấm kéo ngược bối cảnh về thời kỳ cũ. Trong 60 giây đầu (`SC01–SC02`), bắt buộc giữ 100% bối cảnh hiện đại gần gũi với người xem Việt Nam.
 
 ---
 
@@ -43,11 +44,11 @@ description: "Author and transform explainer video scripts into natural conversa
 Để Agent không bao giờ tính sai tọa độ hay trượt điểm neo (`anchor_quote`), hãy soạn kịch bản theo từng cặp **`(Câu thoại ngắn tự nhiên, "loại_shot|Hành động hình ảnh cụ thể")`** (như trong `sys/tools/build_full_frame_acceptance.py` hoặc hàm `build_scenes_from_story_rows` trong `sys/tools/research_story_architect.py`):
 
 - **`full_scene`**: Nhân vật người que ẩn danh và đồ vật tương tác trực tiếp trong bối cảnh vật lý.
-- **`variation`**: Giữ nguyên căn phòng và góc máy của ảnh trước (`based_on`), chỉ đổi cử chỉ tay/biểu cảm nhân vật (code tự động thêm `Expression lock`).
+- **`variation`**: Giữ nguyên căn phòng và góc máy của ảnh trước (`based_on`), chỉ đổi cử chỉ tay/biểu cảm nhân vật (code tự động thêm `Expression lock`; nếu cần đổi biểu cảm ở các bước ngoặt nhận thức, bật `allow_expression_shift: true` hoặc ghi rõ `Expression shift:` trong `change`).
 - **`macro_prop`**: Cận cảnh bàn tay 4 ngón hoạt hình cầm bút, trang sách tô vàng, đồng hồ hoặc chi tiết sơ đồ.
 - **`white_card`**: Thẻ khái niệm nền trắng tinh `#FFFFFF` cô lập một biểu tượng đối sánh tối giản.
 
-1. **Cold open (`0:00–0:12.5`) & Cấm Lệnh Vật Lý Vụn Vặt (`MICRO_ACTION_FILLER_BABBLE`):** Đạt khoảng 4 hình trong 5 giây đầu và 8–9 hình trong 12,5 giây đầu bằng **đối trọng thị giác (Visual Counterpoint)** lật tẩy mâu thuẫn nhận thức; tuyệt đối cấm viết $\ge 3$ câu lệnh vật lý 4 chữ tầm thường liên tiếp (*"Cầm cây bút lên. Đặt xuống tờ giấy trắng. Mở sách ra."*).
+1. **Cold open (`0:00–0:12.5`) & Cấm Lệnh Vật Lý Vụn Vặt (`MICRO_ACTION_FILLER_BABBLE`):** Đạt **3–5 hình trong 5 giây đầu** và **6–10 hình trong 12,5 giây đầu** bằng **đối trọng thị giác (Visual Counterpoint)** lật tẩy mâu thuẫn nhận thức; tuyệt đối cấm viết $\ge 3$ câu lệnh vật lý 4 chữ tầm thường liên tiếp (*"Cầm cây bút lên. Đặt xuống tờ giấy trắng. Mở sách ra."*).
 2. **Thân bài (`sau 0:15`):** Giữ mỗi câu/nhịp hình trong khoảng **`0.83s–3.80s`**, kể chuyện thí nghiệm sinh động nhưng không trích dẫn khô khan kiểu `et al.`, `DOI:`, `(2008)`.
 
 ---
