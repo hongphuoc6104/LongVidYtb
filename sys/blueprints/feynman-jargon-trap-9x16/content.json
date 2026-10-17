@@ -1,0 +1,826 @@
+{
+  "schema_version": "3.0",
+  "brief_revision": 1,
+  "brief_hash": "5015078ca1ba09740ef817946ebd32b52939934bfb90f6cb93ba1c58eb7f62a9",
+  "topic": "Kỹ Thuật Feynman và Cái Bẫy Thuật Ngữ Hàn Lâm: Giải mã cơ chế ảo giác uyên bác khi dùng từ ngữ đao to búa lớn",
+  "duration": {
+    "min_seconds": 45.0,
+    "max_seconds": 60.0
+  },
+  "style": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que viền đen dày tương tác trực tiếp với bảng vẽ và trang giấy trong cùng bố cục, khung dọc 9:16.",
+  "required_points": [
+    "Ảo giác uyên bác khi lạm dụng từ ngữ đao to búa lớn",
+    "Thói quen nhồi nhét thuật ngữ hàn lâm vào tiểu luận đêm khuya",
+    "Thực nghiệm Princeton chứng minh tác hại của việc dùng từ rườm rà",
+    "Kỹ thuật Feynman giải thích bản chất cho một đứa trẻ mười tuổi",
+    "Khép vòng lặp nhận diện lỗ hổng kiến thức nơi buộc phải dùng từ hàn lâm"
+  ],
+  "characters": [
+    {
+      "id": "CH01",
+      "name": "Nhân vật người que học thuật",
+      "appearance": "Hình tượng người que đầu tròn trắng viền đen dày, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung dọc",
+      "outfit": "Áo sơ mi học thuật tối giản nét mực đen"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "SC01",
+      "title": "Ảo giác uyên bác khi lạm dụng từ ngữ đao to búa lớn",
+      "purpose": "Mở màn bằng cú tát sự thật vạch trần thói quen dùng từ ngữ phức tạp để che giấu sự mơ hồ",
+      "action": "Nhân vật người que đứng trước bảng đen chi chít chữ học thuật nhưng đầu óc trống rỗng",
+      "setting": "Giảng đường đại học với bảng đen viết đầy chữ thuật ngữ đao to búa lớn",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Càng dùng từ ngữ phức tạp nghĩa là bạn càng chưa hiểu gì. Đằng sau những từ hoa mỹ thường chỉ là một đầu óc trống rỗng.",
+      "requirements": [
+        "R01"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC01"
+      ],
+      "images": [
+        {
+          "id": "SC01_I1",
+          "description": "Một bàn tay người que cầm bút đen viết lên trang giấy trắng, ngòi bút lướt nhanh tạo thành những dòng chữ nguệch ngoạc trừu tượng, góc nhìn cận cảnh từ trên xuống.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Cận cảnh ngòi bút tạo ra các từ ngữ phức tạp.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC01_I2",
+          "description": "Nhân vật người que đứng lúng túng giữa giảng đường lớn trước tấm bảng đen phủ kín các phương trình và thuật ngữ đao to búa lớn, hai tay buông thõng bối rối.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Toàn cảnh nhân vật đứng trước khối thuật ngữ đồ sộ.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC01_I3",
+          "description": "Nhân vật người que đứng trước bảng đen, phía trên đầu là một bong bóng suy nghĩ bọc lớp vỏ chữ nghĩa hoa mỹ lấp lánh, nhưng bị cây kim chọc thủng xì hơi để lộ ra bên trong hoàn toàn rỗng tuếch.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC01_I2",
+          "preserve": "Keep the exact lecture hall, black board with dense equations, camera framing and stick figure appearance from the base scene. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Above the stick figure's head, an ornate thought bubble covered in shimmering academic words is pierced by a sharp needle, deflating to reveal an empty void inside.",
+          "reason": "Bong bóng chữ nghĩa bị kim chọc thủng xì hơi lộ ra bên trong rỗng tuếch.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC01_B1",
+          "image_id": "SC01_I1",
+          "purpose": "Mở màn bằng cú tát sự thật vạch trần thói quen dùng từ ngữ phức tạp để che giấu sự mơ hồ",
+          "anchor": {
+            "vi": {
+              "quote": "Càng dùng từ ngữ phức tạp",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B2",
+          "image_id": "SC01_I2",
+          "purpose": "Mở màn bằng cú tát sự thật vạch trần thói quen dùng từ ngữ phức tạp để che giấu sự mơ hồ",
+          "anchor": {
+            "vi": {
+              "quote": "nghĩa là bạn càng chưa hiểu gì",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B3",
+          "image_id": "SC01_I3",
+          "purpose": "Mở màn bằng cú tát sự thật vạch trần thói quen dùng từ ngữ phức tạp để che giấu sự mơ hồ",
+          "anchor": {
+            "vi": {
+              "quote": "Đằng sau những từ hoa mỹ thường chỉ là một đầu óc trống rỗng",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp"
+    },
+    {
+      "id": "SC02",
+      "title": "Thói quen nhồi nhét thuật ngữ hàn lâm vào tiểu luận đêm khuya",
+      "purpose": "Mô tả ma sát thực tế khi viết tiểu luận và cú sốc khi bị yêu cầu diễn đạt bằng tiếng Việt bình dân",
+      "action": "Nhân vật người que gõ bàn phím tự đắc đêm khuya nhưng đứng hình trước câu hỏi của giảng viên",
+      "setting": "Góc học tập ban đêm chuyển cảnh sang phòng hội thảo đại học",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Đêm làm tiểu luận, bạn cố nhồi những từ ngữ hàn lâm để bài viết có vẻ uyên bác. [pause:900ms] Nhưng khi giảng viên yêu cầu giải thích bằng tiếng Việt đời thường, bạn lập tức đứng hình.",
+      "requirements": [
+        "R02"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC01"
+      ],
+      "images": [
+        {
+          "id": "SC02_I1",
+          "description": "Góc học tập ban đêm tĩnh mịch, đèn bàn vàng chiếu sáng một góc phòng, nhân vật người que ngồi chăm chú gõ bàn phím laptop trong tư thế tự đắc.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Thiết lập bối cảnh bàn học quen thuộc lúc đêm muộn.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC02_I2",
+          "description": "Góc nhìn cận cảnh màn hình laptop hiển thị trang soạn thảo văn bản với dòng tiêu đề lớn phương pháp luận biện chứng được tô đậm màu mực đen.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Cận cảnh màn hình bài viết cố tỏ ra uyên bác.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC02_I3",
+          "description": "Phòng hội thảo sáng trưng, một vị giảng viên đeo kính đứng khoanh tay, chỉ ngón tay về phía nhân vật người que với ánh mắt đặt câu hỏi chất vấn nghiêm túc.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC02_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Show the described full-frame scene.",
+          "reason": "Chuyển bối cảnh sang phòng hội thảo và câu hỏi phản biện đời thường.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC02_I4",
+          "description": "Nhân vật người que đứng sau bục thuyết trình, hai mắt mở to bối rối, những giọt mồ hôi rơi xuống, chiếc micro trước mặt im bặt không thể phát ra lời giải thích.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC02_I3",
+          "preserve": "Keep the conference room lighting, wall backdrop and general atmosphere from the base scene. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Focus on the stick figure behind the presentation podium sweating nervously with wide dot eyes, unable to speak into the microphone.",
+          "reason": "Biến thể cận cảnh trạng thái đông cứng của nhân vật khi không dùng được thuật ngữ.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC02_B1",
+          "image_id": "SC02_I1",
+          "purpose": "Mô tả ma sát thực tế khi viết tiểu luận và cú sốc khi bị yêu cầu diễn đạt bằng tiếng Việt bình dân",
+          "anchor": {
+            "vi": {
+              "quote": "Đêm làm tiểu luận",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B2",
+          "image_id": "SC02_I2",
+          "purpose": "Mô tả ma sát thực tế khi viết tiểu luận và cú sốc khi bị yêu cầu diễn đạt bằng tiếng Việt bình dân",
+          "anchor": {
+            "vi": {
+              "quote": "bạn cố nhồi những từ ngữ hàn lâm để bài viết có vẻ uyên bác",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B3",
+          "image_id": "SC02_I3",
+          "purpose": "Mô tả ma sát thực tế khi viết tiểu luận và cú sốc khi bị yêu cầu diễn đạt bằng tiếng Việt bình dân",
+          "anchor": {
+            "vi": {
+              "quote": "Nhưng khi giảng viên yêu cầu giải thích bằng tiếng Việt đời thường",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B4",
+          "image_id": "SC02_I4",
+          "purpose": "Mô tả ma sát thực tế khi viết tiểu luận và cú sốc khi bị yêu cầu diễn đạt bằng tiếng Việt bình dân",
+          "anchor": {
+            "vi": {
+              "quote": "bạn lập tức đứng hình",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "narrative_warm"
+    },
+    {
+      "id": "SC03",
+      "title": "Thực nghiệm Princeton chứng minh tác hại của việc dùng từ rườm rà",
+      "purpose": "Dẫn chứng nghiên cứu khoa học Q1 của Oppenheimer vạch trần việc lạm dụng từ khó làm giảm uy tín",
+      "action": "Bàn thực nghiệm đối chiếu hai văn bản và biểu đồ đánh giá trí thông minh",
+      "setting": "Phòng thực nghiệm tâm lý học tại Đại học Princeton",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Thực nghiệm tại Đại học Princeton đã chứng minh một sự thật rất bất ngờ. Những bài viết càng lạm dụng từ đao to búa lớn lại càng bị đánh giá là kém thông minh hơn.",
+      "requirements": [
+        "R03"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC01"
+      ],
+      "images": [
+        {
+          "id": "SC03_I1",
+          "description": "Phòng thực nghiệm tâm lý học với chiếc bàn gỗ lớn, trên bàn đặt hai tập hồ sơ tài liệu được gắn nhãn đối chứng nghiên cứu khoa học rõ ràng.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Thiết lập không gian phòng thí nghiệm Princeton.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC03_I2",
+          "description": "Góc nhìn cận cảnh chiếc phong bì hồ sơ dán tem niêm phong thực nghiệm nghiên cứu nhận thức của Đại học Princeton.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Cận cảnh hồ sơ thực nghiệm tạo tính xác thực học thuật.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC03_I3",
+          "description": "Góc nhìn cận cảnh tập hồ sơ bên phải phủ đầy các dòng chữ hàn lâm rườm rà bị một chiếc bút lông đỏ gạch một dấu chéo lớn cảnh báo.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Cận cảnh tập hồ sơ dùng từ rườm rà bị đánh dấu phê bình.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC03_I4",
+          "description": "Tấm bảng trắng thực nghiệm với biểu đồ hai cột đối chiếu: cột văn bản giản dị vươn cao với ngôi sao sáng, cột văn bản dùng từ phức tạp tụt sâu xuống đáy.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Minh họa biểu đồ kết quả thực nghiệm tâm lý học.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC03_B1",
+          "image_id": "SC03_I1",
+          "purpose": "Dẫn chứng nghiên cứu khoa học Q1 của Oppenheimer vạch trần việc lạm dụng từ khó làm giảm uy tín",
+          "anchor": {
+            "vi": {
+              "quote": "Thực nghiệm tại Đại học Princeton",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B2",
+          "image_id": "SC03_I2",
+          "purpose": "Dẫn chứng nghiên cứu khoa học Q1 của Oppenheimer vạch trần việc lạm dụng từ khó làm giảm uy tín",
+          "anchor": {
+            "vi": {
+              "quote": "đã chứng minh một sự thật rất bất ngờ",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B3",
+          "image_id": "SC03_I3",
+          "purpose": "Dẫn chứng nghiên cứu khoa học Q1 của Oppenheimer vạch trần việc lạm dụng từ khó làm giảm uy tín",
+          "anchor": {
+            "vi": {
+              "quote": "Những bài viết càng lạm dụng từ đao to búa lớn",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B4",
+          "image_id": "SC03_I4",
+          "purpose": "Dẫn chứng nghiên cứu khoa học Q1 của Oppenheimer vạch trần việc lạm dụng từ khó làm giảm uy tín",
+          "anchor": {
+            "vi": {
+              "quote": "lại càng bị đánh giá là kém thông minh hơn",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp"
+    },
+    {
+      "id": "SC04",
+      "title": "Kỹ thuật Feynman giải thích bản chất cho một đứa trẻ mười tuổi",
+      "purpose": "Hướng dẫn phương pháp Feynman: giải thích cho một đứa trẻ để kiểm tra độ sâu của hiểu biết",
+      "action": "Nhân vật người que ngồi đối thoại với đứa trẻ và vẽ sơ đồ trực quan đơn giản",
+      "setting": "Phòng học sáng sủa với bảng đen và bàn gỗ nhỏ",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Để phá vỡ cái bẫy này, hãy dùng ngay kỹ thuật Feynman kinh điển. Bạn phải giải thích sao cho một đứa trẻ mười tuổi cũng hiểu được, mà cấm dùng từ chuyên môn.",
+      "requirements": [
+        "R04"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC02"
+      ],
+      "images": [
+        {
+          "id": "SC04_I1",
+          "description": "Nhân vật người que đứng cạnh chiếc bảng xanh học thuật, cầm phấn viết tên nguyên lý Feynman lên góc trên bên trái của bảng.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Giới thiệu kỹ thuật tư duy Feynman.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC04_I2",
+          "description": "Chiếc bảng xanh học thuật nổi bật dòng chữ viết phấn trắng mô hình 4 bước đơn giản hóa của nhà vật lý Feynman.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Cận cảnh mô hình 4 bước Feynman trên bảng.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC04_I3",
+          "description": "Nhân vật người que ngồi trên ghế gỗ đối diện một đứa trẻ mười tuổi mắt tròn xoe lắng nghe, ở giữa là chiếc bàn tròn nhỏ đặt cuốn sổ tay mở sẵn.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC04_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Show the described full-frame scene.",
+          "reason": "Cảnh đối thoại giữa người học và một đứa trẻ mười tuổi.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC04_I4",
+          "description": "Trên bảng đen phía sau, người que dùng phấn trắng vẽ sơ đồ hình quả táo mộc mạc chia đôi với các mũi tên minh họa đơn giản không chứa chữ viết.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC04_I3",
+          "preserve": "Keep the room, wooden chairs, round table, stick figure and child from the base scene. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Focus towards the blackboard behind where the stick figure draws a simple split-apple diagram with intuitive arrows without any text.",
+          "reason": "Minh họa cơ chế bằng hình vẽ đời thường thay vì từ ngữ chuyên môn.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC04_B1",
+          "image_id": "SC04_I1",
+          "purpose": "Hướng dẫn phương pháp Feynman: giải thích cho một đứa trẻ để kiểm tra độ sâu của hiểu biết",
+          "anchor": {
+            "vi": {
+              "quote": "Để phá vỡ cái bẫy này",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B2",
+          "image_id": "SC04_I2",
+          "purpose": "Hướng dẫn phương pháp Feynman: giải thích cho một đứa trẻ để kiểm tra độ sâu của hiểu biết",
+          "anchor": {
+            "vi": {
+              "quote": "hãy dùng ngay kỹ thuật Feynman kinh điển",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B3",
+          "image_id": "SC04_I3",
+          "purpose": "Hướng dẫn phương pháp Feynman: giải thích cho một đứa trẻ để kiểm tra độ sâu của hiểu biết",
+          "anchor": {
+            "vi": {
+              "quote": "Bạn phải giải thích sao cho một đứa trẻ mười tuổi cũng hiểu được",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B4",
+          "image_id": "SC04_I4",
+          "purpose": "Hướng dẫn phương pháp Feynman: giải thích cho một đứa trẻ để kiểm tra độ sâu của hiểu biết",
+          "anchor": {
+            "vi": {
+              "quote": "mà cấm dùng từ chuyên môn",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "narrative_warm"
+    },
+    {
+      "id": "SC05",
+      "title": "Khép vòng lặp nhận diện lỗ hổng kiến thức nơi buộc phải dùng từ hàn lâm",
+      "purpose": "Đúc kết quy luật cốt lõi và gửi gắm thông điệp tinh giản hóa để làm chủ tri thức",
+      "action": "Nhân vật người que khoanh vùng điểm đứt gãy và mỉm cười cầm tờ giấy kết luận giản dị",
+      "setting": "Góc học tập sáng sủa với ánh nắng ban mai",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Điểm nào bạn buộc phải viện đến từ ngữ hoa mỹ, chính là nơi bạn chưa hiểu bản chất. [pause:500ms] Hãy đơn giản hóa câu từ để thực sự làm chủ tri thức.",
+      "requirements": [
+        "R05"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC02"
+      ],
+      "images": [
+        {
+          "id": "SC05_I1",
+          "description": "Cận cảnh sơ đồ tư duy trên mặt giấy, bàn tay người que cầm bút đỏ khoanh một vòng tròn nổi bật quanh một điểm nối bị đứt gãy giữa hai ý niệm.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Cận cảnh điểm đứt gãy kiến thức nơi người học phải dựa vào từ ngữ hoa mỹ.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC05_I2",
+          "description": "Tờ giấy trắng tinh với ba dòng chữ tóm tắt cốt lõi ngắn gọn sáng rõ, không chứa bất kỳ từ ngữ thuật ngữ hàn lâm trừu tượng nào.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Cận cảnh tờ giấy kết luận giản dị trần trụi.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC05_I3",
+          "description": "Bàn tay người que cầm bút gạch bỏ những từ ngữ hoa mỹ rườm rà, thay bằng cách diễn đạt ngắn gọn dễ hiểu.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Cận cảnh hành động đơn giản hóa câu từ để thấu suốt bản chất.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC05_I4",
+          "description": "Góc học tập sáng sủa với ánh nắng ban mai rọi qua cửa sổ, nhân vật người que mỉm cười thư thái, hai tay cầm tờ giấy trắng tinh chỉ ghi một kết luận sáng rõ.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Khép vòng lặp với cảm giác tự tin làm chủ bản chất tri thức.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC05_B1",
+          "image_id": "SC05_I1",
+          "purpose": "Đúc kết quy luật cốt lõi và gửi gắm thông điệp tinh giản hóa để làm chủ tri thức",
+          "anchor": {
+            "vi": {
+              "quote": "Điểm nào bạn buộc phải viện đến từ ngữ hoa mỹ",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B2",
+          "image_id": "SC05_I2",
+          "purpose": "Đúc kết quy luật cốt lõi và gửi gắm thông điệp tinh giản hóa để làm chủ tri thức",
+          "anchor": {
+            "vi": {
+              "quote": "chính là nơi bạn chưa hiểu bản chất",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B3",
+          "image_id": "SC05_I3",
+          "purpose": "Đúc kết quy luật cốt lõi và gửi gắm thông điệp tinh giản hóa để làm chủ tri thức",
+          "anchor": {
+            "vi": {
+              "quote": "Hãy đơn giản hóa câu từ",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B4",
+          "image_id": "SC05_I4",
+          "purpose": "Đúc kết quy luật cốt lõi và gửi gắm thông điệp tinh giản hóa để làm chủ tri thức",
+          "anchor": {
+            "vi": {
+              "quote": "để thực sự làm chủ tri thức",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "reflective_slow"
+    }
+  ],
+  "coverage": [
+    {
+      "requirement_id": "R01",
+      "scene_id": "SC01",
+      "quote": "Càng dùng từ ngữ phức tạp nghĩa là bạn càng chưa hiểu gì"
+    },
+    {
+      "requirement_id": "R02",
+      "scene_id": "SC02",
+      "quote": "Đêm làm tiểu luận, bạn cố nhồi những từ ngữ hàn lâm để bài viết có vẻ uyên bác"
+    },
+    {
+      "requirement_id": "R03",
+      "scene_id": "SC03",
+      "quote": "Thực nghiệm tại Đại học Princeton đã chứng minh một sự thật rất bất ngờ"
+    },
+    {
+      "requirement_id": "R04",
+      "scene_id": "SC04",
+      "quote": "Bạn phải giải thích sao cho một đứa trẻ mười tuổi cũng hiểu được, mà cấm dùng từ chuyên môn"
+    },
+    {
+      "requirement_id": "R05",
+      "scene_id": "SC05",
+      "quote": "Điểm nào bạn buộc phải viện đến từ ngữ hoa mỹ, chính là nơi bạn chưa hiểu bản chất"
+    }
+  ],
+  "outline": [
+    {
+      "scene_id": "SC01",
+      "purpose": "Mở màn bằng cú tát sự thật vạch trần thói quen dùng từ ngữ phức tạp để che giấu sự mơ hồ",
+      "requirements": [
+        "R01"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC02",
+      "purpose": "Mô tả ma sát thực tế khi viết tiểu luận và cú sốc khi bị yêu cầu diễn đạt bằng tiếng Việt bình dân",
+      "requirements": [
+        "R02"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC03",
+      "purpose": "Dẫn chứng nghiên cứu khoa học Q1 của Oppenheimer vạch trần việc lạm dụng từ khó làm giảm uy tín",
+      "requirements": [
+        "R03"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC04",
+      "purpose": "Hướng dẫn phương pháp Feynman: giải thích cho một đứa trẻ để kiểm tra độ sâu của hiểu biết",
+      "requirements": [
+        "R04"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC05",
+      "purpose": "Đúc kết quy luật cốt lõi và gửi gắm thông điệp tinh giản hóa để làm chủ tri thức",
+      "requirements": [
+        "R05"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    }
+  ],
+  "claims": [
+    {
+      "scene_id": "SC01",
+      "quote": "Càng dùng từ ngữ phức tạp nghĩa là bạn càng chưa hiểu gì",
+      "language": "vi",
+      "source_id": "SRC01",
+      "fact": "Càng dùng từ ngữ khó hiểu càng bị đánh giá là kém thông minh."
+    },
+    {
+      "scene_id": "SC02",
+      "quote": "bạn cố nhồi những từ ngữ hàn lâm",
+      "language": "vi",
+      "source_id": "SRC01",
+      "fact": "Từ ngữ rườm rà chỉ là tấm khiên che đậy sự mơ hồ trong tư duy."
+    },
+    {
+      "scene_id": "SC03",
+      "quote": "Những bài viết càng lạm dụng từ đao to búa lớn lại càng bị đánh giá là kém thông minh hơn",
+      "language": "vi",
+      "source_id": "SRC01",
+      "fact": "Càng dùng từ ngữ khó hiểu càng bị đánh giá là kém thông minh."
+    },
+    {
+      "scene_id": "SC04",
+      "quote": "Bạn phải giải thích sao cho một đứa trẻ mười tuổi cũng hiểu được",
+      "language": "vi",
+      "source_id": "SRC02",
+      "fact": "Nếu không giải thích được cho một đứa trẻ nghĩa là bạn chưa hiểu."
+    },
+    {
+      "scene_id": "SC05",
+      "quote": "Điểm nào bạn buộc phải viện đến từ ngữ hoa mỹ, chính là nơi bạn chưa hiểu bản chất",
+      "language": "vi",
+      "source_id": "SRC02",
+      "fact": "Điểm phải dùng từ hàn lâm chính là nơi kiến thức bị đứt gãy."
+    }
+  ],
+  "revision_response": [],
+  "open_questions": []
+}

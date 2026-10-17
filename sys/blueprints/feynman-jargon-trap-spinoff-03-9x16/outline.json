@@ -1,0 +1,44 @@
+{
+  "outline": [
+    {
+      "scene_id": "SC01",
+      "purpose": "Mở màn bằng cú tát sự thật về việc dùng slide màu mè và thuật ngữ làm chiếc nạng",
+      "requirements": [
+        "R01"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC02",
+      "purpose": "Tái hiện ma sát tâm lý trước hội đồng bảo vệ và cú sốc khi bị hỏi vặn bản chất",
+      "requirements": [
+        "R02"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC03",
+      "purpose": "Phân tích bản chất: thuật ngữ là công cụ nén thông tin, không thể thay thế tư duy cốt lõi",
+      "requirements": [
+        "R03"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC04",
+      "purpose": "Đưa ra bài test tờ giấy trắng thực chiến: tóm tắt đề tài bằng 3 câu đời thường",
+      "requirements": [
+        "R04"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC05",
+      "purpose": "Khép vòng lặp làm chủ 120 giây đầu phòng bảo vệ bằng sự sáng rõ của tờ giấy trắng",
+      "requirements": [
+        "R05"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    }
+  ]
+}

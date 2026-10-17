@@ -1,0 +1,826 @@
+{
+  "schema_version": "3.0",
+  "brief_revision": 1,
+  "brief_hash": "0dc7d20621f11d0886fa33866f888b9b7d5d25e84e12fbf507677306ebbb7420",
+  "topic": "Chiếc Nạng Ngôn Từ: Bài Test Tờ Giấy Trắng Trước Cửa Phòng Bảo Vệ Khóa Luận",
+  "duration": {
+    "min_seconds": 45.0,
+    "max_seconds": 60.0
+  },
+  "style": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que viền đen dày tương tác trực tiếp với hội đồng và tờ giấy trắng trong cùng bố cục, khung dọc 9:16.",
+  "required_points": [
+    "Cái bẫy biến thuật ngữ thành chiếc nạng ru ngủ não bộ",
+    "Nỗi sợ phòng bảo vệ và thói quen lấp liếm bằng slide dày đặc chữ",
+    "Bản chất của thuật ngữ khoa học là công cụ nén chứ không phải tấm khiên",
+    "Bài test tờ giấy trắng viết ba câu đời thường trước giờ lên bục",
+    "Khép vòng lặp làm chủ một trăm hai mươi giây đầu phòng bảo vệ"
+  ],
+  "characters": [
+    {
+      "id": "CH01",
+      "name": "Nhân vật người que học thuật",
+      "appearance": "Hình tượng người que đầu tròn trắng viền đen dày, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung dọc",
+      "outfit": "Áo sơ mi học thuật tối giản nét mực đen"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "SC01",
+      "title": "Cái bẫy biến thuật ngữ thành chiếc nạng ru ngủ não bộ",
+      "purpose": "Mở màn bằng cú tát sự thật về việc dùng slide màu mè và thuật ngữ làm chiếc nạng",
+      "action": "Chiếc nạng gỗ bên bục thuyết trình và màn chiếu sặc sỡ rung lắc",
+      "setting": "Phòng bảo vệ khóa luận với bục thuyết trình và màn chiếu",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Thuật ngữ học thuật đang biến thành chiếc nạng ru ngủ não bạn. Càng che đậy bằng slide màu mè, bạn càng dễ bị đánh gục trên bục bảo vệ.",
+      "requirements": [
+        "R01"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC01"
+      ],
+      "images": [
+        {
+          "id": "SC01_I1",
+          "description": "Một cặp nạng gỗ tựa vào bục giảng đường bên cạnh chiếc micro thuyết trình đơn độc.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Ẩn dụ trực quan về chiếc nạng thuật ngữ.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC01_I2",
+          "description": "Nhân vật người que bước đi khập khiễng trên bục giảng đường khi đang cố bấu víu vào chiếc nạng.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC01_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Show the described full-frame scene.",
+          "reason": "Người học phụ thuộc vào chiếc nạng từ ngữ.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC01_I3",
+          "description": "Màn hình trình chiếu với các hiệu ứng màu sắc sặc sỡ và khối chữ dày đặc đang rung lắc chực sụp đổ.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Cảnh báo sự sụp đổ của slide màu mè.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC01_B1",
+          "image_id": "SC01_I1",
+          "purpose": "Mở màn bằng cú tát sự thật về việc dùng slide màu mè và thuật ngữ làm chiếc nạng",
+          "anchor": {
+            "vi": {
+              "quote": "Thuật ngữ học thuật đang biến thành chiếc nạng",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B2",
+          "image_id": "SC01_I2",
+          "purpose": "Mở màn bằng cú tát sự thật về việc dùng slide màu mè và thuật ngữ làm chiếc nạng",
+          "anchor": {
+            "vi": {
+              "quote": "ru ngủ não bạn",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B3",
+          "image_id": "SC01_I3",
+          "purpose": "Mở màn bằng cú tát sự thật về việc dùng slide màu mè và thuật ngữ làm chiếc nạng",
+          "anchor": {
+            "vi": {
+              "quote": "bạn càng dễ bị đánh gục trên bục bảo vệ",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp"
+    },
+    {
+      "id": "SC02",
+      "title": "Nỗi sợ phòng bảo vệ và thói quen lấp liếm bằng slide dày đặc chữ",
+      "purpose": "Tái hiện ma sát tâm lý trước hội đồng bảo vệ và cú sốc khi bị hỏi vặn bản chất",
+      "action": "Hành lang phòng thi căng thẳng và khoảnh khắc hội đồng lật tẩy câu từ sáo rỗng",
+      "setting": "Hành lang trường đại học chuyển cảnh sang phòng bảo vệ khóa luận",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Trước giờ bảo vệ, nhiều bạn cố nhồi vào bài thuyết trình những thuật ngữ thật kêu. [pause:900ms] Nhưng chỉ cần một câu hỏi vặn từ hội đồng, toàn bộ vỏ bọc lập tức sụp đổ.",
+      "requirements": [
+        "R02"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC01"
+      ],
+      "images": [
+        {
+          "id": "SC02_I1",
+          "description": "Hành lang trường đại học tĩnh lặng, các ứng viên ngồi chờ trước cửa phòng bảo vệ khóa luận với vẻ mặt hồi hộp lo âu.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Thiết lập không khí căng thẳng trước giờ G.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC02_I2",
+          "description": "Tập slide thuyết trình in sẵn chi chít chữ chuyên ngành và các khối sơ đồ phức tạp đặt trên bàn.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Cận cảnh tập slide cố tình làm rối để che đậy sự mông lung.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC02_I3",
+          "description": "Vị chủ tịch hội đồng nhìn thẳng qua gọng kính, đưa ra một câu hỏi vặn xoáy vào bản chất của đề tài.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC02_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Show the described full-frame scene.",
+          "reason": "Khoảnh khắc câu hỏi chất vấn bất ngờ từ hội đồng.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC02_I4",
+          "description": "Màn hình máy chiếu phụt tắt, khối chữ học thuật hoa mỹ tan vỡ thành cát bụi trước ánh mắt thất vọng của hội đồng.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC02_I3",
+          "preserve": "Keep the committee room backdrop, judge desk and stern lighting from the base scene. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Focus towards the presentation screen shattering like glass into dust before the disappointed committee.",
+          "reason": "Hình ảnh ẩn dụ về sự sụp đổ của lớp vỏ bọc từ ngữ.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC02_B1",
+          "image_id": "SC02_I1",
+          "purpose": "Tái hiện ma sát tâm lý trước hội đồng bảo vệ và cú sốc khi bị hỏi vặn bản chất",
+          "anchor": {
+            "vi": {
+              "quote": "Trước giờ bảo vệ",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B2",
+          "image_id": "SC02_I2",
+          "purpose": "Tái hiện ma sát tâm lý trước hội đồng bảo vệ và cú sốc khi bị hỏi vặn bản chất",
+          "anchor": {
+            "vi": {
+              "quote": "nhiều bạn cố nhồi vào bài thuyết trình những thuật ngữ thật kêu",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B3",
+          "image_id": "SC02_I3",
+          "purpose": "Tái hiện ma sát tâm lý trước hội đồng bảo vệ và cú sốc khi bị hỏi vặn bản chất",
+          "anchor": {
+            "vi": {
+              "quote": "Nhưng chỉ cần một câu hỏi vặn từ hội đồng",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B4",
+          "image_id": "SC02_I4",
+          "purpose": "Tái hiện ma sát tâm lý trước hội đồng bảo vệ và cú sốc khi bị hỏi vặn bản chất",
+          "anchor": {
+            "vi": {
+              "quote": "toàn bộ vỏ bọc lập tức sụp đổ",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "narrative_warm"
+    },
+    {
+      "id": "SC03",
+      "title": "Bản chất của thuật ngữ khoa học là công cụ nén chứ không phải tấm khiên",
+      "purpose": "Phân tích bản chất: thuật ngữ là công cụ nén thông tin, không thể thay thế tư duy cốt lõi",
+      "action": "Hội đồng soi thấu tấm khiên rỗng và đối chiếu cán cân bản chất",
+      "setting": "Phòng bảo vệ với bàn hội đồng nghiêm nghị",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Thuật ngữ sinh ra để các chuyên gia trao đổi nhanh, chứ không phải tấm khiên giấu dốt. Hội đồng luôn nhìn thấu sự mông lung đằng sau những câu chữ sáo rỗng.",
+      "requirements": [
+        "R03"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC02"
+      ],
+      "images": [
+        {
+          "id": "SC03_I1",
+          "description": "Hình ảnh hai nhà khoa học bắt tay trao đổi bên một sơ đồ ký hiệu toán học súc tích ngắn gọn.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Minh họa chức năng đúng đắn của thuật ngữ giữa các chuyên gia.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC03_I2",
+          "description": "Một chiếc khiên chắn bằng kim loại rỉ sét có khắc các dòng chữ học thuật trừu tượng.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Cận cảnh chiếc khiên che giấu sự mơ hồ.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC03_I3",
+          "description": "Tia laser của hội đồng chiếu xuyên qua tấm khiên kim loại để lộ ra một dấu hỏi chấm trống rỗng.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Hội đồng nhìn thấu sự mông lung.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC03_I4",
+          "description": "Hình ảnh một chiếc cán cân thăng bằng: một bên đĩa cân là chồng tài liệu dày cộp chữ nghĩa nhưng nhẹ bẫng bốc lên cao, bên kia là một viên kim cương nhỏ bản chất cốt lõi nặng trịch kéo lệch cán cân xuống.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Ẩn dụ chiếc cán cân đối chiếu giữa chồng tài liệu nhẹ bẫng và viên kim cương bản chất nặng trịch.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC03_B1",
+          "image_id": "SC03_I1",
+          "purpose": "Phân tích bản chất: thuật ngữ là công cụ nén thông tin, không thể thay thế tư duy cốt lõi",
+          "anchor": {
+            "vi": {
+              "quote": "Thuật ngữ sinh ra để các chuyên gia trao đổi nhanh",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B2",
+          "image_id": "SC03_I2",
+          "purpose": "Phân tích bản chất: thuật ngữ là công cụ nén thông tin, không thể thay thế tư duy cốt lõi",
+          "anchor": {
+            "vi": {
+              "quote": "chứ không phải tấm khiên giấu dốt",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B3",
+          "image_id": "SC03_I3",
+          "purpose": "Phân tích bản chất: thuật ngữ là công cụ nén thông tin, không thể thay thế tư duy cốt lõi",
+          "anchor": {
+            "vi": {
+              "quote": "Hội đồng luôn nhìn thấu sự mông lung",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B4",
+          "image_id": "SC03_I4",
+          "purpose": "Phân tích bản chất: thuật ngữ là công cụ nén thông tin, không thể thay thế tư duy cốt lõi",
+          "anchor": {
+            "vi": {
+              "quote": "đằng sau những câu chữ sáo rỗng",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp"
+    },
+    {
+      "id": "SC04",
+      "title": "Bài test tờ giấy trắng viết ba câu đời thường trước giờ lên bục",
+      "purpose": "Đưa ra bài test tờ giấy trắng thực chiến: tóm tắt đề tài bằng 3 câu đời thường",
+      "action": "Cây bút gạch bỏ từ ngữ chuyên ngành trên bản nháp và viết ba câu sáng rõ trên tờ giấy trắng tinh",
+      "setting": "Bàn chuẩn bị trước phòng bảo vệ với đèn bàn và tờ giấy trắng",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Trước khi bước lên bục, hãy thử ngay quy tắc tờ giấy trắng. Viết lại toàn bộ thông điệp đề tài bằng đúng ba câu ngắn gọn, không dùng bất kỳ từ ngữ chuyên môn nào.",
+      "requirements": [
+        "R04"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC02"
+      ],
+      "images": [
+        {
+          "id": "SC04_I1",
+          "description": "Một tờ giấy A4 trắng tinh đặt ngay ngắn giữa bàn làm việc bên cạnh một cây bút máy đen.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Cận cảnh quy tắc tờ giấy trắng tinh khôi.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC04_I2",
+          "description": "Cận cảnh bàn tay cầm bút đỏ gạch xóa thẳng tay những dòng chữ thuật ngữ chuyên ngành dài dòng trên bản nháp nghiên cứu cũ.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Cận cảnh gạch bỏ các thuật ngữ rườm rà trên bản nháp.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC04_I3",
+          "description": "Bàn tay cầm bút máy đen đặt nét viết lại đúng ba gạch đầu dòng ngắn gọn, súc tích lên một tờ giấy trắng mới tinh khôi.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Cận cảnh viết ba câu cốt lõi súc tích lên tờ giấy trắng mới.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC04_I4",
+          "description": "Trang giấy trắng hiển thị ba câu văn tiếng Việt đời thường trong sáng không chứa chữ viết tắt hay thuật ngữ ngoại.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Minh họa sản phẩm hoàn thành của quy tắc tờ giấy trắng.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC04_B1",
+          "image_id": "SC04_I1",
+          "purpose": "Đưa ra bài test tờ giấy trắng thực chiến: tóm tắt đề tài bằng 3 câu đời thường",
+          "anchor": {
+            "vi": {
+              "quote": "Trước khi bước lên bục",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B2",
+          "image_id": "SC04_I2",
+          "purpose": "Đưa ra bài test tờ giấy trắng thực chiến: tóm tắt đề tài bằng 3 câu đời thường",
+          "anchor": {
+            "vi": {
+              "quote": "hãy thử ngay quy tắc tờ giấy trắng",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B3",
+          "image_id": "SC04_I3",
+          "purpose": "Đưa ra bài test tờ giấy trắng thực chiến: tóm tắt đề tài bằng 3 câu đời thường",
+          "anchor": {
+            "vi": {
+              "quote": "Viết lại toàn bộ thông điệp đề tài bằng đúng ba câu ngắn gọn",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B4",
+          "image_id": "SC04_I4",
+          "purpose": "Đưa ra bài test tờ giấy trắng thực chiến: tóm tắt đề tài bằng 3 câu đời thường",
+          "anchor": {
+            "vi": {
+              "quote": "không dùng bất kỳ từ ngữ chuyên môn nào",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "narrative_warm"
+    },
+    {
+      "id": "SC05",
+      "title": "Khép vòng lặp làm chủ một trăm hai mươi giây đầu phòng bảo vệ",
+      "purpose": "Khép vòng lặp làm chủ 120 giây đầu phòng bảo vệ bằng sự sáng rõ của tờ giấy trắng",
+      "action": "Người que tự tin làm chủ bục bảo vệ và nhận được cái gật đầu từ hội đồng",
+      "setting": "Phòng bảo vệ khóa luận sáng sủa với đồng hồ 120 giây",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Khi tóm gọn được mọi thứ trên một mặt giấy trắng, bạn sẽ không còn sợ hãi. [pause:500ms] Một trăm hai mươi giây đầu tiên trước hội đồng sẽ hoàn toàn thuộc về bạn.",
+      "requirements": [
+        "R05"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC02"
+      ],
+      "images": [
+        {
+          "id": "SC05_I1",
+          "description": "Nhân vật người que đứng trên bục bảo vệ, tay cầm tờ giấy trắng nhỏ mỉm cười tự tin nhìn thẳng vào hội đồng.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Người que làm chủ sân khấu với tờ giấy trắng nhỏ.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC05_I2",
+          "description": "Chiếc đồng hồ điện tử đếm ngược 120 giây đầu tiên hiển thị ánh sáng xanh tích cực.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Cận cảnh 120 giây then chốt tạo ấn tượng đầu tiên.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC05_I3",
+          "description": "Các thành viên hội đồng đồng loạt mỉm cười và gật đầu tán thành trước phần trình bày khúc chiết, sáng rõ.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC05_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Show the described full-frame scene.",
+          "reason": "Phản hồi tích cực đồng thuận từ hội đồng.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC05_I4",
+          "description": "Nhân vật người que nở nụ cười rạng rỡ, hoàn toàn làm chủ bục bảo vệ trong sự ngưỡng mộ của cả khán phòng.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC05_I3",
+          "preserve": "Keep podium, microphone, presentation stage and audience rows from the base scene. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Focus on the stick figure smiling with glowing triumph at the podium under warm auditorium lights.",
+          "reason": "Khép lại với chiến thắng ngoạn mục nhờ sự sáng rõ của bản chất.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC05_B1",
+          "image_id": "SC05_I1",
+          "purpose": "Khép vòng lặp làm chủ 120 giây đầu phòng bảo vệ bằng sự sáng rõ của tờ giấy trắng",
+          "anchor": {
+            "vi": {
+              "quote": "Khi tóm gọn được mọi thứ trên một mặt giấy trắng",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B2",
+          "image_id": "SC05_I2",
+          "purpose": "Khép vòng lặp làm chủ 120 giây đầu phòng bảo vệ bằng sự sáng rõ của tờ giấy trắng",
+          "anchor": {
+            "vi": {
+              "quote": "bạn sẽ không còn sợ hãi",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B3",
+          "image_id": "SC05_I3",
+          "purpose": "Khép vòng lặp làm chủ 120 giây đầu phòng bảo vệ bằng sự sáng rõ của tờ giấy trắng",
+          "anchor": {
+            "vi": {
+              "quote": "Một trăm hai mươi giây đầu tiên",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B4",
+          "image_id": "SC05_I4",
+          "purpose": "Khép vòng lặp làm chủ 120 giây đầu phòng bảo vệ bằng sự sáng rõ của tờ giấy trắng",
+          "anchor": {
+            "vi": {
+              "quote": "sẽ hoàn toàn thuộc về bạn",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "reflective_slow"
+    }
+  ],
+  "coverage": [
+    {
+      "requirement_id": "R01",
+      "scene_id": "SC01",
+      "quote": "Thuật ngữ học thuật đang biến thành chiếc nạng ru ngủ não bạn"
+    },
+    {
+      "requirement_id": "R02",
+      "scene_id": "SC02",
+      "quote": "Trước giờ bảo vệ, nhiều bạn cố nhồi vào bài thuyết trình những thuật ngữ thật kêu"
+    },
+    {
+      "requirement_id": "R03",
+      "scene_id": "SC03",
+      "quote": "Thuật ngữ sinh ra để các chuyên gia trao đổi nhanh, chứ không phải tấm khiên giấu dốt"
+    },
+    {
+      "requirement_id": "R04",
+      "scene_id": "SC04",
+      "quote": "Trước khi bước lên bục, hãy thử ngay quy tắc tờ giấy trắng"
+    },
+    {
+      "requirement_id": "R05",
+      "scene_id": "SC05",
+      "quote": "[pause:500ms] Một trăm hai mươi giây đầu tiên trước hội đồng sẽ hoàn toàn thuộc về bạn"
+    }
+  ],
+  "outline": [
+    {
+      "scene_id": "SC01",
+      "purpose": "Mở màn bằng cú tát sự thật về việc dùng slide màu mè và thuật ngữ làm chiếc nạng",
+      "requirements": [
+        "R01"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC02",
+      "purpose": "Tái hiện ma sát tâm lý trước hội đồng bảo vệ và cú sốc khi bị hỏi vặn bản chất",
+      "requirements": [
+        "R02"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC03",
+      "purpose": "Phân tích bản chất: thuật ngữ là công cụ nén thông tin, không thể thay thế tư duy cốt lõi",
+      "requirements": [
+        "R03"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC04",
+      "purpose": "Đưa ra bài test tờ giấy trắng thực chiến: tóm tắt đề tài bằng 3 câu đời thường",
+      "requirements": [
+        "R04"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC05",
+      "purpose": "Khép vòng lặp làm chủ 120 giây đầu phòng bảo vệ bằng sự sáng rõ của tờ giấy trắng",
+      "requirements": [
+        "R05"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    }
+  ],
+  "claims": [
+    {
+      "scene_id": "SC01",
+      "quote": "Thuật ngữ học thuật đang biến thành chiếc nạng ru ngủ não bạn",
+      "language": "vi",
+      "source_id": "SRC01",
+      "fact": "Thuật ngữ rườm rà làm suy giảm uy tín của bài viết."
+    },
+    {
+      "scene_id": "SC02",
+      "quote": "toàn bộ vỏ bọc lập tức sụp đổ",
+      "language": "vi",
+      "source_id": "SRC01",
+      "fact": "Người nghe luôn cảnh giác khi gặp các câu từ sáo rỗng."
+    },
+    {
+      "scene_id": "SC03",
+      "quote": "Hội đồng luôn nhìn thấu sự mông lung đằng sau những câu chữ sáo rỗng",
+      "language": "vi",
+      "source_id": "SRC02",
+      "fact": "Hội đồng luôn soi bản chất nghiên cứu thay vì slide màu mè."
+    },
+    {
+      "scene_id": "SC04",
+      "quote": "Viết lại toàn bộ thông điệp đề tài bằng đúng ba câu ngắn gọn",
+      "language": "vi",
+      "source_id": "SRC02",
+      "fact": "Giải thích ngắn gọn ba câu giúp chiếm trọn lòng tin hội đồng."
+    },
+    {
+      "scene_id": "SC05",
+      "quote": "Một trăm hai mươi giây đầu tiên trước hội đồng sẽ hoàn toàn thuộc về bạn",
+      "language": "vi",
+      "source_id": "SRC02",
+      "fact": "Giải thích ngắn gọn ba câu giúp chiếm trọn lòng tin hội đồng."
+    }
+  ],
+  "revision_response": [],
+  "open_questions": []
+}

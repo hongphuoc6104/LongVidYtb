@@ -1,0 +1,44 @@
+{
+  "outline": [
+    {
+      "scene_id": "SC01",
+      "purpose": "Mở màn bằng cú tát sự thật về quy tắc đứa trẻ của Feynman",
+      "requirements": [
+        "R01"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC02",
+      "purpose": "Chỉ ra mâu thuẫn giữa điểm số thi cử và khả năng áp dụng thực tế",
+      "requirements": [
+        "R02"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC03",
+      "purpose": "Dẫn lời Richard Feynman phân biệt giữa nhãn mác tên gọi và cơ chế bản chất",
+      "requirements": [
+        "R03"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC04",
+      "purpose": "Mô tả quy tắc thực hành Feynman: giải thích cho đứa trẻ 10 tuổi và cấm thuật ngữ",
+      "requirements": [
+        "R04"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC05",
+      "purpose": "Đúc kết quy luật: điểm nghẽn câu từ là lỗ hổng tri thức và kết thúc bằng thành quả thấu suốt",
+      "requirements": [
+        "R05"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    }
+  ]
+}

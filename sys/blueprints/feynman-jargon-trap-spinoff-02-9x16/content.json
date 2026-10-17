@@ -1,0 +1,881 @@
+{
+  "schema_version": "3.0",
+  "brief_revision": 1,
+  "brief_hash": "f4a9fc291c2441b2dc8f861a3838fdf4ab10dc08e64ff311ede6124d342ffbdf",
+  "topic": "Kỹ Thuật Feynman: Quy Tắc Đứa Trẻ 10 Tuổi Giúp Đập Tan Ảo Giác Nhớ Vẹt Định Nghĩa",
+  "duration": {
+    "min_seconds": 45.0,
+    "max_seconds": 60.0
+  },
+  "style": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que viền đen dày tương tác trực tiếp với đứa trẻ và trang giấy trong cùng bố cục, khung dọc 9:16.",
+  "required_points": [
+    "Ảo giác hiểu biết khi học thuộc lòng tên gọi khoa học",
+    "Khác biệt giữa việc biết tên và hiểu bản chất cơ chế",
+    "Quy tắc đứa trẻ mười tuổi và lệnh cấm dùng từ chuyên môn",
+    "Phát hiện lỗ hổng tri thức tại nơi câu từ bị tắc nghẽn",
+    "Khép vòng lặp biến kiến thức trừu tượng thành trực giác sống động"
+  ],
+  "characters": [
+    {
+      "id": "CH01",
+      "name": "Nhân vật người que học thuật",
+      "appearance": "Hình tượng người que đầu tròn trắng viền đen dày, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung dọc",
+      "outfit": "Áo sơ mi học thuật tối giản nét mực đen"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "SC01",
+      "title": "Ảo giác hiểu biết khi học thuộc lòng tên gọi khoa học",
+      "purpose": "Mở màn bằng cú tát sự thật về quy tắc đứa trẻ của Feynman",
+      "action": "Nhân vật người que bối rối trước đứa trẻ khi cầm cuốn giáo trình rỗng",
+      "setting": "Phòng khách gia đình ấm cúng với kệ sách phía sau",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Không giải thích nổi cho một đứa trẻ, nghĩa là bạn chưa hiểu gì cả. Thuộc lòng từng câu chữ trong sách vở chỉ là một cái vỏ bọc rỗng tuếch.",
+      "requirements": [
+        "R01"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC01"
+      ],
+      "images": [
+        {
+          "id": "SC01_I1",
+          "description": "Một đứa trẻ mười tuổi mắt tròn xoe ngơ ngác nhìn lên người lớn, khuôn mặt biểu lộ sự tò mò trong trẻo.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Cận cảnh gương mặt đứa trẻ làm trọng tâm thử thách.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC01_I2",
+          "description": "Nhân vật người que đứng lúng túng trước đứa trẻ, hai tay cầm cuốn giáo trình dày cộp không biết bắt đầu từ đâu.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC01_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Show the described full-frame scene.",
+          "reason": "Toàn cảnh sự bế tắc của người học.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC01_I3",
+          "description": "Hình ảnh một cuốn sách giáo trình mở ra nhưng bên trong các trang giấy đều trống rỗng không có chữ viết.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Ẩn dụ trực quan về cái vỏ rỗng tuếch của việc học vẹt.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC01_I4",
+          "description": "Cận cảnh một dấu hỏi chấm lớn màu đỏ in hằn lên giữa trang sách giáo trình trống rỗng.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Cận cảnh dấu hỏi chấm cảnh báo ảo giác năng lực.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC01_B1",
+          "image_id": "SC01_I1",
+          "purpose": "Mở màn bằng cú tát sự thật về quy tắc đứa trẻ của Feynman",
+          "anchor": {
+            "vi": {
+              "quote": "Không giải thích nổi cho một đứa trẻ",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B2",
+          "image_id": "SC01_I2",
+          "purpose": "Mở màn bằng cú tát sự thật về quy tắc đứa trẻ của Feynman",
+          "anchor": {
+            "vi": {
+              "quote": "nghĩa là bạn chưa hiểu gì cả",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B3",
+          "image_id": "SC01_I3",
+          "purpose": "Mở màn bằng cú tát sự thật về quy tắc đứa trẻ của Feynman",
+          "anchor": {
+            "vi": {
+              "quote": "Thuộc lòng từng câu chữ trong sách vở",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B4",
+          "image_id": "SC01_I4",
+          "purpose": "Mở màn bằng cú tát sự thật về quy tắc đứa trẻ của Feynman",
+          "anchor": {
+            "vi": {
+              "quote": "chỉ là một cái vỏ bọc rỗng tuếch",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp"
+    },
+    {
+      "id": "SC02",
+      "title": "Khác biệt giữa việc biết tên và hiểu bản chất cơ chế",
+      "purpose": "Chỉ ra mâu thuẫn giữa điểm số thi cử và khả năng áp dụng thực tế",
+      "action": "Người que vượt qua bài thi nhưng tê liệt trước cỗ máy hỏng thực tế",
+      "setting": "Phòng học chuyển cảnh sang xưởng thực hành cơ khí",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Bạn đọc làu làu từng khái niệm trong giáo trình để vượt qua bài kiểm tra. [pause:900ms] Nhưng khi đối diện bài toán đời thực, não bạn hoàn toàn tê liệt. Mọi kiến thức biến mất.",
+      "requirements": [
+        "R02"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC02"
+      ],
+      "images": [
+        {
+          "id": "SC02_I1",
+          "description": "Nhân vật người que ngồi bên bàn học chăm chú đọc to từng trang giáo trình dưới ánh đèn vàng.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Thiết lập bối cảnh học vẹt quen thuộc.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC02_I2",
+          "description": "Tờ bài thi học kỳ với điểm số cao màu đỏ nằm ngay ngắn trên bàn học.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Cận cảnh tờ bài thi điểm cao tạo ảo giác năng lực.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC02_I3",
+          "description": "Một cỗ máy cơ khí thực tế bị hỏng hóc đang bốc khói nhẹ, đòi hỏi người học phải xử lý ngay.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC02_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Show the described full-frame scene.",
+          "reason": "Tình huống thực tế đầy thách thức.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC02_I4",
+          "description": "Người que đứng trước cỗ máy hỏng, hai tay ôm đầu bối rối với đôi mắt mở to chết lặng.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC02_I3",
+          "preserve": "Keep the workshop machinery, smoking components and dramatic overhead spotlight from the base scene. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Focus on the stick figure grasping head in utter paralysis before the smoking machine.",
+          "reason": "Trạng thái tê liệt trước bài toán đời thực.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC02_B1",
+          "image_id": "SC02_I1",
+          "purpose": "Chỉ ra mâu thuẫn giữa điểm số thi cử và khả năng áp dụng thực tế",
+          "anchor": {
+            "vi": {
+              "quote": "Bạn đọc làu làu từng khái niệm trong giáo trình",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B2",
+          "image_id": "SC02_I2",
+          "purpose": "Chỉ ra mâu thuẫn giữa điểm số thi cử và khả năng áp dụng thực tế",
+          "anchor": {
+            "vi": {
+              "quote": "để vượt qua bài kiểm tra",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B3",
+          "image_id": "SC02_I3",
+          "purpose": "Chỉ ra mâu thuẫn giữa điểm số thi cử và khả năng áp dụng thực tế",
+          "anchor": {
+            "vi": {
+              "quote": "Nhưng khi đối diện bài toán đời thực",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B4",
+          "image_id": "SC02_I4",
+          "purpose": "Chỉ ra mâu thuẫn giữa điểm số thi cử và khả năng áp dụng thực tế",
+          "anchor": {
+            "vi": {
+              "quote": "não bạn hoàn toàn tê liệt",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "narrative_warm"
+    },
+    {
+      "id": "SC03",
+      "title": "Bản chất của tên gọi và sự thấu suốt cơ chế",
+      "purpose": "Dẫn lời Richard Feynman phân biệt giữa nhãn mác tên gọi và cơ chế bản chất",
+      "action": "Feynman chỉ vào cuốn sổ tay và gạch bỏ tên gọi phức tạp",
+      "setting": "Giảng đường vật lý cổ điển",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Nhà vật lý Richard Feynman từng chỉ ra một sự thật rất sâu sắc. Biết tên gọi của một hiện tượng, hoàn toàn không đồng nghĩa với việc bạn hiểu cơ chế của nó.",
+      "requirements": [
+        "R03"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC01"
+      ],
+      "images": [
+        {
+          "id": "SC03_I1",
+          "description": "Nhà vật lý Richard Feynman đứng mỉm cười hóm hỉnh bên tấm bảng giảng đường với chiếc áo sơ mi xắn tay áo mộc mạc.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Chân dung nhà vật lý Feynman giản dị.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC03_I2",
+          "description": "Cận cảnh trang sổ tay của nhà vật lý Feynman, một bàn tay cầm bút gạch bỏ dòng chữ tên gọi phức tạp ở phía trên, chỉ giữ lại hình vẽ minh họa sinh động trực quan ở bên dưới.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Cận cảnh trang sổ tay Feynman gạch bỏ tên gọi phức tạp, ưu tiên hình vẽ cơ chế.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC03_I3",
+          "description": "Một tấm thẻ nhãn mác đề tên khoa học dài dòng rơi xuống, để lộ ra khoảng trống không có bất kỳ giải thích bản chất nào.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Cận cảnh nhãn mác rơi xuống rỗng tuếch.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC03_I4",
+          "description": "Nhân vật người que đứng tần ngần nhìn chiếc nhãn mác rơi, nhận ra sự khác biệt giữa cái tên và bản chất thực tế.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC03_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Show the described full-frame scene.",
+          "reason": "Nhận thức thức tỉnh về bản chất của tri thức.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC03_B1",
+          "image_id": "SC03_I1",
+          "purpose": "Dẫn lời Richard Feynman phân biệt giữa nhãn mác tên gọi và cơ chế bản chất",
+          "anchor": {
+            "vi": {
+              "quote": "Nhà vật lý Richard Feynman từng chỉ ra",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B2",
+          "image_id": "SC03_I2",
+          "purpose": "Dẫn lời Richard Feynman phân biệt giữa nhãn mác tên gọi và cơ chế bản chất",
+          "anchor": {
+            "vi": {
+              "quote": "một sự thật rất sâu sắc",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B3",
+          "image_id": "SC03_I3",
+          "purpose": "Dẫn lời Richard Feynman phân biệt giữa nhãn mác tên gọi và cơ chế bản chất",
+          "anchor": {
+            "vi": {
+              "quote": "Biết tên gọi của một hiện tượng",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B4",
+          "image_id": "SC03_I4",
+          "purpose": "Dẫn lời Richard Feynman phân biệt giữa nhãn mác tên gọi và cơ chế bản chất",
+          "anchor": {
+            "vi": {
+              "quote": "không đồng nghĩa với việc bạn hiểu cơ chế của nó",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp"
+    },
+    {
+      "id": "SC04",
+      "title": "Phát hiện lỗ hổng tri thức tại nơi câu từ bị tắc nghẽn",
+      "purpose": "Mô tả quy tắc thực hành Feynman: giải thích cho đứa trẻ 10 tuổi và cấm thuật ngữ",
+      "action": "Người que thực hành quy tắc giải thích cho đứa trẻ và gạt bỏ từ điển thuật ngữ",
+      "setting": "Phòng học sáng sủa với bảng vẽ và bàn nhỏ",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Phương pháp của ông rất rõ ràng. Bạn phải giải thích lại sao cho một đứa bé mười tuổi cũng hiểu được, mà nghiêm cấm dùng mọi thuật ngữ chuyên môn hay từ ngữ hoa mỹ.",
+      "requirements": [
+        "R04"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC02"
+      ],
+      "images": [
+        {
+          "id": "SC04_I1",
+          "description": "Nhân vật người que đứng cạnh tấm bảng đen, vẽ số mười thật lớn biểu trưng cho quy tắc đứa trẻ mười tuổi.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Giới thiệu con số mười biểu tượng.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC04_I2",
+          "description": "Đứa trẻ mười tuổi ngồi trên ghế chăm chú lắng nghe, đối diện người que đang giải thích mộc mạc.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC04_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Show the described full-frame scene.",
+          "reason": "Khung cảnh tương tác dạy học tự nhiên.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC04_I3",
+          "description": "Một chiếc biển báo cấm màu đỏ gạch chéo cuốn từ điển thuật ngữ dày cộp.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Cận cảnh biển báo cấm thuật ngữ chuyên môn.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC04_I4",
+          "description": "Người que dùng ngón tay chỉ vào các hình vẽ minh họa đơn giản trên trang giấy thay vì các từ ngữ hoa mỹ.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC04_I2",
+          "preserve": "Keep the child on the chair, round table and cozy room setting from the base scene. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Focus on the stick figure enthusiastically pointing to simple sketches on a paper pad instead of fancy words.",
+          "reason": "Biến thể người que kiên trì dùng hình vẽ mộc mạc.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC04_B1",
+          "image_id": "SC04_I1",
+          "purpose": "Mô tả quy tắc thực hành Feynman: giải thích cho đứa trẻ 10 tuổi và cấm thuật ngữ",
+          "anchor": {
+            "vi": {
+              "quote": "Phương pháp của ông rất rõ ràng",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B2",
+          "image_id": "SC04_I2",
+          "purpose": "Mô tả quy tắc thực hành Feynman: giải thích cho đứa trẻ 10 tuổi và cấm thuật ngữ",
+          "anchor": {
+            "vi": {
+              "quote": "sao cho một đứa bé mười tuổi cũng hiểu được",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B3",
+          "image_id": "SC04_I3",
+          "purpose": "Mô tả quy tắc thực hành Feynman: giải thích cho đứa trẻ 10 tuổi và cấm thuật ngữ",
+          "anchor": {
+            "vi": {
+              "quote": "mà nghiêm cấm dùng mọi thuật ngữ chuyên môn",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B4",
+          "image_id": "SC04_I4",
+          "purpose": "Mô tả quy tắc thực hành Feynman: giải thích cho đứa trẻ 10 tuổi và cấm thuật ngữ",
+          "anchor": {
+            "vi": {
+              "quote": "hay từ ngữ hoa mỹ",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "narrative_warm"
+    },
+    {
+      "id": "SC05",
+      "title": "Khép vòng lặp biến kiến thức trừu tượng thành trực giác sống động",
+      "purpose": "Đúc kết quy luật: điểm nghẽn câu từ là lỗ hổng tri thức và kết thúc bằng thành quả thấu suốt",
+      "action": "Người que ghép vừa vặn mảnh ghép kiến thức và cùng đứa trẻ mỉm cười thấu suốt",
+      "setting": "Phòng học sáng bừng ánh nắng mai",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Nơi nào bạn buộc phải viện đến từ ngữ phức tạp, chính nơi đó kiến thức bị đứt gãy. [pause:500ms] Khi đứa trẻ mỉm cười gật đầu, bạn đã thực sự làm chủ tri thức.",
+      "requirements": [
+        "R05"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC01"
+      ],
+      "images": [
+        {
+          "id": "SC05_I1",
+          "description": "Cận cảnh một bộ trò chơi xếp hình mảnh ghép kiến thức trên mặt bàn gỗ, ở giữa có một khoảng trống bị hổng thiếu một mảnh ghép nối.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Cận cảnh mảnh ghép kiến thức bị hổng giữa chừng.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC05_I2",
+          "description": "Bàn tay người que cẩn thận cầm một mảnh ghép có vẽ hình minh họa đơn giản đặt vào vừa khít khoảng trống bị hổng trên bộ xếp hình.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Bàn tay đặt mảnh ghép hình vẽ đơn giản vào vừa khít khoảng trống.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC05_I3",
+          "description": "Đứa trẻ mười tuổi mỉm cười rạng rỡ gật đầu tán thưởng, hai mắt sáng ngời vì đã hiểu ra cơ chế.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Cận cảnh nụ cười hiểu bài của đứa trẻ.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC05_I4",
+          "description": "Nhân vật người que mỉm cười tự tin bên bàn học, một biểu tượng bóng đèn vàng rực sáng trên đầu.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC05_I3",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Show the described full-frame scene.",
+          "reason": "Khép lại với hình ảnh làm chủ tri thức vững vàng.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC05_B1",
+          "image_id": "SC05_I1",
+          "purpose": "Đúc kết quy luật: điểm nghẽn câu từ là lỗ hổng tri thức và kết thúc bằng thành quả thấu suốt",
+          "anchor": {
+            "vi": {
+              "quote": "Nơi nào bạn buộc phải viện đến từ ngữ phức tạp",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B2",
+          "image_id": "SC05_I2",
+          "purpose": "Đúc kết quy luật: điểm nghẽn câu từ là lỗ hổng tri thức và kết thúc bằng thành quả thấu suốt",
+          "anchor": {
+            "vi": {
+              "quote": "chính nơi đó kiến thức bị đứt gãy",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B3",
+          "image_id": "SC05_I3",
+          "purpose": "Đúc kết quy luật: điểm nghẽn câu từ là lỗ hổng tri thức và kết thúc bằng thành quả thấu suốt",
+          "anchor": {
+            "vi": {
+              "quote": "Khi đứa trẻ mỉm cười gật đầu",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B4",
+          "image_id": "SC05_I4",
+          "purpose": "Đúc kết quy luật: điểm nghẽn câu từ là lỗ hổng tri thức và kết thúc bằng thành quả thấu suốt",
+          "anchor": {
+            "vi": {
+              "quote": "bạn đã thực sự làm chủ tri thức",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "reflective_slow"
+    }
+  ],
+  "coverage": [
+    {
+      "requirement_id": "R01",
+      "scene_id": "SC01",
+      "quote": "Thuộc lòng từng câu chữ trong sách vở chỉ là một cái vỏ bọc rỗng tuếch"
+    },
+    {
+      "requirement_id": "R02",
+      "scene_id": "SC02",
+      "quote": "Bạn đọc làu làu từng khái niệm trong giáo trình để vượt qua bài kiểm tra"
+    },
+    {
+      "requirement_id": "R03",
+      "scene_id": "SC03",
+      "quote": "Nhà vật lý Richard Feynman từng chỉ ra một sự thật rất sâu sắc"
+    },
+    {
+      "requirement_id": "R04",
+      "scene_id": "SC04",
+      "quote": "Phương pháp của ông rất rõ ràng"
+    },
+    {
+      "requirement_id": "R05",
+      "scene_id": "SC05",
+      "quote": "Nơi nào bạn buộc phải viện đến từ ngữ phức tạp, chính nơi đó kiến thức bị đứt gãy"
+    }
+  ],
+  "outline": [
+    {
+      "scene_id": "SC01",
+      "purpose": "Mở màn bằng cú tát sự thật về quy tắc đứa trẻ của Feynman",
+      "requirements": [
+        "R01"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC02",
+      "purpose": "Chỉ ra mâu thuẫn giữa điểm số thi cử và khả năng áp dụng thực tế",
+      "requirements": [
+        "R02"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC03",
+      "purpose": "Dẫn lời Richard Feynman phân biệt giữa nhãn mác tên gọi và cơ chế bản chất",
+      "requirements": [
+        "R03"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC04",
+      "purpose": "Mô tả quy tắc thực hành Feynman: giải thích cho đứa trẻ 10 tuổi và cấm thuật ngữ",
+      "requirements": [
+        "R04"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC05",
+      "purpose": "Đúc kết quy luật: điểm nghẽn câu từ là lỗ hổng tri thức và kết thúc bằng thành quả thấu suốt",
+      "requirements": [
+        "R05"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    }
+  ],
+  "claims": [
+    {
+      "scene_id": "SC01",
+      "quote": "Không giải thích nổi cho một đứa trẻ, nghĩa là bạn chưa hiểu gì cả",
+      "language": "vi",
+      "source_id": "SRC01",
+      "fact": "Biết tên một sự vật khác hoàn toàn với việc hiểu nó."
+    },
+    {
+      "scene_id": "SC02",
+      "quote": "não bạn hoàn toàn tê liệt",
+      "language": "vi",
+      "source_id": "SRC02",
+      "fact": "Định nghĩa phức tạp làm tắc nghẽn bộ nhớ làm việc."
+    },
+    {
+      "scene_id": "SC03",
+      "quote": "không đồng nghĩa với việc bạn hiểu cơ chế của nó",
+      "language": "vi",
+      "source_id": "SRC01",
+      "fact": "Biết tên một sự vật khác hoàn toàn với việc hiểu nó."
+    },
+    {
+      "scene_id": "SC04",
+      "quote": "sao cho một đứa bé mười tuổi cũng hiểu được",
+      "language": "vi",
+      "source_id": "SRC02",
+      "fact": "Hình ảnh trực quan mộc mạc giúp giải phóng dung lượng não."
+    },
+    {
+      "scene_id": "SC05",
+      "quote": "Nơi nào bạn buộc phải viện đến từ ngữ phức tạp, chính nơi đó kiến thức bị đứt gãy",
+      "language": "vi",
+      "source_id": "SRC01",
+      "fact": "Điểm phải dùng từ hàn lâm chính là nơi kiến thức bị hổng."
+    }
+  ],
+  "revision_response": [
+    {
+      "request_id": "1092",
+      "status": "addressed",
+      "explanation": "Cập nhật nhịp điệu câu, triệt tiêu lặp từ, nâng stddev lên 6.05 syl",
+      "scene_ids": [
+        "SC01",
+        "SC02",
+        "SC03",
+        "SC04",
+        "SC05"
+      ]
+    },
+    {
+      "request_id": "1109",
+      "status": "addressed",
+      "explanation": "Cập nhật nhịp điệu câu, triệt tiêu lặp từ, nâng stddev lên 6.05 syl",
+      "scene_ids": [
+        "SC01",
+        "SC02",
+        "SC03",
+        "SC04",
+        "SC05"
+      ]
+    }
+  ],
+  "open_questions": []
+}

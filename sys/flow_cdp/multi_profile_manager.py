@@ -105,12 +105,12 @@ class ChromeProfileWorker:
 
 
 DEFAULT_PROFILES = [
-    {"id": "profile_1", "port": 9225, "directory": "Profile 106", "user_data_dir": "~/.config/google-chrome-cdp-p1"},
-    {"id": "profile_2", "port": 9223, "directory": "Profile 127", "user_data_dir": "~/.config/google-chrome-cdp-p2"},
-    {"id": "profile_3", "port": 9224, "directory": "Profile 13", "user_data_dir": "~/.config/google-chrome-cdp-p3"},
-    {"id": "profile_4", "port": 9222, "directory": "Profile 130", "user_data_dir": "~/.config/google-chrome-cdp-p4"},
-    {"id": "profile_5", "port": 9226, "directory": "Profile 102", "user_data_dir": "~/.config/google-chrome-cdp-p5"},
-    {"id": "profile_6", "port": 9227, "directory": "Profile 98", "user_data_dir": "~/.config/google-chrome-cdp-p6"},
+    {"id": "profile_1", "port": 9225, "directory": "Profile 1", "user_data_dir": "~/.config/google-chrome-cdp-p1"},
+    {"id": "profile_2", "port": 9223, "directory": "Profile 2", "user_data_dir": "~/.config/google-chrome-cdp-p2"},
+    {"id": "profile_3", "port": 9224, "directory": "Profile 3", "user_data_dir": "~/.config/google-chrome-cdp-p3"},
+    {"id": "profile_4", "port": 9222, "directory": "Profile 4", "user_data_dir": "~/.config/google-chrome-cdp-profile4"},
+    {"id": "profile_5", "port": 9226, "directory": "Default", "user_data_dir": "~/.config/google-chrome-cdp-profile5"},
+    {"id": "profile_6", "port": 9227, "directory": "Profile 7", "user_data_dir": "~/.config/google-chrome-cdp-profile7"},
 ]
 
 
@@ -120,7 +120,7 @@ class MultiProfileManager:
     def __init__(
         self,
         profiles_config: list[dict[str, Any]] | None = None,
-        cooldown_seconds: float = 15.0,
+        cooldown_seconds: float = 5.0,
         job_id: str | None = None,
         max_workers_per_job: int = 6,
         lock_dir: Path | None = None,
@@ -334,7 +334,7 @@ class MultiProfileDispatcher:
                 # If all excluded or in cooldown, wait up to 65s for worker/cooldown to pass
                 wait_start = time.time()
                 while not worker and (time.time() - wait_start < 65.0):
-                    time.sleep(2.0)
+                    time.sleep(0.5)
                     worker = self.manager.acquire_healthy_worker(exclude_ids=excluded_workers)
                     if not worker and (time.time() - wait_start > 30.0):
                         worker = self.manager.acquire_healthy_worker()

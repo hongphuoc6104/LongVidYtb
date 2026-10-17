@@ -1,0 +1,44 @@
+{
+  "outline": [
+    {
+      "scene_id": "SC01",
+      "purpose": "Mở màn bằng cú tát sự thật vạch trần thói quen dùng từ ngữ phức tạp để che giấu sự mơ hồ",
+      "requirements": [
+        "R01"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC02",
+      "purpose": "Mô tả ma sát thực tế khi viết tiểu luận và cú sốc khi bị yêu cầu diễn đạt bằng tiếng Việt bình dân",
+      "requirements": [
+        "R02"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC03",
+      "purpose": "Dẫn chứng nghiên cứu khoa học Q1 của Oppenheimer vạch trần việc lạm dụng từ khó làm giảm uy tín",
+      "requirements": [
+        "R03"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC04",
+      "purpose": "Hướng dẫn phương pháp Feynman: giải thích cho một đứa trẻ để kiểm tra độ sâu của hiểu biết",
+      "requirements": [
+        "R04"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC05",
+      "purpose": "Đúc kết quy luật cốt lõi và gửi gắm thông điệp tinh giản hóa để làm chủ tri thức",
+      "requirements": [
+        "R05"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    }
+  ]
+}

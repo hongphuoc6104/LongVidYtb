@@ -1,0 +1,117 @@
+[
+  {
+    "id": "SC01",
+    "duration": 8.45,
+    "narration": "Không giải thích nổi cho một đứa trẻ, nghĩa là bạn chưa hiểu gì cả. Thuộc lòng từng câu chữ trong sách vở chỉ là một cái vỏ bọc rỗng tuếch.",
+    "beats": [
+      {
+        "image_id": "SC01_I1",
+        "anchor_quote": "Không giải thích nổi cho một đứa trẻ"
+      },
+      {
+        "image_id": "SC01_I2",
+        "anchor_quote": "nghĩa là bạn chưa hiểu gì cả"
+      },
+      {
+        "image_id": "SC01_I3",
+        "anchor_quote": "Thuộc lòng từng câu chữ trong sách vở"
+      },
+      {
+        "image_id": "SC01_I4",
+        "anchor_quote": "chỉ là một cái vỏ bọc rỗng tuếch"
+      }
+    ]
+  },
+  {
+    "id": "SC02",
+    "duration": 10.35,
+    "narration": "Bạn đọc làu làu từng khái niệm trong giáo trình để vượt qua bài kiểm tra. [pause:900ms] Nhưng khi đối diện bài toán đời thực, não bạn hoàn toàn tê liệt. Mọi kiến thức biến mất.",
+    "beats": [
+      {
+        "image_id": "SC02_I1",
+        "anchor_quote": "Bạn đọc làu làu từng khái niệm trong giáo trình"
+      },
+      {
+        "image_id": "SC02_I2",
+        "anchor_quote": "để vượt qua bài kiểm tra"
+      },
+      {
+        "image_id": "SC02_I3",
+        "anchor_quote": "Nhưng khi đối diện bài toán đời thực"
+      },
+      {
+        "image_id": "SC02_I4",
+        "anchor_quote": "não bạn hoàn toàn tê liệt"
+      }
+    ]
+  },
+  {
+    "id": "SC03",
+    "duration": 9.45,
+    "narration": "Nhà vật lý Richard Feynman từng chỉ ra một sự thật rất sâu sắc. Biết tên gọi của một hiện tượng, hoàn toàn không đồng nghĩa với việc bạn hiểu cơ chế của nó.",
+    "beats": [
+      {
+        "image_id": "SC03_I1",
+        "anchor_quote": "Nhà vật lý Richard Feynman từng chỉ ra"
+      },
+      {
+        "image_id": "SC03_I2",
+        "anchor_quote": "một sự thật rất sâu sắc"
+      },
+      {
+        "image_id": "SC03_I3",
+        "anchor_quote": "Biết tên gọi của một hiện tượng"
+      },
+      {
+        "image_id": "SC03_I4",
+        "anchor_quote": "không đồng nghĩa với việc bạn hiểu cơ chế của nó"
+      }
+    ]
+  },
+  {
+    "id": "SC04",
+    "duration": 9.7,
+    "narration": "Phương pháp của ông rất rõ ràng. Bạn phải giải thích lại sao cho một đứa bé mười tuổi cũng hiểu được, mà nghiêm cấm dùng mọi thuật ngữ chuyên môn hay từ ngữ hoa mỹ.",
+    "beats": [
+      {
+        "image_id": "SC04_I1",
+        "anchor_quote": "Phương pháp của ông rất rõ ràng"
+      },
+      {
+        "image_id": "SC04_I2",
+        "anchor_quote": "sao cho một đứa bé mười tuổi cũng hiểu được"
+      },
+      {
+        "image_id": "SC04_I3",
+        "anchor_quote": "mà nghiêm cấm dùng mọi thuật ngữ chuyên môn"
+      },
+      {
+        "image_id": "SC04_I4",
+        "anchor_quote": "hay từ ngữ hoa mỹ"
+      }
+    ]
+  },
+  {
+    "id": "SC05",
+    "duration": 9.35,
+    "narration": "Nơi nào bạn buộc phải viện đến từ ngữ phức tạp, chính nơi đó kiến thức bị đứt gãy. [pause:500ms] Khi đứa trẻ mỉm cười gật đầu, bạn đã thực sự làm chủ tri thức.",
+    "beats": [
+      {
+        "image_id": "SC05_I1",
+        "anchor_quote": "Nơi nào bạn buộc phải viện đến từ ngữ phức tạp"
+      },
+      {
+        "image_id": "SC05_I2",
+        "anchor_quote": "chính nơi đó kiến thức bị đứt gãy"
+      },
+      {
+        "image_id": "SC05_I3",
+        "anchor_quote": "Khi đứa trẻ mỉm cười gật đầu"
+      },
+      {
+        "image_id": "SC05_I4",
+        "anchor_quote": "bạn đã thực sự làm chủ tri thức"
+      }
+    ]
+  }
+]

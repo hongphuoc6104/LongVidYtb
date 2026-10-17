@@ -208,7 +208,7 @@ CDP_RECAPTCHA_GUARD_JS = r"""
         } catch (e) {
           lastErr = e;
         }
-        await new Promise((r) => setTimeout(r, 600));
+        await new Promise((r) => setTimeout(r, 100));
       }
       throw lastErr || new Error('captcha_mint_failed');
     } finally {
@@ -222,47 +222,47 @@ PROFILES = [
     {
         "name": "profile_1",
         "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-p1"),
-        "profile_dir": "Profile 106",
+        "profile_dir": "Profile 1",
         "cdp_port": 9225,
-        "url": "https://flow.google.com/project/b3563082-1ea0-4c17-b5f8-b14903b5fbb9",
-        "project_id": "b3563082-1ea0-4c17-b5f8-b14903b5fbb9",
+        "url": "https://flow.google.com/project/3cc9a378-4801-4a5e-b984-4370e0c3d2aa",
+        "project_id": "3cc9a378-4801-4a5e-b984-4370e0c3d2aa",
     },
     {
         "name": "profile_2",
         "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-p2"),
-        "profile_dir": "Profile 127",
+        "profile_dir": "Profile 2",
         "cdp_port": 9223,
-        "url": "https://flow.google.com/project/689aebeb-6fc3-4b96-a84e-67095cd0aae3",
-        "project_id": "689aebeb-6fc3-4b96-a84e-67095cd0aae3",
+        "url": "https://flow.google.com/project/917085b1-ed75-4d4e-aa3e-dad16f6ee7b4",
+        "project_id": "917085b1-ed75-4d4e-aa3e-dad16f6ee7b4",
     },
     {
         "name": "profile_3",
         "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-p3"),
-        "profile_dir": "Profile 13",
+        "profile_dir": "Profile 3",
         "cdp_port": 9224,
         "url": "https://flow.google.com/project/afc36132-bdc0-4d3c-9440-a4a63d8cdfbf",
         "project_id": "afc36132-bdc0-4d3c-9440-a4a63d8cdfbf",
     },
     {
         "name": "profile_4",
-        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-p4"),
-        "profile_dir": "Profile 130",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-profile4"),
+        "profile_dir": "Profile 4",
         "cdp_port": 9222,
         "url": "https://flow.google.com/project/45f66f11-b15f-4fc5-bcfc-fa46f874f57f",
         "project_id": "45f66f11-b15f-4fc5-bcfc-fa46f874f57f",
     },
     {
         "name": "profile_5",
-        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-p5"),
-        "profile_dir": "Profile 102",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-profile5"),
+        "profile_dir": "Default",
         "cdp_port": 9226,
         "url": "https://flow.google.com/project/ecc61241-f9a6-40f4-bc63-8a50c8f94672",
         "project_id": "ecc61241-f9a6-40f4-bc63-8a50c8f94672",
     },
     {
         "name": "profile_6",
-        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-p6"),
-        "profile_dir": "Profile 98",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-profile7"),
+        "profile_dir": "Profile 7",
         "cdp_port": 9227,
         "url": "https://flow.google.com/project/8cc6cb2b-8a51-4f86-8772-63f31b1947df",
         "project_id": "8cc6cb2b-8a51-4f86-8772-63f31b1947df",
@@ -308,7 +308,7 @@ def ensure_chrome_profiles_launched(profiles: list[dict[str, Any]] | None = None
             stderr=subprocess.DEVNULL,
             start_new_session=True,
         )
-        time.sleep(1.5)
+        time.sleep(0.3)
 
     for p in target_profiles:
         port = p["cdp_port"]
@@ -414,7 +414,7 @@ class DirectCDPProfileSession:
             pid = self._extract_project_id(cur_url)
             if pid:
                 self.project_id = pid
-            await asyncio.sleep(4.0)
+            await asyncio.sleep(1.0)
 
         need_reload = reload_for_guard
         if not need_reload:

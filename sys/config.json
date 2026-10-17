@@ -15,12 +15,12 @@
   "flow_batch": false,
   "flow_image_engine": "cdp",
   "flow_cdp_profiles": [
-    {"id": "profile_1", "port": 9225, "directory": "Profile 106", "user_data_dir": "~/.config/google-chrome-cdp-p1"},
-    {"id": "profile_2", "port": 9223, "directory": "Profile 127", "user_data_dir": "~/.config/google-chrome-cdp-p2"},
-    {"id": "profile_3", "port": 9224, "directory": "Profile 13", "user_data_dir": "~/.config/google-chrome-cdp-p3"},
-    {"id": "profile_4", "port": 9222, "directory": "Profile 130", "user_data_dir": "~/.config/google-chrome-cdp-p4"},
-    {"id": "profile_5", "port": 9226, "directory": "Profile 102", "user_data_dir": "~/.config/google-chrome-cdp-p5"},
-    {"id": "profile_6", "port": 9227, "directory": "Profile 98", "user_data_dir": "~/.config/google-chrome-cdp-p6"}
+    {"id": "profile_1", "port": 9225, "directory": "Profile 1", "user_data_dir": "~/.config/google-chrome-cdp-p1"},
+    {"id": "profile_2", "port": 9223, "directory": "Profile 2", "user_data_dir": "~/.config/google-chrome-cdp-p2"},
+    {"id": "profile_3", "port": 9224, "directory": "Profile 3", "user_data_dir": "~/.config/google-chrome-cdp-p3"},
+    {"id": "profile_4", "port": 9222, "directory": "Profile 4", "user_data_dir": "~/.config/google-chrome-cdp-profile4"},
+    {"id": "profile_5", "port": 9226, "directory": "Default", "user_data_dir": "~/.config/google-chrome-cdp-profile5"},
+    {"id": "profile_6", "port": 9227, "directory": "Profile 7", "user_data_dir": "~/.config/google-chrome-cdp-profile7"}
   ],
   "patch_size": 3,
   "flow_session_image_cap": 200,
@@ -51,9 +51,9 @@
   "auto_max_audio_retakes_per_scene": 2,
   "auto_max_audio_retakes": 4,
   "auto_max_repeat_failures": 3,
-  "flow_status_timeout_seconds": 30,
-  "flow_status_retries": 2,
-  "flow_status_backoff_seconds": 2,
+  "flow_status_timeout_seconds": 15,
+  "flow_status_retries": 1,
+  "flow_status_backoff_seconds": 0.2,
   "brief_policies": [],
   "colab_tts": {
     "enabled": true,

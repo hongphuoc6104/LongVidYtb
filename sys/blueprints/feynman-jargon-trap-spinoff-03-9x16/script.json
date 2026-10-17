@@ -1,0 +1,113 @@
+[
+  {
+    "id": "SC01",
+    "duration": 8.2,
+    "narration": "Thuật ngữ học thuật đang biến thành chiếc nạng ru ngủ não bạn. Càng che đậy bằng slide màu mè, bạn càng dễ bị đánh gục trên bục bảo vệ.",
+    "beats": [
+      {
+        "image_id": "SC01_I1",
+        "anchor_quote": "Thuật ngữ học thuật đang biến thành chiếc nạng"
+      },
+      {
+        "image_id": "SC01_I2",
+        "anchor_quote": "ru ngủ não bạn"
+      },
+      {
+        "image_id": "SC01_I3",
+        "anchor_quote": "bạn càng dễ bị đánh gục trên bục bảo vệ"
+      }
+    ]
+  },
+  {
+    "id": "SC02",
+    "duration": 10.35,
+    "narration": "Trước giờ bảo vệ, nhiều bạn cố nhồi vào bài thuyết trình những thuật ngữ thật kêu. [pause:900ms] Nhưng chỉ cần một câu hỏi vặn từ hội đồng, toàn bộ vỏ bọc lập tức sụp đổ.",
+    "beats": [
+      {
+        "image_id": "SC02_I1",
+        "anchor_quote": "Trước giờ bảo vệ"
+      },
+      {
+        "image_id": "SC02_I2",
+        "anchor_quote": "nhiều bạn cố nhồi vào bài thuyết trình những thuật ngữ thật kêu"
+      },
+      {
+        "image_id": "SC02_I3",
+        "anchor_quote": "Nhưng chỉ cần một câu hỏi vặn từ hội đồng"
+      },
+      {
+        "image_id": "SC02_I4",
+        "anchor_quote": "toàn bộ vỏ bọc lập tức sụp đổ"
+      }
+    ]
+  },
+  {
+    "id": "SC03",
+    "duration": 8.95,
+    "narration": "Thuật ngữ sinh ra để các chuyên gia trao đổi nhanh, chứ không phải tấm khiên giấu dốt. Hội đồng luôn nhìn thấu sự mông lung đằng sau những câu chữ sáo rỗng.",
+    "beats": [
+      {
+        "image_id": "SC03_I1",
+        "anchor_quote": "Thuật ngữ sinh ra để các chuyên gia trao đổi nhanh"
+      },
+      {
+        "image_id": "SC03_I2",
+        "anchor_quote": "chứ không phải tấm khiên giấu dốt"
+      },
+      {
+        "image_id": "SC03_I3",
+        "anchor_quote": "Hội đồng luôn nhìn thấu sự mông lung"
+      },
+      {
+        "image_id": "SC03_I4",
+        "anchor_quote": "đằng sau những câu chữ sáo rỗng"
+      }
+    ]
+  },
+  {
+    "id": "SC04",
+    "duration": 9.7,
+    "narration": "Trước khi bước lên bục, hãy thử ngay quy tắc tờ giấy trắng. Viết lại toàn bộ thông điệp đề tài bằng đúng ba câu ngắn gọn, không dùng bất kỳ từ ngữ chuyên môn nào.",
+    "beats": [
+      {
+        "image_id": "SC04_I1",
+        "anchor_quote": "Trước khi bước lên bục"
+      },
+      {
+        "image_id": "SC04_I2",
+        "anchor_quote": "hãy thử ngay quy tắc tờ giấy trắng"
+      },
+      {
+        "image_id": "SC04_I3",
+        "anchor_quote": "Viết lại toàn bộ thông điệp đề tài bằng đúng ba câu ngắn gọn"
+      },
+      {
+        "image_id": "SC04_I4",
+        "anchor_quote": "không dùng bất kỳ từ ngữ chuyên môn nào"
+      }
+    ]
+  },
+  {
+    "id": "SC05",
+    "duration": 9.1,
+    "narration": "Khi tóm gọn được mọi thứ trên một mặt giấy trắng, bạn sẽ không còn sợ hãi. [pause:500ms] Một trăm hai mươi giây đầu tiên trước hội đồng sẽ hoàn toàn thuộc về bạn.",
+    "beats": [
+      {
+        "image_id": "SC05_I1",
+        "anchor_quote": "Khi tóm gọn được mọi thứ trên một mặt giấy trắng"
+      },
+      {
+        "image_id": "SC05_I2",
+        "anchor_quote": "bạn sẽ không còn sợ hãi"
+      },
+      {
+        "image_id": "SC05_I3",
+        "anchor_quote": "Một trăm hai mươi giây đầu tiên"
+      },
+      {
+        "image_id": "SC05_I4",
+        "anchor_quote": "sẽ hoàn toàn thuộc về bạn"
+      }
+    ]
+  }
+]
