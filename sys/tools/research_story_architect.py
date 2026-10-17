@@ -592,6 +592,39 @@ def _default_full_frame_beats(scene: ResearchedScene, elapsed: float) -> List[Re
 
 
 
+def _infer_scene_tone(index: int, total: int, title: str, narration: str) -> str:
+    """Modulate voice tone dynamically from dramatic/cognitive intent rather than flat 20/60/20 slicing."""
+    combined = f"{title} {narration}".casefold()
+    if index <= max(1, total // 5):
+        return "narrative_warm"
+    if index > total - max(1, total // 5):
+        return "reflective_slow"
+    if re.search(r"\?|tại sao|nhưng|nghịch lý|tưởng rằng|ảo giác|sụp đổ|thật sự|khựng lại", combined):
+        return "reflective_slow" if "?" in title or "tại sao" in combined or "sụp đổ" in combined else "narrative_warm"
+    return "analytical_crisp"
+
+
+def _select_best_coverage_quote(narration: str, req_text: str) -> str:
+    """Pick the sentence in narration with highest lexical overlap with req_text, falling back to first sentence."""
+    sentences = [s.strip() for s in re.split(r"(?<=[.!?])\s+", narration) if s.strip()]
+    if not sentences:
+        return narration[:30].strip()
+    req_tokens = {w for w in re.findall(r"\w+", (req_text or "").casefold()) if len(w) > 2}
+    if req_tokens:
+        best_sent = max(
+            sentences,
+            key=lambda s: sum(1 for w in req_tokens if w in s.casefold()),
+        )
+        if sum(1 for w in req_tokens if w in best_sent.casefold()) > 0:
+            cleaned = best_sent.rstrip(".!?").strip()
+            if cleaned and cleaned in narration:
+                return cleaned
+            if best_sent in narration:
+                return best_sent
+    first = narration.split(".")[0].strip()
+    return first if first in narration else narration[:30].strip()
+
+
 def build_scenes_from_story_rows(
     story_rows: List[Tuple[str, str, List[Tuple[str, str]]]],
     character_id: str = "CH01",
@@ -619,7 +652,7 @@ def build_scenes_from_story_rows(
                 base_id = image_id
             based_on = (base_id or f"{scene_id}_I{max(1, beat_idx - 1)}") if shot_type == "variation" else None
             preserve = (
-                f"Keep the exact camera angle, room geometry and props from {based_on} in {setting}. "
+                f"Keep the exact camera angle, room geometry and props in {setting}. "
                 "Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift."
                 if based_on else ""
             )
@@ -641,7 +674,7 @@ def build_scenes_from_story_rows(
         pause_sec, _, _ = extract_pauses(narration)
         syl = count_syllables(narration, lang="vi")
         duration = round(pause_sec + (syl / nominal_rate) + p_tail, 2)
-        tone = "narrative_warm" if index <= max(1, total // 5) else ("reflective_slow" if index > total - max(1, total // 5) else "analytical_crisp")
+        tone = _infer_scene_tone(index, total, title, narration)
         built_scenes.append(ResearchedScene(
             scene_id=scene_id,
             title=title,
@@ -734,9 +767,13 @@ def build_content_v3(
         from scripts.visual_quality import apply_room_continuity
         apply_room_continuity(images)
         previous_effect = None
-        for beat, image in zip(beats, images, strict=True):
+        for idx, (beat, image) in enumerate(zip(beats, images, strict=True)):
             if beat['effect'] in ('auto', 'cut', 'fade'):
-                beat['effect'] = select_semantic_camera_effect(image['description'] + ' ' + sc.camera, previous_effect)
+                beat['effect'] = select_semantic_camera_effect(
+                    image['description'] + ' ' + sc.camera,
+                    previous_effect,
+                    beat_index=idx,
+                )
             previous_effect = beat['effect']
 
         scene_dict = {
@@ -764,21 +801,17 @@ def build_content_v3(
         content_scenes.append(scene_dict)
         elapsed += sc.duration
 
-        # Coverage: link requirements to scene quotes
+        # Coverage: link requirements to scene quotes using semantic overlap
         for r_id in sc.requirements:
             if r_id in req_map:
-                quote_cand = sc.narration.split(".")[0].strip()
-                if quote_cand not in sc.narration:
-                    quote_cand = sc.narration[:30].strip()
+                quote_cand = _select_best_coverage_quote(sc.narration, req_map[r_id])
                 cov_entry = {
                     "requirement_id": r_id,
                     "scene_id": s_id,
                     "quote": quote_cand,
                 }
                 if needs_en and sc.narration_en:
-                    quote_en_cand = sc.narration_en.split(".")[0].strip()
-                    if quote_en_cand not in sc.narration_en:
-                        quote_en_cand = sc.narration_en[:30].strip()
+                    quote_en_cand = _select_best_coverage_quote(sc.narration_en, req_map[r_id])
                     cov_entry["quote_en"] = quote_en_cand
                 coverage.append(cov_entry)
 

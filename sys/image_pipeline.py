@@ -246,8 +246,14 @@ def requested_prompt(p, j, target, prompt, notes, ratio, registration=False):
     c = content(p,j)
     corrections = safe_corrections(c, notes)
     unit = next((x for x in planned_units(p,j) if x['id']==target),None)
-    mascot_target = (target == 'ref:CH01' or target.startswith('register:CH01:') or
-                     bool(unit and 'CH01' in unit['character_ids']))
+    from flow_management import prompt_pin
+    from flow_prompts.compiler import CAST_VERSIONS
+    pin = prompt_pin(p, j)
+    cast_mode = bool(pin and pin.get('version') in CAST_VERSIONS)
+    mascot_target = not cast_mode and (
+        target == 'ref:CH01' or target.startswith('register:CH01:') or
+        bool(unit and 'CH01' in unit['character_ids'])
+    )
     if mascot_target:
         from execution import is_job
         if is_job(p, j):

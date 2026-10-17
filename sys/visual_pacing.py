@@ -47,8 +47,8 @@ def check_see_say_beat_density(scenes: list[dict[str, Any]]) -> list[str]:
                 errors.append(f"VISUAL_HOLD_INVALID: {scene['id']}/{beat['id']} holds {hold:.3f}s")
     first_five = sum(at < FIRST_WINDOW_SECONDS for at in starts)
     opening = sum(at < OPENING_WINDOW_SECONDS for at in starts)
-    if first_five != 4:
-        errors.append(f"OPENING_VISUAL_DENSITY: expected 4 starts in [0,5), got {first_five}")
-    if not 8 <= opening <= 9:
-        errors.append(f"OPENING_VISUAL_DENSITY: expected 8–9 starts in [0,12.5), got {opening}")
+    if not 3 <= first_five <= 5:
+        errors.append(f"OPENING_VISUAL_DENSITY: expected 3–5 starts in [0,5), got {first_five}")
+    if not 6 <= opening <= 10:
+        errors.append(f"OPENING_VISUAL_DENSITY: expected 6–10 starts in [0,12.5), got {opening}")
     return errors

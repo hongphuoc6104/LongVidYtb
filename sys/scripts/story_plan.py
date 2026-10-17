@@ -81,8 +81,18 @@ def validate_plan(b, c):
             if len(motions) >= 2 and len(set(motions)) == 1:
                 fail('CAMERA_MOTION_MONOTONY', s['id'], 'All beats use the same camera motion; vary authored intent.')
             for image in s['images']:
-                if image.get('based_on') and not re.search(r'expression|facial|biểu cảm', image.get('preserve', ''), re.I):
-                    fail('EXPRESSION_LOCK_REQUIRED', image['id'], 'Preserve facial expression unless change explicitly requests a shift.')
+                if image.get('based_on'):
+                    has_preserve_lock = bool(re.search(r'expression|facial|biểu cảm', image.get('preserve', ''), re.I))
+                    has_explicit_shift = bool(
+                        image.get('allow_expression_shift')
+                        or re.search(
+                            r'expression shift|facial shift|thay đổi biểu cảm|chuyển biểu cảm|biểu cảm chuyển sang',
+                            image.get('change', ''),
+                            re.I,
+                        )
+                    )
+                    if not (has_preserve_lock or has_explicit_shift):
+                        fail('EXPRESSION_LOCK_REQUIRED', image['id'], 'Preserve facial expression unless change explicitly requests a shift.')
         used = {x['image_id'] for x in s['beats']}
         if used != scene_images: fail('IMAGE_USAGE', s['id'], 'Mỗi ảnh scene phải được dùng đúng một lần trong beats')
         for lang in languages(b):

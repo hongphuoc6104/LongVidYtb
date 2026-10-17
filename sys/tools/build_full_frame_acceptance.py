@@ -311,6 +311,51 @@ STORY: list[tuple[str, str, list[tuple[str, str]]]] = [('Trang sách vàng',
     'full_scene|The student closes the textbook and confidently begins a fresh sheet.')])]
 
 
+def _closing_resolution_beat(
+    scene_id: str,
+    beat_number: int,
+    setting: str,
+    last_quote: str,
+    last_spec: str,
+    previous_id: str,
+) -> ResearchedBeat:
+    """Create a context-aware closing beat for the final half-clause without mechanical hand-focus clones."""
+    words = last_quote.split()
+    tail = ' '.join(words[len(words) // 2 + 1:])
+    last_shot, base_desc = last_spec.split('|', 1)
+    lowered = f"{base_desc} {setting}".casefold()
+    if last_shot == 'white_card' or any(k in lowered for k in ('diagram', 'arrow', 'timeline', 'path', 'chart', 'gauge')):
+        shot_type = 'white_card'
+        description = f'Clean schematic synthesis of {base_desc[0].lower() + base_desc[1:]} on pure white.'
+        based_on = None
+        preserve = ''
+        change = 'Isolate the core structural comparison as the spoken clause resolves.'
+    elif any(k in lowered for k in ('bridge', 'landscape', 'corridor', 'gallery', 'hall', 'classroom', 'cafe')):
+        shot_type = 'variation'
+        description = f'Wide spatial resolution in {setting}: {base_desc}'
+        based_on = previous_id
+        preserve = 'Keep the exact room, camera, furniture, clothing and existing props.'
+        change = 'Hold on the wider spatial consequence as the spoken clause concludes.'
+    else:
+        shot_type = 'macro_prop'
+        description = f'Close detail on the key artifact in {setting}: {base_desc}'
+        based_on = None
+        preserve = ''
+        change = 'Shift to a close inspection of the key artifact as the clause resolves.'
+    return ResearchedBeat(
+        image_id=f'{scene_id}_I{beat_number}',
+        anchor_quote=tail,
+        description=description,
+        reason='Resolve the final clause with a context-matched visual beat.',
+        character_ids=['CH01'],
+        shot_type=shot_type,
+        based_on=based_on,
+        preserve=preserve,
+        change=change,
+        effect='cut',
+    )
+
+
 def build_topic() -> ResearchedTopic:
     scenes: list[ResearchedScene] = []
     for index, (title, setting, rows) in enumerate(STORY, 1):
@@ -330,13 +375,13 @@ def build_topic() -> ResearchedTopic:
             ))
         if index > 1:
             quote, spec = rows[-1]
-            words = quote.split()
-            tail = ' '.join(words[len(words) // 2 + 1:])
-            visuals.append(ResearchedBeat(
-                image_id=f'{scene_id}_I{len(visuals) + 1}', anchor_quote=tail,
-                description=f'{spec.split("|", 1)[1]} Focus on the hands and the study object already named. Setting: {setting}',
-                reason='Show the final concrete action as the spoken clause resolves.',
-                character_ids=['CH01'], shot_type='macro_prop', change='Use a close view of the named action.',
+            visuals.append(_closing_resolution_beat(
+                scene_id=scene_id,
+                beat_number=len(visuals) + 1,
+                setting=setting,
+                last_quote=quote,
+                last_spec=spec,
+                previous_id=visuals[-1].image_id,
             ))
         scenes.append(ResearchedScene(
             scene_id=scene_id, title=title, purpose=title,
