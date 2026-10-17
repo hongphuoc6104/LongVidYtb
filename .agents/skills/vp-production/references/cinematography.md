@@ -34,14 +34,14 @@ Composition adapts dynamically to the target `format_profile` configured in the 
 ## 4. Transitions & Renderer-Compatible Effects
 Refer to detailed parameters in [render-capabilities](../../../../sys/docs/render-capabilities.md).
 
-| Scene Effect | Operating Mechanism | Recommended Use Case |
+| Scene Effect | Operating Mechanism (`computeCinematicCameraVector` in `camera.mjs`) | Recommended Use Case & Flash Agent Rule |
 |---|---|---|
-| `cut` / `hold` | `transition: cut` switches beats cleanly (with automatic 85ms micro-dissolve on `variation` shots); `hold` keeps camera motionless for dense diagrams. | Standard beat cuts and diagram inspection. |
-| `zoom_in` / `zoom_out` | Smoothly scales `1.0 -> 1.08` or `1.08 -> 1.0` with subtle GPU handheld micro-breathing (`organicNoise`). | Push-in (focusing on action/detail) or Pull-out (revealing context). |
-| `punch_in` | Snappy spring zoom `1.22x -> 1.08x` with subtle decay shake. | Opening hook (`SC01`), sudden discovery, shock, or eureka moments. |
-| `pan_left` / `pan_right` | Smooth 3% horizontal sweep at `1.06` scale (+ `1.045` overscan). | Contrasting two groups, timeline progression, or wide environments. |
-| `slide_left` | Bezier horizontal slide with directional motion blur (Whip pan). | Fast topic transitions. |
-| `shake` | Multi-frequency Perlin camera vibration decaying over 0.28s. | Impact or sudden realization. |
+| `auto` / `cut` / `hold` | Resolves `auto`/`cut` into a **Scene-Continuous Weyl Camera Glide** (with 75ms optical soft-cut between in-scene beats); `hold` keeps camera still for dense diagrams. | **Default for Gemini Flash**: leave `effect: "auto"` (or `"cut"`) and let code compute non-repeating vectors. |
+| `zoom_in` / `zoom_out` | Continuous scene-level dolly (`~3.4%–5.2%` adaptive scale + 2D diagonal parallax drift via Weyl golden-ratio sequence $\phi_1, \phi_2, \phi_3$) with ease-in-out inertia. | Focusing on action/detail (`zoom_in`) or revealing context (`zoom_out`). Vectors vary per scene and group; repetition is unlikely but not formally guaranteed. |
+| `punch_in` | Critically damped (`damping: 28`) forward push-in accent (`+1.6%` on top of scene dolly, zero backward bounce, zero screen shake). | **Max 1 per scene**: reserve strictly for Opening Hook (`SC01`) or a single eureka/climax beat (`!`). |
+| `pan_left` / `pan_right` | Coupled horizontal tracking (`~1.05%–1.60%`) + subtle micro-dolly (`1.4%–2.6%`) across the full scene duration. | Contrasting two groups, timeline progression, or wide environments. |
+| `slide_left` | Bezier horizontal slide with directional motion blur (Whip pan). | Fast topic transitions (use sparingly, max 1–2 per chapter). |
+| `shake` | Subtle Perlin camera vibration decaying over 0.28s (`<= 5px`). | Physical impact only; never attach `shake` to ordinary numbers or speech beats. |
 
 - **Hand-drawn call-outs inside the AI art**: Request `"red hand-drawn circle or arrow pointing at..."` directly inside the image description when needed; **never** add external React/SVG floating callouts or coordinate overlays on top of the video.
 - **Clean papers & books**: When `allowed_text` is empty, books and sheets must contain only abstract wavy ink lines—never invented words, titles, or equations.

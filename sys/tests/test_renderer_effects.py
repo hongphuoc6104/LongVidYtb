@@ -105,5 +105,105 @@ console.log('OK');
         self.assertNotIn("vp-layered-motion", cap_text)
 
 
+
+    def test_weyl_cinematic_camera_vectors_non_repeating_and_bounded(self):
+        cmd = [
+            "node",
+            "--input-type=module",
+            "-e",
+            """
+import {selectSemanticCameraEffect, computeCinematicCameraVector} from './renderer/camera.mjs';
+const seen = new Set();
+let prevEff = '';
+for (let i = 0; i < 48; i++) {
+  const sc = {
+    id: `SC${String(i + 1).padStart(2, '0')}`,
+    title: `Scene ${i + 1}`,
+    start: i * 14,
+    end: (i + 1) * 14,
+    tone: i % 3 === 0 ? 'reflective_slow' : (i % 3 === 1 ? 'analytical_crisp' : 'narrative_warm')
+  };
+  const eff = selectSemanticCameraEffect({effect: 'auto'}, sc, i);
+  if (i > 0 && eff === prevEff) {
+    process.exit(2);
+  }
+  prevEff = eff;
+  const vec = computeCinematicCameraVector(eff, sc, i);
+  const sig = JSON.stringify(vec);
+  if (seen.has(sig)) process.exit(3);
+  seen.add(sig);
+  if (vec.scaleStart < 1.0 || vec.scaleEnd > 1.08 || Math.abs(vec.txStart) > 1.5 || Math.abs(vec.txEnd) > 1.5) {
+    process.exit(4);
+  }
+}
+console.log('WEYL_48_OK');
+"""
+        ]
+        result = subprocess.run(cmd, cwd=str(ROOT / "sys"), capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, f"Weyl vector test failed: {result.stderr}")
+        self.assertIn("WEYL_48_OK", result.stdout)
+
+
+
+    def test_aspect_adaptive_camera_focus_and_anchor_group_continuity(self):
+        cmd = [
+            "node",
+            "--input-type=module",
+            "-e",
+            """
+import {
+  selectSemanticCameraEffect,
+  computeCinematicCameraVector,
+  resolveCameraAnchorGroup,
+  resolveBeatFocus,
+  isContinuousCameraBeat
+} from './renderer/camera.mjs';
+
+const sc = { id: 'SC01', title: 'Hook', start: 0, end: 12, tone: 'narrative_warm' };
+const vec16x9 = computeCinematicCameraVector('pan_right', sc, 0, false);
+const vec9x16 = computeCinematicCameraVector('pan_right', sc, 0, true);
+
+// 1. 9:16 tightens horizontal pan swing compared to 16:9
+const span16 = Math.abs(vec16x9.txEnd - vec16x9.txStart);
+const span9 = Math.abs(vec9x16.txEnd - vec9x16.txStart);
+if (!(span9 < span16)) process.exit(10);
+
+// 2. Focus resolution: default {0.5, 0.5} maps to 44% on 16:9 and 40% on 9:16; explicit beat focus is honored on Beat 2+
+const defaultBeat = { focus: { x: 0.5, y: 0.5 } };
+const customBeat = { focus: { x: 0.38, y: 0.36 } };
+const f16 = resolveBeatFocus(defaultBeat, defaultBeat, false);
+const f9 = resolveBeatFocus(defaultBeat, defaultBeat, true);
+const fCustom = resolveBeatFocus(customBeat, defaultBeat, true);
+if (f16.focusY !== 44 || f9.focusY !== 40) process.exit(11);
+if (fCustom.focusX !== 38 || fCustom.focusY !== 36) process.exit(12);
+
+// 3. Anchor-group continuity: full_scene + variations share one continuous group; macro_prop and white_card isolate cleanly
+const beats = [
+  { id: 'B1', at: 0.0, shot_type: 'macro_prop', effect: 'punch_in', focus: { x: 0.5, y: 0.5 } },
+  { id: 'B2', at: 2.2, shot_type: 'full_scene', effect: 'zoom_in', focus: { x: 0.5, y: 0.5 } },
+  { id: 'B3', at: 5.0, shot_type: 'variation', based_on: 'SC01_I2', effect: 'pan_right', focus: { x: 0.5, y: 0.5 } },
+  { id: 'B4', at: 8.2, shot_type: 'variation', based_on: 'SC01_I2', effect: 'zoom_out', focus: { x: 0.5, y: 0.5 } },
+  { id: 'B5', at: 11.0, shot_type: 'white_card', effect: 'hold', focus: { x: 0.5, y: 0.5 } }
+];
+const g0 = resolveCameraAnchorGroup(beats, 0, 14.0);
+const g1 = resolveCameraAnchorGroup(beats, 1, 14.0);
+const g2 = resolveCameraAnchorGroup(beats, 2, 14.0);
+const g3 = resolveCameraAnchorGroup(beats, 3, 14.0);
+const g4 = resolveCameraAnchorGroup(beats, 4, 14.0);
+
+if (g0.startIndex !== 0 || g0.endIndex !== 0 || Math.abs(g0.span - 2.2) > 1e-4) process.exit(13);
+if (g1.startIndex !== 1 || g1.endIndex !== 3 || Math.abs(g1.span - 8.8) > 1e-4) process.exit(14);
+if (g2.startIndex !== 1 || g3.startIndex !== 1) process.exit(15);
+if (g4.startIndex !== 4 || g4.endIndex !== 4 || selectSemanticCameraEffect(beats[4], sc, 4) !== 'hold') process.exit(16);
+if (isContinuousCameraBeat(beats[3], beats[4])) process.exit(17);
+
+console.log('ASPECT_AND_ANCHOR_OK');
+"""
+        ]
+        result = subprocess.run(cmd, cwd=str(ROOT / "sys"), capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, f"Aspect/Anchor test failed (code {result.returncode}): {result.stderr}")
+        self.assertIn("ASPECT_AND_ANCHOR_OK", result.stdout)
+
+
 if __name__ == "__main__":
     unittest.main()

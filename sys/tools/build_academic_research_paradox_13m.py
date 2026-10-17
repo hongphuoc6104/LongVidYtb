@@ -1389,6 +1389,7 @@ def build_multi_chapter_bundle(
                         "src": img_filename,
                         "at": rel_at,
                         "effect": eff,
+                        "shot_type": "variation" if parent_shot is not None else "full_scene",
                     })
                     cue_shot_entries.append({
                         "shot_index": global_shot_idx,

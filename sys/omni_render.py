@@ -84,7 +84,7 @@ def prepare_shorts(brief: dict, content: dict, audio: dict, images: dict,
                 raise ValueError('OMNI_IMAGE: master image missing from public directory')
             first_eff = 'punch_in' if part is None else select_semantic_camera_effect(str(image.get('description', '') or text), prev_short_eff)
             prev_short_eff = first_eff
-            beats = [{'src': name, 'at': 0, 'shot_type': 'full_scene', 'effect': first_eff, 'camera_motion': first_eff, 'focus': {'x': .5, 'y': .5}}]
+            beats = [{'src': name, 'at': 0, 'shot_type': image.get('shot_type', 'full_scene'), 'effect': first_eff, 'camera_motion': first_eff, 'focus': {'x': .5, 'y': .5}}]
             if part is not None:
                 parent_scene = next(scene for scene in parent_timeline if scene['id'] == part['parent_scene_id'])
                 beats += [dict(beat, at=(parent_scene['start'] + beat['at'] - piece['start']) / factor)
@@ -93,6 +93,7 @@ def prepare_shorts(brief: dict, content: dict, audio: dict, images: dict,
                 if any(not .83 <= right - left <= 3.8 for left, right in zip(bounds, bounds[1:], strict=False)):
                     raise ValueError('OMNI_VISUAL_PACING: selected body requires 0.83–3.80s visual holds')
             scenes.append({'id': scene_id, 'title': plan['hook_title'], 'start': cursor, 'end': cursor + duration,
+                           'tone': (parent_scene.get('tone') if part is not None else 'analytical_crisp') or 'analytical_crisp',
                            'image': name, 'images': beats})
             words = [dict(word=word['word'], start=word['start'] / factor, end=min(duration, word['end'] / factor)) for word in stamps]
             segments.append({'scene_id': scene_id, 'text': text, 'start': cursor, 'end': cursor + duration,

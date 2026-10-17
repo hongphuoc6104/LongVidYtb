@@ -1,4 +1,12 @@
-import {selectSemanticCameraEffect, overscanScale, BASE_OVERSCAN} from './camera.mjs';
+import {
+  selectSemanticCameraEffect,
+  computeCinematicCameraVector,
+  resolveCameraAnchorGroup,
+  resolveBeatFocus,
+  isContinuousCameraBeat,
+  overscanScale,
+  BASE_OVERSCAN
+} from './camera.mjs';
 import {Thumbnail} from './thumbnail';
 import React, {useLayoutEffect} from 'react';
 import {karaokeTokens, captionStyle, captionMaxHeight} from './captions.mjs';
@@ -33,7 +41,13 @@ export function boilJitter(frame: number, seed: number = 0): number {
   return r - Math.floor(r) - 0.5;
 }
 
-export {selectSemanticCameraEffect} from './camera.mjs';
+export {
+  selectSemanticCameraEffect,
+  computeCinematicCameraVector,
+  resolveCameraAnchorGroup,
+  resolveBeatFocus,
+  isContinuousCameraBeat
+} from './camera.mjs';
 
 // Dynamic voice-guided BGM sidechain ducking envelope (swells in pauses, ducks during speech)
 export function computeDynamicBgmVolume(
@@ -136,100 +150,130 @@ const Video: React.FC<any> = (p) => {
   }
   const beat = imageList[active] || {src: scene.image, at: 0, effect: 'auto'};
   const currentImageSrc = beat?.src || scene.image;
-  const nextAt = imageList[active + 1]?.at ?? (scene.end - scene.start);
+  const sceneSpan = Math.max(0.001, scene.end - scene.start);
+  const nextAt = imageList[active + 1]?.at ?? sceneSpan;
   const beatDuration = Math.max(0.001, nextAt - beat.at);
-  const progress = Math.max(0, Math.min(1, (relative - beat.at) / beatDuration));
   const transition = Math.max(0, Math.min(1, (relative - beat.at) / Math.min(0.3, beatDuration / 2)));
-  // Smooth 85ms flipbook micro-dissolve for in-place variation shots
-  const isVariationCut = active > 0 && beat.shot_type === 'variation' && beat.effect !== 'slide_left';
+
+  const sceneIndex = Math.max(0, (p.scenes || []).indexOf(scene));
+  const isPortrait = height > width;
+
+  // Compute Anchor-Group continuous camera state for any beat index in imageList
+  const computeCameraStateForIndex = (targetIdx: number) => {
+    const targetBeat = imageList[targetIdx] || beat;
+    const group = resolveCameraAnchorGroup(imageList, targetIdx, sceneSpan);
+    const groupEffect = selectSemanticCameraEffect(group.anchorBeat, scene, sceneIndex + group.groupIndex);
+    const beatEffect = selectSemanticCameraEffect(targetBeat, scene, targetIdx);
+    const camVec = computeCinematicCameraVector(
+      groupEffect,
+      scene,
+      sceneIndex,
+      isPortrait,
+      group.groupIndex,
+      group.span
+    );
+
+    const groupProgressRaw = Math.max(0, Math.min(1, (relative - group.startAt) / group.span));
+    const groupSmoothProgress = interpolate(groupProgressRaw, [0, 1], [0, 1], {
+      easing: Easing.bezier(camVec.bezier[0], camVec.bezier[1], camVec.bezier[2], camVec.bezier[3])
+    });
+
+    let sc = interpolate(groupSmoothProgress, [0, 1], [camVec.scaleStart, camVec.scaleEnd]);
+    let tx = interpolate(groupSmoothProgress, [0, 1], [camVec.txStart, camVec.txEnd]);
+    let ty = interpolate(groupSmoothProgress, [0, 1], [camVec.tyStart, camVec.tyEnd]);
+    let blurX = 0;
+
+    // Accumulate punch_in across the Anchor Group so subsequent variation beats never snap backward (-1.6%)
+    if (groupEffect !== 'hold' && beatEffect !== 'hold') {
+      for (let i = group.startIndex; i <= targetIdx; i++) {
+        const iBeat = imageList[i];
+        const iEff = selectSemanticCameraEffect(iBeat, scene, i);
+        if (iEff === 'punch_in' && relative >= (iBeat?.at ?? 0)) {
+          const punchFrame = Math.round((relative - (iBeat?.at ?? 0)) * fps);
+          const punchSpring = spring({
+            frame: Math.max(0, punchFrame),
+            fps,
+            config: { damping: 28, mass: 0.9, stiffness: 80 }
+          });
+          sc += interpolate(punchSpring, [0, 1], [0.0, 0.016]);
+        }
+      }
+    }
+
+    if (beatEffect === 'slide_left' && targetIdx === active) {
+      const slideEase = interpolate(transition, [0, 1], [0, 1], {
+        easing: Easing.bezier(0.16, 1, 0.3, 1)
+      });
+      tx = (1 - slideEase) * 100;
+      if (transition > 0 && transition < 1) {
+        blurX = Math.sin(transition * Math.PI) * 18;
+      }
+    }
+
+    sc = overscanScale(sc);
+    const edScale = 1 + (sc / BASE_OVERSCAN - 1) * 0.65;
+    const { focusX: fx, focusY: fy } = resolveBeatFocus(targetBeat, group.anchorBeat, isPortrait);
+    const isEd = Boolean(
+      p.reframe_mode && isPortrait && !['macro_prop', 'white_card', 'white_isolated'].includes(targetBeat?.shot_type)
+    );
+
+    return {
+      group,
+      groupEffect,
+      beatEffect,
+      scale: sc,
+      editorialScale: edScale,
+      translateX: tx,
+      translateY: ty,
+      motionBlurX: blurX,
+      focusX: fx,
+      focusY: fy,
+      editorial: isEd
+    };
+  };
+
+  const currentCam = computeCameraStateForIndex(active);
+  const prevCam = active > 0 ? computeCameraStateForIndex(active - 1) : currentCam;
+
+  const {
+    groupEffect: sceneEffect,
+    beatEffect: effect,
+    scale,
+    editorialScale,
+    translateX,
+    translateY,
+    motionBlurX,
+    focusX,
+    focusY,
+    editorial
+  } = currentCam;
+
+  // Soft 75ms (2-frame) optical crossfade ONLY for in-room continuous variation cuts (prevents ghosting on white_card/macro cuts)
+  const isVariationCut =
+    active > 0 &&
+    isContinuousCameraBeat(imageList[active - 1], beat) &&
+    beat.effect !== 'slide_left' &&
+    beat.effect !== 'fade';
   const variationCrossfade = isVariationCut
-    ? Math.max(0, Math.min(1, (relative - beat.at) / Math.min(0.085, beatDuration / 3)))
+    ? Math.max(0, Math.min(1, (relative - beat.at) / Math.min(0.075, beatDuration / 3)))
     : 1;
 
-  // Motion Engine with Spring Physics, Bezier Easing & Dynamic Motion Blur
-  let scale = 1;
-  let translateX = 0;
-  let translateY = 0;
-  let motionBlurX = 0;
-  const effect = selectSemanticCameraEffect(beat, scene, active);
-
-  // Asymmetric organic ease curve (fast eye-catch, gentle cinematic settle)
-  const smoothProgress = interpolate(progress, [0, 1], [0, 1], {
-    easing: Easing.bezier(0.33, 1, 0.68, 1.0)
-  });
-
-  if (effect === 'punch_in') {
-    // Spring physics with snappy elasticity and gentle settle
-    const punchFrame = Math.round((relative - beat.at) * fps);
-    const punchSpring = spring({
-      frame: Math.max(0, punchFrame),
-      fps,
-      config: { damping: 12, mass: 0.5, stiffness: 120 }
-    });
-    scale = interpolate(punchSpring, [0, 1], [1.22, 1.08]);
-  } else if (effect === 'zoom_in') {
-    scale = 1 + 0.08 * smoothProgress;
-  } else if (effect === 'zoom_out') {
-    scale = 1.08 - 0.08 * smoothProgress;
-  } else if (effect === 'pan_left') {
-    scale = 1.06;
-    translateX = (0.5 - smoothProgress) * 3;
-  } else if (effect === 'pan_right') {
-    scale = 1.06;
-    translateX = (smoothProgress - 0.5) * 3;
-  } else if (effect === 'shake') {
-    scale = 1.06; // Đệm phóng to 6% để triệt tiêu viền đen khi rung chấn màn hình (14px shake)
-  } else if (effect === 'slide_left') {
-    // Bezier deceleration curve for natural slide momentum
-    const slideEase = interpolate(transition, [0, 1], [0, 1], {
-      easing: Easing.bezier(0.16, 1, 0.3, 1)
-    });
-    translateX = (1 - slideEase) * 100;
-    // Whip Pan: Optical directional motion blur peaks at the fastest motion point
-    if (transition > 0 && transition < 1) {
-      motionBlurX = Math.sin(transition * Math.PI) * 18;
-    }
-  } else if (!p.modern_style && effect !== 'hold') {
-    // AUTO KEN BURNS (Chu kỳ chuyển động camera êm ái chống nhàm chán)
-    const cycle = active % 4;
-    if (cycle === 0) {
-      scale = 1.0 + 0.06 * smoothProgress; // Smooth zoom in
-    } else if (cycle === 1) {
-      scale = 1.05;
-      translateX = (smoothProgress - 0.5) * 2.5; // Smooth pan right
-    } else if (cycle === 2) {
-      scale = 1.06 - 0.06 * smoothProgress; // Smooth zoom out
-    } else {
-      scale = 1.05;
-      translateX = (0.5 - smoothProgress) * 2.5; // Smooth pan left
-    }
-  }
-
-  // Overscan applies after every motion branch; 4.5% zoom crops ~2.15% per edge.
-  // This is a framing margin, not proof that a provider watermark is removed.
-  scale = overscanScale(scale);
-
-  // Organic Camera Shake + Subtle Handheld Micro-Breathing (GPU transform only, zero overlay clutter)
+  // Subtle Tripod Micro-Breathing (zero horizon rotation to prevent 2D line aliasing, continuous scene seed)
   let shakeX = 0;
   let shakeY = 0;
-  let microRot = 0;
-  if (effect === 'shake' || (effect === 'punch_in' && (relative - beat.at) < 0.28)) {
-    const shakeTime = relative - beat.at;
+  const microRot = 0;
+  const sceneSeed = Math.round((scene.start || 0) * 10) + 1.1;
+  if (effect === 'shake') {
+    const shakeTime = Math.max(0, relative - beat.at);
     const decay = Math.max(0, 1 - shakeTime / 0.28);
-    shakeX = organicNoise(shakeTime * 1.5, 1.2) * 14 * decay;
-    shakeY = organicNoise(shakeTime * 1.5, 4.7) * 12 * decay;
-  } else if (effect !== 'hold') {
-    shakeX = organicNoise(t * 0.14, active + 1.1) * 3.2;
-    shakeY = organicNoise(t * 0.14, active + 3.7) * 2.4;
-    microRot = organicNoise(t * 0.11, active + 7.3) * 0.18;
+    shakeX = organicNoise(shakeTime * 1.2, 1.2) * 5.0 * decay;
+    shakeY = organicNoise(shakeTime * 1.2, 4.7) * 3.8 * decay;
+  } else if (sceneEffect !== 'hold' && effect !== 'hold') {
+    shakeX = organicNoise(t * 0.05, sceneSeed) * 0.9;
+    shakeY = organicNoise(t * 0.05, sceneSeed + 2.6) * 0.65;
   }
 
   const opacity = beat.effect === 'fade' ? transition : variationCrossfade;
-  // Clamp focal center to safe central viewport so model coordinate guesses never zoom into blank corners
-  const focusX = Math.min(65, Math.max(35, (beat.focus?.x ?? 0.5) * 100));
-  const focusY = Math.min(58, Math.max(35, (beat.focus?.y ?? 0.42) * 100));
-  const editorial = p.reframe_mode && height > width && !['macro_prop', 'white_card', 'white_isolated'].includes(beat.shot_type);
-  const editorialScale = 1 + (scale / BASE_OVERSCAN - 1) * 0.65;
   const isVideoAsset = currentImageSrc && (currentImageSrc.endsWith('.mp4') || currentImageSrc.endsWith('.webm'));
 
   // Procedural Line Boiling (opt-in only for isolated assets; disabled on full-bleed 1080p)
@@ -378,7 +422,7 @@ const Video: React.FC<any> = (p) => {
         </AbsoluteFill>
       ) : (
         <>
-          {/* Background layer transition (supports fade, slide_left, and 85ms flipbook variation cross-dissolve) */}
+          {/* Background layer transition (supports fade, slide_left, and 75ms in-room variation cross-dissolve) */}
           {active > 0 && ((['fade', 'slide_left'].includes(beat.effect) && transition < 1) || (isVariationCut && variationCrossfade < 1)) && (
             <Img
               src={staticFile(imageList[active - 1].src)}
@@ -387,11 +431,11 @@ const Video: React.FC<any> = (p) => {
                 position: 'absolute',
                 width: '100%',
                 height: '100%',
-                objectFit: editorial ? 'contain' : 'cover',
-                objectPosition: `${focusX}% ${focusY}%`,
-                ...(editorial ? {top: '25%', height: '48%', borderRadius: 24} : {}),
-                transform: `translate(calc(${translateX}% + ${shakeX}px), calc(${translateY}% + ${shakeY}px)) scale(${editorial ? editorialScale : scale}) rotate(${microRot.toFixed(3)}deg)`,
-                transformOrigin: `${focusX}% ${focusY}%`,
+                objectFit: prevCam.editorial ? 'contain' : 'cover',
+                objectPosition: `${prevCam.focusX}% ${prevCam.focusY}%`,
+                ...(prevCam.editorial ? {top: '25%', height: '48%', borderRadius: 24} : {}),
+                transform: `translate(calc(${prevCam.translateX}% + ${shakeX}px), calc(${prevCam.translateY}% + ${shakeY}px)) scale(${prevCam.editorial ? prevCam.editorialScale : prevCam.scale}) rotate(${microRot.toFixed(3)}deg)`,
+                transformOrigin: `${prevCam.focusX}% ${prevCam.focusY}%`,
               }}
             />
           )}

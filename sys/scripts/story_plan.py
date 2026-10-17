@@ -276,50 +276,79 @@ def _word_anchor_time(segment: dict, offset: int) -> float | None:
 
 def timeline(c, images, audio, language, ratio):
     """Prefer acoustic word starts, recording interpolation fallbacks per beat."""
-    by_id={(im.get('image_id',im['scene_id']),im.get('ratio',ratio)):im for im in images['items']}
-    output=[]
+    asset_ratio = '16:9' if images.get('reframe_mode') else ratio
+    by_id = {(im.get('image_id', im['scene_id']), im.get('ratio', asset_ratio)): im for im in images['items']}
+    output = []
     for sc in c['scenes']:
         track = audio.get('tracks', {}).get(language)
         track_segments = track['segments'] if track else (audio['segments'] if audio.get('language', 'vi') == language else audio['en']['scenes'])
-        spans = [x for x in track_segments if x['scene_id']==sc['id']]
-        start=spans[0]['start'];end=spans[-1]['end']
-        if c.get('schema_version')!='3.0':
-            im=by_id[(sc['id'],ratio)];output.append({'id':sc['id'],'title':sc['title'],'image':im['path'],'start':start,'end':end});continue
-        text=sc['narration_en' if language=='en' else 'narration'];beats=[]
+        spans = [x for x in track_segments if x['scene_id'] == sc['id']]
+        start = spans[0]['start']; end = spans[-1]['end']
+        if c.get('schema_version') != '3.0':
+            im = by_id.get((sc['id'], ratio)) or by_id[(sc['id'], asset_ratio)]
+            output.append({'id': sc['id'], 'title': sc['title'], 'image': im['path'], 'start': start, 'end': end})
+            continue
+        text = sc['narration_en' if language == 'en' else 'narration']; beats = []
+        im_meta = {im['id']: im for im in sc.get('images', [])}
         from scripts.camera_motion import scene_camera_motions
         for bt, motion in zip(sc['beats'], scene_camera_motions(sc), strict=True):
-            offset=occurrence(text,bt['anchor'][language])
+            offset = occurrence(text, bt['anchor'][language])
             # Use actual chunk bounds when available; interpolate within the chunk.
-            at=start+offset/max(1,len(text))*(spans[-1].get('content_end',end)-start)
+            at = start + offset / max(1, len(text)) * (spans[-1].get('content_end', end) - start)
             timing_method = 'narration_anchor_interpolated'
             if all('text' in seg for seg in spans):
-                cursor=0
+                cursor = 0
                 for seg in spans:
-                    pos=text.find(seg['text'],cursor)
-                    if pos<0: continue
-                    if pos<=offset<pos+len(seg['text']):
-                        measured = _word_anchor_time(seg, offset-pos)
+                    pos = text.find(seg['text'], cursor)
+                    if pos < 0: continue
+                    if pos <= offset < pos + len(seg['text']):
+                        measured = _word_anchor_time(seg, offset - pos)
                         if measured is not None:
                             at = measured
                             timing_method = 'acoustic_word_timestamps'
                         else:
-                            at=seg['start']+(offset-pos)/max(1,len(seg['text']))*(seg.get('content_end',seg['end'])-seg['start'])
+                            at = seg['start'] + (offset - pos) / max(1, len(seg['text'])) * (seg.get('content_end', seg['end']) - seg['start'])
                         break
-                    cursor=pos+len(seg['text'])
-            im=by_id.get((bt['image_id'],ratio))
-            if im is None and images.get('reframe_mode'):
-                im=by_id[(bt['image_id'],'16:9')]
+                    cursor = pos + len(seg['text'])
+            im = by_id.get((bt['image_id'], ratio)) or by_id.get((bt['image_id'], asset_ratio))
             if im is None:
-                raise ValueError('Missing requested image aspect: '+bt['image_id'])
-            beats.append({'id':bt['id'],'src':im['path'],'at':round(at-start,4),'effect':motion,'camera_motion':motion,'transition':'cut','focus':bt['focus'],
-                          'timing_method': timing_method,
-                          'shot_type': next((image.get('shot_type', 'full_scene') for image in sc.get('images', []) if image['id'] == bt['image_id']), 'full_scene')})
-        beats[0]['at']=0
-        if any(round(a['at']*30)>=round(z['at']*30) for a,z in zip(beats,beats[1:])):
+                raise ValueError('Missing requested image aspect: ' + bt['image_id'])
+            im_doc = im_meta.get(bt['image_id'], {})
+            beat_entry = {
+                'id': bt['id'],
+                'src': im['path'],
+                'at': round(at - start, 4),
+                'effect': motion,
+                'camera_motion': motion,
+                'transition': 'cut',
+                'focus': bt['focus'],
+                'timing_method': timing_method,
+            }
+            beat_entry['shot_type'] = im_doc.get('shot_type', 'full_scene')
+            if im_doc.get('based_on'):
+                beat_entry['based_on'] = im_doc['based_on']
+            if 'camera_intent' in bt:
+                beat_entry['camera_intent'] = bt['camera_intent']
+            beats.append(beat_entry)
+        beats[0]['at'] = 0
+        if any(round(a['at'] * 30) >= round(z['at'] * 30) for a, z in zip(beats, beats[1:])):
             raise ValueError('Visual beats collide at 30 fps; revise content anchors')
         methods = {beat['timing_method'] for beat in beats}
-        scene_out={'id':sc['id'],'title':sc['title'],'start':start,'end':end,'image':beats[0]['src'],'images':beats,
-                   'timing_method': next(iter(methods)) if len(methods) == 1 else 'mixed_word_timestamps_and_interpolation'}
+        scene_out = {
+            'id': sc['id'],
+            'title': sc['title'],
+            'start': start,
+            'end': end,
+            'image': beats[0]['src'],
+            'images': beats,
+            'timing_method': next(iter(methods)) if len(methods) == 1 else 'mixed_word_timestamps_and_interpolation',
+        }
+        if sc.get('tone'):
+            scene_out['tone'] = sc['tone']
+        if sc.get('camera'):
+            scene_out['camera'] = sc['camera']
+        if 'j_l_cut_offset' in sc:
+            scene_out['j_l_cut_offset'] = sc['j_l_cut_offset']
         output.append(scene_out)
     return output
 

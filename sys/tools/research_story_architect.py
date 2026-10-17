@@ -80,6 +80,8 @@ _SELF_ANSWERING_TITLE_RE = re.compile(
 from scripts.camera_motion import assign_scene_camera_effects, select_semantic_camera_effect  # noqa: F401
 
 
+MAX_PUNCH_PER_SCENE = 1  # punch_in is an accent: SC01 hook or one climax beat per scene
+
 def check_conversational_spoken_facts(
     sources: List[Dict[str, Any]],
     max_syllables: int = 22,
@@ -611,7 +613,7 @@ def _default_full_frame_beats(scene: ResearchedScene, elapsed: float) -> List[Re
     for index, (quote, occurrence) in enumerate(vi_anchors):
         image_id = f"{scene.scene_id}_I{index + 1}"
         focus_kind = (
-            "punch_in" if re.search(r"\d|\b(giờ|phút|lần|tầng|số|năm)\b", quote, re.I)
+            "punch_in" if (index == 0 and scene.scene_id == "SC01") or "!" in quote
             else "cut"
         )
         variation = index > 0
@@ -628,7 +630,7 @@ def _default_full_frame_beats(scene: ResearchedScene, elapsed: float) -> List[Re
             anchor_occurrence_en=en_anchors[index][1] if en_anchors else 1,
             reason="Full-frame visual beat tied to a concrete narration phrase.",
             character_ids=list(scene.character_ids),
-            effect=focus_kind if not variation else ("cut" if focus_kind == "punch_in" else "fade"),
+            effect="punch_in" if focus_kind == "punch_in" else ("fade" if variation else "cut"),
             based_on=f"{scene.scene_id}_I{index}" if variation else None,
             preserve=(
                 f"Keep the same setting ({scene.setting}), character design, and surrounding props."
@@ -675,6 +677,10 @@ def build_scenes_from_story_rows(
                 "Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift."
                 if based_on else ""
             )
+            row_effect = (
+                "hold" if shot_type == "white_card"
+                else ("punch_in" if (index == 1 and beat_idx == 1) or "!" in quote else "cut")
+            )
             beats.append(ResearchedBeat(
                 image_id=image_id,
                 description=f"{setting} {action_desc}",
@@ -682,7 +688,7 @@ def build_scenes_from_story_rows(
                 anchor_occurrence=seen_quotes[quote],
                 reason="Narration-locked full-frame beat.",
                 character_ids=[character_id],
-                effect="cut",
+                effect=row_effect,
                 based_on=based_on,
                 preserve=preserve,
                 change=action_desc,
@@ -786,9 +792,16 @@ def build_content_v3(
         from scripts.visual_quality import apply_room_continuity
         apply_room_continuity(images)
         previous_effect = None
+        punch_count = 0
         for beat, image in zip(beats, images, strict=True):
-            if beat['effect'] in ('auto', 'cut', 'fade'):
+            if image.get('shot_type') == 'white_card' and beat['effect'] in ('auto', 'cut', 'fade', 'hold'):
+                beat['effect'] = 'hold'
+            elif beat['effect'] in ('auto', 'cut', 'fade'):
                 beat['effect'] = select_semantic_camera_effect(image['description'] + ' ' + sc.camera, previous_effect)
+            if beat['effect'] == 'punch_in':
+                punch_count += 1
+                if punch_count > MAX_PUNCH_PER_SCENE:
+                    beat['effect'] = 'zoom_in' if previous_effect != 'zoom_in' else 'pan_right'
             previous_effect = beat['effect']
 
         scene_dict = {
