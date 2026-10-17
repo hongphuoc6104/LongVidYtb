@@ -120,6 +120,36 @@ class TestFlowJobLeaseManager(unittest.TestCase):
         self.assertEqual(len(leased_2), 1)
         self.assertEqual(leased_2[0]["id"], "single_p")
 
+    def test_concurrent_managers_same_job_independent_release(self):
+        # Two managers for same job leasing 1 profile each
+        mgr1 = MultiProfileManager(
+            profiles_config=self.profiles,
+            job_id="same_job_01",
+            max_workers_per_job=1,
+            lock_dir=self.lock_dir,
+        )
+        self.assertEqual(len(mgr1.workers), 1)
+        prof1_id = list(mgr1.workers.keys())[0]
+
+        mgr2 = MultiProfileManager(
+            profiles_config=self.profiles,
+            job_id="same_job_01",
+            max_workers_per_job=1,
+            lock_dir=self.lock_dir,
+        )
+        self.assertEqual(len(mgr2.workers), 1)
+        prof2_id = list(mgr2.workers.keys())[0]
+        self.assertNotEqual(prof1_id, prof2_id)
+
+        # Closing mgr1 should NOT release mgr2's profile
+        mgr1.close()
+        active = self.lease_mgr.get_job_leases("same_job_01")
+        self.assertNotIn(prof1_id, active)
+        self.assertIn(prof2_id, active)
+
+        mgr2.close()
+        self.assertEqual(self.lease_mgr.get_job_leases("same_job_01"), [])
+
 
 if __name__ == "__main__":
     unittest.main()

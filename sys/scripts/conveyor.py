@@ -103,6 +103,8 @@ def station_2_test_ast() -> bool:
         SYS_DIR / "tests/test_remote_render.py",
         SYS_DIR / "tests/test_anti_formulaic_storytelling.py",
         SYS_DIR / "tests/test_independent_maintenance_contracts.py",
+        SYS_DIR / "tests/test_narration_pauses.py",
+        SYS_DIR / "tests/test_colab_download_paths.py",
     ]
     # Check AST on test directory
     ast_ok, ast_report = check_test_suite_integrity([SYS_DIR / "tests"])
@@ -217,6 +219,8 @@ def station_4_lint() -> bool:
         str(SYS_DIR / "scripts/camera_motion.py"),
         str(SYS_DIR / "scripts/visual_quality.py"),
         str(SYS_DIR / "format_profiles.py"),
+        str(SYS_DIR / "narration_pauses.py"),
+        str(SYS_DIR / "tests/test_narration_pauses.py"),
         str(SYS_DIR / "visual_pacing.py"),
         str(SYS_DIR / "omni_platform.py"),
         str(SYS_DIR / "omni_render.py"),

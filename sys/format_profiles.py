@@ -13,6 +13,12 @@ from typing import Any, Dict, Optional, Tuple
 PROFILES: Dict[str, Dict[str, Any]] = {
     "short_9x16": {
         "id": "short_9x16",
+        "narration_pauses": {
+            "short_sentence": 0.16, "sentence": 0.22, "minor": 0.12,
+            "opening_short_sentence": 0.12, "opening_sentence": 0.16,
+            "scene": 0.30, "tail": 0.15,
+            "recommended_pivot": 0.45,
+        },
         "aspect_ratio": "9:16",
         "width": 1080,
         "height": 1920,
@@ -44,6 +50,12 @@ PROFILES: Dict[str, Dict[str, Any]] = {
     },
     "long_16x9": {
         "id": "long_16x9",
+        "narration_pauses": {
+            "short_sentence": 0.20, "sentence": 0.28, "minor": 0.16,
+            "opening_short_sentence": 0.16, "opening_sentence": 0.20,
+            "scene": 0.40, "tail": 0.25,
+            "recommended_pivot": 0.60,
+        },
         "aspect_ratio": "16:9",
         "width": 1920,
         "height": 1080,

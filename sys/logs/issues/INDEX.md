@@ -18,3 +18,48 @@ List of technical issues recorded during pipeline operation:
 
 - [colab-1792252056929833821.md](colab-1792252056929833821.md) — Colab TTS cần kiểm tra.
 - [academic-q1-short-t1 — render](1792252056930097148-academic-q1-short-t1-render.md)
+- [academic-paradox-q1-16x9 — images](1792253041978405817-academic-paradox-q1-16x9-images.md)
+
+- [colab-1792253651585045841.md](colab-1792253651585045841.md) — Colab TTS cần kiểm tra.
+
+- [colab-1792253780294598292.md](colab-1792253780294598292.md) — Colab TTS cần kiểm tra.
+
+- [colab-1792253780294828907.md](colab-1792253780294828907.md) — Colab TTS cần kiểm tra.
+
+- [colab-1792254137529024600.md](colab-1792254137529024600.md) — Colab TTS cần kiểm tra.
+- [academic-q1-short-t2 — audio](1792254137529528362-academic-q1-short-t2-audio.md)
+
+- [colab-1792254329856848887.md](colab-1792254329856848887.md) — Colab TTS cần kiểm tra.
+- [academic-q1-short-t2 — audio](1792254329857068973-academic-q1-short-t2-audio.md)
+- [academic-q1-short-t2 — images](1792254403599420516-academic-q1-short-t2-images.md)
+- [academic-q1-short-t2 — images](1792254492066407467-academic-q1-short-t2-images.md)
+
+- [colab-1792254736537953606.md](colab-1792254736537953606.md) — Colab TTS cần kiểm tra.
+- [full-frame-16x9-001 — audio](1792254736538483803-full-frame-16x9-001-audio.md)
+- [academic-q1-short-t2 — render](1792254870909663303-academic-q1-short-t2-render.md)
+
+- [colab-1792255061750672681.md](colab-1792255061750672681.md) — Colab TTS cần kiểm tra.
+- [academic-q1-short-t2 — render](1792255061751119087-academic-q1-short-t2-render.md)
+
+- [colab-1792255183339311388.md](colab-1792255183339311388.md) — Colab TTS cần kiểm tra.
+- [academic-q1-short-t2 — render](1792255183339709905-academic-q1-short-t2-render.md)
+
+- [colab-1792255317083013947.md](colab-1792255317083013947.md) — Colab TTS cần kiểm tra.
+- [academic-q1-short-t2 — render](1792255317083314441-academic-q1-short-t2-render.md)
+
+- [colab-1792255918795423647.md](colab-1792255918795423647.md) — Colab TTS cần kiểm tra.
+- [academic-q1-short-t2 — render](1792255918795668768-academic-q1-short-t2-render.md)
+
+- [colab-1792257001760310013.md](colab-1792257001760310013.md) — Colab TTS cần kiểm tra.
+- [full-frame-16x9-001 — render](1792257001760594593-full-frame-16x9-001-render.md)
+
+- [colab-1792262868163194746.md](colab-1792262868163194746.md) — Colab TTS cần kiểm tra.
+- [full-frame-16x9-001 — render](1792262868163458794-full-frame-16x9-001-render.md)
+
+- [colab-1792274051890696918.md](colab-1792274051890696918.md) — Colab TTS cần kiểm tra.
+- [academic-q1-short-t1 — render](1792274051890961796-academic-q1-short-t1-render.md)
+
+- [colab-1792274131068828139.md](colab-1792274131068828139.md) — Colab TTS cần kiểm tra.
+
+- [colab-1792275397882056890.md](colab-1792275397882056890.md) — Colab TTS cần kiểm tra.
+- [academic-q1-short-t1 — render](1792275397882530821-academic-q1-short-t1-render.md)

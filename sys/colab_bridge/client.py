@@ -115,6 +115,8 @@ class Client:
                 raise ColabError('COLAB_PROVIDER_BLOCKED: ' + kind + '; preserve owner and request; do not rotate account')
             if re.search(r"session\s+['\"]?[^\n]+?['\"]?\s+not found|no active sessions found|unknown session", observed):
                 raise ColabError(f'COLAB_SESSION_NOT_FOUND: {self.session}; reconcile authenticated server assignments; local mapping alone does not prove termination')
+            if args[0] == 'download' and re.search(r'file not found|no such file or directory', observed):
+                raise ColabError('COLAB_REMOTE_PATH_NOT_FOUND: download source is unavailable')
             error_type = next((name for name in ('TimeoutError', 'ConnectionError', 'RuntimeError', 'ValueError', 'KeyError') if name.lower() in observed), 'CommandExit')
             # OAuth URLs/codes belong in an interactive terminal, not artifact logs.
             raise ColabError(f'COLAB_COMMAND_FAILED: {args[0]} (exit {p.returncode}, type={error_type}); '
@@ -398,9 +400,20 @@ class Client:
         tmp.write_text(json.dumps(dict(data, updated_at=time.time()), indent=2))
         tmp.replace(path)
 
+    def _download_archive(self, remote: str, archive: Path, *, timeout: int) -> None:
+        """Try a relative Colab path only on a confirmed file-path error, never a timeout."""
+        download_src = '/' + remote.strip('/') + '/output.zip'
+        try:
+            self.call('download', '-s', self.session, download_src, str(archive), timeout=timeout)
+        except ColabError as ex:
+            if not str(ex).startswith('COLAB_REMOTE_PATH_NOT_FOUND:') or not remote.startswith('/content/'):
+                raise
+            fallback = remote.removeprefix('/content/').removeprefix('/') + '/output.zip'
+            self.call('download', '-s', self.session, fallback, str(archive), timeout=timeout)
+
     def _download(self, remote, folder, req):
         archive = folder / 'download.zip'
-        self.call('download', '-s', self.session, remote + '/output.zip', str(archive), timeout=180)
+        self._download_archive(remote, archive, timeout=180)
         with tempfile.TemporaryDirectory(dir=folder) as temp:
             staging = Path(temp)
             with zipfile.ZipFile(archive) as z:
@@ -541,7 +554,7 @@ class Client:
                                 if attempts >= 3: raise ColabError('COLAB_RECOVERY_LIMIT: needs attention; preserve pinned request')
                                 self._state(state_path, **dict(saved, collection_attempts=attempts + 1))
                             archive = folder / 'output.zip'
-                            self.call('download', '-s', self.session, remote + '/output.zip', str(archive), timeout=300)
+                            self._download_archive(remote, archive, timeout=300)
                             with tempfile.TemporaryDirectory(dir=folder) as tmp:
                                 staging = Path(tmp); extract(archive, staging, flat=True)
                                 validate_render_result(staging, request)

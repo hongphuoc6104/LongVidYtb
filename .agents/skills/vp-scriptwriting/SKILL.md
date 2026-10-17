@@ -79,3 +79,11 @@ python3 sys/tools/script_diversity_linter.py path/to/content.json
 - [Chỉ Dẫn Kịch Bản Sản Xuất](../vp-production/references/script.md)
 - [Chỉ Dẫn Âm Thanh Sản Xuất](../vp-production/references/audio.md)
 - [Hợp Đồng Chất Lượng Toàn Khung](../vp-full-frame-quality/SKILL.md)
+
+## Active pause authoring (format_v1)
+
+- Default gaps come from `sys/format_profiles.py`; do not add a pause at every image cut.
+- SC01 has short automatic breaths but rejects explicit `[pause:...]`.
+- Suggested intentional pivots: 450 ms for standalone shorts, 600 ms for long narration. Existing tags remain exact; never silently compress them. Use a terminal tag for a deliberate major scene transition.
+- Run `sys/tools/preview_narration_pauses.py` for planned silence; actual WAV determines timing. Legacy cadence estimates are not the new pause budget.
+- Details and rollout: [pause implementation plan](../../../sys/docs/narration-pause-implementation-plan.md).

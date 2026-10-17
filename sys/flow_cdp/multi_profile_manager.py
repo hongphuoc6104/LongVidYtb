@@ -152,7 +152,7 @@ class MultiProfileManager:
                 job_id=self.job_id,
                 pool_profiles=self.pool_profiles,
                 count=self.max_workers_per_job,
-                max_profiles_per_job=self.max_workers_per_job,
+                max_profiles_per_job=max(self.max_workers_per_job, len(self.pool_profiles)),
             )
         else:
             active_profiles = self.pool_profiles
@@ -174,9 +174,10 @@ class MultiProfileManager:
         self.close()
 
     def close(self) -> None:
-        """Release all leased profiles for this job."""
+        """Release leased profiles owned by this manager instance."""
         if self.lease_manager and self.job_id:
-            self.lease_manager.release_all_for_job(self.job_id)
+            for prof_id in list(self.workers.keys()):
+                self.lease_manager.release_profile(self.job_id, prof_id)
 
     def replace_worker_for_job(
         self,
@@ -398,10 +399,12 @@ class MultiProfileDispatcher:
             return []
 
         if not self.manager.workers:
-            raise RuntimeError(
+            exc = RuntimeError(
                 f"No Chrome profile workers available for job {getattr(self.manager, 'job_id', 'unknown')}. "
                 f"Ensure profiles are running and not locked."
             )
+            exc.generation_submitted = False
+            raise exc
 
         all_results: list[dict[str, Any]] = []
         errors: list[Exception] = []

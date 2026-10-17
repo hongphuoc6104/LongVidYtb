@@ -110,36 +110,36 @@ class FlowJobLeaseManager:
     ) -> list[dict[str, Any]]:
         """Atomically claim and lease up to 'count' idle profiles for a job, adhering to quota."""
         start_time = time.time()
+        effective_quota = min(count, max_profiles_per_job)
         while True:
             current_held = self.get_job_leases(job_id)
-            allowed_new = max_profiles_per_job - len(current_held)
-            if allowed_new <= 0:
-                logger.info("Job %s already reached max quota (%d profiles): %s", job_id, max_profiles_per_job, current_held)
-                return [p for p in pool_profiles if p["id"] in current_held]
-
-            need_count = min(count, allowed_new)
             granted: list[dict[str, Any]] = []
 
-            # Re-verify already held profiles
-            for p in pool_profiles:
-                if p["id"] in current_held and p not in granted:
-                    granted.append(p)
+            # Re-verify already held profiles by this job in this instance
+            for prof_id in list(self._open_handles.keys()):
+                if prof_id in current_held:
+                    p = next((x for x in pool_profiles if x["id"] == prof_id), None)
+                    if p and p not in granted:
+                        granted.append(p)
 
-            # Seek idle profiles from pool
-            for p in pool_profiles:
-                if len(granted) >= max_profiles_per_job:
-                    break
-                prof_id = p["id"]
-                if prof_id in current_held or not p.get("enabled", True):
-                    continue
-                if any(g["id"] == prof_id for g in granted):
-                    continue
-                if self._try_acquire_lock(prof_id, job_id, p):
-                    granted.append(p)
-                    if len(granted) - len(current_held) >= need_count:
+            allowed_new = max_profiles_per_job - len(current_held)
+            new_acquired = 0
+            if allowed_new > 0 and len(granted) < effective_quota:
+                for p in pool_profiles:
+                    if len(granted) >= effective_quota or new_acquired >= allowed_new:
                         break
+                    prof_id = p["id"]
+                    if prof_id in current_held or not p.get("enabled", True):
+                        continue
+                    if any(g["id"] == prof_id for g in granted):
+                        continue
+                    if self.is_profile_busy(prof_id):
+                        continue
+                    if self._try_acquire_lock(prof_id, job_id, p):
+                        granted.append(p)
+                        new_acquired += 1
 
-            if granted or timeout <= 0 or (time.time() - start_time >= timeout):
+            if len(granted) >= effective_quota or (allowed_new <= 0 and len(granted) > 0) or timeout <= 0 or (time.time() - start_time >= timeout):
                 break
             time.sleep(0.5)
 

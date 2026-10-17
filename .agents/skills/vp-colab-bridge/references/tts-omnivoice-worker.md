@@ -52,14 +52,13 @@ The sole canonical voice profile across both Vietnamese (`vi`) and English (`en`
 1. **Mandatory Utterance Boundary Silence Trimming (`_trim_silence`)**:
    - `OmniVoice` natively emits `50–180ms` of leading silence and `180–420ms` of trailing silence per utterance. Concatenating raw utterances with artificial pauses causes audible hesitation (`0.65s–1.35s` gaps).
    - `worker.py` applies `_trim_silence(w, sr=48000, threshold=0.012, lead_ms=25, trail_ms=30, fade_ms=8)` right after `resample_poly` and peak normalization so every cached WAV retains only a natural `25ms` onset and `30ms` release with an `8ms` click-free linear fade.
-   - Multi-chapter assembly scripts (`generate_spoken_narration.py`) apply `trim_pcm16_stereo_silence()` and calibrated post-trim pauses: `0.20s` for short sentences (`< 8` words), `0.28s` for standard sentences, and `0.48s` for `[pause:800ms]`/`[pause:900ms]` dramatic pivots.
+   - Desktop planning uses `narration_pauses.py` and `format_profiles.py` for explicit-output `format_v1` jobs. Short/regular sentence gaps are 0.16/0.22 s for portrait and 0.20/0.28 s for landscape, with shorter SC01 gaps. Explicit tags, including 800/900 ms, are preserved exactly. No untracked assembly script is part of the standard contract.
 
 2. **Loudness & Scene Tail Assembly**:
    - When `request['assemble'] = True`, `worker.py` uploads and invokes `audio_processing.py`, `subtitles.py`, and `media_packaging.py` on Colab to master the final track:
    - **Loudness Normalization**: Targets `audio_lufs: -14.0` and `audio_peak_db: -1.5`.
    - **Acoustic Silence Constants**:
-     - Intermediate scene boundary: $P_{\text{tail}} = 0.70\text{s}$ (`para`).
-     - Final scene boundary: $P_{\text{tail}} = 0.35\text{s}$ (`tail`).
-     - Minor clause / comma pause: $P_{\text{comma}} = 0.30\text{s}$ (`minor`).
+     - format_v1 short/long scene tails: 0.30/0.40 s; final tails: 0.15/0.25 s; long-clause splits: 0.12/0.16 s.
+     - Legacy timing remains 0.70 s scene / 0.35 s final / 0.30 s minor. Ordinary commas do not force a separate utterance.
    - **Result Verification (`validate_result`)**:
      - Downloads `/content/video-pilot-tts/<request_id>/output.zip`, verifies no symlinks or unexpected file extensions, validates finite positive durations for every WAV and segment, and writes `tts.log`.
