@@ -79,7 +79,6 @@ _SELF_ANSWERING_TITLE_RE = re.compile(
 
 from scripts.camera_motion import assign_scene_camera_effects, select_semantic_camera_effect  # noqa: F401
 
-
 MAX_PUNCH_PER_SCENE = 1  # punch_in is an accent: SC01 hook or one climax beat per scene
 
 def check_conversational_spoken_facts(

@@ -42,10 +42,12 @@ def validate_plan(b, c):
     errors = []
     def fail(code, path, message):
         errors.append(error(code, path, message, 'Sửa bản nháp; không sửa revision đã lưu.'))
-    scenes = c['scenes']; ids = [s['id'] for s in scenes]
+    scenes = c['scenes']
+    ids = [s['id'] for s in scenes]
     if [x['scene_id'] for x in c['outline']] != ids:
         fail('OUTLINE', 'outline', 'Dàn ý không khớp thứ tự cảnh')
-    all_images = set(); all_beats = set()
+    all_images = set()
+    all_beats = set()
     internal = ids + [x['id'] for x in c['characters']]
     internal += [im['id'] for s in scenes for im in s['images']]
     internal += [bt['id'] for s in scenes for bt in s['beats']]
@@ -53,12 +55,13 @@ def validate_plan(b, c):
     if any(re.search(r'(?<!\w)'+re.escape(code)+r'(?!\w)', global_visible, re.I) for code in internal):
         fail('INTERNAL_LABEL','characters/style','Mã quản lý xuất hiện trong mô tả dùng tạo hình')
     all_seen = set()
-    for s, outline in zip(scenes, c['outline']):
+    for s, outline in zip(scenes, c['outline'], strict=False):
         if outline['purpose'] != s['purpose'] or outline['requirements'] != s['requirements']:
             fail('OUTLINE', s['id'], 'Mục đích hoặc ý của cảnh khác dàn ý')
         scene_images = set()
         for im in s['images']:
-            if im['id'] in all_images: fail('IMAGE_ID', s['id'], 'Mã ảnh trùng')
+            if im['id'] in all_images:
+                fail('IMAGE_ID', s['id'], 'Mã ảnh trùng')
             all_images.add(im['id'])
             if im['based_on'] is not None and im['based_on'] not in all_seen:
                 fail('IMAGE_BASE', im['id'], 'Ảnh nền phải là ảnh trước đó trong cùng cảnh hoặc cảnh trước')
@@ -84,17 +87,21 @@ def validate_plan(b, c):
                 if image.get('based_on') and not re.search(r'expression|facial|biểu cảm', image.get('preserve', ''), re.I):
                     fail('EXPRESSION_LOCK_REQUIRED', image['id'], 'Preserve facial expression unless change explicitly requests a shift.')
         used = {x['image_id'] for x in s['beats']}
-        if used != scene_images: fail('IMAGE_USAGE', s['id'], 'Mỗi ảnh scene phải được dùng đúng một lần trong beats')
+        if used != scene_images:
+            fail('IMAGE_USAGE', s['id'], 'Mỗi ảnh scene phải được dùng đúng một lần trong beats')
         for lang in languages(b):
             text = s.get('narration_en' if lang == 'en' else 'narration', '')
             positions = []
             for beat in s['beats']:
-                try: positions.append(occurrence(text, beat['anchor'][lang]))
-                except (ValueError, KeyError): fail('ANCHOR', beat['id'], 'Thiếu/sai điểm neo '+lang)
-            if positions and (positions[0] != 0 or any(a >= z for a,z in zip(positions,positions[1:]))):
+                try:
+                    positions.append(occurrence(text, beat['anchor'][lang]))
+                except (ValueError, KeyError):
+                    fail('ANCHOR', beat['id'], 'Thiếu/sai điểm neo '+lang)
+            if positions and (positions[0] != 0 or any(a >= z for a,z in zip(positions,positions[1:], strict=False))):
                 fail('ANCHOR_ORDER', s['id'], 'Nhịp đầu bắt đầu lời dẫn; các nhịp sau tăng dần theo từng ngôn ngữ')
         for beat in s['beats']:
-            if beat['id'] in all_beats: fail('BEAT_ID', s['id'], 'Mã nhịp trùng')
+            if beat['id'] in all_beats:
+                fail('BEAT_ID', s['id'], 'Mã nhịp trùng')
             all_beats.add(beat['id'])
     source = {x['id']: x for x in b['sources']}
     scene_by_id = {x['id']: x for x in scenes}
@@ -108,12 +115,15 @@ def validate_plan(b, c):
         fail('CLAIM_SOURCE','claims','Nội dung yêu cầu dữ kiện phải có liên kết phát biểu và nguồn')
     valid_scenes=set(ids)
     for response in c['revision_response']:
-        if not set(response['scene_ids'])<=valid_scenes: fail('REVISION_RESPONSE','revision_response','Phản hồi trỏ tới cảnh không tồn tại')
-    if errors: raise ContractError(errors)
+        if not set(response['scene_ids']) <= valid_scenes:
+            fail('REVISION_RESPONSE', 'revision_response', 'Phản hồi trỏ tới cảnh không tồn tại')
+    if errors:
+        raise ContractError(errors)
 
 
 def image_units(c):
-    if c.get('schema_version') != '3.0': return c['scenes']
+    if c.get('schema_version') != '3.0':
+        return c['scenes']
     chars = {x['id']: x for x in c['characters']}
     units = []
     for scene in c['scenes']:
@@ -138,7 +148,8 @@ def text_prompt(prompt, allowed, style):
 def estimates(b, c):
     result = {'languages': {}, 'warnings': [], 'status': 'estimated_not_measured'}
     for lang in languages(b):
-        rate = b['planning']['speech_rates'][lang]; rows = []
+        rate = b['planning']['speech_rates'][lang]
+        rows = []
         elapsed = 0.0
         for sc in c['scenes']:
             text = sc['narration_en' if lang=='en' else 'narration']
@@ -168,7 +179,8 @@ def estimates(b, c):
                             f"{sc['id']}: beat hold {hold:.2f}s outside {zone} target {low:.2f}–{high:.2f}s ({lang})"
                         )
             elapsed += seconds
-        lo=sum(x['min'] for x in rows);hi=sum(x['max'] for x in rows)
+        lo = sum(x['min'] for x in rows)
+        hi = sum(x['max'] for x in rows)
         result['languages'][lang]={'scenes':rows,'min':round(lo,2),'max':round(hi,2),'rate':rate}
         if b.get('duration') and (lo>b['duration']['max_seconds'] or hi<b['duration']['min_seconds']):
             result['warnings'].append(lang+': khoảng ước tính không giao với thời lượng yêu cầu')
@@ -181,7 +193,8 @@ def feedback(p, job):
 
 
 def check_revision(p, job, payload):
-    if payload.get('schema_version') != '3.0': return
+    if payload.get('schema_version') != '3.0':
+        return
     from pilot import Blocked, read
     requests = feedback(p,job)
     responses = payload['revision_response']
@@ -196,8 +209,10 @@ def check_revision(p, job, payload):
 
 
 def review_plan(b, c, previous=None, requests=()):
-    timing=estimates(b,c); plan=b['planning']
-    def bullets(values): return '\n'.join('- '+str(x) for x in values) or 'Không có.'
+    timing = estimates(b, c)
+    plan = b['planning']
+    def bullets(values):
+        return '\n'.join('- '+str(x) for x in values) or 'Không có.'
     lines=['## Mục tiêu và người xem', b['goal'], 'Người xem: '+b['audience'],
            'Kiến thức đầu vào: '+plan['prior_knowledge'], 'Tiêu chí đạt:\n'+bullets(plan['success_criteria']),
            'Cần tránh:\n'+bullets(plan['avoid']), 'Yêu cầu chuyên biệt:\n'+bullets(plan['domain_requirements']),
@@ -214,7 +229,8 @@ def review_plan(b, c, previous=None, requests=()):
               'Chỉ những chữ liệt kê ở từng hình được phép xuất hiện; danh sách rỗng nghĩa là không chữ hoặc số.']
     for scene in c['scenes']:
         lines += ['## '+scene['id']+' — '+scene['title'], 'Mục đích: '+scene['purpose'], scene['narration']]
-        if scene.get('narration_en'): lines.append('EN: '+scene['narration_en'])
+        if scene.get('narration_en'):
+            lines.append('EN: '+scene['narration_en'])
         for lang, direction in scene.get('audio_direction', {}).items():
             lines.append(f"Chỉ đạo âm thanh {lang}: {direction['intent']} · Lưu ý phát âm: {direction['pronunciation_notes'] or 'Không có'} · Khoảng chờ học viên cuối cảnh: {direction['learner_pause_seconds']} giây (chưa xác minh WAV). Ý đồ giọng chưa phải điều khiển TTS.")
         for im in scene['images']:
@@ -283,12 +299,14 @@ def timeline(c, images, audio, language, ratio):
         track = audio.get('tracks', {}).get(language)
         track_segments = track['segments'] if track else (audio['segments'] if audio.get('language', 'vi') == language else audio['en']['scenes'])
         spans = [x for x in track_segments if x['scene_id'] == sc['id']]
-        start = spans[0]['start']; end = spans[-1]['end']
+        start = spans[0]['start']
+        end = spans[-1]['end']
         if c.get('schema_version') != '3.0':
             im = by_id.get((sc['id'], ratio)) or by_id[(sc['id'], asset_ratio)]
             output.append({'id': sc['id'], 'title': sc['title'], 'image': im['path'], 'start': start, 'end': end})
             continue
-        text = sc['narration_en' if language == 'en' else 'narration']; beats = []
+        text = sc['narration_en' if language == 'en' else 'narration']
+        beats = []
         im_meta = {im['id']: im for im in sc.get('images', [])}
         from scripts.camera_motion import scene_camera_motions
         for bt, motion in zip(sc['beats'], scene_camera_motions(sc), strict=True):
@@ -300,7 +318,8 @@ def timeline(c, images, audio, language, ratio):
                 cursor = 0
                 for seg in spans:
                     pos = text.find(seg['text'], cursor)
-                    if pos < 0: continue
+                    if pos < 0:
+                        continue
                     if pos <= offset < pos + len(seg['text']):
                         measured = _word_anchor_time(seg, offset - pos)
                         if measured is not None:
@@ -331,7 +350,7 @@ def timeline(c, images, audio, language, ratio):
                 beat_entry['camera_intent'] = bt['camera_intent']
             beats.append(beat_entry)
         beats[0]['at'] = 0
-        if any(round(a['at'] * 30) >= round(z['at'] * 30) for a, z in zip(beats, beats[1:])):
+        if any(round(a['at'] * 30) >= round(z['at'] * 30) for a, z in zip(beats, beats[1:], strict=False)):
             raise ValueError('Visual beats collide at 30 fps; revise content anchors')
         methods = {beat['timing_method'] for beat in beats}
         scene_out = {
@@ -365,7 +384,8 @@ def calibrate_rates(c, audio, source):
 
 def safe_corrections(c, note):
     """Keep verbatim feedback in journals; translate management IDs only for the model prompt."""
-    if c.get('schema_version') != '3.0': return note
+    if c.get('schema_version') != '3.0':
+        return note
     replacements={x['id']:x['name'] for x in c['characters']}
     for sc in c['scenes']:
         replacements[sc['id']]='cảnh đang được sửa'

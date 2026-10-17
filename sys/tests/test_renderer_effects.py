@@ -85,7 +85,7 @@ console.log('OK');
     def test_capabilities_doc_and_guidelines_consistency(self):
         cap_file = ROOT / "sys/docs/render-capabilities.md"
         cinema_file = ROOT / ".agents/skills/vp-production/references/cinematography.md"
-        
+
         cap_text = cap_file.read_text()
         cinema_text = cinema_file.read_text()
 
@@ -231,6 +231,7 @@ console.log('KARAOKE_REPEATED_OK');
 
     def test_python_and_js_camera_selection_parity_and_punch_cap(self):
         import json
+
         from scripts.camera_motion import scene_camera_motions
 
         scene = {

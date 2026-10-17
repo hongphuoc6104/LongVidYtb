@@ -40,9 +40,9 @@ from research_story_architect import (  # noqa: E402
     DEFAULT_CHANNEL_PILLAR,
     PackagingSpec,
     ResearchedScene,
-    compose_full_frame_description,
     ResearchedTopic,
     assign_scene_camera_effects,
+    compose_full_frame_description,
     write_production_package,
 )
 from script_cadence_checker import count_syllables, extract_pauses  # noqa: E402
