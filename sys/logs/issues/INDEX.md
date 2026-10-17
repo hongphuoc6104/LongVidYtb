@@ -15,3 +15,6 @@ List of technical issues recorded during pipeline operation:
 - [academic-q1-short-t1 — images](1792249940864787856-academic-q1-short-t1-images.md)
 - [academic-q1-short-t1 — images](1792250347571860480-academic-q1-short-t1-images.md)
 - [academic-q1-short-t1 — images](1792250504898058376-academic-q1-short-t1-images.md)
+
+- [colab-1792252056929833821.md](colab-1792252056929833821.md) — Colab TTS cần kiểm tra.
+- [academic-q1-short-t1 — render](1792252056930097148-academic-q1-short-t1-render.md)
