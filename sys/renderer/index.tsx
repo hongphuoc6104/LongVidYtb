@@ -1,6 +1,6 @@
-import {selectSemanticCameraEffect, overscanScale, BASE_OVERSCAN, cameraVariation} from './camera.mjs';
+import {buildCalmCameraPlan, calmCameraFrame, calmCameraStyle} from './camera.mjs';
 import {Thumbnail} from './thumbnail';
-import React, {useLayoutEffect} from 'react';
+import React, {useLayoutEffect, useMemo} from 'react';
 import {portraitCaptionTokens, PORTRAIT_CAPTION_ACTIVE_COLOR, captionStyle, captionMaxHeight} from './captions.mjs';
 import {BRAND_LOGO_DATA_URI} from './brand_logo';
 import {
@@ -138,111 +138,27 @@ const Video: React.FC<any> = (p) => {
   const currentImageSrc = beat?.src || scene.image;
   const nextAt = imageList[active + 1]?.at ?? (scene.end - scene.start);
   const beatDuration = Math.max(0.001, nextAt - beat.at);
-  const progress = Math.max(0, Math.min(1, (relative - beat.at) / beatDuration));
   const transition = Math.max(0, Math.min(1, (relative - beat.at) / Math.min(0.3, beatDuration / 2)));
   // Smooth 85ms flipbook micro-dissolve for in-place variation shots
-  const isVariationCut = active > 0 && beat.shot_type === 'variation' && beat.effect !== 'slide_left';
+  const isVariationCut = active > 0 && beat.shot_type === 'variation';
   const variationCrossfade = isVariationCut
     ? Math.max(0, Math.min(1, (relative - beat.at) / Math.min(0.085, beatDuration / 3)))
     : 1;
 
-  // Motion Engine with Spring Physics, Bezier Easing & Dynamic Motion Blur
-  let scale = 1;
-  let translateX = 0;
-  let translateY = 0;
-  let motionBlurX = 0;
-  const effect = selectSemanticCameraEffect(beat, scene, active);
-  const variation = cameraVariation(scene?.id || 'SC01', active);
-
-  // Organic ease curve adapted per beat from variation
-  const smoothProgress = interpolate(progress, [0, 1], [0, 1], {
-    easing: Easing.bezier(
-      variation.easing[0],
-      variation.easing[1],
-      variation.easing[2],
-      variation.easing[3]
-    )
-  });
-
-  if (effect === 'punch_in') {
-    // Overdamped spring: quick settle without bounce
-    const punchFrame = (relative - beat.at) * fps;
-    const punchSpring = spring({
-      frame: Math.max(0, punchFrame),
-      fps,
-      config: { damping: 26, mass: 0.6, stiffness: 110 }
-    });
-    scale = interpolate(punchSpring, [0, 1], [1.14, 1.06]);
-  } else if (effect === 'zoom_in') {
-    scale = 1 + variation.zoomAmp * smoothProgress;
-  } else if (effect === 'zoom_out') {
-    scale = (1 + variation.zoomAmp) - variation.zoomAmp * smoothProgress;
-  } else if (effect === 'pan_left') {
-    scale = 1.06;
-    translateX = (0.5 - smoothProgress) * variation.panAmp;
-  } else if (effect === 'pan_right') {
-    scale = 1.06;
-    translateX = (smoothProgress - 0.5) * variation.panAmp;
-  } else if (effect === 'pan_up') {
-    scale = 1.06;
-    translateY = (0.5 - smoothProgress) * (variation.panAmp * 0.75);
-  } else if (effect === 'pan_down') {
-    scale = 1.06;
-    translateY = (smoothProgress - 0.5) * (variation.panAmp * 0.75);
-  } else if (effect === 'drift_diag_in') {
-    scale = 1 + (variation.zoomAmp * 0.7) * smoothProgress;
-    translateX = (smoothProgress - 0.5) * (variation.panAmp * 0.7) * variation.dirSign;
-    translateY = (smoothProgress - 0.5) * (variation.panAmp * 0.5);
-  } else if (effect === 'drift_diag_out') {
-    scale = (1 + variation.zoomAmp * 0.7) - (variation.zoomAmp * 0.7) * smoothProgress;
-    translateX = (0.5 - smoothProgress) * (variation.panAmp * 0.7) * variation.dirSign;
-    translateY = (0.5 - smoothProgress) * (variation.panAmp * 0.5);
-  } else if (effect === 'shake') {
-    scale = 1.06; // Đệm phóng to 6% để triệt tiêu viền đen khi rung chấn màn hình
-  } else if (effect === 'slide_left') {
-    // Bezier deceleration curve for natural slide momentum
-    const slideEase = interpolate(transition, [0, 1], [0, 1], {
-      easing: Easing.bezier(0.16, 1, 0.3, 1)
-    });
-    translateX = (1 - slideEase) * 100;
-    // Whip Pan: Optical directional motion blur peaks at the fastest motion point
-    if (transition > 0 && transition < 1) {
-      motionBlurX = Math.sin(transition * Math.PI) * 18;
-    }
-  } else if (effect !== 'hold') {
-    // Subtle fallback gentle zoom in for unclassified effects
-    scale = 1 + (variation.zoomAmp * 0.6) * smoothProgress;
-  }
-
-  // Overscan applies after every motion branch; 4.5% zoom crops ~2.15% per edge.
-  // This is a framing margin, not proof that a provider watermark is removed.
-  scale = overscanScale(scale);
-
-  // Organic Camera Shake + Subtle Handheld Micro-Breathing (GPU transform only, zero overlay clutter)
-  let shakeX = 0;
-  let shakeY = 0;
-  let microRot = 0;
-  if (effect === 'shake' || (effect === 'punch_in' && (relative - beat.at) < 0.2)) {
-    const shakeTime = relative - beat.at;
-    const decay = Math.max(0, 1 - shakeTime / 0.2) ** 2;
-    shakeX = organicNoise(shakeTime * 1.0, 1.2) * 5 * decay;
-    shakeY = organicNoise(shakeTime * 1.0, 4.7) * 4 * decay;
-  } else if (effect !== 'hold') {
-    // Slow breathing drift only (~0.1 Hz, ≤1.2px); no micro-rotation to avoid pixel shimmer
-    shakeX = Math.sin(t * 0.6 + 1.1) * 1.2;
-    shakeY = Math.sin(t * 0.45 + 3.7) * 0.9;
-  }
-
+  // One camera path per composition, evaluated from absolute render frames.
+  // Variation cuts keep camera time and focal origin; unrelated outgoing shots
+  // retain their own final framing throughout a dissolve.
+  const cameraPlans = useMemo(() => buildCalmCameraPlan(p.scenes), [p.scenes]);
+  const cameraPlan = cameraPlans[p.scenes.indexOf(scene)] || [];
+  const camera = calmCameraFrame(cameraPlan[active], relative);
+  const previousCamera = calmCameraFrame(cameraPlan[active - 1], relative);
   const opacity = beat.effect === 'fade' ? transition : variationCrossfade;
-  // Clamp focal center to safe central viewport so model coordinate guesses never zoom into blank corners
-  const focusX = Math.min(65, Math.max(35, (beat.focus?.x ?? 0.5) * 100));
-  const focusY = Math.min(58, Math.max(35, (beat.focus?.y ?? 0.42) * 100));
-  const editorial = p.reframe_mode && height > width && !['macro_prop', 'white_card', 'white_isolated'].includes(beat.shot_type);
-  const editorialScale = 1 + (scale / BASE_OVERSCAN - 1) * 0.65;
+  const editorial = p.reframe_mode && height > width && !['macro_prop', 'white_card', 'white_isolated'].includes(cameraPlan[active]?.shotType ?? beat.shot_type);
+  const previousEditorial = p.reframe_mode && height > width && !['macro_prop', 'white_card', 'white_isolated'].includes(cameraPlan[active - 1]?.shotType ?? imageList[active - 1]?.shot_type);
   const isVideoAsset = currentImageSrc && (currentImageSrc.endsWith('.mp4') || currentImageSrc.endsWith('.webm'));
 
   // Procedural Line Boiling (opt-in only for isolated assets; disabled on full-bleed 1080p)
-  const isLineBoil = Boolean(beat.line_boil || beat.effect === 'line_boil' || p.line_boil);
+  const isLineBoil = Boolean(scene.layers?.length && (beat.line_boil || beat.effect === 'line_boil' || p.line_boil));
   const boilFps = 10;
   const boilIndex = Math.floor((frame / fps) * boilFps) % 4;
   const lineBoilFilter = isLineBoil ? `url(#line-boil-${boilIndex})` : '';
@@ -259,10 +175,7 @@ const Video: React.FC<any> = (p) => {
     ? `linear-gradient(135deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) ${drawEase * 105}%, rgba(0,0,0,0) ${drawEase * 105 + 12}%)`
     : undefined;
 
-  const combinedFilter = [
-    motionBlurX > 0.5 ? `blur(${motionBlurX.toFixed(1)}px)` : '',
-    lineBoilFilter
-  ].filter(Boolean).join(' ') || undefined;
+  const combinedFilter = lineBoilFilter || undefined;
 
   return (
     <AbsoluteFill style={{background: editorial ? '#0F172A' : p.modern_style ? '#F8FAFC' : '#090D16', fontFamily: 'Arial, sans-serif', color: 'white', width, height, overflow: 'hidden'}}>
@@ -387,8 +300,8 @@ const Video: React.FC<any> = (p) => {
         </AbsoluteFill>
       ) : (
         <>
-          {/* Background layer transition (supports fade, slide_left, and 85ms flipbook variation cross-dissolve) */}
-          {active > 0 && ((['fade', 'slide_left'].includes(beat.effect) && transition < 1) || (isVariationCut && variationCrossfade < 1)) && (
+          {/* Dissolve retains the outgoing composition and camera framing. */}
+          {active > 0 && ((beat.effect === 'fade' && transition < 1) || (isVariationCut && variationCrossfade < 1)) && (
             <Img
               src={staticFile(imageList[active - 1].src)}
               decoding="sync"
@@ -396,16 +309,14 @@ const Video: React.FC<any> = (p) => {
                 position: 'absolute',
                 width: '100%',
                 height: '100%',
-                objectFit: editorial ? 'contain' : 'cover',
-                objectPosition: `${focusX}% ${focusY}%`,
-                ...(editorial ? {top: '25%', height: '48%', borderRadius: 24} : {}),
-                transform: `translate(calc(${translateX}% + ${shakeX}px), calc(${translateY}% + ${shakeY}px)) scale(${editorial ? editorialScale : scale}) rotate(${microRot.toFixed(3)}deg)`,
-                transformOrigin: `${focusX}% ${focusY}%`,
+                objectFit: previousEditorial ? 'contain' : 'cover',
+                ...(previousEditorial ? {top: '25%', height: '48%', borderRadius: 24} : {}),
+                ...calmCameraStyle(previousCamera, previousEditorial),
               }}
             />
           )}
 
-          {/* Main Visual Layer: Image with Ken Burns + Handheld Micro-Motion or Video Clip */}
+          {/* Main visual: steady framing or one restrained camera move. */}
           {currentImageSrc && (
             isVideoAsset ? (
               <RemotionVideo
@@ -425,10 +336,8 @@ const Video: React.FC<any> = (p) => {
                   width: '100%',
                   height: '100%',
                   objectFit: editorial ? 'contain' : 'cover',
-                  objectPosition: `${focusX}% ${focusY}%`,
                   ...(editorial ? {position: 'absolute', top: '25%', height: '48%', borderRadius: 24, boxShadow: '0 12px 32px #0008'} : {}),
-                  transform: `translate(calc(${translateX}% + ${shakeX}px), calc(${translateY}% + ${shakeY}px)) scale(${editorial ? editorialScale : scale}) rotate(${microRot.toFixed(3)}deg)`,
-                  transformOrigin: `${focusX}% ${focusY}%`,
+                  ...calmCameraStyle(camera, editorial),
                   opacity,
                   filter: combinedFilter,
                   WebkitMaskImage: drawMask,

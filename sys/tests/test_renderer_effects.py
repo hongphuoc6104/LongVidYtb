@@ -179,11 +179,11 @@ console.log(JSON.stringify(results));
 
             # Variations bounds
             for var in data[sc]["variations"]:
-                self.assertGreaterEqual(var["zoomAmp"], 0.04)
-                self.assertLessEqual(var["zoomAmp"], 0.09)
-                self.assertGreaterEqual(var["panAmp"], 1.5)
-                self.assertLessEqual(var["panAmp"], 3.5)
-                self.assertEqual(len(var["easing"]), 4)
+                self.assertGreater(var["zoomAmp"], 0)
+                self.assertLessEqual(var["zoomAmp"], 0.05)
+                self.assertGreater(var["panAmp"], 0)
+                self.assertLessEqual(var["panAmp"], 2.0)
+                self.assertEqual(var["easing"], [0.0, 0.0, 1.0, 1.0])
                 self.assertIn(var["dirSign"], [-1, 1])
 
 

@@ -26,6 +26,125 @@ from tools.research_story_architect import build_brief_v3, build_content_v3
 SYSTEM = Path(__file__).resolve().parents[1]
 
 
+def _camera_result(script: str) -> object:
+    prelude = """
+import {buildCalmCameraPlan, calmCameraFrame, calmCameraStyle,
+  BASE_OVERSCAN, CALM_MAX_ZOOM_PER_SEC} from './sys/renderer/camera.mjs';
+"""
+    result = subprocess.run(['node', '--input-type=module', '-e', prelude + script],
+                            cwd=SYSTEM.parent, capture_output=True, text=True, check=True)
+    return json.loads(result.stdout)
+
+
+def test_calm_camera_bounds_speed_and_rests_on_short_or_dense_shots() -> None:
+    data = _camera_result("""
+const results = [];
+for (const fps of [24, 30, 60]) {
+  for (const duration of [0.8, 1.2, 2.39, 2.4, 3.8, 8]) {
+    for (const effect of ['zoom_in', 'zoom_out', 'push_in', 'pull_back', 'punch_in',
+                          'pan_left', 'pan_right', 'slide_left', 'shake', 'hold']) {
+      const scene = {start: 0, end: duration, images: [{at: 0, src: 'a.jpg', camera_motion: effect}]};
+      const camera = buildCalmCameraPlan([scene])[0][0];
+      const scales = Array.from({length: Math.ceil(duration * fps) + 1}, (_, i) => calmCameraFrame(camera, i / fps).scale);
+      results.push({fps, duration, effect, scales});
+    }
+  }
+}
+console.log(JSON.stringify(results));
+""")
+    for case in data:
+        scales = case['scales']
+        changes = [right - left for left, right in zip(scales, scales[1:], strict=False)]
+        assert min(scales) >= 1.045
+        assert max(scales) <= 1.045 * 1.015 + 1e-12
+        assert all(abs(change) * case['fps'] <= .004 + 1e-12 for change in changes)
+        assert all(change >= -1e-12 for change in changes) or all(change <= 1e-12 for change in changes)
+        if case['duration'] < 2.4 or case['effect'] in {'pan_left', 'pan_right', 'slide_left', 'shake', 'hold'}:
+            assert len(set(scales)) == 1
+        else:
+            assert max(scales) > min(scales)
+            assert abs(changes[0]) * case['fps'] < .0005
+    cards = _camera_result("""
+console.log(JSON.stringify(['white_card', 'macro_prop', 'white_isolated'].map(shot_type => {
+  const camera = buildCalmCameraPlan([{start: 0, end: 8, images: [{at: 0, shot_type, camera_motion: 'punch_in'}]}])[0][0];
+  return [calmCameraFrame(camera, 0), calmCameraFrame(camera, 4), calmCameraFrame(camera, 8)];
+})));
+""")
+    assert all(start == middle == end for start, middle, end in cards)
+
+
+def test_calm_variation_cuts_share_time_and_focal_origin() -> None:
+    data = _camera_result("""
+const images = [
+  {at: 0, src: 'base.jpg', camera_motion: 'zoom_in', focus: {x: .4, y: .4}},
+  {at: 1.15, src: 'pose1.jpg', shot_type: 'variation', camera_motion: 'pan_right', focus: {x: .65, y: .58}},
+  {at: 2.19, src: 'pose2.jpg', shot_type: 'variation', camera_motion: 'zoom_out'},
+  {at: 3.82, src: 'pose2.jpg', camera_motion: 'punch_in'},
+];
+const plan = buildCalmCameraPlan([{start: 0, end: 6, images}])[0];
+console.log(JSON.stringify(images.slice(1).map((beat, i) => ({
+  before: calmCameraFrame(plan[i], beat.at - 1/30),
+  outgoing: calmCameraStyle(calmCameraFrame(plan[i], beat.at)),
+  incoming: calmCameraStyle(calmCameraFrame(plan[i+1], beat.at)),
+  after: calmCameraFrame(plan[i+1], beat.at),
+  sharedGroup: plan[i] === plan[i+1],
+}))));
+""")
+    for cut in data:
+        assert cut['sharedGroup']
+        assert cut['outgoing'] == cut['incoming']
+        assert cut['after']['focusX'] == 40
+        assert cut['after']['focusY'] == 40
+        assert abs(cut['after']['scale'] - cut['before']['scale']) * 30 <= .004
+
+
+def test_calm_camera_rest_budget_crosses_scene_boundaries_and_is_seek_safe() -> None:
+    data = _camera_result("""
+const scenes = Array.from({length: 4}, (_, i) => ({start: i*3, end: (i+1)*3,
+  images: [{at: 0, camera_motion: 'punch_in', src: `${i}.jpg`}]}));
+const plan = buildCalmCameraPlan(scenes);
+const camera = plan[0][0];
+const times = [2, 0, 3, 1, -1, 4, 2];
+console.log(JSON.stringify({
+  amplitudes: plan.map(beats => beats[0].amplitude),
+  frames: times.map(t => calmCameraFrame(camera, t)),
+  clean: calmCameraFrame(undefined, 0),
+}));
+""")
+    assert data['amplitudes'][0] > 0
+    assert data['amplitudes'][1:3] == [0, 0]
+    assert data['amplitudes'][3] > 0
+    assert data['frames'][0] == data['frames'][-1]
+    assert data['frames'][1] == data['frames'][4]
+    assert data['frames'][2] == data['frames'][5]
+    assert data['clean'] == {'scale': 1.045, 'focusX': 50, 'focusY': 42}
+
+
+def test_dissolve_keeps_outgoing_camera_and_legacy_no_intent_is_steady() -> None:
+    data = _camera_result("""
+const scene = {start: 0, end: 9, images: [
+  {at: 0, src: 'a.jpg', effect: 'zoom_out', focus: {x: .35, y: .35}},
+  {at: 4, src: 'b.jpg', effect: 'fade', focus: {x: .65, y: .58}},
+]};
+const plan = buildCalmCameraPlan([scene])[0];
+const legacy = buildCalmCameraPlan([{start: 0, end: 10, image: 'legacy.jpg'}])[0][0];
+console.log(JSON.stringify({
+  end: calmCameraStyle(calmCameraFrame(plan[0], 4)),
+  outgoing: calmCameraStyle(calmCameraFrame(plan[0], 4.15)),
+  incoming: calmCameraStyle(calmCameraFrame(plan[1], 4.15)),
+  legacyStart: calmCameraFrame(legacy, 0), legacyEnd: calmCameraFrame(legacy, 10),
+}));
+""")
+    assert data['end'] == data['outgoing']
+    assert data['incoming']['transformOrigin'] != data['outgoing']['transformOrigin']
+    assert data['legacyStart'] == data['legacyEnd']
+    renderer = (SYSTEM / 'renderer/index.tsx').read_text()
+    assert '...calmCameraStyle(previousCamera, previousEditorial)' in renderer
+    assert '...calmCameraStyle(camera, editorial)' in renderer
+    assert 'const punchSpring' not in renderer
+    assert 'microRot' not in renderer
+
+
 @pytest.mark.parametrize('ratio', ['16:9', '9:16'])
 def test_full_frame_prompt_does_not_reserve_caption_band(ratio: str) -> None:
     record = compile_prompt('NanoBanana2', 'scene', {

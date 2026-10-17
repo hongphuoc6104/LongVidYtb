@@ -4,7 +4,7 @@ Visual standards, shot framing grammar, and cutting pace for full-frame explaine
 
 ## 1. Mandatory Three-Step Process (Flash-Agent Simplified)
 1. **Author natural sentence-beat pairs**: Pair each spoken sentence with one concrete visual action (`shot_type|visual_action`), alternating short punchy sentences (`3–8` words) with explanatory sentences (`15–24` words).
-2. **Select full-frame `shot_type`**: Choose from `full_scene`, `macro_prop`, `variation`, `white_card`, or `white_isolated`. Never guess manual `(x, y)` coordinates—code automatically centers `focus` safely and assigns non-repeating semantic camera movements (`select_semantic_camera_effect`).
+2. **Select full-frame `shot_type`**: Choose from `full_scene`, `macro_prop`, `variation`, `white_card`, or `white_isolated`. Never guess manual `(x, y)` coordinates—code automatically centers `focus` safely. Semantic camera intent remains diverse; calm playback decides whether visible movement is warranted.
 3. **Author full-bleed prompts for Flow**: Generate one integrated 2D illustration per beat where anonymous stick figures, furniture, and props belong naturally to the same physical environment (no detached stickers, no white cutout borders).
 
 ---
@@ -37,11 +37,13 @@ Refer to detailed parameters in [render-capabilities](../../../../sys/docs/rende
 | Scene Effect | Operating Mechanism | Recommended Use Case |
 |---|---|---|
 | `cut` / `hold` | `transition: cut` switches beats cleanly (with automatic 85ms micro-dissolve on `variation` shots); `hold` keeps camera motionless for dense diagrams. | Standard beat cuts and diagram inspection. |
-| `zoom_in` / `zoom_out` | Smoothly scales `1.0 -> 1.08` or `1.08 -> 1.0` with subtle GPU handheld micro-breathing (`organicNoise`). | Push-in (focusing on action/detail) or Pull-out (revealing context). |
-| `punch_in` | Snappy spring zoom `1.22x -> 1.08x` with subtle decay shake. | Opening hook (`SC01`), sudden discovery, shock, or eureka moments. |
-| `pan_left` / `pan_right` | Smooth 3% horizontal sweep at `1.06` scale (+ `1.045` overscan). | Contrasting two groups, timeline progression, or wide environments. |
-| `slide_left` | Bezier horizontal slide with directional motion blur (Whip pan). | Fast topic transitions. |
-| `shake` | Multi-frequency Perlin camera vibration decaying over 0.28s. | Impact or sudden realization. |
+| `zoom_in` / `zoom_out` | Calm playback: at most 1.5% scale change, peak velocity <= 0.004/s including overscan; smooth start/stop. | Move only on a composition held >= 2.4s, with at least 4s of camera rest between moving compositions. |
+| `punch_in` | Restrained push with the same speed budget; no spring or shake. | Convey surprise through the image and narration rather than an abrupt size jump. |
+| `pan_left` / `pan_right` | Intent is retained; calm playback holds the image steady. | Contrast through authored composition and edits. |
+| `slide_left` | Steady image cut in calm playback; no Whip pan or slide. | Topic changes use clean cuts. |
+| `shake` | Steady framing in full-frame playback; legacy Perlin helpers are not applied. | Convey impact through the depicted action. |
+
+- **Continuity and breathing room**: Consecutive variations and repeated images share one camera clock, focal origin and portrait framing mode. Macro shots and white cards hold steady. During a dissolve the outgoing image retains its own framing. Global line-boil flags never displace full-frame images. Image beat density and narration timing remain independent of camera motion.
 
 - **Hand-drawn call-outs inside the AI art**: Request `"red hand-drawn circle or arrow pointing at..."` directly inside the image description when needed; **never** add external React/SVG floating callouts or coordinate overlays on top of the video.
 - **Clean papers & books**: When `allowed_text` is empty, books and sheets must contain only abstract wavy ink lines—never invented words, titles, or equations.
