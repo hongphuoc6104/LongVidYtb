@@ -85,7 +85,7 @@ console.log('OK');
     def test_capabilities_doc_and_guidelines_consistency(self):
         cap_file = ROOT / "sys/docs/render-capabilities.md"
         cinema_file = ROOT / ".agents/skills/vp-production/references/cinematography.md"
-        
+
         cap_text = cap_file.read_text()
         cinema_text = cinema_file.read_text()
 
@@ -103,6 +103,88 @@ console.log('OK');
         self.assertIn("Deprecated for new jobs", cap_text)
         self.assertIn('kind: "scene"', cap_text)
         self.assertNotIn("vp-layered-motion", cap_text)
+
+    def test_camera_variety_and_sequence_constraints(self):
+        import json
+        script = """
+import {
+  selectSemanticCameraEffect,
+  cameraVariation,
+  resolveFallbackCameraSequence,
+  hash01
+} from './sys/renderer/camera.mjs';
+
+const scenes = ['SC01', 'SC02', 'SC03', 'SC04', 'CH01_SC01'];
+const results = {};
+
+for (const sc of scenes) {
+  const seq = resolveFallbackCameraSequence(sc, 24);
+  results[sc] = {
+    seq,
+    variations: [0, 1, 2, 3, 4].map(i => cameraVariation(sc, i)),
+  };
+}
+
+results.semantic = {
+  hold: selectSemanticCameraEffect({effect: 'hold'}, {id: 'SC01'}, 0),
+  wide: selectSemanticCameraEffect({}, {id: 'SC01', camera: 'wide view'}, 0),
+  punch: selectSemanticCameraEffect({}, {id: 'SC01', camera_intent: 'reveal shock'}, 0),
+};
+
+console.log(JSON.stringify(results));
+"""
+        res = subprocess.run(
+            ["node", "--input-type=module", "-e", script],
+            cwd=str(ROOT),
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        data = json.loads(res.stdout)
+
+        # 1. Semantic overrides work
+        self.assertEqual(data["semantic"]["hold"], "hold")
+        self.assertEqual(data["semantic"]["wide"], "zoom_out")
+        self.assertEqual(data["semantic"]["punch"], "punch_in")
+
+        # 2. Sequence constraints across scenes
+        for sc in ["SC01", "SC02", "SC03", "SC04", "CH01_SC01"]:
+            seq = data[sc]["seq"]
+            self.assertEqual(len(seq), 24)
+            unique_effects = set(seq)
+            self.assertGreaterEqual(len(unique_effects), 5, f"Too few unique effects in {sc}: {unique_effects}")
+
+            # No duplicates in any window of 3
+            for i in range(len(seq) - 3):
+                window = seq[i : i + 3]
+                self.assertEqual(len(set(window)), 3, f"Duplicate found in window of 3 for {sc} at {i}: {window}")
+
+            # No consecutive same-direction zoom or vertical oscillation
+            zoom_in_family = {"zoom_in", "drift_diag_in"}
+            zoom_out_family = {"zoom_out", "drift_diag_out"}
+            vertical_family = {"pan_up", "pan_down"}
+            for i in range(len(seq) - 1):
+                self.assertFalse(
+                    seq[i] in zoom_in_family and seq[i + 1] in zoom_in_family,
+                    f"Consecutive zoom in at {i} in {sc}",
+                )
+                self.assertFalse(
+                    seq[i] in zoom_out_family and seq[i + 1] in zoom_out_family,
+                    f"Consecutive zoom out at {i} in {sc}",
+                )
+                self.assertFalse(
+                    seq[i] in vertical_family and seq[i + 1] in vertical_family,
+                    f"Consecutive vertical pan at {i} in {sc}",
+                )
+
+            # Variations bounds
+            for var in data[sc]["variations"]:
+                self.assertGreaterEqual(var["zoomAmp"], 0.04)
+                self.assertLessEqual(var["zoomAmp"], 0.09)
+                self.assertGreaterEqual(var["panAmp"], 1.5)
+                self.assertLessEqual(var["panAmp"], 3.5)
+                self.assertEqual(len(var["easing"]), 4)
+                self.assertIn(var["dirSign"], [-1, 1])
 
 
 if __name__ == "__main__":

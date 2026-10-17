@@ -1,4 +1,4 @@
-import {selectSemanticCameraEffect, overscanScale, BASE_OVERSCAN} from './camera.mjs';
+import {selectSemanticCameraEffect, overscanScale, BASE_OVERSCAN, cameraVariation} from './camera.mjs';
 import {Thumbnail} from './thumbnail';
 import React, {useLayoutEffect} from 'react';
 import {portraitCaptionTokens, PORTRAIT_CAPTION_ACTIVE_COLOR, captionStyle, captionMaxHeight} from './captions.mjs';
@@ -33,7 +33,7 @@ export function boilJitter(frame: number, seed: number = 0): number {
   return r - Math.floor(r) - 0.5;
 }
 
-export {selectSemanticCameraEffect} from './camera.mjs';
+export {selectSemanticCameraEffect, cameraVariation} from './camera.mjs';
 
 // Dynamic voice-guided BGM sidechain ducking envelope (swells in pauses, ducks during speech)
 export function computeDynamicBgmVolume(
@@ -152,33 +152,53 @@ const Video: React.FC<any> = (p) => {
   let translateY = 0;
   let motionBlurX = 0;
   const effect = selectSemanticCameraEffect(beat, scene, active);
+  const variation = cameraVariation(scene?.id || 'SC01', active);
 
-  // Asymmetric organic ease curve (fast eye-catch, gentle cinematic settle)
+  // Organic ease curve adapted per beat from variation
   const smoothProgress = interpolate(progress, [0, 1], [0, 1], {
-    easing: Easing.bezier(0.33, 1, 0.68, 1.0)
+    easing: Easing.bezier(
+      variation.easing[0],
+      variation.easing[1],
+      variation.easing[2],
+      variation.easing[3]
+    )
   });
 
   if (effect === 'punch_in') {
-    // Spring physics with snappy elasticity and gentle settle
-    const punchFrame = Math.round((relative - beat.at) * fps);
+    // Overdamped spring: quick settle without bounce
+    const punchFrame = (relative - beat.at) * fps;
     const punchSpring = spring({
       frame: Math.max(0, punchFrame),
       fps,
-      config: { damping: 12, mass: 0.5, stiffness: 120 }
+      config: { damping: 26, mass: 0.6, stiffness: 110 }
     });
-    scale = interpolate(punchSpring, [0, 1], [1.22, 1.08]);
+    scale = interpolate(punchSpring, [0, 1], [1.14, 1.06]);
   } else if (effect === 'zoom_in') {
-    scale = 1 + 0.08 * smoothProgress;
+    scale = 1 + variation.zoomAmp * smoothProgress;
   } else if (effect === 'zoom_out') {
-    scale = 1.08 - 0.08 * smoothProgress;
+    scale = (1 + variation.zoomAmp) - variation.zoomAmp * smoothProgress;
   } else if (effect === 'pan_left') {
     scale = 1.06;
-    translateX = (0.5 - smoothProgress) * 3;
+    translateX = (0.5 - smoothProgress) * variation.panAmp;
   } else if (effect === 'pan_right') {
     scale = 1.06;
-    translateX = (smoothProgress - 0.5) * 3;
+    translateX = (smoothProgress - 0.5) * variation.panAmp;
+  } else if (effect === 'pan_up') {
+    scale = 1.06;
+    translateY = (0.5 - smoothProgress) * (variation.panAmp * 0.75);
+  } else if (effect === 'pan_down') {
+    scale = 1.06;
+    translateY = (smoothProgress - 0.5) * (variation.panAmp * 0.75);
+  } else if (effect === 'drift_diag_in') {
+    scale = 1 + (variation.zoomAmp * 0.7) * smoothProgress;
+    translateX = (smoothProgress - 0.5) * (variation.panAmp * 0.7) * variation.dirSign;
+    translateY = (smoothProgress - 0.5) * (variation.panAmp * 0.5);
+  } else if (effect === 'drift_diag_out') {
+    scale = (1 + variation.zoomAmp * 0.7) - (variation.zoomAmp * 0.7) * smoothProgress;
+    translateX = (0.5 - smoothProgress) * (variation.panAmp * 0.7) * variation.dirSign;
+    translateY = (0.5 - smoothProgress) * (variation.panAmp * 0.5);
   } else if (effect === 'shake') {
-    scale = 1.06; // Đệm phóng to 6% để triệt tiêu viền đen khi rung chấn màn hình (14px shake)
+    scale = 1.06; // Đệm phóng to 6% để triệt tiêu viền đen khi rung chấn màn hình
   } else if (effect === 'slide_left') {
     // Bezier deceleration curve for natural slide momentum
     const slideEase = interpolate(transition, [0, 1], [0, 1], {
@@ -189,20 +209,9 @@ const Video: React.FC<any> = (p) => {
     if (transition > 0 && transition < 1) {
       motionBlurX = Math.sin(transition * Math.PI) * 18;
     }
-  } else if (!p.modern_style && effect !== 'hold') {
-    // AUTO KEN BURNS (Chu kỳ chuyển động camera êm ái chống nhàm chán)
-    const cycle = active % 4;
-    if (cycle === 0) {
-      scale = 1.0 + 0.06 * smoothProgress; // Smooth zoom in
-    } else if (cycle === 1) {
-      scale = 1.05;
-      translateX = (smoothProgress - 0.5) * 2.5; // Smooth pan right
-    } else if (cycle === 2) {
-      scale = 1.06 - 0.06 * smoothProgress; // Smooth zoom out
-    } else {
-      scale = 1.05;
-      translateX = (0.5 - smoothProgress) * 2.5; // Smooth pan left
-    }
+  } else if (effect !== 'hold') {
+    // Subtle fallback gentle zoom in for unclassified effects
+    scale = 1 + (variation.zoomAmp * 0.6) * smoothProgress;
   }
 
   // Overscan applies after every motion branch; 4.5% zoom crops ~2.15% per edge.
@@ -213,15 +222,15 @@ const Video: React.FC<any> = (p) => {
   let shakeX = 0;
   let shakeY = 0;
   let microRot = 0;
-  if (effect === 'shake' || (effect === 'punch_in' && (relative - beat.at) < 0.28)) {
+  if (effect === 'shake' || (effect === 'punch_in' && (relative - beat.at) < 0.2)) {
     const shakeTime = relative - beat.at;
-    const decay = Math.max(0, 1 - shakeTime / 0.28);
-    shakeX = organicNoise(shakeTime * 1.5, 1.2) * 14 * decay;
-    shakeY = organicNoise(shakeTime * 1.5, 4.7) * 12 * decay;
+    const decay = Math.max(0, 1 - shakeTime / 0.2) ** 2;
+    shakeX = organicNoise(shakeTime * 1.0, 1.2) * 5 * decay;
+    shakeY = organicNoise(shakeTime * 1.0, 4.7) * 4 * decay;
   } else if (effect !== 'hold') {
-    shakeX = organicNoise(t * 0.14, active + 1.1) * 3.2;
-    shakeY = organicNoise(t * 0.14, active + 3.7) * 2.4;
-    microRot = organicNoise(t * 0.11, active + 7.3) * 0.18;
+    // Slow breathing drift only (~0.1 Hz, ≤1.2px); no micro-rotation to avoid pixel shimmer
+    shakeX = Math.sin(t * 0.6 + 1.1) * 1.2;
+    shakeY = Math.sin(t * 0.45 + 3.7) * 0.9;
   }
 
   const opacity = beat.effect === 'fade' ? transition : variationCrossfade;
