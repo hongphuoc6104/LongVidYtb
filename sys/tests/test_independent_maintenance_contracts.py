@@ -183,7 +183,7 @@ class IndependentDocumentation(unittest.TestCase):
     def test_four_skills_and_new_direction_have_concrete_current_sources(self):
         skills=ROOT.parent/'.agents/skills'
         actual=sorted(p.parent.name for p in skills.glob('*/SKILL.md'))
-        self.assertEqual(actual, ['gh-axi', 'lavish', 'treehouse', 'vp-channel-patterns', 'vp-colab-bridge', 'vp-development', 'vp-flow-cdp', 'vp-full-frame-quality', 'vp-layered-motion', 'vp-maintenance', 'vp-omni-platform', 'vp-production', 'vp-research-architect', 'vp-scriptwriting', 'vp-setup', 'vp-troubleshooting'])
+        self.assertEqual(actual, ['gh-axi', 'vp-channel-patterns', 'vp-colab-bridge', 'vp-development', 'vp-flow-cdp', 'vp-full-frame-quality', 'vp-maintenance', 'vp-omni-platform', 'vp-production', 'vp-research-architect', 'vp-scriptwriting', 'vp-setup', 'vp-troubleshooting'])
         workflow_doc=(ROOT/'docs/workflow.md').read_text()
         for token in ('outline','dialogue','audio','images','video','without a machine reviewer','connected agent/author'):
             self.assertIn(token,workflow_doc)
