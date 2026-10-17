@@ -38,55 +38,20 @@ BANNED_FORMULAIC_TRANSITIONS = [
 ]
 
 BANNED_ACADEMIC_NAMEDROPS = [
+    r"\bet\s+al\.",
+    r"\bdoi\s*:",
+    r"\(\d{4}\)",
     r"\b(?:giáo\s+sư|tiến\s+sĩ)\s+[a-zA-ZÀ-ỹ]+\s+[a-zA-ZÀ-ỹ]+",
-    r"\btại\s+(?:trường\s+)?đại\s+học\b",
     r"\bnghiên\s+cứu\s+năm\s+(?:\d+|một\s+nghìn|hai\s+nghìn)\s+của\b",
 ]
 
-# Strict Forward Chronology Forbidden Keywords per Chapter
-# Chapter map:
-# Ch1: Contemporary Desk
-# Ch2: Molecular Brain & SEEKING
-# Ch3: Prehistoric Hunter-Gatherer Play
-# Ch4: Ancient Sumer Edubba
-# Ch5: Feudal Imperial Examination
-# Ch6: Industrial Factory School
-# Ch7: Modern Digital 3-Way Trap
-# Ch8: Practical Transformation Keys
-HISTORICAL_BACKTRACK_RULES: Dict[int, List[str]] = {
-    1: [
-        "tiền sử", "săn bắt", "săn hái", "thảo nguyên", "thợ săn",
-        "đống lửa", "lửa trại", "nguyên thủy", "vạn năm trước", "tổ tiên",
-    ],
-    2: [
-        "tiền sử", "săn bắt", "săn hái", "thảo nguyên", "thợ săn",
-        "đống lửa", "lửa trại", "nguyên thủy", "vạn năm trước", "tổ tiên",
-        "hái lượm",
-    ],
-    4: [
-        "tiền sử", "săn bắt", "săn hái", "thảo nguyên", "thợ săn",
-        "đống lửa", "lửa trại", "nguyên thủy",
-    ],
-    5: [
-        "tiền sử", "săn bắt", "săn hái", "thảo nguyên", "thợ săn",
-        "đống lửa", "lửa trại", "nguyên thủy", "sumer", "lưỡng hà",
-        "chữ nêm", "edubba",
-    ],
-    6: [
-        "tiền sử", "săn bắt", "săn hái", "thảo nguyên", "thợ săn",
-        "đống lửa", "lửa trại", "nguyên thủy", "sumer", "lưỡng hà",
-        "chữ nêm", "edubba", "khoa cử", "sĩ tử", "bát cổ", "trường thi",
-    ],
-    7: [
-        "tiền sử", "săn bắt", "săn hái", "thảo nguyên", "thợ săn",
-        "đống lửa", "lửa trại", "nguyên thủy", "sumer", "lưỡng hà",
-        "chữ nêm", "khoa cử", "sĩ tử", "nhà máy phổ", "quân sự phổ",
-    ],
-    8: [
-        "tiền sử", "săn bắt", "săn hái", "thảo nguyên", "thợ săn",
-        "đống lửa", "lửa trại", "nguyên thủy", "tổ tiên", "vạn năm trước",
-    ],
-}
+# Topic-agnostic default: custom_chronology_rules from brief.json defines chapter boundaries.
+HISTORICAL_BACKTRACK_RULES: Dict[int, List[str]] = {}
+
+MICRO_ACTION_FILLER_RE = re.compile(
+    r"^\s*(?:bạn\s+|rồi\s+)?(?:cầm\s+cây\s+bút|đặt\s+xuống\s+tờ\s+giấy|gấp\s+cuốn\s+sách|mở\s+sách\s+ra|đặt\s+bút\s+xuống|lật\s+trang\s+giấy)\b",
+    re.IGNORECASE,
+)
 
 STOP_WORDS = {
     "và", "của", "là", "có", "được", "trong", "để", "cho", "với", "không",
@@ -148,6 +113,27 @@ def check_formulaic_transitions(scenes: List[Dict[str, Any]]) -> List[Dict[str, 
     return violations
 
 
+def check_micro_action_filler(scenes: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Detect scenes with >= 3 ultra-short physical micro-instruction commands."""
+    violations: List[Dict[str, Any]] = []
+    for sc in scenes:
+        sc_id = sc.get("scene_id") or sc.get("id") or "UNKNOWN"
+        narration = sc.get("narration") or sc.get("text") or ""
+        sents = [s.strip() for s in re.split(r"[.!?…]+", narration) if s.strip()]
+        matches = [
+            s for s in sents
+            if len(get_words(s)) <= 6 and MICRO_ACTION_FILLER_RE.search(s)
+        ]
+        if len(matches) >= 3:
+            violations.append({
+                "type": "MICRO_ACTION_FILLER_BABBLE",
+                "scene_id": sc_id,
+                "count": len(matches),
+                "snippet": " | ".join(matches[:3]),
+            })
+    return violations
+
+
 def compute_sentence_rhythm_metrics(scenes: List[Dict[str, Any]]) -> Dict[str, Any]:
     """Calculates human storytelling cadence variation (sentence length stddev & short punchy sentences)."""
     import math
@@ -200,43 +186,28 @@ def check_historical_backtracking(
     custom_chronology_rules: Dict[int, List[str]] | None = None,
 ) -> List[Dict[str, Any]]:
     violations = []
-    is_ancient_humans = any(
-        kw in topic_title.lower()
-        for kw in ["quái vật", "ancient", "tiền sử", "săn mồi", "megafauna", "vũ khí tiến hóa"]
+    active_rules = (
+        {int(k): v for k, v in custom_chronology_rules.items()}
+        if custom_chronology_rules is not None
+        else HISTORICAL_BACKTRACK_RULES
     )
+    if not active_rules:
+        return violations
+
     for sc in scenes:
         sc_id = sc.get("scene_id") or sc.get("id") or "UNKNOWN"
         ch_num = sc.get("chapter")
         if not ch_num:
-            # Try to infer chapter from scene_id if SC01..SC48
             m = re.match(r"SC0?(\d+)", sc_id, re.IGNORECASE)
             if m:
                 idx = int(m.group(1))
                 ch_num = (idx - 1) // 6 + 1
 
-        active_rules = (
-            {int(k): v for k, v in custom_chronology_rules.items()}
-            if custom_chronology_rules is not None
-            else HISTORICAL_BACKTRACK_RULES
-        )
-        if custom_chronology_rules is not None:
-            if not ch_num or ch_num not in active_rules:
-                continue
-            forbidden_words = active_rules[ch_num]
-        elif is_ancient_humans:
-            # For Ancient Humans topics, Ch1-Ch7 are set in prehistoric savannah/hunting.
-            # Only Ch8 (Contemporary modern room) enforces forward chronology partition.
-            if ch_num != 8:
-                continue
-            forbidden_words = ["đống lửa", "lửa trại", "nguyên thủy", "vạn năm trước"]
-        else:
-            if not ch_num or ch_num not in active_rules:
-                continue
-            forbidden_words = active_rules[ch_num]
-
+        if not ch_num or ch_num not in active_rules:
+            continue
+        forbidden_words = active_rules[ch_num]
         narration = (sc.get("narration") or sc.get("text") or "").lower()
         for kw in forbidden_words:
-            # Word boundary check
             pattern = r"(?<!\w)" + re.escape(kw) + r"(?!\w)"
             if re.search(pattern, narration):
                 violations.append({
@@ -380,9 +351,10 @@ def lint_script(
         all_violations.extend(check_scene_narrative_progression(scenes))
     all_violations.extend(check_instructional_manual_loop(scenes))
 
-    # 1. Formulaic transitions
+    # 1. Formulaic transitions & micro-action filler babble
     ft_violations = check_formulaic_transitions(scenes)
     all_violations.extend(ft_violations)
+    all_violations.extend(check_micro_action_filler(scenes))
 
     # 2. Historical backtracking (topic-aware or custom brief rules)
     hb_violations = check_historical_backtracking(

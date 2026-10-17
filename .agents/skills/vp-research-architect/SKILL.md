@@ -24,7 +24,8 @@ Bộ kỹ năng này được thiết kế để **tự động hóa 100% phần
 
 ## 2. Quy Trình Kiến Trúc Tối Giản Cho Agent Flash (`full_frame_v1`)
 
-### Bước 1: Khai Thác Dữ Kiện Văn Nói & Việt Hóa 60 Giây Đầu
+### Bước 1: Khai Thác Dữ Kiện Văn Nói, 1 Nghịch Lý Cốt Lõi & Việt Hóa 60 Giây Đầu
+- **1 Nghịch Lý Cốt Lõi / Video (Cấm Frankenstein Bloat & Cấm Nhân Bản Đề Tài):** Mỗi video chỉ mổ xẻ sâu **1 nghịch lý duy nhất** kèm **1 thí nghiệm tâm điểm có cốt truyện** (ai làm gì, thiết lập đối chứng ra sao, cú lật kết quả bất ngờ thế nào). Tuyệt đối không nhồi nhét giáo trình đại cương nhiều chương rời rạc và không lặp lại đề tài/hook đã sản xuất trong `sys/exports/`.
 - Mọi dữ kiện trong `sources[].facts` và `required_points` phải là câu văn nói tự nhiên $\le 20$ âm tiết (ngưỡng cứng $22$), không chứa `DOI`, `ISBN`, `et al.`, `%`, `/` (`check_conversational_spoken_facts()`).
 - **Việt hóa 60 giây đầu:** Mở màn bằng bối cảnh sát sườn với người học tại Việt Nam (bàn học đêm khuya, bút dạ quang vàng, giảng đường, phòng bảo vệ khóa luận). Chi tiết: [Fact Mining Guide](references/fact-mining-guide.md).
 

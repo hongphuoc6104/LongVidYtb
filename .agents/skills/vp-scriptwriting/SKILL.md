@@ -47,8 +47,8 @@ description: "Author and transform explainer video scripts into natural conversa
 - **`macro_prop`**: Cận cảnh bàn tay 4 ngón hoạt hình cầm bút, trang sách tô vàng, đồng hồ hoặc chi tiết sơ đồ.
 - **`white_card`**: Thẻ khái niệm nền trắng tinh `#FFFFFF` cô lập một biểu tượng đối sánh tối giản.
 
-1. **Cold open (`0:00–0:12.5`):** Viết các câu ngắn gọn gắn với hành động dồn dập để đạt khoảng 4 hình trong 5 giây đầu và 8–9 hình trong 12,5 giây đầu.
-2. **Thân bài (`sau 0:15`):** Giữ mỗi câu/nhịp hình trong khoảng **`0.83s–3.80s`**.
+1. **Cold open (`0:00–0:12.5`) & Cấm Lệnh Vật Lý Vụn Vặt (`MICRO_ACTION_FILLER_BABBLE`):** Đạt khoảng 4 hình trong 5 giây đầu và 8–9 hình trong 12,5 giây đầu bằng **đối trọng thị giác (Visual Counterpoint)** lật tẩy mâu thuẫn nhận thức; tuyệt đối cấm viết $\ge 3$ câu lệnh vật lý 4 chữ tầm thường liên tiếp (*"Cầm cây bút lên. Đặt xuống tờ giấy trắng. Mở sách ra."*).
+2. **Thân bài (`sau 0:15`):** Giữ mỗi câu/nhịp hình trong khoảng **`0.83s–3.80s`**, kể chuyện thí nghiệm sinh động nhưng không trích dẫn khô khan kiểu `et al.`, `DOI:`, `(2008)`.
 
 ---
 

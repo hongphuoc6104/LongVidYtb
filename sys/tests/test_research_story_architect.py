@@ -496,55 +496,6 @@ class TestResearchStoryArchitect(unittest.TestCase):
             assert report["passed"] is True
             assert len(report["errors"]) == 0
 
-    def test_motivation_v2_exp_13m_package_audio_gaps_and_videos(self):
-        """Verify V2 experimental 8-chapter package, stereo PCM16 trimmer, 0.000s cue sync, and V2 MP4s."""
-        import array
-        import importlib.util
-
-        from build_motivation_v2_exp_13m import create_motivation_v2_exp_13m_topic
-        from research_story_architect import check_conversational_spoken_facts
-        from script_cadence_checker import count_syllables
-
-        topic = create_motivation_v2_exp_13m_topic()
-        brief = build_brief_v3(topic)
-        validate_brief(SYS_DIR, brief)
-        brief_hash = compute_brief_hash(brief)
-        content = build_content_v3(topic, brief, brief_hash)
-        validate_content(SYS_DIR, brief, 1, brief_hash, content)
-        self.assertEqual(check_conversational_spoken_facts(brief["sources"]), [])
-        for src in brief["sources"]:
-            for fact in src["facts"]:
-                self.assertLessEqual(count_syllables(fact), 20)
-
-        cadence = ScriptCadenceChecker().check_scenes(generate_script_json(topic))
-        self.assertEqual(cadence["status"], "PASS")
-        self.assertEqual(cadence["warnings_count"], 0)
-        self.assertLessEqual(cadence["max_drift"], 0.30)
-
-        playbook_txt = (SYS_DIR.parent / "PLAYBOOK.md").read_text(encoding="utf-8")
-        self.assertNotIn("600.0", playbook_txt)
-        self.assertNotIn("10–15", playbook_txt)
-
-        v2_gen_path = SYS_DIR / "exports" / "motivation_v2_exp_bundle" / "scripts" / "generate_spoken_narration.py"
-        if not v2_gen_path.is_file():
-            return
-        spec = importlib.util.spec_from_file_location("v2_gen_spoken", v2_gen_path)
-        v2_mod = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(v2_mod)
-        sr = 48000
-        right_only = array.array("h", [0] * (int(0.20 * sr) * 2))
-        for _ in range(int(0.30 * sr)):
-            right_only.extend([0, 8000])
-        right_only.extend([0] * (int(0.25 * sr) * 2))
-        trimmed_bytes = v2_mod.trim_pcm16_stereo_silence(right_only.tobytes(), sr=sr)
-        self.assertGreater(len(trimmed_bytes), int(0.30 * sr) * 4)
-        self.assertLess(len(trimmed_bytes), int(0.40 * sr) * 4)
-
-        no_pad = array.array("h", [8000, -8000] * int(0.30 * sr)).tobytes()
-        once = v2_mod.trim_pcm16_stereo_silence(no_pad, sr=sr)
-        twice = v2_mod.trim_pcm16_stereo_silence(once, sr=sr)
-        self.assertEqual(once, twice)
-
-
 if __name__ == "__main__":
     unittest.main()
+

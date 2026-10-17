@@ -1,6 +1,6 @@
 # Targeted image repair with progress
 
-Engine 4 has no total cap on progressing repairs. Do not repeat failed target/input/strategy/evidence unchanged. Diagnose, consult logs, choose a justified strategy or report needs_attention with the actual cause. Renaming an issue/job cannot reset history. Engine 3 caps belong only to the [historical guide](legacy/image-repair-loops-before-normalization.md).
+Engine 4 has no total cap on progressing repairs. Do not repeat failed target/input/strategy/evidence unchanged. Diagnose, consult logs, choose a justified strategy or report needs_attention with the actual cause. Renaming an issue/job cannot reset history.
 
 From `sys/`: `pilot.py repair-status JOB --image IMAGE [--ratio RATIO]`; inspect the actual file before describing errors. Then `reject JOB images --revision N --image IMAGE [--ratio RATIO] --repair-plan PATH --note TEXT`, with actual feedback, followed by `resume JOB`. `--scene` repairs the whole scene; use `--image` for one image. Preserve unaffected audio/images.
 

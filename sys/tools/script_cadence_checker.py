@@ -674,6 +674,18 @@ class SceneCadenceReport:
                             f"without a breathing comma (exceeds limit of {self.max_clause_syllables}): '{snippet}'"
                         )
 
+        unnatural_comma_re = re.compile(
+            r",\s+(?:là|chỉ\s+tạo|bằng\s+cách|nhằm)\b",
+            re.IGNORECASE,
+        )
+        for s_idx, s in enumerate(self.sentences, 1):
+            m = unnatural_comma_re.search(s)
+            if m:
+                self.warnings.append(
+                    f"UNNATURAL_SUBJECT_VERB_COMMA: Sentence #{s_idx} in {self.scene_id} places an unnatural comma "
+                    f"before predicate/connector ('{m.group(0).strip()}'); split into 2 sentences instead"
+                )
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             "scene_id": self.scene_id,

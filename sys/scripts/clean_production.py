@@ -3,7 +3,6 @@
 
 import argparse
 import json
-import os
 import re
 import shutil
 import sqlite3
@@ -94,8 +93,9 @@ def validate_job_deliverables(job_id: str) -> tuple[bool, str, list[Path], int]:
     """Verify v3 decisions and current video library without changing job state."""
     import threading
     sys.path.insert(0, str(ROOT))
-    from pilot import Pilot
     import workflow
+
+    from pilot import Pilot
     p = None
     try:
         validate_job_id(job_id)
@@ -155,6 +155,48 @@ def clean_system_and_browser_cache(dry_run: bool = False) -> int:
     print('  Giữ profile, cache trình duyệt, model và /tmp dùng chung; chưa có ứng viên xóa được xác minh.')
     return 0
 
+
+def prune_transient_logs_and_proofs(keep_latest_proofs: int = 5, dry_run: bool = False) -> int:
+    """Rotate sys/logs/proofs/test_evidence_*.log, remove transient sys/reports/*.log, and clean sys/.cache/pycache."""
+    freed = 0
+    proofs_dir = ROOT / "logs/proofs"
+    if proofs_dir.is_dir() and not proofs_dir.is_symlink():
+        proofs = sorted(proofs_dir.glob("test_evidence_*.log"))
+        for old_proof in proofs[:-max(1, keep_latest_proofs)]:
+            if old_proof.is_file() and not old_proof.is_symlink():
+                sz = old_proof.stat().st_size
+                if dry_run:
+                    print(f"  [Proofs - Sẽ xoay vòng log cũ] {old_proof.name} ({format_size(sz)})")
+                else:
+                    old_proof.unlink(missing_ok=True)
+                    print(f"  [Proofs - Đã xoay vòng log cũ] {old_proof.name} ({format_size(sz)})")
+                freed += sz
+
+    reports_dir = ROOT / "reports"
+    if reports_dir.is_dir() and not reports_dir.is_symlink():
+        for log_file in reports_dir.glob("*.log"):
+            if log_file.is_file() and not log_file.is_symlink():
+                sz = log_file.stat().st_size
+                if dry_run:
+                    print(f"  [Reports - Sẽ xóa log tạm] {log_file.name} ({format_size(sz)})")
+                else:
+                    log_file.unlink(missing_ok=True)
+                    print(f"  [Reports - Đã xóa log tạm] {log_file.name} ({format_size(sz)})")
+                freed += sz
+
+    pycache_dir = ROOT / ".cache/pycache"
+    if pycache_dir.is_dir() and not pycache_dir.is_symlink():
+        sz = get_dir_size(pycache_dir)
+        if sz > 0:
+            if dry_run:
+                print(f"  [Cache - Sẽ dọn pycache] {pycache_dir} ({format_size(sz)})")
+            else:
+                shutil.rmtree(pycache_dir, ignore_errors=True)
+                print(f"  [Cache - Đã dọn pycache] {pycache_dir} ({format_size(sz)})")
+            freed += sz
+    return freed
+
+
 def clean_completed_job(job_id: str, dry_run: bool = False) -> int:
     """Safely validates and prunes unapproved revisions of a completed job."""
     try:
@@ -173,12 +215,12 @@ def clean_completed_job(job_id: str, dry_run: bool = False) -> int:
         print(f"   Dữ liệu {job_id} trong runs/ được giữ nguyên 100%.")
         return 0
 
-    print(f"\n==========================================================")
+    print("\n==========================================================")
     print(f"  Job Hợp Lệ Đã Nghiệm Thu: {job_id}")
     print(f"  Thành phẩm đã xác minh trong thư viện video của {job_id}:")
     for f in preserved:
         print(f"    ✓ {f.name} ({format_size(f.stat().st_size)})")
-    print(f"==========================================================")
+    print("==========================================================")
 
     freed = prune_unapproved_revisions(job_id, dry_run=dry_run)
     return freed
@@ -189,7 +231,7 @@ def main():
     )
     parser.add_argument("--job", help="Tên job cần kiểm tra thành phẩm v3")
     parser.add_argument("--all", action="store_true", help="Kiểm kê các job và dọn scratch rỗng quá hạn")
-    parser.add_argument("--periodic", action="store_true", help="Chế độ bảo trì định kỳ: Kiểm kê job và dọn scratch rỗng quá hạn")
+    parser.add_argument("--periodic", action="store_true", help="Chế độ bảo trì định kỳ: Kiểm kê job, xoay vòng proof logs và dọn scratch rỗng quá hạn")
     parser.add_argument("--cache-only", action="store_true", help="Báo trạng thái bảo toàn cache; không xóa")
     parser.add_argument("--dry-run", action="store_true", help="Xem trước các mục sẽ dọn mà không xóa thật")
     args = parser.parse_args()
@@ -215,8 +257,9 @@ def main():
         # Step 1: System & Browser Cache
         total_freed += clean_system_and_browser_cache(dry_run=args.dry_run)
 
-        # Step 2: Scratch Whitelist
+        # Step 2: Scratch Whitelist & Proof/Report Log Rotation
         total_freed += clean_scratch_whitelist(retention_days=3, dry_run=args.dry_run)
+        total_freed += prune_transient_logs_and_proofs(keep_latest_proofs=5, dry_run=args.dry_run)
 
         # Step 3: Scan all runs/ for completed, approved jobs
         print("\n--- [Tầng 3] Tối ưu hóa các Job đã nghiệm thu hoàn tất ---")

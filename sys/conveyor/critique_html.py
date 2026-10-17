@@ -29,7 +29,7 @@ def scan_critique(root_dir: Path) -> Tuple[bool, Dict[str, any]]:
     ]
     allowed_root_files = {
         "AGENTS.md", "GEMINI.md", "INDEX.md", "README.md", "PLAYBOOK.md",
-        "pilot.py", "pipeline", "pyproject.toml", "implementation_plan.md", "uv.lock"
+        "pilot.py", "pipeline", "pyproject.toml", "uv.lock"
     }
     unexpected_root = [f for f in root_files if f not in allowed_root_files]
     checks.append({
@@ -162,6 +162,21 @@ def scan_critique(root_dir: Path) -> Tuple[bool, Dict[str, any]]:
             "100% kiến trúc chuẩn hóa trên Flow CDP độc lập, không còn dấu vết thành phần cũ."
             if not legacy_hits
             else f"Phát hiện dấu vết thành phần cũ: {', '.join(legacy_hits[:5])}"
+        ),
+    })
+
+    # Check 6: PLAYBOOK.md Token Quota Budget (<= 200 lines)
+    playbook_path = root / "PLAYBOOK.md"
+    pb_lines = len(playbook_path.read_text(encoding="utf-8", errors="ignore").splitlines()) if playbook_path.is_file() else 0
+    pb_ok = 0 < pb_lines <= 200
+    checks.append({
+        "name": "PLAYBOOK.md Quota Budget (<= 200 lines)",
+        "category": "Token Quota Guard",
+        "status": "PASS" if pb_ok else "WARN",
+        "detail": (
+            f"PLAYBOOK.md gọn nhẹ ({pb_lines}/200 dòng), đảm bảo tiết kiệm token context."
+            if pb_ok
+            else f"PLAYBOOK.md vượt ngưỡng 200 dòng ({pb_lines} dòng); cần trích xuất sang skills/references."
         ),
     })
 

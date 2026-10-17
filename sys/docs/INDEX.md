@@ -13,8 +13,9 @@ Root INDEX remains the entry point. Specifications do not prove that a service c
 | [Flow model prompts](flow-prompts.md) | Versioned model/purpose instructions, exact learner text and reference provenance; new-job pinning with legacy request preservation |
 | [maintenance](maintenance.md) | Reproducibility manifests, verified archive, scoped Git history/branch/remote |
 | [AGY adapter](AGY-SETUP.md) | Compatibility entry point without duplicate Rules/reviewer |
-| [Rules](../../AGENTS.md), [14 Skills](../../.agents/skills) | Authority/execution/accounts/brand; one skill per workflow |
+| [Rules](../../AGENTS.md), [13 Skills](../../.agents/skills) | Authority/execution/accounts/brand; one skill per workflow |
 
-`legacy/` preserves pre-normalization guides, v3 skills and the old profile outside discovery. Legacy content cannot grant authority or change engine 4. Outdated historical planning documents have been cleaned up and consolidated into the current documentation.
+Outdated historical planning documents and pre-normalization `legacy/` guides have been cleaned up and consolidated into the current documentation.
 
 Other docs are scoped references or history: M2-FLOW/b2-illustrator/flow-queue describe provider integration; flow-x4-results/render-performance/flow-pc-compatibility record dated trials; layout-migration/branch-sync record restructuring. Use only facts applicable to the actual job/tool. Never import legacy auto-reviewer/three-gate/local-TTS/comedy instructions as current policy. Current v4 commands/policy come from the table above.
+

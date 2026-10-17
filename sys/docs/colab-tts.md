@@ -20,6 +20,6 @@ The official workflow packages text/voice/rate/reference hashes/languages/output
 
 Submitted work retains account/session/request pins. `collect` retrieves old work without generation; unknown/ambiguous waits for reconciliation. Quota/bot/CAPTCHA/auth/503 blocks only dependent scope; network recovery is finite per episode. Collect important files and verify hashes/manifests before `stop --account ACCOUNT --session SESSION` on the completed owned runtime. Closing a browser tab does not release GPU.
 
-Passing fixtures/protocol checks do not prove actual T4, pronunciation, voice similarity or video quality. Report real measurements and only actual viewing/listening. [Progress/evidence](archive/normalization-progress.md) tracks trials; the [earlier Colab guide](legacy/colab-tts-before-normalization.md) preserves historical design/testing.
+Passing fixtures/protocol checks do not prove actual T4, pronunciation, voice similarity or video quality. Report real measurements and only actual viewing/listening. [Progress/evidence](archive/normalization-progress.md) tracks trials.
 
 Engine 4 uses measured WAV duration for downstream timeline/rendering; the brief range is an estimate, not a TTS stop condition. Keep narration, voice and rate when the measurement differs. Positive finite WAV/header/segment durations, manifest hashes and audio/video consistency remain mandatory; legacy v3 or an explicit source-backed required duration retains its contract.

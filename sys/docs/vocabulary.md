@@ -13,4 +13,4 @@ From `sys/`, use the management interpreter:
 - `vocab/bank.py mark JOB --note TEXT`: verify completion/export before updating the ledger. Never mark early or edit ledger state directly.
 - `build` after source changes regenerates the bank without editing the ledger. `lint` inspects duplicate senses; `audit` checks jobs/bank/mark. Rank/level metadata do not establish learner ability.
 
-Reserved senses stay with the same job during repairs. Release/redo/supersede need an actual lifecycle instruction and retain previous/history; never use them to evade unknown work or service caps. Queues are finite and explicitly assigned, never automatic mass production after setup. The [pre-normalization guide](legacy/vocabulary-before-normalization.md) retains earlier choices.
+Reserved senses stay with the same job during repairs. Release/redo/supersede need an actual lifecycle instruction and retain previous/history; never use them to evade unknown work or service caps. Queues are finite and explicitly assigned, never automatic mass production after setup.

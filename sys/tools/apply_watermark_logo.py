@@ -5,9 +5,7 @@ Automatically calculates position and dimensions based on resolution,
 ensuring 100% coverage without obstructing video content.
 """
 import argparse
-import os
 import subprocess
-import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]

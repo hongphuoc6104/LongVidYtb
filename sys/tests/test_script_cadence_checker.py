@@ -634,6 +634,33 @@ class ScriptDiversityLinterTests(unittest.TestCase):
         violations = check_formulaic_transitions(scenes)
         self.assertEqual(len(violations), 0)
 
+    def test_unnatural_subject_verb_comma_warning(self):
+        checker = ScriptCadenceChecker()
+        scenes = [
+            {
+                "id": "SC01",
+                "duration": 6.0,
+                "narration": "Đọc đi đọc lại một tài liệu nhiều lần, chỉ tạo ra ảo giác năng lực.",
+            }
+        ]
+        res = checker.check_scenes(scenes)
+        self.assertEqual(res["status"], "WARN")
+        self.assertTrue(any("UNNATURAL_SUBJECT_VERB_COMMA" in w for w in res["scenes"][0]["warnings"]))
+
+    def test_micro_action_filler_babble_detection(self):
+        from script_diversity_linter import check_micro_action_filler
+
+        bad_scenes = [
+            {
+                "id": "SC01",
+                "narration": "Rồi gấp cuốn sách lại. Cầm cây bút lên. Đặt xuống tờ giấy trắng. Mở sách ra.",
+            }
+        ]
+        violations = check_micro_action_filler(bad_scenes)
+        self.assertEqual(len(violations), 1)
+        self.assertEqual(violations[0]["type"], "MICRO_ACTION_FILLER_BABBLE")
+
 
 if __name__ == "__main__":
     unittest.main()
+

@@ -13,4 +13,5 @@ Collect important outputs before releasing a dedicated Colab runtime; stop only 
 
 Commit/push only granted repo/branch/path scope at a chosen maintenance checkpoint. Check diff, ignore rules and secrets; stage an allowlist, never git add . blindly. Preserve other local edits, never force-push. Resolve conflicts only within the same granted scope. A clock schedule requires a specified cadence; do not invent one.
 
-If candidates cannot be proved safe, leave them and explain the precise missing evidence. Report actual files/bytes and issues, not generic promises of a reset.
+If candidates cannot be proved safe, leave them and explain the precise missing evidence. Report actual files/bytes and issues, not generic promises of a reset. For routine non-destructive maintenance of expired empty scratch folders, `sys/reports/*.log`, and rotation of `sys/logs/proofs/test_evidence_*.log` (retaining the latest 5 proofs), run `python3 sys/scripts/clean_production.py --periodic`.
+

@@ -8,4 +8,4 @@ Use the existing outline/purpose/action/images/beats/anchors fields, not competi
 
 Technical checks do not prove perception/learning. Never claim listening/viewing/quality from prompts, ASR, hashes or metadata. Auto does not call a reviewer; craft inspection does not become a new quality gate. The new direction requires real artifact trials within the development assignment.
 
-The v3 [director guide](legacy/director-system.md) is historical. Current loaders/callers use vp-production references without reviewer calls in engine 4 auto.
+Current loaders/callers use vp-production references without reviewer calls in engine 4 auto.

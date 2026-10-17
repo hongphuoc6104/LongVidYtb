@@ -314,7 +314,7 @@ def _template_request(p, j, target, prompt, corrections, ratio, refs, registrati
         raise Blocked('FLOW_LAYERING_DISABLED: generate complete full-frame scene images')
     desc = prompt
     preserve_items, change_items = [], []
-    brief_obj = p.brief(j)[0] if p.brief(j) else {}
+    brief_obj = p.brief(j)[0] if hasattr(p, 'brief') and p.brief(j) else {}
     has_format_profile = brief_obj.get('format_profile') is not None
     if has_format_profile:
         from format_profiles import clearance_for_output

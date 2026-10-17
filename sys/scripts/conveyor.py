@@ -88,7 +88,6 @@ def station_2_test_ast() -> bool:
         SYS_DIR / "tests/test_pipeline_stations.py",
         SYS_DIR / "tests/test_research_story_architect.py",
         SYS_DIR / "tests/test_script_cadence_checker.py",
-        SYS_DIR / "tests/test_option_b_manifest_and_templates.py",
         SYS_DIR / "tests/test_colab_bridge_skill.py",
         SYS_DIR / "tests/test_format_separation.py",
         SYS_DIR / "tests/test_renderer_tile_integrity.py",
@@ -97,6 +96,7 @@ def station_2_test_ast() -> bool:
         SYS_DIR / "tests/test_full_frame_upgrade.py",
         SYS_DIR / "tests/test_full_frame_pipeline.py",
         SYS_DIR / "tests/test_omni_platform.py",
+        SYS_DIR / "tests/test_independent_maintenance_contracts.py",
     ]
     # Check AST on test directory
     ast_ok, ast_report = check_test_suite_integrity([SYS_DIR / "tests"])
@@ -150,6 +150,10 @@ def station_2_test_ast() -> bool:
     )
     evidence_file.write_text(evidence_content, encoding="utf-8")
 
+    # Auto-rotate proof logs to keep latest 5
+    for old_proof in sorted(proof_dir.glob("test_evidence_*.log"))[:-5]:
+        old_proof.unlink(missing_ok=True)
+
     print(res.stdout)
     if res.returncode != 0:
         print(f"[FAIL] Pytest thất bại với mã lỗi {res.returncode}")
@@ -197,12 +201,13 @@ def station_4_lint() -> bool:
     # Step B: Ruff linter
     print("  2. Phân tích tĩnh mã nguồn qua Ruff...")
     ruff_bin = get_ruff_executable()
-    # Check specific paths
     ruff_cmd = [
         ruff_bin,
         "check",
         str(SYS_DIR / "conveyor"),
+        str(SYS_DIR / "tools"),
         str(SYS_DIR / "scripts/conveyor.py"),
+        str(SYS_DIR / "scripts/clean_production.py"),
         str(SYS_DIR / "format_profiles.py"),
         str(SYS_DIR / "tests/test_format_separation.py"),
         str(REPO_ROOT / "pilot.py"),

@@ -25,7 +25,7 @@ Auto records a plan and executes without a machine reviewer or per-output user c
 
 `stop JOB --source TEXT` blocks each new submission while collection remains allowed. Resume or a new chat preserves grant/checkpoint/owner and cannot duplicate runners. Takeover rejects a live previous runner. `mode JOB --mode auto|review --source TEXT` records an explicit mode transition; never edit workflow state directly. `bind-session` changes choices for new work while retaining existing request pins.
 
-Development uses `migrate JOB --grant DEV --production-grant PROD --source TEXT` for v3 migration with snapshots/rollback. `rollback-migration JOB --grant DEV --source TEXT` follows the tool's conditions. `adopt-code JOB --grant DEV --confirm JOB --reason TEXT` accepts only authorized changes without a fake human TTY. Guide/test changes do not blanket-lock v4; incompatible schemas still need migration. [v3 workflow](legacy/workflow.md) is historical only.
+Development uses `migrate JOB --grant DEV --production-grant PROD --source TEXT` for v3 migration with snapshots/rollback. `rollback-migration JOB --grant DEV --source TEXT` follows the tool's conditions. `adopt-code JOB --grant DEV --confirm JOB --reason TEXT` accepts only authorized changes without a fake human TTY. Guide/test changes do not blanket-lock v4; incompatible schemas still need migration. Prior v3 workflow guides are historical only.
 
 ## Completion and evidence
 

@@ -29,4 +29,3 @@
 - **Run/Resume pipeline:**
   `python3 sys/pilot.py run <JOB>` or `python3 sys/pilot.py resume <JOB>`
 
-*(Note: The [prior guide](legacy/story-planning-before-normalization.md) is historical, not current mode policy.)*
