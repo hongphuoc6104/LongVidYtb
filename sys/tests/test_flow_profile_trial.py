@@ -8,6 +8,7 @@ import hashlib
 import json
 from pathlib import Path
 import shutil
+import socket
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -81,6 +82,18 @@ class FlowProfileTrialTests(unittest.TestCase):
 
     def context(self):
         stack=ExitStack()
+        from flow_cdp import bridge as cdp
+        endpoint=self.root/'fixture-flow.sock'
+        peer=socket.socket(socket.AF_UNIX,socket.SOCK_STREAM)
+        peer.bind(str(endpoint))
+        stack.callback(endpoint.unlink,missing_ok=True)
+        stack.callback(peer.close)
+        stack.enter_context(patch.object(cdp,'SYS_ROOT',self.root))
+        stack.enter_context(patch.object(cdp,'ROOT',self.root))
+        stack.enter_context(patch.object(cdp,'get_socket_path',return_value=endpoint))
+        stack.enter_context(patch.object(cdp,'_execute_via_cdp_direct',side_effect=AssertionError('Trial fixture must never dispatch to real Flow')))
+        stack.enter_context(patch('flow_cdp.cdp_direct_client.is_port_open',return_value=False))
+        stack.enter_context(patch('flow_cdp.cdp_direct_client.ensure_chrome_profiles_launched',side_effect=AssertionError('Trial fixture must never launch Chrome')))
         stack.enter_context(patch('b2_bridge.ROOT',self.root))
         stack.enter_context(patch('b2_bridge.send_raw_command',side_effect=self.peer))
         stack.enter_context(patch('account_catalog.probe_flow',return_value={

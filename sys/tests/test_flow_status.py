@@ -8,6 +8,7 @@ that happens after generate_b2_batch actually sends 'tool-snapshot:queue:...'
 may fall back to the default ambiguous classification.
 """
 import json
+import socket
 import tempfile
 import unittest
 from pathlib import Path
@@ -19,11 +20,37 @@ except ImportError:
 from pilot import Blocked
 
 
+def isolate_transport(case: unittest.TestCase, root: Path) -> None:
+    """Keep the real bridge while closing every live fallback in a fixture."""
+    from flow_cdp import bridge as cdp
+    endpoint = root / 'fixture-flow.sock'
+    peer = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    peer.bind(str(endpoint))
+    case.addCleanup(endpoint.unlink, missing_ok=True)
+    case.addCleanup(peer.close)
+    replacements = [
+        patch.object(cdp, 'ROOT', root),
+        patch.object(cdp, 'SYS_ROOT', root),
+        patch.object(cdp, 'get_socket_path', return_value=endpoint),
+        patch.object(cdp, '_execute_via_cdp_direct', side_effect=AssertionError('Status fixture must never dispatch to real Flow')),
+        patch('flow_cdp.cdp_direct_client.is_port_open', return_value=False),
+        patch('flow_cdp.cdp_direct_client.ensure_chrome_profiles_launched', side_effect=AssertionError('Status fixture must never launch Chrome')),
+    ]
+    for replacement in replacements:
+        replacement.start()
+        case.addCleanup(replacement.stop)
+
+
 @unittest.skipIf(b2_bridge is None, "B-2 Illustrator bridge retired in favor of Flow CDP")
 class QueryStatusRetryTests(unittest.TestCase):
     """query_status() must retry a transient failure with backoff and use
     the configured timeout, since session.mjs answers 'status' immediately
     but the daemon itself can still be cold-starting."""
+
+    def setUp(self) -> None:
+        folder = tempfile.TemporaryDirectory()
+        self.addCleanup(folder.cleanup)
+        isolate_transport(self, Path(folder.name))
 
     def _root_with_config(self, tmp, **config):
         root = Path(tmp)
@@ -80,6 +107,7 @@ class PreSubmitClassificationTests(unittest.TestCase):
         self.root = Path(self.tmp.name)
         (self.root / 'config.json').write_text(json.dumps({'flow_status_retries': 0}))
         self.addCleanup(self.tmp.cleanup)
+        isolate_transport(self, self.root)
         self.root_patch = patch.object(b2_bridge, 'ROOT', self.root)
         self.root_patch.start()
         self.addCleanup(self.root_patch.stop)

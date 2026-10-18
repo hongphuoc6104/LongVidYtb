@@ -157,3 +157,11 @@ $$\text{1. Tái hiện E2E} \longrightarrow \text{2. Phân tích gốc rễ} \lo
 - **Wrong Assumptions:** Stopping retries within one patch also stops unstarted patches, or local fixture timings certify real Google recovery.
 - **Resolution & E2E Proof:** Bound scheduling to available workers; after observing an error, collect only in-flight work and preserve the unsent remainder. Nine offline regressions include 1,000 requests without profile overlap, refusal categories, unsent failures and partial collection. Live image acceptance remains blocked by disabled browser control; see sys/docs/flow-recovery-load-test.md.
 - **Golden Rule:** Stop scheduling immediately on a terminal error, preserve every submitted owner, and distinguish offline control-flow evidence from live provider recovery.
+
+### [ERR-20261018-12] Close live fallbacks in legacy Flow recovery fixtures
+- **Symptom:** Seven expanded recovery tests fail when a signed-in CDP browser is open; one timeout fixture reaches the real RPC and receives error [3] without an image.
+- **Reproduction Path:** The initial 84-test project run records 77 passes and seven failures. Trial preflight sees a different real profile, socket-status failures are masked by live ports, and a mocked send is bypassed by direct dispatch.
+- **Root Cause:** Legacy trial/status fixtures replace only the socket sender. The bridge also probes live CDP ports, launches browsers and uses a direct fallback when no fixture socket exists.
+- **Wrong Assumptions:** A mocked socket sender alone isolates the provider, or a test suite that passes with Chrome closed remains offline with Chrome open.
+- **Resolution & E2E Proof:** Give each fixture a private local Unix endpoint, disable external port observations, and fail immediately on browser launch or direct dispatch. Preserve real bridge, request ownership, budget and timeout logic. The fourteen affected tests pass in isolation; expanded verification remains separate from live production observations.
+- **Golden Rule:** Close every alternate provider boundary before running recovery tests; document accidental RPCs and never count fixture results as live image acceptance.

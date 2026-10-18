@@ -33,6 +33,7 @@ jobs:
           sys/tests/test_colab_reconcile.py sys/tests/test_account_probe.py
           sys/tests/test_dashboard.py sys/tests/test_dashboard_engine.py
           sys/tests/test_multi_profile_manager.py sys/tests/test_flow_batch_stop.py
+          sys/tests/test_flow_status.py sys/tests/test_flow_profile_trial.py
       - name: Lint scheduler and health implementation
         run: >-
           python -m pip install ruff && python -m ruff check

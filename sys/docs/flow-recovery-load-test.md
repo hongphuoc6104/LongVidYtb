@@ -50,3 +50,28 @@ profile and pending requests first. Use a small serial sample with a minimum
 four-second gap, record each request/result/latency, and stop on the first
 provider refusal. Avoid the legacy CAPTCHA interception path; do not change
 verification actions or use cookie resets to circumvent a refusal.
+
+## Project-only continuation
+
+The user subsequently required project tools only, without Computer Use. Work
+browser permissions are not a prerequisite for those project commands. The
+earlier browser-tool limitation applies only to that separate tool route.
+
+The expanded project suite initially found seven failures out of 84 tests. Old
+trial/status fixtures did not close the direct fallback or external port probes.
+One synthetic timeout case reached the live RPC and received parameter error
+`[3]`, without a returned image; billing was not verified. This was unintended
+test transport leakage, not a successful stress test. The fixtures now use
+private Unix endpoints and assert on any external launch/direct dispatch.
+
+At 17:11 on 2026-10-18, read-only production observation confirmed fresh real
+images in adversarial-ai-9x16, with matching bytes/media sidecars and roughly
+27–43 seconds per image in the latest sample. These were submissions by the
+already-running production controller, not this test task. Its submitted
+request and profile ownership prevent disruptive cleanup while it is running.
+
+The cleanup utility rejects the active port 9225 because its CLI only accepts
+9222/9223/9224. It also claims seven-day filtering but passes no time range and
+prints a claim that abnormal-activity flags were eliminated without performing
+a post-cleanup generation check. These are observed utility limitations, not
+evidence that cookies caused or resolved a provider refusal.
