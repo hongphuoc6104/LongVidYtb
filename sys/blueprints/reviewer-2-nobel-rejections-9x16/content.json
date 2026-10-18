@@ -1,0 +1,2126 @@
+{
+  "schema_version": "3.0",
+  "brief_revision": 1,
+  "brief_hash": "544cd3f5ade0e918c3ad4e996cee0b5d5b3d389f613c64f09598b6b12e753a5b",
+  "topic": "Nghịch Lý Reviewer 2: Những Công Trình Đoạt Giải Nobel Từng Bị Tạp Chí Từ Chối Thẳng Thừng",
+  "duration": {
+    "min_seconds": 120.0,
+    "max_seconds": 200.0
+  },
+  "style": "Minh họa 2D Editorial dọc toàn khung, nhân vật người que biểu cảm, mật độ hình ảnh cao, đồ họa tôn trọng vùng an toàn phụ đề 400px phía dưới.",
+  "required_points": [
+    "Cú tát mở màn sọt rác Nobel",
+    "Ca thứ nhất: Peter Higgs và Hạt của Chúa",
+    "Khải hoàn của Hạt của Chúa",
+    "Ca thứ hai: Dan Shechtman và sự ruồng bỏ",
+    "Lời chế giễu của Linus Pauling",
+    "Khải hoàn của Chuẩn tinh thể",
+    "Ca thứ ba: Katalin Karikó và niềm tin sắt đá",
+    "Cứu sống cả nhân loại",
+    "Khép vòng lặp cho người làm khoa học"
+  ],
+  "characters": [
+    {
+      "id": "CH01",
+      "name": "Người làm nghiên cứu di động",
+      "appearance": "Anonymous round white head with a thick black outline, expressive dot eyes and thin black stick limbs.",
+      "outfit": "Simple teal shirt in vertical safe zone framing."
+    }
+  ],
+  "scenes": [
+    {
+      "id": "SC01",
+      "title": "Cú tát mở màn sọt rác Nobel",
+      "purpose": "Triển khai bước 1: cú tát mở màn sọt rác nobel",
+      "action": "Close vertical view of a Nobel Prize medal emerging from beneath a crumpled rejection letter.",
+      "setting": "A vertical mobile frame showing a crumpled academic rejection letter next to a glowing golden medal.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Những bài báo đoạt giải Nobel từng bị hội đồng ném vào sọt rác. Bạn vừa nhận thư từ chối từ tạp chí? Đừng vội nản lòng buông xuôi. Hãy nhìn lại lịch sử khoa học. Những bộ óc vĩ đại nhất nhân loại, cũng từng bị người phản biện số hai chê bai thậm tệ.",
+      "requirements": [
+        "R01"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC01_I1",
+          "description": "A vertical mobile frame showing a crumpled academic rejection letter next to a glowing golden medal. Close vertical view of a Nobel Prize medal emerging from beneath a crumpled rejection letter.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Close vertical view of a Nobel Prize medal emerging from beneath a crumpled rejection letter.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC01_I2",
+          "description": "A vertical mobile frame showing a crumpled academic rejection letter next to a glowing golden medal. A young researcher looks down at their phone screen with a crestfallen expression.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A young researcher looks down at their phone screen with a crestfallen expression.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC01_I3",
+          "description": "A vertical mobile frame showing a crumpled academic rejection letter next to a glowing golden medal. The researcher lowers the phone slowly; eyes reflect quiet determination.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC01_I2",
+          "preserve": "Keep the exact camera angle, room geometry and props in A vertical mobile frame showing a crumpled academic rejection letter next to a glowing golden medal.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The researcher lowers the phone slowly; eyes reflect quiet determination.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC01_I4",
+          "description": "A vertical mobile frame showing a crumpled academic rejection letter next to a glowing golden medal. A hand flips open a historical Nobel prize archive book.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A hand flips open a historical Nobel prize archive book.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC01_I5",
+          "description": "A vertical mobile frame showing a crumpled academic rejection letter next to a glowing golden medal. A vertical concept card contrasting a harsh REJECT stamp with a golden laurel on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A vertical concept card contrasting a harsh REJECT stamp with a golden laurel on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC01_I6",
+          "description": "A vertical mobile frame showing a crumpled academic rejection letter next to a glowing golden medal. Shadows of critical reviewers loom behind the researcher desk.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC01_I2",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shadows of critical reviewers loom behind the researcher desk.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC01_B1",
+          "image_id": "SC01_I1",
+          "purpose": "Triển khai bước 1: cú tát mở màn sọt rác nobel",
+          "anchor": {
+            "vi": {
+              "quote": "Những bài báo đoạt giải Nobel từng bị hội đồng ném vào sọt rác.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B2",
+          "image_id": "SC01_I2",
+          "purpose": "Triển khai bước 1: cú tát mở màn sọt rác nobel",
+          "anchor": {
+            "vi": {
+              "quote": "Bạn vừa nhận thư từ chối từ tạp chí?",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B3",
+          "image_id": "SC01_I3",
+          "purpose": "Triển khai bước 1: cú tát mở màn sọt rác nobel",
+          "anchor": {
+            "vi": {
+              "quote": "Đừng vội nản lòng buông xuôi.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B4",
+          "image_id": "SC01_I4",
+          "purpose": "Triển khai bước 1: cú tát mở màn sọt rác nobel",
+          "anchor": {
+            "vi": {
+              "quote": "Hãy nhìn lại lịch sử khoa học.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B5",
+          "image_id": "SC01_I5",
+          "purpose": "Triển khai bước 1: cú tát mở màn sọt rác nobel",
+          "anchor": {
+            "vi": {
+              "quote": "Những bộ óc vĩ đại nhất nhân loại,",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B6",
+          "image_id": "SC01_I6",
+          "purpose": "Triển khai bước 1: cú tát mở màn sọt rác nobel",
+          "anchor": {
+            "vi": {
+              "quote": "cũng từng bị người phản biện số hai chê bai thậm tệ.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "narrative_warm",
+      "narrative_phase": "lived_friction"
+    },
+    {
+      "id": "SC02",
+      "title": "Ca thứ nhất: Peter Higgs và Hạt của Chúa",
+      "purpose": "Triển khai bước 2: ca thứ nhất: peter higgs và hạt của chúa",
+      "action": "Physicist Peter Higgs sits at a wooden desk in Edinburgh writing formulas on paper.",
+      "setting": "A European theoretical physics office in 1964 with chalkboards full of field equations.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Vào năm một nghìn chín trăm sáu mươi tư, bài báo của Peter Higgs từng bị tạp chí vật lý từ chối. Hội đồng cho rằng công trình này không có giá trị thực tiễn. Họ mỉa mai lý thuyết của ông là viển vông. Và ném bài viết vào ngăn kéo lãng quên.",
+      "requirements": [
+        "R02"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC01"
+      ],
+      "images": [
+        {
+          "id": "SC02_I1",
+          "description": "A European theoretical physics office in 1964 with chalkboards full of field equations. Physicist Peter Higgs sits at a wooden desk in Edinburgh writing formulas on paper.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Physicist Peter Higgs sits at a wooden desk in Edinburgh writing formulas on paper.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC02_I2",
+          "description": "A European theoretical physics office in 1964 with chalkboards full of field equations. The CERN journal editor stamps REJECT across Higgs' two-page paper on gauge bosons.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "The CERN journal editor stamps REJECT across Higgs' two-page paper on gauge bosons.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC02_I3",
+          "description": "A European theoretical physics office in 1964 with chalkboards full of field equations. Physicist Peter Higgs carefully places his finalized manuscript into an envelope.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC02_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Physicist Peter Higgs carefully places his finalized manuscript into an envelope.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC02_I4",
+          "description": "A European theoretical physics office in 1964 with chalkboards full of field equations. A vertical card showing the critique: NO OBVIOUS RELEVANCE TO PHYSICS on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A vertical card showing the critique: NO OBVIOUS RELEVANCE TO PHYSICS on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC02_I5",
+          "description": "A European theoretical physics office in 1964 with chalkboards full of field equations. A senior editor waves his hand dismissively at the chalkboard equations.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC02_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in A European theoretical physics office in 1964 with chalkboards full of field equations.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "A senior editor waves his hand dismissively at the chalkboard equations.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC02_I6",
+          "description": "A European theoretical physics office in 1964 with chalkboards full of field equations. The manuscript is locked into a wooden archive drawer in the dark hallway.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC02_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The manuscript is locked into a wooden archive drawer in the dark hallway.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC02_B1",
+          "image_id": "SC02_I1",
+          "purpose": "Triển khai bước 2: ca thứ nhất: peter higgs và hạt của chúa",
+          "anchor": {
+            "vi": {
+              "quote": "Vào năm một nghìn chín trăm sáu mươi tư,",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B2",
+          "image_id": "SC02_I2",
+          "purpose": "Triển khai bước 2: ca thứ nhất: peter higgs và hạt của chúa",
+          "anchor": {
+            "vi": {
+              "quote": "bài báo của Peter Higgs từng bị tạp chí vật lý từ chối.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B3",
+          "image_id": "SC02_I3",
+          "purpose": "Triển khai bước 2: ca thứ nhất: peter higgs và hạt của chúa",
+          "anchor": {
+            "vi": {
+              "quote": "Hội đồng cho rằng",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B4",
+          "image_id": "SC02_I4",
+          "purpose": "Triển khai bước 2: ca thứ nhất: peter higgs và hạt của chúa",
+          "anchor": {
+            "vi": {
+              "quote": "công trình này không có giá trị thực tiễn.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B5",
+          "image_id": "SC02_I5",
+          "purpose": "Triển khai bước 2: ca thứ nhất: peter higgs và hạt của chúa",
+          "anchor": {
+            "vi": {
+              "quote": "Họ mỉa mai lý thuyết của ông là viển vông.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B6",
+          "image_id": "SC02_I6",
+          "purpose": "Triển khai bước 2: ca thứ nhất: peter higgs và hạt của chúa",
+          "anchor": {
+            "vi": {
+              "quote": "Và ném bài viết vào ngăn kéo lãng quên.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "empirical_conflict"
+    },
+    {
+      "id": "SC03",
+      "title": "Khải hoàn của Hạt của Chúa",
+      "purpose": "Triển khai bước 3: khải hoàn của hạt của chúa",
+      "action": "Autumn leaves fall outside Edinburgh University as decades pass.",
+      "setting": "The underground tunnel of the Large Hadron Collider at CERN.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Gần nửa thế kỷ âm thầm trôi qua. Đến khi cỗ máy gia tốc hạt vận hành, thực nghiệm lớn nhất hành tinh chứng minh ông đúng. Một tín hiệu một trăm hai mươi lăm giga electron volt xuất hiện. Hạt của Chúa trở thành bệ phóng cho giải thưởng Nobel. Những kẻ từng từ chối ông giờ phải cúi đầu khâm phục.",
+      "requirements": [
+        "R03"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC03_I1",
+          "description": "The underground tunnel of the Large Hadron Collider at CERN. Autumn leaves fall outside Edinburgh University as decades pass.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Autumn leaves fall outside Edinburgh University as decades pass.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC03_I2",
+          "description": "The underground tunnel of the Large Hadron Collider at CERN. A massive circular underground tunnel glows with blue proton beam pulses.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A massive circular underground tunnel glows with blue proton beam pulses.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC03_I3",
+          "description": "The underground tunnel of the Large Hadron Collider at CERN. The massive circular detector at CERN glows with pulsing proton collision beams.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC03_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The massive circular detector at CERN glows with pulsing proton collision beams.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC03_I4",
+          "description": "The underground tunnel of the Large Hadron Collider at CERN. A data graph displaying a sharp 125 GeV signal peak confirming the Higgs boson.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A data graph displaying a sharp 125 GeV signal peak confirming the Higgs boson.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC03_I5",
+          "description": "The underground tunnel of the Large Hadron Collider at CERN. The Nobel gold medal shining beside the Higgs potential equation on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "The Nobel gold medal shining beside the Higgs potential equation on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC03_I6",
+          "description": "The underground tunnel of the Large Hadron Collider at CERN. An auditorium of thousands of physicists stands applauding Peter Higgs in tears.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC03_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "An auditorium of thousands of physicists stands applauding Peter Higgs in tears.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC03_B1",
+          "image_id": "SC03_I1",
+          "purpose": "Triển khai bước 3: khải hoàn của hạt của chúa",
+          "anchor": {
+            "vi": {
+              "quote": "Gần nửa thế kỷ âm thầm trôi qua.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B2",
+          "image_id": "SC03_I2",
+          "purpose": "Triển khai bước 3: khải hoàn của hạt của chúa",
+          "anchor": {
+            "vi": {
+              "quote": "Đến khi cỗ máy gia tốc hạt vận hành,",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B3",
+          "image_id": "SC03_I3",
+          "purpose": "Triển khai bước 3: khải hoàn của hạt của chúa",
+          "anchor": {
+            "vi": {
+              "quote": "thực nghiệm lớn nhất hành tinh chứng minh ông đúng.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B4",
+          "image_id": "SC03_I4",
+          "purpose": "Triển khai bước 3: khải hoàn của hạt của chúa",
+          "anchor": {
+            "vi": {
+              "quote": "Một tín hiệu một trăm hai mươi lăm giga electron volt xuất hiện.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B5",
+          "image_id": "SC03_I5",
+          "purpose": "Triển khai bước 3: khải hoàn của hạt của chúa",
+          "anchor": {
+            "vi": {
+              "quote": "Hạt của Chúa trở thành bệ phóng cho giải thưởng Nobel.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B6",
+          "image_id": "SC03_I6",
+          "purpose": "Triển khai bước 3: khải hoàn của hạt của chúa",
+          "anchor": {
+            "vi": {
+              "quote": "Những kẻ từng từ chối ông giờ phải cúi đầu khâm phục.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "reflective_slow",
+      "narrative_phase": "empirical_conflict"
+    },
+    {
+      "id": "SC04",
+      "title": "Ca thứ hai: Dan Shechtman và sự ruồng bỏ",
+      "purpose": "Triển khai bước 4: ca thứ hai: dan shechtman và sự ruồng bỏ",
+      "action": "Scientist Dan Shechtman looks up from an electron microscope with disbelief.",
+      "setting": "A materials science electron microscope lab in 1982.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Mười tám năm sau phát kiến hạt Higgs, Dan Shechtman từng bị đuổi khỏi nhóm vì phát hiện tinh thể mới. ông nhìn thấy đối xứng bậc mười không thể tồn tại. Trưởng phòng ném cuốn sổ tay vào mặt ông. Tuyên bố phát hiện này làm xấu mặt viện nghiên cứu. Ông trở thành kẻ cô độc giữa giảng đường.",
+      "requirements": [
+        "R04"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC02"
+      ],
+      "images": [
+        {
+          "id": "SC04_I1",
+          "description": "A materials science electron microscope lab in 1982. Scientist Dan Shechtman looks up from an electron microscope with disbelief.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Scientist Dan Shechtman looks up from an electron microscope with disbelief.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC04_I2",
+          "description": "A materials science electron microscope lab in 1982. Shechtman holds an electron microscope diffraction negative to the light.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC04_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in A materials science electron microscope lab in 1982.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shechtman holds an electron microscope diffraction negative to the light.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC04_I3",
+          "description": "A materials science electron microscope lab in 1982. Shechtman stares closely at the diffraction spots on photographic film.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC04_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in A materials science electron microscope lab in 1982.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shechtman stares closely at the diffraction spots on photographic film.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC04_I4",
+          "description": "A materials science electron microscope lab in 1982. A lab notebook thrown onto the desk, showing a ten-fold symmetric diffraction pattern.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A lab notebook thrown onto the desk, showing a ten-fold symmetric diffraction pattern.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC04_I5",
+          "description": "A materials science electron microscope lab in 1982. The lab director points angrily at the door, ordering Shechtman to leave the group.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC04_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in A materials science electron microscope lab in 1982.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The lab director points angrily at the door, ordering Shechtman to leave the group.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC04_I6",
+          "description": "A materials science electron microscope lab in 1982. Shechtman stands alone in a corridor as other researchers walk past him in silence.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC04_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shechtman stands alone in a corridor as other researchers walk past him in silence.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC04_B1",
+          "image_id": "SC04_I1",
+          "purpose": "Triển khai bước 4: ca thứ hai: dan shechtman và sự ruồng bỏ",
+          "anchor": {
+            "vi": {
+              "quote": "Mười tám năm sau phát kiến hạt Higgs,",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B2",
+          "image_id": "SC04_I2",
+          "purpose": "Triển khai bước 4: ca thứ hai: dan shechtman và sự ruồng bỏ",
+          "anchor": {
+            "vi": {
+              "quote": "Dan Shechtman từng bị đuổi khỏi nhóm vì phát hiện tinh thể mới.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B3",
+          "image_id": "SC04_I3",
+          "purpose": "Triển khai bước 4: ca thứ hai: dan shechtman và sự ruồng bỏ",
+          "anchor": {
+            "vi": {
+              "quote": "ông nhìn thấy đối xứng bậc mười không thể tồn tại.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B4",
+          "image_id": "SC04_I4",
+          "purpose": "Triển khai bước 4: ca thứ hai: dan shechtman và sự ruồng bỏ",
+          "anchor": {
+            "vi": {
+              "quote": "Trưởng phòng ném cuốn sổ tay vào mặt ông.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B5",
+          "image_id": "SC04_I5",
+          "purpose": "Triển khai bước 4: ca thứ hai: dan shechtman và sự ruồng bỏ",
+          "anchor": {
+            "vi": {
+              "quote": "Tuyên bố phát hiện này làm xấu mặt viện nghiên cứu.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B6",
+          "image_id": "SC04_I6",
+          "purpose": "Triển khai bước 4: ca thứ hai: dan shechtman và sự ruồng bỏ",
+          "anchor": {
+            "vi": {
+              "quote": "Ông trở thành kẻ cô độc giữa giảng đường.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "empirical_conflict"
+    },
+    {
+      "id": "SC05",
+      "title": "Lời chế giễu của Linus Pauling",
+      "purpose": "Triển khai bước 5: lời chế giễu của linus pauling",
+      "action": "A vertical card showing basic textbook rules clashing with quasicrystal geometry on pure white.",
+      "setting": "A high-profile scientific symposium press conference.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Tổng biên tập bảo ông nên đọc lại sách giáo khoa hóa học. Bài báo bị trả về ngay lập tức. Thậm chí một huyền thoại từng hai lần đoạt giải Nobel, còn công khai chế giễu ông trước truyền thông. Tuyên bố chỉ có những nhà khoa học nửa mùa. Cả giới học thuật cô lập ông suốt cả thập kỷ.",
+      "requirements": [
+        "R05"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC02"
+      ],
+      "images": [
+        {
+          "id": "SC05_I1",
+          "description": "A high-profile scientific symposium press conference. A vertical card showing basic textbook rules clashing with quasicrystal geometry on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A vertical card showing basic textbook rules clashing with quasicrystal geometry on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC05_I2",
+          "description": "A high-profile scientific symposium press conference. A rejection stamp marked: Fundamental violation of crystallography laws.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A rejection stamp marked: Fundamental violation of crystallography laws.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC05_I3",
+          "description": "A high-profile scientific symposium press conference. A famous senior scientist addresses a crowded lecture hall with dismissive hand gestures.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A famous senior scientist addresses a crowded lecture hall with dismissive hand gestures.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC05_I4",
+          "description": "A high-profile scientific symposium press conference. A newspaper headline reading: No quasi-crystals, only quasi-scientists.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A newspaper headline reading: No quasi-crystals, only quasi-scientists.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC05_I5",
+          "description": "A high-profile scientific symposium press conference. The senior scientist smirks while the lecture hall erupts in mocking laughter.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC05_I3",
+          "preserve": "Keep the exact camera angle, room geometry and props in A high-profile scientific symposium press conference.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The senior scientist smirks while the lecture hall erupts in mocking laughter.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC05_I6",
+          "description": "A high-profile scientific symposium press conference. Shechtman works alone late at night in a tiny basement laboratory.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC05_I3",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shechtman works alone late at night in a tiny basement laboratory.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC05_B1",
+          "image_id": "SC05_I1",
+          "purpose": "Triển khai bước 5: lời chế giễu của linus pauling",
+          "anchor": {
+            "vi": {
+              "quote": "Tổng biên tập bảo ông nên đọc lại sách giáo khoa hóa học.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B2",
+          "image_id": "SC05_I2",
+          "purpose": "Triển khai bước 5: lời chế giễu của linus pauling",
+          "anchor": {
+            "vi": {
+              "quote": "Bài báo bị trả về ngay lập tức.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B3",
+          "image_id": "SC05_I3",
+          "purpose": "Triển khai bước 5: lời chế giễu của linus pauling",
+          "anchor": {
+            "vi": {
+              "quote": "Thậm chí một huyền thoại từng hai lần đoạt giải Nobel,",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B4",
+          "image_id": "SC05_I4",
+          "purpose": "Triển khai bước 5: lời chế giễu của linus pauling",
+          "anchor": {
+            "vi": {
+              "quote": "còn công khai chế giễu ông trước truyền thông.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B5",
+          "image_id": "SC05_I5",
+          "purpose": "Triển khai bước 5: lời chế giễu của linus pauling",
+          "anchor": {
+            "vi": {
+              "quote": "Tuyên bố chỉ có những nhà khoa học nửa mùa.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B6",
+          "image_id": "SC05_I6",
+          "purpose": "Triển khai bước 5: lời chế giễu của linus pauling",
+          "anchor": {
+            "vi": {
+              "quote": "Cả giới học thuật cô lập ông suốt cả thập kỷ.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "structural_model"
+    },
+    {
+      "id": "SC06",
+      "title": "Khải hoàn của Chuẩn tinh thể",
+      "purpose": "Triển khai bước 6: khải hoàn của chuẩn tinh thể",
+      "action": "Modern crystallographers inspect a flawless penrose tiling quasicrystal pattern.",
+      "setting": "The Stockholm Nobel Prize Award Ceremony stage.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Nhưng sự thật không bao giờ khuất phục định kiến. Shechtman âm thầm tích lũy bằng chứng thực nghiệm. Từng bước chứng minh cấu trúc chuẩn tinh thể. Năm hai nghìn mười một, ông nhận giải Nobel Hóa học một mình. Những cuốn sách giáo khoa cũ buộc phải viết lại từ đầu. Đây là cú tát đanh thép vào những kẻ bảo thủ.",
+      "requirements": [
+        "R06"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC06_I1",
+          "description": "The Stockholm Nobel Prize Award Ceremony stage. Modern crystallographers inspect a flawless penrose tiling quasicrystal pattern.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Modern crystallographers inspect a flawless penrose tiling quasicrystal pattern.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC06_I2",
+          "description": "The Stockholm Nobel Prize Award Ceremony stage. Shechtman catalogs hundreds of diffraction diffraction plates.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC06_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in The Stockholm Nobel Prize Award Ceremony stage.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shechtman catalogs hundreds of diffraction diffraction plates.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC06_I3",
+          "description": "The Stockholm Nobel Prize Award Ceremony stage. A glowing 3D geometric crystal lattice rotating under polarized light.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A glowing 3D geometric crystal lattice rotating under polarized light.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC06_I4",
+          "description": "The Stockholm Nobel Prize Award Ceremony stage. Dan Shechtman receives the Nobel gold medal on the royal Stockholm stage.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Dan Shechtman receives the Nobel gold medal on the royal Stockholm stage.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC06_I5",
+          "description": "The Stockholm Nobel Prize Award Ceremony stage. An old textbook page dissolving into a new definition of crystals on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "An old textbook page dissolving into a new definition of crystals on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC06_I6",
+          "description": "The Stockholm Nobel Prize Award Ceremony stage. Shechtman smiles peacefully, holding the original lab notebook that was once thrown away.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC06_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Shechtman smiles peacefully, holding the original lab notebook that was once thrown away.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC06_B1",
+          "image_id": "SC06_I1",
+          "purpose": "Triển khai bước 6: khải hoàn của chuẩn tinh thể",
+          "anchor": {
+            "vi": {
+              "quote": "Nhưng sự thật không bao giờ khuất phục định kiến.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC06_B2",
+          "image_id": "SC06_I2",
+          "purpose": "Triển khai bước 6: khải hoàn của chuẩn tinh thể",
+          "anchor": {
+            "vi": {
+              "quote": "Shechtman âm thầm tích lũy bằng chứng thực nghiệm.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC06_B3",
+          "image_id": "SC06_I3",
+          "purpose": "Triển khai bước 6: khải hoàn của chuẩn tinh thể",
+          "anchor": {
+            "vi": {
+              "quote": "Từng bước chứng minh cấu trúc chuẩn tinh thể.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC06_B4",
+          "image_id": "SC06_I4",
+          "purpose": "Triển khai bước 6: khải hoàn của chuẩn tinh thể",
+          "anchor": {
+            "vi": {
+              "quote": "Năm hai nghìn mười một, ông nhận giải Nobel Hóa học một mình.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC06_B5",
+          "image_id": "SC06_I5",
+          "purpose": "Triển khai bước 6: khải hoàn của chuẩn tinh thể",
+          "anchor": {
+            "vi": {
+              "quote": "Những cuốn sách giáo khoa cũ buộc phải viết lại từ đầu.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC06_B6",
+          "image_id": "SC06_I6",
+          "purpose": "Triển khai bước 6: khải hoàn của chuẩn tinh thể",
+          "anchor": {
+            "vi": {
+              "quote": "Đây là cú tát đanh thép vào những kẻ bảo thủ.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "reflective_slow",
+      "narrative_phase": "structural_model"
+    },
+    {
+      "id": "SC07",
+      "title": "Ca thứ ba: Katalin Karikó và niềm tin sắt đá",
+      "purpose": "Triển khai bước 7: ca thứ ba: katalin karikó và niềm tin sắt đá",
+      "action": "Katalin Karikó pipettes biological samples late at night in a cluttered basement.",
+      "setting": "A cramped, underfunded medical school basement lab in the 1990s.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Katalin Karikó bị giáng chức vì theo đuổi nghiên cứu mRNA. Suốt hàng chục năm trời ròng rã, bà bị cắt lương và tước bỏ phòng thí nghiệm. Hàng chục tạp chí đồng loạt từ chối bản thảo của bà. Họ chê mRNA quá mỏng manh để trị bệnh. Nhưng bà kiên quyết không bỏ cuộc.",
+      "requirements": [
+        "R07"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC03"
+      ],
+      "images": [
+        {
+          "id": "SC07_I1",
+          "description": "A cramped, underfunded medical school basement lab in the 1990s. Katalin Karikó pipettes biological samples late at night in a cluttered basement.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Katalin Karikó pipettes biological samples late at night in a cluttered basement.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC07_I2",
+          "description": "A cramped, underfunded medical school basement lab in the 1990s. A calendar with pages tearing off rapidly from 1990 to 2005.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A calendar with pages tearing off rapidly from 1990 to 2005.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC07_I3",
+          "description": "A cramped, underfunded medical school basement lab in the 1990s. A demotion notice from the university department placed next to unpaid grant bills.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A demotion notice from the university department placed next to unpaid grant bills.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC07_I4",
+          "description": "A cramped, underfunded medical school basement lab in the 1990s. A stack of rejected manuscript letters marked: UNPROVEN mRNA TECHNOLOGY on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A stack of rejected manuscript letters marked: UNPROVEN mRNA TECHNOLOGY on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC07_I5",
+          "description": "A cramped, underfunded medical school basement lab in the 1990s. Karikó continues her experiments on ice baths despite zero funding and skepticism.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC07_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in A cramped, underfunded medical school basement lab in the 1990s.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Karikó continues her experiments on ice baths despite zero funding and skepticism.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC07_I6",
+          "description": "A cramped, underfunded medical school basement lab in the 1990s. Karikó writes down a modified nucleoside formula with steady hands.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC07_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Karikó writes down a modified nucleoside formula with steady hands.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC07_B1",
+          "image_id": "SC07_I1",
+          "purpose": "Triển khai bước 7: ca thứ ba: katalin karikó và niềm tin sắt đá",
+          "anchor": {
+            "vi": {
+              "quote": "Katalin Karikó bị giáng chức vì theo đuổi nghiên cứu mRNA.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC07_B2",
+          "image_id": "SC07_I2",
+          "purpose": "Triển khai bước 7: ca thứ ba: katalin karikó và niềm tin sắt đá",
+          "anchor": {
+            "vi": {
+              "quote": "Suốt hàng chục năm trời ròng rã,",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC07_B3",
+          "image_id": "SC07_I3",
+          "purpose": "Triển khai bước 7: ca thứ ba: katalin karikó và niềm tin sắt đá",
+          "anchor": {
+            "vi": {
+              "quote": "bà bị cắt lương và tước bỏ phòng thí nghiệm.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC07_B4",
+          "image_id": "SC07_I4",
+          "purpose": "Triển khai bước 7: ca thứ ba: katalin karikó và niềm tin sắt đá",
+          "anchor": {
+            "vi": {
+              "quote": "Hàng chục tạp chí đồng loạt từ chối bản thảo của bà.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC07_B5",
+          "image_id": "SC07_I5",
+          "purpose": "Triển khai bước 7: ca thứ ba: katalin karikó và niềm tin sắt đá",
+          "anchor": {
+            "vi": {
+              "quote": "Họ chê mRNA quá mỏng manh để trị bệnh.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC07_B6",
+          "image_id": "SC07_I6",
+          "purpose": "Triển khai bước 7: ca thứ ba: katalin karikó và niềm tin sắt đá",
+          "anchor": {
+            "vi": {
+              "quote": "Nhưng bà kiên quyết không bỏ cuộc.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "actionable_resolution"
+    },
+    {
+      "id": "SC08",
+      "title": "Cứu sống cả nhân loại",
+      "purpose": "Triển khai bước 8: cứu sống cả nhân loại",
+      "action": "Dark storm clouds and red virus warnings sweep across global map screens.",
+      "setting": "Global pandemic crisis turning into scientific victory.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Và rồi cơn bão đại dịch ập đến. Nghiên cứu bị từ chối đã tạo ra vắc xin cứu cả thế giới. Hàng trăm triệu sinh mạng được giải cứu an toàn. Bà nhận giải Nobel Y học năm hai nghìn hai mươi ba. Đó là câu trả lời vẻ vang nhất cho lòng kiên định. Biến những vết thương quá khứ thành vinh quang chói lọi.",
+      "requirements": [
+        "R08"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC03"
+      ],
+      "images": [
+        {
+          "id": "SC08_I1",
+          "description": "Global pandemic crisis turning into scientific victory. Dark storm clouds and red virus warnings sweep across global map screens.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Dark storm clouds and red virus warnings sweep across global map screens.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC08_I2",
+          "description": "Global pandemic crisis turning into scientific victory. A tiny glowing vaccine vial illuminated against a dark background of global pandemic.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC08_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "A tiny glowing vaccine vial illuminated against a dark background of global pandemic.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC08_I3",
+          "description": "Global pandemic crisis turning into scientific victory. An old yellowed laboratory notebook with mRNA chemical sequences.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "An old yellowed laboratory notebook with mRNA chemical sequences.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC08_I4",
+          "description": "Global pandemic crisis turning into scientific victory. Billions of vaccine doses distributed globally, bringing cities back to vibrant life.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Billions of vaccine doses distributed globally, bringing cities back to vibrant life.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC08_I5",
+          "description": "Global pandemic crisis turning into scientific victory. Katalin Karikó Nobel Prize portrait in gold letters on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Katalin Karikó Nobel Prize portrait in gold letters on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC08_I6",
+          "description": "Global pandemic crisis turning into scientific victory. Karikó on the Nobel stage with tears of quiet triumph in her eyes.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC08_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Karikó on the Nobel stage with tears of quiet triumph in her eyes.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC08_I7",
+          "description": "Global pandemic crisis turning into scientific victory. Golden spotlight illuminates the medal in Karikó's hands.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Golden spotlight illuminates the medal in Karikó's hands.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC08_B1",
+          "image_id": "SC08_I1",
+          "purpose": "Triển khai bước 8: cứu sống cả nhân loại",
+          "anchor": {
+            "vi": {
+              "quote": "Và rồi cơn bão đại dịch ập đến.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC08_B2",
+          "image_id": "SC08_I2",
+          "purpose": "Triển khai bước 8: cứu sống cả nhân loại",
+          "anchor": {
+            "vi": {
+              "quote": "Nghiên cứu bị từ chối đã tạo ra vắc xin cứu cả thế giới.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC08_B3",
+          "image_id": "SC08_I3",
+          "purpose": "Triển khai bước 8: cứu sống cả nhân loại",
+          "anchor": {
+            "vi": {
+              "quote": "Hàng trăm triệu sinh mạng",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC08_B4",
+          "image_id": "SC08_I4",
+          "purpose": "Triển khai bước 8: cứu sống cả nhân loại",
+          "anchor": {
+            "vi": {
+              "quote": "được giải cứu an toàn.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC08_B5",
+          "image_id": "SC08_I5",
+          "purpose": "Triển khai bước 8: cứu sống cả nhân loại",
+          "anchor": {
+            "vi": {
+              "quote": "Bà nhận giải Nobel Y học năm hai nghìn hai mươi ba.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC08_B6",
+          "image_id": "SC08_I6",
+          "purpose": "Triển khai bước 8: cứu sống cả nhân loại",
+          "anchor": {
+            "vi": {
+              "quote": "Đó là câu trả lời vẻ vang nhất cho lòng kiên định.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC08_B7",
+          "image_id": "SC08_I7",
+          "purpose": "Triển khai bước 8: cứu sống cả nhân loại",
+          "anchor": {
+            "vi": {
+              "quote": "Biến những vết thương quá khứ thành vinh quang chói lọi.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "reflective_slow",
+      "narrative_phase": "actionable_resolution"
+    },
+    {
+      "id": "SC09",
+      "title": "Khép vòng lặp cho người làm khoa học",
+      "purpose": "Triển khai bước 9: khép vòng lặp cho người làm khoa học",
+      "action": "A young researcher looks at their laptop screen.",
+      "setting": "A contemporary vertical framing of a young researcher smiling at their desk.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Người phản biện số hai có thể từ chối bài viết của bạn hôm nay. Nhưng họ không thể dập tắt chân lý nếu bạn không từ bỏ. Hãy tiếp tục nghiên cứu và hoàn thiện lập luận. Bởi vì ý tưởng làm rung chuyển thế giới, thường bắt đầu từ bức thư từ chối đầu tiên. Hãy vững tin vào con đường của mình. Chân lý sẽ luôn tỏa sáng cùng thời gian.",
+      "requirements": [
+        "R09"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC09_I1",
+          "description": "A contemporary vertical framing of a young researcher smiling at their desk. A young researcher looks at their laptop screen.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A young researcher looks at their laptop screen.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC09_I2",
+          "description": "A contemporary vertical framing of a young researcher smiling at their desk. Close view of a polite rejection email on screen.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Close view of a polite rejection email on screen.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC09_I3",
+          "description": "A contemporary vertical framing of a young researcher smiling at their desk. A glowing flame inside an ink pen, representing unbroken scientific passion.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A glowing flame inside an ink pen, representing unbroken scientific passion.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC09_I4",
+          "description": "A contemporary vertical framing of a young researcher smiling at their desk. A vertical roadmap showing: REJECT -> PERSIST -> PROVE -> REVOLUTION on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A vertical roadmap showing: REJECT -> PERSIST -> PROVE -> REVOLUTION on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC09_I5",
+          "description": "A contemporary vertical framing of a young researcher smiling at their desk. The researcher resumes typing with intense focus and bright eyes.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC09_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The researcher resumes typing with intense focus and bright eyes.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC09_I6",
+          "description": "A contemporary vertical framing of a young researcher smiling at their desk. A warm golden glow fills the vertical frame as the camera pulls up.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC09_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in A contemporary vertical framing of a young researcher smiling at their desk.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "A warm golden glow fills the vertical frame as the camera pulls up.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC09_I7",
+          "description": "A contemporary vertical framing of a young researcher smiling at their desk. The researcher stands tall with confidence.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC09_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in A contemporary vertical framing of a young researcher smiling at their desk.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The researcher stands tall with confidence.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC09_I8",
+          "description": "A contemporary vertical framing of a young researcher smiling at their desk. The morning sun rises over the city, shining onto the open research page.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "The morning sun rises over the city, shining onto the open research page.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC09_B1",
+          "image_id": "SC09_I1",
+          "purpose": "Triển khai bước 9: khép vòng lặp cho người làm khoa học",
+          "anchor": {
+            "vi": {
+              "quote": "Người phản biện số hai",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC09_B2",
+          "image_id": "SC09_I2",
+          "purpose": "Triển khai bước 9: khép vòng lặp cho người làm khoa học",
+          "anchor": {
+            "vi": {
+              "quote": "có thể từ chối bài viết của bạn hôm nay.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC09_B3",
+          "image_id": "SC09_I3",
+          "purpose": "Triển khai bước 9: khép vòng lặp cho người làm khoa học",
+          "anchor": {
+            "vi": {
+              "quote": "Nhưng họ không thể dập tắt chân lý nếu bạn không từ bỏ.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC09_B4",
+          "image_id": "SC09_I4",
+          "purpose": "Triển khai bước 9: khép vòng lặp cho người làm khoa học",
+          "anchor": {
+            "vi": {
+              "quote": "Hãy tiếp tục nghiên cứu và hoàn thiện lập luận.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC09_B5",
+          "image_id": "SC09_I5",
+          "purpose": "Triển khai bước 9: khép vòng lặp cho người làm khoa học",
+          "anchor": {
+            "vi": {
+              "quote": "Bởi vì ý tưởng làm rung chuyển thế giới,",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC09_B6",
+          "image_id": "SC09_I6",
+          "purpose": "Triển khai bước 9: khép vòng lặp cho người làm khoa học",
+          "anchor": {
+            "vi": {
+              "quote": "thường bắt đầu từ bức thư từ chối đầu tiên.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC09_B7",
+          "image_id": "SC09_I7",
+          "purpose": "Triển khai bước 9: khép vòng lặp cho người làm khoa học",
+          "anchor": {
+            "vi": {
+              "quote": "Hãy vững tin vào con đường của mình.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC09_B8",
+          "image_id": "SC09_I8",
+          "purpose": "Triển khai bước 9: khép vòng lặp cho người làm khoa học",
+          "anchor": {
+            "vi": {
+              "quote": "Chân lý sẽ luôn tỏa sáng cùng thời gian.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "reflective_slow",
+      "narrative_phase": "actionable_resolution"
+    }
+  ],
+  "coverage": [
+    {
+      "requirement_id": "R01",
+      "scene_id": "SC01",
+      "quote": "Những bài báo đoạt giải Nobel từng bị hội đồng ném vào sọt rác"
+    },
+    {
+      "requirement_id": "R02",
+      "scene_id": "SC02",
+      "quote": "Vào năm một nghìn chín trăm sáu mươi tư, bài báo của Peter Higgs từng bị tạp chí vật lý từ chối"
+    },
+    {
+      "requirement_id": "R03",
+      "scene_id": "SC03",
+      "quote": "Hạt của Chúa trở thành bệ phóng cho giải thưởng Nobel"
+    },
+    {
+      "requirement_id": "R04",
+      "scene_id": "SC04",
+      "quote": "Mười tám năm sau phát kiến hạt Higgs, Dan Shechtman từng bị đuổi khỏi nhóm vì phát hiện tinh thể mới"
+    },
+    {
+      "requirement_id": "R05",
+      "scene_id": "SC05",
+      "quote": "Thậm chí một huyền thoại từng hai lần đoạt giải Nobel, còn công khai chế giễu ông trước truyền thông"
+    },
+    {
+      "requirement_id": "R06",
+      "scene_id": "SC06",
+      "quote": "Từng bước chứng minh cấu trúc chuẩn tinh thể"
+    },
+    {
+      "requirement_id": "R07",
+      "scene_id": "SC07",
+      "quote": "Katalin Karikó bị giáng chức vì theo đuổi nghiên cứu mRNA"
+    },
+    {
+      "requirement_id": "R08",
+      "scene_id": "SC08",
+      "quote": "Nghiên cứu bị từ chối đã tạo ra vắc xin cứu cả thế giới"
+    },
+    {
+      "requirement_id": "R09",
+      "scene_id": "SC09",
+      "quote": "Người phản biện số hai có thể từ chối bài viết của bạn hôm nay"
+    }
+  ],
+  "outline": [
+    {
+      "scene_id": "SC01",
+      "purpose": "Triển khai bước 1: cú tát mở màn sọt rác nobel",
+      "requirements": [
+        "R01"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC02",
+      "purpose": "Triển khai bước 2: ca thứ nhất: peter higgs và hạt của chúa",
+      "requirements": [
+        "R02"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC03",
+      "purpose": "Triển khai bước 3: khải hoàn của hạt của chúa",
+      "requirements": [
+        "R03"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC04",
+      "purpose": "Triển khai bước 4: ca thứ hai: dan shechtman và sự ruồng bỏ",
+      "requirements": [
+        "R04"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC05",
+      "purpose": "Triển khai bước 5: lời chế giễu của linus pauling",
+      "requirements": [
+        "R05"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC06",
+      "purpose": "Triển khai bước 6: khải hoàn của chuẩn tinh thể",
+      "requirements": [
+        "R06"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC07",
+      "purpose": "Triển khai bước 7: ca thứ ba: katalin karikó và niềm tin sắt đá",
+      "requirements": [
+        "R07"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC08",
+      "purpose": "Triển khai bước 8: cứu sống cả nhân loại",
+      "requirements": [
+        "R08"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC09",
+      "purpose": "Triển khai bước 9: khép vòng lặp cho người làm khoa học",
+      "requirements": [
+        "R09"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    }
+  ],
+  "claims": [
+    {
+      "scene_id": "SC02",
+      "quote": "bài báo của Peter Higgs từng bị tạp chí vật lý từ chối.",
+      "language": "vi",
+      "source_id": "SRC01",
+      "fact": "Bài báo của Peter Higgs từng bị tạp chí vật lý từ chối."
+    },
+    {
+      "scene_id": "SC02",
+      "quote": "Hội đồng cho rằng công trình này không có giá trị thực tiễn.",
+      "language": "vi",
+      "source_id": "SRC01",
+      "fact": "Hội đồng cho rằng công trình này không có giá trị thực tiễn."
+    },
+    {
+      "scene_id": "SC04",
+      "quote": "Dan Shechtman từng bị đuổi khỏi nhóm vì phát hiện tinh thể mới.",
+      "language": "vi",
+      "source_id": "SRC02",
+      "fact": "Dan Shechtman từng bị đuổi khỏi nhóm vì phát hiện tinh thể mới."
+    },
+    {
+      "scene_id": "SC05",
+      "quote": "Tổng biên tập bảo ông nên đọc lại sách giáo khoa hóa học.",
+      "language": "vi",
+      "source_id": "SRC02",
+      "fact": "Tổng biên tập bảo ông nên đọc lại sách giáo khoa hóa học."
+    },
+    {
+      "scene_id": "SC07",
+      "quote": "Katalin Karikó bị giáng chức vì theo đuổi nghiên cứu mRNA.",
+      "language": "vi",
+      "source_id": "SRC03",
+      "fact": "Katalin Karikó bị giáng chức vì theo đuổi nghiên cứu mRNA."
+    },
+    {
+      "scene_id": "SC08",
+      "quote": "Nghiên cứu bị từ chối đã tạo ra vắc xin cứu cả thế giới.",
+      "language": "vi",
+      "source_id": "SRC03",
+      "fact": "Nghiên cứu bị từ chối đã tạo ra vắc xin cứu cả thế giới."
+    }
+  ],
+  "revision_response": [],
+  "open_questions": []
+}

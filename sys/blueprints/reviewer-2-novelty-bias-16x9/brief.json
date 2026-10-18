@@ -1,0 +1,177 @@
+{
+  "schema_version": "3.0",
+  "topic": "Nghịch Lý Reviewer 2 & Định Kiến Chống Đột Phá: Vì sao hệ thống bình duyệt khoa học luôn có xu hướng đào thải các phát kiến cấp tiến?",
+  "audience": "Sinh viên năm cuối, học viên cao học, nghiên cứu sinh và giảng viên tại Việt Nam làm nghiên cứu công bố quốc tế",
+  "goal": "Giải mã nghịch lý Reviewer 2, phân tích căn nguyên định kiến chống đột phá Novelty Bias và cung cấp chiến lược thực chiến sống sót qua ải phản biện Q1",
+  "video_type": "research_explainer",
+  "duration": {
+    "min_seconds": 140.0,
+    "max_seconds": 220.0
+  },
+  "scene_count": 12,
+  "required_points": [
+    {
+      "id": "R01",
+      "text": "Cú tát mở màn bàn học đêm"
+    },
+    {
+      "id": "R02",
+      "text": "Cơn ác mộng Reviewer 2"
+    },
+    {
+      "id": "R03",
+      "text": "Ảo tưởng về bức tường bình duyệt"
+    },
+    {
+      "id": "R04",
+      "text": "Thực nghiệm lật tẩy của Peters và Ceci"
+    },
+    {
+      "id": "R05",
+      "text": "Kết quả bẽ bàng của giới học thuật"
+    },
+    {
+      "id": "R06",
+      "text": "Định kiến chống đột phá Novelty Bias"
+    },
+    {
+      "id": "R07",
+      "text": "Áp lực bất đối xứng của Reviewer"
+    },
+    {
+      "id": "R08",
+      "text": "Cái bẫy của khoa học thường nhật"
+    },
+    {
+      "id": "R09",
+      "text": "Bài học từ những người mở đường"
+    },
+    {
+      "id": "R10",
+      "text": "Chiến lược đóng gói bình mới rượu cũ"
+    },
+    {
+      "id": "R11",
+      "text": "Nghệ thuật đối thoại với Reviewer 2"
+    },
+    {
+      "id": "R12",
+      "text": "Khép vòng lặp và thông điệp kiên định"
+    }
+  ],
+  "language": "vi",
+  "tone": "Conversational Essayist điềm đạm, ấm áp, sâu sắc, lôi cuốn",
+  "style": "Minh họa 2D Editorial toàn khung, nhân vật người que đầu tròn nét mực đen biểu cảm, bảng biểu khái niệm màu trắng tinh khiết, gam màu xanh ngọc và vàng ấm trang nhã, không chữ thừa trong ảnh.",
+  "aspect_ratio": "16:9",
+  "format_profile": "long_16x9",
+  "facts_required": true,
+  "sources": [
+    {
+      "id": "SRC01",
+      "title": "Peer-Review Practices of Psychological Journals: Fate of Published Articles",
+      "reference": "Douglas P. Peters & Stephen J. Ceci (1982). Behavioral and Brain Sciences",
+      "facts": [
+        "Tám mươi chín phần trăm bài báo cũ bị từ chối khi nộp lại.",
+        "Hội đồng luôn có định kiến vô thức với tên tuổi tác giả."
+      ]
+    },
+    {
+      "id": "SRC02",
+      "title": "Intellectual Distance, Novelty, and Funding for Science",
+      "reference": "Kevin J. Boudreau et al. (2016). Management Science and Harvard Research",
+      "facts": [
+        "Ý tưởng càng mới mẻ càng nhận điểm đánh giá thấp hơn.",
+        "Người phản biện luôn ưu tiên nghiên cứu quen thuộc an toàn."
+      ]
+    },
+    {
+      "id": "SRC03",
+      "title": "The Structure of Scientific Revolutions",
+      "reference": "Thomas S. Kuhn (1962). University of Chicago Press",
+      "facts": [
+        "Khoa học chính thống luôn tìm cách loại trừ dị biệt.",
+        "Đột phá chỉ xuất hiện khi mô hình cũ hoàn toàn sụp đổ."
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "aspect_ratio": "16:9",
+      "language": "vi",
+      "subtitles": false,
+      "voice": "VietNarrator",
+      "speed": 1.0
+    }
+  ],
+  "planning": {
+    "success_criteria": [
+      "Giải mã nghịch lý Reviewer 2, phân tích căn nguyên định kiến chống đột phá Novelty Bias và cung cấp chiến lược thực chiến sống sót qua ải phản biện Q1"
+    ],
+    "avoid": [
+      "Tránh lối diễn đạt giáo điều, sáo rỗng hoặc thuật ngữ hàn lâm không giải thích."
+    ],
+    "prior_knowledge": "Không đòi hỏi kiến thức chuyên sâu từ trước.",
+    "pacing": "Theo lời dẫn tự nhiên Conversational Essayist, cân chỉnh triệt tiêu dead-air.",
+    "domain_requirements": [],
+    "assumptions": [
+      "Mỗi phân cảnh được cân chỉnh theo công thức âm học P_tail và dung sai drift <= 0.3s."
+    ],
+    "text_style": {
+      "font": "sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt",
+      "color": "#172033",
+      "outline": "nền sáng tương phản",
+      "size": "dễ đọc trên màn hình ngang (khung 16:9)",
+      "placement": "cách mép ít nhất 10%; bố cục ngang thoáng, không ép lề dọc điện thoại"
+    },
+    "speech_rates": {
+      "vi": {
+        "units_per_second": 4.0,
+        "uncertainty": 0.15,
+        "source": "Acoustic calibrated cadence"
+      },
+      "en": {
+        "units_per_second": 2.5,
+        "uncertainty": 0.25,
+        "source": "Estimated English reading rate"
+      }
+    }
+  },
+  "conversational_facts": true,
+  "packaging": {
+    "youtube_title": "Vì sao ý tưởng đột phá luôn bị phản biện từ chối?",
+    "thumbnail_spec": {
+      "visual_hook": "Bản thảo nghiên cứu dán nhãn REJECT đỏ thẫm đặt cạnh Huân chương Nobel rực sáng đối lập",
+      "text_overlay": "BẪY REVIEWER 2",
+      "contrast_pair": "Bình duyệt bảo vệ chuẩn mực vs. Rào cản bóp nghẹt đột phá"
+    },
+    "channel_pillar": "Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật",
+    "funnel_tier": "tier_2_mid",
+    "seo_keywords": [
+      "reviewer 2",
+      "bình duyệt khoa học",
+      "novelty bias",
+      "định kiến chống đột phá",
+      "công bố quốc tế Q1",
+      "phản biện bài báo khoa học",
+      "nghiên cứu khoa học"
+    ]
+  },
+  "youtube_title": "Vì sao ý tưởng đột phá luôn bị phản biện từ chối?",
+  "thumbnail_spec": {
+    "visual_hook": "Bản thảo nghiên cứu dán nhãn REJECT đỏ thẫm đặt cạnh Huân chương Nobel rực sáng đối lập",
+    "text_overlay": "BẪY REVIEWER 2",
+    "contrast_pair": "Bình duyệt bảo vệ chuẩn mực vs. Rào cản bóp nghẹt đột phá"
+  },
+  "channel_pillar": "Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật",
+  "funnel_tier": "tier_2_mid",
+  "seo_keywords": [
+    "reviewer 2",
+    "bình duyệt khoa học",
+    "novelty bias",
+    "định kiến chống đột phá",
+    "công bố quốc tế Q1",
+    "phản biện bài báo khoa học",
+    "nghiên cứu khoa học"
+  ],
+  "visual_pacing_profile": "full_frame_v1"
+}

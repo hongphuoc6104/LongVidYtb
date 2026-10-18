@@ -27,7 +27,7 @@
   "flow_require_ui_evidence": false,
   "flow_queue_trial_enabled": true,
   "flow_model": "Nano Banana 2 Lite",
-  "flow_prompt_version": "1.3.0",
+  "flow_prompt_version": "1.4.0",
   "flow_profile": "video-pilot",
   "flow_project": "Video Pilot",
   "tts_pause": {
@@ -72,7 +72,7 @@
         "revision": "20d056b8ea5d8d578b4cbaf1f703012fa3798a84"
       }
     },
-    "account": "auto",
+    "account": "auto-idle",
     "render_estimate_seconds": 60
   },
   "flow_profile_policy": "existing_only"

@@ -264,13 +264,14 @@ def command(binary: str | Path, name: str, args: list[str] | tuple[str, ...]) ->
     return [first[2:], str(Path(__file__).with_name('account_cli.py')), str(folder(name)), *args]
 
 
-def assignment_state(binary: str | Path, name: str, session: str, timeout: int = 45) -> dict[str, Any]:
+def assignment_state(binary: str | Path, name: str, session: str, timeout: int = 45,
+                     *, refresh_auth: bool = False) -> dict[str, Any]:
     """Read-only exact-account server probe using the installed official runtime."""
     argv = command(binary, name, ())
     helper = Path(__file__).with_name('assignment_probe.py')
     try:
         result = subprocess.run(
-            [argv[0], str(helper), str(folder(name)), session],
+            [argv[0], str(helper), str(folder(name)), session, *(['--refresh-auth'] if refresh_auth else [])],
             capture_output=True,
             text=True,
             timeout=timeout,
@@ -319,7 +320,11 @@ def status_all(
         'store': str(STORE),
         'preferred': d.get('preferred'),
         'total_accounts': len(items),
-        'ready_for_pool': sum(1 for i in items if i['enabled'] and i['authenticated'] and not i['session_busy']),
+        'locally_eligible': sum(1 for i in items if i['enabled'] and i['authenticated'] and not i['session_busy']
+                               and not has_external_session(i['id'])),
+        'ready_for_pool': sum(1 for i in items if i['enabled'] and not i['session_busy']
+                              and not has_external_session(i['id'])
+                              and i.get('server_assignment', {}).get('verified') is True) if probe_server else None,
         'accounts': items,
     }
 

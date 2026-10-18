@@ -36,6 +36,15 @@ class ProtocolTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         self.cfg = read(ROOT / 'config.json')
+        from account_budget import Budgets
+        from colab_bridge import accounts
+        isolated = patch.object(accounts, 'STORE', self.root/'account-profiles')
+        isolated.start()
+        self.addCleanup(isolated.stop)
+        accounts.add('fixture-account')
+        (accounts.folder('fixture-account')/'token.json').write_text('{}')
+        self.cfg['colab_tts'].update(account='fixture-account', management_store=str(self.root/'management'))
+        Budgets(self.root/'management').bind_identity('colab:fixture-account', 'fixture:'+str(self.root), 'TEST isolated provider boundary')
         shutil.copytree(ROOT / 'assets/voices', self.root / 'assets/voices')
         self.scenes = [dict(scene_id='SC01', narration='Từ weather. I am happy.',
                            texts=['Từ weather.', 'I am happy.'],

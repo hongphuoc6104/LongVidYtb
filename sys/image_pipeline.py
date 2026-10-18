@@ -282,6 +282,7 @@ def _template_request(p, j, target, prompt, corrections, ratio, refs, registrati
         return None
     from adapters import _flow_media_reference
     from flow_prompts import compile_pinned
+    from flow_prompts.compiler import CAST_VERSIONS, FULL_FRAME_VERSIONS
     canonical = p.root / 'assets/characters/channel-mascot/reference-v1.png'
     if registration:
         image = p.path(j, registration['path'])
@@ -302,7 +303,6 @@ def _template_request(p, j, target, prompt, corrections, ratio, refs, registrati
             raise Blocked('FLOW_REFERENCE_REQUIRED: registration journal artifact differs from attachment')
         purpose = 'variation' if base_image else 'scene'
     else:
-        from flow_prompts.compiler import CAST_VERSIONS
         if pin['version'] in CAST_VERSIONS:
             # Anonymous stick-figure cast: no character reference is attached.
             image = media = None
@@ -327,7 +327,7 @@ def _template_request(p, j, target, prompt, corrections, ratio, refs, registrati
         from output_contract import outputs
         out_plan = next((o for o in outputs(brief_obj) if o['aspect_ratio'] == ratio), None)
         subtitled = out_plan['subtitles'] if out_plan else (ratio == '9:16')
-        format_clearance = None if pin['version'] == '1.3.0' else clearance_for_output(ratio, subtitled)
+        format_clearance = None if pin['version'] in FULL_FRAME_VERSIONS else clearance_for_output(ratio, subtitled)
     if scene:
         original = next((image for parent in content(p, j)['scenes'] for image in parent.get('images', [])
                          if image['id'] == scene.get('image_id', scene['id'])), None)
@@ -344,7 +344,7 @@ def _template_request(p, j, target, prompt, corrections, ratio, refs, registrati
                 change_items = [change_raw]
     data = {'description': desc, 'aspect_ratio': ratio,
             'allowed_text': scene.get('visible_text', []) if scene else []}
-    if scene and pin['version'] == '1.3.0' and scene.get('shot_type'):
+    if scene and pin['version'] in FULL_FRAME_VERSIONS and scene.get('shot_type'):
         data['shot_type'] = scene['shot_type']
     if has_format_profile:
         data['caption_clearance'] = format_clearance
@@ -615,12 +615,7 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None):
     except Exception as ex:
         # A known downloaded but invalid image is not an unknown submission.
         if result['state'] != 'downloaded':
-            pre_submission_errors = ('session ended', 'connection blocked', 'socket', 'connection refused',
-                                     'devtoolsactiveport', 'profile_unverified', 'no automatic reconnect',
-                                     'cannot connect to chrome', 'endpoint ownership unavailable',
-                                     'no chrome profile workers available')
-            err_msg = str(ex).lower()
-            not_sub = getattr(ex, 'generation_submitted', None) is False or any(pat in err_msg for pat in pre_submission_errors)
+            not_sub = getattr(ex, 'generation_submitted', None) is False
             state = 'generated' if collection_only or getattr(ex, 'collection_only', False) else (
                 'not_submitted' if not_sub else 'ambiguous')
             result.update(state=state, error=str(ex))

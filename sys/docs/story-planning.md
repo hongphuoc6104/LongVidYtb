@@ -14,7 +14,7 @@
 ## 3. Visuals & Storyboard (`full_frame_v1`)
 - **Zero Layering / Zero Coordinate Guessing:** All beats use complete `kind: "scene"` full-frame images (`full_scene`, `macro_prop`, `variation`, `white_card`, `white_isolated`) with `caption_clearance: null` on landscape `16:9`. Never generate cutout stickers, `layers[]`, or guess manual `x, y, w` coordinates.
 - **Visual Cast (Anonymous Stick Figures):**
-  - Prompt registry `1.3.0`: All people are **anonymous stick figures** (large round white head with thick black outline, solid-black dot/oval eyes, stick limbs, simplified four-finger cartoon hands, exactly one torso) integrated physically into the environment.
+  - Prompt registry `1.4.0`: All people are **anonymous stick figures** (large round white head with fine-to-medium charcoal outline, solid-black dot/oval eyes, stick limbs, simplified four-finger cartoon hands, exactly one torso) integrated physically into the environment.
   - **No main character, recurring protagonist, or presenter inside scenes.**
 - **Continuity (`based_on`):** Within the same room/setting, `apply_room_continuity()` automatically links returning full-scene shots via `based_on` and enforces an `Expression lock` in `preserve`.
 

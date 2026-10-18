@@ -1,0 +1,326 @@
+[
+  {
+    "id": "SC01",
+    "duration": 10.45,
+    "narration": "Tải hàng trăm cuốn sách chỉ tạo ra ảo giác học tập. Bạn lướt thấy tài liệu hay. Bấm lưu vào máy ngay lập tức. Não bạn thở phào nhẹ nhõm. Tưởng rằng mình đã nắm trọn kiến thức.",
+    "beats": [
+      {
+        "image_id": "SC01_I1",
+        "anchor_quote": "Tải hàng trăm cuốn sách chỉ tạo ra ảo giác học tập."
+      },
+      {
+        "image_id": "SC01_I2",
+        "anchor_quote": "Bạn lướt thấy tài liệu hay."
+      },
+      {
+        "image_id": "SC01_I3",
+        "anchor_quote": "Bấm lưu vào máy ngay lập tức."
+      },
+      {
+        "image_id": "SC01_I4",
+        "anchor_quote": "Não bạn thở phào nhẹ nhõm."
+      },
+      {
+        "image_id": "SC01_I5",
+        "anchor_quote": "Tưởng rằng mình đã nắm trọn kiến thức."
+      }
+    ]
+  },
+  {
+    "id": "SC02",
+    "duration": 10.7,
+    "narration": "Nhưng bạn có bao giờ mở lại mục xem sau không? Hàng trăm bài viết quan trọng nằm im lìm. Bạn lưu để yên tâm, chứ không lưu để học. Mục xem sau đã biến thành nghĩa địa tri thức.",
+    "beats": [
+      {
+        "image_id": "SC02_I1",
+        "anchor_quote": "Nhưng bạn có bao giờ mở lại mục xem sau không?"
+      },
+      {
+        "image_id": "SC02_I2",
+        "anchor_quote": "Hàng trăm bài viết quan trọng nằm im lìm."
+      },
+      {
+        "image_id": "SC02_I3",
+        "anchor_quote": "Bạn lưu để yên tâm,"
+      },
+      {
+        "image_id": "SC02_I4",
+        "anchor_quote": "chứ không lưu để học."
+      },
+      {
+        "image_id": "SC02_I5",
+        "anchor_quote": "Mục xem sau đã biến thành nghĩa địa tri thức."
+      }
+    ]
+  },
+  {
+    "id": "SC03",
+    "duration": 10.15,
+    "narration": "Tâm lý học gọi đây là Ảo tưởng Người thu gom. Collectors Fallacy. Nó là một cái bẫy tinh vi. Khiến ta ngộ nhận rằng, sở hữu dữ liệu là đã có tri thức. [pause:450ms]",
+    "beats": [
+      {
+        "image_id": "SC03_I1",
+        "anchor_quote": "Tâm lý học gọi đây là Ảo tưởng Người thu gom."
+      },
+      {
+        "image_id": "SC03_I2",
+        "anchor_quote": "Collectors Fallacy."
+      },
+      {
+        "image_id": "SC03_I3",
+        "anchor_quote": "Nó là một cái bẫy tinh vi."
+      },
+      {
+        "image_id": "SC03_I4",
+        "anchor_quote": "Khiến ta ngộ nhận rằng,"
+      },
+      {
+        "image_id": "SC03_I5",
+        "anchor_quote": "sở hữu dữ liệu là đã có tri thức. [pause:450ms]"
+      }
+    ]
+  },
+  {
+    "id": "SC04",
+    "duration": 10.7,
+    "narration": "Tại sao nút lưu lại gây nghiện đến vậy? Khoảnh khắc bạn bấm tải về, não bạn đã tự thưởng một liều dopamine giả. Cảm giác thỏa mãn ập đến rất nhanh. Trước khi bạn kịp đọc dòng đầu tiên.",
+    "beats": [
+      {
+        "image_id": "SC04_I1",
+        "anchor_quote": "Tại sao nút lưu lại gây nghiện đến vậy?"
+      },
+      {
+        "image_id": "SC04_I2",
+        "anchor_quote": "Khoảnh khắc bạn bấm tải về,"
+      },
+      {
+        "image_id": "SC04_I3",
+        "anchor_quote": "não bạn đã tự thưởng một liều dopamine giả."
+      },
+      {
+        "image_id": "SC04_I4",
+        "anchor_quote": "Cảm giác thỏa mãn ập đến rất nhanh."
+      },
+      {
+        "image_id": "SC04_I5",
+        "anchor_quote": "Trước khi bạn kịp đọc dòng đầu tiên."
+      }
+    ]
+  },
+  {
+    "id": "SC05",
+    "duration": 11.4,
+    "narration": "Lưu một bài viết mất đúng ba giây. Nhưng để thấu hiểu nó, bạn cần nhiều ngày nghiền ngẫm. Não bộ chọn con đường dễ nhất để tự lừa dối. Bạn bận rộn tích trữ để trốn tránh việc học thật. [pause:450ms]",
+    "beats": [
+      {
+        "image_id": "SC05_I1",
+        "anchor_quote": "Lưu một bài viết mất đúng ba giây."
+      },
+      {
+        "image_id": "SC05_I2",
+        "anchor_quote": "Nhưng để thấu hiểu nó,"
+      },
+      {
+        "image_id": "SC05_I3",
+        "anchor_quote": "bạn cần nhiều ngày nghiền ngẫm."
+      },
+      {
+        "image_id": "SC05_I4",
+        "anchor_quote": "Não bộ chọn con đường dễ nhất để tự lừa dối."
+      },
+      {
+        "image_id": "SC05_I5",
+        "anchor_quote": "Bạn bận rộn tích trữ để trốn tránh việc học thật. [pause:450ms]"
+      }
+    ]
+  },
+  {
+    "id": "SC06",
+    "duration": 12.2,
+    "narration": "Khoa học nhận thức đã chứng minh nghịch lý này. Người có cả nghìn tài liệu lại làm bài kém hơn người chỉ giữ một bài duy nhất. Họ kiệt sức vì sắp xếp tệp. Còn người kia tập trung hấp thụ trọn vẹn bản chất.",
+    "beats": [
+      {
+        "image_id": "SC06_I1",
+        "anchor_quote": "Khoa học nhận thức đã chứng minh nghịch lý này."
+      },
+      {
+        "image_id": "SC06_I2",
+        "anchor_quote": "Người có cả nghìn tài liệu"
+      },
+      {
+        "image_id": "SC06_I3",
+        "anchor_quote": "lại làm bài kém hơn người chỉ giữ một bài duy nhất."
+      },
+      {
+        "image_id": "SC06_I4",
+        "anchor_quote": "Họ kiệt sức vì sắp xếp tệp."
+      },
+      {
+        "image_id": "SC06_I5",
+        "anchor_quote": "Còn người kia tập trung hấp thụ trọn vẹn bản chất."
+      }
+    ]
+  },
+  {
+    "id": "SC07",
+    "duration": 12.45,
+    "narration": "Người Nhật gọi thói quen tích sách không đọc là Tsundoku. Thời đại số biến chúng ta thành những kẻ tích trữ rác dữ liệu. Tệp trong máy không thể tự ngấm vào đầu bạn. Chừng nào chưa đọc, nó chỉ là con số không tròn trĩnh.",
+    "beats": [
+      {
+        "image_id": "SC07_I1",
+        "anchor_quote": "Người Nhật gọi thói quen tích sách không đọc là Tsundoku."
+      },
+      {
+        "image_id": "SC07_I2",
+        "anchor_quote": "Thời đại số biến chúng ta thành những kẻ tích trữ rác dữ liệu."
+      },
+      {
+        "image_id": "SC07_I3",
+        "anchor_quote": "Tệp trong máy không thể tự ngấm vào đầu bạn."
+      },
+      {
+        "image_id": "SC07_I4",
+        "anchor_quote": "Chừng nào chưa đọc,"
+      },
+      {
+        "image_id": "SC07_I5",
+        "anchor_quote": "nó chỉ là con số không tròn trĩnh."
+      }
+    ]
+  },
+  {
+    "id": "SC08",
+    "duration": 10.65,
+    "narration": "Tri thức thật sự cần đi qua bốn tầng phễu. Thu nạp, Tiêu hóa, Tổng hợp, và Tái tạo. Bấm lưu chỉ là bước khởi đầu. Nếu không tiêu hóa, mọi tài liệu đều trở nên vô nghĩa. [pause:450ms]",
+    "beats": [
+      {
+        "image_id": "SC08_I1",
+        "anchor_quote": "Tri thức thật sự cần đi qua bốn tầng phễu."
+      },
+      {
+        "image_id": "SC08_I2",
+        "anchor_quote": "Thu nạp, Tiêu hóa, Tổng hợp, và Tái tạo."
+      },
+      {
+        "image_id": "SC08_I3",
+        "anchor_quote": "Bấm lưu chỉ là bước khởi đầu."
+      },
+      {
+        "image_id": "SC08_I4",
+        "anchor_quote": "Nếu không tiêu hóa,"
+      },
+      {
+        "image_id": "SC08_I5",
+        "anchor_quote": "mọi tài liệu đều trở nên vô nghĩa. [pause:450ms]"
+      }
+    ]
+  },
+  {
+    "id": "SC09",
+    "duration": 12.95,
+    "narration": "Muốn cai nghiện lưu trữ? Hãy áp dụng quy tắc: Đọc một, trả một. Trước khi tải thêm tệp mới, hãy xóa bớt một tệp cũ. Hoặc tự viết ra ba câu tóm tắt điều bạn vừa học được. Bắt não phải làm việc trước khi tích lũy thêm.",
+    "beats": [
+      {
+        "image_id": "SC09_I1",
+        "anchor_quote": "Muốn cai nghiện lưu trữ? Hãy áp dụng quy tắc: Đọc một, trả một."
+      },
+      {
+        "image_id": "SC09_I2",
+        "anchor_quote": "Trước khi tải thêm tệp mới, hãy xóa bớt một tệp cũ."
+      },
+      {
+        "image_id": "SC09_I3",
+        "anchor_quote": "Hoặc tự viết ra ba câu tóm tắt điều bạn vừa học được."
+      },
+      {
+        "image_id": "SC09_I4",
+        "anchor_quote": "Bắt não phải làm việc"
+      },
+      {
+        "image_id": "SC09_I5",
+        "anchor_quote": "trước khi tích lũy thêm."
+      }
+    ]
+  },
+  {
+    "id": "SC10",
+    "duration": 10.7,
+    "narration": "Bài kiểm tra sự thật là một tờ giấy trắng. Cất điện thoại đi. Tự giải thích khái niệm vừa học bằng ngôn từ của chính bạn. Nếu mắc kẹt ở đâu, bạn biết mình phải đọc lại từ đó.",
+    "beats": [
+      {
+        "image_id": "SC10_I1",
+        "anchor_quote": "Bài kiểm tra sự thật là một tờ giấy trắng."
+      },
+      {
+        "image_id": "SC10_I2",
+        "anchor_quote": "Cất điện thoại đi."
+      },
+      {
+        "image_id": "SC10_I3",
+        "anchor_quote": "Tự giải thích khái niệm vừa học bằng ngôn từ của chính bạn."
+      },
+      {
+        "image_id": "SC10_I4",
+        "anchor_quote": "Nếu mắc kẹt ở đâu,"
+      },
+      {
+        "image_id": "SC10_I5",
+        "anchor_quote": "bạn biết mình phải đọc lại từ đó."
+      }
+    ]
+  },
+  {
+    "id": "SC11",
+    "duration": 13.7,
+    "narration": "Đừng làm người gác kho cho hàng nghìn tệp dữ liệu. Hãy là người tiêu hóa và kiến tạo tri thức. Giá trị của bạn nằm ở tư duy đọng lại trong đầu. Nó là sự sắc bén khi đối thoại. Chứ không nằm ở dung lượng ổ cứng bạn đang có.",
+    "beats": [
+      {
+        "image_id": "SC11_I1",
+        "anchor_quote": "Đừng làm người gác kho cho hàng nghìn tệp dữ liệu."
+      },
+      {
+        "image_id": "SC11_I2",
+        "anchor_quote": "Hãy là người tiêu hóa và kiến tạo tri thức."
+      },
+      {
+        "image_id": "SC11_I3",
+        "anchor_quote": "Giá trị của bạn nằm ở tư duy đọng lại trong đầu."
+      },
+      {
+        "image_id": "SC11_I4",
+        "anchor_quote": "Nó là sự sắc bén khi đối thoại."
+      },
+      {
+        "image_id": "SC11_I5",
+        "anchor_quote": "Chứ không nằm ở dung lượng ổ cứng bạn đang có."
+      }
+    ]
+  },
+  {
+    "id": "SC12",
+    "duration": 11.1,
+    "narration": "Lần tới khi chuẩn bị bấm nút lưu, hãy dừng lại một nhịp. Tự hỏi bản thân: Mình đang học thật, hay chỉ đang lừa dối chính mình? Đóng điện thoại lại. Và mở trang sách đầu tiên ra đọc ngay bây giờ.",
+    "beats": [
+      {
+        "image_id": "SC12_I1",
+        "anchor_quote": "Lần tới khi chuẩn bị bấm nút lưu,"
+      },
+      {
+        "image_id": "SC12_I2",
+        "anchor_quote": "hãy dừng lại một nhịp."
+      },
+      {
+        "image_id": "SC12_I3",
+        "anchor_quote": "Tự hỏi bản thân: Mình đang học thật, hay chỉ đang lừa dối chính mình?"
+      },
+      {
+        "image_id": "SC12_I4",
+        "anchor_quote": "Đóng điện thoại lại."
+      },
+      {
+        "image_id": "SC12_I5",
+        "anchor_quote": "Và mở trang sách đầu tiên ra đọc ngay bây giờ."
+      }
+    ]
+  }
+]

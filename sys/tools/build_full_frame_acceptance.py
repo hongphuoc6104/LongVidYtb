@@ -18,6 +18,7 @@ from tools.research_story_architect import (
     ResearchedTopic,
     write_production_package,
 )
+from visual_style import CAST_APPEARANCE, DEFAULT_OUTFIT, STYLE_DESCRIPTION
 
 # Each row is an authored narration unit and a visible action, not an automatic
 # subdivision of a generic background prompt. Text is never painted implicitly.
@@ -404,8 +405,8 @@ def build_topic() -> ResearchedTopic:
         video_type='research_explainer', aspect_ratio='16:9', format_profile='long_16x9',
         min_duration=300., max_duration=480., scenes=scenes, subtitles=False, voice='VietNarrator', speed=1.0,
         visual_pacing_profile='full_frame_v1',
-        style='Hand-drawn 2D marker illustration, anonymous round-headed stick figures, flat muted teal and yellow. Complete integrated scenes; white cards use pure white. No unrequested lettering.',
-        characters=[{'id': 'CH01', 'name': 'Người học', 'appearance': 'Anonymous round white head with a thick black outline, expressive dot eyes and thin black stick limbs.', 'outfit': 'Simple teal shirt.'}],
+        style=STYLE_DESCRIPTION,
+        characters=[{'id': 'CH01', 'name': 'Người học', 'appearance': CAST_APPEARANCE, 'outfit': DEFAULT_OUTFIT}],
         required_points=[{'id': f'R{i:02d}', 'text': title} for i, (title, _, _) in enumerate(STORY, 1)],
         sources=[{
             'id': 'SRC01', 'title': 'Test-Enhanced Learning: Taking Memory Tests Improves Long-Term Retention',

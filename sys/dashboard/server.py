@@ -49,6 +49,8 @@ def make_server(root, *, port=0, dashboard=None, python=None):
             try:
                 if path == '/api/state':
                     return self.send(200, {**app.snapshot(), 'csrf': csrf})
+                if path == '/api/resources':
+                    return self.send(200, {**app.snapshot(include_jobs=False), 'csrf': csrf})
                 if path.startswith('/api/jobs/'):
                     return self.send(200, app.job(path[len('/api/jobs/'):]))
                 if path in ('/', '/app.js', '/style.css'):

@@ -135,3 +135,21 @@ def test_ci_requires_actual_successful_runs_for_the_current_revision() -> None:
     assert not validate_ci_runs([run], 'other')
     assert not validate_ci_runs([{**run, 'status': 'in_progress'}], 'abc')
     assert not validate_ci_runs([{**run, 'conclusion': 'skipped'}], 'abc')
+
+
+def test_ci_evidence_envelope_retains_all_runs_and_rejects_toon() -> None:
+    import base64
+    import json
+
+    from conveyor.ci_evidence import decode_ci_runs, validate_ci_runs
+
+    run = {'head_sha': 'abc', 'status': 'completed', 'conclusion': 'success',
+           'id': 1, 'html_url': 'https://github.com/example/repo/actions/runs/1'}
+    payload = [run, {**run, 'id': 2, 'status': 'in_progress', 'conclusion': None}]
+    encoded = base64.b64encode(json.dumps(payload).encode()).decode()
+    decoded = decode_ci_runs(encoded + '\n')
+    assert decoded == payload
+    assert not validate_ci_runs(decoded, 'abc')
+    for invalid in ('[2]{id,status}: 1,completed', 'not base64!', ''):
+        with pytest.raises(ValueError):
+            decode_ci_runs(invalid)

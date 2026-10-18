@@ -83,6 +83,7 @@ class AccountTests(unittest.TestCase):
             pool = accounts.select_pool(lock_dir=lock_dir)
             self.assertEqual(pool, ['account-02'])
             st = accounts.status_all(lock_dir=lock_dir)
-            self.assertEqual(st['ready_for_pool'], 1)
+            self.assertEqual(st['locally_eligible'], 1)
+            self.assertIsNone(st['ready_for_pool'])
             fcntl.flock(handle, fcntl.LOCK_UN)
 

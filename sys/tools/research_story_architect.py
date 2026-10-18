@@ -47,6 +47,7 @@ from script_cadence_checker import (  # noqa: E402
     extract_pauses,
     split_sentences,
 )
+from visual_style import CAST_APPEARANCE, DEFAULT_OUTFIT, STYLE_DESCRIPTION
 
 DEFAULT_CHANNEL_PILLAR = "Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật"
 ALLOWED_FUNNEL_TIERS: Tuple[str, str, str] = ("tier_1_broad", "tier_2_mid", "tier_3_conversion")
@@ -279,7 +280,7 @@ class ResearchedTopic:
     video_type: str
     min_duration: Optional[float] = None
     max_duration: Optional[float] = None
-    style: str = ""
+    style: str = STYLE_DESCRIPTION
     aspect_ratio: str = "16:9"
     sources: List[Dict[str, Any]] = field(default_factory=list)
     required_points: List[Dict[str, str]] = field(default_factory=list)
@@ -975,8 +976,8 @@ def create_demo_trial_topic() -> ResearchedTopic:
     characters = [{
         "id": "CH01",
         "name": "Nhân vật người que trải nghiệm",
-        "appearance": "Hình tượng người que đầu tròn trắng viền đen dày, mắt chấm oval, thân nét mực mảnh",
-        "outfit": "Áo thun nét vẽ đen đơn giản trong bối cảnh toàn khung",
+        "appearance": CAST_APPEARANCE,
+        "outfit": DEFAULT_OUTFIT,
     }]
     scenes = _make_five_part_scene_list([
         ("SC01", "Khoảnh khắc mở tủ lạnh lúc nửa đêm", 8.0,
@@ -1020,7 +1021,7 @@ def create_demo_trial_topic() -> ResearchedTopic:
         video_type="science",
         min_duration=45.0,
         max_duration=60.0,
-        style="Minh hoạ biên tập 2D toàn khung, phong cách người que đầu tròn trắng viền đen dày, không chữ thừa trong ảnh.",
+        style=STYLE_DESCRIPTION,
         aspect_ratio="16:9",
         sources=sources,
         required_points=required_points,
@@ -1064,8 +1065,8 @@ def create_academic_research_paradox_topic(
     characters = [{
         "id": "CH01",
         "name": "Nhân vật người que nghiên cứu",
-        "appearance": "Hình tượng người que đầu tròn trắng viền đen dày khép kín, mắt oval tối giản, tạo hình thống nhất trong ảnh toàn khung",
-        "outfit": "Áo sơ mi học thuật tối giản nét mực đen",
+        "appearance": CAST_APPEARANCE,
+        "outfit": DEFAULT_OUTFIT,
     }]
     scenes = _make_five_part_scene_list([
         ("SC01", "Ảo giác năng lực khi tô màu kín giáo trình và mở Word lúc hai giờ sáng", 8.0,
@@ -1112,7 +1113,7 @@ def create_academic_research_paradox_topic(
         video_type="science",
         min_duration=45.0,
         max_duration=60.0,
-        style="Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que viền đen dày tương tác vật lý với sơ đồ trong cùng bố cục, không chữ thừa trong ảnh.",
+        style=STYLE_DESCRIPTION,
         aspect_ratio=aspect_ratio,
         sources=sources,
         required_points=required_points,
@@ -1216,7 +1217,7 @@ def build_short_spinoff_topics(
         video_type="science",
         min_duration=45.0,
         max_duration=60.0,
-        style="Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que tương tác trực tiếp với Sơ đồ 3 Bước Phản Biện trong cùng bối cảnh, khung dọc 9:16.",
+        style=STYLE_DESCRIPTION,
         aspect_ratio="9:16",
         format_profile="short_9x16",
         sources=sources_t2,
@@ -1310,7 +1311,7 @@ def build_short_spinoff_topics(
         video_type="science",
         min_duration=45.0,
         max_duration=60.0,
-        style="Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que làm việc trực tiếp với Bảng Ma trận Khoảng trống Nghiên cứu trong cùng bố cục, khung dọc 9:16.",
+        style=STYLE_DESCRIPTION,
         aspect_ratio="9:16",
         format_profile="short_9x16",
         sources=sources_t3,
@@ -1345,6 +1346,8 @@ def write_production_package(
     omni_plan: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """Assemble and write brief.json, content.json, script.json, cadence_report.json, and optional short_9x16 spin-offs."""
+    if any((output_dir / name).exists() for name in ('revisions', 'execution-control.json', 'brief-current.json', 'integrity.json')):
+        raise ValueError('ACTIVE_JOB_DESTINATION: export a blueprint and use official pilot author/revision operations')
     output_dir.mkdir(parents=True, exist_ok=True)
 
     spinoff_packages: List[Dict[str, Any]] = []

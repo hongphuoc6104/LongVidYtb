@@ -237,8 +237,12 @@ class Dashboard:
         except sqlite3.Error:
             return []
 
-    def snapshot(self):
+    def snapshot(self, *, include_jobs=True):
         inventory = discover(self.home, self.root)
+        from colab_bridge.scheduler import read_json
+        colab_health = read_json(self.budgets.path.parent/'colab-health.json')
+        inventory['colab_health'] = colab_health
+        health_by_account = {x['id']: x for x in colab_health.get('accounts', [])}
         from profile_setup import inventory as flow_inventory
         flow_details = {x['id']: x for x in flow_inventory(self.root, self.home)}
         budget_data = self.budgets.read()
@@ -260,6 +264,12 @@ class Dashboard:
             if account['service'] == 'colab' and account['budget']['allocated_sessions'] and not service_block:
                 account['capability'] = {'state': 'allocated_uncertain' if account['budget']['uncertain'] else 'T4_allocated',
                     'device': 'T4', 'source': 'recorded_runtime_allocation_evidence'}
+            if account['service'] == 'colab' and (observed := health_by_account.get(account.get('account'))):
+                account['runtime_health'] = {**observed, 'checked_at': colab_health.get('checked_at'),
+                                             'source': 'bounded_colab_account_audit'}
+                if not service_block:
+                    account['capability'] = {'state': observed['state'], 'source': 'bounded_colab_account_audit',
+                                              'checked_at': colab_health.get('checked_at')}
             identity = self.budgets.read()['aliases'].get(account['id'])
             if account['service'] == 'colab' and identity:
                 stamp = hashlib.sha256(json.dumps(identity, ensure_ascii=False, sort_keys=True).encode()).hexdigest()
@@ -276,7 +286,7 @@ class Dashboard:
         with self.operation_lock:
             operations = safe(list(self.operations.values()))
         issues = self.root / 'logs/issues/INDEX.md'
-        return {'jobs': self.jobs(), 'inventory': safe(inventory), 'session': safe(self.sessions.read()), 'setup': self.setup_status(),
+        return {'jobs': self.jobs() if include_jobs else [], 'inventory': safe(inventory), 'session': safe(self.sessions.read()), 'setup': self.setup_status(),
                 'operations': operations, 'issues': safe(issues.read_text()) if issues.is_file() else '',
                 'settings': {'execution': 'CLI chính thức', 'processing': 'Colab', 'images': 'Flow',
                              'auth_probe': 'not_tested', 'provider_quota': 'not_verified'}, 'observed_at': time.time()}
@@ -344,6 +354,13 @@ class Dashboard:
         return {'operation': key, 'state': 'running'}
 
     def mutate(self, action, data):
+        if action == 'audit-colab-pool':
+            from colab_bridge.health import audit
+            refresh_auth = data.get('refresh_auth', False)
+            if type(refresh_auth) is not bool or self.home.resolve() != Path.home().resolve():
+                raise ValueError('Kiểm tra pool cần đúng hồ sơ người dùng và lựa chọn làm mới hợp lệ')
+            return self.start_operation('colab:health-audit', action,
+                lambda: audit(refresh_auth=refresh_auth, check_kernels=True, store=self.budgets.path.parent))
         if action.startswith('flow-') or action.startswith('colab-'):
             service, operation = action.split('-', 1)
             if service == 'flow' and operation not in ('plan', 'configure', 'start') or service == 'colab' and operation not in ('start', 'setup', 'reconcile', 'collect', 'stop'):

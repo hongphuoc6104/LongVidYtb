@@ -2,15 +2,16 @@
 import copy
 import fcntl
 import json
-import os
 import re
-from pathlib import Path
 import shutil
 import subprocess
 import tempfile
 import time
 import uuid
 import zipfile
+from contextlib import contextmanager
+from pathlib import Path
+from typing import Iterator
 
 from .protocol import file_hash, stamp, validate_result
 
@@ -49,13 +50,16 @@ class Client:
         if self.cfg.get('_session_explicit') and (not isinstance(self.session, str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.-]{0,127}', self.session)):
             raise ColabError('COLAB_SESSION_INVALID: exact lifecycle session required')
         self.binary = cli()
-        from .accounts import STORE, select
         from session_store import Sessions
+
+        from .accounts import STORE, select
         self.management = Sessions(self.root)
         selection = self.cfg.get('management_session', self.management.snapshot(self.cfg.get('job_id')))
         default = selection.get('defaults', {}).get('colab')
         choice = self.cfg.get('account', 'auto')
         binding = selection.get('runtime_bindings', {}).get('colab')
+        self.selection = selection
+        self.auto_pool = choice == 'auto-idle' and not binding and not self.cfg.get('_session_explicit')
         if binding and not self.cfg.get('_session_explicit', False):
             alias = binding.get('account')
             session = binding.get('runtime_session')
@@ -66,7 +70,7 @@ class Client:
             account = alias.removeprefix('colab:')
             from .accounts import folder
             folder(account)
-            if choice not in ('auto', account):
+            if choice not in ('auto', 'auto-idle', account):
                 raise ColabError('COLAB_RUNTIME_BINDING_ACCOUNT_MISMATCH: explicit account differs from frozen runtime')
             choice = account
             self.session = session
@@ -89,6 +93,43 @@ class Client:
                     folder(choice)  # Validate the explicit ID; no account rotation.
                     self.account = choice
         else: self.account = None
+
+    @contextmanager
+    def _execution_slot(self, saved: dict, request: str, journal: Path, role: str) -> Iterator[None]:
+        from . import accounts
+        from .scheduler import PoolUnavailable, RuntimeScheduler
+        if self.account is None:
+            # Historical journals without an account retain their original transport.
+            locks = Path.home()/'.cache/video-pilot-colab'
+            locks.mkdir(parents=True, exist_ok=True)
+            with (locks/(stamp([None, self.session])+'.lock')).open('a') as handle:
+                try:
+                    fcntl.flock(handle, fcntl.LOCK_EX|fcntl.LOCK_NB)
+                except BlockingIOError as ex:
+                    raise ColabError('COLAB_SESSION_BUSY') from ex
+                yield
+            return
+        exact = bool(saved) or not self.auto_pool
+        candidates = [self.account] if exact else accounts.select_pool(session=self.session, role=role, include_busy=True)
+        if not exact and self.selection.get('pool'):
+            candidates = [name for name in candidates if 'colab:'+name in self.selection['pool']]
+        candidates = [name for name in candidates if name]
+        manager = RuntimeScheduler(self.root, store=self._budgets().path.parent)
+        if not exact:
+            from .scheduler import read_json
+            health = read_json(manager.store/'colab-health.json')
+            if health and time.time()-health.get('checked_at', 0) >= 300:
+                from .health import audit
+                audit(session=self.session, refresh_auth=True, check_kernels=True,
+                      binary=self.binary, store=manager.store)
+        try:
+            with manager.claim(candidates, session=self.session, request=request, journal=journal,
+                               exact=exact, wait_seconds=float(self.cfg.get('queue_wait_seconds', 15)),
+                               collection_only=saved.get('phase') in ('submitted', 'ambiguous', 'complete')) as account:
+                self.account = account
+                yield
+        except PoolUnavailable as ex:
+            raise ColabError(str(ex)) from ex
 
     def call(self, *args, timeout=60, code=None):
         try:
@@ -202,6 +243,8 @@ class Client:
             start = time.time()
             self._state(journal, phase='submitted', account=self.account, session=self.session, allocation_started_at=start)
             try:
+                from .scheduler import RuntimeScheduler
+                RuntimeScheduler(self.root, store=budgets.path.parent).allocation_turn()
                 result = self.call('new', '-s', self.session, '--gpu', 'T4', timeout=120)
                 output = self.exec("import subprocess, json\ngpu = subprocess.check_output(['nvidia-smi', '--query-gpu=name', '--format=csv,noheader'], text=True).strip()\nprint('VP_GPU=' + json.dumps(gpu))")
                 matches = [line for line in output.splitlines() if line.startswith('VP_GPU=')]
@@ -318,8 +361,6 @@ class Client:
             folder.mkdir(exist_ok=True)
             state_path = folder / 'state.json'
             # Serialize access across jobs/checkouts to this Colab session, not just one job.
-            lock_dir = Path.home() / '.cache/video-pilot-colab'
-            lock_dir.mkdir(parents=True, exist_ok=True)
             with (folder / 'request.lock').open('a') as request_lock:
                 try: fcntl.flock(request_lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
                 except BlockingIOError as ex: raise ColabError('COLAB_REQUEST_BUSY') from ex
@@ -330,12 +371,7 @@ class Client:
                         from .accounts import folder as account_folder
                         account_folder(self.account)
                     self.session = saved.get('session', self.session)
-                lock = lock_dir / (stamp([self.account, self.session]) + '.lock')
-                with lock.open('a') as handle:
-                    try:
-                        fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                    except BlockingIOError as ex:
-                        raise ColabError('COLAB_SESSION_BUSY: another request owns this session') from ex
+                with self._execution_slot(saved, req['request_id'], state_path, 'tts'):
                     try:
                         if (folder / 'result/tts-result.json').exists():
                             imported = self._import(folder / 'result', out, req)
@@ -521,10 +557,7 @@ class Client:
                         from .accounts import folder as account_folder
                         account_folder(self.account)
                     self.session = saved['session']
-                locks = Path.home() / '.cache/video-pilot-colab'; locks.mkdir(parents=True, exist_ok=True)
-                with (locks / (stamp([self.account, self.session]) + '.lock')).open('a') as lock:
-                    try: fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                    except BlockingIOError as ex: raise ColabError('COLAB_SESSION_BUSY') from ex
+                with self._execution_slot(saved, request['request_id'], state_path, 'render'):
                     remote = saved.get('remote', '/content/video-pilot-jobs/' + request['request_id'])
                     try:
                         result = folder / 'result'

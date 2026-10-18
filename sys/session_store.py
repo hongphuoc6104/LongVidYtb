@@ -47,6 +47,11 @@ class Sessions:
             if state['session_id'] is None:
                 state['session_id'] = uuid.uuid4().hex
             state.update(pool=pool, defaults=defaults, selection=selection, preset=preset, updated_at=time.time())
+            if selection == 'auto':
+                previous = state.get('runtime_bindings', {}).pop('colab', None)
+                if previous:
+                    state.setdefault('runtime_binding_history', []).append({
+                        'job': None, 'binding': previous, 'reason': 'automatic_pool_selection', 'at': time.time()})
         return self.read()
 
     def snapshot(self, job=None):

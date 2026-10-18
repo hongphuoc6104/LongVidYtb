@@ -15,7 +15,11 @@ class ReconcileTests(unittest.TestCase):
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)
         self.root=Path(self.temp.name);cfg=read(ROOT/'config.json');cfg['colab_tts']['management_store']=str(self.root/'budget')
-        with patch('colab_bridge.client.cli',return_value='/bin/true'),patch('colab_bridge.accounts.STORE',self.root/'auth'):
+        cfg['colab_tts']['account']='fixture-account'
+        from colab_bridge import accounts
+        isolated=patch.object(accounts,'STORE',self.root/'auth');isolated.start();self.addCleanup(isolated.stop)
+        accounts.add('fixture-account');(accounts.folder('fixture-account')/'token.json').write_text('{}')
+        with patch('colab_bridge.client.cli',return_value='/bin/true'):
             self.client=Client(self.root,cfg)
         self.client.account='fixture-account';self.client.session='owned-runtime'
         self.budget=Budgets(self.root/'budget');self.budget.bind_identity('colab:fixture-account','fixture-identity','synthetic identity')

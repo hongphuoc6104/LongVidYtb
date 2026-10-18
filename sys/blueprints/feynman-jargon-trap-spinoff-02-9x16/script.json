@@ -1,116 +1,120 @@
 [
   {
     "id": "SC01",
-    "duration": 8.45,
-    "narration": "Không giải thích nổi cho một đứa trẻ, nghĩa là bạn chưa hiểu gì cả. Thuộc lòng từng câu chữ trong sách vở chỉ là một cái vỏ bọc rỗng tuếch.",
+    "duration": 9.45,
+    "narration": "Biết tên một sự vật khác xa với việc thực sự hiểu nó. Rất nhiều người nhầm lẫn. Việc học vẹt từng dòng định nghĩa chỉ mang lại một cảm giác an tâm giả tạo.",
     "beats": [
       {
         "image_id": "SC01_I1",
-        "anchor_quote": "Không giải thích nổi cho một đứa trẻ"
+        "anchor_quote": "Biết tên một sự vật"
       },
       {
         "image_id": "SC01_I2",
-        "anchor_quote": "nghĩa là bạn chưa hiểu gì cả"
+        "anchor_quote": "khác xa với việc thực sự hiểu nó"
       },
       {
         "image_id": "SC01_I3",
-        "anchor_quote": "Thuộc lòng từng câu chữ trong sách vở"
+        "anchor_quote": "Rất nhiều người nhầm lẫn"
       },
       {
         "image_id": "SC01_I4",
-        "anchor_quote": "chỉ là một cái vỏ bọc rỗng tuếch"
+        "anchor_quote": "Việc học vẹt từng dòng định nghĩa"
+      },
+      {
+        "image_id": "SC01_I5",
+        "anchor_quote": "chỉ mang lại một cảm giác an tâm giả tạo"
       }
     ]
   },
   {
     "id": "SC02",
-    "duration": 10.35,
-    "narration": "Bạn đọc làu làu từng khái niệm trong giáo trình để vượt qua bài kiểm tra. [pause:900ms] Nhưng khi đối diện bài toán đời thực, não bạn hoàn toàn tê liệt. Mọi kiến thức biến mất.",
+    "duration": 9.65,
+    "narration": "Bạn có thể đọc làu làu khái niệm trong sách để vượt qua kỳ thi. [pause:450ms] Thực tế rất khác. Khi gặp tình huống thực tế ngoài đời, não bạn sẽ hoàn toàn tê liệt.",
     "beats": [
       {
         "image_id": "SC02_I1",
-        "anchor_quote": "Bạn đọc làu làu từng khái niệm trong giáo trình"
+        "anchor_quote": "Bạn có thể đọc làu làu khái niệm trong sách"
       },
       {
         "image_id": "SC02_I2",
-        "anchor_quote": "để vượt qua bài kiểm tra"
+        "anchor_quote": "để vượt qua kỳ thi"
       },
       {
         "image_id": "SC02_I3",
-        "anchor_quote": "Nhưng khi đối diện bài toán đời thực"
+        "anchor_quote": "Thực tế rất khác"
       },
       {
         "image_id": "SC02_I4",
-        "anchor_quote": "não bạn hoàn toàn tê liệt"
+        "anchor_quote": "Khi gặp tình huống thực tế ngoài đời, não bạn sẽ hoàn toàn tê liệt"
       }
     ]
   },
   {
     "id": "SC03",
-    "duration": 9.45,
-    "narration": "Nhà vật lý Richard Feynman từng chỉ ra một sự thật rất sâu sắc. Biết tên gọi của một hiện tượng, hoàn toàn không đồng nghĩa với việc bạn hiểu cơ chế của nó.",
+    "duration": 9.2,
+    "narration": "Nhà vật lý Richard Feynman từng đặc biệt nhấn mạnh điều này. Tên gọi khoa học chỉ là nhãn dán, còn hiểu rõ cơ chế vận hành mới là tri thức thực sự.",
     "beats": [
       {
         "image_id": "SC03_I1",
-        "anchor_quote": "Nhà vật lý Richard Feynman từng chỉ ra"
+        "anchor_quote": "Nhà vật lý Richard Feynman từng đặc biệt nhấn mạnh điều này"
       },
       {
         "image_id": "SC03_I2",
-        "anchor_quote": "một sự thật rất sâu sắc"
+        "anchor_quote": "Tên gọi khoa học chỉ là nhãn dán"
       },
       {
         "image_id": "SC03_I3",
-        "anchor_quote": "Biết tên gọi của một hiện tượng"
+        "anchor_quote": "còn hiểu rõ cơ chế vận hành"
       },
       {
         "image_id": "SC03_I4",
-        "anchor_quote": "không đồng nghĩa với việc bạn hiểu cơ chế của nó"
+        "anchor_quote": "mới là tri thức thực sự"
       }
     ]
   },
   {
     "id": "SC04",
-    "duration": 9.7,
-    "narration": "Phương pháp của ông rất rõ ràng. Bạn phải giải thích lại sao cho một đứa bé mười tuổi cũng hiểu được, mà nghiêm cấm dùng mọi thuật ngữ chuyên môn hay từ ngữ hoa mỹ.",
+    "duration": 8.2,
+    "narration": "Phương pháp của ông rất cụ thể. Bạn hãy giải thích lại vấn đề sao cho một đứa bé mười tuổi cũng hiểu, mà cấm dùng thuật ngữ phức tạp.",
     "beats": [
       {
         "image_id": "SC04_I1",
-        "anchor_quote": "Phương pháp của ông rất rõ ràng"
+        "anchor_quote": "Phương pháp của ông rất cụ thể"
       },
       {
         "image_id": "SC04_I2",
-        "anchor_quote": "sao cho một đứa bé mười tuổi cũng hiểu được"
+        "anchor_quote": "Bạn hãy giải thích lại vấn đề"
       },
       {
         "image_id": "SC04_I3",
-        "anchor_quote": "mà nghiêm cấm dùng mọi thuật ngữ chuyên môn"
+        "anchor_quote": "sao cho một đứa bé mười tuổi cũng hiểu"
       },
       {
         "image_id": "SC04_I4",
-        "anchor_quote": "hay từ ngữ hoa mỹ"
+        "anchor_quote": "mà cấm dùng thuật ngữ phức tạp"
       }
     ]
   },
   {
     "id": "SC05",
     "duration": 9.35,
-    "narration": "Nơi nào bạn buộc phải viện đến từ ngữ phức tạp, chính nơi đó kiến thức bị đứt gãy. [pause:500ms] Khi đứa trẻ mỉm cười gật đầu, bạn đã thực sự làm chủ tri thức.",
+    "narration": "Chỗ nào bạn buộc phải dựa vào từ ngữ phức tạp, chính là nơi bạn chưa hiểu sâu. Tìm ra điểm nghẽn đó sẽ giúp bạn nhận diện chính xác lỗ hổng trong mạch tư duy.",
     "beats": [
       {
         "image_id": "SC05_I1",
-        "anchor_quote": "Nơi nào bạn buộc phải viện đến từ ngữ phức tạp"
+        "anchor_quote": "Chỗ nào bạn buộc phải dựa vào từ ngữ phức tạp"
       },
       {
         "image_id": "SC05_I2",
-        "anchor_quote": "chính nơi đó kiến thức bị đứt gãy"
+        "anchor_quote": "chính là nơi bạn chưa hiểu sâu"
       },
       {
         "image_id": "SC05_I3",
-        "anchor_quote": "Khi đứa trẻ mỉm cười gật đầu"
+        "anchor_quote": "Tìm ra điểm nghẽn đó"
       },
       {
         "image_id": "SC05_I4",
-        "anchor_quote": "bạn đã thực sự làm chủ tri thức"
+        "anchor_quote": "sẽ giúp bạn nhận diện chính xác lỗ hổng trong mạch tư duy"
       }
     ]
   }

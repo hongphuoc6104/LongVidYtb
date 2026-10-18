@@ -1,5 +1,7 @@
 # Storyboard and Full-frame Visual Beats
 
+For every new image, use [the light 2D visual contract](visual-style.md). Keep anonymous stick figures and simplify the background moderately; do not furnish the whole setting or impose a fixed room/palette.
+
 ## Beat & Image Planning Checklist (mandatory before prompt authoring)
 - Does the cold open use enough narration-anchored full-frame images to show each important object or action? As a starting target, use about 8–9 images in the first 12–12.5 seconds and about 4 in the first 5 seconds when the narration supports it.
 - Are all chosen effects supported in [render-capabilities](../../../../sys/docs/render-capabilities.md)? Keep body holds within `0.83s–3.80s`; inspect actual cut timing against the WAV.

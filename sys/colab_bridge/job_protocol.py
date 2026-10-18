@@ -46,7 +46,7 @@ def build_render_request(root, brief, content, images, audio, resolve):
         track['wav'] = asset(track['wav'])
     sources = []
     names = ['omni_platform.py', 'omni_render.py', 'output_contract.py', 'format_profiles.py', 'visual_pacing.py', 'scripts/story_plan.py', 'scripts/subtitles.py', 'scripts/camera_motion.py',
-             'renderer/render.mjs', 'renderer/index.tsx', 'renderer/outputs.mjs', 'renderer/captions.mjs',
+             'renderer/render.mjs', 'renderer/index.tsx', 'renderer/outputs.mjs', 'renderer/captions.mjs', 'renderer/visual-style.mjs',
              'renderer/brand_logo.ts', 'renderer/thumbnail.tsx', 'tools/social_pack_generator.py', 'renderer/camera.mjs',
              'package.json', 'package-lock.json']
     wants_sound_design = bool(brief.get('omni_platform') or brief.get('visual_pacing_profile') == 'full_frame_v1' or brief.get('enable_sound_design'))
@@ -60,6 +60,9 @@ def build_render_request(root, brief, content, images, audio, resolve):
     request = {'version': 1, 'operation': 'render', 'brief': brief, 'content': content,
                'images': images, 'audio': audio, 'files': sources + assets,
                'worker_sha256': file_hash(worker)}
+    from visual_style import render_style
+    if style := render_style(brief, images):
+        request['visual_style_profile'] = style
     total = sum(f['size'] for f in request['files'])
     if len(request['files']) > MAX_FILES or total > MAX_BUNDLE: raise ValueError('Remote job bundle exceeds bounds')
     identity = dict(request, files=[{k:v for k,v in f.items() if k != 'local_path'} for f in request['files']])
@@ -108,6 +111,8 @@ def validate_render_result(folder, request):
     layout = json.loads((folder / 'layout.json').read_text())
     if layout.get('passed') is not True or layout.get('failures'): raise ValueError('Remote caption layout failed')
     props = json.loads((folder / 'props.json').read_text())
+    if request.get('visual_style_profile') and props.get('visual_style_profile') != request['visual_style_profile']:
+        raise ValueError('Remote props visual style mismatch')
     if props.get('outputs') != request['brief']['outputs'] or props.get('aspect_ratio') != request['brief']['aspect_ratio']:
         raise ValueError('Remote props output contract mismatch')
     if props.get('reframe_mode', False) != request['brief'].get('reframe_mode', False) or props.get('omni_platform', False) != request['brief'].get('omni_platform', False):

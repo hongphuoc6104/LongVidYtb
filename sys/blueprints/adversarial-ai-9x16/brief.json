@@ -1,0 +1,199 @@
+{
+  "schema_version": "3.0",
+  "topic": "Đừng để AI viết hộ: Biến AI thành Reviewer 2 đối đầu chuẩn Q1",
+  "audience": "Sinh viên, nghiên cứu sinh và người tự học lướt video ngắn trên di động",
+  "goal": "Tóm lược sắc bén bẫy văn phong trung tính và hướng dẫn 4 bước thực chiến ra lệnh cho AI phản biện đối kháng",
+  "video_type": "research_explainer",
+  "duration": {
+    "min_seconds": 260.0,
+    "max_seconds": 340.0
+  },
+  "scene_count": 19,
+  "required_points": [
+    {
+      "id": "R01",
+      "text": "Cú tát mở màn bàn học đêm"
+    },
+    {
+      "id": "R02",
+      "text": "Ảo giác tiết kiệm thời gian"
+    },
+    {
+      "id": "R03",
+      "text": "Cú sốc ba mươi giây phòng bảo vệ"
+    },
+    {
+      "id": "R04",
+      "text": "Bản chất dự đoán từ tiếp theo"
+    },
+    {
+      "id": "R05",
+      "text": "Bẫy văn phong an toàn trung tính"
+    },
+    {
+      "id": "R06",
+      "text": "Bẫy danh sách đi chợ tầm thường"
+    },
+    {
+      "id": "R07",
+      "text": "Mô hình CARS của John Swales"
+    },
+    {
+      "id": "R08",
+      "text": "Bản chất của khoảng trống tri thức"
+    },
+    {
+      "id": "R09",
+      "text": "Ví dụ cọ xát lý thuyết thực tế"
+    },
+    {
+      "id": "R10",
+      "text": "Bẫy ngụy tạo trích dẫn ảo"
+    },
+    {
+      "id": "R11",
+      "text": "Đảo ngược vai trò của công nghệ"
+    },
+    {
+      "id": "R12",
+      "text": "Bước một: Thử tải giả thuyết"
+    },
+    {
+      "id": "R13",
+      "text": "Bước hai: Lập ma trận khoảng trống"
+    },
+    {
+      "id": "R14",
+      "text": "Bước ba: Mổ xẻ phương pháp"
+    },
+    {
+      "id": "R15",
+      "text": "Bước bốn: Đối soát cứ liệu gốc"
+    },
+    {
+      "id": "R16",
+      "text": "So sánh câu lệnh lười vs câu lệnh đối kháng"
+    },
+    {
+      "id": "R17",
+      "text": "Rèn luyện trong phòng tập nhận thức"
+    },
+    {
+      "id": "R18",
+      "text": "Trở lại bàn học đêm muộn"
+    },
+    {
+      "id": "R19",
+      "text": "Khép vòng lặp và thông điệp triết lý"
+    }
+  ],
+  "language": "vi",
+  "tone": "Conversational Essayist sắc sảo, dứt khoát, gần gũi",
+  "style": "Hand-drawn 2D marker illustration, anonymous round-headed stick figures, high vertical visual density, clean white card diagrams. All critical graphics strictly respect vertical safe zone 400px bottom.",
+  "aspect_ratio": "9:16",
+  "format_profile": "short_9x16",
+  "facts_required": true,
+  "sources": [
+    {
+      "id": "SRC01",
+      "title": "Large Language Models as Research Assistants",
+      "reference": "Science Journal on Generative AI in Academic Research",
+      "facts": [
+        "Trí tuệ nhân tạo luôn chọn từ ngữ an toàn nhất.",
+        "Máy tính chỉ đoán xác suất của từ tiếp theo."
+      ]
+    },
+    {
+      "id": "SRC02",
+      "title": "Creating a Research Space: CARS Model",
+      "reference": "John Swales Academic Research Framework",
+      "facts": [
+        "Nghiên cứu khoa học bắt đầu từ xung đột học thuật.",
+        "Hội đồng luôn tìm kiếm khoảng trống tri thức mới."
+      ]
+    },
+    {
+      "id": "SRC03",
+      "title": "Adversarial Machine Learning and Critical Review",
+      "reference": "AI Peer Review and Adversarial Testing Principles",
+      "facts": [
+        "Phản biện đối đầu giúp phơi bày các điểm mù.",
+        "Thử tải luận điểm bằng các phản ví dụ thực tế."
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "aspect_ratio": "9:16",
+      "language": "vi",
+      "subtitles": true,
+      "voice": "VietNarrator",
+      "speed": 1.0
+    }
+  ],
+  "planning": {
+    "success_criteria": [
+      "Tóm lược sắc bén bẫy văn phong trung tính và hướng dẫn 4 bước thực chiến ra lệnh cho AI phản biện đối kháng"
+    ],
+    "avoid": [
+      "Tránh lối diễn đạt giáo điều, sáo rỗng hoặc thuật ngữ hàn lâm không giải thích."
+    ],
+    "prior_knowledge": "Không đòi hỏi kiến thức chuyên sâu từ trước.",
+    "pacing": "Theo lời dẫn tự nhiên Conversational Essayist, cân chỉnh triệt tiêu dead-air.",
+    "domain_requirements": [],
+    "assumptions": [
+      "Mỗi phân cảnh được cân chỉnh theo công thức âm học P_tail và dung sai drift <= 0.3s."
+    ],
+    "text_style": {
+      "font": "sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt",
+      "color": "#172033",
+      "outline": "nền sáng tương phản",
+      "size": "dễ đọc trên điện thoại (khung dọc 9:16)",
+      "placement": "cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%"
+    },
+    "speech_rates": {
+      "vi": {
+        "units_per_second": 4.0,
+        "uncertainty": 0.15,
+        "source": "Acoustic calibrated cadence"
+      },
+      "en": {
+        "units_per_second": 2.5,
+        "uncertainty": 0.25,
+        "source": "Estimated English reading rate"
+      }
+    }
+  },
+  "conversational_facts": true,
+  "packaging": {
+    "youtube_title": "Đừng để AI viết hộ: Biến AI thành Reviewer 2",
+    "thumbnail_spec": {
+      "visual_hook": "Màn hình điện thoại gõ lệnh AI bị hội đồng lật tẩy trong 30 giây",
+      "text_overlay": "BẪY DÙNG AI",
+      "contrast_pair": "Viết hộ rỗng tuếch vs. Phản biện sắc bén"
+    },
+    "channel_pillar": "Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật",
+    "funnel_tier": "tier_3_conversion",
+    "seo_keywords": [
+      "dùng AI viết luận văn",
+      "reviewer 2",
+      "phản biện học thuật",
+      "nghiên cứu khoa học di động"
+    ]
+  },
+  "youtube_title": "Đừng để AI viết hộ: Biến AI thành Reviewer 2",
+  "thumbnail_spec": {
+    "visual_hook": "Màn hình điện thoại gõ lệnh AI bị hội đồng lật tẩy trong 30 giây",
+    "text_overlay": "BẪY DÙNG AI",
+    "contrast_pair": "Viết hộ rỗng tuếch vs. Phản biện sắc bén"
+  },
+  "channel_pillar": "Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật",
+  "funnel_tier": "tier_3_conversion",
+  "seo_keywords": [
+    "dùng AI viết luận văn",
+    "reviewer 2",
+    "phản biện học thuật",
+    "nghiên cứu khoa học di động"
+  ],
+  "visual_pacing_profile": "full_frame_v1"
+}

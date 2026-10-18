@@ -98,6 +98,26 @@ def station_2_test_ast() -> bool:
         SYS_DIR / "tests/test_human_naturalness_upgrades.py",
         SYS_DIR / "tests/test_full_frame_upgrade.py",
         SYS_DIR / "tests/test_full_frame_pipeline.py",
+        SYS_DIR / "tests/test_soft_visual_style.py",
+        SYS_DIR / "tests/test_repository_checkpoint.py",
+        SYS_DIR / "tests/test_account_management.py",
+        SYS_DIR / "tests/test_colab_scheduler.py",
+        SYS_DIR / "tests/test_ci_envelope.py",
+        SYS_DIR / "tests/test_dashboard_engine.py",
+        SYS_DIR / "tests/test_dashboard.py",
+        SYS_DIR / "tests/test_account_probe.py",
+        SYS_DIR / "tests/test_colab_reconcile.py",
+        SYS_DIR / "tests/test_colab_runtime_binding.py",
+        SYS_DIR / "tests/test_colab_health.py",
+        SYS_DIR / "tests/test_colab_accounts.py",
+        SYS_DIR / "tests/test_colab_tts.py",
+        SYS_DIR / "tests/test_flow_lease_manager.py",
+        SYS_DIR / "tests/test_multi_profile_manager.py",
+        SYS_DIR / "tests/test_flow_cdp_bridge.py",
+        SYS_DIR / "tests/test_adversarial_ai_production.py",
+        SYS_DIR / "tests/test_collectors_fallacy_production.py",
+        SYS_DIR / "tests/test_reviewer_2_production.py",
+        SYS_DIR / "tests/test_flow_prompt_integration.py",
         SYS_DIR / "tests/test_omni_platform.py",
         SYS_DIR / "tests/test_caption_profile_07.py",
         SYS_DIR / "tests/test_remote_render.py",
@@ -126,7 +146,7 @@ def station_2_test_ast() -> bool:
     if not test_files_to_run:
         test_files_to_run = [str(SYS_DIR / "tests/test_flow_cdp_bridge.py")]
 
-    cmd = [pytest_bin, "-v", "--tb=short", "--continue-on-collection-errors"] + test_files_to_run
+    cmd = [pytest_bin, "-v", "--tb=short", "--continue-on-collection-errors", "-m", "not media_acceptance"] + test_files_to_run
     res = subprocess.run(cmd, cwd=str(REPO_ROOT), capture_output=True, text=True)
     duration = time.time() - start_time
 
@@ -226,6 +246,9 @@ def station_4_lint() -> bool:
         str(SYS_DIR / "omni_render.py"),
         str(SYS_DIR / "tests/test_format_separation.py"),
         str(SYS_DIR / "tests/test_full_frame_pipeline.py"),
+        str(SYS_DIR / "visual_style.py"),
+        str(SYS_DIR / "tests/test_soft_visual_style.py"),
+        str(SYS_DIR / "tests/test_repository_checkpoint.py"),
         str(SYS_DIR / "tests/test_full_frame_upgrade.py"),
         str(SYS_DIR / "tests/test_omni_platform.py"),
         str(SYS_DIR / "tests/test_caption_profile_07.py"),
@@ -309,7 +332,7 @@ Nâng cấp và chuẩn hóa quy trình phát triển dự án theo mô hình B�
 def station_6_ci_watch() -> bool:
     print_banner("Trạm 6: CI Watch & Local Green Certification (GH-AXI Watch)", 6)
     gh_axi_bin = shutil.which("gh-axi")
-    from conveyor.ci_evidence import validate_ci_runs
+    from conveyor.ci_evidence import decode_ci_runs, validate_ci_runs
     dirty = subprocess.run(['git', 'status', '--porcelain'], cwd=REPO_ROOT, capture_output=True, text=True, check=True)
     if dirty.stdout.strip() or not gh_axi_bin:
         print('[FAIL] CI certification requires a committed tree and the GitHub client.')
@@ -324,9 +347,9 @@ def station_6_ci_watch() -> bool:
         # The configured repository is resolved by gh-axi; no hard-coded host.
         result = subprocess.run([
             gh_axi_bin, 'api', '/repos/{owner}/{repo}/actions/runs?head_sha=' + head + '&per_page=100',
-            '--jq', '[.workflow_runs[] | {id,head_sha,status,conclusion,html_url}]', '--full',
+            '--jq', '[.workflow_runs[] | {id,head_sha,status,conclusion,html_url}] | @base64', '--full',
         ], cwd=REPO_ROOT, capture_output=True, text=True, timeout=60, check=True)
-        runs = json.loads(result.stdout)
+        runs = decode_ci_runs(result.stdout)
     except (subprocess.SubprocessError, OSError, ValueError):
         print('[FAIL] Actual CI evidence is unavailable or unreadable.')
         return False

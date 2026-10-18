@@ -133,3 +133,57 @@ $$\text{1. Tái hiện E2E} \longrightarrow \text{2. Phân tích gốc rễ} \lo
 - **Giả định sai (Wrong Assumptions):** Any download failure means the path syntax is wrong and is safe to retry immediately.
 - **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Classify sanitized missing-file errors and share one typed download helper for TTS/render. Only a confirmed missing file under /content permits one relative-path retry; other failures preserve the original recovery contract. Tests use isolated transport fixtures, not live Colab observations.
 - **Quy tắc phòng ngừa vàng (Golden Rule):** Never multiply durable retry budgets on timeouts, auth/session failures or unknown errors; fallback requires a specific, observed path error.
+
+### [ERR-20261018-05] Điều Tiết Nhịp Giữ Beat Hình Toàn Khung (Body Visual Hold Smoothing)
+- **Triệu chứng (Symptom):** Lỗi `VISUAL_HOLD_INVALID` từ chối render khi nhịp beat rơi vào cụm từ quá ngắn (`SC06_B4 holds 0.440s < 0.80s`) hoặc câu đơn dài (`SC07_B4 holds 3.811s > 3.80s`) dù kịch bản và audio đạt chuẩn.
+- **Tái hiện E2E (Reproduction Path):** Chạy `pytest sys/tests/test_full_frame_upgrade.py -k test_acceptance_package_has_valid_anchors_and_meets_estimated_density`.
+- **Nguyên nhân cốt lõi (Root Cause):** `scripts/story_plan.py:timeline` ánh xạ trực tiếp mốc từ âm học sang thời điểm đổi hình mà không điều tiết vi mô (smoothing) để bảo toàn khoảng giữ tối thiểu và tối đa thân bài (`0.80s–3.80s`).
+- **Giả định sai (Wrong Assumptions):** Giả định mọi mốc ngắt câu tự nhiên đều sinh ra khoảng giữ beat hình nằm gọn trong dải `[0.80s, 3.80s]` mà không cần kiểm soát ràng buộc biên.
+- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Tích hợp thuật toán điều tiết nhịp giữ thân bài (`start >= 15s`) trong `scripts/story_plan.py`, tự động vi điều chỉnh mốc beat theo dải mục tiêu `[0.85s, 3.75s]` bảo toàn mốc `at = 0`, thứ tự hình ảnh và chống va chạm ở 30fps. Kiểm chứng 54/54 test pytest đạt 100% green và render video 16:9 `feynman-jargon-trap-16x9` thành công trên Colab T4.
+- **Quy tắc phòng ngừa vàng (Golden Rule):** Mọi thuật toán sinh timeline thị giác từ audio/văn bản phải tích hợp bước điều tiết nhịp giữ (Hold Smoothing), bảo đảm $0.80\text{s} \le \text{hold} \le 3.80\text{s}$ trên thân bài trước khi chuyển sang renderer.
+
+### [ERR-20261018-06] Điều Tiết Nhịp Giữ Cảnh Chuyển Tiếp Biên & Bảo Đảm Mật Độ Cold Open
+- **Triệu chứng (Symptom):** Lỗi `VISUAL_HOLD_INVALID` ở cảnh chuyển tiếp vắt qua mốc 15s (`SC02_B3 holds 0.700s`), `OPENING_VISUAL_DENSITY` thiếu beat ở 5s đầu (`got 2`), và `LOW_VISUAL_BEAT_DENSITY` ở cảnh thân bài dài 6 beat.
+- **Tái hiện E2E (Reproduction Path):** Chạy `check_see_say_beat_density(scenes)` trên timeline có câu mở đầu tự nhiên kéo dài qua 5s hoặc cảnh bắt đầu trước 15s nhưng kết thúc sau 15s.
+- **Nguyên nhân cốt lõi (Root Cause):** (1) Logic điều tiết hold cũ chỉ kích hoạt khi `start >= 15s` nên bỏ sót cảnh vắt qua mốc 15s (`start < 15s, end > 15s`); (2) Thoại tự nhiên 2 câu đầu có thể dài quá 5.0s nếu không chủ động phân phối beat 3; (3) `MAX_AVERAGE_HOLD_SECONDS = 2.8s` quá hẹp so với trần giữ hình 3.80s của thân bài.
+- **Giả định sai (Wrong Assumptions):** Nhầm tưởng phân cảnh mở đầu câu thoại tự nhiên luôn rơi vào trước 5s và chỉ những cảnh có `start >= 15s` mới cần kẹp hold.
+- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** (1) Đổi điều kiện kẹp hold sang `end > 15s` trong `story_plan.py`; (2) Tự động điều tiết beat 3 mở đầu rơi vào trước 5s khi `start == 0.0`; (3) Nâng `MAX_AVERAGE_HOLD_SECONDS` lên 3.0s trong `visual_pacing.py`. Đã kiểm chứng render thành công video 9:16 `reviewer-2-nobel-rejections-9x16` (136.85s, 1080x1920) trên Colab T4 NVENC.
+- **Quy tắc phòng ngừa vàng (Golden Rule):** Thuật toán timeline phải kiểm tra điều tiết biên trên toàn bộ phân cảnh vắt qua mốc thân bài (`end > 15s`), chủ động bảo đảm mật độ Cold Open 3 beat trong 5s đầu và đồng bộ trần mật độ trung bình với độ dài phân cảnh thực tế.
+
+### [ERR-20261018-07] Visual style and CI verification lessons
+- **Symptom:** Heavy visual treatment, provider fixture leakage and unreadable CI evidence.
+- **Reproduction Path:** Run style, prompt integration and full-frame upgrade suites.
+- **Root Cause:** Repeated heavy-line prompts, an unguarded transport fallback and TOON/JSON confusion.
+- **Wrong Assumptions:** Prompt text proves quality, one mocked sender isolates all transport, or --full forces JSON.
+- **Resolution & E2E Proof:** Version the light style, close every fixture boundary and decode a strict CI envelope. Full original ERR-07/08/09 records are preserved in [the extracted reference](.agents/skills/vp-development/references/visual-ci-regressions.md).
+- **Golden Rule:** Inspect real media and retain exact transport/CI provenance; never infer success from fixture artifacts.
+
+### [ERR-20261018-10] Preserve Flow submission evidence across failures
+- **Symptom:** Direct transport errors rewrote requests as not_submitted, and profile failover could send the same unresolved generation again.
+- **Reproduction Path:** Run test_repository_checkpoint and test_multi_profile_manager with socket loss, provider refusal and partially completed batch fixtures.
+- **Root Cause:** A transport wrapper edited engine journals, string matching treated post-send failures as pre-send, and a single unsent patch could classify a mixed batch as wholly unsent.
+- **Wrong Assumptions:** A missing download proves generation was never submitted, or provider refusal makes account rotation safe.
+- **Resolution & E2E Proof:** Let the engine own journal transitions; require explicit pre-send evidence, preserve ambiguous/partial batches, stop provider refusals and do not repeat their RPC. Disabled profiles return without waiting. Offline regressions verify no journal mutation or duplicate dispatch.
+- **Golden Rule:** Reconcile the original request on its owner; see the Flow submission-safety reference. Never infer non-submission from error wording or missing media.
+### [ERR-20261018-11] Preserve measured anchors when smoothing visual holds
+- **Symptom:** A pacing repair moved image cuts away from measured word timestamps while still labeling the result acoustic.
+- **Reproduction Path:** Run test_repository_checkpoint with measured anchors and densely spaced interpolated fallback beats.
+- **Root Cause:** The smoothing loop moved every beat and forced an opening-density target without respecting the timing source.
+- **Wrong Assumptions:** Meeting hold limits justifies altering measured speech alignment.
+- **Resolution & E2E Proof:** Smooth only narration_anchor_interpolated beats, retain original estimates when adjusted and leave measured conflicts visible to validation. Restore the 0.83-second body minimum.
+- **Golden Rule:** Measured timing is authoritative; repair the authored plan when real anchors cannot satisfy visual pacing.
+### [ERR-20261018-12] Separate blueprint source from active job state
+- **Symptom:** Production builders could overwrite initialized run inputs; source tests depended on unpublished live runs and media.
+- **Reproduction Path:** Run source-factory validation, active-run export refusal and the production suites. Run media_acceptance separately against genuine local outputs.
+- **Root Cause:** Source exports, mutable execution state and delivered media shared assumptions about directory ownership.
+- **Wrong Assumptions:** A valid blueprint may be copied over an active job, or CI should contain local production MP4 files.
+- **Resolution & E2E Proof:** Default source exports to blueprints, reject active-job destinations, read committed blueprint fixtures and explicitly separate real-media acceptance. Existing thumbnail/MP4 checks pass against local files without publishing them.
+- **Golden Rule:** Use official job author/revision operations for live executions; source CI and genuine media acceptance remain separate evidence.
+
+### [ERR-20261018-13] Colab identity leases and truthful pool readiness
+- **Symptom:** Jobs contend for a pinned runtime while unused profiles are reported ready; an unknown request loses its local runner lock.
+- **Reproduction Path:** The 2026-10-18 audit verified 20 profiles but only 15 Google identities, one live T4, five duplicate profile pairs and an exhausted preferred-account budget. Independent controllers reproduce the duplicate-alias race with real file locks.
+- **Root Cause:** Production replaced auto-idle selection with the selected default; selection and reservation were separate, locks used profile aliases, and token-file presence was counted as readiness.
+- **Wrong Assumptions:** Each profile is a distinct Google account; a free local lock proves the remote session is free; an authenticated account already has available GPU capacity.
+- **Resolution & E2E Proof:** Add a bounded health audit and identity-based atomic claims in the actual audio/render client. Preserve exact bindings and unresolved request journals, filter blocked/exhausted accounts and stagger allocations across controllers. Scheduler, transport ownership and dashboard regression tests pass; live audit and account-03 observation verify authentication/T4 response only, not a completed production request.
+- **Golden Rule:** Count unique verified identities, distinguish auth/allocation/kernel readiness, and collect an unknown request only on its original owner before another send.

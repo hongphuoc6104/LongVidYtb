@@ -1,50 +1,58 @@
 [
   {
     "id": "SC01",
-    "duration": 8.2,
-    "narration": "Thuật ngữ học thuật đang biến thành chiếc nạng ru ngủ não bạn. Càng che đậy bằng slide màu mè, bạn càng dễ bị đánh gục trên bục bảo vệ.",
+    "duration": 9.7,
+    "narration": "Đừng biến buổi bảo vệ khóa luận thành màn trả bài từ điển. Đó là sai lầm rất phổ biến. Càng nhồi nhét thuật ngữ sáo rỗng, bài nói của bạn càng trở nên xa cách.",
     "beats": [
       {
         "image_id": "SC01_I1",
-        "anchor_quote": "Thuật ngữ học thuật đang biến thành chiếc nạng"
+        "anchor_quote": "Đừng biến buổi bảo vệ khóa luận"
       },
       {
         "image_id": "SC01_I2",
-        "anchor_quote": "ru ngủ não bạn"
+        "anchor_quote": "thành màn trả bài từ điển"
       },
       {
         "image_id": "SC01_I3",
-        "anchor_quote": "bạn càng dễ bị đánh gục trên bục bảo vệ"
+        "anchor_quote": "Đó là sai lầm rất phổ biến"
+      },
+      {
+        "image_id": "SC01_I4",
+        "anchor_quote": "Càng nhồi nhét thuật ngữ sáo rỗng"
+      },
+      {
+        "image_id": "SC01_I5",
+        "anchor_quote": "bài nói của bạn càng trở nên xa cách"
       }
     ]
   },
   {
     "id": "SC02",
-    "duration": 10.35,
-    "narration": "Trước giờ bảo vệ, nhiều bạn cố nhồi vào bài thuyết trình những thuật ngữ thật kêu. [pause:900ms] Nhưng chỉ cần một câu hỏi vặn từ hội đồng, toàn bộ vỏ bọc lập tức sụp đổ.",
+    "duration": 9.15,
+    "narration": "Nhiều bạn nghĩ dùng từ khó sẽ khiến hội đồng nể phục. [pause:450ms] Thực tế ngược lại. Chỉ cần một câu hỏi vặn vào bản chất, toàn bộ vỏ bọc sẽ lung lay.",
     "beats": [
       {
         "image_id": "SC02_I1",
-        "anchor_quote": "Trước giờ bảo vệ"
+        "anchor_quote": "Nhiều bạn nghĩ dùng từ khó"
       },
       {
         "image_id": "SC02_I2",
-        "anchor_quote": "nhiều bạn cố nhồi vào bài thuyết trình những thuật ngữ thật kêu"
+        "anchor_quote": "sẽ khiến hội đồng nể phục"
       },
       {
         "image_id": "SC02_I3",
-        "anchor_quote": "Nhưng chỉ cần một câu hỏi vặn từ hội đồng"
+        "anchor_quote": "Thực tế ngược lại"
       },
       {
         "image_id": "SC02_I4",
-        "anchor_quote": "toàn bộ vỏ bọc lập tức sụp đổ"
+        "anchor_quote": "Chỉ cần một câu hỏi vặn vào bản chất, toàn bộ vỏ bọc sẽ lung lay"
       }
     ]
   },
   {
     "id": "SC03",
     "duration": 8.95,
-    "narration": "Thuật ngữ sinh ra để các chuyên gia trao đổi nhanh, chứ không phải tấm khiên giấu dốt. Hội đồng luôn nhìn thấu sự mông lung đằng sau những câu chữ sáo rỗng.",
+    "narration": "Thuật ngữ sinh ra để các chuyên gia trao đổi nhanh, chứ không phải tấm khiên giấu dốt. Hội đồng luôn nhìn thấu sự mơ hồ đằng sau những câu từ sáo rỗng.",
     "beats": [
       {
         "image_id": "SC03_I1",
@@ -56,18 +64,18 @@
       },
       {
         "image_id": "SC03_I3",
-        "anchor_quote": "Hội đồng luôn nhìn thấu sự mông lung"
+        "anchor_quote": "Hội đồng luôn nhìn thấu sự mơ hồ"
       },
       {
         "image_id": "SC03_I4",
-        "anchor_quote": "đằng sau những câu chữ sáo rỗng"
+        "anchor_quote": "đằng sau những câu từ sáo rỗng"
       }
     ]
   },
   {
     "id": "SC04",
-    "duration": 9.7,
-    "narration": "Trước khi bước lên bục, hãy thử ngay quy tắc tờ giấy trắng. Viết lại toàn bộ thông điệp đề tài bằng đúng ba câu ngắn gọn, không dùng bất kỳ từ ngữ chuyên môn nào.",
+    "duration": 8.7,
+    "narration": "Trước khi bước lên bục, hãy thử quy tắc tờ giấy trắng. Viết lại thông điệp đề tài bằng đúng ba câu đời thường, không dựa dẫm vào từ ngữ chuyên môn.",
     "beats": [
       {
         "image_id": "SC04_I1",
@@ -75,38 +83,38 @@
       },
       {
         "image_id": "SC04_I2",
-        "anchor_quote": "hãy thử ngay quy tắc tờ giấy trắng"
+        "anchor_quote": "hãy thử quy tắc tờ giấy trắng"
       },
       {
         "image_id": "SC04_I3",
-        "anchor_quote": "Viết lại toàn bộ thông điệp đề tài bằng đúng ba câu ngắn gọn"
+        "anchor_quote": "Viết lại thông điệp đề tài bằng đúng ba câu đời thường"
       },
       {
         "image_id": "SC04_I4",
-        "anchor_quote": "không dùng bất kỳ từ ngữ chuyên môn nào"
+        "anchor_quote": "không dựa dẫm vào từ ngữ chuyên môn"
       }
     ]
   },
   {
     "id": "SC05",
-    "duration": 9.1,
-    "narration": "Khi tóm gọn được mọi thứ trên một mặt giấy trắng, bạn sẽ không còn sợ hãi. [pause:500ms] Một trăm hai mươi giây đầu tiên trước hội đồng sẽ hoàn toàn thuộc về bạn.",
+    "duration": 8.6,
+    "narration": "Khi tóm gọn được ý niệm trên một mặt giấy trắng, bạn sẽ vững tâm hơn nhiều. Hội đồng cũng sẽ dễ dàng nắm bắt được đóng góp thực sự của đề tài.",
     "beats": [
       {
         "image_id": "SC05_I1",
-        "anchor_quote": "Khi tóm gọn được mọi thứ trên một mặt giấy trắng"
+        "anchor_quote": "Khi tóm gọn được ý niệm trên một mặt giấy trắng"
       },
       {
         "image_id": "SC05_I2",
-        "anchor_quote": "bạn sẽ không còn sợ hãi"
+        "anchor_quote": "bạn sẽ vững tâm hơn nhiều"
       },
       {
         "image_id": "SC05_I3",
-        "anchor_quote": "Một trăm hai mươi giây đầu tiên"
+        "anchor_quote": "Hội đồng cũng sẽ dễ dàng nắm bắt"
       },
       {
         "image_id": "SC05_I4",
-        "anchor_quote": "sẽ hoàn toàn thuộc về bạn"
+        "anchor_quote": "được đóng góp thực sự của đề tài"
       }
     ]
   }

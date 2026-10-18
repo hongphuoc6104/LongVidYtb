@@ -1,10 +1,14 @@
 # Versioned Google Flow image prompts
 
-The active registry for new jobs is `sys/flow_prompts/versions/1.1.0/registry.json` (anonymous stick-figure cast, no recurring presenter). `1.0.0`/`1.0.1` remain byte-identical for historical jobs. It defines authored instruction strategies for the **observed Flow UI labels** Nano Banana Pro, Nano Banana 2 and Nano Banana 2 Lite; stable registry IDs are `NanoBananaPro`, `NanoBanana2` and `NanoBanana2Lite`. Both exact forms are accepted. Similar names, other models and unknown versions fail before dispatch.
+The active registry for new jobs is `sys/flow_prompts/versions/1.4.0/registry.json`: anonymous 2D stick figures, moderately simplified backgrounds, light-value pastel fills and restrained charcoal contours. Scene context, time of day, costumes and palette stay story-specific. See the [visual style contract](../../.agents/skills/vp-production/references/visual-style.md). `1.0.0`/`1.0.1` remain byte-identical for historical jobs. It defines authored instruction strategies for the **observed Flow UI labels** Nano Banana Pro, Nano Banana 2 and Nano Banana 2 Lite; stable registry IDs are `NanoBananaPro`, `NanoBanana2` and `NanoBanana2Lite`. Both exact forms are accepted. Similar names, other models and unknown versions fail before dispatch.
 
 These profiles are different writing strategies, not model benchmarks. The registry does not claim lower costs, better accuracy, shorter latency, a guaranteed output count or model-specific capabilities. The coordinating agent supplied the observed UI labels and the current integration limit: one Character reference and at most one Base scene reference. Compilation does not observe the UI, attach images or verify costs.
 
-## 1.1.0 cast style (current)
+## 1.4.0 light 2D style (current)
+
+The registry simplifies secondary objects and background linework while preserving the focal action and recognizable setting. Night scenes retain their night cues with readable soft ambient fill. Character/style references are optional; new references must match this treatment, and Base variations retain declared continuity. White cards remain pure white. Full-frame art fills the canvas with no reserved subtitle band. Authoring defaults read the same registry through `visual_style.py`. Remote render requests carry `soft_pastel_2d` from the authored style or uniformly compiled 1.4.0 image prompts; this suppresses vignette/grain while preserving legacy render treatment.
+
+## 1.1.0 cast style (historical)
 
 Visual reference: Ink Explainer (@Inkexplainer96), style only. No main character or recurring presenter; people are anonymous stick figures (round white head, thick black outline, simple expressive face, stick limbs) whose roles come from scene costume/hair/props. Marker-pen outlines, flat muted colors, full-bleed backgrounds, optional red circles/arrows.
 
@@ -50,7 +54,7 @@ Caption clearance supports `top` or `bottom` and a fraction from `0.10` to `0.40
 
 ## Visual contract
 
-All profiles use bright flat 2D illustration with bold outlines and readable props/diagrams. Under 1.1.0, cast consists of anonymous stick figures (round white head, thick black outline, solid-black oval eyes, stick limbs, one torso) whose role comes from scene props/costumes. Subtle brows, sweat, forehead lines, mouth expressions and rounded hands/feet are allowed by the brand's 80/20 rule. Final scene/variation frames keep figures clear and useful for directing attention; a character-reference image can use larger inspection framing. The tolerance cannot excuse wrong action or wrong meaning.
+Historical 1.0.x–1.3.0 profiles use flat 2D illustration with bold outlines and readable props/diagrams. Registry 1.4.0 keeps the anonymous stick-figure construction with fine-to-medium charcoal contours and light-value fills instead. Under 1.1.0, cast consists of anonymous stick figures (round white head, thick black outline, solid-black oval eyes, stick limbs, one torso) whose role comes from scene props/costumes. Subtle brows, sweat, forehead lines, mouth expressions and rounded hands/feet are allowed by the brand's 80/20 rule. Final scene/variation frames keep figures clear and useful for directing attention; a character-reference image can use larger inspection framing. The tolerance cannot excuse wrong action or wrong meaning.
 
 The compiler imposes no fixed scene/image count, comedy structure, sound effects or topic. Narration, learner text and current job contracts remain their own data. Actual image inspection, continuity checking and learner-text readability are separate evidence; prompts/hashes do not certify them.
 
@@ -76,7 +80,7 @@ A job missing the new version/pin keeps the legacy requested-prompt path. Previo
 
 ## Installed caller integration
 
-New engine-4 jobs whose saved control configuration contains `flow_prompt_version` receive a pin in workflow metadata and `flow/prompts/pin.json`, with a `flow_prompt_frozen` event. The official `execution.new` operation performs that persistence under the job lease before any provider image send. The current configuration selects `1.0.0` for newly created jobs. The effective Flow configuration uses the complete saved control configuration; an old job does not inherit a newly added live-config template field.
+New engine-4 jobs whose saved control configuration contains `flow_prompt_version` receive a pin in workflow metadata and `flow/prompts/pin.json`, with a `flow_prompt_frozen` event. The official `execution.new` operation performs that persistence under the job lease before any provider image send. The current configuration selects `1.4.0` for newly created jobs. The effective Flow configuration uses the complete saved control configuration; an old job does not inherit a newly added live-config template field.
 
 `image_pipeline._plan_request` compiles both single and batch requests from the same pin and mapping. Character references resolve exactly as the actual adapter does: canonical bytes/media ID for the canonical reference, or the hash/UUID of the proven downloaded registration artifact. Base references use the exact predecessor's downloaded bytes and sidecar media ID. The request identity retains a `prompt_template` compilation record with pin, visual data, purpose, hashes and provenance. Character-reference and registration frames may use full-body inspection framing; final scenes keep the character figures clear. Corrections enter the declared change data without modifying learner lettering.
 

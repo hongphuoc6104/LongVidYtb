@@ -1,0 +1,179 @@
+[
+  {
+    "id": "SC01",
+    "duration": 14.95,
+    "narration": "Mười một giờ đêm bên bàn học. Bạn thở phào nhẹ nhõm. Gõ dòng lệnh nhờ AI viết hộ. Từng đoạn văn tuôn ra ào ào. Ngỡ rằng mình đã làm chủ kiến thức. Nhưng khi bước vào phòng bảo vệ, thầy cô chỉ mất ba mươi giây. Là phát hiện ra ngay bài văn mẫu.",
+    "beats": [
+      {
+        "image_id": "SC01_I1",
+        "anchor_quote": "Mười một giờ đêm bên bàn học."
+      },
+      {
+        "image_id": "SC01_I2",
+        "anchor_quote": "Bạn thở phào nhẹ nhõm."
+      },
+      {
+        "image_id": "SC01_I3",
+        "anchor_quote": "Gõ dòng lệnh nhờ AI viết hộ."
+      },
+      {
+        "image_id": "SC01_I4",
+        "anchor_quote": "Từng đoạn văn tuôn ra ào ào."
+      },
+      {
+        "image_id": "SC01_I5",
+        "anchor_quote": "Ngỡ rằng mình đã làm chủ kiến thức."
+      },
+      {
+        "image_id": "SC01_I6",
+        "anchor_quote": "Nhưng khi bước vào phòng bảo vệ,"
+      },
+      {
+        "image_id": "SC01_I7",
+        "anchor_quote": "thầy cô chỉ mất ba mươi giây."
+      },
+      {
+        "image_id": "SC01_I8",
+        "anchor_quote": "Là phát hiện ra ngay bài văn mẫu."
+      }
+    ]
+  },
+  {
+    "id": "SC02",
+    "duration": 9.2,
+    "narration": "Thực tế rất phũ phàng. Hội đồng không đọc để khen câu từ trôi chảy. Họ tìm kiếm khoảng trống tri thức mới. Và bài viết của bạn hoàn toàn không có điều đó.",
+    "beats": [
+      {
+        "image_id": "SC02_I1",
+        "anchor_quote": "Thực tế rất phũ phàng."
+      },
+      {
+        "image_id": "SC02_I2",
+        "anchor_quote": "Hội đồng không đọc để khen câu từ trôi chảy."
+      },
+      {
+        "image_id": "SC02_I3",
+        "anchor_quote": "Họ tìm kiếm khoảng trống tri thức mới."
+      },
+      {
+        "image_id": "SC02_I4",
+        "anchor_quote": "Và bài viết của bạn hoàn toàn không có điều đó."
+      }
+    ]
+  },
+  {
+    "id": "SC03",
+    "duration": 10.7,
+    "narration": "Vì sao AI hay sinh ra văn mẫu? Bản chất cỗ máy chỉ đoán xác suất từ tiếp theo. Nó chọn từ ngữ an toàn và ít rủi ro nhất. Tạo ra đoạn văn rỗng tuếch, không lập trường.",
+    "beats": [
+      {
+        "image_id": "SC03_I1",
+        "anchor_quote": "Vì sao AI hay sinh ra văn mẫu?"
+      },
+      {
+        "image_id": "SC03_I2",
+        "anchor_quote": "Bản chất cỗ máy chỉ đoán xác suất từ tiếp theo."
+      },
+      {
+        "image_id": "SC03_I3",
+        "anchor_quote": "Nó chọn từ ngữ an toàn và ít rủi ro nhất."
+      },
+      {
+        "image_id": "SC03_I4",
+        "anchor_quote": "Tạo ra đoạn văn rỗng tuếch, không lập trường."
+      }
+    ]
+  },
+  {
+    "id": "SC04",
+    "duration": 9.95,
+    "narration": "Một bên là tóm tắt tầm thường. Một bên là sơ đồ tranh luận học thuật. Nghiên cứu quốc tế bắt đầu từ xung đột lý thuyết. Không có tranh luận thì không có phát kiến mới.",
+    "beats": [
+      {
+        "image_id": "SC04_I1",
+        "anchor_quote": "Một bên là tóm tắt tầm thường."
+      },
+      {
+        "image_id": "SC04_I2",
+        "anchor_quote": "Một bên là sơ đồ tranh luận học thuật."
+      },
+      {
+        "image_id": "SC04_I3",
+        "anchor_quote": "Nghiên cứu quốc tế bắt đầu từ xung đột lý thuyết."
+      },
+      {
+        "image_id": "SC04_I4",
+        "anchor_quote": "Không có tranh luận thì không có phát kiến mới."
+      }
+    ]
+  },
+  {
+    "id": "SC05",
+    "duration": 9.45,
+    "narration": "Đã đến lúc đổi vai cho cỗ máy. Bước một: Thử tải giả thuyết cốt lõi. Bắt AI tìm ba điểm mù nguy hiểm nhất. Bước hai: Dựng ma trận mâu thuẫn học thuật.",
+    "beats": [
+      {
+        "image_id": "SC05_I1",
+        "anchor_quote": "Đã đến lúc đổi vai cho cỗ máy."
+      },
+      {
+        "image_id": "SC05_I2",
+        "anchor_quote": "Bước một: Thử tải giả thuyết cốt lõi."
+      },
+      {
+        "image_id": "SC05_I3",
+        "anchor_quote": "Bắt AI tìm ba điểm mù nguy hiểm nhất."
+      },
+      {
+        "image_id": "SC05_I4",
+        "anchor_quote": "Bước hai: Dựng ma trận mâu thuẫn học thuật."
+      }
+    ]
+  },
+  {
+    "id": "SC06",
+    "duration": 10.45,
+    "narration": "Bước ba: Mổ xẻ phương pháp luận. Ra lệnh cho AI chất vấn cỡ mẫu và độ tin cậy. Bước bốn: Đối soát cứ liệu thực tế. Truy tìm các phản ví dụ để củng cố lập luận.",
+    "beats": [
+      {
+        "image_id": "SC06_I1",
+        "anchor_quote": "Bước ba: Mổ xẻ phương pháp luận."
+      },
+      {
+        "image_id": "SC06_I2",
+        "anchor_quote": "Ra lệnh cho AI chất vấn cỡ mẫu và độ tin cậy."
+      },
+      {
+        "image_id": "SC06_I3",
+        "anchor_quote": "Bước bốn: Đối soát cứ liệu thực tế."
+      },
+      {
+        "image_id": "SC06_I4",
+        "anchor_quote": "Truy tìm các phản ví dụ để củng cố lập luận."
+      }
+    ]
+  },
+  {
+    "id": "SC07",
+    "duration": 9.85,
+    "narration": "Khi biến AI thành phản biện đối đầu, bạn sẽ vững vàng trước mọi câu hỏi hội đồng. Công nghệ không sinh ra để nghĩ thay bạn. Nó sinh ra để mài sắc tư duy của bạn.",
+    "beats": [
+      {
+        "image_id": "SC07_I1",
+        "anchor_quote": "Khi biến AI thành phản biện đối đầu,"
+      },
+      {
+        "image_id": "SC07_I2",
+        "anchor_quote": "bạn sẽ vững vàng trước mọi câu hỏi hội đồng."
+      },
+      {
+        "image_id": "SC07_I3",
+        "anchor_quote": "Công nghệ không sinh ra để nghĩ thay bạn."
+      },
+      {
+        "image_id": "SC07_I4",
+        "anchor_quote": "Nó sinh ra để mài sắc tư duy của bạn."
+      }
+    ]
+  }
+]
