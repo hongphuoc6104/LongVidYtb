@@ -3,6 +3,7 @@ import {Thumbnail} from './thumbnail';
 import React, {useLayoutEffect, useMemo} from 'react';
 import {portraitCaptionTokens, PORTRAIT_CAPTION_ACTIVE_COLOR, captionStyle, captionMaxHeight} from './captions.mjs';
 import {BRAND_LOGO_DATA_URI} from './brand_logo';
+import {vignetteBackground} from './visual-style.mjs';
 import {
   AbsoluteFill,
   Audio,
@@ -387,7 +388,7 @@ const Video: React.FC<any> = (p) => {
       })()}
 
       {/* Cinematic Overlays: Vignette & Subtle Film Grain */}
-      {!p.hide_overlays && (
+      {vignetteBackground(p) && (
         <>
           {/* 1. Vignette (Darkened edges to guide focus towards center) */}
           <div
@@ -395,9 +396,7 @@ const Video: React.FC<any> = (p) => {
               position: 'absolute',
               inset: 0,
               pointerEvents: 'none',
-              background: p.modern_style
-                ? 'radial-gradient(circle at 50% 45%, rgba(0,0,0,0) 65%, rgba(15,23,42,0.22) 100%)'
-                : 'radial-gradient(circle at 50% 45%, rgba(0,0,0,0) 60%, rgba(0,0,0,0.42) 100%)',
+              background: vignetteBackground(p) || undefined,
               zIndex: 12
             }}
           />

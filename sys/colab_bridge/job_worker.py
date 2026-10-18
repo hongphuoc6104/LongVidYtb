@@ -98,9 +98,14 @@ def run(bundle_path, output_dir, expected_id, expected_worker):
              'tracks': tracks, 'render_concurrency': 4, 'modern_style': True,
              'reframe_mode': brief.get('reframe_mode', False), 'omni_platform': brief.get('omni_platform', False),
              'hook_title': brief.get('youtube_title', brief.get('topic', '')), 'thumbnail_spec': brief.get('thumbnail_spec', {})}
+    if request.get('visual_style_profile'):
+        props['visual_style_profile'] = request['visual_style_profile']
     if brief.get('omni_platform'):
         omni = load('vp_omni_render', 'omni_render.py')
         props['short_deliveries'] = omni.prepare_shorts(brief, request['content'], audio, request['images'], inputs, public, captions, tracks['vi']['scenesByAspect']['16:9'])
+        for delivery in props['short_deliveries']:
+            if request.get('visual_style_profile'):
+                delivery['props']['visual_style_profile'] = request['visual_style_profile']
     wants_sound_design = bool(brief.get('omni_platform') or brief.get('visual_pacing_profile') == 'full_frame_v1' or brief.get('enable_sound_design'))
     if wants_sound_design and (source / 'assets/sfx/ambient_focus_loop.wav').is_file():
         for sound in (source / 'assets/sfx').glob('*.wav'):

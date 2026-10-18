@@ -53,7 +53,15 @@ class FlowPromptIntegrationTests(unittest.TestCase):
   return {'status':'completed','items':items}
  def transport(self):
   from contextlib import ExitStack
-  stack=ExitStack();stack.enter_context(patch.object(b2_bridge,'ROOT',self.root));stack.enter_context(patch.object(b2_bridge,'require_queue_acceptance'));stack.enter_context(patch.object(b2_bridge,'ensure_connected',return_value=self.connection));stack.enter_context(patch.object(b2_bridge,'send_raw_command',side_effect=self.backend));return stack
+  import socket
+  from flow_cdp import bridge as cdp
+  stack=ExitStack()
+  endpoint=self.root/'fixture-flow.sock'
+  sock=socket.socket(socket.AF_UNIX,socket.SOCK_STREAM);sock.bind(str(endpoint))
+  stack.callback(endpoint.unlink,missing_ok=True);stack.callback(sock.close)
+  stack.enter_context(patch.object(cdp,'get_socket_path',return_value=endpoint))
+  stack.enter_context(patch.object(cdp,'_execute_via_cdp_direct',side_effect=AssertionError('Integration fixture must never reach a real Flow provider')))
+  stack.enter_context(patch.object(b2_bridge,'ROOT',self.root));stack.enter_context(patch.object(b2_bridge,'require_queue_acceptance'));stack.enter_context(patch.object(b2_bridge,'ensure_connected',return_value=self.connection));stack.enter_context(patch.object(b2_bridge,'send_raw_command',side_effect=self.backend));return stack
  def test_cli_new_freezes_before_send_real_adapter_passes_compiled_pin_model_and_guards(self):
   self.cli_new();pin=prompt_pin(self.p,self.job);self.assertEqual(pin['version'],'1.0.0');self.assertTrue((self.p.job(self.job)/'flow/prompts/pin.json').is_file());self.assertEqual(self.p.db.execute("SELECT count(*) FROM events WHERE job=? AND event='flow_prompt_frozen'",(self.job,)).fetchone()[0],1)
   cfg=copy.deepcopy(self.cfg);cfg['flow_prompt_version']='99.0.0';cfg['flow_model']='WRONG FUTURE GLOBAL';cfg['new_policy']='must not leak';write(self.root/'config.json',cfg)
@@ -70,6 +78,15 @@ class FlowPromptIntegrationTests(unittest.TestCase):
   with self.transport(),ex.lease(self.p,self.job):result=image_pipeline.request(self.p,self.job,'ref:CH01','Three anonymous stick figures in different costumes on a plain background.')
   self.assertEqual(result['state'],'downloaded');self.assertEqual(len(self.sent),1);record=result['identity']['prompt_template'];self.assertNotIn('character_reference',record['data']);self.assertIsNone(record['provenance']['references']['character'])
   sent=self.sent[0];self.assertFalse(sent.get('characterRefPath'));self.assertFalse(sent.get('charMediaId'));self.assertIs(sent.get('useCharacterRef'),False);self.assertNotIn('#8CCFE8',sent['prompt']);self.assertIn('No main character, presenter or recurring protagonist',sent['prompt'])
+ def test_light_version_freezes_before_send_and_keeps_optional_reference_empty(self):
+  cfg=copy.deepcopy(self.cfg);cfg['flow_prompt_version']='1.4.0';write(self.root/'config.json',cfg);self.cli_new()
+  with self.transport(),ex.lease(self.p,self.job):
+   result=image_pipeline.request(self.p,self.job,'ref:CH01','Anonymous stick figures in different scene-appropriate costumes.')
+  self.assertEqual(result['state'],'downloaded');self.assertEqual(len(self.sent),1)
+  record=result['identity']['prompt_template'];self.assertEqual(record['pin']['version'],'1.4.0')
+  self.assertIsNone(record['provenance']['references']['character']);self.assertIs(self.sent[0].get('useCharacterRef'),False)
+  self.assertIn('light-value pastel',self.sent[0]['prompt']);self.assertNotIn('thick black outline',self.sent[0]['prompt'])
+  self.assertEqual(self.sent[0]['prompt'],compile_pinned(record['pin'],record['purpose'],record['data'])['prompt'])
  def test_legacy_downloaded_request_does_not_inherit_template_or_resubmit(self):
   cfg=copy.deepcopy(self.cfg);cfg.pop('flow_prompt_version',None);write(self.root/'config.json',cfg);self.cli_new();self.assertIsNone(prompt_pin(self.p,self.job))
   with self.transport(),ex.lease(self.p,self.job):first=image_pipeline.request(self.p,self.job,'ref:CH01','TEST unchanged legacy generic reference')

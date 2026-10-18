@@ -66,3 +66,7 @@ python3 sys/tools/build_full_frame_acceptance.py --output-dir sys/runs/full-fram
 ## Full-frame visual journey gate
 
 For new jobs, declare `visual_pacing_profile: full_frame_v1` and follow [Full-frame quality contracts](../vp-full-frame-quality/SKILL.md). Plan across the 4 functional cognitive phases (`lived_friction` → `empirical_conflict` → `structural_model` → `actionable_resolution`). Use at most two consecutive scenes per physical setting; for ten or more scenes, keep each setting at or below 30%. Author source-backed comparisons without inventing numeric results. Preserve room and expression through `based_on` return shots (or set `allow_expression_shift: true` for intentional emotional turns); distinguish hard cuts from in-frame camera movement.
+
+## Light 2D image authoring
+
+Use prompt registry `1.4.0` and the [visual style contract](../vp-production/references/visual-style.md) for new packages. Import `STYLE_DESCRIPTION`, `CAST_APPEARANCE` and `DEFAULT_OUTFIT` from `visual_style` instead of hardcoding heavy marker lines or dark clothing. Keep scene descriptions focused on action and a few setting cues; retain varied locations, night scenes and useful metaphors. Simplification must preserve the narrative meaning, requested people and Base continuity.

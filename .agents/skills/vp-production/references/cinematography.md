@@ -1,6 +1,6 @@
 # Cinematography and Shot Grammar for Full-Frame Explainer Videos (`full_frame_v1`)
 
-Visual standards, shot framing grammar, and cutting pace for full-frame explainer videos (`flow_prompts 1.3.0`), adapting composition to target aspect ratios (`9:16`, `16:9`) specified in `sys/format_profiles.py`. Read before planning visual beats and prompt authoring.
+Visual standards, shot framing grammar, and cutting pace for full-frame explainer videos (`flow_prompts 1.4.0`), adapting composition to target aspect ratios (`9:16`, `16:9`) specified in `sys/format_profiles.py`. Read before planning visual beats and prompt authoring.
 
 ## 1. Mandatory Three-Step Process (Flash-Agent Simplified)
 1. **Author natural sentence-beat pairs**: Pair each spoken sentence with one concrete visual action (`shot_type|visual_action`), alternating short punchy sentences (`3–8` words) with explanatory sentences (`15–24` words).
@@ -20,12 +20,12 @@ Composition adapts dynamically to the target `format_profile` configured in the 
 
 ---
 
-## 3. Standard Full-Frame Shot Types (`flow_prompts 1.3.0`)
+## 3. Standard Full-Frame Shot Types (`flow_prompts 1.4.0`)
 | Shot Type | Purpose & Composition Rule | Practical Production Application |
 |---|---|---|
 | **`full_scene`** | Integrated physical environment with anonymous stick figure(s), furniture, and props drawn together. | Establishing rooms, experiments, lecture halls, cafes, or metaphorical landscapes. |
 | **`variation`** | Attached to prior `based_on` image; preserves exact room geometry, camera, and facial expression (`Expression lock`), changing only the declared action/prop. | Flipbook-style character pose changes (e.g., closing a book, lifting a pen) within the same room. |
-| **`macro_prop`** | Close-up on a concrete object, hand action, or diagram detail (simplified white four-finger cartoon hands with black outlines). | Highlighting a textbook, correcting an error with a red pen, inspecting a clock or gauge. |
+| **`macro_prop`** | Close-up on a concrete object, hand action, or diagram detail (simplified white four-finger cartoon hands with restrained charcoal outlines). | Highlighting a textbook, correcting an error with a red pen, inspecting a clock or gauge. |
 | **`white_card`** | Clean pure white `#FFFFFF` concept card with no room, floor, or scenery; renders only the requested icon/diagram and `allowed_text`. | Isolating a core paradox, comparison icon, or minimal conceptual diagram. |
 | **`white_isolated`** | Clean pure white `#FFFFFF` field with the requested figure or object integrated into a complete frame (no sticker border). | Single-subject conceptual emphasis without environmental distractions. |
 

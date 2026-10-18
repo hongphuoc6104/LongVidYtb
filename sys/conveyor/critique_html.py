@@ -10,6 +10,7 @@ Performs critical pre-flight checks:
 Generates a modern, self-contained HTML report at sys/reports/critique_review.html.
 """
 
+import json
 import re
 from datetime import datetime
 from pathlib import Path
@@ -115,23 +116,25 @@ def scan_critique(root_dir: Path) -> Tuple[bool, Dict[str, any]]:
 
     # Check 4: Stick-figure Visual Cast Invariant
     compiler_path = sys_dir / "flow_prompts/compiler.py"
-    registry_path = sys_dir / "flow_prompts/versions/1.3.0/registry.json"
-    if not registry_path.is_file():
-        registry_path = sys_dir / "flow_prompts/versions/1.2.0/registry.json"
     cast_ok = False
-    cast_detail = "Visual cast tuân thủ chuẩn anonymous stick-figure (flow_prompts 1.3.0)."
-
-    if compiler_path.is_file() and registry_path.is_file():
-        compiler_code = compiler_path.read_text(encoding="utf-8", errors="ignore")
-        registry_code = registry_path.read_text(encoding="utf-8", errors="ignore")
-        if "stick-figure" in compiler_code.lower() and "stick figure" in registry_code.lower():
-            cast_ok = True
+    cast_detail = "Configured prompt registry is unavailable or lacks the anonymous stick-figure contract."
+    try:
+        version = json.loads((sys_dir / "config.json").read_text())["flow_prompt_version"]
+        if not isinstance(version, str) or not re.fullmatch(r"\d+\.\d+\.\d+", version):
+            raise ValueError("Invalid registry version")
+        registry_path = sys_dir / "flow_prompts/versions" / version / "registry.json"
+        spec = json.loads(registry_path.read_text())
+        cast_ok = compiler_path.is_file() and "anonymous stick figures" in spec.get("cast_rule", "").lower()
+        if cast_ok:
+            cast_detail = f"Anonymous 2D stick-figure contract present in configured registry {version}; media quality requires inspection."
+    except (OSError, ValueError, KeyError):
+        pass
 
     checks.append({
         "name": "Visual Cast Invariant (Stick-Figure)",
         "category": "Anti-Hallucination Guard",
         "status": "PASS" if cast_ok else "WARN",
-        "detail": cast_detail if cast_ok else "Thiếu định nghĩa anonymous stick-figure trong flow_prompts.",
+        "detail": cast_detail,
     })
 
     # Check 5: Zero Legacy Bridge Terminology Invariant

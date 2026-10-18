@@ -1,0 +1,38 @@
+name: Visual style contracts
+
+on:
+  push:
+    branches: ['codex/**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+      - name: Install contract test dependencies
+        run: python -m pip install -r sys/requirements-dev.txt pytest ruff
+      - name: Verify style, compatibility and remote render contracts
+        run: >-
+          python -m pytest -q
+          sys/tests/test_soft_visual_style.py
+          sys/tests/test_flow_prompts.py
+          sys/tests/test_flow_prompt_integration.py
+          sys/tests/test_story_prompt_preservation.py
+          sys/tests/test_full_frame_pipeline.py
+          sys/tests/test_full_frame_upgrade.py
+          sys/tests/test_remote_render.py
+          sys/tests/test_anti_formulaic_storytelling.py
+      - name: Lint the new implementation
+        run: >-
+          python -m ruff check
+          sys/visual_style.py sys/tests/test_soft_visual_style.py
+          sys/tools/preview_soft_visual_style.py
