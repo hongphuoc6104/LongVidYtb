@@ -110,7 +110,8 @@ class RuntimeScheduler:
 
     @contextmanager
     def claim(
-        self, candidates: list[str], *, session: str, request: str, journal: Path, exact: bool, wait_seconds: float = 15
+        self, candidates: list[str], *, session: str, request: str, journal: Path, exact: bool, wait_seconds: float = 15,
+        collection_only: bool = False,
     ) -> Iterator[str]:
         """Select and lock together; no gap exists between choosing and reserving an account."""
         self.directory.mkdir(parents=True, exist_ok=True, mode=0o700)
@@ -132,9 +133,9 @@ class RuntimeScheduler:
                             fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
                     except BlockingIOError:
                         continue
-                    if self.pending(account, request, journal):
+                    if not collection_only and self.pending(account, request, journal):
                         continue
-                    record = self.directory / (key + ".json")
+                    record = self.directory / (key + '-' + stamp(str(journal.resolve())) + ".json")
                     value = {
                         "account": account,
                         "session": session,

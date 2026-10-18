@@ -79,6 +79,23 @@ def test_identical_request_hash_in_another_job_does_not_bypass_pending_owner(poo
         assert selected == 'two'
 
 
+def test_collection_can_resolve_multiple_old_requests_without_forgetting_other_roots(pool):
+    root, manager = pool
+    first = root/'old-checkout/a.json'
+    first.parent.mkdir()
+    with manager.claim(['one'], session='tts', request='a', journal=first, exact=True):
+        first.write_text(json.dumps({'phase': 'ambiguous', 'account': 'one', 'request_id': 'a'}))
+    second = root/'old-checkout/b.json'
+    second.write_text(json.dumps({'phase': 'submitted', 'account': 'one', 'request_id': 'b'}))
+    with manager.claim(['one'], session='tts', request='b', journal=second, exact=True, collection_only=True) as selected:
+        assert selected == 'one'
+    assert first in manager.pending('one', 'new', root/'new.json')
+    assert second in manager.pending('one', 'new', root/'new.json')
+    with pytest.raises(PoolUnavailable):
+        with manager.claim(['one'], session='tts', request='new', journal=root/'new.json', exact=False, wait_seconds=0):
+            pytest.fail('Collecting another request must not free an unresolved owner')
+
+
 def test_global_default_does_not_disable_pool_but_exact_binding_wins():
     cfg = {"colab_tts": {"account": "auto-idle"}}
     selection = {"defaults": {"colab": "colab:one"}}
