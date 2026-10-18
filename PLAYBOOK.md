@@ -141,3 +141,11 @@ $$\text{1. Tái hiện E2E} \longrightarrow \text{2. Phân tích gốc rễ} \lo
 - **Wrong Assumptions:** Each profile is a distinct Google account; a free local lock proves the remote session is free; an authenticated account already has available GPU capacity.
 - **Resolution & E2E Proof:** Add a bounded health audit and identity-based atomic claims in the actual audio/render client. Preserve exact bindings and unresolved request journals, filter blocked/exhausted accounts and stagger allocations across controllers. Scheduler, transport ownership and dashboard regression tests pass; live audit and account-03 observation verify authentication/T4 response only, not a completed production request.
 - **Golden Rule:** Count unique verified identities, distinguish auth/allocation/kernel readiness, and collect an unknown request only on its original owner before another send.
+
+### [ERR-20261018-09] Preserve machine-readable CI evidence through gh-axi
+- **Symptom:** Station 6 rejects successful GitHub Actions runs as unreadable despite a clean committed tree and green checks.
+- **Reproduction Path:** Compare gh-axi api output for the head commit with json.loads: nonempty run arrays are emitted as TOON tables, not JSON. The empty-array case hides the mismatch.
+- **Root Cause:** The certification code assumes --full selects JSON; it actually preserves field values while retaining TOON formatting.
+- **Wrong Assumptions:** A successful API command or visible green check guarantees machine evidence can be decoded, or only the first passing run needs validation.
+- **Resolution & E2E Proof:** Request an explicit jq @base64 envelope, decode strictly, then apply the unchanged all-runs/exact-commit/success validation. Regression coverage preserves pending runs and rejects malformed/TOON envelopes; live API results confirm the envelope works.
+- **Golden Rule:** Separate display formatting from the machine evidence protocol. Never weaken CI validation to obtain a certificate.

@@ -27,7 +27,7 @@ jobs:
       - name: Verify account claims, recovery and dashboard contracts
         run: >-
           python -m pytest -q
-          sys/tests/test_colab_scheduler.py sys/tests/test_colab_health.py
+          sys/tests/test_ci_envelope.py sys/tests/test_colab_scheduler.py sys/tests/test_colab_health.py
           sys/tests/test_colab_accounts.py sys/tests/test_colab_runtime_binding.py
           sys/tests/test_colab_tts.py sys/tests/test_remote_render.py
           sys/tests/test_colab_reconcile.py sys/tests/test_account_probe.py
