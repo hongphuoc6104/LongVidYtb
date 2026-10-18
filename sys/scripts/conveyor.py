@@ -313,7 +313,7 @@ Nâng cấp và chuẩn hóa quy trình phát triển dự án theo mô hình B�
 def station_6_ci_watch() -> bool:
     print_banner("Trạm 6: CI Watch & Local Green Certification (GH-AXI Watch)", 6)
     gh_axi_bin = shutil.which("gh-axi")
-    from conveyor.ci_evidence import validate_ci_runs
+    from conveyor.ci_evidence import decode_ci_runs, validate_ci_runs
     dirty = subprocess.run(['git', 'status', '--porcelain'], cwd=REPO_ROOT, capture_output=True, text=True, check=True)
     if dirty.stdout.strip() or not gh_axi_bin:
         print('[FAIL] CI certification requires a committed tree and the GitHub client.')
@@ -328,9 +328,9 @@ def station_6_ci_watch() -> bool:
         # The configured repository is resolved by gh-axi; no hard-coded host.
         result = subprocess.run([
             gh_axi_bin, 'api', '/repos/{owner}/{repo}/actions/runs?head_sha=' + head + '&per_page=100',
-            '--jq', '[.workflow_runs[] | {id,head_sha,status,conclusion,html_url}]', '--full',
+            '--jq', '[.workflow_runs[] | {id,head_sha,status,conclusion,html_url}] | @base64', '--full',
         ], cwd=REPO_ROOT, capture_output=True, text=True, timeout=60, check=True)
-        runs = json.loads(result.stdout)
+        runs = decode_ci_runs(result.stdout)
     except (subprocess.SubprocessError, OSError, ValueError):
         print('[FAIL] Actual CI evidence is unavailable or unreadable.')
         return False
