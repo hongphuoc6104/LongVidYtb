@@ -49,7 +49,7 @@ class TestMultiProfileManager(unittest.TestCase):
         next_w = self.manager.acquire_healthy_worker()
         self.assertNotEqual(next_w.profile_id, w.profile_id)
 
-    def test_dispatcher_failover_on_unusual_activity(self):
+    def test_dispatcher_failover_on_proven_pre_send_transport_failure(self):
         dispatcher = MultiProfileDispatcher(self.manager, max_retries_per_patch=3)
         patch = Patch(
             patch_id="patch-failover-1",
@@ -64,9 +64,12 @@ class TestMultiProfileManager(unittest.TestCase):
         def mock_executor(worker: ChromeProfileWorker, items: list[dict]):
             attempts.append((worker.profile_id, [x["testCase"] for x in items]))
             if worker.profile_id == "p1":
-                # p1 succeeds on shot-1 then fails on shot-2 with unusual activity
+                # The first item is collected; dispatch proves the second was never sent.
                 patch.mark_item_success("shot-1", {"path": "/tmp/1.png", "media_id": "m1"})
-                raise RuntimeError("PUBLIC_ERROR_UNUSUAL_ACTIVITY: Account blocked temporarily")
+                error = RuntimeError("Temporary transport unavailable before submission")
+                error.generation_submitted = False
+                error.retryable_pre_submit = True
+                raise error
             # Other workers succeed on whatever items they are given
             return [{"path": f"/tmp/{x['testCase']}.png", "media_id": f"m-{x['testCase']}"} for x in items]
 
@@ -118,7 +121,8 @@ class TestMultiProfileManager(unittest.TestCase):
 
         with self.assertRaises(RuntimeError) as ctx:
             dispatcher.execute_patch_with_failover(patch, always_fail)
-        self.assertIn("failed after", str(ctx.exception).lower())
+        self.assertIn("PUBLIC_ERROR_UNUSUAL_ACTIVITY", str(ctx.exception))
+        self.assertEqual(sum(w.failure_count for w in self.manager.workers.values()), 1)
 
     def test_empty_workers_dispatch_all_raises_clean_error(self):
         empty_mgr = MultiProfileManager([])

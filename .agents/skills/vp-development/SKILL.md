@@ -45,3 +45,5 @@ When modifying full-frame authoring, audio or render contracts, read [Full-frame
 ## Flow test transport isolation
 
 Provider integration fixtures must close both socket and direct-CDP boundaries. Use a private fixture endpoint and a failing guard on any real direct fallback; mocking only the historical sender can trigger a signed-in browser. Keep real compiler, adapter and before-send guards in these tests. Fixture artifacts never certify live image quality.
+
+Detailed visual-style, transport-fixture and CI evidence lessons are preserved in [visual/CI regressions](references/visual-ci-regressions.md).

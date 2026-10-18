@@ -1,0 +1,2835 @@
+{
+  "schema_version": "3.0",
+  "brief_revision": 1,
+  "brief_hash": "22c7c3923f16d4e506ee59f9568019ad6e4891a5fe4f51604eec14d28ec84140",
+  "topic": "Nghịch Lý Reviewer 2 & Định Kiến Chống Đột Phá: Vì sao hệ thống bình duyệt khoa học luôn có xu hướng đào thải các phát kiến cấp tiến?",
+  "duration": {
+    "min_seconds": 140.0,
+    "max_seconds": 220.0
+  },
+  "style": "Minh họa 2D Editorial toàn khung, nhân vật người que đầu tròn nét mực đen biểu cảm, bảng biểu khái niệm màu trắng tinh khiết, gam màu xanh ngọc và vàng ấm trang nhã, không chữ thừa trong ảnh.",
+  "required_points": [
+    "Cú tát mở màn bàn học đêm",
+    "Cơn ác mộng Reviewer 2",
+    "Ảo tưởng về bức tường bình duyệt",
+    "Thực nghiệm lật tẩy của Peters và Ceci",
+    "Kết quả bẽ bàng của giới học thuật",
+    "Định kiến chống đột phá Novelty Bias",
+    "Áp lực bất đối xứng của Reviewer",
+    "Cái bẫy của khoa học thường nhật",
+    "Bài học từ những người mở đường",
+    "Chiến lược đóng gói bình mới rượu cũ",
+    "Nghệ thuật đối thoại với Reviewer 2",
+    "Khép vòng lặp và thông điệp kiên định"
+  ],
+  "characters": [
+    {
+      "id": "CH01",
+      "name": "Nhà nghiên cứu trẻ",
+      "appearance": "Anonymous round white head with a thick black outline, expressive dot eyes and thin black stick limbs.",
+      "outfit": "Simple teal shirt and navy trousers in complete full-frame environments."
+    }
+  ],
+  "scenes": [
+    {
+      "id": "SC01",
+      "title": "Cú tát mở màn bàn học đêm",
+      "purpose": "Triển khai bước 1: cú tát mở màn bàn học đêm",
+      "action": "A close view of an academic decision letter stamped with a bold red REJECT heading on screen.",
+      "setting": "A Vietnamese researcher desk at night with a glowing laptop screen under a warm lamp.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Ý tưởng đột phá nhất thường là thứ bị hội đồng từ chối đầu tiên. Hai giờ sáng bên bàn làm việc. Bạn hồi hộp mở hòm thư. Dòng chữ từ chối hiện lên. Bản nhận xét thứ hai gạt phắt. Họ bảo ý tưởng của bạn hoàn toàn vô căn cứ.",
+      "requirements": [
+        "R01"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC01_I1",
+          "description": "A Vietnamese researcher desk at night with a glowing laptop screen under a warm lamp. A close view of an academic decision letter stamped with a bold red REJECT heading on screen.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A close view of an academic decision letter stamped with a bold red REJECT heading on screen.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC01_I2",
+          "description": "A Vietnamese researcher desk at night with a glowing laptop screen under a warm lamp. A young Vietnamese researcher sits tiredly at a wooden desk beside stacks of highlighted research papers.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A young Vietnamese researcher sits tiredly at a wooden desk beside stacks of highlighted research papers.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC01_I3",
+          "description": "A Vietnamese researcher desk at night with a glowing laptop screen under a warm lamp. The researcher clicks open an unread email from an international Q1 academic journal.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC01_I2",
+          "preserve": "Keep the exact camera angle, room geometry and props in A Vietnamese researcher desk at night with a glowing laptop screen under a warm lamp.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The researcher clicks open an unread email from an international Q1 academic journal.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC01_I4",
+          "description": "A Vietnamese researcher desk at night with a glowing laptop screen under a warm lamp. Close view of the computer monitor displaying the cold opening line: We regret to inform you.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Close view of the computer monitor displaying the cold opening line: We regret to inform you.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC01_I5",
+          "description": "A Vietnamese researcher desk at night with a glowing laptop screen under a warm lamp. A stark white concept card showing a crossed-out breakthrough research diagram on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A stark white concept card showing a crossed-out breakthrough research diagram on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC01_I6",
+          "description": "A Vietnamese researcher desk at night with a glowing laptop screen under a warm lamp. The researcher leans back in silence, stunned and exhausted before the glowing screen.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC01_I2",
+          "preserve": "Keep the exact camera angle, room geometry and props in A Vietnamese researcher desk at night with a glowing laptop screen under a warm lamp.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The researcher leans back in silence, stunned and exhausted before the glowing screen.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC01_B1",
+          "image_id": "SC01_I1",
+          "purpose": "Triển khai bước 1: cú tát mở màn bàn học đêm",
+          "anchor": {
+            "vi": {
+              "quote": "Ý tưởng đột phá nhất thường là thứ bị hội đồng từ chối đầu tiên.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B2",
+          "image_id": "SC01_I2",
+          "purpose": "Triển khai bước 1: cú tát mở màn bàn học đêm",
+          "anchor": {
+            "vi": {
+              "quote": "Hai giờ sáng bên bàn làm việc.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B3",
+          "image_id": "SC01_I3",
+          "purpose": "Triển khai bước 1: cú tát mở màn bàn học đêm",
+          "anchor": {
+            "vi": {
+              "quote": "Bạn hồi hộp mở hòm thư.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B4",
+          "image_id": "SC01_I4",
+          "purpose": "Triển khai bước 1: cú tát mở màn bàn học đêm",
+          "anchor": {
+            "vi": {
+              "quote": "Dòng chữ từ chối hiện lên.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B5",
+          "image_id": "SC01_I5",
+          "purpose": "Triển khai bước 1: cú tát mở màn bàn học đêm",
+          "anchor": {
+            "vi": {
+              "quote": "Bản nhận xét thứ hai gạt phắt.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B6",
+          "image_id": "SC01_I6",
+          "purpose": "Triển khai bước 1: cú tát mở màn bàn học đêm",
+          "anchor": {
+            "vi": {
+              "quote": "Họ bảo ý tưởng của bạn hoàn toàn vô căn cứ.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "narrative_warm",
+      "narrative_phase": "lived_friction"
+    },
+    {
+      "id": "SC02",
+      "title": "Cơn ác mộng Reviewer 2",
+      "purpose": "Triển khai bước 2: cơn ác mộng reviewer 2",
+      "action": "The researcher compares two printed peer review sheets under the desk lamp.",
+      "setting": "An academic desk showing dual divergent peer review evaluation reports side by side.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Cảm giác bất công dâng trào tột độ. Người phản biện một hết lời khen ngợi. Còn người phản biện số hai lại thẳng tay vùi dập. Họ bắt bẻ từng dấu chấm câu. Đây không phải là xui xẻo cá nhân. Đây là luật ngầm của giới học thuật.",
+      "requirements": [
+        "R02"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC02_I1",
+          "description": "An academic desk showing dual divergent peer review evaluation reports side by side. The researcher compares two printed peer review sheets under the desk lamp.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "The researcher compares two printed peer review sheets under the desk lamp.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC02_I2",
+          "description": "An academic desk showing dual divergent peer review evaluation reports side by side. Close view of Reviewer 1 comments highlighted in soft green: Outstanding originality and solid methodology.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Close view of Reviewer 1 comments highlighted in soft green: Outstanding originality and solid methodology.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC02_I3",
+          "description": "An academic desk showing dual divergent peer review evaluation reports side by side. Close view of Reviewer 2 comments marked with harsh red ink: Lacks merit, unconvincing, recommend rejection.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Close view of Reviewer 2 comments marked with harsh red ink: Lacks merit, unconvincing, recommend rejection.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC02_I4",
+          "description": "An academic desk showing dual divergent peer review evaluation reports side by side. The researcher stares at three pages of nitpicking technical complaints with furrowed brow.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC02_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in An academic desk showing dual divergent peer review evaluation reports side by side.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The researcher stares at three pages of nitpicking technical complaints with furrowed brow.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC02_I5",
+          "description": "An academic desk showing dual divergent peer review evaluation reports side by side. A crisp diagram illustrating the notorious Reviewer 2 meme turned into an academic reality on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A crisp diagram illustrating the notorious Reviewer 2 meme turned into an academic reality on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC02_I6",
+          "description": "An academic desk showing dual divergent peer review evaluation reports side by side. The researcher gazes through the window into the dark night sky, realizing a systemic barrier.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC02_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The researcher gazes through the window into the dark night sky, realizing a systemic barrier.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC02_B1",
+          "image_id": "SC02_I1",
+          "purpose": "Triển khai bước 2: cơn ác mộng reviewer 2",
+          "anchor": {
+            "vi": {
+              "quote": "Cảm giác bất công dâng trào tột độ.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B2",
+          "image_id": "SC02_I2",
+          "purpose": "Triển khai bước 2: cơn ác mộng reviewer 2",
+          "anchor": {
+            "vi": {
+              "quote": "Người phản biện một hết lời khen ngợi.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B3",
+          "image_id": "SC02_I3",
+          "purpose": "Triển khai bước 2: cơn ác mộng reviewer 2",
+          "anchor": {
+            "vi": {
+              "quote": "Còn người phản biện số hai lại thẳng tay vùi dập.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B4",
+          "image_id": "SC02_I4",
+          "purpose": "Triển khai bước 2: cơn ác mộng reviewer 2",
+          "anchor": {
+            "vi": {
+              "quote": "Họ bắt bẻ từng dấu chấm câu.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B5",
+          "image_id": "SC02_I5",
+          "purpose": "Triển khai bước 2: cơn ác mộng reviewer 2",
+          "anchor": {
+            "vi": {
+              "quote": "Đây không phải là xui xẻo cá nhân.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B6",
+          "image_id": "SC02_I6",
+          "purpose": "Triển khai bước 2: cơn ác mộng reviewer 2",
+          "anchor": {
+            "vi": {
+              "quote": "Đây là luật ngầm của giới học thuật.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "narrative_warm",
+      "narrative_phase": "lived_friction"
+    },
+    {
+      "id": "SC03",
+      "title": "Ảo tưởng về bức tường bình duyệt",
+      "purpose": "Triển khai bước 3: ảo tưởng về bức tường bình duyệt",
+      "action": "A grand academic library where scholars in robes debate behind towering stacks of leather-bound journals.",
+      "setting": "A grand classical academic library with tall bookshelves and marble columns.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Chúng ta vẫn thường ngây thơ tin rằng, bình duyệt là pháo đài bảo vệ chân lý. Nơi các chuyên gia công tâm sàng lọc tri thức. Nhưng khoa học hiện đại chứng minh điều ngược lại. Cơ chế này sinh ra để duy trì trật tự cũ. Chứ không phải để đón chào những phát kiến mới.",
+      "requirements": [
+        "R03"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC03_I1",
+          "description": "A grand classical academic library with tall bookshelves and marble columns. A grand academic library where scholars in robes debate behind towering stacks of leather-bound journals.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A grand academic library where scholars in robes debate behind towering stacks of leather-bound journals.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC03_I2",
+          "description": "A grand classical academic library with tall bookshelves and marble columns. A stone fortress gate symbolizing the peer review gatekeeping mechanism.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A stone fortress gate symbolizing the peer review gatekeeping mechanism.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC03_I3",
+          "description": "A grand classical academic library with tall bookshelves and marble columns. Three senior scholars solemnly examine open research manuscripts around a polished wooden table.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC03_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in A grand classical academic library with tall bookshelves and marble columns.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Three senior scholars solemnly examine open research manuscripts around a polished wooden table.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC03_I4",
+          "description": "A grand classical academic library with tall bookshelves and marble columns. A cracked foundation symbol under the academic peer review banner on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A cracked foundation symbol under the academic peer review banner on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC03_I5",
+          "description": "A grand classical academic library with tall bookshelves and marble columns. A flowchart showing papers traveling along conventional rails while divergent paths are blocked.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC03_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "A flowchart showing papers traveling along conventional rails while divergent paths are blocked.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC03_I6",
+          "description": "A grand classical academic library with tall bookshelves and marble columns. A red barrier gate slamming down on an innovative blueprint.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A red barrier gate slamming down on an innovative blueprint.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC03_B1",
+          "image_id": "SC03_I1",
+          "purpose": "Triển khai bước 3: ảo tưởng về bức tường bình duyệt",
+          "anchor": {
+            "vi": {
+              "quote": "Chúng ta vẫn thường ngây thơ tin rằng,",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B2",
+          "image_id": "SC03_I2",
+          "purpose": "Triển khai bước 3: ảo tưởng về bức tường bình duyệt",
+          "anchor": {
+            "vi": {
+              "quote": "bình duyệt là pháo đài bảo vệ chân lý.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B3",
+          "image_id": "SC03_I3",
+          "purpose": "Triển khai bước 3: ảo tưởng về bức tường bình duyệt",
+          "anchor": {
+            "vi": {
+              "quote": "Nơi các chuyên gia công tâm sàng lọc tri thức.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B4",
+          "image_id": "SC03_I4",
+          "purpose": "Triển khai bước 3: ảo tưởng về bức tường bình duyệt",
+          "anchor": {
+            "vi": {
+              "quote": "Nhưng khoa học hiện đại chứng minh điều ngược lại.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B5",
+          "image_id": "SC03_I5",
+          "purpose": "Triển khai bước 3: ảo tưởng về bức tường bình duyệt",
+          "anchor": {
+            "vi": {
+              "quote": "Cơ chế này sinh ra để duy trì trật tự cũ.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B6",
+          "image_id": "SC03_I6",
+          "purpose": "Triển khai bước 3: ảo tưởng về bức tường bình duyệt",
+          "anchor": {
+            "vi": {
+              "quote": "Chứ không phải để đón chào những phát kiến mới.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "empirical_conflict"
+    },
+    {
+      "id": "SC04",
+      "title": "Thực nghiệm lật tẩy của Peters và Ceci",
+      "purpose": "Triển khai bước 4: thực nghiệm lật tẩy của peters và ceci",
+      "action": "Psychology researchers Peters and Ceci stand in their laboratory planning an empirical audit.",
+      "setting": "A behavioral science laboratory with historical psychology journal archives.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Một thực nghiệm chấn động đã lật tẩy sự thật này. Họ chọn mười hai bài báo uy tín, từng được các tạp chí danh giá nhất công bố. Họ giữ nguyên toàn bộ nội dung nghiên cứu. Chỉ thay đổi tên tác giả và trường đại học. Thành những cái tên hoàn toàn xa lạ.",
+      "requirements": [
+        "R04"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC04_I1",
+          "description": "A behavioral science laboratory with historical psychology journal archives. Psychology researchers Peters and Ceci stand in their laboratory planning an empirical audit.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Psychology researchers Peters and Ceci stand in their laboratory planning an empirical audit.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC04_I2",
+          "description": "A behavioral science laboratory with historical psychology journal archives. Twelve published articles from top psychology journals laid out in two neat rows.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Twelve published articles from top psychology journals laid out in two neat rows.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC04_I3",
+          "description": "A behavioral science laboratory with historical psychology journal archives. The researchers inspect the original accepted stamps on the cover pages.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC04_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in A behavioral science laboratory with historical psychology journal archives.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The researchers inspect the original accepted stamps on the cover pages.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC04_I4",
+          "description": "A behavioral science laboratory with historical psychology journal archives. Close view of identical body text and scientific charts being carefully duplicated.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Close view of identical body text and scientific charts being carefully duplicated.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC04_I5",
+          "description": "A behavioral science laboratory with historical psychology journal archives. A typewriter replaces famous Harvard and Yale affiliations with fictitious local institutes.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC04_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in A behavioral science laboratory with historical psychology journal archives.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "A typewriter replaces famous Harvard and Yale affiliations with fictitious local institutes.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC04_I6",
+          "description": "A behavioral science laboratory with historical psychology journal archives. Two contrasting institutional envelopes: prestigious Ivy League versus unknown local institute on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Two contrasting institutional envelopes: prestigious Ivy League versus unknown local institute on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC04_B1",
+          "image_id": "SC04_I1",
+          "purpose": "Triển khai bước 4: thực nghiệm lật tẩy của peters và ceci",
+          "anchor": {
+            "vi": {
+              "quote": "Một thực nghiệm chấn động đã lật tẩy sự thật này.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B2",
+          "image_id": "SC04_I2",
+          "purpose": "Triển khai bước 4: thực nghiệm lật tẩy của peters và ceci",
+          "anchor": {
+            "vi": {
+              "quote": "Họ chọn mười hai bài báo uy tín,",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B3",
+          "image_id": "SC04_I3",
+          "purpose": "Triển khai bước 4: thực nghiệm lật tẩy của peters và ceci",
+          "anchor": {
+            "vi": {
+              "quote": "từng được các tạp chí danh giá nhất công bố.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B4",
+          "image_id": "SC04_I4",
+          "purpose": "Triển khai bước 4: thực nghiệm lật tẩy của peters và ceci",
+          "anchor": {
+            "vi": {
+              "quote": "Họ giữ nguyên toàn bộ nội dung nghiên cứu.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B5",
+          "image_id": "SC04_I5",
+          "purpose": "Triển khai bước 4: thực nghiệm lật tẩy của peters và ceci",
+          "anchor": {
+            "vi": {
+              "quote": "Chỉ thay đổi tên tác giả và trường đại học.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B6",
+          "image_id": "SC04_I6",
+          "purpose": "Triển khai bước 4: thực nghiệm lật tẩy của peters và ceci",
+          "anchor": {
+            "vi": {
+              "quote": "Thành những cái tên hoàn toàn xa lạ.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "empirical_conflict"
+    },
+    {
+      "id": "SC05",
+      "title": "Kết quả bẽ bàng của giới học thuật",
+      "purpose": "Triển khai bước 5: kết quả bẽ bàng của giới học thuật",
+      "action": "Editorial desks piled high with rejected submissions as editor-in-chief reviews audit data.",
+      "setting": "An editorial office with journal rejection letters and review scorecards.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Kết quả khiến cả giới học thuật bàng hoàng. Tám mươi chín phần trăm bài báo cũ bị từ chối khi nộp lại. Các chuyên gia chê bai phương pháp yếu kém. Họ hoàn toàn không nhận ra, đây chính là công trình họ từng hết lời ca ngợi. Hội đồng luôn có định kiến vô thức với tên tuổi tác giả.",
+      "requirements": [
+        "R05"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC01"
+      ],
+      "images": [
+        {
+          "id": "SC05_I1",
+          "description": "An editorial office with journal rejection letters and review scorecards. Editorial desks piled high with rejected submissions as editor-in-chief reviews audit data.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Editorial desks piled high with rejected submissions as editor-in-chief reviews audit data.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC05_I2",
+          "description": "An editorial office with journal rejection letters and review scorecards. A stark statistical chart highlighting 89% rejection rate in bold crimson numbers.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A stark statistical chart highlighting 89% rejection rate in bold crimson numbers.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC05_I3",
+          "description": "An editorial office with journal rejection letters and review scorecards. Reviewer scorecards filled with harsh criticisms of statistical methods they previously approved.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC05_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in An editorial office with journal rejection letters and review scorecards.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Reviewer scorecards filled with harsh criticisms of statistical methods they previously approved.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC05_I4",
+          "description": "An editorial office with journal rejection letters and review scorecards. An anonymous reviewer shaking their head while scribbling negative remarks on the paper.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC05_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "An anonymous reviewer shaking their head while scribbling negative remarks on the paper.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC05_I5",
+          "description": "An editorial office with journal rejection letters and review scorecards. Overlay of the past acceptance letter fading into the current harsh rejection sheet.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Overlay of the past acceptance letter fading into the current harsh rejection sheet.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC05_I6",
+          "description": "An editorial office with journal rejection letters and review scorecards. A cognitive scale tilting heavily under the weight of institutional prestige on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A cognitive scale tilting heavily under the weight of institutional prestige on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC05_B1",
+          "image_id": "SC05_I1",
+          "purpose": "Triển khai bước 5: kết quả bẽ bàng của giới học thuật",
+          "anchor": {
+            "vi": {
+              "quote": "Kết quả khiến cả giới học thuật bàng hoàng.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B2",
+          "image_id": "SC05_I2",
+          "purpose": "Triển khai bước 5: kết quả bẽ bàng của giới học thuật",
+          "anchor": {
+            "vi": {
+              "quote": "Tám mươi chín phần trăm bài báo cũ bị từ chối khi nộp lại.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B3",
+          "image_id": "SC05_I3",
+          "purpose": "Triển khai bước 5: kết quả bẽ bàng của giới học thuật",
+          "anchor": {
+            "vi": {
+              "quote": "Các chuyên gia chê bai phương pháp yếu kém.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B4",
+          "image_id": "SC05_I4",
+          "purpose": "Triển khai bước 5: kết quả bẽ bàng của giới học thuật",
+          "anchor": {
+            "vi": {
+              "quote": "Họ hoàn toàn không nhận ra,",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B5",
+          "image_id": "SC05_I5",
+          "purpose": "Triển khai bước 5: kết quả bẽ bàng của giới học thuật",
+          "anchor": {
+            "vi": {
+              "quote": "đây chính là công trình họ từng hết lời ca ngợi.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B6",
+          "image_id": "SC05_I6",
+          "purpose": "Triển khai bước 5: kết quả bẽ bàng của giới học thuật",
+          "anchor": {
+            "vi": {
+              "quote": "Hội đồng luôn có định kiến vô thức với tên tuổi tác giả.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "reflective_slow",
+      "narrative_phase": "empirical_conflict"
+    },
+    {
+      "id": "SC06",
+      "title": "Định kiến chống đột phá Novelty Bias",
+      "purpose": "Triển khai bước 6: định kiến chống đột phá novelty bias",
+      "action": "Cognitive scientists gather around a high-tech data visualization display.",
+      "setting": "A cognitive science research center with brain scans and novelty distribution charts.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Các nhà khoa học tại đại học Harvard gọi đây là định kiến chống đột phá. Não bộ con người luôn thèm khát sự an toàn. Ý tưởng càng mới mẻ càng nhận điểm đánh giá thấp hơn. Khi một ý tưởng đi ngược lại niềm tin số đông, nó lập tức bị xem là mối đe dọa. Người phản biện luôn ưu tiên nghiên cứu quen thuộc an toàn.",
+      "requirements": [
+        "R06"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC02"
+      ],
+      "images": [
+        {
+          "id": "SC06_I1",
+          "description": "A cognitive science research center with brain scans and novelty distribution charts. Cognitive scientists gather around a high-tech data visualization display.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Cognitive scientists gather around a high-tech data visualization display.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC06_I2",
+          "description": "A cognitive science research center with brain scans and novelty distribution charts. A minimalist title card: NOVELTY BIAS on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A minimalist title card: NOVELTY BIAS on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC06_I3",
+          "description": "A cognitive science research center with brain scans and novelty distribution charts. A brain diagram highlighting the amygdala lighting up in defense against foreign stimuli.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A brain diagram highlighting the amygdala lighting up in defense against foreign stimuli.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC06_I4",
+          "description": "A cognitive science research center with brain scans and novelty distribution charts. A scatter plot showing an inverse relationship: high novelty scores correlate with lower review ratings.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A scatter plot showing an inverse relationship: high novelty scores correlate with lower review ratings.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC06_I5",
+          "description": "A cognitive science research center with brain scans and novelty distribution charts. A single divergent glowing node surrounded by a tightly clustered grid of uniform gray nodes.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC06_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "A single divergent glowing node surrounded by a tightly clustered grid of uniform gray nodes.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC06_I6",
+          "description": "A cognitive science research center with brain scans and novelty distribution charts. A warning icon reading UNKNOWN ANOMALY flashing in red on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A warning icon reading UNKNOWN ANOMALY flashing in red on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC06_I7",
+          "description": "A cognitive science research center with brain scans and novelty distribution charts. Reviewers comfortably stamp approval on predictable incremental variations of known models.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC06_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in A cognitive science research center with brain scans and novelty distribution charts.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Reviewers comfortably stamp approval on predictable incremental variations of known models.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC06_B1",
+          "image_id": "SC06_I1",
+          "purpose": "Triển khai bước 6: định kiến chống đột phá novelty bias",
+          "anchor": {
+            "vi": {
+              "quote": "Các nhà khoa học tại đại học Harvard",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC06_B2",
+          "image_id": "SC06_I2",
+          "purpose": "Triển khai bước 6: định kiến chống đột phá novelty bias",
+          "anchor": {
+            "vi": {
+              "quote": "gọi đây là định kiến chống đột phá.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC06_B3",
+          "image_id": "SC06_I3",
+          "purpose": "Triển khai bước 6: định kiến chống đột phá novelty bias",
+          "anchor": {
+            "vi": {
+              "quote": "Não bộ con người luôn thèm khát sự an toàn.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC06_B4",
+          "image_id": "SC06_I4",
+          "purpose": "Triển khai bước 6: định kiến chống đột phá novelty bias",
+          "anchor": {
+            "vi": {
+              "quote": "Ý tưởng càng mới mẻ càng nhận điểm đánh giá thấp hơn.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC06_B5",
+          "image_id": "SC06_I5",
+          "purpose": "Triển khai bước 6: định kiến chống đột phá novelty bias",
+          "anchor": {
+            "vi": {
+              "quote": "Khi một ý tưởng đi ngược lại niềm tin số đông,",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC06_B6",
+          "image_id": "SC06_I6",
+          "purpose": "Triển khai bước 6: định kiến chống đột phá novelty bias",
+          "anchor": {
+            "vi": {
+              "quote": "nó lập tức bị xem là mối đe dọa.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC06_B7",
+          "image_id": "SC06_I7",
+          "purpose": "Triển khai bước 6: định kiến chống đột phá novelty bias",
+          "anchor": {
+            "vi": {
+              "quote": "Người phản biện luôn ưu tiên nghiên cứu quen thuộc an toàn.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "structural_model"
+    },
+    {
+      "id": "SC07",
+      "title": "Áp lực bất đối xứng của Reviewer",
+      "purpose": "Triển khai bước 7: áp lực bất đối xứng của reviewer",
+      "action": "A tired senior professor sitting alone at midnight reviewing a radical manuscript under a banker lamp.",
+      "setting": "A solitary reviewer office under late-night green banker lamp.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Hãy đặt mình vào vị trí của người phản biện. Nếu họ thông qua một bài báo sai sót, uy tín cả đời của họ sẽ tan biến. Nhưng nếu họ từ chối một công trình kiệt xuất, chẳng có ai trừng phạt họ cả. Cơ chế bất đối xứng này tạo ra thói quen thà giết nhầm còn hơn bỏ sót.",
+      "requirements": [
+        "R07"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC07_I1",
+          "description": "A solitary reviewer office under late-night green banker lamp. A tired senior professor sitting alone at midnight reviewing a radical manuscript under a banker lamp.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A tired senior professor sitting alone at midnight reviewing a radical manuscript under a banker lamp.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC07_I2",
+          "description": "A solitary reviewer office under late-night green banker lamp. Close view of an academic retraction notice published in a journal: Paper Retracted.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Close view of an academic retraction notice published in a journal: Paper Retracted.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC07_I3",
+          "description": "A solitary reviewer office under late-night green banker lamp. The professor winces, imagining peer gossip and damaged professional standing.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC07_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in A solitary reviewer office under late-night green banker lamp.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The professor winces, imagining peer gossip and damaged professional standing.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC07_I4",
+          "description": "A solitary reviewer office under late-night green banker lamp. The professor drops the radical paper into the reject tray without hesitation.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC07_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The professor drops the radical paper into the reject tray without hesitation.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC07_I5",
+          "description": "A solitary reviewer office under late-night green banker lamp. An empty consequence log showing zero accountability for rejecting groundbreaking discoveries.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "An empty consequence log showing zero accountability for rejecting groundbreaking discoveries.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC07_I6",
+          "description": "A solitary reviewer office under late-night green banker lamp. An asymmetric balance scale showing massive personal risk versus zero reward on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "An asymmetric balance scale showing massive personal risk versus zero reward on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC07_B1",
+          "image_id": "SC07_I1",
+          "purpose": "Triển khai bước 7: áp lực bất đối xứng của reviewer",
+          "anchor": {
+            "vi": {
+              "quote": "Hãy đặt mình vào vị trí của người phản biện.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC07_B2",
+          "image_id": "SC07_I2",
+          "purpose": "Triển khai bước 7: áp lực bất đối xứng của reviewer",
+          "anchor": {
+            "vi": {
+              "quote": "Nếu họ thông qua một bài báo sai sót,",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC07_B3",
+          "image_id": "SC07_I3",
+          "purpose": "Triển khai bước 7: áp lực bất đối xứng của reviewer",
+          "anchor": {
+            "vi": {
+              "quote": "uy tín cả đời của họ sẽ tan biến.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC07_B4",
+          "image_id": "SC07_I4",
+          "purpose": "Triển khai bước 7: áp lực bất đối xứng của reviewer",
+          "anchor": {
+            "vi": {
+              "quote": "Nhưng nếu họ từ chối một công trình kiệt xuất,",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC07_B5",
+          "image_id": "SC07_I5",
+          "purpose": "Triển khai bước 7: áp lực bất đối xứng của reviewer",
+          "anchor": {
+            "vi": {
+              "quote": "chẳng có ai trừng phạt họ cả.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC07_B6",
+          "image_id": "SC07_I6",
+          "purpose": "Triển khai bước 7: áp lực bất đối xứng của reviewer",
+          "anchor": {
+            "vi": {
+              "quote": "Cơ chế bất đối xứng này tạo ra thói quen thà giết nhầm còn hơn bỏ sót.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "structural_model"
+    },
+    {
+      "id": "SC08",
+      "title": "Cái bẫy của khoa học thường nhật",
+      "purpose": "Triển khai bước 8: cái bẫy của khoa học thường nhật",
+      "action": "A minimalist lecture amphitheater where a diagram of Scientific Revolutions is projected.",
+      "setting": "A philosophical lecture hall displaying Thomas Kuhn's paradigm shift concepts.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Nhà triết học Thomas Kuhn từng cảnh báo điều này. Khoa học chính thống luôn tìm cách loại trừ dị biệt. Các chuyên gia gác cổng bảo vệ mô hình quen thuộc. Họ dành cả đời để củng cố lý thuyết đó. Bất kỳ ai muốn đập vỡ chiếc hộp, đều bị coi là mối hiểm họa học thuật.",
+      "requirements": [
+        "R08"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC03"
+      ],
+      "images": [
+        {
+          "id": "SC08_I1",
+          "description": "A philosophical lecture hall displaying Thomas Kuhn's paradigm shift concepts. A minimalist lecture amphitheater where a diagram of Scientific Revolutions is projected.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A minimalist lecture amphitheater where a diagram of Scientific Revolutions is projected.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC08_I2",
+          "description": "A philosophical lecture hall displaying Thomas Kuhn's paradigm shift concepts. A rigid geometric jigsaw puzzle rejecting a uniquely shaped breakthrough piece.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A rigid geometric jigsaw puzzle rejecting a uniquely shaped breakthrough piece.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC08_I3",
+          "description": "A philosophical lecture hall displaying Thomas Kuhn's paradigm shift concepts. Scholars standing guard around a neat textbook paradigm, pushing away unorthodox questions.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC08_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Scholars standing guard around a neat textbook paradigm, pushing away unorthodox questions.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC08_I4",
+          "description": "A philosophical lecture hall displaying Thomas Kuhn's paradigm shift concepts. Generations of scholars meticulously adding tiny bricks to the same existing wall.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC08_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in A philosophical lecture hall displaying Thomas Kuhn's paradigm shift concepts.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Generations of scholars meticulously adding tiny bricks to the same existing wall.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC08_I5",
+          "description": "A philosophical lecture hall displaying Thomas Kuhn's paradigm shift concepts. A heavy stone cube labeled CONVENTIONAL PARADIGM resisting external cracks on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A heavy stone cube labeled CONVENTIONAL PARADIGM resisting external cracks on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC08_I6",
+          "description": "A philosophical lecture hall displaying Thomas Kuhn's paradigm shift concepts. A red stamp reading UNORTHODOX stamped over an innovative hypothesis.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A red stamp reading UNORTHODOX stamped over an innovative hypothesis.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC08_B1",
+          "image_id": "SC08_I1",
+          "purpose": "Triển khai bước 8: cái bẫy của khoa học thường nhật",
+          "anchor": {
+            "vi": {
+              "quote": "Nhà triết học Thomas Kuhn từng cảnh báo điều này.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC08_B2",
+          "image_id": "SC08_I2",
+          "purpose": "Triển khai bước 8: cái bẫy của khoa học thường nhật",
+          "anchor": {
+            "vi": {
+              "quote": "Khoa học chính thống luôn tìm cách loại trừ dị biệt.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC08_B3",
+          "image_id": "SC08_I3",
+          "purpose": "Triển khai bước 8: cái bẫy của khoa học thường nhật",
+          "anchor": {
+            "vi": {
+              "quote": "Các chuyên gia gác cổng bảo vệ mô hình quen thuộc.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC08_B4",
+          "image_id": "SC08_I4",
+          "purpose": "Triển khai bước 8: cái bẫy của khoa học thường nhật",
+          "anchor": {
+            "vi": {
+              "quote": "Họ dành cả đời để củng cố lý thuyết đó.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC08_B5",
+          "image_id": "SC08_I5",
+          "purpose": "Triển khai bước 8: cái bẫy của khoa học thường nhật",
+          "anchor": {
+            "vi": {
+              "quote": "Bất kỳ ai muốn đập vỡ chiếc hộp,",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC08_B6",
+          "image_id": "SC08_I6",
+          "purpose": "Triển khai bước 8: cái bẫy của khoa học thường nhật",
+          "anchor": {
+            "vi": {
+              "quote": "đều bị coi là mối hiểm họa học thuật.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "reflective_slow",
+      "narrative_phase": "structural_model"
+    },
+    {
+      "id": "SC09",
+      "title": "Bài học từ những người mở đường",
+      "purpose": "Triển khai bước 9: bài học từ những người mở đường",
+      "action": "A historical exhibition gallery displaying early manuscripts of revolutionary scientific theories.",
+      "setting": "A historical gallery of revolutionary scientific breakthroughs.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Những phát kiến vĩ đại nhất lịch sử, đều từng trải qua chuỗi ngày bị hắt hủi. Đột phá chỉ xuất hiện khi mô hình cũ hoàn toàn sụp đổ. Những người dám đi ngược số đông, phải có bản lĩnh chịu đựng sự cô độc. Để bảo vệ chân lý trước định kiến thời đại.",
+      "requirements": [
+        "R09"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC03"
+      ],
+      "images": [
+        {
+          "id": "SC09_I1",
+          "description": "A historical gallery of revolutionary scientific breakthroughs. A historical exhibition gallery displaying early manuscripts of revolutionary scientific theories.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A historical exhibition gallery displaying early manuscripts of revolutionary scientific theories.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC09_I2",
+          "description": "A historical gallery of revolutionary scientific breakthroughs. Archived rejection letters from the Royal Society and top physics journals.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Archived rejection letters from the Royal Society and top physics journals.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC09_I3",
+          "description": "A historical gallery of revolutionary scientific breakthroughs. A crumbling old paradigm wall giving way to a luminous new scientific landscape on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A crumbling old paradigm wall giving way to a luminous new scientific landscape on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC09_I4",
+          "description": "A historical gallery of revolutionary scientific breakthroughs. A solitary researcher walking forward toward a glowing horizon while others stay in the crowd.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC09_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "A solitary researcher walking forward toward a glowing horizon while others stay in the crowd.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC09_I5",
+          "description": "A historical gallery of revolutionary scientific breakthroughs. The researcher pauses, holding their manuscript tightly with quiet resolve.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC09_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in A historical gallery of revolutionary scientific breakthroughs.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The researcher pauses, holding their manuscript tightly with quiet resolve.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC09_I6",
+          "description": "A historical gallery of revolutionary scientific breakthroughs. A warm light illuminates the handwritten equation on paper.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A warm light illuminates the handwritten equation on paper.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC09_B1",
+          "image_id": "SC09_I1",
+          "purpose": "Triển khai bước 9: bài học từ những người mở đường",
+          "anchor": {
+            "vi": {
+              "quote": "Những phát kiến vĩ đại nhất lịch sử,",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC09_B2",
+          "image_id": "SC09_I2",
+          "purpose": "Triển khai bước 9: bài học từ những người mở đường",
+          "anchor": {
+            "vi": {
+              "quote": "đều từng trải qua chuỗi ngày bị hắt hủi.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC09_B3",
+          "image_id": "SC09_I3",
+          "purpose": "Triển khai bước 9: bài học từ những người mở đường",
+          "anchor": {
+            "vi": {
+              "quote": "Đột phá chỉ xuất hiện khi mô hình cũ hoàn toàn sụp đổ.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC09_B4",
+          "image_id": "SC09_I4",
+          "purpose": "Triển khai bước 9: bài học từ những người mở đường",
+          "anchor": {
+            "vi": {
+              "quote": "Những người dám đi ngược số đông,",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC09_B5",
+          "image_id": "SC09_I5",
+          "purpose": "Triển khai bước 9: bài học từ những người mở đường",
+          "anchor": {
+            "vi": {
+              "quote": "phải có bản lĩnh chịu đựng sự cô độc.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC09_B6",
+          "image_id": "SC09_I6",
+          "purpose": "Triển khai bước 9: bài học từ những người mở đường",
+          "anchor": {
+            "vi": {
+              "quote": "Để bảo vệ chân lý trước định kiến thời đại.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "narrative_warm",
+      "narrative_phase": "actionable_resolution"
+    },
+    {
+      "id": "SC10",
+      "title": "Chiến lược đóng gói bình mới rượu cũ",
+      "purpose": "Triển khai bước 10: chiến lược đóng gói bình mới rượu cũ",
+      "action": "A strategist stands before a glass board outlining academic framing architectures.",
+      "setting": "A modern research strategy room with drafting tables and positioning frameworks.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Làm sao để ý tưởng đột phá sống sót qua cửa ải bình duyệt khắt khe? Đừng dại dột khoác lên nó chiếc áo cách mạng quá chói lóa. Hãy đóng gói hạt nhân mới lạ trong chiếc bình quen thuộc. Dẫn dắt người đọc từ nền móng họ tin tưởng. Từng bước mở rộng ranh giới một cách khéo léo. Biến sự chấn động thành một bước tiến tự nhiên. Hội đồng sẽ dễ dàng gật đầu chấp thuận hơn.",
+      "requirements": [
+        "R10"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC10_I1",
+          "description": "A modern research strategy room with drafting tables and positioning frameworks. A strategist stands before a glass board outlining academic framing architectures.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A strategist stands before a glass board outlining academic framing architectures.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC10_I2",
+          "description": "A modern research strategy room with drafting tables and positioning frameworks. A heavily guarded stone gateway labeled PEER REVIEW GATEWAY on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A heavily guarded stone gateway labeled PEER REVIEW GATEWAY on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC10_I3",
+          "description": "A modern research strategy room with drafting tables and positioning frameworks. A red warning card showing crossed-out sensational claims: RADICAL REVOLUTION on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A red warning card showing crossed-out sensational claims: RADICAL REVOLUTION on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC10_I4",
+          "description": "A modern research strategy room with drafting tables and positioning frameworks. A radical mathematical formula nestled safely inside an accepted classical framework model.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A radical mathematical formula nestled safely inside an accepted classical framework model.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC10_I5",
+          "description": "A modern research strategy room with drafting tables and positioning frameworks. A bridge connecting a solid classical stone foundation to a modern cantilevered glass structure.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC10_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "A bridge connecting a solid classical stone foundation to a modern cantilevered glass structure.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC10_I6",
+          "description": "A modern research strategy room with drafting tables and positioning frameworks. The architect points to each secure step on the theoretical bridge.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC10_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in A modern research strategy room with drafting tables and positioning frameworks.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The architect points to each secure step on the theoretical bridge.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC10_I7",
+          "description": "A modern research strategy room with drafting tables and positioning frameworks. A green indicator light confirming seamless theoretical continuity.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A green indicator light confirming seamless theoretical continuity.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC10_I8",
+          "description": "A modern research strategy room with drafting tables and positioning frameworks. A green checkmark stamp on a rigorous thesis framework on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A green checkmark stamp on a rigorous thesis framework on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC10_B1",
+          "image_id": "SC10_I1",
+          "purpose": "Triển khai bước 10: chiến lược đóng gói bình mới rượu cũ",
+          "anchor": {
+            "vi": {
+              "quote": "Làm sao để ý tưởng đột phá sống sót",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC10_B2",
+          "image_id": "SC10_I2",
+          "purpose": "Triển khai bước 10: chiến lược đóng gói bình mới rượu cũ",
+          "anchor": {
+            "vi": {
+              "quote": "qua cửa ải bình duyệt khắt khe?",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC10_B3",
+          "image_id": "SC10_I3",
+          "purpose": "Triển khai bước 10: chiến lược đóng gói bình mới rượu cũ",
+          "anchor": {
+            "vi": {
+              "quote": "Đừng dại dột khoác lên nó chiếc áo cách mạng quá chói lóa.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC10_B4",
+          "image_id": "SC10_I4",
+          "purpose": "Triển khai bước 10: chiến lược đóng gói bình mới rượu cũ",
+          "anchor": {
+            "vi": {
+              "quote": "Hãy đóng gói hạt nhân mới lạ trong chiếc bình quen thuộc.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC10_B5",
+          "image_id": "SC10_I5",
+          "purpose": "Triển khai bước 10: chiến lược đóng gói bình mới rượu cũ",
+          "anchor": {
+            "vi": {
+              "quote": "Dẫn dắt người đọc từ nền móng họ tin tưởng.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC10_B6",
+          "image_id": "SC10_I6",
+          "purpose": "Triển khai bước 10: chiến lược đóng gói bình mới rượu cũ",
+          "anchor": {
+            "vi": {
+              "quote": "Từng bước mở rộng ranh giới một cách khéo léo.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC10_B7",
+          "image_id": "SC10_I7",
+          "purpose": "Triển khai bước 10: chiến lược đóng gói bình mới rượu cũ",
+          "anchor": {
+            "vi": {
+              "quote": "Biến sự chấn động thành một bước tiến tự nhiên.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC10_B8",
+          "image_id": "SC10_I8",
+          "purpose": "Triển khai bước 10: chiến lược đóng gói bình mới rượu cũ",
+          "anchor": {
+            "vi": {
+              "quote": "Hội đồng sẽ dễ dàng gật đầu chấp thuận hơn.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "actionable_resolution"
+    },
+    {
+      "id": "SC11",
+      "title": "Nghệ thuật đối thoại với Reviewer 2",
+      "purpose": "Triển khai bước 11: nghệ thuật đối thoại với reviewer 2",
+      "action": "A researcher calmly sits at the desk, reading Reviewer 2 comments without emotional anger.",
+      "setting": "A clean study desk with a formal Rebuttal Letter draft and peer comments.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Khi nhận được những lời phản biện gay gắt, tuyệt đối không phản ứng bằng sự tự ái cá nhân. Hãy cảm ơn họ bằng sự lịch thiệp chuẩn mực. Bẻ gãy từng hoài nghi hoang mang, bằng dữ liệu thực nghiệm sắc lạnh. Biến sự khắt khe của họ thành đòn bẩy chứng minh tính vững chắc. Khuất phục hội đồng bằng sự chuyên nghiệp tuyệt đối. Biến người phản biện khó tính nhất thành đồng minh bất đắc dĩ.",
+      "requirements": [
+        "R11"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC11_I1",
+          "description": "A clean study desk with a formal Rebuttal Letter draft and peer comments. A researcher calmly sits at the desk, reading Reviewer 2 comments without emotional anger.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A researcher calmly sits at the desk, reading Reviewer 2 comments without emotional anger.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC11_I2",
+          "description": "A clean study desk with a formal Rebuttal Letter draft and peer comments. Two paths: emotional anger leading to immediate rejection versus structured evidence rebuttal on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Two paths: emotional anger leading to immediate rejection versus structured evidence rebuttal on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC11_I3",
+          "description": "A clean study desk with a formal Rebuttal Letter draft and peer comments. Close view of typed response text: We sincerely thank Reviewer 2 for this critical and insightful observation.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Close view of typed response text: We sincerely thank Reviewer 2 for this critical and insightful observation.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC11_I4",
+          "description": "A clean study desk with a formal Rebuttal Letter draft and peer comments. The researcher calmly examines three complex critique points on paper.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC11_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The researcher calmly examines three complex critique points on paper.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC11_I5",
+          "description": "A clean study desk with a formal Rebuttal Letter draft and peer comments. Close view of robust empirical statistical tables with dense sample tests.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Close view of robust empirical statistical tables with dense sample tests.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC11_I6",
+          "description": "A clean study desk with a formal Rebuttal Letter draft and peer comments. The revised manuscript gains three robust proof appendices addressing every single critique.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC11_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in A clean study desk with a formal Rebuttal Letter draft and peer comments.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The revised manuscript gains three robust proof appendices addressing every single critique.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC11_I7",
+          "description": "A clean study desk with a formal Rebuttal Letter draft and peer comments. A green editor approval stamp: All reviewer concerns thoroughly resolved.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A green editor approval stamp: All reviewer concerns thoroughly resolved.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC11_I8",
+          "description": "A clean study desk with a formal Rebuttal Letter draft and peer comments. A balanced partnership symbol between author and reviewer on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A balanced partnership symbol between author and reviewer on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC11_B1",
+          "image_id": "SC11_I1",
+          "purpose": "Triển khai bước 11: nghệ thuật đối thoại với reviewer 2",
+          "anchor": {
+            "vi": {
+              "quote": "Khi nhận được những lời phản biện gay gắt,",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC11_B2",
+          "image_id": "SC11_I2",
+          "purpose": "Triển khai bước 11: nghệ thuật đối thoại với reviewer 2",
+          "anchor": {
+            "vi": {
+              "quote": "tuyệt đối không phản ứng bằng sự tự ái cá nhân.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC11_B3",
+          "image_id": "SC11_I3",
+          "purpose": "Triển khai bước 11: nghệ thuật đối thoại với reviewer 2",
+          "anchor": {
+            "vi": {
+              "quote": "Hãy cảm ơn họ bằng sự lịch thiệp chuẩn mực.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC11_B4",
+          "image_id": "SC11_I4",
+          "purpose": "Triển khai bước 11: nghệ thuật đối thoại với reviewer 2",
+          "anchor": {
+            "vi": {
+              "quote": "Bẻ gãy từng hoài nghi hoang mang,",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC11_B5",
+          "image_id": "SC11_I5",
+          "purpose": "Triển khai bước 11: nghệ thuật đối thoại với reviewer 2",
+          "anchor": {
+            "vi": {
+              "quote": "bằng dữ liệu thực nghiệm sắc lạnh.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC11_B6",
+          "image_id": "SC11_I6",
+          "purpose": "Triển khai bước 11: nghệ thuật đối thoại với reviewer 2",
+          "anchor": {
+            "vi": {
+              "quote": "Biến sự khắt khe của họ thành đòn bẩy chứng minh tính vững chắc.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC11_B7",
+          "image_id": "SC11_I7",
+          "purpose": "Triển khai bước 11: nghệ thuật đối thoại với reviewer 2",
+          "anchor": {
+            "vi": {
+              "quote": "Khuất phục hội đồng bằng sự chuyên nghiệp tuyệt đối.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC11_B8",
+          "image_id": "SC11_I8",
+          "purpose": "Triển khai bước 11: nghệ thuật đối thoại với reviewer 2",
+          "anchor": {
+            "vi": {
+              "quote": "Biến người phản biện khó tính nhất thành đồng minh bất đắc dĩ.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "actionable_resolution"
+    },
+    {
+      "id": "SC12",
+      "title": "Khép vòng lặp và thông điệp kiên định",
+      "purpose": "Triển khai bước 12: khép vòng lặp và thông điệp kiên định",
+      "action": "Morning sunlight gently illuminates the student desk as the darkness of night fades away.",
+      "setting": "Back to the Vietnamese student desk at dawn with early morning sunlight streaming in.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Lần tới khi nhận thư từ chối lúc nửa đêm, bạn hãy mỉm cười và tiếp tục nghiên cứu. Bị gạt bỏ không có nghĩa là bạn đã thất bại. Đó có thể là dấu hiệu cho thấy, bạn đang chạm tới vùng tri thức mà số đông chưa dám bước tới. Chân lý luôn thuộc về những người kiên trì đến cùng.",
+      "requirements": [
+        "R12"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC12_I1",
+          "description": "Back to the Vietnamese student desk at dawn with early morning sunlight streaming in. Morning sunlight gently illuminates the student desk as the darkness of night fades away.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Morning sunlight gently illuminates the student desk as the darkness of night fades away.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC12_I2",
+          "description": "Back to the Vietnamese student desk at dawn with early morning sunlight streaming in. The Vietnamese researcher closes the laptop lid with calm dignity and a faint smile.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC12_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in Back to the Vietnamese student desk at dawn with early morning sunlight streaming in.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The Vietnamese researcher closes the laptop lid with calm dignity and a faint smile.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC12_I3",
+          "description": "Back to the Vietnamese student desk at dawn with early morning sunlight streaming in. A golden compass pointing steadily north despite turbulent wind arrows on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A golden compass pointing steadily north despite turbulent wind arrows on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC12_I4",
+          "description": "Back to the Vietnamese student desk at dawn with early morning sunlight streaming in. The researcher stands up, looking out the window at the vibrant awakening city of Hanoi.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC12_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The researcher stands up, looking out the window at the vibrant awakening city of Hanoi.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC12_I5",
+          "description": "Back to the Vietnamese student desk at dawn with early morning sunlight streaming in. Close view of the researcher hand holding the pen, ready to write the next chapter.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Close view of the researcher hand holding the pen, ready to write the next chapter.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC12_I6",
+          "description": "Back to the Vietnamese student desk at dawn with early morning sunlight streaming in. The morning sun bathes the entire room in warm golden optimism.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC12_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in Back to the Vietnamese student desk at dawn with early morning sunlight streaming in.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The morning sun bathes the entire room in warm golden optimism.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC12_B1",
+          "image_id": "SC12_I1",
+          "purpose": "Triển khai bước 12: khép vòng lặp và thông điệp kiên định",
+          "anchor": {
+            "vi": {
+              "quote": "Lần tới khi nhận thư từ chối lúc nửa đêm,",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC12_B2",
+          "image_id": "SC12_I2",
+          "purpose": "Triển khai bước 12: khép vòng lặp và thông điệp kiên định",
+          "anchor": {
+            "vi": {
+              "quote": "bạn hãy mỉm cười và tiếp tục nghiên cứu.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC12_B3",
+          "image_id": "SC12_I3",
+          "purpose": "Triển khai bước 12: khép vòng lặp và thông điệp kiên định",
+          "anchor": {
+            "vi": {
+              "quote": "Bị gạt bỏ không có nghĩa là bạn đã thất bại.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC12_B4",
+          "image_id": "SC12_I4",
+          "purpose": "Triển khai bước 12: khép vòng lặp và thông điệp kiên định",
+          "anchor": {
+            "vi": {
+              "quote": "Đó có thể là dấu hiệu cho thấy,",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC12_B5",
+          "image_id": "SC12_I5",
+          "purpose": "Triển khai bước 12: khép vòng lặp và thông điệp kiên định",
+          "anchor": {
+            "vi": {
+              "quote": "bạn đang chạm tới vùng tri thức mà số đông chưa dám bước tới.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC12_B6",
+          "image_id": "SC12_I6",
+          "purpose": "Triển khai bước 12: khép vòng lặp và thông điệp kiên định",
+          "anchor": {
+            "vi": {
+              "quote": "Chân lý luôn thuộc về những người kiên trì đến cùng.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "reflective_slow",
+      "narrative_phase": "actionable_resolution"
+    }
+  ],
+  "coverage": [
+    {
+      "requirement_id": "R01",
+      "scene_id": "SC01",
+      "quote": "Hai giờ sáng bên bàn làm việc"
+    },
+    {
+      "requirement_id": "R02",
+      "scene_id": "SC02",
+      "quote": "Cảm giác bất công dâng trào tột độ"
+    },
+    {
+      "requirement_id": "R03",
+      "scene_id": "SC03",
+      "quote": "Chúng ta vẫn thường ngây thơ tin rằng, bình duyệt là pháo đài bảo vệ chân lý"
+    },
+    {
+      "requirement_id": "R04",
+      "scene_id": "SC04",
+      "quote": "Một thực nghiệm chấn động đã lật tẩy sự thật này"
+    },
+    {
+      "requirement_id": "R05",
+      "scene_id": "SC05",
+      "quote": "Kết quả khiến cả giới học thuật bàng hoàng"
+    },
+    {
+      "requirement_id": "R06",
+      "scene_id": "SC06",
+      "quote": "Các nhà khoa học tại đại học Harvard gọi đây là định kiến chống đột phá"
+    },
+    {
+      "requirement_id": "R07",
+      "scene_id": "SC07",
+      "quote": "Cơ chế bất đối xứng này tạo ra thói quen thà giết nhầm còn hơn bỏ sót"
+    },
+    {
+      "requirement_id": "R08",
+      "scene_id": "SC08",
+      "quote": "Khoa học chính thống luôn tìm cách loại trừ dị biệt"
+    },
+    {
+      "requirement_id": "R09",
+      "scene_id": "SC09",
+      "quote": "Những người dám đi ngược số đông, phải có bản lĩnh chịu đựng sự cô độc"
+    },
+    {
+      "requirement_id": "R10",
+      "scene_id": "SC10",
+      "quote": "Hãy đóng gói hạt nhân mới lạ trong chiếc bình quen thuộc"
+    },
+    {
+      "requirement_id": "R11",
+      "scene_id": "SC11",
+      "quote": "Khi nhận được những lời phản biện gay gắt, tuyệt đối không phản ứng bằng sự tự ái cá nhân"
+    },
+    {
+      "requirement_id": "R12",
+      "scene_id": "SC12",
+      "quote": "Chân lý luôn thuộc về những người kiên trì đến cùng"
+    }
+  ],
+  "outline": [
+    {
+      "scene_id": "SC01",
+      "purpose": "Triển khai bước 1: cú tát mở màn bàn học đêm",
+      "requirements": [
+        "R01"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC02",
+      "purpose": "Triển khai bước 2: cơn ác mộng reviewer 2",
+      "requirements": [
+        "R02"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC03",
+      "purpose": "Triển khai bước 3: ảo tưởng về bức tường bình duyệt",
+      "requirements": [
+        "R03"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC04",
+      "purpose": "Triển khai bước 4: thực nghiệm lật tẩy của peters và ceci",
+      "requirements": [
+        "R04"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC05",
+      "purpose": "Triển khai bước 5: kết quả bẽ bàng của giới học thuật",
+      "requirements": [
+        "R05"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC06",
+      "purpose": "Triển khai bước 6: định kiến chống đột phá novelty bias",
+      "requirements": [
+        "R06"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC07",
+      "purpose": "Triển khai bước 7: áp lực bất đối xứng của reviewer",
+      "requirements": [
+        "R07"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC08",
+      "purpose": "Triển khai bước 8: cái bẫy của khoa học thường nhật",
+      "requirements": [
+        "R08"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC09",
+      "purpose": "Triển khai bước 9: bài học từ những người mở đường",
+      "requirements": [
+        "R09"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC10",
+      "purpose": "Triển khai bước 10: chiến lược đóng gói bình mới rượu cũ",
+      "requirements": [
+        "R10"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC11",
+      "purpose": "Triển khai bước 11: nghệ thuật đối thoại với reviewer 2",
+      "requirements": [
+        "R11"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC12",
+      "purpose": "Triển khai bước 12: khép vòng lặp và thông điệp kiên định",
+      "requirements": [
+        "R12"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    }
+  ],
+  "claims": [
+    {
+      "scene_id": "SC05",
+      "quote": "Tám mươi chín phần trăm bài báo cũ bị từ chối khi nộp lại.",
+      "language": "vi",
+      "source_id": "SRC01",
+      "fact": "Tám mươi chín phần trăm bài báo cũ bị từ chối khi nộp lại."
+    },
+    {
+      "scene_id": "SC05",
+      "quote": "Hội đồng luôn có định kiến vô thức với tên tuổi tác giả.",
+      "language": "vi",
+      "source_id": "SRC01",
+      "fact": "Hội đồng luôn có định kiến vô thức với tên tuổi tác giả."
+    },
+    {
+      "scene_id": "SC06",
+      "quote": "Ý tưởng càng mới mẻ càng nhận điểm đánh giá thấp hơn.",
+      "language": "vi",
+      "source_id": "SRC02",
+      "fact": "Ý tưởng càng mới mẻ càng nhận điểm đánh giá thấp hơn."
+    },
+    {
+      "scene_id": "SC06",
+      "quote": "Người phản biện luôn ưu tiên nghiên cứu quen thuộc an toàn.",
+      "language": "vi",
+      "source_id": "SRC02",
+      "fact": "Người phản biện luôn ưu tiên nghiên cứu quen thuộc an toàn."
+    },
+    {
+      "scene_id": "SC08",
+      "quote": "Khoa học chính thống luôn tìm cách loại trừ dị biệt.",
+      "language": "vi",
+      "source_id": "SRC03",
+      "fact": "Khoa học chính thống luôn tìm cách loại trừ dị biệt."
+    },
+    {
+      "scene_id": "SC09",
+      "quote": "Đột phá chỉ xuất hiện khi mô hình cũ hoàn toàn sụp đổ.",
+      "language": "vi",
+      "source_id": "SRC03",
+      "fact": "Đột phá chỉ xuất hiện khi mô hình cũ hoàn toàn sụp đổ."
+    }
+  ],
+  "revision_response": [],
+  "open_questions": []
+}

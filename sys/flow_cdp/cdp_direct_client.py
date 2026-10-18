@@ -556,16 +556,8 @@ class DirectCDPProfileSession:
             payload = flow_rpc.first_payload(raw_text, flow_rpc.RPC_GEN_IMAGE)
         except Exception as ex:
             if "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in str(ex) or "CAPTCHA" in str(ex):
-                logger.warning("Abnormal activity / CAPTCHA on %s, refreshing session guard...", self.name)
-                await self.connect(reload_for_guard=True)
-                await self._wait_for_flow_ready(timeout=15.0)
-                out = await self.evaluate(js_code, await_promise=True, timeout=180.0)
-                if not isinstance(out, dict) or out.get("error"):
-                    raise RuntimeError(out.get("error") if isinstance(out, dict) else "NO_CDP_RESPONSE")
-                raw_text = out.get("text", "")
-                payload = flow_rpc.first_payload(raw_text, flow_rpc.RPC_GEN_IMAGE)
-            else:
-                raise
+                raise RuntimeError("FLOW_PROVIDER_BLOCKED: preserve the original session and reconcile; do not resubmit") from ex
+            raise
         images = flow_rpc.read_images(payload)
         if not images:
             raise RuntimeError(f"No generated image URL in response (HTTP {out.get('status')})")
@@ -636,16 +628,8 @@ class DirectCDPProfileSession:
             payload = flow_rpc.first_payload(raw_text, flow_rpc.RPC_GEN_IMAGE)
         except Exception as ex:
             if "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in str(ex) or "CAPTCHA" in str(ex):
-                logger.warning("Abnormal activity / CAPTCHA on %s, refreshing session guard...", self.name)
-                await self.connect(reload_for_guard=True)
-                await self._wait_for_flow_ready(timeout=15.0)
-                out = await self.evaluate(js_code, await_promise=True, timeout=180.0)
-                if not isinstance(out, dict) or out.get("error"):
-                    raise RuntimeError(out.get("error") if isinstance(out, dict) else "NO_CDP_RESPONSE")
-                raw_text = out.get("text", "")
-                payload = flow_rpc.first_payload(raw_text, flow_rpc.RPC_GEN_IMAGE)
-            else:
-                raise
+                raise RuntimeError("FLOW_PROVIDER_BLOCKED: preserve the original session and reconcile; do not resubmit") from ex
+            raise
         images = flow_rpc.read_images(payload)
         if not images:
             raise RuntimeError(f"No generated image URL in response (HTTP {out.get('status')})")

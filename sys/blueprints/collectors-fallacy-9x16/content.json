@@ -1,0 +1,2296 @@
+{
+  "schema_version": "3.0",
+  "brief_revision": 1,
+  "brief_hash": "b2439a2c3baa91dedf1189b630ebff5d5617d1aedc25036d468caa52559625e5",
+  "topic": "Ảo Tưởng Sở Hữu Tri Thức (The Collector's Fallacy — Bản Dọc Safe Zone)",
+  "duration": {
+    "min_seconds": 240.0,
+    "max_seconds": 330.0
+  },
+  "style": "Hand-drawn 2D marker illustration, anonymous round-headed stick figures, high vertical visual density, clean white card diagrams. All critical graphics strictly respect vertical safe zone 400px bottom.",
+  "required_points": [
+    "Cú tát mở màn dọc",
+    "Nghĩa địa thư mục xem sau",
+    "Định danh Collector Fallacy",
+    "Dopamine giả từ nút lưu",
+    "Ba giây so với ba tuần",
+    "Thực nghiệm Thư viện và một bài",
+    "Căn bệnh Tsundoku thời số hóa",
+    "Bốn tầng phễu tri thức",
+    "Quy tắc Đọc một trả một",
+    "Quy tắc Tờ giấy trắng",
+    "Người học không phải người gác kho",
+    "Khép lại: Đọc trang đầu tiên"
+  ],
+  "characters": [
+    {
+      "id": "CH01",
+      "name": "Người học di động",
+      "appearance": "Anonymous round white head with a thick black outline, expressive dot eyes and thin black stick limbs.",
+      "outfit": "Simple teal shirt in vertical safe zone framing."
+    }
+  ],
+  "scenes": [
+    {
+      "id": "SC01",
+      "title": "Cú tát mở màn dọc",
+      "purpose": "Triển khai bước 1: cú tát mở màn dọc",
+      "action": "A vertical close-up of a thumb repeatedly tapping the Save Bookmark button on a mobile feed.",
+      "setting": "A vertical mobile frame of a Vietnamese student desk at night under a lamp.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Tải hàng trăm cuốn sách chỉ tạo ra ảo giác học tập. Bạn lướt thấy tài liệu hay. Bấm lưu vào máy ngay lập tức. Não bạn thở phào nhẹ nhõm. Tưởng rằng mình đã nắm trọn kiến thức.",
+      "requirements": [
+        "R01"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC01_I1",
+          "description": "A vertical mobile frame of a Vietnamese student desk at night under a lamp. A vertical close-up of a thumb repeatedly tapping the Save Bookmark button on a mobile feed.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A vertical close-up of a thumb repeatedly tapping the Save Bookmark button on a mobile feed.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC01_I2",
+          "description": "A vertical mobile frame of a Vietnamese student desk at night under a lamp. A vertical view of a student scrolling through academic posts on a phone in a dimly lit room.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A vertical view of a student scrolling through academic posts on a phone in a dimly lit room.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC01_I3",
+          "description": "A vertical mobile frame of a Vietnamese student desk at night under a lamp. The screen flashes with a quick notification: Saved to Collection.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC01_I2",
+          "preserve": "Keep the exact camera angle, room geometry and props in A vertical mobile frame of a Vietnamese student desk at night under a lamp.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The screen flashes with a quick notification: Saved to Collection.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC01_I4",
+          "description": "A vertical mobile frame of a Vietnamese student desk at night under a lamp. The student smiles with instant relief, locking the phone screen.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC01_I2",
+          "preserve": "Keep the exact camera angle, room geometry and props in A vertical mobile frame of a Vietnamese student desk at night under a lamp.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The student smiles with instant relief, locking the phone screen.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC01_I5",
+          "description": "A vertical mobile frame of a Vietnamese student desk at night under a lamp. A phone outline showing a giant SAVED checkmark over an empty brain on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A phone outline showing a giant SAVED checkmark over an empty brain on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC01_B1",
+          "image_id": "SC01_I1",
+          "purpose": "Triển khai bước 1: cú tát mở màn dọc",
+          "anchor": {
+            "vi": {
+              "quote": "Tải hàng trăm cuốn sách chỉ tạo ra ảo giác học tập.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B2",
+          "image_id": "SC01_I2",
+          "purpose": "Triển khai bước 1: cú tát mở màn dọc",
+          "anchor": {
+            "vi": {
+              "quote": "Bạn lướt thấy tài liệu hay.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B3",
+          "image_id": "SC01_I3",
+          "purpose": "Triển khai bước 1: cú tát mở màn dọc",
+          "anchor": {
+            "vi": {
+              "quote": "Bấm lưu vào máy ngay lập tức.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B4",
+          "image_id": "SC01_I4",
+          "purpose": "Triển khai bước 1: cú tát mở màn dọc",
+          "anchor": {
+            "vi": {
+              "quote": "Não bạn thở phào nhẹ nhõm.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B5",
+          "image_id": "SC01_I5",
+          "purpose": "Triển khai bước 1: cú tát mở màn dọc",
+          "anchor": {
+            "vi": {
+              "quote": "Tưởng rằng mình đã nắm trọn kiến thức.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "narrative_warm"
+    },
+    {
+      "id": "SC02",
+      "title": "Nghĩa địa thư mục xem sau",
+      "purpose": "Triển khai bước 2: nghĩa địa thư mục xem sau",
+      "action": "A vertical screen view scrolling through a backlog of hundreds of saved posts dated two years ago.",
+      "setting": "A vertical mobile screen interface showing neglected bookmarks.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Nhưng bạn có bao giờ mở lại mục xem sau không? Hàng trăm bài viết quan trọng nằm im lìm. Bạn lưu để yên tâm, chứ không lưu để học. Mục xem sau đã biến thành nghĩa địa tri thức.",
+      "requirements": [
+        "R02"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC02_I1",
+          "description": "A vertical mobile screen interface showing neglected bookmarks. A vertical screen view scrolling through a backlog of hundreds of saved posts dated two years ago.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A vertical screen view scrolling through a backlog of hundreds of saved posts dated two years ago.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC02_I2",
+          "description": "A vertical mobile screen interface showing neglected bookmarks. The student stares at the overwhelming list of saved links, feeling sudden mental weight.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "The student stares at the overwhelming list of saved links, feeling sudden mental weight.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC02_I3",
+          "description": "A vertical mobile screen interface showing neglected bookmarks. The student taps through endless saved titles with a lingering sense of guilt.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC02_I2",
+          "preserve": "Keep the exact camera angle, room geometry and props in A vertical mobile screen interface showing neglected bookmarks.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The student taps through endless saved titles with a lingering sense of guilt.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC02_I4",
+          "description": "A vertical mobile screen interface showing neglected bookmarks. A lock icon securing thousands of unread articles on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A lock icon securing thousands of unread articles on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC02_I5",
+          "description": "A vertical mobile screen interface showing neglected bookmarks. The student sighs and closes the collection list without clicking a single post.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC02_I2",
+          "preserve": "Keep the exact camera angle, room geometry and props in A vertical mobile screen interface showing neglected bookmarks.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The student sighs and closes the collection list without clicking a single post.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC02_B1",
+          "image_id": "SC02_I1",
+          "purpose": "Triển khai bước 2: nghĩa địa thư mục xem sau",
+          "anchor": {
+            "vi": {
+              "quote": "Nhưng bạn có bao giờ mở lại mục xem sau không?",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B2",
+          "image_id": "SC02_I2",
+          "purpose": "Triển khai bước 2: nghĩa địa thư mục xem sau",
+          "anchor": {
+            "vi": {
+              "quote": "Hàng trăm bài viết quan trọng nằm im lìm.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B3",
+          "image_id": "SC02_I3",
+          "purpose": "Triển khai bước 2: nghĩa địa thư mục xem sau",
+          "anchor": {
+            "vi": {
+              "quote": "Bạn lưu để yên tâm,",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B4",
+          "image_id": "SC02_I4",
+          "purpose": "Triển khai bước 2: nghĩa địa thư mục xem sau",
+          "anchor": {
+            "vi": {
+              "quote": "chứ không lưu để học.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B5",
+          "image_id": "SC02_I5",
+          "purpose": "Triển khai bước 2: nghĩa địa thư mục xem sau",
+          "anchor": {
+            "vi": {
+              "quote": "Mục xem sau đã biến thành nghĩa địa tri thức.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "narrative_warm"
+    },
+    {
+      "id": "SC03",
+      "title": "Định danh Collector Fallacy",
+      "purpose": "Triển khai bước 3: định danh collector fallacy",
+      "action": "Vertical card on white: THE COLLECTORS FALLACY with a minimalist cognitive scale.",
+      "setting": "A vertical analytical study space with clean conceptual graphics.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Tâm lý học gọi đây là Ảo tưởng Người thu gom. Collectors Fallacy. Nó là một cái bẫy tinh vi. Khiến ta ngộ nhận rằng, sở hữu dữ liệu là đã có tri thức. [pause:450ms]",
+      "requirements": [
+        "R03"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC02"
+      ],
+      "images": [
+        {
+          "id": "SC03_I1",
+          "description": "A vertical analytical study space with clean conceptual graphics. Vertical card on white: THE COLLECTORS FALLACY with a minimalist cognitive scale.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Vertical card on white: THE COLLECTORS FALLACY with a minimalist cognitive scale.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC03_I2",
+          "description": "A vertical analytical study space with clean conceptual graphics. The student stands in front of a vertical infographic separating Sở hữu from Hiểu biết.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "The student stands in front of a vertical infographic separating Sở hữu from Hiểu biết.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC03_I3",
+          "description": "A vertical analytical study space with clean conceptual graphics. A hand holding a mobile phone next to a blank notebook.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A hand holding a mobile phone next to a blank notebook.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC03_I4",
+          "description": "A vertical analytical study space with clean conceptual graphics. The phone screen illuminates the students face with bright icons.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC03_I2",
+          "preserve": "Keep the exact camera angle, room geometry and props in A vertical analytical study space with clean conceptual graphics.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The phone screen illuminates the students face with bright icons.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC03_I5",
+          "description": "A vertical analytical study space with clean conceptual graphics. A stark cross mark dividing a data file icon from true comprehension on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A stark cross mark dividing a data file icon from true comprehension on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC03_B1",
+          "image_id": "SC03_I1",
+          "purpose": "Triển khai bước 3: định danh collector fallacy",
+          "anchor": {
+            "vi": {
+              "quote": "Tâm lý học gọi đây là Ảo tưởng Người thu gom.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B2",
+          "image_id": "SC03_I2",
+          "purpose": "Triển khai bước 3: định danh collector fallacy",
+          "anchor": {
+            "vi": {
+              "quote": "Collectors Fallacy.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B3",
+          "image_id": "SC03_I3",
+          "purpose": "Triển khai bước 3: định danh collector fallacy",
+          "anchor": {
+            "vi": {
+              "quote": "Nó là một cái bẫy tinh vi.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B4",
+          "image_id": "SC03_I4",
+          "purpose": "Triển khai bước 3: định danh collector fallacy",
+          "anchor": {
+            "vi": {
+              "quote": "Khiến ta ngộ nhận rằng,",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B5",
+          "image_id": "SC03_I5",
+          "purpose": "Triển khai bước 3: định danh collector fallacy",
+          "anchor": {
+            "vi": {
+              "quote": "sở hữu dữ liệu là đã có tri thức. [pause:450ms]",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp"
+    },
+    {
+      "id": "SC04",
+      "title": "Dopamine giả từ nút lưu",
+      "purpose": "Triển khai bước 4: dopamine giả từ nút lưu",
+      "action": "A student holding a phone while an artistic neural network glows in the background.",
+      "setting": "A vertical graphic representation of neural mechanisms.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Tại sao nút lưu lại gây nghiện đến vậy? Khoảnh khắc bạn bấm tải về, não bạn đã tự thưởng một liều dopamine giả. Cảm giác thỏa mãn ập đến rất nhanh. Trước khi bạn kịp đọc dòng đầu tiên.",
+      "requirements": [
+        "R04"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC03"
+      ],
+      "images": [
+        {
+          "id": "SC04_I1",
+          "description": "A vertical graphic representation of neural mechanisms. A student holding a phone while an artistic neural network glows in the background.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A student holding a phone while an artistic neural network glows in the background.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC04_I2",
+          "description": "A vertical graphic representation of neural mechanisms. Close view of the thumb pressing Download on the touchscreen.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Close view of the thumb pressing Download on the touchscreen.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC04_I3",
+          "description": "A vertical graphic representation of neural mechanisms. A dopamine molecule pulsing with a brief green spark on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A dopamine molecule pulsing with a brief green spark on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC04_I4",
+          "description": "A vertical graphic representation of neural mechanisms. The student leans back on the chair, savoring a premature victory.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC04_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in A vertical graphic representation of neural mechanisms.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The student leans back on the chair, savoring a premature victory.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC04_I5",
+          "description": "A vertical graphic representation of neural mechanisms. The phone screen dims while the unread article sits untouched.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC04_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in A vertical graphic representation of neural mechanisms.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The phone screen dims while the unread article sits untouched.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC04_B1",
+          "image_id": "SC04_I1",
+          "purpose": "Triển khai bước 4: dopamine giả từ nút lưu",
+          "anchor": {
+            "vi": {
+              "quote": "Tại sao nút lưu lại gây nghiện đến vậy?",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B2",
+          "image_id": "SC04_I2",
+          "purpose": "Triển khai bước 4: dopamine giả từ nút lưu",
+          "anchor": {
+            "vi": {
+              "quote": "Khoảnh khắc bạn bấm tải về,",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B3",
+          "image_id": "SC04_I3",
+          "purpose": "Triển khai bước 4: dopamine giả từ nút lưu",
+          "anchor": {
+            "vi": {
+              "quote": "não bạn đã tự thưởng một liều dopamine giả.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B4",
+          "image_id": "SC04_I4",
+          "purpose": "Triển khai bước 4: dopamine giả từ nút lưu",
+          "anchor": {
+            "vi": {
+              "quote": "Cảm giác thỏa mãn ập đến rất nhanh.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B5",
+          "image_id": "SC04_I5",
+          "purpose": "Triển khai bước 4: dopamine giả từ nút lưu",
+          "anchor": {
+            "vi": {
+              "quote": "Trước khi bạn kịp đọc dòng đầu tiên.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "reflective_slow"
+    },
+    {
+      "id": "SC05",
+      "title": "Ba giây so với ba tuần",
+      "purpose": "Triển khai bước 5: ba giây so với ba tuần",
+      "action": "A digital timer counting down: 00:03 seconds on a smartphone.",
+      "setting": "A vertical comparison chart measuring effort versus time.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Lưu một bài viết mất đúng ba giây. Nhưng để thấu hiểu nó, bạn cần nhiều ngày nghiền ngẫm. Não bộ chọn con đường dễ nhất để tự lừa dối. Bạn bận rộn tích trữ để trốn tránh việc học thật. [pause:450ms]",
+      "requirements": [
+        "R05"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC03"
+      ],
+      "images": [
+        {
+          "id": "SC05_I1",
+          "description": "A vertical comparison chart measuring effort versus time. A digital timer counting down: 00:03 seconds on a smartphone.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A digital timer counting down: 00:03 seconds on a smartphone.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC05_I2",
+          "description": "A vertical comparison chart measuring effort versus time. The student seated at a clean table studying a printed document with deep focus.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "The student seated at a clean table studying a printed document with deep focus.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC05_I3",
+          "description": "A vertical comparison chart measuring effort versus time. The student takes margin notes with deliberate analytical care.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC05_I2",
+          "preserve": "Keep the exact camera angle, room geometry and props in A vertical comparison chart measuring effort versus time.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The student takes margin notes with deliberate analytical care.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC05_I4",
+          "description": "A vertical comparison chart measuring effort versus time. A path splitting into a zero-effort shortcut and a steep climb on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A path splitting into a zero-effort shortcut and a steep climb on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC05_I5",
+          "description": "A vertical comparison chart measuring effort versus time. The student pauses, recognizing the unconscious avoidance habit.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC05_I2",
+          "preserve": "Keep the exact camera angle, room geometry and props in A vertical comparison chart measuring effort versus time.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The student pauses, recognizing the unconscious avoidance habit.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC05_B1",
+          "image_id": "SC05_I1",
+          "purpose": "Triển khai bước 5: ba giây so với ba tuần",
+          "anchor": {
+            "vi": {
+              "quote": "Lưu một bài viết mất đúng ba giây.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B2",
+          "image_id": "SC05_I2",
+          "purpose": "Triển khai bước 5: ba giây so với ba tuần",
+          "anchor": {
+            "vi": {
+              "quote": "Nhưng để thấu hiểu nó,",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B3",
+          "image_id": "SC05_I3",
+          "purpose": "Triển khai bước 5: ba giây so với ba tuần",
+          "anchor": {
+            "vi": {
+              "quote": "bạn cần nhiều ngày nghiền ngẫm.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B4",
+          "image_id": "SC05_I4",
+          "purpose": "Triển khai bước 5: ba giây so với ba tuần",
+          "anchor": {
+            "vi": {
+              "quote": "Não bộ chọn con đường dễ nhất để tự lừa dối.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B5",
+          "image_id": "SC05_I5",
+          "purpose": "Triển khai bước 5: ba giây so với ba tuần",
+          "anchor": {
+            "vi": {
+              "quote": "Bạn bận rộn tích trữ để trốn tránh việc học thật. [pause:450ms]",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "narrative_warm"
+    },
+    {
+      "id": "SC06",
+      "title": "Thực nghiệm Thư viện và một bài",
+      "purpose": "Triển khai bước 6: thực nghiệm thư viện và một bài",
+      "action": "A clean lab split vertically into two test subject profiles.",
+      "setting": "A vertical laboratory observation setting.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Khoa học nhận thức đã chứng minh nghịch lý này. Người có cả nghìn tài liệu lại làm bài kém hơn người chỉ giữ một bài duy nhất. Họ kiệt sức vì sắp xếp tệp. Còn người kia tập trung hấp thụ trọn vẹn bản chất.",
+      "requirements": [
+        "R06"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC01"
+      ],
+      "images": [
+        {
+          "id": "SC06_I1",
+          "description": "A vertical laboratory observation setting. A clean lab split vertically into two test subject profiles.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A clean lab split vertically into two test subject profiles.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC06_I2",
+          "description": "A vertical laboratory observation setting. The hoarder student drowned in endless digital folder icons.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC06_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in A vertical laboratory observation setting.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The hoarder student drowned in endless digital folder icons.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC06_I3",
+          "description": "A vertical laboratory observation setting. A vertical bar chart: 1000 Unread Files vs 1 Deep Article on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A vertical bar chart: 1000 Unread Files vs 1 Deep Article on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC06_I4",
+          "description": "A vertical laboratory observation setting. The hoarder student rubs exhausted eyes before an empty exam desk.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC06_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in A vertical laboratory observation setting.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The hoarder student rubs exhausted eyes before an empty exam desk.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC06_I5",
+          "description": "A vertical laboratory observation setting. The focused student calmly explains the core principle on a vertical blackboard.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC06_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in A vertical laboratory observation setting.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The focused student calmly explains the core principle on a vertical blackboard.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC06_B1",
+          "image_id": "SC06_I1",
+          "purpose": "Triển khai bước 6: thực nghiệm thư viện và một bài",
+          "anchor": {
+            "vi": {
+              "quote": "Khoa học nhận thức đã chứng minh nghịch lý này.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC06_B2",
+          "image_id": "SC06_I2",
+          "purpose": "Triển khai bước 6: thực nghiệm thư viện và một bài",
+          "anchor": {
+            "vi": {
+              "quote": "Người có cả nghìn tài liệu",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC06_B3",
+          "image_id": "SC06_I3",
+          "purpose": "Triển khai bước 6: thực nghiệm thư viện và một bài",
+          "anchor": {
+            "vi": {
+              "quote": "lại làm bài kém hơn người chỉ giữ một bài duy nhất.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC06_B4",
+          "image_id": "SC06_I4",
+          "purpose": "Triển khai bước 6: thực nghiệm thư viện và một bài",
+          "anchor": {
+            "vi": {
+              "quote": "Họ kiệt sức vì sắp xếp tệp.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC06_B5",
+          "image_id": "SC06_I5",
+          "purpose": "Triển khai bước 6: thực nghiệm thư viện và một bài",
+          "anchor": {
+            "vi": {
+              "quote": "Còn người kia tập trung hấp thụ trọn vẹn bản chất.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "narrative_warm"
+    },
+    {
+      "id": "SC07",
+      "title": "Căn bệnh Tsundoku thời số hóa",
+      "purpose": "Triển khai bước 7: căn bệnh tsundoku thời số hóa",
+      "action": "A neat vertical stack of physical books beside a glowing cloud storage icon.",
+      "setting": "A vertical aesthetic room blending books and cloud data.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Người Nhật gọi thói quen tích sách không đọc là Tsundoku. Thời đại số biến chúng ta thành những kẻ tích trữ rác dữ liệu. Tệp trong máy không thể tự ngấm vào đầu bạn. Chừng nào chưa đọc, nó chỉ là con số không tròn trĩnh.",
+      "requirements": [
+        "R07"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC02"
+      ],
+      "images": [
+        {
+          "id": "SC07_I1",
+          "description": "A vertical aesthetic room blending books and cloud data. A neat vertical stack of physical books beside a glowing cloud storage icon.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A neat vertical stack of physical books beside a glowing cloud storage icon.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC07_I2",
+          "description": "A vertical aesthetic room blending books and cloud data. The student surrounded by floating PDF thumbnails and unread cloud notifications.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "The student surrounded by floating PDF thumbnails and unread cloud notifications.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC07_I3",
+          "description": "A vertical aesthetic room blending books and cloud data. A smartphone with Bluetooth waves failing to connect to a human head on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A smartphone with Bluetooth waves failing to connect to a human head on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC07_I4",
+          "description": "A vertical aesthetic room blending books and cloud data. A thumb hovering indecisively over hundreds of unread bookmarks.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A thumb hovering indecisively over hundreds of unread bookmarks.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC07_I5",
+          "description": "A vertical aesthetic room blending books and cloud data. The student lowers the phone, acknowledging the illusion.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC07_I2",
+          "preserve": "Keep the exact camera angle, room geometry and props in A vertical aesthetic room blending books and cloud data.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The student lowers the phone, acknowledging the illusion.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC07_B1",
+          "image_id": "SC07_I1",
+          "purpose": "Triển khai bước 7: căn bệnh tsundoku thời số hóa",
+          "anchor": {
+            "vi": {
+              "quote": "Người Nhật gọi thói quen tích sách không đọc là Tsundoku.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC07_B2",
+          "image_id": "SC07_I2",
+          "purpose": "Triển khai bước 7: căn bệnh tsundoku thời số hóa",
+          "anchor": {
+            "vi": {
+              "quote": "Thời đại số biến chúng ta thành những kẻ tích trữ rác dữ liệu.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC07_B3",
+          "image_id": "SC07_I3",
+          "purpose": "Triển khai bước 7: căn bệnh tsundoku thời số hóa",
+          "anchor": {
+            "vi": {
+              "quote": "Tệp trong máy không thể tự ngấm vào đầu bạn.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC07_B4",
+          "image_id": "SC07_I4",
+          "purpose": "Triển khai bước 7: căn bệnh tsundoku thời số hóa",
+          "anchor": {
+            "vi": {
+              "quote": "Chừng nào chưa đọc,",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC07_B5",
+          "image_id": "SC07_I5",
+          "purpose": "Triển khai bước 7: căn bệnh tsundoku thời số hóa",
+          "anchor": {
+            "vi": {
+              "quote": "nó chỉ là con số không tròn trĩnh.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp"
+    },
+    {
+      "id": "SC08",
+      "title": "Bốn tầng phễu tri thức",
+      "purpose": "Triển khai bước 8: bốn tầng phễu tri thức",
+      "action": "A 4-tier vertical funnel on pure white: Thu nap -> Tieu hoa -> Tong hop -> Tai tao.",
+      "setting": "A vertical conceptual diagram of knowledge synthesis.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Tri thức thật sự cần đi qua bốn tầng phễu. Thu nạp, Tiêu hóa, Tổng hợp, và Tái tạo. Bấm lưu chỉ là bước khởi đầu. Nếu không tiêu hóa, mọi tài liệu đều trở nên vô nghĩa. [pause:450ms]",
+      "requirements": [
+        "R08"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC08_I1",
+          "description": "A vertical conceptual diagram of knowledge synthesis. A 4-tier vertical funnel on pure white: Thu nap -> Tieu hoa -> Tong hop -> Tai tao.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A 4-tier vertical funnel on pure white: Thu nap -> Tieu hoa -> Tong hop -> Tai tao.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC08_I2",
+          "description": "A vertical conceptual diagram of knowledge synthesis. The student stands beside the vertical funnel diagram examining each processing stage.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "The student stands beside the vertical funnel diagram examining each processing stage.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC08_I3",
+          "description": "A vertical conceptual diagram of knowledge synthesis. A tiny dot entering the top layer while the lower three layers remain empty.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A tiny dot entering the top layer while the lower three layers remain empty.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC08_I4",
+          "description": "A vertical conceptual diagram of knowledge synthesis. The student points to the blank processing chamber below.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC08_I2",
+          "preserve": "Keep the exact camera angle, room geometry and props in A vertical conceptual diagram of knowledge synthesis.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The student points to the blank processing chamber below.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC08_I5",
+          "description": "A vertical conceptual diagram of knowledge synthesis. A warning badge on pure white: DỮ LIỆU CHẾT NẾU KHÔNG TIÊU HÓA.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A warning badge on pure white: DỮ LIỆU CHẾT NẾU KHÔNG TIÊU HÓA.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC08_B1",
+          "image_id": "SC08_I1",
+          "purpose": "Triển khai bước 8: bốn tầng phễu tri thức",
+          "anchor": {
+            "vi": {
+              "quote": "Tri thức thật sự cần đi qua bốn tầng phễu.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC08_B2",
+          "image_id": "SC08_I2",
+          "purpose": "Triển khai bước 8: bốn tầng phễu tri thức",
+          "anchor": {
+            "vi": {
+              "quote": "Thu nạp, Tiêu hóa, Tổng hợp, và Tái tạo.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC08_B3",
+          "image_id": "SC08_I3",
+          "purpose": "Triển khai bước 8: bốn tầng phễu tri thức",
+          "anchor": {
+            "vi": {
+              "quote": "Bấm lưu chỉ là bước khởi đầu.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC08_B4",
+          "image_id": "SC08_I4",
+          "purpose": "Triển khai bước 8: bốn tầng phễu tri thức",
+          "anchor": {
+            "vi": {
+              "quote": "Nếu không tiêu hóa,",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC08_B5",
+          "image_id": "SC08_I5",
+          "purpose": "Triển khai bước 8: bốn tầng phễu tri thức",
+          "anchor": {
+            "vi": {
+              "quote": "mọi tài liệu đều trở nên vô nghĩa. [pause:450ms]",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "narrative_warm"
+    },
+    {
+      "id": "SC09",
+      "title": "Quy tắc Đọc một trả một",
+      "purpose": "Triển khai bước 9: quy tắc đọc một trả một",
+      "action": "Bold vertical card: QUY TAC DOC 1 TRA 1 on pure white.",
+      "setting": "A vertical view of desk action and digital hygiene.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Muốn cai nghiện lưu trữ? Hãy áp dụng quy tắc: Đọc một, trả một. Trước khi tải thêm tệp mới, hãy xóa bớt một tệp cũ. Hoặc tự viết ra ba câu tóm tắt điều bạn vừa học được. Bắt não phải làm việc trước khi tích lũy thêm.",
+      "requirements": [
+        "R09"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC09_I1",
+          "description": "A vertical view of desk action and digital hygiene. Bold vertical card: QUY TAC DOC 1 TRA 1 on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Bold vertical card: QUY TAC DOC 1 TRA 1 on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC09_I2",
+          "description": "A vertical view of desk action and digital hygiene. The student swipes to delete an old unread bookmark from the phone library.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "The student swipes to delete an old unread bookmark from the phone library.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC09_I3",
+          "description": "A vertical view of desk action and digital hygiene. A pen jotting three concise bullet points on a vertical paper notepad.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A pen jotting three concise bullet points on a vertical paper notepad.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC09_I4",
+          "description": "A vertical view of desk action and digital hygiene. The student pauses to actively recall the core concept.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC09_I2",
+          "preserve": "Keep the exact camera angle, room geometry and props in A vertical view of desk action and digital hygiene.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The student pauses to actively recall the core concept.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC09_I5",
+          "description": "A vertical view of desk action and digital hygiene. The student looks satisfied after recording the actual learning notes.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC09_I2",
+          "preserve": "Keep the exact camera angle, room geometry and props in A vertical view of desk action and digital hygiene.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The student looks satisfied after recording the actual learning notes.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC09_B1",
+          "image_id": "SC09_I1",
+          "purpose": "Triển khai bước 9: quy tắc đọc một trả một",
+          "anchor": {
+            "vi": {
+              "quote": "Muốn cai nghiện lưu trữ? Hãy áp dụng quy tắc: Đọc một, trả một.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC09_B2",
+          "image_id": "SC09_I2",
+          "purpose": "Triển khai bước 9: quy tắc đọc một trả một",
+          "anchor": {
+            "vi": {
+              "quote": "Trước khi tải thêm tệp mới, hãy xóa bớt một tệp cũ.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC09_B3",
+          "image_id": "SC09_I3",
+          "purpose": "Triển khai bước 9: quy tắc đọc một trả một",
+          "anchor": {
+            "vi": {
+              "quote": "Hoặc tự viết ra ba câu tóm tắt điều bạn vừa học được.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC09_B4",
+          "image_id": "SC09_I4",
+          "purpose": "Triển khai bước 9: quy tắc đọc một trả một",
+          "anchor": {
+            "vi": {
+              "quote": "Bắt não phải làm việc",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC09_B5",
+          "image_id": "SC09_I5",
+          "purpose": "Triển khai bước 9: quy tắc đọc một trả một",
+          "anchor": {
+            "vi": {
+              "quote": "trước khi tích lũy thêm.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "narrative_warm"
+    },
+    {
+      "id": "SC10",
+      "title": "Quy tắc Tờ giấy trắng",
+      "purpose": "Triển khai bước 10: quy tắc tờ giấy trắng",
+      "action": "A single blank white index card placed squarely on the desk.",
+      "setting": "A vertical close view of an analog desk test.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Bài kiểm tra sự thật là một tờ giấy trắng. Cất điện thoại đi. Tự giải thích khái niệm vừa học bằng ngôn từ của chính bạn. Nếu mắc kẹt ở đâu, bạn biết mình phải đọc lại từ đó.",
+      "requirements": [
+        "R10"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC01"
+      ],
+      "images": [
+        {
+          "id": "SC10_I1",
+          "description": "A vertical close view of an analog desk test. A single blank white index card placed squarely on the desk.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A single blank white index card placed squarely on the desk.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC10_I2",
+          "description": "A vertical close view of an analog desk test. The student turns the phone face down and pushes it away.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "The student turns the phone face down and pushes it away.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC10_I3",
+          "description": "A vertical close view of an analog desk test. The student draws a simple concept flowchart on the paper card.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC10_I2",
+          "preserve": "Keep the exact camera angle, room geometry and props in A vertical close view of an analog desk test.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The student draws a simple concept flowchart on the paper card.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC10_I4",
+          "description": "A vertical close view of an analog desk test. Close-up of the pen hovering above an uncompleted diagram branch.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Close-up of the pen hovering above an uncompleted diagram branch.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC10_I5",
+          "description": "A vertical close view of an analog desk test. A question on pure white: CON NHO GI KHI KHONG NHIN MAY?",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A question on pure white: CON NHO GI KHI KHONG NHIN MAY?",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC10_B1",
+          "image_id": "SC10_I1",
+          "purpose": "Triển khai bước 10: quy tắc tờ giấy trắng",
+          "anchor": {
+            "vi": {
+              "quote": "Bài kiểm tra sự thật là một tờ giấy trắng.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC10_B2",
+          "image_id": "SC10_I2",
+          "purpose": "Triển khai bước 10: quy tắc tờ giấy trắng",
+          "anchor": {
+            "vi": {
+              "quote": "Cất điện thoại đi.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC10_B3",
+          "image_id": "SC10_I3",
+          "purpose": "Triển khai bước 10: quy tắc tờ giấy trắng",
+          "anchor": {
+            "vi": {
+              "quote": "Tự giải thích khái niệm vừa học bằng ngôn từ của chính bạn.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC10_B4",
+          "image_id": "SC10_I4",
+          "purpose": "Triển khai bước 10: quy tắc tờ giấy trắng",
+          "anchor": {
+            "vi": {
+              "quote": "Nếu mắc kẹt ở đâu,",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC10_B5",
+          "image_id": "SC10_I5",
+          "purpose": "Triển khai bước 10: quy tắc tờ giấy trắng",
+          "anchor": {
+            "vi": {
+              "quote": "bạn biết mình phải đọc lại từ đó.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp"
+    },
+    {
+      "id": "SC11",
+      "title": "Người học không phải người gác kho",
+      "purpose": "Triển khai bước 11: người học không phải người gác kho",
+      "action": "The student sets down a heavy box of storage drives with a sense of relief.",
+      "setting": "A vertical empowering scene of mental agility.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Đừng làm người gác kho cho hàng nghìn tệp dữ liệu. Hãy là người tiêu hóa và kiến tạo tri thức. Giá trị của bạn nằm ở tư duy đọng lại trong đầu. Nó là sự sắc bén khi đối thoại. Chứ không nằm ở dung lượng ổ cứng bạn đang có.",
+      "requirements": [
+        "R11"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC11_I1",
+          "description": "A vertical empowering scene of mental agility. The student sets down a heavy box of storage drives with a sense of relief.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "The student sets down a heavy box of storage drives with a sense of relief.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC11_I2",
+          "description": "A vertical empowering scene of mental agility. The student stands upright, surrounded by sharp, glowing insight diagrams.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC11_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in A vertical empowering scene of mental agility.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The student stands upright, surrounded by sharp, glowing insight diagrams.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC11_I3",
+          "description": "A vertical empowering scene of mental agility. Close view of clean handwritten notes connecting two major concepts.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Close view of clean handwritten notes connecting two major concepts.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC11_I4",
+          "description": "A vertical empowering scene of mental agility. The student points with confidence to a structured concept on the board.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC11_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in A vertical empowering scene of mental agility.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The student points with confidence to a structured concept on the board.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC11_I5",
+          "description": "A vertical empowering scene of mental agility. A solid brain icon outshining a heavy hard drive icon on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A solid brain icon outshining a heavy hard drive icon on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC11_B1",
+          "image_id": "SC11_I1",
+          "purpose": "Triển khai bước 11: người học không phải người gác kho",
+          "anchor": {
+            "vi": {
+              "quote": "Đừng làm người gác kho cho hàng nghìn tệp dữ liệu.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC11_B2",
+          "image_id": "SC11_I2",
+          "purpose": "Triển khai bước 11: người học không phải người gác kho",
+          "anchor": {
+            "vi": {
+              "quote": "Hãy là người tiêu hóa và kiến tạo tri thức.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC11_B3",
+          "image_id": "SC11_I3",
+          "purpose": "Triển khai bước 11: người học không phải người gác kho",
+          "anchor": {
+            "vi": {
+              "quote": "Giá trị của bạn nằm ở tư duy đọng lại trong đầu.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC11_B4",
+          "image_id": "SC11_I4",
+          "purpose": "Triển khai bước 11: người học không phải người gác kho",
+          "anchor": {
+            "vi": {
+              "quote": "Nó là sự sắc bén khi đối thoại.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC11_B5",
+          "image_id": "SC11_I5",
+          "purpose": "Triển khai bước 11: người học không phải người gác kho",
+          "anchor": {
+            "vi": {
+              "quote": "Chứ không nằm ở dung lượng ổ cứng bạn đang có.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "reflective_slow"
+    },
+    {
+      "id": "SC12",
+      "title": "Khép lại: Đọc trang đầu tiên",
+      "purpose": "Triển khai bước 12: khép lại: đọc trang đầu tiên",
+      "action": "A thumb pauses above the Bookmark icon on the phone screen.",
+      "setting": "A peaceful vertical shot of a student study corner at night.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Lần tới khi chuẩn bị bấm nút lưu, hãy dừng lại một nhịp. Tự hỏi bản thân: Mình đang học thật, hay chỉ đang lừa dối chính mình? Đóng điện thoại lại. Và mở trang sách đầu tiên ra đọc ngay bây giờ.",
+      "requirements": [
+        "R12"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC12_I1",
+          "description": "A peaceful vertical shot of a student study corner at night. A thumb pauses above the Bookmark icon on the phone screen.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A thumb pauses above the Bookmark icon on the phone screen.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC12_I2",
+          "description": "A peaceful vertical shot of a student study corner at night. The student pauses thoughtfully before the glowing screen.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC12_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in A peaceful vertical shot of a student study corner at night.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The student pauses thoughtfully before the glowing screen.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC12_I3",
+          "description": "A peaceful vertical shot of a student study corner at night. The student looks away from the phone into the quiet room.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC12_I2",
+          "preserve": "Keep the exact camera angle, room geometry and props in A peaceful vertical shot of a student study corner at night.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The student looks away from the phone into the quiet room.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC12_I4",
+          "description": "A peaceful vertical shot of a student study corner at night. The student puts the phone into a drawer and turns to the desk.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "The student puts the phone into a drawer and turns to the desk.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC12_I5",
+          "description": "A peaceful vertical shot of a student study corner at night. The student sits down peacefully, reading the first sentence of an open book under the warm light.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC12_I4",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The student sits down peacefully, reading the first sentence of an open book under the warm light.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC12_B1",
+          "image_id": "SC12_I1",
+          "purpose": "Triển khai bước 12: khép lại: đọc trang đầu tiên",
+          "anchor": {
+            "vi": {
+              "quote": "Lần tới khi chuẩn bị bấm nút lưu,",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC12_B2",
+          "image_id": "SC12_I2",
+          "purpose": "Triển khai bước 12: khép lại: đọc trang đầu tiên",
+          "anchor": {
+            "vi": {
+              "quote": "hãy dừng lại một nhịp.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC12_B3",
+          "image_id": "SC12_I3",
+          "purpose": "Triển khai bước 12: khép lại: đọc trang đầu tiên",
+          "anchor": {
+            "vi": {
+              "quote": "Tự hỏi bản thân: Mình đang học thật, hay chỉ đang lừa dối chính mình?",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC12_B4",
+          "image_id": "SC12_I4",
+          "purpose": "Triển khai bước 12: khép lại: đọc trang đầu tiên",
+          "anchor": {
+            "vi": {
+              "quote": "Đóng điện thoại lại.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC12_B5",
+          "image_id": "SC12_I5",
+          "purpose": "Triển khai bước 12: khép lại: đọc trang đầu tiên",
+          "anchor": {
+            "vi": {
+              "quote": "Và mở trang sách đầu tiên ra đọc ngay bây giờ.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "reflective_slow"
+    }
+  ],
+  "coverage": [
+    {
+      "requirement_id": "R01",
+      "scene_id": "SC01",
+      "quote": "Tải hàng trăm cuốn sách chỉ tạo ra ảo giác học tập"
+    },
+    {
+      "requirement_id": "R02",
+      "scene_id": "SC02",
+      "quote": "Mục xem sau đã biến thành nghĩa địa tri thức"
+    },
+    {
+      "requirement_id": "R03",
+      "scene_id": "SC03",
+      "quote": "Collectors Fallacy"
+    },
+    {
+      "requirement_id": "R04",
+      "scene_id": "SC04",
+      "quote": "Tại sao nút lưu lại gây nghiện đến vậy"
+    },
+    {
+      "requirement_id": "R05",
+      "scene_id": "SC05",
+      "quote": "Lưu một bài viết mất đúng ba giây"
+    },
+    {
+      "requirement_id": "R06",
+      "scene_id": "SC06",
+      "quote": "Người có cả nghìn tài liệu lại làm bài kém hơn người chỉ giữ một bài duy nhất"
+    },
+    {
+      "requirement_id": "R07",
+      "scene_id": "SC07",
+      "quote": "Người Nhật gọi thói quen tích sách không đọc là Tsundoku"
+    },
+    {
+      "requirement_id": "R08",
+      "scene_id": "SC08",
+      "quote": "Tri thức thật sự cần đi qua bốn tầng phễu"
+    },
+    {
+      "requirement_id": "R09",
+      "scene_id": "SC09",
+      "quote": "Hãy áp dụng quy tắc: Đọc một, trả một"
+    },
+    {
+      "requirement_id": "R10",
+      "scene_id": "SC10",
+      "quote": "Bài kiểm tra sự thật là một tờ giấy trắng"
+    },
+    {
+      "requirement_id": "R11",
+      "scene_id": "SC11",
+      "quote": "Đừng làm người gác kho cho hàng nghìn tệp dữ liệu"
+    },
+    {
+      "requirement_id": "R12",
+      "scene_id": "SC12",
+      "quote": "Và mở trang sách đầu tiên ra đọc ngay bây giờ"
+    }
+  ],
+  "outline": [
+    {
+      "scene_id": "SC01",
+      "purpose": "Triển khai bước 1: cú tát mở màn dọc",
+      "requirements": [
+        "R01"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC02",
+      "purpose": "Triển khai bước 2: nghĩa địa thư mục xem sau",
+      "requirements": [
+        "R02"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC03",
+      "purpose": "Triển khai bước 3: định danh collector fallacy",
+      "requirements": [
+        "R03"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC04",
+      "purpose": "Triển khai bước 4: dopamine giả từ nút lưu",
+      "requirements": [
+        "R04"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC05",
+      "purpose": "Triển khai bước 5: ba giây so với ba tuần",
+      "requirements": [
+        "R05"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC06",
+      "purpose": "Triển khai bước 6: thực nghiệm thư viện và một bài",
+      "requirements": [
+        "R06"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC07",
+      "purpose": "Triển khai bước 7: căn bệnh tsundoku thời số hóa",
+      "requirements": [
+        "R07"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC08",
+      "purpose": "Triển khai bước 8: bốn tầng phễu tri thức",
+      "requirements": [
+        "R08"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC09",
+      "purpose": "Triển khai bước 9: quy tắc đọc một trả một",
+      "requirements": [
+        "R09"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC10",
+      "purpose": "Triển khai bước 10: quy tắc tờ giấy trắng",
+      "requirements": [
+        "R10"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC11",
+      "purpose": "Triển khai bước 11: người học không phải người gác kho",
+      "requirements": [
+        "R11"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC12",
+      "purpose": "Triển khai bước 12: khép lại: đọc trang đầu tiên",
+      "requirements": [
+        "R12"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    }
+  ],
+  "claims": [
+    {
+      "scene_id": "SC03",
+      "quote": "sở hữu dữ liệu là đã có tri thức.",
+      "language": "vi",
+      "source_id": "SRC02",
+      "fact": "Lưu trữ tài liệu không đồng nghĩa với tiếp thu."
+    },
+    {
+      "scene_id": "SC04",
+      "quote": "não bạn đã tự thưởng một liều dopamine giả.",
+      "language": "vi",
+      "source_id": "SRC03",
+      "fact": "Nút tải về kích hoạt dopamine săn mồi tức thì."
+    },
+    {
+      "scene_id": "SC06",
+      "quote": "Khoa học nhận thức đã chứng minh nghịch lý này.",
+      "language": "vi",
+      "source_id": "SRC01",
+      "fact": "Tải tài liệu chỉ tạo ra ảo giác hiểu bài."
+    }
+  ],
+  "revision_response": [],
+  "open_questions": []
+}

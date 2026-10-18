@@ -110,7 +110,10 @@ class FlowJobLeaseManager:
     ) -> list[dict[str, Any]]:
         """Atomically claim and lease up to 'count' idle profiles for a job, adhering to quota."""
         start_time = time.time()
-        effective_quota = min(count, max_profiles_per_job)
+        enabled_candidates = [p for p in pool_profiles if p.get("enabled", True)]
+        effective_quota = min(count, max_profiles_per_job, len(enabled_candidates))
+        if effective_quota <= 0:
+            return []
         while True:
             current_held = self.get_job_leases(job_id)
             granted: list[dict[str, Any]] = []
@@ -140,6 +143,8 @@ class FlowJobLeaseManager:
                         new_acquired += 1
 
             if len(granted) >= effective_quota or (allowed_new <= 0 and len(granted) > 0) or timeout <= 0 or (time.time() - start_time >= timeout):
+                break
+            if len(granted) > 0 and new_acquired == 0:
                 break
             time.sleep(0.5)
 

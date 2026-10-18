@@ -1,112 +1,120 @@
 [
   {
     "id": "SC01",
-    "duration": 7.45,
-    "narration": "Càng dùng từ ngữ phức tạp nghĩa là bạn càng chưa hiểu gì. Đằng sau những từ hoa mỹ thường chỉ là một đầu óc trống rỗng.",
+    "duration": 9.7,
+    "narration": "Dùng từ ngữ càng phức tạp, bạn càng dễ bị đánh giá thấp. Đó là một nghịch lý. Đằng sau lớp vỏ chữ nghĩa hoa mỹ, người đọc chỉ thấy sự khó hiểu và xa cách.",
     "beats": [
       {
         "image_id": "SC01_I1",
-        "anchor_quote": "Càng dùng từ ngữ phức tạp"
+        "anchor_quote": "Dùng từ ngữ càng phức tạp"
       },
       {
         "image_id": "SC01_I2",
-        "anchor_quote": "nghĩa là bạn càng chưa hiểu gì"
+        "anchor_quote": "bạn càng dễ bị đánh giá thấp"
       },
       {
         "image_id": "SC01_I3",
-        "anchor_quote": "Đằng sau những từ hoa mỹ thường chỉ là một đầu óc trống rỗng"
+        "anchor_quote": "Đó là một nghịch lý"
+      },
+      {
+        "image_id": "SC01_I4",
+        "anchor_quote": "Đằng sau lớp vỏ chữ nghĩa hoa mỹ"
+      },
+      {
+        "image_id": "SC01_I5",
+        "anchor_quote": "người đọc chỉ thấy sự khó hiểu và xa cách"
       }
     ]
   },
   {
     "id": "SC02",
-    "duration": 10.85,
-    "narration": "Đêm làm tiểu luận, bạn cố nhồi những từ ngữ hàn lâm để bài viết có vẻ uyên bác. [pause:900ms] Nhưng khi giảng viên yêu cầu giải thích bằng tiếng Việt đời thường, bạn lập tức đứng hình.",
+    "duration": 9.9,
+    "narration": "Nhiều bạn viết báo cáo thường cố nhồi nhét thuật ngữ để tạo vẻ uyên bác. [pause:450ms] Thực tế rất phũ phàng. Giảng viên chấm bài chỉ thấy mệt mỏi trước những trang viết rườm rà.",
     "beats": [
       {
         "image_id": "SC02_I1",
-        "anchor_quote": "Đêm làm tiểu luận"
+        "anchor_quote": "Nhiều bạn viết báo cáo thường cố nhồi nhét thuật ngữ"
       },
       {
         "image_id": "SC02_I2",
-        "anchor_quote": "bạn cố nhồi những từ ngữ hàn lâm để bài viết có vẻ uyên bác"
+        "anchor_quote": "để tạo vẻ uyên bác"
       },
       {
         "image_id": "SC02_I3",
-        "anchor_quote": "Nhưng khi giảng viên yêu cầu giải thích bằng tiếng Việt đời thường"
+        "anchor_quote": "Thực tế rất phũ phàng"
       },
       {
         "image_id": "SC02_I4",
-        "anchor_quote": "bạn lập tức đứng hình"
+        "anchor_quote": "Giảng viên chấm bài chỉ thấy mệt mỏi trước những trang viết rườm rà"
       }
     ]
   },
   {
     "id": "SC03",
-    "duration": 9.7,
-    "narration": "Thực nghiệm tại Đại học Princeton đã chứng minh một sự thật rất bất ngờ. Những bài viết càng lạm dụng từ đao to búa lớn lại càng bị đánh giá là kém thông minh hơn.",
+    "duration": 9.2,
+    "narration": "Nghiên cứu của Daniel Oppenheimer đã làm sáng tỏ điều này. Khi tác giả lạm dụng từ đao to búa lớn, người đọc sẽ đánh giá họ kém thông minh hơn mức thực tế.",
     "beats": [
       {
         "image_id": "SC03_I1",
-        "anchor_quote": "Thực nghiệm tại Đại học Princeton"
+        "anchor_quote": "Nghiên cứu của Daniel Oppenheimer"
       },
       {
         "image_id": "SC03_I2",
-        "anchor_quote": "đã chứng minh một sự thật rất bất ngờ"
+        "anchor_quote": "đã làm sáng tỏ điều này"
       },
       {
         "image_id": "SC03_I3",
-        "anchor_quote": "Những bài viết càng lạm dụng từ đao to búa lớn"
+        "anchor_quote": "Khi tác giả lạm dụng từ đao to búa lớn"
       },
       {
         "image_id": "SC03_I4",
-        "anchor_quote": "lại càng bị đánh giá là kém thông minh hơn"
+        "anchor_quote": "người đọc sẽ đánh giá họ kém thông minh hơn mức thực tế"
       }
     ]
   },
   {
     "id": "SC04",
-    "duration": 9.45,
-    "narration": "Để phá vỡ cái bẫy này, hãy dùng ngay kỹ thuật Feynman kinh điển. Bạn phải giải thích sao cho một đứa trẻ mười tuổi cũng hiểu được, mà cấm dùng từ chuyên môn.",
+    "duration": 9.7,
+    "narration": "Để gỡ bỏ cái bẫy này, hãy áp dụng kỹ thuật Feynman. Bạn thử giải thích lại vấn đề cho một đứa trẻ mười tuổi, mà không dựa vào bất kỳ từ chuyên môn nào.",
     "beats": [
       {
         "image_id": "SC04_I1",
-        "anchor_quote": "Để phá vỡ cái bẫy này"
+        "anchor_quote": "Để gỡ bỏ cái bẫy này"
       },
       {
         "image_id": "SC04_I2",
-        "anchor_quote": "hãy dùng ngay kỹ thuật Feynman kinh điển"
+        "anchor_quote": "hãy áp dụng kỹ thuật Feynman"
       },
       {
         "image_id": "SC04_I3",
-        "anchor_quote": "Bạn phải giải thích sao cho một đứa trẻ mười tuổi cũng hiểu được"
+        "anchor_quote": "Bạn thử giải thích lại vấn đề cho một đứa trẻ mười tuổi"
       },
       {
         "image_id": "SC04_I4",
-        "anchor_quote": "mà cấm dùng từ chuyên môn"
+        "anchor_quote": "mà không dựa vào bất kỳ từ chuyên môn nào"
       }
     ]
   },
   {
     "id": "SC05",
-    "duration": 8.85,
-    "narration": "Điểm nào bạn buộc phải viện đến từ ngữ hoa mỹ, chính là nơi bạn chưa hiểu bản chất. [pause:500ms] Hãy đơn giản hóa câu từ để thực sự làm chủ tri thức.",
+    "duration": 9.1,
+    "narration": "Nơi nào bạn buộc phải dựa vào từ ngữ hoa mỹ, nơi đó mạch tư duy còn lỗ hổng. Hãy tập diễn đạt sáng rõ, để củng cố lại sự hiểu biết của chính mình.",
     "beats": [
       {
         "image_id": "SC05_I1",
-        "anchor_quote": "Điểm nào bạn buộc phải viện đến từ ngữ hoa mỹ"
+        "anchor_quote": "Nơi nào bạn buộc phải dựa vào từ ngữ hoa mỹ"
       },
       {
         "image_id": "SC05_I2",
-        "anchor_quote": "chính là nơi bạn chưa hiểu bản chất"
+        "anchor_quote": "nơi đó mạch tư duy còn lỗ hổng"
       },
       {
         "image_id": "SC05_I3",
-        "anchor_quote": "Hãy đơn giản hóa câu từ"
+        "anchor_quote": "Hãy tập diễn đạt sáng rõ"
       },
       {
         "image_id": "SC05_I4",
-        "anchor_quote": "để thực sự làm chủ tri thức"
+        "anchor_quote": "để củng cố lại sự hiểu biết của chính mình"
       }
     ]
   }

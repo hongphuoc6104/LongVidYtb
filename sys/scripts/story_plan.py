@@ -324,6 +324,8 @@ def timeline(c, images, audio, language, ratio):
             beats.append({'id':bt['id'],'src':im['path'],'at':round(at-start,4),'effect':motion,'camera_motion':motion,'transition':'cut','focus':bt['focus'],
                           'timing_method': timing_method,
                           'shot_type': next((image.get('shot_type', 'full_scene') for image in sc.get('images', []) if image['id'] == bt['image_id']), 'full_scene')})
+        from visual_pacing import smooth_interpolated_beats
+        smooth_interpolated_beats(beats, start, end)
         beats[0]['at']=0
         if any(round(a['at']*30)>=round(z['at']*30) for a,z in zip(beats,beats[1:])):
             raise ValueError('Visual beats collide at 30 fps; revise content anchors')

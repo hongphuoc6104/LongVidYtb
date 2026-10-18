@@ -12,3 +12,5 @@ python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
 addopts = "-v --tb=short"
+
+markers = ["media_acceptance: checks genuine local deliverables; requires VP_MEDIA_ROOT on a clean checkout"]

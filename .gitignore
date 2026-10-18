@@ -183,3 +183,16 @@ logs/
 /sys/logs/proofs/
 /sys/reports/
 .worktrees/
+
+# Runtime state accidentally placed alongside blueprint source remains local.
+/sys/blueprints/**/brief-current.json
+/sys/blueprints/**/execution-control.json
+/sys/blueprints/**/integrity.json
+/sys/blueprints/**/integrity-meta.json
+/sys/blueprints/**/workflow.json
+
+# Per-machine account audits and local activation/cleanup proofs.
+/sys/logs/colab-account-audit-*.json
+/sys/logs/colab-auto-pool-activation-*.json
+/sys/logs/colab-scheduler-live-lock-proof-*.json
+/sys/logs/colab-test-isolation-cleanup-*.json

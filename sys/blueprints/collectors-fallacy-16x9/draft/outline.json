@@ -1,0 +1,148 @@
+{
+  "outline": [
+    {
+      "scene_id": "SC01",
+      "purpose": "Triển khai bước 1: cú tát mở màn",
+      "requirements": [
+        "R01"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC02",
+      "purpose": "Triển khai bước 2: nghĩa địa thư mục",
+      "requirements": [
+        "R02"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC03",
+      "purpose": "Triển khai bước 3: vòng lặp thu gom",
+      "requirements": [
+        "R03"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC04",
+      "purpose": "Triển khai bước 4: định danh căn bệnh",
+      "requirements": [
+        "R04"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC05",
+      "purpose": "Triển khai bước 5: cơn sốt dopamine giả",
+      "requirements": [
+        "R05"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC06",
+      "purpose": "Triển khai bước 6: bản năng săn mồi thời đồ đá",
+      "requirements": [
+        "R06"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC07",
+      "purpose": "Triển khai bước 7: sự lười biếng tinh vi",
+      "requirements": [
+        "R07"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC08",
+      "purpose": "Triển khai bước 8: thực nghiệm lưu trữ",
+      "requirements": [
+        "R08"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC09",
+      "purpose": "Triển khai bước 9: cú lật bất ngờ",
+      "requirements": [
+        "R09"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC10",
+      "purpose": "Triển khai bước 10: hội chứng tsundoku",
+      "requirements": [
+        "R10"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC11",
+      "purpose": "Triển khai bước 11: file chết trong ổ cứng",
+      "requirements": [
+        "R11"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC12",
+      "purpose": "Triển khai bước 12: bài học từ niklas luhmann",
+      "requirements": [
+        "R12"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC13",
+      "purpose": "Triển khai bước 13: chiếc phễu xử lý tri thức",
+      "requirements": [
+        "R13"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC14",
+      "purpose": "Triển khai bước 14: quy tắc: đọc một, trả một",
+      "requirements": [
+        "R14"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC15",
+      "purpose": "Triển khai bước 15: bài kiểm tra tờ giấy trắng",
+      "requirements": [
+        "R15"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC16",
+      "purpose": "Triển khai bước 16: chiến lược ăn kiêng thông tin",
+      "requirements": [
+        "R16"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC17",
+      "purpose": "Triển khai bước 17: từ thủ thư sang người học",
+      "requirements": [
+        "R17"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC18",
+      "purpose": "Triển khai bước 18: khép lại vòng lặp",
+      "requirements": [
+        "R18"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    }
+  ]
+}

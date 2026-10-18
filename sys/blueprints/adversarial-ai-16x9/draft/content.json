@@ -1,0 +1,1277 @@
+{
+  "schema_version": "3.0",
+  "brief_revision": 1,
+  "brief_hash": "043deb4a771b4f9484ef4dd3c7c0f0d2c9715a949bdd995b0ae7f280f3a05c32",
+  "topic": "Biến AI thành phản biện đối đầu thay vì viết hộ: Giải mã cơ chế next-token prediction và quy trình 4 bước Reviewer 2 chuẩn Q1",
+  "duration": {
+    "min_seconds": 80.0,
+    "max_seconds": 140.0
+  },
+  "style": "Hand-drawn 2D marker illustration, anonymous round-headed stick figures, clean teal and yellow palette with deep navy accents. Complete integrated scenes; diagrams use pure white cards. No unrequested text.",
+  "required_points": [
+    "Cú tát mở màn bàn học đêm",
+    "Cú sốc ba mươi giây phòng bảo vệ",
+    "Bản chất cỗ máy đoán xác suất",
+    "Phân tích đối lập và mô hình CARS",
+    "Bước một và bước hai đảo vai AI",
+    "Bước ba và bước bốn mổ xẻ phương pháp",
+    "Khép vòng lặp mài sắc tư duy"
+  ],
+  "characters": [
+    {
+      "id": "CH01",
+      "name": "Người học nghiên cứu",
+      "appearance": "Anonymous round white head with a thick black outline, expressive dot eyes and thin black stick limbs.",
+      "outfit": "Simple teal shirt and navy trousers in complete full-frame environments."
+    }
+  ],
+  "scenes": [
+    {
+      "id": "SC01",
+      "title": "Cú tát mở màn bàn học đêm",
+      "purpose": "Triển khai bước 1: cú tát mở màn bàn học đêm",
+      "action": "A glowing laptop screen shows a blank document with a ticking clock on the wall at 11 PM.",
+      "setting": "A Vietnamese student desk at night under a warm desk lamp, glowing laptop screen.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Mười một giờ đêm bên bàn học. Bạn thở phào nhẹ nhõm. Gõ dòng lệnh nhờ AI viết hộ. Từng đoạn văn tuôn ra ào ào. Ngỡ rằng mình đã làm chủ kiến thức. Nhưng khi bước vào phòng bảo vệ, thầy cô chỉ mất ba mươi giây. Là phát hiện ra ngay bài văn mẫu.",
+      "requirements": [
+        "R01"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC01_I1",
+          "description": "A Vietnamese student desk at night under a warm desk lamp, glowing laptop screen. A glowing laptop screen shows a blank document with a ticking clock on the wall at 11 PM.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A glowing laptop screen shows a blank document with a ticking clock on the wall at 11 PM.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC01_I2",
+          "description": "A Vietnamese student desk at night under a warm desk lamp, glowing laptop screen. A student character slumps in a wooden chair at the desk, exhausted before an approaching deadline.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A student character slumps in a wooden chair at the desk, exhausted before an approaching deadline.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC01_I3",
+          "description": "A Vietnamese student desk at night under a warm desk lamp, glowing laptop screen. Close-up of the screen showing an AI chat prompt asking to generate an entire literature review.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC01_I2",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Close-up of the screen showing an AI chat prompt asking to generate an entire literature review.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC01_I4",
+          "description": "A Vietnamese student desk at night under a warm desk lamp, glowing laptop screen. Dense paragraphs of text rapidly flood the screen with a glowing cyan light.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC01_I2",
+          "preserve": "Keep the exact camera angle, room geometry and props in A Vietnamese student desk at night under a warm desk lamp, glowing laptop screen.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Dense paragraphs of text rapidly flood the screen with a glowing cyan light.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC01_I5",
+          "description": "A Vietnamese student desk at night under a warm desk lamp, glowing laptop screen. The student leans back smiling with complacent relief, feeling premature triumph.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC01_I2",
+          "preserve": "Keep the exact camera angle, room geometry and props in A Vietnamese student desk at night under a warm desk lamp, glowing laptop screen.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The student leans back smiling with complacent relief, feeling premature triumph.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC01_I6",
+          "description": "A Vietnamese student desk at night under a warm desk lamp, glowing laptop screen. The heavy oak door of an academic defense room swings open under bright cold fluorescent lights.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC01_I2",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The heavy oak door of an academic defense room swings open under bright cold fluorescent lights.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC01_I7",
+          "description": "A Vietnamese student desk at night under a warm desk lamp, glowing laptop screen. Close view of an academic committee professor rapidly skimming the first three pages of the thesis draft.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Close view of an academic committee professor rapidly skimming the first three pages of the thesis draft.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC01_I8",
+          "description": "A Vietnamese student desk at night under a warm desk lamp, glowing laptop screen. A crisp warning card with a bright red stamp reading BAN PHAT HIEN on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A crisp warning card with a bright red stamp reading BAN PHAT HIEN on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC01_B1",
+          "image_id": "SC01_I1",
+          "purpose": "Triển khai bước 1: cú tát mở màn bàn học đêm",
+          "anchor": {
+            "vi": {
+              "quote": "Mười một giờ đêm bên bàn học.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B2",
+          "image_id": "SC01_I2",
+          "purpose": "Triển khai bước 1: cú tát mở màn bàn học đêm",
+          "anchor": {
+            "vi": {
+              "quote": "Bạn thở phào nhẹ nhõm.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B3",
+          "image_id": "SC01_I3",
+          "purpose": "Triển khai bước 1: cú tát mở màn bàn học đêm",
+          "anchor": {
+            "vi": {
+              "quote": "Gõ dòng lệnh nhờ AI viết hộ.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B4",
+          "image_id": "SC01_I4",
+          "purpose": "Triển khai bước 1: cú tát mở màn bàn học đêm",
+          "anchor": {
+            "vi": {
+              "quote": "Từng đoạn văn tuôn ra ào ào.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B5",
+          "image_id": "SC01_I5",
+          "purpose": "Triển khai bước 1: cú tát mở màn bàn học đêm",
+          "anchor": {
+            "vi": {
+              "quote": "Ngỡ rằng mình đã làm chủ kiến thức.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B6",
+          "image_id": "SC01_I6",
+          "purpose": "Triển khai bước 1: cú tát mở màn bàn học đêm",
+          "anchor": {
+            "vi": {
+              "quote": "Nhưng khi bước vào phòng bảo vệ,",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B7",
+          "image_id": "SC01_I7",
+          "purpose": "Triển khai bước 1: cú tát mở màn bàn học đêm",
+          "anchor": {
+            "vi": {
+              "quote": "thầy cô chỉ mất ba mươi giây.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B8",
+          "image_id": "SC01_I8",
+          "purpose": "Triển khai bước 1: cú tát mở màn bàn học đêm",
+          "anchor": {
+            "vi": {
+              "quote": "Là phát hiện ra ngay bài văn mẫu.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "narrative_warm",
+      "narrative_phase": "lived_friction"
+    },
+    {
+      "id": "SC02",
+      "title": "Cú sốc ba mươi giây phòng bảo vệ",
+      "purpose": "Triển khai bước 2: cú sốc ba mươi giây phòng bảo vệ",
+      "action": "Three committee professors sit solemnly behind an academic evaluation table.",
+      "setting": "A serious academic evaluation defense room with committee professors.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Thực tế rất phũ phàng. Hội đồng không đọc để khen câu từ trôi chảy. Họ tìm kiếm khoảng trống tri thức mới. Và bài viết của bạn hoàn toàn không có điều đó.",
+      "requirements": [
+        "R02"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC02_I1",
+          "description": "A serious academic evaluation defense room with committee professors. Three committee professors sit solemnly behind an academic evaluation table.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Three committee professors sit solemnly behind an academic evaluation table.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC02_I2",
+          "description": "A serious academic evaluation defense room with committee professors. The lead professor pushes the thesis draft aside without reading past the intro.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC02_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in A serious academic evaluation defense room with committee professors.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The lead professor pushes the thesis draft aside without reading past the intro.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC02_I3",
+          "description": "A serious academic evaluation defense room with committee professors. A red ballpoint pen points directly at an empty space between two cited academic papers.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A red ballpoint pen points directly at an empty space between two cited academic papers.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC02_I4",
+          "description": "A serious academic evaluation defense room with committee professors. A visual comparison showing a zero research gap symbol on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A visual comparison showing a zero research gap symbol on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC02_B1",
+          "image_id": "SC02_I1",
+          "purpose": "Triển khai bước 2: cú sốc ba mươi giây phòng bảo vệ",
+          "anchor": {
+            "vi": {
+              "quote": "Thực tế rất phũ phàng.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B2",
+          "image_id": "SC02_I2",
+          "purpose": "Triển khai bước 2: cú sốc ba mươi giây phòng bảo vệ",
+          "anchor": {
+            "vi": {
+              "quote": "Hội đồng không đọc để khen câu từ trôi chảy.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B3",
+          "image_id": "SC02_I3",
+          "purpose": "Triển khai bước 2: cú sốc ba mươi giây phòng bảo vệ",
+          "anchor": {
+            "vi": {
+              "quote": "Họ tìm kiếm khoảng trống tri thức mới.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B4",
+          "image_id": "SC02_I4",
+          "purpose": "Triển khai bước 2: cú sốc ba mươi giây phòng bảo vệ",
+          "anchor": {
+            "vi": {
+              "quote": "Và bài viết của bạn hoàn toàn không có điều đó.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "lived_friction"
+    },
+    {
+      "id": "SC03",
+      "title": "Bản chất cỗ máy đoán xác suất",
+      "purpose": "Triển khai bước 3: bản chất cỗ máy đoán xác suất",
+      "action": "A glowing holographic visualization of neural network token prediction paths.",
+      "setting": "A conceptual computer science visualization chamber showing language model probability distribution.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Vì sao AI hay sinh ra văn mẫu? Bản chất cỗ máy chỉ đoán xác suất từ tiếp theo. Nó chọn từ ngữ an toàn và ít rủi ro nhất. Tạo ra đoạn văn rỗng tuếch, không lập trường.",
+      "requirements": [
+        "R03"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC01"
+      ],
+      "images": [
+        {
+          "id": "SC03_I1",
+          "description": "A conceptual computer science visualization chamber showing language model probability distribution. A glowing holographic visualization of neural network token prediction paths.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A glowing holographic visualization of neural network token prediction paths.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC03_I2",
+          "description": "A conceptual computer science visualization chamber showing language model probability distribution. Close view of probabilistic word trees branching out from a single seed token.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Close view of probabilistic word trees branching out from a single seed token.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC03_I3",
+          "description": "A conceptual computer science visualization chamber showing language model probability distribution. The highlighted path chooses the most average, safe, neutral path among probability branches.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC03_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in A conceptual computer science visualization chamber showing language model probability distribution.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The highlighted path chooses the most average, safe, neutral path among probability branches.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC03_I4",
+          "description": "A conceptual computer science visualization chamber showing language model probability distribution. A neutral grey text block labeled SAFE AVERAGE VOCABULARY on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A neutral grey text block labeled SAFE AVERAGE VOCABULARY on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC03_B1",
+          "image_id": "SC03_I1",
+          "purpose": "Triển khai bước 3: bản chất cỗ máy đoán xác suất",
+          "anchor": {
+            "vi": {
+              "quote": "Vì sao AI hay sinh ra văn mẫu?",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B2",
+          "image_id": "SC03_I2",
+          "purpose": "Triển khai bước 3: bản chất cỗ máy đoán xác suất",
+          "anchor": {
+            "vi": {
+              "quote": "Bản chất cỗ máy chỉ đoán xác suất từ tiếp theo.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B3",
+          "image_id": "SC03_I3",
+          "purpose": "Triển khai bước 3: bản chất cỗ máy đoán xác suất",
+          "anchor": {
+            "vi": {
+              "quote": "Nó chọn từ ngữ an toàn và ít rủi ro nhất.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B4",
+          "image_id": "SC03_I4",
+          "purpose": "Triển khai bước 3: bản chất cỗ máy đoán xác suất",
+          "anchor": {
+            "vi": {
+              "quote": "Tạo ra đoạn văn rỗng tuếch, không lập trường.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "empirical_conflict"
+    },
+    {
+      "id": "SC04",
+      "title": "Phân tích đối lập và mô hình CARS",
+      "purpose": "Triển khai bước 4: phân tích đối lập và mô hình cars",
+      "action": "Left side shows a flat boring bullet list titled TÓM TẮT TÀI LIỆU with zero insight.",
+      "setting": "An analytical comparative studio environment contrasting superficial summary and deep synthesis.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Một bên là tóm tắt tầm thường. Một bên là sơ đồ tranh luận học thuật. Nghiên cứu quốc tế bắt đầu từ xung đột lý thuyết. Không có tranh luận thì không có phát kiến mới.",
+      "requirements": [
+        "R04"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC02"
+      ],
+      "images": [
+        {
+          "id": "SC04_I1",
+          "description": "An analytical comparative studio environment contrasting superficial summary and deep synthesis. Left side shows a flat boring bullet list titled TÓM TẮT TÀI LIỆU with zero insight.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Left side shows a flat boring bullet list titled TÓM TẮT TÀI LIỆU with zero insight.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC04_I2",
+          "description": "An analytical comparative studio environment contrasting superficial summary and deep synthesis. Right side lights up with an intricate 2-axis matrix mapping theoretical tensions.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC04_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in An analytical comparative studio environment contrasting superficial summary and deep synthesis.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Right side lights up with an intricate 2-axis matrix mapping theoretical tensions.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC04_I3",
+          "description": "An analytical comparative studio environment contrasting superficial summary and deep synthesis. Two contrasting scholar portraits facing each other with opposing directional arrows.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Two contrasting scholar portraits facing each other with opposing directional arrows.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC04_I4",
+          "description": "An analytical comparative studio environment contrasting superficial summary and deep synthesis. A conceptual formula card: XUNG DOT LY THUYET TAO RA KHOANG TRONG on pure white.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A conceptual formula card: XUNG DOT LY THUYET TAO RA KHOANG TRONG on pure white.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC04_B1",
+          "image_id": "SC04_I1",
+          "purpose": "Triển khai bước 4: phân tích đối lập và mô hình cars",
+          "anchor": {
+            "vi": {
+              "quote": "Một bên là tóm tắt tầm thường.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B2",
+          "image_id": "SC04_I2",
+          "purpose": "Triển khai bước 4: phân tích đối lập và mô hình cars",
+          "anchor": {
+            "vi": {
+              "quote": "Một bên là sơ đồ tranh luận học thuật.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B3",
+          "image_id": "SC04_I3",
+          "purpose": "Triển khai bước 4: phân tích đối lập và mô hình cars",
+          "anchor": {
+            "vi": {
+              "quote": "Nghiên cứu quốc tế bắt đầu từ xung đột lý thuyết.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B4",
+          "image_id": "SC04_I4",
+          "purpose": "Triển khai bước 4: phân tích đối lập và mô hình cars",
+          "anchor": {
+            "vi": {
+              "quote": "Không có tranh luận thì không có phát kiến mới.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "empirical_conflict"
+    },
+    {
+      "id": "SC05",
+      "title": "Bước một và bước hai đảo vai AI",
+      "purpose": "Triển khai bước 5: bước một và bước hai đảo vai ai",
+      "action": "The student stands decisively beside a glowing 4-step framework flowchart.",
+      "setting": "A structured modern research studio with prominent numbered step cards.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Đã đến lúc đổi vai cho cỗ máy. Bước một: Thử tải giả thuyết cốt lõi. Bắt AI tìm ba điểm mù nguy hiểm nhất. Bước hai: Dựng ma trận mâu thuẫn học thuật.",
+      "requirements": [
+        "R05"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC05_I1",
+          "description": "A structured modern research studio with prominent numbered step cards. The student stands decisively beside a glowing 4-step framework flowchart.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "The student stands decisively beside a glowing 4-step framework flowchart.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC05_I2",
+          "description": "A structured modern research studio with prominent numbered step cards. Card Step 1: BUOC 1 THU TAI GIA THUYET on pure white with stress testing symbol.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Card Step 1: BUOC 1 THU TAI GIA THUYET on pure white with stress testing symbol.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC05_I3",
+          "description": "A structured modern research studio with prominent numbered step cards. Close view of three sharp red arrows targeting hidden logical weak spots.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Close view of three sharp red arrows targeting hidden logical weak spots.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC05_I4",
+          "description": "A structured modern research studio with prominent numbered step cards. Card Step 2: BUOC 2 MA TRAN MAU THUAN on pure white with a 4-quadrant grid.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Card Step 2: BUOC 2 MA TRAN MAU THUAN on pure white with a 4-quadrant grid.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC05_B1",
+          "image_id": "SC05_I1",
+          "purpose": "Triển khai bước 5: bước một và bước hai đảo vai ai",
+          "anchor": {
+            "vi": {
+              "quote": "Đã đến lúc đổi vai cho cỗ máy.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B2",
+          "image_id": "SC05_I2",
+          "purpose": "Triển khai bước 5: bước một và bước hai đảo vai ai",
+          "anchor": {
+            "vi": {
+              "quote": "Bước một: Thử tải giả thuyết cốt lõi.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B3",
+          "image_id": "SC05_I3",
+          "purpose": "Triển khai bước 5: bước một và bước hai đảo vai ai",
+          "anchor": {
+            "vi": {
+              "quote": "Bắt AI tìm ba điểm mù nguy hiểm nhất.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B4",
+          "image_id": "SC05_I4",
+          "purpose": "Triển khai bước 5: bước một và bước hai đảo vai ai",
+          "anchor": {
+            "vi": {
+              "quote": "Bước hai: Dựng ma trận mâu thuẫn học thuật.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "structural_model"
+    },
+    {
+      "id": "SC06",
+      "title": "Bước ba và bước bốn mổ xẻ phương pháp",
+      "purpose": "Triển khai bước 6: bước ba và bước bốn mổ xẻ phương pháp",
+      "action": "Card Step 3: BUOC 3 MO XE PHUONG PHAP on pure white with diagnostic scalpel icon.",
+      "setting": "A high-stakes debate command center with tactical academic prompt displays.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Bước ba: Mổ xẻ phương pháp luận. Ra lệnh cho AI chất vấn cỡ mẫu và độ tin cậy. Bước bốn: Đối soát cứ liệu thực tế. Truy tìm các phản ví dụ để củng cố lập luận.",
+      "requirements": [
+        "R06"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC03"
+      ],
+      "images": [
+        {
+          "id": "SC06_I1",
+          "description": "A high-stakes debate command center with tactical academic prompt displays. Card Step 3: BUOC 3 MO XE PHUONG PHAP on pure white with diagnostic scalpel icon.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Card Step 3: BUOC 3 MO XE PHUONG PHAP on pure white with diagnostic scalpel icon.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC06_I2",
+          "description": "A high-stakes debate command center with tactical academic prompt displays. A strict, sharp reviewer silhouette appears behind a glowing prompt terminal.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A strict, sharp reviewer silhouette appears behind a glowing prompt terminal.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC06_I3",
+          "description": "A high-stakes debate command center with tactical academic prompt displays. Card Step 4: BUOC 4 DOI SOAT CU LIEU on pure white with verified magnifying glass.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Card Step 4: BUOC 4 DOI SOAT CU LIEU on pure white with verified magnifying glass.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        },
+        {
+          "id": "SC06_I4",
+          "description": "A high-stakes debate command center with tactical academic prompt displays. A researcher highlights outlier data points and counter-examples in an experimental dataset.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A researcher highlights outlier data points and counter-examples in an experimental dataset.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC06_B1",
+          "image_id": "SC06_I1",
+          "purpose": "Triển khai bước 6: bước ba và bước bốn mổ xẻ phương pháp",
+          "anchor": {
+            "vi": {
+              "quote": "Bước ba: Mổ xẻ phương pháp luận.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC06_B2",
+          "image_id": "SC06_I2",
+          "purpose": "Triển khai bước 6: bước ba và bước bốn mổ xẻ phương pháp",
+          "anchor": {
+            "vi": {
+              "quote": "Ra lệnh cho AI chất vấn cỡ mẫu và độ tin cậy.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC06_B3",
+          "image_id": "SC06_I3",
+          "purpose": "Triển khai bước 6: bước ba và bước bốn mổ xẻ phương pháp",
+          "anchor": {
+            "vi": {
+              "quote": "Bước bốn: Đối soát cứ liệu thực tế.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC06_B4",
+          "image_id": "SC06_I4",
+          "purpose": "Triển khai bước 6: bước ba và bước bốn mổ xẻ phương pháp",
+          "anchor": {
+            "vi": {
+              "quote": "Truy tìm các phản ví dụ để củng cố lập luận.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "actionable_resolution"
+    },
+    {
+      "id": "SC07",
+      "title": "Khép vòng lặp mài sắc tư duy",
+      "purpose": "Triển khai bước 7: khép vòng lặp mài sắc tư duy",
+      "action": "The student sits upright at the warm desk, examining a sharp structured defense outline.",
+      "setting": "A serene, warm Vietnamese student desk at night, illuminated by a warm lamp, confident and empowered.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Khi biến AI thành phản biện đối đầu, bạn sẽ vững vàng trước mọi câu hỏi hội đồng. Công nghệ không sinh ra để nghĩ thay bạn. Nó sinh ra để mài sắc tư duy của bạn.",
+      "requirements": [
+        "R07"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC07_I1",
+          "description": "A serene, warm Vietnamese student desk at night, illuminated by a warm lamp, confident and empowered. The student sits upright at the warm desk, examining a sharp structured defense outline.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "The student sits upright at the warm desk, examining a sharp structured defense outline.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene"
+        },
+        {
+          "id": "SC07_I2",
+          "description": "A serene, warm Vietnamese student desk at night, illuminated by a warm lamp, confident and empowered. The student smiles calmly with unwavering confidence, looking directly at the camera.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC07_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in A serene, warm Vietnamese student desk at night, illuminated by a warm lamp, confident and empowered.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The student smiles calmly with unwavering confidence, looking directly at the camera.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation"
+        },
+        {
+          "id": "SC07_I3",
+          "description": "A serene, warm Vietnamese student desk at night, illuminated by a warm lamp, confident and empowered. A laptop resting quietly as a supportive assistant while a fountain pen writes key insights.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A laptop resting quietly as a supportive assistant while a fountain pen writes key insights.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop"
+        },
+        {
+          "id": "SC07_I4",
+          "description": "A serene, warm Vietnamese student desk at night, illuminated by a warm lamp, confident and empowered. A crisp motivational card: AI MAI SAC TU DUY on pure white with a gleaming diamond intellect icon.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "A crisp motivational card: AI MAI SAC TU DUY on pure white with a gleaming diamond intellect icon.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "white_card"
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC07_B1",
+          "image_id": "SC07_I1",
+          "purpose": "Triển khai bước 7: khép vòng lặp mài sắc tư duy",
+          "anchor": {
+            "vi": {
+              "quote": "Khi biến AI thành phản biện đối đầu,",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC07_B2",
+          "image_id": "SC07_I2",
+          "purpose": "Triển khai bước 7: khép vòng lặp mài sắc tư duy",
+          "anchor": {
+            "vi": {
+              "quote": "bạn sẽ vững vàng trước mọi câu hỏi hội đồng.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC07_B3",
+          "image_id": "SC07_I3",
+          "purpose": "Triển khai bước 7: khép vòng lặp mài sắc tư duy",
+          "anchor": {
+            "vi": {
+              "quote": "Công nghệ không sinh ra để nghĩ thay bạn.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC07_B4",
+          "image_id": "SC07_I4",
+          "purpose": "Triển khai bước 7: khép vòng lặp mài sắc tư duy",
+          "anchor": {
+            "vi": {
+              "quote": "Nó sinh ra để mài sắc tư duy của bạn.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "reflective_slow",
+      "narrative_phase": "actionable_resolution"
+    }
+  ],
+  "coverage": [
+    {
+      "requirement_id": "R01",
+      "scene_id": "SC01",
+      "quote": "Mười một giờ đêm bên bàn học"
+    },
+    {
+      "requirement_id": "R02",
+      "scene_id": "SC02",
+      "quote": "Thực tế rất phũ phàng"
+    },
+    {
+      "requirement_id": "R03",
+      "scene_id": "SC03",
+      "quote": "Bản chất cỗ máy chỉ đoán xác suất từ tiếp theo"
+    },
+    {
+      "requirement_id": "R04",
+      "scene_id": "SC04",
+      "quote": "Một bên là tóm tắt tầm thường"
+    },
+    {
+      "requirement_id": "R05",
+      "scene_id": "SC05",
+      "quote": "Bước một: Thử tải giả thuyết cốt lõi"
+    },
+    {
+      "requirement_id": "R06",
+      "scene_id": "SC06",
+      "quote": "Bước ba: Mổ xẻ phương pháp luận"
+    },
+    {
+      "requirement_id": "R07",
+      "scene_id": "SC07",
+      "quote": "Nó sinh ra để mài sắc tư duy của bạn"
+    }
+  ],
+  "outline": [
+    {
+      "scene_id": "SC01",
+      "purpose": "Triển khai bước 1: cú tát mở màn bàn học đêm",
+      "requirements": [
+        "R01"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC02",
+      "purpose": "Triển khai bước 2: cú sốc ba mươi giây phòng bảo vệ",
+      "requirements": [
+        "R02"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC03",
+      "purpose": "Triển khai bước 3: bản chất cỗ máy đoán xác suất",
+      "requirements": [
+        "R03"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC04",
+      "purpose": "Triển khai bước 4: phân tích đối lập và mô hình cars",
+      "requirements": [
+        "R04"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC05",
+      "purpose": "Triển khai bước 5: bước một và bước hai đảo vai ai",
+      "requirements": [
+        "R05"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC06",
+      "purpose": "Triển khai bước 6: bước ba và bước bốn mổ xẻ phương pháp",
+      "requirements": [
+        "R06"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC07",
+      "purpose": "Triển khai bước 7: khép vòng lặp mài sắc tư duy",
+      "requirements": [
+        "R07"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    }
+  ],
+  "claims": [
+    {
+      "scene_id": "SC03",
+      "quote": "Bản chất cỗ máy chỉ đoán xác suất từ tiếp theo.",
+      "language": "vi",
+      "source_id": "SRC01",
+      "fact": "Máy tính chỉ đoán xác suất của từ tiếp theo."
+    },
+    {
+      "scene_id": "SC04",
+      "quote": "Nghiên cứu quốc tế bắt đầu từ xung đột lý thuyết.",
+      "language": "vi",
+      "source_id": "SRC02",
+      "fact": "Nghiên cứu khoa học bắt đầu từ xung đột học thuật."
+    },
+    {
+      "scene_id": "SC06",
+      "quote": "Truy tìm các phản ví dụ để củng cố lập luận.",
+      "language": "vi",
+      "source_id": "SRC03",
+      "fact": "Thử tải luận điểm bằng các phản ví dụ thực tế."
+    }
+  ],
+  "revision_response": [],
+  "open_questions": []
+}

@@ -1346,6 +1346,8 @@ def write_production_package(
     omni_plan: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """Assemble and write brief.json, content.json, script.json, cadence_report.json, and optional short_9x16 spin-offs."""
+    if any((output_dir / name).exists() for name in ('revisions', 'execution-control.json', 'brief-current.json', 'integrity.json')):
+        raise ValueError('ACTIVE_JOB_DESTINATION: export a blueprint and use official pilot author/revision operations')
     output_dir.mkdir(parents=True, exist_ok=True)
 
     spinoff_packages: List[Dict[str, Any]] = []

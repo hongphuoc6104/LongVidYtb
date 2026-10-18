@@ -8,7 +8,7 @@ List of technical issues recorded during pipeline operation:
 | 2026-10-08 | Flow CDP / Network | Timeout > 120s or Chrome extension disconnected | Add 4.0s delay between requests to avoid bot rate limits; verify port `8100` daemon and active Extension tab. |
 | 2026-10-09 | Flow CDP / Multi-Profile & `BELUGA` ([log](20261009-ancient-humans-ch1-flow-cdp-multiprofile-beluga.md)) | `NANO_BANANA_2_1` wire mismatch, cross-profile `based_on` `media_id` error, `PUBLIC_ERROR_UNUSUAL_ACTIVITY` on tab reload | Map `NANO_BANANA_2_1` $\to$ `"BELUGA"` (`slot12` UUID on fresh gen); isolate per-profile slots & route `based_on` chains to same `profile_index`; wrap `executeWithPristine` with `Object.assign` neuter; use in-place backoff instead of tab reload. |
 | 2026-10-09 | Renderer / Colab T4 Slowdown ([log](20261009-ancient-humans-ch1-colab-render-lineboil-slowdown.md)) | Upload fails when Colab session expires; 64s chapter takes >12m to render with dashed black border teeth | Auto-bootstrap `video-pilot-tts` T4 session & `/content/render-runtime`; never enable blanket `"line_boil": true` (SVG `<feTurbulence>`) on full-screen `1920x1080` raster plates under `--disable-gpu-rasterization`. |
-| 2026-10-16 | Flow CDP / Browser Lease ([log](20261016-flow-cdp-sequential-profile-close.md)) | Mass launch of 10 Chrome profiles exhausts RAM; bound Flow jobs lose production identity under concurrency | Open and close profiles sequentially during login (`sequential_close`); propagate `jobId` separately from `testCase` and serialize requests when bound to a fixed profile. |
+| 2026-10-16 | Flow CDP / Browser Lease (historical log unavailable) | Mass launch of 10 Chrome profiles exhausts RAM; bound Flow jobs lose production identity under concurrency | Open and close profiles sequentially during login (`sequential_close`); propagate `jobId` separately from `testCase` and serialize requests when bound to a fixed profile. |
 - [academic-q1-short-t1 — audio](1792249626389072818-academic-q1-short-t1-audio.md)
 - [academic-q1-short-t1 — images](1792249729112722896-academic-q1-short-t1-images.md)
 - [academic-q1-short-t1 — images](1792249834170276261-academic-q1-short-t1-images.md)
@@ -112,3 +112,75 @@ List of technical issues recorded during pipeline operation:
 - [colab-1792275397882056890.md](colab-1792275397882056890.md) — Colab TTS cần kiểm tra.
 - [academic-q1-short-t1 — render](1792275397882530821-academic-q1-short-t1-render.md)
 - [feynman-jargon-trap-9x16 — content](1792277102108965749-feynman-jargon-trap-9x16-content.md)
+
+- [colab-1792279377090243075.md](colab-1792279377090243075.md) — Colab TTS cần kiểm tra.
+- [feynman-jargon-trap-9x16 — audio](1792279377090576481-feynman-jargon-trap-9x16-audio.md)
+
+- [colab-1792279462247662735.md](colab-1792279462247662735.md) — Colab TTS cần kiểm tra.
+
+- [colab-1792279470334323313.md](colab-1792279470334323313.md) — Colab TTS cần kiểm tra.
+- [feynman-jargon-trap-9x16 — images](1792280069653137481-feynman-jargon-trap-9x16-images.md)
+- [feynman-jargon-trap-spinoff-02-9x16 — images](1792280750316090218-feynman-jargon-trap-spinoff-02-9x16-images.md)
+
+- [colab-1792287269780007672.md](colab-1792287269780007672.md) — Colab TTS cần kiểm tra.
+- [feynman-jargon-trap-16x9 — audio](1792287269780594243-feynman-jargon-trap-16x9-audio.md)
+- [feynman-jargon-trap-16x9 — images](1792287771754701114-feynman-jargon-trap-16x9-images.md)
+
+- [colab-1792288938203218835.md](colab-1792288938203218835.md) — Colab TTS cần kiểm tra.
+- [feynman-jargon-trap-16x9 — render](1792288938203570710-feynman-jargon-trap-16x9-render.md)
+- [adversarial-ai-16x9 — images](1792297053435226259-adversarial-ai-16x9-images.md)
+- [adversarial-ai-16x9 — images](1792297452178587994-adversarial-ai-16x9-images.md)
+
+- [colab-1792297687226945864.md](colab-1792297687226945864.md) — Colab TTS cần kiểm tra.
+- [collectors-fallacy-16x9 — audio](1792297687227477834-collectors-fallacy-16x9-audio.md)
+- [adversarial-ai-16x9 — images](1792297715899864356-adversarial-ai-16x9-images.md)
+- [adversarial-ai-16x9 — audio](1792298036808062957-adversarial-ai-16x9-audio.md)
+- [collectors-fallacy-16x9 — images](1792298125954135529-collectors-fallacy-16x9-images.md)
+- [reviewer-2-novelty-bias-16x9 — images](1792298504662783934-reviewer-2-novelty-bias-16x9-images.md)
+- [reviewer-2-novelty-bias-16x9 — images](1792298883312508345-reviewer-2-novelty-bias-16x9-images.md)
+- [adversarial-ai-9x16 — images](1792299302814660058-adversarial-ai-9x16-images.md)
+- [reviewer-2-novelty-bias-16x9 — images](1792299532147653766-reviewer-2-novelty-bias-16x9-images.md)
+- [adversarial-ai-9x16 — images](1792299567354112606-adversarial-ai-9x16-images.md)
+- [collectors-fallacy-16x9 — images](1792299614983842222-collectors-fallacy-16x9-images.md)
+- [collectors-fallacy-16x9 — images](1792299924493211623-collectors-fallacy-16x9-images.md)
+
+- [colab-1792300026574386927.md](colab-1792300026574386927.md) — Colab TTS cần kiểm tra.
+- [adversarial-ai-9x16 — render](1792300026575018979-adversarial-ai-9x16-render.md)
+
+- [colab-1792300495352855164.md](colab-1792300495352855164.md) — Colab TTS cần kiểm tra.
+- [reviewer-2-nobel-rejections-9x16 — audio](1792300495353186531-reviewer-2-nobel-rejections-9x16-audio.md)
+- [collectors-fallacy-16x9 — images](1792300658091576781-collectors-fallacy-16x9-images.md)
+
+- [colab-1792300786346604783.md](colab-1792300786346604783.md) — Colab TTS cần kiểm tra.
+- [collectors-fallacy-16x9 — render](1792300786347074457-collectors-fallacy-16x9-render.md)
+
+- [colab-1792300826050477070.md](colab-1792300826050477070.md) — Colab TTS cần kiểm tra.
+- [collectors-fallacy-16x9 — render](1792301071561590665-collectors-fallacy-16x9-render.md)
+- [reviewer-2-nobel-rejections-9x16 — images](1792301279998440190-reviewer-2-nobel-rejections-9x16-images.md)
+- [collectors-fallacy-9x16 — images](1792301373384345985-collectors-fallacy-9x16-images.md)
+- [reviewer-2-nobel-rejections-9x16 — images](1792301585245409775-reviewer-2-nobel-rejections-9x16-images.md)
+- [collectors-fallacy-9x16 — images](1792301611524326621-collectors-fallacy-9x16-images.md)
+- [reviewer-2-nobel-rejections-9x16 — images](1792301825464030510-reviewer-2-nobel-rejections-9x16-images.md)
+- [collectors-fallacy-9x16 — images](1792301827619895338-collectors-fallacy-9x16-images.md)
+- [collectors-fallacy-9x16 — images](1792302112254847228-collectors-fallacy-9x16-images.md)
+
+- [colab-1792302742364587113.md](colab-1792302742364587113.md) — Colab TTS cần kiểm tra.
+
+- [colab-1792302870792152359.md](colab-1792302870792152359.md) — Colab TTS cần kiểm tra.
+- [collectors-fallacy-9x16 — images](1792303073719276267-collectors-fallacy-9x16-images.md)
+
+- [colab-1792303921045143469.md](colab-1792303921045143469.md) — Colab TTS cần kiểm tra.
+- [reviewer-2-nobel-rejections-9x16 — render](1792303921045867938-reviewer-2-nobel-rejections-9x16-render.md)
+
+- [colab-1792304133565674392.md](colab-1792304133565674392.md) — Colab TTS cần kiểm tra.
+- [reviewer-2-nobel-rejections-9x16 — render](1792304133565977404-reviewer-2-nobel-rejections-9x16-render.md)
+- [reviewer-2-novelty-bias-16x9 — render](1792304608549564849-reviewer-2-novelty-bias-16x9-render.md)
+
+- [colab-1792306216992636378.md](colab-1792306216992636378.md) — Colab TTS cần kiểm tra.
+- [adversarial-ai-9x16 — audio](1792306216993132059-adversarial-ai-9x16-audio.md)
+
+- [colab-1792306319974484376.md](colab-1792306319974484376.md) — Colab TTS cần kiểm tra.
+
+- [colab-1792306333856321990.md](colab-1792306333856321990.md) — Colab TTS cần kiểm tra.
+
+- [colab-1792315130979717529.md](colab-1792315130979717529.md) — Colab TTS cần kiểm tra.

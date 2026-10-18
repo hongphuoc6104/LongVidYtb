@@ -79,6 +79,7 @@ def send_raw_command(command: str, timeout: float = 120.0, sock_path: Path | Non
 
     client = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
     client.settimeout(timeout)
+    submission_attempted = False
     try:
         client.connect(str(target_sock))
         if hasattr(socket, "SO_PEERCRED"):
@@ -86,6 +87,7 @@ def send_raw_command(command: str, timeout: float = 120.0, sock_path: Path | Non
             if peer_uid != os.getuid():
                 raise _mark_not_submitted(Blocked("UNSAFE_FLOW_SOCKET: peer user differs from runtime owner"))
         payload = (command.strip() + "\n").encode("utf-8")
+        submission_attempted = True
         client.sendall(payload)
 
         response_chunks = []
@@ -99,16 +101,16 @@ def send_raw_command(command: str, timeout: float = 120.0, sock_path: Path | Non
 
         response_text = b"".join(response_chunks).decode("utf-8").strip()
         if not response_text:
-            raise _mark_not_submitted(Blocked("Empty response from Flow CDP session socket"))
+            raise Blocked("Empty response from Flow CDP session socket")
         return json.loads(response_text)
     except socket.timeout:
         exc = Blocked(f"Flow CDP session command timed out after {timeout}s: {command[:50]}")
-        if not command.startswith("tool-snapshot:queue:"):
+        if not submission_attempted or not command.startswith("tool-snapshot:queue:"):
             exc = _mark_not_submitted(exc)
         raise exc from exc
     except (json.JSONDecodeError, OSError) as exc:
         err = Blocked(f"Flow CDP session communication error: {exc}")
-        if not command.startswith("tool-snapshot:queue:"):
+        if not submission_attempted or not command.startswith("tool-snapshot:queue:"):
             err = _mark_not_submitted(err)
         raise err from exc
     finally:
@@ -219,14 +221,20 @@ def _execute_via_cdp_direct(specs: list[dict[str, Any]], timeout: float = 240.0,
         selected_cfg = PROFILES[0]
 
     # Only launch the specifically assigned profile to avoid high RAM/CPU usage and lag
-    ensure_chrome_profiles_launched([selected_cfg])
+    try:
+        ensure_chrome_profiles_launched([selected_cfg])
+    except Exception as exc:
+        raise _mark_not_submitted(Blocked(str(exc))) from exc
 
     async def _run():
         sess = DirectCDPProfileSession(selected_cfg)
-        await sess.connect()
-        await sess._wait_for_flow_ready(timeout=15.0)
         items = []
         try:
+            try:
+                await sess.connect()
+                await sess._wait_for_flow_ready(timeout=15.0)
+            except Exception as exc:
+                raise _mark_not_submitted(Blocked(str(exc))) from exc
             for spec in specs:
                 start_t = time.time()
                 prompt = spec["prompt"]
@@ -425,11 +433,10 @@ def generate_cdp_batch(
         job_id = specs[0].get("job_id") or specs[0].get("jobId") or specs[0].get("testCase")
 
     if profiles_cfg and job_id:
+        from execution import is_job, settings
+        from pilot import Pilot
+        p_obj = Pilot()
         try:
-            from execution import is_job, settings
-
-            from pilot import Pilot
-            p_obj = Pilot()
             if is_job(p_obj, job_id):
                 binding = settings(p_obj, job_id).get("management_session", {}).get("runtime_bindings", {}).get("flow", {})
                 target_path = binding.get("target", {}).get("profile_path")
@@ -439,14 +446,11 @@ def generate_cdp_batch(
                         prof for prof in profiles_cfg
                         if (Path(prof.get("user_data_dir", "")).expanduser() / prof.get("directory", "")).resolve() == target_resolved
                     ]
-                    others = [
-                        prof for prof in profiles_cfg
-                        if (Path(prof.get("user_data_dir", "")).expanduser() / prof.get("directory", "")).resolve() != target_resolved
-                    ]
-                    if matched:
-                        profiles_cfg = matched + others
-        except Exception:
-            pass
+                    if len(matched) != 1:
+                        raise _mark_not_submitted(Blocked("FLOW_BOUND_PROFILE_MISSING: exact owned profile required"))
+                    profiles_cfg = matched
+        finally:
+            p_obj.db.close()
 
     workers_needed = max(1, min(len(patches), len(profiles_cfg))) if patches else 1
     manager = MultiProfileManager(profiles_config=profiles_cfg, job_id=job_id, max_workers_per_job=workers_needed)

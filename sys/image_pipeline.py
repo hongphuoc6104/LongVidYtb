@@ -615,12 +615,7 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None):
     except Exception as ex:
         # A known downloaded but invalid image is not an unknown submission.
         if result['state'] != 'downloaded':
-            pre_submission_errors = ('session ended', 'connection blocked', 'socket', 'connection refused',
-                                     'devtoolsactiveport', 'profile_unverified', 'no automatic reconnect',
-                                     'cannot connect to chrome', 'endpoint ownership unavailable',
-                                     'no chrome profile workers available')
-            err_msg = str(ex).lower()
-            not_sub = getattr(ex, 'generation_submitted', None) is False or any(pat in err_msg for pat in pre_submission_errors)
+            not_sub = getattr(ex, 'generation_submitted', None) is False
             state = 'generated' if collection_only or getattr(ex, 'collection_only', False) else (
                 'not_submitted' if not_sub else 'ambiguous')
             result.update(state=state, error=str(ex))

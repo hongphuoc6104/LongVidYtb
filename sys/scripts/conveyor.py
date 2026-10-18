@@ -99,6 +99,24 @@ def station_2_test_ast() -> bool:
         SYS_DIR / "tests/test_full_frame_upgrade.py",
         SYS_DIR / "tests/test_full_frame_pipeline.py",
         SYS_DIR / "tests/test_soft_visual_style.py",
+        SYS_DIR / "tests/test_repository_checkpoint.py",
+        SYS_DIR / "tests/test_account_management.py",
+        SYS_DIR / "tests/test_colab_scheduler.py",
+        SYS_DIR / "tests/test_ci_envelope.py",
+        SYS_DIR / "tests/test_dashboard_engine.py",
+        SYS_DIR / "tests/test_dashboard.py",
+        SYS_DIR / "tests/test_account_probe.py",
+        SYS_DIR / "tests/test_colab_reconcile.py",
+        SYS_DIR / "tests/test_colab_runtime_binding.py",
+        SYS_DIR / "tests/test_colab_health.py",
+        SYS_DIR / "tests/test_colab_accounts.py",
+        SYS_DIR / "tests/test_colab_tts.py",
+        SYS_DIR / "tests/test_flow_lease_manager.py",
+        SYS_DIR / "tests/test_multi_profile_manager.py",
+        SYS_DIR / "tests/test_flow_cdp_bridge.py",
+        SYS_DIR / "tests/test_adversarial_ai_production.py",
+        SYS_DIR / "tests/test_collectors_fallacy_production.py",
+        SYS_DIR / "tests/test_reviewer_2_production.py",
         SYS_DIR / "tests/test_flow_prompt_integration.py",
         SYS_DIR / "tests/test_omni_platform.py",
         SYS_DIR / "tests/test_caption_profile_07.py",
@@ -128,7 +146,7 @@ def station_2_test_ast() -> bool:
     if not test_files_to_run:
         test_files_to_run = [str(SYS_DIR / "tests/test_flow_cdp_bridge.py")]
 
-    cmd = [pytest_bin, "-v", "--tb=short", "--continue-on-collection-errors"] + test_files_to_run
+    cmd = [pytest_bin, "-v", "--tb=short", "--continue-on-collection-errors", "-m", "not media_acceptance"] + test_files_to_run
     res = subprocess.run(cmd, cwd=str(REPO_ROOT), capture_output=True, text=True)
     duration = time.time() - start_time
 
@@ -230,6 +248,7 @@ def station_4_lint() -> bool:
         str(SYS_DIR / "tests/test_full_frame_pipeline.py"),
         str(SYS_DIR / "visual_style.py"),
         str(SYS_DIR / "tests/test_soft_visual_style.py"),
+        str(SYS_DIR / "tests/test_repository_checkpoint.py"),
         str(SYS_DIR / "tests/test_full_frame_upgrade.py"),
         str(SYS_DIR / "tests/test_omni_platform.py"),
         str(SYS_DIR / "tests/test_caption_profile_07.py"),
