@@ -2,6 +2,7 @@
 import argparse
 import json
 from pathlib import Path
+
 from .client import Client, ColabError, issue
 
 
@@ -12,13 +13,15 @@ def main():
         choices=[
             'status', 'start', 'reconcile', 'setup', 'stop',
             'synthesize', 'render', 'collect', 'reconcile-render-failure',
-            'pool-status', 'pool-start', 'pool-stop', 'teardown',
+            'pool-status', 'pool-health', 'pool-start', 'pool-stop', 'teardown',
         ],
     )
     parser.add_argument('--account')
     parser.add_argument('--accounts', help='Comma-separated account IDs for pool operations')
     parser.add_argument('--max-workers', type=int, default=3)
     parser.add_argument('--probe', action='store_true')
+    parser.add_argument('--refresh-auth', action='store_true', help='Renew existing OAuth credentials; never starts interactive login')
+    parser.add_argument('--check-kernels', action='store_true', help='Observe existing kernels without allocating or generating')
     parser.add_argument('--session')
     parser.add_argument('--request', type=Path)
     parser.add_argument('--out', type=Path)
@@ -27,6 +30,11 @@ def main():
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     cfg = json.loads((root / 'config.json').read_text())
+    if args.action == 'pool-health':
+        from .health import audit
+        print(json.dumps(audit(session=args.session or 'video-pilot-tts', refresh_auth=args.refresh_auth,
+                               check_kernels=args.check_kernels), ensure_ascii=False, indent=2))
+        return
     if args.action in ('pool-status', 'pool-start', 'pool-stop', 'teardown'):
         from .pool_manager import ColabPoolManager
         session_name = args.session or cfg.get('colab_tts', {}).get('session', 'video-pilot-tts')

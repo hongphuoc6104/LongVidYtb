@@ -1,5 +1,7 @@
 # Colab CLI, Multi-Account Store, Smart Selection & Parallel T4 Pool Lifecycle
 
+Production account claims now use the identity-based scheduler described in [runtime management](../../../../sys/docs/colab-runtime-management.md). Use `./pipeline colab pool-health --refresh-auth --check-kernels` for an explicit credential-renewal and kernel-readiness audit. Token-file presence and an unlocked alias are local eligibility only, not proof of a working T4. Preserve exact runtime bindings and pending requests; unbound `auto-idle` jobs claim an eligible member of their frozen pool atomically.
+
 This reference covers the architecture and operational workflow of [`sys/colab_bridge/accounts.py`](../../../../sys/colab_bridge/accounts.py), [`sys/colab_bridge/account_cli.py`](../../../../sys/colab_bridge/account_cli.py), [`sys/colab_bridge/pool_manager.py`](../../../../sys/colab_bridge/pool_manager.py), [`sys/colab_bridge/assignment_probe.py`](../../../../sys/colab_bridge/assignment_probe.py), and [`sys/colab_bridge/client.py`](../../../../sys/colab_bridge/client.py).
 
 ---

@@ -133,3 +133,11 @@ $$\text{1. Tái hiện E2E} \longrightarrow \text{2. Phân tích gốc rễ} \lo
 - **Giả định sai (Wrong Assumptions):** Any download failure means the path syntax is wrong and is safe to retry immediately.
 - **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Classify sanitized missing-file errors and share one typed download helper for TTS/render. Only a confirmed missing file under /content permits one relative-path retry; other failures preserve the original recovery contract. Tests use isolated transport fixtures, not live Colab observations.
 - **Quy tắc phòng ngừa vàng (Golden Rule):** Never multiply durable retry budgets on timeouts, auth/session failures or unknown errors; fallback requires a specific, observed path error.
+
+### [ERR-20261018-10] Colab identity leases and truthful pool readiness
+- **Symptom:** Jobs contend for a pinned runtime while unused profiles are reported ready; an unknown request loses its local runner lock.
+- **Reproduction Path:** The 2026-10-18 audit verified 20 profiles but only 15 Google identities, one live T4, five duplicate profile pairs and an exhausted preferred-account budget. Independent controllers reproduce the duplicate-alias race with real file locks.
+- **Root Cause:** Production replaced auto-idle selection with the selected default; selection and reservation were separate, locks used profile aliases, and token-file presence was counted as readiness.
+- **Wrong Assumptions:** Each profile is a distinct Google account; a free local lock proves the remote session is free; an authenticated account already has available GPU capacity.
+- **Resolution & E2E Proof:** Add a bounded health audit and identity-based atomic claims in the actual audio/render client. Preserve exact bindings and unresolved request journals, filter blocked/exhausted accounts and stagger allocations across controllers. Scheduler, transport ownership and dashboard regression tests pass; live audit and account-03 observation verify authentication/T4 response only, not a completed production request.
+- **Golden Rule:** Count unique verified identities, distinguish auth/allocation/kernel readiness, and collect an unknown request only on its original owner before another send.

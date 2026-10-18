@@ -5,6 +5,19 @@ from pathlib import Path
 from output_contract import languages, narration, primary_language, voice_settings
 
 
+def configure_accounts(cfg: dict, selection: dict) -> None:
+    """Exact bindings stay exact; an idle-pool policy must not become a preferred-account pin."""
+    options = cfg['colab_tts']
+    options['management_session'] = selection
+    bound = selection.get('runtime_bindings', {}).get('colab', {}).get('account')
+    if bound:
+        options['account'] = bound.removeprefix('colab:')
+    elif options.get('account') == 'auto-idle' or selection.get('selection') == 'auto':
+        options['account'] = 'auto-idle'
+    elif selected := selection.get('defaults', {}).get('colab'):
+        options['account'] = selected.removeprefix('colab:')
+
+
 def primary_scene_request(scene: dict, text: str, language: str, pauses: dict,
                           retake: int, last: bool) -> dict:
     """Keep sentence chunks, explicit [pause:...] gaps, tone and bilingual spans aligned one-to-one."""
@@ -37,10 +50,7 @@ def produce(pilot, job, out):
     import execution
     if execution.is_job(pilot, job):
         selection = execution.settings(pilot, job).get('management_session', {})
-        cfg['colab_tts']['management_session'] = selection
-        selected = selection.get('runtime_bindings', {}).get('colab', {}).get('account') or selection.get('defaults', {}).get('colab')
-        if selected:
-            cfg['colab_tts']['account'] = selected.removeprefix('colab:')
+        configure_accounts(cfg, selection)
     if not enabled(cfg):
         raise Blocked('COLAB_REQUIRED: explicit output jobs never fall back to local TTS')
     requested = languages(brief)
@@ -88,8 +98,8 @@ def produce(pilot, job, out):
     if policy not in ('legacy', 'format_v1'):
         raise Blocked('PAUSE_POLICY: unsupported tts_pause_policy')
     if policy == 'format_v1':
-        from narration_pauses import plan_tracks
         from adapters import english_parts, is_english
+        from narration_pauses import plan_tracks
         try:
             scenes, secondary_segments, pause_plan = plan_tracks(brief, content, takes, primary)
         except ValueError as ex:
@@ -155,10 +165,7 @@ def render(pilot, job, out):
     import execution
     if execution.is_job(pilot, job):
         selection = execution.settings(pilot, job).get('management_session', {})
-        cfg['colab_tts']['management_session'] = selection
-        selected = selection.get('runtime_bindings', {}).get('colab', {}).get('account') or selection.get('defaults', {}).get('colab')
-        if selected:
-            cfg['colab_tts']['account'] = selected.removeprefix('colab:')
+        configure_accounts(cfg, selection)
     if not enabled(cfg):
         raise Blocked('COLAB_REQUIRED: explicit outputs never render locally')
     try:
