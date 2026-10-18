@@ -5,6 +5,7 @@ import types
 from unittest.mock import patch
 
 from colab_bridge.assignment_probe import probe
+from colab_bridge.health import kernel_health
 from dashboard.data import Dashboard
 
 
@@ -84,3 +85,16 @@ def test_dashboard_audit_action_runs_in_background_and_refresh_is_explicit(tmp_p
         assert audit.call_args.kwargs['refresh_auth'] is False
         app.mutate('audit-colab-pool', {'refresh_auth': True})
         assert audit.call_args.kwargs['refresh_auth'] is True
+
+
+def test_kernel_health_does_not_compete_with_another_alias_of_a_busy_identity(tmp_path):
+    import fcntl
+
+    from colab_bridge.protocol import stamp
+    lock = tmp_path/('identity-'+stamp('google:fixture')+'.lock')
+    with lock.open('a') as handle:
+        fcntl.flock(handle, fcntl.LOCK_EX|fcntl.LOCK_NB)
+        with patch('colab_bridge.health.subprocess.run') as remote:
+            value = kernel_health('/bin/false', 'another-alias', 'tts', identity='google:fixture', lock_dir=tmp_path)
+        assert value == {'verified': False, 'reason': 'busy'}
+        remote.assert_not_called()
