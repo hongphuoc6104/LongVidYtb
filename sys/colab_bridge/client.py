@@ -115,6 +115,13 @@ class Client:
             candidates = [name for name in candidates if 'colab:'+name in self.selection['pool']]
         candidates = [name for name in candidates if name]
         manager = RuntimeScheduler(self.root, store=self._budgets().path.parent)
+        if not exact:
+            from .scheduler import read_json
+            health = read_json(manager.store/'colab-health.json')
+            if health and time.time()-health.get('checked_at', 0) >= 300:
+                from .health import audit
+                audit(session=self.session, refresh_auth=True, check_kernels=True,
+                      binary=self.binary, store=manager.store)
         try:
             with manager.claim(candidates, session=self.session, request=request, journal=journal,
                                exact=exact, wait_seconds=float(self.cfg.get('queue_wait_seconds', 15))) as account:

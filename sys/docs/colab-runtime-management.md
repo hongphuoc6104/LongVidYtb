@@ -4,6 +4,8 @@ Production audio and render requests claim an account atomically in `colab_bridg
 
 For unbound jobs, `auto-idle` keeps its pool meaning through `remote_audio.configure_accounts`; the preferred default no longer overrides it. Only accounts in the job's frozen pool and matching the workload role are considered. Recent unhealthy observations, exhausted budgets, unresolved allocations and service blocks prevent new pooled work. Exact runtime bindings stay exact and queue for a bounded interval; they never silently switch accounts.
 
+Selecting automatic pool mode in the dashboard archives the current global Colab runtime binding for future snapshots. Previously frozen jobs, explicit job bindings and submitted request pins retain their exact owners. The Flow runtime binding is unaffected. This makes automatic selection usable even after a prior setup session selected one exact Colab runtime.
+
 Submitted or ambiguous journals retain their account after the runner exits. The scheduler imports existing job journals and maintains shared references for new requests. Missing pending evidence is a blocker, not proof of remote termination. Collection continues on the original account/session even if a newer default or health observation differs.
 
 Run an observational audit from the repository root:

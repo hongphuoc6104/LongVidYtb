@@ -13,6 +13,7 @@ from colab_bridge.client import Client, ColabError
 from colab_bridge.health import audit
 from colab_bridge.scheduler import PoolUnavailable, RuntimeScheduler
 from remote_audio import configure_accounts
+from session_store import Sessions
 
 
 @pytest.fixture
@@ -76,6 +77,22 @@ def test_global_default_does_not_disable_pool_but_exact_binding_wins():
     selection["runtime_bindings"] = {"colab": {"account": "colab:two"}}
     configure_accounts(cfg, selection)
     assert cfg["colab_tts"]["account"] == "two"
+
+
+def test_switching_to_auto_pool_preserves_submitted_pins_and_existing_snapshots(tmp_path):
+    sessions = Sessions(tmp_path)
+    sessions.path.parent.mkdir()
+    bound = {'service': 'colab', 'account': 'colab:one', 'runtime_session': 'original'}
+    sessions.path.write_text(json.dumps({'version': 1, 'pool': ['colab:one', 'colab:two'],
+        'runtime_bindings': {'colab': bound, 'flow': {'account': 'browser-one'}},
+        'pins': {'submitted': {'account': 'colab:one', 'session': 'original'}}}))
+    frozen = sessions.snapshot()
+    sessions.select(['colab:one', 'colab:two'], {'colab': 'colab:two'}, selection='auto')
+    assert frozen['runtime_bindings']['colab'] == bound
+    assert 'colab' not in sessions.snapshot()['runtime_bindings']
+    assert sessions.read()['pins']['submitted']['account'] == 'colab:one'
+    assert sessions.snapshot()['runtime_bindings']['flow']['account'] == 'browser-one'
+    assert sessions.read()['runtime_binding_history'][-1]['binding'] == bound
 
 
 def test_client_pool_claim_obeys_job_allowlist_and_exact_frozen_owner(pool):
