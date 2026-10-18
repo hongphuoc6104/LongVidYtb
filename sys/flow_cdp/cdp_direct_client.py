@@ -183,7 +183,8 @@ CDP_RECAPTCHA_GUARD_JS = r"""
     };
     try {
       await waitReady(2500);
-      const fn = window.__vp_cdp_hijack?.pristine || window.grecaptcha.enterprise.execute;
+      const fn = window.__vp_cdp_hijack?.pristine || window.grecaptcha?.enterprise?.execute;
+      if (typeof fn !== 'function') throw new Error('grecaptcha_not_ready');
       const token = await Promise.race([
         fn(sitekey, { action }),
         new Promise((_, rej) => setTimeout(() => rej(new Error('execute_hang')), 8000)),
@@ -266,6 +267,118 @@ PROFILES = [
         "cdp_port": 9227,
         "url": "https://flow.google.com/project/8cc6cb2b-8a51-4f86-8772-63f31b1947df",
         "project_id": "8cc6cb2b-8a51-4f86-8772-63f31b1947df",
+    },
+    {
+        "name": "profile_7",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-profile11"),
+        "profile_dir": "Profile 11",
+        "cdp_port": 9228,
+        "url": "https://flow.google.com/project/d17a7e81-7c91-4c28-98e4-b77873a11007",
+        "project_id": "d17a7e81-7c91-4c28-98e4-b77873a11007",
+    },
+    {
+        "name": "profile_8",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-p5"),
+        "profile_dir": "Profile 5",
+        "cdp_port": 9229,
+        "url": "https://flow.google.com/project/e28b8f92-8da2-4d39-a9f5-c88984b22008",
+        "project_id": "e28b8f92-8da2-4d39-a9f5-c88984b22008",
+    },
+    {
+        "name": "profile_9",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-p15"),
+        "profile_dir": "Profile 15",
+        "cdp_port": 9230,
+        "url": "https://flow.google.com/project/f39c90a3-9eb3-4e4a-ba06-d99a95c33009",
+        "project_id": "f39c90a3-9eb3-4e4a-ba06-d99a95c33009",
+    },
+    {
+        "name": "profile_10",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-profile6"),
+        "profile_dir": "Profile 6",
+        "cdp_port": 9231,
+        "url": "https://flow.google.com/project/a40d01b4-0fc4-4f5b-cb17-ea0ba6d44010",
+        "project_id": "a40d01b4-0fc4-4f5b-cb17-ea0ba6d44010",
+    },
+    {
+        "name": "profile_11",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-profile12"),
+        "profile_dir": "Profile 12",
+        "cdp_port": 9232,
+        "url": "https://flow.google.com/project/b51e02c5-1fd5-4a6c-dc28-fb1cb7e55011",
+        "project_id": "b51e02c5-1fd5-4a6c-dc28-fb1cb7e55011",
+    },
+    {
+        "name": "profile_12",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-profile13"),
+        "profile_dir": "Profile 13",
+        "cdp_port": 9233,
+        "url": "https://flow.google.com/project/c62f13d6-2ae6-4b7d-ed39-ac2dc8f66012",
+        "project_id": "c62f13d6-2ae6-4b7d-ed39-ac2dc8f66012",
+    },
+    {
+        "name": "profile_13",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-profile14"),
+        "profile_dir": "Profile 14",
+        "cdp_port": 9234,
+        "url": "https://flow.google.com/project/d73a24e7-3bf7-4c8e-fe4a-bd3ed9a77013",
+        "project_id": "d73a24e7-3bf7-4c8e-fe4a-bd3ed9a77013",
+    },
+    {
+        "name": "profile_14",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-profile16"),
+        "profile_dir": "Profile 16",
+        "cdp_port": 9235,
+        "url": "https://flow.google.com/project/e84b35f8-4ca8-4d9f-af5b-ce4feab88014",
+        "project_id": "e84b35f8-4ca8-4d9f-af5b-ce4feab88014",
+    },
+    {
+        "name": "profile_15",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-profile17"),
+        "profile_dir": "Profile 17",
+        "cdp_port": 9236,
+        "url": "https://flow.google.com/project/f95c46a9-5db9-4eaf-ba6c-df5afbc99015",
+        "project_id": "f95c46a9-5db9-4eaf-ba6c-df5afbc99015",
+    },
+    {
+        "name": "profile_16",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-profile18"),
+        "profile_dir": "Profile 18",
+        "cdp_port": 9237,
+        "url": "https://flow.google.com/project/0a6d57ba-6eca-4fba-cb7d-ea6bacda0016",
+        "project_id": "0a6d57ba-6eca-4fba-cb7d-ea6bacda0016",
+    },
+    {
+        "name": "profile_17",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-profile19"),
+        "profile_dir": "Profile 19",
+        "cdp_port": 9238,
+        "url": "https://flow.google.com/project/1b7e68cb-7fdb-4acb-dc8e-fb7cbdeb1017",
+        "project_id": "1b7e68cb-7fdb-4acb-dc8e-fb7cbdeb1017",
+    },
+    {
+        "name": "profile_18",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-profile22"),
+        "profile_dir": "Profile 22",
+        "cdp_port": 9239,
+        "url": "https://flow.google.com/project/2c8f79dc-8aec-4bdc-ed9f-ac8dcefc2018",
+        "project_id": "2c8f79dc-8aec-4bdc-ed9f-ac8dcefc2018",
+    },
+    {
+        "name": "profile_19",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-profile23"),
+        "profile_dir": "Profile 23",
+        "cdp_port": 9240,
+        "url": "https://flow.google.com/project/3d9a8aed-9bfd-4ced-fe0a-bd9edafd3019",
+        "project_id": "3d9a8aed-9bfd-4ced-fe0a-bd9edafd3019",
+    },
+    {
+        "name": "profile_20",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-profile8"),
+        "profile_dir": "Profile 8",
+        "cdp_port": 9241,
+        "url": "https://flow.google.com/project/4ea09bfe-ac0e-4dfe-af1b-ce0faefe4020",
+        "project_id": "4ea09bfe-ac0e-4dfe-af1b-ce0faefe4020",
     },
 ]
 
@@ -464,28 +577,34 @@ class DirectCDPProfileSession:
 
     async def reconnect(self) -> None:
         """Re-acquire flow target and re-establish CDP websocket connection."""
-        if self._reader_task and not self._reader_task.done():
-            self._reader_task.cancel()
-        if self.ws:
-            try:
-                await self.ws.close()
-            except Exception:
-                pass
-            self.ws = None
-        target = get_flow_target(self.cdp_port)
-        ws_url = target["webSocketDebuggerUrl"]
-        self.ws = await websockets.connect(
-            ws_url,
-            max_size=64 * 1024 * 1024,
-            ping_interval=None,
-            ping_timeout=None,
-            close_timeout=10,
-        )
-        self._reader_task = asyncio.create_task(self._reader())
-        await self.call("Page.enable")
-        await self.call("Runtime.enable")
-        await self.call("Page.addScriptToEvaluateOnNewDocument", {"source": CDP_RECAPTCHA_GUARD_JS})
-        await self.evaluate(CDP_RECAPTCHA_GUARD_JS, await_promise=False)
+        if getattr(self, "_reconnecting", False):
+            return
+        self._reconnecting = True
+        try:
+            if self._reader_task and not self._reader_task.done():
+                self._reader_task.cancel()
+            if self.ws:
+                try:
+                    await self.ws.close()
+                except Exception:
+                    pass
+                self.ws = None
+            target = get_flow_target(self.cdp_port)
+            ws_url = target["webSocketDebuggerUrl"]
+            self.ws = await websockets.connect(
+                ws_url,
+                max_size=64 * 1024 * 1024,
+                ping_interval=None,
+                ping_timeout=None,
+                close_timeout=10,
+            )
+            self._reader_task = asyncio.create_task(self._reader())
+            await self.call("Page.enable")
+            await self.call("Runtime.enable")
+            await self.call("Page.addScriptToEvaluateOnNewDocument", {"source": CDP_RECAPTCHA_GUARD_JS})
+            await self.evaluate(CDP_RECAPTCHA_GUARD_JS, await_promise=False)
+        finally:
+            self._reconnecting = False
 
     async def close(self) -> None:
         if self._reader_task:
@@ -508,8 +627,17 @@ class DirectCDPProfileSession:
                     fut.set_exception(e)
             self.pending.clear()
 
+    def _is_closed(self) -> bool:
+        if self.ws is None:
+            return True
+        if hasattr(self.ws, "closed"):
+            return bool(self.ws.closed)
+        if hasattr(self.ws, "state"):
+            return getattr(self.ws.state, "name", "") != "OPEN"
+        return False
+
     async def call(self, method: str, params: dict | None = None, timeout: float = 60.0) -> dict:
-        if self.ws is None or getattr(self.ws, "closed", True):
+        if not getattr(self, "_reconnecting", False) and self._is_closed():
             await self.reconnect()
         self.msg_id += 1
         mid = self.msg_id
@@ -528,7 +656,7 @@ class DirectCDPProfileSession:
     async def evaluate(self, expression: str, await_promise: bool = True, timeout: float = 120.0) -> Any:
         for attempt in range(3):
             try:
-                if self.ws is None or getattr(self.ws, "closed", True):
+                if not getattr(self, "_reconnecting", False) and self._is_closed():
                     await self.reconnect()
                 res = await self.call(
                     "Runtime.evaluate",

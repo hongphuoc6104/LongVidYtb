@@ -111,6 +111,20 @@ DEFAULT_PROFILES = [
     {"id": "profile_4", "port": 9222, "directory": "Profile 4", "user_data_dir": "~/.config/google-chrome-cdp-profile4"},
     {"id": "profile_5", "port": 9226, "directory": "Default", "user_data_dir": "~/.config/google-chrome-cdp-profile5"},
     {"id": "profile_6", "port": 9227, "directory": "Profile 7", "user_data_dir": "~/.config/google-chrome-cdp-profile7"},
+    {"id": "profile_7", "port": 9228, "directory": "Profile 11", "user_data_dir": "~/.config/google-chrome-cdp-profile11"},
+    {"id": "profile_8", "port": 9229, "directory": "Profile 5", "user_data_dir": "~/.config/google-chrome-cdp-p5"},
+    {"id": "profile_9", "port": 9230, "directory": "Profile 15", "user_data_dir": "~/.config/google-chrome-cdp-p15"},
+    {"id": "profile_10", "port": 9231, "directory": "Profile 6", "user_data_dir": "~/.config/google-chrome-cdp-profile6"},
+    {"id": "profile_11", "port": 9232, "directory": "Profile 12", "user_data_dir": "~/.config/google-chrome-cdp-profile12"},
+    {"id": "profile_12", "port": 9233, "directory": "Profile 13", "user_data_dir": "~/.config/google-chrome-cdp-profile13"},
+    {"id": "profile_13", "port": 9234, "directory": "Profile 14", "user_data_dir": "~/.config/google-chrome-cdp-profile14"},
+    {"id": "profile_14", "port": 9235, "directory": "Profile 16", "user_data_dir": "~/.config/google-chrome-cdp-profile16"},
+    {"id": "profile_15", "port": 9236, "directory": "Profile 17", "user_data_dir": "~/.config/google-chrome-cdp-profile17"},
+    {"id": "profile_16", "port": 9237, "directory": "Profile 18", "user_data_dir": "~/.config/google-chrome-cdp-profile18"},
+    {"id": "profile_17", "port": 9238, "directory": "Profile 19", "user_data_dir": "~/.config/google-chrome-cdp-profile19"},
+    {"id": "profile_18", "port": 9239, "directory": "Profile 22", "user_data_dir": "~/.config/google-chrome-cdp-profile22"},
+    {"id": "profile_19", "port": 9240, "directory": "Profile 23", "user_data_dir": "~/.config/google-chrome-cdp-profile23"},
+    {"id": "profile_20", "port": 9241, "directory": "Profile 8", "user_data_dir": "~/.config/google-chrome-cdp-profile8"},
 ]
 
 
@@ -358,7 +372,25 @@ class MultiProfileDispatcher:
             p_id = it.get("profile_id") or it.get("profile")
             if p_id:
                 return str(p_id)
-            base_ref = it.get("baseRefPath") or it.get("base_ref_path") or it.get("base_image")
+            base_img = it.get("base_image")
+            if isinstance(base_img, dict):
+                if base_img.get("profile_id"):
+                    return str(base_img["profile_id"])
+                if base_img.get("path"):
+                    try:
+                        sc = Path(str(base_img["path"])).with_suffix(".json")
+                        if sc.is_file():
+                            sc_data = json.loads(sc.read_text(encoding="utf-8"))
+                            cand = sc_data.get("profile_id") or sc_data.get("profile")
+                            if cand:
+                                return str(cand)
+                    except Exception:
+                        pass
+            base_ref = (
+                it.get("baseRefPath")
+                or it.get("base_ref_path")
+                or (base_img if isinstance(base_img, (str, Path)) else None)
+            )
             if base_ref:
                 try:
                     sc = Path(str(base_ref)).with_suffix(".json")
@@ -369,15 +401,30 @@ class MultiProfileDispatcher:
                             return str(cand)
                 except Exception:
                     pass
+            based_on = it.get("based_on")
+            if based_on and isinstance(based_on, (str, Path)):
+                try:
+                    sc = Path(str(based_on)).with_suffix(".json")
+                    if sc.is_file():
+                        sc_data = json.loads(sc.read_text(encoding="utf-8"))
+                        cand = sc_data.get("profile_id") or sc_data.get("profile")
+                        if cand:
+                            return str(cand)
+                except Exception:
+                    pass
         # Check if pending items depend on items completed earlier in this patch
         assigned = getattr(patch, "assigned_profile", None)
         completed = getattr(patch, "completed_items", None)
-        if assigned and completed:
+        if completed:
             completed_ids = set(completed.keys())
             for it in pending_items:
                 parent_id = it.get("based_on") or it.get("base_shot") or it.get("parent_id")
                 if parent_id and str(parent_id) in completed_ids:
-                    return str(assigned)
+                    c_item = completed.get(str(parent_id))
+                    if isinstance(c_item, dict) and c_item.get("profile_id"):
+                        return str(c_item["profile_id"])
+                    if assigned:
+                        return str(assigned)
         return None
 
     def execute_patch_with_failover(
@@ -416,9 +463,11 @@ class MultiProfileDispatcher:
                 worker = self.manager.acquire_healthy_worker(exclude_ids=excluded_workers)
 
             if not worker:
-                # If worker unavailable or in cooldown, wait up to 65s for worker/cooldown to pass
+                # If worker unavailable or in cooldown, wait for worker/cooldown to pass
+                # Pinned workers get 300s to allow preceding batch on same worker to finish
+                wait_timeout = 300.0 if required_profile else 65.0
                 wait_start = time.time()
-                while not worker and (time.time() - wait_start < 65.0):
+                while not worker and (time.time() - wait_start < wait_timeout):
                     time.sleep(0.5)
                     if required_profile:
                         if required_profile in excluded_workers:

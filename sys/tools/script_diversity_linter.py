@@ -20,6 +20,10 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List, Set, Tuple
 
+SYS_DIR = Path(__file__).resolve().parents[1]
+if str(SYS_DIR) not in sys.path:
+    sys.path.insert(0, str(SYS_DIR))
+
 BANNED_FORMULAIC_TRANSITIONS = [
     r"^\s*nhưng rồi\b",
     r"^\s*thế nhưng rồi\b",
@@ -330,6 +334,140 @@ def check_corpus_cross_similarity(
     return violations
 
 
+def check_visual_prompt_cliches(
+    scenes: List[Dict[str, Any]],
+    characters: List[Dict[str, Any]] | None = None,
+    style: str | None = None,
+) -> List[Dict[str, Any]]:
+    """Flags any visual description fields that contain banned visual clichés."""
+    from flow_prompts import find_visual_cliche
+
+    violations: List[Dict[str, Any]] = []
+    if style and isinstance(style, str):
+        cliche = find_visual_cliche(style)
+        if cliche:
+            violations.append({
+                "type": "FLOW_CLICHE_FORBIDDEN",
+                "scene_id": "GLOBAL",
+                "field": "style",
+                "cliche": cliche,
+                "snippet": style[:120],
+            })
+    for ch in characters or []:
+        ch_id = ch.get("id") if isinstance(ch, dict) else getattr(ch, "id", "CH")
+        for field in ("appearance", "outfit", "name"):
+            val = ch.get(field) if isinstance(ch, dict) else getattr(ch, field, None)
+            if val and isinstance(val, str):
+                cliche = find_visual_cliche(val)
+                if cliche:
+                    violations.append({
+                        "type": "FLOW_CLICHE_FORBIDDEN",
+                        "scene_id": "GLOBAL",
+                        "image_id": ch_id,
+                        "field": f"character.{field}",
+                        "cliche": cliche,
+                        "snippet": val[:120],
+                    })
+    for sc in scenes:
+        sc_id = sc.get("scene_id") or sc.get("id") or "UNKNOWN"
+        for field in ("setting", "prompt", "action", "description", "bg_description"):
+            val = sc.get(field)
+            if val and isinstance(val, str):
+                cliche = find_visual_cliche(val)
+                if cliche:
+                    violations.append({
+                        "type": "FLOW_CLICHE_FORBIDDEN",
+                        "scene_id": sc_id,
+                        "field": field,
+                        "cliche": cliche,
+                        "snippet": val[:120],
+                    })
+        for im in sc.get("images", []):
+            im_id = im.get("id") or "IMAGE"
+            for field in ("description", "preserve", "change"):
+                val = im.get(field)
+                if val and isinstance(val, str):
+                    cliche = find_visual_cliche(val)
+                    if cliche:
+                        violations.append({
+                            "type": "FLOW_CLICHE_FORBIDDEN",
+                            "scene_id": sc_id,
+                            "image_id": im_id,
+                            "field": field,
+                            "cliche": cliche,
+                            "snippet": val[:120],
+                        })
+            for vt in im.get("visible_text", []):
+                if isinstance(vt, str):
+                    cliche = find_visual_cliche(vt)
+                    if cliche:
+                        violations.append({
+                            "type": "FLOW_CLICHE_FORBIDDEN",
+                            "scene_id": sc_id,
+                            "image_id": im_id,
+                            "field": "visible_text",
+                            "cliche": cliche,
+                            "snippet": vt[:120],
+                        })
+                elif isinstance(vt, dict):
+                    for subf in ("text", "placement", "object"):
+                        subval = vt.get(subf)
+                        if subval and isinstance(subval, str):
+                            cliche = find_visual_cliche(subval)
+                            if cliche:
+                                violations.append({
+                                    "type": "FLOW_CLICHE_FORBIDDEN",
+                                    "scene_id": sc_id,
+                                    "image_id": im_id,
+                                    "field": f"visible_text.{subf}",
+                                    "cliche": cliche,
+                                    "snippet": subval[:120],
+                                })
+        for bt in sc.get("visual_beats", []):
+            bt_id = getattr(bt, "image_id", None) or (bt.get("image_id") if isinstance(bt, dict) else "BEAT")
+            for field in ("description", "preserve", "change"):
+                val = getattr(bt, field, None) if not isinstance(bt, dict) else bt.get(field)
+                if val and isinstance(val, str):
+                    cliche = find_visual_cliche(val)
+                    if cliche:
+                        violations.append({
+                            "type": "FLOW_CLICHE_FORBIDDEN",
+                            "scene_id": sc_id,
+                            "image_id": bt_id,
+                            "field": field,
+                            "cliche": cliche,
+                            "snippet": val[:120],
+                        })
+            vts = getattr(bt, "visible_text", None) if not isinstance(bt, dict) else bt.get("visible_text")
+            for vt in vts or []:
+                if isinstance(vt, str):
+                    cliche = find_visual_cliche(vt)
+                    if cliche:
+                        violations.append({
+                            "type": "FLOW_CLICHE_FORBIDDEN",
+                            "scene_id": sc_id,
+                            "image_id": bt_id,
+                            "field": "visible_text",
+                            "cliche": cliche,
+                            "snippet": vt[:120],
+                        })
+                elif isinstance(vt, dict):
+                    for subf in ("text", "placement", "object"):
+                        subval = vt.get(subf)
+                        if subval and isinstance(subval, str):
+                            cliche = find_visual_cliche(subval)
+                            if cliche:
+                                violations.append({
+                                    "type": "FLOW_CLICHE_FORBIDDEN",
+                                    "scene_id": sc_id,
+                                    "image_id": bt_id,
+                                    "field": f"visible_text.{subf}",
+                                    "cliche": cliche,
+                                    "snippet": subval[:120],
+                                })
+    return violations
+
+
 def lint_script(
     scenes: List[Dict[str, Any]],
     corpus_dir: Path | None = None,
@@ -337,8 +475,13 @@ def lint_script(
     topic_title: str = "",
     custom_chronology_rules: Dict[int, List[str]] | None = None,
     enforce_rhythm_variance: bool = False,
+    characters: List[Dict[str, Any]] | None = None,
+    style: str | None = None,
 ) -> Dict[str, Any]:
     all_violations: List[Dict[str, Any]] = []
+
+    # 0. Visual prompt clichés
+    all_violations.extend(check_visual_prompt_cliches(scenes, characters=characters, style=style))
 
     from scripts.visual_quality import (
         check_instructional_manual_loop,
@@ -442,7 +585,14 @@ def main() -> None:
             pass
 
     corpus_dir = Path(args.corpus_dir)
-    result = lint_script(scenes, corpus_dir=corpus_dir, claim_facts=claim_facts, topic_title=topic_title)
+    result = lint_script(
+        scenes,
+        corpus_dir=corpus_dir,
+        claim_facts=claim_facts,
+        topic_title=topic_title,
+        characters=data.get("characters") if isinstance(data, dict) else None,
+        style=data.get("style") if isinstance(data, dict) else None,
+    )
 
     print("=" * 80)
     print("                 SCRIPT DIVERSITY & ZERO-BACKTRACKING LINTER")
@@ -471,6 +621,11 @@ def main() -> None:
                 print(f"    Overlap words: {v['overlap_words']}")
                 print(f"    Target opening: {v['target_opening']}")
                 print(f"    Corpus opening: {v['corpus_opening']}")
+            elif v_type == "FLOW_CLICHE_FORBIDDEN":
+                target_desc = f"{v['scene_id']}" + (f" ({v['image_id']})" if v.get('image_id') else "")
+                print(f"[{idx}] {v_type} in {target_desc} field '{v.get('field', 'visual')}':")
+                print(f"    Forbidden cliché: '{v.get('cliche')}'")
+                print(f"    Snippet: {v.get('snippet')}")
             else:
                 print(f"[{idx}] {v_type}: {v}")
         print("=" * 80)

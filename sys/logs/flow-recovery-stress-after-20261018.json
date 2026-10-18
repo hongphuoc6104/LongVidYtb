@@ -1,0 +1,27 @@
+{
+  "kind": "offline-control-flow-only",
+  "live_provider_requests": 0,
+  "runs": [
+    {
+      "patches": 6,
+      "executor_calls": 1,
+      "elapsed_seconds": 0.001287,
+      "unstarted_preserved": 5,
+      "error": "FLOW_PARTIAL_BATCH: stopped queued work; preserve original ownership and reconcile every unresolved request. First failure: PUBLIC_ERROR_UNUSUAL_ACTIVITY: offline fixture"
+    },
+    {
+      "patches": 100,
+      "executor_calls": 1,
+      "elapsed_seconds": 0.000259,
+      "unstarted_preserved": 99,
+      "error": "FLOW_PARTIAL_BATCH: stopped queued work; preserve original ownership and reconcile every unresolved request. First failure: PUBLIC_ERROR_UNUSUAL_ACTIVITY: offline fixture"
+    },
+    {
+      "patches": 1000,
+      "executor_calls": 1,
+      "elapsed_seconds": 0.000218,
+      "unstarted_preserved": 999,
+      "error": "FLOW_PARTIAL_BATCH: stopped queued work; preserve original ownership and reconcile every unresolved request. First failure: PUBLIC_ERROR_UNUSUAL_ACTIVITY: offline fixture"
+    }
+  ]
+}

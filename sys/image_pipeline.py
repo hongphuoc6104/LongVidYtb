@@ -468,10 +468,52 @@ def _unresolved_conflict(p, j, target):
         if target.startswith('register:'):
             same_target = old['identity']['target'].rsplit(':', 1)[0] == target.rsplit(':', 1)[0]
         if same_target and old['state'] in ('submitted', 'ambiguous'):
-            return old
+            rec = auto_reconcile_attempt(p, j, q.parent, old)
+            if rec.get('state') in ('submitted', 'ambiguous'):
+                return rec
         if same_target and old['state'] == 'generated':
             generated = old
     return generated
+
+
+def auto_reconcile_attempt(p, j, folder, record=None):
+    """If an attempt has a valid downloaded image on disk, auto-reconcile it to downloaded and sync ledger."""
+    folder = Path(folder)
+    record_file = folder / 'request.json'
+    if not record_file.is_file():
+        return record or {}
+    data = record if record is not None else read(record_file)
+    if data.get('state') not in ('ambiguous', 'submitted'):
+        return data
+    out = folder / 'download'
+    if not out.is_dir():
+        return data
+    candidates = [f for f in (list(out.glob('*.png')) + list(out.glob('*.jpg')) + list(out.glob('*.webp')))
+                  if not f.name.startswith('.')]
+    if not candidates:
+        return data
+    f = candidates[0]
+    try:
+        from PIL import Image
+        with Image.open(f) as im:
+            im.verify()
+        data.update(
+            state='downloaded',
+            path=str(f.relative_to(p.job(j))),
+            sha256=digest(f),
+            auto_reconciled=True,
+            auto_reconciled_at=time.time(),
+        )
+        write(record_file, data)
+        from execution import is_job
+        if is_job(p, j) or (Path(folder) / 'owner.json').exists():
+            __import__('flow_management').sync(p, j, folder, data)
+        p.event(j, 'images', 'flow_auto_reconciled', json.dumps({
+            'key': data.get('key'), 'path': data['path'], 'reason': 'download_found_on_disk'
+        }, ensure_ascii=False))
+        return data
+    except Exception:
+        return data
 
 
 def reconcile_stuck_conflict(p, j, target, reason="auto recovery failover"):
@@ -487,6 +529,9 @@ def reconcile_stuck_conflict(p, j, target, reason="auto recovery failover"):
             data['state'] = 'not_submitted'
             data['reconciled_reason'] = reason
             write(record_file, data)
+            from execution import is_job
+            if is_job(p, j) or (Path(folder) / 'owner.json').exists():
+                __import__('flow_management').sync(p, j, folder, data)
             p.event(j, 'images', 'conflict_reset', json.dumps({
                 'target': target, 'key': conflict['key'], 'reason': reason
             }, ensure_ascii=False))
@@ -515,13 +560,49 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None):
     # Even changed prompts/edits cannot hide an unresolved submission.
     conflict = _unresolved_conflict(p, j, target)
     if conflict and not (conflict['key'] == key and conflict['state'] == 'generated'):
+        err_text = str(conflict.get('error', '')).lower()
+        transient_patterns = (
+            'no close frame received or sent',
+            'cdp_transport_closed',
+            'failed to fetch',
+            'captcha_failed',
+            'no_at_token',
+            'connection closed',
+        )
+        if any(tp in err_text for tp in transient_patterns):
+            reconcile_stuck_conflict(p, j, target, reason=f"auto-recovered transient error: {conflict.get('error')}")
+            conflict = _unresolved_conflict(p, j, target)
+    if conflict and not (conflict['key'] == key and conflict['state'] == 'generated'):
         raise Blocked('M2_AMBIGUOUS: reconcile request ' + conflict['key'] + ' before another submission')
     folder = base / key
     record = folder / 'request.json'
     if record.exists():
         result = read(record)
+        if result['state'] in ('submitted', 'ambiguous'):
+            result = auto_reconcile_attempt(p, j, folder, result)
+            if result['state'] in ('submitted', 'ambiguous'):
+                err_text = str(result.get('error', '')).lower()
+                transient_patterns = (
+                    'no close frame received or sent',
+                    'cdp_transport_closed',
+                    'failed to fetch',
+                    'captcha_failed',
+                    'no_at_token',
+                    'connection closed',
+                )
+                if any(tp in err_text for tp in transient_patterns):
+                    result['state'] = 'not_submitted'
+                    result['reconciled_reason'] = f"auto-recovered transient error: {result.get('error')}"
+                    write(record, result)
+                    from execution import is_job
+                    if is_job(p, j) or (Path(folder) / 'owner.json').exists():
+                        __import__('flow_management').sync(p, j, folder, result)
         if result['state'] == 'downloaded':
             image_check(p, j, result['path'], result['sha256'], full=registration is None)
+            if 'profile_id' not in result:
+                sc = p.path(j, result['path']).with_suffix('.json')
+                if sc.is_file():
+                    result['profile_id'] = read(sc).get('profile_id')
             return result
         if result['state'] not in ('not_submitted','generated'):
             raise Blocked('M2_ATTEMPT: request needs explicit reconciliation')
@@ -533,6 +614,44 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None):
     recovery_out = read(record).get('collection_out') if collection_only else None
     out = p.path(j,recovery_out) if recovery_out else folder / 'download'
     out.mkdir(exist_ok=True)
+    pinned_profile_id = None
+    if (folder / 'owner.json').is_file():
+        try:
+            prior_owner = read(folder / 'owner.json')
+            prior_path = prior_owner.get('profile_path', '')
+            cfg_profiles = cfg.get('flow_cdp_profiles', [])
+            for cp in cfg_profiles:
+                if cp.get('directory') and cp.get('directory') in prior_path:
+                    pinned_profile_id = cp['id']
+                    break
+        except Exception:
+            pass
+    base_profile_id = None
+    if base_image:
+        base_profile_id = base_image.get('profile_id')
+        if not base_profile_id and base_image.get('path'):
+            b_path = p.path(j, base_image['path'])
+            b_sc = b_path.with_suffix('.json')
+            if b_sc.is_file():
+                try:
+                    base_profile_id = read(b_sc).get('profile_id')
+                except Exception:
+                    pass
+            if not base_profile_id:
+                for cand in (b_path.parent / 'owner.json', b_path.parent.parent / 'owner.json'):
+                    if cand.is_file():
+                        try:
+                            b_owner = read(cand)
+                            b_pp = b_owner.get('profile_path', '')
+                            for cp in cfg.get('flow_cdp_profiles', []):
+                                if cp.get('directory') and cp.get('directory') in b_pp:
+                                    base_profile_id = cp['id']
+                                    break
+                        except Exception:
+                            pass
+                    if base_profile_id:
+                        break
+    target_profile_id = base_profile_id or pinned_profile_id
     common = ['--profile', cfg['flow_profile'], '--project', cfg['flow_project'], '--out', str(out)]
     model_arg = 'nano-banana-pro' if 'pro' in cfg['flow_model'].lower() else ('nano-banana-2' if '2' in cfg['flow_model'] else cfg['flow_model'])
     scene = next((x for x in planned_units(p, j) if x['id'] == target), None)
@@ -542,6 +661,8 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None):
         args = ['character', 'create', '--name', registration['name'], '--prompt', actual_prompt,
                 '--model', model_arg,
                 '--image', str(p.path(j, registration['path']))] + common
+        if target_profile_id:
+            args += ['--profile-id', target_profile_id]
     else:
         args = ['image', '--id', key[:16], '--prompt', actual_prompt, '--model', model_arg,
                 '--ratio', ratio, '--outputs', '1'] + common
@@ -553,6 +674,8 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None):
             args += ['--base-image', str(p.path(j,base_image['path']))]
         if refs:
             args += ['--character'] + [x['name'] for x in refs]
+        if target_profile_id:
+            args += ['--profile-id', target_profile_id]
     result = {'key': key, 'identity': identity, 'state': 'generated' if collection_only else 'submitted', 'submitted_at': time.time(),
               'args': args, 'journal': str(record.relative_to(p.job(j)))}
     if recovery_out:
@@ -605,7 +728,9 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None):
                 or metadata.get('characters', []) != expected_chars
                 or metadata.get('source') != 'google-flow-browser' or metadata.get('status') != 'downloaded'):
                 raise Blocked('Downloaded metadata does not match request')
-        result.update(state='downloaded', path=str(f.relative_to(p.job(j))), sha256=digest(f))
+        meta_profile = metadata.get('profile_id') if not registration else None
+        result.update(state='downloaded', path=str(f.relative_to(p.job(j))), sha256=digest(f),
+                      profile_id=meta_profile or target_profile_id or '')
         write(record, result)
         if is_job(p, j):
             __import__('flow_management').sync(p, j, folder, result)
@@ -615,13 +740,20 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None):
     except Exception as ex:
         # A known downloaded but invalid image is not an unknown submission.
         if result['state'] != 'downloaded':
-            not_sub = getattr(ex, 'generation_submitted', None) is False
+            pre_submission_errors = ('session ended', 'connection blocked', 'socket', 'connection refused',
+                                     'devtoolsactiveport', 'profile_unverified', 'no automatic reconnect',
+                                     'cannot connect to chrome', 'endpoint ownership unavailable',
+                                     'no chrome profile workers available', 'no close frame received or sent',
+                                     'cdp_transport_closed', 'connection closed', 'failed to fetch',
+                                     'captcha_failed', 'no_at_token')
+            err_msg = str(ex).lower()
+            not_sub = getattr(ex, 'generation_submitted', None) is False or any(pat in err_msg for pat in pre_submission_errors)
             state = 'generated' if collection_only or getattr(ex, 'collection_only', False) else (
                 'not_submitted' if not_sub else 'ambiguous')
             result.update(state=state, error=str(ex))
             write(record, result)
         from execution import is_job
-        if is_job(p, j):
+        if is_job(p, j) or (Path(folder) / 'owner.json').exists():
             __import__('flow_management').sync(p, j, folder, result)
         raise Blocked('M2_FLOW: ' + str(ex)) from ex
 
@@ -862,11 +994,13 @@ def produce(p, j, out):
         cfg = read(p.root / 'config.json')
         concurrency = cfg.get('concurrency', 6)
         from execution import settings as execution_settings, is_job
-        # Multi-profile concurrency is enabled across pool profiles. If only 1 profile configured, limit to 1.
+        # Multi-profile concurrency is enabled across pool profiles. If job is bound to a single profile, constrain to 1.
         pool_profiles = cfg.get('flow_cdp_profiles', [])
-        if pool_profiles and len(pool_profiles) > 1:
+        if is_job(p, j) and execution_settings(p, j).get('management_session', {}).get('runtime_bindings', {}).get('flow', {}).get('target', {}).get('profile_path'):
+            concurrency = 1
+        elif pool_profiles and len(pool_profiles) > 1:
             concurrency = min(concurrency, len(pool_profiles))
-        elif is_job(p, j) and execution_settings(p, j).get('management_session', {}).get('runtime_bindings', {}).get('flow', {}).get('target', {}).get('profile_path'):
+        else:
             concurrency = 1
 
         completed = {}
@@ -926,10 +1060,25 @@ def produce(p, j, out):
                                 if first_exception is not None:
                                     return
                                 base = completed.get(u.get('based_on'))
+                                if not base and u.get('based_on'):
+                                    parent_id = u['based_on']
+                                    att_dir = p.job(j) / 'flow/attempts'
+                                    if att_dir.is_dir():
+                                        for q in att_dir.glob('*/request.json'):
+                                            try:
+                                                old_rec = read(q)
+                                                if old_rec.get('identity', {}).get('target') == parent_id and old_rec.get('state') == 'downloaded':
+                                                    base = {'target': parent_id, 'path': old_rec['path'], 'sha256': old_rec['sha256'],
+                                                            'profile_id': old_rec.get('profile_id')}
+                                                    completed[parent_id] = base
+                                                    break
+                                            except Exception:
+                                                pass
                             linked = [registrations[x] for x in u['character_ids']]
                             r = request(p, j, u['id'], u['prompt'], linked, **({'base_image': base} if base else {}))
                             with lock:
-                                completed[u['id']] = {'target': u['id'], 'path': r['path'], 'sha256': r['sha256']}
+                                completed[u['id']] = {'target': u['id'], 'path': r['path'], 'sha256': r['sha256'],
+                                                      'profile_id': r.get('profile_id')}
                                 outcomes[u['id']] = (u['id'], u['prompt'], linked, r)
                                 if first_exception is None:
                                     for child in dependents.get(u['id'], []):
@@ -1242,30 +1391,53 @@ def flow_action(p, a):
         write(q.parent / 'confirmation.json', e)
         p.event(a.job, 'images', 'registration_confirmed', a.request)
         return {'confirmed': a.request}
-    if r['state'] not in ('submitted', 'ambiguous') or not a.asset or not a.note or not a.evidence:
-        raise Blocked('M2_RECONCILE: unresolved request, downloaded asset, UI screenshot and verification note required')
-    source = Path(a.asset)
-    with Image.open(source) as im: im.verify()
-    dest = q.parent / ('reconciled' + source.suffix)
-    shutil.copy(source, dest)
-    image_check(p, a.job, str(dest.relative_to(p.job(a.job))), full=r['identity']['registration'] is None)
-    evidence = q.parent / 'reconcile.png'
-    observed = read(a.evidence)
-    expected_names = [x['name'] for x in r['identity']['references']]
-    expected_mode = 'character-register' if r['identity']['registration'] else 'image'
-    if (observed.get('request') != r['key'] or observed.get('mode') != expected_mode
-        or observed.get('characters') != expected_names or observed.get('matched_download') is not True
-        or not observed.get('observer') or observed.get('actual_prompt') != r['identity']['actual_prompt']):
-        raise Blocked('M2_RECONCILE: observed request, prompt, mode, references and downloaded result must match')
-    with Image.open(observed['screenshot']) as im: im.verify()
-    shutil.copy(observed['screenshot'], evidence)
-    base_image = r['identity'].get('base_image')
-    if base_image and observed.get('base_image') != str(p.path(a.job,base_image['path'])):
-        raise Blocked('M2_RECONCILE: base image attachment must be observed')
-    observed['passed'] = True
-    write(q.parent / 'ui-proof.json', observed)
-    shutil.copy(evidence, q.parent / 'before-submit.png')
-    r.update(state='downloaded', path=str(dest.relative_to(p.job(a.job))), sha256=digest(dest),
-             verification=a.note, reconciliation_evidence=str(evidence.relative_to(p.job(a.job))))
-    write(q, r);p.event(a.job, 'images', 'flow_reconciled', json.dumps({'request': a.request, 'note': a.note}))
-    return r
+    if r['state'] not in ('submitted', 'ambiguous') or not a.note or not a.evidence:
+        raise Blocked('M2_RECONCILE: unresolved request, UI screenshot and verification note required')
+    if a.asset:
+        source = Path(a.asset)
+        with Image.open(source) as im: im.verify()
+        dest = q.parent / ('reconciled' + source.suffix)
+        shutil.copy(source, dest)
+        image_check(p, a.job, str(dest.relative_to(p.job(a.job))), full=r['identity']['registration'] is None)
+        evidence = q.parent / 'reconcile.png'
+        observed = read(a.evidence)
+        expected_names = [x['name'] for x in r['identity']['references']]
+        expected_mode = 'character-register' if r['identity']['registration'] else 'image'
+        if (observed.get('request') != r['key'] or observed.get('mode') != expected_mode
+            or observed.get('characters') != expected_names or observed.get('matched_download') is not True
+            or not observed.get('observer') or observed.get('actual_prompt') != r['identity']['actual_prompt']):
+            raise Blocked('M2_RECONCILE: observed request, prompt, mode, references and downloaded result must match')
+        with Image.open(observed['screenshot']) as im: im.verify()
+        shutil.copy(observed['screenshot'], evidence)
+        base_image = r['identity'].get('base_image')
+        if base_image and observed.get('base_image') != str(p.path(a.job,base_image['path'])):
+            raise Blocked('M2_RECONCILE: base image attachment must be observed')
+        observed['passed'] = True
+        write(q.parent / 'ui-proof.json', observed)
+        shutil.copy(evidence, q.parent / 'before-submit.png')
+        r.update(state='downloaded', path=str(dest.relative_to(p.job(a.job))), sha256=digest(dest),
+                 verification=a.note, reconciliation_evidence=str(evidence.relative_to(p.job(a.job))))
+        write(q, r)
+        from execution import is_job
+        if is_job(p, a.job) or (Path(q.parent) / 'owner.json').exists():
+            __import__('flow_management').sync(p, a.job, q.parent, r)
+        p.event(a.job, 'images', 'flow_reconciled', json.dumps({'request': a.request, 'note': a.note}))
+        return r
+    else:
+        observed = read(a.evidence)
+        if (observed.get('request') != r['key'] or not observed.get('observer')
+            or not observed.get('screenshot') or not Path(observed['screenshot']).is_file()):
+            raise Blocked('M2_RECONCILE: observed request, observer and UI screenshot required')
+        with Image.open(observed['screenshot']) as im: im.verify()
+        evidence = q.parent / 'reconcile-not-submitted.png'
+        shutil.copy(observed['screenshot'], evidence)
+        observed['passed'] = True
+        write(q.parent / 'ui-proof.json', observed)
+        r.update(state='not_submitted', verification=a.note,
+                 reconciliation_evidence=str(evidence.relative_to(p.job(a.job))))
+        write(q, r)
+        from execution import is_job
+        if is_job(p, a.job) or (Path(q.parent) / 'owner.json').exists():
+            __import__('flow_management').sync(p, a.job, q.parent, r)
+        p.event(a.job, 'images', 'flow_reconciled_not_submitted', json.dumps({'request': a.request, 'note': a.note}))
+        return r

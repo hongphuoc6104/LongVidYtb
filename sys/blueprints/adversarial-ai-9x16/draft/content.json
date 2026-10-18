@@ -2920,7 +2920,7 @@
       "title": "So sánh câu lệnh lười vs câu lệnh đối kháng",
       "purpose": "Triển khai bước 16: so sánh câu lệnh lười vs câu lệnh đối kháng",
       "action": "A vertical dual-panel mobile view contrasting two divergent chat prompts.",
-      "setting": "A vertical split screen contrasting lazy prompting with adversarial commanding.",
+      "setting": "A vertical comparative studio contrasting lazy prompting with adversarial commanding.",
       "camera": "Semantic full-frame sequence",
       "narration": "Hãy nhìn vào sự khác biệt giữa hai cách ra lệnh. Một bên là câu lệnh lười biếng nhờ viết hộ mười trang, chỉ mang về những đoạn văn sáo rỗng vô hồn. Một bên là câu lệnh đối kháng sắc bén, buộc cỗ máy phải tấn công vào điểm yếu, để bạn tự tay gia cố luận điểm của mình.",
       "requirements": [
@@ -2933,7 +2933,7 @@
       "images": [
         {
           "id": "SC16_I1",
-          "description": "A vertical split screen contrasting lazy prompting with adversarial commanding. A vertical dual-panel mobile view contrasting two divergent chat prompts.",
+          "description": "A vertical comparative studio contrasting lazy prompting with adversarial commanding. A vertical dual-panel mobile view contrasting two divergent chat prompts.",
           "character_ids": [
             "CH01"
           ],
@@ -2947,7 +2947,7 @@
         },
         {
           "id": "SC16_I2",
-          "description": "A vertical split screen contrasting lazy prompting with adversarial commanding. The left panel shows a lazy one-line prompt yielding bland paragraphs of filler text.",
+          "description": "A vertical comparative studio contrasting lazy prompting with adversarial commanding. The left panel shows a lazy one-line prompt yielding bland paragraphs of filler text.",
           "character_ids": [
             "CH01"
           ],
@@ -2961,12 +2961,12 @@
         },
         {
           "id": "SC16_I3",
-          "description": "A vertical split screen contrasting lazy prompting with adversarial commanding. The left document is stamped with a red label: Zero Critical Thought.",
+          "description": "A vertical comparative studio contrasting lazy prompting with adversarial commanding. The left document is stamped with a red label: Zero Critical Thought.",
           "character_ids": [
             "CH01"
           ],
           "based_on": "SC16_I1",
-          "preserve": "Keep the exact camera angle, room geometry and props in A vertical split screen contrasting lazy prompting with adversarial commanding.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "preserve": "Keep the exact camera angle, room geometry and props in A vertical comparative studio contrasting lazy prompting with adversarial commanding.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
           "change": "The left document is stamped with a red label: Zero Critical Thought.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
@@ -2975,12 +2975,12 @@
         },
         {
           "id": "SC16_I4",
-          "description": "A vertical split screen contrasting lazy prompting with adversarial commanding. The right panel shows an adversarial prompt producing five sharp methodological challenges.",
+          "description": "A vertical comparative studio contrasting lazy prompting with adversarial commanding. The right panel shows an adversarial prompt producing five sharp methodological challenges.",
           "character_ids": [
             "CH01"
           ],
           "based_on": "SC16_I1",
-          "preserve": "Keep the exact camera angle, room geometry and props in A vertical split screen contrasting lazy prompting with adversarial commanding.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "preserve": "Keep the exact camera angle, room geometry and props in A vertical comparative studio contrasting lazy prompting with adversarial commanding.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
           "change": "The right panel shows an adversarial prompt producing five sharp methodological challenges.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
@@ -2989,12 +2989,12 @@
         },
         {
           "id": "SC16_I5",
-          "description": "A vertical split screen contrasting lazy prompting with adversarial commanding. Targeting crosshairs locate logical vulnerabilities on the right screen.",
+          "description": "A vertical comparative studio contrasting lazy prompting with adversarial commanding. Targeting crosshairs locate logical vulnerabilities on the right screen.",
           "character_ids": [
             "CH01"
           ],
           "based_on": "SC16_I1",
-          "preserve": "Keep the exact camera angle, room geometry and props in A vertical split screen contrasting lazy prompting with adversarial commanding.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "preserve": "Keep the exact camera angle, room geometry and props in A vertical comparative studio contrasting lazy prompting with adversarial commanding.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
           "change": "Targeting crosshairs locate logical vulnerabilities on the right screen.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
@@ -3003,7 +3003,7 @@
         },
         {
           "id": "SC16_I6",
-          "description": "A vertical split screen contrasting lazy prompting with adversarial commanding. Vertical card on pure white: DOI THOAI DOI KHANG with a polished cognitive shield.",
+          "description": "A vertical comparative studio contrasting lazy prompting with adversarial commanding. Vertical card on pure white: DOI THOAI DOI KHANG with a polished cognitive shield.",
           "character_ids": [
             "CH01"
           ],

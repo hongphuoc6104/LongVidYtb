@@ -136,21 +136,25 @@ def query_status(timeout: float | None = None, sock_path: Path | None = None) ->
             if attempt < retries:
                 time.sleep(backoff * (attempt + 1))
     if last_exc:
-        from .cdp_direct_client import PROFILES, is_port_open
-        if any(is_port_open(p["cdp_port"]) for p in PROFILES):
-            return {
-                "status": "connected",
-                "identity": {
-                    "observedProfile": str(Path(PROFILES[0]["user_data_dir"]).expanduser() / PROFILES[0]["profile_dir"]),
-                    "toolUrl": PROFILES[0]["url"],
-                }
-            }
         raise last_exc
     return {"status": "not_connected"}
 
 
 def ensure_connected(sock_path: Path | None = None) -> dict[str, Any]:
     target_sock = sock_path if (sock_path is not None and sock_path != get_socket_path()) else None
+    if is_session_available(target_sock):
+        return query_status(sock_path=target_sock)
+
+    target_or_default = target_sock or get_socket_path()
+    if target_or_default.exists():
+        if target_sock is not None:
+            result = send_raw_command("connect", timeout=75.0, sock_path=target_sock)
+        else:
+            result = send_raw_command("connect", timeout=75.0)
+        if result.get("status") != "connected":
+            raise Blocked(f"Flow CDP connection blocked: {result.get('reason', 'not connected')}")
+        return result
+
     from .cdp_direct_client import PROFILES, ensure_chrome_profiles_launched, is_port_open
     if any(is_port_open(p["cdp_port"]) for p in PROFILES):
         return {
@@ -160,36 +164,14 @@ def ensure_connected(sock_path: Path | None = None) -> dict[str, Any]:
                 "toolUrl": PROFILES[0]["url"],
             }
         }
-    if is_session_available(target_sock):
-        return query_status(sock_path=target_sock)
-
-    try:
-        if target_sock is not None and target_sock.exists():
-            result = send_raw_command("connect", timeout=75.0, sock_path=target_sock)
-        else:
-            result = send_raw_command("connect", timeout=75.0)
-    except Exception as exc:
-        exc_str = str(exc).lower()
-        if "socket not found" in exc_str:
-            ensure_chrome_profiles_launched()
-            return {
-                "status": "connected",
-                "identity": {
-                    "observedProfile": str(Path(PROFILES[0]["user_data_dir"]).expanduser() / PROFILES[0]["profile_dir"]),
-                    "toolUrl": PROFILES[0]["url"],
-                }
-            }
-        ensure_chrome_profiles_launched()
-        return {
-            "status": "connected",
-            "identity": {
-                "observedProfile": str(Path(PROFILES[0]["user_data_dir"]).expanduser() / PROFILES[0]["profile_dir"]),
-                "toolUrl": PROFILES[0]["url"],
-            }
+    ensure_chrome_profiles_launched()
+    return {
+        "status": "connected",
+        "identity": {
+            "observedProfile": str(Path(PROFILES[0]["user_data_dir"]).expanduser() / PROFILES[0]["profile_dir"]),
+            "toolUrl": PROFILES[0]["url"],
         }
-    if result.get("status") != "connected":
-        raise Blocked(f"Flow CDP connection blocked: {result.get('reason', 'not connected')}")
-    return result
+    }
 
 
 def is_session_available(sock_path: Path | None = None) -> bool:
@@ -301,6 +283,8 @@ def _execute_via_cdp_direct(specs: list[dict[str, Any]], timeout: float = 240.0,
                     "sha256": digest(dest_img),
                     "profile_id": profile_name,
                 })
+                if len(specs) > 1:
+                    await asyncio.sleep(4.0)
                 sidecar_file = dest_img.with_suffix(".json")
                 if sidecar_file.is_file():
                     try:
@@ -391,9 +375,23 @@ def _execute_sub_batch(specs: list[dict[str, Any]], timeout: float = 240.0, sock
             if sidecar_file.is_file():
                 try:
                     s_data = json.loads(sidecar_file.read_text(encoding="utf-8"))
-                    if not s_data.get("profile_id"):
-                        s_data["profile_id"] = item["profile_id"]
-                        sidecar_file.write_text(json.dumps(s_data, indent=2), encoding="utf-8")
+                    s_data["profile_id"] = item["profile_id"]
+                    sidecar_file.write_text(json.dumps(s_data, indent=2), encoding="utf-8")
+                except Exception:
+                    pass
+            else:
+                try:
+                    s_data = {
+                        "jobId": spec.get("testCase"),
+                        "type": "image",
+                        "prompt": spec.get("prompt"),
+                        "ratio": spec.get("ratio", "9:16"),
+                        "source": "google-flow-browser",
+                        "status": "downloaded",
+                        "forgeId": item.get("forge_id") or item.get("media_id"),
+                        "profile_id": item["profile_id"],
+                    }
+                    sidecar_file.write_text(json.dumps(s_data, indent=2), encoding="utf-8")
                 except Exception:
                     pass
     return items
@@ -428,6 +426,8 @@ def generate_cdp_image(
             try:
                 sc = json.loads(base_sidecar.read_text(encoding="utf-8"))
                 profile_id = sc.get("profile_id") or sc.get("profile") or ""
+                if not base_media_id:
+                    base_media_id = sc.get("forgeId") or sc.get("media_id") or sc.get("forge_id")
             except Exception:
                 pass
         if not profile_id:
@@ -509,18 +509,32 @@ def generate_cdp_batch(
     for spec in specs:
         if profile_id:
             spec.setdefault("profile_id", profile_id)
-        elif not spec.get("profile_id") and spec.get("baseRefPath"):
-            sidecar = Path(spec["baseRefPath"]).with_suffix(".json")
-            if sidecar.is_file():
-                try:
-                    sc = json.loads(sidecar.read_text(encoding="utf-8"))
-                    cand_pid = sc.get("profile_id") or sc.get("profile")
-                    if cand_pid:
-                        spec["profile_id"] = cand_pid
-                except Exception:
-                    pass
+        else:
+            base_ref = spec.get("baseRefPath") or spec.get("base_ref_path") or spec.get("base_image")
+            if isinstance(base_ref, dict):
+                if base_ref.get("profile_id") and not spec.get("profile_id"):
+                    spec["profile_id"] = base_ref["profile_id"]
+                if base_ref.get("path") and not spec.get("baseRefPath"):
+                    spec["baseRefPath"] = str(base_ref["path"])
+                base_ref = base_ref.get("path")
+            if base_ref and (not spec.get("profile_id") or not spec.get("baseMediaId")):
+                sidecar = Path(str(base_ref)).with_suffix(".json")
+                if sidecar.is_file():
+                    try:
+                        sc = json.loads(sidecar.read_text(encoding="utf-8"))
+                        if not spec.get("profile_id"):
+                            cand_pid = sc.get("profile_id") or sc.get("profile")
+                            if cand_pid:
+                                spec["profile_id"] = cand_pid
+                        if not spec.get("baseMediaId"):
+                            cand_mid = sc.get("forgeId") or sc.get("media_id") or sc.get("forge_id")
+                            if cand_mid:
+                                spec["baseMediaId"] = cand_mid
+                    except Exception:
+                        pass
 
-    target_profile = profile_id or (specs[0].get("profile_id") if (specs and all(s.get("profile_id") == specs[0].get("profile_id") for s in specs if s.get("profile_id"))) else "")
+    distinct_pids = {s.get("profile_id") for s in specs if s.get("profile_id")}
+    target_profile = profile_id or (next(iter(distinct_pids)) if len(distinct_pids) == 1 else "")
 
     job_id = None
     if specs and isinstance(specs[0], dict):

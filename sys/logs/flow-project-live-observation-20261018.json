@@ -1,0 +1,536 @@
+{
+  "observed_at": "2026-10-18T17:11:35.883167+07:00",
+  "kind": "read-only observation of independently running production; not submissions by this test",
+  "all_journal_states": {
+    "downloaded": 687,
+    "submitted": 1,
+    "not_submitted": 7
+  },
+  "pending": [
+    {
+      "job": "adversarial-ai-9x16",
+      "request_id": "10b31249b291393c8b6e5fc35b631b721bb6467b859560b0975bc9ae46daf55c",
+      "state": "submitted"
+    }
+  ],
+  "recent_last_hour": [
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "submitted",
+      "request_id": "10b31249b291393c8b6e5fc35b631b721bb6467b859560b0975bc9ae46daf55c",
+      "age_seconds": 26,
+      "error": null,
+      "submitted_at": 1792318269.4667423
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "30636b6457864858378f25ea444c376a4132a44c7a9b0b2fdaad795558c66997",
+      "age_seconds": 27,
+      "error": null,
+      "submitted_at": 1792318238.1625848,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 30.63
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "d8902b1ef7a9ebcdbef60761e7300dea0bb611c3d44dff81ef559b7f1b3145fb",
+      "age_seconds": 58,
+      "error": null,
+      "submitted_at": 1792318209.6074715,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 27.92
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "5084285ecdb6e77c2a4405d7ef78a69283994eed3144c8a049f6e71090fd1ee0",
+      "age_seconds": 87,
+      "error": null,
+      "submitted_at": 1792318182.3752997,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 26.65
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "9a726c6fc12ffe36f83d440128e5bad39bf8396a171beac5b942cb905c7386a6",
+      "age_seconds": 114,
+      "error": null,
+      "submitted_at": 1792318151.915379,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 29.86
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "d8ffc0763cbdea17eaf933c29cb7c21cda7819ce2106ba542066b7596d0873fc",
+      "age_seconds": 144,
+      "error": null,
+      "submitted_at": 1792318116.6236792,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 34.72
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "1f3000ea8c6d36ca5d391dda6344d1d7a3870b86aacd889f7daac069d74731cc",
+      "age_seconds": 180,
+      "error": null,
+      "submitted_at": 1792318085.8243074,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 30.18
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "eed46052af90f4df5e514a39160066e7b8422faed72c95d35d1d94964436872d",
+      "age_seconds": 210,
+      "error": null,
+      "submitted_at": 1792318044.108841,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 41.13
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "583665653f7b1cd34230b940d7b86620b8f049113dfc62a20f647a3427c3d119",
+      "age_seconds": 252,
+      "error": null,
+      "submitted_at": 1792318011.1216693,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 32.37
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "80f7174e72bfc9ff897adec9e3c00ffc801b716d85a651ce3ccf48de0dff411d",
+      "age_seconds": 285,
+      "error": null,
+      "submitted_at": 1792317967.6769838,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 42.86
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "b119ac76562eb3da99bfeec40ddc1a0859c209267a4e3c3d78a3bf060a251f2f",
+      "age_seconds": 329,
+      "error": null,
+      "submitted_at": 1792317927.0640998,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 40.02
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "dc5038a68c18f7d85ba79f12d660758eaec964ac6ec150663b8b6f905f0cd89b",
+      "age_seconds": 369,
+      "error": null,
+      "submitted_at": 1792317895.2194939,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 31.27
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "df216527fcc9fc84eb604b162be66e2c005511507eeba36e6964633ed15f1c24",
+      "age_seconds": 401,
+      "error": null,
+      "submitted_at": 1792317854.1438599,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 40.5
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "a2edc481ce8bb4a2759529a77359dae48db01268d33821947d47e11895e44350",
+      "age_seconds": 442,
+      "error": null,
+      "submitted_at": 1792317824.8075154,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 28.74
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "ea6ec7ba37efee7fde27635357a809062a254c9d72e7d52afa89c60d6f05a2de",
+      "age_seconds": 471,
+      "error": null,
+      "submitted_at": 1792317789.9950268,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 34.2
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "8e1294c175c52b5a57048a60717f606c8bd8722f33f8a67bc81b1eca0e9c4b46",
+      "age_seconds": 506,
+      "error": null,
+      "submitted_at": 1792317751.2281318,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 38.18
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "f331ef5f1a58826ca76aeb4c8d547905237af95e7f2cb14ccf473c97b29b91ca",
+      "age_seconds": 545,
+      "error": null,
+      "submitted_at": 1792317718.403164,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 32.26
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "b29ccf4a8c5327467ed7a0aaaa09369b85579cba6896659706fbc92e415c65fd",
+      "age_seconds": 578,
+      "error": null,
+      "submitted_at": 1792317692.6089532,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 25.25
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "f8a6a337632ba7cd80f85cabf898ad26f91be3e5e9293281e3cccda1c73bf167",
+      "age_seconds": 604,
+      "error": null,
+      "submitted_at": 1792317639.6690006,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 52.39
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "dcd41da3ce94c3735ef99cfb49c0735ab82385f4748b09adf0fba42739f9def9",
+      "age_seconds": 657,
+      "error": null,
+      "submitted_at": 1792317599.1799757,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 39.92
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "03e40f5d6f0d13bcce574f9d122ddfd983db689ad3e27179b998f38dd3c09a99",
+      "age_seconds": 697,
+      "error": null,
+      "submitted_at": 1792317569.0814278,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 29.52
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "88d21eaf61b9f6fac7ef9ee4f55e9335fabde3770970aa193038ba22ffbf129d",
+      "age_seconds": 727,
+      "error": null,
+      "submitted_at": 1792317519.3331387,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 49.16
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "a5ef99a98a2d1cd1c5614041784589f42a6ba26eb624e0e1ecac5106c7f38303",
+      "age_seconds": 777,
+      "error": null,
+      "submitted_at": 1792317478.0537512,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 40.67
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "4cb8aa29335c8f3b755f9f1e09b4f3a6b8c5cef1862dc8c05e5150a19ea1904e",
+      "age_seconds": 818,
+      "error": null,
+      "submitted_at": 1792317448.6004004,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 28.88
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "e8e285e5802b499ef2d156c9f905843d647c1e5b0edb6dd0fbb6d3a3a25c8f9a",
+      "age_seconds": 849,
+      "error": null,
+      "submitted_at": 1792317418.0934618,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 28.64
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "f636f1f9f82062832457e4c1196f4b2d3a9f0e834e2f62f83e34c40f024b066a",
+      "age_seconds": 878,
+      "error": null,
+      "submitted_at": 1792317374.8088312,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 42.68
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "7194561aaa211b15e2759cf98b1a8d5089952fe098ec884ff4ade13a42a68cde",
+      "age_seconds": 923,
+      "error": null,
+      "submitted_at": 1792317333.1924536,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 39.72
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "38229b5b39a83a882b8ac38d1d61d82206d3f0ea157ff8bf535510a8ecc07758",
+      "age_seconds": 1175,
+      "error": null,
+      "submitted_at": 1792316999.1657429,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 49.4
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "aebc13266e9f124099fb3a4f5e2b3b49ad5e68a14346da73e6d3033ff726df07",
+      "age_seconds": 1225,
+      "error": null,
+      "submitted_at": 1792316964.615346,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 40.71
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "41b0172075956059ac136b40bf2d43c47a026e20356a60461aaab33f1748f419",
+      "age_seconds": 1266,
+      "error": null,
+      "submitted_at": 1792316936.5562658,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 30.67
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "182d108667def938c9baa8920f04caf5ac0cefe041ae5967a13acf6e758212b2",
+      "age_seconds": 1297,
+      "error": null,
+      "submitted_at": 1792316838.8906295,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 34.23
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "b569a2ac63175c14776d96d8a5eaa30296fb3f7517781ae4d1af940275523902",
+      "age_seconds": 1332,
+      "error": null,
+      "submitted_at": 1792316838.8087533,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 27.9
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "a9fae727a99229b0567a95c23e7012c7c8b99da4d4f8114c9cd0a82b95cf01a8",
+      "age_seconds": 1360,
+      "error": null,
+      "submitted_at": 1792316838.8885098,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 33.18
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "d4630d259445ad6be04760d931653d9914cf992c2bb7e6e363567ce101b99c5c",
+      "age_seconds": 1393,
+      "error": null,
+      "submitted_at": 1792316838.8560617,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 29.86
+    },
+    {
+      "job": "adversarial-ai-9x16",
+      "state": "downloaded",
+      "request_id": "80ce0d8de95957f8bad7c8c92d607c0b1c87d7df8b9741681090f7dcffe8fc5d",
+      "age_seconds": 1423,
+      "error": null,
+      "submitted_at": 1792316838.40693,
+      "image_size": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 33.46
+    }
+  ]
+}

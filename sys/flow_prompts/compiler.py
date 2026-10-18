@@ -19,11 +19,11 @@ SHA = re.compile(r'[a-f0-9]{64}\Z')
 INJECTION = re.compile(r'(?i)(?:\b(?:ignore|disregard|override|bypass)\b.{0,70}\b(?:instructions?|rules?|system|developer|restrictions?|constraints?|polic(?:y|ies)|references?)\b|\b(?:system|developer)\s*(?:message\b|prompt\b|:)|<\|[^>]*\|>|\[/?INST\]|</?(?:system|developer|assistant)>|\{\{|\{%|\$\(|```)', re.S)
 MANAGEMENT = re.compile(r'(?i)(?:\bSC\d{2,}\b|\bCH\d{2,}\b|\b(?:job|request|template|media)[_-][a-z0-9_-]+\b|[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}|\b[\w.-]+\.(?:json|png|jpe?g|webp|wav|mp4)\b|\b[a-f0-9]{64}\b)')
 BANNED_CLICHES = [
-    (re.compile(r'(?i)\b(?:brain\s*cutaway|split\s*brain|exposed\s*brain|cerebrum|cross-section\s*of\s*(?:the\s*)?brain)\b'), 'brain cutaway cliché'),
-    (re.compile(r'(?i)\b(?:abacus|counting\s*frame)\b'), 'abacus cliché'),
-    (re.compile(r'(?i)\b(?:pipe\s*valve|plumbing\s*valve|industrial\s*faucet)\b'), 'pipe valve cliché'),
-    (re.compile(r'(?i)\b(?:iron\s*anchor|ship\s*anchor|heavy\s*anchor)\b'), 'iron anchor cliché'),
-    (re.compile(r'(?i)\b(?:split[- ]screen|split\s*composition|dichotomy\s*screen)\b'), 'split screen cliché'),
+    (re.compile(r'(?i)\b(?:brain\s*cutaway|split\s*brain|exposed\s*brain|cerebrum|cross-section\s*of\s*(?:the\s*)?brain|lát\s*cắt\s*não|bổ\s*đôi\s*não|não\s*bổ\s*đôi)\b'), 'brain cutaway cliché'),
+    (re.compile(r'(?i)\b(?:abacus|counting\s*frame|bàn\s*tính\s*gảy|chiếc\s*bàn\s*tính)\b'), 'abacus cliché'),
+    (re.compile(r'(?i)\b(?:pipe\s*valve|plumbing\s*valve|industrial\s*faucet|van\s*ống\s*nước|van\s*công\s*nghiệp)\b'), 'pipe valve cliché'),
+    (re.compile(r'(?i)\b(?:iron\s*anchor|ship\s*anchor|heavy\s*anchor|mỏ\s*neo\s*sắt|mỏ\s*neo\s*tàu)\b'), 'iron anchor cliché'),
+    (re.compile(r'(?i)\b(?:split[- ]?screen|split[- ]?composition|dichotomy\s*screen|màn\s*hình\s*chia\s*đôi|chia\s*đôi\s*màn\s*hình)\b'), 'split screen cliché'),
 ]
 
 
@@ -53,6 +53,27 @@ def _model(model, spec):
     return matches[0]
 
 
+def find_visual_cliche(text):
+    """Return the name of any banned visual cliché pattern matched in text, or None."""
+    if not isinstance(text, str):
+        return None
+    for pattern, name in BANNED_CLICHES:
+        if pattern.search(text):
+            return name
+    return None
+
+
+def check_visual_prompt_text(value, field='description'):
+    """Check a text string against visual cliché rules and return it.
+
+    Raises PromptError with FLOW_CLICHE_FORBIDDEN if a banned visual cliché is present.
+    """
+    cliche = find_visual_cliche(value)
+    if cliche:
+        raise PromptError('FLOW_CLICHE_FORBIDDEN: ' + field + ' contains banned ' + cliche)
+    return value
+
+
 def _text(value, field, *, max_length=12000, empty=False):
     if not isinstance(value, str) or (not empty and not value.strip()) or len(value) > max_length:
         raise PromptError('FLOW_PROMPT_DATA_INVALID: ' + field + ' needs bounded text')
@@ -60,9 +81,7 @@ def _text(value, field, *, max_length=12000, empty=False):
         raise PromptError('FLOW_PROMPT_CONTROL_REJECTED: ' + field)
     if INJECTION.search(value):
         raise PromptError('FLOW_PROMPT_INJECTION_REJECTED: ' + field)
-    for pattern, name in BANNED_CLICHES:
-        if pattern.search(value):
-            raise PromptError('FLOW_CLICHE_FORBIDDEN: ' + field + ' contains banned ' + name)
+    check_visual_prompt_text(value, field)
     return value
 
 

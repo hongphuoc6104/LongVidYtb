@@ -243,6 +243,24 @@ class ResearchedBeat:
             raise ValueError(f"Unsupported full-frame shot type: {self.shot_type}")
         if self.shot_type == "variation" and not (self.based_on and self.preserve.strip() and self.change.strip()):
             raise ValueError("A variation requires based_on, preserve, and change")
+        from flow_prompts import find_visual_cliche
+        for field_name, text in [("description", self.description), ("preserve", self.preserve), ("change", self.change)]:
+            if text:
+                cliche = find_visual_cliche(text)
+                if cliche:
+                    raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {self.image_id} {field_name}: contains banned {cliche}")
+        for vt in self.visible_text:
+            if isinstance(vt, str):
+                cliche = find_visual_cliche(vt)
+                if cliche:
+                    raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {self.image_id} visible_text: contains banned {cliche}")
+            elif isinstance(vt, dict):
+                for subf in ("text", "placement", "object"):
+                    subval = vt.get(subf)
+                    if subval and isinstance(subval, str):
+                        cliche = find_visual_cliche(subval)
+                        if cliche:
+                            raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {self.image_id} visible_text.{subf}: contains banned {cliche}")
 
 
 # Read compatibility for authored briefs and older builder imports.
@@ -270,6 +288,14 @@ class ResearchedScene:
     scene_description: str = ""
     tone: Optional[str] = None
     narrative_phase: Optional[str] = None
+
+    def __post_init__(self) -> None:
+        from flow_prompts import find_visual_cliche
+        for field_name, text in [("setting", self.setting), ("action", self.action), ("bg_description", self.bg_description), ("scene_description", self.scene_description)]:
+            if text:
+                cliche = find_visual_cliche(text)
+                if cliche:
+                    raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {self.scene_id} {field_name}: contains banned {cliche}")
 
 
 @dataclass
@@ -639,10 +665,15 @@ def build_scenes_from_story_rows(
     """Flash-agent friendly builder: converts (title, setting, [(sentence, "shot_type|visual_action")]) rows
     into fully anchored, cadence-calibrated ResearchedScene objects without manual coordinate or offset math.
     """
+    from flow_prompts import find_visual_cliche
+
     built_scenes: List[ResearchedScene] = []
     total = len(story_rows)
     for index, (title, setting, rows) in enumerate(story_rows, 1):
         scene_id = f"SC{index:02d}"
+        cliche = find_visual_cliche(setting)
+        if cliche:
+            raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {scene_id} setting: contains banned {cliche}")
         narration = " ".join(sent.strip() for sent, _ in rows if sent.strip())
         beats: List[ResearchedBeat] = []
         base_id: Optional[str] = None
@@ -652,6 +683,9 @@ def build_scenes_from_story_rows(
             shot_type = shot_type.strip() or "full_scene"
             action_desc = action_desc.strip() or spec.strip()
             image_id = f"{scene_id}_I{beat_idx}"
+            cliche = find_visual_cliche(action_desc) or find_visual_cliche(spec)
+            if cliche:
+                raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {image_id} visual action: contains banned {cliche}")
             quote = sentence.strip()
             seen_quotes[quote] = seen_quotes.get(quote, 0) + 1
             if shot_type == "full_scene" and base_id is None:
@@ -662,9 +696,13 @@ def build_scenes_from_story_rows(
                 "Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift."
                 if based_on else ""
             )
+            desc = f"{setting} {action_desc}"
+            cliche = find_visual_cliche(desc)
+            if cliche:
+                raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {image_id} description: contains banned {cliche}")
             beats.append(ResearchedBeat(
                 image_id=image_id,
-                description=f"{setting} {action_desc}",
+                description=desc,
                 anchor_quote=quote,
                 anchor_occurrence=seen_quotes[quote],
                 reason="Narration-locked full-frame beat.",
@@ -715,8 +753,29 @@ def build_content_v3(
     needs_en = "en" in brief_langs
     elapsed = 0.0
 
+    from flow_prompts import find_visual_cliche
+
+    if topic.style:
+        cliche = find_visual_cliche(topic.style)
+        if cliche:
+            raise ValueError(f"FLOW_CLICHE_FORBIDDEN in topic style: contains banned {cliche}")
+    for ch in topic.characters:
+        for f in ("appearance", "outfit", "name"):
+            val = ch.get(f) if isinstance(ch, dict) else getattr(ch, f, None)
+            if val and isinstance(val, str):
+                cliche = find_visual_cliche(val)
+                if cliche:
+                    ch_id = ch.get("id") if isinstance(ch, dict) else getattr(ch, "id", "character")
+                    raise ValueError(f"FLOW_CLICHE_FORBIDDEN in character {ch_id} {f}: contains banned {cliche}")
+
     for sc in topic.scenes:
         s_id = sc.scene_id
+        for f in ("setting", "action", "bg_description", "scene_description"):
+            val = getattr(sc, f, None) if not isinstance(sc, dict) else sc.get(f)
+            if val and isinstance(val, str):
+                cliche = find_visual_cliche(val)
+                if cliche:
+                    raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {s_id} {f}: contains banned {cliche}")
 
         visual_beats = sc.visual_beats or _default_full_frame_beats(sc, elapsed)
         images: List[Dict[str, Any]] = []
@@ -728,6 +787,23 @@ def build_content_v3(
                 raise ValueError(f"{s_id}/{visual.image_id}: based_on needs a preserve description")
             if not visual.change.strip():
                 raise ValueError(f"{s_id}/{visual.image_id}: visual beat needs a change description")
+            for field_name, val in [("description", visual.description), ("preserve", visual.preserve), ("change", visual.change)]:
+                if val:
+                    cliche = find_visual_cliche(val)
+                    if cliche:
+                        raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {s_id}/{visual.image_id} {field_name}: contains banned {cliche}")
+            for vt in getattr(visual, "visible_text", []):
+                if isinstance(vt, str):
+                    cliche = find_visual_cliche(vt)
+                    if cliche:
+                        raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {s_id}/{visual.image_id} visible_text: contains banned {cliche}")
+                elif isinstance(vt, dict):
+                    for subf in ("text", "placement", "object"):
+                        subval = vt.get(subf)
+                        if subval and isinstance(subval, str):
+                            cliche = find_visual_cliche(subval)
+                            if cliche:
+                                raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {s_id}/{visual.image_id} visible_text.{subf}: contains banned {cliche}")
 
             image_entry: Dict[str, Any] = {
                 "id": visual.image_id,

@@ -12,31 +12,8 @@ $$\text{1. Tái hiện E2E} \longrightarrow \text{2. Phân tích gốc rễ} \lo
 
 ## II. Danh Mục Bài Học & Sự Cố Chuẩn Hóa
 
-### [ERR-20261017-03] Centered Portrait Caption Profile 07
-- **Triệu chứng (Symptom):** Portrait captions drift left and obscure the illustration with a large opaque panel.
-- **Tái hiện E2E (Reproduction Path):** At 1080×1920, the former 56 px left offset plus half the 820 px width puts the caption center at 466 px rather than 540 px. Run `pytest sys/tests/test_caption_profile_07.py` for the replacement contract.
-- **Nguyên nhân cốt lõi (Root Cause):** Fixed left anchoring, opaque background, trailing token margins and full-cue karaoke increase visual imbalance and density.
-- **Giả định sai (Wrong Assumptions):** Centered text inside a left-anchored box does not center the box within the frame.
-- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Profile 07 uses centered layout, white/amber text, transparent background, thin text outline, no word scaling and compact groups from measured word starts. Regression tests verify token preservation, alignment fallback and responsive styles; static preview verifies appearance without rendering video.
-- **Quy tắc phòng ngừa vàng (Golden Rule):** Center the entire caption group; preserve transcript tokens and measured timing. Missing alignment must retain the full cue instead of inventing word timings. Static previews do not prove audiovisual sync.
+> Historical entries [ERR-20261010-08], [ERR-20261010-09], [ERR-20261011-01] (Format Separation), [ERR-20261011-05] (Headless EGL), and [ERR-20261017-03] are archived in .agents/skills/vp-troubleshooting/references/historical-playbook.md.
 
-> Historical entries [ERR-20261010-08] (OmniVoice Phonetics) and [ERR-20261010-09] (Canonical JSON Hash) are archived in .agents/skills/vp-troubleshooting/references/historical-playbook.md.
-
-### [ERR-20261011-01] Tách Biệt Hồ Sơ Định Dạng SSOT (`short_9x16` & `long_16x9`)
-- **Triệu chứng (Symptom):** Trộn lẫn thông số phụ đề, vùng trống đáy ảnh (`caption_clearance`) và tỷ lệ khung hình giữa video ngắn `9:16` và video dài `16:9`.
-- **Tái hiện E2E (Reproduction Path):** Chạy `pytest sys/tests/test_format_separation.py -v`.
-- **Nguyên nhân cốt lõi (Root Cause):** Thiếu nguồn chân lý duy nhất (SSOT) định nghĩa tách biệt hai hồ sơ `short_9x16` và `long_16x9`.
-- **Giả định sai (Wrong Assumptions):** Cho rằng có thể dùng chung quy tắc ngắt dòng phụ đề và vùng trống đáy ảnh cho cả hai định dạng.
-- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Thiết lập `sys/format_profiles.py` quản lý độc lập `short_9x16` (`1080x1920`, `speed=1.0`, `clearance=0.18`) và `long_16x9` (`1920x1080`, `speed=1.0`, `clearance=None` trên `full_frame_v1`).
-- **Quy tắc phòng ngừa vàng (Golden Rule):** Mọi thông số khung hình, tốc độ giọng và vùng phụ đề phải truy xuất tường minh từ `sys/format_profiles.py`.
-
-### [ERR-20261011-05] Mở Khóa NVIDIA Headless EGL, NVENC `6M` & Chống Rơi Tile Trên Colab T4
-- **Triệu chứng (Symptom):** Render Remotion trên Colab T4 bị rơi về CPU hoặc bị vẽ thiếu ô trắng (tile drops), hoặc NVENC bị tự động tắt.
-- **Tái hiện E2E (Reproduction Path):** Chạy `pytest sys/tests/test_renderer_tile_integrity.py sys/tests/test_colab_bridge_skill.py -v`.
-- **Nguyên nhân cốt lõi (Root Cause):** Thiếu khai báo `/usr/share/glvnd/egl_vendor.d/10_nvidia.json`, thiếu cờ khóa đồng bộ compositor trước khi chụp frame và thiếu `videoBitrate: '6M'` cho `h264_nvenc`.
-- **Giả định sai (Wrong Assumptions):** Nhầm tưởng phải dùng `xvfb-run` hoặc chỉ cần truyền `hardwareAcceleration: 'if-possible'` là bật được NVENC.
-- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Cấu hình `10_nvidia.json` + `--use-angle=gl-egl`, khóa đồng bộ 4 tầng (`--run-all-compositor-stages-before-draw`, `--disable-checker-imaging`, `<Img decoding="sync">`), đặt `videoBitrate: '6M'` và tự động dọn phiên qua `teardown_job_resources()`.
-- **Quy tắc phòng ngừa vàng (Golden Rule):** Cấm dùng `xvfb-run`; luôn chạy Headless EGL + `videoBitrate: '6M'` qua `chrome-wrapper.sh` và giải phóng phiên Colab/Chrome CDP ngay sau khi xong job.
 
 ### [ERR-20261014-01] Chốt Chặn Âm Học, Độ Lệch Chuẩn Nhịp Câu & Cú Tát Sự Thật `SC01`
 - **Triệu chứng (Symptom):** Kịch bản bị nhồi câu dài $> 25$ âm tiết, đọc một lèo không phẩy $> 18$ âm tiết hoặc rải `[pause:800ms]` cơ học ngay ở `SC01`.
@@ -189,3 +166,27 @@ $$\text{1. Tái hiện E2E} \longrightarrow \text{2. Phân tích gốc rễ} \lo
 - **Giả định sai (Wrong Assumptions):** Nhầm tưởng kết nối CDP qua WebSocket luôn duy trì mà không cần tắt chế độ tiết kiệm bộ nhớ của Chrome; giả định lỗi transport giữa chừng là unrecoverable khiến batch ngừng retry.
 - **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Bổ sung 6 cờ Chrome ngăn discard/throttling; thiết lập `ping_interval=None, ping_timeout=None`; triển khai auto-reconnect trong `evaluate()`; gắn nhãn `retryable_pre_submit=True` khi đứt kết nối transport; bắt lỗi socket missing để tự động launch Chrome. 81/81 tests Flow CDP và 6/6 tests resilience pass 100%.
 - **Quy tắc phòng ngừa vàng (Golden Rule):** Luôn khởi chạy Chrome CDP với các cờ vô hiệu hóa Tab Discarding/Memory Saver; tắt websocket ping heartbeat mặc định trên CDP và cô lập lỗi transport pre-submit để kích hoạt retry/failover mượt mà.
+
+### [ERR-20261018-16] Chốt Chặn Sớm Sáo Rỗng Thị Giác (FLOW_CLICHE_FORBIDDEN)
+- **Triệu chứng (Symptom):** Lỗi `FLOW_CLICHE_FORBIDDEN` (như split screen/brain cutaway) bị phát hiện quá muộn tại trạm sinh ảnh sau khi đã duyệt kịch bản và tổng hợp xong toàn bộ audio WAV.
+- **Tái hiện E2E (Reproduction Path):** Chạy `pytest sys/tests/test_early_visual_cliche_gate.py -v`.
+- **Nguyên nhân cốt lõi (Root Cause):** Khâu duyệt `validate_content`/`validate_plan` và dựng cảnh `build_scenes_from_story_rows` chỉ kiểm tra cấu trúc/nhãn mà không đối chiếu từ khóa sáo rỗng trong `setting`, `action`, `description`, `preserve`, `change`, `visible_text`, `style` và `characters`.
+- **Giả định sai (Wrong Assumptions):** Nhầm tưởng linter prompt ở `image_pipeline.py` là đủ an toàn mà không tính đến chi phí token/TTS bị lãng phí khi crash muộn tại khâu ảnh.
+- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Xuất `find_visual_cliche` và `check_visual_prompt_text` tại `flow_prompts`; chặn sớm lỗi `FLOW_CLICHE_FORBIDDEN` ngay tại `content_contract.py`, `story_plan.py`, `research_story_architect.py`, và `script_diversity_linter.py`. 27/27 tests early gate và test suite sản xuất pass 100%.
+- **Quy tắc phòng ngừa vàng (Golden Rule):** Mọi ràng buộc từ khóa cấm của prompt AI phải được kiểm tra và chặn ngay từ khâu phê duyệt bản thảo nội dung (`content`); không bao giờ để lọt lỗi prompt xuống khâu sinh ảnh.
+
+### [ERR-20261018-17] Khóa Sở Hữu Ảnh Phụ Thuộc & Cách Ly base_media_id Xuyên Profile
+- **Triệu chứng (Symptom):** Lỗi `M2_FLOW: Pinned request ownership cannot be changed` khi sinh hoặc retry ảnh biến thể (`based_on`), khiến pipeline ảnh bị nghẽn.
+- **Tái hiện E2E (Reproduction Path):** Chạy `pytest sys/tests/test_multi_profile_manager.py sys/tests/test_flow_cdp_bridge.py sys/tests/test_patch_partitioner.py -v`.
+- **Nguyên nhân cốt lõi (Root Cause):** Profile Google Flow cách ly ID dự án; chia patch lớn làm rớt ảnh con sang worker khác; failover chuyển ảnh con mang `base_media_id` ngoại lai; sidecar thiếu `profile_id`.
+- **Giả định sai (Wrong Assumptions):** Nhầm tưởng `forgeId` có giá trị toàn cục giữa các Chrome profile và patch có thể tùy ý failover sang profile khác.
+- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Giữ chuỗi phụ thuộc nguyên tử qua `dependency_group_id`/`depends_on_patch_id`; cấm failover cho ảnh con phụ thuộc; điều phối DAG tuần tự khóa worker; ghi nhận và kế thừa `profile_id` qua sidecar `.json`. 43/43 tests pass 100%.
+- **Quy tắc phòng ngừa vàng (Golden Rule):** Ảnh phụ thuộc (`based_on`) phải gắn chặt vào profile của ảnh cha; tuyệt đối không chuyển giao ảnh phụ thuộc sang profile khác.
+
+### [ERR-20261018-18] Tự Động Đối Soát Request Flow & Đồng Bộ Sổ Cái Ngân Sách (FLOW_BUDGET & M2_AMBIGUOUS)
+- **Triệu chứng (Symptom):** Khi gặp timeout, mất kết nối websocket hoặc provider từ chối, pipeline ảnh bị kẹt vòng lặp `M2_AMBIGUOUS: reconcile request <key> before another submission` và `FLOW_BUDGET: Existing request: collect/reconcile, never resubmit`, treo cứng job chờ can thiệp thủ công.
+- **Tái hiện E2E (Reproduction Path):** Chạy `pytest sys/tests/test_flow_auto_reconcile.py -v`.
+- **Nguyên nhân cốt lõi (Root Cause):** Khâu gỡ kẹt `reconcile_stuck_conflict()` chỉ ghi `request.json` cục bộ mà không gọi `flow_management.sync()` để cập nhật sổ cái `budgets.json`; ảnh đã tải về đĩa không được tự động đối soát sang `downloaded`; các lỗi tiền gửi (captcha, no at token, transport close) bị đánh nhãn sai thành `ambiguous`; lệnh `flow-reconcile` bắt buộc phải có `--asset`.
+- **Giả định sai (Wrong Assumptions):** Nhầm tưởng cập nhật `state: not_submitted` trên file request là đủ mà không nhận ra `account_budget.py` kiểm tra độc lập trên `budgets.json`; giả định mọi timeout đều đã gửi thành công lên máy chủ.
+- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Bổ sung `auto_reconcile_attempt()` tự động xác nhận ảnh đã tải về đĩa; gắn cờ `generation_submitted = False` cho lỗi rớt mạng/tiền gửi; gọi `flow_management.sync()` trong mọi nhánh đối soát; cho phép `flow-reconcile` giải tỏa `not_submitted` kèm ảnh chụp bằng chứng UI khi không có asset. 5/5 test auto-reconcile và toàn bộ 37/37 test images v2 pass 100%.
+- **Quy tắc phòng ngừa vàng (Golden Rule):** Mọi thay đổi trạng thái request (downloaded, not_submitted) phải lập tức đồng bộ sang sổ cái `budgets.json` qua `flow_management.sync()`; lỗi trước khi gửi phải ghi nhận `not_submitted` để không gây kẹt đối soát.

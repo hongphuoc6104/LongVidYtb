@@ -52,10 +52,28 @@ def validate_plan(b, c):
     global_visible = c['style']+' '+json.dumps(b['planning']['text_style'],ensure_ascii=False)+' '+' '.join(x['appearance']+' '+x['outfit']+' '+x['name'] for x in c['characters'])
     if any(re.search(r'(?<!\w)'+re.escape(code)+r'(?!\w)', global_visible, re.I) for code in internal):
         fail('INTERNAL_LABEL','characters/style','Mã quản lý xuất hiện trong mô tả dùng tạo hình')
+    from flow_prompts import find_visual_cliche
+    if c.get('style'):
+        cliche = find_visual_cliche(c['style'])
+        if cliche:
+            fail('FLOW_CLICHE_FORBIDDEN', 'style', f"Style contains banned {cliche}")
+    for ch in c.get('characters', []):
+        for f in ('appearance', 'outfit', 'name'):
+            val = ch.get(f)
+            if val and isinstance(val, str):
+                cliche = find_visual_cliche(val)
+                if cliche:
+                    fail('FLOW_CLICHE_FORBIDDEN', f"{ch.get('id', 'character')}/{f}", f"Character {f} contains banned {cliche}")
     all_seen = set()
     for s, outline in zip(scenes, c['outline']):
         if outline['purpose'] != s['purpose'] or outline['requirements'] != s['requirements']:
             fail('OUTLINE', s['id'], 'Mục đích hoặc ý của cảnh khác dàn ý')
+        for f in ('setting', 'action', 'prompt', 'description', 'bg_description'):
+            val = s.get(f)
+            if val and isinstance(val, str):
+                cliche = find_visual_cliche(val)
+                if cliche:
+                    fail('FLOW_CLICHE_FORBIDDEN', s['id'], f"{f.capitalize()} contains banned {cliche}")
         scene_images = set()
         for im in s['images']:
             if im['id'] in all_images: fail('IMAGE_ID', s['id'], 'Mã ảnh trùng')
@@ -70,6 +88,24 @@ def validate_plan(b, c):
             visible += ' ' + ' '.join(x['text']+' '+x['placement']+' '+x['object'] for x in im['visible_text'])
             if any(re.search(r'(?<!\w)'+re.escape(code)+r'(?!\w)', visible, re.I) for code in internal):
                 fail('INTERNAL_LABEL', im['id'], 'Mã nội bộ không được đưa vào mô tả hình/chữ')
+            for field in ('description', 'preserve', 'change'):
+                val = im.get(field)
+                if val and isinstance(val, str):
+                    cliche = find_visual_cliche(val)
+                    if cliche:
+                        fail('FLOW_CLICHE_FORBIDDEN', im['id'], f"{field.capitalize()} contains banned {cliche}")
+            for vt in im.get('visible_text', []):
+                if isinstance(vt, str):
+                    cliche = find_visual_cliche(vt)
+                    if cliche:
+                        fail('FLOW_CLICHE_FORBIDDEN', im['id'], f"Visible text contains banned {cliche}")
+                elif isinstance(vt, dict):
+                    for subf in ('text', 'placement', 'object'):
+                        subval = vt.get(subf)
+                        if subval and isinstance(subval, str):
+                            cliche = find_visual_cliche(subval)
+                            if cliche:
+                                fail('FLOW_CLICHE_FORBIDDEN', im['id'], f"Visible text {subf} contains banned {cliche}")
             scene_images.add(im['id'])
             all_seen.add(im['id'])
         kinds = {im['id']: im.get('kind', 'scene') for im in s['images']}

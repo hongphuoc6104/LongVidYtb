@@ -1,6 +1,7 @@
 """Unit tests for Flow CDP patch partitioner."""
 import unittest
-from flow_cdp.patch_partitioner import PatchPartitioner, Patch
+
+from flow_cdp.patch_partitioner import Patch, PatchPartitioner
 
 
 class TestPatchPartitioner(unittest.TestCase):
@@ -13,7 +14,7 @@ class TestPatchPartitioner(unittest.TestCase):
     def test_independent_shots_partitioning(self):
         items = [{"testCase": f"shot-{i}", "prompt": f"prompt {i}", "ratio": "16:9"} for i in range(7)]
         patches = self.partitioner.partition(items)
-        
+
         # 7 items with target_size=3, max_size=4 should divide into ~2-3 patches
         self.assertGreaterEqual(len(patches), 2)
         total_items = sum(len(p.items) for p in patches)
@@ -31,11 +32,11 @@ class TestPatchPartitioner(unittest.TestCase):
             {"testCase": "scene-05", "prompt": "independent 2"},
         ]
         patches = self.partitioner.partition(items)
-        
+
         # Find patch containing scene-01
         p_with_01 = next(p for p in patches if any(x["testCase"] == "scene-01" for x in p.items))
         shot_ids = [x["testCase"] for x in p_with_01.items]
-        
+
         # scene-01, scene-02, scene-03 must be in the same patch in sequential order
         self.assertIn("scene-02", shot_ids)
         self.assertIn("scene-03", shot_ids)
@@ -102,7 +103,51 @@ class TestPatchPartitioner(unittest.TestCase):
         self.assertIn("item-1", patch.completed_items)
         self.assertNotIn("item-1", patch.failed_items)
 
+    def test_long_dependency_chain_links_dependency_group_and_sequential_patches(self):
+        # 6 items in sequential dependency chain with max_size=4, target_size=3
+        items = [{"testCase": f"seq-{i}", "prompt": f"P{i}"} for i in range(6)]
+        for i in range(1, 6):
+            items[i]["based_on"] = f"seq-{i-1}"
+        patches = self.partitioner.partition(items)
+        self.assertEqual(len(patches), 2)
+        p1, p2 = patches[0], patches[1]
+        self.assertIsNotNone(p1.dependency_group_id)
+        self.assertEqual(p1.dependency_group_id, p2.dependency_group_id)
+        self.assertIsNone(p1.depends_on_patch_id)
+        self.assertEqual(p2.depends_on_patch_id, p1.patch_id)
+
+    def test_chain_profile_pinning_propagated_to_all_chunks(self):
+        items = [{"testCase": f"seq-{i}", "prompt": f"P{i}"} for i in range(5)]
+        for i in range(1, 5):
+            items[i]["based_on"] = f"seq-{i-1}"
+        # Specify profile_id on one item in the chain
+        items[0]["profile_id"] = "profile_3"
+        patches = self.partitioner.partition(items)
+        for p in patches:
+            self.assertEqual(p.pinned_profile, "profile_3")
+
+    def test_resolve_item_profile_supports_dict_base_image(self):
+        item = {
+            "testCase": "shot-var",
+            "prompt": "Variation shot",
+            "base_image": {"target": "shot-parent", "path": "/tmp/parent.png", "profile_id": "profile_2"},
+        }
+        resolved = PatchPartitioner._resolve_item_profile(item)
+        self.assertEqual(resolved, "profile_2")
+
+    def test_conflicting_profiles_not_packed_into_same_patch(self):
+        items = [
+            {"testCase": "shot-p1", "prompt": "P1", "profile_id": "profile_1"},
+            {"testCase": "shot-p2", "prompt": "P2", "profile_id": "profile_2"},
+        ]
+        patches = self.partitioner.partition(items)
+        # Even though target_size=3 and total items=2, they must be partitioned into 2 distinct patches
+        self.assertEqual(len(patches), 2)
+        self.assertEqual(patches[0].pinned_profile, "profile_1")
+        self.assertEqual(patches[1].pinned_profile, "profile_2")
+
 
 if __name__ == "__main__":
     unittest.main()
+
 

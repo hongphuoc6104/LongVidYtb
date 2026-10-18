@@ -144,11 +144,14 @@ class TestMultiProfileManager(unittest.TestCase):
         cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
         cfg_profiles = cfg["flow_cdp_profiles"]
 
-        self.assertEqual(len(cfg_profiles), 6)
-        self.assertEqual(len(DEFAULT_PROFILES), 6)
-        self.assertEqual(len(PROFILES), 6)
+        self.assertEqual(len(cfg_profiles), 20)
+        self.assertEqual(len(DEFAULT_PROFILES), 20)
+        self.assertEqual(len(PROFILES), 20)
 
-        expected_ports = [9225, 9223, 9224, 9222, 9226, 9227]
+        expected_ports = [
+            9225, 9223, 9224, 9222, 9226, 9227, 9228, 9229, 9230, 9231,
+            9232, 9233, 9234, 9235, 9236, 9237, 9238, 9239, 9240, 9241,
+        ]
         self.assertEqual([p["port"] for p in cfg_profiles], expected_ports)
         self.assertEqual([p["port"] for p in DEFAULT_PROFILES], expected_ports)
         self.assertEqual([p["cdp_port"] for p in PROFILES], expected_ports)
@@ -204,6 +207,69 @@ class TestMultiProfileManager(unittest.TestCase):
 
         self.assertNotIn("Page.reload", called_methods)
         self.assertNotIn("Storage.clearDataForOrigin", called_methods)
+
+    def test_dependent_item_cannot_failover_to_foreign_profile(self):
+        dispatcher = MultiProfileDispatcher(self.manager, max_retries_per_patch=3)
+        patch = Patch(
+            patch_id="patch-dep-failover",
+            items=[
+                {"testCase": "shot-parent", "prompt": "Parent shot"},
+                {"testCase": "shot-child", "prompt": "Child shot", "based_on": "shot-parent"},
+            ],
+        )
+
+        attempts = []
+
+        def mock_executor(worker: ChromeProfileWorker, items: list[dict]):
+            attempts.append((worker.profile_id, [x["testCase"] for x in items]))
+            # Parent succeeds on worker p1
+            if worker.profile_id == "p1":
+                patch.mark_item_success("shot-parent", {"path": "/tmp/parent.png", "media_id": "forge-p1"})
+                error = RuntimeError("Temporary socket glitch before child submission")
+                error.generation_submitted = False
+                error.retryable_pre_submit = True
+                raise error
+            return [{"path": f"/tmp/{x['testCase']}.png", "media_id": f"forge-{x['testCase']}"} for x in items]
+
+        with self.assertRaises(RuntimeError) as ctx:
+            dispatcher.execute_patch_with_failover(patch, mock_executor)
+
+        self.assertIn("Cannot fail over patch", str(ctx.exception))
+        self.assertIn("depend on media produced by profile p1", str(ctx.exception))
+        # Verify it was NOT attempted on any foreign profile (p2 or p3)
+        self.assertEqual(len(attempts), 1)
+        self.assertEqual(attempts[0][0], "p1")
+
+    def test_dispatch_all_respects_inter_patch_dependencies_and_pins_profile(self):
+        dispatcher = MultiProfileDispatcher(self.manager)
+        p1 = Patch(
+            patch_id="p-dag-1",
+            items=[{"testCase": "dag-1", "prompt": "P1"}],
+            dependency_group_id="dep-dag",
+        )
+        p2 = Patch(
+            patch_id="p-dag-2",
+            items=[{"testCase": "dag-2", "prompt": "P2", "based_on": "dag-1"}],
+            dependency_group_id="dep-dag",
+            depends_on_patch_id="p-dag-1",
+        )
+
+        dispatch_log = []
+
+        def tracked_executor(worker: ChromeProfileWorker, items: list[dict]):
+            dispatch_log.append((worker.profile_id, [x["testCase"] for x in items], time.time()))
+            time.sleep(0.05)
+            return [{"path": f"/tmp/{x['testCase']}.png", "media_id": f"m-{x['testCase']}", "profile_id": worker.profile_id} for x in items]
+
+        results = dispatcher.dispatch_all([p1, p2], tracked_executor, max_concurrency=3)
+        self.assertEqual(len(results), 2)
+        self.assertEqual(len(dispatch_log), 2)
+        # p1 must execute before p2
+        self.assertEqual(dispatch_log[0][1], ["dag-1"])
+        self.assertEqual(dispatch_log[1][1], ["dag-2"])
+        self.assertLess(dispatch_log[0][2], dispatch_log[1][2])
+        # p2 must execute on the EXACT same worker profile as p1
+        self.assertEqual(dispatch_log[0][0], dispatch_log[1][0])
 
 
 if __name__ == "__main__":

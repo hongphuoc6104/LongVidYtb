@@ -86,7 +86,10 @@ def freeze_prompt_pin(p, job):
 
 def budgets(p, job):
     cfg = config(p, job)
-    return Budgets(cfg.get('flow_management_store') or cfg.get('colab_tts', {}).get('management_store'))
+    store = cfg.get('flow_management_store') or cfg.get('colab_tts', {}).get('management_store')
+    if not store and hasattr(p, 'root') and (p.root / 'budgets.json').is_file():
+        store = p.root
+    return Budgets(store)
 
 
 def before_send(p, job, folders, connection):

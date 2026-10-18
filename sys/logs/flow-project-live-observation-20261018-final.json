@@ -1,0 +1,347 @@
+{
+  "observed_at": "2026-10-18T17:17:17.809143+07:00",
+  "origin": "read-only observation of independently running production, not test-generated images",
+  "window_minutes": 15,
+  "downloaded": 25,
+  "pending": 1,
+  "recorded_errors": 0,
+  "all_images_verified": true,
+  "latency_seconds": {
+    "min": 26.65,
+    "median": 33.38,
+    "max": 45.85
+  },
+  "rows": [
+    {
+      "state": "downloaded",
+      "request_id": "583665653f7b1cd34230b940d7b86620b8f049113dfc62a20f647a3427c3d119",
+      "target": "SC09_I7_9x16",
+      "error": null,
+      "dimensions": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 32.37
+    },
+    {
+      "state": "downloaded",
+      "request_id": "691c8d919d025f2eb7008ab757ffe0b0dec4525f3ad4d1cf2dd37df191984007",
+      "target": "SC13_I1_9x16",
+      "error": null,
+      "dimensions": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 45.34
+    },
+    {
+      "state": "downloaded",
+      "request_id": "70a18c0ddbbaaac4df448011a9e6f6e1950804392b4f1111cfa27aadb6fd95f2",
+      "target": "SC12_I3_9x16",
+      "error": null,
+      "dimensions": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 35.24
+    },
+    {
+      "state": "downloaded",
+      "request_id": "5084285ecdb6e77c2a4405d7ef78a69283994eed3144c8a049f6e71090fd1ee0",
+      "target": "SC11_I4_9x16",
+      "error": null,
+      "dimensions": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 26.65
+    },
+    {
+      "state": "downloaded",
+      "request_id": "d8ffc0763cbdea17eaf933c29cb7c21cda7819ce2106ba542066b7596d0873fc",
+      "target": "SC10_I5_9x16",
+      "error": null,
+      "dimensions": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 34.72
+    },
+    {
+      "state": "downloaded",
+      "request_id": "80f7174e72bfc9ff897adec9e3c00ffc801b716d85a651ce3ccf48de0dff411d",
+      "target": "SC09_I3_9x16",
+      "error": null,
+      "dimensions": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 42.86
+    },
+    {
+      "state": "downloaded",
+      "request_id": "d8902b1ef7a9ebcdbef60761e7300dea0bb611c3d44dff81ef559b7f1b3145fb",
+      "target": "SC11_I6_9x16",
+      "error": null,
+      "dimensions": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 27.92
+    },
+    {
+      "state": "downloaded",
+      "request_id": "eed46052af90f4df5e514a39160066e7b8422faed72c95d35d1d94964436872d",
+      "target": "SC10_I1_9x16",
+      "error": null,
+      "dimensions": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 41.13
+    },
+    {
+      "state": "downloaded",
+      "request_id": "74a2dddb42c07b0342cc6993693b38c12e7dff746ad70c0ac8f22c6cec29e93a",
+      "target": "SC13_I3_9x16",
+      "error": null,
+      "dimensions": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 33.38
+    },
+    {
+      "state": "downloaded",
+      "request_id": "f331ef5f1a58826ca76aeb4c8d547905237af95e7f2cb14ccf473c97b29b91ca",
+      "target": "SC07_I1_9x16",
+      "error": null,
+      "dimensions": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 32.26
+    },
+    {
+      "state": "downloaded",
+      "request_id": "dc5038a68c18f7d85ba79f12d660758eaec964ac6ec150663b8b6f905f0cd89b",
+      "target": "SC08_I5_9x16",
+      "error": null,
+      "dimensions": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 31.27
+    },
+    {
+      "state": "downloaded",
+      "request_id": "d7973f35ca63f22e4564b474f0cc5cc85585782c563bbbda82cb90016b134daa",
+      "target": "SC13_I2_9x16",
+      "error": null,
+      "dimensions": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 45.47
+    },
+    {
+      "state": "downloaded",
+      "request_id": "a2edc481ce8bb4a2759529a77359dae48db01268d33821947d47e11895e44350",
+      "target": "SC08_I1_9x16",
+      "error": null,
+      "dimensions": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 28.74
+    },
+    {
+      "state": "downloaded",
+      "request_id": "a5fc2079426b0eb91b51ca0d2c21e03214315630d75e98ef2420896b3b273154",
+      "target": "SC14_I3_9x16",
+      "error": null,
+      "dimensions": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 31.95
+    },
+    {
+      "state": "downloaded",
+      "request_id": "d1c482b030187bc54d259ef564e94457b5f75b05e15931c57034540b72dffb44",
+      "target": "SC14_I1_9x16",
+      "error": null,
+      "dimensions": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 44.66
+    },
+    {
+      "state": "downloaded",
+      "request_id": "1f3000ea8c6d36ca5d391dda6344d1d7a3870b86aacd889f7daac069d74731cc",
+      "target": "SC10_I3_9x16",
+      "error": null,
+      "dimensions": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 30.18
+    },
+    {
+      "state": "downloaded",
+      "request_id": "ea6ec7ba37efee7fde27635357a809062a254c9d72e7d52afa89c60d6f05a2de",
+      "target": "SC07_I6_9x16",
+      "error": null,
+      "dimensions": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 34.2
+    },
+    {
+      "state": "downloaded",
+      "request_id": "8e1294c175c52b5a57048a60717f606c8bd8722f33f8a67bc81b1eca0e9c4b46",
+      "target": "SC07_I2_9x16",
+      "error": null,
+      "dimensions": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 38.18
+    },
+    {
+      "state": "downloaded",
+      "request_id": "10b31249b291393c8b6e5fc35b631b721bb6467b859560b0975bc9ae46daf55c",
+      "target": "SC12_I2_9x16",
+      "error": null,
+      "dimensions": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 33.19
+    },
+    {
+      "state": "downloaded",
+      "request_id": "f894159f08a31cef84f43e1f16b03ff5291457669a035de11fe52b1f948e93e6",
+      "target": "SC15_I1_9x16",
+      "error": null,
+      "dimensions": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 31.0
+    },
+    {
+      "state": "downloaded",
+      "request_id": "9a726c6fc12ffe36f83d440128e5bad39bf8396a171beac5b942cb905c7386a6",
+      "target": "SC11_I1_9x16",
+      "error": null,
+      "dimensions": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 29.86
+    },
+    {
+      "state": "downloaded",
+      "request_id": "df216527fcc9fc84eb604b162be66e2c005511507eeba36e6964633ed15f1c24",
+      "target": "SC08_I3_9x16",
+      "error": null,
+      "dimensions": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 40.5
+    },
+    {
+      "state": "downloaded",
+      "request_id": "30636b6457864858378f25ea444c376a4132a44c7a9b0b2fdaad795558c66997",
+      "target": "SC12_I1_9x16",
+      "error": null,
+      "dimensions": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 30.63
+    },
+    {
+      "state": "downloaded",
+      "request_id": "b119ac76562eb3da99bfeec40ddc1a0859c209267a4e3c3d78a3bf060a251f2f",
+      "target": "SC09_I1_9x16",
+      "error": null,
+      "dimensions": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 40.02
+    },
+    {
+      "state": "submitted",
+      "request_id": "420ca813bbfaaf544bbee214273aea399e3441fd1d6e8b5f504bdc93660e8001",
+      "target": "SC15_I2_9x16",
+      "error": null
+    },
+    {
+      "state": "downloaded",
+      "request_id": "9fedafd42919ce2bd715fb668c7e98ff86a38f1a37ff8df515fbdab36fcb2526",
+      "target": "SC14_I2_9x16",
+      "error": null,
+      "dimensions": [
+        768,
+        1376
+      ],
+      "sha256_matches": true,
+      "provider_media_id_present": true,
+      "latency_seconds": 45.85
+    }
+  ]
+}

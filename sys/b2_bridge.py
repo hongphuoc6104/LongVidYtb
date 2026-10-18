@@ -59,36 +59,22 @@ def query_status(timeout: float | None = None, sock_path: Path | None = None) ->
             if attempt < retries:
                 time.sleep(backoff * (attempt + 1))
     if last_exc:
-        from flow_cdp.cdp_direct_client import PROFILES, is_port_open
-        if any(is_port_open(p["cdp_port"]) for p in PROFILES):
-            return {
-                "status": "connected",
-                "identity": {
-                    "observedProfile": str(Path(PROFILES[0]["user_data_dir"]).expanduser() / PROFILES[0]["profile_dir"]),
-                    "toolUrl": PROFILES[0]["url"],
-                }
-            }
         raise last_exc
     return {"status": "not_connected"}
 
 
 def ensure_connected(sock_path: Path | None = None) -> dict[str, Any]:
     _cdp.ROOT = ROOT
-    from flow_cdp.cdp_direct_client import PROFILES, ensure_chrome_profiles_launched, is_port_open
-    if any(is_port_open(p["cdp_port"]) for p in PROFILES):
-        return {
-            "status": "connected",
-            "identity": {
-                "observedProfile": str(Path(PROFILES[0]["user_data_dir"]).expanduser() / PROFILES[0]["profile_dir"]),
-                "toolUrl": PROFILES[0]["url"],
-            }
-        }
     try:
         status = query_status(sock_path=sock_path)
         if status.get("status") == "connected":
             return status
         result = send_raw_command("connect", timeout=75.0)
+        if result.get("status") != "connected":
+            raise Blocked(f"Flow connection blocked: {result.get('reason', 'not connected')}")
+        return result
     except Exception as exc:
+        from flow_cdp.cdp_direct_client import PROFILES, ensure_chrome_profiles_launched, is_port_open
         exc_str = str(exc).lower()
         if "socket not found" in exc_str:
             ensure_chrome_profiles_launched()
@@ -100,9 +86,6 @@ def ensure_connected(sock_path: Path | None = None) -> dict[str, Any]:
                 }
             }
         raise _mark_not_submitted(exc) from exc
-    if result.get("status") != "connected":
-        raise Blocked(f"Flow connection blocked: {result.get('reason', 'not connected')}")
-    return result
 
 
 def generate_b2_image(*args, **kwargs) -> dict[str, Any]:

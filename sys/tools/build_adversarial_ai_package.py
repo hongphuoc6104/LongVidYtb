@@ -392,7 +392,7 @@ STORY_9X16: list[tuple[str, str, str, str, str, list[tuple[str, str]]]] = [
     ),
     (
         'So sánh câu lệnh lười vs câu lệnh đối kháng',
-        'A vertical split screen contrasting lazy prompting with adversarial commanding.',
+        'A vertical comparative studio contrasting lazy prompting with adversarial commanding.',
         'analytical_crisp',
         'decisive_prompts',
         'actionable_resolution',

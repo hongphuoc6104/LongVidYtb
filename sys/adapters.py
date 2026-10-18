@@ -196,6 +196,29 @@ def gflow(p,*args,timeout=960,flow_job=None):
     canvas.save(dest_img, quality=95)
     b2_res = {'path': str(dest_img), 'forge_id': 'FORGE-CANONICAL-MASCOT', 'latency': 0.1}
   else:
+   target_profile = _get_arg('--profile-id')
+   if not target_profile and base_img:
+    base_sidecar = Path(base_img).with_suffix('.json')
+    if base_sidecar.is_file():
+     try:
+      target_profile = read(base_sidecar).get('profile_id')
+     except Exception:
+      pass
+    if not target_profile:
+     for cand in (Path(base_img).resolve().parent / 'owner.json', Path(base_img).resolve().parent.parent / 'owner.json'):
+      if cand.is_file():
+       try:
+        cand_owner = read(cand)
+        cand_path = cand_owner.get('profile_path', '')
+        for prof in read(p.root / 'config.json').get('flow_cdp_profiles', []):
+         if prof.get('directory') and prof.get('directory') in cand_path:
+          target_profile = prof['id']
+          break
+       except Exception:
+        pass
+       if target_profile:
+        break
+
    b2_res = b2_bridge.generate_b2_image(
     prompt=prompt,
     ratio=ratio,
@@ -209,6 +232,7 @@ def gflow(p,*args,timeout=960,flow_job=None):
     timeout=timeout,
     collection_only='--collect-only' in args_list,
     before_submit=(lambda connection: __import__('flow_management').before_send(p, flow_job, [Path(_get_arg('--evidence-out', str(out_folder.parent)))], connection)) if modern else None,
+    profile_id=target_profile or '',
     **({'model': frozen_flow['flow_model'], 'project': frozen_flow['flow_project'], 'tool_url': frozen_flow.get('flow_tool_url'), 'job_id': flow_job} if modern else {}),
    )
    src_img = Path(b2_res['path'])
@@ -227,7 +251,8 @@ def gflow(p,*args,timeout=960,flow_job=None):
     'source': 'google-flow-browser',
     'status': 'downloaded',
     'forgeId': b2_res.get('forge_id'),
-    'latency': b2_res.get('latency')
+    'latency': b2_res.get('latency'),
+    'profile_id': b2_res.get('profile_id') or target_profile or '',
    }
    dest_img.with_suffix('.json').write_text(json.dumps(meta, indent=2), encoding='utf-8')
 
@@ -274,9 +299,22 @@ def gflow(p,*args,timeout=960,flow_job=None):
   mascot = p.root / 'assets/characters/channel-mascot/reference-v1.png'
   for offset in range(0, len(jobs), 4):
    group = jobs[offset:offset+4]
-   specs = [{'testCase': job['id'], 'prompt': job['prompt'], 'ratio': job.get('ratio', '9:16'),
-             'outDir': str(batch_out / job['id']), 'characterRefPath': str(mascot) if mascot.is_file() else None,
-             'charMediaId': _canonical_mascot_media_id(p, flow_job) if mascot.is_file() else None} for job in group]
+   specs = []
+   for job in group:
+    b_ref = job.get('baseRefPath') or job.get('base_ref_path') or job.get('base_image')
+    b_path = b_ref['path'] if isinstance(b_ref, dict) else b_ref
+    b_mid = job.get('baseMediaId') or (b_ref.get('forgeId') or b_ref.get('media_id') if isinstance(b_ref, dict) else None)
+    p_id = job.get('profile_id') or (b_ref.get('profile_id') if isinstance(b_ref, dict) else None)
+    specs.append({
+     'testCase': job['id'], 'prompt': job['prompt'], 'ratio': job.get('ratio', '9:16'),
+     'outDir': str(batch_out / job['id']),
+     'characterRefPath': str(mascot) if mascot.is_file() else None,
+     'charMediaId': _canonical_mascot_media_id(p, flow_job) if mascot.is_file() else None,
+     'baseRefPath': str(b_path) if b_path else None,
+     'baseMediaId': b_mid,
+     'based_on': job.get('based_on'),
+     'profile_id': p_id,
+    })
    modern = flow_job is not None and __import__('execution').is_job(p, flow_job)
    if modern:
     frozen_flow = __import__('flow_management').config(p, flow_job)
@@ -315,7 +353,8 @@ def gflow(p,*args,timeout=960,flow_job=None):
      chars = job.get('character', [])
      write(dst.with_suffix('.json'), {'jobId':job['id'], 'type':'image', 'prompt':job['prompt'],
            'ratio':job.get('ratio','9:16'), 'characters':chars, 'source':'google-flow-browser',
-           'status':'downloaded', 'forgeId':result['media_id']})
+           'status':'downloaded', 'forgeId':result['media_id'],
+           'profile_id': result.get('profile_id') or getattr(spec, 'get', lambda k: '')('profile_id', '')})
      ev = batch_out / '.evidence' / job['id']; ev.mkdir(parents=True, exist_ok=True)
      if result.get('before_submit'): shutil.copy(result['before_submit'], ev / 'before-submit.png')
      proof={'passed':True, 'mode':'image', 'characters':chars,

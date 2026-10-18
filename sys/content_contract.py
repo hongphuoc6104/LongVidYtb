@@ -60,6 +60,10 @@ def validate_brief(root,b):
     errors.append(error('PACKAGING_CONTRACT', 'packaging', pw, 'Đảm bảo youtube_title <= 55 ký tự, thumbnail_spec có text_overlay 2-4 từ in hoa và đúng ngách học thuật.'))
   except ImportError:
    pass
+ if b.get('style'):
+  from flow_prompts import find_visual_cliche
+  cliche = find_visual_cliche(b['style'])
+  if cliche: errors.append(error('FLOW_CLICHE_FORBIDDEN', 'style', f"Style contains banned {cliche}", 'Thay thế phong cách sáo rỗng trong brief.'))
  if errors: raise ContractError(errors)
 
 def validate_content(root,b,revision,bhash,p):
@@ -134,6 +138,42 @@ def validate_content(root,b,revision,bhash,p):
      fail('UNNORMALIZED_FOREIGN_TOKEN', s['id'], f'Lời dẫn chứa từ ngoại lai/số chưa chuẩn hóa ngữ âm: {bad_tokens}', 'Bổ sung phiên âm tiếng Việt vào vn_text_normalizer.py trước khi tổng hợp TTS.')
    except ImportError:
     pass
+ # Visual prompt cliché validation (FLOW_CLICHE_FORBIDDEN)
+ from flow_prompts import find_visual_cliche
+ if p.get('style'):
+  cliche = find_visual_cliche(p['style'])
+  if cliche: fail('FLOW_CLICHE_FORBIDDEN', 'style', f"Style contains banned {cliche}", 'Thay thế phong cách sáo rỗng bằng phong cách chuẩn.')
+ for ch in p.get('characters', []):
+  for field in ('appearance', 'outfit', 'name'):
+   val = ch.get(field)
+   if val and isinstance(val, str):
+    cliche = find_visual_cliche(val)
+    if cliche: fail('FLOW_CLICHE_FORBIDDEN', f"{ch.get('id', 'character')}/{field}", f"Character {field} contains banned {cliche}", 'Thay thế mô tả nhân vật sáo rỗng bằng tạo hình chuẩn.')
+ for s in p['scenes']:
+  for field in ('setting', 'prompt', 'action', 'description', 'bg_description'):
+   val = s.get(field)
+   if val and isinstance(val, str):
+    cliche = find_visual_cliche(val)
+    if cliche: fail('FLOW_CLICHE_FORBIDDEN', f"{s['id']}/{field}", f"{field.capitalize()} contains banned {cliche}", 'Thay thế mô tả sáo rỗng bằng chi tiết bối cảnh cụ thể.')
+  beats_or_images = list(s.get('images', [])) + list(s.get('visual_beats', [])) + list(s.get('beats', []))
+  for im in beats_or_images:
+   im_id = (im.get('id') if isinstance(im, dict) else getattr(im, 'image_id', None)) or s['id']
+   for field in ('description', 'preserve', 'change'):
+    val = im.get(field) if isinstance(im, dict) else getattr(im, field, None)
+    if val and isinstance(val, str):
+     cliche = find_visual_cliche(val)
+     if cliche: fail('FLOW_CLICHE_FORBIDDEN', f"{im_id}/{field}", f"{field.capitalize()} contains banned {cliche}", 'Thay thế mô tả sáo rỗng bằng chi tiết thị giác cụ thể.')
+   vts = im.get('visible_text', []) if isinstance(im, dict) else getattr(im, 'visible_text', [])
+   for vt in vts or []:
+    if isinstance(vt, str):
+     cliche = find_visual_cliche(vt)
+     if cliche: fail('FLOW_CLICHE_FORBIDDEN', f"{im_id}/visible_text", f"Visible text contains banned {cliche}", 'Thay thế chữ hiển thị sáo rỗng.')
+    elif isinstance(vt, dict):
+     for subf in ('text', 'placement', 'object'):
+      subval = vt.get(subf)
+      if subval and isinstance(subval, str):
+       cliche = find_visual_cliche(subval)
+       if cliche: fail('FLOW_CLICHE_FORBIDDEN', f"{im_id}/visible_text.{subf}", f"Visible text {subf} contains banned {cliche}", 'Thay thế chữ hiển thị sáo rỗng.')
  if errors: raise ContractError(errors)
  if p.get('schema_version')=='3.0':
   from scripts.visual_quality import (
