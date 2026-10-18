@@ -98,3 +98,11 @@ def test_kernel_health_does_not_compete_with_another_alias_of_a_busy_identity(tm
             value = kernel_health('/bin/false', 'another-alias', 'tts', identity='google:fixture', lock_dir=tmp_path)
         assert value == {'verified': False, 'reason': 'busy'}
         remote.assert_not_called()
+
+
+def test_account_snapshot_never_waits_for_job_hashing(tmp_path):
+    app = Dashboard(tmp_path/'system', home=tmp_path/'home')
+    with patch.object(app, 'jobs', side_effect=AssertionError('Account view must not read video jobs')):
+        value = app.snapshot(include_jobs=False)
+    assert value['jobs'] == []
+    assert 'colab_health' in value['inventory']

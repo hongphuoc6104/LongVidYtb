@@ -28,6 +28,9 @@ class DashboardTests(unittest.TestCase):
  def test_eight_tabs_and_real_state(self):
   code,page,headers=self.request('GET','/');self.assertEqual(code,200);self.assertIn(b'/app.js',page);self.assertIn("frame-ancestors 'none'",headers['Content-Security-Policy'])
   js=(Path(__file__).parents[1]/'dashboard/static/app.js').read_text();self.assertEqual(js.split('const names=')[1].split(';')[0].count("','")+1,8);self.assertEqual(self.app.snapshot()['jobs'][0]['checkpoints'][0]['revision'],1)
+ def test_resources_endpoint_is_fast_account_metadata_without_job_execution(self):
+  status,body,_=self.request('GET','/api/resources');value=json.loads(body)
+  self.assertEqual(status,200);self.assertEqual(value['jobs'],[]);self.assertIn('csrf',value);self.assertEqual(self.calls,[])
  def test_exact_revision_public_cli(self):
   self.assertEqual(self.request('POST','/api/actions/approve',{'job':'test-job','phase':'audio','revision':1,'note':'Đồng ý'},self.token_headers())[0],200)
   self.assertIn(['approve','test-job','audio','--revision','1','--note','Đồng ý'],self.calls)
