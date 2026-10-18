@@ -237,7 +237,7 @@ class Dashboard:
         except sqlite3.Error:
             return []
 
-    def snapshot(self):
+    def snapshot(self, *, include_jobs=True):
         inventory = discover(self.home, self.root)
         from colab_bridge.scheduler import read_json
         colab_health = read_json(self.budgets.path.parent/'colab-health.json')
@@ -286,7 +286,7 @@ class Dashboard:
         with self.operation_lock:
             operations = safe(list(self.operations.values()))
         issues = self.root / 'logs/issues/INDEX.md'
-        return {'jobs': self.jobs(), 'inventory': safe(inventory), 'session': safe(self.sessions.read()), 'setup': self.setup_status(),
+        return {'jobs': self.jobs() if include_jobs else [], 'inventory': safe(inventory), 'session': safe(self.sessions.read()), 'setup': self.setup_status(),
                 'operations': operations, 'issues': safe(issues.read_text()) if issues.is_file() else '',
                 'settings': {'execution': 'CLI chính thức', 'processing': 'Colab', 'images': 'Flow',
                              'auth_probe': 'not_tested', 'provider_quota': 'not_verified'}, 'observed_at': time.time()}

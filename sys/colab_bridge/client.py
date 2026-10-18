@@ -124,7 +124,8 @@ class Client:
                       binary=self.binary, store=manager.store)
         try:
             with manager.claim(candidates, session=self.session, request=request, journal=journal,
-                               exact=exact, wait_seconds=float(self.cfg.get('queue_wait_seconds', 15))) as account:
+                               exact=exact, wait_seconds=float(self.cfg.get('queue_wait_seconds', 15)),
+                               collection_only=saved.get('phase') in ('submitted', 'ambiguous', 'complete')) as account:
                 self.account = account
                 yield
         except PoolUnavailable as ex:

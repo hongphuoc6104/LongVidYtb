@@ -1,5 +1,7 @@
 # Visual style, transport fixtures and CI evidence lessons
 
+Repository-wide CI also installs ffprobe/ffmpeg for real media inspection of test audio. Reconciliation fixtures choose an explicit synthetic account and keep their account registry patched for the entire test; they never depend on the machine's live account pool or default policy. Local success with a populated account registry does not prove CI isolation.
+
 ### [ERR-20261018-07] Light-value 2D stick figures and moderately simplified backgrounds
 - **Symptom:** Images retain the requested stick-figure style but look dark, heavy and cluttered; even bright rooms use strong black outlines and many small background objects.
 - **Reproduction Path:** Inspect the eight historical images and saved prompts in the visual-tone audit; compare six genuine Flow recreations under sys/runs/soft-pastel-style-review-20261018. Run pytest sys/tests/test_soft_visual_style.py and the prompt/full-frame/remote suites.
