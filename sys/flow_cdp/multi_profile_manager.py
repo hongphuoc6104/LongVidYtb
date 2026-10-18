@@ -317,7 +317,7 @@ class MultiProfileDispatcher:
         patch: Any,
         executor_func: Callable[[ChromeProfileWorker, list[dict[str, Any]]], list[dict[str, Any]]],
     ) -> list[dict[str, Any]]:
-        """Execute a single patch, failing over to another profile if abnormal activity occurs.
+        """Fail over only after an explicitly retryable, proven pre-send transport failure.
         Only uncompleted items in the patch are retried.
         """
         excluded_workers: set[str] = set()
@@ -353,6 +353,8 @@ class MultiProfileDispatcher:
                     patch.patch_id, len(pending_items), worker.profile_id, worker.port
                 )
                 results = executor_func(worker, pending_items)
+                if len(results) != len(pending_items):
+                    raise RuntimeError('FLOW_PARTIAL_RESULTS: preserve requests and reconcile missing results')
                 for item, res in zip(pending_items, results, strict=False):
                     item_id = str(item.get("testCase") or item.get("id") or "")
                     patch.mark_item_success(item_id, res)
@@ -367,12 +369,15 @@ class MultiProfileDispatcher:
                     patch.patch_id, worker.profile_id, error_str
                 )
                 self.manager.release_worker(worker, success=False, error=error_str)
-                # If managed under a specific job, dynamically lease a replacement from pool
+                # Unknown or provider-blocked submissions must retain their owner.
+                # A retry requires explicit evidence that no generation was sent.
+                proven_unsent = getattr(ex, "generation_submitted", None) is False
+                retryable = getattr(ex, "retryable_pre_submit", False) is True
+                hard_stop = bool(re.search(r"captcha|unusual.activity|\b(?:401|403|429|503)\b|quota|bot.detect|provider.blocked|unauthorized|authentication|login", error_str, re.I))
+                if hard_stop or not proven_unsent or not retryable:
+                    raise
                 if getattr(self.manager, "job_id", None):
                     self.manager.replace_worker_for_job(worker, reason=error_str)
-                # If the failure is a fundamental pre-submission contract violation, fail immediately
-                if getattr(ex, "generation_submitted", None) is False:
-                    raise ex
                 excluded_workers.add(worker.profile_id)
                 patch.retry_count += 1
                 # Mark individual failed item if identified, leaving completed items intact
@@ -410,25 +415,40 @@ class MultiProfileDispatcher:
         errors: list[Exception] = []
 
         max_workers = max(1, min(max_concurrency, len(self.manager.workers)))
+        remaining = iter(patches)
         with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as pool:
-            futures = {
-                pool.submit(self.execute_patch_with_failover, patch, executor_func): patch
-                for patch in patches
-            }
-            for fut in concurrent.futures.as_completed(futures):
-                try:
-                    patch_res = fut.result()
-                    all_results.extend(patch_res)
-                except Exception as ex:
-                    errors.append(ex)
+            # Keep unstarted patches out of the executor. Once a terminal failure
+            # arrives, collect already-running work without sending the remainder.
+            futures: dict[concurrent.futures.Future, Any] = {}
+
+            def fill_capacity() -> None:
+                while len(futures) < max_workers:
+                    patch = next(remaining, None)
+                    if patch is None:
+                        break
+                    future = pool.submit(self.execute_patch_with_failover, patch, executor_func)
+                    futures[future] = patch
+
+            fill_capacity()
+            while futures:
+                done, _ = concurrent.futures.wait(futures, return_when=concurrent.futures.FIRST_COMPLETED)
+                # Observe every completed failure before scheduling more work.
+                for future in done:
+                    futures.pop(future)
+                    try:
+                        all_results.extend(future.result())
+                    except Exception as ex:
+                        errors.append(ex)
+                if not errors:
+                    fill_capacity()
 
         if errors:
-            if len(errors) == 1:
+            if not all_results and all(getattr(error, 'generation_submitted', None) is False for error in errors):
                 raise errors[0]
-            for err in errors:
-                if getattr(err, "generation_submitted", None) is False:
-                    raise err
-            raise errors[0]
+            raise RuntimeError(
+                'FLOW_PARTIAL_BATCH: stopped queued work; preserve original ownership '
+                f'and reconcile every unresolved request. First failure: {errors[0]}'
+            ) from errors[0]
 
         return all_results
 

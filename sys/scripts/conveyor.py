@@ -115,6 +115,8 @@ def station_2_test_ast() -> bool:
         SYS_DIR / "tests/test_colab_accounts.py",
         SYS_DIR / "tests/test_colab_health.py",
         SYS_DIR / "tests/test_colab_scheduler.py",
+        SYS_DIR / "tests/test_multi_profile_manager.py",
+        SYS_DIR / "tests/test_flow_batch_stop.py",
     ]
     # Check AST on test directory
     ast_ok, ast_report = check_test_suite_integrity([SYS_DIR / "tests"])

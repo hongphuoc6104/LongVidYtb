@@ -149,3 +149,11 @@ $$\text{1. Tái hiện E2E} \longrightarrow \text{2. Phân tích gốc rễ} \lo
 - **Wrong Assumptions:** A successful API command or visible green check guarantees machine evidence can be decoded, or only the first passing run needs validation.
 - **Resolution & E2E Proof:** Request an explicit jq @base64 envelope, decode strictly, then apply the unchanged all-runs/exact-commit/success validation. Regression coverage preserves pending runs and rejects malformed/TOON envelopes; live API results confirm the envelope works.
 - **Golden Rule:** Separate display formatting from the machine evidence protocol. Never weaken CI validation to obtain a certificate.
+
+### [ERR-20261018-11] Stop queued Flow patches after a terminal failure
+- **Symptom:** A Flow batch continues waiting through cooldowns and invoking remaining patches after the first provider refusal.
+- **Reproduction Path:** An offline six-patch, one-worker probe injects PUBLIC_ERROR_UNUSUAL_ACTIVITY with a 0.1-second fixture cooldown; the old dispatcher invokes six callbacks in 2.502 seconds. No browser or provider request is involved.
+- **Root Cause:** dispatch_all eagerly submits every patch to the executor and waits for all futures even after a terminal error. Per-patch refusal protection does not stop the queued batch.
+- **Wrong Assumptions:** Stopping retries within one patch also stops unstarted patches, or local fixture timings certify real Google recovery.
+- **Resolution & E2E Proof:** Bound scheduling to available workers; after observing an error, collect only in-flight work and preserve the unsent remainder. Nine offline regressions include 1,000 requests without profile overlap, refusal categories, unsent failures and partial collection. Live image acceptance remains blocked by disabled browser control; see sys/docs/flow-recovery-load-test.md.
+- **Golden Rule:** Stop scheduling immediately on a terminal error, preserve every submitted owner, and distinguish offline control-flow evidence from live provider recovery.

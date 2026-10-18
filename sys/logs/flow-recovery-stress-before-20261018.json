@@ -1,0 +1,8 @@
+{
+  "kind": "offline-control-flow-only",
+  "patches": 6,
+  "executor_calls": 6,
+  "elapsed_seconds": 2.502,
+  "error": "FLOW_PARTIAL_BATCH: preserve original ownership and reconcile every unresolved request",
+  "live_provider_requests": 0
+}
