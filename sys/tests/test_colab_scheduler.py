@@ -69,6 +69,16 @@ def test_pending_journal_from_legacy_runner_is_imported(pool):
         assert selected == "two"
 
 
+def test_identical_request_hash_in_another_job_does_not_bypass_pending_owner(pool):
+    root, manager = pool
+    old = root/'runs/old/cache/colab-tts/same/state.json'
+    old.parent.mkdir(parents=True)
+    old.write_text(json.dumps({'phase': 'ambiguous', 'account': 'one', 'request_id': 'same'}))
+    with manager.claim(['one', 'two'], session='tts', request='same',
+                       journal=root/'runs/new/cache/colab-tts/same/state.json', exact=False) as selected:
+        assert selected == 'two'
+
+
 def test_global_default_does_not_disable_pool_but_exact_binding_wins():
     cfg = {"colab_tts": {"account": "auto-idle"}}
     selection = {"defaults": {"colab": "colab:one"}}

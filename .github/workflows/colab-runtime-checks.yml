@@ -20,6 +20,10 @@ jobs:
           python-version: '3.12'
       - name: Install test dependencies
         run: python -m pip install -r sys/requirements-dev.txt pytest
+      - name: Install media inspection tools for WAV contract fixtures
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes ffmpeg
       - name: Verify account claims, recovery and dashboard contracts
         run: >-
           python -m pytest -q

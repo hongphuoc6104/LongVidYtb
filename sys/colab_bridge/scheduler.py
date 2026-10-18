@@ -59,7 +59,7 @@ class RuntimeScheduler:
                 time.sleep(delay)
             self._write(path, {"started_at": time.time()})
 
-    def pending(self, account: str, request: str) -> list[Path]:
+    def pending(self, account: str, request: str, journal: Path) -> list[Path]:
         """Import old journals too; an exited runner never frees an unknown remote send."""
         identity = self.identity(account)
         paths = set((self.root / "runs").glob("*/cache/colab-*/*/state.json"))
@@ -69,7 +69,7 @@ class RuntimeScheduler:
                 if (
                     saved.get("phase") in PENDING
                     and self.identity(saved["account"]) == identity
-                    and saved.get("request_id") != request
+                    and (saved.get("request_id") != request or Path(saved['journal']).resolve() != journal.resolve())
                     and not Path(saved["journal"]).is_file()
                 ):
                     blocked_path = Path(saved["journal"])
@@ -83,7 +83,7 @@ class RuntimeScheduler:
                 state.get("phase") in PENDING
                 and owner
                 and self.identity(owner) == identity
-                and state.get("request_id") != request
+                and (state.get("request_id") != request or path.resolve() != journal.resolve())
             ):
                 blocked.append(path)
         return blocked
@@ -132,7 +132,7 @@ class RuntimeScheduler:
                             fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
                     except BlockingIOError:
                         continue
-                    if self.pending(account, request):
+                    if self.pending(account, request, journal):
                         continue
                     record = self.directory / (key + ".json")
                     value = {
