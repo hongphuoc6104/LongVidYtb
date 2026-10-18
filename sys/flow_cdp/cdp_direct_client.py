@@ -301,6 +301,12 @@ def ensure_chrome_profiles_launched(profiles: list[dict[str, Any]] | None = None
                 "--remote-allow-origins=*",
                 "--no-first-run",
                 "--no-default-browser-check",
+                "--disable-features=CalculateNativeWinOcclusion,IntensiveWakeUpThrottling,AutomaticTabDiscarding,MemorySaverMode",
+                "--disable-background-timer-throttling",
+                "--disable-backgrounding-occluded-windows",
+                "--disable-renderer-backgrounding",
+                "--disable-dev-shm-usage",
+                "--disable-hang-monitor",
                 p["url"],
             ],
             env=env,
@@ -402,7 +408,13 @@ class DirectCDPProfileSession:
         pid = self._extract_project_id(cur_url)
         if pid:
             self.project_id = pid
-        self.ws = await websockets.connect(ws_url, max_size=64 * 1024 * 1024)
+        self.ws = await websockets.connect(
+            ws_url,
+            max_size=64 * 1024 * 1024,
+            ping_interval=None,
+            ping_timeout=None,
+            close_timeout=10,
+        )
         self._reader_task = asyncio.create_task(self._reader())
         await self.call("Page.enable")
         await self.call("Runtime.enable")
@@ -450,6 +462,31 @@ class DirectCDPProfileSession:
         if not has_mint:
             await self.evaluate(CDP_RECAPTCHA_GUARD_JS, await_promise=False)
 
+    async def reconnect(self) -> None:
+        """Re-acquire flow target and re-establish CDP websocket connection."""
+        if self._reader_task and not self._reader_task.done():
+            self._reader_task.cancel()
+        if self.ws:
+            try:
+                await self.ws.close()
+            except Exception:
+                pass
+            self.ws = None
+        target = get_flow_target(self.cdp_port)
+        ws_url = target["webSocketDebuggerUrl"]
+        self.ws = await websockets.connect(
+            ws_url,
+            max_size=64 * 1024 * 1024,
+            ping_interval=None,
+            ping_timeout=None,
+            close_timeout=10,
+        )
+        self._reader_task = asyncio.create_task(self._reader())
+        await self.call("Page.enable")
+        await self.call("Runtime.enable")
+        await self.call("Page.addScriptToEvaluateOnNewDocument", {"source": CDP_RECAPTCHA_GUARD_JS})
+        await self.evaluate(CDP_RECAPTCHA_GUARD_JS, await_promise=False)
+
     async def close(self) -> None:
         if self._reader_task:
             self._reader_task.cancel()
@@ -466,17 +503,24 @@ class DirectCDPProfileSession:
                     if not fut.done():
                         fut.set_result(msg)
         except Exception as e:
-            for fut in self.pending.values():
+            for fut in list(self.pending.values()):
                 if not fut.done():
                     fut.set_exception(e)
+            self.pending.clear()
 
     async def call(self, method: str, params: dict | None = None, timeout: float = 60.0) -> dict:
+        if self.ws is None or getattr(self.ws, "closed", True):
+            await self.reconnect()
         self.msg_id += 1
         mid = self.msg_id
         fut = asyncio.get_running_loop().create_future()
         self.pending[mid] = fut
-        await self.ws.send(json.dumps({"id": mid, "method": method, "params": params or {}}))
-        res = await asyncio.wait_for(fut, timeout=timeout)
+        try:
+            await self.ws.send(json.dumps({"id": mid, "method": method, "params": params or {}}))
+            res = await asyncio.wait_for(fut, timeout=timeout)
+        except Exception:
+            self.pending.pop(mid, None)
+            raise
         if "error" in res:
             raise RuntimeError(f"CDP error in {method}: {res['error']}")
         return res.get("result", {})
@@ -484,6 +528,8 @@ class DirectCDPProfileSession:
     async def evaluate(self, expression: str, await_promise: bool = True, timeout: float = 120.0) -> Any:
         for attempt in range(3):
             try:
+                if self.ws is None or getattr(self.ws, "closed", True):
+                    await self.reconnect()
                 res = await self.call(
                     "Runtime.evaluate",
                     {"expression": expression, "awaitPromise": await_promise, "returnByValue": True},
@@ -493,10 +539,28 @@ class DirectCDPProfileSession:
                     exc = res["exceptionDetails"]
                     raise RuntimeError(f"JS exception: {exc.get('text')} {exc.get('exception', {}).get('description', '')}")
                 return res.get("result", {}).get("value")
-            except RuntimeError as err:
-                if "navigated or closed" in str(err).lower() and attempt < 2:
-                    await asyncio.sleep(2.0)
+            except (RuntimeError, websockets.exceptions.ConnectionClosed, OSError) as err:
+                err_str = str(err).lower()
+                is_recoverable = (
+                    "navigated or closed" in err_str
+                    or "no close frame" in err_str
+                    or "connectionclosed" in err_str
+                    or isinstance(err, (websockets.exceptions.ConnectionClosed, OSError))
+                )
+                if is_recoverable and attempt < 2:
+                    await asyncio.sleep(0.5 * (attempt + 1))
+                    if self.ws:
+                        try:
+                            await self.ws.close()
+                        except Exception:
+                            pass
+                        self.ws = None
                     continue
+                if isinstance(err, (websockets.exceptions.ConnectionClosed, OSError)) or "no close frame" in err_str:
+                    err_wrap = RuntimeError(f"CDP_TRANSPORT_CLOSED: {err}")
+                    err_wrap.generation_submitted = False
+                    err_wrap.retryable_pre_submit = True
+                    raise err_wrap from err
                 raise
 
     async def generate_image(
@@ -550,7 +614,13 @@ class DirectCDPProfileSession:
         """
         out = await self.evaluate(js_code, await_promise=True, timeout=180.0)
         if not isinstance(out, dict) or out.get("error"):
-            raise RuntimeError(out.get("error") if isinstance(out, dict) else "NO_CDP_RESPONSE")
+            err_msg = out.get("error") if isinstance(out, dict) else "NO_CDP_RESPONSE"
+            err = RuntimeError(str(err_msg))
+            if isinstance(out, dict) and out.get("submitted") is False:
+                err.generation_submitted = False
+            elif any(pat in str(err_msg) for pat in ("CAPTCHA_FAILED", "NO_AT_TOKEN", "CDP_TRANSPORT_CLOSED", "Failed to fetch")):
+                err.generation_submitted = False
+            raise err
         raw_text = out.get("text", "")
         try:
             payload = flow_rpc.first_payload(raw_text, flow_rpc.RPC_GEN_IMAGE)
@@ -622,7 +692,13 @@ class DirectCDPProfileSession:
         """
         out = await self.evaluate(js_code, await_promise=True, timeout=180.0)
         if not isinstance(out, dict) or out.get("error"):
-            raise RuntimeError(out.get("error") if isinstance(out, dict) else "NO_CDP_RESPONSE")
+            err_msg = out.get("error") if isinstance(out, dict) else "NO_CDP_RESPONSE"
+            err = RuntimeError(str(err_msg))
+            if isinstance(out, dict) and out.get("submitted") is False:
+                err.generation_submitted = False
+            elif any(pat in str(err_msg) for pat in ("CAPTCHA_FAILED", "NO_AT_TOKEN", "CDP_TRANSPORT_CLOSED", "Failed to fetch")):
+                err.generation_submitted = False
+            raise err
         raw_text = out.get("text", "")
         try:
             payload = flow_rpc.first_payload(raw_text, flow_rpc.RPC_GEN_IMAGE)

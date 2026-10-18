@@ -74,7 +74,7 @@ def query_status(timeout: float | None = None, sock_path: Path | None = None) ->
 
 def ensure_connected(sock_path: Path | None = None) -> dict[str, Any]:
     _cdp.ROOT = ROOT
-    from flow_cdp.cdp_direct_client import PROFILES, is_port_open, ensure_chrome_profiles_launched
+    from flow_cdp.cdp_direct_client import PROFILES, ensure_chrome_profiles_launched, is_port_open
     if any(is_port_open(p["cdp_port"]) for p in PROFILES):
         return {
             "status": "connected",
@@ -83,20 +83,23 @@ def ensure_connected(sock_path: Path | None = None) -> dict[str, Any]:
                 "toolUrl": PROFILES[0]["url"],
             }
         }
-    status = query_status(sock_path=sock_path)
-    if status.get("status") == "connected":
-        return status
     try:
+        status = query_status(sock_path=sock_path)
+        if status.get("status") == "connected":
+            return status
         result = send_raw_command("connect", timeout=75.0)
-    except Exception:
-        ensure_chrome_profiles_launched()
-        return {
-            "status": "connected",
-            "identity": {
-                "observedProfile": str(Path(PROFILES[0]["user_data_dir"]).expanduser() / PROFILES[0]["profile_dir"]),
-                "toolUrl": PROFILES[0]["url"],
+    except Exception as exc:
+        exc_str = str(exc).lower()
+        if "socket not found" in exc_str:
+            ensure_chrome_profiles_launched()
+            return {
+                "status": "connected",
+                "identity": {
+                    "observedProfile": str(Path(PROFILES[0]["user_data_dir"]).expanduser() / PROFILES[0]["profile_dir"]),
+                    "toolUrl": PROFILES[0]["url"],
+                }
             }
-        }
+        raise _mark_not_submitted(exc) from exc
     if result.get("status") != "connected":
         raise Blocked(f"Flow connection blocked: {result.get('reason', 'not connected')}")
     return result

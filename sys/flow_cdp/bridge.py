@@ -62,10 +62,13 @@ def _mark_not_submitted(exc: Blocked) -> Blocked:
 def send_raw_command(command: str, timeout: float = 120.0, sock_path: Path | None = None) -> dict[str, Any]:
     target_sock = sock_path or get_socket_path()
     if not target_sock.exists():
-        raise Blocked(
+        exc = Blocked(
             f"Flow CDP session socket not found at {target_sock}. "
             "Ensure flow-cdp session service is running."
         )
+        exc.generation_submitted = False
+        exc.retryable_pre_submit = True
+        raise exc
     try:
         parent = target_sock.parent.lstat()
         endpoint = target_sock.lstat()
@@ -148,8 +151,6 @@ def query_status(timeout: float | None = None, sock_path: Path | None = None) ->
 
 def ensure_connected(sock_path: Path | None = None) -> dict[str, Any]:
     target_sock = sock_path if (sock_path is not None and sock_path != get_socket_path()) else None
-    if is_session_available(target_sock):
-        return query_status(sock_path=target_sock)
     from .cdp_direct_client import PROFILES, ensure_chrome_profiles_launched, is_port_open
     if any(is_port_open(p["cdp_port"]) for p in PROFILES):
         return {
@@ -159,12 +160,25 @@ def ensure_connected(sock_path: Path | None = None) -> dict[str, Any]:
                 "toolUrl": PROFILES[0]["url"],
             }
         }
+    if is_session_available(target_sock):
+        return query_status(sock_path=target_sock)
+
     try:
         if target_sock is not None and target_sock.exists():
             result = send_raw_command("connect", timeout=75.0, sock_path=target_sock)
         else:
             result = send_raw_command("connect", timeout=75.0)
-    except Exception:
+    except Exception as exc:
+        exc_str = str(exc).lower()
+        if "socket not found" in exc_str:
+            ensure_chrome_profiles_launched()
+            return {
+                "status": "connected",
+                "identity": {
+                    "observedProfile": str(Path(PROFILES[0]["user_data_dir"]).expanduser() / PROFILES[0]["profile_dir"]),
+                    "toolUrl": PROFILES[0]["url"],
+                }
+            }
         ensure_chrome_profiles_launched()
         return {
             "status": "connected",
@@ -224,7 +238,10 @@ def _execute_via_cdp_direct(specs: list[dict[str, Any]], timeout: float = 240.0,
     try:
         ensure_chrome_profiles_launched([selected_cfg])
     except Exception as exc:
-        raise _mark_not_submitted(Blocked(str(exc))) from exc
+        err = Blocked(str(exc))
+        err.generation_submitted = False
+        err.retryable_pre_submit = True
+        raise _mark_not_submitted(err) from exc
 
     async def _run():
         sess = DirectCDPProfileSession(selected_cfg)
@@ -234,7 +251,10 @@ def _execute_via_cdp_direct(specs: list[dict[str, Any]], timeout: float = 240.0,
                 await sess.connect()
                 await sess._wait_for_flow_ready(timeout=15.0)
             except Exception as exc:
-                raise _mark_not_submitted(Blocked(str(exc))) from exc
+                err = Blocked(str(exc))
+                err.generation_submitted = False
+                err.retryable_pre_submit = True
+                raise _mark_not_submitted(err) from exc
             for spec in specs:
                 start_t = time.time()
                 prompt = spec["prompt"]
@@ -243,14 +263,22 @@ def _execute_via_cdp_direct(specs: list[dict[str, Any]], timeout: float = 240.0,
                 ref_media_ids = [spec["charMediaId"]] if spec.get("charMediaId") else None
                 model = "BELUGA"
 
-                res = await sess.generate_image(
-                    prompt=prompt,
-                    aspect=aspect,
-                    model=model,
-                    base_media_id=base_media_id,
-                    ref_media_ids=ref_media_ids,
-                )
-                out_dir = Path(spec["outDir"]).resolve()
+                try:
+                    res = await sess.generate_image(
+                        prompt=prompt,
+                        aspect=aspect,
+                        model=model,
+                        base_media_id=base_media_id,
+                        ref_media_ids=ref_media_ids,
+                    )
+                except Exception as exc:
+                    exc_str = str(exc).lower()
+                    if "no close frame" in exc_str or "connectionclosed" in exc_str or "cdp_transport_closed" in exc_str:
+                        if getattr(exc, "generation_submitted", None) is None:
+                            exc.generation_submitted = False
+                            exc.retryable_pre_submit = True
+                    raise
+                out_dir = Path(spec.get("outDir") or spec.get("out_dir") or (SYS_ROOT / "experiments/b2_illustrator/results/controller")).resolve()
                 out_dir.mkdir(parents=True, exist_ok=True)
                 dest_img = out_dir / "result.jpg"
 
@@ -264,13 +292,35 @@ def _execute_via_cdp_direct(specs: list[dict[str, Any]], timeout: float = 240.0,
                     im.verify()
 
                 latency = round(time.time() - start_t, 2)
+                profile_name = selected_cfg.get("name") or getattr(worker, "profile_id", "profile_1")
                 items.append({
                     "request_id": spec["testCase"],
                     "path": str(dest_img),
                     "forge_id": res["media_id"],
                     "latency": latency,
                     "sha256": digest(dest_img),
+                    "profile_id": profile_name,
                 })
+                sidecar_file = dest_img.with_suffix(".json")
+                if sidecar_file.is_file():
+                    try:
+                        sc_data = json.loads(sidecar_file.read_text(encoding="utf-8"))
+                        sc_data["profile_id"] = profile_name
+                        sidecar_file.write_text(json.dumps(sc_data, indent=2), encoding="utf-8")
+                    except Exception:
+                        pass
+                else:
+                    sidecar_data = {
+                        "jobId": spec.get("testCase"),
+                        "type": "image",
+                        "prompt": spec.get("prompt"),
+                        "ratio": aspect,
+                        "source": "google-flow-browser",
+                        "status": "downloaded",
+                        "forgeId": res["media_id"],
+                        "profile_id": profile_name,
+                    }
+                    sidecar_file.write_text(json.dumps(sidecar_data, indent=2), encoding="utf-8")
         finally:
             if sess.ws is not None:
                 await sess.ws.close()
@@ -306,16 +356,14 @@ def _execute_sub_batch(specs: list[dict[str, Any]], timeout: float = 240.0, sock
         _mark_not_submitted(exc)
         raise
 
-    if (target_sock is None or not target_sock.exists()) and not get_socket_path().exists():
-        return _execute_via_cdp_direct(specs, timeout=timeout, worker=worker)
-
     try:
         if target_sock is not None and target_sock.exists():
             result = send_raw_command(f"tool-snapshot:queue:{manifest}", timeout=max(timeout, 240), sock_path=target_sock)
         else:
             result = send_raw_command(f"tool-snapshot:queue:{manifest}", timeout=max(timeout, 240))
     except Blocked as exc:
-        if "session socket not found" in str(exc).lower():
+        exc_msg = str(exc).lower()
+        if "socket not found" in exc_msg or "communication error" in exc_msg:
             return _execute_via_cdp_direct(specs, timeout=timeout, worker=worker)
         raise
 
@@ -335,6 +383,19 @@ def _execute_sub_batch(specs: list[dict[str, Any]], timeout: float = 240.0, sock
         if item.get("request_id") != spec["testCase"] or not Path(item["path"]).is_file():
             raise Blocked("Flow CDP result mapping failed")
         item["sha256"] = digest(Path(item["path"]))
+        if "profile_id" not in item or not item["profile_id"]:
+            item["profile_id"] = getattr(worker, "profile_id", None) or spec.get("profile_id") or ""
+        if item.get("profile_id"):
+            img_path = Path(item["path"])
+            sidecar_file = img_path.with_suffix(".json")
+            if sidecar_file.is_file():
+                try:
+                    s_data = json.loads(sidecar_file.read_text(encoding="utf-8"))
+                    if not s_data.get("profile_id"):
+                        s_data["profile_id"] = item["profile_id"]
+                        sidecar_file.write_text(json.dumps(s_data, indent=2), encoding="utf-8")
+                except Exception:
+                    pass
     return items
 
 
@@ -361,6 +422,30 @@ def generate_cdp_image(
     job_id: str | None = None,
 ) -> dict[str, Any]:
     """Generate a single image via Flow CDP."""
+    if not profile_id and base_ref_path:
+        base_sidecar = Path(base_ref_path).with_suffix(".json")
+        if base_sidecar.is_file():
+            try:
+                sc = json.loads(base_sidecar.read_text(encoding="utf-8"))
+                profile_id = sc.get("profile_id") or sc.get("profile") or ""
+            except Exception:
+                pass
+        if not profile_id:
+            base_p = Path(base_ref_path).resolve()
+            for cand in (base_p.parent / "owner.json", base_p.parent.parent / "owner.json"):
+                if cand.is_file():
+                    try:
+                        owner = json.loads(cand.read_text(encoding="utf-8"))
+                        owner_path = owner.get("profile_path", "")
+                        for p in _config().get("flow_cdp_profiles", []):
+                            if p.get("directory") and p.get("directory") in owner_path:
+                                profile_id = p["id"]
+                                break
+                    except Exception:
+                        pass
+                if profile_id:
+                    break
+
     try:
         require_queue_acceptance()
         if profile_id:
@@ -394,6 +479,8 @@ def generate_cdp_image(
         "baseMediaId": base_media_id,
         "charMediaId": char_media_id,
     }
+    if profile_id:
+        spec["profile_id"] = profile_id
     if not use_character_ref and char_ref_path is None:
         spec["useCharacterRef"] = False
     if model is not None:
@@ -419,21 +506,34 @@ def generate_cdp_batch(
     patch_size = cfg.get("patch_size", 3)
     profiles_cfg = cfg.get("flow_cdp_profiles", None)
 
-    # If small batch (1-4) and single profile specified, or socket is already active for this single profile
-    if len(specs) <= 4 and (not use_multi_profile or not profiles_cfg or len(profiles_cfg) <= 1):
-        sock = get_socket_path(profile_id)
-        return _execute_sub_batch(specs, timeout=timeout, sock_path=sock, before_submit=before_submit)
+    for spec in specs:
+        if profile_id:
+            spec.setdefault("profile_id", profile_id)
+        elif not spec.get("profile_id") and spec.get("baseRefPath"):
+            sidecar = Path(spec["baseRefPath"]).with_suffix(".json")
+            if sidecar.is_file():
+                try:
+                    sc = json.loads(sidecar.read_text(encoding="utf-8"))
+                    cand_pid = sc.get("profile_id") or sc.get("profile")
+                    if cand_pid:
+                        spec["profile_id"] = cand_pid
+                except Exception:
+                    pass
 
-    # Multi-patch & multi-profile parallel execution
-    partitioner = PatchPartitioner(target_size=patch_size, min_size=2, max_size=4)
-    patches = partitioner.partition(specs)
+    target_profile = profile_id or (specs[0].get("profile_id") if (specs and all(s.get("profile_id") == specs[0].get("profile_id") for s in specs if s.get("profile_id"))) else "")
 
     job_id = None
     if specs and isinstance(specs[0], dict):
         job_id = specs[0].get("job_id") or specs[0].get("jobId") or specs[0].get("testCase")
 
+    if profiles_cfg and target_profile:
+        matched_target = [prof for prof in profiles_cfg if prof["id"] == target_profile]
+        if matched_target:
+            profiles_cfg = matched_target
+
     if profiles_cfg and job_id:
         from execution import is_job, settings
+
         from pilot import Pilot
         p_obj = Pilot()
         try:
@@ -452,6 +552,26 @@ def generate_cdp_batch(
         finally:
             p_obj.db.close()
 
+    # If small batch (1-4) and single profile specified, or socket is already active for this single profile
+    if len(specs) <= 4 and (target_profile or not use_multi_profile or not profiles_cfg or len(profiles_cfg) <= 1):
+        effective_profile = target_profile or profile_id
+        sock = get_socket_path(effective_profile)
+        assigned_worker = None
+        if effective_profile and profiles_cfg:
+            pw = next((p for p in profiles_cfg if p["id"] == effective_profile), None)
+            if pw:
+                assigned_worker = ChromeProfileWorker(
+                    profile_id=pw["id"],
+                    port=pw.get("port", 9222),
+                    directory=pw.get("directory", "Default"),
+                    user_data_dir=pw.get("user_data_dir", "~/.config/google-chrome"),
+                )
+        return _execute_sub_batch(specs, timeout=timeout, sock_path=sock, before_submit=before_submit, worker=assigned_worker)
+
+    # Multi-patch & multi-profile parallel execution
+    partitioner = PatchPartitioner(target_size=patch_size, min_size=2, max_size=4)
+    patches = partitioner.partition(specs)
+
     workers_needed = max(1, min(len(patches), len(profiles_cfg))) if patches else 1
     manager = MultiProfileManager(profiles_config=profiles_cfg, job_id=job_id, max_workers_per_job=workers_needed)
     try:
@@ -462,7 +582,11 @@ def generate_cdp_batch(
             # If per-worker socket doesn't exist, fall back to default socket
             if not sock.exists() and get_socket_path().exists():
                 sock = get_socket_path()
-            return _execute_sub_batch(patch_items, timeout=timeout, sock_path=sock, before_submit=before_submit, worker=worker)
+            sub_results = _execute_sub_batch(patch_items, timeout=timeout, sock_path=sock, before_submit=before_submit, worker=worker)
+            for r in sub_results:
+                if "profile_id" not in r or not r["profile_id"]:
+                    r["profile_id"] = worker.profile_id
+            return sub_results
 
         return dispatcher.dispatch_all(patches, worker_executor, max_concurrency=max(1, len(manager.workers)))
     finally:

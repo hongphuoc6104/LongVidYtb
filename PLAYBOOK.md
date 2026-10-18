@@ -20,21 +20,7 @@ $$\text{1. Tái hiện E2E} \longrightarrow \text{2. Phân tích gốc rễ} \lo
 - **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Profile 07 uses centered layout, white/amber text, transparent background, thin text outline, no word scaling and compact groups from measured word starts. Regression tests verify token preservation, alignment fallback and responsive styles; static preview verifies appearance without rendering video.
 - **Quy tắc phòng ngừa vàng (Golden Rule):** Center the entire caption group; preserve transcript tokens and measured timing. Missing alignment must retain the full cue instead of inventing word timings. Static previews do not prove audiovisual sync.
 
-### [ERR-20261010-08] Chuẩn Hóa Ngữ Âm Tiếng Việt & Cắt Khoảng Lặng Nội Sinh OmniVoice
-- **Triệu chứng (Symptom):** Giọng đọc `OmniVoice` (`VietNarrator`) phát âm sai chữ số/từ mượn tiếng Anh và bị khựng nhịp (`0.65s–1.35s`) giữa các câu.
-- **Tái hiện E2E (Reproduction Path):** Chạy `pytest sys/tests/test_colab_worker.py sys/tests/test_script_cadence_checker.py -v` với văn bản chứa số hoặc WAV chưa cắt lặng.
-- **Nguyên nhân cốt lõi (Root Cause):** Tokenizer đa ngữ đọc chữ số theo âm vị tiếng Anh, đồng thời `OmniVoice.generate()` tự sinh khoảng lặng nội sinh đầu/cuối câu cộng dồn với khoảng nghỉ ghép câu.
-- **Giả định sai (Wrong Assumptions):** Nhầm tưởng TTS tự đọc số sang tiếng Việt và xuất sóng âm sát mép âm tiết mà không có khoảng lặng dư thừa.
-- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Chuẩn hóa 100% văn bản qua `sys/tools/vn_text_normalizer.py` và cắt khoảng lặng bằng `_trim_silence(lead_ms=25, trail_ms=30, fade_ms=8)` trong `sys/colab_bridge/worker.py`.
-- **Quy tắc phòng ngừa vàng (Golden Rule):** Mọi kịch bản cấp cho `OmniVoice` phải đi qua `vn_text_normalizer.py` (lọc sạch `[pause:...]`, số và từ ngoại lai) và cắt khoảng lặng nội sinh trước khi trộn âm.
-
-### [ERR-20261010-09] Đồng Bộ Canonical JSON Hash Giữa Thượng Nguồn Và `pilot.py`
-- **Triệu chứng (Symptom):** `pilot.py check_draft` từ chối `content.json` với lỗi `BRIEF_VERSION` dù nội dung hợp lệ.
-- **Tái hiện E2E (Reproduction Path):** Chạy `pytest sys/tests/test_research_story_architect.py -k test_pilot_check_draft_direct_compatibility`.
-- **Nguyên nhân cốt lõi (Root Cause):** Công cụ thượng nguồn băm chuỗi JSON nén trong khi `pilot.py` băm byte file ghi với `indent=2, ensure_ascii=False`.
-- **Giả định sai (Wrong Assumptions):** Giả định mã băm dictionary trong bộ nhớ trùng khớp với `digest(file)` trên đĩa.
-- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Dùng hàm duy nhất `serialize_brief_json()` (`indent=2, ensure_ascii=False`) cho cả khâu tính `brief_hash` và ghi đĩa.
-- **Quy tắc phòng ngừa vàng (Golden Rule):** Luôn tính `brief_hash` trực tiếp trên chuỗi byte canonical giống hệt định dạng ghi xuống đĩa.
+> Historical entries [ERR-20261010-08] (OmniVoice Phonetics) and [ERR-20261010-09] (Canonical JSON Hash) are archived in .agents/skills/vp-troubleshooting/references/historical-playbook.md.
 
 ### [ERR-20261011-01] Tách Biệt Hồ Sơ Định Dạng SSOT (`short_9x16` & `long_16x9`)
 - **Triệu chứng (Symptom):** Trộn lẫn thông số phụ đề, vùng trống đáy ảnh (`caption_clearance`) và tỷ lệ khung hình giữa video ngắn `9:16` và video dài `16:9`.
@@ -195,3 +181,11 @@ $$\text{1. Tái hiện E2E} \longrightarrow \text{2. Phân tích gốc rễ} \lo
 - **Giả định sai (Wrong Assumptions):** Nhầm tưởng `flock` luôn tự động nhả khi crash mà không tính đến subprocess kế thừa FD; giả định pool luôn có profile rảnh để thay thế.
 - **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Thiết lập `FD_CLOEXEC` trên mọi lock handle; bổ sung kiểm tra `is_pid_alive` để tự động thu hồi lease của PID chết; bảo vệ lease profile đơn trong `replace_profile`; bổ sung `refresh_workers` và chẩn đoán pool vào `dispatch_all`. Đạt 63/63 test pytest 100% green.
 - **Quy tắc phòng ngừa vàng (Golden Rule):** Luôn gán cờ `FD_CLOEXEC` cho lock descriptor; kiểm tra liveness PID trước khi coi profile là bận; không bao giờ nhả lease của worker suy biến nếu chưa tìm được profile thay thế hợp lệ.
+
+### [ERR-20261018-15] Khôi Phục Kết Nối Direct CDP & Chống Rơi WebSocket Hàng Đợi Ảnh
+- **Triệu chứng (Symptom):** Hàng đợi sinh ảnh bị sập toàn bộ các futures khi WebSocket CDP đóng bất thường (`no close frame received or sent`) hoặc báo lỗi `Socket Not Found` (`/tmp/video-pilot-1000/flow-*.sock`) trước khi Chrome kịp khởi động.
+- **Tái hiện E2E (Reproduction Path):** Chạy `pytest sys/tests/test_flow_cdp_resilience.py -v`.
+- **Nguyên nhân cốt lõi (Root Cause):** Chrome thiếu cờ ngăn Background Throttling/Memory Saver/AutomaticTabDiscarding khiến renderer bị ngủ; client `websockets` dùng `ping_interval=20s` gây rớt kết nối giả 1006 khi trang xử lý nặng; `b2_bridge` gọi `query_status()` ném lỗi socket missing trước khối bọc khởi tạo; `evaluate()` không tự động kết nối lại khi rơi transport.
+- **Giả định sai (Wrong Assumptions):** Nhầm tưởng kết nối CDP qua WebSocket luôn duy trì mà không cần tắt chế độ tiết kiệm bộ nhớ của Chrome; giả định lỗi transport giữa chừng là unrecoverable khiến batch ngừng retry.
+- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Bổ sung 6 cờ Chrome ngăn discard/throttling; thiết lập `ping_interval=None, ping_timeout=None`; triển khai auto-reconnect trong `evaluate()`; gắn nhãn `retryable_pre_submit=True` khi đứt kết nối transport; bắt lỗi socket missing để tự động launch Chrome. 81/81 tests Flow CDP và 6/6 tests resilience pass 100%.
+- **Quy tắc phòng ngừa vàng (Golden Rule):** Luôn khởi chạy Chrome CDP với các cờ vô hiệu hóa Tab Discarding/Memory Saver; tắt websocket ping heartbeat mặc định trên CDP và cô lập lỗi transport pre-submit để kích hoạt retry/failover mượt mà.
