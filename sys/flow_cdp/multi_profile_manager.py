@@ -179,6 +179,33 @@ class MultiProfileManager:
             for prof_id in list(self.workers.keys()):
                 self.lease_manager.release_profile(self.job_id, prof_id)
 
+    def refresh_workers(self, timeout: float = 30.0) -> int:
+        """Attempt to re-acquire leased profiles if workers pool is empty or degraded."""
+        if not self.lease_manager or not self.job_id:
+            return len(self.workers)
+
+        with self._lock:
+            needed = max(1, self.max_workers_per_job - len(self.workers))
+            if needed > 0:
+                active = self.lease_manager.lease_profiles(
+                    job_id=self.job_id,
+                    pool_profiles=self.pool_profiles,
+                    count=self.max_workers_per_job,
+                    max_profiles_per_job=max(self.max_workers_per_job, len(self.pool_profiles)),
+                    timeout=timeout,
+                )
+                for p in active:
+                    prof_id = p["id"]
+                    if prof_id not in self.workers:
+                        w = ChromeProfileWorker(
+                            profile_id=prof_id,
+                            port=int(p.get("port", 9222)),
+                            directory=p.get("directory", "Default"),
+                            user_data_dir=p.get("user_data_dir", "~/.config/google-chrome"),
+                        )
+                        self.workers[prof_id] = w
+            return len(self.workers)
+
     def replace_worker_for_job(
         self,
         failed_worker: ChromeProfileWorker,
@@ -233,10 +260,20 @@ class MultiProfileManager:
                 ],
             }
 
-    def acquire_healthy_worker(self, exclude_ids: set[str] | None = None) -> ChromeProfileWorker | None:
-        """Acquire the next available healthy worker, optionally excluding certain profiles."""
+    def acquire_healthy_worker(
+        self,
+        exclude_ids: set[str] | None = None,
+        target_profile_id: str | None = None,
+    ) -> ChromeProfileWorker | None:
+        """Acquire the next available healthy worker, optionally targeting a specific profile or excluding certain profiles."""
         exclude = exclude_ids or set()
         with self._lock:
+            if target_profile_id:
+                worker = self.workers.get(target_profile_id)
+                if worker and worker.profile_id not in exclude and worker.is_available:
+                    worker.mark_busy()
+                    return worker
+                return None
             # Check for available workers
             candidates = [w for w in self.workers.values() if w.profile_id not in exclude and w.is_available]
             if not candidates:
@@ -312,6 +349,37 @@ class MultiProfileDispatcher:
         self.manager = profile_manager or MultiProfileManager()
         self.max_retries_per_patch = max_retries_per_patch
 
+    @staticmethod
+    def _get_required_profile(patch: Any, pending_items: list[dict[str, Any]]) -> str | None:
+        """Identify if this patch must be pinned to a specific worker profile."""
+        if getattr(patch, "pinned_profile", None):
+            return str(patch.pinned_profile)
+        for it in pending_items:
+            p_id = it.get("profile_id") or it.get("profile")
+            if p_id:
+                return str(p_id)
+            base_ref = it.get("baseRefPath") or it.get("base_ref_path") or it.get("base_image")
+            if base_ref:
+                try:
+                    sc = Path(str(base_ref)).with_suffix(".json")
+                    if sc.is_file():
+                        sc_data = json.loads(sc.read_text(encoding="utf-8"))
+                        cand = sc_data.get("profile_id") or sc_data.get("profile")
+                        if cand:
+                            return str(cand)
+                except Exception:
+                    pass
+        # Check if pending items depend on items completed earlier in this patch
+        assigned = getattr(patch, "assigned_profile", None)
+        completed = getattr(patch, "completed_items", None)
+        if assigned and completed:
+            completed_ids = set(completed.keys())
+            for it in pending_items:
+                parent_id = it.get("based_on") or it.get("base_shot") or it.get("parent_id")
+                if parent_id and str(parent_id) in completed_ids:
+                    return str(assigned)
+        return None
+
     def execute_patch_with_failover(
         self,
         patch: Any,
@@ -319,6 +387,7 @@ class MultiProfileDispatcher:
     ) -> list[dict[str, Any]]:
         """Fail over only after an explicitly retryable, proven pre-send transport failure.
         Only uncompleted items in the patch are retried.
+        Dependent items (based_on) completed on a worker profile MUST NOT fail over to a different profile.
         """
         excluded_workers: set[str] = set()
 
@@ -329,20 +398,44 @@ class MultiProfileDispatcher:
                 patch.status = "completed"
                 break
 
-            worker = self.manager.acquire_healthy_worker(exclude_ids=excluded_workers)
+            required_profile = self._get_required_profile(patch, pending_items)
+            if required_profile:
+                patch.pinned_profile = required_profile
+
+            if required_profile:
+                if required_profile in excluded_workers:
+                    raise RuntimeError(
+                        f"Cannot fail over patch {patch.patch_id} with dependency items to a different profile. "
+                        f"Target profile {required_profile} encountered error and ownership is pinned."
+                    )
+                worker = self.manager.acquire_healthy_worker(
+                    exclude_ids=excluded_workers,
+                    target_profile_id=required_profile,
+                )
+            else:
+                worker = self.manager.acquire_healthy_worker(exclude_ids=excluded_workers)
+
             if not worker:
-                # If all excluded or in cooldown, wait up to 65s for worker/cooldown to pass
+                # If worker unavailable or in cooldown, wait up to 65s for worker/cooldown to pass
                 wait_start = time.time()
                 while not worker and (time.time() - wait_start < 65.0):
                     time.sleep(0.5)
-                    worker = self.manager.acquire_healthy_worker(exclude_ids=excluded_workers)
-                    if not worker and (time.time() - wait_start > 30.0):
-                        worker = self.manager.acquire_healthy_worker()
+                    if required_profile:
+                        if required_profile in excluded_workers:
+                            break
+                        worker = self.manager.acquire_healthy_worker(
+                            exclude_ids=excluded_workers,
+                            target_profile_id=required_profile,
+                        )
+                    else:
+                        worker = self.manager.acquire_healthy_worker(exclude_ids=excluded_workers)
+                        if not worker and (time.time() - wait_start > 30.0):
+                            worker = self.manager.acquire_healthy_worker()
                 if not worker:
                     if last_exc is not None:
                         raise last_exc
                     raise RuntimeError(
-                        f"All Chrome profiles in cooldown or blocked: {self.manager.get_status()}"
+                        f"All Chrome profiles (required: {required_profile or 'any'}) in cooldown or blocked: {self.manager.get_status()}"
                     )
 
             patch.assigned_profile = worker.profile_id
@@ -357,6 +450,8 @@ class MultiProfileDispatcher:
                     raise RuntimeError('FLOW_PARTIAL_RESULTS: preserve requests and reconcile missing results')
                 for item, res in zip(pending_items, results, strict=False):
                     item_id = str(item.get("testCase") or item.get("id") or "")
+                    if "profile_id" not in res or not res["profile_id"]:
+                        res["profile_id"] = worker.profile_id
                     patch.mark_item_success(item_id, res)
 
                 self.manager.release_worker(worker, success=True)
@@ -376,6 +471,27 @@ class MultiProfileDispatcher:
                 hard_stop = bool(re.search(r"captcha|unusual.activity|\b(?:401|403|429|503)\b|quota|bot.detect|provider.blocked|unauthorized|authentication|login", error_str, re.I))
                 if hard_stop or not proven_unsent or not retryable:
                     raise
+                # Check if pending items have dependency on items completed on this worker
+                has_dep_on_completed = False
+                if getattr(patch, "completed_items", None):
+                    c_ids = set(patch.completed_items.keys())
+                    for it in pending_items:
+                        p_id = it.get("based_on") or it.get("base_shot") or it.get("parent_id")
+                        if p_id and str(p_id) in c_ids:
+                            has_dep_on_completed = True
+                            break
+
+                if has_dep_on_completed or required_profile:
+                    excluded_workers.add(worker.profile_id)
+                    patch.retry_count += 1
+                    for item in pending_items:
+                        item_id = str(item.get("testCase") or item.get("id") or item.get("job_id") or item.get("request_id") or "")
+                        if item_id not in patch.completed_items:
+                            patch.mark_item_failure(item_id, f"Cannot fail over dependent shot to foreign profile: {error_str}")
+                    raise RuntimeError(
+                        f"Cannot fail over patch {patch.patch_id} to a different profile: "
+                        f"items depend on media produced by profile {worker.profile_id} ({error_str})"
+                    ) from ex
                 if getattr(self.manager, "job_id", None):
                     self.manager.replace_worker_for_job(worker, reason=error_str)
                 excluded_workers.add(worker.profile_id)
@@ -399,13 +515,27 @@ class MultiProfileDispatcher:
         executor_func: Callable[[ChromeProfileWorker, list[dict[str, Any]]], list[dict[str, Any]]],
         max_concurrency: int = 6,
     ) -> list[dict[str, Any]]:
-        """Dispatch all patches in parallel across up to max_concurrency workers."""
+        """Dispatch all patches in parallel across up to max_concurrency workers, respecting inter-patch dependencies."""
         if not patches:
             return []
 
         if not self.manager.workers:
+            if hasattr(self.manager, "refresh_workers"):
+                self.manager.refresh_workers(timeout=5.0)
+
+        if not self.manager.workers:
+            job_name = getattr(self.manager, 'job_id', 'unknown')
+            pool = getattr(self.manager, "pool_profiles", [])
+            lm = getattr(self.manager, "lease_manager", None)
+            diag = [
+                f"{p.get('id', 'unknown')}(port={p.get('port')}, busy={lm.is_profile_busy(p.get('id', '')) if lm else 'unknown'})"
+                for p in pool
+            ]
+            active_leases = lm.list_active_leases() if lm else []
             exc = RuntimeError(
-                f"No Chrome profile workers available for job {getattr(self.manager, 'job_id', 'unknown')}. "
+                f"No Chrome profile workers available for job {job_name}. "
+                f"Configured profiles: [{', '.join(diag)}]. "
+                f"Active leases: {active_leases}. "
                 f"Ensure profiles are running and not locked."
             )
             exc.generation_submitted = False
@@ -414,23 +544,57 @@ class MultiProfileDispatcher:
         all_results: list[dict[str, Any]] = []
         errors: list[Exception] = []
 
+        # Build inter-patch dependency DAG
+        patch_by_id = {p.patch_id: p for p in patches}
+        dependents: dict[str, list[Any]] = {}
+        in_degree: dict[str, int] = {}
+
+        for p in patches:
+            parent_id = getattr(p, "depends_on_patch_id", None)
+            if parent_id and parent_id in patch_by_id:
+                in_degree[p.patch_id] = in_degree.get(p.patch_id, 0) + 1
+                dependents.setdefault(parent_id, []).append(p)
+            else:
+                in_degree[p.patch_id] = 0
+
+        ready_queue: list[Any] = [p for p in patches if in_degree[p.patch_id] == 0]
         max_workers = max(1, min(max_concurrency, len(self.manager.workers)))
+
         with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as pool:
-            futures = {
-                pool.submit(self.execute_patch_with_failover, patch, executor_func): patch
-                for patch in patches
-            }
-            for fut in concurrent.futures.as_completed(futures):
-                try:
-                    patch_res = fut.result()
-                    all_results.extend(patch_res)
-                except Exception as ex:
-                    errors.append(ex)
+            futures: dict[concurrent.futures.Future, Any] = {}
+
+            def fill_capacity() -> None:
+                while len(futures) < max_workers and ready_queue:
+                    next_patch = ready_queue.pop(0)
+                    future = pool.submit(self.execute_patch_with_failover, next_patch, executor_func)
+                    futures[future] = next_patch
+
+            fill_capacity()
+            while futures:
+                done, _ = concurrent.futures.wait(futures, return_when=concurrent.futures.FIRST_COMPLETED)
+                for future in done:
+                    completed_patch = futures.pop(future)
+                    try:
+                        res = future.result()
+                        all_results.extend(res)
+                        for child in dependents.get(completed_patch.patch_id, []):
+                            if completed_patch.assigned_profile:
+                                child.pinned_profile = completed_patch.assigned_profile
+                            in_degree[child.patch_id] -= 1
+                            if in_degree[child.patch_id] == 0:
+                                ready_queue.append(child)
+                    except Exception as ex:
+                        errors.append(ex)
+                if not errors:
+                    fill_capacity()
 
         if errors:
             if not all_results and all(getattr(error, 'generation_submitted', None) is False for error in errors):
                 raise errors[0]
-            raise RuntimeError('FLOW_PARTIAL_BATCH: preserve original ownership and reconcile every unresolved request') from errors[0]
+            raise RuntimeError(
+                'FLOW_PARTIAL_BATCH: stopped queued work; preserve original ownership '
+                f'and reconcile every unresolved request. First failure: {errors[0]}'
+            ) from errors[0]
 
         return all_results
 

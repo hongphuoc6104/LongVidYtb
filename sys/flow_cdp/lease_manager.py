@@ -23,6 +23,34 @@ DEFAULT_LOCK_DIR = Path.home() / ".cache/video-pilot/flow_locks"
 DEFAULT_MAX_PROFILES_PER_JOB = 6
 
 
+def is_pid_alive(pid: int | None) -> bool:
+    """Check if process with given PID is alive."""
+    if not pid or pid <= 0:
+        return False
+    try:
+        os.kill(pid, 0)
+        return True
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+
+
+def _open_lock_file(path: Path) -> Any:
+    """Open a lock file with FD_CLOEXEC set atomically to prevent FD leaks into child processes."""
+    flags = os.O_CREAT | os.O_RDWR
+    if hasattr(os, "O_CLOEXEC"):
+        flags |= os.O_CLOEXEC
+    fd = os.open(str(path), flags, 0o600)
+    handle = os.fdopen(fd, "a")
+    try:
+        cur_flags = fcntl.fcntl(fd, fcntl.F_GETFD)
+        fcntl.fcntl(fd, fcntl.F_SETFD, cur_flags | fcntl.FD_CLOEXEC)
+    except OSError:
+        pass
+    return handle
+
+
 class FlowJobLeaseManager:
     """Manages cross-process lease locks for Chrome CDP profiles."""
 
@@ -33,13 +61,15 @@ class FlowJobLeaseManager:
         self.clean_stale_leases()
 
     def clean_stale_leases(self) -> list[str]:
-        """Remove any .lease files that are not actively held by an OS flock."""
+        """Remove any .lease files that are not actively held by an OS flock or living PID."""
         cleaned = []
         for meta_file in self.lock_dir.glob("*.lease"):
             try:
                 data = json.loads(meta_file.read_text(encoding="utf-8"))
                 prof_id = data.get("profile_id")
-                if prof_id and not self.is_profile_busy(prof_id):
+                pid = data.get("pid")
+                pid_dead = pid is not None and not is_pid_alive(pid)
+                if prof_id and (pid_dead or not self.is_profile_busy(prof_id)):
                     meta_file.unlink(missing_ok=True)
                     cleaned.append(prof_id)
             except Exception:
@@ -60,19 +90,25 @@ class FlowJobLeaseManager:
 
         meta_path = self._lease_meta_path(profile_id)
         current_job = None
+        current_pid = None
         if meta_path.is_file():
             try:
                 data = json.loads(meta_path.read_text(encoding="utf-8"))
                 current_job = data.get("job_id")
+                current_pid = data.get("pid")
             except Exception:
                 pass
 
         if exclude_job_id and current_job == exclude_job_id:
             return False
 
+        # If recorded PID is dead, this profile is not legitimately busy
+        if current_pid is not None and not is_pid_alive(current_pid):
+            return False
+
         # Test OS flock
         try:
-            handle = open(lock_path, "a")
+            handle = _open_lock_file(lock_path)
             try:
                 fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
             except BlockingIOError:
@@ -109,6 +145,7 @@ class FlowJobLeaseManager:
         timeout: float = 180.0,
     ) -> list[dict[str, Any]]:
         """Atomically claim and lease up to 'count' idle profiles for a job, adhering to quota."""
+        self.clean_stale_leases()
         start_time = time.time()
         enabled_candidates = [p for p in pool_profiles if p.get("enabled", True)]
         effective_quota = min(count, max_profiles_per_job, len(enabled_candidates))
@@ -155,7 +192,7 @@ class FlowJobLeaseManager:
         lock_path = self._lock_file_path(profile_id)
         meta_path = self._lease_meta_path(profile_id)
         try:
-            handle = open(lock_path, "a")
+            handle = _open_lock_file(lock_path)
             fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except (BlockingIOError, OSError):
             return False
@@ -194,18 +231,33 @@ class FlowJobLeaseManager:
             "Job %s requesting replacement for failed profile %s. Reason: %s",
             job_id, failed_profile_id, reason or "unspecified"
         )
+        candidates = [
+            p for p in pool_profiles
+            if p["id"] != failed_profile_id and p.get("enabled", True) and not self.is_profile_busy(p["id"])
+        ]
+        if not candidates:
+            logger.warning(
+                "Job %s: No available idle profile in pool to replace %s. Retaining lease.",
+                job_id, failed_profile_id
+            )
+            return None
+
         # Release the failed profile first to free quota
         self.release_profile(job_id, failed_profile_id)
 
-        # Find replacement from pool that is enabled and not busy
-        for p in pool_profiles:
+        # Find replacement from candidates
+        for p in candidates:
             prof_id = p["id"]
-            if prof_id == failed_profile_id or not p.get("enabled", True):
-                continue
             if not self.is_profile_busy(prof_id):
                 if self._try_acquire_lock(prof_id, job_id, p):
                     logger.info("Job %s replaced %s with %s", job_id, failed_profile_id, prof_id)
                     return p
+
+        # If candidates failed to acquire, attempt to re-acquire original profile
+        orig = next((p for p in pool_profiles if p["id"] == failed_profile_id), None)
+        if orig and self._try_acquire_lock(failed_profile_id, job_id, orig):
+            logger.info("Job %s re-acquired original profile %s after replacement failed", job_id, failed_profile_id)
+
         logger.error("Job %s: No available idle profile in pool to replace %s", job_id, failed_profile_id)
         return None
 

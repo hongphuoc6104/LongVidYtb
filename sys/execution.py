@@ -152,9 +152,25 @@ def lease(p, job):
     path = p.job(job) / 'execution-lease.lock'
     with path.open('a') as handle:
         try:
+            cur_flags = fcntl.fcntl(handle.fileno(), fcntl.F_GETFD)
+            fcntl.fcntl(handle.fileno(), fcntl.F_SETFD, cur_flags | fcntl.FD_CLOEXEC)
+        except OSError:
+            pass
+        try:
             fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError as ex:
-            raise Blocked('JOB_RUNNING: another controller owns this job') from ex
+            state = control(p, job)
+            old_pid = state.get('pid')
+            owner = state.get('owner')
+            if old_pid:
+                try:
+                    os.kill(old_pid, 0)
+                except ProcessLookupError:
+                    raise Blocked(
+                        f'JOB_RUNNING: previous controller pid {old_pid} (owner {owner}) has died, '
+                        f'but lock is held by an orphaned process. Run takeover or terminate orphaned processes.'
+                    ) from ex
+            raise Blocked(f'JOB_RUNNING: another controller owns this job (pid={old_pid}, owner={owner})') from ex
         owner = uuid.uuid4().hex
         _update_control(p, job, owner=owner, pid=os.getpid(), heartbeat=time.time())
         p._execution_job = job

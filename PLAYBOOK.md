@@ -187,3 +187,11 @@ $$\text{1. Tái hiện E2E} \longrightarrow \text{2. Phân tích gốc rễ} \lo
 - **Wrong Assumptions:** Each profile is a distinct Google account; a free local lock proves the remote session is free; an authenticated account already has available GPU capacity.
 - **Resolution & E2E Proof:** Add a bounded health audit and identity-based atomic claims in the actual audio/render client. Preserve exact bindings and unresolved request journals, filter blocked/exhausted accounts and stagger allocations across controllers. Scheduler, transport ownership and dashboard regression tests pass; live audit and account-03 observation verify authentication/T4 response only, not a completed production request.
 - **Golden Rule:** Count unique verified identities, distinguish auth/allocation/kernel readiness, and collect an unknown request only on its original owner before another send.
+
+### [ERR-20261018-14] Auto-Reclaim Stale Leases & Worker Availability Resilience
+- **Triệu chứng (Symptom):** Pipeline văng lỗi `No Chrome profile workers available` hoặc `JOB_RUNNING` khi tiến trình trước crash để lại file lock mồ côi, hoặc khi pool chỉ có 1 profile gặp lỗi tạm thời.
+- **Tái hiện E2E (Reproduction Path):** Chạy `PYTHONPATH=sys pytest sys/tests/test_lock_and_worker_resilience.py -v`.
+- **Nguyên nhân cốt lõi (Root Cause):** Handle mở lock thiếu `FD_CLOEXEC` gây rò rỉ FD sang subprocess; `clean_stale_leases` không kiểm tra liveness PID chết; `replace_profile` nhả profile duy nhất khi pool không có profile thay thế.
+- **Giả định sai (Wrong Assumptions):** Nhầm tưởng `flock` luôn tự động nhả khi crash mà không tính đến subprocess kế thừa FD; giả định pool luôn có profile rảnh để thay thế.
+- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Thiết lập `FD_CLOEXEC` trên mọi lock handle; bổ sung kiểm tra `is_pid_alive` để tự động thu hồi lease của PID chết; bảo vệ lease profile đơn trong `replace_profile`; bổ sung `refresh_workers` và chẩn đoán pool vào `dispatch_all`. Đạt 63/63 test pytest 100% green.
+- **Quy tắc phòng ngừa vàng (Golden Rule):** Luôn gán cờ `FD_CLOEXEC` cho lock descriptor; kiểm tra liveness PID trước khi coi profile là bận; không bao giờ nhả lease của worker suy biến nếu chưa tìm được profile thay thế hợp lệ.
