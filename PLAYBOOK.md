@@ -12,24 +12,7 @@ $$\text{1. Tái hiện E2E} \longrightarrow \text{2. Phân tích gốc rễ} \lo
 
 ## II. Danh Mục Bài Học & Sự Cố Chuẩn Hóa
 
-> Historical entries [ERR-20261010-08], [ERR-20261010-09], [ERR-20261011-01] (Format Separation), [ERR-20261011-05] (Headless EGL), and [ERR-20261017-03] are archived in .agents/skills/vp-troubleshooting/references/historical-playbook.md.
-
-
-### [ERR-20261014-01] Chốt Chặn Âm Học, Độ Lệch Chuẩn Nhịp Câu & Cú Tát Sự Thật `SC01`
-- **Triệu chứng (Symptom):** Kịch bản bị nhồi câu dài $> 25$ âm tiết, đọc một lèo không phẩy $> 18$ âm tiết hoặc rải `[pause:800ms]` cơ học ngay ở `SC01`.
-- **Tái hiện E2E (Reproduction Path):** Chạy `pytest sys/tests/test_script_cadence_checker.py sys/tests/test_human_naturalness_upgrades.py -v`.
-- **Nguyên nhân cốt lõi (Root Cause):** Thiếu chốt chặn trần âm tiết câu đơn, trần vế câu không phẩy, giới hạn tổng số pause kịch tính và kiểm tra Cú Tát Sự Thật mở màn.
-- **Giả định sai (Wrong Assumptions):** Nhầm tưởng chỉ cần đạt `drift <= 0.30s` là kịch bản tự nhiên và có thể dùng `[pause]` để giảm chỉ tiêu âm tiết.
-- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Bổ sung `SENTENCE_TOO_LONG`, `BREATHLESS_CLAUSE`, `EXCESSIVE_DRAMATIC_PAUSES`, `OPENING_SCENE_PAUSE_FORBIDDEN` và `OPENING_HOOK_TOO_LONG` (`<= 18` âm tiết) vào `sys/tools/script_cadence_checker.py`.
-- **Quy tắc phòng ngừa vàng (Golden Rule):** Câu mở đầu `SC01` phải $\le 18$ âm tiết với `0` thẻ `[pause:...]`; toàn bài dùng tối đa 1–3 dramatic pause trước điểm bẻ lái.
-
-### [ERR-20261016-02] Hợp Đồng Ảnh Toàn Khung (`full_frame_v1`) & Cấm Ghép Lớp Sticker Cut-out
-- **Triệu chứng (Symptom):** Tạo ảnh nền và sticker tách rời (`kind: "background"`/`"sticker"`) khiến hình ảnh rời rạc và thiếu mật độ đổi hình trong Cold Open.
-- **Tái hiện E2E (Reproduction Path):** Chạy `pytest sys/tests/test_full_frame_pipeline.py sys/tests/test_full_frame_upgrade.py -v`.
-- **Nguyên nhân cốt lõi (Root Cause):** Serializer cũ tách `ResearchedScene` thành layer rời và thiếu kiểm định mật độ beat hình theo từng câu thoại.
-- **Giả định sai (Wrong Assumptions):** Giả định cần tách nền `matte_sticker.py` hoặc chừa dải trắng đáy ảnh `caption_clearance` trên khung ngang `16:9`.
-- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Chuẩn hóa 100% sang ảnh toàn khung `kind: "scene"` (`shot_type` trong `full_scene|macro_prop|variation|white_card`), `caption_clearance: null` trên `16:9`, 6–10 ảnh trong `12.5s` đầu (`3–5` ảnh trong `5s` đầu) và xóa bỏ `matte_sticker.py`.
-- **Quy tắc phòng ngừa vàng (Golden Rule):** Chỉ dùng ảnh toàn khung `kind: "scene"` có `anchor` theo câu thoại và `Expression lock` trên các biến thể `variation` (trừ khi khai báo `allow_expression_shift: true`).
+> Historical entries [ERR-20261010-08], [ERR-20261010-09], [ERR-20261011-01], [ERR-20261011-05], [ERR-20261014-01], [ERR-20261016-02], and [ERR-20261017-03] are archived in .agents/skills/vp-troubleshooting/references/historical-playbook.md.
 
 ### [ERR-20261017-02] Xuất Bản Đa Nền Tảng (`vp-omni-platform`) & Giữ Khóa Profile Flow CDP
 - **Triệu chứng (Symptom):** Sinh trùng ảnh giữa các tỷ lệ khung hình hoặc mất liên kết profile trình duyệt cố định khi chạy đồng thời các tác vụ ảnh.
@@ -190,3 +173,12 @@ $$\text{1. Tái hiện E2E} \longrightarrow \text{2. Phân tích gốc rễ} \lo
 - **Giả định sai (Wrong Assumptions):** Nhầm tưởng cập nhật `state: not_submitted` trên file request là đủ mà không nhận ra `account_budget.py` kiểm tra độc lập trên `budgets.json`; giả định mọi timeout đều đã gửi thành công lên máy chủ.
 - **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Bổ sung `auto_reconcile_attempt()` tự động xác nhận ảnh đã tải về đĩa; gắn cờ `generation_submitted = False` cho lỗi rớt mạng/tiền gửi; gọi `flow_management.sync()` trong mọi nhánh đối soát; cho phép `flow-reconcile` giải tỏa `not_submitted` kèm ảnh chụp bằng chứng UI khi không có asset. 5/5 test auto-reconcile và toàn bộ 37/37 test images v2 pass 100%.
 - **Quy tắc phòng ngừa vàng (Golden Rule):** Mọi thay đổi trạng thái request (downloaded, not_submitted) phải lập tức đồng bộ sang sổ cái `budgets.json` qua `flow_management.sync()`; lỗi trước khi gửi phải ghi nhận `not_submitted` để không gây kẹt đối soát.
+
+### [ERR-20261019-01] Tự Điều Tiết Số Tab Chrome & Đảm Bảo Vòng Đời Dọn Dẹp RAM (LIFECYCLE_TEARDOWN & ADAPTIVE_WORKERS)
+- **Triệu chứng (Symptom):** Tạo ít ảnh (1–3 ảnh) vẫn mở cố định 10 tab Chrome ngốn ~7GB RAM; khi pipeline kết thúc hoặc crash, các tiến trình Chrome tiếp tục chạy ngầm làm nghẽn tài nguyên máy chủ.
+- **Tái hiện E2E (Reproduction Path):** Chạy `pytest sys/tests/test_flow_lifecycle.py -v`.
+- **Nguyên nhân cốt lõi (Root Cause):** Hệ thống không phân bậc khối lượng công việc theo số lượng ảnh cần tạo và thiếu trình quản lý vòng đời theo dõi PID/cổng debug đã được mở để giải phóng.
+- **Giả định sai (Wrong Assumptions):** Nhầm tưởng luôn mở tối đa số tab (10 tab) là tối ưu cho mọi tác vụ và hệ điều hành sẽ tự thu hồi RAM trình duyệt.
+- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Xây dựng `calculate_optimal_workers` phân 5 bậc (Micro 1 tab, Short 2–3 tab, Chapter 3–5 tab, Standard 5–7 tab, Bulk 8–10 tab) và `ProfileLifecycleManager` đảm bảo nguyên tắc "mở bao nhiêu tắt bấy nhiêu", tích hợp trực tiếp vào `sys/image_pipeline.py`. 9/9 unit tests và thực nghiệm 300 ảnh pass 100%, giải phóng ~6.5GB RAM ngay khi xong.
+- **Quy tắc phòng ngừa vàng (Golden Rule):** Luôn tính toán số tab worker tối ưu theo khối lượng ảnh thực tế; mọi phiên sinh ảnh phải bọc trong `ProfileLifecycleManager` để đảm bảo dọn dẹp chính xác những tiến trình Chrome vừa mở mà không ảnh hưởng cửa sổ duyệt web của người dùng.
+

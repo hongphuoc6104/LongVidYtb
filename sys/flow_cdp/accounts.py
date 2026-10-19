@@ -257,6 +257,11 @@ def launch_profile(
     for _ in range(25):
         time.sleep(0.2)
         if is_port_listening(port):
+            try:
+                from .lifecycle import register_spawned_port
+                register_spawned_port(port)
+            except Exception:
+                pass
             return True
     return False
 

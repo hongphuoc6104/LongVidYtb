@@ -41,7 +41,7 @@
   "flow_require_ui_evidence": false,
   "flow_queue_trial_enabled": true,
   "flow_model": "Nano Banana 2 Lite",
-  "flow_prompt_version": "1.4.0",
+  "flow_prompt_version": "1.5.0",
   "flow_profile": "video-pilot",
   "flow_project": "Video Pilot",
   "tts_pause": {

@@ -390,7 +390,8 @@ def is_port_open(port: int) -> bool:
 
 
 def ensure_chrome_profiles_launched(profiles: list[dict[str, Any]] | None = None) -> None:
-    target_profiles = profiles or PROFILES
+    # Safe default: only launch primary profile if not explicitly specified, preventing RAM exhaustion
+    target_profiles = profiles if profiles is not None else [PROFILES[0]]
     env = dict(os.environ, DISPLAY=os.environ.get("DISPLAY", ":0"))
     chrome_bin = "/opt/google/chrome/chrome"
     for p in target_profiles:
@@ -427,6 +428,11 @@ def ensure_chrome_profiles_launched(profiles: list[dict[str, Any]] | None = None
             stderr=subprocess.DEVNULL,
             start_new_session=True,
         )
+        try:
+            from .lifecycle import register_spawned_port
+            register_spawned_port(port)
+        except Exception:
+            pass
         time.sleep(0.3)
 
     for p in target_profiles:

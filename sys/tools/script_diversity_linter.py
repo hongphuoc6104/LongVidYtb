@@ -477,6 +477,7 @@ def lint_script(
     enforce_rhythm_variance: bool = False,
     characters: List[Dict[str, Any]] | None = None,
     style: str | None = None,
+    enforce_breathing_room: bool | None = None,
 ) -> Dict[str, Any]:
     all_violations: List[Dict[str, Any]] = []
 
@@ -484,14 +485,51 @@ def lint_script(
     all_violations.extend(check_visual_prompt_cliches(scenes, characters=characters, style=style))
 
     from scripts.visual_quality import (
+        check_character_breathing_room,
         check_instructional_manual_loop,
         check_scene_narrative_progression,
+        check_setting_description_verbosity,
         check_visual_setting_diversity,
     )
+    from visual_style import STYLE_DESCRIPTION, render_style
+
     has_visual_fields = any(sc.get("setting") or sc.get("images") for sc in scenes)
     if has_visual_fields:
         all_violations.extend(check_visual_setting_diversity(scenes))
         all_violations.extend(check_scene_narrative_progression(scenes))
+
+        if enforce_breathing_room is not None:
+            should_enforce_breathing = enforce_breathing_room
+        elif style is not None:
+            should_enforce_breathing = (
+                render_style({"style": style}) == "earth_toned_2d"
+                or style == STYLE_DESCRIPTION
+                or any(
+                    str(im.get("shot_type")) in {"still_life", "environment"}
+                    for sc in scenes
+                    for im in sc.get("images", [])
+                )
+            )
+        else:
+            has_150_shots = any(
+                str(im.get("shot_type")) in {"still_life", "environment"}
+                for sc in scenes
+                for im in sc.get("images", [])
+            )
+            is_legacy_blueprint = (
+                not has_150_shots
+                and any(len(str(sc.get("setting", "")).split()) > 10 for sc in scenes)
+                and all(
+                    str(im.get("shot_type")) in {"", "full_scene", "variation", "macro_prop", "white_card", "white_isolated"}
+                    for sc in scenes
+                    for im in sc.get("images", [])
+                )
+            )
+            should_enforce_breathing = has_150_shots or not is_legacy_blueprint
+
+        if should_enforce_breathing:
+            all_violations.extend(check_character_breathing_room(scenes))
+            all_violations.extend(check_setting_description_verbosity(scenes))
     all_violations.extend(check_instructional_manual_loop(scenes))
 
     # 1. Formulaic transitions & micro-action filler babble
@@ -533,6 +571,18 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Lint video script for lexical and narrative diversity.")
     parser.add_argument("script_file", help="Path to content.json, script.json, or bundle manifest")
     parser.add_argument("--corpus-dir", default="sys/exports", help="Corpus directory to check against")
+    parser.add_argument(
+        "--enforce-breathing-room",
+        action="store_true",
+        default=None,
+        help="Explicitly enforce visual breathing room and concise setting constraints",
+    )
+    parser.add_argument(
+        "--no-breathing-room",
+        dest="enforce_breathing_room",
+        action="store_false",
+        help="Explicitly disable visual breathing room and concise setting constraints",
+    )
     args = parser.parse_args()
 
     target_path = Path(args.script_file)
@@ -592,6 +642,7 @@ def main() -> None:
         topic_title=topic_title,
         characters=data.get("characters") if isinstance(data, dict) else None,
         style=data.get("style") if isinstance(data, dict) else None,
+        enforce_breathing_room=args.enforce_breathing_room,
     )
 
     print("=" * 80)
@@ -626,6 +677,16 @@ def main() -> None:
                 print(f"[{idx}] {v_type} in {target_desc} field '{v.get('field', 'visual')}':")
                 print(f"    Forbidden cliché: '{v.get('cliche')}'")
                 print(f"    Snippet: {v.get('snippet')}")
+            elif v_type == "CHARACTER_STREAK_EXCEEDED":
+                print(f"[{idx}] {v_type} in scene {v.get('scene_id')} (beat {v.get('beat_id')}):")
+                print(f"    {v.get('message')}")
+            elif v_type == "LOW_CHARACTER_FREE_RATIO":
+                print(f"[{idx}] {v_type} across scenes {', '.join(v.get('scenes', []))}:")
+                print(f"    {v.get('message')}")
+            elif v_type == "SETTING_DESCRIPTION_TOO_VERBOSE":
+                print(f"[{idx}] {v_type} in scene {v.get('scene_id')}:")
+                print(f"    Word count: {v.get('word_count')} words (max allowed: {v.get('max_allowed')})")
+                print(f"    Setting: '{v.get('setting')}'")
             else:
                 print(f"[{idx}] {v_type}: {v}")
         print("=" * 80)

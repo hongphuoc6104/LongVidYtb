@@ -125,6 +125,7 @@ def station_2_test_ast() -> bool:
         SYS_DIR / "tests/test_adversarial_ai_production.py",
         SYS_DIR / "tests/test_collectors_fallacy_production.py",
         SYS_DIR / "tests/test_reviewer_2_production.py",
+        SYS_DIR / "tests/test_visual_breathing_room.py",
     ]
     # Check AST on test directory
     ast_ok, ast_report = check_test_suite_integrity([SYS_DIR / "tests"])
@@ -252,6 +253,7 @@ def station_4_lint() -> bool:
         str(SYS_DIR / "tests/test_omni_platform.py"),
         str(SYS_DIR / "tests/test_caption_profile_07.py"),
         str(SYS_DIR / "tests/test_anti_formulaic_storytelling.py"),
+        str(SYS_DIR / "tests/test_visual_breathing_room.py"),
         str(REPO_ROOT / "pilot.py"),
     ]
     ruff_res = subprocess.run(ruff_cmd, cwd=str(REPO_ROOT), capture_output=True, text=True)

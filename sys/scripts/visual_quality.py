@@ -116,3 +116,108 @@ def apply_room_continuity(images: list[dict[str, Any]]) -> None:
             lock = 'Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.'
             if 'expression' not in image.get('preserve', '').casefold() and 'biểu cảm' not in image.get('preserve', '').casefold():
                 image['preserve'] = (image.get('preserve', '').rstrip() + ' ' + lock).strip()
+
+
+_HUMAN_KEYWORDS_PATTERN = re.compile(
+    r'\b(?:student|learner|figure|person|hand|finger|nhân vật|người)\b',
+    re.IGNORECASE,
+)
+
+
+def _is_character_beat(beat: dict[str, Any]) -> bool:
+    """Classify whether a visual beat contains human figures/limbs."""
+    if beat.get('character_free') is True or beat.get('has_character') is False:
+        return False
+    if beat.get('has_character') is True:
+        return True
+    shot_type = str(beat.get('shot_type', '')).strip().casefold()
+    if shot_type in {'still_life', 'environment', 'white_card'}:
+        return False
+    if shot_type in {'full_scene', 'variation'}:
+        return True
+    if beat.get('character_ids'):
+        return True
+    desc = str(beat.get('description', '')).casefold()
+    if desc and _HUMAN_KEYWORDS_PATTERN.search(desc):
+        return True
+    return False
+
+
+def check_character_breathing_room(scenes: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Enforce visual breathing room: max 4 consecutive character beats and >= 30% rest beats per 10-beat window."""
+    beats: list[dict[str, Any]] = []
+    for sc in scenes:
+        images = sc.get('images')
+        sc_id = str(sc.get('id', sc.get('scene_id', '?')))
+        if images and isinstance(images, list):
+            for im in images:
+                beats.append({'scene_id': sc_id, 'beat_id': str(im.get('id', sc_id)), 'beat': im})
+        else:
+            beats.append({'scene_id': sc_id, 'beat_id': sc_id, 'beat': sc})
+
+    if not beats:
+        return []
+
+    violations: list[dict[str, Any]] = []
+
+    # 1. Consecutive character streak check (max 4)
+    char_streak = 0
+    for idx, item in enumerate(beats):
+        if _is_character_beat(item['beat']):
+            char_streak += 1
+            if char_streak > 4:
+                violations.append({
+                    'type': 'CHARACTER_STREAK_EXCEEDED',
+                    'scene_id': item['scene_id'],
+                    'beat_id': item['beat_id'],
+                    'beat_index': idx,
+                    'streak': char_streak,
+                    'message': f'Excessive consecutive character beats ({char_streak} > 4)',
+                })
+        else:
+            char_streak = 0
+
+    # 2. Rolling 10-beat sequence check (>= 30% character-free, i.e. >= 3 rest beats out of 10)
+    if len(beats) >= 10:
+        for i in range(len(beats) - 9):
+            window = beats[i : i + 10]
+            rest_count = sum(1 for b in window if not _is_character_beat(b['beat']))
+            if rest_count < 3:
+                violations.append({
+                    'type': 'LOW_CHARACTER_FREE_RATIO',
+                    'scene_id': window[0]['scene_id'],
+                    'window_start': i,
+                    'window_end': i + 10,
+                    'scenes': sorted({b['scene_id'] for b in window}),
+                    'beat_ids': [b['beat_id'] for b in window],
+                    'character_free_count': rest_count,
+                    'ratio': round(rest_count / 10.0, 2),
+                    'message': f'Insufficient visual breathing room in 10-beat window ({rest_count}/10 < 30%)',
+                })
+
+    return violations
+
+
+def check_setting_description_verbosity(
+    scenes: list[dict[str, Any]],
+    max_words: int = 10,
+) -> list[dict[str, Any]]:
+    """Flag setting descriptions exceeding word threshold (authoring <= 8 words, linter flag > 10 words)."""
+    violations: list[dict[str, Any]] = []
+    for sc in scenes:
+        setting = str(sc.get('setting', '')).strip()
+        if not setting:
+            continue
+        words = setting.split()
+        if len(words) > max_words:
+            sc_id = str(sc.get('id', sc.get('scene_id', '?')))
+            violations.append({
+                'type': 'SETTING_DESCRIPTION_TOO_VERBOSE',
+                'scene_id': sc_id,
+                'setting': setting,
+                'word_count': len(words),
+                'max_allowed': max_words,
+                'message': f'Setting description exceeds {max_words} words ({len(words)} words): \'{setting}\'',
+            })
+    return violations
+

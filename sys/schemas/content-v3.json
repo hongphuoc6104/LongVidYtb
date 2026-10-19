@@ -244,7 +244,9 @@
                     "full_scene",
                     "variation",
                     "white_card",
-                    "white_isolated"
+                    "white_isolated",
+                    "still_life",
+                    "environment"
                   ]
                 },
                 "allow_expression_shift": {

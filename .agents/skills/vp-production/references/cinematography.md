@@ -1,26 +1,28 @@
 # Cinematography and Shot Grammar for Full-Frame Explainer Videos (`full_frame_v1`)
 
-Visual standards, shot framing grammar, and cutting pace for full-frame explainer videos (`flow_prompts 1.4.0`), adapting composition to target aspect ratios (`9:16`, `16:9`) specified in `sys/format_profiles.py`. Read before planning visual beats and prompt authoring.
+Visual standards, shot framing grammar, and cutting pace for full-frame explainer videos (`flow_prompts 1.5.0`), adapting composition to target aspect ratios (`9:16`, `16:9`) specified in `sys/format_profiles.py`. Read before planning visual beats and prompt authoring.
 
 ## 1. Mandatory Three-Step Process (Flash-Agent Simplified)
 1. **Author natural sentence-beat pairs**: Pair each spoken sentence with one concrete visual action (`shot_type|visual_action`), alternating short punchy sentences (`3–8` words) with explanatory sentences (`15–24` words).
-2. **Select full-frame `shot_type`**: Choose from `full_scene`, `macro_prop`, `variation`, `white_card`, or `white_isolated`. Never guess manual `(x, y)` coordinates—code automatically centers `focus` safely. Semantic camera intent remains diverse; calm playback decides whether visible movement is warranted.
-3. **Author full-bleed prompts for Flow**: Generate one integrated 2D illustration per beat where anonymous stick figures, furniture, and props belong naturally to the same physical environment (no detached stickers, no white cutout borders).
+2. **Select full-frame `shot_type`**: Choose from all 7 standard shot types: `full_scene`, `variation`, `macro_prop`, `white_card`, `white_isolated`, `still_life`, or `environment`. Never guess manual `(x, y)` coordinates—code automatically centers `focus` safely. Semantic camera intent remains diverse; calm playback decides whether visible movement is warranted.
+3. **Author full-bleed prompts for Flow**: Generate one integrated 2D illustration per beat where anonymous stick figures, furniture, and props belong naturally to the same physical environment (no detached stickers, no white cutout borders). For character-free rest shots (`still_life`, `environment`), human figures and hands are completely excluded.
 
 ---
 
-## 2. Frame Composition & Safe Margins (`sys/format_profiles.py`)
+## 2. Frame Composition, Setting Brevity & Visual Breathing Room (`sys/format_profiles.py`)
 Composition adapts dynamically to the target `format_profile` configured in the job brief:
 - **Horizontal Framing (`long_16x9` — `1920x1080`, `full_frame_v1`)**:
   - **100% Full-Bleed Canvas (`caption_clearance = null`)**: Landscape videos use external `.srt` (`subtitles: false` by default). Never instruct the AI to leave a blank bottom band.
+  - **Setting Brevity Invariant**: Setting descriptions must be strictly $\le 8$ words specifying only physical space and ambient lighting (e.g., `"A student desk under green lamp light."`). Prop or furniture enumeration (listing pens, highlighters, laptop screens, textbooks) is strictly forbidden in `setting`.
   - **Setting Diversity & Continuity**: Use at most 2 consecutive scenes in the same physical room; across $\ge 10$ scenes no single setting may exceed 30%. Within one room, use `variation` (`based_on`) with `Expression lock` to animate character posture changes smoothly.
+  - **Visual Breathing Room**: To prevent character fatigue, at least 30% of beats in every 10-beat sliding window must be character-free rest shots (`still_life`, `environment`, or character-free `white_card`). Never exceed 4 consecutive beats containing human figures.
 - **Vertical Framing (`short_9x16` — `1080x1920`)**:
   - **Top & Middle Zone (Top 82%)**: Compose character posture, expressions, action and focal props together in the physical scene, or use `reframe_mode: true` from a `16:9` master.
   - **Bottom 18% (`caption_clearance = 0.18`)**: Reserved for burn-in dynamic captions (`max_line_chars = 28`).
 
 ---
 
-## 3. Standard Full-Frame Shot Types (`flow_prompts 1.4.0`)
+## 3. Standard Full-Frame Shot Types (`flow_prompts 1.5.0`)
 | Shot Type | Purpose & Composition Rule | Practical Production Application |
 |---|---|---|
 | **`full_scene`** | Integrated physical environment with anonymous stick figure(s), furniture, and props drawn together. | Establishing rooms, experiments, lecture halls, cafes, or metaphorical landscapes. |
@@ -28,6 +30,8 @@ Composition adapts dynamically to the target `format_profile` configured in the 
 | **`macro_prop`** | Close-up on a concrete object, hand action, or diagram detail (simplified white four-finger cartoon hands with restrained charcoal outlines). | Highlighting a textbook, correcting an error with a red pen, inspecting a clock or gauge. |
 | **`white_card`** | Clean pure white `#FFFFFF` concept card with no room, floor, or scenery; renders only the requested icon/diagram and `allowed_text`. | Isolating a core paradox, comparison icon, or minimal conceptual diagram. |
 | **`white_isolated`** | Clean pure white `#FFFFFF` field with the requested figure or object integrated into a complete frame (no sticker border). | Single-subject conceptual emphasis without environmental distractions. |
+| **`still_life`** | Character-free close-up or medium focus on physical objects, documents, books, or instruments without human figures or cartoon hands. | Resting between character beats; inspecting an open highlighted textbook, ticking desk clock, or blueprint sheet. |
+| **`environment`** | Character-free wide establishing shot of a landscape, room architecture, or outdoor space completely devoid of human figures or crowds. | Visual rest and contemplative pacing; wide empty classroom, morning light over an urban corridor, or foggy landscape. |
 
 ---
 

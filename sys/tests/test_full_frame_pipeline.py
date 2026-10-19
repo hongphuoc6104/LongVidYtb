@@ -16,8 +16,10 @@ from remote_audio import primary_scene_request
 from scripts.subtitles import audit_cues, phrase_chunks, sentence_units, subtitle_cues
 from scripts.visual_quality import (
     apply_room_continuity,
+    check_character_breathing_room,
     check_instructional_manual_loop,
     check_scene_narrative_progression,
+    check_setting_description_verbosity,
     check_visual_setting_diversity,
 )
 from tools.build_full_frame_acceptance import build_topic
@@ -238,7 +240,7 @@ def test_room_return_retains_base_and_expression_lock() -> None:
 
 
 def test_diversity_blocks_monotony_and_repeated_operation_pairs() -> None:
-    scenes = [{'id': f'SC{i:02}', 'setting': 'A study desk at night.',
+    scenes = [{'id': f'SC{i:02}', 'setting': 'A study desk at night.', 'shot_type': 'full_scene',
                'narration': 'Gấp sách lại, rồi khoanh chỗ chưa nhớ.'} for i in range(1, 11)]
     assert {'SETTING_MONOTONY_STREAK', 'LOW_VISUAL_SETTING_VARIETY'} == {
         row['type'] for row in check_visual_setting_diversity(scenes)}
@@ -246,6 +248,14 @@ def test_diversity_blocks_monotony_and_repeated_operation_pairs() -> None:
     assert check_scene_narrative_progression(scenes)[0]['type'] == 'NARRATIVE_SETTING_PROGRESSION'
     assert check_visual_setting_diversity(scenes[:2]) == []
     assert check_instructional_manual_loop(scenes[:3]) == []
+
+    breathing_violations = check_character_breathing_room(scenes)
+    assert any(v['type'] in {'CHARACTER_STREAK_EXCEEDED', 'LOW_CHARACTER_FREE_RATIO'} for v in breathing_violations)
+    assert check_character_breathing_room(scenes[:4]) == []
+
+    verbose_scenes = [{'id': 'SC01', 'setting': 'A very long detailed room description with lots of props and lamps and books everywhere.'}]
+    assert check_setting_description_verbosity(verbose_scenes)[0]['type'] == 'SETTING_DESCRIPTION_TOO_VERBOSE'
+    assert check_setting_description_verbosity(scenes[:2]) == []
 
 
 def test_acceptance_contract_enforces_visual_journey_before_provider_calls() -> None:

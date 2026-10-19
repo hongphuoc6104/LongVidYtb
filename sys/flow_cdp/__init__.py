@@ -26,7 +26,9 @@ from .multi_profile_manager import (
 from .lifecycle import (
     ProfileLifecycleManager,
     calculate_optimal_workers,
+    get_current_lifecycle,
     get_workload_tier_info,
+    register_spawned_port,
 )
 from .patch_partitioner import Patch, PatchPartitioner
 
@@ -40,6 +42,8 @@ __all__ = [
     "calculate_optimal_workers",
     "get_workload_tier_info",
     "ProfileLifecycleManager",
+    "register_spawned_port",
+    "get_current_lifecycle",
     "generate_cdp_image",
     "generate_cdp_batch",
     "generate_b2_image",

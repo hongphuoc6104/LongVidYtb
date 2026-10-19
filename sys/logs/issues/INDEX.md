@@ -195,3 +195,7 @@ List of technical issues recorded during pipeline operation:
 - [adversarial-ai-9x16 — images](1792317120342249387-adversarial-ai-9x16-images.md)
 - [adversarial-ai-9x16 — images](1792318692969929400-adversarial-ai-9x16-images.md)
 - [adversarial-ai-9x16 — images](1792320277095749889-adversarial-ai-9x16-images.md)
+- [test-20s-illusion-9x16 — images](1792391355733816013-test-20s-illusion-9x16-images.md)
+
+- [colab-1792391746684890191.md](colab-1792391746684890191.md) — Colab TTS cần kiểm tra.
+- [test-20s-illusion-9x16 — render](1792391746685703291-test-20s-illusion-9x16-render.md)

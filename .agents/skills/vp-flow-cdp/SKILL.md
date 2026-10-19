@@ -1,6 +1,6 @@
 ---
 name: vp-flow-cdp
-description: "Generate images via Flow CDP across 3 Chrome profiles with patch partitioning and failover."
+description: "Generate images via Flow CDP across a 20-profile pool with adaptive tab sizing, failover and strict teardown."
 ---
 
 # VP Flow CDP — Image Generation Skill
@@ -10,34 +10,27 @@ description: "Generate images via Flow CDP across 3 Chrome profiles with patch p
 ## 1. Architecture & Capabilities
 
 - **Direct CDP Automation**: Communicates directly with running Chrome profiles through Chrome DevTools Protocol sockets/WebSockets (`sys/flow_cdp/`).
-- **Concurrent 3-Profile Pool**: Maintains connections across 3 distinct Google Chrome profiles (`Profile 1` on port 9225, `Profile 2` on port 9223, `Profile 3` on port 9224) located under `~/.config/google-chrome-cdp-p{1,2,3}`.
-- **Intelligent Patch Partitioner**: Groups scene shots into moderate patches (2 to 4 shots per patch). Shots with reference dependencies (`based_on`) are kept strictly within the same patch to preserve intermediate media context.
-- **Failover & Cooldown Protection**: Continuously detects abnormal signals (`PUBLIC_ERROR_UNUSUAL_ACTIVITY`, `CAPTCHA`, rate limit 429, timeouts). Preserves unresolved request ownership. Failover is allowed only for explicitly retryable failures proven to occur before submission; provider CAPTCHA, quota, bot or authentication refusals stop dependent work.
+- **Dynamic 20-Profile Pool**: Maintains connections across up to 20 distinct Google Chrome profiles (`profile_1`..`profile_20` on ports `9222`–`9241`) located under `~/.config/google-chrome-cdp-p*`.
+- **Intelligent Patch Partitioner**: Groups scene shots into moderate patches (2 to 4 shots per patch). Shots with reference dependencies (`based_on`) are kept strictly within the same patch and locked to the parent's profile.
+- **Failover & Cooldown Protection**: Continuously detects abnormal signals (`PUBLIC_ERROR_UNUSUAL_ACTIVITY`, `CAPTCHA`, rate limit 429, timeouts). Automatically quarantines the affected profile with an exponential cooldown and rotates to healthy profiles in the 20-profile pool.
+- **Workload-Aware Adaptive Sizing**: Dynamically calculates optimal worker count (`calculate_optimal_workers`) based on image volume to avoid RAM waste.
+- **Strict Lifecycle Teardown Guarantee**: Employs `ProfileLifecycleManager` to track spawned browser instances. Upon task completion or exit, shuts down strictly the Chrome instances spawned during that run ("mở bao nhiêu tắt bấy nhiêu"), preserving user browser windows and freeing up to 7GB host RAM.
 - **Relaxed Verification Contract**: Accepts valid downloaded images (`.png`, `.jpg`, `.webp`) matching required aspect ratio and technical integrity sidecars (`.json` with `forgeId`). Does **not** require UI screenshot proofs (`ui-proof.json` or snapshot captures).
 
-## 2. Configuration (`sys/config.json`)
+## 2. Workload Allocation Tiers
 
-Configure the engine and profile endpoints:
-
-```json
-{
-  "flow_image_engine": "cdp",
-  "flow_cdp_profiles": [
-    {"id": "profile_1", "port": 9225, "directory": "Profile 1", "user_data_dir": "~/.config/google-chrome-cdp-p1"},
-    {"id": "profile_2", "port": 9223, "directory": "Profile 2", "user_data_dir": "~/.config/google-chrome-cdp-p2"},
-    {"id": "profile_3", "port": 9224, "directory": "Profile 3", "user_data_dir": "~/.config/google-chrome-cdp-p3"}
-  ],
-  "patch_size": 3,
-  "flow_model": "Nano Banana 2 Lite",
-  "flow_queue_trial_enabled": true
-}
-```
-*Ghi chú*: Profile 1 sử dụng cổng `9225` đồng bộ giữa `sys/config.json`, `multi_profile_manager.py` và `cdp_direct_client.py`; mã wire protobuf nội bộ tại `flow_rpc.py` là `"BELUGA"`.
+| Workload Tier | Image Count | Worker Tabs | RAM Footprint | Typical Use Case |
+|---|---|---|---|---|
+| `MICRO` | 1–3 images | 1 worker | ~700 MB | Retakes, thumbnail, single scene repair |
+| `SHORT` | 4–8 images | 2–3 workers | ~1.4–2.1 GB | Shorts/TikTok 9:16 standalone scenes (`SC01..SC05`) |
+| `CHAPTER` | 9–20 images | 3–5 workers | ~2.1–3.5 GB | Single chapter generation |
+| `STANDARD` | 21–50 images | 5–7 workers | ~3.5–4.9 GB | 5–8 min `full_frame_v1` explainers |
+| `BULK` | >50 images | 8–10 workers | ~5.6–7.0 GB | 13 min full explainer / stress batches |
 
 ## 3. Workflow & Usage
 
-### Step 1: Preflight & Profile Health Check
-Before generating, inspect the readiness of all 3 Chrome profiles:
+### Step 1: Preflight & Pool Health Check
+Before generating, inspect the readiness of the profile pool:
 
 ```bash
 ./pipeline flow status
@@ -46,32 +39,26 @@ python3 -c "from flow_cdp.multi_profile_manager import MultiProfileManager; impo
 ```
 
 ### Step 2: Generation Invocation
-When the pipeline reaches the `images` stage in `pilot.py` / `workflow.py`, `sys/image_pipeline.py` coordinates generation:
+When the pipeline reaches the `images` stage in `pilot.py` / `workflow.py`, `sys/image_pipeline.py` coordinates generation automatically with adaptive concurrency and lifecycle wrapping:
 
 ```python
-from flow_cdp.bridge import generate_cdp_image, generate_cdp_batch
+from flow_cdp.lifecycle import ProfileLifecycleManager, calculate_optimal_workers
+from flow_cdp.bridge import generate_cdp_batch
 
-# Single image generation
-result = generate_cdp_image(
-    prompt="A cheerful stick figure student writing notes",
-    ratio="16:9",
-    test_case="scene-01",
-    out_dir="/path/to/download"
-)
-
-# Batch generation with auto-patching and 3-profile distribution
-batch_results = generate_cdp_batch(specs, timeout=240.0)
+# Direct batch invocation with lifecycle tracking
+with ProfileLifecycleManager(auto_teardown=True):
+    batch_results = generate_cdp_batch(specs, timeout=240.0)
 ```
 
-### Step 3: Local Error Recovery
+### Step 3: Local Error Recovery & Failover
 If generation encounters an error or abnormal activity on one profile:
-1. Preserve collected images and the original request/session identity.
-2. Submitted, unknown, partial and provider-blocked requests require collection/reconciliation; do not rotate profiles or repeat the RPC.
-3. Only a failure explicitly proven unsent and marked retryable may send the unsubmitted remainder through a healthy worker.
-4. The engine owns journal/ledger transitions; the transport never rewrites them. See [submission safety](references/submission-safety.md).
+1. The profile is placed into cooldown (`PUBLIC_ERROR_UNUSUAL_ACTIVITY`).
+2. Unsubmitted items are safely handed over to the next healthy profile in the 20-profile pool.
+3. Dependent shots (`based_on`) remain pinned to their parent's profile to prevent foreign ID mismatches.
 
-### Step 4: Post-Job Chrome CDP Pool Teardown
-Once all required images for a job are downloaded and verified, close the 3 isolated Chrome CDP instances (`~/.config/google-chrome-cdp-p{1,2,3}` on ports `9225`, `9223`, `9224`) to reclaim ~5GB of local RAM without affecting any personal browser windows:
+### Step 4: Teardown & RAM Reclamation
+When run through `./pipeline run` or `pilot.py run ... images`, teardown occurs automatically via `ProfileLifecycleManager`.
+To manually shut down all pool profiles:
 
 ```bash
 ./pipeline flow stop
@@ -79,17 +66,15 @@ Once all required images for a job are downloaded and verified, close the 3 isol
 PYTHONPATH=sys python3 -m flow_cdp.multi_profile_manager stop
 ```
 
-## 4. Verification & Invariants
+## 4. Legacy Jobs Protocol (Các Job Tạo Trước Đó)
+
+For older jobs created prior to the 20-profile and adaptive sizing upgrades:
+1. **Automatic Code Adoption**: The pipeline execution engine (`sys/image_pipeline.py`) is shared across all jobs. Running an old job via `./pipeline run <job>` or `python3 sys/pilot.py run <job> images` automatically executes with adaptive worker sizing and lifecycle auto-teardown.
+2. **Bound Profile Unbinding**: If an old job is bound to a single profile via `management_session.runtime_bindings.flow.target.profile_path` that enters cooldown, unbinding the profile allows the 20-profile rotation pool to take over.
+3. **Transient Attempt Recovery**: Unfinished attempts in `flow/attempts/` marked with transient transport or rate limit errors are auto-reconciled to `not_submitted`, allowing any healthy profile in the pool to resume the unfinished work without data loss.
+
+## 5. Verification & Invariants
 
 - **Binary Validity**: Every downloaded image must pass PIL verification (`Image.open(f).verify()`) with matching aspect ratio (9:16 or 16:9).
 - **Metadata Sidecar**: Accompanied by `{image_stem}.json` containing `jobId`, `prompt`, `ratio`, `characters`, `source`, `status: "downloaded"`, and `forgeId` (or `media_id`).
 - **No Synthetic Proof Hack**: Never fake screenshot proof files. The relaxed contract strictly relies on valid image binaries and sidecars.
-
-
-## Bound-profile dispatch regression
-
-Keep production `jobId` distinct from an image `testCase` in single and batch specs. Jobs bound to one exact browser profile use a serial image queue; parallel managers must not compete for the same browser lease. Treat an empty worker pool as a proven pre-send failure only when dispatch evidence confirms no worker/provider submission. Preserve downloaded assets and original request ownership during recovery.
-
-## Repository checkpoint verification
-
-Source-factory tests use committed blueprints. Real thumbnail/MP4 checks use the explicit `media_acceptance` marker and a genuine `VP_MEDIA_ROOT`; they must not be replaced with fixture media to make CI pass.

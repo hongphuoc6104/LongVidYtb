@@ -6,10 +6,17 @@ import re
 from pathlib import Path
 
 CURRENT_VERSION = '1.4.0'
-SUPPORTED_VERSIONS = ('1.0.0', '1.0.1', '1.1.0', '1.2.0', '1.3.0', '1.4.0')
+SUPPORTED_VERSIONS = ('1.0.0', '1.0.1', '1.1.0', '1.2.0', '1.3.0', '1.4.0', '1.5.0')
 # 1.1.0+: anonymous stick-figure cast, optional Character/style reference, no recurring presenter.
-CAST_VERSIONS = ('1.1.0', '1.2.0', '1.3.0', '1.4.0')
-FULL_FRAME_VERSIONS = ('1.3.0', '1.4.0')
+CAST_VERSIONS = ('1.1.0', '1.2.0', '1.3.0', '1.4.0', '1.5.0')
+FULL_FRAME_VERSIONS = ('1.3.0', '1.4.0', '1.5.0')
+BASE_FULL_FRAME_SHOT_TYPES = ('macro_prop', 'full_scene', 'variation', 'white_card', 'white_isolated')
+CHARACTER_FREE_SHOT_TYPES = ('still_life', 'environment')
+CHARACTER_FREE_DIRECTIVE = (
+    "Strict character-free composition: absolutely no human figures, characters, people, silhouettes, "
+    "faces, stick figures, hands, arms, legs, or human limbs anywhere in this frame. The focus is entirely "
+    "on the environment, landscape, architecture, objects, or conceptual props."
+)
 DEPRECATED_PURPOSES = ('layer_background', 'layer_sticker')
 FIELDS = {'description', 'aspect_ratio', 'allowed_text', 'character_reference', 'base_reference',
           'preserve', 'change', 'composition', 'mascot_placement', 'caption_clearance', 'shot_type'}
@@ -158,7 +165,12 @@ def _data(data, purpose, version='1.0.0'):
     normalized = {'description': description, 'aspect_ratio': ratio, 'allowed_text': allowed,
                   'preserve': preserve, 'change': change, 'caption_clearance': clearance}
     if 'shot_type' in data:
-        if version not in FULL_FRAME_VERSIONS or data['shot_type'] not in ('macro_prop', 'full_scene', 'variation', 'white_card', 'white_isolated'):
+        allowed_shots = (
+            BASE_FULL_FRAME_SHOT_TYPES + CHARACTER_FREE_SHOT_TYPES
+            if version >= '1.5.0'
+            else BASE_FULL_FRAME_SHOT_TYPES
+        )
+        if version not in FULL_FRAME_VERSIONS or data['shot_type'] not in allowed_shots:
             raise PromptError('FLOW_SHOT_TYPE_UNSUPPORTED: shot types require a full-frame registry (1.3.0+)')
         normalized['shot_type'] = data['shot_type']
         if data['shot_type'] == 'variation' and purpose != 'variation':
@@ -185,9 +197,22 @@ def compile(model, purpose, data, version=CURRENT_VERSION):
         raise PromptError('FLOW_PURPOSE_UNSUPPORTED: reference, character, scene or variation required')
     visual, references = _data(data, purpose, version)
     template_id = 'flow.' + model_id + '.' + purpose
-    sections = ['Requested aspect ratio: ' + visual['aspect_ratio'] + '. Render the requested still image.',
-                spec['models'][model_id]['strategy'], spec['purposes'][purpose], spec['style'], spec['cast_rule'] if version in CAST_VERSIONS else spec['identity'],
-                spec['reference_rule'], spec['data_boundary']] + ([spec['clearance_rule']] if version in FULL_FRAME_VERSIONS or visual.get('caption_clearance') is not None else [])
+    if visual.get('shot_type') in CHARACTER_FREE_SHOT_TYPES:
+        character_section = CHARACTER_FREE_DIRECTIVE
+    elif version in CAST_VERSIONS:
+        character_section = spec['cast_rule']
+    else:
+        character_section = spec['identity']
+
+    sections = [
+        'Requested aspect ratio: ' + visual['aspect_ratio'] + '. Render the requested still image.',
+        spec['models'][model_id]['strategy'],
+        spec['purposes'][purpose],
+        spec['style'],
+        character_section,
+        spec['reference_rule'],
+        spec['data_boundary'],
+    ] + ([spec['clearance_rule']] if version in FULL_FRAME_VERSIONS or visual.get('caption_clearance') is not None else [])
     if version in FULL_FRAME_VERSIONS and visual.get('shot_type'):
         sections.append(spec['shot_types'][visual['shot_type']])
     if references['base']:

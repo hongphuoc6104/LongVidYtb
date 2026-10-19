@@ -82,3 +82,66 @@ class CastPromptTests(unittest.TestCase):
   with self.assertRaisesRegex(PromptError,'FLOW_BASE_REFERENCE_REQUIRED'):compile('NanoBanana2','variation',self.data(preserve=['same fire'],change=['night']),'1.1.0')
  def test_legacy_registries_unchanged(self):
   self.assertEqual(create_pin('NanoBanana2','1.0.0')['version'],'1.0.0');self.assertIn('#8CCFE8',compile('NanoBanana2','scene',{**self.data(),'character_reference':copy.deepcopy(CHARACTER)},'1.0.1')['prompt'])
+
+
+class Version150PromptTests(unittest.TestCase):
+    def data(self, **extra):
+        return {
+            'description': 'A quiet library desk with scattered notebooks and an amber reading lamp.',
+            'aspect_ratio': '16:9',
+            'allowed_text': [],
+            **extra,
+        }
+
+    def test_version_150_all_models_deterministic(self):
+        prompts = {}
+        for model in ('NanoBananaPro', 'NanoBanana2', 'NanoBanana2Lite'):
+            for purpose in ('reference', 'character', 'scene'):
+                data = self.data()
+                result = compile(model, purpose, data, '1.5.0')
+                same = compile(model, purpose, dict(reversed(list(data.items()))), '1.5.0')
+                self.assertEqual(result, same)
+                self.assertEqual(result['sha256'], hashlib.sha256(result['prompt'].encode()).hexdigest())
+                self.assertEqual(result['version'], '1.5.0')
+                prompts[(model, purpose)] = result['prompt']
+        self.assertEqual(len(set(prompts.values())), 9)
+
+    def test_historical_registries_sha256_immutability(self):
+        expected_hashes = {
+            '1.0.0': '13c6656ec627da3b05cb01ae87bfb348a5714f62d4e4d792a539854fe4ed4b23',
+            '1.0.1': '069e87e74bb808f88cc8bb689d4b1b84d759bfb80370d623de04c246536c05ce',
+            '1.1.0': 'b2a41021a795158e89b9f39b1984b8e110f2ff3d2397ef07256a01a3d40f2dae',
+            '1.2.0': 'd574d19eceadcd3db31d3b9c5729c4cca7f5c55333d1c6f1b4dd83019289403b',
+            '1.3.0': '6c689b6af72b779ed477998797f94b8703824403e1d1d02d5be85290976d6176',
+            '1.4.0': '09c268d08b87500fee71b7de3068e002511623006557fd75b9dd55c0e94f4a09',
+        }
+        repo_root = Path(__file__).resolve().parents[2]
+        versions_dir = repo_root / 'sys/flow_prompts/versions'
+        for ver, expected_sha in expected_hashes.items():
+            reg_path = versions_dir / ver / 'registry.json'
+            self.assertTrue(reg_path.is_file(), f"Missing registry {ver}")
+            actual_sha = hashlib.sha256(reg_path.read_bytes()).hexdigest()
+            self.assertEqual(actual_sha, expected_sha, f"Registry {ver} mutated!")
+
+    def test_character_free_shot_types_suppress_cast_rule_in_150(self):
+        spec_150 = registry('1.5.0')
+        for shot in ('still_life', 'environment'):
+            data = self.data(shot_type=shot)
+            result = compile('NanoBanana2', 'scene', data, '1.5.0')
+            prompt = result['prompt']
+            self.assertIn('Strict character-free composition', prompt)
+            self.assertNotIn('round white head', prompt)
+            self.assertNotIn('dot or oval eyes', prompt)
+            self.assertNotIn('thin stick limbs', prompt)
+            self.assertNotIn('simplified cartoon hands', prompt)
+            self.assertNotIn(spec_150['cast_rule'], prompt)
+
+        char_data = self.data(shot_type='full_scene')
+        char_result = compile('NanoBanana2', 'scene', char_data, '1.5.0')
+        char_prompt = char_result['prompt']
+        self.assertNotIn('Strict character-free composition', char_prompt)
+        self.assertIn('round white head', char_prompt)
+        self.assertIn('dot or oval eyes', char_prompt)
+        self.assertIn('thin stick limbs', char_prompt)
+        self.assertIn(spec_150['cast_rule'], char_prompt)
+

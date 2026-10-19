@@ -59,7 +59,9 @@ Hồ sơ bàn giao đặt trong thư mục `sys/runs/<job>/` gồm:
   - **Phần thân & kết:** `4.0` âm tiết/s ở phần giải phẫu cơ chế và `3.6 – 3.8` âm tiết/s ở phần đúc kết triết lý.
 
 ### 2.3. Hợp đồng Tạo hình: Full-frame Visual Beats & Continuity (Flow CDP)
-- Mỗi beat là một ảnh hoàn chỉnh `kind: "scene"`, có chủ thể và môi trường trong cùng khung hình. Dùng sơ đồ biên tập, cận cảnh đạo cụ, cảnh rộng có nhân vật tương tác vật lý với bối cảnh, hoặc thẻ khái niệm nền trắng; tất cả vẫn là ảnh toàn khung.
+- Mỗi beat là một ảnh hoàn chỉnh `kind: "scene"`, áp dụng bảng 7 shot types chuẩn: `full_scene`, `variation`, `macro_prop`, `white_card`, `white_isolated`, `still_life` (cận cảnh vật thể, tài liệu, dụng cụ không có người/bàn tay), và `environment` (cảnh rộng bối cảnh, phòng học, phong cảnh không có người).
+- **Khoảng thở thị giác & Chống mệt mỏi nhân vật:** Sử dụng `still_life` và `environment` làm các nhịp nghỉ nhận thức giữa các cảnh có nhân vật. Bắt buộc đạt ít nhất 30% nhịp hình không có nhân vật trong mỗi chuỗi 10 nhịp trượt; tuyệt đối cấm vượt quá 4 nhịp hình có nhân vật liên tiếp.
+- **Quy chuẩn Bối cảnh (Setting Brevity):** Chuỗi `setting` của mỗi cảnh bắt buộc $\le 8$ từ (chỉ nêu không gian và ánh sáng), tuyệt đối cấm liệt kê bàn ghế, tài liệu, vật dụng trong trường `setting`.
 - Với cùng địa điểm và bố cục, dùng `based_on` trỏ tới ảnh trước, nêu rõ phần giữ lại trong `preserve` và thay đổi trong `change`. Với chuyển cảnh hoặc đổi góc lớn, dùng ảnh độc lập.
 - Trong cold open, hướng tới 8–9 hình trong 12–12,5 giây và khoảng 4 hình trong 5 giây đầu khi lời thoại có đủ ý hình ảnh. Đây là mục tiêu dựng cho phần mở đầu, không phải quota cho mọi cảnh. Các beat phải neo vào đúng cụm lời thoại và được kiểm tra theo WAV.
 - Không tạo `kind: "background"`/`kind: "sticker"`, `layers[]`, ảnh cut-out nền trắng hay viền sticker. Không dùng cơ khí sáo rỗng (`brain cutaway`, bàn tính, van ống nước, mỏ neo sắt).

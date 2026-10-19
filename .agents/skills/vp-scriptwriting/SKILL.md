@@ -47,9 +47,16 @@ description: "Author and transform explainer video scripts into natural conversa
 - **`variation`**: Giữ nguyên căn phòng và góc máy của ảnh trước (`based_on`), chỉ đổi cử chỉ tay/biểu cảm nhân vật (code tự động thêm `Expression lock`; nếu cần đổi biểu cảm ở các bước ngoặt nhận thức, bật `allow_expression_shift: true` hoặc ghi rõ `Expression shift:` trong `change`).
 - **`macro_prop`**: Cận cảnh bàn tay 4 ngón hoạt hình cầm bút, trang sách tô vàng, đồng hồ hoặc chi tiết sơ đồ.
 - **`white_card`**: Thẻ khái niệm nền trắng tinh `#FFFFFF` cô lập một biểu tượng đối sánh tối giản.
+- **`white_isolated`**: Nền trắng tinh `#FFFFFF` với đối tượng hoặc nhân vật được cô lập hoàn toàn.
+- **`still_life`**: Nhịp nghỉ thị giác (rest frame) cận cảnh hoặc trung cảnh tập trung vào vật thể, tài liệu, sách, thiết bị, đồng hồ — tuyệt đối không vẽ nhân vật người que hay bàn tay hoạt hình.
+- **`environment`**: Nhịp nghỉ thị giác (rest frame) cảnh rộng thiết lập không gian, phòng ốc, phong cảnh, đại lộ — hoàn toàn vắng bóng nhân vật.
 
-1. **Cold open (`0:00–0:12.5`) & Cấm Lệnh Vật Lý Vụn Vặt (`MICRO_ACTION_FILLER_BABBLE`):** Đạt **3–5 hình trong 5 giây đầu** và **6–10 hình trong 12,5 giây đầu** bằng **đối trọng thị giác (Visual Counterpoint)** lật tẩy mâu thuẫn nhận thức; tuyệt đối cấm viết $\ge 3$ câu lệnh vật lý 4 chữ tầm thường liên tiếp (*"Cầm cây bút lên. Đặt xuống tờ giấy trắng. Mở sách ra."*).
-2. **Thân bài (`sau 0:15`):** Giữ mỗi câu/nhịp hình trong khoảng **`0.83s–3.80s`**, kể chuyện thí nghiệm sinh động nhưng không trích dẫn khô khan kiểu `et al.`, `DOI:`, `(2008)`.
+1. **Khoảng thở thị giác & Nhịp kể (Visual Breathing Room):**
+   - Xen kẽ nhịp kể với các khung hình nghỉ (`still_life`, `environment`): bắt buộc có ít nhất 30% nhịp hình không có nhân vật trong mỗi chuỗi 10 nhịp trượt.
+   - **Trần nhịp nhân vật liên tiếp:** Tuyệt đối cấm viết quá 4 nhịp hình có nhân vật liên tiếp; phải ngắt chuỗi bằng một nhịp `environment` hoặc `still_life`.
+   - **Quy chuẩn Bối cảnh (Setting Brevity):** Mỗi bối cảnh `setting` chỉ được dài $\le 8$ từ (chỉ nêu không gian và điều kiện ánh sáng, nghiêm cấm liệt kê đồ đạc/đạo cụ).
+2. **Cold open (`0:00–0:12.5`) & Cấm Lệnh Vật Lý Vụn Vặt (`MICRO_ACTION_FILLER_BABBLE`):** Đạt **3–5 hình trong 5 giây đầu** và **6–10 hình trong 12,5 giây đầu** bằng **đối trọng thị giác (Visual Counterpoint)** lật tẩy mâu thuẫn nhận thức; tuyệt đối cấm viết $\ge 3$ câu lệnh vật lý 4 chữ tầm thường liên tiếp (*"Cầm cây bút lên. Đặt xuống tờ giấy trắng. Mở sách ra."*).
+3. **Thân bài (`sau 0:15`):** Giữ mỗi câu/nhịp hình trong khoảng **`0.83s–3.80s`**, kể chuyện thí nghiệm sinh động nhưng không trích dẫn khô khan kiểu `et al.`, `DOI:`, `(2008)`.
 
 ---
 

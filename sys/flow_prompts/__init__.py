@@ -1,5 +1,8 @@
 from .compiler import (
     BANNED_CLICHES,
+    BASE_FULL_FRAME_SHOT_TYPES,
+    CHARACTER_FREE_DIRECTIVE,
+    CHARACTER_FREE_SHOT_TYPES,
     PromptError,
     check_visual_prompt_text,
     compile,
@@ -13,6 +16,9 @@ from .compiler import (
 
 __all__ = [
     'BANNED_CLICHES',
+    'BASE_FULL_FRAME_SHOT_TYPES',
+    'CHARACTER_FREE_DIRECTIVE',
+    'CHARACTER_FREE_SHOT_TYPES',
     'PromptError',
     'check_visual_prompt_text',
     'compile',

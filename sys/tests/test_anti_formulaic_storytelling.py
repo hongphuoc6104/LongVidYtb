@@ -42,7 +42,7 @@ def _non_desk_story_rows() -> list[tuple[str, str, list[tuple[str, str]]]]:
     return [
         (
             "Nghịch lý mở thêm làn đường",
-            "An elevated urban highway interchange at rush hour, red brake lights stretching across lanes.",
+            "An urban highway interchange at rush hour.",
             [
                 ("Mở rộng đường cao tốc đôi khi chỉ làm kẹt xe nghiêm trọng hơn.", "full_scene|Commuters sit trapped on a newly widened six-lane highway."),
                 ("Hàng tỷ đô la đổ vào bê tông, nhưng tốc độ di chuyển lại quay về vạch xuất phát.", "variation|A driver grips the steering wheel as the digital clock ticks forward."),
@@ -50,63 +50,63 @@ def _non_desk_story_rows() -> list[tuple[str, str, list[tuple[str, str]]]]:
         ),
         (
             "Ảo giác giải phóng không gian",
-            "A city municipal planning office with traffic monitors and blueprint tables.",
+            "A municipal planning office in soft daylight.",
             [
                 ("Khi thấy nút thắt cổ chai, phản xạ tự nhiên của chúng ta là nới rộng chỗ hẹp.", "full_scene|An engineer points a marker at a congested road map on a planning table."),
-                ("Ta tin rằng thêm diện tích mặt đường sẽ chia nhỏ lượng xe hiện có.", "white_card|A simple pipe diagram showing water flowing faster through a wider tube on pure white."),
+                ("Ta tin rằng thêm diện tích mặt đường sẽ chia nhỏ lượng xe hiện có.", "still_life|A detailed traffic blueprint and pipe diagram resting under office lamps."),
             ],
         ),
         (
             "Khảo sát thực địa tại các đại lộ",
-            "A traffic observation bridge with digital speed sensors and field notebooks.",
+            "A traffic observation bridge in morning light.",
             [
-                ("Nhưng dữ liệu thực địa từ các đợt mở rộng cao tốc lại kể một câu chuyện ngược lại.", "full_scene|Field researchers observe traffic flow from an overpass with sensor counters."),
-                ("Chỉ vài năm sau khi thông xe, lưu lượng phương tiện tăng vọt lấp đầy mọi làn mới.", "macro_prop|A field sensor screen showing traffic volume climbing back to 100 percent capacity."),
+                ("Nhưng dữ liệu thực địa từ các đợt mở rộng cao tốc lại kể một câu chuyện ngược lại.", "environment|A wide traffic observation bridge overlooking multi-lane roads in morning light."),
+                ("Chỉ vài năm sau khi thông xe, lưu lượng phương tiện tăng vọt lấp đầy mọi làn mới.", "still_life|A field sensor screen showing traffic volume climbing back to 100 percent capacity."),
             ],
         ),
         (
             "Cơ chế nhu cầu cảm ứng",
-            "A conceptual split diagram studio showing hidden commuter choices.",
+            "A conceptual diagram studio under neutral light.",
             [
-                ("Trong kinh tế học giao thông, hiện tượng này được gọi là nhu cầu cảm ứng.", "white_card|Two branching arrows labeled hidden demand and road supply on pure white."),
+                ("Trong kinh tế học giao thông, hiện tượng này được gọi là nhu cầu cảm ứng.", "still_life|Two branching arrows on a printed economic chart showing hidden demand and supply."),
                 ("Đường rộng hơn làm giảm chi phí thời gian tạm thời, kéo những người từng đi tàu chuyển sang lái xe.", "full_scene|Stick-figure commuters leave the train platform and walk toward parked cars."),
             ],
         ),
         (
             "Nghịch lý Braess trong mạng lưới",
-            "A mathematical network model room with glowing node-and-bridge graphs.",
+            "A network model room under ambient glow.",
             [
-                ("Nhà toán học Dietrich Braess thậm chí chứng minh một nghịch lý kỳ lạ hơn.", "full_scene|A network graph of two routes connected by a new shortcut bridge."),
+                ("Nhà toán học Dietrich Braess thậm chí chứng minh một nghịch lý kỳ lạ hơn.", "full_scene|A researcher points at a network graph of two routes connected by a shortcut bridge."),
                 ("Thêm một cây cầu tắt vào mạng lưới có thể khiến mọi tài xế đều đi chậm hơn trước.", "variation|All stick-figure cars crowd onto the middle shortcut bridge, creating a two-way jam."),
             ],
         ),
         (
             "Tại sao trực giác cá nhân đánh lừa hệ thống?",
-            "A quiet evening tram stop overlooking a glowing city avenue.",
+            "A quiet tram stop in evening light.",
             [
-                ("Mỗi người đều chọn lối đi có lợi nhất cho riêng mình ở thời điểm đó.", "full_scene|A lone commuter watches cars inching along the avenue from a quiet tram platform."),
-                ("Nhưng khi hàng vạn người cùng tối ưu hóa cá nhân, điểm cân bằng chung lại sụp đổ.", "variation|The commuter glances down at a transit map with a thoughtful expression."),
+                ("Mỗi người đều chọn lối đi có lợi nhất cho riêng mình ở thời điểm đó.", "environment|A quiet tram stop platform at dusk with distant avenue lights."),
+                ("Nhưng khi hàng vạn người cùng tối ưu hóa cá nhân, điểm cân bằng chung lại sụp đổ.", "still_life|A transit schedule sheet and route map resting beside the quiet tram platform rails."),
             ],
         ),
         (
             "Đối chứng: Khi thành phố dỡ bỏ đường cao tốc",
-            "A riverside urban park that replaced an old elevated highway in Seoul.",
+            "A riverside urban park in bright daylight.",
             [
-                ("Điều bất ngờ nhất xảy ra khi các đô thị làm điều ngược lại: dỡ bỏ đường cao tốc.", "full_scene|A restored stream and pedestrian walkway where an elevated highway once stood."),
-                ("Tại Seoul, khi tháo dỡ tuyến đường xuyên tâm, giao thông quanh thành phố không hề tê liệt.", "macro_prop|A comparison chart showing faster average transit times after highway removal."),
+                ("Điều bất ngờ nhất xảy ra khi các đô thị làm điều ngược lại: dỡ bỏ đường cao tốc.", "environment|A restored stream and pedestrian parkway where an elevated highway once stood."),
+                ("Tại Seoul, khi tháo dỡ tuyến đường xuyên tâm, giao thông quanh thành phố không hề tê liệt.", "still_life|A comparative transit speed chart on a display board beside the park stream."),
             ],
         ),
         (
             "Dịch chuyển hành vi thay vì đổ thêm bê tông",
-            "A multimodal transit hub connecting metro lines, bike lanes and shaded sidewalks.",
+            "A transit hub in morning daylight.",
             [
                 ("Khi cung đường cũ biến mất, nhu cầu di chuyển tự phân bổ sang tàu điện và các khung giờ khác.", "full_scene|Passengers move smoothly between a metro entrance and a tree-lined walkway."),
-                ("Hệ thống giao thông không phải là đường ống nước tĩnh, mà là một cơ thể thích nghi.", "white_card|An adaptive network diagram balancing train, bus and car flows on pure white."),
+                ("Hệ thống giao thông không phải là đường ống nước tĩnh, mà là một cơ thể thích nghi.", "still_life|An adaptive network map balancing train, bus and car flows on a display console."),
             ],
         ),
         (
             "Bài học cho mọi hệ thống quá tải",
-            "A collaborative operations workplace with a clean workflow board.",
+            "An operations workplace under balanced overhead light.",
             [
                 ("Quy luật này xuất hiện ngay trong cách chúng ta quản lý công việc hàng ngày.", "full_scene|A team lead reviews a workflow board with three focused task lanes."),
                 ("Mở thêm kênh họp hay kéo dài giờ làm chỉ hút thêm việc vụn vặt vào lấp chỗ trống.", "variation|Extra sticky notes pile onto the board as the team lead pauses to reconsider."),
@@ -114,10 +114,10 @@ def _non_desk_story_rows() -> list[tuple[str, str, list[tuple[str, str]]]]:
         ),
         (
             "Thiết kế giới hạn để giữ luồng thông suốt",
-            "An elevated urban balcony at sunrise overlooking a balanced city transit corridor.",
+            "An elevated urban balcony at sunrise.",
             [
-                ("Muốn giải quyết tắc nghẽn bền vững, đừng chỉ hỏi làm sao mở rộng sức chứa.", "full_scene|Morning light over a balanced avenue with a dedicated bus lane and clear sidewalk."),
-                ("Hãy thiết kế lại chi phí lựa chọn để dòng chảy tự tìm về đúng luồng hiệu quả nhất.", "variation|The commuter steps onto a departing tram as traffic flows steadily beside it."),
+                ("Muốn giải quyết tắc nghẽn bền vững, đừng chỉ hỏi làm sao mở rộng sức chứa.", "environment|An elevated urban balcony at sunrise overlooking a balanced city transit corridor."),
+                ("Hãy thiết kế lại chi phí lựa chọn để dòng chảy tự tìm về đúng luồng hiệu quả nhất.", "full_scene|A commuter steps onto a departing tram as traffic flows steadily beside it."),
             ],
         ),
     ]

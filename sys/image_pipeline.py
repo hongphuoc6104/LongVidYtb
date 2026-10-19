@@ -967,6 +967,12 @@ def produce(p, j, out):
         raise Blocked('M2_APPROVED: reject a specific scene or character before replacement')
     if p.rows(j)['images']['state'] == 'awaiting_review':
         raise Blocked('M2_REVIEW: approve or reject current checkpoint first')
+    from flow_cdp.lifecycle import ProfileLifecycleManager
+    with ProfileLifecycleManager(auto_teardown=True):
+        return _produce_internal(p, j, out, c, s)
+
+
+def _produce_internal(p, j, out, c, s):
     refs, items, proofs = [], [], []
     if s == 'references':
         chars = c['characters']
@@ -991,15 +997,17 @@ def produce(p, j, out):
         import collections
         import concurrent.futures
         import threading
+        from flow_cdp.lifecycle import calculate_optimal_workers
         cfg = read(p.root / 'config.json')
-        concurrency = cfg.get('concurrency', 6)
+        pool_profiles = cfg.get('flow_cdp_profiles', [])
+        optimal_workers = calculate_optimal_workers(len(scenes))
+        concurrency = cfg.get('concurrency', optimal_workers)
         from execution import settings as execution_settings, is_job
         # Multi-profile concurrency is enabled across pool profiles. If job is bound to a single profile, constrain to 1.
-        pool_profiles = cfg.get('flow_cdp_profiles', [])
         if is_job(p, j) and execution_settings(p, j).get('management_session', {}).get('runtime_bindings', {}).get('flow', {}).get('target', {}).get('profile_path'):
             concurrency = 1
         elif pool_profiles and len(pool_profiles) > 1:
-            concurrency = min(concurrency, len(pool_profiles))
+            concurrency = max(1, min(concurrency, optimal_workers, len(pool_profiles)))
         else:
             concurrency = 1
 

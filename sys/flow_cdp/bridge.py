@@ -586,7 +586,9 @@ def generate_cdp_batch(
     partitioner = PatchPartitioner(target_size=patch_size, min_size=2, max_size=4)
     patches = partitioner.partition(specs)
 
-    workers_needed = max(1, min(len(patches), len(profiles_cfg))) if patches else 1
+    from .lifecycle import calculate_optimal_workers
+    optimal_cap = calculate_optimal_workers(len(specs))
+    workers_needed = max(1, min(len(patches), len(profiles_cfg), optimal_cap)) if patches else 1
     manager = MultiProfileManager(profiles_config=profiles_cfg, job_id=job_id, max_workers_per_job=workers_needed)
     try:
         dispatcher = MultiProfileDispatcher(profile_manager=manager)

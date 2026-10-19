@@ -177,12 +177,34 @@ def validate_content(root,b,revision,bhash,p):
  if errors: raise ContractError(errors)
  if p.get('schema_version')=='3.0':
   from scripts.visual_quality import (
+   check_character_breathing_room,
    check_instructional_manual_loop,
    check_scene_narrative_progression,
+   check_setting_description_verbosity,
    check_visual_setting_diversity,
   )
   from tools.script_diversity_linter import check_micro_action_filler
-  checks = (check_visual_setting_diversity, check_instructional_manual_loop, check_scene_narrative_progression, check_micro_action_filler) if b.get('visual_pacing_profile') == 'full_frame_v1' else ()
+  from visual_style import STYLE_DESCRIPTION, render_style
+  is_earth_or_rest = (
+   render_style(b) == 'earth_toned_2d'
+   or b.get('style') == STYLE_DESCRIPTION
+   or any(
+    str(im.get('shot_type')) in {'still_life', 'environment'}
+    for sc in p.get('scenes', [])
+    for im in sc.get('images', [])
+   )
+  )
+  checks = [
+   check_visual_setting_diversity,
+   check_instructional_manual_loop,
+   check_scene_narrative_progression,
+   check_micro_action_filler,
+  ] if b.get('visual_pacing_profile') == 'full_frame_v1' else []
+  if is_earth_or_rest and b.get('visual_pacing_profile') == 'full_frame_v1':
+   checks.extend([
+    check_character_breathing_room,
+    check_setting_description_verbosity,
+   ])
   for check in checks:
    for violation in check(p['scenes']):
     fail(violation['type'], str(violation.get('scene_id', 'scenes')), str(violation))

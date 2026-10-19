@@ -111,6 +111,20 @@ def get_workload_tier_info(num_images: int) -> dict[str, Any]:
     }
 
 
+_ACTIVE_LIFECYCLE: ProfileLifecycleManager | None = None
+
+
+def get_current_lifecycle() -> ProfileLifecycleManager | None:
+    return _ACTIVE_LIFECYCLE
+
+
+def register_spawned_port(port: int) -> None:
+    """Register a newly spawned Chrome debug port with the active lifecycle manager."""
+    global _ACTIVE_LIFECYCLE
+    if _ACTIVE_LIFECYCLE is not None:
+        _ACTIVE_LIFECYCLE.spawned_ports.add(port)
+
+
 class ProfileLifecycleManager:
     """Manages spawning, tracking, and clean teardown of Chrome profile instances.
 
@@ -193,8 +207,14 @@ class ProfileLifecycleManager:
             self.teardown(force_all=self.force_teardown_all)
 
     def __enter__(self) -> ProfileLifecycleManager:
+        global _ACTIVE_LIFECYCLE
+        self._prev_active = _ACTIVE_LIFECYCLE
+        _ACTIVE_LIFECYCLE = self
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+        global _ACTIVE_LIFECYCLE
+        _ACTIVE_LIFECYCLE = self._prev_active
         if self.auto_teardown:
             self.teardown(force_all=self.force_teardown_all)
+

@@ -180,3 +180,41 @@ def test_remote_worker_routes_light_profile_and_rejects_lost_treatment(tmp_path:
     (output / "render-result.json").write_text(json.dumps(report))
     with pytest.raises(ValueError, match="visual style mismatch"):
         validate_render_result(output, request)
+
+
+@pytest.mark.parametrize("shot", ["still_life", "environment"])
+@pytest.mark.parametrize("ratio", ["16:9", "9:16"])
+def test_character_free_rest_shots_have_negative_directive_and_no_figures(shot: str, ratio: str) -> None:
+    description = "An archival stone artifact resting on a plain wooden pedestal under natural light."
+    record = compile("NanoBanana2", "scene", {
+        "description": description,
+        "aspect_ratio": ratio,
+        "shot_type": shot,
+        "allowed_text": [],
+    }, STYLE_VERSION)
+    prompt = record["prompt"]
+    assert "Strict character-free composition" in prompt
+    assert "absolutely no human figures" in prompt
+    assert "round white head" not in prompt
+    assert "dot or oval eyes" not in prompt
+    assert "thin stick limbs" not in prompt
+    assert "four-finger" not in prompt
+    assert "simplified cartoon hands" not in prompt
+    assert record["provenance"]["references"]["character"] is None
+
+
+def test_earth_toned_style_contains_palette_and_negative_space() -> None:
+    for color in ("ochre", "sage green", "warm gray", "sky blue"):
+        assert color in STYLE_DESCRIPTION
+    assert "60-30-10" in STYLE_DESCRIPTION
+    assert "25–35% calm open canvas" in STYLE_DESCRIPTION
+
+    record = compile("NanoBanana2", "scene", {
+        "description": "A researcher notes findings on a desk.",
+        "aspect_ratio": "16:9",
+        "shot_type": "full_scene",
+        "allowed_text": [],
+    }, STYLE_VERSION)
+    assert "earth-toned foundation" in record["prompt"]
+    assert "light-value pastel" not in record["prompt"]
+

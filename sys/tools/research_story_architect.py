@@ -239,8 +239,10 @@ class ResearchedBeat:
     allow_expression_shift: Optional[bool] = None
 
     def __post_init__(self) -> None:
-        if self.shot_type not in {"macro_prop", "full_scene", "variation", "white_card", "white_isolated"}:
+        if self.shot_type not in {"macro_prop", "full_scene", "variation", "white_card", "white_isolated", "still_life", "environment"}:
             raise ValueError(f"Unsupported full-frame shot type: {self.shot_type}")
+        if self.shot_type in {"still_life", "environment"}:
+            self.character_ids = []
         if self.shot_type == "variation" and not (self.based_on and self.preserve.strip() and self.change.strip()):
             raise ValueError("A variation requires based_on, preserve, and change")
         from flow_prompts import find_visual_cliche
@@ -700,13 +702,14 @@ def build_scenes_from_story_rows(
             cliche = find_visual_cliche(desc)
             if cliche:
                 raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {image_id} description: contains banned {cliche}")
+            beat_char_ids = [] if shot_type in ("still_life", "environment") else [character_id]
             beats.append(ResearchedBeat(
                 image_id=image_id,
                 description=desc,
                 anchor_quote=quote,
                 anchor_occurrence=seen_quotes[quote],
                 reason="Narration-locked full-frame beat.",
-                character_ids=[character_id],
+                character_ids=beat_char_ids,
                 effect="cut",
                 based_on=based_on,
                 preserve=preserve,
@@ -805,17 +808,21 @@ def build_content_v3(
                             if cliche:
                                 raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {s_id}/{visual.image_id} visible_text.{subf}: contains banned {cliche}")
 
+            effective_shot = "variation" if visual.based_on else visual.shot_type
+            resolved_character_ids = [] if effective_shot in ("still_life", "environment") else list(
+                visual.character_ids if visual.character_ids is not None else sc.character_ids
+            )
             image_entry: Dict[str, Any] = {
                 "id": visual.image_id,
                 "description": visual.description,
-                "character_ids": list(visual.character_ids or sc.character_ids),
+                "character_ids": resolved_character_ids,
                 "based_on": visual.based_on,
                 "preserve": visual.preserve,
                 "change": visual.change,
                 "reason": visual.reason,
                 "visible_text": list(visual.visible_text),
                 "kind": "scene",
-                "shot_type": "variation" if visual.based_on else visual.shot_type,
+                "shot_type": effective_shot,
             }
             if getattr(visual, "allow_expression_shift", None) is not None:
                 image_entry["allow_expression_shift"] = bool(visual.allow_expression_shift)
