@@ -279,6 +279,17 @@ def stop_profile(profile_entry: dict[str, Any]) -> None:
                     pass
 
 
+def stop_profile_by_port(port: int) -> bool:
+    """Terminate Chrome process for a specific remote debugging port and clean its locks."""
+    d = registry()
+    entry = next((p for p in d.get("profiles", []) if int(p["port"]) == port), None)
+    if entry:
+        stop_profile(entry)
+        return True
+    subprocess.run(["pkill", "-f", f"remote-debugging-port={port}"], capture_output=True, check=False)
+    return True
+
+
 def stop_all(profiles: list[dict[str, Any]] | None = None) -> list[str]:
     """Stop all configured or passed profiles."""
     d = registry()

@@ -23,6 +23,11 @@ from .multi_profile_manager import (
     MultiProfileManager,
     ProfileState,
 )
+from .lifecycle import (
+    ProfileLifecycleManager,
+    calculate_optimal_workers,
+    get_workload_tier_info,
+)
 from .patch_partitioner import Patch, PatchPartitioner
 
 __all__ = [
@@ -32,6 +37,9 @@ __all__ = [
     "MultiProfileDispatcher",
     "ProfileState",
     "ChromeProfileWorker",
+    "calculate_optimal_workers",
+    "get_workload_tier_info",
+    "ProfileLifecycleManager",
     "generate_cdp_image",
     "generate_cdp_batch",
     "generate_b2_image",

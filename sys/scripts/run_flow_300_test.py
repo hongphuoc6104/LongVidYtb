@@ -36,6 +36,11 @@ if str(SYS_DIR) not in sys.path:
 
 from flow_cdp import accounts
 from flow_cdp.cdp_direct_client import PROFILES, DirectCDPProfileSession
+from flow_cdp.lifecycle import (
+    ProfileLifecycleManager,
+    calculate_optimal_workers,
+    get_workload_tier_info,
+)
 
 
 def sha256_file(path: Path) -> str:
@@ -162,6 +167,7 @@ def worker_loop(
     worker_id: int,
     initial_profile: dict[str, Any],
     pool: DynamicProfilePool,
+    lifecycle_mgr: ProfileLifecycleManager,
     task_queue: queue.PriorityQueue,
     out_dir: Path,
     staging_dir: Path,
@@ -178,7 +184,7 @@ def worker_loop(
     sess = None
 
     def connect_session(p_cfg: dict[str, Any]) -> DirectCDPProfileSession:
-        launch_profile_if_needed(p_cfg)
+        lifecycle_mgr.launch_profile(p_cfg)
         s = DirectCDPProfileSession(p_cfg)
         loop.run_until_complete(s.connect())
         return s
@@ -382,13 +388,15 @@ def worker_loop(
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Run 300 Flow image generations with Dynamic Pool Failover")
+    parser = argparse.ArgumentParser(description="Run Flow image generations with Dynamic Pool Failover and Auto-Sizing")
     parser.add_argument("--total", type=int, default=300, help="Total images to generate")
-    parser.add_argument("--workers", type=int, default=9, help="Number of concurrent active worker threads")
+    parser.add_argument("--workers", type=str, default="auto", help="Number of concurrent active workers or 'auto'")
     parser.add_argument("--pacing", type=float, default=4.0, help="Pacing gap in seconds per profile")
     parser.add_argument("--stagger", type=float, default=0.5, help="Staggered start delay in seconds")
     parser.add_argument("--cooldown", type=float, default=600.0, help="Quarantine duration for blocked profiles")
     parser.add_argument("--out-dir", type=str, default="sys/runs/flow-300-experiment/images", help="Output directory")
+    parser.add_argument("--keep-open", action="store_true", help="Keep spawned Chrome instances open after exit")
+    parser.add_argument("--stop-all", action="store_true", help="Stop ALL profiles after exit, even pre-existing ones")
     args = parser.parse_args()
 
     out_dir = (REPO_ROOT / args.out_dir).resolve()
@@ -399,6 +407,18 @@ def main():
     summary_file = out_dir.parent / "summary.json"
 
     prompts = generate_300_prompts()[:args.total]
+
+    # Calculate optimal workers based on workload size
+    tier_info = get_workload_tier_info(len(prompts))
+    if str(args.workers).lower() == "auto":
+        allocated_workers = tier_info["actual_workers"]
+    else:
+        try:
+            allocated_workers = int(args.workers)
+        except ValueError:
+            allocated_workers = tier_info["actual_workers"]
+
+    num_workers = min(allocated_workers, len(PROFILES))
 
     task_q = queue.PriorityQueue()
     for item in prompts:
@@ -420,45 +440,53 @@ def main():
     print(f"  - Thư mục lưu ảnh: {out_dir}")
     print(f"  - Thư mục Staging: {staging_dir}")
     print(f"  - Tổng số Profile trong Pool: {len(PROFILES)} Profiles")
-    print(f"  - Số luồng chạy đồng thời (Active Workers): {args.workers}")
+    print(f"  - Quy mô tác vụ (Workload Tier): {tier_info['tier'].upper()} ({tier_info['description']})")
+    print(f"  - Phân bổ số luồng tự động: {num_workers} Active Workers (Ước tính RAM: ~{tier_info['estimated_ram_mb']} MB)")
     print(f"  - Giãn cách mỗi Profile (Pacing Gap): {args.pacing}s")
-    print(f"  - Thời gian cách ly Cooldown khi gặp Lỗi 7: {args.cooldown}s (10 phút)")
-    print(f"  - Cơ chế bảo toàn: Two-Phase Commit + Priority Re-Queue + Standby Failover")
+    print(f"  - Quản lý vòng đời (Lifecycle): Mở bao nhiêu tắt bấy nhiêu (Tự động giải phóng RAM khi xong)")
     print("=" * 80 + "\n")
 
     start_time = time.time()
     threads = []
-    num_workers = min(args.workers, len(PROFILES))
 
-    for w_id in range(1, num_workers + 1):
-        prof = pool.acquire()
-        if not prof:
-            print(f"[!] Không đủ profile khả dụng cho Worker-{w_id}.")
-            break
+    with ProfileLifecycleManager(auto_teardown=not args.keep_open, force_teardown_all=args.stop_all) as lifecycle_mgr:
+        for w_id in range(1, num_workers + 1):
+            prof = pool.acquire()
+            if not prof:
+                print(f"[!] Không đủ profile khả dụng cho Worker-{w_id}.")
+                break
 
-        t = threading.Thread(
-            target=worker_loop,
-            args=(
-                w_id,
-                prof,
-                pool,
-                task_q,
-                out_dir,
-                staging_dir,
-                incidents_file,
-                abort_event,
-                args.pacing,
-                progress_lock,
-                progress_tracker,
-            ),
-            name=f"Worker-{w_id}",
-        )
-        threads.append(t)
-        t.start()
-        time.sleep(args.stagger)
+            t = threading.Thread(
+                target=worker_loop,
+                args=(
+                    w_id,
+                    prof,
+                    pool,
+                    lifecycle_mgr,
+                    task_q,
+                    out_dir,
+                    staging_dir,
+                    incidents_file,
+                    abort_event,
+                    args.pacing,
+                    progress_lock,
+                    progress_tracker,
+                ),
+                name=f"Worker-{w_id}",
+            )
+            threads.append(t)
+            t.start()
+            time.sleep(args.stagger)
 
-    for t in threads:
-        t.join()
+        for t in threads:
+            t.join()
+
+        # Teardown spawned profiles
+        closed_ports = lifecycle_mgr.teardown()
+        if closed_ports:
+            print(f"\n[*] Đã tự động tắt {len(closed_ports)} profile Chrome vừa mở (Port: {closed_ports}) để giải phóng 100% RAM.")
+        else:
+            print("\n[*] Không có profile nào cần tắt (giữ nguyên cửa sổ sẵn có).")
 
     total_time = round(time.time() - start_time, 2)
     completed_count = progress_tracker["completed"]
