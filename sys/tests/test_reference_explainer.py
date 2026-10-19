@@ -269,3 +269,14 @@ def test_direct_rpc_submission_classification_uses_evidence_instead_of_error_wor
         asyncio.run(session.generate_images_batch(['comparison']) if batch else session.generate_image('comparison'))
     assert getattr(caught.value, 'generation_submitted', None) is (False if submitted is False else None)
     assert session.evaluate.await_count == 1
+
+
+@pytest.mark.parametrize('inventory', [None, []])
+def test_legacy_missing_profile_inventory_reaches_single_transport_without_type_error(inventory):
+    from flow_cdp import bridge
+
+    with patch.object(bridge, '_config', return_value={'flow_cdp_profiles': inventory}), \
+         patch.object(bridge, '_execute_sub_batch', return_value=[]) as transport:
+        assert bridge.generate_cdp_batch([{'testCase': 'fixture', 'prompt': 'comparison'}]) == []
+    transport.assert_called_once()
+    assert transport.call_args.kwargs['worker'] is None

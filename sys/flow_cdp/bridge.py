@@ -501,7 +501,7 @@ def generate_cdp_batch(
     """Submit batch through Flow CDP with automatic patch partitioning and multi-profile failover."""
     cfg = _config()
     patch_size = cfg.get("patch_size", 3)
-    profiles_cfg = cfg.get("flow_cdp_profiles", None)
+    profiles_cfg = cfg.get("flow_cdp_profiles") or []
 
     for spec in specs:
         if profile_id:
