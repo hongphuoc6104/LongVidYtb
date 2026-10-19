@@ -568,6 +568,7 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None):
             'captcha_failed',
             'no_at_token',
             'connection closed',
+            'js exception',
         )
         if any(tp in err_text for tp in transient_patterns):
             reconcile_stuck_conflict(p, j, target, reason=f"auto-recovered transient error: {conflict.get('error')}")
@@ -589,6 +590,7 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None):
                     'captcha_failed',
                     'no_at_token',
                     'connection closed',
+                    'js exception',
                 )
                 if any(tp in err_text for tp in transient_patterns):
                     result['state'] = 'not_submitted'
@@ -745,7 +747,7 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None):
                                      'cannot connect to chrome', 'endpoint ownership unavailable',
                                      'no chrome profile workers available', 'no close frame received or sent',
                                      'cdp_transport_closed', 'connection closed', 'failed to fetch',
-                                     'captcha_failed', 'no_at_token')
+                                     'captcha_failed', 'no_at_token', 'js exception')
             err_msg = str(ex).lower()
             not_sub = getattr(ex, 'generation_submitted', None) is False or any(pat in err_msg for pat in pre_submission_errors)
             state = 'generated' if collection_only or getattr(ex, 'collection_only', False) else (
