@@ -47,7 +47,9 @@ from script_cadence_checker import (  # noqa: E402
     extract_pauses,
     split_sentences,
 )
-from visual_style import CAST_APPEARANCE, DEFAULT_OUTFIT, STYLE_DESCRIPTION
+from visual_style import CAST_APPEARANCE, DEFAULT_OUTFIT
+from visual_style import LEGACY_HANDDRAWN_STYLE_DESCRIPTION as STYLE_DESCRIPTION
+from visual_style import STYLE_DESCRIPTION as REFERENCE_STYLE_DESCRIPTION
 
 DEFAULT_CHANNEL_PILLAR = "Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật"
 ALLOWED_FUNNEL_TIERS: Tuple[str, str, str] = ("tier_1_broad", "tier_2_mid", "tier_3_conversion")
@@ -237,25 +239,48 @@ class ResearchedBeat:
     visible_text: List[Dict[str, str]] = field(default_factory=list)
     shot_type: str = "full_scene"
     allow_expression_shift: Optional[bool] = None
+    has_character: Optional[bool] = None
+    explanation: Optional[Dict[str, Any]] = None
 
     def __post_init__(self) -> None:
-        if self.shot_type not in {"macro_prop", "full_scene", "variation", "white_card", "white_isolated", "still_life", "environment"}:
+        allowed_shots = {
+            "macro_prop",
+            "full_scene",
+            "variation",
+            "white_card",
+            "white_isolated",
+            "still_life",
+            "environment",
+            "concept_metaphor",
+            "visual_diagram",
+            "cutaway_detail",
+        }
+        if self.shot_type not in allowed_shots:
             raise ValueError(f"Unsupported full-frame shot type: {self.shot_type}")
-        if self.shot_type in {"still_life", "environment"}:
+        if self.shot_type in {"still_life", "environment", "visual_diagram", "cutaway_detail"} and not self.character_ids:
             self.character_ids = []
         if self.shot_type == "variation" and not (self.based_on and self.preserve.strip() and self.change.strip()):
             raise ValueError("A variation requires based_on, preserve, and change")
         from flow_prompts import find_visual_cliche
+        from flow_prompts.compiler import find_laziness_pattern
         for field_name, text in [("description", self.description), ("preserve", self.preserve), ("change", self.change)]:
             if text:
                 cliche = find_visual_cliche(text)
                 if cliche:
                     raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {self.image_id} {field_name}: contains banned {cliche}")
+                laziness = find_laziness_pattern(text)
+                if laziness:
+                    name, token = laziness
+                    raise ValueError(f"LAZY_VISUAL_ACTION_FORBIDDEN in {self.image_id} {field_name}: contains banned {name} ({token!r})")
         for vt in self.visible_text:
             if isinstance(vt, str):
                 cliche = find_visual_cliche(vt)
                 if cliche:
                     raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {self.image_id} visible_text: contains banned {cliche}")
+                laziness = find_laziness_pattern(vt)
+                if laziness:
+                    name, token = laziness
+                    raise ValueError(f"LAZY_VISUAL_ACTION_FORBIDDEN in {self.image_id} visible_text: contains banned {name} ({token!r})")
             elif isinstance(vt, dict):
                 for subf in ("text", "placement", "object"):
                     subval = vt.get(subf)
@@ -263,6 +288,10 @@ class ResearchedBeat:
                         cliche = find_visual_cliche(subval)
                         if cliche:
                             raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {self.image_id} visible_text.{subf}: contains banned {cliche}")
+                        laziness = find_laziness_pattern(subval)
+                        if laziness:
+                            name, token = laziness
+                            raise ValueError(f"LAZY_VISUAL_ACTION_FORBIDDEN in {self.image_id} visible_text.{subf}: contains banned {name} ({token!r})")
 
 
 # Read compatibility for authored briefs and older builder imports.
@@ -293,11 +322,16 @@ class ResearchedScene:
 
     def __post_init__(self) -> None:
         from flow_prompts import find_visual_cliche
+        from flow_prompts.compiler import find_laziness_pattern
         for field_name, text in [("setting", self.setting), ("action", self.action), ("bg_description", self.bg_description), ("scene_description", self.scene_description)]:
             if text:
                 cliche = find_visual_cliche(text)
                 if cliche:
                     raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {self.scene_id} {field_name}: contains banned {cliche}")
+                laziness = find_laziness_pattern(text)
+                if laziness:
+                    name, token = laziness
+                    raise ValueError(f"LAZY_VISUAL_ACTION_FORBIDDEN in {self.scene_id} {field_name}: contains banned {name} ({token!r})")
 
 
 @dataclass
@@ -308,7 +342,7 @@ class ResearchedTopic:
     video_type: str
     min_duration: Optional[float] = None
     max_duration: Optional[float] = None
-    style: str = STYLE_DESCRIPTION
+    style: str = REFERENCE_STYLE_DESCRIPTION
     aspect_ratio: str = "16:9"
     sources: List[Dict[str, Any]] = field(default_factory=list)
     required_points: List[Dict[str, str]] = field(default_factory=list)
@@ -659,50 +693,353 @@ def _select_best_coverage_quote(narration: str, req_text: str) -> str:
     return first if first in narration else narration[:30].strip()
 
 
+_HUMAN_ACTOR_KEYWORDS_RE = re.compile(
+    r"\b(?:student|learner|figure|stick-figure|stick_figure|person|human|hand(?!-drawn)|hands|finger|fingers|researcher|"
+    r"traveler|mountaineer|psychologist|psychologists|lecturer|audience|committee|character|actor|people|"
+    r"nhân vật|người|sinh viên|giảng viên|nhà nghiên cứu|lữ hành|bàn tay|ngón tay)\b",
+    re.IGNORECASE,
+)
+
+
+_GENERAL_STOPWORDS = {
+    "là", "và", "của", "cho", "với", "trong", "trên", "dưới", "khi", "mà", "để", "như", "rằng",
+    "thì", "bị", "được", "này", "đó", "kia", "ấy", "lại", "cũng", "đã", "đang", "sẽ", "chỉ",
+    "vẫn", "rất", "quá", "lắm", "hãy", "phải", "nào", "gì", "sao", "ai", "đâu", "nhiều", "ít",
+    "thêm", "bớt", "ra", "vào", "lên", "xuống", "về", "từ", "đến", "qua", "bởi", "tại", "theo",
+    "nếu", "nhưng", "thế", "vậy", "thực sự", "hoàn toàn", "chính", "mình", "bạn", "họ", "chúng ta",
+    "tôi", "rồi", "ngay", "luôn", "chưa", "tự", "do", "vì", "ở", "đây", "càng", "khiến", "làm",
+    "the", "and", "or", "of", "to", "in", "on", "at", "by", "for", "with", "about", "against",
+    "between", "into", "through", "during", "before", "after", "above", "below", "from", "up",
+    "down", "out", "off", "over", "under", "again", "further", "then", "once",
+}
+
+_BI_CONCEPT_MAP: Dict[str, List[str]] = {
+    "sinh viên": ["student", "pupil", "researcher", "academic"],
+    "nghiên cứu": ["research", "study", "academic", "scientist", "investigation"],
+    "tài liệu": ["paper", "document", "file", "textbook", "reading"],
+    "bài báo": ["article", "paper", "journal"],
+    "bản nháp": ["draft", "manuscript", "page", "sheet"],
+    "trang giấy": ["paper", "sheet", "page", "blank"],
+    "màn hình": ["screen", "monitor", "display"],
+    "con trỏ": ["cursor", "pointer"],
+    "máy tính": ["laptop", "computer", "desktop"],
+    "bức tường": ["wall", "brick", "barrier"],
+    "mặt nạ": ["mask"],
+    "đồng hồ": ["clock", "watch", "time", "2 am", "midnight"],
+    "não": ["brain", "mind", "head", "cognitive"],
+    "tâm lý": ["psychologist", "psychology", "mental", "consultation"],
+    "kẻ mạo danh": ["impostor", "imposter"],
+    "hội chứng": ["syndrome"],
+    "lời khen": ["praise", "compliment", "laurel", "honor"],
+    "cân đòn": ["scale", "balance"],
+    "thước đo": ["measure", "ruler", "gauge"],
+    "tế bào": ["cell"],
+    "hồng cầu": ["blood", "red blood"],
+    "oxy": ["oxygen"],
+    "mao mạch": ["vessel", "capillary"],
+    "lạm phát": ["inflation"],
+    "tiền": ["currency", "money"],
+    "thuyền": ["boat", "ship", "vessel"],
+    "dòng điện": ["current", "electricity", "wire"],
+    "electron": ["electron"],
+    "đánh bại": ["beat", "defeat", "greater", "weigh", ">"],
+    "sợ": ["fear", "anxiety", "dread", "paralysis", "freeze", "slump", "stress"],
+    "lo sợ": ["fear", "anxiety", "dread", "paralysis"],
+    "bế tắc": ["paralysis", "stuck", "blocked", "wall", "freeze"],
+    "tự ti": ["doubt", "insecurity", "hesitat"],
+    "bắt đầu": ["start", "begin", "open"],
+    "đêm": ["night", "dark", "midnight", "lamp"],
+}
+
+
+def extract_sentence_semantic_elements(sentence: str) -> Dict[str, Any]:
+    """Dynamically extract verbs, nouns, quantities, and comparative structures from any narration sentence.
+    Follows General Dynamic Reasoning Invariant: operates strictly via language structure without hardcoded topic templates.
+    """
+    text = sentence.strip()
+    # 1. Quantities / metrics
+    numbers = re.findall(
+        r"(?:\d+(?:[.,]\d+)?%?|\b(?:bảy mươi|năm mươi|hai mươi|mười|một trăm|năm trăm|hàng trăm|trăm|một nghìn|nghìn|hàng nghìn|hàng triệu|hai|ba|bốn|năm|sáu|bảy|tám|chín)\s*(?:phần trăm|giờ|phút|từ|bài|người|sinh viên)?\b)",
+        text,
+        re.IGNORECASE,
+    )
+    # 2. Key Vietnamese/English active verbs
+    action_verbs = re.findall(
+        r"(?:\b(?:bắt đầu|phá vỡ|đánh bại|thú nhận|khảo sát|phỏng vấn|đối xử|đặt tên|leo|đứng|nở rộng|"
+        r"bóp nghẹt|nhìn thấy|mở ra|thì thầm|gõ|xóa|xuất hiện|tiến lên|chuyển|vượt quá|nhận ra|"
+        r"vận chuyển|sụt giảm|tạo thành|khóa|đè bẹp|"
+        r"shatters|crushes|climbs|tears|ignites|throws|plants|types|confesses|expands|breaks|stamps|tilts)\b)",
+        text,
+        re.IGNORECASE,
+    )
+    # 3. Contrast / comparison markers
+    contrast_markers = re.findall(
+        r"(?:\b(?:càng\b.*?\bcàng|nhưng|ngược lại|đánh bại|thay vì|hơn|kém|khác|đối nghịch|vs|>|<)\b)",
+        text,
+        re.IGNORECASE,
+    )
+
+    # 4. Dynamic linguistic extraction for nouns and conceptual entities (general across any domain)
+    nouns: List[str] = []
+    # Phrases following classifiers / markers
+    classifier_pats = [
+        r"\b(?:các|những|mỗi|từng|chiếc|cái|con|bức|tờ|bản|cuộc|sự|nỗi|mối|hạt|khối|khoảng|vùng|mô|tế bào|hệ|đoàn|quân|cửa|sông|dòng)\s+([a-zA-ZÀ-ỹ0-9_]+(?:\s+[a-zA-ZÀ-ỹ0-9_]+)?)\b",
+        r"\b([a-zA-ZÀ-ỹ0-9_]+(?:\s+[a-zA-ZÀ-ỹ0-9_]+)?)\s+(?:của|trong|trên|dưới|về)\b",
+    ]
+    for pat in classifier_pats:
+        for m in re.finditer(pat, text, re.IGNORECASE):
+            chunk = m.group(1).strip()
+            subwords = chunk.split()
+            valid_sub = [w for w in subwords if w.lower() not in _GENERAL_STOPWORDS]
+            if valid_sub:
+                val = " ".join(valid_sub)
+                if len(val) >= 3 and val.lower() not in _GENERAL_STOPWORDS:
+                    nouns.append(val)
+
+    # Capitalized phrases (Proper nouns or mid-sentence topics)
+    tokens = text.split()
+    for tok in tokens[1:]:
+        clean = re.sub(r"[^\wÀ-ỹ]", "", tok)
+        if clean and clean[0].isupper() and clean.lower() not in _GENERAL_STOPWORDS:
+            nouns.append(clean)
+
+    # Content word n-grams (not in stopwords, length >= 3)
+    words = re.findall(r"[a-zA-ZÀ-ỹ0-9_]+", text)
+    for i, w in enumerate(words):
+        if w.lower() not in _GENERAL_STOPWORDS and len(w) >= 3 and not w.isdigit():
+            if i + 1 < len(words):
+                w2 = words[i + 1]
+                if w2.lower() not in _GENERAL_STOPWORDS and len(w2) >= 3 and not w2.isdigit():
+                    phrase = f"{w} {w2}"
+                    if phrase not in nouns:
+                        nouns.append(phrase)
+            if w not in nouns and not any(w in n for n in nouns):
+                nouns.append(w)
+
+    # Deduplicate while preserving order
+    seen = set()
+    cleaned_nouns: List[str] = []
+    for n in nouns:
+        n_low = n.lower()
+        if n_low not in seen:
+            seen.add(n_low)
+            cleaned_nouns.append(n)
+
+    return {
+        "text": text,
+        "metrics": numbers,
+        "verbs": action_verbs,
+        "nouns": cleaned_nouns,
+        "contrasts": contrast_markers,
+    }
+
+
+def derive_see_say_visual_action(
+    sentence: str,
+    shot_type: str = "full_scene",
+    setting: str = "",
+    character_id: str = "",
+) -> str:
+    """Dynamically derive an authentic 2D explainer visual action from any spoken sentence on the fly.
+    Adheres strictly to the General Dynamic Reasoning Invariant (zero hardcoded topic templates).
+    """
+    sem = extract_sentence_semantic_elements(sentence)
+    noun_label = ", ".join(sem["nouns"][:2]) if sem["nouns"] else "narrated subject"
+    metric_label = sem["metrics"][0] if sem["metrics"] else ""
+    contrast_label = sem["contrasts"][0] if sem["contrasts"] else ""
+
+    if shot_type == "visual_diagram":
+        if metric_label:
+            return f"Hand-drawn quantitative infographic on clean white background highlighting {metric_label} with high-contrast charcoal lines."
+        elif contrast_label or "đánh bại" in sentence.lower():
+            return f"Hand-drawn comparison diagram on clean white background contrasting opposing elements: {noun_label}."
+        else:
+            return f"Clean hand-drawn conceptual diagram on pure white background mapping the structural relationship of {noun_label}."
+
+    elif shot_type == "concept_metaphor":
+        if any(w in sentence.lower() for w in ("sợ", "bế tắc", "nguy hiểm", "xiềng xích", "khó")):
+            return f"Hand-drawn visual metaphor showing tangible physical friction and tension surrounding {noun_label} on minimal ground."
+        elif any(w in sentence.lower() for w in ("nở rộng", "lớn", "mênh mông", "biển", "núi")):
+            return f"Dynamic hand-drawn expanding boundary metaphor pushing against dark charcoal void to visualize {noun_label}."
+        else:
+            return f"Hand-drawn symbolic visual metaphor depicting active physical dynamics of {noun_label} on uncluttered ground."
+
+    elif shot_type == "cutaway_detail":
+        return f"Hand-drawn cross-section cutaway revealing the internal structural mechanics of {noun_label} with fine charcoal outlines."
+
+    elif shot_type == "variation":
+        return f"The figure advances the physical action, actively engaging with {noun_label} while shifting pose and tension."
+
+    else:  # full_scene
+        return f"The contextual stick-figure actively engages with {noun_label}, executing physical action reflecting spoken friction."
+
+
+def validate_see_say_alignment(sentence: str, visual_desc: str) -> bool:
+    """Verify lexical or conceptual connection between spoken sentence and visual prompt.
+    Returns True when visual elements bind to sentence metrics, key entities, or concepts.
+    Returns False when the visual prompt is completely disconnected from the spoken sentence.
+    """
+    if not sentence or not visual_desc:
+        return False
+    s_low = sentence.lower()
+    v_low = visual_desc.lower()
+
+    # Matching numbers cannot establish a shared subject or relationship.
+    # 2. Bilingual concept mapping
+    for vn_term, en_synonyms in _BI_CONCEPT_MAP.items():
+        if vn_term in s_low:
+            for en_syn in en_synonyms:
+                if en_syn in v_low:
+                    return True
+
+    # 3. Direct lexical overlap (for shared terms >= 4 chars)
+    words = re.findall(r"[a-zA-ZÀ-ỹ0-9_]+", s_low)
+    for w in words:
+        if len(w) >= 4 and not w.isdigit() and w not in _GENERAL_STOPWORDS and re.search(r"\b" + re.escape(w) + r"\b", v_low):
+            return True
+
+    # If neither metric, concept, nor lexical overlap matches, reject disconnect
+    return False
+
+
 def build_scenes_from_story_rows(
-    story_rows: List[Tuple[str, str, List[Tuple[str, str]]]],
-    character_id: str = "CH01",
+    story_rows: Any,
+    character_id: str = "",
     nominal_rate: float = NOMINAL_SPEECH_RATE,
+    characters: Optional[Any] = None,
+    visual_contract: str = "1.6.0",
 ) -> List[ResearchedScene]:
-    """Flash-agent friendly builder: converts (title, setting, [(sentence, "shot_type|visual_action")]) rows
-    into fully anchored, cadence-calibrated ResearchedScene objects without manual coordinate or offset math.
+    """Flash-agent friendly builder: converts story rows into fully anchored, cadence-calibrated
+    ResearchedScene objects with dynamic contextual character resolution and action progression.
+    Supports 3-tuple (title, setting, rows), 4-tuple, 5-tuple, and 6-tuple story rows.
     """
     from flow_prompts import find_visual_cliche
+    from flow_prompts.compiler import find_laziness_pattern
 
     built_scenes: List[ResearchedScene] = []
     total = len(story_rows)
-    for index, (title, setting, rows) in enumerate(story_rows, 1):
+    for index, item in enumerate(story_rows, 1):
         scene_id = f"SC{index:02d}"
+        scene_char_id = character_id
+        scene_tone = None
+        scene_phase = None
+        if len(item) == 3:
+            title, setting, rows = item
+        elif len(item) == 4 and isinstance(item[2], list):
+            title, setting, rows, scene_char_id = item
+        elif len(item) == 4 and isinstance(item[3], list):
+            title, setting, scene_tone, rows = item
+        elif len(item) == 5 and isinstance(item[4], list):
+            title, setting, scene_tone, scene_phase, rows = item
+        elif len(item) == 6 and isinstance(item[5], list):
+            title, setting, scene_tone, _spoken_style, scene_phase, rows = item
+        else:
+            title, setting = item[0], item[1]
+            rows = item[-1]
+
         cliche = find_visual_cliche(setting)
         if cliche:
             raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {scene_id} setting: contains banned {cliche}")
+        laziness = find_laziness_pattern(setting)
+        if laziness and visual_contract != "1.7.0":
+            name, token = laziness
+            raise ValueError(f"LAZY_VISUAL_ACTION_FORBIDDEN in {scene_id} setting: contains banned {name} ({token!r})")
+
+        # Dynamically infer primary scene character if declared in row specs
+        inferred_scene_char = None
+        for _, spec in rows:
+            raw_shot = spec.partition("|")[0].strip()
+            if ":" in raw_shot:
+                _, _, c_part = raw_shot.partition(":")
+                c_part = c_part.strip()
+                if c_part and c_part.lower() not in ("none", "no_char", "character_free", "free", "empty"):
+                    chars = [c.strip() for c in c_part.split(",") if c.strip()]
+                    if chars:
+                        inferred_scene_char = chars[0]
+                        break
+        if inferred_scene_char and scene_char_id == "CH01":
+            scene_char_id = inferred_scene_char
+
         narration = " ".join(sent.strip() for sent, _ in rows if sent.strip())
         beats: List[ResearchedBeat] = []
         base_id: Optional[str] = None
         seen_quotes: Dict[str, int] = {}
         for beat_idx, (sentence, spec) in enumerate(rows, 1):
-            shot_type, _, action_desc = spec.partition("|")
-            shot_type = shot_type.strip() or "full_scene"
+            raw_shot, _, action_desc = spec.partition("|")
+            raw_shot = raw_shot.strip()
             action_desc = action_desc.strip() or spec.strip()
+
+            if ":" in raw_shot:
+                shot_type, _, char_part = raw_shot.partition(":")
+                shot_type = shot_type.strip() or "full_scene"
+                char_part = char_part.strip()
+                if char_part.lower() in ("none", "no_char", "character_free", "free", "empty"):
+                    explicit_chars: List[str] = []
+                    has_explicit_chars = True
+                else:
+                    explicit_chars = [c.strip() for c in char_part.split(",") if c.strip()]
+                    has_explicit_chars = True
+            else:
+                shot_type = raw_shot or "full_scene"
+                explicit_chars = []
+                has_explicit_chars = False
+
             image_id = f"{scene_id}_I{beat_idx}"
+            quote = sentence.strip()
+
+            # Dynamic See-Say synthesis when action_desc is not specified
+            if not action_desc or action_desc == raw_shot or action_desc == shot_type:
+                action_desc = derive_see_say_visual_action(
+                    quote, shot_type=shot_type, setting=setting, character_id=scene_char_id
+                )
+
             cliche = find_visual_cliche(action_desc) or find_visual_cliche(spec)
             if cliche:
                 raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {image_id} visual action: contains banned {cliche}")
-            quote = sentence.strip()
+            laziness = find_laziness_pattern(action_desc) or find_laziness_pattern(spec)
+            if laziness and visual_contract != "1.7.0":
+                name, token = laziness
+                raise ValueError(f"LAZY_VISUAL_ACTION_FORBIDDEN in {image_id} visual action: contains banned {name} ({token!r})")
+
             seen_quotes[quote] = seen_quotes.get(quote, 0) + 1
             if shot_type == "full_scene" and base_id is None:
                 base_id = image_id
             based_on = (base_id or f"{scene_id}_I{max(1, beat_idx - 1)}") if shot_type == "variation" else None
+
+            has_expression_shift = bool(
+                re.search(
+                    r"\b(?:smile|smiles|smiling|grin|grins|grinning|frown|frowns|clench|clenches|cower|cowers|relaxes|relaxed|laugh|laughs|tears|sweat|dread|resilience|joy|paralyzed|overwhelmed|shaking|expression shift|facial shift|thay đổi biểu cảm|chuyển biểu cảm)\b",
+                    action_desc,
+                    re.I,
+                )
+            )
             preserve = (
                 f"Keep the exact camera angle, room geometry and props in {setting}. "
                 "Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift."
                 if based_on else ""
             )
-            desc = f"{setting} {action_desc}"
+            desc = f"{setting} {action_desc}".strip()
             cliche = find_visual_cliche(desc)
             if cliche:
                 raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {image_id} description: contains banned {cliche}")
-            beat_char_ids = [] if shot_type in ("still_life", "environment") else [character_id]
+            laziness = find_laziness_pattern(desc)
+            if laziness and visual_contract != "1.7.0":
+                name, token = laziness
+                raise ValueError(f"LAZY_VISUAL_ACTION_FORBIDDEN in {image_id} description: contains banned {name} ({token!r})")
+
+            if has_explicit_chars:
+                beat_char_ids = list(explicit_chars)
+            else:
+                if shot_type in ("still_life", "environment", "visual_diagram", "cutaway_detail"):
+                    beat_char_ids = []
+                elif shot_type in ("full_scene", "variation"):
+                    beat_char_ids = [scene_char_id] if scene_char_id else []
+                elif shot_type in ("concept_metaphor", "macro_prop", "white_card", "white_isolated"):
+                    if _HUMAN_ACTOR_KEYWORDS_RE.search(action_desc):
+                        beat_char_ids = [scene_char_id] if scene_char_id else []
+                    else:
+                        beat_char_ids = []
+
             beats.append(ResearchedBeat(
                 image_id=image_id,
                 description=desc,
@@ -715,13 +1052,25 @@ def build_scenes_from_story_rows(
                 preserve=preserve,
                 change=action_desc,
                 shot_type=shot_type,
+                allow_expression_shift=True if has_expression_shift and shot_type == "variation" else None,
+                has_character=bool(beat_char_ids) if visual_contract == "1.7.0" else None,
             ))
+
+        scene_char_ids: List[str] = []
+        for b in beats:
+            for cid in b.character_ids:
+                if cid and cid not in scene_char_ids:
+                    scene_char_ids.append(cid)
+        if not scene_char_ids and scene_char_id:
+            scene_char_ids = [scene_char_id]
+
         is_last = index == total
         p_tail = DEFAULT_P_TAIL_LAST if is_last else DEFAULT_P_TAIL_PARA
         pause_sec, _, _ = extract_pauses(narration)
         syl = count_syllables(narration, lang="vi")
         duration = round(pause_sec + (syl / nominal_rate) + p_tail, 2)
-        tone = _infer_scene_tone(index, total, title, narration)
+        tone = scene_tone or _infer_scene_tone(index, total, title, narration)
+        first_action = rows[0][1].partition("|")[2].strip() if rows else title
         built_scenes.append(ResearchedScene(
             scene_id=scene_id,
             title=title,
@@ -730,12 +1079,13 @@ def build_scenes_from_story_rows(
             narration=narration,
             requirements=[],
             source_ids=[],
-            character_ids=[character_id],
-            action=rows[0][1].partition("|")[2].strip() if rows else title,
+            character_ids=scene_char_ids,
+            action=first_action or title,
             setting=setting,
             camera="Semantic full-frame sequence",
             visual_beats=beats,
             tone=tone,
+            narrative_phase=scene_phase,
         ))
     return built_scenes
 
@@ -757,11 +1107,16 @@ def build_content_v3(
     elapsed = 0.0
 
     from flow_prompts import find_visual_cliche
+    from flow_prompts.compiler import find_laziness_pattern
 
     if topic.style:
         cliche = find_visual_cliche(topic.style)
         if cliche:
             raise ValueError(f"FLOW_CLICHE_FORBIDDEN in topic style: contains banned {cliche}")
+        laziness = find_laziness_pattern(topic.style)
+        if laziness:
+            name, token = laziness
+            raise ValueError(f"LAZY_VISUAL_ACTION_FORBIDDEN in topic style: contains banned {name} ({token!r})")
     for ch in topic.characters:
         for f in ("appearance", "outfit", "name"):
             val = ch.get(f) if isinstance(ch, dict) else getattr(ch, f, None)
@@ -770,6 +1125,10 @@ def build_content_v3(
                 if cliche:
                     ch_id = ch.get("id") if isinstance(ch, dict) else getattr(ch, "id", "character")
                     raise ValueError(f"FLOW_CLICHE_FORBIDDEN in character {ch_id} {f}: contains banned {cliche}")
+                laziness = find_laziness_pattern(val)
+                if laziness:
+                    ch_id = ch.get("id") if isinstance(ch, dict) else getattr(ch, "id", "character")
+                    raise ValueError(f"LAZY_VISUAL_ACTION_FORBIDDEN in character {ch_id} {f}: contains banned {name} ({token!r})")
 
     for sc in topic.scenes:
         s_id = sc.scene_id
@@ -779,6 +1138,10 @@ def build_content_v3(
                 cliche = find_visual_cliche(val)
                 if cliche:
                     raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {s_id} {f}: contains banned {cliche}")
+                laziness = find_laziness_pattern(val)
+                if laziness:
+                    name, token = laziness
+                    raise ValueError(f"LAZY_VISUAL_ACTION_FORBIDDEN in {s_id} {f}: contains banned {name} ({token!r})")
 
         visual_beats = sc.visual_beats or _default_full_frame_beats(sc, elapsed)
         images: List[Dict[str, Any]] = []
@@ -795,11 +1158,19 @@ def build_content_v3(
                     cliche = find_visual_cliche(val)
                     if cliche:
                         raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {s_id}/{visual.image_id} {field_name}: contains banned {cliche}")
+                    laziness = find_laziness_pattern(val)
+                    if laziness:
+                        name, token = laziness
+                        raise ValueError(f"LAZY_VISUAL_ACTION_FORBIDDEN in {s_id}/{visual.image_id} {field_name}: contains banned {name} ({token!r})")
             for vt in getattr(visual, "visible_text", []):
                 if isinstance(vt, str):
                     cliche = find_visual_cliche(vt)
                     if cliche:
                         raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {s_id}/{visual.image_id} visible_text: contains banned {cliche}")
+                    laziness = find_laziness_pattern(vt)
+                    if laziness:
+                        name, token = laziness
+                        raise ValueError(f"LAZY_VISUAL_ACTION_FORBIDDEN in {s_id}/{visual.image_id} visible_text: contains banned {name} ({token!r})")
                 elif isinstance(vt, dict):
                     for subf in ("text", "placement", "object"):
                         subval = vt.get(subf)
@@ -807,11 +1178,18 @@ def build_content_v3(
                             cliche = find_visual_cliche(subval)
                             if cliche:
                                 raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {s_id}/{visual.image_id} visible_text.{subf}: contains banned {cliche}")
+                            laziness = find_laziness_pattern(subval)
+                            if laziness:
+                                name, token = laziness
+                                raise ValueError(f"LAZY_VISUAL_ACTION_FORBIDDEN in {s_id}/{visual.image_id} visible_text.{subf}: contains banned {name} ({token!r})")
 
             effective_shot = "variation" if visual.based_on else visual.shot_type
-            resolved_character_ids = [] if effective_shot in ("still_life", "environment") else list(
-                visual.character_ids if visual.character_ids is not None else sc.character_ids
-            )
+            if effective_shot in ("still_life", "environment", "visual_diagram", "cutaway_detail") and not visual.character_ids:
+                resolved_character_ids = []
+            else:
+                resolved_character_ids = list(
+                    visual.character_ids if visual.character_ids is not None else sc.character_ids
+                )
             image_entry: Dict[str, Any] = {
                 "id": visual.image_id,
                 "description": visual.description,
@@ -826,6 +1204,10 @@ def build_content_v3(
             }
             if getattr(visual, "allow_expression_shift", None) is not None:
                 image_entry["allow_expression_shift"] = bool(visual.allow_expression_shift)
+            if visual.has_character is not None:
+                image_entry["has_character"] = visual.has_character
+            if visual.explanation is not None:
+                image_entry["explanation"] = dict(visual.explanation)
             images.append(image_entry)
             anchor_payload: Dict[str, Any] = {
                 "vi": {

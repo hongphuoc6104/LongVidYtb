@@ -5,6 +5,9 @@ description: "Architect research-backed conversational narratives, 3-tier academ
 
 # VP Research Architect — Research, Packaging & Full-Frame Narrative Architecture Skill
 
+For new registry 1.7.0 work, use the [reference-led explainer contract](../vp-production/references/reference-led-explainer.md). Its explicit entity policy and explanatory static compositions supersede historical stick-figure defaults, compulsory room/hand rules and people/no-people quotas below. Retain narration hooks, source fidelity, cadence and full-frame timing. Do not invent identities or certify semantic percentages from keyword overlap.
+
+
 `vp-research-architect` là bộ kỹ năng thượng nguồn (upstream creative & technical engine) chịu trách nhiệm nghiên cứu đề tài, khai thác cứ liệu học thuật chuẩn quốc tế (Q1), đóng gói CTR (Title/Thumbnail/SEO) và kiến trúc bộ hồ sơ kỹ thuật hoàn chỉnh (`brief.json` và `content.json` chuẩn Schema 3.0, `visual_pacing_profile: "full_frame_v1"`) cho băng chuyền Video Pilot (`long_16x9` và `short_9x16` Spin-offs).
 
 Bộ kỹ năng này được thiết kế để **tự động hóa 100% phần tính toán kỹ thuật bằng code Python**, giúp Agent thực thi (kể cả dòng model nhẹ như Gemini Flash) không bao giờ phải đoán tọa độ `(x, y)` hay tính toán offset thủ công.

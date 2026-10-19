@@ -155,23 +155,17 @@ def ensure_connected(sock_path: Path | None = None) -> dict[str, Any]:
             raise Blocked(f"Flow CDP connection blocked: {result.get('reason', 'not connected')}")
         return result
 
-    from .cdp_direct_client import PROFILES, ensure_chrome_profiles_launched, is_port_open
-    if any(is_port_open(p["cdp_port"]) for p in PROFILES):
-        return {
-            "status": "connected",
-            "identity": {
-                "observedProfile": str(Path(PROFILES[0]["user_data_dir"]).expanduser() / PROFILES[0]["profile_dir"]),
-                "toolUrl": PROFILES[0]["url"],
-            }
-        }
-    ensure_chrome_profiles_launched()
-    return {
-        "status": "connected",
-        "identity": {
-            "observedProfile": str(Path(PROFILES[0]["user_data_dir"]).expanduser() / PROFILES[0]["profile_dir"]),
-            "toolUrl": PROFILES[0]["url"],
-        }
-    }
+    from .cdp_direct_client import PROFILES, ensure_chrome_profiles_launched
+    selected = next((p for p in PROFILES if target_sock is not None and get_socket_path(p['name']) == target_sock), None)
+    if selected is None and target_sock is not None:
+        raise _mark_not_submitted(Blocked('FLOW_PROFILE_UNRESOLVED: explicit profile socket is unknown'))
+    selected = selected or PROFILES[0]
+    # Only the selected runtime can be started here; never launch the inventory.
+    ensure_chrome_profiles_launched([selected])
+    return {'status': 'connected', 'identity': {
+        'observedProfile': str(Path(selected['user_data_dir']).expanduser() / selected['profile_dir']),
+        'toolUrl': selected['url'],
+    }}
 
 
 def is_session_available(sock_path: Path | None = None) -> bool:
@@ -195,7 +189,7 @@ def require_queue_acceptance() -> None:
         raise Blocked("B2_QUEUE_NOT_ACCEPTED: Flow CDP queue not accepted for production")
 
 
-def _execute_via_cdp_direct(specs: list[dict[str, Any]], timeout: float = 240.0, worker: Any = None) -> list[dict[str, Any]]:
+def _execute_via_cdp_direct(specs: list[dict[str, Any]], timeout: float = 240.0, worker: Any = None, before_submit=None) -> list[dict[str, Any]]:
     import asyncio
     import urllib.request
 
@@ -208,6 +202,8 @@ def _execute_via_cdp_direct(specs: list[dict[str, Any]], timeout: float = 240.0,
     selected_cfg = None
     if worker_id or worker_port:
         selected_cfg = next((p for p in PROFILES if (worker_id and p["name"] == worker_id) or (worker_port and p["cdp_port"] == worker_port)), None)
+    if (worker_id or worker_port) and selected_cfg is None:
+        raise _mark_not_submitted(Blocked('FLOW_OWNER_UNAVAILABLE: assigned profile is not configured'))
     if not selected_cfg:
         for p in PROFILES:
             if is_port_open(p["cdp_port"]):
@@ -237,13 +233,21 @@ def _execute_via_cdp_direct(specs: list[dict[str, Any]], timeout: float = 240.0,
                 err.generation_submitted = False
                 err.retryable_pre_submit = True
                 raise _mark_not_submitted(err) from exc
+            if any(spec.get('collectionOnly') for spec in specs):
+                raise _mark_not_submitted(Blocked('FLOW_COLLECTION_REQUIRED: direct generation cannot collect an existing request'))
+            if before_submit is not None:
+                before_submit({'status': 'connected', 'identity': {
+                    'observedProfile': str(Path(selected_cfg['user_data_dir']).expanduser() / selected_cfg['profile_dir']),
+                    'toolUrl': await sess.evaluate('location.href'),
+                }})
             for spec in specs:
                 start_t = time.time()
                 prompt = spec["prompt"]
                 aspect = spec.get("ratio", "9:16")
                 base_media_id = spec.get("baseMediaId")
                 ref_media_ids = [spec["charMediaId"]] if spec.get("charMediaId") else None
-                model = "BELUGA"
+                from .flow_rpc import resolve_image_model
+                model = resolve_image_model(spec.get("model"))
 
                 try:
                     res = await sess.generate_image(
@@ -253,12 +257,9 @@ def _execute_via_cdp_direct(specs: list[dict[str, Any]], timeout: float = 240.0,
                         base_media_id=base_media_id,
                         ref_media_ids=ref_media_ids,
                     )
-                except Exception as exc:
-                    exc_str = str(exc).lower()
-                    if "no close frame" in exc_str or "connectionclosed" in exc_str or "cdp_transport_closed" in exc_str:
-                        if getattr(exc, "generation_submitted", None) is None:
-                            exc.generation_submitted = False
-                            exc.retryable_pre_submit = True
+                except Exception:
+                    # Errors after an attempted RPC are ambiguous unless the
+                    # transport itself provides explicit pre-send evidence.
                     raise
                 out_dir = Path(spec.get("outDir") or spec.get("out_dir") or (SYS_ROOT / "experiments/b2_illustrator/results/controller")).resolve()
                 out_dir.mkdir(parents=True, exist_ok=True)
@@ -347,8 +348,8 @@ def _execute_sub_batch(specs: list[dict[str, Any]], timeout: float = 240.0, sock
             result = send_raw_command(f"tool-snapshot:queue:{manifest}", timeout=max(timeout, 240))
     except Blocked as exc:
         exc_msg = str(exc).lower()
-        if "socket not found" in exc_msg or "communication error" in exc_msg:
-            return _execute_via_cdp_direct(specs, timeout=timeout, worker=worker)
+        if getattr(exc, "generation_submitted", None) is False and ("socket not found" in exc_msg or "communication error" in exc_msg):
+            return _execute_via_cdp_direct(specs, timeout=timeout, worker=worker, before_submit=before_submit)
         raise
 
 
@@ -438,7 +439,7 @@ def generate_cdp_image(
                         owner = json.loads(cand.read_text(encoding="utf-8"))
                         owner_path = owner.get("profile_path", "")
                         for p in _config().get("flow_cdp_profiles", []):
-                            if p.get("directory") and p.get("directory") in owner_path:
+                            if __import__("flow_dispatch").profile_path(p) == Path(owner_path).expanduser().resolve():
                                 profile_id = p["id"]
                                 break
                     except Exception:
@@ -448,13 +449,9 @@ def generate_cdp_image(
 
     try:
         require_queue_acceptance()
-        if profile_id:
-            ensure_connected(sock_path=get_socket_path(profile_id))
-        else:
-            ensure_connected()
+        ensure_connected(sock_path=get_socket_path(profile_id) if profile_id else None)
     except Blocked as exc:
-        _mark_not_submitted(exc)
-        raise
+        raise _mark_not_submitted(exc)
 
     canonical_mascot = (SYS_ROOT / "assets/characters/channel-mascot/reference-v1.png").resolve()
     if use_character_ref and char_ref_path is None and canonical_mascot.exists():
@@ -504,7 +501,7 @@ def generate_cdp_batch(
     """Submit batch through Flow CDP with automatic patch partitioning and multi-profile failover."""
     cfg = _config()
     patch_size = cfg.get("patch_size", 3)
-    profiles_cfg = cfg.get("flow_cdp_profiles", None)
+    profiles_cfg = cfg.get("flow_cdp_profiles") or []
 
     for spec in specs:
         if profile_id:
@@ -546,29 +543,32 @@ def generate_cdp_batch(
             profiles_cfg = matched_target
 
     if profiles_cfg and job_id:
-        from execution import is_job, settings
-
+        from execution import is_job
+        from flow_dispatch import job_profiles
         from pilot import Pilot
         p_obj = Pilot()
         try:
-            if is_job(p_obj, job_id):
-                binding = settings(p_obj, job_id).get("management_session", {}).get("runtime_bindings", {}).get("flow", {})
-                target_path = binding.get("target", {}).get("profile_path")
-                if target_path:
-                    target_resolved = Path(target_path).resolve()
-                    matched = [
-                        prof for prof in profiles_cfg
-                        if (Path(prof.get("user_data_dir", "")).expanduser() / prof.get("directory", "")).resolve() == target_resolved
-                    ]
-                    if len(matched) != 1:
-                        raise _mark_not_submitted(Blocked("FLOW_BOUND_PROFILE_MISSING: exact owned profile required"))
-                    profiles_cfg = matched
+            if is_job(p_obj, job_id) and p_obj.payload(job_id, 'control').get('flow_prompt_version') == '1.7.0':
+                _, eligible = job_profiles(p_obj, job_id)
+                allowed_ids = {prof['id'] for prof in eligible}
+                profiles_cfg = [prof for prof in profiles_cfg if prof['id'] in allowed_ids]
+                if not profiles_cfg or (target_profile and target_profile not in allowed_ids):
+                    raise _mark_not_submitted(Blocked('FLOW_BOUND_PROFILE_MISSING: requested owner is outside the authorized pool'))
+            elif is_job(p_obj, job_id):
+                from execution import settings
+                binding = settings(p_obj, job_id).get('management_session', {}).get('runtime_bindings', {}).get('flow', {})
+                bound = binding.get('target', {}).get('profile_path')
+                if bound:
+                    from flow_dispatch import profile_path
+                    profiles_cfg = [prof for prof in profiles_cfg if profile_path(prof) == Path(bound).expanduser().resolve()]
+                    if len(profiles_cfg) != 1:
+                        raise _mark_not_submitted(Blocked('FLOW_BOUND_PROFILE_MISSING: exact legacy owner required'))
         finally:
             p_obj.db.close()
 
     # If small batch (1-4) and single profile specified, or socket is already active for this single profile
     if len(specs) <= 4 and (target_profile or not use_multi_profile or not profiles_cfg or len(profiles_cfg) <= 1):
-        effective_profile = target_profile or profile_id
+        effective_profile = target_profile or profile_id or (profiles_cfg[0]["id"] if len(profiles_cfg) == 1 else "")
         sock = get_socket_path(effective_profile)
         assigned_worker = None
         if effective_profile and profiles_cfg:
@@ -595,9 +595,6 @@ def generate_cdp_batch(
 
         def worker_executor(worker: ChromeProfileWorker, patch_items: list[dict[str, Any]]) -> list[dict[str, Any]]:
             sock = get_socket_path(worker.profile_id)
-            # If per-worker socket doesn't exist, fall back to default socket
-            if not sock.exists() and get_socket_path().exists():
-                sock = get_socket_path()
             sub_results = _execute_sub_batch(patch_items, timeout=timeout, sock_path=sock, before_submit=before_submit, worker=worker)
             for r in sub_results:
                 if "profile_id" not in r or not r["profile_id"]:

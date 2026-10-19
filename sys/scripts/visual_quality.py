@@ -112,7 +112,7 @@ def apply_room_continuity(images: list[dict[str, Any]]) -> None:
                 image['preserve'] = 'Keep room layout, window geometry, furniture, props and figure design.'
             elif not image.get('based_on'):
                 base = image['id']
-        if image.get('based_on'):
+        if image.get('based_on') and image.get('has_character', True):
             lock = 'Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.'
             if 'expression' not in image.get('preserve', '').casefold() and 'biểu cảm' not in image.get('preserve', '').casefold():
                 image['preserve'] = (image.get('preserve', '').rstrip() + ' ' + lock).strip()
@@ -131,7 +131,7 @@ def _is_character_beat(beat: dict[str, Any]) -> bool:
     if beat.get('has_character') is True:
         return True
     shot_type = str(beat.get('shot_type', '')).strip().casefold()
-    if shot_type in {'still_life', 'environment', 'white_card'}:
+    if shot_type in {'still_life', 'environment', 'white_card', 'white_isolated', 'visual_diagram', 'cutaway_detail'}:
         return False
     if shot_type in {'full_scene', 'variation'}:
         return True
@@ -219,5 +219,91 @@ def check_setting_description_verbosity(
                 'max_allowed': max_words,
                 'message': f'Setting description exceeds {max_words} words ({len(words)} words): \'{setting}\'',
             })
+    return violations
+
+
+def check_abstract_card_clustering(
+    scenes: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Ban clustering of > 2 consecutive abstract card shots (white_card, visual_diagram, cutaway_detail)."""
+    beats: list[dict[str, Any]] = []
+    for sc in scenes:
+        images = sc.get('images')
+        sc_id = str(sc.get('id', sc.get('scene_id', '?')))
+        if images and isinstance(images, list):
+            for im in images:
+                beats.append({'scene_id': sc_id, 'beat_id': str(im.get('id', sc_id)), 'beat': im})
+        else:
+            beats.append({'scene_id': sc_id, 'beat_id': sc_id, 'beat': sc})
+
+    violations: list[dict[str, Any]] = []
+    abstract_streak = 0
+    abstract_shots = {'white_card', 'white_isolated', 'visual_diagram', 'cutaway_detail'}
+    for idx, item in enumerate(beats):
+        shot = str(item['beat'].get('shot_type', '')).strip().casefold()
+        if shot in abstract_shots:
+            abstract_streak += 1
+            if abstract_streak > 2:
+                violations.append({
+                    'type': 'CONSECUTIVE_ABSTRACT_CARDS_EXCEEDED',
+                    'scene_id': item['scene_id'],
+                    'beat_id': item['beat_id'],
+                    'beat_index': idx,
+                    'streak': abstract_streak,
+                    'message': f'Too many consecutive abstract cards ({abstract_streak} > 2)',
+                })
+        else:
+            abstract_streak = 0
+    return violations
+
+
+def check_ungrounded_environment_scenes(
+    scenes: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Ban ungrounded environment scenes that lack character grounding, metaphor marker, or active story location."""
+    violations: list[dict[str, Any]] = []
+    for sc in scenes:
+        sc_id = str(sc.get('id', sc.get('scene_id', '?')))
+        setting = str(sc.get('setting', '')).strip()
+        images = sc.get('images', [])
+        for im in images:
+            shot = str(im.get('shot_type', '')).strip().casefold()
+            if shot == 'environment':
+                desc = str(im.get('description', '')).casefold()
+                has_metaphor = any(w in desc for w in ('metaphor', 'symbol', 'boundary', 'tension', 'horizon', 'mist', 'void'))
+                has_chars = bool(im.get('character_ids')) or bool(sc.get('character_ids'))
+                if not has_metaphor and not has_chars and not setting:
+                    violations.append({
+                        'type': 'UNGROUNDED_ENVIRONMENT_SCENE',
+                        'scene_id': sc_id,
+                        'beat_id': str(im.get('id', sc_id)),
+                        'message': 'Ungrounded environment shot lacks character grounding, metaphor marker, or active story setting',
+                    })
+    return violations
+
+
+def check_atomic_variation_continuity(
+    scenes: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Enforce atomic variation continuity: each variation must reference a valid base within the same scene."""
+    violations: list[dict[str, Any]] = []
+    for sc in scenes:
+        sc_id = str(sc.get('id', sc.get('scene_id', '?')))
+        images = sc.get('images', [])
+        seen_ids = set()
+        for im in images:
+            im_id = str(im.get('id', ''))
+            seen_ids.add(im_id)
+            shot = str(im.get('shot_type', '')).strip().casefold()
+            if shot == 'variation':
+                based_on = str(im.get('based_on', '')).strip()
+                if not based_on or based_on not in seen_ids:
+                    violations.append({
+                        'type': 'BROKEN_VARIATION_CONTINUITY',
+                        'scene_id': sc_id,
+                        'beat_id': im_id,
+                        'based_on': based_on,
+                        'message': f"Variation '{im_id}' does not immediately follow or reference a prior base in the same scene",
+                    })
     return violations
 

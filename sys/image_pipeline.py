@@ -348,11 +348,17 @@ def _template_request(p, j, target, prompt, corrections, ratio, refs, registrati
         data['shot_type'] = scene['shot_type']
     if has_format_profile:
         data['caption_clearance'] = format_clearance
+    if pin['version'] == '1.7.0' and purpose == 'character':
+        data['has_character'] = True
     if image is not None:
         data['character_reference'] = {'media_id': media, 'sha256': digest(image)}
     if scene:
         data['preserve'] = preserve_items
         data['change'] = change_items
+        if pin['version'] == '1.7.0':
+            if not original or type(original.get('has_character')) is not bool:
+                raise Blocked('FLOW_ENTITY_POLICY_REQUIRED: author human presence explicitly')
+            data['has_character'] = original['has_character']
     if corrections:
         data.setdefault('change', []).append(corrections)
     if base_image:
@@ -410,7 +416,12 @@ def _plan_request(p, j, target, prompt, refs, registration, base_image):
     does) so the batch path can compute the exact same journal key a normal
     request() call would, without submitting anything itself.
     """
-    content(p, j)  # schema/character-id validation; result unused below.
+    current = content(p, j)
+    from explainer_contract import is_reference_explainer, validate_explanations
+    if is_reference_explainer(p.brief(j)[0]):
+        findings = validate_explanations(current)
+        if findings:
+            raise Blocked('EXPLAINER_CONTRACT: ' + '; '.join(findings))
     if not target.startswith('ref:') and not approved(p, j, 'references'):
         raise Blocked('M2_REFERENCES: approve references first')
     scene = next((x for x in planned_units(p,j) if x['id'] == target), None)
@@ -518,27 +529,13 @@ def auto_reconcile_attempt(p, j, folder, record=None):
         return data
 
 
-def reconcile_stuck_conflict(p, j, target, reason="auto recovery failover"):
-    """Reset a stuck ambiguous/failed conflict for a target if no file exists."""
+def reconcile_stuck_conflict(p, j, target, reason="collection-only recovery"):
+    """Try collection; missing files and transport errors do not prove non-submission."""
     conflict = _unresolved_conflict(p, j, target)
     if not conflict:
         return None
     folder = p.job(j) / 'flow/attempts' / conflict['key']
-    record_file = folder / 'request.json'
-    if record_file.is_file():
-        data = read(record_file)
-        if data.get('state') in ('ambiguous', 'submitted', 'failed'):
-            data['state'] = 'not_submitted'
-            data['reconciled_reason'] = reason
-            write(record_file, data)
-            from execution import is_job
-            if is_job(p, j) or (Path(folder) / 'owner.json').exists():
-                __import__('flow_management').sync(p, j, folder, data)
-            p.event(j, 'images', 'conflict_reset', json.dumps({
-                'target': target, 'key': conflict['key'], 'reason': reason
-            }, ensure_ascii=False))
-            return data
-    return None
+    return auto_reconcile_attempt(p, j, folder, conflict)
 
 
 def _before_generation(p, j):
@@ -562,20 +559,6 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None, p
     # Even changed prompts/edits cannot hide an unresolved submission.
     conflict = _unresolved_conflict(p, j, target)
     if conflict and not (conflict['key'] == key and conflict['state'] == 'generated'):
-        err_text = str(conflict.get('error', '')).lower()
-        transient_patterns = (
-            'no close frame received or sent',
-            'cdp_transport_closed',
-            'failed to fetch',
-            'captcha_failed',
-            'no_at_token',
-            'connection closed',
-            'js exception',
-        )
-        if any(tp in err_text for tp in transient_patterns):
-            reconcile_stuck_conflict(p, j, target, reason=f"auto-recovered transient error: {conflict.get('error')}")
-            conflict = _unresolved_conflict(p, j, target)
-    if conflict and not (conflict['key'] == key and conflict['state'] == 'generated'):
         raise Blocked('M2_AMBIGUOUS: reconcile request ' + conflict['key'] + ' before another submission')
     folder = base / key
     record = folder / 'request.json'
@@ -583,24 +566,6 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None, p
         result = read(record)
         if result['state'] in ('submitted', 'ambiguous'):
             result = auto_reconcile_attempt(p, j, folder, result)
-            if result['state'] in ('submitted', 'ambiguous'):
-                err_text = str(result.get('error', '')).lower()
-                transient_patterns = (
-                    'no close frame received or sent',
-                    'cdp_transport_closed',
-                    'failed to fetch',
-                    'captcha_failed',
-                    'no_at_token',
-                    'connection closed',
-                    'js exception',
-                )
-                if any(tp in err_text for tp in transient_patterns):
-                    result['state'] = 'not_submitted'
-                    result['reconciled_reason'] = f"auto-recovered transient error: {result.get('error')}"
-                    write(record, result)
-                    from execution import is_job
-                    if is_job(p, j) or (Path(folder) / 'owner.json').exists():
-                        __import__('flow_management').sync(p, j, folder, result)
         if result['state'] == 'downloaded':
             image_check(p, j, result['path'], result['sha256'], full=registration is None)
             if 'profile_id' not in result:
@@ -625,7 +590,7 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None, p
             prior_path = prior_owner.get('profile_path', '')
             cfg_profiles = cfg.get('flow_cdp_profiles', [])
             for cp in cfg_profiles:
-                if cp.get('directory') and cp.get('directory') in prior_path:
+                if (__import__('flow_dispatch').profile_path(cp) == Path(prior_path).expanduser().resolve()):
                     pinned_profile_id = cp['id']
                     break
         except Exception:
@@ -744,14 +709,7 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None, p
     except Exception as ex:
         # A known downloaded but invalid image is not an unknown submission.
         if result['state'] != 'downloaded':
-            pre_submission_errors = ('session ended', 'connection blocked', 'socket', 'connection refused',
-                                     'devtoolsactiveport', 'profile_unverified', 'no automatic reconnect',
-                                     'cannot connect to chrome', 'endpoint ownership unavailable',
-                                     'no chrome profile workers available', 'no close frame received or sent',
-                                     'cdp_transport_closed', 'connection closed', 'failed to fetch',
-                                     'captcha_failed', 'no_at_token', 'js exception')
-            err_msg = str(ex).lower()
-            not_sub = getattr(ex, 'generation_submitted', None) is False or any(pat in err_msg for pat in pre_submission_errors)
+            not_sub = getattr(ex, 'generation_submitted', None) is False
             state = 'generated' if collection_only or getattr(ex, 'collection_only', False) else (
                 'not_submitted' if not_sub else 'ambiguous')
             result.update(state=state, error=str(ex))
@@ -1007,16 +965,41 @@ def _produce_internal(p, j, out, c, s):
         optimal_workers = calculate_optimal_workers(len(scenes))
         concurrency = cfg.get('concurrency', optimal_workers)
         single_profile_enforced = bool(cfg.get('flow_single_profile', False))
-        if single_profile_enforced:
-            concurrency = 1
-        elif pool_profiles and len(pool_profiles) > 1:
-            concurrency = max(1, min(cfg.get('concurrency', optimal_workers), optimal_workers, len(pool_profiles)))
+        from execution import is_job
+        from flow_dispatch import job_profiles, validate_dependencies
+        roots = validate_dependencies(scenes)
+        policy = 'single_profile' if single_profile_enforced else 'pool'
+        if is_job(p, j):
+            policy, pool_profiles = job_profiles(p, j)
+        from flow_cdp.lifecycle import get_current_lifecycle
+        lifecycle = get_current_lifecycle()
+        # Launch only eligible candidates under the lifecycle's ownership tracker.
+        wanted = min(concurrency, optimal_workers, len(pool_profiles), roots)
+        if policy == 'single_profile':
+            wanted = min(1, wanted)
+        effective_pool = []
+        if lifecycle:
+            for prof in pool_profiles:
+                if len(effective_pool) >= wanted:
+                    break
+                if lifecycle.launch_profile(prof):
+                    effective_pool.append(prof)
         else:
-            concurrency = 1
+            # Offline injected transports do not launch browsers.
+            effective_pool = pool_profiles[:wanted]
+        if not effective_pool:
+            raise Blocked('FLOW_NO_READY_PROFILE: no authorized worker could start')
+        concurrency = min(wanted, len(effective_pool))
+        write(out / 'dispatch.json', {'policy': policy, 'requested_workers': cfg.get('concurrency', optimal_workers),
+              'eligible_profiles': [x['id'] for x in pool_profiles], 'active_profiles': [x['id'] for x in effective_pool],
+              'root_groups': roots, 'worker_count': concurrency,
+              'fallback_reason': 'single_profile_policy' if policy == 'single_profile' else
+                  ('capacity_or_dependency_limit' if concurrency < cfg.get('concurrency', optimal_workers) else None)})
+        profile_locks = {prof['id']: threading.Lock() for prof in effective_pool}
 
         import queue
         profile_pool_queue = queue.Queue()
-        active_worker_pids = [prof['id'] for prof in pool_profiles[:concurrency]]
+        active_worker_pids = [prof['id'] for prof in effective_pool[:concurrency]]
         for pid in active_worker_pids:
             profile_pool_queue.put(pid)
 
@@ -1098,17 +1081,25 @@ def _produce_internal(p, j, out, c, s):
                                 assigned_worker_pid = base['profile_id']
                             else:
                                 try:
-                                    assigned_worker_pid = profile_pool_queue.get_nowait()
+                                    assigned_worker_pid = profile_pool_queue.get(timeout=30)
                                     borrowed_from_queue = True
-                                except queue.Empty:
-                                    assigned_worker_pid = None
+                                except queue.Empty as exc:
+                                    raise Blocked('FLOW_WORKER_LEASE: no profile available') from exc
 
                             linked = [registrations[x] for x in u['character_ids']]
-                            r = request(
-                                p, j, u['id'], u['prompt'], linked,
-                                **({'base_image': base} if base else {}),
-                                profile_id=assigned_worker_pid,
-                            )
+                            if assigned_worker_pid not in profile_locks:
+                                raise Blocked('FLOW_OWNER_UNAVAILABLE: Base owner is outside the active pool')
+                            with profile_locks[assigned_worker_pid]:
+                                started = time.time()
+                                r = request(
+                                    p, j, u['id'], u['prompt'], linked,
+                                    **({'base_image': base} if base else {}),
+                                    profile_id=assigned_worker_pid,
+                                )
+                                p.event(j, 'images', 'flow_dispatch_interval', json.dumps({
+                                    'target': u['id'], 'profile': assigned_worker_pid,
+                                    'started_at': started, 'finished_at': time.time(), 'state': r.get('state'),
+                                }))
                             with lock:
                                 completed[u['id']] = {'target': u['id'], 'path': r['path'], 'sha256': r['sha256'],
                                                       'profile_id': r.get('profile_id') or assigned_worker_pid}

@@ -7,6 +7,8 @@ description: "Create, continue, or repair Video Pilot videos (both long_16x9 13m
 
 Use production scope and sys/docs/workflow.md. One task/role; current brief and saved bank sense define the product. Auto plans and executes without a reviewer; review waits at outline, dialogue, audio, image set and video checkpoints. Do not use legacy v3 auto to impersonate the new mode.
 
+New reference-led work follows the [Hand-Drawn 2D Explainer contract](references/reference-led-explainer.md); it supersedes historical people quotas, compulsory stick-figure designs and room-first story defaults. Preserve old saved pins.
+
 ## Read guidance by step
 
 - New topic architecture, Packaging & SEO Contract (`youtube_title <= 55` chars, `thumbnail_spec`, `channel_pillar` locked to *"Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật"*), Vietnamese 60s localization, and Short-Form Spin-off Blueprints (`brief.json` & `content.json` Schema 3.0): [vp-research-architect](../vp-research-architect/SKILL.md); vocabulary bank entry (`vocab/bank.py start`): [vocabulary](references/vocabulary.md).

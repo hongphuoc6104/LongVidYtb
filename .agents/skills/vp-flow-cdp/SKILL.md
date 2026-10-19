@@ -70,8 +70,8 @@ PYTHONPATH=sys python3 -m flow_cdp.multi_profile_manager stop
 
 For older jobs created prior to the 20-profile and adaptive sizing upgrades:
 1. **Automatic Code Adoption**: The pipeline execution engine (`sys/image_pipeline.py`) is shared across all jobs. Running an old job via `./pipeline run <job>` or `python3 sys/pilot.py run <job> images` automatically executes with adaptive worker sizing and lifecycle auto-teardown.
-2. **Bound Profile Unbinding**: If an old job is bound to a single profile via `management_session.runtime_bindings.flow.target.profile_path` that enters cooldown, unbinding the profile allows the 20-profile rotation pool to take over.
-3. **Transient Attempt Recovery**: Unfinished attempts in `flow/attempts/` marked with transient transport or rate limit errors are auto-reconciled to `not_submitted`, allowing any healthy profile in the pool to resume the unfinished work without data loss.
+2. **Bound Profile Unbinding**: If an old job is bound to a single profile via `management_session.runtime_bindings.flow.target.profile_path` that enters cooldown, select a new job with explicit `flow_dispatch_policy: pool`; existing requests remain on their owners. A configured profile must also belong to the frozen authorized session pool.
+3. **Transient Attempt Recovery**: Unfinished attempts retain submitted/ambiguous state until verified collection or explicit reconciliation. Error words, rate limits and absent downloads never establish non-submission. Only definitely unsent work may move to another healthy authorized profile.
 
 ## 5. Verification & Invariants
 

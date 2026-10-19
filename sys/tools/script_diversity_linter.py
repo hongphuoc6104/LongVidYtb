@@ -485,10 +485,13 @@ def lint_script(
     all_violations.extend(check_visual_prompt_cliches(scenes, characters=characters, style=style))
 
     from scripts.visual_quality import (
+        check_abstract_card_clustering,
+        check_atomic_variation_continuity,
         check_character_breathing_room,
         check_instructional_manual_loop,
         check_scene_narrative_progression,
         check_setting_description_verbosity,
+        check_ungrounded_environment_scenes,
         check_visual_setting_diversity,
     )
     from visual_style import STYLE_DESCRIPTION, render_style
@@ -498,38 +501,39 @@ def lint_script(
         all_violations.extend(check_visual_setting_diversity(scenes))
         all_violations.extend(check_scene_narrative_progression(scenes))
 
-        if enforce_breathing_room is not None:
-            should_enforce_breathing = enforce_breathing_room
-        elif style is not None:
-            should_enforce_breathing = (
-                render_style({"style": style}) == "earth_toned_2d"
-                or style == STYLE_DESCRIPTION
-                or any(
-                    str(im.get("shot_type")) in {"still_life", "environment"}
-                    for sc in scenes
-                    for im in sc.get("images", [])
-                )
-            )
-        else:
-            has_150_shots = any(
-                str(im.get("shot_type")) in {"still_life", "environment"}
+        has_new_shots = any(
+            str(im.get("shot_type")) in {"still_life", "environment", "concept_metaphor", "visual_diagram", "cutaway_detail"}
+            for sc in scenes
+            for im in sc.get("images", [])
+        )
+        is_legacy_blueprint = (
+            not has_new_shots
+            and any(len(str(sc.get("setting", "")).split()) > 10 for sc in scenes)
+            and all(
+                str(im.get("shot_type")) in {"", "full_scene", "variation", "macro_prop", "white_card", "white_isolated"}
                 for sc in scenes
                 for im in sc.get("images", [])
             )
-            is_legacy_blueprint = (
-                not has_150_shots
-                and any(len(str(sc.get("setting", "")).split()) > 10 for sc in scenes)
-                and all(
-                    str(im.get("shot_type")) in {"", "full_scene", "variation", "macro_prop", "white_card", "white_isolated"}
-                    for sc in scenes
-                    for im in sc.get("images", [])
-                )
+        )
+        if enforce_breathing_room is not None:
+            should_enforce_breathing = enforce_breathing_room
+        elif is_legacy_blueprint:
+            should_enforce_breathing = False
+        elif style is not None:
+            should_enforce_breathing = (
+                render_style({"style": style}) in {"earth_toned_2d", "hand_drawn_2d_explainer"}
+                or style == STYLE_DESCRIPTION
+                or has_new_shots
             )
-            should_enforce_breathing = has_150_shots or not is_legacy_blueprint
+        else:
+            should_enforce_breathing = has_new_shots or not is_legacy_blueprint
 
         if should_enforce_breathing:
             all_violations.extend(check_character_breathing_room(scenes))
             all_violations.extend(check_setting_description_verbosity(scenes))
+            all_violations.extend(check_abstract_card_clustering(scenes))
+            all_violations.extend(check_ungrounded_environment_scenes(scenes))
+            all_violations.extend(check_atomic_variation_continuity(scenes))
     all_violations.extend(check_instructional_manual_loop(scenes))
 
     # 1. Formulaic transitions & micro-action filler babble

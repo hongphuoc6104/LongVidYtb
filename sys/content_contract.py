@@ -31,6 +31,9 @@ def validate_brief(root,b):
  from format_profiles import validate_format_separation
  try: validate_format_separation(b)
  except ValueError as ex: errors.append(error('FORMAT_PROFILE','format_profile',str(ex),'Chọn đúng format_profile tương ứng với aspect_ratio.'))
+ from explainer_contract import validate_short
+ for message in validate_short(b):
+  errors.append(error(message.split(':')[0], 'format_profile', message, 'Use the reference-led short contract.'))
  from output_contract import outputs
  try: outputs(b)
  except ValueError as ex: errors.append(error('OUTPUT_CONTRACT','outputs',str(ex),'Sửa hợp đồng đầu ra.'))
@@ -176,6 +179,11 @@ def validate_content(root,b,revision,bhash,p):
        if cliche: fail('FLOW_CLICHE_FORBIDDEN', f"{im_id}/visible_text.{subf}", f"Visible text {subf} contains banned {cliche}", 'Thay thế chữ hiển thị sáo rỗng.')
  if errors: raise ContractError(errors)
  if p.get('schema_version')=='3.0':
+  from explainer_contract import is_reference_explainer, validate_explanations
+  reference_explainer = is_reference_explainer(b)
+  if reference_explainer:
+   for message in validate_explanations(p):
+    fail(message.split(':')[0], 'images', message, 'Author explicit entities and explanation bindings.')
   from scripts.visual_quality import (
    check_character_breathing_room,
    check_instructional_manual_loop,
@@ -184,14 +192,27 @@ def validate_content(root,b,revision,bhash,p):
    check_visual_setting_diversity,
   )
   from tools.script_diversity_linter import check_micro_action_filler
-  from visual_style import STYLE_DESCRIPTION, render_style
-  is_earth_or_rest = (
-   render_style(b) == 'earth_toned_2d'
-   or b.get('style') == STYLE_DESCRIPTION
-   or any(
-    str(im.get('shot_type')) in {'still_life', 'environment'}
+  from visual_style import EARTH_TONED_STYLE_DESCRIPTION, STYLE_DESCRIPTION, render_style
+  has_new_shots = any(
+   str(im.get('shot_type')) in {'still_life', 'environment', 'concept_metaphor', 'visual_diagram', 'cutaway_detail'}
+   for sc in p.get('scenes', [])
+   for im in sc.get('images', [])
+  )
+  is_legacy_blueprint = (
+   not has_new_shots
+   and any(len(str(sc.get('setting', '')).split()) > 10 for sc in p.get('scenes', []))
+   and all(
+    str(im.get('shot_type')) in {'', 'full_scene', 'variation', 'macro_prop', 'white_card', 'white_isolated'}
     for sc in p.get('scenes', [])
     for im in sc.get('images', [])
+   )
+  )
+  is_hd2d_or_earth = (
+   not is_legacy_blueprint
+   and (
+    render_style(b) in {'handdrawn_2d_explainer', 'earth_toned_2d'}
+    or b.get('style') in {STYLE_DESCRIPTION, EARTH_TONED_STYLE_DESCRIPTION}
+    or has_new_shots
    )
   )
   checks = [
@@ -200,7 +221,10 @@ def validate_content(root,b,revision,bhash,p):
    check_scene_narrative_progression,
    check_micro_action_filler,
   ] if b.get('visual_pacing_profile') == 'full_frame_v1' else []
-  if is_earth_or_rest and b.get('visual_pacing_profile') == 'full_frame_v1':
+  if reference_explainer:
+   # White fields and static diagrams do not need artificial location changes.
+   checks = [check_micro_action_filler]
+  if is_hd2d_or_earth and not reference_explainer and b.get('visual_pacing_profile') == 'full_frame_v1':
    checks.extend([
     check_character_breathing_room,
     check_setting_description_verbosity,

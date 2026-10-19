@@ -27,7 +27,8 @@ from tools.research_story_architect import (
     build_scenes_from_story_rows,
     write_production_package,
 )
-from visual_style import CAST_APPEARANCE, STYLE_DESCRIPTION
+from visual_style import CAST_APPEARANCE
+from visual_style import LEGACY_HANDDRAWN_STYLE_DESCRIPTION as STYLE_DESCRIPTION
 
 # ---------------------------------------------------------------------------
 # STORY 9:16 (19 Scenes — Vertical Mobile Long-Form)

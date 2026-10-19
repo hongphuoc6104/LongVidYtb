@@ -114,10 +114,11 @@ def validate_plan(b, c):
         if b.get('visual_pacing_profile') == 'full_frame_v1':
             from scripts.camera_motion import scene_camera_motions
             motions = scene_camera_motions(s)
-            if len(motions) >= 2 and len(set(motions)) == 1:
+            explicit_entities = all(type(im.get('has_character')) is bool for im in s['images'])
+            if len(motions) >= 2 and len(set(motions)) == 1 and not explicit_entities:
                 fail('CAMERA_MOTION_MONOTONY', s['id'], 'All beats use the same camera motion; vary authored intent.')
             for image in s['images']:
-                if image.get('based_on'):
+                if image.get('based_on') and image.get('has_character', True):
                     has_preserve_lock = bool(re.search(r'expression|facial|biểu cảm', image.get('preserve', ''), re.I))
                     has_explicit_shift = bool(
                         image.get('allow_expression_shift')

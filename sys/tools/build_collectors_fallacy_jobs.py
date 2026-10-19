@@ -25,7 +25,8 @@ from tools.research_story_architect import (
     build_scenes_from_story_rows,
     write_production_package,
 )
-from visual_style import CAST_APPEARANCE, DEFAULT_OUTFIT, STYLE_DESCRIPTION
+from visual_style import CAST_APPEARANCE, DEFAULT_OUTFIT
+from visual_style import LEGACY_HANDDRAWN_STYLE_DESCRIPTION as STYLE_DESCRIPTION
 
 # ---------------------------------------------------------------------------
 # STORY 16:9 (18 Scenes — Widescreen Explainer, 6 Beats / Scene, Max <= 2.8s)
