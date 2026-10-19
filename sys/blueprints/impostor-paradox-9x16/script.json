@@ -1,0 +1,439 @@
+[
+  {
+    "id": "SC01",
+    "duration": 8.95,
+    "narration": "Càng đọc nhiều tài liệu, não bạn càng sợ bắt đầu. Màn hình rực sáng giữa đêm khuya. Con trỏ nhấp nháy trên trang giấy trắng. Bạn cảm thấy hoàn toàn bế tắc.",
+    "beats": [
+      {
+        "image_id": "SC01_I1",
+        "anchor_quote": "Càng đọc nhiều tài liệu, não bạn càng sợ bắt đầu."
+      },
+      {
+        "image_id": "SC01_I2",
+        "anchor_quote": "Màn hình rực sáng giữa đêm khuya."
+      },
+      {
+        "image_id": "SC01_I3",
+        "anchor_quote": "Con trỏ nhấp nháy trên trang giấy trắng."
+      },
+      {
+        "image_id": "SC01_I4",
+        "anchor_quote": "Bạn cảm thấy hoàn toàn bế tắc."
+      }
+    ]
+  },
+  {
+    "id": "SC02",
+    "duration": 7.45,
+    "narration": "Đồng hồ đã chỉ hai giờ sáng. Thư mục tài liệu dày cộm. Mỗi bài báo bạn đọc xong, lại mở ra thêm mười câu hỏi mới.",
+    "beats": [
+      {
+        "image_id": "SC02_I1",
+        "anchor_quote": "Đồng hồ đã chỉ hai giờ sáng."
+      },
+      {
+        "image_id": "SC02_I2",
+        "anchor_quote": "Thư mục tài liệu dày cộm."
+      },
+      {
+        "image_id": "SC02_I3",
+        "anchor_quote": "Mỗi bài báo bạn đọc xong,"
+      },
+      {
+        "image_id": "SC02_I4",
+        "anchor_quote": "lại mở ra thêm mười câu hỏi mới."
+      }
+    ]
+  },
+  {
+    "id": "SC03",
+    "duration": 8.95,
+    "narration": "Và cái giọng nói trong đầu bạn thì thầm: mình chưa đọc đủ để gõ dòng đầu tiên. Bạn sợ bị người khác phát hiện. Sợ người ta bảo mình chưa hiểu gì.",
+    "beats": [
+      {
+        "image_id": "SC03_I1",
+        "anchor_quote": "Và cái giọng nói trong đầu bạn thì thầm:"
+      },
+      {
+        "image_id": "SC03_I2",
+        "anchor_quote": "mình chưa đọc đủ để gõ dòng đầu tiên."
+      },
+      {
+        "image_id": "SC03_I3",
+        "anchor_quote": "Bạn sợ bị người khác phát hiện."
+      },
+      {
+        "image_id": "SC03_I4",
+        "anchor_quote": "Sợ người ta bảo mình chưa hiểu gì."
+      }
+    ]
+  },
+  {
+    "id": "SC04",
+    "duration": 8.2,
+    "narration": "Biển tri thức ngoài kia quá mênh mông. Bạn càng học, càng thấy mình nhỏ bé. Cảm giác dốt nát cứ thế lớn dần. Biến thành xiềng xích vô hình.",
+    "beats": [
+      {
+        "image_id": "SC04_I1",
+        "anchor_quote": "Biển tri thức ngoài kia quá mênh mông."
+      },
+      {
+        "image_id": "SC04_I2",
+        "anchor_quote": "Bạn càng học, càng thấy mình nhỏ bé."
+      },
+      {
+        "image_id": "SC04_I3",
+        "anchor_quote": "Cảm giác dốt nát cứ thế lớn dần."
+      },
+      {
+        "image_id": "SC04_I4",
+        "anchor_quote": "Biến thành xiềng xích vô hình."
+      }
+    ]
+  },
+  {
+    "id": "SC05",
+    "duration": 7.95,
+    "narration": "Đây không phải là sự lười biếng. Bạn thực sự quan tâm đến bài viết. Nhưng chính sự cầu toàn quá mức, đang bóp nghẹt động lực hành động.",
+    "beats": [
+      {
+        "image_id": "SC05_I1",
+        "anchor_quote": "Đây không phải là sự lười biếng."
+      },
+      {
+        "image_id": "SC05_I2",
+        "anchor_quote": "Bạn thực sự quan tâm đến bài viết."
+      },
+      {
+        "image_id": "SC05_I3",
+        "anchor_quote": "Nhưng chính sự cầu toàn quá mức,"
+      },
+      {
+        "image_id": "SC05_I4",
+        "anchor_quote": "đang bóp nghẹt động lực hành động."
+      }
+    ]
+  },
+  {
+    "id": "SC06",
+    "duration": 7.95,
+    "narration": "Khoa học đã đặt tên cho hiện tượng này. Đó là Hội chứng Kẻ mạo danh. Căn bệnh của những người giỏi giang. Càng hiểu biết, càng tự ti.",
+    "beats": [
+      {
+        "image_id": "SC06_I1",
+        "anchor_quote": "Khoa học đã đặt tên cho hiện tượng này."
+      },
+      {
+        "image_id": "SC06_I2",
+        "anchor_quote": "Đó là Hội chứng Kẻ mạo danh."
+      },
+      {
+        "image_id": "SC06_I3",
+        "anchor_quote": "Căn bệnh của những người giỏi giang."
+      },
+      {
+        "image_id": "SC06_I4",
+        "anchor_quote": "Càng hiểu biết, càng tự ti."
+      }
+    ]
+  },
+  {
+    "id": "SC07",
+    "duration": 9.7,
+    "narration": "Năm một nghìn chín trăm bảy mươi tám, hai nhà tâm lý học thực hiện cuộc khảo sát. Họ phỏng vấn một trăm năm mươi sinh viên, có thành tích học thuật xuất sắc nhất trường.",
+    "beats": [
+      {
+        "image_id": "SC07_I1",
+        "anchor_quote": "Năm một nghìn chín trăm bảy mươi tám,"
+      },
+      {
+        "image_id": "SC07_I2",
+        "anchor_quote": "hai nhà tâm lý học thực hiện cuộc khảo sát."
+      },
+      {
+        "image_id": "SC07_I3",
+        "anchor_quote": "Họ phỏng vấn một trăm năm mươi sinh viên,"
+      },
+      {
+        "image_id": "SC07_I4",
+        "anchor_quote": "có thành tích học thuật xuất sắc nhất trường."
+      }
+    ]
+  },
+  {
+    "id": "SC08",
+    "duration": 8.7,
+    "narration": "Bảy mươi phần trăm trong số họ thú nhận, họ luôn nghĩ mình chỉ gặp may mắn. Họ sợ một ngày nào đó, hội đồng sẽ phát hiện ra họ dốt nát.",
+    "beats": [
+      {
+        "image_id": "SC08_I1",
+        "anchor_quote": "Bảy mươi phần trăm trong số họ thú nhận,"
+      },
+      {
+        "image_id": "SC08_I2",
+        "anchor_quote": "họ luôn nghĩ mình chỉ gặp may mắn."
+      },
+      {
+        "image_id": "SC08_I3",
+        "anchor_quote": "Họ sợ một ngày nào đó,"
+      },
+      {
+        "image_id": "SC08_I4",
+        "anchor_quote": "hội đồng sẽ phát hiện ra họ dốt nát."
+      }
+    ]
+  },
+  {
+    "id": "SC09",
+    "duration": 8.7,
+    "narration": "Điểm số của họ đều ở mức thủ khoa. Nhưng niềm tin thì ngược lại hoàn toàn. Người ngoài nhìn vào thấy tài năng. Còn bên trong, họ thấy mình lừa dối.",
+    "beats": [
+      {
+        "image_id": "SC09_I1",
+        "anchor_quote": "Điểm số của họ đều ở mức thủ khoa."
+      },
+      {
+        "image_id": "SC09_I2",
+        "anchor_quote": "Nhưng niềm tin thì ngược lại hoàn toàn."
+      },
+      {
+        "image_id": "SC09_I3",
+        "anchor_quote": "Người ngoài nhìn vào thấy tài năng."
+      },
+      {
+        "image_id": "SC09_I4",
+        "anchor_quote": "Còn bên trong, họ thấy mình lừa dối."
+      }
+    ]
+  },
+  {
+    "id": "SC10",
+    "duration": 9.45,
+    "narration": "Khoa học thần kinh đã làm sáng tỏ điều này. Não người giỏi đối xử với lời khen, như một tín hiệu cảnh báo nguy hiểm. Họ sợ kỳ vọng mới vượt quá sức mình.",
+    "beats": [
+      {
+        "image_id": "SC10_I1",
+        "anchor_quote": "Khoa học thần kinh đã làm sáng tỏ điều này."
+      },
+      {
+        "image_id": "SC10_I2",
+        "anchor_quote": "Não người giỏi đối xử với lời khen,"
+      },
+      {
+        "image_id": "SC10_I3",
+        "anchor_quote": "như một tín hiệu cảnh báo nguy hiểm."
+      },
+      {
+        "image_id": "SC10_I4",
+        "anchor_quote": "Họ sợ kỳ vọng mới vượt quá sức mình."
+      }
+    ]
+  },
+  {
+    "id": "SC11",
+    "duration": 9.7,
+    "narration": "Và đây là nghịch lý trớ trêu nhất. Người thật sự thiếu năng lực lại tự tin nhất. Bởi vì họ không biết những gì mình chưa biết. Họ nộp bài mà không chút đắn đo.",
+    "beats": [
+      {
+        "image_id": "SC11_I1",
+        "anchor_quote": "Và đây là nghịch lý trớ trêu nhất."
+      },
+      {
+        "image_id": "SC11_I2",
+        "anchor_quote": "Người thật sự thiếu năng lực lại tự tin nhất."
+      },
+      {
+        "image_id": "SC11_I3",
+        "anchor_quote": "Bởi vì họ không biết những gì mình chưa biết."
+      },
+      {
+        "image_id": "SC11_I4",
+        "anchor_quote": "Họ nộp bài mà không chút đắn đo."
+      }
+    ]
+  },
+  {
+    "id": "SC12",
+    "duration": 8.7,
+    "narration": "Hãy hình dung tri thức như một hòn đảo. Khi bạn mới bước vào lĩnh vực này, vùng sáng của bạn rất nhỏ. Đường viền tiếp xúc với sương mù cũng ngắn.",
+    "beats": [
+      {
+        "image_id": "SC12_I1",
+        "anchor_quote": "Hãy hình dung tri thức như một hòn đảo."
+      },
+      {
+        "image_id": "SC12_I2",
+        "anchor_quote": "Khi bạn mới bước vào lĩnh vực này,"
+      },
+      {
+        "image_id": "SC12_I3",
+        "anchor_quote": "vùng sáng của bạn rất nhỏ."
+      },
+      {
+        "image_id": "SC12_I4",
+        "anchor_quote": "Đường viền tiếp xúc với sương mù cũng ngắn."
+      }
+    ]
+  },
+  {
+    "id": "SC13",
+    "duration": 8.45,
+    "narration": "Nhưng khi bạn đọc thêm hàng trăm bài báo, hòn đảo sáng của bạn nở rộng gấp mười. Đồng nghĩa với việc, đường viền sương mù cũng dài thêm gấp mười.",
+    "beats": [
+      {
+        "image_id": "SC13_I1",
+        "anchor_quote": "Nhưng khi bạn đọc thêm hàng trăm bài báo,"
+      },
+      {
+        "image_id": "SC13_I2",
+        "anchor_quote": "hòn đảo sáng của bạn nở rộng gấp mười."
+      },
+      {
+        "image_id": "SC13_I3",
+        "anchor_quote": "Đồng nghĩa với việc,"
+      },
+      {
+        "image_id": "SC13_I4",
+        "anchor_quote": "đường viền sương mù cũng dài thêm gấp mười."
+      }
+    ]
+  },
+  {
+    "id": "SC14",
+    "duration": 9.7,
+    "narration": "Bạn nhìn thấy hàng nghìn khoảng trống mới. Những thứ mà người hiểu nông không bao giờ thấy. Cảm giác dốt nát không phải là điểm yếu. Nó là bằng chứng bạn đã đi rất xa.",
+    "beats": [
+      {
+        "image_id": "SC14_I1",
+        "anchor_quote": "Bạn nhìn thấy hàng nghìn khoảng trống mới."
+      },
+      {
+        "image_id": "SC14_I2",
+        "anchor_quote": "Những thứ mà người hiểu nông không bao giờ thấy."
+      },
+      {
+        "image_id": "SC14_I3",
+        "anchor_quote": "Cảm giác dốt nát không phải là điểm yếu."
+      },
+      {
+        "image_id": "SC14_I4",
+        "anchor_quote": "Nó là bằng chứng bạn đã đi rất xa."
+      }
+    ]
+  },
+  {
+    "id": "SC15",
+    "duration": 9.7,
+    "narration": "Chỉ có người leo lên sườn núi cao, mới thấy đỉnh núi tiếp theo còn xa ngút ngàn. Kẻ dưới chân núi luôn nghĩ mình đã tới nơi. Còn bạn, bạn đang dũng cảm tiến lên.",
+    "beats": [
+      {
+        "image_id": "SC15_I1",
+        "anchor_quote": "Chỉ có người leo lên sườn núi cao,"
+      },
+      {
+        "image_id": "SC15_I2",
+        "anchor_quote": "mới thấy đỉnh núi tiếp theo còn xa ngút ngàn."
+      },
+      {
+        "image_id": "SC15_I3",
+        "anchor_quote": "Kẻ dưới chân núi luôn nghĩ mình đã tới nơi."
+      },
+      {
+        "image_id": "SC15_I4",
+        "anchor_quote": "Còn bạn, bạn đang dũng cảm tiến lên."
+      }
+    ]
+  },
+  {
+    "id": "SC16",
+    "duration": 7.95,
+    "narration": "Vậy làm thế nào để phá vỡ bế tắc? Hãy dùng quy tắc bản nháp thô. Bản nháp thô năm trăm từ, đánh bại một nghìn giờ đọc thêm.",
+    "beats": [
+      {
+        "image_id": "SC16_I1",
+        "anchor_quote": "Vậy làm thế nào để phá vỡ bế tắc?"
+      },
+      {
+        "image_id": "SC16_I2",
+        "anchor_quote": "Hãy dùng quy tắc bản nháp thô."
+      },
+      {
+        "image_id": "SC16_I3",
+        "anchor_quote": "Bản nháp thô năm trăm từ,"
+      },
+      {
+        "image_id": "SC16_I4",
+        "anchor_quote": "đánh bại một nghìn giờ đọc thêm."
+      }
+    ]
+  },
+  {
+    "id": "SC17",
+    "duration": 7.7,
+    "narration": "Đặt đồng hồ hai mươi lăm phút. Gõ liên tục mà không được phép xóa. Cho phép câu cú vụng về. Cho phép lập luận chưa hoàn hảo.",
+    "beats": [
+      {
+        "image_id": "SC17_I1",
+        "anchor_quote": "Đặt đồng hồ hai mươi lăm phút."
+      },
+      {
+        "image_id": "SC17_I2",
+        "anchor_quote": "Gõ liên tục mà không được phép xóa."
+      },
+      {
+        "image_id": "SC17_I3",
+        "anchor_quote": "Cho phép câu cú vụng về."
+      },
+      {
+        "image_id": "SC17_I4",
+        "anchor_quote": "Cho phép lập luận chưa hoàn hảo."
+      }
+    ]
+  },
+  {
+    "id": "SC18",
+    "duration": 8.95,
+    "narration": "Khi văn bản thô đã xuất hiện, não bạn chuyển từ sợ hãi sang chỉnh sửa. Không ai giả vờ giỏi được suốt bốn năm. Bạn xứng đáng với vị trí hôm nay.",
+    "beats": [
+      {
+        "image_id": "SC18_I1",
+        "anchor_quote": "Khi văn bản thô đã xuất hiện,"
+      },
+      {
+        "image_id": "SC18_I2",
+        "anchor_quote": "não bạn chuyển từ sợ hãi sang chỉnh sửa."
+      },
+      {
+        "image_id": "SC18_I3",
+        "anchor_quote": "Không ai giả vờ giỏi được suốt bốn năm."
+      },
+      {
+        "image_id": "SC18_I4",
+        "anchor_quote": "Bạn xứng đáng với vị trí hôm nay."
+      }
+    ]
+  },
+  {
+    "id": "SC19",
+    "duration": 8.6,
+    "narration": "Lần tới khi ngồi trước trang giấy trắng, nếu cái giọng nói bảo bạn chưa đủ giỏi, hãy mỉm cười và nhớ rằng: cảm giác đó chính là siêu năng lực của bạn.",
+    "beats": [
+      {
+        "image_id": "SC19_I1",
+        "anchor_quote": "Lần tới khi ngồi trước trang giấy trắng,"
+      },
+      {
+        "image_id": "SC19_I2",
+        "anchor_quote": "nếu cái giọng nói bảo bạn chưa đủ giỏi,"
+      },
+      {
+        "image_id": "SC19_I3",
+        "anchor_quote": "hãy mỉm cười và nhớ rằng:"
+      },
+      {
+        "image_id": "SC19_I4",
+        "anchor_quote": "cảm giác đó chính là siêu năng lực của bạn."
+      }
+    ]
+  }
+]
