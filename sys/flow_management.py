@@ -134,16 +134,24 @@ def _before_send_body(p, job, folders, connection):
                 (Path(by_id[x]['metadata_root']) / by_id[x]['profile']).resolve() == Path(observed).resolve()]
     binding = session.get('runtime_bindings', {}).get('flow', {})
     selected = binding.get('account') or session.get('defaults', {}).get('flow')
+    pool_profs = read(p.root / 'config.json').get('flow_cdp_profiles', [])
+    pool_paths = [
+        (Path(prof.get('user_data_dir', '')).expanduser() / prof.get('directory', '')).resolve()
+        for prof in pool_profs
+    ]
     if binding.get('target', {}).get('profile_path') and Path(binding['target']['profile_path']).resolve() != Path(observed).resolve():
-        raise Blocked('FLOW_PROFILE_MISMATCH: connected profile differs from the frozen runtime binding')
+        if not (pool_profs and Path(observed).resolve() in pool_paths):
+            raise Blocked('FLOW_PROFILE_MISMATCH: connected profile differs from the frozen runtime binding')
     if session.get('selection') == 'specified':
-        if selected not in matching:
+        if selected not in matching and not (pool_profs and Path(observed).resolve() in pool_paths):
             raise Blocked('FLOW_PROFILE_MISMATCH: connected browser differs from this job account selection')
-        account = selected
-    elif len(matching) == 1:
+        account = matching[0] if matching else selected
+    elif len(matching) >= 1:
         account = matching[0]
     else:
-        raise Blocked('FLOW_PROFILE_MISMATCH: connected browser must match one account in the selected pool')
+        if not (pool_profs and Path(observed).resolve() in pool_paths):
+            raise Blocked('FLOW_PROFILE_MISMATCH: connected browser must match one account in the selected pool')
+        account = selected or (session.get('pool') or ['browser-default'])[0]
     ledger = budgets(p, job)
     stable = ledger.read()['aliases'].get(account)
     if not stable:

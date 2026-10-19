@@ -467,10 +467,12 @@ def _unresolved_conflict(p, j, target):
         same_target = old['identity']['target'] == target
         if target.startswith('register:'):
             same_target = old['identity']['target'].rsplit(':', 1)[0] == target.rsplit(':', 1)[0]
-        if same_target and old['state'] in ('submitted', 'ambiguous'):
+        if same_target and old['state'] == 'submitted':
             rec = auto_reconcile_attempt(p, j, q.parent, old)
             if rec.get('state') in ('submitted', 'ambiguous'):
                 return rec
+        elif same_target and old['state'] == 'ambiguous':
+            return old
         if same_target and old['state'] == 'generated':
             generated = old
     return generated
@@ -550,7 +552,7 @@ def _before_generation(p, j):
             raise
 
 
-def request(p, j, target, prompt, refs=(), registration=None, base_image=None):
+def request(p, j, target, prompt, refs=(), registration=None, base_image=None, profile_id=None):
     """One durable journal per identity; unknown outcomes are never retried."""
     import adapters
     p.gate(j, 'images')
@@ -653,7 +655,7 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None):
                             pass
                     if base_profile_id:
                         break
-    target_profile_id = base_profile_id or pinned_profile_id
+    target_profile_id = base_profile_id or profile_id or pinned_profile_id
     common = ['--profile', cfg['flow_profile'], '--project', cfg['flow_project'], '--out', str(out)]
     model_arg = 'nano-banana-pro' if 'pro' in cfg['flow_model'].lower() else ('nano-banana-2' if '2' in cfg['flow_model'] else cfg['flow_model'])
     scene = next((x for x in planned_units(p, j) if x['id'] == target), None)
@@ -674,10 +676,10 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None):
             args += ['--evidence-out',str(folder)]
         if base_image:
             args += ['--base-image', str(p.path(j,base_image['path']))]
-        if refs:
-            args += ['--character'] + [x['name'] for x in refs]
         if target_profile_id:
             args += ['--profile-id', target_profile_id]
+        if refs:
+            args += ['--character'] + [x['name'] for x in refs]
     result = {'key': key, 'identity': identity, 'state': 'generated' if collection_only else 'submitted', 'submitted_at': time.time(),
               'args': args, 'journal': str(record.relative_to(p.job(j)))}
     if recovery_out:
@@ -1004,14 +1006,19 @@ def _produce_internal(p, j, out, c, s):
         pool_profiles = cfg.get('flow_cdp_profiles', [])
         optimal_workers = calculate_optimal_workers(len(scenes))
         concurrency = cfg.get('concurrency', optimal_workers)
-        from execution import settings as execution_settings, is_job
-        # Multi-profile concurrency is enabled across pool profiles. If job is bound to a single profile, constrain to 1.
-        if is_job(p, j) and execution_settings(p, j).get('management_session', {}).get('runtime_bindings', {}).get('flow', {}).get('target', {}).get('profile_path'):
+        single_profile_enforced = bool(cfg.get('flow_single_profile', False))
+        if single_profile_enforced:
             concurrency = 1
         elif pool_profiles and len(pool_profiles) > 1:
-            concurrency = max(1, min(concurrency, optimal_workers, len(pool_profiles)))
+            concurrency = max(1, min(cfg.get('concurrency', optimal_workers), optimal_workers, len(pool_profiles)))
         else:
             concurrency = 1
+
+        import queue
+        profile_pool_queue = queue.Queue()
+        active_worker_pids = [prof['id'] for prof in pool_profiles[:concurrency]]
+        for pid in active_worker_pids:
+            profile_pool_queue.put(pid)
 
         completed = {}
 
@@ -1065,6 +1072,8 @@ def _produce_internal(p, j, out, c, s):
 
                     def worker(u):
                         nonlocal first_exception
+                        assigned_worker_pid = None
+                        borrowed_from_queue = False
                         try:
                             with lock:
                                 if first_exception is not None:
@@ -1084,11 +1093,25 @@ def _produce_internal(p, j, out, c, s):
                                                     break
                                             except Exception:
                                                 pass
+
+                            if base and base.get('profile_id'):
+                                assigned_worker_pid = base['profile_id']
+                            else:
+                                try:
+                                    assigned_worker_pid = profile_pool_queue.get_nowait()
+                                    borrowed_from_queue = True
+                                except queue.Empty:
+                                    assigned_worker_pid = None
+
                             linked = [registrations[x] for x in u['character_ids']]
-                            r = request(p, j, u['id'], u['prompt'], linked, **({'base_image': base} if base else {}))
+                            r = request(
+                                p, j, u['id'], u['prompt'], linked,
+                                **({'base_image': base} if base else {}),
+                                profile_id=assigned_worker_pid,
+                            )
                             with lock:
                                 completed[u['id']] = {'target': u['id'], 'path': r['path'], 'sha256': r['sha256'],
-                                                      'profile_id': r.get('profile_id')}
+                                                      'profile_id': r.get('profile_id') or assigned_worker_pid}
                                 outcomes[u['id']] = (u['id'], u['prompt'], linked, r)
                                 if first_exception is None:
                                     for child in dependents.get(u['id'], []):
@@ -1100,6 +1123,8 @@ def _produce_internal(p, j, out, c, s):
                                 if first_exception is None:
                                     first_exception = exc
                         finally:
+                            if borrowed_from_queue and assigned_worker_pid:
+                                profile_pool_queue.put(assigned_worker_pid)
                             with condition:
                                 nonlocal remaining
                                 remaining -= 1

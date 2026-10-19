@@ -20,7 +20,7 @@ from typing import Any
 logger = logging.getLogger("flow_cdp.lease_manager")
 
 DEFAULT_LOCK_DIR = Path.home() / ".cache/video-pilot/flow_locks"
-DEFAULT_MAX_PROFILES_PER_JOB = 6
+DEFAULT_MAX_PROFILES_PER_JOB = 10
 
 
 def is_pid_alive(pid: int | None) -> bool:

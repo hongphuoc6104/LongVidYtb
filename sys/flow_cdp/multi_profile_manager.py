@@ -136,7 +136,7 @@ class MultiProfileManager:
         profiles_config: list[dict[str, Any]] | None = None,
         cooldown_seconds: float = 5.0,
         job_id: str | None = None,
-        max_workers_per_job: int = 6,
+        max_workers_per_job: int = 10,
         lock_dir: Path | None = None,
     ):
         raw_profiles = profiles_config

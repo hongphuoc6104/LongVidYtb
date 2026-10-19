@@ -10,7 +10,7 @@ from content_contract import ContractError
 class ContentV2Tests(unittest.TestCase):
  def setUp(self):
   self.tmp=tempfile.TemporaryDirectory();self.root=Path(self.tmp.name)
-  for n in ['schemas','.agents','renderer','tests','examples','scripts']:shutil.copytree(ROOT/n,self.root/n)
+  for n in ['schemas','.agents','renderer','tests','examples','scripts','flow_prompts','flow_cdp']:shutil.copytree(ROOT/n,self.root/n)
   # A fresh CLI process must receive its real runtime imports, as a clone does.
   # In-process tests can otherwise hide missing imports through sys.path.
   for source in ROOT.glob('*.py'):shutil.copy(source,self.root/source.name)
