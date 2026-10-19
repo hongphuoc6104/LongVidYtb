@@ -181,4 +181,10 @@ $$\text{1. Tái hiện E2E} \longrightarrow \text{2. Phân tích gốc rễ} \lo
 - **Giả định sai (Wrong Assumptions):** Nhầm tưởng luôn mở tối đa số tab (10 tab) là tối ưu cho mọi tác vụ và hệ điều hành sẽ tự thu hồi RAM trình duyệt.
 - **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Xây dựng `calculate_optimal_workers` phân 5 bậc (Micro 1 tab, Short 2–3 tab, Chapter 3–5 tab, Standard 5–7 tab, Bulk 8–10 tab) và `ProfileLifecycleManager` đảm bảo nguyên tắc "mở bao nhiêu tắt bấy nhiêu", tích hợp trực tiếp vào `sys/image_pipeline.py`. 9/9 unit tests và thực nghiệm 300 ảnh pass 100%, giải phóng ~6.5GB RAM ngay khi xong.
 - **Quy tắc phòng ngừa vàng (Golden Rule):** Luôn tính toán số tab worker tối ưu theo khối lượng ảnh thực tế; mọi phiên sinh ảnh phải bọc trong `ProfileLifecycleManager` để đảm bảo dọn dẹp chính xác những tiến trình Chrome vừa mở mà không ảnh hưởng cửa sổ duyệt web của người dùng.
-
+### [ERR-20261019-02] Tính Bất Biến Idempotent Của Hijack CDP Trên Window Tái Sử Dụng
+- **Triệu chứng (Symptom):** Khi chạy batch ảnh liên tiếp trên cùng một tab Chrome, JS văng lỗi `TypeError: Cannot assign to read only property '__vp_cdp_hijack' of object '#<Window>'`.
+- **Tái hiện E2E (Reproduction Path):** Chạy `pytest sys/tests/test_flow_cdp_resilience.py sys/tests/test_flow_cdp_bridge.py -v`.
+- **Nguyên nhân cốt lõi (Root Cause):** Khối `Object.defineProperty` khởi tạo `writable: false, configurable: false` trên `window.__vp_cdp_hijack`. Khi evaluate lại trên tab cũ, ném exception và nhánh `catch` cố gán lại thuộc tính read-only trong strict mode.
+- **Giả định sai (Wrong Assumptions):** Nhầm tưởng mỗi batch evaluate luôn chạy trên ngữ cảnh window mới tinh mà không tính đến tab tái sử dụng.
+- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Kiểm tra `if (!window.__vp_cdp_hijack)` trước khi define; đặt `writable: true, configurable: true`; bọc fallback gán trực tiếp trong `try...catch`. Đã kiểm chứng 12/12 unit tests đạt green.
+- **Quy tắc phòng ngừa vàng (Golden Rule):** Mọi script tiêm vào window browser qua CDP phải bảo đảm tính idempotent, không định nghĩa thuộc tính read-only/non-configurable nếu trang có thể được evaluate nhiều lần.

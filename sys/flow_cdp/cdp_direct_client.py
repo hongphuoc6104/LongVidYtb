@@ -131,22 +131,28 @@ CDP_RECAPTCHA_GUARD_JS = r"""
   installCapture();
 
   try {
-    Object.defineProperty(window, '__vp_cdp_hijack', {
-      value: Object.freeze({
-        get pristine() { return _pristineExecute; },
-        get trapped() { return _capturedTrapped; },
-        get source()  { return _captureSource; },
-      }),
-      writable: false,
-      configurable: false,
-      enumerable: false,
-    });
+    if (!window.__vp_cdp_hijack) {
+      Object.defineProperty(window, '__vp_cdp_hijack', {
+        value: Object.freeze({
+          get pristine() { return _pristineExecute; },
+          get trapped() { return _capturedTrapped; },
+          get source()  { return _captureSource; },
+        }),
+        writable: true,
+        configurable: true,
+        enumerable: false,
+      });
+    }
   } catch (e) {
-    window.__vp_cdp_hijack = {
-      get pristine() { return _pristineExecute; },
-      get trapped() { return _capturedTrapped; },
-      get source()  { return _captureSource; },
-    };
+    try {
+      if (!window.__vp_cdp_hijack) {
+        window.__vp_cdp_hijack = {
+          get pristine() { return _pristineExecute; },
+          get trapped() { return _capturedTrapped; },
+          get source()  { return _captureSource; },
+        };
+      }
+    } catch (err) {}
   }
 
   const SITE_KEY_FALLBACK = '6LdsFiUsAAAAAIjVDZcuLhaHiDn5nnHVXVRQGeMV';
