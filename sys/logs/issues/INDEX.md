@@ -199,3 +199,5 @@ List of technical issues recorded during pipeline operation:
 
 - [colab-1792391746684890191.md](colab-1792391746684890191.md) — Colab TTS cần kiểm tra.
 - [test-20s-illusion-9x16 — render](1792391746685703291-test-20s-illusion-9x16-render.md)
+- [impostor-paradox-9x16 — images](1792399480561396942-impostor-paradox-9x16-images.md)
+- [impostor-paradox-9x16 — images](1792399921218284513-impostor-paradox-9x16-images.md)
