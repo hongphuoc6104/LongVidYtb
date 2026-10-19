@@ -7,7 +7,7 @@ from PIL import Image
 ROOT=Path(__file__).resolve().parent
 ORDER=['control','content','audio','images','render']
 DEPS={'control':[],'content':['control'],'images':['control','content'],'audio':['control','content'],'render':['control','content','images','audio']}
-PROTECTED_FILES=['pilot.py','workflow.py','execution.py','machine_review.py','content_contract.py','output_contract.py','format_profiles.py','visual_pacing.py','omni_platform.py','omni_render.py','remote_audio.py','media_packaging.py','image_pipeline.py','prompt_templates.py','adapters.py','config.json','AGENTS.md','GEMINI.md','package.json','package-lock.json','requirements.txt','b2_bridge.py']
+PROTECTED_FILES=['explainer_contract.py','flow_dispatch.py','pilot.py','workflow.py','execution.py','machine_review.py','content_contract.py','output_contract.py','format_profiles.py','visual_pacing.py','omni_platform.py','omni_render.py','remote_audio.py','media_packaging.py','image_pipeline.py','prompt_templates.py','adapters.py','config.json','AGENTS.md','GEMINI.md','package.json','package-lock.json','requirements.txt','b2_bridge.py']
 PROTECTED_DIRS=['assets/voices','assets/sfx','colab_bridge','flow_cdp','flow_prompts','schemas','.agents','renderer','tests','examples','scripts','tools']
 class Blocked(Exception):pass
 def read(p):return json.loads(Path(p).read_text())
@@ -386,6 +386,9 @@ class Pilot:
   import math
   if type(duration) not in (int,float) or not math.isfinite(duration) or duration<=0:
    raise Blocked('REMOTE_DURATION: measured duration must be positive and finite')
+  from explainer_contract import is_reference_explainer
+  if is_reference_explainer(brief) and brief.get('format_profile') == 'short_9x16' and not 45<=duration<=60:
+   raise Blocked('DURATION_REQUIRED: reference-led shorts require 45–60 measured seconds; revise narration, never pad or accelerate')
   from execution import is_job,settings
   if not is_job(self,j):
    if brief.get('duration') is None:return

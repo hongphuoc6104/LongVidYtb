@@ -126,6 +126,9 @@ def station_2_test_ast() -> bool:
         SYS_DIR / "tests/test_collectors_fallacy_production.py",
         SYS_DIR / "tests/test_reviewer_2_production.py",
         SYS_DIR / "tests/test_visual_breathing_room.py",
+        SYS_DIR / "tests/test_reference_explainer.py",
+        SYS_DIR / "tests/test_repository_checkpoint.py",
+        SYS_DIR / "tests/test_flow_prompts.py",
     ]
     # Check AST on test directory
     ast_ok, ast_report = check_test_suite_integrity([SYS_DIR / "tests"])
@@ -248,6 +251,9 @@ def station_4_lint() -> bool:
         str(SYS_DIR / "tests/test_format_separation.py"),
         str(SYS_DIR / "tests/test_full_frame_pipeline.py"),
         str(SYS_DIR / "visual_style.py"),
+        str(SYS_DIR / "explainer_contract.py"),
+        str(SYS_DIR / "flow_dispatch.py"),
+        str(SYS_DIR / "tests/test_reference_explainer.py"),
         str(SYS_DIR / "tests/test_soft_visual_style.py"),
         str(SYS_DIR / "tests/test_full_frame_upgrade.py"),
         str(SYS_DIR / "tests/test_omni_platform.py"),

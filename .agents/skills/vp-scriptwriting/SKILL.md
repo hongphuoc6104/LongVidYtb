@@ -5,6 +5,9 @@ description: "Author and transform explainer video scripts into natural conversa
 
 # VP Scriptwriting — Conversational Essayist, Truth-Slap Hook & Voice Cadence Skill
 
+For new registry 1.7.0 work, use the [reference-led explainer contract](../vp-production/references/reference-led-explainer.md). Its explicit entity policy and explanatory static compositions supersede historical stick-figure defaults, compulsory room/hand rules and people/no-people quotas below. Retain narration hooks, source fidelity, cadence and full-frame timing. Do not invent identities or certify semantic percentages from keyword overlap.
+
+
 `vp-scriptwriting` là bộ kỹ năng cốt lõi dùng để sáng tác và thẩm định kịch bản video trong Video Pilot (cho cả `long_16x9` và `short_9x16`). Bộ kỹ năng này được tối ưu hóa cho **Agent Gemini Flash**: loại bỏ việc tính toán công thức phức tạp thủ công, tập trung 100% vào câu thoại tự nhiên, giàu nhịp điệu cảm xúc và gắn kết 1-1 với hành động hình ảnh toàn khung (`full_frame_v1`).
 
 ---

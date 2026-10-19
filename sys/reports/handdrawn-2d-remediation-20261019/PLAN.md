@@ -1,15 +1,16 @@
 # Hand-Drawn 2D Explainer Remediation Plan
 
 Date: 2026-10-19 (Asia/Ho_Chi_Minh)
-Branch: `codex/handdrawn-2d-remediation`
+Planning branch: `codex/handdrawn-2d-remediation`
+Implementation branch: `codex/handdrawn-2d-implementation` (isolated managed worktree)
 Base commit: `5b5b54a6cd37f661a3c82989bbc0e9d33c2fdacf`
-Status: planned; no remediation code or production run completed by this document.
+Status: implementation started on 2026-10-20. See WORKLOG.md for verified progress and remaining gates.
 
 ## 1. Objective and authorized scope
 
 Convert the project's default authoring and image generation to the user's reference-led Hand-Drawn 2D Explainer language. Remove unsolicited recurring characters, make genuine multi-profile execution available, recover interrupted work without duplicate generation, and produce three comparable short videos after the implementation gates pass.
 
-This turn authorizes branch creation and a detailed plan. Implementation, generation, rendering and publication are separate execution stages; none is represented as completed here. No new publishing or messaging action is part of this plan.
+The user subsequently authorized implementation with “bắt đầu thực hiện kế hoạch trên.” Development, calibration and production may proceed within the plan. Publication and merging remain outside its scope. Completion is recorded only with the corresponding evidence.
 
 The required outcome is observable behavior across authoring, schemas, compiled prompts, provider attachments, dispatch, recovery, rendering, skills and evidence. Renaming a style string is insufficient.
 

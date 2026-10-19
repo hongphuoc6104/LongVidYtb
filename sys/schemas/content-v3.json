@@ -246,11 +246,61 @@
                     "white_card",
                     "white_isolated",
                     "still_life",
-                    "environment"
+                    "environment",
+                    "concept_metaphor",
+                    "visual_diagram",
+                    "cutaway_detail"
                   ]
                 },
                 "allow_expression_shift": {
                   "type": "boolean"
+                },
+                "has_character": {
+                  "type": "boolean",
+                  "description": "Explicit human presence for reference-led scenes; independent of optional identity references."
+                },
+                "explanation": {
+                  "type": "object",
+                  "properties": {
+                    "quote": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "relation": {
+                      "enum": [
+                        "quantity",
+                        "comparison",
+                        "grouping",
+                        "cause_effect",
+                        "progression",
+                        "structure",
+                        "context"
+                      ]
+                    },
+                    "source_terms": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "minItems": 1
+                    },
+                    "visual_terms": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "minItems": 1
+                    }
+                  },
+                  "required": [
+                    "quote",
+                    "relation",
+                    "source_terms",
+                    "visual_terms"
+                  ],
+                  "additionalProperties": false
                 }
               },
               "required": [

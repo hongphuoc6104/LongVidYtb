@@ -124,14 +124,17 @@ def scan_critique(root_dir: Path) -> Tuple[bool, Dict[str, any]]:
             raise ValueError("Invalid registry version")
         registry_path = sys_dir / "flow_prompts/versions" / version / "registry.json"
         spec = json.loads(registry_path.read_text())
-        cast_ok = compiler_path.is_file() and "anonymous stick figures" in spec.get("cast_rule", "").lower()
+        if version == "1.7.0":
+            cast_ok = compiler_path.is_file() and "Entity policy is explicit" in spec.get("cast_rule", "")
+        else:
+            cast_ok = compiler_path.is_file() and "anonymous stick figures" in spec.get("cast_rule", "").lower()
         if cast_ok:
-            cast_detail = f"Anonymous 2D stick-figure contract present in configured registry {version}; media quality requires inspection."
+            cast_detail = f"Versioned entity contract present in registry {version}; actual media quality requires inspection."
     except (OSError, ValueError, KeyError):
         pass
 
     checks.append({
-        "name": "Visual Cast Invariant (Stick-Figure)",
+        "name": "Versioned Visual Entity Contract",
         "category": "Anti-Hallucination Guard",
         "status": "PASS" if cast_ok else "WARN",
         "detail": cast_detail,

@@ -24,7 +24,7 @@ from tools.research_story_architect import (
     write_production_package,
 )
 from visual_pacing import smooth_interpolated_beats
-from visual_style import STYLE_DESCRIPTION
+from visual_style import LEGACY_HANDDRAWN_STYLE_DESCRIPTION as STYLE_DESCRIPTION
 
 from pilot import ROOT, Blocked
 
@@ -85,17 +85,16 @@ def test_bound_job_uses_only_its_owned_profile_and_serial_dispatch(tmp_path: Pat
     profiles = [{'id': f'p{number}', 'user_data_dir': str(tmp_path), 'directory': f'Profile {number}'} for number in [1, 2]]
     bound = str(tmp_path / 'Profile 2')
     pilot = MagicMock()
-    manager = MagicMock()
-    manager.workers = {'p2': object()}
     with patch.object(bridge, '_config', return_value={'flow_cdp_profiles': profiles}), \
             patch('pilot.Pilot', return_value=pilot), patch('execution.is_job', return_value=True), \
             patch('execution.settings', return_value={'management_session': {'runtime_bindings': {'flow': {'target': {'profile_path': bound}}}}}), \
-            patch.object(bridge, 'MultiProfileManager', return_value=manager) as pool, \
-            patch.object(bridge, 'MultiProfileDispatcher') as dispatcher:
+            patch.object(bridge, 'MultiProfileManager') as pool, \
+            patch.object(bridge, '_execute_sub_batch', return_value=[]) as transport:
         bridge.generate_cdp_batch([{'testCase': 'one', 'jobId': 'owned', 'prompt': 'A scene.'}])
-    assert pool.call_args.kwargs['profiles_config'] == [profiles[1]]
-    assert pool.call_args.kwargs['max_workers_per_job'] == 1
-    assert dispatcher.return_value.dispatch_all.call_args.kwargs['max_concurrency'] == 1
+    pool.assert_not_called()
+    transport.assert_called_once()
+    assert transport.call_args.kwargs['worker'].profile_id == 'p2'
+    assert len(transport.call_args.args[0]) == 1
     pilot.db.close.assert_called_once()
 
 
@@ -161,7 +160,7 @@ def test_package_export_cannot_overwrite_active_run(tmp_path: Path) -> None:
     ('build_reviewer_2_jobs', 'build_topic_9x16'),
     ('build_feynman_16x9_job', 'build_topic'),
 ])
-def test_source_factories_build_valid_light_style_contracts(module: str, factory: str) -> None:
+def test_archived_source_factories_keep_their_explicit_legacy_style_contracts(module: str, factory: str) -> None:
     topic = getattr(importlib.import_module('tools.' + module), factory)()
     brief = build_brief_v3(topic)
     digest = compute_brief_hash(brief)

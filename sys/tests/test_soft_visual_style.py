@@ -10,12 +10,22 @@ from unittest.mock import patch
 
 import pytest
 from colab_bridge.job_protocol import build_render_request, bundle, validate_render_result
-from flow_prompts import PromptError, compile, compile_pinned, create_pin, freeze
+from flow_prompts import PromptError, compile, compile_pinned, create_pin, freeze, registry
 from image_pipeline import _template_request
 from tools.research_story_architect import ResearchedTopic
-from visual_style import STYLE_DESCRIPTION, STYLE_ID, STYLE_VERSION, render_style
+from visual_style import (
+    EARTH_TONED_STYLE_DESCRIPTION,
+    PASTEL_STYLE_DESCRIPTION,
+    STYLE_ID,
+    render_style,
+)
+from visual_style import (
+    LEGACY_HANDDRAWN_STYLE_DESCRIPTION as STYLE_DESCRIPTION,
+)
 
 from pilot import ROOT
+
+STYLE_VERSION = "1.6.0"
 
 
 @pytest.mark.parametrize("ratio", ["16:9", "9:16"])
@@ -79,7 +89,7 @@ def test_real_caller_keeps_shot_type_without_mascot_or_caption_band(tmp_path: Pa
 
 def test_authoring_and_remote_manifest_use_same_style_without_adopting_legacy(tmp_path: Path) -> None:
     topic = ResearchedTopic(topic="A discovery", audience="Students", goal="Understand", video_type="research_explainer")
-    assert topic.style == STYLE_DESCRIPTION
+    assert topic.style == registry("1.7.0")["style"]
     assert render_style({"style": "Legacy marker style"}) is None
     assert render_style({}, {"items": [{"actual_prompt": "legacy"}]}) is None
     assert render_style({}, {"items": [{"actual_prompt": STYLE_DESCRIPTION}]}) == STYLE_ID
@@ -122,7 +132,7 @@ def test_preview_freezes_source_lineage_and_refuses_unresolved_resubmission(tmp_
     output = tmp_path / "preview"
     manifest = prepare(tmp_path / "source", output)
     assert len(manifest["samples"]) == 6
-    assert manifest["pin"]["version"] == STYLE_VERSION
+    assert manifest["pin"]["version"] == "1.7.0"
     assert all(sample["source_sha256"] == hashlib.sha256(b"historical-fixture").hexdigest() for sample in manifest["samples"])
     assert prepare(tmp_path / "source", output) == manifest
     manifest["samples"][0]["status"] = "unknown"
@@ -218,3 +228,53 @@ def test_earth_toned_style_contains_palette_and_negative_space() -> None:
     assert "earth-toned foundation" in record["prompt"]
     assert "light-value pastel" not in record["prompt"]
 
+
+@pytest.mark.parametrize("shot", ["visual_diagram", "cutaway_detail"])
+@pytest.mark.parametrize("ratio", ["16:9", "9:16"])
+def test_hd2d_character_free_diagram_and_cutaway_have_negative_directive(shot: str, ratio: str) -> None:
+    description = "A hand-drawn comparative balance scale weighing taxes against basic provisions."
+    record = compile("NanoBanana2", "scene", {
+        "description": description,
+        "aspect_ratio": ratio,
+        "shot_type": shot,
+        "allowed_text": [],
+    }, STYLE_VERSION)
+    prompt = record["prompt"]
+    assert "Strict character-free composition" in prompt
+    assert "absolutely no human figures" in prompt
+    assert "round white head" not in prompt
+    assert "dot or oval eyes" not in prompt
+    assert "thin stick limbs" not in prompt
+    assert "simplified cartoon hands" not in prompt
+    assert record["provenance"]["references"]["character"] is None
+
+
+def test_hd2d_concept_metaphor_character_suppression_and_retention() -> None:
+    # Character-free metaphor
+    r_free = compile("NanoBanana2", "scene", {
+        "description": "Three ceramic jars balancing on an uneven wooden beam.",
+        "aspect_ratio": "16:9",
+        "shot_type": "concept_metaphor",
+        "character_free": True,
+        "allowed_text": [],
+    }, STYLE_VERSION)
+    assert "Strict character-free composition" in r_free["prompt"]
+    assert "round white head" not in r_free["prompt"]
+
+    # Character-based metaphor (default)
+    r_char = compile("NanoBanana2", "scene", {
+        "description": "A student climbs an insurmountable vertical wall of parchment.",
+        "aspect_ratio": "16:9",
+        "shot_type": "concept_metaphor",
+        "allowed_text": [],
+    }, STYLE_VERSION)
+    assert "Strict character-free composition" not in r_char["prompt"]
+    assert "round white head" in r_char["prompt"]
+    assert "anonymous stick figures" in r_char["prompt"]
+
+
+def test_render_style_routes_all_supported_profiles() -> None:
+    assert render_style({"style": STYLE_DESCRIPTION}) == STYLE_ID
+    assert render_style({"style": EARTH_TONED_STYLE_DESCRIPTION}) == "earth_toned_2d"
+    assert render_style({"style": PASTEL_STYLE_DESCRIPTION}) == "soft_pastel_2d"
+    assert render_style({"style": "Unrecognized custom style"}) is None

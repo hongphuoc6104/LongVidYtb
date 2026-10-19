@@ -6,12 +6,15 @@ import re
 from pathlib import Path
 
 CURRENT_VERSION = '1.4.0'
-SUPPORTED_VERSIONS = ('1.0.0', '1.0.1', '1.1.0', '1.2.0', '1.3.0', '1.4.0', '1.5.0')
+SUPPORTED_VERSIONS = ('1.0.0', '1.0.1', '1.1.0', '1.2.0', '1.3.0', '1.4.0', '1.5.0', '1.6.0', '1.7.0')
 # 1.1.0+: anonymous stick-figure cast, optional Character/style reference, no recurring presenter.
-CAST_VERSIONS = ('1.1.0', '1.2.0', '1.3.0', '1.4.0', '1.5.0')
-FULL_FRAME_VERSIONS = ('1.3.0', '1.4.0', '1.5.0')
+CAST_VERSIONS = ('1.1.0', '1.2.0', '1.3.0', '1.4.0', '1.5.0', '1.6.0', '1.7.0')
+FULL_FRAME_VERSIONS = ('1.3.0', '1.4.0', '1.5.0', '1.6.0', '1.7.0')
+EXPLICIT_ENTITY_VERSIONS = ('1.7.0',)
 BASE_FULL_FRAME_SHOT_TYPES = ('macro_prop', 'full_scene', 'variation', 'white_card', 'white_isolated')
+LEGACY_REST_SHOT_TYPES = ('still_life', 'environment')
 CHARACTER_FREE_SHOT_TYPES = ('still_life', 'environment')
+EXPLAINER_2D_SHOT_TYPES = ('concept_metaphor', 'visual_diagram', 'cutaway_detail')
 CHARACTER_FREE_DIRECTIVE = (
     "Strict character-free composition: absolutely no human figures, characters, people, silhouettes, "
     "faces, stick figures, hands, arms, legs, or human limbs anywhere in this frame. The focus is entirely "
@@ -19,7 +22,8 @@ CHARACTER_FREE_DIRECTIVE = (
 )
 DEPRECATED_PURPOSES = ('layer_background', 'layer_sticker')
 FIELDS = {'description', 'aspect_ratio', 'allowed_text', 'character_reference', 'base_reference',
-          'preserve', 'change', 'composition', 'mascot_placement', 'caption_clearance', 'shot_type'}
+          'preserve', 'change', 'composition', 'mascot_placement', 'caption_clearance', 'shot_type',
+          'character_free', 'has_character'}
 PLACEMENTS = {'upper-left', 'upper-right', 'left-margin', 'right-margin', 'above-caption-left', 'above-caption-right'}
 UUID = re.compile(r'[a-fA-F0-9]{8}(?:-[a-fA-F0-9]{4}){3}-[a-fA-F0-9]{12}\Z')
 SHA = re.compile(r'[a-f0-9]{64}\Z')
@@ -31,6 +35,17 @@ BANNED_CLICHES = [
     (re.compile(r'(?i)\b(?:pipe\s*valve|plumbing\s*valve|industrial\s*faucet|van\s*ống\s*nước|van\s*công\s*nghiệp)\b'), 'pipe valve cliché'),
     (re.compile(r'(?i)\b(?:iron\s*anchor|ship\s*anchor|heavy\s*anchor|mỏ\s*neo\s*sắt|mỏ\s*neo\s*tàu)\b'), 'iron anchor cliché'),
     (re.compile(r'(?i)\b(?:split[- ]?screen|split[- ]?composition|dichotomy\s*screen|màn\s*hình\s*chia\s*đôi|chia\s*đôi\s*màn\s*hình)\b'), 'split screen cliché'),
+]
+BANNED_LAZINESS_PATTERNS = [
+    # Passive character actions
+    (re.compile(r'(?i)\b(?:sits\s+and\s+thinks|sitting\s+quietly|staring\s+at\s+(?:laptop|screen|paper|wall)|pondering|feeling\s+stressed|lost\s+in\s+thought)\b'),
+     'passive character action'),
+    # Lazy still-life clichés
+    (re.compile(r'(?i)\b(?:coffee\s+mug\s+on\s+desk|books\s+resting\s+on\s+table|desk\s+lamp\s+glowing|empty\s+room|scattered\s+papers\s+on\s+desk|vintage\s+clock|reading\s+lamp)\b'),
+     'lazy still-life cliché'),
+    # Evasive abstract phrasing
+    (re.compile(r'(?i)\b(?:a\s+conceptual\s+metaphor\s+of|an\s+abstract\s+illustration\s+of|a\s+symbolic\s+representation\s+of)\b'),
+     'evasive abstract phrasing'),
 ]
 
 
@@ -81,7 +96,27 @@ def check_visual_prompt_text(value, field='description'):
     return value
 
 
-def _text(value, field, *, max_length=12000, empty=False):
+def find_laziness_pattern(text):
+    """Return the (pattern_name, matched_text) if text contains banned laziness lexicon, or None."""
+    if not isinstance(text, str):
+        return None
+    for pattern, name in BANNED_LAZINESS_PATTERNS:
+        match = pattern.search(text)
+        if match:
+            return name, match.group()
+    return None
+
+
+def check_laziness_lexicon(text: str, field: str = 'description') -> str:
+    """Flag passive or evasive authoring in visual prompt fields."""
+    match = find_laziness_pattern(text)
+    if match:
+        name, token = match
+        raise PromptError(f'LAZY_VISUAL_ACTION_FORBIDDEN: {field} contains {name} ({token!r})')
+    return text
+
+
+def _text(value, field, *, max_length=12000, empty=False, version='1.0.0'):
     if not isinstance(value, str) or (not empty and not value.strip()) or len(value) > max_length:
         raise PromptError('FLOW_PROMPT_DATA_INVALID: ' + field + ' needs bounded text')
     if any(ord(char) < 32 and char not in ('\n', '\t') for char in value) or '\x7f' in value:
@@ -89,29 +124,31 @@ def _text(value, field, *, max_length=12000, empty=False):
     if INJECTION.search(value):
         raise PromptError('FLOW_PROMPT_INJECTION_REJECTED: ' + field)
     check_visual_prompt_text(value, field)
+    if version == '1.6.0':
+        check_laziness_lexicon(value, field)
     return value
 
 
-def _strings(value, field, *, maximum=40):
+def _strings(value, field, *, maximum=40, version='1.0.0'):
     if not isinstance(value, list) or len(value) > maximum:
         raise PromptError('FLOW_PROMPT_DATA_INVALID: ' + field + ' needs a bounded list')
-    return [_text(item, field, max_length=2000) for item in value]
+    return [_text(item, field, max_length=2000, version=version) for item in value]
 
 
-def _allowed(value):
+def _allowed(value, version='1.0.0'):
     if not isinstance(value, list) or len(value) > 40:
         raise PromptError('FLOW_VISIBLE_TEXT_INVALID: a bounded exact-text list is required')
     result = []
     for item in value:
         if isinstance(item, str):
-            text = _text(item, 'allowed_text', max_length=2000)
+            text = _text(item, 'allowed_text', max_length=2000, version=version)
             normalized = text
         elif isinstance(item, dict) and 'text' in item and not set(item) - {'text', 'placement', 'object'}:
-            text = _text(item['text'], 'allowed_text.text', max_length=2000)
+            text = _text(item['text'], 'allowed_text.text', max_length=2000, version=version)
             normalized = {'text': text}
             for key in ('placement', 'object'):
                 if key in item:
-                    normalized[key] = _text(item[key], 'allowed_text.' + key, max_length=2000)
+                    normalized[key] = _text(item[key], 'allowed_text.' + key, max_length=2000, version=version)
         else:
             raise PromptError('FLOW_VISIBLE_TEXT_INVALID: string or text/placement/object record required')
         if MANAGEMENT.search(text):
@@ -134,7 +171,7 @@ def _data(data, purpose, version='1.0.0'):
     cast = version in CAST_VERSIONS
     if not isinstance(data, dict) or set(data) - FIELDS or (cast and 'mascot_placement' in data):
         raise PromptError('FLOW_PROMPT_FIELDS_UNSUPPORTED: visual fields are allowlisted')
-    description = _text(data.get('description'), 'description')
+    description = _text(data.get('description'), 'description', version=version)
     ratio = data.get('aspect_ratio')
     if ratio not in ('9:16', '16:9'):
         raise PromptError('FLOW_PROMPT_RATIO_UNSUPPORTED: explicit 9:16 or 16:9 required')
@@ -143,13 +180,13 @@ def _data(data, purpose, version='1.0.0'):
     else:
         character = _reference(data.get('character_reference'), 'character_reference')
     base = _reference(data['base_reference'], 'base_reference') if data.get('base_reference') is not None else None
-    preserve = _strings(data.get('preserve', []), 'preserve')
-    change = _strings(data.get('change', []), 'change')
+    preserve = _strings(data.get('preserve', []), 'preserve', version=version)
+    change = _strings(data.get('change', []), 'change', version=version)
     if (purpose == 'variation' or preserve) and base is None:
         raise PromptError('FLOW_BASE_REFERENCE_REQUIRED: preserved shot/variation needs its actual Base reference')
     if purpose == 'variation' and (not preserve or not change):
         raise PromptError('FLOW_VARIATION_INVALID: declare both preserved composition and visible change')
-    allowed = _allowed(data.get('allowed_text', []))
+    allowed = _allowed(data.get('allowed_text', []), version=version)
     placement = data.get('mascot_placement', 'above-caption-right')
     if not cast and placement not in PLACEMENTS:
         raise PromptError('FLOW_MASCOT_PLACEMENT_UNSUPPORTED: choose a supported attention margin')
@@ -165,20 +202,35 @@ def _data(data, purpose, version='1.0.0'):
     normalized = {'description': description, 'aspect_ratio': ratio, 'allowed_text': allowed,
                   'preserve': preserve, 'change': change, 'caption_clearance': clearance}
     if 'shot_type' in data:
-        allowed_shots = (
-            BASE_FULL_FRAME_SHOT_TYPES + CHARACTER_FREE_SHOT_TYPES
-            if version >= '1.5.0'
-            else BASE_FULL_FRAME_SHOT_TYPES
-        )
+        if version >= '1.6.0':
+            allowed_shots = BASE_FULL_FRAME_SHOT_TYPES + LEGACY_REST_SHOT_TYPES + EXPLAINER_2D_SHOT_TYPES
+        elif version >= '1.5.0':
+            allowed_shots = BASE_FULL_FRAME_SHOT_TYPES + LEGACY_REST_SHOT_TYPES
+        else:
+            allowed_shots = BASE_FULL_FRAME_SHOT_TYPES
         if version not in FULL_FRAME_VERSIONS or data['shot_type'] not in allowed_shots:
             raise PromptError('FLOW_SHOT_TYPE_UNSUPPORTED: shot types require a full-frame registry (1.3.0+)')
         normalized['shot_type'] = data['shot_type']
         if data['shot_type'] == 'variation' and purpose != 'variation':
             raise PromptError('FLOW_BASE_REFERENCE_REQUIRED: variation shot requires its Base reference')
+    if 'character_free' in data:
+        normalized['character_free'] = bool(data['character_free'])
+    if 'has_character' in data:
+        normalized['has_character'] = bool(data['has_character'])
+    if version in EXPLICIT_ENTITY_VERSIONS:
+        for key in ('has_character', 'character_free'):
+            if key in data and type(data[key]) is not bool:
+                raise PromptError('FLOW_ENTITY_POLICY_INVALID: entity flags must be booleans')
+        if data.get('has_character') is True and data.get('character_free') is True:
+            raise PromptError('FLOW_ENTITY_POLICY_INVALID: contradictory entity flags')
+        if character is not None and not data.get('has_character'):
+            raise PromptError('FLOW_ENTITY_POLICY_INVALID: identity reference requires explicit people')
+        normalized['has_character'] = data.get('has_character', False)
+        normalized['character_free'] = not normalized['has_character']
     if not cast:
         normalized['mascot_placement'] = placement
     if 'composition' in data:
-        normalized['composition'] = _text(data['composition'], 'composition')
+        normalized['composition'] = _text(data['composition'], 'composition', version=version)
     references = {'character': character, 'base': base}
     return normalized, references
 
@@ -197,7 +249,14 @@ def compile(model, purpose, data, version=CURRENT_VERSION):
         raise PromptError('FLOW_PURPOSE_UNSUPPORTED: reference, character, scene or variation required')
     visual, references = _data(data, purpose, version)
     template_id = 'flow.' + model_id + '.' + purpose
-    if visual.get('shot_type') in CHARACTER_FREE_SHOT_TYPES:
+    shot = visual.get('shot_type')
+    if version in EXPLICIT_ENTITY_VERSIONS:
+        character_section = spec['cast_rule'] if visual['has_character'] else CHARACTER_FREE_DIRECTIVE
+    elif shot in ('visual_diagram', 'cutaway_detail') and not visual.get('has_character'):
+        character_section = CHARACTER_FREE_DIRECTIVE
+    elif shot in LEGACY_REST_SHOT_TYPES:
+        character_section = CHARACTER_FREE_DIRECTIVE
+    elif shot == 'concept_metaphor' and visual.get('character_free') is True:
         character_section = CHARACTER_FREE_DIRECTIVE
     elif version in CAST_VERSIONS:
         character_section = spec['cast_rule']

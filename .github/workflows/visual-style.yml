@@ -25,6 +25,7 @@ jobs:
       - name: Verify style, compatibility and remote render contracts
         run: >-
           python -m pytest -q -m "not media_acceptance"
+          sys/tests/test_reference_explainer.py
           sys/tests/test_repository_checkpoint.py
           sys/tests/test_account_management.py
           sys/tests/test_colab_scheduler.py
