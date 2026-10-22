@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build production-ready packages for Adversarial AI (16:9 Landscape & 9:16 Portrait).
 
-Pillar: "Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật" (tier_3_conversion)
+Pillar: "Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức" (tier_3_conversion)
 Topic: "Biến AI Thành 'Phản Biện Đối Đầu' Thay Vì Công Cụ Viết Hộ"
 - adversarial-ai-16x9: 32 visual beats full_frame_v1 landscape explainer
 - adversarial-ai-9x16: 20 visual beats full_frame_v1 vertical mobile long-form

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build production-ready packages for The Collector's Fallacy (16:9 and 9:16 long-form).
 
-Pillar: "Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật" (tier_1_broad)
+Pillar: "Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức" (tier_1_broad)
 - collectors-fallacy-16x9: 18 scenes full_frame_v1 landscape explainer
 - collectors-fallacy-9x16: 12 scenes full_frame_v1 vertical mobile long-form
 """

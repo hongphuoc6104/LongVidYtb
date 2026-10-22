@@ -50,7 +50,7 @@ from script_cadence_checker import (  # noqa: E402
 from visual_style import CAST_APPEARANCE, DEFAULT_OUTFIT
 from visual_style import LEGACY_HANDDRAWN_STYLE_DESCRIPTION as STYLE_DESCRIPTION
 
-DEFAULT_CHANNEL_PILLAR = "Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật"
+DEFAULT_CHANNEL_PILLAR = "Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức"
 ALLOWED_FUNNEL_TIERS: Tuple[str, str, str] = ("tier_1_broad", "tier_2_mid", "tier_3_conversion")
 MAX_YOUTUBE_TITLE_CHARS = 55
 HARD_MAX_YOUTUBE_TITLE_CHARS = 65

@@ -106,15 +106,17 @@ def test_production_request_gate_rejects_missing_explanation_before_planning_or_
     units.assert_not_called()
 
 
-def test_reference_short_rejects_long_blueprint_without_changing_legacy_contract():
+def test_reference_short_supports_dynamic_duration():
     brief = {'style': registry('1.7.0')['style'], 'format_profile': 'short_9x16',
-             'scene_count': 19, 'duration': {'min_seconds': 240, 'max_seconds': 420}}
-    assert len(validate_short(brief)) == 2
-    brief.update(scene_count=5, duration={'min_seconds': 45, 'max_seconds': 60})
+             'scene_count': 19, 'duration': {'min_seconds': 240, 'max_seconds': 420},
+             'speed': 1.0, 'outputs': [{'subtitles': True}]}
     assert validate_short(brief) == []
-    brief['style'] = registry('1.6.0')['style']
-    brief['scene_count'] = 19
-    assert validate_short(brief) == []
+    brief['speed'] = 1.2
+    assert len(validate_short(brief)) == 1
+    brief['speed'] = 1.0
+    brief['outputs'] = [{'subtitles': False}]
+    assert len(validate_short(brief)) == 1
+
 
 
 def session_profiles(tmp_path):

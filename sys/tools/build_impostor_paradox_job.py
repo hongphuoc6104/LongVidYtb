@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build production-ready package for Impostor Paradox (9:16 Vertical Short Explainer).
 
-Pillar: "Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật" (tier_1_broad)
+Pillar: "Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức" (tier_1_broad)
 Topic: "Bẫy Tự Ti Học Thuật: Giải Mã Hội Chứng Kẻ Mạo Danh Ở Người Có Năng Lực Tư Duy Sâu"
 Format: short_9x16 (vertical mobile short-form, 5 standalone scenes SC01..SC05, full_frame_v1)
 """
@@ -252,7 +252,7 @@ def main():
 
     out_dir = args.out.resolve()
     out_dir.mkdir(parents=True, exist_ok=True)
-    res = build_and_export_job(topic, out_dir)
+    build_and_export_job(topic, out_dir)
     print(f"Exported package to {out_dir}")
     print(f"Visual beats: {total_beats} across {len(topic.scenes)} scenes")
 

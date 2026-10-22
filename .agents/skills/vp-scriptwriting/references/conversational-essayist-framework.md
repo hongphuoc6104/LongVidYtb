@@ -1,6 +1,6 @@
 # Khung Kể Chuyện Conversational Essayist & Cú Tát Sự Thật (Conversational Essayist Storytelling Framework)
 
-Tài liệu này chuẩn hóa mô hình kể chuyện **Conversational Essayist (Nhà luận thuyết trò chuyện)** kết hợp công thức **Counter-Intuitive / Truth-Slap Hook (Cú tát sự thật trong 2.5 giây đầu)** — cấu trúc biên kịch ăn đề xuất cho cả ngách **Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật** lẫn các chuyên đề Khoa học Nhận thức & Lịch sử Tiến hóa trong Video Pilot.
+Tài liệu này chuẩn hóa mô hình kể chuyện **Conversational Essayist (Nhà luận thuyết trò chuyện)** kết hợp công thức **Counter-Intuitive / Truth-Slap Hook (Cú tát sự thật trong 2.5 giây đầu)** — cấu trúc biên kịch ăn đề xuất cho ngách **Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức** trong Video Pilot.
 
 ---
 

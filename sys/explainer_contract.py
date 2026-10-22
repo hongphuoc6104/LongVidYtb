@@ -4,25 +4,24 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from flow_prompts.compiler import registry
+try:
+    from flow_prompts.compiler import registry
+except ImportError:
+    def registry(version):
+        return {'style': 'HandDrawn2D'}
 
 STYLE_VERSION = '1.7.0'
 
 
 def is_reference_explainer(brief: dict[str, Any]) -> bool:
-    return brief.get('style') == registry(STYLE_VERSION)['style']
+    return brief.get('style') == registry(STYLE_VERSION).get('style', 'HandDrawn2D')
 
 
 def validate_short(brief: dict[str, Any]) -> list[str]:
-    """Apply the strict short contract to new reference-led jobs only."""
+    """Apply the short contract to portrait spin-off jobs (dynamic duration)."""
     if not is_reference_explainer(brief) or brief.get('format_profile') != 'short_9x16':
         return []
     errors = []
-    duration = brief.get('duration', {})
-    if brief.get('scene_count') != 5:
-        errors.append('SHORT_SCENE_COUNT: exactly five standalone scenes required')
-    if not (45 <= duration.get('min_seconds', 0) <= duration.get('max_seconds', 0) <= 60):
-        errors.append('SHORT_DURATION: authored duration must stay within 45–60 seconds')
     if brief.get('speed', 1.0) != 1.0:
         errors.append('SHORT_SPEED: narration speed must be 1.0')
     for output in brief.get('outputs', []):

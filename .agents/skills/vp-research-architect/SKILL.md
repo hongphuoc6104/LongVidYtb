@@ -13,12 +13,14 @@ Bộ kỹ năng này được thiết kế để **tự động hóa 100% phần
 
 ## 1. Định Vị Ngách & Phễu 3 Tầng (Core Mission & 3-Tier Pillar Lock)
 
-- **Trụ cột nội dung cố định (`channel_pillar`):** Khóa cứng vào ngách **"Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật"** (kết hợp Tâm lý học Nhận thức & Khoa học Học tập).
-- **Quy tắc Chống Loãng Tệp (`Anti-Dilution Guard`):** Tuyệt đối **cấm** các mẹo vặt văn phòng (gõ hàm Excel, làm Slide nhanh 4 tiếng, tình huống bạn Na học tiếng Anh).
-- **Mô hình Phễu 3 Tầng (`funnel_tier`):**
-  1. **Tầng 1 — Phễu Rộng (`tier_1_broad`):** *"Ảo Giác Hiểu Biết & Nghịch Lý Học Thuật"* (*Biết tính $\neq$ Hiểu bản chất*; *Ảo giác năng lực khi đọc lại giáo trình 5 lần*; *Kỹ thuật Feynman & cái bẫy thuật ngữ hàn lâm*).
-  2. **Tầng 2 — Phễu Giữa (`tier_2_mid`):** *"Giải Phẫu Quy Trình Nghiên Cứu Chuẩn Quốc Tế (Q1) & Tâm Lý Hội Đồng"* (*Academic Pyramid 9 tầng*, chuỗi `Question → Gap → Method → Evidence → Paper`, *Tâm lý Hội đồng trong 120 giây đầu phòng bảo vệ*).
-  3. **Tầng 3 — Phễu Chuyển Đổi (`tier_3_conversion`):** *"Vũ Khí Tư Duy Học Thuật (AI for Deep Research)"* (*Biến 30 bài báo Q1 thành Ma trận Khoảng trống Nghiên cứu — Research Gap Matrix*, *Dùng AI phản biện chéo lý thuyết thay vì viết hộ*).
+- **Trụ cột nội dung cố định (`channel_pillar`):** Khóa cứng vào ngách **"Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức"** (kết hợp Tâm lý học Nhận thức, Mô hình Tư duy & Triết học Tri thức).
+- **Quy tắc Chống Loãng Tệp (`Anti-Dilution Guard`):** Tuyệt đối **cấm** các mẹo vặt văn phòng hời hợt (gõ hàm Excel, làm Slide nhanh 4 tiếng, mẹo học vẹt ngắn hạn).
+- **Mô hình Phễu 3 Tầng Linh Hoạt (`funnel_tier`):**
+  1. **Tầng 1 — Phễu Rộng (`tier_1_broad`):** *"Tư Duy Nhận Thức, Nghịch Lý & Ảo Giác Tri Thức"* (Cognitive Biases, Mental Models, cơ chế nhận thức khi tiếp nhận và xử lý thông tin, khoảng cách giữa nhận biết hời hợt và thấu suốt bản chất).
+  2. **Tầng 2 — Phễu Giữa (`tier_2_mid`):** *"Phương Pháp Luận, Phân Tích Căn Nguyên & Bản Chất Vấn Đề"* (Methodological Inquiry, First-Principles Thinking, giải phẫu cấu trúc nhân quả, cơ chế vận hành gốc rễ và kiểm chứng thực nghiệm).
+  3. **Tầng 3 — Phễu Chuyển Đổi (`tier_3_conversion`):** *"Công Cụ & Khung Tư Duy Đào Sâu Tri Thức"* (Deep Intellectual Frameworks, mô hình phân tích hệ thống, ứng dụng công nghệ/AI để phản biện chéo và kết nối tri thức đa chiều).
+- **Nguyên Tắc Đề Tài Mở (No Rigid Sample Overfitting):** Tập trung vào nguyên lý cốt lõi, cơ chế nhân quả và chiều sâu nhận thức; không ép buộc chủ đề mẫu cố định và không định nghĩa vấn đề quá hẹp hay gượng ép.
+- **Thời Lượng Động (Dynamic Duration SSOT):** Thời lượng video và số phân cảnh hoàn toàn động theo chiều sâu kịch bản và độ dài audio thực tế từ WAV, loại bỏ các con số cứng cố định.
 
 ---
 
@@ -33,7 +35,7 @@ Bộ kỹ năng này được thiết kế để **tự động hóa 100% phần
 - Tách biệt `topic` nội bộ khỏi bộ trường `packaging`:
   1. `youtube_title`: $\le 55$ ký tự, tạo *Curiosity Gap*, không tự trả lời trong tiêu đề.
   2. `thumbnail_spec`: `visual_hook` + `text_overlay` đúng **2–4 từ in hoa**.
-  3. `channel_pillar` & `funnel_tier`: Khóa cố định ngách Tư Duy Nghiên Cứu (`tier_1_broad` / `tier_2_mid` / `tier_3_conversion`).
+  3. `channel_pillar` & `funnel_tier`: Khóa cố định ngách Tư Duy Nhận Thức & Phương Pháp Luận (`tier_1_broad` / `tier_2_mid` / `tier_3_conversion`).
 
 ### Bước 3: Soạn Kịch Bản Theo Cặp `(Câu Thoại, Hành Động Hình Ảnh)` — Không Đoán Tọa Độ
 - Thay vì tự tính thời lượng, tự cắt `anchor_quote` hoặc tự đoán tọa độ `focus: {x, y}`, hãy sử dụng hàm **`build_scenes_from_story_rows()`** trong `sys/tools/research_story_architect.py` (hoặc cấu trúc `STORY` trong `sys/tools/build_full_frame_acceptance.py`):

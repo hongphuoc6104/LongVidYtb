@@ -11,7 +11,7 @@ description: "Author and transform explainer video scripts into natural conversa
 
 ## 1. Bản Sắc Giọng Kể, Cú Tát Sự Thật Mở Màn & Nhịp Câu Con Người
 
-- **Hình tượng (The Voice Archetype):** **Conversational Essayist (Nhà luận thuyết trò chuyện)** — điềm đạm, ấm áp, sắc sảo, như người đàn anh hướng dẫn nghiên cứu bên bàn cà phê, khóa cứng ngách **"Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật"**.
+- **Hình tượng (The Voice Archetype):** **Conversational Essayist (Nhà luận thuyết trò chuyện)** — điềm đạm, ấm áp, sắc sảo, như người bạn đồng hành tri thức bên bàn cà phê, khóa cứng ngách **"Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức"**.
 - **Counter-Intuitive / Truth-Slap Hook (Cú tát sự thật trong 2.5 giây đầu):**
   - Câu đầu tiên của `SC01` bắt buộc **$\le 18$ âm tiết** (`OPENING_HOOK_TOO_LONG`), đánh thẳng vào nghịch lý phản trực giác hoặc lật tẩy ảo giác học thuật của người xem (ví dụ: *"Trang sách vàng kín, đầu bạn vẫn trống."* — 8 âm tiết; hoặc *"Đọc lại giáo trình năm lần chỉ tạo ra ảo giác hiểu bài."* — 12 âm tiết).
   - **Tuyệt đối cấm** mở đầu bằng lời chào (*"Xin chào"*), giới thiệu đề tài (*"Hôm nay chúng ta..."*), hoặc câu dẫn nhập chậm (*"Hãy nghĩ về..."*, *"Hãy hình dung..."*, *"Hãy tưởng tượng..."*, *"Giờ đây, hãy thử..."*).

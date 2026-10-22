@@ -1,6 +1,6 @@
 # Causal Explanatory Script & Cadence Standards
 
-Read the brief/profile, packaging contract, audience and required points. Every video script must adhere to the **Conversational Essayist** standard, the **3-Tier Academic Research Funnel** (*"Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật"*), and the 5-part storytelling framework ([vp-scriptwriting](../../vp-scriptwriting/SKILL.md)):
+Read the brief/profile, packaging contract, audience and required points. Every video script must adhere to the **Conversational Essayist** standard, the **3-Tier Funnel** (*"Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức"*), and the 5-part storytelling framework ([vp-scriptwriting](../../vp-scriptwriting/SKILL.md)):
 1. **Counter-Intuitive / Truth-Slap Hook & Empathy (0–15%):** Open with a counter-intuitive truth-slap statement ($\le 18$ syllables in the first sentence of `SC01`), **zero `[pause:...]` tags in `SC01`**, `4.2–4.4` syl/s pacing (`VietNarrator` `speed: 1.0` on `short_9x16` and `long_16x9`), and 100% Vietnamese cultural localization in the first 60s (exam/thesis night, highlighting textbooks, opening Word at 2 AM, 120s before the defense committee).
 2. **Reframe & Dilemma (15–35%):** Challenge conventional assumptions with an intriguing scientific/academic paradox + at most 1 `[pause:900ms]` before the reveal.
 3. **Causal Evidence 70/30 (35–65%):** Balance 70% visual diagram-driven flow (*Academic Pyramid*, `Question → Gap → Method → Evidence` flowchart) with 30% verified spoken facts ($\le 20$ syllables).

@@ -21,28 +21,28 @@ Hồ sơ bàn giao đặt trong thư mục `sys/runs/<job>/` gồm:
 ```json
 {
   "topic": "Nghịch lý Tri thức và Ảo giác Năng lực: Giải phẫu cơ chế nhận thức khiến việc đọc lại giáo trình thụ động và mở Word gõ ngay làm tê liệt tư duy nghiên cứu khoa học chuẩn Q1",
-  "channel_pillar": "Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật",
+  "channel_pillar": "Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức",
   "funnel_tier": "tier_1_broad",
-  "youtube_title": "Ảo Giác Năng Lực: Vì Sao Đọc Lại Sách Làm Não Ngừng Tư Duy?",
+  "youtube_title": "Ảo Giác Năng Lực: Vì Sao Càng Đọc Càng Thấy Hiểu?",
   "thumbnail_spec": {
-    "visual_hook": "Nhân vật người que dùng kính lúp kiểm tra Sơ đồ Tháp Học Thuật trong cùng khung với cuốn giáo trình highlight kín chữ",
+    "visual_hook": "Nhân vật người que dùng kính lúp kiểm tra mô hình tư duy trong cùng khung với sơ đồ",
     "text_overlay": "BIẾT TÍNH ≠ HIỂU!",
-    "contrast_pair": "Học vẹt cơ học vs. Tư duy gốc rễ Q1"
+    "contrast_pair": "Nhận thức hời hợt vs. Thấu suốt bản chất"
   },
   "seo_keywords": [
-    "tư duy nghiên cứu khoa học",
+    "tư duy nhận thức",
     "ảo giác năng lực",
-    "cách đọc bài báo Q1",
-    "nghiên cứu khoa học sinh viên",
+    "mô hình tư duy",
+    "phương pháp luận",
     "bản chất tri thức"
   ]
 }
 ```
 
 - **Quy tắc kiểm định cứng (`check_packaging_and_localization`):**
-  1. `youtube_title`: Độ dài lý tưởng **$\le 55$ ký tự** (ngưỡng cảnh báo cứng $60$ ký tự); phải đặt từ khóa kích thích tò mò (*Ảo Giác Năng Lực*, *Tâm Lý Hội Đồng*, *Nghịch Lý Tri Thức*, *Giải Phẫu Bài Báo Q1*) ngay trong **5 chữ đầu tiên**; **tuyệt đối cấm tự trả lời câu hỏi ngay trong tiêu đề**.
+  1. `youtube_title`: Độ dài lý tưởng **$\le 55$ ký tự** (ngưỡng cảnh báo cứng $60$ ký tự); phải đặt từ khóa kích thích tò mò ngay trong **5 chữ đầu tiên**; **tuyệt đối cấm tự trả lời câu hỏi ngay trong tiêu đề**.
   2. `thumbnail_spec`: Gồm 1 hình ảnh tương phản trực diện (`visual_hook`) + dòng chữ đè (`text_overlay`) ngắn gọn **2–4 từ in hoa** (không lặp lại nguyên văn tiêu đề video).
-  3. `channel_pillar` & `funnel_tier`: Khóa cố định vào ngách *"Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật"*, phân tầng rõ `tier_1_broad`, `tier_2_mid`, hoặc `tier_3_conversion`. Nghiêm cấm chứa từ khóa lệch ngách văn phòng (*mẹo Excel, hàm Excel, làm Slide nhanh, tình huống của Na*).
+  3. `channel_pillar` & `funnel_tier`: Khóa cố định vào ngách *"Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức"*, phân tầng rõ `tier_1_broad`, `tier_2_mid`, hoặc `tier_3_conversion`. Nghiêm cấm chứa từ khóa lệch ngách văn phòng (*mẹo Excel, hàm Excel, làm Slide nhanh, hacks ngắn hạn*).
 
 ### 2.2. Hợp đồng Âm thanh & Chốt Chặn 15 Giây Đầu (Audio & TTS Contract)
 - **Công thức tính âm tiết:**
@@ -73,10 +73,10 @@ Hồ sơ bàn giao đặt trong thư mục `sys/runs/<job>/` gồm:
   2. **Vùng Thân Bài (`sau 0:15` / `SC03+`):** Giữ ngưỡng chuẩn **`0.83s – 3.80s`** theo thuật toán *Cue-Window Allocation* (`0.000s` drift tại mọi đầu câu thoại).
 
 ### 2.5. Kiến Trúc Chuyển Thể `Short-Form Spin-off Blueprint` (Giải quyết Bẫy 2)
-- **Nghiêm cấm cắt ngang video dài đem đăng TikTok:** Tuyệt đối không cắt thô Chương 2, Chương 3 của video `long_16x9` để đăng TikTok vì thiếu Hook độc lập và sai khung hình.
+- **Nghiêm cấm cắt ngang video dài đem đăng TikTok:** Tuyệt đối không cắt thô giữa video `long_16x9` để đăng TikTok vì thiếu Hook độc lập và sai khung hình.
 - **Quy trình Spin-off chuẩn (`build_short_spinoff_topics`):**
-  - Từ 1 hồ sơ nghiên cứu gốc, kiến trúc sư trích xuất **2–3 nghịch lý đắt giá nhất** (ví dụ: Nghịch lý 1: *Đọc lại 5 lần vs. Truy xuất chủ động*; Nghịch lý 2: *Mở Word gõ ngay vs. Chuỗi quyết định Q1*; Nghịch lý 3: *120 giây đầu trước Hội đồng bảo vệ*).
-  - Mỗi bản Spin-off được đóng gói thành một hồ sơ `short_9x16` độc lập (`aspect_ratio: "9:16"`, `format_profile: "short_9x16"`, `subtitles: true`, `voice: "VietNarrator"`, `speed: 1.0`, 5 cảnh `SC01..SC05`, thời lượng `45–60s`), có câu mở đầu **Counter-Intuitive Hook $\le 18$ âm tiết** viết mới hoàn toàn và phụ đề nhảy chữ theo `word_timestamps` (`max_line_chars: 28`).
+  - Từ 1 hồ sơ nghiên cứu gốc, kiến trúc sư trích xuất **các nghịch lý đắt giá nhất** làm chủ đề cho các video ngắn độc lập.
+  - Mỗi bản Spin-off được đóng gói thành một hồ sơ `short_9x16` độc lập (`aspect_ratio: "9:16"`, `format_profile: "short_9x16"`, `subtitles: true`, `voice: "VietNarrator"`, `speed: 1.0`, thời lượng động theo kịch bản và audio WAV), có câu mở đầu **Counter-Intuitive Hook $\le 18$ âm tiết** viết mới hoàn toàn và phụ đề nhảy chữ theo `word_timestamps` (`max_line_chars: 28`).
 
 ### 2.6. Hợp đồng Pháp lý & Tính Toàn Vẹn (Legal & Integrity Contract)
 - **`brief_hash` bất biến:** Tính SHA-256 trên chuỗi JSON tuần tự hóa canonical (`serialize_brief_json`, `indent=2`, `ensure_ascii=False`), khớp 100% với `pilot.py`.

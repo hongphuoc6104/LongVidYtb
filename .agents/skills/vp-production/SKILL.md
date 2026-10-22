@@ -1,6 +1,6 @@
 ---
 name: vp-production
-description: "Create, continue, or repair Video Pilot videos (both long_16x9 13m explainers and short_9x16 45-60s spin-offs) through auto/review job contracts."
+description: "Create, continue, or repair Video Pilot videos (both long_16x9 explainers and short_9x16 spin-offs) through auto/review job contracts with dynamic duration."
 ---
 
 # Production
@@ -9,7 +9,7 @@ Use production scope and sys/docs/workflow.md. One task/role; current brief and 
 
 ## Read guidance by step
 
-- New topic architecture, Packaging & SEO Contract (`youtube_title <= 55` chars, `thumbnail_spec`, `channel_pillar` locked to *"Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật"*), Vietnamese 60s localization, and Short-Form Spin-off Blueprints (`brief.json` & `content.json` Schema 3.0): [vp-research-architect](../vp-research-architect/SKILL.md); vocabulary bank entry (`vocab/bank.py start`): [vocabulary](references/vocabulary.md).
+- New topic architecture, Packaging & SEO Contract (`youtube_title <= 55` chars, `thumbnail_spec`, `channel_pillar` locked to *"Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức"*), Vietnamese 60s localization, and Short-Form Spin-off Blueprints (`brief.json` & `content.json` Schema 3.0): [vp-research-architect](../vp-research-architect/SKILL.md); vocabulary bank entry (`vocab/bank.py start`): [vocabulary](references/vocabulary.md).
 - Outline/narration/cadence (Counter-Intuitive Hook `<= 18` syl, Zero Pause in `SC01`, 4.2–4.4 syl/s opening pace): [script](references/script.md), [narration](references/narration-style.md), and [vp-scriptwriting](../vp-scriptwriting/SKILL.md) (`vn_text_normalizer.py` + `script_cadence_checker.py`).
 - Shot grammar & renderer limits (mandatory reading before creating beat/image plans — after dialogue is finalized, before writing prompts): [cinematography](references/cinematography.md) then [render-capabilities](../../../sys/docs/render-capabilities.md).
 - Image/beat planning and generation: [storyboard and visuals](references/visuals.md) and [vp-flow-cdp](../vp-flow-cdp/SKILL.md). Generate a complete full-frame `kind: "scene"` image for each narration-anchored visual beat; use `based_on` with explicit `preserve` and `change` when a shot stays in the same place. Do not generate background/sticker cutouts or run `matte_sticker.py`.
@@ -17,7 +17,7 @@ Use production scope and sys/docs/workflow.md. One task/role; current brief and 
 - Timeline/captions/MP4: [editing](references/editing.md) and [vp-colab-bridge](../vp-colab-bridge/SKILL.md).
 - Errors: [recovery](references/recovery.md) and [Colab error matrix](../vp-colab-bridge/references/error-recovery-matrix.md).
 
-Channel brief specs follow sys/format_profiles.py across both official formats: `long_16x9` (13m Explainer Blueprint, 8 chapters / 48 scenes for YouTube) and `short_9x16` (45–60s, 5 standalone scenes `SC01..SC05`, `subtitles: true`, `speed: 1.0` with `VietNarrator` for TikTok/Shorts Spin-offs); freeze its relevant fields in the brief. Never raw-cut middle chapters (`CH02..CH08`) of a 16:9 video for TikTok. Never leak internal IDs/instructions into visible text.
+Channel brief specs follow sys/format_profiles.py across both official formats: `long_16x9` (landscape widescreen explainers for YouTube) and `short_9x16` (vertical standalone spin-offs, `subtitles: true`, `speed: 1.0` with `VietNarrator` for TikTok/Shorts Spin-offs); freeze its relevant fields in the brief. Zero fixed duration constraints — video duration and scene counts are determined strictly by narrative depth and measured WAV narration. Never raw-cut middle chapters of a 16:9 video for TikTok without standalone restructuring. Never leak internal IDs/instructions into visible text.
 
 Start with the total execution plan; author draft directly with version/anchors, not an implicit external generator. Send every real artifact to web/chat with job/version/path and verified measures. Do not represent a prompt/hash/metadata as visual or auditory inspection.
 

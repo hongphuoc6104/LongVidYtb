@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build production-ready packages for Reviewer 2 & Novelty Bias (16:9 Landscape & 9:16 Portrait).
 
-Pillar: "Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật" (tier_2_mid)
+Pillar: "Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức" (tier_2_mid)
 Topic 1 (16:9): "Nghịch Lý Reviewer 2 & Định Kiến Chống Đột Phá (Novelty Bias)"
   - reviewer-2-novelty-bias-16x9: 12 scenes, 77 visual beats, full_frame_v1 landscape explainer
 Topic 2 (9:16): "Câu chuyện các bài báo đoạt giải Nobel từng bị từ chối xuất bản"

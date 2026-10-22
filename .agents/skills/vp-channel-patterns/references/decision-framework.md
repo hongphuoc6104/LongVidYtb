@@ -9,7 +9,7 @@ Tài liệu này cung cấp **Ma trận Ra Quyết định (Decision Matrix)** c
 | Vấn đề cần quyết định | Lựa chọn A | Lựa chọn B | Tiêu chí quyết định (Khi nào dùng?) | Rủi ro nếu chọn sai |
 |:---|:---|:---|:---|:---|
 | **Chế độ sản xuất** | **Mode A** *(Structural Replication)* | **Mode B** *(Original Adaptation)* | Dùng **Mode A** khi chạy benchmark nội bộ, đo độ lệch timeline. Dùng **Mode B** khi sản xuất video mới ra kênh. | Chọn sai Mode A cho sản xuất công khai sẽ vi phạm bản quyền nội dung. |
-| **Định dạng xuất bản (`sys/format_profiles.py`)** | **`long_16x9`** *(1920x1080, 11–13m, 8 chương / 48 cảnh)* | **`short_9x16`** *(1080x1920, 45–60s, 5 cảnh độc lập)* | Dùng **`long_16x9`** (`subtitles: false`, `voice: "VietNarrator"`, `speed: 1.0`) cho YouTube Long-form. Dùng **`short_9x16`** (`subtitles: true`, `voice: "VietNarrator"`, `speed: 1.0`, `max_line_chars: 28`) cho TikTok/YouTube Shorts. | Cắt ngang Chương 2–8 của video 16:9 đem đăng TikTok khiến video mất Hook 3 giây và kịch trần 200 view. |
+| **Định dạng xuất bản (`sys/format_profiles.py`)** | **`long_16x9`** *(1920x1080, Landscape Widescreen)* | **`short_9x16`** *(1080x1920, Portrait Spin-offs)* | Dùng **`long_16x9`** (`subtitles: false`, `voice: "VietNarrator"`, `speed: 1.0`) cho YouTube Long-form. Dùng **`short_9x16`** (`subtitles: true`, `voice: "VietNarrator"`, `speed: 1.0`, `max_line_chars: 28`) cho TikTok/YouTube Shorts. Thời lượng hoàn toàn động theo kịch bản và audio WAV. | Cắt ngang giữa video 16:9 đem đăng TikTok khiến video mất Hook 3 giây và kịch trần 200 view. |
 | **Mật độ giữ hình (`Visual Hold`)** | **Cold open `0:00–0:12.5`** *(8–9 ảnh khi lời thoại hỗ trợ)* | **Vùng Thân Bài `> 0:15`** *(`0.83s – 3.80s`/beat)* | Hướng tới khoảng 4 ảnh trong 5 giây đầu và 8–9 ảnh trong 12–12,5 giây; neo cut vào lời thoại và xác nhận trên WAV. Từ `SC03` trở đi dùng cue window `0.83s–3.80s`. | Gắn cut theo nhịp đều mà không khớp ý lời thoại hoặc giữ một hình quá lâu ở đoạn mở đầu. |
 | **Dàn dựng Visual Hợp Nhất** | **Sơ đồ và nhân vật trong cùng ảnh** *(`kind: "scene"`)* | **Cận cảnh đạo cụ / cảnh rộng / biến thể tại chỗ / thẻ khái niệm** | Tạo ảnh toàn khung có nhân vật, đạo cụ và môi trường cùng trong một bố cục; dùng `based_on` + `preserve`/`change` khi cần giữ bối cảnh giữa hai beat. | Tách nhân vật khỏi bối cảnh thành sticker hoặc giữ các thành phần không cùng một không gian vật lý. |
 | **Giọng đọc & Tốc độ (SSOT)** | `VietNarrator` `1.0x` *(Thân bài / `long_16x9`)* | `VietNarrator` `1.0x` / `4.2–4.4` syl/s *(30s đầu / `short_9x16`)* | Mặc định duy nhất: `assets/voices/viet_narrator/profile.json` trên Colab T4 (`-14.0 LUFS`, `-1.5 dBTP`, dải hợp lệ `[0.90, 1.15]`, điều biến `tone` `0.98`, `1.02`, `0.92`). Đẩy nhịp câu 30s đầu lên `4.2–4.4` âm tiết/s. | Đọc chậm đều đều ở 15s đầu hoặc dùng TTS local làm rớt Retention. |
@@ -21,7 +21,7 @@ Tài liệu này cung cấp **Ma trận Ra Quyết định (Decision Matrix)** c
 
 ### 2.1. Trục 1: Chế độ Vận hành (Mode A vs Mode B)
 - **Mode A (Structural Replication & Control Benchmark):** Chỉ dùng nội bộ (`sys/runs/`) để kiểm tra độ chính xác của timeline và động cơ render.
-- **Mode B (Original Adaptation & Production):** Sản phẩm xuất bản chính thức. Giữ khung nhân quả 5 hồi nhưng thay đổi 100% đề tài, dữ liệu, lời dẫn và sơ đồ minh họa theo ngách **"Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật"**.
+- **Mode B (Original Adaptation & Production):** Sản phẩm xuất bản chính thức. Giữ khung nhân quả 5 hồi nhưng thay đổi 100% đề tài, dữ liệu, lời dẫn và sơ đồ minh họa theo ngách **"Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức"**.
 
 ---
 
@@ -72,18 +72,18 @@ Mỗi visual beat là một ảnh `kind: "scene"` hoàn chỉnh. Dùng sơ đồ
 ---
 
 ### 2.8. Trục 8: Chuyển Thể Video Dài Sang Ngắn (`Long-to-Short Spin-off Repurposing` — Giải quyết Bẫy 2)
-- **Quy tắc Nghiêm Cấm:** **Tuyệt đối KHÔNG cắt ngang các chương giữa (`CH02..CH08`) của video `long_16x9` (11–13 phút) để đăng lên TikTok/Shorts.** Một đoạn cắt giữa chừng không có Hook phản trực giác trong 3 giây đầu, thiếu ngữ cảnh mở bài và sai bố cục khung hình dọc sẽ bị thuật toán TikTok chặn đứng ở ngưỡng ~200 view.
+- **Quy tắc Nghiêm Cấm:** **Tuyệt đối KHÔNG cắt ngang giữa chừng video `long_16x9` để đăng lên TikTok/Shorts.** Một đoạn cắt giữa chừng không có Hook phản trực giác trong 3 giây đầu, thiếu ngữ cảnh mở bài và sai bố cục khung hình dọc sẽ bị thuật toán TikTok chặn đứng ở ngưỡng ~200 view.
 - **Quy trình Spin-off Độc Lập (`build_short_spinoff_topics`):**
-  1. Từ 1 hồ sơ nghiên cứu gốc (`long_16x9`), chọn ra **2–3 nghịch lý đắt giá nhất** (mỗi nghịch lý tương ứng với 1 điểm chạm Lưu/Share cao).
-  2. Kiến trúc từng nghịch lý thành một gói kịch bản **`short_9x16` độc lập** (`1080x1920`, thời lượng `45–60s`, đúng 5 cảnh `SC01..SC05`).
+  1. Từ 1 hồ sơ nghiên cứu gốc (`long_16x9`), chọn ra **các nghịch lý đắt giá nhất** (mỗi nghịch lý tương ứng với 1 điểm chạm Lưu/Share cao).
+  2. Kiến trúc từng nghịch lý thành một gói kịch bản **`short_9x16` độc lập** (`1080x1920`, thời lượng động theo kịch bản và audio narration).
   3. Viết lại hoàn toàn **`SC01` bằng câu Counter-Intuitive Hook $\le 18$ âm tiết** độc lập, đặt tốc độ `speed: 1.0` (`VietNarrator`, nhịp `4.2–4.4` âm tiết/s ở 30s đầu), bật phụ đề nhảy chữ theo `word_timestamps` (`subtitles: true`, `max_line_chars: 28`, chừa đáy `18%`).
 
 ---
 
 ## 3. Bảng Tự kiểm tra Trước khi Duyệt Kịch bản (Pre-flight Checklist)
 
-- [ ] **Đóng gói CTR & Ngách chuẩn (`brief.json`):** `youtube_title <= 55` ký tự, `thumbnail_spec` (2–4 từ in hoa), đúng ngách Tư Duy Nghiên Cứu (không có từ khóa Excel/Slide/Na).
+- [ ] **Đóng gói CTR & Ngách chuẩn (`brief.json`):** `youtube_title <= 55` ký tự, `thumbnail_spec` (2–4 từ in hoa), đúng ngách Tư Duy Nhận Thức & Phương Pháp Luận (không có từ khóa Excel/Slide/hacks).
 - [ ] **Chốt chặn mở đầu (`SC01`):** Câu đầu $\le 18$ âm tiết, 0 thẻ `[pause:...]`, Việt hóa 100% trong 60s đầu; hướng tới 8–9 ảnh toàn khung trong 12–12,5 giây đầu khi lời thoại hỗ trợ.
 - [ ] **Đã tính toán số âm tiết & trần câu:** Mọi câu đơn $\le 25$ âm tiết, vế câu $\le 18$ âm tiết, tổng thẻ `[pause:...]` toàn video $\le 3$, $|\text{drift}| \le 0.30\text{s}$.
-- [ ] **Ảnh toàn khung:** Nhân vật, đạo cụ và Sơ đồ Học thuật cùng trong bố cục; dùng `based_on` khi cần giữ liên tục bối cảnh.
-- [ ] **Tách biệt `long_16x9` và `short_9x16` Spin-offs:** Mọi video đăng TikTok đều là kịch bản `short_9x16` 5 cảnh độc lập có phụ đề nhảy chữ.
+- [ ] **Ảnh toàn khung:** Nhân vật, đạo cụ và sơ đồ nhận thức cùng trong bố cục; dùng `based_on` khi cần giữ liên tục bối cảnh.
+- [ ] **Tách biệt `long_16x9` và `short_9x16` Spin-offs:** Mọi video đăng TikTok đều là kịch bản `short_9x16` độc lập có phụ đề nhảy chữ và hook riêng.
