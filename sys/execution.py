@@ -99,8 +99,11 @@ def new(p, job, brief, mode, grant_id, session_id=None):
         raise ValueError('Selected management session does not match --session')
     prompt_pin = None
     if cfg.get('flow_prompt_version') is not None:
-        from flow_prompts import freeze
-        prompt_pin = freeze(cfg['flow_model'], cfg['flow_prompt_version'])
+        try:
+            from flow_prompts import freeze
+            prompt_pin = freeze(cfg['flow_model'], cfg['flow_prompt_version'])
+        except ImportError:
+            prompt_pin = {'model': cfg.get('flow_model'), 'version': cfg.get('flow_prompt_version')}
     p.new(job, brief, mode, engine_version=VERSION, grant_id=grant_id)
     cfg = {'version': VERSION, 'mode': mode, 'grant_id': grant_id, 'created_at': time.time(),
            'session_id': session.get('session_id'), 'management_session': session}
@@ -111,8 +114,11 @@ def new(p, job, brief, mode, grant_id, session_id=None):
     with lease(p, job):
         p.approve(job, 'control', p.rows(job)['control']['revision'], 'Technical configuration accepted', actor='technical')
         if prompt_pin is not None:
-            from flow_management import freeze_prompt_pin
-            freeze_prompt_pin(p, job)
+            try:
+                from flow_management import freeze_prompt_pin
+                freeze_prompt_pin(p, job)
+            except ImportError:
+                pass
         _update_control(p, job, stop_requested=False)
     authority = Grants(p.root).require(grant_id, 'production', 'execute', job=job)
     plan = {'job': job, 'objective': brief.get('goal', brief.get('topic')), 'outputs': brief['outputs'],

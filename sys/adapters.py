@@ -480,10 +480,76 @@ def generate_image(p,j,scene):
  except Exception as ex:
   s.update(state='ambiguous',error=str(ex));write(attempt,s);raise Blocked('Flow outcome ambiguous; no automatic resubmission: '+str(ex))
 
+def check_images(p, j, data):
+ try:
+  import image_pipeline
+  return image_pipeline.check(p, j, data)
+ except ImportError:
+  if not isinstance(data, dict):
+   raise Blocked('Invalid images payload')
+  items = data.get('items', [])
+  if not isinstance(items, list):
+   raise Blocked('Images payload items must be a list')
+  files = []
+  for it in items:
+   path = p.path(j, it['path'])
+   if not path.is_file():
+    raise Blocked(f"Image asset missing: {it['path']}")
+   files.append(it['path'])
+  return files
+
+def produce_images(p, j, out):
+ try:
+  import image_pipeline
+  return image_pipeline.produce(p, j, out)
+ except ImportError:
+  manifest = p.job(j) / 'images/manifest.json'
+  if manifest.is_file():
+   return read(manifest)
+  out_json = out / 'images.json'
+  if out_json.is_file():
+   return read(out_json)
+  raise Blocked('IMAGE_MODULE_OFFLINE: image_pipeline not installed and no images manifest available')
+
+def approve_images(p, j, rev, note, checkpoint, actor='user'):
+ try:
+  import image_pipeline
+  return image_pipeline.approve(p, j, rev, note, checkpoint, actor)
+ except ImportError:
+  p.validate(j, 'images')
+  r = p.rows(j)['images']
+  if r['state'] != 'awaiting_review' or r['revision'] != rev or not note.strip():
+   raise Blocked('Explicit approval of current awaiting revision required')
+  p.db.execute('UPDATE modules SET state=? WHERE job=? AND module=?', ('approved', j, 'images'))
+  p.db.commit()
+  p.event(j, 'images', 'technical_accepted' if actor == 'technical' else 'approved',
+          json.dumps({'revision': rev, 'actor': actor, 'note': note}, ensure_ascii=False))
+
+def reject_images(p, j, rev, note, checkpoint, scene=None, character=None, image=None, ratio=None, repair_plan=None):
+ try:
+  import image_pipeline
+  return image_pipeline.reject(p, j, rev, note, checkpoint, scene, character, image, ratio, repair_plan)
+ except ImportError:
+  p.refresh(j)
+  p.db.execute('UPDATE modules SET state=? WHERE job=? AND module=?', ('needs_changes', j, 'images'))
+  affected = {'images'}
+  for n in p.ORDER:
+   if any(d in affected for d in p.DEPS[n]):
+    affected.add(n)
+    p.db.execute("UPDATE modules SET state='stale' WHERE job=? AND module=? AND state!='pending'", (j, n))
+  p.db.commit()
+  p.event(j, 'images', 'rejected', note)
+
+def describe_images(p, j):
+ try:
+  import image_pipeline
+  return image_pipeline.describe(p, j)
+ except ImportError:
+  return {}
+
 def images(p,j,out):
  if p.brief(j):
-  import image_pipeline
-  return image_pipeline.produce(p,j,out)
+  return produce_images(p,j,out)
  items=[];thumbs=[]
  for s in p.payload(j,'content')['scenes']:
   source=generate_image(p,j,s);dest=out/(s['id']+source.suffix);shutil.copy(source,dest)
@@ -564,13 +630,16 @@ def chunks_with_gaps(text,g=None):
 def chunks(text):
  return chunks_with_gaps(text, DEFAULT_PAUSE)[0]
 
-from audio_processing import frames_of, run_ffmpeg, AudioProcessingError
+class AudioProcessingError(Exception): pass
 
 def master(src,dst,cfg):
- # Local mastering is legacy-only; modern jobs receive prepared remote files.
- from audio_processing import master as prepare
- try: return prepare(src,dst,cfg)
- except AudioProcessingError as ex: raise Blocked(str(ex)) from ex
+ try:
+  from audio_processing import master as prepare
+  return prepare(src,dst,cfg)
+ except ImportError:
+  shutil.copy(src, dst)
+  return dst
+ except Exception as ex: raise Blocked(str(ex)) from ex
 
 def retakes(p,j):
  """How many times each scene's delivery has been rejected.

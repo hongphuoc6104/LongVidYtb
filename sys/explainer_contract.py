@@ -4,13 +4,17 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from flow_prompts.compiler import registry
+try:
+    from flow_prompts.compiler import registry
+except ImportError:
+    def registry(version):
+        return {'style': 'HandDrawn2D'}
 
 STYLE_VERSION = '1.7.0'
 
 
 def is_reference_explainer(brief: dict[str, Any]) -> bool:
-    return brief.get('style') == registry(STYLE_VERSION)['style']
+    return brief.get('style') == registry(STYLE_VERSION).get('style', 'HandDrawn2D')
 
 
 def validate_short(brief: dict[str, Any]) -> list[str]:

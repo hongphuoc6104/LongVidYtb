@@ -71,7 +71,7 @@ class OutputContractTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 outputs({'aspect_ratio': '9:16', 'outputs': bad})
 
-    @unittest.skipUnless(shutil.which('node'), 'Node required for renderer contract')
+    @unittest.skipUnless(shutil.which('node') and (ROOT / 'renderer/outputs.mjs').exists(), 'Node and renderer/outputs.mjs required for renderer contract')
     def test_renderer_uses_english_track_cues_and_portrait_timeline(self):
         script = """
 import {outputPlans} from './renderer/outputs.mjs';

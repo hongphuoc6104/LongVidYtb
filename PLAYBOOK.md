@@ -12,15 +12,15 @@ $$\text{1. Tái hiện E2E} \longrightarrow \text{2. Phân tích gốc rễ} \lo
 
 ## II. Danh Mục Bài Học & Sự Cố Chuẩn Hóa
 
-> Historical entries [ERR-20261010-08], [ERR-20261010-09], [ERR-20261011-01], [ERR-20261011-05], [ERR-20261014-01], [ERR-20261016-02], and [ERR-20261017-03] are archived in .agents/skills/vp-troubleshooting/references/historical-playbook.md.
+> Historical entries [ERR-20261010-08], [ERR-20261010-09], [ERR-20261011-01], [ERR-20261011-05], [ERR-20261014-01], [ERR-20261016-02], [ERR-20261017-02], and [ERR-20261017-03] are archived in .agents/skills/vp-troubleshooting/references/historical-playbook.md.
 
-### [ERR-20261017-02] Xuất Bản Đa Nền Tảng (`vp-omni-platform`) & Giữ Khóa Profile Flow CDP
-- **Triệu chứng (Symptom):** Sinh trùng ảnh giữa các tỷ lệ khung hình hoặc mất liên kết profile trình duyệt cố định khi chạy đồng thời các tác vụ ảnh.
-- **Tái hiện E2E (Reproduction Path):** Chạy `pytest sys/tests/test_omni_platform.py sys/tests/test_flow_cdp_bridge.py -v`.
-- **Nguyên nhân cốt lõi (Root Cause):** Tách rời `jobId` khỏi `testCase` khi gửi qua bridge và chưa tái sử dụng ảnh chung cho các bản xuất đa nền tảng.
-- **Giả định sai (Wrong Assumptions):** Cho rằng `testCase` ID đại diện cho `jobId` và một trình duyệt cố định có thể nhận nhiều hàng đợi UI song song.
-- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Truyền tường minh `jobId` qua bridge, tuần tự hóa khi khóa vào 1 profile (`sequential_close`) và đóng gói xuất bản đa nền tảng qua `sys/omni_platform.py`.
-- **Quy tắc phòng ngừa vàng (Golden Rule):** Bảo toàn định danh `jobId` và quyền sở hữu trình duyệt xuyên suốt vòng đời job; tuân thủ [Omni-platform contracts](.agents/skills/vp-omni-platform/SKILL.md).
+### [ERR-20261023-01] Độc Lập Hóa Lõi Điều Phối (`module-core`) & Khử Phụ Thuộc Chặt Vào Engine Ngoài
+- **Triệu chứng (Symptom):** Nhánh `module-core` bị phình to (>20MB) và gãy kiểm thử khi tách các engine vệ tinh (`module-images`, `module-video`, `module-audio`) do các file hợp đồng (`content_contract.py`, `output_contract.py`, `story_plan.py`, `pilot.py`) import trực tiếp vào các package ngoài.
+- **Tái hiện E2E (Reproduction Path):** Xóa các thư mục vệ tinh `sys/flow_cdp/`, `sys/colab_bridge/`, `sys/renderer/`, `sys/dashboard/`, sau đó chạy `pytest sys/tests/ -v`.
+- **Nguyên nhân cốt lõi (Root Cause):** Gắn kết chặt chẽ (tight coupling) giữa lõi điều phối (`Pilot`, `Workflow`, `Execution`) với chi tiết thực thi của các engine ngoài (`flow_prompts`, `flow_cdp.lifecycle`, `colab_bridge.job_protocol`); thiếu lớp trừu tượng adapter và cơ chế fallback an toàn.
+- **Giả định sai (Wrong Assumptions):** Nhầm tưởng toàn bộ các file vệ tinh đều phải nằm chung một thư mục gốc để pipeline và test suite hoạt động được.
+- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** (1) Đưa các hợp đồng I/O (`TONE_SPEED_MULTIPLIERS`, `validate_render_result`) về `sys/output_contract.py` làm SSOT; (2) bọc các import ngoài bằng `try...except ImportError` và adapter fallback an toàn trong `image_pipeline.py`, `story_plan.py`, `content_contract.py`, `execution.py`; (3) xóa bỏ triệt để ~20MB package và tài nguyên dư thừa; (4) kiểm chứng 182/182 bài test hạt nhân Core và 5 trạm Conveyor xanh hoàn toàn.
+- **Quy tắc phòng ngừa vàng (Golden Rule):** Lõi điều phối (`module-core`) chỉ quản lý State Machine, SQLite DB, vòng đời duyệt và Schema SSOT; giao tiếp với các engine chuyên biệt qua Adapter Interface trừu tượng, tuyệt đối không phụ thuộc trực tiếp vào mã nguồn hay runtime của engine ngoài.
 
 ### [ERR-20261017-04] Chặn 6 Nguyên Nhân Khiến Nội Dung Thực Tế Bị Flop (Anti-Flop Content Gate)
 - **Triệu chứng (Symptom):** Video xuất bản thực tế bị tuột giữ chân khán giả trong 15 giây đầu do lặp lại cùng một kịch bản tô sách vàng ở mọi job, câu thoại mở màn toàn lệnh vật lý 4 chữ vụn vặt (`Cầm cây bút lên. Đặt xuống tờ giấy trắng.`), hoặc ngắt dấu phẩy giả tạo giữa chủ ngữ và vị ngữ (`, chỉ tạo ra`).

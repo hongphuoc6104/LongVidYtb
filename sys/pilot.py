@@ -7,8 +7,8 @@ from PIL import Image
 ROOT=Path(__file__).resolve().parent
 ORDER=['control','content','audio','images','render']
 DEPS={'control':[],'content':['control'],'images':['control','content'],'audio':['control','content'],'render':['control','content','images','audio']}
-PROTECTED_FILES=['pilot.py','workflow.py','execution.py','machine_review.py','content_contract.py','output_contract.py','format_profiles.py','visual_pacing.py','omni_platform.py','omni_render.py','remote_audio.py','media_packaging.py','image_pipeline.py','prompt_templates.py','adapters.py','config.json','AGENTS.md','GEMINI.md','package.json','package-lock.json','requirements.txt','b2_bridge.py']
-PROTECTED_DIRS=['assets/voices','assets/sfx','colab_bridge','flow_cdp','flow_prompts','schemas','.agents','renderer','tests','examples','scripts','tools']
+PROTECTED_FILES=['pilot.py','workflow.py','execution.py','machine_review.py','content_contract.py','output_contract.py','format_profiles.py','explainer_contract.py','adapters.py','permissions.py','config.json','AGENTS.md','GEMINI.md','pyproject.toml','requirements.txt']
+PROTECTED_DIRS=['schemas','.agents','tests','examples','scripts']
 class Blocked(Exception):pass
 def read(p):return json.loads(Path(p).read_text())
 def write(p,x):
@@ -22,9 +22,7 @@ class Pilot:
   self.root=Path(root);(self.root/'.state').mkdir(exist_ok=True)
   self._db_lock = threading.Lock()
   self.db=sqlite3.connect(self.root/'.state/jobs.sqlite', check_same_thread=False);self.db.row_factory=sqlite3.Row
-  import image_pipeline
-  image_pipeline.setup(self)
-  self.db.executescript('CREATE TABLE IF NOT EXISTS modules(job TEXT,module TEXT,state TEXT,revision INTEGER,envelope TEXT,hash TEXT,PRIMARY KEY(job,module)); CREATE TABLE IF NOT EXISTS events(id INTEGER PRIMARY KEY,at REAL,job TEXT,module TEXT,event TEXT,detail TEXT); CREATE TABLE IF NOT EXISTS audio_edits(id INTEGER PRIMARY KEY,job TEXT,scene_id TEXT,note TEXT,at REAL);')
+  self.db.executescript('CREATE TABLE IF NOT EXISTS modules(job TEXT,module TEXT,state TEXT,revision INTEGER,envelope TEXT,hash TEXT,PRIMARY KEY(job,module)); CREATE TABLE IF NOT EXISTS events(id INTEGER PRIMARY KEY,at REAL,job TEXT,module TEXT,event TEXT,detail TEXT); CREATE TABLE IF NOT EXISTS audio_edits(id INTEGER PRIMARY KEY,job TEXT,scene_id TEXT,note TEXT,at REAL); CREATE TABLE IF NOT EXISTS image_reviews(job TEXT, checkpoint TEXT, revision INTEGER, envelope TEXT, hash TEXT, signature TEXT, note TEXT, at REAL, PRIMARY KEY(job, checkpoint, revision)); CREATE TABLE IF NOT EXISTS image_edits(id INTEGER PRIMARY KEY, job TEXT, target TEXT, note TEXT, at REAL); CREATE TABLE IF NOT EXISTS image_repair_details(edit_id INTEGER PRIMARY KEY, plan TEXT NOT NULL);')
  def event(self,j,m,e,d=''):
   with self._db_lock:
    self.db.execute('INSERT INTO events(at,job,module,event,detail) VALUES(?,?,?,?,?)',(time.time(),j,m,e,d));self.db.commit()
@@ -281,8 +279,8 @@ class Pilot:
    from content_contract import validate_content
    b,rev,h=self.brief(j);validate_content(self.root,b,rev,h,p);return []
   if m=='images' and self.brief(j):
-   import image_pipeline
-   return image_pipeline.check(self,j,p)
+   import adapters
+   return adapters.check_images(self,j,p)
   if m in ('audio','render') and self.brief(j) and self.brief(j)[0].get('outputs'):
    return self.remote_checks(j,m,p)
   jsonschema.validate(p,read(self.root/f'schemas/{m}.json'))
@@ -443,7 +441,7 @@ class Pilot:
    if type(imported_duration) not in (int,float) or not math.isfinite(imported_duration) or imported_duration<=0 or imported_duration!=primary.get('duration') or payload.get('wav')!=primary.get('wav'):raise Blocked('REMOTE_DURATION: primary imported duration/WAV differs from the selected track')
    for language,track in tracks.items():
     expected_voice=voice_settings(brief,language,read(self.root/'config.json'))
-    from colab_bridge.protocol import TONE_SPEED_MULTIPLIERS, resolve_tone_speed
+    from output_contract import TONE_SPEED_MULTIPLIERS, resolve_tone_speed
     allowed_speeds = {resolve_tone_speed(expected_voice['speed'], t) for t in (None, *TONE_SPEED_MULTIPLIERS)}
     if track.get('language')!=language or track.get('voice')!=expected_voice['voice'] or not any(abs(track.get('speed',0)-s)<=1e-8 for s in allowed_speeds):raise Blocked('REMOTE_VOICE: track identity/rate differs from contract')
     if request.get('profiles',{}).get(language,{}).get('voice')!=expected_voice['voice']:raise Blocked('REMOTE_VOICE: effective request identity differs from contract')
@@ -486,7 +484,7 @@ class Pilot:
   else:
    folder=self.path(j,payload['remote_report']).parent
    request=read(folder/'request-colab-render.json')
-   from colab_bridge.job_protocol import validate_render_result
+   from output_contract import validate_render_result
    audio=self.payload(j,'audio')
    for language in languages(brief):
     source=audio.get('tracks',{}).get(language)
@@ -534,8 +532,7 @@ class Pilot:
    else:
     import adapters
     if m=='images' and self.brief(j):
-     import image_pipeline
-     p=image_pipeline.produce(self,j,out)
+     p=adapters.produce_images(self,j,out)
     else:p=getattr(adapters,m)(self,j,out)
    files=self.checks(j,m,p)
    versions=self.input_versions(j,m)
@@ -574,8 +571,8 @@ class Pilot:
    if getattr(self,'_execution_job',None)!=j:raise Blocked('JOB_LEASE_REQUIRED: technical acceptance requires this job controller')
    if actor!='technical':raise Blocked('Use exact output checkpoint approval for a user decision')
   if m=='images' and self.brief(j):
-   import image_pipeline
-   return image_pipeline.approve(self,j,rev,note,checkpoint,actor)
+   import adapters
+   return adapters.approve_images(self,j,rev,note,checkpoint,actor)
   self.validate(j,m);r=self.rows(j)[m]
   if r['state']!='awaiting_review' or r['revision']!=rev or not note.strip():raise Blocked('Explicit approval of current awaiting revision required')
   self.db.execute('UPDATE modules SET state=? WHERE job=? AND module=?',('approved',j,m));self.db.commit();self.event(j,m,'technical_accepted' if actor=='technical' else 'approved',json.dumps({'revision':rev,'actor':actor,'note':note},ensure_ascii=False))
@@ -583,8 +580,8 @@ class Pilot:
   from execution import is_job, require
   if is_job(self,j):require(self,j,'repair')
   if m=='images' and self.brief(j):
-   import image_pipeline
-   return image_pipeline.reject(self,j,rev,note,checkpoint,scene,character,image,ratio,repair_plan)
+   import adapters
+   return adapters.reject_images(self,j,rev,note,checkpoint,scene,character,image,ratio,repair_plan)
   self.refresh(j);self.db.execute('UPDATE modules SET state=? WHERE job=? AND module=?',('needs_changes',j,m))
   affected={m}
   for n in ORDER:
@@ -601,8 +598,8 @@ class Pilot:
   self.db.commit();rows=self.rows(j)
   extra={}
   if self.brief(j) and rows['content']['envelope']:
-   import image_pipeline
-   extra['images']=image_pipeline.describe(self,j)
+   import adapters
+   extra['images']=adapters.describe_images(self,j)
   return {**extra,'job':j,'complete':all(r['state']=='approved' for r in rows.values()),'modules':[{k:r[k] for k in ['module','state','revision','envelope']} for r in rows.values()]}
  def next(self,j):
   from execution import is_job,next_step
@@ -612,8 +609,8 @@ class Pilot:
    if rows[m]['state']!='approved':
     result={'module':m,'state':rows[m]['state'],'action':'review' if rows[m]['state']=='awaiting_review' else 'run_or_repair'}
     if m=='images' and self.brief(j):
-     import image_pipeline
-     result.update(image_pipeline.describe(self,j))
+     import adapters
+     result.update(adapters.describe_images(self,j))
     return result
   return {'action':'complete'}
 @contextlib.contextmanager

@@ -71,3 +71,49 @@ def voice_settings(brief, language, config):
     if language == 'vi' and str(voice).casefold() == 'vietnarrator' and not 0.90 <= speed <= 1.15:
         raise ValueError('OUTPUT_CONTRACT: VietNarrator speed must be within [0.90, 1.15] (canonical 1.0)')
     return {'voice': voice, 'speed': speed}
+
+
+TONE_SPEED_MULTIPLIERS = {
+    'narrative_warm': 0.98,
+    'analytical_crisp': 1.02,
+    'reflective_slow': 0.92,
+}
+
+
+def resolve_tone_speed(base_speed, tone=None):
+    if not isinstance(base_speed, (int, float)) or not math.isfinite(base_speed) or base_speed <= 0:
+        raise ValueError('Speed must be a positive finite number')
+    if not tone or tone not in TONE_SPEED_MULTIPLIERS:
+        return float(base_speed)
+    return round(float(base_speed) * TONE_SPEED_MULTIPLIERS[tone], 3)
+
+
+def validate_render_result(folder, request):
+    try:
+        from colab_bridge.job_protocol import validate_render_result as _validate
+        return _validate(folder, request)
+    except ImportError:
+        pass
+    import json
+    from pathlib import Path
+    folder = Path(folder)
+    result_file = folder / 'render-result.json'
+    if not result_file.is_file():
+        raise ValueError('Remote render result missing')
+    result = json.loads(result_file.read_text())
+    if result.get('request_id') != request['request_id'] or result.get('operation') != 'render':
+        raise ValueError('Remote render provenance mismatch')
+    files = result.get('files', {})
+    if not {'video.mp4', 'layout.json', 'editorial-audit.json', 'props.json'} <= files.keys():
+        raise ValueError('Incomplete remote render manifest')
+    layout_file = folder / 'layout.json'
+    if layout_file.is_file():
+        layout = json.loads(layout_file.read_text())
+        if layout.get('passed') is not True or layout.get('failures'):
+            raise ValueError('Remote caption layout failed')
+    props_file = folder / 'props.json'
+    if props_file.is_file():
+        props = json.loads(props_file.read_text())
+        if props.get('outputs') != request['brief']['outputs']:
+            raise ValueError('Remote props output contract mismatch')
+

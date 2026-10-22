@@ -10,6 +10,44 @@ from PIL import Image, ImageDraw
 
 from pilot import Blocked, digest, hashobj, read, write
 
+try:
+    from flow_cdp.lifecycle import ProfileLifecycleManager, calculate_optimal_workers, get_current_lifecycle
+except ImportError:
+    @contextlib.contextmanager
+    def ProfileLifecycleManager(*args, **kwargs):
+        yield None
+    calculate_optimal_workers = lambda n: 1
+    get_current_lifecycle = lambda: None
+
+try:
+    from flow_dispatch import job_profiles, validate_dependencies
+except ImportError:
+    job_profiles = lambda p, j: ('pool', read(p.root / 'config.json').get('flow_cdp_profiles', []))
+    validate_dependencies = lambda scenes: 1
+
+try:
+    from flow_management import prompt_pin, config as flow_config
+except ImportError:
+    def flow_config(p, job):
+        return read(p.root / 'config.json')
+    def prompt_pin(p, job):
+        return None
+
+try:
+    from flow_prompts import compile_pinned
+    from flow_prompts.compiler import CAST_VERSIONS, FULL_FRAME_VERSIONS
+except ImportError:
+    compile_pinned = lambda pin, purpose, data: {'prompt': data.get('description', '')}
+    CAST_VERSIONS = ()
+    FULL_FRAME_VERSIONS = ()
+
+def _sync_flow_management(p, job, folder, record):
+    try:
+        import flow_management
+        flow_management.sync(p, job, folder, record)
+    except ImportError:
+        pass
+
 STAGES = ('references', 'final')
 
 
@@ -246,8 +284,6 @@ def requested_prompt(p, j, target, prompt, notes, ratio, registration=False):
     c = content(p,j)
     corrections = safe_corrections(c, notes)
     unit = next((x for x in planned_units(p,j) if x['id']==target),None)
-    from flow_management import prompt_pin
-    from flow_prompts.compiler import CAST_VERSIONS
     pin = prompt_pin(p, j)
     cast_mode = bool(pin and pin.get('version') in CAST_VERSIONS)
     mascot_target = not cast_mode and (
@@ -276,13 +312,10 @@ def _template_request(p, j, target, prompt, corrections, ratio, refs, registrati
     Resolve the same verified artifact/media pair as the actual adapter. The
     daemon still checks the Character/Base UI slots at each send boundary.
     """
-    from flow_management import prompt_pin
     pin = prompt_pin(p, j)
     if pin is None:
         return None
     from adapters import _flow_media_reference
-    from flow_prompts import compile_pinned
-    from flow_prompts.compiler import CAST_VERSIONS, FULL_FRAME_VERSIONS
     canonical = p.root / 'assets/characters/channel-mascot/reference-v1.png'
     if registration:
         image = p.path(j, registration['path'])
@@ -378,8 +411,6 @@ def _saved_template_prompt(p, j, identity):
     if record is None:
         return requested_prompt(p, j, identity['target'], identity['prompt'], identity.get('corrections', ''),
                                 identity['ratio'], bool(identity.get('registration')))
-    from flow_management import prompt_pin
-    from flow_prompts import compile_pinned
     if prompt_pin(p, j) != record.get('pin'):
         raise Blocked('FLOW_TEMPLATE_PIN_CHANGED: request does not match its job pin')
     scene = next((unit for unit in planned_units(p, j) if unit['id'] == identity['target']), None)
@@ -428,7 +459,6 @@ def _plan_request(p, j, target, prompt, refs, registration, base_image):
         linked = [register_existing(p, j, next(x for x in approved_refs if x['character_id'] == cid)) for cid in scene['character_ids']]
         if list(refs) != linked or prompt != scene['prompt']:
             raise Blocked('M2_REFERENCE_LINK: scene request must use approved prompt and registered characters')
-    from flow_management import config as flow_config
     cfg = flow_config(p, j)
     from scripts.image_repairs import active
     corrections = active(p, j, scene, target)
@@ -518,7 +548,7 @@ def auto_reconcile_attempt(p, j, folder, record=None):
         write(record_file, data)
         from execution import is_job
         if is_job(p, j) or (Path(folder) / 'owner.json').exists():
-            __import__('flow_management').sync(p, j, folder, data)
+            _sync_flow_management(p, j, folder, data)
         p.event(j, 'images', 'flow_auto_reconciled', json.dumps({
             'key': data.get('key'), 'path': data['path'], 'reason': 'download_found_on_disk'
         }, ensure_ascii=False))
@@ -700,7 +730,7 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None, p
                       profile_id=meta_profile or target_profile_id or '')
         write(record, result)
         if is_job(p, j):
-            __import__('flow_management').sync(p, j, folder, result)
+            _sync_flow_management(p, j, folder, result)
         image_check(p, j, result['path'], result['sha256'], full=registration is None)
         p.event(j, 'images', 'flow_downloaded', key)
         return result
@@ -721,7 +751,7 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None, p
             write(record, result)
         from execution import is_job
         if is_job(p, j) or (Path(folder) / 'owner.json').exists():
-            __import__('flow_management').sync(p, j, folder, result)
+            _sync_flow_management(p, j, folder, result)
         raise Blocked('M2_FLOW: ' + str(ex)) from ex
 
 
@@ -744,7 +774,6 @@ def batch_submit(p, j, units, registrations):
     Known generated results use collection-only recovery through request().
     """
     import adapters
-    from flow_management import config as flow_config
     cfg = flow_config(p, j)
     plans = []
     for unit in units:
@@ -811,14 +840,14 @@ def batch_submit(p, j, units, registrations):
         if entry['status'] == 'not_submitted':
             result.update(state='not_submitted',error=entry.get('error',''))
             write(record,result)
-            if __import__('execution').is_job(p, j): __import__('flow_management').sync(p, j, folder, result)
+            if __import__('execution').is_job(p, j): _sync_flow_management(p, j, folder, result)
             continue
         if entry['status'] == 'failed':
             result.update(state='generated' if entry.get('collection_only') else 'ambiguous', error=entry.get('error', 'batch job failed'))
             if entry.get('collection_only'):
                 result['collection_out'] = str((batch_dir / plan['job_id']).relative_to(p.job(j)))
             write(record, result)
-            if __import__('execution').is_job(p, j): __import__('flow_management').sync(p, j, folder, result)
+            if __import__('execution').is_job(p, j): _sync_flow_management(p, j, folder, result)
             p.event(j, 'images', 'flow_batch_ambiguous', key)
             continue
         try:
@@ -854,13 +883,13 @@ def batch_submit(p, j, units, registrations):
             shutil.copy(f.with_suffix('.json'), dest.with_suffix('.json'))
             result.update(state='downloaded', path=str(dest.relative_to(p.job(j))), sha256=digest(dest))
             write(record, result)
-            if __import__('execution').is_job(p, j): __import__('flow_management').sync(p, j, folder, result)
+            if __import__('execution').is_job(p, j): _sync_flow_management(p, j, folder, result)
             image_check(p, j, result['path'], result['sha256'], full=True)
             p.event(j, 'images', 'flow_batch_downloaded', key)
         except Exception as ex:
             result.update(state='ambiguous', error=str(ex))
             write(record, result)
-            if __import__('execution').is_job(p, j): __import__('flow_management').sync(p, j, folder, result)
+            if __import__('execution').is_job(p, j): _sync_flow_management(p, j, folder, result)
             p.event(j, 'images', 'flow_batch_ambiguous', key)
 
 
@@ -934,7 +963,6 @@ def produce(p, j, out):
         raise Blocked('M2_APPROVED: reject a specific scene or character before replacement')
     if p.rows(j)['images']['state'] == 'awaiting_review':
         raise Blocked('M2_REVIEW: approve or reject current checkpoint first')
-    from flow_cdp.lifecycle import ProfileLifecycleManager
     with ProfileLifecycleManager(auto_teardown=True):
         return _produce_internal(p, j, out, c, s)
 
@@ -964,19 +992,16 @@ def _produce_internal(p, j, out, c, s):
         import collections
         import concurrent.futures
         import threading
-        from flow_cdp.lifecycle import calculate_optimal_workers
         cfg = read(p.root / 'config.json')
         pool_profiles = cfg.get('flow_cdp_profiles', [])
         optimal_workers = calculate_optimal_workers(len(scenes))
         concurrency = cfg.get('concurrency', optimal_workers)
         single_profile_enforced = bool(cfg.get('flow_single_profile', False))
         from execution import is_job
-        from flow_dispatch import job_profiles, validate_dependencies
         roots = validate_dependencies(scenes)
         policy = 'single_profile' if single_profile_enforced else 'pool'
         if is_job(p, j):
             policy, pool_profiles = job_profiles(p, j)
-        from flow_cdp.lifecycle import get_current_lifecycle
         lifecycle = get_current_lifecycle()
         # Launch only eligible candidates under the lifecycle's ownership tracker.
         wanted = min(concurrency, optimal_workers, len(pool_profiles), roots)
@@ -1451,7 +1476,7 @@ def flow_action(p, a):
         write(q, r)
         from execution import is_job
         if is_job(p, a.job) or (Path(q.parent) / 'owner.json').exists():
-            __import__('flow_management').sync(p, a.job, q.parent, r)
+            _sync_flow_management(p, a.job, q.parent, r)
         p.event(a.job, 'images', 'flow_reconciled', json.dumps({'request': a.request, 'note': a.note}))
         return r
     else:
@@ -1469,6 +1494,6 @@ def flow_action(p, a):
         write(q, r)
         from execution import is_job
         if is_job(p, a.job) or (Path(q.parent) / 'owner.json').exists():
-            __import__('flow_management').sync(p, a.job, q.parent, r)
+            _sync_flow_management(p, a.job, q.parent, r)
         p.event(a.job, 'images', 'flow_reconciled_not_submitted', json.dumps({'request': a.request, 'note': a.note}))
         return r

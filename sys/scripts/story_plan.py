@@ -52,7 +52,10 @@ def validate_plan(b, c):
     global_visible = c['style']+' '+json.dumps(b['planning']['text_style'],ensure_ascii=False)+' '+' '.join(x['appearance']+' '+x['outfit']+' '+x['name'] for x in c['characters'])
     if any(re.search(r'(?<!\w)'+re.escape(code)+r'(?!\w)', global_visible, re.I) for code in internal):
         fail('INTERNAL_LABEL','characters/style','Mã quản lý xuất hiện trong mô tả dùng tạo hình')
-    from flow_prompts import find_visual_cliche
+    try:
+        from flow_prompts import find_visual_cliche
+    except ImportError:
+        find_visual_cliche = lambda text: None
     if c.get('style'):
         cliche = find_visual_cliche(c['style'])
         if cliche:

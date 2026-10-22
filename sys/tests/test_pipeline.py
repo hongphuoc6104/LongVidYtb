@@ -10,7 +10,8 @@ from PIL import Image
 class PipelineTests(unittest.TestCase):
  def setUp(self):
   self.tmp=tempfile.TemporaryDirectory();self.root=Path(self.tmp.name)
-  for name in ['schemas','.agents','renderer','tests']:shutil.copytree(ROOT/name,self.root/name)
+  for name in ['schemas','.agents','renderer','tests']:
+   if (ROOT/name).exists(): shutil.copytree(ROOT/name,self.root/name)
   for name in ['config.json','AGENTS.md','GEMINI.md','pilot.py','workflow.py','machine_review.py','image_pipeline.py','prompt_templates.py','adapters.py','package.json','package-lock.json','requirements.txt']:
    if (ROOT/name).exists():shutil.copy(ROOT/name,self.root/name)
   shutil.copytree(ROOT/'examples',self.root/'examples');self.p=Pilot(self.root);self.p.new('test')
