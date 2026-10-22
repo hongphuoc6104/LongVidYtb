@@ -1,13 +1,13 @@
 {
   "schema_version": "3.0",
   "brief_revision": 1,
-  "brief_hash": "4a57ca2b1e70a707036dc0756b39604c444f8fb0b6ea9e17edefb40d4cd18d92",
+  "brief_hash": "cfea602fdf19d7d66f0a33b3f3d12b15deebc18f8c4c1ea938b7128e2599c190",
   "topic": "Ảo Tưởng Sở Hữu Tri Thức (The Collector's Fallacy): Giải mã cơ chế tải hàng gigabyte tài liệu tạo dopamine giả khiến não lầm tưởng sở hữu file đồng nghĩa với tiếp thu",
   "duration": {
     "min_seconds": 360.0,
     "max_seconds": 480.0
   },
-  "style": "Hand-drawn 2D marker illustration, anonymous round-headed stick figures, clean teal and yellow palette with deep navy accents. Complete integrated scenes; diagrams use pure white cards. No unrequested text.",
+  "style": "Hand-drawn 2D explainer illustration with an earth-toned foundation (terracotta, warm ochre, sage green, navy, warm gray, sky blue), fine-to-medium warm-charcoal contours, high contrast, and warm-cool temperature contrast (warm highlights paired with cool blue-gray shadows). Follow a disciplined 60-30-10 color ratio: 60% dominant calm neutral or grounding backdrop, 30% secondary structural elements and setting, and 10% intentional focal accent. Maintain generous negative space with at least 25–35% calm open canvas free of decorative props or dense linework. Use a moderately simplified composition with one clear focal action or concept metaphor. Suggest the requested setting with only essential environmental cues; secondary objects are simplified into quiet flat shapes with fewer interior lines. Background linework is finer, lighter, and lower-contrast than the focal subject. Choose colors naturally for each scene, preserving the requested location, time of day, and meaningful visual metaphor. Night scenes retain night cues with gentle ambient fill to read the action clearly. Create visual interest through expressive gestures, deliberate composition, open breathing room, and selective temperature contrast. No decorative clutter, photographic room interiors, heavy black marker borders, washed-out pastels, muddy dark grading, neon saturation, harsh spotlights, photorealism, lens blur, gradients, or 3D rendering. Complete edge-to-edge full-frame composition; white_card, visual_diagram, and concept cards use a clean pure white #FFFFFF field.",
   "required_points": [
     "Cú tát mở màn",
     "Nghĩa địa thư mục",
@@ -32,8 +32,8 @@
     {
       "id": "CH01",
       "name": "Người học nghiên cứu",
-      "appearance": "Anonymous round white head with a thick black outline, expressive dot eyes and thin black stick limbs.",
-      "outfit": "Simple teal shirt and navy trousers in complete full-frame environments."
+      "appearance": "Anonymous round white head, expressive dot eyes, thin stick limbs, simplified cartoon hands and fine-to-medium charcoal contours.",
+      "outfit": "Simple earth-toned clothing (terracotta, warm ochre, sage green, navy, warm gray) appropriate to the scene and role; preserve the costume in returning shots without imposing a recurring color."
     }
   ],
   "scenes": [
@@ -84,9 +84,7 @@
         {
           "id": "SC01_I3",
           "description": "A Vietnamese student desk at night, blue laptop screen, warm desk lamp, ticking clock. Close view of the download progress bar racing forward.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Close view of the download progress bar racing forward.",
@@ -121,14 +119,13 @@
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
-          "shot_type": "variation"
+          "shot_type": "variation",
+          "allow_expression_shift": true
         },
         {
           "id": "SC01_I6",
           "description": "A Vietnamese student desk at night, blue laptop screen, warm desk lamp, ticking clock. A shiny full hard drive icon stamped with false victory laurels on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A shiny full hard drive icon stamped with false victory laurels on pure white.",
@@ -272,9 +269,7 @@
         {
           "id": "SC02_I2",
           "description": "A digital workspace view showing cluttered folder hierarchies and neglected files. Close view of a folder containing hundreds of PDF files with creation dates from three years ago.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Close view of a folder containing hundreds of PDF files with creation dates from three years ago.",
@@ -328,9 +323,7 @@
         {
           "id": "SC02_I6",
           "description": "A digital workspace view showing cluttered folder hierarchies and neglected files. A minimalist tombstone icon inscribed with UNREAD PDF on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A minimalist tombstone icon inscribed with UNREAD PDF on pure white.",
@@ -488,9 +481,7 @@
         {
           "id": "SC03_I3",
           "description": "A bustling digital communication background with online study groups and file shares. A storage bar turns bright warning red at five hundred gigabytes used.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A storage bar turns bright warning red at five hundred gigabytes used.",
@@ -692,9 +683,7 @@
         {
           "id": "SC04_I3",
           "description": "A conceptual psychology study space with diagnostic charts and research books. Bold minimalist title card: THE COLLECTORS FALLACY with a balanced cognitive scale on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Bold minimalist title card: THE COLLECTORS FALLACY with a balanced cognitive scale on pure white.",
@@ -910,9 +899,7 @@
         {
           "id": "SC05_I4",
           "description": "A neural pathway illustration room showing neurochemical reactions. A chemical dopamine molecule glowing vibrantly above a computer mouse on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A chemical dopamine molecule glowing vibrantly above a computer mouse on pure white.",
@@ -933,7 +920,8 @@
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
-          "shot_type": "variation"
+          "shot_type": "variation",
+          "allow_expression_shift": true
         },
         {
           "id": "SC05_I6",
@@ -1095,7 +1083,8 @@
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
-          "shot_type": "variation"
+          "shot_type": "variation",
+          "allow_expression_shift": true
         },
         {
           "id": "SC06_I3",
@@ -1128,9 +1117,7 @@
         {
           "id": "SC06_I5",
           "description": "A dual conceptual environment contrasting ancient wilderness and modern study room. A cartoon cave filled with glowing data disks and unopened books on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A cartoon cave filled with glowing data disks and unopened books on pure white.",
@@ -1320,9 +1307,7 @@
         {
           "id": "SC07_I2",
           "description": "An analytical balance room measuring mental effort and cognitive energy. A thick research monograph with dense analytical text requiring intensive focus.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A thick research monograph with dense analytical text requiring intensive focus.",
@@ -1348,9 +1333,7 @@
         {
           "id": "SC07_I4",
           "description": "An analytical balance room measuring mental effort and cognitive energy. An energy meter comparing negligible click exertion against massive deep reading expenditure on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "An energy meter comparing negligible click exertion against massive deep reading expenditure on pure white.",
@@ -1538,9 +1521,7 @@
         {
           "id": "SC08_I3",
           "description": "A controlled experimental laboratory with two matched study groups. Close view of infinite browser tabs loading dense scientific papers.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Close view of infinite browser tabs loading dense scientific papers.",
@@ -1566,9 +1547,7 @@
         {
           "id": "SC08_I5",
           "description": "A controlled experimental laboratory with two matched study groups. A laboratory calendar turning past seven days alongside an objective evaluation timer.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A laboratory calendar turning past seven days alongside an objective evaluation timer.",
@@ -1580,9 +1559,7 @@
         {
           "id": "SC08_I6",
           "description": "A controlled experimental laboratory with two matched study groups. Close view of an experimental timer ticking steadily.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Close view of an experimental timer ticking steadily.",
@@ -1594,9 +1571,7 @@
         {
           "id": "SC08_I7",
           "description": "A controlled experimental laboratory with two matched study groups. A warning sign showing books and laptops crossed out before an examination door on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A warning sign showing books and laptops crossed out before an examination door on pure white.",
@@ -1853,14 +1828,13 @@
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
-          "shot_type": "variation"
+          "shot_type": "variation",
+          "allow_expression_shift": true
         },
         {
           "id": "SC09_I7",
           "description": "An academic evaluation room showing comparative test performance. An overflowing information funnel choking and blocking knowledge output on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "An overflowing information funnel choking and blocking knowledge output on pure white.",
@@ -2052,9 +2026,7 @@
         {
           "id": "SC10_I2",
           "description": "A peaceful Japanese-inspired library space transitioning into digital clutter. Close-up of elegant typography displaying the word TSUNDOKU beside an unread book spine.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Close-up of elegant typography displaying the word TSUNDOKU beside an unread book spine.",
@@ -2094,9 +2066,7 @@
         {
           "id": "SC10_I5",
           "description": "A peaceful Japanese-inspired library space transitioning into digital clutter. An infinite cloud storage icon absorbing thousands of unread files effortlessly on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "An infinite cloud storage icon absorbing thousands of unread files effortlessly on pure white.",
@@ -2270,9 +2240,7 @@
         {
           "id": "SC11_I3",
           "description": "A moody student room lit only by the cold pulsing light of an external drive. Close view of eyes scanning line by line across a focused paragraph of text.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Close view of eyes scanning line by line across a focused paragraph of text.",
@@ -2298,9 +2266,7 @@
         {
           "id": "SC11_I5",
           "description": "A moody student room lit only by the cold pulsing light of an external drive. Close view of cold metallic hard drive casing reflecting the dim desk lamp.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Close view of cold metallic hard drive casing reflecting the dim desk lamp.",
@@ -2486,9 +2452,7 @@
         {
           "id": "SC12_I4",
           "description": "A classic mid-century German scholar study with wooden slip-box cabinets. A minimalist diagram of interconnected index cards forming a decentralized neural net on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A minimalist diagram of interconnected index cards forming a decentralized neural net on pure white.",
@@ -2500,9 +2464,7 @@
         {
           "id": "SC12_I5",
           "description": "A classic mid-century German scholar study with wooden slip-box cabinets. A fountain pen resting on an open book beside clean blank note cards.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A fountain pen resting on an open book beside clean blank note cards.",
@@ -2514,9 +2476,7 @@
         {
           "id": "SC12_I6",
           "description": "A classic mid-century German scholar study with wooden slip-box cabinets. A fountain pen writing a concise one-sentence core insight on an index card.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A fountain pen writing a concise one-sentence core insight on an index card.",
@@ -2720,9 +2680,7 @@
         {
           "id": "SC13_I2",
           "description": "A conceptual diagrammatic laboratory showing the four-tier knowledge engine. Four labeled tiers on pure white: 1. Thu nap -> 2. Tieu hoa -> 3. Tong hop -> 4. Tai tao.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Four labeled tiers on pure white: 1. Thu nap -> 2. Tieu hoa -> 3. Tong hop -> 4. Tai tao.",
@@ -2748,9 +2706,7 @@
         {
           "id": "SC13_I4",
           "description": "A conceptual diagrammatic laboratory showing the four-tier knowledge engine. Close view showing ninety-five percent of the processing pipeline completely empty below the rim.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Close view showing ninety-five percent of the processing pipeline completely empty below the rim.",
@@ -2776,9 +2732,7 @@
         {
           "id": "SC13_I6",
           "description": "A conceptual diagrammatic laboratory showing the four-tier knowledge engine. A cogwheel mechanism grinding raw data into pure crystalline insight on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A cogwheel mechanism grinding raw data into pure crystalline insight on pure white.",
@@ -2922,9 +2876,7 @@
         {
           "id": "SC14_I2",
           "description": "A focused student workspace applying clean minimalist digital hygiene. Bold action rule card: DOC 1 TRA 1 with two balanced arrows on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Bold action rule card: DOC 1 TRA 1 with two balanced arrows on pure white.",
@@ -2964,9 +2916,7 @@
         {
           "id": "SC14_I5",
           "description": "A focused student workspace applying clean minimalist digital hygiene. A pen neatly writes three bullet points summarizing a recent article in a notebook.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A pen neatly writes three bullet points summarizing a recent article in a notebook.",
@@ -3126,9 +3076,7 @@
         {
           "id": "SC15_I2",
           "description": "A minimalist testing desk with a single blank sheet of paper and a black pen. A fresh, pristine blank white sheet of paper rests under the warm desk lamp.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A fresh, pristine blank white sheet of paper rests under the warm desk lamp.",
@@ -3182,9 +3130,7 @@
         {
           "id": "SC15_I6",
           "description": "A minimalist testing desk with a single blank sheet of paper and a black pen. A crisp question on white: TU GIAI THICH DUOC CHUA? with a definitive green checkmark.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A crisp question on white: TU GIAI THICH DUOC CHUA? with a definitive green checkmark.",
@@ -3328,9 +3274,7 @@
         {
           "id": "SC16_I2",
           "description": "A serene minimalist study room with abundant natural light. A calendar highlighting exactly two focused study dates with minimal book icons on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A calendar highlighting exactly two focused study dates with minimal book icons on pure white.",
@@ -3370,9 +3314,7 @@
         {
           "id": "SC16_I5",
           "description": "A serene minimalist study room with abundant natural light. A well-worn paper with margin notes, underlines and critical reflections.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A well-worn paper with margin notes, underlines and critical reflections.",
@@ -3544,9 +3486,7 @@
         {
           "id": "SC17_I3",
           "description": "An empowering transformation space from dark archival maze to expansive horizon. A closed external hard drive resting quietly as a mere auxiliary tool on the side.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A closed external hard drive resting quietly as a mere auxiliary tool on the side.",
@@ -3586,9 +3526,7 @@
         {
           "id": "SC17_I6",
           "description": "An empowering transformation space from dark archival maze to expansive horizon. A glowing lightbulb symbol forged inside a solid diamond foundation on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A glowing lightbulb symbol forged inside a solid diamond foundation on pure white.",

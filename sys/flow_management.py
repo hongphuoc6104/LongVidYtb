@@ -127,31 +127,25 @@ def _before_send_body(p, job, folders, connection):
             identity_record = record['identity']
             if identity_record.get('prompt_template', {}).get('pin') != pinned or _saved_template_prompt(p, job, identity_record) != identity_record['actual_prompt']:
                 raise Blocked('FLOW_TEMPLATE_RECORD_CHANGED: submit must use the exact pinned compiled prompt')
-    if not cfg.get('flow_tool_url') or identity.get('toolUrl') != cfg['flow_tool_url']:
-        raise Blocked('FLOW_PROJECT_MISMATCH: configure and connect the exact Flow tool URL frozen for this job')
-    by_id = {x['id']: x for x in discover(system_root=p.root)['accounts'] if x['service'] == 'flow'}
-    matching = [x for x in session['pool'] if x in by_id and
-                (Path(by_id[x]['metadata_root']) / by_id[x]['profile']).resolve() == Path(observed).resolve()]
+    from urllib.parse import urlparse
+    policy = cfg.get('flow_dispatch_policy', 'single_profile') if cfg.get('flow_prompt_version') == '1.7.0' else 'single_profile'
+    actual_url = identity.get('toolUrl', '')
+    parsed = urlparse(actual_url)
+    if policy == 'single_profile':
+        if not cfg.get('flow_tool_url') or actual_url != cfg['flow_tool_url']:
+            raise Blocked('FLOW_PROJECT_MISMATCH: exact frozen project required in single-profile mode')
+    elif parsed.scheme != 'https' or parsed.hostname not in {'flow.google.com', 'labs.google'} or '/project/' not in parsed.path:
+        raise Blocked('FLOW_PROJECT_MISMATCH: worker must report a live Flow project')
+    by_id = {a['id']: a for a in discover(system_root=p.root)['accounts'] if a['service'] == 'flow'}
+    matching = [key for key in session['pool'] if key in by_id and
+                (Path(by_id[key]['metadata_root']).expanduser() / by_id[key]['profile']).resolve() == Path(observed).resolve()]
+    if len(matching) != 1:
+        raise Blocked('FLOW_PROFILE_MISMATCH: connected profile is outside the authorized session pool')
     binding = session.get('runtime_bindings', {}).get('flow', {})
     selected = binding.get('account') or session.get('defaults', {}).get('flow')
-    pool_profs = read(p.root / 'config.json').get('flow_cdp_profiles', [])
-    pool_paths = [
-        (Path(prof.get('user_data_dir', '')).expanduser() / prof.get('directory', '')).resolve()
-        for prof in pool_profs
-    ]
-    if binding.get('target', {}).get('profile_path') and Path(binding['target']['profile_path']).resolve() != Path(observed).resolve():
-        if not (pool_profs and Path(observed).resolve() in pool_paths):
-            raise Blocked('FLOW_PROFILE_MISMATCH: connected profile differs from the frozen runtime binding')
-    if session.get('selection') == 'specified':
-        if selected not in matching and not (pool_profs and Path(observed).resolve() in pool_paths):
-            raise Blocked('FLOW_PROFILE_MISMATCH: connected browser differs from this job account selection')
-        account = matching[0] if matching else selected
-    elif len(matching) >= 1:
-        account = matching[0]
-    else:
-        if not (pool_profs and Path(observed).resolve() in pool_paths):
-            raise Blocked('FLOW_PROFILE_MISMATCH: connected browser must match one account in the selected pool')
-        account = selected or (session.get('pool') or ['browser-default'])[0]
+    if policy == 'single_profile' and selected and matching[0] != selected:
+        raise Blocked('FLOW_PROFILE_MISMATCH: exact selected owner required in single-profile mode')
+    account = matching[0]
     ledger = budgets(p, job)
     stable = ledger.read()['aliases'].get(account)
     if not stable:
@@ -162,7 +156,7 @@ def _before_send_body(p, job, folders, connection):
         record = read(folder / 'request.json')
         owner = {'job': job, 'account': account, 'session': session['session_id'], 'identity': stable,
                  'profile_path': str(Path(observed).resolve()), 'operation': session['session_id'],
-                 'model': cfg['flow_model'], 'project': cfg['flow_project'], 'tool_url': cfg['flow_tool_url']}
+                 'model': cfg['flow_model'], 'project': cfg['flow_project'], 'tool_url': actual_url}
         old = read(folder / 'owner.json') if (folder / 'owner.json').exists() else None
         if old and old != owner:
             raise Blocked('FLOW_OWNER_MISMATCH: collect/reconcile on the original account and session')

@@ -18,7 +18,8 @@ from tools.research_story_architect import (
     ResearchedTopic,
     write_production_package,
 )
-from visual_style import CAST_APPEARANCE, DEFAULT_OUTFIT, STYLE_DESCRIPTION
+from visual_style import CAST_APPEARANCE, DEFAULT_OUTFIT
+from visual_style import LEGACY_HANDDRAWN_STYLE_DESCRIPTION as STYLE_DESCRIPTION
 
 # Each row is an authored narration unit and a visible action, not an automatic
 # subdivision of a generic background prompt. Text is never painted implicitly.

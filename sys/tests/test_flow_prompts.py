@@ -114,6 +114,7 @@ class Version150PromptTests(unittest.TestCase):
             '1.2.0': 'd574d19eceadcd3db31d3b9c5729c4cca7f5c55333d1c6f1b4dd83019289403b',
             '1.3.0': '6c689b6af72b779ed477998797f94b8703824403e1d1d02d5be85290976d6176',
             '1.4.0': '09c268d08b87500fee71b7de3068e002511623006557fd75b9dd55c0e94f4a09',
+            '1.5.0': '37de6f79cfed9e2b85636e690bfe5f238c966c9ec887b0898957f0a06b06fb26',
         }
         repo_root = Path(__file__).resolve().parents[2]
         versions_dir = repo_root / 'sys/flow_prompts/versions'
@@ -144,4 +145,95 @@ class Version150PromptTests(unittest.TestCase):
         self.assertIn('dot or oval eyes', char_prompt)
         self.assertIn('thin stick limbs', char_prompt)
         self.assertIn(spec_150['cast_rule'], char_prompt)
+
+
+class Version160PromptTests(unittest.TestCase):
+    def data(self, **kwargs):
+        base = {
+            'description': 'An active scholar tears open an ancient parchment scroll.',
+            'aspect_ratio': '16:9',
+            'allowed_text': [{'text': 'CLAIM 01', 'placement': 'upper-left'}],
+        }
+        base.update(kwargs)
+        return base
+
+    def test_version_160_all_models_deterministic(self):
+        models = ('NanoBananaPro', 'NanoBanana2', 'NanoBanana2Lite')
+        purposes = ('reference', 'character', 'scene', 'variation')
+        prompts = {}
+        spec_160 = registry('1.6.0')
+        self.assertEqual(spec_160['version'], '1.6.0')
+        self.assertEqual(spec_160['schema_version'], 1)
+        for model in models:
+            for purpose in purposes:
+                data = self.data()
+                if purpose == 'variation':
+                    data['base_reference'] = {'media_id': '00000000-0000-4000-8000-000000000001', 'sha256': 'a' * 64}
+                    data['preserve'] = ['Keep chamber architecture and lighting.']
+                    data['change'] = ['Tears open the scroll.']
+                result = compile(model, purpose, data, '1.6.0')
+                same = compile(model, purpose, dict(reversed(list(data.items()))), '1.6.0')
+                self.assertEqual(result, same)
+                self.assertEqual(result['sha256'], hashlib.sha256(result['prompt'].encode()).hexdigest())
+                self.assertEqual(result['version'], '1.6.0')
+                prompts[(model, purpose)] = result['prompt']
+        self.assertEqual(len(set(prompts.values())), 12)
+
+    def test_160_shot_types_compilation_and_character_suppression(self):
+        spec_160 = registry('1.6.0')
+        # visual_diagram suppresses cast rule
+        d1 = self.data(shot_type='visual_diagram')
+        r1 = compile('NanoBanana2', 'scene', d1, '1.6.0')
+        self.assertIn('Strict character-free composition', r1['prompt'])
+        self.assertNotIn('round white head', r1['prompt'])
+        self.assertNotIn(spec_160['cast_rule'], r1['prompt'])
+
+        # cutaway_detail suppresses cast rule
+        d2 = self.data(shot_type='cutaway_detail')
+        r2 = compile('NanoBanana2', 'scene', d2, '1.6.0')
+        self.assertIn('Strict character-free composition', r2['prompt'])
+        self.assertNotIn('round white head', r2['prompt'])
+        self.assertNotIn(spec_160['cast_rule'], r2['prompt'])
+
+        # concept_metaphor with character_free=True suppresses cast rule
+        d3 = self.data(shot_type='concept_metaphor', character_free=True)
+        r3 = compile('NanoBanana2', 'scene', d3, '1.6.0')
+        self.assertIn('Strict character-free composition', r3['prompt'])
+        self.assertNotIn('round white head', r3['prompt'])
+        self.assertNotIn(spec_160['cast_rule'], r3['prompt'])
+
+        # concept_metaphor default (character-based) retains cast rule
+        d4 = self.data(shot_type='concept_metaphor')
+        r4 = compile('NanoBanana2', 'scene', d4, '1.6.0')
+        self.assertNotIn('Strict character-free composition', r4['prompt'])
+        self.assertIn('round white head', r4['prompt'])
+        self.assertIn(spec_160['cast_rule'], r4['prompt'])
+
+    def test_160_banned_laziness_lexicon_rejection(self):
+        lazy_phrases = [
+            'sits and thinks',
+            'sitting quietly',
+            'staring at laptop',
+            'coffee mug on desk',
+            'books resting on table',
+            'desk lamp glowing',
+            'empty room',
+            'A conceptual metaphor of a mental block',
+            'An abstract illustration of stress',
+            'A symbolic representation of fear',
+        ]
+        for phrase in lazy_phrases:
+            data = self.data(description=f'An illustration where a person {phrase} in space.')
+            with self.assertRaises(PromptError) as ctx:
+                compile('NanoBanana2', 'scene', data, '1.6.0')
+            self.assertIn('LAZY_VISUAL_ACTION_FORBIDDEN', str(ctx.exception))
+
+    def test_legacy_version_rejects_160_shot_types(self):
+        for ver in ('1.4.0', '1.5.0'):
+            for shot in ('concept_metaphor', 'visual_diagram', 'cutaway_detail'):
+                data = self.data(shot_type=shot)
+                with self.assertRaises(PromptError) as ctx:
+                    compile('NanoBanana2', 'scene', data, ver)
+                self.assertIn('FLOW_SHOT_TYPE_UNSUPPORTED', str(ctx.exception))
+
 

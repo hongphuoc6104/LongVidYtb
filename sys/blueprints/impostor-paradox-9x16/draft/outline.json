@@ -10,7 +10,7 @@
     },
     {
       "scene_id": "SC02",
-      "purpose": "Triển khai bước 2: đồng hồ điểm hai giờ sáng",
+      "purpose": "Triển khai bước 2: nghịch lý tự ti kẻ mạo danh",
       "requirements": [
         "R02"
       ],
@@ -18,7 +18,7 @@
     },
     {
       "scene_id": "SC03",
-      "purpose": "Triển khai bước 3: cái bẫy chưa đủ sâu",
+      "purpose": "Triển khai bước 3: cán cân bản nháp thô năm trăm từ",
       "requirements": [
         "R03"
       ],
@@ -26,7 +26,7 @@
     },
     {
       "scene_id": "SC04",
-      "purpose": "Triển khai bước 4: hành lang thư viện vô tận",
+      "purpose": "Triển khai bước 4: ẩn dụ hòn đảo tri thức và sương mù",
       "requirements": [
         "R04"
       ],
@@ -34,121 +34,9 @@
     },
     {
       "scene_id": "SC05",
-      "purpose": "Triển khai bước 5: nỗi đau của người cầu toàn",
+      "purpose": "Triển khai bước 5: kích hoạt hành động hai mươi lăm phút",
       "requirements": [
         "R05"
-      ],
-      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
-    },
-    {
-      "scene_id": "SC06",
-      "purpose": "Triển khai bước 6: đặt tên cho con quái vật",
-      "requirements": [
-        "R06"
-      ],
-      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
-    },
-    {
-      "scene_id": "SC07",
-      "purpose": "Triển khai bước 7: thí nghiệm clance và imes",
-      "requirements": [
-        "R07"
-      ],
-      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
-    },
-    {
-      "scene_id": "SC08",
-      "purpose": "Triển khai bước 8: lời thú nhận chấn động",
-      "requirements": [
-        "R08"
-      ],
-      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
-    },
-    {
-      "scene_id": "SC09",
-      "purpose": "Triển khai bước 9: hồ sơ đối chứng thực nghiệm",
-      "requirements": [
-        "R09"
-      ],
-      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
-    },
-    {
-      "scene_id": "SC10",
-      "purpose": "Triển khai bước 10: cơ chế não sợ lời khen",
-      "requirements": [
-        "R10"
-      ],
-      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
-    },
-    {
-      "scene_id": "SC11",
-      "purpose": "Triển khai bước 11: nghịch lý dunning kruger đảo chiều",
-      "requirements": [
-        "R11"
-      ],
-      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
-    },
-    {
-      "scene_id": "SC12",
-      "purpose": "Triển khai bước 12: tấm bản đồ sương mù",
-      "requirements": [
-        "R12"
-      ],
-      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
-    },
-    {
-      "scene_id": "SC13",
-      "purpose": "Triển khai bước 13: đảo sáng nở rộng",
-      "requirements": [
-        "R13"
-      ],
-      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
-    },
-    {
-      "scene_id": "SC14",
-      "purpose": "Triển khai bước 14: đại dương kiến thức mênh mông",
-      "requirements": [
-        "R14"
-      ],
-      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
-    },
-    {
-      "scene_id": "SC15",
-      "purpose": "Triển khai bước 15: đứng trên đỉnh núi cao",
-      "requirements": [
-        "R15"
-      ],
-      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
-    },
-    {
-      "scene_id": "SC16",
-      "purpose": "Triển khai bước 16: vũ khí bản nháp thô năm trăm từ",
-      "requirements": [
-        "R16"
-      ],
-      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
-    },
-    {
-      "scene_id": "SC17",
-      "purpose": "Triển khai bước 17: hành động phá vỡ nỗi sợ",
-      "requirements": [
-        "R17"
-      ],
-      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
-    },
-    {
-      "scene_id": "SC18",
-      "purpose": "Triển khai bước 18: trang giấy đã đầy chữ",
-      "requirements": [
-        "R18"
-      ],
-      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
-    },
-    {
-      "scene_id": "SC19",
-      "purpose": "Triển khai bước 19: khép lại vòng lặp bàn học đêm",
-      "requirements": [
-        "R19"
       ],
       "transition": "Tiếp tục theo trình tự diễn biến nội dung"
     }

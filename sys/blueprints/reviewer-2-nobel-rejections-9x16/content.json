@@ -1,13 +1,13 @@
 {
   "schema_version": "3.0",
   "brief_revision": 1,
-  "brief_hash": "544cd3f5ade0e918c3ad4e996cee0b5d5b3d389f613c64f09598b6b12e753a5b",
+  "brief_hash": "7b3eeea464fee469f5ea670ee3696484509ef208e43f19146ec56ac8bd69029f",
   "topic": "Nghịch Lý Reviewer 2: Những Công Trình Đoạt Giải Nobel Từng Bị Tạp Chí Từ Chối Thẳng Thừng",
   "duration": {
     "min_seconds": 120.0,
     "max_seconds": 200.0
   },
-  "style": "Minh họa 2D Editorial dọc toàn khung, nhân vật người que biểu cảm, mật độ hình ảnh cao, đồ họa tôn trọng vùng an toàn phụ đề 400px phía dưới.",
+  "style": "Hand-drawn 2D explainer illustration with an earth-toned foundation (terracotta, warm ochre, sage green, navy, warm gray, sky blue), fine-to-medium warm-charcoal contours, high contrast, and warm-cool temperature contrast (warm highlights paired with cool blue-gray shadows). Follow a disciplined 60-30-10 color ratio: 60% dominant calm neutral or grounding backdrop, 30% secondary structural elements and setting, and 10% intentional focal accent. Maintain generous negative space with at least 25–35% calm open canvas free of decorative props or dense linework. Use a moderately simplified composition with one clear focal action or concept metaphor. Suggest the requested setting with only essential environmental cues; secondary objects are simplified into quiet flat shapes with fewer interior lines. Background linework is finer, lighter, and lower-contrast than the focal subject. Choose colors naturally for each scene, preserving the requested location, time of day, and meaningful visual metaphor. Night scenes retain night cues with gentle ambient fill to read the action clearly. Create visual interest through expressive gestures, deliberate composition, open breathing room, and selective temperature contrast. No decorative clutter, photographic room interiors, heavy black marker borders, washed-out pastels, muddy dark grading, neon saturation, harsh spotlights, photorealism, lens blur, gradients, or 3D rendering. Complete edge-to-edge full-frame composition; white_card, visual_diagram, and concept cards use a clean pure white #FFFFFF field.",
   "required_points": [
     "Cú tát mở màn sọt rác Nobel",
     "Ca thứ nhất: Peter Higgs và Hạt của Chúa",
@@ -23,7 +23,7 @@
     {
       "id": "CH01",
       "name": "Người làm nghiên cứu di động",
-      "appearance": "Anonymous round white head with a thick black outline, expressive dot eyes and thin black stick limbs.",
+      "appearance": "Anonymous round white head, expressive dot eyes, thin stick limbs, simplified cartoon hands and fine-to-medium charcoal contours.",
       "outfit": "Simple teal shirt in vertical safe zone framing."
     }
   ],
@@ -47,9 +47,7 @@
         {
           "id": "SC01_I1",
           "description": "A vertical mobile frame showing a crumpled academic rejection letter next to a glowing golden medal. Close vertical view of a Nobel Prize medal emerging from beneath a crumpled rejection letter.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Close vertical view of a Nobel Prize medal emerging from beneath a crumpled rejection letter.",
@@ -103,9 +101,7 @@
         {
           "id": "SC01_I5",
           "description": "A vertical mobile frame showing a crumpled academic rejection letter next to a glowing golden medal. A vertical concept card contrasting a harsh REJECT stamp with a golden laurel on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A vertical concept card contrasting a harsh REJECT stamp with a golden laurel on pure white.",
@@ -266,9 +262,7 @@
         {
           "id": "SC02_I2",
           "description": "A European theoretical physics office in 1964 with chalkboards full of field equations. The CERN journal editor stamps REJECT across Higgs' two-page paper on gauge bosons.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "The CERN journal editor stamps REJECT across Higgs' two-page paper on gauge bosons.",
@@ -294,9 +288,7 @@
         {
           "id": "SC02_I4",
           "description": "A European theoretical physics office in 1964 with chalkboards full of field equations. A vertical card showing the critique: NO OBVIOUS RELEVANCE TO PHYSICS on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A vertical card showing the critique: NO OBVIOUS RELEVANCE TO PHYSICS on pure white.",
@@ -469,9 +461,7 @@
         {
           "id": "SC03_I2",
           "description": "The underground tunnel of the Large Hadron Collider at CERN. A massive circular underground tunnel glows with blue proton beam pulses.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A massive circular underground tunnel glows with blue proton beam pulses.",
@@ -497,9 +487,7 @@
         {
           "id": "SC03_I4",
           "description": "The underground tunnel of the Large Hadron Collider at CERN. A data graph displaying a sharp 125 GeV signal peak confirming the Higgs boson.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A data graph displaying a sharp 125 GeV signal peak confirming the Higgs boson.",
@@ -511,9 +499,7 @@
         {
           "id": "SC03_I5",
           "description": "The underground tunnel of the Large Hadron Collider at CERN. The Nobel gold medal shining beside the Higgs potential equation on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "The Nobel gold medal shining beside the Higgs potential equation on pure white.",
@@ -702,9 +688,7 @@
         {
           "id": "SC04_I4",
           "description": "A materials science electron microscope lab in 1982. A lab notebook thrown onto the desk, showing a ten-fold symmetric diffraction pattern.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A lab notebook thrown onto the desk, showing a ten-fold symmetric diffraction pattern.",
@@ -865,9 +849,7 @@
         {
           "id": "SC05_I1",
           "description": "A high-profile scientific symposium press conference. A vertical card showing basic textbook rules clashing with quasicrystal geometry on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A vertical card showing basic textbook rules clashing with quasicrystal geometry on pure white.",
@@ -879,9 +861,7 @@
         {
           "id": "SC05_I2",
           "description": "A high-profile scientific symposium press conference. A rejection stamp marked: Fundamental violation of crystallography laws.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A rejection stamp marked: Fundamental violation of crystallography laws.",
@@ -907,9 +887,7 @@
         {
           "id": "SC05_I4",
           "description": "A high-profile scientific symposium press conference. A newspaper headline reading: No quasi-crystals, only quasi-scientists.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A newspaper headline reading: No quasi-crystals, only quasi-scientists.",
@@ -1096,9 +1074,7 @@
         {
           "id": "SC06_I3",
           "description": "The Stockholm Nobel Prize Award Ceremony stage. A glowing 3D geometric crystal lattice rotating under polarized light.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A glowing 3D geometric crystal lattice rotating under polarized light.",
@@ -1110,9 +1086,7 @@
         {
           "id": "SC06_I4",
           "description": "The Stockholm Nobel Prize Award Ceremony stage. Dan Shechtman receives the Nobel gold medal on the royal Stockholm stage.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Dan Shechtman receives the Nobel gold medal on the royal Stockholm stage.",
@@ -1124,9 +1098,7 @@
         {
           "id": "SC06_I5",
           "description": "The Stockholm Nobel Prize Award Ceremony stage. An old textbook page dissolving into a new definition of crystals on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "An old textbook page dissolving into a new definition of crystals on pure white.",
@@ -1287,9 +1259,7 @@
         {
           "id": "SC07_I2",
           "description": "A cramped, underfunded medical school basement lab in the 1990s. A calendar with pages tearing off rapidly from 1990 to 2005.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A calendar with pages tearing off rapidly from 1990 to 2005.",
@@ -1301,9 +1271,7 @@
         {
           "id": "SC07_I3",
           "description": "A cramped, underfunded medical school basement lab in the 1990s. A demotion notice from the university department placed next to unpaid grant bills.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A demotion notice from the university department placed next to unpaid grant bills.",
@@ -1315,9 +1283,7 @@
         {
           "id": "SC07_I4",
           "description": "A cramped, underfunded medical school basement lab in the 1990s. A stack of rejected manuscript letters marked: UNPROVEN mRNA TECHNOLOGY on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A stack of rejected manuscript letters marked: UNPROVEN mRNA TECHNOLOGY on pure white.",
@@ -1506,9 +1472,7 @@
         {
           "id": "SC08_I3",
           "description": "Global pandemic crisis turning into scientific victory. An old yellowed laboratory notebook with mRNA chemical sequences.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "An old yellowed laboratory notebook with mRNA chemical sequences.",
@@ -1520,9 +1484,7 @@
         {
           "id": "SC08_I4",
           "description": "Global pandemic crisis turning into scientific victory. Billions of vaccine doses distributed globally, bringing cities back to vibrant life.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Billions of vaccine doses distributed globally, bringing cities back to vibrant life.",
@@ -1534,9 +1496,7 @@
         {
           "id": "SC08_I5",
           "description": "Global pandemic crisis turning into scientific victory. Katalin Karikó Nobel Prize portrait in gold letters on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Katalin Karikó Nobel Prize portrait in gold letters on pure white.",
@@ -1725,9 +1685,7 @@
         {
           "id": "SC09_I2",
           "description": "A contemporary vertical framing of a young researcher smiling at their desk. Close view of a polite rejection email on screen.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Close view of a polite rejection email on screen.",
@@ -1739,9 +1697,7 @@
         {
           "id": "SC09_I3",
           "description": "A contemporary vertical framing of a young researcher smiling at their desk. A glowing flame inside an ink pen, representing unbroken scientific passion.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A glowing flame inside an ink pen, representing unbroken scientific passion.",
@@ -1753,9 +1709,7 @@
         {
           "id": "SC09_I4",
           "description": "A contemporary vertical framing of a young researcher smiling at their desk. A vertical roadmap showing: REJECT -> PERSIST -> PROVE -> REVOLUTION on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A vertical roadmap showing: REJECT -> PERSIST -> PROVE -> REVOLUTION on pure white.",
@@ -1809,9 +1763,7 @@
         {
           "id": "SC09_I8",
           "description": "A contemporary vertical framing of a young researcher smiling at their desk. The morning sun rises over the city, shining onto the open research page.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "The morning sun rises over the city, shining onto the open research page.",

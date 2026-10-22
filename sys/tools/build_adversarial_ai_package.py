@@ -28,7 +28,8 @@ from tools.research_story_architect import (
     build_scenes_from_story_rows,
     write_production_package,
 )
-from visual_style import CAST_APPEARANCE, DEFAULT_OUTFIT, STYLE_DESCRIPTION
+from visual_style import CAST_APPEARANCE, DEFAULT_OUTFIT
+from visual_style import LEGACY_HANDDRAWN_STYLE_DESCRIPTION as STYLE_DESCRIPTION
 
 # ---------------------------------------------------------------------------
 # Conversational Tone & Keywords Specification (User Spoken Modulation Protocol)

@@ -722,20 +722,22 @@ class DirectCDPProfileSession:
         )
         js_code = f"""
         (async () => {{
+            let submissionAttempted = false;
             try {{
                 let freqStr = {json.dumps(freq)};
                 const token = await window.mintCaptcha("IMAGE_GENERATION");
-                if (!token) return {{ error: "CAPTCHA_FAILED: empty token" }};
+                if (!token) return {{ error: "CAPTCHA_FAILED: empty token", submitted: false }};
                 freqStr = freqStr.split("__CAPTCHA__").join(token);
                 const wiz = globalThis.WIZ_global_data || {{}};
                 const at = wiz.SNlM0e;
                 const sid = wiz.FdrFJe;
                 const bl = wiz.cfb2h;
-                if (!at) return {{ error: "NO_AT_TOKEN" }};
+                if (!at) return {{ error: "NO_AT_TOKEN", submitted: false }};
                 const reqid = Math.floor(Math.random() * 900000) + 100000;
                 const sourcePath = location.pathname || "/";
                 const hl = (document.documentElement.lang || navigator.language || "en").split("-")[0];
                 const url = `/_/AiSandboxAngularFrontend/data/batchexecute?rpcids=ogiZ0b&source-path=${{encodeURIComponent(sourcePath)}}&bl=${{encodeURIComponent(bl || "")}}&f.sid=${{encodeURIComponent(sid || "")}}&hl=${{encodeURIComponent(hl)}}&_reqid=${{reqid}}&rt=c`;
+                submissionAttempted = true;
                 const resp = await fetch(url, {{
                     method: "POST",
                     credentials: "include",
@@ -748,7 +750,7 @@ class DirectCDPProfileSession:
                 const text = await resp.text();
                 return {{ status: resp.status, text: text.slice(0, 32000000) }};
             }} catch (err) {{
-                return {{ error: err.message || String(err) }};
+                return {{ error: err.message || String(err), submitted: submissionAttempted }};
             }}
         }})()
         """
@@ -757,8 +759,6 @@ class DirectCDPProfileSession:
             err_msg = out.get("error") if isinstance(out, dict) else "NO_CDP_RESPONSE"
             err = RuntimeError(str(err_msg))
             if isinstance(out, dict) and out.get("submitted") is False:
-                err.generation_submitted = False
-            elif any(pat in str(err_msg) for pat in ("CAPTCHA_FAILED", "NO_AT_TOKEN", "CDP_TRANSPORT_CLOSED", "Failed to fetch")):
                 err.generation_submitted = False
             raise err
         raw_text = out.get("text", "")

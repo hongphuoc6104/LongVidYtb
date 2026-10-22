@@ -1,13 +1,13 @@
 {
   "schema_version": "3.0",
   "brief_revision": 1,
-  "brief_hash": "b2439a2c3baa91dedf1189b630ebff5d5617d1aedc25036d468caa52559625e5",
+  "brief_hash": "92294bc667f6e76fbba705c0ae243c1fc73e06fe7c6dd06b74549f56cd54e367",
   "topic": "Ảo Tưởng Sở Hữu Tri Thức (The Collector's Fallacy — Bản Dọc Safe Zone)",
   "duration": {
     "min_seconds": 240.0,
     "max_seconds": 330.0
   },
-  "style": "Hand-drawn 2D marker illustration, anonymous round-headed stick figures, high vertical visual density, clean white card diagrams. All critical graphics strictly respect vertical safe zone 400px bottom.",
+  "style": "Hand-drawn 2D explainer illustration with an earth-toned foundation (terracotta, warm ochre, sage green, navy, warm gray, sky blue), fine-to-medium warm-charcoal contours, high contrast, and warm-cool temperature contrast (warm highlights paired with cool blue-gray shadows). Follow a disciplined 60-30-10 color ratio: 60% dominant calm neutral or grounding backdrop, 30% secondary structural elements and setting, and 10% intentional focal accent. Maintain generous negative space with at least 25–35% calm open canvas free of decorative props or dense linework. Use a moderately simplified composition with one clear focal action or concept metaphor. Suggest the requested setting with only essential environmental cues; secondary objects are simplified into quiet flat shapes with fewer interior lines. Background linework is finer, lighter, and lower-contrast than the focal subject. Choose colors naturally for each scene, preserving the requested location, time of day, and meaningful visual metaphor. Night scenes retain night cues with gentle ambient fill to read the action clearly. Create visual interest through expressive gestures, deliberate composition, open breathing room, and selective temperature contrast. No decorative clutter, photographic room interiors, heavy black marker borders, washed-out pastels, muddy dark grading, neon saturation, harsh spotlights, photorealism, lens blur, gradients, or 3D rendering. Complete edge-to-edge full-frame composition; white_card, visual_diagram, and concept cards use a clean pure white #FFFFFF field.",
   "required_points": [
     "Cú tát mở màn dọc",
     "Nghĩa địa thư mục xem sau",
@@ -26,7 +26,7 @@
     {
       "id": "CH01",
       "name": "Người học di động",
-      "appearance": "Anonymous round white head with a thick black outline, expressive dot eyes and thin black stick limbs.",
+      "appearance": "Anonymous round white head, expressive dot eyes, thin stick limbs, simplified cartoon hands and fine-to-medium charcoal contours.",
       "outfit": "Simple teal shirt in vertical safe zone framing."
     }
   ],
@@ -50,9 +50,7 @@
         {
           "id": "SC01_I1",
           "description": "A vertical mobile frame of a Vietnamese student desk at night under a lamp. A vertical close-up of a thumb repeatedly tapping the Save Bookmark button on a mobile feed.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A vertical close-up of a thumb repeatedly tapping the Save Bookmark button on a mobile feed.",
@@ -101,14 +99,13 @@
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
-          "shot_type": "variation"
+          "shot_type": "variation",
+          "allow_expression_shift": true
         },
         {
           "id": "SC01_I5",
           "description": "A vertical mobile frame of a Vietnamese student desk at night under a lamp. A phone outline showing a giant SAVED checkmark over an empty brain on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A phone outline showing a giant SAVED checkmark over an empty brain on pure white.",
@@ -222,9 +219,7 @@
         {
           "id": "SC02_I1",
           "description": "A vertical mobile screen interface showing neglected bookmarks. A vertical screen view scrolling through a backlog of hundreds of saved posts dated two years ago.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A vertical screen view scrolling through a backlog of hundreds of saved posts dated two years ago.",
@@ -264,9 +259,7 @@
         {
           "id": "SC02_I4",
           "description": "A vertical mobile screen interface showing neglected bookmarks. A lock icon securing thousands of unread articles on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A lock icon securing thousands of unread articles on pure white.",
@@ -396,9 +389,7 @@
         {
           "id": "SC03_I1",
           "description": "A vertical analytical study space with clean conceptual graphics. Vertical card on white: THE COLLECTORS FALLACY with a minimalist cognitive scale.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Vertical card on white: THE COLLECTORS FALLACY with a minimalist cognitive scale.",
@@ -452,9 +443,7 @@
         {
           "id": "SC03_I5",
           "description": "A vertical analytical study space with clean conceptual graphics. A stark cross mark dividing a data file icon from true comprehension on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A stark cross mark dividing a data file icon from true comprehension on pure white.",
@@ -584,9 +573,7 @@
         {
           "id": "SC04_I2",
           "description": "A vertical graphic representation of neural mechanisms. Close view of the thumb pressing Download on the touchscreen.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Close view of the thumb pressing Download on the touchscreen.",
@@ -598,9 +585,7 @@
         {
           "id": "SC04_I3",
           "description": "A vertical graphic representation of neural mechanisms. A dopamine molecule pulsing with a brief green spark on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A dopamine molecule pulsing with a brief green spark on pure white.",
@@ -744,9 +729,7 @@
         {
           "id": "SC05_I1",
           "description": "A vertical comparison chart measuring effort versus time. A digital timer counting down: 00:03 seconds on a smartphone.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A digital timer counting down: 00:03 seconds on a smartphone.",
@@ -786,9 +769,7 @@
         {
           "id": "SC05_I4",
           "description": "A vertical comparison chart measuring effort versus time. A path splitting into a zero-effort shortcut and a steep climb on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A path splitting into a zero-effort shortcut and a steep climb on pure white.",
@@ -946,9 +927,7 @@
         {
           "id": "SC06_I3",
           "description": "A vertical laboratory observation setting. A vertical bar chart: 1000 Unread Files vs 1 Deep Article on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A vertical bar chart: 1000 Unread Files vs 1 Deep Article on pure white.",
@@ -1092,9 +1071,7 @@
         {
           "id": "SC07_I1",
           "description": "A vertical aesthetic room blending books and cloud data. A neat vertical stack of physical books beside a glowing cloud storage icon.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A neat vertical stack of physical books beside a glowing cloud storage icon.",
@@ -1134,9 +1111,7 @@
         {
           "id": "SC07_I4",
           "description": "A vertical aesthetic room blending books and cloud data. A thumb hovering indecisively over hundreds of unread bookmarks.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A thumb hovering indecisively over hundreds of unread bookmarks.",
@@ -1264,9 +1239,7 @@
         {
           "id": "SC08_I1",
           "description": "A vertical conceptual diagram of knowledge synthesis. A 4-tier vertical funnel on pure white: Thu nap -> Tieu hoa -> Tong hop -> Tai tao.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A 4-tier vertical funnel on pure white: Thu nap -> Tieu hoa -> Tong hop -> Tai tao.",
@@ -1292,9 +1265,7 @@
         {
           "id": "SC08_I3",
           "description": "A vertical conceptual diagram of knowledge synthesis. A tiny dot entering the top layer while the lower three layers remain empty.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A tiny dot entering the top layer while the lower three layers remain empty.",
@@ -1320,9 +1291,7 @@
         {
           "id": "SC08_I5",
           "description": "A vertical conceptual diagram of knowledge synthesis. A warning badge on pure white: DỮ LIỆU CHẾT NẾU KHÔNG TIÊU HÓA.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A warning badge on pure white: DỮ LIỆU CHẾT NẾU KHÔNG TIÊU HÓA.",
@@ -1436,9 +1405,7 @@
         {
           "id": "SC09_I1",
           "description": "A vertical view of desk action and digital hygiene. Bold vertical card: QUY TAC DOC 1 TRA 1 on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Bold vertical card: QUY TAC DOC 1 TRA 1 on pure white.",
@@ -1464,9 +1431,7 @@
         {
           "id": "SC09_I3",
           "description": "A vertical view of desk action and digital hygiene. A pen jotting three concise bullet points on a vertical paper notepad.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A pen jotting three concise bullet points on a vertical paper notepad.",
@@ -1610,9 +1575,7 @@
         {
           "id": "SC10_I1",
           "description": "A vertical close view of an analog desk test. A single blank white index card placed squarely on the desk.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A single blank white index card placed squarely on the desk.",
@@ -1652,9 +1615,7 @@
         {
           "id": "SC10_I4",
           "description": "A vertical close view of an analog desk test. Close-up of the pen hovering above an uncompleted diagram branch.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Close-up of the pen hovering above an uncompleted diagram branch.",
@@ -1666,9 +1627,7 @@
         {
           "id": "SC10_I5",
           "description": "A vertical close view of an analog desk test. A question on pure white: CON NHO GI KHI KHONG NHIN MAY?",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A question on pure white: CON NHO GI KHI KHONG NHIN MAY?",
@@ -1810,9 +1769,7 @@
         {
           "id": "SC11_I3",
           "description": "A vertical empowering scene of mental agility. Close view of clean handwritten notes connecting two major concepts.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Close view of clean handwritten notes connecting two major concepts.",
@@ -1838,9 +1795,7 @@
         {
           "id": "SC11_I5",
           "description": "A vertical empowering scene of mental agility. A solid brain icon outshining a heavy hard drive icon on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A solid brain icon outshining a heavy hard drive icon on pure white.",
@@ -1954,9 +1909,7 @@
         {
           "id": "SC12_I1",
           "description": "A peaceful vertical shot of a student study corner at night. A thumb pauses above the Bookmark icon on the phone screen.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A thumb pauses above the Bookmark icon on the phone screen.",

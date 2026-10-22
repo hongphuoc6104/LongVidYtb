@@ -147,6 +147,8 @@ def gflow(p,*args,timeout=960,flow_job=None):
   char_media_id = None
   modern = flow_job is not None and __import__('execution').is_job(p, flow_job)
   frozen_flow = __import__('flow_management').config(p, flow_job) if modern else {}
+  if frozen_flow.get('flow_prompt_version') == '1.7.0':
+   from flow_cdp import bridge as b2_bridge
   cast = modern and _cast_job(p, flow_job)
   if modern and char_ref_path and canonical_mascot.is_file() and Path(char_ref_path).resolve() == canonical_mascot.resolve():
    char_media_id = _canonical_mascot_media_id(p, flow_job)
@@ -289,6 +291,8 @@ def gflow(p,*args,timeout=960,flow_job=None):
 
  if args and args[0]=='batch':
   import b2_bridge
+  if __import__('flow_management').config(p, flow_job).get('flow_prompt_version') == '1.7.0':
+   from flow_cdp import bridge as b2_bridge
   data = read(Path(args[1]))
   batch_out = Path(args[args.index('--out')+1]).resolve()
   batch_out.mkdir(parents=True, exist_ok=True)

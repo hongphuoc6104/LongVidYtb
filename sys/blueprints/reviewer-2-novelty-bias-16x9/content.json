@@ -1,13 +1,13 @@
 {
   "schema_version": "3.0",
   "brief_revision": 1,
-  "brief_hash": "22c7c3923f16d4e506ee59f9568019ad6e4891a5fe4f51604eec14d28ec84140",
+  "brief_hash": "b85166c48094396f00e19797ac4315213a5f8d8e09590cb9206f5f1e5c346144",
   "topic": "Nghịch Lý Reviewer 2 & Định Kiến Chống Đột Phá: Vì sao hệ thống bình duyệt khoa học luôn có xu hướng đào thải các phát kiến cấp tiến?",
   "duration": {
     "min_seconds": 140.0,
     "max_seconds": 220.0
   },
-  "style": "Minh họa 2D Editorial toàn khung, nhân vật người que đầu tròn nét mực đen biểu cảm, bảng biểu khái niệm màu trắng tinh khiết, gam màu xanh ngọc và vàng ấm trang nhã, không chữ thừa trong ảnh.",
+  "style": "Hand-drawn 2D explainer illustration with an earth-toned foundation (terracotta, warm ochre, sage green, navy, warm gray, sky blue), fine-to-medium warm-charcoal contours, high contrast, and warm-cool temperature contrast (warm highlights paired with cool blue-gray shadows). Follow a disciplined 60-30-10 color ratio: 60% dominant calm neutral or grounding backdrop, 30% secondary structural elements and setting, and 10% intentional focal accent. Maintain generous negative space with at least 25–35% calm open canvas free of decorative props or dense linework. Use a moderately simplified composition with one clear focal action or concept metaphor. Suggest the requested setting with only essential environmental cues; secondary objects are simplified into quiet flat shapes with fewer interior lines. Background linework is finer, lighter, and lower-contrast than the focal subject. Choose colors naturally for each scene, preserving the requested location, time of day, and meaningful visual metaphor. Night scenes retain night cues with gentle ambient fill to read the action clearly. Create visual interest through expressive gestures, deliberate composition, open breathing room, and selective temperature contrast. No decorative clutter, photographic room interiors, heavy black marker borders, washed-out pastels, muddy dark grading, neon saturation, harsh spotlights, photorealism, lens blur, gradients, or 3D rendering. Complete edge-to-edge full-frame composition; white_card, visual_diagram, and concept cards use a clean pure white #FFFFFF field.",
   "required_points": [
     "Cú tát mở màn bàn học đêm",
     "Cơn ác mộng Reviewer 2",
@@ -26,8 +26,8 @@
     {
       "id": "CH01",
       "name": "Nhà nghiên cứu trẻ",
-      "appearance": "Anonymous round white head with a thick black outline, expressive dot eyes and thin black stick limbs.",
-      "outfit": "Simple teal shirt and navy trousers in complete full-frame environments."
+      "appearance": "Anonymous round white head, expressive dot eyes, thin stick limbs, simplified cartoon hands and fine-to-medium charcoal contours.",
+      "outfit": "Simple earth-toned clothing (terracotta, warm ochre, sage green, navy, warm gray) appropriate to the scene and role; preserve the costume in returning shots without imposing a recurring color."
     }
   ],
   "scenes": [
@@ -50,9 +50,7 @@
         {
           "id": "SC01_I1",
           "description": "A Vietnamese researcher desk at night with a glowing laptop screen under a warm lamp. A close view of an academic decision letter stamped with a bold red REJECT heading on screen.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A close view of an academic decision letter stamped with a bold red REJECT heading on screen.",
@@ -92,9 +90,7 @@
         {
           "id": "SC01_I4",
           "description": "A Vietnamese researcher desk at night with a glowing laptop screen under a warm lamp. Close view of the computer monitor displaying the cold opening line: We regret to inform you.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Close view of the computer monitor displaying the cold opening line: We regret to inform you.",
@@ -106,9 +102,7 @@
         {
           "id": "SC01_I5",
           "description": "A Vietnamese researcher desk at night with a glowing laptop screen under a warm lamp. A stark white concept card showing a crossed-out breakthrough research diagram on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A stark white concept card showing a crossed-out breakthrough research diagram on pure white.",
@@ -267,9 +261,7 @@
         {
           "id": "SC02_I2",
           "description": "An academic desk showing dual divergent peer review evaluation reports side by side. Close view of Reviewer 1 comments highlighted in soft green: Outstanding originality and solid methodology.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Close view of Reviewer 1 comments highlighted in soft green: Outstanding originality and solid methodology.",
@@ -281,9 +273,7 @@
         {
           "id": "SC02_I3",
           "description": "An academic desk showing dual divergent peer review evaluation reports side by side. Close view of Reviewer 2 comments marked with harsh red ink: Lacks merit, unconvincing, recommend rejection.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Close view of Reviewer 2 comments marked with harsh red ink: Lacks merit, unconvincing, recommend rejection.",
@@ -309,9 +299,7 @@
         {
           "id": "SC02_I5",
           "description": "An academic desk showing dual divergent peer review evaluation reports side by side. A crisp diagram illustrating the notorious Reviewer 2 meme turned into an academic reality on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A crisp diagram illustrating the notorious Reviewer 2 meme turned into an academic reality on pure white.",
@@ -470,9 +458,7 @@
         {
           "id": "SC03_I2",
           "description": "A grand classical academic library with tall bookshelves and marble columns. A stone fortress gate symbolizing the peer review gatekeeping mechanism.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A stone fortress gate symbolizing the peer review gatekeeping mechanism.",
@@ -498,9 +484,7 @@
         {
           "id": "SC03_I4",
           "description": "A grand classical academic library with tall bookshelves and marble columns. A cracked foundation symbol under the academic peer review banner on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A cracked foundation symbol under the academic peer review banner on pure white.",
@@ -526,9 +510,7 @@
         {
           "id": "SC03_I6",
           "description": "A grand classical academic library with tall bookshelves and marble columns. A red barrier gate slamming down on an innovative blueprint.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A red barrier gate slamming down on an innovative blueprint.",
@@ -673,9 +655,7 @@
         {
           "id": "SC04_I2",
           "description": "A behavioral science laboratory with historical psychology journal archives. Twelve published articles from top psychology journals laid out in two neat rows.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Twelve published articles from top psychology journals laid out in two neat rows.",
@@ -701,9 +681,7 @@
         {
           "id": "SC04_I4",
           "description": "A behavioral science laboratory with historical psychology journal archives. Close view of identical body text and scientific charts being carefully duplicated.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Close view of identical body text and scientific charts being carefully duplicated.",
@@ -729,9 +707,7 @@
         {
           "id": "SC04_I6",
           "description": "A behavioral science laboratory with historical psychology journal archives. Two contrasting institutional envelopes: prestigious Ivy League versus unknown local institute on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Two contrasting institutional envelopes: prestigious Ivy League versus unknown local institute on pure white.",
@@ -878,9 +854,7 @@
         {
           "id": "SC05_I2",
           "description": "An editorial office with journal rejection letters and review scorecards. A stark statistical chart highlighting 89% rejection rate in bold crimson numbers.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A stark statistical chart highlighting 89% rejection rate in bold crimson numbers.",
@@ -920,9 +894,7 @@
         {
           "id": "SC05_I5",
           "description": "An editorial office with journal rejection letters and review scorecards. Overlay of the past acceptance letter fading into the current harsh rejection sheet.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Overlay of the past acceptance letter fading into the current harsh rejection sheet.",
@@ -934,9 +906,7 @@
         {
           "id": "SC05_I6",
           "description": "An editorial office with journal rejection letters and review scorecards. A cognitive scale tilting heavily under the weight of institutional prestige on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A cognitive scale tilting heavily under the weight of institutional prestige on pure white.",
@@ -1083,9 +1053,7 @@
         {
           "id": "SC06_I2",
           "description": "A cognitive science research center with brain scans and novelty distribution charts. A minimalist title card: NOVELTY BIAS on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A minimalist title card: NOVELTY BIAS on pure white.",
@@ -1097,9 +1065,7 @@
         {
           "id": "SC06_I3",
           "description": "A cognitive science research center with brain scans and novelty distribution charts. A brain diagram highlighting the amygdala lighting up in defense against foreign stimuli.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A brain diagram highlighting the amygdala lighting up in defense against foreign stimuli.",
@@ -1111,9 +1077,7 @@
         {
           "id": "SC06_I4",
           "description": "A cognitive science research center with brain scans and novelty distribution charts. A scatter plot showing an inverse relationship: high novelty scores correlate with lower review ratings.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A scatter plot showing an inverse relationship: high novelty scores correlate with lower review ratings.",
@@ -1139,9 +1103,7 @@
         {
           "id": "SC06_I6",
           "description": "A cognitive science research center with brain scans and novelty distribution charts. A warning icon reading UNKNOWN ANOMALY flashing in red on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A warning icon reading UNKNOWN ANOMALY flashing in red on pure white.",
@@ -1316,9 +1278,7 @@
         {
           "id": "SC07_I2",
           "description": "A solitary reviewer office under late-night green banker lamp. Close view of an academic retraction notice published in a journal: Paper Retracted.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Close view of an academic retraction notice published in a journal: Paper Retracted.",
@@ -1358,9 +1318,7 @@
         {
           "id": "SC07_I5",
           "description": "A solitary reviewer office under late-night green banker lamp. An empty consequence log showing zero accountability for rejecting groundbreaking discoveries.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "An empty consequence log showing zero accountability for rejecting groundbreaking discoveries.",
@@ -1372,9 +1330,7 @@
         {
           "id": "SC07_I6",
           "description": "A solitary reviewer office under late-night green banker lamp. An asymmetric balance scale showing massive personal risk versus zero reward on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "An asymmetric balance scale showing massive personal risk versus zero reward on pure white.",
@@ -1521,9 +1477,7 @@
         {
           "id": "SC08_I2",
           "description": "A philosophical lecture hall displaying Thomas Kuhn's paradigm shift concepts. A rigid geometric jigsaw puzzle rejecting a uniquely shaped breakthrough piece.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A rigid geometric jigsaw puzzle rejecting a uniquely shaped breakthrough piece.",
@@ -1563,9 +1517,7 @@
         {
           "id": "SC08_I5",
           "description": "A philosophical lecture hall displaying Thomas Kuhn's paradigm shift concepts. A heavy stone cube labeled CONVENTIONAL PARADIGM resisting external cracks on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A heavy stone cube labeled CONVENTIONAL PARADIGM resisting external cracks on pure white.",
@@ -1577,9 +1529,7 @@
         {
           "id": "SC08_I6",
           "description": "A philosophical lecture hall displaying Thomas Kuhn's paradigm shift concepts. A red stamp reading UNORTHODOX stamped over an innovative hypothesis.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A red stamp reading UNORTHODOX stamped over an innovative hypothesis.",
@@ -1726,9 +1676,7 @@
         {
           "id": "SC09_I2",
           "description": "A historical gallery of revolutionary scientific breakthroughs. Archived rejection letters from the Royal Society and top physics journals.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Archived rejection letters from the Royal Society and top physics journals.",
@@ -1740,9 +1688,7 @@
         {
           "id": "SC09_I3",
           "description": "A historical gallery of revolutionary scientific breakthroughs. A crumbling old paradigm wall giving way to a luminous new scientific landscape on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A crumbling old paradigm wall giving way to a luminous new scientific landscape on pure white.",
@@ -1782,9 +1728,7 @@
         {
           "id": "SC09_I6",
           "description": "A historical gallery of revolutionary scientific breakthroughs. A warm light illuminates the handwritten equation on paper.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A warm light illuminates the handwritten equation on paper.",
@@ -1929,9 +1873,7 @@
         {
           "id": "SC10_I2",
           "description": "A modern research strategy room with drafting tables and positioning frameworks. A heavily guarded stone gateway labeled PEER REVIEW GATEWAY on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A heavily guarded stone gateway labeled PEER REVIEW GATEWAY on pure white.",
@@ -1943,9 +1885,7 @@
         {
           "id": "SC10_I3",
           "description": "A modern research strategy room with drafting tables and positioning frameworks. A red warning card showing crossed-out sensational claims: RADICAL REVOLUTION on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A red warning card showing crossed-out sensational claims: RADICAL REVOLUTION on pure white.",
@@ -1957,9 +1897,7 @@
         {
           "id": "SC10_I4",
           "description": "A modern research strategy room with drafting tables and positioning frameworks. A radical mathematical formula nestled safely inside an accepted classical framework model.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A radical mathematical formula nestled safely inside an accepted classical framework model.",
@@ -1999,9 +1937,7 @@
         {
           "id": "SC10_I7",
           "description": "A modern research strategy room with drafting tables and positioning frameworks. A green indicator light confirming seamless theoretical continuity.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A green indicator light confirming seamless theoretical continuity.",
@@ -2013,9 +1949,7 @@
         {
           "id": "SC10_I8",
           "description": "A modern research strategy room with drafting tables and positioning frameworks. A green checkmark stamp on a rigorous thesis framework on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A green checkmark stamp on a rigorous thesis framework on pure white.",
@@ -2192,9 +2126,7 @@
         {
           "id": "SC11_I2",
           "description": "A clean study desk with a formal Rebuttal Letter draft and peer comments. Two paths: emotional anger leading to immediate rejection versus structured evidence rebuttal on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Two paths: emotional anger leading to immediate rejection versus structured evidence rebuttal on pure white.",
@@ -2206,9 +2138,7 @@
         {
           "id": "SC11_I3",
           "description": "A clean study desk with a formal Rebuttal Letter draft and peer comments. Close view of typed response text: We sincerely thank Reviewer 2 for this critical and insightful observation.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Close view of typed response text: We sincerely thank Reviewer 2 for this critical and insightful observation.",
@@ -2234,9 +2164,7 @@
         {
           "id": "SC11_I5",
           "description": "A clean study desk with a formal Rebuttal Letter draft and peer comments. Close view of robust empirical statistical tables with dense sample tests.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "Close view of robust empirical statistical tables with dense sample tests.",
@@ -2262,9 +2190,7 @@
         {
           "id": "SC11_I7",
           "description": "A clean study desk with a formal Rebuttal Letter draft and peer comments. A green editor approval stamp: All reviewer concerns thoroughly resolved.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A green editor approval stamp: All reviewer concerns thoroughly resolved.",
@@ -2276,9 +2202,7 @@
         {
           "id": "SC11_I8",
           "description": "A clean study desk with a formal Rebuttal Letter draft and peer comments. A balanced partnership symbol between author and reviewer on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A balanced partnership symbol between author and reviewer on pure white.",
@@ -2464,14 +2388,13 @@
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
-          "shot_type": "variation"
+          "shot_type": "variation",
+          "allow_expression_shift": true
         },
         {
           "id": "SC12_I3",
           "description": "Back to the Vietnamese student desk at dawn with early morning sunlight streaming in. A golden compass pointing steadily north despite turbulent wind arrows on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
           "change": "A golden compass pointing steadily north despite turbulent wind arrows on pure white.",

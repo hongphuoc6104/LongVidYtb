@@ -7,8 +7,11 @@ import sys
 from pathlib import Path
 
 from scripts.visual_quality import (
+    check_abstract_card_clustering,
+    check_atomic_variation_continuity,
     check_character_breathing_room,
     check_setting_description_verbosity,
+    check_ungrounded_environment_scenes,
 )
 from tools.script_diversity_linter import lint_script
 
@@ -349,3 +352,70 @@ def test_cli_diversity_linter_subcommand_exit_codes(tmp_path: Path):
     # Test non-existent file
     res_notfound = subprocess.run([py_bin, str(cli_tool), str(tmp_path / "non_existent.json")], capture_output=True, text=True)
     assert res_notfound.returncode == 2
+
+
+# =========================================================================
+# Group 5: Narrative & Metaphor Guardrails (HD2D)
+# =========================================================================
+
+def test_abstract_card_clustering_guardrail():
+    # <= 2 abstract cards pass
+    ok_scenes = [
+        _make_beat_scene("SC01", "visual_diagram"),
+        _make_beat_scene("SC02", "cutaway_detail"),
+        _make_beat_scene("SC03", "full_scene"),
+    ]
+    assert len(check_abstract_card_clustering(ok_scenes)) == 0
+
+    # > 2 abstract cards fail
+    bad_scenes = [
+        _make_beat_scene("SC01", "visual_diagram"),
+        _make_beat_scene("SC02", "cutaway_detail"),
+        _make_beat_scene("SC03", "white_card"),
+    ]
+    violations = check_abstract_card_clustering(bad_scenes)
+    assert len(violations) == 1
+    assert violations[0]["type"] == "CONSECUTIVE_ABSTRACT_CARDS_EXCEEDED"
+    assert violations[0]["streak"] == 3
+
+
+def test_ungrounded_environment_guardrail():
+    # Environment with story setting passes
+    ok_scene = _make_beat_scene("SC01", "environment")
+    ok_scene["setting"] = "Quiet coastal rocky peak under dawn light."
+    assert len(check_ungrounded_environment_scenes([ok_scene])) == 0
+
+    # Environment without character, setting or metaphor fails
+    bad_scene = _make_beat_scene("SC02", "environment", char_ids=[], desc="Empty field of grass.")
+    bad_scene["setting"] = ""
+    bad_scene["character_ids"] = []
+    violations = check_ungrounded_environment_scenes([bad_scene])
+    assert len(violations) == 1
+    assert violations[0]["type"] == "UNGROUNDED_ENVIRONMENT_SCENE"
+
+
+def test_atomic_variation_continuity_guardrail():
+    # Valid variation referencing prior full_scene in same scene passes
+    valid_scene = {
+        "id": "SC01",
+        "setting": "A student desk.",
+        "images": [
+            {"id": "SC01_I1", "shot_type": "full_scene", "description": "Student at desk."},
+            {"id": "SC01_I2", "shot_type": "variation", "based_on": "SC01_I1", "description": "Student slumps shoulders."},
+        ],
+    }
+    assert len(check_atomic_variation_continuity([valid_scene])) == 0
+
+    # Broken variation with missing or invalid based_on fails
+    broken_scene = {
+        "id": "SC02",
+        "setting": "A student desk.",
+        "images": [
+            {"id": "SC02_I1", "shot_type": "full_scene", "description": "Student at desk."},
+            {"id": "SC02_I2", "shot_type": "variation", "based_on": "NON_EXISTENT_BEAT", "description": "Student writes."},
+        ],
+    }
+    violations = check_atomic_variation_continuity([broken_scene])
+    assert len(violations) == 1
+    assert violations[0]["type"] == "BROKEN_VARIATION_CONTINUITY"
+

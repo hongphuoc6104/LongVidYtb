@@ -1,40 +1,32 @@
 {
   "schema_version": "3.0",
   "brief_revision": 1,
-  "brief_hash": "dc1c4e88d1ae838a85ccbac7810115aa52754c81422d52857370d827ec2d86b3",
+  "brief_hash": "5d297826eb13a46ff6cd935488afa508204468b9d10f1f3987f3acb856d85893",
   "topic": "Bẫy Tự Ti Học Thuật: Giải Mã Hội Chứng Kẻ Mạo Danh Ở Người Có Năng Lực Tư Duy Sâu",
   "duration": {
-    "min_seconds": 240.0,
-    "max_seconds": 420.0
+    "min_seconds": 45.0,
+    "max_seconds": 60.0
   },
-  "style": "Hand-drawn 2D explainer illustration with an earth-toned foundation (warm ochre, sage green, warm gray, sky blue), fine-to-medium warm-charcoal contours, soft natural illumination, and warm-cool temperature contrast (warm highlights paired with cool blue-gray shadows). Follow a disciplined 60-30-10 color ratio: 60% dominant calm neutral or grounding backdrop, 30% secondary structural elements and setting, and 10% intentional focal accent. Maintain generous negative space with at least 25–35% calm open canvas free of decorative props or dense linework. Use a moderately simplified composition with one clear focal action. Suggest the requested setting with only essential environmental cues; secondary objects are simplified into quiet shapes with fewer interior lines. Background linework is finer, lighter, and lower-contrast than the focal subject. Choose colors naturally for each scene, preserving the requested location, time of day, and meaningful visual metaphor. Night scenes retain night cues with gentle ambient fill to read the action clearly. Create visual interest through expressive gestures, deliberate composition, open breathing room, and selective temperature contrast. No decorative clutter, heavy black marker borders, washed-out pastels, muddy dark grading, neon saturation, harsh spotlights, photorealism, or 3D rendering. Complete edge-to-edge full-frame composition; white_card and white_isolated shots use a clean pure white #FFFFFF field.",
+  "style": "Hand-drawn 2D explanatory illustration. Use clear black outer contours with slight natural hand-drawn irregularity and simple internal lines. Use selective flat color areas and only small simple grounding shadows when useful. Keep silhouettes readable on a mobile screen. Use a clean white field for isolated objects, comparisons and diagrams; contextual scenes may use broad flat color areas with only essential setting cues. Explain one clear relationship through objects, quantities, labels, arrows or relevant contextual action. Static objects and diagrams are valid explanations. No cinematic lighting, blue-gray shadow system, glossy volume, gradients, paper aging, photorealism or 3D. Draw a complete scene image.",
   "required_points": [
     "Cú tát mở màn bàn học đêm",
-    "Đồng hồ điểm hai giờ sáng",
-    "Cái bẫy chưa đủ sâu",
-    "Hành lang thư viện vô tận",
-    "Nỗi đau của người cầu toàn",
-    "Đặt tên cho con quái vật",
-    "Thí nghiệm Clance và Imes",
-    "Lời thú nhận chấn động",
-    "Hồ sơ đối chứng thực nghiệm",
-    "Cơ chế não sợ lời khen",
-    "Nghịch lý Dunning Kruger đảo chiều",
-    "Tấm bản đồ sương mù",
-    "Đảo sáng nở rộng",
-    "Đại dương kiến thức mênh mông",
-    "Đứng trên đỉnh núi cao",
-    "Vũ khí bản nháp thô năm trăm từ",
-    "Hành động phá vỡ nỗi sợ",
-    "Trang giấy đã đầy chữ",
-    "Khép lại vòng lặp bàn học đêm"
+    "Nghịch lý tự ti kẻ mạo danh",
+    "Cán cân bản nháp thô năm trăm từ",
+    "Ẩn dụ hòn đảo tri thức và sương mù",
+    "Kích hoạt hành động hai mươi lăm phút"
   ],
   "characters": [
     {
       "id": "CH01",
-      "name": "Người làm nghiên cứu học thuật",
+      "name": "Nhân vật sinh viên nghiên cứu",
       "appearance": "Anonymous round white head, expressive dot eyes, thin stick limbs, simplified cartoon hands and fine-to-medium charcoal contours.",
-      "outfit": "Simple comfortable shirt in vertical safe zone framing."
+      "outfit": "Simple earth-toned student sweatshirt or comfortable hoodie in warm gray, appropriate for desk study."
+    },
+    {
+      "id": "CH04",
+      "name": "Người lữ hành trên đảo tri thức",
+      "appearance": "Anonymous round white head, expressive dot eyes, thin stick limbs, simplified cartoon hands and fine-to-medium charcoal contours.",
+      "outfit": "Simple outdoor traveler cloak with rugged boots and warm ochre lantern."
     }
   ],
   "scenes": [
@@ -42,10 +34,10 @@
       "id": "SC01",
       "title": "Cú tát mở màn bàn học đêm",
       "purpose": "Triển khai bước 1: cú tát mở màn bàn học đêm",
-      "action": "A young student stick-figure sits tiredly before a glowing laptop screen with multiple open browser tabs.",
-      "setting": "A student desk under cold laptop glow.",
+      "action": "Researcher freezes before glowing laptop screen surrounded by towering open browser tabs.",
+      "setting": "A computer workspace under cold laptop glow.",
       "camera": "Semantic full-frame sequence",
-      "narration": "Càng đọc nhiều tài liệu, não bạn càng sợ bắt đầu. Màn hình rực sáng giữa đêm khuya. Con trỏ nhấp nháy trên trang giấy trắng. Bạn cảm thấy hoàn toàn bế tắc.",
+      "narration": "Càng đọc nhiều tài liệu, não bạn càng sợ bắt đầu. Ánh đèn hắt bóng giữa đêm khuya. Con trỏ nhấp nháy trên trang giấy trắng. Tờ nháp trắng biến thành bức tường gạch khổng lồ chặn đứng lối đi.",
       "requirements": [
         "R01"
       ],
@@ -56,57 +48,97 @@
       "images": [
         {
           "id": "SC01_I1",
-          "description": "A student desk under cold laptop glow. A young student stick-figure sits tiredly before a glowing laptop screen with multiple open browser tabs.",
+          "description": "A computer workspace under cold laptop glow. Researcher freezes before glowing laptop screen surrounded by towering open browser tabs.",
           "character_ids": [
             "CH01"
           ],
           "based_on": null,
           "preserve": "",
-          "change": "A young student stick-figure sits tiredly before a glowing laptop screen with multiple open browser tabs.",
+          "change": "Researcher freezes before glowing laptop screen surrounded by towering open browser tabs.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
-          "shot_type": "full_scene"
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Càng đọc nhiều tài liệu, não bạn càng sợ bắt đầu.",
+            "relation": "context",
+            "source_terms": [
+              "Càng"
+            ],
+            "visual_terms": [
+              "computer"
+            ]
+          }
         },
         {
           "id": "SC01_I2",
-          "description": "A student desk under cold laptop glow. A desk organizer holding highlighters and printed drafts under pale blue laptop glow.",
+          "description": "A computer workspace under cold laptop glow. Dozens of miniature digital document windows cascade down and crowd the desktop space.",
           "character_ids": [],
           "based_on": null,
           "preserve": "",
-          "change": "A desk organizer holding highlighters and printed drafts under pale blue laptop glow.",
+          "change": "Dozens of miniature digital document windows cascade down and crowd the desktop space.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
-          "shot_type": "still_life"
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Ánh đèn hắt bóng giữa đêm khuya.",
+            "relation": "context",
+            "source_terms": [
+              "Ánh"
+            ],
+            "visual_terms": [
+              "computer"
+            ]
+          }
         },
         {
           "id": "SC01_I3",
-          "description": "A student desk under cold laptop glow. A laptop monitor showing an empty document with a single blinking cursor line.",
-          "character_ids": [
-            "CH01"
-          ],
+          "description": "A computer workspace under cold laptop glow. Extreme close-up of the screen where a vertical charcoal cursor pulses like a tiny heartbeat in a white void.",
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
-          "change": "A laptop monitor showing an empty document with a single blinking cursor line.",
+          "change": "Extreme close-up of the screen where a vertical charcoal cursor pulses like a tiny heartbeat in a white void.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
-          "shot_type": "macro_prop"
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Con trỏ nhấp nháy trên trang giấy trắng.",
+            "relation": "context",
+            "source_terms": [
+              "Con"
+            ],
+            "visual_terms": [
+              "computer"
+            ]
+          }
         },
         {
           "id": "SC01_I4",
-          "description": "A student desk under cold laptop glow. The student slumps their shoulders, paralyzed with uncertainty.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": "SC01_I1",
-          "preserve": "Keep the exact camera angle, room geometry and props in A student desk under cold laptop glow.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
-          "change": "The student slumps their shoulders, paralyzed with uncertainty.",
+          "description": "A computer workspace under cold laptop glow. The blank paper transforms into a towering impenetrable charcoal brick wall rising straight from the desk, completely blocking the forward path.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "The blank paper transforms into a towering impenetrable charcoal brick wall rising straight from the desk, completely blocking the forward path.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
-          "shot_type": "variation"
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Tờ nháp trắng biến thành bức tường gạch khổng lồ chặn đứng lối đi.",
+            "relation": "context",
+            "source_terms": [
+              "Tờ"
+            ],
+            "visual_terms": [
+              "computer"
+            ]
+          }
         }
       ],
       "beats": [
@@ -132,11 +164,11 @@
           "purpose": "Triển khai bước 1: cú tát mở màn bàn học đêm",
           "anchor": {
             "vi": {
-              "quote": "Màn hình rực sáng giữa đêm khuya.",
+              "quote": "Ánh đèn hắt bóng giữa đêm khuya.",
               "occurrence": 1
             }
           },
-          "effect": "hold",
+          "effect": "pan_right",
           "focus": {
             "x": 0.5,
             "y": 0.5
@@ -152,7 +184,7 @@
               "occurrence": 1
             }
           },
-          "effect": "zoom_out",
+          "effect": "punch_in",
           "focus": {
             "x": 0.5,
             "y": 0.5
@@ -164,7 +196,7 @@
           "purpose": "Triển khai bước 1: cú tát mở màn bàn học đêm",
           "anchor": {
             "vi": {
-              "quote": "Bạn cảm thấy hoàn toàn bế tắc.",
+              "quote": "Tờ nháp trắng biến thành bức tường gạch khổng lồ chặn đứng lối đi.",
               "occurrence": 1
             }
           },
@@ -181,77 +213,128 @@
     },
     {
       "id": "SC02",
-      "title": "Đồng hồ điểm hai giờ sáng",
-      "purpose": "Triển khai bước 2: đồng hồ điểm hai giờ sáng",
-      "action": "A vintage desk clock resting beside a cold ceramic coffee mug under dim yellow lamplight.",
-      "setting": "A vintage clock in dim warm lamplight.",
+      "title": "Nghịch lý tự ti kẻ mạo danh",
+      "purpose": "Triển khai bước 2: nghịch lý tự ti kẻ mạo danh",
+      "action": "Clean white card featuring bold charcoal typography: HỘI CHỨNG KẺ MẠO DANH framed by crisp diagnostic bounding box.",
+      "setting": "A pure white background with bright lighting.",
       "camera": "Semantic full-frame sequence",
-      "narration": "Đồng hồ đã chỉ hai giờ sáng. Thư mục tài liệu dày cộm. Mỗi bài báo bạn đọc xong, lại mở ra thêm mười câu hỏi mới.",
+      "narration": "Khoa học gọi đây là Hội chứng Kẻ mạo danh. Bảy mươi phần trăm sinh viên giỏi, nghĩ mình chỉ gặp may chứ không hề có thực lực. Càng hiểu biết sâu, bạn càng thấy biển kiến thức mênh mông.",
       "requirements": [
         "R02"
       ],
       "character_ids": [
         "CH01"
       ],
-      "source_ids": [],
+      "source_ids": [
+        "SRC01",
+        "SRC02"
+      ],
       "images": [
         {
           "id": "SC02_I1",
-          "description": "A vintage clock in dim warm lamplight. A vintage desk clock resting beside a cold ceramic coffee mug under dim yellow lamplight.",
+          "description": "A pure white background with bright lighting. Clean white card featuring bold charcoal typography: HỘI CHỨNG KẺ MẠO DANH framed by crisp diagnostic bounding box.",
           "character_ids": [],
           "based_on": null,
           "preserve": "",
-          "change": "A vintage desk clock resting beside a cold ceramic coffee mug under dim yellow lamplight.",
+          "change": "Clean white card featuring bold charcoal typography: HỘI CHỨNG KẺ MẠO DANH framed by crisp diagnostic bounding box.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
-          "shot_type": "still_life"
+          "shot_type": "visual_diagram",
+          "has_character": false,
+          "explanation": {
+            "quote": "Khoa học gọi đây là Hội chứng Kẻ mạo danh.",
+            "relation": "context",
+            "source_terms": [
+              "Khoa"
+            ],
+            "visual_terms": [
+              "pure"
+            ]
+          }
         },
         {
           "id": "SC02_I2",
-          "description": "A vintage clock in dim warm lamplight. A heavy stack of printed research papers with yellow sticky bookmarks on a wooden surface.",
+          "description": "A pure white background with bright lighting. Hand-drawn column chart on clean white: a bold 70% column in terracotta red towering over a 30% column in muted gray.",
           "character_ids": [],
           "based_on": null,
           "preserve": "",
-          "change": "A heavy stack of printed research papers with yellow sticky bookmarks on a wooden surface.",
+          "change": "Hand-drawn column chart on clean white: a bold 70% column in terracotta red towering over a 30% column in muted gray.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
-          "shot_type": "still_life"
+          "shot_type": "visual_diagram",
+          "has_character": false,
+          "explanation": {
+            "quote": "Bảy mươi phần trăm sinh viên giỏi,",
+            "relation": "context",
+            "source_terms": [
+              "Bảy"
+            ],
+            "visual_terms": [
+              "pure"
+            ]
+          }
         },
         {
           "id": "SC02_I3",
-          "description": "A vintage clock in dim warm lamplight. An open textbook showing highlighted passages and clean hand-drawn margin brackets.",
-          "character_ids": [],
+          "description": "A pure white background with bright lighting. Researcher holds up a smiling porcelain theater mask that cracks down the middle, revealing cold sweat and inner dread.",
+          "character_ids": [
+            "CH01"
+          ],
           "based_on": null,
           "preserve": "",
-          "change": "An open textbook showing highlighted passages and clean hand-drawn margin brackets.",
+          "change": "Researcher holds up a smiling porcelain theater mask that cracks down the middle, revealing cold sweat and inner dread.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
-          "shot_type": "still_life"
+          "shot_type": "concept_metaphor",
+          "has_character": true,
+          "explanation": {
+            "quote": "nghĩ mình chỉ gặp may chứ không hề có thực lực.",
+            "relation": "context",
+            "source_terms": [
+              "nghĩ"
+            ],
+            "visual_terms": [
+              "pure"
+            ]
+          }
         },
         {
           "id": "SC02_I4",
-          "description": "A vintage clock in dim warm lamplight. A spiral notebook filled with question marks and abstract interconnected branch lines.",
-          "character_ids": [],
+          "description": "A pure white background with bright lighting. Researcher sits pensively at wooden desk under warm lamplight, hands clasped with sincere humility.",
+          "character_ids": [
+            "CH01"
+          ],
           "based_on": null,
           "preserve": "",
-          "change": "A spiral notebook filled with question marks and abstract interconnected branch lines.",
+          "change": "Researcher sits pensively at wooden desk under warm lamplight, hands clasped with sincere humility.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
-          "shot_type": "still_life"
+          "shot_type": "concept_metaphor",
+          "has_character": true,
+          "explanation": {
+            "quote": "Càng hiểu biết sâu, bạn càng thấy biển kiến thức mênh mông.",
+            "relation": "context",
+            "source_terms": [
+              "Càng"
+            ],
+            "visual_terms": [
+              "pure"
+            ]
+          }
         }
       ],
       "beats": [
         {
           "id": "SC02_B1",
           "image_id": "SC02_I1",
-          "purpose": "Triển khai bước 2: đồng hồ điểm hai giờ sáng",
+          "purpose": "Triển khai bước 2: nghịch lý tự ti kẻ mạo danh",
           "anchor": {
             "vi": {
-              "quote": "Đồng hồ đã chỉ hai giờ sáng.",
+              "quote": "Khoa học gọi đây là Hội chứng Kẻ mạo danh.",
               "occurrence": 1
             }
           },
@@ -264,10 +347,10 @@
         {
           "id": "SC02_B2",
           "image_id": "SC02_I2",
-          "purpose": "Triển khai bước 2: đồng hồ điểm hai giờ sáng",
+          "purpose": "Triển khai bước 2: nghịch lý tự ti kẻ mạo danh",
           "anchor": {
             "vi": {
-              "quote": "Thư mục tài liệu dày cộm.",
+              "quote": "Bảy mươi phần trăm sinh viên giỏi,",
               "occurrence": 1
             }
           },
@@ -280,14 +363,14 @@
         {
           "id": "SC02_B3",
           "image_id": "SC02_I3",
-          "purpose": "Triển khai bước 2: đồng hồ điểm hai giờ sáng",
+          "purpose": "Triển khai bước 2: nghịch lý tự ti kẻ mạo danh",
           "anchor": {
             "vi": {
-              "quote": "Mỗi bài báo bạn đọc xong,",
+              "quote": "nghĩ mình chỉ gặp may chứ không hề có thực lực.",
               "occurrence": 1
             }
           },
-          "effect": "zoom_out",
+          "effect": "hold",
           "focus": {
             "x": 0.5,
             "y": 0.5
@@ -296,10 +379,10 @@
         {
           "id": "SC02_B4",
           "image_id": "SC02_I4",
-          "purpose": "Triển khai bước 2: đồng hồ điểm hai giờ sáng",
+          "purpose": "Triển khai bước 2: nghịch lý tự ti kẻ mạo danh",
           "anchor": {
             "vi": {
-              "quote": "lại mở ra thêm mười câu hỏi mới.",
+              "quote": "Càng hiểu biết sâu, bạn càng thấy biển kiến thức mênh mông.",
               "occurrence": 1
             }
           },
@@ -311,86 +394,130 @@
         }
       ],
       "layers": [],
-      "tone": "narrative_warm",
-      "narrative_phase": "lived_friction"
+      "tone": "analytical_crisp",
+      "narrative_phase": "empirical_conflict"
     },
     {
       "id": "SC03",
-      "title": "Cái bẫy chưa đủ sâu",
-      "purpose": "Triển khai bước 3: cái bẫy chưa đủ sâu",
-      "action": "Cartoon four-finger hand rests hesitantly above keyboard keys without typing a single letter.",
-      "setting": "A laptop screen in a dark room.",
+      "title": "Cán cân bản nháp thô năm trăm từ",
+      "purpose": "Triển khai bước 3: cán cân bản nháp thô năm trăm từ",
+      "action": "Clean white card featuring a circular loop of cognitive paralysis shattered by a bold angular red breakthrough arrow.",
+      "setting": "A pure white background with bright lighting.",
       "camera": "Semantic full-frame sequence",
-      "narration": "Và cái giọng nói trong đầu bạn thì thầm: mình chưa đọc đủ để gõ dòng đầu tiên. Bạn sợ bị người khác phát hiện. Sợ người ta bảo mình chưa hiểu gì.",
+      "narration": "Để thoát khỏi bẫy tự ti này, hãy dùng quy tắc bản nháp thô năm trăm từ. Bản nháp thô năm trăm từ, đánh bại một nghìn giờ đọc thêm vô nghĩa.",
       "requirements": [
         "R03"
       ],
       "character_ids": [
         "CH01"
       ],
-      "source_ids": [],
+      "source_ids": [
+        "SRC03"
+      ],
       "images": [
         {
           "id": "SC03_I1",
-          "description": "A laptop screen in a dark room. Cartoon four-finger hand rests hesitantly above keyboard keys without typing a single letter.",
-          "character_ids": [
-            "CH01"
-          ],
+          "description": "A pure white background with bright lighting. Clean white card featuring a circular loop of cognitive paralysis shattered by a bold angular red breakthrough arrow.",
+          "character_ids": [],
           "based_on": null,
           "preserve": "",
-          "change": "Cartoon four-finger hand rests hesitantly above keyboard keys without typing a single letter.",
+          "change": "Clean white card featuring a circular loop of cognitive paralysis shattered by a bold angular red breakthrough arrow.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
-          "shot_type": "macro_prop"
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Để thoát khỏi bẫy tự ti này,",
+            "relation": "context",
+            "source_terms": [
+              "Để"
+            ],
+            "visual_terms": [
+              "pure"
+            ]
+          }
         },
         {
           "id": "SC03_I2",
-          "description": "A laptop screen in a dark room. A close view of an empty document screen reflecting pale blue ambient light.",
+          "description": "A pure white background with bright lighting. A rough crumpled paper sheet boldly stamped BẢN NHÁP THÔ 500 TỪ in heavy charcoal block lettering on clean white.",
           "character_ids": [],
           "based_on": null,
           "preserve": "",
-          "change": "A close view of an empty document screen reflecting pale blue ambient light.",
+          "change": "A rough crumpled paper sheet boldly stamped BẢN NHÁP THÔ 500 TỪ in heavy charcoal block lettering on clean white.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
-          "shot_type": "still_life"
+          "shot_type": "visual_diagram",
+          "has_character": false,
+          "explanation": {
+            "quote": "hãy dùng quy tắc bản nháp thô năm trăm từ.",
+            "relation": "context",
+            "source_terms": [
+              "hãy"
+            ],
+            "visual_terms": [
+              "pure"
+            ]
+          }
         },
         {
           "id": "SC03_I3",
-          "description": "A laptop screen in a dark room. A magnifying glass examining an empty document icon on pure white.",
+          "description": "A pure white background with bright lighting. Researcher firmly holds a raw hand-written manuscript sheet with bold terracotta strike-throughs on the wooden desk.",
           "character_ids": [
             "CH01"
           ],
           "based_on": null,
           "preserve": "",
-          "change": "A magnifying glass examining an empty document icon on pure white.",
+          "change": "Researcher firmly holds a raw hand-written manuscript sheet with bold terracotta strike-throughs on the wooden desk.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
-          "shot_type": "white_card"
+          "shot_type": "concept_metaphor",
+          "has_character": true,
+          "explanation": {
+            "quote": "Bản nháp thô năm trăm từ,",
+            "relation": "context",
+            "source_terms": [
+              "Bản"
+            ],
+            "visual_terms": [
+              "pure"
+            ]
+          }
         },
         {
           "id": "SC03_I4",
-          "description": "A laptop screen in a dark room. An ink pen lying horizontally across empty white notebook lines.",
+          "description": "A pure white background with bright lighting. Balance scale where the tiny rough draft paper tilts the brass arm down with heavy force, catapulting a massive leaning stack of books high into the air.",
           "character_ids": [],
           "based_on": null,
           "preserve": "",
-          "change": "An ink pen lying horizontally across empty white notebook lines.",
+          "change": "Balance scale where the tiny rough draft paper tilts the brass arm down with heavy force, catapulting a massive leaning stack of books high into the air.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
-          "shot_type": "still_life"
+          "shot_type": "visual_diagram",
+          "has_character": false,
+          "explanation": {
+            "quote": "đánh bại một nghìn giờ đọc thêm vô nghĩa.",
+            "relation": "context",
+            "source_terms": [
+              "đánh"
+            ],
+            "visual_terms": [
+              "pure"
+            ]
+          }
         }
       ],
       "beats": [
         {
           "id": "SC03_B1",
           "image_id": "SC03_I1",
-          "purpose": "Triển khai bước 3: cái bẫy chưa đủ sâu",
+          "purpose": "Triển khai bước 3: cán cân bản nháp thô năm trăm từ",
           "anchor": {
             "vi": {
-              "quote": "Và cái giọng nói trong đầu bạn thì thầm:",
+              "quote": "Để thoát khỏi bẫy tự ti này,",
               "occurrence": 1
             }
           },
@@ -403,10 +530,10 @@
         {
           "id": "SC03_B2",
           "image_id": "SC03_I2",
-          "purpose": "Triển khai bước 3: cái bẫy chưa đủ sâu",
+          "purpose": "Triển khai bước 3: cán cân bản nháp thô năm trăm từ",
           "anchor": {
             "vi": {
-              "quote": "mình chưa đọc đủ để gõ dòng đầu tiên.",
+              "quote": "hãy dùng quy tắc bản nháp thô năm trăm từ.",
               "occurrence": 1
             }
           },
@@ -419,552 +546,10 @@
         {
           "id": "SC03_B3",
           "image_id": "SC03_I3",
-          "purpose": "Triển khai bước 3: cái bẫy chưa đủ sâu",
+          "purpose": "Triển khai bước 3: cán cân bản nháp thô năm trăm từ",
           "anchor": {
             "vi": {
-              "quote": "Bạn sợ bị người khác phát hiện.",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_out",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC03_B4",
-          "image_id": "SC03_I4",
-          "purpose": "Triển khai bước 3: cái bẫy chưa đủ sâu",
-          "anchor": {
-            "vi": {
-              "quote": "Sợ người ta bảo mình chưa hiểu gì.",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_left",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        }
-      ],
-      "layers": [],
-      "tone": "narrative_warm",
-      "narrative_phase": "lived_friction"
-    },
-    {
-      "id": "SC04",
-      "title": "Hành lang thư viện vô tận",
-      "purpose": "Triển khai bước 4: hành lang thư viện vô tận",
-      "action": "A grand library hall with towering bookshelves extending to distant arches under soft dawn light.",
-      "setting": "A library aisle stretching into distance.",
-      "camera": "Semantic full-frame sequence",
-      "narration": "Biển tri thức ngoài kia quá mênh mông. Bạn càng học, càng thấy mình nhỏ bé. Cảm giác dốt nát cứ thế lớn dần. Biến thành xiềng xích vô hình.",
-      "requirements": [
-        "R04"
-      ],
-      "character_ids": [
-        "CH01"
-      ],
-      "source_ids": [],
-      "images": [
-        {
-          "id": "SC04_I1",
-          "description": "A library aisle stretching into distance. A grand library hall with towering bookshelves extending to distant arches under soft dawn light.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "A grand library hall with towering bookshelves extending to distant arches under soft dawn light.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "environment"
-        },
-        {
-          "id": "SC04_I2",
-          "description": "A library aisle stretching into distance. Rows of quiet wooden study desks beside tall arched glass windows with morning fog.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "Rows of quiet wooden study desks beside tall arched glass windows with morning fog.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "environment"
-        },
-        {
-          "id": "SC04_I3",
-          "description": "A library aisle stretching into distance. An empty corridor between massive academic book stacks without a single human figure.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "An empty corridor between massive academic book stacks without a single human figure.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "environment"
-        },
-        {
-          "id": "SC04_I4",
-          "description": "A library aisle stretching into distance. Quiet dusty light beams filtering through tall windows across empty reading tables.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "Quiet dusty light beams filtering through tall windows across empty reading tables.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "environment"
-        }
-      ],
-      "beats": [
-        {
-          "id": "SC04_B1",
-          "image_id": "SC04_I1",
-          "purpose": "Triển khai bước 4: hành lang thư viện vô tận",
-          "anchor": {
-            "vi": {
-              "quote": "Biển tri thức ngoài kia quá mênh mông.",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_in",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC04_B2",
-          "image_id": "SC04_I2",
-          "purpose": "Triển khai bước 4: hành lang thư viện vô tận",
-          "anchor": {
-            "vi": {
-              "quote": "Bạn càng học, càng thấy mình nhỏ bé.",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_right",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC04_B3",
-          "image_id": "SC04_I3",
-          "purpose": "Triển khai bước 4: hành lang thư viện vô tận",
-          "anchor": {
-            "vi": {
-              "quote": "Cảm giác dốt nát cứ thế lớn dần.",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_out",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC04_B4",
-          "image_id": "SC04_I4",
-          "purpose": "Triển khai bước 4: hành lang thư viện vô tận",
-          "anchor": {
-            "vi": {
-              "quote": "Biến thành xiềng xích vô hình.",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_left",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        }
-      ],
-      "layers": [],
-      "tone": "narrative_warm",
-      "narrative_phase": "lived_friction"
-    },
-    {
-      "id": "SC05",
-      "title": "Nỗi đau của người cầu toàn",
-      "purpose": "Triển khai bước 5: nỗi đau của người cầu toàn",
-      "action": "The student stick-figure rests head in hands beside the glowing laptop, overwhelmed by thoughts.",
-      "setting": "A student desk under cold laptop glow.",
-      "camera": "Semantic full-frame sequence",
-      "narration": "Đây không phải là sự lười biếng. Bạn thực sự quan tâm đến bài viết. Nhưng chính sự cầu toàn quá mức, đang bóp nghẹt động lực hành động.",
-      "requirements": [
-        "R05"
-      ],
-      "character_ids": [
-        "CH01"
-      ],
-      "source_ids": [],
-      "images": [
-        {
-          "id": "SC05_I1",
-          "description": "A student desk under cold laptop glow. The student stick-figure rests head in hands beside the glowing laptop, overwhelmed by thoughts.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": null,
-          "preserve": "",
-          "change": "The student stick-figure rests head in hands beside the glowing laptop, overwhelmed by thoughts.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "full_scene"
-        },
-        {
-          "id": "SC05_I2",
-          "description": "A student desk under cold laptop glow. A neat stack of handwritten revision index cards resting beside a warm mug.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "A neat stack of handwritten revision index cards resting beside a warm mug.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "still_life"
-        },
-        {
-          "id": "SC05_I3",
-          "description": "A student desk under cold laptop glow. The student rubs their temples, struggling against mental paralysis.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": "SC05_I1",
-          "preserve": "Keep the exact camera angle, room geometry and props in A student desk under cold laptop glow.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
-          "change": "The student rubs their temples, struggling against mental paralysis.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "variation"
-        },
-        {
-          "id": "SC05_I4",
-          "description": "A student desk under cold laptop glow. An open academic planner with unmarked checkbox boxes under warm lamplight.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "An open academic planner with unmarked checkbox boxes under warm lamplight.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "still_life"
-        }
-      ],
-      "beats": [
-        {
-          "id": "SC05_B1",
-          "image_id": "SC05_I1",
-          "purpose": "Triển khai bước 5: nỗi đau của người cầu toàn",
-          "anchor": {
-            "vi": {
-              "quote": "Đây không phải là sự lười biếng.",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_in",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC05_B2",
-          "image_id": "SC05_I2",
-          "purpose": "Triển khai bước 5: nỗi đau của người cầu toàn",
-          "anchor": {
-            "vi": {
-              "quote": "Bạn thực sự quan tâm đến bài viết.",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_right",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC05_B3",
-          "image_id": "SC05_I3",
-          "purpose": "Triển khai bước 5: nỗi đau của người cầu toàn",
-          "anchor": {
-            "vi": {
-              "quote": "Nhưng chính sự cầu toàn quá mức,",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_out",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC05_B4",
-          "image_id": "SC05_I4",
-          "purpose": "Triển khai bước 5: nỗi đau của người cầu toàn",
-          "anchor": {
-            "vi": {
-              "quote": "đang bóp nghẹt động lực hành động.",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_left",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        }
-      ],
-      "layers": [],
-      "tone": "narrative_warm",
-      "narrative_phase": "lived_friction"
-    },
-    {
-      "id": "SC06",
-      "title": "Đặt tên cho con quái vật",
-      "purpose": "Triển khai bước 6: đặt tên cho con quái vật",
-      "action": "A theatrical mask icon divided into two halves, one smiling and one frowning, on pure white.",
-      "setting": "A pure white background with bright lighting.",
-      "camera": "Semantic full-frame sequence",
-      "narration": "Khoa học đã đặt tên cho hiện tượng này. Đó là Hội chứng Kẻ mạo danh. Căn bệnh của những người giỏi giang. Càng hiểu biết, càng tự ti.",
-      "requirements": [
-        "R06"
-      ],
-      "character_ids": [
-        "CH01"
-      ],
-      "source_ids": [],
-      "images": [
-        {
-          "id": "SC06_I1",
-          "description": "A pure white background with bright lighting. A theatrical mask icon divided into two halves, one smiling and one frowning, on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": null,
-          "preserve": "",
-          "change": "A theatrical mask icon divided into two halves, one smiling and one frowning, on pure white.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "white_card"
-        },
-        {
-          "id": "SC06_I2",
-          "description": "A pure white background with bright lighting. Bold conceptual text icon reading IMPOSTOR SYNDROME surrounded by simple line borders on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": null,
-          "preserve": "",
-          "change": "Bold conceptual text icon reading IMPOSTOR SYNDROME surrounded by simple line borders on pure white.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "white_card"
-        },
-        {
-          "id": "SC06_I3",
-          "description": "A pure white background with bright lighting. A gold academic medal placed beside a large questioning symbol on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": null,
-          "preserve": "",
-          "change": "A gold academic medal placed beside a large questioning symbol on pure white.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "white_card"
-        },
-        {
-          "id": "SC06_I4",
-          "description": "A pure white background with bright lighting. A minimal conceptual balance scale weighing deep insight against self doubt on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": null,
-          "preserve": "",
-          "change": "A minimal conceptual balance scale weighing deep insight against self doubt on pure white.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "white_card"
-        }
-      ],
-      "beats": [
-        {
-          "id": "SC06_B1",
-          "image_id": "SC06_I1",
-          "purpose": "Triển khai bước 6: đặt tên cho con quái vật",
-          "anchor": {
-            "vi": {
-              "quote": "Khoa học đã đặt tên cho hiện tượng này.",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_in",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC06_B2",
-          "image_id": "SC06_I2",
-          "purpose": "Triển khai bước 6: đặt tên cho con quái vật",
-          "anchor": {
-            "vi": {
-              "quote": "Đó là Hội chứng Kẻ mạo danh.",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_right",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC06_B3",
-          "image_id": "SC06_I3",
-          "purpose": "Triển khai bước 6: đặt tên cho con quái vật",
-          "anchor": {
-            "vi": {
-              "quote": "Căn bệnh của những người giỏi giang.",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_out",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC06_B4",
-          "image_id": "SC06_I4",
-          "purpose": "Triển khai bước 6: đặt tên cho con quái vật",
-          "anchor": {
-            "vi": {
-              "quote": "Càng hiểu biết, càng tự ti.",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_left",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        }
-      ],
-      "layers": [],
-      "tone": "analytical_crisp",
-      "narrative_phase": "empirical_conflict"
-    },
-    {
-      "id": "SC07",
-      "title": "Thí nghiệm Clance và Imes",
-      "purpose": "Triển khai bước 7: thí nghiệm clance và imes",
-      "action": "Two psychologist stick-figures interview a bright student across a polished wooden office table.",
-      "setting": "An academic office with sage-green walls.",
-      "camera": "Semantic full-frame sequence",
-      "narration": "Năm một nghìn chín trăm bảy mươi tám, hai nhà tâm lý học thực hiện cuộc khảo sát. Họ phỏng vấn một trăm năm mươi sinh viên, có thành tích học thuật xuất sắc nhất trường.",
-      "requirements": [
-        "R07"
-      ],
-      "character_ids": [
-        "CH01"
-      ],
-      "source_ids": [
-        "SRC01"
-      ],
-      "images": [
-        {
-          "id": "SC07_I1",
-          "description": "An academic office with sage-green walls. Two psychologist stick-figures interview a bright student across a polished wooden office table.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": null,
-          "preserve": "",
-          "change": "Two psychologist stick-figures interview a bright student across a polished wooden office table.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "full_scene"
-        },
-        {
-          "id": "SC07_I2",
-          "description": "An academic office with sage-green walls. A clipboard holding clinical interview evaluation sheets beside a silver pen.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "A clipboard holding clinical interview evaluation sheets beside a silver pen.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "still_life"
-        },
-        {
-          "id": "SC07_I3",
-          "description": "An academic office with sage-green walls. A student participant speaks earnestly while gesturing toward their academic records.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": "SC07_I1",
-          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
-          "change": "A student participant speaks earnestly while gesturing toward their academic records.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "variation"
-        },
-        {
-          "id": "SC07_I4",
-          "description": "An academic office with sage-green walls. A stack of bound honor society theses on polished oak wood.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "A stack of bound honor society theses on polished oak wood.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "still_life"
-        }
-      ],
-      "beats": [
-        {
-          "id": "SC07_B1",
-          "image_id": "SC07_I1",
-          "purpose": "Triển khai bước 7: thí nghiệm clance và imes",
-          "anchor": {
-            "vi": {
-              "quote": "Năm một nghìn chín trăm bảy mươi tám,",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_in",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC07_B2",
-          "image_id": "SC07_I2",
-          "purpose": "Triển khai bước 7: thí nghiệm clance và imes",
-          "anchor": {
-            "vi": {
-              "quote": "hai nhà tâm lý học thực hiện cuộc khảo sát.",
+              "quote": "Bản nháp thô năm trăm từ,",
               "occurrence": 1
             }
           },
@@ -975,1293 +560,12 @@
           }
         },
         {
-          "id": "SC07_B3",
-          "image_id": "SC07_I3",
-          "purpose": "Triển khai bước 7: thí nghiệm clance và imes",
+          "id": "SC03_B4",
+          "image_id": "SC03_I4",
+          "purpose": "Triển khai bước 3: cán cân bản nháp thô năm trăm từ",
           "anchor": {
             "vi": {
-              "quote": "Họ phỏng vấn một trăm năm mươi sinh viên,",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_right",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC07_B4",
-          "image_id": "SC07_I4",
-          "purpose": "Triển khai bước 7: thí nghiệm clance và imes",
-          "anchor": {
-            "vi": {
-              "quote": "có thành tích học thuật xuất sắc nhất trường.",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_left",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        }
-      ],
-      "layers": [],
-      "tone": "analytical_crisp",
-      "narrative_phase": "empirical_conflict"
-    },
-    {
-      "id": "SC08",
-      "title": "Lời thú nhận chấn động",
-      "purpose": "Triển khai bước 8: lời thú nhận chấn động",
-      "action": "The high-achieving student looks downward, confessing deep inner vulnerability.",
-      "setting": "An academic office with sage-green walls.",
-      "camera": "Semantic full-frame sequence",
-      "narration": "Bảy mươi phần trăm trong số họ thú nhận, họ luôn nghĩ mình chỉ gặp may mắn. Họ sợ một ngày nào đó, hội đồng sẽ phát hiện ra họ dốt nát.",
-      "requirements": [
-        "R08"
-      ],
-      "character_ids": [
-        "CH01"
-      ],
-      "source_ids": [
-        "SRC01"
-      ],
-      "images": [
-        {
-          "id": "SC08_I1",
-          "description": "An academic office with sage-green walls. The high-achieving student looks downward, confessing deep inner vulnerability.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": null,
-          "preserve": "",
-          "change": "The high-achieving student looks downward, confessing deep inner vulnerability.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "full_scene"
-        },
-        {
-          "id": "SC08_I2",
-          "description": "An academic office with sage-green walls. A percentage chart icon illustrating high achievement alongside hidden imposter anxiety on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": null,
-          "preserve": "",
-          "change": "A percentage chart icon illustrating high achievement alongside hidden imposter anxiety on pure white.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "white_card"
-        },
-        {
-          "id": "SC08_I3",
-          "description": "An academic office with sage-green walls. The psychologists listen with solemn empathy across the interview desk.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": "SC08_I1",
-          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
-          "change": "The psychologists listen with solemn empathy across the interview desk.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "variation"
-        },
-        {
-          "id": "SC08_I4",
-          "description": "An academic office with sage-green walls. An open case file folder showing anonymous interview transcripts on the table.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "An open case file folder showing anonymous interview transcripts on the table.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "still_life"
-        }
-      ],
-      "beats": [
-        {
-          "id": "SC08_B1",
-          "image_id": "SC08_I1",
-          "purpose": "Triển khai bước 8: lời thú nhận chấn động",
-          "anchor": {
-            "vi": {
-              "quote": "Bảy mươi phần trăm trong số họ thú nhận,",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_in",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC08_B2",
-          "image_id": "SC08_I2",
-          "purpose": "Triển khai bước 8: lời thú nhận chấn động",
-          "anchor": {
-            "vi": {
-              "quote": "họ luôn nghĩ mình chỉ gặp may mắn.",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_right",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC08_B3",
-          "image_id": "SC08_I3",
-          "purpose": "Triển khai bước 8: lời thú nhận chấn động",
-          "anchor": {
-            "vi": {
-              "quote": "Họ sợ một ngày nào đó,",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_out",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC08_B4",
-          "image_id": "SC08_I4",
-          "purpose": "Triển khai bước 8: lời thú nhận chấn động",
-          "anchor": {
-            "vi": {
-              "quote": "hội đồng sẽ phát hiện ra họ dốt nát.",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_left",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        }
-      ],
-      "layers": [],
-      "tone": "reflective_slow",
-      "narrative_phase": "empirical_conflict"
-    },
-    {
-      "id": "SC09",
-      "title": "Hồ sơ đối chứng thực nghiệm",
-      "purpose": "Triển khai bước 9: hồ sơ đối chứng thực nghiệm",
-      "action": "An academic transcript showing top grades beside an embossed university gold seal.",
-      "setting": "A research notebook under warm light.",
-      "camera": "Semantic full-frame sequence",
-      "narration": "Điểm số của họ đều ở mức thủ khoa. Nhưng niềm tin thì ngược lại hoàn toàn. Người ngoài nhìn vào thấy tài năng. Còn bên trong, họ thấy mình lừa dối.",
-      "requirements": [
-        "R09"
-      ],
-      "character_ids": [
-        "CH01"
-      ],
-      "source_ids": [],
-      "images": [
-        {
-          "id": "SC09_I1",
-          "description": "A research notebook under warm light. An academic transcript showing top grades beside an embossed university gold seal.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "An academic transcript showing top grades beside an embossed university gold seal.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "still_life"
-        },
-        {
-          "id": "SC09_I2",
-          "description": "A research notebook under warm light. A personal journal page with wavy handwriting lines and a hand-drawn question mark.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "A personal journal page with wavy handwriting lines and a hand-drawn question mark.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "still_life"
-        },
-        {
-          "id": "SC09_I3",
-          "description": "A research notebook under warm light. A framed certificate of academic merit resting proudly on polished oak wood.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "A framed certificate of academic merit resting proudly on polished oak wood.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "still_life"
-        },
-        {
-          "id": "SC09_I4",
-          "description": "A research notebook under warm light. An open fountain pen resting beside an unfinished manuscript page with ink smudges.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "An open fountain pen resting beside an unfinished manuscript page with ink smudges.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "still_life"
-        }
-      ],
-      "beats": [
-        {
-          "id": "SC09_B1",
-          "image_id": "SC09_I1",
-          "purpose": "Triển khai bước 9: hồ sơ đối chứng thực nghiệm",
-          "anchor": {
-            "vi": {
-              "quote": "Điểm số của họ đều ở mức thủ khoa.",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_in",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC09_B2",
-          "image_id": "SC09_I2",
-          "purpose": "Triển khai bước 9: hồ sơ đối chứng thực nghiệm",
-          "anchor": {
-            "vi": {
-              "quote": "Nhưng niềm tin thì ngược lại hoàn toàn.",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_right",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC09_B3",
-          "image_id": "SC09_I3",
-          "purpose": "Triển khai bước 9: hồ sơ đối chứng thực nghiệm",
-          "anchor": {
-            "vi": {
-              "quote": "Người ngoài nhìn vào thấy tài năng.",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_out",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC09_B4",
-          "image_id": "SC09_I4",
-          "purpose": "Triển khai bước 9: hồ sơ đối chứng thực nghiệm",
-          "anchor": {
-            "vi": {
-              "quote": "Còn bên trong, họ thấy mình lừa dối.",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_left",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        }
-      ],
-      "layers": [],
-      "tone": "reflective_slow",
-      "narrative_phase": "empirical_conflict"
-    },
-    {
-      "id": "SC10",
-      "title": "Cơ chế não sợ lời khen",
-      "purpose": "Triển khai bước 10: cơ chế não sợ lời khen",
-      "action": "A lecturer stick-figure warmly compliments a young student before an audience.",
-      "setting": "A bright seminar room with skylight.",
-      "camera": "Semantic full-frame sequence",
-      "narration": "Khoa học thần kinh đã làm sáng tỏ điều này. Não người giỏi đối xử với lời khen, như một tín hiệu cảnh báo nguy hiểm. Họ sợ kỳ vọng mới vượt quá sức mình.",
-      "requirements": [
-        "R10"
-      ],
-      "character_ids": [
-        "CH01"
-      ],
-      "source_ids": [
-        "SRC02"
-      ],
-      "images": [
-        {
-          "id": "SC10_I1",
-          "description": "A bright seminar room with skylight. A lecturer stick-figure warmly compliments a young student before an audience.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": null,
-          "preserve": "",
-          "change": "A lecturer stick-figure warmly compliments a young student before an audience.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "full_scene"
-        },
-        {
-          "id": "SC10_I2",
-          "description": "A bright seminar room with skylight. A conceptual neural diagram showing alarm signals triggered by positive feedback on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": null,
-          "preserve": "",
-          "change": "A conceptual neural diagram showing alarm signals triggered by positive feedback on pure white.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "white_card"
-        },
-        {
-          "id": "SC10_I3",
-          "description": "A bright seminar room with skylight. A projected diagram showing brain neural paths lighting up under unexpected stress.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": "SC10_I1",
-          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
-          "change": "A projected diagram showing brain neural paths lighting up under unexpected stress.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "variation"
-        },
-        {
-          "id": "SC10_I4",
-          "description": "A bright seminar room with skylight. An empty lecture podium with an open lecture manuscript under soft auditorium light.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "An empty lecture podium with an open lecture manuscript under soft auditorium light.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "still_life"
-        }
-      ],
-      "beats": [
-        {
-          "id": "SC10_B1",
-          "image_id": "SC10_I1",
-          "purpose": "Triển khai bước 10: cơ chế não sợ lời khen",
-          "anchor": {
-            "vi": {
-              "quote": "Khoa học thần kinh đã làm sáng tỏ điều này.",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_in",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC10_B2",
-          "image_id": "SC10_I2",
-          "purpose": "Triển khai bước 10: cơ chế não sợ lời khen",
-          "anchor": {
-            "vi": {
-              "quote": "Não người giỏi đối xử với lời khen,",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_right",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC10_B3",
-          "image_id": "SC10_I3",
-          "purpose": "Triển khai bước 10: cơ chế não sợ lời khen",
-          "anchor": {
-            "vi": {
-              "quote": "như một tín hiệu cảnh báo nguy hiểm.",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_out",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC10_B4",
-          "image_id": "SC10_I4",
-          "purpose": "Triển khai bước 10: cơ chế não sợ lời khen",
-          "anchor": {
-            "vi": {
-              "quote": "Họ sợ kỳ vọng mới vượt quá sức mình.",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_left",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        }
-      ],
-      "layers": [],
-      "tone": "analytical_crisp",
-      "narrative_phase": "empirical_conflict"
-    },
-    {
-      "id": "SC11",
-      "title": "Nghịch lý Dunning Kruger đảo chiều",
-      "purpose": "Triển khai bước 11: nghịch lý dunning kruger đảo chiều",
-      "action": "A two-panel comparison diagram contrasting shallow confidence with deep hesitation on pure white.",
-      "setting": "A pure white background with bright lighting.",
-      "camera": "Semantic full-frame sequence",
-      "narration": "Và đây là nghịch lý trớ trêu nhất. Người thật sự thiếu năng lực lại tự tin nhất. Bởi vì họ không biết những gì mình chưa biết. Họ nộp bài mà không chút đắn đo.",
-      "requirements": [
-        "R11"
-      ],
-      "character_ids": [
-        "CH01"
-      ],
-      "source_ids": [
-        "SRC03"
-      ],
-      "images": [
-        {
-          "id": "SC11_I1",
-          "description": "A pure white background with bright lighting. A two-panel comparison diagram contrasting shallow confidence with deep hesitation on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": null,
-          "preserve": "",
-          "change": "A two-panel comparison diagram contrasting shallow confidence with deep hesitation on pure white.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "white_card"
-        },
-        {
-          "id": "SC11_I2",
-          "description": "A pure white background with bright lighting. A stick-figure on a low hill waving a flag of complete overconfidence on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": null,
-          "preserve": "",
-          "change": "A stick-figure on a low hill waving a flag of complete overconfidence on pure white.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "white_card"
-        },
-        {
-          "id": "SC11_I3",
-          "description": "A pure white background with bright lighting. A tiny closed box icon representing limited cognitive awareness on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": null,
-          "preserve": "",
-          "change": "A tiny closed box icon representing limited cognitive awareness on pure white.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "white_card"
-        },
-        {
-          "id": "SC11_I4",
-          "description": "A pure white background with bright lighting. A green checkmark icon stamped swiftly onto an unchecked document on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": null,
-          "preserve": "",
-          "change": "A green checkmark icon stamped swiftly onto an unchecked document on pure white.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "white_card"
-        }
-      ],
-      "beats": [
-        {
-          "id": "SC11_B1",
-          "image_id": "SC11_I1",
-          "purpose": "Triển khai bước 11: nghịch lý dunning kruger đảo chiều",
-          "anchor": {
-            "vi": {
-              "quote": "Và đây là nghịch lý trớ trêu nhất.",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_left",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC11_B2",
-          "image_id": "SC11_I2",
-          "purpose": "Triển khai bước 11: nghịch lý dunning kruger đảo chiều",
-          "anchor": {
-            "vi": {
-              "quote": "Người thật sự thiếu năng lực lại tự tin nhất.",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_right",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC11_B3",
-          "image_id": "SC11_I3",
-          "purpose": "Triển khai bước 11: nghịch lý dunning kruger đảo chiều",
-          "anchor": {
-            "vi": {
-              "quote": "Bởi vì họ không biết những gì mình chưa biết.",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_out",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC11_B4",
-          "image_id": "SC11_I4",
-          "purpose": "Triển khai bước 11: nghịch lý dunning kruger đảo chiều",
-          "anchor": {
-            "vi": {
-              "quote": "Họ nộp bài mà không chút đắn đo.",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_left",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        }
-      ],
-      "layers": [],
-      "tone": "analytical_crisp",
-      "narrative_phase": "structural_model"
-    },
-    {
-      "id": "SC12",
-      "title": "Tấm bản đồ sương mù",
-      "purpose": "Triển khai bước 12: tấm bản đồ sương mù",
-      "action": "A small illuminated island clearing surrounded by endless calm morning mist.",
-      "setting": "A foggy landscape at dawn light.",
-      "camera": "Semantic full-frame sequence",
-      "narration": "Hãy hình dung tri thức như một hòn đảo. Khi bạn mới bước vào lĩnh vực này, vùng sáng của bạn rất nhỏ. Đường viền tiếp xúc với sương mù cũng ngắn.",
-      "requirements": [
-        "R12"
-      ],
-      "character_ids": [
-        "CH01"
-      ],
-      "source_ids": [],
-      "images": [
-        {
-          "id": "SC12_I1",
-          "description": "A foggy landscape at dawn light. A small illuminated island clearing surrounded by endless calm morning mist.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "A small illuminated island clearing surrounded by endless calm morning mist.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "environment"
-        },
-        {
-          "id": "SC12_I2",
-          "description": "A foggy landscape at dawn light. A lone traveler stick-figure stands at the center of the tiny circle of light.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": null,
-          "preserve": "",
-          "change": "A lone traveler stick-figure stands at the center of the tiny circle of light.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "full_scene"
-        },
-        {
-          "id": "SC12_I3",
-          "description": "A foggy landscape at dawn light. A small glowing lantern resting on mossy green earth casting soft light.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "A small glowing lantern resting on mossy green earth casting soft light.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "still_life"
-        },
-        {
-          "id": "SC12_I4",
-          "description": "A foggy landscape at dawn light. The traveler looks at the clear ground beneath their feet with easy certainty.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": "SC12_I2",
-          "preserve": "Keep the exact camera angle, room geometry and props in A foggy landscape at dawn light.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
-          "change": "The traveler looks at the clear ground beneath their feet with easy certainty.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "variation"
-        }
-      ],
-      "beats": [
-        {
-          "id": "SC12_B1",
-          "image_id": "SC12_I1",
-          "purpose": "Triển khai bước 12: tấm bản đồ sương mù",
-          "anchor": {
-            "vi": {
-              "quote": "Hãy hình dung tri thức như một hòn đảo.",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_in",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC12_B2",
-          "image_id": "SC12_I2",
-          "purpose": "Triển khai bước 12: tấm bản đồ sương mù",
-          "anchor": {
-            "vi": {
-              "quote": "Khi bạn mới bước vào lĩnh vực này,",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_right",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC12_B3",
-          "image_id": "SC12_I3",
-          "purpose": "Triển khai bước 12: tấm bản đồ sương mù",
-          "anchor": {
-            "vi": {
-              "quote": "vùng sáng của bạn rất nhỏ.",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_out",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC12_B4",
-          "image_id": "SC12_I4",
-          "purpose": "Triển khai bước 12: tấm bản đồ sương mù",
-          "anchor": {
-            "vi": {
-              "quote": "Đường viền tiếp xúc với sương mù cũng ngắn.",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_left",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        }
-      ],
-      "layers": [],
-      "tone": "narrative_warm",
-      "narrative_phase": "structural_model"
-    },
-    {
-      "id": "SC13",
-      "title": "Đảo sáng nở rộng",
-      "purpose": "Triển khai bước 13: đảo sáng nở rộng",
-      "action": "The illuminated circular clearing expands into the morning mist under soft dawn light.",
-      "setting": "A foggy landscape at dawn light.",
-      "camera": "Semantic full-frame sequence",
-      "narration": "Nhưng khi bạn đọc thêm hàng trăm bài báo, hòn đảo sáng của bạn nở rộng gấp mười. Đồng nghĩa với việc, đường viền sương mù cũng dài thêm gấp mười.",
-      "requirements": [
-        "R13"
-      ],
-      "character_ids": [
-        "CH01"
-      ],
-      "source_ids": [],
-      "images": [
-        {
-          "id": "SC13_I1",
-          "description": "A foggy landscape at dawn light. The illuminated circular clearing expands into the morning mist under soft dawn light.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "The illuminated circular clearing expands into the morning mist under soft dawn light.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "environment"
-        },
-        {
-          "id": "SC13_I2",
-          "description": "A foggy landscape at dawn light. The traveler walks forward across the vast newly discovered territory of light.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": null,
-          "preserve": "",
-          "change": "The traveler walks forward across the vast newly discovered territory of light.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "full_scene"
-        },
-        {
-          "id": "SC13_I3",
-          "description": "A foggy landscape at dawn light. The outer boundary of fog stretches endlessly into infinite horizons.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "The outer boundary of fog stretches endlessly into infinite horizons.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "environment"
-        },
-        {
-          "id": "SC13_I4",
-          "description": "A foggy landscape at dawn light. The traveler pauses at the boundary, marveling at the colossal expanse of mystery.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": "SC13_I2",
-          "preserve": "Keep the exact camera angle, room geometry and props in A foggy landscape at dawn light.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
-          "change": "The traveler pauses at the boundary, marveling at the colossal expanse of mystery.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "variation"
-        }
-      ],
-      "beats": [
-        {
-          "id": "SC13_B1",
-          "image_id": "SC13_I1",
-          "purpose": "Triển khai bước 13: đảo sáng nở rộng",
-          "anchor": {
-            "vi": {
-              "quote": "Nhưng khi bạn đọc thêm hàng trăm bài báo,",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_right",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC13_B2",
-          "image_id": "SC13_I2",
-          "purpose": "Triển khai bước 13: đảo sáng nở rộng",
-          "anchor": {
-            "vi": {
-              "quote": "hòn đảo sáng của bạn nở rộng gấp mười.",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_out",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC13_B3",
-          "image_id": "SC13_I3",
-          "purpose": "Triển khai bước 13: đảo sáng nở rộng",
-          "anchor": {
-            "vi": {
-              "quote": "Đồng nghĩa với việc,",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_left",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC13_B4",
-          "image_id": "SC13_I4",
-          "purpose": "Triển khai bước 13: đảo sáng nở rộng",
-          "anchor": {
-            "vi": {
-              "quote": "đường viền sương mù cũng dài thêm gấp mười.",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_right",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        }
-      ],
-      "layers": [],
-      "tone": "reflective_slow",
-      "narrative_phase": "structural_model"
-    },
-    {
-      "id": "SC14",
-      "title": "Đại dương kiến thức mênh mông",
-      "purpose": "Triển khai bước 14: đại dương kiến thức mênh mông",
-      "action": "A tranquil ocean horizon at golden sunset with gentle waves catching orange amber light.",
-      "setting": "A vast ocean horizon at golden hour.",
-      "camera": "Semantic full-frame sequence",
-      "narration": "Bạn nhìn thấy hàng nghìn khoảng trống mới. Những thứ mà người hiểu nông không bao giờ thấy. Cảm giác dốt nát không phải là điểm yếu. Nó là bằng chứng bạn đã đi rất xa.",
-      "requirements": [
-        "R14"
-      ],
-      "character_ids": [
-        "CH01"
-      ],
-      "source_ids": [
-        "SRC03"
-      ],
-      "images": [
-        {
-          "id": "SC14_I1",
-          "description": "A vast ocean horizon at golden hour. A tranquil ocean horizon at golden sunset with gentle waves catching orange amber light.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "A tranquil ocean horizon at golden sunset with gentle waves catching orange amber light.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "environment"
-        },
-        {
-          "id": "SC14_I2",
-          "description": "A vast ocean horizon at golden hour. Soft sea foam rolling across untouched wet sand under a luminous evening sky.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "Soft sea foam rolling across untouched wet sand under a luminous evening sky.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "environment"
-        },
-        {
-          "id": "SC14_I3",
-          "description": "A vast ocean horizon at golden hour. Distant seabirds gliding peacefully across the warm twilight horizon.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "Distant seabirds gliding peacefully across the warm twilight horizon.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "environment"
-        },
-        {
-          "id": "SC14_I4",
-          "description": "A vast ocean horizon at golden hour. The golden sun dipping below the tranquil waterline, filling the frame with warmth.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "The golden sun dipping below the tranquil waterline, filling the frame with warmth.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "environment"
-        }
-      ],
-      "beats": [
-        {
-          "id": "SC14_B1",
-          "image_id": "SC14_I1",
-          "purpose": "Triển khai bước 14: đại dương kiến thức mênh mông",
-          "anchor": {
-            "vi": {
-              "quote": "Bạn nhìn thấy hàng nghìn khoảng trống mới.",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_in",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC14_B2",
-          "image_id": "SC14_I2",
-          "purpose": "Triển khai bước 14: đại dương kiến thức mênh mông",
-          "anchor": {
-            "vi": {
-              "quote": "Những thứ mà người hiểu nông không bao giờ thấy.",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_right",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC14_B3",
-          "image_id": "SC14_I3",
-          "purpose": "Triển khai bước 14: đại dương kiến thức mênh mông",
-          "anchor": {
-            "vi": {
-              "quote": "Cảm giác dốt nát không phải là điểm yếu.",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_out",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC14_B4",
-          "image_id": "SC14_I4",
-          "purpose": "Triển khai bước 14: đại dương kiến thức mênh mông",
-          "anchor": {
-            "vi": {
-              "quote": "Nó là bằng chứng bạn đã đi rất xa.",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_left",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        }
-      ],
-      "layers": [],
-      "tone": "reflective_slow",
-      "narrative_phase": "structural_model"
-    },
-    {
-      "id": "SC15",
-      "title": "Đứng trên đỉnh núi cao",
-      "purpose": "Triển khai bước 15: đứng trên đỉnh núi cao",
-      "action": "A majestic mountain peak bathed in morning amber sunlight without any figures.",
-      "setting": "A mountain ridge under open sky.",
-      "camera": "Semantic full-frame sequence",
-      "narration": "Chỉ có người leo lên sườn núi cao, mới thấy đỉnh núi tiếp theo còn xa ngút ngàn. Kẻ dưới chân núi luôn nghĩ mình đã tới nơi. Còn bạn, bạn đang dũng cảm tiến lên.",
-      "requirements": [
-        "R15"
-      ],
-      "character_ids": [
-        "CH01"
-      ],
-      "source_ids": [],
-      "images": [
-        {
-          "id": "SC15_I1",
-          "description": "A mountain ridge under open sky. A majestic mountain peak bathed in morning amber sunlight without any figures.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "A majestic mountain peak bathed in morning amber sunlight without any figures.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "environment"
-        },
-        {
-          "id": "SC15_I2",
-          "description": "A mountain ridge under open sky. A mountaineer stick-figure shields their eyes, surveying colossal mountain chains beyond.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": null,
-          "preserve": "",
-          "change": "A mountaineer stick-figure shields their eyes, surveying colossal mountain chains beyond.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "full_scene"
-        },
-        {
-          "id": "SC15_I3",
-          "description": "A mountain ridge under open sky. A distant view from above showing small tranquil foothills bathed in soft sun.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "A distant view from above showing small tranquil foothills bathed in soft sun.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "environment"
-        },
-        {
-          "id": "SC15_I4",
-          "description": "A mountain ridge under open sky. The mountaineer adjusts their backpack, smiling with quiet resilience.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": "SC15_I2",
-          "preserve": "Keep the exact camera angle, room geometry and props in A mountain ridge under open sky.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
-          "change": "The mountaineer adjusts their backpack, smiling with quiet resilience.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "variation"
-        }
-      ],
-      "beats": [
-        {
-          "id": "SC15_B1",
-          "image_id": "SC15_I1",
-          "purpose": "Triển khai bước 15: đứng trên đỉnh núi cao",
-          "anchor": {
-            "vi": {
-              "quote": "Chỉ có người leo lên sườn núi cao,",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_in",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC15_B2",
-          "image_id": "SC15_I2",
-          "purpose": "Triển khai bước 15: đứng trên đỉnh núi cao",
-          "anchor": {
-            "vi": {
-              "quote": "mới thấy đỉnh núi tiếp theo còn xa ngút ngàn.",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_right",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC15_B3",
-          "image_id": "SC15_I3",
-          "purpose": "Triển khai bước 15: đứng trên đỉnh núi cao",
-          "anchor": {
-            "vi": {
-              "quote": "Kẻ dưới chân núi luôn nghĩ mình đã tới nơi.",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_out",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC15_B4",
-          "image_id": "SC15_I4",
-          "purpose": "Triển khai bước 15: đứng trên đỉnh núi cao",
-          "anchor": {
-            "vi": {
-              "quote": "Còn bạn, bạn đang dũng cảm tiến lên.",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_left",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        }
-      ],
-      "layers": [],
-      "tone": "narrative_warm",
-      "narrative_phase": "structural_model"
-    },
-    {
-      "id": "SC16",
-      "title": "Vũ khí bản nháp thô năm trăm từ",
-      "purpose": "Triển khai bước 16: vũ khí bản nháp thô năm trăm từ",
-      "action": "A circular breakthrough arrow breaking free from a cognitive loop on pure white.",
-      "setting": "A pure white background with bright lighting.",
-      "camera": "Semantic full-frame sequence",
-      "narration": "Vậy làm thế nào để phá vỡ bế tắc? Hãy dùng quy tắc bản nháp thô. Bản nháp thô năm trăm từ, đánh bại một nghìn giờ đọc thêm.",
-      "requirements": [
-        "R16"
-      ],
-      "character_ids": [
-        "CH01"
-      ],
-      "source_ids": [
-        "SRC04"
-      ],
-      "images": [
-        {
-          "id": "SC16_I1",
-          "description": "A pure white background with bright lighting. A circular breakthrough arrow breaking free from a cognitive loop on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": null,
-          "preserve": "",
-          "change": "A circular breakthrough arrow breaking free from a cognitive loop on pure white.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "white_card"
-        },
-        {
-          "id": "SC16_I2",
-          "description": "A pure white background with bright lighting. A notepad icon labeled DIRTY DRAFT 500 in clean uppercase lettering on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": null,
-          "preserve": "",
-          "change": "A notepad icon labeled DIRTY DRAFT 500 in clean uppercase lettering on pure white.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "white_card"
-        },
-        {
-          "id": "SC16_I3",
-          "description": "A pure white background with bright lighting. A numerical comparison badge: 500 WRITTEN WORDS beats 1000 READING HOURS on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": null,
-          "preserve": "",
-          "change": "A numerical comparison badge: 500 WRITTEN WORDS beats 1000 READING HOURS on pure white.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "white_card"
-        },
-        {
-          "id": "SC16_I4",
-          "description": "A pure white background with bright lighting. A golden trophy icon awarded to an imperfect handwritten draft sheet on pure white.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": null,
-          "preserve": "",
-          "change": "A golden trophy icon awarded to an imperfect handwritten draft sheet on pure white.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "white_card"
-        }
-      ],
-      "beats": [
-        {
-          "id": "SC16_B1",
-          "image_id": "SC16_I1",
-          "purpose": "Triển khai bước 16: vũ khí bản nháp thô năm trăm từ",
-          "anchor": {
-            "vi": {
-              "quote": "Vậy làm thế nào để phá vỡ bế tắc?",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_in",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC16_B2",
-          "image_id": "SC16_I2",
-          "purpose": "Triển khai bước 16: vũ khí bản nháp thô năm trăm từ",
-          "anchor": {
-            "vi": {
-              "quote": "Hãy dùng quy tắc bản nháp thô.",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_right",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC16_B3",
-          "image_id": "SC16_I3",
-          "purpose": "Triển khai bước 16: vũ khí bản nháp thô năm trăm từ",
-          "anchor": {
-            "vi": {
-              "quote": "Bản nháp thô năm trăm từ,",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_out",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC16_B4",
-          "image_id": "SC16_I4",
-          "purpose": "Triển khai bước 16: vũ khí bản nháp thô năm trăm từ",
-          "anchor": {
-            "vi": {
-              "quote": "đánh bại một nghìn giờ đọc thêm.",
+              "quote": "đánh bại một nghìn giờ đọc thêm vô nghĩa.",
               "occurrence": 1
             }
           },
@@ -2277,15 +581,198 @@
       "narrative_phase": "actionable_resolution"
     },
     {
-      "id": "SC17",
-      "title": "Hành động phá vỡ nỗi sợ",
-      "purpose": "Triển khai bước 17: hành động phá vỡ nỗi sợ",
-      "action": "A vintage mechanical kitchen timer counting down beside a steaming teacup on wooden table.",
-      "setting": "A café table under afternoon light.",
+      "id": "SC04",
+      "title": "Ẩn dụ hòn đảo tri thức và sương mù",
+      "purpose": "Triển khai bước 4: ẩn dụ hòn đảo tri thức và sương mù",
+      "action": "A luminous circular plateau of light labeled ĐẢO TRI THỨC stands isolated in a calm dark sea.",
+      "setting": "A misty vast ocean horizon.",
       "camera": "Semantic full-frame sequence",
-      "narration": "Đặt đồng hồ hai mươi lăm phút. Gõ liên tục mà không được phép xóa. Cho phép câu cú vụng về. Cho phép lập luận chưa hoàn hảo.",
+      "narration": "Tri thức giống như một hòn đảo giữa đại dương. Đảo càng mở rộng, đường bờ biển tiếp xúc với sương mù càng dài. Cảm giác chưa đủ chính là bằng chứng bạn đang tiến bộ.",
       "requirements": [
-        "R17"
+        "R04"
+      ],
+      "character_ids": [
+        "CH04"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC04_I1",
+          "description": "A misty vast ocean horizon. A luminous circular plateau of light labeled ĐẢO TRI THỨC stands isolated in a calm dark sea.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A luminous circular plateau of light labeled ĐẢO TRI THỨC stands isolated in a calm dark sea.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Tri thức giống như một hòn đảo giữa đại dương.",
+            "relation": "context",
+            "source_terms": [
+              "Tri"
+            ],
+            "visual_terms": [
+              "misty"
+            ]
+          }
+        },
+        {
+          "id": "SC04_I2",
+          "description": "A misty vast ocean horizon. The island plateau expands wider with warm ochre stone pathways radiating outward from the center into the water.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "The island plateau expands wider with warm ochre stone pathways radiating outward from the center into the water.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Đảo càng mở rộng,",
+            "relation": "context",
+            "source_terms": [
+              "Đảo"
+            ],
+            "visual_terms": [
+              "misty"
+            ]
+          }
+        },
+        {
+          "id": "SC04_I3",
+          "description": "A misty vast ocean horizon. The traveler lifts an ochre lantern high, revealing dense swirling charcoal mist along the vast expanding perimeter.",
+          "character_ids": [
+            "CH04"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "The traveler lifts an ochre lantern high, revealing dense swirling charcoal mist along the vast expanding perimeter.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": true,
+          "explanation": {
+            "quote": "đường bờ biển tiếp xúc với sương mù càng dài.",
+            "relation": "context",
+            "source_terms": [
+              "đường"
+            ],
+            "visual_terms": [
+              "misty"
+            ]
+          }
+        },
+        {
+          "id": "SC04_I4",
+          "description": "A misty vast ocean horizon. The traveler smiles with calm determination, facing the misty horizon without fear under warm lantern light.",
+          "character_ids": [
+            "CH04"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "The traveler smiles with calm determination, facing the misty horizon without fear under warm lantern light.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Cảm giác chưa đủ chính là bằng chứng bạn đang tiến bộ.",
+            "relation": "context",
+            "source_terms": [
+              "Cảm"
+            ],
+            "visual_terms": [
+              "misty"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC04_B1",
+          "image_id": "SC04_I1",
+          "purpose": "Triển khai bước 4: ẩn dụ hòn đảo tri thức và sương mù",
+          "anchor": {
+            "vi": {
+              "quote": "Tri thức giống như một hòn đảo giữa đại dương.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B2",
+          "image_id": "SC04_I2",
+          "purpose": "Triển khai bước 4: ẩn dụ hòn đảo tri thức và sương mù",
+          "anchor": {
+            "vi": {
+              "quote": "Đảo càng mở rộng,",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B3",
+          "image_id": "SC04_I3",
+          "purpose": "Triển khai bước 4: ẩn dụ hòn đảo tri thức và sương mù",
+          "anchor": {
+            "vi": {
+              "quote": "đường bờ biển tiếp xúc với sương mù càng dài.",
+              "occurrence": 1
+            }
+          },
+          "effect": "punch_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B4",
+          "image_id": "SC04_I4",
+          "purpose": "Triển khai bước 4: ẩn dụ hòn đảo tri thức và sương mù",
+          "anchor": {
+            "vi": {
+              "quote": "Cảm giác chưa đủ chính là bằng chứng bạn đang tiến bộ.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "narrative_warm",
+      "narrative_phase": "structural_model"
+    },
+    {
+      "id": "SC05",
+      "title": "Kích hoạt hành động hai mươi lăm phút",
+      "purpose": "Triển khai bước 5: kích hoạt hành động hai mươi lăm phút",
+      "action": "A 25-minute hourglass on a warm wooden ground, with sand grains transforming as they fall into streaming written words.",
+      "setting": "A morning writing table under sunlight.",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Đặt đồng hồ hai mươi lăm phút. Gõ liên tục mà không được phép xóa. Cho phép bản thân viết những câu văn vụng về. Bởi vì trang nháp xấu xí, luôn giá trị hơn trang giấy trắng hoàn hảo.",
+      "requirements": [
+        "R05"
       ],
       "character_ids": [
         "CH01"
@@ -2293,65 +780,109 @@
       "source_ids": [],
       "images": [
         {
-          "id": "SC17_I1",
-          "description": "A café table under afternoon light. A vintage mechanical kitchen timer counting down beside a steaming teacup on wooden table.",
+          "id": "SC05_I1",
+          "description": "A morning writing table under sunlight. A 25-minute hourglass on a warm wooden ground, with sand grains transforming as they fall into streaming written words.",
           "character_ids": [],
           "based_on": null,
           "preserve": "",
-          "change": "A vintage mechanical kitchen timer counting down beside a steaming teacup on wooden table.",
+          "change": "A 25-minute hourglass on a warm wooden ground, with sand grains transforming as they fall into streaming written words.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
-          "shot_type": "still_life"
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Đặt đồng hồ hai mươi lăm phút.",
+            "relation": "context",
+            "source_terms": [
+              "Đặt"
+            ],
+            "visual_terms": [
+              "morning"
+            ]
+          }
         },
         {
-          "id": "SC17_I2",
-          "description": "A café table under afternoon light. The researcher types fluidly on the keyboard, letting ideas flow without second-guessing.",
+          "id": "SC05_I2",
+          "description": "A morning writing table under sunlight. The researcher types rapidly on the laptop keyboard, eyes ablaze with momentum, ignoring mistakes.",
           "character_ids": [
             "CH01"
           ],
           "based_on": null,
           "preserve": "",
-          "change": "The researcher types fluidly on the keyboard, letting ideas flow without second-guessing.",
+          "change": "The researcher types rapidly on the laptop keyboard, eyes ablaze with momentum, ignoring mistakes.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
-          "shot_type": "full_scene"
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Gõ liên tục mà không được phép xóa.",
+            "relation": "context",
+            "source_terms": [
+              "Gõ"
+            ],
+            "visual_terms": [
+              "morning"
+            ]
+          }
         },
         {
-          "id": "SC17_I3",
-          "description": "A café table under afternoon light. Fingers moving steadily across keys under warm cafe window light.",
+          "id": "SC05_I3",
+          "description": "A morning writing table under sunlight. Cartoon four-finger hands hammering keys rhythmically while draft text streams across the screen without backspace.",
           "character_ids": [
             "CH01"
           ],
           "based_on": null,
           "preserve": "",
-          "change": "Fingers moving steadily across keys under warm cafe window light.",
+          "change": "Cartoon four-finger hands hammering keys rhythmically while draft text streams across the screen without backspace.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
-          "shot_type": "macro_prop"
+          "shot_type": "macro_prop",
+          "has_character": true,
+          "explanation": {
+            "quote": "Cho phép bản thân viết những câu văn vụng về.",
+            "relation": "context",
+            "source_terms": [
+              "Cho"
+            ],
+            "visual_terms": [
+              "morning"
+            ]
+          }
         },
         {
-          "id": "SC17_I4",
-          "description": "A café table under afternoon light. The researcher smiles as words fill the screen without hesitation.",
+          "id": "SC05_I4",
+          "description": "A morning writing table under sunlight. The researcher holds up a completed rough draft with a warm triumphant smile under morning sunlight.",
           "character_ids": [
             "CH01"
           ],
-          "based_on": "SC17_I2",
-          "preserve": "Keep the exact camera angle, room geometry and props in A café table under afternoon light.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
-          "change": "The researcher smiles as words fill the screen without hesitation.",
+          "based_on": "SC05_I2",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "The researcher holds up a completed rough draft with a warm triumphant smile under morning sunlight.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
-          "shot_type": "variation"
+          "shot_type": "variation",
+          "has_character": true,
+          "explanation": {
+            "quote": "Bởi vì trang nháp xấu xí, luôn giá trị hơn trang giấy trắng hoàn hảo.",
+            "relation": "context",
+            "source_terms": [
+              "Bởi"
+            ],
+            "visual_terms": [
+              "morning"
+            ]
+          }
         }
       ],
       "beats": [
         {
-          "id": "SC17_B1",
-          "image_id": "SC17_I1",
-          "purpose": "Triển khai bước 17: hành động phá vỡ nỗi sợ",
+          "id": "SC05_B1",
+          "image_id": "SC05_I1",
+          "purpose": "Triển khai bước 5: kích hoạt hành động hai mươi lăm phút",
           "anchor": {
             "vi": {
               "quote": "Đặt đồng hồ hai mươi lăm phút.",
@@ -2365,9 +896,9 @@
           }
         },
         {
-          "id": "SC17_B2",
-          "image_id": "SC17_I2",
-          "purpose": "Triển khai bước 17: hành động phá vỡ nỗi sợ",
+          "id": "SC05_B2",
+          "image_id": "SC05_I2",
+          "purpose": "Triển khai bước 5: kích hoạt hành động hai mươi lăm phút",
           "anchor": {
             "vi": {
               "quote": "Gõ liên tục mà không được phép xóa.",
@@ -2381,12 +912,12 @@
           }
         },
         {
-          "id": "SC17_B3",
-          "image_id": "SC17_I3",
-          "purpose": "Triển khai bước 17: hành động phá vỡ nỗi sợ",
+          "id": "SC05_B3",
+          "image_id": "SC05_I3",
+          "purpose": "Triển khai bước 5: kích hoạt hành động hai mươi lăm phút",
           "anchor": {
             "vi": {
-              "quote": "Cho phép câu cú vụng về.",
+              "quote": "Cho phép bản thân viết những câu văn vụng về.",
               "occurrence": 1
             }
           },
@@ -2397,16 +928,16 @@
           }
         },
         {
-          "id": "SC17_B4",
-          "image_id": "SC17_I4",
-          "purpose": "Triển khai bước 17: hành động phá vỡ nỗi sợ",
+          "id": "SC05_B4",
+          "image_id": "SC05_I4",
+          "purpose": "Triển khai bước 5: kích hoạt hành động hai mươi lăm phút",
           "anchor": {
             "vi": {
-              "quote": "Cho phép lập luận chưa hoàn hảo.",
+              "quote": "Bởi vì trang nháp xấu xí, luôn giá trị hơn trang giấy trắng hoàn hảo.",
               "occurrence": 1
             }
           },
-          "effect": "pan_left",
+          "effect": "hold",
           "focus": {
             "x": 0.5,
             "y": 0.5
@@ -2416,379 +947,33 @@
       "layers": [],
       "tone": "narrative_warm",
       "narrative_phase": "actionable_resolution"
-    },
-    {
-      "id": "SC18",
-      "title": "Trang giấy đã đầy chữ",
-      "purpose": "Triển khai bước 18: trang giấy đã đầy chữ",
-      "action": "A laptop screen showing dozens of completed paragraphs and structured section titles.",
-      "setting": "A laptop screen showing typed lines.",
-      "camera": "Semantic full-frame sequence",
-      "narration": "Khi văn bản thô đã xuất hiện, não bạn chuyển từ sợ hãi sang chỉnh sửa. Không ai giả vờ giỏi được suốt bốn năm. Bạn xứng đáng với vị trí hôm nay.",
-      "requirements": [
-        "R18"
-      ],
-      "character_ids": [
-        "CH01"
-      ],
-      "source_ids": [],
-      "images": [
-        {
-          "id": "SC18_I1",
-          "description": "A laptop screen showing typed lines. A laptop screen showing dozens of completed paragraphs and structured section titles.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "A laptop screen showing dozens of completed paragraphs and structured section titles.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "still_life"
-        },
-        {
-          "id": "SC18_I2",
-          "description": "A laptop screen showing typed lines. A red pen resting beside printouts with constructive handwritten improvements.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "A red pen resting beside printouts with constructive handwritten improvements.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "still_life"
-        },
-        {
-          "id": "SC18_I3",
-          "description": "A laptop screen showing typed lines. A clean wooden desk with a stack of completed reference binders neatly arranged.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "A clean wooden desk with a stack of completed reference binders neatly arranged.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "still_life"
-        },
-        {
-          "id": "SC18_I4",
-          "description": "A laptop screen showing typed lines. A cup of warm coffee beside a completed manuscript ready for submission.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "A cup of warm coffee beside a completed manuscript ready for submission.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "still_life"
-        }
-      ],
-      "beats": [
-        {
-          "id": "SC18_B1",
-          "image_id": "SC18_I1",
-          "purpose": "Triển khai bước 18: trang giấy đã đầy chữ",
-          "anchor": {
-            "vi": {
-              "quote": "Khi văn bản thô đã xuất hiện,",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_in",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC18_B2",
-          "image_id": "SC18_I2",
-          "purpose": "Triển khai bước 18: trang giấy đã đầy chữ",
-          "anchor": {
-            "vi": {
-              "quote": "não bạn chuyển từ sợ hãi sang chỉnh sửa.",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_right",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC18_B3",
-          "image_id": "SC18_I3",
-          "purpose": "Triển khai bước 18: trang giấy đã đầy chữ",
-          "anchor": {
-            "vi": {
-              "quote": "Không ai giả vờ giỏi được suốt bốn năm.",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_out",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC18_B4",
-          "image_id": "SC18_I4",
-          "purpose": "Triển khai bước 18: trang giấy đã đầy chữ",
-          "anchor": {
-            "vi": {
-              "quote": "Bạn xứng đáng với vị trí hôm nay.",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_left",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        }
-      ],
-      "layers": [],
-      "tone": "reflective_slow",
-      "narrative_phase": "actionable_resolution"
-    },
-    {
-      "id": "SC19",
-      "title": "Khép lại vòng lặp bàn học đêm",
-      "purpose": "Triển khai bước 19: khép lại vòng lặp bàn học đêm",
-      "action": "A brass desk lamp casting rich warm golden light over a clean student workspace.",
-      "setting": "A student desk under warm golden light.",
-      "camera": "Semantic full-frame sequence",
-      "narration": "Lần tới khi ngồi trước trang giấy trắng, nếu cái giọng nói bảo bạn chưa đủ giỏi, hãy mỉm cười và nhớ rằng: cảm giác đó chính là siêu năng lực của bạn.",
-      "requirements": [
-        "R19"
-      ],
-      "character_ids": [
-        "CH01"
-      ],
-      "source_ids": [],
-      "images": [
-        {
-          "id": "SC19_I1",
-          "description": "A student desk under warm golden light. A brass desk lamp casting rich warm golden light over a clean student workspace.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "A brass desk lamp casting rich warm golden light over a clean student workspace.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "still_life"
-        },
-        {
-          "id": "SC19_I2",
-          "description": "A student desk under warm golden light. The student stick-figure sits peacefully at their study desk under rich golden lamplight.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": null,
-          "preserve": "",
-          "change": "The student stick-figure sits peacefully at their study desk under rich golden lamplight.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "full_scene"
-        },
-        {
-          "id": "SC19_I3",
-          "description": "A student desk under warm golden light. Hand resting calmly beside keyboard with quiet peaceful confidence.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": null,
-          "preserve": "",
-          "change": "Hand resting calmly beside keyboard with quiet peaceful confidence.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "macro_prop"
-        },
-        {
-          "id": "SC19_I4",
-          "description": "A student desk under warm golden light. Warm golden light fills the entire room as the camera slowly pulls backward.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": "SC19_I2",
-          "preserve": "Keep the exact camera angle, room geometry and props in A student desk under warm golden light.. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
-          "change": "Warm golden light fills the entire room as the camera slowly pulls backward.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "variation"
-        }
-      ],
-      "beats": [
-        {
-          "id": "SC19_B1",
-          "image_id": "SC19_I1",
-          "purpose": "Triển khai bước 19: khép lại vòng lặp bàn học đêm",
-          "anchor": {
-            "vi": {
-              "quote": "Lần tới khi ngồi trước trang giấy trắng,",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_in",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC19_B2",
-          "image_id": "SC19_I2",
-          "purpose": "Triển khai bước 19: khép lại vòng lặp bàn học đêm",
-          "anchor": {
-            "vi": {
-              "quote": "nếu cái giọng nói bảo bạn chưa đủ giỏi,",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_right",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC19_B3",
-          "image_id": "SC19_I3",
-          "purpose": "Triển khai bước 19: khép lại vòng lặp bàn học đêm",
-          "anchor": {
-            "vi": {
-              "quote": "hãy mỉm cười và nhớ rằng:",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_out",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC19_B4",
-          "image_id": "SC19_I4",
-          "purpose": "Triển khai bước 19: khép lại vòng lặp bàn học đêm",
-          "anchor": {
-            "vi": {
-              "quote": "cảm giác đó chính là siêu năng lực của bạn.",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_left",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        }
-      ],
-      "layers": [],
-      "tone": "reflective_slow",
-      "narrative_phase": "actionable_resolution"
     }
   ],
   "coverage": [
     {
       "requirement_id": "R01",
       "scene_id": "SC01",
-      "quote": "Màn hình rực sáng giữa đêm khuya"
+      "quote": "Ánh đèn hắt bóng giữa đêm khuya"
     },
     {
       "requirement_id": "R02",
       "scene_id": "SC02",
-      "quote": "Đồng hồ đã chỉ hai giờ sáng"
+      "quote": "Khoa học gọi đây là Hội chứng Kẻ mạo danh"
     },
     {
       "requirement_id": "R03",
       "scene_id": "SC03",
-      "quote": "Và cái giọng nói trong đầu bạn thì thầm: mình chưa đọc đủ để gõ dòng đầu tiên"
+      "quote": "Để thoát khỏi bẫy tự ti này, hãy dùng quy tắc bản nháp thô năm trăm từ"
     },
     {
       "requirement_id": "R04",
       "scene_id": "SC04",
-      "quote": "Biến thành xiềng xích vô hình"
+      "quote": "Tri thức giống như một hòn đảo giữa đại dương"
     },
     {
       "requirement_id": "R05",
       "scene_id": "SC05",
-      "quote": "Nhưng chính sự cầu toàn quá mức, đang bóp nghẹt động lực hành động"
-    },
-    {
-      "requirement_id": "R06",
-      "scene_id": "SC06",
-      "quote": "Khoa học đã đặt tên cho hiện tượng này"
-    },
-    {
-      "requirement_id": "R07",
-      "scene_id": "SC07",
-      "quote": "Năm một nghìn chín trăm bảy mươi tám, hai nhà tâm lý học thực hiện cuộc khảo sát"
-    },
-    {
-      "requirement_id": "R08",
-      "scene_id": "SC08",
-      "quote": "Bảy mươi phần trăm trong số họ thú nhận, họ luôn nghĩ mình chỉ gặp may mắn"
-    },
-    {
-      "requirement_id": "R09",
-      "scene_id": "SC09",
-      "quote": "Điểm số của họ đều ở mức thủ khoa"
-    },
-    {
-      "requirement_id": "R10",
-      "scene_id": "SC10",
-      "quote": "Não người giỏi đối xử với lời khen, như một tín hiệu cảnh báo nguy hiểm"
-    },
-    {
-      "requirement_id": "R11",
-      "scene_id": "SC11",
-      "quote": "Và đây là nghịch lý trớ trêu nhất"
-    },
-    {
-      "requirement_id": "R12",
-      "scene_id": "SC12",
-      "quote": "Đường viền tiếp xúc với sương mù cũng ngắn"
-    },
-    {
-      "requirement_id": "R13",
-      "scene_id": "SC13",
-      "quote": "Nhưng khi bạn đọc thêm hàng trăm bài báo, hòn đảo sáng của bạn nở rộng gấp mười"
-    },
-    {
-      "requirement_id": "R14",
-      "scene_id": "SC14",
-      "quote": "Bạn nhìn thấy hàng nghìn khoảng trống mới"
-    },
-    {
-      "requirement_id": "R15",
-      "scene_id": "SC15",
-      "quote": "Chỉ có người leo lên sườn núi cao, mới thấy đỉnh núi tiếp theo còn xa ngút ngàn"
-    },
-    {
-      "requirement_id": "R16",
-      "scene_id": "SC16",
-      "quote": "Bản nháp thô năm trăm từ, đánh bại một nghìn giờ đọc thêm"
-    },
-    {
-      "requirement_id": "R17",
-      "scene_id": "SC17",
       "quote": "Đặt đồng hồ hai mươi lăm phút"
-    },
-    {
-      "requirement_id": "R18",
-      "scene_id": "SC18",
-      "quote": "Khi văn bản thô đã xuất hiện, não bạn chuyển từ sợ hãi sang chỉnh sửa"
-    },
-    {
-      "requirement_id": "R19",
-      "scene_id": "SC19",
-      "quote": "Lần tới khi ngồi trước trang giấy trắng, nếu cái giọng nói bảo bạn chưa đủ giỏi, hãy mỉm cười và nhớ rằng: cảm giác đó chính là siêu năng lực của bạn"
     }
   ],
   "outline": [
@@ -2802,7 +987,7 @@
     },
     {
       "scene_id": "SC02",
-      "purpose": "Triển khai bước 2: đồng hồ điểm hai giờ sáng",
+      "purpose": "Triển khai bước 2: nghịch lý tự ti kẻ mạo danh",
       "requirements": [
         "R02"
       ],
@@ -2810,7 +995,7 @@
     },
     {
       "scene_id": "SC03",
-      "purpose": "Triển khai bước 3: cái bẫy chưa đủ sâu",
+      "purpose": "Triển khai bước 3: cán cân bản nháp thô năm trăm từ",
       "requirements": [
         "R03"
       ],
@@ -2818,7 +1003,7 @@
     },
     {
       "scene_id": "SC04",
-      "purpose": "Triển khai bước 4: hành lang thư viện vô tận",
+      "purpose": "Triển khai bước 4: ẩn dụ hòn đảo tri thức và sương mù",
       "requirements": [
         "R04"
       ],
@@ -2826,166 +1011,33 @@
     },
     {
       "scene_id": "SC05",
-      "purpose": "Triển khai bước 5: nỗi đau của người cầu toàn",
+      "purpose": "Triển khai bước 5: kích hoạt hành động hai mươi lăm phút",
       "requirements": [
         "R05"
-      ],
-      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
-    },
-    {
-      "scene_id": "SC06",
-      "purpose": "Triển khai bước 6: đặt tên cho con quái vật",
-      "requirements": [
-        "R06"
-      ],
-      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
-    },
-    {
-      "scene_id": "SC07",
-      "purpose": "Triển khai bước 7: thí nghiệm clance và imes",
-      "requirements": [
-        "R07"
-      ],
-      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
-    },
-    {
-      "scene_id": "SC08",
-      "purpose": "Triển khai bước 8: lời thú nhận chấn động",
-      "requirements": [
-        "R08"
-      ],
-      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
-    },
-    {
-      "scene_id": "SC09",
-      "purpose": "Triển khai bước 9: hồ sơ đối chứng thực nghiệm",
-      "requirements": [
-        "R09"
-      ],
-      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
-    },
-    {
-      "scene_id": "SC10",
-      "purpose": "Triển khai bước 10: cơ chế não sợ lời khen",
-      "requirements": [
-        "R10"
-      ],
-      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
-    },
-    {
-      "scene_id": "SC11",
-      "purpose": "Triển khai bước 11: nghịch lý dunning kruger đảo chiều",
-      "requirements": [
-        "R11"
-      ],
-      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
-    },
-    {
-      "scene_id": "SC12",
-      "purpose": "Triển khai bước 12: tấm bản đồ sương mù",
-      "requirements": [
-        "R12"
-      ],
-      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
-    },
-    {
-      "scene_id": "SC13",
-      "purpose": "Triển khai bước 13: đảo sáng nở rộng",
-      "requirements": [
-        "R13"
-      ],
-      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
-    },
-    {
-      "scene_id": "SC14",
-      "purpose": "Triển khai bước 14: đại dương kiến thức mênh mông",
-      "requirements": [
-        "R14"
-      ],
-      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
-    },
-    {
-      "scene_id": "SC15",
-      "purpose": "Triển khai bước 15: đứng trên đỉnh núi cao",
-      "requirements": [
-        "R15"
-      ],
-      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
-    },
-    {
-      "scene_id": "SC16",
-      "purpose": "Triển khai bước 16: vũ khí bản nháp thô năm trăm từ",
-      "requirements": [
-        "R16"
-      ],
-      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
-    },
-    {
-      "scene_id": "SC17",
-      "purpose": "Triển khai bước 17: hành động phá vỡ nỗi sợ",
-      "requirements": [
-        "R17"
-      ],
-      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
-    },
-    {
-      "scene_id": "SC18",
-      "purpose": "Triển khai bước 18: trang giấy đã đầy chữ",
-      "requirements": [
-        "R18"
-      ],
-      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
-    },
-    {
-      "scene_id": "SC19",
-      "purpose": "Triển khai bước 19: khép lại vòng lặp bàn học đêm",
-      "requirements": [
-        "R19"
       ],
       "transition": "Tiếp tục theo trình tự diễn biến nội dung"
     }
   ],
   "claims": [
     {
-      "scene_id": "SC07",
-      "quote": "Năm một nghìn chín trăm bảy mươi tám, hai nhà tâm lý học thực hiện cuộc khảo sát.",
-      "language": "vi",
-      "source_id": "SRC01",
-      "fact": "Hội chứng kẻ mạo danh khiến người tài năng tự ti."
-    },
-    {
-      "scene_id": "SC08",
-      "quote": "Bảy mươi phần trăm trong số họ thú nhận, họ luôn nghĩ mình chỉ gặp may mắn.",
+      "scene_id": "SC02",
+      "quote": "Bảy mươi phần trăm sinh viên giỏi,",
       "language": "vi",
       "source_id": "SRC01",
       "fact": "Bảy mươi phần trăm sinh viên giỏi nghĩ mình chỉ gặp may."
     },
     {
-      "scene_id": "SC10",
-      "quote": "Não người giỏi đối xử với lời khen, như một tín hiệu cảnh báo nguy hiểm.",
+      "scene_id": "SC02",
+      "quote": "Càng hiểu biết sâu, bạn càng thấy biển kiến thức mênh mông.",
       "language": "vi",
       "source_id": "SRC02",
-      "fact": "Não người giỏi đối xử với lời khen như tín hiệu nguy hiểm."
+      "fact": "Càng hiểu biết sâu càng nhận ra biển kiến thức mênh mông."
     },
     {
-      "scene_id": "SC11",
-      "quote": "Người thật sự thiếu năng lực lại tự tin nhất.",
+      "scene_id": "SC03",
+      "quote": "Bản nháp thô năm trăm từ, đánh bại một nghìn giờ đọc thêm vô nghĩa.",
       "language": "vi",
       "source_id": "SRC03",
-      "fact": "Người thiếu năng lực thường tự tin nhất vì không biết mình sai."
-    },
-    {
-      "scene_id": "SC14",
-      "quote": "Bạn nhìn thấy hàng nghìn khoảng trống mới.",
-      "language": "vi",
-      "source_id": "SRC03",
-      "fact": "Hiểu càng sâu càng nhận ra biển kiến thức mênh mông."
-    },
-    {
-      "scene_id": "SC16",
-      "quote": "Bản nháp thô năm trăm từ, đánh bại một nghìn giờ đọc thêm.",
-      "language": "vi",
-      "source_id": "SRC04",
       "fact": "Bản nháp thô năm trăm từ đánh bại một nghìn giờ đọc thêm."
     }
   ],

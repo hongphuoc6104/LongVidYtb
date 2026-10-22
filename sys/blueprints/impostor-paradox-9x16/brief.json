@@ -5,10 +5,10 @@
   "goal": "Giải mã tâm lý tự ti học thuật bằng cơ chế khoa học thần kinh và trao vũ khí bản nháp thô 500 từ",
   "video_type": "research_explainer",
   "duration": {
-    "min_seconds": 240.0,
-    "max_seconds": 420.0
+    "min_seconds": 45.0,
+    "max_seconds": 60.0
   },
-  "scene_count": 19,
+  "scene_count": 5,
   "required_points": [
     {
       "id": "R01",
@@ -16,80 +16,24 @@
     },
     {
       "id": "R02",
-      "text": "Đồng hồ điểm hai giờ sáng"
+      "text": "Nghịch lý tự ti kẻ mạo danh"
     },
     {
       "id": "R03",
-      "text": "Cái bẫy chưa đủ sâu"
+      "text": "Cán cân bản nháp thô năm trăm từ"
     },
     {
       "id": "R04",
-      "text": "Hành lang thư viện vô tận"
+      "text": "Ẩn dụ hòn đảo tri thức và sương mù"
     },
     {
       "id": "R05",
-      "text": "Nỗi đau của người cầu toàn"
-    },
-    {
-      "id": "R06",
-      "text": "Đặt tên cho con quái vật"
-    },
-    {
-      "id": "R07",
-      "text": "Thí nghiệm Clance và Imes"
-    },
-    {
-      "id": "R08",
-      "text": "Lời thú nhận chấn động"
-    },
-    {
-      "id": "R09",
-      "text": "Hồ sơ đối chứng thực nghiệm"
-    },
-    {
-      "id": "R10",
-      "text": "Cơ chế não sợ lời khen"
-    },
-    {
-      "id": "R11",
-      "text": "Nghịch lý Dunning Kruger đảo chiều"
-    },
-    {
-      "id": "R12",
-      "text": "Tấm bản đồ sương mù"
-    },
-    {
-      "id": "R13",
-      "text": "Đảo sáng nở rộng"
-    },
-    {
-      "id": "R14",
-      "text": "Đại dương kiến thức mênh mông"
-    },
-    {
-      "id": "R15",
-      "text": "Đứng trên đỉnh núi cao"
-    },
-    {
-      "id": "R16",
-      "text": "Vũ khí bản nháp thô năm trăm từ"
-    },
-    {
-      "id": "R17",
-      "text": "Hành động phá vỡ nỗi sợ"
-    },
-    {
-      "id": "R18",
-      "text": "Trang giấy đã đầy chữ"
-    },
-    {
-      "id": "R19",
-      "text": "Khép lại vòng lặp bàn học đêm"
+      "text": "Kích hoạt hành động hai mươi lăm phút"
     }
   ],
   "language": "vi",
   "tone": "Conversational Essayist điềm đạm, ấm áp, sắc sảo, giải tỏa áp lực nhận thức",
-  "style": "Hand-drawn 2D explainer illustration with an earth-toned foundation (warm ochre, sage green, warm gray, sky blue), fine-to-medium warm-charcoal contours, soft natural illumination, and warm-cool temperature contrast (warm highlights paired with cool blue-gray shadows). Follow a disciplined 60-30-10 color ratio: 60% dominant calm neutral or grounding backdrop, 30% secondary structural elements and setting, and 10% intentional focal accent. Maintain generous negative space with at least 25–35% calm open canvas free of decorative props or dense linework. Use a moderately simplified composition with one clear focal action. Suggest the requested setting with only essential environmental cues; secondary objects are simplified into quiet shapes with fewer interior lines. Background linework is finer, lighter, and lower-contrast than the focal subject. Choose colors naturally for each scene, preserving the requested location, time of day, and meaningful visual metaphor. Night scenes retain night cues with gentle ambient fill to read the action clearly. Create visual interest through expressive gestures, deliberate composition, open breathing room, and selective temperature contrast. No decorative clutter, heavy black marker borders, washed-out pastels, muddy dark grading, neon saturation, harsh spotlights, photorealism, or 3D rendering. Complete edge-to-edge full-frame composition; white_card and white_isolated shots use a clean pure white #FFFFFF field.",
+  "style": "Hand-drawn 2D explanatory illustration. Use clear black outer contours with slight natural hand-drawn irregularity and simple internal lines. Use selective flat color areas and only small simple grounding shadows when useful. Keep silhouettes readable on a mobile screen. Use a clean white field for isolated objects, comparisons and diagrams; contextual scenes may use broad flat color areas with only essential setting cues. Explain one clear relationship through objects, quantities, labels, arrows or relevant contextual action. Static objects and diagrams are valid explanations. No cinematic lighting, blue-gray shadow system, glossy volume, gradients, paper aging, photorealism or 3D. Draw a complete scene image.",
   "aspect_ratio": "9:16",
   "format_profile": "short_9x16",
   "facts_required": true,
@@ -105,24 +49,15 @@
     },
     {
       "id": "SRC02",
-      "title": "Neural Correlates of the Impostor Phenomenon",
-      "reference": "Koldehoff et al. (2023). Frontiers in Psychology, 14, 1148201.",
-      "facts": [
-        "Não người giỏi đối xử với lời khen như tín hiệu nguy hiểm.",
-        "Khen ngợi kích hoạt phản ứng sợ hãi trong hạch hạnh nhân."
-      ]
-    },
-    {
-      "id": "SRC03",
       "title": "Unskilled and Unaware of It",
       "reference": "Justin Kruger & David Dunning (1999). Journal of Personality and Social Psychology, 77(6), 1121-1134.",
       "facts": [
         "Người thiếu năng lực thường tự tin nhất vì không biết mình sai.",
-        "Hiểu càng sâu càng nhận ra biển kiến thức mênh mông."
+        "Càng hiểu biết sâu càng nhận ra biển kiến thức mênh mông."
       ]
     },
     {
-      "id": "SRC04",
+      "id": "SRC03",
       "title": "Bird by Bird: Shitty First Drafts",
       "reference": "Anne Lamott (1994). Anchor Books. ISBN: 978-0385480017.",
       "facts": [
