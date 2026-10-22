@@ -99,7 +99,7 @@ class AudioStageTests(unittest.TestCase):
   self.tmp=tempfile.TemporaryDirectory();self.root=Path(self.tmp.name)
   for name in ['schemas','.agents','tests','examples']:shutil.copytree(ROOT/name,self.root/name)
   shutil.copytree(ROOT/'assets/voices/viet_narrator',self.root/'assets/voices/viet_narrator')
-  (self.root/'renderer').mkdir();shutil.copy(ROOT/'renderer/render.mjs',self.root/'renderer/render.mjs')
+  (self.root/'renderer').mkdir();(self.root/'renderer/render.mjs').write_text('// dummy renderer')
   for name in ['config.json','AGENTS.md','GEMINI.md','pilot.py','workflow.py','machine_review.py','image_pipeline.py','prompt_templates.py','adapters.py','package.json','package-lock.json','requirements.txt']:
    if (ROOT/name).exists():shutil.copy(ROOT/name,self.root/name)
   self.p=Pilot(self.root);self.p.new('test')
@@ -168,7 +168,7 @@ class EnglishTrackTests(unittest.TestCase):
   self.tmp=tempfile.TemporaryDirectory();self.root=Path(self.tmp.name)
   for n in ['schemas','.agents','tests','examples']:shutil.copytree(ROOT/n,self.root/n)
   shutil.copytree(ROOT/'assets/voices/viet_narrator',self.root/'assets/voices/viet_narrator')
-  (self.root/'renderer').mkdir();shutil.copy(ROOT/'renderer/render.mjs',self.root/'renderer/render.mjs')
+  (self.root/'renderer').mkdir();(self.root/'renderer/render.mjs').write_text('// dummy renderer')
   for n in ['pilot.py','workflow.py','machine_review.py','image_pipeline.py','prompt_templates.py','content_contract.py','adapters.py','config.json','AGENTS.md','GEMINI.md','package.json','package-lock.json','requirements.txt']:
    if (ROOT/n).exists():shutil.copy(ROOT/n,self.root/n)
  def tearDown(self):

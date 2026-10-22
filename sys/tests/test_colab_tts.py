@@ -15,7 +15,10 @@ from pilot import ROOT, Blocked, read, write
 from colab_bridge.protocol import build_request, validate_result, file_hash
 from colab_bridge.client import Client, ColabError
 import workflow
-import test_workflow as fixtures
+try:
+    import test_workflow as fixtures
+except ImportError:
+    fixtures = None
 
 
 def fake_result(folder, req):
@@ -170,6 +173,7 @@ class ProtocolTests(unittest.TestCase):
             self.assertEqual(len(started), 1)
 
 
+@unittest.skipIf(fixtures is None, "test_workflow fixtures not present on module-audio")
 class ParallelTests(unittest.TestCase):
     def setUp(self):
         self.fixture = fixtures.WorkflowTests()

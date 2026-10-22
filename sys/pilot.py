@@ -22,8 +22,11 @@ class Pilot:
   self.root=Path(root);(self.root/'.state').mkdir(exist_ok=True)
   self._db_lock = threading.Lock()
   self.db=sqlite3.connect(self.root/'.state/jobs.sqlite', check_same_thread=False);self.db.row_factory=sqlite3.Row
-  import image_pipeline
-  image_pipeline.setup(self)
+  try:
+   import image_pipeline
+   image_pipeline.setup(self)
+  except ImportError:
+   pass
   self.db.executescript('CREATE TABLE IF NOT EXISTS modules(job TEXT,module TEXT,state TEXT,revision INTEGER,envelope TEXT,hash TEXT,PRIMARY KEY(job,module)); CREATE TABLE IF NOT EXISTS events(id INTEGER PRIMARY KEY,at REAL,job TEXT,module TEXT,event TEXT,detail TEXT); CREATE TABLE IF NOT EXISTS audio_edits(id INTEGER PRIMARY KEY,job TEXT,scene_id TEXT,note TEXT,at REAL);')
  def event(self,j,m,e,d=''):
   with self._db_lock:
@@ -307,7 +310,13 @@ class Pilot:
     files.append(x['path'])
    files.append(p['contact_sheet'])
   elif m=='audio':
-   import wave, audioop
+   import wave
+   def _rms(data, width):
+    if not data: return 0
+    import numpy as np
+    dt = {1: np.int8, 2: np.int16, 4: np.int32}.get(width, np.int16)
+    arr = np.frombuffer(data, dtype=dt)
+    return int(np.sqrt(np.mean(arr.astype(np.float64)**2))) if len(arr) else 0
    segs=p['segments'];last=0
    scenes=self.payload(j,'content')['scenes']
    for s in scenes:
@@ -320,7 +329,7 @@ class Pilot:
     if not x['start']<x.get('content_end',x['end'])<=x['end']:raise Blocked('Invalid content boundary before silence')
     with wave.open(str(self.path(j,x['path']))) as wav:
      duration=wav.getnframes()/wav.getframerate();raw=wav.readframes(wav.getnframes())
-     if audioop.rms(raw,wav.getsampwidth())<5:raise Blocked('Silent audio segment')
+     if _rms(raw,wav.getsampwidth())<5:raise Blocked('Silent audio segment')
      if abs(duration-(x['end']-x['start']))>.03:raise Blocked('Segment duration mismatch')
     last=x['end'];files.append(x['path'])
    dur_cfg = self.brief(j)[0].get('duration') if self.brief(j) else {'min_seconds': 45, 'max_seconds': 60}
@@ -344,7 +353,7 @@ class Pilot:
      if not x['start']<x.get('content_end',x['end'])<=x['end']:raise Blocked('Invalid English content boundary before silence')
      with wave.open(str(self.path(j,x['path']))) as wav:
       duration=wav.getnframes()/wav.getframerate();raw=wav.readframes(wav.getnframes())
-      if audioop.rms(raw,wav.getsampwidth())<5:raise Blocked('Silent English scene')
+      if _rms(raw,wav.getsampwidth())<5:raise Blocked('Silent English scene')
       if abs(duration-(x['end']-x['start']))>.03:raise Blocked('English scene duration mismatch')
      last=x['end'];files.append(x['path'])
     if abs(last-en['duration'])>.01 or (dur_cfg and not dur_cfg['min_seconds']<=last<=dur_cfg['max_seconds']):

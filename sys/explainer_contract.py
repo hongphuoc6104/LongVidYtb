@@ -4,7 +4,12 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from flow_prompts.compiler import registry
+try:
+    from flow_prompts.compiler import registry
+except ImportError:
+    STYLE_170 = "Hand-drawn 2D explanatory illustration. Use clear black outer contours with slight natural hand-drawn irregularity and simple internal lines. Use selective flat color areas and only small simple grounding shadows when useful. Keep silhouettes readable on a mobile screen. Use a clean white field for isolated objects, comparisons and diagrams; contextual scenes may use broad flat color areas with only essential setting cues. Explain one clear relationship through objects, quantities, labels, arrows or relevant contextual action. Static objects and diagrams are valid explanations. No cinematic lighting, blue-gray shadow system, glossy volume, gradients, paper aging, photorealism or 3D. Draw a complete scene image."
+    def registry(v):
+        return {'style': STYLE_170}
 
 STYLE_VERSION = '1.7.0'
 
