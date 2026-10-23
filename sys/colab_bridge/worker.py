@@ -242,7 +242,52 @@ def _trim_silence(w, sr=SR, threshold=0.012, lead_ms=25, trail_ms=30, fade_ms=8)
     return trimmed
 
 
+def assemble_prepared(request_path, output_dir):
+    """Assemble checked shard bytes on the GPU host without loading the TTS model."""
+    import importlib.util
+    import shutil
+    import subprocess
+
+    req = json.loads(Path(request_path).read_text())
+    parent, output = Path(request_path).parent, Path(output_dir)
+    output.mkdir(parents=True, exist_ok=True)
+    device = subprocess.check_output(['nvidia-smi', '--query-gpu=name', '--format=csv,noheader'], text=True)
+    if 'T4' not in device:
+        raise RuntimeError('COLAB_GPU_REQUIRED: expected an actual NVIDIA T4')
+    if req.get('worker_sha256') != hashlib.sha256(Path(__file__).read_bytes()).hexdigest():
+        raise RuntimeError('Remote TTS worker checksum mismatch')
+    targets = set()
+    for item in req.get('support_files', []) + req['prepared_audio']:
+        name = item['name']
+        path = parent / name
+        if (Path(name).name != name or path.is_symlink() or not path.is_file()
+                or hashlib.sha256(path.read_bytes()).hexdigest() != item['sha256']):
+            raise RuntimeError('Remote processing source checksum mismatch')
+    for item in req['prepared_audio']:
+        target = item['target']
+        if (Path(target).name != target or target in targets
+                or not (target.endswith('.wav') or target in {'tts-result.json', 'en-result.json', 'secondary-result.json'})):
+            raise ValueError('Unsafe prepared audio target')
+        targets.add(target)
+        dest = output / target
+        shutil.copyfile(parent / item['name'], dest)
+        if target.endswith('.json'):
+            meta = json.loads(dest.read_text())
+            meta['request_id'] = req['request_id']
+            dest.write_text(json.dumps(meta, ensure_ascii=False, indent=2))
+    spec = importlib.util.spec_from_file_location('vp_media_packaging', parent / 'media_packaging.py')
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.assemble(req, output, parent)
+    with zipfile.ZipFile(output.with_suffix('.zip'), 'w', zipfile.ZIP_DEFLATED) as archive:
+        for path in output.iterdir():
+            if path.suffix in {'.json', '.wav', '.srt'}:
+                archive.write(path, path.name)
+
+
 def run(request_path, output_dir):
+    if json.loads(Path(request_path).read_text()).get('prepared_audio'):
+        return assemble_prepared(request_path, output_dir)
     import numpy as np
     import soundfile as sf
     import torch

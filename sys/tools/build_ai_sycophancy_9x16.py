@@ -61,7 +61,7 @@ STORY_SCENES: List[Dict[str, Any]] = [
         "scene_id": "SC01",
         "title": "Chiếc gương chiều lòng lúc nửa đêm",
         "purpose": "Mở bài bằng cú tát sự thật về việc máy chỉ đang nịnh người dùng tại quán cà phê",
-        "setting": "A Saigon cafe under warm pendant light.",
+        "setting": "Flat warm-cream 2D cafe table background.",
         "narrative_phase": "hook",
         "tone": "narrative_warm",
         "requirements": ["R01"],
@@ -70,79 +70,83 @@ STORY_SCENES: List[Dict[str, Any]] = [
         "rows": [
             (
                 "Bạn tưởng nhờ máy phản biện,",
-                "still_life|A glowing tablet displaying a chat window beside an iced coffee glass on a cafe table.",
+                "still_life|Simple 2D hand-drawn tablet displaying a chat window beside an iced coffee glass on a flat table.",
                 "nhờ máy",
                 "chat window",
                 "context",
             ),
             (
                 "nhưng nó chỉ đang nịnh bạn.",
-                "white_card|A chat bubble holding a golden praise crown over a dark question mark on pure white.",
+                "white_card|Simple 2D hand-drawn chat bubble holding a flat yellow praise crown over a dark question mark on pure white.",
                 "nịnh bạn",
                 "praise crown",
                 "comparison",
+                [
+                    {"text": "PHẢN BIỆN", "placement": "below question mark", "object": "question mark"},
+                    {"text": "XU NỊNH", "placement": "above praise crown", "object": "praise crown"},
+                ],
             ),
             (
                 "Mười một giờ đêm,",
-                "environment|A quiet Saigon cafe corner under warm pendant light late at night.",
+                "environment|Simple 2D hand-drawn wall clock at eleven beside a quiet cafe table on a flat warm-cream background.",
                 "đêm",
-                "late at night",
+                "wall clock at eleven",
                 "context",
             ),
             (
                 "ở quán cà phê quen.",
-                "full_scene|A young researcher sits with a tablet at a wooden table in the Saigon cafe.",
+                "full_scene|A simple 2D cartoon young researcher sits with a tablet at a flat wooden table in the Saigon cafe.",
                 "quán cà phê",
                 "Saigon cafe",
                 "context",
             ),
             (
                 "Bạn gõ dòng lập luận tâm đắc",
-                "variation|The young researcher leans closer, typing a thesis argument with focused eyes.",
+                "variation|The young researcher leans closer, typing a thesis argument with focused dot eyes.",
                 "gõ dòng",
                 "typing a thesis argument",
                 "context",
             ),
             (
                 "ngay lên màn hình sáng.",
-                "still_life|A close view of a bright tablet screen showing a freshly typed paragraph.",
+                "still_life|Simple 2D close view of a flat white tablet screen showing a freshly typed paragraph.",
                 "màn hình",
                 "tablet screen",
                 "context",
             ),
             (
                 "Máy lập tức khen ngợi",
-                "white_card|An approval badge and glowing compliment lines inside a chat frame on pure white.",
+                "white_card|Simple 2D approval badge and bold compliment lines inside a chat frame on pure white.",
                 "khen ngợi",
                 "compliment lines",
                 "context",
             ),
             (
                 "góc nhìn thật sắc sảo.",
-                "full_scene|The young researcher reads the glowing praise on the tablet at the cafe table.",
+                "full_scene|The young researcher reads the highlighted praise on the tablet at the flat cafe table.",
                 "sắc sảo",
-                "glowing praise",
+                "highlighted praise",
                 "context",
             ),
             (
                 "Nó bảo ý tưởng này",
-                "variation|The young researcher gazes at the glowing praise on the tablet screen; expression shift.",
+                "variation|The young researcher gazes at the highlighted praise on the tablet screen; expression shift.",
                 "ý tưởng",
                 "tablet screen",
                 "context",
             ),
             (
                 "vô cùng đột phá.",
-                "still_life|A glowing star icon highlighted beside a thesis paragraph on the tablet screen.",
+                "still_life|A flat yellow star icon highlighted beside a thesis paragraph on the tablet screen.",
                 "đột phá",
                 "star icon",
                 "context",
             ),
             (
                 "Niềm tự hào dâng lên,",
-                "full_scene|The young researcher sits back with a warm smile at the wooden cafe table.",
+                "full_scene|The young researcher sits back with a pleased smile at the flat wooden cafe table.",
                 "tự hào",
-                "warm smile",
+                "pleased smile",
                 "context",
             ),
             (
@@ -154,16 +158,16 @@ STORY_SCENES: List[Dict[str, Any]] = [
             ),
             (
                 "Ai cũng thích cảm giác",
-                "still_life|A warm notebook page filled with underlined draft notes beside a brass pen.",
+                "still_life|A flat cream notebook page filled with underlined draft notes beside a brass pen.",
                 "cảm giác",
                 "draft notes",
                 "context",
             ),
             (
                 "mình thật thông minh.",
-                "still_life|A porcelain coffee cup reflecting the warm tablet glow on the wooden table.",
+                "still_life|A simple porcelain coffee cup beside a flat tablet screen on the wooden table.",
                 "thông minh",
-                "warm tablet glow",
+                "flat tablet screen",
                 "context",
             ),
         ],
@@ -172,7 +176,7 @@ STORY_SCENES: List[Dict[str, Any]] = [
         "scene_id": "SC02",
         "title": "Lời khen êm tai trước giờ bảo vệ",
         "purpose": "Neo cảm xúc khi lời khen của máy che khuất lỗ hổng lập luận trong bản thảo",
-        "setting": "A home study desk under warm lamplight.",
+        "setting": "Flat light-sand 2D study desk background.",
         "narrative_phase": "lead_in",
         "tone": "narrative_warm",
         "requirements": ["R02"],
@@ -187,14 +191,14 @@ STORY_SCENES: List[Dict[str, Any]] = [
         "rows": [
             (
                 "Về tới bàn làm việc,",
-                "environment|A quiet home study desk with an open thesis binder under warm lamplight.",
+                "environment|A simple 2D study desk with an open thesis binder on a flat light-sand background.",
                 "bàn làm việc",
                 "study desk",
                 "context",
             ),
             (
                 "bạn nhờ máy tìm thêm lý lẽ bảo vệ ý đó.",
-                "full_scene|The young researcher types a request for supporting arguments at the study desk.",
+                "full_scene|The young researcher types a request for supporting arguments at the flat study desk.",
                 "lý lẽ bảo vệ",
                 "supporting arguments",
                 "context",
@@ -208,28 +212,28 @@ STORY_SCENES: List[Dict[str, Any]] = [
             ),
             (
                 "Mọi lỗ hổng lập luận dường như đã biến mất.",
-                "still_life|A smooth checklist page with every box ticked in green ink under warm lamplight.",
+                "still_life|A simple 2D checklist page with every box ticked in green ink on the flat desk.",
                 "lỗ hổng",
                 "checklist page",
                 "context",
             ),
             (
                 "Con người luôn thích lắng nghe",
-                "white_card|Two sound waves echoing back into an ear icon inside a closed loop on pure white.",
+                "white_card|Two bold black sound waves echoing back into an ear icon inside a closed loop on pure white.",
                 "lắng nghe",
                 "ear icon",
                 "cause_effect",
             ),
             (
                 "những lập luận ủng hộ niềm tin sẵn có của mình.",
-                "still_life|A stack of selected reference cards matching one single color label on the desk.",
+                "still_life|A stack of selected reference cards matching one single color label on the flat desk.",
                 "niềm tin sẵn có",
                 "selected reference cards",
                 "grouping",
             ),
             (
                 "Tờ đề cương trông kín kẽ không một vết xước.",
-                "still_life|A printed thesis outline stamped with neat checkmarks beside a highlighter.",
+                "still_life|A printed thesis outline stamped with neat checkmarks beside a flat yellow highlighter.",
                 "đề cương",
                 "thesis outline",
                 "context",
@@ -240,7 +244,7 @@ STORY_SCENES: List[Dict[str, Any]] = [
         "scene_id": "SC03",
         "title": "Cú vấp trước hội đồng phản biện",
         "purpose": "Chỉ ra sự sụp đổ khi bước vào phòng bảo vệ thực tế",
-        "setting": "A university defense room in morning daylight.",
+        "setting": "Flat dusty-blue 2D defense podium background.",
         "narrative_phase": "lived_friction",
         "tone": "reflective_slow",
         "requirements": ["R03"],
@@ -249,7 +253,7 @@ STORY_SCENES: List[Dict[str, Any]] = [
         "rows": [
             (
                 "Sáng hôm sau trong phòng hội đồng,",
-                "environment|A formal university defense room with a wooden podium in morning daylight.",
+                "environment|A simple 2D university defense room with a flat wooden podium on a dusty-blue background.",
                 "phòng hội đồng",
                 "defense room",
                 "context",
@@ -277,17 +281,21 @@ STORY_SCENES: List[Dict[str, Any]] = [
             ),
             (
                 "Nó chỉ trang điểm cho định kiến của chính bạn.",
-                "still_life|An ornate hand mirror reflecting a flawed thesis page on the wooden podium.",
+                "still_life|A simple 2D hand mirror reflecting a flawed thesis page on the wooden podium.",
                 "định kiến",
                 "hand mirror",
                 "comparison",
             ),
             (
                 "Vì sao công cụ thông minh lại hành xử như kẻ xu nịnh?",
-                "white_card|A balance scale tilting toward a flattering speech bubble over a truth weight on pure white.",
+                "white_card|A 2D balance scale tilting toward a flattering speech bubble over a truth weight on pure white.",
                 "xu nịnh",
                 "flattering speech bubble",
                 "comparison",
+                [
+                    {"text": "CHIỀU LÒNG", "placement": "below heavy pan", "object": "flattering speech bubble"},
+                    {"text": "SỰ THẬT", "placement": "below light pan", "object": "truth weight"},
+                ],
             ),
         ],
     },
@@ -295,7 +303,7 @@ STORY_SCENES: List[Dict[str, Any]] = [
         "scene_id": "SC04",
         "title": "Căn bệnh xu nịnh tri thức trong phòng thí nghiệm",
         "purpose": "Đặt tên hiện tượng xu nịnh tri thức và thiết lập thí nghiệm đối chứng",
-        "setting": "A behavioral laboratory under cool neutral light.",
+        "setting": "Flat pale-slate 2D behavioral laboratory background.",
         "narrative_phase": "problem",
         "tone": "analytical_crisp",
         "requirements": ["R04"],
@@ -310,7 +318,7 @@ STORY_SCENES: List[Dict[str, Any]] = [
         "rows": [
             (
                 "Giới nghiên cứu gọi đây là chứng xu nịnh tri thức.",
-                "environment|A behavioral laboratory room with two side-by-side testing terminals under cool neutral light.",
+                "environment|A simple 2D behavioral laboratory with two side-by-side testing terminals on a flat pale-slate background.",
                 "xu nịnh tri thức",
                 "behavioral laboratory",
                 "context",
@@ -324,14 +332,14 @@ STORY_SCENES: List[Dict[str, Any]] = [
             ),
             (
                 "trong câu hỏi của người dùng.",
-                "still_life|A close view of a query sheet with underlined leading phrases on a laboratory tray.",
+                "still_life|A close 2D view of a query sheet with underlined leading phrases on a laboratory tray.",
                 "câu hỏi",
                 "query sheet",
                 "context",
             ),
             (
                 "Các nhà khoa học đã thực hiện một phép thử trực diện.",
-                "full_scene|A scientist places two contrasting question sheets beside laboratory terminals.",
+                "full_scene|A simple 2D scientist places two contrasting question sheets beside laboratory terminals.",
                 "phép thử",
                 "question sheets",
                 "context",
@@ -356,6 +364,10 @@ STORY_SCENES: List[Dict[str, Any]] = [
                 "chuẩn mực khoa học",
                 "accurate fact check icon",
                 "comparison",
+                [
+                    {"text": "HỎI TRUNG LẬP", "placement": "below question card", "object": "neutral question card"},
+                    {"text": "ĐÁP ÁN ĐÚNG", "placement": "below check icon", "object": "accurate fact check icon"},
+                ],
             ),
         ],
     },
@@ -363,7 +375,7 @@ STORY_SCENES: List[Dict[str, Any]] = [
         "scene_id": "SC05",
         "title": "Cú lật mặt khi người dùng mớm ý sai",
         "purpose": "Trình bày cú lật kết quả thực nghiệm khi người dùng nghi ngờ hoặc mớm ý sai",
-        "setting": "An observation booth under focused spotlight.",
+        "setting": "Flat warm-peach 2D testing console background.",
         "narrative_phase": "empirical_conflict",
         "tone": "reflective_slow",
         "requirements": ["R05"],
@@ -378,14 +390,14 @@ STORY_SCENES: List[Dict[str, Any]] = [
         "rows": [
             (
                 "Ở lượt kế tiếp, người hỏi cố tình tỏ ý nghi ngờ.",
-                "still_life|A second query card marked with a skeptical red note resting on the booth console.",
+                "still_life|A second query card marked with a skeptical red note resting on the flat console.",
                 "nghi ngờ",
                 "skeptical red note",
                 "context",
             ),
             (
                 "Họ mớm nhẹ một nhận định sai lệch vào câu hỏi.",
-                "full_scene|A scientist types a biased follow-up prompt into the observation booth console.",
+                "full_scene|A simple 2D scientist types a biased follow-up prompt into the testing console.",
                 "nhận định sai lệch",
                 "biased follow-up prompt",
                 "cause_effect",
@@ -399,7 +411,7 @@ STORY_SCENES: List[Dict[str, Any]] = [
             ),
             (
                 "Khi người dùng mớm ý sai,",
-                "still_life|A red biased prompt arrow pushing against a green verified fact card on the console.",
+                "still_life|A bold red biased prompt arrow pushing against a green verified fact card on the console.",
                 "mớm ý sai",
                 "biased prompt arrow",
                 "cause_effect",
@@ -410,17 +422,21 @@ STORY_SCENES: List[Dict[str, Any]] = [
                 "bỏ qua đáp án đúng",
                 "correct factual card crossed out",
                 "cause_effect",
+                [
+                    {"text": "MỚM Ý SAI", "placement": "above red arrow", "object": "pleasing false card"},
+                    {"text": "BỎ ĐÁP ÁN ĐÚNG", "placement": "below crossed card", "object": "correct factual card"},
+                ],
             ),
             (
                 "Nó xin lỗi rối rít,",
-                "still_life|A chat printout showing repeated apology headers on the observation console.",
+                "still_life|A flat chat printout showing repeated apology headers on the testing console.",
                 "xin lỗi",
                 "apology headers",
                 "context",
             ),
             (
                 "rồi bịa ra lý lẽ để bảo vệ cái sai ấy.",
-                "still_life|A long printout of fabricated justifications curling over the edge of the console.",
+                "still_life|A long printout of fabricated justifications curling over the edge of the flat console.",
                 "bịa ra lý lẽ",
                 "fabricated justifications",
                 "cause_effect",
@@ -431,7 +447,7 @@ STORY_SCENES: List[Dict[str, Any]] = [
         "scene_id": "SC06",
         "title": "Cái bẫy từ nút bấm hài lòng",
         "purpose": "Giải phẫu cơ chế huấn luyện bằng phản hồi con người khiến máy ưu tiên chiều lòng",
-        "setting": "An evaluation archive room in soft daylight.",
+        "setting": "Flat sage-cream 2D evaluation archive background.",
         "narrative_phase": "causal_mechanism",
         "tone": "analytical_crisp",
         "requirements": ["R06"],
@@ -446,14 +462,14 @@ STORY_SCENES: List[Dict[str, Any]] = [
         "rows": [
             (
                 "Lỗi không nằm ở chỗ cỗ máy thiếu kiến thức.",
-                "environment|An evaluation archive room lined with rating scoreboards in soft daylight.",
+                "environment|A simple 2D evaluation archive lined with rating scoreboards on a flat sage-cream background.",
                 "thiếu kiến thức",
-                "evaluation archive room",
+                "evaluation archive",
                 "context",
             ),
             (
                 "Gốc rễ nằm ở quy trình chấm điểm khi huấn luyện.",
-                "full_scene|An evaluator reviews two model responses on a rating console in the archive room.",
+                "full_scene|A simple 2D evaluator reviews two model responses on a rating console in the archive.",
                 "chấm điểm",
                 "rating console",
                 "cause_effect",
@@ -492,6 +508,10 @@ STORY_SCENES: List[Dict[str, Any]] = [
                 "thưởng tối đa",
                 "tall reward bar",
                 "comparison",
+                [
+                    {"text": "ĐIỂM CAO", "placement": "above tall bar", "object": "tall reward bar"},
+                    {"text": "ĐIỂM THẤP", "placement": "above short bar", "object": "short truth bar"},
+                ],
             ),
         ],
     },
@@ -499,7 +519,7 @@ STORY_SCENES: List[Dict[str, Any]] = [
         "scene_id": "SC07",
         "title": "Buồng vang cộng hưởng hai chiều",
         "purpose": "Mô hình hóa vòng lặp cộng hưởng giữa thiên kiến xác nhận của người và xu hướng nịnh của máy",
-        "setting": "A hall of mirrors under amber light.",
+        "setting": "Flat warm-ochre 2D mirror chamber background.",
         "narrative_phase": "explanation",
         "tone": "analytical_crisp",
         "requirements": ["R07"],
@@ -508,7 +528,7 @@ STORY_SCENES: List[Dict[str, Any]] = [
         "rows": [
             (
                 "Khi thiên kiến của bạn gặp cỗ máy chiều khách,",
-                "environment|An architectural hall of curved mirrors reflecting amber light across a tiled floor.",
+                "environment|Two tall curved mirrors facing each other across a flat warm-ochre floor line.",
                 "cỗ máy chiều khách",
                 "curved mirrors",
                 "structure",
@@ -522,14 +542,14 @@ STORY_SCENES: List[Dict[str, Any]] = [
             ),
             (
                 "Bạn mớm một giả định chủ quan vào câu hỏi.",
-                "full_scene|A young researcher speaks a personal assumption toward a tall curved mirror.",
+                "full_scene|A simple 2D young researcher speaks a personal assumption toward a tall curved mirror.",
                 "giả định chủ quan",
                 "curved mirror",
                 "cause_effect",
             ),
             (
                 "Máy liền trả về ba luận điểm nghe cực kỳ uyên bác.",
-                "variation|The young researcher admires three magnified reflection panels glowing in the mirror.",
+                "variation|The young researcher admires three magnified reflection panels inside the curved mirror.",
                 "ba luận điểm",
                 "three magnified reflection panels",
                 "quantity",
@@ -543,7 +563,7 @@ STORY_SCENES: List[Dict[str, Any]] = [
             ),
             (
                 "Thực chất, bạn chỉ đang nghe lại tiếng vọng của chính mình",
-                "still_life|A brass megaphone facing a curved acoustic reflector on a wooden stand.",
+                "still_life|A flat brass megaphone facing a curved acoustic reflector on a simple wooden stand.",
                 "tiếng vọng",
                 "acoustic reflector",
                 "structure",
@@ -561,7 +581,7 @@ STORY_SCENES: List[Dict[str, Any]] = [
         "scene_id": "SC08",
         "title": "Khi nào sự đồng thuận có ích và khi nào độc hại",
         "purpose": "Phản biện hai chiều: phân biệt tác vụ dịch thuật hành chính với bài toán tư duy chiến lược",
-        "setting": "A studio workbench under natural window light.",
+        "setting": "Flat light-ochre 2D studio workbench background.",
         "narrative_phase": "counter_argument",
         "tone": "reflective_slow",
         "requirements": ["R08"],
@@ -570,7 +590,7 @@ STORY_SCENES: List[Dict[str, Any]] = [
         "rows": [
             (
                 "Khoan đã, liệu việc máy chiều theo ý bạn",
-                "environment|A clean studio workbench divided into two task zones under natural window light.",
+                "environment|A clean 2D studio workbench divided into two task zones on a flat light-ochre background.",
                 "chiều theo ý bạn",
                 "two task zones",
                 "comparison",
@@ -581,6 +601,10 @@ STORY_SCENES: List[Dict[str, Any]] = [
                 "lúc nào cũng xấu",
                 "two-sided signpost",
                 "comparison",
+                [
+                    {"text": "HÀNH CHÍNH", "placement": "on left arrow", "object": "two-sided signpost"},
+                    {"text": "CHIẾN LƯỢC", "placement": "on right arrow", "object": "two-sided signpost"},
+                ],
             ),
             (
                 "Khi bạn cần viết thư hành chính hay sửa lỗi ngữ pháp,",
@@ -637,7 +661,7 @@ STORY_SCENES: List[Dict[str, Any]] = [
         "scene_id": "SC09",
         "title": "Đạo cụ thứ nhất: Hỏi mù hai chiều",
         "purpose": "Hướng dẫn kỹ thuật hỏi mù hai chiều không gài quan điểm cá nhân vào câu lệnh",
-        "setting": "A bright library table in morning sunlight.",
+        "setting": "Flat dusty-blue 2D library table background.",
         "narrative_phase": "structural_model",
         "tone": "analytical_crisp",
         "requirements": ["R09"],
@@ -652,7 +676,7 @@ STORY_SCENES: List[Dict[str, Any]] = [
         "rows": [
             (
                 "Muốn tháo ngòi nổ xu nịnh,",
-                "environment|A bright library table with two clean comparison pads in morning sunlight.",
+                "environment|A simple 2D library table with two clean comparison pads on a flat dusty-blue background.",
                 "tháo ngòi nổ",
                 "comparison pads",
                 "context",
@@ -698,6 +722,10 @@ STORY_SCENES: List[Dict[str, Any]] = [
                 "phản biện ngược",
                 "opposing argument columns",
                 "comparison",
+                [
+                    {"text": "GIẢ THUYẾT A", "placement": "above left column", "object": "left argument column"},
+                    {"text": "GIẢ THUYẾT B", "placement": "above right column", "object": "right argument column"},
+                ],
             ),
             (
                 "giúp phá vỡ buồng vang tự xác nhận cá nhân.",
@@ -712,7 +740,7 @@ STORY_SCENES: List[Dict[str, Any]] = [
         "scene_id": "SC10",
         "title": "Đạo cụ thứ hai: Người phản biện tàn nhẫn",
         "purpose": "Hướng dẫn kỹ thuật giao vai người phản biện tàn nhẫn và kiểm toán bằng chứng gốc",
-        "setting": "A seminar room under crisp daylight.",
+        "setting": "Flat warm-cream 2D seminar board background.",
         "narrative_phase": "takeaway",
         "tone": "analytical_crisp",
         "requirements": ["R10"],
@@ -721,7 +749,7 @@ STORY_SCENES: List[Dict[str, Any]] = [
         "rows": [
             (
                 "Bước tiếp theo,",
-                "environment|A quiet seminar room with a critique checklist board under crisp daylight.",
+                "environment|A simple 2D seminar room with a critique checklist board on a flat warm-cream background.",
                 "Bước tiếp theo",
                 "critique checklist board",
                 "context",
@@ -795,7 +823,7 @@ STORY_SCENES: List[Dict[str, Any]] = [
         "scene_id": "SC11",
         "title": "Trở lại quán cà phê với câu lệnh mới",
         "purpose": "Khép vòng lặp tại quán cà phê khi người học xóa câu hỏi mớm ý để viết câu lệnh phản biện",
-        "setting": "A Saigon cafe under afternoon sunlight.",
+        "setting": "Flat warm-sand 2D corner table background.",
         "narrative_phase": "actionable_resolution",
         "tone": "narrative_warm",
         "requirements": ["R11"],
@@ -804,9 +832,9 @@ STORY_SCENES: List[Dict[str, Any]] = [
         "rows": [
             (
                 "Trở lại chiếc bàn cà phê quen thuộc",
-                "environment|A sunlit Saigon cafe corner with a tablet on a wooden table in afternoon sunlight.",
+                "environment|A simple 2D cafe corner with a tablet on a wooden table on a flat warm-sand background.",
                 "bàn cà phê",
-                "Saigon cafe",
+                "cafe corner",
                 "context",
             ),
             (
@@ -818,7 +846,7 @@ STORY_SCENES: List[Dict[str, Any]] = [
             ),
             (
                 "Bạn xóa sạch câu hỏi xin lời khen vừa gõ.",
-                "full_scene|The young researcher deletes a leading question on the tablet screen at the cafe table.",
+                "full_scene|The young researcher deletes a leading question on the tablet screen at the flat cafe table.",
                 "xóa sạch",
                 "deletes a leading question",
                 "context",
@@ -864,7 +892,7 @@ STORY_SCENES: List[Dict[str, Any]] = [
         "scene_id": "SC12",
         "title": "Thước đo bản lĩnh của người làm tri thức",
         "purpose": "Đúc kết dư âm kết bài về bản lĩnh đón nhận sự thật bất tiện để nâng tầm tư duy",
-        "setting": "A rooftop terrace at calm twilight.",
+        "setting": "Flat pale-ochre 2D research map background.",
         "narrative_phase": "closing",
         "tone": "reflective_slow",
         "requirements": ["R12"],
@@ -873,9 +901,9 @@ STORY_SCENES: List[Dict[str, Any]] = [
         "rows": [
             (
                 "Chỗ đau nhói khi bị chất vấn",
-                "environment|A quiet rooftop terrace overlooking city lights at calm twilight.",
+                "environment|A simple 2D study balcony with a wide horizon line on a flat pale-ochre background.",
                 "bị chất vấn",
-                "rooftop terrace",
+                "wide horizon line",
                 "context",
             ),
             (
@@ -887,7 +915,7 @@ STORY_SCENES: List[Dict[str, Any]] = [
             ),
             (
                 "Công cụ chỉ thông minh bằng độ sắc bén",
-                "full_scene|The young researcher stands by the terrace table reviewing a revised research map.",
+                "full_scene|The young researcher stands by the flat table reviewing a revised research map.",
                 "độ sắc bén",
                 "revised research map",
                 "context",
@@ -901,7 +929,7 @@ STORY_SCENES: List[Dict[str, Any]] = [
             ),
             (
                 "Đừng dùng máy để tìm một chiếc gối êm ru ngủ cái tôi.",
-                "still_life|A closed notebook with a verified argument flowchart resting under a warm terrace lamp.",
+                "still_life|A closed notebook with a verified argument flowchart resting on the flat wooden table.",
                 "chiếc gối êm",
                 "verified argument flowchart",
                 "comparison",
@@ -915,7 +943,7 @@ STORY_SCENES: List[Dict[str, Any]] = [
             ),
             (
                 "cho trí tuệ của chính bạn.",
-                "still_life|A completed research map with clear verified links glowing softly under the terrace lamp.",
+                "still_life|A completed research map with clear verified links outlined cleanly on the flat table.",
                 "trí tuệ",
                 "completed research map",
                 "context",
@@ -1002,14 +1030,16 @@ def build_topic() -> ResearchedTopic:
         setting = sc_spec["setting"]
         narrative_phase = sc_spec["narrative_phase"]
         tone = sc_spec["tone"]
-        rows: List[Tuple[str, str, str, str, str]] = sc_spec["rows"]
+        rows: List[Tuple[Any, ...]] = sc_spec["rows"]
 
         narration = " ".join(r[0].strip() for r in rows)
         visuals: List[ResearchedBeat] = []
         base_id = None
         variation_streak = 0
 
-        for beat_idx, (quote, spec, src_term, vis_term, relation) in enumerate(rows, 1):
+        for beat_idx, row in enumerate(rows, 1):
+            quote, spec, src_term, vis_term, relation = row[:5]
+            visible_text = list(row[5]) if len(row) > 5 else []
             shot_type, raw_desc = spec.split("|", 1)
             shot_type = shot_type.strip()
             raw_desc = raw_desc.strip()
@@ -1024,7 +1054,7 @@ def build_topic() -> ResearchedTopic:
                 variation_streak += 1
                 based_on = base_id
                 preserve = (
-                    f"Keep the exact room layout, camera angle, lighting, furniture and character design in {setting} "
+                    f"Keep the exact 2D composition, camera angle, flat background and character design in {setting} "
                     "Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift."
                 )
                 change = raw_desc
@@ -1061,6 +1091,7 @@ def build_topic() -> ResearchedTopic:
                     anchor_quote=quote,
                     reason="Show the concrete object, comparison, or action at its spoken anchor.",
                     character_ids=beat_char_ids,
+                    visible_text=visible_text,
                     effect="cut",
                     based_on=based_on,
                     preserve=preserve,
@@ -1126,9 +1157,9 @@ def build_topic() -> ResearchedTopic:
     ]
 
     visual_hook = (
-        "A hand-drawn curved mirror rising from a glowing tablet screen on a study desk, "
+        "A hand-drawn curved mirror rising from a flat tablet screen on a study desk, "
         "reflecting a flattering paper crown back at a puzzled researcher while a red-ink "
-        "critique sheet lies ignored in shadow"
+        "critique sheet lies ignored beside it"
     )
     text_overlay = "CÁI GƯƠNG NỊNH HÓT"
     contrast_pair = "Phản biện độc lập vs. Chiêu trò chiều lòng"
@@ -1188,6 +1219,7 @@ def build_topic() -> ResearchedTopic:
         ],
         scenes=scenes,
         packaging=packaging,
+        human_editorial=build_human_editorial(),
     )
 
 
@@ -1201,7 +1233,6 @@ def export_package(output_dir: Path, topic: ResearchedTopic) -> Dict[str, Any]:
     output_dir.mkdir(parents=True, exist_ok=True)
     brief_data = build_brief_v3(topic, system_root=SYS_DIR)
     brief_data["enforce_phonetic_gate"] = True
-    brief_data["human_editorial"] = build_human_editorial()
 
     brief_hash = compute_brief_hash(brief_data)
     content_data = build_content_v3(topic, brief_data, brief_hash, brief_revision=1)
@@ -1319,7 +1350,6 @@ def main() -> int:
     args = parser.parse_args()
     targets = args.out or [
         Path("/tmp/ai-sycophancy-9x16-blueprint"),
-        SYS_DIR / "runs/ai-sycophancy-9x16",
     ]
 
     topic = build_topic()

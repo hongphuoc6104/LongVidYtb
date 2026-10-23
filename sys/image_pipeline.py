@@ -363,6 +363,8 @@ def _template_request(p, j, target, prompt, corrections, ratio, refs, registrati
                 raise Blocked('FLOW_ENTITY_POLICY_REQUIRED: author human presence explicitly')
             data['has_character'] = original['has_character']
     elif registration and pin['version'] == '1.7.0':
+        data['has_character'] = bool(registration.get('has_character', True))
+    elif purpose == 'character' and pin['version'] == '1.7.0':
         data['has_character'] = True
     if corrections:
         data.setdefault('change', []).append(corrections)
@@ -777,9 +779,7 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None, p
                                      'cannot connect to chrome', 'endpoint ownership unavailable',
                                      'no chrome profile workers available', 'no close frame received or sent',
                                      'cdp_transport_closed', 'connection closed', 'failed to fetch',
-                                     'captcha_failed', 'no_at_token', 'js exception',
-                                     'public_error_unsafe_generation', 'did not receive a valid http response',
-                                     'remote end closed connection')
+                                     'captcha_failed', 'no_at_token', 'js exception')
             err_msg = str(ex).lower()
             not_sub = getattr(ex, 'generation_submitted', None) is False or any(pat in err_msg for pat in pre_submission_errors)
             state = 'generated' if collection_only or getattr(ex, 'collection_only', False) else (
@@ -945,7 +945,7 @@ def reference_prompt(c, char):
 
 def register(p, j, ref):
     r = request(p, j, 'register:' + ref['character_id'] + ':' + ref['sha256'], ref['prompt'],
-                registration={'name': ref['name'], 'path': ref['path'], 'sha256': ref['sha256']})
+                registration={'name': ref['name'], 'path': ref['path'], 'sha256': ref['sha256'], 'has_character': True})
     confirmation = p.path(j, r['journal']).parent / 'confirmation.json'
     if not confirmation.exists() and (p.job(j) / 'workflow.json').exists():
         import workflow

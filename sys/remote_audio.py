@@ -38,14 +38,14 @@ def primary_scene_request(scene: dict, text: str, language: str, pauses: dict,
 
 def produce(pilot, job, out):
     from adapters import DEFAULT_PAUSE, config, retakes, scene_tail
-    from colab_bridge.client import Client, ColabError, enabled
+    from colab_bridge.client import ColabError, enabled
     from colab_bridge.protocol import build_request
 
     from pilot import Blocked, read, write
 
     brief = pilot.brief(job)[0]
     content = pilot.payload(job, 'content')
-    cfg = copy.deepcopy(config(pilot))
+    cfg = config(pilot, job)
     cfg.setdefault('colab_tts', {})['job_id'] = job
     import execution
     if execution.is_job(pilot, job):
@@ -122,7 +122,8 @@ def produce(pilot, job, out):
         write(out / 'request-colab.json', request)
         import execution
         guard = (lambda: execution.before_submit(pilot, job)) if execution.is_job(pilot, job) else None
-        Client(pilot.root, cfg).synthesize(request, out, pilot.job(job) / 'cache/colab-tts', before_submit=guard)
+        from colab_bridge.parallel_audio import synthesize
+        synthesize(pilot.root, cfg, request, out, pilot.job(job) / 'cache/colab-tts', before_submit=guard)
         report = read(out / 'audio-result.json')
         if report.get('processing_location') != 'colab' or report.get('language') != primary:
             raise Blocked('COLAB_ASSEMBLY_REQUIRED: prepared remote result missing')
@@ -160,7 +161,7 @@ def render(pilot, job, out):
     from colab_bridge.job_protocol import build_render_request
 
     from pilot import Blocked, read, write
-    cfg = copy.deepcopy(config(pilot))
+    cfg = config(pilot, job)
     cfg.setdefault('colab_tts', {})['job_id'] = job
     import execution
     if execution.is_job(pilot, job):

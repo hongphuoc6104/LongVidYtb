@@ -446,7 +446,8 @@ class Pilot:
    imported_duration=payload.get('duration')
    if type(imported_duration) not in (int,float) or not math.isfinite(imported_duration) or imported_duration<=0 or imported_duration!=primary.get('duration') or payload.get('wav')!=primary.get('wav'):raise Blocked('REMOTE_DURATION: primary imported duration/WAV differs from the selected track')
    for language,track in tracks.items():
-    expected_voice=voice_settings(brief,language,read(self.root/'config.json'))
+    from runtime_contract import job_config
+    expected_voice=voice_settings(brief,language,job_config(self,j))
     from output_contract import TONE_SPEED_MULTIPLIERS, resolve_tone_speed
     allowed_speeds = {resolve_tone_speed(expected_voice['speed'], t) for t in (None, *TONE_SPEED_MULTIPLIERS)}
     if track.get('language')!=language or track.get('voice')!=expected_voice['voice'] or not any(abs(track.get('speed',0)-s)<=1e-8 for s in allowed_speeds):raise Blocked('REMOTE_VOICE: track identity/rate differs from contract')
@@ -530,6 +531,9 @@ class Pilot:
   rev=r['revision']+1;out=self.job(j)/'revisions'/m/str(rev);out.mkdir(parents=True,exist_ok=False)
   self.db.execute('UPDATE modules SET state=?,revision=? WHERE job=? AND module=?',('running',rev,j,m));self.db.commit();self.event(j,m,'started',str(rev))
   try:
+   if is_job(self,j) and m!='control':
+    from runtime_contract import job_config,source_receipt
+    write(out/'runtime.json',source_receipt(self.root,m,job_config(self,j)))
    if m=='control':p=read(self.root/'config.json')
    elif m=='content':
     p=read(self.job(j)/'draft/content.json')
@@ -541,6 +545,9 @@ class Pilot:
      p=adapters.produce_images(self,j,out)
     else:p=getattr(adapters,m)(self,j,out)
    files=self.checks(j,m,p)
+   if (out/'runtime.json').is_file():
+    runtime=read(out/'runtime.json');runtime['completed_at']=time.time();write(out/'runtime.json',runtime)
+    files.append(str((out/'runtime.json').relative_to(self.job(j))))
    versions=self.input_versions(j,m)
    if m=='content' and self.brief(j):
     from content_contract import review_markdown

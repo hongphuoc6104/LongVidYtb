@@ -129,6 +129,7 @@ def station_2_test_ast() -> bool:
         SYS_DIR / "tests/test_visual_breathing_room.py",
         SYS_DIR / "tests/test_reference_explainer.py",
         SYS_DIR / "tests/test_flow_prompts.py",
+        SYS_DIR / "tests/test_integration_recovery.py",
     ]
     # Check AST on test directory
     ast_ok, ast_report = check_test_suite_integrity([SYS_DIR / "tests"])

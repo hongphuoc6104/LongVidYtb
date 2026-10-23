@@ -18,7 +18,9 @@ def copy_optional_flow_screenshot(source, destination, *, required=False):
 
 
 def rel(p,j,path):return str(Path(path).relative_to(p.job(j)))
-def config(p):return read(p.root/'config.json') if hasattr(p, 'root') and (p.root/'config.json').is_file() else (getattr(p, 'cfg', {}) or {})
+def config(p, job=None):
+ from runtime_contract import job_config
+ return job_config(p, job)
 
 def _cast_job(p, job):
  """True when the job's frozen prompt pin uses the no-mascot cast style."""
@@ -285,7 +287,7 @@ def gflow(p,*args,timeout=960,flow_job=None):
 
   shot = evidence_folder / 'before-submit.png'
   copy_optional_flow_screenshot(b2_res.get('before_submit'), shot,
-                               required=config(p).get('flow_require_ui_evidence', False))
+                               required=config(p,flow_job).get('flow_require_ui_evidence', False))
 
   return subprocess.CompletedProcess(args, 0, stdout=f"B-2 Illustrator generated: {dest_img}", stderr='')
 
@@ -399,7 +401,7 @@ def request_video(*a,**k):
  raise Blocked('Video AI disabled; image-only production')
 
 def flow_action(p,a):
- j=a.job;p.gate(j,'images');cfg=config(p)
+ j=a.job;p.gate(j,'images');cfg=config(p,j)
  # flow-preflight now delegates too (jobs with a brief only): image_pipeline
  # owns the single evidence-shape check used both to write this file and to
  # read it back before every request, so a job without a brief (legacy,
@@ -445,7 +447,7 @@ def flow_action(p,a):
 
 def generate_image(p,j,scene):
  # Legacy no-brief compatibility; v3 production uses image_pipeline.request.
- cfg=config(p);base=p.job(j)/'flow';base.mkdir(exist_ok=True)
+ cfg=config(p,j);base=p.job(j)/'flow';base.mkdir(exist_ok=True)
  attempt=base/(scene['id']+'.json');key=digest(p.root/'config.json')+scene['prompt']
  if attempt.exists():
   s=read(attempt)
@@ -742,7 +744,7 @@ def audio(p,j,out):
  if p.brief(j) and p.brief(j)[0].get('outputs'):
   from remote_audio import produce
   return produce(p,j,out)
- content=p.payload(j,'content');cfg=config(p);g=cfg.get('tts_pause',DEFAULT_PAUSE)
+ content=p.payload(j,'content');cfg=config(p,j);g=cfg.get('tts_pause',DEFAULT_PAUSE)
  from colab_bridge.client import Client, ColabError, enabled
  from colab_bridge.protocol import build_request
  if not enabled(cfg):raise Blocked('COLAB_REQUIRED: local TTS removed')
@@ -814,7 +816,7 @@ def render(p,j,out):
    for beat in scene.get('images',[]):beat['src']=copy_asset(beat['src'])
   return planned
  scenes=render_scenes('en',ratio) if (ratio=='16:9' or (b and b.get('language')=='en')) else render_scenes('vi','9:16')
- props={'duration':snd['duration'],'scenes':scenes,'segments':snd['segments'],'cues':subtitle_cues(snd['segments'],aspect_ratio=ratio if ratio in ('9:16','16:9') else None),'aspect_ratio':ratio,'render_concurrency':config(p).get('render_concurrency',4)}
+ props={'duration':snd['duration'],'scenes':scenes,'segments':snd['segments'],'cues':subtitle_cues(snd['segments'],aspect_ratio=ratio if ratio in ('9:16','16:9') else None),'aspect_ratio':ratio,'render_concurrency':config(p,j).get('render_concurrency',4)}
  if en:
   props['en_duration']=en['duration']
   props['en_scenes']=scenes if ratio=='16:9' else render_scenes('en','16:9')

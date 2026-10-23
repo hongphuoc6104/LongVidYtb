@@ -168,6 +168,10 @@ def ensure_connected(sock_path: Path | None = None) -> dict[str, Any]:
     }}
 
 
+_ORIGINAL_SEND_RAW_COMMAND = send_raw_command
+_ORIGINAL_ENSURE_CONNECTED = ensure_connected
+
+
 def is_session_available(sock_path: Path | None = None) -> bool:
     target_sock = sock_path or get_socket_path()
     if not target_sock.exists():
@@ -247,7 +251,9 @@ def _execute_via_cdp_direct(specs: list[dict[str, Any]], timeout: float = 240.0,
             if before_submit is not None:
                 live_url = str(await sess.evaluate('location.href') or '')
                 if '/project/' not in live_url and selected_cfg.get('url'):
-                    live_url = selected_cfg['url']
+                    await sess.call('Page.navigate', {'url': selected_cfg['url']})
+                    await sess._wait_for_flow_ready(timeout=15.0)
+                    live_url = str(await sess.evaluate('location.href') or '')
                 before_submit({'status': 'connected', 'identity': {
                     'observedProfile': str(Path(selected_cfg['user_data_dir']).expanduser() / selected_cfg['profile_dir']),
                     'toolUrl': live_url,
@@ -332,6 +338,11 @@ def _execute_sub_batch(specs: list[dict[str, Any]], timeout: float = 120.0, sock
     """Submit 1 to 4 requests directly over CDP socket or direct CDP client."""
     target_sock = sock_path if (sock_path is not None and sock_path != get_socket_path()) else None
     active_sock = target_sock if target_sock is not None else get_socket_path()
+    using_default_socket_transport = (
+        ensure_connected is _ORIGINAL_ENSURE_CONNECTED
+        and send_raw_command is _ORIGINAL_SEND_RAW_COMMAND
+    )
+    before_submit_called = False
     try:
         require_queue_acceptance()
         if not 1 <= len(specs) <= 4:
@@ -343,7 +354,7 @@ def _execute_sub_batch(specs: list[dict[str, Any]], timeout: float = 120.0, sock
             if spec.get("baseRefPath") and not spec.get("baseMediaId"):
                 raise Blocked("REFERENCE_MEDIA_ID_REQUIRED: baseRefPath thiếu baseMediaId (thiếu sidecar .json chứa forgeId)")
 
-        if not active_sock.exists():
+        if not active_sock.exists() and using_default_socket_transport:
             return _execute_via_cdp_direct(specs, timeout=timeout, worker=worker, before_submit=before_submit)
 
         connection = ensure_connected(sock_path=target_sock)
@@ -355,6 +366,7 @@ def _execute_sub_batch(specs: list[dict[str, Any]], timeout: float = 120.0, sock
 
         if before_submit is not None:
             before_submit(connection)
+            before_submit_called = True
     except Blocked as exc:
         _mark_not_submitted(exc)
         raise
@@ -366,8 +378,17 @@ def _execute_sub_batch(specs: list[dict[str, Any]], timeout: float = 120.0, sock
             result = send_raw_command(f"tool-snapshot:queue:{manifest}", timeout=timeout)
     except Blocked as exc:
         exc_msg = str(exc).lower()
-        if getattr(exc, "generation_submitted", None) is False and ("socket not found" in exc_msg or "communication error" in exc_msg):
-            return _execute_via_cdp_direct(specs, timeout=timeout, worker=worker, before_submit=None)
+        if (
+            using_default_socket_transport
+            and getattr(exc, "generation_submitted", None) is False
+            and ("socket not found" in exc_msg or "communication error" in exc_msg)
+        ):
+            return _execute_via_cdp_direct(
+                specs,
+                timeout=timeout,
+                worker=worker,
+                before_submit=None if before_submit_called else before_submit,
+            )
         raise
 
 
@@ -471,7 +492,7 @@ def generate_cdp_image(
     try:
         require_queue_acceptance()
         cand_sock = get_socket_path(profile_id) if profile_id else get_socket_path()
-        if cand_sock.exists():
+        if cand_sock.exists() or ensure_connected is not _ORIGINAL_ENSURE_CONNECTED:
             ensure_connected(sock_path=cand_sock)
     except Blocked as exc:
         raise _mark_not_submitted(exc)

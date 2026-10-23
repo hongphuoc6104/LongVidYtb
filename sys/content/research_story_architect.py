@@ -426,6 +426,30 @@ class PackagingSpec:
 
 
 @dataclass
+class HumanEditorialSpec:
+    """Anti-AI-Slop Human Editorial Co-Creation block with dynamic topic-specific questions and expanded in-video ideas."""
+
+    topic_dilemmas: List[str]
+    dynamic_questions: List[str]
+    author_raw_input: Optional[str] = None
+    editorial_stance: Optional[str] = None
+    expanded_content_ideas: List[Dict[str, str]] = field(default_factory=list)
+
+    def to_dict(self) -> Dict[str, Any]:
+        payload: Dict[str, Any] = {
+            "topic_dilemmas": list(self.topic_dilemmas),
+            "dynamic_questions": list(self.dynamic_questions),
+        }
+        if self.author_raw_input is not None:
+            payload["author_raw_input"] = self.author_raw_input
+        if self.editorial_stance is not None:
+            payload["editorial_stance"] = self.editorial_stance
+        if self.expanded_content_ideas:
+            payload["expanded_content_ideas"] = [dict(item) for item in self.expanded_content_ideas]
+        return payload
+
+
+@dataclass
 class ResearchedBeat:
     """One complete full-frame image and its narration-anchored beat."""
 
@@ -564,6 +588,7 @@ class ResearchedTopic:
     spinoff_shorts: Optional[List[Dict[str, Any]]] = None
     visual_pacing_profile: Optional[str] = None
     enable_sound_design: Optional[bool] = None
+    human_editorial: Optional[Dict[str, Any]] = None
 
     def __post_init__(self) -> None:
         if not self.style:
@@ -767,6 +792,11 @@ def build_brief_v3(topic: ResearchedTopic, system_root: Optional[Path] = None) -
         brief["funnel_tier"] = pkg_dict["funnel_tier"]
         if pkg_dict.get("seo_keywords"):
             brief["seo_keywords"] = list(pkg_dict["seo_keywords"])
+    if topic.human_editorial is not None:
+        brief['human_editorial'] = (
+            topic.human_editorial.to_dict() if hasattr(topic.human_editorial, 'to_dict')
+            else __import__('copy').deepcopy(topic.human_editorial)
+        )
     if topic.visual_pacing_profile is not None:
         brief['visual_pacing_profile'] = topic.visual_pacing_profile
     if getattr(topic, "enable_sound_design", None) is not None:

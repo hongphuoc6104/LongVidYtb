@@ -143,6 +143,7 @@ def _build_timeline(c, images, audio, language, ratio, load):
 def run(bundle_path, output_dir, expected_id, expected_worker):
     from pathlib import PurePosixPath
 
+    t_unpack_start = time.monotonic()
     if hashlib.sha256(Path(__file__).read_bytes()).hexdigest() != expected_worker:
         raise ValueError("Remote worker checksum mismatch")
     device = subprocess.check_output(["nvidia-smi", "--query-gpu=name", "--format=csv,noheader"], text=True).strip()
@@ -195,6 +196,9 @@ def run(bundle_path, output_dir, expected_id, expected_worker):
         source = inputs / entry["name"]
         if source.stat().st_size != entry["size"] or hashlib.sha256(source.read_bytes()).hexdigest() != entry["sha256"]:
             raise ValueError("Job bundle hash mismatch")
+    unpack_seconds = round(time.monotonic() - t_unpack_start, 3)
+
+    t_timeline_start = time.monotonic()
     source = inputs / "source"
     sys.path.insert(0, str(source))
     # Load from this immutable bundle, not modules retained by another job kernel.
@@ -361,6 +365,9 @@ def run(bundle_path, output_dir, expected_id, expected_worker):
         )
     )
     (output / "props.json").write_text(json.dumps(props, ensure_ascii=False, indent=2))
+    timeline_seconds = round(time.monotonic() - t_timeline_start, 3)
+
+    t_runtime_start = time.monotonic()
     # Remote dependencies are cached by the pinned source package lock.
     runtime = output.parent.parent / (
         "render-runtime-" + hashlib.sha256((source / "package-lock.json").read_bytes()).hexdigest()[:16]
@@ -430,9 +437,14 @@ fi
     wrapper.chmod(0o755)
     env = dict(os.environ, VP_CHROME_PATH=str(wrapper), DISABLE_FROM_SURFACE="true")
     env.pop("DISPLAY", None)
+    runtime_setup_seconds = round(time.monotonic() - t_runtime_start, 3)
+
     started = time.monotonic()
     render_cmd = ["node", str(runtime / "renderer/render.mjs"), str(output.resolve())]
     subprocess.run(render_cmd, cwd=runtime, env=env, check=True, timeout=3600)
+    render_seconds = round(time.monotonic() - started, 3)
+
+    t_ffprobe_start = time.monotonic()
     deliveries = []
     for plan in brief["outputs"]:
         file = (
@@ -521,11 +533,21 @@ fi
                     audio_codec="aac",
                 )
             )
+    ffprobe_seconds = round(time.monotonic() - t_ffprobe_start, 3)
+
+    t_package_start = time.monotonic()
+    layout_data = {}
+    if (output / "layout.json").is_file():
+        try:
+            layout_data = json.loads((output / "layout.json").read_text())
+        except Exception:
+            layout_data = {}
     files = {
         p.name: {"sha256": hashlib.sha256(p.read_bytes()).hexdigest(), "size": p.stat().st_size}
         for p in output.iterdir()
         if p.is_file() and p.suffix in (".mp4", ".png", ".srt", ".json", ".md") and p.name != "render-result.json"
     }
+    package_seconds = round(time.monotonic() - t_package_start, 3)
     result = {
         "request_id": expected_id,
         "operation": "render",
@@ -535,6 +557,15 @@ fi
         "files": files,
         "supplemental_outputs": supplemental,
         "elapsed_seconds": time.monotonic() - started,
+        "remotion_concurrency": layout_data.get("remotion_concurrency"),
+        "stage_timings": {
+            "unpack_seconds": unpack_seconds,
+            "timeline_seconds": timeline_seconds,
+            "runtime_setup_seconds": runtime_setup_seconds,
+            "render_seconds": render_seconds,
+            "ffprobe_seconds": ffprobe_seconds,
+            "package_seconds": package_seconds,
+        },
         "processing": ["timeline", "subtitles", "layout", "render", "encode", "ffprobe"],
         "quality_approval": False,
     }

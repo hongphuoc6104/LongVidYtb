@@ -402,6 +402,8 @@ def observe(p, job):
         item = current(p, job, phase)
         state = 'complete' if accepted(p, job, phase) else 'awaiting_review' if item else 'pending'
         stages.append({'phase': phase, 'state': state, 'revision': item['revision'] if item else None,
+                       'technical_complete': bool(item and item.get('technical_complete')),
+                       'quality_approved': bool(cfg['mode'] == 'review' and accepted(p, job, phase)),
                        'assets': item['assets'] if item else [],
                        'review': str(p.path(job, item['review'])) if item and item.get('review') else None})
     owner = control(p, job)

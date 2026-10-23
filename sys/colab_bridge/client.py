@@ -377,10 +377,11 @@ class Client:
                     evidence=evidence,
                     allocation_started_at=start,
                 )
-                try:
-                    self.exec("import omnivoice, soundfile")
-                except Exception:
-                    self.setup()
+                if getattr(self, '_runtime_role', 'tts') == 'tts':
+                    try:
+                        self.exec("import omnivoice, soundfile")
+                    except Exception:
+                        self.setup()
             except Exception as ex:
                 evidence = self._observation("allocation-unknown", error=str(ex), allocation_started_at=start)
                 self._state(
@@ -502,6 +503,7 @@ class Client:
         return result
 
     def synthesize(self, request, out, cache, collect_only=False, before_submit=None):
+        self._runtime_role = 'assembly' if request.get('prepared_audio') else 'tts'
         out, cache = Path(out), Path(cache)
         cache.mkdir(parents=True, exist_ok=True)
         out.mkdir(parents=True, exist_ok=True)
@@ -573,16 +575,34 @@ class Client:
                             )
                             self._download(remote, folder, req)
                         else:
+                            # Validate sources before allocating a GPU or uploading anything.
+                            prepared = req.get('prepared_audio', [])
+                            if len(prepared) > 512 or len({item['name'] for item in prepared}) != len(prepared):
+                                raise ColabError('COLAB_PREPARED_INVALID: duplicate or excessive files')
+                            for source in req.get('support_files', []) + prepared:
+                                local = Path(source['local_path'])
+                                if (Path(source['name']).name != source['name'] or local.is_symlink()
+                                        or not local.is_file() or file_hash(local) != source['sha256']):
+                                    raise ColabError('COLAB_SUPPORT_CHANGED: processing source changed before submission')
                             if before_submit is not None:
                                 before_submit()
                             if req.get("assemble"):
                                 self._ready()
-                            self.exec(f"from pathlib import Path\nPath({remote!r}).mkdir(parents=True, exist_ok=True)")
+                            try:
+                                self.exec(f"from pathlib import Path\nPath({remote!r}).mkdir(parents=True, exist_ok=True)")
+                            except ColabError as exc:
+                                if 'COLAB_SESSION_NOT_FOUND' not in str(exc):
+                                    raise
+                                # No synthesis has been submitted: reconcile the same account
+                                # before allocating once. Unknown assignments must stay blocked.
+                                self.reconcile()
+                                self._ready(auto_start=True)
+                                self.exec(f"from pathlib import Path\nPath({remote!r}).mkdir(parents=True, exist_ok=True)")
                             for lang, profile in req["profiles"].items():
                                 dest = remote + "/" + lang + ".wav"
                                 self.call("upload", "-s", self.session, profile.pop("local_wav"), dest, timeout=120)
                                 profile["remote_wav"] = dest
-                            for support in req.get("support_files", []):
+                            for support in req.get("support_files", []) + req.get('prepared_audio', []):
                                 local = Path(support.pop("local_path"))
                                 if (
                                     Path(support["name"]).name != support["name"]
@@ -782,6 +802,7 @@ class Client:
     def render(self, request, out, cache, collect_only=False, before_submit=None):
         """Generic remote work. Unknown execution is always collected on its pinned owner."""
         from .job_protocol import bundle, extract, validate_render_result
+        self._runtime_role = 'render'
 
         out, cache = Path(out), Path(cache)
         out.mkdir(parents=True, exist_ok=True)

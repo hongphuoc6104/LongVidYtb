@@ -36,10 +36,12 @@ if (Array.isArray(srtCues)) {
 }
 
 const plans = outputPlans(props, fs.existsSync(path.join(publicDir, 'narration_en.wav')));
+const bundleStartedAt = Date.now();
 const url = await bundle({
   entryPoint: fileURLToPath(new URL('./index.tsx', import.meta.url)),
   publicDir: path.join(dir, 'public')
 });
+const bundleSeconds = Number(((Date.now() - bundleStartedAt) / 1000).toFixed(3));
 function resolveChromePath() {
   if (process.env.VP_CHROME_PATH && fs.existsSync(process.env.VP_CHROME_PATH)) {
     return process.env.VP_CHROME_PATH;
@@ -121,9 +123,12 @@ process.on('exit', () => {
 
 process.env.DISABLE_FROM_SURFACE = 'true';
 
-const effectiveConcurrency = renderConcurrency(props.render_concurrency, cpus().length, hasNvidiaEgl);
+const hostCpus = Math.max(1, cpus().length);
+const effectiveConcurrency = renderConcurrency(props.render_concurrency, hostCpus, hasNvidiaEgl);
+const remotionConcurrency = Math.min(effectiveConcurrency, hostCpus);
 
 // Step 1: Run Batch DOM Caption Safety Check and close Playwright BEFORE opening Remotion browser
+const layoutStartedAt = Date.now();
 const captionPlans = plans.filter(plan => !plan.props.hideSubtitles);
 let failures = [];
 let checked = 0;
@@ -165,14 +170,23 @@ if (captionPlans.length) {
     await pw.close();
   }
 }
+const layoutSeconds = Number(((Date.now() - layoutStartedAt) / 1000).toFixed(3));
 
 const layoutResult = {
   passed: !failures.length,
   applies: captionPlans.length > 0,
   checked_cues: checked,
   concurrency: effectiveConcurrency,
+  remotion_concurrency: remotionConcurrency,
+  host_cpus: hostCpus,
   execution_mode: 'multi_threaded_batch',
   method: 'actual requested language/aspect caption styles; two lines; no quality approval',
+  timings: {
+    bundle_seconds: bundleSeconds,
+    layout_seconds: layoutSeconds,
+    stills_seconds: 0,
+    render_media_seconds: 0
+  },
   failures
 };
 
@@ -207,6 +221,7 @@ const browser = await openBrowser('chrome', {
 
 try {
   // Render representative stills on the shared browser instance
+  const stillsStartedAt = Date.now();
   const compStills = await selectComposition({
     serveUrl: url,
     id: 'Pilot',
@@ -285,7 +300,9 @@ try {
       });
     }
   }
+  layoutResult.timings.stills_seconds = Number(((Date.now() - stillsStartedAt) / 1000).toFixed(3));
 
+  const renderMediaStartedAt = Date.now();
   for (const plan of plans) {
     const composition = await selectComposition({serveUrl: url, id: 'Pilot', inputProps: plan.props, puppeteerInstance: browser});
     await renderMedia({
@@ -297,7 +314,7 @@ try {
       hardwareAcceleration: 'if-possible',
       videoBitrate: '6M',
       audioCodec: 'aac',
-      concurrency: Math.min(effectiveConcurrency, Math.max(1, cpus().length)),
+      concurrency: remotionConcurrency,
       outputLocation: path.join(dir, plan.file),
       onProgress: ({renderedFrames}) => {
         if (renderedFrames % 150 === 0) {
@@ -306,6 +323,9 @@ try {
       }
     });
   }
+  layoutResult.timings.render_media_seconds = Number(((Date.now() - renderMediaStartedAt) / 1000).toFixed(3));
+  fs.writeFileSync(path.join(dir, 'layout.json'), JSON.stringify(layoutResult, null, 2));
+
   if (plans[0].file !== 'video.mp4') fs.copyFileSync(path.join(dir, plans[0].file), path.join(dir, 'video.mp4'));
 
   const ratio = props.aspect_ratio || '9:16';
