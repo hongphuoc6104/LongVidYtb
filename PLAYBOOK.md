@@ -188,3 +188,10 @@ $$\text{1. Tái hiện E2E} \longrightarrow \text{2. Phân tích gốc rễ} \lo
 - **Giả định sai (Wrong Assumptions):** Nhầm tưởng mỗi batch evaluate luôn chạy trên ngữ cảnh window mới tinh mà không tính đến tab tái sử dụng.
 - **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Kiểm tra `if (!window.__vp_cdp_hijack)` trước khi define; đặt `writable: true, configurable: true`; bọc fallback gán trực tiếp trong `try...catch`. Đã kiểm chứng 12/12 unit tests đạt green.
 - **Quy tắc phòng ngừa vàng (Golden Rule):** Mọi script tiêm vào window browser qua CDP phải bảo đảm tính idempotent, không định nghĩa thuộc tính read-only/non-configurable nếu trang có thể được evaluate nhiều lần.
+### [ERR-20261023-01] Giọng Đọc Nhỏ & Thì Thầm Trên TikTok, Tăng Âm Lượng Bị Phô (AUDIO_MASTERING)
+- **Triệu chứng (Symptom):** Narration đăng TikTok nhỏ hơn hẳn video khác, cảm giác thì thầm; tăng âm lượng thì giọng bị phô/gắt.
+- **Tái hiện E2E (Reproduction Path):** Master `sys/assets/voices/viet_narrator/sample.wav` với chuỗi cũ ở `audio_lufs=-11`: chỉ đạt -12.4 LUFS, dải >3 kHz thấp hơn toàn dải ~25 dB.
+- **Nguyên nhân cốt lõi (Root Cause):** OmniVoice tối & nhiều hơi; chuỗi cũ còn cắt -2.5 dB ở 7 kHz và không có compressor, crest factor cao khiến limiter phải ép mạnh (phô) mà vẫn không đạt target; target -14 LUFS quá nhỏ cho TikTok.
+- **Giả định sai (Wrong Assumptions):** Cho rằng chỉ cần limiter là đạt loudness mà giữ được ngữ điệu; cho rằng mọi nền tảng đều tự chuẩn hóa về -14 LUFS.
+- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** `audio_processing.VOICE_CHAIN` (highpass 80, -2 dB@250, +3.5 dB@3.2k, deesser, 2 tầng acompressor nhẹ) + vòng hiệu chỉnh gain sau limiter; một cấu hình duy nhất `sys/config.json` `audio_lufs=-11`, `audio_peak_db=-1.0` cho mọi format. Mẫu thật: -11.7 LUFS, -1.1 dBTP, khoảng cách dải cao 16.4 dB; frame giữ nguyên; 116 tests pass; người dùng nghe và chốt.
+- **Quy tắc phòng ngừa vàng (Golden Rule):** Một giọng, một cấu hình mastering trong `config.json`; không tách loudness theo nền tảng; luôn đo LUFS/TP/dải cao trên giọng thật trước khi đổi chuỗi.

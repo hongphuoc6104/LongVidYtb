@@ -36,35 +36,68 @@ def run_ffmpeg(cmd, log):
     return r
 
 
+# Voice-forward chain for TTS narration (OmniVoice VietNarrator is breathy and
+# dark: energy above 3 kHz sits ~24 dB under the full band, which reads as a
+# whisper on phone speakers). Rumble cut, de-mud, presence lift, de-ess, then a
+# gentle leveller plus a fast peak catcher so the crest factor drops enough to
+# reach a loud target without the limiter grinding (the old "louder = harsh").
+VOICE_CHAIN = (
+    'highpass=f=80,'
+    'equalizer=f=250:t=q:w=1:g=-2,'
+    'equalizer=f=3200:t=q:w=1.2:g=3.5,'
+    'highshelf=f=9000:g=1.5,'
+    'deesser=i=0.4:m=0.5:f=0.5,'
+    'acompressor=threshold=-22dB:ratio=3:attack=4:release=90:knee=4:makeup=1,'
+    'acompressor=threshold=-10dB:ratio=8:attack=1:release=40:knee=2'
+)
+# alimiter is sample-peak only; keep margin so inter-sample true peak stays under target.
+TRUE_PEAK_MARGIN_DB = 0.7
+
+
+def _measure(path, log):
+    r = run_ffmpeg(['ffmpeg', '-v', 'info', '-i', str(path), '-af', 'loudnorm=print_format=json', '-f', 'null', '-'], log)
+    try:
+        return json.loads(r.stderr[r.stderr.rindex('{'):r.stderr.rindex('}') + 1])
+    except ValueError:
+        return None
+
+
 def master(src, dst, cfg):
-    """EQ, then a static gain to target loudness with a true-peak limiter.
+    """Voice EQ + dynamics, then closed-loop static gain to target loudness under a peak limiter.
 
     loudnorm is used for ANALYSIS only: its dynamic mode pads and resamples to
     192 kHz, which would break the +/-30 ms duration gates in pilot.checks.
-    No compressor: a limiter only touches the few samples above the ceiling, so
-    it reaches the loudness target without flattening the prosody we just gained.
     alimiter needs level=disabled or it auto-normalises straight back to 0 dBFS.
-    Every filter here is sample-preserving; the frame count is asserted anyway.
+    Gain is re-measured once after limiting and corrected, since limiting eats
+    loudness. Every filter here is sample-preserving; the frame count is asserted anyway.
     """
     log = dst.parent / (dst.stem + '.log')
-    eq = 'equalizer=f=200:t=q:w=1:g=1.5,equalizer=f=7000:t=q:w=2:g=-2.5'
-    r = run_ffmpeg(['ffmpeg', '-y', '-i', str(src), '-af', eq, '-ar', '48000', '-c:a', 'pcm_s16le', str(dst)], log)
+    chain = cfg.get('audio_voice_chain', VOICE_CHAIN)
+    r = run_ffmpeg(['ffmpeg', '-y', '-i', str(src), '-af', chain, '-ar', '48000', '-c:a', 'pcm_s16le', str(dst)], log)
     if r.returncode or not (dst.exists() and dst.stat().st_size > 1000):
         raise Blocked(f'Audio mastering (EQ) failed; see {log.name}')
-    r = run_ffmpeg(['ffmpeg', '-v', 'info', '-i', str(dst), '-af', 'loudnorm=print_format=json', '-f', 'null', '-'], log)
-    try:
-        m = json.loads(r.stderr[r.stderr.rindex('{'):r.stderr.rindex('}') + 1])
-    except ValueError:
+    m = _measure(dst, log)
+    if m is None:
         dst.unlink(missing_ok=True)
         raise Blocked(f'Audio mastering (loudness analysis) failed; see {log.name}')
-    peak = float(cfg.get('audio_peak_db', -1.5))
-    gain = float(cfg.get('audio_lufs', -14.)) - float(m['input_i'])
+    peak = float(cfg.get('audio_peak_db', -1.0))
+    target = float(cfg.get('audio_lufs', -11.))
+    limit = 10 ** ((peak - TRUE_PEAK_MARGIN_DB) / 20)
+    gain = target - float(m['input_i'])
     final = dst.with_name('narration_lv.wav')
-    r = run_ffmpeg(
-        ['ffmpeg', '-y', '-i', str(dst), '-af', f'volume={gain:.2f}dB,alimiter=limit={10**(peak/20):.4f}:level=disabled',
-         '-ar', '48000', '-c:a', 'pcm_s16le', str(final)],
-        log,
-    )
+    for _ in range(2):
+        r = run_ffmpeg(
+            ['ffmpeg', '-y', '-i', str(dst), '-af',
+             f'volume={gain:.2f}dB,alimiter=limit={limit:.4f}:attack=2:release=60:level=disabled',
+             '-ar', '48000', '-c:a', 'pcm_s16le', str(final)],
+            log,
+        )
+        if r.returncode:
+            break
+        got = _measure(final, log)
+        if got is None or abs(float(got['input_i']) - target) <= 0.3:
+            break
+        gain += min(3.0, target - float(got['input_i']))
     dst.unlink(missing_ok=True)
     if r.returncode:
         final.unlink(missing_ok=True)

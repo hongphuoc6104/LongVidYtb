@@ -108,6 +108,14 @@ class AudioPipeline:
         self.speed = float(speed or self.brief.get("speed", 1.0))
         self.aspect_ratio = self.brief.get("aspect_ratio", "16:9")
 
+    def _mastering_cfg(self) -> dict[str, float]:
+        """Single channel-wide mastering config from sys/config.json (same for every format)."""
+        cfg = read_json(SYS_ROOT / "config.json")
+        return {
+            "audio_lufs": float(cfg.get("audio_lufs", -11.0)),
+            "audio_peak_db": float(cfg.get("audio_peak_db", -1.0)),
+        }
+
     def run(self) -> dict[str, Any]:
         """Execute the complete audio workflow."""
         self.out_dir.mkdir(parents=True, exist_ok=True)
@@ -223,10 +231,7 @@ class AudioPipeline:
             w.writeframes(combined_frames)
 
         final_mastered = self.out_dir / "narration.wav"
-        mastering_cfg = {
-            "audio_lufs": self.brief.get("audio_lufs", -14.0),
-            "audio_peak_db": self.brief.get("audio_peak_db", -1.5),
-        }
+        mastering_cfg = self._mastering_cfg()
 
         # Apply mastering EQ & loudness if ffmpeg is available
         if shutil.which("ffmpeg"):

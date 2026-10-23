@@ -52,8 +52,8 @@
     "tail": 0.35
   },
   "tts_pause_policy": "format_v1",
-  "audio_lufs": -14.0,
-  "audio_peak_db": -1.5,
+  "audio_lufs": -11.0,
+  "audio_peak_db": -1.0,
   "renderer": "remotion",
   "concurrency": 6,
   "review": "three_stages",
