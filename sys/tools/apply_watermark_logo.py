@@ -4,6 +4,7 @@ Tool to overlay the official stickman brand logo over the video watermark.
 Automatically calculates position and dimensions based on resolution,
 ensuring 100% coverage without obstructing video content.
 """
+
 import argparse
 import subprocess
 from pathlib import Path
@@ -14,11 +15,16 @@ DEFAULT_LOGO = ROOT / "renderer/brand_logo.png"
 
 def get_video_dimensions(video_path: Path):
     cmd = [
-        "ffprobe", "-v", "error",
-        "-select_streams", "v:0",
-        "-show_entries", "stream=width,height",
-        "-of", "csv=s=x:p=0",
-        str(video_path)
+        "ffprobe",
+        "-v",
+        "error",
+        "-select_streams",
+        "v:0",
+        "-show_entries",
+        "stream=width,height",
+        "-of",
+        "csv=s=x:p=0",
+        str(video_path),
     ]
     res = subprocess.check_output(cmd, text=True).strip().split("x")
     return int(res[0]), int(res[1])
@@ -48,17 +54,25 @@ def apply_logo(video_path: Path, output_path: Path, logo_path: Path = DEFAULT_LO
     temp_output = output_path.with_name(f"_tmp_{output_path.name}")
 
     cmd = [
-        "ffmpeg", "-y",
-        "-i", str(video_path),
-        "-i", str(logo_path),
+        "ffmpeg",
+        "-y",
+        "-i",
+        str(video_path),
+        "-i",
+        str(logo_path),
         "-filter_complex",
         f"[1:v]scale={logo_size}:{logo_size}[logo];[0:v][logo]overlay={overlay_expr}",
-        "-c:v", "libx264",
-        "-preset", "veryfast",
-        "-crf", "18",
-        "-c:a", "copy",
-        "-movflags", "+faststart",
-        str(temp_output)
+        "-c:v",
+        "libx264",
+        "-preset",
+        "veryfast",
+        "-crf",
+        "18",
+        "-c:a",
+        "copy",
+        "-movflags",
+        "+faststart",
+        str(temp_output),
     ]
 
     print(f"[Brand Logo] Applying logo ({logo_size}x{logo_size}) at {overlay_expr} on {w}x{h} video...")
@@ -70,7 +84,9 @@ def apply_logo(video_path: Path, output_path: Path, logo_path: Path = DEFAULT_LO
 def main():
     parser = argparse.ArgumentParser(description="Apply stickman brand logo over watermark in video.")
     parser.add_argument("video", type=Path, help="Input video path")
-    parser.add_argument("-o", "--output", type=Path, default=None, help="Output video path (default: <name>_branded.mp4)")
+    parser.add_argument(
+        "-o", "--output", type=Path, default=None, help="Output video path (default: <name>_branded.mp4)"
+    )
     parser.add_argument("--logo", type=Path, default=DEFAULT_LOGO, help="Logo image path")
     parser.add_argument("--in-place", action="store_true", help="Overwrite the original video")
     args = parser.parse_args()

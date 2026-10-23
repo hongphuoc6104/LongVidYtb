@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Interactive OAuth login runner for Colab CLI accounts."""
+
 import json
 import os
 import sys
@@ -44,7 +45,9 @@ def login_account(account_id: str) -> None:
 
     # Update accounts.json
     acc_json_path = STORE / "accounts.json"
-    acc_data = json.loads(acc_json_path.read_text()) if acc_json_path.is_file() else {"preferred": account_id, "accounts": []}
+    acc_data = (
+        json.loads(acc_json_path.read_text()) if acc_json_path.is_file() else {"preferred": account_id, "accounts": []}
+    )
     existing = {x["id"] for x in acc_data["accounts"]}
     if account_id not in existing:
         acc_data["accounts"].append({"id": account_id, "enabled": True, "role": "any"})

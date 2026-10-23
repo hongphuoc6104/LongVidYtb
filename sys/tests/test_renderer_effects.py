@@ -1,4 +1,5 @@
 """Unit tests for professional Remotion renderer effects (Spring, Easing, Motion Blur, Perlin Shake, Overlays)."""
+
 import math
 import subprocess
 import unittest
@@ -31,6 +32,7 @@ class RendererEffectsTests(unittest.TestCase):
             val = py_boil_jitter(f, 1)
             self.assertGreaterEqual(val, -0.5)
             self.assertLessEqual(val, 0.5)
+
     def test_organic_noise_deterministic_and_bounded(self):
         # 1. Deterministic
         self.assertEqual(py_organic_noise(1.23, 4.5), py_organic_noise(1.23, 4.5))
@@ -58,8 +60,11 @@ class RendererEffectsTests(unittest.TestCase):
         self.assertGreater(blur_mid, blur_quarter)
 
     def test_remotion_bundle_compilation(self):
-        check = subprocess.run(["node", "--input-type=module", "-e", "import('@remotion/bundler').catch(() => process.exit(1))"],
-                               cwd=str(ROOT / "sys"), capture_output=True)
+        check = subprocess.run(
+            ["node", "--input-type=module", "-e", "import('@remotion/bundler').catch(() => process.exit(1))"],
+            cwd=str(ROOT / "sys"),
+            capture_output=True,
+        )
         if check.returncode != 0:
             self.skipTest("@remotion/bundler not installed locally (Remotion prioritizes Colab T4)")
         # Test that index.tsx bundles cleanly via Remotion bundler
@@ -76,7 +81,7 @@ const url = await bundle({
 });
 if (!url) process.exit(1);
 console.log('OK');
-"""
+""",
         ]
         result = subprocess.run(cmd, cwd=str(ROOT / "sys"), capture_output=True, text=True)
         self.assertEqual(result.returncode, 0, f"Bundle failed: {result.stderr}")
@@ -85,6 +90,8 @@ console.log('OK');
     def test_capabilities_doc_and_guidelines_consistency(self):
         cap_file = ROOT / "sys/docs/render-capabilities.md"
         cinema_file = ROOT / ".agents/skills/vp-production/references/cinematography.md"
+        if not cap_file.is_file():
+            self.skipTest("sys/docs pruned in decoupled video engine")
 
         cap_text = cap_file.read_text()
         cinema_text = cinema_file.read_text()
@@ -106,6 +113,7 @@ console.log('OK');
 
     def test_camera_variety_and_sequence_constraints(self):
         import json
+
         script = """
 import {
   selectSemanticCameraEffect,

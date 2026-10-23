@@ -1,6 +1,6 @@
 """Single Source of Truth for Short (9:16 Portrait) and Long (16:9 Landscape) video formats.
 
-Strictly separates visual framing, resolution, Flow RPC aspect ratios, caption layout,
+Strictly separates visual framing, resolution, caption layout,
 caption clearance, text style, and watermark coordinates between the two pipelines.
 Contains zero fixed duration constraints — video duration is determined strictly by
 authored scene scripts and measured WAV narration.
@@ -13,17 +13,10 @@ from typing import Any, Dict, Optional, Tuple
 PROFILES: Dict[str, Dict[str, Any]] = {
     "short_9x16": {
         "id": "short_9x16",
-        "narration_pauses": {
-            "short_sentence": 0.16, "sentence": 0.22, "minor": 0.12,
-            "opening_short_sentence": 0.12, "opening_sentence": 0.16,
-            "scene": 0.30, "tail": 0.15,
-            "recommended_pivot": 0.45,
-        },
         "aspect_ratio": "9:16",
         "width": 1080,
         "height": 1920,
         "fps": 30,
-        "flow_rpc_aspect": 2,
         "framing_mode": "vertical_portrait_safe_zone",
         "caption_layout": {
             "max_line_chars": 28,
@@ -50,17 +43,10 @@ PROFILES: Dict[str, Dict[str, Any]] = {
     },
     "long_16x9": {
         "id": "long_16x9",
-        "narration_pauses": {
-            "short_sentence": 0.20, "sentence": 0.28, "minor": 0.16,
-            "opening_short_sentence": 0.16, "opening_sentence": 0.20,
-            "scene": 0.40, "tail": 0.25,
-            "recommended_pivot": 0.60,
-        },
         "aspect_ratio": "16:9",
         "width": 1920,
         "height": 1080,
         "fps": 30,
-        "flow_rpc_aspect": 3,
         "framing_mode": "horizontal_widescreen_cinema",
         "caption_layout": {
             "max_line_chars": 42,
@@ -127,7 +113,9 @@ def validate_format_separation(brief: Dict[str, Any]) -> None:
         raise ValueError("FORMAT_SEPARATION: brief must be a dictionary")
     ratio = brief.get("aspect_ratio")
     if ratio not in ("9:16", "16:9", "dual"):
-        raise ValueError(f"FORMAT_SEPARATION: explicit aspect_ratio ('9:16', '16:9', or 'dual') required, got {ratio!r}")
+        raise ValueError(
+            f"FORMAT_SEPARATION: explicit aspect_ratio ('9:16', '16:9', or 'dual') required, got {ratio!r}"
+        )
 
     profile = brief.get("format_profile")
     if profile is not None:

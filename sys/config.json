@@ -1,94 +1,14 @@
 {
   "schema_version": "1.0",
-  "voices": {
-    "vi": "assets/voices/viet_narrator/profile.json",
-    "en": "assets/voices/viet_narrator/profile.json"
-  },
-  "tts_voice": "VietNarrator",
-  "tts_speed": 1.0,
-  "tts_max_chars": 256,
-  "en_voice": "VietNarrator",
-  "en_speed": 1.0,
-  "fps": 30,
-  "video_generation": false,
-  "credit_budget": 0,
-  "flow_batch": false,
-  "flow_image_engine": "cdp",
-  "flow_cdp_profiles": [
-    {"id": "profile_1", "port": 9225, "directory": "Profile 1", "user_data_dir": "~/.config/google-chrome-cdp-p1"},
-    {"id": "profile_2", "port": 9223, "directory": "Profile 2", "user_data_dir": "~/.config/google-chrome-cdp-p2"},
-    {"id": "profile_3", "port": 9224, "directory": "Profile 3", "user_data_dir": "~/.config/google-chrome-cdp-p3"},
-    {"id": "profile_4", "port": 9222, "directory": "Profile 4", "user_data_dir": "~/.config/google-chrome-cdp-profile4"},
-    {"id": "profile_5", "port": 9226, "directory": "Default", "user_data_dir": "~/.config/google-chrome-cdp-profile5"},
-    {"id": "profile_6", "port": 9227, "directory": "Profile 7", "user_data_dir": "~/.config/google-chrome-cdp-profile7"},
-    {"id": "profile_7", "port": 9228, "directory": "Profile 11", "user_data_dir": "~/.config/google-chrome-cdp-profile11"},
-    {"id": "profile_8", "port": 9229, "directory": "Profile 5", "user_data_dir": "~/.config/google-chrome-cdp-p5"},
-    {"id": "profile_9", "port": 9230, "directory": "Profile 15", "user_data_dir": "~/.config/google-chrome-cdp-p15"},
-    {"id": "profile_10", "port": 9231, "directory": "Profile 6", "user_data_dir": "~/.config/google-chrome-cdp-profile6"},
-    {"id": "profile_11", "port": 9232, "directory": "Profile 12", "user_data_dir": "~/.config/google-chrome-cdp-profile12"},
-    {"id": "profile_12", "port": 9233, "directory": "Profile 13", "user_data_dir": "~/.config/google-chrome-cdp-profile13"},
-    {"id": "profile_13", "port": 9234, "directory": "Profile 14", "user_data_dir": "~/.config/google-chrome-cdp-profile14"},
-    {"id": "profile_14", "port": 9235, "directory": "Profile 16", "user_data_dir": "~/.config/google-chrome-cdp-profile16"},
-    {"id": "profile_15", "port": 9236, "directory": "Profile 17", "user_data_dir": "~/.config/google-chrome-cdp-profile17"},
-    {"id": "profile_16", "port": 9237, "directory": "Profile 18", "user_data_dir": "~/.config/google-chrome-cdp-profile18"},
-    {"id": "profile_17", "port": 9238, "directory": "Profile 19", "user_data_dir": "~/.config/google-chrome-cdp-profile19"},
-    {"id": "profile_18", "port": 9239, "directory": "Profile 22", "user_data_dir": "~/.config/google-chrome-cdp-profile22"},
-    {"id": "profile_19", "port": 9240, "directory": "Profile 23", "user_data_dir": "~/.config/google-chrome-cdp-profile23"},
-    {"id": "profile_20", "port": 9241, "directory": "Profile 8", "user_data_dir": "~/.config/google-chrome-cdp-profile8"}
-  ],
-  "patch_size": 3,
-  "flow_session_image_cap": 200,
-  "flow_require_ui_evidence": false,
-  "flow_queue_trial_enabled": true,
-  "flow_model": "Nano Banana 2 Lite",
-  "flow_prompt_version": "1.7.0",
-  "flow_dispatch_policy": "pool",
-  "flow_profile": "video-pilot",
-  "flow_project": "Video Pilot",
-  "tts_pause": {
-    "para": 0.7,
-    "sentence": 0.5,
-    "minor": 0.3,
-    "tail": 0.35
-  },
-  "tts_pause_policy": "format_v1",
-  "audio_lufs": -14.0,
-  "audio_peak_db": -1.5,
   "renderer": "remotion",
-  "concurrency": 6,
-  "review": "three_stages",
-  "en_seed": 42,
-  "workflow_mode": "review",
+  "fps": 30,
   "render_concurrency": 4,
-  "canonical_character": null,
-  "auto_require_clean_code": true,
-  "auto_max_media_rejections": 3,
-  "auto_max_audio_retakes_per_scene": 2,
-  "auto_max_audio_retakes": 4,
-  "auto_max_repeat_failures": 3,
-  "flow_status_timeout_seconds": 15,
-  "flow_status_retries": 1,
-  "flow_status_backoff_seconds": 0.2,
-  "brief_policies": [],
   "colab_tts": {
     "enabled": true,
-    "parallel_images": true,
     "session": "video-pilot-tts",
-    "batch_size": 4,
-    "num_step": 32,
     "timeout_seconds": 1800,
-    "models": {
-      "vi": {
-        "id": "kjanh/KhanhTTS-OmniVoice",
-        "revision": "20d056b8ea5d8d578b4cbaf1f703012fa3798a84"
-      },
-      "en": {
-        "id": "kjanh/KhanhTTS-OmniVoice",
-        "revision": "20d056b8ea5d8d578b4cbaf1f703012fa3798a84"
-      }
-    },
+    "render_timeout_seconds": 5400,
     "account": "auto-idle",
     "render_estimate_seconds": 60
-  },
-  "flow_profile_policy": "existing_only"
+  }
 }

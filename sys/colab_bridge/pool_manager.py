@@ -5,6 +5,7 @@ supports role-based routing ('any', 'tts', 'render'), staggered T4 allocation,
 and work-stealing failover across accounts so TTS and multi-chapter renders
 execute in parallel without waiting on a single shared session.
 """
+
 from __future__ import annotations
 
 import concurrent.futures
@@ -136,7 +137,8 @@ class ColabPoolManager:
         else:
             reg = accounts.registry()
             raw_entries = [
-                x for x in reg.get("accounts", [])
+                x
+                for x in reg.get("accounts", [])
                 if x.get("enabled", True) and (accounts.folder(x["id"]) / "token.json").is_file()
             ]
         for item in raw_entries:
@@ -184,9 +186,7 @@ class ColabPoolManager:
                     "local_sessions": accounts.local_sessions(w.account_id),
                 }
                 if probe_server and Path(self.binary).is_file():
-                    entry["server_assignment"] = accounts.assignment_state(
-                        self.binary, w.account_id, w.session_name
-                    )
+                    entry["server_assignment"] = accounts.assignment_state(self.binary, w.account_id, w.session_name)
                 worker_list.append(entry)
 
             return {
@@ -208,7 +208,8 @@ class ColabPoolManager:
         with self._lock:
             now = time.time()
             candidates = [
-                w for w in self.workers.values()
+                w
+                for w in self.workers.values()
                 if w.account_id not in exclude
                 and w.matches_role(role)
                 and w.is_available(now=now, lock_dir=self.lock_dir)
@@ -318,10 +319,9 @@ class ColabPoolManager:
         max_workers: int = 3,
     ) -> dict[str, Any]:
         """Start or verify T4 sessions across multiple accounts in parallel."""
-        targets = [
-            w for w in self.workers.values()
-            if (account_ids is None or w.account_id in account_ids)
-        ][:max_workers]
+        targets = [w for w in self.workers.values() if (account_ids is None or w.account_id in account_ids)][
+            :max_workers
+        ]
         started: list[dict[str, Any]] = []
         failed: list[dict[str, Any]] = []
 
@@ -439,10 +439,7 @@ class ColabPoolManager:
     ) -> dict[str, Any]:
         """Stop active T4 sessions across selected or all pool accounts and clear split caches."""
         tmp_base = tmp_profiles_dir if tmp_profiles_dir is not None else Path("/tmp/vp_colab_profiles")
-        targets = [
-            w for w in self.workers.values()
-            if (account_ids is None or w.account_id in account_ids)
-        ]
+        targets = [w for w in self.workers.values() if (account_ids is None or w.account_id in account_ids)]
         stopped: list[str] = []
         unassigned_map: dict[str, list[str]] = {}
         errors: list[dict[str, str]] = []
@@ -473,7 +470,11 @@ class ColabPoolManager:
                         pass
 
             res = self.run_account_cmd(w.account_id, ["stop", "-s", w.session_name], timeout=60, check=False)
-            unassigned = self._unassign_server_endpoints(w.account_id, target_endpoints=known_endpoints) if unassign_server else []
+            unassigned = (
+                self._unassign_server_endpoints(w.account_id, target_endpoints=known_endpoints)
+                if unassign_server
+                else []
+            )
             if unassigned:
                 unassigned_map[w.account_id] = unassigned
             self._clear_local_session_files(w.account_id, w.session_name, tmp_profiles_dir=tmp_base)
@@ -482,10 +483,7 @@ class ColabPoolManager:
             w.render_runtime_ready = False
             w.tts_runtime_ready = False
             stderr_msg = (res.stderr or res.stdout or "").strip()
-            already_gone = any(
-                k in stderr_msg.lower()
-                for k in ("not found", "no active session", "no session")
-            )
+            already_gone = any(k in stderr_msg.lower() for k in ("not found", "no active session", "no session"))
             if res.returncode == 0 or unassigned or already_gone:
                 stopped.append(w.account_id)
             else:
@@ -511,25 +509,12 @@ class ColabPoolManager:
             tmp_profiles_dir=tmp_profiles_dir,
         )
         chrome_res: dict[str, Any] = {}
-        if close_chrome:
-            try:
-                from flow_cdp.multi_profile_manager import MultiProfileManager
-                chrome_res = MultiProfileManager().stop_all_profiles()
-            except Exception as exc:
-                chrome_res = {"error": str(exc)}
         released_leases: list[str] = []
-        if job_id:
-            try:
-                from flow_cdp.lease_manager import FlowJobLeaseManager
-                released_leases = FlowJobLeaseManager().release_all_for_job(job_id)
-            except Exception:
-                pass
         return {
             "colab": colab_res,
             "chrome_cdp": chrome_res,
             "released_leases": released_leases,
         }
-
 
 
 class ColabPoolDispatcher:
@@ -567,7 +552,8 @@ class ColabPoolDispatcher:
             # Check if any non-excluded worker is merely BUSY (meaning it will free up) or in COOLDOWN
             with self.manager._lock:
                 viable = [
-                    w for w in self.manager.workers.values()
+                    w
+                    for w in self.manager.workers.values()
                     if (exclude_ids is None or w.account_id not in exclude_ids)
                     and w.matches_role(role)
                     and w.state != ColabWorkerState.BLOCKED
@@ -638,14 +624,18 @@ class ColabPoolDispatcher:
         tasks: list[dict[str, Any]],
         executor_func: Callable[[ColabAccountWorker, dict[str, Any]], Any],
         *,
-        max_concurrency: int = 3,
+        max_concurrency: int | None = None,
         role: str | None = None,
     ) -> list[Any]:
-        """Dispatch tasks in parallel across up to max_concurrency T4 accounts."""
+        """Dispatch tasks in parallel across all available T4 accounts by default."""
         if not tasks:
             return []
 
-        worker_count = max(1, min(max_concurrency, max(1, len(self.manager.workers))))
+        pool_size = max(1, len(self.manager.workers))
+        target_concurrency = (
+            max_concurrency if (max_concurrency is not None and max_concurrency > 0) else max(4, pool_size)
+        )
+        worker_count = max(1, min(target_concurrency, pool_size, len(tasks)))
         results_by_idx: dict[int, Any] = {}
         errors: list[Exception] = []
 

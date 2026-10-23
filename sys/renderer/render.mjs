@@ -5,12 +5,35 @@ import fs from 'node:fs';
 import path from 'node:path';
 import os, {cpus} from 'node:os';
 import {fileURLToPath} from 'node:url';
-import {outputPlans, renderConcurrency} from './outputs.mjs';
+import {outputPlans, renderConcurrency, runParallelPool} from './outputs.mjs';
 import {captionStyle, captionMaxHeight} from './captions.mjs';
+import {generateSrt} from './srt.mjs';
+
+if (!process.argv[2] || process.argv[2] === '--help' || process.argv[2] === '-h') {
+  console.log('Usage: node sys/renderer/render.mjs <work_dir>');
+  console.log('Strict I/O contract: renders video.mp4, subtitles.srt, layout.json, stills & thumbnails');
+  process.exit(process.argv[2] ? 0 : 1);
+}
 
 const dir = path.resolve(process.argv[2]);
-const props = JSON.parse(fs.readFileSync(path.join(dir, 'props.json')));
+const propsPath = path.join(dir, 'props.json');
+if (!fs.existsSync(propsPath)) {
+  console.error(`Error: props.json not found in ${dir}`);
+  process.exit(1);
+}
+
+const props = JSON.parse(fs.readFileSync(propsPath, 'utf8'));
 const publicDir = path.join(dir, 'public');
+if (!fs.existsSync(publicDir)) {
+  fs.mkdirSync(publicDir, {recursive: true});
+}
+
+// Generate native subtitles.srt directly from props.cues if available
+const srtCues = props.cues || props.tracks?.[props.primary_language || 'vi']?.cues;
+if (Array.isArray(srtCues)) {
+  const srtContent = generateSrt(srtCues);
+  fs.writeFileSync(path.join(dir, 'subtitles.srt'), srtContent, 'utf8');
+}
 
 const plans = outputPlans(props, fs.existsSync(path.join(publicDir, 'narration_en.wav')));
 const url = await bundle({
@@ -98,6 +121,66 @@ process.on('exit', () => {
 
 process.env.DISABLE_FROM_SURFACE = 'true';
 
+const effectiveConcurrency = renderConcurrency(props.render_concurrency, cpus().length, hasNvidiaEgl);
+
+// Step 1: Run Batch DOM Caption Safety Check and close Playwright BEFORE opening Remotion browser
+const captionPlans = plans.filter(plan => !plan.props.hideSubtitles);
+let failures = [];
+let checked = 0;
+if (captionPlans.length) {
+  const pw = await chromium.launch({executablePath: chromePath, headless: true});
+  try {
+    for (const plan of captionPlans) {
+      const checkWidth = plan.props.width;
+      const checkHeight = plan.props.height;
+      const page = await pw.newPage({viewport: {width: checkWidth, height: checkHeight}});
+      try {
+        await page.setContent('<div id="subtitle"></div>');
+        const style = captionStyle(checkWidth, checkHeight);
+        const maxHeight = captionMaxHeight(checkWidth, checkHeight);
+        const cues = Array.isArray(plan.props.cues) ? plan.props.cues : [];
+        const res = await page.evaluate(({cuesList, styleObj, w, h, maxH, file, language}) => {
+          const e = document.querySelector('#subtitle');
+          for (const [key, value] of Object.entries(styleObj)) {
+            e.style[key] = typeof value === 'number' && !['fontWeight', 'lineHeight', 'zIndex'].includes(key) ? `${value}px` : String(value);
+          }
+          const badList = [];
+          for (const cue of cuesList) {
+            e.textContent = cue.text;
+            const r = e.getBoundingClientRect();
+            const isOverflow = r.left < 0 || r.right > w || r.top < 0 || r.bottom > h || r.height > maxH || e.scrollWidth > e.clientWidth;
+            if (isOverflow) {
+              badList.push({file, language, text: cue.text, errors: ['subtitle']});
+            }
+          }
+          return {checkedCount: cuesList.length, badList};
+        }, {cuesList: cues, styleObj: style, w: checkWidth, h: checkHeight, maxH: maxHeight, file: plan.file, language: plan.props.language});
+        checked += res.checkedCount;
+        if (res.badList.length) failures.push(...res.badList);
+      } finally {
+        await page.close();
+      }
+    }
+  } finally {
+    await pw.close();
+  }
+}
+
+const layoutResult = {
+  passed: !failures.length,
+  applies: captionPlans.length > 0,
+  checked_cues: checked,
+  concurrency: effectiveConcurrency,
+  execution_mode: 'multi_threaded_batch',
+  method: 'actual requested language/aspect caption styles; two lines; no quality approval',
+  failures
+};
+
+fs.writeFileSync(path.join(dir, 'layout.json'), JSON.stringify(layoutResult, null, 2));
+
+if (layoutResult.failures.length) throw Error('Text overflow');
+
+// Step 2: Open Remotion browser after Playwright has cleanly exited
 const browser = await openBrowser('chrome', {
   browserExecutable: chromePath,
   chromiumOptions: {
@@ -123,46 +206,7 @@ const browser = await openBrowser('chrome', {
 });
 
 try {
-  const captionPlans = plans.filter(plan => !plan.props.hideSubtitles);
-  let failures = [];
-  let checked = 0;
-  if (captionPlans.length) {
-    const pw = await chromium.launch({executablePath: chromePath, headless: true});
-    try {
-      for (const plan of captionPlans) {
-        const checkWidth = plan.props.width;
-        const checkHeight = plan.props.height;
-        const page = await pw.newPage({viewport: {width: checkWidth, height: checkHeight}});
-        for (const cue of plan.props.cues) {
-          checked++;
-          await page.setContent('<div id="subtitle"></div>');
-          const style = captionStyle(checkWidth, checkHeight);
-          await page.locator('#subtitle').evaluate((e, {text, style}) => {
-            for (const [key, value] of Object.entries(style)) {
-              e.style[key] = typeof value === 'number' && !['fontWeight', 'lineHeight', 'zIndex'].includes(key) ? `${value}px` : String(value);
-            }
-            e.textContent = text;
-          }, {text: cue.text, style});
-          const bad = await page.evaluate(([w, h, maxHeight]) => {
-            const e = document.querySelector('#subtitle');
-            const r = e.getBoundingClientRect();
-            return r.left < 0 || r.right > w || r.top < 0 || r.bottom > h || r.height > maxHeight || e.scrollWidth > e.clientWidth
-              ? ['subtitle'] : [];
-          }, [checkWidth, checkHeight, captionMaxHeight(checkWidth, checkHeight)]);
-          if (bad.length) failures.push({file: plan.file, language: plan.props.language, text: cue.text, errors: bad});
-        }
-        await page.close();
-      }
-    } finally { await pw.close(); }
-  }
-  const layoutResult = {passed: !failures.length, applies: captionPlans.length > 0, checked_cues: checked,
-    method: 'actual requested language/aspect caption styles; two lines; no quality approval', failures};
-
-  fs.writeFileSync(path.join(dir, 'layout.json'), JSON.stringify(layoutResult, null, 2));
-
-  if (layoutResult.failures.length) throw Error('Text overflow');
-
-  // Render representative stills
+  // Render representative stills on the shared browser instance
   const compStills = await selectComposition({
     serveUrl: url,
     id: 'Pilot',
@@ -170,24 +214,75 @@ try {
     puppeteerInstance: browser
   });
 
+  const stillsFps = compStills.fps || 30;
   for (const scene of plans[0].props.scenes) {
+    let targetFrame = 0;
+    if (scene.start !== undefined && scene.end !== undefined) {
+      targetFrame = Math.round(((scene.start + scene.end) / 2) * stillsFps);
+    } else if (scene.startFrame !== undefined) {
+      const dur = scene.durationInFrames ?? (scene.endFrame !== undefined ? scene.endFrame - scene.startFrame : 0);
+      targetFrame = Math.round(scene.startFrame + dur / 2);
+    } else if (scene.start !== undefined) {
+      targetFrame = Math.round(scene.start * stillsFps);
+    }
+    targetFrame = Math.max(0, Math.min(compStills.durationInFrames - 1, targetFrame));
+
     await renderStill({
       serveUrl: url,
       composition: compStills,
       inputProps: plans[0].props,
       puppeteerInstance: browser,
-      frame: Math.min(compStills.durationInFrames - 1, Math.round((scene.start + scene.end) / 2 * 30)),
+      frame: targetFrame,
       output: path.join(dir, scene.id + '.png')
     });
   }
 
-  if (props.omni_platform) {
-    const text = props.thumbnail_spec?.text_overlay;
-    if (!text || text !== text.toUpperCase() || text.trim().split(/\s+/u).length < 2 || text.trim().split(/\s+/u).length > 4) throw Error('Invalid thumbnail text: 2–4 uppercase words required');
-    for (const [width, height, file] of [[1920, 1080, 'thumbnail_youtube_16x9.png'], [1080, 1920, 'cover_tiktok_reels_9x16.png']]) {
-      const inputProps = {width, height, text, image: plans[0].props.scenes[0].image};
-      const composition = await selectComposition({serveUrl: url, id: 'Thumbnail', inputProps, puppeteerInstance: browser});
-      await renderStill({serveUrl: url, composition, inputProps, puppeteerInstance: browser, frame: 0, output: path.join(dir, file)});
+  // Render thumbnail and cover stills if thumbnail_spec is provided
+  if (props.thumbnail_spec) {
+    const spec = props.thumbnail_spec;
+    const thumbText = spec.title || spec.text_overlay || spec.text || '';
+    const thumbBadge = spec.badge || '';
+    const thumbImage = spec.image || plans[0]?.props?.scenes?.[0]?.image || plans[0]?.props?.scenes?.[0]?.images?.[0]?.src || '';
+
+    if (props.omni_platform && spec.text_overlay) {
+      const text = spec.text_overlay;
+      if (text !== text.toUpperCase() || text.trim().split(/\s+/u).length < 2 || text.trim().split(/\s+/u).length > 4) {
+        throw Error('Invalid thumbnail text: 2–4 uppercase words required');
+      }
+    }
+
+    const ratio = props.aspect_ratio || '9:16';
+    const targets = [];
+    if (ratio === '16:9' || ratio === 'dual' || props.omni_platform) {
+      targets.push([1920, 1080, 'thumbnail_youtube_16x9.png']);
+    }
+    if (ratio === '9:16' || ratio === 'dual' || props.omni_platform) {
+      targets.push([1080, 1920, 'cover_tiktok_reels_9x16.png']);
+    }
+
+    for (const [width, height, file] of targets) {
+      const inputProps = {
+        width,
+        height,
+        text: thumbText,
+        title: spec.title || thumbText,
+        badge: thumbBadge,
+        image: thumbImage
+      };
+      const composition = await selectComposition({
+        serveUrl: url,
+        id: 'Thumbnail',
+        inputProps,
+        puppeteerInstance: browser
+      });
+      await renderStill({
+        serveUrl: url,
+        composition,
+        inputProps,
+        puppeteerInstance: browser,
+        frame: 0,
+        output: path.join(dir, file)
+      });
     }
   }
 
@@ -202,7 +297,7 @@ try {
       hardwareAcceleration: 'if-possible',
       videoBitrate: '6M',
       audioCodec: 'aac',
-      concurrency: renderConcurrency(props.render_concurrency, cpus().length),
+      concurrency: effectiveConcurrency,
       outputLocation: path.join(dir, plan.file),
       onProgress: ({renderedFrames}) => {
         if (renderedFrames % 150 === 0) {
@@ -212,6 +307,14 @@ try {
     });
   }
   if (plans[0].file !== 'video.mp4') fs.copyFileSync(path.join(dir, plans[0].file), path.join(dir, 'video.mp4'));
+
+  const ratio = props.aspect_ratio || '9:16';
+  if (ratio === '16:9' && !fs.existsSync(path.join(dir, 'video_16x9.mp4')) && fs.existsSync(path.join(dir, 'video.mp4'))) {
+    fs.copyFileSync(path.join(dir, 'video.mp4'), path.join(dir, 'video_16x9.mp4'));
+  }
+  if (ratio === '9:16' && !fs.existsSync(path.join(dir, 'video_9x16.mp4')) && fs.existsSync(path.join(dir, 'video.mp4'))) {
+    fs.copyFileSync(path.join(dir, 'video.mp4'), path.join(dir, 'video_9x16.mp4'));
+  }
 
 } finally {
   await browser.close({silent: true});

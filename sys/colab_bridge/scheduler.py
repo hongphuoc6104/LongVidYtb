@@ -69,7 +69,7 @@ class RuntimeScheduler:
                 if (
                     saved.get("phase") in PENDING
                     and self.identity(saved["account"]) == identity
-                    and (saved.get("request_id") != request or Path(saved['journal']).resolve() != journal.resolve())
+                    and (saved.get("request_id") != request or Path(saved["journal"]).resolve() != journal.resolve())
                     and not Path(saved["journal"]).is_file()
                 ):
                     blocked_path = Path(saved["journal"])
@@ -110,7 +110,14 @@ class RuntimeScheduler:
 
     @contextmanager
     def claim(
-        self, candidates: list[str], *, session: str, request: str, journal: Path, exact: bool, wait_seconds: float = 15,
+        self,
+        candidates: list[str],
+        *,
+        session: str,
+        request: str,
+        journal: Path,
+        exact: bool,
+        wait_seconds: float = 15,
         collection_only: bool = False,
     ) -> Iterator[str]:
         """Select and lock together; no gap exists between choosing and reserving an account."""
@@ -135,7 +142,7 @@ class RuntimeScheduler:
                         continue
                     if not collection_only and self.pending(account, request, journal):
                         continue
-                    record = self.directory / (key + '-' + stamp(str(journal.resolve())) + ".json")
+                    record = self.directory / (key + "-" + stamp(str(journal.resolve())) + ".json")
                     value = {
                         "account": account,
                         "session": session,

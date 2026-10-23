@@ -101,9 +101,10 @@ export function cameraVariation(sceneId, beatIndex, beatDuration = Infinity) {
 }
 
 export function selectSemanticCameraEffect(beat, scene, beatIndex = 0) {
-  const explicit = beat?.camera_motion || beat?.effect;
+  const explicit = beat?.camera_motion || beat?.effect || (typeof beat?.camera === 'object' ? beat?.camera?.motion : undefined);
   if (explicit && !['auto', 'cut', 'fade'].includes(explicit)) return explicit;
-  const intent = String(beat?.camera_intent || scene?.camera_intent || scene?.camera || '').toLowerCase();
+  const cameraVal = typeof scene?.camera === 'object' ? (scene?.camera?.motion || '') : (scene?.camera || '');
+  const intent = String(beat?.camera_intent || scene?.camera_intent || cameraVal || '').toLowerCase();
   const desc = String(beat?.description || scene?.action || scene?.purpose || '').toLowerCase();
 
   if (intent.includes('hold') || desc.includes('diagram') || desc.includes('sơ đồ')) return 'hold';
@@ -157,7 +158,7 @@ export function buildCalmCameraPlan(scenes) {
       const duration = Math.max(0, end - start);
       // Unknown legacy effects and lateral sweeps are steady in calm playback.
       // Keep the semantic selector available for authoring and contract checks.
-      const explicit = anchor.camera_motion || anchor.effect;
+      const explicit = anchor.camera_motion || anchor.effect || (typeof anchor.camera === 'object' ? anchor.camera?.motion : undefined);
       const hasIntent = (explicit && !['auto', 'cut', 'fade', 'draw_on', 'line_boil'].includes(explicit)) ||
         anchor.camera_intent || scene.camera_intent || scene.camera;
       const requested = hasIntent ? selectSemanticCameraEffect(anchor, scene, group.first) : 'hold';

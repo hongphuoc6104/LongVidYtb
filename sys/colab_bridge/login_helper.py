@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Helper script to generate Colab OAuth URL and exchange authorization code for multi-account setup."""
+
 import argparse
 import json
 import os
@@ -28,11 +29,15 @@ def generate_auth_url(account_id: str) -> str:
 
     # Save state and code_verifier to exchange later
     state_file = STATE_DIR / f"{account_id}.json"
-    state_file.write_text(json.dumps({
-        "state": state,
-        "client_config": client_config,
-        "code_verifier": getattr(flow, "code_verifier", None),
-    }))
+    state_file.write_text(
+        json.dumps(
+            {
+                "state": state,
+                "client_config": client_config,
+                "code_verifier": getattr(flow, "code_verifier", None),
+            }
+        )
+    )
     os.chmod(state_file, 0o600)
     return auth_url
 
@@ -67,7 +72,9 @@ def exchange_code(account_id: str, code: str) -> bool:
 
     # Register into accounts.json
     acc_json_path = STORE / "accounts.json"
-    acc_data = json.loads(acc_json_path.read_text()) if acc_json_path.is_file() else {"preferred": account_id, "accounts": []}
+    acc_data = (
+        json.loads(acc_json_path.read_text()) if acc_json_path.is_file() else {"preferred": account_id, "accounts": []}
+    )
     existing = {x["id"] for x in acc_data["accounts"]}
     if account_id not in existing:
         acc_data["accounts"].append({"id": account_id, "enabled": True, "role": "any"})

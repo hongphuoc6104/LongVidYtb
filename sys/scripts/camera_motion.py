@@ -1,4 +1,5 @@
 """Camera selection shared by authoring and the remote timeline."""
+
 from typing import List, Optional
 
 _FALLBACK_POOL = ("zoom_in", "pan_right", "zoom_out", "pan_left")
@@ -9,7 +10,9 @@ def _match_explicit_or_keyword_effect(text: str) -> Optional[str]:
         return text
     if any(k in text for k in ("hold", "static", "white_card", "sơ đồ tĩnh", "bảng đối chiếu", "sơ đồ đối chiếu")):
         return "hold"
-    if any(k in text for k in ("extreme", "macro", "đặc tả", "nhấn", "punch", "reveal", "shock", "bất ngờ", "giật mình")):
+    if any(
+        k in text for k in ("extreme", "macro", "đặc tả", "nhấn", "punch", "reveal", "shock", "bất ngờ", "giật mình")
+    ):
         return "punch_in"
     if any(k in text for k in ("wide", "establishing", "pull", "zoom_out", "zoom out", "toàn cảnh", "rộng", "mở rộng")):
         return "zoom_out"
@@ -61,16 +64,18 @@ def assign_scene_camera_effects(camera_descriptions: List[str]) -> List[str]:
 
 def scene_camera_motions(scene: dict) -> list[str]:
     """Resolve legacy cut/fade transitions to non-repeating in-frame movements."""
-    images = {image['id']: image for image in scene.get('images', [])}
+    images = {image["id"]: image for image in scene.get("images", [])}
     motions: list[str] = []
-    beats = scene.get('beats', [])
+    beats = scene.get("beats", [])
     use_pool = len(beats) > 2
     for idx, beat in enumerate(beats):
-        motion = beat.get('camera_motion', beat.get('effect', 'auto'))
-        if motion in ('auto', 'cut', 'fade'):
-            image = images.get(beat['image_id'], {})
-            combined = image.get('description', '') + ' ' + scene.get('camera', '')
-            use_index = idx if (use_pool and _match_explicit_or_keyword_effect(combined.strip().lower()) is None) else None
+        motion = beat.get("camera_motion", beat.get("effect", "auto"))
+        if motion in ("auto", "cut", "fade"):
+            image = images.get(beat["image_id"], {})
+            combined = image.get("description", "") + " " + scene.get("camera", "")
+            use_index = (
+                idx if (use_pool and _match_explicit_or_keyword_effect(combined.strip().lower()) is None) else None
+            )
             motion = select_semantic_camera_effect(
                 combined,
                 motions[-1] if motions else None,

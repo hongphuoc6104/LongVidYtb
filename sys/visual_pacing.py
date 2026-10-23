@@ -1,4 +1,5 @@
 """Measured full-frame storyboard acceptance, independent of rendering providers."""
+
 from __future__ import annotations
 
 import math
@@ -21,27 +22,33 @@ def check_see_say_beat_density(scenes: list[dict[str, Any]]) -> list[str]:
     starts: list[float] = []
     previous_end = 0.0
     for scene in scenes:
-        start, end = float(scene['start']), float(scene['end'])
-        if not all(math.isfinite(value) for value in (start, end)) or abs(start - previous_end) > 2 / 48000 or end <= start:
+        start, end = float(scene["start"]), float(scene["end"])
+        if (
+            not all(math.isfinite(value) for value in (start, end))
+            or abs(start - previous_end) > 2 / 48000
+            or end <= start
+        ):
             errors.append(f"VISUAL_TIMELINE_INVALID: {scene['id']}")
             continue
         previous_end = end
-        beats = scene.get('images', [])
+        beats = scene.get("images", [])
         if not beats:
             errors.append(f"LOW_VISUAL_BEAT_DENSITY: {scene['id']} has no image beats")
             continue
         if (end - start) / len(beats) > MAX_AVERAGE_HOLD_SECONDS:
-            errors.append(f"LOW_VISUAL_BEAT_DENSITY: {scene['id']} averages more than {MAX_AVERAGE_HOLD_SECONDS}s per beat")
+            errors.append(
+                f"LOW_VISUAL_BEAT_DENSITY: {scene['id']} averages more than {MAX_AVERAGE_HOLD_SECONDS}s per beat"
+            )
         last_at = -1.0
         for index, beat in enumerate(beats):
-            at = float(beat['at'])
+            at = float(beat["at"])
             if not math.isfinite(at) or not last_at < at < end - start or (index == 0 and at != 0):
                 errors.append(f"VISUAL_BEAT_INVALID: {scene['id']}/{beat['id']}")
                 continue
             last_at = at
             absolute = start + at
             starts.append(absolute)
-            following = float(beats[index + 1]['at']) if index + 1 < len(beats) else end - start
+            following = float(beats[index + 1]["at"]) if index + 1 < len(beats) else end - start
             hold = following - at
             if absolute >= 15 and not BODY_MIN_HOLD_SECONDS <= hold <= BODY_MAX_HOLD_SECONDS:
                 errors.append(f"VISUAL_HOLD_INVALID: {scene['id']}/{beat['id']} holds {hold:.3f}s")
@@ -66,31 +73,31 @@ def smooth_interpolated_beats(beats: list[dict[str, Any]], start: float, end: fl
 
     def move(index: int, target: float) -> None:
         beat = beats[index]
-        if beat.get('timing_method') != 'narration_anchor_interpolated':
+        if beat.get("timing_method") != "narration_anchor_interpolated":
             return
-        if target == beat['at']:
+        if target == beat["at"]:
             return
-        beat.setdefault('original_at', beat['at'])
-        beat['at'] = round(target, 4)
+        beat.setdefault("original_at", beat["at"])
+        beat["at"] = round(target, 4)
 
-    if start == 0.0 and count >= 3 and beats[2]['at'] >= 5.0:
-        target = min(4.8, beats[1]['at'] + (5.0 - beats[1]['at']) * .75)
-        if target > beats[1]['at'] + .5:
+    if start == 0.0 and count >= 3 and beats[2]["at"] >= 5.0:
+        target = min(4.8, beats[1]["at"] + (5.0 - beats[1]["at"]) * 0.75)
+        if target > beats[1]["at"] + 0.5:
             move(2, target)
     if end <= 15:
         return
-    minimum, maximum = .85, 3.75
+    minimum, maximum = 0.85, 3.75
     for _ in range(10):
         for index in range(count - 1, 0, -1):
-            following = beats[index + 1]['at'] if index + 1 < count else duration
-            hold = following - beats[index]['at']
+            following = beats[index + 1]["at"] if index + 1 < count else duration
+            hold = following - beats[index]["at"]
             target = following - minimum if hold < minimum else following - maximum if hold > maximum else None
-            if target is not None and target >= beats[index - 1]['at'] + minimum:
+            if target is not None and target >= beats[index - 1]["at"] + minimum:
                 move(index, target)
         for index in range(1, count):
-            previous = beats[index - 1]['at']
-            hold = beats[index]['at'] - previous
+            previous = beats[index - 1]["at"]
+            hold = beats[index]["at"] - previous
             target = previous + maximum if hold > maximum else previous + minimum if hold < minimum else None
-            following = beats[index + 1]['at'] if index + 1 < count else duration
+            following = beats[index + 1]["at"] if index + 1 < count else duration
             if target is not None and target <= following - minimum:
                 move(index, target)

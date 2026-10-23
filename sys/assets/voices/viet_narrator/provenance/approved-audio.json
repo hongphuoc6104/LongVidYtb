@@ -1,8 +1,0 @@
-{
-  "status": "user_approved",
-  "approved_artifact": "output-boundary-fixed/narration.wav",
-  "sha256": "ccba2d390e5ce75644cd42c03d20c39a566d7a708b86fa6c6411822187326eb5",
-  "user_feedback": "chính xác bay giờ đã hoàn chỉn rồi đó không còn bị lỗi nửa file này âm thanh sạch.",
-  "verification": "User listened and confirmed the repaired audio is clean and has no remaining audible defect.",
-  "canonical_voice_changed": false
-}

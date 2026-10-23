@@ -17,8 +17,15 @@ from . import accounts
 from .protocol import stamp
 
 
-def kernel_health(binary: str | Path, name: str, session: str, timeout: int = 25,
-                  *, identity: str | None = None, lock_dir: Path | None = None) -> dict[str, Any]:
+def kernel_health(
+    binary: str | Path,
+    name: str,
+    session: str,
+    timeout: int = 25,
+    *,
+    identity: str | None = None,
+    lock_dir: Path | None = None,
+) -> dict[str, Any]:
     """Run only a device/readiness observation; never allocate, install or generate."""
     code = (
         "import json, subprocess, importlib.util\n"
@@ -27,15 +34,19 @@ def kernel_health(binary: str | Path, name: str, session: str, timeout: int = 25
     )
     if identity is not None:
         from contextlib import ExitStack
-        base = Path(lock_dir or Path.home()/'.cache/video-pilot-colab')
+
+        base = Path(lock_dir or Path.home() / ".cache/video-pilot-colab")
         base.mkdir(parents=True, exist_ok=True, mode=0o700)
         with ExitStack() as held:
             try:
-                for path in [base/('identity-'+stamp(identity)+'.lock'), base/(stamp([name, session])+'.lock')]:
-                    handle = held.enter_context(path.open('a'))
-                    fcntl.flock(handle, fcntl.LOCK_EX|fcntl.LOCK_NB)
+                for path in [
+                    base / ("identity-" + stamp(identity) + ".lock"),
+                    base / (stamp([name, session]) + ".lock"),
+                ]:
+                    handle = held.enter_context(path.open("a"))
+                    fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
             except BlockingIOError:
-                return {'verified': False, 'reason': 'busy'}
+                return {"verified": False, "reason": "busy"}
             return kernel_health(binary, name, session, timeout)
     try:
         result = subprocess.run(
@@ -86,7 +97,7 @@ def audit(
             if observed.get("named_assignment_active"):
                 entry["state"] = "active_kernel_not_tested"
                 if check_kernels and not entry["session_busy"] and not entry["external_session"]:
-                    kernel = kernel_health(binary, name, session, identity=observed.get('identity'))
+                    kernel = kernel_health(binary, name, session, identity=observed.get("identity"))
                     entry["kernel"] = kernel
                     entry["state"] = (
                         ("t4_ready" if kernel.get("t4") else "non_t4") if kernel["verified"] else kernel["reason"]

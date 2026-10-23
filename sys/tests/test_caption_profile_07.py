@@ -1,4 +1,5 @@
 """Regression coverage for centered, compact portrait captions."""
+
 import json
 import subprocess
 from pathlib import Path
@@ -18,31 +19,33 @@ console.log(JSON.stringify({groups, fallback:portraitCaptionTokens(cue, [], 3),
   styles:[captionStyle(1080,1920), captionStyle(540,960)],
   color:PORTRAIT_CAPTION_ACTIVE_COLOR}));
 """
-    data = json.loads(subprocess.check_output(
-        ['node', '--input-type=module', '-e', script],
-        cwd=Path(__file__).resolve().parents[1], text=True))
-    original = 'Bạn đọc rất nhiều nhưng vẫn chưa hiểu bản chất vấn đề.'.split()
+    data = json.loads(
+        subprocess.check_output(
+            ["node", "--input-type=module", "-e", script], cwd=Path(__file__).resolve().parents[1], text=True
+        )
+    )
+    original = "Bạn đọc rất nhiều nhưng vẫn chưa hiểu bản chất vấn đề.".split()
     unique_groups = []
-    for index, group in enumerate(data['groups']):
-        words = [token['text'] for token in group]
+    for index, group in enumerate(data["groups"]):
+        words = [token["text"] for token in group]
         assert len(words) <= 6
-        assert len(' '.join(words)) <= 28
-        assert [token['text'] for token in group if token['active']] == [original[index]]
+        assert len(" ".join(words)) <= 28
+        assert [token["text"] for token in group if token["active"]] == [original[index]]
         if not unique_groups or unique_groups[-1] != words:
             unique_groups.append(words)
     assert [word for group in unique_groups for word in group] == original
-    assert [token['text'] for token in data['fallback']] == original
-    assert [token['text'] for token in data['mismatch']] == original
-    assert not any(token['active'] for token in data['before'])
-    assert data['color'] == '#FBBF24'
-    assert data['empty'] == []
-    for style in data['styles']:
-        assert style['left'] == '50%'
-        assert style['transform'] == 'translateX(-50%)'
-        assert style['background'] == 'transparent'
-        assert style['border'] == 'none'
-        assert style['boxShadow'] == 'none'
-        assert style['padding'] == '0px'
+    assert [token["text"] for token in data["fallback"]] == original
+    assert [token["text"] for token in data["mismatch"]] == original
+    assert not any(token["active"] for token in data["before"])
+    assert data["color"] == "#FBBF24"
+    assert data["empty"] == []
+    for style in data["styles"]:
+        assert style["left"] == "50%"
+        assert style["transform"] == "translateX(-50%)"
+        assert style["background"] == "transparent"
+        assert style["border"] == "none"
+        assert style["boxShadow"] == "none"
+        assert style["padding"] == "0px"
 
 
 def test_output_plan_preserves_alignment_for_profile_07() -> None:
@@ -58,10 +61,12 @@ const output = outputPlans(props, false)[0].props;
 console.log(JSON.stringify({output, tokens:portraitCaptionTokens(output.cues[0],output.words,2.1),
   color:PORTRAIT_CAPTION_ACTIVE_COLOR}));
 """
-    data = json.loads(subprocess.check_output(
-        ['node', '--input-type=module', '-e', script],
-        cwd=Path(__file__).resolve().parents[1], text=True))
-    assert data['output']['hideSubtitles'] is False
-    assert (data['output']['width'], data['output']['height']) == (1080, 1920)
-    assert [token['text'] for token in data['tokens'] if token['active']] == ['hiểu?']
-    assert data['color'] == '#FBBF24'
+    data = json.loads(
+        subprocess.check_output(
+            ["node", "--input-type=module", "-e", script], cwd=Path(__file__).resolve().parents[1], text=True
+        )
+    )
+    assert data["output"]["hideSubtitles"] is False
+    assert (data["output"]["width"], data["output"]["height"]) == (1080, 1920)
+    assert [token["text"] for token in data["tokens"] if token["active"]] == ["hiểu?"]
+    assert data["color"] == "#FBBF24"
