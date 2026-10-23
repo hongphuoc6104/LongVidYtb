@@ -190,3 +190,156 @@ def render(pilot, job, out):
     if pilot.brief(job)[0].get('omni_platform'):
         result['social_assets'] = {name: path(name) for name in report['files'] if name in {'video_youtube_16x9.mp4', 'video_facebook_16x9.mp4', 'thumbnail_youtube_16x9.png', 'cover_tiktok_reels_9x16.png', 'SOCIAL_POST_KIT.md'} or name.startswith('subtitles_') or name.startswith('video_tiktok_short_')}
     return result
+
+
+def produce_parallel(
+    root: Path,
+    cfg: dict,
+    scenes: list[dict],
+    out: Path,
+    cache: Path,
+    *,
+    max_concurrency: int = 3,
+    scenes_per_shard: int = 4,
+    primary_language: str = 'vi',
+    pool_manager=None,
+    auto_teardown: bool = True,
+) -> dict:
+    """Partition multi-scene synthesis across multiple idle Colab T4 accounts in parallel.
+
+    Dispatches shards concurrently via `ColabPoolDispatcher` (work-stealing failover),
+    deterministically merges segment waveforms, word timestamps, and metadata in
+    exact scene sequence order, and automatically tears down used Colab T4 sessions
+    and temporary shard directories upon completion.
+    """
+    import shutil
+    import threading
+    import wave
+
+    from colab_bridge.client import Client
+    from colab_bridge.pool_manager import ColabPoolDispatcher, ColabPoolManager
+    from colab_bridge.protocol import build_request
+
+    from pilot import read, write
+
+    out, cache = Path(out), Path(cache)
+    out.mkdir(parents=True, exist_ok=True)
+    cache.mkdir(parents=True, exist_ok=True)
+
+    shard_size = max(1, int(scenes_per_shard))
+    shards = [scenes[i : i + shard_size] for i in range(0, len(scenes), shard_size)]
+    tasks = [
+        {
+            'id': f'audio-shard-{idx:03d}',
+            'shard_index': idx,
+            'scenes': shard,
+        }
+        for idx, shard in enumerate(shards)
+    ]
+
+    mgr = pool_manager or ColabPoolManager()
+    dispatcher = ColabPoolDispatcher(mgr)
+    used_accounts: set[str] = set()
+    used_lock = threading.Lock()
+    teardown_report = None
+
+    def _run_shard(worker, task: dict) -> dict:
+        s_idx = int(task['shard_index'])
+        shard_out = out / 'shards' / f'shard-{s_idx:03d}'
+        shard_cache = cache / f'shard-{s_idx:03d}'
+        shard_out.mkdir(parents=True, exist_ok=True)
+        shard_cache.mkdir(parents=True, exist_ok=True)
+
+        shard_cfg = copy.deepcopy(cfg)
+        shard_cfg.setdefault('colab_tts', {})['account'] = worker.account_id
+        shard_cfg['colab_tts']['session'] = worker.session_name
+        with used_lock:
+            used_accounts.add(worker.account_id)
+
+        req = build_request(
+            root,
+            shard_cfg,
+            task['scenes'],
+            primary_language=primary_language,
+            assemble=False,
+        )
+        Client(root, shard_cfg).synthesize(req, shard_out, shard_cache)
+        res = read(shard_out / 'tts-result.json')
+        return {
+            'shard_index': s_idx,
+            'account': worker.account_id,
+            'shard_out': shard_out,
+            'request': req,
+            'result': res,
+        }
+
+    try:
+        shard_outputs = dispatcher.dispatch_all(
+            tasks,
+            _run_shard,
+            max_concurrency=max_concurrency,
+            role='tts',
+        )
+
+        merged_segments = []
+        merged_spans = []
+        merged_batches = []
+        global_seg_idx = 0
+        cursor = 0.0
+        combined_frames = bytearray()
+        wav_params = None
+
+        for item in sorted(shard_outputs, key=lambda x: x['shard_index']):
+            s_out = item['shard_out']
+            res = item['result']
+            merged_spans.extend(res.get('english_spans', []))
+            merged_batches.extend(res.get('batches', []))
+            for seg in res.get('segments', []):
+                src_wav = s_out / seg['path']
+                dst_name = f'segment-{global_seg_idx:04d}.wav'
+                dst_wav = out / dst_name
+                shutil.copy2(src_wav, dst_wav)
+                with wave.open(str(dst_wav), 'rb') as wf:
+                    wav_params = wf.getparams()
+                    dur = wf.getnframes() / wf.getframerate()
+                    combined_frames.extend(wf.readframes(wf.getnframes()))
+                seg_entry = dict(
+                    seg,
+                    path=dst_name,
+                    start=round(cursor, 3),
+                    end=round(cursor + dur, 3),
+                    content_end=round(cursor + float(seg.get('content_duration', dur)), 3),
+                    worker_account=item['account'],
+                )
+                cursor += dur
+                merged_segments.append(seg_entry)
+                global_seg_idx += 1
+
+        narration_wav = out / 'narration.wav'
+        if wav_params is not None:
+            with wave.open(str(narration_wav), 'wb') as wf:
+                wf.setparams((wav_params.nchannels, wav_params.sampwidth, wav_params.framerate, 0, 'NONE', 'not compressed'))
+                wf.writeframes(combined_frames)
+    finally:
+        shutil.rmtree(out / 'shards', ignore_errors=True)
+        if auto_teardown and used_accounts:
+            teardown_report = mgr.teardown_job_resources(
+                account_ids=sorted(used_accounts),
+                close_chrome=False,
+            )
+
+    merged_report = {
+        'voice': shard_outputs[0]['result']['voice'] if shard_outputs else cfg.get('tts_voice', 'VietNarrator'),
+        'backend': 'colab-omnivoice',
+        'wav': 'narration.wav',
+        'duration': round(cursor, 3),
+        'segments': merged_segments,
+        'english_spans': merged_spans,
+        'batches': merged_batches,
+        'shards_dispatched': len(shard_outputs),
+        'worker_accounts': [x['account'] for x in shard_outputs],
+        'teardown': teardown_report,
+    }
+    write(out / 'tts-result.json', merged_report)
+    return merged_report
+

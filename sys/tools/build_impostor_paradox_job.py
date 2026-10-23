@@ -252,7 +252,7 @@ def main():
 
     out_dir = args.out.resolve()
     out_dir.mkdir(parents=True, exist_ok=True)
-    res = build_and_export_job(topic, out_dir)
+    build_and_export_job(topic, out_dir)
     print(f"Exported package to {out_dir}")
     print(f"Visual beats: {total_beats} across {len(topic.scenes)} scenes")
 

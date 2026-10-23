@@ -5,7 +5,10 @@ from unittest.mock import patch
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from pilot import Pilot,Blocked,read,write,ROOT
 import adapters
-from colab_bridge.client import Client,ColabError
+import numpy as np
+from audio_processing import TRUE_PEAK_MARGIN_DB, VOICE_CHAIN
+from colab_bridge.client import Client, ColabError
+from colab_bridge.worker import _trim_silence
 
 SR=48000
 
@@ -92,6 +95,34 @@ class MasterTests(unittest.TestCase):
   with patch.object(adapters.subprocess,'run',side_effect=missing):
    with self.assertRaisesRegex(Blocked,'ffmpeg'):adapters.master(src,self.d/'eq.wav',{})
   self.assertEqual(src.read_bytes(),before,'src must be left untouched, not silently passed through')
+
+ def test_master_pure_silence_unity_gain_and_true_peak(self):
+  """Pure digital silence must be mastered with unity gain (0.00 dB) and preserve true peak <= -1.0 dBTP."""
+  src = self.d / "silence.wav"
+  n_frames = 2 * SR
+  with wave.open(str(src), "wb") as w:
+   w.setparams((1, 2, SR, n_frames, "NONE", "not compressed"))
+   w.writeframes(b"\x00\x00" * n_frames)
+
+  adapters.master(src, self.d / "eq.wav", {"audio_lufs": -11.0, "audio_peak_db": -1.0})
+  self.assertEqual(adapters.frames_of(src), n_frames)
+
+  # Verify FFmpeg execution log confirms unity gain (0.00dB) and no infdB divergence
+  log_path = self.d / "eq.log"
+  self.assertTrue(log_path.exists())
+  log_content = log_path.read_text()
+  self.assertIn("volume=0.00dB", log_content, "Expected volume=0.00dB unity gain in mastering log")
+  self.assertNotIn("volume=infdB", log_content, "volume=infdB divergence must never be executed")
+
+  # Verify True Peak of mastered silence is <= -1.0 dBTP
+  r = subprocess.run(
+   ["ffmpeg", "-v", "info", "-i", str(src), "-af", "loudnorm=print_format=json", "-f", "null", "-"],
+   capture_output=True,
+   text=True,
+  )
+  m = json.loads(r.stderr[r.stderr.rindex("{") : r.stderr.rindex("}") + 1])
+  self.assertEqual(m["input_i"], "-inf")
+  self.assertLessEqual(float(m["input_tp"]), -1.0)
 
 class AudioStageTests(unittest.TestCase):
  """Drives adapters.audio() with a fake Colab OmniVoice client and asserts every pilot gate."""
@@ -273,4 +304,209 @@ class EnglishTrackTests(unittest.TestCase):
   self.assertEqual([s['start'] for s in captured['en_scenes']],[s['start'] for s in snd['en']['scenes']])
   self.assertNotEqual([s['end'] for s in captured['en_scenes']],[s['end'] for s in captured['scenes']])
 
-if __name__=='__main__':unittest.main()
+
+@unittest.skipUnless(shutil.which('ffmpeg') and shutil.which('ffprobe'), 'ffmpeg required')
+class MasterInvarianceTests(unittest.TestCase):
+    """Verifies 7-stage VOICE_CHAIN, LUFS targeting (-11.0 and -14.0), and 100% exact frame count invariance."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.d = Path(self.tmp.name)
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_voice_chain_7_stages_composition(self):
+        """VOICE_CHAIN comprises exactly 7 cascaded linear/dynamics processing stages."""
+        stages = [s.strip() for s in VOICE_CHAIN.split(',') if s.strip()]
+        self.assertEqual(len(stages), 7, f'Expected 7 stages, got {len(stages)}: {stages}')
+        self.assertTrue(stages[0].startswith('highpass=f=80'), stages[0])
+        self.assertTrue(stages[1].startswith('equalizer=f='), stages[1])
+        self.assertTrue(stages[2].startswith('equalizer=f=3200'), stages[2])
+        self.assertTrue(stages[3].startswith('highshelf=f=9000'), stages[3])
+        self.assertTrue(stages[4].startswith('deesser=i=0.4'), stages[4])
+        self.assertTrue(stages[5].startswith('acompressor=threshold=-22dB'), stages[5])
+        self.assertTrue(stages[6].startswith('acompressor=threshold=-10dB'), stages[6])
+
+    def test_master_lufs_target_minus_14_long_format(self):
+        """Long 16:9 format targets -14.0 LUFS with true peak headroom."""
+        src = self.d / 'long.wav'
+        tone(src, 3.0, level=4000)
+        before_frames = adapters.frames_of(src)
+        adapters.master(src, self.d / 'eq_long.wav', {'audio_lufs': -14.0, 'audio_peak_db': -1.5})
+        self.assertEqual(adapters.frames_of(src), before_frames)
+        r = subprocess.run(
+            ['ffmpeg', '-v', 'info', '-i', str(src), '-af', 'loudnorm=print_format=json', '-f', 'null', '-'],
+            capture_output=True,
+            text=True,
+        )
+        m = json.loads(r.stderr[r.stderr.rindex('{'):r.stderr.rindex('}') + 1])
+        self.assertLess(abs(float(m['input_i']) - (-14.0)), 1.5, m)
+        self.assertLessEqual(float(m['input_tp']), -1.5 - TRUE_PEAK_MARGIN_DB + 0.3, m)
+
+    def test_master_lufs_target_minus_11_short_format(self):
+        """Short 9:16 format targets -11.0 LUFS for punchy mobile phone playback."""
+        src = self.d / 'short.wav'
+        tone(src, 3.0, level=4000)
+        before_frames = adapters.frames_of(src)
+        adapters.master(src, self.d / 'eq_short.wav', {'audio_lufs': -11.0, 'audio_peak_db': -1.0})
+        self.assertEqual(adapters.frames_of(src), before_frames)
+        r = subprocess.run(
+            ['ffmpeg', '-v', 'info', '-i', str(src), '-af', 'loudnorm=print_format=json', '-f', 'null', '-'],
+            capture_output=True,
+            text=True,
+        )
+        m = json.loads(r.stderr[r.stderr.rindex('{'):r.stderr.rindex('}') + 1])
+        self.assertLess(abs(float(m['input_i']) - (-11.0)), 1.5, m)
+        self.assertLessEqual(float(m['input_tp']), -1.0, m)
+
+    def test_master_two_pass_feedback_loop_converges(self):
+        """Signal with high crest factor triggering peak limiter converges via 2-pass feedback."""
+        src = self.d / 'peaks.wav'
+        tone(src, 4.0, level=14000)
+        adapters.master(src, self.d / 'eq_peaks.wav', {'audio_lufs': -14.0, 'audio_peak_db': -1.5})
+        r = subprocess.run(
+            ['ffmpeg', '-v', 'info', '-i', str(src), '-af', 'loudnorm=print_format=json', '-f', 'null', '-'],
+            capture_output=True,
+            text=True,
+        )
+        m = json.loads(r.stderr[r.stderr.rindex('{'):r.stderr.rindex('}') + 1])
+        self.assertLess(abs(float(m['input_i']) + 14.0), 1.0, m)
+
+    def test_master_strict_sample_count_invariance_arbitrary_durations(self):
+        """Mastering guarantees 100% sample-exact PCM frame count across arbitrary and prime durations."""
+        sample_counts = [
+            48000,   # 1.0s
+            65761,   # ~1.37s prime frame count
+            120000,  # 2.5s
+            12347,   # ~0.257s odd sample count
+        ]
+        for n_frames in sample_counts:
+            src = self.d / f'inv_{n_frames}.wav'
+            frames = b''.join(
+                struct.pack('<h', int(6000 * math.sin(2.0 * math.pi * 260.0 * i / SR)))
+                for i in range(n_frames)
+            )
+            with wave.open(str(src), 'wb') as w:
+                w.setnchannels(1)
+                w.setsampwidth(2)
+                w.setframerate(SR)
+                w.writeframes(frames)
+
+            before = adapters.frames_of(src)
+            adapters.master(src, self.d / f'eq_{n_frames}.wav', {'audio_lufs': -14.0})
+            self.assertEqual(adapters.frames_of(src), before)
+            with wave.open(str(src)) as w:
+                self.assertEqual(w.getframerate(), SR)
+                self.assertEqual(w.getnchannels(), 1)
+                self.assertEqual(w.getsampwidth(), 2)
+
+    def test_master_preserves_frames_on_silence_and_clipping_audio(self):
+        """Pure silence and saturated clipping signals both retain exact frame count."""
+        # 1. Silence input: 2.0s zero-amplitude
+        silence_src = self.d / 'silence.wav'
+        n_frames = 2 * SR
+        with wave.open(str(silence_src), 'wb') as w:
+            w.setparams((1, 2, SR, n_frames, 'NONE', 'not compressed'))
+            w.writeframes(b'\x00\x00' * n_frames)
+        adapters.master(silence_src, self.d / 'eq_silence.wav', {})
+        self.assertEqual(adapters.frames_of(silence_src), n_frames)
+
+        # 2. Clipping input: 2.0s maximum amplitude tone
+        clipping_src = self.d / 'clipping.wav'
+        with wave.open(str(clipping_src), 'wb') as w:
+            w.setparams((1, 2, SR, n_frames, 'NONE', 'not compressed'))
+            clip_frames = b''.join(
+                struct.pack('<h', max(-32767, min(32767, int(32000 * math.sin(2.0 * math.pi * 400.0 * i / SR)))))
+                for i in range(n_frames)
+            )
+            w.writeframes(clip_frames)
+        adapters.master(clipping_src, self.d / 'eq_clip.wav', {})
+        self.assertEqual(adapters.frames_of(clipping_src), n_frames)
+
+    def test_master_frame_mismatch_raises_blocked(self):
+        """Any filter altering sample count raises Blocked and leaves src untouched."""
+        src = self.d / 'mismatch.wav'
+        tone(src, 1.0)
+        before_bytes = src.read_bytes()
+        # atrim alters sample count by dropping 100 samples
+        with self.assertRaisesRegex(Blocked, 'frame count'):
+            adapters.master(src, self.d / 'eq_mismatch.wav', {'audio_voice_chain': 'atrim=start_sample=100'})
+        self.assertEqual(src.read_bytes(), before_bytes, 'src must be untouched when frame count check fails')
+        self.assertFalse((self.d / 'narration_lv.wav').exists())
+
+
+class TrimSilenceTests(unittest.TestCase):
+    """Verifies 48kHz mono PCM16 silence trimming, idempotency, padding preservation, and soft fricatives."""
+
+    def test_trim_silence_is_idempotent(self):
+        """trim(trim(w)) == trim(w) holds for clean audio and audio with low-level noise floor."""
+        # 1. Zero-lead audio
+        lead = np.zeros(round(0.25 * SR), dtype=np.float32)
+        speech = (0.20 * np.sin(np.arange(round(0.50 * SR)) * 0.05)).astype(np.float32)
+        trail = np.zeros(round(0.20 * SR), dtype=np.float32)
+        w = np.concatenate([lead, speech, trail])
+        once = _trim_silence(w, sr=SR)
+        twice = _trim_silence(once, sr=SR)
+        np.testing.assert_array_equal(once, twice)
+
+        # 2. Audio with non-zero noise floor (below 0.012 threshold)
+        noise = np.full(len(w), 0.001, dtype=np.float32)
+        w_noise = w + noise
+        once_noise = _trim_silence(w_noise, sr=SR)
+        twice_noise = _trim_silence(once_noise, sr=SR)
+        np.testing.assert_array_equal(once_noise, twice_noise)
+
+    def test_trim_silence_preserves_lead_and_trail_buffers(self):
+        """Preserves 25ms lead (1200 frames) and 30ms trail (1440 frames) padding."""
+        lead = np.zeros(round(0.20 * SR), dtype=np.float32)  # 9600 samples
+        speech = np.full(round(0.50 * SR), 0.25, dtype=np.float32)  # 24000 samples
+        trail = np.zeros(round(0.20 * SR), dtype=np.float32)  # 9600 samples
+        w = np.concatenate([lead, speech, trail])
+
+        trimmed = _trim_silence(w, sr=SR, lead_ms=25, trail_ms=30, fade_ms=8)
+        # Expected duration: 24000 speech + 1200 lead + 1440 trail = 26640 samples
+        expected_len = 24000 + round(0.025 * SR) + round(0.030 * SR)
+        self.assertEqual(len(trimmed), expected_len)
+        self.assertEqual(len(trimmed), 26640)
+
+    def test_trim_silence_soft_fricative_preservation(self):
+        """Preserves soft fricatives (<0.012 amplitude) in the 25ms lead window without fade attenuation."""
+        # 15ms fricative at 0.008 amplitude (< 0.012 threshold) preceding voiced vowel
+        lead = np.zeros(round(0.20 * SR), dtype=np.float32)
+        fricative = np.full(round(0.015 * SR), 0.008, dtype=np.float32)
+        vowel = (0.30 * np.sin(np.arange(round(0.40 * SR)) * 0.05)).astype(np.float32)
+        trail = np.zeros(round(0.20 * SR), dtype=np.float32)
+        w = np.concatenate([lead, fricative, vowel, trail])
+
+        trimmed = _trim_silence(w, sr=SR)
+        # Total duration: ~0.40s vowel + 0.015s fricative + 25ms lead + 30ms trail = ~0.47s
+        dur = len(trimmed) / float(SR)
+        self.assertGreaterEqual(dur, 0.45)
+        self.assertLessEqual(dur, 0.49)
+
+        # Fricative samples within [8ms, 25ms] of lead are unattenuated (0.008)
+        idx0 = int(np.where(np.abs(w) >= 0.012)[0][0])
+        start = max(0, idx0 - round(0.025 * SR))
+        fric_start = len(lead) - start
+        fric_end = fric_start + len(fricative)
+        np.testing.assert_allclose(trimmed[fric_start:fric_end], 0.008)
+
+    def test_trim_silence_empty_and_pure_silence_arrays(self):
+        """Empty input and all-silent arrays are returned safely without error."""
+        empty = np.array([], dtype=np.float32)
+        np.testing.assert_array_equal(_trim_silence(empty, sr=SR), empty)
+
+        silence = np.zeros(SR, dtype=np.float32)
+        np.testing.assert_array_equal(_trim_silence(silence, sr=SR), silence)
+
+    def test_trim_silence_sub_buffer_short_utterance(self):
+        """Utterance shorter than lead + trail is returned intact without indexing crash."""
+        w = np.full(500, 0.05, dtype=np.float32)
+        trimmed = _trim_silence(w, sr=SR)
+        self.assertEqual(len(trimmed), 500)
+
+
+if __name__ == '__main__':
+    unittest.main()
+

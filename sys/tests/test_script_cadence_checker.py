@@ -102,7 +102,11 @@ class BenchmarkCadenceTests(unittest.TestCase):
     """Test the 6 canonical benchmark scenes from voice-cadence-pacing.md."""
 
     def test_individual_benchmark_scenes_match_empirical_table(self):
-        checker = ScriptCadenceChecker(forbid_opening_pause=True, max_opening_hook_syllables=18)
+        checker = ScriptCadenceChecker(
+            forbid_opening_pause=True,
+            max_opening_hook_syllables=18,
+            max_clause_syllables=None,
+        )
         input_scenes = [{"id": s["id"], "duration": s["duration"], "narration": s["narration"]} for s in BENCHMARK_SCENES]
         result = checker.check_scenes(input_scenes)
 
@@ -122,7 +126,11 @@ class BenchmarkCadenceTests(unittest.TestCase):
             self.assertEqual(scene_res["status"], "PASS")
 
     def test_benchmark_aggregate_totals(self):
-        checker = ScriptCadenceChecker(forbid_opening_pause=True, max_opening_hook_syllables=18)
+        checker = ScriptCadenceChecker(
+            forbid_opening_pause=True,
+            max_opening_hook_syllables=18,
+            max_clause_syllables=None,
+        )
         input_scenes = [{"id": s["id"], "duration": s["duration"], "narration": s["narration"]} for s in BENCHMARK_SCENES]
         result = checker.check_scenes(input_scenes)
 
@@ -138,7 +146,11 @@ class BenchmarkCadenceTests(unittest.TestCase):
         from script_diversity_linter import check_formulaic_transitions
 
         playbook_path = ROOT.parent / ".agents/skills/vp-channel-patterns/references/voice-cadence-pacing.md"
-        checker = ScriptCadenceChecker(forbid_opening_pause=True, max_opening_hook_syllables=18)
+        checker = ScriptCadenceChecker(
+            forbid_opening_pause=True,
+            max_opening_hook_syllables=18,
+            max_clause_syllables=None,
+        )
         result = checker.check_file(playbook_path)
 
         self.assertEqual(result["status"], "PASS")
@@ -544,7 +556,18 @@ class CliExecutionTests(unittest.TestCase):
         try:
             cli_script = ROOT / "tools/script_cadence_checker.py"
             proc = subprocess.run(
-                [sys.executable, str(cli_script), tmp_path, "--json", "--strict", "--forbid-opening-pause", "--max-opening-hook-syllables", "18"],
+                [
+                    sys.executable,
+                    str(cli_script),
+                    tmp_path,
+                    "--json",
+                    "--strict",
+                    "--forbid-opening-pause",
+                    "--max-opening-hook-syllables",
+                    "18",
+                    "--max-clause-syllables",
+                    "None",
+                ],
                 capture_output=True,
                 text=True,
             )
@@ -659,6 +682,21 @@ class ScriptDiversityLinterTests(unittest.TestCase):
         violations = check_micro_action_filler(bad_scenes)
         self.assertEqual(len(violations), 1)
         self.assertEqual(violations[0]["type"], "MICRO_ACTION_FILLER_BABBLE")
+
+    def test_default_constructor_actively_enforces_all_invariants(self):
+        checker = ScriptCadenceChecker()
+        bad_scenes = [
+            {
+                "id": "SC01",
+                "duration": 10.0,
+                "narration": "Câu mở đầu này dài hơn mười tám âm tiết để kiểm tra xem hệ thống có bắt lỗi hook quá dài không nhé. [pause:800ms] Câu tiếp theo không có dấu phẩy nhưng kéo dài hơn mười tám âm tiết liên tục để kích hoạt cảnh báo.",
+            }
+        ]
+        res = checker.check_scenes(bad_scenes)
+        warns = res["scenes"][0]["warnings"]
+        self.assertTrue(any("OPENING_SCENE_PAUSE_FORBIDDEN" in w for w in warns))
+        self.assertTrue(any("OPENING_HOOK_TOO_LONG" in w for w in warns))
+        self.assertTrue(any("BREATHLESS_CLAUSE" in w for w in warns))
 
 
 if __name__ == "__main__":

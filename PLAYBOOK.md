@@ -12,23 +12,7 @@ $$\text{1. Tái hiện E2E} \longrightarrow \text{2. Phân tích gốc rễ} \lo
 
 ## II. Danh Mục Bài Học & Sự Cố Chuẩn Hóa
 
-> Historical entries [ERR-20261010-08], [ERR-20261010-09], [ERR-20261011-01], [ERR-20261011-05], [ERR-20261014-01], [ERR-20261016-02], and [ERR-20261017-03] are archived in .agents/skills/vp-troubleshooting/references/historical-playbook.md.
-
-### [ERR-20261017-02] Xuất Bản Đa Nền Tảng (`vp-omni-platform`) & Giữ Khóa Profile Flow CDP
-- **Triệu chứng (Symptom):** Sinh trùng ảnh giữa các tỷ lệ khung hình hoặc mất liên kết profile trình duyệt cố định khi chạy đồng thời các tác vụ ảnh.
-- **Tái hiện E2E (Reproduction Path):** Chạy `pytest sys/tests/test_omni_platform.py sys/tests/test_flow_cdp_bridge.py -v`.
-- **Nguyên nhân cốt lõi (Root Cause):** Tách rời `jobId` khỏi `testCase` khi gửi qua bridge và chưa tái sử dụng ảnh chung cho các bản xuất đa nền tảng.
-- **Giả định sai (Wrong Assumptions):** Cho rằng `testCase` ID đại diện cho `jobId` và một trình duyệt cố định có thể nhận nhiều hàng đợi UI song song.
-- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Truyền tường minh `jobId` qua bridge, tuần tự hóa khi khóa vào 1 profile (`sequential_close`) và đóng gói xuất bản đa nền tảng qua `sys/omni_platform.py`.
-- **Quy tắc phòng ngừa vàng (Golden Rule):** Bảo toàn định danh `jobId` và quyền sở hữu trình duyệt xuyên suốt vòng đời job; tuân thủ [Omni-platform contracts](.agents/skills/vp-omni-platform/SKILL.md).
-
-### [ERR-20261017-04] Chặn 6 Nguyên Nhân Khiến Nội Dung Thực Tế Bị Flop (Anti-Flop Content Gate)
-- **Triệu chứng (Symptom):** Video xuất bản thực tế bị tuột giữ chân khán giả trong 15 giây đầu do lặp lại cùng một kịch bản tô sách vàng ở mọi job, câu thoại mở màn toàn lệnh vật lý 4 chữ vụn vặt (`Cầm cây bút lên. Đặt xuống tờ giấy trắng.`), hoặc ngắt dấu phẩy giả tạo giữa chủ ngữ và vị ngữ (`, chỉ tạo ra`).
-- **Tái hiện E2E (Reproduction Path):** Chạy `pytest sys/tests/test_script_cadence_checker.py sys/tests/test_research_story_architect.py -v` để kiểm tra `UNNATURAL_SUBJECT_VERB_COMMA` và `MICRO_ACTION_FILLER_BABBLE`.
-- **Nguyên nhân cốt lõi (Root Cause):** (1) Các script tạo đề tài bị hardcode và nhân bản cùng một chủ đề `Roediger & Karpicke 2006`; (2) lách luật `BREATHLESS_CLAUSE` bằng cách nhét dấu phẩy sai ngữ pháp trước động từ `là`, `chỉ tạo`; (3) chia nhỏ hành động vật lý tầm thường để lấy số lượng beat hình thay vì dùng đối trọng thị giác (Visual Counterpoint); (4) `BANNED_ACADEMIC_NAMEDROPS` cấm cả cụm `"tại đại học"` khiến kịch bản mất khả năng kể chuyện thí nghiệm thực tế.
-- **Giả định sai (Wrong Assumptions):** Nhầm tưởng chỉ cần nhiều câu 4 chữ mô tả động tác tay là giữ chân được người xem và có thể nhét dấu phẩy bất kỳ đâu để qua mặt linter âm học.
-- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** (1) Bổ sung `UNNATURAL_SUBJECT_VERB_COMMA` trong `script_cadence_checker.py` chặn dấu phẩy trước `là|chỉ tạo|bằng cách|nhằm`; (2) bổ sung `check_micro_action_filler()` (`MICRO_ACTION_FILLER_BABBLE`) và tinh chỉnh `BANNED_ACADEMIC_NAMEDROPS` trong `script_diversity_linter.py` để cho phép kể chuyện thí nghiệm tự nhiên nhưng chặn trích dẫn học thuật khô khan (`et al.`, `DOI:`, `(2008)`); (3) xóa bỏ 31 script hardcode đề tài cũ và thu gọn `research_story_architect.py`.
-- **Quy tắc phòng ngừa vàng (Golden Rule):** Mỗi video chỉ xoay quanh **1 Nghịch Lý Cốt Lõi Duy Nhất**, cấm lặp lại hook/chủ đề đã sản xuất, cấm dùng chuỗi câu lệnh vật lý vụn vặt làm đầy cảnh mở đầu, và tuyệt đối không đặt dấu phẩy ngăn cách chủ ngữ với vị ngữ để lách luật âm tiết.
+> Historical entries [ERR-20261010-08], [ERR-20261010-09], [ERR-20261011-01], [ERR-20261011-05], [ERR-20261014-01], [ERR-20261016-02], [ERR-20261017-02], [ERR-20261017-03], and [ERR-20261017-04] are archived in .agents/skills/vp-troubleshooting/references/historical-playbook.md.
 
 ### [ERR-20261017-05] Gỡ Bỏ 7 Ràng Buộc Khuôn Mẫu Cứng Nhắc & Mở Khóa Kể Chuyện Đa Ngữ Cảnh (Anti-Formulaic Storytelling)
 - **Triệu chứng (Symptom):** Mọi video giải thích khoa học đều bị ép vào cùng 4 căn phòng cố định (`study_desk`, `laboratory`, `comparison_board`, `exam_hall`), nhịp giọng phẳng lì ở 60% thân bài (`analytical_crisp`), chuyển động camera lặp vòng 2 trạng thái (`push_in`/`pull_back`), và nhân vật ẩn danh bị ép mặc áo `#8CCFE8`.
@@ -195,3 +179,12 @@ $$\text{1. Tái hiện E2E} \longrightarrow \text{2. Phân tích gốc rễ} \lo
 - **Giả định sai (Wrong Assumptions):** Cho rằng chỉ cần limiter là đạt loudness mà giữ được ngữ điệu; cho rằng mọi nền tảng đều tự chuẩn hóa về -14 LUFS.
 - **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** `audio_processing.VOICE_CHAIN` (highpass 80, -2 dB@250, +3.5 dB@3.2k, deesser, 2 tầng acompressor nhẹ) + vòng hiệu chỉnh gain sau limiter; một cấu hình duy nhất `sys/config.json` `audio_lufs=-11`, `audio_peak_db=-1.0` cho mọi format. Mẫu thật: -11.7 LUFS, -1.1 dBTP, khoảng cách dải cao 16.4 dB; frame giữ nguyên; 116 tests pass; người dùng nghe và chốt.
 - **Quy tắc phòng ngừa vàng (Golden Rule):** Một giọng, một cấu hình mastering trong `config.json`; không tách loudness theo nền tảng; luôn đo LUFS/TP/dải cao trên giọng thật trước khi đổi chuỗi.
+
+### [ERR-20261023-02] Tăng Tốc Đa Luồng Mặc Định Toàn Trình Audio/TTS & Khắc Phục 5 Lỗi Biên Âm Học (PARALLEL_TTS_DEFAULT)
+- **Triệu chứng (Symptom):** (1) `audio_pipeline.py` chạy tuần tự từng câu và crash `TypeError: Client.__init__()` khi gọi remote; (2) `normalize_for_tts` nuốt thẻ `[pause:800ms]` thành chữ `"tám trăm mi-li giây"` và `detect_unnormalized_tokens` tự từ chối từ phiên âm có gạch nối (`Xô-crát`); (3) `master()` nổ gain `+inf dB` trên file im lặng tuyệt đối (`input_i: "-inf"`); (4) `subtitles.py` và `worker.py` chồng lấn mốc phụ đề 10ms (`CAPTION_TIMELINE`).
+- **Tái hiện E2E (Reproduction Path):** Chạy `PYTHONPATH=sys:sys/tools ./.venv/bin/pytest sys/tests/test_vn_text_normalizer_adversarial.py sys/tests/test_adversarial_m2.py sys/tests/test_colab_pool.py sys/tests/test_parallel_audio_pipeline.py -v`.
+- **Nguyên nhân cốt lõi (Root Cause):** (1) Thiếu điều phối song song qua `ColabPoolDispatcher` trong `audio_pipeline.py` và `remote_audio.py`; (2) `vn_text_normalizer` biến đổi số trước khi bảo vệ thẻ `[pause:...]` và thiếu whitelist âm tiết phiên âm chuẩn; (3) `master()` lấy `-11.0 - (-inf) = +inf` khi sườn âm bằng 0; (4) làm tròn biên từ không kẹp `t[i].end <= t[i+1].start`.
+- **Giả định sai (Wrong Assumptions):** Giả định `audio_pipeline.py` chỉ chạy mock đơn luồng, thẻ `[pause]` không chứa chữ số, file WAV đầu vào luôn có năng lượng âm thanh `> -70 LUFS`, và các mốc từ độc lập không bao giờ chồng lấn sau khi làm tròn.
+- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** (1) Mặc định hóa chạy song song đa luồng (`parallel=True, max_workers=3, batch_size=4`) trong `AudioPipeline._synthesize_segments_parallel()` và `remote_audio.produce_parallel()` qua `ColabPoolDispatcher`; (2) bảo vệ thẻ `[pause:...]` trước khi chuẩn hóa số và bổ sung `CANONICAL_TRANSLITERATION_SYLLABLES`; (3) chặn ngưỡng `input_i <= -70.0` (`gain_db = 0.0`) trong `master()` và `nframes <= 0` trong `mix_sound_design()`; (4) kẹp đơn điệu không chồng lấn `a = max(cues[-1]['end'], a)` trong `subtitles.py` và `worker.py`. Đạt 399/399 tests green.
+- **Quy tắc phòng ngừa vàng (Golden Rule):** Chế độ mặc định của tổng hợp giọng đọc luôn là **tăng tốc đa luồng đa tài khoản Colab T4** kết hợp gom lô (`batch_size=4`); luôn bảo vệ thẻ điều khiển `[pause:...]` trước khi chuẩn hóa văn bản, kẹp gain an toàn với tín hiệu im lặng và ép đơn điệu chặt các mốc thời gian phụ đề.
+

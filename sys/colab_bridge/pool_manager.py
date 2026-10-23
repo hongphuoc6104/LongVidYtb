@@ -135,9 +135,23 @@ class ColabPoolManager:
             raw_entries = accounts_config
         else:
             reg = accounts.registry()
+            duplicate_ids: set[str] = set()
+            health_path = Path.home() / ".config/video-pilot/management/colab-health.json"
+            if health_path.is_file():
+                try:
+                    health_data = json.loads(health_path.read_text(encoding="utf-8"))
+                    duplicate_ids = {
+                        row["id"]
+                        for row in health_data.get("accounts", [])
+                        if row.get("duplicate_of")
+                    }
+                except Exception:
+                    duplicate_ids = set()
             raw_entries = [
                 x for x in reg.get("accounts", [])
-                if x.get("enabled", True) and (accounts.folder(x["id"]) / "token.json").is_file()
+                if x.get("enabled", True)
+                and x["id"] not in duplicate_ids
+                and (accounts.folder(x["id"]) / "token.json").is_file()
             ]
         for item in raw_entries:
             acc_id = item["id"]

@@ -188,6 +188,8 @@ def subtitle_cues(segments, *, aspect_ratio=None):
                 a = start if idx_c == 0 else start + rel_a
                 z = end if idx_c == len(chunks) - 1 else start + rel_z
                 a = max(start, min(content_end, a))
+                if cues:
+                    a = max(cues[-1]['end'], a)
                 z = max(a + 0.01, min(end, z))
                 cues.append({'text': wrap_phrase(chunk, max_len=max_line), 'start': a, 'end': z, 'scene_id': scene})
             continue
@@ -198,6 +200,9 @@ def subtitle_cues(segments, *, aspect_ratio=None):
             a = start + (content_end - start) * used / total
             used += weight
             z = end if used == total else start + (content_end - start) * used / total
+            if cues:
+                a = max(cues[-1]['end'], a)
+            z = max(a + 0.01, min(end, z))
             cues.append({'text': wrap_phrase(chunk, max_len=max_line), 'start': a, 'end': z, 'scene_id': scene})
     return cues
 

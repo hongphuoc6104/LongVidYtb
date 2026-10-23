@@ -29,8 +29,8 @@ def run_ffmpeg(cmd, log):
     """
     try:
         r = subprocess.run(cmd, capture_output=True, text=True)
-    except FileNotFoundError:
-        raise Blocked('ffmpeg not found on PATH; install ffmpeg to master narration audio')
+    except FileNotFoundError as err:
+        raise Blocked('ffmpeg not found on PATH; install ffmpeg to master narration audio') from err
     with open(log, 'a') as f:
         f.write('$ ' + ' '.join(cmd) + '\n' + r.stdout + r.stderr + '\n')
     return r
@@ -83,7 +83,12 @@ def master(src, dst, cfg):
     peak = float(cfg.get('audio_peak_db', -1.0))
     target = float(cfg.get('audio_lufs', -11.))
     limit = 10 ** ((peak - TRUE_PEAK_MARGIN_DB) / 20)
-    gain = target - float(m['input_i'])
+    input_i = float(m['input_i'])
+    if math.isinf(input_i) or input_i < -70.0:
+        # Silent or sub-gated audio: preserve silence without infinite gain
+        gain = 0.0
+    else:
+        gain = target - input_i
     final = dst.with_name('narration_lv.wav')
     for _ in range(2):
         r = run_ffmpeg(
@@ -95,9 +100,12 @@ def master(src, dst, cfg):
         if r.returncode:
             break
         got = _measure(final, log)
-        if got is None or abs(float(got['input_i']) - target) <= 0.3:
+        if got is None:
             break
-        gain += min(3.0, target - float(got['input_i']))
+        got_i = float(got['input_i'])
+        if math.isinf(got_i) or abs(got_i - target) <= 0.3:
+            break
+        gain += min(3.0, target - got_i)
     dst.unlink(missing_ok=True)
     if r.returncode:
         final.unlink(missing_ok=True)
@@ -163,6 +171,8 @@ def mix_sound_design(
         channels, sampwidth, sr, nframes, _, _ = wf.getparams()
         if (channels, sampwidth) != (1, 2):
             raise Blocked('mix_sound_design expects mono 16-bit PCM narration WAV')
+        if nframes <= 0:
+            raise Blocked('mix_sound_design expects non-empty narration audio')
         raw_voice = wf.readframes(nframes)
     voice_samples = list(struct.unpack(f'<{nframes}h', raw_voice))
 

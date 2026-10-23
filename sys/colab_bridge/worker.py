@@ -201,14 +201,18 @@ def _extract_word_timestamps_acoustic(w, text, sr=SR):
     total_w = float(sum(word_weights))
     timestamps = []
     used_w = 0.0
-    for wd, ww in zip(words, word_weights):
+    prev_end = 0.0
+    for wd, ww in zip(words, word_weights, strict=True):
         e_start = (used_w / total_w) * total_energy
         used_w += ww
         e_end = (used_w / total_w) * total_energy
         f_start = int(np.searchsorted(cum_energy, e_start, side="left"))
-        f_end = int(np.searchsorted(cum_energy, e_end, side="right"))
-        t0 = round(min(total_dur, max(0.0, f_start * hop / float(sr))), 3)
+        f_end = int(np.searchsorted(cum_energy, e_end, side="left"))
+        t0 = round(min(total_dur, max(prev_end, f_start * hop / float(sr))), 3)
         t1 = round(min(total_dur, max(t0 + 0.01, f_end * hop / float(sr))), 3)
+        if t1 < t0:
+            t1 = t0
+        prev_end = t1
         timestamps.append({"word": wd, "start": t0, "end": t1})
     return timestamps
 
@@ -225,6 +229,8 @@ def _trim_silence(w, sr=SR, threshold=0.012, lead_ms=25, trail_ms=30, fade_ms=8)
     trail = round(trail_ms * sr / 1000)
     start = max(0, int(idx[0]) - lead)
     end = min(len(w), int(idx[-1]) + 1 + trail)
+    if start == 0 and end == len(w) and int(idx[0]) <= lead and len(w) - 1 - int(idx[-1]) <= trail:
+        return w
     trimmed = w[start:end].copy()
     fade = min(round(fade_ms * sr / 1000), len(trimmed) // 4)
     fade_in = min(fade, int(idx[0]) - start)

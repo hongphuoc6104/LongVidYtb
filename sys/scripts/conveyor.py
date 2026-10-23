@@ -21,6 +21,7 @@ Usage:
 
 import argparse
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -40,16 +41,16 @@ from conveyor.playbook_validator import validate_playbook
 
 
 def get_python_executable() -> str:
-    venv_py = SYS_DIR / ".venv/bin/python"
-    if venv_py.is_file():
-        return str(venv_py)
+    for candidate in (REPO_ROOT / ".venv/bin/python", SYS_DIR / ".venv/bin/python"):
+        if candidate.is_file():
+            return str(candidate)
     return sys.executable
 
 
 def get_ruff_executable() -> str:
-    venv_ruff = SYS_DIR / ".venv/bin/ruff"
-    if venv_ruff.is_file():
-        return str(venv_ruff)
+    for candidate in (REPO_ROOT / ".venv/bin/ruff", SYS_DIR / ".venv/bin/ruff"):
+        if candidate.is_file():
+            return str(candidate)
     system_ruff = shutil.which("ruff")
     if system_ruff:
         return system_ruff
@@ -117,6 +118,17 @@ def station_2_test_ast() -> bool:
         SYS_DIR / "tests/test_colab_accounts.py",
         SYS_DIR / "tests/test_colab_health.py",
         SYS_DIR / "tests/test_colab_scheduler.py",
+        SYS_DIR / "tests/test_colab_pool.py",
+        SYS_DIR / "tests/test_vn_text_normalizer.py",
+        SYS_DIR / "tests/test_vn_text_normalizer_adversarial.py",
+        SYS_DIR / "tests/test_voice_contracts.py",
+        SYS_DIR / "tests/test_adversarial_m1_cadence_voice.py",
+        SYS_DIR / "tests/test_sound_design.py",
+        SYS_DIR / "tests/test_subtitles_acoustic.py",
+        SYS_DIR / "tests/test_adversarial_m2.py",
+        SYS_DIR / "tests/test_audio.py",
+        SYS_DIR / "tests/test_audio_english_spans.py",
+        SYS_DIR / "tests/test_parallel_audio_pipeline.py",
         SYS_DIR / "tests/test_multi_profile_manager.py",
         SYS_DIR / "tests/test_flow_batch_stop.py",
         SYS_DIR / "tests/test_flow_status.py",
@@ -144,13 +156,14 @@ def station_2_test_ast() -> bool:
 
     print("\n  Đang thực thi Pytest suite...")
     start_time = time.time()
-    pytest_bin = shutil.which("pytest") or "pytest"
+    python_bin = get_python_executable()
     test_files_to_run = [str(f) for f in test_targets if f.is_file()]
     if not test_files_to_run:
-        test_files_to_run = [str(SYS_DIR / "tests/test_flow_cdp_bridge.py")]
+        test_files_to_run = [str(SYS_DIR / "tests/test_audio.py")]
 
-    cmd = [pytest_bin, "-v", "--tb=short", "--continue-on-collection-errors"] + test_files_to_run
-    res = subprocess.run(cmd, cwd=str(REPO_ROOT), capture_output=True, text=True)
+    env = dict(os.environ, PYTHONPATH=f"{SYS_DIR}:{SYS_DIR / 'tools'}")
+    cmd = [python_bin, "-m", "pytest", "-v", "--tb=short", "--continue-on-collection-errors"] + test_files_to_run
+    res = subprocess.run(cmd, cwd=str(REPO_ROOT), env=env, capture_output=True, text=True)
     duration = time.time() - start_time
 
     # Output immutable evidence log
@@ -232,35 +245,35 @@ def station_4_lint() -> bool:
     # Step B: Ruff linter
     print("  2. Phân tích tĩnh mã nguồn qua Ruff...")
     ruff_bin = get_ruff_executable()
-    ruff_cmd = [
-        ruff_bin,
-        "check",
-        str(SYS_DIR / "conveyor"),
-        str(SYS_DIR / "tools"),
-        str(SYS_DIR / "scripts/conveyor.py"),
-        str(SYS_DIR / "scripts/clean_production.py"),
-        str(SYS_DIR / "scripts/camera_motion.py"),
-        str(SYS_DIR / "scripts/visual_quality.py"),
-        str(SYS_DIR / "format_profiles.py"),
-        str(SYS_DIR / "narration_pauses.py"),
-        str(SYS_DIR / "tests/test_narration_pauses.py"),
-        str(SYS_DIR / "visual_pacing.py"),
-        str(SYS_DIR / "omni_platform.py"),
-        str(SYS_DIR / "omni_render.py"),
-        str(SYS_DIR / "tests/test_format_separation.py"),
-        str(SYS_DIR / "tests/test_full_frame_pipeline.py"),
-        str(SYS_DIR / "visual_style.py"),
-        str(SYS_DIR / "explainer_contract.py"),
-        str(SYS_DIR / "flow_dispatch.py"),
-        str(SYS_DIR / "tests/test_reference_explainer.py"),
-        str(SYS_DIR / "tests/test_soft_visual_style.py"),
-        str(SYS_DIR / "tests/test_full_frame_upgrade.py"),
-        str(SYS_DIR / "tests/test_omni_platform.py"),
-        str(SYS_DIR / "tests/test_caption_profile_07.py"),
-        str(SYS_DIR / "tests/test_anti_formulaic_storytelling.py"),
-        str(SYS_DIR / "tests/test_visual_breathing_room.py"),
-        str(REPO_ROOT / "pilot.py"),
+    candidate_targets = [
+        SYS_DIR / "conveyor",
+        SYS_DIR / "tools",
+        SYS_DIR / "scripts/conveyor.py",
+        SYS_DIR / "scripts/clean_production.py",
+        SYS_DIR / "scripts/subtitles.py",
+        SYS_DIR / "audio_pipeline.py",
+        SYS_DIR / "audio_processing.py",
+        SYS_DIR / "remote_audio.py",
+        SYS_DIR / "format_profiles.py",
+        SYS_DIR / "narration_pauses.py",
+        SYS_DIR / "visual_pacing.py",
+        SYS_DIR / "omni_platform.py",
+        SYS_DIR / "explainer_contract.py",
+        SYS_DIR / "tests/test_narration_pauses.py",
+        SYS_DIR / "tests/test_vn_text_normalizer.py",
+        SYS_DIR / "tests/test_vn_text_normalizer_adversarial.py",
+        SYS_DIR / "tests/test_voice_contracts.py",
+        SYS_DIR / "tests/test_adversarial_m1_cadence_voice.py",
+        SYS_DIR / "tests/test_sound_design.py",
+        SYS_DIR / "tests/test_subtitles_acoustic.py",
+        SYS_DIR / "tests/test_adversarial_m2.py",
+        SYS_DIR / "tests/test_colab_pool.py",
+        SYS_DIR / "tests/test_colab_scheduler.py",
+        SYS_DIR / "tests/test_colab_health.py",
+        SYS_DIR / "tests/test_parallel_audio_pipeline.py",
+        REPO_ROOT / "pilot.py",
     ]
+    ruff_cmd = [ruff_bin, "check"] + [str(p) for p in candidate_targets if p.exists()]
     ruff_res = subprocess.run(ruff_cmd, cwd=str(REPO_ROOT), capture_output=True, text=True)
     if ruff_res.returncode != 0:
         print("[FAIL] Ruff phát hiện vi phạm linting:")
@@ -519,11 +532,30 @@ def cmd_setup(args):
 
 def cmd_colab(args):
     subaction = args.colab_action or "list"
+    pool_actions = {"pool-status", "pool-health", "pool-start", "pool-stop", "teardown"}
+    env = dict(os.environ, PYTHONPATH=str(SYS_DIR))
+    if subaction in pool_actions:
+        cmd = [get_python_executable(), "-m", "colab_bridge", subaction]
+        if getattr(args, "probe", False) and subaction == "pool-status":
+            cmd.append("--probe")
+        if getattr(args, "refresh_auth", False) and subaction == "pool-health":
+            cmd.append("--refresh-auth")
+        if getattr(args, "check_kernels", False) and subaction == "pool-health":
+            cmd.append("--check-kernels")
+        if getattr(args, "accounts", None):
+            cmd.extend(["--accounts", args.accounts])
+        if getattr(args, "max_workers", None) and subaction == "pool-start":
+            cmd.extend(["--max-workers", str(args.max_workers)])
+        res = subprocess.run(cmd, cwd=str(REPO_ROOT), env=env)
+        return sys.exit(res.returncode)
+
     script = SYS_DIR / "colab_bridge/accounts.py"
     cmd = [get_python_executable(), str(script), subaction]
+    if getattr(args, "probe", False) and subaction == "status-all":
+        cmd.append("--probe")
     if getattr(args, "account", None) and args.account != "auto":
         cmd.append(args.account)
-    res = subprocess.run(cmd, cwd=str(REPO_ROOT))
+    res = subprocess.run(cmd, cwd=str(REPO_ROOT), env=env)
     sys.exit(res.returncode)
 
 
@@ -551,9 +583,22 @@ def main():
     flow_parser.add_argument("target", nargs="?", default="all", help="Profile ID, job ID, hoặc 'all'")
     flow_parser.add_argument("--total", type=int, help="Tổng số Profile khi chạy login-many")
 
-    colab_parser = subparsers.add_parser("colab", help="Quản lý tài khoản Google Colab CLI")
-    colab_parser.add_argument("colab_action", choices=["list", "status-all", "login", "login-many", "enable", "disable", "role", "remove"], nargs="?", default="list")
+    colab_parser = subparsers.add_parser("colab", help="Quản lý tài khoản và Pool Google Colab CLI")
+    colab_parser.add_argument(
+        "colab_action",
+        choices=[
+            "list", "status-all", "login", "login-many", "enable", "disable", "role", "remove", "prefer", "pool", "select-idle",
+            "pool-status", "pool-health", "pool-start", "pool-stop", "teardown",
+        ],
+        nargs="?",
+        default="list",
+    )
     colab_parser.add_argument("account", nargs="?", default="auto", help="ID tài khoản Colab")
+    colab_parser.add_argument("--probe", action="store_true", help="Probe live Google server assignments")
+    colab_parser.add_argument("--refresh-auth", action="store_true", help="Renew existing OAuth credentials")
+    colab_parser.add_argument("--check-kernels", action="store_true", help="Observe existing kernels")
+    colab_parser.add_argument("--accounts", type=str, help="Comma-separated account IDs for pool operations")
+    colab_parser.add_argument("--max-workers", type=int, default=3, help="Max concurrent workers for pool-start")
 
     args = parser.parse_args()
 
