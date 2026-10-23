@@ -502,6 +502,7 @@ class ColabPoolManager:
             )
             if res.returncode == 0 or unassigned or already_gone:
                 stopped.append(w.account_id)
+                self._release_account_ledger(w.account_id, w.session_name)
             else:
                 errors.append({"account": w.account_id, "stderr": stderr_msg})
         return {
@@ -509,6 +510,46 @@ class ColabPoolManager:
             "unassigned_endpoints": unassigned_map,
             "errors": errors,
         }
+
+    @staticmethod
+    def _release_account_ledger(account_id: str, session_name: str) -> None:
+        """Synchronize Budgets ledger, allocation journal, and dispatch records after stopping a session."""
+        try:
+            from account_budget import Budgets
+            from .protocol import stamp
+
+            budgets = Budgets()
+            alias = f"colab:{account_id}"
+            snap = budgets.snapshot(alias)
+            now = time.time()
+            for item in snap.get("allocated_sessions", []):
+                if item.get("session") == session_name:
+                    start_t = float(item.get("start") or now)
+                    # Cap stale multi-day unclosed intervals to max 300s from start if older than 2h
+                    rel_at = min(now, start_t + 300.0) if (now - start_t) > 7200 else now
+                    budgets.released(alias, session_name, at=rel_at, evidence="teardown_stop_pool")
+            identity = budgets.read().get("aliases", {}).get(alias)
+            store_dir = budgets.path.parent
+            if identity:
+                alloc_file = store_dir / f"allocation-{stamp(identity)}.json"
+                if alloc_file.is_file():
+                    data = json.loads(alloc_file.read_text())
+                    if data.get("phase") != "released":
+                        data["phase"] = "released"
+                        data["release_reason"] = "teardown_stop_pool"
+                        data["updated_at"] = now
+                        alloc_file.write_text(json.dumps(data, indent=2) + "\n")
+            dispatch_dir = store_dir / "colab-dispatch"
+            if dispatch_dir.is_dir():
+                for rec in dispatch_dir.glob("*.json"):
+                    try:
+                        d = json.loads(rec.read_text())
+                        if d.get("account") == account_id and d.get("session") == session_name:
+                            rec.unlink(missing_ok=True)
+                    except Exception:
+                        pass
+        except Exception:
+            pass
 
     def teardown_job_resources(
         self,

@@ -390,7 +390,17 @@ class Client:
                         else:
                             if before_submit is not None: before_submit()
                             if req.get('assemble'): self._ready()
-                            self.exec(f'from pathlib import Path\nPath({remote!r}).mkdir(parents=True, exist_ok=True)')
+                            try:
+                                self.exec(f'from pathlib import Path\nPath({remote!r}).mkdir(parents=True, exist_ok=True)')
+                            except ColabError as ex:
+                                if 'COLAB_SESSION_NOT_FOUND' not in str(ex):
+                                    raise
+                                try:
+                                    self.reconcile()
+                                except Exception:
+                                    pass
+                                self._ready(auto_start=True)
+                                self.exec(f'from pathlib import Path\nPath({remote!r}).mkdir(parents=True, exist_ok=True)')
                             for lang, profile in req['profiles'].items():
                                 dest = remote + '/' + lang + '.wav'
                                 self.call('upload', '-s', self.session, profile.pop('local_wav'), dest, timeout=120)
