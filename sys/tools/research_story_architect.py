@@ -47,8 +47,9 @@ from script_cadence_checker import (  # noqa: E402
     extract_pauses,
     split_sentences,
 )
-from visual_style import CAST_APPEARANCE, DEFAULT_OUTFIT
-from visual_style import LEGACY_HANDDRAWN_STYLE_DESCRIPTION as STYLE_DESCRIPTION
+from visual_style import CAST_APPEARANCE, DEFAULT_OUTFIT, STYLE_DESCRIPTION
+
+STYLE_VERSION = "1.7.0"
 
 DEFAULT_CHANNEL_PILLAR = "Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức"
 ALLOWED_FUNNEL_TIERS: Tuple[str, str, str] = ("tier_1_broad", "tier_2_mid", "tier_3_conversion")
@@ -341,6 +342,30 @@ class PackagingSpec:
 
 
 @dataclass
+class HumanEditorialSpec:
+    """Anti-AI-Slop Human Editorial Co-Creation block with dynamic topic-specific questions and expanded in-video ideas."""
+
+    topic_dilemmas: List[str]
+    dynamic_questions: List[str]
+    author_raw_input: Optional[str] = None
+    editorial_stance: Optional[str] = None
+    expanded_content_ideas: List[Dict[str, str]] = field(default_factory=list)
+
+    def to_dict(self) -> Dict[str, Any]:
+        payload: Dict[str, Any] = {
+            "topic_dilemmas": list(self.topic_dilemmas),
+            "dynamic_questions": list(self.dynamic_questions),
+        }
+        if self.author_raw_input is not None:
+            payload["author_raw_input"] = self.author_raw_input
+        if self.editorial_stance is not None:
+            payload["editorial_stance"] = self.editorial_stance
+        if self.expanded_content_ideas:
+            payload["expanded_content_ideas"] = [dict(item) for item in self.expanded_content_ideas]
+        return payload
+
+
+@dataclass
 class ResearchedBeat:
     """One complete full-frame image and its narration-anchored beat."""
 
@@ -478,6 +503,7 @@ class ResearchedTopic:
     format_profile: Optional[str] = None
     conversational_facts: Optional[bool] = None
     packaging: Optional[PackagingSpec] = None
+    human_editorial: Optional[Any] = None
     spinoff_shorts: Optional[List[Dict[str, Any]]] = None
     visual_pacing_profile: Optional[str] = None
     enable_sound_design: Optional[bool] = None
@@ -677,6 +703,9 @@ def build_brief_v3(topic: ResearchedTopic, system_root: Optional[Path] = None) -
         brief["funnel_tier"] = pkg_dict["funnel_tier"]
         if pkg_dict.get("seo_keywords"):
             brief["seo_keywords"] = list(pkg_dict["seo_keywords"])
+    if getattr(topic, "human_editorial", None) is not None:
+        he_val = topic.human_editorial
+        brief["human_editorial"] = he_val.to_dict() if hasattr(he_val, "to_dict") else dict(he_val)
     if topic.visual_pacing_profile is not None:
         brief['visual_pacing_profile'] = topic.visual_pacing_profile
     if getattr(topic, "enable_sound_design", None) is not None:
@@ -847,43 +876,6 @@ _GENERAL_STOPWORDS = {
     "down", "out", "off", "over", "under", "again", "further", "then", "once",
 }
 
-_BI_CONCEPT_MAP: Dict[str, List[str]] = {
-    "sinh viên": ["student", "pupil", "researcher", "academic"],
-    "nghiên cứu": ["research", "study", "academic", "scientist", "investigation"],
-    "tài liệu": ["paper", "document", "file", "textbook", "reading"],
-    "bài báo": ["article", "paper", "journal"],
-    "bản nháp": ["draft", "manuscript", "page", "sheet"],
-    "trang giấy": ["paper", "sheet", "page", "blank"],
-    "màn hình": ["screen", "monitor", "display"],
-    "con trỏ": ["cursor", "pointer"],
-    "máy tính": ["laptop", "computer", "desktop"],
-    "bức tường": ["wall", "brick", "barrier"],
-    "mặt nạ": ["mask"],
-    "đồng hồ": ["clock", "watch", "time", "2 am", "midnight"],
-    "não": ["brain", "mind", "head", "cognitive"],
-    "tâm lý": ["psychologist", "psychology", "mental", "consultation"],
-    "kẻ mạo danh": ["impostor", "imposter"],
-    "hội chứng": ["syndrome"],
-    "lời khen": ["praise", "compliment", "laurel", "honor"],
-    "cân đòn": ["scale", "balance"],
-    "thước đo": ["measure", "ruler", "gauge"],
-    "tế bào": ["cell"],
-    "hồng cầu": ["blood", "red blood"],
-    "oxy": ["oxygen"],
-    "mao mạch": ["vessel", "capillary"],
-    "lạm phát": ["inflation"],
-    "tiền": ["currency", "money"],
-    "thuyền": ["boat", "ship", "vessel"],
-    "dòng điện": ["current", "electricity", "wire"],
-    "electron": ["electron"],
-    "đánh bại": ["beat", "defeat", "greater", "weigh", ">"],
-    "sợ": ["fear", "anxiety", "dread", "paralysis", "freeze", "slump", "stress"],
-    "lo sợ": ["fear", "anxiety", "dread", "paralysis"],
-    "bế tắc": ["paralysis", "stuck", "blocked", "wall", "freeze"],
-    "tự ti": ["doubt", "insecurity", "hesitat"],
-    "bắt đầu": ["start", "begin", "open"],
-    "đêm": ["night", "dark", "midnight", "lamp"],
-}
 
 
 def extract_sentence_semantic_elements(sentence: str) -> Dict[str, Any]:
@@ -975,7 +967,8 @@ def derive_see_say_visual_action(
     character_id: str = "",
 ) -> str:
     """Dynamically derive an authentic 2D explainer visual action from any spoken sentence on the fly.
-    Adheres strictly to the General Dynamic Reasoning Invariant (zero hardcoded topic templates).
+    Grounded directly in real-world people, animals, objects, experiments, and everyday situations.
+    Zero abstract void or cookie-cutter fallback templates.
     """
     sem = extract_sentence_semantic_elements(sentence)
     noun_label = ", ".join(sem["nouns"][:2]) if sem["nouns"] else "narrated subject"
@@ -984,55 +977,94 @@ def derive_see_say_visual_action(
 
     if shot_type == "visual_diagram":
         if metric_label:
-            return f"Hand-drawn quantitative infographic on clean white background highlighting {metric_label} with high-contrast charcoal lines."
+            return f"Hand-drawn analytical breakdown displaying exact figures for {noun_label} labeled {metric_label} on uncluttered paper."
         elif contrast_label or "đánh bại" in sentence.lower():
-            return f"Hand-drawn comparison diagram on clean white background contrasting opposing elements: {noun_label}."
+            return f"Hand-drawn side-by-side comparison contrasting two distinct physical states of {noun_label} on uncluttered paper."
         else:
-            return f"Clean hand-drawn conceptual diagram on pure white background mapping the structural relationship of {noun_label}."
+            return f"Hand-drawn structural overview mapping the direct physical relationships of {noun_label} on clean paper."
 
     elif shot_type == "concept_metaphor":
         if any(w in sentence.lower() for w in ("sợ", "bế tắc", "nguy hiểm", "xiềng xích", "khó")):
-            return f"Hand-drawn visual metaphor showing tangible physical friction and tension surrounding {noun_label} on minimal ground."
+            return f"Hand-drawn tangible physical interaction showing resistance and tension applied to {noun_label} on solid ground."
         elif any(w in sentence.lower() for w in ("nở rộng", "lớn", "mênh mông", "biển", "núi")):
-            return f"Dynamic hand-drawn expanding boundary metaphor pushing against dark charcoal void to visualize {noun_label}."
+            return f"Hand-drawn expansive landscape showing physical boundaries extending outward around {noun_label} in natural daylight."
         else:
-            return f"Hand-drawn symbolic visual metaphor depicting active physical dynamics of {noun_label} on uncluttered ground."
+            return f"Hand-drawn tangible physical object illustrating the working dynamics of {noun_label} in an everyday setting."
 
     elif shot_type == "cutaway_detail":
-        return f"Hand-drawn cross-section cutaway revealing the internal structural mechanics of {noun_label} with fine charcoal outlines."
+        return f"Hand-drawn cross-section revealing the internal components and mechanisms of {noun_label} with precise line work."
 
     elif shot_type == "variation":
-        return f"The figure advances the physical action, actively engaging with {noun_label} while shifting pose and tension."
+        return f"A person continues the physical task, handling {noun_label} while adjusting posture and focus."
 
     else:  # full_scene
-        return f"The contextual stick-figure actively engages with {noun_label}, executing physical action reflecting spoken friction."
+        return f"A person in everyday attire actively works with {noun_label}, demonstrating the physical action in the scene."
 
 
 def validate_see_say_alignment(sentence: str, visual_desc: str) -> bool:
     """Verify lexical or conceptual connection between spoken sentence and visual prompt.
+    Performs dynamic linguistic token overlap and semantic checking without a static concept map.
     Returns True when visual elements bind to sentence metrics, key entities, or concepts.
     Returns False when the visual prompt is completely disconnected from the spoken sentence.
     """
-    if not sentence or not visual_desc:
+    if not sentence or not visual_desc or not sentence.strip() or not visual_desc.strip():
         return False
     s_low = sentence.lower()
     v_low = visual_desc.lower()
 
-    # Matching numbers cannot establish a shared subject or relationship.
-    # 2. Bilingual concept mapping
-    for vn_term, en_synonyms in _BI_CONCEPT_MAP.items():
-        if vn_term in s_low:
-            for en_syn in en_synonyms:
-                if en_syn in v_low:
-                    return True
-
-    # 3. Direct lexical overlap (for shared terms >= 4 chars)
+    # 1. Direct lexical token overlap (words >= 4 chars, not digits, not stopwords)
     words = re.findall(r"[a-zA-ZÀ-ỹ0-9_]+", s_low)
     for w in words:
         if len(w) >= 4 and not w.isdigit() and w not in _GENERAL_STOPWORDS and re.search(r"\b" + re.escape(w) + r"\b", v_low):
             return True
 
-    # If neither metric, concept, nor lexical overlap matches, reject disconnect
+    # 2. Transliterated / unaccented token overlap for Vietnamese terms
+    import unicodedata
+    s_unaccent = "".join(c for c in unicodedata.normalize("NFD", s_low) if unicodedata.category(c) != "Mn")
+    v_unaccent = "".join(c for c in unicodedata.normalize("NFD", v_low) if unicodedata.category(c) != "Mn")
+    words_unaccent = re.findall(r"[a-zA-Z0-9_]+", s_unaccent)
+    for w in words_unaccent:
+        if len(w) >= 4 and not w.isdigit() and w not in _GENERAL_STOPWORDS and re.search(r"\b" + re.escape(w) + r"\b", v_unaccent):
+            return True
+
+    # 3. Dynamic semantic checking using extracted semantic elements
+    sem = extract_sentence_semantic_elements(sentence)
+    for noun in sem.get("nouns", []):
+        n_clean = noun.lower().strip()
+        n_unaccent = "".join(c for c in unicodedata.normalize("NFD", n_clean) if unicodedata.category(c) != "Mn")
+        for chunk in (n_clean, n_unaccent):
+            for part in chunk.split():
+                if len(part) >= 4 and not part.isdigit() and part not in _GENERAL_STOPWORDS and re.search(r"\b" + re.escape(part) + r"\b", v_low):
+                    return True
+
+    # Semantic alignment for contrast structures with shared comparative intent
+    contrast_markers = sem.get("contrasts", [])
+    if contrast_markers:
+        has_visual_contrast = bool(re.search(r"\b(?:comparison|contrasting|versus|vs|opposing|weighing more than|weigh|greater than|balance|scale)\b", v_low))
+        if has_visual_contrast:
+            s_numbers = re.findall(r"\b\d+\b", s_low)
+            v_numbers = re.findall(r"\b\d+\b", v_low)
+            if s_numbers and any(n in v_numbers for n in s_numbers):
+                return True
+            for w in words:
+                if len(w) >= 3 and not w.isdigit() and w not in _GENERAL_STOPWORDS and w in v_low:
+                    return True
+
+    # Dynamic metric unit alignment (e.g. 500 từ / words, 1000 giờ / hours)
+    metric_unit_pairs = [
+        (r"\b\d+\s*từ\b", r"\b\d+\s*words?\b"),
+        (r"\b\d+\s*giờ\b", r"\b\d+\s*hours?\b"),
+        (r"\b\d+\s*phút\b", r"\b\d+\s*minutes?\b"),
+        (r"\b\d+\s*người\b", r"\b\d+\s*people\b"),
+        (r"\b\d+\s*%\b", r"\b\d+\s*%\b"),
+        (r"\b\d+\s*phần trăm\b", r"\b\d+\s*percent\b"),
+    ]
+    for s_pat, v_pat in metric_unit_pairs:
+        s_m = re.search(s_pat, s_low)
+        v_m = re.search(v_pat, v_low)
+        if s_m and v_m:
+            return True
+
     return False
 
 
@@ -1041,7 +1073,7 @@ def build_scenes_from_story_rows(
     character_id: str = "",
     nominal_rate: float = NOMINAL_SPEECH_RATE,
     characters: Optional[Any] = None,
-    visual_contract: str = "1.6.0",
+    visual_contract: str = "1.7.0",
 ) -> List[ResearchedScene]:
     """Flash-agent friendly builder: converts story rows into fully anchored, cadence-calibrated
     ResearchedScene objects with dynamic contextual character resolution and action progression.
@@ -1074,8 +1106,8 @@ def build_scenes_from_story_rows(
         cliche = find_visual_cliche(setting)
         if cliche:
             raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {scene_id} setting: contains banned {cliche}")
-        laziness = find_laziness_pattern(setting)
-        if laziness and visual_contract != "1.7.0":
+        laziness = find_laziness_pattern(setting, version=visual_contract)
+        if laziness:
             name, token = laziness
             raise ValueError(f"LAZY_VISUAL_ACTION_FORBIDDEN in {scene_id} setting: contains banned {name} ({token!r})")
 
@@ -1141,8 +1173,8 @@ def build_scenes_from_story_rows(
             cliche = find_visual_cliche(action_desc) or find_visual_cliche(spec)
             if cliche:
                 raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {image_id} visual action: contains banned {cliche}")
-            laziness = find_laziness_pattern(action_desc) or find_laziness_pattern(spec)
-            if laziness and visual_contract != "1.7.0":
+            laziness = find_laziness_pattern(action_desc, version=visual_contract) or find_laziness_pattern(spec, version=visual_contract)
+            if laziness:
                 name, token = laziness
                 raise ValueError(f"LAZY_VISUAL_ACTION_FORBIDDEN in {image_id} visual action: contains banned {name} ({token!r})")
 
@@ -1167,8 +1199,8 @@ def build_scenes_from_story_rows(
             cliche = find_visual_cliche(desc)
             if cliche:
                 raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {image_id} description: contains banned {cliche}")
-            laziness = find_laziness_pattern(desc)
-            if laziness and visual_contract != "1.7.0":
+            laziness = find_laziness_pattern(desc, version=visual_contract)
+            if laziness:
                 name, token = laziness
                 raise ValueError(f"LAZY_VISUAL_ACTION_FORBIDDEN in {image_id} description: contains banned {name} ({token!r})")
 

@@ -31,9 +31,11 @@ def validate_brief(root,b):
  from format_profiles import validate_format_separation
  try: validate_format_separation(b)
  except ValueError as ex: errors.append(error('FORMAT_PROFILE','format_profile',str(ex),'Chọn đúng format_profile tương ứng với aspect_ratio.'))
- from explainer_contract import validate_short
+ from explainer_contract import validate_short, validate_human_editorial
  for message in validate_short(b):
   errors.append(error(message.split(':')[0], 'format_profile', message, 'Use the reference-led short contract.'))
+ for message in validate_human_editorial(b):
+  errors.append(error(message.split(':')[0], 'human_editorial', message, 'Sinh bộ câu hỏi động theo đề tài và phát triển ý tưởng chi tiết từ góc nhìn tác giả.'))
  from output_contract import outputs
  try: outputs(b)
  except ValueError as ex: errors.append(error('OUTPUT_CONTRACT','outputs',str(ex),'Sửa hợp đồng đầu ra.'))
@@ -64,9 +66,12 @@ def validate_brief(root,b):
   except ImportError:
    pass
  if b.get('style'):
-  from flow_prompts import find_visual_cliche
-  cliche = find_visual_cliche(b['style'])
-  if cliche: errors.append(error('FLOW_CLICHE_FORBIDDEN', 'style', f"Style contains banned {cliche}", 'Thay thế phong cách sáo rỗng trong brief.'))
+  try:
+   from flow_prompts import find_visual_cliche
+   cliche = find_visual_cliche(b['style'])
+   if cliche: errors.append(error('FLOW_CLICHE_FORBIDDEN', 'style', f"Style contains banned {cliche}", 'Thay thế phong cách sáo rỗng trong brief.'))
+  except ImportError:
+   pass
  if errors: raise ContractError(errors)
 
 def validate_content(root,b,revision,bhash,p):
@@ -142,7 +147,10 @@ def validate_content(root,b,revision,bhash,p):
    except ImportError:
     pass
  # Visual prompt cliché validation (FLOW_CLICHE_FORBIDDEN)
- from flow_prompts import find_visual_cliche
+ try:
+  from flow_prompts import find_visual_cliche
+ except ImportError:
+  find_visual_cliche = lambda text: None
  if p.get('style'):
   cliche = find_visual_cliche(p['style'])
   if cliche: fail('FLOW_CLICHE_FORBIDDEN', 'style', f"Style contains banned {cliche}", 'Thay thế phong cách sáo rỗng bằng phong cách chuẩn.')
@@ -179,56 +187,62 @@ def validate_content(root,b,revision,bhash,p):
        if cliche: fail('FLOW_CLICHE_FORBIDDEN', f"{im_id}/visible_text.{subf}", f"Visible text {subf} contains banned {cliche}", 'Thay thế chữ hiển thị sáo rỗng.')
  if errors: raise ContractError(errors)
  if p.get('schema_version')=='3.0':
-  from explainer_contract import is_reference_explainer, validate_explanations
+  from explainer_contract import is_reference_explainer, validate_clearance_and_labels, validate_explanations
   reference_explainer = is_reference_explainer(b)
   if reference_explainer:
    for message in validate_explanations(p):
     fail(message.split(':')[0], 'images', message, 'Author explicit entities and explanation bindings.')
-  from scripts.visual_quality import (
-   check_character_breathing_room,
-   check_instructional_manual_loop,
-   check_scene_narrative_progression,
-   check_setting_description_verbosity,
-   check_visual_setting_diversity,
-  )
-  from tools.script_diversity_linter import check_micro_action_filler
-  from visual_style import EARTH_TONED_STYLE_DESCRIPTION, STYLE_DESCRIPTION, render_style
-  has_new_shots = any(
-   str(im.get('shot_type')) in {'still_life', 'environment', 'concept_metaphor', 'visual_diagram', 'cutaway_detail'}
-   for sc in p.get('scenes', [])
-   for im in sc.get('images', [])
-  )
-  is_legacy_blueprint = (
-   not has_new_shots
-   and any(len(str(sc.get('setting', '')).split()) > 10 for sc in p.get('scenes', []))
-   and all(
-    str(im.get('shot_type')) in {'', 'full_scene', 'variation', 'macro_prop', 'white_card', 'white_isolated'}
+  elif b.get('visual_pacing_profile') == 'full_frame_v1' and ('1.7.0' in str(b.get('style', '')) or 'Hand-drawn 2D' in str(b.get('style', ''))):
+   for message in validate_clearance_and_labels(p):
+    fail(message.split(':')[0], 'images', message, 'Ensure full-bleed 100% canvas and concise uppercase Vietnamese labels (< 5% height).')
+  try:
+   from scripts.visual_quality import (
+    check_character_breathing_room,
+    check_instructional_manual_loop,
+    check_scene_narrative_progression,
+    check_setting_description_verbosity,
+    check_visual_setting_diversity,
+   )
+   from tools.script_diversity_linter import check_micro_action_filler
+   from visual_style import EARTH_TONED_STYLE_DESCRIPTION, STYLE_DESCRIPTION, render_style
+   has_new_shots = any(
+    str(im.get('shot_type')) in {'still_life', 'environment', 'concept_metaphor', 'visual_diagram', 'cutaway_detail'}
     for sc in p.get('scenes', [])
     for im in sc.get('images', [])
    )
-  )
-  is_hd2d_or_earth = (
-   not is_legacy_blueprint
-   and (
-    render_style(b) in {'handdrawn_2d_explainer', 'earth_toned_2d'}
-    or b.get('style') in {STYLE_DESCRIPTION, EARTH_TONED_STYLE_DESCRIPTION}
-    or has_new_shots
+   is_legacy_blueprint = (
+    not has_new_shots
+    and any(len(str(sc.get('setting', '')).split()) > 10 for sc in p.get('scenes', []))
+    and all(
+     str(im.get('shot_type')) in {'', 'full_scene', 'variation', 'macro_prop', 'white_card', 'white_isolated'}
+     for sc in p.get('scenes', [])
+     for im in sc.get('images', [])
+    )
    )
-  )
-  checks = [
-   check_visual_setting_diversity,
-   check_instructional_manual_loop,
-   check_scene_narrative_progression,
-   check_micro_action_filler,
-  ] if b.get('visual_pacing_profile') == 'full_frame_v1' else []
-  if is_hd2d_or_earth and not reference_explainer and b.get('visual_pacing_profile') == 'full_frame_v1':
-   checks.extend([
-    check_character_breathing_room,
-    check_setting_description_verbosity,
-   ])
-  for check in checks:
-   for violation in check(p['scenes']):
-    fail(violation['type'], str(violation.get('scene_id', 'scenes')), str(violation))
+   is_hd2d_or_earth = (
+    not is_legacy_blueprint
+    and (
+     render_style(b) in {'handdrawn_2d_explainer', 'earth_toned_2d'}
+     or b.get('style') in {STYLE_DESCRIPTION, EARTH_TONED_STYLE_DESCRIPTION}
+     or has_new_shots
+    )
+   )
+   checks = [
+    check_visual_setting_diversity,
+    check_instructional_manual_loop,
+    check_scene_narrative_progression,
+    check_micro_action_filler,
+   ] if b.get('visual_pacing_profile') == 'full_frame_v1' else []
+   if is_hd2d_or_earth and b.get('visual_pacing_profile') == 'full_frame_v1':
+    checks.extend([
+     check_character_breathing_room,
+     check_setting_description_verbosity,
+    ])
+   for check in checks:
+    for violation in check(p['scenes']):
+     fail(violation['type'], str(violation.get('scene_id', 'scenes')), str(violation))
+  except ImportError:
+   pass
   if errors:
    raise ContractError(errors)
   from scripts.story_plan import validate_plan

@@ -10,7 +10,7 @@
 - **Conveyor**: St1 Critique (`critique_review.html`) -> St2 AST Proof & `pytest` -> St3 `PLAYBOOK.md` Sync -> St4 `ruff` Lint -> St5 PR (`gh-axi`) -> St6 Green CI.
 
 ## 3. Pipelines & Role Separation (Flash-Agent Simplified)
-- **Topic-to-Video Chain (`vp-production`)**: `vp-research-architect` (Schema 3.0 `brief.json`/`content.json`, Packaging Contract, VN 60s, `build_scenes_from_story_rows`) -> `vp-scriptwriting` (Truth-Slap Hook `<= 18` syl, Zero Pause in `SC01`, mix 3–8 & 15–24 word sentences; `vn_text_normalizer.py`) -> `vp-full-frame-quality` (`kind: "scene"`, `shot_type` in `full_scene|macro_prop|variation|white_card`, `based_on`, camera) -> `vp-omni-platform` (`sys/omni_platform.py`) -> Multi-T4 Orchestrator (`ColabPoolDispatcher` / `pilot.py` outline -> dialogue -> audio -> images -> video).
+- **Topic-to-Video Chain (`vp-production`)**: `vp-research-architect` (Schema 3.0 `brief.json`/`content.json`, `human_editorial` dynamic questions, Packaging Contract, VN 60s, `build_scenes_from_story_rows`) -> `vp-scriptwriting` (Truth-Slap Hook `<= 18` syl, Zero Pause in `SC01`, mix 3–8 & 15–24 word sentences; `vn_text_normalizer.py`) -> `vp-full-frame-quality` (`kind: "scene"`, `shot_type` in `full_scene|macro_prop|variation|white_card`, `based_on`, camera) -> `vp-omni-platform` (`sys/omni_platform.py`) -> Multi-T4 Orchestrator (`ColabPoolDispatcher` / `pilot.py` outline -> dialogue -> audio -> images -> video).
 - **Remote GPU TTS & Video (`vp-colab-bridge`)**: Execute via `pilot.py` or `sys/colab_bridge/` + `sys/renderer/render.mjs` (no ad-hoc ffmpeg/local render).
 - **AI Image Generation (`vp-flow-cdp`)**: Dynamic 20 Chrome profiles pool (`sys/flow_cdp/`) with adaptive sizing (1–10 tabs) and strict lifecycle teardown (open N, close N). Valid AI image + `.json` sidecar required (no PIL mocks).
 
@@ -23,8 +23,8 @@
 - **Bug Protocol**: Reproduction -> Root Cause -> Fix -> `PLAYBOOK.md` (6 fields). Extract to `.agents/skills/` if `PLAYBOOK.md` > 200 lines.
 
 ## 6. Quality, Anti-Flop & Verification Guards
-- **Fidelity, Packaging & Anti-Flop Gate**: 1 core paradox/video (no cramming or clone topics), `youtube_title <= 55` chars + `thumbnail_spec` (2–4 uppercase words), VN 60s localization, `SC01` hook `<= 18` syl, zero `[pause:...]` (`OPENING_SCENE_PAUSE_FORBIDDEN`), spoken facts `<= 20` syl; pass `script_diversity_linter.py`.
-- **Visuals & Verification (`full_frame_v1`)**: Complete `kind: "scene"` images (`caption_clearance: null` on 16:9) with visual counterpoint; no manual `(x, y)` coords, cutout stickers, `layers[]`, or `matte_sticker.py`. Dynamic visual pacing on narrative beats and measured audio (no rigid clamps). Verify MP4 with `ffprobe`.
+- **Fidelity, Packaging & Anti-Flop Gate**: 1 core paradox/video (no cramming), `youtube_title <= 55` chars + `thumbnail_spec` (2–4 uppercase words), VN 60s localization, `SC01` hook `<= 18` syl, zero `[pause:...]` (`OPENING_SCENE_PAUSE_FORBIDDEN`), spoken facts `<= 20` syl; pass `script_diversity_linter.py`.
+- **Visuals & Verification (`full_frame_v1`)**: Complete `kind: "scene"` images (`caption_clearance: null` on 16:9) with visual counterpoint; no manual `(x, y)` coords, cutout stickers, `layers[]`, or `matte_sticker.py`. Dynamic visual pacing on narrative beats and measured audio. Verify MP4 with `ffprobe`.
 
 ## 7. Language Standards
 - **User**: Concise **Vietnamese**. **Code/Commits/Prompts**: **English** (preserve exact English spelling including `I`).

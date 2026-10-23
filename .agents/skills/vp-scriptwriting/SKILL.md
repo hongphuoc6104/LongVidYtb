@@ -12,6 +12,9 @@ description: "Author and transform explainer video scripts into natural conversa
 ## 1. Bản Sắc Giọng Kể, Cú Tát Sự Thật Mở Màn & Nhịp Câu Con Người
 
 - **Hình tượng (The Voice Archetype):** **Conversational Essayist (Nhà luận thuyết trò chuyện)** — điềm đạm, ấm áp, sắc sảo, như người bạn đồng hành tri thức bên bàn cà phê, khóa cứng ngách **"Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức"**.
+- **Trục Phân Tích - Bình Luận - Đánh Giá Con Người (`human_editorial` Spine — Chống AI-Slop):**
+  - Kịch bản bắt buộc lấy lập trường (`editorial_stance`) và các ý tưởng chi tiết mở rộng từ góc nhìn tác giả (`expanded_content_ideas` trong `brief.json`) làm **xương sống dẫn dắt**.
+  - Tuyệt đối không viết theo lối tổng hợp thông tin trung tính kiểu Wikipedia/AI. Mỗi phân đoạn phải thể hiện rõ sự **phân tích nguyên nhân ngầm**, **bình luận phản biện**, và **đánh giá trọng số giá trị** của con người; dữ kiện khoa học (`sources`) chỉ được trích dẫn làm bằng chứng phục vụ cho trục bình luận đó.
 - **Counter-Intuitive / Truth-Slap Hook (Cú tát sự thật trong 2.5 giây đầu):**
   - Câu đầu tiên của `SC01` bắt buộc **$\le 18$ âm tiết** (`OPENING_HOOK_TOO_LONG`), đánh thẳng vào nghịch lý phản trực giác hoặc lật tẩy ảo giác học thuật của người xem (ví dụ: *"Trang sách vàng kín, đầu bạn vẫn trống."* — 8 âm tiết; hoặc *"Đọc lại giáo trình năm lần chỉ tạo ra ảo giác hiểu bài."* — 12 âm tiết).
   - **Tuyệt đối cấm** mở đầu bằng lời chào (*"Xin chào"*), giới thiệu đề tài (*"Hôm nay chúng ta..."*), hoặc câu dẫn nhập chậm (*"Hãy nghĩ về..."*, *"Hãy hình dung..."*, *"Hãy tưởng tượng..."*, *"Giờ đây, hãy thử..."*).
@@ -24,47 +27,39 @@ description: "Author and transform explainer video scripts into natural conversa
 
 ---
 
-## 2. Khung Kể Chuyện 8 Phần Ngầm (`narrative_phase`) & Điều Biến Giọng Động
+## 2. Khung Kể Chuyện Nhân Quả (`narrative_phase`) & Điều Biến Giọng Động
 
-1. **Mạch Truyện 8 Chặng Nhận Thức (`NARRATIVE_ARC_8_STAGES` / `narrative_phase` trên `full_frame_v1`):**
-   - Kịch bản luôn được chia thành **8 chặng tư duy rõ ràng** để người xem không bao giờ thấy đều đều, lộn xộn hay mất phương hướng:
-     1. **`hook` (Mở bài):** Cú tát sự thật $\le 18$ âm tiết + lát cắt đời thực sát sườn.
-     2. **`lead_in` (Phần dẫn):** Neo cảm xúc và bối cảnh thực tế tại Việt Nam (`tone: "narrative_warm"`).
-     3. **`problem` (Phần vấn đề):** Phơi bày mâu thuẫn nhận thức — vì sao cách làm quen thuộc lại phản tác dụng.
-     4. **`causal_mechanism` (Phần nhân quả):** Giải phẫu cơ chế nhân quả gốc rễ và bằng chứng thực nghiệm.
-     5. **`explanation` (Phần giải thích):** Mô hình hóa trực quan qua sơ đồ nhân quả hoặc ẩn dụ vật lý (`visual_diagram`, `concept_metaphor`).
-     6. **`counter_argument` (Phần phản biện):** Lật ngược giả định thông thường, xét góc nhìn đối lập hoặc giới hạn của giải pháp để tránh cảm giác giảng đạo một chiều.
-     7. **`takeaway` (Phần nội dung rút ra):** Đúc kết nguyên lý/khung tư duy cốt lõi để người xem mang về áp dụng ngay.
-     8. **`closing` (Phần kết bài, `tone: "reflective_slow"`):** Khép vòng lặp với chi tiết ở cảnh mở đầu.
-   - *(Tương thích ngược với 4 pha macro: `lived_friction` $\leftrightarrow$ `hook`/`lead_in`; `empirical_conflict` $\leftrightarrow$ `problem`/`causal_mechanism`; `structural_model` $\leftrightarrow$ `explanation`/`counter_argument`; `actionable_resolution` $\leftrightarrow$ `takeaway`/`closing`).*
-   - **Điều biến `tone` động (`_infer_scene_tone`):** Ở thân bài, không khóa cứng 100% vào `analytical_crisp`; hệ thống tự động xen kẽ `reflective_slow` hoặc `narrative_warm` ở các cảnh đặt câu hỏi bản chất (`?`, `tại sao`, `nghịch lý`, `sụp đổ`, `ảo giác`) để giữ sóng cảm xúc.
-2. **Chuyển Ý Tự Nhiên (Cấm Khẩu Hiệu Mục Lục Kiểu AI):**
-   - Tuyệt đối cấm các câu dẫn sáo rỗng hoặc thông báo mục lục máy móc (*"Phần 1 là..."*, *"Bước sang phần hai..."*, *"Đầu tiên chúng ta hãy..."*, *"Tóm lại là..."*, *"Trong kỷ nguyên số hiện nay..."*, *"Như một con dao hai lưỡi..."*, *"Nhưng rồi..."*, *"Hãy cùng khám phá..."*). Hãy chuyển chặng bằng câu hỏi kích hoạt tò mò hoặc từ nối tự nhiên (*"Vấn đề nằm ở chỗ..."*, *"Thế nhưng có một nghịch lý..."*, *"Nếu nhìn sâu vào cơ chế..."*, *"Khoan đã, liệu cách này có luôn đúng?"*).
+1. **Hành trình nhân quả 4 Pha Chức Năng (`narrative_phase` trên `full_frame_v1`):**
+   - **Pha 1 — `lived_friction` (Trải nghiệm ma sát thực tế, `tone: "narrative_warm"`):** Bối cảnh sát sườn tại Việt Nam (bàn học 2 giờ sáng, tô bút dạ quang kín giáo trình, giảng đường, kẹt xe đại lộ, mở Word trắng tinh).
+   - **Pha 2 — `empirical_conflict` (Thực nghiệm & Bằng chứng đối chứng):** Đặt hai nhóm học tập/hành vi lên bàn cân thực nghiệm khoa học; trích dẫn dữ kiện văn nói $\le 20$ âm tiết.
+   - **Pha 3 — `structural_model` (Cơ chế & Mô hình cấu trúc):** Giải phẫu cơ chế bằng ẩn dụ vật lý hoặc mô hình hệ thống (bản đồ sương mù, mạng lưới cầu tắt, Tháp Học Thuật 9 tầng, chuỗi `Question → Gap → Method → Evidence`, Ma trận Khoảng trống).
+   - **Pha 4 — `actionable_resolution` (Ứng dụng thực chiến & Khép vòng lặp, `tone: "reflective_slow"`):** Quay lại bối cảnh mở màn với nguyên tắc thiết kế/hành động rõ ràng.
+   - **Điều biến `tone` động (`_infer_scene_tone`):** Ở 60% thân bài (Pha 2–3), không khóa cứng 100% vào `analytical_crisp`; hệ thống tự động xen kẽ `reflective_slow` hoặc `narrative_warm` ở các cảnh đặt câu hỏi bản chất (`?`, `tại sao`, `nghịch lý`, `sụp đổ`, `ảo giác`) để giữ sóng cảm xúc.
+2. **Luân phiên thế chuyển cảnh động:**
+   - Tuyệt đối cấm các câu dẫn sáo rỗng (*"Nhưng rồi..."*, *"Bước sang..."*, *"Hãy cùng bước vào..."*, *"Nhưng câu chuyện chưa dừng lại ở đó..."*).
 3. **Phân vùng lịch sử một chiều (Strict Forward Chronology):**
    - Khi đã bước sang thời kỳ mới, nghiêm cấm kéo ngược bối cảnh về thời kỳ cũ. Trong 60 giây đầu (`SC01–SC02`), bắt buộc giữ 100% bối cảnh hiện đại gần gũi với người xem Việt Nam.
 
 ---
 
-## 3. Viết Kịch Bản Gắn Kết Với Nhịp Hình Ảnh (`Clause/Sentence-Beat Pairing`)
+## 3. Viết Kịch Bản Gắn Kết 1-1 Với Hình Ảnh Toàn Khung (`Sentence-Beat Pairing`)
 
-Để Agent không bao giờ tính sai tọa độ hay trượt điểm neo (`anchor_quote`), hãy soạn kịch bản theo từng cặp **`(Câu hoặc mệnh đề thoại tự nhiên, "loại_shot|Hành động hình ảnh cụ thể")`** (như trong `sys/tools/build_full_frame_acceptance.py` hoặc hàm `build_scenes_from_story_rows` trong `sys/tools/research_story_architect.py`):
+Để Agent không bao giờ tính sai tọa độ hay trượt điểm neo (`anchor_quote`), hãy soạn kịch bản theo từng cặp **`(Câu thoại ngắn tự nhiên, "loại_shot|Hành động hình ảnh cụ thể")`** (như trong `sys/tools/build_full_frame_acceptance.py` hoặc hàm `build_scenes_from_story_rows` trong `sys/tools/research_story_architect.py`):
 
 - **`full_scene`**: Nhân vật người que ẩn danh và đồ vật tương tác trực tiếp trong bối cảnh vật lý.
-- **`variation`**: Giữ nguyên căn phòng và góc máy của ảnh trước (`based_on`), chỉ đổi cử chỉ tay/biểu cảm nhân vật (tối đa **2 nhịp `variation` liên tiếp**; đến nhịp thứ 3 bắt buộc đổi góc máy sang `macro_prop`, `visual_diagram` hoặc `full_scene` góc mới để tránh đứng hình nhàm chán).
+- **`variation`**: Giữ nguyên căn phòng và góc máy của ảnh trước (`based_on`), chỉ đổi cử chỉ tay/biểu cảm nhân vật (code tự động thêm `Expression lock`; nếu cần đổi biểu cảm ở các bước ngoặt nhận thức, bật `allow_expression_shift: true` hoặc ghi rõ `Expression shift:` trong `change`).
 - **`macro_prop`**: Cận cảnh bàn tay 4 ngón hoạt hình cầm bút, trang sách tô vàng, đồng hồ hoặc chi tiết sơ đồ.
-- **`visual_diagram`**: Sơ đồ nhân quả hoặc biểu đồ so sánh vẽ tay trực quan trên nền sáng sạch (`camera: hold`).
-- **`concept_metaphor`**: Ẩn dụ thị giác vật lý hóa cơ chế trừu tượng.
-- **`white_card`**: Thẻ khái niệm nền trắng tinh `#FFFFFF` cô lập một biểu tượng đối sánh tối giản (`camera: hold`).
+- **`white_card`**: Thẻ khái niệm nền trắng tinh `#FFFFFF` cô lập một biểu tượng đối sánh tối giản.
 - **`white_isolated`**: Nền trắng tinh `#FFFFFF` với đối tượng hoặc nhân vật được cô lập hoàn toàn.
 - **`still_life`**: Nhịp nghỉ thị giác (rest frame) cận cảnh hoặc trung cảnh tập trung vào vật thể, tài liệu, sách, thiết bị, đồng hồ — tuyệt đối không vẽ nhân vật người que hay bàn tay hoạt hình.
 - **`environment`**: Nhịp nghỉ thị giác (rest frame) cảnh rộng thiết lập không gian, phòng ốc, phong cảnh, đại lộ — hoàn toàn vắng bóng nhân vật.
 
 1. **Khoảng thở thị giác & Nhịp kể (Visual Breathing Room):**
    - Xen kẽ nhịp kể với các khung hình nghỉ (`still_life`, `environment`): bắt buộc có ít nhất 30% nhịp hình không có nhân vật trong mỗi chuỗi 10 nhịp trượt.
-   - **Trần nhịp nhân vật & trần `variation` liên tiếp:** Tuyệt đối cấm viết quá 4 nhịp hình có nhân vật liên tiếp, và cấm quá 2 nhịp `variation` (`based_on`) liên tiếp.
+   - **Trần nhịp nhân vật liên tiếp:** Tuyệt đối cấm viết quá 4 nhịp hình có nhân vật liên tiếp; phải ngắt chuỗi bằng một nhịp `environment` hoặc `still_life`.
    - **Quy chuẩn Bối cảnh (Setting Brevity):** Mỗi bối cảnh `setting` chỉ được dài $\le 8$ từ (chỉ nêu không gian và điều kiện ánh sáng, nghiêm cấm liệt kê đồ đạc/đạo cụ).
 2. **Cold open (`0:00–0:12.5`) & Cấm Lệnh Vật Lý Vụn Vặt (`MICRO_ACTION_FILLER_BABBLE`):** Đạt **3–5 hình trong 5 giây đầu** và **6–10 hình trong 12,5 giây đầu** bằng **đối trọng thị giác (Visual Counterpoint)** lật tẩy mâu thuẫn nhận thức; tuyệt đối cấm viết $\ge 3$ câu lệnh vật lý 4 chữ tầm thường liên tiếp (*"Cầm cây bút lên. Đặt xuống tờ giấy trắng. Mở sách ra."*).
-3. **Thân bài (`sau 0:15`):** Với câu dài $> 14$ chữ có bước ngoặt ý, tách thành 2 nhịp hình theo mệnh đề (`split_long_sentence_into_beat_clauses()`) để mỗi nhịp hình rơi vào khoảng **`1.2s–3.5s`**, kể chuyện thí nghiệm sinh động nhưng không trích dẫn khô khan kiểu `et al.`, `DOI:`, `(2008)`.
+3. **Thân bài (`sau 0:15`):** Giữ mỗi câu/nhịp hình trong khoảng **`0.83s–3.80s`**, kể chuyện thí nghiệm sinh động nhưng không trích dẫn khô khan kiểu `et al.`, `DOI:`, `(2008)`.
 
 ---
 

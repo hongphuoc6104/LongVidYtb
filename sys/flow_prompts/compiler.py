@@ -23,7 +23,7 @@ CHARACTER_FREE_DIRECTIVE = (
 DEPRECATED_PURPOSES = ('layer_background', 'layer_sticker')
 FIELDS = {'description', 'aspect_ratio', 'allowed_text', 'character_reference', 'base_reference',
           'preserve', 'change', 'composition', 'mascot_placement', 'caption_clearance', 'shot_type',
-          'character_free', 'has_character'}
+          'character_free', 'has_character', 'setting', 'action'}
 PLACEMENTS = {'upper-left', 'upper-right', 'left-margin', 'right-margin', 'above-caption-left', 'above-caption-right'}
 UUID = re.compile(r'[a-fA-F0-9]{8}(?:-[a-fA-F0-9]{4}){3}-[a-fA-F0-9]{12}\Z')
 SHA = re.compile(r'[a-f0-9]{64}\Z')
@@ -46,6 +46,21 @@ BANNED_LAZINESS_PATTERNS = [
     # Evasive abstract phrasing
     (re.compile(r'(?i)\b(?:a\s+conceptual\s+metaphor\s+of|an\s+abstract\s+illustration\s+of|a\s+symbolic\s+representation\s+of)\b'),
      'evasive abstract phrasing'),
+]
+BANNED_170_CLICHE_PATTERNS = [
+    (re.compile(r'(?i)\bfunnels?\b'), 'funnel cliché'),
+    (re.compile(r'(?i)\bgears?\b'), 'gear cliché'),
+    (re.compile(r'(?i)\blight\s*bulbs?\b'), 'lightbulb cliché'),
+    (re.compile(r'(?i)\bglowing\s+brains?\b'), 'glowing brain cliché'),
+    (re.compile(r'(?i)\bexploding\s+brains?\b'), 'exploding brain cliché'),
+    (re.compile(r'(?i)\babstract\s+voids?\b'), 'abstract void cliché'),
+    (re.compile(r'(?i)\bdark\s+charcoal\s+voids?\b'), 'dark charcoal void cliché'),
+    (re.compile(r'(?i)\bmetaphor\s+of\b'), 'metaphor of cliché'),
+    (re.compile(r'(?i)\bsymboli[zs]ing\b'), 'symbolizing cliché'),
+    (re.compile(r'(?i)\bpuzzle(?:\s+(?:pieces?|blocks?|frames?))?\b'), 'puzzle cliché'),
+    (re.compile(r'(?i)\bicebergs?\b'), 'iceberg cliché'),
+    (re.compile(r'(?i)\bhamster\s+wheels?\b'), 'hamster wheel cliché'),
+    (re.compile(r'(?i)\btreadmills?\b'), 'treadmill cliché'),
 ]
 
 
@@ -96,24 +111,88 @@ def check_visual_prompt_text(value, field='description'):
     return value
 
 
-def find_laziness_pattern(text):
+def find_laziness_pattern(text, version='1.0.0'):
     """Return the (pattern_name, matched_text) if text contains banned laziness lexicon, or None."""
     if not isinstance(text, str):
         return None
-    for pattern, name in BANNED_LAZINESS_PATTERNS:
+    patterns = list(BANNED_LAZINESS_PATTERNS)
+    if version >= '1.7.0':
+        patterns = BANNED_170_CLICHE_PATTERNS + patterns
+    for pattern, name in patterns:
         match = pattern.search(text)
         if match:
             return name, match.group()
     return None
 
 
-def check_laziness_lexicon(text: str, field: str = 'description') -> str:
+def check_laziness_lexicon(text: str, field: str = 'description', version: str = '1.0.0') -> str:
     """Flag passive or evasive authoring in visual prompt fields."""
-    match = find_laziness_pattern(text)
+    match = find_laziness_pattern(text, version=version)
     if match:
         name, token = match
+        if version >= '1.7.0':
+            raise PromptError(f'FLOW_LAZINESS_VIOLATION: {field} contains {name} ({token!r})')
         raise PromptError(f'LAZY_VISUAL_ACTION_FORBIDDEN: {field} contains {name} ({token!r})')
     return text
+
+
+_COGNITIVE_STUDY_LABEL_RE = re.compile(
+    r'(?i)\b(?:GIÂY|PHÚT|GIỜ|THỜI\s*GIAN|TÓM\s*TẮT|SAO\s*CHÉP|HỌC\s*VẸT|TẢI\s*VỀ|BỎ\s*ĐÓ|QUÊN\s*SẠCH|'
+    r'Ý\s*TƯỞNG|ĐỌC|HIỂU|HỆ\s*THỐNG|PHƯƠNG\s*PHÁP|TƯ\s*DUY|NGHIÊN\s*CỨU|CƠ\s*CHẾ|LỖ\s*HỔNG|CHỌN\s*LỌC)\b'
+)
+_UNRELATED_BORROWED_PROP_RE = re.compile(
+    r'(?i)\b(?:rice\s+bowls?|chopsticks|wooden\s+spoon|metal\s+spoon|mound\s+of\s+.*?\bgranules|'
+    r'ceramic\s+bowl|document\s+jars?|pickle\s+jars?|cave-like\s+background|caveman|shallow\s+saucer|'
+    r'salts?|soups?|cauldrons?)\b'
+)
+_TIME_LABEL_RE = re.compile(r'(?i)\b(?:GIÂY|PHÚT|GIỜ|THỜI\s*GIAN)\b')
+_TIME_VISUAL_RE = re.compile(
+    r'(?i)\b(?:clock|stopwatch|timer|watch|hourglass|timeline|progress\s+bar|calendar|dial|minute|second)\b'
+)
+_READING_LABEL_RE = re.compile(
+    r'(?i)\b(?:TÓM\s*TẮT|SAO\s*CHÉP|HỌC\s*VẸT|ĐỌC\s*LƯỚT|ĐỌC\s*SÂU|ĐỌC\s*NHIỀU|TẢI\s*VỀ|GHI\s*CHÉP|TÀI\s*LIỆU)\b'
+)
+_READING_VISUAL_RE = re.compile(
+    r'(?i)\b(?:books?|notebooks?|pages?|folders?|documents?|papers?|notes?|cards?|sheets?|text|files?|manuscripts?)\b'
+)
+
+
+def check_concept_object_alignment(description_or_spec, allowed_text: list = None, version: str = '1.0.0') -> None:
+    """Block domain-mismatched props and ungrounded metaphors when compiling 1.7.0+ prompts."""
+    if isinstance(description_or_spec, dict):
+        spec = description_or_spec
+        desc = spec.get('description') or f"{spec.get('setting', '')} {spec.get('action', '')}".strip()
+        if allowed_text is None:
+            allowed_text = spec.get('allowed_text', [])
+        version = spec.get('version', version)
+    else:
+        desc = description_or_spec
+
+    if version < '1.7.0' or not isinstance(desc, str):
+        return
+    labels_joined = ' '.join(
+        item['text'] if isinstance(item, dict) else str(item)
+        for item in (allowed_text or [])
+    )
+    if labels_joined and _COGNITIVE_STUDY_LABEL_RE.search(labels_joined):
+        bad_prop = _UNRELATED_BORROWED_PROP_RE.search(desc)
+        if bad_prop:
+            raise PromptError(
+                f"FLOW_CONCEPT_OBJECT_MISMATCH: cognitive/study label ({labels_joined!r}) paired with "
+                f"unrelated prop ({bad_prop.group()!r})"
+            )
+    if labels_joined and _TIME_LABEL_RE.search(labels_joined):
+        if not _TIME_VISUAL_RE.search(desc):
+            raise PromptError(
+                f"FLOW_CONCEPT_OBJECT_MISMATCH: time label ({labels_joined!r}) requires a concrete "
+                "clock, stopwatch, timer, or timeline visual object in description"
+            )
+    if labels_joined and _READING_LABEL_RE.search(labels_joined):
+        if not _READING_VISUAL_RE.search(desc):
+            raise PromptError(
+                f"FLOW_CONCEPT_OBJECT_MISMATCH: reading/document label ({labels_joined!r}) requires "
+                "concrete book, notebook, page, folder, or document objects in description"
+            )
 
 
 def _text(value, field, *, max_length=12000, empty=False, version='1.0.0'):
@@ -124,8 +203,8 @@ def _text(value, field, *, max_length=12000, empty=False, version='1.0.0'):
     if INJECTION.search(value):
         raise PromptError('FLOW_PROMPT_INJECTION_REJECTED: ' + field)
     check_visual_prompt_text(value, field)
-    if version == '1.6.0':
-        check_laziness_lexicon(value, field)
+    if version in ('1.6.0', '1.7.0') or version >= '1.6.0':
+        check_laziness_lexicon(value, field, version=version)
     return value
 
 
@@ -143,16 +222,31 @@ def _allowed(value, version='1.0.0'):
         if isinstance(item, str):
             text = _text(item, 'allowed_text', max_length=2000, version=version)
             normalized = text
-        elif isinstance(item, dict) and 'text' in item and not set(item) - {'text', 'placement', 'object'}:
+        elif isinstance(item, dict) and 'text' in item and not set(item) - {'text', 'placement', 'object', 'height', 'max_height', 'proportion', 'frame_height'}:
             text = _text(item['text'], 'allowed_text.text', max_length=2000, version=version)
             normalized = {'text': text}
             for key in ('placement', 'object'):
                 if key in item:
                     normalized[key] = _text(item[key], 'allowed_text.' + key, max_length=2000, version=version)
+            for key in ('height', 'max_height', 'proportion', 'frame_height'):
+                if key in item:
+                    normalized[key] = item[key]
         else:
             raise PromptError('FLOW_VISIBLE_TEXT_INVALID: string or text/placement/object record required')
         if MANAGEMENT.search(text):
             raise PromptError('FLOW_MANAGEMENT_TEXT_FORBIDDEN: management identifiers are not learner-visible text')
+        if version >= '1.7.0':
+            if any(c.islower() for c in text):
+                raise PromptError(f"FLOW_VISIBLE_TEXT_INVALID: allowed_text label ({text!r}) must be concise uppercase Vietnamese")
+            words = text.split()
+            if len(words) > 6 or len(text) > 45:
+                raise PromptError(f"FLOW_VISIBLE_TEXT_INVALID: allowed_text label ({text!r}) exceeds concise limit (max 6 words, <= 45 chars)")
+            if isinstance(item, dict):
+                for h_key in ('height', 'max_height', 'proportion', 'frame_height'):
+                    if h_key in item:
+                        h_val = item[h_key]
+                        if isinstance(h_val, (int, float)) and h_val >= 0.05:
+                            raise PromptError(f"FLOW_VISIBLE_TEXT_INVALID: allowed_text label height {h_val} exceeds compact proportion (< 5% frame height)")
         result.append(normalized)
     if len(result) != len({_hash(item) for item in result}):
         raise PromptError('FLOW_VISIBLE_TEXT_INVALID: duplicate exact lettering records')
@@ -171,7 +265,12 @@ def _data(data, purpose, version='1.0.0'):
     cast = version in CAST_VERSIONS
     if not isinstance(data, dict) or set(data) - FIELDS or (cast and 'mascot_placement' in data):
         raise PromptError('FLOW_PROMPT_FIELDS_UNSUPPORTED: visual fields are allowlisted')
-    description = _text(data.get('description'), 'description', version=version)
+    desc_val = data.get('description')
+    if desc_val is None and ('action' in data or 'setting' in data):
+        desc_parts = [p for p in (data.get('setting'), data.get('action')) if p and isinstance(p, str)]
+        if desc_parts:
+            desc_val = '. '.join(desc_parts)
+    description = _text(desc_val, 'description', version=version)
     ratio = data.get('aspect_ratio')
     if ratio not in ('9:16', '16:9'):
         raise PromptError('FLOW_PROMPT_RATIO_UNSUPPORTED: explicit 9:16 or 16:9 required')
@@ -187,6 +286,14 @@ def _data(data, purpose, version='1.0.0'):
     if purpose == 'variation' and (not preserve or not change):
         raise PromptError('FLOW_VARIATION_INVALID: declare both preserved composition and visible change')
     allowed = _allowed(data.get('allowed_text', []), version=version)
+    normalized_setting = None
+    if 'setting' in data and data['setting'] is not None:
+        normalized_setting = _text(data['setting'], 'setting', version=version)
+    normalized_action = None
+    if 'action' in data and data['action'] is not None:
+        normalized_action = _text(data['action'], 'action', version=version)
+    combined_desc = ' '.join(filter(None, [normalized_setting, normalized_action, description]))
+    check_concept_object_alignment(combined_desc, allowed, version=version)
     placement = data.get('mascot_placement', 'above-caption-right')
     if not cast and placement not in PLACEMENTS:
         raise PromptError('FLOW_MASCOT_PLACEMENT_UNSUPPORTED: choose a supported attention margin')
@@ -201,6 +308,10 @@ def _data(data, purpose, version='1.0.0'):
         clearance = None  # Full-frame art never reserves a caption band.
     normalized = {'description': description, 'aspect_ratio': ratio, 'allowed_text': allowed,
                   'preserve': preserve, 'change': change, 'caption_clearance': clearance}
+    if normalized_setting is not None:
+        normalized['setting'] = normalized_setting
+    if normalized_action is not None:
+        normalized['action'] = normalized_action
     if 'shot_type' in data:
         if version >= '1.6.0':
             allowed_shots = BASE_FULL_FRAME_SHOT_TYPES + LEGACY_REST_SHOT_TYPES + EXPLAINER_2D_SHOT_TYPES
@@ -272,6 +383,17 @@ def compile(model, purpose, data, version=CURRENT_VERSION):
         spec['reference_rule'],
         spec['data_boundary'],
     ] + ([spec['clearance_rule']] if version in FULL_FRAME_VERSIONS or visual.get('caption_clearance') is not None else [])
+    if version >= '1.7.0':
+        sections.append(
+            "Explicit negative clearance directive: strictly forbid white-on-black YouTube subtitle boxes, "
+            "caption bars, letterbox bars, and browser player controls. Render a 100% full-bleed illustration "
+            "extending continuously to all edges with zero reserved subtitle areas."
+        )
+        if visual.get('allowed_text'):
+            sections.append(
+                "Label constraint: all allowed_text lettering must be rendered as concise uppercase Vietnamese labels "
+                "locked to compact proportions (< 5% frame height) integrated cleanly with hand-drawn visual elements."
+            )
     if version in FULL_FRAME_VERSIONS and visual.get('shot_type'):
         sections.append(spec['shot_types'][visual['shot_type']])
     if references['base']:
@@ -333,3 +455,7 @@ def freeze(model, version=CURRENT_VERSION, *, existing_pin=None, request_states=
     if any(state not in ('pending', 'prepared', 'not_submitted') for state in request_states):
         raise PromptError('FLOW_TEMPLATE_LEGACY_REQUESTS: retain prior actual prompts; cannot add a pin after send/cache')
     return requested
+
+
+compile_prompt = compile
+

@@ -71,7 +71,45 @@ class OutputContractTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 outputs({'aspect_ratio': '9:16', 'outputs': bad})
 
-    @unittest.skipUnless(shutil.which('node'), 'Node required for renderer contract')
+    def test_human_editorial_and_dynamic_spinoff_shorts_validation(self):
+        brief, _ = self.fixture()
+        brief['human_editorial'] = {
+            'topic_dilemmas': ['Why does passive familiarity feel like deep mastery until tested?'],
+            'dynamic_questions': [
+                'When did a student or colleague appear fluent in theory yet collapse when asked a first-principles why question?',
+                'Which popular study habit do you judge to be the most counterproductive cognitive trap?'
+            ],
+            'author_raw_input': 'Students summarize papers line by line without questioning the underlying assumptions.',
+            'editorial_stance': 'Summarizing without questioning assumptions is cognitive procrastination disguised as diligence.',
+            'expanded_content_ideas': [
+                {
+                    'idea_id': 'IDEA_01',
+                    'angle_type': 'analysis',
+                    'summary': 'Dissect how line-by-line summarizing bypasses causal mechanism modeling in working memory.',
+                    'target_narrative_phase': 'causal_mechanism'
+                },
+                {
+                    'idea_id': 'IDEA_02',
+                    'angle_type': 'evaluation',
+                    'summary': 'Critique aesthetic note-taking systems that optimize visual neatness over conceptual friction.',
+                    'target_narrative_phase': 'counter_argument'
+                }
+            ]
+        }
+        validate_brief(ROOT, brief)
+
+        dup_q_brief, _ = self.fixture()
+        dup_q_brief['human_editorial'] = {
+            'topic_dilemmas': ['Dilemma one about cognitive load.'],
+            'dynamic_questions': [
+                'Same question repeated twice for testing?',
+                'Same question repeated twice for testing?'
+            ]
+        }
+        with self.assertRaises(ContractError):
+            validate_brief(ROOT, dup_q_brief)
+
+    @unittest.skipUnless(shutil.which('node') and (ROOT / 'renderer/outputs.mjs').exists(), 'Node and renderer/outputs.mjs required for renderer contract')
     def test_renderer_uses_english_track_cues_and_portrait_timeline(self):
         script = """
 import {outputPlans} from './renderer/outputs.mjs';
