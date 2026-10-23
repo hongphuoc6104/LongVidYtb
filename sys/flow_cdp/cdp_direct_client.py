@@ -395,11 +395,24 @@ def is_port_open(port: int) -> bool:
         return s.connect_ex(("127.0.0.1", port)) == 0
 
 
-def ensure_chrome_profiles_launched(profiles: list[dict[str, Any]] | None = None) -> None:
+def ensure_chrome_profiles_launched(
+    profiles: list[dict[str, Any]] | None = None,
+    headless: bool = True,
+) -> None:
     # Safe default: only launch primary profile if not explicitly specified, preventing RAM exhaustion
     target_profiles = profiles if profiles is not None else [PROFILES[0]]
-    env = dict(os.environ, DISPLAY=os.environ.get("DISPLAY", ":0"))
-    chrome_bin = "/opt/google/chrome/chrome"
+    env = dict(os.environ)
+    if headless:
+        env.pop("DISPLAY", None)
+    else:
+        env["DISPLAY"] = os.environ.get("DISPLAY", ":0")
+
+    try:
+        from .accounts import detect_chrome_binary
+        chrome_bin = detect_chrome_binary()
+    except Exception:
+        chrome_bin = "/opt/google/chrome/chrome"
+
     for p in target_profiles:
         port = p["cdp_port"]
         if is_port_open(port):
@@ -412,28 +425,49 @@ def ensure_chrome_profiles_launched(profiles: list[dict[str, Any]] | None = None
                     os.unlink(lp)
                 except OSError:
                     pass
-        subprocess.Popen(
-            [
-                chrome_bin,
-                f"--user-data-dir={udir}",
-                f"--profile-directory={p['profile_dir']}",
-                f"--remote-debugging-port={port}",
-                "--remote-allow-origins=*",
-                "--no-first-run",
-                "--no-default-browser-check",
-                "--disable-features=CalculateNativeWinOcclusion,IntensiveWakeUpThrottling,AutomaticTabDiscarding,MemorySaverMode",
-                "--disable-background-timer-throttling",
-                "--disable-backgrounding-occluded-windows",
-                "--disable-renderer-backgrounding",
-                "--disable-dev-shm-usage",
-                "--disable-hang-monitor",
-                p["url"],
-            ],
+        cmd = [
+            chrome_bin,
+            f"--user-data-dir={udir}",
+            f"--profile-directory={p['profile_dir']}",
+            f"--remote-debugging-port={port}",
+            "--remote-allow-origins=*",
+            "--no-first-run",
+            "--no-default-browser-check",
+            "--disable-features=CalculateNativeWinOcclusion,IntensiveWakeUpThrottling,AutomaticTabDiscarding,MemorySaverMode",
+            "--disable-background-timer-throttling",
+            "--disable-backgrounding-occluded-windows",
+            "--disable-renderer-backgrounding",
+            "--disable-dev-shm-usage",
+            "--disable-hang-monitor",
+        ]
+        if headless:
+            cmd.insert(1, "--headless=new")
+        cmd.append(p["url"])
+
+        proc = subprocess.Popen(
+            cmd,
             env=env,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
             start_new_session=True,
         )
+        try:
+            from .process_manager import get_process_manager
+            pm = get_process_manager()
+            with pm._lock:
+                pm.active_processes[port] = {
+                    "pid": proc.pid,
+                    "pgid": proc.pid,
+                    "user_data_dir": udir,
+                    "profile_dir": p["profile_dir"],
+                    "port": port,
+                    "headless": headless,
+                    "started_at": time.time(),
+                    "process": proc,
+                }
+                pm._save_registry()
+        except Exception:
+            pass
         try:
             from .lifecycle import register_spawned_port
             register_spawned_port(port)

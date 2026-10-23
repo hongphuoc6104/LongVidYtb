@@ -30,11 +30,11 @@ EARTH_TONED_STYLE_DESCRIPTION: str = _REGISTRY_150["style"]
 PASTEL_STYLE_DESCRIPTION: str = _REGISTRY_140["style"]
 
 CAST_APPEARANCE: str = (
-    "Anonymous round white head, expressive dot eyes, thin stick limbs, "
-    "simplified cartoon hands and fine-to-medium charcoal contours."
+    "Simple contextual 2D cartoon design only when explicitly requested; natural contextual hair, "
+    "skin tone, dot eyes, and clear black outer contours without imposing a fixed white round head or white mittens."
 )
 DEFAULT_OUTFIT: str = (
-    "Simple earth-toned clothing (terracotta, warm ochre, sage green, navy, warm gray) "
+    "Flat solid earth-toned clothing (terracotta, warm ochre, sage green, slate blue, warm brown) "
     "appropriate to the scene and role; preserve the costume in returning shots without imposing a recurring color."
 )
 

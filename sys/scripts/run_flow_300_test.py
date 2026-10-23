@@ -1,32 +1,39 @@
 #!/usr/bin/env python3
-"""Execute 300 real Flow image generations across a Dynamic Profile Pool with auto-failover.
+"""Graduated 5-Tier 300-Image Ramp-Up Runner & Verification Harness for Flow CDP.
 
-Architectural Guarantees:
-1. Dynamic Profile Pool (up to 20 Chrome profiles, 8-10 active workers, standby rotation).
-2. Two-Phase Commit (atomic staging in `.staging/` -> verified `.jpg` + `.json` in `images/`).
-3. Priority Re-Queue: Failed/interrupted tasks return to HEAD of queue for immediate worker pickup.
-4. Auto-Remediation & Cooldown Quarantine: When Error 7 (PUBLIC_ERROR_UNUSUAL_ACTIVITY) occurs,
-   the offending profile clears storage/cookies, enters a 10-minute cooldown, and is swapped
-   with a healthy standby profile without stopping other concurrent workers.
-5. Pacing gap (>= 4.0s per profile) and staggered launches (0.5s) to eliminate burst flags.
-6. Resumable & Idempotent: Automatically verifies existing images and skips completed ones.
+Tiers & Hard Watchdog Timeouts (Calibrated ~30s/Round SLA):
+- Batch 1 (Smoke / Warm-up):       10 images  | 4 workers  (3 rounds)  | Hard Timeout: 120.0s (2.0 min) | Target: ~75-90s
+- Batch 2 (Short / Chapter):       30 images  | 6 workers  (5 rounds)  | Hard Timeout: 210.0s (3.5 min) | Target: ~150-165s
+- Batch 3 (Standard Explainer):    60 images  | 9 workers  (7 rounds)  | Hard Timeout: 300.0s (5.0 min) | Target: ~210-230s
+- Batch 4 (Bulk Video):            90 images  | 11 workers (9 rounds)  | Hard Timeout: 390.0s (6.5 min) | Target: ~270-300s
+- Batch 5 (Max Stress Test):      110 images  | 12 workers (10 rounds) | Hard Timeout: 480.0s (8.0 min) | Target: ~300-330s
+- Total:                          300 images  |                        | Global Limit: 1500.0s (25.0 min)
+
+Guarantees:
+1. Native `--headless=new` with DISPLAY stripped (zero X11 desktop window popups).
+2. PersistentWorkerPool reuse across each batch (zero per-image WebSocket reconnect churn).
+3. Registry 1.7.0 Editorial Visual DNA + Tactile Documentary Render Overlay (overscan watermark crop,
+   archival paper weave, and Academic Citation Card HUD).
+4. Two-stage PIL verification (`im.verify()` + `im.load()`) and aspect ratio check (< 3% tolerance).
+5. Standardized sidecar JSON (`jobId`, `forgeId`, `profile_id`, `prompt`, `latency`, `sha256`).
+6. Zero-dependency `/proc` RAM sampler (before, peak, after, leaked MB) and `ProcessGroupManager` orphan cleanup.
 """
 from __future__ import annotations
 
 import argparse
-import asyncio
 import hashlib
 import json
+import logging
 import os
-import queue
 import shutil
+import statistics
 import sys
 import threading
 import time
-import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
+
 from PIL import Image
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -34,481 +41,516 @@ SYS_DIR = REPO_ROOT / "sys"
 if str(SYS_DIR) not in sys.path:
     sys.path.insert(0, str(SYS_DIR))
 
-from flow_cdp import accounts
-from flow_cdp.cdp_direct_client import PROFILES, DirectCDPProfileSession
-from flow_cdp.lifecycle import (
-    ProfileLifecycleManager,
-    calculate_optimal_workers,
-    get_workload_tier_info,
+from flow_cdp.cdp_direct_client import PROFILES
+from flow_cdp.persistent_pool import PersistentWorkerPool
+from flow_cdp.process_manager import get_process_manager
+from tools.editorial_compositor import build_editorial_task_spec
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    datefmt="%H:%M:%S",
 )
+logger = logging.getLogger("flow_300_rampup")
 
-
-def sha256_file(path: Path) -> str:
-    h = hashlib.sha256()
-    with open(path, "rb") as f:
-        for chunk in iter(lambda: f.read(65536), b""):
-            h.update(chunk)
-    return h.hexdigest()
-
-
-PROMPT_TEMPLATES = [
-    "A clean 2D hand-drawn stick figure researcher with a large round white head and simple dot eyes standing in front of a chalkboard covered in mathematical equations, minimalist marker-pen explainer style, full frame 16:9, soft muted colors, pure white background #FFFFFF.",
-    "A 2D stick figure student reading an ancient leather-bound academic journal at a wooden desk with a single brass lamp, marker illustration style, clean black contours, no realistic hair, no text, wide angle 16:9.",
-    "A behavioral psychology laboratory with two stick figures observing a rat navigating a transparent maze on a checkered table, marker-pen 2D explainer style, soft pastel palette, uncluttered composition 16:9.",
-    "A scientific debate in a lecture hall: one stick figure professor gesturing passionately at a podium while stick figure audience members take notes, flat fills, expressive stick postures, 16:9 widescreen.",
-    "A researcher looking through a brass microscope in a brightly lit modern genetics laboratory, simple test tubes and glassware on the table, clean 2D marker style, edge-to-edge illustration 16:9.",
-    "A scholar holding a single glowing lightbulb idea above their head while sitting on a massive stack of academic textbooks, expressive stick figure posture, cheerful mood, marker art 16:9.",
-    "Two researchers standing before a large comparison board with red arrows pointing between two conflicting scientific hypotheses, clean marker illustration, minimal details, 16:9 aspect ratio.",
-    "An astronomical observatory interior at dusk: a stick figure astronomer looking through a large vintage telescope towards a starry window, deep navy and warm amber lighting, 2D explainer 16:9.",
-    "A solitary stick figure walking down a long minimalist corridor lined with archive filing cabinets and quiet doors, perspective view, contemplative mood, 2D marker explainer 16:9.",
-    "A cognitive neuroscience experiment: a stick figure wearing an EEG sensor cap with simple colorful wires sitting peacefully in an armchair, clean laboratory background, 16:9.",
-    "A stick figure statistician reviewing a massive printed scatter plot chart rolling across a conference table, marker pen line art, soft muted tones, 16:9 composition.",
-    "An archaeology field station tent: a stick figure brushing sand from an ancient fossil fragment on an examination table, warm earthy tones, simple 2D stick figure, 16:9.",
-    "A quiet university library aisle with floor-to-ceiling wooden bookshelves, a stick figure holding a magnifying glass examining a manuscript, peaceful lighting, 16:9.",
-    "A medical research briefing room: three stick figure doctors in simple teal coats analyzing an abstract anatomical diagram, clear visual hierarchy, marker-pen aesthetic 16:9.",
-    "A computer science server room: a stick figure technician holding a digital tablet next to glowing server racks with subtle cable lines, high-contrast clean 2D illustration 16:9."
+# 5-Tier Graduated Ramp-Up Specification with Calibrated Workers & Strict Watchdog Timeouts
+BATCH_SPECS = [
+    {
+        "batch_num": 1,
+        "name": "batch_1",
+        "tier": "Smoke / Warm-up (3 rounds)",
+        "count": 10,
+        "start_idx": 1,
+        "end_idx": 10,
+        "workers": 4,
+        "timeout_seconds": 120.0,  # 2.0 min hard cap (Expected: ~75-90s)
+    },
+    {
+        "batch_num": 2,
+        "name": "batch_2",
+        "tier": "Short / Chapter Tier (5 rounds)",
+        "count": 30,
+        "start_idx": 11,
+        "end_idx": 40,
+        "workers": 6,
+        "timeout_seconds": 210.0,  # 3.5 min hard cap (Expected: ~150-165s)
+    },
+    {
+        "batch_num": 3,
+        "name": "batch_3",
+        "tier": "Standard Explainer Tier (7 rounds)",
+        "count": 60,
+        "start_idx": 41,
+        "end_idx": 100,
+        "workers": 9,
+        "timeout_seconds": 300.0,  # 5.0 min hard cap (Expected: ~210-230s)
+    },
+    {
+        "batch_num": 4,
+        "name": "batch_4",
+        "tier": "Bulk Video Tier (9 rounds)",
+        "count": 90,
+        "start_idx": 101,
+        "end_idx": 190,
+        "workers": 11,
+        "timeout_seconds": 390.0,  # 6.5 min hard cap (Expected: ~270-300s)
+    },
+    {
+        "batch_num": 5,
+        "name": "batch_5",
+        "tier": "Max Stress Test (10 rounds)",
+        "count": 110,
+        "start_idx": 191,
+        "end_idx": 300,
+        "workers": 12,
+        "timeout_seconds": 480.0,  # 8.0 min hard cap (Expected: ~300-330s)
+    },
 ]
 
-
-def generate_300_prompts() -> list[dict[str, Any]]:
-    """Generate 300 structured prompt tasks with scene continuity markers."""
-    items = []
-    num_templates = len(PROMPT_TEMPLATES)
-    for i in range(1, 301):
-        tmpl = PROMPT_TEMPLATES[(i - 1) % num_templates]
-        variant_idx = ((i - 1) // num_templates) + 1
-        prompt = f"{tmpl} (Scientific Study Phase {variant_idx}, Scene Variant {i:03d})"
-        items.append({
-            "index": i,
-            "id": f"flow_300_shot_{i:03d}",
-            "prompt": prompt,
-            "ratio": "16:9",
-            "retries": 0,
-        })
-    return items
+GLOBAL_TIMEOUT_SECONDS = 1500.0  # 25.0 min hard ceiling
 
 
-def launch_profile_if_needed(prof_cfg: dict[str, Any]) -> bool:
-    """Ensure Chrome is running and listening on the designated port."""
-    port = int(prof_cfg["cdp_port"])
-    if accounts.is_port_listening(port):
-        return True
-    entry = {
-        "port": port,
-        "user_data_dir": prof_cfg["user_data_dir"],
-        "directory": prof_cfg["profile_dir"],
-    }
-    return accounts.launch_profile(entry, url="https://flow.google.com/")
+def build_300_tasks(base_out_dir: Path) -> dict[int, list[dict[str, Any]]]:
+    """Build all 300 tasks partitioned into the 5 graduated batches using Editorial Visual DNA."""
+    batches: dict[int, list[dict[str, Any]]] = {}
+
+    for b_spec in BATCH_SPECS:
+        b_num = b_spec["batch_num"]
+        b_dir = base_out_dir / b_spec["name"]
+        tasks = [
+            build_editorial_task_spec(idx=idx, batch_num=b_num, out_dir=b_dir)
+            for idx in range(b_spec["start_idx"], b_spec["end_idx"] + 1)
+        ]
+        batches[b_num] = tasks
+    return batches
 
 
-async def remediate_profile_session(sess: DirectCDPProfileSession) -> None:
-    """Clean origin cache, indexeddb, and bot detection tracking cookies."""
+def read_system_ram_mb() -> float:
+    """Read current system used RAM in MB from /proc/meminfo."""
     try:
-        await sess.call(
-            "Storage.clearDataForOrigin",
-            {
-                "origin": "https://flow.google.com",
-                "storageTypes": "appcache,cache_storage,file_systems,indexeddb,local_storage,service_workers,shader_cache,websql",
-            },
-            timeout=6.0,
-        )
-        await sess.call("Network.clearBrowserCache", timeout=6.0)
-        res = await sess.call("Network.getAllCookies", timeout=6.0)
-        cookies = res.get("cookies", [])
-        for c in cookies:
-            if "GRECAPTCHA" in c["name"] or c["name"].startswith("_ga"):
-                await sess.call(
-                    "Network.deleteCookies",
-                    {"name": c["name"], "domain": c["domain"], "path": c.get("path", "/")},
-                    timeout=4.0,
-                )
-        await sess.call("Page.navigate", {"url": "https://flow.google.com/"}, timeout=6.0)
+        with open("/proc/meminfo", encoding="utf-8") as f:
+            mem = {}
+            for line in f:
+                if ":" in line:
+                    k, v = line.split(":", 1)
+                    mem[k.strip()] = int(v.strip().split()[0])
+        total_kb = mem.get("MemTotal", 0)
+        avail_kb = mem.get("MemAvailable", mem.get("MemFree", 0))
+        return round((total_kb - avail_kb) / 1024.0, 1)
     except Exception:
-        pass
+        return 0.0
 
 
-class DynamicProfilePool:
-    """Thread-safe pool managing active and standby Chrome profiles with cooldown quarantine."""
-
-    def __init__(self, profiles: list[dict[str, Any]], cooldown_seconds: float = 600.0):
-        self.lock = threading.Lock()
-        self.all_profiles = list(profiles)
-        self.in_use: set[str] = set()
-        self.cooldowns: dict[str, float] = {}
-        self.cooldown_seconds = cooldown_seconds
-
-    def acquire(self, current_name: Optional[str] = None) -> Optional[dict[str, Any]]:
-        with self.lock:
-            now = time.time()
-            for p in self.all_profiles:
-                name = p["name"]
-                if name == current_name or name in self.in_use:
-                    continue
-                # Check cooldown status
-                if name in self.cooldowns:
-                    if self.cooldowns[name] > now:
-                        continue
-                    else:
-                        del self.cooldowns[name]
-                # Found candidate profile
-                self.in_use.add(name)
-                return p
-            return None
-
-    def release(self, profile_cfg: dict[str, Any], quarantine_reason: Optional[str] = None):
-        with self.lock:
-            name = profile_cfg["name"]
-            self.in_use.discard(name)
-            if quarantine_reason:
-                self.cooldowns[name] = time.time() + self.cooldown_seconds
-
-
-def worker_loop(
-    worker_id: int,
-    initial_profile: dict[str, Any],
-    pool: DynamicProfilePool,
-    lifecycle_mgr: ProfileLifecycleManager,
-    task_queue: queue.PriorityQueue,
-    out_dir: Path,
-    staging_dir: Path,
-    incidents_file: Path,
-    abort_event: threading.Event,
-    pacing_seconds: float,
-    progress_lock: threading.Lock,
-    progress_tracker: dict[str, Any],
-):
-    current_profile = initial_profile
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-
-    sess = None
-
-    def connect_session(p_cfg: dict[str, Any]) -> DirectCDPProfileSession:
-        lifecycle_mgr.launch_profile(p_cfg)
-        s = DirectCDPProfileSession(p_cfg)
-        loop.run_until_complete(s.connect())
-        return s
-
-    try:
-        sess = connect_session(current_profile)
-    except Exception as exc:
-        print(f"\033[93m[Worker-{worker_id}] Lỗi kết nối khởi động {current_profile['name']}: {exc}. Đang đổi profile khác...\033[0m")
-        pool.release(current_profile, quarantine_reason="init_connect_failed")
-        current_profile = pool.acquire()
-        if not current_profile:
-            print(f"\033[91m[Worker-{worker_id}] Không còn profile nào khả dụng trong pool. Luồng kết thúc.\033[0m")
-            return
+def read_chrome_cdp_rss_mb() -> tuple[float, int]:
+    """Sum RSS memory (MB) and process count of all running google-chrome-cdp processes."""
+    page_size = os.sysconf("SC_PAGE_SIZE") if hasattr(os, "sysconf") else 4096
+    total_rss_bytes = 0
+    proc_count = 0
+    proc_root = Path("/proc")
+    if not proc_root.is_dir():
+        return 0.0, 0
+    for entry in proc_root.iterdir():
+        if not entry.name.isdigit():
+            continue
         try:
-            sess = connect_session(current_profile)
-        except Exception as exc2:
-            print(f"\033[91m[Worker-{worker_id}] Lỗi kết nối profile thay thế {current_profile['name']}: {exc2}. Luồng kết thúc.\033[0m")
-            pool.release(current_profile, quarantine_reason="replace_connect_failed")
-            return
+            cmdline = (entry / "cmdline").read_bytes().decode("utf-8", errors="ignore")
+            if "google-chrome-cdp" in cmdline:
+                statm = (entry / "statm").read_text(encoding="utf-8").split()
+                if len(statm) >= 2:
+                    rss_pages = int(statm[1])
+                    total_rss_bytes += rss_pages * page_size
+                    proc_count += 1
+        except Exception:
+            continue
+    return round(total_rss_bytes / (1024.0 * 1024.0), 1), proc_count
+
+
+class RAMSampler:
+    """Background daemon sampling system RAM and Chrome CDP RSS every 1.0s."""
+
+    def __init__(self) -> None:
+        self.stop_event = threading.Event()
+        self.sys_samples: list[float] = []
+        self.chrome_rss_samples: list[float] = []
+        self.max_chrome_procs: int = 0
+        self._thread: threading.Thread | None = None
+
+    def start(self) -> None:
+        self.stop_event.clear()
+        self._sample_once()
+        self._thread = threading.Thread(target=self._loop, daemon=True)
+        self._thread.start()
+
+    def _sample_once(self) -> None:
+        self.sys_samples.append(read_system_ram_mb())
+        rss_mb, cnt = read_chrome_cdp_rss_mb()
+        self.chrome_rss_samples.append(rss_mb)
+        if cnt > self.max_chrome_procs:
+            self.max_chrome_procs = cnt
+
+    def _loop(self) -> None:
+        while not self.stop_event.wait(1.0):
+            self._sample_once()
+
+    def stop(self) -> None:
+        self.stop_event.set()
+        if self._thread:
+            self._thread.join(timeout=2.0)
+        self._sample_once()
+
+    @property
+    def peak_sys_mb(self) -> float:
+        return max(self.sys_samples) if self.sys_samples else 0.0
+
+    @property
+    def peak_chrome_rss_mb(self) -> float:
+        return max(self.chrome_rss_samples) if self.chrome_rss_samples else 0.0
+
+
+def verify_image_and_sidecar(img_path: Path, expected_ratio: str = "16:9") -> dict[str, Any]:
+    """Perform strict two-stage PIL verification and sidecar schema audit."""
+    if not img_path.is_file():
+        return {"valid": False, "reason": f"Image missing: {img_path}"}
+    fsize = img_path.stat().st_size
+    if fsize < 5000:
+        return {"valid": False, "reason": f"Image too small ({fsize} bytes)"}
+
+    # Stage 1: Container & checksum verification
+    try:
+        with Image.open(img_path) as im:
+            im.verify()
+    except Exception as exc:
+        return {"valid": False, "reason": f"PIL verify() failed: {exc}"}
+
+    # Stage 2: Full pixel load & aspect ratio verification
+    try:
+        with Image.open(img_path) as im:
+            im.load()
+            w, h = im.size
+    except Exception as exc:
+        return {"valid": False, "reason": f"PIL load() failed: {exc}"}
+
+    target_ratio = (16.0 / 9.0) if expected_ratio == "16:9" else (9.0 / 16.0)
+    actual_ratio = w / h if h else 0.0
+    if abs(actual_ratio - target_ratio) / target_ratio > 0.03:
+        return {"valid": False, "reason": f"Aspect ratio mismatch: {w}x{h} ({actual_ratio:.3f})"}
+
+    # Stage 3: Sidecar verification
+    sidecar_path = img_path.with_suffix(".json")
+    if not sidecar_path.is_file():
+        return {"valid": False, "reason": f"Sidecar missing: {sidecar_path}"}
 
     try:
-        while not abort_event.is_set():
+        sc = json.loads(sidecar_path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        return {"valid": False, "reason": f"Invalid sidecar JSON: {exc}"}
+
+    required_keys = ("jobId", "forgeId", "profile_id", "prompt", "latency", "sha256")
+    missing = [k for k in required_keys if not sc.get(k) and sc.get(k) != 0]
+    if missing:
+        return {"valid": False, "reason": f"Sidecar missing keys: {missing}"}
+
+    actual_sha = hashlib.sha256(img_path.read_bytes()).hexdigest()
+    if sc.get("sha256") != actual_sha:
+        return {"valid": False, "reason": "SHA256 mismatch between image and sidecar"}
+
+    return {
+        "valid": True,
+        "width": w,
+        "height": h,
+        "size_bytes": fsize,
+        "latency": float(sc.get("latency", 0.0)),
+        "profile_id": sc.get("profile_id"),
+    }
+
+
+def load_enabled_profiles() -> list[dict[str, Any]]:
+    """Load enabled profiles from ~/.config/video-pilot/flow/profiles.json mapped to PROFILES."""
+    reg_path = Path.home() / ".config/video-pilot/flow/profiles.json"
+    disabled_ids: set[str] = set()
+    if reg_path.is_file():
+        try:
+            data = json.loads(reg_path.read_text(encoding="utf-8"))
+            for p in data.get("profiles", []):
+                if not p.get("enabled", True):
+                    disabled_ids.add(p["id"])
+        except Exception:
+            pass
+    return [dict(p) for p in PROFILES if p["name"] not in disabled_ids]
+
+
+def run_single_batch(
+    b_spec: dict[str, Any],
+    tasks: list[dict[str, Any]],
+    base_out_dir: Path,
+    global_deadline: float,
+) -> dict[str, Any]:
+    """Execute one graduated batch with PersistentWorkerPool, hard watchdog, and teardown."""
+    b_num = b_spec["batch_num"]
+    b_name = b_spec["name"]
+    b_dir = base_out_dir / b_name
+    b_dir.mkdir(parents=True, exist_ok=True)
+
+    # Filter out already verified tasks (idempotent resume support)
+    pending_tasks = []
+    pre_verified = 0
+    for t in tasks:
+        dest_file = b_dir / t["filename"]
+        chk = verify_image_and_sidecar(dest_file, t["ratio"])
+        if chk["valid"]:
+            pre_verified += 1
+        else:
+            pending_tasks.append(t)
+
+    if not pending_tasks:
+        report_path = b_dir / "batch_report.json"
+        if report_path.is_file():
             try:
-                # PriorityQueue items: (priority, index, task_dict)
-                priority, idx, task = task_queue.get_nowait()
-            except queue.Empty:
-                break
-
-            shot_id = task["id"]
-            img_dest = out_dir / f"image_{idx:03d}.jpg"
-            meta_dest = out_dir / f"image_{idx:03d}.json"
-            staging_path = staging_dir / f"temp_{idx:03d}_{current_profile['name']}.jpg"
-
-            # 1. Idempotent check: skip if valid file exists
-            if img_dest.is_file() and meta_dest.is_file():
-                try:
-                    with Image.open(img_dest) as im:
-                        im.verify()
-                    with progress_lock:
-                        progress_tracker["completed"] += 1
-                        c = progress_tracker["completed"]
-                        t = progress_tracker["total"]
-                        print(f"[{c:03d}/{t:03d}] [{current_profile['name']}] Image #{idx:03d} ALREADY EXISTS & VALID (Skipped).")
-                    task_queue.task_done()
-                    continue
-                except Exception:
-                    pass
-
-            t0 = time.time()
-            try:
-                # 2. Execute RPC generation inside browser tab
-                res = loop.run_until_complete(
-                    sess.generate_image(
-                        prompt=task["prompt"],
-                        aspect=task.get("ratio", "16:9"),
-                        model="BELUGA",
-                    )
-                )
-                media_url = res.get("url")
-                media_id = res.get("media_id")
-                if not media_url:
-                    raise RuntimeError(f"No media URL returned: {res}")
-
-                # 3. Download binary to Staging directory with 3 retries
-                img_data = b""
-                for dl_attempt in range(3):
-                    try:
-                        req = urllib.request.Request(media_url, headers={"User-Agent": "video-pilot"})
-                        with urllib.request.urlopen(req, timeout=45) as resp:
-                            img_data = resp.read()
-                        if len(img_data) >= 5000:
-                            break
-                    except Exception as dl_err:
-                        if dl_attempt == 2:
-                            raise RuntimeError(f"Download failed after 3 attempts: {dl_err}") from dl_err
-                        time.sleep(2.0)
-
-                if len(img_data) < 5000:
-                    raise RuntimeError(f"Downloaded image too small ({len(img_data)} bytes)")
-
-                # Write to staging first
-                staging_path.write_bytes(img_data)
-
-                # 4. Verify PIL integrity on staging image
-                with Image.open(staging_path) as im:
-                    im.verify()
-
-                # 5. Atomic Commit: Move staging -> images/
-                shutil.move(str(staging_path), str(img_dest))
-
-                latency = round(time.time() - t0, 2)
-                f_hash = sha256_file(img_dest)
-
-                # Write sidecar metadata
-                metadata = {
-                    "index": idx,
-                    "id": shot_id,
-                    "media_id": media_id,
-                    "url": media_url,
-                    "prompt": task["prompt"],
-                    "ratio": task.get("ratio", "16:9"),
-                    "profile": current_profile["name"],
-                    "port": current_profile["cdp_port"],
-                    "latency": latency,
-                    "sha256": f_hash,
-                    "bytes": len(img_data),
-                    "created_at": datetime.now(timezone.utc).isoformat(),
-                }
-                meta_dest.write_text(json.dumps(metadata, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-
-                with progress_lock:
-                    progress_tracker["completed"] += 1
-                    c = progress_tracker["completed"]
-                    t = progress_tracker["total"]
-                    print(f"[{c:03d}/{t:03d}] [{current_profile['name']}:{current_profile['cdp_port']}] Image #{idx:03d} SUCCESS in {latency}s ({len(img_data)}B, ID={media_id[:8]}..) [Pacing {pacing_seconds}s]")
-
-                task_queue.task_done()
-
-                # Pacing gap per profile
-                if not abort_event.is_set():
-                    time.sleep(pacing_seconds)
-
-            except Exception as exc:
-                staging_path.unlink(missing_ok=True)
-                err_str = str(exc)
-                is_rate_limit = "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in err_str or "FLOW_PROVIDER_BLOCKED" in err_str
-
-                incident = {
-                    "index": idx,
-                    "id": shot_id,
-                    "profile": current_profile["name"],
-                    "port": current_profile["cdp_port"],
-                    "error": err_str,
-                    "timestamp": datetime.now(timezone.utc).isoformat(),
-                }
-                with progress_lock:
-                    with open(incidents_file, "a", encoding="utf-8") as f_inc:
-                        f_inc.write(json.dumps(incident, ensure_ascii=False) + "\n")
-
-                if is_rate_limit:
-                    print(f"\n\033[93m[FAILOVER] {current_profile['name']} gặp Rate Limit / Bot Block tại ảnh #{idx:03d}!\033[0m")
-                    print(f"\033[93m  - Đang chạy Remediation (Xóa Storage/Cache & reload tab) trên {current_profile['name']}...\033[0m")
-                    loop.run_until_complete(remediate_profile_session(sess))
-
-                    # Quarantine for 10 minutes
-                    old_prof_name = current_profile["name"]
-                    pool.release(current_profile, quarantine_reason="rate_limit_code_7")
-
-                    # Re-queue task at HEAD of PriorityQueue (priority=0)
-                    task["retries"] = task.get("retries", 0) + 1
-                    if task["retries"] <= 3:
-                        task_queue.put((0, idx, task))
-                        print(f"\033[92m  - Đã đẩy lại ảnh #{idx:03d} vào ĐẦU HÀNG ĐỢI (Retry {task['retries']}/3).\033[0m")
-                    else:
-                        print(f"\033[91m  - [!] Ảnh #{idx:03d} đã thử lại quá 3 lần. Cách ly vào sổ sự cố.\033[0m")
-                    task_queue.task_done()
-
-                    # Acquire a fresh healthy standby profile from the pool
-                    try:
-                        loop.run_until_complete(sess.close())
-                    except Exception:
-                        pass
-
-                    new_profile = pool.acquire(current_name=old_prof_name)
-                    if not new_profile:
-                        print(f"\033[93m[!] Tất cả profile khác đang bận/cooldown. Worker-{worker_id} chờ 30s trước khi thử lại...\033[0m")
-                        time.sleep(30)
-                        current_profile = pool.acquire()
-                        if not current_profile:
-                            print(f"\033[91m[!] Hết profile khả dụng. Worker-{worker_id} kết thúc.\033[0m")
-                            break
-                    else:
-                        current_profile = new_profile
-
-                    print(f"\033[96m[✓] Worker-{worker_id} đã đổi sang Profile mới: {current_profile['name']} (Port {current_profile['cdp_port']}). Tiếp tục tạo ảnh ngay!\033[0m\n")
-                    try:
-                        sess = connect_session(current_profile)
-                    except Exception as switch_err:
-                        print(f"\033[91m[!] Lỗi kết nối profile mới {current_profile['name']}: {switch_err}\033[0m")
-                        pool.release(current_profile, quarantine_reason="switch_connect_failed")
-                        break
-                    continue
-                else:
-                    # Non-rate-limit exception
-                    task["retries"] = task.get("retries", 0) + 1
-                    if task["retries"] <= 5:
-                        task_queue.put((0, idx, task))
-                        print(f"\033[93m[!] Lỗi tạm thời ({exc}) tại ảnh #{idx:03d}. Đã đưa lại đầu hàng đợi (Retry {task['retries']}/5).\033[0m")
-                    else:
-                        print(f"\033[91m[X] Ảnh #{idx:03d} đã thử lại quá 5 lần. Bỏ qua.\033[0m")
-                    task_queue.task_done()
-                    time.sleep(2.0)
-    finally:
-        if sess:
-            try:
-                loop.run_until_complete(sess.close())
+                existing_rep = json.loads(report_path.read_text(encoding="utf-8"))
+                if existing_rep.get("elapsed_seconds", 0) > 0 and existing_rep.get("verified_images") == len(tasks):
+                    logger.info("=== BATCH %d ALREADY FULLY VERIFIED (%d/%d images) in %.1fs ===", b_num, len(tasks), len(tasks), existing_rep["elapsed_seconds"])
+                    return existing_rep
             except Exception:
                 pass
-        pool.release(current_profile)
-        loop.close()
 
+    timeout_sec = b_spec["timeout_seconds"]
+    remaining_global = max(10.0, global_deadline - time.monotonic())
+    effective_timeout = min(timeout_sec, remaining_global)
 
-def main():
-    parser = argparse.ArgumentParser(description="Run Flow image generations with Dynamic Pool Failover and Auto-Sizing")
-    parser.add_argument("--total", type=int, default=300, help="Total images to generate")
-    parser.add_argument("--workers", type=str, default="auto", help="Number of concurrent active workers or 'auto'")
-    parser.add_argument("--pacing", type=float, default=4.0, help="Pacing gap in seconds per profile")
-    parser.add_argument("--stagger", type=float, default=0.5, help="Staggered start delay in seconds")
-    parser.add_argument("--cooldown", type=float, default=600.0, help="Quarantine duration for blocked profiles")
-    parser.add_argument("--out-dir", type=str, default="sys/runs/flow-300-experiment/images", help="Output directory")
-    parser.add_argument("--keep-open", action="store_true", help="Keep spawned Chrome instances open after exit")
-    parser.add_argument("--stop-all", action="store_true", help="Stop ALL profiles after exit, even pre-existing ones")
-    args = parser.parse_args()
+    logger.info(
+        "=== STARTING BATCH %d (%s): %d images (%d pending, %d already verified) | Workers=%d | Hard Timeout=%.1fs ===",
+        b_num, b_spec["tier"], b_spec["count"], len(pending_tasks), pre_verified, b_spec["workers"], effective_timeout
+    )
 
-    out_dir = (REPO_ROOT / args.out_dir).resolve()
-    out_dir.mkdir(parents=True, exist_ok=True)
-    staging_dir = out_dir.parent / ".staging"
-    staging_dir.mkdir(parents=True, exist_ok=True)
-    incidents_file = out_dir.parent / "incidents.jsonl"
-    summary_file = out_dir.parent / "summary.json"
+    ram_before_sys = read_system_ram_mb()
+    ram_before_chrome, _ = read_chrome_cdp_rss_mb()
+    sampler = RAMSampler()
+    sampler.start()
 
-    prompts = generate_300_prompts()[:args.total]
+    t_start = time.monotonic()
+    watchdog_triggered = False
+    profiles = load_enabled_profiles()
+    proc_mgr = get_process_manager()
 
-    # Calculate optimal workers based on workload size
-    tier_info = get_workload_tier_info(len(prompts))
-    if str(args.workers).lower() == "auto":
-        allocated_workers = tier_info["actual_workers"]
-    else:
-        try:
-            allocated_workers = int(args.workers)
-        except ValueError:
-            allocated_workers = tier_info["actual_workers"]
+    pool = PersistentWorkerPool(
+        target_workers=b_spec["workers"],
+        cooldown_seconds=600.0,
+        pacing_seconds=1.5,
+        stagger_seconds=0.3,
+        headless=True,
+        profiles=profiles,
+        proc_mgr=proc_mgr,
+        default_out_dir=b_dir,
+    )
 
-    num_workers = min(allocated_workers, len(PROFILES))
+    completed_in_run = 0
 
-    task_q = queue.PriorityQueue()
-    for item in prompts:
-        # Initial priority = 10, idx = item["index"], data = item
-        task_q.put((10, item["index"], item))
-
-    # Initialize pool with all 20 profiles
-    pool = DynamicProfilePool(PROFILES, cooldown_seconds=args.cooldown)
-
-    # Put profile_7 into initial cooldown since it's currently flagged
-    pool.cooldowns["profile_7"] = time.time() + args.cooldown
-
-    abort_event = threading.Event()
-    progress_lock = threading.Lock()
-    progress_tracker = {"completed": 0, "total": len(prompts)}
-
-    print("=" * 80)
-    print(f"  TIẾN TRÌNH THỰC NGHIỆM: TẠO {len(prompts)} ẢNH VỚI DYNAMIC PROFILE POOL")
-    print(f"  - Thư mục lưu ảnh: {out_dir}")
-    print(f"  - Thư mục Staging: {staging_dir}")
-    print(f"  - Tổng số Profile trong Pool: {len(PROFILES)} Profiles")
-    print(f"  - Quy mô tác vụ (Workload Tier): {tier_info['tier'].upper()} ({tier_info['description']})")
-    print(f"  - Phân bổ số luồng tự động: {num_workers} Active Workers (Ước tính RAM: ~{tier_info['estimated_ram_mb']} MB)")
-    print(f"  - Giãn cách mỗi Profile (Pacing Gap): {args.pacing}s")
-    print(f"  - Quản lý vòng đời (Lifecycle): Mở bao nhiêu tắt bấy nhiêu (Tự động giải phóng RAM khi xong)")
-    print("=" * 80 + "\n")
-
-    start_time = time.time()
-    threads = []
-
-    with ProfileLifecycleManager(auto_teardown=not args.keep_open, force_teardown_all=args.stop_all) as lifecycle_mgr:
-        for w_id in range(1, num_workers + 1):
-            prof = pool.acquire()
-            if not prof:
-                print(f"[!] Không đủ profile khả dụng cho Worker-{w_id}.")
-                break
-
-            t = threading.Thread(
-                target=worker_loop,
-                args=(
-                    w_id,
-                    prof,
-                    pool,
-                    lifecycle_mgr,
-                    task_q,
-                    out_dir,
-                    staging_dir,
-                    incidents_file,
-                    abort_event,
-                    args.pacing,
-                    progress_lock,
-                    progress_tracker,
-                ),
-                name=f"Worker-{w_id}",
+    def on_task_done(task: dict[str, Any], res: dict[str, Any] | None, err: Exception | None) -> None:
+        nonlocal completed_in_run
+        if res and not err:
+            completed_in_run += 1
+            elapsed = time.monotonic() - t_start
+            logger.info(
+                "[Batch %d] Progress: %d/%d completed (%s on %s in %.1fs, elapsed %.1fs/%.1fs)",
+                b_num,
+                pre_verified + completed_in_run,
+                b_spec["count"],
+                task["filename"],
+                res.get("profile_id"),
+                res.get("latency", 0.0),
+                elapsed,
+                effective_timeout,
             )
-            threads.append(t)
-            t.start()
-            time.sleep(args.stagger)
 
-        for t in threads:
-            t.join()
+    if pending_tasks:
+        for t in pending_tasks:
+            t["callback"] = on_task_done
+            pool.submit_task(t, priority=10)
 
-        # Teardown spawned profiles
-        closed_ports = lifecycle_mgr.teardown()
-        if closed_ports:
-            print(f"\n[*] Đã tự động tắt {len(closed_ports)} profile Chrome vừa mở (Port: {closed_ports}) để giải phóng 100% RAM.")
+        # Watchdog timer thread to enforce strict timeout ceiling
+        def watchdog_func() -> None:
+            nonlocal watchdog_triggered
+            watchdog_triggered = True
+            logger.error(
+                "[WATCHDOG ALERT] Batch %d exceeded hard timeout of %.1fs! Triggering immediate abort & failover.",
+                b_num, effective_timeout
+            )
+            pool.abort_event.set()
+
+        timer = threading.Timer(effective_timeout, watchdog_func)
+        timer.daemon = True
+        timer.start()
+        try:
+            with pool:
+                pool.wait_completion(timeout=effective_timeout + 2.0)
+                timer.cancel()
+        finally:
+            timer.cancel()
+
+    t_tasks_done = time.monotonic()
+    gen_elapsed_sec = round(t_tasks_done - t_start, 2)
+    elapsed_sec = round(time.monotonic() - t_start, 2)
+    sampler.stop()
+
+    # Ensure all spawned Chrome processes are cleanly reaped after the batch
+    proc_mgr.terminate_all()
+    time.sleep(0.5)
+
+    ram_after_sys = read_system_ram_mb()
+    ram_after_chrome, lingering_procs = read_chrome_cdp_rss_mb()
+
+    # Verify all images in batch directory
+    verified_count = 0
+    failed_verifications = []
+    latencies: list[float] = []
+    profile_dist: dict[str, int] = {}
+
+    for t in tasks:
+        dest_file = b_dir / t["filename"]
+        chk = verify_image_and_sidecar(dest_file, t["ratio"])
+        if chk["valid"]:
+            verified_count += 1
+            if chk["latency"] > 0:
+                latencies.append(chk["latency"])
+            pid = chk.get("profile_id") or "unknown"
+            profile_dist[pid] = profile_dist.get(pid, 0) + 1
         else:
-            print("\n[*] Không có profile nào cần tắt (giữ nguyên cửa sổ sẵn có).")
+            failed_verifications.append({"id": t["id"], "file": t["filename"], "reason": chk["reason"]})
 
-    total_time = round(time.time() - start_time, 2)
-    completed_count = progress_tracker["completed"]
+    avg_lat = round(statistics.mean(latencies), 2) if latencies else 0.0
+    p50_lat = round(statistics.median(latencies), 2) if latencies else 0.0
+    max_lat = round(max(latencies), 2) if latencies else 0.0
+    min_lat = round(min(latencies), 2) if latencies else 0.0
+    throughput_per_min = round((verified_count / elapsed_sec) * 60.0, 2) if elapsed_sec > 0 else 0.0
 
-    summary_data = {
-        "total_images": completed_count,
-        "target": len(prompts),
-        "total_time_seconds": total_time,
-        "average_time_per_image": round(total_time / max(1, completed_count), 2),
-        "out_dir": str(out_dir),
-        "status": "SUCCESS" if completed_count >= len(prompts) else "PARTIAL",
+    report = {
+        "batch_num": b_num,
+        "name": b_name,
+        "tier": b_spec["tier"],
+        "target_images": b_spec["count"],
+        "verified_images": verified_count,
+        "failed_count": len(failed_verifications),
+        "workers_configured": b_spec["workers"],
+        "hard_timeout_seconds": timeout_sec,
+        "elapsed_seconds": gen_elapsed_sec,
+        "total_batch_seconds": elapsed_sec,
+        "within_timeout": (not watchdog_triggered) and (gen_elapsed_sec <= timeout_sec),
+        "watchdog_triggered": watchdog_triggered,
+        "throughput_images_per_min": throughput_per_min,
+        "latency_stats": {
+            "avg_s": avg_lat,
+            "p50_s": p50_lat,
+            "min_s": min_lat,
+            "max_s": max_lat,
+        },
+        "ram_metrics": {
+            "sys_before_mb": ram_before_sys,
+            "sys_peak_mb": sampler.peak_sys_mb,
+            "sys_after_mb": ram_after_sys,
+            "chrome_rss_before_mb": ram_before_chrome,
+            "chrome_rss_peak_mb": sampler.peak_chrome_rss_mb,
+            "chrome_rss_after_teardown_mb": ram_after_chrome,
+            "lingering_chrome_procs_after_teardown": lingering_procs,
+        },
+        "incidents_count": len(pool.incidents),
+        "incidents": pool.incidents,
+        "profile_distribution": profile_dist,
+        "failed_verifications": failed_verifications,
         "completed_at": datetime.now(timezone.utc).isoformat(),
     }
-    summary_file.write_text(json.dumps(summary_data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
-    print("\n" + "=" * 80)
-    print(f"\033[92m[✓] BÁO CÁO KẾT THÚC: {completed_count}/{len(prompts)} ảnh hoàn thành ({total_time}s ~ {total_time/60:.1f} phút).\033[0m")
-    print(f"Báo cáo tổng kết: {summary_file}")
-    print(f"Sổ nhật ký sự cố: {incidents_file}")
-    print(f"Thư mục ảnh: {out_dir}")
-    print("=" * 80)
+    report_path = b_dir / "batch_report.json"
+    report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    logger.info(
+        "=== BATCH %d SUMMARY: Verified=%d/%d | Elapsed=%.1fs/%.1fs | Avg Latency=%.2fs | Peak Chrome RSS=%.1fMB | Post-Teardown Procs=%d ===",
+        b_num, verified_count, b_spec["count"], elapsed_sec, timeout_sec, avg_lat, sampler.peak_chrome_rss_mb, lingering_procs
+    )
+    return report
+
+
+def write_comparative_reports(base_out_dir: Path, batch_reports: list[dict[str, Any]], total_elapsed: float) -> None:
+    """Write comparison_report.json and COMPARISON_REPORT.md across completed batches."""
+    total_target = sum(r["target_images"] for r in batch_reports)
+    total_verified = sum(r["verified_images"] for r in batch_reports)
+    summary = {
+        "total_target_images": total_target,
+        "total_verified_images": total_verified,
+        "total_elapsed_seconds": round(total_elapsed, 2),
+        "global_timeout_seconds": GLOBAL_TIMEOUT_SECONDS,
+        "within_global_timeout": total_elapsed <= GLOBAL_TIMEOUT_SECONDS,
+        "batches": batch_reports,
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+    }
+    json_path = base_out_dir / "comparison_report.json"
+    json_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    lines = [
+        "# Báo Cáo Kiểm Thử 300 Ảnh Theo Mô Hình Bậc Thang (Graduated Ramp-Up)",
+        "",
+        f"- **Tổng số ảnh hợp lệ**: `{total_verified} / {total_target}`",
+        f"- **Tổng thời gian thực thi**: `{total_elapsed:.1f}s` ({total_elapsed / 60.0:.2f} phút) / Ngưỡng tối đa `{GLOBAL_TIMEOUT_SECONDS / 60.0:.1f}` phút",
+        "",
+        "| Đợt | Cấp độ (Tier) | Số ảnh (Đạt/Mục tiêu) | Workers | Thời gian chạy | Ngưỡng tối đa | Độ trễ TB (s) | Tốc độ (ảnh/phút) | Peak Chrome RAM (MB) | Tiến trình sót sau dọn dẹp |",
+        "|---|---|---|---|---|---|---|---|---|---|",
+    ]
+    for r in batch_reports:
+        lat = r["latency_stats"]
+        ram = r["ram_metrics"]
+        status_icon = "PASS" if (r["verified_images"] == r["target_images"] and r["within_timeout"]) else "WARN"
+        lines.append(
+            f"| **Batch {r['batch_num']}** ({status_icon}) | {r['tier']} | `{r['verified_images']}/{r['target_images']}` | "
+            f"{r['workers_configured']} | `{r['elapsed_seconds']:.1f}s` ({r['elapsed_seconds']/60.0:.2f}m) | "
+            f"`{r['hard_timeout_seconds']:.0f}s` ({r['hard_timeout_seconds']/60.0:.1f}m) | `{lat['avg_s']:.2f}s` | "
+            f"`{r['throughput_images_per_min']:.1f}` | `{ram['chrome_rss_peak_mb']:.1f} MB` | `{ram['lingering_chrome_procs_after_teardown']}` |"
+        )
+
+    md_path = base_out_dir / "COMPARISON_REPORT.md"
+    md_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="5-Tier 300-Image Graduated Ramp-Up Runner")
+    parser.add_argument("--batch", type=int, choices=[1, 2, 3, 4, 5], help="Run a specific batch (1..5)")
+    parser.add_argument("--out-dir", type=str, default=str(SYS_DIR / "runs" / "test-300-images"))
+    parser.add_argument("--clean-batch", action="store_true", help="Remove existing images in target batch before running")
+    args = parser.parse_args()
+
+    base_out_dir = Path(args.out_dir).resolve()
+    base_out_dir.mkdir(parents=True, exist_ok=True)
+    all_batches = build_300_tasks(base_out_dir)
+
+    target_specs = [s for s in BATCH_SPECS if args.batch is None or s["batch_num"] == args.batch]
+    if args.clean_batch:
+        for b_spec in target_specs:
+            b_dir = base_out_dir / b_spec["name"]
+            if b_dir.is_dir():
+                shutil.rmtree(b_dir)
+
+    global_start = time.monotonic()
+    global_deadline = global_start + GLOBAL_TIMEOUT_SECONDS
+
+    reports: list[dict[str, Any]] = []
+    for b_spec in target_specs:
+        b_num = b_spec["batch_num"]
+        rep = run_single_batch(b_spec, all_batches[b_num], base_out_dir, global_deadline)
+        reports.append(rep)
+
+    # Also load any previously completed batch reports so comparison_report is cumulative
+    all_reports: list[dict[str, Any]] = []
+    for b_spec in BATCH_SPECS:
+        rep_file = base_out_dir / b_spec["name"] / "batch_report.json"
+        if rep_file.is_file():
+            try:
+                all_reports.append(json.loads(rep_file.read_text(encoding="utf-8")))
+            except Exception:
+                pass
+
+    total_elapsed = sum(r.get("elapsed_seconds", 0.0) for r in all_reports)
+    write_comparative_reports(base_out_dir, all_reports, total_elapsed)
+
+    failed = any(r["verified_images"] < r["target_images"] or not r["within_timeout"] for r in reports)
+    return 1 if failed else 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

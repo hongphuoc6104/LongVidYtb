@@ -214,56 +214,16 @@ def launch_profile(
     profile_entry: dict[str, Any],
     url: str = "https://flow.google.com/",
     chrome_bin: str | None = None,
+    headless: bool = True,
 ) -> bool:
     """Launch a Chrome profile in background with remote debugging enabled."""
-    port = int(profile_entry["port"])
-    if is_port_listening(port):
-        return True
-
-    target_dir = Path(profile_entry["user_data_dir"]).expanduser().resolve()
-    prof_name = profile_entry.get("directory", "Profile 1")
-    binary = chrome_bin or detect_chrome_binary()
-
-    # Clean stale locks
-    for lock in ("SingletonLock", "SingletonCookie", "SingletonSocket"):
-        for p in (target_dir / lock, target_dir / prof_name / lock):
-            if p.exists() or p.is_symlink():
-                try:
-                    p.unlink()
-                except OSError:
-                    pass
-
-    env = dict(os.environ, DISPLAY=os.environ.get("DISPLAY", ":0"))
-    cmd = [
-        binary,
-        f"--user-data-dir={target_dir}",
-        f"--profile-directory={prof_name}",
-        f"--remote-debugging-port={port}",
-        "--remote-allow-origins=*",
-        "--no-first-run",
-        "--no-default-browser-check",
-        url,
-    ]
-
-    subprocess.Popen(
-        cmd,
-        env=env,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-        start_new_session=True,
+    from .process_manager import get_process_manager
+    return get_process_manager().launch(
+        profile_cfg=profile_entry,
+        url=url,
+        headless=headless,
+        chrome_bin=chrome_bin,
     )
-
-    # Poll port readiness
-    for _ in range(25):
-        time.sleep(0.2)
-        if is_port_listening(port):
-            try:
-                from .lifecycle import register_spawned_port
-                register_spawned_port(port)
-            except Exception:
-                pass
-            return True
-    return False
 
 
 def stop_profile(profile_entry: dict[str, Any]) -> None:
@@ -271,51 +231,43 @@ def stop_profile(profile_entry: dict[str, Any]) -> None:
     port = int(profile_entry["port"])
     target_dir = Path(profile_entry["user_data_dir"]).expanduser().resolve()
     prof_name = profile_entry.get("directory", "Profile 1")
-
-    subprocess.run(["pkill", "-f", f"remote-debugging-port={port}"], capture_output=True, check=False)
-    subprocess.run(["pkill", "-f", f"user-data-dir={target_dir}"], capture_output=True, check=False)
-
-    for lock in ("SingletonLock", "SingletonCookie", "SingletonSocket"):
-        for p in (target_dir / lock, target_dir / prof_name / lock):
-            if p.exists() or p.is_symlink():
-                try:
-                    p.unlink()
-                except OSError:
-                    pass
+    from .process_manager import clean_singleton_locks, get_process_manager
+    get_process_manager().terminate_by_port(port)
+    clean_singleton_locks(target_dir, prof_name)
 
 
 def stop_profile_by_port(port: int) -> bool:
     """Terminate Chrome process for a specific remote debugging port and clean its locks."""
-    d = registry()
-    entry = next((p for p in d.get("profiles", []) if int(p["port"]) == port), None)
-    if entry:
-        stop_profile(entry)
-        return True
-    subprocess.run(["pkill", "-f", f"remote-debugging-port={port}"], capture_output=True, check=False)
-    return True
+    from .process_manager import get_process_manager
+    return get_process_manager().terminate_by_port(port)
 
 
 def stop_all(profiles: list[dict[str, Any]] | None = None) -> list[str]:
     """Stop all configured or passed profiles."""
     d = registry()
     entries = profiles or d.get("profiles", [])
+    from .process_manager import get_process_manager
+    pm = get_process_manager()
     stopped = []
     for p in entries:
-        stop_profile(p)
+        port = int(p["port"])
+        pm.terminate_by_port(port)
         stopped.append(p["id"])
+    pm.terminate_all()
     return stopped
 
 
 def launch_all(
     profiles: list[dict[str, Any]] | None = None,
     url: str = "https://flow.google.com/",
+    headless: bool = True,
 ) -> dict[str, bool]:
     """Launch all configured or passed profiles and return port readiness."""
     d = registry()
     entries = profiles or [p for p in d.get("profiles", []) if p.get("enabled", True)]
     results = {}
     for p in entries:
-        results[p["id"]] = launch_profile(p, url=url)
+        results[p["id"]] = launch_profile(p, url=url, headless=headless)
     return results
 
 
@@ -473,7 +425,7 @@ def login_many(
         setup_profile_dir(target_user_data, source_profile_name=source_dir)
 
         print(f"  --> Đang mở Chrome {prof_id} (Port {port})...")
-        ok = launch_profile(entry, url="https://flow.google.com/")
+        ok = launch_profile(entry, url="https://flow.google.com/", headless=False)
         if ok:
             print(f"  [OK] Cổng {port} ĐÃ SẴN SÀNG! Đã kết nối Flow.google.com.")
         else:
@@ -526,6 +478,7 @@ def main() -> None:
     parser.add_argument("--total", type=int, help="Total number of profiles to configure in login-many")
     parser.add_argument("--select", type=str, help="Danh sách profile muốn chọn sẵn (ví dụ: '10,102,14' hoặc '1,2,3')")
     parser.add_argument("--url", default="https://flow.google.com/", help="URL to open on launch")
+    parser.add_argument("--headed", "--no-headless", dest="headless", action="store_false", default=True, help="Launch Chrome in visible GUI window (non-headless)")
     args = parser.parse_args()
 
     if args.action == "leases":
@@ -578,7 +531,7 @@ def main() -> None:
     if args.action == "launch":
         d = registry()
         if args.target == "all":
-            results = launch_all(url=args.url)
+            results = launch_all(url=args.url, headless=args.headless)
             for pid, ok in results.items():
                 print(f"Profile {pid}: {'LISTENING (READY)' if ok else 'FAILED TO LAUNCH'}")
         else:
@@ -586,7 +539,7 @@ def main() -> None:
             if not target_entry:
                 print(f"Không tìm thấy profile '{args.target}'", file=sys.stderr)
                 sys.exit(1)
-            ok = launch_profile(target_entry, url=args.url)
+            ok = launch_profile(target_entry, url=args.url, headless=args.headless)
             print(f"Profile {args.target}: {'LISTENING (READY)' if ok else 'FAILED TO LAUNCH'}")
         return
 

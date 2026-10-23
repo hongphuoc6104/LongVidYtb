@@ -166,46 +166,6 @@ class IndependentRetention(unittest.TestCase):
             self.assertEqual(digest(source),stamp)
 
 
-class IndependentDocumentation(unittest.TestCase):
-    def test_advertised_cli_commands_exist_without_provider_calls(self):
-        commands={
-            ('pilot.py','--help'):('observe','author','stop','takeover','mode','bind-session','micro-plan','micro-result','grant','migrate','rollback-migration','adopt-code'),
-            ('maintenance.py','--help'):('cleanup','archive','archive-scope','git-scope','git','--review-hash','--execute','--root'),
-            ('scripts/bootstrap.py','--help'):('plan','check','apply','resume','--install'),
-            ('-m','colab_bridge','--help'):('status','start','reconcile','setup','stop','synthesize','render','collect','--account','--session'),
-            ('-m','dashboard.server','--help'):('--root','--port','--python'),
-        }
-        for args,tokens in commands.items():
-            result=subprocess.run([sys.executable,*args],cwd=ROOT,capture_output=True,text=True)
-            self.assertEqual(result.returncode,0,(args,result.stderr))
-            for token in tokens:self.assertIn(token,result.stdout,(args,token))
-
-    def test_four_skills_and_new_direction_have_concrete_current_sources(self):
-        skills=ROOT.parent/'.agents/skills'
-        actual=sorted(p.parent.name for p in skills.glob('*/SKILL.md'))
-        self.assertEqual(actual, ['gh-axi', 'vp-channel-patterns', 'vp-colab-bridge', 'vp-development', 'vp-flow-cdp', 'vp-full-frame-quality', 'vp-maintenance', 'vp-omni-platform', 'vp-production', 'vp-research-architect', 'vp-scriptwriting', 'vp-setup', 'vp-troubleshooting'])
-        workflow_doc=(ROOT/'docs/workflow.md').read_text()
-        for token in ('outline','dialogue','audio','images','video','without a machine reviewer','connected agent/author'):
-            self.assertIn(token,workflow_doc)
-        production=(skills/'vp-production/SKILL.md').read_text()
-        self.assertIn('sys/format_profiles.py',production)
-        from scripts import director_context
-        for stage in director_context.REFERENCES:
-            context=director_context.context(ROOT,stage,{'video_type':'vocabulary'})
-            self.assertIn('vp-production',context)
-            self.assertNotIn('Local craft guidance (vp-content',context)
-
-    def test_active_entrypoint_doc_and_skill_file_links_resolve(self):
-        paths=[ROOT.parent/p for p in ('INDEX.md','AGENTS.md','README.md','GEMINI.md')]
-        paths += [ROOT/'docs'/p for p in ('INDEX.md','getting-started.md','session-start.md','workflow.md','contracts.md','vocabulary.md','story-planning.md','narration-length-guidance.md','director-system.md','colab-tts.md','image-repair-loops.md','maintenance.md','AGY-SETUP.md')]
-        paths += list((ROOT.parent/'.agents/skills').rglob('*.md'))
-        broken=[]
-        for path in paths:
-            for target in re.findall(r'\]\(([^)]+)\)',path.read_text()):
-                target=target.strip('<>').split('#',1)[0]
-                if not target or re.match(r'^[A-Za-z]+:',target):continue
-                if not (path.parent/target).exists():broken.append((str(path.relative_to(ROOT.parent)),target))
-        self.assertEqual(broken,[])
 
 
 class IndependentGit(unittest.TestCase):

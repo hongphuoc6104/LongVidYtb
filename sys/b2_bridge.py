@@ -94,10 +94,12 @@ def generate_b2_image(*args, **kwargs) -> dict[str, Any]:
     orig_conn = _cdp.ensure_connected
     orig_status = _cdp.query_status
     orig_accept = _cdp.require_queue_acceptance
+    orig_batch = _cdp.generate_cdp_batch
     _cdp.send_raw_command = send_raw_command
     _cdp.ensure_connected = ensure_connected
     _cdp.query_status = query_status
     _cdp.require_queue_acceptance = require_queue_acceptance
+    _cdp.generate_cdp_batch = generate_b2_batch
     try:
         return _cdp.generate_cdp_image(*args, **kwargs)
     finally:
@@ -105,6 +107,10 @@ def generate_b2_image(*args, **kwargs) -> dict[str, Any]:
         _cdp.ensure_connected = orig_conn
         _cdp.query_status = orig_status
         _cdp.require_queue_acceptance = orig_accept
+        _cdp.generate_cdp_batch = orig_batch
+
+
+_real_generate_cdp_batch = _cdp.generate_cdp_batch
 
 
 def generate_b2_batch(*args, **kwargs) -> list[dict[str, Any]]:
@@ -118,7 +124,7 @@ def generate_b2_batch(*args, **kwargs) -> list[dict[str, Any]]:
     _cdp.query_status = query_status
     _cdp.require_queue_acceptance = require_queue_acceptance
     try:
-        return _cdp.generate_cdp_batch(*args, **kwargs)
+        return _real_generate_cdp_batch(*args, **kwargs)
     finally:
         _cdp.send_raw_command = orig_send
         _cdp.ensure_connected = orig_conn

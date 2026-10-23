@@ -261,7 +261,9 @@ def _execute_via_cdp_direct(specs: list[dict[str, Any]], timeout: float = 240.0,
                     raise
                 out_dir = Path(spec.get("outDir") or spec.get("out_dir") or (SYS_ROOT / "experiments/b2_illustrator/results/controller")).resolve()
                 out_dir.mkdir(parents=True, exist_ok=True)
-                dest_img = out_dir / "result.jpg"
+                req_id = str(spec.get("testCase") or spec.get("request_id") or spec.get("id") or "result")
+                filename = spec.get("filename") or (f"{req_id}.jpg" if len(specs) > 1 else "result.jpg")
+                dest_img = out_dir / filename
 
                 req = urllib.request.Request(res["url"], headers={"User-Agent": "Mozilla/5.0"})
                 with urllib.request.urlopen(req, timeout=60) as resp:
@@ -275,7 +277,7 @@ def _execute_via_cdp_direct(specs: list[dict[str, Any]], timeout: float = 240.0,
                 latency = round(time.time() - start_t, 2)
                 profile_name = selected_cfg.get("name") or getattr(worker, "profile_id", "profile_1")
                 items.append({
-                    "request_id": spec["testCase"],
+                    "request_id": req_id,
                     "path": str(dest_img),
                     "forge_id": res["media_id"],
                     "latency": latency,
@@ -294,7 +296,7 @@ def _execute_via_cdp_direct(specs: list[dict[str, Any]], timeout: float = 240.0,
                         pass
                 else:
                     sidecar_data = {
-                        "jobId": spec.get("testCase"),
+                        "jobId": req_id,
                         "type": "image",
                         "prompt": spec.get("prompt"),
                         "ratio": aspect,
@@ -312,7 +314,7 @@ def _execute_via_cdp_direct(specs: list[dict[str, Any]], timeout: float = 240.0,
     return asyncio.run(_run())
 
 
-def _execute_sub_batch(specs: list[dict[str, Any]], timeout: float = 240.0, sock_path: Path | None = None, before_submit=None, worker: Any = None) -> list[dict[str, Any]]:
+def _execute_sub_batch(specs: list[dict[str, Any]], timeout: float = 120.0, sock_path: Path | None = None, before_submit=None, worker: Any = None) -> list[dict[str, Any]]:
     """Submit 1 to 4 requests directly over CDP socket or direct CDP client."""
     target_sock = sock_path if (sock_path is not None and sock_path != get_socket_path()) else None
     try:
@@ -341,9 +343,9 @@ def _execute_sub_batch(specs: list[dict[str, Any]], timeout: float = 240.0, sock
 
     try:
         if target_sock is not None and target_sock.exists():
-            result = send_raw_command(f"tool-snapshot:queue:{manifest}", timeout=max(timeout, 240), sock_path=target_sock)
+            result = send_raw_command(f"tool-snapshot:queue:{manifest}", timeout=timeout, sock_path=target_sock)
         else:
-            result = send_raw_command(f"tool-snapshot:queue:{manifest}", timeout=max(timeout, 240))
+            result = send_raw_command(f"tool-snapshot:queue:{manifest}", timeout=timeout)
     except Blocked as exc:
         exc_msg = str(exc).lower()
         if getattr(exc, "generation_submitted", None) is False and ("socket not found" in exc_msg or "communication error" in exc_msg):
@@ -363,7 +365,8 @@ def _execute_sub_batch(specs: list[dict[str, Any]], timeout: float = 240.0, sock
         raise Blocked("Flow CDP incomplete batch; reconcile before retry")
 
     for spec, item in zip(specs, items, strict=False):
-        if item.get("request_id") != spec["testCase"] or not Path(item["path"]).is_file():
+        expected_id = str(spec.get("testCase") or spec.get("request_id") or spec.get("id") or "")
+        if (expected_id and item.get("request_id") != expected_id) or not Path(item["path"]).is_file():
             raise Blocked("Flow CDP result mapping failed")
         item["sha256"] = digest(Path(item["path"]))
         if "profile_id" not in item or not item["profile_id"]:
@@ -381,7 +384,7 @@ def _execute_sub_batch(specs: list[dict[str, Any]], timeout: float = 240.0, sock
             else:
                 try:
                     s_data = {
-                        "jobId": spec.get("testCase"),
+                        "jobId": expected_id,
                         "type": "image",
                         "prompt": spec.get("prompt"),
                         "ratio": spec.get("ratio", "9:16"),
@@ -491,12 +494,16 @@ def generate_cdp_image(
 
 def generate_cdp_batch(
     specs: list[dict[str, Any]],
-    timeout: float = 240.0,
+    timeout: float | None = None,
     before_submit=None,
     profile_id: str = "",
     use_multi_profile: bool = True,
 ) -> list[dict[str, Any]]:
     """Submit batch through Flow CDP with automatic patch partitioning and multi-profile failover."""
+    from .lifecycle import calculate_rampup_timeout, calculate_rampup_workers
+
+    total_images = len(specs)
+    effective_timeout = timeout if timeout is not None else calculate_rampup_timeout(total_images)
     cfg = _config()
     patch_size = cfg.get("patch_size", 3)
     profiles_cfg = cfg.get("flow_cdp_profiles", None)
@@ -569,22 +576,21 @@ def generate_cdp_batch(
                     directory=pw.get("directory", "Default"),
                     user_data_dir=pw.get("user_data_dir", "~/.config/google-chrome"),
                 )
-        return _execute_sub_batch(specs, timeout=timeout, sock_path=sock, before_submit=before_submit, worker=assigned_worker)
+        return _execute_sub_batch(specs, timeout=effective_timeout, sock_path=sock, before_submit=before_submit, worker=assigned_worker)
 
     # Multi-patch & multi-profile parallel execution
     partitioner = PatchPartitioner(target_size=patch_size, min_size=2, max_size=4)
     patches = partitioner.partition(specs)
 
-    from .lifecycle import calculate_optimal_workers
-    optimal_cap = calculate_optimal_workers(len(specs))
-    workers_needed = max(1, min(len(patches), len(profiles_cfg), optimal_cap)) if patches else 1
+    rampup_workers = calculate_rampup_workers(total_images)
+    workers_needed = max(1, min(len(patches), len(profiles_cfg), rampup_workers)) if patches else 1
     manager = MultiProfileManager(profiles_config=profiles_cfg, job_id=job_id, max_workers_per_job=workers_needed)
     try:
         dispatcher = MultiProfileDispatcher(profile_manager=manager)
 
         def worker_executor(worker: ChromeProfileWorker, patch_items: list[dict[str, Any]]) -> list[dict[str, Any]]:
             sock = get_socket_path(worker.profile_id)
-            sub_results = _execute_sub_batch(patch_items, timeout=timeout, sock_path=sock, before_submit=before_submit, worker=worker)
+            sub_results = _execute_sub_batch(patch_items, timeout=effective_timeout, sock_path=sock, before_submit=before_submit, worker=worker)
             for r in sub_results:
                 if "profile_id" not in r or not r["profile_id"]:
                     r["profile_id"] = worker.profile_id

@@ -21,6 +21,7 @@ def main() -> int:
     parser.add_argument("--total", type=int, help="Tổng số Profile muốn cấu hình (mặc định: 3)")
     parser.add_argument("--status", action="store_true", help="Kiểm tra trạng thái cổng và kết nối CDP")
     parser.add_argument("--launch", action="store_true", help="Khởi chạy toàn bộ các Profile đã cấu hình")
+    parser.add_argument("--headed", action="store_true", help="Mở cửa sổ giao diện để thao tác trực tiếp")
     parser.add_argument("--stop", action="store_true", help="Dừng toàn bộ các Profile Chrome CDP")
     args = parser.parse_args()
 
@@ -30,7 +31,7 @@ def main() -> int:
         return 0
 
     if args.launch:
-        results = launch_all()
+        results = launch_all(headless=not args.headed)
         for pid, ok in results.items():
             print(f"Profile {pid}: {'LISTENING (READY)' if ok else 'FAILED TO LAUNCH'}")
         return 0

@@ -22,7 +22,8 @@ class WorkflowTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
         for name in ['schemas', '.agents', 'renderer', 'examples', 'scripts']:
-            shutil.copytree(ROOT / name, self.root / name)
+            if (ROOT / name).exists():
+                shutil.copytree(ROOT / name, self.root / name)
         for name in ['pilot.py', 'workflow.py', 'machine_review.py', 'image_pipeline.py',
                      'content_contract.py', 'prompt_templates.py', 'adapters.py', 'config.json', 'AGENTS.md', 'GEMINI.md']:
             shutil.copy(ROOT / name, self.root / name)

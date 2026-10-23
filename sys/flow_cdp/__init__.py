@@ -26,9 +26,12 @@ from .multi_profile_manager import (
 from .lifecycle import (
     ProfileLifecycleManager,
     calculate_optimal_workers,
+    calculate_rampup_timeout,
+    calculate_rampup_workers,
     get_current_lifecycle,
     get_workload_tier_info,
     register_spawned_port,
+    stop_all_profiles,
 )
 from .patch_partitioner import Patch, PatchPartitioner
 
@@ -40,6 +43,9 @@ __all__ = [
     "ProfileState",
     "ChromeProfileWorker",
     "calculate_optimal_workers",
+    "calculate_rampup_workers",
+    "calculate_rampup_timeout",
+    "stop_all_profiles",
     "get_workload_tier_info",
     "ProfileLifecycleManager",
     "register_spawned_port",

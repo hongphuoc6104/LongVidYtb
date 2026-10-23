@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Test Suite: Verification of Conveyor Stations and QA Invariants."""
 
-from pathlib import Path
 import tempfile
+from pathlib import Path
 
 from conveyor.ast_checker import check_test_suite_integrity, inspect_test_file
 from conveyor.critique_html import generate_critique_html, scan_critique
@@ -54,13 +54,13 @@ def test_station_2_ast_integrity_on_real_suite():
     target_tests = [
         repo_root / "sys/tests/test_tools_readiness.py",
         repo_root / "sys/tests/test_pipeline_stations.py",
-        repo_root / "sys/tests/test_research_story_architect.py",
-        repo_root / "sys/tests/test_script_cadence_checker.py",
-        repo_root / "sys/tests/test_format_separation.py",
-        repo_root / "sys/tests/test_full_frame_pipeline.py",
-        repo_root / "sys/tests/test_full_frame_upgrade.py",
-        repo_root / "sys/tests/test_omni_platform.py",
-        repo_root / "sys/tests/test_anti_formulaic_storytelling.py",
+        repo_root / "sys/tests/test_flow_prompt_integration.py",
+        repo_root / "sys/tests/test_flow_cdp_bridge.py",
+        repo_root / "sys/tests/test_multi_profile_manager.py",
+        repo_root / "sys/tests/test_patch_partitioner.py",
+        repo_root / "sys/tests/test_early_visual_cliche_gate.py",
+        repo_root / "sys/tests/test_lock_and_worker_resilience.py",
+        repo_root / "sys/tests/test_image_pipeline_parallel.py",
     ]
     ok, report = check_test_suite_integrity(target_tests)
     assert ok, f"Expected active assertions in all test functions, violations: {report['violations']}"

@@ -3,7 +3,14 @@ set -e
 
 echo "=== Setting up & Launching 3 Chrome Profiles for Video Pilot (Flow CDP) ==="
 
-export DISPLAY="${DISPLAY:-:0}"
+HEADLESS="${HEADLESS:-1}"
+HEADLESS_FLAG=""
+if [ "$HEADLESS" = "1" ] || [ "$HEADLESS" = "true" ]; then
+  HEADLESS_FLAG="--headless=new"
+  unset DISPLAY
+else
+  export DISPLAY="${DISPLAY:-:0}"
+fi
 CHROME_BIN="/opt/google/chrome/google-chrome"
 if [ ! -f "$CHROME_BIN" ]; then
   CHROME_BIN="/opt/google/chrome/chrome"
@@ -50,33 +57,45 @@ setup_profile_dir "$P3_DIR" "Profile 13"
 
 echo "Launching Chrome Profile 106 on port 9225..."
 nohup "$CHROME_BIN" \
+  ${HEADLESS_FLAG} \
   --user-data-dir="$P1_DIR" \
   --profile-directory="Profile 106" \
   --remote-debugging-port=9225 \
   --remote-allow-origins="*" \
   --no-first-run \
+  --no-default-browser-check \
+  --disable-features=CalculateNativeWinOcclusion,IntensiveWakeUpThrottling,AutomaticTabDiscarding,MemorySaverMode \
+  --disable-dev-shm-usage \
   "https://flow.google.com/" </dev/null > /dev/null 2>&1 &
 
 sleep 2
 
 echo "Launching Chrome Profile 127 on port 9223..."
 nohup "$CHROME_BIN" \
+  ${HEADLESS_FLAG} \
   --user-data-dir="$P2_DIR" \
   --profile-directory="Profile 127" \
   --remote-debugging-port=9223 \
   --remote-allow-origins="*" \
   --no-first-run \
+  --no-default-browser-check \
+  --disable-features=CalculateNativeWinOcclusion,IntensiveWakeUpThrottling,AutomaticTabDiscarding,MemorySaverMode \
+  --disable-dev-shm-usage \
   "https://flow.google.com/" </dev/null > /dev/null 2>&1 &
 
 sleep 2
 
 echo "Launching Chrome Profile 13 on port 9224..."
 nohup "$CHROME_BIN" \
+  ${HEADLESS_FLAG} \
   --user-data-dir="$P3_DIR" \
   --profile-directory="Profile 13" \
   --remote-debugging-port=9224 \
   --remote-allow-origins="*" \
   --no-first-run \
+  --no-default-browser-check \
+  --disable-features=CalculateNativeWinOcclusion,IntensiveWakeUpThrottling,AutomaticTabDiscarding,MemorySaverMode \
+  --disable-dev-shm-usage \
   "https://flow.google.com/" </dev/null > /dev/null 2>&1 &
 
 disown -a 2>/dev/null || true

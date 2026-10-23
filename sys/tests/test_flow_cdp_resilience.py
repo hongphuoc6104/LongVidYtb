@@ -24,9 +24,12 @@ class TestFlowCdpResilience(unittest.TestCase):
     def test_chrome_launch_flags_include_anti_discard_and_memory_saver(self):
         """Chrome launch arguments must disable tab discarding, memory saver and background throttling."""
         launched_cmd = []
+        launched_env = {}
 
-        def fake_popen(cmd, **kwargs):
+        def fake_popen(cmd, env=None, **kwargs):
             launched_cmd.extend(cmd)
+            if env:
+                launched_env.update(env)
             proc = MagicMock()
             proc.poll.return_value = None
             return proc
@@ -35,9 +38,11 @@ class TestFlowCdpResilience(unittest.TestCase):
         with patch("flow_cdp.cdp_direct_client.is_port_open", side_effect=[False, True]), \
              patch("flow_cdp.cdp_direct_client.subprocess.Popen", side_effect=fake_popen), \
              patch("flow_cdp.cdp_direct_client.time.sleep"):
-            ensure_chrome_profiles_launched(target_cfg)
+            ensure_chrome_profiles_launched(target_cfg, headless=True)
 
         cmd_str = " ".join(launched_cmd)
+        self.assertIn("--headless=new", cmd_str)
+        self.assertNotIn("DISPLAY", launched_env)
         self.assertIn("AutomaticTabDiscarding", cmd_str)
         self.assertIn("MemorySaverMode", cmd_str)
         self.assertIn("--disable-background-timer-throttling", cmd_str)
@@ -45,6 +50,29 @@ class TestFlowCdpResilience(unittest.TestCase):
         self.assertIn("--disable-renderer-backgrounding", cmd_str)
         self.assertIn("--disable-dev-shm-usage", cmd_str)
         self.assertIn("--disable-hang-monitor", cmd_str)
+
+    def test_chrome_launch_headed_mode_sets_display(self):
+        """When headless=False is requested, DISPLAY must be retained and --headless=new omitted."""
+        launched_cmd = []
+        launched_env = {}
+
+        def fake_popen(cmd, env=None, **kwargs):
+            launched_cmd.extend(cmd)
+            if env:
+                launched_env.update(env)
+            proc = MagicMock()
+            proc.poll.return_value = None
+            return proc
+
+        target_cfg = [dict(PROFILES[0], cdp_port=19226)]
+        with patch("flow_cdp.cdp_direct_client.is_port_open", side_effect=[False, True]), \
+             patch("flow_cdp.cdp_direct_client.subprocess.Popen", side_effect=fake_popen), \
+             patch("flow_cdp.cdp_direct_client.time.sleep"):
+            ensure_chrome_profiles_launched(target_cfg, headless=False)
+
+        cmd_str = " ".join(launched_cmd)
+        self.assertNotIn("--headless=new", cmd_str)
+        self.assertIn("DISPLAY", launched_env)
 
     def test_b2_bridge_ensure_connected_does_not_crash_when_socket_missing(self):
         """When socket is missing and CDP ports are closed, ensure_connected must launch Chrome without raising socket not found."""

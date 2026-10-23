@@ -154,6 +154,25 @@ class FlowCdpBridgeTests(unittest.TestCase):
             self.assertEqual(worker.profile_id, "profile_3")
 
 
+    def test_generate_cdp_batch_calculates_5_tier_timeout_and_workers(self):
+        specs_small = [{"testCase": f"shot-{i}", "prompt": f"P{i}", "profile_id": "profile_1"} for i in range(2)]
+        with patch("flow_cdp.bridge._config", return_value={"patch_size": 3, "flow_cdp_profiles": [{"id": "profile_1", "port": 9225}]}), \
+             patch("flow_cdp.bridge._execute_sub_batch") as exec_sub_mock:
+            exec_sub_mock.return_value = [{"request_id": f"shot-{i}", "path": f"/tmp/{i}.png", "profile_id": "profile_1"} for i in range(2)]
+            generate_cdp_batch(specs_small)
+            self.assertEqual(exec_sub_mock.call_args.kwargs.get("timeout"), 120.0)
+
+        specs_bulk = [{"testCase": f"shot-{i}", "prompt": f"P{i}"} for i in range(105)]
+        with patch("flow_cdp.bridge._config", return_value={"patch_size": 3, "flow_cdp_profiles": [{"id": f"profile_{i}", "port": 9220 + i} for i in range(1, 15)]}), \
+             patch("flow_cdp.bridge._execute_sub_batch") as exec_sub_mock, \
+             patch("flow_cdp.bridge.MultiProfileDispatcher.dispatch_all") as dispatch_mock:
+            dispatch_mock.return_value = [{"request_id": f"shot-{i}", "path": f"/tmp/{i}.png"} for i in range(105)]
+            generate_cdp_batch(specs_bulk)
+            # Concurrency passed to dispatch_all should be 12 (max tier 5 cap)
+            self.assertEqual(dispatch_mock.call_args.kwargs.get("max_concurrency"), 12)
+
+
 if __name__ == "__main__":
     unittest.main()
+
 

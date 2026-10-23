@@ -307,7 +307,8 @@ class TestChallengerM1DiskReconciliation(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.root = Path(self.tmp.name)
         for n in ["schemas", ".agents", "renderer", "tests", "examples", "scripts"]:
-            shutil.copytree(ROOT / n, self.root / n)
+            if (ROOT / n).is_dir():
+                shutil.copytree(ROOT / n, self.root / n)
         for n in [
             "pilot.py", "workflow.py", "machine_review.py", "image_pipeline.py",
             "prompt_templates.py", "content_contract.py", "adapters.py", "config.json",

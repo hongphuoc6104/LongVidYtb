@@ -169,7 +169,7 @@ def step_flow_onboarding(force_setup: bool = False) -> None:
             from flow_cdp.accounts import launch_profile, stop_profile
             for p in configured_profiles:
                 print(f"\n--> Đang mở {p['id']} (Cổng {p['port']})...")
-                ok = launch_profile(p)
+                ok = launch_profile(p, headless=False)
                 if ok:
                     print(f"  [OK] Cổng {p['port']} sẵn sàng.")
                 if sys.stdin.isatty():

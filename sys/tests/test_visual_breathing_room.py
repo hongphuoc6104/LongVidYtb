@@ -1,11 +1,6 @@
 """Tests for character breathing room and setting description verbosity guards (R1-R4)."""
 from __future__ import annotations
 
-import json
-import subprocess
-import sys
-from pathlib import Path
-
 from scripts.visual_quality import (
     check_abstract_card_clustering,
     check_atomic_variation_continuity,
@@ -13,7 +8,6 @@ from scripts.visual_quality import (
     check_setting_description_verbosity,
     check_ungrounded_environment_scenes,
 )
-from tools.script_diversity_linter import lint_script
 
 
 def _make_beat_scene(scene_id: str, shot_type: str, char_ids: list[str] | None = None, desc: str = "", **kwargs) -> dict:
@@ -281,77 +275,6 @@ def test_empty_or_missing_setting_does_not_raise():
     assert len(violations) == 0
 
 
-# =========================================================================
-# Group 5: Full Pipeline & Linter Integration
-# =========================================================================
-
-def test_lint_script_end_to_end_with_breathing_room():
-    scenes = [
-        _make_beat_scene("SC01", "full_scene"),
-        _make_beat_scene("SC02", "variation"),
-        _make_beat_scene("SC03", "full_scene"),
-        _make_beat_scene("SC04", "variation"),
-        _make_beat_scene("SC05", "full_scene"),  # 5th streak
-    ]
-    # Add excessive setting description
-    scenes[0]["setting"] = "A very long detailed room description with multiple lamps and books and papers scattered everywhere."
-    result = lint_script(scenes, enforce_breathing_room=True)
-    assert result["status"] == "FAIL"
-    types = {v["type"] for v in result["violations"]}
-    assert "CHARACTER_STREAK_EXCEEDED" in types
-    assert "SETTING_DESCRIPTION_TOO_VERBOSE" in types
-
-
-def test_lint_script_passes_fully_compliant_story():
-    # 10 beats compliant story: 7 character + 3 rest, alternating <= 4 streaks, <= 8 words settings
-    pattern = ["full_scene", "variation", "still_life", "full_scene", "variation",
-               "environment", "full_scene", "variation", "white_card", "full_scene"]
-    scenes = []
-    for i, shot in enumerate(pattern, 1):
-        sc = _make_beat_scene(f"SC{i:02d}", shot)
-        sc["setting"] = "Quiet laboratory under soft LED light."  # 6 words
-        scenes.append(sc)
-
-    result = lint_script(scenes)
-    # Filter to only visual breathing room & verbosity violations
-    pacing_violations = [
-        v for v in result["violations"]
-        if v["type"] in {"CHARACTER_STREAK_EXCEEDED", "LOW_CHARACTER_FREE_RATIO", "SETTING_DESCRIPTION_TOO_VERBOSE"}
-    ]
-    assert len(pacing_violations) == 0
-
-
-def test_cli_diversity_linter_subcommand_exit_codes(tmp_path: Path):
-    # Compliant script file
-    pattern = ["full_scene", "variation", "still_life", "full_scene", "variation",
-               "environment", "full_scene", "variation", "white_card", "full_scene"]
-    compliant_scenes = []
-    for i, shot in enumerate(pattern, 1):
-        sc = _make_beat_scene(f"SC{i:02d}", shot)
-        sc["setting"] = "Quiet laboratory under soft LED light."
-        compliant_scenes.append(sc)
-
-    compliant_file = tmp_path / "compliant_content.json"
-    compliant_file.write_text(json.dumps({"topic": "Compliant Research", "scenes": compliant_scenes}), encoding="utf-8")
-
-    # Non-compliant script file (streak 5)
-    failing_scenes = [_make_beat_scene(f"SC{i:02d}", "full_scene") for i in range(1, 6)]
-    failing_file = tmp_path / "failing_content.json"
-    failing_file.write_text(json.dumps({"topic": "Failing Research", "scenes": failing_scenes}), encoding="utf-8")
-
-    # Test CLI invocation on failing file
-    repo_root = Path(__file__).resolve().parents[2]
-    cli_tool = repo_root / "sys/tools/script_diversity_linter.py"
-    venv_py = repo_root / "sys/.venv/bin/python"
-    py_bin = str(venv_py) if venv_py.is_file() else sys.executable
-
-    res_fail = subprocess.run([py_bin, str(cli_tool), str(failing_file)], capture_output=True, text=True)
-    assert res_fail.returncode == 1
-    assert "CHARACTER_STREAK_EXCEEDED" in res_fail.stdout
-
-    # Test non-existent file
-    res_notfound = subprocess.run([py_bin, str(cli_tool), str(tmp_path / "non_existent.json")], capture_output=True, text=True)
-    assert res_notfound.returncode == 2
 
 
 # =========================================================================

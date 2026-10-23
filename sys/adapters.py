@@ -291,7 +291,8 @@ def gflow(p,*args,timeout=960,flow_job=None):
 
  if args and args[0]=='batch':
   import b2_bridge
-  if __import__('flow_management').config(p, flow_job).get('flow_prompt_version') == '1.7.0':
+  cfg_path = getattr(p, 'root', None) and (Path(p.root) / 'config.json')
+  if cfg_path and cfg_path.is_file() and __import__('flow_management').config(p, flow_job).get('flow_prompt_version') == '1.7.0':
    from flow_cdp import bridge as b2_bridge
   data = read(Path(args[1]))
   batch_out = Path(args[args.index('--out')+1]).resolve()
@@ -564,13 +565,15 @@ def chunks_with_gaps(text,g=None):
 def chunks(text):
  return chunks_with_gaps(text, DEFAULT_PAUSE)[0]
 
-from audio_processing import frames_of, run_ffmpeg, AudioProcessingError
-
 def master(src,dst,cfg):
  # Local mastering is legacy-only; modern jobs receive prepared remote files.
- from audio_processing import master as prepare
- try: return prepare(src,dst,cfg)
- except AudioProcessingError as ex: raise Blocked(str(ex)) from ex
+ try:
+  from audio_processing import master as prepare, AudioProcessingError
+  return prepare(src,dst,cfg)
+ except ImportError:
+  raise Blocked('audio_processing is not available in module-images')
+ except Exception as ex:
+  raise Blocked(str(ex)) from ex
 
 def retakes(p,j):
  """How many times each scene's delivery has been rejected.

@@ -2,11 +2,12 @@
 import tempfile
 import unittest
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from flow_cdp.accounts import (
     detect_chrome_binary,
     is_port_listening,
+    launch_profile,
     probe_profile,
     registry,
     save_registry,
@@ -68,6 +69,60 @@ class TestFlowAccounts(unittest.TestCase):
 
                 loaded = registry()
                 self.assertEqual(loaded["preferred"], "profile_custom")
+
+    def setUp(self):
+        from flow_cdp.process_manager import reset_process_manager
+        reset_process_manager()
+
+    def tearDown(self):
+        from flow_cdp.process_manager import reset_process_manager
+        reset_process_manager()
+
+    @patch("subprocess.Popen")
+    def test_launch_profile_headless_mode_strips_display_and_adds_flag(self, mock_popen):
+        fake_proc = MagicMock()
+        fake_proc.pid = 9991
+        mock_popen.return_value = fake_proc
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            reg_file = Path(tmpdir) / "chrome_pids.json"
+            entry = {"port": 19228, "user_data_dir": str(Path(tmpdir) / "prof"), "directory": "Profile 1"}
+            with patch("flow_cdp.process_manager.DEFAULT_REGISTRY_FILE", reg_file), \
+                 patch("flow_cdp.process_manager.is_port_listening", side_effect=[False, True]):
+                ok = launch_profile(entry, headless=True)
+                self.assertTrue(ok)
+
+            mock_popen.assert_called_once()
+            args, kwargs = mock_popen.call_args
+            cmd = args[0]
+            env = kwargs.get("env", {})
+            cmd_str = " ".join(cmd)
+            self.assertIn("--headless=new", cmd_str)
+            self.assertNotIn("DISPLAY", env)
+            self.assertIn("AutomaticTabDiscarding", cmd_str)
+            self.assertIn("--disable-dev-shm-usage", cmd_str)
+
+    @patch("subprocess.Popen")
+    def test_launch_profile_headed_mode_sets_display(self, mock_popen):
+        fake_proc = MagicMock()
+        fake_proc.pid = 9992
+        mock_popen.return_value = fake_proc
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            reg_file = Path(tmpdir) / "chrome_pids.json"
+            entry = {"port": 19229, "user_data_dir": str(Path(tmpdir) / "prof"), "directory": "Profile 1"}
+            with patch("flow_cdp.process_manager.DEFAULT_REGISTRY_FILE", reg_file), \
+                 patch("flow_cdp.process_manager.is_port_listening", side_effect=[False, True]):
+                ok = launch_profile(entry, headless=False)
+                self.assertTrue(ok)
+
+            mock_popen.assert_called_once()
+            args, kwargs = mock_popen.call_args
+            cmd = args[0]
+            env = kwargs.get("env", {})
+            cmd_str = " ".join(cmd)
+            self.assertNotIn("--headless=new", cmd_str)
+            self.assertIn("DISPLAY", env)
 
 
 if __name__ == "__main__":

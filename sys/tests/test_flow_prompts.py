@@ -237,3 +237,157 @@ class Version160PromptTests(unittest.TestCase):
                 self.assertIn('FLOW_SHOT_TYPE_UNSUPPORTED', str(ctx.exception))
 
 
+class Version170PromptTests(unittest.TestCase):
+    def data(self, **extra):
+        base = {
+            'description': 'A scholar reviews an ancient manuscript on a wooden desk.',
+            'aspect_ratio': '16:9',
+            'shot_type': 'full_scene',
+            'allowed_text': [{'text': 'CLAIM 01', 'placement': 'upper-left'}],
+        }
+        base.update(extra)
+        return base
+
+    def test_170_cliche_and_laziness_rejection_flow_laziness_violation(self):
+        cliches = [
+            'funnel',
+            'gears',
+            'gear',
+            'lightbulb',
+            'glowing brain',
+            'exploding brain',
+            'abstract void',
+            'dark charcoal void',
+            'metaphor of',
+            'symbolizing',
+            'puzzle piece',
+            'puzzle pieces',
+            'puzzle blocks',
+            'puzzle',
+            'iceberg',
+            'hamster wheel',
+            'treadmill',
+        ]
+        for term in cliches:
+            # 1. In description
+            data = self.data(description=f'The illustration depicts a {term} in the center.')
+            with self.assertRaises(PromptError) as ctx:
+                compile('NanoBanana2', 'scene', data, '1.7.0')
+            self.assertIn('FLOW_LAZINESS_VIOLATION', str(ctx.exception), f"Failed for {term}")
+
+            # 2. In setting
+            data_setting = self.data(setting=f'A room with a {term} in background.')
+            with self.assertRaises(PromptError) as ctx:
+                compile('NanoBanana2', 'scene', data_setting, '1.7.0')
+            self.assertIn('FLOW_LAZINESS_VIOLATION', str(ctx.exception), f"Failed in setting for {term}")
+
+            # 3. In action
+            data_action = self.data(action=f'A character interacts with a {term}.')
+            with self.assertRaises(PromptError) as ctx:
+                compile('NanoBanana2', 'scene', data_action, '1.7.0')
+            self.assertIn('FLOW_LAZINESS_VIOLATION', str(ctx.exception), f"Failed in action for {term}")
+
+    def test_160_backwards_compatibility_intact(self):
+        # 1.6.0 must continue raising LAZY_VISUAL_ACTION_FORBIDDEN on passive action
+        data = self.data(description='A scholar sits and thinks quietly.')
+        with self.assertRaises(PromptError) as ctx:
+            compile('NanoBanana2', 'scene', data, '1.6.0')
+        self.assertIn('LAZY_VISUAL_ACTION_FORBIDDEN', str(ctx.exception))
+        self.assertNotIn('FLOW_LAZINESS_VIOLATION', str(ctx.exception))
+
+    def test_170_concept_object_mismatch_culinary_props(self):
+        culinary_props = ['salt', 'soup', 'cauldron']
+        cognitive_labels = ['TƯ DUY', 'NGHIÊN CỨU', 'Ý TƯỞNG', 'HỌC VẸT']
+        for prop in culinary_props:
+            for label in cognitive_labels:
+                data = self.data(
+                    description=f'A scholar studies with a bowl of {prop} on the table.',
+                    allowed_text=[{'text': label, 'placement': 'upper-left'}],
+                )
+                with self.assertRaises(PromptError) as ctx:
+                    compile('NanoBanana2', 'scene', data, '1.7.0')
+                self.assertIn('FLOW_CONCEPT_OBJECT_MISMATCH', str(ctx.exception), f"Failed for {prop} + {label}")
+
+    def test_170_allowed_text_uppercase_and_concise_enforcement(self):
+        # Lowercase in allowed_text must be rejected
+        bad_cases = [
+            'Hiểu thật',
+            'tư duy phản biện',
+            'Ghi chép',
+        ]
+        for bad in bad_cases:
+            data = self.data(allowed_text=[bad])
+            with self.assertRaises(PromptError) as ctx:
+                compile('NanoBanana2', 'scene', data, '1.7.0')
+            self.assertIn('FLOW_VISIBLE_TEXT_INVALID', str(ctx.exception))
+
+        # Overly long text (not concise) must be rejected
+        too_long = 'ĐÂY LÀ MỘT ĐOẠN VĂN BẢN QUÁ DÀI ĐỂ LÀM NHÃN CHO HÌNH MINH HỌA'
+        data_long = self.data(allowed_text=[too_long])
+        with self.assertRaises(PromptError) as ctx:
+            compile('NanoBanana2', 'scene', data_long, '1.7.0')
+        self.assertIn('FLOW_VISIBLE_TEXT_INVALID', str(ctx.exception))
+
+        # Compact uppercase labels must pass
+        valid_labels = ['TƯ DUY', 'NGHIÊN CỨU', 'Ý TƯỞNG', 'CLAIM 01', 'ĐỌC SÂU']
+        data_valid = self.data(allowed_text=valid_labels)
+        res = compile('NanoBanana2', 'scene', data_valid, '1.7.0')
+        self.assertIn('TƯ DUY', res['prompt'])
+
+    def test_170_allowed_text_height_constraint(self):
+        # Label height >= 5% must be rejected
+        bad_data = self.data(allowed_text=[{'text': 'TƯ DUY', 'height': 0.08}])
+        with self.assertRaises(PromptError) as ctx:
+            compile('NanoBanana2', 'scene', bad_data, '1.7.0')
+        self.assertIn('FLOW_VISIBLE_TEXT_INVALID', str(ctx.exception))
+        self.assertIn('exceeds compact proportion', str(ctx.exception))
+
+        # Label height < 5% passes
+        good_data = self.data(allowed_text=[{'text': 'TƯ DUY', 'height': 0.04}])
+        res = compile('NanoBanana2', 'scene', good_data, '1.7.0')
+        self.assertIn('TƯ DUY', res['prompt'])
+
+    def test_170_negative_clearance_directives_in_prompt(self):
+        data = self.data()
+        res = compile('NanoBanana2', 'scene', data, '1.7.0')
+        prompt = res['prompt']
+        self.assertIn('Explicit negative clearance directive', prompt)
+        self.assertIn('strictly forbid white-on-black YouTube subtitle boxes', prompt)
+        self.assertIn('letterbox bars', prompt)
+        self.assertIn('browser player controls', prompt)
+        self.assertIn('Label constraint', prompt)
+        self.assertIn('< 5% frame height', prompt)
+
+    def test_170_explainer_contract_clearance_and_labels(self):
+        from explainer_contract import validate_clearance_and_labels
+
+        # Caption clearance violation
+        content_bad_clearance = {
+            'scenes': [{'images': [{'id': 'SC01_IMG01', 'caption_clearance': {'edge': 'bottom', 'fraction': 0.18}}]}]
+        }
+        errs = validate_clearance_and_labels(content_bad_clearance)
+        self.assertTrue(any('CLEARANCE_VIOLATION' in e for e in errs))
+
+        # Subtitle box mention violation
+        content_bad_sub = {
+            'scenes': [{'images': [{'id': 'SC01_IMG01', 'description': 'Draw a white-on-black subtitle box at bottom.'}]}]
+        }
+        errs = validate_clearance_and_labels(content_bad_sub)
+        self.assertTrue(any('CLEARANCE_VIOLATION' in e for e in errs))
+
+        # Lowercase label violation
+        content_bad_label = {
+            'scenes': [{'images': [{'id': 'SC01_IMG01', 'visible_text': ['hiểu thật']}]}]
+        }
+        errs = validate_clearance_and_labels(content_bad_label)
+        self.assertTrue(any('LABEL_NOT_UPPERCASE' in e for e in errs))
+
+        # Height violation
+        content_bad_height = {
+            'scenes': [{'images': [{'id': 'SC01_IMG01', 'visible_text': [{'text': 'HIỂU THẬT', 'height': 0.1}]}]}]
+        }
+        errs = validate_clearance_and_labels(content_bad_height)
+        self.assertTrue(any('LABEL_HEIGHT_EXCEEDED' in e for e in errs))
+
+
+

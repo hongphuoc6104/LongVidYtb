@@ -14,11 +14,7 @@ from __future__ import annotations
 import atexit
 import logging
 import math
-import os
-import signal
-import sys
-from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 logger = logging.getLogger("flow_cdp.lifecycle")
 
@@ -111,6 +107,87 @@ def get_workload_tier_info(num_images: int) -> dict[str, Any]:
     }
 
 
+RAMPUP_BATCH_TIERS = [
+    {
+        "batch_num": 1,
+        "count": 10,
+        "workers": 4,
+        "rounds": 3,
+        "timeout_seconds": 120.0,
+        "expected_range_s": (75.0, 90.0),
+    },
+    {
+        "batch_num": 2,
+        "count": 30,
+        "workers": 6,
+        "rounds": 5,
+        "timeout_seconds": 210.0,
+        "expected_range_s": (150.0, 165.0),
+    },
+    {
+        "batch_num": 3,
+        "count": 60,
+        "workers": 9,
+        "rounds": 7,
+        "timeout_seconds": 300.0,
+        "expected_range_s": (210.0, 230.0),
+    },
+    {
+        "batch_num": 4,
+        "count": 90,
+        "workers": 11,
+        "rounds": 9,
+        "timeout_seconds": 390.0,
+        "expected_range_s": (270.0, 300.0),
+    },
+    {
+        "batch_num": 5,
+        "count": 110,
+        "workers": 12,
+        "rounds": 10,
+        "timeout_seconds": 480.0,
+        "expected_range_s": (300.0, 330.0),
+    },
+]
+
+
+def calculate_rampup_workers(num_images: int, max_cap: int = 12, min_cap: int = 1) -> int:
+    """Calculate calibrated worker count for strict ~30s/round SLA compliance across 5 ramp-up tiers.
+
+    - <= 10 images (Batch 1):  4 workers (3 rounds, ~75-90s < 120s timeout)
+    - <= 30 images (Batch 2):  6 workers (5 rounds, ~150-165s < 210s timeout)
+    - <= 60 images (Batch 3):  9 workers (7 rounds, ~210-230s < 300s timeout)
+    - <= 90 images (Batch 4): 11 workers (9 rounds, ~270-300s < 390s timeout)
+    - >  90 images (Batch 5): 12 workers (10 rounds, ~300-330s < 480s timeout)
+    """
+    if num_images <= 0:
+        return min_cap
+    if num_images <= 10:
+        target = 4
+    elif num_images <= 30:
+        target = 6
+    elif num_images <= 60:
+        target = 9
+    elif num_images <= 90:
+        target = 11
+    else:
+        target = 12
+    return max(min_cap, min(max_cap, target))
+
+
+def calculate_rampup_timeout(num_images: int) -> float:
+    """Return hard watchdog timeout (seconds) for the 5-tier ramp-up schedule."""
+    if num_images <= 10:
+        return 120.0
+    if num_images <= 30:
+        return 210.0
+    if num_images <= 60:
+        return 300.0
+    if num_images <= 90:
+        return 390.0
+    return 480.0
+
+
 _ACTIVE_LIFECYCLE: ProfileLifecycleManager | None = None
 
 
@@ -156,7 +233,12 @@ class ProfileLifecycleManager:
             if self.accounts.is_port_listening(port):
                 self.pre_existing_ports.add(port)
 
-    def launch_profile(self, profile_cfg: dict[str, Any], url: str = "https://flow.google.com/") -> bool:
+    def launch_profile(
+        self,
+        profile_cfg: dict[str, Any],
+        url: str = "https://flow.google.com/",
+        headless: bool = True,
+    ) -> bool:
         """Launch a profile if not running, and track it if newly spawned."""
         port = int(profile_cfg.get("port") or profile_cfg.get("cdp_port", 0))
         if port == 0:
@@ -171,7 +253,7 @@ class ProfileLifecycleManager:
             "user_data_dir": profile_cfg["user_data_dir"],
             "directory": profile_cfg.get("directory") or profile_cfg.get("profile_dir", "Default"),
         }
-        ok = self.accounts.launch_profile(entry, url=url)
+        ok = self.accounts.launch_profile(entry, url=url, headless=headless)
         if ok:
             self.spawned_ports.add(port)
             logger.info("Lifecycle: Spawned new Chrome instance on port %d", port)
@@ -199,7 +281,17 @@ class ProfileLifecycleManager:
             except Exception as e:
                 logger.warning("Error stopping profile on port %d: %s", port, e)
 
+        try:
+            from .process_manager import get_process_manager
+            get_process_manager().clean_orphans_from_registry()
+        except Exception:
+            pass
+
         return closed_ports
+
+    def stop_all_profiles(self) -> list[int]:
+        """Terminate all active profiles managed by this lifecycle or process manager."""
+        return self.teardown(force_all=True)
 
     def _atexit_handler(self) -> None:
         """Hook called when Python process terminates."""
@@ -217,4 +309,10 @@ class ProfileLifecycleManager:
         _ACTIVE_LIFECYCLE = self._prev_active
         if self.auto_teardown:
             self.teardown(force_all=self.force_teardown_all)
+
+
+def stop_all_profiles(force_all: bool = True) -> list[int]:
+    """Terminate all running Flow Chrome instances and reap orphan processes."""
+    from .process_manager import get_process_manager
+    return get_process_manager().terminate_all()
 
