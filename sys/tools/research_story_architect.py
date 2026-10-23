@@ -78,8 +78,106 @@ _SELF_ANSWERING_TITLE_RE = re.compile(
     re.IGNORECASE,
 )
 
+# AI-slop thumbnail visual clichés (generic stock AI imagery that kills CTR)
+_THUMBNAIL_AI_SLOP_RE = re.compile(
+    r"\b(?:neon\s+brain|exploding\s+brain|glowing\s+galaxy\s+brain|binary\s+code\s+rain|matrix\s+0101|"
+    r"cyborg\s+hand|robot\s+shaking\s+hands|generic\s+gear\s+head|floating\s+hologram\s+screen|"
+    r"não\s+phát\s+sáng\s+neon|não\s+nổ\s+tung|mưa\s+mã\s+nhị\s+phân)\b",
+    re.IGNORECASE,
+)
+
+# 8-Stage Invisible Narrative Arc for YouTube Explainer Storytelling
+NARRATIVE_ARC_8_STAGES: Tuple[str, ...] = (
+    "hook",              # 1. Mở bài (Truth-Slap / Đời thực)
+    "lead_in",           # 2. Phần dẫn (Neo cảm xúc & Bối cảnh)
+    "problem",           # 3. Phần vấn đề (Mâu thuẫn nhận thức)
+    "causal_mechanism",  # 4. Phần nhân quả (Cơ chế gốc rễ)
+    "explanation",       # 5. Phần giải thích (Mô hình hóa trực quan)
+    "counter_argument",  # 6. Phần phản biện (Lật ngược giả định / Giới hạn)
+    "takeaway",          # 7. Phần nội dung rút ra (Đúc kết nguyên lý)
+    "closing",           # 8. Phần kết bài (Khép vòng lặp mở bài)
+)
+
+MAX_CONSECUTIVE_VARIATION_BEATS = 2
+
 
 from scripts.camera_motion import assign_scene_camera_effects, select_semantic_camera_effect  # noqa: F401
+
+
+def infer_editorial_section(index: int, total: int, title: str = "", narration: str = "") -> str:
+    """Infer the 8-part editorial narrative stage from scene position and semantic cues."""
+    combined = f"{title} {narration}".casefold()
+    if index <= 1:
+        return "hook"
+    if index == total and total >= 3:
+        return "closing"
+    if re.search(r"\b(?:phản biện|ngược lại|tuy nhiên|nhưng nếu nhìn kỹ|giới hạn|ngoại lệ|mặt trái)\b", combined):
+        if index >= max(3, (total * 3) // 5):
+            return "counter_argument"
+    if re.search(r"\b(?:rút ra|nguyên lý|quy tắc|bài học|cốt lõi nằm ở|ma trận|khung tư duy)\b", combined):
+        if index >= max(3, (total * 3) // 5):
+            return "takeaway"
+
+    if total <= 0:
+        return "explanation"
+    if total == len(NARRATIVE_ARC_8_STAGES):
+        return NARRATIVE_ARC_8_STAGES[max(0, min(len(NARRATIVE_ARC_8_STAGES) - 1, index - 1))]
+    stage_idx = min(
+        len(NARRATIVE_ARC_8_STAGES) - 1,
+        max(0, int(((index - 1) * len(NARRATIVE_ARC_8_STAGES)) / max(1, total))),
+    )
+    return NARRATIVE_ARC_8_STAGES[stage_idx]
+
+
+def split_long_sentence_into_beat_clauses(sentence: str, max_words: int = 14) -> List[str]:
+    """Split a long spoken sentence into 2 natural visual beat clauses at punctuation or discourse Pivot markers
+    so visuals never freeze on a single frame for > 4 seconds.
+    """
+    cleaned = sentence.strip()
+    words = cleaned.split()
+    if len(words) <= max_words:
+        return [cleaned]
+
+    # Try splitting on natural internal punctuation or Vietnamese discourse pivots near the middle
+    pivot_re = re.compile(
+        r"(?:[,;–—]\s+|\s+(?:nhưng|mà|để rồi|trong khi|thay vì|khiến cho|dẫn đến|bởi vì|nhờ đó|ngược lại)\s+)",
+        re.IGNORECASE,
+    )
+    mid_char = len(cleaned) // 2
+    best_split: Optional[Tuple[int, str, str]] = None
+    for m in pivot_re.finditer(cleaned):
+        left = cleaned[: m.start()].strip()
+        right = cleaned[m.start() :].lstrip(",;–— ").strip()
+        if len(left.split()) >= 4 and len(right.split()) >= 4:
+            dist = abs(m.start() - mid_char)
+            if best_split is None or dist < best_split[0]:
+                best_split = (dist, left, right)
+    if best_split is not None:
+        return [best_split[1], best_split[2]]
+    return [cleaned]
+
+
+def build_thumbnail_poster_prompt(
+    visual_hook: str,
+    text_overlay: str,
+    contrast_pair: str = "",
+    style_tone: str = "Warm editorial 2D hand-drawn illustration on textured cream paper (#F5F2EB) with bold charcoal ink",
+) -> str:
+    """Compile an Integrated Poster Thumbnail Prompt where 1 iconic visual metaphor occupies 60% of the frame
+    and bold golden-yellow typography (#FACC15) with thick charcoal outline is natively integrated in 40% clean negative space.
+    """
+    hook_clean = visual_hook.strip().rstrip(".")
+    overlay_clean = text_overlay.strip().upper()
+    contrast_note = f" Visual contrast tension: {contrast_pair.strip().rstrip('.')}." if contrast_pair.strip() else ""
+    return (
+        f"YouTube 16:9 high-CTR integrated poster thumbnail. {style_tone}. "
+        f"Rule of thirds composition: 60% of the frame features ONE striking focal metaphor ({hook_clean}), "
+        f"leaving 40% clean uncluttered negative space.{contrast_note} "
+        f"Natively integrated into the negative space is giant, bold, hand-crafted uppercase poster typography "
+        f"reading \"{overlay_clean}\" in vibrant golden-yellow (#FACC15) with a heavy charcoal-black ink outline "
+        f"and subtle warm drop shadow, matching the exact brush texture and lighting of the artwork. "
+        f"No cheap rectangular text boxes, no cluttered tiny details, maximum 2 focal elements."
+    )
 
 
 def check_conversational_spoken_facts(
@@ -137,12 +235,17 @@ def check_packaging_and_localization(
                 f"YOUTUBE_TITLE_SELF_ANSWERING: youtube_title answers its own question instead of creating a Curiosity Gap: '{yt_title}'"
             )
 
-    # 3. Thumbnail Spec validation (visual_hook + 2-4 uppercase word text_overlay)
+    # 3. Thumbnail Spec validation (visual_hook + 2-4 uppercase word text_overlay + anti-AI-slop check)
     if isinstance(thumb, dict) and thumb:
         vis_hook = str(thumb.get("visual_hook") or "").strip()
         overlay = str(thumb.get("text_overlay") or "").strip()
+        thumb_prompt = str(thumb.get("thumbnail_prompt") or "").strip()
         if not vis_hook:
             warnings.append("THUMBNAIL_MISSING_VISUAL_HOOK: thumbnail_spec.visual_hook must not be empty")
+        elif _THUMBNAIL_AI_SLOP_RE.search(vis_hook) or _THUMBNAIL_AI_SLOP_RE.search(thumb_prompt):
+            warnings.append(
+                f"THUMBNAIL_AI_SLOP_CLICHE: thumbnail_spec contains generic AI cliché (neon brain/matrix/cyborg): '{vis_hook}'"
+            )
         if overlay:
             overlay_words = [w for w in re.split(r"\s+", overlay) if w]
             if not (2 <= len(overlay_words) <= 5):
@@ -202,15 +305,35 @@ class PackagingSpec:
     channel_pillar: str = DEFAULT_CHANNEL_PILLAR
     funnel_tier: str = "tier_1_broad"
     seo_keywords: List[str] = field(default_factory=list)
+    thumbnail_prompt: Optional[str] = None
+    layout_mode: Optional[str] = None
+    typography_style: Optional[str] = None
+
+    def compile_poster_prompt(self) -> str:
+        """Return explicit thumbnail_prompt or compile an integrated poster prompt with large yellow typography."""
+        if self.thumbnail_prompt:
+            return self.thumbnail_prompt
+        return build_thumbnail_poster_prompt(
+            visual_hook=self.visual_hook,
+            text_overlay=self.text_overlay,
+            contrast_pair=self.contrast_pair,
+        )
 
     def to_dict(self) -> Dict[str, Any]:
+        thumb_dict: Dict[str, Any] = {
+            "visual_hook": self.visual_hook,
+            "text_overlay": self.text_overlay,
+            "contrast_pair": self.contrast_pair,
+        }
+        if self.thumbnail_prompt is not None:
+            thumb_dict["thumbnail_prompt"] = self.thumbnail_prompt
+        if self.layout_mode is not None:
+            thumb_dict["layout_mode"] = self.layout_mode
+        if self.typography_style is not None:
+            thumb_dict["typography_style"] = self.typography_style
         return {
             "youtube_title": self.youtube_title,
-            "thumbnail_spec": {
-                "visual_hook": self.visual_hook,
-                "text_overlay": self.text_overlay,
-                "contrast_pair": self.contrast_pair,
-            },
+            "thumbnail_spec": thumb_dict,
             "channel_pillar": self.channel_pillar,
             "funnel_tier": self.funnel_tier,
             "seo_keywords": list(self.seo_keywords),
@@ -613,7 +736,7 @@ def _phrase_anchors(text: str, count: int) -> List[Tuple[str, int]]:
 
 
 def _default_full_frame_beats(scene: ResearchedScene, elapsed: float) -> List[ResearchedVisualBeat]:
-    """Create full-frame beats from scene briefs using opening/body hold targets."""
+    """Create full-frame beats from scene briefs using opening/body hold targets and a max-2 variation streak cap."""
     opening_seconds = max(0.0, min(scene.duration, 15.0 - elapsed))
     body_seconds = max(0.0, scene.duration - opening_seconds)
     count = max(1, math.ceil(opening_seconds / 1.5) + math.ceil(body_seconds / 2.5))
@@ -623,13 +746,21 @@ def _default_full_frame_beats(scene: ResearchedScene, elapsed: float) -> List[Re
         vi_anchors = vi_anchors[:len(en_anchors)]
     base_description = scene.scene_description or compose_full_frame_description(scene.setting, scene.action)
     beats = []
+    variation_streak = 0
     for index, (quote, occurrence) in enumerate(vi_anchors):
         image_id = f"{scene.scene_id}_I{index + 1}"
         focus_kind = (
             "punch_in" if re.search(r"\d|\b(giờ|phút|lần|tầng|số|năm)\b", quote, re.I)
             else "cut"
         )
-        variation = index > 0
+        # Cap consecutive variations at MAX_CONSECUTIVE_VARIATION_BEATS (2) to prevent static room boredom
+        is_variation = index > 0 and variation_streak < MAX_CONSECUTIVE_VARIATION_BEATS
+        if is_variation:
+            variation_streak += 1
+            shot_type = "variation"
+        else:
+            variation_streak = 0
+            shot_type = "full_scene" if index == 0 else "macro_prop"
         description = (
             f"{base_description} Visual focus: {quote}. "
             "Keep the character and props physically integrated in the complete scene; do not render the phrase as lettering."
@@ -643,16 +774,20 @@ def _default_full_frame_beats(scene: ResearchedScene, elapsed: float) -> List[Re
             anchor_occurrence_en=en_anchors[index][1] if en_anchors else 1,
             reason="Full-frame visual beat tied to a concrete narration phrase.",
             character_ids=list(scene.character_ids),
-            effect=focus_kind if not variation else ("cut" if focus_kind == "punch_in" else "fade"),
-            based_on=f"{scene.scene_id}_I{index}" if variation else None,
+            effect=focus_kind if not is_variation else ("cut" if focus_kind == "punch_in" else "fade"),
+            based_on=f"{scene.scene_id}_I{index}" if is_variation else None,
             preserve=(
                 f"Keep the same setting ({scene.setting}), character design, and surrounding props."
-                if variation else ""
+                if is_variation else ""
             ),
             change=(
                 f"Shift the full-frame emphasis to this next narrated action or object: {quote}."
-                if variation else "Establish the complete scene and its opening action."
+                if is_variation else (
+                    "Establish the complete scene and its opening action."
+                    if index == 0 else f"Cut to a fresh focal angle emphasizing: {quote}."
+                )
             ),
+            shot_type=shot_type,
         ))
     return beats
 
@@ -963,6 +1098,7 @@ def build_scenes_from_story_rows(
         beats: List[ResearchedBeat] = []
         base_id: Optional[str] = None
         seen_quotes: Dict[str, int] = {}
+        variation_streak = 0
         for beat_idx, (sentence, spec) in enumerate(rows, 1):
             raw_shot, _, action_desc = spec.partition("|")
             raw_shot = raw_shot.strip()
@@ -983,6 +1119,16 @@ def build_scenes_from_story_rows(
                 explicit_chars = []
                 has_explicit_chars = False
 
+            # Cap consecutive variations at MAX_CONSECUTIVE_VARIATION_BEATS (2)
+            if shot_type == "variation":
+                if variation_streak >= MAX_CONSECUTIVE_VARIATION_BEATS:
+                    shot_type = "full_scene"
+                    variation_streak = 0
+                else:
+                    variation_streak += 1
+            else:
+                variation_streak = 0
+
             image_id = f"{scene_id}_I{beat_idx}"
             quote = sentence.strip()
 
@@ -1001,7 +1147,7 @@ def build_scenes_from_story_rows(
                 raise ValueError(f"LAZY_VISUAL_ACTION_FORBIDDEN in {image_id} visual action: contains banned {name} ({token!r})")
 
             seen_quotes[quote] = seen_quotes.get(quote, 0) + 1
-            if shot_type == "full_scene" and base_id is None:
+            if shot_type == "full_scene":
                 base_id = image_id
             based_on = (base_id or f"{scene_id}_I{max(1, beat_idx - 1)}") if shot_type == "variation" else None
 
@@ -1068,6 +1214,7 @@ def build_scenes_from_story_rows(
         syl = count_syllables(narration, lang="vi")
         duration = round(pause_sec + (syl / nominal_rate) + p_tail, 2)
         tone = scene_tone or _infer_scene_tone(index, total, title, narration)
+        resolved_phase = scene_phase or infer_editorial_section(index, total, title, narration)
         first_action = rows[0][1].partition("|")[2].strip() if rows else title
         built_scenes.append(ResearchedScene(
             scene_id=scene_id,
@@ -1083,7 +1230,7 @@ def build_scenes_from_story_rows(
             camera="Semantic full-frame sequence",
             visual_beats=beats,
             tone=tone,
-            narrative_phase=scene_phase,
+            narrative_phase=resolved_phase,
         ))
     return built_scenes
 
@@ -1264,6 +1411,8 @@ def build_content_v3(
                     image['description'] + ' ' + sc.camera,
                     previous_effect,
                     beat_index=idx,
+                    shot_type=image.get("shot_type"),
+                    narrative_phase=getattr(sc, "narrative_phase", None),
                 )
             previous_effect = beat['effect']
 

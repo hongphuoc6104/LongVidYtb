@@ -31,24 +31,36 @@ Bộ kỹ năng này được thiết kế để **tự động hóa 100% phần
 - Mọi dữ kiện trong `sources[].facts` và `required_points` phải là câu văn nói tự nhiên $\le 20$ âm tiết (ngưỡng cứng $22$), không chứa `DOI`, `ISBN`, `et al.`, `%`, `/` (`check_conversational_spoken_facts()`).
 - **Việt hóa 60 giây đầu:** Mở màn bằng bối cảnh sát sườn với người học tại Việt Nam (bàn học đêm khuya, bút dạ quang vàng, giảng đường, phòng bảo vệ khóa luận). Chi tiết: [Fact Mining Guide](references/fact-mining-guide.md).
 
-### Bước 2: Đóng Gói CTR (`Packaging & SEO Contract`)
+### Bước 2: Đóng Gói CTR (`Packaging & SEO Contract` — Chống Thumbnail Kiểu Dán Đè AI)
 - Tách biệt `topic` nội bộ khỏi bộ trường `packaging`:
   1. `youtube_title`: $\le 55$ ký tự, tạo *Curiosity Gap*, không tự trả lời trong tiêu đề.
-  2. `thumbnail_spec`: `visual_hook` + `text_overlay` đúng **2–4 từ in hoa**.
+  2. `thumbnail_spec`:
+     - `visual_hook` + `text_overlay` đúng **2–4 từ in hoa** đánh trúng nghịch lý tâm lý.
+     - **Integrated Poster Thumbnail Prompt (`thumbnail_prompt` / `build_thumbnail_poster_prompt()`):** Tuyệt đối không dùng lại ảnh `SC01` rồi dán đè một chiếc thẻ HTML rẻ tiền, và nghiêm cấm các sáo rỗng AI (`neon brain`, `matrix 0101`, `cyborg hand`). Thumbnail phải được thiết kế như **1 poster thống nhất**: **60% khung hình** là **1 ẩn dụ thị giác duy nhất** cực kỳ sắc nét; **40% khung hình** là khoảng trống sạch (*negative space*) nơi **dòng chữ vàng đậm cỡ đại (`#FACC15`) viền đen dày** được vẽ/thiết kế hòa quyện cùng một tone màu và ánh sáng với bức tranh.
   3. `channel_pillar` & `funnel_tier`: Khóa cố định ngách Tư Duy Nhận Thức & Phương Pháp Luận (`tier_1_broad` / `tier_2_mid` / `tier_3_conversion`).
 
-### Bước 3: Soạn Kịch Bản Theo Cặp `(Câu Thoại, Hành Động Hình Ảnh)` — Không Đoán Tọa Độ
+### Bước 3: Kiến Trúc Mạch Truyện 8 Phần Ngầm & Cặp `(Nhịp Thoại, Hành Động Hình Ảnh)`
+- **Cấu trúc Kịch bản 8 Phần Ngầm (`NARRATIVE_ARC_8_STAGES`):** Mọi video giải thích cần dẫn dắt người xem đi qua 8 chặng nhận thức rõ ràng (nhưng chuyển ý tự nhiên, tuyệt đối không hô khẩu hiệu *"Phần 1 là..."*):
+  1. `hook` (**Mở bài**): Cú tát sự thật $\le 18$ âm tiết + tình huống đời thực sát sườn.
+  2. `lead_in` (**Phần dẫn**): Neo cảm xúc và bối cảnh khiến người xem thấy chính mình trong đó.
+  3. `problem` (**Phần vấn đề**): Lật tẩy mâu thuẫn nhận thức — vì sao cách hiểu thông thường lại sai hoặc thất bại.
+  4. `causal_mechanism` (**Phần nhân quả**): Giải phẫu cơ chế gốc rễ (`A dẫn đến B vì quy luật C`).
+  5. `explanation` (**Phần giải thích**): Mô hình hóa trực quan bằng sơ đồ nhân quả hoặc thí nghiệm đối chứng.
+  6. `counter_argument` (**Phần phản biện**): Lật ngược giả định, chỉ ra giới hạn hoặc bẫy ngụy biện để tăng chiều sâu trí tuệ.
+  7. `takeaway` (**Phần nội dung rút ra**): Đúc kết nguyên lý/khung tư duy sắc bén có thể áp dụng ngay.
+  8. `closing` (**Phần kết bài**): Khép vòng lặp với cảnh mở đầu và để lại dư âm sâu sắc.
 - Thay vì tự tính thời lượng, tự cắt `anchor_quote` hoặc tự đoán tọa độ `focus: {x, y}`, hãy sử dụng hàm **`build_scenes_from_story_rows()`** trong `sys/tools/research_story_architect.py` (hoặc cấu trúc `STORY` trong `sys/tools/build_full_frame_acceptance.py`):
-  - Mỗi dòng là một cặp `(câu_thoại_tiếng_Việt, "shot_type|mô_tả_hình_ảnh_toàn_khung")`.
-  - Chọn `shot_type` trong 7 loại chuẩn: `full_scene`, `variation`, `macro_prop`, `white_card`, `white_isolated`, `still_life` (cận cảnh vật thể/tài liệu không có nhân vật hay bàn tay), và `environment` (cảnh rộng kiến trúc/thiên nhiên không có người).
+  - Mỗi dòng là một cặp `(câu_hoặc_mệnh_đề_thoại_tiếng_Việt, "shot_type|mô_tả_hình_ảnh_toàn_khung")`. Với câu dài $> 14$ chữ có bước ngoặt ý, dùng `split_long_sentence_into_beat_clauses()` để tách thành 2 nhịp hình tự nhiên.
+  - Chọn `shot_type` trong các loại chuẩn: `full_scene`, `variation`, `macro_prop`, `visual_diagram`, `concept_metaphor`, `cutaway_detail`, `white_card`, `white_isolated`, `still_life`, và `environment`.
+  - **Trần tối đa 2 nhịp `variation` (`based_on`) liên tiếp (`MAX_CONSECUTIVE_VARIATION_BEATS = 2`):** Sau tối đa 2 nhịp `variation` giữ nguyên phòng, bắt buộc cắt sang góc máy mới (`macro_prop`, `visual_diagram`, `cutaway_detail`, hoặc `full_scene` góc mới) để tránh đứng hình nhàm chán và tránh lỗi biến dạng nét vẽ AI.
   - **Quy chuẩn Bối cảnh (Setting Brevity):** Chuỗi `setting` bắt buộc $\le 8$ từ, chỉ mô tả không gian vật lý và điều kiện ánh sáng (ví dụ: `"A student desk under green lamp light."`), tuyệt đối không liệt kê đồ vật, đạo cụ, bàn ghế trong `setting`.
   - **Khoảng thở Thị giác (Visual Breathing Room):** Để chống mệt mỏi nhận thức, trong mỗi cửa sổ 10 nhịp hình trượt (10-beat sliding window), bắt buộc có ít nhất 3 nhịp hình không có nhân vật ($\ge 30\%$ rest frames: `still_life`, `environment`, hoặc `white_card` thuần biểu tượng), và không bao giờ xuất hiện quá 4 nhịp nhân vật liên tiếp.
   - Code Python trong `build_content_v3()` sẽ **tự động**:
     - Ghép câu, tính thời lượng chuẩn và trích xuất `anchor_quote` chính xác 100%.
     - Khớp câu `coverage[].quote` với `required_points` theo độ chồng lấp từ vựng cao nhất (`_select_best_coverage_quote()`) thay vì lấy mù quáng câu đầu tiên.
-    - Nối `based_on` + `Expression lock` qua `apply_room_continuity()` cho các cảnh cùng phòng (và tôn trọng `allow_expression_shift: true` khi cần đổi biểu cảm).
-    - Chọn chuyển động camera ngữ nghĩa 4 hướng không lặp qua `select_semantic_camera_effect()` (`entropy >= 1.5` bits).
-    - Khóa tâm `focus` trong vùng an toàn trung tâm (`0.35..0.65`), gắn `narrative_phase` (`lived_friction`, `empirical_conflict`, `structural_model`, `actionable_resolution`) và điều biến giọng `tone` động qua `_infer_scene_tone()`.
+    - Nối `based_on` + `Expression lock` qua `apply_room_continuity()` (tự động ngắt chuỗi ở nhịp thứ 3 để không vượt quá 2 `variation` liên tiếp).
+    - Chọn chuyển động camera có chủ đích theo từng chặng và loại khung hình qua `select_semantic_camera_effect()` (`hold` cho sơ đồ/`white_card`, `punch_in` cho cú lật/hook, `pan_right` cho chuỗi nhân quả, `zoom_out` cho đúc kết; không bao giờ xoay vòng máy móc `% 4`).
+    - Khóa tâm `focus` trong vùng an toàn trung tâm (`0.35..0.65`), gắn `narrative_phase` theo 8 chặng (`infer_editorial_section()`) và điều biến giọng `tone` động qua `_infer_scene_tone()`.
     - Kiểm định tự động `diversity_report` (`lint_script`) trong `write_production_package()`.
 - Chi tiết: [Conversational Structuring](references/conversational-structuring.md) và [Pipeline Blueprint Spec](references/pipeline-blueprint-spec.md).
 

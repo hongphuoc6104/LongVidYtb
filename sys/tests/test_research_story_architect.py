@@ -497,6 +497,82 @@ class TestResearchStoryArchitect(unittest.TestCase):
             assert report["passed"] is True
             assert len(report["errors"]) == 0
 
+    def test_anti_ai_slop_narrative_arc_thumbnail_and_pacing(self):
+        """Verify 8-stage narrative arc inference, integrated poster thumbnail prompt, and max-2 variation streak."""
+        from research_story_architect import (
+            NARRATIVE_ARC_8_STAGES,
+            PackagingSpec,
+            build_scenes_from_story_rows,
+            build_thumbnail_poster_prompt,
+            infer_editorial_section,
+            split_long_sentence_into_beat_clauses,
+        )
+        from scripts.visual_quality import check_excessive_variation_streak
+
+        # 1. Verify 8-stage narrative arc
+        self.assertEqual(len(NARRATIVE_ARC_8_STAGES), 8)
+        inferred_8 = [infer_editorial_section(i, 8) for i in range(1, 9)]
+        self.assertEqual(inferred_8, list(NARRATIVE_ARC_8_STAGES))
+
+        # 2. Verify Integrated Poster Thumbnail Prompt and AI-slop detection
+        poster_prompt = build_thumbnail_poster_prompt(
+            visual_hook="Cán cân đối nghịch giữa cuốn giáo trình dày và trang giấy trắng",
+            text_overlay="ẢO GIÁC HIỂU BÀI!",
+            contrast_pair="Đọc lại 5 lần vs. Tự truy xuất",
+        )
+        self.assertIn("#FACC15", poster_prompt)
+        self.assertIn("40% clean uncluttered negative space", poster_prompt)
+        self.assertIn("ẢO GIÁC HIỂU BÀI!", poster_prompt)
+
+        pkg = PackagingSpec(
+            youtube_title="Ảo Giác Năng Lực: Vì Sao Đọc Lại Sách Làm Não Tê Liệt?",
+            visual_hook="Cán cân đối nghịch giữa cuốn giáo trình dày và trang giấy trắng",
+            text_overlay="ẢO GIÁC HIỂU BÀI!",
+            thumbnail_prompt=poster_prompt,
+            layout_mode="integrated_poster",
+        )
+        pkg_dict = pkg.to_dict()
+        self.assertEqual(pkg_dict["thumbnail_spec"]["layout_mode"], "integrated_poster")
+        self.assertIn("#FACC15", pkg_dict["thumbnail_spec"]["thumbnail_prompt"])
+
+        slop_warns = check_packaging_and_localization({
+            "youtube_title": "Vì Sao Bạn Hay Quên?",
+            "thumbnail_spec": {
+                "visual_hook": "Glowing neon brain with matrix 0101 binary code rain",
+                "text_overlay": "BÍ MẬT NÃO BỘ",
+            },
+        })
+        self.assertTrue(any("THUMBNAIL_AI_SLOP_CLICHE" in w for w in slop_warns))
+
+        # 3. Verify sub-sentence beat clause splitting
+        clauses = split_long_sentence_into_beat_clauses(
+            "Bạn đọc đi đọc lại cuốn giáo trình suốt bốn tiếng đồng hồ trong đêm, nhưng ngay khi gấp sách lại thì tâm trí hoàn toàn trống rỗng.",
+            max_words=12,
+        )
+        self.assertEqual(len(clauses), 2)
+
+        # 4. Verify max-2 consecutive variation cap in build_scenes_from_story_rows
+        rows_sc = build_scenes_from_story_rows([
+            (
+                "Mở màn",
+                "A quiet study room under warm lamp light.",
+                [
+                    ("Câu mở đầu ngắn gọn.", "full_scene|Nhân vật mở cuốn sổ ghi chú trên bàn."),
+                    ("Câu thứ hai tiếp nối.", "variation|Nhân vật cầm bút gạch chân dòng đầu tiên."),
+                    ("Câu thứ ba đẩy cao trào.", "variation|Nhân vật nhíu mày nhìn trang giấy."),
+                    ("Câu thứ tư đổi góc nhìn.", "variation|Nhân vật đặt bút xuống mặt bàn gỗ."),
+                ],
+            )
+        ], character_id="CH01")
+        shot_types = [b.shot_type for b in rows_sc[0].visual_beats]
+        self.assertEqual(shot_types, ["full_scene", "variation", "variation", "full_scene"])
+        self.assertEqual(
+            check_excessive_variation_streak([{"id": "SC01", "images": [{"id": b.image_id, "shot_type": b.shot_type, "based_on": b.based_on} for b in rows_sc[0].visual_beats]}]),
+            [],
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
+
 
