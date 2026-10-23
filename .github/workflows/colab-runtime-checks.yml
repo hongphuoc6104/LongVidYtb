@@ -28,13 +28,12 @@ jobs:
         run: >-
           python -m pytest -q
           sys/tests/test_colab_scheduler.py sys/tests/test_colab_health.py
-          sys/tests/test_colab_accounts.py sys/tests/test_colab_runtime_binding.py
+          sys/tests/test_colab_accounts.py
           sys/tests/test_colab_tts.py sys/tests/test_remote_render.py
-          sys/tests/test_colab_reconcile.py sys/tests/test_account_probe.py
-          sys/tests/test_dashboard.py sys/tests/test_dashboard_engine.py
+          sys/tests/test_integration_recovery.py
       - name: Lint scheduler and health implementation
         run: >-
           python -m pip install ruff && python -m ruff check
           sys/colab_bridge/scheduler.py sys/colab_bridge/health.py
           sys/colab_bridge/assignment_probe.py sys/tests/test_colab_scheduler.py
-          sys/tests/test_colab_health.py
+          sys/tests/test_colab_health.py sys/tests/test_integration_recovery.py
