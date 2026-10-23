@@ -534,10 +534,10 @@ class SceneCadenceReport:
         max_sentences: int = 5,
         max_syllables: Optional[int] = None,
         max_sentence_syllables: Optional[int] = None,
-        max_clause_syllables: Optional[int] = None,
+        max_clause_syllables: Optional[int] = DEFAULT_MAX_CLAUSE_SYLLABLES,
         is_first: bool = False,
-        forbid_opening_pause: bool = False,
-        max_opening_hook_syllables: Optional[int] = None,
+        forbid_opening_pause: bool = True,
+        max_opening_hook_syllables: Optional[int] = DEFAULT_MAX_OPENING_HOOK_SYLLABLES,
     ):
         self.scene_id = scene_id
         self.duration = duration
@@ -659,7 +659,7 @@ class SceneCadenceReport:
                         f"(exceeds limit of {self.max_sentence_syllables}); split into shorter sentences"
                     )
 
-        if self.max_clause_syllables is not None:
+        if self.max_clause_syllables is not None and self.max_clause_syllables > 0:
             for s_idx, s in enumerate(self.sentences, 1):
                 clauses = re.split(r"[,;—\u2013\u2014]", s)
                 for c_idx, c in enumerate(clauses, 1):
@@ -718,10 +718,10 @@ class ScriptCadenceChecker:
         max_sentences: int = 5,
         max_syllables: Optional[int] = None,
         max_sentence_syllables: Optional[int] = None,
-        max_clause_syllables: Optional[int] = None,
+        max_clause_syllables: Optional[int] = DEFAULT_MAX_CLAUSE_SYLLABLES,
         max_dramatic_pauses: Optional[int] = None,
-        forbid_opening_pause: bool = False,
-        max_opening_hook_syllables: Optional[int] = None,
+        forbid_opening_pause: bool = True,
+        max_opening_hook_syllables: Optional[int] = DEFAULT_MAX_OPENING_HOOK_SYLLABLES,
     ):
         self.nominal_rate = nominal_rate
         self.p_tail_para = p_tail_para
@@ -869,10 +869,10 @@ def main() -> int:
     parser.add_argument("--lang", default="auto", choices=["auto", "vi", "en"], help="Narration language")
     parser.add_argument("--max-syllables", type=int, default=None, help="Maximum syllables per scene (e.g. 36 for concise scenes)")
     parser.add_argument("--max-sentence-syllables", type=int, default=None, help="Maximum syllables per sentence (e.g. 25)")
-    parser.add_argument("--max-clause-syllables", type=int, default=None, help="Maximum syllables per clause without comma (e.g. 18)")
+    parser.add_argument("--max-clause-syllables", type=lambda v: None if str(v).lower() in ("none", "null", "0") else int(v), default=DEFAULT_MAX_CLAUSE_SYLLABLES, help="Maximum syllables per clause without comma (default: 18)")
     parser.add_argument("--max-dramatic-pauses", type=int, default=None, help="Maximum dramatic [pause] markers in entire script (e.g. 4)")
-    parser.add_argument("--forbid-opening-pause", action="store_true", help="Forbid any [pause:...] tag in opening scene SC01 (first 15s)")
-    parser.add_argument("--max-opening-hook-syllables", type=int, default=None, help="Maximum syllables in the first sentence of SC01 (e.g. 18)")
+    parser.add_argument("--forbid-opening-pause", default=True, action=argparse.BooleanOptionalAction, help="Forbid any [pause:...] tag in opening scene SC01 (default: True)")
+    parser.add_argument("--max-opening-hook-syllables", type=int, default=DEFAULT_MAX_OPENING_HOOK_SYLLABLES, help="Maximum syllables in the first sentence of SC01 (default: 18)")
     parser.add_argument("--json", action="store_true", help="Output analysis in JSON format")
     parser.add_argument("--strict", action="store_true", help="Exit with non-zero code if any warning is found")
 

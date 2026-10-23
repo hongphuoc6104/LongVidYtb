@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "applies": true,
+  "checked_cues": 1,
+  "concurrency": 8,
+  "execution_mode": "multi_threaded_batch",
+  "method": "actual requested language/aspect caption styles; two lines; no quality approval",
+  "failures": []
+}

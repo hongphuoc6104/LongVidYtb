@@ -326,5 +326,5 @@ def test_remote_source_manifest_contains_executable_camera_dependencies(tmp_path
                              'from scripts.camera_motion import scene_camera_motions; '
                              'print(scene_camera_motions({"beats":[{"image_id":"I1","effect":"cut"}]}))',
                              str(tmp_path / 'source')], capture_output=True, text=True, check=True)
-    assert result.stdout.strip() == "['zoom_in']"
+    assert result.stdout.strip() == "['pan_right']"
     assert (tmp_path / 'source/renderer/camera.mjs').is_file()

@@ -4,10 +4,11 @@ import shutil
 import subprocess
 import unittest
 
-from pilot import ROOT, read
-from content_contract import validate_content, ContractError, validate_brief
-from output_contract import outputs, languages, voice_settings
+from content_contract import ContractError, validate_brief, validate_content
+from output_contract import languages, outputs, voice_settings
 from scripts.story_plan import estimates
+
+from pilot import ROOT, read
 
 
 class OutputContractTests(unittest.TestCase):
@@ -18,7 +19,7 @@ class OutputContractTests(unittest.TestCase):
             {'aspect_ratio': '9:16', 'language': 'en', 'subtitles': True, 'voice': 'VietNarrator', 'speed': .92}])
         content.update(brief_hash='TEST')
         messages = ['A predator hunts other animals for food.', 'The crocodile waits quietly near the water.', 'Small fish move away when danger comes.', 'The hunter needs food to survive.', 'A hawk can also hunt smaller animals.', 'Which animal is the predator in this story?']
-        for scene, text in zip(content['scenes'], messages):
+        for scene, text in zip(content['scenes'], messages, strict=False):
             scene['narration_en'] = text
             scene['narration'] = text
             for beat in scene['beats']:

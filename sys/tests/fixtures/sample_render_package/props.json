@@ -1,0 +1,36 @@
+{
+  "aspect_ratio": "9:16",
+  "duration": 3.0,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "audioSrc": "narration.wav",
+  "scenes": [
+    {
+      "id": "SC01",
+      "start": 0.0,
+      "end": 3.0,
+      "image": "scene1.png",
+      "title": "Scene 1",
+      "images": [
+        {
+          "src": "scene1.png",
+          "at": 0.0,
+          "shot_type": "full_scene",
+          "effect": "zoom_in"
+        }
+      ]
+    }
+  ],
+  "cues": [
+    {
+      "text": "Thử nghiệm hệ thống render Remotion độc lập.",
+      "start": 0.5,
+      "end": 2.5
+    }
+  ],
+  "thumbnail_spec": {
+    "title": "THỬ NGHIỆM ĐỘC LẬP",
+    "badge": "EPISODE 01"
+  }
+}

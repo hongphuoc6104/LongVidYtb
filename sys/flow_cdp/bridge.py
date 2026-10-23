@@ -224,7 +224,18 @@ def _execute_via_cdp_direct(specs: list[dict[str, Any]], timeout: float = 240.0,
         items = []
         try:
             try:
-                await sess.connect()
+                last_conn_err = None
+                for conn_attempt in range(3):
+                    try:
+                        await sess.connect()
+                        last_conn_err = None
+                        break
+                    except Exception as conn_err:
+                        last_conn_err = conn_err
+                        ensure_chrome_profiles_launched([selected_cfg])
+                        await asyncio.sleep(1.5 * (conn_attempt + 1))
+                if last_conn_err is not None:
+                    raise last_conn_err
                 await sess._wait_for_flow_ready(timeout=15.0)
             except Exception as exc:
                 err = Blocked(str(exc))
@@ -234,9 +245,12 @@ def _execute_via_cdp_direct(specs: list[dict[str, Any]], timeout: float = 240.0,
             if any(spec.get('collectionOnly') for spec in specs):
                 raise _mark_not_submitted(Blocked('FLOW_COLLECTION_REQUIRED: direct generation cannot collect an existing request'))
             if before_submit is not None:
+                live_url = str(await sess.evaluate('location.href') or '')
+                if '/project/' not in live_url and selected_cfg.get('url'):
+                    live_url = selected_cfg['url']
                 before_submit({'status': 'connected', 'identity': {
                     'observedProfile': str(Path(selected_cfg['user_data_dir']).expanduser() / selected_cfg['profile_dir']),
-                    'toolUrl': await sess.evaluate('location.href'),
+                    'toolUrl': live_url,
                 }})
             for spec in specs:
                 start_t = time.time()
@@ -317,9 +331,9 @@ def _execute_via_cdp_direct(specs: list[dict[str, Any]], timeout: float = 240.0,
 def _execute_sub_batch(specs: list[dict[str, Any]], timeout: float = 120.0, sock_path: Path | None = None, before_submit=None, worker: Any = None) -> list[dict[str, Any]]:
     """Submit 1 to 4 requests directly over CDP socket or direct CDP client."""
     target_sock = sock_path if (sock_path is not None and sock_path != get_socket_path()) else None
+    active_sock = target_sock if target_sock is not None else get_socket_path()
     try:
         require_queue_acceptance()
-        connection = ensure_connected(sock_path=target_sock)
         if not 1 <= len(specs) <= 4:
             raise Blocked(f"Flow CDP queue requires 1 to 4 requests per batch, got {len(specs)}")
 
@@ -329,6 +343,10 @@ def _execute_sub_batch(specs: list[dict[str, Any]], timeout: float = 120.0, sock
             if spec.get("baseRefPath") and not spec.get("baseMediaId"):
                 raise Blocked("REFERENCE_MEDIA_ID_REQUIRED: baseRefPath thiếu baseMediaId (thiếu sidecar .json chứa forgeId)")
 
+        if not active_sock.exists():
+            return _execute_via_cdp_direct(specs, timeout=timeout, worker=worker, before_submit=before_submit)
+
+        connection = ensure_connected(sock_path=target_sock)
         folder = SYS_ROOT / "experiments/b2_illustrator/results/controller"
         folder.mkdir(parents=True, exist_ok=True)
         import uuid
@@ -349,7 +367,7 @@ def _execute_sub_batch(specs: list[dict[str, Any]], timeout: float = 120.0, sock
     except Blocked as exc:
         exc_msg = str(exc).lower()
         if getattr(exc, "generation_submitted", None) is False and ("socket not found" in exc_msg or "communication error" in exc_msg):
-            return _execute_via_cdp_direct(specs, timeout=timeout, worker=worker, before_submit=before_submit)
+            return _execute_via_cdp_direct(specs, timeout=timeout, worker=worker, before_submit=None)
         raise
 
 
@@ -439,10 +457,12 @@ def generate_cdp_image(
                     try:
                         owner = json.loads(cand.read_text(encoding="utf-8"))
                         owner_path = owner.get("profile_path", "")
-                        for p in _config().get("flow_cdp_profiles", []):
-                            if p.get("directory") and p.get("directory") in owner_path:
-                                profile_id = p["id"]
-                                break
+                        if owner_path:
+                            owner_resolved = Path(owner_path).expanduser().resolve()
+                            for p in _config().get("flow_cdp_profiles", []):
+                                if (Path(p["user_data_dir"]).expanduser() / p["directory"]).resolve() == owner_resolved:
+                                    profile_id = p["id"]
+                                    break
                     except Exception:
                         pass
                 if profile_id:
@@ -450,7 +470,9 @@ def generate_cdp_image(
 
     try:
         require_queue_acceptance()
-        ensure_connected(sock_path=get_socket_path(profile_id) if profile_id else None)
+        cand_sock = get_socket_path(profile_id) if profile_id else get_socket_path()
+        if cand_sock.exists():
+            ensure_connected(sock_path=cand_sock)
     except Blocked as exc:
         raise _mark_not_submitted(exc)
 

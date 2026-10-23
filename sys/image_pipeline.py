@@ -362,6 +362,8 @@ def _template_request(p, j, target, prompt, corrections, ratio, refs, registrati
             if not original or type(original.get('has_character')) is not bool:
                 raise Blocked('FLOW_ENTITY_POLICY_REQUIRED: author human presence explicitly')
             data['has_character'] = original['has_character']
+    elif registration and pin['version'] == '1.7.0':
+        data['has_character'] = True
     if corrections:
         data.setdefault('change', []).append(corrections)
     if base_image:
@@ -620,11 +622,33 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None, p
         try:
             prior_owner = read(folder / 'owner.json')
             prior_path = prior_owner.get('profile_path', '')
-            cfg_profiles = cfg.get('flow_cdp_profiles', [])
-            for cp in cfg_profiles:
-                if cp.get('directory') and cp.get('directory') in prior_path:
-                    pinned_profile_id = cp['id']
-                    break
+            if prior_path:
+                prior_resolved = Path(prior_path).expanduser().resolve()
+                for cp in cfg.get('flow_cdp_profiles', []):
+                    if (Path(cp['user_data_dir']).expanduser() / cp['directory']).resolve() == prior_resolved:
+                        pinned_profile_id = cp['id']
+                        break
+        except Exception:
+            pass
+    if not pinned_profile_id:
+        try:
+            from session_store import Sessions
+            pin_rec = Sessions(p.root).read().get('pins', {}).get(key)
+            if pin_rec and pin_rec.get('account'):
+                for cp in pool_profiles if 'pool_profiles' in locals() else []:
+                    if cp.get('account') == pin_rec['account']:
+                        pinned_profile_id = cp['id']
+                        break
+                if not pinned_profile_id:
+                    from account_catalog import discover
+                    acc_map = {a['id']: (Path(a['metadata_root']).expanduser() / a['profile']).resolve()
+                               for a in discover(system_root=p.root)['accounts'] if a.get('service') == 'flow'}
+                    pin_path = acc_map.get(pin_rec['account'])
+                    if pin_path:
+                        for cp in cfg.get('flow_cdp_profiles', []):
+                            if (Path(cp['user_data_dir']).expanduser() / cp['directory']).resolve() == pin_path:
+                                pinned_profile_id = cp['id']
+                                break
         except Exception:
             pass
     base_profile_id = None
@@ -644,15 +668,17 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None, p
                         try:
                             b_owner = read(cand)
                             b_pp = b_owner.get('profile_path', '')
-                            for cp in cfg.get('flow_cdp_profiles', []):
-                                if cp.get('directory') and cp.get('directory') in b_pp:
-                                    base_profile_id = cp['id']
-                                    break
+                            if b_pp:
+                                b_resolved = Path(b_pp).expanduser().resolve()
+                                for cp in cfg.get('flow_cdp_profiles', []):
+                                    if (Path(cp['user_data_dir']).expanduser() / cp['directory']).resolve() == b_resolved:
+                                        base_profile_id = cp['id']
+                                        break
                         except Exception:
                             pass
                     if base_profile_id:
                         break
-    target_profile_id = base_profile_id or profile_id or pinned_profile_id
+    target_profile_id = pinned_profile_id or base_profile_id or profile_id
     common = ['--profile', cfg['flow_profile'], '--project', cfg['flow_project'], '--out', str(out)]
     model_arg = 'nano-banana-pro' if 'pro' in cfg['flow_model'].lower() else ('nano-banana-2' if '2' in cfg['flow_model'] else cfg['flow_model'])
     scene = next((x for x in planned_units(p, j) if x['id'] == target), None)
@@ -751,7 +777,9 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None, p
                                      'cannot connect to chrome', 'endpoint ownership unavailable',
                                      'no chrome profile workers available', 'no close frame received or sent',
                                      'cdp_transport_closed', 'connection closed', 'failed to fetch',
-                                     'captcha_failed', 'no_at_token', 'js exception')
+                                     'captcha_failed', 'no_at_token', 'js exception',
+                                     'public_error_unsafe_generation', 'did not receive a valid http response',
+                                     'remote end closed connection')
             err_msg = str(ex).lower()
             not_sub = getattr(ex, 'generation_submitted', None) is False or any(pat in err_msg for pat in pre_submission_errors)
             state = 'generated' if collection_only or getattr(ex, 'collection_only', False) else (
@@ -1028,7 +1056,7 @@ def _produce_internal(p, j, out, c, s):
         rampup_workers = calculate_rampup_workers(total_images)
         rampup_timeout = calculate_rampup_timeout(total_images)
         optimal_workers = calculate_optimal_workers(total_images)
-        concurrency = cfg.get('concurrency', rampup_workers)
+        concurrency = max(cfg.get('concurrency', optimal_workers), optimal_workers)
         single_profile_enforced = bool(cfg.get('flow_single_profile', False))
         from execution import is_job
         from flow_dispatch import job_profiles, validate_dependencies
@@ -1036,6 +1064,14 @@ def _produce_internal(p, j, out, c, s):
         policy = 'single_profile' if single_profile_enforced else 'pool'
         if is_job(p, j):
             policy, pool_profiles = job_profiles(p, j)
+            try:
+                from flow_management import budgets
+                known_aliases = budgets(p, j).read().get('aliases', {})
+                verified_pool = [prof for prof in pool_profiles if prof.get('account') in known_aliases]
+                if verified_pool:
+                    pool_profiles = verified_pool
+            except Exception:
+                pass
         lifecycle = get_current_lifecycle()
         # Launch only eligible candidates under the lifecycle's ownership tracker.
         wanted = min(concurrency, rampup_workers, len(pool_profiles), roots)

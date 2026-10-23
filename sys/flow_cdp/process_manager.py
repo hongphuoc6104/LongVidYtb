@@ -28,7 +28,9 @@ from typing import Any
 
 logger = logging.getLogger("flow_cdp.process_manager")
 
-DEFAULT_REGISTRY_FILE = Path.home() / ".cache/video-pilot/chrome_pids.json"
+import hashlib
+_WORKSPACE_TAG = hashlib.sha256(str(Path(__file__).resolve().parents[2]).encode("utf-8")).hexdigest()[:8]
+DEFAULT_REGISTRY_FILE = Path.home() / f".cache/video-pilot/chrome_pids_{_WORKSPACE_TAG}.json"
 
 
 def detect_chrome_binary() -> str:
@@ -114,7 +116,6 @@ class ProcessGroupManager:
         self.active_processes: dict[int, dict[str, Any]] = {}  # port -> {pid, pgid, user_data_dir, profile_dir, ...}
         self._lock = threading.RLock()
         self._ensure_registry_dir()
-        self.clean_orphans_from_registry()
         if auto_cleanup_on_exit:
             atexit.register(self._atexit_cleanup)
 

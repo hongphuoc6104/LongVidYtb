@@ -248,12 +248,23 @@ class ProfileLifecycleManager:
             # Port was already open
             return True
 
+        target_url = profile_cfg.get("url") or url
+        if target_url == "https://flow.google.com/":
+            try:
+                from .cdp_direct_client import PROFILES
+                prof_id = profile_cfg.get("id") or profile_cfg.get("name")
+                matched = next((p for p in PROFILES if p.get("name") == prof_id or p.get("cdp_port") == port), None)
+                if matched and matched.get("url"):
+                    target_url = matched["url"]
+            except Exception:
+                pass
+
         entry = {
             "port": port,
             "user_data_dir": profile_cfg["user_data_dir"],
             "directory": profile_cfg.get("directory") or profile_cfg.get("profile_dir", "Default"),
         }
-        ok = self.accounts.launch_profile(entry, url=url, headless=headless)
+        ok = self.accounts.launch_profile(entry, url=target_url, headless=headless)
         if ok:
             self.spawned_ports.add(port)
             logger.info("Lifecycle: Spawned new Chrome instance on port %d", port)

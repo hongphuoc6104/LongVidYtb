@@ -18,7 +18,7 @@ FOREIGN_NAMES_MAP: Dict[str, str] = {
     r"\bFeynman\b": "Phây-man",
     r"\bLee\b": "Li",
     r"\bJu/'hoansi\b": "Giu-hoan-si",
-    r"\bJu/'\b": "Giu",
+    r"\bJu/'(?!\w)": "Giu",
     r"\bKalahari\b": "Ka-la-ha-ri",
     r"\bBotswana\b": "Bốt-xoa-na",
     r"\bHadza\b": "Hát-da",
@@ -95,11 +95,30 @@ FOREIGN_NAMES_MAP: Dict[str, str] = {
     r"\bShopee\b": "Sóp-pi",
     r"\bblog\b": "bờ-lốc",
     r"\bweb\b": "gép",
+    r"\bkm/h\b": "ki-lô-mét trên giờ",
+    r"\bkm/giờ\b": "ki-lô-mét trên giờ",
+    r"\bm/s\b": "mét trên giây",
 }
 
 ONES = ["không", "một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín"]
 
 PAUSE_TAG_RE = re.compile(r"\[pause:\s*([0-9.]+)\s*(ms|s)?\s*\]", re.IGNORECASE)
+
+# Canonical syllables and words from FOREIGN_NAMES_MAP transliterations
+# whitelisted to prevent gatekeeper self-rejection of approved loanword phonetics
+CANONICAL_TRANSLITERATION_SYLLABLES: Set[str] = {
+    part.lower()
+    for val in FOREIGN_NAMES_MAP.values()
+    for word in val.split()
+    for part in word.split("-")
+    if part
+}
+
+CANONICAL_TRANSLITERATION_WORDS: Set[str] = {
+    word.lower()
+    for val in FOREIGN_NAMES_MAP.values()
+    for word in val.split()
+}
 
 # Foreign orthography patterns that do not exist in standard Vietnamese words
 FOREIGN_ORTHOGRAPHY_PATTERNS = [
@@ -111,7 +130,7 @@ FOREIGN_ORTHOGRAPHY_PATTERNS = [
 
 
 def num_to_vn_words(n: int) -> str:
-    """Converts an integer from 0 to 999,999,999 into Vietnamese words."""
+    """Converts an integer from 0 to 999,999,999,999 into Vietnamese words."""
     if n < 0:
         return "âm " + num_to_vn_words(-n)
     if n < 10:
@@ -162,23 +181,34 @@ def num_to_vn_words(n: int) -> str:
         if rem == 0:
             return m_str
         return f"{m_str} {num_to_vn_words(rem)}"
-    return str(n)
+    billions = n // 1_000_000_000
+    rem = n % 1_000_000_000
+    b_str = f"{num_to_vn_words(billions)} tỷ"
+    if rem == 0:
+        return b_str
+    return f"{b_str} {num_to_vn_words(rem)}"
 
 
-def normalize_number_token(match: re.Match) -> str:
-    raw = match.group(0)
-    if raw.endswith("%"):
-        val_str = raw[:-1].replace(".", "").replace(",", "")
-        try:
-            return f"{num_to_vn_words(int(val_str))} phần trăm"
-        except ValueError:
-            return raw
-
-    clean_val = raw.replace(".", "")
-    if clean_val.isdigit():
-        n = int(clean_val)
-        return num_to_vn_words(n)
-    return raw
+def normalize_decimal(whole_str: str, frac_str: str) -> str:
+    """Normalizes decimal numbers into standard spoken Vietnamese.
+    - 2.4 / 2,4 -> hai phẩy bốn
+    - 0.5 / 0,5 -> không phẩy năm
+    - 0.05 / 0,05 -> không phẩy không năm
+    - 3.14 / 3,14 -> ba phẩy mười bốn
+    - 3.1415 -> ba phẩy một nghìn bốn trăm mười lăm
+    """
+    whole_text = num_to_vn_words(int(whole_str))
+    zeros = len(frac_str) - len(frac_str.lstrip("0"))
+    rem = frac_str.lstrip("0")
+    if zeros > 0:
+        zero_words = " ".join(["không"] * zeros)
+        if rem:
+            frac_text = f"{zero_words} {num_to_vn_words(int(rem))}"
+        else:
+            frac_text = zero_words
+    else:
+        frac_text = num_to_vn_words(int(frac_str))
+    return f"{whole_text} phẩy {frac_text}"
 
 
 def parse_pause_seconds(raw_val: str, unit: str | None) -> float:
@@ -217,15 +247,42 @@ def split_utterances_by_pause(
     return parts
 
 
-def normalize_for_tts(text: str, extra_map: Dict[str, str] | None = None) -> str:
-    """
-    Normalizes a sentence for flawless Vietnamese TTS pronunciation:
+def normalize_for_tts(
+    text: str,
+    extra_map: Dict[str, str] | None = None,
+    preserve_pauses: bool = False,
+) -> str:
+    """Normalizes a sentence for flawless Vietnamese TTS pronunciation:
     - 100% natural number-to-words conversion
-    - Percentage conversion (81% -> tám mươi mốt phần trăm)
+    - Differentiates English comma thousands (50,000) from comma decimals (2,4)
+    - Normalizes dot-separated decimals (2.4 -> hai phẩy bốn)
+    - Normalizes integer and decimal percentages (81% -> tám mươi mốt phần trăm, 81,5% -> tám mươi mốt phẩy năm phần trăm)
+    - Transliterates slashes / (17 giờ/tuần -> mười bảy giờ trên tuần, 24/7 -> hai mươi tư trên bảy)
     - Foreign names & proper nouns phonetic transliteration
     - Punctuation sanitization for natural breathing pauses
+    - Optional preservation of [pause:Xms] tags for upstream pause planners
     """
-    res = PAUSE_TAG_RE.sub(" , ", text)
+    sheltered_pauses: List[tuple[str, str]] = []
+    if preserve_pauses:
+        def shelter_pause(m: re.Match) -> str:
+            token = f"___VP_PAUSE_{len(sheltered_pauses)}___"
+            sheltered_pauses.append((token, m.group(0)))
+            return f" {token} "
+
+        res = PAUSE_TAG_RE.sub(shelter_pause, text)
+    else:
+        res = PAUSE_TAG_RE.sub(" , ", text)
+
+    # 0a. Preprocess unspaced metric units
+    res = re.sub(
+        r"(\d+)(km/h|km/giờ|m/s|kg|g|m|cm|mm)\b",
+        r"\1 \2",
+        res,
+        flags=re.IGNORECASE,
+    )
+
+    # 0b. Preprocess negative numbers before numeric word conversions
+    res = re.sub(r"(?<!\w)[-\u2212](?=\d)", "âm ", res)
 
     combined_map = dict(FOREIGN_NAMES_MAP)
     if extra_map:
@@ -233,27 +290,86 @@ def normalize_for_tts(text: str, extra_map: Dict[str, str] | None = None) -> str
     for pattern, replacement in combined_map.items():
         res = re.sub(pattern, replacement, res, flags=re.IGNORECASE)
 
+    # 1. Years
     def replace_year(m: re.Match) -> str:
         prefix = m.group(1)
         year_num = int(m.group(2))
         return f"{prefix} {num_to_vn_words(year_num)}"
 
     res = re.sub(r"(Năm|năm)\s+(\d{4})\b", replace_year, res)
-    res = re.sub(r"\b(\d+)%", lambda m: f"{num_to_vn_words(int(m.group(1)))} phần trăm", res)
-    res = re.sub(r"\b\d{1,3}(?:\.\d{3})+\b", normalize_number_token, res)
+
+    # 2. Percentages (integer and decimal)
+    def replace_percent(m: re.Match) -> str:
+        whole = m.group(1)
+        sep = m.group(2)
+        frac = m.group(3)
+        if sep and frac:
+            return f"{normalize_decimal(whole, frac)} phần trăm"
+        return f"{num_to_vn_words(int(whole))} phần trăm"
+
+    res = re.sub(r"\b(\d+)(?:([.,])(\d+))?\s*%", replace_percent, res)
+
+    # 3. Slashes (units, fractions, ratios)
+    res = re.sub(r"\bvà/hoặc\b", "và hoặc", res, flags=re.IGNORECASE)
+    res = re.sub(r"(\b[A-Za-zÀ-ỹ]+)\s*/\s*([A-Za-zÀ-ỹ]+\b)", r"\1 trên \2", res)
+
+    def replace_slash_ratio(m: re.Match) -> str:
+        n1 = int(m.group(1))
+        n2 = int(m.group(2))
+        if n1 < n2:
+            return f"{num_to_vn_words(n1)} phần {num_to_vn_words(n2)}"
+        return f"{num_to_vn_words(n1)} trên {num_to_vn_words(n2)}"
+
+    res = re.sub(r"\b(\d+)\s*/\s*(\d+)\b", replace_slash_ratio, res)
+    res = re.sub(r"\s*/\s*", " trên ", res)
+
+    # 4. Thousands (dot-separated 50.000 and comma-separated 50,000)
     res = re.sub(
-        r"\b(\d+),(\d+)\b",
-        lambda m: f"{num_to_vn_words(int(m.group(1)))} phẩy {num_to_vn_words(int(m.group(2)))}",
+        r"\b[1-9]\d{0,2}(?:\.\d{3})+\b",
+        lambda m: num_to_vn_words(int(m.group(0).replace(".", ""))),
         res,
     )
-    res = re.sub(r"\b\d+\b", normalize_number_token, res)
+    res = re.sub(
+        r"\b[1-9]\d{0,2}(?:,\d{3})+\b",
+        lambda m: num_to_vn_words(int(m.group(0).replace(",", ""))),
+        res,
+    )
 
-    res = res.replace("...", ",").replace("…", ",")
-    res = res.replace("—", ",").replace("–", ",")
-    res = res.replace(":", ",").replace(";", ",")
+    # 5. Decimals (comma decimals 2,4 and dot decimals 2.4)
+    res = re.sub(
+        r"\b(\d+),(\d+)\b",
+        lambda m: normalize_decimal(m.group(1), m.group(2)),
+        res,
+    )
+    res = re.sub(
+        r"\b(\d+)\.(\d+)\b",
+        lambda m: normalize_decimal(m.group(1), m.group(2)),
+        res,
+    )
 
-    res = re.sub(r",\s*,", ",", res)
+    # 6. Plain integers
+    res = re.sub(r"\b\d+\b", lambda m: num_to_vn_words(int(m.group(0))), res)
+
+    # 8. Punctuation sanitization
+    res = re.sub(r"\s*(?:\.{3,}|…)\s*", ", ", res)
+    res = re.sub(r"\s*[—–]\s*", ", ", res)
+    res = re.sub(r"\s*[:;]\s*", ", ", res)
+    res = re.sub(r",\s*,+", ",", res)
+    res = re.sub(r"\s*,\s*", ", ", res)
+    res = re.sub(r",\s*([.!?])", r"\1", res)
+    res = re.sub(r"([.!?])\s*,", r"\1", res)
+    res = re.sub(r"^\s*,\s*", "", res)
+    res = re.sub(r"\s*,\s*$", "", res)
     res = re.sub(r"\s+", " ", res).strip()
+
+    # 9. Restore preserved pause tags
+    if preserve_pauses:
+        for token, raw_tag in sheltered_pauses:
+            res = res.replace(token, raw_tag)
+        res = re.sub(r",\s*(\[pause:[^\]]+\])", r" \1", res)
+        res = re.sub(r"(\[pause:[^\]]+\])\s*,", r"\1 ", res)
+        res = re.sub(r"\s*(\[pause:[^\]]+\])\s*", r" \1 ", res)
+        res = re.sub(r"\s+", " ", res).strip()
 
     return res
 
@@ -264,17 +380,23 @@ def detect_unnormalized_tokens(
 ) -> List[Dict[str, str]]:
     """Scans normalized Vietnamese text and flags any leftover numbers, symbols,
     or un-transliterated foreign words that could cause TTS phoneme fallback.
+    Explicit pause tags are ignored so valid pauses do not trigger false alerts.
     """
-    allowed = {t.lower() for t in (allowed_tokens or set())}
+    clean_text = PAUSE_TAG_RE.sub(" ", text)
+    allowed = (
+        {t.lower() for t in (allowed_tokens or set())}
+        | CANONICAL_TRANSLITERATION_SYLLABLES
+        | CANONICAL_TRANSLITERATION_WORDS
+    )
     issues: List[Dict[str, str]] = []
 
-    for m in re.finditer(r"\b\d+\b|[%/]", text):
+    for m in re.finditer(r"\d+|[%/]", clean_text):
         issues.append({
             "token": m.group(0),
             "reason": "Chứa chữ số hoặc ký hiệu chưa chuyển thành chữ tiếng Việt",
         })
 
-    raw_words = re.findall(r"[A-Za-zÀ-ỹ]+(?:-[A-Za-zÀ-ỹ]+)*", text)
+    raw_words = re.findall(r"[A-Za-zÀ-ỹ]+(?:-[A-Za-zÀ-ỹ]+)*", clean_text)
     for word in raw_words:
         w_lower = word.lower()
         if w_lower in allowed:
@@ -297,10 +419,19 @@ def enforce_tts_normalization_gate(
     text: str,
     extra_map: Dict[str, str] | None = None,
     allowed_tokens: Set[str] | None = None,
+    preserve_pauses: bool = False,
 ) -> str:
     """Normalizes text and enforces strict zero-foreign-token gate before TTS."""
-    normalized = normalize_for_tts(text, extra_map=extra_map)
-    issues = detect_unnormalized_tokens(normalized, allowed_tokens=allowed_tokens)
+    normalized = normalize_for_tts(text, extra_map=extra_map, preserve_pauses=preserve_pauses)
+    extra_allowed = set(allowed_tokens or set())
+    if extra_map:
+        for val in extra_map.values():
+            for word in val.split():
+                extra_allowed.add(word.lower())
+                for part in word.split("-"):
+                    if part:
+                        extra_allowed.add(part.lower())
+    issues = detect_unnormalized_tokens(normalized, allowed_tokens=extra_allowed)
     if issues:
         bad_list = ", ".join(f"{x['token']!r} ({x['reason']})" for x in issues[:5])
         raise ValueError(f"UNNORMALIZED_FOREIGN_TOKEN: Phát hiện từ chưa chuẩn hóa ngữ âm: {bad_list}")

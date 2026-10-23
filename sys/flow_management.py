@@ -4,6 +4,7 @@ Browser profile verification is not a claim of Google authentication. Stable
 identity comes from the recorded provider/user mapping; provider failures keep
 the exact owner and are never retried on a different account.
 """
+import contextlib
 from pathlib import Path
 import json
 import re

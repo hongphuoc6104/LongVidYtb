@@ -630,7 +630,14 @@ def chunks_with_gaps(text,g=None):
 def chunks(text):
  return chunks_with_gaps(text, DEFAULT_PAUSE)[0]
 
-class AudioProcessingError(Exception): pass
+try:
+ from audio_processing import frames_of, run_ffmpeg, AudioProcessingError
+except ImportError:
+ class AudioProcessingError(Exception): pass
+ def frames_of(p):
+  import wave
+  with wave.open(str(p)) as w: return w.getnframes()
+ def run_ffmpeg(*args, **kwargs): pass
 
 def master(src,dst,cfg):
  try:
@@ -639,6 +646,7 @@ def master(src,dst,cfg):
  except ImportError:
   shutil.copy(src, dst)
   return dst
+ except AudioProcessingError as ex: raise Blocked(str(ex)) from ex
  except Exception as ex: raise Blocked(str(ex)) from ex
 
 def retakes(p,j):

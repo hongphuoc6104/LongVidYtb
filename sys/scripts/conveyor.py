@@ -21,6 +21,7 @@ Usage:
 
 import argparse
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -503,11 +504,30 @@ def cmd_setup(args):
 
 def cmd_colab(args):
     subaction = args.colab_action or "list"
+    pool_actions = {"pool-status", "pool-health", "pool-start", "pool-stop", "teardown"}
+    env = dict(os.environ, PYTHONPATH=str(SYS_DIR))
+    if subaction in pool_actions:
+        cmd = [get_python_executable(), "-m", "colab_bridge", subaction]
+        if getattr(args, "probe", False) and subaction == "pool-status":
+            cmd.append("--probe")
+        if getattr(args, "refresh_auth", False) and subaction == "pool-health":
+            cmd.append("--refresh-auth")
+        if getattr(args, "check_kernels", False) and subaction == "pool-health":
+            cmd.append("--check-kernels")
+        if getattr(args, "accounts", None):
+            cmd.extend(["--accounts", args.accounts])
+        if getattr(args, "max_workers", None) and subaction == "pool-start":
+            cmd.extend(["--max-workers", str(args.max_workers)])
+        res = subprocess.run(cmd, cwd=str(REPO_ROOT), env=env)
+        return sys.exit(res.returncode)
+
     script = SYS_DIR / "colab_bridge/accounts.py"
     cmd = [get_python_executable(), str(script), subaction]
+    if getattr(args, "probe", False) and subaction == "status-all":
+        cmd.append("--probe")
     if getattr(args, "account", None) and args.account != "auto":
         cmd.append(args.account)
-    res = subprocess.run(cmd, cwd=str(REPO_ROOT))
+    res = subprocess.run(cmd, cwd=str(REPO_ROOT), env=env)
     sys.exit(res.returncode)
 
 
@@ -536,8 +556,21 @@ def main():
     flow_parser.add_argument("--total", type=int, help="Tổng số Profile khi chạy login-many")
 
     colab_parser = subparsers.add_parser("colab", help="Quản lý tài khoản Google Colab CLI")
-    colab_parser.add_argument("colab_action", choices=["list", "status-all", "login", "login-many", "enable", "disable", "role", "remove"], nargs="?", default="list")
+    colab_parser.add_argument(
+        "colab_action",
+        choices=[
+            "list", "status-all", "login", "login-many", "enable", "disable", "role", "remove",
+            "pool-status", "pool-health", "pool-start", "pool-stop", "teardown",
+        ],
+        nargs="?",
+        default="list",
+    )
     colab_parser.add_argument("account", nargs="?", default="auto", help="ID tài khoản Colab")
+    colab_parser.add_argument("--probe", action="store_true", help="Probe live Google server assignments")
+    colab_parser.add_argument("--refresh-auth", action="store_true", help="Renew existing OAuth credentials")
+    colab_parser.add_argument("--check-kernels", action="store_true", help="Observe existing kernels")
+    colab_parser.add_argument("--accounts", type=str, help="Comma-separated account IDs for pool operations")
+    colab_parser.add_argument("--max-workers", type=int, default=3, help="Max concurrent workers for pool-start")
 
     args = parser.parse_args()
 
