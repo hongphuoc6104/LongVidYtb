@@ -297,7 +297,7 @@ try {
       hardwareAcceleration: 'if-possible',
       videoBitrate: '6M',
       audioCodec: 'aac',
-      concurrency: effectiveConcurrency,
+      concurrency: Math.min(effectiveConcurrency, Math.max(1, cpus().length)),
       outputLocation: path.join(dir, plan.file),
       onProgress: ({renderedFrames}) => {
         if (renderedFrames % 150 === 0) {

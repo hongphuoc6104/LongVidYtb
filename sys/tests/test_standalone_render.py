@@ -73,91 +73,95 @@ console.log(JSON.stringify({ t0, t1, t2, t3, srt, emptySrt, nullSrt }));
         props_file = FIXTURE_DIR / "props.json"
         self.assertTrue(props_file.is_file(), "props.json missing in fixture")
 
-        # Execute node render.mjs directly
-        cmd = [self.node, str(ROOT / "renderer" / "render.mjs"), str(FIXTURE_DIR)]
-        res = subprocess.run(cmd, cwd=str(ROOT), capture_output=True, text=True)
-        self.assertEqual(res.returncode, 0, f"Render command failed:\n{res.stderr}\n{res.stdout}")
+        with tempfile.TemporaryDirectory() as tmpdir:
+            work_dir = Path(tmpdir)
+            shutil.copytree(FIXTURE_DIR, work_dir, dirs_exist_ok=True)
 
-        # 1. Output MP4 verification
-        video_file = FIXTURE_DIR / "video.mp4"
-        video_9x16_file = FIXTURE_DIR / "video_9x16.mp4"
-        self.assertTrue(video_file.is_file(), "video.mp4 was not produced")
-        self.assertTrue(video_9x16_file.is_file(), "video_9x16.mp4 was not produced")
-        self.assertGreater(video_file.stat().st_size, 50000, "video.mp4 is suspiciously small")
+            # Execute node render.mjs directly
+            cmd = [self.node, str(ROOT / "renderer" / "render.mjs"), str(work_dir)]
+            res = subprocess.run(cmd, cwd=str(ROOT), capture_output=True, text=True)
+            self.assertEqual(res.returncode, 0, f"Render command failed:\n{res.stderr}\n{res.stdout}")
 
-        if self.ffprobe:
-            probe_raw = subprocess.check_output(
-                [self.ffprobe, "-v", "error", "-show_streams", "-show_format", "-of", "json", str(video_file)],
-                text=True,
-            )
-            probe = json.loads(probe_raw)
-            video_stream = next((s for s in probe["streams"] if s["codec_type"] == "video"), None)
-            audio_stream = next((s for s in probe["streams"] if s["codec_type"] == "audio"), None)
+            # 1. Output MP4 verification
+            video_file = work_dir / "video.mp4"
+            video_9x16_file = work_dir / "video_9x16.mp4"
+            self.assertTrue(video_file.is_file(), "video.mp4 was not produced")
+            self.assertTrue(video_9x16_file.is_file(), "video_9x16.mp4 was not produced")
+            self.assertGreater(video_file.stat().st_size, 50000, "video.mp4 is suspiciously small")
 
-            self.assertIsNotNone(video_stream, "No video stream in video.mp4")
-            self.assertIsNotNone(audio_stream, "No audio stream in video.mp4")
-            self.assertEqual(video_stream["codec_name"], "h264")
-            self.assertEqual(audio_stream["codec_name"], "aac")
-            self.assertEqual(video_stream["width"], 1080)
-            self.assertEqual(video_stream["height"], 1920)
+            if self.ffprobe:
+                probe_raw = subprocess.check_output(
+                    [self.ffprobe, "-v", "error", "-show_streams", "-show_format", "-of", "json", str(video_file)],
+                    text=True,
+                )
+                probe = json.loads(probe_raw)
+                video_stream = next((s for s in probe["streams"] if s["codec_type"] == "video"), None)
+                audio_stream = next((s for s in probe["streams"] if s["codec_type"] == "audio"), None)
 
-        # 2. Output Subtitles SRT verification
-        srt_file = FIXTURE_DIR / "subtitles.srt"
-        self.assertTrue(srt_file.is_file(), "subtitles.srt was not produced")
-        srt_text = srt_file.read_text(encoding="utf-8")
-        self.assertIn("1\n00:00:00,500 --> 00:00:02,500", srt_text)
-        self.assertIn("Thử nghiệm hệ thống render Remotion độc lập.", srt_text)
+                self.assertIsNotNone(video_stream, "No video stream in video.mp4")
+                self.assertIsNotNone(audio_stream, "No audio stream in video.mp4")
+                self.assertEqual(video_stream["codec_name"], "h264")
+                self.assertEqual(audio_stream["codec_name"], "aac")
+                self.assertEqual(video_stream["width"], 1080)
+                self.assertEqual(video_stream["height"], 1920)
 
-        # 3. Output Layout Safety Audit
-        layout_file = FIXTURE_DIR / "layout.json"
-        self.assertTrue(layout_file.is_file(), "layout.json was not produced")
-        layout_data = json.loads(layout_file.read_text(encoding="utf-8"))
-        self.assertTrue(layout_data.get("passed"), f"Layout check failed: {layout_data}")
-        self.assertEqual(len(layout_data.get("failures", [])), 0)
+            # 2. Output Subtitles SRT verification
+            srt_file = work_dir / "subtitles.srt"
+            self.assertTrue(srt_file.is_file(), "subtitles.srt was not produced")
+            srt_text = srt_file.read_text(encoding="utf-8")
+            self.assertIn("1\n00:00:00,500 --> 00:00:02,500", srt_text)
+            self.assertIn("Thử nghiệm hệ thống render Remotion độc lập.", srt_text)
 
-        # 4. Output Scene Preview Stills
-        still_file = FIXTURE_DIR / "SC01.png"
-        self.assertTrue(still_file.is_file(), "Representative still SC01.png was not produced")
-        self.assertGreater(still_file.stat().st_size, 10000, "SC01.png is suspiciously small")
-        if self.ffprobe:
-            dim = subprocess.check_output(
-                [
-                    self.ffprobe,
-                    "-v",
-                    "error",
-                    "-select_streams",
-                    "v:0",
-                    "-show_entries",
-                    "stream=width,height",
-                    "-of",
-                    "csv=s=x:p=0",
-                    str(still_file),
-                ],
-                text=True,
-            ).strip()
-            self.assertEqual(dim, "1080x1920")
+            # 3. Output Layout Safety Audit
+            layout_file = work_dir / "layout.json"
+            self.assertTrue(layout_file.is_file(), "layout.json was not produced")
+            layout_data = json.loads(layout_file.read_text(encoding="utf-8"))
+            self.assertTrue(layout_data.get("passed"), f"Layout check failed: {layout_data}")
+            self.assertEqual(len(layout_data.get("failures", [])), 0)
 
-        # 5. Output Thumbnail/Cover Stills
-        cover_file = FIXTURE_DIR / "cover_tiktok_reels_9x16.png"
-        self.assertTrue(cover_file.is_file(), "cover_tiktok_reels_9x16.png was not produced")
-        self.assertGreater(cover_file.stat().st_size, 10000, "cover_tiktok_reels_9x16.png is suspiciously small")
-        if self.ffprobe:
-            dim = subprocess.check_output(
-                [
-                    self.ffprobe,
-                    "-v",
-                    "error",
-                    "-select_streams",
-                    "v:0",
-                    "-show_entries",
-                    "stream=width,height",
-                    "-of",
-                    "csv=s=x:p=0",
-                    str(cover_file),
-                ],
-                text=True,
-            ).strip()
-            self.assertEqual(dim, "1080x1920")
+            # 4. Output Scene Preview Stills
+            still_file = work_dir / "SC01.png"
+            self.assertTrue(still_file.is_file(), "Representative still SC01.png was not produced")
+            self.assertGreater(still_file.stat().st_size, 10000, "SC01.png is suspiciously small")
+            if self.ffprobe:
+                dim = subprocess.check_output(
+                    [
+                        self.ffprobe,
+                        "-v",
+                        "error",
+                        "-select_streams",
+                        "v:0",
+                        "-show_entries",
+                        "stream=width,height",
+                        "-of",
+                        "csv=s=x:p=0",
+                        str(still_file),
+                    ],
+                    text=True,
+                ).strip()
+                self.assertEqual(dim, "1080x1920")
+
+            # 5. Output Thumbnail/Cover Stills
+            cover_file = work_dir / "cover_tiktok_reels_9x16.png"
+            self.assertTrue(cover_file.is_file(), "cover_tiktok_reels_9x16.png was not produced")
+            self.assertGreater(cover_file.stat().st_size, 10000, "cover_tiktok_reels_9x16.png is suspiciously small")
+            if self.ffprobe:
+                dim = subprocess.check_output(
+                    [
+                        self.ffprobe,
+                        "-v",
+                        "error",
+                        "-select_streams",
+                        "v:0",
+                        "-show_entries",
+                        "stream=width,height",
+                        "-of",
+                        "csv=s=x:p=0",
+                        str(cover_file),
+                    ],
+                    text=True,
+                ).strip()
+                self.assertEqual(dim, "1080x1920")
 
     def test_python_render_cli_wrappers(self):
         """Verifies sys/render_cli.py and python -m sys.renderer interfaces."""
@@ -170,21 +174,25 @@ console.log(JSON.stringify({ t0, t1, t2, t3, srt, emptySrt, nullSrt }));
         self.assertEqual(res_cli.returncode, 0, f"render_cli.py --help failed: {res_cli.stderr}")
         self.assertIn("--concurrency", res_cli.stdout)
 
-        # 2. Test Module invocation E2E: python3 -m sys.renderer <work_dir> --concurrency 4
-        cmd_mod = [sys.executable, "-m", "sys.renderer", str(FIXTURE_DIR), "--concurrency", "4"]
-        res_mod = subprocess.run(cmd_mod, cwd=str(ROOT.parent), capture_output=True, text=True)
-        self.assertEqual(res_mod.returncode, 0, f"python -m sys.renderer failed: {res_mod.stderr}")
-        self.assertIn("Render successful", res_mod.stdout)
+        with tempfile.TemporaryDirectory() as tmpdir:
+            work_dir = Path(tmpdir)
+            shutil.copytree(FIXTURE_DIR, work_dir, dirs_exist_ok=True)
 
-        # 3. Verify programmatic collect_outputs contract
-        from sys.render_cli import collect_outputs, verify_inputs
+            # 2. Test Module invocation E2E: python3 -m sys.renderer <work_dir> --concurrency 4
+            cmd_mod = [sys.executable, "-m", "sys.renderer", str(work_dir), "--concurrency", "4"]
+            res_mod = subprocess.run(cmd_mod, cwd=str(ROOT.parent), capture_output=True, text=True)
+            self.assertEqual(res_mod.returncode, 0, f"python -m sys.renderer failed: {res_mod.stderr}")
+            self.assertIn("Render successful", res_mod.stdout)
 
-        props = verify_inputs(FIXTURE_DIR)
-        outputs = collect_outputs(FIXTURE_DIR, props)
-        self.assertIn("video", outputs)
-        self.assertIn("subtitles", outputs)
-        self.assertIn("layout", outputs)
-        self.assertIn("cover_tiktok_reels_9x16", outputs)
+            # 3. Verify programmatic collect_outputs contract
+            from sys.render_cli import collect_outputs, verify_inputs
+
+            props = verify_inputs(work_dir)
+            outputs = collect_outputs(work_dir, props)
+            self.assertIn("video", outputs)
+            self.assertIn("subtitles", outputs)
+            self.assertIn("layout", outputs)
+            self.assertIn("cover_tiktok_reels_9x16", outputs)
 
     def test_standalone_16x9_rendering_and_thumbnails(self):
         """Verifies 16:9 standalone render and thumbnail_youtube_16x9.png output."""
