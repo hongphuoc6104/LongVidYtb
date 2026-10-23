@@ -40,8 +40,10 @@ def test_compiler_rejects_ambiguous_entity_policy(fields):
 
 def test_static_explanation_is_not_rejected_as_a_lazy_action():
     flow_prompts = pytest.importorskip("flow_prompts", reason="requires images module (flow_prompts)")
-    result = flow_prompts.compile('NanoBanana2Lite', 'scene', visual(description='Books resting on table, grouped into two labelled quantities.'), '1.7.0')
-    assert 'Books resting on table' in result['prompt']
+    result = flow_prompts.compile('NanoBanana2Lite', 'scene', visual(description='Two stacks of books on a table, grouped into two labelled quantities.'), '1.7.0')
+    assert 'Two stacks of books on a table' in result['prompt']
+    with pytest.raises(flow_prompts.PromptError, match='FLOW_LAZINESS_VIOLATION'):
+        flow_prompts.compile('NanoBanana2Lite', 'scene', visual(description='Books resting on table.'), '1.7.0')
     with pytest.raises(flow_prompts.PromptError, match='LAZY_VISUAL_ACTION_FORBIDDEN'):
         flow_prompts.compile('NanoBanana2Lite', 'scene', visual(description='Books resting on table.'), '1.6.0')
 

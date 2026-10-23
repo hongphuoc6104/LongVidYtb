@@ -51,7 +51,7 @@ def validate_brief(root,b):
   errors.append(error('SOURCE_REQUIRED','sources','Chưa cung cấp dữ kiện','Bổ sung tài liệu và dữ kiện trước khi viết.'))
  if b.get('schema_version') == '3.0' and b.get('sources') and b.get('conversational_facts', True) is not False:
   try:
-   from research_story_architect import check_conversational_spoken_facts
+   from content.research_story_architect import check_conversational_spoken_facts
    spoken_fact_errs = check_conversational_spoken_facts(b.get('sources', []))
    for sfe in spoken_fact_errs:
     errors.append(error('FACT_NOT_CONVERSATIONAL', 'sources', sfe, 'Chuyển đổi dữ kiện thành văn nói <= 20 âm tiết, không dùng ký hiệu học thuật.'))
@@ -59,7 +59,7 @@ def validate_brief(root,b):
    pass
  if b.get('schema_version') == '3.0' and any(k in b for k in ('packaging', 'youtube_title', 'thumbnail_spec', 'channel_pillar')):
   try:
-   from research_story_architect import check_packaging_and_localization
+   from content.research_story_architect import check_packaging_and_localization
    pkg_warns = check_packaging_and_localization(b)
    for pw in pkg_warns:
     errors.append(error('PACKAGING_CONTRACT', 'packaging', pw, 'Đảm bảo youtube_title <= 55 ký tự, thumbnail_spec có text_overlay 2-4 từ in hoa và đúng ngách học thuật.'))

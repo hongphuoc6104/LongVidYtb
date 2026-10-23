@@ -103,9 +103,9 @@ def test_white_card_prompt_uses_versioned_full_frame_contract() -> None:
 
 
 def test_acceptance_package_has_valid_anchors_and_meets_estimated_density(tmp_path) -> None:
+    from content.research_story_architect import write_production_package
     from scripts.story_plan import timeline
     from tools.build_full_frame_acceptance import build_topic
-    from tools.research_story_architect import write_production_package
 
     topic = build_topic()
     result = write_production_package(tmp_path, topic)

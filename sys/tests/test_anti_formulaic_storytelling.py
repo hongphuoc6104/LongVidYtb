@@ -9,6 +9,13 @@ import math
 from collections import Counter
 from pathlib import Path
 
+from content.research_story_architect import (
+    PackagingSpec,
+    ResearchedTopic,
+    build_brief_v3,
+    build_content_v3,
+    build_scenes_from_story_rows,
+)
 from content_contract import validate_content
 from scripts.camera_motion import assign_scene_camera_effects, scene_camera_motions
 from scripts.visual_quality import (
@@ -16,13 +23,6 @@ from scripts.visual_quality import (
     check_visual_setting_diversity,
 )
 from tools.build_full_frame_acceptance import build_topic
-from tools.research_story_architect import (
-    PackagingSpec,
-    ResearchedTopic,
-    build_brief_v3,
-    build_content_v3,
-    build_scenes_from_story_rows,
-)
 from visual_pacing import check_see_say_beat_density
 
 SYSTEM = Path(__file__).resolve().parents[1]
@@ -191,8 +191,8 @@ def test_non_desk_topic_passes_narrative_progression_and_diversity() -> None:
     topic.scenes[9].narrative_phase = "actionable_resolution"
     topic.scenes[0].visual_beats[1].allow_expression_shift = True
 
+    from content.research_story_architect import compute_brief_hash
     from content_contract import validate_brief
-    from tools.research_story_architect import compute_brief_hash
     brief = build_brief_v3(topic)
     validate_brief(SYSTEM, brief)
     assert brief.get("enable_sound_design") is True

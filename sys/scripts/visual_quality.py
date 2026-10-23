@@ -73,10 +73,20 @@ _NARRATIVE_PHASE_PATTERNS = (
 
 _PHASE_NAME_INDEX = {
     'lived_friction': 0,
+    'hook': 0,
+    'lead_in': 0,
     'empirical_conflict': 1,
+    'problem': 1,
     'structural_model': 2,
+    'causal_mechanism': 2,
+    'explanation': 2,
+    'counter_argument': 2,
     'actionable_resolution': 3,
+    'takeaway': 3,
+    'closing': 3,
 }
+
+MAX_CONSECUTIVE_VARIATIONS = 2
 
 
 def check_scene_narrative_progression(scenes: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -85,7 +95,9 @@ def check_scene_narrative_progression(scenes: list[dict[str, Any]]) -> list[dict
         return []
     next_zone = 0
     for scene in scenes:
-        explicit_phase = str(scene.get('narrative_phase', '')).strip().casefold()
+        explicit_phase = str(
+            scene.get('narrative_phase') or scene.get('editorial_section') or ''
+        ).strip().casefold()
         if explicit_phase in _PHASE_NAME_INDEX and _PHASE_NAME_INDEX[explicit_phase] == next_zone:
             next_zone += 1
             if next_zone == len(_NARRATIVE_PHASE_PATTERNS):
@@ -101,21 +113,59 @@ def check_scene_narrative_progression(scenes: list[dict[str, Any]]) -> list[dict
     return [{'type': 'NARRATIVE_SETTING_PROGRESSION', 'missing_zone': next_zone + 1}]
 
 
-def apply_room_continuity(images: list[dict[str, Any]]) -> None:
-    """Within one authored room, return shots reuse the first full-scene reference."""
+def apply_room_continuity(
+    images: list[dict[str, Any]],
+    max_consecutive_variations: int = MAX_CONSECUTIVE_VARIATIONS,
+) -> None:
+    """Within one authored room, return shots reuse the first full-scene reference (capped at max_consecutive_variations)."""
     base = None
+    variation_streak = 0
     for image in images:
-        if image.get('shot_type') == 'full_scene':
-            if base and not image.get('based_on'):
+        shot = image.get('shot_type')
+        if shot == 'full_scene':
+            if base and not image.get('based_on') and variation_streak < max_consecutive_variations:
                 image['based_on'] = base
                 image['shot_type'] = 'variation'
                 image['preserve'] = 'Keep room layout, window geometry, furniture, props and figure design.'
+                variation_streak += 1
             elif not image.get('based_on'):
                 base = image['id']
+                variation_streak = 0
+        elif shot == 'variation':
+            variation_streak += 1
+        else:
+            variation_streak = 0
         if image.get('based_on') and image.get('has_character', True):
             lock = 'Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.'
             if 'expression' not in image.get('preserve', '').casefold() and 'biểu cảm' not in image.get('preserve', '').casefold():
                 image['preserve'] = (image.get('preserve', '').rstrip() + ' ' + lock).strip()
+
+
+def check_excessive_variation_streak(
+    scenes: list[dict[str, Any]],
+    max_streak: int = MAX_CONSECUTIVE_VARIATIONS,
+) -> list[dict[str, Any]]:
+    """Flag scenes that hold the same camera angle via > max_streak consecutive variations (anti-AI-slop guard)."""
+    violations: list[dict[str, Any]] = []
+    for sc in scenes:
+        sc_id = str(sc.get('id', sc.get('scene_id', '?')))
+        streak = 0
+        for idx, im in enumerate(sc.get('images', [])):
+            shot = str(im.get('shot_type', '')).strip().casefold()
+            if shot == 'variation' or im.get('based_on'):
+                streak += 1
+                if streak > max_streak:
+                    violations.append({
+                        'type': 'EXCESSIVE_VARIATION_STREAK',
+                        'scene_id': sc_id,
+                        'beat_id': str(im.get('id', f'{sc_id}_I{idx + 1}')),
+                        'streak': streak,
+                        'max_allowed': max_streak,
+                        'message': f'Too many consecutive variation beats ({streak} > {max_streak}) in {sc_id}; insert a macro_prop, visual_diagram, or fresh angle.',
+                    })
+            else:
+                streak = 0
+    return violations
 
 
 _HUMAN_KEYWORDS_PATTERN = re.compile(

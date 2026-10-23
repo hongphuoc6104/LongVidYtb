@@ -11,7 +11,7 @@ for _p in (str(SYS_DIR), str(SYS_DIR / "tools")):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-from tools.research_story_architect import (
+from content.research_story_architect import (
     PackagingSpec,
     ResearchedBeat,
     ResearchedScene,

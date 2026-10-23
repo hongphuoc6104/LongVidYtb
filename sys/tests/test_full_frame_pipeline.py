@@ -17,6 +17,7 @@ try:
     from remote_audio import primary_scene_request
 except ImportError:
     primary_scene_request = None
+from content.research_story_architect import build_brief_v3, build_content_v3
 from scripts.subtitles import audit_cues, phrase_chunks, sentence_units, subtitle_cues
 from scripts.visual_quality import (
     apply_room_continuity,
@@ -27,7 +28,6 @@ from scripts.visual_quality import (
     check_visual_setting_diversity,
 )
 from tools.build_full_frame_acceptance import build_topic
-from tools.research_story_architect import build_brief_v3, build_content_v3
 
 SYSTEM = Path(__file__).resolve().parents[1]
 CAMERA_MJS_EXISTS = (SYSTEM / 'renderer/camera.mjs').is_file()
