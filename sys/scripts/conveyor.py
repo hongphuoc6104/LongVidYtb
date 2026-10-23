@@ -241,6 +241,7 @@ def station_4_lint() -> bool:
         SYS_DIR / "visual_pacing.py",
         SYS_DIR / "explainer_contract.py",
         SYS_DIR / "output_contract.py",
+        SYS_DIR / "content",
     ]
     target_paths = [str(p) for p in core_candidates if p.exists()]
     ruff_cmd = [ruff_bin, "check", *target_paths]

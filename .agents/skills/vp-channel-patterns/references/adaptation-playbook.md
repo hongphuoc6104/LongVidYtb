@@ -21,18 +21,19 @@ Tài liệu này hướng dẫn cách chuyển hóa các quy luật kể chuyệ
 
 ---
 
-## 2. Quy Hoạch Ngách "Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật" Theo Phễu 3 Tầng
+## 2. Quy Hoạch Ngách "Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức" Theo Phễu 3 Tầng
 
-Để vừa nổ view đại chúng (10K–100K+ view), vừa có tỷ lệ Lưu/Bookmark cực cao và chuyển đổi khách hàng mua **Gemini Pro 18 tháng** mà không bị tụt xuống 200 view:
+Vận hành nội dung theo phễu 3 tầng mở rộng không gian sáng tạo đề tài, tập trung vào nguyên lý và cơ chế nhân quả:
 
-1. **Tầng 1 — Phễu Rộng (`tier_1_broad`, mục tiêu 10K – 100K+ view): "Ảo Giác Hiểu Biết & Nghịch Lý Học Thuật"**
-   - *Công thức cốt lõi:* Kế thừa bài *Nghịch lý tri thức* (`22.1K` & `16.8K` view), *Lý thuyết gốc vs Sao chép cơ học* (`1.877` view) và *Biết tính $\neq$ Hiểu* (`883` view).
-   - *Điểm chạm tâm lý:* Giải thích bằng khoa học nhận thức vì sao học sinh, sinh viên, kỹ sư học vẹt/chép tài liệu rất chăm nhưng không hiểu bản chất gốc rễ (*Illusion of Competence*, *Kỹ thuật Feynman & cái bẫy thuật ngữ*).
-2. **Tầng 2 — Phễu Giữa (`tier_2_mid`, mục tiêu 3K – 20K view, Lưu/Share cực cao): "Giải Phẫu Quy Trình Nghiên Cứu Chuẩn Q1 & Tâm Lý Hội Đồng"**
-   - *Công thức cốt lõi:* Kế thừa bài *Academic Pyramid 9 nguồn nghiên cứu* (`3.042` view), *Tâm lý hội đồng 120s* (`881` view) và *Bài báo không bắt đầu ở Word* (`749` view).
-   - *Điểm chạm tâm lý:* Cung cấp khung tư duy hệ thống (*Framework / Pyramid / Flowchart `Question → Gap → Method → Evidence → Paper`*) và góc nhìn "bên kia chiến tuyến" của giám khảo phản biện.
-3. **Tầng 3 — Phễu Chuyển Đổi (`tier_3_conversion`, chuyển đổi Gemini Pro 18 tháng): "Vũ Khí Tư Duy Học Thuật (AI for Deep Research)"**
-   - *Quy tắc vàng:* **Tuyệt đối cấm** dùng từ khóa văn phòng (*mẹo Excel, gõ hàm Excel, làm Slide nhanh 4 tiếng, tình huống của Na/Nam*). Mọi bài có yếu tố AI phải gắn chặt với Chuỗi nghiên cứu (`Question → Gap → Method → Evidence`): biến 30 bài báo Q1 rời rạc thành *Ma trận Khoảng trống Nghiên cứu (Research Gap Matrix)*, hoặc dùng AI để phản biện chéo lý thuyết ở mục *Tổng quan tài liệu* thay vì viết hộ.
+1. **Tầng 1 — Phễu Rộng (`tier_1_broad`): "Tư Duy Nhận Thức, Nghịch Lý Nhận Thức & Ảo Giác Tri Thức"**
+   - *Trọng tâm:* Nhận diện và giải phẫu các điểm mù tư duy, bẫy tâm lý nhận thức và ảo giác hiểu biết (Cognitive Biases, Mental Models, Illusion of Explanatory Depth).
+   - *Điểm chạm:* Tập trung vào cơ chế nhận thức đằng sau các nghịch lý tư duy, lý giải nguyên nhân gốc rễ bằng khoa học nhận thức.
+2. **Tầng 2 — Phễu Giữa (`tier_2_mid`): "Phương Pháp Luận, Giải Phẫu Nhân Quả & Bản Chất Gốc Rễ"**
+   - *Trọng tâm:* Truy vết nguyên lý đệ nhất (First-Principles Thinking), giải phẫu chuỗi nhân quả và tư duy hệ thống (Systems Thinking, Causal Inquiry).
+   - *Điểm chạm:* Cung cấp các mô hình tư duy phân tích đa chiều, bóc tách cấu trúc tri thức phức tạp thành các liên kết nhân quả mạch lạc.
+3. **Tầng 3 — Phễu Chuyển Đổi (`tier_3_conversion`): "Khung Tư Duy Đào Sâu Tri Thức & Hệ Thống Hóa"**
+   - *Trọng tâm:* Các công cụ tư duy bậc cao, phương pháp phản biện đối đầu và hệ thống hóa tri thức sâu (Deep Intellectual Tooling, Adversarial Thinking).
+   - *Quy tắc:* Tuyệt đối cấm mẹo vặt văn phòng hời hợt (Excel, slide, mẹo học vẹt). Mọi nội dung công cụ đều phải phục vụ việc nâng tầm tư duy phân tích và giải quyết bài toán phức tạp.
 
 ---
 

@@ -188,3 +188,11 @@ $$\text{1. Tái hiện E2E} \longrightarrow \text{2. Phân tích gốc rễ} \lo
 - **Giả định sai (Wrong Assumptions):** Nhầm tưởng mỗi batch evaluate luôn chạy trên ngữ cảnh window mới tinh mà không tính đến tab tái sử dụng.
 - **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Kiểm tra `if (!window.__vp_cdp_hijack)` trước khi define; đặt `writable: true, configurable: true`; bọc fallback gán trực tiếp trong `try...catch`. Đã kiểm chứng 12/12 unit tests đạt green.
 - **Quy tắc phòng ngừa vàng (Golden Rule):** Mọi script tiêm vào window browser qua CDP phải bảo đảm tính idempotent, không định nghĩa thuộc tính read-only/non-configurable nếu trang có thể được evaluate nhiều lần.
+
+### [ERR-20261023-01] Cô Lập Package `sys/content/` & Guard Phụ Thuộc Chéo Giữa Core - Content - Images
+- **Triệu chứng (Symptom):** Khi merge `module-content` vào `module-core` (đã tách các external engines), phát sinh 18 xung đột `modify/delete` và lỗi `ModuleNotFoundError: No module named 'visual_style'` / `'flow_prompts'` khi chạy bộ test của core.
+- **Tái hiện E2E (Reproduction Path):** Chạy `pytest sys/tests/test_research_story_architect.py sys/tests/test_output_contract.py -v` trên môi trường chỉ có `module-core`.
+- **Nguyên nhân cốt lõi (Root Cause):** `module-core` đã xóa các file engine khỏi `sys/tools/` và `sys/scripts/`, trong khi `module-content` cập nhật trực tiếp trên đường dẫn cũ và import cứng `visual_style` / `flow_prompts` thuộc `module-images`.
+- **Giả định sai (Wrong Assumptions):** Nhầm tưởng mọi module đều nằm chung một không gian phẳng `sys/tools/` và `visual_style` luôn tồn tại trong core.
+- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Di chuyển toàn bộ `research_story_architect.py`, `visual_quality.py`, builders và blueprints vào package độc lập `sys/content/`; bọc import `visual_style` bằng guard `VISUAL_STYLE_AVAILABLE` và kiểm tra rõ ràng trong `ResearchedTopic.__post_init__`; dùng `pytest.importorskip` cho các test cần `module-images`. 183 passed trên core-only và 34/34 passed khi nạp kèm `module-images`.
+- **Quy tắc phòng ngừa vàng (Golden Rule):** Giữ toàn bộ tài sản và bộ kiến trúc nội dung trong `sys/content/`; mọi tham chiếu sang module ngoại vi (`visual_style`, `flow_prompts`, `flow_dispatch`) phải qua lazy/guarded import để `module-core` luôn tự chủ.

@@ -23,8 +23,8 @@
 - **Bug Protocol**: Reproduction -> Root Cause -> Fix -> `PLAYBOOK.md` (6 fields). Extract to `.agents/skills/` if `PLAYBOOK.md` > 200 lines.
 
 ## 6. Quality, Anti-Flop & Verification Guards
-- **Fidelity, Packaging & Anti-Flop Gate**: 1 core paradox/video (no cramming), `youtube_title <= 55` chars + `thumbnail_spec` (2–4 uppercase words), VN 60s localization, `SC01` hook `<= 18` syl, zero `[pause:...]` (`OPENING_SCENE_PAUSE_FORBIDDEN`), spoken facts `<= 20` syl; pass `script_diversity_linter.py`.
-- **Visuals & Verification (`full_frame_v1`)**: Complete `kind: "scene"` images (`caption_clearance: null` on 16:9) with visual counterpoint; no manual `(x, y)` coords, cutout stickers, `layers[]`, or `matte_sticker.py`. Dynamic visual pacing on narrative beats and measured audio. Verify MP4 with `ffprobe`.
+- **Fidelity, Packaging & Anti-Flop Gate**: 1 paradox/video (no cramming/clone), `youtube_title <= 55` chars + `thumbnail_spec` (2–4 uppercase words), VN 60s localization, `SC01` hook `<= 18` syl, zero `[pause:...]` (`OPENING_SCENE_PAUSE_FORBIDDEN`), spoken facts `<= 20` syl; pass `script_diversity_linter.py`.
+- **Visuals & Verification (`full_frame_v1`)**: Complete `kind: "scene"` images (`caption_clearance: null` on 16:9) with visual counterpoint; no manual `(x, y)` coords, cutout stickers, `layers[]`, or `matte_sticker.py`. Dynamic pacing on narrative beats + measured audio (no clamps). Verify MP4 via `ffprobe`.
 
 ## 7. Language Standards
 - **User**: Concise **Vietnamese**. **Code/Commits/Prompts**: **English** (preserve exact English spelling including `I`).

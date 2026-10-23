@@ -111,5 +111,5 @@ Hồ sơ bàn giao đặt trong thư mục `sys/runs/<job>/` gồm:
 
 Trước khi chuyển giao hồ sơ cho khâu sản xuất, công cụ kiến trúc tự động chạy thẩm định:
 1. `validate_brief(ROOT, brief_data)` và `validate_content(ROOT, brief_data, 1, brief_hash, content_data)` trong `sys/content_contract.py`.
-2. `check_packaging_and_localization(brief_data, scenes)` trong `sys/tools/research_story_architect.py`.
+2. `check_packaging_and_localization(brief_data, scenes)` trong `sys/content/research_story_architect.py`.
 3. `script_cadence_checker.py` với chốt chặn `forbid_opening_pause=True` và `max_opening_hook_syllables=18`.

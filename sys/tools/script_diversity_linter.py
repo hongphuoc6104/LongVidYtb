@@ -39,6 +39,11 @@ BANNED_FORMULAIC_TRANSITIONS = [
     r"^\s*hãy\s+(?:nghĩ\s+về|hình\s+dung|tưởng\s+tượng)\b",
     r"^\s*giờ\s+đây\s*,?\s*hãy\b",
     r"\bđể\s+tìm\s+câu\s+trả\s+lời\b",
+    r"^\s*(?:phần|mục|chương)\s+(?:một|hai|ba|bốn|năm|sáu|bảy|tám|\d+)\s+(?:là|sẽ\s+là|nói\s+về)\b",
+    r"^\s*(?:đầu\s+tiên|trước\s+hết)\s*,?\s*chúng\s+ta\s+hãy\b",
+    r"^\s*tóm\s+lại\s+là\b",
+    r"\btrong\s+kỷ\s+nguyên\s+số\s+hiện\s+nay\b",
+    r"\bnhư\s+một\s+con\s+dao\s+hai\s+lưỡi\b",
 ]
 
 BANNED_ACADEMIC_NAMEDROPS = [
@@ -484,7 +489,7 @@ def lint_script(
     # 0. Visual prompt clichés
     all_violations.extend(check_visual_prompt_cliches(scenes, characters=characters, style=style))
 
-    from scripts.visual_quality import (
+    from content.visual_quality import (
         check_abstract_card_clustering,
         check_atomic_variation_continuity,
         check_character_breathing_room,

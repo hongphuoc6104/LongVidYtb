@@ -87,7 +87,7 @@ Các ví dụ này minh họa cách giản lược, không phải danh sách b�
 
 ## 7. Phạm vi kỹ thuật khi triển khai
 
-- Điểm sửa chính: sys/flow_prompts/versions/, sys/flow_prompts/compiler.py, sys/image_pipeline.py, sys/tools/research_story_architect.py, builder đang dùng và hướng dẫn style/reference. Các nhánh kiểm tra cứng 1.3.0 cho shot type/full-bleed phải được mở rộng có chủ đích cho phiên bản mới.
+- Điểm sửa chính: sys/flow_prompts/versions/, sys/flow_prompts/compiler.py, sys/image_pipeline.py, sys/content/research_story_architect.py, builder đang dùng và hướng dẫn style/reference. Các nhánh kiểm tra cứng 1.3.0 cho shot type/full-bleed phải được mở rộng có chủ đích cho phiên bản mới.
 - Critique tiếp tục kiểm tra người que đúng hợp đồng; không loại bỏ invariant này. Thêm kiểm tra hành vi cho palette/style mới và việc caller không chèn lại nét đen dày.
 - Giữ test lịch sử 1.3.0; thêm test phiên bản mới cho người que, tay hoạt hình, full-frame, tham chiếu, pin trước gửi và không gửi lặp khi replay.
 - Chạy ./pipeline status trước khi sửa engine, các suite prompt/integration/full-frame liên quan và đủ sáu trạm của conveyor khi triển khai. Ghi PLAYBOOK đúng schema cho lỗi thực sự đã sửa; không tuyên bố chất lượng ảnh từ test fixture.

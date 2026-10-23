@@ -705,7 +705,28 @@
               "lived_friction",
               "empirical_conflict",
               "structural_model",
-              "actionable_resolution"
+              "actionable_resolution",
+              "hook",
+              "lead_in",
+              "problem",
+              "causal_mechanism",
+              "explanation",
+              "counter_argument",
+              "takeaway",
+              "closing"
+            ]
+          },
+          "editorial_section": {
+            "type": "string",
+            "enum": [
+              "hook",
+              "lead_in",
+              "problem",
+              "causal_mechanism",
+              "explanation",
+              "counter_argument",
+              "takeaway",
+              "closing"
             ]
           }
         },

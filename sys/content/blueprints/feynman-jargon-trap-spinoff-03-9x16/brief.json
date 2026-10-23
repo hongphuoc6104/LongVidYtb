@@ -1,0 +1,133 @@
+{
+  "schema_version": "3.0",
+  "topic": "Chiếc Nạng Ngôn Từ: Bài Test Tờ Giấy Trắng Trước Cửa Phòng Bảo Vệ Khóa Luận",
+  "audience": "Sinh viên, học viên cao học và người bảo vệ luận văn tại Việt Nam",
+  "goal": "Phá vỡ cái bẫy dựa dẫm vào thuật ngữ trừu tượng, áp dụng bài test tờ giấy trắng để làm chủ 120s đầu phòng bảo vệ",
+  "video_type": "science",
+  "duration": {
+    "min_seconds": 45.0,
+    "max_seconds": 60.0
+  },
+  "scene_count": 5,
+  "required_points": [
+    {
+      "id": "R01",
+      "text": "Cái bẫy biến thuật ngữ thành chiếc nạng ru ngủ não bộ"
+    },
+    {
+      "id": "R02",
+      "text": "Nỗi sợ phòng bảo vệ và thói quen lấp liếm bằng slide dày đặc chữ"
+    },
+    {
+      "id": "R03",
+      "text": "Bản chất của thuật ngữ khoa học là công cụ nén chứ không phải tấm khiên"
+    },
+    {
+      "id": "R04",
+      "text": "Bài test tờ giấy trắng viết ba câu đời thường trước giờ lên bục"
+    },
+    {
+      "id": "R05",
+      "text": "Khép vòng lặp làm chủ một trăm hai mươi giây đầu phòng bảo vệ"
+    }
+  ],
+  "language": "vi",
+  "tone": "Điềm đạm, ấm áp, thông tuệ, gần gũi",
+  "style": "Minh hoạ Editorial Graphic 2D toàn khung, nhân vật người que viền đen dày tương tác trực tiếp với hội đồng và tờ giấy trắng trong cùng bố cục, khung dọc 9:16.",
+  "aspect_ratio": "9:16",
+  "format_profile": "short_9x16",
+  "facts_required": true,
+  "sources": [
+    {
+      "id": "SRC01",
+      "title": "Consequences of Erudite Vernacular Utilized Irrespective of Necessity",
+      "reference": "Dr. Daniel M. Oppenheimer (2006). Applied Cognitive Psychology, 20(2), 139-156. DOI: 10.1002/acp.1178",
+      "facts": [
+        "Thuật ngữ rườm rà làm suy giảm uy tín của bài viết.",
+        "Người nghe luôn cảnh giác khi gặp các câu từ sáo rỗng."
+      ]
+    },
+    {
+      "id": "SRC02",
+      "title": "Genre Analysis: English in Academic and Research Settings",
+      "reference": "Dr. John M. Swales (1990). Cambridge University Press. ISBN: 978-0521338134",
+      "facts": [
+        "Hội đồng luôn soi bản chất nghiên cứu thay vì slide màu mè.",
+        "Giải thích ngắn gọn ba câu giúp chiếm trọn lòng tin hội đồng."
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "aspect_ratio": "9:16",
+      "language": "vi",
+      "subtitles": true,
+      "voice": "VietNarrator",
+      "speed": 1.0
+    }
+  ],
+  "planning": {
+    "success_criteria": [
+      "Phá vỡ cái bẫy dựa dẫm vào thuật ngữ trừu tượng, áp dụng bài test tờ giấy trắng để làm chủ 120s đầu phòng bảo vệ"
+    ],
+    "avoid": [
+      "Tránh lối diễn đạt giáo điều, sáo rỗng hoặc thuật ngữ hàn lâm không giải thích."
+    ],
+    "prior_knowledge": "Không đòi hỏi kiến thức chuyên sâu từ trước.",
+    "pacing": "Theo lời dẫn tự nhiên Conversational Essayist, cân chỉnh triệt tiêu dead-air.",
+    "domain_requirements": [],
+    "assumptions": [
+      "Mỗi phân cảnh được cân chỉnh theo công thức âm học P_tail và dung sai drift <= 0.3s."
+    ],
+    "text_style": {
+      "font": "sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt",
+      "color": "#172033",
+      "outline": "nền sáng tương phản",
+      "size": "dễ đọc trên điện thoại (khung dọc 9:16)",
+      "placement": "cách mép ít nhất 10%; tránh mặt và vùng phụ đề dưới cùng 18%"
+    },
+    "speech_rates": {
+      "vi": {
+        "units_per_second": 4.0,
+        "uncertainty": 0.15,
+        "source": "Acoustic calibrated cadence"
+      },
+      "en": {
+        "units_per_second": 2.5,
+        "uncertainty": 0.25,
+        "source": "Estimated English reading rate"
+      }
+    }
+  },
+  "conversational_facts": true,
+  "packaging": {
+    "youtube_title": "Quy Tắc Tờ Giấy Trắng Trước Giờ Bảo Vệ Khóa Luận",
+    "thumbnail_spec": {
+      "visual_hook": "Tờ giấy trắng tinh với ba câu kết luận ngắn gọn bên cạnh chiếc micro phòng bảo vệ",
+      "text_overlay": "TỜ GIẤY TRẮNG",
+      "contrast_pair": "Chiếc nạng thuật ngữ vs. Tờ giấy trắng bản chất"
+    },
+    "channel_pillar": "Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức",
+    "funnel_tier": "tier_2_mid",
+    "seo_keywords": [
+      "bảo vệ khóa luận",
+      "bài test tờ giấy trắng",
+      "chiếc nạng ngôn từ",
+      "tâm lý hội đồng"
+    ]
+  },
+  "youtube_title": "Quy Tắc Tờ Giấy Trắng Trước Giờ Bảo Vệ Khóa Luận",
+  "thumbnail_spec": {
+    "visual_hook": "Tờ giấy trắng tinh với ba câu kết luận ngắn gọn bên cạnh chiếc micro phòng bảo vệ",
+    "text_overlay": "TỜ GIẤY TRẮNG",
+    "contrast_pair": "Chiếc nạng thuật ngữ vs. Tờ giấy trắng bản chất"
+  },
+  "channel_pillar": "Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức",
+  "funnel_tier": "tier_2_mid",
+  "seo_keywords": [
+    "bảo vệ khóa luận",
+    "bài test tờ giấy trắng",
+    "chiếc nạng ngôn từ",
+    "tâm lý hội đồng"
+  ]
+}

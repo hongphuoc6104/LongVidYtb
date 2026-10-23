@@ -386,6 +386,21 @@
         },
         "contrast_pair": {
           "type": "string"
+        },
+        "thumbnail_prompt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "layout_mode": {
+          "type": "string",
+          "enum": [
+            "integrated_poster",
+            "split_contrast",
+            "minimal_negative_space"
+          ]
+        },
+        "typography_style": {
+          "type": "string"
         }
       },
       "required": [
@@ -421,6 +436,21 @@
               "minLength": 1
             },
             "contrast_pair": {
+              "type": "string"
+            },
+            "thumbnail_prompt": {
+              "type": "string",
+              "minLength": 1
+            },
+            "layout_mode": {
+              "type": "string",
+              "enum": [
+                "integrated_poster",
+                "split_contrast",
+                "minimal_negative_space"
+              ]
+            },
+            "typography_style": {
               "type": "string"
             }
           },

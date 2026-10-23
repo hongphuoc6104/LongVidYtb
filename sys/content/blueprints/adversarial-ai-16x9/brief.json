@@ -1,0 +1,155 @@
+{
+  "schema_version": "3.0",
+  "topic": "Biến AI thành phản biện đối đầu thay vì viết hộ: Giải mã cơ chế next-token prediction và quy trình 4 bước Reviewer 2 chuẩn Q1",
+  "audience": "Sinh viên năm cuối, học viên cao học và người làm nghiên cứu tại Việt Nam",
+  "goal": "Giải mã bẫy dùng AI viết tổng quan tài liệu và xây dựng quy trình 4 bước biến AI thành Reviewer 2 phản biện đối đầu chuẩn Q1",
+  "video_type": "research_explainer",
+  "duration": {
+    "min_seconds": 80.0,
+    "max_seconds": 140.0
+  },
+  "scene_count": 7,
+  "required_points": [
+    {
+      "id": "R01",
+      "text": "Cú tát mở màn bàn học đêm"
+    },
+    {
+      "id": "R02",
+      "text": "Cú sốc ba mươi giây phòng bảo vệ"
+    },
+    {
+      "id": "R03",
+      "text": "Bản chất cỗ máy đoán xác suất"
+    },
+    {
+      "id": "R04",
+      "text": "Phân tích đối lập và mô hình CARS"
+    },
+    {
+      "id": "R05",
+      "text": "Bước một và bước hai đảo vai AI"
+    },
+    {
+      "id": "R06",
+      "text": "Bước ba và bước bốn mổ xẻ phương pháp"
+    },
+    {
+      "id": "R07",
+      "text": "Khép vòng lặp mài sắc tư duy"
+    }
+  ],
+  "language": "vi",
+  "tone": "Conversational Essayist điềm đạm, ấm áp, sâu sắc, lôi cuốn",
+  "style": "Hand-drawn 2D marker illustration, anonymous round-headed stick figures, clean teal and yellow palette with deep navy accents. Complete integrated scenes; diagrams use pure white cards. No unrequested text.",
+  "aspect_ratio": "16:9",
+  "format_profile": "long_16x9",
+  "facts_required": true,
+  "sources": [
+    {
+      "id": "SRC01",
+      "title": "Large Language Models as Research Assistants",
+      "reference": "Science Journal on Generative AI in Academic Research",
+      "facts": [
+        "Trí tuệ nhân tạo luôn chọn từ ngữ an toàn nhất.",
+        "Máy tính chỉ đoán xác suất của từ tiếp theo."
+      ]
+    },
+    {
+      "id": "SRC02",
+      "title": "Creating a Research Space: CARS Model",
+      "reference": "John Swales Academic Research Framework",
+      "facts": [
+        "Nghiên cứu khoa học bắt đầu từ xung đột học thuật.",
+        "Hội đồng luôn tìm kiếm khoảng trống tri thức mới."
+      ]
+    },
+    {
+      "id": "SRC03",
+      "title": "Adversarial Machine Learning and Critical Review",
+      "reference": "AI Peer Review and Adversarial Testing Principles",
+      "facts": [
+        "Phản biện đối đầu giúp phơi bày các điểm mù.",
+        "Thử tải luận điểm bằng các phản ví dụ thực tế."
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "aspect_ratio": "16:9",
+      "language": "vi",
+      "subtitles": false,
+      "voice": "VietNarrator",
+      "speed": 1.0
+    }
+  ],
+  "planning": {
+    "success_criteria": [
+      "Giải mã bẫy dùng AI viết tổng quan tài liệu và xây dựng quy trình 4 bước biến AI thành Reviewer 2 phản biện đối đầu chuẩn Q1"
+    ],
+    "avoid": [
+      "Tránh lối diễn đạt giáo điều, sáo rỗng hoặc thuật ngữ hàn lâm không giải thích."
+    ],
+    "prior_knowledge": "Không đòi hỏi kiến thức chuyên sâu từ trước.",
+    "pacing": "Theo lời dẫn tự nhiên Conversational Essayist, cân chỉnh triệt tiêu dead-air.",
+    "domain_requirements": [],
+    "assumptions": [
+      "Mỗi phân cảnh được cân chỉnh theo công thức âm học P_tail và dung sai drift <= 0.3s."
+    ],
+    "text_style": {
+      "font": "sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt",
+      "color": "#172033",
+      "outline": "nền sáng tương phản",
+      "size": "dễ đọc trên màn hình ngang (khung 16:9)",
+      "placement": "cách mép ít nhất 10%; bố cục ngang thoáng, không ép lề dọc điện thoại"
+    },
+    "speech_rates": {
+      "vi": {
+        "units_per_second": 4.0,
+        "uncertainty": 0.15,
+        "source": "Acoustic calibrated cadence"
+      },
+      "en": {
+        "units_per_second": 2.5,
+        "uncertainty": 0.25,
+        "source": "Estimated English reading rate"
+      }
+    }
+  },
+  "conversational_facts": true,
+  "packaging": {
+    "youtube_title": "Dùng AI viết luận văn sẽ bị bắt bài ở mục này",
+    "thumbnail_spec": {
+      "visual_hook": "Màn hình laptop đỏ rực lỗi đạo văn đối lập với sơ đồ ma trận phản biện AI",
+      "text_overlay": "BẪY DÙNG AI",
+      "contrast_pair": "Dùng AI viết hộ sáo rỗng vs. AI phản biện đối kháng Q1"
+    },
+    "channel_pillar": "Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức",
+    "funnel_tier": "tier_3_conversion",
+    "seo_keywords": [
+      "nghiên cứu khoa học",
+      "dùng AI viết luận văn",
+      "research gap matrix",
+      "literature review",
+      "phản biện luận văn",
+      "reviewer 2"
+    ]
+  },
+  "youtube_title": "Dùng AI viết luận văn sẽ bị bắt bài ở mục này",
+  "thumbnail_spec": {
+    "visual_hook": "Màn hình laptop đỏ rực lỗi đạo văn đối lập với sơ đồ ma trận phản biện AI",
+    "text_overlay": "BẪY DÙNG AI",
+    "contrast_pair": "Dùng AI viết hộ sáo rỗng vs. AI phản biện đối kháng Q1"
+  },
+  "channel_pillar": "Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức",
+  "funnel_tier": "tier_3_conversion",
+  "seo_keywords": [
+    "nghiên cứu khoa học",
+    "dùng AI viết luận văn",
+    "research gap matrix",
+    "literature review",
+    "phản biện luận văn",
+    "reviewer 2"
+  ],
+  "visual_pacing_profile": "full_frame_v1"
+}
