@@ -53,12 +53,85 @@ try:
     # must still import the pure packaging/script validators defined here.
     from visual_style import CAST_APPEARANCE, DEFAULT_OUTFIT
     from visual_style import LEGACY_HANDDRAWN_STYLE_DESCRIPTION as STYLE_DESCRIPTION
+    from visual_style import STYLE_DESCRIPTION as CURRENT_STYLE_DESCRIPTION
     VISUAL_STYLE_AVAILABLE = True
 except ImportError:
-    CAST_APPEARANCE = None  # type: ignore[assignment]
-    DEFAULT_OUTFIT = None  # type: ignore[assignment]
-    STYLE_DESCRIPTION = None  # type: ignore[assignment]
+    CAST_APPEARANCE = (
+        "Anonymous round white head, expressive dot eyes, thin stick limbs, "
+        "simplified cartoon hands and fine-to-medium charcoal contours."
+    )
+    DEFAULT_OUTFIT = (
+        "Simple earth-toned clothing (terracotta, warm ochre, sage green, navy, warm gray) "
+        "appropriate to the scene and role; preserve the costume in returning shots without imposing a recurring color."
+    )
+    STYLE_DESCRIPTION = (
+        "Hand-drawn 2D explainer illustration with an earth-toned foundation (terracotta, warm ochre, sage green, "
+        "navy, warm gray, sky blue), fine-to-medium warm-charcoal contours, high contrast, and warm-cool temperature "
+        "contrast (warm highlights paired with cool blue-gray shadows). Follow a disciplined 60-30-10 color ratio: "
+        "60% dominant calm neutral or grounding backdrop, 30% secondary structural elements and setting, and 10% "
+        "intentional focal accent. Maintain generous negative space with at least 25–35% calm open canvas free of "
+        "decorative props or dense linework. Use a moderately simplified composition with one clear focal action or "
+        "concept metaphor. Suggest the requested setting with only essential environmental cues; secondary objects "
+        "are simplified into quiet flat shapes with fewer interior lines. Background linework is finer, lighter, and "
+        "lower-contrast than the focal subject. Choose colors naturally for each scene, preserving the requested "
+        "location, time of day, and meaningful visual metaphor. Night scenes retain night cues with gentle ambient "
+        "fill to read the action clearly. Create visual interest through expressive gestures, deliberate composition, "
+        "open breathing room, and selective temperature contrast. No decorative clutter, photographic room interiors, "
+        "heavy black marker borders, washed-out pastels, muddy dark grading, neon saturation, harsh spotlights, "
+        "photorealism, lens blur, gradients, or 3D rendering. Complete edge-to-edge full-frame composition; "
+        "white_card, visual_diagram, and concept cards use a clean pure white #FFFFFF field."
+    )
+    CURRENT_STYLE_DESCRIPTION = (
+        "Hand-drawn 2D explanatory illustration. Use clear black outer contours with slight natural hand-drawn "
+        "irregularity and simple internal lines. Use selective flat color areas and only small simple grounding "
+        "shadows when useful. Keep silhouettes readable on a mobile screen. Use a clean white field for isolated "
+        "objects, comparisons and diagrams; contextual scenes may use broad flat color areas with only essential "
+        "setting cues. Explain one clear relationship through objects, quantities, labels, arrows or relevant "
+        "contextual action. Static objects and diagrams are valid explanations. No cinematic lighting, blue-gray "
+        "shadow system, glossy volume, gradients, paper aging, photorealism or 3D. Draw a complete scene image."
+    )
     VISUAL_STYLE_AVAILABLE = False
+
+_FALLBACK_BANNED_CLICHES = (
+    (re.compile(r"(?i)\b(?:brain\s*cutaway|split\s*brain|exposed\s*brain|cerebrum|cross-section\s*of\s*(?:the\s*)?brain|lát\s*cắt\s*não|bổ\s*đôi\s*não|não\s*bổ\s*đôi)\b"), "brain cutaway cliché"),
+    (re.compile(r"(?i)\b(?:abacus|counting\s*frame|bàn\s*tính\s*gảy|chiếc\s*bàn\s*tính)\b"), "abacus cliché"),
+    (re.compile(r"(?i)\b(?:pipe\s*valve|plumbing\s*valve|industrial\s*faucet|van\s*ống\s*nước|van\s*công\s*nghiệp)\b"), "pipe valve cliché"),
+    (re.compile(r"(?i)\b(?:iron\s*anchor|ship\s*anchor|heavy\s*anchor|mỏ\s*neo\s*sắt|mỏ\s*neo\s*tàu)\b"), "iron anchor cliché"),
+    (re.compile(r"(?i)\b(?:split[- ]?screen|split[- ]?composition|dichotomy\s*screen|màn\s*hình\s*chia\s*đôi|chia\s*đôi\s*màn\s*hình)\b"), "split screen cliché"),
+)
+_FALLBACK_LAZINESS_PATTERNS = (
+    (re.compile(r"(?i)\b(?:sits\s+and\s+thinks|sitting\s+quietly|staring\s+at\s+(?:laptop|screen|paper|wall)|pondering|feeling\s+stressed|lost\s+in\s+thought)\b"), "passive character action"),
+    (re.compile(r"(?i)\b(?:coffee\s+mug\s+on\s+desk|books\s+resting\s+on\s+table|desk\s+lamp\s+glowing|empty\s+room|scattered\s+papers\s+on\s+desk|vintage\s+clock|reading\s+lamp)\b"), "lazy still-life cliché"),
+    (re.compile(r"(?i)\b(?:a\s+conceptual\s+metaphor\s+of|an\s+abstract\s+illustration\s+of|a\s+symbolic\s+representation\s+of)\b"), "evasive abstract phrasing"),
+)
+
+
+def _fallback_find_visual_cliche(text: Any) -> Optional[str]:
+    if not isinstance(text, str):
+        return None
+    for pattern, name in _FALLBACK_BANNED_CLICHES:
+        if pattern.search(text):
+            return name
+    return None
+
+
+def _fallback_find_laziness_pattern(text: Any) -> Optional[Tuple[str, str]]:
+    if not isinstance(text, str):
+        return None
+    for pattern, name in _FALLBACK_LAZINESS_PATTERNS:
+        m = pattern.search(text)
+        if m:
+            return name, m.group()
+    return None
+
+
+def _resolve_visual_prompt_validators():
+    try:
+        from flow_prompts import find_visual_cliche
+        from flow_prompts.compiler import find_laziness_pattern
+        return find_visual_cliche, find_laziness_pattern
+    except ImportError:
+        return _fallback_find_visual_cliche, _fallback_find_laziness_pattern
 
 DEFAULT_CHANNEL_PILLAR = "Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức"
 ALLOWED_FUNNEL_TIERS: Tuple[str, str, str] = ("tier_1_broad", "tier_2_mid", "tier_3_conversion")
@@ -393,8 +466,7 @@ class ResearchedBeat:
             self.character_ids = []
         if self.shot_type == "variation" and not (self.based_on and self.preserve.strip() and self.change.strip()):
             raise ValueError("A variation requires based_on, preserve, and change")
-        from flow_prompts import find_visual_cliche
-        from flow_prompts.compiler import find_laziness_pattern
+        find_visual_cliche, find_laziness_pattern = _resolve_visual_prompt_validators()
         for field_name, text in [("description", self.description), ("preserve", self.preserve), ("change", self.change)]:
             if text:
                 cliche = find_visual_cliche(text)
@@ -453,8 +525,7 @@ class ResearchedScene:
     narrative_phase: Optional[str] = None
 
     def __post_init__(self) -> None:
-        from flow_prompts import find_visual_cliche
-        from flow_prompts.compiler import find_laziness_pattern
+        find_visual_cliche, find_laziness_pattern = _resolve_visual_prompt_validators()
         for field_name, text in [("setting", self.setting), ("action", self.action), ("bg_description", self.bg_description), ("scene_description", self.scene_description)]:
             if text:
                 cliche = find_visual_cliche(text)
@@ -1064,8 +1135,7 @@ def build_scenes_from_story_rows(
     ResearchedScene objects with dynamic contextual character resolution and action progression.
     Supports 3-tuple (title, setting, rows), 4-tuple, 5-tuple, and 6-tuple story rows.
     """
-    from flow_prompts import find_visual_cliche
-    from flow_prompts.compiler import find_laziness_pattern
+    find_visual_cliche, find_laziness_pattern = _resolve_visual_prompt_validators()
 
     built_scenes: List[ResearchedScene] = []
     total = len(story_rows)
@@ -1268,8 +1338,7 @@ def build_content_v3(
     needs_en = "en" in brief_langs
     elapsed = 0.0
 
-    from flow_prompts import find_visual_cliche
-    from flow_prompts.compiler import find_laziness_pattern
+    find_visual_cliche, find_laziness_pattern = _resolve_visual_prompt_validators()
 
     if topic.style:
         cliche = find_visual_cliche(topic.style)

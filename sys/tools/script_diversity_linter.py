@@ -489,7 +489,7 @@ def lint_script(
     # 0. Visual prompt clichés
     all_violations.extend(check_visual_prompt_cliches(scenes, characters=characters, style=style))
 
-    from content.visual_quality import (
+    from scripts.visual_quality import (
         check_abstract_card_clustering,
         check_atomic_variation_continuity,
         check_character_breathing_room,

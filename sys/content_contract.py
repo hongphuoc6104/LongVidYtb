@@ -51,7 +51,7 @@ def validate_brief(root,b):
   errors.append(error('SOURCE_REQUIRED','sources','Chưa cung cấp dữ kiện','Bổ sung tài liệu và dữ kiện trước khi viết.'))
  if b.get('schema_version') == '3.0' and b.get('sources') and b.get('conversational_facts', True) is not False:
   try:
-   from content.research_story_architect import check_conversational_spoken_facts
+   from research_story_architect import check_conversational_spoken_facts
    spoken_fact_errs = check_conversational_spoken_facts(b.get('sources', []))
    for sfe in spoken_fact_errs:
     errors.append(error('FACT_NOT_CONVERSATIONAL', 'sources', sfe, 'Chuyển đổi dữ kiện thành văn nói <= 20 âm tiết, không dùng ký hiệu học thuật.'))
@@ -59,7 +59,7 @@ def validate_brief(root,b):
    pass
  if b.get('schema_version') == '3.0' and any(k in b for k in ('packaging', 'youtube_title', 'thumbnail_spec', 'channel_pillar')):
   try:
-   from content.research_story_architect import check_packaging_and_localization
+   from research_story_architect import check_packaging_and_localization
    pkg_warns = check_packaging_and_localization(b)
    for pw in pkg_warns:
     errors.append(error('PACKAGING_CONTRACT', 'packaging', pw, 'Đảm bảo youtube_title <= 55 ký tự, thumbnail_spec có text_overlay 2-4 từ in hoa và đúng ngách học thuật.'))
@@ -187,13 +187,16 @@ def validate_content(root,b,revision,bhash,p):
        if cliche: fail('FLOW_CLICHE_FORBIDDEN', f"{im_id}/visible_text.{subf}", f"Visible text {subf} contains banned {cliche}", 'Thay thế chữ hiển thị sáo rỗng.')
  if errors: raise ContractError(errors)
  if p.get('schema_version')=='3.0':
-  from explainer_contract import is_reference_explainer, validate_explanations
+  from explainer_contract import is_reference_explainer, validate_clearance_and_labels, validate_explanations
   reference_explainer = is_reference_explainer(b)
   if reference_explainer:
    for message in validate_explanations(p):
     fail(message.split(':')[0], 'images', message, 'Author explicit entities and explanation bindings.')
+  elif b.get('visual_pacing_profile') == 'full_frame_v1' and ('1.7.0' in str(b.get('style', '')) or 'Hand-drawn 2D' in str(b.get('style', ''))):
+   for message in validate_clearance_and_labels(p):
+    fail(message.split(':')[0], 'images', message, 'Ensure full-bleed 100% canvas and concise uppercase Vietnamese labels (< 5% height).')
   try:
-   from content.visual_quality import (
+   from scripts.visual_quality import (
     check_character_breathing_room,
     check_instructional_manual_loop,
     check_scene_narrative_progression,
@@ -230,7 +233,7 @@ def validate_content(root,b,revision,bhash,p):
     check_scene_narrative_progression,
     check_micro_action_filler,
    ] if b.get('visual_pacing_profile') == 'full_frame_v1' else []
-   if is_hd2d_or_earth and not reference_explainer and b.get('visual_pacing_profile') == 'full_frame_v1':
+   if is_hd2d_or_earth and b.get('visual_pacing_profile') == 'full_frame_v1':
     checks.extend([
      check_character_breathing_room,
      check_setting_description_verbosity,

@@ -20,11 +20,11 @@ for _p in (str(SYS_DIR), str(SYS_DIR / "tools")):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-from visual_style import CAST_APPEARANCE, DEFAULT_OUTFIT
-from visual_style import LEGACY_HANDDRAWN_STYLE_DESCRIPTION as STYLE_DESCRIPTION
-
 from content.research_story_architect import (
+    CAST_APPEARANCE,
     DEFAULT_CHANNEL_PILLAR,
+    DEFAULT_OUTFIT,
+    STYLE_DESCRIPTION,
     PackagingSpec,
     ResearchedScene,
     ResearchedTopic,

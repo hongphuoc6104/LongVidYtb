@@ -2,51 +2,18 @@
 import contextlib
 import json
 import shutil
+import sys
 import time
 from pathlib import Path
+
+_sys_dir = Path(__file__).resolve().parent
+if str(_sys_dir) not in sys.path:
+    sys.path.insert(0, str(_sys_dir))
 
 import jsonschema
 from PIL import Image, ImageDraw
 
 from pilot import Blocked, digest, hashobj, read, write
-
-try:
-    from flow_cdp.lifecycle import ProfileLifecycleManager, calculate_optimal_workers, get_current_lifecycle
-except ImportError:
-    @contextlib.contextmanager
-    def ProfileLifecycleManager(*args, **kwargs):
-        yield None
-    calculate_optimal_workers = lambda n: 1
-    get_current_lifecycle = lambda: None
-
-try:
-    from flow_dispatch import job_profiles, validate_dependencies
-except ImportError:
-    job_profiles = lambda p, j: ('pool', read(p.root / 'config.json').get('flow_cdp_profiles', []))
-    validate_dependencies = lambda scenes: 1
-
-try:
-    from flow_management import prompt_pin, config as flow_config
-except ImportError:
-    def flow_config(p, job):
-        return read(p.root / 'config.json')
-    def prompt_pin(p, job):
-        return None
-
-try:
-    from flow_prompts import compile_pinned
-    from flow_prompts.compiler import CAST_VERSIONS, FULL_FRAME_VERSIONS
-except ImportError:
-    compile_pinned = lambda pin, purpose, data: {'prompt': data.get('description', '')}
-    CAST_VERSIONS = ()
-    FULL_FRAME_VERSIONS = ()
-
-def _sync_flow_management(p, job, folder, record):
-    try:
-        import flow_management
-        flow_management.sync(p, job, folder, record)
-    except ImportError:
-        pass
 
 STAGES = ('references', 'final')
 
@@ -284,6 +251,8 @@ def requested_prompt(p, j, target, prompt, notes, ratio, registration=False):
     c = content(p,j)
     corrections = safe_corrections(c, notes)
     unit = next((x for x in planned_units(p,j) if x['id']==target),None)
+    from flow_management import prompt_pin
+    from flow_prompts.compiler import CAST_VERSIONS
     pin = prompt_pin(p, j)
     cast_mode = bool(pin and pin.get('version') in CAST_VERSIONS)
     mascot_target = not cast_mode and (
@@ -312,10 +281,13 @@ def _template_request(p, j, target, prompt, corrections, ratio, refs, registrati
     Resolve the same verified artifact/media pair as the actual adapter. The
     daemon still checks the Character/Base UI slots at each send boundary.
     """
+    from flow_management import prompt_pin
     pin = prompt_pin(p, j)
     if pin is None:
         return None
     from adapters import _flow_media_reference
+    from flow_prompts import compile_pinned
+    from flow_prompts.compiler import CAST_VERSIONS, FULL_FRAME_VERSIONS
     canonical = p.root / 'assets/characters/channel-mascot/reference-v1.png'
     if registration:
         image = p.path(j, registration['path'])
@@ -411,6 +383,8 @@ def _saved_template_prompt(p, j, identity):
     if record is None:
         return requested_prompt(p, j, identity['target'], identity['prompt'], identity.get('corrections', ''),
                                 identity['ratio'], bool(identity.get('registration')))
+    from flow_management import prompt_pin
+    from flow_prompts import compile_pinned
     if prompt_pin(p, j) != record.get('pin'):
         raise Blocked('FLOW_TEMPLATE_PIN_CHANGED: request does not match its job pin')
     scene = next((unit for unit in planned_units(p, j) if unit['id'] == identity['target']), None)
@@ -459,6 +433,7 @@ def _plan_request(p, j, target, prompt, refs, registration, base_image):
         linked = [register_existing(p, j, next(x for x in approved_refs if x['character_id'] == cid)) for cid in scene['character_ids']]
         if list(refs) != linked or prompt != scene['prompt']:
             raise Blocked('M2_REFERENCE_LINK: scene request must use approved prompt and registered characters')
+    from flow_management import config as flow_config
     cfg = flow_config(p, j)
     from scripts.image_repairs import active
     corrections = active(p, j, scene, target)
@@ -538,6 +513,13 @@ def auto_reconcile_attempt(p, j, folder, record=None):
         from PIL import Image
         with Image.open(f) as im:
             im.verify()
+        target_name = str(data.get('identity', {}).get('target', ''))
+        if not target_name.startswith('register:'):
+            try:
+                from tools.editorial_compositor import apply_editorial_overlay
+                apply_editorial_overlay(f)
+            except Exception:
+                pass
         data.update(
             state='downloaded',
             path=str(f.relative_to(p.job(j))),
@@ -548,7 +530,7 @@ def auto_reconcile_attempt(p, j, folder, record=None):
         write(record_file, data)
         from execution import is_job
         if is_job(p, j) or (Path(folder) / 'owner.json').exists():
-            _sync_flow_management(p, j, folder, data)
+            __import__('flow_management').sync(p, j, folder, data)
         p.event(j, 'images', 'flow_auto_reconciled', json.dumps({
             'key': data.get('key'), 'path': data['path'], 'reason': 'download_found_on_disk'
         }, ensure_ascii=False))
@@ -586,6 +568,28 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None, p
     base.mkdir(parents=True, exist_ok=True)
     # Even changed prompts/edits cannot hide an unresolved submission.
     conflict = _unresolved_conflict(p, j, target)
+    if conflict and conflict.get('key') == key and conflict.get('state') == 'ambiguous':
+        c_folder = base / key
+        if not (c_folder / 'download').is_dir():
+            transient_errors = (
+                'session ended', 'connection blocked', 'socket', 'connection refused',
+                'devtoolsactiveport', 'profile_unverified', 'no automatic reconnect',
+                'cannot connect to chrome', 'endpoint ownership unavailable',
+                'no chrome profile workers available', 'no close frame received or sent',
+                'cdp_transport_closed', 'connection closed', 'failed to fetch',
+                'captcha_failed', 'no_at_token', 'js exception'
+            )
+            if any(pat in str(conflict.get('error', '')).lower() for pat in transient_errors):
+                conflict.update(
+                    state='not_submitted',
+                    auto_reconciled=True,
+                    auto_reconciled_at=time.time(),
+                )
+                write(c_folder / 'request.json', conflict)
+                from execution import is_job
+                if is_job(p, j) or (c_folder / 'owner.json').exists():
+                    __import__('flow_management').sync(p, j, c_folder, conflict)
+                conflict = None
     if conflict and not (conflict['key'] == key and conflict['state'] == 'generated'):
         raise Blocked('M2_AMBIGUOUS: reconcile request ' + conflict['key'] + ' before another submission')
     folder = base / key
@@ -725,12 +729,17 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None, p
                 or metadata.get('characters', []) != expected_chars
                 or metadata.get('source') != 'google-flow-browser' or metadata.get('status') != 'downloaded'):
                 raise Blocked('Downloaded metadata does not match request')
+            try:
+                from tools.editorial_compositor import apply_editorial_overlay
+                apply_editorial_overlay(f)
+            except Exception:
+                pass
         meta_profile = metadata.get('profile_id') if not registration else None
         result.update(state='downloaded', path=str(f.relative_to(p.job(j))), sha256=digest(f),
                       profile_id=meta_profile or target_profile_id or '')
         write(record, result)
         if is_job(p, j):
-            _sync_flow_management(p, j, folder, result)
+            __import__('flow_management').sync(p, j, folder, result)
         image_check(p, j, result['path'], result['sha256'], full=registration is None)
         p.event(j, 'images', 'flow_downloaded', key)
         return result
@@ -751,7 +760,7 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None, p
             write(record, result)
         from execution import is_job
         if is_job(p, j) or (Path(folder) / 'owner.json').exists():
-            _sync_flow_management(p, j, folder, result)
+            __import__('flow_management').sync(p, j, folder, result)
         raise Blocked('M2_FLOW: ' + str(ex)) from ex
 
 
@@ -774,6 +783,7 @@ def batch_submit(p, j, units, registrations):
     Known generated results use collection-only recovery through request().
     """
     import adapters
+    from flow_management import config as flow_config
     cfg = flow_config(p, j)
     plans = []
     for unit in units:
@@ -820,7 +830,10 @@ def batch_submit(p, j, units, registrations):
     try:
         _before_generation(p, j)
         from execution import is_job
-        r = adapters.gflow(p, *args, timeout=max(960, 300 * len(jobs)), **({'flow_job': j} if is_job(p, j) else {}))
+        from flow_cdp.lifecycle import calculate_rampup_timeout
+        batch_timeout = calculate_rampup_timeout(len(jobs))
+        effective_timeout = cfg.get('flow_batch_timeout', max(batch_timeout, 300 * len(jobs)))
+        r = adapters.gflow(p, *args, timeout=effective_timeout, **({'flow_job': j} if is_job(p, j) else {}))
         (batch_dir / 'command.log').write_text(r.stdout + '\n' + r.stderr)
     except Exception as ex:
         (batch_dir / 'command.log').write_text('EXCEPTION: ' + str(ex))
@@ -840,14 +853,14 @@ def batch_submit(p, j, units, registrations):
         if entry['status'] == 'not_submitted':
             result.update(state='not_submitted',error=entry.get('error',''))
             write(record,result)
-            if __import__('execution').is_job(p, j): _sync_flow_management(p, j, folder, result)
+            if __import__('execution').is_job(p, j): __import__('flow_management').sync(p, j, folder, result)
             continue
         if entry['status'] == 'failed':
             result.update(state='generated' if entry.get('collection_only') else 'ambiguous', error=entry.get('error', 'batch job failed'))
             if entry.get('collection_only'):
                 result['collection_out'] = str((batch_dir / plan['job_id']).relative_to(p.job(j)))
             write(record, result)
-            if __import__('execution').is_job(p, j): _sync_flow_management(p, j, folder, result)
+            if __import__('execution').is_job(p, j): __import__('flow_management').sync(p, j, folder, result)
             p.event(j, 'images', 'flow_batch_ambiguous', key)
             continue
         try:
@@ -878,18 +891,23 @@ def batch_submit(p, j, units, registrations):
                 raise Blocked('Downloaded metadata does not match request')
             dest = folder / ('result' + f.suffix)
             shutil.copy(f, dest)
+            try:
+                from tools.editorial_compositor import apply_editorial_overlay
+                apply_editorial_overlay(dest)
+            except Exception:
+                pass
             if ui_proof_path.is_file(): shutil.copy(ui_proof_path, folder / 'ui-proof.json')
             if before_submit_path.exists(): shutil.copy(before_submit_path, folder / 'before-submit.png')
             shutil.copy(f.with_suffix('.json'), dest.with_suffix('.json'))
             result.update(state='downloaded', path=str(dest.relative_to(p.job(j))), sha256=digest(dest))
             write(record, result)
-            if __import__('execution').is_job(p, j): _sync_flow_management(p, j, folder, result)
+            if __import__('execution').is_job(p, j): __import__('flow_management').sync(p, j, folder, result)
             image_check(p, j, result['path'], result['sha256'], full=True)
             p.event(j, 'images', 'flow_batch_downloaded', key)
         except Exception as ex:
             result.update(state='ambiguous', error=str(ex))
             write(record, result)
-            if __import__('execution').is_job(p, j): _sync_flow_management(p, j, folder, result)
+            if __import__('execution').is_job(p, j): __import__('flow_management').sync(p, j, folder, result)
             p.event(j, 'images', 'flow_batch_ambiguous', key)
 
 
@@ -963,8 +981,14 @@ def produce(p, j, out):
         raise Blocked('M2_APPROVED: reject a specific scene or character before replacement')
     if p.rows(j)['images']['state'] == 'awaiting_review':
         raise Blocked('M2_REVIEW: approve or reject current checkpoint first')
-    with ProfileLifecycleManager(auto_teardown=True):
-        return _produce_internal(p, j, out, c, s)
+    from flow_cdp.lifecycle import ProfileLifecycleManager
+    from flow_cdp.process_manager import get_process_manager
+    with ProfileLifecycleManager(auto_teardown=True) as mgr:
+        try:
+            return _produce_internal(p, j, out, c, s)
+        finally:
+            mgr.teardown()
+            get_process_manager().clean_orphans_from_registry()
 
 
 def _produce_internal(p, j, out, c, s):
@@ -992,19 +1016,29 @@ def _produce_internal(p, j, out, c, s):
         import collections
         import concurrent.futures
         import threading
+        from flow_cdp.lifecycle import (
+            calculate_optimal_workers,
+            calculate_rampup_timeout,
+            calculate_rampup_workers,
+            get_current_lifecycle,
+        )
         cfg = read(p.root / 'config.json')
         pool_profiles = cfg.get('flow_cdp_profiles', [])
-        optimal_workers = calculate_optimal_workers(len(scenes))
-        concurrency = cfg.get('concurrency', optimal_workers)
+        total_images = len(scenes)
+        rampup_workers = calculate_rampup_workers(total_images)
+        rampup_timeout = calculate_rampup_timeout(total_images)
+        optimal_workers = calculate_optimal_workers(total_images)
+        concurrency = cfg.get('concurrency', rampup_workers)
         single_profile_enforced = bool(cfg.get('flow_single_profile', False))
         from execution import is_job
+        from flow_dispatch import job_profiles, validate_dependencies
         roots = validate_dependencies(scenes)
         policy = 'single_profile' if single_profile_enforced else 'pool'
         if is_job(p, j):
             policy, pool_profiles = job_profiles(p, j)
         lifecycle = get_current_lifecycle()
         # Launch only eligible candidates under the lifecycle's ownership tracker.
-        wanted = min(concurrency, optimal_workers, len(pool_profiles), roots)
+        wanted = min(concurrency, rampup_workers, len(pool_profiles), roots)
         if policy == 'single_profile':
             wanted = min(1, wanted)
         effective_pool = []
@@ -1476,7 +1510,7 @@ def flow_action(p, a):
         write(q, r)
         from execution import is_job
         if is_job(p, a.job) or (Path(q.parent) / 'owner.json').exists():
-            _sync_flow_management(p, a.job, q.parent, r)
+            __import__('flow_management').sync(p, a.job, q.parent, r)
         p.event(a.job, 'images', 'flow_reconciled', json.dumps({'request': a.request, 'note': a.note}))
         return r
     else:
@@ -1494,6 +1528,386 @@ def flow_action(p, a):
         write(q, r)
         from execution import is_job
         if is_job(p, a.job) or (Path(q.parent) / 'owner.json').exists():
-            _sync_flow_management(p, a.job, q.parent, r)
+            __import__('flow_management').sync(p, a.job, q.parent, r)
         p.event(a.job, 'images', 'flow_reconciled_not_submitted', json.dumps({'request': a.request, 'note': a.note}))
         return r
+
+
+def run_autonomous_image_pipeline(
+    content_input,
+    output_dir,
+    ratio=None,
+    mock=False,
+    concurrency=None,
+    flow_model="NanoBananaPro",
+    version="1.4.0",
+):
+    """Autonomous Image Generation Micro-Pipeline.
+
+    Accepts standard input (content.json path or dict), runs quality gates,
+    compiles Flow prompts, partitions dependencies into DAG patches,
+    and produces standard images, metadata sidecars, manifest.json, and budgets.json.
+    """
+    import copy
+    import hashlib
+    from datetime import datetime, timezone
+
+    start_time = time.time()
+    out_dir = Path(output_dir).resolve()
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    # 1. Parse content (supports direct content.json, blueprint dict, or job blueprint directory)
+    if isinstance(content_input, (str, Path)):
+        c_path = Path(content_input).resolve()
+        if c_path.is_dir():
+            found = False
+            for cand in ("content.json", "draft/content.json", "scenes.json"):
+                if (c_path / cand).is_file():
+                    c_path = c_path / cand
+                    found = True
+                    break
+            if not found:
+                raise FileNotFoundError(f"No content.json found in directory: {content_input}")
+        elif not c_path.is_file():
+            raise FileNotFoundError(f"Content file not found: {c_path}")
+        content_data = json.loads(c_path.read_text(encoding="utf-8"))
+    elif isinstance(content_input, dict):
+        content_data = copy.deepcopy(content_input)
+    else:
+        raise TypeError(f"content_input must be a path or dict, got {type(content_input)}")
+
+    # 2. Quality Gate: Early Visual Cliché Check
+    from flow_prompts import PromptError, find_visual_cliche
+
+    if content_data.get("style"):
+        cliche = find_visual_cliche(content_data["style"])
+        if cliche:
+            raise PromptError(f"FLOW_CLICHE_FORBIDDEN: style contains banned {cliche}")
+
+    for char in content_data.get("characters", []):
+        for field_name in ("appearance", "outfit", "name"):
+            val = char.get(field_name, "")
+            cliche = find_visual_cliche(val)
+            if cliche:
+                raise PromptError(f"FLOW_CLICHE_FORBIDDEN: character {char.get('id', '')} {field_name} contains banned {cliche}")
+
+    scenes = content_data.get("scenes", [])
+    for sc in scenes:
+        sc_id = sc.get("id", "scene")
+        visual = sc.get("visual") or {}
+
+        # Synchronize visual fields onto scene level for downstream validators
+        if visual.get("setting") and not sc.get("setting"):
+            sc["setting"] = visual["setting"]
+        if visual.get("action") and not sc.get("action"):
+            sc["action"] = visual["action"]
+        if visual.get("shot_type") and not sc.get("shot_type"):
+            sc["shot_type"] = visual["shot_type"]
+        if visual.get("based_on") and not sc.get("based_on"):
+            sc["based_on"] = visual["based_on"]
+
+        for field_name in ("setting", "action", "purpose", "preserve", "change", "camera"):
+            val = visual.get(field_name) or sc.get(field_name, "")
+            cliche = find_visual_cliche(val)
+            if cliche:
+                raise PromptError(f"FLOW_CLICHE_FORBIDDEN: scene {sc_id} {field_name} contains banned {cliche}")
+
+        for img in sc.get("images", []):
+            img_id = img.get("id", sc_id)
+            for field_name in ("description", "preserve", "change"):
+                val = img.get(field_name, "")
+                cliche = find_visual_cliche(val)
+                if cliche:
+                    raise PromptError(f"FLOW_CLICHE_FORBIDDEN: image {img_id} {field_name} contains banned {cliche}")
+
+    # 3. Quality Gate: Visual Breathing Room & Setting Verbosity
+    from scripts.visual_quality import check_character_breathing_room, check_setting_description_verbosity
+    check_setting_description_verbosity(scenes, max_words=10)
+    check_character_breathing_room(scenes)
+
+    # 4. Aspect Ratio & Dimensions
+    resolved_ratio = ratio or content_data.get("aspect_ratio") or "16:9"
+    if resolved_ratio not in ("16:9", "9:16"):
+        resolved_ratio = "16:9"
+    width, height = (1280, 720) if resolved_ratio == "16:9" else (720, 1280)
+
+    # 5. Extract Image Units
+    image_units = []
+    for sc_idx, sc in enumerate(scenes):
+        sc_id = sc.get("id", f"SC{sc_idx+1:02d}")
+        visual = sc.get("visual") or {}
+        images = sc.get("images")
+        if images and isinstance(images, list) and len(images) > 0:
+            for img_idx, img in enumerate(images):
+                img_id = img.get("id", f"{sc_id}_I{img_idx+1}")
+                desc = img.get("description") or f"{img.get('setting', sc.get('setting', ''))}. {img.get('action', sc.get('action', ''))}".strip() or sc.get("purpose", "")
+                based_on = img.get("based_on")
+                preserve = img.get("preserve", "")
+                change = img.get("change", "")
+                shot_type = img.get("shot_type") or ("variation" if based_on else "full_scene")
+                char_ids = img.get("character_ids", sc.get("character_ids", []))
+                visible_text = img.get("visible_text", [])
+                image_units.append({
+                    "id": img_id,
+                    "scene_id": sc_id,
+                    "description": desc,
+                    "based_on": based_on,
+                    "preserve": preserve,
+                    "change": change,
+                    "shot_type": shot_type,
+                    "character_ids": char_ids,
+                    "visible_text": visible_text,
+                })
+        else:
+            setting = visual.get("setting") or sc.get("setting", "")
+            action = visual.get("action") or sc.get("action", "")
+            preserve = visual.get("preserve") or sc.get("preserve", "")
+            change = visual.get("change") or sc.get("change", "")
+            camera = visual.get("camera") or sc.get("camera", "")
+            based_on = sc.get("based_on") or visual.get("based_on")
+            shot_type = sc.get("shot_type") or visual.get("shot_type") or ("variation" if based_on else "full_scene")
+            desc_parts = [p for p in (setting, action) if p]
+            desc = ". ".join(desc_parts).strip() or sc.get("purpose", "")
+            if not desc:
+                desc = f"Scene {sc_id}"
+            image_units.append({
+                "id": sc_id,
+                "scene_id": sc_id,
+                "description": desc,
+                "based_on": based_on,
+                "preserve": preserve,
+                "change": change,
+                "camera": camera,
+                "shot_type": shot_type,
+                "character_ids": sc.get("character_ids", []),
+                "visible_text": sc.get("visible_text", visual.get("visible_text", [])),
+            })
+
+    # 6. Ramp-up Pool & Watchdog Calculation
+    total_images = len(image_units)
+    from flow_cdp.lifecycle import (
+        ProfileLifecycleManager,
+        calculate_rampup_timeout,
+        calculate_rampup_workers,
+    )
+    from flow_cdp.process_manager import get_process_manager
+
+    rampup_workers = calculate_rampup_workers(total_images)
+    rampup_timeout = calculate_rampup_timeout(total_images)
+    effective_concurrency = concurrency if concurrency is not None else rampup_workers
+
+    with ProfileLifecycleManager(auto_teardown=True) as lifecycle_mgr:
+        try:
+            # 7. DAG Partitioning
+            from flow_cdp.patch_partitioner import PatchPartitioner
+            partitioner = PatchPartitioner(target_size=3, min_size=1, max_size=4)
+            patches = partitioner.partition(image_units)
+
+            # 8. Generation Execution
+            from flow_prompts import compile as compile_flow_prompt
+            generated_items = {}
+
+            for patch in patches:
+                for item in patch.items:
+                    item_id = item["id"]
+                    parent_id = item.get("based_on")
+                    if parent_id and parent_id in generated_items:
+                        parent_info = generated_items[parent_id]
+                        media_uuid = "00000000-0000-0000-0000-000000000001"
+                        try:
+                            import uuid
+                            cand_u = str(parent_info.get("media_id", ""))
+                            uuid.UUID(cand_u)
+                            media_uuid = cand_u
+                        except Exception:
+                            pass
+
+                        base_sha = str(parent_info.get("sha256", ""))
+                        if len(base_sha) != 64 or not all(c in "0123456789abcdefABCDEF" for c in base_sha):
+                            base_sha = hashlib.sha256(base_sha.encode("utf-8")).hexdigest()
+
+                        purpose = "variation"
+                        shot_type = "variation" if item.get("shot_type") in ("variation", "full_scene") else item.get("shot_type")
+                        prompt_data = {
+                            "description": item["description"],
+                            "aspect_ratio": resolved_ratio,
+                            "shot_type": shot_type,
+                            "base_reference": {
+                                "media_id": media_uuid,
+                                "sha256": base_sha,
+                            },
+                            "preserve": [item["preserve"]] if item.get("preserve") else ["Keep physical layout and character consistency."],
+                            "change": [item["change"]] if item.get("change") else ["Shift visual action as described."],
+                            "allowed_text": item.get("visible_text", []),
+                        }
+                    else:
+                        purpose = "scene"
+                        shot_type = item.get("shot_type", "full_scene")
+                        if shot_type == "variation":
+                            shot_type = "full_scene"
+                        prompt_data = {
+                            "description": item["description"],
+                            "aspect_ratio": resolved_ratio,
+                            "shot_type": shot_type,
+                            "allowed_text": item.get("visible_text", []),
+                        }
+
+                    if version == "1.7.0":
+                        has_char = bool(item.get("character_ids") or item.get("has_character"))
+                        prompt_data["has_character"] = has_char
+                        prompt_data["character_free"] = not has_char
+
+                    compiled = compile_flow_prompt(flow_model, purpose, prompt_data, version=version)
+                    prompt_text = compiled["prompt"]
+
+                    if not mock:
+                        from flow_cdp.bridge import generate_cdp_batch
+                        spec = {
+                            "request_id": item_id,
+                            "prompt": prompt_text,
+                            "ratio": resolved_ratio,
+                            "out_dir": str(out_dir),
+                            "shot_type": shot_type,
+                        }
+                        if parent_id and parent_id in generated_items:
+                            parent_info = generated_items[parent_id]
+                            spec["base_image"] = parent_info["file"]
+                            spec["baseRefPath"] = str(out_dir / parent_info["file"])
+                            spec["baseMediaId"] = parent_info.get("media_id")
+                        batch_res = generate_cdp_batch([spec], timeout=rampup_timeout)[0]
+                        png_path = Path(batch_res["path"])
+                        try:
+                            from tools.editorial_compositor import apply_editorial_overlay
+                            apply_editorial_overlay(png_path)
+                        except Exception:
+                            pass
+                        file_hash = batch_res.get("sha256") or hashlib.sha256(png_path.read_bytes()).hexdigest()
+                        media_id = batch_res.get("media_id") or batch_res.get("forgeId") or f"forge-{item_id}"
+                    else:
+                        # Generate image asset via offline mock editorial renderer
+                        h = hashlib.sha256(item_id.encode("utf-8") + item["description"].encode("utf-8")).digest()
+                        bg_r = 215 + (h[0] % 35)
+                        bg_g = 215 + (h[1] % 35)
+                        bg_b = 215 + (h[2] % 35)
+                        img = Image.new("RGB", (width, height), color=(bg_r, bg_g, bg_b))
+                        draw = ImageDraw.Draw(img)
+
+                        # Editorial layout framing
+                        draw.rectangle([(20, 20), (width - 20, height - 20)], outline=(50, 50, 50), width=3)
+                        draw.line([(20, 80), (width - 20, 80)], fill=(100, 100, 100), width=2)
+                        draw.text((40, 35), f"VP Image Pipeline — {item_id} [{shot_type}]", fill=(20, 20, 20))
+                        draw.text((40, 100), f"Scene: {item['scene_id']} | Ratio: {resolved_ratio} ({width}x{height})", fill=(40, 40, 40))
+                        if item.get("based_on"):
+                            draw.text((40, 130), f"Based on: {item['based_on']}", fill=(60, 60, 60))
+
+                        png_filename = f"{item_id}.png"
+                        png_path = out_dir / png_filename
+                        img.save(png_path, "PNG")
+                        try:
+                            from tools.editorial_compositor import apply_editorial_overlay
+                            apply_editorial_overlay(png_path)
+                        except Exception:
+                            pass
+                        file_hash = hashlib.sha256(png_path.read_bytes()).hexdigest()
+                        media_id = f"00000000-0000-0000-0000-{len(generated_items)+1:012d}"
+
+                    # Sidecar metadata
+                    sidecar_filename = f"{item_id}.json"
+                    sidecar_data = {
+                        "id": item_id,
+                        "scene_id": item["scene_id"],
+                        "shot_type": shot_type,
+                        "based_on": item.get("based_on"),
+                        "prompt": prompt_text,
+                        "aspect_ratio": resolved_ratio,
+                        "width": width,
+                        "height": height,
+                        "sha256": file_hash,
+                        "path": png_path.name,
+                        "media_id": media_id,
+                        "model": flow_model,
+                        "version": version,
+                        "created_at": datetime.now(timezone.utc).isoformat(),
+                    }
+                    sidecar_path = out_dir / sidecar_filename
+                    sidecar_path.write_text(json.dumps(sidecar_data, ensure_ascii=False, indent=2), encoding="utf-8")
+
+                    # Scene-level alias (e.g. SC01.png alongside SC01_I1.png)
+                    if "_" in item_id:
+                        prefix = item_id.split("_")[0]
+                        if item_id.endswith("_I1") or item_id.endswith("_1"):
+                            alias_png = out_dir / f"{prefix}.png"
+                            if not alias_png.exists():
+                                shutil.copyfile(png_path, alias_png)
+                                alias_sidecar = dict(sidecar_data, id=prefix, path=f"{prefix}.png")
+                                (out_dir / f"{prefix}.json").write_text(json.dumps(alias_sidecar, ensure_ascii=False, indent=2), encoding="utf-8")
+
+                    generated_items[item_id] = {
+                        "id": item_id,
+                        "scene_id": item["scene_id"],
+                        "file": png_path.name,
+                        "sidecar": sidecar_filename,
+                        "sha256": file_hash,
+                        "shot_type": shot_type,
+                        "based_on": item.get("based_on"),
+                        "media_id": media_id,
+                    }
+        finally:
+            lifecycle_mgr.teardown()
+            get_process_manager().clean_orphans_from_registry()
+
+    # 9. Manifest & Budgets
+    manifest = {
+        "schema_version": "1.0",
+        "generator": "vp-image-pipeline",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "aspect_ratio": resolved_ratio,
+        "total_images": len(generated_items),
+        "style": content_data.get("style", ""),
+        "images": list(generated_items.values()),
+    }
+    manifest_path = out_dir / "manifest.json"
+    manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    budgets = {
+        "schema_version": "1.0",
+        "total_images": len(generated_items),
+        "estimated_credits": 0,
+        "concurrency_used": effective_concurrency,
+        "rampup_workers": rampup_workers,
+        "rampup_timeout": rampup_timeout,
+        "generation_time_seconds": round(time.time() - start_time, 3),
+        "status": "completed",
+        "output_dir": str(out_dir),
+    }
+    budgets_path = out_dir / "budgets.json"
+    budgets_path.write_text(json.dumps(budgets, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    return {
+        "status": "completed",
+        "total_images": len(generated_items),
+        "output_dir": str(out_dir),
+        "manifest": manifest,
+        "budgets": budgets,
+    }
+
+
+if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description="Autonomous Image Generation Micro-Pipeline")
+    parser.add_argument("--content", required=True, help="Path to content.json")
+    parser.add_argument("--out", required=True, help="Output directory for generated images and metadata")
+    parser.add_argument("--ratio", choices=["16:9", "9:16"], default=None, help="Target aspect ratio")
+    parser.add_argument("--mock", action="store_true", default=False, help="Run mock generation")
+    parser.add_argument("--concurrency", type=int, default=None, help="Worker concurrency limit (default: 5-tier rampup)")
+    cli_args = parser.parse_args()
+
+    res = run_autonomous_image_pipeline(
+        content_input=cli_args.content,
+        output_dir=cli_args.out,
+        ratio=cli_args.ratio,
+        mock=cli_args.mock,
+        concurrency=cli_args.concurrency,
+    )
+    print(f"[PASS] Successfully generated {res['total_images']} images into {cli_args.out}")
+    print(f"       Manifest: {cli_args.out}/manifest.json | Budgets: {cli_args.out}/budgets.json")

@@ -29,11 +29,6 @@ if str(SYS_DIR) not in sys.path:
 if str(SYS_DIR / "tools") not in sys.path:
     sys.path.insert(0, str(SYS_DIR / "tools"))
 
-import pytest  # noqa: E402
-
-pytest.importorskip("visual_style", reason="requires images module (visual_style)")
-pytest.importorskip("flow_prompts", reason="requires images module (flow_prompts)")
-
 from content.research_story_architect import (  # noqa: E402
     DEFAULT_CHANNEL_PILLAR,
     build_brief_v3,

@@ -97,4 +97,50 @@ def validate_explanations(content: dict[str, Any]) -> list[str]:
                 errors.append(f'EXPLANATION_QUANTITY: {key} omits an authored quantity')
     for identity in sorted(declared - used):
         errors.append(f'UNUSED_CHARACTER: {identity} must not trigger reference generation')
+    errors.extend(validate_clearance_and_labels(content))
     return errors
+
+
+def validate_clearance_and_labels(content: dict[str, Any]) -> list[str]:
+    """Validate 1.7.0 prompt clearance and label height constraints."""
+    errors = []
+    clearance_violation_re = re.compile(
+        r'(?i)\b(?:subtitle\s*box(?:es)?|letterbox(?:\s*bars?)?|player\s*controls?)\b'
+    )
+    for scene in content.get('scenes', []):
+        for image in scene.get('images', []):
+            key = image.get('id', 'image')
+            # 1. Caption clearance validation: full-frame 1.7.0 must not reserve caption bands
+            clearance = image.get('caption_clearance')
+            if clearance is not None:
+                errors.append(f'CLEARANCE_VIOLATION: {key} full-frame 1.7.0 prohibits caption clearance bands')
+
+            # 2. Description / visual prompt clearance: no subtitle boxes, letterbox bars, or player controls
+            desc = image.get('description', '')
+            if isinstance(desc, str):
+                bad_clearance = clearance_violation_re.search(desc)
+                if bad_clearance:
+                    errors.append(f'CLEARANCE_VIOLATION: {key} description forbids {bad_clearance.group()}')
+
+            # 3. Label constraints
+            vts = image.get('visible_text', []) or image.get('allowed_text', [])
+            for vt in vts or []:
+                if isinstance(vt, str):
+                    text = vt
+                    height = None
+                elif isinstance(vt, dict):
+                    text = vt.get('text', '')
+                    height = vt.get('height') or vt.get('max_height') or vt.get('proportion') or vt.get('frame_height')
+                else:
+                    continue
+
+                if isinstance(text, str) and text.strip():
+                    if any(c.islower() for c in text):
+                        errors.append(f'LABEL_NOT_UPPERCASE: {key} label {text!r} must be uppercase')
+                    words = text.split()
+                    if len(words) > 6 or len(text) > 45:
+                        errors.append(f'LABEL_NOT_CONCISE: {key} label {text!r} exceeds concise limit')
+                if isinstance(height, (int, float)) and height >= 0.05:
+                    errors.append(f'LABEL_HEIGHT_EXCEEDED: {key} label {text!r} height {height} must be < 5% frame height')
+    return errors
+

@@ -59,8 +59,6 @@ def test_media_tools_readiness():
 
 def test_axi_tools_readiness():
     """Verify gh-axi binary."""
-    repo_root = Path(__file__).resolve().parents[2]
-
     tool_bin = shutil.which("gh-axi")
     assert tool_bin is not None, "Expected gh-axi binary in PATH"
     res = subprocess.run([tool_bin, "--version"], capture_output=True, text=True)
