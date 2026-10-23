@@ -18,20 +18,41 @@ def is_reference_explainer(brief: dict[str, Any]) -> bool:
 
 
 def validate_short(brief: dict[str, Any]) -> list[str]:
-    """Apply the strict short contract to new reference-led jobs only."""
+    """Apply the short contract to portrait spin-off jobs (dynamic duration)."""
     if not is_reference_explainer(brief) or brief.get('format_profile') != 'short_9x16':
         return []
     errors = []
-    duration = brief.get('duration', {})
-    if brief.get('scene_count') != 5:
-        errors.append('SHORT_SCENE_COUNT: exactly five standalone scenes required')
-    if not (45 <= duration.get('min_seconds', 0) <= duration.get('max_seconds', 0) <= 60):
-        errors.append('SHORT_DURATION: authored duration must stay within 45–60 seconds')
     if brief.get('speed', 1.0) != 1.0:
         errors.append('SHORT_SPEED: narration speed must be 1.0')
     for output in brief.get('outputs', []):
         if output.get('subtitles') is not True:
             errors.append('SHORT_SUBTITLES: portrait output requires subtitles')
+    return errors
+
+
+def validate_human_editorial(brief: dict[str, Any]) -> list[str]:
+    """Validate dynamic topic-specific questions and expanded human editorial ideas."""
+    editorial = brief.get('human_editorial')
+    if not isinstance(editorial, dict):
+        return []
+    errors = []
+    questions = [str(q).strip() for q in editorial.get('dynamic_questions', []) if str(q).strip()]
+    if len(questions) != len(set(q.casefold() for q in questions)):
+        errors.append('HUMAN_EDITORIAL_DUPLICATE_QUESTIONS: dynamic_questions must be unique')
+    dilemmas = {str(d).strip().casefold() for d in editorial.get('topic_dilemmas', []) if str(d).strip()}
+    if any(q.casefold() in dilemmas for q in questions):
+        errors.append('HUMAN_EDITORIAL_QUESTION_COPIED: dynamic_questions must be distinct from topic_dilemmas')
+    ideas = editorial.get('expanded_content_ideas', [])
+    summaries = []
+    for idx, i in enumerate(ideas):
+        if isinstance(i, dict):
+            s = str(i.get('idea_summary') or i.get('summary') or '').strip()
+            if not s:
+                errors.append(f'HUMAN_EDITORIAL_EMPTY_IDEA: expanded_content_ideas[{idx}] requires summary or idea_summary')
+            else:
+                summaries.append(s)
+    if len(summaries) != len(set(s.casefold() for s in summaries)):
+        errors.append('HUMAN_EDITORIAL_DUPLICATE_IDEAS: expanded_content_ideas must contain distinct ideas')
     return errors
 
 

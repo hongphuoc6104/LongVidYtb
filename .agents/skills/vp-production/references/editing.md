@@ -2,9 +2,9 @@
 
 Build timelines from real language-track WAVs and acoustic `word_timestamps` (`_extract_word_timestamps_acoustic()`). Each cut/hold/diagram/reveal needs a semantic purpose; never use mechanical modulo cycling (`% 5` or `% 4`).
 
-Language, aspect ratio, subtitles and track selection are governed by `sys/format_profiles.py`:
-- **`long_16x9` (`1920x1080`):** 8 chapters / 48 scenes (11–13m) for YouTube, `subtitles: false` by default (`max_line_chars: 42`, `max_cue_chars: 84` for SRT), `voice: "VietNarrator"`, `speed: 1.0`.
-- **`short_9x16` (`1080x1920`):** 5 standalone scenes (`SC01..SC05`, 45–60s) for TikTok/Shorts Spin-offs, `subtitles: true` (`max_line_chars: 28`, `max_cue_chars: 54`, `18%` bottom clearance), `voice: "VietNarrator"`, `speed: 1.0`. Never raw-cut middle chapters (`CH02..CH08`) of a `16:9` video to post on TikTok.
+Language, aspect ratio, subtitles and track selection are governed by `sys/format_profiles.py` (zero fixed duration constraints — duration is dynamic, determined by narrative depth and measured WAV narration):
+- **`long_16x9` (`1920x1080`):** Landscape explainers for YouTube, `subtitles: false` by default (`max_line_chars: 42`, `max_cue_chars: 84` for SRT), `voice: "VietNarrator"`, `speed: 1.0`.
+- **`short_9x16` (`1080x1920`):** Standalone scenes for TikTok/Shorts Spin-offs, `subtitles: true` (`max_line_chars: 28`, `max_cue_chars: 54`, `18%` bottom clearance), `voice: "VietNarrator"`, `speed: 1.0`. Never raw-cut middle chapters of a `16:9` video to post on TikTok without standalone restructuring.
 
 Use supported camera/transition effects (`cut`, `hold`, `fade`, `slide_left`, `zoom_in`, `zoom_out`, `punch_in`, `pan_left`, `pan_right`, `shake`) according to render-capabilities.md; preserve diagram labels and visual action under crop/zoom.
 

@@ -6,29 +6,25 @@ Tài liệu hướng dẫn dành cho **Research & Narrative Architect** nhằm b
 
 ## 1. Định Vị Cố Định Ngách Kênh & Phễu Nội Dung 3 Tầng (Pillar Lock & 3-Tier Funnel)
 
-Dữ liệu thực nghiệm từ Top 12 Video Thịnh Hành của kênh chứng minh thuật toán phân phối đóng đinh kênh vào ngách **"Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật"** với 3 nhóm chủ đề ăn đề xuất mạnh nhất:
+Trục nội dung được định vị cố định vào ngách **"Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức"** (Cognitive Thinking, Methodology & Epistemic Depth). 
 
-| Nhóm chủ đề ăn đề xuất | Minh chứng thực nghiệm trên kênh | Điểm chạm tâm lý khiến người xem Lưu (Save) & Xem hết |
-|:---|:---|:---|
-| **1. Nghịch lý Nhận thức & "Học vẹt vs. Hiểu bản chất"** *(Nhóm nổ view mạnh nhất — Mở rộng tệp đại chúng)* | • *Nghịch lý tri thức — 4 cấp độ tiếp cận tri thức* (`22.1K` & `16.8K` view)<br>• *Cơn bão thông tin — Dữ liệu phân mảnh & quá tải* (`1.885` view)<br>• *Cảm giác bạn biết nhưng không làm được: Lý thuyết gốc vs Sao chép cơ học* (`1.877` view)<br>• *Toán học & Nghiên cứu: Biết tính $\neq$ Hiểu?* (`883` view) | Đánh trúng nỗi hoang mang lớn nhất của học sinh, sinh viên, kỹ sư và người tự học tại Việt Nam: giải bài tập/chép tài liệu rất chăm nhưng không hiểu bản chất gốc rễ và không biết cách tạo ra tri thức mới. |
-| **2. Giải phẫu Quy trình Nghiên cứu Chuẩn Quốc tế (Q1)** *(Nhóm tỷ lệ Lưu/Bookmark cao nhất)* | • *Xếp hạng 9 nguồn nghiên cứu — Academic Pyramid* (`3.042` view)<br>• *Quy trình & Tiến trình NCKH / Bản chất NCKH* (`909` & `868` view)<br>• *Bài báo khoa học không bắt đầu ở Word: Question → Gap → Method → Evidence → Paper* (`749` view) | Cung cấp khung tư duy hệ thống (*Framework / Pyramid / Flowchart*) mà trường đại học thường dạy rất mơ hồ. Người xem buộc phải bấm Lưu lại để làm kim chỉ nam khi viết tiểu luận, khóa luận, bài báo. |
-| **3. Tâm lý học Phòng Bảo Vệ & Hội Đồng** *(Nhóm kích thích tò mò & bình luận)* | • *Tâm lý Hội đồng — Cửa sổ 120 giây bước vào phòng bảo vệ khóa luận* (`881` view)<br>• *Hội đồng bảo vệ — Sai lầm sinh viên thường gặp* (`716` view) | Khai thác góc nhìn "bên kia chiến tuyến" (*Giám khảo nghĩ gì trong 2 phút đầu?*), đánh thẳng vào nỗi sợ bị vặn hỏi của mọi sinh viên và học viên cao học. |
+Kênh tập trung giải mã các cơ chế nhận thức sâu sắc, phương pháp tư duy gốc rễ và bản chất của việc hình thành tri thức, giúp người xem nhìn thấu các hiện tượng tâm lý, học tập, công việc và cuộc sống từ góc nhìn nguyên lý đầu tiên (*First-Principles*).
 
-### Quy hoạch Đề tài vào Pipeline theo Mô hình Phễu 3 Tầng (`funnel_tier`)
-- **Tầng 1 — Phễu Rộng (`tier_1_broad`, mục tiêu 10K – 100K+ view trên TikTok & YouTube): "Ảo Giác Hiểu Biết & Nghịch Lý Học Thuật"**
-  - *Đối tượng:* Toàn bộ sinh viên, học sinh giỏi, kỹ sư, người tự học (tệp rộng gấp 20 lần tệp chỉ đang làm khóa luận).
-  - *Đề tài mẫu:*
-    1. *"Ảo Giác Năng Lực (Illusion of Competence): Vì Sao Đọc Lại Giáo Trình 5 Lần Và Highlight Kín Sách Lại Làm Não Bạn Ngừng Tư Duy?"*
-    2. *"Vì Sao Người Giải Toán Nhanh Nhất Lớp Thường Thất Bại Khi Bước Vào Nghiên Cứu Khoa Học?"* (Kế thừa trực tiếp bài *Biết tính $\neq$ Hiểu*).
-    3. *"Kỹ Thuật Feynman & Cái Bẫy Thuật Ngữ: Vì Sao Càng Dùng Từ Hàn Lâm Phức Tạp Nghĩa Là Bạn Càng Chưa Hiểu Gì?"*
-- **Tầng 2 — Phễu Giữa (`tier_2_mid`, mục tiêu 3K – 20K view, Lưu/Share cực cao): "Giải Phẫu Quy Trình Nghiên Cứu & Tâm Lý Hội Đồng"**
-  - *Đề tài mẫu:*
-    1. *"Giải Phẫu 1 Bài Báo Q1: 80% Sinh Viên Đọc Bài Báo Khoa Học Từ Trang Đầu Đến Trang Cuối — Các Giáo Sư Đọc Theo Thứ Tự Ngược Lại Này"*.
-    2. *"Tâm Lý Học Phản Biện: Khi Hội Đồng Hỏi 'Đề Tài Này Có Gì Mới?', Đừng Trả Lời Bằng Số Liệu — Hãy Dùng Cấu Trúc 3 Bước Này"*.
-- **Tầng 3 — Phễu Chuyển Đổi (`tier_3_conversion`, kéo khách mua Gemini Pro 18 tháng mà không tụt xuống 200 view): "Vũ Khí Tư Duy Học Thuật (AI for Deep Research)"**
-  - *Quy tắc vàng:* **Tuyệt đối cấm** dùng từ khóa văn phòng (*mẹo Excel, gõ hàm Excel, làm Slide nhanh 4 tiếng, tình huống của Na/Nam*). Mọi bài có yếu tố AI phải gắn chặt với Chuỗi nghiên cứu (`Question → Gap → Method → Evidence → Paper`):
-    1. *"Cách Biến 30 Bài Báo Q1 Rời Rạc Thành 'Ma Trận Khoảng Trống Nghiên Cứu' (Research Gap Matrix) Mà Không Bị Cơn Bão Thông Tin Nhấn Chìm"*.
-    2. *"Vì Sao Dùng AI Viết Luận Văn Luôn Bị Phát Hiện Ở Mục Tổng Quan Tài Liệu? (Cách Dùng AI Để Phản Biện Chéo Lý Thuyết Thay Vì Viết Hộ)"*.
+### Quy hoạch Đề tài theo Mô hình Phễu 3 Tầng Linh Hoạt (`funnel_tier`)
+
+Hệ thống phân tầng nội dung theo chiều sâu nhận thức thay vì áp đặt các chủ đề mẫu hay tình huống cố định hẹp:
+
+- **Tầng 1 — Phễu Rộng (`tier_1_broad`, độ lan tỏa đại chúng cao trên TikTok & YouTube): "Tư Duy Nhận Thức, Nghịch Lý & Ảo Giác Tri Thức"**
+  - *Mục tiêu:* Tiếp cận tệp người học và người đi làm quan tâm đến phát triển tư duy, bóc tách các ảo giác tâm lý nhận thức phổ biến.
+  - *Đặc trưng nội dung:* Các nghịch lý nhận thức, thiên kiến vô thức (*Cognitive Biases*), mô hình tư duy (*Mental Models*), sự ngộ nhận giữa việc tiếp xúc thông tin thụ động và sự thấu suốt bản chất. Đề tài mở rộng tự do dựa trên các cơ chế tâm lý và nhận thức thực nghiệm.
+
+- **Tầng 2 — Phễu Giữa (`tier_2_mid`, tỷ lệ Lưu/Share và giữ chân người xem chuyên sâu rất cao): "Phương Pháp Luận, Phân Tích Căn Nguyên & Bản Chất Vấn Đề"**
+  - *Mục tiêu:* Dành cho những ai muốn nắm bắt phương pháp luận giải quyết vấn đề, quy trình nghiên cứu, phân tích chuỗi nhân quả và tư duy hệ thống.
+  - *Đặc trưng nội dung:* Giải phẫu cấu trúc luận chứng, tư duy nguyên lý đầu tiên, cách phát hiện khoảng trống tri thức (*Knowledge Gap*), đối chiếu các bằng chứng khoa học, mổ xẻ nguyên nhân gốc rễ (*Root-Cause Analysis*) thay vì triệu chứng bề mặt.
+
+- **Tầng 3 — Phễu Chuyển Đổi (`tier_3_conversion`, nâng cao năng lực tư duy chuyên sâu): "Công Cụ & Khung Tư Duy Đào Sâu Tri Thức"**
+  - *Mục tiêu:* Chuyển hóa tri thức thành công cụ tư duy, mô hình hành động và phương pháp luận cấp tiến.
+  - *Quy tắc Chống Loãng Tệp:* **Tuyệt đối cấm** các mẹo vặt văn phòng hời hợt (*mẹo Excel, làm slide nhanh, mẹo học vẹt đối phó*). Nội dung tầng 3 phải tập trung vào các khung tư duy thượng nguồn (*Intellectual Frameworks*), cách kết nối tri thức đa ngành, hoặc ứng dụng AI/công nghệ để phản biện, tổng hợp và kiến tạo tri thức có chiều sâu.
 
 ---
 

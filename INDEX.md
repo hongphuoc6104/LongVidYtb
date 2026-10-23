@@ -21,7 +21,7 @@ Read [AGENTS.md](AGENTS.md), identify the task and authority, then select the ro
 ## Layout
 
 - `sys/`: code, docs, schemas, configuration and operational data.
-- `sys/format_profiles.py`: single source of truth for Dual-Format video profiles (`long_16x9` 11–13m 8ch/48sc Explainer & `short_9x16` 45–60s 5sc Spin-offs).
+- `sys/format_profiles.py`: single source of truth for Dual-Format video profiles (`long_16x9` Landscape Explainer & `short_9x16` Vertical Spin-offs with dynamic duration based on narrative depth and measured audio).
 - `sys/runs/<job>/`: content, versions, requests and artifacts.
 - `sys/.state/`: local state; `~/.config/google-chrome`: Flow CDP browser profiles, excluded from Git.
 - `sys/assets/`: visual/voice references; `video/<job>/`: collected products.

@@ -1,6 +1,6 @@
 # Cẩm nang Chuyển thể Video Nguyên bản, Nhịp Độ Khán Giả Lạnh & Phễu 3 Tầng Học Thuật (Original Adaptation Playbook)
 
-Tài liệu này hướng dẫn cách chuyển hóa các quy luật kể chuyện và hình ảnh rút ra từ phân tích video mẫu tham chiếu (như `@Inkexplainer96` và Top 12 Video Thịnh Hành của kênh) thành **kịch bản và sản phẩm video hoàn toàn nguyên bản (Mode B)** trong Video Pilot, được tối ưu hóa đặc biệt cho **khán giả lạnh (Cold Audience)** và ngách **"Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật"**.
+Tài liệu này hướng dẫn cách chuyển hóa các quy luật kể chuyện và hình ảnh rút ra từ phân tích video mẫu tham chiếu (như `@Inkexplainer96` và Top 12 Video Thịnh Hành của kênh) thành **kịch bản và sản phẩm video hoàn toàn nguyên bản (Mode B)** trong Video Pilot, được tối ưu hóa đặc biệt cho **khán giả lạnh (Cold Audience)** và ngách **"Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức"**.
 
 > [!IMPORTANT]
 > **Nguyên tắc chuyển thể độc lập (Mode B) & Cold-Audience Pacing:**
@@ -59,7 +59,7 @@ flowchart LR
 1. **Phụ đề an toàn (`sys/format_profiles.py`):**
    - Tối đa 2 dòng/cue; $\le 42$ ký tự/dòng (`84` ký tự/cue) cho `long_16x9` và $\le 28$ ký tự/dòng (`54` ký tự/cue) cho `short_9x16`, đồng bộ nhảy chữ theo `word_timestamps` âm học.
 2. **Chuyển thể Long-to-Short Spin-off (`short_9x16`):**
-   - Tuyệt đối không cắt ngang Chương 2–8 của video `16:9` đem đăng TikTok. Phải rút trích 2–3 nghịch lý đắt giá nhất thành các kịch bản `short_9x16` độc lập (5 cảnh, 45–60s, `subtitles: true`, `voice: "VietNarrator"`, `speed: 1.0`) có câu mở đầu Truth-Slap Hook $\le 18$ âm tiết riêng.
+   - Tuyệt đối không cắt ngang giữa video `16:9` đem đăng TikTok. Phải rút trích các nghịch lý đắt giá nhất thành các kịch bản `short_9x16` độc lập (thời lượng động theo kịch bản và audio, `subtitles: true`, `voice: "VietNarrator"`, `speed: 1.0`) có câu mở đầu Truth-Slap Hook $\le 18$ âm tiết riêng.
 3. **Âm thanh & Foley:**
    - Khóa từ neo (*semantic anchors*) với Micro-SFX (`pop`, `whoosh`, tiếng lật trang giấy, tiếng đồng hồ) và Sidechain Ducking BGM (`-20dB` khi có thoại, `-14dB` khi nghỉ).
 
@@ -67,7 +67,7 @@ flowchart LR
 
 ## 5. Danh Mục Kiểm Tra Chuyển Thể Hoàn Tất (Adaptation QC Checklist)
 
-- [ ] **Đúng ngách học thuật & Phễu 3 Tầng:** Thuộc ngách *"Giải Mã Tư Duy Nghiên Cứu, Bản Chất Tri Thức & Luật Ngầm Học Thuật"*, 0 từ khóa mẹo văn phòng (Excel/Slide/Na).
+- [ ] **Đúng ngách & Phễu 3 Tầng:** Thuộc ngách *"Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức"*, 0 từ khóa mẹo văn phòng (Excel/Slide/hacks ngắn hạn).
 - [ ] **Đóng gói CTR chuẩn (`brief.json`):** `youtube_title <= 55` ký tự (từ khóa tò mò trong 5 chữ đầu, không tự trả lời), `thumbnail_spec` có `text_overlay` 2–4 từ in hoa.
 - [ ] **Cold-Audience Hook & Việt hóa 60s đầu:** Câu đầu `SC01 <= 18` âm tiết, `0` thẻ pause ở `SC01`, bối cảnh Việt Nam 100% trong 60s đầu, không có mẫu câu cấm *"Hãy nghĩ về..."*.
-- [ ] **Mật độ thị giác cold open:** Hướng tới 8–9 ảnh toàn khung trong 12–12,5 giây đầu khi nội dung hỗ trợ; nhân vật, sơ đồ và đạo cụ cùng trong ảnh scene.
+- [ ] **Mật độ thị giác cold open:** Đảm bảo nhịp thị giác tương xứng với tốc độ dẫn thoại mở màn; nhân vật, sơ đồ và đạo cụ cùng trong ảnh scene toàn khung.

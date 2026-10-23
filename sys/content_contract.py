@@ -31,9 +31,11 @@ def validate_brief(root,b):
  from format_profiles import validate_format_separation
  try: validate_format_separation(b)
  except ValueError as ex: errors.append(error('FORMAT_PROFILE','format_profile',str(ex),'Chọn đúng format_profile tương ứng với aspect_ratio.'))
- from explainer_contract import validate_short
+ from explainer_contract import validate_short, validate_human_editorial
  for message in validate_short(b):
   errors.append(error(message.split(':')[0], 'format_profile', message, 'Use the reference-led short contract.'))
+ for message in validate_human_editorial(b):
+  errors.append(error(message.split(':')[0], 'human_editorial', message, 'Sinh bộ câu hỏi động theo đề tài và phát triển ý tưởng chi tiết từ góc nhìn tác giả.'))
  from output_contract import outputs
  try: outputs(b)
  except ValueError as ex: errors.append(error('OUTPUT_CONTRACT','outputs',str(ex),'Sửa hợp đồng đầu ra.'))

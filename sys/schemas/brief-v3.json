@@ -478,13 +478,11 @@
           },
           "scene_count": {
             "type": "integer",
-            "minimum": 3,
-            "maximum": 6
+            "minimum": 1
           },
           "body": {
             "type": "array",
-            "minItems": 4,
-            "maxItems": 4,
+            "minItems": 1,
             "items": {
               "type": "object",
               "properties": {
@@ -540,6 +538,81 @@
           "type": "string"
         }
       },
+      "additionalProperties": false
+    },
+    "human_editorial": {
+      "type": "object",
+      "properties": {
+        "topic_dilemmas": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "dynamic_questions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "author_raw_input": {
+          "type": "string",
+          "minLength": 1
+        },
+        "editorial_stance": {
+          "type": "string",
+          "minLength": 1
+        },
+        "expanded_content_ideas": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "idea_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "angle_type": {
+                "enum": [
+                  "analysis",
+                  "commentary",
+                  "evaluation",
+                  "real_world_case"
+                ]
+              },
+              "idea_summary": {
+                "type": "string",
+                "minLength": 1
+              },
+              "summary": {
+                "type": "string",
+                "minLength": 1
+              },
+              "narrative_integration": {
+                "type": "string",
+                "minLength": 1
+              },
+              "target_narrative_phase": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "angle_type"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "topic_dilemmas",
+        "dynamic_questions"
+      ],
       "additionalProperties": false
     }
   },
