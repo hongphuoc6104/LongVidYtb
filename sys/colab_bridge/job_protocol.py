@@ -121,7 +121,8 @@ def build_render_request(root, brief, content, images, audio, resolve):
         "files": sources + assets,
         "worker_sha256": file_hash(worker),
     }
-    if style := brief.get("visual_style_profile"):
+    from visual_style import render_style
+    if style := (brief.get("visual_style_profile") or render_style(brief, images)):
         request["visual_style_profile"] = style
     total = sum(f["size"] for f in request["files"])
     if len(request["files"]) > MAX_FILES or total > MAX_BUNDLE:

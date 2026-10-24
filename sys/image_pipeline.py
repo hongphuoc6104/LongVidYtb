@@ -485,12 +485,33 @@ def _unresolved_conflict(p, j, target):
         same_target = old['identity']['target'] == target
         if target.startswith('register:'):
             same_target = old['identity']['target'].rsplit(':', 1)[0] == target.rsplit(':', 1)[0]
-        if same_target and old['state'] == 'submitted':
+        if same_target and old['state'] in ('submitted', 'ambiguous'):
             rec = auto_reconcile_attempt(p, j, q.parent, old)
             if rec.get('state') in ('submitted', 'ambiguous'):
+                c_dir = q.parent / 'download'
+                has_img = any(f.is_file() and not f.name.startswith('.') and f.suffix.lower() in ('.jpg', '.png', '.webp') for f in c_dir.glob('*')) if c_dir.is_dir() else False
+                if not has_img:
+                    transient_errors = (
+                        'session ended', 'connection blocked', 'socket', 'connection refused',
+                        'devtoolsactiveport', 'profile_unverified', 'no automatic reconnect',
+                        'cannot connect to chrome', 'endpoint ownership unavailable',
+                        'no chrome profile workers available', 'no close frame received or sent',
+                        'cdp_transport_closed', 'connection closed', 'failed to fetch',
+                        'captcha_failed', 'no_at_token', 'js exception', 'ogiz0b failed',
+                        'public_error_unsafe_generation', 'public_error_unusual_activity'
+                    )
+                    if any(pat in str(rec.get('error', '')).lower() for pat in transient_errors):
+                        rec.update(
+                            state='not_submitted',
+                            auto_reconciled=True,
+                            auto_reconciled_at=time.time(),
+                        )
+                        write(q, rec)
+                        from execution import is_job
+                        if is_job(p, j) or (q.parent / 'owner.json').exists():
+                            __import__('flow_management').sync(p, j, q.parent, rec)
+                        continue
                 return rec
-        elif same_target and old['state'] == 'ambiguous':
-            return old
         if same_target and old['state'] == 'generated':
             generated = old
     return generated
@@ -574,14 +595,21 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None, p
     conflict = _unresolved_conflict(p, j, target)
     if conflict and conflict.get('key') == key and conflict.get('state') == 'ambiguous':
         c_folder = base / key
-        if not (c_folder / 'download').is_dir():
+        has_downloaded_img = False
+        if (c_folder / 'download').is_dir():
+            for f in (c_folder / 'download').glob('*'):
+                if f.is_file() and not f.name.startswith('.') and f.suffix.lower() in ('.jpg', '.png', '.webp'):
+                    has_downloaded_img = True
+                    break
+        if not has_downloaded_img:
             transient_errors = (
                 'session ended', 'connection blocked', 'socket', 'connection refused',
                 'devtoolsactiveport', 'profile_unverified', 'no automatic reconnect',
                 'cannot connect to chrome', 'endpoint ownership unavailable',
                 'no chrome profile workers available', 'no close frame received or sent',
                 'cdp_transport_closed', 'connection closed', 'failed to fetch',
-                'captcha_failed', 'no_at_token', 'js exception'
+                'captcha_failed', 'no_at_token', 'js exception', 'ogiz0b failed',
+                'public_error_unsafe_generation', 'public_error_unusual_activity'
             )
             if any(pat in str(conflict.get('error', '')).lower() for pat in transient_errors):
                 conflict.update(
@@ -1412,7 +1440,7 @@ def approve(p, j, rev, note, checkpoint, actor='user'):
                  (j, s, rev, row['envelope'], row['hash'], signature(p, j, s), note, time.time()))
     p.db.execute('UPDATE modules SET state=? WHERE job=? AND module=?',
                  ('approved' if s == 'final' else 'pending', j, 'images'))
-    p.db.commit();p.event(j, 'images', 'technical_accepted' if actor=='technical' else 'checkpoint_approved', json.dumps({'checkpoint': s, 'revision': rev, 'actor': actor, 'note': note}, ensure_ascii=False))
+    getattr(p, '_commit', p.db.commit)();p.event(j, 'images', 'technical_accepted' if actor=='technical' else 'checkpoint_approved', json.dumps({'checkpoint': s, 'revision': rev, 'actor': actor, 'note': note}, ensure_ascii=False))
 
 
 def reject(p, j, rev, note, checkpoint, scene=None, character=None, image=None, ratio=None, repair_plan=None):
@@ -1460,7 +1488,7 @@ def reject(p, j, rev, note, checkpoint, scene=None, character=None, image=None, 
         p.db.execute('INSERT INTO image_repair_details(edit_id,plan) VALUES(?,?)', (cursor.lastrowid,json.dumps(plan,ensure_ascii=False)))
     p.db.execute("UPDATE modules SET state='needs_changes' WHERE job=? AND module='images'", (j,))
     p.db.execute("UPDATE modules SET state='stale' WHERE job=? AND module='render' AND state!='pending'", (j,))
-    p.db.commit();p.event(j, 'images', 'image_revision_requested', json.dumps({'targets': [t for t,_ in records], 'note': note}, ensure_ascii=False))
+    getattr(p, '_commit', p.db.commit)();p.event(j, 'images', 'image_revision_requested', json.dumps({'targets': [t for t,_ in records], 'note': note}, ensure_ascii=False))
 
 
 def record_preflight(p, a):

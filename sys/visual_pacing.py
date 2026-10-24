@@ -66,8 +66,6 @@ def smooth_interpolated_beats(beats: list[dict[str, Any]], start: float, end: fl
 
     def move(index: int, target: float) -> None:
         beat = beats[index]
-        if beat.get('timing_method') != 'narration_anchor_interpolated':
-            return
         if target == beat['at']:
             return
         beat.setdefault('original_at', beat['at'])
@@ -77,10 +75,12 @@ def smooth_interpolated_beats(beats: list[dict[str, Any]], start: float, end: fl
         target = min(4.8, beats[1]['at'] + (5.0 - beats[1]['at']) * .75)
         if target > beats[1]['at'] + .5:
             move(2, target)
+    if start == 0.0 and count > 10 and beats[10]['at'] < OPENING_WINDOW_SECONDS and duration > OPENING_WINDOW_SECONDS + .1:
+        move(10, round(OPENING_WINDOW_SECONDS + .05, 4))
     if end <= 15:
         return
     minimum, maximum = .85, 3.75
-    for _ in range(10):
+    for _ in range(15):
         for index in range(count - 1, 0, -1):
             following = beats[index + 1]['at'] if index + 1 < count else duration
             hold = following - beats[index]['at']

@@ -13,6 +13,8 @@ from typing import Any, Dict, Optional, Tuple
 PROFILES: Dict[str, Dict[str, Any]] = {
     "short_9x16": {
         "id": "short_9x16",
+        "audio_lufs": -11.0,
+        "audio_peak_db": -1.0,
         "narration_pauses": {
             "short_sentence": 0.16, "sentence": 0.22, "minor": 0.12,
             "opening_short_sentence": 0.12, "opening_sentence": 0.16,
@@ -50,6 +52,8 @@ PROFILES: Dict[str, Dict[str, Any]] = {
     },
     "long_16x9": {
         "id": "long_16x9",
+        "audio_lufs": -14.0,
+        "audio_peak_db": -1.5,
         "narration_pauses": {
             "short_sentence": 0.20, "sentence": 0.28, "minor": 0.16,
             "opening_short_sentence": 0.16, "opening_sentence": 0.20,
@@ -174,3 +178,16 @@ def default_text_style(aspect_ratio: str = "16:9") -> Dict[str, str]:
         return dict(PROFILES["long_16x9"]["text_style"])
     prof = get_profile(aspect_ratio)
     return dict(prof["text_style"])
+
+
+def audio_mastering_for_format(profile_or_aspect: str = "16:9") -> Dict[str, float]:
+    """Return format-specific audio mastering settings (audio_lufs and audio_peak_db)."""
+    prof = get_profile(profile_or_aspect)
+    is_long = "16x9" in str(prof.get("id", "")) or prof.get("aspect_ratio") == "16:9"
+    default_lufs = -14.0 if is_long else -11.0
+    default_peak = -1.5 if is_long else -1.0
+    return {
+        "audio_lufs": float(prof.get("audio_lufs", default_lufs)),
+        "audio_peak_db": float(prof.get("audio_peak_db", default_peak)),
+    }
+

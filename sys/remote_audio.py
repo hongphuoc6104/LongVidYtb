@@ -46,6 +46,12 @@ def produce(pilot, job, out):
     brief = pilot.brief(job)[0]
     content = pilot.payload(job, 'content')
     cfg = config(pilot, job)
+    from format_profiles import audio_mastering_for_format, resolve_format_profile
+    try:
+        format_mastering = audio_mastering_for_format(resolve_format_profile(brief))
+        cfg.update(format_mastering)
+    except Exception:
+        pass
     cfg.setdefault('colab_tts', {})['job_id'] = job
     import execution
     if execution.is_job(pilot, job):

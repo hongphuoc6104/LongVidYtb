@@ -175,14 +175,14 @@ _HUMAN_KEYWORDS_PATTERN = re.compile(
 
 
 def _is_character_beat(beat: dict[str, Any]) -> bool:
-    """Classify whether a visual beat contains human figures/limbs."""
+    """Classify whether a visual beat is a standard full_scene/variation room beat vs a visual-break beat."""
     if beat.get('character_free') is True or beat.get('has_character') is False:
+        return False
+    shot_type = str(beat.get('shot_type', '')).strip().casefold()
+    if shot_type in {'still_life', 'environment', 'white_card', 'white_isolated', 'visual_diagram', 'cutaway_detail', 'concept_metaphor', 'macro_prop'}:
         return False
     if beat.get('has_character') is True:
         return True
-    shot_type = str(beat.get('shot_type', '')).strip().casefold()
-    if shot_type in {'still_life', 'environment', 'white_card', 'white_isolated', 'visual_diagram', 'cutaway_detail'}:
-        return False
     if shot_type in {'full_scene', 'variation'}:
         return True
     if beat.get('character_ids'):

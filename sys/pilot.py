@@ -23,9 +23,15 @@ class Pilot:
   self._db_lock = threading.Lock()
   self.db=sqlite3.connect(self.root/'.state/jobs.sqlite', check_same_thread=False);self.db.row_factory=sqlite3.Row
   self.db.executescript('CREATE TABLE IF NOT EXISTS modules(job TEXT,module TEXT,state TEXT,revision INTEGER,envelope TEXT,hash TEXT,PRIMARY KEY(job,module)); CREATE TABLE IF NOT EXISTS events(id INTEGER PRIMARY KEY,at REAL,job TEXT,module TEXT,event TEXT,detail TEXT); CREATE TABLE IF NOT EXISTS audio_edits(id INTEGER PRIMARY KEY,job TEXT,scene_id TEXT,note TEXT,at REAL); CREATE TABLE IF NOT EXISTS image_reviews(job TEXT, checkpoint TEXT, revision INTEGER, envelope TEXT, hash TEXT, signature TEXT, note TEXT, at REAL, PRIMARY KEY(job, checkpoint, revision)); CREATE TABLE IF NOT EXISTS image_edits(id INTEGER PRIMARY KEY, job TEXT, target TEXT, note TEXT, at REAL); CREATE TABLE IF NOT EXISTS image_repair_details(edit_id INTEGER PRIMARY KEY, plan TEXT NOT NULL);')
+ def _commit(self):
+  try:
+   self.db.commit()
+  except sqlite3.OperationalError as ex:
+   if 'no transaction is active' not in str(ex).lower():
+    raise
  def event(self,j,m,e,d=''):
   with self._db_lock:
-   self.db.execute('INSERT INTO events(at,job,module,event,detail) VALUES(?,?,?,?,?)',(time.time(),j,m,e,d));self.db.commit()
+   self.db.execute('INSERT INTO events(at,job,module,event,detail) VALUES(?,?,?,?,?)',(time.time(),j,m,e,d));self._commit()
  def issue(self,j,module,error,evidence=None):
   folder=self.root/'logs/issues';folder.mkdir(parents=True,exist_ok=True)
   name=f"{time.time_ns()}-{j}-{module}.md";path=folder/name
@@ -160,7 +166,7 @@ class Pilot:
    write(p/'briefs/1.json',brief)
    write(p/'brief-current.json',{'revision':1,'hash':digest(p/'briefs/1.json')})
   for m in ORDER:self.db.execute('INSERT INTO modules VALUES(?,?,?,?,?,?)',(j,m,'pending',0,'',''))
-  self.db.commit();self.event(j,'control','created')
+  self._commit();self.event(j,'control','created')
   self._creating_v4_job=j if engine_version==4 else None
   try:self.run(j,'control')
   finally:self._creating_v4_job=None
@@ -238,7 +244,7 @@ class Pilot:
    if any(d in dirty or rows[d]['state']=='stale' for d in DEPS[m]):dirty.add(m)
    if m in dirty and r['state'] not in ('pending','stale'):
     self.db.execute('UPDATE modules SET state=? WHERE job=? AND module=?',('stale',j,m));self.event(j,m,'stale','Input or artifact changed')
-  self.db.commit()
+  self._commit()
  def gate(self,j,m):
   self.refresh(j);rows=self.rows(j)
   import workflow
@@ -529,7 +535,7 @@ class Pilot:
   if r['state']=='approved':raise Blocked('Approved module: reject explicitly before replacing')
   if m=='images' and self.brief(j) and r['state']=='awaiting_review':raise Blocked('M2_REVIEW: approve or reject current checkpoint first')
   rev=r['revision']+1;out=self.job(j)/'revisions'/m/str(rev);out.mkdir(parents=True,exist_ok=False)
-  self.db.execute('UPDATE modules SET state=?,revision=? WHERE job=? AND module=?',('running',rev,j,m));self.db.commit();self.event(j,m,'started',str(rev))
+  self.db.execute('UPDATE modules SET state=?,revision=? WHERE job=? AND module=?',('running',rev,j,m));self._commit();self.event(j,m,'started',str(rev))
   try:
    if is_job(self,j) and m!='control':
     from runtime_contract import job_config,source_receipt
@@ -567,10 +573,10 @@ class Pilot:
    e={'schema_version':'1.0','job_id':j,'module':m,'revision':rev,'input_versions':versions,'files':files,'payload':p,'checks':{'passed':True,'errors':[]}}
    jsonschema.validate(e,read(self.root/'schemas/envelope.json'))
    ep=out/'output.json';write(ep,e);h=self.snapshot_hash(j,e)
-   self.db.execute('UPDATE modules SET state=?,revision=?,envelope=?,hash=? WHERE job=? AND module=?',('awaiting_review',rev,str(ep.relative_to(self.job(j))),h,j,m));self.db.commit();self.event(j,m,'awaiting_review',str(rev));self.resolve_issues(j,m,rev)
+   self.db.execute('UPDATE modules SET state=?,revision=?,envelope=?,hash=? WHERE job=? AND module=?',('awaiting_review',rev,str(ep.relative_to(self.job(j))),h,j,m));self._commit();self.event(j,m,'awaiting_review',str(rev));self.resolve_issues(j,m,rev)
   except Exception as ex:
    self.issue(j,m,str(ex),evidence=str((out/'failure.json').relative_to(self.job(j))))
-   write(out/'failure.json',{'error':str(ex),'errors':getattr(ex,'errors',[]),'passed':False});self.db.execute('UPDATE modules SET state=?,revision=? WHERE job=? AND module=?',('blocked',rev,j,m));self.db.commit();self.event(j,m,'blocked',str(ex));raise
+   write(out/'failure.json',{'error':str(ex),'errors':getattr(ex,'errors',[]),'passed':False});self.db.execute('UPDATE modules SET state=?,revision=? WHERE job=? AND module=?',('blocked',rev,j,m));self._commit();self.event(j,m,'blocked',str(ex));raise
  def validate(self,j,m):
   self.gate(j,m);r=self.rows(j)[m]
   if r['state'] in ['stale','blocked','pending','running']:raise Blocked('Must run module to create a fresh validated revision')
@@ -588,7 +594,7 @@ class Pilot:
    return adapters.approve_images(self,j,rev,note,checkpoint,actor)
   self.validate(j,m);r=self.rows(j)[m]
   if r['state']!='awaiting_review' or r['revision']!=rev or not note.strip():raise Blocked('Explicit approval of current awaiting revision required')
-  self.db.execute('UPDATE modules SET state=? WHERE job=? AND module=?',('approved',j,m));self.db.commit();self.event(j,m,'technical_accepted' if actor=='technical' else 'approved',json.dumps({'revision':rev,'actor':actor,'note':note},ensure_ascii=False))
+  self.db.execute('UPDATE modules SET state=? WHERE job=? AND module=?',('approved',j,m));self._commit();self.event(j,m,'technical_accepted' if actor=='technical' else 'approved',json.dumps({'revision':rev,'actor':actor,'note':note},ensure_ascii=False))
  def reject(self,j,m,note,rev=None,checkpoint=None,scene=None,character=None,image=None,ratio=None,repair_plan=None):
   from execution import is_job, require
   if is_job(self,j):require(self,j,'repair')
@@ -600,7 +606,7 @@ class Pilot:
   for n in ORDER:
    if any(d in affected for d in DEPS[n]):
     affected.add(n);self.db.execute("UPDATE modules SET state='stale' WHERE job=? AND module=? AND state!='pending'",(j,n))
-  self.db.commit();self.event(j,m,'rejected',note)
+  self._commit();self.event(j,m,'rejected',note)
  def status(self,j):
   from execution import is_job,observe
   if is_job(self,j):return observe(self,j)
@@ -608,7 +614,7 @@ class Pilot:
   for m,r in rows.items():
    if r['state']=='running':
     self.db.execute("UPDATE modules SET state='blocked' WHERE job=? AND module=?",(j,m));self.event(j,m,'interrupted','Inspect partial output before retry')
-  self.db.commit();rows=self.rows(j)
+  self._commit();rows=self.rows(j)
   extra={}
   if self.brief(j) and rows['content']['envelope']:
    import adapters

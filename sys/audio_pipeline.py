@@ -117,12 +117,16 @@ class AudioPipeline:
         self.aspect_ratio = self.brief.get("aspect_ratio", "16:9")
 
     def _mastering_cfg(self) -> dict[str, float]:
-        """Single channel-wide mastering config from sys/config.json (same for every format)."""
-        cfg = read_json(SYS_ROOT / "config.json")
-        return {
-            "audio_lufs": float(cfg.get("audio_lufs", -11.0)),
-            "audio_peak_db": float(cfg.get("audio_peak_db", -1.0)),
-        }
+        """Format-aware audio mastering config."""
+        from format_profiles import audio_mastering_for_format, resolve_format_profile
+        try:
+            return audio_mastering_for_format(resolve_format_profile(self.brief))
+        except Exception:
+            cfg = read_json(SYS_ROOT / "config.json")
+            return {
+                "audio_lufs": float(cfg.get("audio_lufs", -11.0)),
+                "audio_peak_db": float(cfg.get("audio_peak_db", -1.0)),
+            }
 
     def _synthesize_segments_parallel(
         self,

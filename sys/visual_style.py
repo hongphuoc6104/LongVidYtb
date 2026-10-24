@@ -30,12 +30,16 @@ EARTH_TONED_STYLE_DESCRIPTION: str = _REGISTRY_150["style"]
 PASTEL_STYLE_DESCRIPTION: str = _REGISTRY_140["style"]
 
 CAST_APPEARANCE: str = (
-    "Simple contextual 2D cartoon design only when explicitly requested; natural contextual hair, "
-    "skin tone, dot eyes, and clear black outer contours without imposing a fixed white round head or white mittens."
+    "Iconic 2D Vietnamese indie webcomic doodle stickman (Nguệch Ngoạc / Vẽ Vời / Xấu Vê Nờ style): "
+    "oversized slightly lopsided hand-drawn pure-white (#FFFFFF) bald circle head with bold pitch-black (#000000) "
+    "marker outline, tiny solid-black dot eyes placed low on the face leaving a large open upper forehead/cranium, "
+    "minimal single-stroke eyebrows and mouth, no nose or ears, thin single-line solid-black wire/stick arms "
+    "(single black stroke with zero arm thickness) ending in small round white circle hands"
 )
 DEFAULT_OUTFIT: str = (
-    "Flat solid earth-toned clothing (terracotta, warm ochre, sage green, slate blue, warm brown) "
-    "appropriate to the scene and role; preserve the costume in returning shots without imposing a recurring color."
+    "Unshaded 100% flat MS-Paint paint-bucket solid cerulean-blue (#3B82C4) simple pill/rectangular T-shirt torso "
+    "and simple flat slate-gray (#8C857B) straight trousers or single-line black stick legs, with zero clothing "
+    "folds, zero collar details, and zero shading gradients"
 )
 
 

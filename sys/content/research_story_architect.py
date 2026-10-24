@@ -57,12 +57,15 @@ try:
     VISUAL_STYLE_AVAILABLE = True
 except ImportError:
     CAST_APPEARANCE = (
-        "Simple contextual 2D cartoon design only when explicitly requested; natural contextual hair, "
-        "skin tone, dot eyes, and clear black outer contours without imposing a fixed white round head or white mittens."
+        "Iconic 2D white-head doodle stickman (Nguệch Ngoạc / Vẽ Vời / Xấu Vê Nờ style): oversized slightly lopsided "
+        "hand-drawn circular or oval head filled with stark pure white (#FFFFFF) and outlined in thick wobbly black "
+        "marker (#000000); two tiny solid black dot eyes set low on the face with expressive floating black-line "
+        "eyebrows and a simple line mouth; zero nose, zero ears, zero human skin tone, zero realistic hair; single-line "
+        "black wire arms and legs with simple mittens or 3-finger cartoon hands."
     )
     DEFAULT_OUTFIT = (
-        "Flat solid earth-toned clothing (terracotta, warm ochre, sage green, slate blue, warm brown) "
-        "appropriate to the scene and role; preserve the costume in returning shots without imposing a recurring color."
+        "Simple flat bell-shaped or rectangular torso filled with 100% unshaded solid cerulean blue (#3B82C4) or flat "
+        "muted coral/sage, with zero collar details, zero cloth folds, and thick wobbly black outer contours (#000000)."
     )
     STYLE_DESCRIPTION = (
         "Hand-drawn 2D explainer illustration with an earth-toned foundation (terracotta, warm ochre, sage green, "

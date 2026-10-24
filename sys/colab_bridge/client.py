@@ -399,7 +399,7 @@ class Client:
     def _assignment_state(self):
         from .accounts import assignment_state
 
-        return assignment_state(self.binary, self.account, self.session)
+        return assignment_state(self.binary, self.account, self.session, refresh_auth=True)
 
     def reconcile(self):
         """Explicit read-only reconciliation of an allocation whose send was uncertain."""
@@ -757,18 +757,23 @@ class Client:
                     raise ColabError("COLAB_SESSION_BUSY") from ex
                 self.ensure_authenticated()
                 code = (
-                    "import json, sys, subprocess\nfrom pathlib import Path\n"
+                    "import json, sys, subprocess, traceback\nfrom pathlib import Path\n"
                     f"p=Path({remote!r})\n"
                     "e=getattr(sys,'last_value',None)\n"
+                    "tb=getattr(sys,'last_traceback',None)\n"
+                    "frames=traceback.extract_tb(tb) if tb else []\n"
                     "cmd=getattr(e,'cmd',[])\n"
-                    "exact=isinstance(e,subprocess.CalledProcessError) and isinstance(cmd,(list,tuple)) and len(cmd)==3 and str(cmd[1]).endswith('/renderer/render.mjs') and str(cmd[2])==str(p/'output')\n"
+                    "exact_proc=isinstance(e,subprocess.CalledProcessError) and isinstance(cmd,(list,tuple)) and len(cmd)==3 and str(cmd[1]).endswith('/renderer/render.mjs') and str(cmd[2])==str(p/'output')\n"
+                    "exact_worker=isinstance(e,(ValueError,RuntimeError)) and any(str(p/'job_worker.py') in f.filename for f in frames)\n"
+                    "exact=bool(exact_proc or exact_worker)\n"
+                    "rc=getattr(e,'returncode',1 if exact_worker else None)\n"
                     "active=[]\n"
                     "for q in Path('/proc').glob('[0-9]*/cmdline'):\n"
                     " try:\n"
                     "  args=q.read_bytes().replace(b'\\x00',b' ').decode(errors='replace')\n"
                     "  if str(p) in args and ('renderer/render.mjs' in args or 'job_worker.py' in args): active.append(q.parent.name)\n"
                     " except (OSError,PermissionError): pass\n"
-                    "print('VP_FAILED_RENDER='+json.dumps({'exact_failed_exit':exact,'returncode':getattr(e,'returncode',None),'archive_exists':(p/'output.zip').exists(),'mp4_exists':any((p/'output').glob('*.mp4')),'active_renderers':active,'error':str(e) if exact else None}))\n"
+                    "print('VP_FAILED_RENDER='+json.dumps({'exact_failed_exit':exact,'returncode':rc,'archive_exists':(p/'output.zip').exists(),'mp4_exists':any((p/'output').glob('*.mp4')),'active_renderers':active,'error':str(e) if exact else None}))\n"
                 )
                 output = self.exec(code, timeout=45)
                 lines = [x for x in output.splitlines() if x.startswith("VP_FAILED_RENDER=")]
