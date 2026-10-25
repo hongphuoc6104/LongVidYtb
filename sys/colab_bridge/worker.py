@@ -146,11 +146,18 @@ def _num_to_vi(n: int) -> str:
     return str(n)
 
 
+def _strip_inter_letter_hyphens(text: str) -> str:
+    """Replace syllable-joining hyphens (e.g. 'vi-đê-ô') with spaces so OmniVoice never inserts dash pauses."""
+    res = re.sub(r"(?<=[^\W\d_])-(?=[^\W\d_])", " ", text or "")
+    return re.sub(r"\s+", " ", res).strip()
+
+
 def _normalize_vi_tts_text(text: str) -> str:
     """Sanitize pause tags, numbers, and loanwords for Vietnamese OmniVoice synthesis only."""
     try:
         from vn_text_normalizer import normalize_for_tts
-        return normalize_for_tts(text or "")
+        norm = _strip_inter_letter_hyphens(normalize_for_tts(text or ""))
+        return norm or text
     except ImportError:
         pass
     res = re.sub(r"\[pause:[^\]]+\]", " , ", text or "", flags=re.IGNORECASE)
@@ -163,7 +170,7 @@ def _normalize_vi_tts_text(text: str) -> str:
     res = re.sub(r"\b\d+\b", lambda m: _num_to_vi(int(m.group(0))) if len(m.group(0)) <= 9 else m.group(0), res)
     res = res.replace("...", ",").replace("…", ",").replace("—", ",").replace("–", ",").replace(":", ",").replace(";", ",")
     res = re.sub(r",\s*,", ",", res)
-    res = re.sub(r"\s+", " ", res).strip()
+    res = _strip_inter_letter_hyphens(res)
     return res or text
 
 
@@ -217,24 +224,82 @@ def _extract_word_timestamps_acoustic(w, text, sr=SR):
     return timestamps
 
 
+def _strip_leading_prompt_bleed(w, sr=SR):
+    """Strip residual voice-prompt boundary click or syllable bleed (<=240ms) + dead silence (>=120ms) at utterance start."""
+    import numpy as np
+    hop = max(1, sr // 100)
+    nf = len(w) // hop
+    if nf < 45:
+        return w
+    rms = np.sqrt(np.mean(w[: nf * hop].reshape(nf, hop) ** 2, axis=1))
+    sample_idx = np.where(np.abs(w) >= 0.010)[0]
+    if not len(sample_idx):
+        return w
+    b_start = int(sample_idx[0]) // hop
+    if b_start > 25:
+        return w
+    for g_start in range(b_start + 1, min(b_start + 25, nf - 22)):
+        if rms[g_start] < 0.011:
+            s_candidates = np.where(rms[g_start:] >= 0.014)[0]
+            if not len(s_candidates):
+                return w
+            s_start = g_start + int(s_candidates[0])
+            if (s_start - g_start) >= 12:
+                win = rms[s_start : min(nf, s_start + 25)]
+                if int(np.sum(win >= 0.015)) >= 10:
+                    cut = max(0, (s_start - 3) * hop)
+                    return w[cut:]
+    return w
+
+
+def _utterance_acoustic_score(w, synth_text: str, sr: int = SR) -> tuple[bool, float]:
+    """Verify trimmed Vietnamese waveform speaks expected syllables without mid-clause stalls."""
+    import numpy as np
+    w = np.asarray(w, dtype=np.float32).reshape(-1)
+    if not w.size:
+        return False, 0.0
+    words = re.findall(r"[^\W\d_]+", synth_text or "")
+    n_words = len(words)
+    dur = len(w) / float(sr)
+    if n_words <= 2:
+        return dur >= 0.20, dur
+    hop = max(1, sr // 100)
+    nf = len(w) // hop
+    if nf < 10:
+        return False, 0.0
+    rms = np.sqrt(np.mean(w[: nf * hop].reshape(nf, hop) ** 2, axis=1))
+    voiced_s = float(np.sum(rms >= 0.008)) * (hop / float(sr))
+    min_voiced = max(0.42, n_words * 0.142)
+    v_idx = np.where(rms >= 0.008)[0]
+    max_gap = float(np.max(np.diff(v_idx) - 1)) * (hop / float(sr)) if len(v_idx) > 1 else 0.0
+    has_internal_punct = bool(re.search(r"[,.;:!?]", (synth_text or "").strip()[:-1]))
+    gap_limit = 0.55 if has_internal_punct else 0.36
+    ok = (voiced_s >= min_voiced) and (max_gap <= gap_limit)
+    score = (voiced_s / max(1, n_words)) - max(0.0, max_gap - gap_limit)
+    return ok, score
+
+
 def _trim_silence(w, sr=SR, threshold=0.012, lead_ms=25, trail_ms=30, fade_ms=8):
     import numpy as np
     w = np.asarray(w, dtype=np.float32).reshape(-1)
     if not w.size:
         return w
+    w = _strip_leading_prompt_bleed(w, sr=sr)
     idx = np.where(np.abs(w) >= threshold)[0]
     if not idx.size:
         return w
+    soft_coda = np.where(np.abs(w[int(idx[-1]) : min(len(w), int(idx[-1]) + round(0.09 * sr))]) >= min(threshold, 0.006))[0]
+    last_voiced = int(idx[-1]) + (int(soft_coda[-1]) if soft_coda.size else 0)
     lead = round(lead_ms * sr / 1000)
     trail = round(trail_ms * sr / 1000)
     start = max(0, int(idx[0]) - lead)
-    end = min(len(w), int(idx[-1]) + 1 + trail)
-    if start == 0 and end == len(w) and int(idx[0]) <= lead and len(w) - 1 - int(idx[-1]) <= trail:
+    end = min(len(w), last_voiced + 1 + trail)
+    if start == 0 and end == len(w) and int(idx[0]) <= lead and len(w) - 1 - last_voiced <= trail:
         return w
     trimmed = w[start:end].copy()
     fade = min(round(fade_ms * sr / 1000), len(trimmed) // 4)
     fade_in = min(fade, int(idx[0]) - start)
-    fade_out = min(fade, end - 1 - int(idx[-1]))
+    fade_out = min(fade, end - 1 - last_voiced)
     if fade_in > 1:
         trimmed[:fade_in] *= np.linspace(0.0, 1.0, fade_in, dtype=np.float32)
     if fade_out > 1:
@@ -374,15 +439,41 @@ def run(request_path, output_dir):
                     continue
                 if len(generated) != len(batch):
                     raise RuntimeError('Model returned incomplete batch')
-                for (i, _item, cached), w in zip(batch, generated, strict=False):
-                    w = np.asarray(w, dtype=np.float32).reshape(-1)
-                    if not w.size or not np.isfinite(w).all() or np.max(np.abs(w)) < 1e-5:
+                def _postprocess_wave(raw_w):
+                    arr = np.asarray(raw_w, dtype=np.float32).reshape(-1)
+                    if not arr.size or not np.isfinite(arr).all() or np.max(np.abs(arr)) < 1e-5:
                         raise RuntimeError('Model returned empty/nonfinite/silent audio')
-                    w = resample_poly(w, 2, 1).astype(np.float32)  # OmniVoice: 24 kHz
-                    peak = float(np.max(np.abs(w)))
-                    if peak > .89:
-                        w *= .89 / peak
-                    w = _trim_silence(w, sr=SR)
+                    arr = resample_poly(arr, 2, 1).astype(np.float32)  # OmniVoice: 24 kHz
+                    pk = float(np.max(np.abs(arr)))
+                    if pk > .89:
+                        arr *= .89 / pk
+                    return _trim_silence(arr, sr=SR)
+
+                for (i, _item, cached), w_raw, s_txt in zip(batch, generated, synth_texts, strict=False):
+                    w = _postprocess_wave(w_raw)
+                    if lang == 'vi':
+                        ok, best_score = _utterance_acoustic_score(w, s_txt, sr=SR)
+                        if not ok:
+                            best_w = w
+                            for attempt in (1, 2):
+                                torch.manual_seed(req['seed'] + take + attempt * 31)
+                                retry_gen = _MODEL.generate(
+                                    text=[s_txt],
+                                    language=[lang],
+                                    voice_clone_prompt=[prompt],
+                                    speed=[_item['speed'] / profile['source_speed']],
+                                    num_step=req['num_step'],
+                                )
+                                if retry_gen:
+                                    cand_w = _postprocess_wave(retry_gen[0])
+                                    cand_ok, cand_score = _utterance_acoustic_score(cand_w, s_txt, sr=SR)
+                                    if cand_ok:
+                                        best_w = cand_w
+                                        break
+                                    if cand_score > best_score:
+                                        best_w = cand_w
+                                        best_score = cand_score
+                            w = best_w
                     tmp = cached.with_suffix('.tmp.wav')
                     sf.write(tmp, w, SR, subtype='PCM_16')
                     tmp.replace(cached)

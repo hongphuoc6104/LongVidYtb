@@ -153,3 +153,15 @@ def test_ci_evidence_envelope_retains_all_runs_and_rejects_toon() -> None:
     for invalid in ('[2]{id,status}: 1,completed', 'not base64!', ''):
         with pytest.raises(ValueError):
             decode_ci_runs(invalid)
+
+
+def test_smooth_interpolated_beats_never_collides_index_10_past_index_11() -> None:
+    from visual_pacing import smooth_interpolated_beats
+
+    beats = [
+        {'id': f'SC01_B{i + 1}', 'at': round(i * 0.98, 4)}
+        for i in range(14)
+    ]
+    smooth_interpolated_beats(beats, 0.0, 14.95)
+    assert all(round(a['at'] * 30) < round(b['at'] * 30) for a, b in zip(beats, beats[1:], strict=False))
+

@@ -15,15 +15,19 @@ description: "Author and transform explainer video scripts into natural conversa
 - **Trục Phân Tích - Bình Luận - Đánh Giá Con Người (`human_editorial` Spine — Chống AI-Slop):**
   - Kịch bản bắt buộc lấy lập trường (`editorial_stance`) và các ý tưởng chi tiết mở rộng từ góc nhìn tác giả (`expanded_content_ideas` trong `brief.json`) làm **xương sống dẫn dắt**.
   - Tuyệt đối không viết theo lối tổng hợp thông tin trung tính kiểu Wikipedia/AI. Mỗi phân đoạn phải thể hiện rõ sự **phân tích nguyên nhân ngầm**, **bình luận phản biện**, và **đánh giá trọng số giá trị** của con người; dữ kiện khoa học (`sources`) chỉ được trích dẫn làm bằng chứng phục vụ cho trục bình luận đó.
-- **Counter-Intuitive / Truth-Slap Hook (Cú tát sự thật trong 2.5 giây đầu):**
-  - Câu đầu tiên của `SC01` bắt buộc **$\le 18$ âm tiết** (`OPENING_HOOK_TOO_LONG`), đánh thẳng vào nghịch lý phản trực giác hoặc lật tẩy ảo giác học thuật của người xem (ví dụ: *"Trang sách vàng kín, đầu bạn vẫn trống."* — 8 âm tiết; hoặc *"Đọc lại giáo trình năm lần chỉ tạo ra ảo giác hiểu bài."* — 12 âm tiết).
+- **Counter-Intuitive / Truth-Slap Hook & Lát Cắt Đời Thực Sát Sườn (`SC01–SC02` Grounded Clarity):**
+  - Câu đầu tiên của `SC01` bắt buộc **$\le 18$ âm tiết** (`OPENING_HOOK_TOO_LONG`), đi thẳng vào hành vi đời thực sát sườn hoặc nghịch lý phản trực giác mà người xem Việt Nam vừa trải qua hôm qua — tuyệt đối tránh ẩn dụ sách vở mơ hồ, sáo rỗng.
+  - Ngay trong 30 giây đầu (`SC01–SC02`), phải đặt lát cắt hành vi quen thuộc cạnh hậu quả ngược đời và **chỉ thẳng tên nghịch lý bằng ngôn ngữ bình dân sắc gọn** (ví dụ chuẩn đã duyệt: *"Đi làm về mệt rã rời, bạn nằm vật ra giường để xả hơi một chút. Tay cầm điện thoại định lướt mười lăm phút, mà ngoảnh đi ngoảnh lại đã trôi vèo hai tiếng... Thật ra thứ được nghỉ lúc đó chỉ là cái lưng của bạn, chứ không phải bộ não."*).
+  - Giải thích cơ chế tâm lý/nhận thức qua **các đối cực hành vi đời thường cụ thể** (*"giây trước vừa bật cười vì một đoạn hài ngắn, giây sau đã căng thẳng xem người lạ cãi vã"*, *"bưng bát cơm hay nhắm mắt đi ngủ, máy vẫn chạy"*, *"bật tiếng rì rầm bên gối chỉ vì sợ sự im lặng"*) thay vì liệt kê thuật ngữ trừu tượng (*"nén cảm xúc"*, *"quá tải thông tin"*).
   - **Tuyệt đối cấm** mở đầu bằng lời chào (*"Xin chào"*), giới thiệu đề tài (*"Hôm nay chúng ta..."*), hoặc câu dẫn nhập chậm (*"Hãy nghĩ về..."*, *"Hãy hình dung..."*, *"Hãy tưởng tượng..."*, *"Giờ đây, hãy thử..."*).
+- **Ưu Tiên Từ Thuần Việt Trơn Âm (Tránh Từ Mượn Dễ Lắp Bắp Trên TTS):**
+  - Khi có từ tiếng Việt tự nhiên tương đương, bắt buộc dùng từ thuần Việt giàu sức gợi (*"đoạn hài ngắn"*, *"lướt điện thoại"*, *"bỏ máy xuống"*, *"tiếng rì rầm"*) thay vì lạm dụng từ mượn phiên âm (`"vi-đê-ô"`, `"pót-cát"`, `"nô-ti-phi-cây-sần"`) khiến giọng đọc mất tự nhiên.
 - **Zero Pause in First 15 Seconds (`SC01` — `OPENING_SCENE_PAUSE_FORBIDDEN`):**
   - **Nghiêm cấm** chèn bất kỳ thẻ `[pause:...]` nào trong cảnh mở đầu `SC01`.
 - **Quy Tắc Nhịp Điệu Tự Nhiên (Chống "Văn Mẫu AI"):**
-  - **Bắt buộc xen kẽ câu ngắn và câu dài (`stddev_syllables >= 1.8`):** Không bao giờ viết mọi cảnh đều chằn chặn 3 câu dài 18–20 chữ. Mỗi chương/kịch bản bắt buộc phải xen kẽ các câu ngắn đanh gọn (**3–8 âm tiết**, ví dụ: *"Đó là ảo giác năng lực."*, *"Mỏ vàng nằm ở cuối bài."*, *"Làm sao biết bạn hiểu thật?"*) với các câu giải thích cơ chế (**15–24 âm tiết**).
+  - **Bắt buộc xen kẽ câu ngắn và câu dài (`stddev_syllables >= 1.8`):** Không bao giờ viết mọi cảnh đều chằn chặn 3 câu dài 18–20 chữ. Mỗi chương/kịch bản bắt buộc phải xen kẽ các câu ngắn đanh gọn (**3–8 âm tiết**, ví dụ: *"Đó là ảo giác năng lực."*, *"Mỏ vàng nằm ở cuối bài."*, *"Làm sao biết bạn hiểu thật?"*) với các câu giải thích cơ chế (**15–24 âm tiết**). Với câu kết cảnh có cụm âm mũi nặng (`-ng`, `-m`, `-n` như *"im lặng"*), giữ độ dài gọn **12–16 âm tiết** để giọng hạ kết trọn vẹn, không hụt hơi.
   - **Cấm ngắt dấu phẩy ngang xương giữa Chủ ngữ và Vị ngữ:** Tuyệt đối không chèn dấu phẩy vô lý giữa chủ ngữ và động từ (ví dụ sai: *"Bản chất của tổng quan tài liệu, là..."* hoặc *"Đó là nơi bạn vẽ nên, khoảng trống..."*) chỉ để lách luật đếm chữ. Hãy tách hẳn thành một câu ngắn tự nhiên.
-  - **Tự động chuẩn hóa ở Backend:** Hệ thống (`sys/remote_audio.py`, `sys/adapters.py`, `sys/colab_bridge/worker.py`) đã tự động tách thẻ `[pause:...]` thành khoảng nghỉ âm học thực tế và tự động phiên âm số/từ mượn qua `vn_text_normalizer.py`. Agent chỉ cần tập trung viết câu tiếng Việt tự nhiên, giàu hình ảnh.
+  - **Tự động chuẩn hóa ở Backend:** Hệ thống (`sys/remote_audio.py`, `sys/adapters.py`, `sys/colab_bridge/worker.py`) đã tự động tách thẻ `[pause:...]` thành khoảng nghỉ âm học thực tế, tự động phiên âm số/từ mượn qua `vn_text_normalizer.py` và tự động gỡ dấu gạch nối liên chữ trước khi vào BPE TTS. Agent chỉ cần tập trung viết câu tiếng Việt đời thực, giàu hình ảnh.
 
 ---
 
@@ -50,23 +54,24 @@ description: "Author and transform explainer video scripts into natural conversa
 
 ## 3. Viết Kịch Bản Gắn Kết Với Nhịp Hình Ảnh (`Clause/Sentence-Beat Pairing`)
 
-Để Agent không bao giờ tính sai tọa độ hay trượt điểm neo (`anchor_quote`), hãy soạn kịch bản theo từng cặp **`(Câu hoặc mệnh đề thoại tự nhiên, "loại_shot|Hành động hình ảnh cụ thể")`** (như trong `sys/tools/build_full_frame_acceptance.py` hoặc hàm `build_scenes_from_story_rows` trong `sys/content/research_story_architect.py`):
+Để Agent không bao giờ tính sai tọa độ hay trượt điểm neo (`anchor_quote`), hãy soạn kịch bản theo từng cặp **`(Câu hoặc mệnh đề thoại tự nhiên, "loại_shot|Hành động hình ảnh cụ thể")`** (như trong `sys/tools/build_rest_paradox_16x9.py` hoặc hàm `build_scenes_from_story_rows` trong `sys/content/research_story_architect.py`):
 
-- **`full_scene`**: Nhân vật người que ẩn danh và đồ vật tương tác trực tiếp trong bối cảnh vật lý.
-- **`variation`**: Giữ nguyên căn phòng và góc máy của ảnh trước (`based_on`), chỉ đổi cử chỉ tay/biểu cảm nhân vật (tối đa **2 nhịp `variation` liên tiếp**; đến nhịp thứ 3 bắt buộc đổi góc máy sang `macro_prop`, `visual_diagram` hoặc `full_scene` góc mới để tránh đứng hình nhàm chán).
-- **`macro_prop`**: Cận cảnh bàn tay 4 ngón hoạt hình cầm bút, trang sách tô vàng, đồng hồ hoặc chi tiết sơ đồ.
-- **`visual_diagram`**: Sơ đồ nhân quả hoặc biểu đồ so sánh vẽ tay trực quan trên nền sáng sạch (`camera: hold`).
-- **`concept_metaphor`**: Ẩn dụ thị giác vật lý hóa cơ chế trừu tượng.
-- **`white_card`**: Thẻ khái niệm nền trắng tinh `#FFFFFF` cô lập một biểu tượng đối sánh tối giản (`camera: hold`).
-- **`white_isolated`**: Nền trắng tinh `#FFFFFF` với đối tượng hoặc nhân vật được cô lập hoàn toàn.
-- **`still_life`**: Nhịp nghỉ thị giác (rest frame) cận cảnh hoặc trung cảnh tập trung vào vật thể, tài liệu, sách, thiết bị, đồng hồ — tuyệt đối không vẽ nhân vật người que hay bàn tay hoạt hình.
-- **`environment`**: Nhịp nghỉ thị giác (rest frame) cảnh rộng thiết lập không gian, phòng ốc, phong cảnh, đại lộ — hoàn toàn vắng bóng nhân vật.
+- **`full_scene`**: Nhân vật doodle đầu tròn trắng (`CAST_APPEARANCE`) và đồ vật tương tác trực tiếp trên sân khấu 2D phẳng.
+- **`variation`**: Giữ nguyên bối cảnh 2D và góc máy của ảnh trước (`based_on`), chỉ đổi cử chỉ tay/biểu cảm nhân vật (tối đa **2 nhịp `variation` liên tiếp**; đến nhịp thứ 3 bắt buộc đổi góc máy sang `macro_prop`, `visual_diagram`, `cutaway_detail` hoặc `full_scene` góc mới).
+- **`macro_prop`**: Cận cảnh bàn tay tròn trắng / đạo cụ chính trên nền màu phẳng 2D.
+- **`visual_diagram`**: Sơ đồ nhân quả hoặc biểu đồ so sánh vẽ tay nguệch ngoạc trực quan trên nền màu phẳng (`camera: hold`).
+- **`concept_metaphor`**: Ẩn dụ thị giác kiểu truyện tranh 2D (`Nguệch Ngoạc`) vật lý hóa cơ chế trừu tượng (quả tạ đè đầu, đám mây suy nghĩ, tia sét cảm xúc).
+- **`cutaway_detail`**: Cửa sổ cắt lớp mở nửa trên chiếc đầu tròn trắng tinh `#FFFFFF` để lộ người que tí hon hoặc bộ não đang quá tải bên trong.
+- **`white_card`**: Thẻ khái niệm nền màu phẳng (`#FFFFFF`, `#F8F0DC`, `#F2B88B`, `#2E4361`) cô lập một đối sánh tối giản (`camera: hold`).
+- **`white_isolated`**: Nền phẳng `#FFFFFF` hoặc `#F8F0DC` với đối tượng hoặc nhân vật được cô lập hoàn toàn.
+- **`still_life`**: Nhịp nghỉ thị giác (rest frame) tập trung vào 1–2 vật thể 2D phẳng — tuyệt đối không vẽ nhân vật.
+- **`environment`**: Nhịp nghỉ thị giác (rest frame) sân khấu 2 mặt phẳng tối giản — hoàn toàn vắng bóng nhân vật.
 
 1. **Khoảng thở thị giác & Nhịp kể (Visual Breathing Room):**
-   - Xen kẽ nhịp kể với các khung hình nghỉ (`still_life`, `environment`): bắt buộc có ít nhất 30% nhịp hình không có nhân vật trong mỗi chuỗi 10 nhịp trượt.
-   - **Trần nhịp nhân vật & trần `variation` liên tiếp:** Tuyệt đối cấm viết quá 4 nhịp hình có nhân vật liên tiếp, và cấm quá 2 nhịp `variation` (`based_on`) liên tiếp.
-   - **Quy chuẩn Bối cảnh (Setting Brevity):** Mỗi bối cảnh `setting` chỉ được dài $\le 8$ từ (chỉ nêu không gian và điều kiện ánh sáng, nghiêm cấm liệt kê đồ đạc/đạo cụ).
-2. **Cold open (`0:00–0:12.5`) & Cấm Lệnh Vật Lý Vụn Vặt (`MICRO_ACTION_FILLER_BABBLE`):** Đạt **3–5 hình trong 5 giây đầu** và **6–10 hình trong 12,5 giây đầu** bằng **đối trọng thị giác (Visual Counterpoint)** lật tẩy mâu thuẫn nhận thức; tuyệt đối cấm viết $\ge 3$ câu lệnh vật lý 4 chữ tầm thường liên tiếp (*"Cầm cây bút lên. Đặt xuống tờ giấy trắng. Mở sách ra."*).
+   - Xen kẽ nhịp kể với các khung hình nghỉ (`still_life`, `environment`, `visual_diagram`, `cutaway_detail`, `white_card`): bắt buộc có ít nhất 30% nhịp hình không mang `full_scene`/`variation` nhân vật trong mỗi chuỗi 10 nhịp trượt.
+   - **Trần nhịp nhân vật & trần `variation` liên tiếp:** Tuyệt đối cấm viết quá 4 nhịp hình nhân vật liên tiếp, và cấm quá 2 nhịp `variation` (`based_on`) liên tiếp.
+   - **Quy chuẩn Bối cảnh (Setting Brevity):** Mỗi bối cảnh `setting` chỉ được dài $\le 8$ từ (nêu sân khấu màu phẳng 2D, nghiêm cấm liệt kê đồ đạc hay đèn chiếu 3D).
+2. **Cold open (`0:00–0:15`, `SC01`) & Căn Khớp Kép Ước Tính / Thực Đo:** Với cảnh `SC01` dài ~70–75 chữ (~15s WAV thực đo), chia thành **`10–11` nhịp hình** (`24–28` ký tự/nhịp ở 9–10 nhịp đầu để đạt **3–5 starts trong `[0, 5s)`** và **6–10 starts trong `[0, 12.5s)`**, kèm 1 nhịp kết ở `>= 12.5s`) để đồng thời vượt qua cả `story_plan.estimates` (`1.0–1.8s`) và `visual_pacing.py` ở 30fps. Tuyệt đối cấm viết $\ge 3$ câu lệnh vật lý 4 chữ tầm thường liên tiếp (`MICRO_ACTION_FILLER_BABBLE`).
 3. **Thân bài (`sau 0:15`):** Với câu dài $> 14$ chữ có bước ngoặt ý, tách thành 2 nhịp hình theo mệnh đề (`split_long_sentence_into_beat_clauses()`) để mỗi nhịp hình rơi vào khoảng **`1.2s–3.5s`**, kể chuyện thí nghiệm sinh động nhưng không trích dẫn khô khan kiểu `et al.`, `DOI:`, `(2008)`.
 
 ---

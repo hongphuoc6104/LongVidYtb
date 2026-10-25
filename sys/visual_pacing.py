@@ -75,7 +75,13 @@ def smooth_interpolated_beats(beats: list[dict[str, Any]], start: float, end: fl
         target = min(4.8, beats[1]['at'] + (5.0 - beats[1]['at']) * .75)
         if target > beats[1]['at'] + .5:
             move(2, target)
-    if start == 0.0 and count > 10 and beats[10]['at'] < OPENING_WINDOW_SECONDS and duration > OPENING_WINDOW_SECONDS + .1:
+    if (
+        start == 0.0
+        and count > 10
+        and beats[10]['at'] < OPENING_WINDOW_SECONDS
+        and duration > OPENING_WINDOW_SECONDS + .1
+        and (count == 11 or OPENING_WINDOW_SECONDS + .05 <= beats[11]['at'] - .5)
+    ):
         move(10, round(OPENING_WINDOW_SECONDS + .05, 4))
     if end <= 15:
         return

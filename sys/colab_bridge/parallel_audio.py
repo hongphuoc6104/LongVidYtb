@@ -146,14 +146,24 @@ def synthesize(root: Path, cfg: dict, request: dict, out: Path, cache: Path,
             owners.append(worker.account_id)
         client = Client(root, shard_cfg)
         client.synthesize(task['request'], dest, cache / 'shards' / str(task['index']), before_submit=before_submit)
-        return {**task, 'out': str(dest), 'account': client.account,
+        return {**task, 'out': str(dest), 'account': client.account, 'session': client.session,
                 'request_id': task['request']['request_id']}
 
     tasks = [{'index': index, 'request': shard} for index, shard in enumerate(shards)]
     results = ColabPoolDispatcher(manager).dispatch_all(tasks, run, max_concurrency=max_workers, role='tts')
     prepared = prepare_assembly(request, results, out / 'prepared')
+    from account_budget import Budgets
+    budgets = Budgets(cfg['colab_tts'].get('management_store'))
+    ordered_results = sorted(results, key=lambda r: (0 if r['account'] in owners else 1, r['index']))
+    chosen = next(
+        (
+            r for r in ordered_results
+            if not budgets.snapshot('colab:' + r['account'])['blocks'].get('colab')
+        ),
+        ordered_results[0],
+    )
     collector_cfg = copy.deepcopy(cfg)
-    collector_cfg['colab_tts'].update(account=results[0]['account'], _session_explicit=True)
+    collector_cfg['colab_tts'].update(account=chosen['account'], session=chosen['session'], _session_explicit=True)
     Client(root, collector_cfg).synthesize(prepared, out, cache / 'assembly', before_submit=before_submit)
     (out / 'parallel-dispatch.json').write_text(json.dumps({
         'version': 1, 'shards': len(shards), 'accounts': sorted(set(owners)),

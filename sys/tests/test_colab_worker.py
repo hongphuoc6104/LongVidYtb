@@ -268,6 +268,54 @@ class WorkerTests(unittest.TestCase):
         fric_end = fric_start + len(soft_fricative)
         self.assertTrue(np.allclose(once[fric_start:fric_end], 0.008))
 
+    def test_hyphen_stripping_prompt_bleed_and_dropout_retry(self):
+        # 1. Inter-syllable hyphens from loanword normalization are stripped so OmniVoice never inserts dash pauses
+        norm = worker._normalize_vi_tts_text('Chưa kịp đánh răng, đã xem xong chục video và dopamine.')
+        self.assertNotIn('-', norm)
+        self.assertIn('vi đê ô', norm)
+        self.assertIn('đô pa min', norm)
+
+        # 2. Leading prompt-bleed click (<200ms) + dead silence (>=100ms) is stripped and remains idempotent
+        bleed_48k = (0.06 * np.sin(np.arange(round(0.06 * 48000)) * 0.09)).astype(np.float32)
+        gap_48k = np.zeros(round(0.32 * 48000), dtype=np.float32)
+        speech_48k = (0.22 * np.sin(np.arange(round(0.60 * 48000)) * 0.05)).astype(np.float32)
+        trail_48k = np.zeros(round(0.10 * 48000), dtype=np.float32)
+        raw_bleed = np.concatenate([bleed_48k, gap_48k, speech_48k, trail_48k])
+        trimmed_once = worker._trim_silence(raw_bleed, sr=48000)
+        trimmed_twice = worker._trim_silence(trimmed_once, sr=48000)
+        np.testing.assert_array_equal(trimmed_once, trimmed_twice)
+        self.assertLessEqual(len(trimmed_once) / 48000.0, 0.67)
+        self.assertGreaterEqual(len(trimmed_once) / 48000.0, 0.64)
+
+        # 3. Truncated Vietnamese utterance triggers deterministic batch_size=1 retry and recovers full audio
+        calls = []
+        truncated_24k = (0.20 * np.sin(np.arange(round(0.45 * 24000)) * 0.05)).astype(np.float32)
+        complete_24k = (0.20 * np.sin(np.arange(round(2.10 * 24000)) * 0.05)).astype(np.float32)
+
+        def flaky_generate(**kw):
+            calls.append(kw['text'])
+            if len(calls) == 1:
+                return [truncated_24k.copy() for _ in kw['text']]
+            return [complete_24k.copy() for _ in kw['text']]
+
+        self.model.from_pretrained = lambda *a, **k: SimpleNamespace(
+            create_voice_clone_prompt=lambda **kw: kw,
+            generate=flaky_generate,
+        )
+        sentence = 'Đi làm về mệt rã rời, bạn nằm vật ra giường xả hơi.'
+        req = build_request(
+            self.root,
+            self.cfg,
+            [dict(scene_id='SC01', narration=sentence, texts=[sentence], gaps=[], tail=0.25, retake=0)],
+            primary_language='vi',
+        )
+        out = self.root / 'remote/dropout-retry/output'
+        self.run_worker(req, out)
+        validate_result(out, req)
+        self.assertEqual(len(calls), 2)
+        res = read(out / 'tts-result.json')
+        self.assertGreaterEqual(res['segments'][0]['content_duration'], 2.05)
+
 
 if __name__ == '__main__':
     unittest.main()

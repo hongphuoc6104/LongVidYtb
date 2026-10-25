@@ -52,7 +52,7 @@ Phong cách kể chuyện **Conversational Essayist (Nhà luận thuyết trò c
 
 | Voice | Profile | Speed (`long_16x9` / `short_9x16`) | Engine | Mastering & Định dạng |
 |:---|:---|:---:|:---|:---|
-| `VietNarrator` | `assets/voices/viet_narrator/profile.json` | `1.00x` (`16:9` & `9:16`, dải `[0.90, 1.15]`) | Colab `kjanh/KhanhTTS-OmniVoice` (`num_step=32`, `batch_size=4`) | `48kHz` Mono PCM16, EQ `+1.5dB @ 200Hz`, `-2.5dB @ 7000Hz`, `-14.0 LUFS`, `-1.5 dBTP` |
+| `VietNarrator` | `assets/voices/viet_narrator/profile.json` | `1.00x` (`16:9` & `9:16`, dải `[0.90, 1.15]`) | Colab `kjanh/KhanhTTS-OmniVoice` (`num_step=32`, `batch_size=4`, auto-retry `batch_size=1`) | `48kHz` Mono PCM16, `VOICE_CHAIN` (`highpass 80Hz`, `-2dB@250Hz`, `+3.5dB@3.2kHz`, de-esser, 2-stage `acompressor`), `-11.0 LUFS`, `-1.0 dBTP` |
 
 ---
 
@@ -62,11 +62,11 @@ Phong cách kể chuyện **Conversational Essayist (Nhà luận thuyết trò c
 - **Tiếng Anh (Bản ngữ tham chiếu):** Trung bình **135 – 145 WPM** ($\approx 2.25 – 2.40$ từ/giây).
 - **Tiếng Việt (Chuẩn hóa Video Pilot Pacing Model):**
   - Tốc độ danh định mục tiêu: **4.0 âm tiết/giây**.
-  - Dải vận hành an toàn: **3.8 – 4.4 âm tiết/giây**.
-  - *Cảnh báo kỹ thuật:* $> 4.5$ âm tiết/giây gây cảm giác vội vã, dồn ép; $< 3.2$ âm tiết/giây gây cảm giác chậm chạp, buồn ngủ.
+  - Dải vận hành an toàn: **3.8 – 4.4 âm tiết/giây** (thực đo `OmniVoice` bao gồm nghỉ ngắn đạt ~`4.5–4.9` từ/giây ở đoạn mở đầu giàu năng lượng).
+  - *Cảnh báo kỹ thuật:* $> 5.0$ âm tiết/giây gây cảm giác vội vã, dồn ép; $< 3.2$ âm tiết/giây gây cảm giác chậm chạp, buồn ngủ.
 
 ### 4.2. Biến thiên nhịp điệu theo cấu trúc câu chuyện (Dynamic Pacing)
-1. **Phân đoạn Mở đầu — 30 giây đầu (Truth-Slap Hook & Empathy - 0–15% thời lượng):**
+1. **Phân đoạn Mở đầu — 30 giây đầu (Truth-Slap Hook & Lived-Reality Empathy - 0–15% thời lượng):**
    - Tốc độ: **`4.2 – 4.4` âm tiết/s** (Tiếng Việt, giọng `VietNarrator` `speed: 1.0x`) / ~150–155 wpm (Tiếng Anh).
    - **Zero Pause in `SC01`:** Tuyệt đối không chèn `[pause:...]` trong 15 giây đầu tiên để tạo nhịp cuốn tức thì từ giây `0:00`.
 2. **Phân đoạn Giải thích & Cơ chế (Causal Explanation - 15–80% thời lượng):**
@@ -78,11 +78,12 @@ Phong cách kể chuyện **Conversational Essayist (Nhà luận thuyết trò c
 
 ---
 
-## 5. Cách đọc & Ngữ điệu (Reading Delivery, Inflection & Prosody)
+## 5. Cách đọc, Độ Sạch Âm Học & Ngữ điệu (Reading Delivery, Clean Prosody & Inflection)
 
-Khắc phục triệt để hiện tượng **"Metronomic Cadence" (nhịp máy đếm nhịp vô hồn của AI)**:
+Khắc phục triệt để hiện tượng **"Metronomic Cadence"** và lỗi **lắp bắp / rò âm mẫu trên `OmniVoice`**:
 1. **Độ lệch chuẩn độ dài câu (`stddev_syllables >= 1.8`):** Xen kẽ các câu ngắn đanh thép (4–8 chữ) với câu phân tích nhân quả (15–22 chữ) để vượt qua `check_sentence_rhythm_variance()` trong `script_diversity_linter.py`.
-2. **Nhấn trọng âm ngữ nghĩa (Semantic Stress):** Đặt lực nhấn vào các từ then chốt đối nghịch: *ảo giác*, *ngược lại*, *khoảng trống*, *bản chất*, *hai phút đầu*.
+2. **Nhấn trọng âm ngữ nghĩa & Ưu tiên từ thuần Việt:** Đặt lực nhấn vào các cặp đối nghịch đời thực (*cái lưng được nghỉ $\leftrightarrow$ bộ não chạy nước rút*, *bật cười $\leftrightarrow$ cãi vã*); ưu tiên từ thuần Việt (*"đoạn hài ngắn"*, *"bỏ máy xuống"*) thay vì từ mượn phiên âm (`"vi-đê-ô"`).
+3. **Khử gạch nối BPE, Cắt rò âm mẫu & Kiểm thính bắt buộc (`ERR-20261025-01`):** Backend `worker.py` tự động tách gạch nối liên chữ (`vi-đê-ô` $\rightarrow$ `vi đê ô`), cắt cụm rò âm đầu câu từ giọng mẫu, giữ âm đuôi mũi nhẹ (`-ng`, `-m`, `-n`) và tự retry `batch_size=1` khi có hố lặng nội câu `> 380ms`. Luôn nghe trực tiếp `narration.wav` để xác nhận độ tự nhiên trước khi duyệt.
 
 ---
 
