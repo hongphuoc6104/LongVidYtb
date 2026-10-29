@@ -100,7 +100,7 @@ _VI_LOANWORD_MAP = {
     '\\bYouTube\\b': 'Diu-túp',
     '\\bShopee\\b': 'Sóp-pi',
     '\\bblog\\b': 'bờ-lốc',
-    '\\bweb\\b': 'gép',
+    '\\bweb\\b': 'uép',
 }
 
 

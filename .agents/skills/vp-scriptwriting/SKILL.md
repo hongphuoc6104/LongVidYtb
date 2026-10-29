@@ -110,3 +110,6 @@ python3 sys/tools/script_diversity_linter.py path/to/content.json
 - Suggested intentional pivots: 450 ms for standalone shorts, 600 ms for long narration. Existing tags remain exact; never silently compress them. Use a terminal tag for a deliberate major scene transition.
 - Run `sys/tools/preview_narration_pauses.py` for planned silence; actual WAV determines timing. Legacy cadence estimates are not the new pause budget.
 - Details and rollout: [pause implementation plan](../../../sys/docs/narration-pause-implementation-plan.md).
+
+## Pillar `research_guide`
+- Hook theo kiểu tutorial: SC01 nêu vấn đề thực tế của người mới nghiên cứu + lời hứa kết quả; KHÔNG bắt buộc nghịch lý hay cảnh VN 60s. Vẫn giữ hook `<= 18` âm tiết, zero `[pause:...]` trong SC01, câu dữ kiện `<= 20` âm tiết.

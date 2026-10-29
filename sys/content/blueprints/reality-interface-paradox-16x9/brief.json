@@ -1,0 +1,238 @@
+{
+  "schema_version": "3.0",
+  "topic": "Mắt Bạn Không Hề Nhìn Thấy Thế Giới Thật? (Nghịch Lý Giao Diện Thực Tại)",
+  "audience": "Người đi làm, sinh viên và người làm việc trí óc quan tâm đến tâm lý học nhận thức và bản chất cuộc sống",
+  "goal": "Giải mã nghịch lý giao diện thực tại qua định lý FBT của GS Donald Hoffman, cơ chế nén không-thời gian và ẩn dụ màn hình máy tính",
+  "video_type": "research_explainer",
+  "duration": {
+    "min_seconds": 420.0,
+    "max_seconds": 540.0
+  },
+  "scene_count": 18,
+  "required_points": [
+    {
+      "id": "R01",
+      "text": "Cú tát thực tại mở màn"
+    },
+    {
+      "id": "R02",
+      "text": "Ảo giác ma trận trong đời thực"
+    },
+    {
+      "id": "R03",
+      "text": "Thí nghiệm chiếc cốc cà phê"
+    },
+    {
+      "id": "R04",
+      "text": "Vũ trụ trần trụi không màu sắc"
+    },
+    {
+      "id": "R05",
+      "text": "Ảo tưởng mắt thấy tai nghe"
+    },
+    {
+      "id": "R06",
+      "text": "Nghịch lý nhận thức của sinh vật"
+    },
+    {
+      "id": "R07",
+      "text": "Chi phí năng lượng của sự thật"
+    },
+    {
+      "id": "R08",
+      "text": "Không-thời gian là tệp nén dữ liệu"
+    },
+    {
+      "id": "R09",
+      "text": "Ẩn dụ màn hình máy tính để bàn"
+    },
+    {
+      "id": "R10",
+      "text": "Thực nghiệm mô phỏng máy tính FBT"
+    },
+    {
+      "id": "R11",
+      "text": "Sự diệt vong của kẻ thấy chân lý"
+    },
+    {
+      "id": "R12",
+      "text": "Chiến thắng tuyệt đối của bộ lọc sinh tồn"
+    },
+    {
+      "id": "R13",
+      "text": "Bẫy ngụy biện của chủ nghĩa hư vô"
+    },
+    {
+      "id": "R14",
+      "text": "Coi trọng nhưng không ngộ nhận"
+    },
+    {
+      "id": "R15",
+      "text": "Giải mã bẫy pixel mạng xã hội"
+    },
+    {
+      "id": "R16",
+      "text": "Thoát khỏi áp lực đồng trang lứa"
+    },
+    {
+      "id": "R17",
+      "text": "Làm chủ bộ giải mã tâm trí"
+    },
+    {
+      "id": "R18",
+      "text": "Thức tỉnh không cần viên thuốc đỏ"
+    }
+  ],
+  "language": "vi",
+  "tone": "Conversational Essayist điềm đạm, ấm áp, sâu sắc, lôi cuốn",
+  "style": "Hand-drawn 2D Vietnamese indie doodle explainer illustration (raw freehand MS-Paint / Flash webcomic aesthetic). Use clear black outer contours (#000000) with visible unpolished hand-drawn wobble, slightly crooked freehand lines drawn without a ruler, imperfect corner joints, and uniform marker stroke weight across both foreground and background (strictly forbid lighter background linework, Bezier curve smoothing, sleek rounded vector icons, or geometric perfection). Fill all shapes with 100% unshaded flat MS-Paint paint-bucket solid hex colors: warm paper-cream (#F8F0DC), muted apricot-peach (#F2B88B), soft sage-green (#93A88C), pale ice-blue (#CBE0E0), flat night slate-navy (#2E4361), or stark pure white (#FFFFFF). Strictly 2D front-on or side-on orthographic flat paper-cutout staging; never use 3/4 isometric furniture perspective, two-tone bevel shading, floating black oval drop shadows, floor cast shadows, glowing lamp light cones, warm sepia AI color grading, gradients, photorealism, or 3D rendering. Draw a complete scene image.",
+  "aspect_ratio": "16:9",
+  "format_profile": "long_16x9",
+  "facts_required": true,
+  "sources": [
+    {
+      "id": "SRC01",
+      "title": "The Case Against Reality: Why Evolution Hid the Truth from Our Eyes",
+      "reference": "Donald D. Hoffman (2019). W. W. Norton & Company / Psychonomic Bulletin & Review.",
+      "facts": [
+        "Não bộ không tiến hóa để nhìn thấy sự thật khách quan.",
+        "Tiến hóa ưu tiên sinh tồn hơn là thấu suốt chân lý.",
+        "Sinh vật thấy sự thật tuyệt chủng trước kẻ chỉ thấy sinh tồn."
+      ]
+    },
+    {
+      "id": "SRC02",
+      "title": "Spacetime is Doomed: Scattering Amplitudes and the Holographic Principle",
+      "reference": "Nima Arkani-Hamed (2012). Institute for Advanced Study, Princeton.",
+      "facts": [
+        "Không gian ba chiều chỉ là định dạng nén dữ liệu của não.",
+        "Vật thể ba chiều giống như biểu tượng trên màn hình máy tính.",
+        "Bộ não nén hàng tỷ photon thành một hình ảnh đơn giản."
+      ]
+    },
+    {
+      "id": "SRC03",
+      "title": "Fitness Beats Truth Theorem in Evolutionary Game Theory",
+      "reference": "Chetan Prakash, Donald Hoffman et al. (2014). Journal of Theoretical Biology.",
+      "facts": [
+        "Biểu tượng thùng rác không chứa rác thật hay chất dẻo nhựa.",
+        "Nếu phải nhìn thấy dòng điện bạn sẽ không thể dùng máy tính.",
+        "Coi trọng biểu tượng nhưng không ngộ nhận nó là sự thật."
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "aspect_ratio": "16:9",
+      "language": "vi",
+      "subtitles": false,
+      "voice": "VietNarrator",
+      "speed": 1.0
+    }
+  ],
+  "planning": {
+    "success_criteria": [
+      "Giải mã nghịch lý giao diện thực tại qua định lý FBT của GS Donald Hoffman, cơ chế nén không-thời gian và ẩn dụ màn hình máy tính"
+    ],
+    "avoid": [
+      "Tránh lối diễn đạt giáo điều, sáo rỗng hoặc thuật ngữ hàn lâm không giải thích."
+    ],
+    "prior_knowledge": "Không đòi hỏi kiến thức chuyên sâu từ trước.",
+    "pacing": "Theo lời dẫn tự nhiên Conversational Essayist, cân chỉnh triệt tiêu dead-air.",
+    "domain_requirements": [],
+    "assumptions": [
+      "Mỗi phân cảnh được cân chỉnh theo công thức âm học P_tail và dung sai drift <= 0.3s."
+    ],
+    "text_style": {
+      "font": "sans-serif rõ nét, cùng kiểu và độ đậm xuyên suốt",
+      "color": "#172033",
+      "outline": "nền sáng tương phản",
+      "size": "dễ đọc trên màn hình ngang (khung 16:9)",
+      "placement": "cách mép ít nhất 10%; bố cục ngang thoáng, không ép lề dọc điện thoại"
+    },
+    "speech_rates": {
+      "vi": {
+        "units_per_second": 4.0,
+        "uncertainty": 0.15,
+        "source": "Acoustic calibrated cadence"
+      },
+      "en": {
+        "units_per_second": 2.5,
+        "uncertainty": 0.25,
+        "source": "Estimated English reading rate"
+      }
+    }
+  },
+  "conversational_facts": true,
+  "packaging": {
+    "youtube_title": "Mắt Bạn Không Hề Nhìn Thấy Thế Giới Thật?",
+    "thumbnail_spec": {
+      "visual_hook": "Nhân vật stickman dùng chiếc kéo to bản rạch rách tấm màn bầu trời thực tại, lộ ra phía sau là bảng mã nhị phân và dòng điện ma trận.",
+      "text_overlay": "SỰ THẬT LÀ GIẢ",
+      "contrast_pair": "Thực tại trần trụi vs. Giao diện nén sinh tồn",
+      "thumbnail_prompt": "Orthographic 2D hand-drawn doodle poster. 60% of the frame shows a bald stickman in a blue shirt (#3B82C4) cutting through a canvas sky with oversized black scissors, revealing a glowing matrix of green binary code and wire bus lines beneath the torn fabric. Solid warm paper-cream canvas (#F8F0DC), wobbly raw black marker contours (#000000). 40% clean negative space on the top right with massive bold yellow hand-lettered text 'SỰ THẬT LÀ GIẢ' with thick black outline. Zero room interiors, zero 3D perspective, zero drop shadows."
+    },
+    "channel_pillar": "Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức",
+    "funnel_tier": "tier_1_broad",
+    "seo_keywords": [
+      "thực tại ảo giác",
+      "định lý fbt",
+      "donald hoffman",
+      "không thời gian",
+      "tâm lý học nhận thức"
+    ]
+  },
+  "youtube_title": "Mắt Bạn Không Hề Nhìn Thấy Thế Giới Thật?",
+  "thumbnail_spec": {
+    "visual_hook": "Nhân vật stickman dùng chiếc kéo to bản rạch rách tấm màn bầu trời thực tại, lộ ra phía sau là bảng mã nhị phân và dòng điện ma trận.",
+    "text_overlay": "SỰ THẬT LÀ GIẢ",
+    "contrast_pair": "Thực tại trần trụi vs. Giao diện nén sinh tồn",
+    "thumbnail_prompt": "Orthographic 2D hand-drawn doodle poster. 60% of the frame shows a bald stickman in a blue shirt (#3B82C4) cutting through a canvas sky with oversized black scissors, revealing a glowing matrix of green binary code and wire bus lines beneath the torn fabric. Solid warm paper-cream canvas (#F8F0DC), wobbly raw black marker contours (#000000). 40% clean negative space on the top right with massive bold yellow hand-lettered text 'SỰ THẬT LÀ GIẢ' with thick black outline. Zero room interiors, zero 3D perspective, zero drop shadows."
+  },
+  "channel_pillar": "Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức",
+  "funnel_tier": "tier_1_broad",
+  "seo_keywords": [
+    "thực tại ảo giác",
+    "định lý fbt",
+    "donald hoffman",
+    "không thời gian",
+    "tâm lý học nhận thức"
+  ],
+  "human_editorial": {
+    "topic_dilemmas": [
+      "Nếu thực tại khách quan hoàn toàn khác với những gì mắt thấy, liệu con người có rơi vào chủ nghĩa hư vô và mất phương hướng sống hay không.",
+      "Xã hội hiện đại ngập tràn các biểu tượng ảo như lượt thích, điểm số và tiền bạc số khiến não bộ bị thao túng bởi những thứ không có thật."
+    ],
+    "dynamic_questions": [
+      "Tại sao một sinh vật nhìn thấy sự thật của vũ trụ lại bị tuyệt chủng nhanh hơn một sinh vật chỉ nhìn thấy ảo giác sinh tồn?",
+      "Làm thế nào để phân biệt giữa việc coi trọng luật chơi của cuộc sống với việc bị nô lệ bởi những biểu tượng vô nghĩa?",
+      "Làm sao ứng dụng định lý không-thời gian vào việc giải tỏa áp lực xã hội và chứng lo âu trong đời sống hàng ngày?"
+    ],
+    "author_raw_input": "Thực tại bạn thấy không phải là chân lý mà chỉ là giao diện nén để sống sót. Hiểu được điều này giúp bạn không còn bị ám ảnh bởi các áp lực ảo mà xã hội bày ra.",
+    "editorial_stance": "Khoa học nhận thức hiện đại và vật lý lượng tử đã chứng minh một sự thật giải thoát: Mọi thứ chúng ta nhìn thấy chỉ là một giao diện đồ họa. Nhận thức này không biến cuộc đời thành hư vô, mà trao cho ta quyền năng tháo bỏ chiếc kính định kiến, không còn bị thao túng bởi những biểu tượng xã hội rỗng tuếch và tập trung vào những giá trị sống đích thực.",
+    "expanded_content_ideas": [
+      {
+        "idea_id": "IDEA_01",
+        "angle_type": "analysis",
+        "summary": "Phân tích cơ chế nén không-thời gian như định dạng tệp để tiết kiệm năng lượng não bộ.",
+        "narrative_integration": "Đưa vào phân cảnh phân tích cơ chế nhân quả.",
+        "target_narrative_phase": "causal_mechanism"
+      },
+      {
+        "idea_id": "IDEA_02",
+        "angle_type": "commentary",
+        "summary": "Phản biện chủ nghĩa hư vô qua ẩn dụ biểu tượng thùng rác trên máy tính: Coi trọng nhưng không ngộ nhận.",
+        "narrative_integration": "Đưa vào phân cảnh phản biện lật ngược vấn đề.",
+        "target_narrative_phase": "counter_argument"
+      },
+      {
+        "idea_id": "IDEA_03",
+        "angle_type": "evaluation",
+        "summary": "Đánh giá việc áp dụng định lý giao diện để giải phóng áp lực đồng trang lứa và lo âu xã hội.",
+        "narrative_integration": "Đưa vào phân cảnh giải pháp chuyển hóa thực tế.",
+        "target_narrative_phase": "takeaway"
+      }
+    ]
+  },
+  "visual_pacing_profile": "full_frame_v1"
+}

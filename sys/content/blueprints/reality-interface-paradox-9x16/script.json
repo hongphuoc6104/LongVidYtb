@@ -1,0 +1,140 @@
+[
+  {
+    "id": "SC01",
+    "duration": 9.2,
+    "narration": "Ly cà phê bạn đang cầm trên tay, thực ra không có màu nâu hay vị đắng. Bên ngoài đôi mắt của bạn, thế giới không hề có sẵn màu sắc hay âm thanh.",
+    "beats": [
+      {
+        "image_id": "SC01_I1",
+        "anchor_quote": "Ly cà phê bạn đang cầm trên tay,"
+      },
+      {
+        "image_id": "SC01_I2",
+        "anchor_quote": "thực ra không có màu nâu hay vị đắng."
+      },
+      {
+        "image_id": "SC01_I3",
+        "anchor_quote": "Bên ngoài đôi mắt của bạn,"
+      },
+      {
+        "image_id": "SC01_I4",
+        "anchor_quote": "thế giới không hề có sẵn màu sắc hay âm thanh."
+      }
+    ]
+  },
+  {
+    "id": "SC02",
+    "duration": 9.95,
+    "narration": "Nơi đó chỉ có các bước sóng vô hình. Chính bộ não đã tự tay pha màu, và tự thêm vào những âm thanh quen thuộc. Tất cả chỉ để giúp bạn dễ sống hơn mà thôi.",
+    "beats": [
+      {
+        "image_id": "SC02_I1",
+        "anchor_quote": "Nơi đó chỉ có các bước sóng vô hình."
+      },
+      {
+        "image_id": "SC02_I2",
+        "anchor_quote": "Chính bộ não đã tự tay pha màu,"
+      },
+      {
+        "image_id": "SC02_I3",
+        "anchor_quote": "và tự thêm vào những âm thanh quen thuộc."
+      },
+      {
+        "image_id": "SC02_I4",
+        "anchor_quote": "Tất cả chỉ để giúp bạn dễ sống hơn mà thôi."
+      }
+    ]
+  },
+  {
+    "id": "SC03",
+    "duration": 10.2,
+    "narration": "Tại sao não lại làm như vậy? Nếu phải soi rõ từng hạt bụi li ti. Cái đầu bạn sẽ kiệt sức vì quá tải. Không gian ba chiều chỉ là định dạng nén dữ liệu của não.",
+    "beats": [
+      {
+        "image_id": "SC03_I1",
+        "anchor_quote": "Tại sao não lại làm như vậy?"
+      },
+      {
+        "image_id": "SC03_I2",
+        "anchor_quote": "Nếu phải soi rõ từng hạt bụi li ti."
+      },
+      {
+        "image_id": "SC03_I3",
+        "anchor_quote": "Cái đầu bạn sẽ kiệt sức vì quá tải."
+      },
+      {
+        "image_id": "SC03_I4",
+        "anchor_quote": "Không gian ba chiều chỉ là định dạng nén dữ liệu của não."
+      }
+    ]
+  },
+  {
+    "id": "SC04",
+    "duration": 10.2,
+    "narration": "Các nhà khoa học đã làm thử nghiệm. Nhóm mải nhìn sự thật đều bị đói lả. Sinh vật thấy sự thật tuyệt chủng trước kẻ chỉ thấy sinh tồn. Chỉ kẻ biết thích nghi mới sống sót.",
+    "beats": [
+      {
+        "image_id": "SC04_I1",
+        "anchor_quote": "Các nhà khoa học đã làm thử nghiệm."
+      },
+      {
+        "image_id": "SC04_I2",
+        "anchor_quote": "Nhóm mải nhìn sự thật đều bị đói lả."
+      },
+      {
+        "image_id": "SC04_I3",
+        "anchor_quote": "Sinh vật thấy sự thật tuyệt chủng trước kẻ chỉ thấy sinh tồn."
+      },
+      {
+        "image_id": "SC04_I4",
+        "anchor_quote": "Chỉ kẻ biết thích nghi mới sống sót."
+      }
+    ]
+  },
+  {
+    "id": "SC05",
+    "duration": 9.7,
+    "narration": "Biểu tượng thùng rác chỉ là hình vẽ. Nó che đi những vi mạch phức tạp. Coi trọng biểu tượng nhưng không ngộ nhận nó là sự thật. Đừng để những con số làm bạn buồn.",
+    "beats": [
+      {
+        "image_id": "SC05_I1",
+        "anchor_quote": "Biểu tượng thùng rác chỉ là hình vẽ."
+      },
+      {
+        "image_id": "SC05_I2",
+        "anchor_quote": "Nó che đi những vi mạch phức tạp."
+      },
+      {
+        "image_id": "SC05_I3",
+        "anchor_quote": "Coi trọng biểu tượng nhưng không ngộ nhận nó là sự thật."
+      },
+      {
+        "image_id": "SC05_I4",
+        "anchor_quote": "Đừng để những con số làm bạn buồn."
+      }
+    ]
+  },
+  {
+    "id": "SC06",
+    "duration": 10.1,
+    "narration": "Mọi áp lực chỉ do góc nhìn của bạn. Đổi chiếc kính, bạn sẽ thấy lòng nhẹ nhõm. Tặng mình một like nếu thấy hữu ích nhé. Và bấm theo dõi để chúng mình cùng gặp lại nhau nha.",
+    "beats": [
+      {
+        "image_id": "SC06_I1",
+        "anchor_quote": "Mọi áp lực chỉ do góc nhìn của bạn."
+      },
+      {
+        "image_id": "SC06_I2",
+        "anchor_quote": "Đổi chiếc kính, bạn sẽ thấy lòng nhẹ nhõm."
+      },
+      {
+        "image_id": "SC06_I3",
+        "anchor_quote": "Tặng mình một like nếu thấy hữu ích nhé."
+      },
+      {
+        "image_id": "SC06_I4",
+        "anchor_quote": "Và bấm theo dõi để chúng mình cùng gặp lại nhau nha."
+      }
+    ]
+  }
+]

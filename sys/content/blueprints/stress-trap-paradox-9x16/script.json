@@ -1,0 +1,156 @@
+[
+  {
+    "id": "SC01",
+    "duration": 9.45,
+    "narration": "Càng lướt mạng, bạn càng mệt mỏi. Bạn định xem năm phút rồi ngủ. Nhưng ngẩng lên đã hai giờ sáng. Bạn ngỡ mình đang thư giãn. Thực ra đầu óc đang bị vắt kiệt.",
+    "beats": [
+      {
+        "image_id": "SC01_I1",
+        "anchor_quote": "Càng lướt mạng, bạn càng mệt mỏi."
+      },
+      {
+        "image_id": "SC01_I2",
+        "anchor_quote": "Bạn định xem năm phút rồi ngủ."
+      },
+      {
+        "image_id": "SC01_I3",
+        "anchor_quote": "Nhưng ngẩng lên đã hai giờ sáng."
+      },
+      {
+        "image_id": "SC01_I4",
+        "anchor_quote": "Bạn ngỡ mình đang thư giãn."
+      },
+      {
+        "image_id": "SC01_I5",
+        "anchor_quote": "Thực ra đầu óc đang bị vắt kiệt."
+      }
+    ]
+  },
+  {
+    "id": "SC02",
+    "duration": 7.7,
+    "narration": "Buông máy xuống, mắt bạn cay xè. Lồng ngực dâng lên nỗi trống trải. Lướt mạng không mang lại bình yên. Nó rút cạn năng lượng của bạn.",
+    "beats": [
+      {
+        "image_id": "SC02_I1",
+        "anchor_quote": "Buông máy xuống, mắt bạn cay xè."
+      },
+      {
+        "image_id": "SC02_I2",
+        "anchor_quote": "Lồng ngực dâng lên nỗi trống trải."
+      },
+      {
+        "image_id": "SC02_I3",
+        "anchor_quote": "Lướt mạng không mang lại bình yên."
+      },
+      {
+        "image_id": "SC02_I4",
+        "anchor_quote": "Nó rút cạn năng lượng của bạn."
+      }
+    ]
+  },
+  {
+    "id": "SC03",
+    "duration": 12.7,
+    "narration": "Năm một chín năm tư, có một thí nghiệm. Họ gắn một nút bấm nhỏ vào đầu con chuột. Con chuột nhấn cần hai nghìn lần mỗi giờ. Nó bỏ đói cơ thể cho đến khi kiệt sức ngã gục. Nó thèm bấm cần hơn cả ăn uống.",
+    "beats": [
+      {
+        "image_id": "SC03_I1",
+        "anchor_quote": "Năm một chín năm tư, có một thí nghiệm."
+      },
+      {
+        "image_id": "SC03_I2",
+        "anchor_quote": "Họ gắn một nút bấm nhỏ vào đầu con chuột."
+      },
+      {
+        "image_id": "SC03_I3",
+        "anchor_quote": "Con chuột nhấn cần hai nghìn lần mỗi giờ."
+      },
+      {
+        "image_id": "SC03_I4",
+        "anchor_quote": "Nó bỏ đói cơ thể cho đến khi kiệt sức ngã gục."
+      },
+      {
+        "image_id": "SC03_I5",
+        "anchor_quote": "Nó thèm bấm cần hơn cả ăn uống."
+      }
+    ]
+  },
+  {
+    "id": "SC04",
+    "duration": 8.7,
+    "narration": "Nút bấm không mang lại niềm vui. Nó chỉ kích thích cảm giác muốn xem tiếp. Nó không giúp bạn hạnh phúc. Nó chỉ thôi thúc bạn bấm thêm một lần nữa.",
+    "beats": [
+      {
+        "image_id": "SC04_I1",
+        "anchor_quote": "Nút bấm không mang lại niềm vui."
+      },
+      {
+        "image_id": "SC04_I2",
+        "anchor_quote": "Nó chỉ kích thích cảm giác muốn xem tiếp."
+      },
+      {
+        "image_id": "SC04_I3",
+        "anchor_quote": "Nó không giúp bạn hạnh phúc."
+      },
+      {
+        "image_id": "SC04_I4",
+        "anchor_quote": "Nó chỉ thôi thúc bạn bấm thêm một lần nữa."
+      }
+    ]
+  },
+  {
+    "id": "SC05",
+    "duration": 13.7,
+    "narration": "Đầu óc bạn dần bị chai lì với mọi niềm vui. Ngưỡng vui vẻ tự nhiên của bạn bị kéo tụt xuống rất thấp. Khiến cho mọi phút giây yên tĩnh bỗng thành bứt rứt. Càng tìm niềm vui dễ, bạn càng kiệt sức. Sự trống rỗng bám lấy bạn mỗi đêm.",
+    "beats": [
+      {
+        "image_id": "SC05_I1",
+        "anchor_quote": "Đầu óc bạn dần bị chai lì với mọi niềm vui."
+      },
+      {
+        "image_id": "SC05_I2",
+        "anchor_quote": "Ngưỡng vui vẻ tự nhiên của bạn bị kéo tụt xuống rất thấp."
+      },
+      {
+        "image_id": "SC05_I3",
+        "anchor_quote": "Khiến cho mọi phút giây yên tĩnh bỗng thành bứt rứt."
+      },
+      {
+        "image_id": "SC05_I4",
+        "anchor_quote": "Càng tìm niềm vui dễ, bạn càng kiệt sức."
+      },
+      {
+        "image_id": "SC05_I5",
+        "anchor_quote": "Sự trống rỗng bám lấy bạn mỗi đêm."
+      }
+    ]
+  },
+  {
+    "id": "SC06",
+    "duration": 12.6,
+    "narration": "Đêm nay hãy để điện thoại ngoài phòng ngủ. Thay video ngắn bằng mười trang sách. Những niềm vui cần chút công sức mới giúp bạn thư thái thật sự. Nếu thấy hữu ích, bạn bấm like và theo dõi nhé. Chúc bạn ngủ thật ngon giấc.",
+    "beats": [
+      {
+        "image_id": "SC06_I1",
+        "anchor_quote": "Đêm nay hãy để điện thoại ngoài phòng ngủ."
+      },
+      {
+        "image_id": "SC06_I2",
+        "anchor_quote": "Thay video ngắn bằng mười trang sách."
+      },
+      {
+        "image_id": "SC06_I3",
+        "anchor_quote": "Những niềm vui cần chút công sức mới giúp bạn thư thái thật sự."
+      },
+      {
+        "image_id": "SC06_I4",
+        "anchor_quote": "Nếu thấy hữu ích, bạn bấm like và theo dõi nhé."
+      },
+      {
+        "image_id": "SC06_I5",
+        "anchor_quote": "Chúc bạn ngủ thật ngon giấc."
+      }
+    ]
+  }
+]

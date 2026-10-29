@@ -1,0 +1,148 @@
+{
+  "outline": [
+    {
+      "scene_id": "SC01",
+      "purpose": "Triển khai bước 1: cú tát thực tại mở màn",
+      "requirements": [
+        "R01"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC02",
+      "purpose": "Triển khai bước 2: ảo giác ma trận trong đời thực",
+      "requirements": [
+        "R02"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC03",
+      "purpose": "Triển khai bước 3: thí nghiệm chiếc cốc cà phê",
+      "requirements": [
+        "R03"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC04",
+      "purpose": "Triển khai bước 4: vũ trụ trần trụi không màu sắc",
+      "requirements": [
+        "R04"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC05",
+      "purpose": "Triển khai bước 5: ảo tưởng mắt thấy tai nghe",
+      "requirements": [
+        "R05"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC06",
+      "purpose": "Triển khai bước 6: nghịch lý nhận thức của sinh vật",
+      "requirements": [
+        "R06"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC07",
+      "purpose": "Triển khai bước 7: chi phí năng lượng của sự thật",
+      "requirements": [
+        "R07"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC08",
+      "purpose": "Triển khai bước 8: không-thời gian là tệp nén dữ liệu",
+      "requirements": [
+        "R08"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC09",
+      "purpose": "Triển khai bước 9: ẩn dụ màn hình máy tính để bàn",
+      "requirements": [
+        "R09"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC10",
+      "purpose": "Triển khai bước 10: thực nghiệm mô phỏng máy tính fbt",
+      "requirements": [
+        "R10"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC11",
+      "purpose": "Triển khai bước 11: sự diệt vong của kẻ thấy chân lý",
+      "requirements": [
+        "R11"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC12",
+      "purpose": "Triển khai bước 12: chiến thắng tuyệt đối của bộ lọc sinh tồn",
+      "requirements": [
+        "R12"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC13",
+      "purpose": "Triển khai bước 13: bẫy ngụy biện của chủ nghĩa hư vô",
+      "requirements": [
+        "R13"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC14",
+      "purpose": "Triển khai bước 14: coi trọng nhưng không ngộ nhận",
+      "requirements": [
+        "R14"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC15",
+      "purpose": "Triển khai bước 15: giải mã bẫy pixel mạng xã hội",
+      "requirements": [
+        "R15"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC16",
+      "purpose": "Triển khai bước 16: thoát khỏi áp lực đồng trang lứa",
+      "requirements": [
+        "R16"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC17",
+      "purpose": "Triển khai bước 17: làm chủ bộ giải mã tâm trí",
+      "requirements": [
+        "R17"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC18",
+      "purpose": "Triển khai bước 18: thức tỉnh không cần viên thuốc đỏ",
+      "requirements": [
+        "R18"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    }
+  ]
+}

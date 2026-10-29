@@ -722,6 +722,7 @@ class ScriptCadenceChecker:
         max_dramatic_pauses: Optional[int] = None,
         forbid_opening_pause: bool = True,
         max_opening_hook_syllables: Optional[int] = DEFAULT_MAX_OPENING_HOOK_SYLLABLES,
+        max_beat_hold_seconds: Optional[float] = None,
     ):
         self.nominal_rate = nominal_rate
         self.p_tail_para = p_tail_para
@@ -735,6 +736,7 @@ class ScriptCadenceChecker:
         self.max_dramatic_pauses = max_dramatic_pauses
         self.forbid_opening_pause = forbid_opening_pause
         self.max_opening_hook_syllables = max_opening_hook_syllables
+        self.max_beat_hold_seconds = max_beat_hold_seconds
 
     def check_scenes(self, scenes: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Analyze a list of scene dictionaries."""
@@ -753,6 +755,13 @@ class ScriptCadenceChecker:
             }
 
         total_scenes = len(scenes)
+        total_duration_est = sum(float(sc.get("duration", 0.0)) for sc in scenes)
+        is_long_explainer = total_scenes >= 10 or total_duration_est >= 120.0
+        max_beat_hold = (
+            self.max_beat_hold_seconds
+            if self.max_beat_hold_seconds is not None
+            else (6.0 if is_long_explainer else 2.8)
+        )
         reports: List[SceneCadenceReport] = []
 
         for idx, sc in enumerate(scenes):
@@ -776,10 +785,10 @@ class ScriptCadenceChecker:
                 forbid_opening_pause=self.forbid_opening_pause,
                 max_opening_hook_syllables=self.max_opening_hook_syllables,
             )
-            if 'beats' in sc and report.duration / max(1, len(sc['beats'])) > 2.8:
+            if 'beats' in sc and report.duration / max(1, len(sc['beats'])) > max_beat_hold:
                 report.warnings.append(
                     f"LOW_VISUAL_BEAT_DENSITY: {report.scene_id} averages "
-                    f"{report.duration / max(1, len(sc['beats'])):.2f}s per visual beat (maximum 2.8s)"
+                    f"{report.duration / max(1, len(sc['beats'])):.2f}s per visual beat (maximum {max_beat_hold:.1f}s)"
                 )
             reports.append(report)
 

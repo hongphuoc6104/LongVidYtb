@@ -40,9 +40,9 @@ export {selectSemanticCameraEffect, cameraVariation} from './camera.mjs';
 export function computeDynamicBgmVolume(
   t: number,
   cues: any[],
-  baseVolume: number = 0.12,
-  duckedVolume: number = 0.075,
-  swellVolume: number = 0.19
+  baseVolume: number = 0.22,
+  duckedVolume: number = 0.22,
+  swellVolume: number = 0.40
 ): number {
   if (!Array.isArray(cues) || cues.length === 0) return baseVolume;
   const attack = 0.22;  // 220ms smooth duck before/into speech
@@ -419,7 +419,7 @@ const Video: React.FC<any> = (p) => {
       )}
 
       {/* Subtitles (Phụ đề động bắt mắt) */}
-      {!DISABLE_SUBTITLES && !p.hideSubtitles && cue && (() => {
+      {!DISABLE_SUBTITLES && !p.hideSubtitles && !p.disableSubtitles && !p.disable_subtitles && cue && (() => {
         const lineText = cue.text;
         const targetWord = p.target_word;
         return (
@@ -428,20 +428,6 @@ const Video: React.FC<any> = (p) => {
           </div>
         );
       })()}
-
-      {/* Subtle Progress Bar (Thanh thời gian mỏng phát sáng ở đáy) */}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          height: 6,
-          width: `${Math.min(100, Math.max(0, (t / duration) * 100))}%`,
-          background: 'linear-gradient(90deg, #38BDF8, #FACC15)',
-          boxShadow: '0 0 10px rgba(56, 189, 248, 0.8)',
-          zIndex: 20
-        }}
-      />
 
       {/* Brand Channel Logo / Watermark Cover (Hiển thị cố định từ đầu đến cuối video) */}
       {!p.hide_logo && (() => {
@@ -479,7 +465,11 @@ const Video: React.FC<any> = (p) => {
         );
       })()}
 
-      {(p.sfx_events || []).map((event: any, index: number) => <Sequence key={index} from={Math.round(event.at * fps)} durationInFrames={Math.round(.3 * fps)}><Audio src={staticFile(event.src)} volume={0.5} /></Sequence>)}
+      {(p.sfx_events || []).map((event: any, index: number) => (
+        <Sequence key={index} from={Math.round(event.at * fps)} durationInFrames={Math.round((event.duration ?? 2.0) * fps)}>
+          <Audio src={staticFile(event.src)} volume={event.volume ?? 0.5} />
+        </Sequence>
+      ))}
       {/* Audio Mixer: Voice narration */}
       <Audio src={staticFile(p.audioSrc || 'narration.wav')} volume={1} />
 

@@ -1,0 +1,148 @@
+[
+  {
+    "id": "SC01",
+    "duration": 7.2,
+    "narration": "Bạn càng cố dùng kỷ luật sắt, bạn càng nhanh bỏ cuộc. Gồng mình ép bản thân tập trung. Để rồi nhận lại sự kiệt sức.",
+    "beats": [
+      {
+        "image_id": "SC01_I1",
+        "anchor_quote": "Bạn càng cố dùng kỷ luật sắt, bạn càng nhanh bỏ cuộc."
+      },
+      {
+        "image_id": "SC01_I2",
+        "anchor_quote": "Gồng mình ép bản thân tập trung."
+      },
+      {
+        "image_id": "SC01_I3",
+        "anchor_quote": "Để rồi nhận lại sự kiệt sức."
+      }
+    ]
+  },
+  {
+    "id": "SC02",
+    "duration": 7.7,
+    "narration": "Xóa ứng dụng trên máy, trưa lại mở mạng lướt tiếp. Mở thêm một tab tra cứu, mười phút sau đã thấy mình ngồi đọc tin giật gân.",
+    "beats": [
+      {
+        "image_id": "SC02_I1",
+        "anchor_quote": "Xóa ứng dụng trên máy, trưa lại mở mạng lướt tiếp."
+      },
+      {
+        "image_id": "SC02_I2",
+        "anchor_quote": "Mở thêm một tab tra cứu,"
+      },
+      {
+        "image_id": "SC02_I3",
+        "anchor_quote": "mười phút sau đã thấy mình ngồi đọc tin giật gân."
+      }
+    ]
+  },
+  {
+    "id": "SC03",
+    "duration": 11.7,
+    "narration": "Đại học Texas đã chứng minh một sự thật bất ngờ. Để điện thoại trên bàn rút cạn bộ nhớ làm việc. Kể cả khi bạn đã tắt nguồn úp mặt máy. Não bạn vẫn phải gồng mình, để chống lại sự cám dỗ.",
+    "beats": [
+      {
+        "image_id": "SC03_I1",
+        "anchor_quote": "Đại học Texas đã chứng minh một sự thật bất ngờ."
+      },
+      {
+        "image_id": "SC03_I2",
+        "anchor_quote": "Để điện thoại trên bàn rút cạn bộ nhớ làm việc."
+      },
+      {
+        "image_id": "SC03_I3",
+        "anchor_quote": "Kể cả khi bạn đã tắt nguồn úp mặt máy."
+      },
+      {
+        "image_id": "SC03_I4",
+        "anchor_quote": "Não bạn vẫn phải gồng mình,"
+      },
+      {
+        "image_id": "SC03_I5",
+        "anchor_quote": "để chống lại sự cám dỗ."
+      }
+    ]
+  },
+  {
+    "id": "SC04",
+    "duration": 10.95,
+    "narration": "Ý chí con người là hữu hạn. Não bộ phải liên tục bật cơ chế ức chế chủ động. Bạn càng gồng ép kìm nén, vùng vỏ não trước trán càng nhanh sập nguồn. Và khiến bạn sa ngã gấp đôi.",
+    "beats": [
+      {
+        "image_id": "SC04_I1",
+        "anchor_quote": "Ý chí con người là hữu hạn."
+      },
+      {
+        "image_id": "SC04_I2",
+        "anchor_quote": "Não bộ phải liên tục bật cơ chế ức chế chủ động."
+      },
+      {
+        "image_id": "SC04_I3",
+        "anchor_quote": "Bạn càng gồng ép kìm nén,"
+      },
+      {
+        "image_id": "SC04_I4",
+        "anchor_quote": "vùng vỏ não trước trán càng nhanh sập nguồn."
+      },
+      {
+        "image_id": "SC04_I5",
+        "anchor_quote": "Và khiến bạn sa ngã gấp đôi."
+      }
+    ]
+  },
+  {
+    "id": "SC05",
+    "duration": 13.45,
+    "narration": "Thay đổi cách sắp đặt vật lý, hiệu quả hơn gồng ép ý chí. Tăng ma sát môi trường làm giảm thói quen xấu. Cầm bút viết ra giấy câu bạn cần tìm trước khi mở tab mới. Tạo khoảng trễ ba mươi giây, để cắt đứt cơn nghiện vô thức.",
+    "beats": [
+      {
+        "image_id": "SC05_I1",
+        "anchor_quote": "Thay đổi cách sắp đặt vật lý,"
+      },
+      {
+        "image_id": "SC05_I2",
+        "anchor_quote": "hiệu quả hơn gồng ép ý chí."
+      },
+      {
+        "image_id": "SC05_I3",
+        "anchor_quote": "Tăng ma sát môi trường làm giảm thói quen xấu."
+      },
+      {
+        "image_id": "SC05_I4",
+        "anchor_quote": "Cầm bút viết ra giấy câu bạn cần tìm trước khi mở tab mới."
+      },
+      {
+        "image_id": "SC05_I5",
+        "anchor_quote": "Tạo khoảng trễ ba mươi giây,"
+      },
+      {
+        "image_id": "SC05_I6",
+        "anchor_quote": "để cắt đứt cơn nghiện vô thức."
+      }
+    ]
+  },
+  {
+    "id": "SC06",
+    "duration": 10.6,
+    "narration": "Cất máy sang phòng khác đúng chín mươi phút buổi sáng. Đừng làm anh hùng chịu trận. Hãy làm kiến trúc sư cho bàn làm việc của bạn. Bấm theo dõi kênh để làm chủ sự tập trung mỗi ngày nhé!",
+    "beats": [
+      {
+        "image_id": "SC06_I1",
+        "anchor_quote": "Cất máy sang phòng khác đúng chín mươi phút buổi sáng."
+      },
+      {
+        "image_id": "SC06_I2",
+        "anchor_quote": "Đừng làm anh hùng chịu trận."
+      },
+      {
+        "image_id": "SC06_I3",
+        "anchor_quote": "Hãy làm kiến trúc sư cho bàn làm việc của bạn."
+      },
+      {
+        "image_id": "SC06_I4",
+        "anchor_quote": "Bấm theo dõi kênh để làm chủ sự tập trung mỗi ngày nhé!"
+      }
+    ]
+  }
+]

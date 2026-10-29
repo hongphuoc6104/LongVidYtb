@@ -1,0 +1,1423 @@
+{
+  "schema_version": "3.0",
+  "brief_revision": 1,
+  "brief_hash": "abd3a350d756b1c5afac21d480ab8b331b95af8d69dfed4f96e886b55387aa88",
+  "topic": "Bẫy Xả Stress: Càng Lướt Mạng Càng Kiệt Sức? (Bản Dọc 60 Giây)",
+  "duration": {
+    "min_seconds": 45.0,
+    "max_seconds": 65.0
+  },
+  "style": "Hand-drawn 2D Vietnamese indie doodle explainer illustration (raw freehand MS-Paint / Flash webcomic aesthetic). Use clear black outer contours (#000000) with visible unpolished hand-drawn wobble, slightly crooked freehand lines drawn without a ruler, imperfect corner joints, and uniform marker stroke weight across both foreground and background (strictly forbid lighter background linework, Bezier curve smoothing, sleek rounded vector icons, or geometric perfection). Fill all shapes with 100% unshaded flat MS-Paint paint-bucket solid hex colors: warm paper-cream (#F8F0DC), muted apricot-peach (#F2B88B), soft sage-green (#93A88C), pale ice-blue (#CBE0E0), flat night slate-navy (#2E4361), or stark pure white (#FFFFFF). Strictly 2D front-on or side-on orthographic flat paper-cutout staging; never use 3/4 isometric furniture perspective, two-tone bevel shading, floating black oval drop shadows, floor cast shadows, glowing lamp light cones, warm sepia AI color grading, gradients, photorealism, or 3D rendering. Draw a complete scene image.",
+  "required_points": [
+    "Cú tát lướt điện thoại hai giờ sáng",
+    "Não kiệt quệ sau khi xả stress",
+    "Thí nghiệm chuột nhấn cần gạt tự hủy",
+    "Dopamine chỉ là sự thèm muốn vô tận",
+    "Cái giá đắt của kích thích rẻ tiền",
+    "Đổi sang niềm vui có ma sát tư duy"
+  ],
+  "characters": [
+    {
+      "id": "CH01",
+      "name": "Người quan sát nhận thức",
+      "appearance": "Iconic 2D Vietnamese indie webcomic doodle stickman (Nguệch Ngoạc / Vẽ Vời / Xấu Vê Nờ style): oversized slightly lopsided hand-drawn pure-white (#FFFFFF) bald circle head with bold pitch-black (#000000) marker outline, tiny solid-black dot eyes placed low on the face leaving a large open upper forehead/cranium, minimal single-stroke eyebrows and mouth, no nose or ears, thin single-line solid-black wire/stick arms (single black stroke with zero arm thickness) ending in small round white circle hands",
+      "outfit": "Unshaded 100% flat MS-Paint paint-bucket solid cerulean-blue (#3B82C4) simple pill/rectangular T-shirt torso and simple flat slate-gray (#8C857B) straight trousers or single-line black stick legs, with zero clothing folds, zero collar details, and zero shading gradients"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "SC01",
+      "title": "Cú tát lướt điện thoại hai giờ sáng",
+      "purpose": "Triển khai bước 1: cú tát lướt điện thoại hai giờ sáng",
+      "action": "Stickman sits curled up holding flat phone outline on solid warm cream canvas.",
+      "setting": "Solid warm cream canvas (#F8F0DC).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Càng lướt mạng, bạn càng mệt mỏi. Bạn định xem năm phút rồi ngủ. Nhưng ngẩng lên đã hai giờ sáng. Bạn ngỡ mình đang thư giãn. Thực ra đầu óc đang bị vắt kiệt.",
+      "requirements": [
+        "R01"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC01_I1",
+          "description": "Solid warm cream canvas (#F8F0DC). Stickman sits curled up holding flat phone outline on solid warm cream canvas.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Stickman sits curled up holding flat phone outline on solid warm cream canvas.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Càng lướt mạng, bạn càng mệt mỏi.",
+            "relation": "context",
+            "source_terms": [
+              "Càng"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC01_I2",
+          "description": "Solid warm cream canvas (#F8F0DC). A small square digital bedside clock showing 00:30 on solid warm cream canvas.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A small square digital bedside clock showing 00:30 on solid warm cream canvas.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Bạn định xem năm phút rồi ngủ.",
+            "relation": "context",
+            "source_terms": [
+              "Bạn"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC01_I3",
+          "description": "Solid warm cream canvas (#F8F0DC). A simple hand-drawn analog clock showing late midnight hour on solid warm cream canvas.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A simple hand-drawn analog clock showing late midnight hour on solid warm cream canvas.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "still_life",
+          "has_character": false,
+          "explanation": {
+            "quote": "Nhưng ngẩng lên đã hai giờ sáng.",
+            "relation": "context",
+            "source_terms": [
+              "Nhưng"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC01_I4",
+          "description": "Solid warm cream canvas (#F8F0DC). Stickman stares blankly at screen with tired shoulders and heavy eyes.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC01_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in Solid warm cream canvas (#F8F0DC).. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Stickman stares blankly at screen with tired shoulders and heavy eyes.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation",
+          "has_character": true,
+          "explanation": {
+            "quote": "Bạn ngỡ mình đang thư giãn.",
+            "relation": "context",
+            "source_terms": [
+              "Bạn"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC01_I5",
+          "description": "Solid warm cream canvas (#F8F0DC). Stickman looks forward with sudden realization under dark vertical framing.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC01_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Stickman looks forward with sudden realization under dark vertical framing.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation",
+          "has_character": true,
+          "explanation": {
+            "quote": "Thực ra đầu óc đang bị vắt kiệt.",
+            "relation": "context",
+            "source_terms": [
+              "Thực"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC01_B1",
+          "image_id": "SC01_I1",
+          "purpose": "Triển khai bước 1: cú tát lướt điện thoại hai giờ sáng",
+          "anchor": {
+            "vi": {
+              "quote": "Càng lướt mạng, bạn càng mệt mỏi.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B2",
+          "image_id": "SC01_I2",
+          "purpose": "Triển khai bước 1: cú tát lướt điện thoại hai giờ sáng",
+          "anchor": {
+            "vi": {
+              "quote": "Bạn định xem năm phút rồi ngủ.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B3",
+          "image_id": "SC01_I3",
+          "purpose": "Triển khai bước 1: cú tát lướt điện thoại hai giờ sáng",
+          "anchor": {
+            "vi": {
+              "quote": "Nhưng ngẩng lên đã hai giờ sáng.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B4",
+          "image_id": "SC01_I4",
+          "purpose": "Triển khai bước 1: cú tát lướt điện thoại hai giờ sáng",
+          "anchor": {
+            "vi": {
+              "quote": "Bạn ngỡ mình đang thư giãn.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B5",
+          "image_id": "SC01_I5",
+          "purpose": "Triển khai bước 1: cú tát lướt điện thoại hai giờ sáng",
+          "anchor": {
+            "vi": {
+              "quote": "Thực ra đầu óc đang bị vắt kiệt.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "narrative_warm",
+      "narrative_phase": "lived_friction"
+    },
+    {
+      "id": "SC02",
+      "title": "Não kiệt quệ sau khi xả stress",
+      "purpose": "Triển khai bước 2: não kiệt quệ sau khi xả stress",
+      "action": "Stickman rubs tired eyes with both hands on clean stark white background.",
+      "setting": "Clean pure white background (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Buông máy xuống, mắt bạn cay xè. Lồng ngực dâng lên nỗi trống trải. Lướt mạng không mang lại bình yên. Nó rút cạn năng lượng của bạn.",
+      "requirements": [
+        "R02"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC02_I1",
+          "description": "Clean pure white background (#FFFFFF). Stickman rubs tired eyes with both hands on clean stark white background.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Stickman rubs tired eyes with both hands on clean stark white background.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Buông máy xuống, mắt bạn cay xè.",
+            "relation": "context",
+            "source_terms": [
+              "Buông"
+            ],
+            "visual_terms": [
+              "Clean"
+            ]
+          }
+        },
+        {
+          "id": "SC02_I2",
+          "description": "Clean pure white background (#FFFFFF). A solitary smooth pebble resting motionless at base of vertical white void.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A solitary smooth pebble resting motionless at base of vertical white void.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Lồng ngực dâng lên nỗi trống trải.",
+            "relation": "context",
+            "source_terms": [
+              "Lồng"
+            ],
+            "visual_terms": [
+              "Clean"
+            ]
+          }
+        },
+        {
+          "id": "SC02_I3",
+          "description": "Clean pure white background (#FFFFFF). A flat dark smartphone screen resting silent on clean white field with eighty percent negative space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A flat dark smartphone screen resting silent on clean white field with eighty percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop",
+          "has_character": false,
+          "explanation": {
+            "quote": "Lướt mạng không mang lại bình yên.",
+            "relation": "context",
+            "source_terms": [
+              "Lướt"
+            ],
+            "visual_terms": [
+              "Clean"
+            ]
+          }
+        },
+        {
+          "id": "SC02_I4",
+          "description": "Clean pure white background (#FFFFFF). A simple single vertical line dividing vertical format on clean white canvas.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A simple single vertical line dividing vertical format on clean white canvas.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "visual_diagram",
+          "has_character": false,
+          "explanation": {
+            "quote": "Nó rút cạn năng lượng của bạn.",
+            "relation": "context",
+            "source_terms": [
+              "Nó"
+            ],
+            "visual_terms": [
+              "Clean"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC02_B1",
+          "image_id": "SC02_I1",
+          "purpose": "Triển khai bước 2: não kiệt quệ sau khi xả stress",
+          "anchor": {
+            "vi": {
+              "quote": "Buông máy xuống, mắt bạn cay xè.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B2",
+          "image_id": "SC02_I2",
+          "purpose": "Triển khai bước 2: não kiệt quệ sau khi xả stress",
+          "anchor": {
+            "vi": {
+              "quote": "Lồng ngực dâng lên nỗi trống trải.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B3",
+          "image_id": "SC02_I3",
+          "purpose": "Triển khai bước 2: não kiệt quệ sau khi xả stress",
+          "anchor": {
+            "vi": {
+              "quote": "Lướt mạng không mang lại bình yên.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B4",
+          "image_id": "SC02_I4",
+          "purpose": "Triển khai bước 2: não kiệt quệ sau khi xả stress",
+          "anchor": {
+            "vi": {
+              "quote": "Nó rút cạn năng lượng của bạn.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "lived_friction"
+    },
+    {
+      "id": "SC03",
+      "title": "Thí nghiệm chuột nhấn cần gạt tự hủy",
+      "purpose": "Triển khai bước 3: thí nghiệm chuột nhấn cần gạt tự hủy",
+      "action": "Stickman stands beside a tall laboratory lever on white canvas.",
+      "setting": "Pure stark white field (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Năm một chín năm tư, có một thí nghiệm. Họ gắn một nút bấm nhỏ vào đầu con chuột. Con chuột nhấn cần hai nghìn lần mỗi giờ. Nó bỏ đói cơ thể cho đến khi kiệt sức ngã gục. Nó thèm bấm cần hơn cả ăn uống.",
+      "requirements": [
+        "R03"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC01"
+      ],
+      "images": [
+        {
+          "id": "SC03_I1",
+          "description": "Pure stark white field (#FFFFFF). Stickman stands beside a tall laboratory lever on white canvas.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Stickman stands beside a tall laboratory lever on white canvas.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Năm một chín năm tư, có một thí nghiệm.",
+            "relation": "context",
+            "source_terms": [
+              "Năm"
+            ],
+            "visual_terms": [
+              "Pure"
+            ]
+          }
+        },
+        {
+          "id": "SC03_I2",
+          "description": "Pure stark white field (#FFFFFF). A simple cross-section outline of animal brain with slender probe placed inside.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A simple cross-section outline of animal brain with slender probe placed inside.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "visual_diagram",
+          "has_character": false,
+          "explanation": {
+            "quote": "Họ gắn một nút bấm nhỏ vào đầu con chuột.",
+            "relation": "context",
+            "source_terms": [
+              "Họ"
+            ],
+            "visual_terms": [
+              "Pure"
+            ]
+          }
+        },
+        {
+          "id": "SC03_I3",
+          "description": "Pure stark white field (#FFFFFF). A tiny crude cartoon rat pressing a simple black lever on flat pure white canvas.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A tiny crude cartoon rat pressing a simple black lever on flat pure white canvas.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "still_life",
+          "has_character": false,
+          "explanation": {
+            "quote": "Con chuột nhấn cần hai nghìn lần mỗi giờ.",
+            "relation": "context",
+            "source_terms": [
+              "Con"
+            ],
+            "visual_terms": [
+              "Pure"
+            ]
+          }
+        },
+        {
+          "id": "SC03_I4",
+          "description": "Pure stark white field (#FFFFFF). The metal lever standing motionless under ninety percent vertical space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "The metal lever standing motionless under ninety percent vertical space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Nó bỏ đói cơ thể cho đến khi kiệt sức ngã gục.",
+            "relation": "context",
+            "source_terms": [
+              "Nó"
+            ],
+            "visual_terms": [
+              "Pure"
+            ]
+          }
+        },
+        {
+          "id": "SC03_I5",
+          "description": "Pure stark white field (#FFFFFF). A close vertical view of a metal lever untouched on stark white floor.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A close vertical view of a metal lever untouched on stark white floor.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop",
+          "has_character": false,
+          "explanation": {
+            "quote": "Nó thèm bấm cần hơn cả ăn uống.",
+            "relation": "context",
+            "source_terms": [
+              "Nó"
+            ],
+            "visual_terms": [
+              "Pure"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC03_B1",
+          "image_id": "SC03_I1",
+          "purpose": "Triển khai bước 3: thí nghiệm chuột nhấn cần gạt tự hủy",
+          "anchor": {
+            "vi": {
+              "quote": "Năm một chín năm tư, có một thí nghiệm.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B2",
+          "image_id": "SC03_I2",
+          "purpose": "Triển khai bước 3: thí nghiệm chuột nhấn cần gạt tự hủy",
+          "anchor": {
+            "vi": {
+              "quote": "Họ gắn một nút bấm nhỏ vào đầu con chuột.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B3",
+          "image_id": "SC03_I3",
+          "purpose": "Triển khai bước 3: thí nghiệm chuột nhấn cần gạt tự hủy",
+          "anchor": {
+            "vi": {
+              "quote": "Con chuột nhấn cần hai nghìn lần mỗi giờ.",
+              "occurrence": 1
+            }
+          },
+          "effect": "punch_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B4",
+          "image_id": "SC03_I4",
+          "purpose": "Triển khai bước 3: thí nghiệm chuột nhấn cần gạt tự hủy",
+          "anchor": {
+            "vi": {
+              "quote": "Nó bỏ đói cơ thể cho đến khi kiệt sức ngã gục.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B5",
+          "image_id": "SC03_I5",
+          "purpose": "Triển khai bước 3: thí nghiệm chuột nhấn cần gạt tự hủy",
+          "anchor": {
+            "vi": {
+              "quote": "Nó thèm bấm cần hơn cả ăn uống.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "empirical_conflict"
+    },
+    {
+      "id": "SC04",
+      "title": "Dopamine chỉ là sự thèm muốn vô tận",
+      "purpose": "Triển khai bước 4: dopamine chỉ là sự thèm muốn vô tận",
+      "action": "Stickman shakes head gently, pointing to a brain diagram on ivory.",
+      "setting": "Solid ivory neutral field (#F8F0DC).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Nút bấm không mang lại niềm vui. Nó chỉ kích thích cảm giác muốn xem tiếp. Nó không giúp bạn hạnh phúc. Nó chỉ thôi thúc bạn bấm thêm một lần nữa.",
+      "requirements": [
+        "R04"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC02"
+      ],
+      "images": [
+        {
+          "id": "SC04_I1",
+          "description": "Solid ivory neutral field (#F8F0DC). Stickman shakes head gently, pointing to a brain diagram on ivory.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Stickman shakes head gently, pointing to a brain diagram on ivory.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Nút bấm không mang lại niềm vui.",
+            "relation": "context",
+            "source_terms": [
+              "Nút"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC04_I2",
+          "description": "Solid ivory neutral field (#F8F0DC). A single straight vertical black line running down center of stark white space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A single straight vertical black line running down center of stark white space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "visual_diagram",
+          "has_character": false,
+          "explanation": {
+            "quote": "Nó chỉ kích thích cảm giác muốn xem tiếp.",
+            "relation": "context",
+            "source_terms": [
+              "Nó"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC04_I3",
+          "description": "Solid ivory neutral field (#F8F0DC). An empty plate drawn in thin black outline on cream canvas with eighty percent negative space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "An empty plate drawn in thin black outline on cream canvas with eighty percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop",
+          "has_character": false,
+          "explanation": {
+            "quote": "Nó không giúp bạn hạnh phúc.",
+            "relation": "context",
+            "source_terms": [
+              "Nó"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC04_I4",
+          "description": "Solid ivory neutral field (#F8F0DC). A stickman thumb hovering restlessly over a vertical phone screen.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A stickman thumb hovering restlessly over a vertical phone screen.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop",
+          "has_character": false,
+          "explanation": {
+            "quote": "Nó chỉ thôi thúc bạn bấm thêm một lần nữa.",
+            "relation": "context",
+            "source_terms": [
+              "Nó"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC04_B1",
+          "image_id": "SC04_I1",
+          "purpose": "Triển khai bước 4: dopamine chỉ là sự thèm muốn vô tận",
+          "anchor": {
+            "vi": {
+              "quote": "Nút bấm không mang lại niềm vui.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B2",
+          "image_id": "SC04_I2",
+          "purpose": "Triển khai bước 4: dopamine chỉ là sự thèm muốn vô tận",
+          "anchor": {
+            "vi": {
+              "quote": "Nó chỉ kích thích cảm giác muốn xem tiếp.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B3",
+          "image_id": "SC04_I3",
+          "purpose": "Triển khai bước 4: dopamine chỉ là sự thèm muốn vô tận",
+          "anchor": {
+            "vi": {
+              "quote": "Nó không giúp bạn hạnh phúc.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B4",
+          "image_id": "SC04_I4",
+          "purpose": "Triển khai bước 4: dopamine chỉ là sự thèm muốn vô tận",
+          "anchor": {
+            "vi": {
+              "quote": "Nó chỉ thôi thúc bạn bấm thêm một lần nữa.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "structural_model"
+    },
+    {
+      "id": "SC05",
+      "title": "Cái giá đắt của kích thích rẻ tiền",
+      "purpose": "Triển khai bước 5: cái giá đắt của kích thích rẻ tiền",
+      "action": "Stickman sits slumped on wooden chair with limp arms on warm cream canvas.",
+      "setting": "Solid warm cream canvas (#F8F0DC).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Đầu óc bạn dần bị chai lì với mọi niềm vui. Ngưỡng vui vẻ tự nhiên của bạn bị kéo tụt xuống rất thấp. Khiến cho mọi phút giây yên tĩnh bỗng thành bứt rứt. Càng tìm niềm vui dễ, bạn càng kiệt sức. Sự trống rỗng bám lấy bạn mỗi đêm.",
+      "requirements": [
+        "R05"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC02",
+        "SRC03"
+      ],
+      "images": [
+        {
+          "id": "SC05_I1",
+          "description": "Solid warm cream canvas (#F8F0DC). Stickman sits slumped on wooden chair with limp arms on warm cream canvas.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Stickman sits slumped on wooden chair with limp arms on warm cream canvas.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Đầu óc bạn dần bị chai lì với mọi niềm vui.",
+            "relation": "context",
+            "source_terms": [
+              "Đầu"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC05_I2",
+          "description": "Solid warm cream canvas (#F8F0DC). A vertical plummeting red arrow piercing far below dotted baseline.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A vertical plummeting red arrow piercing far below dotted baseline.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "visual_diagram",
+          "has_character": false,
+          "explanation": {
+            "quote": "Ngưỡng vui vẻ tự nhiên của bạn bị kéo tụt xuống rất thấp.",
+            "relation": "context",
+            "source_terms": [
+              "Ngưỡng"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC05_I3",
+          "description": "Solid warm cream canvas (#F8F0DC). A seesaw heavily tilted downward toward pain side on cream.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A seesaw heavily tilted downward toward pain side on cream.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Khiến cho mọi phút giây yên tĩnh bỗng thành bứt rứt.",
+            "relation": "context",
+            "source_terms": [
+              "Khiến"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC05_I4",
+          "description": "Solid warm cream canvas (#F8F0DC). An empty white ceramic cup resting quietly on solid warm cream canvas.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "An empty white ceramic cup resting quietly on solid warm cream canvas.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "still_life",
+          "has_character": false,
+          "explanation": {
+            "quote": "Càng tìm niềm vui dễ, bạn càng kiệt sức.",
+            "relation": "context",
+            "source_terms": [
+              "Càng"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC05_I5",
+          "description": "Solid warm cream canvas (#F8F0DC). Stickman presses hand against chest, breathing slowly with reflective insight on cream.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC05_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in Solid warm cream canvas (#F8F0DC).. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Stickman presses hand against chest, breathing slowly with reflective insight on cream.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation",
+          "has_character": true,
+          "explanation": {
+            "quote": "Sự trống rỗng bám lấy bạn mỗi đêm.",
+            "relation": "context",
+            "source_terms": [
+              "Sự"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC05_B1",
+          "image_id": "SC05_I1",
+          "purpose": "Triển khai bước 5: cái giá đắt của kích thích rẻ tiền",
+          "anchor": {
+            "vi": {
+              "quote": "Đầu óc bạn dần bị chai lì với mọi niềm vui.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B2",
+          "image_id": "SC05_I2",
+          "purpose": "Triển khai bước 5: cái giá đắt của kích thích rẻ tiền",
+          "anchor": {
+            "vi": {
+              "quote": "Ngưỡng vui vẻ tự nhiên của bạn bị kéo tụt xuống rất thấp.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B3",
+          "image_id": "SC05_I3",
+          "purpose": "Triển khai bước 5: cái giá đắt của kích thích rẻ tiền",
+          "anchor": {
+            "vi": {
+              "quote": "Khiến cho mọi phút giây yên tĩnh bỗng thành bứt rứt.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B4",
+          "image_id": "SC05_I4",
+          "purpose": "Triển khai bước 5: cái giá đắt của kích thích rẻ tiền",
+          "anchor": {
+            "vi": {
+              "quote": "Càng tìm niềm vui dễ, bạn càng kiệt sức.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B5",
+          "image_id": "SC05_I5",
+          "purpose": "Triển khai bước 5: cái giá đắt của kích thích rẻ tiền",
+          "anchor": {
+            "vi": {
+              "quote": "Sự trống rỗng bám lấy bạn mỗi đêm.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "structural_model"
+    },
+    {
+      "id": "SC06",
+      "title": "Đổi sang niềm vui có ma sát tư duy",
+      "purpose": "Triển khai bước 6: đổi sang niềm vui có ma sát tư duy",
+      "action": "Stickman places phone outside door on solid warm cream canvas.",
+      "setting": "Solid warm cream canvas (#F8F0DC).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Đêm nay hãy để điện thoại ngoài phòng ngủ. Thay video ngắn bằng mười trang sách. Những niềm vui cần chút công sức mới giúp bạn thư thái thật sự. Nếu thấy hữu ích, bạn bấm like và theo dõi nhé. Chúc bạn ngủ thật ngon giấc.",
+      "requirements": [
+        "R06"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC03"
+      ],
+      "images": [
+        {
+          "id": "SC06_I1",
+          "description": "Solid warm cream canvas (#F8F0DC). Stickman places phone outside door on solid warm cream canvas.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Stickman places phone outside door on solid warm cream canvas.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Đêm nay hãy để điện thoại ngoài phòng ngủ.",
+            "relation": "context",
+            "source_terms": [
+              "Đêm"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC06_I2",
+          "description": "Solid warm cream canvas (#F8F0DC). A clean open paper book outline drawn in black marker on solid warm cream canvas with eighty percent negative space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A clean open paper book outline drawn in black marker on solid warm cream canvas with eighty percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop",
+          "has_character": false,
+          "explanation": {
+            "quote": "Thay video ngắn bằng mười trang sách.",
+            "relation": "context",
+            "source_terms": [
+              "Thay"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC06_I3",
+          "description": "Solid warm cream canvas (#F8F0DC). A single clean closed notebook with bookmark ribbon on flat cream canvas with eighty percent negative space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A single clean closed notebook with bookmark ribbon on flat cream canvas with eighty percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop",
+          "has_character": false,
+          "explanation": {
+            "quote": "Những niềm vui cần chút công sức mới giúp bạn thư thái thật sự.",
+            "relation": "context",
+            "source_terms": [
+              "Những"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC06_I4",
+          "description": "Solid warm cream canvas (#F8F0DC). A simple hand-drawn thumbs-up outline and small bell icon in pitch-black marker on solid warm cream canvas with eighty percent negative space. Zero decor, zero clutter.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A simple hand-drawn thumbs-up outline and small bell icon in pitch-black marker on solid warm cream canvas with eighty percent negative space. Zero decor, zero clutter.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "still_life",
+          "has_character": false,
+          "explanation": {
+            "quote": "Nếu thấy hữu ích, bạn bấm like và theo dõi nhé.",
+            "relation": "context",
+            "source_terms": [
+              "Nếu"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC06_I5",
+          "description": "Solid warm cream canvas (#F8F0DC). Stickman rests head peacefully on pillow, sleeping soundly on solid warm cream canvas with vast negative space.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC06_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Stickman rests head peacefully on pillow, sleeping soundly on solid warm cream canvas with vast negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation",
+          "has_character": true,
+          "explanation": {
+            "quote": "Chúc bạn ngủ thật ngon giấc.",
+            "relation": "context",
+            "source_terms": [
+              "Chúc"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC06_B1",
+          "image_id": "SC06_I1",
+          "purpose": "Triển khai bước 6: đổi sang niềm vui có ma sát tư duy",
+          "anchor": {
+            "vi": {
+              "quote": "Đêm nay hãy để điện thoại ngoài phòng ngủ.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC06_B2",
+          "image_id": "SC06_I2",
+          "purpose": "Triển khai bước 6: đổi sang niềm vui có ma sát tư duy",
+          "anchor": {
+            "vi": {
+              "quote": "Thay video ngắn bằng mười trang sách.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC06_B3",
+          "image_id": "SC06_I3",
+          "purpose": "Triển khai bước 6: đổi sang niềm vui có ma sát tư duy",
+          "anchor": {
+            "vi": {
+              "quote": "Những niềm vui cần chút công sức mới giúp bạn thư thái thật sự.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC06_B4",
+          "image_id": "SC06_I4",
+          "purpose": "Triển khai bước 6: đổi sang niềm vui có ma sát tư duy",
+          "anchor": {
+            "vi": {
+              "quote": "Nếu thấy hữu ích, bạn bấm like và theo dõi nhé.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC06_B5",
+          "image_id": "SC06_I5",
+          "purpose": "Triển khai bước 6: đổi sang niềm vui có ma sát tư duy",
+          "anchor": {
+            "vi": {
+              "quote": "Chúc bạn ngủ thật ngon giấc.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "reflective_slow",
+      "narrative_phase": "actionable_resolution"
+    }
+  ],
+  "coverage": [
+    {
+      "requirement_id": "R01",
+      "scene_id": "SC01",
+      "quote": "Nhưng ngẩng lên đã hai giờ sáng"
+    },
+    {
+      "requirement_id": "R02",
+      "scene_id": "SC02",
+      "quote": "Buông máy xuống, mắt bạn cay xè"
+    },
+    {
+      "requirement_id": "R03",
+      "scene_id": "SC03",
+      "quote": "Con chuột nhấn cần hai nghìn lần mỗi giờ"
+    },
+    {
+      "requirement_id": "R04",
+      "scene_id": "SC04",
+      "quote": "Nó chỉ kích thích cảm giác muốn xem tiếp"
+    },
+    {
+      "requirement_id": "R05",
+      "scene_id": "SC05",
+      "quote": "Ngưỡng vui vẻ tự nhiên của bạn bị kéo tụt xuống rất thấp"
+    },
+    {
+      "requirement_id": "R06",
+      "scene_id": "SC06",
+      "quote": "Những niềm vui cần chút công sức mới giúp bạn thư thái thật sự"
+    }
+  ],
+  "outline": [
+    {
+      "scene_id": "SC01",
+      "purpose": "Triển khai bước 1: cú tát lướt điện thoại hai giờ sáng",
+      "requirements": [
+        "R01"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC02",
+      "purpose": "Triển khai bước 2: não kiệt quệ sau khi xả stress",
+      "requirements": [
+        "R02"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC03",
+      "purpose": "Triển khai bước 3: thí nghiệm chuột nhấn cần gạt tự hủy",
+      "requirements": [
+        "R03"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC04",
+      "purpose": "Triển khai bước 4: dopamine chỉ là sự thèm muốn vô tận",
+      "requirements": [
+        "R04"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC05",
+      "purpose": "Triển khai bước 5: cái giá đắt của kích thích rẻ tiền",
+      "requirements": [
+        "R05"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC06",
+      "purpose": "Triển khai bước 6: đổi sang niềm vui có ma sát tư duy",
+      "requirements": [
+        "R06"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    }
+  ],
+  "claims": [
+    {
+      "scene_id": "SC03",
+      "quote": "Con chuột nhấn cần hai nghìn lần mỗi giờ.",
+      "language": "vi",
+      "source_id": "SRC01",
+      "fact": "Chuột tự nhấn cần gạt hai nghìn lần mỗi giờ."
+    },
+    {
+      "scene_id": "SC03",
+      "quote": "Nó bỏ đói cơ thể cho đến khi kiệt sức ngã gục.",
+      "language": "vi",
+      "source_id": "SRC01",
+      "fact": "Chuột bỏ đói đến kiệt sức chỉ để nhận kích thích."
+    },
+    {
+      "scene_id": "SC04",
+      "quote": "Nó chỉ kích thích cảm giác muốn xem tiếp.",
+      "language": "vi",
+      "source_id": "SRC02",
+      "fact": "Dopamine là phân tử của sự mong đợi và truy cầu."
+    },
+    {
+      "scene_id": "SC05",
+      "quote": "Đầu óc bạn dần bị chai lì với mọi niềm vui.",
+      "language": "vi",
+      "source_id": "SRC02",
+      "fact": "Kích thích liên tục làm não giảm thụ thể tiếp nhận."
+    },
+    {
+      "scene_id": "SC05",
+      "quote": "Ngưỡng vui vẻ tự nhiên của bạn bị kéo tụt xuống rất thấp.",
+      "language": "vi",
+      "source_id": "SRC02",
+      "fact": "Đường đáy dopamine sụt giảm gây cảm giác trống rỗng."
+    },
+    {
+      "scene_id": "SC05",
+      "quote": "Khiến cho mọi phút giây yên tĩnh bỗng thành bứt rứt.",
+      "language": "vi",
+      "source_id": "SRC03",
+      "fact": "Khoái cảm không ma sát luôn dẫn đến nỗi đau bù trừ."
+    },
+    {
+      "scene_id": "SC06",
+      "quote": "Những niềm vui cần chút công sức mới giúp bạn thư thái thật sự.",
+      "language": "vi",
+      "source_id": "SRC03",
+      "fact": "Hoạt động nỗ lực có ma sát giúp nâng cao đường chuẩn."
+    }
+  ],
+  "revision_response": [],
+  "open_questions": []
+}

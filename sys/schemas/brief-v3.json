@@ -644,6 +644,12 @@
         "dynamic_questions"
       ],
       "additionalProperties": false
+    },
+    "screen_capture_source": {
+      "enum": [
+        "user_recorded",
+        "cdp_auto"
+      ]
     }
   },
   "required": [

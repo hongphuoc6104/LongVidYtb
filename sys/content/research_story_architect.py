@@ -488,6 +488,7 @@ class ResearchedBeat:
             "concept_metaphor",
             "visual_diagram",
             "cutaway_detail",
+            "screen_capture",
         }
         if self.shot_type not in allowed_shots:
             raise ValueError(f"Unsupported full-frame shot type: {self.shot_type}")
@@ -1642,13 +1643,84 @@ def generate_script_json(topic: ResearchedTopic) -> List[Dict[str, Any]]:
     return script_items
 
 
+def validate_long_form_narrative_depth(
+    brief_data: Dict[str, Any],
+    content_data: Dict[str, Any],
+    min_syllables: Optional[int] = None,
+    min_scenes: Optional[int] = None,
+    max_sentence_syllables: int = 20,
+) -> Tuple[bool, List[str]]:
+    """Validate that long-form 16:9 explainer packages meet the narrative depth & syllable floor SSOT.
+
+    Invariants:
+    - Minimum floor of >= 1,800 syllables
+    - Minimum scene count of >= 16 scenes (achieving 7-9 minutes at ~4.5 syl/s)
+    - Prohibit 1-to-1 mapping of 8 cognitive stages to 8 scenes (chain 2-4 scenes per stage)
+    - Conversational spoken sentences <= 20 syllables
+    """
+    errors: List[str] = []
+    from format_profiles import PROFILES, resolve_format_profile
+    from narration_pauses import PAUSE_RE, SENTENCE_RE
+
+    try:
+        profile_id = resolve_format_profile(brief_data)
+    except Exception:
+        profile_id = brief_data.get("format_profile") or brief_data.get("aspect_ratio")
+
+    if profile_id == "long_16x9":
+        prof = PROFILES.get("long_16x9", {})
+        from pillars import depth_floor_for
+        floor = depth_floor_for(brief_data)
+        req_scenes = min_scenes if min_scenes is not None else (floor.min_scenes if floor else prof.get("min_scenes", 16))
+        req_sylls = min_syllables if min_syllables is not None else (floor.min_syllables if floor else prof.get("min_syllables", 1800))
+
+        scenes = content_data.get("scenes", [])
+        if len(scenes) < req_scenes:
+            errors.append(
+                f"NARRATIVE_DEPTH_SCENE_COUNT_TOO_LOW: long_16x9 explainer requires >= {req_scenes} scenes for layered narrative depth, got {len(scenes)}"
+            )
+
+        total_syllables = sum(count_syllables(sc.get("narration", "")) for sc in scenes)
+        if total_syllables < req_sylls:
+            errors.append(
+                f"NARRATIVE_DEPTH_SYLLABLE_FLOOR_NOT_MET: long_16x9 explainer requires >= {req_sylls} syllables (7-9 minutes depth), got {total_syllables}"
+            )
+
+        # 3. Check spoken sentences <= max_sentence_syllables (20 syl ceiling)
+        for sc in scenes:
+            sc_id = sc.get("id", "SC??")
+            raw_narration = sc.get("narration", "")
+            clean_narration = PAUSE_RE.sub(" ", raw_narration).strip()
+            for sentence in SENTENCE_RE.split(clean_narration):
+                parts = re.split(r"(?<=[,;:\-])\s+", sentence) if len(sentence) > 180 else [sentence]
+                for part in parts:
+                    clean_part = part.strip()
+                    if not clean_part:
+                        continue
+                    syl_cnt = count_syllables(clean_part, lang="vi")
+                    if syl_cnt > max_sentence_syllables:
+                        errors.append(
+                            f"NARRATIVE_DEPTH_SENTENCE_TOO_LONG: {sc_id} spoken sentence has {syl_cnt} syllables (> {max_sentence_syllables} syl limit): {clean_part!r}"
+                        )
+
+        # 4. Check stage chaining: forbid 1-to-1 stage mapping
+        phases = [sc.get("narrative_phase") for sc in scenes if sc.get("narrative_phase")]
+        if phases and len(set(phases)) == len(scenes):
+            errors.append(
+                "NARRATIVE_DEPTH_1TO1_STAGE_MAPPING_FORBIDDEN: 1-to-1 mapping of cognitive stages to scenes is forbidden; chain 2-4 scenes per stage."
+            )
+
+    return len(errors) == 0, errors
+
+
 def validate_production_bundle(
     system_root: Path,
     brief_data: Dict[str, Any],
     content_data: Dict[str, Any],
     brief_revision: int = 1,
+    enforce_narrative_depth: Optional[bool] = None,
 ) -> Tuple[bool, List[str]]:
-    """Validate brief and content against official contracts and cadence checker."""
+    """Validate brief and content against official contracts, cadence checker, and narrative depth."""
     from content_contract import ContractError, validate_brief, validate_content
 
     errors = []
@@ -1668,6 +1740,20 @@ def validate_production_bundle(
         errors.append(f"validate_content error: {ce}")
     except Exception as ex:
         errors.append(f"validate_content unexpected exception: {ex}")
+
+    # 3. Validate Long-Form Narrative Depth
+    min_dur = float(brief_data.get("duration", {}).get("min_seconds", 0))
+    try:
+        from format_profiles import resolve_format_profile
+        b_prof = resolve_format_profile(brief_data)
+    except Exception:
+        b_prof = brief_data.get("format_profile") or brief_data.get("aspect_ratio")
+
+    should_enforce = enforce_narrative_depth if enforce_narrative_depth is not None else (b_prof == "long_16x9" and min_dur >= 400.0)
+    if should_enforce:
+        depth_valid, depth_errors = validate_long_form_narrative_depth(brief_data, content_data)
+        if not depth_valid:
+            errors.extend(depth_errors)
 
     return len(errors) == 0, errors
 
@@ -2097,9 +2183,10 @@ def write_production_package(
     brief_revision: int = 1,
     include_spinoffs: bool = False,
     omni_plan: Optional[Dict[str, Any]] = None,
+    allow_active: bool = False,
 ) -> Dict[str, Any]:
     """Assemble and write brief.json, content.json, script.json, cadence_report.json, and optional short_9x16 spin-offs."""
-    if any((output_dir / name).exists() for name in ('revisions', 'execution-control.json', 'brief-current.json', 'integrity.json')):
+    if not allow_active and any((output_dir / name).exists() for name in ('revisions', 'execution-control.json', 'brief-current.json', 'integrity.json')):
         raise ValueError('ACTIVE_JOB_DESTINATION: export a blueprint and use official pilot author/revision operations')
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -2148,12 +2235,19 @@ def write_production_package(
     cadence_file = output_dir / "cadence_report.json"
 
     script_json_str = json.dumps(script_data, indent=2, ensure_ascii=False) + "\n"
+    content_json_str = json.dumps(content_data, indent=2, ensure_ascii=False) + "\n"
     _write_if_changed(brief_file, serialize_brief_json(brief_data))
-    _write_if_changed(content_file, json.dumps(content_data, indent=2, ensure_ascii=False) + "\n")
+    _write_if_changed(content_file, content_json_str)
     _write_if_changed(script_file, script_json_str)
     if len(topic.scenes) == 48:
         _write_if_changed(output_dir / "script_13m_48scenes.json", script_json_str)
     _write_if_changed(cadence_file, json.dumps(cadence_report, indent=2, ensure_ascii=False) + "\n")
+
+    draft_dir = output_dir / "draft"
+    draft_dir.mkdir(parents=True, exist_ok=True)
+    outline_data = {"outline": content_data.get("outline", [])}
+    _write_if_changed(draft_dir / "outline.json", json.dumps(outline_data, indent=2, ensure_ascii=False) + "\n")
+    _write_if_changed(draft_dir / "content.json", content_json_str)
 
     if include_spinoffs:
         spinoffs_root = output_dir / "spinoff_shorts"
@@ -2194,7 +2288,7 @@ def main() -> int:
     parser.add_argument("--demo", action="store_true", help="Generate benchmark production package for trial topic")
     parser.add_argument(
         "--topic",
-        choices=["procrastination-paradox", "academic-paradox-q1"],
+        choices=["procrastination-paradox", "academic-paradox-q1", "willpower-paradox"],
         default=None,
         help="Select built-in researched topic blueprint",
     )
@@ -2215,6 +2309,14 @@ def main() -> int:
             out_dir = Path(args.output_dir) if args.output_dir else SYS_DIR / f"runs/{job_id}"
             print("[*] Đang kiến trúc bộ hồ sơ kỹ thuật ngách Tư Duy Nghiên Cứu Q1: 'Nghịch lý Tri thức & Ảo giác Năng lực'...")
             topic = create_academic_research_paradox_topic(aspect_ratio=args.aspect_ratio, subtitles=args.subtitles or None)
+        elif selected_topic == "willpower-paradox":
+            job_id = args.job_id or f"willpower-paradox-{args.aspect_ratio.replace(':', 'x')}"
+            out_dir = Path(args.output_dir) if args.output_dir else SYS_DIR / f"runs/{job_id}"
+            print("[*] Đang kiến trúc bộ hồ sơ kỹ thuật ngách Tư Duy Nhận Thức: 'Nghịch Lý Ý Chí & Bẫy Cạn Kiệt Não Bộ'...")
+            from content.builders.build_willpower_paradox_jobs import build_topic_9x16, build_topic_16x9
+            topic = build_topic_16x9() if args.aspect_ratio == "16:9" else build_topic_9x16()
+            if args.subtitles:
+                topic.subtitles = True
         else:
             job_id = args.job_id or f"procrastination-paradox-{args.aspect_ratio.replace(':', 'x')}-001"
             out_dir = Path(args.output_dir) if args.output_dir else SYS_DIR / f"runs/{job_id}"
@@ -2265,6 +2367,26 @@ def main() -> int:
 
         print("\n★ BỘ HỒ SƠ KỸ THUẬT ĐẦU VÀO ĐÃ ĐƯỢC ĐÓNG GÓI VÀ XÁC THỰC HOÀN TOÀN! ★")
         return 0
+
+    if args.validate and (args.output_dir or args.job_id):
+        job_id = args.job_id or "job"
+        out_dir = Path(args.output_dir) if args.output_dir else SYS_DIR / f"runs/{job_id}"
+        brief_file = out_dir / "brief.json"
+        content_file = out_dir / "content.json"
+        if not brief_file.is_file() or not content_file.is_file():
+            print(f"[FAIL] Không tìm thấy brief.json hoặc content.json tại {out_dir}")
+            return 1
+        brief_data = json.loads(brief_file.read_text(encoding="utf-8"))
+        content_data = json.loads(content_file.read_text(encoding="utf-8"))
+        valid, errors = validate_production_bundle(SYS_DIR, brief_data, content_data)
+        if valid:
+            print(f"  [PASS] Xác thực hợp đồng Schema 3.0 cho {out_dir}: 100% HỢP LỆ.")
+            return 0
+        else:
+            print(f"  [FAIL] Lỗi xác thực hợp đồng cho {out_dir}:")
+            for err in errors:
+                print(f"    - {err}")
+            return 1
 
     print("Vui lòng cung cấp cờ --demo hoặc --topic. Xem --help.")
     return 1

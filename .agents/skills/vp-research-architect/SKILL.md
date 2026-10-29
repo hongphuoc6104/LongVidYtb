@@ -13,7 +13,8 @@ Bộ kỹ năng này được thiết kế để **tự động hóa 100% phần
 
 ## 1. Định Vị Ngách & Phễu 3 Tầng (Core Mission & 3-Tier Pillar Lock)
 
-- **Trụ cột nội dung cố định (`channel_pillar`):** Khóa cứng vào ngách **"Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức"** (kết hợp Tâm lý học Nhận thức, Mô hình Tư duy & Triết học Tri thức).
+- **Đa pillar (`sys/pillars.py`):** Mỗi job chọn `channel_pillar` (`cognition` mặc định hoặc `research_guide`). Pillar `research_guide` ("Hướng Dẫn Nghiên Cứu Khoa Học Cho Người Mới"): đa ngành; T1 sai lầm/ngộ nhận người mới, T2 bản chất từng bước (câu hỏi → tổng quan → thiết kế → dữ liệu → viết → nộp/phản biện), T3 công cụ (Zotero, Scholar, SPSS/R, LaTeX, chọn tạp chí). Hook kiểu tutorial (vấn đề thực tế + lời hứa kết quả), không bắt buộc nghịch lý/cảnh VN 60s; T3 long 10–15 phút (≥ 2700 âm tiết, ≥ 24 cảnh). Nếu video T3 có cảnh `shot_type: screen_capture` thì PHẢI hỏi người dùng `screen_capture_source` (`user_recorded`/`cdp_auto`) trước khi chạy tiếp; không có cảnh đó thì không hỏi.
+- **Pillar `cognition` (mặc định):** Khóa vào ngách **"Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức"** (kết hợp Tâm lý học Nhận thức, Mô hình Tư duy & Triết học Tri thức).
 - **Quy tắc Chống Loãng Tệp (`Anti-Dilution Guard`):** Tuyệt đối **cấm** các mẹo vặt văn phòng hời hợt (gõ hàm Excel, làm Slide nhanh 4 tiếng, mẹo học vẹt ngắn hạn).
 - **Mô hình Phễu 3 Tầng Linh Hoạt (`funnel_tier`):**
   1. **Tầng 1 — Phễu Rộng (`tier_1_broad`):** *"Tư Duy Nhận Thức, Nghịch Lý & Ảo Giác Tri Thức"* (Cognitive Biases, Mental Models, cơ chế nhận thức khi tiếp nhận và xử lý thông tin, khoảng cách giữa nhận biết hời hợt và thấu suốt bản chất).
@@ -45,7 +46,7 @@ Bộ kỹ năng này được thiết kế để **tự động hóa 100% phần
   2. `thumbnail_spec`:
      - `visual_hook` + `text_overlay` đúng **2–4 từ in hoa** đánh trúng nghịch lý tâm lý.
      - **Integrated Poster Thumbnail Prompt (`thumbnail_prompt` / `build_thumbnail_poster_prompt()`):** Tuyệt đối không dùng lại ảnh `SC01` rồi dán đè một chiếc thẻ HTML rẻ tiền, và nghiêm cấm các sáo rỗng AI (`neon brain`, `matrix 0101`, `cyborg hand`). Thumbnail phải được thiết kế như **1 poster thống nhất**: **60% khung hình** là **1 ẩn dụ thị giác duy nhất** cực kỳ sắc nét; **40% khung hình** là khoảng trống sạch (*negative space*) nơi **dòng chữ vàng đậm cỡ đại (`#FACC15`) viền đen dày** được vẽ/thiết kế hòa quyện cùng một tone màu và ánh sáng với bức tranh.
-  3. `channel_pillar` & `funnel_tier`: Khóa cố định ngách Tư Duy Nhận Thức & Phương Pháp Luận (`tier_1_broad` / `tier_2_mid` / `tier_3_conversion`).
+  3. `channel_pillar` & `funnel_tier`: Theo pillar đã chọn trong `sys/pillars.py` (`tier_1_broad` / `tier_2_mid` / `tier_3_conversion`).
 
 ### Bước 3: Kiến Trúc Mạch Truyện 8 Phần Ngầm & Cặp `(Nhịp Thoại, Hành Động Hình Ảnh)`
 - **Cấu trúc Kịch bản 8 Phần Ngầm (`NARRATIVE_ARC_8_STAGES`):** Mọi video giải thích cần dẫn dắt người xem đi qua 8 chặng nhận thức rõ ràng (nhưng chuyển ý tự nhiên, tuyệt đối không hô khẩu hiệu *"Phần 1 là..."*):

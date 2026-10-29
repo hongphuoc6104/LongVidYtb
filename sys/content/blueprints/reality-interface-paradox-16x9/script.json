@@ -1,0 +1,704 @@
+[
+  {
+    "id": "SC01",
+    "duration": 26.45,
+    "narration": "Có bao giờ bạn tự hỏi, mọi thứ trước mắt có thật không? Chúng ta luôn tin rằng mắt mình thấy sao thì đời là vậy. Mỗi buổi sáng thức dậy, bạn thấy ánh nắng chiếu qua khung cửa. Chạm tay xuống mặt bàn, bạn cảm nhận rõ độ cứng cáp. Mọi cảm giác đều rõ ràng đến mức chẳng ai thèm nghi ngờ. Thế nhưng các nhà nghiên cứu lại tìm ra một điều rất lạ. Đôi mắt của chúng ta sinh ra không phải để nhìn sự thật. Nó chỉ là một công cụ giúp bạn dễ sống hơn mà thôi.",
+    "beats": [
+      {
+        "image_id": "SC01_I1",
+        "anchor_quote": "Có bao giờ bạn tự hỏi, mọi thứ trước mắt có thật không?"
+      },
+      {
+        "image_id": "SC01_I2",
+        "anchor_quote": "Chúng ta luôn tin rằng mắt mình thấy sao thì đời là vậy."
+      },
+      {
+        "image_id": "SC01_I3",
+        "anchor_quote": "Mỗi buổi sáng thức dậy, bạn thấy ánh nắng chiếu qua khung cửa."
+      },
+      {
+        "image_id": "SC01_I4",
+        "anchor_quote": "Chạm tay xuống mặt bàn, bạn cảm nhận rõ độ cứng cáp."
+      },
+      {
+        "image_id": "SC01_I5",
+        "anchor_quote": "Mọi cảm giác đều rõ ràng đến mức chẳng ai thèm nghi ngờ."
+      },
+      {
+        "image_id": "SC01_I6",
+        "anchor_quote": "Thế nhưng các nhà nghiên cứu lại tìm ra một điều rất lạ."
+      },
+      {
+        "image_id": "SC01_I7",
+        "anchor_quote": "Đôi mắt của chúng ta sinh ra không phải để nhìn sự thật."
+      },
+      {
+        "image_id": "SC01_I8",
+        "anchor_quote": "Nó chỉ là một công cụ giúp bạn dễ sống hơn mà thôi."
+      }
+    ]
+  },
+  {
+    "id": "SC02",
+    "duration": 26.95,
+    "narration": "Nhiều người xem phim ma trận thường nghĩ thế giới ảo rất xa vời. Chúng ta cười khi thấy các nhân vật bị nhốt trong máy móc. Ta tự hào vì mình đang hít thở bầu không khí tự nhiên. Thế nhưng tự nhiên đã làm điều tương tự từ rất lâu rồi. Mọi thứ bạn nhìn, nghe hay chạm vào đều do não tự vẽ ra. Não giống như một người làm phim hoạt hình tài ba vậy. Nó liên tục phác thảo hình ảnh để bạn dễ định hướng. Và bạn đang sống trong bức tranh do chính cái đầu mình tạo nên.",
+    "beats": [
+      {
+        "image_id": "SC02_I1",
+        "anchor_quote": "Nhiều người xem phim ma trận thường nghĩ thế giới ảo rất xa vời."
+      },
+      {
+        "image_id": "SC02_I2",
+        "anchor_quote": "Chúng ta cười khi thấy các nhân vật bị nhốt trong máy móc."
+      },
+      {
+        "image_id": "SC02_I3",
+        "anchor_quote": "Ta tự hào vì mình đang hít thở bầu không khí tự nhiên."
+      },
+      {
+        "image_id": "SC02_I4",
+        "anchor_quote": "Thế nhưng tự nhiên đã làm điều tương tự từ rất lâu rồi."
+      },
+      {
+        "image_id": "SC02_I5",
+        "anchor_quote": "Mọi thứ bạn nhìn, nghe hay chạm vào đều do não tự vẽ ra."
+      },
+      {
+        "image_id": "SC02_I6",
+        "anchor_quote": "Não giống như một người làm phim hoạt hình tài ba vậy."
+      },
+      {
+        "image_id": "SC02_I7",
+        "anchor_quote": "Nó liên tục phác thảo hình ảnh để bạn dễ định hướng."
+      },
+      {
+        "image_id": "SC02_I8",
+        "anchor_quote": "Và bạn đang sống trong bức tranh do chính cái đầu mình tạo nên."
+      }
+    ]
+  },
+  {
+    "id": "SC03",
+    "duration": 26.7,
+    "narration": "Hãy thử nhìn vào ly cà phê quen thuộc trên bàn làm việc. Bạn thấy màu nâu sẫm sóng sánh rất bắt mắt. Bạn ngửi thấy mùi thơm thoang thoảng bay lên. Khi nhấp một ngụm, bạn cảm nhận ngay vị đắng nơi đầu lưỡi. Bạn tin chắc màu nâu và vị đắng là có thật ở ngoài đời. Nhưng bản thân ly cà phê đâu có tự dán nhãn màu nâu hay vị đắng. Đó chỉ là cách các tế bào cảm giác báo tin về cho não. Cái ly bạn thấy chỉ là cách não dịch lại tín hiệu cho dễ hiểu.",
+    "beats": [
+      {
+        "image_id": "SC03_I1",
+        "anchor_quote": "Hãy thử nhìn vào ly cà phê quen thuộc trên bàn làm việc."
+      },
+      {
+        "image_id": "SC03_I2",
+        "anchor_quote": "Bạn thấy màu nâu sẫm sóng sánh rất bắt mắt."
+      },
+      {
+        "image_id": "SC03_I3",
+        "anchor_quote": "Bạn ngửi thấy mùi thơm thoang thoảng bay lên."
+      },
+      {
+        "image_id": "SC03_I4",
+        "anchor_quote": "Khi nhấp một ngụm, bạn cảm nhận ngay vị đắng nơi đầu lưỡi."
+      },
+      {
+        "image_id": "SC03_I5",
+        "anchor_quote": "Bạn tin chắc màu nâu và vị đắng là có thật ở ngoài đời."
+      },
+      {
+        "image_id": "SC03_I6",
+        "anchor_quote": "Nhưng bản thân ly cà phê đâu có tự dán nhãn màu nâu hay vị đắng."
+      },
+      {
+        "image_id": "SC03_I7",
+        "anchor_quote": "Đó chỉ là cách các tế bào cảm giác báo tin về cho não."
+      },
+      {
+        "image_id": "SC03_I8",
+        "anchor_quote": "Cái ly bạn thấy chỉ là cách não dịch lại tín hiệu cho dễ hiểu."
+      }
+    ]
+  },
+  {
+    "id": "SC04",
+    "duration": 27.7,
+    "narration": "Thực tế bên ngoài kia không hề giống như chúng ta tưởng. Bên ngoài cái đầu của bạn, không gian không hề có màu hay tiếng. Nơi đó chỉ có các bước sóng và những rung động không khí. Bông hoa hồng không tự có màu đỏ, tiếng hát không tự vang lên. Tất cả chỉ là những hạt bụi và luồng sáng vô hình bay lượn. Chính bộ não của bạn đã tự tay tô màu cho bông hoa. Não tự phổ nhạc để biến những rung động thành âm thanh vui tai. Nếu không có bạn quan sát, thế giới chỉ là một khoảng lặng im.",
+    "beats": [
+      {
+        "image_id": "SC04_I1",
+        "anchor_quote": "Thực tế bên ngoài kia không hề giống như chúng ta tưởng."
+      },
+      {
+        "image_id": "SC04_I2",
+        "anchor_quote": "Bên ngoài cái đầu của bạn, không gian không hề có màu hay tiếng."
+      },
+      {
+        "image_id": "SC04_I3",
+        "anchor_quote": "Nơi đó chỉ có các bước sóng và những rung động không khí."
+      },
+      {
+        "image_id": "SC04_I4",
+        "anchor_quote": "Bông hoa hồng không tự có màu đỏ, tiếng hát không tự vang lên."
+      },
+      {
+        "image_id": "SC04_I5",
+        "anchor_quote": "Tất cả chỉ là những hạt bụi và luồng sáng vô hình bay lượn."
+      },
+      {
+        "image_id": "SC04_I6",
+        "anchor_quote": "Chính bộ não của bạn đã tự tay tô màu cho bông hoa."
+      },
+      {
+        "image_id": "SC04_I7",
+        "anchor_quote": "Não tự phổ nhạc để biến những rung động thành âm thanh vui tai."
+      },
+      {
+        "image_id": "SC04_I8",
+        "anchor_quote": "Nếu không có bạn quan sát, thế giới chỉ là một khoảng lặng im."
+      }
+    ]
+  },
+  {
+    "id": "SC05",
+    "duration": 26.45,
+    "narration": "Vậy tại sao chúng ta lại tin vào mắt mình suốt bao năm qua? Ta cứ nghĩ đôi mắt hoạt động y hệt như một chiếc máy ảnh. Cứ có ánh sáng lọt vào là mắt chụp lại nguyên vẹn mọi thứ. Nhưng cách hiểu ngây thơ này đã bị khoa học làm sáng tỏ. Mắt của bạn không chụp ảnh một cách thụ động đâu. Mắt chỉ bắt được một chút ánh sáng rồi gửi về cho não đoán. Bạn không nhìn thẳng ra thế giới bên ngoài. Bạn chỉ đang xem lại bản phác thảo do não bộ tự vẽ ra.",
+    "beats": [
+      {
+        "image_id": "SC05_I1",
+        "anchor_quote": "Vậy tại sao chúng ta lại tin vào mắt mình suốt bao năm qua?"
+      },
+      {
+        "image_id": "SC05_I2",
+        "anchor_quote": "Ta cứ nghĩ đôi mắt hoạt động y hệt như một chiếc máy ảnh."
+      },
+      {
+        "image_id": "SC05_I3",
+        "anchor_quote": "Cứ có ánh sáng lọt vào là mắt chụp lại nguyên vẹn mọi thứ."
+      },
+      {
+        "image_id": "SC05_I4",
+        "anchor_quote": "Nhưng cách hiểu ngây thơ này đã bị khoa học làm sáng tỏ."
+      },
+      {
+        "image_id": "SC05_I5",
+        "anchor_quote": "Mắt của bạn không chụp ảnh một cách thụ động đâu."
+      },
+      {
+        "image_id": "SC05_I6",
+        "anchor_quote": "Mắt chỉ bắt được một chút ánh sáng rồi gửi về cho não đoán."
+      },
+      {
+        "image_id": "SC05_I7",
+        "anchor_quote": "Bạn không nhìn thẳng ra thế giới bên ngoài."
+      },
+      {
+        "image_id": "SC05_I8",
+        "anchor_quote": "Bạn chỉ đang xem lại bản phác thảo do não bộ tự vẽ ra."
+      }
+    ]
+  },
+  {
+    "id": "SC06",
+    "duration": 25.95,
+    "narration": "Đến đây, chắc chắn bạn sẽ tự hỏi một điều rất tự nhiên. Chẳng phải nhìn đúng sự thật sẽ giúp ta sống an toàn hơn sao? Nếu thấy rõ con rắn hay thú dữ đang rình rập. Bạn sẽ né tránh nhanh hơn và thoát thân an toàn hơn. Nhìn chuẩn xác đáng lẽ phải là điều tốt nhất cho con người. Thế nhưng quá trình sinh tồn lại không cần đến sự thật tuyệt đối. Tự nhiên chỉ quan tâm đúng một mục tiêu duy nhất. Đó là làm sao để bạn sống sót và nuôi nấng con cái.",
+    "beats": [
+      {
+        "image_id": "SC06_I1",
+        "anchor_quote": "Đến đây, chắc chắn bạn sẽ tự hỏi một điều rất tự nhiên."
+      },
+      {
+        "image_id": "SC06_I2",
+        "anchor_quote": "Chẳng phải nhìn đúng sự thật sẽ giúp ta sống an toàn hơn sao?"
+      },
+      {
+        "image_id": "SC06_I3",
+        "anchor_quote": "Nếu thấy rõ con rắn hay thú dữ đang rình rập."
+      },
+      {
+        "image_id": "SC06_I4",
+        "anchor_quote": "Bạn sẽ né tránh nhanh hơn và thoát thân an toàn hơn."
+      },
+      {
+        "image_id": "SC06_I5",
+        "anchor_quote": "Nhìn chuẩn xác đáng lẽ phải là điều tốt nhất cho con người."
+      },
+      {
+        "image_id": "SC06_I6",
+        "anchor_quote": "Thế nhưng quá trình sinh tồn lại không cần đến sự thật tuyệt đối."
+      },
+      {
+        "image_id": "SC06_I7",
+        "anchor_quote": "Tự nhiên chỉ quan tâm đúng một mục tiêu duy nhất."
+      },
+      {
+        "image_id": "SC06_I8",
+        "anchor_quote": "Đó là làm sao để bạn sống sót và nuôi nấng con cái."
+      }
+    ]
+  },
+  {
+    "id": "SC07",
+    "duration": 28.2,
+    "narration": "Bởi vì nhìn thấu tận gốc mọi thứ đòi hỏi cái giá quá đắt. Não bộ không tiến hóa để nhìn thấy sự thật khách quan. Vũ trụ ngoài kia có hàng tỷ chi tiết nhỏ li ti trong mỗi mét vuông. Não không thể nào phân tích hết mọi thứ khi bạn đang đi bộ. Làm như vậy thì đầu bạn sẽ nhanh chóng kiệt sức vì quá tải. Bạn sẽ đói lả trước khi kịp hái được một quả dâu dại. Tiến hóa ưu tiên sinh tồn hơn là thấu suốt chân lý. Để giữ mạng sống cho bạn, não bộ bắt buộc phải giấu bớt chi tiết.",
+    "beats": [
+      {
+        "image_id": "SC07_I1",
+        "anchor_quote": "Bởi vì nhìn thấu tận gốc mọi thứ đòi hỏi cái giá quá đắt."
+      },
+      {
+        "image_id": "SC07_I2",
+        "anchor_quote": "Não bộ không tiến hóa để nhìn thấy sự thật khách quan."
+      },
+      {
+        "image_id": "SC07_I3",
+        "anchor_quote": "Vũ trụ ngoài kia có hàng tỷ chi tiết nhỏ li ti trong mỗi mét vuông."
+      },
+      {
+        "image_id": "SC07_I4",
+        "anchor_quote": "Não không thể nào phân tích hết mọi thứ khi bạn đang đi bộ."
+      },
+      {
+        "image_id": "SC07_I5",
+        "anchor_quote": "Làm như vậy thì đầu bạn sẽ nhanh chóng kiệt sức vì quá tải."
+      },
+      {
+        "image_id": "SC07_I6",
+        "anchor_quote": "Bạn sẽ đói lả trước khi kịp hái được một quả dâu dại."
+      },
+      {
+        "image_id": "SC07_I7",
+        "anchor_quote": "Tiến hóa ưu tiên sinh tồn hơn là thấu suốt chân lý."
+      },
+      {
+        "image_id": "SC07_I8",
+        "anchor_quote": "Để giữ mạng sống cho bạn, não bộ bắt buộc phải giấu bớt chi tiết."
+      }
+    ]
+  },
+  {
+    "id": "SC08",
+    "duration": 27.45,
+    "narration": "Các chuyên gia hàng đầu đã rút ra một nhận định rất thú vị. Không gian ba chiều chỉ là định dạng nén dữ liệu của não. Giống như điện thoại nén bức ảnh lớn thành một tệp nhỏ gọn. Bộ não nén hàng tỷ photon thành một hình ảnh đơn giản. Khi bạn nhìn thấy một quả táo đỏ nằm trên bàn ăn. Bạn đâu cần nhìn thấy từng tế bào hay hạt bụi li ti của nó. Bạn chỉ cần thấy một hình tròn đỏ để biết đây là đồ ăn ngon. Vật thể ba chiều giống như biểu tượng trên màn hình máy tính.",
+    "beats": [
+      {
+        "image_id": "SC08_I1",
+        "anchor_quote": "Các chuyên gia hàng đầu đã rút ra một nhận định rất thú vị."
+      },
+      {
+        "image_id": "SC08_I2",
+        "anchor_quote": "Không gian ba chiều chỉ là định dạng nén dữ liệu của não."
+      },
+      {
+        "image_id": "SC08_I3",
+        "anchor_quote": "Giống như điện thoại nén bức ảnh lớn thành một tệp nhỏ gọn."
+      },
+      {
+        "image_id": "SC08_I4",
+        "anchor_quote": "Bộ não nén hàng tỷ photon thành một hình ảnh đơn giản."
+      },
+      {
+        "image_id": "SC08_I5",
+        "anchor_quote": "Khi bạn nhìn thấy một quả táo đỏ nằm trên bàn ăn."
+      },
+      {
+        "image_id": "SC08_I6",
+        "anchor_quote": "Bạn đâu cần nhìn thấy từng tế bào hay hạt bụi li ti của nó."
+      },
+      {
+        "image_id": "SC08_I7",
+        "anchor_quote": "Bạn chỉ cần thấy một hình tròn đỏ để biết đây là đồ ăn ngon."
+      },
+      {
+        "image_id": "SC08_I8",
+        "anchor_quote": "Vật thể ba chiều giống như biểu tượng trên màn hình máy tính."
+      }
+    ]
+  },
+  {
+    "id": "SC09",
+    "duration": 27.7,
+    "narration": "Để hình dung dễ hơn, bạn hãy nhìn vào màn hình máy tính. Ở góc màn hình luôn có một icon thùng rác nhỏ nhắn. Biểu tượng thùng rác không chứa rác thật hay chất dẻo nhựa. Nó chỉ là hình vẽ để che đi hàng triệu vi mạch điện tử bên trong. Nếu bạn phải nhìn thấy dòng điện bạn sẽ không thể dùng máy tính. Hình vẽ sinh ra để giấu đi những thứ phức tạp bên dưới. Đôi mắt của bạn cũng giống hệt như chiếc màn hình hiển thị. Không gian là hình nền, còn các đồ vật chỉ là những icon chỉ dẫn.",
+    "beats": [
+      {
+        "image_id": "SC09_I1",
+        "anchor_quote": "Để hình dung dễ hơn, bạn hãy nhìn vào màn hình máy tính."
+      },
+      {
+        "image_id": "SC09_I2",
+        "anchor_quote": "Ở góc màn hình luôn có một icon thùng rác nhỏ nhắn."
+      },
+      {
+        "image_id": "SC09_I3",
+        "anchor_quote": "Biểu tượng thùng rác không chứa rác thật hay chất dẻo nhựa."
+      },
+      {
+        "image_id": "SC09_I4",
+        "anchor_quote": "Nó chỉ là hình vẽ để che đi hàng triệu vi mạch điện tử bên trong."
+      },
+      {
+        "image_id": "SC09_I5",
+        "anchor_quote": "Nếu bạn phải nhìn thấy dòng điện bạn sẽ không thể dùng máy tính."
+      },
+      {
+        "image_id": "SC09_I6",
+        "anchor_quote": "Hình vẽ sinh ra để giấu đi những thứ phức tạp bên dưới."
+      },
+      {
+        "image_id": "SC09_I7",
+        "anchor_quote": "Đôi mắt của bạn cũng giống hệt như chiếc màn hình hiển thị."
+      },
+      {
+        "image_id": "SC09_I8",
+        "anchor_quote": "Không gian là hình nền, còn các đồ vật chỉ là những icon chỉ dẫn."
+      }
+    ]
+  },
+  {
+    "id": "SC10",
+    "duration": 27.45,
+    "narration": "Ý tưởng này không phải là lời nói suông của ai đó đâu. Nó đã được kiểm chứng bằng những phép tính rất chặt chẽ. Các nhà khoa học đã tạo ra những thế giới giả lập trên máy tính. Họ thả vào đó hai nhóm sinh vật ảo với cách nhìn khác nhau. Nhóm thứ nhất được lập trình để nhìn thấy tường tận mọi sự thật. Nhóm thứ hai chỉ nhìn thấy những thứ giúp ích cho việc sống sót. Hai nhóm bắt đầu cạnh tranh nhau để tìm kiếm thức ăn. Mọi điều kiện ban đầu của hai bên đều giống hệt như nhau.",
+    "beats": [
+      {
+        "image_id": "SC10_I1",
+        "anchor_quote": "Ý tưởng này không phải là lời nói suông của ai đó đâu."
+      },
+      {
+        "image_id": "SC10_I2",
+        "anchor_quote": "Nó đã được kiểm chứng bằng những phép tính rất chặt chẽ."
+      },
+      {
+        "image_id": "SC10_I3",
+        "anchor_quote": "Các nhà khoa học đã tạo ra những thế giới giả lập trên máy tính."
+      },
+      {
+        "image_id": "SC10_I4",
+        "anchor_quote": "Họ thả vào đó hai nhóm sinh vật ảo với cách nhìn khác nhau."
+      },
+      {
+        "image_id": "SC10_I5",
+        "anchor_quote": "Nhóm thứ nhất được lập trình để nhìn thấy tường tận mọi sự thật."
+      },
+      {
+        "image_id": "SC10_I6",
+        "anchor_quote": "Nhóm thứ hai chỉ nhìn thấy những thứ giúp ích cho việc sống sót."
+      },
+      {
+        "image_id": "SC10_I7",
+        "anchor_quote": "Hai nhóm bắt đầu cạnh tranh nhau để tìm kiếm thức ăn."
+      },
+      {
+        "image_id": "SC10_I8",
+        "anchor_quote": "Mọi điều kiện ban đầu của hai bên đều giống hệt như nhau."
+      }
+    ]
+  },
+  {
+    "id": "SC11",
+    "duration": 27.7,
+    "narration": "Kết quả sau hàng triệu lượt thử nghiệm khiến ai cũng bất ngờ. Nhóm sinh vật cố nhìn thấu mọi thứ bị tụt lại rất nhanh. Chúng mất quá nhiều thời gian để săm soi những chi tiết vụn vặt. Trong khi đối thủ chỉ cần liếc mắt là biết chỗ nào có mồi ngon. Sinh vật thấy sự thật tuyệt chủng trước kẻ chỉ thấy sinh tồn. Trong bất kỳ môi trường cạnh tranh thức ăn khốc liệt nào. Nhóm mải nhìn sự thật đều bị đói và biến mất không còn dấu vết. Không hề có một ngoại lệ nào trong suốt các bài kiểm tra.",
+    "beats": [
+      {
+        "image_id": "SC11_I1",
+        "anchor_quote": "Kết quả sau hàng triệu lượt thử nghiệm khiến ai cũng bất ngờ."
+      },
+      {
+        "image_id": "SC11_I2",
+        "anchor_quote": "Nhóm sinh vật cố nhìn thấu mọi thứ bị tụt lại rất nhanh."
+      },
+      {
+        "image_id": "SC11_I3",
+        "anchor_quote": "Chúng mất quá nhiều thời gian để săm soi những chi tiết vụn vặt."
+      },
+      {
+        "image_id": "SC11_I4",
+        "anchor_quote": "Trong khi đối thủ chỉ cần liếc mắt là biết chỗ nào có mồi ngon."
+      },
+      {
+        "image_id": "SC11_I5",
+        "anchor_quote": "Sinh vật thấy sự thật tuyệt chủng trước kẻ chỉ thấy sinh tồn."
+      },
+      {
+        "image_id": "SC11_I6",
+        "anchor_quote": "Trong bất kỳ môi trường cạnh tranh thức ăn khốc liệt nào."
+      },
+      {
+        "image_id": "SC11_I7",
+        "anchor_quote": "Nhóm mải nhìn sự thật đều bị đói và biến mất không còn dấu vết."
+      },
+      {
+        "image_id": "SC11_I8",
+        "anchor_quote": "Không hề có một ngoại lệ nào trong suốt các bài kiểm tra."
+      }
+    ]
+  },
+  {
+    "id": "SC12",
+    "duration": 28.7,
+    "narration": "Chiến thắng thuộc về nhóm có cách nhìn đơn giản và thực dụng. Chúng không bận tâm bản chất sâu xa của đồ vật là cái gì. Chúng chỉ cần biết: món này ăn được hay nguy hiểm cần tránh. Đó cũng chính là cách mà muôn loài trên Trái Đất đang sống. Con bọ cánh cứng chỉ cần thấy màu nâu lấp lánh là tìm ra bạn đời. Con ếch chỉ cần thấy đốm đen di chuyển là thè lưỡi tóm con mồi. Bộ não con người chúng ta cũng vận hành y như thế mà thôi. Bạn sống khỏe mạnh là nhờ não biết bỏ qua những thứ rườm rà.",
+    "beats": [
+      {
+        "image_id": "SC12_I1",
+        "anchor_quote": "Chiến thắng thuộc về nhóm có cách nhìn đơn giản và thực dụng."
+      },
+      {
+        "image_id": "SC12_I2",
+        "anchor_quote": "Chúng không bận tâm bản chất sâu xa của đồ vật là cái gì."
+      },
+      {
+        "image_id": "SC12_I3",
+        "anchor_quote": "Chúng chỉ cần biết: món này ăn được hay nguy hiểm cần tránh."
+      },
+      {
+        "image_id": "SC12_I4",
+        "anchor_quote": "Đó cũng chính là cách mà muôn loài trên Trái Đất đang sống."
+      },
+      {
+        "image_id": "SC12_I5",
+        "anchor_quote": "Con bọ cánh cứng chỉ cần thấy màu nâu lấp lánh là tìm ra bạn đời."
+      },
+      {
+        "image_id": "SC12_I6",
+        "anchor_quote": "Con ếch chỉ cần thấy đốm đen di chuyển là thè lưỡi tóm con mồi."
+      },
+      {
+        "image_id": "SC12_I7",
+        "anchor_quote": "Bộ não con người chúng ta cũng vận hành y như thế mà thôi."
+      },
+      {
+        "image_id": "SC12_I8",
+        "anchor_quote": "Bạn sống khỏe mạnh là nhờ não biết bỏ qua những thứ rườm rà."
+      }
+    ]
+  },
+  {
+    "id": "SC13",
+    "duration": 29.45,
+    "narration": "Nghe xong chuyện này, có thể bạn sẽ cảm thấy hơi hụt hẫng. Nhiều người nghĩ nếu mọi thứ là ảo ảnh thì sống có ý nghĩa gì. Họ tự hỏi: tại sao ta không lao đầu vào một chiếc xe tải? Nếu chiếc xe tải chỉ là hình ảnh nén, sao nó làm đau ta được? Nghĩ như vậy là một sự nhầm lẫn cực kỳ tai hại và nguy hiểm. Đừng bao giờ đánh đồng hình ảnh dẫn đường với sự vô hại. Chiếc xe tải có thể chỉ là một tín hiệu do mắt bạn ghi nhận. Nhưng tín hiệu đó cảnh báo một vụ va chạm có thể lấy mạng bạn.",
+    "beats": [
+      {
+        "image_id": "SC13_I1",
+        "anchor_quote": "Nghe xong chuyện này, có thể bạn sẽ cảm thấy hơi hụt hẫng."
+      },
+      {
+        "image_id": "SC13_I2",
+        "anchor_quote": "Nhiều người nghĩ nếu mọi thứ là ảo ảnh thì sống có ý nghĩa gì."
+      },
+      {
+        "image_id": "SC13_I3",
+        "anchor_quote": "Họ tự hỏi: tại sao ta không lao đầu vào một chiếc xe tải?"
+      },
+      {
+        "image_id": "SC13_I4",
+        "anchor_quote": "Nếu chiếc xe tải chỉ là hình ảnh nén, sao nó làm đau ta được?"
+      },
+      {
+        "image_id": "SC13_I5",
+        "anchor_quote": "Nghĩ như vậy là một sự nhầm lẫn cực kỳ tai hại và nguy hiểm."
+      },
+      {
+        "image_id": "SC13_I6",
+        "anchor_quote": "Đừng bao giờ đánh đồng hình ảnh dẫn đường với sự vô hại."
+      },
+      {
+        "image_id": "SC13_I7",
+        "anchor_quote": "Chiếc xe tải có thể chỉ là một tín hiệu do mắt bạn ghi nhận."
+      },
+      {
+        "image_id": "SC13_I8",
+        "anchor_quote": "Nhưng tín hiệu đó cảnh báo một vụ va chạm có thể lấy mạng bạn."
+      }
+    ]
+  },
+  {
+    "id": "SC14",
+    "duration": 27.7,
+    "narration": "Hãy nhớ lấy một bài học rất đơn giản và sâu sắc này. Coi trọng biểu tượng nhưng không ngộ nhận nó là sự thật. Bạn không kéo tệp quan trọng vào thùng rác vì tôn trọng nó. Bạn tránh xa con rắn độc vì biết nó có thể cắn chết người. Bạn vẫn cần tuân thủ luật chơi để giữ an toàn cho bản thân. Nhưng đâu nhất thiết phải coi cái màn hình là tất cả cuộc đời. Biết phân biệt điều này sẽ giúp lòng bạn thanh thản hơn rất nhiều. Bạn sẽ có một cách nhìn nhẹ nhõm hơn về mọi chuyện quanh mình.",
+    "beats": [
+      {
+        "image_id": "SC14_I1",
+        "anchor_quote": "Hãy nhớ lấy một bài học rất đơn giản và sâu sắc này."
+      },
+      {
+        "image_id": "SC14_I2",
+        "anchor_quote": "Coi trọng biểu tượng nhưng không ngộ nhận nó là sự thật."
+      },
+      {
+        "image_id": "SC14_I3",
+        "anchor_quote": "Bạn không kéo tệp quan trọng vào thùng rác vì tôn trọng nó."
+      },
+      {
+        "image_id": "SC14_I4",
+        "anchor_quote": "Bạn tránh xa con rắn độc vì biết nó có thể cắn chết người."
+      },
+      {
+        "image_id": "SC14_I5",
+        "anchor_quote": "Bạn vẫn cần tuân thủ luật chơi để giữ an toàn cho bản thân."
+      },
+      {
+        "image_id": "SC14_I6",
+        "anchor_quote": "Nhưng đâu nhất thiết phải coi cái màn hình là tất cả cuộc đời."
+      },
+      {
+        "image_id": "SC14_I7",
+        "anchor_quote": "Biết phân biệt điều này sẽ giúp lòng bạn thanh thản hơn rất nhiều."
+      },
+      {
+        "image_id": "SC14_I8",
+        "anchor_quote": "Bạn sẽ có một cách nhìn nhẹ nhõm hơn về mọi chuyện quanh mình."
+      }
+    ]
+  },
+  {
+    "id": "SC15",
+    "duration": 29.7,
+    "narration": "Bài học này cực kỳ hữu ích cho cuộc sống hàng ngày của bạn. Trong thời buổi hiện nay, con người lại tự tạo thêm nhiều icon mới. Đó là những con số trong tài khoản hay lượt like trên mạng xã hội. Thực chất chúng chỉ là những điểm sáng trên mặt kính điện thoại. Thế nhưng biết bao nhiêu người đang để những điểm sáng làm khổ mình. Bạn lo lắng, mất ngủ và buồn bã vì những con số ảo trên màn hình. Bạn đang nhầm một cái icon nhỏ xíu với giá trị của chính bản thân. Đó là cái bẫy vô hình mà cuộc sống hiện đại vô tình tạo ra.",
+    "beats": [
+      {
+        "image_id": "SC15_I1",
+        "anchor_quote": "Bài học này cực kỳ hữu ích cho cuộc sống hàng ngày của bạn."
+      },
+      {
+        "image_id": "SC15_I2",
+        "anchor_quote": "Trong thời buổi hiện nay, con người lại tự tạo thêm nhiều icon mới."
+      },
+      {
+        "image_id": "SC15_I3",
+        "anchor_quote": "Đó là những con số trong tài khoản hay lượt like trên mạng xã hội."
+      },
+      {
+        "image_id": "SC15_I4",
+        "anchor_quote": "Thực chất chúng chỉ là những điểm sáng trên mặt kính điện thoại."
+      },
+      {
+        "image_id": "SC15_I5",
+        "anchor_quote": "Thế nhưng biết bao nhiêu người đang để những điểm sáng làm khổ mình."
+      },
+      {
+        "image_id": "SC15_I6",
+        "anchor_quote": "Bạn lo lắng, mất ngủ và buồn bã vì những con số ảo trên màn hình."
+      },
+      {
+        "image_id": "SC15_I7",
+        "anchor_quote": "Bạn đang nhầm một cái icon nhỏ xíu với giá trị của chính bản thân."
+      },
+      {
+        "image_id": "SC15_I8",
+        "anchor_quote": "Đó là cái bẫy vô hình mà cuộc sống hiện đại vô tình tạo ra."
+      }
+    ]
+  },
+  {
+    "id": "SC16",
+    "duration": 29.95,
+    "narration": "Khi bạn hiểu được điều này, mọi áp lực sẽ tự nhiên tan biến. Lời chê bai của người khác suy cho cùng chỉ là vài rung động gió. Chiếc xe sang hay ngôi nhà to cũng chỉ là những tấm biển báo ngoài đời. Chúng sinh ra để thôi thúc bạn làm việc và phấn đấu mỗi ngày. Nếu thấy vui thì bạn cứ tham gia vào cuộc chơi của cuộc sống. Nhưng đừng bao giờ để một món đồ bên ngoài quyết định nụ cười của bạn. Hãy sống như một người chơi thông thái và tự do trong tâm trí. Không có thất bại nào ngoài kia có thể làm tổn thương bạn được.",
+    "beats": [
+      {
+        "image_id": "SC16_I1",
+        "anchor_quote": "Khi bạn hiểu được điều này, mọi áp lực sẽ tự nhiên tan biến."
+      },
+      {
+        "image_id": "SC16_I2",
+        "anchor_quote": "Lời chê bai của người khác suy cho cùng chỉ là vài rung động gió."
+      },
+      {
+        "image_id": "SC16_I3",
+        "anchor_quote": "Chiếc xe sang hay ngôi nhà to cũng chỉ là những tấm biển báo ngoài đời."
+      },
+      {
+        "image_id": "SC16_I4",
+        "anchor_quote": "Chúng sinh ra để thôi thúc bạn làm việc và phấn đấu mỗi ngày."
+      },
+      {
+        "image_id": "SC16_I5",
+        "anchor_quote": "Nếu thấy vui thì bạn cứ tham gia vào cuộc chơi của cuộc sống."
+      },
+      {
+        "image_id": "SC16_I6",
+        "anchor_quote": "Nhưng đừng bao giờ để một món đồ bên ngoài quyết định nụ cười của bạn."
+      },
+      {
+        "image_id": "SC16_I7",
+        "anchor_quote": "Hãy sống như một người chơi thông thái và tự do trong tâm trí."
+      },
+      {
+        "image_id": "SC16_I8",
+        "anchor_quote": "Không có thất bại nào ngoài kia có thể làm tổn thương bạn được."
+      }
+    ]
+  },
+  {
+    "id": "SC17",
+    "duration": 28.45,
+    "narration": "Chính bạn là người quyết định cảm xúc cho cuộc đời của mình. Nỗi buồn hay sự thất vọng có thể ghé thăm bạn ngày hôm nay. Nhưng đó chỉ là cách cái đầu của bạn đang diễn giải sự việc. Bạn không thể bắt trời ngừng mưa hay đổi thay người khác. Nhưng bạn hoàn toàn có thể đổi chiếc kính mà mình đang đeo. Hãy chọn nhìn khó khăn như một bài tập để rèn luyện sự dẻo dai. Khi bạn đổi cách nhìn nhận, thế giới quanh bạn sẽ tự nhiên đổi thay. Đó là món quà tuyệt vời nhất mà tự nhiên đã dành tặng cho bạn.",
+    "beats": [
+      {
+        "image_id": "SC17_I1",
+        "anchor_quote": "Chính bạn là người quyết định cảm xúc cho cuộc đời của mình."
+      },
+      {
+        "image_id": "SC17_I2",
+        "anchor_quote": "Nỗi buồn hay sự thất vọng có thể ghé thăm bạn ngày hôm nay."
+      },
+      {
+        "image_id": "SC17_I3",
+        "anchor_quote": "Nhưng đó chỉ là cách cái đầu của bạn đang diễn giải sự việc."
+      },
+      {
+        "image_id": "SC17_I4",
+        "anchor_quote": "Bạn không thể bắt trời ngừng mưa hay đổi thay người khác."
+      },
+      {
+        "image_id": "SC17_I5",
+        "anchor_quote": "Nhưng bạn hoàn toàn có thể đổi chiếc kính mà mình đang đeo."
+      },
+      {
+        "image_id": "SC17_I6",
+        "anchor_quote": "Hãy chọn nhìn khó khăn như một bài tập để rèn luyện sự dẻo dai."
+      },
+      {
+        "image_id": "SC17_I7",
+        "anchor_quote": "Khi bạn đổi cách nhìn nhận, thế giới quanh bạn sẽ tự nhiên đổi thay."
+      },
+      {
+        "image_id": "SC17_I8",
+        "anchor_quote": "Đó là món quà tuyệt vời nhất mà tự nhiên đã dành tặng cho bạn."
+      }
+    ]
+  },
+  {
+    "id": "SC18",
+    "duration": 23.85,
+    "narration": "Bạn đâu cần phải tìm kiếm một phép màu nào xa xôi. Sự bình yên thực ra luôn ở ngay trước mắt bạn. Chỉ cần hiểu được chiếc kính mà tự nhiên trao tặng. Bạn sẽ thấy lòng mình nhẹ nhõm và tự do hơn. Hãy cứ yêu quý cuộc sống và trọn vẹn từng khoảnh khắc. Nếu câu chuyện nhỏ này đem lại chút thư thái cho bạn. Đừng ngần ngại nhấn like và để lại một lời nhắn nhé. Và bấm theo dõi kênh để chúng mình cùng gặp lại nhau nha.",
+    "beats": [
+      {
+        "image_id": "SC18_I1",
+        "anchor_quote": "Bạn đâu cần phải tìm kiếm một phép màu nào xa xôi."
+      },
+      {
+        "image_id": "SC18_I2",
+        "anchor_quote": "Sự bình yên thực ra luôn ở ngay trước mắt bạn."
+      },
+      {
+        "image_id": "SC18_I3",
+        "anchor_quote": "Chỉ cần hiểu được chiếc kính mà tự nhiên trao tặng."
+      },
+      {
+        "image_id": "SC18_I4",
+        "anchor_quote": "Bạn sẽ thấy lòng mình nhẹ nhõm và tự do hơn."
+      },
+      {
+        "image_id": "SC18_I5",
+        "anchor_quote": "Hãy cứ yêu quý cuộc sống và trọn vẹn từng khoảnh khắc."
+      },
+      {
+        "image_id": "SC18_I6",
+        "anchor_quote": "Nếu câu chuyện nhỏ này đem lại chút thư thái cho bạn."
+      },
+      {
+        "image_id": "SC18_I7",
+        "anchor_quote": "Đừng ngần ngại nhấn like và để lại một lời nhắn nhé."
+      },
+      {
+        "image_id": "SC18_I8",
+        "anchor_quote": "Và bấm theo dõi kênh để chúng mình cùng gặp lại nhau nha."
+      }
+    ]
+  }
+]

@@ -571,6 +571,51 @@ class TestResearchStoryArchitect(unittest.TestCase):
             [],
         )
 
+    def test_validate_long_form_narrative_depth(self):
+        """Verify validate_long_form_narrative_depth enforces all SSOT invariants."""
+        from content.research_story_architect import validate_long_form_narrative_depth
+
+        brief_16x9 = {"format_profile": "long_16x9", "aspect_ratio": "16:9"}
+
+        # 1. Rejects scene count < 16
+        scenes_few = [{"id": f"SC{i:02d}", "narration": "Một câu chuyện ngắn.", "narrative_phase": "phase_1"} for i in range(1, 10)]
+        valid, errs = validate_long_form_narrative_depth(brief_16x9, {"scenes": scenes_few})
+        self.assertFalse(valid)
+        self.assertTrue(any("NARRATIVE_DEPTH_SCENE_COUNT_TOO_LOW" in e for e in errs))
+
+        # 2. Rejects total syllables < 1800
+        scenes_short = [{"id": f"SC{i:02d}", "narration": "Mỗi phân cảnh chỉ có mười từ ngắn gọn.", "narrative_phase": f"phase_{i % 4}"} for i in range(1, 17)]
+        valid, errs = validate_long_form_narrative_depth(brief_16x9, {"scenes": scenes_short})
+        self.assertFalse(valid)
+        self.assertTrue(any("NARRATIVE_DEPTH_SYLLABLE_FLOOR_NOT_MET" in e for e in errs))
+
+        # 3. Rejects sentences > 20 syllables
+        long_sentence = "Đây là một câu nói cực kỳ dài dòng vượt quá giới hạn hai mươi âm tiết được quy định rất nghiêm ngặt trong tài liệu kỹ thuật."
+        scenes_long_sent = [
+            {"id": f"SC{i:02d}", "narration": ("Một câu ngắn gọn. " * 15) if i > 1 else long_sentence, "narrative_phase": f"phase_{i % 4}"}
+            for i in range(1, 17)
+        ]
+        valid, errs = validate_long_form_narrative_depth(brief_16x9, {"scenes": scenes_long_sent})
+        self.assertFalse(valid)
+        self.assertTrue(any("NARRATIVE_DEPTH_SENTENCE_TOO_LONG" in e for e in errs))
+
+        # 4. Rejects 1:1 stage mapping
+        scenes_1to1 = [
+            {"id": f"SC{i:02d}", "narration": ("Câu văn chuẩn mực dưới mười từ. " * 12), "narrative_phase": f"stage_{i:02d}"}
+            for i in range(1, 17)
+        ]
+        valid, errs = validate_long_form_narrative_depth(brief_16x9, {"scenes": scenes_1to1})
+        self.assertFalse(valid)
+        self.assertTrue(any("NARRATIVE_DEPTH_1TO1_STAGE_MAPPING_FORBIDDEN" in e for e in errs))
+
+        # 5. Accepts valid chained long-form package
+        scenes_valid = [
+            {"id": f"SC{i:02d}", "narration": ("Câu văn chuẩn mực ngắn gọn dưới mười từ. " * 13), "narrative_phase": f"stage_{i // 4}"}
+            for i in range(1, 17)
+        ]
+        valid, errs = validate_long_form_narrative_depth(brief_16x9, {"scenes": scenes_valid})
+        self.assertTrue(valid, f"Unexpected errors: {errs}")
+
 
 if __name__ == "__main__":
     unittest.main()

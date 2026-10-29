@@ -52,8 +52,10 @@ PROFILES: Dict[str, Dict[str, Any]] = {
     },
     "long_16x9": {
         "id": "long_16x9",
-        "audio_lufs": -14.0,
-        "audio_peak_db": -1.5,
+        "audio_lufs": -11.0,
+        "audio_peak_db": -1.0,
+        "min_syllables": 1800,
+        "min_scenes": 16,
         "narration_pauses": {
             "short_sentence": 0.20, "sentence": 0.28, "minor": 0.16,
             "opening_short_sentence": 0.16, "opening_sentence": 0.20,

@@ -609,7 +609,8 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None, p
                 'no chrome profile workers available', 'no close frame received or sent',
                 'cdp_transport_closed', 'connection closed', 'failed to fetch',
                 'captcha_failed', 'no_at_token', 'js exception', 'ogiz0b failed',
-                'public_error_unsafe_generation', 'public_error_unusual_activity'
+                'public_error_unsafe_generation', 'public_error_unusual_activity',
+                'flow_provider_blocked',
             )
             if any(pat in str(conflict.get('error', '')).lower() for pat in transient_errors):
                 conflict.update(
@@ -807,7 +808,8 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None, p
                                      'cannot connect to chrome', 'endpoint ownership unavailable',
                                      'no chrome profile workers available', 'no close frame received or sent',
                                      'cdp_transport_closed', 'connection closed', 'failed to fetch',
-                                     'captcha_failed', 'no_at_token', 'js exception')
+                                     'captcha_failed', 'no_at_token', 'js exception',
+                                     'flow_provider_blocked', 'public_error_unusual_activity')
             err_msg = str(ex).lower()
             not_sub = getattr(ex, 'generation_submitted', None) is False or any(pat in err_msg for pat in pre_submission_errors)
             state = 'generated' if collection_only or getattr(ex, 'collection_only', False) else (

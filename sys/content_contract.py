@@ -65,6 +65,11 @@ def validate_brief(root,b):
     errors.append(error('PACKAGING_CONTRACT', 'packaging', pw, 'Đảm bảo youtube_title <= 55 ký tự, thumbnail_spec có text_overlay 2-4 từ in hoa và đúng ngách học thuật.'))
   except ImportError:
    pass
+ try:
+  from pillars import get_pillar
+  get_pillar(b.get('channel_pillar') or (b.get('packaging') or {}).get('channel_pillar'))
+ except ValueError as ex:
+  errors.append(error('UNKNOWN_PILLAR','channel_pillar',str(ex),'Chọn pillar có trong sys/pillars.py.'))
  if b.get('style'):
   try:
    from flow_prompts import find_visual_cliche
@@ -99,6 +104,9 @@ def validate_content(root,b,revision,bhash,p):
  needs_en='en' in languages(b)
  # quote_en is only defined on the content-v3 coverage schema; content-v2 has no field to satisfy this with.
  check_coverage_en=needs_en and p.get('schema_version')=='3.0'
+ from pillars import check_screen_capture
+ for msg in check_screen_capture(b,p['scenes']):
+  fail(msg.split(':',1)[0],'scenes',msg,'Hỏi người dùng nguồn bản ghi màn hình hoặc bỏ cảnh screen_capture.')
  covered=set()
  for c in p['coverage']:
   s=scenes.get(c['scene_id'])

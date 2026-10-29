@@ -330,7 +330,10 @@ def start(system_root, *, grant, source, timeout=15, runner=None, inspect_proces
         data_root.mkdir(parents=True, exist_ok=True)
         command = [value['executable_path'], '--user-data-dir=' + str(data_root),
                    '--profile-directory=' + value['flow_profile_directory'], '--remote-debugging-address=127.0.0.1',
-                   '--remote-debugging-port=0', '--no-first-run', value['tool_url']]
+                   '--remote-debugging-port=0', '--no-first-run',
+                   '--disable-component-update',
+                   '--disable-features=OptimizationGuideModelDownloading,OptimizationGuideOnDeviceModel,OptimizationHints',
+                   value['tool_url']]
         # No no-sandbox, remote-allow-origins, credentials or copied browser data.
         process = (runner or subprocess.Popen)(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                                                start_new_session=True)

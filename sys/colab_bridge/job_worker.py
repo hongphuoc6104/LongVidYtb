@@ -245,7 +245,9 @@ def run(bundle_path, output_dir, expected_id, expected_worker):
             scenes = _build_timeline(request["content"], request["images"], audio, language, plan["aspect_ratio"], load)
             if brief.get("visual_pacing_profile") == "full_frame_v1" and brief.get("format_profile") != "short_9x16":
                 pacing = load("vp_visual_pacing", "visual_pacing.py")
-                errors = pacing.check_see_say_beat_density(scenes)
+                errors = pacing.check_see_say_beat_density(
+                    scenes, format_profile=plan.get("format_profile", brief.get("format_profile"))
+                )
                 (output / f"pacing-{language}-{plan['aspect_ratio'].replace(':', 'x')}.json").write_text(
                     json.dumps(
                         {"profile": "full_frame_v1", "errors": errors, "timeline": scenes}, ensure_ascii=False, indent=2

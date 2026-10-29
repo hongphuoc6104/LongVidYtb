@@ -2,6 +2,15 @@
 
 This file archives older or superseded PLAYBOOK.md entries to keep `PLAYBOOK.md <= 200` lines.
 
+### [ERR-20261018-04] Bound Colab download path fallback
+- **Triệu chứng (Symptom):** Three transport regressions fail because a broad download exception handler doubles collection attempts, including timeouts.
+- **Tái hiện E2E (Reproduction Path):** Run `pytest sys/tests/test_colab_tts.py sys/tests/test_remote_render.py sys/tests/test_colab_download_paths.py`; the pre-fix recovery-limit test observes six calls instead of three.
+- **Nguyên nhân cốt lõi (Root Cause):** Absolute-to-relative path fallback catches every exception instead of distinguishing a confirmed missing-file response from an uncertain operation outcome.
+- **Giả định sai (Wrong Assumptions):** Any download failure means the path syntax is wrong and is safe to retry immediately.
+- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Classify sanitized missing-file errors and share one typed download helper for TTS/render. Only a confirmed missing file under /content permits one relative-path retry; other failures preserve the original recovery contract. Tests use isolated transport fixtures, not live Colab observations.
+- **Quy tắc phòng ngừa vàng (Golden Rule):** Never multiply durable retry budgets on timeouts, auth/session failures or unknown errors; fallback requires a specific, observed path error.
+
+
 ### [ERR-20261017-02] Xuất Bản Đa Nền Tảng (`vp-omni-platform`) & Giữ Khóa Profile Flow CDP
 - **Triệu chứng (Symptom):** Sinh trùng ảnh giữa các tỷ lệ khung hình hoặc mất liên kết profile trình duyệt cố định khi chạy đồng thời các tác vụ ảnh.
 - **Tái hiện E2E (Reproduction Path):** Chạy `pytest sys/tests/test_omni_platform.py sys/tests/test_flow_cdp_bridge.py -v`.
@@ -108,3 +117,27 @@ This file archives older or superseded PLAYBOOK.md entries to keep `PLAYBOOK.md 
 - **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** (1) Đổi sang đường cong easing đối xứng êm ái hai đầu vận tốc bằng 0 (`bezier(0.42, 0, 0.58, 1)` v.v.); (2) Chuyển rung camera thành trôi chậm hữu cơ vô cực (tần số thấp ~0.1Hz, biên độ $\le 1.2$px, pha trôi liên tục theo thời gian thực `t`, loại bỏ triệt để `microRot`); (3) Overdamp cú `punch_in` (damping 26, scale 1.14→1.06, rung 5px suy giảm theo $t^2$); (4) Mở rộng pool 8 kiểu chuyển động (`zoom_in`, `zoom_out`, `pan_left`, `pan_right`, `pan_up`, `pan_down`, `drift_diag_in`, `drift_diag_out`), chọn theo shuffle-bag seed triệt tiêu lặp lại trong cửa sổ 3 nhịp và chặn 2 cú zoom cùng chiều liên tiếp; (5) Hàm `cameraVariation` băm xác định theo seed sinh biên độ zoom/pan và đường cong bezier mềm mại biến thiên theo từng beat.
 - **Quy tắc phòng ngừa vàng (Golden Rule):** Mọi chuyển động camera trên ảnh tĩnh phải đạt vận tốc tiệm cận 0 tại hai đầu chuyển cảnh, cấm áp dụng biến đổi xoay vi mô `rotate()` gây vỡ hạt/shimmer điểm ảnh, và chu kỳ camera dự phòng phải dùng bộ chọn shuffle-bag có cửa sổ khử lặp $\ge 3$ nhịp với biên độ điều biến theo seed.
 
+### [ERR-20261018-02] Calm Camera Playback and Composition Continuity
+- **Triệu chứng (Symptom):** Zoom pumping and framing jumps persist after reducing amplitudes and disabling breathing drift, particularly at rapid variation cuts.
+- **Tái hiện E2E (Reproduction Path):** Run `sys/.venv/bin/python -m pytest sys/tests/test_full_frame_pipeline.py sys/tests/test_renderer_effects.py -q`. Sample the executable camera path at 24/30/60 fps, including a base image followed by variations at 1.15s and 2.19s with conflicting directions and focal origins. This proves trajectory contracts, not rendered-media comfort.
+- **Nguyên nhân cốt lõi (Root Cause):** Per-beat camera time and randomized amplitudes reset at each image; punch bypasses velocity caps with a spring and shake; outgoing dissolves reuse incoming transforms and framing. Camera-intent diversity was treated as a requirement to move on every beat.
+- **Giả định sai (Wrong Assumptions):** Lowering individual amplitudes or adding GPU transform hints guarantees visual comfort; alternating camera directions prevents pumping; zero endpoint velocity alone prevents a positional jump between two different camera paths.
+- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Use a deterministic composition-level calm plan: hold short (<2.4s), macro and diagram shots; suppress pans/slides/shake and full-frame line-boil; map punch to a gentle push with <=1.5% zoom and <=0.004/s peak scale velocity including overscan. Share time/focal origin/framing across variations, retain outgoing dissolve framing and enforce 4s rest across scene boundaries. Regression tests execute the real shared camera module, test seek order, boundary continuity and speed. Real Flow image quality and remote MP4 comfort still require visual acceptance after rerendering.
+- **Quy tắc phòng ngừa vàng (Golden Rule):** Keep authored semantic diversity separate from executed motion. Plan camera movement over a continuous composition, budget peak velocity after easing, and test positional continuity at edits. Never certify perceptual smoothness from unit tests alone.
+
+### [ERR-20261018-03] Format-aware narration pause planning
+- **Triệu chứng (Symptom):** Explicit-output jobs insert 0.50 s after every sentence and 0.70 s after scenes; the sampled long WAV spends 18.9% on inserted silence despite calibrated settings in config.
+- **Tái hiện E2E (Reproduction Path):** Inspect saved request segments and WAV padding; run `pytest sys/tests/test_narration_pauses.py sys/tests/test_colab_worker.py`. Synthetic-model PCM proves assembly, not listening quality.
+- **Nguyên nhân cốt lõi (Root Cause):** Only legacy tts_pause was consumed; calibrated fields were unused and secondary tracks bypassed sentence planning.
+- **Giả định sai (Wrong Assumptions):** Adding config values changes runtime timing, SC01 forbids all automatic breaths, or an image cut requires a voice pause.
+- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Implement format_v1 in format_profiles/narration_pauses, route both languages, preserve authored tags/learner holds and include per-boundary provenance in request identity. See [acceptance plan](sys/docs/narration-pause-implementation-plan.md); real-media acceptance remains pending.
+- **Quy tắc phòng ngừa vàng (Golden Rule):** Resolve pause policy from language outputs, count each boundary once, keep legacy snapshots immutable and verify PCM before claiming timing; listening is required before claiming naturalness.
+
+
+### [ERR-20261023-02] Giọng Đọc Nhỏ & Thì Thầm Trên TikTok, Tăng Âm Lượng Bị Phô (AUDIO_MASTERING)
+- **Triệu chứng (Symptom):** Narration đăng TikTok nhỏ hơn hẳn video khác, cảm giác thì thầm; tăng âm lượng thì giọng bị phô/gắt.
+- **Tái hiện E2E (Reproduction Path):** Master `sys/assets/voices/viet_narrator/sample.wav` với chuỗi cũ ở `audio_lufs=-11`: chỉ đạt -12.4 LUFS, dải >3 kHz thấp hơn toàn dải ~25 dB.
+- **Nguyên nhân cốt lõi (Root Cause):** OmniVoice tối & nhiều hơi; chuỗi cũ còn cắt -2.5 dB ở 7 kHz và không có compressor, crest factor cao khiến limiter phải ép mạnh (phô) mà vẫn không đạt target; target -14 LUFS quá nhỏ cho TikTok.
+- **Giả định sai (Wrong Assumptions):** Cho rằng chỉ cần limiter là đạt loudness mà giữ được ngữ điệu; cho rằng mọi nền tảng đều tự chuẩn hóa về -14 LUFS.
+- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** `audio_processing.VOICE_CHAIN` (highpass 80, -2 dB@250, +3.5 dB@3.2k, deesser, 2 tầng acompressor nhẹ) + vòng hiệu chỉnh gain sau limiter; một cấu hình duy nhất `sys/config.json` `audio_lufs=-11`, `audio_peak_db=-1.0` cho mọi format. Mẫu thật: -11.7 LUFS, -1.1 dBTP, khoảng cách dải cao 16.4 dB; frame giữ nguyên; 116 tests pass; người dùng nghe và chốt.
+- **Quy tắc phòng ngừa vàng (Golden Rule):** Một giọng, một cấu hình mastering trong `config.json`; không tách loudness theo nền tảng; luôn đo LUFS/TP/dải cao trên giọng thật trước khi đổi chuỗi.

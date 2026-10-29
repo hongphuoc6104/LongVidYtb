@@ -1,0 +1,1232 @@
+{
+  "schema_version": "3.0",
+  "brief_revision": 1,
+  "brief_hash": "489a96c462e11d05ce8cca85dc564500e9306ee619f98f0f4571d9445a154269",
+  "topic": "Mắt Bạn Đang Lừa Dối Bạn? (Bản Dọc 60 Giây)",
+  "duration": {
+    "min_seconds": 45.0,
+    "max_seconds": 65.0
+  },
+  "style": "Hand-drawn 2D Vietnamese indie doodle explainer illustration (raw freehand MS-Paint / Flash webcomic aesthetic). Use clear black outer contours (#000000) with visible unpolished hand-drawn wobble, slightly crooked freehand lines drawn without a ruler, imperfect corner joints, and uniform marker stroke weight across both foreground and background (strictly forbid lighter background linework, Bezier curve smoothing, sleek rounded vector icons, or geometric perfection). Fill all shapes with 100% unshaded flat MS-Paint paint-bucket solid hex colors: warm paper-cream (#F8F0DC), muted apricot-peach (#F2B88B), soft sage-green (#93A88C), pale ice-blue (#CBE0E0), flat night slate-navy (#2E4361), or stark pure white (#FFFFFF). Strictly 2D front-on or side-on orthographic flat paper-cutout staging; never use 3/4 isometric furniture perspective, two-tone bevel shading, floating black oval drop shadows, floor cast shadows, glowing lamp light cones, warm sepia AI color grading, gradients, photorealism, or 3D rendering. Draw a complete scene image.",
+  "required_points": [
+    "Cú tát ly cà phê",
+    "Vũ trụ không màu sắc",
+    "Cơ chế nén không-thời gian",
+    "Định lý FBT chấn động",
+    "Ẩn dụ màn hình máy tính",
+    "Thức tỉnh giữa đời thực"
+  ],
+  "characters": [
+    {
+      "id": "CH01",
+      "name": "Người quan sát nhận thức",
+      "appearance": "Iconic 2D Vietnamese indie webcomic doodle stickman (Nguệch Ngoạc / Vẽ Vời / Xấu Vê Nờ style): oversized slightly lopsided hand-drawn pure-white (#FFFFFF) bald circle head with bold pitch-black (#000000) marker outline, tiny solid-black dot eyes placed low on the face leaving a large open upper forehead/cranium, minimal single-stroke eyebrows and mouth, no nose or ears, thin single-line solid-black wire/stick arms (single black stroke with zero arm thickness) ending in small round white circle hands",
+      "outfit": "Unshaded 100% flat MS-Paint paint-bucket solid cerulean-blue (#3B82C4) simple pill/rectangular T-shirt torso and simple flat slate-gray (#8C857B) straight trousers or single-line black stick legs, with zero clothing folds, zero collar details, and zero shading gradients"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "SC01",
+      "title": "Cú tát ly cà phê",
+      "purpose": "Triển khai bước 1: cú tát ly cà phê",
+      "action": "A single simple white ceramic mug with dark coffee outline in center of flat solid cream canvas (#F8F0DC), zero pencils, zero desk clutter, zero decorative borders, eighty percent blank open space.",
+      "setting": "Solid warm cream canvas (#F8F0DC).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Ly cà phê bạn đang cầm trên tay, thực ra không có màu nâu hay vị đắng. Bên ngoài đôi mắt của bạn, thế giới không hề có sẵn màu sắc hay âm thanh.",
+      "requirements": [
+        "R01"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC01_I1",
+          "description": "Solid warm cream canvas (#F8F0DC). A single simple white ceramic mug with dark coffee outline in center of flat solid cream canvas (#F8F0DC), zero pencils, zero desk clutter, zero decorative borders, eighty percent blank open space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A single simple white ceramic mug with dark coffee outline in center of flat solid cream canvas (#F8F0DC), zero pencils, zero desk clutter, zero decorative borders, eighty percent blank open space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop",
+          "has_character": false,
+          "explanation": {
+            "quote": "Ly cà phê bạn đang cầm trên tay,",
+            "relation": "context",
+            "source_terms": [
+              "Ly"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC01_I2",
+          "description": "Solid warm cream canvas (#F8F0DC). Stickman in blue shirt stands in center of plain cream canvas (#F8F0DC), looking down at a tiny coffee mug with curious eyes, zero desk, zero room interior, zero decorative borders, eighty percent negative space.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Stickman in blue shirt stands in center of plain cream canvas (#F8F0DC), looking down at a tiny coffee mug with curious eyes, zero desk, zero room interior, zero decorative borders, eighty percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "thực ra không có màu nâu hay vị đắng.",
+            "relation": "context",
+            "source_terms": [
+              "thực"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC01_I3",
+          "description": "Solid warm cream canvas (#F8F0DC). A simple minimalist human head profile outline in pure black marker on flat solid cream canvas (#F8F0DC), zero brain details, zero decorative borders, eighty-five percent blank negative space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A simple minimalist human head profile outline in pure black marker on flat solid cream canvas (#F8F0DC), zero brain details, zero decorative borders, eighty-five percent blank negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Bên ngoài đôi mắt của bạn,",
+            "relation": "context",
+            "source_terms": [
+              "Bên"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC01_I4",
+          "description": "Solid warm cream canvas (#F8F0DC). A simple doodle sphere outline drawn with a single black marker line in center of plain white canvas (#FFFFFF), zero color fill, zero patterns, zero decorative borders, eighty-five percent negative space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A simple doodle sphere outline drawn with a single black marker line in center of plain white canvas (#FFFFFF), zero color fill, zero patterns, zero decorative borders, eighty-five percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "thế giới không hề có sẵn màu sắc hay âm thanh.",
+            "relation": "context",
+            "source_terms": [
+              "thế"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC01_B1",
+          "image_id": "SC01_I1",
+          "purpose": "Triển khai bước 1: cú tát ly cà phê",
+          "anchor": {
+            "vi": {
+              "quote": "Ly cà phê bạn đang cầm trên tay,",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B2",
+          "image_id": "SC01_I2",
+          "purpose": "Triển khai bước 1: cú tát ly cà phê",
+          "anchor": {
+            "vi": {
+              "quote": "thực ra không có màu nâu hay vị đắng.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B3",
+          "image_id": "SC01_I3",
+          "purpose": "Triển khai bước 1: cú tát ly cà phê",
+          "anchor": {
+            "vi": {
+              "quote": "Bên ngoài đôi mắt của bạn,",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC01_B4",
+          "image_id": "SC01_I4",
+          "purpose": "Triển khai bước 1: cú tát ly cà phê",
+          "anchor": {
+            "vi": {
+              "quote": "thế giới không hề có sẵn màu sắc hay âm thanh.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "narrative_warm",
+      "narrative_phase": "lived_friction"
+    },
+    {
+      "id": "SC02",
+      "title": "Vũ trụ không màu sắc",
+      "purpose": "Triển khai bước 2: vũ trụ không màu sắc",
+      "action": "A single straight horizontal black line across center of flat pure white canvas (#FFFFFF), zero waves, zero vibrations, zero decorative borders, ninety percent blank open space.",
+      "setting": "Clean pure white background (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Nơi đó chỉ có các bước sóng vô hình. Chính bộ não đã tự tay pha màu, và tự thêm vào những âm thanh quen thuộc. Tất cả chỉ để giúp bạn dễ sống hơn mà thôi.",
+      "requirements": [
+        "R02"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC02_I1",
+          "description": "Clean pure white background (#FFFFFF). A single straight horizontal black line across center of flat pure white canvas (#FFFFFF), zero waves, zero vibrations, zero decorative borders, ninety percent blank open space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A single straight horizontal black line across center of flat pure white canvas (#FFFFFF), zero waves, zero vibrations, zero decorative borders, ninety percent blank open space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "visual_diagram",
+          "has_character": false,
+          "explanation": {
+            "quote": "Nơi đó chỉ có các bước sóng vô hình.",
+            "relation": "context",
+            "source_terms": [
+              "Nơi"
+            ],
+            "visual_terms": [
+              "Clean"
+            ]
+          }
+        },
+        {
+          "id": "SC02_I2",
+          "description": "Clean pure white background (#FFFFFF). Stickman in blue shirt stands alone in center of plain white canvas (#FFFFFF), holding a simple painter brush, smiling gently, zero easel, zero palette clutter, zero borders, eighty-five percent negative space.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Stickman in blue shirt stands alone in center of plain white canvas (#FFFFFF), holding a simple painter brush, smiling gently, zero easel, zero palette clutter, zero borders, eighty-five percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Chính bộ não đã tự tay pha màu,",
+            "relation": "context",
+            "source_terms": [
+              "Chính"
+            ],
+            "visual_terms": [
+              "Clean"
+            ]
+          }
+        },
+        {
+          "id": "SC02_I3",
+          "description": "Clean pure white background (#FFFFFF). A single clean blank square picture frame outline in center of flat white canvas (#FFFFFF) with a tiny black flower doodle inside, zero floral garlands, zero decorative borders, eighty-five percent negative space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A single clean blank square picture frame outline in center of flat white canvas (#FFFFFF) with a tiny black flower doodle inside, zero floral garlands, zero decorative borders, eighty-five percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "và tự thêm vào những âm thanh quen thuộc.",
+            "relation": "context",
+            "source_terms": [
+              "và"
+            ],
+            "visual_terms": [
+              "Clean"
+            ]
+          }
+        },
+        {
+          "id": "SC02_I4",
+          "description": "Clean pure white background (#FFFFFF). Stickman in blue shirt stands calmly with hands at sides in center of plain white canvas (#FFFFFF), smiling peacefully, zero background objects, zero decorative borders, eighty-five percent negative space.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC02_I2",
+          "preserve": "Keep the exact camera angle, room geometry and props in Clean pure white background (#FFFFFF).. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Stickman in blue shirt stands calmly with hands at sides in center of plain white canvas (#FFFFFF), smiling peacefully, zero background objects, zero decorative borders, eighty-five percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation",
+          "allow_expression_shift": true,
+          "has_character": true,
+          "explanation": {
+            "quote": "Tất cả chỉ để giúp bạn dễ sống hơn mà thôi.",
+            "relation": "context",
+            "source_terms": [
+              "Tất"
+            ],
+            "visual_terms": [
+              "Clean"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC02_B1",
+          "image_id": "SC02_I1",
+          "purpose": "Triển khai bước 2: vũ trụ không màu sắc",
+          "anchor": {
+            "vi": {
+              "quote": "Nơi đó chỉ có các bước sóng vô hình.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B2",
+          "image_id": "SC02_I2",
+          "purpose": "Triển khai bước 2: vũ trụ không màu sắc",
+          "anchor": {
+            "vi": {
+              "quote": "Chính bộ não đã tự tay pha màu,",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B3",
+          "image_id": "SC02_I3",
+          "purpose": "Triển khai bước 2: vũ trụ không màu sắc",
+          "anchor": {
+            "vi": {
+              "quote": "và tự thêm vào những âm thanh quen thuộc.",
+              "occurrence": 1
+            }
+          },
+          "effect": "punch_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC02_B4",
+          "image_id": "SC02_I4",
+          "purpose": "Triển khai bước 2: vũ trụ không màu sắc",
+          "anchor": {
+            "vi": {
+              "quote": "Tất cả chỉ để giúp bạn dễ sống hơn mà thôi.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "empirical_conflict"
+    },
+    {
+      "id": "SC03",
+      "title": "Cơ chế nén không-thời gian",
+      "purpose": "Triển khai bước 3: cơ chế nén không-thời gian",
+      "action": "Stickman in blue shirt raises an open hand in gentle inquiry in center of flat solid cream canvas (#F8F0DC), zero decorative borders, zero corner clutter, eighty-five percent negative space.",
+      "setting": "Solid ivory neutral field (#F8F0DC).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Tại sao não lại làm như vậy? Nếu phải soi rõ từng hạt bụi li ti. Cái đầu bạn sẽ kiệt sức vì quá tải. Không gian ba chiều chỉ là định dạng nén dữ liệu của não.",
+      "requirements": [
+        "R03"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC02"
+      ],
+      "images": [
+        {
+          "id": "SC03_I1",
+          "description": "Solid ivory neutral field (#F8F0DC). Stickman in blue shirt raises an open hand in gentle inquiry in center of flat solid cream canvas (#F8F0DC), zero decorative borders, zero corner clutter, eighty-five percent negative space.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Stickman in blue shirt raises an open hand in gentle inquiry in center of flat solid cream canvas (#F8F0DC), zero decorative borders, zero corner clutter, eighty-five percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Tại sao não lại làm như vậy?",
+            "relation": "context",
+            "source_terms": [
+              "Tại"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC03_I2",
+          "description": "Solid ivory neutral field (#F8F0DC). A single simple flat 2D square outline in center of flat pure cream canvas (#F8F0DC), zero 3D cubes, zero arrows, zero pencils, zero hanging garlands, zero stationery clutter, zero decorative borders, eighty-five percent blank space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A single simple flat 2D square outline in center of flat pure cream canvas (#F8F0DC), zero 3D cubes, zero arrows, zero pencils, zero hanging garlands, zero stationery clutter, zero decorative borders, eighty-five percent blank space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "visual_diagram",
+          "has_character": false,
+          "explanation": {
+            "quote": "Nếu phải soi rõ từng hạt bụi li ti.",
+            "relation": "context",
+            "source_terms": [
+              "Nếu"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC03_I3",
+          "description": "Solid ivory neutral field (#F8F0DC). Stickman in blue shirt touches temples gently with both hands in center of flat cream canvas (#F8F0DC), closed eyes, zero clutter, zero decorative borders, eighty-five percent negative space.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC03_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in Solid ivory neutral field (#F8F0DC).. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Stickman in blue shirt touches temples gently with both hands in center of flat cream canvas (#F8F0DC), closed eyes, zero clutter, zero decorative borders, eighty-five percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation",
+          "has_character": true,
+          "explanation": {
+            "quote": "Cái đầu bạn sẽ kiệt sức vì quá tải.",
+            "relation": "context",
+            "source_terms": [
+              "Cái"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC03_I4",
+          "description": "Solid ivory neutral field (#F8F0DC). A single simple vertical tube thermometer outline with a solid red liquid column at midpoint in center of plain cream canvas (#F8F0DC), zero smoke, zero decorative borders, eighty-five percent negative space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A single simple vertical tube thermometer outline with a solid red liquid column at midpoint in center of plain cream canvas (#F8F0DC), zero smoke, zero decorative borders, eighty-five percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Không gian ba chiều chỉ là định dạng nén dữ liệu của não.",
+            "relation": "context",
+            "source_terms": [
+              "Không"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC03_B1",
+          "image_id": "SC03_I1",
+          "purpose": "Triển khai bước 3: cơ chế nén không-thời gian",
+          "anchor": {
+            "vi": {
+              "quote": "Tại sao não lại làm như vậy?",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B2",
+          "image_id": "SC03_I2",
+          "purpose": "Triển khai bước 3: cơ chế nén không-thời gian",
+          "anchor": {
+            "vi": {
+              "quote": "Nếu phải soi rõ từng hạt bụi li ti.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B3",
+          "image_id": "SC03_I3",
+          "purpose": "Triển khai bước 3: cơ chế nén không-thời gian",
+          "anchor": {
+            "vi": {
+              "quote": "Cái đầu bạn sẽ kiệt sức vì quá tải.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC03_B4",
+          "image_id": "SC03_I4",
+          "purpose": "Triển khai bước 3: cơ chế nén không-thời gian",
+          "anchor": {
+            "vi": {
+              "quote": "Không gian ba chiều chỉ là định dạng nén dữ liệu của não.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "structural_model"
+    },
+    {
+      "id": "SC04",
+      "title": "Định lý FBT chấn động",
+      "purpose": "Triển khai bước 4: định lý fbt chấn động",
+      "action": "Two tiny simple stick figures standing calmly on opposite sides of center on flat pure white canvas (#FFFFFF), zero digital grids, zero borders, eighty-five percent negative space.",
+      "setting": "Pure stark white field (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Các nhà khoa học đã làm thử nghiệm. Nhóm mải nhìn sự thật đều bị đói lả. Sinh vật thấy sự thật tuyệt chủng trước kẻ chỉ thấy sinh tồn. Chỉ kẻ biết thích nghi mới sống sót.",
+      "requirements": [
+        "R04"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC01"
+      ],
+      "images": [
+        {
+          "id": "SC04_I1",
+          "description": "Pure stark white field (#FFFFFF). Two tiny simple stick figures standing calmly on opposite sides of center on flat pure white canvas (#FFFFFF), zero digital grids, zero borders, eighty-five percent negative space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "Two tiny simple stick figures standing calmly on opposite sides of center on flat pure white canvas (#FFFFFF), zero digital grids, zero borders, eighty-five percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "visual_diagram",
+          "has_character": false,
+          "explanation": {
+            "quote": "Các nhà khoa học đã làm thử nghiệm.",
+            "relation": "context",
+            "source_terms": [
+              "Các"
+            ],
+            "visual_terms": [
+              "Pure"
+            ]
+          }
+        },
+        {
+          "id": "SC04_I2",
+          "description": "Pure stark white field (#FFFFFF). A single simple doodle human eye outline in center of flat pure white canvas (#FFFFFF), calm blue iris, zero decorative borders, zero pedestals, eighty-five percent negative space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A single simple doodle human eye outline in center of flat pure white canvas (#FFFFFF), calm blue iris, zero decorative borders, zero pedestals, eighty-five percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Nhóm mải nhìn sự thật đều bị đói lả.",
+            "relation": "context",
+            "source_terms": [
+              "Nhóm"
+            ],
+            "visual_terms": [
+              "Pure"
+            ]
+          }
+        },
+        {
+          "id": "SC04_I3",
+          "description": "Pure stark white field (#FFFFFF). A simple minimalist doodle tombstone outline in center of flat pure white canvas (#FFFFFF), zero flowers, zero grass, zero decorative borders, ninety percent negative space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A simple minimalist doodle tombstone outline in center of flat pure white canvas (#FFFFFF), zero flowers, zero grass, zero decorative borders, ninety percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Sinh vật thấy sự thật tuyệt chủng trước kẻ chỉ thấy sinh tồn.",
+            "relation": "context",
+            "source_terms": [
+              "Sinh"
+            ],
+            "visual_terms": [
+              "Pure"
+            ]
+          }
+        },
+        {
+          "id": "SC04_I4",
+          "description": "Pure stark white field (#FFFFFF). A simple single downward red trend line dropping gently in center of flat pure white canvas (#FFFFFF), zero grids, zero charts, zero decorative borders, eighty-five percent open space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A simple single downward red trend line dropping gently in center of flat pure white canvas (#FFFFFF), zero grids, zero charts, zero decorative borders, eighty-five percent open space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "visual_diagram",
+          "has_character": false,
+          "explanation": {
+            "quote": "Chỉ kẻ biết thích nghi mới sống sót.",
+            "relation": "context",
+            "source_terms": [
+              "Chỉ"
+            ],
+            "visual_terms": [
+              "Pure"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC04_B1",
+          "image_id": "SC04_I1",
+          "purpose": "Triển khai bước 4: định lý fbt chấn động",
+          "anchor": {
+            "vi": {
+              "quote": "Các nhà khoa học đã làm thử nghiệm.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B2",
+          "image_id": "SC04_I2",
+          "purpose": "Triển khai bước 4: định lý fbt chấn động",
+          "anchor": {
+            "vi": {
+              "quote": "Nhóm mải nhìn sự thật đều bị đói lả.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B3",
+          "image_id": "SC04_I3",
+          "purpose": "Triển khai bước 4: định lý fbt chấn động",
+          "anchor": {
+            "vi": {
+              "quote": "Sinh vật thấy sự thật tuyệt chủng trước kẻ chỉ thấy sinh tồn.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B4",
+          "image_id": "SC04_I4",
+          "purpose": "Triển khai bước 4: định lý fbt chấn động",
+          "anchor": {
+            "vi": {
+              "quote": "Chỉ kẻ biết thích nghi mới sống sót.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "structural_model"
+    },
+    {
+      "id": "SC05",
+      "title": "Ẩn dụ màn hình máy tính",
+      "purpose": "Triển khai bước 5: ẩn dụ màn hình máy tính",
+      "action": "A simple minimalist desktop trash bin icon rendered in single black marker outline in center of flat solid cream canvas (#F8F0DC), zero paper clutter outside, zero decorative borders, eighty-five percent negative space.",
+      "setting": "Solid warm cream canvas (#F8F0DC).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Biểu tượng thùng rác chỉ là hình vẽ. Nó che đi những vi mạch phức tạp. Coi trọng biểu tượng nhưng không ngộ nhận nó là sự thật. Đừng để những con số làm bạn buồn.",
+      "requirements": [
+        "R05"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC03"
+      ],
+      "images": [
+        {
+          "id": "SC05_I1",
+          "description": "Solid warm cream canvas (#F8F0DC). A simple minimalist desktop trash bin icon rendered in single black marker outline in center of flat solid cream canvas (#F8F0DC), zero paper clutter outside, zero decorative borders, eighty-five percent negative space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A simple minimalist desktop trash bin icon rendered in single black marker outline in center of flat solid cream canvas (#F8F0DC), zero paper clutter outside, zero decorative borders, eighty-five percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "macro_prop",
+          "has_character": false,
+          "explanation": {
+            "quote": "Biểu tượng thùng rác chỉ là hình vẽ.",
+            "relation": "context",
+            "source_terms": [
+              "Biểu"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC05_I2",
+          "description": "Solid warm cream canvas (#F8F0DC). A single small rectangular computer chip icon outline with three straight black pins on each side in center of flat cream canvas (#F8F0DC), zero dashed borders, zero micro-circuits, zero decorative border lines, eighty-five percent negative space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A single small rectangular computer chip icon outline with three straight black pins on each side in center of flat cream canvas (#F8F0DC), zero dashed borders, zero micro-circuits, zero decorative border lines, eighty-five percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "visual_diagram",
+          "has_character": false,
+          "explanation": {
+            "quote": "Nó che đi những vi mạch phức tạp.",
+            "relation": "context",
+            "source_terms": [
+              "Nó"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC05_I3",
+          "description": "Solid warm cream canvas (#F8F0DC). A simple single doodle umbrella outline resting on flat cream ground (#F8F0DC), zero rain streaks, zero plants, zero decorative borders, eighty-five percent negative space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A simple single doodle umbrella outline resting on flat cream ground (#F8F0DC), zero rain streaks, zero plants, zero decorative borders, eighty-five percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Coi trọng biểu tượng nhưng không ngộ nhận nó là sự thật.",
+            "relation": "context",
+            "source_terms": [
+              "Coi"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC05_I4",
+          "description": "Solid warm cream canvas (#F8F0DC). A single minimalist smartphone outline with a blank dark screen in center of flat cream surface (#F8F0DC), zero apps, zero decorative borders, eighty-five percent negative space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A single minimalist smartphone outline with a blank dark screen in center of flat cream surface (#F8F0DC), zero apps, zero decorative borders, eighty-five percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Đừng để những con số làm bạn buồn.",
+            "relation": "context",
+            "source_terms": [
+              "Đừng"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC05_B1",
+          "image_id": "SC05_I1",
+          "purpose": "Triển khai bước 5: ẩn dụ màn hình máy tính",
+          "anchor": {
+            "vi": {
+              "quote": "Biểu tượng thùng rác chỉ là hình vẽ.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B2",
+          "image_id": "SC05_I2",
+          "purpose": "Triển khai bước 5: ẩn dụ màn hình máy tính",
+          "anchor": {
+            "vi": {
+              "quote": "Nó che đi những vi mạch phức tạp.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B3",
+          "image_id": "SC05_I3",
+          "purpose": "Triển khai bước 5: ẩn dụ màn hình máy tính",
+          "anchor": {
+            "vi": {
+              "quote": "Coi trọng biểu tượng nhưng không ngộ nhận nó là sự thật.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B4",
+          "image_id": "SC05_I4",
+          "purpose": "Triển khai bước 5: ẩn dụ màn hình máy tính",
+          "anchor": {
+            "vi": {
+              "quote": "Đừng để những con số làm bạn buồn.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "narrative_warm",
+      "narrative_phase": "actionable_resolution"
+    },
+    {
+      "id": "SC06",
+      "title": "Thức tỉnh giữa đời thực",
+      "purpose": "Triển khai bước 6: thức tỉnh giữa đời thực",
+      "action": "Stickman in blue shirt stands calmly in center of flat pure white canvas (#FFFFFF), smiling gently with hands at sides, zero background decor, zero borders, eighty-five percent negative space.",
+      "setting": "Clean serene white field (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Mọi áp lực chỉ do góc nhìn của bạn. Đổi chiếc kính, bạn sẽ thấy lòng nhẹ nhõm. Tặng mình một like nếu thấy hữu ích nhé. Và bấm theo dõi để chúng mình cùng gặp lại nhau nha.",
+      "requirements": [
+        "R06"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC06_I1",
+          "description": "Clean serene white field (#FFFFFF). Stickman in blue shirt stands calmly in center of flat pure white canvas (#FFFFFF), smiling gently with hands at sides, zero background decor, zero borders, eighty-five percent negative space.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Stickman in blue shirt stands calmly in center of flat pure white canvas (#FFFFFF), smiling gently with hands at sides, zero background decor, zero borders, eighty-five percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Mọi áp lực chỉ do góc nhìn của bạn.",
+            "relation": "context",
+            "source_terms": [
+              "Mọi"
+            ],
+            "visual_terms": [
+              "Clean"
+            ]
+          }
+        },
+        {
+          "id": "SC06_I2",
+          "description": "Clean serene white field (#FFFFFF). A simple pair of round black doodle eyeglasses resting in center of flat pure white canvas (#FFFFFF), zero frames, zero decorative borders, eighty-five percent negative space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A simple pair of round black doodle eyeglasses resting in center of flat pure white canvas (#FFFFFF), zero frames, zero decorative borders, eighty-five percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Đổi chiếc kính, bạn sẽ thấy lòng nhẹ nhõm.",
+            "relation": "context",
+            "source_terms": [
+              "Đổi"
+            ],
+            "visual_terms": [
+              "Clean"
+            ]
+          }
+        },
+        {
+          "id": "SC06_I3",
+          "description": "Clean serene white field (#FFFFFF). A simple doodle outline of a thumbs-up like icon drawn with a single black marker line in center of flat pure white canvas (#FFFFFF), zero borders, zero background decor, ninety percent negative space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A simple doodle outline of a thumbs-up like icon drawn with a single black marker line in center of flat pure white canvas (#FFFFFF), zero borders, zero background decor, ninety percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Tặng mình một like nếu thấy hữu ích nhé.",
+            "relation": "context",
+            "source_terms": [
+              "Tặng"
+            ],
+            "visual_terms": [
+              "Clean"
+            ]
+          }
+        },
+        {
+          "id": "SC06_I4",
+          "description": "Clean serene white field (#FFFFFF). Stickman in blue shirt smiles warmly and waves a friendly hand in center of flat pure white canvas (#FFFFFF), zero background decor, zero decorative borders, eighty-five percent negative space.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC06_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in Clean serene white field (#FFFFFF).. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Stickman in blue shirt smiles warmly and waves a friendly hand in center of flat pure white canvas (#FFFFFF), zero background decor, zero decorative borders, eighty-five percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation",
+          "allow_expression_shift": true,
+          "has_character": true,
+          "explanation": {
+            "quote": "Và bấm theo dõi để chúng mình cùng gặp lại nhau nha.",
+            "relation": "context",
+            "source_terms": [
+              "Và"
+            ],
+            "visual_terms": [
+              "Clean"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC06_B1",
+          "image_id": "SC06_I1",
+          "purpose": "Triển khai bước 6: thức tỉnh giữa đời thực",
+          "anchor": {
+            "vi": {
+              "quote": "Mọi áp lực chỉ do góc nhìn của bạn.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC06_B2",
+          "image_id": "SC06_I2",
+          "purpose": "Triển khai bước 6: thức tỉnh giữa đời thực",
+          "anchor": {
+            "vi": {
+              "quote": "Đổi chiếc kính, bạn sẽ thấy lòng nhẹ nhõm.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC06_B3",
+          "image_id": "SC06_I3",
+          "purpose": "Triển khai bước 6: thức tỉnh giữa đời thực",
+          "anchor": {
+            "vi": {
+              "quote": "Tặng mình một like nếu thấy hữu ích nhé.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC06_B4",
+          "image_id": "SC06_I4",
+          "purpose": "Triển khai bước 6: thức tỉnh giữa đời thực",
+          "anchor": {
+            "vi": {
+              "quote": "Và bấm theo dõi để chúng mình cùng gặp lại nhau nha.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "reflective_slow",
+      "narrative_phase": "actionable_resolution"
+    }
+  ],
+  "coverage": [
+    {
+      "requirement_id": "R01",
+      "scene_id": "SC01",
+      "quote": "Ly cà phê bạn đang cầm trên tay, thực ra không có màu nâu hay vị đắng"
+    },
+    {
+      "requirement_id": "R02",
+      "scene_id": "SC02",
+      "quote": "Chính bộ não đã tự tay pha màu, và tự thêm vào những âm thanh quen thuộc"
+    },
+    {
+      "requirement_id": "R03",
+      "scene_id": "SC03",
+      "quote": "Không gian ba chiều chỉ là định dạng nén dữ liệu của não"
+    },
+    {
+      "requirement_id": "R04",
+      "scene_id": "SC04",
+      "quote": "Các nhà khoa học đã làm thử nghiệm"
+    },
+    {
+      "requirement_id": "R05",
+      "scene_id": "SC05",
+      "quote": "Biểu tượng thùng rác chỉ là hình vẽ"
+    },
+    {
+      "requirement_id": "R06",
+      "scene_id": "SC06",
+      "quote": "Mọi áp lực chỉ do góc nhìn của bạn"
+    }
+  ],
+  "outline": [
+    {
+      "scene_id": "SC01",
+      "purpose": "Triển khai bước 1: cú tát ly cà phê",
+      "requirements": [
+        "R01"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC02",
+      "purpose": "Triển khai bước 2: vũ trụ không màu sắc",
+      "requirements": [
+        "R02"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC03",
+      "purpose": "Triển khai bước 3: cơ chế nén không-thời gian",
+      "requirements": [
+        "R03"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC04",
+      "purpose": "Triển khai bước 4: định lý fbt chấn động",
+      "requirements": [
+        "R04"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC05",
+      "purpose": "Triển khai bước 5: ẩn dụ màn hình máy tính",
+      "requirements": [
+        "R05"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC06",
+      "purpose": "Triển khai bước 6: thức tỉnh giữa đời thực",
+      "requirements": [
+        "R06"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    }
+  ],
+  "claims": [
+    {
+      "scene_id": "SC03",
+      "quote": "Không gian ba chiều chỉ là định dạng nén dữ liệu của não.",
+      "language": "vi",
+      "source_id": "SRC02",
+      "fact": "Không gian ba chiều chỉ là định dạng nén dữ liệu của não."
+    },
+    {
+      "scene_id": "SC04",
+      "quote": "Sinh vật thấy sự thật tuyệt chủng trước kẻ chỉ thấy sinh tồn.",
+      "language": "vi",
+      "source_id": "SRC01",
+      "fact": "Sinh vật thấy sự thật tuyệt chủng trước kẻ chỉ thấy sinh tồn."
+    },
+    {
+      "scene_id": "SC05",
+      "quote": "Coi trọng biểu tượng nhưng không ngộ nhận nó là sự thật.",
+      "language": "vi",
+      "source_id": "SRC03",
+      "fact": "Coi trọng biểu tượng nhưng không ngộ nhận nó là sự thật."
+    }
+  ],
+  "revision_response": [],
+  "open_questions": []
+}

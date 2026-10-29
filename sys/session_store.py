@@ -95,3 +95,7 @@ class Sessions:
                 raise ValueError("Pinned request ownership cannot be changed")
             state["pins"][request] = record
         return record
+
+    def unpin(self, request):
+        with locked_json(self.path, self.read) as state:
+            state.setdefault("pins", {}).pop(request, None)

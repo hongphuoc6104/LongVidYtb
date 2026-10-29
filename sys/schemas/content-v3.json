@@ -249,7 +249,8 @@
                     "environment",
                     "concept_metaphor",
                     "visual_diagram",
-                    "cutaway_detail"
+                    "cutaway_detail",
+                    "screen_capture"
                   ]
                 },
                 "allow_expression_shift": {

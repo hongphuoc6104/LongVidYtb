@@ -433,7 +433,9 @@ def ensure_chrome_profiles_launched(
             "--remote-allow-origins=*",
             "--no-first-run",
             "--no-default-browser-check",
-            "--disable-features=CalculateNativeWinOcclusion,IntensiveWakeUpThrottling,AutomaticTabDiscarding,MemorySaverMode",
+            "--disable-component-update",
+            "--host-resolver-rules=MAP edgedl.me.gvt1.com ~NOTFOUND, MAP *.gvt1.com ~NOTFOUND",
+            "--disable-features=CalculateNativeWinOcclusion,IntensiveWakeUpThrottling,AutomaticTabDiscarding,MemorySaverMode,OptimizationGuideModelDownloading,OptimizationGuideOnDeviceModel,OptimizationHints",
             "--disable-background-timer-throttling",
             "--disable-backgrounding-occluded-windows",
             "--disable-renderer-backgrounding",
@@ -800,7 +802,9 @@ class DirectCDPProfileSession:
             payload = flow_rpc.first_payload(raw_text, flow_rpc.RPC_GEN_IMAGE)
         except Exception as ex:
             if "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in str(ex) or "CAPTCHA" in str(ex):
-                raise RuntimeError("FLOW_PROVIDER_BLOCKED: preserve the original session and reconcile; do not resubmit") from ex
+                err_block = RuntimeError("FLOW_PROVIDER_BLOCKED: preserve the original session and reconcile; do not resubmit")
+                err_block.generation_submitted = False
+                raise err_block from ex
             raise
         images = flow_rpc.read_images(payload)
         if not images:
@@ -878,7 +882,9 @@ class DirectCDPProfileSession:
             payload = flow_rpc.first_payload(raw_text, flow_rpc.RPC_GEN_IMAGE)
         except Exception as ex:
             if "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in str(ex) or "CAPTCHA" in str(ex):
-                raise RuntimeError("FLOW_PROVIDER_BLOCKED: preserve the original session and reconcile; do not resubmit") from ex
+                err_block = RuntimeError("FLOW_PROVIDER_BLOCKED: preserve the original session and reconcile; do not resubmit")
+                err_block.generation_submitted = False
+                raise err_block from ex
             raise
         images = flow_rpc.read_images(payload)
         if not images:

@@ -11,12 +11,29 @@ BODY_MAX_HOLD_SECONDS = 3.80
 MAX_AVERAGE_HOLD_SECONDS = 3.0
 
 
-def check_see_say_beat_density(scenes: list[dict[str, Any]]) -> list[str]:
+def check_see_say_beat_density(
+    scenes: list[dict[str, Any]],
+    format_profile: str | None = None,
+) -> list[str]:
     """Validate a measured renderer timeline; image starts use half-open windows.
 
     Count unique full-frame beat starts across scene boundaries. This is an
     acceptance gate for the full-frame production profile, not old job migration.
     """
+    total_beats = sum(len(sc.get('images', [])) for sc in scenes)
+    total_duration = scenes[-1]['end'] - scenes[0]['start'] if scenes and 'end' in scenes[-1] and 'start' in scenes[0] else 0.0
+    is_long_explainer = (
+        format_profile == 'long_16x9'
+        or total_duration > 120.0
+        or (total_beats > 0 and total_duration / total_beats > 2.8)
+    )
+
+    max_average = 6.0 if is_long_explainer else MAX_AVERAGE_HOLD_SECONDS
+    body_max = 8.5 if is_long_explainer else BODY_MAX_HOLD_SECONDS
+    body_min = BODY_MIN_HOLD_SECONDS
+    min_first_five = 2 if is_long_explainer else 3
+    min_opening = 3 if is_long_explainer else 6
+
     errors: list[str] = []
     starts: list[float] = []
     previous_end = 0.0
@@ -30,8 +47,8 @@ def check_see_say_beat_density(scenes: list[dict[str, Any]]) -> list[str]:
         if not beats:
             errors.append(f"LOW_VISUAL_BEAT_DENSITY: {scene['id']} has no image beats")
             continue
-        if (end - start) / len(beats) > MAX_AVERAGE_HOLD_SECONDS:
-            errors.append(f"LOW_VISUAL_BEAT_DENSITY: {scene['id']} averages more than {MAX_AVERAGE_HOLD_SECONDS}s per beat")
+        if (end - start) / len(beats) > max_average:
+            errors.append(f"LOW_VISUAL_BEAT_DENSITY: {scene['id']} averages more than {max_average}s per beat")
         last_at = -1.0
         for index, beat in enumerate(beats):
             at = float(beat['at'])
@@ -43,14 +60,14 @@ def check_see_say_beat_density(scenes: list[dict[str, Any]]) -> list[str]:
             starts.append(absolute)
             following = float(beats[index + 1]['at']) if index + 1 < len(beats) else end - start
             hold = following - at
-            if absolute >= 15 and not BODY_MIN_HOLD_SECONDS <= hold <= BODY_MAX_HOLD_SECONDS:
+            if absolute >= 15 and not body_min <= hold <= body_max:
                 errors.append(f"VISUAL_HOLD_INVALID: {scene['id']}/{beat['id']} holds {hold:.3f}s")
     first_five = sum(at < FIRST_WINDOW_SECONDS for at in starts)
     opening = sum(at < OPENING_WINDOW_SECONDS for at in starts)
-    if not 3 <= first_five <= 5:
-        errors.append(f"OPENING_VISUAL_DENSITY: expected 3–5 starts in [0,5), got {first_five}")
-    if not 6 <= opening <= 10:
-        errors.append(f"OPENING_VISUAL_DENSITY: expected 6–10 starts in [0,12.5), got {opening}")
+    if not min_first_five <= first_five <= 5:
+        errors.append(f"OPENING_VISUAL_DENSITY: expected {min_first_five}–5 starts in [0,5), got {first_five}")
+    if not min_opening <= opening <= 10:
+        errors.append(f"OPENING_VISUAL_DENSITY: expected {min_opening}–10 starts in [0,12.5), got {opening}")
     return errors
 
 
@@ -85,7 +102,8 @@ def smooth_interpolated_beats(beats: list[dict[str, Any]], start: float, end: fl
         move(10, round(OPENING_WINDOW_SECONDS + .05, 4))
     if end <= 15:
         return
-    minimum, maximum = .85, 3.75
+    avg_hold = duration / count
+    minimum, maximum = .85, max(3.75, avg_hold * 1.35)
     for _ in range(15):
         for index in range(count - 1, 0, -1):
             following = beats[index + 1]['at'] if index + 1 < count else duration

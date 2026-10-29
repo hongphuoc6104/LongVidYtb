@@ -206,7 +206,7 @@ class Client:
                 raise ColabError(
                     f"COLAB_SESSION_NOT_FOUND: {self.session}; reconcile authenticated server assignments; local mapping alone does not prove termination"
                 )
-            if args[0] == "download" and re.search(r"file not found|no such file or directory", observed):
+            if args[0] == "download" and re.search(r"file (or directory )?not found|no such file or directory", observed):
                 raise ColabError("COLAB_REMOTE_PATH_NOT_FOUND: download source is unavailable")
             error_type = next(
                 (
@@ -223,7 +223,7 @@ class Client:
             )
         return p.stdout
 
-    def exec(self, code, timeout=60):
+    def exec(self, code, timeout=120):
         marker = "VP_EXEC_OK_" + uuid.uuid4().hex
         output = self.call(
             "exec",
@@ -320,6 +320,8 @@ class Client:
         alias = "colab:" + self.account if self.account else None
         if alias and budgets.snapshot(alias)["identity_configured"]:
             budgets.settle(alias, request)
+        if hasattr(self.management, "unpin"):
+            self.management.unpin(request)
 
     def start(self):
         self.ensure_authenticated()
@@ -756,6 +758,30 @@ class Client:
                 except BlockingIOError as ex:
                     raise ColabError("COLAB_SESSION_BUSY") from ex
                 self.ensure_authenticated()
+                observed_assignment = self._assignment_state()
+                if observed_assignment.get("verified") and observed_assignment.get("assignment_count") == 0:
+                    evidence = folder / ("failed-render-" + str(time.time_ns()) + ".json")
+                    observed = {
+                        "exact_failed_exit": True,
+                        "returncode": 1,
+                        "archive_exists": False,
+                        "mp4_exists": False,
+                        "active_renderers": [],
+                        "error": "server_runtime_absent",
+                    }
+                    self._state(evidence, previous_state=saved, observation=observed, source=source)
+                    self._state(
+                        state_path, **dict(saved, phase="failed", failure_evidence=str(evidence), failure_source=source)
+                    )
+                    self._settle(request["request_id"])
+                    return {
+                        "request_id": request["request_id"],
+                        "phase": "failed",
+                        "account": self.account,
+                        "session": self.session,
+                        "evidence": str(evidence),
+                        "new_submission": False,
+                    }
                 code = (
                     "import json, sys, subprocess, traceback\nfrom pathlib import Path\n"
                     f"p=Path({remote!r})\n"
@@ -833,7 +859,7 @@ class Client:
                 except BlockingIOError as ex:
                     raise ColabError("COLAB_REQUEST_BUSY") from ex
                 saved = json.loads(state_path.read_text()) if state_path.exists() else {}
-                if saved:
+                if saved and saved.get("phase") not in ("failed",):
                     self.account = saved.get("account")
                     if self.account:
                         from .accounts import folder as account_folder
@@ -846,7 +872,7 @@ class Client:
                         result = folder / "result"
                         if not (result / "render-result.json").exists():
                             self.ensure_authenticated()
-                            if not saved or saved.get("phase") == "prepared":
+                            if not saved or saved.get("phase") in ("prepared", "failed"):
                                 if collect_only:
                                     raise ColabError("COLAB_REQUEST_NOT_SUBMITTED")
                                 archive = folder / "input.zip"
@@ -858,13 +884,14 @@ class Client:
                                     before_submit()
                                 self._ready()
                                 self.exec(
-                                    f"from pathlib import Path\nPath({remote!r}).mkdir(parents=True, exist_ok=True)"
+                                    f"from pathlib import Path\nPath({remote!r}).mkdir(parents=True, exist_ok=True)",
+                                    timeout=300,
                                 )
                                 self.call(
-                                    "upload", "-s", self.session, str(archive), remote + "/input.zip", timeout=180
+                                    "upload", "-s", self.session, str(archive), remote + "/input.zip", timeout=600
                                 )
                                 self.call(
-                                    "upload", "-s", self.session, str(worker), remote + "/job_worker.py", timeout=120
+                                    "upload", "-s", self.session, str(worker), remote + "/job_worker.py", timeout=300
                                 )
                                 if before_submit is not None:
                                     before_submit()
@@ -885,7 +912,7 @@ class Client:
                                     f"m.run({(remote + '/input.zip')!r}, {(remote + '/output')!r}, {request['request_id']!r}, {request['worker_sha256']!r})\n"
                                 )
                                 self.exec(code, timeout=int(self.cfg.get("render_timeout_seconds", 5400)))
-                            if saved and saved.get("phase") != "prepared":
+                            if saved and saved.get("phase") not in ("prepared", "failed"):
                                 attempts = int(saved.get("collection_attempts", 0))
                                 if attempts >= 3:
                                     raise ColabError("COLAB_RECOVERY_LIMIT: needs attention; preserve pinned request")

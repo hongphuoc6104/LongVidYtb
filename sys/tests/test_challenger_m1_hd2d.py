@@ -429,7 +429,8 @@ def test_content_schema_v3_contains_all_10_shot_types() -> None:
     shot_enum = schema["properties"]["scenes"]["items"]["properties"]["images"]["items"]["properties"]["shot_type"]["enum"]
     for shot in ALL_10_SHOT_TYPES:
         assert shot in shot_enum, f"Shot type {shot} missing from schemas/content-v3.json"
-    assert len(shot_enum) == 10
+    # 10 generated shot types + pillar-gated "screen_capture" (sys/pillars.py)
+    assert set(shot_enum) - set(ALL_10_SHOT_TYPES) == {"screen_capture"}
 
 
 def test_style_system_constants_synchronized() -> None:

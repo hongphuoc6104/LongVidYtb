@@ -24,3 +24,6 @@ New images lock to the **2D Vietnamese Indie Doodle** profile `1.7.0` (`handdraw
 # Verification
 
 Run `sys/tests/test_full_frame_pipeline.py`, `sys/tests/test_full_frame_upgrade.py`, and `sys/tests/test_anti_formulaic_storytelling.py` plus the existing format, story, remote-render and cadence checks through `./pipeline run`. Inspect real Flow outputs and a remotely rendered WAV/MP4 before claiming emotional continuity, text cleanliness, acoustic sync or visual acceptance. Fixtures and estimated timelines prove contracts only.
+
+## Pillar `research_guide`
+- Giữ Doodle stickman + Clean Minimalist, cho phép prop học thuật (bài báo, biểu đồ đơn giản, sơ đồ quy trình). Chỉ video `tier_3_conversion` được dùng `shot_type: "screen_capture"` (ảnh chụp công cụ thật, ngoại lệ flat canvas); bắt buộc có `brief.screen_capture_source` — nếu thiếu, hỏi người dùng.
