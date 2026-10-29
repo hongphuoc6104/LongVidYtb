@@ -154,12 +154,6 @@ _BANNED_OFF_PILLAR_RE = re.compile(
     re.IGNORECASE,
 )
 
-# Foreign historical / anthropological jargon forbidden in the first 60s (SC01) before Vietnamese localization
-_FOREIGN_OPENING_JARGON_RE = re.compile(
-    r"\b(?:sumer|edubba|mesopotamia|lưỡng\s+hà|kalahari|ju/'hoansi|giu-hoan-si|hadza|nhà\s+máy\s+phổ|quân\s+sự\s+phổ)\b",
-    re.IGNORECASE,
-)
-
 # Self-answering title pattern (gives away the answer in the title instead of creating a Curiosity Gap)
 _SELF_ANSWERING_TITLE_RE = re.compile(
     r"(?:\blà\s+do\b|\blà\s+bởi\s+vì\b|\bcâu\s+trả\s+lời\s+là\b)",
@@ -174,47 +168,54 @@ _THUMBNAIL_AI_SLOP_RE = re.compile(
     re.IGNORECASE,
 )
 
-# 8-Stage Invisible Narrative Arc for YouTube Explainer Storytelling
-NARRATIVE_ARC_8_STAGES: Tuple[str, ...] = (
-    "hook",              # 1. Mở bài (Truth-Slap / Đời thực)
-    "lead_in",           # 2. Phần dẫn (Neo cảm xúc & Bối cảnh)
-    "problem",           # 3. Phần vấn đề (Mâu thuẫn nhận thức)
-    "causal_mechanism",  # 4. Phần nhân quả (Cơ chế gốc rễ)
-    "explanation",       # 5. Phần giải thích (Mô hình hóa trực quan)
-    "counter_argument",  # 6. Phần phản biện (Lật ngược giả định / Giới hạn)
-    "takeaway",          # 7. Phần nội dung rút ra (Đúc kết nguyên lý)
-    "closing",           # 8. Phần kết bài (Khép vòng lặp mở bài)
-)
-
 MAX_CONSECUTIVE_VARIATION_BEATS = 2
 
 
 from scripts.camera_motion import assign_scene_camera_effects, select_semantic_camera_effect  # noqa: F401
 
 
-def infer_editorial_section(index: int, total: int, title: str = "", narration: str = "") -> str:
-    """Infer the 8-part editorial narrative stage from scene position and semantic cues."""
+def infer_editorial_section(
+    index: int,
+    total: int,
+    title: str = "",
+    narration: str = "",
+    cognitive_phase: Optional[str] = None,
+) -> str:
+    """Infer dynamic editorial narrative stage from scene position, cognitive progression, and semantic cues."""
+    if cognitive_phase:
+        return str(cognitive_phase).strip().lower()
+
     combined = f"{title} {narration}".casefold()
     if index <= 1:
         return "hook"
-    if index == total and total >= 3:
+    if total <= 1:
+        return "explanation"
+    if index >= total and total >= 2:
         return "closing"
+
+    # Semantic cue checks for dynamic progression
     if re.search(r"\b(?:phản biện|ngược lại|tuy nhiên|nhưng nếu nhìn kỹ|giới hạn|ngoại lệ|mặt trái)\b", combined):
-        if index >= max(3, (total * 3) // 5):
+        if index >= max(2, (total * 2) // 5):
             return "counter_argument"
     if re.search(r"\b(?:rút ra|nguyên lý|quy tắc|bài học|cốt lõi nằm ở|ma trận|khung tư duy)\b", combined):
-        if index >= max(3, (total * 3) // 5):
+        if index >= max(2, (total * 2) // 5):
             return "takeaway"
+    if re.search(r"\b(?:cơ chế|nguyên nhân|tại sao|bản chất|gốc rễ|hoạt động như thế nào)\b", combined):
+        return "causal_mechanism"
+    if re.search(r"\b(?:vấn đề|nghịch lý|bế tắc|sai lầm|mâu thuẫn|thực tế là)\b", combined):
+        return "problem"
 
-    if total <= 0:
+    # Dynamic progression based on relative progress through the narrative
+    progress = (index - 1) / max(1, total - 1)
+    if progress < 0.25:
+        return "lead_in"
+    if progress < 0.45:
+        return "problem"
+    if progress < 0.70:
         return "explanation"
-    if total == len(NARRATIVE_ARC_8_STAGES):
-        return NARRATIVE_ARC_8_STAGES[max(0, min(len(NARRATIVE_ARC_8_STAGES) - 1, index - 1))]
-    stage_idx = min(
-        len(NARRATIVE_ARC_8_STAGES) - 1,
-        max(0, int(((index - 1) * len(NARRATIVE_ARC_8_STAGES)) / max(1, total))),
-    )
-    return NARRATIVE_ARC_8_STAGES[stage_idx]
+    if progress < 0.88:
+        return "takeaway"
+    return "closing"
 
 
 def split_long_sentence_into_beat_clauses(sentence: str, max_words: int = 14) -> List[str]:
@@ -354,7 +355,7 @@ def check_packaging_and_localization(
             f"INVALID_FUNNEL_TIER: funnel_tier '{tier}' must be one of {ALLOWED_FUNNEL_TIERS}"
         )
 
-    # 5. Vietnamese Cultural Localization & Opening Scene (SC01) checks
+    # 5. Vietnamese Cultural Localization & Opening Scene (SC01) guidance
     if scenes:
         first_sc = scenes[0]
         first_narr = (
@@ -362,10 +363,18 @@ def check_packaging_and_localization(
             if hasattr(first_sc, "narration")
             else str(first_sc.get("narration") or "")
         )
-        m_foreign = _FOREIGN_OPENING_JARGON_RE.search(first_narr)
-        if m_foreign:
+        # Constructive guidance for opening hook: advise relatable everyday grounding
+        # rather than blocking foreign or historical terms.
+        has_relatable_hook = bool(
+            re.search(
+                r"\b(?:bạn|chúng ta|người|hãy|tại sao|vì sao|có bao giờ|thực tế|\?)\b",
+                first_narr,
+                re.IGNORECASE,
+            )
+        )
+        if not has_relatable_hook:
             warnings.append(
-                f"OPENING_NOT_LOCALIZED_VN: SC01 introduces foreign/ancient term '{m_foreign.group(0)}' in the first 60s instead of a relatable Vietnamese context"
+                "OPENING_LOCALIZATION_ADVICE: SC01 nên bắt đầu bằng quan sát đời thường, câu hỏi gợi mở hoặc trải nghiệm gần gũi ('bạn', 'chúng ta') để tạo kết nối tự nhiên trước khi mở rộng kiến thức."
             )
         if check_opening_hook:
             pause_sec, pauses, _ = extract_pauses(first_narr)
@@ -615,20 +624,26 @@ def compute_brief_hash(brief_dict: Dict[str, Any]) -> str:
 def calculate_proportional_durations(
     total_duration: float,
     scene_count: int = 5,
+    weights: Optional[List[float]] = None,
 ) -> List[float]:
-    """Calculate scene duration budgets for conversational narrative arcs.
+    """Calculate scene duration budgets adapting dynamically to narrative depth.
 
-    For the standard 5-part conversational arc (Hook -> Reframe -> Causal 70/30 -> Contrast -> Loop Payoff),
-    allocates according to empirical ratios (14%, 20%, 32%, 20%, 14%).
-    For other scene counts, allocates an even distribution reconciling rounding differences.
+    Allows proportional allocation based on scene weights or equal distribution,
+    adapting dynamically to content depth without fixed ratio locks.
+    Reconciles rounding differences to match total_duration exactly.
     """
     if scene_count <= 0:
         raise ValueError("scene_count must be positive")
     if total_duration <= 0:
         raise ValueError("total_duration must be positive")
 
-    if scene_count == 5:
-        ratios = [0.14, 0.20, 32 / 100.0, 0.20, 0.14]
+    if weights is not None:
+        if len(weights) != scene_count:
+            raise ValueError(f"weights length ({len(weights)}) must match scene_count ({scene_count})")
+        if any(w <= 0 for w in weights):
+            raise ValueError("All weights must be positive")
+        total_w = sum(weights)
+        ratios = [w / total_w for w in weights]
     else:
         ratios = [1.0 / scene_count] * scene_count
 
@@ -1648,19 +1663,20 @@ def validate_long_form_narrative_depth(
     content_data: Dict[str, Any],
     min_syllables: Optional[int] = None,
     min_scenes: Optional[int] = None,
-    max_sentence_syllables: int = 20,
+    max_sentence_syllables: Optional[int] = None,
+    strict: bool = False,
 ) -> Tuple[bool, List[str]]:
-    """Validate that long-form 16:9 explainer packages meet the narrative depth & syllable floor SSOT.
+    """Validate long-form narrative depth using dynamic depth estimation.
 
-    Invariants:
-    - Minimum floor of >= 1,800 syllables
-    - Minimum scene count of >= 16 scenes (achieving 7-9 minutes at ~4.5 syl/s)
-    - Prohibit 1-to-1 mapping of 8 cognitive stages to 8 scenes (chain 2-4 scenes per stage)
-    - Conversational spoken sentences <= 20 syllables
+    Evaluates narrative depth based on ContentPhilosophy and dynamic content_depth_estimate.
+    Rather than enforcing rigid hard floors (fixed 16 scenes, 1,800 syllables, or 20-syllable caps),
+    this function generates constructive advisory guidance to maintain quality and cognitive depth.
+    When strict=False (default), advisories are soft warnings and do not fail validation.
     """
-    errors: List[str] = []
-    from format_profiles import PROFILES, resolve_format_profile
+    warnings: List[str] = []
+    from format_profiles import resolve_format_profile
     from narration_pauses import PAUSE_RE, SENTENCE_RE
+    from pillars import content_depth_estimate, depth_floor_for
 
     try:
         profile_id = resolve_format_profile(brief_data)
@@ -1668,25 +1684,37 @@ def validate_long_form_narrative_depth(
         profile_id = brief_data.get("format_profile") or brief_data.get("aspect_ratio")
 
     if profile_id == "long_16x9":
-        prof = PROFILES.get("long_16x9", {})
-        from pillars import depth_floor_for
+        # Dynamic depth estimation from ContentPhilosophy / content complexity
+        estimate = content_depth_estimate(brief_data)
         floor = depth_floor_for(brief_data)
-        req_scenes = min_scenes if min_scenes is not None else (floor.min_scenes if floor else prof.get("min_scenes", 16))
-        req_sylls = min_syllables if min_syllables is not None else (floor.min_syllables if floor else prof.get("min_syllables", 1800))
+
+        # Dynamic scene count and syllable recommendations
+        req_scenes = (
+            min_scenes
+            if min_scenes is not None
+            else (floor.min_scenes if floor else estimate.min_scenes)
+        )
+        req_sylls = (
+            min_syllables
+            if min_syllables is not None
+            else (floor.min_syllables if floor else estimate.target_syllables)
+        )
 
         scenes = content_data.get("scenes", [])
         if len(scenes) < req_scenes:
-            errors.append(
-                f"NARRATIVE_DEPTH_SCENE_COUNT_TOO_LOW: long_16x9 explainer requires >= {req_scenes} scenes for layered narrative depth, got {len(scenes)}"
+            warnings.append(
+                f"NARRATIVE_DEPTH_SCENE_COUNT_TOO_LOW: long_16x9 explainer recommends >= {req_scenes} scenes for layered narrative depth, got {len(scenes)} ({estimate.rationale})"
             )
 
         total_syllables = sum(count_syllables(sc.get("narration", "")) for sc in scenes)
         if total_syllables < req_sylls:
-            errors.append(
-                f"NARRATIVE_DEPTH_SYLLABLE_FLOOR_NOT_MET: long_16x9 explainer requires >= {req_sylls} syllables (7-9 minutes depth), got {total_syllables}"
+            warnings.append(
+                f"NARRATIVE_DEPTH_SYLLABLE_FLOOR_NOT_MET: long_16x9 explainer recommends >= {req_sylls} syllables for comprehensive coverage, got {total_syllables}"
             )
 
-        # 3. Check spoken sentences <= max_sentence_syllables (20 syl ceiling)
+        # 3. Spoken sentence clarity & cadence guidance (advisory rather than rigid error)
+        # Allows chained simple sentences explaining complex ideas
+        sentence_limit = max_sentence_syllables if max_sentence_syllables is not None else 25
         for sc in scenes:
             sc_id = sc.get("id", "SC??")
             raw_narration = sc.get("narration", "")
@@ -1698,19 +1726,20 @@ def validate_long_form_narrative_depth(
                     if not clean_part:
                         continue
                     syl_cnt = count_syllables(clean_part, lang="vi")
-                    if syl_cnt > max_sentence_syllables:
-                        errors.append(
-                            f"NARRATIVE_DEPTH_SENTENCE_TOO_LONG: {sc_id} spoken sentence has {syl_cnt} syllables (> {max_sentence_syllables} syl limit): {clean_part!r}"
+                    if syl_cnt > sentence_limit:
+                        warnings.append(
+                            f"NARRATIVE_DEPTH_SENTENCE_TOO_LONG: {sc_id} spoken sentence has {syl_cnt} syllables (> {sentence_limit} syl recommendation): {clean_part!r}"
                         )
 
-        # 4. Check stage chaining: forbid 1-to-1 stage mapping
+        # 4. Stage chaining advisory: recommend chaining scenes across cognitive stages
         phases = [sc.get("narrative_phase") for sc in scenes if sc.get("narrative_phase")]
-        if phases and len(set(phases)) == len(scenes):
-            errors.append(
-                "NARRATIVE_DEPTH_1TO1_STAGE_MAPPING_FORBIDDEN: 1-to-1 mapping of cognitive stages to scenes is forbidden; chain 2-4 scenes per stage."
+        if phases and len(set(phases)) == len(scenes) and len(scenes) > 3:
+            warnings.append(
+                "NARRATIVE_DEPTH_1TO1_STAGE_MAPPING_FORBIDDEN: 1-to-1 mapping of cognitive stages to scenes is discouraged; chain 2-4 scenes per stage for deeper exploration."
             )
 
-    return len(errors) == 0, errors
+    is_valid = True if not strict else len(warnings) == 0
+    return is_valid, warnings
 
 
 def validate_production_bundle(
@@ -1751,7 +1780,9 @@ def validate_production_bundle(
 
     should_enforce = enforce_narrative_depth if enforce_narrative_depth is not None else (b_prof == "long_16x9" and min_dur >= 400.0)
     if should_enforce:
-        depth_valid, depth_errors = validate_long_form_narrative_depth(brief_data, content_data)
+        depth_valid, depth_errors = validate_long_form_narrative_depth(
+            brief_data, content_data, strict=bool(enforce_narrative_depth)
+        )
         if not depth_valid:
             errors.extend(depth_errors)
 

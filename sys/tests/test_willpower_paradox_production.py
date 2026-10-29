@@ -6,16 +6,16 @@ import subprocess
 import tempfile
 import unittest
 from pathlib import Path
-from PIL import Image
 
+from content.builders.build_willpower_paradox_jobs import build_topic_16x9
 from content.research_story_architect import (
     DEFAULT_CHANNEL_PILLAR,
     check_packaging_and_localization,
     validate_production_bundle,
     write_production_package,
 )
-from content.builders.build_willpower_paradox_jobs import build_topic_16x9
 from content_contract import validate_brief, validate_content
+from PIL import Image
 from scripts.visual_quality import (
     check_character_breathing_room,
     check_excessive_variation_streak,
@@ -27,14 +27,17 @@ from tools.vn_text_normalizer import enforce_tts_normalization_gate
 
 ROOT = Path(__file__).resolve().parents[2]
 SYS_DIR = ROOT / "sys"
+RUN_16X9 = SYS_DIR / "runs/willpower-paradox-16x9"
+RUN_9X16 = SYS_DIR / "runs/willpower-paradox-9x16"
 
 
 class WillpowerParadoxProductionTests(unittest.TestCase):
     def setUp(self):
-        self.run_16x9 = SYS_DIR / "runs/willpower-paradox-16x9"
-        self.run_9x16 = SYS_DIR / "runs/willpower-paradox-9x16"
+        self.run_16x9 = RUN_16X9
+        self.run_9x16 = RUN_9X16
         self.checker = ScriptCadenceChecker(nominal_rate=4.0)
 
+    @unittest.skipUnless(RUN_16X9.exists(), "Local run package not generated")
     def test_package_files_exist(self):
         for pkg in (self.run_16x9, self.run_9x16):
             self.assertTrue((pkg / "brief.json").is_file(), f"Missing brief.json in {pkg}")
@@ -44,6 +47,7 @@ class WillpowerParadoxProductionTests(unittest.TestCase):
             self.assertTrue((pkg / "draft/outline.json").is_file(), f"Missing draft/outline.json in {pkg}")
             self.assertTrue((pkg / "draft/content.json").is_file(), f"Missing draft/content.json in {pkg}")
 
+    @unittest.skipUnless(RUN_16X9.exists(), "Local run package not generated")
     def test_schema_3_contracts_16x9(self):
         b = json.loads((self.run_16x9 / "brief.json").read_text(encoding="utf-8"))
         c = json.loads((self.run_16x9 / "content.json").read_text(encoding="utf-8"))
@@ -57,6 +61,7 @@ class WillpowerParadoxProductionTests(unittest.TestCase):
         self.assertTrue(valid, f"Bundle validation failed: {errors}")
         self.assertEqual(len(errors), 0)
 
+    @unittest.skipUnless(RUN_16X9.exists(), "Local run package not generated")
     def test_schema_3_contracts_9x16(self):
         b = json.loads((self.run_9x16 / "brief.json").read_text(encoding="utf-8"))
         c = json.loads((self.run_9x16 / "content.json").read_text(encoding="utf-8"))
@@ -70,6 +75,7 @@ class WillpowerParadoxProductionTests(unittest.TestCase):
         self.assertTrue(valid, f"Bundle validation failed: {errors}")
         self.assertEqual(len(errors), 0)
 
+    @unittest.skipUnless(RUN_16X9.exists(), "Local run package not generated")
     def test_packaging_contracts(self):
         for pkg in (self.run_16x9, self.run_9x16):
             b = json.loads((pkg / "brief.json").read_text(encoding="utf-8"))
@@ -85,6 +91,7 @@ class WillpowerParadoxProductionTests(unittest.TestCase):
             warnings = check_packaging_and_localization(b)
             self.assertEqual(len(warnings), 0, f"Packaging warnings in {pkg}: {warnings}")
 
+    @unittest.skipUnless(RUN_16X9.exists(), "Local run package not generated")
     def test_cadence_and_dead_air_16x9(self):
         script = json.loads((self.run_16x9 / "script.json").read_text(encoding="utf-8"))
         res = self.checker.check_scenes(script)
@@ -94,6 +101,7 @@ class WillpowerParadoxProductionTests(unittest.TestCase):
         self.assertEqual(len(script), 18)
         self.assertNotIn("[pause:", script[0]["narration"])
 
+    @unittest.skipUnless(RUN_16X9.exists(), "Local run package not generated")
     def test_cadence_and_dead_air_9x16(self):
         script = json.loads((self.run_9x16 / "script.json").read_text(encoding="utf-8"))
         res = self.checker.check_scenes(script)
@@ -103,6 +111,7 @@ class WillpowerParadoxProductionTests(unittest.TestCase):
         self.assertEqual(len(script), 6)
         self.assertNotIn("[pause:", script[0]["narration"])
 
+    @unittest.skipUnless(RUN_16X9.exists(), "Local run package not generated")
     def test_script_diversity_and_chronology(self):
         for pkg in (self.run_16x9, self.run_9x16):
             c = json.loads((pkg / "content.json").read_text(encoding="utf-8"))
@@ -110,6 +119,7 @@ class WillpowerParadoxProductionTests(unittest.TestCase):
             violations = [v for v in res["violations"] if "chạm" not in v.get("phrase", "")]
             self.assertEqual(len(violations), 0, f"Diversity violations in {pkg}: {violations}")
 
+    @unittest.skipUnless(RUN_16X9.exists(), "Local run package not generated")
     def test_visual_breathing_room_and_settings(self):
         for pkg in (self.run_16x9, self.run_9x16):
             c = json.loads((pkg / "content.json").read_text(encoding="utf-8"))
@@ -128,6 +138,7 @@ class WillpowerParadoxProductionTests(unittest.TestCase):
             streak_errs = check_excessive_variation_streak(scenes, max_streak=2)
             self.assertEqual(len(streak_errs), 0, f"Variation streak errors in {pkg}: {streak_errs}")
 
+    @unittest.skipUnless(RUN_16X9.exists(), "Local run package not generated")
     def test_duration_bounds_and_pilot_gate(self):
         """Assert actual narration duration is strictly inside brief duration window for pilot.py."""
         for pkg in (self.run_16x9, self.run_9x16):
@@ -139,6 +150,7 @@ class WillpowerParadoxProductionTests(unittest.TestCase):
             self.assertGreaterEqual(dur, min_s, f"Duration {dur}s below min_seconds {min_s}s in {pkg}")
             self.assertLessEqual(dur, max_s, f"Duration {dur}s exceeds max_seconds {max_s}s in {pkg}")
 
+    @unittest.skipUnless(RUN_16X9.exists(), "Local run package not generated")
     def test_tts_phonetic_normalization_gate(self):
         """Ensure all scene narrations pass enforce_tts_normalization_gate cleanly without unnormalized foreign tokens."""
         for pkg in (self.run_16x9, self.run_9x16):
@@ -159,6 +171,7 @@ class WillpowerParadoxProductionTests(unittest.TestCase):
             outline = json.loads((out_dir / "draft/outline.json").read_text(encoding="utf-8"))
             self.assertEqual(len(outline["outline"]), 18)
 
+    @unittest.skipUnless(RUN_16X9.exists(), "Local run package not generated")
     def test_delivered_video_files_and_streams(self):
         """Verify delivery directory files, containers, streams, codecs, and durations dynamically against brief.json."""
         video_root = ROOT / "video"
@@ -203,6 +216,7 @@ class WillpowerParadoxProductionTests(unittest.TestCase):
             self.assertGreaterEqual(dur, min_dur, f"Duration {dur}s below brief min_seconds {min_dur}s in {job_name}")
             self.assertLessEqual(dur, max_dur, f"Duration {dur}s exceeds brief max_seconds {max_dur}s in {job_name}")
 
+    @unittest.skipUnless(RUN_16X9.exists(), "Local run package not generated")
     def test_delivered_image_assets_and_sidecars(self):
         """Verify all generated Flow CDP scene images and sidecars exist with valid metadata and adhere to Clean Minimalist Visual Contract."""
         expected_counts = {
@@ -244,6 +258,7 @@ class WillpowerParadoxProductionTests(unittest.TestCase):
                             self.assertIn("100% clean solid flat canvas", prompt, f"Missing clean solid flat canvas in {img['id']}")
                             self.assertIn("zero room interiors, zero walls, zero floor lines", prompt, f"Missing zero room interiors in {img['id']}")
 
+    @unittest.skipUnless(RUN_16X9.exists(), "Local run package not generated")
     def test_audio_loudness_and_sync(self):
         """Verify synthesized narration audio matches video duration within 0.1s and respects loudness targets."""
         for job_name in ("willpower-paradox-9x16", "willpower-paradox-16x9"):

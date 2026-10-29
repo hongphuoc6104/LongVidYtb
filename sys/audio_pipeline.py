@@ -16,6 +16,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import logging
 import math
 import shutil
 import struct
@@ -24,6 +25,8 @@ import uuid
 import wave
 from pathlib import Path
 from typing import Any
+
+logger = logging.getLogger("audio_pipeline")
 
 # Ensure sys directory is in Python path
 SYS_ROOT = Path(__file__).resolve().parent
@@ -96,7 +99,8 @@ class AudioPipeline:
                  bgm_path: Path | str | None = None, voice: str | None = None,
                  speed: float | None = None, mock: bool = False,
                  parallel: bool = True, max_workers: int = 3, batch_size: int = 4,
-                 auto_teardown: bool = True, pool_manager: Any | None = None):
+                 auto_teardown: bool = True, pool_manager: Any | None = None,
+                 strict_cadence: bool = False):
         self.content_path = Path(content_path)
         self.brief_path = Path(brief_path)
         self.out_dir = Path(out_dir)
@@ -115,6 +119,7 @@ class AudioPipeline:
         self.voice = voice or self.brief.get("voice", "VietNarrator")
         self.speed = float(speed or self.brief.get("speed", 1.0))
         self.aspect_ratio = self.brief.get("aspect_ratio", "16:9")
+        self.strict_cadence = strict_cadence or self.brief.get("strict_cadence", False)
 
     def _mastering_cfg(self) -> dict[str, float]:
         """Format-aware audio mastering config."""
@@ -300,7 +305,7 @@ class AudioPipeline:
         all_warnings: list[str] = []
         for sc in cadence_res.get("scenes", []):
             all_warnings.extend(sc.get("warnings", []))
-        critical_cadence_tags = (
+        cadence_tags = (
             "OPENING_SCENE_PAUSE_FORBIDDEN",
             "OPENING_HOOK_TOO_LONG",
             "RATE_TOO_FAST",
@@ -308,8 +313,11 @@ class AudioPipeline:
             "DEAD_AIR",
         )
         for w in all_warnings:
-            if any(tag in w for tag in critical_cadence_tags):
-                raise AudioPipelineError(f"Cadence rejection: {w}")
+            for tag in cadence_tags:
+                if tag in w:
+                    if self.strict_cadence:
+                        raise AudioPipelineError(f"Cadence rejection: {w}")
+                    logger.warning("Cadence advisory (%s): %s", tag, w)
 
         # 3. Chunking & pause planning
         cfg = {"tts_pause": adapters.DEFAULT_PAUSE}

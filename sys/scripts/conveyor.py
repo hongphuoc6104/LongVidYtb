@@ -88,6 +88,7 @@ def station_2_test_ast() -> bool:
     print("  Đang phân tích AST cú pháp: Kiểm tra 100% active assertions trong test functions...")
 
     test_targets = [
+        SYS_DIR / "tests/test_pillars.py",
         SYS_DIR / "tests/test_tools_readiness.py",
         SYS_DIR / "tests/test_pipeline_stations.py",
         SYS_DIR / "tests/test_research_story_architect.py",
@@ -126,6 +127,7 @@ def station_2_test_ast() -> bool:
         SYS_DIR / "tests/test_adversarial_ai_production.py",
         SYS_DIR / "tests/test_collectors_fallacy_production.py",
         SYS_DIR / "tests/test_reviewer_2_production.py",
+        SYS_DIR / "tests/test_research_topic_size_production.py",
         SYS_DIR / "tests/test_visual_breathing_room.py",
         SYS_DIR / "tests/test_reference_explainer.py",
         SYS_DIR / "tests/test_flow_prompts.py",

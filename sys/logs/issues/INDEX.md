@@ -368,3 +368,25 @@ List of technical issues recorded during pipeline operation:
 - [colab-1793240689365775492.md](colab-1793240689365775492.md) — Colab TTS cần kiểm tra.
 
 - [colab-1793243259367695791.md](colab-1793243259367695791.md) — Colab TTS cần kiểm tra.
+
+- [colab-1793248759864163580.md](colab-1793248759864163580.md) — Colab TTS cần kiểm tra.
+
+- [colab-1793248909868431189.md](colab-1793248909868431189.md) — Colab TTS cần kiểm tra.
+
+- [colab-1793248909868641305.md](colab-1793248909868641305.md) — Colab TTS cần kiểm tra.
+
+- [colab-1793253212701056843.md](colab-1793253212701056843.md) — Colab TTS cần kiểm tra.
+
+- [colab-1793253234147193213.md](colab-1793253234147193213.md) — Colab TTS cần kiểm tra.
+
+- [colab-1793253234147410276.md](colab-1793253234147410276.md) — Colab TTS cần kiểm tra.
+
+- [colab-1793264878478540592.md](colab-1793264878478540592.md) — Colab TTS cần kiểm tra.
+
+- [colab-1793264902497177467.md](colab-1793264902497177467.md) — Colab TTS cần kiểm tra.
+
+- [colab-1793264912407844733.md](colab-1793264912407844733.md) — Colab TTS cần kiểm tra.
+
+- [colab-1793264939508168995.md](colab-1793264939508168995.md) — Colab TTS cần kiểm tra.
+
+- [colab-1793265172573121536.md](colab-1793265172573121536.md) — Colab TTS cần kiểm tra.

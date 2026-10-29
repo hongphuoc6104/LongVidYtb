@@ -267,12 +267,20 @@ def test_diversity_blocks_monotony_and_repeated_operation_pairs() -> None:
     assert check_visual_setting_diversity(scenes[:2]) == []
     assert check_instructional_manual_loop(scenes[:3]) == []
 
-    breathing_violations = check_character_breathing_room(scenes)
-    assert any(v['type'] in {'CHARACTER_STREAK_EXCEEDED', 'LOW_CHARACTER_FREE_RATIO'} for v in breathing_violations)
-    assert check_character_breathing_room(scenes[:4]) == []
+    # Under flexible Feynman formula, progressive character domino frames pass cleanly by default
+    assert check_character_breathing_room(scenes) == []
+    # Strict mode provides legacy checks if explicitly requested
+    strict_breathing = check_character_breathing_room(scenes, strict=True)
+    assert any(v['type'] in {'CHARACTER_STREAK_EXCEEDED', 'LOW_CHARACTER_FREE_RATIO'} for v in strict_breathing)
+    assert check_character_breathing_room(scenes[:4], strict=True) == []
 
     verbose_scenes = [{'id': 'SC01', 'setting': 'A very long detailed room description with lots of props and lamps and books everywhere.'}]
-    assert check_setting_description_verbosity(verbose_scenes)[0]['type'] == 'SETTING_DESCRIPTION_TOO_VERBOSE'
+    # Relaxed setting threshold allows descriptive canvas notes without hard 10-word rejection
+    assert check_setting_description_verbosity(verbose_scenes) == []
+    # Strict mode flags verbose settings with constructive guidance
+    strict_verbosity = check_setting_description_verbosity(verbose_scenes, strict=True)
+    assert strict_verbosity[0]['type'] == 'SETTING_DESCRIPTION_TOO_VERBOSE'
+    assert 'guidance' in strict_verbosity[0]
     assert check_setting_description_verbosity(scenes[:2]) == []
 
 

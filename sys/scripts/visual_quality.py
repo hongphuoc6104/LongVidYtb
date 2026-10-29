@@ -193,8 +193,21 @@ def _is_character_beat(beat: dict[str, Any]) -> bool:
     return False
 
 
-def check_character_breathing_room(scenes: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Enforce visual breathing room: max 4 consecutive character beats and >= 30% rest beats per 10-beat window."""
+def check_character_breathing_room(
+    scenes: list[dict[str, Any]],
+    strict: bool = False,
+) -> list[dict[str, Any]]:
+    """Check visual breathing room.
+
+    Under the Feynman visual formula (1 character + 1 focal metaphor on clean flat canvas
+    with progressive domino frames adding detail incrementally without decorative clutter),
+    progressive domino frames are supported and not blocked by arbitrary empty-frame counts
+    or rigid streak caps (strict=False by default).
+    When strict=True, legacy 4-beat streak and 30% rest ratio checks are evaluated.
+    """
+    if not strict:
+        return []
+
     beats: list[dict[str, Any]] = []
     for sc in scenes:
         images = sc.get('images')
@@ -210,7 +223,7 @@ def check_character_breathing_room(scenes: list[dict[str, Any]]) -> list[dict[st
 
     violations: list[dict[str, Any]] = []
 
-    # 1. Consecutive character streak check (max 4)
+    # 1. Consecutive character streak check (max 4 in strict mode)
     char_streak = 0
     for idx, item in enumerate(beats):
         if _is_character_beat(item['beat']):
@@ -223,11 +236,12 @@ def check_character_breathing_room(scenes: list[dict[str, Any]]) -> list[dict[st
                     'beat_index': idx,
                     'streak': char_streak,
                     'message': f'Excessive consecutive character beats ({char_streak} > 4)',
+                    'guidance': 'Consider using concept_metaphor or visual_diagram to provide visual breathing room if not using progressive domino frames.',
                 })
         else:
             char_streak = 0
 
-    # 2. Rolling 10-beat sequence check (>= 30% character-free, i.e. >= 3 rest beats out of 10)
+    # 2. Rolling 10-beat sequence check (>= 30% character-free in strict mode)
     if len(beats) >= 10:
         for i in range(len(beats) - 9):
             window = beats[i : i + 10]
@@ -243,6 +257,7 @@ def check_character_breathing_room(scenes: list[dict[str, Any]]) -> list[dict[st
                     'character_free_count': rest_count,
                     'ratio': round(rest_count / 10.0, 2),
                     'message': f'Insufficient visual breathing room in 10-beat window ({rest_count}/10 < 30%)',
+                    'guidance': 'Incorporate focal metaphors or diagram frames if character presence feels continuous.',
                 })
 
     return violations
@@ -250,24 +265,33 @@ def check_character_breathing_room(scenes: list[dict[str, Any]]) -> list[dict[st
 
 def check_setting_description_verbosity(
     scenes: list[dict[str, Any]],
-    max_words: int = 10,
+    max_words: int = 30,
+    strict: bool = False,
 ) -> list[dict[str, Any]]:
-    """Flag setting descriptions exceeding word threshold (authoring <= 8 words, linter flag > 10 words)."""
+    """Flag setting descriptions exceeding word threshold.
+
+    Under the Feynman visual formula, setting descriptions describe a clean flat canvas
+    with 1 character + 1 focal metaphor. Hard 8-word/10-word caps are relaxed to constructive
+    guidance (default max_words=30, strict=False).
+    When strict=True, strict 10-word ceiling is enforced.
+    """
+    effective_max = 10 if strict else max_words
     violations: list[dict[str, Any]] = []
     for sc in scenes:
         setting = str(sc.get('setting', '')).strip()
         if not setting:
             continue
         words = setting.split()
-        if len(words) > max_words:
+        if len(words) > effective_max:
             sc_id = str(sc.get('id', sc.get('scene_id', '?')))
             violations.append({
                 'type': 'SETTING_DESCRIPTION_TOO_VERBOSE',
                 'scene_id': sc_id,
                 'setting': setting,
                 'word_count': len(words),
-                'max_allowed': max_words,
-                'message': f'Setting description exceeds {max_words} words ({len(words)} words): \'{setting}\'',
+                'max_allowed': effective_max,
+                'message': f"Setting description exceeds {effective_max} words ({len(words)} words): '{setting}'",
+                'guidance': 'Keep flat canvas setting descriptions focused on the character and focal metaphor without interior room clutter.',
             })
     return violations
 

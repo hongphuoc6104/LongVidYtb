@@ -639,7 +639,7 @@ class SceneCadenceReport:
         if self.forbid_opening_pause and is_opening_scene and self.pauses:
             self.warnings.append(
                 f"OPENING_SCENE_PAUSE_FORBIDDEN: Opening scene {self.scene_id} contains {len(self.pauses)} pause tag(s) "
-                f"({self.pause_seconds:.2f}s); zero [pause:...] allowed in first 15 seconds (SC01)"
+                f"({self.pause_seconds:.2f}s); guidance: prefer zero [pause:...] in first 15 seconds (SC01) for energetic hook delivery"
             )
 
         if self.max_opening_hook_syllables is not None and is_opening_scene and self.sentences:
@@ -647,7 +647,7 @@ class SceneCadenceReport:
             if first_sent_syl > self.max_opening_hook_syllables:
                 self.warnings.append(
                     f"OPENING_HOOK_TOO_LONG: Opening hook sentence in {self.scene_id} has {first_sent_syl} syllables "
-                    f"(exceeds Counter-Intuitive Hook limit of {self.max_opening_hook_syllables}): '{self.sentences[0][:40]}...'"
+                    f"(guidance: recommend concise Counter-Intuitive Hook <= {self.max_opening_hook_syllables} syllables): '{self.sentences[0][:40]}...'"
                 )
 
         if self.max_sentence_syllables is not None:
@@ -656,7 +656,7 @@ class SceneCadenceReport:
                 if s_syl > self.max_sentence_syllables:
                     self.warnings.append(
                         f"SENTENCE_TOO_LONG: Sentence #{s_idx} has {s_syl} syllables "
-                        f"(exceeds limit of {self.max_sentence_syllables}); split into shorter sentences"
+                        f"(guidance: consider splitting into shorter sentences <= {self.max_sentence_syllables} syl for acoustic clarity)"
                     )
 
         if self.max_clause_syllables is not None and self.max_clause_syllables > 0:
@@ -671,7 +671,7 @@ class SceneCadenceReport:
                         snippet = c_clean[:35] + ("..." if len(c_clean) > 35 else "")
                         self.warnings.append(
                             f"BREATHLESS_CLAUSE: Clause #{c_idx} in sentence #{s_idx} has {c_syl} syllables "
-                            f"without a breathing comma (exceeds limit of {self.max_clause_syllables}): '{snippet}'"
+                            f"(guidance: consider adding a breathing comma; exceeds {self.max_clause_syllables} syl): '{snippet}'"
                         )
 
         unnatural_comma_re = re.compile(

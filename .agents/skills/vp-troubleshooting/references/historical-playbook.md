@@ -130,7 +130,7 @@ This file archives older or superseded PLAYBOOK.md entries to keep `PLAYBOOK.md 
 - **Tái hiện E2E (Reproduction Path):** Inspect saved request segments and WAV padding; run `pytest sys/tests/test_narration_pauses.py sys/tests/test_colab_worker.py`. Synthetic-model PCM proves assembly, not listening quality.
 - **Nguyên nhân cốt lõi (Root Cause):** Only legacy tts_pause was consumed; calibrated fields were unused and secondary tracks bypassed sentence planning.
 - **Giả định sai (Wrong Assumptions):** Adding config values changes runtime timing, SC01 forbids all automatic breaths, or an image cut requires a voice pause.
-- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Implement format_v1 in format_profiles/narration_pauses, route both languages, preserve authored tags/learner holds and include per-boundary provenance in request identity. See [acceptance plan](sys/docs/narration-pause-implementation-plan.md); real-media acceptance remains pending.
+- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Implement format_v1 in format_profiles/narration_pauses, route both languages, preserve authored tags/learner holds and include per-boundary provenance in request identity. See [acceptance plan](../../../../sys/docs/narration-pause-implementation-plan.md); real-media acceptance remains pending.
 - **Quy tắc phòng ngừa vàng (Golden Rule):** Resolve pause policy from language outputs, count each boundary once, keep legacy snapshots immutable and verify PCM before claiming timing; listening is required before claiming naturalness.
 
 

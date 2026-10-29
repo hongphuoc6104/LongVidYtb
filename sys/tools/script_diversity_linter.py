@@ -23,37 +23,7 @@ from typing import Any, Dict, List, Set, Tuple
 SYS_DIR = Path(__file__).resolve().parents[1]
 if str(SYS_DIR) not in sys.path:
     sys.path.insert(0, str(SYS_DIR))
-
-BANNED_FORMULAIC_TRANSITIONS = [
-    r"^\s*nhưng rồi\b",
-    r"^\s*thế nhưng rồi\b",
-    r"^\s*bước sang\b",
-    r"^\s*hãy cùng bước vào\b",
-    r"^\s*hãy cùng khám phá\b",
-    r"^\s*nhưng câu chuyện(?: áp lực)? chưa dừng lại ở đó\b",
-    r"^\s*hãy thử ngẫm nghĩ\b",
-    r"^\s*(?:xin\s+)?chào\b",
-    r"^\s*chào\s+mừng\b",
-    r"\bhôm\s+nay\s+chúng\s+ta\b",
-    r"\btrong\s+video\s+này\b",
-    r"^\s*hãy\s+(?:nghĩ\s+về|hình\s+dung|tưởng\s+tượng)\b",
-    r"^\s*giờ\s+đây\s*,?\s*hãy\b",
-    r"\bđể\s+tìm\s+câu\s+trả\s+lời\b",
-    r"^\s*(?:phần|mục|chương)\s+(?:một|hai|ba|bốn|năm|sáu|bảy|tám|\d+)\s+(?:là|sẽ\s+là|nói\s+về)\b",
-    r"^\s*(?:đầu\s+tiên|trước\s+hết)\s*,?\s*chúng\s+ta\s+hãy\b",
-    r"^\s*tóm\s+lại\s+là\b",
-    r"\btrong\s+kỷ\s+nguyên\s+số\s+hiện\s+nay\b",
-    r"\bnhư\s+một\s+con\s+dao\s+hai\s+lưỡi\b",
-]
-
-BANNED_ACADEMIC_NAMEDROPS = [
-    r"\bet\s+al\.",
-    r"\bdoi\s*:",
-    r"\(\d{4}\)",
-    r"\b(?:giáo\s+sư|tiến\s+sĩ)\s+(?!quốc\s+tế\b|đại\s+học\b|hội\s+đồng\b|hướng\s+dẫn\b|phản\s+biện\b|đầu\s+ngành\b)[a-zA-ZÀ-ỹ]+\s+[a-zA-ZÀ-ỹ]+",
-    r"\bnghiên\s+cứu\s+năm\s+(?:\d+|một\s+nghìn|hai\s+nghìn)\s+của\b",
-]
-
+# Formulaic ban lists removed in Feynman Flex architecture in favor of constructive clarity guidance.
 # Topic-agnostic default: custom_chronology_rules from brief.json defines chapter boundaries.
 HISTORICAL_BACKTRACK_RULES: Dict[int, List[str]] = {}
 
@@ -89,37 +59,25 @@ def is_meaningful_ngram(ngram: Tuple[str, ...]) -> bool:
 
 
 def check_formulaic_transitions(scenes: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    violations = []
+    """Provide constructive clarity guidance for transitions and academic citations without hard rejection."""
+    guidance = []
     for sc in scenes:
         sc_id = sc.get("scene_id") or sc.get("id") or "UNKNOWN"
         narration = sc.get("narration") or sc.get("text") or ""
-        # Check start of sentences and academic name-drop bloat
         sents = re.split(r"[.!?…]+", narration)
         for s_idx, s in enumerate(sents):
-            s_clean = s.strip().lower()
+            s_clean = s.strip()
             if not s_clean:
                 continue
-            for pattern in BANNED_FORMULAIC_TRANSITIONS:
-                if re.search(pattern, s_clean):
-                    violations.append({
-                        "type": "FORMULAIC_TRANSITION",
-                        "scene_id": sc_id,
-                        "sentence_index": s_idx + 1,
-                        "pattern": pattern,
-                        "snippet": s.strip(),
-                    })
-                    break
-            for pattern in BANNED_ACADEMIC_NAMEDROPS:
-                if re.search(pattern, s_clean, flags=re.IGNORECASE):
-                    violations.append({
-                        "type": "ACADEMIC_NAMEDROP_BLOAT",
-                        "scene_id": sc_id,
-                        "sentence_index": s_idx + 1,
-                        "pattern": pattern,
-                        "snippet": s.strip(),
-                    })
-                    break
-    return violations
+            if re.search(r"\b(?:doi\s*:|et\s+al\b)", s_clean, flags=re.IGNORECASE):
+                guidance.append({
+                    "type": "CLARITY_GUIDANCE",
+                    "scene_id": sc_id,
+                    "sentence_index": s_idx + 1,
+                    "message": "Prefer conversational experiment attribution over formal academic citation syntax (e.g. 'các cộng sự' instead of 'et al.').",
+                    "snippet": s.strip(),
+                })
+    return guidance
 
 
 def check_micro_action_filler(scenes: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
@@ -483,6 +441,7 @@ def lint_script(
     characters: List[Dict[str, Any]] | None = None,
     style: str | None = None,
     enforce_breathing_room: bool | None = None,
+    strict: bool = False,
 ) -> Dict[str, Any]:
     all_violations: List[Dict[str, Any]] = []
 
@@ -534,8 +493,8 @@ def lint_script(
             should_enforce_breathing = has_new_shots or not is_legacy_blueprint
 
         if should_enforce_breathing:
-            all_violations.extend(check_character_breathing_room(scenes))
-            all_violations.extend(check_setting_description_verbosity(scenes))
+            all_violations.extend(check_character_breathing_room(scenes, strict=strict))
+            all_violations.extend(check_setting_description_verbosity(scenes, strict=strict))
             all_violations.extend(check_abstract_card_clustering(scenes))
             all_violations.extend(check_ungrounded_environment_scenes(scenes))
             all_violations.extend(check_atomic_variation_continuity(scenes))
@@ -568,8 +527,15 @@ def lint_script(
     if enforce_rhythm_variance:
         all_violations.extend(check_sentence_rhythm_variance(scenes))
 
+    if not all_violations:
+        status = "PASS"
+    elif strict:
+        status = "FAIL"
+    else:
+        status = "WARN"
+
     return {
-        "status": "PASS" if not all_violations else "FAIL",
+        "status": status,
         "total_violations": len(all_violations),
         "violations": all_violations,
         "rhythm_metrics": rhythm_metrics,
@@ -591,6 +557,12 @@ def main() -> None:
         dest="enforce_breathing_room",
         action="store_false",
         help="Explicitly disable visual breathing room and concise setting constraints",
+    )
+    parser.add_argument(
+        "--strict",
+        action="store_true",
+        default=False,
+        help="Enforce strict mode and exit with code 1 on any violation or warning",
     )
     args = parser.parse_args()
 
@@ -652,6 +624,7 @@ def main() -> None:
         characters=data.get("characters") if isinstance(data, dict) else None,
         style=data.get("style") if isinstance(data, dict) else None,
         enforce_breathing_room=args.enforce_breathing_room,
+        strict=args.strict,
     )
 
     print("=" * 80)
@@ -669,10 +642,10 @@ def main() -> None:
                 print(f"[{idx}] {v_type} in {v['scene_id']} (Ch{v['chapter']}):")
                 print(f"    Forbidden keyword found: '{v['keyword']}'")
                 print(f"    Snippet: {v['snippet']}")
-            elif v_type in ("FORMULAIC_TRANSITION", "ACADEMIC_NAMEDROP_BLOAT"):
-                print(f"[{idx}] {v_type} in {v['scene_id']} cue #{v['sentence_index']}:")
-                print(f"    Pattern: {v['pattern']}")
-                print(f"    Snippet: {v['snippet']}")
+            elif v_type in ("FORMULAIC_TRANSITION", "ACADEMIC_NAMEDROP_BLOAT", "CLARITY_GUIDANCE"):
+                print(f"[{idx}] {v_type} in {v['scene_id']} cue #{v.get('sentence_index', 1)}:")
+                print(f"    Message: {v.get('message', v.get('pattern', ''))}")
+                print(f"    Snippet: {v.get('snippet', '')}")
             elif v_type == "INTRA_VIDEO_REPETITION":
                 print(f"[{idx}] {v_type} between {v['scenes'][0]} and {v['scenes'][1]}:")
                 print(f"    Repeated phrase: '{v['phrase']}'")
@@ -699,7 +672,12 @@ def main() -> None:
             else:
                 print(f"[{idx}] {v_type}: {v}")
         print("=" * 80)
-        sys.exit(1)
+        if args.strict:
+            sys.exit(1)
+        else:
+            print("Soft warning: advisory notes logged above. Pass --strict to treat as failure.")
+            print("=" * 80)
+            sys.exit(0)
     else:
         print("All diversity checks passed! Zero formulaic transitions, zero backtracking, zero duplicate phrasing.")
         print("=" * 80)

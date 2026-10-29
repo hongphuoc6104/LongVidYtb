@@ -41,6 +41,7 @@ from content.research_story_architect import (  # noqa: E402
     create_academic_research_paradox_topic,
     create_demo_trial_topic,
     generate_script_json,
+    infer_editorial_section,
     write_production_package,
 )
 from content_contract import validate_brief, validate_content  # noqa: E402
@@ -71,7 +72,7 @@ class TestResearchStoryArchitect(unittest.TestCase):
         assert budget_9s_last == 35
 
     def test_calculate_proportional_durations(self):
-        """Verify duration allocator matches 5-part conversational arc and reconciles sums."""
+        """Verify duration allocator supports dynamic proportional allocation and reconciles sums."""
         for total in [45.0, 52.5, 60.0, 75.0, 90.0]:
             durations = calculate_proportional_durations(total, scene_count=5)
             self.assertEqual(len(durations), 5)
@@ -79,20 +80,32 @@ class TestResearchStoryArchitect(unittest.TestCase):
             assert len(durations) == 5
             assert round(sum(durations), 1) == round(total, 1)
 
-        for count in [3, 4, 6, 8]:
+        for count in [3, 4, 6, 8, 12]:
             durations = calculate_proportional_durations(60.0, scene_count=count)
             self.assertEqual(len(durations), count)
             self.assertEqual(round(sum(durations), 1), 60.0)
             assert len(durations) == count
             assert round(sum(durations), 1) == 60.0
 
+        # Dynamic weights allocation adapting to scene cognitive weight
+        weights = [1.0, 2.0, 3.0, 2.0, 1.0]
+        w_durations = calculate_proportional_durations(90.0, scene_count=5, weights=weights)
+        self.assertEqual(len(w_durations), 5)
+        self.assertEqual(round(sum(w_durations), 1), 90.0)
+        self.assertEqual(w_durations[2], max(w_durations))
+        assert len(w_durations) == 5
+        assert round(sum(w_durations), 1) == 90.0
+        assert w_durations[2] == max(w_durations)
+
         with self.assertRaises(ValueError):
             calculate_proportional_durations(60.0, scene_count=0)
         with self.assertRaises(ValueError):
             calculate_proportional_durations(-10.0, scene_count=5)
+        with self.assertRaises(ValueError):
+            calculate_proportional_durations(60.0, scene_count=3, weights=[1.0, 2.0])
 
     def test_demo_trial_topic_structure(self):
-        """Verify the trial topic has 5 scenes matching the 5-part conversational arc."""
+        """Verify the trial topic has 5 scenes with dynamic narrative progression."""
         self.assertEqual(len(self.topic.scenes), 5)
         self.assertEqual([s.scene_id for s in self.topic.scenes], ["SC01", "SC02", "SC03", "SC04", "SC05"])
         assert len(self.topic.scenes) == 5
@@ -102,6 +115,16 @@ class TestResearchStoryArchitect(unittest.TestCase):
         self.assertGreaterEqual(total_duration, self.topic.min_duration)
         self.assertLessEqual(total_duration, self.topic.max_duration)
         assert self.topic.min_duration <= total_duration <= self.topic.max_duration
+
+        # Dynamic editorial sections for scenes: starts with hook, ends with closing
+        sections = [
+            infer_editorial_section(i, len(self.topic.scenes), s.title, s.narration)
+            for i, s in enumerate(self.topic.scenes, 1)
+        ]
+        self.assertEqual(sections[0], "hook")
+        self.assertEqual(sections[-1], "closing")
+        assert sections[0] == "hook"
+        assert sections[-1] == "closing"
 
         self.assertEqual(len(self.topic.sources), 2)
         assert any("Pychyl" in s["reference"] for s in self.topic.sources)
@@ -362,7 +385,7 @@ class TestResearchStoryArchitect(unittest.TestCase):
         self.assertEqual(cadence_res["warnings_count"], 0)
         self.assertLessEqual(cadence_res["max_drift"], 0.30)
 
-        # Verify check_packaging_and_localization catches violations (Excel off-pillar, >55 char title, foreign SC01)
+        # Verify check_packaging_and_localization catches violations and provides constructive advice
         bad_brief = dict(brief)
         bad_brief["youtube_title"] = "Nghịch lý tri thức là bởi vì não bộ con người luôn lười suy nghĩ khi đọc lại giáo trình đại học"
         bad_brief["topic"] = "Tổng hợp mẹo Excel và làm slide nhanh trong 4 tiếng cho tình huống của Na"
@@ -373,8 +396,22 @@ class TestResearchStoryArchitect(unittest.TestCase):
         self.assertTrue(any("YOUTUBE_TITLE_TOO_LONG" in w for w in bad_warns))
         self.assertTrue(any("YOUTUBE_TITLE_SELF_ANSWERING" in w for w in bad_warns))
         self.assertTrue(any("THUMBNAIL_OVERLAY_NOT_UPPERCASE" in w for w in bad_warns))
-        self.assertTrue(any("OPENING_NOT_LOCALIZED_VN" in w for w in bad_warns))
+        self.assertTrue(any("OPENING_LOCALIZATION_ADVICE" in w for w in bad_warns))
         self.assertTrue(any("OPENING_SCENE_PAUSE_FORBIDDEN" in w for w in bad_warns))
+        assert any("OFF_PILLAR_DILUTION" in w for w in bad_warns)
+        assert any("YOUTUBE_TITLE_TOO_LONG" in w for w in bad_warns)
+        assert any("YOUTUBE_TITLE_SELF_ANSWERING" in w for w in bad_warns)
+        assert any("THUMBNAIL_OVERLAY_NOT_UPPERCASE" in w for w in bad_warns)
+        assert any("OPENING_LOCALIZATION_ADVICE" in w for w in bad_warns)
+        assert any("OPENING_SCENE_PAUSE_FORBIDDEN" in w for w in bad_warns)
+
+        # Verify historical context with a relatable hook is permitted (no hard jargon ban)
+        good_hist_scenes = [{"id": "SC01", "narration": "Bạn có biết rằng từ thời Sumer cổ đại, các học sinh đã học cách ghi nhớ bài học?"}]
+        hist_warns = check_packaging_and_localization(brief, scenes=good_hist_scenes, check_opening_hook=True)
+        self.assertFalse(any("OPENING_NOT_LOCALIZED_VN" in w for w in hist_warns))
+        self.assertFalse(any("OPENING_LOCALIZATION_ADVICE" in w for w in hist_warns))
+        assert not any("OPENING_NOT_LOCALIZED_VN" in w for w in hist_warns)
+        assert not any("OPENING_LOCALIZATION_ADVICE" in w for w in hist_warns)
 
         # Verify standalone short_9x16 spin-offs generation
         spinoffs = build_short_spinoff_topics(acad_topic, max_spinoffs=3)
@@ -498,9 +535,8 @@ class TestResearchStoryArchitect(unittest.TestCase):
             assert len(report["errors"]) == 0
 
     def test_anti_ai_slop_narrative_arc_thumbnail_and_pacing(self):
-        """Verify 8-stage narrative arc inference, integrated poster thumbnail prompt, and max-2 variation streak."""
+        """Verify dynamic editorial progression, integrated poster thumbnail prompt, and max-2 variation streak."""
         from content.research_story_architect import (
-            NARRATIVE_ARC_8_STAGES,
             PackagingSpec,
             build_scenes_from_story_rows,
             build_thumbnail_poster_prompt,
@@ -509,10 +545,20 @@ class TestResearchStoryArchitect(unittest.TestCase):
         )
         from content.visual_quality import check_excessive_variation_streak
 
-        # 1. Verify 8-stage narrative arc
-        self.assertEqual(len(NARRATIVE_ARC_8_STAGES), 8)
+        # 1. Verify dynamic editorial progression without fixed 8-stage lock
         inferred_8 = [infer_editorial_section(i, 8) for i in range(1, 9)]
-        self.assertEqual(inferred_8, list(NARRATIVE_ARC_8_STAGES))
+        self.assertEqual(inferred_8[0], "hook")
+        self.assertEqual(inferred_8[-1], "closing")
+        assert inferred_8[0] == "hook"
+        assert inferred_8[-1] == "closing"
+
+        # Verify semantic cues and explicit cognitive phase override
+        self.assertEqual(infer_editorial_section(4, 8, title="Phản biện quan điểm truyền thống"), "counter_argument")
+        self.assertEqual(infer_editorial_section(6, 8, title="Bài học rút ra từ nguyên lý"), "takeaway")
+        self.assertEqual(infer_editorial_section(3, 8, cognitive_phase="deep_exploration"), "deep_exploration")
+        assert infer_editorial_section(4, 8, title="Phản biện quan điểm truyền thống") == "counter_argument"
+        assert infer_editorial_section(6, 8, title="Bài học rút ra từ nguyên lý") == "takeaway"
+        assert infer_editorial_section(3, 8, cognitive_phase="deep_exploration") == "deep_exploration"
 
         # 2. Verify Integrated Poster Thumbnail Prompt and AI-slop detection
         poster_prompt = build_thumbnail_poster_prompt(
@@ -572,49 +618,77 @@ class TestResearchStoryArchitect(unittest.TestCase):
         )
 
     def test_validate_long_form_narrative_depth(self):
-        """Verify validate_long_form_narrative_depth enforces all SSOT invariants."""
+        """Verify validate_long_form_narrative_depth uses dynamic depth estimation and constructive warnings."""
         from content.research_story_architect import validate_long_form_narrative_depth
 
         brief_16x9 = {"format_profile": "long_16x9", "aspect_ratio": "16:9"}
 
-        # 1. Rejects scene count < 16
+        # 1. Advisory warning for scene count below dynamic recommendation (soft warning: valid=True by default)
         scenes_few = [{"id": f"SC{i:02d}", "narration": "Một câu chuyện ngắn.", "narrative_phase": "phase_1"} for i in range(1, 10)]
-        valid, errs = validate_long_form_narrative_depth(brief_16x9, {"scenes": scenes_few})
-        self.assertFalse(valid)
-        self.assertTrue(any("NARRATIVE_DEPTH_SCENE_COUNT_TOO_LOW" in e for e in errs))
+        valid, warns = validate_long_form_narrative_depth(brief_16x9, {"scenes": scenes_few})
+        self.assertTrue(valid)
+        self.assertTrue(any("NARRATIVE_DEPTH_SCENE_COUNT" in w for w in warns))
+        assert valid
+        assert any("NARRATIVE_DEPTH_SCENE_COUNT" in w for w in warns)
 
-        # 2. Rejects total syllables < 1800
+        # Strict mode rejects when warnings are present
+        valid_strict, _ = validate_long_form_narrative_depth(brief_16x9, {"scenes": scenes_few}, strict=True)
+        self.assertFalse(valid_strict)
+        assert not valid_strict
+
+        # 2. Advisory warning for syllables below dynamic recommendation (soft warning: valid=True)
         scenes_short = [{"id": f"SC{i:02d}", "narration": "Mỗi phân cảnh chỉ có mười từ ngắn gọn.", "narrative_phase": f"phase_{i % 4}"} for i in range(1, 17)]
-        valid, errs = validate_long_form_narrative_depth(brief_16x9, {"scenes": scenes_short})
-        self.assertFalse(valid)
-        self.assertTrue(any("NARRATIVE_DEPTH_SYLLABLE_FLOOR_NOT_MET" in e for e in errs))
+        valid, warns = validate_long_form_narrative_depth(brief_16x9, {"scenes": scenes_short})
+        self.assertTrue(valid)
+        self.assertTrue(any("NARRATIVE_DEPTH_SYLLABLE" in w for w in warns))
+        assert valid
+        assert any("NARRATIVE_DEPTH_SYLLABLE" in w for w in warns)
 
-        # 3. Rejects sentences > 20 syllables
-        long_sentence = "Đây là một câu nói cực kỳ dài dòng vượt quá giới hạn hai mươi âm tiết được quy định rất nghiêm ngặt trong tài liệu kỹ thuật."
+        # 3. Spoken sentence advisory warning for long sentences (soft warning: valid=True)
+        long_sentence = "Đây là một câu nói cực kỳ dài dòng vượt quá giới hạn hai mươi lăm âm tiết được quy định nhằm đảm bảo nhịp thở và độ rõ ràng trong truyền đạt thông tin."
         scenes_long_sent = [
             {"id": f"SC{i:02d}", "narration": ("Một câu ngắn gọn. " * 15) if i > 1 else long_sentence, "narrative_phase": f"phase_{i % 4}"}
             for i in range(1, 17)
         ]
-        valid, errs = validate_long_form_narrative_depth(brief_16x9, {"scenes": scenes_long_sent})
-        self.assertFalse(valid)
-        self.assertTrue(any("NARRATIVE_DEPTH_SENTENCE_TOO_LONG" in e for e in errs))
+        valid, warns = validate_long_form_narrative_depth(brief_16x9, {"scenes": scenes_long_sent})
+        self.assertTrue(valid)
+        self.assertTrue(any("NARRATIVE_DEPTH_SENTENCE" in w for w in warns))
+        assert valid
+        assert any("NARRATIVE_DEPTH_SENTENCE" in w for w in warns)
 
-        # 4. Rejects 1:1 stage mapping
+        # 4. Stage chaining advisory
         scenes_1to1 = [
             {"id": f"SC{i:02d}", "narration": ("Câu văn chuẩn mực dưới mười từ. " * 12), "narrative_phase": f"stage_{i:02d}"}
             for i in range(1, 17)
         ]
-        valid, errs = validate_long_form_narrative_depth(brief_16x9, {"scenes": scenes_1to1})
-        self.assertFalse(valid)
-        self.assertTrue(any("NARRATIVE_DEPTH_1TO1_STAGE_MAPPING_FORBIDDEN" in e for e in errs))
+        valid, warns = validate_long_form_narrative_depth(brief_16x9, {"scenes": scenes_1to1})
+        self.assertTrue(valid)
+        self.assertTrue(any("NARRATIVE_DEPTH_1TO1_STAGE_MAPPING_FORBIDDEN" in w for w in warns))
+        assert valid
+        assert any("NARRATIVE_DEPTH_1TO1_STAGE_MAPPING_FORBIDDEN" in w for w in warns)
 
-        # 5. Accepts valid chained long-form package
+        # 5. Accepts valid chained long-form package with zero warnings
         scenes_valid = [
             {"id": f"SC{i:02d}", "narration": ("Câu văn chuẩn mực ngắn gọn dưới mười từ. " * 13), "narrative_phase": f"stage_{i // 4}"}
             for i in range(1, 17)
         ]
-        valid, errs = validate_long_form_narrative_depth(brief_16x9, {"scenes": scenes_valid})
-        self.assertTrue(valid, f"Unexpected errors: {errs}")
+        valid, warns = validate_long_form_narrative_depth(brief_16x9, {"scenes": scenes_valid})
+        self.assertTrue(valid, f"Unexpected warnings: {warns}")
+        self.assertEqual(len(warns), 0)
+        assert valid
+        assert len(warns) == 0
+
+        # 6. Dynamic depth scales with required points
+        brief_deep = {
+            "format_profile": "long_16x9",
+            "aspect_ratio": "16:9",
+            "required_points": [{"id": f"P{i:02d}", "text": f"Point {i}"} for i in range(1, 9)],
+        }
+        valid_deep, warns_deep = validate_long_form_narrative_depth(brief_deep, {"scenes": scenes_valid})
+        self.assertTrue(valid_deep)
+        self.assertTrue(any("NARRATIVE_DEPTH_SCENE_COUNT" in w for w in warns_deep))
+        assert valid_deep
+        assert any("NARRATIVE_DEPTH_SCENE_COUNT" in w for w in warns_deep)
 
 
 if __name__ == "__main__":

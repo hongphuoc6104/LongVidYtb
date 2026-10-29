@@ -2,8 +2,8 @@
 
 Strictly separates visual framing, resolution, Flow RPC aspect ratios, caption layout,
 caption clearance, text style, and watermark coordinates between the two pipelines.
-Contains zero fixed duration constraints — video duration is determined strictly by
-authored scene scripts and measured WAV narration.
+Duration and scene count are adaptive and determined dynamically by content depth
+estimation (sys/pillars.py) and measured WAV narration rather than rigid hard caps.
 """
 
 from __future__ import annotations
@@ -54,8 +54,13 @@ PROFILES: Dict[str, Dict[str, Any]] = {
         "id": "long_16x9",
         "audio_lufs": -11.0,
         "audio_peak_db": -1.0,
+        # Dynamic depth defaults: soft guidance baselines calibrated dynamically
+        # by content_depth_estimate in sys/pillars.py based on narrative depth.
+        "default_min_syllables": 1800,
+        "default_min_scenes": 16,
         "min_syllables": 1800,
         "min_scenes": 16,
+        "dynamic_depth": True,
         "narration_pauses": {
             "short_sentence": 0.20, "sentence": 0.28, "minor": 0.16,
             "opening_short_sentence": 0.16, "opening_sentence": 0.20,

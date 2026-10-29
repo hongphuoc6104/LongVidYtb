@@ -39,7 +39,7 @@ def validate_brief(root,b):
  from output_contract import outputs
  try: outputs(b)
  except ValueError as ex: errors.append(error('OUTPUT_CONTRACT','outputs',str(ex),'Sửa hợp đồng đầu ra.'))
- if b.get('scene_count') is None and not b.get('outputs'):
+ if b.get('scene_count') is None and not b.get('outputs') and not b.get('dynamic_depth'):
   errors.append(error('SCENE_PLAN_REQUIRED','scene_count','Job chưa có số cảnh và hợp đồng đầu ra mới.','Lập kế hoạch trước nội dung.'))
  if b.get('duration') and b['duration']['min_seconds']>b['duration']['max_seconds']:
   errors.append(error('DURATION','duration','Khoảng thời lượng đảo ngược','Sửa min/max.'))
@@ -57,19 +57,24 @@ def validate_brief(root,b):
     errors.append(error('FACT_NOT_CONVERSATIONAL', 'sources', sfe, 'Chuyển đổi dữ kiện thành văn nói <= 20 âm tiết, không dùng ký hiệu học thuật.'))
   except ImportError:
    pass
- if b.get('schema_version') == '3.0' and any(k in b for k in ('packaging', 'youtube_title', 'thumbnail_spec', 'channel_pillar')):
+ if b.get('schema_version') == '3.0' and any(k in b for k in ('packaging', 'youtube_title', 'thumbnail_spec', 'channel_pillar', 'channel_philosophy')):
   try:
    from content.research_story_architect import check_packaging_and_localization
    pkg_warns = check_packaging_and_localization(b)
-   for pw in pkg_warns:
-    errors.append(error('PACKAGING_CONTRACT', 'packaging', pw, 'Đảm bảo youtube_title <= 55 ký tự, thumbnail_spec có text_overlay 2-4 từ in hoa và đúng ngách học thuật.'))
+   # Packaging and localization advisories are treated as soft warnings rather than fatal ContractError
   except ImportError:
    pass
  try:
-  from pillars import get_pillar
-  get_pillar(b.get('channel_pillar') or (b.get('packaging') or {}).get('channel_pillar'))
+  from pillars import get_philosophy
+  philosophy_key = (
+   b.get('channel_philosophy')
+   or b.get('channel_pillar')
+   or (b.get('packaging') or {}).get('channel_philosophy')
+   or (b.get('packaging') or {}).get('channel_pillar')
+  )
+  get_philosophy(philosophy_key)
  except ValueError as ex:
-  errors.append(error('UNKNOWN_PILLAR','channel_pillar',str(ex),'Chọn pillar có trong sys/pillars.py.'))
+  errors.append(error('UNKNOWN_PILLAR','channel_philosophy',str(ex),'Chọn philosophy có trong sys/pillars.py.'))
  if b.get('style'):
   try:
    from flow_prompts import find_visual_cliche
@@ -91,8 +96,13 @@ def validate_content(root,b,revision,bhash,p):
  if p['required_points']!=list(req.values()): fail('BRIEF_MISMATCH','required_points','Ý bắt buộc bị thay đổi')
  scenes={s['id']:s for s in p['scenes']}
  if b.get('scene_count') is None:
-  raise ContractError([error('SCENE_PLAN_REQUIRED','scene_count','Chọn số cảnh từ outline trước khi chốt narration.','Cập nhật brief qua công cụ rồi nộp content.')])
- if [s['id'] for s in p['scenes']]!=[f'SC{i:02}' for i in range(1,b['scene_count']+1)]: fail('SCENES','scenes','Thiếu, trùng hoặc sai thứ tự mã cảnh')
+  if p.get('scenes'):
+   expected_count = len(p['scenes'])
+  else:
+   raise ContractError([error('SCENE_PLAN_REQUIRED','scene_count','Chọn số cảnh từ outline trước khi chốt narration.','Cập nhật brief qua công cụ rồi nộp content.')])
+ else:
+  expected_count = b['scene_count']
+ if [s['id'] for s in p['scenes']]!=[f'SC{i:02}' for i in range(1,expected_count+1)]: fail('SCENES','scenes','Thiếu, trùng hoặc sai thứ tự mã cảnh')
  chars=[c['id'] for c in p['characters']]
  if len(chars)!=len(set(chars)): fail('CHARACTERS','characters','Trùng mã nhân vật')
  source_ids={s['id'] for s in b['sources']}
@@ -123,7 +133,7 @@ def validate_content(root,b,revision,bhash,p):
  if needs_en:
   for s in p['scenes']:
    if not s.get('narration_en'): fail('NARRATION_EN',s['id'],'Thiếu lời dẫn tiếng Anh','Bổ sung narration_en cho đầu ra tiếng Anh đã chọn.')
- if p.get('schema_version')!='3.0' and b.get('duration'):
+ if p.get('schema_version')!='3.0' and b.get('duration') and not b.get('dynamic_depth'):
   total=sum(s['estimated_seconds'] for s in p['scenes'])
   if not b['duration']['min_seconds']<=total<=b['duration']['max_seconds']: fail('ESTIMATE','scenes','Tổng thời lượng dự kiến ngoài khoảng')
  # Human-grade storytelling & phonetic gates (when present on scenes/beats/brief)

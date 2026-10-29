@@ -620,32 +620,46 @@ class CliExecutionTests(unittest.TestCase):
 class ScriptDiversityLinterTests(unittest.TestCase):
     """Test script diversity linter for direct pacing, greetings ban, and academic name-drop ban."""
 
-    def test_banned_greetings_and_filler_transitions(self):
+    def test_natural_transitions_pass_without_formulaic_bans(self):
+        from script_diversity_linter import check_formulaic_transitions
+
+        # Conversational transitions that were previously banned now pass under Feynman Flex
+        scenes = [
+            {"id": "SC01", "narration": "Hãy nghĩ về một buổi sáng quen thuộc của bạn."},
+            {"id": "SC02", "narration": "Để tìm câu trả lời cho hiện tượng này, hãy xem xét hạch hạnh nhân."},
+            {"id": "SC03", "narration": "Bây giờ chúng ta sẽ đi sâu vào cơ chế phản ứng."},
+        ]
+        violations = check_formulaic_transitions(scenes)
+        self.assertEqual(len(violations), 0)
+
+    def test_academic_citations_provide_constructive_clarity_guidance(self):
         from script_diversity_linter import check_formulaic_transitions
 
         scenes = [
-            {"id": "SC01", "narration": "Xin chào các bạn đã quay trở lại."},
-            {"id": "SC02", "narration": "Chào mừng quý vị đến với kênh hôm nay."},
-            {"id": "SC03", "narration": "Hãy nghĩ về một buổi sáng quen thuộc của bạn."},
-            {"id": "SC04", "narration": "Để tìm câu trả lời cho hiện tượng này."},
+            {"id": "SC01", "narration": "Nghiên cứu của tác giả et al. về hành vi nhận thức."},
+            {"id": "SC02", "narration": "Xem chi tiết tại doi: 10.1038/s41586-020."},
         ]
         violations = check_formulaic_transitions(scenes)
-        self.assertEqual(len(violations), 4)
+        self.assertEqual(len(violations), 2)
         types = [v["type"] for v in violations]
-        self.assertTrue(all(t == "FORMULAIC_TRANSITION" for t in types))
+        self.assertTrue(all(t == "CLARITY_GUIDANCE" for t in types))
+        self.assertTrue(all("message" in v for v in violations))
 
-    def test_banned_academic_namedrops(self):
-        from script_diversity_linter import check_formulaic_transitions
+    def test_diversity_linter_soft_warning_default_vs_strict(self):
+        from script_diversity_linter import lint_script
 
         scenes = [
-            {"id": "SC01", "narration": "Giáo sư Robert Sapolsky đã chứng minh điều này."},
-            {"id": "SC02", "narration": "Tiến sĩ Timothy Pychyl tại trường Đại học Carleton phát hiện ra."},
-            {"id": "SC03", "narration": "Nghiên cứu năm 2018 của viện tâm lý cho thấy."},
+            {"id": "SC01", "narration": "Nghiên cứu của Robert Sapolsky et al. chứng minh cơ chế này."},
         ]
-        violations = check_formulaic_transitions(scenes)
-        self.assertGreaterEqual(len(violations), 3)
-        namedrop_violations = [v for v in violations if v["type"] == "ACADEMIC_NAMEDROP_BLOAT"]
-        self.assertGreaterEqual(len(namedrop_violations), 3)
+        # Default strict=False yields soft warning (WARN) instead of FAIL
+        res_soft = lint_script(scenes, strict=False)
+        self.assertEqual(res_soft["status"], "WARN")
+        self.assertGreater(res_soft["total_violations"], 0)
+
+        # Explicit strict=True yields FAIL
+        res_strict = lint_script(scenes, strict=True)
+        self.assertEqual(res_strict["status"], "FAIL")
+        self.assertGreater(res_strict["total_violations"], 0)
 
     def test_direct_concise_narration_passes_cleanly(self):
         from script_diversity_linter import check_formulaic_transitions

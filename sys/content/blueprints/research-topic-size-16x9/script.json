@@ -1,0 +1,754 @@
+[
+  {
+    "id": "SC01",
+    "duration": 38.45,
+    "narration": "Tên đề tài nghiên cứu quá rộng sẽ bị thầy cô gạch ngay. Khi mới bắt đầu làm nghiên cứu, ai cũng thích những chuyện đao to búa lớn. Bạn muốn tìm giải pháp cho cả nền kinh tế, hay cứu vãn môi trường toàn cầu. Nghe thì rất oách, nhưng thực tế là bạn đang tự đào hố chôn mình. Càng ôm đồm vĩ mô, bạn càng nhanh rơi vào ngõ cụt và kiệt sức. Chỉ sau vài ngày, bạn sẽ hoàn toàn lạc lối trong mớ bòng bong dữ liệu. Một câu hỏi quá rộng sẽ nuốt chửng toàn bộ thời gian quý báu của bạn. Bạn không có đủ kinh phí hay nhân lực để chứng minh điều to lớn đó. Bộ não của bạn sẽ bị quá tải trước biển thông tin khổng lồ. Bí quyết của nhà nghiên cứu giỏi là làm ngược lại hoàn toàn.",
+    "beats": [
+      {
+        "image_id": "SC01_I1",
+        "anchor_quote": "Tên đề tài nghiên cứu quá rộng sẽ bị thầy cô gạch ngay."
+      },
+      {
+        "image_id": "SC01_I2",
+        "anchor_quote": "Khi mới bắt đầu làm nghiên cứu, ai cũng thích những chuyện đao to búa lớn."
+      },
+      {
+        "image_id": "SC01_I3",
+        "anchor_quote": "Bạn muốn tìm giải pháp cho cả nền kinh tế, hay cứu vãn môi trường toàn cầu."
+      },
+      {
+        "image_id": "SC01_I4",
+        "anchor_quote": "Nghe thì rất oách, nhưng thực tế là bạn đang tự đào hố chôn mình."
+      },
+      {
+        "image_id": "SC01_I5",
+        "anchor_quote": "Càng ôm đồm vĩ mô, bạn càng nhanh rơi vào ngõ cụt và kiệt sức."
+      },
+      {
+        "image_id": "SC01_I6",
+        "anchor_quote": "Chỉ sau vài ngày, bạn sẽ hoàn toàn lạc lối trong mớ bòng bong dữ liệu."
+      },
+      {
+        "image_id": "SC01_I7",
+        "anchor_quote": "Một câu hỏi quá rộng sẽ nuốt chửng toàn bộ thời gian quý báu của bạn."
+      },
+      {
+        "image_id": "SC01_I8",
+        "anchor_quote": "Bạn không có đủ kinh phí hay nhân lực để chứng minh điều to lớn đó."
+      },
+      {
+        "image_id": "SC01_I9",
+        "anchor_quote": "Bộ não của bạn sẽ bị quá tải trước biển thông tin khổng lồ."
+      },
+      {
+        "image_id": "SC01_I10",
+        "anchor_quote": "Bí quyết của nhà nghiên cứu giỏi là làm ngược lại hoàn toàn."
+      }
+    ]
+  },
+  {
+    "id": "SC02",
+    "duration": 30.2,
+    "narration": "Lần đầu làm nghiên cứu, ai cũng thích những tên đề tài thật dài. Càng nhiều từ chuyên môn, bạn càng thấy bài viết của mình quan trọng. Đó là một ảo giác rất ngọt ngào. Bạn tưởng mình đang chuẩn bị tạo ra một cuộc cách mạng. Nhưng trong mắt hội đồng, đó chỉ là sự ngây thơ. Họ không cần một bài diễn văn truyền cảm hứng. Họ cần một phép đo cụ thể mà bạn có thể làm được. Một câu hỏi hẹp và sâu luôn đánh bại một ý tưởng mênh mông. Tính khả thi mới là thước đo thực sự của bản đề cương. Không thể đo lường thì không thể nghiên cứu.",
+    "beats": [
+      {
+        "image_id": "SC02_I1",
+        "anchor_quote": "Lần đầu làm nghiên cứu, ai cũng thích những tên đề tài thật dài."
+      },
+      {
+        "image_id": "SC02_I2",
+        "anchor_quote": "Càng nhiều từ chuyên môn, bạn càng thấy bài viết của mình quan trọng."
+      },
+      {
+        "image_id": "SC02_I3",
+        "anchor_quote": "Đó là một ảo giác rất ngọt ngào."
+      },
+      {
+        "image_id": "SC02_I4",
+        "anchor_quote": "Bạn tưởng mình đang chuẩn bị tạo ra một cuộc cách mạng."
+      },
+      {
+        "image_id": "SC02_I5",
+        "anchor_quote": "Nhưng trong mắt hội đồng, đó chỉ là sự ngây thơ."
+      },
+      {
+        "image_id": "SC02_I6",
+        "anchor_quote": "Họ không cần một bài diễn văn truyền cảm hứng."
+      },
+      {
+        "image_id": "SC02_I7",
+        "anchor_quote": "Họ cần một phép đo cụ thể mà bạn có thể làm được."
+      },
+      {
+        "image_id": "SC02_I8",
+        "anchor_quote": "Một câu hỏi hẹp và sâu luôn đánh bại một ý tưởng mênh mông."
+      },
+      {
+        "image_id": "SC02_I9",
+        "anchor_quote": "Tính khả thi mới là thước đo thực sự của bản đề cương."
+      },
+      {
+        "image_id": "SC02_I10",
+        "anchor_quote": "Không thể đo lường thì không thể nghiên cứu."
+      }
+    ]
+  },
+  {
+    "id": "SC03",
+    "duration": 31.95,
+    "narration": "Nhưng chỉ sau một tuần, thực tế sẽ tạt cho bạn một gáo nước lạnh. Giáo viên hướng dẫn sẽ gạch bỏ ngay từ vòng đề cương. Lời phê thường rất ngắn: Quá rộng, không thể thực hiện. Cảm giác lúc đó giống như bị dội một gáo nước lạnh. Bạn bực bội vì nghĩ thầy cô không hiểu tham vọng của mình. Nhưng thầy cô đã thấy trước ngõ cụt mà bạn chưa nhìn ra. Một đề tài vĩ mô sẽ dẫn bạn vào ngõ cụt không lối thoát. Càng cố chấp bảo vệ, bạn càng lún sâu vào bế tắc. Nhận ra giới hạn sớm sẽ giúp bạn tiết kiệm nhiều tháng trời. Biết dừng lại lúc này chính là điều may mắn.",
+    "beats": [
+      {
+        "image_id": "SC03_I1",
+        "anchor_quote": "Nhưng chỉ sau một tuần, thực tế sẽ tạt cho bạn một gáo nước lạnh."
+      },
+      {
+        "image_id": "SC03_I2",
+        "anchor_quote": "Giáo viên hướng dẫn sẽ gạch bỏ ngay từ vòng đề cương."
+      },
+      {
+        "image_id": "SC03_I3",
+        "anchor_quote": "Lời phê thường rất ngắn: Quá rộng, không thể thực hiện."
+      },
+      {
+        "image_id": "SC03_I4",
+        "anchor_quote": "Cảm giác lúc đó giống như bị dội một gáo nước lạnh."
+      },
+      {
+        "image_id": "SC03_I5",
+        "anchor_quote": "Bạn bực bội vì nghĩ thầy cô không hiểu tham vọng của mình."
+      },
+      {
+        "image_id": "SC03_I6",
+        "anchor_quote": "Nhưng thầy cô đã thấy trước ngõ cụt mà bạn chưa nhìn ra."
+      },
+      {
+        "image_id": "SC03_I7",
+        "anchor_quote": "Một đề tài vĩ mô sẽ dẫn bạn vào ngõ cụt không lối thoát."
+      },
+      {
+        "image_id": "SC03_I8",
+        "anchor_quote": "Càng cố chấp bảo vệ, bạn càng lún sâu vào bế tắc."
+      },
+      {
+        "image_id": "SC03_I9",
+        "anchor_quote": "Nhận ra giới hạn sớm sẽ giúp bạn tiết kiệm nhiều tháng trời."
+      },
+      {
+        "image_id": "SC03_I10",
+        "anchor_quote": "Biết dừng lại lúc này chính là điều may mắn."
+      }
+    ]
+  },
+  {
+    "id": "SC04",
+    "duration": 29.7,
+    "narration": "Đề tài càng lớn, bạn càng không biết phải bắt đầu từ đâu. Bạn cần khảo sát mười nghìn người để lấy mẫu. Nhưng bạn chỉ có đúng hai bàn tay trắng. Bạn không có kinh phí để đi khắp các tỉnh thành. Bạn cũng không có quyền tiếp cận các cơ sở dữ liệu kín. Thời gian làm bài tốt nghiệp chỉ vỏn vẹn ba tháng. Biển dữ liệu mênh mông sẽ nhấn chìm bạn trước ngày nộp bài. Mỗi ngày trôi qua trong hoang mang và lo âu tột cùng. Sự bất lực xuất hiện khi bạn gánh vác việc quá sức mình. Đừng tự biến mình thành nạn nhân của sự tham lam.",
+    "beats": [
+      {
+        "image_id": "SC04_I1",
+        "anchor_quote": "Đề tài càng lớn, bạn càng không biết phải bắt đầu từ đâu."
+      },
+      {
+        "image_id": "SC04_I2",
+        "anchor_quote": "Bạn cần khảo sát mười nghìn người để lấy mẫu."
+      },
+      {
+        "image_id": "SC04_I3",
+        "anchor_quote": "Nhưng bạn chỉ có đúng hai bàn tay trắng."
+      },
+      {
+        "image_id": "SC04_I4",
+        "anchor_quote": "Bạn không có kinh phí để đi khắp các tỉnh thành."
+      },
+      {
+        "image_id": "SC04_I5",
+        "anchor_quote": "Bạn cũng không có quyền tiếp cận các cơ sở dữ liệu kín."
+      },
+      {
+        "image_id": "SC04_I6",
+        "anchor_quote": "Thời gian làm bài tốt nghiệp chỉ vỏn vẹn ba tháng."
+      },
+      {
+        "image_id": "SC04_I7",
+        "anchor_quote": "Biển dữ liệu mênh mông sẽ nhấn chìm bạn trước ngày nộp bài."
+      },
+      {
+        "image_id": "SC04_I8",
+        "anchor_quote": "Mỗi ngày trôi qua trong hoang mang và lo âu tột cùng."
+      },
+      {
+        "image_id": "SC04_I9",
+        "anchor_quote": "Sự bất lực xuất hiện khi bạn gánh vác việc quá sức mình."
+      },
+      {
+        "image_id": "SC04_I10",
+        "anchor_quote": "Đừng tự biến mình thành nạn nhân của sự tham lam."
+      }
+    ]
+  },
+  {
+    "id": "SC05",
+    "duration": 32.2,
+    "narration": "Nhiều người tưởng nghiên cứu là phải phát minh ra điều chưa ai từng nghĩ. Họ sợ đề tài của mình bị chê là tầm thường. Đây là cái bẫy tâm lý phổ biến nhất của người mới. Khoa học thực sự không vận hành theo cách giật gân như vậy. Các nhà bác học cũng bắt đầu từ những phép thử rất nhỏ. Phát minh lại bánh xe chỉ làm bạn mất thời gian vô ích. Bạn không cần chứng minh lại những định luật đã có từ lâu. Giá trị của một nghiên cứu nằm ở tính khả thi. Một phát hiện nhỏ nhưng chính xác vẫn có chỗ đứng riêng. Làm được trọn vẹn một việc nhỏ tốt hơn bỏ dở việc lớn.",
+    "beats": [
+      {
+        "image_id": "SC05_I1",
+        "anchor_quote": "Nhiều người tưởng nghiên cứu là phải phát minh ra điều chưa ai từng nghĩ."
+      },
+      {
+        "image_id": "SC05_I2",
+        "anchor_quote": "Họ sợ đề tài của mình bị chê là tầm thường."
+      },
+      {
+        "image_id": "SC05_I3",
+        "anchor_quote": "Đây là cái bẫy tâm lý phổ biến nhất của người mới."
+      },
+      {
+        "image_id": "SC05_I4",
+        "anchor_quote": "Khoa học thực sự không vận hành theo cách giật gân như vậy."
+      },
+      {
+        "image_id": "SC05_I5",
+        "anchor_quote": "Các nhà bác học cũng bắt đầu từ những phép thử rất nhỏ."
+      },
+      {
+        "image_id": "SC05_I6",
+        "anchor_quote": "Phát minh lại bánh xe chỉ làm bạn mất thời gian vô ích."
+      },
+      {
+        "image_id": "SC05_I7",
+        "anchor_quote": "Bạn không cần chứng minh lại những định luật đã có từ lâu."
+      },
+      {
+        "image_id": "SC05_I8",
+        "anchor_quote": "Giá trị của một nghiên cứu nằm ở tính khả thi."
+      },
+      {
+        "image_id": "SC05_I9",
+        "anchor_quote": "Một phát hiện nhỏ nhưng chính xác vẫn có chỗ đứng riêng."
+      },
+      {
+        "image_id": "SC05_I10",
+        "anchor_quote": "Làm được trọn vẹn một việc nhỏ tốt hơn bỏ dở việc lớn."
+      }
+    ]
+  },
+  {
+    "id": "SC06",
+    "duration": 32.45,
+    "narration": "Thực ra, tri thức nhân loại giống như một bức tường đã xây rất cao. Hàng triệu nhà khoa học đi trước đã đóng góp từng viên gạch. Bức tường ấy vững chắc nhờ sự tích lũy qua hàng trăm năm. Không ai một mình xây nên cả tòa lâu đài đồ sộ. Nhìn kỹ vào bức tường, bạn sẽ thấy những lỗ khuyết rất nhỏ. Đó là những chỗ mà người đi trước chưa kịp kiểm tra. Có thể họ chưa kịp đo đạc ở một đối tượng đặc thù. Đó chính là nơi đề tài của bạn nên hướng vào. Bạn chỉ cần bổ sung đúng khoảng trống bị bỏ quên ấy. Một khe hở nhỏ cũng đủ tạo nên một công trình giá trị.",
+    "beats": [
+      {
+        "image_id": "SC06_I1",
+        "anchor_quote": "Thực ra, tri thức nhân loại giống như một bức tường đã xây rất cao."
+      },
+      {
+        "image_id": "SC06_I2",
+        "anchor_quote": "Hàng triệu nhà khoa học đi trước đã đóng góp từng viên gạch."
+      },
+      {
+        "image_id": "SC06_I3",
+        "anchor_quote": "Bức tường ấy vững chắc nhờ sự tích lũy qua hàng trăm năm."
+      },
+      {
+        "image_id": "SC06_I4",
+        "anchor_quote": "Không ai một mình xây nên cả tòa lâu đài đồ sộ."
+      },
+      {
+        "image_id": "SC06_I5",
+        "anchor_quote": "Nhìn kỹ vào bức tường, bạn sẽ thấy những lỗ khuyết rất nhỏ."
+      },
+      {
+        "image_id": "SC06_I6",
+        "anchor_quote": "Đó là những chỗ mà người đi trước chưa kịp kiểm tra."
+      },
+      {
+        "image_id": "SC06_I7",
+        "anchor_quote": "Có thể họ chưa kịp đo đạc ở một đối tượng đặc thù."
+      },
+      {
+        "image_id": "SC06_I8",
+        "anchor_quote": "Đó chính là nơi đề tài của bạn nên hướng vào."
+      },
+      {
+        "image_id": "SC06_I9",
+        "anchor_quote": "Bạn chỉ cần bổ sung đúng khoảng trống bị bỏ quên ấy."
+      },
+      {
+        "image_id": "SC06_I10",
+        "anchor_quote": "Một khe hở nhỏ cũng đủ tạo nên một công trình giá trị."
+      }
+    ]
+  },
+  {
+    "id": "SC07",
+    "duration": 32.2,
+    "narration": "Việc của bạn không phải xây tường mới, mà là đặt thêm một viên gạch. Một viên gạch nhỏ nhưng vừa khít với chỗ trống trên tường. Viên gạch vừa vặn sẽ làm bức tường vững chắc hơn. Trong giới khoa học, người ta gọi đó là đóng góp tích lũy. Không ai chê một viên gạch là quá nhỏ bé. Họ chỉ chê những viên gạch nứt vỡ hoặc đặt sai vị trí. Nếu bạn gọt đề tài vừa sức, dữ liệu của bạn sẽ rất chắc. Một câu hỏi nghiên cứu hẹp giúp viên gạch của bạn rắn chắc. Kết quả bạn đưa ra sẽ không ai có thể bắt bẻ được. Bạn hoàn toàn có thể tự hào về phần việc nhỏ ấy.",
+    "beats": [
+      {
+        "image_id": "SC07_I1",
+        "anchor_quote": "Việc của bạn không phải xây tường mới, mà là đặt thêm một viên gạch."
+      },
+      {
+        "image_id": "SC07_I2",
+        "anchor_quote": "Một viên gạch nhỏ nhưng vừa khít với chỗ trống trên tường."
+      },
+      {
+        "image_id": "SC07_I3",
+        "anchor_quote": "Viên gạch vừa vặn sẽ làm bức tường vững chắc hơn."
+      },
+      {
+        "image_id": "SC07_I4",
+        "anchor_quote": "Trong giới khoa học, người ta gọi đó là đóng góp tích lũy."
+      },
+      {
+        "image_id": "SC07_I5",
+        "anchor_quote": "Không ai chê một viên gạch là quá nhỏ bé."
+      },
+      {
+        "image_id": "SC07_I6",
+        "anchor_quote": "Họ chỉ chê những viên gạch nứt vỡ hoặc đặt sai vị trí."
+      },
+      {
+        "image_id": "SC07_I7",
+        "anchor_quote": "Nếu bạn gọt đề tài vừa sức, dữ liệu của bạn sẽ rất chắc."
+      },
+      {
+        "image_id": "SC07_I8",
+        "anchor_quote": "Một câu hỏi nghiên cứu hẹp giúp viên gạch của bạn rắn chắc."
+      },
+      {
+        "image_id": "SC07_I9",
+        "anchor_quote": "Kết quả bạn đưa ra sẽ không ai có thể bắt bẻ được."
+      },
+      {
+        "image_id": "SC07_I10",
+        "anchor_quote": "Bạn hoàn toàn có thể tự hào về phần việc nhỏ ấy."
+      }
+    ]
+  },
+  {
+    "id": "SC08",
+    "duration": 31.2,
+    "narration": "Bớt tham lại, bài nghiên cứu của bạn mới có đường sống. Khi thu nhỏ phạm vi, bạn kiểm soát được toàn bộ biến số. Bạn biết rõ mình cần thu thập bao nhiêu mẫu khảo sát. Bạn biết rõ công cụ nào đo lường chính xác nhất. Dữ liệu thu về sẽ sạch sẽ và không bị nhiễu. Bạn sẽ không bị ngợp giữa hàng tá tài liệu mâu thuẫn nhau. Thầy cô chấm bài sẽ nhìn thấy ngay phương pháp mạch lạc. Một bài báo gọn gàng luôn được đánh giá cao hơn bản thảo lan man. Sự tập trung chính là vũ khí mạnh nhất của người nghiên cứu. Bớt tham không phải lười, mà là sự khôn ngoan.",
+    "beats": [
+      {
+        "image_id": "SC08_I1",
+        "anchor_quote": "Bớt tham lại, bài nghiên cứu của bạn mới có đường sống."
+      },
+      {
+        "image_id": "SC08_I2",
+        "anchor_quote": "Khi thu nhỏ phạm vi, bạn kiểm soát được toàn bộ biến số."
+      },
+      {
+        "image_id": "SC08_I3",
+        "anchor_quote": "Bạn biết rõ mình cần thu thập bao nhiêu mẫu khảo sát."
+      },
+      {
+        "image_id": "SC08_I4",
+        "anchor_quote": "Bạn biết rõ công cụ nào đo lường chính xác nhất."
+      },
+      {
+        "image_id": "SC08_I5",
+        "anchor_quote": "Dữ liệu thu về sẽ sạch sẽ và không bị nhiễu."
+      },
+      {
+        "image_id": "SC08_I6",
+        "anchor_quote": "Bạn sẽ không bị ngợp giữa hàng tá tài liệu mâu thuẫn nhau."
+      },
+      {
+        "image_id": "SC08_I7",
+        "anchor_quote": "Thầy cô chấm bài sẽ nhìn thấy ngay phương pháp mạch lạc."
+      },
+      {
+        "image_id": "SC08_I8",
+        "anchor_quote": "Một bài báo gọn gàng luôn được đánh giá cao hơn bản thảo lan man."
+      },
+      {
+        "image_id": "SC08_I9",
+        "anchor_quote": "Sự tập trung chính là vũ khí mạnh nhất của người nghiên cứu."
+      },
+      {
+        "image_id": "SC08_I10",
+        "anchor_quote": "Bớt tham không phải lười, mà là sự khôn ngoan."
+      }
+    ]
+  },
+  {
+    "id": "SC09",
+    "duration": 31.2,
+    "narration": "Để gọt một đề tài to thành nhỏ, hãy dùng quy tắc ba vòng tròn. Kỹ thuật này giống hệt như bóc từng lớp vỏ của củ hành tây. Mỗi lần bóc một lớp, bài toán lại hiện ra rõ ràng hơn. Vòng tròn ngoài cùng là lĩnh vực chung rất rộng. Vòng tròn ở giữa là nhóm người cụ thể bạn tiếp cận được. Vòng tròn trong cùng là một hành vi đo đạc chính xác. Bằng cách này, mọi đề tài khổng lồ đều bị thu nhỏ. Bạn sẽ không còn cảm giác mơ hồ hay mông lung nữa. Mỗi bước đi đều có đích đến rõ ràng trước mắt. Hãy cùng đi qua từng lớp vỏ ngay bây giờ.",
+    "beats": [
+      {
+        "image_id": "SC09_I1",
+        "anchor_quote": "Để gọt một đề tài to thành nhỏ, hãy dùng quy tắc ba vòng tròn."
+      },
+      {
+        "image_id": "SC09_I2",
+        "anchor_quote": "Kỹ thuật này giống hệt như bóc từng lớp vỏ của củ hành tây."
+      },
+      {
+        "image_id": "SC09_I3",
+        "anchor_quote": "Mỗi lần bóc một lớp, bài toán lại hiện ra rõ ràng hơn."
+      },
+      {
+        "image_id": "SC09_I4",
+        "anchor_quote": "Vòng tròn ngoài cùng là lĩnh vực chung rất rộng."
+      },
+      {
+        "image_id": "SC09_I5",
+        "anchor_quote": "Vòng tròn ở giữa là nhóm người cụ thể bạn tiếp cận được."
+      },
+      {
+        "image_id": "SC09_I6",
+        "anchor_quote": "Vòng tròn trong cùng là một hành vi đo đạc chính xác."
+      },
+      {
+        "image_id": "SC09_I7",
+        "anchor_quote": "Bằng cách này, mọi đề tài khổng lồ đều bị thu nhỏ."
+      },
+      {
+        "image_id": "SC09_I8",
+        "anchor_quote": "Bạn sẽ không còn cảm giác mơ hồ hay mông lung nữa."
+      },
+      {
+        "image_id": "SC09_I9",
+        "anchor_quote": "Mỗi bước đi đều có đích đến rõ ràng trước mắt."
+      },
+      {
+        "image_id": "SC09_I10",
+        "anchor_quote": "Hãy cùng đi qua từng lớp vỏ ngay bây giờ."
+      }
+    ]
+  },
+  {
+    "id": "SC10",
+    "duration": 31.2,
+    "narration": "Thay vì nghiên cứu giới trẻ cả nước, hãy chọn sinh viên trường bạn. Nhiều bạn ghi trong đề cương: Khảo sát thanh niên toàn quốc. Nhưng bạn lấy đâu ra tiền để đi từ Bắc vào Nam? Thu hẹp đối tượng không hề làm giảm giá trị bài viết. Khoa học cần mẫu khảo sát thật và có thể xác minh. Sinh viên trong ký túc xá là nguồn dữ liệu ngay trước mắt bạn. Bạn có thể gặp họ hàng ngày để hỏi sâu hơn. Bạn dễ dàng kiểm chứng lại nếu có dữ liệu bất thường. Mẫu khảo sát gần gũi giúp bài nghiên cứu đáng tin cậy hơn. Khả thi trong tầm tay chính là tiêu chuẩn vàng.",
+    "beats": [
+      {
+        "image_id": "SC10_I1",
+        "anchor_quote": "Thay vì nghiên cứu giới trẻ cả nước, hãy chọn sinh viên trường bạn."
+      },
+      {
+        "image_id": "SC10_I2",
+        "anchor_quote": "Nhiều bạn ghi trong đề cương: Khảo sát thanh niên toàn quốc."
+      },
+      {
+        "image_id": "SC10_I3",
+        "anchor_quote": "Nhưng bạn lấy đâu ra tiền để đi từ Bắc vào Nam?"
+      },
+      {
+        "image_id": "SC10_I4",
+        "anchor_quote": "Thu hẹp đối tượng không hề làm giảm giá trị bài viết."
+      },
+      {
+        "image_id": "SC10_I5",
+        "anchor_quote": "Khoa học cần mẫu khảo sát thật và có thể xác minh."
+      },
+      {
+        "image_id": "SC10_I6",
+        "anchor_quote": "Sinh viên trong ký túc xá là nguồn dữ liệu ngay trước mắt bạn."
+      },
+      {
+        "image_id": "SC10_I7",
+        "anchor_quote": "Bạn có thể gặp họ hàng ngày để hỏi sâu hơn."
+      },
+      {
+        "image_id": "SC10_I8",
+        "anchor_quote": "Bạn dễ dàng kiểm chứng lại nếu có dữ liệu bất thường."
+      },
+      {
+        "image_id": "SC10_I9",
+        "anchor_quote": "Mẫu khảo sát gần gũi giúp bài nghiên cứu đáng tin cậy hơn."
+      },
+      {
+        "image_id": "SC10_I10",
+        "anchor_quote": "Khả thi trong tầm tay chính là tiêu chuẩn vàng."
+      }
+    ]
+  },
+  {
+    "id": "SC11",
+    "duration": 30.7,
+    "narration": "Thay vì sức khỏe tinh thần, hãy đo giờ đi ngủ và thời gian lướt mạng. Khái niệm sức khỏe tinh thần quá trừu tượng và khó nắm bắt. Mỗi người hiểu từ này theo một nghĩa khác nhau. Nhưng giờ đi ngủ và số phút dùng điện thoại thì đo được ngay. Bạn chỉ cần chụp màn hình tính năng thời gian sử dụng. Con số khách quan không biết nói dối. Bạn không cần đoán mò cảm xúc của đối tượng nữa. Khóa chặt hành vi giúp loại bỏ các tranh cãi mơ hồ. Mọi kết luận của bạn đều dựa trên con số thực tế. Đó là cách biến ý tưởng chung thành biến số đo được.",
+    "beats": [
+      {
+        "image_id": "SC11_I1",
+        "anchor_quote": "Thay vì sức khỏe tinh thần, hãy đo giờ đi ngủ và thời gian lướt mạng."
+      },
+      {
+        "image_id": "SC11_I2",
+        "anchor_quote": "Khái niệm sức khỏe tinh thần quá trừu tượng và khó nắm bắt."
+      },
+      {
+        "image_id": "SC11_I3",
+        "anchor_quote": "Mỗi người hiểu từ này theo một nghĩa khác nhau."
+      },
+      {
+        "image_id": "SC11_I4",
+        "anchor_quote": "Nhưng giờ đi ngủ và số phút dùng điện thoại thì đo được ngay."
+      },
+      {
+        "image_id": "SC11_I5",
+        "anchor_quote": "Bạn chỉ cần chụp màn hình tính năng thời gian sử dụng."
+      },
+      {
+        "image_id": "SC11_I6",
+        "anchor_quote": "Con số khách quan không biết nói dối."
+      },
+      {
+        "image_id": "SC11_I7",
+        "anchor_quote": "Bạn không cần đoán mò cảm xúc của đối tượng nữa."
+      },
+      {
+        "image_id": "SC11_I8",
+        "anchor_quote": "Khóa chặt hành vi giúp loại bỏ các tranh cãi mơ hồ."
+      },
+      {
+        "image_id": "SC11_I9",
+        "anchor_quote": "Mọi kết luận của bạn đều dựa trên con số thực tế."
+      },
+      {
+        "image_id": "SC11_I10",
+        "anchor_quote": "Đó là cách biến ý tưởng chung thành biến số đo được."
+      }
+    ]
+  },
+  {
+    "id": "SC12",
+    "duration": 33.7,
+    "narration": "Bài toán bây giờ vừa vặn trong tay, làm xong gọn gàng trong ba tháng. Một số người sẽ lo rằng đề tài này trông quá giản dị. Họ hỏi: Liệu một đề tài nhỏ như vậy có đủ để tốt nghiệp không? Câu trả lời là hoàn toàn đủ, thậm chí còn đạt điểm cao. Hội đồng luôn đánh giá cao số liệu trung thực và chặt chẽ. Họ không cần những lời hứa to tát nhưng vô căn cứ. Một nghiên cứu trung thực ở góc nhỏ giá trị hơn ngàn lời sáo rỗng. Bạn chứng minh được một mắt xích nhỏ bằng chứng cứ thép. Thầy cô sẽ thấy bạn hiểu rất sâu phương pháp làm việc. Đó mới là tinh thần chân chính của khoa học thực nghiệm.",
+    "beats": [
+      {
+        "image_id": "SC12_I1",
+        "anchor_quote": "Bài toán bây giờ vừa vặn trong tay, làm xong gọn gàng trong ba tháng."
+      },
+      {
+        "image_id": "SC12_I2",
+        "anchor_quote": "Một số người sẽ lo rằng đề tài này trông quá giản dị."
+      },
+      {
+        "image_id": "SC12_I3",
+        "anchor_quote": "Họ hỏi: Liệu một đề tài nhỏ như vậy có đủ để tốt nghiệp không?"
+      },
+      {
+        "image_id": "SC12_I4",
+        "anchor_quote": "Câu trả lời là hoàn toàn đủ, thậm chí còn đạt điểm cao."
+      },
+      {
+        "image_id": "SC12_I5",
+        "anchor_quote": "Hội đồng luôn đánh giá cao số liệu trung thực và chặt chẽ."
+      },
+      {
+        "image_id": "SC12_I6",
+        "anchor_quote": "Họ không cần những lời hứa to tát nhưng vô căn cứ."
+      },
+      {
+        "image_id": "SC12_I7",
+        "anchor_quote": "Một nghiên cứu trung thực ở góc nhỏ giá trị hơn ngàn lời sáo rỗng."
+      },
+      {
+        "image_id": "SC12_I8",
+        "anchor_quote": "Bạn chứng minh được một mắt xích nhỏ bằng chứng cứ thép."
+      },
+      {
+        "image_id": "SC12_I9",
+        "anchor_quote": "Thầy cô sẽ thấy bạn hiểu rất sâu phương pháp làm việc."
+      },
+      {
+        "image_id": "SC12_I10",
+        "anchor_quote": "Đó mới là tinh thần chân chính của khoa học thực nghiệm."
+      }
+    ]
+  },
+  {
+    "id": "SC13",
+    "duration": 31.7,
+    "narration": "Bước một: Viết tên đề tài ra giấy, gạch hết những từ đao to búa lớn. Hãy bỏ ngay những từ như: Toàn diện, giải pháp vĩ mô, hay cứu cánh. Những từ đó chỉ làm rối mắt và che giấu sự mơ hồ. Tên đề tài chuẩn cần ngắn gọn, rõ ràng và mộc mạc. Đọc lên là người nghe hiểu ngay bạn đang làm gì. Không cần dùng từ hoa mỹ để chứng tỏ mình thông minh. Từ ngữ càng đơn giản thì ý tưởng càng sáng rõ. Sự rõ ràng là đỉnh cao của sự thông suốt. Bạn giúp người đọc nắm bắt vấn đề chỉ sau ba giây. Gọt chữ thừa chính là bước đầu tiên để cứu đề tài.",
+    "beats": [
+      {
+        "image_id": "SC13_I1",
+        "anchor_quote": "Bước một: Viết tên đề tài ra giấy, gạch hết những từ đao to búa lớn."
+      },
+      {
+        "image_id": "SC13_I2",
+        "anchor_quote": "Hãy bỏ ngay những từ như: Toàn diện, giải pháp vĩ mô, hay cứu cánh."
+      },
+      {
+        "image_id": "SC13_I3",
+        "anchor_quote": "Những từ đó chỉ làm rối mắt và che giấu sự mơ hồ."
+      },
+      {
+        "image_id": "SC13_I4",
+        "anchor_quote": "Tên đề tài chuẩn cần ngắn gọn, rõ ràng và mộc mạc."
+      },
+      {
+        "image_id": "SC13_I5",
+        "anchor_quote": "Đọc lên là người nghe hiểu ngay bạn đang làm gì."
+      },
+      {
+        "image_id": "SC13_I6",
+        "anchor_quote": "Không cần dùng từ hoa mỹ để chứng tỏ mình thông minh."
+      },
+      {
+        "image_id": "SC13_I7",
+        "anchor_quote": "Từ ngữ càng đơn giản thì ý tưởng càng sáng rõ."
+      },
+      {
+        "image_id": "SC13_I8",
+        "anchor_quote": "Sự rõ ràng là đỉnh cao của sự thông suốt."
+      },
+      {
+        "image_id": "SC13_I9",
+        "anchor_quote": "Bạn giúp người đọc nắm bắt vấn đề chỉ sau ba giây."
+      },
+      {
+        "image_id": "SC13_I10",
+        "anchor_quote": "Gọt chữ thừa chính là bước đầu tiên để cứu đề tài."
+      }
+    ]
+  },
+  {
+    "id": "SC14",
+    "duration": 30.7,
+    "narration": "Bước hai: Chỉ giữ lại đúng một nhóm người, một thói quen và một thước đo. Khung này giúp bạn không bao giờ bị lạc lối. Ô thứ nhất: Sinh viên năm nhất trường bạn. Ô thứ hai: Thói quen lướt điện thoại sau mười một giờ đêm. Ô thứ ba: Điểm số trung bình môn của học kỳ vừa rồi. Ba mảnh ghép này khớp lại thành một câu hỏi hoàn chỉnh. Bạn dễ dàng giải thích đề tài cho bất kỳ ai nghe. Bạn có thấy mọi thứ trở nên cực kỳ dễ thở không? Bạn biết chính xác ngày mai mình cần phải làm gì. Đây chính là công thức giúp hàng nghìn sinh viên qua môn.",
+    "beats": [
+      {
+        "image_id": "SC14_I1",
+        "anchor_quote": "Bước hai: Chỉ giữ lại đúng một nhóm người, một thói quen và một thước đo."
+      },
+      {
+        "image_id": "SC14_I2",
+        "anchor_quote": "Khung này giúp bạn không bao giờ bị lạc lối."
+      },
+      {
+        "image_id": "SC14_I3",
+        "anchor_quote": "Ô thứ nhất: Sinh viên năm nhất trường bạn."
+      },
+      {
+        "image_id": "SC14_I4",
+        "anchor_quote": "Ô thứ hai: Thói quen lướt điện thoại sau mười một giờ đêm."
+      },
+      {
+        "image_id": "SC14_I5",
+        "anchor_quote": "Ô thứ ba: Điểm số trung bình môn của học kỳ vừa rồi."
+      },
+      {
+        "image_id": "SC14_I6",
+        "anchor_quote": "Ba mảnh ghép này khớp lại thành một câu hỏi hoàn chỉnh."
+      },
+      {
+        "image_id": "SC14_I7",
+        "anchor_quote": "Bạn dễ dàng giải thích đề tài cho bất kỳ ai nghe."
+      },
+      {
+        "image_id": "SC14_I8",
+        "anchor_quote": "Bạn có thấy mọi thứ trở nên cực kỳ dễ thở không?"
+      },
+      {
+        "image_id": "SC14_I9",
+        "anchor_quote": "Bạn biết chính xác ngày mai mình cần phải làm gì."
+      },
+      {
+        "image_id": "SC14_I10",
+        "anchor_quote": "Đây chính là công thức giúp hàng nghìn sinh viên qua môn."
+      }
+    ]
+  },
+  {
+    "id": "SC15",
+    "duration": 30.95,
+    "narration": "Bước ba: Lên mạng tìm xem có ai từng đo việc này ở nước khác chưa. Chắc chắn đã có người từng làm một nghiên cứu tương tự. Đừng hoảng sợ khi thấy người ta đã làm trước mình. Ngược lại, đó là một tin rất đáng mừng. Bạn có thể mượn ngay thang đo chuẩn mà họ đã kiểm định. Bạn không phải mất công nghĩ ra bảng hỏi từ đầu. Việc của bạn chỉ là lặp lại phép đo đó tại Việt Nam. Đó hoàn toàn là một đóng góp học thuật hợp lệ. Hội đồng sẽ đánh giá cao sự am hiểu tài liệu của bạn. Bạn tiết kiệm được ít nhất hai tháng mày mò vô ích.",
+    "beats": [
+      {
+        "image_id": "SC15_I1",
+        "anchor_quote": "Bước ba: Lên mạng tìm xem có ai từng đo việc này ở nước khác chưa."
+      },
+      {
+        "image_id": "SC15_I2",
+        "anchor_quote": "Chắc chắn đã có người từng làm một nghiên cứu tương tự."
+      },
+      {
+        "image_id": "SC15_I3",
+        "anchor_quote": "Đừng hoảng sợ khi thấy người ta đã làm trước mình."
+      },
+      {
+        "image_id": "SC15_I4",
+        "anchor_quote": "Ngược lại, đó là một tin rất đáng mừng."
+      },
+      {
+        "image_id": "SC15_I5",
+        "anchor_quote": "Bạn có thể mượn ngay thang đo chuẩn mà họ đã kiểm định."
+      },
+      {
+        "image_id": "SC15_I6",
+        "anchor_quote": "Bạn không phải mất công nghĩ ra bảng hỏi từ đầu."
+      },
+      {
+        "image_id": "SC15_I7",
+        "anchor_quote": "Việc của bạn chỉ là lặp lại phép đo đó tại Việt Nam."
+      },
+      {
+        "image_id": "SC15_I8",
+        "anchor_quote": "Đó hoàn toàn là một đóng góp học thuật hợp lệ."
+      },
+      {
+        "image_id": "SC15_I9",
+        "anchor_quote": "Hội đồng sẽ đánh giá cao sự am hiểu tài liệu của bạn."
+      },
+      {
+        "image_id": "SC15_I10",
+        "anchor_quote": "Bạn tiết kiệm được ít nhất hai tháng mày mò vô ích."
+      }
+    ]
+  },
+  {
+    "id": "SC16",
+    "duration": 39.85,
+    "narration": "Nghiên cứu giỏi không phải làm việc lớn, mà là giải quyết dứt điểm một việc nhỏ. Đừng cố giải cứu thế giới bằng một bản đề cương ba mươi trang sáo rỗng. Hãy bắt đầu bằng một câu hỏi cụ thể mà bạn đếm được bằng tay. Khi bóp nhỏ đề tài, áp lực biến mất và con đường phía trước sẽ sáng tỏ. Bạn sẽ hoàn thành khóa luận đúng hạn mà không phải thức trắng kiệt sức. Khoa học thực sự là một hành trình từng bước giản dị và vững chắc. Nếu những chia sẻ này giúp bạn thấy nhẹ nhõm hơn, hãy thả một tim ủng hộ mình nhé. Bấm theo dõi kênh để không bỏ lỡ những bài gỡ rối nghiên cứu tiếp theo. Chúc bạn sớm hoàn thành xuất sắc bản đề tài của riêng mình. Bớt tham lại, và bắt tay vào gọt giũa đề tài ngay hôm nay nhé.",
+    "beats": [
+      {
+        "image_id": "SC16_I1",
+        "anchor_quote": "Nghiên cứu giỏi không phải làm việc lớn, mà là giải quyết dứt điểm một việc nhỏ."
+      },
+      {
+        "image_id": "SC16_I2",
+        "anchor_quote": "Đừng cố giải cứu thế giới bằng một bản đề cương ba mươi trang sáo rỗng."
+      },
+      {
+        "image_id": "SC16_I3",
+        "anchor_quote": "Hãy bắt đầu bằng một câu hỏi cụ thể mà bạn đếm được bằng tay."
+      },
+      {
+        "image_id": "SC16_I4",
+        "anchor_quote": "Khi bóp nhỏ đề tài, áp lực biến mất và con đường phía trước sẽ sáng tỏ."
+      },
+      {
+        "image_id": "SC16_I5",
+        "anchor_quote": "Bạn sẽ hoàn thành khóa luận đúng hạn mà không phải thức trắng kiệt sức."
+      },
+      {
+        "image_id": "SC16_I6",
+        "anchor_quote": "Khoa học thực sự là một hành trình từng bước giản dị và vững chắc."
+      },
+      {
+        "image_id": "SC16_I7",
+        "anchor_quote": "Nếu những chia sẻ này giúp bạn thấy nhẹ nhõm hơn, hãy thả một tim ủng hộ mình nhé."
+      },
+      {
+        "image_id": "SC16_I8",
+        "anchor_quote": "Bấm theo dõi kênh để không bỏ lỡ những bài gỡ rối nghiên cứu tiếp theo."
+      },
+      {
+        "image_id": "SC16_I9",
+        "anchor_quote": "Chúc bạn sớm hoàn thành xuất sắc bản đề tài của riêng mình."
+      },
+      {
+        "image_id": "SC16_I10",
+        "anchor_quote": "Bớt tham lại, và bắt tay vào gọt giũa đề tài ngay hôm nay nhé."
+      }
+    ]
+  }
+]

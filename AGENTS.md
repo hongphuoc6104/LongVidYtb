@@ -1,8 +1,8 @@
 # Video Pilot — Agent Invariants & Governance
 
 ## 1. Architecture, Dual-Format SSOT & Niche Pillar
-- **Dual-Format (`sys/format_profiles.py`)**: Automate **`long_16x9`** (13m Explainer Blueprint ref; floor $\ge 1,800$ syl, $\ge 16$ scenes, 7–9 min; forbid 1:1 stage mapping, chain 2–4 scenes/stage with spoken sentences $\le 20$ syl) and **`short_9x16`** (`subtitles: true`, `speed: 1.0`, `VietNarrator`). Dynamic duration by narrative depth & measured WAV.
-- **Pillars (`sys/pillars.py`)**: `cognition` (default) / `research_guide` (beginner research; tutorial hook, no paradox; T3 `screen_capture` → ask source). No shallow tips.
+- **Dual-Format (`sys/format_profiles.py`)**: Automate **`long_16x9`** (13m Explainer Blueprint ref; dynamic duration & scenes via `content_depth_estimate`; chained simple sentences for complex ideas) and **`short_9x16`** (`subtitles: true`, `speed: 1.0`, `VietNarrator`). Dynamic duration by narrative depth & measured WAV.
+- **Content Philosophy (`sys/pillars.py`)**: `ContentPhilosophy` registry (`cognition` default, `research_guide`); adaptive flow, no forced paradox/arcs; T3 `screen_capture` → ask source. No shallow tips.
 - **Directory**: `sys/` (engine/tools), `sys/runs/<job>/` (assets), `video/<job>/` (final MP4/SRT). Root clean.
 
 ## 2. Technical Ethos & 6-Station Conveyor (`./pipeline run`)
@@ -10,7 +10,7 @@
 - **Conveyor**: St1 Critique (`critique_review.html`) -> St2 AST & `pytest` -> St3 `PLAYBOOK.md` -> St4 `ruff` -> St5 PR (`gh-axi`) -> St6 Green CI.
 
 ## 3. Pipelines & Role Separation
-- **Topic-to-Video (`vp-production`)**: `vp-research-architect` (Schema 3.0 `brief.json`/`content.json`, `human_editorial`, Packaging, VN 60s, `build_scenes_from_story_rows`) -> `vp-scriptwriting` (Hook `<= 18` syl, Zero Pause in `SC01`, mix 3–8 & 15–24 word sentences; `vn_text_normalizer.py`) -> `vp-full-frame-quality` (`kind: "scene"`, `shot_type`, `based_on`, camera) -> `vp-omni-platform` (`sys/omni_platform.py`) -> Multi-T4 (`ColabPoolDispatcher` / `pilot.py` outline -> dialogue -> audio -> images -> video).
+- **Topic-to-Video (`vp-production`)**: `vp-research-architect` (Schema 3.0 `brief.json`/`content.json`, `human_editorial`, Packaging, `build_scenes_from_story_rows`) -> `vp-scriptwriting` (Feynman simple sentences, natural cadence, `vn_text_normalizer.py`) -> `vp-full-frame-quality` (`kind: "scene"`, `shot_type`, `based_on`, camera) -> `vp-omni-platform` (`sys/omni_platform.py`) -> Multi-T4 (`ColabPoolDispatcher` / `pilot.py` outline -> dialogue -> audio -> images -> video).
 - **Remote GPU (`vp-colab-bridge`)**: Execute via `pilot.py` or `sys/colab_bridge/` + `sys/renderer/render.mjs` (no local ffmpeg render).
 - **Flow CDP (`vp-flow-cdp`)**: 20 Chrome profiles (`sys/flow_cdp/`), adaptive 1–10 tabs, strict teardown. Valid AI image + `.json` sidecar (no PIL mocks).
 
@@ -23,9 +23,9 @@
 - **Bug Protocol**: Reproduction -> Root Cause -> Fix -> `PLAYBOOK.md` (6 fields, `<= 200` lines; archive overflow to `.agents/skills/`).
 
 ## 6. Quality, Doodle Style & Voice Guards
-- **Grounded Script & Anti-Flop**: (`cognition`) 1 paradox/video, `youtube_title <= 55` chars + `thumbnail_spec` (2–4 uppercase words), VN 60s slice-of-life + paradox in `SC01–SC02` (no clichés; prefer pure VN over `vi-đê-ô`), `SC01` hook `<= 18` syl, zero `[pause:...]` in `SC01`, spoken facts `<= 20` syl; pass `script_diversity_linter.py`.
+- **Grounded Script & Anti-Flop**: `youtube_title <= 55` chars + `thumbnail_spec` (2–4 uppercase words), relatable hook (prefer pure VN over `vi-đê-ô`), simple declarative sentences (one idea/sentence), constructive guidance (`script_diversity_linter.py`, `script_cadence_checker.py` soft warnings).
 - **Voice & Prosody (`VietNarrator` `1.0x`, `-11.0 LUFS` / `-1.0 dBTP`)**: Strip hyphens before `OmniVoice` BPE, strip prompt-bleed bursts, keep nasal codas, retry stalls (`batch_size=1`), and verify WAV by listening.
-- **2D Indie Doodle (`full_frame_v1` / `1.7.0` `handdrawn_2d_explainer`)**: Lock to `Nguệch Ngoạc / Vẽ Vời` (`sys/visual_style.py`: wobbly `#000000` marker contours, flat hex fills `#F8F0DC`, `#F2B88B`, `#93A88C`, `#CBE0E0`, `#2E4361`, `#FFFFFF`, white bald circle-head stickman, `#3B82C4` shirt, wire arms, circle hands, orthographic 2D); Clean Minimalist Contract: 100% flat canvas (`#FFFFFF`/`#F8F0DC`), zero room interiors/walls/floor lines/clutter, $\ge 60\%$ negative space with 1 stickman + 1 focal prop/metaphor; no oval shadows, 3/4 isometric, rounded AI icons, or vignette. Verify MP4 via `ffprobe` + frame check.
+- **2D Indie Doodle (`full_frame_v1` / `1.7.0` `handdrawn_2d_explainer`)**: Lock to `Nguệch Ngoạc / Vẽ Vời` (`sys/visual_style.py`: wobbly `#000000` marker contours, flat hex fills `#F8F0DC`, `#F2B88B`, `#93A88C`, `#CBE0E0`, `#2E4361`, `#FFFFFF`, white bald circle-head stickman, `#3B82C4` shirt, wire arms, circle hands, orthographic 2D); Feynman Formula: 1 stickman + 1 focal metaphor object on 100% flat canvas (`#FFFFFF`/`#F8F0DC`), progressive domino frames adding detail incrementally without clutter, $\ge 60\%$ negative space; zero room interiors/walls/floor lines, oval shadows, 3/4 isometric, rounded AI icons, or vignette. Verify MP4 via `ffprobe` + frame check.
 
 ## 7. Language Standards
 - **User**: Concise **Vietnamese**. **Code/Commits/Prompts**: **English** (preserve exact `I`).

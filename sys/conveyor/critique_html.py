@@ -30,7 +30,7 @@ def scan_critique(root_dir: Path) -> Tuple[bool, Dict[str, any]]:
     ]
     allowed_root_files = {
         "AGENTS.md", "GEMINI.md", "INDEX.md", "README.md", "PLAYBOOK.md",
-        "pilot.py", "pipeline", "pyproject.toml", "uv.lock"
+        "PROJECT.md", "pilot.py", "pipeline", "pyproject.toml", "uv.lock"
     }
     unexpected_root = [f for f in root_files if f not in allowed_root_files]
     checks.append({

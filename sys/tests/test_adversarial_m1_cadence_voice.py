@@ -72,7 +72,7 @@ class TestSC01OpeningHookBoundary(unittest.TestCase):
         self.assertEqual(len(hook_warnings), 1, "19-syllable opening hook MUST trigger OPENING_HOOK_TOO_LONG")
         self.assertIn("OPENING_HOOK_TOO_LONG", hook_warnings[0])
         self.assertIn("19 syllables", hook_warnings[0])
-        self.assertIn("limit of 18", hook_warnings[0])
+        self.assertIn("<= 18", hook_warnings[0])
 
     def test_hook_boundary_19_syllables_with_comma_still_triggers_hook_warning(self):
         # 19 syllables split by comma: each clause <= 18 syl, but hook sentence is 19 syl
@@ -175,7 +175,7 @@ class TestClauseLengthLimit(unittest.TestCase):
         clause_warnings = [w for w in report.warnings if "BREATHLESS_CLAUSE" in w]
         self.assertEqual(len(clause_warnings), 1, "19-syllable clause without comma MUST trigger BREATHLESS_CLAUSE")
         self.assertIn("Clause #1 in sentence #1 has 19 syllables", clause_warnings[0])
-        self.assertIn("exceeds limit of 18", clause_warnings[0])
+        self.assertIn("exceeds 18 syl", clause_warnings[0])
 
     def test_sentence_with_two_18_syllable_clauses_passes(self):
         # 18 syl + comma + 18 syl = 36 syl sentence with comma breathing break
@@ -262,9 +262,17 @@ class TestAudioPipelinePausePreservationAndCadenceRejection(unittest.TestCase):
             (job_dir / "content.json").write_text(json.dumps(content, ensure_ascii=False))
             (job_dir / "brief.json").write_text(json.dumps(brief, ensure_ascii=False))
 
-            pipeline = AudioPipeline(job_dir / "content.json", job_dir / "brief.json", job_dir / "out", mock=True)
+            # Default strict_cadence=False logs advisory without raising fatal exception
+            pipeline_advisory = AudioPipeline(job_dir / "content.json", job_dir / "brief.json", job_dir / "out", mock=True)
+            res = pipeline_advisory.run()
+            self.assertIn("total_duration", res)
+
+            # strict_cadence=True raises AudioPipelineError
+            pipeline_strict = AudioPipeline(
+                job_dir / "content.json", job_dir / "brief.json", job_dir / "out", mock=True, strict_cadence=True
+            )
             with self.assertRaises(AudioPipelineError) as ctx:
-                pipeline.run()
+                pipeline_strict.run()
             self.assertIn("Cadence rejection", str(ctx.exception))
             self.assertIn("OPENING_SCENE_PAUSE_FORBIDDEN", str(ctx.exception))
 
@@ -280,9 +288,17 @@ class TestAudioPipelinePausePreservationAndCadenceRejection(unittest.TestCase):
             (job_dir / "content.json").write_text(json.dumps(content, ensure_ascii=False))
             (job_dir / "brief.json").write_text(json.dumps(brief, ensure_ascii=False))
 
-            pipeline = AudioPipeline(job_dir / "content.json", job_dir / "brief.json", job_dir / "out", mock=True)
+            # Default strict_cadence=False logs advisory without raising fatal exception
+            pipeline_advisory = AudioPipeline(job_dir / "content.json", job_dir / "brief.json", job_dir / "out", mock=True)
+            res = pipeline_advisory.run()
+            self.assertIn("total_duration", res)
+
+            # strict_cadence=True raises AudioPipelineError
+            pipeline_strict = AudioPipeline(
+                job_dir / "content.json", job_dir / "brief.json", job_dir / "out", mock=True, strict_cadence=True
+            )
             with self.assertRaises(AudioPipelineError) as ctx:
-                pipeline.run()
+                pipeline_strict.run()
             self.assertIn("Cadence rejection", str(ctx.exception))
             self.assertIn("OPENING_HOOK_TOO_LONG", str(ctx.exception))
 

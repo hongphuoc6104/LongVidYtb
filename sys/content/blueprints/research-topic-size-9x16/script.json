@@ -1,0 +1,140 @@
+[
+  {
+    "id": "SC01",
+    "duration": 10.95,
+    "narration": "Tên đề tài nghiên cứu quá rộng sẽ bị thầy cô gạch ngay. Muốn giải cứu thế giới, bạn đang tự hại mình. Không tiền, không dữ liệu, bạn bế tắc ngay. Càng ôm đồm, bạn càng cầm chắc thất bại.",
+    "beats": [
+      {
+        "image_id": "SC01_I1",
+        "anchor_quote": "Tên đề tài nghiên cứu quá rộng sẽ bị thầy cô gạch ngay."
+      },
+      {
+        "image_id": "SC01_I2",
+        "anchor_quote": "Muốn giải cứu thế giới, bạn đang tự hại mình."
+      },
+      {
+        "image_id": "SC01_I3",
+        "anchor_quote": "Không tiền, không dữ liệu, bạn bế tắc ngay."
+      },
+      {
+        "image_id": "SC01_I4",
+        "anchor_quote": "Càng ôm đồm, bạn càng cầm chắc thất bại."
+      }
+    ]
+  },
+  {
+    "id": "SC02",
+    "duration": 10.2,
+    "narration": "Chỉ sau một tuần, giáo viên sẽ gạch bỏ ngay. Lời phê ngắn gọn: Quá rộng, không thể làm. Bạn không có tiền bạc hay thời gian vô tận. Biển dữ liệu lớn sẽ nhấn chìm bạn ngay.",
+    "beats": [
+      {
+        "image_id": "SC02_I1",
+        "anchor_quote": "Chỉ sau một tuần, giáo viên sẽ gạch bỏ ngay."
+      },
+      {
+        "image_id": "SC02_I2",
+        "anchor_quote": "Lời phê ngắn gọn: Quá rộng, không thể làm."
+      },
+      {
+        "image_id": "SC02_I3",
+        "anchor_quote": "Bạn không có tiền bạc hay thời gian vô tận."
+      },
+      {
+        "image_id": "SC02_I4",
+        "anchor_quote": "Biển dữ liệu lớn sẽ nhấn chìm bạn ngay."
+      }
+    ]
+  },
+  {
+    "id": "SC03",
+    "duration": 10.7,
+    "narration": "Khoa học không cần bạn phát minh lại bánh xe. Tri thức giống như một bức tường đã rất cao. Việc của bạn là đặt thêm một viên gạch nhỏ. Làm trọn việc nhỏ tốt hơn bỏ dở việc to.",
+    "beats": [
+      {
+        "image_id": "SC03_I1",
+        "anchor_quote": "Khoa học không cần bạn phát minh lại bánh xe."
+      },
+      {
+        "image_id": "SC03_I2",
+        "anchor_quote": "Tri thức giống như một bức tường đã rất cao."
+      },
+      {
+        "image_id": "SC03_I3",
+        "anchor_quote": "Việc của bạn là đặt thêm một viên gạch nhỏ."
+      },
+      {
+        "image_id": "SC03_I4",
+        "anchor_quote": "Làm trọn việc nhỏ tốt hơn bỏ dở việc to."
+      }
+    ]
+  },
+  {
+    "id": "SC04",
+    "duration": 9.95,
+    "narration": "Hãy bóp nhỏ đề tài bằng ba câu hỏi then chốt. Nghiên cứu ai? Hãy chọn sinh viên trường bạn. Đừng chọn thanh niên toàn quốc xa vời. Mẫu gần gũi giúp dữ liệu rất chắc chắn.",
+    "beats": [
+      {
+        "image_id": "SC04_I1",
+        "anchor_quote": "Hãy bóp nhỏ đề tài bằng ba câu hỏi then chốt."
+      },
+      {
+        "image_id": "SC04_I2",
+        "anchor_quote": "Nghiên cứu ai? Hãy chọn sinh viên trường bạn."
+      },
+      {
+        "image_id": "SC04_I3",
+        "anchor_quote": "Đừng chọn thanh niên toàn quốc xa vời."
+      },
+      {
+        "image_id": "SC04_I4",
+        "anchor_quote": "Mẫu gần gũi giúp dữ liệu rất chắc chắn."
+      }
+    ]
+  },
+  {
+    "id": "SC05",
+    "duration": 10.7,
+    "narration": "Đo cái gì? Đổi khái niệm thành hành vi cụ thể. Thay vì sức khỏe tinh thần, hãy đo giờ ngủ. Số phút lướt điện thoại là thước đo khách quan. Bài toán bây giờ làm gọn trong ba tháng.",
+    "beats": [
+      {
+        "image_id": "SC05_I1",
+        "anchor_quote": "Đo cái gì? Đổi khái niệm thành hành vi cụ thể."
+      },
+      {
+        "image_id": "SC05_I2",
+        "anchor_quote": "Thay vì sức khỏe tinh thần, hãy đo giờ ngủ."
+      },
+      {
+        "image_id": "SC05_I3",
+        "anchor_quote": "Số phút lướt điện thoại là thước đo khách quan."
+      },
+      {
+        "image_id": "SC05_I4",
+        "anchor_quote": "Bài toán bây giờ làm gọn trong ba tháng."
+      }
+    ]
+  },
+  {
+    "id": "SC06",
+    "duration": 10.85,
+    "narration": "Bớt tham lại, đề tài mới có cơ hội sống. Làm trọn một việc nhỏ là đủ để qua môn. Thả tim ủng hộ nếu thấy nhẹ nhõm hơn bạn nhé. Bấm theo dõi để cùng gỡ rối đề tài tiếp theo.",
+    "beats": [
+      {
+        "image_id": "SC06_I1",
+        "anchor_quote": "Bớt tham lại, đề tài mới có cơ hội sống."
+      },
+      {
+        "image_id": "SC06_I2",
+        "anchor_quote": "Làm trọn một việc nhỏ là đủ để qua môn."
+      },
+      {
+        "image_id": "SC06_I3",
+        "anchor_quote": "Thả tim ủng hộ nếu thấy nhẹ nhõm hơn bạn nhé."
+      },
+      {
+        "image_id": "SC06_I4",
+        "anchor_quote": "Bấm theo dõi để cùng gỡ rối đề tài tiếp theo."
+      }
+    ]
+  }
+]
