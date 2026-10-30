@@ -241,4 +241,4 @@ def test_run_channel_missing_channel_and_active_file_raises(tmp_path: Path) -> N
     empty_dir = tmp_path / "empty_workspace"
     empty_dir.mkdir()
     with pytest.raises(ValueError, match="No --channel provided"):
-        resolve_channel(channel_arg=None, cwd=empty_dir)
+        resolve_channel(channel_arg=None, cwd=empty_dir, system_root=empty_dir / "sys")
