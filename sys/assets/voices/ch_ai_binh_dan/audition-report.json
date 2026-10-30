@@ -1,0 +1,13 @@
+{
+  "channel_id": "ai_binh_dan",
+  "voice": "VietNarrator_AIBinhDan",
+  "duration_seconds": 21.985,
+  "integrated_lufs": -15.33,
+  "true_peak_dbtp": -2.03,
+  "rms": 5627,
+  "sha256": "586632aa80088f0cda7e0c0f364c0ae01ccd691e4b64f47f20bad974eeb586e9",
+  "retake": 3,
+  "text": "Đừng vội đặt bút ký hợp đồng, khi bạn chưa nhờ AI kiểm tra. Nhưng điều bất ngờ là, chỉ mất ba mươi giây để phát hiện các điều khoản gài bẫy. Đầu tiên, bạn tải hợp đồng lên và dán câu lệnh rà soát rủi ro pháp lý. Khung lệnh thông minh sẽ phân tích từng câu chữ, và khoanh đỏ các điểm bất lợi. Tiếp theo, hệ thống tự động đối chiếu các mốc phạt và gợi ý điều khoản sửa đổi an toàn.",
+  "engine": "colab-omnivoice",
+  "account_used": "account-10"
+}

@@ -225,7 +225,10 @@ def _extract_word_timestamps_acoustic(w, text, sr=SR):
 
 
 def _strip_leading_prompt_bleed(w, sr=SR):
-    """Strip residual voice-prompt boundary click or syllable bleed (<=240ms) + dead silence (>=120ms) at utterance start."""
+    """Strip only genuine sub-60ms voice-prompt boundary micro-clicks followed by >=120ms silence.
+
+    Never strip real initial syllables or short interjections (e.g. 'Ủa,', 'Thực').
+    """
     import numpy as np
     hop = max(1, sr // 100)
     nf = len(w) // hop
@@ -236,15 +239,17 @@ def _strip_leading_prompt_bleed(w, sr=SR):
     if not len(sample_idx):
         return w
     b_start = int(sample_idx[0]) // hop
-    if b_start > 25:
+    if b_start > 15:
         return w
-    for g_start in range(b_start + 1, min(b_start + 25, nf - 22)):
-        if rms[g_start] < 0.011:
+    for g_start in range(b_start + 1, min(b_start + 7, nf - 22)):
+        if rms[g_start] < 0.008:
+            if float(np.max(rms[b_start:g_start])) >= 0.035:
+                return w
             s_candidates = np.where(rms[g_start:] >= 0.014)[0]
             if not len(s_candidates):
                 return w
             s_start = g_start + int(s_candidates[0])
-            if (s_start - g_start) >= 12:
+            if (s_start - g_start) >= 12 and int(np.sum(rms[g_start:s_start] < 0.008)) >= (s_start - g_start - 1):
                 win = rms[s_start : min(nf, s_start + 25)]
                 if int(np.sum(win >= 0.015)) >= 10:
                     cut = max(0, (s_start - 3) * hop)
@@ -269,7 +274,7 @@ def _utterance_acoustic_score(w, synth_text: str, sr: int = SR) -> tuple[bool, f
         return False, 0.0
     rms = np.sqrt(np.mean(w[: nf * hop].reshape(nf, hop) ** 2, axis=1))
     voiced_s = float(np.sum(rms >= 0.008)) * (hop / float(sr))
-    min_voiced = max(0.42, n_words * 0.142)
+    min_voiced = max(0.32, n_words * 0.105)
     v_idx = np.where(rms >= 0.008)[0]
     max_gap = float(np.max(np.diff(v_idx) - 1)) * (hop / float(sr)) if len(v_idx) > 1 else 0.0
     has_internal_punct = bool(re.search(r"[,.;:!?]", (synth_text or "").strip()[:-1]))
@@ -279,7 +284,7 @@ def _utterance_acoustic_score(w, synth_text: str, sr: int = SR) -> tuple[bool, f
     return ok, score
 
 
-def _trim_silence(w, sr=SR, threshold=0.012, lead_ms=25, trail_ms=30, fade_ms=8):
+def _trim_silence(w, sr=SR, threshold=0.008, lead_ms=35, trail_ms=45, fade_ms=10):
     import numpy as np
     w = np.asarray(w, dtype=np.float32).reshape(-1)
     if not w.size:
@@ -358,7 +363,7 @@ def run(request_path, output_dir):
     import torch
     from huggingface_hub import snapshot_download
     from omnivoice import OmniVoice
-    from scipy.signal import resample_poly
+    from scipy.signal import butter, resample_poly, sosfiltfilt
     global _MODEL, _MODEL_KEY, _PROMPTS
     req = json.loads(Path(request_path).read_text())
     output = Path(output_dir)
@@ -444,6 +449,14 @@ def run(request_path, output_dir):
                     if not arr.size or not np.isfinite(arr).all() or np.max(np.abs(arr)) < 1e-5:
                         raise RuntimeError('Model returned empty/nonfinite/silent audio')
                     arr = resample_poly(arr, 2, 1).astype(np.float32)  # OmniVoice: 24 kHz
+                    if len(arr) >= 32:
+                        try:
+                            sos = butter(2, 85.0 / (SR * 0.5), btype='highpass', output='sos')
+                            hp = sosfiltfilt(sos, arr).astype(np.float32)
+                            if np.isfinite(hp).all():
+                                arr = hp
+                        except Exception:
+                            pass
                     pk = float(np.max(np.abs(arr)))
                     if pk > .89:
                         arr *= .89 / pk
