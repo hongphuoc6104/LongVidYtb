@@ -367,7 +367,7 @@ def check_packaging_and_localization(
         # rather than blocking foreign or historical terms.
         has_relatable_hook = bool(
             re.search(
-                r"\b(?:bạn|chúng ta|người|hãy|tại sao|vì sao|có bao giờ|thực tế|\?)\b",
+                r"\b(?:bạn|chúng ta|nước ta|người|hãy|tại sao|vì sao|có bao giờ|thực tế|\?)\b",
                 first_narr,
                 re.IGNORECASE,
             )
@@ -602,6 +602,7 @@ class ResearchedTopic:
     visual_pacing_profile: Optional[str] = None
     enable_sound_design: Optional[bool] = None
     human_editorial: Optional[Dict[str, Any]] = None
+    channel_id: Optional[str] = None
 
     def __post_init__(self) -> None:
         if not self.style:
@@ -822,6 +823,10 @@ def build_brief_v3(topic: ResearchedTopic, system_root: Optional[Path] = None) -
         brief["enable_sound_design"] = bool(topic.enable_sound_design)
     if getattr(topic, "spinoff_shorts", None):
         brief["spinoff_shorts"] = list(topic.spinoff_shorts)
+    if getattr(topic, "channel_id", None):
+        from channels.registry import apply_channel
+
+        brief = apply_channel(brief, str(topic.channel_id))
     return brief
 
 
@@ -2330,6 +2335,7 @@ def main() -> int:
     parser.add_argument("--subtitles", action="store_true", help="Force enable subtitles on output")
     parser.add_argument("--omni-plan", help="Authored standalone short references JSON; enables shared-image omni-platform outputs")
     parser.add_argument("--spinoff-shorts", action="store_true", help="Also generate standalone short_9x16 spin-off packages")
+    parser.add_argument("--channel", default=None, help="Apply a channel profile from sys/channels/registry.py")
 
     args = parser.parse_args()
 
@@ -2356,6 +2362,16 @@ def main() -> int:
             topic.aspect_ratio = args.aspect_ratio
             if args.subtitles:
                 topic.subtitles = True
+
+        if args.channel:
+            from channels.registry import channel_cast, get_channel
+
+            ch = get_channel(args.channel)
+            topic.channel_id = ch.id
+            topic.style = ch.visual.style_description
+            topic.tone = ch.tone
+            if topic.characters:
+                topic.characters = [channel_cast(ch.id, topic.characters[0].get("id", "CH01"))] + topic.characters[1:]
 
         result = write_production_package(
             out_dir,

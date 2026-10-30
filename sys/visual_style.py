@@ -54,6 +54,14 @@ def render_style(brief: dict, images: dict | None = None) -> str | None:
         return "earth_toned_2d"
     if b_style == PASTEL_STYLE_DESCRIPTION:
         return "soft_pastel_2d"
+    if isinstance(b_style, str) and b_style:
+        try:
+            from channels.registry import channel_for_style
+        except ImportError:  # remote bundles may ship without the channel registry
+            channel_for_style = None
+        channel = channel_for_style(b_style) if channel_for_style else None
+        if channel is not None:
+            return channel.visual.profile_id
     items = (images or {}).get("items", [])
     if items:
         if all(STYLE_DESCRIPTION in item.get("actual_prompt", "") for item in items):

@@ -1,0 +1,204 @@
+{
+  "outline": [
+    {
+      "scene_id": "SC01",
+      "purpose": "Đặt vấn đề về nguồn nhân lực y sinh và nghiên cứu xuất sắc",
+      "requirements": [
+        "R01"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC02",
+      "purpose": "Gợi mở câu hỏi cốt lõi về giới hạn đề tài lớn",
+      "requirements": [
+        "R02"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC03",
+      "purpose": "Giới thiệu ca nghiên cứu thực tế vaccine Covid-19",
+      "requirements": [
+        "R03"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC04",
+      "purpose": "Chuyển tiếp khám phá 4 bước quy trình tạo sản phẩm",
+      "requirements": [
+        "R04"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC05",
+      "purpose": "Chứng minh sinh viên làm tốt bước công thức phòng lab",
+      "requirements": [
+        "R05"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC06",
+      "purpose": "Trực quan hóa tỷ trọng một phần mười của bước phòng lab",
+      "requirements": [
+        "R06"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC07",
+      "purpose": "Giới thiệu chặng tiền lâm sàng trên động vật",
+      "requirements": [
+        "R07"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC08",
+      "purpose": "Liệt kê nhịp nhanh quy mô thử nghiệm người lên tới hơn 43000 người",
+      "requirements": [
+        "R08"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC09",
+      "purpose": "Giới thiệu chuỗi cung ứng lạnh công nghiệp và nhà máy triệu liều",
+      "requirements": [
+        "R09"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC10",
+      "purpose": "Chuyển đoạn sang phân tích chủ thể thực thi đề tài lớn",
+      "requirements": [
+        "R10"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC11",
+      "purpose": "Mô tả vai trò Chủ nhiệm đề tài PI và bề dày kinh nghiệm",
+      "requirements": [
+        "R11"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC12",
+      "purpose": "Nhấn mạnh trách nhiệm pháp nhân và an toàn tính mạng",
+      "requirements": [
+        "R12"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC13",
+      "purpose": "Giới thiệu trụ cột nguồn vốn từ tập đoàn và chính phủ",
+      "requirements": [
+        "R13"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC14",
+      "purpose": "Chứng minh quy mô mười tỷ đô la và chấp nhận mất trắng",
+      "requirements": [
+        "R14"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC15",
+      "purpose": "Đặt vấn đề đối chiếu với hoàn cảnh thực tế của sinh viên",
+      "requirements": [
+        "R15"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC16",
+      "purpose": "Khẳng định năng lực trí tuệ và sự sáng tạo của người trẻ",
+      "requirements": [
+        "R16"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC17",
+      "purpose": "Dẫn vào 3 rào cản cốt lõi của sinh viên",
+      "requirements": [
+        "R17"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC18",
+      "purpose": "Phân tích rào cản chi phí bảo hiểm và kinh phí thử nghiệm",
+      "requirements": [
+        "R18"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC19",
+      "purpose": "Phân tích rào cản tư cách pháp nhân trước tòa án và hội đồng y đức",
+      "requirements": [
+        "R19"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC20",
+      "purpose": "Đối chiếu chu kỳ bốn năm đại học với đề tài hàng chục năm",
+      "requirements": [
+        "R20"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC21",
+      "purpose": "Phân tích nghịch lý an toàn tốt nghiệp và tỷ lệ thất bại 90%",
+      "requirements": [
+        "R21"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC22",
+      "purpose": "Mở ra giải pháp hành động thực tế",
+      "requirements": [
+        "R22"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC23",
+      "purpose": "Giải phóng áp lực người hùng đơn độc",
+      "requirements": [
+        "R23"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC24",
+      "purpose": "Định vị hành động xuất sắc từ nhiệm vụ nhỏ nhất",
+      "requirements": [
+        "R24"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC25",
+      "purpose": "Kết bài truyền cảm hứng dẫn dắt tương lai",
+      "requirements": [
+        "R25"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    }
+  ]
+}

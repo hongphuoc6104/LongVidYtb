@@ -110,6 +110,10 @@ FOREIGN_NAMES_MAP: Dict[str, str] = {
     r"\bkm/h\b": "ki-lô-mét trên giờ",
     r"\bkm/giờ\b": "ki-lô-mét trên giờ",
     r"\bm/s\b": "mét trên giây",
+    r"\bCovid-19\b": "Cô-vít mười chín",
+    r"\bCovid\b": "Cô-vít",
+    r"\bvaccine\b": "vắc-xin",
+    r"\bvắc xin\b": "vắc-xin",
 }
 
 ONES = ["không", "một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín"]

@@ -745,8 +745,7 @@ def request(p, j, target, prompt, refs=(), registration=None, base_image=None, p
     try:
         if not collection_only:
             _before_generation(p, j)
-        from execution import is_job
-        r = adapters.gflow(p, *args, **({'flow_job': j} if is_job(p, j) else {}))
+        r = adapters.gflow(p, *args, flow_job=j)
         (folder / 'command.log').write_text(r.stdout + '\n' + r.stderr)
         if r.returncode:
             raise Blocked('Flow failed (login/CAPTCHA/limit or provider error); see command.log: ' + r.stderr[-500:])
@@ -1027,6 +1026,9 @@ def attach(p, j, result, target, prompt, refs, out):
     src = p.path(j, result['path'])
     dst = out / (target + src.suffix)
     shutil.copy(src, dst)
+    src_json = src.with_suffix('.json')
+    if src_json.is_file():
+        shutil.copy(src_json, dst.with_suffix('.json'))
     return {'scene_id': target, 'path': str(dst.relative_to(p.job(j))), 'prompt': prompt,
             'source': 'google-flow', 'actual_prompt': result['identity']['actual_prompt'], 'sha256': digest(dst), 'references': list(refs),
             'request': result['journal']}
@@ -1082,6 +1084,13 @@ def _produce_internal(p, j, out, c, s):
         )
         cfg = read(p.root / 'config.json')
         pool_profiles = cfg.get('flow_cdp_profiles', [])
+        flow_store_path = Path.home() / '.config/video-pilot/flow/profiles.json'
+        if flow_store_path.is_file():
+            try:
+                disabled_pids = {x['id'] for x in json.loads(flow_store_path.read_text()).get('profiles', []) if not x.get('enabled', True)}
+                pool_profiles = [x for x in pool_profiles if x.get('id') not in disabled_pids]
+            except Exception:
+                pass
         total_images = len(scenes)
         rampup_workers = calculate_rampup_workers(total_images)
         rampup_timeout = calculate_rampup_timeout(total_images)

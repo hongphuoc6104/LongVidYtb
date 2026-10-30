@@ -152,14 +152,14 @@ class ResearchTopicSizeProductionTests(unittest.TestCase):
             self.assertEqual(res["status"], "PASS")
             self.assertEqual(res["warnings_count"], 0)
             self.assertLessEqual(res["max_drift"], 0.3)
-            self.assertEqual(len(script), 6)
+            self.assertEqual(len(script), 11)
 
             # SC01 hook invariant: zero [pause:...] and hook <= 18 syl
             self.assertNotIn("[pause:", script[0]["narration"])
             first_sentence = SENTENCE_RE.split(script[0]["narration"])[0].strip()
             hook_syl = count_syllables(first_sentence, lang="vi")
             self.assertLessEqual(hook_syl, 18, f"SC01 hook has {hook_syl} syl > 18: {first_sentence}")
-            self.assertEqual(first_sentence, "Tên đề tài nghiên cứu quá rộng sẽ bị thầy cô gạch ngay.")
+            self.assertEqual(first_sentence, "Hãy lưu lại video này nếu bạn chuẩn bị làm nghiên cứu khoa học.")
 
             # All spoken sentences must be <= 20 syllables
             for sc in script:

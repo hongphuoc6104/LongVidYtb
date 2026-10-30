@@ -1,0 +1,2496 @@
+{
+  "schema_version": "3.0",
+  "brief_revision": 1,
+  "brief_hash": "fb94dede4847bd206170236c07b2eba3991c2e0af2a7c2d81782913826b078b1",
+  "topic": "Quy trình làm đề tài lớn, ai đứng ra làm, tại sao sinh viên không làm được, cần người có chuyên môn và có tiền; ví dụ thực tế Covid-19 vaccine",
+  "duration": {
+    "min_seconds": 85.0,
+    "max_seconds": 145.0
+  },
+  "style": "Hand-drawn 2D Vietnamese indie doodle explainer illustration (raw freehand MS-Paint / Flash webcomic aesthetic). Use clear black outer contours (#000000) with visible unpolished hand-drawn wobble, slightly crooked freehand lines drawn without a ruler, imperfect corner joints, and uniform marker stroke weight across both foreground and background (strictly forbid lighter background linework, Bezier curve smoothing, sleek rounded vector icons, or geometric perfection). Fill all shapes with 100% unshaded flat MS-Paint paint-bucket solid hex colors: warm paper-cream (#F8F0DC), muted apricot-peach (#F2B88B), soft sage-green (#93A88C), pale ice-blue (#CBE0E0), flat night slate-navy (#2E4361), or stark pure white (#FFFFFF). Strictly 2D front-on or side-on orthographic flat paper-cutout staging; never use 3/4 isometric furniture perspective, two-tone bevel shading, floating black oval drop shadows, floor cast shadows, glowing lamp light cones, warm sepia AI color grading, gradients, photorealism, or 3D rendering. Draw a complete scene image.",
+  "required_points": [
+    "Nghịch lý bác sĩ giỏi sinh viên xuất sắc nhưng không tự làm đề tài lớn",
+    "Đặt câu hỏi tại sao sinh viên không thể tự làm đề tài thế giới",
+    "Dẫn chứng thực tế từ chiếc lọ vaccine Covid-19",
+    "Khám phá quy trình thực sự để tạo ra một sản phẩm lớn",
+    "Bước một tìm công thức phòng thí nghiệm là việc sinh viên làm được",
+    "Công thức ban đầu mới chỉ là một phần mười quãng đường",
+    "Bước hai thử nghiệm tiền lâm sàng trên động vật",
+    "Bước ba thử nghiệm lâm sàng ba giai đoạn lên tới hơn bốn mươi ba nghìn người",
+    "Bước bốn xây nhà máy giữ lạnh âm tám mươi độ để sản xuất hàng triệu liều",
+    "Câu hỏi ai là người thực sự đứng ra làm đề tài lớn",
+    "Chuyên gia đầu ngành hai mươi đến ba mươi năm kinh nghiệm làm chủ nhiệm",
+    "Người đứng tên chịu trách nhiệm pháp lý trước tính mạng con người",
+    "Chính phủ và tập đoàn lớn đứng sau cung cấp nguồn tiền khổng lồ",
+    "Ngân sách hơn mười tỷ đô la và chấp nhận mất trắng nếu thất bại",
+    "Nguyên nhân cốt lõi khiến sinh viên không thể tự làm đề tài lớn",
+    "Khẳng định không phải do sinh viên thiếu thông minh hay năng lực",
+    "Ba rào cản cốt lõi sinh viên không thể có khi làm đề tài lớn",
+    "Rào cản một hàng trăm triệu đô la thử nghiệm và bảo hiểm",
+    "Rào cản hai tư cách pháp lý và chữ ký trước hội đồng y đức",
+    "Rào cản ba thời gian đào tạo bốn năm so với đề tài hàng chục năm",
+    "Sinh viên cần ra trường an toàn không thể gánh chín mươi phần trăm rủi ro",
+    "Định hướng hành động thực tế cho sinh viên và người trẻ",
+    "Không cần một mình tạo ra toàn bộ sản phẩm hoàn chỉnh",
+    "Làm thật tốt từng việc nhỏ nhất tích lũy trong phòng thí nghiệm",
+    "Tích lũy chuyên môn từng ngày để dẫn dắt cỗ máy lớn trong tương lai"
+  ],
+  "characters": [
+    {
+      "id": "CH01",
+      "name": "Người que sinh viên",
+      "appearance": "Iconic 2D Vietnamese indie webcomic doodle stickman (Nguệch Ngoạc / Vẽ Vời / Xấu Vê Nờ style): oversized slightly lopsided hand-drawn pure-white (#FFFFFF) bald circle head with bold pitch-black (#000000) marker outline, tiny solid-black dot eyes placed low on the face leaving a large open upper forehead/cranium, minimal single-stroke eyebrows and mouth, no nose or ears, thin single-line solid-black wire/stick arms (single black stroke with zero arm thickness) ending in small round white circle hands",
+      "outfit": "Unshaded 100% flat MS-Paint paint-bucket solid cerulean-blue (#3B82C4) simple pill/rectangular T-shirt torso and simple flat slate-gray (#8C857B) straight trousers or single-line black stick legs, with zero clothing folds, zero collar details, and zero shading gradients"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "SC01",
+      "title": "Nghịch lý bác sĩ và sinh viên xuất sắc",
+      "purpose": "Đặt vấn đề về nguồn nhân lực y sinh và nghiên cứu xuất sắc",
+      "action": "Two minimalist doodle stickmen stand side by side: one stickman wearing a doctor stethoscope, and one stickman wearing a graduation mortarboard cap holding an academic diploma certificate.",
+      "setting": "Clean pure white canvas (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Nước ta có rất nhiều bác sĩ giỏi, nhiều tiến sĩ, giáo sư và sinh viên xuất sắc.",
+      "requirements": [
+        "R01"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC01_I1",
+          "description": "Clean pure white canvas (#FFFFFF). Two minimalist doodle stickmen stand side by side: one stickman wearing a doctor stethoscope, and one stickman wearing a graduation mortarboard cap holding an academic diploma certificate.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Opening hook contrasting academic excellence with large-scale challenge.",
+          "visible_text": [
+            {
+              "text": "BÁC SĨ GIỎI?",
+              "placement": "top_left",
+              "object": "banner"
+            },
+            {
+              "text": "SINH VIÊN XUẤT SẮC?",
+              "placement": "top_right",
+              "object": "banner"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Nước ta có rất nhiều bác sĩ giỏi, nhiều tiến sĩ, giáo sư và sinh viên xuất sắc.",
+            "relation": "context",
+            "source_terms": [
+              "bác sĩ"
+            ],
+            "visual_terms": [
+              "doctor"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC01_B1",
+          "image_id": "SC01_I1",
+          "purpose": "Đặt vấn đề về nguồn nhân lực y sinh và nghiên cứu xuất sắc",
+          "anchor": {
+            "vi": {
+              "quote": "Nước ta có rất nhiều bác sĩ giỏi, nhiều tiến sĩ, giáo sư và sinh viên xuất sắc.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "hook"
+    },
+    {
+      "id": "SC02",
+      "title": "Câu hỏi tại sao sinh viên không tự làm",
+      "purpose": "Gợi mở câu hỏi cốt lõi về giới hạn đề tài lớn",
+      "action": "Minimalist stickman stands resting chin on hand in deep contemplation with a bold oversized black question mark floating overhead.",
+      "setting": "Stark pure white field (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Nhưng tại sao với các đề tài tầm cỡ thế giới, sinh viên lại không thể tự làm được?",
+      "requirements": [
+        "R02"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC02_I1",
+          "description": "Stark pure white field (#FFFFFF). Minimalist stickman stands resting chin on hand in deep contemplation with a bold oversized black question mark floating overhead.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Curiosity gap question on why students cannot do world-class projects alone.",
+          "visible_text": [
+            {
+              "text": "TẠI SAO KHÔNG THỂ?",
+              "placement": "top_center",
+              "object": "question"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Nhưng tại sao với các đề tài tầm cỡ thế giới, sinh viên lại không thể tự làm được?",
+            "relation": "cause_effect",
+            "source_terms": [
+              "tại sao"
+            ],
+            "visual_terms": [
+              "question"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC02_B1",
+          "image_id": "SC02_I1",
+          "purpose": "Gợi mở câu hỏi cốt lõi về giới hạn đề tài lớn",
+          "anchor": {
+            "vi": {
+              "quote": "Nhưng tại sao với các đề tài tầm cỡ thế giới, sinh viên lại không thể tự làm được?",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "lead_in"
+    },
+    {
+      "id": "SC03",
+      "title": "Ví dụ thực tế lọ vắc-xin Cô-vít",
+      "purpose": "Giới thiệu ca nghiên cứu thực tế vaccine Covid-19",
+      "action": "A simple minimalist glass medicine vial labeled with bold clean lettering reading VACCINE COVID-19.",
+      "setting": "Solid clean white background (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Hãy nhìn vào một ví dụ thực tế: chiếc lọ vắc-xin Cô-vít mười chín.",
+      "requirements": [
+        "R03"
+      ],
+      "character_ids": [],
+      "source_ids": [
+        "SRC02"
+      ],
+      "images": [
+        {
+          "id": "SC03_I1",
+          "description": "Solid clean white background (#FFFFFF). A simple minimalist glass medicine vial labeled with bold clean lettering reading VACCINE COVID-19.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Real-world case study grounding with Covid-19 vaccine vial.",
+          "visible_text": [
+            {
+              "text": "VACCINE COVID-19",
+              "placement": "center",
+              "object": "vial"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "macro_prop",
+          "has_character": false,
+          "explanation": {
+            "quote": "Hãy nhìn vào một ví dụ thực tế: chiếc lọ vắc-xin Cô-vít mười chín.",
+            "relation": "context",
+            "source_terms": [
+              "lọ"
+            ],
+            "visual_terms": [
+              "vial"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC03_B1",
+          "image_id": "SC03_I1",
+          "purpose": "Giới thiệu ca nghiên cứu thực tế vaccine Covid-19",
+          "anchor": {
+            "vi": {
+              "quote": "Hãy nhìn vào một ví dụ thực tế: chiếc lọ vắc-xin Cô-vít mười chín.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "narrative_warm",
+      "narrative_phase": "lead_in"
+    },
+    {
+      "id": "SC04",
+      "title": "Đặt câu hỏi về quy trình thực sự",
+      "purpose": "Chuyển tiếp khám phá 4 bước quy trình tạo sản phẩm",
+      "action": "A curved black marker arrow pointing from the small medicine vial towards a long multi-stage linear roadmap pipeline.",
+      "setting": "Minimalist pure white canvas (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Để làm ra nó, quy trình thực sự diễn ra như thế nào?",
+      "requirements": [
+        "R04"
+      ],
+      "character_ids": [],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC04_I1",
+          "description": "Minimalist pure white canvas (#FFFFFF). A curved black marker arrow pointing from the small medicine vial towards a long multi-stage linear roadmap pipeline.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Visual transition introducing the research and development pipeline.",
+          "visible_text": [
+            {
+              "text": "QUY TRÌNH RA SAO?",
+              "placement": "top_center",
+              "object": "header"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "visual_diagram",
+          "has_character": false,
+          "explanation": {
+            "quote": "Để làm ra nó, quy trình thực sự diễn ra như thế nào?",
+            "relation": "progression",
+            "source_terms": [
+              "quy trình"
+            ],
+            "visual_terms": [
+              "pipeline"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC04_B1",
+          "image_id": "SC04_I1",
+          "purpose": "Chuyển tiếp khám phá 4 bước quy trình tạo sản phẩm",
+          "anchor": {
+            "vi": {
+              "quote": "Để làm ra nó, quy trình thực sự diễn ra như thế nào?",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "problem"
+    },
+    {
+      "id": "SC05",
+      "title": "Bước một tìm công thức phòng thí nghiệm",
+      "purpose": "Chứng minh sinh viên làm tốt bước công thức phòng lab",
+      "action": "Stickman student holding a glass test tube and carefully adding drops of liquid.",
+      "setting": "Stark white explainer field (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Bước một, tìm công thức trong phòng thí nghiệm. Bước này sinh viên có thể làm được.",
+      "requirements": [
+        "R05"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC05_I1",
+          "description": "Stark white explainer field (#FFFFFF). Stickman student holding a glass test tube and carefully adding drops of liquid on pure white background.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Demonstrating lab bench chemistry step that students can accomplish.",
+          "visible_text": [
+            {
+              "text": "BƯỚC 1: CÔNG THỨC",
+              "placement": "top_center",
+              "object": "step"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Bước một, tìm công thức trong phòng thí nghiệm.",
+            "relation": "context",
+            "source_terms": [
+              "công thức"
+            ],
+            "visual_terms": [
+              "tube"
+            ]
+          }
+        },
+        {
+          "id": "SC05_I2",
+          "description": "Stark white explainer field (#FFFFFF). Stickman student gives a confident smile and thumbs-up beside the test tube on pure white canvas.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC05_I1",
+          "preserve": "Keep the exact camera angle and props in Stark white explainer field (#FFFFFF). Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Stickman student gives a confident smile and thumbs-up beside the test tube.",
+          "reason": "Affirming student competence in fundamental lab formulation.",
+          "visible_text": [
+            {
+              "text": "BƯỚC 1: CÔNG THỨC",
+              "placement": "top_center",
+              "object": "step"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "variation",
+          "allow_expression_shift": true,
+          "has_character": true,
+          "explanation": {
+            "quote": "Bước này sinh viên có thể làm được.",
+            "relation": "context",
+            "source_terms": [
+              "sinh viên"
+            ],
+            "visual_terms": [
+              "student"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC05_B1",
+          "image_id": "SC05_I1",
+          "purpose": "Chứng minh sinh viên làm tốt bước công thức phòng lab",
+          "anchor": {
+            "vi": {
+              "quote": "Bước một, tìm công thức trong phòng thí nghiệm.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B2",
+          "image_id": "SC05_I2",
+          "purpose": "Chứng minh sinh viên làm tốt bước công thức phòng lab",
+          "anchor": {
+            "vi": {
+              "quote": "Bước này sinh viên có thể làm được.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "narrative_warm",
+      "narrative_phase": "causal_mechanism"
+    },
+    {
+      "id": "SC06",
+      "title": "Một phần mười quãng đường",
+      "purpose": "Trực quan hóa tỷ trọng một phần mười của bước phòng lab",
+      "action": "A horizontal battery progress bar filling only ten percent 10% with ninety percent remaining empty.",
+      "setting": "Pure white doodle backdrop (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Nhưng đây mới chỉ là một phần mười quãng đường.",
+      "requirements": [
+        "R06"
+      ],
+      "character_ids": [],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC06_I1",
+          "description": "Pure white doodle backdrop (#FFFFFF). A horizontal battery progress bar filling only ten percent 10% with ninety percent remaining empty.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Visualizing that formula is only 1/10 of the total journey.",
+          "visible_text": [
+            {
+              "text": "1/10 QUÃNG ĐƯỜNG",
+              "placement": "top_center",
+              "object": "progress"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "visual_diagram",
+          "has_character": false,
+          "explanation": {
+            "quote": "Nhưng đây mới chỉ là một phần mười quãng đường.",
+            "relation": "quantity",
+            "source_terms": [
+              "một phần mười"
+            ],
+            "visual_terms": [
+              "progress"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC06_B1",
+          "image_id": "SC06_I1",
+          "purpose": "Trực quan hóa tỷ trọng một phần mười của bước phòng lab",
+          "anchor": {
+            "vi": {
+              "quote": "Nhưng đây mới chỉ là một phần mười quãng đường.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "causal_mechanism"
+    },
+    {
+      "id": "SC07",
+      "title": "Bước hai thử nghiệm trên động vật",
+      "purpose": "Giới thiệu chặng tiền lâm sàng trên động vật",
+      "action": "A simple doodle laboratory white mouse sniffs an experiment petri dish beside a laboratory microscope.",
+      "setting": "Solid stark white canvas (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Bước hai, thử nghiệm trên động vật.",
+      "requirements": [
+        "R07"
+      ],
+      "character_ids": [],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC07_I1",
+          "description": "Solid stark white canvas (#FFFFFF). A simple doodle laboratory white mouse sniffs an experiment petri dish beside a laboratory microscope.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Illustrating preclinical animal testing stage.",
+          "visible_text": [
+            {
+              "text": "BƯỚC 2: TIỀN LÂM SÀNG",
+              "placement": "top_center",
+              "object": "step"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": false,
+          "explanation": {
+            "quote": "Bước hai, thử nghiệm trên động vật.",
+            "relation": "context",
+            "source_terms": [
+              "động vật"
+            ],
+            "visual_terms": [
+              "mouse"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC07_B1",
+          "image_id": "SC07_I1",
+          "purpose": "Giới thiệu chặng tiền lâm sàng trên động vật",
+          "anchor": {
+            "vi": {
+              "quote": "Bước hai, thử nghiệm trên động vật.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "causal_mechanism"
+    },
+    {
+      "id": "SC08",
+      "title": "Bước ba thử nghiệm lâm sàng ba giai đoạn",
+      "purpose": "Liệt kê nhịp nhanh quy mô thử nghiệm người lên tới hơn 43000 người",
+      "action": "Three successive groups of minimalist doodle stick figures expanding rapidly across stages.",
+      "setting": "Clean white diagram field (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Bước ba, thử nghiệm trên người qua ba giai đoạn. Vài chục người, vài trăm người, và hơn bốn mươi ba nghìn người.",
+      "requirements": [
+        "R08"
+      ],
+      "character_ids": [],
+      "source_ids": [
+        "SRC02"
+      ],
+      "images": [
+        {
+          "id": "SC08_I1",
+          "description": "Clean white diagram field (#FFFFFF). A small trial cohort of a dozen minimalist doodle stick figures lined up cleanly for initial Phase 1 testing.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Phase 1 clinical trial: small safety cohort of dozens of participants.",
+          "visible_text": [
+            {
+              "text": "PHA 1: VÀI CHỤC NGƯỜI",
+              "placement": "top_left",
+              "object": "phase1"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": false,
+          "explanation": {
+            "quote": "Vài chục người",
+            "relation": "progression",
+            "source_terms": [
+              "Vài chục người"
+            ],
+            "visual_terms": [
+              "cohort"
+            ]
+          }
+        },
+        {
+          "id": "SC08_I2",
+          "description": "Clean white diagram field (#FFFFFF). The cohort expands into a denser crowd of several hundred minimalist doodle stick figures for Phase 2 expanded efficacy testing.",
+          "character_ids": [],
+          "based_on": "SC08_I1",
+          "preserve": "Preserve Clean white diagram field (#FFFFFF). and styling of Phase 1 group on left.",
+          "change": "Multiply doodle stick figures into a dense medium crowd filling center.",
+          "reason": "Phase 2 clinical trial: hundreds of participants.",
+          "visible_text": [
+            {
+              "text": "PHA 2: VÀI TRĂM NGƯỜI",
+              "placement": "top_center",
+              "object": "phase2"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "variation",
+          "has_character": false,
+          "explanation": {
+            "quote": "vài trăm người",
+            "relation": "progression",
+            "source_terms": [
+              "vài trăm người"
+            ],
+            "visual_terms": [
+              "crowd"
+            ]
+          }
+        },
+        {
+          "id": "SC08_I3",
+          "description": "Clean white diagram field (#FFFFFF). A massive stadium crowd symbol representing forty-three thousand participants spanning 150 medical centers worldwide.",
+          "character_ids": [],
+          "based_on": "SC08_I2",
+          "preserve": "Preserve Clean white diagram field (#FFFFFF). with expansive clean negative space above.",
+          "change": "Show a massive symbolic stadium crowd icon with label 43000 people.",
+          "reason": "Phase 3 massive global trial exceeding 43000 individuals.",
+          "visible_text": [
+            {
+              "text": "PHA 3: 43.000 NGƯỜI",
+              "placement": "top_right",
+              "object": "phase3"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "variation",
+          "has_character": false,
+          "explanation": {
+            "quote": "và hơn bốn mươi ba nghìn người.",
+            "relation": "progression",
+            "source_terms": [
+              "bốn mươi ba nghìn"
+            ],
+            "visual_terms": [
+              "stadium crowd"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC08_B1",
+          "image_id": "SC08_I1",
+          "purpose": "Liệt kê nhịp nhanh quy mô thử nghiệm người lên tới hơn 43000 người",
+          "anchor": {
+            "vi": {
+              "quote": "Bước ba, thử nghiệm trên người qua ba giai đoạn. Vài chục người,",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC08_B2",
+          "image_id": "SC08_I2",
+          "purpose": "Liệt kê nhịp nhanh quy mô thử nghiệm người lên tới hơn 43000 người",
+          "anchor": {
+            "vi": {
+              "quote": "vài trăm người,",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC08_B3",
+          "image_id": "SC08_I3",
+          "purpose": "Liệt kê nhịp nhanh quy mô thử nghiệm người lên tới hơn 43000 người",
+          "anchor": {
+            "vi": {
+              "quote": "và hơn bốn mươi ba nghìn người.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "causal_mechanism"
+    },
+    {
+      "id": "SC09",
+      "title": "Bước bốn xây nhà máy sản xuất âm tám mươi độ",
+      "purpose": "Giới thiệu chuỗi cung ứng lạnh công nghiệp và nhà máy triệu liều",
+      "action": "A minimalist industrial factory building box with a clean smokestack, cold snowflake ice crystals, and temperature label -80°C.",
+      "setting": "Pure white concept canvas (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Bước bốn, xây nhà máy giữ lạnh âm tám mươi độ C để sản xuất hàng triệu liều.",
+      "requirements": [
+        "R09"
+      ],
+      "character_ids": [],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC09_I1",
+          "description": "Pure white concept canvas (#FFFFFF). A minimalist industrial factory building box with a clean smokestack, cold snowflake ice crystals, and temperature label -80°C.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Industrial scale manufacturing and cold storage challenge.",
+          "visible_text": [
+            {
+              "text": "BƯỚC 4: NHÀ MÁY (-80°C)",
+              "placement": "top_center",
+              "object": "factory"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "environment",
+          "has_character": false,
+          "explanation": {
+            "quote": "Bước bốn, xây nhà máy giữ lạnh âm tám mươi độ C để sản xuất hàng triệu liều.",
+            "relation": "structure",
+            "source_terms": [
+              "nhà máy"
+            ],
+            "visual_terms": [
+              "factory"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC09_B1",
+          "image_id": "SC09_I1",
+          "purpose": "Giới thiệu chuỗi cung ứng lạnh công nghiệp và nhà máy triệu liều",
+          "anchor": {
+            "vi": {
+              "quote": "Bước bốn, xây nhà máy giữ lạnh âm tám mươi độ C để sản xuất hàng triệu liều.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "causal_mechanism"
+    },
+    {
+      "id": "SC10",
+      "title": "Ai là người thực sự đứng ra làm",
+      "purpose": "Chuyển đoạn sang phân tích chủ thể thực thi đề tài lớn",
+      "action": "Minimalist stickman stands facing forward with arms open wide in curious wonder questioning who manages such enormous projects.",
+      "setting": "Minimalist clean white surface (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Vậy ai là những người thực sự đứng ra làm?",
+      "requirements": [
+        "R10"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC10_I1",
+          "description": "Minimalist clean white surface (#FFFFFF). Minimalist stickman stands facing forward with arms open wide in curious wonder questioning who manages such enormous projects.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Pivot question introducing real-world project leaders.",
+          "visible_text": [
+            {
+              "text": "AI ĐỨNG RA LÀM?",
+              "placement": "top_center",
+              "object": "question"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Vậy ai là những người thực sự đứng ra làm?",
+            "relation": "cause_effect",
+            "source_terms": [
+              "ai"
+            ],
+            "visual_terms": [
+              "stickman"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC10_B1",
+          "image_id": "SC10_I1",
+          "purpose": "Chuyển đoạn sang phân tích chủ thể thực thi đề tài lớn",
+          "anchor": {
+            "vi": {
+              "quote": "Vậy ai là những người thực sự đứng ra làm?",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "problem"
+    },
+    {
+      "id": "SC11",
+      "title": "Chuyên gia đầu ngành hai mươi đến ba mươi năm kinh nghiệm",
+      "purpose": "Mô tả vai trò Chủ nhiệm đề tài PI và bề dày kinh nghiệm",
+      "action": "Senior stickman scientist wearing round spectacles and holding a thick leather briefcase with label PI principal investigator.",
+      "setting": "Solid pure white field (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Thứ nhất, phải là những chuyên gia đầu ngành có hai mươi đến ba mươi năm kinh nghiệm.",
+      "requirements": [
+        "R11"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC01"
+      ],
+      "images": [
+        {
+          "id": "SC11_I1",
+          "description": "Solid pure white field (#FFFFFF). Senior stickman scientist wearing round spectacles and holding a thick leather briefcase with label PI principal investigator.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "First pillar: senior expert with decades of domain leadership.",
+          "visible_text": [
+            {
+              "text": "CHUYÊN GIA (20 - 30 NĂM)",
+              "placement": "top_center",
+              "object": "title"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Thứ nhất, phải là những chuyên gia đầu ngành có hai mươi đến ba mươi năm kinh nghiệm.",
+            "relation": "context",
+            "source_terms": [
+              "chuyên gia"
+            ],
+            "visual_terms": [
+              "scientist"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC11_B1",
+          "image_id": "SC11_I1",
+          "purpose": "Mô tả vai trò Chủ nhiệm đề tài PI và bề dày kinh nghiệm",
+          "anchor": {
+            "vi": {
+              "quote": "Thứ nhất, phải là những chuyên gia đầu ngành có hai mươi đến ba mươi năm kinh nghiệm.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "explanation"
+    },
+    {
+      "id": "SC12",
+      "title": "Người chịu trách nhiệm pháp lý trước tính mạng con người",
+      "purpose": "Nhấn mạnh trách nhiệm pháp nhân và an toàn tính mạng",
+      "action": "An official legal contract document with an official round regulatory stamp seal and an ink pen signing on the dotted line.",
+      "setting": "Clean stark white background (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Họ là người đứng tên ký cam kết chịu trách nhiệm pháp lý. Đặc biệt khi xảy ra rủi ro về tính mạng con người.",
+      "requirements": [
+        "R12"
+      ],
+      "character_ids": [],
+      "source_ids": [
+        "SRC04"
+      ],
+      "images": [
+        {
+          "id": "SC12_I1",
+          "description": "Clean stark white background (#FFFFFF). An official legal contract document with a prominent round regulatory stamp seal on pure white paper.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Legal accountability and Institutional Review Board contracts.",
+          "visible_text": [
+            {
+              "text": "TRÁCH NHIỆM PHÁP LÝ",
+              "placement": "top_center",
+              "object": "contract"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "macro_prop",
+          "has_character": false,
+          "explanation": {
+            "quote": "Họ là người đứng tên ký cam kết chịu trách nhiệm pháp lý.",
+            "relation": "cause_effect",
+            "source_terms": [
+              "trách nhiệm pháp lý"
+            ],
+            "visual_terms": [
+              "contract"
+            ]
+          }
+        },
+        {
+          "id": "SC12_I2",
+          "description": "Clean stark white background (#FFFFFF). An ink pen actively signs on the contract line beside an official red seal marking life-or-death legal liability.",
+          "character_ids": [],
+          "based_on": "SC12_I1",
+          "preserve": "Preserve contract document positioning in Clean stark white background (#FFFFFF)..",
+          "change": "Ink pen signs firmly across the signature line beside a red wax seal.",
+          "reason": "Signing personal liability for human life outcomes.",
+          "visible_text": [
+            {
+              "text": "CAM KẾT TÍNH MẠNG",
+              "placement": "top_center",
+              "object": "signature"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "variation",
+          "has_character": false,
+          "explanation": {
+            "quote": "Đặc biệt khi xảy ra rủi ro về tính mạng con người.",
+            "relation": "cause_effect",
+            "source_terms": [
+              "tính mạng con người"
+            ],
+            "visual_terms": [
+              "pen",
+              "contract"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC12_B1",
+          "image_id": "SC12_I1",
+          "purpose": "Nhấn mạnh trách nhiệm pháp nhân và an toàn tính mạng",
+          "anchor": {
+            "vi": {
+              "quote": "Họ là người đứng tên ký cam kết chịu trách nhiệm pháp lý.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC12_B2",
+          "image_id": "SC12_I2",
+          "purpose": "Nhấn mạnh trách nhiệm pháp nhân và an toàn tính mạng",
+          "anchor": {
+            "vi": {
+              "quote": "Đặc biệt khi xảy ra rủi ro về tính mạng con người.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "reflective_slow",
+      "narrative_phase": "explanation"
+    },
+    {
+      "id": "SC13",
+      "title": "Tập đoàn và chính phủ có nguồn tiền khổng lồ",
+      "purpose": "Giới thiệu trụ cột nguồn vốn từ tập đoàn và chính phủ",
+      "action": "A minimalist central bank building facade beside a heavy steel money vault safe brimming with gold coins.",
+      "setting": "Stark pure white backdrop (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Thứ hai, phải là những tập đoàn hoặc chính phủ có rất nhiều tiền.",
+      "requirements": [
+        "R13"
+      ],
+      "character_ids": [],
+      "source_ids": [
+        "SRC03"
+      ],
+      "images": [
+        {
+          "id": "SC13_I1",
+          "description": "Stark pure white backdrop (#FFFFFF). A minimalist central bank building facade beside a heavy steel money vault safe brimming with gold coins.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Second pillar: institutions with massive financial backing.",
+          "visible_text": [
+            {
+              "text": "CHÍNH PHỦ & TẬP ĐOÀN",
+              "placement": "top_center",
+              "object": "institution"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": false,
+          "explanation": {
+            "quote": "Thứ hai, phải là những tập đoàn hoặc chính phủ có rất nhiều tiền.",
+            "relation": "grouping",
+            "source_terms": [
+              "tập đoàn"
+            ],
+            "visual_terms": [
+              "bank"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC13_B1",
+          "image_id": "SC13_I1",
+          "purpose": "Giới thiệu trụ cột nguồn vốn từ tập đoàn và chính phủ",
+          "anchor": {
+            "vi": {
+              "quote": "Thứ hai, phải là những tập đoàn hoặc chính phủ có rất nhiều tiền.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "explanation"
+    },
+    {
+      "id": "SC14",
+      "title": "Ngân sách mười tỷ đô la và rủi ro mất trắng",
+      "purpose": "Chứng minh quy mô mười tỷ đô la và chấp nhận mất trắng",
+      "action": "A giant gold coin embossed with bold text $10B beside an office wastebasket filled with crumpled blueprints.",
+      "setting": "Pure white explainer canvas (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Dự án vắc-xin tiêu tốn hơn mười tỷ đô la. Và họ phải chấp nhận mất trắng nếu thử nghiệm thất bại.",
+      "requirements": [
+        "R14"
+      ],
+      "character_ids": [],
+      "source_ids": [
+        "SRC03"
+      ],
+      "images": [
+        {
+          "id": "SC14_I1",
+          "description": "Pure white explainer canvas (#FFFFFF). A giant gold coin embossed with bold text $10B representing ten billion dollars research investment.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Quantifying the $10B capital expenditure.",
+          "visible_text": [
+            {
+              "text": "10 TỶ USD",
+              "placement": "top_center",
+              "object": "coin"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Dự án vắc-xin tiêu tốn hơn mười tỷ đô la.",
+            "relation": "quantity",
+            "source_terms": [
+              "mười tỷ đô la"
+            ],
+            "visual_terms": [
+              "coin"
+            ]
+          }
+        },
+        {
+          "id": "SC14_I2",
+          "description": "Pure white explainer canvas (#FFFFFF). An office wastebasket filled with crumpled research blueprints marked with red X symbols beside an empty coin outline.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Illustrating the zero-recovery sunk cost risk if trials fail.",
+          "visible_text": [
+            {
+              "text": "CHẤP NHẬN MẤT TRẮNG",
+              "placement": "top_center",
+              "object": "waste"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Và họ phải chấp nhận mất trắng nếu thử nghiệm thất bại.",
+            "relation": "cause_effect",
+            "source_terms": [
+              "thất bại"
+            ],
+            "visual_terms": [
+              "wastebasket"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC14_B1",
+          "image_id": "SC14_I1",
+          "purpose": "Chứng minh quy mô mười tỷ đô la và chấp nhận mất trắng",
+          "anchor": {
+            "vi": {
+              "quote": "Dự án vắc-xin tiêu tốn hơn mười tỷ đô la.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC14_B2",
+          "image_id": "SC14_I2",
+          "purpose": "Chứng minh quy mô mười tỷ đô la và chấp nhận mất trắng",
+          "anchor": {
+            "vi": {
+              "quote": "Và họ phải chấp nhận mất trắng nếu thử nghiệm thất bại.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "explanation"
+    },
+    {
+      "id": "SC15",
+      "title": "Tại sao sinh viên không thể tự làm",
+      "purpose": "Đặt vấn đề đối chiếu với hoàn cảnh thực tế của sinh viên",
+      "action": "Stickman student standing before three solid obstacle barrier blocks on clean white ground, looking thoughtful.",
+      "setting": "Minimalist pure white surface (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Bây giờ, bạn đã hiểu tại sao sinh viên không làm được chưa?",
+      "requirements": [
+        "R15"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC15_I1",
+          "description": "Minimalist pure white surface (#FFFFFF). Stickman student standing before three solid obstacle barrier blocks on clean white ground, looking thoughtful.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Synthesizing why students cannot conduct massive projects independently.",
+          "visible_text": [
+            {
+              "text": "TẠI SAO KHÔNG LÀM ĐƯỢC?",
+              "placement": "top_center",
+              "object": "question"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Bây giờ, bạn đã hiểu tại sao sinh viên không làm được chưa?",
+            "relation": "cause_effect",
+            "source_terms": [
+              "sinh viên"
+            ],
+            "visual_terms": [
+              "student"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC15_B1",
+          "image_id": "SC15_I1",
+          "purpose": "Đặt vấn đề đối chiếu với hoàn cảnh thực tế của sinh viên",
+          "anchor": {
+            "vi": {
+              "quote": "Bây giờ, bạn đã hiểu tại sao sinh viên không làm được chưa?",
+              "occurrence": 1
+            }
+          },
+          "effect": "punch_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "problem"
+    },
+    {
+      "id": "SC16",
+      "title": "Không phải vì sinh viên thiếu thông minh",
+      "purpose": "Khẳng định năng lực trí tuệ và sự sáng tạo của người trẻ",
+      "action": "Stickman student with radiating sharp idea spark lines drawn with crisp black marker strokes above head representing sharp intellect.",
+      "setting": "Clean white graphic field (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Không phải vì sinh viên thiếu thông minh.",
+      "requirements": [
+        "R16"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC16_I1",
+          "description": "Clean white graphic field (#FFFFFF). Stickman student with radiating sharp idea spark lines drawn with crisp black marker strokes above head representing sharp intellect.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Counter-argument: student intelligence is not the missing factor.",
+          "visible_text": [
+            {
+              "text": "KHÔNG PHẢI VÌ KÉM THÔNG MINH",
+              "placement": "top_center",
+              "object": "intellect"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Không phải vì sinh viên thiếu thông minh.",
+            "relation": "comparison",
+            "source_terms": [
+              "thông minh"
+            ],
+            "visual_terms": [
+              "spark"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC16_B1",
+          "image_id": "SC16_I1",
+          "purpose": "Khẳng định năng lực trí tuệ và sự sáng tạo của người trẻ",
+          "anchor": {
+            "vi": {
+              "quote": "Không phải vì sinh viên thiếu thông minh.",
+              "occurrence": 1
+            }
+          },
+          "effect": "punch_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "narrative_warm",
+      "narrative_phase": "counter_argument"
+    },
+    {
+      "id": "SC17",
+      "title": "Ba thứ sinh viên không thể có",
+      "purpose": "Dẫn vào 3 rào cản cốt lõi của sinh viên",
+      "action": "A bold oversized numeral 3 drawn with crisp black marker strokes centered on canvas.",
+      "setting": "Solid white doodle canvas (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Mà vì sinh viên không thể có ba thứ:",
+      "requirements": [
+        "R17"
+      ],
+      "character_ids": [],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC17_I1",
+          "description": "Solid white doodle canvas (#FFFFFF). A bold oversized numeral 3 drawn with crisp black marker strokes centered on canvas.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Enumeration setup for the three decisive structural barriers.",
+          "visible_text": [
+            {
+              "text": "3 THỨ KHÔNG THỂ CÓ",
+              "placement": "top_center",
+              "object": "number"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "visual_diagram",
+          "has_character": false,
+          "explanation": {
+            "quote": "Mà vì sinh viên không thể có ba thứ:",
+            "relation": "grouping",
+            "source_terms": [
+              "ba thứ"
+            ],
+            "visual_terms": [
+              "numeral"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC17_B1",
+          "image_id": "SC17_I1",
+          "purpose": "Dẫn vào 3 rào cản cốt lõi của sinh viên",
+          "anchor": {
+            "vi": {
+              "quote": "Mà vì sinh viên không thể có ba thứ:",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "explanation"
+    },
+    {
+      "id": "SC18",
+      "title": "Rào cản một hàng trăm triệu đô la bảo hiểm",
+      "purpose": "Phân tích rào cản chi phí bảo hiểm và kinh phí thử nghiệm",
+      "action": "A neat stack of currency cash banknotes marked with a subtle red diagonal strike-through line.",
+      "setting": "Stark clean white backdrop (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Một: Hàng trăm triệu đô la để thử nghiệm và trả tiền bảo hiểm.",
+      "requirements": [
+        "R18"
+      ],
+      "character_ids": [],
+      "source_ids": [
+        "SRC03"
+      ],
+      "images": [
+        {
+          "id": "SC18_I1",
+          "description": "Stark clean white backdrop (#FFFFFF). A neat stack of currency cash banknotes marked with a subtle red diagonal strike-through line.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Barrier 1: multi-million dollar insurance and trial operating expenses.",
+          "visible_text": [
+            {
+              "text": "1. TIỀN BẢO HIỂM",
+              "placement": "top_center",
+              "object": "barrier1"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Một: Hàng trăm triệu đô la để thử nghiệm và trả tiền bảo hiểm.",
+            "relation": "quantity",
+            "source_terms": [
+              "hàng trăm triệu đô la"
+            ],
+            "visual_terms": [
+              "banknotes"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC18_B1",
+          "image_id": "SC18_I1",
+          "purpose": "Phân tích rào cản chi phí bảo hiểm và kinh phí thử nghiệm",
+          "anchor": {
+            "vi": {
+              "quote": "Một: Hàng trăm triệu đô la để thử nghiệm và trả tiền bảo hiểm.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "explanation"
+    },
+    {
+      "id": "SC19",
+      "title": "Rào cản hai tư cách pháp lý và chữ ký",
+      "purpose": "Phân tích rào cản tư cách pháp nhân trước tòa án và hội đồng y đức",
+      "action": "An academic certificate paper labeled BẰNG CỬ NHÂN lacking the mandatory official regulatory round red seal stamp.",
+      "setting": "Pure white diagram canvas (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Hai: Chữ ký pháp lý trước tòa án và hội đồng y đức.",
+      "requirements": [
+        "R19"
+      ],
+      "character_ids": [],
+      "source_ids": [
+        "SRC04"
+      ],
+      "images": [
+        {
+          "id": "SC19_I1",
+          "description": "Pure white diagram canvas (#FFFFFF). An academic certificate paper labeled BẰNG CỬ NHÂN lacking the mandatory official regulatory round red seal stamp.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Barrier 2: legal standing and Institutional Review Board qualifications.",
+          "visible_text": [
+            {
+              "text": "2. TƯ CÁCH PHÁP LÝ",
+              "placement": "top_center",
+              "object": "barrier2"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Hai: Chữ ký pháp lý trước tòa án và hội đồng y đức.",
+            "relation": "context",
+            "source_terms": [
+              "chữ ký pháp lý"
+            ],
+            "visual_terms": [
+              "certificate"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC19_B1",
+          "image_id": "SC19_I1",
+          "purpose": "Phân tích rào cản tư cách pháp nhân trước tòa án và hội đồng y đức",
+          "anchor": {
+            "vi": {
+              "quote": "Hai: Chữ ký pháp lý trước tòa án và hội đồng y đức.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "explanation"
+    },
+    {
+      "id": "SC20",
+      "title": "Rào cản ba thời gian đào tạo so với đề tài",
+      "purpose": "Đối chiếu chu kỳ bốn năm đại học với đề tài hàng chục năm",
+      "action": "A desk calendar flipping rapidly and comparison timeline between 4 years and 30 years.",
+      "setting": "Minimalist stark white field (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Ba: Thời gian liên tục. Sinh viên bốn năm là tốt nghiệp, nhưng đề tài lớn cần mười đến ba mươi năm.",
+      "requirements": [
+        "R20"
+      ],
+      "character_ids": [],
+      "source_ids": [
+        "SRC01"
+      ],
+      "images": [
+        {
+          "id": "SC20_I1",
+          "description": "Minimalist stark white field (#FFFFFF). A desk calendar flipping rapidly through pages marked Year 1 to Year 4 on clean white surface.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Barrier 3: undergraduate degree horizon.",
+          "visible_text": [
+            {
+              "text": "3. THỜI GIAN 10-30 NĂM",
+              "placement": "top_center",
+              "object": "barrier3"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Ba: Thời gian liên tục.",
+            "relation": "progression",
+            "source_terms": [
+              "thời gian"
+            ],
+            "visual_terms": [
+              "calendar"
+            ]
+          }
+        },
+        {
+          "id": "SC20_I2",
+          "description": "Minimalist stark white field (#FFFFFF). A comparison timeline showing a short 4-year graduation segment beside an extended 30-year arrow spanning three decades.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Contrasting 4 years university training against 10 to 30 year fundamental science cycle.",
+          "visible_text": [
+            {
+              "text": "4 NĂM VS 30 NĂM",
+              "placement": "top_center",
+              "object": "timeline"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "visual_diagram",
+          "has_character": false,
+          "explanation": {
+            "quote": "Sinh viên bốn năm là tốt nghiệp, nhưng đề tài lớn cần mười đến ba mươi năm.",
+            "relation": "comparison",
+            "source_terms": [
+              "ba mươi năm"
+            ],
+            "visual_terms": [
+              "timeline"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC20_B1",
+          "image_id": "SC20_I1",
+          "purpose": "Đối chiếu chu kỳ bốn năm đại học với đề tài hàng chục năm",
+          "anchor": {
+            "vi": {
+              "quote": "Ba: Thời gian liên tục.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC20_B2",
+          "image_id": "SC20_I2",
+          "purpose": "Đối chiếu chu kỳ bốn năm đại học với đề tài hàng chục năm",
+          "anchor": {
+            "vi": {
+              "quote": "Sinh viên bốn năm là tốt nghiệp, nhưng đề tài lớn cần mười đến ba mươi năm.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "explanation"
+    },
+    {
+      "id": "SC21",
+      "title": "Rủi ro thất bại chín mươi phần trăm",
+      "purpose": "Phân tích nghịch lý an toàn tốt nghiệp và tỷ lệ thất bại 90%",
+      "action": "Stickman student looking anxiously at a graduation certificate paper, followed by a pie chart showing 90% failure risk.",
+      "setting": "Clean pure white surface (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Sinh viên cần kết quả an toàn để ra trường. Không thể đánh cược tương lai vào dự án có chín mươi phần trăm rủi ro thất bại.",
+      "requirements": [
+        "R21"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC21_I1",
+          "description": "Clean pure white surface (#FFFFFF). Stickman student looking anxiously at a graduation cap and university diploma requirement on pure white ground.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "The structural need for guaranteed degree graduation vs risk.",
+          "visible_text": [
+            {
+              "text": "CẦN TỐT NGHIỆP AN TOÀN",
+              "placement": "top_center",
+              "object": "diploma"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Sinh viên cần kết quả an toàn để ra trường.",
+            "relation": "cause_effect",
+            "source_terms": [
+              "an toàn"
+            ],
+            "visual_terms": [
+              "student"
+            ]
+          }
+        },
+        {
+          "id": "SC21_I2",
+          "description": "Clean pure white surface (#FFFFFF). A circular pie chart showing ninety percent shaded dark gray indicating failure risk and ten percent clean white indicating success.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Visualizing 90% project mortality risk.",
+          "visible_text": [
+            {
+              "text": "RỦI RO THẤT BẠI 90%",
+              "placement": "top_center",
+              "object": "chart"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "visual_diagram",
+          "has_character": false,
+          "explanation": {
+            "quote": "Không thể đánh cược tương lai vào dự án có chín mươi phần trăm rủi ro thất bại.",
+            "relation": "quantity",
+            "source_terms": [
+              "chín mươi phần trăm"
+            ],
+            "visual_terms": [
+              "chart"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC21_B1",
+          "image_id": "SC21_I1",
+          "purpose": "Phân tích nghịch lý an toàn tốt nghiệp và tỷ lệ thất bại 90%",
+          "anchor": {
+            "vi": {
+              "quote": "Sinh viên cần kết quả an toàn để ra trường.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC21_B2",
+          "image_id": "SC21_I2",
+          "purpose": "Phân tích nghịch lý an toàn tốt nghiệp và tỷ lệ thất bại 90%",
+          "anchor": {
+            "vi": {
+              "quote": "Không thể đánh cược tương lai vào dự án có chín mươi phần trăm rủi ro thất bại.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "reflective_slow",
+      "narrative_phase": "explanation"
+    },
+    {
+      "id": "SC22",
+      "title": "Định hướng hành động vậy sinh viên nên làm gì",
+      "purpose": "Mở ra giải pháp hành động thực tế",
+      "action": "Stickman student cheerfully rolling up sleeves with an energetic eager smile ready for practical action.",
+      "setting": "Solid white concept field (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Vậy sinh viên nên làm gì?",
+      "requirements": [
+        "R22"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC22_I1",
+          "description": "Solid white concept field (#FFFFFF). Stickman student cheerfully rolling up sleeves with an energetic eager smile ready for practical action.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Transition to constructive empowering takeaways.",
+          "visible_text": [
+            {
+              "text": "VẬY BẮT ĐẦU TỪ ĐÂU?",
+              "placement": "top_center",
+              "object": "question"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Vậy sinh viên nên làm gì?",
+            "relation": "cause_effect",
+            "source_terms": [
+              "sinh viên"
+            ],
+            "visual_terms": [
+              "student"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC22_B1",
+          "image_id": "SC22_I1",
+          "purpose": "Mở ra giải pháp hành động thực tế",
+          "anchor": {
+            "vi": {
+              "quote": "Vậy sinh viên nên làm gì?",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "narrative_warm",
+      "narrative_phase": "takeaway"
+    },
+    {
+      "id": "SC23",
+      "title": "Không cần một mình tạo ra cả sản phẩm",
+      "purpose": "Giải phóng áp lực người hùng đơn độc",
+      "action": "A small stickman student joins hands with a line of taller team scientists collectively supporting a large scientific apparatus.",
+      "setting": "Stark pure white graphic canvas (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Bạn không cần phải một mình tạo ra cả viên thuốc.",
+      "requirements": [
+        "R23"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC23_I1",
+          "description": "Stark pure white graphic canvas (#FFFFFF). A small stickman student joins hands with a line of taller team scientists collectively supporting a large scientific apparatus.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Dispelling the lone hero fallacy: science is collective teamwork.",
+          "visible_text": [
+            {
+              "text": "KHÔNG CẦN LÀM MỘT MÌNH",
+              "placement": "top_center",
+              "object": "team"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": true,
+          "explanation": {
+            "quote": "Bạn không cần phải một mình tạo ra cả viên thuốc.",
+            "relation": "grouping",
+            "source_terms": [
+              "một mình"
+            ],
+            "visual_terms": [
+              "scientists"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC23_B1",
+          "image_id": "SC23_I1",
+          "purpose": "Giải phóng áp lực người hùng đơn độc",
+          "anchor": {
+            "vi": {
+              "quote": "Bạn không cần phải một mình tạo ra cả viên thuốc.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "narrative_warm",
+      "narrative_phase": "takeaway"
+    },
+    {
+      "id": "SC24",
+      "title": "Làm thật tốt việc nhỏ nhất trong phòng thí nghiệm",
+      "purpose": "Định vị hành động xuất sắc từ nhiệm vụ nhỏ nhất",
+      "action": "Stickman student meticulously dispensing a single droplet of liquid into a clean glass test tube on laboratory rack.",
+      "setting": "Clean white explainer backdrop (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Hãy làm thật tốt việc nhỏ nhất trong phòng thí nghiệm. Đo một chỉ số, rửa một ống nghiệm, tìm một phân tử.",
+      "requirements": [
+        "R24"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC24_I1",
+          "description": "Clean white explainer backdrop (#FFFFFF). Stickman student carefully standing at a tidy laboratory table holding a glass test tube rack.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Focusing on precision in foundational lab responsibilities.",
+          "visible_text": [
+            {
+              "text": "LÀM TỐT VIỆC NHỎ",
+              "placement": "top_center",
+              "object": "action"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Hãy làm thật tốt việc nhỏ nhất trong phòng thí nghiệm.",
+            "relation": "context",
+            "source_terms": [
+              "phòng thí nghiệm"
+            ],
+            "visual_terms": [
+              "laboratory"
+            ]
+          }
+        },
+        {
+          "id": "SC24_I2",
+          "description": "Clean white explainer backdrop (#FFFFFF). Stickman student meticulously dispensing a single droplet of liquid into a clean glass test tube on laboratory rack.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC24_I1",
+          "preserve": "Preserve Clean white explainer backdrop (#FFFFFF). and bench layout. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Stickman student meticulously dispenses a single droplet of liquid into the test tube.",
+          "reason": "Mastering the smallest rigorous tasks in laboratory research.",
+          "visible_text": [
+            {
+              "text": "TÍCH LŨY TỪNG CHÚT",
+              "placement": "top_center",
+              "object": "pipette"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "variation",
+          "has_character": true,
+          "explanation": {
+            "quote": "Đo một chỉ số, rửa một ống nghiệm, tìm một phân tử.",
+            "relation": "context",
+            "source_terms": [
+              "ống nghiệm"
+            ],
+            "visual_terms": [
+              "test tube"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC24_B1",
+          "image_id": "SC24_I1",
+          "purpose": "Định vị hành động xuất sắc từ nhiệm vụ nhỏ nhất",
+          "anchor": {
+            "vi": {
+              "quote": "Hãy làm thật tốt việc nhỏ nhất trong phòng thí nghiệm.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC24_B2",
+          "image_id": "SC24_I2",
+          "purpose": "Định vị hành động xuất sắc từ nhiệm vụ nhỏ nhất",
+          "anchor": {
+            "vi": {
+              "quote": "Đo một chỉ số, rửa một ống nghiệm, tìm một phân tử.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "narrative_warm",
+      "narrative_phase": "takeaway"
+    },
+    {
+      "id": "SC25",
+      "title": "Tích lũy chuyên môn để dẫn dắt cỗ máy tương lai",
+      "purpose": "Kết bài truyền cảm hứng dẫn dắt tương lai",
+      "action": "Stickman student standing confidently on leadership podium directing a large high-tech research initiative roadmap.",
+      "setting": "Pure stark white final canvas (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Hãy tích lũy chuyên môn từng ngày. Rồi chính bạn sẽ dẫn dắt cỗ máy triệu đô trong tương lai.",
+      "requirements": [
+        "R25"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC25_I1",
+          "description": "Pure stark white final canvas (#FFFFFF). Stickman student standing confidently on leadership podium directing a large high-tech research initiative roadmap.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Show the described full-frame scene.",
+          "reason": "Inspiring closure: incremental rigor leads to future scientific leadership.",
+          "visible_text": [
+            {
+              "text": "TÍCH LŨY ➔ DẪN DẮT",
+              "placement": "top_center",
+              "object": "future"
+            }
+          ],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Hãy tích lũy chuyên môn từng ngày. Rồi chính bạn sẽ dẫn dắt cỗ máy triệu đô trong tương lai.",
+            "relation": "progression",
+            "source_terms": [
+              "dẫn dắt"
+            ],
+            "visual_terms": [
+              "leadership"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC25_B1",
+          "image_id": "SC25_I1",
+          "purpose": "Kết bài truyền cảm hứng dẫn dắt tương lai",
+          "anchor": {
+            "vi": {
+              "quote": "Hãy tích lũy chuyên môn từng ngày. Rồi chính bạn sẽ dẫn dắt cỗ máy triệu đô trong tương lai.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "narrative_warm",
+      "narrative_phase": "closing"
+    }
+  ],
+  "coverage": [
+    {
+      "requirement_id": "R01",
+      "scene_id": "SC01",
+      "quote": "Nước ta có rất nhiều bác sĩ giỏi, nhiều tiến sĩ, giáo sư và sinh viên xuất sắc"
+    },
+    {
+      "requirement_id": "R02",
+      "scene_id": "SC02",
+      "quote": "Nhưng tại sao với các đề tài tầm cỡ thế giới, sinh viên lại không thể tự làm được"
+    },
+    {
+      "requirement_id": "R03",
+      "scene_id": "SC03",
+      "quote": "Hãy nhìn vào một ví dụ thực tế: chiếc lọ vắc-xin Cô-vít mười chín"
+    },
+    {
+      "requirement_id": "R04",
+      "scene_id": "SC04",
+      "quote": "Để làm ra nó, quy trình thực sự diễn ra như thế nào"
+    },
+    {
+      "requirement_id": "R05",
+      "scene_id": "SC05",
+      "quote": "Bước một, tìm công thức trong phòng thí nghiệm"
+    },
+    {
+      "requirement_id": "R06",
+      "scene_id": "SC06",
+      "quote": "Nhưng đây mới chỉ là một phần mười quãng đường"
+    },
+    {
+      "requirement_id": "R07",
+      "scene_id": "SC07",
+      "quote": "Bước hai, thử nghiệm trên động vật"
+    },
+    {
+      "requirement_id": "R08",
+      "scene_id": "SC08",
+      "quote": "Bước ba, thử nghiệm trên người qua ba giai đoạn"
+    },
+    {
+      "requirement_id": "R09",
+      "scene_id": "SC09",
+      "quote": "Bước bốn, xây nhà máy giữ lạnh âm tám mươi độ C để sản xuất hàng triệu liều"
+    },
+    {
+      "requirement_id": "R10",
+      "scene_id": "SC10",
+      "quote": "Vậy ai là những người thực sự đứng ra làm"
+    },
+    {
+      "requirement_id": "R11",
+      "scene_id": "SC11",
+      "quote": "Thứ nhất, phải là những chuyên gia đầu ngành có hai mươi đến ba mươi năm kinh nghiệm"
+    },
+    {
+      "requirement_id": "R12",
+      "scene_id": "SC12",
+      "quote": "Họ là người đứng tên ký cam kết chịu trách nhiệm pháp lý"
+    },
+    {
+      "requirement_id": "R13",
+      "scene_id": "SC13",
+      "quote": "Thứ hai, phải là những tập đoàn hoặc chính phủ có rất nhiều tiền"
+    },
+    {
+      "requirement_id": "R14",
+      "scene_id": "SC14",
+      "quote": "Và họ phải chấp nhận mất trắng nếu thử nghiệm thất bại"
+    },
+    {
+      "requirement_id": "R15",
+      "scene_id": "SC15",
+      "quote": "Bây giờ, bạn đã hiểu tại sao sinh viên không làm được chưa"
+    },
+    {
+      "requirement_id": "R16",
+      "scene_id": "SC16",
+      "quote": "Không phải vì sinh viên thiếu thông minh"
+    },
+    {
+      "requirement_id": "R17",
+      "scene_id": "SC17",
+      "quote": "Mà vì sinh viên không thể có ba thứ:"
+    },
+    {
+      "requirement_id": "R18",
+      "scene_id": "SC18",
+      "quote": "Một: Hàng trăm triệu đô la để thử nghiệm và trả tiền bảo hiểm"
+    },
+    {
+      "requirement_id": "R19",
+      "scene_id": "SC19",
+      "quote": "Hai: Chữ ký pháp lý trước tòa án và hội đồng y đức"
+    },
+    {
+      "requirement_id": "R20",
+      "scene_id": "SC20",
+      "quote": "Sinh viên bốn năm là tốt nghiệp, nhưng đề tài lớn cần mười đến ba mươi năm"
+    },
+    {
+      "requirement_id": "R21",
+      "scene_id": "SC21",
+      "quote": "Không thể đánh cược tương lai vào dự án có chín mươi phần trăm rủi ro thất bại"
+    },
+    {
+      "requirement_id": "R22",
+      "scene_id": "SC22",
+      "quote": "Vậy sinh viên nên làm gì"
+    },
+    {
+      "requirement_id": "R23",
+      "scene_id": "SC23",
+      "quote": "Bạn không cần phải một mình tạo ra cả viên thuốc"
+    },
+    {
+      "requirement_id": "R24",
+      "scene_id": "SC24",
+      "quote": "Hãy làm thật tốt việc nhỏ nhất trong phòng thí nghiệm"
+    },
+    {
+      "requirement_id": "R25",
+      "scene_id": "SC25",
+      "quote": "Hãy tích lũy chuyên môn từng ngày"
+    }
+  ],
+  "outline": [
+    {
+      "scene_id": "SC01",
+      "purpose": "Đặt vấn đề về nguồn nhân lực y sinh và nghiên cứu xuất sắc",
+      "requirements": [
+        "R01"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC02",
+      "purpose": "Gợi mở câu hỏi cốt lõi về giới hạn đề tài lớn",
+      "requirements": [
+        "R02"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC03",
+      "purpose": "Giới thiệu ca nghiên cứu thực tế vaccine Covid-19",
+      "requirements": [
+        "R03"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC04",
+      "purpose": "Chuyển tiếp khám phá 4 bước quy trình tạo sản phẩm",
+      "requirements": [
+        "R04"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC05",
+      "purpose": "Chứng minh sinh viên làm tốt bước công thức phòng lab",
+      "requirements": [
+        "R05"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC06",
+      "purpose": "Trực quan hóa tỷ trọng một phần mười của bước phòng lab",
+      "requirements": [
+        "R06"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC07",
+      "purpose": "Giới thiệu chặng tiền lâm sàng trên động vật",
+      "requirements": [
+        "R07"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC08",
+      "purpose": "Liệt kê nhịp nhanh quy mô thử nghiệm người lên tới hơn 43000 người",
+      "requirements": [
+        "R08"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC09",
+      "purpose": "Giới thiệu chuỗi cung ứng lạnh công nghiệp và nhà máy triệu liều",
+      "requirements": [
+        "R09"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC10",
+      "purpose": "Chuyển đoạn sang phân tích chủ thể thực thi đề tài lớn",
+      "requirements": [
+        "R10"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC11",
+      "purpose": "Mô tả vai trò Chủ nhiệm đề tài PI và bề dày kinh nghiệm",
+      "requirements": [
+        "R11"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC12",
+      "purpose": "Nhấn mạnh trách nhiệm pháp nhân và an toàn tính mạng",
+      "requirements": [
+        "R12"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC13",
+      "purpose": "Giới thiệu trụ cột nguồn vốn từ tập đoàn và chính phủ",
+      "requirements": [
+        "R13"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC14",
+      "purpose": "Chứng minh quy mô mười tỷ đô la và chấp nhận mất trắng",
+      "requirements": [
+        "R14"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC15",
+      "purpose": "Đặt vấn đề đối chiếu với hoàn cảnh thực tế của sinh viên",
+      "requirements": [
+        "R15"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC16",
+      "purpose": "Khẳng định năng lực trí tuệ và sự sáng tạo của người trẻ",
+      "requirements": [
+        "R16"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC17",
+      "purpose": "Dẫn vào 3 rào cản cốt lõi của sinh viên",
+      "requirements": [
+        "R17"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC18",
+      "purpose": "Phân tích rào cản chi phí bảo hiểm và kinh phí thử nghiệm",
+      "requirements": [
+        "R18"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC19",
+      "purpose": "Phân tích rào cản tư cách pháp nhân trước tòa án và hội đồng y đức",
+      "requirements": [
+        "R19"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC20",
+      "purpose": "Đối chiếu chu kỳ bốn năm đại học với đề tài hàng chục năm",
+      "requirements": [
+        "R20"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC21",
+      "purpose": "Phân tích nghịch lý an toàn tốt nghiệp và tỷ lệ thất bại 90%",
+      "requirements": [
+        "R21"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC22",
+      "purpose": "Mở ra giải pháp hành động thực tế",
+      "requirements": [
+        "R22"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC23",
+      "purpose": "Giải phóng áp lực người hùng đơn độc",
+      "requirements": [
+        "R23"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC24",
+      "purpose": "Định vị hành động xuất sắc từ nhiệm vụ nhỏ nhất",
+      "requirements": [
+        "R24"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC25",
+      "purpose": "Kết bài truyền cảm hứng dẫn dắt tương lai",
+      "requirements": [
+        "R25"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    }
+  ],
+  "claims": [
+    {
+      "scene_id": "SC08",
+      "quote": "Bước ba, thử nghiệm trên người qua ba giai đoạn. Vài chục người, vài trăm người, và hơn bốn mươi ba nghìn người.",
+      "language": "vi",
+      "source_id": "SRC02",
+      "fact": "Thử nghiệm pha ba được thực hiện trên hơn bốn mươi ba nghìn người."
+    },
+    {
+      "scene_id": "SC12",
+      "quote": "Họ là người đứng tên ký cam kết chịu trách nhiệm pháp lý. Đặc biệt khi xảy ra rủi ro về tính mạng con người.",
+      "language": "vi",
+      "source_id": "SRC04",
+      "fact": "Nhà khoa học trưởng phải ký cam kết chịu trách nhiệm pháp lý trước tòa án."
+    },
+    {
+      "scene_id": "SC14",
+      "quote": "Dự án vắc-xin tiêu tốn hơn mười tỷ đô la.",
+      "language": "vi",
+      "source_id": "SRC03",
+      "fact": "Dự án phát triển vaccine tiêu tốn hơn mười tỷ đô la."
+    },
+    {
+      "scene_id": "SC20",
+      "quote": "Sinh viên bốn năm là tốt nghiệp, nhưng đề tài lớn cần mười đến ba mươi năm.",
+      "language": "vi",
+      "source_id": "SRC01",
+      "fact": "Sinh viên bốn năm đại học không đủ thời gian theo đuổi chu kỳ nghiên cứu gốc."
+    }
+  ],
+  "revision_response": [],
+  "open_questions": []
+}

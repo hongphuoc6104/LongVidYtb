@@ -23,7 +23,7 @@
 - **Bug Protocol**: Reproduction -> Root Cause -> Fix -> `PLAYBOOK.md` (6 fields, `<= 200` lines; archive overflow to `.agents/skills/`).
 
 ## 6. Quality, Doodle Style & Voice Guards
-- **Grounded Script & Anti-Flop**: `youtube_title <= 55` chars + `thumbnail_spec` (2–4 uppercase words), relatable hook (prefer pure VN over `vi-đê-ô`), simple declarative sentences (one idea/sentence), constructive guidance (`script_diversity_linter.py`, `script_cadence_checker.py` soft warnings).
+- **Grounded Script & Anti-Flop**: `youtube_title <= 55` chars + Flow CDP `thumbnail_spec` (2–4 uppercase words directly on flat canvas; zero text card/gradient overlays covering artwork), relatable hook (prefer pure VN over `vi-đê-ô`), simple declarative sentences (one idea/sentence), constructive guidance (`script_diversity_linter.py`, `script_cadence_checker.py` soft warnings).
 - **Voice & Prosody (`VietNarrator` `1.0x`, `-11.0 LUFS` / `-1.0 dBTP`)**: Strip hyphens before `OmniVoice` BPE, strip prompt-bleed bursts, keep nasal codas, retry stalls (`batch_size=1`), and verify WAV by listening.
 - **2D Indie Doodle (`full_frame_v1` / `1.7.0` `handdrawn_2d_explainer`)**: Lock to `Nguệch Ngoạc / Vẽ Vời` (`sys/visual_style.py`: wobbly `#000000` marker contours, flat hex fills `#F8F0DC`, `#F2B88B`, `#93A88C`, `#CBE0E0`, `#2E4361`, `#FFFFFF`, white bald circle-head stickman, `#3B82C4` shirt, wire arms, circle hands, orthographic 2D); Feynman Formula: 1 stickman + 1 focal metaphor object on 100% flat canvas (`#FFFFFF`/`#F8F0DC`), progressive domino frames adding detail incrementally without clutter, $\ge 60\%$ negative space; zero room interiors/walls/floor lines, oval shadows, 3/4 isometric, rounded AI icons, or vignette. Verify MP4 via `ffprobe` + frame check.
 

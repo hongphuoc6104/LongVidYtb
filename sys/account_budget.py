@@ -97,7 +97,7 @@ class Budgets:
         flow = state.get('flow', {})
         return {'identity_configured': identity is not None, 'window_start': start,
                 'window_end': start + WINDOW if start is not None else None,
-                'needs_service_recheck': anchor is not None and now >= anchor + WINDOW and not (
+                'needs_service_recheck': anchor is not None and now >= anchor + WINDOW and any(x['end'] is None for x in state.get('intervals', [])) and not (
                     state.get('service_recheck', {}).get('at', -1) >= start and
                     any(x['session'] == state.get('service_recheck', {}).get('session') and x['end'] is None for x in state.get('intervals', []))),
                 'display_seconds': 6 * HOUR, 'usable_seconds': 5 * HOUR, 'reserve_seconds': HOUR,

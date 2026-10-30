@@ -390,3 +390,19 @@ List of technical issues recorded during pipeline operation:
 - [colab-1793264939508168995.md](colab-1793264939508168995.md) — Colab TTS cần kiểm tra.
 
 - [colab-1793265172573121536.md](colab-1793265172573121536.md) — Colab TTS cần kiểm tra.
+
+- [colab-1793287539805748701.md](colab-1793287539805748701.md) — Colab TTS cần kiểm tra.
+- [quy-trinh-de-tai-lon-9x16 — images](1793292076585515361-quy-trinh-de-tai-lon-9x16-images.md)
+- [quy-trinh-de-tai-lon-9x16 — images](1793293679903093178-quy-trinh-de-tai-lon-9x16-images.md)
+- [quy-trinh-de-tai-lon-9x16 — images](1793294082938171292-quy-trinh-de-tai-lon-9x16-images.md)
+- [quy-trinh-de-tai-lon-9x16 — images](1793294242423830729-quy-trinh-de-tai-lon-9x16-images.md)
+- [quy-trinh-de-tai-lon-9x16 — images](1793294383391221714-quy-trinh-de-tai-lon-9x16-images.md)
+- [quy-trinh-de-tai-lon-9x16 — render](1793295078983064436-quy-trinh-de-tai-lon-9x16-render.md)
+
+- [colab-1793295149791471088.md](colab-1793295149791471088.md) — Colab TTS cần kiểm tra.
+
+- [colab-1793299072175426973.md](colab-1793299072175426973.md) — Colab TTS cần kiểm tra.
+
+- [colab-1793299072175612248.md](colab-1793299072175612248.md) — Colab TTS cần kiểm tra.
+
+- [colab-1793299102038158097.md](colab-1793299102038158097.md) — Colab TTS cần kiểm tra.

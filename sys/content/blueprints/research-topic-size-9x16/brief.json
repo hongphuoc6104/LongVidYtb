@@ -1,38 +1,58 @@
 {
   "schema_version": "3.0",
-  "topic": "Đừng Chọn Đề Tài NCKH Quá Lớn (Bản Dọc 60 Giây)",
+  "topic": "Đừng Chọn Đề Tài NCKH Quá Lớn (Bản Dọc Chi Tiết)",
   "audience": "Sinh viên đại học, học viên cao học và người mới bước vào nghiên cứu khoa học lướt video ngắn trên di động",
-  "goal": "Tóm gọn kỹ thuật gọt củ hành trong 60 giây và hướng dẫn bóp nhỏ đề tài NCKH khả thi trong ba tháng",
+  "goal": "Hướng dẫn cách chọn phạm vi nghiên cứu thực tế giữa sinh viên toàn quốc và sinh viên ký túc xá cho người mới",
   "video_type": "research_explainer",
   "duration": {
-    "min_seconds": 45.0,
-    "max_seconds": 65.0
+    "min_seconds": 85.0,
+    "max_seconds": 145.0
   },
-  "scene_count": 6,
+  "scene_count": 11,
   "required_points": [
     {
       "id": "R01",
-      "text": "Cú tát đề tài vĩ mô"
+      "text": "Cảnh báo bẫy chọn mẫu"
     },
     {
       "id": "R02",
-      "text": "Cú gạch đề cương"
+      "text": "Tình huống toàn quốc hay ký túc xá"
     },
     {
       "id": "R03",
-      "text": "Bức tường tri thức"
+      "text": "Cái bẫy chi phí và thời gian"
     },
     {
       "id": "R04",
-      "text": "Ba câu hỏi gọt củ hành"
+      "text": "Hậu quả số liệu ảo và lệch mẫu"
     },
     {
       "id": "R05",
-      "text": "Khóa chặt hành vi và thước đo"
+      "text": "Lời chúc mừng khi chọn ký túc xá"
     },
     {
       "id": "R06",
-      "text": "Bớt tham lại để thành công"
+      "text": "Sức mạnh dữ liệu thật và độ sâu"
+    },
+    {
+      "id": "R07",
+      "text": "Bảo vệ tự tin trước hội đồng"
+    },
+    {
+      "id": "R08",
+      "text": "Ai mới nên chọn dữ liệu toàn quốc"
+    },
+    {
+      "id": "R09",
+      "text": "Quy trình vĩ mô của dự án lớn"
+    },
+    {
+      "id": "R10",
+      "text": "Giới hạn phạm vi và lời hẹn mở rộng"
+    },
+    {
+      "id": "R11",
+      "text": "Quy tắc vàng và kêu gọi tinh tế"
     }
   ],
   "language": "vi",
@@ -84,7 +104,7 @@
   ],
   "planning": {
     "success_criteria": [
-      "Tóm gọn kỹ thuật gọt củ hành trong 60 giây và hướng dẫn bóp nhỏ đề tài NCKH khả thi trong ba tháng"
+      "Hướng dẫn cách chọn phạm vi nghiên cứu thực tế giữa sinh viên toàn quốc và sinh viên ký túc xá cho người mới"
     ],
     "avoid": [
       "Tránh lối diễn đạt giáo điều, sáo rỗng hoặc thuật ngữ hàn lâm không giải thích."
@@ -119,7 +139,7 @@
   "packaging": {
     "youtube_title": "Đừng Chọn Đề Tài NCKH Quá Lớn",
     "thumbnail_spec": {
-      "visual_hook": "Stickman gập người ôm tảng đá xám to quá sức trên nền kem phẳng, chữ BỚT THAM LẠI nổi bật.",
+      "visual_hook": "Stickman bối rối chỉ tay giữa bản đồ toàn quốc to đùng và phòng ký túc xá nhỏ gọn, chữ BỚT THAM LẠI nổi bật.",
       "text_overlay": "BỚT THAM LẠI",
       "contrast_pair": "Đề tài to đùng bế tắc vs Câu hỏi nhỏ giải quyết được",
       "thumbnail_prompt": "Orthographic 2D hand-drawn doodle poster in 9:16 vertical ratio. A minimalist bald circle-head stickman in solid cerulean-blue T-shirt (#3B82C4) staggering under an oversized grey rock prop. Clean unshaded warm paper-cream canvas (#F8F0DC), bold wobbly black marker contours (#000000). Top center shows big hand-lettered text 'BỚT THAM LẠI'. Zero 3D perspective, zero floor lines, zero room background, zero drop shadows, over 60% clean empty space."
@@ -135,7 +155,7 @@
   },
   "youtube_title": "Đừng Chọn Đề Tài NCKH Quá Lớn",
   "thumbnail_spec": {
-    "visual_hook": "Stickman gập người ôm tảng đá xám to quá sức trên nền kem phẳng, chữ BỚT THAM LẠI nổi bật.",
+    "visual_hook": "Stickman bối rối chỉ tay giữa bản đồ toàn quốc to đùng và phòng ký túc xá nhỏ gọn, chữ BỚT THAM LẠI nổi bật.",
     "text_overlay": "BỚT THAM LẠI",
     "contrast_pair": "Đề tài to đùng bế tắc vs Câu hỏi nhỏ giải quyết được",
     "thumbnail_prompt": "Orthographic 2D hand-drawn doodle poster in 9:16 vertical ratio. A minimalist bald circle-head stickman in solid cerulean-blue T-shirt (#3B82C4) staggering under an oversized grey rock prop. Clean unshaded warm paper-cream canvas (#F8F0DC), bold wobbly black marker contours (#000000). Top center shows big hand-lettered text 'BỚT THAM LẠI'. Zero 3D perspective, zero floor lines, zero room background, zero drop shadows, over 60% clean empty space."

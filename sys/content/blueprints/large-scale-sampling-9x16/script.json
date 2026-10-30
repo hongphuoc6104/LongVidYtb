@@ -1,0 +1,239 @@
+[
+  {
+    "id": "SC01",
+    "duration": 5.45,
+    "narration": "Chỉ cần bốn trăm người, là đại diện được cho cả triệu dân. Bạn có tin điều này không?",
+    "beats": [
+      {
+        "image_id": "SC01_I1",
+        "anchor_quote": "Chỉ cần bốn trăm người, là đại diện được cho cả triệu dân."
+      },
+      {
+        "image_id": "SC01_I2",
+        "anchor_quote": "Bạn có tin điều này không?"
+      }
+    ]
+  },
+  {
+    "id": "SC02",
+    "duration": 4.7,
+    "narration": "Nghe như đùa đúng không? Nhưng các Viện nghiên cứu làm đúng như vậy mỗi ngày.",
+    "beats": [
+      {
+        "image_id": "SC02_I1",
+        "anchor_quote": "Nghe như đùa đúng không?"
+      },
+      {
+        "image_id": "SC02_I2",
+        "anchor_quote": "Nhưng các Viện nghiên cứu làm đúng như vậy mỗi ngày."
+      }
+    ]
+  },
+  {
+    "id": "SC03",
+    "duration": 2.7,
+    "narration": "Bí mật nằm ở một chiếc nồi súp.",
+    "beats": [
+      {
+        "image_id": "SC03_I1",
+        "anchor_quote": "Bí mật nằm ở một chiếc nồi súp."
+      }
+    ]
+  },
+  {
+    "id": "SC04",
+    "duration": 6.7,
+    "narration": "Nấu một nồi súp một nghìn lít, không ai húp hết cả nồi mới biết mặn nhạt. Bạn chỉ cần nếm đúng một muôi.",
+    "beats": [
+      {
+        "image_id": "SC04_I1",
+        "anchor_quote": "Nấu một nồi súp một nghìn lít, không ai húp hết cả nồi mới biết mặn nhạt."
+      },
+      {
+        "image_id": "SC04_I2",
+        "anchor_quote": "Bạn chỉ cần nếm đúng một muôi."
+      }
+    ]
+  },
+  {
+    "id": "SC05",
+    "duration": 4.7,
+    "narration": "Nhưng nếu bạn chỉ hớt lớp váng dầu trên mặt, bạn sẽ thấy toàn mỡ ngấy.",
+    "beats": [
+      {
+        "image_id": "SC05_I1",
+        "anchor_quote": "Nhưng nếu bạn chỉ hớt lớp váng dầu trên mặt, bạn sẽ thấy toàn mỡ ngấy."
+      }
+    ]
+  },
+  {
+    "id": "SC06",
+    "duration": 5.7,
+    "narration": "Đó chính là sai lầm của sinh viên: Gửi link khảo sát vào mấy nhóm bạn bè trên Facebook.",
+    "beats": [
+      {
+        "image_id": "SC06_I1",
+        "anchor_quote": "Đó chính là sai lầm của sinh viên: Gửi link khảo sát vào mấy nhóm bạn bè trên Facebook."
+      }
+    ]
+  },
+  {
+    "id": "SC07",
+    "duration": 5.7,
+    "narration": "Số liệu đó chỉ đại diện cho nhóm bạn thân của bạn, không đại diện cho sinh viên toàn quốc.",
+    "beats": [
+      {
+        "image_id": "SC07_I1",
+        "anchor_quote": "Số liệu đó chỉ đại diện cho nhóm bạn thân của bạn, không đại diện cho sinh viên toàn quốc."
+      }
+    ]
+  },
+  {
+    "id": "SC08",
+    "duration": 4.2,
+    "narration": "Còn các Viện nghiên cứu làm gì? Họ khuấy đều và múc phân tầng.",
+    "beats": [
+      {
+        "image_id": "SC08_I1",
+        "anchor_quote": "Còn các Viện nghiên cứu làm gì?"
+      },
+      {
+        "image_id": "SC08_I2",
+        "anchor_quote": "Họ khuấy đều và múc phân tầng."
+      }
+    ]
+  },
+  {
+    "id": "SC09",
+    "duration": 5.7,
+    "narration": "Trong một muôi súp, họ gom đủ: Sinh viên kỹ thuật, sinh viên kinh tế và sinh viên y dược.",
+    "beats": [
+      {
+        "image_id": "SC09_I1",
+        "anchor_quote": "Trong một muôi súp, họ gom đủ: Sinh viên kỹ thuật, sinh viên kinh tế và sinh viên y dược."
+      }
+    ]
+  },
+  {
+    "id": "SC10",
+    "duration": 4.2,
+    "narration": "Họ chia đều theo vùng miền: Bắc, Trung, Nam, trường công và trường tư.",
+    "beats": [
+      {
+        "image_id": "SC10_I1",
+        "anchor_quote": "Họ chia đều theo vùng miền: Bắc, Trung, Nam, trường công và trường tư."
+      }
+    ]
+  },
+  {
+    "id": "SC11",
+    "duration": 5.2,
+    "narration": "Chỉ cần bốn trăm người được chọn ngẫu nhiên chuẩn chỉ, sai số chỉ dưới năm phần trăm.",
+    "beats": [
+      {
+        "image_id": "SC11_I1",
+        "anchor_quote": "Chỉ cần bốn trăm người được chọn ngẫu nhiên chuẩn chỉ, sai số chỉ dưới năm phần trăm."
+      }
+    ]
+  },
+  {
+    "id": "SC12",
+    "duration": 5.45,
+    "narration": "Đặc biệt, họ không dùng Google Form vô danh. Họ dùng phần mềm có định vị G-P-S.",
+    "beats": [
+      {
+        "image_id": "SC12_I1",
+        "anchor_quote": "Đặc biệt, họ không dùng Google Form vô danh."
+      },
+      {
+        "image_id": "SC12_I2",
+        "anchor_quote": "Họ dùng phần mềm có định vị G-P-S."
+      }
+    ]
+  },
+  {
+    "id": "SC13",
+    "duration": 5.45,
+    "narration": "Ai làm khảo sát dưới một phút là hệ thống tự động loại bỏ vì nghi ngờ tích bừa.",
+    "beats": [
+      {
+        "image_id": "SC13_I1",
+        "anchor_quote": "Ai làm khảo sát dưới một phút là hệ thống tự động loại bỏ vì nghi ngờ tích bừa."
+      }
+    ]
+  },
+  {
+    "id": "SC14",
+    "duration": 5.95,
+    "narration": "Họ còn gọi điện ngẫu nhiên mười phần trăm số phiếu để kiểm tra xem có ai khai khống hay không.",
+    "beats": [
+      {
+        "image_id": "SC14_I1",
+        "anchor_quote": "Họ còn gọi điện ngẫu nhiên mười phần trăm số phiếu để kiểm tra xem có ai khai khống hay không."
+      }
+    ]
+  },
+  {
+    "id": "SC15",
+    "duration": 5.2,
+    "narration": "Vậy sinh viên lấy đâu ra tiền và công nghệ để làm quy trình khủng như thế này?",
+    "beats": [
+      {
+        "image_id": "SC15_I1",
+        "anchor_quote": "Vậy sinh viên lấy đâu ra tiền và công nghệ để làm quy trình khủng như thế này?"
+      }
+    ]
+  },
+  {
+    "id": "SC16",
+    "duration": 4.2,
+    "narration": "Đừng lo, đây là vũ khí bí mật cho bạn: Dữ liệu thứ cấp.",
+    "beats": [
+      {
+        "image_id": "SC16_I1",
+        "anchor_quote": "Đừng lo, đây là vũ khí bí mật cho bạn: Dữ liệu thứ cấp."
+      }
+    ]
+  },
+  {
+    "id": "SC17",
+    "duration": 5.45,
+    "narration": "Tổng cục Thống kê và World Bank đã khảo sát sẵn hàng triệu người và công khai miễn phí.",
+    "beats": [
+      {
+        "image_id": "SC17_I1",
+        "anchor_quote": "Tổng cục Thống kê và World Bank đã khảo sát sẵn hàng triệu người và công khai miễn phí."
+      }
+    ]
+  },
+  {
+    "id": "SC18",
+    "duration": 6.45,
+    "narration": "Bạn chỉ cần tải về, làm sạch và phân tích. Hội đồng sẽ chấm điểm tối đa vì số liệu chuẩn quốc gia.",
+    "beats": [
+      {
+        "image_id": "SC18_I1",
+        "anchor_quote": "Bạn chỉ cần tải về, làm sạch và phân tích."
+      },
+      {
+        "image_id": "SC18_I2",
+        "anchor_quote": "Hội đồng sẽ chấm điểm tối đa vì số liệu chuẩn quốc gia."
+      }
+    ]
+  },
+  {
+    "id": "SC19",
+    "duration": 6.35,
+    "narration": "Đừng tự làm khó mình bằng cách đi phát phiếu dạo. Bấm theo dõi kênh để nhận link kho dữ liệu xịn này nhé!",
+    "beats": [
+      {
+        "image_id": "SC19_I1",
+        "anchor_quote": "Đừng tự làm khó mình bằng cách đi phát phiếu dạo."
+      },
+      {
+        "image_id": "SC19_I2",
+        "anchor_quote": "Bấm theo dõi kênh để nhận link kho dữ liệu xịn này nhé!"
+      }
+    ]
+  }
+]

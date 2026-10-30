@@ -128,6 +128,7 @@ def station_2_test_ast() -> bool:
         SYS_DIR / "tests/test_collectors_fallacy_production.py",
         SYS_DIR / "tests/test_reviewer_2_production.py",
         SYS_DIR / "tests/test_research_topic_size_production.py",
+        SYS_DIR / "tests/test_quy_trinh_de_tai_lon_production.py",
         SYS_DIR / "tests/test_visual_breathing_room.py",
         SYS_DIR / "tests/test_reference_explainer.py",
         SYS_DIR / "tests/test_flow_prompts.py",
@@ -171,7 +172,7 @@ def station_2_test_ast() -> bool:
     except Exception:
         pass
 
-    dirty = subprocess.run(['git', 'status', '--porcelain'], cwd=REPO_ROOT, capture_output=True, text=True, check=True)
+    dirty = subprocess.run(["git", "status", "--porcelain"], cwd=REPO_ROOT, capture_output=True, text=True, check=True)
     evidence_content = (
         f"=== Video Pilot Test Evidence Log ===\n"
         f"Timestamp: {datetime.now().isoformat()}\n"
@@ -214,7 +215,9 @@ def station_3_docs_playbook() -> bool:
                 print(f"  - {v}")
         return False
 
-    print(f"  [PASS] PLAYBOOK.md hợp lệ: {report['valid_entries']}/{report['entries_count']} bài học đạt chuẩn 6 trường.")
+    print(
+        f"  [PASS] PLAYBOOK.md hợp lệ: {report['valid_entries']}/{report['entries_count']} bài học đạt chuẩn 6 trường."
+    )
     print("[PASS] Trạm 3: Tài liệu học tập và sổ tay lỗi đồng bộ hoàn toàn!")
     return True
 
@@ -327,28 +330,42 @@ def station_6_ci_watch() -> bool:
     print_banner("Trạm 6: CI Watch & Local Green Certification (GH-AXI Watch)", 6)
     gh_axi_bin = shutil.which("gh-axi")
     from conveyor.ci_evidence import decode_ci_runs, validate_ci_runs
-    dirty = subprocess.run(['git', 'status', '--porcelain'], cwd=REPO_ROOT, capture_output=True, text=True, check=True)
+
+    dirty = subprocess.run(["git", "status", "--porcelain"], cwd=REPO_ROOT, capture_output=True, text=True, check=True)
     if dirty.stdout.strip() or not gh_axi_bin:
-        print('[FAIL] CI certification requires a committed tree and the GitHub client.')
+        print("[FAIL] CI certification requires a committed tree and the GitHub client.")
         return False
-    head = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=REPO_ROOT, capture_output=True, text=True, check=True).stdout.strip()
-    proofs = sorted((SYS_DIR / 'logs/proofs').glob('test_evidence_*.log'))
-    proof = proofs[-1].read_text() if proofs else ''
-    if f'Commit: {head}\n' not in proof or 'Return Code: 0\n' not in proof or 'WorkingTreeDirty: false\n' not in proof:
-        print('[FAIL] Missing successful clean-tree test evidence for this revision.')
+    head = subprocess.run(
+        ["git", "rev-parse", "HEAD"], cwd=REPO_ROOT, capture_output=True, text=True, check=True
+    ).stdout.strip()
+    proofs = sorted((SYS_DIR / "logs/proofs").glob("test_evidence_*.log"))
+    proof = proofs[-1].read_text() if proofs else ""
+    if f"Commit: {head}\n" not in proof or "Return Code: 0\n" not in proof or "WorkingTreeDirty: false\n" not in proof:
+        print("[FAIL] Missing successful clean-tree test evidence for this revision.")
         return False
     try:
         # The configured repository is resolved by gh-axi; no hard-coded host.
-        result = subprocess.run([
-            gh_axi_bin, 'api', '/repos/{owner}/{repo}/actions/runs?head_sha=' + head + '&per_page=100',
-            '--jq', '[.workflow_runs[] | {id,head_sha,status,conclusion,html_url}] | @base64', '--full',
-        ], cwd=REPO_ROOT, capture_output=True, text=True, timeout=60, check=True)
+        result = subprocess.run(
+            [
+                gh_axi_bin,
+                "api",
+                "/repos/{owner}/{repo}/actions/runs?head_sha=" + head + "&per_page=100",
+                "--jq",
+                "[.workflow_runs[] | {id,head_sha,status,conclusion,html_url}] | @base64",
+                "--full",
+            ],
+            cwd=REPO_ROOT,
+            capture_output=True,
+            text=True,
+            timeout=60,
+            check=True,
+        )
         runs = decode_ci_runs(result.stdout)
     except (subprocess.SubprocessError, OSError, ValueError):
-        print('[FAIL] Actual CI evidence is unavailable or unreadable.')
+        print("[FAIL] Actual CI evidence is unavailable or unreadable.")
         return False
     if not validate_ci_runs(runs, head) or len(runs) == 100:
-        print('[FAIL] CI is missing, unfinished, unsuccessful, or incompletely paginated.')
+        print("[FAIL] CI is missing, unfinished, unsuccessful, or incompletely paginated.")
         return False
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -541,7 +558,9 @@ def main():
     subparsers.add_parser("status", help="Kiểm tra tính sẵn sàng của môi trường và công cụ")
     subparsers.add_parser("run", help="Chạy toàn bộ băng chuyền 6 trạm No-Mistake")
 
-    setup_parser = subparsers.add_parser("setup", help="Khởi tạo môi trường, cài Colab CLI và đăng nhập tài khoản Colab + Flow")
+    setup_parser = subparsers.add_parser(
+        "setup", help="Khởi tạo môi trường, cài Colab CLI và đăng nhập tài khoản Colab + Flow"
+    )
     setup_parser.add_argument("--skip-colab", action="store_true", help="Bỏ qua bước đăng nhập Colab")
     setup_parser.add_argument("--skip-flow", action="store_true", help="Bỏ qua bước thiết lập Flow")
     setup_parser.add_argument("--force", action="store_true", help="Bắt buộc chạy lại wizard đăng nhập")
@@ -554,7 +573,12 @@ def main():
     video_parser.add_argument("--step", type=str, help="Bước sản xuất (control/content/audio/images/render)")
 
     flow_parser = subparsers.add_parser("flow", help="Quản lý Profile & Đăng nhập Google Flow CDP")
-    flow_parser.add_argument("flow_action", choices=["status", "launch", "login-many", "stop", "list", "scan", "leases", "release"], nargs="?", default="status")
+    flow_parser.add_argument(
+        "flow_action",
+        choices=["status", "launch", "login-many", "stop", "list", "scan", "leases", "release"],
+        nargs="?",
+        default="status",
+    )
     flow_parser.add_argument("target", nargs="?", default="all", help="Profile ID, job ID, hoặc 'all'")
     flow_parser.add_argument("--total", type=int, help="Tổng số Profile khi chạy login-many")
 
@@ -562,8 +586,19 @@ def main():
     colab_parser.add_argument(
         "colab_action",
         choices=[
-            "list", "status-all", "login", "login-many", "enable", "disable", "role", "remove",
-            "pool-status", "pool-health", "pool-start", "pool-stop", "teardown",
+            "list",
+            "status-all",
+            "login",
+            "login-many",
+            "enable",
+            "disable",
+            "role",
+            "remove",
+            "pool-status",
+            "pool-health",
+            "pool-start",
+            "pool-stop",
+            "teardown",
         ],
         nargs="?",
         default="list",

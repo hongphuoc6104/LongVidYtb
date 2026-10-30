@@ -883,10 +883,20 @@ class Client:
                                 if before_submit is not None:
                                     before_submit()
                                 self._ready()
-                                self.exec(
-                                    f"from pathlib import Path\nPath({remote!r}).mkdir(parents=True, exist_ok=True)",
-                                    timeout=300,
-                                )
+                                try:
+                                    self.exec(
+                                        f"from pathlib import Path\nPath({remote!r}).mkdir(parents=True, exist_ok=True)",
+                                        timeout=300,
+                                    )
+                                except ColabError as exc:
+                                    if "COLAB_SESSION_NOT_FOUND" not in str(exc):
+                                        raise
+                                    self.reconcile()
+                                    self._ready(auto_start=True)
+                                    self.exec(
+                                        f"from pathlib import Path\nPath({remote!r}).mkdir(parents=True, exist_ok=True)",
+                                        timeout=300,
+                                    )
                                 self.call(
                                     "upload", "-s", self.session, str(archive), remote + "/input.zip", timeout=600
                                 )

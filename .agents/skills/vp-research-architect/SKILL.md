@@ -46,7 +46,7 @@ Bộ kỹ năng này được thiết kế để **tự động hóa 100% phần
   1. `youtube_title`: $\le 55$ ký tự, tạo *Curiosity Gap*, không tự trả lời trong tiêu đề.
   2. `thumbnail_spec`:
      - `visual_hook` + `text_overlay` đúng **2–4 từ in hoa** đánh trúng tâm lý tò mò.
-     - **Integrated Poster Thumbnail Prompt (`thumbnail_prompt` / `build_thumbnail_poster_prompt()`):** Tuyệt đối không dùng lại ảnh `SC01` rồi dán đè một chiếc thẻ HTML rẻ tiền, và nghiêm cấm các sáo rỗng AI (`neon brain`, `matrix 0101`, `cyborg hand`). Thumbnail phải được thiết kế như **1 poster thống nhất**: **60% khung hình** là **1 ẩn dụ thị giác duy nhất** cực kỳ sắc nét; **40% khung hình** là khoảng trống sạch (*negative space*) nơi **dòng chữ vàng đậm cỡ đại (`#FACC15`) viền đen dày** được vẽ/thiết kế hòa quyện cùng một tone màu và ánh sáng với bức tranh.
+     - **Integrated Poster Thumbnail Prompt (`thumbnail_prompt` / `build_thumbnail_poster_prompt()`):** 100% tạo thumbnail trực tiếp từ Flow CDP (prompt chuyên biệt). Tuyệt đối không dùng lại ảnh `SC01` rồi dán đè thẻ chữ HTML hay gradient đen che khuất tranh. Nghiêm cấm các sáo rỗng AI (`neon brain`, `matrix 0101`, `cyborg hand`). Thumbnail phải được thiết kế như **1 poster thống nhất**: **60% khung hình** là **1 ẩn dụ thị giác duy nhất** cực kỳ sắc nét; **40% khung hình** là khoảng trống sạch (*negative space*) nơi **chữ vẽ tay cỡ đại (`allowed_text`)** được AI tạo trực tiếp hòa quyện cùng nét vẽ và màu nền phẳng (`#F8F0DC` / `#FFFFFF`).
   3. `channel_philosophy` & `funnel_tier`: Theo triết lý đã chọn trong `sys/pillars.py` (`tier_1_broad` / `tier_2_mid` / `tier_3_conversion`).
 
 ### Bước 3: Kiến Trúc Mạch Truyện Thích Ứng & Cặp `(Nhịp Thoại, Hành Động Hình Ảnh)`

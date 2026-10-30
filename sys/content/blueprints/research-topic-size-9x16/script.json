@@ -1,139 +1,254 @@
 [
   {
     "id": "SC01",
-    "duration": 10.95,
-    "narration": "Tên đề tài nghiên cứu quá rộng sẽ bị thầy cô gạch ngay. Muốn giải cứu thế giới, bạn đang tự hại mình. Không tiền, không dữ liệu, bạn bế tắc ngay. Càng ôm đồm, bạn càng cầm chắc thất bại.",
+    "duration": 11.45,
+    "narration": "Hãy lưu lại video này nếu bạn chuẩn bị làm nghiên cứu khoa học. Sai lầm lớn nhất là: Chọn phạm vi quá rộng. Càng tham lam, bạn càng nhanh bế tắc. Đề tài sẽ chết ngay từ khâu lấy mẫu.",
     "beats": [
       {
         "image_id": "SC01_I1",
-        "anchor_quote": "Tên đề tài nghiên cứu quá rộng sẽ bị thầy cô gạch ngay."
+        "anchor_quote": "Hãy lưu lại video này nếu bạn chuẩn bị làm nghiên cứu khoa học."
       },
       {
         "image_id": "SC01_I2",
-        "anchor_quote": "Muốn giải cứu thế giới, bạn đang tự hại mình."
+        "anchor_quote": "Sai lầm lớn nhất là: Chọn phạm vi quá rộng."
       },
       {
         "image_id": "SC01_I3",
-        "anchor_quote": "Không tiền, không dữ liệu, bạn bế tắc ngay."
+        "anchor_quote": "Càng tham lam, bạn càng nhanh bế tắc."
       },
       {
         "image_id": "SC01_I4",
-        "anchor_quote": "Càng ôm đồm, bạn càng cầm chắc thất bại."
+        "anchor_quote": "Đề tài sẽ chết ngay từ khâu lấy mẫu."
       }
     ]
   },
   {
     "id": "SC02",
-    "duration": 10.2,
-    "narration": "Chỉ sau một tuần, giáo viên sẽ gạch bỏ ngay. Lời phê ngắn gọn: Quá rộng, không thể làm. Bạn không có tiền bạc hay thời gian vô tận. Biển dữ liệu lớn sẽ nhấn chìm bạn ngay.",
+    "duration": 9.95,
+    "narration": "Giả sử bạn làm đề tài về sinh viên. Bạn chọn sinh viên toàn quốc, hay sinh viên trường mình? Ai cũng nghĩ: Chọn toàn quốc nghe mới oách. Nhưng đó là lúc khó khăn ập đến.",
     "beats": [
       {
         "image_id": "SC02_I1",
-        "anchor_quote": "Chỉ sau một tuần, giáo viên sẽ gạch bỏ ngay."
+        "anchor_quote": "Giả sử bạn làm đề tài về sinh viên."
       },
       {
         "image_id": "SC02_I2",
-        "anchor_quote": "Lời phê ngắn gọn: Quá rộng, không thể làm."
+        "anchor_quote": "Bạn chọn sinh viên toàn quốc, hay sinh viên trường mình?"
       },
       {
         "image_id": "SC02_I3",
-        "anchor_quote": "Bạn không có tiền bạc hay thời gian vô tận."
+        "anchor_quote": "Ai cũng nghĩ: Chọn toàn quốc nghe mới oách."
       },
       {
         "image_id": "SC02_I4",
-        "anchor_quote": "Biển dữ liệu lớn sẽ nhấn chìm bạn ngay."
+        "anchor_quote": "Nhưng đó là lúc khó khăn ập đến."
       }
     ]
   },
   {
     "id": "SC03",
-    "duration": 10.7,
-    "narration": "Khoa học không cần bạn phát minh lại bánh xe. Tri thức giống như một bức tường đã rất cao. Việc của bạn là đặt thêm một viên gạch nhỏ. Làm trọn việc nhỏ tốt hơn bỏ dở việc to.",
+    "duration": 10.2,
+    "narration": "Chọn toàn quốc, bạn cần cả nghìn phiếu khảo sát. Phải đi khắp các trường từ Bắc vào Nam. Bạn lấy đâu ra tiền và mạng lưới điều tra? Thời gian làm bài chỉ có đúng ba tháng.",
     "beats": [
       {
         "image_id": "SC03_I1",
-        "anchor_quote": "Khoa học không cần bạn phát minh lại bánh xe."
+        "anchor_quote": "Chọn toàn quốc, bạn cần cả nghìn phiếu khảo sát."
       },
       {
         "image_id": "SC03_I2",
-        "anchor_quote": "Tri thức giống như một bức tường đã rất cao."
+        "anchor_quote": "Phải đi khắp các trường từ Bắc vào Nam."
       },
       {
         "image_id": "SC03_I3",
-        "anchor_quote": "Việc của bạn là đặt thêm một viên gạch nhỏ."
+        "anchor_quote": "Bạn lấy đâu ra tiền và mạng lưới điều tra?"
       },
       {
         "image_id": "SC03_I4",
-        "anchor_quote": "Làm trọn việc nhỏ tốt hơn bỏ dở việc to."
+        "anchor_quote": "Thời gian làm bài chỉ có đúng ba tháng."
       }
     ]
   },
   {
     "id": "SC04",
-    "duration": 9.95,
-    "narration": "Hãy bóp nhỏ đề tài bằng ba câu hỏi then chốt. Nghiên cứu ai? Hãy chọn sinh viên trường bạn. Đừng chọn thanh niên toàn quốc xa vời. Mẫu gần gũi giúp dữ liệu rất chắc chắn.",
+    "duration": 12.2,
+    "narration": "Cuối cùng, bạn chỉ biết nhắn tin nhờ người quen điền giúp. Mẫu bị lệch, số liệu không đại diện cho ai cả. Ra hội đồng, thầy cô hỏi phương pháp là bạn cứng họng. Bạn vừa kiệt sức, vừa ôm một đống số liệu ảo.",
     "beats": [
       {
         "image_id": "SC04_I1",
-        "anchor_quote": "Hãy bóp nhỏ đề tài bằng ba câu hỏi then chốt."
+        "anchor_quote": "Cuối cùng, bạn chỉ biết nhắn tin nhờ người quen điền giúp."
       },
       {
         "image_id": "SC04_I2",
-        "anchor_quote": "Nghiên cứu ai? Hãy chọn sinh viên trường bạn."
+        "anchor_quote": "Mẫu bị lệch, số liệu không đại diện cho ai cả."
       },
       {
         "image_id": "SC04_I3",
-        "anchor_quote": "Đừng chọn thanh niên toàn quốc xa vời."
+        "anchor_quote": "Ra hội đồng, thầy cô hỏi phương pháp là bạn cứng họng."
       },
       {
         "image_id": "SC04_I4",
-        "anchor_quote": "Mẫu gần gũi giúp dữ liệu rất chắc chắn."
+        "anchor_quote": "Bạn vừa kiệt sức, vừa ôm một đống số liệu ảo."
       }
     ]
   },
   {
     "id": "SC05",
-    "duration": 10.7,
-    "narration": "Đo cái gì? Đổi khái niệm thành hành vi cụ thể. Thay vì sức khỏe tinh thần, hãy đo giờ ngủ. Số phút lướt điện thoại là thước đo khách quan. Bài toán bây giờ làm gọn trong ba tháng.",
+    "duration": 12.2,
+    "narration": "Còn nếu bạn chỉ khảo sát ngay trong ký túc xá thì sao? Xin chúc mừng, bạn vừa mở ra con đường sống cho bài làm! Họ ở ngay sát phòng bạn mỗi ngày. Tối đến, bạn chỉ cần gõ cửa từng phòng để trò chuyện.",
     "beats": [
       {
         "image_id": "SC05_I1",
-        "anchor_quote": "Đo cái gì? Đổi khái niệm thành hành vi cụ thể."
+        "anchor_quote": "Còn nếu bạn chỉ khảo sát ngay trong ký túc xá thì sao?"
       },
       {
         "image_id": "SC05_I2",
-        "anchor_quote": "Thay vì sức khỏe tinh thần, hãy đo giờ ngủ."
+        "anchor_quote": "Xin chúc mừng, bạn vừa mở ra con đường sống cho bài làm!"
       },
       {
         "image_id": "SC05_I3",
-        "anchor_quote": "Số phút lướt điện thoại là thước đo khách quan."
+        "anchor_quote": "Họ ở ngay sát phòng bạn mỗi ngày."
       },
       {
         "image_id": "SC05_I4",
-        "anchor_quote": "Bài toán bây giờ làm gọn trong ba tháng."
+        "anchor_quote": "Tối đến, bạn chỉ cần gõ cửa từng phòng để trò chuyện."
       }
     ]
   },
   {
     "id": "SC06",
-    "duration": 10.85,
-    "narration": "Bớt tham lại, đề tài mới có cơ hội sống. Làm trọn một việc nhỏ là đủ để qua môn. Thả tim ủng hộ nếu thấy nhẹ nhõm hơn bạn nhé. Bấm theo dõi để cùng gỡ rối đề tài tiếp theo.",
+    "duration": 11.2,
+    "narration": "Sau ba ngày, bạn có ngay một trăm phiếu khảo sát chuẩn chỉ. Chi phí bỏ ra đúng bằng không đồng. Số liệu người thật việc thật, kiểm tra được ngay. Bạn hiểu rất rõ đối tượng nên viết bài cực sâu.",
     "beats": [
       {
         "image_id": "SC06_I1",
-        "anchor_quote": "Bớt tham lại, đề tài mới có cơ hội sống."
+        "anchor_quote": "Sau ba ngày, bạn có ngay một trăm phiếu khảo sát chuẩn chỉ."
       },
       {
         "image_id": "SC06_I2",
-        "anchor_quote": "Làm trọn một việc nhỏ là đủ để qua môn."
+        "anchor_quote": "Chi phí bỏ ra đúng bằng không đồng."
       },
       {
         "image_id": "SC06_I3",
-        "anchor_quote": "Thả tim ủng hộ nếu thấy nhẹ nhõm hơn bạn nhé."
+        "anchor_quote": "Số liệu người thật việc thật, kiểm tra được ngay."
       },
       {
         "image_id": "SC06_I4",
-        "anchor_quote": "Bấm theo dõi để cùng gỡ rối đề tài tiếp theo."
+        "anchor_quote": "Bạn hiểu rất rõ đối tượng nên viết bài cực sâu."
+      }
+    ]
+  },
+  {
+    "id": "SC07",
+    "duration": 13.45,
+    "narration": "Khi bảo vệ, thầy cô hỏi gì bạn cũng trả lời vanh vách. Bạn giải thích được từng con số, từng câu trả lời bất thường. Hội đồng đánh giá rất cao tính khả thi và sự trung thực. Làm trọn vẹn một việc nhỏ tốt hơn bỏ dở việc lớn.",
+    "beats": [
+      {
+        "image_id": "SC07_I1",
+        "anchor_quote": "Khi bảo vệ, thầy cô hỏi gì bạn cũng trả lời vanh vách."
+      },
+      {
+        "image_id": "SC07_I2",
+        "anchor_quote": "Bạn giải thích được từng con số, từng câu trả lời bất thường."
+      },
+      {
+        "image_id": "SC07_I3",
+        "anchor_quote": "Hội đồng đánh giá rất cao tính khả thi và sự trung thực."
+      },
+      {
+        "image_id": "SC07_I4",
+        "anchor_quote": "Làm trọn vẹn một việc nhỏ tốt hơn bỏ dở việc lớn."
+      }
+    ]
+  },
+  {
+    "id": "SC08",
+    "duration": 11.95,
+    "narration": "Vậy ai mới là người nên chọn sinh viên toàn quốc? Đó là các Viện nghiên cứu, hoặc các dự án cấp Bộ. Họ được cấp kinh phí hàng trăm triệu đồng. Đồng thời có cả mạng lưới điều tra viên tỏa đi các tỉnh.",
+    "beats": [
+      {
+        "image_id": "SC08_I1",
+        "anchor_quote": "Vậy ai mới là người nên chọn sinh viên toàn quốc?"
+      },
+      {
+        "image_id": "SC08_I2",
+        "anchor_quote": "Đó là các Viện nghiên cứu, hoặc các dự án cấp Bộ."
+      },
+      {
+        "image_id": "SC08_I3",
+        "anchor_quote": "Họ được cấp kinh phí hàng trăm triệu đồng."
+      },
+      {
+        "image_id": "SC08_I4",
+        "anchor_quote": "Đồng thời có cả mạng lưới điều tra viên tỏa đi các tỉnh."
+      }
+    ]
+  },
+  {
+    "id": "SC09",
+    "duration": 13.45,
+    "narration": "Họ có phần mềm giám sát và lấy mẫu phân tầng chuẩn mực. Thời gian làm của họ kéo dài từ một đến hai năm. Đó là nhiệm vụ khoa học lớn, không phải bài làm của sinh viên. Đừng ôm đồm việc của một Viện nghiên cứu lên vai mình.",
+    "beats": [
+      {
+        "image_id": "SC09_I1",
+        "anchor_quote": "Họ có phần mềm giám sát và lấy mẫu phân tầng chuẩn mực."
+      },
+      {
+        "image_id": "SC09_I2",
+        "anchor_quote": "Thời gian làm của họ kéo dài từ một đến hai năm."
+      },
+      {
+        "image_id": "SC09_I3",
+        "anchor_quote": "Đó là nhiệm vụ khoa học lớn, không phải bài làm của sinh viên."
+      },
+      {
+        "image_id": "SC09_I4",
+        "anchor_quote": "Đừng ôm đồm việc của một Viện nghiên cứu lên vai mình."
+      }
+    ]
+  },
+  {
+    "id": "SC10",
+    "duration": 15.95,
+    "narration": "Video này, mình muốn tháo gỡ áp lực thực tế cho sinh viên trước. Các video sau, mình sẽ giải mã quy trình thực hiện các đề tài lớn. Cách các dự án lớn thiết kế mẫu và kiểm soát sai số ra sao. Còn bây giờ, mục tiêu quan trọng nhất là bảo vệ an toàn.",
+    "beats": [
+      {
+        "image_id": "SC10_I1",
+        "anchor_quote": "Video này, mình muốn tháo gỡ áp lực thực tế cho sinh viên trước."
+      },
+      {
+        "image_id": "SC10_I2",
+        "anchor_quote": "Các video sau, mình sẽ giải mã quy trình thực hiện các đề tài lớn."
+      },
+      {
+        "image_id": "SC10_I3",
+        "anchor_quote": "Cách các dự án lớn thiết kế mẫu và kiểm soát sai số ra sao."
+      },
+      {
+        "image_id": "SC10_I4",
+        "anchor_quote": "Còn bây giờ, mục tiêu quan trọng nhất là bảo vệ an toàn."
+      }
+    ]
+  },
+  {
+    "id": "SC11",
+    "duration": 12.1,
+    "narration": "Quy tắc vàng: Phạm vi càng hẹp, bài làm càng sâu. Số liệu càng thật, điểm số của bạn càng cao. Thả tim nếu góc nhìn này giúp bạn giải tỏa áp lực nhé. Bấm theo dõi kênh để cùng gỡ rối những đề tài tiếp theo.",
+    "beats": [
+      {
+        "image_id": "SC11_I1",
+        "anchor_quote": "Quy tắc vàng: Phạm vi càng hẹp, bài làm càng sâu."
+      },
+      {
+        "image_id": "SC11_I2",
+        "anchor_quote": "Số liệu càng thật, điểm số của bạn càng cao."
+      },
+      {
+        "image_id": "SC11_I3",
+        "anchor_quote": "Thả tim nếu góc nhìn này giúp bạn giải tỏa áp lực nhé."
+      },
+      {
+        "image_id": "SC11_I4",
+        "anchor_quote": "Bấm theo dõi kênh để cùng gỡ rối những đề tài tiếp theo."
       }
     ]
   }

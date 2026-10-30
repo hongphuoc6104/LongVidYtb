@@ -179,3 +179,11 @@ $$\text{1. Tái hiện E2E} \longrightarrow \text{2. Phân tích gốc rễ} \lo
 - **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** (1) Tách gạch nối liên chữ thành khoảng trắng trong `_normalize_vi_tts_text` của `worker.py`, cắt cụm rò âm mẫu đầu câu + bảo toàn âm đuôi mũi nhẹ trong `_trim_silence`, và thêm vòng chấm điểm âm học `_utterance_acoustic_score` tự retry `batch_size=1` khi hố lặng nội câu `> 380ms` hoặc rớt mật độ âm tiết; (2) thêm guard `count == 11 or OPENING_WINDOW_SECONDS + .05 <= beats[11]['at'] - .5` trong `sys/visual_pacing.py` và viết lại lời thoại thực tế `SC01–SC02`. Kiểm chứng tests green, `PLAYBOOK.md <= 200` dòng và nghe thực tế `narration.wav` sạch 100%.
 - **Quy tắc phòng ngừa vàng (Golden Rule):** Không truyền gạch nối liên âm tiết (`vi-đê-ô`) vào model TTS BPE; luôn kiểm định hậu kỳ bằng điểm âm học + nghe thực tế file WAV để bắt rò âm mẫu/nuốt vế, và mọi phép làm trơn beat phải bảo toàn tính đơn điệu nghiêm ngặt ở 30 fps.
 
+### [ERR-20261030-01] Chặn Thẻ Chữ HTML Phủ Mờ Lên Thumbnail & Chuẩn Hóa Poster Trực Tiếp Từ Flow CDP (FLOW_NATIVE_THUMBNAIL)
+- **Triệu chứng (Symptom):** Thumbnail/Cover xuất ra bị thẻ chữ HTML, dải gradient đen mờ (`#0F172Aee`) hoặc badge đỏ đè lên che khuất nhân vật và hình vẽ nghệ thuật doodle.
+- **Tái hiện E2E (Reproduction Path):** Kiểm tra `sys/renderer/thumbnail.tsx` khi render `Thumbnail` vẫn chèn `<AbsoluteFill style={{background: 'linear-gradient...'}}>` và text overlay đè lên `Img`.
+- **Nguyên nhân cốt lõi (Root Cause):** Renderer Remotion kế thừa template cũ dán thẻ text HTML đè lên ảnh thay vì tạo toàn bộ poster hoàn chỉnh từ prompt Flow CDP với chữ vẽ tay tích hợp thẳng vào nền phẳng.
+- **Giả định sai (Wrong Assumptions):** Nhầm tưởng dán chữ HTML sau khi render ảnh sẽ sắc nét hơn, vô tình phá vỡ tính thẩm mỹ 2D doodle thống nhất và che mất nét vẽ người que.
+- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Cập nhật `Thumbnail.tsx` mặc định tắt `overlay_card` khi có `image`, khóa quy tắc thumbnail 100% sinh trực tiếp từ Flow CDP với `allowed_text` vẽ tay trên nền `#F8F0DC` / `#FFFFFF`. Đạt Station 1, 2, 3, 4 pass.
+- **Quy tắc phòng ngừa vàng (Golden Rule):** Mọi thumbnail/cover phải được sinh trực tiếp 100% từ Flow CDP với chữ vẽ tay tích hợp sẵn trên nền phẳng; tuyệt đối cấm dùng thẻ chữ HTML, banner hay gradient đen dán đè lên hình vẽ.
+

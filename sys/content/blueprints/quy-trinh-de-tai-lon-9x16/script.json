@@ -1,0 +1,309 @@
+[
+  {
+    "id": "SC01",
+    "duration": 5.2,
+    "narration": "Nước ta có rất nhiều bác sĩ giỏi, nhiều tiến sĩ, giáo sư và sinh viên xuất sắc.",
+    "beats": [
+      {
+        "image_id": "SC01_I1",
+        "anchor_quote": "Nước ta có rất nhiều bác sĩ giỏi, nhiều tiến sĩ, giáo sư và sinh viên xuất sắc."
+      }
+    ]
+  },
+  {
+    "id": "SC02",
+    "duration": 5.45,
+    "narration": "Nhưng tại sao với các đề tài tầm cỡ thế giới, sinh viên lại không thể tự làm được?",
+    "beats": [
+      {
+        "image_id": "SC02_I1",
+        "anchor_quote": "Nhưng tại sao với các đề tài tầm cỡ thế giới, sinh viên lại không thể tự làm được?"
+      }
+    ]
+  },
+  {
+    "id": "SC03",
+    "duration": 4.7,
+    "narration": "Hãy nhìn vào một ví dụ thực tế: chiếc lọ vắc-xin Cô-vít mười chín.",
+    "beats": [
+      {
+        "image_id": "SC03_I1",
+        "anchor_quote": "Hãy nhìn vào một ví dụ thực tế: chiếc lọ vắc-xin Cô-vít mười chín."
+      }
+    ]
+  },
+  {
+    "id": "SC04",
+    "duration": 3.95,
+    "narration": "Để làm ra nó, quy trình thực sự diễn ra như thế nào?",
+    "beats": [
+      {
+        "image_id": "SC04_I1",
+        "anchor_quote": "Để làm ra nó, quy trình thực sự diễn ra như thế nào?"
+      }
+    ]
+  },
+  {
+    "id": "SC05",
+    "duration": 4.95,
+    "narration": "Bước một, tìm công thức trong phòng thí nghiệm. Bước này sinh viên có thể làm được.",
+    "beats": [
+      {
+        "image_id": "SC05_I1",
+        "anchor_quote": "Bước một, tìm công thức trong phòng thí nghiệm."
+      },
+      {
+        "image_id": "SC05_I2",
+        "anchor_quote": "Bước này sinh viên có thể làm được."
+      }
+    ]
+  },
+  {
+    "id": "SC06",
+    "duration": 3.2,
+    "narration": "Nhưng đây mới chỉ là một phần mười quãng đường.",
+    "beats": [
+      {
+        "image_id": "SC06_I1",
+        "anchor_quote": "Nhưng đây mới chỉ là một phần mười quãng đường."
+      }
+    ]
+  },
+  {
+    "id": "SC07",
+    "duration": 2.45,
+    "narration": "Bước hai, thử nghiệm trên động vật.",
+    "beats": [
+      {
+        "image_id": "SC07_I1",
+        "anchor_quote": "Bước hai, thử nghiệm trên động vật."
+      }
+    ]
+  },
+  {
+    "id": "SC08",
+    "duration": 6.45,
+    "narration": "Bước ba, thử nghiệm trên người qua ba giai đoạn. Vài chục người, vài trăm người, và hơn bốn mươi ba nghìn người.",
+    "beats": [
+      {
+        "image_id": "SC08_I1",
+        "anchor_quote": "Bước ba, thử nghiệm trên người qua ba giai đoạn. Vài chục người,"
+      },
+      {
+        "image_id": "SC08_I2",
+        "anchor_quote": "vài trăm người,"
+      },
+      {
+        "image_id": "SC08_I3",
+        "anchor_quote": "và hơn bốn mươi ba nghìn người."
+      }
+    ]
+  },
+  {
+    "id": "SC09",
+    "duration": 5.2,
+    "narration": "Bước bốn, xây nhà máy giữ lạnh âm tám mươi độ C để sản xuất hàng triệu liều.",
+    "beats": [
+      {
+        "image_id": "SC09_I1",
+        "anchor_quote": "Bước bốn, xây nhà máy giữ lạnh âm tám mươi độ C để sản xuất hàng triệu liều."
+      }
+    ]
+  },
+  {
+    "id": "SC10",
+    "duration": 3.2,
+    "narration": "Vậy ai là những người thực sự đứng ra làm?",
+    "beats": [
+      {
+        "image_id": "SC10_I1",
+        "anchor_quote": "Vậy ai là những người thực sự đứng ra làm?"
+      }
+    ]
+  },
+  {
+    "id": "SC11",
+    "duration": 5.2,
+    "narration": "Thứ nhất, phải là những chuyên gia đầu ngành có hai mươi đến ba mươi năm kinh nghiệm.",
+    "beats": [
+      {
+        "image_id": "SC11_I1",
+        "anchor_quote": "Thứ nhất, phải là những chuyên gia đầu ngành có hai mươi đến ba mươi năm kinh nghiệm."
+      }
+    ]
+  },
+  {
+    "id": "SC12",
+    "duration": 6.95,
+    "narration": "Họ là người đứng tên ký cam kết chịu trách nhiệm pháp lý. Đặc biệt khi xảy ra rủi ro về tính mạng con người.",
+    "beats": [
+      {
+        "image_id": "SC12_I1",
+        "anchor_quote": "Họ là người đứng tên ký cam kết chịu trách nhiệm pháp lý."
+      },
+      {
+        "image_id": "SC12_I2",
+        "anchor_quote": "Đặc biệt khi xảy ra rủi ro về tính mạng con người."
+      }
+    ]
+  },
+  {
+    "id": "SC13",
+    "duration": 4.2,
+    "narration": "Thứ hai, phải là những tập đoàn hoặc chính phủ có rất nhiều tiền.",
+    "beats": [
+      {
+        "image_id": "SC13_I1",
+        "anchor_quote": "Thứ hai, phải là những tập đoàn hoặc chính phủ có rất nhiều tiền."
+      }
+    ]
+  },
+  {
+    "id": "SC14",
+    "duration": 6.45,
+    "narration": "Dự án vắc-xin tiêu tốn hơn mười tỷ đô la. Và họ phải chấp nhận mất trắng nếu thử nghiệm thất bại.",
+    "beats": [
+      {
+        "image_id": "SC14_I1",
+        "anchor_quote": "Dự án vắc-xin tiêu tốn hơn mười tỷ đô la."
+      },
+      {
+        "image_id": "SC14_I2",
+        "anchor_quote": "Và họ phải chấp nhận mất trắng nếu thử nghiệm thất bại."
+      }
+    ]
+  },
+  {
+    "id": "SC15",
+    "duration": 3.95,
+    "narration": "Bây giờ, bạn đã hiểu tại sao sinh viên không làm được chưa?",
+    "beats": [
+      {
+        "image_id": "SC15_I1",
+        "anchor_quote": "Bây giờ, bạn đã hiểu tại sao sinh viên không làm được chưa?"
+      }
+    ]
+  },
+  {
+    "id": "SC16",
+    "duration": 2.7,
+    "narration": "Không phải vì sinh viên thiếu thông minh.",
+    "beats": [
+      {
+        "image_id": "SC16_I1",
+        "anchor_quote": "Không phải vì sinh viên thiếu thông minh."
+      }
+    ]
+  },
+  {
+    "id": "SC17",
+    "duration": 2.95,
+    "narration": "Mà vì sinh viên không thể có ba thứ:",
+    "beats": [
+      {
+        "image_id": "SC17_I1",
+        "anchor_quote": "Mà vì sinh viên không thể có ba thứ:"
+      }
+    ]
+  },
+  {
+    "id": "SC18",
+    "duration": 4.2,
+    "narration": "Một: Hàng trăm triệu đô la để thử nghiệm và trả tiền bảo hiểm.",
+    "beats": [
+      {
+        "image_id": "SC18_I1",
+        "anchor_quote": "Một: Hàng trăm triệu đô la để thử nghiệm và trả tiền bảo hiểm."
+      }
+    ]
+  },
+  {
+    "id": "SC19",
+    "duration": 3.95,
+    "narration": "Hai: Chữ ký pháp lý trước tòa án và hội đồng y đức.",
+    "beats": [
+      {
+        "image_id": "SC19_I1",
+        "anchor_quote": "Hai: Chữ ký pháp lý trước tòa án và hội đồng y đức."
+      }
+    ]
+  },
+  {
+    "id": "SC20",
+    "duration": 6.2,
+    "narration": "Ba: Thời gian liên tục. Sinh viên bốn năm là tốt nghiệp, nhưng đề tài lớn cần mười đến ba mươi năm.",
+    "beats": [
+      {
+        "image_id": "SC20_I1",
+        "anchor_quote": "Ba: Thời gian liên tục."
+      },
+      {
+        "image_id": "SC20_I2",
+        "anchor_quote": "Sinh viên bốn năm là tốt nghiệp, nhưng đề tài lớn cần mười đến ba mươi năm."
+      }
+    ]
+  },
+  {
+    "id": "SC21",
+    "duration": 7.7,
+    "narration": "Sinh viên cần kết quả an toàn để ra trường. Không thể đánh cược tương lai vào dự án có chín mươi phần trăm rủi ro thất bại.",
+    "beats": [
+      {
+        "image_id": "SC21_I1",
+        "anchor_quote": "Sinh viên cần kết quả an toàn để ra trường."
+      },
+      {
+        "image_id": "SC21_I2",
+        "anchor_quote": "Không thể đánh cược tương lai vào dự án có chín mươi phần trăm rủi ro thất bại."
+      }
+    ]
+  },
+  {
+    "id": "SC22",
+    "duration": 2.2,
+    "narration": "Vậy sinh viên nên làm gì?",
+    "beats": [
+      {
+        "image_id": "SC22_I1",
+        "anchor_quote": "Vậy sinh viên nên làm gì?"
+      }
+    ]
+  },
+  {
+    "id": "SC23",
+    "duration": 3.45,
+    "narration": "Bạn không cần phải một mình tạo ra cả viên thuốc.",
+    "beats": [
+      {
+        "image_id": "SC23_I1",
+        "anchor_quote": "Bạn không cần phải một mình tạo ra cả viên thuốc."
+      }
+    ]
+  },
+  {
+    "id": "SC24",
+    "duration": 6.45,
+    "narration": "Hãy làm thật tốt việc nhỏ nhất trong phòng thí nghiệm. Đo một chỉ số, rửa một ống nghiệm, tìm một phân tử.",
+    "beats": [
+      {
+        "image_id": "SC24_I1",
+        "anchor_quote": "Hãy làm thật tốt việc nhỏ nhất trong phòng thí nghiệm."
+      },
+      {
+        "image_id": "SC24_I2",
+        "anchor_quote": "Đo một chỉ số, rửa một ống nghiệm, tìm một phân tử."
+      }
+    ]
+  },
+  {
+    "id": "SC25",
+    "duration": 5.35,
+    "narration": "Hãy tích lũy chuyên môn từng ngày. Rồi chính bạn sẽ dẫn dắt cỗ máy triệu đô trong tương lai.",
+    "beats": [
+      {
+        "image_id": "SC25_I1",
+        "anchor_quote": "Hãy tích lũy chuyên môn từng ngày. Rồi chính bạn sẽ dẫn dắt cỗ máy triệu đô trong tương lai."
+      }
+    ]
+  }
+]

@@ -74,6 +74,73 @@ export function captionMaxHeight(width = 1080, height = 1920) {
   return Math.ceil(s.fontSize * s.lineHeight * 2 + verticalPadding + 12);
 }
 
+/** Single-word kinetic pop for 9:16 portrait video (Alternating Red #FF3B30 and Yellow #FFE600) */
+export function portraitKineticWord(cue, words, time) {
+  if (!cue || !cue.text.trim()) return null;
+  const cleanCueWords = (words || []).filter(w => w.start >= cue.start - 0.05 && w.start < cue.end + 0.05);
+  if (cleanCueWords.length === 0) {
+    const tokens = cue.text.trim().split(/\s+/u);
+    const duration = Math.max(0.1, cue.end - cue.start);
+    const progress = Math.min(1.0, Math.max(0.0, (time - cue.start) / duration));
+    const idx = Math.min(tokens.length - 1, Math.floor(progress * tokens.length));
+    return {
+      text: tokens[idx],
+      index: idx,
+      color: idx % 2 === 0 ? '#FF3B30' : '#FFE600'
+    };
+  }
+
+  const activeIdx = cleanCueWords.findIndex(w => w.start <= time && time < w.end);
+  if (activeIdx !== -1) {
+    const w = cleanCueWords[activeIdx];
+    return {
+      text: w.word,
+      index: activeIdx,
+      color: activeIdx % 2 === 0 ? '#FF3B30' : '#FFE600'
+    };
+  }
+
+  const pastWords = cleanCueWords.filter(w => w.end <= time);
+  if (pastWords.length > 0) {
+    const lastWord = pastWords[pastWords.length - 1];
+    if (time - lastWord.end < 0.25) {
+      const idx = cleanCueWords.indexOf(lastWord);
+      return {
+        text: lastWord.word,
+        index: idx,
+        color: idx % 2 === 0 ? '#FF3B30' : '#FFE600'
+      };
+    }
+  }
+
+  return null;
+}
+
+/** Profile for 2x scale kinetic portrait typography with heavy black stroke and shadow */
+export function portraitKineticCaptionStyle(width = 1080, height = 1920) {
+  const scale = width / 1080;
+  return {
+    position: 'absolute',
+    zIndex: 30,
+    bottom: Math.round(400 * scale),
+    left: '50%',
+    transform: 'translateX(-50%)',
+    width: '100%',
+    textAlign: 'center',
+    fontFamily: 'Arial, sans-serif',
+    fontSize: Math.round(100 * scale),
+    fontWeight: 900,
+    lineHeight: 1.1,
+    boxSizing: 'border-box',
+    background: 'transparent',
+    border: 'none',
+    boxShadow: 'none',
+    WebkitTextStroke: `${Math.round(6 * scale)}px #000000`,
+    paintOrder: 'stroke fill',
+    textShadow: '0 6px 16px rgba(0,0,0,0.95), 0 0 4px #000000'
+  };
+}
+
 
 /** Match by position and time, so repeated Vietnamese words highlight separately. */
 export function karaokeTokens(cue, words, time) {

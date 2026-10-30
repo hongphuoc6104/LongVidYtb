@@ -1,7 +1,7 @@
 import {buildCalmCameraPlan, calmCameraFrame, calmCameraStyle} from './camera.mjs';
 import {Thumbnail} from './thumbnail';
 import React, {useLayoutEffect, useMemo} from 'react';
-import {portraitCaptionTokens, PORTRAIT_CAPTION_ACTIVE_COLOR, captionStyle, captionMaxHeight} from './captions.mjs';
+import {portraitCaptionTokens, PORTRAIT_CAPTION_ACTIVE_COLOR, captionStyle, captionMaxHeight, portraitKineticWord, portraitKineticCaptionStyle} from './captions.mjs';
 import {BRAND_LOGO_DATA_URI} from './brand_logo';
 import {vignetteBackground} from './visual-style.mjs';
 import {
@@ -422,9 +422,18 @@ const Video: React.FC<any> = (p) => {
       {!DISABLE_SUBTITLES && !p.hideSubtitles && !p.disableSubtitles && !p.disable_subtitles && cue && (() => {
         const lineText = cue.text;
         const targetWord = p.target_word;
+        if (height > width) {
+          const kineticWord = portraitKineticWord(cue, p.words || [], t);
+          if (!kineticWord) return null;
+          return (
+            <div data-check="subtitle" style={{...portraitKineticCaptionStyle(width, height), zIndex: 30} as React.CSSProperties}>
+              <span style={{color: kineticWord.color}}>{kineticWord.text}</span>
+            </div>
+          );
+        }
         return (
           <div data-check="subtitle" style={{...captionStyle(width, height), zIndex: 30} as React.CSSProperties}>
-            {height > width ? portraitCaptionTokens(cue, p.words || [], t).map((token: {text: string; active: boolean}, index: number) => <React.Fragment key={index}>{index > 0 ? ' ' : ''}<span style={{color: token.active ? PORTRAIT_CAPTION_ACTIVE_COLOR : '#FFFFFF'}}>{token.text}</span></React.Fragment>) : renderHighlightedText(lineText, targetWord, p.modern_style)}
+            {renderHighlightedText(lineText, targetWord, p.modern_style)}
           </div>
         );
       })()}

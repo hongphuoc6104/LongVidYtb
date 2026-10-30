@@ -1,20 +1,25 @@
 {
   "schema_version": "3.0",
   "brief_revision": 1,
-  "brief_hash": "6a50f6969164de772e4301e609ae34a722e8011698486d3c0d339eb6688e5421",
-  "topic": "Đừng Chọn Đề Tài NCKH Quá Lớn (Bản Dọc 60 Giây)",
+  "brief_hash": "395097fe47643bd8acee0a75d6cd386d7dba2fe28c8e1cfd9fe4b879c7a6e213",
+  "topic": "Đừng Chọn Đề Tài NCKH Quá Lớn (Bản Dọc Chi Tiết)",
   "duration": {
-    "min_seconds": 45.0,
-    "max_seconds": 65.0
+    "min_seconds": 85.0,
+    "max_seconds": 145.0
   },
   "style": "Hand-drawn 2D Vietnamese indie doodle explainer illustration (raw freehand MS-Paint / Flash webcomic aesthetic). Use clear black outer contours (#000000) with visible unpolished hand-drawn wobble, slightly crooked freehand lines drawn without a ruler, imperfect corner joints, and uniform marker stroke weight across both foreground and background (strictly forbid lighter background linework, Bezier curve smoothing, sleek rounded vector icons, or geometric perfection). Fill all shapes with 100% unshaded flat MS-Paint paint-bucket solid hex colors: warm paper-cream (#F8F0DC), muted apricot-peach (#F2B88B), soft sage-green (#93A88C), pale ice-blue (#CBE0E0), flat night slate-navy (#2E4361), or stark pure white (#FFFFFF). Strictly 2D front-on or side-on orthographic flat paper-cutout staging; never use 3/4 isometric furniture perspective, two-tone bevel shading, floating black oval drop shadows, floor cast shadows, glowing lamp light cones, warm sepia AI color grading, gradients, photorealism, or 3D rendering. Draw a complete scene image.",
   "required_points": [
-    "Cú tát đề tài vĩ mô",
-    "Cú gạch đề cương",
-    "Bức tường tri thức",
-    "Ba câu hỏi gọt củ hành",
-    "Khóa chặt hành vi và thước đo",
-    "Bớt tham lại để thành công"
+    "Cảnh báo bẫy chọn mẫu",
+    "Tình huống toàn quốc hay ký túc xá",
+    "Cái bẫy chi phí và thời gian",
+    "Hậu quả số liệu ảo và lệch mẫu",
+    "Lời chúc mừng khi chọn ký túc xá",
+    "Sức mạnh dữ liệu thật và độ sâu",
+    "Bảo vệ tự tin trước hội đồng",
+    "Ai mới nên chọn dữ liệu toàn quốc",
+    "Quy trình vĩ mô của dự án lớn",
+    "Giới hạn phạm vi và lời hẹn mở rộng",
+    "Quy tắc vàng và kêu gọi tinh tế"
   ],
   "characters": [
     {
@@ -27,39 +32,41 @@
   "scenes": [
     {
       "id": "SC01",
-      "title": "Cú tát đề tài vĩ mô",
-      "purpose": "Triển khai bước 1: cú tát đề tài vĩ mô",
-      "action": "Stickman staggers under an oversized round grey rock prop with shaking knees on flat warm cream canvas.",
+      "title": "Cảnh báo bẫy chọn mẫu",
+      "purpose": "Triển khai bước 1: cảnh báo bẫy chọn mẫu",
+      "action": "Stickman sits before a minimalist computer screen tapping a red bookmark save button beside a caution symbol on cream canvas.",
       "setting": "Solid warm cream canvas (#F8F0DC).",
       "camera": "Semantic full-frame sequence",
-      "narration": "Tên đề tài nghiên cứu quá rộng sẽ bị thầy cô gạch ngay. Muốn giải cứu thế giới, bạn đang tự hại mình. Không tiền, không dữ liệu, bạn bế tắc ngay. Càng ôm đồm, bạn càng cầm chắc thất bại.",
+      "narration": "Hãy lưu lại video này nếu bạn chuẩn bị làm nghiên cứu khoa học. Sai lầm lớn nhất là: Chọn phạm vi quá rộng. Càng tham lam, bạn càng nhanh bế tắc. Đề tài sẽ chết ngay từ khâu lấy mẫu.",
       "requirements": [
         "R01"
       ],
       "character_ids": [
         "CH01"
       ],
-      "source_ids": [],
+      "source_ids": [
+        "SRC01"
+      ],
       "images": [
         {
           "id": "SC01_I1",
-          "description": "Solid warm cream canvas (#F8F0DC). Stickman staggers under an oversized round grey rock prop with shaking knees on flat warm cream canvas.",
+          "description": "Solid warm cream canvas (#F8F0DC). Stickman sits before a minimalist computer screen tapping a red bookmark save button beside a caution symbol on cream canvas.",
           "character_ids": [
             "CH01"
           ],
           "based_on": null,
           "preserve": "",
-          "change": "Stickman staggers under an oversized round grey rock prop with shaking knees on flat warm cream canvas.",
+          "change": "Stickman sits before a minimalist computer screen tapping a red bookmark save button beside a caution symbol on cream canvas.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
           "shot_type": "full_scene",
           "has_character": true,
           "explanation": {
-            "quote": "Tên đề tài nghiên cứu quá rộng sẽ bị thầy cô gạch ngay.",
+            "quote": "Hãy lưu lại video này nếu bạn chuẩn bị làm nghiên cứu khoa học.",
             "relation": "context",
             "source_terms": [
-              "Tên"
+              "Hãy"
             ],
             "visual_terms": [
               "Solid"
@@ -68,23 +75,23 @@
         },
         {
           "id": "SC01_I2",
-          "description": "Solid warm cream canvas (#F8F0DC). Stickman looks up at the heavy grey rock with wide hopeful eyes on warm cream canvas.",
+          "description": "Solid warm cream canvas (#F8F0DC). Stickman points index finger firmly forward with earnest warning expression on warm cream canvas.",
           "character_ids": [
             "CH01"
           ],
           "based_on": "SC01_I1",
           "preserve": "Keep the exact camera angle, room geometry and props in Solid warm cream canvas (#F8F0DC).. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
-          "change": "Stickman looks up at the heavy grey rock with wide hopeful eyes on warm cream canvas.",
+          "change": "Stickman points index finger firmly forward with earnest warning expression on warm cream canvas.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
           "shot_type": "variation",
           "has_character": true,
           "explanation": {
-            "quote": "Muốn giải cứu thế giới, bạn đang tự hại mình.",
+            "quote": "Sai lầm lớn nhất là: Chọn phạm vi quá rộng.",
             "relation": "context",
             "source_terms": [
-              "Muốn"
+              "Sai"
             ],
             "visual_terms": [
               "Solid"
@@ -93,21 +100,21 @@
         },
         {
           "id": "SC01_I3",
-          "description": "Solid warm cream canvas (#F8F0DC). A simple doodle globe outline marked with a large question mark on cream ground, seventy percent negative space.",
+          "description": "Solid warm cream canvas (#F8F0DC). A simple doodle outline of an excessively wide circle expanding across cream ground, seventy percent negative space.",
           "character_ids": [],
           "based_on": null,
           "preserve": "",
-          "change": "A simple doodle globe outline marked with a large question mark on cream ground, seventy percent negative space.",
+          "change": "A simple doodle outline of an excessively wide circle expanding across cream ground, seventy percent negative space.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
           "shot_type": "concept_metaphor",
           "has_character": false,
           "explanation": {
-            "quote": "Không tiền, không dữ liệu, bạn bế tắc ngay.",
+            "quote": "Càng tham lam, bạn càng nhanh bế tắc.",
             "relation": "context",
             "source_terms": [
-              "Không"
+              "Càng"
             ],
             "visual_terms": [
               "Solid"
@@ -116,23 +123,23 @@
         },
         {
           "id": "SC01_I4",
-          "description": "Solid warm cream canvas (#F8F0DC). Stickman drops hands to knees breathing heavily beside the rock outline on cream canvas.",
+          "description": "Solid warm cream canvas (#F8F0DC). Stickman shakes head gently with reflective calm posture in open cream space.",
           "character_ids": [
             "CH01"
           ],
           "based_on": "SC01_I1",
           "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
-          "change": "Stickman drops hands to knees breathing heavily beside the rock outline on cream canvas.",
+          "change": "Stickman shakes head gently with reflective calm posture in open cream space.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
           "shot_type": "variation",
           "has_character": true,
           "explanation": {
-            "quote": "Càng ôm đồm, bạn càng cầm chắc thất bại.",
+            "quote": "Đề tài sẽ chết ngay từ khâu lấy mẫu.",
             "relation": "context",
             "source_terms": [
-              "Càng"
+              "Đề"
             ],
             "visual_terms": [
               "Solid"
@@ -144,10 +151,10 @@
         {
           "id": "SC01_B1",
           "image_id": "SC01_I1",
-          "purpose": "Triển khai bước 1: cú tát đề tài vĩ mô",
+          "purpose": "Triển khai bước 1: cảnh báo bẫy chọn mẫu",
           "anchor": {
             "vi": {
-              "quote": "Tên đề tài nghiên cứu quá rộng sẽ bị thầy cô gạch ngay.",
+              "quote": "Hãy lưu lại video này nếu bạn chuẩn bị làm nghiên cứu khoa học.",
               "occurrence": 1
             }
           },
@@ -160,14 +167,14 @@
         {
           "id": "SC01_B2",
           "image_id": "SC01_I2",
-          "purpose": "Triển khai bước 1: cú tát đề tài vĩ mô",
+          "purpose": "Triển khai bước 1: cảnh báo bẫy chọn mẫu",
           "anchor": {
             "vi": {
-              "quote": "Muốn giải cứu thế giới, bạn đang tự hại mình.",
+              "quote": "Sai lầm lớn nhất là: Chọn phạm vi quá rộng.",
               "occurrence": 1
             }
           },
-          "effect": "zoom_out",
+          "effect": "zoom_in",
           "focus": {
             "x": 0.5,
             "y": 0.5
@@ -176,14 +183,14 @@
         {
           "id": "SC01_B3",
           "image_id": "SC01_I3",
-          "purpose": "Triển khai bước 1: cú tát đề tài vĩ mô",
+          "purpose": "Triển khai bước 1: cảnh báo bẫy chọn mẫu",
           "anchor": {
             "vi": {
-              "quote": "Không tiền, không dữ liệu, bạn bế tắc ngay.",
+              "quote": "Càng tham lam, bạn càng nhanh bế tắc.",
               "occurrence": 1
             }
           },
-          "effect": "pan_right",
+          "effect": "zoom_out",
           "focus": {
             "x": 0.5,
             "y": 0.5
@@ -192,14 +199,14 @@
         {
           "id": "SC01_B4",
           "image_id": "SC01_I4",
-          "purpose": "Triển khai bước 1: cú tát đề tài vĩ mô",
+          "purpose": "Triển khai bước 1: cảnh báo bẫy chọn mẫu",
           "anchor": {
             "vi": {
-              "quote": "Càng ôm đồm, bạn càng cầm chắc thất bại.",
+              "quote": "Đề tài sẽ chết ngay từ khâu lấy mẫu.",
               "occurrence": 1
             }
           },
-          "effect": "zoom_out",
+          "effect": "punch_in",
           "focus": {
             "x": 0.5,
             "y": 0.5
@@ -212,41 +219,39 @@
     },
     {
       "id": "SC02",
-      "title": "Cú gạch đề cương",
-      "purpose": "Triển khai bước 2: cú gạch đề cương",
-      "action": "Stickman stands holding paper scroll as a bold red marker stroke slashes across the text on white canvas.",
+      "title": "Tình huống toàn quốc hay ký túc xá",
+      "purpose": "Triển khai bước 2: tình huống toàn quốc hay ký túc xá",
+      "action": "Stickman stands centered on clean white canvas holding a neat student notebook outline.",
       "setting": "Clean pure white background (#FFFFFF).",
       "camera": "Semantic full-frame sequence",
-      "narration": "Chỉ sau một tuần, giáo viên sẽ gạch bỏ ngay. Lời phê ngắn gọn: Quá rộng, không thể làm. Bạn không có tiền bạc hay thời gian vô tận. Biển dữ liệu lớn sẽ nhấn chìm bạn ngay.",
+      "narration": "Giả sử bạn làm đề tài về sinh viên. Bạn chọn sinh viên toàn quốc, hay sinh viên trường mình? Ai cũng nghĩ: Chọn toàn quốc nghe mới oách. Nhưng đó là lúc khó khăn ập đến.",
       "requirements": [
         "R02"
       ],
       "character_ids": [
         "CH01"
       ],
-      "source_ids": [
-        "SRC01"
-      ],
+      "source_ids": [],
       "images": [
         {
           "id": "SC02_I1",
-          "description": "Clean pure white background (#FFFFFF). Stickman stands holding paper scroll as a bold red marker stroke slashes across the text on white canvas.",
+          "description": "Clean pure white background (#FFFFFF). Stickman stands centered on clean white canvas holding a neat student notebook outline.",
           "character_ids": [
             "CH01"
           ],
           "based_on": null,
           "preserve": "",
-          "change": "Stickman stands holding paper scroll as a bold red marker stroke slashes across the text on white canvas.",
+          "change": "Stickman stands centered on clean white canvas holding a neat student notebook outline.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
           "shot_type": "full_scene",
           "has_character": true,
           "explanation": {
-            "quote": "Chỉ sau một tuần, giáo viên sẽ gạch bỏ ngay.",
+            "quote": "Giả sử bạn làm đề tài về sinh viên.",
             "relation": "context",
             "source_terms": [
-              "Chỉ"
+              "Giả"
             ],
             "visual_terms": [
               "Clean"
@@ -255,43 +260,20 @@
         },
         {
           "id": "SC02_I2",
-          "description": "Clean pure white background (#FFFFFF). A clean white card displaying simple hand-lettered text 'QUÁ RỘNG' in bold black ink on white field, seventy percent negative space.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "A clean white card displaying simple hand-lettered text 'QUÁ RỘNG' in bold black ink on white field, seventy percent negative space.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "white_card",
-          "has_character": false,
-          "explanation": {
-            "quote": "Lời phê ngắn gọn: Quá rộng, không thể làm.",
-            "relation": "context",
-            "source_terms": [
-              "Lời"
-            ],
-            "visual_terms": [
-              "Clean"
-            ]
-          }
-        },
-        {
-          "id": "SC02_I3",
-          "description": "Clean pure white background (#FFFFFF). Stickman spreads both hands with questioning comic shrug on solid white field.",
+          "description": "Clean pure white background (#FFFFFF). Stickman gestures with left hand toward a huge map outline and right hand toward a compact campus school doodle.",
           "character_ids": [
             "CH01"
           ],
           "based_on": "SC02_I1",
           "preserve": "Keep the exact camera angle, room geometry and props in Clean pure white background (#FFFFFF).. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
-          "change": "Stickman spreads both hands with questioning comic shrug on solid white field.",
+          "change": "Stickman gestures with left hand toward a huge map outline and right hand toward a compact campus school doodle.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
           "shot_type": "variation",
           "has_character": true,
           "explanation": {
-            "quote": "Bạn không có tiền bạc hay thời gian vô tận.",
+            "quote": "Bạn chọn sinh viên toàn quốc, hay sinh viên trường mình?",
             "relation": "context",
             "source_terms": [
               "Bạn"
@@ -302,22 +284,47 @@
           }
         },
         {
-          "id": "SC02_I4",
-          "description": "Clean pure white background (#FFFFFF). A sprawling cluster of tiny dot silhouettes shrinking into distance on white ground, eighty percent negative space.",
+          "id": "SC02_I3",
+          "description": "Clean pure white background (#FFFFFF). A simple doodle banner labeled 'TOÀN QUỐC' with a glittering star icon on white ground, seventy-five percent negative space.",
           "character_ids": [],
           "based_on": null,
           "preserve": "",
-          "change": "A sprawling cluster of tiny dot silhouettes shrinking into distance on white ground, eighty percent negative space.",
+          "change": "A simple doodle banner labeled 'TOÀN QUỐC' with a glittering star icon on white ground, seventy-five percent negative space.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
           "shot_type": "concept_metaphor",
           "has_character": false,
           "explanation": {
-            "quote": "Biển dữ liệu lớn sẽ nhấn chìm bạn ngay.",
+            "quote": "Ai cũng nghĩ: Chọn toàn quốc nghe mới oách.",
             "relation": "context",
             "source_terms": [
-              "Biển"
+              "Ai"
+            ],
+            "visual_terms": [
+              "Clean"
+            ]
+          }
+        },
+        {
+          "id": "SC02_I4",
+          "description": "Clean pure white background (#FFFFFF). Stickman scratches bald head with puzzled eyebrows looking down at open white space.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC02_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Stickman scratches bald head with puzzled eyebrows looking down at open white space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation",
+          "has_character": true,
+          "explanation": {
+            "quote": "Nhưng đó là lúc khó khăn ập đến.",
+            "relation": "context",
+            "source_terms": [
+              "Nhưng"
             ],
             "visual_terms": [
               "Clean"
@@ -329,10 +336,10 @@
         {
           "id": "SC02_B1",
           "image_id": "SC02_I1",
-          "purpose": "Triển khai bước 2: cú gạch đề cương",
+          "purpose": "Triển khai bước 2: tình huống toàn quốc hay ký túc xá",
           "anchor": {
             "vi": {
-              "quote": "Chỉ sau một tuần, giáo viên sẽ gạch bỏ ngay.",
+              "quote": "Giả sử bạn làm đề tài về sinh viên.",
               "occurrence": 1
             }
           },
@@ -345,14 +352,14 @@
         {
           "id": "SC02_B2",
           "image_id": "SC02_I2",
-          "purpose": "Triển khai bước 2: cú gạch đề cương",
+          "purpose": "Triển khai bước 2: tình huống toàn quốc hay ký túc xá",
           "anchor": {
             "vi": {
-              "quote": "Lời phê ngắn gọn: Quá rộng, không thể làm.",
+              "quote": "Bạn chọn sinh viên toàn quốc, hay sinh viên trường mình?",
               "occurrence": 1
             }
           },
-          "effect": "zoom_in",
+          "effect": "pan_left",
           "focus": {
             "x": 0.5,
             "y": 0.5
@@ -361,10 +368,10 @@
         {
           "id": "SC02_B3",
           "image_id": "SC02_I3",
-          "purpose": "Triển khai bước 2: cú gạch đề cương",
+          "purpose": "Triển khai bước 2: tình huống toàn quốc hay ký túc xá",
           "anchor": {
             "vi": {
-              "quote": "Bạn không có tiền bạc hay thời gian vô tận.",
+              "quote": "Ai cũng nghĩ: Chọn toàn quốc nghe mới oách.",
               "occurrence": 1
             }
           },
@@ -377,10 +384,10 @@
         {
           "id": "SC02_B4",
           "image_id": "SC02_I4",
-          "purpose": "Triển khai bước 2: cú gạch đề cương",
+          "purpose": "Triển khai bước 2: tình huống toàn quốc hay ký túc xá",
           "anchor": {
             "vi": {
-              "quote": "Biển dữ liệu lớn sẽ nhấn chìm bạn ngay.",
+              "quote": "Nhưng đó là lúc khó khăn ập đến.",
               "occurrence": 1
             }
           },
@@ -397,12 +404,12 @@
     },
     {
       "id": "SC03",
-      "title": "Bức tường tri thức",
-      "purpose": "Triển khai bước 3: bức tường tri thức",
-      "action": "Stickman crosses out a circular wheel outline with clean black marker on soft cream canvas.",
+      "title": "Cái bẫy chi phí và thời gian",
+      "purpose": "Triển khai bước 3: cái bẫy chi phí và thời gian",
+      "action": "Stickman staggers slightly looking up at a towering stack of survey sheets on cream canvas.",
       "setting": "Solid soft cream canvas (#F8F0DC).",
       "camera": "Semantic full-frame sequence",
-      "narration": "Khoa học không cần bạn phát minh lại bánh xe. Tri thức giống như một bức tường đã rất cao. Việc của bạn là đặt thêm một viên gạch nhỏ. Làm trọn việc nhỏ tốt hơn bỏ dở việc to.",
+      "narration": "Chọn toàn quốc, bạn cần cả nghìn phiếu khảo sát. Phải đi khắp các trường từ Bắc vào Nam. Bạn lấy đâu ra tiền và mạng lưới điều tra? Thời gian làm bài chỉ có đúng ba tháng.",
       "requirements": [
         "R03"
       ],
@@ -410,28 +417,28 @@
         "CH01"
       ],
       "source_ids": [
-        "SRC03"
+        "SRC02"
       ],
       "images": [
         {
           "id": "SC03_I1",
-          "description": "Solid soft cream canvas (#F8F0DC). Stickman crosses out a circular wheel outline with clean black marker on soft cream canvas.",
+          "description": "Solid soft cream canvas (#F8F0DC). Stickman staggers slightly looking up at a towering stack of survey sheets on cream canvas.",
           "character_ids": [
             "CH01"
           ],
           "based_on": null,
           "preserve": "",
-          "change": "Stickman crosses out a circular wheel outline with clean black marker on soft cream canvas.",
+          "change": "Stickman staggers slightly looking up at a towering stack of survey sheets on cream canvas.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
           "shot_type": "full_scene",
           "has_character": true,
           "explanation": {
-            "quote": "Khoa học không cần bạn phát minh lại bánh xe.",
+            "quote": "Chọn toàn quốc, bạn cần cả nghìn phiếu khảo sát.",
             "relation": "context",
             "source_terms": [
-              "Khoa"
+              "Chọn"
             ],
             "visual_terms": [
               "Solid"
@@ -440,21 +447,21 @@
         },
         {
           "id": "SC03_I2",
-          "description": "Solid soft cream canvas (#F8F0DC). A neat grid of stacked grey brick outlines forming a sturdy wall on cream field, seventy-five percent negative space.",
+          "description": "Solid soft cream canvas (#F8F0DC). A simple doodle map outline with scattered tiny question marks from north to south on cream field, seventy-five percent negative space.",
           "character_ids": [],
           "based_on": null,
           "preserve": "",
-          "change": "A neat grid of stacked grey brick outlines forming a sturdy wall on cream field, seventy-five percent negative space.",
+          "change": "A simple doodle map outline with scattered tiny question marks from north to south on cream field, seventy-five percent negative space.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
           "shot_type": "concept_metaphor",
           "has_character": false,
           "explanation": {
-            "quote": "Tri thức giống như một bức tường đã rất cao.",
+            "quote": "Phải đi khắp các trường từ Bắc vào Nam.",
             "relation": "context",
             "source_terms": [
-              "Tri"
+              "Phải"
             ],
             "visual_terms": [
               "Solid"
@@ -463,23 +470,23 @@
         },
         {
           "id": "SC03_I3",
-          "description": "Solid soft cream canvas (#F8F0DC). Stickman holds a small solid blue brick (#3B82C4) with both hands, lifting it gently toward wall slot.",
+          "description": "Solid soft cream canvas (#F8F0DC). Stickman opens an empty flat wallet outline showing zero coins with questioning comic shrug.",
           "character_ids": [
             "CH01"
           ],
           "based_on": "SC03_I1",
-          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
-          "change": "Stickman holds a small solid blue brick (#3B82C4) with both hands, lifting it gently toward wall slot.",
+          "preserve": "Keep the exact camera angle, room geometry and props in Solid soft cream canvas (#F8F0DC).. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Stickman opens an empty flat wallet outline showing zero coins with questioning comic shrug.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
           "shot_type": "variation",
           "has_character": true,
           "explanation": {
-            "quote": "Việc của bạn là đặt thêm một viên gạch nhỏ.",
+            "quote": "Bạn lấy đâu ra tiền và mạng lưới điều tra?",
             "relation": "context",
             "source_terms": [
-              "Việc"
+              "Bạn"
             ],
             "visual_terms": [
               "Solid"
@@ -488,21 +495,21 @@
         },
         {
           "id": "SC03_I4",
-          "description": "Solid soft cream canvas (#F8F0DC). A single clean blue brick silhouette resting flat on soft cream ground with eighty percent breathing space.",
+          "description": "Solid soft cream canvas (#F8F0DC). A simple doodle hourglass outline with sand running low on warm cream ground, eighty percent breathing space.",
           "character_ids": [],
           "based_on": null,
           "preserve": "",
-          "change": "A single clean blue brick silhouette resting flat on soft cream ground with eighty percent breathing space.",
+          "change": "A simple doodle hourglass outline with sand running low on warm cream ground, eighty percent breathing space.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
           "shot_type": "still_life",
           "has_character": false,
           "explanation": {
-            "quote": "Làm trọn việc nhỏ tốt hơn bỏ dở việc to.",
+            "quote": "Thời gian làm bài chỉ có đúng ba tháng.",
             "relation": "context",
             "source_terms": [
-              "Làm"
+              "Thời"
             ],
             "visual_terms": [
               "Solid"
@@ -514,10 +521,10 @@
         {
           "id": "SC03_B1",
           "image_id": "SC03_I1",
-          "purpose": "Triển khai bước 3: bức tường tri thức",
+          "purpose": "Triển khai bước 3: cái bẫy chi phí và thời gian",
           "anchor": {
             "vi": {
-              "quote": "Khoa học không cần bạn phát minh lại bánh xe.",
+              "quote": "Chọn toàn quốc, bạn cần cả nghìn phiếu khảo sát.",
               "occurrence": 1
             }
           },
@@ -530,10 +537,10 @@
         {
           "id": "SC03_B2",
           "image_id": "SC03_I2",
-          "purpose": "Triển khai bước 3: bức tường tri thức",
+          "purpose": "Triển khai bước 3: cái bẫy chi phí và thời gian",
           "anchor": {
             "vi": {
-              "quote": "Tri thức giống như một bức tường đã rất cao.",
+              "quote": "Phải đi khắp các trường từ Bắc vào Nam.",
               "occurrence": 1
             }
           },
@@ -546,14 +553,14 @@
         {
           "id": "SC03_B3",
           "image_id": "SC03_I3",
-          "purpose": "Triển khai bước 3: bức tường tri thức",
+          "purpose": "Triển khai bước 3: cái bẫy chi phí và thời gian",
           "anchor": {
             "vi": {
-              "quote": "Việc của bạn là đặt thêm một viên gạch nhỏ.",
+              "quote": "Bạn lấy đâu ra tiền và mạng lưới điều tra?",
               "occurrence": 1
             }
           },
-          "effect": "hold",
+          "effect": "pan_left",
           "focus": {
             "x": 0.5,
             "y": 0.5
@@ -562,10 +569,10 @@
         {
           "id": "SC03_B4",
           "image_id": "SC03_I4",
-          "purpose": "Triển khai bước 3: bức tường tri thức",
+          "purpose": "Triển khai bước 3: cái bẫy chi phí và thời gian",
           "anchor": {
             "vi": {
-              "quote": "Làm trọn việc nhỏ tốt hơn bỏ dở việc to.",
+              "quote": "Thời gian làm bài chỉ có đúng ba tháng.",
               "occurrence": 1
             }
           },
@@ -582,41 +589,39 @@
     },
     {
       "id": "SC04",
-      "title": "Ba câu hỏi gọt củ hành",
-      "purpose": "Triển khai bước 4: ba câu hỏi gọt củ hành",
-      "action": "Stickman points index finger toward three concentric black circular outlines drawn on white canvas.",
+      "title": "Hậu quả số liệu ảo và lệch mẫu",
+      "purpose": "Triển khai bước 4: hậu quả số liệu ảo và lệch mẫu",
+      "action": "Stickman holds up a simple smartphone outline displaying an unread shared message on white field.",
       "setting": "Pure stark white field (#FFFFFF).",
       "camera": "Semantic full-frame sequence",
-      "narration": "Hãy bóp nhỏ đề tài bằng ba câu hỏi then chốt. Nghiên cứu ai? Hãy chọn sinh viên trường bạn. Đừng chọn thanh niên toàn quốc xa vời. Mẫu gần gũi giúp dữ liệu rất chắc chắn.",
+      "narration": "Cuối cùng, bạn chỉ biết nhắn tin nhờ người quen điền giúp. Mẫu bị lệch, số liệu không đại diện cho ai cả. Ra hội đồng, thầy cô hỏi phương pháp là bạn cứng họng. Bạn vừa kiệt sức, vừa ôm một đống số liệu ảo.",
       "requirements": [
         "R04"
       ],
       "character_ids": [
         "CH01"
       ],
-      "source_ids": [
-        "SRC02"
-      ],
+      "source_ids": [],
       "images": [
         {
           "id": "SC04_I1",
-          "description": "Pure stark white field (#FFFFFF). Stickman points index finger toward three concentric black circular outlines drawn on white canvas.",
+          "description": "Pure stark white field (#FFFFFF). Stickman holds up a simple smartphone outline displaying an unread shared message on white field.",
           "character_ids": [
             "CH01"
           ],
           "based_on": null,
           "preserve": "",
-          "change": "Stickman points index finger toward three concentric black circular outlines drawn on white canvas.",
+          "change": "Stickman holds up a simple smartphone outline displaying an unread shared message on white field.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
           "shot_type": "full_scene",
           "has_character": true,
           "explanation": {
-            "quote": "Hãy bóp nhỏ đề tài bằng ba câu hỏi then chốt.",
+            "quote": "Cuối cùng, bạn chỉ biết nhắn tin nhờ người quen điền giúp.",
             "relation": "context",
             "source_terms": [
-              "Hãy"
+              "Cuối"
             ],
             "visual_terms": [
               "Pure"
@@ -625,23 +630,21 @@
         },
         {
           "id": "SC04_I2",
-          "description": "Pure stark white field (#FFFFFF). Stickman steps inside middle circle outline, gesturing toward interior.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": "SC04_I1",
-          "preserve": "Keep the exact camera angle, room geometry and props in Pure stark white field (#FFFFFF).. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
-          "change": "Stickman steps inside middle circle outline, gesturing toward interior.",
+          "description": "Pure stark white field (#FFFFFF). A tilted distorted bar chart outline slashed with a bold red marker stroke on white ground, seventy-five percent open space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A tilted distorted bar chart outline slashed with a bold red marker stroke on white ground, seventy-five percent open space.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
-          "shot_type": "variation",
-          "has_character": true,
+          "shot_type": "concept_metaphor",
+          "has_character": false,
           "explanation": {
-            "quote": "Nghiên cứu ai? Hãy chọn sinh viên trường bạn.",
+            "quote": "Mẫu bị lệch, số liệu không đại diện cho ai cả.",
             "relation": "context",
             "source_terms": [
-              "Nghiên"
+              "Mẫu"
             ],
             "visual_terms": [
               "Pure"
@@ -650,21 +653,24 @@
         },
         {
           "id": "SC04_I3",
-          "description": "Pure stark white field (#FFFFFF). A simple doodle student icon wearing a mortarboard centered on clean white canvas, seventy-five percent negative space.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "A simple doodle student icon wearing a mortarboard centered on clean white canvas, seventy-five percent negative space.",
+          "description": "Pure stark white field (#FFFFFF). Stickman freezes with wide comic eyes and nervous sweat drop before an examiner desk silhouette.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC04_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in Pure stark white field (#FFFFFF).. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Stickman freezes with wide comic eyes and nervous sweat drop before an examiner desk silhouette.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
-          "shot_type": "concept_metaphor",
-          "has_character": false,
+          "shot_type": "variation",
+          "allow_expression_shift": true,
+          "has_character": true,
           "explanation": {
-            "quote": "Đừng chọn thanh niên toàn quốc xa vời.",
+            "quote": "Ra hội đồng, thầy cô hỏi phương pháp là bạn cứng họng.",
             "relation": "context",
             "source_terms": [
-              "Đừng"
+              "Ra"
             ],
             "visual_terms": [
               "Pure"
@@ -673,21 +679,23 @@
         },
         {
           "id": "SC04_I4",
-          "description": "Pure stark white field (#FFFFFF). A straight inward arrow pointing from outer ring to the focused center dot on white background.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "A straight inward arrow pointing from outer ring to the focused center dot on white background.",
+          "description": "Pure stark white field (#FFFFFF). Stickman droops shoulders with comic sigh sitting beside a stack of crossed-out fake data sheets.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC04_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Stickman droops shoulders with comic sigh sitting beside a stack of crossed-out fake data sheets.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
-          "shot_type": "visual_diagram",
-          "has_character": false,
+          "shot_type": "variation",
+          "has_character": true,
           "explanation": {
-            "quote": "Mẫu gần gũi giúp dữ liệu rất chắc chắn.",
+            "quote": "Bạn vừa kiệt sức, vừa ôm một đống số liệu ảo.",
             "relation": "context",
             "source_terms": [
-              "Mẫu"
+              "Bạn"
             ],
             "visual_terms": [
               "Pure"
@@ -699,42 +707,10 @@
         {
           "id": "SC04_B1",
           "image_id": "SC04_I1",
-          "purpose": "Triển khai bước 4: ba câu hỏi gọt củ hành",
+          "purpose": "Triển khai bước 4: hậu quả số liệu ảo và lệch mẫu",
           "anchor": {
             "vi": {
-              "quote": "Hãy bóp nhỏ đề tài bằng ba câu hỏi then chốt.",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_in",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC04_B2",
-          "image_id": "SC04_I2",
-          "purpose": "Triển khai bước 4: ba câu hỏi gọt củ hành",
-          "anchor": {
-            "vi": {
-              "quote": "Nghiên cứu ai? Hãy chọn sinh viên trường bạn.",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_right",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC04_B3",
-          "image_id": "SC04_I3",
-          "purpose": "Triển khai bước 4: ba câu hỏi gọt củ hành",
-          "anchor": {
-            "vi": {
-              "quote": "Đừng chọn thanh niên toàn quốc xa vời.",
+              "quote": "Cuối cùng, bạn chỉ biết nhắn tin nhờ người quen điền giúp.",
               "occurrence": 1
             }
           },
@@ -745,12 +721,230 @@
           }
         },
         {
-          "id": "SC04_B4",
-          "image_id": "SC04_I4",
-          "purpose": "Triển khai bước 4: ba câu hỏi gọt củ hành",
+          "id": "SC04_B2",
+          "image_id": "SC04_I2",
+          "purpose": "Triển khai bước 4: hậu quả số liệu ảo và lệch mẫu",
           "anchor": {
             "vi": {
-              "quote": "Mẫu gần gũi giúp dữ liệu rất chắc chắn.",
+              "quote": "Mẫu bị lệch, số liệu không đại diện cho ai cả.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B3",
+          "image_id": "SC04_I3",
+          "purpose": "Triển khai bước 4: hậu quả số liệu ảo và lệch mẫu",
+          "anchor": {
+            "vi": {
+              "quote": "Ra hội đồng, thầy cô hỏi phương pháp là bạn cứng họng.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC04_B4",
+          "image_id": "SC04_I4",
+          "purpose": "Triển khai bước 4: hậu quả số liệu ảo và lệch mẫu",
+          "anchor": {
+            "vi": {
+              "quote": "Bạn vừa kiệt sức, vừa ôm một đống số liệu ảo.",
+              "occurrence": 1
+            }
+          },
+          "effect": "punch_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "problem"
+    },
+    {
+      "id": "SC05",
+      "title": "Lời chúc mừng khi chọn ký túc xá",
+      "purpose": "Triển khai bước 5: lời chúc mừng khi chọn ký túc xá",
+      "action": "Stickman stands upright and smiles, pointing index finger to a simple door outline labeled 'KÝ TÚC XÁ'.",
+      "setting": "Solid warm cream canvas (#F8F0DC).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Còn nếu bạn chỉ khảo sát ngay trong ký túc xá thì sao? Xin chúc mừng, bạn vừa mở ra con đường sống cho bài làm! Họ ở ngay sát phòng bạn mỗi ngày. Tối đến, bạn chỉ cần gõ cửa từng phòng để trò chuyện.",
+      "requirements": [
+        "R05"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC05_I1",
+          "description": "Solid warm cream canvas (#F8F0DC). Stickman stands upright and smiles, pointing index finger to a simple door outline labeled 'KÝ TÚC XÁ'.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Stickman stands upright and smiles, pointing index finger to a simple door outline labeled 'KÝ TÚC XÁ'.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Còn nếu bạn chỉ khảo sát ngay trong ký túc xá thì sao?",
+            "relation": "context",
+            "source_terms": [
+              "Còn"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC05_I2",
+          "description": "Solid warm cream canvas (#F8F0DC). Stickman raises both arms in joyful triumph with cheerful comic smile on soft cream canvas.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC05_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in Solid warm cream canvas (#F8F0DC).. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Stickman raises both arms in joyful triumph with cheerful comic smile on soft cream canvas.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation",
+          "allow_expression_shift": true,
+          "has_character": true,
+          "explanation": {
+            "quote": "Xin chúc mừng, bạn vừa mở ra con đường sống cho bài làm!",
+            "relation": "context",
+            "source_terms": [
+              "Xin"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC05_I3",
+          "description": "Solid warm cream canvas (#F8F0DC). A simple doodle glowing doorway icon casting gentle flat illumination on cream canvas, seventy-five percent negative space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A simple doodle glowing doorway icon casting gentle flat illumination on cream canvas, seventy-five percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Họ ở ngay sát phòng bạn mỗi ngày.",
+            "relation": "context",
+            "source_terms": [
+              "Họ"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC05_I4",
+          "description": "Solid warm cream canvas (#F8F0DC). Stickman holds a neat clipboard checklist gently knocking on a room door outline with friendly approachable posture.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC05_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Stickman holds a neat clipboard checklist gently knocking on a room door outline with friendly approachable posture.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation",
+          "has_character": true,
+          "explanation": {
+            "quote": "Tối đến, bạn chỉ cần gõ cửa từng phòng để trò chuyện.",
+            "relation": "context",
+            "source_terms": [
+              "Tối"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC05_B1",
+          "image_id": "SC05_I1",
+          "purpose": "Triển khai bước 5: lời chúc mừng khi chọn ký túc xá",
+          "anchor": {
+            "vi": {
+              "quote": "Còn nếu bạn chỉ khảo sát ngay trong ký túc xá thì sao?",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B2",
+          "image_id": "SC05_I2",
+          "purpose": "Triển khai bước 5: lời chúc mừng khi chọn ký túc xá",
+          "anchor": {
+            "vi": {
+              "quote": "Xin chúc mừng, bạn vừa mở ra con đường sống cho bài làm!",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B3",
+          "image_id": "SC05_I3",
+          "purpose": "Triển khai bước 5: lời chúc mừng khi chọn ký túc xá",
+          "anchor": {
+            "vi": {
+              "quote": "Họ ở ngay sát phòng bạn mỗi ngày.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC05_B4",
+          "image_id": "SC05_I4",
+          "purpose": "Triển khai bước 5: lời chúc mừng khi chọn ký túc xá",
+          "anchor": {
+            "vi": {
+              "quote": "Tối đến, bạn chỉ cần gõ cửa từng phòng để trò chuyện.",
               "occurrence": 1
             }
           },
@@ -766,15 +960,15 @@
       "narrative_phase": "explanation"
     },
     {
-      "id": "SC05",
-      "title": "Khóa chặt hành vi và thước đo",
-      "purpose": "Triển khai bước 5: khóa chặt hành vi và thước đo",
-      "action": "Stickman points from a fuzzy cloud symbol to a clear clock icon showing 23:00 on ivory canvas.",
-      "setting": "Solid ivory neutral field (#F8F0DC).",
+      "id": "SC06",
+      "title": "Sức mạnh dữ liệu thật và độ sâu",
+      "purpose": "Triển khai bước 6: sức mạnh dữ liệu thật và độ sâu",
+      "action": "Stickman holds up a neat stack of verified survey pages with solid confident smile on white ground.",
+      "setting": "Clean stark white canvas (#FFFFFF).",
       "camera": "Semantic full-frame sequence",
-      "narration": "Đo cái gì? Đổi khái niệm thành hành vi cụ thể. Thay vì sức khỏe tinh thần, hãy đo giờ ngủ. Số phút lướt điện thoại là thước đo khách quan. Bài toán bây giờ làm gọn trong ba tháng.",
+      "narration": "Sau ba ngày, bạn có ngay một trăm phiếu khảo sát chuẩn chỉ. Chi phí bỏ ra đúng bằng không đồng. Số liệu người thật việc thật, kiểm tra được ngay. Bạn hiểu rất rõ đối tượng nên viết bài cực sâu.",
       "requirements": [
-        "R05"
+        "R06"
       ],
       "character_ids": [
         "CH01"
@@ -784,207 +978,24 @@
       ],
       "images": [
         {
-          "id": "SC05_I1",
-          "description": "Solid ivory neutral field (#F8F0DC). Stickman points from a fuzzy cloud symbol to a clear clock icon showing 23:00 on ivory canvas.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": null,
-          "preserve": "",
-          "change": "Stickman points from a fuzzy cloud symbol to a clear clock icon showing 23:00 on ivory canvas.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "full_scene",
-          "has_character": true,
-          "explanation": {
-            "quote": "Đo cái gì? Đổi khái niệm thành hành vi cụ thể.",
-            "relation": "context",
-            "source_terms": [
-              "Đo"
-            ],
-            "visual_terms": [
-              "Solid"
-            ]
-          }
-        },
-        {
-          "id": "SC05_I2",
-          "description": "Solid ivory neutral field (#F8F0DC). A simple doodle clock icon beside a smartphone screen timer on ivory canvas, seventy-five percent negative space.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "A simple doodle clock icon beside a smartphone screen timer on ivory canvas, seventy-five percent negative space.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "concept_metaphor",
-          "has_character": false,
-          "explanation": {
-            "quote": "Thay vì sức khỏe tinh thần, hãy đo giờ ngủ.",
-            "relation": "context",
-            "source_terms": [
-              "Thay"
-            ],
-            "visual_terms": [
-              "Solid"
-            ]
-          }
-        },
-        {
-          "id": "SC05_I3",
-          "description": "Solid ivory neutral field (#F8F0DC). A clear bar chart with two solid columns on ivory canvas, seventy percent open space.",
-          "character_ids": [],
-          "based_on": null,
-          "preserve": "",
-          "change": "A clear bar chart with two solid columns on ivory canvas, seventy percent open space.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "visual_diagram",
-          "has_character": false,
-          "explanation": {
-            "quote": "Số phút lướt điện thoại là thước đo khách quan.",
-            "relation": "context",
-            "source_terms": [
-              "Số"
-            ],
-            "visual_terms": [
-              "Solid"
-            ]
-          }
-        },
-        {
-          "id": "SC05_I4",
-          "description": "Solid ivory neutral field (#F8F0DC). Stickman holds a single neat sheet of paper with a crisp green checkmark on ivory field.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": "SC05_I1",
-          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
-          "change": "Stickman holds a single neat sheet of paper with a crisp green checkmark on ivory field.",
-          "reason": "Narration-locked full-frame beat.",
-          "visible_text": [],
-          "kind": "scene",
-          "shot_type": "variation",
-          "has_character": true,
-          "explanation": {
-            "quote": "Bài toán bây giờ làm gọn trong ba tháng.",
-            "relation": "context",
-            "source_terms": [
-              "Bài"
-            ],
-            "visual_terms": [
-              "Solid"
-            ]
-          }
-        }
-      ],
-      "beats": [
-        {
-          "id": "SC05_B1",
-          "image_id": "SC05_I1",
-          "purpose": "Triển khai bước 5: khóa chặt hành vi và thước đo",
-          "anchor": {
-            "vi": {
-              "quote": "Đo cái gì? Đổi khái niệm thành hành vi cụ thể.",
-              "occurrence": 1
-            }
-          },
-          "effect": "punch_in",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC05_B2",
-          "image_id": "SC05_I2",
-          "purpose": "Triển khai bước 5: khóa chặt hành vi và thước đo",
-          "anchor": {
-            "vi": {
-              "quote": "Thay vì sức khỏe tinh thần, hãy đo giờ ngủ.",
-              "occurrence": 1
-            }
-          },
-          "effect": "pan_left",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC05_B3",
-          "image_id": "SC05_I3",
-          "purpose": "Triển khai bước 5: khóa chặt hành vi và thước đo",
-          "anchor": {
-            "vi": {
-              "quote": "Số phút lướt điện thoại là thước đo khách quan.",
-              "occurrence": 1
-            }
-          },
-          "effect": "hold",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC05_B4",
-          "image_id": "SC05_I4",
-          "purpose": "Triển khai bước 5: khóa chặt hành vi và thước đo",
-          "anchor": {
-            "vi": {
-              "quote": "Bài toán bây giờ làm gọn trong ba tháng.",
-              "occurrence": 1
-            }
-          },
-          "effect": "punch_in",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        }
-      ],
-      "layers": [],
-      "tone": "analytical_crisp",
-      "narrative_phase": "counter_argument"
-    },
-    {
-      "id": "SC06",
-      "title": "Bớt tham lại để thành công",
-      "purpose": "Triển khai bước 6: bớt tham lại để thành công",
-      "action": "Stickman stands tall and calm in center of canvas, holding the small blue brick high with steady hand.",
-      "setting": "Clean serene white field (#FFFFFF).",
-      "camera": "Semantic full-frame sequence",
-      "narration": "Bớt tham lại, đề tài mới có cơ hội sống. Làm trọn một việc nhỏ là đủ để qua môn. Thả tim ủng hộ nếu thấy nhẹ nhõm hơn bạn nhé. Bấm theo dõi để cùng gỡ rối đề tài tiếp theo.",
-      "requirements": [
-        "R06"
-      ],
-      "character_ids": [
-        "CH01"
-      ],
-      "source_ids": [],
-      "images": [
-        {
           "id": "SC06_I1",
-          "description": "Clean serene white field (#FFFFFF). Stickman stands tall and calm in center of canvas, holding the small blue brick high with steady hand.",
+          "description": "Clean stark white canvas (#FFFFFF). Stickman holds up a neat stack of verified survey pages with solid confident smile on white ground.",
           "character_ids": [
             "CH01"
           ],
           "based_on": null,
           "preserve": "",
-          "change": "Stickman stands tall and calm in center of canvas, holding the small blue brick high with steady hand.",
+          "change": "Stickman holds up a neat stack of verified survey pages with solid confident smile on white ground.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
           "shot_type": "full_scene",
           "has_character": true,
           "explanation": {
-            "quote": "Bớt tham lại, đề tài mới có cơ hội sống.",
+            "quote": "Sau ba ngày, bạn có ngay một trăm phiếu khảo sát chuẩn chỉ.",
             "relation": "context",
             "source_terms": [
-              "Bớt"
+              "Sau"
             ],
             "visual_terms": [
               "Clean"
@@ -993,24 +1004,21 @@
         },
         {
           "id": "SC06_I2",
-          "description": "Clean serene white field (#FFFFFF). Stickman smiles with peaceful clarity holding a completed paper draft marked with a neat checkmark.",
-          "character_ids": [
-            "CH01"
-          ],
-          "based_on": "SC06_I1",
-          "preserve": "Keep the exact camera angle, room geometry and props in Clean serene white field (#FFFFFF).. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
-          "change": "Stickman smiles with peaceful clarity holding a completed paper draft marked with a neat checkmark.",
+          "description": "Clean stark white canvas (#FFFFFF). A simple doodle coin outline marked with a neat checkmark and zero cost label on pure white field, eighty percent negative space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A simple doodle coin outline marked with a neat checkmark and zero cost label on pure white field, eighty percent negative space.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
-          "shot_type": "variation",
-          "allow_expression_shift": true,
-          "has_character": true,
+          "shot_type": "concept_metaphor",
+          "has_character": false,
           "explanation": {
-            "quote": "Làm trọn một việc nhỏ là đủ để qua môn.",
+            "quote": "Chi phí bỏ ra đúng bằng không đồng.",
             "relation": "context",
             "source_terms": [
-              "Làm"
+              "Chi"
             ],
             "visual_terms": [
               "Clean"
@@ -1019,21 +1027,21 @@
         },
         {
           "id": "SC06_I3",
-          "description": "Clean serene white field (#FFFFFF). A simple warm apricot-peach doodle heart icon (#F2B88B) drawn with unpolished black marker ink beside stickman, eighty percent negative space.",
+          "description": "Clean stark white canvas (#FFFFFF). A clean data checklist table with clear checkmarks and verified student rows on white background.",
           "character_ids": [],
           "based_on": null,
           "preserve": "",
-          "change": "A simple warm apricot-peach doodle heart icon (#F2B88B) drawn with unpolished black marker ink beside stickman, eighty percent negative space.",
+          "change": "A clean data checklist table with clear checkmarks and verified student rows on white background.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
-          "shot_type": "concept_metaphor",
+          "shot_type": "visual_diagram",
           "has_character": false,
           "explanation": {
-            "quote": "Thả tim ủng hộ nếu thấy nhẹ nhõm hơn bạn nhé.",
+            "quote": "Số liệu người thật việc thật, kiểm tra được ngay.",
             "relation": "context",
             "source_terms": [
-              "Thả"
+              "Số"
             ],
             "visual_terms": [
               "Clean"
@@ -1042,23 +1050,23 @@
         },
         {
           "id": "SC06_I4",
-          "description": "Clean serene white field (#FFFFFF). Stickman raises hand in a friendly gentle wave toward viewer beside a minimalist doodle bell icon on clean white canvas.",
+          "description": "Clean stark white canvas (#FFFFFF). Stickman points index finger to the clean data rows with sharp analytical clarity.",
           "character_ids": [
             "CH01"
           ],
           "based_on": "SC06_I1",
-          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
-          "change": "Stickman raises hand in a friendly gentle wave toward viewer beside a minimalist doodle bell icon on clean white canvas.",
+          "preserve": "Keep the exact camera angle, room geometry and props in Clean stark white canvas (#FFFFFF).. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Stickman points index finger to the clean data rows with sharp analytical clarity.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
           "shot_type": "variation",
           "has_character": true,
           "explanation": {
-            "quote": "Bấm theo dõi để cùng gỡ rối đề tài tiếp theo.",
+            "quote": "Bạn hiểu rất rõ đối tượng nên viết bài cực sâu.",
             "relation": "context",
             "source_terms": [
-              "Bấm"
+              "Bạn"
             ],
             "visual_terms": [
               "Clean"
@@ -1070,10 +1078,10 @@
         {
           "id": "SC06_B1",
           "image_id": "SC06_I1",
-          "purpose": "Triển khai bước 6: bớt tham lại để thành công",
+          "purpose": "Triển khai bước 6: sức mạnh dữ liệu thật và độ sâu",
           "anchor": {
             "vi": {
-              "quote": "Bớt tham lại, đề tài mới có cơ hội sống.",
+              "quote": "Sau ba ngày, bạn có ngay một trăm phiếu khảo sát chuẩn chỉ.",
               "occurrence": 1
             }
           },
@@ -1086,26 +1094,10 @@
         {
           "id": "SC06_B2",
           "image_id": "SC06_I2",
-          "purpose": "Triển khai bước 6: bớt tham lại để thành công",
+          "purpose": "Triển khai bước 6: sức mạnh dữ liệu thật và độ sâu",
           "anchor": {
             "vi": {
-              "quote": "Làm trọn một việc nhỏ là đủ để qua môn.",
-              "occurrence": 1
-            }
-          },
-          "effect": "zoom_out",
-          "focus": {
-            "x": 0.5,
-            "y": 0.5
-          }
-        },
-        {
-          "id": "SC06_B3",
-          "image_id": "SC06_I3",
-          "purpose": "Triển khai bước 6: bớt tham lại để thành công",
-          "anchor": {
-            "vi": {
-              "quote": "Thả tim ủng hộ nếu thấy nhẹ nhõm hơn bạn nhé.",
+              "quote": "Chi phí bỏ ra đúng bằng không đồng.",
               "occurrence": 1
             }
           },
@@ -1116,12 +1108,953 @@
           }
         },
         {
-          "id": "SC06_B4",
-          "image_id": "SC06_I4",
-          "purpose": "Triển khai bước 6: bớt tham lại để thành công",
+          "id": "SC06_B3",
+          "image_id": "SC06_I3",
+          "purpose": "Triển khai bước 6: sức mạnh dữ liệu thật và độ sâu",
           "anchor": {
             "vi": {
-              "quote": "Bấm theo dõi để cùng gỡ rối đề tài tiếp theo.",
+              "quote": "Số liệu người thật việc thật, kiểm tra được ngay.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC06_B4",
+          "image_id": "SC06_I4",
+          "purpose": "Triển khai bước 6: sức mạnh dữ liệu thật và độ sâu",
+          "anchor": {
+            "vi": {
+              "quote": "Bạn hiểu rất rõ đối tượng nên viết bài cực sâu.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "explanation"
+    },
+    {
+      "id": "SC07",
+      "title": "Bảo vệ tự tin trước hội đồng",
+      "purpose": "Triển khai bước 7: bảo vệ tự tin trước hội đồng",
+      "action": "Stickman stands tall with chest out and palms resting steadily on podium edge on soft cream canvas.",
+      "setting": "Solid ivory neutral field (#F8F0DC).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Khi bảo vệ, thầy cô hỏi gì bạn cũng trả lời vanh vách. Bạn giải thích được từng con số, từng câu trả lời bất thường. Hội đồng đánh giá rất cao tính khả thi và sự trung thực. Làm trọn vẹn một việc nhỏ tốt hơn bỏ dở việc lớn.",
+      "requirements": [
+        "R07"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC03"
+      ],
+      "images": [
+        {
+          "id": "SC07_I1",
+          "description": "Solid ivory neutral field (#F8F0DC). Stickman stands tall with chest out and palms resting steadily on podium edge on soft cream canvas.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Stickman stands tall with chest out and palms resting steadily on podium edge on soft cream canvas.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Khi bảo vệ, thầy cô hỏi gì bạn cũng trả lời vanh vách.",
+            "relation": "context",
+            "source_terms": [
+              "Khi"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC07_I2",
+          "description": "Solid ivory neutral field (#F8F0DC). Stickman points index finger upward explaining with clear animated enthusiasm.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC07_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in Solid ivory neutral field (#F8F0DC).. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Stickman points index finger upward explaining with clear animated enthusiasm.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation",
+          "has_character": true,
+          "explanation": {
+            "quote": "Bạn giải thích được từng con số, từng câu trả lời bất thường.",
+            "relation": "context",
+            "source_terms": [
+              "Bạn"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC07_I3",
+          "description": "Solid ivory neutral field (#F8F0DC). A clean checkmark symbol stamped on an evaluation sheet outline on cream ground, eighty percent negative space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A clean checkmark symbol stamped on an evaluation sheet outline on cream ground, eighty percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Hội đồng đánh giá rất cao tính khả thi và sự trung thực.",
+            "relation": "context",
+            "source_terms": [
+              "Hội"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC07_I4",
+          "description": "Solid ivory neutral field (#F8F0DC). A single small solid blue brick doodle (#3B82C4) resting flat on cream canvas with eighty percent negative space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A single small solid blue brick doodle (#3B82C4) resting flat on cream canvas with eighty percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "still_life",
+          "has_character": false,
+          "explanation": {
+            "quote": "Làm trọn vẹn một việc nhỏ tốt hơn bỏ dở việc lớn.",
+            "relation": "context",
+            "source_terms": [
+              "Làm"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC07_B1",
+          "image_id": "SC07_I1",
+          "purpose": "Triển khai bước 7: bảo vệ tự tin trước hội đồng",
+          "anchor": {
+            "vi": {
+              "quote": "Khi bảo vệ, thầy cô hỏi gì bạn cũng trả lời vanh vách.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC07_B2",
+          "image_id": "SC07_I2",
+          "purpose": "Triển khai bước 7: bảo vệ tự tin trước hội đồng",
+          "anchor": {
+            "vi": {
+              "quote": "Bạn giải thích được từng con số, từng câu trả lời bất thường.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC07_B3",
+          "image_id": "SC07_I3",
+          "purpose": "Triển khai bước 7: bảo vệ tự tin trước hội đồng",
+          "anchor": {
+            "vi": {
+              "quote": "Hội đồng đánh giá rất cao tính khả thi và sự trung thực.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC07_B4",
+          "image_id": "SC07_I4",
+          "purpose": "Triển khai bước 7: bảo vệ tự tin trước hội đồng",
+          "anchor": {
+            "vi": {
+              "quote": "Làm trọn vẹn một việc nhỏ tốt hơn bỏ dở việc lớn.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "explanation"
+    },
+    {
+      "id": "SC08",
+      "title": "Ai mới nên chọn dữ liệu toàn quốc",
+      "purpose": "Triển khai bước 8: ai mới nên chọn dữ liệu toàn quốc",
+      "action": "Stickman tilts head with thoughtful inquiring expression on flat ivory field.",
+      "setting": "Solid soft cream canvas (#F8F0DC).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Vậy ai mới là người nên chọn sinh viên toàn quốc? Đó là các Viện nghiên cứu, hoặc các dự án cấp Bộ. Họ được cấp kinh phí hàng trăm triệu đồng. Đồng thời có cả mạng lưới điều tra viên tỏa đi các tỉnh.",
+      "requirements": [
+        "R08"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC08_I1",
+          "description": "Solid soft cream canvas (#F8F0DC). Stickman tilts head with thoughtful inquiring expression on flat ivory field.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Stickman tilts head with thoughtful inquiring expression on flat ivory field.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Vậy ai mới là người nên chọn sinh viên toàn quốc?",
+            "relation": "context",
+            "source_terms": [
+              "Vậy"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC08_I2",
+          "description": "Solid soft cream canvas (#F8F0DC). A grand institute building outline beside an official seal symbol on ivory field, seventy-five percent open space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A grand institute building outline beside an official seal symbol on ivory field, seventy-five percent open space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Đó là các Viện nghiên cứu, hoặc các dự án cấp Bộ.",
+            "relation": "context",
+            "source_terms": [
+              "Đó"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC08_I3",
+          "description": "Solid soft cream canvas (#F8F0DC). A neat financial funding chart showing substantial budget allocation for fieldwork on ivory ground.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A neat financial funding chart showing substantial budget allocation for fieldwork on ivory ground.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "visual_diagram",
+          "has_character": false,
+          "explanation": {
+            "quote": "Họ được cấp kinh phí hàng trăm triệu đồng.",
+            "relation": "context",
+            "source_terms": [
+              "Họ"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC08_I4",
+          "description": "Solid soft cream canvas (#F8F0DC). Stickman points to a nationwide map diagram showing networked investigator nodes across regions.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC08_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Stickman points to a nationwide map diagram showing networked investigator nodes across regions.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation",
+          "has_character": true,
+          "explanation": {
+            "quote": "Đồng thời có cả mạng lưới điều tra viên tỏa đi các tỉnh.",
+            "relation": "context",
+            "source_terms": [
+              "Đồng"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC08_B1",
+          "image_id": "SC08_I1",
+          "purpose": "Triển khai bước 8: ai mới nên chọn dữ liệu toàn quốc",
+          "anchor": {
+            "vi": {
+              "quote": "Vậy ai mới là người nên chọn sinh viên toàn quốc?",
+              "occurrence": 1
+            }
+          },
+          "effect": "punch_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC08_B2",
+          "image_id": "SC08_I2",
+          "purpose": "Triển khai bước 8: ai mới nên chọn dữ liệu toàn quốc",
+          "anchor": {
+            "vi": {
+              "quote": "Đó là các Viện nghiên cứu, hoặc các dự án cấp Bộ.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_left",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC08_B3",
+          "image_id": "SC08_I3",
+          "purpose": "Triển khai bước 8: ai mới nên chọn dữ liệu toàn quốc",
+          "anchor": {
+            "vi": {
+              "quote": "Họ được cấp kinh phí hàng trăm triệu đồng.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC08_B4",
+          "image_id": "SC08_I4",
+          "purpose": "Triển khai bước 8: ai mới nên chọn dữ liệu toàn quốc",
+          "anchor": {
+            "vi": {
+              "quote": "Đồng thời có cả mạng lưới điều tra viên tỏa đi các tỉnh.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "counter_argument"
+    },
+    {
+      "id": "SC09",
+      "title": "Quy trình vĩ mô của dự án lớn",
+      "purpose": "Triển khai bước 9: quy trình vĩ mô của dự án lớn",
+      "action": "A simple doodle stratified sampling diagram showing neat multi-tier brackets on white canvas, seventy-five percent negative space.",
+      "setting": "Pure stark white field (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Họ có phần mềm giám sát và lấy mẫu phân tầng chuẩn mực. Thời gian làm của họ kéo dài từ một đến hai năm. Đó là nhiệm vụ khoa học lớn, không phải bài làm của sinh viên. Đừng ôm đồm việc của một Viện nghiên cứu lên vai mình.",
+      "requirements": [
+        "R09"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC09_I1",
+          "description": "Pure stark white field (#FFFFFF). A simple doodle stratified sampling diagram showing neat multi-tier brackets on white canvas, seventy-five percent negative space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A simple doodle stratified sampling diagram showing neat multi-tier brackets on white canvas, seventy-five percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Họ có phần mềm giám sát và lấy mẫu phân tầng chuẩn mực.",
+            "relation": "context",
+            "source_terms": [
+              "Họ"
+            ],
+            "visual_terms": [
+              "Pure"
+            ]
+          }
+        },
+        {
+          "id": "SC09_I2",
+          "description": "Pure stark white field (#FFFFFF). A two-year timeline bar divided into quarters with clear survey milestones on white ground.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A two-year timeline bar divided into quarters with clear survey milestones on white ground.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "visual_diagram",
+          "has_character": false,
+          "explanation": {
+            "quote": "Thời gian làm của họ kéo dài từ một đến hai năm.",
+            "relation": "context",
+            "source_terms": [
+              "Thời"
+            ],
+            "visual_terms": [
+              "Pure"
+            ]
+          }
+        },
+        {
+          "id": "SC09_I3",
+          "description": "Pure stark white field (#FFFFFF). Stickman stands calm looking at the large timeline, then gestures toward self with modest smile.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Stickman stands calm looking at the large timeline, then gestures toward self with modest smile.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Đó là nhiệm vụ khoa học lớn, không phải bài làm của sinh viên.",
+            "relation": "context",
+            "source_terms": [
+              "Đó"
+            ],
+            "visual_terms": [
+              "Pure"
+            ]
+          }
+        },
+        {
+          "id": "SC09_I4",
+          "description": "Pure stark white field (#FFFFFF). Stickman gently sets aside an oversized project boulder, standing relaxed on white ground.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC09_I3",
+          "preserve": "Keep the exact camera angle, room geometry and props in Pure stark white field (#FFFFFF).. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Stickman gently sets aside an oversized project boulder, standing relaxed on white ground.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation",
+          "allow_expression_shift": true,
+          "has_character": true,
+          "explanation": {
+            "quote": "Đừng ôm đồm việc của một Viện nghiên cứu lên vai mình.",
+            "relation": "context",
+            "source_terms": [
+              "Đừng"
+            ],
+            "visual_terms": [
+              "Pure"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC09_B1",
+          "image_id": "SC09_I1",
+          "purpose": "Triển khai bước 9: quy trình vĩ mô của dự án lớn",
+          "anchor": {
+            "vi": {
+              "quote": "Họ có phần mềm giám sát và lấy mẫu phân tầng chuẩn mực.",
+              "occurrence": 1
+            }
+          },
+          "effect": "punch_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC09_B2",
+          "image_id": "SC09_I2",
+          "purpose": "Triển khai bước 9: quy trình vĩ mô của dự án lớn",
+          "anchor": {
+            "vi": {
+              "quote": "Thời gian làm của họ kéo dài từ một đến hai năm.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC09_B3",
+          "image_id": "SC09_I3",
+          "purpose": "Triển khai bước 9: quy trình vĩ mô của dự án lớn",
+          "anchor": {
+            "vi": {
+              "quote": "Đó là nhiệm vụ khoa học lớn, không phải bài làm của sinh viên.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC09_B4",
+          "image_id": "SC09_I4",
+          "purpose": "Triển khai bước 9: quy trình vĩ mô của dự án lớn",
+          "anchor": {
+            "vi": {
+              "quote": "Đừng ôm đồm việc của một Viện nghiên cứu lên vai mình.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "counter_argument"
+    },
+    {
+      "id": "SC10",
+      "title": "Giới hạn phạm vi và lời hẹn mở rộng",
+      "purpose": "Triển khai bước 10: giới hạn phạm vi và lời hẹn mở rộng",
+      "action": "Stickman holds hands out warmly toward the viewer with reassuring friendly expression on soft cream canvas.",
+      "setting": "Solid ivory neutral field (#F8F0DC).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Video này, mình muốn tháo gỡ áp lực thực tế cho sinh viên trước. Các video sau, mình sẽ giải mã quy trình thực hiện các đề tài lớn. Cách các dự án lớn thiết kế mẫu và kiểm soát sai số ra sao. Còn bây giờ, mục tiêu quan trọng nhất là bảo vệ an toàn.",
+      "requirements": [
+        "R10"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [],
+      "images": [
+        {
+          "id": "SC10_I1",
+          "description": "Solid ivory neutral field (#F8F0DC). Stickman holds hands out warmly toward the viewer with reassuring friendly expression on soft cream canvas.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Stickman holds hands out warmly toward the viewer with reassuring friendly expression on soft cream canvas.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Video này, mình muốn tháo gỡ áp lực thực tế cho sinh viên trước.",
+            "relation": "context",
+            "source_terms": [
+              "Video"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC10_I2",
+          "description": "Solid ivory neutral field (#F8F0DC). Stickman gestures toward a series of neat blueprint sketches lined up on cream background.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC10_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in Solid ivory neutral field (#F8F0DC).. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Stickman gestures toward a series of neat blueprint sketches lined up on cream background.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation",
+          "has_character": true,
+          "explanation": {
+            "quote": "Các video sau, mình sẽ giải mã quy trình thực hiện các đề tài lớn.",
+            "relation": "context",
+            "source_terms": [
+              "Các"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC10_I3",
+          "description": "Solid ivory neutral field (#F8F0DC). A simple doodle magnifying glass inspecting a statistical bell curve outline on cream field, eighty percent negative space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A simple doodle magnifying glass inspecting a statistical bell curve outline on cream field, eighty percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Cách các dự án lớn thiết kế mẫu và kiểm soát sai số ra sao.",
+            "relation": "context",
+            "source_terms": [
+              "Cách"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        },
+        {
+          "id": "SC10_I4",
+          "description": "Solid ivory neutral field (#F8F0DC). Stickman gives a firm confident nod holding a completed graduation thesis outline.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC10_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Stickman gives a firm confident nod holding a completed graduation thesis outline.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation",
+          "has_character": true,
+          "explanation": {
+            "quote": "Còn bây giờ, mục tiêu quan trọng nhất là bảo vệ an toàn.",
+            "relation": "context",
+            "source_terms": [
+              "Còn"
+            ],
+            "visual_terms": [
+              "Solid"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC10_B1",
+          "image_id": "SC10_I1",
+          "purpose": "Triển khai bước 10: giới hạn phạm vi và lời hẹn mở rộng",
+          "anchor": {
+            "vi": {
+              "quote": "Video này, mình muốn tháo gỡ áp lực thực tế cho sinh viên trước.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC10_B2",
+          "image_id": "SC10_I2",
+          "purpose": "Triển khai bước 10: giới hạn phạm vi và lời hẹn mở rộng",
+          "anchor": {
+            "vi": {
+              "quote": "Các video sau, mình sẽ giải mã quy trình thực hiện các đề tài lớn.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC10_B3",
+          "image_id": "SC10_I3",
+          "purpose": "Triển khai bước 10: giới hạn phạm vi và lời hẹn mở rộng",
+          "anchor": {
+            "vi": {
+              "quote": "Cách các dự án lớn thiết kế mẫu và kiểm soát sai số ra sao.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_in",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC10_B4",
+          "image_id": "SC10_I4",
+          "purpose": "Triển khai bước 10: giới hạn phạm vi và lời hẹn mở rộng",
+          "anchor": {
+            "vi": {
+              "quote": "Còn bây giờ, mục tiêu quan trọng nhất là bảo vệ an toàn.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        }
+      ],
+      "layers": [],
+      "tone": "analytical_crisp",
+      "narrative_phase": "takeaway"
+    },
+    {
+      "id": "SC11",
+      "title": "Quy tắc vàng và kêu gọi tinh tế",
+      "purpose": "Triển khai bước 11: quy tắc vàng và kêu gọi tinh tế",
+      "action": "Stickman stands tall in center of canvas holding the small blue brick (#3B82C4) high with steady hand.",
+      "setting": "Clean serene white field (#FFFFFF).",
+      "camera": "Semantic full-frame sequence",
+      "narration": "Quy tắc vàng: Phạm vi càng hẹp, bài làm càng sâu. Số liệu càng thật, điểm số của bạn càng cao. Thả tim nếu góc nhìn này giúp bạn giải tỏa áp lực nhé. Bấm theo dõi kênh để cùng gỡ rối những đề tài tiếp theo.",
+      "requirements": [
+        "R11"
+      ],
+      "character_ids": [
+        "CH01"
+      ],
+      "source_ids": [
+        "SRC01"
+      ],
+      "images": [
+        {
+          "id": "SC11_I1",
+          "description": "Clean serene white field (#FFFFFF). Stickman stands tall in center of canvas holding the small blue brick (#3B82C4) high with steady hand.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": null,
+          "preserve": "",
+          "change": "Stickman stands tall in center of canvas holding the small blue brick (#3B82C4) high with steady hand.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "full_scene",
+          "has_character": true,
+          "explanation": {
+            "quote": "Quy tắc vàng: Phạm vi càng hẹp, bài làm càng sâu.",
+            "relation": "context",
+            "source_terms": [
+              "Quy"
+            ],
+            "visual_terms": [
+              "Clean"
+            ]
+          }
+        },
+        {
+          "id": "SC11_I2",
+          "description": "Clean serene white field (#FFFFFF). Stickman smiles with peaceful clarity holding a completed paper draft marked with grade 'A'.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC11_I1",
+          "preserve": "Keep the exact camera angle, room geometry and props in Clean serene white field (#FFFFFF).. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Stickman smiles with peaceful clarity holding a completed paper draft marked with grade 'A'.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation",
+          "allow_expression_shift": true,
+          "has_character": true,
+          "explanation": {
+            "quote": "Số liệu càng thật, điểm số của bạn càng cao.",
+            "relation": "context",
+            "source_terms": [
+              "Số"
+            ],
+            "visual_terms": [
+              "Clean"
+            ]
+          }
+        },
+        {
+          "id": "SC11_I3",
+          "description": "Clean serene white field (#FFFFFF). A simple warm apricot-peach doodle heart icon (#F2B88B) drawn with unpolished black marker ink beside stickman, eighty percent negative space.",
+          "character_ids": [],
+          "based_on": null,
+          "preserve": "",
+          "change": "A simple warm apricot-peach doodle heart icon (#F2B88B) drawn with unpolished black marker ink beside stickman, eighty percent negative space.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "concept_metaphor",
+          "has_character": false,
+          "explanation": {
+            "quote": "Thả tim nếu góc nhìn này giúp bạn giải tỏa áp lực nhé.",
+            "relation": "context",
+            "source_terms": [
+              "Thả"
+            ],
+            "visual_terms": [
+              "Clean"
+            ]
+          }
+        },
+        {
+          "id": "SC11_I4",
+          "description": "Clean serene white field (#FFFFFF). Stickman raises hand in a friendly gentle wave toward viewer beside a minimalist doodle bell icon on clean white canvas.",
+          "character_ids": [
+            "CH01"
+          ],
+          "based_on": "SC11_I1",
+          "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
+          "change": "Stickman raises hand in a friendly gentle wave toward viewer beside a minimalist doodle bell icon on clean white canvas.",
+          "reason": "Narration-locked full-frame beat.",
+          "visible_text": [],
+          "kind": "scene",
+          "shot_type": "variation",
+          "has_character": true,
+          "explanation": {
+            "quote": "Bấm theo dõi kênh để cùng gỡ rối những đề tài tiếp theo.",
+            "relation": "context",
+            "source_terms": [
+              "Bấm"
+            ],
+            "visual_terms": [
+              "Clean"
+            ]
+          }
+        }
+      ],
+      "beats": [
+        {
+          "id": "SC11_B1",
+          "image_id": "SC11_I1",
+          "purpose": "Triển khai bước 11: quy tắc vàng và kêu gọi tinh tế",
+          "anchor": {
+            "vi": {
+              "quote": "Quy tắc vàng: Phạm vi càng hẹp, bài làm càng sâu.",
+              "occurrence": 1
+            }
+          },
+          "effect": "hold",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC11_B2",
+          "image_id": "SC11_I2",
+          "purpose": "Triển khai bước 11: quy tắc vàng và kêu gọi tinh tế",
+          "anchor": {
+            "vi": {
+              "quote": "Số liệu càng thật, điểm số của bạn càng cao.",
+              "occurrence": 1
+            }
+          },
+          "effect": "zoom_out",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC11_B3",
+          "image_id": "SC11_I3",
+          "purpose": "Triển khai bước 11: quy tắc vàng và kêu gọi tinh tế",
+          "anchor": {
+            "vi": {
+              "quote": "Thả tim nếu góc nhìn này giúp bạn giải tỏa áp lực nhé.",
+              "occurrence": 1
+            }
+          },
+          "effect": "pan_right",
+          "focus": {
+            "x": 0.5,
+            "y": 0.5
+          }
+        },
+        {
+          "id": "SC11_B4",
+          "image_id": "SC11_I4",
+          "purpose": "Triển khai bước 11: quy tắc vàng và kêu gọi tinh tế",
+          "anchor": {
+            "vi": {
+              "quote": "Bấm theo dõi kênh để cùng gỡ rối những đề tài tiếp theo.",
               "occurrence": 1
             }
           },
@@ -1141,38 +2074,63 @@
     {
       "requirement_id": "R01",
       "scene_id": "SC01",
-      "quote": "Tên đề tài nghiên cứu quá rộng sẽ bị thầy cô gạch ngay"
+      "quote": "Sai lầm lớn nhất là: Chọn phạm vi quá rộng"
     },
     {
       "requirement_id": "R02",
       "scene_id": "SC02",
-      "quote": "Chỉ sau một tuần, giáo viên sẽ gạch bỏ ngay"
+      "quote": "Bạn chọn sinh viên toàn quốc, hay sinh viên trường mình"
     },
     {
       "requirement_id": "R03",
       "scene_id": "SC03",
-      "quote": "Tri thức giống như một bức tường đã rất cao"
+      "quote": "Thời gian làm bài chỉ có đúng ba tháng"
     },
     {
       "requirement_id": "R04",
       "scene_id": "SC04",
-      "quote": "Hãy bóp nhỏ đề tài bằng ba câu hỏi then chốt"
+      "quote": "Mẫu bị lệch, số liệu không đại diện cho ai cả"
     },
     {
       "requirement_id": "R05",
       "scene_id": "SC05",
-      "quote": "Đổi khái niệm thành hành vi cụ thể"
+      "quote": "Xin chúc mừng, bạn vừa mở ra con đường sống cho bài làm"
     },
     {
       "requirement_id": "R06",
       "scene_id": "SC06",
-      "quote": "Bớt tham lại, đề tài mới có cơ hội sống"
+      "quote": "Số liệu người thật việc thật, kiểm tra được ngay"
+    },
+    {
+      "requirement_id": "R07",
+      "scene_id": "SC07",
+      "quote": "Hội đồng đánh giá rất cao tính khả thi và sự trung thực"
+    },
+    {
+      "requirement_id": "R08",
+      "scene_id": "SC08",
+      "quote": "Vậy ai mới là người nên chọn sinh viên toàn quốc"
+    },
+    {
+      "requirement_id": "R09",
+      "scene_id": "SC09",
+      "quote": "Đó là nhiệm vụ khoa học lớn, không phải bài làm của sinh viên"
+    },
+    {
+      "requirement_id": "R10",
+      "scene_id": "SC10",
+      "quote": "Video này, mình muốn tháo gỡ áp lực thực tế cho sinh viên trước"
+    },
+    {
+      "requirement_id": "R11",
+      "scene_id": "SC11",
+      "quote": "Quy tắc vàng: Phạm vi càng hẹp, bài làm càng sâu"
     }
   ],
   "outline": [
     {
       "scene_id": "SC01",
-      "purpose": "Triển khai bước 1: cú tát đề tài vĩ mô",
+      "purpose": "Triển khai bước 1: cảnh báo bẫy chọn mẫu",
       "requirements": [
         "R01"
       ],
@@ -1180,7 +2138,7 @@
     },
     {
       "scene_id": "SC02",
-      "purpose": "Triển khai bước 2: cú gạch đề cương",
+      "purpose": "Triển khai bước 2: tình huống toàn quốc hay ký túc xá",
       "requirements": [
         "R02"
       ],
@@ -1188,7 +2146,7 @@
     },
     {
       "scene_id": "SC03",
-      "purpose": "Triển khai bước 3: bức tường tri thức",
+      "purpose": "Triển khai bước 3: cái bẫy chi phí và thời gian",
       "requirements": [
         "R03"
       ],
@@ -1196,7 +2154,7 @@
     },
     {
       "scene_id": "SC04",
-      "purpose": "Triển khai bước 4: ba câu hỏi gọt củ hành",
+      "purpose": "Triển khai bước 4: hậu quả số liệu ảo và lệch mẫu",
       "requirements": [
         "R04"
       ],
@@ -1204,7 +2162,7 @@
     },
     {
       "scene_id": "SC05",
-      "purpose": "Triển khai bước 5: khóa chặt hành vi và thước đo",
+      "purpose": "Triển khai bước 5: lời chúc mừng khi chọn ký túc xá",
       "requirements": [
         "R05"
       ],
@@ -1212,41 +2170,88 @@
     },
     {
       "scene_id": "SC06",
-      "purpose": "Triển khai bước 6: bớt tham lại để thành công",
+      "purpose": "Triển khai bước 6: sức mạnh dữ liệu thật và độ sâu",
       "requirements": [
         "R06"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC07",
+      "purpose": "Triển khai bước 7: bảo vệ tự tin trước hội đồng",
+      "requirements": [
+        "R07"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC08",
+      "purpose": "Triển khai bước 8: ai mới nên chọn dữ liệu toàn quốc",
+      "requirements": [
+        "R08"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC09",
+      "purpose": "Triển khai bước 9: quy trình vĩ mô của dự án lớn",
+      "requirements": [
+        "R09"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC10",
+      "purpose": "Triển khai bước 10: giới hạn phạm vi và lời hẹn mở rộng",
+      "requirements": [
+        "R10"
+      ],
+      "transition": "Tiếp tục theo trình tự diễn biến nội dung"
+    },
+    {
+      "scene_id": "SC11",
+      "purpose": "Triển khai bước 11: quy tắc vàng và kêu gọi tinh tế",
+      "requirements": [
+        "R11"
       ],
       "transition": "Tiếp tục theo trình tự diễn biến nội dung"
     }
   ],
   "claims": [
     {
-      "scene_id": "SC02",
-      "quote": "Lời phê ngắn gọn: Quá rộng, không thể làm.",
+      "scene_id": "SC01",
+      "quote": "Sai lầm lớn nhất là: Chọn phạm vi quá rộng.",
       "language": "vi",
       "source_id": "SRC01",
-      "fact": "Một đề tài tốt bắt đầu từ một câu hỏi rất hẹp."
+      "fact": "Người mới thường nhầm giữa chủ đề lớn và câu hỏi nghiên cứu."
     },
     {
       "scene_id": "SC03",
-      "quote": "Việc của bạn là đặt thêm một viên gạch nhỏ.",
+      "quote": "Thời gian làm bài chỉ có đúng ba tháng.",
       "language": "vi",
-      "source_id": "SRC03",
-      "fact": "Khoa học tiến lên nhờ tích lũy từng viên gạch nhỏ."
+      "source_id": "SRC02",
+      "fact": "Ba tháng chỉ đủ để giải quyết một mối liên hệ cụ thể."
     },
     {
-      "scene_id": "SC04",
-      "quote": "Mẫu gần gũi giúp dữ liệu rất chắc chắn.",
+      "scene_id": "SC06",
+      "quote": "Số liệu người thật việc thật, kiểm tra được ngay.",
       "language": "vi",
       "source_id": "SRC02",
       "fact": "Thu hẹp không gian giúp bạn thu thập dữ liệu chắc chắn hơn."
     },
     {
-      "scene_id": "SC05",
-      "quote": "Bài toán bây giờ làm gọn trong ba tháng.",
+      "scene_id": "SC07",
+      "quote": "Làm trọn vẹn một việc nhỏ tốt hơn bỏ dở việc lớn.",
       "language": "vi",
-      "source_id": "SRC02",
-      "fact": "Ba tháng chỉ đủ để giải quyết một mối liên hệ cụ thể."
+      "source_id": "SRC03",
+      "fact": "Giải quyết dứt điểm một điểm nhỏ có giá trị hơn ôm đồm việc lớn."
+    },
+    {
+      "scene_id": "SC11",
+      "quote": "Quy tắc vàng: Phạm vi càng hẹp, bài làm càng sâu.",
+      "language": "vi",
+      "source_id": "SRC01",
+      "fact": "Càng thu nhỏ phạm vi bạn càng dễ tìm thấy câu trả lời."
     }
   ],
   "revision_response": [],

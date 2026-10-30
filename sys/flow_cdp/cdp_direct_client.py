@@ -721,6 +721,7 @@ class DirectCDPProfileSession:
                     "navigated or closed" in err_str
                     or "no close frame" in err_str
                     or "connectionclosed" in err_str
+                    or "cannot find default execution context" in err_str
                     or isinstance(err, (websockets.exceptions.ConnectionClosed, OSError))
                 )
                 if is_recoverable and attempt < 2:

@@ -338,9 +338,16 @@ def _execute_sub_batch(specs: list[dict[str, Any]], timeout: float = 120.0, sock
     """Submit 1 to 4 requests directly over CDP socket or direct CDP client."""
     target_sock = sock_path if (sock_path is not None and sock_path != get_socket_path()) else None
     active_sock = target_sock if target_sock is not None else get_socket_path()
+    try:
+        import b2_bridge
+        b2_conn = getattr(b2_bridge, "ensure_connected", None)
+        b2_cmd = getattr(b2_bridge, "send_raw_command", None)
+    except Exception:
+        b2_conn = None
+        b2_cmd = None
     using_default_socket_transport = (
-        ensure_connected is _ORIGINAL_ENSURE_CONNECTED
-        and send_raw_command is _ORIGINAL_SEND_RAW_COMMAND
+        (ensure_connected is _ORIGINAL_ENSURE_CONNECTED or (b2_conn is not None and ensure_connected is b2_conn))
+        and (send_raw_command is _ORIGINAL_SEND_RAW_COMMAND or (b2_cmd is not None and send_raw_command is b2_cmd))
     )
     before_submit_called = False
     try:
@@ -350,7 +357,31 @@ def _execute_sub_batch(specs: list[dict[str, Any]], timeout: float = 120.0, sock
 
         for spec in specs:
             if spec.get("characterRefPath") and not spec.get("charMediaId"):
+                ref_json = Path(spec["characterRefPath"]).with_suffix(".json")
+                if ref_json.is_file():
+                    try:
+                        spec["charMediaId"] = json.loads(ref_json.read_text()).get("forgeId")
+                    except Exception:
+                        pass
+                if not spec.get("charMediaId"):
+                    try:
+                        from adapters import _flow_media_reference
+                        from pilot import Pilot
+                        p_inst = Pilot(SYS_ROOT)
+                        job = spec.get("jobId") or ""
+                        _, mid = _flow_media_reference(p_inst, job, image=spec["characterRefPath"])
+                        spec["charMediaId"] = mid
+                    except Exception:
+                        pass
+            if spec.get("characterRefPath") and not spec.get("charMediaId"):
                 raise Blocked("REFERENCE_MEDIA_ID_REQUIRED: characterRefPath thiếu charMediaId tương ứng")
+            if spec.get("baseRefPath") and not spec.get("baseMediaId"):
+                base_json = Path(spec["baseRefPath"]).with_suffix(".json")
+                if base_json.is_file():
+                    try:
+                        spec["baseMediaId"] = json.loads(base_json.read_text()).get("forgeId")
+                    except Exception:
+                        pass
             if spec.get("baseRefPath") and not spec.get("baseMediaId"):
                 raise Blocked("REFERENCE_MEDIA_ID_REQUIRED: baseRefPath thiếu baseMediaId (thiếu sidecar .json chứa forgeId)")
 

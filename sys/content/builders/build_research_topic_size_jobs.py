@@ -368,85 +368,150 @@ STORY_16X9: list[tuple[str, str, str, str, str, list[tuple[str, str]]]] = [
 ]
 
 # ---------------------------------------------------------------------------
-# STORY 9:16 (6 Scenes — 60-Second Mobile Explainer Blueprint)
+# STORY 9:16 (11 Scenes — Deep-Dive Fast-Paced Practical Scope Blueprint)
 # ---------------------------------------------------------------------------
 STORY_9X16: list[tuple[str, str, str, str, str, list[tuple[str, str]]]] = [
     (
-        "Cú tát đề tài vĩ mô",
+        "Cảnh báo bẫy chọn mẫu",
         "Solid warm cream canvas (#F8F0DC).",
         "narrative_warm",
         "gentle_lived_friction",
         "hook",
         [
-            ("Tên đề tài nghiên cứu quá rộng sẽ bị thầy cô gạch ngay.", "full_scene:CH01|Stickman staggers under an oversized round grey rock prop with shaking knees on flat warm cream canvas."),
-            ("Muốn giải cứu thế giới, bạn đang tự hại mình.", "variation:CH01|Stickman looks up at the heavy grey rock with wide hopeful eyes on warm cream canvas."),
-            ("Không tiền, không dữ liệu, bạn bế tắc ngay.", "concept_metaphor:none|A simple doodle globe outline marked with a large question mark on cream ground, seventy percent negative space."),
-            ("Càng ôm đồm, bạn càng cầm chắc thất bại.", "full_scene:CH01|Stickman drops hands to knees breathing heavily beside the rock outline on cream canvas."),
+            ("Hãy lưu lại video này nếu bạn chuẩn bị làm nghiên cứu khoa học.", "full_scene:CH01|Stickman sits before a minimalist computer screen tapping a red bookmark save button beside a caution symbol on cream canvas."),
+            ("Sai lầm lớn nhất là: Chọn phạm vi quá rộng.", "variation:CH01|Stickman points index finger firmly forward with earnest warning expression on warm cream canvas."),
+            ("Càng tham lam, bạn càng nhanh bế tắc.", "concept_metaphor:none|A simple doodle outline of an excessively wide circle expanding across cream ground, seventy percent negative space."),
+            ("Đề tài sẽ chết ngay từ khâu lấy mẫu.", "full_scene:CH01|Stickman shakes head gently with reflective calm posture in open cream space."),
         ],
     ),
     (
-        "Cú gạch đề cương",
+        "Tình huống toàn quốc hay ký túc xá",
         "Clean pure white background (#FFFFFF).",
         "narrative_warm",
         "demystifying_truth",
         "lead_in",
         [
-            ("Chỉ sau một tuần, giáo viên sẽ gạch bỏ ngay.", "full_scene:CH01|Stickman stands holding paper scroll as a bold red marker stroke slashes across the text on white canvas."),
-            ("Lời phê ngắn gọn: Quá rộng, không thể làm.", "white_card:none|A clean white card displaying simple hand-lettered text 'QUÁ RỘNG' in bold black ink on white field, seventy percent negative space."),
-            ("Bạn không có tiền bạc hay thời gian vô tận.", "variation:CH01|Stickman spreads both hands with questioning comic shrug on solid white field."),
-            ("Biển dữ liệu lớn sẽ nhấn chìm bạn ngay.", "concept_metaphor:none|A sprawling cluster of tiny dot silhouettes shrinking into distance on white ground, eighty percent negative space."),
+            ("Giả sử bạn làm đề tài về sinh viên.", "full_scene:CH01|Stickman stands centered on clean white canvas holding a neat student notebook outline."),
+            ("Bạn chọn sinh viên toàn quốc, hay sinh viên trường mình?", "variation:CH01|Stickman gestures with left hand toward a huge map outline and right hand toward a compact campus school doodle."),
+            ("Ai cũng nghĩ: Chọn toàn quốc nghe mới oách.", "concept_metaphor:none|A simple doodle banner labeled 'TOÀN QUỐC' with a glittering star icon on white ground, seventy-five percent negative space."),
+            ("Nhưng đó là lúc khó khăn ập đến.", "full_scene:CH01|Stickman scratches bald head with puzzled eyebrows looking down at open white space."),
         ],
     ),
     (
-        "Bức tường tri thức",
+        "Cái bẫy chi phí và thời gian",
         "Solid soft cream canvas (#F8F0DC).",
         "analytical_crisp",
         "mechanistic_dissection",
         "problem",
         [
-            ("Khoa học không cần bạn phát minh lại bánh xe.", "full_scene:CH01|Stickman crosses out a circular wheel outline with clean black marker on soft cream canvas."),
-            ("Tri thức giống như một bức tường đã rất cao.", "concept_metaphor:none|A neat grid of stacked grey brick outlines forming a sturdy wall on cream field, seventy-five percent negative space."),
-            ("Việc của bạn là đặt thêm một viên gạch nhỏ.", "full_scene:CH01|Stickman holds a small solid blue brick (#3B82C4) with both hands, lifting it gently toward wall slot."),
-            ("Làm trọn việc nhỏ tốt hơn bỏ dở việc to.", "still_life:none|A single clean blue brick silhouette resting flat on soft cream ground with eighty percent breathing space."),
+            ("Chọn toàn quốc, bạn cần cả nghìn phiếu khảo sát.", "full_scene:CH01|Stickman staggers slightly looking up at a towering stack of survey sheets on cream canvas."),
+            ("Phải đi khắp các trường từ Bắc vào Nam.", "concept_metaphor:none|A simple doodle map outline with scattered tiny question marks from north to south on cream field, seventy-five percent negative space."),
+            ("Bạn lấy đâu ra tiền và mạng lưới điều tra?", "variation:CH01|Stickman opens an empty flat wallet outline showing zero coins with questioning comic shrug."),
+            ("Thời gian làm bài chỉ có đúng ba tháng.", "still_life:none|A simple doodle hourglass outline with sand running low on warm cream ground, eighty percent breathing space."),
         ],
     ),
     (
-        "Ba câu hỏi gọt củ hành",
+        "Hậu quả số liệu ảo và lệch mẫu",
         "Pure stark white field (#FFFFFF).",
         "analytical_crisp",
         "demystifying_truth",
-        "explanation",
+        "problem",
         [
-            ("Hãy bóp nhỏ đề tài bằng ba câu hỏi then chốt.", "full_scene:CH01|Stickman points index finger toward three concentric black circular outlines drawn on white canvas."),
-            ("Nghiên cứu ai? Hãy chọn sinh viên trường bạn.", "variation:CH01|Stickman steps inside middle circle outline, gesturing toward interior."),
-            ("Đừng chọn thanh niên toàn quốc xa vời.", "concept_metaphor:none|A simple doodle student icon wearing a mortarboard centered on clean white canvas, seventy-five percent negative space."),
-            ("Mẫu gần gũi giúp dữ liệu rất chắc chắn.", "visual_diagram:none|A straight inward arrow pointing from outer ring to the focused center dot on white background."),
+            ("Cuối cùng, bạn chỉ biết nhắn tin nhờ người quen điền giúp.", "full_scene:CH01|Stickman holds up a simple smartphone outline displaying an unread shared message on white field."),
+            ("Mẫu bị lệch, số liệu không đại diện cho ai cả.", "concept_metaphor:none|A tilted distorted bar chart outline slashed with a bold red marker stroke on white ground, seventy-five percent open space."),
+            ("Ra hội đồng, thầy cô hỏi phương pháp là bạn cứng họng.", "variation:CH01|Stickman freezes with wide comic eyes and nervous sweat drop before an examiner desk silhouette."),
+            ("Bạn vừa kiệt sức, vừa ôm một đống số liệu ảo.", "full_scene:CH01|Stickman droops shoulders with comic sigh sitting beside a stack of crossed-out fake data sheets."),
         ],
     ),
     (
-        "Khóa chặt hành vi và thước đo",
+        "Lời chúc mừng khi chọn ký túc xá",
+        "Solid warm cream canvas (#F8F0DC).",
+        "analytical_crisp",
+        "counter_intuitive_shift",
+        "explanation",
+        [
+            ("Còn nếu bạn chỉ khảo sát ngay trong ký túc xá thì sao?", "full_scene:CH01|Stickman stands upright and smiles, pointing index finger to a simple door outline labeled 'KÝ TÚC XÁ'."),
+            ("Xin chúc mừng, bạn vừa mở ra con đường sống cho bài làm!", "variation:CH01|Stickman raises both arms in joyful triumph with cheerful comic smile on soft cream canvas."),
+            ("Họ ở ngay sát phòng bạn mỗi ngày.", "concept_metaphor:none|A simple doodle glowing doorway icon casting gentle flat illumination on cream canvas, seventy-five percent negative space."),
+            ("Tối đến, bạn chỉ cần gõ cửa từng phòng để trò chuyện.", "full_scene:CH01|Stickman holds a neat clipboard checklist gently knocking on a room door outline with friendly approachable posture."),
+        ],
+    ),
+    (
+        "Sức mạnh dữ liệu thật và độ sâu",
+        "Clean stark white canvas (#FFFFFF).",
+        "analytical_crisp",
+        "counter_intuitive_shift",
+        "explanation",
+        [
+            ("Sau ba ngày, bạn có ngay một trăm phiếu khảo sát chuẩn chỉ.", "full_scene:CH01|Stickman holds up a neat stack of verified survey pages with solid confident smile on white ground."),
+            ("Chi phí bỏ ra đúng bằng không đồng.", "concept_metaphor:none|A simple doodle coin outline marked with a neat checkmark and zero cost label on pure white field, eighty percent negative space."),
+            ("Số liệu người thật việc thật, kiểm tra được ngay.", "visual_diagram:none|A clean data checklist table with clear checkmarks and verified student rows on white background."),
+            ("Bạn hiểu rất rõ đối tượng nên viết bài cực sâu.", "variation:CH01|Stickman points index finger to the clean data rows with sharp analytical clarity."),
+        ],
+    ),
+    (
+        "Bảo vệ tự tin trước hội đồng",
         "Solid ivory neutral field (#F8F0DC).",
+        "analytical_crisp",
+        "counter_intuitive_shift",
+        "explanation",
+        [
+            ("Khi bảo vệ, thầy cô hỏi gì bạn cũng trả lời vanh vách.", "full_scene:CH01|Stickman stands tall with chest out and palms resting steadily on podium edge on soft cream canvas."),
+            ("Bạn giải thích được từng con số, từng câu trả lời bất thường.", "variation:CH01|Stickman points index finger upward explaining with clear animated enthusiasm."),
+            ("Hội đồng đánh giá rất cao tính khả thi và sự trung thực.", "concept_metaphor:none|A clean checkmark symbol stamped on an evaluation sheet outline on cream ground, eighty percent negative space."),
+            ("Làm trọn vẹn một việc nhỏ tốt hơn bỏ dở việc lớn.", "still_life:none|A single small solid blue brick doodle (#3B82C4) resting flat on cream canvas with eighty percent negative space."),
+        ],
+    ),
+    (
+        "Ai mới nên chọn dữ liệu toàn quốc",
+        "Solid soft cream canvas (#F8F0DC).",
         "analytical_crisp",
         "counter_intuitive_shift",
         "counter_argument",
         [
-            ("Đo cái gì? Đổi khái niệm thành hành vi cụ thể.", "full_scene:CH01|Stickman points from a fuzzy cloud symbol to a clear clock icon showing 23:00 on ivory canvas."),
-            ("Thay vì sức khỏe tinh thần, hãy đo giờ ngủ.", "concept_metaphor:none|A simple doodle clock icon beside a smartphone screen timer on ivory canvas, seventy-five percent negative space."),
-            ("Số phút lướt điện thoại là thước đo khách quan.", "visual_diagram:none|A clear bar chart with two solid columns on ivory canvas, seventy percent open space."),
-            ("Bài toán bây giờ làm gọn trong ba tháng.", "full_scene:CH01|Stickman holds a single neat sheet of paper with a crisp green checkmark on ivory field."),
+            ("Vậy ai mới là người nên chọn sinh viên toàn quốc?", "full_scene:CH01|Stickman tilts head with thoughtful inquiring expression on flat ivory field."),
+            ("Đó là các Viện nghiên cứu, hoặc các dự án cấp Bộ.", "concept_metaphor:none|A grand institute building outline beside an official seal symbol on ivory field, seventy-five percent open space."),
+            ("Họ được cấp kinh phí hàng trăm triệu đồng.", "visual_diagram:none|A neat financial funding chart showing substantial budget allocation for fieldwork on ivory ground."),
+            ("Đồng thời có cả mạng lưới điều tra viên tỏa đi các tỉnh.", "full_scene:CH01|Stickman points to a nationwide map diagram showing networked investigator nodes across regions."),
         ],
     ),
     (
-        "Bớt tham lại để thành công",
+        "Quy trình vĩ mô của dự án lớn",
+        "Pure stark white field (#FFFFFF).",
+        "analytical_crisp",
+        "mechanistic_dissection",
+        "counter_argument",
+        [
+            ("Họ có phần mềm giám sát và lấy mẫu phân tầng chuẩn mực.", "concept_metaphor:none|A simple doodle stratified sampling diagram showing neat multi-tier brackets on white canvas, seventy-five percent negative space."),
+            ("Thời gian làm của họ kéo dài từ một đến hai năm.", "visual_diagram:none|A two-year timeline bar divided into quarters with clear survey milestones on white ground."),
+            ("Đó là nhiệm vụ khoa học lớn, không phải bài làm của sinh viên.", "full_scene:CH01|Stickman stands calm looking at the large timeline, then gestures toward self with modest smile."),
+            ("Đừng ôm đồm việc của một Viện nghiên cứu lên vai mình.", "variation:CH01|Stickman gently sets aside an oversized project boulder, standing relaxed on white ground."),
+        ],
+    ),
+    (
+        "Giới hạn phạm vi và lời hẹn mở rộng",
+        "Solid ivory neutral field (#F8F0DC).",
+        "analytical_crisp",
+        "counter_intuitive_shift",
+        "takeaway",
+        [
+            ("Video này, mình muốn tháo gỡ áp lực thực tế cho sinh viên trước.", "full_scene:CH01|Stickman holds hands out warmly toward the viewer with reassuring friendly expression on soft cream canvas."),
+            ("Các video sau, mình sẽ giải mã quy trình thực hiện các đề tài lớn.", "variation:CH01|Stickman gestures toward a series of neat blueprint sketches lined up on cream background."),
+            ("Cách các dự án lớn thiết kế mẫu và kiểm soát sai số ra sao.", "concept_metaphor:none|A simple doodle magnifying glass inspecting a statistical bell curve outline on cream field, eighty percent negative space."),
+            ("Còn bây giờ, mục tiêu quan trọng nhất là bảo vệ an toàn.", "full_scene:CH01|Stickman gives a firm confident nod holding a completed graduation thesis outline."),
+        ],
+    ),
+    (
+        "Quy tắc vàng và kêu gọi tinh tế",
         "Clean serene white field (#FFFFFF).",
         "reflective_slow",
         "philosophical_closure",
         "closing",
         [
-            ("Bớt tham lại, đề tài mới có cơ hội sống.", "full_scene:CH01|Stickman stands tall and calm in center of canvas, holding the small blue brick high with steady hand."),
-            ("Làm trọn một việc nhỏ là đủ để qua môn.", "variation:CH01|Stickman smiles with peaceful clarity holding a completed paper draft marked with a neat checkmark."),
-            ("Thả tim ủng hộ nếu thấy nhẹ nhõm hơn bạn nhé.", "concept_metaphor:none|A simple warm apricot-peach doodle heart icon (#F2B88B) drawn with unpolished black marker ink beside stickman, eighty percent negative space."),
-            ("Bấm theo dõi để cùng gỡ rối đề tài tiếp theo.", "full_scene:CH01|Stickman raises hand in a friendly gentle wave toward viewer beside a minimalist doodle bell icon on clean white canvas."),
+            ("Quy tắc vàng: Phạm vi càng hẹp, bài làm càng sâu.", "full_scene:CH01|Stickman stands tall in center of canvas holding the small blue brick (#3B82C4) high with steady hand."),
+            ("Số liệu càng thật, điểm số của bạn càng cao.", "variation:CH01|Stickman smiles with peaceful clarity holding a completed paper draft marked with grade 'A'."),
+            ("Thả tim nếu góc nhìn này giúp bạn giải tỏa áp lực nhé.", "concept_metaphor:none|A simple warm apricot-peach doodle heart icon (#F2B88B) drawn with unpolished black marker ink beside stickman, eighty percent negative space."),
+            ("Bấm theo dõi kênh để cùng gỡ rối những đề tài tiếp theo.", "full_scene:CH01|Stickman raises hand in a friendly gentle wave toward viewer beside a minimalist doodle bell icon on clean white canvas."),
         ],
     ),
 ]
@@ -643,30 +708,34 @@ def build_topic_9x16() -> ResearchedTopic:
         sc.narrative_phase = STORY_9X16[i][4]
 
     # Assign source claims for 9x16 scenes
-    scenes[1].source_ids = ["SRC01"]
-    scenes[1].claim_facts = [
-        ("Lời phê ngắn gọn: Quá rộng, không thể làm.", "SRC01", "Một đề tài tốt bắt đầu từ một câu hỏi rất hẹp."),
+    scenes[0].source_ids = ["SRC01"]
+    scenes[0].claim_facts = [
+        ("Sai lầm lớn nhất là: Chọn phạm vi quá rộng.", "SRC01", "Người mới thường nhầm giữa chủ đề lớn và câu hỏi nghiên cứu."),
     ]
-    scenes[2].source_ids = ["SRC03"]
+    scenes[2].source_ids = ["SRC02"]
     scenes[2].claim_facts = [
-        ("Việc của bạn là đặt thêm một viên gạch nhỏ.", "SRC03", "Khoa học tiến lên nhờ tích lũy từng viên gạch nhỏ."),
+        ("Thời gian làm bài chỉ có đúng ba tháng.", "SRC02", "Ba tháng chỉ đủ để giải quyết một mối liên hệ cụ thể."),
     ]
-    scenes[3].source_ids = ["SRC02"]
-    scenes[3].claim_facts = [
-        ("Mẫu gần gũi giúp dữ liệu rất chắc chắn.", "SRC02", "Thu hẹp không gian giúp bạn thu thập dữ liệu chắc chắn hơn."),
+    scenes[5].source_ids = ["SRC02"]
+    scenes[5].claim_facts = [
+        ("Số liệu người thật việc thật, kiểm tra được ngay.", "SRC02", "Thu hẹp không gian giúp bạn thu thập dữ liệu chắc chắn hơn."),
     ]
-    scenes[4].source_ids = ["SRC02"]
-    scenes[4].claim_facts = [
-        ("Bài toán bây giờ làm gọn trong ba tháng.", "SRC02", "Ba tháng chỉ đủ để giải quyết một mối liên hệ cụ thể."),
+    scenes[6].source_ids = ["SRC03"]
+    scenes[6].claim_facts = [
+        ("Làm trọn vẹn một việc nhỏ tốt hơn bỏ dở việc lớn.", "SRC03", "Giải quyết dứt điểm một điểm nhỏ có giá trị hơn ôm đồm việc lớn."),
+    ]
+    scenes[10].source_ids = ["SRC01"]
+    scenes[10].claim_facts = [
+        ("Quy tắc vàng: Phạm vi càng hẹp, bài làm càng sâu.", "SRC01", "Càng thu nhỏ phạm vi bạn càng dễ tìm thấy câu trả lời."),
     ]
 
     return ResearchedTopic(
-        topic="Đừng Chọn Đề Tài NCKH Quá Lớn (Bản Dọc 60 Giây)",
+        topic="Đừng Chọn Đề Tài NCKH Quá Lớn (Bản Dọc Chi Tiết)",
         audience="Sinh viên đại học, học viên cao học và người mới bước vào nghiên cứu khoa học lướt video ngắn trên di động",
-        goal="Tóm gọn kỹ thuật gọt củ hành trong 60 giây và hướng dẫn bóp nhỏ đề tài NCKH khả thi trong ba tháng",
+        goal="Hướng dẫn cách chọn phạm vi nghiên cứu thực tế giữa sinh viên toàn quốc và sinh viên ký túc xá cho người mới",
         video_type="research_explainer",
-        min_duration=45.0,
-        max_duration=65.0,
+        min_duration=85.0,
+        max_duration=145.0,
         style=STYLE_DESCRIPTION,
         aspect_ratio="9:16",
         format_profile="short_9x16",
@@ -684,7 +753,7 @@ def build_topic_9x16() -> ResearchedTopic:
         human_editorial=build_human_editorial(),
         packaging=PackagingSpec(
             youtube_title="Đừng Chọn Đề Tài NCKH Quá Lớn",
-            visual_hook="Stickman gập người ôm tảng đá xám to quá sức trên nền kem phẳng, chữ BỚT THAM LẠI nổi bật.",
+            visual_hook="Stickman bối rối chỉ tay giữa bản đồ toàn quốc to đùng và phòng ký túc xá nhỏ gọn, chữ BỚT THAM LẠI nổi bật.",
             text_overlay="BỚT THAM LẠI",
             contrast_pair="Đề tài to đùng bế tắc vs Câu hỏi nhỏ giải quyết được",
             channel_pillar=CHANNEL_PILLAR_RESEARCH_GUIDE,

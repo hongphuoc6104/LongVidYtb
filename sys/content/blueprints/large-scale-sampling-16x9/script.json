@@ -1,0 +1,398 @@
+[
+  {
+    "id": "SC01",
+    "duration": 19.7,
+    "narration": "Khảo sát bốn trăm người, là đại diện được cho cả triệu dân. Bạn có tin điều vô lý này không? Nhiều người nghĩ rằng dân số càng lớn thì mẫu càng phải khủng khiếp. Đó là hiểu lầm phổ biến nhất trong nghiên cứu khoa học. Toán học chứng minh rằng sai số giảm theo quy luật bão hòa rất nhanh. Vượt qua ngưỡng bốn trăm người, độ chính xác tăng thêm không đáng kể.",
+    "beats": [
+      {
+        "image_id": "SC01_I1",
+        "anchor_quote": "Khảo sát bốn trăm người, là đại diện được cho cả triệu dân."
+      },
+      {
+        "image_id": "SC01_I2",
+        "anchor_quote": "Bạn có tin điều vô lý này không?"
+      },
+      {
+        "image_id": "SC01_I3",
+        "anchor_quote": "Nhiều người nghĩ rằng dân số càng lớn thì mẫu càng phải khủng khiếp."
+      },
+      {
+        "image_id": "SC01_I4",
+        "anchor_quote": "Đó là hiểu lầm phổ biến nhất trong nghiên cứu khoa học."
+      },
+      {
+        "image_id": "SC01_I5",
+        "anchor_quote": "Toán học chứng minh rằng sai số giảm theo quy luật bão hòa rất nhanh."
+      },
+      {
+        "image_id": "SC01_I6",
+        "anchor_quote": "Vượt qua ngưỡng bốn trăm người, độ chính xác tăng thêm không đáng kể."
+      }
+    ]
+  },
+  {
+    "id": "SC02",
+    "duration": 17.2,
+    "narration": "Từ một trăm lên bốn trăm mẫu, sai số giảm hơn một nửa. Nhưng từ bốn trăm lên mười nghìn mẫu, sai số chỉ giảm thêm chưa đầy một phần trăm. Trong khi đó, kinh phí và thời gian của bạn phải tăng gấp hai mươi lăm lần. Các Viện nghiên cứu dừng lại ở bốn trăm mẫu vì họ hiểu rõ bài toán hiệu quả.",
+    "beats": [
+      {
+        "image_id": "SC02_I1",
+        "anchor_quote": "Từ một trăm lên bốn trăm mẫu, sai số giảm hơn một nửa."
+      },
+      {
+        "image_id": "SC02_I2",
+        "anchor_quote": "Nhưng từ bốn trăm lên mười nghìn mẫu, sai số chỉ giảm thêm chưa đầy một phần trăm."
+      },
+      {
+        "image_id": "SC02_I3",
+        "anchor_quote": "Trong khi đó, kinh phí và thời gian của bạn phải tăng gấp hai mươi lăm lần."
+      },
+      {
+        "image_id": "SC02_I4",
+        "anchor_quote": "Các Viện nghiên cứu dừng lại ở bốn trăm mẫu vì họ hiểu rõ bài toán hiệu quả."
+      }
+    ]
+  },
+  {
+    "id": "SC03",
+    "duration": 14.2,
+    "narration": "Nhà vật lý Richard Feynman từng đưa ra một ví dụ rất giản dị. Muốn biết nồi súp một nghìn lít mặn hay nhạt, bạn không cần húp hết cả nồi. Bạn chỉ cần nếm đúng một muôi canh nhỏ. Nhưng điều kiện tiên quyết là: Nồi súp phải được khuấy thật đều.",
+    "beats": [
+      {
+        "image_id": "SC03_I1",
+        "anchor_quote": "Nhà vật lý Richard Feynman từng đưa ra một ví dụ rất giản dị."
+      },
+      {
+        "image_id": "SC03_I2",
+        "anchor_quote": "Muốn biết nồi súp một nghìn lít mặn hay nhạt, bạn không cần húp hết cả nồi."
+      },
+      {
+        "image_id": "SC03_I3",
+        "anchor_quote": "Bạn chỉ cần nếm đúng một muôi canh nhỏ."
+      },
+      {
+        "image_id": "SC03_I4",
+        "anchor_quote": "Nhưng điều kiện tiên quyết là: Nồi súp phải được khuấy thật đều."
+      }
+    ]
+  },
+  {
+    "id": "SC04",
+    "duration": 20.2,
+    "narration": "Nếu bạn chỉ hớt lớp nước trên mặt, bạn sẽ nếm phải toàn váng mỡ. Đây là sai lầm kinh điển của sinh viên khi làm nghiên cứu. Bạn lập một cái Google Form rồi gửi vào năm mươi nhóm bạn bè trên mạng xã hội. Người điền phiếu toàn là bạn cùng lớp, cùng sở thích và cùng thói quen sinh hoạt. Trong thống kê, đó gọi là lấy mẫu tiện lợi và hoàn toàn bị lệch.",
+    "beats": [
+      {
+        "image_id": "SC04_I1",
+        "anchor_quote": "Nếu bạn chỉ hớt lớp nước trên mặt, bạn sẽ nếm phải toàn váng mỡ."
+      },
+      {
+        "image_id": "SC04_I2",
+        "anchor_quote": "Đây là sai lầm kinh điển của sinh viên khi làm nghiên cứu."
+      },
+      {
+        "image_id": "SC04_I3",
+        "anchor_quote": "Bạn lập một cái Google Form rồi gửi vào năm mươi nhóm bạn bè trên mạng xã hội."
+      },
+      {
+        "image_id": "SC04_I4",
+        "anchor_quote": "Người điền phiếu toàn là bạn cùng lớp, cùng sở thích và cùng thói quen sinh hoạt."
+      },
+      {
+        "image_id": "SC04_I5",
+        "anchor_quote": "Trong thống kê, đó gọi là lấy mẫu tiện lợi và hoàn toàn bị lệch."
+      }
+    ]
+  },
+  {
+    "id": "SC05",
+    "duration": 16.45,
+    "narration": "Để muôi súp có giá trị đại diện, người đầu bếp phải khuấy từ đáy lên mặt. Các nhà khoa học gọi kỹ thuật này là lấy mẫu phân tầng. Quần thể sinh viên được chia thành các nhóm con độc lập và không chồng lấn. Mỗi nhóm con sẽ được rút mẫu ngẫu nhiên theo đúng tỷ lệ thực tế ngoài đời.",
+    "beats": [
+      {
+        "image_id": "SC05_I1",
+        "anchor_quote": "Để muôi súp có giá trị đại diện, người đầu bếp phải khuấy từ đáy lên mặt."
+      },
+      {
+        "image_id": "SC05_I2",
+        "anchor_quote": "Các nhà khoa học gọi kỹ thuật này là lấy mẫu phân tầng."
+      },
+      {
+        "image_id": "SC05_I3",
+        "anchor_quote": "Quần thể sinh viên được chia thành các nhóm con độc lập và không chồng lấn."
+      },
+      {
+        "image_id": "SC05_I4",
+        "anchor_quote": "Mỗi nhóm con sẽ được rút mẫu ngẫu nhiên theo đúng tỷ lệ thực tế ngoài đời."
+      }
+    ]
+  },
+  {
+    "id": "SC06",
+    "duration": 17.2,
+    "narration": "Ví dụ, một muôi súp sinh viên chuẩn mực phải có đủ ba thành phần. Tầng một là sinh viên khối ngành kinh tế và xã hội. Tầng hai là sinh viên khối kỹ thuật và công nghệ thông tin. Tầng ba là sinh viên khối y dược và sức khỏe. Mỗi tầng đóng góp số lượng phiếu tương ứng với quy mô thực của trường.",
+    "beats": [
+      {
+        "image_id": "SC06_I1",
+        "anchor_quote": "Ví dụ, một muôi súp sinh viên chuẩn mực phải có đủ ba thành phần."
+      },
+      {
+        "image_id": "SC06_I2",
+        "anchor_quote": "Tầng một là sinh viên khối ngành kinh tế và xã hội."
+      },
+      {
+        "image_id": "SC06_I3",
+        "anchor_quote": "Tầng hai là sinh viên khối kỹ thuật và công nghệ thông tin."
+      },
+      {
+        "image_id": "SC06_I4",
+        "anchor_quote": "Tầng ba là sinh viên khối y dược và sức khỏe."
+      },
+      {
+        "image_id": "SC06_I5",
+        "anchor_quote": "Mỗi tầng đóng góp số lượng phiếu tương ứng với quy mô thực của trường."
+      }
+    ]
+  },
+  {
+    "id": "SC07",
+    "duration": 20.2,
+    "narration": "Không ai có thể đi đến từng trường trong số sáu trăm trường đại học cả nước. Giải pháp tiết kiệm nhất là lấy mẫu cụm nhiều giai đoạn. Giai đoạn một: Bốc thăm ngẫu nhiên năm tỉnh thành đại diện cho ba miền. Giai đoạn hai: Trong mỗi tỉnh, bốc thăm ngẫu nhiên hai trường công và một trường tư. Giai đoạn ba: Chọn ngẫu nhiên sinh viên theo mã số sinh viên từ phòng đào tạo.",
+    "beats": [
+      {
+        "image_id": "SC07_I1",
+        "anchor_quote": "Không ai có thể đi đến từng trường trong số sáu trăm trường đại học cả nước."
+      },
+      {
+        "image_id": "SC07_I2",
+        "anchor_quote": "Giải pháp tiết kiệm nhất là lấy mẫu cụm nhiều giai đoạn."
+      },
+      {
+        "image_id": "SC07_I3",
+        "anchor_quote": "Giai đoạn một: Bốc thăm ngẫu nhiên năm tỉnh thành đại diện cho ba miền."
+      },
+      {
+        "image_id": "SC07_I4",
+        "anchor_quote": "Giai đoạn hai: Trong mỗi tỉnh, bốc thăm ngẫu nhiên hai trường công và một trường tư."
+      },
+      {
+        "image_id": "SC07_I5",
+        "anchor_quote": "Giai đoạn ba: Chọn ngẫu nhiên sinh viên theo mã số sinh viên từ phòng đào tạo."
+      }
+    ]
+  },
+  {
+    "id": "SC08",
+    "duration": 16.45,
+    "narration": "Một bộ câu hỏi dù được viết kỹ đến đâu cũng luôn chứa lỗi tiềm ẩn. Tầng phòng thủ đầu tiên là nếm thử trước ba mươi bát. Họ tiến hành khảo sát thử nghiệm trên một nhóm nhỏ từ ba mươi đến năm mươi người. Bước này giúp phát hiện ngay những câu hỏi dùng từ mơ hồ hoặc gây hiểu lầm.",
+    "beats": [
+      {
+        "image_id": "SC08_I1",
+        "anchor_quote": "Một bộ câu hỏi dù được viết kỹ đến đâu cũng luôn chứa lỗi tiềm ẩn."
+      },
+      {
+        "image_id": "SC08_I2",
+        "anchor_quote": "Tầng phòng thủ đầu tiên là nếm thử trước ba mươi bát."
+      },
+      {
+        "image_id": "SC08_I3",
+        "anchor_quote": "Họ tiến hành khảo sát thử nghiệm trên một nhóm nhỏ từ ba mươi đến năm mươi người."
+      },
+      {
+        "image_id": "SC08_I4",
+        "anchor_quote": "Bước này giúp phát hiện ngay những câu hỏi dùng từ mơ hồ hoặc gây hiểu lầm."
+      }
+    ]
+  },
+  {
+    "id": "SC09",
+    "duration": 22.2,
+    "narration": "Nhiều người điền phiếu khảo sát chỉ để cho xong chuyện bằng cách tích toàn điểm năm. Để bóc trần điều này, nhà nghiên cứu cài các bẫy câu hỏi đảo ngược. Ví dụ, câu số năm hỏi: Tôi luôn cảm thấy tràn đầy năng lượng khi đến trường. Đến câu hai mươi hỏi: Tôi thường xuyên kiệt sức và muốn bỏ học mỗi sáng. Nếu ai tích hoàn toàn đồng ý ở cả hai câu, hệ thống sẽ tự động gạch bỏ toàn bộ phiếu.",
+    "beats": [
+      {
+        "image_id": "SC09_I1",
+        "anchor_quote": "Nhiều người điền phiếu khảo sát chỉ để cho xong chuyện bằng cách tích toàn điểm năm."
+      },
+      {
+        "image_id": "SC09_I2",
+        "anchor_quote": "Để bóc trần điều này, nhà nghiên cứu cài các bẫy câu hỏi đảo ngược."
+      },
+      {
+        "image_id": "SC09_I3",
+        "anchor_quote": "Ví dụ, câu số năm hỏi: Tôi luôn cảm thấy tràn đầy năng lượng khi đến trường."
+      },
+      {
+        "image_id": "SC09_I4",
+        "anchor_quote": "Đến câu hai mươi hỏi: Tôi thường xuyên kiệt sức và muốn bỏ học mỗi sáng."
+      },
+      {
+        "image_id": "SC09_I5",
+        "anchor_quote": "Nếu ai tích hoàn toàn đồng ý ở cả hai câu, hệ thống sẽ tự động gạch bỏ toàn bộ phiếu."
+      }
+    ]
+  },
+  {
+    "id": "SC10",
+    "duration": 20.2,
+    "narration": "Khảo sát chuyên nghiệp không bao giờ giao việc rồi phó mặc cho số phận. Người khảo sát thực địa được trang bị máy tính bảng có phần mềm chuyên dụng. Phần mềm tự động ghi nhận tọa độ định vị vệ tinh tại thời điểm phỏng vấn. Hệ thống đo chính xác thời gian hoàn thành từng phần của bảng hỏi. Bất kỳ phiếu nào làm quá nhanh đều bị hủy bỏ vì vi phạm quy chuẩn.",
+    "beats": [
+      {
+        "image_id": "SC10_I1",
+        "anchor_quote": "Khảo sát chuyên nghiệp không bao giờ giao việc rồi phó mặc cho số phận."
+      },
+      {
+        "image_id": "SC10_I2",
+        "anchor_quote": "Người khảo sát thực địa được trang bị máy tính bảng có phần mềm chuyên dụng."
+      },
+      {
+        "image_id": "SC10_I3",
+        "anchor_quote": "Phần mềm tự động ghi nhận tọa độ định vị vệ tinh tại thời điểm phỏng vấn."
+      },
+      {
+        "image_id": "SC10_I4",
+        "anchor_quote": "Hệ thống đo chính xác thời gian hoàn thành từng phần của bảng hỏi."
+      },
+      {
+        "image_id": "SC10_I5",
+        "anchor_quote": "Bất kỳ phiếu nào làm quá nhanh đều bị hủy bỏ vì vi phạm quy chuẩn."
+      }
+    ]
+  },
+  {
+    "id": "SC11",
+    "duration": 17.2,
+    "narration": "Tầng phòng thủ cuối cùng là đội ngũ giám sát độc lập. Họ bốc ngẫu nhiên mười phần trăm số phiếu đã thu thập để gọi điện phúc tra. Giám sát viên sẽ hỏi lại ba câu ngẫu nhiên trong bài để đối chiếu câu trả lời. Nếu phát hiện điều tra viên tự điền khống, toàn bộ lô khảo sát đó sẽ bị hủy ngay.",
+    "beats": [
+      {
+        "image_id": "SC11_I1",
+        "anchor_quote": "Tầng phòng thủ cuối cùng là đội ngũ giám sát độc lập."
+      },
+      {
+        "image_id": "SC11_I2",
+        "anchor_quote": "Họ bốc ngẫu nhiên mười phần trăm số phiếu đã thu thập để gọi điện phúc tra."
+      },
+      {
+        "image_id": "SC11_I3",
+        "anchor_quote": "Giám sát viên sẽ hỏi lại ba câu ngẫu nhiên trong bài để đối chiếu câu trả lời."
+      },
+      {
+        "image_id": "SC11_I4",
+        "anchor_quote": "Nếu phát hiện điều tra viên tự điền khống, toàn bộ lô khảo sát đó sẽ bị hủy ngay."
+      }
+    ]
+  },
+  {
+    "id": "SC12",
+    "duration": 18.45,
+    "narration": "Một quy trình lấy mẫu và thẩm định dữ liệu nghiêm ngặt tốn hàng trăm triệu đồng. Bạn cần một đội ngũ cộng tác viên điều tra được đào tạo bài bản và trả thù lao đàng hoàng. Sinh viên chúng ta lấy đâu ra kinh phí và thời gian như vậy trong ba tháng? Cố gắng làm toàn quốc bằng sức mình chỉ dẫn bạn đến số liệu giả mạo.",
+    "beats": [
+      {
+        "image_id": "SC12_I1",
+        "anchor_quote": "Một quy trình lấy mẫu và thẩm định dữ liệu nghiêm ngặt tốn hàng trăm triệu đồng."
+      },
+      {
+        "image_id": "SC12_I2",
+        "anchor_quote": "Bạn cần một đội ngũ cộng tác viên điều tra được đào tạo bài bản và trả thù lao đàng hoàng."
+      },
+      {
+        "image_id": "SC12_I3",
+        "anchor_quote": "Sinh viên chúng ta lấy đâu ra kinh phí và thời gian như vậy trong ba tháng?"
+      },
+      {
+        "image_id": "SC12_I4",
+        "anchor_quote": "Cố gắng làm toàn quốc bằng sức mình chỉ dẫn bạn đến số liệu giả mạo."
+      }
+    ]
+  },
+  {
+    "id": "SC13",
+    "duration": 17.45,
+    "narration": "Nhưng bạn không cần phải tuyệt vọng vì có một con đường sáng rực. Đó là khai thác nguồn dữ liệu thứ cấp đã được kiểm định quốc gia. Các cơ quan nhà nước và tổ chức quốc tế đã làm toàn bộ công đoạn thu mẫu cho bạn. Họ đã bỏ ra hàng tỷ đồng để làm sạch và hoàn thiện số liệu khoa học nhất.",
+    "beats": [
+      {
+        "image_id": "SC13_I1",
+        "anchor_quote": "Nhưng bạn không cần phải tuyệt vọng vì có một con đường sáng rực."
+      },
+      {
+        "image_id": "SC13_I2",
+        "anchor_quote": "Đó là khai thác nguồn dữ liệu thứ cấp đã được kiểm định quốc gia."
+      },
+      {
+        "image_id": "SC13_I3",
+        "anchor_quote": "Các cơ quan nhà nước và tổ chức quốc tế đã làm toàn bộ công đoạn thu mẫu cho bạn."
+      },
+      {
+        "image_id": "SC13_I4",
+        "anchor_quote": "Họ đã bỏ ra hàng tỷ đồng để làm sạch và hoàn thiện số liệu khoa học nhất."
+      }
+    ]
+  },
+  {
+    "id": "SC14",
+    "duration": 20.7,
+    "narration": "Bạn có thể truy cập website Tổng cục Thống kê để tải bộ dữ liệu khảo sát mức sống dân cư. Ngân hàng Thế giới cung cấp hoàn toàn miễn phí dữ liệu giáo dục và việc làm toàn cầu. Bạn chỉ cần tải file dữ liệu về, đặt câu hỏi nghiên cứu mới và chạy mô hình phân tích. Khi ra hội đồng, thầy cô sẽ khen ngợi bạn vì biết sử dụng nguồn dữ liệu mẫu mực.",
+    "beats": [
+      {
+        "image_id": "SC14_I1",
+        "anchor_quote": "Bạn có thể truy cập website Tổng cục Thống kê để tải bộ dữ liệu khảo sát mức sống dân cư."
+      },
+      {
+        "image_id": "SC14_I2",
+        "anchor_quote": "Ngân hàng Thế giới cung cấp hoàn toàn miễn phí dữ liệu giáo dục và việc làm toàn cầu."
+      },
+      {
+        "image_id": "SC14_I3",
+        "anchor_quote": "Bạn chỉ cần tải file dữ liệu về, đặt câu hỏi nghiên cứu mới và chạy mô hình phân tích."
+      },
+      {
+        "image_id": "SC14_I4",
+        "anchor_quote": "Khi ra hội đồng, thầy cô sẽ khen ngợi bạn vì biết sử dụng nguồn dữ liệu mẫu mực."
+      }
+    ]
+  },
+  {
+    "id": "SC15",
+    "duration": 16.45,
+    "narration": "Để khép lại, hãy luôn khắc ghi ba nguyên tắc sống còn khi làm nghiên cứu. Nguyên tắc một: Cỡ mẫu không quan trọng bằng cách thức chọn mẫu. Nguyên tắc hai: Làm sơ cấp thì chọn phạm vi thật hẹp và lấy số liệu thật. Nguyên tắc ba: Muốn làm vĩ mô, hãy đứng trên vai dữ liệu thứ cấp có sẵn.",
+    "beats": [
+      {
+        "image_id": "SC15_I1",
+        "anchor_quote": "Để khép lại, hãy luôn khắc ghi ba nguyên tắc sống còn khi làm nghiên cứu."
+      },
+      {
+        "image_id": "SC15_I2",
+        "anchor_quote": "Nguyên tắc một: Cỡ mẫu không quan trọng bằng cách thức chọn mẫu."
+      },
+      {
+        "image_id": "SC15_I3",
+        "anchor_quote": "Nguyên tắc hai: Làm sơ cấp thì chọn phạm vi thật hẹp và lấy số liệu thật."
+      },
+      {
+        "image_id": "SC15_I4",
+        "anchor_quote": "Nguyên tắc ba: Muốn làm vĩ mô, hãy đứng trên vai dữ liệu thứ cấp có sẵn."
+      }
+    ]
+  },
+  {
+    "id": "SC16",
+    "duration": 18.6,
+    "narration": "Khoa học chân chính bắt đầu từ sự trung thực với từng con số nhỏ. Đừng bao giờ để sự tham lam quy mô làm hỏng đi công trình tâm huyết của bạn. Nếu bạn muốn nhận tài liệu hướng dẫn khai thác kho dữ liệu mở, hãy để lại bình luận bên dưới. Bấm đăng ký kênh để cùng nhau giải mã những bài học nghiên cứu khoa học tiếp theo nhé!",
+    "beats": [
+      {
+        "image_id": "SC16_I1",
+        "anchor_quote": "Khoa học chân chính bắt đầu từ sự trung thực với từng con số nhỏ."
+      },
+      {
+        "image_id": "SC16_I2",
+        "anchor_quote": "Đừng bao giờ để sự tham lam quy mô làm hỏng đi công trình tâm huyết của bạn."
+      },
+      {
+        "image_id": "SC16_I3",
+        "anchor_quote": "Nếu bạn muốn nhận tài liệu hướng dẫn khai thác kho dữ liệu mở, hãy để lại bình luận bên dưới."
+      },
+      {
+        "image_id": "SC16_I4",
+        "anchor_quote": "Bấm đăng ký kênh để cùng nhau giải mã những bài học nghiên cứu khoa học tiếp theo nhé!"
+      }
+    ]
+  }
+]
