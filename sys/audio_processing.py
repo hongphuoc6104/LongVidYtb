@@ -36,20 +36,12 @@ def run_ffmpeg(cmd, log):
     return r
 
 
-# Voice-forward chain for TTS narration (OmniVoice VietNarrator is breathy and
-# dark: energy above 3 kHz sits ~24 dB under the full band, which reads as a
-# whisper on phone speakers). Rumble cut, de-mud, presence lift, de-ess, then a
-# gentle leveller plus a fast peak catcher so the crest factor drops enough to
-# reach a loud target without the limiter grinding (the old "louder = harsh").
-VOICE_CHAIN = (
-    'highpass=f=80,'
-    'equalizer=f=250:t=q:w=1:g=-2,'
-    'equalizer=f=3200:t=q:w=1.2:g=3.5,'
-    'highshelf=f=9000:g=1.5,'
-    'deesser=i=0.4:m=0.5:f=0.5,'
-    'acompressor=threshold=-22dB:ratio=3:attack=4:release=90:knee=4:makeup=1,'
-    'acompressor=threshold=-10dB:ratio=8:attack=1:release=40:knee=2'
-)
+# Clean studio 4-stage anti-mud clarity voice chain for OmniVoice narration:
+# No acompressor (which pumps the diffusion noise floor between syllables) and
+# no afftdn (which introduces phase warble/musical noise on speech formants).
+# Pure phase-clean filtering: sub-90 Hz rumble cut, -3.0 dB 185 Hz low-mid boxy mud reduction,
+# +1.5 dB 2.4 kHz core speech articulation recovery, and 13.5 kHz ultrasonic roll-off.
+VOICE_CHAIN = 'highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-3.0,equalizer=f=2400:t=q:w=1.2:g=1.5,lowpass=f=13500'
 # alimiter is sample-peak only; keep margin so inter-sample true peak stays under target.
 TRUE_PEAK_MARGIN_DB = 0.7
 

@@ -147,7 +147,7 @@ def build_request(root, cfg, scenes, english_scenes=(), *, primary_language='vi'
                 raise ValueError('Missing remote processing module: ' + source)
             support.append({'name': name, 'local_path': str(path.resolve()), 'sha256': file_hash(path)})
         request['assemble'] = True
-        request['assembly_settings'] = {key: cfg[key] for key in ('audio_lufs', 'audio_peak_db') if key in cfg}
+        request['assembly_settings'] = {key: cfg[key] for key in ('audio_lufs', 'audio_peak_db', 'audio_voice_chain') if key in cfg}
         request['support_files'] = support
     # Local paths are transport details, never content identity.
     identity = dict(request, profiles={k: {a: b for a, b in v.items() if a != 'local_wav'} for k, v in profiles.items()})
