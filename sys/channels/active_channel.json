@@ -1,0 +1,36 @@
+{
+  "channel_id": "ho_so_ky_la",
+  "name": "Hồ Sơ Kỳ Lạ",
+  "git_branch": "channel/ho-so-ky-la",
+  "workspace_dirname": "channel-ho-so-ky-la",
+  "niche": "Bí ẩn và chuyện kỳ lạ có thật",
+  "promise": "Những hồ sơ kỳ lạ có thật, kể bình tĩnh và có bằng chứng.",
+  "platform_routing": {
+    "tiktok": "short_9x16",
+    "youtube": "long_16x9"
+  },
+  "visual_profile_id": "ch_noir_dossier",
+  "voice": "VietNarrator",
+  "speed": 1.0,
+  "wave": 1,
+  "channel_profile_stamp": {
+    "id": "ho_so_ky_la",
+    "version": 1,
+    "sha256": "158f94e5148d52883ebab17e435d79e56f3ae9ab267c5396f347d2bbdb9651e3"
+  },
+  "speed_optimization": {
+    "render_mode": "flow_full_frame",
+    "fast_short_max_images": 8,
+    "spinoff_shorts_per_long": 4,
+    "remotion_motion_ratio": 0.3,
+    "estimated_short_minutes": [
+      9,
+      13
+    ],
+    "estimated_bundle_minutes": [
+      38,
+      48
+    ]
+  },
+  "plan_file": "sys/channels/ho_so_ky_la/PLAN.md"
+}
