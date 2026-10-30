@@ -54,6 +54,7 @@ from flow_cdp.cdp_direct_client import (
 )
 from flow_prompts import compile as compile_flow_prompt
 from tools.script_hook_scorer import score_content_file
+from tools.vn_text_normalizer import normalize_for_tts
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("produce_nao_luoi")
@@ -64,7 +65,8 @@ def synthesize_vietnamese_speech(text: str, out_wav: Path) -> float:
     out_wav.parent.mkdir(parents=True, exist_ok=True)
     temp_mp3 = out_wav.with_suffix(".mp3")
     
-    encoded_text = urllib.parse.quote(text)
+    norm_text = normalize_for_tts(text)
+    encoded_text = urllib.parse.quote(norm_text)
     url = f"https://translate.google.com/translate_tts?ie=UTF-8&q={encoded_text}&tl=vi&client=tw-ob"
     req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
     
