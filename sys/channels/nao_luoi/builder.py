@@ -25,9 +25,6 @@ for _p in (str(SYS_DIR), str(SYS_DIR / "tools")):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-from channels.registry import (  # noqa: E402
-    get_channel,
-)
 from content.research_story_architect import (  # noqa: E402
     DEFAULT_CHANNEL_PILLAR,
     PackagingSpec,
@@ -38,6 +35,10 @@ from content.research_story_architect import (  # noqa: E402
 )
 from tools.script_cadence_checker import ScriptCadenceChecker  # noqa: E402
 from tools.script_hook_scorer import score_script  # noqa: E402
+
+from channels.registry import (  # noqa: E402
+    get_channel,
+)
 
 CHANNEL_ID = "nao_luoi"
 

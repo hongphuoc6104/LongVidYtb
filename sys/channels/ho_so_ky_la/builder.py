@@ -21,11 +21,11 @@ from typing import Any, Dict, List, Optional, Tuple
 
 # Ensure sys and sys/tools are in sys.path
 SYS_DIR = Path(__file__).resolve().parents[2]
+ROOT_DIR = SYS_DIR.parent
 for _p in (str(SYS_DIR), str(SYS_DIR / "tools")):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-from channels.registry import get_channel  # noqa: E402
 from content.research_story_architect import (  # noqa: E402
     HumanEditorialSpec,
     PackagingSpec,
@@ -44,6 +44,8 @@ from tools.script_cadence_checker import (  # noqa: E402
     ScriptCadenceChecker,
 )
 from tools.script_hook_scorer import score_script  # noqa: E402
+
+from channels.registry import get_channel  # noqa: E402
 
 CHANNEL_ID = "ho_so_ky_la"
 VISUAL_PROFILE_ID = "ch_noir_dossier"
@@ -589,7 +591,7 @@ def build_topic_16x9(topic_title: Optional[str] = None) -> ResearchedTopic:
         {
             "id": "SPINOFF_02",
             "hook_title": "Vì Sao Giả Thuyết Cướp Biển Tàu Ma Bị Bác Bỏ?",
-            "opening_hook": "Vì sao giả thuyết cướp biển con tàu ma bị bác bỏ ngay?",
+            "opening_hook": "Bạn có biết vì sao giả thuyết cướp biển tàu ma bị bác bỏ?",
             "format_profile": "short_9x16",
             "scene_count": 4,
             "body": [
@@ -647,7 +649,7 @@ def build_topic_16x9(topic_title: Optional[str] = None) -> ResearchedTopic:
         {
             "id": "SPINOFF_04",
             "hook_title": "Manh Mối Đứt Đoạn Của Mười Thủy Thủ Biến Mất",
-            "opening_hook": "Manh mối nào hé lộ số phận mười thủy thủ biến mất?",
+            "opening_hook": "Bạn có biết manh mối nào hé lộ số phận mười thủy thủ?",
             "format_profile": "short_9x16",
             "scene_count": 4,
             "body": [
@@ -707,8 +709,100 @@ def build_topic_16x9(topic_title: Optional[str] = None) -> ResearchedTopic:
     )
 
 
+def build_spinoff_topic_from_plan(
+    parent_topic: ResearchedTopic,
+    plan: Dict[str, Any],
+    plan_index: int,
+) -> ResearchedTopic:
+    """Construct an independent short_9x16 ResearchedTopic for a spinoff short plan."""
+    ch = get_channel(CHANNEL_ID)
+    parent_scenes = {sc.scene_id: sc for sc in parent_topic.scenes}
+    settings_pool = [
+        "Noir archive evidence room.",
+        "Atmospheric stormy ocean at dusk.",
+        "Forensic wooden cargo hold.",
+        "Detective mahogany desk under lamplight.",
+        "Ghost ship weathered deck under twilight sky.",
+        "Investigation corkboard with nautical charts.",
+        "Empty captain cabin with antique lanterns.",
+        "Foggy coastal harbor at daybreak.",
+    ]
+    story_tuples = []
+    for i, part in enumerate(plan["body"]):
+        sc_title = f"Manh Mối {i+1}"
+        parent_sc = parent_scenes[part["parent_scene_id"]]
+        if i == 0:
+            narr = f"{plan['opening_hook']} Nhưng sự thật là: {part['segment_text']}"
+        elif i == len(plan["body"]) - 1:
+            narr = f"{part['segment_text']} Bạn có tin vào điều bí ẩn này không?"
+        else:
+            narr = part["segment_text"]
+        setting = settings_pool[(plan_index * 4 + i) % len(settings_pool)]
+        desc = parent_sc.visual_beats[0].description if parent_sc.visual_beats else (parent_sc.action or f"Detective examining clues about {sc_title}.")
+        story_tuples.append((
+            sc_title,
+            setting,
+            [(narr, f"full_scene:CH01|{desc}")],
+        ))
+    sp_scenes = build_scenes_from_story_rows(story_tuples, character_id="CH01")
+    for idx, sc in enumerate(sp_scenes):
+        sc.requirements = [f"R{idx+1:02d}"]
+    sp_scenes[0].source_ids = ["SRC01"]
+    sp_scenes[0].claim_facts = [
+        (
+            plan["body"][0]["segment_text"],
+            "SRC01",
+            parent_topic.sources[0]["facts"][0],
+        )
+    ]
+    sp_packaging = PackagingSpec(
+        youtube_title=plan["hook_title"][:55],
+        visual_hook=parent_topic.packaging.visual_hook,
+        text_overlay="HỒ SƠ TÀU MA",
+        contrast_pair=parent_topic.packaging.contrast_pair,
+        channel_pillar=parent_topic.packaging.channel_pillar,
+        funnel_tier="tier_1_broad",
+        seo_keywords=parent_topic.packaging.seo_keywords,
+        thumbnail_prompt=parent_topic.packaging.thumbnail_prompt,
+        layout_mode=parent_topic.packaging.layout_mode,
+        typography_style=parent_topic.packaging.typography_style,
+    )
+    return ResearchedTopic(
+        topic=plan["hook_title"],
+        audience=ch.audience,
+        goal=plan["hook_title"],
+        video_type="investigative_documentary",
+        min_duration=30.0,
+        max_duration=60.0,
+        style=ch.visual.style_description,
+        aspect_ratio="9:16",
+        format_profile="short_9x16",
+        subtitles=True,
+        voice=ch.voice,
+        speed=ch.speed,
+        visual_pacing_profile="full_frame_v1",
+        sources=_build_sources(),
+        required_points=[{"id": f"R{idx+1:02d}", "text": sc.title} for idx, sc in enumerate(sp_scenes)],
+        characters=[
+            {
+                "id": "CH01",
+                "name": ch.persona,
+                "appearance": ch.visual.cast_appearance,
+                "outfit": ch.visual.outfit,
+            }
+        ],
+        scenes=sp_scenes,
+        packaging=sp_packaging,
+        human_editorial=_build_editorial(),
+        channel_id=CHANNEL_ID,
+    )
+
+
 def export_package(topic: ResearchedTopic, output_dir: Path, include_spinoffs: bool = False) -> Dict[str, Any]:
     """Assemble and write all Schema 3.0 package artifacts and run validation."""
+    import adapters
+    from flow_prompts import compile as compile_flow_prompt
+
     output_dir.mkdir(parents=True, exist_ok=True)
     brief_data = build_brief_v3(topic, system_root=SYS_DIR)
     if topic.spinoff_shorts:
@@ -745,6 +839,99 @@ def export_package(topic: ResearchedTopic, output_dir: Path, include_spinoffs: b
     (draft_dir / "outline.json").write_text(json.dumps(outline_data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     (draft_dir / "content.json").write_text(json.dumps(content_data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
+    # Flow prompts manifest
+    aspect_ratio = topic.aspect_ratio or "16:9"
+    compiled_images = []
+    for sc in content_data.get("scenes", []):
+        for img in sc.get("images", []):
+            shot = img.get("shot_type", "full_scene")
+            if shot == "variation":
+                shot = "full_scene"
+            comp = compile_flow_prompt(
+                "NanoBanana2Lite",
+                "scene",
+                {
+                    "description": img["description"],
+                    "aspect_ratio": aspect_ratio,
+                    "allowed_text": img.get("visible_text", []),
+                    "shot_type": shot,
+                    "has_character": img.get("has_character", True),
+                    "character_free": not img.get("has_character", True),
+                },
+                version="1.7.0",
+            )
+            compiled_images.append({
+                "id": img["id"],
+                "scene_id": sc["id"],
+                "shot_type": shot,
+                "prompt": comp["prompt"],
+            })
+
+    thumb_spec = brief_data.get("packaging", {}).get("thumbnail_spec", {})
+    thumb_prompt = thumb_spec.get("thumbnail_prompt") or thumb_spec.get("visual_hook", "Noir evidence document.")
+    thumb_overlay = thumb_spec.get("text_overlay", "HỒ SƠ TÀU MA")
+    thumb_comp = compile_flow_prompt(
+        "NanoBanana2Lite",
+        "scene",
+        {
+            "description": thumb_prompt,
+            "aspect_ratio": aspect_ratio,
+            "allowed_text": [thumb_overlay],
+            "shot_type": "full_scene",
+            "has_character": True,
+            "character_free": False,
+        },
+        version="1.7.0",
+    )
+    images_manifest = {
+        "job_id": output_dir.name,
+        "aspect_ratio": aspect_ratio,
+        "images_count": len(compiled_images),
+        "thumbnail": {
+            "prompt": thumb_comp["prompt"],
+            "text_overlay": thumb_overlay,
+        },
+        "scenes": compiled_images,
+    }
+    (output_dir / "images.json").write_text(json.dumps(images_manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    # Generate subtitles.srt
+    curr_time = 0.0
+    segs = []
+    for sc_item in script_data:
+        dur = float(sc_item.get("duration", 10.0))
+        segs.append({
+            "scene_id": sc_item["id"],
+            "text": sc_item["narration"],
+            "start": curr_time,
+            "end": curr_time + dur,
+        })
+        curr_time += dur + 0.35
+    srt_text = adapters.make_srt(segs)
+    (output_dir / "subtitles.srt").write_text(srt_text, encoding="utf-8")
+
+    # Export subtitles to video deliverables (only for non-temp runs)
+    if (
+        not output_dir.name.startswith("test-")
+        and output_dir.name != "cli_run"
+        and "tmp" not in str(output_dir)
+    ):
+        video_dir = ROOT_DIR / "video" / output_dir.name
+        video_dir.mkdir(parents=True, exist_ok=True)
+        (video_dir / "subtitles.srt").write_text(srt_text, encoding="utf-8")
+        (video_dir / f"{output_dir.name}.srt").write_text(srt_text, encoding="utf-8")
+
+    # Spinoff Shorts Export (if requested and present)
+    spinoff_packages = []
+    if include_spinoffs and topic.spinoff_shorts:
+        spinoffs_root = output_dir / "spinoff_shorts"
+        spinoffs_root.mkdir(parents=True, exist_ok=True)
+        for idx, plan in enumerate(topic.spinoff_shorts, 1):
+            sp_dir = spinoffs_root / f"spinoff_{idx:02d}_short_9x16"
+            sp_topic = build_spinoff_topic_from_plan(topic, plan, idx - 1)
+            sp_res = export_package(sp_topic, sp_dir, include_spinoffs=False)
+            spinoff_packages.append(sp_res)
+
     valid_contracts, contract_errors = validate_production_bundle(
         system_root=SYS_DIR,
         brief_data=brief_data,
@@ -758,6 +945,8 @@ def export_package(topic: ResearchedTopic, output_dir: Path, include_spinoffs: b
         "content_file": str(content_file),
         "script_file": str(script_file),
         "cadence_file": str(cadence_file),
+        "images_file": str(output_dir / "images.json"),
+        "subtitles_file": str(output_dir / "subtitles.srt"),
         "brief_hash": brief_hash,
         "valid_contracts": valid_contracts,
         "contract_errors": contract_errors,
@@ -765,6 +954,7 @@ def export_package(topic: ResearchedTopic, output_dir: Path, include_spinoffs: b
         "hook_score_result": hook_score_result,
         "cadence_report": cadence_report,
         "total_images": sum(len(sc.get("images", [])) for sc in content_data["scenes"]),
+        "spinoff_packages": spinoff_packages,
     }
 
 
@@ -772,18 +962,19 @@ def build_production_bundle(
     format_profile: str = "short_9x16",
     output_dir: Optional[Path] = None,
     topic_title: Optional[str] = None,
+    include_spinoffs: bool = True,
 ) -> Dict[str, Any]:
     """Top-level convenience builder for ho_so_ky_la."""
     if format_profile == "short_9x16":
         topic = build_topic_9x16(topic_title)
         target_dir = output_dir or (SYS_DIR / "runs" / "ho-so-ky-la-week1-9x16")
+        return export_package(topic, target_dir, include_spinoffs=False)
     elif format_profile == "long_16x9":
         topic = build_topic_16x9(topic_title)
         target_dir = output_dir or (SYS_DIR / "runs" / "ho-so-ky-la-week1-16x9")
+        return export_package(topic, target_dir, include_spinoffs=include_spinoffs)
     else:
         raise ValueError(f"Unsupported format_profile: {format_profile}")
-
-    return export_package(topic, target_dir)
 
 
 def main() -> int:

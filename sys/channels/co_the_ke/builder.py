@@ -24,7 +24,6 @@ for _p in (str(SYS_DIR), str(SYS_DIR / "tools")):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-from channels.registry import get_channel  # noqa: E402
 from content.research_story_architect import (  # noqa: E402
     PackagingSpec,
     ResearchedTopic,
@@ -34,6 +33,8 @@ from content.research_story_architect import (  # noqa: E402
 )
 from tools.script_cadence_checker import ScriptCadenceChecker  # noqa: E402
 from tools.script_hook_scorer import HookScore, score_script  # noqa: E402
+
+from channels.registry import get_channel  # noqa: E402
 
 CHANNEL_ID = "co_the_ke"
 DEFAULT_SHORT_JOB = "co-the-ke-week1-9x16"

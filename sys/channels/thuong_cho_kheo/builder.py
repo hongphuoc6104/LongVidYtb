@@ -23,7 +23,6 @@ TOOLS_DIR = SYS_DIR / "tools"
 if str(TOOLS_DIR) not in sys.path:
     sys.path.insert(0, str(TOOLS_DIR))
 
-from channels.registry import get_channel  # noqa: E402
 from content.research_story_architect import (  # noqa: E402
     PackagingSpec,
     ResearchedTopic,
@@ -32,6 +31,8 @@ from content.research_story_architect import (  # noqa: E402
 )
 from script_cadence_checker import ScriptCadenceChecker  # noqa: E402
 from tools.script_hook_scorer import score_script  # noqa: E402
+
+from channels.registry import get_channel  # noqa: E402
 
 CHANNEL_ID = "thuong_cho_kheo"
 

@@ -140,7 +140,7 @@ WEEK1_LONG_STORY: List[Tuple[str, str, str, str, List[Tuple[str, str]]]] = [
         "lived_friction",
         [
             (
-                "Một ly trà sữa năm mươi nghìn, vì sao chủ quán lãi đậm mà vẫn sập tiệm?",
+                "Ly trà sữa năm mươi nghìn, bạn nghĩ vì sao chủ quán vẫn sập tiệm?",
                 "full_scene:CH01|Stickman with glasses holding a 50k VND milk tea cup next to a closed shop on warm grid paper.",
             ),
             (
@@ -208,7 +208,7 @@ WEEK1_LONG_STORY: List[Tuple[str, str, str, str, List[Tuple[str, str]]]] = [
                 "concept_metaphor:CH01|Stickman balances fixed costs and income scale on warm grid field.",
             ),
             (
-                "Hãy bắt đầu ghi chép chi tiêu nhỏ nhất hôm nay để giữ chặt túi tiền của bạn.",
+                "Bạn muốn mình bóc tách mô hình kinh doanh nào tiếp theo, hãy bình luận nhé?",
                 "full_scene:CH01|Stickman with glasses writes in a personal expense notebook with an inspiring smile.",
             ),
         ],

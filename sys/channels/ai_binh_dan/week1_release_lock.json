@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "channel_id": "ai_binh_dan",
+  "channel_name": "AI Bình Dân",
+  "git_branch": "channel/ai-binh-dan",
+  "workspace_dirname": "channel-ai-binh-dan",
+  "locked_at": "2026-10-30T18:04:56+00:00",
+  "status": "LOCKED_RELEASE_READY",
+  "visual_lock": {
+    "visual_profile_id": "ch_tech_doodle",
+    "label": "Doodle công nghệ: stickman + khung màn hình, chèn quay màn hình thật",
+    "palette": [
+      "#FFFFFF",
+      "#3B82C4",
+      "#7C5CFF",
+      "#34D399",
+      "#E5E7EB",
+      "#000000"
+    ],
+    "cast_appearance": "Iconic 2D Vietnamese indie webcomic doodle stickman (Nguệch Ngoạc / Vẽ Vời / Xấu Vê Nờ style): oversized slightly lopsided hand-drawn pure-white (#FFFFFF) bald circle head with bold pitch-black (#000000) marker outline, tiny solid-black dot eyes placed low on the face leaving a large open upper forehead/cranium, minimal single-stroke eyebrows and mouth, no nose or ears, thin single-line solid-black wire/stick arms (single black stroke with zero arm thickness) ending in small round white circle hands",
+    "fast_short_max_images": 4
+  },
+  "voice_lock": {
+    "voice_profile_id": "ch_ai_binh_dan",
+    "speaker": "VietNarrator",
+    "persona": "Đồng nghiệp rành công nghệ, chỉ từng bước 'làm theo liền'",
+    "tts_speed_applied": 1.14,
+    "profile_sha256": "dd4ec507efa3267e7bc1c266923d2acb3b52935232c7091a733740d44aa6a893"
+  },
+  "week1_short_9x16": {
+    "job_id": "ai-binh-dan-week1-9x16",
+    "format_profile": "short_9x16",
+    "mp4_relpath": "video/ai-binh-dan-week1-9x16/ai-binh-dan-week1-9x16.mp4",
+    "mp4_sha256": "3553a18db74f27364eea2b647c51f7fc6a813f0fdbd5fd3cb67df84b19070373",
+    "mp4_bytes": 6254961,
+    "resolution": "1080x1920",
+    "fps": 30.0,
+    "video_codec": "h264",
+    "audio_codec": "aac",
+    "mp4_duration_sec": 26.752,
+    "wav_duration_sec": 26.68,
+    "sync_delta_sec": 0.072,
+    "loudness_lufs": -15.1,
+    "true_peak_dbtp": -1.9,
+    "srt_relpath": "video/ai-binh-dan-week1-9x16/ai-binh-dan-week1-9x16.srt",
+    "srt_sha256": "484c823426140f19a74e3b9edfd727d7a2502389c7cbf7c33b3e0ebd4b8354af",
+    "thumbnail_relpath": "video/ai-binh-dan-week1-9x16/thumbnail_9x16.jpg",
+    "thumbnail_sha256": "7c914789bfffc6c34f00772bb8d2415287aab0c1d9c8853ae16ff1c97ab08315",
+    "flow_scene_images_count": 4,
+    "brief_sha256": "e63280de8caa9a244a3e93a6ae60b7178a5b7bd7d55a8305e42f910400850547",
+    "content_sha256": "dfd227e2dee2d790fb8875222fa6be96bccf77b073ca64133c7322c7a2de29b1"
+  }
+}
