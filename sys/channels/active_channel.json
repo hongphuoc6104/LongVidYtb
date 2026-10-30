@@ -1,0 +1,36 @@
+{
+  "channel_id": "tui_tien",
+  "name": "Túi Tiền Biết Nói",
+  "git_branch": "channel/tui-tien",
+  "workspace_dirname": "channel-tui-tien",
+  "niche": "Tiền và kinh tế đời sống",
+  "promise": "Bóc tách tiền bạc đằng sau những thứ bạn mua mỗi ngày.",
+  "platform_routing": {
+    "tiktok": "short_9x16",
+    "youtube": "long_16x9"
+  },
+  "visual_profile_id": "ch_ledger_doodle",
+  "voice": "VietNarrator",
+  "speed": 1.0,
+  "wave": 1,
+  "channel_profile_stamp": {
+    "id": "tui_tien",
+    "version": 1,
+    "sha256": "d8daa775fae6a3e43cf6541b6235bcee16c279d2f4c0695a959bd6d8d49d47b1"
+  },
+  "speed_optimization": {
+    "render_mode": "hybrid_motion",
+    "fast_short_max_images": 6,
+    "spinoff_shorts_per_long": 4,
+    "remotion_motion_ratio": 0.5,
+    "estimated_short_minutes": [
+      7,
+      10
+    ],
+    "estimated_bundle_minutes": [
+      30,
+      40
+    ]
+  },
+  "plan_file": "sys/channels/tui_tien/PLAN.md"
+}
