@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "channel_id": "thuong_cho_kheo",
+  "channel_name": "Thương Cho Khéo",
+  "git_branch": "channel/thuong-cho-kheo",
+  "workspace_dirname": "channel-thuong-cho-kheo",
+  "locked_at": "2026-10-30T18:04:56+00:00",
+  "status": "LOCKED_RELEASE_READY",
+  "visual_lock": {
+    "visual_profile_id": "ch_pastel_duo",
+    "label": "Pastel đôi bạn: 2 nhân vật Tũn và Mây đối thoại, nét mềm",
+    "palette": [
+      "#FFF8F0",
+      "#F7C6C7",
+      "#CDB4DB",
+      "#BDE0C6",
+      "#FFF1B5",
+      "#5B4636"
+    ],
+    "cast_appearance": "Recurring duo: 'Tũn', a young man with a round face, messy short black hair and dot eyes; and 'Mây', a young woman with a round face, shoulder-length black hair with a small clip and dot eyes; both drawn in simple chibi-like proportions",
+    "fast_short_max_images": 6
+  },
+  "voice_lock": {
+    "voice_profile_id": "ch_thuong_cho_kheo",
+    "speaker": "VietNarrator",
+    "persona": "Người chị/anh tâm lý, tâm sự nhỏ nhẹ, không phán xét",
+    "tts_speed_applied": 1.0,
+    "profile_sha256": "460b59abcb97748fe4c57853765bee4fe8a1b4fe1cc1d5e02955d44216216509"
+  },
+  "week1_short_9x16": {
+    "job_id": "thuong-cho-kheo-week1-9x16",
+    "format_profile": "short_9x16",
+    "mp4_relpath": "video/thuong-cho-kheo-week1-9x16/thuong-cho-kheo-week1-9x16.mp4",
+    "mp4_sha256": "e72ee639806cde57efa8900681719d0014fe65b41128aaa22a035bc1af787adc",
+    "mp4_bytes": 23187929,
+    "resolution": "1080x1920",
+    "fps": 30.0,
+    "video_codec": "h264",
+    "audio_codec": "aac",
+    "mp4_duration_sec": 33.429,
+    "wav_duration_sec": 33.349,
+    "sync_delta_sec": 0.08,
+    "loudness_lufs": -15.1,
+    "true_peak_dbtp": -2.0,
+    "srt_relpath": "video/thuong-cho-kheo-week1-9x16/thuong-cho-kheo-week1-9x16.srt",
+    "srt_sha256": "26db61f7e778e757289fa1ce5d64394db6ca5859da561ba3125491fbe2cbe4e6",
+    "thumbnail_relpath": "video/thuong-cho-kheo-week1-9x16/thumbnail_9x16.jpg",
+    "thumbnail_sha256": "77548f5d3b1bcd81f43acd881c3e8c2ce4a83b69af820434060f79b62c24e37d",
+    "flow_scene_images_count": 5,
+    "brief_sha256": "ff682a837390f2c70fc70755b1a3f9364a9c6d3064d1c58412c6f949305e9d68",
+    "content_sha256": "9865f729d9e2ac30b756b3d209eb959881121521b4d602cb53a6601976e96aa4"
+  }
+}

@@ -27,5 +27,7 @@
     }
   ],
   "listening_verified": true,
-  "note": "Studio-tuned human voice profile for channel ho_so_ky_la (narrative_warm, speed 1.06)."
+  "note": "Studio-tuned human voice profile for channel ho_so_ky_la (narrative_warm, speed 1.06).",
+  "sample_sha256": "3d45ccacadbf48a35ac1a573c341cad6570d24693eb647982d7d93904f800a65",
+  "sample_listening_verified": true
 }

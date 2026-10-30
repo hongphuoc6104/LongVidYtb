@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "channel_id": "su_ke_lai",
+  "channel_name": "Sử Kể Lại",
+  "git_branch": "channel/su-ke-lai",
+  "workspace_dirname": "channel-su-ke-lai",
+  "locked_at": "2026-10-30T18:04:56+00:00",
+  "status": "LOCKED_RELEASE_READY",
+  "visual_lock": {
+    "visual_profile_id": "ch_dong_ho_folk",
+    "label": "Tranh dân gian Đông Hồ / khắc gỗ trên giấy dó",
+    "palette": [
+      "#EFE4C8",
+      "#B5332E",
+      "#D9A520",
+      "#2C4A6E",
+      "#5E7D3A",
+      "#1E1E1E"
+    ],
+    "cast_appearance": "Stylized Dong Ho folk-print human figures with round faces, simple almond eyes, rosy cheek dots and period-accurate Vietnamese costume for the episode's era",
+    "fast_short_max_images": 8
+  },
+  "voice_lock": {
+    "voice_profile_id": "ch_su_ke_lai",
+    "speaker": "VietNarrator",
+    "persona": "Người kể chuyện trầm, biết nghỉ đúng lúc, thỉnh thoảng chêm câu hài",
+    "tts_speed_applied": 1.04,
+    "profile_sha256": "2b2bb1e7fe6d6d79f6ba50c88afa038cb02b991037f21d47d989d3f1012e346d"
+  },
+  "week1_short_9x16": {
+    "job_id": "su-ke-lai-week1-9x16",
+    "format_profile": "short_9x16",
+    "mp4_relpath": "video/su-ke-lai-week1-9x16/su-ke-lai-week1-9x16.mp4",
+    "mp4_sha256": "61ef97b01ae24efa15b223d37460fd6399ea0d3e9fc3d4e5c055763200445d45",
+    "mp4_bytes": 51847376,
+    "resolution": "1080x1920",
+    "fps": 30.0,
+    "video_codec": "h264",
+    "audio_codec": "aac",
+    "mp4_duration_sec": 65.856,
+    "wav_duration_sec": 65.787,
+    "sync_delta_sec": 0.069,
+    "loudness_lufs": -15.2,
+    "true_peak_dbtp": -2.0,
+    "srt_relpath": "video/su-ke-lai-week1-9x16/su-ke-lai-week1-9x16.srt",
+    "srt_sha256": "cb11a8d4a8820f975e707fbf0642a58980c3c7574aa81be61ec8a593ceebb059",
+    "thumbnail_relpath": "video/su-ke-lai-week1-9x16/thumbnail_9x16.jpg",
+    "thumbnail_sha256": "543dab9a9e044263b82f26a755bf064dd6c94ace28290dee1844646737d399b3",
+    "flow_scene_images_count": 7,
+    "brief_sha256": "1df534b9c4d40473e4b271328fb2104aa57b71ff3eefc8963d20ebd50988a8a8",
+    "content_sha256": "5933fc4262c86e1133ff71fd3ec25f56d1bfa7cb6b615d0698298a30ad1708c4"
+  }
+}

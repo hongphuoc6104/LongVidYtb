@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "channel_id": "ua_sao_vay",
+  "channel_name": "Ủa Sao Vậy?",
+  "git_branch": "channel/ua-sao-vay",
+  "workspace_dirname": "channel-ua-sao-vay",
+  "locked_at": "2026-10-30T18:04:56+00:00",
+  "status": "LOCKED_RELEASE_READY",
+  "visual_lock": {
+    "visual_profile_id": "ch_sticker_pop",
+    "label": "Sticker pop: hoạt hình màu nổi viền trắng dày, linh vật Bé Ủa",
+    "palette": [
+      "#FFF6D6",
+      "#FFD23F",
+      "#FF6B6B",
+      "#2EC4B6",
+      "#7B2CBF"
+    ],
+    "cast_appearance": "Mascot 'Bé Ủa': a round lemon-yellow (#FFD23F) blob creature with huge white oval eyes, tiny black pupils, a wide open mouth, two short stubby arms and a single curly antenna shaped like a question mark",
+    "fast_short_max_images": 5
+  },
+  "voice_lock": {
+    "voice_profile_id": "ch_ua_sao_vay",
+    "speaker": "VietNarrator",
+    "persona": "Linh vật 'Bé Ủa' tò mò, nói nhanh, hay há hốc mồm",
+    "tts_speed_applied": 1.16,
+    "profile_sha256": "a3b15676bcf9fbfed93c2c76085dcf015840ea5e6eeda2da210a71b9824cb459"
+  },
+  "week1_short_9x16": {
+    "job_id": "ua-sao-vay-week1-9x16",
+    "format_profile": "short_9x16",
+    "mp4_relpath": "video/ua-sao-vay-week1-9x16/ua-sao-vay-week1-9x16.mp4",
+    "mp4_sha256": "0ef753887bbb0e77cc0da9ddeec5544f42d4b00340c158e58a8139deac361a8d",
+    "mp4_bytes": 11283665,
+    "resolution": "1080x1920",
+    "fps": 30.0,
+    "video_codec": "h264",
+    "audio_codec": "aac",
+    "mp4_duration_sec": 16.725,
+    "wav_duration_sec": 16.635,
+    "sync_delta_sec": 0.09,
+    "loudness_lufs": -15.2,
+    "true_peak_dbtp": -2.0,
+    "srt_relpath": "video/ua-sao-vay-week1-9x16/ua-sao-vay-week1-9x16.srt",
+    "srt_sha256": "6c05676b24681f3988d1b8b8a12d5d2b15094e15eb2d10cce394b3b0e97bac6f",
+    "thumbnail_relpath": "video/ua-sao-vay-week1-9x16/thumbnail_9x16.jpg",
+    "thumbnail_sha256": "f3c82f5348cc3b2f99bf8d8ec27351ab24015de5fcb9aba4337af50757f10f9a",
+    "flow_scene_images_count": 4,
+    "brief_sha256": "a38b463a30c1c52ad840a55c3140ad6a16ddf8da853c5f0fee50063f0b2877f7",
+    "content_sha256": "36af2873898d1a2b6589523df13e86c9697baf967f6806f8af2e7d8bdcaaa42e"
+  }
+}
