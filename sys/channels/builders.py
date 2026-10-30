@@ -157,6 +157,10 @@ WEEK1_SHORT_STORIES: Dict[str, Dict[str, Any]] = {
                 "visual_diagram:none|Flat balance scale with a milk tea cup balancing against seven small golden coin icons.",
             ),
             (
+                "Hai mươi tám nghìn còn lại đã bay đi đâu mất?",
+                "concept_metaphor:CH01|Stickman adjusts his glasses with curiosity looking down at an open ledger book.",
+            ),
+            (
                 "Chín nghìn trả tiền thuê mặt bằng mặt phố đắt đỏ.",
                 "white_card:none|Flat drawing of a storefront building with a red rent sign reading MẶT BẰNG 9K on grid paper.",
             ),
@@ -165,11 +169,19 @@ WEEK1_SHORT_STORIES: Dict[str, Dict[str, Any]] = {
                 "macro_prop:none|Simple flat name badge and barista apron on warm paper background.",
             ),
             (
-                "Sau khi trừ thuế và điện nước điều hòa cả ngày, chủ quán chỉ thực sự đút túi chưa tới bốn nghìn đồng.",
+                "Năm nghìn dành cho đá lạnh, ly nhựa và ống hút.",
+                "concept_metaphor:none|Plastic cup lid and straw drawn as flat shapes with price stamp 5K.",
+            ),
+            (
+                "Sau khi trừ thuế và điện nước điều hòa cả ngày,",
+                "visual_diagram:none|Hand-drawn bar chart on grid paper breaking down the thirty-five thousand VND total.",
+            ),
+            (
+                "chủ quán chỉ thực sự đút túi chưa tới bốn nghìn đồng.",
                 "concept_metaphor:CH01|Stickman points with a pencil to four small gold coins resting in a piggy bank.",
             ),
             (
-                "Lần tới uống trà sữa, bạn muốn mình bóc tách món nào tiếp theo, bình luận nhé?",
+                "Lần tới uống trà sữa, bạn muốn mình bóc tách món nào tiếp theo?",
                 "full_scene:CH01|Stickman smiles warmly holding open ledger and waves to viewer on grid paper.",
             ),
         ],

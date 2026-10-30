@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "channel_id": "ho_so_ky_la",
+  "channel_name": "Hồ Sơ Kỳ Lạ",
+  "git_branch": "channel/ho-so-ky-la",
+  "workspace_dirname": "channel-ho-so-ky-la",
+  "locked_at": "2026-10-30T18:04:56+00:00",
+  "status": "LOCKED_RELEASE_READY",
+  "visual_lock": {
+    "visual_profile_id": "ch_noir_dossier",
+    "label": "Noir hồ sơ: minh họa 2D tương phản cao, đen trắng và một điểm đỏ",
+    "palette": [
+      "#111111",
+      "#E8E2D0",
+      "#5A5F66",
+      "#C0392B"
+    ],
+    "cast_appearance": "Silhouette-style figures with simple faces, the narrator detective drawn as a faceless figure in a long coat and hat seen from behind or in profile",
+    "fast_short_max_images": 8
+  },
+  "voice_lock": {
+    "voice_profile_id": "ch_ho_so_ky_la",
+    "speaker": "VietNarrator",
+    "persona": "Thám tử điềm tĩnh mở từng tập hồ sơ",
+    "tts_speed_applied": 1.06,
+    "profile_sha256": "a82a537814727b306c3c4b05bb555498813d4614f3d2118522f2de13105a0f28"
+  },
+  "week1_short_9x16": {
+    "job_id": "ho-so-ky-la-week1-9x16",
+    "format_profile": "short_9x16",
+    "mp4_relpath": "video/ho-so-ky-la-week1-9x16/ho-so-ky-la-week1-9x16.mp4",
+    "mp4_sha256": "fcd25a48c0683fd11914157f427b14db32b6cee1d506b81159e64b0db72ef85a",
+    "mp4_bytes": 35043286,
+    "resolution": "1080x1920",
+    "fps": 30.0,
+    "video_codec": "h264",
+    "audio_codec": "aac",
+    "mp4_duration_sec": 51.989,
+    "wav_duration_sec": 51.918,
+    "sync_delta_sec": 0.071,
+    "loudness_lufs": -15.1,
+    "true_peak_dbtp": -1.9,
+    "srt_relpath": "video/ho-so-ky-la-week1-9x16/ho-so-ky-la-week1-9x16.srt",
+    "srt_sha256": "a98475f59a944420545403293cea239964f139716407251e2c2dfdc2e8750c85",
+    "thumbnail_relpath": "video/ho-so-ky-la-week1-9x16/thumbnail_9x16.jpg",
+    "thumbnail_sha256": "5e3973b76e02fcd2e2b98f6681172bf4c1e0cdc59875a11057efebddd9a83fe8",
+    "flow_scene_images_count": 8,
+    "brief_sha256": "70d60fb0e812bf99f7c1bd1dd36b00d322579e2188530859c65357c1e23fe3bb",
+    "content_sha256": "8efc451802475ebee3c995ca981870b93645b5c4cf7fecf96b6e593ab1ae9a32"
+  }
+}

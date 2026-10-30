@@ -1,13 +1,13 @@
 {
   "channel_id": "nao_luoi",
   "voice": "VietNarrator_NaoLuoi",
-  "duration_seconds": 20.687,
-  "integrated_lufs": -15.58,
-  "true_peak_dbtp": -1.87,
-  "rms": 5564,
-  "sha256": "060b2ace78393d72b94c19fcb7fbaa8b6246cb0eb684c53d66e1b0133f4d1770",
-  "retake": 4,
+  "duration_seconds": 17.122,
+  "integrated_lufs": -15.29,
+  "true_peak_dbtp": -2.03,
+  "rms": 5804,
+  "sha256": "c135187b0a0bb552cd0db06120fbd7afb89cc4e7ac3a250dc978137ed3dcf840",
+  "retake": 5,
   "text": "Vì sao bạn thức tới hai giờ sáng dù mắt đã díp lại? Thế nhưng ngón tay vẫn tiếp tục lướt màn hình trong vô thức. Não bạn không hề muốn thức khuya để xem clip ngắn. Thực chất nó đang muốn đòi lại quyền kiểm soát cuộc sống. Khoa học gọi hiện tượng này là sự trì hoãn giấc ngủ để trả thù. Cả ngày bạn đã phải gồng mình làm hài lòng cấp trên và đồng nghiệp.",
   "engine": "colab-omnivoice",
-  "account_used": "account-05"
+  "account_used": "account-11"
 }

@@ -27,5 +27,7 @@
     }
   ],
   "listening_verified": true,
-  "note": "Studio-tuned human voice profile for channel thuong_cho_kheo (reflective_slow, speed 1.0)."
+  "note": "Studio-tuned human voice profile for channel thuong_cho_kheo (reflective_slow, speed 1.0).",
+  "sample_sha256": "5cf6453b2a689c5152e6f72fb47ea4de6c31b86008f1350ff7eb55ce0653a4fc",
+  "sample_listening_verified": true
 }
