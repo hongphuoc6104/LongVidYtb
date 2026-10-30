@@ -9,8 +9,8 @@ def short_plans(brief: dict, content: dict) -> list[dict]:
     if brief.get('aspect_ratio') != '16:9' or not brief.get('reframe_mode'):
         raise ValueError('OMNI_MASTER: require 16:9 master and reframe_mode=true')
     plans = brief.get('spinoff_shorts', [])
-    if not 2 <= len(plans) <= 3:
-        raise ValueError('OMNI_SHORT_COUNT: author 2–3 standalone shorts')
+    if not 2 <= len(plans) <= 6:
+        raise ValueError('OMNI_SHORT_COUNT: author 2–6 standalone shorts')
     scenes = {scene['id']: scene for scene in content['scenes']}
     ids = set()
     for plan in plans:

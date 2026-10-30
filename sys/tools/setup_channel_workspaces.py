@@ -69,7 +69,6 @@ def setup_workspaces(
     selected = [get_channel(cid) for cid in channel_filter] if channel_filter else list(channels().values())
     results: List[Dict[str, Any]] = []
 
-    base_nm = REPO_ROOT / "sys/renderer/node_modules"
     wt_out = _run(["git", "worktree", "list", "--porcelain"]).stdout
     existing_worktrees = {
         line.split(" ", 1)[1].strip()
@@ -97,9 +96,11 @@ def setup_workspaces(
             encoding="utf-8",
         )
 
-        target_nm = ws_dir / "sys/renderer/node_modules"
-        if base_nm.exists() and not target_nm.exists():
-            target_nm.symlink_to(base_nm)
+        for nm_rel in ("sys/node_modules", "sys/renderer/node_modules"):
+            src_nm = REPO_ROOT / nm_rel
+            dst_nm = ws_dir / nm_rel
+            if src_nm.exists() and not dst_nm.exists():
+                dst_nm.symlink_to(src_nm)
 
         if push:
             _run(["git", "push", "-u", "origin", f"{branch}:{branch}", "--force-with-lease"])

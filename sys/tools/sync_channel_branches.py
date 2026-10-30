@@ -39,7 +39,7 @@ from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
 
 SYS_DIR = Path(__file__).resolve().parents[1]
 REPO_ROOT = SYS_DIR.parent
-DEFAULT_WORKSPACES_ROOT = REPO_ROOT.parent / "vp-channels"
+DEFAULT_WORKSPACES_ROOT = REPO_ROOT.parent if REPO_ROOT.parent.name == "vp-channels" else REPO_ROOT.parent / "vp-channels"
 
 for _p in (str(SYS_DIR), str(SYS_DIR / "tools")):
     if _p not in sys.path:
