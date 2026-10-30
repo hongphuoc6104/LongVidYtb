@@ -27,5 +27,7 @@
     }
   ],
   "listening_verified": true,
-  "note": "Studio-tuned human voice profile for channel co_the_ke (narrative_warm, speed 1.1)."
+  "note": "Studio-tuned human voice profile for channel co_the_ke (narrative_warm, speed 1.1).",
+  "sample_sha256": "6b166538f6b7dc7057d47345412907c7449365c2aee0948738e1ebd42b0bc746",
+  "sample_listening_verified": true
 }

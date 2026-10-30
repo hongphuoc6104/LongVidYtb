@@ -27,5 +27,7 @@
     }
   ],
   "listening_verified": true,
-  "note": "Studio-tuned human voice profile for channel su_ke_lai (reflective_slow, speed 1.04)."
+  "note": "Studio-tuned human voice profile for channel su_ke_lai (reflective_slow, speed 1.04).",
+  "sample_sha256": "08f8730c25ce6fecda567403259f887777c7a8946fa5edc09a40986e902564ec",
+  "sample_listening_verified": true
 }

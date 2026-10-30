@@ -27,5 +27,7 @@
     }
   ],
   "listening_verified": true,
-  "note": "Studio-tuned human voice profile for channel tui_tien (analytical_crisp, speed 1.12)."
+  "note": "Studio-tuned human voice profile for channel tui_tien (analytical_crisp, speed 1.12).",
+  "sample_sha256": "943bf48f8b08681763c95a22d56f0627924754a9b3280e7bb5813e5289c79d15",
+  "sample_listening_verified": true
 }

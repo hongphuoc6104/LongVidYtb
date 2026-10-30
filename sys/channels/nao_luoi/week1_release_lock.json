@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "channel_id": "nao_luoi",
+  "channel_name": "Não Lười",
+  "git_branch": "channel/nao-luoi",
+  "workspace_dirname": "channel-nao-luoi",
+  "locked_at": "2026-10-30T18:04:56+00:00",
+  "status": "LOCKED_RELEASE_READY",
+  "visual_lock": {
+    "visual_profile_id": "handdrawn_2d_explainer",
+    "label": "Doodle stickman Nguệch Ngoạc (giữ phong cách hiện tại, biểu cảm mạnh hơn)",
+    "palette": [
+      "#F8F0DC",
+      "#FFFFFF",
+      "#3B82C4",
+      "#F2B88B",
+      "#93A88C",
+      "#000000"
+    ],
+    "cast_appearance": "Iconic 2D Vietnamese indie webcomic doodle stickman (Nguệch Ngoạc / Vẽ Vời / Xấu Vê Nờ style): oversized slightly lopsided hand-drawn pure-white (#FFFFFF) bald circle head with bold pitch-black (#000000) marker outline, tiny solid-black dot eyes placed low on the face leaving a large open upper forehead/cranium, minimal single-stroke eyebrows and mouth, no nose or ears, thin single-line solid-black wire/stick arms (single black stroke with zero arm thickness) ending in small round white circle hands",
+    "fast_short_max_images": 7
+  },
+  "voice_lock": {
+    "voice_profile_id": "ch_nao_luoi",
+    "speaker": "VietNarrator",
+    "persona": "Người bạn thân hiểu tâm lý, hơi cà khịa nhưng thương người xem",
+    "tts_speed_applied": 1.08,
+    "profile_sha256": "4999677bc40274b4c9d71167ee3ceb9d491b73dc6b4485b9769a04c7b6f81985"
+  },
+  "week1_short_9x16": {
+    "job_id": "nao-luoi-week1-9x16",
+    "format_profile": "short_9x16",
+    "mp4_relpath": "video/nao-luoi-week1-9x16/nao-luoi-week1-9x16.mp4",
+    "mp4_sha256": "333cf76b0d7295a78bc93acd4a80319d1ca1873331d34db457aab285c59491dc",
+    "mp4_bytes": 8424884,
+    "resolution": "1080x1920",
+    "fps": 30.0,
+    "video_codec": "h264",
+    "audio_codec": "aac",
+    "mp4_duration_sec": 29.312,
+    "wav_duration_sec": 29.25,
+    "sync_delta_sec": 0.062,
+    "loudness_lufs": -15.3,
+    "true_peak_dbtp": -1.8,
+    "srt_relpath": "video/nao-luoi-week1-9x16/nao-luoi-week1-9x16.srt",
+    "srt_sha256": "9a022fb4fb3cada2fc5f85e557ae125ed8a49f717af59a01998f3872d2161d65",
+    "thumbnail_relpath": "video/nao-luoi-week1-9x16/thumbnail_9x16.jpg",
+    "thumbnail_sha256": "c0552a315e612cbc613a05c551595d75185fb1665232e15730d686e511dfbfe6",
+    "flow_scene_images_count": 6,
+    "brief_sha256": "7d8c83b7da76fe1cda05f9dd149011978f6ac82d3ac38026a92118355b6c745d",
+    "content_sha256": "033a5e8b9a2df6e3e4d912ff5d8dac8f5d5f7106fe2d22dca2f7946c68e85662"
+  }
+}

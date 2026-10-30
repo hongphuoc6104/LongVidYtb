@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "channel_id": "tui_tien",
+  "channel_name": "Túi Tiền Biết Nói",
+  "git_branch": "channel/tui-tien",
+  "workspace_dirname": "channel-tui-tien",
+  "locked_at": "2026-10-30T18:04:56+00:00",
+  "status": "LOCKED_RELEASE_READY",
+  "visual_lock": {
+    "visual_profile_id": "ch_ledger_doodle",
+    "label": "Sổ tay kế toán vẽ tay: doodle trên giấy kẻ ô, tiền xu, biểu đồ vẽ tay",
+    "palette": [
+      "#FAF6E9",
+      "#2F9E5B",
+      "#F2C14E",
+      "#D64545",
+      "#24364F"
+    ],
+    "cast_appearance": "Simple 2D doodle stickman with a white round head, black dot eyes, thin wire arms and round hands, small round glasses, always holding a pencil or a coin",
+    "fast_short_max_images": 6
+  },
+  "voice_lock": {
+    "voice_profile_id": "ch_tui_tien",
+    "speaker": "VietNarrator",
+    "persona": "Người bạn mê con số, hay tính nhẩm giùm bạn",
+    "tts_speed_applied": 1.12,
+    "profile_sha256": "121b6bd9bdf654b5e6ee70b2e920dc2e66fc8f31dbcf0a6aaf017c5f259f8787"
+  },
+  "week1_short_9x16": {
+    "job_id": "tui-tien-week1-9x16",
+    "format_profile": "short_9x16",
+    "mp4_relpath": "video/tui-tien-week1-9x16/tui-tien-week1-9x16.mp4",
+    "mp4_sha256": "36875f3298cbc2475e38e307978397c5d08fb704d203b1653f5b6032d1c67033",
+    "mp4_bytes": 23170990,
+    "resolution": "1080x1920",
+    "fps": 30.0,
+    "video_codec": "h264",
+    "audio_codec": "aac",
+    "mp4_duration_sec": 43.349,
+    "wav_duration_sec": 43.299,
+    "sync_delta_sec": 0.05,
+    "loudness_lufs": -14.9,
+    "true_peak_dbtp": -1.9,
+    "srt_relpath": "video/tui-tien-week1-9x16/tui-tien-week1-9x16.srt",
+    "srt_sha256": "1e76c87cc5cafdb4ba24bdf49e5413b4d6982f8224c763fed6d4e10192ad6385",
+    "thumbnail_relpath": "video/tui-tien-week1-9x16/thumbnail_9x16.jpg",
+    "thumbnail_sha256": "44eea22aaf8033722d5254244ebfad48b058cf5f534bcf3800119825040e068e",
+    "flow_scene_images_count": 5,
+    "brief_sha256": "bc1b747d3a33ee3661edcf7165cfd9ca9aace9e337295b8e10358cd65457a304",
+    "content_sha256": "5f7a437d46152555c9fed8a59fb6d7ecab27b6082ecf15d113e5c0f22d0b9640"
+  }
+}
