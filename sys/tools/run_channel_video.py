@@ -244,20 +244,6 @@ def run_stage_images(
         "overlay_card": False,  # Strict native invariant: text painted directly onto artwork
     }
 
-    images_manifest = {
-        "checkpoint": "compiled",
-        "total_images": len(compiled_items),
-        "aspect_ratio": aspect_ratio,
-        "items": compiled_items,
-        "thumbnail": {
-            "prompt": thumb_prompt,
-            "actual_prompt": thumb_compiled["prompt"],
-            "overlay_text": thumb_overlay,
-            "overlay_card": False,
-        },
-    }
-    (out_dir / "images.json").write_text(json.dumps(images_manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-
     if dry_run:
         logger.info(
             f"  [DRY-RUN] Đã biên dịch {len(compiled_items)} prompt cảnh và 1 Native Thumbnail prompt chuẩn 1.7.0."
@@ -288,15 +274,6 @@ def run_stage_render(
     out_dir = Path(package_res["output_dir"])
     brief_data = json.loads((out_dir / "brief.json").read_text(encoding="utf-8"))
     content_data = json.loads((out_dir / "content.json").read_text(encoding="utf-8"))
-
-    # Export delivery subtitles if subtitles.srt exists
-    if (out_dir / "subtitles.srt").is_file():
-        video_deliv = SYS_DIR.parent / "video" / out_dir.name
-        video_deliv.mkdir(parents=True, exist_ok=True)
-        import shutil
-
-        shutil.copy2(out_dir / "subtitles.srt", video_deliv / "subtitles.srt")
-        shutil.copy2(out_dir / "subtitles.srt", video_deliv / f"{out_dir.name}.srt")
 
     render_summary = {
         "job_id": out_dir.name,
