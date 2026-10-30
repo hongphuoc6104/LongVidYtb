@@ -1,0 +1,33 @@
+{
+  "voice": "VietNarrator_HoSoKyLa",
+  "channel_id": "ho_so_ky_la",
+  "language": "vi",
+  "languages": [
+    "vi",
+    "en"
+  ],
+  "reference_wav": "reference.wav",
+  "reference_text": "Đang ngồi đọc sách thì dưới chân bỗng có tiếng kêu meo meo dịu dàng. Nhà bạn có nuôi một chú mèo nào không, hãy bình luận nhé.",
+  "source_speed": 0.9,
+  "recommended_speed": 1.06,
+  "default_tone": "narrative_warm",
+  "audio_voice_chain": "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-3.0,equalizer=f=2400:t=q:w=1.2:g=1.4,lowpass=f=13500",
+  "audio_lufs": -14.0,
+  "audio_peak_db": -1.5,
+  "sha256": "8ff1a7152a5e97124ba736b1295d6d41570f32b56cc217ecdb5e05f5438e383c",
+  "sources": [
+    {
+      "source": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+      "window_seconds": [
+        0.0,
+        8.14
+      ],
+      "pitch_factor": 1.0,
+      "eq": ""
+    }
+  ],
+  "listening_verified": true,
+  "note": "Studio-tuned human voice profile for channel ho_so_ky_la (narrative_warm, speed 1.06).",
+  "sample_sha256": "3d45ccacadbf48a35ac1a573c341cad6570d24693eb647982d7d93904f800a65",
+  "sample_listening_verified": true
+}

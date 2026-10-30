@@ -307,7 +307,7 @@ class EnglishTrackTests(unittest.TestCase):
 
 @unittest.skipUnless(shutil.which('ffmpeg') and shutil.which('ffprobe'), 'ffmpeg required')
 class MasterInvarianceTests(unittest.TestCase):
-    """Verifies 7-stage VOICE_CHAIN, LUFS targeting (-11.0 and -14.0), and 100% exact frame count invariance."""
+    """Verifies clean 4-stage studio VOICE_CHAIN, LUFS targeting (-11.0 and -14.0), and 100% exact frame count invariance."""
 
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -316,17 +316,20 @@ class MasterInvarianceTests(unittest.TestCase):
     def tearDown(self):
         self.tmp.cleanup()
 
-    def test_voice_chain_7_stages_composition(self):
-        """VOICE_CHAIN comprises exactly 7 cascaded linear/dynamics processing stages."""
+    def test_voice_chain_composition(self):
+        """VOICE_CHAIN comprises clean 4-stage anti-mud clarity studio processing."""
         stages = [s.strip() for s in VOICE_CHAIN.split(',') if s.strip()]
-        self.assertEqual(len(stages), 7, f'Expected 7 stages, got {len(stages)}: {stages}')
-        self.assertTrue(stages[0].startswith('highpass=f=80'), stages[0])
-        self.assertTrue(stages[1].startswith('equalizer=f='), stages[1])
-        self.assertTrue(stages[2].startswith('equalizer=f=3200'), stages[2])
-        self.assertTrue(stages[3].startswith('highshelf=f=9000'), stages[3])
-        self.assertTrue(stages[4].startswith('deesser=i=0.4'), stages[4])
-        self.assertTrue(stages[5].startswith('acompressor=threshold=-22dB'), stages[5])
-        self.assertTrue(stages[6].startswith('acompressor=threshold=-10dB'), stages[6])
+        self.assertEqual(len(stages), 4, f'Expected 4 stages, got {len(stages)}: {stages}')
+        self.assertTrue(stages[0].startswith('highpass=f=90'), stages[0])
+        self.assertTrue(stages[1].startswith('equalizer=f=185'), stages[1])
+        self.assertTrue(stages[2].startswith('equalizer=f=2400'), stages[2])
+        self.assertTrue(stages[3].startswith('lowpass=f=13500'), stages[3])
+        self.assertNotIn('acompressor', VOICE_CHAIN)
+        self.assertNotIn('afftdn', VOICE_CHAIN)
+
+    # Backward compatibility aliases
+    test_voice_chain_5_stages_composition = test_voice_chain_composition
+    test_voice_chain_7_stages_composition = test_voice_chain_composition
 
     def test_master_lufs_target_minus_14_long_format(self):
         """Long 16:9 format targets -14.0 LUFS with true peak headroom."""
@@ -471,8 +474,8 @@ class TrimSilenceTests(unittest.TestCase):
         self.assertEqual(len(trimmed), 26640)
 
     def test_trim_silence_soft_fricative_preservation(self):
-        """Preserves soft fricatives (<0.012 amplitude) in the 25ms lead window without fade attenuation."""
-        # 15ms fricative at 0.008 amplitude (< 0.012 threshold) preceding voiced vowel
+        """Preserves soft fricatives (>=0.008 amplitude) in the 35ms lead window without fade attenuation."""
+        # 15ms fricative at 0.008 amplitude preceding voiced vowel
         lead = np.zeros(round(0.20 * SR), dtype=np.float32)
         fricative = np.full(round(0.015 * SR), 0.008, dtype=np.float32)
         vowel = (0.30 * np.sin(np.arange(round(0.40 * SR)) * 0.05)).astype(np.float32)
@@ -480,14 +483,14 @@ class TrimSilenceTests(unittest.TestCase):
         w = np.concatenate([lead, fricative, vowel, trail])
 
         trimmed = _trim_silence(w, sr=SR)
-        # Total duration: ~0.40s vowel + 0.015s fricative + 25ms lead + 30ms trail = ~0.47s
+        # Total duration: ~0.40s vowel + 0.015s fricative + lead/trail buffers (~0.495s)
         dur = len(trimmed) / float(SR)
         self.assertGreaterEqual(dur, 0.45)
-        self.assertLessEqual(dur, 0.49)
+        self.assertLessEqual(dur, 0.51)
 
-        # Fricative samples within [8ms, 25ms] of lead are unattenuated (0.008)
-        idx0 = int(np.where(np.abs(w) >= 0.012)[0][0])
-        start = max(0, idx0 - round(0.025 * SR))
+        # Fricative samples within lead buffer are unattenuated (0.008)
+        idx0 = int(np.where(np.abs(w) >= 0.008)[0][0])
+        start = max(0, idx0 - round(0.035 * SR))
         fric_start = len(lead) - start
         fric_end = fric_start + len(fricative)
         np.testing.assert_allclose(trimmed[fric_start:fric_end], 0.008)

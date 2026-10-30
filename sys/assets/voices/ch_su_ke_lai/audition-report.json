@@ -1,0 +1,13 @@
+{
+  "channel_id": "su_ke_lai",
+  "voice": "VietNarrator_SuKeLai",
+  "duration_seconds": 18.281,
+  "integrated_lufs": -15.11,
+  "true_peak_dbtp": -1.98,
+  "rms": 5932,
+  "sha256": "08f8730c25ce6fecda567403259f887777c7a8946fa5edc09a40986e902564ec",
+  "retake": 5,
+  "text": "Năm chín trăm ba mươi tám, bạn có biết bí mật nào giúp Ngô Quyền thắng lớn? Một đạo quân phương Bắc hùng hậu vượt biển tiến vào nước ta. Nhưng điều bất ngờ là Ngô Quyền không hề chọn cách nghênh chiến trực diện ngoài biển. Ông nhận ra con sông Bạch Đằng có một quy luật tự nhiên vô cùng đặc biệt. Đó chính là biên độ thủy triều lên xuống chênh lệch tới gần bốn mét.",
+  "engine": "colab-omnivoice",
+  "account_used": "account-13"
+}
