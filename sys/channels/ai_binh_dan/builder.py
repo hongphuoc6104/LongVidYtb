@@ -81,7 +81,7 @@ def build_week1_short_topic() -> ResearchedTopic:
             "shot_type": "visual_diagram",
             "action": "A clean 2D desktop terminal frame displaying a structured prompt for contract risk analysis on white canvas.",
             "char_ids": [],
-            "narration": "Nhưng điều bất ngờ là, chỉ mất ba mươi giây để phát hiện các điều khoản gài bẫy. Đầu tiên, bạn tải hợp đồng lên và dán câu lệnh rà soát rủi ro pháp lý.",
+            "narration": "Nhưng điều bất ngờ là, chỉ mất ba mươi giây để phát hiện các điều khoản gài bẫy. Đầu tiên bạn tải hợp đồng lên và dán câu lệnh rà soát rủi ro pháp lý.",
             "claim_facts": [
                 (
                     "chỉ mất ba mươi giây để phát hiện các điều khoản gài bẫy.",
@@ -91,7 +91,7 @@ def build_week1_short_topic() -> ResearchedTopic:
             ],
             "source_ids": ["SRC01"],
             "reqs": ["R02"],
-            "cov_quote": "Đầu tiên, bạn tải hợp đồng lên và dán câu lệnh rà soát rủi ro pháp lý.",
+            "cov_quote": "Đầu tiên bạn tải hợp đồng lên và dán câu lệnh rà soát rủi ro pháp lý.",
         },
         {
             "id": "SC03",
