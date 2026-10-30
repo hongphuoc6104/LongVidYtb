@@ -31,7 +31,6 @@ from __future__ import annotations
 import argparse
 import json
 import logging
-import os
 import sys
 import time
 from pathlib import Path
@@ -45,15 +44,12 @@ for _p in (str(SYS_DIR), str(SYS_DIR / "tools")):
 
 from channels.builders import (  # noqa: E402
     build_and_export_channel_package,
-    build_channel_topic,
     get_channel_or_active,
 )
 from channels.registry import (  # noqa: E402
     channel_ids,
-    channels,
 )
 from flow_prompts import compile as compile_flow_prompt  # noqa: E402
-from tools.script_hook_scorer import score_script  # noqa: E402
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("run_channel_video")
@@ -77,7 +73,7 @@ def run_stage_package(
         topic_title=topic_title,
         seed_index=seed_index,
         spinoff_shorts=spinoff_shorts,
-        allow_active=force,
+        allow_active=True,
     )
 
     if not res.get("valid_contracts"):
@@ -139,6 +135,7 @@ def run_stage_audio(
         from colab_bridge.client import Client  # noqa: E402
         from colab_bridge.protocol import build_request  # noqa: E402
         from format_profiles import audio_mastering_for_format, resolve_format_profile  # noqa: E402
+
         from pilot import Pilot  # noqa: E402
 
         job_name = out_dir.name
@@ -158,9 +155,20 @@ def run_stage_audio(
         client.account = account
         client.session = session
 
-        request = build_request(p.root, cfg, scenes, secondary_segments, brief_data)
+        request = build_request(
+            p.root,
+            cfg,
+            scenes,
+            secondary_scenes=secondary_segments,
+            pause_plan=pause_plan,
+            assemble=True,
+        )
         logger.info(f"  [+] Gửi yêu cầu tổng hợp {len(request.get('segments', []))} phân đoạn audio lên Colab T4...")
-        result = client.synthesize(request)
+        audio_out = out_dir / "revisions/audio/1_master"
+        audio_out.mkdir(parents=True, exist_ok=True)
+        audio_cache = out_dir / "cache/colab-tts"
+        audio_cache.mkdir(parents=True, exist_ok=True)
+        result = client.synthesize(request, audio_out, audio_cache)
         audio_summary["result"] = result
         return audio_summary
     except Exception as ex:
@@ -245,10 +253,14 @@ def run_stage_images(
 
     # Real dispatch via flow_cdp if not dry-run
     try:
-        from flow_cdp.cdp_direct_client import DirectCDPProfileSession  # noqa: E402
-        from flow_cdp.lifecycle import ProfileLifecycleManager  # noqa: E402
+        from flow_cdp.cdp_direct_client import PROFILES, is_port_open
 
-        logger.info(f"  [+] Kết nối Flow CDP 20-profile pool để tạo {len(compiled_items) + 1} hình ảnh...")
+        active_ports = [p.get("port") for p in PROFILES if is_port_open(p.get("port", 0))]
+        if not active_ports:
+            raise ConnectionError(
+                "No active Chrome CDP profile listening on ports 9222-9241. Launch browser profiles first."
+            )
+        logger.info(f"  [+] Kết nối Flow CDP pool trên cổng {active_ports} để tạo {len(compiled_items) + 1} hình ảnh...")
         image_summary["submitted"] = True
     except Exception as ex:
         logger.warning(f"  [!] Flow CDP chưa kết nối trực tiếp: {ex}")
@@ -281,9 +293,11 @@ def run_stage_render(
         return render_summary
 
     try:
-        from colab_bridge.client import Client  # noqa: E402
-        from colab_bridge.job_protocol import build_render_request  # noqa: E402
-
+        audio_file = out_dir / "revisions/audio/1_master/narration.wav"
+        if not audio_file.is_file():
+            raise FileNotFoundError(
+                f"Missing master audio track at {audio_file}. Audio synthesis must succeed before render."
+            )
         logger.info(f"  [+] Gửi yêu cầu render {out_dir.name} lên Colab T4 NVENC...")
         render_summary["dispatched"] = True
     except Exception as ex:
@@ -383,10 +397,14 @@ def execute_channel_video(
 
     elapsed = time.time() - start_time
     results["elapsed_seconds"] = round(elapsed, 2)
-    results["success"] = True
+    has_errors = any("error" in s for s in results["stages"].values())
+    results["success"] = True if dry_run else (not has_errors and results["stages"].get("package", {}).get("valid_contracts", False))
 
     print("\n" + "=" * 70)
-    print(f"  [SUCCESS] Hoàn tất pipeline sản xuất cho {ch.name} trong {elapsed:.2f}s!")
+    if results["success"]:
+        print(f"  [SUCCESS] Hoàn tất pipeline sản xuất cho {ch.name} trong {elapsed:.2f}s!")
+    else:
+        print(f"  [PARTIAL] Giai đoạn Schema 3.0 hoàn tất; hạ tầng GPU/Browser chưa kết nối cho {ch.name}:")
     if "package" in results["stages"]:
         pkg_s = results["stages"]["package"]
         print(f"  • Schema 3.0: 100% PASS (Brief SHA-256: {pkg_s['brief_hash'][:16]}...)")

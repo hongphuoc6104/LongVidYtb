@@ -347,7 +347,11 @@ def execute_full_e2e_stages(
             client.account = account
             client.session = session
             request = build_request(p.root, cfg, scenes, secondary_scenes=secondary, pause_plan=pause_plan, assemble=True)
-            synth_res = client.synthesize(request)
+            audio_out = output_dir / "revisions/audio/1_master"
+            audio_out.mkdir(parents=True, exist_ok=True)
+            audio_cache = output_dir / "cache/colab-tts"
+            audio_cache.mkdir(parents=True, exist_ok=True)
+            synth_res = client.synthesize(request, audio_out, audio_cache)
             results["audio_tts"] = {"status": "SUCCESS", "detail": synth_res}
         except Exception as ex:
             results["audio_tts"] = {

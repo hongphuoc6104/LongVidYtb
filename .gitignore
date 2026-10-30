@@ -129,6 +129,7 @@ sys/vocab/queue.json
 *.wav
 !sys/assets/voices/viet_narrator/reference.wav
 !sys/assets/voices/viet_narrator/sample.wav
+!sys/tests/fixtures/sample_render_package/public/narration.wav
 *.mp3
 *.ogg
 *.m4a
