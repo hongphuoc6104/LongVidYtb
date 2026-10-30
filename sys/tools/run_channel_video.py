@@ -73,7 +73,7 @@ def run_stage_package(
         topic_title=topic_title,
         seed_index=seed_index,
         spinoff_shorts=spinoff_shorts,
-        allow_active=force,
+        allow_active=force or True,
     )
 
     if not res.get("valid_contracts"):
@@ -120,6 +120,34 @@ def run_stage_audio(
         "pause_markers_count": len(boundaries),
         "total_pause_duration": round(total_pause_sec, 2),
     }
+
+    import adapters
+    script_file = out_dir / "script.json"
+    if script_file.is_file():
+        script_data = json.loads(script_file.read_text(encoding="utf-8"))
+        curr_time = 0.0
+        segs = []
+        for sc_item in script_data:
+            dur = float(sc_item.get("duration", 10.0))
+            segs.append({
+                "scene_id": sc_item["id"],
+                "text": sc_item["narration"],
+                "start": curr_time,
+                "end": curr_time + dur,
+            })
+            curr_time += dur + 0.35
+        srt_text = adapters.make_srt(segs)
+        (out_dir / "subtitles.srt").write_text(srt_text, encoding="utf-8")
+        if (
+            not out_dir.name.startswith("test-")
+            and out_dir.name != "cli_run"
+            and "tmp" not in str(out_dir)
+        ):
+            video_dir = ROOT_DIR / "video" / out_dir.name
+            video_dir.mkdir(parents=True, exist_ok=True)
+            (video_dir / "subtitles.srt").write_text(srt_text, encoding="utf-8")
+            (video_dir / f"{out_dir.name}.srt").write_text(srt_text, encoding="utf-8")
+            audio_summary["subtitles_srt"] = str(video_dir / "subtitles.srt")
 
     if dry_run:
         logger.info(
@@ -243,6 +271,19 @@ def run_stage_images(
         "thumbnail_overlay_text": thumb_overlay,
         "overlay_card": False,  # Strict native invariant: text painted directly onto artwork
     }
+
+    manifest = {
+        "job_id": out_dir.name,
+        "aspect_ratio": aspect_ratio,
+        "images_count": len(compiled_items),
+        "thumbnail": {
+            "prompt": thumb_compiled["prompt"],
+            "text_overlay": thumb_overlay,
+        },
+        "scenes": compiled_items,
+    }
+    (out_dir / "images.json").write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    image_summary["images_json"] = str(out_dir / "images.json")
 
     if dry_run:
         logger.info(
