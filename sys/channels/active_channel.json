@@ -1,0 +1,36 @@
+{
+  "channel_id": "ua_sao_vay",
+  "name": "Ủa Sao Vậy?",
+  "git_branch": "channel/ua-sao-vay",
+  "workspace_dirname": "channel-ua-sao-vay",
+  "niche": "Sự thật bất ngờ, khoa học gây tò mò",
+  "promise": "Mỗi video trả lời một câu 'ủa sao vậy' trong chưa tới một phút.",
+  "platform_routing": {
+    "tiktok": "short_9x16",
+    "youtube": "long_16x9"
+  },
+  "visual_profile_id": "ch_sticker_pop",
+  "voice": "VietNarrator",
+  "speed": 1.0,
+  "wave": 1,
+  "channel_profile_stamp": {
+    "id": "ua_sao_vay",
+    "version": 1,
+    "sha256": "93491d4370d5eb1eca2fe1a6165bd1c895f13c559f383bd0b74c2c14c682191c"
+  },
+  "speed_optimization": {
+    "render_mode": "hybrid_motion",
+    "fast_short_max_images": 5,
+    "spinoff_shorts_per_long": 6,
+    "remotion_motion_ratio": 0.4,
+    "estimated_short_minutes": [
+      6,
+      9
+    ],
+    "estimated_bundle_minutes": [
+      30,
+      40
+    ]
+  },
+  "plan_file": "sys/channels/ua_sao_vay/PLAN.md"
+}
