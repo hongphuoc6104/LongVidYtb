@@ -1,13 +1,13 @@
 {
   "channel_id": "ho_so_ky_la",
   "voice": "VietNarrator_HoSoKyLa",
-  "duration_seconds": 29.324,
-  "integrated_lufs": -15.21,
-  "true_peak_dbtp": -1.94,
-  "rms": 5701,
-  "sha256": "5413ebd7c9858a64a69f370d23a89f8e9efd293cbe8460042e215010aadcdc02",
-  "retake": 4,
+  "duration_seconds": 23.238,
+  "integrated_lufs": -15.01,
+  "true_peak_dbtp": -2.02,
+  "rms": 5923,
+  "sha256": "3d45ccacadbf48a35ac1a573c341cad6570d24693eb647982d7d93904f800a65",
+  "retake": 5,
   "text": "Bạn có biết bí mật rùng rợn về con tàu ma trôi dạt không một bóng người? Giữa đại dương mênh mông, con tàu Ma-ri Xê-lét được tìm thấy hoàn toàn nguyên vẹn. Thế nhưng mười người trên tàu đã biến mất mà không để lại bất kỳ dấu vết nào. Trên bàn ăn, thức ăn vẫn còn nguyên vẹn và ấm nóng. Quần áo của thủy thủ đoàn được xếp gọn gàng trong các khoang ngủ. Tiền bạc và hàng hóa quý giá trong kho hàng không hề bị đụng tới. Dường như mọi người vừa mới rời đi chỉ vài phút trước đó.",
   "engine": "colab-omnivoice",
-  "account_used": "account-05"
+  "account_used": "account-04"
 }
