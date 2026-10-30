@@ -773,6 +773,7 @@ def channel_cast(channel_id: str, character_id: str = "CH01") -> Dict[str, str]:
         "id": character_id,
         "name": ch.persona,
         "appearance": f"{ch.visual.cast_appearance}. {ch.visual.outfit}.",
+        "outfit": ch.visual.outfit,
     }
 
 
