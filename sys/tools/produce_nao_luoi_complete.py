@@ -20,17 +20,13 @@ import copy
 import hashlib
 import json
 import logging
-import math
-import os
+import re
 import shutil
 import subprocess
 import sys
-import time
-import urllib.parse
-import urllib.request
 import wave
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 from PIL import Image
 
@@ -41,16 +37,10 @@ for _p in (str(SYS_DIR), str(SYS_DIR / "tools")):
         sys.path.insert(0, _p)
 
 import audio_processing as ap
+from colab_bridge.client import Client, ColabError
+from colab_bridge.protocol import build_request
 from content.research_story_architect import (
-    compute_brief_hash,
     validate_production_bundle,
-    write_production_package,
-)
-from flow_cdp.cdp_direct_client import (
-    PROFILES,
-    DirectCDPProfileSession,
-    ensure_chrome_profiles_launched,
-    is_port_open,
 )
 from flow_prompts import compile as compile_flow_prompt
 from tools.script_hook_scorer import score_content_file
@@ -60,139 +50,254 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 logger = logging.getLogger("produce_nao_luoi")
 
 
-def synthesize_vietnamese_speech(text: str, out_wav: Path) -> float:
-    """Synthesize Vietnamese narration via TTS and convert to 48kHz mono PCM16 WAV."""
+CANDIDATE_ACCOUNTS: List[str] = [
+    "account-01",
+    "account-03",
+    "account-04",
+    "account-05",
+    "account-06",
+    "account-07",
+    "account-08",
+    "account-09",
+    "account-10",
+    "account-11",
+    "account-12",
+]
+
+SENTENCE_RE = re.compile(r'(?<=[.!?…])\s+|(?<=[.!?…]["\'”’])\s+')
+
+
+def split_into_clauses(text: str) -> List[str]:
+    """Split narration into natural spoken clauses/sentences."""
+    sentences = [s.strip() for s in SENTENCE_RE.split(text.strip()) if s.strip()]
+    clauses: List[str] = []
+    for s in sentences:
+        if len(s) > 120 and ("," in s or ";" in s):
+            sub = [c.strip() for c in re.split(r'(?<=[,;])\s+', s) if c.strip()]
+            clauses.extend(sub if sub else [s])
+        else:
+            clauses.append(s)
+    return [c for c in clauses if c]
+
+
+def concat_mono_pcm16_wavs(wav_paths: List[Path], out_wav: Path) -> None:
+    """Concatenate 48kHz mono PCM16 WAV files without transcoding loss."""
     out_wav.parent.mkdir(parents=True, exist_ok=True)
-    temp_mp3 = out_wav.with_suffix(".mp3")
-    
-    norm_text = normalize_for_tts(text)
-    encoded_text = urllib.parse.quote(norm_text)
-    url = f"https://translate.google.com/translate_tts?ie=UTF-8&q={encoded_text}&tl=vi&client=tw-ob"
-    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-    
-    with urllib.request.urlopen(req, timeout=30) as resp:
-        temp_mp3.write_bytes(resp.read())
-        
-    cmd = [
-        "ffmpeg", "-y", "-i", str(temp_mp3),
-        "-ar", "48000", "-ac", "1", "-c:a", "pcm_s16le",
-        str(out_wav)
-    ]
-    subprocess.run(cmd, check=True, capture_output=True)
-    temp_mp3.unlink(missing_ok=True)
-    
-    with wave.open(str(out_wav)) as w:
-        duration = w.getnframes() / w.getframerate()
-    return duration
+    with wave.open(str(out_wav), "wb") as outfile:
+        outfile.setnchannels(1)
+        outfile.setsampwidth(2)
+        outfile.setframerate(48000)
+        for p in wav_paths:
+            with wave.open(str(p), "rb") as infile:
+                if (infile.getnchannels(), infile.getsampwidth(), infile.getframerate()) != (1, 2, 48000):
+                    tmp_conv = p.with_name(f"conv_{p.name}")
+                    cmd = [
+                        "ffmpeg", "-y", "-i", str(p),
+                        "-ar", "48000", "-ac", "1", "-c:a", "pcm_s16le",
+                        str(tmp_conv),
+                    ]
+                    subprocess.run(cmd, check=True, capture_output=True)
+                    with wave.open(str(tmp_conv), "rb") as cin:
+                        outfile.writeframes(cin.readframes(cin.getnframes()))
+                    tmp_conv.unlink(missing_ok=True)
+                else:
+                    outfile.writeframes(infile.readframes(infile.getnframes()))
 
 
-def generate_audio_stage(job_dir: Path) -> Dict[str, Any]:
-    """Execute Stage 2: Audio Synthesis & Mastering for all scenes in job."""
-    logger.info(f"[*] GIAI ĐOẠN 2: Tổng hợp giọng kể TTS và làm chủ âm học cho {job_dir.name}...")
+def generate_audio_stage(job_dir: Path, target_account: Optional[str] = None) -> Dict[str, Any]:
+    """Execute Stage 2: Audio Synthesis via Colab T4 OmniVoice & Mastering for all scenes in job."""
+    logger.info(f"[*] GIAI ĐOẠN 2: Tổng hợp giọng kể OmniVoice và làm chủ âm học cho {job_dir.name}...")
     brief = json.loads((job_dir / "brief.json").read_text(encoding="utf-8"))
     content = json.loads((job_dir / "content.json").read_text(encoding="utf-8"))
-    
+
     audio_rev_dir = job_dir / "revisions/audio/1"
     audio_rev_dir.mkdir(parents=True, exist_ok=True)
-    
+
+    # 1. Voice profile resolution: ch_nao_luoi or fallback to viet_narrator
+    profile_path = SYS_DIR / "assets/voices/ch_nao_luoi/profile.json"
+    if not (profile_path.is_file() and (profile_path.parent / "reference.wav").is_file()):
+        profile_path = SYS_DIR / "assets/voices/viet_narrator/profile.json"
+    profile = json.loads(profile_path.read_text(encoding="utf-8"))
+    voice_name = profile.get("voice", "VietNarrator")
+    rel_profile = str(profile_path.relative_to(SYS_DIR))
+
+    # 2. Build format_v1 scenes plan (0.22s clause pause, 0.32s scene tail)
     scenes = content.get("scenes", [])
-    segments: List[Dict[str, Any]] = []
-    cues: List[Dict[str, Any]] = []
-    wav_parts: List[Path] = []
-    
-    current_time = 0.0
-    pause_gap = 0.35  # standard cadence pause between scenes
-    
-    for idx, sc in enumerate(scenes):
-        sc_id = sc["id"]
+    scenes_plan: List[Dict[str, Any]] = []
+    for sc in scenes:
         narration = sc.get("narration", "").strip()
-        part_wav = audio_rev_dir / f"segment-{idx:04d}.wav"
-        
-        dur = synthesize_vietnamese_speech(narration, part_wav)
+        norm_narration = normalize_for_tts(narration)
+        clauses = split_into_clauses(norm_narration)
+        if not clauses:
+            clauses = [norm_narration]
+        scenes_plan.append({
+            "scene_id": sc["id"],
+            "texts": clauses,
+            "gaps": [0.22] * max(0, len(clauses) - 1),
+            "tail": 0.32,
+            "tone": sc.get("tone", "narrative_warm"),
+        })
+
+    # 3. Colab configuration
+    base_cfg_path = SYS_DIR / "config.json"
+    cfg: Dict[str, Any] = json.loads(base_cfg_path.read_text(encoding="utf-8")) if base_cfg_path.is_file() else {}
+    cfg["voices"] = {"vi": rel_profile, "en": rel_profile}
+    cfg["tts_voice"] = voice_name
+    cfg["en_voice"] = voice_name
+    cfg["tts_speed"] = float(profile.get("recommended_speed", profile.get("source_speed", 1.0)))
+    cfg["audio_lufs"] = -11.0
+    cfg["audio_peak_db"] = -1.0
+    cfg["audio_voice_chain"] = profile.get("audio_voice_chain", ap.VOICE_CHAIN)
+
+    cfg.setdefault("colab_tts", {})
+    cfg["colab_tts"]["session"] = "video-pilot-tts"
+    cfg["colab_tts"]["_session_explicit"] = True
+    cfg["colab_tts"]["batch_size"] = 1
+    cfg["colab_tts"]["num_step"] = 32
+    cfg["colab_tts"]["timeout_seconds"] = 1800
+    cfg["colab_tts"]["models"] = {
+        "vi": {
+            "id": "kjanh/KhanhTTS-OmniVoice",
+            "revision": "20d056b8ea5d8d578b4cbaf1f703012fa3798a84",
+        },
+        "en": {
+            "id": "kjanh/KhanhTTS-OmniVoice",
+            "revision": "20d056b8ea5d8d578b4cbaf1f703012fa3798a84",
+        },
+    }
+
+    request = build_request(SYS_DIR, cfg, scenes_plan, assemble=False)
+    logger.info(f"Built Colab TTS request ID: {request['request_id']} with {len(request.get('items', []))} items")
+
+    # 4. Colab synthesis with failover
+    accounts_to_try: List[str] = []
+    if target_account:
+        accounts_to_try.append(target_account)
+    for a in CANDIDATE_ACCOUNTS:
+        if a not in accounts_to_try:
+            accounts_to_try.append(a)
+
+    account_used: Optional[str] = None
+    cache_base = job_dir / "cache/colab-tts"
+    cache_base.mkdir(parents=True, exist_ok=True)
+
+    for acc in accounts_to_try:
+        logger.info(f"Trying Colab OmniVoice synthesis on {acc}...")
+        acc_cfg = copy.deepcopy(cfg)
+        acc_cfg["colab_tts"]["account"] = acc
+        acc_cfg["colab_tts"]["job_id"] = job_dir.name
+
+        try:
+            client = Client(SYS_DIR, acc_cfg)
+            client.account = acc
+            client.session = "video-pilot-tts"
+
+            try:
+                client.reconcile()
+            except Exception:
+                pass
+
+            try:
+                client._ready(auto_start=True)
+            except Exception as ex_ready:
+                logger.warning(f"Account {acc} _ready failed: {ex_ready}")
+
+            client.synthesize(request, audio_rev_dir, cache_base / acc)
+            account_used = acc
+            logger.info(f"Colab OmniVoice synthesis succeeded on {acc}")
+            break
+        except (ColabError, Exception) as ex:
+            logger.warning(f"Synthesis on {acc} failed ({type(ex).__name__}): {ex}. Failing over...")
+            continue
+
+    if not account_used:
+        raise RuntimeError(f"All candidate Colab accounts failed for job {job_dir.name}: {accounts_to_try}")
+
+    # 5. Process synthesized segments
+    tts_result_file = audio_rev_dir / "tts-result.json"
+    if not tts_result_file.is_file():
+        raise FileNotFoundError(f"Missing {tts_result_file}")
+
+    tts_res = json.loads(tts_result_file.read_text(encoding="utf-8"))
+    synced_segments = tts_res.get("segments", [])
+
+    segments: List[Dict[str, Any]] = []
+    wav_parts: List[Path] = []
+    current_time = 0.0
+
+    for seg_info in synced_segments:
+        sc_id = seg_info["scene_id"]
+        text = seg_info["text"]
+        part_wav = audio_rev_dir / seg_info["path"]
         wav_parts.append(part_wav)
-        
-        # Word timestamps approximate for Remotion captions
-        words = narration.split()
-        word_dur = dur / max(1, len(words))
+
+        with wave.open(str(part_wav), "rb") as w:
+            total_dur = w.getnframes() / w.getframerate()
+
+        content_dur = float(seg_info.get("content_duration", total_dur))
+        words = text.split()
+        word_dur = content_dur / max(1, len(words))
         word_timestamps = [
-            {"word": w, "start": round(i * word_dur, 2), "end": round((i + 1) * word_dur, 2)}
+            {"word": w, "start": round(current_time + i * word_dur, 2), "end": round(current_time + (i + 1) * word_dur, 2)}
             for i, w in enumerate(words)
         ]
-        
+
         seg = {
             "scene_id": sc_id,
-            "text": narration,
+            "text": text,
             "path": f"revisions/audio/1/{part_wav.name}",
             "start": round(current_time, 3),
-            "end": round(current_time + dur, 3),
-            "content_end": round(current_time + dur, 3),
+            "end": round(current_time + total_dur, 3),
+            "content_end": round(current_time + content_dur, 3),
             "word_timestamps": word_timestamps,
         }
         segments.append(seg)
-        current_time += dur + pause_gap
+        current_time += total_dur
 
-    total_duration = round(current_time - pause_gap, 3)
+    total_duration = round(current_time, 3)
     from scripts.subtitles import subtitle_cues
-    cues = subtitle_cues(segments, aspect_ratio=brief.get("outputs", [{}])[0].get("aspect_ratio", "9:16"))
-    
-    # Concatenate all parts into raw narration.wav
-    concat_list = audio_rev_dir / "concat_list.txt"
-    with open(concat_list, "w", encoding="utf-8") as f:
-        for idx, p in enumerate(wav_parts):
-            f.write(f"file '{p.resolve()}'\n")
-            if idx < len(wav_parts) - 1:
-                # generate silence gap
-                silence_wav = audio_rev_dir / f"silence_{idx}.wav"
-                silence_frames = int(48000 * pause_gap)
-                with wave.open(str(silence_wav), "wb") as sw:
-                    sw.setnchannels(1)
-                    sw.setsampwidth(2)
-                    sw.setframerate(48000)
-                    sw.writeframes(b"\x00\x00" * silence_frames)
-                f.write(f"file '{silence_wav.resolve()}'\n")
-                
+    aspect = brief.get("outputs", [{}])[0].get("aspect_ratio", "9:16")
+    cues = subtitle_cues(segments, aspect_ratio=aspect)
+
+    # 6. Concatenate all segments
     raw_narration = audio_rev_dir / "narration_raw.wav"
-    cmd_concat = [
-        "ffmpeg", "-y", "-f", "concat", "-safe", "0",
-        "-i", str(concat_list),
-        "-c", "copy", str(raw_narration)
-    ]
-    subprocess.run(cmd_concat, check=True, capture_output=True)
-    concat_list.unlink(missing_ok=True)
-    
-    # Master audio to -11.0 LUFS and -1.0 dBTP via audio_processing.master()
+    concat_mono_pcm16_wavs(wav_parts, raw_narration)
+
+    # 7. Master audio to -11.0 LUFS and -1.0 dBTP via audio_processing.master()
     mastered_narration = audio_rev_dir / "narration.wav"
     shutil.copy2(raw_narration, mastered_narration)
     raw_narration.unlink(missing_ok=True)
     temp_work = audio_rev_dir / "master_work_tmp.wav"
-    ap.master(mastered_narration, temp_work, {"audio_lufs": -11.0, "audio_peak_db": -1.0})
-    
-    # Measure mastered audio parameters with ffmpeg loudnorm
+    ap.master(mastered_narration, temp_work, {"audio_lufs": -11.0, "audio_peak_db": -1.0, "audio_voice_chain": cfg["audio_voice_chain"]})
+
+    # 8. Measure loudness with ffmpeg loudnorm
     r_measure = subprocess.run(
         ["ffmpeg", "-v", "info", "-i", str(mastered_narration), "-af", "loudnorm=print_format=json", "-f", "null", "-"],
-        capture_output=True, text=True
+        capture_output=True, text=True,
     )
-    m_json = {}
+    m_json: Dict[str, Any] = {}
     try:
-        m_json = json.loads(r_measure.stderr[r_measure.stderr.rindex("{"):r_measure.stderr.rindex("}")+1])
+        s_idx = r_measure.stderr.rindex("{")
+        e_idx = r_measure.stderr.rindex("}") + 1
+        m_json = json.loads(r_measure.stderr[s_idx:e_idx])
     except Exception:
         pass
-        
+
     measured_lufs = float(m_json.get("input_i", -11.0))
     measured_tp = float(m_json.get("input_tp", -1.0))
-    
-    # Build subtitles.srt
+
+    # 9. Build subtitles.srt
     def fmt_time(seconds: float) -> str:
         ms = round(seconds * 1000)
         return f"{ms // 3600000:02}:{ms // 60000 % 60:02}:{ms // 1000 % 60:02},{ms % 1000:03}"
-        
+
     srt_lines = []
     for i, c in enumerate(cues, 1):
         srt_lines.append(f"{i}\n{fmt_time(c['start'])} --> {fmt_time(c['end'])}\n{c['text']}\n")
     srt_path = audio_rev_dir / "subtitles.srt"
     srt_path.write_text("\n".join(srt_lines), encoding="utf-8")
-    
-    # Build output.json for pilot and downstream compatibility
+
+    # 10. Build output.json for pilot and downstream compatibility
     audio_output = {
         "schema_version": "1.0",
         "job_id": job_dir.name,
@@ -206,6 +311,8 @@ def generate_audio_stage(job_dir: Path) -> Dict[str, Any]:
             "cues": cues,
             "measured_lufs": measured_lufs,
             "measured_peak_dbtp": measured_tp,
+            "account_used": account_used,
+            "engine": "colab-omnivoice",
             "tracks": {
                 "vi": {
                     "wav": "revisions/audio/1/narration.wav",
@@ -213,15 +320,15 @@ def generate_audio_stage(job_dir: Path) -> Dict[str, Any]:
                     "segments": segments,
                     "cues": cues,
                 }
-            }
-        }
+            },
+        },
     }
     (audio_rev_dir / "output.json").write_text(json.dumps(audio_output, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     (audio_rev_dir / "audio-result.json").write_text(json.dumps(audio_output["payload"], indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    
-    logger.info(f"  [+] Âm thanh đã tổng hợp hoàn tất: {len(scenes)} cảnh, tổng thời lượng: {total_duration:.2f}s")
-    logger.info(f"  [+] Âm học đo lường: {measured_lufs:.2f} LUFS (mục tiêu -11.0), True Peak: {measured_tp:.2f} dBTP (mục tiêu -1.0)")
-    
+
+    logger.info(f"  [+] Âm thanh OmniVoice đã tổng hợp hoàn tất: {len(segments)} phân đoạn, thời lượng: {total_duration:.2f}s")
+    logger.info(f"  [+] Âm học đo lường: {measured_lufs:.2f} LUFS (mục tiêu -11.0), True Peak: {measured_tp:.2f} dBTP (mục tiêu -1.0), Account: {account_used}")
+
     return audio_output["payload"]
 
 
@@ -230,26 +337,26 @@ async def generate_images_stage(job_dir: Path, aspect_ratio: str = "9:16", max_p
     logger.info(f"[*] GIAI ĐOẠN 3: Biên dịch prompt và sinh ảnh qua Flow CDP cho {job_dir.name} ({aspect_ratio})...")
     brief = json.loads((job_dir / "brief.json").read_text(encoding="utf-8"))
     content = json.loads((job_dir / "content.json").read_text(encoding="utf-8"))
-    
+
     img_rev_dir = job_dir / "revisions/images/1"
     img_rev_dir.mkdir(parents=True, exist_ok=True)
-    
+
     ratio_slug = aspect_ratio.replace(":", "x")
     target_size = (1080, 1920) if aspect_ratio == "9:16" else (1920, 1080)
-    
+
     # 1. Compile all items
     items_to_generate: List[Dict[str, Any]] = []
-    
+
     for sc in content.get("scenes", []):
         for img in sc.get("images", []):
             req_id = img["id"]
             target_jpg = img_rev_dir / f"{req_id}_{ratio_slug}.jpg"
             target_json = img_rev_dir / f"{req_id}_{ratio_slug}.json"
-            
+
             shot = img.get("shot_type", "full_scene")
             if shot == "variation":
                 shot = "full_scene"
-                
+
             compiled = compile_flow_prompt(
                 "NanoBanana2Lite",
                 "scene",
@@ -272,7 +379,7 @@ async def generate_images_stage(job_dir: Path, aspect_ratio: str = "9:16", max_p
                 "aspect": aspect_ratio,
                 "is_thumb": False,
             })
-            
+
     # Native Thumbnail item
     thumb_id = f"THUMBNAIL_{ratio_slug}"
     thumb_jpg = img_rev_dir / f"{thumb_id}.jpg"
@@ -288,7 +395,7 @@ async def generate_images_stage(job_dir: Path, aspect_ratio: str = "9:16", max_p
         thumb_prompt = f"{thumb_prompt}. Concrete prop: glowing digital alarm clock showing 02:00 on nightstand."
     if any(w in upper_text for w in ["TRÁCH", "LƯỜI", "TRÌ HOÃN"]) and not any(w in lower_prompt for w in ["desk", "book", "phone", "task"]):
         thumb_prompt = f"{thumb_prompt}. Concrete prop: glowing smartphone and heavy task notebook on study desk."
-    
+
     thumb_compiled = compile_flow_prompt(
         "NanoBanana2Lite",
         "scene",
@@ -311,9 +418,9 @@ async def generate_images_stage(job_dir: Path, aspect_ratio: str = "9:16", max_p
         "aspect": aspect_ratio,
         "is_thumb": True,
     })
-    
+
     logger.info(f"  [+] Tổng cộng {len(items_to_generate)} ảnh cần sinh (gồm {len(items_to_generate)-1} ảnh cảnh + 1 Native Thumbnail)")
-    
+
     # 2. Check already valid images on disk
     pending_items = []
     for it in items_to_generate:
@@ -329,9 +436,9 @@ async def generate_images_stage(job_dir: Path, aspect_ratio: str = "9:16", max_p
             except Exception:
                 pass
         pending_items.append(it)
-        
+
     logger.info(f"  [+] Cần sinh mới trên Flow CDP: {len(pending_items)} ảnh")
-    
+
     # 3. Launch Chrome profiles & generate via PersistentWorkerPool
     if pending_items:
         from flow_cdp.persistent_pool import PersistentWorkerPool
@@ -354,7 +461,7 @@ async def generate_images_stage(job_dir: Path, aspect_ratio: str = "9:16", max_p
                     "out_dir": str(img_rev_dir),
                     "editorial_overlay": {"enabled": False},
                 })
-            
+
             logger.info(f"  [+] Chờ PersistentWorkerPool hoàn thành {len(pending_items)} ảnh...")
             timeout_sec = max(300.0, len(pending_items) * 60.0)
             completed = pool.wait_completion(timeout=timeout_sec)
@@ -372,12 +479,12 @@ async def generate_images_stage(job_dir: Path, aspect_ratio: str = "9:16", max_p
                 im_resized.save(jpg, format="JPEG", quality=95)
             else:
                 im.verify()
-                
+
     # 4. Copy thumbnail to root of job_dir
     if thumb_jpg.is_file():
         dest_thumb = job_dir / f"thumbnail_{ratio_slug}.jpg"
         shutil.copy2(thumb_jpg, dest_thumb)
-        
+
     # 5. Build output.json for images module
     manifest_items = []
     files_list = []
@@ -394,7 +501,7 @@ async def generate_images_stage(job_dir: Path, aspect_ratio: str = "9:16", max_p
                 "sha256": sha,
                 "ratio": it["aspect"],
             })
-            
+
     images_output = {
         "schema_version": "1.0",
         "job_id": job_dir.name,
@@ -406,7 +513,7 @@ async def generate_images_stage(job_dir: Path, aspect_ratio: str = "9:16", max_p
     }
     (img_rev_dir / "output.json").write_text(json.dumps(images_output, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     logger.info(f"  [+] Đã lưu toàn bộ {len(manifest_items)} ảnh và 1 thumbnail tại {img_rev_dir}")
-    
+
     return images_output
 
 
@@ -415,31 +522,31 @@ def render_video_stage(job_dir: Path, audio_payload: Dict[str, Any], images_payl
     logger.info(f"[*] GIAI ĐOẠN 4: Chuẩn bị props và Render video Remotion cho {job_dir.name}...")
     brief = json.loads((job_dir / "brief.json").read_text(encoding="utf-8"))
     content = json.loads((job_dir / "content.json").read_text(encoding="utf-8"))
-    
+
     render_dir = job_dir / "revisions/render/1"
     public_dir = render_dir / "public"
     public_dir.mkdir(parents=True, exist_ok=True)
-    
+
     aspect = brief.get("outputs", [{}])[0].get("aspect_ratio", "9:16")
     ratio_slug = aspect.replace(":", "x")
-    
+
     # 1. Copy mastered audio into public/vi.wav
     audio_wav = job_dir / audio_payload["wav"]
     shutil.copy2(audio_wav, public_dir / "vi.wav")
-    
+
     # Copy sfx if available
     sfx_dir = SYS_DIR / "assets/sfx"
     if sfx_dir.is_dir():
         for sfx in sfx_dir.glob("*.wav"):
             shutil.copy2(sfx, public_dir / sfx.name)
-            
+
     # 2. Copy scene images into public/
     scenes_timeline = []
     by_id = {item["image_id"]: item for item in images_payload["items"]}
-    
+
     scenes = content.get("scenes", [])
     segments = audio_payload.get("segments", [])
-    
+
     for sc_idx, sc in enumerate(scenes):
         sc_id = sc["id"]
         sc_segs = [s for s in segments if s["scene_id"] == sc_id]
@@ -452,21 +559,21 @@ def render_video_stage(job_dir: Path, audio_payload: Dict[str, Any], images_payl
             end_time = next_segs[0]["start"] if next_segs else sc_segs[-1]["end"]
         else:
             end_time = audio_payload["duration"]
-        
+
         # Primary image for the scene
         sc_imgs = sc.get("images", [])
         if not sc_imgs:
             continue
-            
+
         prim_img_id = sc_imgs[0]["id"]
         img_item = by_id.get(prim_img_id)
         if not img_item:
             continue
-            
+
         src_img = job_dir / img_item["path"]
         target_name = f"{prim_img_id}_{ratio_slug}.jpg"
         shutil.copy2(src_img, public_dir / target_name)
-        
+
         # Sub-beats
         beats = []
         for b_idx, b_img in enumerate(sc_imgs):
@@ -476,14 +583,14 @@ def render_video_stage(job_dir: Path, audio_payload: Dict[str, Any], images_payl
                 continue
             b_name = f"{b_id}_{ratio_slug}.jpg"
             shutil.copy2(job_dir / b_item["path"], public_dir / b_name)
-            
+
             beat_at = 0.0 if b_idx == 0 else (end_time - start_time) * (b_idx / len(sc_imgs))
             beats.append({
                 "at": round(beat_at, 3),
                 "src": b_name,
                 "motion": {"type": "pan_subtle", "zoom": 1.05},
             })
-            
+
         scenes_timeline.append({
             "id": sc_id,
             "title": sc.get("title", sc_id),
@@ -492,13 +599,13 @@ def render_video_stage(job_dir: Path, audio_payload: Dict[str, Any], images_payl
             "end": end_time,
             "images": beats,
         })
-        
+
     # Copy thumbnail image if present
     thumb_name = f"THUMBNAIL_{ratio_slug}.jpg"
     thumb_path = job_dir / f"revisions/images/1/{thumb_name}"
     if thumb_path.is_file():
         shutil.copy2(thumb_path, public_dir / thumb_name)
-        
+
     # 3. Build props.json
     props = {
         "aspect_ratio": aspect,
@@ -518,9 +625,9 @@ def render_video_stage(job_dir: Path, audio_payload: Dict[str, Any], images_payl
         "modern_style": True,
         "thumbnail_spec": brief.get("packaging", {}).get("thumbnail_spec", {}),
     }
-    
+
     (render_dir / "props.json").write_text(json.dumps(props, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    
+
     # 4. Execute render.mjs via Node
     logger.info(f"  [+] Chạy render.mjs Remotion tại {render_dir}...")
     cmd_render = ["node", "sys/renderer/render.mjs", str(render_dir)]
@@ -528,32 +635,32 @@ def render_video_stage(job_dir: Path, audio_payload: Dict[str, Any], images_payl
     if res.returncode != 0:
         logger.error(f"Render thất bại: {res.stderr}\n{res.stdout}")
         raise RuntimeError(f"Remotion render thất bại (mã {res.returncode})")
-        
+
     logger.info("  [+] Remotion render thành công!")
-    
+
     # 5. Copy final deliverables to video/<job_dir.name>/
     video_deliv_dir = ROOT_DIR / "video" / job_dir.name
     video_deliv_dir.mkdir(parents=True, exist_ok=True)
-    
+
     source_mp4 = render_dir / f"video_{ratio_slug}.mp4"
     if not source_mp4.is_file():
         source_mp4 = render_dir / "video.mp4"
-        
+
     if not source_mp4.is_file():
         raise FileNotFoundError(f"Không tìm thấy video đầu ra tại {render_dir}")
-        
+
     final_mp4 = video_deliv_dir / f"{job_dir.name}.mp4"
     named_mp4 = video_deliv_dir / f"video_{ratio_slug}.mp4"
     shutil.copy2(source_mp4, final_mp4)
     shutil.copy2(source_mp4, named_mp4)
-    
+
     # Subtitles
     srt_source = render_dir / "subtitles.srt"
     if not srt_source.is_file():
         srt_source = job_dir / "revisions/audio/1/subtitles.srt"
     shutil.copy2(srt_source, video_deliv_dir / f"{job_dir.name}.srt")
     shutil.copy2(srt_source, video_deliv_dir / "subtitles.srt")
-    
+
     # Thumbnail / Cover
     thumb_source = job_dir / f"thumbnail_{ratio_slug}.jpg"
     if not thumb_source.is_file():
@@ -561,7 +668,7 @@ def render_video_stage(job_dir: Path, audio_payload: Dict[str, Any], images_payl
     if thumb_source.is_file():
         shutil.copy2(thumb_source, video_deliv_dir / f"thumbnail_{ratio_slug}.jpg")
         shutil.copy2(thumb_source, video_deliv_dir / "cover.jpg")
-        
+
     logger.info(f"  [✓] Đã xuất video MP4 và subtitles SRT đầy đủ tại: {video_deliv_dir}")
     return final_mp4
 
@@ -571,11 +678,11 @@ def verify_job(job_dir: Path, mp4_path: Optional[Path] = None) -> Dict[str, Any]
     logger.info(f"[*] GIAI ĐOẠN 5: Kiểm định xác thực cho {job_dir.name}...")
     brief = json.loads((job_dir / "brief.json").read_text(encoding="utf-8"))
     content = json.loads((job_dir / "content.json").read_text(encoding="utf-8"))
-    
+
     valid, errors = validate_production_bundle(SYS_DIR, brief, content)
     fmt = brief.get("format_profile", "short_9x16")
     hook = score_content_file(job_dir / "content.json", "nao_luoi", fmt)
-    
+
     probe_info = {}
     if mp4_path and mp4_path.is_file():
         cmd = [
@@ -585,7 +692,7 @@ def verify_job(job_dir: Path, mp4_path: Optional[Path] = None) -> Dict[str, Any]
         ]
         r = subprocess.run(cmd, capture_output=True, text=True, check=True)
         probe_info = json.loads(r.stdout)
-        
+
     return {
         "job_id": job_dir.name,
         "format": fmt,
@@ -606,34 +713,34 @@ async def main():
     parser = argparse.ArgumentParser(description="Produce complete video packages for channel nao_luoi")
     parser.add_argument("--job", choices=["9x16", "16x9", "all"], default="all")
     args = parser.parse_args()
-    
+
     runs_dir = SYS_DIR / "runs"
     jobs_to_run = []
     if args.job in ("9x16", "all"):
         jobs_to_run.append((runs_dir / "nao-luoi-week1-9x16", "9:16"))
     if args.job in ("16x9", "all"):
         jobs_to_run.append((runs_dir / "nao-luoi-week1-16x9", "16:9"))
-        
+
     overall_summary = {}
-    
+
     for job_dir, aspect in jobs_to_run:
         logger.info("=" * 70)
         logger.info(f"  BẮT ĐẦU SẢN XUẤT JOB: {job_dir.name} ({aspect})")
         logger.info("=" * 70)
-        
+
         # 1. Audio
         audio_payload = generate_audio_stage(job_dir)
-        
+
         # 2. Images
         images_payload = await generate_images_stage(job_dir, aspect_ratio=aspect, max_profiles=4)
-        
+
         # 3. Video Render
         final_mp4 = render_video_stage(job_dir, audio_payload, images_payload)
-        
+
         # 4. Verify
         verification = verify_job(job_dir, final_mp4)
         overall_summary[job_dir.name] = verification
-        
+
     logger.info("\n" + "=" * 70)
     logger.info("  KẾT QUẢ SẢN XUẤT HOÀN TẤT CHO KÊNH NÃO LƯỜI:")
     logger.info(json.dumps(overall_summary, indent=2, ensure_ascii=False))
