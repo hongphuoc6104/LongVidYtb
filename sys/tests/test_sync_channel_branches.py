@@ -23,6 +23,7 @@ from tools.sync_channel_branches import (  # noqa: E402
     is_excluded_path,
     is_preserved_path,
     main,
+    push_workspace_branch,
     sync_channel_workspace,
     verify_all_workspaces,
     verify_channel,
@@ -342,3 +343,73 @@ def test_format_reports_output_readability() -> None:
     rendered_sync = format_sync_report(mock_sync_result)
     assert "Created files:    10" in rendered_sync
     assert "Preserved files:  3" in rendered_sync
+
+
+def test_push_workspace_branch_with_local_git_remote(tmp_path: Path) -> None:
+    origin_dir = tmp_path / "origin.git"
+    origin_dir.mkdir()
+    subprocess.run(["git", "init", "--bare", "-b", "channel/nao-luoi"], cwd=str(origin_dir), check=True, capture_output=True)
+
+    ws_dir = tmp_path / "channel-nao-luoi"
+    _init_git_repo(ws_dir, initial_branch="channel/nao-luoi")
+    subprocess.run(["git", "remote", "add", "origin", str(origin_dir)], cwd=str(ws_dir), check=True, capture_output=True)
+
+    # Clean push
+    res_clean = push_workspace_branch(ws_dir, "channel/nao-luoi")
+    assert res_clean["pushed"] is True
+    assert res_clean["committed"] is False
+
+    # Modify and push
+    (ws_dir / "new_file.txt").write_text("Hello Git", encoding="utf-8")
+    res_changed = push_workspace_branch(ws_dir, "channel/nao-luoi", commit_message="test: add file")
+    assert res_changed["pushed"] is True
+    assert res_changed["committed"] is True
+
+    log_out = subprocess.run(
+        ["git", "log", "-1", "--pretty=%B"], cwd=str(origin_dir), check=True, text=True, capture_output=True
+    ).stdout.strip()
+    assert "test: add file" in log_out
+
+
+def test_verify_channel_detects_corruptions_and_mismatches(tmp_path: Path) -> None:
+    ws_dir = tmp_path / "channel-tui-tien"
+    _init_git_repo(ws_dir, initial_branch="wrong-branch")
+    ch = get_channel("tui_tien")
+
+    # Wrong branch
+    res_b = verify_channel(ch, ws_dir, system_root=SYS_DIR)
+    assert res_b["git_branch"]["ok"] is False
+    assert res_b["git_branch"]["actual"] == "wrong-branch"
+
+    # Switch to correct branch
+    subprocess.run(["git", "checkout", "-b", "channel/tui-tien"], cwd=str(ws_dir), check=True, capture_output=True)
+
+    # Corrupt active_channel.json
+    ac_file = ws_dir / "sys/channels/active_channel.json"
+    ac_file.parent.mkdir(parents=True)
+    ac_file.write_text("{corrupt-json", encoding="utf-8")
+
+    res_c = verify_channel(ch, ws_dir, system_root=SYS_DIR)
+    assert res_c["active_channel"]["ok"] is False
+    assert "JSON decode error" in res_c["active_channel"]["error"]
+
+    # Mismatched channel_id
+    ac_file.write_text(json.dumps({"channel_id": "WRONG_ID", "git_branch": "channel/tui-tien"}), encoding="utf-8")
+    res_m = verify_channel(ch, ws_dir, system_root=SYS_DIR)
+    assert res_m["active_channel"]["ok"] is False
+    assert res_m["active_channel"]["channel_id"] == "WRONG_ID"
+
+
+def test_symlink_node_modules(tmp_path: Path) -> None:
+    source_root = tmp_path / "source"
+    target_dir = tmp_path / "target"
+    (source_root / "sys/renderer/node_modules").mkdir(parents=True)
+    (target_dir / "sys/renderer").mkdir(parents=True)
+
+    ch = get_channel("nao_luoi")
+    res = sync_channel_workspace(source_root, target_dir, ch, dry_run=False)
+    assert res["node_modules_linked"] is True
+    target_nm = target_dir / "sys/renderer/node_modules"
+    assert target_nm.is_symlink()
+    assert target_nm.resolve() == (source_root / "sys/renderer/node_modules").resolve()
+
