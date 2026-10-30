@@ -1,0 +1,36 @@
+{
+  "channel_id": "thuong_cho_kheo",
+  "name": "Thương Cho Khéo",
+  "git_branch": "channel/thuong-cho-kheo",
+  "workspace_dirname": "channel-thuong-cho-kheo",
+  "niche": "Tình cảm, giao tiếp và cách cư xử",
+  "promise": "Những tình huống tình cảm ai cũng gặp, và cách nói cho khéo.",
+  "platform_routing": {
+    "tiktok": "short_9x16",
+    "youtube": "long_16x9"
+  },
+  "visual_profile_id": "ch_pastel_duo",
+  "voice": "VietNarrator",
+  "speed": 1.0,
+  "wave": 2,
+  "channel_profile_stamp": {
+    "id": "thuong_cho_kheo",
+    "version": 1,
+    "sha256": "bd5c8cac134937653a7d682069e9123024d48b220aefb061d7d4b5e714268ae3"
+  },
+  "speed_optimization": {
+    "render_mode": "hybrid_motion",
+    "fast_short_max_images": 6,
+    "spinoff_shorts_per_long": 4,
+    "remotion_motion_ratio": 0.4,
+    "estimated_short_minutes": [
+      7,
+      11
+    ],
+    "estimated_bundle_minutes": [
+      32,
+      42
+    ]
+  },
+  "plan_file": "sys/channels/thuong_cho_kheo/PLAN.md"
+}
