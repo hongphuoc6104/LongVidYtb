@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "channel_id": "co_the_ke",
+  "channel_name": "Cơ Thể Kể",
+  "git_branch": "channel/co-the-ke",
+  "workspace_dirname": "channel-co-the-ke",
+  "locked_at": "2026-10-30T18:04:56+00:00",
+  "status": "LOCKED_RELEASE_READY",
+  "visual_lock": {
+    "visual_profile_id": "ch_organ_buddies",
+    "label": "Nội tạng dễ thương: cơ quan có mặt và tính cách, nền trắng sạch",
+    "palette": [
+      "#FFFFFF",
+      "#F4A6A6",
+      "#F6C28B",
+      "#A23E48",
+      "#F28C9B",
+      "#7FB3D5"
+    ],
+    "cast_appearance": "Recurring organ characters: Tim (heart) brave and loud, Dạ Dày (stomach) dramatic complainer, Gan (liver) tired hard worker, Não (brain-shaped round pink blob) overthinking boss; plus a simple doodle human host with a round white head",
+    "fast_short_max_images": 6
+  },
+  "voice_lock": {
+    "voice_profile_id": "ch_co_the_ke",
+    "speaker": "VietNarrator",
+    "persona": "Các cơ quan nội tạng biết nói, mỗi cơ quan một tính cách",
+    "tts_speed_applied": 1.1,
+    "profile_sha256": "552890f2f4f4a1f8191543183e090547bbff656f2982f69c9634ff0b79bccfd3"
+  },
+  "week1_short_9x16": {
+    "job_id": "co-the-ke-week1-9x16",
+    "format_profile": "short_9x16",
+    "mp4_relpath": "video/co-the-ke-week1-9x16/co-the-ke-week1-9x16.mp4",
+    "mp4_sha256": "2e0f6e72d8a03c0aea66ce97f9e9ed7b49812199076261b20f980967cacedcb3",
+    "mp4_bytes": 17213423,
+    "resolution": "1080x1920",
+    "fps": 30.0,
+    "video_codec": "h264",
+    "audio_codec": "aac",
+    "mp4_duration_sec": 23.744,
+    "wav_duration_sec": 23.69,
+    "sync_delta_sec": 0.054,
+    "loudness_lufs": -15.2,
+    "true_peak_dbtp": -2.0,
+    "srt_relpath": "video/co-the-ke-week1-9x16/co-the-ke-week1-9x16.srt",
+    "srt_sha256": "f255b3f4d68db55c389aa2634a4931a46bbd6065ed8190597464f35c36c28508",
+    "thumbnail_relpath": "video/co-the-ke-week1-9x16/thumbnail_9x16.jpg",
+    "thumbnail_sha256": "64aa820103316e734ea2c4d61c22d9ab7f954e1cef737d1163d5acb007c5995c",
+    "flow_scene_images_count": 5,
+    "brief_sha256": "f01f2a45306a390a19468dff0b33934d1c017eff811e161c4f7764367983b1fa",
+    "content_sha256": "98831b5fa6999a00c72008464126dfb7d347cdecc205fbe25e662bb1673da61d"
+  }
+}

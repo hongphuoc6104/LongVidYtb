@@ -27,5 +27,7 @@
     }
   ],
   "listening_verified": true,
-  "note": "Studio-tuned human voice profile for channel nao_luoi (narrative_warm, speed 1.08)."
+  "note": "Studio-tuned human voice profile for channel nao_luoi (narrative_warm, speed 1.08).",
+  "sample_sha256": "c135187b0a0bb552cd0db06120fbd7afb89cc4e7ac3a250dc978137ed3dcf840",
+  "sample_listening_verified": true
 }

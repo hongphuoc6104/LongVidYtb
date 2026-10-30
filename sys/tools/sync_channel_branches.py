@@ -80,6 +80,7 @@ PRESERVED_PATTERNS: Tuple[str, ...] = (
     "sys/channels/active_channel.json",
     "sys/channels/*/builder.py",
     "sys/channels/*/PLAN.md",
+    "sys/channels/*/week1_release_lock.json",
     "sys/runs",
     "video",
     "sys/staging",
@@ -96,6 +97,7 @@ EXCLUDED_PATTERNS: Tuple[str, ...] = (
     "experiments",
     "sys/logs",
     "logs",
+    "sys/reports",
     "sys/staging",
     "staging",
     "sys/batches",
@@ -116,6 +118,9 @@ EXCLUDED_PATTERNS: Tuple[str, ...] = (
     ".gemini",
     ".antigravity",
     ".cursor",
+    ".agents/teamwork",
+    ".agents/sentinel",
+    ".agents/ORIGINAL_REQUEST.md",
     "--help",
     "list",
     "status",
@@ -165,10 +170,10 @@ def is_preserved_path(rel_path: Path, channel_id: Optional[str] = None) -> bool:
     if rel_str == "sys/channels/active_channel.json":
         return True
 
-    # Protected channel builder scripts and PLAN.md under sys/channels/<id>/
+    # Protected channel builder scripts, PLAN.md, and release locks under sys/channels/<id>/
     parts = rel_path.parts
     if len(parts) >= 4 and parts[0] == "sys" and parts[1] == "channels":
-        if parts[3] in ("builder.py", "PLAN.md"):
+        if parts[3] in ("builder.py", "PLAN.md", "week1_release_lock.json"):
             return True
 
     # Protected production runs and video deliverables

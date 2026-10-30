@@ -27,5 +27,7 @@
     }
   ],
   "listening_verified": true,
-  "note": "Studio-tuned human voice profile for channel ua_sao_vay (analytical_crisp, speed 1.16)."
+  "note": "Studio-tuned human voice profile for channel ua_sao_vay (analytical_crisp, speed 1.16).",
+  "sample_sha256": "ad94fb5e5bf9d8095d30b78e29ae5f83688750246a767edcd66963e428ae77df",
+  "sample_listening_verified": true
 }
