@@ -1,0 +1,13 @@
+{
+  "channel_id": "tui_tien",
+  "voice": "VietNarrator_TuiTien",
+  "duration_seconds": 18.909,
+  "integrated_lufs": -14.88,
+  "true_peak_dbtp": -1.97,
+  "rms": 5986,
+  "sha256": "943bf48f8b08681763c95a22d56f0627924754a9b3280e7bb5813e5289c79d15",
+  "retake": 5,
+  "text": "Ly trà sữa ba mươi lăm nghìn, bạn nghĩ chủ quán thật ra lời bao nhiêu? Nhưng con số thực tế trong sổ kế toán sẽ khiến bạn giật mình. Nhiều người nghĩ bán một ly trà sữa là siêu lợi nhuận. Thực tế tiền nguyên liệu gồm cốt trà, bột sữa và trân châu chỉ tốn sáu nghìn đồng. Chiếc ly nhựa, màng ép và ống hút cộng thêm một nghìn đồng nữa. Như vậy chi phí trực tiếp cho một ly nước mới chỉ hết bảy nghìn đồng.",
+  "engine": "colab-omnivoice",
+  "account_used": "account-05"
+}

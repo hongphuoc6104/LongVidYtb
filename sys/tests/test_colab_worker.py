@@ -250,11 +250,11 @@ class WorkerTests(unittest.TestCase):
         validate_result(out, req)
         res = read(out / 'tts-result.json')
         content_dur = res['segments'][0]['content_duration']
-        # Active speech is 0.50s + 25ms lead + 30ms trail = ~0.555s (well below untrimmed 0.95s)
-        self.assertGreaterEqual(content_dur, 0.54)
-        self.assertLessEqual(content_dur, 0.57)
+        # Active speech is 0.50s + 35ms lead + 45ms trail = ~0.58s (well below untrimmed 0.95s)
+        self.assertGreaterEqual(content_dur, 0.56)
+        self.assertLessEqual(content_dur, 0.59)
 
-        # Verify _trim_silence is 100% idempotent and preserves soft initial fricative pre-roll (< 0.012)
+        # Verify _trim_silence is 100% idempotent and preserves soft initial fricative pre-roll (threshold 0.008)
         soft_fricative = np.full(round(0.015 * 48000), 0.008, dtype=np.float32)
         lead_48k = np.zeros(round(0.20 * 48000), dtype=np.float32)
         vowel_48k = (0.25 * np.sin(np.arange(round(0.30 * 48000)) * 0.05)).astype(np.float32)
@@ -263,8 +263,8 @@ class WorkerTests(unittest.TestCase):
         once = worker._trim_silence(utterance, sr=48000)
         twice = worker._trim_silence(once, sr=48000)
         np.testing.assert_array_equal(once, twice)
-        # Soft 15ms fricative resides inside the 25ms pre-roll window unattenuated by the 8ms fade
-        fric_start = len(lead_48k) - (np.where(np.abs(utterance) >= 0.012)[0][0] - round(0.025 * 48000))
+        # Soft 15ms fricative resides inside the 35ms pre-roll window unattenuated by the 10ms fade
+        fric_start = len(lead_48k) - (np.where(np.abs(utterance) >= 0.008)[0][0] - round(0.035 * 48000))
         fric_end = fric_start + len(soft_fricative)
         self.assertTrue(np.allclose(once[fric_start:fric_end], 0.008))
 
@@ -275,8 +275,8 @@ class WorkerTests(unittest.TestCase):
         self.assertIn('vi đê ô', norm)
         self.assertIn('đô pa min', norm)
 
-        # 2. Leading prompt-bleed click (<200ms) + dead silence (>=100ms) is stripped and remains idempotent
-        bleed_48k = (0.06 * np.sin(np.arange(round(0.06 * 48000)) * 0.09)).astype(np.float32)
+        # 2. Leading prompt-bleed micro-click (<60ms, RMS < 0.035) + dead silence (>=120ms) is stripped and remains idempotent
+        bleed_48k = (0.025 * np.sin(np.arange(round(0.04 * 48000)) * 0.09)).astype(np.float32)
         gap_48k = np.zeros(round(0.32 * 48000), dtype=np.float32)
         speech_48k = (0.22 * np.sin(np.arange(round(0.60 * 48000)) * 0.05)).astype(np.float32)
         trail_48k = np.zeros(round(0.10 * 48000), dtype=np.float32)
@@ -284,8 +284,14 @@ class WorkerTests(unittest.TestCase):
         trimmed_once = worker._trim_silence(raw_bleed, sr=48000)
         trimmed_twice = worker._trim_silence(trimmed_once, sr=48000)
         np.testing.assert_array_equal(trimmed_once, trimmed_twice)
-        self.assertLessEqual(len(trimmed_once) / 48000.0, 0.67)
-        self.assertGreaterEqual(len(trimmed_once) / 48000.0, 0.64)
+        self.assertLessEqual(len(trimmed_once) / 48000.0, 0.70)
+        self.assertGreaterEqual(len(trimmed_once) / 48000.0, 0.65)
+
+        # Real initial syllable (RMS >= 0.035) followed by pause is preserved
+        syllable_48k = (0.06 * np.sin(np.arange(round(0.06 * 48000)) * 0.09)).astype(np.float32)
+        raw_syllable = np.concatenate([syllable_48k, gap_48k, speech_48k, trail_48k])
+        kept = worker._strip_leading_prompt_bleed(raw_syllable, sr=48000)
+        np.testing.assert_array_equal(kept, raw_syllable)
 
         # 3. Truncated Vietnamese utterance triggers deterministic batch_size=1 retry and recovers full audio
         calls = []
