@@ -1,0 +1,36 @@
+{
+  "channel_id": "ai_binh_dan",
+  "name": "AI Bình Dân",
+  "git_branch": "channel/ai-binh-dan",
+  "workspace_dirname": "channel-ai-binh-dan",
+  "niche": "Mẹo dùng AI và công nghệ cho người thường",
+  "promise": "Một mẹo AI làm được ngay trong 1 phút, không cần biết code.",
+  "platform_routing": {
+    "tiktok": "short_9x16",
+    "youtube": "long_16x9"
+  },
+  "visual_profile_id": "ch_tech_doodle",
+  "voice": "VietNarrator",
+  "speed": 1.0,
+  "wave": 2,
+  "channel_profile_stamp": {
+    "id": "ai_binh_dan",
+    "version": 1,
+    "sha256": "f76fa51527c64531939671baa42fbfec618bd3bd61815024562a21e080d6d901"
+  },
+  "speed_optimization": {
+    "render_mode": "screen_capture_hybrid",
+    "fast_short_max_images": 4,
+    "spinoff_shorts_per_long": 5,
+    "remotion_motion_ratio": 0.6,
+    "estimated_short_minutes": [
+      5,
+      8
+    ],
+    "estimated_bundle_minutes": [
+      25,
+      35
+    ]
+  },
+  "plan_file": "sys/channels/ai_binh_dan/PLAN.md"
+}
