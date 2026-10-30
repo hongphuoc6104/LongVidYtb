@@ -1290,6 +1290,30 @@ def build_and_export_channel_package(
     narrations = [sc.narration for sc in topic.scenes]
     hook_score = score_script(narrations, channel_id=ch.id, format_profile=format_profile)
 
+    if not (output_dir / "subtitles.srt").is_file():
+        from adapters import make_srt
+
+        cursor = 0.0
+        segments = []
+        for idx, sc in enumerate(topic.scenes, 1):
+            dur = sc.duration
+            p_tail = getattr(sc, "p_tail", 0.7)
+            segments.append({
+                "scene_id": getattr(sc, "scene_id", getattr(sc, "id", f"SC{idx:02d}")),
+                "text": sc.narration,
+                "start": cursor,
+                "end": cursor + dur,
+                "content_end": cursor + dur,
+            })
+            cursor += dur + p_tail
+        srt_text = make_srt(segments)
+        (output_dir / "subtitles.srt").write_text(srt_text + "\n", encoding="utf-8")
+        if output_dir.parent.name == "runs":
+            video_dir = SYS_DIR.parent / "video" / output_dir.name
+            video_dir.mkdir(parents=True, exist_ok=True)
+            (video_dir / "subtitles.srt").write_text(srt_text + "\n", encoding="utf-8")
+            (video_dir / f"{output_dir.name}.srt").write_text(srt_text + "\n", encoding="utf-8")
+
     result["channel_id"] = ch.id
     result["channel_name"] = ch.name
     result["format_profile"] = format_profile

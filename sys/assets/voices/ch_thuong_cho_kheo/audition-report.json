@@ -1,0 +1,13 @@
+{
+  "channel_id": "thuong_cho_kheo",
+  "voice": "VietNarrator_ThuongChoKheo",
+  "duration_seconds": 25.107,
+  "integrated_lufs": -15.17,
+  "true_peak_dbtp": -2.05,
+  "rms": 5819,
+  "sha256": "b2c3cfd7edd3e4ccfcd9a1440c2c8e39a5f6a348bd698614e04cb944ad4398db",
+  "retake": 4,
+  "text": "Bạn đừng bao giờ trả lời câu này khi người yêu bảo em không sao. Bản năng của chúng ta thường là thở phào nhẹ nhõm rồi quay đi. Nhưng điều bất ngờ là câu nói đó chính là một tín hiệu cầu cứu. Người ấy không hề giận dỗi vô cớ, mà đang cảm thấy vô cùng cô đơn. Nếu bạn vội đáp vậy thì tốt rồi, khoảng cách giữa hai người sẽ lớn dần. Đó là câu trả lời sai lầm nhất, khiến đối phương khép chặt cõi lòng.",
+  "engine": "colab-omnivoice",
+  "account_used": "account-04"
+}

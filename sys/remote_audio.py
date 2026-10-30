@@ -78,6 +78,13 @@ def produce(pilot, job, out):
         cfg.setdefault('colab_tts', {}).setdefault('voices', {})[language] = rel_path
         cfg['en_voice' if language == 'en' else 'tts_voice'] = profile['voice']
         cfg['en_speed' if language == 'en' else 'tts_speed'] = settings['speed']
+        if language == primary:
+            if 'audio_lufs' in profile:
+                cfg['audio_lufs'] = float(profile['audio_lufs'])
+            if 'audio_peak_db' in profile:
+                cfg['audio_peak_db'] = float(profile['audio_peak_db'])
+            if profile.get('audio_voice_chain'):
+                cfg['audio_voice_chain'] = str(profile['audio_voice_chain'])
     takes = retakes(pilot, job)
     gaps = cfg.get('tts_pause', DEFAULT_PAUSE)
     scenes = []

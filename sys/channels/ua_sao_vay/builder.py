@@ -25,7 +25,7 @@ TOOLS_DIR = SYS_DIR / "tools"
 if str(TOOLS_DIR) not in sys.path:
     sys.path.insert(0, str(TOOLS_DIR))
 
-from channels.registry import get_channel  # noqa: E402
+from adapters import make_srt  # noqa: E402
 from content.research_story_architect import (  # noqa: E402
     PackagingSpec,
     ResearchedBeat,
@@ -37,11 +37,15 @@ from content.research_story_architect import (  # noqa: E402
     serialize_brief_json,
     validate_production_bundle,
 )
+from flow_prompts import compile as compile_flow_prompt  # noqa: E402
 from omni_platform import short_plans  # noqa: E402
 from script_cadence_checker import ScriptCadenceChecker, count_syllables  # noqa: E402
 from script_hook_scorer import HookScore, score_script  # noqa: E402
 
+from channels.registry import get_channel  # noqa: E402
+
 CHANNEL_ID = "ua_sao_vay"
+ROOT_DIR = SYS_DIR.parent
 DEFAULT_SHORT_RUN_DIR = SYS_DIR / "runs" / "ua-sao-vay-week1-9x16"
 DEFAULT_LONG_RUN_DIR = SYS_DIR / "runs" / "ua-sao-vay-week1-16x9"
 
@@ -705,6 +709,96 @@ def _write_bundle_files(
     outline_file.write_text(json.dumps({"outline": content_data.get("outline", [])}, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     hook_file.write_text(json.dumps(asdict(hook_score), indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
+    draft_dir = output_dir / "draft"
+    draft_dir.mkdir(parents=True, exist_ok=True)
+    (draft_dir / "outline.json").write_text(json.dumps({"outline": content_data.get("outline", [])}, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    (draft_dir / "content.json").write_text(json.dumps(content_data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    # Generate subtitles.srt
+    cursor = 0.0
+    segments = []
+    for sc in content_data.get("scenes", []):
+        dur = sc.get("duration", 5.0)
+        p_tail = sc.get("p_tail", 0.7)
+        segments.append({
+            "scene_id": sc["id"],
+            "text": sc["narration"],
+            "start": cursor,
+            "end": cursor + dur,
+            "content_end": cursor + dur,
+        })
+        cursor += dur + p_tail
+
+    srt_text = make_srt(segments)
+    (output_dir / "subtitles.srt").write_text(srt_text + "\n", encoding="utf-8")
+
+    # Export delivery subtitles if top-level job
+    if output_dir.parent.name == "runs":
+        video_dir = ROOT_DIR / "video" / output_dir.name
+        video_dir.mkdir(parents=True, exist_ok=True)
+        (video_dir / "subtitles.srt").write_text(srt_text + "\n", encoding="utf-8")
+        (video_dir / f"{output_dir.name}.srt").write_text(srt_text + "\n", encoding="utf-8")
+
+    # Compile Flow prompts into images.json
+    aspect_ratio = brief_data.get("outputs", [{}])[0].get("aspect_ratio", "9:16")
+    aspect_slug = "9x16" if aspect_ratio == "9:16" else "16x9"
+    compiled_items = []
+    for sc in content_data.get("scenes", []):
+        for img in sc.get("images", []):
+            shot = img.get("shot_type", "full_scene")
+            compiled = compile_flow_prompt(
+                "NanoBanana2Lite",
+                "scene",
+                {
+                    "description": img["description"],
+                    "aspect_ratio": aspect_ratio,
+                    "allowed_text": img.get("visible_text", []),
+                    "shot_type": shot,
+                    "has_character": img.get("has_character", True),
+                    "character_free": not img.get("has_character", True),
+                },
+                version="1.7.0",
+            )
+            compiled_items.append({
+                "scene_id": sc["id"],
+                "image_id": img["id"],
+                "path": f"revisions/images/1/{img['id']}_{aspect_slug}.jpg",
+                "prompt": img["description"],
+                "actual_prompt": compiled["prompt"],
+                "source": "google-flow-browser",
+                "ratio": aspect_ratio,
+            })
+
+    thumb_spec = brief_data.get("packaging", {}).get("thumbnail_spec", {})
+    thumb_prompt = thumb_spec.get("thumbnail_prompt") or thumb_spec.get("visual_hook", "Minimal flat doodle canvas.")
+    thumb_overlay = thumb_spec.get("text_overlay", "ỦA SAO VẬY")
+    thumb_compiled = compile_flow_prompt(
+        "NanoBanana2Lite",
+        "scene",
+        {
+            "description": thumb_prompt,
+            "aspect_ratio": aspect_ratio,
+            "allowed_text": [thumb_overlay],
+            "shot_type": "full_scene",
+            "has_character": True,
+            "character_free": False,
+        },
+        version="1.7.0",
+    )
+    images_manifest = {
+        "checkpoint": "compiled",
+        "total_images": len(compiled_items),
+        "aspect_ratio": aspect_ratio,
+        "items": compiled_items,
+        "thumbnail": {
+            "prompt": thumb_prompt,
+            "actual_prompt": thumb_compiled["prompt"],
+            "overlay_text": thumb_overlay,
+            "overlay_card": False,
+        },
+    }
+    (output_dir / "images.json").write_text(json.dumps(images_manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
 
 def build_short_bundle(
     output_dir: Optional[Union[str, Path]] = None,
@@ -774,6 +868,7 @@ def build_short_bundle(
 def build_long_bundle(
     output_dir: Optional[Union[str, Path]] = None,
     topic_str: Optional[str] = None,
+    include_spinoffs: bool = True,
 ) -> Dict[str, Any]:
     """Build and write a verified YouTube Long (long_16x9) bundle with spinoff shorts."""
     out_dir = Path(output_dir or DEFAULT_LONG_RUN_DIR).resolve()
@@ -818,6 +913,17 @@ def build_long_bundle(
 
     _write_bundle_files(out_dir, brief_data, content_data, script_data, cadence_report, hook_result)
 
+    spinoff_packages = []
+    if include_spinoffs:
+        spinoffs_root = out_dir / "spinoff_shorts"
+        spinoffs_root.mkdir(parents=True, exist_ok=True)
+        sp_list = brief_data.get("spinoff_shorts") or verified_spinoffs
+        for idx, sp in enumerate(sp_list, 1):
+            sp_dir = spinoffs_root / f"spinoff_{idx:02d}_short_9x16"
+            sp_topic = sp.get("opening_hook") or sp.get("hook_title")
+            sp_res = build_short_bundle(output_dir=sp_dir, topic_str=sp_topic)
+            spinoff_packages.append(sp_res)
+
     image_count = sum(len(sc.get("images", [])) for sc in content_data.get("scenes", []))
 
     return {
@@ -835,6 +941,7 @@ def build_long_bundle(
         "image_count": image_count,
         "scene_count": len(content_data.get("scenes", [])),
         "spinoff_shorts_count": len(verified_spinoffs),
+        "spinoff_packages": spinoff_packages,
         "brief_file": str(out_dir / "brief.json"),
         "content_file": str(out_dir / "content.json"),
     }
@@ -856,7 +963,7 @@ def build_channel_bundle(
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build ua_sao_vay Schema 3.0 production packages.")
-    parser.add_argument("--format", default="short_9x16", choices=["short_9x16", "long_16x9", "both"])
+    parser.add_argument("--format", default="both", choices=["short_9x16", "long_16x9", "both"])
     parser.add_argument("--topic", default=None, help="Custom topic string")
     parser.add_argument("--output-dir", default=None, help="Target run output directory")
     args = parser.parse_args()

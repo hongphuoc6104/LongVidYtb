@@ -31,7 +31,6 @@ from __future__ import annotations
 import argparse
 import json
 import logging
-import os
 import sys
 import time
 from pathlib import Path
@@ -45,15 +44,12 @@ for _p in (str(SYS_DIR), str(SYS_DIR / "tools")):
 
 from channels.builders import (  # noqa: E402
     build_and_export_channel_package,
-    build_channel_topic,
     get_channel_or_active,
 )
 from channels.registry import (  # noqa: E402
     channel_ids,
-    channels,
 )
 from flow_prompts import compile as compile_flow_prompt  # noqa: E402
-from tools.script_hook_scorer import score_script  # noqa: E402
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("run_channel_video")
@@ -139,6 +135,7 @@ def run_stage_audio(
         from colab_bridge.client import Client  # noqa: E402
         from colab_bridge.protocol import build_request  # noqa: E402
         from format_profiles import audio_mastering_for_format, resolve_format_profile  # noqa: E402
+
         from pilot import Pilot  # noqa: E402
 
         job_name = out_dir.name
@@ -158,9 +155,20 @@ def run_stage_audio(
         client.account = account
         client.session = session
 
-        request = build_request(p.root, cfg, scenes, secondary_segments, brief_data)
+        request = build_request(
+            p.root,
+            cfg,
+            scenes,
+            secondary_scenes=secondary_segments,
+            pause_plan=pause_plan,
+            assemble=True,
+        )
         logger.info(f"  [+] Gửi yêu cầu tổng hợp {len(request.get('segments', []))} phân đoạn audio lên Colab T4...")
-        result = client.synthesize(request)
+        out_audio_dir = out_dir / "revisions/audio/1_master"
+        cache_tts_dir = out_dir / "cache/colab-tts"
+        out_audio_dir.mkdir(parents=True, exist_ok=True)
+        cache_tts_dir.mkdir(parents=True, exist_ok=True)
+        result = client.synthesize(request, out_audio_dir, cache_tts_dir)
         audio_summary["result"] = result
         return audio_summary
     except Exception as ex:
@@ -236,6 +244,20 @@ def run_stage_images(
         "overlay_card": False,  # Strict native invariant: text painted directly onto artwork
     }
 
+    images_manifest = {
+        "checkpoint": "compiled",
+        "total_images": len(compiled_items),
+        "aspect_ratio": aspect_ratio,
+        "items": compiled_items,
+        "thumbnail": {
+            "prompt": thumb_prompt,
+            "actual_prompt": thumb_compiled["prompt"],
+            "overlay_text": thumb_overlay,
+            "overlay_card": False,
+        },
+    }
+    (out_dir / "images.json").write_text(json.dumps(images_manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
     if dry_run:
         logger.info(
             f"  [DRY-RUN] Đã biên dịch {len(compiled_items)} prompt cảnh và 1 Native Thumbnail prompt chuẩn 1.7.0."
@@ -245,8 +267,6 @@ def run_stage_images(
 
     # Real dispatch via flow_cdp if not dry-run
     try:
-        from flow_cdp.cdp_direct_client import DirectCDPProfileSession  # noqa: E402
-        from flow_cdp.lifecycle import ProfileLifecycleManager  # noqa: E402
 
         logger.info(f"  [+] Kết nối Flow CDP 20-profile pool để tạo {len(compiled_items) + 1} hình ảnh...")
         image_summary["submitted"] = True
@@ -269,6 +289,15 @@ def run_stage_render(
     brief_data = json.loads((out_dir / "brief.json").read_text(encoding="utf-8"))
     content_data = json.loads((out_dir / "content.json").read_text(encoding="utf-8"))
 
+    # Export delivery subtitles if subtitles.srt exists
+    if (out_dir / "subtitles.srt").is_file():
+        video_deliv = SYS_DIR.parent / "video" / out_dir.name
+        video_deliv.mkdir(parents=True, exist_ok=True)
+        import shutil
+
+        shutil.copy2(out_dir / "subtitles.srt", video_deliv / "subtitles.srt")
+        shutil.copy2(out_dir / "subtitles.srt", video_deliv / f"{out_dir.name}.srt")
+
     render_summary = {
         "job_id": out_dir.name,
         "format": brief_data.get("outputs", [{}])[0].get("aspect_ratio", "9:16"),
@@ -281,8 +310,6 @@ def run_stage_render(
         return render_summary
 
     try:
-        from colab_bridge.client import Client  # noqa: E402
-        from colab_bridge.job_protocol import build_render_request  # noqa: E402
 
         logger.info(f"  [+] Gửi yêu cầu render {out_dir.name} lên Colab T4 NVENC...")
         render_summary["dispatched"] = True

@@ -1,0 +1,13 @@
+{
+  "channel_id": "ua_sao_vay",
+  "voice": "VietNarrator_UaSaoVay",
+  "duration_seconds": 12.181,
+  "integrated_lufs": -15.15,
+  "true_peak_dbtp": -2.05,
+  "rms": 5905,
+  "sha256": "ad94fb5e5bf9d8095d30b78e29ae5f83688750246a767edcd66963e428ae77df",
+  "retake": 5,
+  "text": "Ủa, sao trong phòng đông người mà muỗi chỉ đốt mỗi mình bạn vậy? Ai cũng nghĩ do máu ngọt. Nhưng sự thật khoa học lại hoàn toàn khác. Muỗi bị thu hút bởi khí thở và lượng nhiệt tỏa ra từ cơ thể bạn. Người có thân nhiệt cao hoặc vừa vận động sẽ thành mục tiêu số một.",
+  "engine": "colab-omnivoice",
+  "account_used": "account-04"
+}
