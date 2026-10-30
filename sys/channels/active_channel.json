@@ -1,0 +1,36 @@
+{
+  "channel_id": "co_the_ke",
+  "name": "Cơ Thể Kể",
+  "git_branch": "channel/co-the-ke",
+  "workspace_dirname": "channel-co-the-ke",
+  "niche": "Sức khỏe và cơ thể được nhân hóa",
+  "promise": "Các cơ quan trong người bạn tự kể chuyện, vui mà đúng khoa học.",
+  "platform_routing": {
+    "tiktok": "short_9x16",
+    "youtube": "long_16x9"
+  },
+  "visual_profile_id": "ch_organ_buddies",
+  "voice": "VietNarrator",
+  "speed": 1.0,
+  "wave": 2,
+  "channel_profile_stamp": {
+    "id": "co_the_ke",
+    "version": 1,
+    "sha256": "12a5a4c015d28e16b6889c9fa072d847bbe1b956f99b6be66af42cdbb1b1ffa8"
+  },
+  "speed_optimization": {
+    "render_mode": "hybrid_motion",
+    "fast_short_max_images": 6,
+    "spinoff_shorts_per_long": 4,
+    "remotion_motion_ratio": 0.4,
+    "estimated_short_minutes": [
+      7,
+      10
+    ],
+    "estimated_bundle_minutes": [
+      30,
+      40
+    ]
+  },
+  "plan_file": "sys/channels/co_the_ke/PLAN.md"
+}
