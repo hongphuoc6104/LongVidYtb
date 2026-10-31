@@ -1,0 +1,50 @@
+{
+  "schema_version": "2.0",
+  "channel_id": "su_ke_lai",
+  "channel_slug": "su-ke-lai",
+  "git_branch": "channel/su-ke-lai",
+  "locked_at": "2026-10-31T04:32:16.533742+00:00",
+  "status": "LOCKED_RELEASE_READY",
+  "deliverables": {
+    "short_9x16": {
+      "job_id": "su-ke-lai-week1-9x16-v2",
+      "format_profile": "short_9x16",
+      "mp4_relpath": "video/su-ke-lai-week1-9x16/su-ke-lai-week1-9x16.mp4",
+      "mp4_sha256": "61ef97b01ae24efa15b223d37460fd6399ea0d3e9fc3d4e5c055763200445d45",
+      "mp4_bytes": 51847376,
+      "resolution": "1080x1920",
+      "fps": 30.0,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "mp4_duration_sec": 65.856,
+      "wav_duration_sec": 72.236,
+      "sync_delta_sec": 6.38,
+      "loudness_lufs": -15.1,
+      "true_peak_dbtp": -1.6,
+      "srt_relpath": "video/su-ke-lai-week1-9x16/subtitles.srt",
+      "srt_sha256": "cb11a8d4a8820f975e707fbf0642a58980c3c7574aa81be61ec8a593ceebb059",
+      "thumbnail_relpath": "video/su-ke-lai-week1-9x16/thumbnail_9x16.jpg",
+      "thumbnail_sha256": "543dab9a9e044263b82f26a755bf064dd6c94ace28290dee1844646737d399b3"
+    },
+    "long_16x9": {
+      "job_id": "su-ke-lai-week1-16x9",
+      "format_profile": "long_16x9",
+      "mp4_relpath": "video/su-ke-lai-week1-16x9/su-ke-lai-week1-16x9.mp4",
+      "mp4_sha256": "855e0b48cfb3eec6dd182324399fe77bcb98ed04c83221c00415d472b6d14a90",
+      "mp4_bytes": 208004980,
+      "resolution": "1920x1080",
+      "fps": 30.0,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "mp4_duration_sec": 280.917,
+      "wav_duration_sec": 280.838,
+      "sync_delta_sec": 0.079,
+      "loudness_lufs": -15.1,
+      "true_peak_dbtp": -1.6,
+      "srt_relpath": "video/su-ke-lai-week1-16x9/su-ke-lai-week1-16x9.srt",
+      "srt_sha256": "7b83032d6a0e31228410b1bc7447e20e6d25a21353510fbaa8f1b825938ebe1b",
+      "thumbnail_relpath": "video/su-ke-lai-week1-16x9/thumbnail_16x9.jpg",
+      "thumbnail_sha256": "22c878ed2bbeeaa50b8b5aef44de671d077105d07d9b7f19e1fe93a25033e63f"
+    }
+  }
+}

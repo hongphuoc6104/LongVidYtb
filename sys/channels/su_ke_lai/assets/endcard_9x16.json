@@ -1,0 +1,17 @@
+{
+  "jobId": "endcard_su_ke_lai_9x16",
+  "forgeId": "88db2f87-e7f5-4773-a421-f247c875d99f",
+  "profile_id": "profile_8",
+  "prompt": "Requested aspect ratio: 9:16. Render a complete 100% full-bleed vertical 9:16 2D endcard illustration extending continuously to all four edges with zero letterbox bars, zero subtitle boxes, and zero dark vignette.\n\nVisual Style (ch_dong_ho_folk): 2D Vietnamese Dong Ho folk woodblock-print illustration: bold carved black woodcut outlines (#1E1E1E), flat natural-pigment fills in vermilion (#B5332E), pagoda-tree yellow (#D9A520), indigo (#2C4A6E) and leaf green (#5E7D3A) on a warm handmade do-paper canvas (#EFE4C8) with a subtle paper fiber texture; stylized flat folk figures in period costume, symmetrical decorative composition, orthographic 2D, no gradients, no photorealism, no 3D. Palette: #EFE4C8, #B5332E, #D9A520, #2C4A6E, #5E7D3A, #1E1E1E.\n\nCharacter Cast: Stylized Dong Ho folk-print human figures with round faces, simple almond eyes, rosy cheek dots and period-accurate Vietnamese costume for the episode's era. Outfit: Era-specific flat costume in vermilion, indigo or yellow pigment, woodcut line folds only.\n\nScene Composition: The channel character stands centered in the frame, pointing upwards with a welcoming smile. Clean, minimalist composition with at least 60% open negative space on the solid flat background.\n\nEmphasis lettering instruction: render exact uppercase Vietnamese hand-lettered text in the upper third integrated directly onto the flat canvas (strictly zero rectangular text cards, banners, or gradient overlays covering artwork): \"BẢN ĐẦY ĐỦ TRÊN YOUTUBE\" and \"SỬ KỂ LẠI\".",
+  "latency": 37.54,
+  "sha256": "053218751d5dbde79f69775902918ce570a545593fd7e2fa54be1b52dcf2113e",
+  "aspect_ratio": "9:16",
+  "width": 768,
+  "height": 1376,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "verified",
+  "created_at": "2026-10-30T19:14:15.192702+00:00",
+  "channel_id": "su_ke_lai"
+}

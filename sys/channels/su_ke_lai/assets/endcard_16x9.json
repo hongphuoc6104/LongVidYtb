@@ -1,0 +1,17 @@
+{
+  "jobId": "endcard_su_ke_lai_16x9",
+  "forgeId": "8e4138cc-1a8d-457b-82cd-caa1378365ca",
+  "profile_id": "profile_1",
+  "prompt": "Requested aspect ratio: 16:9. Render a complete 100% full-bleed horizontal 16:9 widescreen 2D endcard illustration extending continuously to all four edges with zero letterbox bars, zero subtitle boxes, and zero dark vignette.\n\nVisual Style (ch_dong_ho_folk): 2D Vietnamese Dong Ho folk woodblock-print illustration: bold carved black woodcut outlines (#1E1E1E), flat natural-pigment fills in vermilion (#B5332E), pagoda-tree yellow (#D9A520), indigo (#2C4A6E) and leaf green (#5E7D3A) on a warm handmade do-paper canvas (#EFE4C8) with a subtle paper fiber texture; stylized flat folk figures in period costume, symmetrical decorative composition, orthographic 2D, no gradients, no photorealism, no 3D. Palette: #EFE4C8, #B5332E, #D9A520, #2C4A6E, #5E7D3A, #1E1E1E.\n\nCharacter Cast: Stylized Dong Ho folk-print human figures with round faces, simple almond eyes, rosy cheek dots and period-accurate Vietnamese costume for the episode's era. Outfit: Era-specific flat costume in vermilion, indigo or yellow pigment, woodcut line folds only.\n\nScene Composition: Position the character strictly on the far left 35% of the widescreen canvas, smiling and pointing toward the right. CRITICAL END-SCREEN RULE: The entire right 65% of the frame must remain completely flat, empty, solid background canvas with strictly zero characters, zero text, zero props, and zero decorations so YouTube video/subscribe cards can overlay cleanly.\n\nEmphasis lettering instruction: render exact uppercase Vietnamese hand-lettered text strictly on the far left 35% of the canvas integrated directly onto the flat canvas (strictly zero rectangular text cards, banners, or gradient overlays covering artwork): \"BẢN ĐẦY ĐỦ TRÊN YOUTUBE\" and \"SỬ KỂ LẠI\".",
+  "latency": 57.63,
+  "sha256": "e6480c069d93d6800e6ab55cc029cf47a6e73fb6cca79b1a7caea0923f888fa4",
+  "aspect_ratio": "16:9",
+  "width": 1376,
+  "height": 768,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "verified",
+  "created_at": "2026-10-30T19:15:51.744787+00:00",
+  "channel_id": "su_ke_lai"
+}
