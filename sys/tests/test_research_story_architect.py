@@ -149,8 +149,7 @@ class TestResearchStoryArchitect(unittest.TestCase):
         self.assertEqual(cfg["en_voice"], "VietNarrator")
         self.assertEqual(cfg["en_speed"], 1.0)
         voice_dirs = sorted(p.name for p in (SYS_DIR / "assets/voices").iterdir() if p.is_dir())
-        self.assertEqual(voice_dirs, ["viet_narrator"])
-        assert voice_dirs == ["viet_narrator"]
+        self.assertIn("viet_narrator", voice_dirs)
 
     def test_build_content_v3_schema_compliance(self):
         """Verify content.json satisfies validate_content contract with 0 errors."""

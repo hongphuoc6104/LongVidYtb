@@ -1,0 +1,17 @@
+{
+  "jobId": "endcard_ho_so_ky_la_16x9",
+  "forgeId": "cfa42006-033f-45d0-a22a-09da7cf5aadd",
+  "profile_id": "profile_1",
+  "prompt": "Requested aspect ratio: 16:9. Render a complete 100% full-bleed horizontal 16:9 widescreen 2D endcard illustration extending continuously to all four edges with zero letterbox bars, zero subtitle boxes, and zero dark vignette.\n\nVisual Style (ch_noir_dossier): 2D noir graphic-novel illustration: heavy black ink shapes and crisp linework with high-contrast flat shadows, limited palette of ink black (#111111), aged off-white paper (#E8E2D0), slate grey (#5A5F66) and a single accent of evidence red (#C0392B); case-file props such as folders, stamped documents, map pins and old photographs drawn flat; orthographic 2D, no gore, no blood, no gradients, no photorealism, no 3D. Palette: #111111, #E8E2D0, #5A5F66, #C0392B.\n\nCharacter Cast: Silhouette-style figures with simple faces, the narrator detective drawn as a faceless figure in a long coat and hat seen from behind or in profile. Outfit: Flat slate-grey long coat and hat; only evidence objects use the red accent.\n\nScene Composition: Position the character strictly on the far left 35% of the widescreen canvas, smiling and pointing toward the right. CRITICAL END-SCREEN RULE: The entire right 65% of the frame must remain completely flat, empty, solid background canvas with strictly zero characters, zero text, zero props, and zero decorations so YouTube video/subscribe cards can overlay cleanly.\n\nEmphasis lettering instruction: render exact uppercase Vietnamese hand-lettered text strictly on the far left 35% of the canvas integrated directly onto the flat canvas (strictly zero rectangular text cards, banners, or gradient overlays covering artwork): \"BẢN ĐẦY ĐỦ TRÊN YOUTUBE\" and \"HỒ SƠ KỲ LẠ\".",
+  "latency": 44.14,
+  "sha256": "90e375eb0afd9bc6874da8e665a2f10d66d57a3db1f353528e8a5ecd01926f17",
+  "aspect_ratio": "16:9",
+  "width": 1376,
+  "height": 768,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "verified",
+  "created_at": "2026-10-30T19:20:16.387987+00:00",
+  "channel_id": "ho_so_ky_la"
+}

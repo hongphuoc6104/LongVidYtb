@@ -1,0 +1,18 @@
+{
+  "jobId": "endcard_en_wallet_anatomy_16x9",
+  "forgeId": "7355df26-fb81-46cb-badc-2a34802f6a56",
+  "profile_id": "profile_4",
+  "prompt": "Requested aspect ratio: 16:9. Render a complete 100% full-bleed horizontal 16:9 widescreen 2D endcard illustration extending continuously to all four edges with zero letterbox bars, zero subtitle boxes, and zero dark vignette.\n\nVisual Style (ch_en_ledger_grid): Hand-inked 2D financial ledger notebook illustration on warm square-grid graph paper (#FAF6E9 ivory paper with faint #E3DCC8 grid, #2F9E5B dollar emerald, #F2C14E bullion gold, #D64545 deficit red, #24364F fountain-pen navy); clean balance-sheet columns, cashflow conduits, and financial anatomy charts; orthographic 2D, at least 60% negative space, zero 3D, zero gradients. Palette: #FAF6E9, #24364F, #2F9E5B, #F2C14E, #D64545, #E3DCC8.\n\nCharacter Cast: Witty mid-century editorial bookkeeper character with neat side-parted hair, round tortoiseshell glasses, green visor and vest and fountain pen. Outfit: Forest green accountant vest over rolled-up sleeve ivory shirt with neat navy tie and tortoiseshell glasses.\n\nScene Composition: Position the character strictly on the far left 35% of the widescreen canvas, smiling and pointing toward the right. CRITICAL END-SCREEN RULE: The entire right 65% of the frame must remain completely flat, empty, solid background canvas (#FAF6E9) with strictly zero characters, zero text, zero props, and zero decorations so YouTube video/subscribe cards can overlay cleanly.\n\nEmphasis lettering instruction: render exact uppercase English hand-lettered text (crisp high-contrast dark ink lettering) strictly on the far left 35% of the canvas integrated directly onto the flat canvas (#FAF6E9) (strictly zero rectangular text cards, banners, or gradient overlays covering artwork): \"FULL VIDEO ON YOUTUBE\" and \"WALLET ANATOMY\".",
+  "latency": 24.93,
+  "sha256": "dc8f4a8fdc9398e83582f210c787024e7782a4125779f15e11cb92e25573c64c",
+  "aspect_ratio": "16:9",
+  "width": 1920,
+  "height": 1080,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "verified",
+  "created_at": "2026-10-31T18:09:19.719790+00:00",
+  "media_id": "7355df26-fb81-46cb-badc-2a34802f6a56",
+  "channel_id": "en_wallet_anatomy"
+}

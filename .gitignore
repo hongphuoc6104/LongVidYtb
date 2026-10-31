@@ -172,6 +172,7 @@ sys/assets/voices/adam-bua*
 logs/
 !/sys/logs/
 !/sys/logs/**
+/sys/logs/issues/colab-*.md
 /sys/.cache/
 
 # Per-machine Flow identity; never sync another machine profile.
@@ -196,3 +197,13 @@ logs/
 /sys/logs/colab-auto-pool-activation-*.json
 /sys/logs/colab-scheduler-live-lock-proof-*.json
 /sys/logs/colab-test-isolation-cleanup-*.json
+
+# --- 15. Local Channel Identity Maps, Provisioning Scripts & QA Screenshots ---
+/qa/
+sys/channels/youtube_channel_map.json
+sys/channels/dashboard_metrics.json
+sys/channels/dashboard_history.jsonl
+sys/tools/provision_wave*.py
+sys/tools/setup_wave*.py
+sys/tools/cleanup_youtube_channels.py
+sys/flow_cdp/chrome-data-pool*

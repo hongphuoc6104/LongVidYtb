@@ -1,0 +1,50 @@
+{
+  "schema_version": "2.0",
+  "channel_id": "ai_binh_dan",
+  "channel_slug": "ai-binh-dan",
+  "git_branch": "channel/ai-binh-dan",
+  "locked_at": "2026-10-31T05:26:34.222945+00:00",
+  "status": "LOCKED_RELEASE_READY",
+  "deliverables": {
+    "short_9x16": {
+      "job_id": "ai-binh-dan-week1-9x16-v2",
+      "format_profile": "short_9x16",
+      "mp4_relpath": "video/ai-binh-dan-week1-9x16-v2/ai-binh-dan-week1-9x16-v2.mp4",
+      "mp4_sha256": "45dbd7d99731e372cc9bd2cf83fa0a77c9906fb543b8b1204866a721c9c6dba3",
+      "mp4_bytes": 10120827,
+      "resolution": "1080x1920",
+      "fps": 30.0,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "mp4_duration_sec": 28.011,
+      "wav_duration_sec": 27.964,
+      "sync_delta_sec": 0.047,
+      "loudness_lufs": -15.1,
+      "true_peak_dbtp": -1.6,
+      "srt_relpath": "video/ai-binh-dan-week1-9x16-v2/ai-binh-dan-week1-9x16-v2.srt",
+      "srt_sha256": "c2ea7eaf5bae69f5ef313ab0792ac5c8e6a1c883ba09a08f1b4c5b6a6f1dfeb2",
+      "thumbnail_relpath": "video/ai-binh-dan-week1-9x16-v2/thumbnail_9x16.jpg",
+      "thumbnail_sha256": "391bb9e3081d2ccbd23d6d3f21131a5cf96747cedfc0d23fc385ad627ab5feea"
+    },
+    "long_16x9": {
+      "job_id": "ai-binh-dan-week1-16x9",
+      "format_profile": "long_16x9",
+      "mp4_relpath": "video/ai-binh-dan-week1-16x9/ai-binh-dan-week1-16x9.mp4",
+      "mp4_sha256": "8684805d5c28fd866fc1fb6ddec58727d28ba3433c4b8392c1e7b18a003614c2",
+      "mp4_bytes": 97243340,
+      "resolution": "1920x1080",
+      "fps": 30.0,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "mp4_duration_sec": 205.888,
+      "wav_duration_sec": 205.826,
+      "sync_delta_sec": 0.062,
+      "loudness_lufs": -15.1,
+      "true_peak_dbtp": -1.6,
+      "srt_relpath": "video/ai-binh-dan-week1-16x9/ai-binh-dan-week1-16x9.srt",
+      "srt_sha256": "8d40306eac2e4ed3427d56e0d5bd10e5d5fd91482cc22c128a74275f52d06158",
+      "thumbnail_relpath": "video/ai-binh-dan-week1-16x9/thumbnail_16x9.jpg",
+      "thumbnail_sha256": "8ae462704770c3c0304915e5940b6d006c04335961ce622c53c79d5d5725d3c6"
+    }
+  }
+}

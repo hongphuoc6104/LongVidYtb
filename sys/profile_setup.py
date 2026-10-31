@@ -11,14 +11,14 @@ import fnmatch
 import hashlib
 import json
 import os
-from pathlib import Path
 import re
 import shutil
 import socket
 import subprocess
 import time
-from urllib.parse import urlparse
+from pathlib import Path
 from urllib.error import URLError
+from urllib.parse import urlparse
 from urllib.request import HTTPRedirectHandler, ProxyHandler, build_opener
 
 from account_catalog import discover
@@ -78,7 +78,8 @@ def _validate(value, home=None):
                 home / '.config/google-chrome-unstable'}
     if root in defaults or root == home:
         raise SetupBlocked('DEFAULT_CHROME_CDP_FORBIDDEN')
-    _url(value['tool_url']); _profile(value['flow_profile_directory'])
+    _url(value['tool_url'])
+    _profile(value['flow_profile_directory'])
     if value.get('remote_debugging_port') != 0 or value.get('remote_debugging_address') != '127.0.0.1':
         raise SetupBlocked('UNSAFE_CDP_CONFIGURATION')
     executable = Path(value['executable_path'])
@@ -332,7 +333,10 @@ def start(system_root, *, grant, source, timeout=15, runner=None, inspect_proces
                    '--profile-directory=' + value['flow_profile_directory'], '--remote-debugging-address=127.0.0.1',
                    '--remote-debugging-port=0', '--no-first-run',
                    '--disable-component-update',
-                   '--disable-features=OptimizationGuideModelDownloading,OptimizationGuideOnDeviceModel,OptimizationHints',
+                   '--component-updater=url-source=http://127.0.0.1:1',
+                   '--enable-gpu-rasterization', '--ignore-gpu-blocklist', '--enable-zero-copy',
+                   '--use-gl=angle', '--use-angle=gl',
+                   '--disable-features=OptimizationGuideModelDownloading,OptimizationGuideOnDeviceModel,OptimizationHints,OptimizationHintsFetching,OptimizationTargetPrediction',
                    value['tool_url']]
         # No no-sandbox, remote-allow-origins, credentials or copied browser data.
         process = (runner or subprocess.Popen)(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
@@ -363,9 +367,12 @@ def main():
     parser = argparse.ArgumentParser(description='Metadata inventory and authorized Flow profile setup')
     parser.add_argument('action', choices=('inventory', 'plan', 'configure', 'start'))
     parser.add_argument('--root', default=str(Path(__file__).parent))
-    parser.add_argument('--account'); parser.add_argument('--tool-url'); parser.add_argument('--executable')
+    parser.add_argument('--account')
+    parser.add_argument('--tool-url')
+    parser.add_argument('--executable')
     parser.add_argument('--reuse-account')
-    parser.add_argument('--grant'); parser.add_argument('--source')
+    parser.add_argument('--grant')
+    parser.add_argument('--source')
     args = parser.parse_args()
     if args.action == 'inventory':
         result = inventory(args.root)

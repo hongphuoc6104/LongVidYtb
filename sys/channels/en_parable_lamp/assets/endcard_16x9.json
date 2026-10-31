@@ -1,0 +1,18 @@
+{
+  "jobId": "endcard_en_parable_lamp_16x9",
+  "forgeId": "b1939780-d7ee-426f-bd7f-17190114b746",
+  "profile_id": "profile_6",
+  "prompt": "Requested aspect ratio: 16:9. Render a complete 100% full-bleed horizontal 16:9 widescreen 2D endcard illustration extending continuously to all four edges with zero letterbox bars, zero subtitle boxes, and zero dark vignette.\n\nVisual Style (ch_en_parable_woodcut): Expressive BibleProject-inspired 2D carved woodblock and linocut parable print on aged parchment canvas (#EFE4C8 aged parchment, #1E1E1E bold carved woodcut ink, #D9A520 glowing lamp gold, #5E7D3A olive-leaf green, #A44A3F Galilean terracotta); textured relief gouge lines, radiant lamps, olive trees and timeless architectural arches; orthographic 2D, at least 60% negative space, zero 3D, zero gradients. Palette: #EFE4C8, #1E1E1E, #D9A520, #5E7D3A, #A44A3F.\n\nCharacter Cast: Warm woodcut human parable narrator in ancient woven cloak holding a radiant golden clay oil lamp and olive branch. Outfit: Hand-carved Galilean terracotta tunic draped under a woven ochre mantle, no modern garments.\n\nScene Composition: Position the character strictly on the far left 35% of the widescreen canvas, smiling and pointing toward the right. CRITICAL END-SCREEN RULE: The entire right 65% of the frame must remain completely flat, empty, solid background canvas (#EFE4C8) with strictly zero characters, zero text, zero props, and zero decorations so YouTube video/subscribe cards can overlay cleanly.\n\nEmphasis lettering instruction: render exact uppercase English hand-lettered text (crisp high-contrast dark ink lettering) strictly on the far left 35% of the canvas integrated directly onto the flat canvas (#EFE4C8) (strictly zero rectangular text cards, banners, or gradient overlays covering artwork): \"FULL VIDEO ON YOUTUBE\" and \"PARABLE & LAMP\".",
+  "latency": 26.82,
+  "sha256": "ee363cc6f2e5248893f7a7aa3ca981f412f70888640e7db9a9f185b9b1bfeb06",
+  "aspect_ratio": "16:9",
+  "width": 1920,
+  "height": 1080,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "verified",
+  "created_at": "2026-10-31T18:08:15.632716+00:00",
+  "media_id": "b1939780-d7ee-426f-bd7f-17190114b746",
+  "channel_id": "en_parable_lamp"
+}

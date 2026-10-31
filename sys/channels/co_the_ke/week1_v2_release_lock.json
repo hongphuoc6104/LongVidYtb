@@ -1,0 +1,50 @@
+{
+  "schema_version": "2.0",
+  "channel_id": "co_the_ke",
+  "channel_slug": "co-the-ke",
+  "git_branch": "channel/co-the-ke",
+  "locked_at": "2026-10-31T05:26:50.625236+00:00",
+  "status": "LOCKED_RELEASE_READY",
+  "deliverables": {
+    "short_9x16": {
+      "job_id": "co-the-ke-week1-9x16-v2",
+      "format_profile": "short_9x16",
+      "mp4_relpath": "video/co-the-ke-week1-9x16-v2/co-the-ke-week1-9x16-v2.mp4",
+      "mp4_sha256": "e77ec2cff32eb06a5d207e69f4ba78c47e254edd537e4ad9c9ddab2c75a00351",
+      "mp4_bytes": 21129986,
+      "resolution": "1080x1920",
+      "fps": 30.0,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "mp4_duration_sec": 33.152,
+      "wav_duration_sec": 33.098,
+      "sync_delta_sec": 0.054,
+      "loudness_lufs": -15.1,
+      "true_peak_dbtp": -1.6,
+      "srt_relpath": "video/co-the-ke-week1-9x16-v2/co-the-ke-week1-9x16-v2.srt",
+      "srt_sha256": "b1d556e3d318844a0ad15026a50b9d2072753ee587bcef6b83a77a5ef27316e8",
+      "thumbnail_relpath": "video/co-the-ke-week1-9x16-v2/thumbnail_9x16.jpg",
+      "thumbnail_sha256": "19e6990e0491908ea9b027bbb1fd108ccc00d9d1b5edf43330c1761df73f01cd"
+    },
+    "long_16x9": {
+      "job_id": "co-the-ke-week1-16x9",
+      "format_profile": "long_16x9",
+      "mp4_relpath": "video/co-the-ke-week1-16x9/co-the-ke-week1-16x9.mp4",
+      "mp4_sha256": "03f50698faab0ed386520457ce942df44bbcd51ea763f82f5595962d0aed196f",
+      "mp4_bytes": 123453283,
+      "resolution": "1920x1080",
+      "fps": 30.0,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "mp4_duration_sec": 367.125,
+      "wav_duration_sec": 367.055,
+      "sync_delta_sec": 0.07,
+      "loudness_lufs": -15.1,
+      "true_peak_dbtp": -1.6,
+      "srt_relpath": "video/co-the-ke-week1-16x9/co-the-ke-week1-16x9.srt",
+      "srt_sha256": "3373c04a280d0356afd548d25531f9e733185da52910d134eb86b1e26fdcc85b",
+      "thumbnail_relpath": "video/co-the-ke-week1-16x9/thumbnail_16x9.jpg",
+      "thumbnail_sha256": "b80addb56377c884326e6c264d738db91fdb3d418a0b7248450a662f2e1710bc"
+    }
+  }
+}

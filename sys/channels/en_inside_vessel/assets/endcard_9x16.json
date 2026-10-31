@@ -1,0 +1,18 @@
+{
+  "jobId": "endcard_en_inside_vessel_9x16",
+  "forgeId": "2a1f2641-5423-4b19-9d0a-c500a3b757a2",
+  "profile_id": "profile_5",
+  "prompt": "Requested aspect ratio: 9:16. Render a complete 100% full-bleed vertical 9:16 2D endcard illustration extending continuously to all four edges with zero letterbox bars, zero subtitle boxes, and zero dark vignette.\n\nVisual Style (ch_en_organ_buddies): Clean 2D kawaii medical mascot illustration on pure clinical white canvas (#FFFFFF background, #222222 smooth outlines, #F4A6A6 heart pink, #F6C28B stomach peach, #7FB3D5 oxygen blue, #82E0AA immune-cell mint); cute personified human physiology, friendly cells, and cartoon anatomy; orthographic 2D, at least 60% negative space, zero 3D, zero gradients. Palette: #FFFFFF, #222222, #F4A6A6, #F6C28B, #7FB3D5, #82E0AA.\n\nCharacter Cast: Adorable recurring personified body mascots — brave Ticker the Heart, dramatic Gurgle the Stomach, calm Cortex the Brain, and armored little T-Cell defender with expressive faces and full character anatomy. Outfit: Tiny white medical headband on Ticker; little warrior helmet on T-Cell defender.\n\nScene Composition: The channel character stands centered in the frame, pointing upwards with a welcoming smile. Clean, minimalist composition with at least 60% open negative space on the solid flat background canvas (#FFFFFF).\n\nEmphasis lettering instruction: render exact uppercase English hand-lettered text (crisp high-contrast dark ink lettering) in the upper third integrated directly onto the flat canvas (#FFFFFF) (strictly zero rectangular text cards, banners, or gradient overlays covering artwork): \"FULL VIDEO ON YOUTUBE\" and \"INSIDE THE VESSEL\".",
+  "latency": 41.45,
+  "sha256": "11252328d8f19b158c0c0c2648df3121aab985ae531391cd38da1128f1c6c212",
+  "aspect_ratio": "9:16",
+  "width": 1080,
+  "height": 1920,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "verified",
+  "created_at": "2026-10-31T18:07:25.494797+00:00",
+  "media_id": "2a1f2641-5423-4b19-9d0a-c500a3b757a2",
+  "channel_id": "en_inside_vessel"
+}

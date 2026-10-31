@@ -1,0 +1,19 @@
+{
+  "jobId": "endcard_la_ban_hoc_thuat_16x9",
+  "forgeId": "a325ef9c-0061-4997-bd75-f836002d603b",
+  "profile_id": "profile_9",
+  "prompt": "Requested aspect ratio: 16:9. Render a complete 100% full-bleed horizontal 16:9 widescreen 2D endcard illustration extending continuously to all four edges with zero letterbox bars, zero subtitle boxes, and zero dark vignette.\n\nVisual Style (ch_academic_sketchbook): Classical Da Vinci and Oxford archival ivory vellum fountain-pen illustration on warm archival vellum canvas (#F6F1E3 warm archival vellum, #1F2D3D deep indigo fountain-pen ink, #B8860B antique brass compass gold, #4F6D5A botanical library sage) with fine ink linework, index cards, marginalia annotations and taxonomy diagrams; orthographic 2D, at least 60% negative space, zero 3D, zero gradients. Palette: #F6F1E3, #1F2D3D, #B8860B, #4F6D5A, #8C7A6B.\n\nCharacter Cast: Warm scholarly human presenter with wavy dark hair, round brass spectacles, and flat olive-tweed vest over rolled white sleeves, holding a fountain pen or open leather notebook. Outfit: Flat olive-tweed vest over crisp rolled-sleeve ivory oxford shirt with brass spectacles, no shading.\n\nScene Composition: Position the character strictly on the far left 35% of the widescreen canvas, smiling and pointing toward the right. CRITICAL END-SCREEN RULE: The entire right 65% of the frame must remain completely flat, empty, solid background canvas (#F6F1E3) with strictly zero characters, zero text, zero props, and zero decorations so YouTube video/subscribe cards can overlay cleanly.\n\nEmphasis lettering instruction: render exact uppercase Vietnamese hand-lettered text (crisp high-contrast dark ink lettering) strictly on the far left 35% of the canvas integrated directly onto the flat canvas (#F6F1E3) (strictly zero rectangular text cards, banners, or gradient overlays covering artwork): \"BẢN ĐẦY ĐỦ TRÊN YOUTUBE\" and \"LA BÀN HỌC THUẬT\".",
+  "latency": 31.66,
+  "sha256": "6da7c6e0b8a9125ee5bb5f4ee4edcceddb9e932a75ba40b48c08f64ed036613b",
+  "aspect_ratio": "16:9",
+  "width": 1920,
+  "height": 1080,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "verified",
+  "created_at": "2026-10-31T18:09:38.139782+00:00",
+  "media_id": "a325ef9c-0061-4997-bd75-f836002d603b",
+  "channel_id": "la_ban_hoc_thuat",
+  "visual_profile": "ch_academic_sketchbook"
+}

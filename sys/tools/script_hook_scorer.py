@@ -35,6 +35,15 @@ _OPEN_LOOP = re.compile(
 _CLOSING = re.compile(r"(?i)(\?|bình luận|comment|phần 2|phần tiếp|theo dõi|lưu lại|tag|chia sẻ|bạn có)")
 _SPLIT = re.compile(r"(?<=[.!?…])\s+")
 
+_CURIOSITY_EN = re.compile(
+    r"(?i)(\?|why|how|what|secret|nobody|truth|wrong|actually|if you|don't|stop|here's|\d)"
+)
+_DIRECT_EN = re.compile(r"(?i)\b(you|your|we|our|us)\b")
+_OPEN_LOOP_EN = re.compile(
+    r"(?i)(but|however|yet|turns out|until now|later|surprise|secret|answer|what happens|the catch)"
+)
+_CLOSING_EN = re.compile(r"(?i)(\?|comment|part 2|follow|save|share|do you|thoughts)")
+
 
 def syllables(text: str) -> int:
     return len([w for w in re.split(r"\s+", text.strip()) if re.search(r"\w", w)])
@@ -64,6 +73,8 @@ class HookScore:
 def score_script(narrations: Sequence[str], channel_id: str, format_profile: str = "short_9x16") -> HookScore:
     """Score scene narrations in order against the channel's format spec."""
     channel = get_channel(channel_id)
+    language = getattr(channel, "language", "vi")
+    is_en = language == "en"
     spec = channel.spec_for(format_profile)
     text = " ".join(n.strip() for n in narrations if n and n.strip())
     sents = sentences(text)
@@ -79,14 +90,25 @@ def score_script(narrations: Sequence[str], channel_id: str, format_profile: str
     limit = HOOK_MAX_SYLLABLES.get(format_profile, 20)
     early = " ".join(sents[1:4])
 
+    if is_en:
+        hook_curiosity = bool(_CURIOSITY_EN.search(hook) or _CURIOSITY.search(hook))
+        hook_direct = bool(_DIRECT_EN.search(hook) or _DIRECT.search(hook))
+        open_loop = bool(_OPEN_LOOP_EN.search(early) or _OPEN_LOOP.search(early) or "?" in early)
+        closing_cta = bool(_CLOSING_EN.search(sents[-1]) or _CLOSING.search(sents[-1]))
+    else:
+        hook_curiosity = bool(_CURIOSITY.search(hook))
+        hook_direct = bool(_DIRECT.search(hook))
+        open_loop = bool(_OPEN_LOOP.search(early) or "?" in early)
+        closing_cta = bool(_CLOSING.search(sents[-1]))
+
     checks = {
         "hook_short": hook_syl <= limit,
-        "hook_curiosity": bool(_CURIOSITY.search(hook)),
-        "hook_direct": bool(_DIRECT.search(hook)),
-        "open_loop": bool(_OPEN_LOOP.search(early) or "?" in early),
+        "hook_curiosity": hook_curiosity,
+        "hook_direct": hook_direct,
+        "open_loop": open_loop,
         "beat_density": sec_per_sentence <= beat_hi,
         "duration_fit": lo * 0.85 <= seconds <= hi * 1.15,
-        "closing_cta": bool(_CLOSING.search(sents[-1])),
+        "closing_cta": closing_cta,
     }
     weights = {"hook_short": 20, "hook_curiosity": 20, "hook_direct": 10, "open_loop": 15,
                "beat_density": 15, "duration_fit": 10, "closing_cta": 10}

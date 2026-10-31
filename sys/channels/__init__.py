@@ -15,6 +15,7 @@ from channels.registry import (
     channel_profile_stamp,
     channels,
     get_channel,
+    get_visual_archetype,
     writer_brief,
 )
 
@@ -33,5 +34,6 @@ __all__ = [
     "channel_profile_stamp",
     "channels",
     "get_channel",
+    "get_visual_archetype",
     "writer_brief",
 ]

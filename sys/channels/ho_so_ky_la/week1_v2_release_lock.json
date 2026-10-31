@@ -1,0 +1,50 @@
+{
+  "schema_version": "2.0",
+  "channel_id": "ho_so_ky_la",
+  "channel_slug": "ho-so-ky-la",
+  "git_branch": "channel/ho-so-ky-la",
+  "locked_at": "2026-10-31T05:27:05.395555+00:00",
+  "status": "LOCKED_RELEASE_READY",
+  "deliverables": {
+    "short_9x16": {
+      "job_id": "ho-so-ky-la-week1-9x16-v2",
+      "format_profile": "short_9x16",
+      "mp4_relpath": "video/ho-so-ky-la-week1-9x16-v2/ho-so-ky-la-week1-9x16-v2.mp4",
+      "mp4_sha256": "d52eeda65793575f2548e48b0bfededf75d90a3625ed6b5c59d051d736bc3d11",
+      "mp4_bytes": 30447588,
+      "resolution": "1080x1920",
+      "fps": 30.0,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "mp4_duration_sec": 49.792,
+      "wav_duration_sec": 49.729,
+      "sync_delta_sec": 0.063,
+      "loudness_lufs": -15.1,
+      "true_peak_dbtp": -1.6,
+      "srt_relpath": "video/ho-so-ky-la-week1-9x16-v2/ho-so-ky-la-week1-9x16-v2.srt",
+      "srt_sha256": "be62265ffff2666c1ce12c79aa40bc85c6e19b7d7add137b62585ecc970102d5",
+      "thumbnail_relpath": "video/ho-so-ky-la-week1-9x16-v2/thumbnail_9x16.jpg",
+      "thumbnail_sha256": "40e09f55d0645dbe25704bf94b3ce433c167043b000b4791dc65425024f0f192"
+    },
+    "long_16x9": {
+      "job_id": "ho-so-ky-la-week1-16x9",
+      "format_profile": "long_16x9",
+      "mp4_relpath": "video/ho-so-ky-la-week1-16x9/ho-so-ky-la-week1-16x9.mp4",
+      "mp4_sha256": "decda43ea80fbae95d2c4f9989a725f13465a6493329c889c689dd9c4cca4aa5",
+      "mp4_bytes": 98890044,
+      "resolution": "1920x1080",
+      "fps": 30.0,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "mp4_duration_sec": 208.896,
+      "wav_duration_sec": 208.806,
+      "sync_delta_sec": 0.09,
+      "loudness_lufs": -15.1,
+      "true_peak_dbtp": -1.6,
+      "srt_relpath": "video/ho-so-ky-la-week1-16x9/ho-so-ky-la-week1-16x9.srt",
+      "srt_sha256": "18a3defd7fd359202def164ead2d5733cc445234ec263fe8d07b2fc358fd294e",
+      "thumbnail_relpath": "video/ho-so-ky-la-week1-16x9/thumbnail_16x9.jpg",
+      "thumbnail_sha256": "e5655f511d074d280d3514bd30d09273eef12e9a34999369ee98c68c78c5e126"
+    }
+  }
+}

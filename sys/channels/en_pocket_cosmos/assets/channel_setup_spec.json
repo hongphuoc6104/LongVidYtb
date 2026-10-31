@@ -1,0 +1,28 @@
+{
+  "channel_id": "en_pocket_cosmos",
+  "slug": "en-pocket-cosmos",
+  "youtube_name": "Pocket Cosmos",
+  "handle_candidates": [
+    "@PocketCosmos",
+    "@PocketCosmosHQ",
+    "@PocketCosmosLab",
+    "@TinyCosmosInk"
+  ],
+  "description": "Welcome to the official Pocket Cosmos channel!\n\nExplain mind-bending astrophysics and spacetime paradoxes using everyday analogies and gentle stick figures.\nClear, visual, research-backed explainers crafted for space lovers, students, science fiction thinkers, and curious cosmologists.\n\nCore topics: Astrophysics, black holes, quantum paradoxes & spacetime explained in Feynman style.\n\n#space #astrophysics #cosmos #physics #blackhole #science",
+  "keywords": [
+    "space",
+    "astrophysics",
+    "cosmos",
+    "physics",
+    "blackhole",
+    "science",
+    "Astrophysics, black holes, quantum paradoxes & spacetime explained in Feynman style"
+  ],
+  "assets": {
+    "avatar_800x800": "sys/channels/en_pocket_cosmos/assets/avatar_800x800.png",
+    "banner_2048x1152": "sys/channels/en_pocket_cosmos/assets/banner_2048x1152.png",
+    "watermark_150x150": "sys/channels/en_pocket_cosmos/assets/watermark_150x150.png",
+    "endcard_16x9": "sys/channels/en_pocket_cosmos/assets/endcard_16x9.jpg",
+    "endcard_9x16": "sys/channels/en_pocket_cosmos/assets/endcard_9x16.jpg"
+  }
+}

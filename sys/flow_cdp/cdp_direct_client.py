@@ -14,7 +14,6 @@ import logging
 import os
 import re
 import socket
-import subprocess
 import time
 import urllib.request
 from typing import Any, Optional
@@ -308,8 +307,8 @@ PROFILES = [
     },
     {
         "name": "profile_11",
-        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-profile12"),
-        "profile_dir": "Profile 12",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-profile24"),
+        "profile_dir": "Profile 24",
         "cdp_port": 9232,
         "url": "https://flow.google.com/project/b51e02c5-1fd5-4a6c-dc28-fb1cb7e55011",
         "project_id": "b51e02c5-1fd5-4a6c-dc28-fb1cb7e55011",
@@ -351,8 +350,8 @@ PROFILES = [
         "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-profile18"),
         "profile_dir": "Profile 18",
         "cdp_port": 9237,
-        "url": "https://flow.google.com/project/0a6d57ba-6eca-4fba-cb7d-ea6bacda0016",
-        "project_id": "0a6d57ba-6eca-4fba-cb7d-ea6bacda0016",
+        "url": "https://flow.google.com/project/2bdb755e-e212-4e1e-b72e-502607f4e111",
+        "project_id": "2bdb755e-e212-4e1e-b72e-502607f4e111",
     },
     {
         "name": "profile_17",
@@ -386,6 +385,166 @@ PROFILES = [
         "url": "https://flow.google.com/project/4ea09bfe-ac0e-4dfe-af1b-ce0faefe4020",
         "project_id": "4ea09bfe-ac0e-4dfe-af1b-ce0faefe4020",
     },
+    {
+        "name": "profile_21",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-profile25"),
+        "profile_dir": "Profile 25",
+        "cdp_port": 9242,
+        "url": "https://flow.google.com/project/5fb1ac0f-bd1f-4eff-bf2c-df1abfff5021",
+        "project_id": "5fb1ac0f-bd1f-4eff-bf2c-df1abfff5021",
+    },
+    {
+        "name": "profile_en01",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-en01"),
+        "profile_dir": "Default",
+        "cdp_port": 9251,
+        "url": "https://flow.google.com/",
+        "project_id": "",
+    },
+    {
+        "name": "profile_en02",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-en02"),
+        "profile_dir": "Profile 9",
+        "cdp_port": 9252,
+        "url": "https://flow.google.com/",
+        "project_id": "",
+    },
+    {
+        "name": "profile_en03",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-en03"),
+        "profile_dir": "Profile 12",
+        "cdp_port": 9253,
+        "url": "https://flow.google.com/",
+        "project_id": "",
+    },
+    {
+        "name": "profile_en04",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-en04"),
+        "profile_dir": "Profile 26",
+        "cdp_port": 9254,
+        "url": "https://flow.google.com/",
+        "project_id": "",
+    },
+    {
+        "name": "profile_en05",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-en05"),
+        "profile_dir": "Profile 27",
+        "cdp_port": 9255,
+        "url": "https://flow.google.com/",
+        "project_id": "",
+    },
+    {
+        "name": "profile_en06",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-en06"),
+        "profile_dir": "Profile 28",
+        "cdp_port": 9256,
+        "url": "https://flow.google.com/",
+        "project_id": "",
+    },
+    {
+        "name": "profile_en07",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-en07"),
+        "profile_dir": "Profile 29",
+        "cdp_port": 9257,
+        "url": "https://flow.google.com/",
+        "project_id": "",
+    },
+    {
+        "name": "profile_en08",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-en08"),
+        "profile_dir": "Profile 30",
+        "cdp_port": 9258,
+        "url": "https://flow.google.com/",
+        "project_id": "",
+    },
+    {
+        "name": "profile_en09",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-en09"),
+        "profile_dir": "Profile 31",
+        "cdp_port": 9259,
+        "url": "https://flow.google.com/",
+        "project_id": "",
+    },
+    {
+        "name": "profile_en10",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-en10"),
+        "profile_dir": "Profile 32",
+        "cdp_port": 9260,
+        "url": "https://flow.google.com/",
+        "project_id": "",
+    },
+    {
+        "name": "profile_en11",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-en11"),
+        "profile_dir": "Profile 33",
+        "cdp_port": 9261,
+        "url": "https://flow.google.com/",
+        "project_id": "",
+    },
+    {
+        "name": "profile_en12",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-en12"),
+        "profile_dir": "Profile 34",
+        "cdp_port": 9262,
+        "url": "https://flow.google.com/",
+        "project_id": "",
+    },
+    {
+        "name": "profile_en13",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-en13"),
+        "profile_dir": "Profile 35",
+        "cdp_port": 9263,
+        "url": "https://flow.google.com/",
+        "project_id": "",
+    },
+    {
+        "name": "profile_en14",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-en14"),
+        "profile_dir": "Profile 36",
+        "cdp_port": 9264,
+        "url": "https://flow.google.com/",
+        "project_id": "",
+    },
+    {
+        "name": "profile_en15",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-en15"),
+        "profile_dir": "Profile 37",
+        "cdp_port": 9265,
+        "url": "https://flow.google.com/",
+        "project_id": "",
+    },
+    {
+        "name": "profile_en16",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-en16"),
+        "profile_dir": "Profile 38",
+        "cdp_port": 9266,
+        "url": "https://flow.google.com/",
+        "project_id": "",
+    },
+    {
+        "name": "profile_en17",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-en17"),
+        "profile_dir": "Profile 39",
+        "cdp_port": 9267,
+        "url": "https://flow.google.com/",
+        "project_id": "",
+    },
+    {
+        "name": "profile_en18",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-en18"),
+        "profile_dir": "Profile 40",
+        "cdp_port": 9268,
+        "url": "https://flow.google.com/",
+        "project_id": "",
+    },
+    {
+        "name": "profile_en19",
+        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-en19"),
+        "profile_dir": "Profile 41",
+        "cdp_port": 9269,
+        "url": "https://flow.google.com/",
+        "project_id": "",
+    },
 ]
 
 
@@ -401,101 +560,55 @@ def ensure_chrome_profiles_launched(
 ) -> None:
     # Safe default: only launch primary profile if not explicitly specified, preventing RAM exhaustion
     target_profiles = profiles if profiles is not None else [PROFILES[0]]
-    env = dict(os.environ)
-    if headless:
-        env.pop("DISPLAY", None)
-    else:
-        env["DISPLAY"] = os.environ.get("DISPLAY", ":0")
+    from .process_manager import get_process_manager
 
-    try:
-        from .accounts import detect_chrome_binary
-        chrome_bin = detect_chrome_binary()
-    except Exception:
-        chrome_bin = "/opt/google/chrome/chrome"
-
+    pm = get_process_manager()
     for p in target_profiles:
-        port = p["cdp_port"]
+        port = int(p["cdp_port"])
         if is_port_open(port):
             continue
-        udir = p["user_data_dir"]
-        for lock_name in ("SingletonLock", "SingletonCookie", "SingletonSocket"):
-            lp = os.path.join(udir, lock_name)
-            if os.path.lexists(lp):
-                try:
-                    os.unlink(lp)
-                except OSError:
-                    pass
-        cmd = [
-            chrome_bin,
-            f"--user-data-dir={udir}",
-            f"--profile-directory={p['profile_dir']}",
-            f"--remote-debugging-port={port}",
-            "--remote-allow-origins=*",
-            "--no-first-run",
-            "--no-default-browser-check",
-            "--disable-component-update",
-            "--host-resolver-rules=MAP edgedl.me.gvt1.com ~NOTFOUND, MAP *.gvt1.com ~NOTFOUND",
-            "--disable-features=CalculateNativeWinOcclusion,IntensiveWakeUpThrottling,AutomaticTabDiscarding,MemorySaverMode,OptimizationGuideModelDownloading,OptimizationGuideOnDeviceModel,OptimizationHints",
-            "--disable-background-timer-throttling",
-            "--disable-backgrounding-occluded-windows",
-            "--disable-renderer-backgrounding",
-            "--disable-dev-shm-usage",
-            "--disable-hang-monitor",
-        ]
-        if headless:
-            cmd.insert(1, "--headless=new")
-        cmd.append(p["url"])
-
-        proc = subprocess.Popen(
-            cmd,
-            env=env,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            start_new_session=True,
-        )
-        try:
-            from .process_manager import get_process_manager
-            pm = get_process_manager()
-            with pm._lock:
-                pm.active_processes[port] = {
-                    "pid": proc.pid,
-                    "pgid": proc.pid,
-                    "user_data_dir": udir,
-                    "profile_dir": p["profile_dir"],
-                    "port": port,
-                    "headless": headless,
-                    "started_at": time.time(),
-                    "process": proc,
-                }
-                pm._save_registry()
-        except Exception:
-            pass
-        try:
-            from .lifecycle import register_spawned_port
-            register_spawned_port(port)
-        except Exception:
-            pass
-        time.sleep(0.3)
+        launch_cfg = {
+            "id": p.get("name", f"port_{port}"),
+            "port": port,
+            "cdp_port": port,
+            "user_data_dir": p["user_data_dir"],
+            "profile_dir": p.get("profile_dir", "Default"),
+            "directory": p.get("profile_dir", "Default"),
+        }
+        # Launch lightweight Flow root shell to avoid 404 project redirects & heavy timeline WebGL overhead
+        pm.launch(launch_cfg, url="https://flow.google.com/", headless=headless)
+        time.sleep(0.25)
 
     for p in target_profiles:
-        port = p["cdp_port"]
+        port = int(p["cdp_port"])
         for _ in range(30):
             if is_port_open(port):
                 break
             time.sleep(0.5)
 
 
-def get_flow_target(cdp_port: int) -> dict[str, Any]:
+def get_flow_target(cdp_port: int, retries: int = 30) -> dict[str, Any]:
     req = urllib.request.Request(f"http://127.0.0.1:{cdp_port}/json")
-    with urllib.request.urlopen(req, timeout=5) as resp:
-        targets = json.loads(resp.read().decode("utf-8"))
-    pages = [t for t in targets if t.get("type") == "page"]
-    for t in pages:
-        u = t.get("url", "")
-        if "flow.google.com" in u or "labs.google" in u:
-            return t
-    if pages:
-        return pages[0]
+    for attempt in range(retries):
+        try:
+            with urllib.request.urlopen(req, timeout=5) as resp:
+                targets = json.loads(resp.read().decode("utf-8"))
+            pages = [t for t in targets if t.get("type") == "page"]
+            for t in pages:
+                u = t.get("url", "")
+                if u and ("flow.google.com" in u or "labs.google" in u):
+                    return t
+            if pages and attempt > 10:
+                return pages[0]
+        except Exception:
+            pass
+        time.sleep(0.5)
+    try:
+        new_req = urllib.request.Request(f"http://127.0.0.1:{cdp_port}/json/new?https://flow.google.com", method="PUT")
+        with urllib.request.urlopen(new_req, timeout=5) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+    except Exception:
+        pass
     raise RuntimeError(f"No page target found on CDP port {cdp_port}")
 
 
@@ -563,7 +676,20 @@ class DirectCDPProfileSession:
         return last_state
 
     async def connect(self, reload_for_guard: bool = False) -> None:
-        target = get_flow_target(self.cdp_port)
+        target = None
+        last_exc = None
+        for _ in range(15):
+            try:
+                target = get_flow_target(self.cdp_port)
+                if target and target.get("webSocketDebuggerUrl"):
+                    break
+            except Exception as e:
+                last_exc = e
+                await asyncio.sleep(0.5)
+        if not target:
+            if last_exc:
+                raise last_exc
+            raise RuntimeError(f"Could not resolve flow target on port {self.cdp_port}")
         ws_url = target["webSocketDebuggerUrl"]
         cur_url = target.get("url") or self.default_url
         pid = self._extract_project_id(cur_url)
@@ -581,20 +707,41 @@ class DirectCDPProfileSession:
         await self.call("Runtime.enable")
         await self.call("Page.addScriptToEvaluateOnNewDocument", {"source": CDP_RECAPTCHA_GUARD_JS})
 
-        if "/project/" not in str(cur_url) and "/project/" in self.default_url:
-            await self.call("Page.navigate", {"url": self.default_url})
-            cur_url = self.default_url
-            pid = self._extract_project_id(cur_url)
-            if pid:
-                self.project_id = pid
-            await asyncio.sleep(1.0)
+        # Prune any extra duplicate page tabs on this browser to keep memory/renderer count strictly 1 tab
+        try:
+            req = urllib.request.Request(f"http://127.0.0.1:{self.cdp_port}/json")
+            with urllib.request.urlopen(req, timeout=3) as resp:
+                all_targets = json.loads(resp.read().decode("utf-8"))
+            active_tid = target.get("id")
+            for other in all_targets:
+                if other.get("type") == "page" and other.get("id") and other.get("id") != active_tid:
+                    try:
+                        close_req = urllib.request.Request(
+                            f"http://127.0.0.1:{self.cdp_port}/json/close/{other['id']}"
+                        )
+                        urllib.request.urlopen(close_req, timeout=2).read()
+                    except Exception:
+                        pass
+        except Exception:
+            pass
+
+        cur_url_str = str(cur_url or "")
+        # Avoid 404 project redirects and heavy timeline WebGL canvas: use lightweight https://flow.google.com/
+        if (
+            "flow.google.com" not in cur_url_str
+            or "/404" in cur_url_str
+            or "reason=project" in cur_url_str
+        ):
+            await self.call("Page.navigate", {"url": "https://flow.google.com/"})
+            cur_url = "https://flow.google.com/"
+            await asyncio.sleep(0.8)
 
         need_reload = reload_for_guard
         if not need_reload:
             has_mint = await self.evaluate("typeof window.mintCaptcha === 'function'", await_promise=False)
             if not has_mint:
                 await self.evaluate(CDP_RECAPTCHA_GUARD_JS, await_promise=False)
-            state = await self._wait_for_flow_ready(timeout=8.0)
+            state = await self._wait_for_flow_ready(timeout=18.0)
             if state.get("trapped") or not (state.get("hasPristine") or state.get("hasExec")):
                 need_reload = True
 

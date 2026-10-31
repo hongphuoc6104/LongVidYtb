@@ -1,0 +1,27 @@
+{
+  "channel_id": "tam_tinh_dem",
+  "slug": "tam-tinh-dem",
+  "youtube_name": "Tâm Tĩnh Đêm",
+  "handle_candidates": [
+    "@TamTinhDemVN",
+    "@TamTinhDemOfficial",
+    "@KenhTamTinhDem",
+    "@TamTinhDem"
+  ],
+  "description": "Chào mừng bạn đến với kênh chính thức của Tâm Tĩnh Đêm!\n\nMột câu chuyện ngụ ngôn lắng đọng mỗi tối giúp bạn gác lại âu lo và ngủ thật bình yên.\nNội dung được thiết kế dễ hiểu, trực quan và hấp dẫn dành riêng cho khán giả nghe đêm (21h-24h), người cần chữa lành tổn thương, yêu thích truyện ngụ ngôn nhân sinh.\n\nChủ đề trọng tâm: Truyện ngụ ngôn tỉnh thức, bài học nhân quả, lòng biết ơn và chiêm nghiệm chữa lành trước khi ngủ.\n\n#tamtinhdem #truyenngungon #nhansinh #chualanhtamhon #binhyen",
+  "keywords": [
+    "tamtinhdem",
+    "truyenngungon",
+    "nhansinh",
+    "chualanhtamhon",
+    "binhyen",
+    "Truyện ngụ ngôn tỉnh thức, bài học nhân quả, lòng biết ơn và chiêm nghiệm chữa lành trước khi ngủ"
+  ],
+  "assets": {
+    "avatar_800x800": "sys/channels/tam_tinh_dem/assets/avatar_800x800.png",
+    "banner_2048x1152": "sys/channels/tam_tinh_dem/assets/banner_2048x1152.png",
+    "watermark_150x150": "sys/channels/tam_tinh_dem/assets/watermark_150x150.png",
+    "endcard_16x9": "sys/channels/tam_tinh_dem/assets/endcard_16x9.jpg",
+    "endcard_9x16": "sys/channels/tam_tinh_dem/assets/endcard_9x16.jpg"
+  }
+}

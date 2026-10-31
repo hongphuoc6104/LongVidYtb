@@ -1,0 +1,28 @@
+{
+  "channel_id": "en_career_leverage",
+  "slug": "career-leverage",
+  "youtube_name": "Career Leverage",
+  "handle_candidates": [
+    "@CareerLeverage",
+    "@CareerLeverageHQ",
+    "@CareerLeverageLab",
+    "@TheCareerLeverage"
+  ],
+  "description": "Welcome to Career Leverage!\n\nUnderstand the unspoken rules of modern workplaces, salary negotiation, and high-leverage skills in the AI era.\n\nCore topics: Career strategy, workplace psychology, negotiation, and leverage.\n\n#careeradvice #workplace #negotiation #leadership #corporatelife",
+  "keywords": [
+    "careerleverage",
+    "careeradvice",
+    "workplace",
+    "negotiation",
+    "leadership",
+    "corporatelife",
+    "Career strategy, workplace psychology, negotiation, and leverage"
+  ],
+  "assets": {
+    "avatar_800x800": "sys/channels/en_career_leverage/assets/avatar_800x800.png",
+    "banner_2048x1152": "sys/channels/en_career_leverage/assets/banner_2048x1152.png",
+    "watermark_150x150": "sys/channels/en_career_leverage/assets/watermark_150x150.png",
+    "endcard_16x9": "sys/channels/en_career_leverage/assets/endcard_16x9.jpg",
+    "endcard_9x16": "sys/channels/en_career_leverage/assets/endcard_9x16.jpg"
+  }
+}

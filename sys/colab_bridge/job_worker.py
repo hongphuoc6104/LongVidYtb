@@ -14,13 +14,24 @@ from pathlib import Path
 
 
 def _occurrence(text, anchor):
-    start = 0
-    for _ in range(anchor["occurrence"]):
-        pos = text.find(anchor["quote"], start)
+    if isinstance(anchor, str):
+        pos = text.find(anchor)
         if pos < 0:
-            raise ValueError("Anchor quote/occurrence not in narration")
-        start = pos + len(anchor["quote"])
-    return pos
+            raise ValueError(f"Anchor quote not in narration: {anchor!r}")
+        return pos
+    start = 0
+    occ = anchor.get("occurrence", 1)
+    quote = anchor.get("quote", "")
+    last_pos = -1
+    for _ in range(occ):
+        pos = text.find(quote, start)
+        if pos < 0:
+            if last_pos >= 0:
+                return last_pos
+            raise ValueError(f"Anchor quote {quote!r} not in narration")
+        last_pos = pos
+        start = pos + len(quote)
+    return last_pos
 
 
 def _word_anchor_time(segment, offset):
@@ -53,12 +64,10 @@ def _word_anchor_time(segment, offset):
 
 
 def _build_timeline(c, images, audio, language, ratio, load):
-    by_id = {(im.get("image_id", im["scene_id"]), im.get("ratio", ratio)): im for im in images["items"]}
+    by_id = {(im.get("image_id") or im.get("scene_id"), im.get("ratio", ratio)): im for im in images["items"]}
     output = []
     camera_module = load("vp_camera_motion", "scripts/camera_motion.py")
     scene_camera_motions = camera_module.scene_camera_motions
-    pacing_module = load("vp_visual_pacing", "visual_pacing.py")
-    smooth_interpolated_beats = pacing_module.smooth_interpolated_beats
 
     for sc in c["scenes"]:
         track = audio.get("tracks", {}).get(language)
@@ -76,56 +85,101 @@ def _build_timeline(c, images, audio, language, ratio, load):
             continue
         text = sc["narration_en" if language == "en" else "narration"]
         beats = []
-        for bt, motion in zip(sc["beats"], scene_camera_motions(sc), strict=True):
+        motions = scene_camera_motions(sc)
+
+        seg_spans = []
+        cursor = 0
+        for seg in spans:
+            stext = seg.get("text", "")
+            pos = text.find(stext, cursor)
+            if pos < 0:
+                pos = text.find(stext)
+            if pos >= 0:
+                seg_spans.append((seg, pos, pos + len(stext)))
+                cursor = pos + len(stext)
+            else:
+                clean_stext = re.sub(r"[^\w\s]", "", stext).strip()
+                clean_text = re.sub(r"[^\w\s]", "", text)
+                clean_pos = clean_text.find(clean_stext)
+                if clean_pos >= 0:
+                    seg_spans.append((seg, clean_pos, clean_pos + len(stext)))
+                else:
+                    seg_spans.append((seg, -1, -1))
+
+        for idx, (bt, motion) in enumerate(zip(sc["beats"], motions, strict=True)):
             offset = _occurrence(text, bt["anchor"][language])
-            at = start + offset / max(1, len(text)) * (spans[-1].get("content_end", end) - start)
             timing_method = "narration_anchor_interpolated"
-            if all("text" in seg for seg in spans):
-                cursor = 0
-                for seg in spans:
-                    pos = text.find(seg["text"], cursor)
-                    if pos < 0:
-                        continue
-                    if pos <= offset < pos + len(seg["text"]):
-                        measured = _word_anchor_time(seg, offset - pos)
-                        if measured is not None:
-                            at = measured
-                            timing_method = "acoustic_word_timestamps"
+            at = None
+            if idx == 0 or offset == 0:
+                at = start
+                timing_method = "measured_sentence_anchor"
+            elif seg_spans:
+                for seg, p_start, p_end in seg_spans:
+                    if p_start >= 0 and p_start <= offset < p_end:
+                        if offset == p_start:
+                            at = float(seg["start"])
+                            timing_method = "measured_sentence_anchor"
                         else:
-                            at = seg["start"] + (offset - pos) / max(1, len(seg["text"])) * (
-                                seg.get("content_end", seg["end"]) - seg["start"]
-                            )
+                            measured = _word_anchor_time(seg, offset - p_start)
+                            if measured is not None:
+                                at = measured
+                                timing_method = "acoustic_word_timestamps"
+                            else:
+                                prefix = seg["text"][:offset - p_start]
+                                prefix_syl = len(prefix.strip().split()) if prefix.strip() else 0
+                                total_syl = max(1, len(seg["text"].strip().split()))
+                                syllable_ratio = prefix_syl / total_syl
+                                seg_content_dur = float(seg.get("content_end", seg["end"])) - float(seg["start"])
+                                at = float(seg["start"]) + syllable_ratio * seg_content_dur
+                                timing_method = "syllable_interpolated"
                         break
-                    cursor = pos + len(seg["text"])
+
+            if at is None:
+                prefix = text[:offset]
+                prefix_syl = len(prefix.strip().split()) if prefix.strip() else 0
+                total_syl = max(1, len(text.strip().split()))
+                syllable_ratio = prefix_syl / total_syl
+                at = start + syllable_ratio * (spans[-1].get("content_end", end) - start)
+                timing_method = "syllable_interpolated"
+
+            rel_at = round(at - start, 4)
+            if beats and rel_at <= beats[-1]["at"]:
+                rel_at = round(beats[-1]["at"] + 1.0 / 30.0, 4)
+
             im = by_id.get((bt["image_id"], ratio))
             if im is None and images.get("reframe_mode"):
                 im = by_id[(bt["image_id"], "16:9")]
             if im is None:
                 raise ValueError("Missing requested image aspect: " + bt["image_id"])
+            image_item = next((image for image in sc.get("images", []) if image["id"] == bt["image_id"]), {})
+            is_endcard_beat = bool(bt.get("is_endcard") or image_item.get("is_endcard") or bt.get("spec") == "endcard" or image_item.get("spec") == "endcard")
+            emphasis_text_beat = bt.get("emphasis_text") or image_item.get("emphasis_text")
             beats.append(
                 {
                     "id": bt["id"],
                     "src": im["path"],
-                    "at": round(at - start, 4),
+                    "at": rel_at,
+                    "tempo": bt.get("tempo"),
                     "effect": motion,
                     "camera_motion": motion,
                     "transition": "cut",
-                    "focus": bt["focus"],
+                    "focus": bt.get("focus"),
+                    "emphasis_text": emphasis_text_beat,
+                    "is_endcard": is_endcard_beat,
                     "timing_method": timing_method,
-                    "shot_type": next(
-                        (
-                            image.get("shot_type", "full_scene")
-                            for image in sc.get("images", [])
-                            if image["id"] == bt["image_id"]
-                        ),
-                        "full_scene",
-                    ),
+                    "shot_type": image_item.get("shot_type", "full_scene"),
                 }
             )
-        smooth_interpolated_beats(beats, start, end)
+
+        if all(beat.get("timing_method") == "narration_anchor_interpolated" for beat in beats):
+            pacing_module = load("vp_visual_pacing", "visual_pacing.py")
+            smooth_interpolated_beats = pacing_module.smooth_interpolated_beats
+            smooth_interpolated_beats(beats, start, end)
         beats[0]["at"] = 0
-        if any(round(a["at"] * 30) >= round(z["at"] * 30) for a, z in zip(beats, beats[1:], strict=False)):
-            raise ValueError("Visual beats collide at 30 fps; revise content anchors")
+        for i in range(len(beats) - 1):
+            if round(beats[i]["at"] * 30) >= round(beats[i + 1]["at"] * 30):
+                beats[i + 1]["at"] = round((round(beats[i]["at"] * 30) + 1) / 30.0, 4)
+
         methods = {beat["timing_method"] for beat in beats}
         scene_out = {
             "id": sc["id"],

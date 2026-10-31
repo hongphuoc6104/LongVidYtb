@@ -1,7 +1,7 @@
 # KẾ HOẠCH CHI TIẾT KÊNH: AI BÌNH DÂN (`ai_binh_dan`)
 
 ## 1. Định Vị Kênh & Phân Tách Nền Tảng
-- **Mã kênh:** `ai_binh_dan` (Đợt triển khai: Wave 2)
+- **Mã kênh:** `ai_binh_dan` (Đợt triển khai: Wave 1)
 - **Nhánh GitHub độc lập:** `channel/ai-binh-dan` (`origin/channel/ai-binh-dan`)
 - **Thư mục phát triển trên máy:** `/home/hongphuoc6104/Desktop/vp-channels/channel-ai-binh-dan`
 - **Ngách nội dung:** Mẹo dùng AI và công nghệ cho người thường

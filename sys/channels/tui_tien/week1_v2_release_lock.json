@@ -1,0 +1,50 @@
+{
+  "schema_version": "2.0",
+  "channel_id": "tui_tien",
+  "channel_slug": "tui-tien",
+  "git_branch": "channel/tui-tien",
+  "locked_at": "2026-10-31T05:27:58.351406+00:00",
+  "status": "LOCKED_RELEASE_READY",
+  "deliverables": {
+    "short_9x16": {
+      "job_id": "tui-tien-week1-9x16-v2",
+      "format_profile": "short_9x16",
+      "mp4_relpath": "video/tui-tien-week1-9x16-v2/tui-tien-week1-9x16-v2.mp4",
+      "mp4_sha256": "3649226755df6c8cff260790c6dbd34670a975c555da1bbdd00831eb64241be8",
+      "mp4_bytes": 25246107,
+      "resolution": "1080x1920",
+      "fps": 30.0,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "mp4_duration_sec": 50.624,
+      "wav_duration_sec": 50.556,
+      "sync_delta_sec": 0.068,
+      "loudness_lufs": -15.1,
+      "true_peak_dbtp": -1.6,
+      "srt_relpath": "video/tui-tien-week1-9x16-v2/tui-tien-week1-9x16-v2.srt",
+      "srt_sha256": "ff764cddedece53648024a081b9d9854c1396c7fcc8b0cd27548d50fbd68de4e",
+      "thumbnail_relpath": "video/tui-tien-week1-9x16-v2/thumbnail_9x16.jpg",
+      "thumbnail_sha256": "fdd294ff54753c18a612943977d481abf7ee08c2aef327460ee667254c349cb0"
+    },
+    "long_16x9": {
+      "job_id": "tui-tien-week1-16x9",
+      "format_profile": "long_16x9",
+      "mp4_relpath": "video/tui-tien-week1-16x9/tui-tien-week1-16x9.mp4",
+      "mp4_sha256": "dad03dea5e7f8d10a5d35af52218dba6011e4c7bafc3271a9a779a84252437b7",
+      "mp4_bytes": 131431573,
+      "resolution": "1920x1080",
+      "fps": 30.0,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "mp4_duration_sec": 285.76,
+      "wav_duration_sec": 285.686,
+      "sync_delta_sec": 0.074,
+      "loudness_lufs": -15.1,
+      "true_peak_dbtp": -1.6,
+      "srt_relpath": "video/tui-tien-week1-16x9/tui-tien-week1-16x9.srt",
+      "srt_sha256": "4b78454b60ffe287e3cb91efaca3640a4ebbf265bd76556e59506be710c674aa",
+      "thumbnail_relpath": "video/tui-tien-week1-16x9/thumbnail_16x9.jpg",
+      "thumbnail_sha256": "2caba024239edd5c23dd348b0f1620df7efb56e9381429c103fb3799a419481e"
+    }
+  }
+}

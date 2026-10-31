@@ -1,0 +1,18 @@
+{
+  "jobId": "endcard_en_macro_gears_9x16",
+  "forgeId": "88cbbcd3-0cb0-43b5-b479-7d96e277f4eb",
+  "profile_id": "profile_4",
+  "prompt": "Requested aspect ratio: 9:16. Render a complete 100% full-bleed vertical 9:16 2D endcard illustration extending continuously to all four edges with zero letterbox bars, zero subtitle boxes, and zero dark vignette.\n\nVisual Style (ch_en_swiss_macro): Bold Economist-style 2D flat geometric Swiss editorial vector infographic on financial-press paper canvas (#F3EFE6 financial-press paper, #0F2C59 central-bank navy, #D9381E inflation vermilion, #2A9D8F trade teal, #E9C46A reserve gold) with zero marker wobble, precise economic indicators, container shipping icons and monetary policy levers; orthographic 2D, at least 60% negative space, zero 3D, zero gradients. Palette: #F3EFE6, #0F2C59, #D9381E, #2A9D8F, #E9C46A.\n\nCharacter Cast: Crisp flat vector editorial host in structured navy suit and vermilion tie alongside clean cargo ships, interest-rate levers and currency bars. Outfit: Sharp tailored central-bank navy (#0F2C59) two-button suit with crisp white shirt and vermilion tie.\n\nScene Composition: The channel character stands centered in the frame, pointing upwards with a welcoming smile. Clean, minimalist composition with at least 60% open negative space on the solid flat background canvas (#F3EFE6).\n\nEmphasis lettering instruction: render exact uppercase English hand-lettered text (crisp high-contrast dark ink lettering) in the upper third integrated directly onto the flat canvas (#F3EFE6) (strictly zero rectangular text cards, banners, or gradient overlays covering artwork): \"FULL VIDEO ON YOUTUBE\" and \"MACRO GEARS\".",
+  "latency": 33.41,
+  "sha256": "59eaf3d61fe269fba5b9665d2633fa4b782b8e7f4d7aa7367fd7afa9466d89b6",
+  "aspect_ratio": "9:16",
+  "width": 1080,
+  "height": 1920,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "verified",
+  "created_at": "2026-10-31T18:09:19.780493+00:00",
+  "media_id": "88cbbcd3-0cb0-43b5-b479-7d96e277f4eb",
+  "channel_id": "en_macro_gears"
+}

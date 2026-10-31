@@ -1,0 +1,18 @@
+{
+  "jobId": "endcard_en_ego_unmasked_9x16",
+  "forgeId": "99908190-03c7-440f-bb08-fe297e97ee5d",
+  "profile_id": "profile_4",
+  "prompt": "Requested aspect ratio: 9:16. Render a complete 100% full-bleed vertical 9:16 2D endcard illustration extending continuously to all four edges with zero letterbox bars, zero subtitle boxes, and zero dark vignette.\n\nVisual Style (ch_en_jungian_noir): Dramatic 2D chiaroscuro graphic-novel engraving on ivory parchment canvas (#141418 obsidian ink black, #EAE2D3 ivory parchment, #C89B3C alchemical mirror gold, #9E2A2B shadow crimson); high-contrast psychological shadow archetypes, dual theater masks, and symbolic golden mirrors; orthographic 2D, at least 60% negative space, zero 3D, zero gradients. Palette: #141418, #EAE2D3, #C89B3C, #9E2A2B, #FFFFFF.\n\nCharacter Cast: Refined graphic-novel protagonist in charcoal high-collar coat holding an ivory theater mask beside a golden mirror silhouette. Outfit: High-collared charcoal frock coat over dark vest with alchemical gold pocket-watch chain, no shading.\n\nScene Composition: The channel character stands centered in the frame, pointing upwards with a welcoming smile. Clean, minimalist composition with at least 60% open negative space on the solid flat background canvas (#141418).\n\nEmphasis lettering instruction: render exact uppercase English hand-lettered text (crisp high-contrast white and gold lettering) in the upper third integrated directly onto the flat canvas (#141418) (strictly zero rectangular text cards, banners, or gradient overlays covering artwork): \"FULL VIDEO ON YOUTUBE\" and \"EGO UNMASKED\".",
+  "latency": 23.8,
+  "sha256": "d35396eade035222c86c6b36ba0e383dcf4fb7f8a3fdf0b8af2216fc16f1f2bb",
+  "aspect_ratio": "9:16",
+  "width": 1080,
+  "height": 1920,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "verified",
+  "created_at": "2026-10-31T18:09:19.390513+00:00",
+  "media_id": "99908190-03c7-440f-bb08-fe297e97ee5d",
+  "channel_id": "en_ego_unmasked"
+}

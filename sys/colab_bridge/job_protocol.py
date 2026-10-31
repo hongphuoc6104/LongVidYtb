@@ -65,6 +65,7 @@ def build_render_request(root, brief, content, images, audio, resolve):
         "output_contract.py",
         "format_profiles.py",
         "visual_pacing.py",
+        "crop_safety.py",
         "scripts/story_plan.py",
         "scripts/subtitles.py",
         "scripts/camera_motion.py",
@@ -132,9 +133,12 @@ def build_render_request(root, brief, content, images, audio, resolve):
     return request
 
 
+STORE_ONLY_SUFFIXES = frozenset({".jpg", ".jpeg", ".png", ".webp", ".gif", ".mp4", ".mp3", ".m4a", ".aac", ".zip"})
+
+
 def bundle(request, path):
     remote = dict(request, files=[{k: v for k, v in f.items() if k != "local_path"} for f in request["files"]])
-    with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as archive:
+    with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED, compresslevel=1) as archive:
         archive.writestr("request.json", json.dumps(remote, ensure_ascii=False))
         for entry in request["files"]:
             src = Path(entry["local_path"])
@@ -144,8 +148,15 @@ def bundle(request, path):
                 or src.stat().st_size != entry["size"]
                 or file_hash(src) != entry["sha256"]
             ):
-                raise ValueError("Remote bundle input changed or unsafe")
-            archive.write(src, entry["name"])
+                cur_size = src.stat().st_size if src.exists() else None
+                cur_hash = file_hash(src) if src.exists() else None
+                raise ValueError(
+                    f"Remote bundle input changed or unsafe: {entry['name']} "
+                    f"(expected size={entry['size']}, got {cur_size}; "
+                    f"expected sha={entry['sha256'][:8]}, got {cur_hash[:8] if cur_hash else 'none'})"
+                )
+            ctype = zipfile.ZIP_STORED if src.suffix.lower() in STORE_ONLY_SUFFIXES else zipfile.ZIP_DEFLATED
+            archive.write(src, entry["name"], compress_type=ctype)
     return remote
 
 
@@ -261,9 +272,9 @@ def validate_render_result(folder, request):
                         at = beat.get("at")
                         valid_effects = {wanted.get("effect"), resolved_motion}
                         if (beat.get("id"), beat.get("src"), beat.get("focus")) != (
-                            wanted["id"],
+                            wanted.get("id"),
                             expected_asset,
-                            wanted["focus"],
+                            wanted.get("focus"),
                         ) or beat.get("effect") not in valid_effects:
                             raise ValueError("Remote props visual asset/beat mismatch")
                         if (

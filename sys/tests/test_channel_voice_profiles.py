@@ -69,6 +69,180 @@ EXPECTED_CHANNELS = {
         "recommended_speed": 1.14,
         "default_tone": "analytical_crisp",
     },
+    "luat_ngam": {
+        "voice": "VietNarrator_LuatNgam",
+        "recommended_speed": 1.07,
+        "default_tone": "narrative_warm",
+    },
+    "ban_do_quyen_luc": {
+        "voice": "VietNarrator_BanDoQuyenLuc",
+        "recommended_speed": 1.09,
+        "default_tone": "analytical_crisp",
+    },
+    "dia_com": {
+        "voice": "VietNarrator_DiaCom",
+        "recommended_speed": 1.11,
+        "default_tone": "analytical_crisp",
+    },
+    "luat_doi_thuong": {
+        "voice": "VietNarrator_LuatDoiThuong",
+        "recommended_speed": 1.08,
+        "default_tone": "narrative_warm",
+    },
+    "banh_rang": {
+        "voice": "VietNarrator_BanhRang",
+        "recommended_speed": 1.13,
+        "default_tone": "analytical_crisp",
+    },
+    "vu_tru_ti_hon": {
+        "voice": "VietNarrator_VuTruTiHon",
+        "recommended_speed": 1.06,
+        "default_tone": "narrative_warm",
+    },
+    "nghe_song_sot": {
+        "voice": "VietNarrator_NgheSongSot",
+        "recommended_speed": 1.10,
+        "default_tone": "analytical_crisp",
+    },
+    "la_ban_hoc_thuat": {
+        "voice": "VietNarrator_LaBanHocThuat",
+        "recommended_speed": 1.15,
+        "default_tone": "analytical_crisp",
+    },
+    "chanh_niem_ke": {
+        "voice": "VietNarrator_ChanhNiemKe",
+        "recommended_speed": 1.02,
+        "default_tone": "reflective_slow",
+    },
+    "loi_sang_soi": {
+        "voice": "VietNarrator_LoiSangSoi",
+        "recommended_speed": 1.05,
+        "default_tone": "narrative_warm",
+    },
+    "minh_triet_song": {
+        "voice": "VietNarrator_MinhTrietSong",
+        "recommended_speed": 1.04,
+        "default_tone": "reflective_slow",
+    },
+    "tam_tinh_dem": {
+        "voice": "VietNarrator_TamTinhDem",
+        "recommended_speed": 1.00,
+        "default_tone": "reflective_slow",
+    },
+    "en_lazy_brain": {
+        "voice": "OmniVoice_EnLazyBrain",
+        "recommended_speed": 1.08,
+        "default_tone": "narrative_warm",
+        "language": "en",
+    },
+    "en_crowd_strings": {
+        "voice": "OmniVoice_EnCrowdStrings",
+        "recommended_speed": 1.10,
+        "default_tone": "analytical_crisp",
+        "language": "en",
+    },
+    "en_kindred_sketch": {
+        "voice": "OmniVoice_EnKindredSketch",
+        "recommended_speed": 1.02,
+        "default_tone": "narrative_warm",
+        "language": "en",
+    },
+    "en_ego_unmasked": {
+        "voice": "OmniVoice_EnEgoUnmasked",
+        "recommended_speed": 1.00,
+        "default_tone": "reflective_slow",
+        "language": "en",
+    },
+    "en_first_principles": {
+        "voice": "OmniVoice_EnFirstPrinciples",
+        "recommended_speed": 1.12,
+        "default_tone": "analytical_crisp",
+        "language": "en",
+    },
+    "en_wallet_anatomy": {
+        "voice": "OmniVoice_EnWalletAnatomy",
+        "recommended_speed": 1.10,
+        "default_tone": "analytical_crisp",
+        "language": "en",
+    },
+    "en_macro_gears": {
+        "voice": "OmniVoice_EnMacroGears",
+        "recommended_speed": 1.12,
+        "default_tone": "analytical_crisp",
+        "language": "en",
+    },
+    "en_plain_sight_ai": {
+        "voice": "OmniVoice_EnPlainSightAI",
+        "recommended_speed": 1.14,
+        "default_tone": "analytical_crisp",
+        "language": "en",
+    },
+    "en_career_leverage": {
+        "voice": "OmniVoice_EnCareerLeverage",
+        "recommended_speed": 1.10,
+        "default_tone": "analytical_crisp",
+        "language": "en",
+    },
+    "en_fine_print": {
+        "voice": "OmniVoice_EnFinePrint",
+        "recommended_speed": 1.08,
+        "default_tone": "analytical_crisp",
+        "language": "en",
+    },
+    "en_inside_vessel": {
+        "voice": "OmniVoice_EnInsideVessel",
+        "recommended_speed": 1.08,
+        "default_tone": "narrative_warm",
+        "language": "en",
+    },
+    "en_kitchen_molecules": {
+        "voice": "OmniVoice_EnKitchenMolecules",
+        "recommended_speed": 1.10,
+        "default_tone": "analytical_crisp",
+        "language": "en",
+    },
+    "en_wait_how": {
+        "voice": "OmniVoice_EnWaitHow",
+        "recommended_speed": 1.14,
+        "default_tone": "analytical_crisp",
+        "language": "en",
+    },
+    "en_cold_case_ink": {
+        "voice": "OmniVoice_EnColdCaseInk",
+        "recommended_speed": 1.02,
+        "default_tone": "reflective_slow",
+        "language": "en",
+    },
+    "en_choke_point": {
+        "voice": "OmniVoice_EnChokePoint",
+        "recommended_speed": 1.10,
+        "default_tone": "analytical_crisp",
+        "language": "en",
+    },
+    "en_pocket_cosmos": {
+        "voice": "OmniVoice_EnPocketCosmos",
+        "recommended_speed": 1.06,
+        "default_tone": "narrative_warm",
+        "language": "en",
+    },
+    "en_second_arrow": {
+        "voice": "OmniVoice_EnSecondArrow",
+        "recommended_speed": 1.00,
+        "default_tone": "reflective_slow",
+        "language": "en",
+    },
+    "en_parable_lamp": {
+        "voice": "OmniVoice_EnParableLamp",
+        "recommended_speed": 1.02,
+        "default_tone": "reflective_slow",
+        "language": "en",
+    },
+    "en_bamboo_marble": {
+        "voice": "OmniVoice_EnBambooMarble",
+        "recommended_speed": 1.00,
+        "default_tone": "reflective_slow",
+        "language": "en",
+    },
 }
 
 
@@ -95,7 +269,8 @@ class TestChannelVoiceProfiles(unittest.TestCase):
 
             self.assertEqual(data.get("voice"), expected["voice"])
             self.assertEqual(data.get("channel_id"), ch_id)
-            self.assertEqual(data.get("language"), "vi")
+            expected_lang = expected.get("language", "vi")
+            self.assertEqual(data.get("language"), expected_lang)
             self.assertIn("vi", data.get("languages", []))
             self.assertIn("en", data.get("languages", []))
             self.assertEqual(data.get("reference_wav"), "reference.wav")
@@ -236,10 +411,14 @@ class TestChannelVoiceProfiles(unittest.TestCase):
         self.assertTrue(6 <= len(res[1].split()) <= 16, f"Clause 2 length {len(res[1].split())} outside 6..16 sweet spot")
 
     def test_audition_scripts_coverage_and_duration(self):
-        """Validates that AUDITION_SCRIPTS covers all 8 channels with full 5-sentence scripts."""
+        """Validates that AUDITION_SCRIPTS covers all Wave 1 channels with full 5-sentence scripts."""
         from audition_channel_voice import AUDITION_SCRIPTS, SENTENCE_RE
 
-        for ch_id in EXPECTED_CHANNELS:
+        wave1_ids = [
+            "nao_luoi", "tui_tien", "ua_sao_vay", "su_ke_lai",
+            "thuong_cho_kheo", "ho_so_ky_la", "co_the_ke", "ai_binh_dan",
+        ]
+        for ch_id in wave1_ids:
             self.assertIn(ch_id, AUDITION_SCRIPTS, f"Missing {ch_id} in AUDITION_SCRIPTS")
             script = AUDITION_SCRIPTS[ch_id]
             sents = [s.strip() for s in SENTENCE_RE.split(script) if s.strip()]
@@ -258,14 +437,18 @@ class TestChannelVoiceProfiles(unittest.TestCase):
         self.assertIn("true_peak_db", sig.parameters)
 
     def test_worktrees_sync_verification(self):
-        """Verifies that all 8 channel worktrees have their voice profiles present and synced."""
+        """Verifies that all active channel worktrees have their voice profiles present and synced."""
         worktrees_root = Path("/home/hongphuoc6104/Desktop/vp-channels")
         if not worktrees_root.is_dir():
             self.skipTest("Worktrees directory not found; skipping sync check")
 
+        checked = 0
         for ch_id in EXPECTED_CHANNELS:
             slug = ch_id.replace("_", "-")
-            wt_profile_dir = worktrees_root / f"channel-{slug}" / "sys" / "assets" / "voices" / f"ch_{ch_id}"
+            wt_channel_dir = worktrees_root / f"channel-{slug}"
+            if not wt_channel_dir.is_dir():
+                continue
+            wt_profile_dir = wt_channel_dir / "sys" / "assets" / "voices" / f"ch_{ch_id}"
             self.assertTrue(
                 (wt_profile_dir / "profile.json").is_file(),
                 f"Missing profile.json in worktree: {wt_profile_dir}",
@@ -293,6 +476,8 @@ class TestChannelVoiceProfiles(unittest.TestCase):
             with open(wt_profile_dir / "reference.wav", "rb") as f:
                 hasher.update(f.read())
             self.assertEqual(wt_data.get("sha256"), hasher.hexdigest())
+            checked += 1
+        self.assertGreaterEqual(checked, 8, "Expected at least 8 worktrees to be checked")
 
 
 if __name__ == "__main__":

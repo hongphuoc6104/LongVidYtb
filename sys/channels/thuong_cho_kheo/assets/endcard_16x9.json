@@ -1,0 +1,17 @@
+{
+  "jobId": "endcard_thuong_cho_kheo_16x9",
+  "forgeId": "db1a81ff-2a39-49fd-b558-d482cd272816",
+  "profile_id": "profile_1",
+  "prompt": "Requested aspect ratio: 16:9. Render a complete 100% full-bleed horizontal 16:9 widescreen 2D endcard illustration extending continuously to all four edges with zero letterbox bars, zero subtitle boxes, and zero dark vignette.\n\nVisual Style (ch_pastel_duo): Soft 2D pastel line-art illustration: smooth thin warm-brown outlines (#5B4636), flat unshaded fills in blush pink (#F7C6C7), lavender (#CDB4DB), mint (#BDE0C6) and butter (#FFF1B5) on a flat solid cream canvas (#FFF8F0); two characters facing each other with speech-bubble-free composition, rounded gentle shapes, small heart and sparkle accents, orthographic 2D, no gradients, no 3D. Palette: #FFF8F0, #F7C6C7, #CDB4DB, #BDE0C6, #FFF1B5, #5B4636.\n\nCharacter Cast: Recurring duo: 'Tũn', a young man with a round face, messy short black hair and dot eyes; and 'Mây', a young woman with a round face, shoulder-length black hair with a small clip and dot eyes; both drawn in simple chibi-like proportions. Outfit: Tũn wears a flat mint (#BDE0C6) hoodie; Mây wears a flat blush (#F7C6C7) cardigan.\n\nScene Composition: Position the character strictly on the far left 35% of the widescreen canvas, smiling and pointing toward the right. CRITICAL END-SCREEN RULE: The entire right 65% of the frame must remain completely flat, empty, solid background canvas with strictly zero characters, zero text, zero props, and zero decorations so YouTube video/subscribe cards can overlay cleanly.\n\nEmphasis lettering instruction: render exact uppercase Vietnamese hand-lettered text strictly on the far left 35% of the canvas integrated directly onto the flat canvas (strictly zero rectangular text cards, banners, or gradient overlays covering artwork): \"BẢN ĐẦY ĐỦ TRÊN YOUTUBE\" and \"THƯƠNG CHO KHÉO\".",
+  "latency": 30.08,
+  "sha256": "1a2a9f263d86325babeb42c591eb204dcf006a5b6b3d7a517de07ba78ff84f0d",
+  "aspect_ratio": "16:9",
+  "width": 1376,
+  "height": 768,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "verified",
+  "created_at": "2026-10-30T19:17:57.043157+00:00",
+  "channel_id": "thuong_cho_kheo"
+}

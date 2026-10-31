@@ -1,0 +1,18 @@
+{
+  "jobId": "q1_luat_doi_thuong_16x9",
+  "forgeId": "0862f038-ae1e-4a34-87b2-7e3c5f43c44c",
+  "profile_id": "profile_1",
+  "prompt": "Requested aspect ratio: 16:9. Render a complete 100% full-bleed horizontal 16:9 widescreen 2D endcard illustration extending continuously to all four edges with zero letterbox bars, zero subtitle boxes, and zero dark vignette.\n\nVisual Style (ch_legal_risograph): Mid-century New Yorker-inspired 2D editorial pen-and-ink risograph print on ivory newsprint canvas (#F4EFE6 ivory newsprint, #1D3557 Prussian ink navy, #E63946 vermilion legal-stamp red, #A8DADC celadon highlight) with subtle paper grain texture, crisp fountain-pen linework, contract seals and balance scales; orthographic 2D, at least 60% negative space, zero 3D, zero gradients. Palette: #F4EFE6, #1D3557, #E63946, #A8DADC, #457B9D.\n\nCharacter Cast: Expressive stylized human legal advocate with neat parted dark hair, horn-rimmed glasses, fountain pen and contract folder with proper stylized editorial human proportions. Outfit: Crisp Prussian navy (#1D3557) blazer over cream collared shirt with vermilion red pocket square, no shading.\n\nScene Composition: Position the character strictly on the far left 35% of the widescreen canvas, smiling and pointing toward the right. CRITICAL END-SCREEN RULE: The entire right 65% of the frame must remain completely flat, empty, solid background canvas (#F4EFE6) with strictly zero characters, zero text, zero props, and zero decorations so YouTube video/subscribe cards can overlay cleanly.\n\nEmphasis lettering instruction: render exact uppercase Vietnamese hand-lettered text (crisp high-contrast dark ink lettering) strictly on the far left 35% of the canvas integrated directly onto the flat canvas (#F4EFE6) (strictly zero rectangular text cards, banners, or gradient overlays covering artwork): \"BẢN ĐẦY ĐỦ TRÊN YOUTUBE\" and \"LUẬT ĐỜI THƯỜNG\".",
+  "latency": 30.3,
+  "sha256": "356094b2d044b892742b1d1fc1d10f904054ba37be10415d2d6bf2145212ba0c",
+  "aspect_ratio": "16:9",
+  "width": 1920,
+  "height": 1080,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "verified",
+  "created_at": "2026-10-31T18:08:42.974529+00:00",
+  "media_id": "0862f038-ae1e-4a34-87b2-7e3c5f43c44c",
+  "channel_id": "luat_doi_thuong"
+}

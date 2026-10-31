@@ -438,8 +438,8 @@ const Video: React.FC<any> = (p) => {
         );
       })()}
 
-      {/* Brand Channel Logo / Watermark Cover (Hiển thị cố định từ đầu đến cuối video) */}
-      {!p.hide_logo && (() => {
+      {/* Brand Channel Logo / Watermark Cover (Hiển thị cố định, tự động ẩn khi có emphasis_text hoặc is_endcard) */}
+      {!p.hide_logo && !p.hideLogo && !beat?.emphasis_text && !beat?.is_endcard && beat?.spec !== 'endcard' && (beat?.tempo !== 'hold' || width >= height) && (() => {
         const isHorizontal = width >= height;
         const logoSize = isHorizontal ? Math.round(width * (108 / 1920)) : Math.round(width * (100 / 1080));
         const logoRight = isHorizontal ? Math.round(width * (23 / 1920)) : Math.round(width * (32 / 1080));

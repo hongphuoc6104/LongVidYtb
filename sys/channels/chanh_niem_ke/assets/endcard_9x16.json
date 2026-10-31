@@ -1,0 +1,19 @@
+{
+  "jobId": "endcard_chanh_niem_ke_9x16",
+  "forgeId": "ad8dfee8-1898-4bcd-a38a-be998c9fcbf7",
+  "profile_id": "profile_9",
+  "prompt": "Requested aspect ratio: 9:16. Render a complete 100% full-bleed vertical 9:16 2D endcard illustration extending continuously to all four edges with zero letterbox bars, zero subtitle boxes, and zero dark vignette.\n\nVisual Style (ch_zen_sumie): Serene 2D East-Asian Sumi-e ink-wash painting on handmade Xuan rice paper canvas (#F5EFE0 warm textured rice paper, #1C1C1C expressive calligraphy brush ink, #5F7A61 bamboo sage wash, #D98A76 soft lotus blush, #8C7A6B tea-earth) with generous meditative negative space, water ripples and swaying bamboo strokes; orthographic 2D, at least 65% negative space, zero 3D, zero gradients. Palette: #F5EFE0, #1C1C1C, #5F7A61, #D98A76, #8C7A6B.\n\nCharacter Cast: Peaceful minimalist brush-painted Zen practitioner with gentle facial contours, calm closed eyes, and flowing bamboo-sage linen robe. Outfit: Flowing unadorned bamboo-sage (#5F7A61) linen robe with wide sleeves, zero shading.\n\nScene Composition: The channel character stands centered in the frame, pointing upwards with a welcoming smile. Clean, minimalist composition with at least 60% open negative space on the solid flat background canvas (#F5EFE0).\n\nEmphasis lettering instruction: render exact uppercase Vietnamese hand-lettered text (crisp high-contrast dark ink lettering) in the upper third integrated directly onto the flat canvas (#F5EFE0) (strictly zero rectangular text cards, banners, or gradient overlays covering artwork): \"BẢN ĐẦY ĐỦ TRÊN YOUTUBE\" and \"CHÁNH NIỆM KỂ\".",
+  "latency": 42.3,
+  "sha256": "8d9edc094bfd37d0d6144b4aa79776ceb11b628b06e7dbfcb85bf503d681ba3c",
+  "aspect_ratio": "9:16",
+  "width": 1080,
+  "height": 1920,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "verified",
+  "created_at": "2026-10-31T18:09:38.208572+00:00",
+  "media_id": "ad8dfee8-1898-4bcd-a38a-be998c9fcbf7",
+  "channel_id": "chanh_niem_ke",
+  "visual_profile": "ch_zen_sumie"
+}

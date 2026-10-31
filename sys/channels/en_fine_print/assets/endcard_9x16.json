@@ -1,0 +1,18 @@
+{
+  "jobId": "endcard_en_fine_print_9x16",
+  "forgeId": "b95ef7cb-15dc-41a3-ab4c-de12af60f347",
+  "profile_id": "profile_5",
+  "prompt": "Requested aspect ratio: 9:16. Render a complete 100% full-bleed vertical 9:16 2D endcard illustration extending continuously to all four edges with zero letterbox bars, zero subtitle boxes, and zero dark vignette.\n\nVisual Style (ch_en_risograph_law): Crisp 3-color mid-century New Yorker editorial risograph print on newsprint ivory canvas (#F4EFE6 newsprint ivory, #1D3557 navy ink, #E63946 red-seal ink, #457B9D steel blue); stippled halftone textures, magnifying-glass investigations and consumer protection clauses; orthographic 2D, at least 60% negative space, zero 3D, zero gradients. Palette: #F4EFE6, #1D3557, #E63946, #457B9D, #D8E2DC.\n\nCharacter Cast: Sharp-witted human consumer advocate drawn in expressive fountain-pen ink with neat hair, spectacles, navy blazer and brass magnifying glass inspecting red-stamped contract clauses. Outfit: Unshaded navy blazer with steel-blue collar, spectacles, and brass magnifying glass in pocket.\n\nScene Composition: The channel character stands centered in the frame, pointing upwards with a welcoming smile. Clean, minimalist composition with at least 60% open negative space on the solid flat background canvas (#F4EFE6).\n\nEmphasis lettering instruction: render exact uppercase English hand-lettered text (crisp high-contrast dark ink lettering) in the upper third integrated directly onto the flat canvas (#F4EFE6) (strictly zero rectangular text cards, banners, or gradient overlays covering artwork): \"FULL VIDEO ON YOUTUBE\" and \"EVERYDAY FINE PRINT\".",
+  "latency": 29.8,
+  "sha256": "0412427c2457153dcf4e5b0aee1837664689b53ab589665d818fe08eb2194377",
+  "aspect_ratio": "9:16",
+  "width": 1080,
+  "height": 1920,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "verified",
+  "created_at": "2026-10-31T18:07:25.349527+00:00",
+  "media_id": "b95ef7cb-15dc-41a3-ab4c-de12af60f347",
+  "channel_id": "en_fine_print"
+}

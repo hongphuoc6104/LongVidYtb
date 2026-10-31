@@ -1,0 +1,27 @@
+{
+  "channel_id": "ai_binh_dan",
+  "slug": "ai-binh-dan",
+  "youtube_name": "AI Bình Dân",
+  "handle_candidates": [
+    "@AIBinhDanVN",
+    "@AIBinhDanOfficial",
+    "@KenhAIBinhDan",
+    "@AIBinhDan"
+  ],
+  "description": "Chào mừng bạn đến với kênh chính thức của AI Bình Dân!\n\nMột mẹo AI làm được ngay trong 1 phút, không cần biết code.\nNội dung được thiết kế dễ hiểu, trực quan và hấp dẫn dành riêng cho người đi làm văn phòng, sinh viên, chủ shop nhỏ.\n\nChủ đề trọng tâm: Mẹo dùng AI và công nghệ cho người thường.\n\n#ai #meocongnghe #chatgpt #vanphong #learnontiktok",
+  "keywords": [
+    "ai",
+    "meocongnghe",
+    "chatgpt",
+    "vanphong",
+    "learnontiktok",
+    "Mẹo dùng AI và công nghệ cho người thường"
+  ],
+  "assets": {
+    "avatar_800x800": "sys/channels/ai_binh_dan/assets/avatar_800x800.png",
+    "banner_2048x1152": "sys/channels/ai_binh_dan/assets/banner_2048x1152.png",
+    "watermark_150x150": "sys/channels/ai_binh_dan/assets/watermark_150x150.png",
+    "endcard_16x9": "sys/channels/ai_binh_dan/assets/endcard_16x9.jpg",
+    "endcard_9x16": "sys/channels/ai_binh_dan/assets/endcard_9x16.jpg"
+  }
+}

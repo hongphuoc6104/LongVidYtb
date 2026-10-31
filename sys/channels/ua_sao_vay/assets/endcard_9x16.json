@@ -1,0 +1,17 @@
+{
+  "jobId": "endcard_ua_sao_vay_9x16",
+  "forgeId": "55e2409f-85dd-406e-bb02-4e6af499ab1f",
+  "profile_id": "profile_4",
+  "prompt": "Requested aspect ratio: 9:16. Render a complete 100% full-bleed vertical 9:16 2D endcard illustration extending continuously to all four edges with zero letterbox bars, zero subtitle boxes, and zero dark vignette.\n\nVisual Style (ch_sticker_pop): Bold 2D sticker-pop cartoon illustration: thick smooth black outlines with a chunky white sticker border around every main object, saturated flat fills in lemon yellow (#FFD23F), coral (#FF6B6B), teal (#2EC4B6) and grape (#7B2CBF) on a single flat solid pastel background (#FFF6D6 or #DFF7F4); simple exaggerated proportions, big expressive eyes, comic motion lines and sparkle marks, orthographic 2D, no gradients, no realistic textures, no 3D. Palette: #FFF6D6, #FFD23F, #FF6B6B, #2EC4B6, #7B2CBF.\n\nCharacter Cast: Mascot 'Bé Ủa': a round lemon-yellow (#FFD23F) blob creature with huge white oval eyes, tiny black pupils, a wide open mouth, two short stubby arms and a single curly antenna shaped like a question mark. Outfit: No clothing; tiny coral (#FF6B6B) cheeks, chunky white sticker border.\n\nScene Composition: The channel character stands centered in the frame, pointing upwards with a welcoming smile. Clean, minimalist composition with at least 60% open negative space on the solid flat background.\n\nEmphasis lettering instruction: render exact uppercase Vietnamese hand-lettered text in the upper third integrated directly onto the flat canvas (strictly zero rectangular text cards, banners, or gradient overlays covering artwork): \"BẢN ĐẦY ĐỦ TRÊN YOUTUBE\" and \"ỦA SAO VẬY?\".",
+  "latency": 28.27,
+  "sha256": "94b91424ea49c6a4c13f5e7f9ff37ad4e5b10903ece929fe1b4b013eca47c319",
+  "aspect_ratio": "9:16",
+  "width": 768,
+  "height": 1376,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "verified",
+  "created_at": "2026-10-30T18:47:37.530919+00:00",
+  "channel_id": "ua_sao_vay"
+}

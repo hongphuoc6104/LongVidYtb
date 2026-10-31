@@ -1,0 +1,50 @@
+{
+  "schema_version": "2.0",
+  "channel_id": "nao_luoi",
+  "channel_slug": "nao-luoi",
+  "git_branch": "channel/nao-luoi",
+  "locked_at": "2026-10-31T05:27:17.336965+00:00",
+  "status": "LOCKED_RELEASE_READY",
+  "deliverables": {
+    "short_9x16": {
+      "job_id": "nao-luoi-week1-9x16-v2",
+      "format_profile": "short_9x16",
+      "mp4_relpath": "video/nao-luoi-week1-9x16-v2/nao-luoi-week1-9x16-v2.mp4",
+      "mp4_sha256": "5ab1ca784e385d11096486b9ee31b473439a36f1df68fe008620abaa92bd2ee1",
+      "mp4_bytes": 15184294,
+      "resolution": "1080x1920",
+      "fps": 30.0,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "mp4_duration_sec": 33.792,
+      "wav_duration_sec": 33.721,
+      "sync_delta_sec": 0.071,
+      "loudness_lufs": -15.1,
+      "true_peak_dbtp": -1.6,
+      "srt_relpath": "video/nao-luoi-week1-9x16-v2/nao-luoi-week1-9x16-v2.srt",
+      "srt_sha256": "cbc03bfd73ea0f890c6e3539bf2e7bd48d0e513e5e30e02cb5366545df0f0b09",
+      "thumbnail_relpath": "video/nao-luoi-week1-9x16-v2/thumbnail_9x16.jpg",
+      "thumbnail_sha256": "d56445209d7111d3a39162924e508ffab25b4de413e7090dc8b38adab6c1ad7b"
+    },
+    "long_16x9": {
+      "job_id": "nao-luoi-week1-16x9",
+      "format_profile": "long_16x9",
+      "mp4_relpath": "video/nao-luoi-week1-16x9/nao-luoi-week1-16x9.mp4",
+      "mp4_sha256": "9742411c8c834f44d574b004887478aa97ce0d91513520277e194ef2d504b743",
+      "mp4_bytes": 113301903,
+      "resolution": "1920x1080",
+      "fps": 30.0,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "mp4_duration_sec": 263.36,
+      "wav_duration_sec": 263.296,
+      "sync_delta_sec": 0.064,
+      "loudness_lufs": -15.1,
+      "true_peak_dbtp": -1.6,
+      "srt_relpath": "video/nao-luoi-week1-16x9/nao-luoi-week1-16x9.srt",
+      "srt_sha256": "a9d341cf4c1531466e58c64a1bd7a29e1dd186fa036adf1fed6b444fdbf88e64",
+      "thumbnail_relpath": "video/nao-luoi-week1-16x9/thumbnail_16x9.jpg",
+      "thumbnail_sha256": "b7ecc9140fc7bea45602d087a8fa1df9941b35214a3d85d26f95626c773ea0fe"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "channel_id": "en_crowd_strings",
+  "slug": "en-crowd-strings",
+  "youtube_name": "Crowd Strings",
+  "handle_candidates": [
+    "@CrowdStrings",
+    "@CrowdStringsHQ",
+    "@CrowdStringsLab",
+    "@TheCrowdStrings"
+  ],
+  "description": "Welcome to the official Crowd Strings channel!\n\nExpose the invisible social strings pulling your decisions, so you never get manipulated.\nClear, visual, research-backed explainers crafted for curious minds seeking psychological awareness, consumer defense, and smart negotiation.\n\nCore topics: Social psychology, herd behavior, subtle persuasion & everyday negotiation.\n\n#psychology #persuasion #socialpsychology #negotiation #influence #mindset",
+  "keywords": [
+    "psychology",
+    "persuasion",
+    "socialpsychology",
+    "negotiation",
+    "influence",
+    "mindset",
+    "Social psychology, herd behavior, subtle persuasion & everyday negotiation"
+  ],
+  "assets": {
+    "avatar_800x800": "sys/channels/en_crowd_strings/assets/avatar_800x800.png",
+    "banner_2048x1152": "sys/channels/en_crowd_strings/assets/banner_2048x1152.png",
+    "watermark_150x150": "sys/channels/en_crowd_strings/assets/watermark_150x150.png",
+    "endcard_16x9": "sys/channels/en_crowd_strings/assets/endcard_16x9.jpg",
+    "endcard_9x16": "sys/channels/en_crowd_strings/assets/endcard_9x16.jpg"
+  }
+}

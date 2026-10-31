@@ -1,0 +1,18 @@
+{
+  "jobId": "endcard_en_cold_case_ink_9x16",
+  "forgeId": "15fec42b-62f8-489d-b226-6730b1be26d0",
+  "profile_id": "profile_5",
+  "prompt": "Requested aspect ratio: 9:16. Render a complete 100% full-bleed vertical 9:16 2D endcard illustration extending continuously to all four edges with zero letterbox bars, zero subtitle boxes, and zero dark vignette.\n\nVisual Style (ch_en_forensic_noir): Classic 2D forensic noir graphic-novel illustration on aged case-file manila canvas (#111111 deep ink black, #E8E2D0 aged case-file manila, #5A5F66 fog-slate, #C0392B forensic evidence crimson); chalk contours, archive folders, magnifying lenses, and high-contrast shadow drama; orthographic 2D, at least 60% negative space, zero 3D, zero gradients. Palette: #111111, #E8E2D0, #5A5F66, #C0392B, #FFFFFF.\n\nCharacter Cast: Shadowy faceless trench-coat detective silhouette in a fedora hat holding a warm lantern beam over crimson-tagged archival clues. Outfit: Classic flat charcoal trench coat with turned-up collar, wide-brim fedora hat, zero shading.\n\nScene Composition: The channel character stands centered in the frame, pointing upwards with a welcoming smile. Clean, minimalist composition with at least 60% open negative space on the solid flat background canvas (#111111).\n\nEmphasis lettering instruction: render exact uppercase English hand-lettered text (crisp high-contrast white and gold lettering) in the upper third integrated directly onto the flat canvas (#111111) (strictly zero rectangular text cards, banners, or gradient overlays covering artwork): \"FULL VIDEO ON YOUTUBE\" and \"COLD CASE INK\".",
+  "latency": 41.71,
+  "sha256": "9096cef3cfa978b83a51471dc0735190c3ce6c8b0c8e4a540b78f8fa33b62514",
+  "aspect_ratio": "9:16",
+  "width": 1080,
+  "height": 1920,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "verified",
+  "created_at": "2026-10-31T18:07:25.925044+00:00",
+  "media_id": "15fec42b-62f8-489d-b226-6730b1be26d0",
+  "channel_id": "en_cold_case_ink"
+}

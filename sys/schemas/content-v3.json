@@ -302,6 +302,63 @@
                     "visual_terms"
                   ],
                   "additionalProperties": false
+                },
+                "tempo": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "enum": [
+                    "burst",
+                    "fast",
+                    "normal",
+                    "slow",
+                    "hold",
+                    null
+                  ]
+                },
+                "emphasis_text": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "reuse_from": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "focus": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "properties": {
+                    "x": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "y": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "scale": {
+                      "type": "number"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "is_endcard": {
+                  "type": "boolean"
+                },
+                "narrative_situation": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 }
               },
               "required": [
@@ -404,6 +461,9 @@
                       "type": "number",
                       "minimum": 0,
                       "maximum": 1
+                    },
+                    "scale": {
+                      "type": "number"
                     }
                   },
                   "required": [
@@ -411,6 +471,20 @@
                     "y"
                   ],
                   "additionalProperties": false
+                },
+                "tempo": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "enum": [
+                    "burst",
+                    "fast",
+                    "normal",
+                    "slow",
+                    "hold",
+                    null
+                  ]
                 },
                 "camera_intent": {
                   "type": "string"
@@ -433,6 +507,12 @@
                 },
                 "foley_cue": {
                   "type": "string"
+                },
+                "narrative_situation": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 }
               },
               "required": [
@@ -728,6 +808,12 @@
               "counter_argument",
               "takeaway",
               "closing"
+            ]
+          },
+          "narrative_situation": {
+            "type": [
+              "string",
+              "null"
             ]
           }
         },

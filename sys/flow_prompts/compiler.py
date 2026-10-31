@@ -23,7 +23,7 @@ CHARACTER_FREE_DIRECTIVE = (
 DEPRECATED_PURPOSES = ('layer_background', 'layer_sticker')
 FIELDS = {'description', 'aspect_ratio', 'allowed_text', 'character_reference', 'base_reference',
           'preserve', 'change', 'composition', 'mascot_placement', 'caption_clearance', 'shot_type',
-          'character_free', 'has_character', 'setting', 'action'}
+          'character_free', 'has_character', 'setting', 'action', 'emphasis_text'}
 PLACEMENTS = {'upper-left', 'upper-right', 'left-margin', 'right-margin', 'above-caption-left', 'above-caption-right'}
 UUID = re.compile(r'[a-fA-F0-9]{8}(?:-[a-fA-F0-9]{4}){3}-[a-fA-F0-9]{12}\Z')
 SHA = re.compile(r'[a-f0-9]{64}\Z')
@@ -222,7 +222,7 @@ def _allowed(value, version='1.0.0'):
         if isinstance(item, str):
             text = _text(item, 'allowed_text', max_length=2000, version=version)
             normalized = text
-        elif isinstance(item, dict) and 'text' in item and not set(item) - {'text', 'placement', 'object', 'height', 'max_height', 'proportion', 'frame_height'}:
+        elif isinstance(item, dict) and 'text' in item and not set(item) - {'text', 'placement', 'object', 'height', 'max_height', 'proportion', 'frame_height', 'is_emphasis', 'emphasis'}:
             text = _text(item['text'], 'allowed_text.text', max_length=2000, version=version)
             normalized = {'text': text}
             for key in ('placement', 'object'):
@@ -231,6 +231,9 @@ def _allowed(value, version='1.0.0'):
             for key in ('height', 'max_height', 'proportion', 'frame_height'):
                 if key in item:
                     normalized[key] = item[key]
+            for key in ('is_emphasis', 'emphasis'):
+                if key in item:
+                    normalized[key] = bool(item[key])
         else:
             raise PromptError('FLOW_VISIBLE_TEXT_INVALID: string or text/placement/object record required')
         if MANAGEMENT.search(text):
@@ -238,15 +241,23 @@ def _allowed(value, version='1.0.0'):
         if version >= '1.7.0':
             if any(c.islower() for c in text):
                 raise PromptError(f"FLOW_VISIBLE_TEXT_INVALID: allowed_text label ({text!r}) must be concise uppercase Vietnamese")
+            is_emphasis = bool(isinstance(item, dict) and (item.get('is_emphasis') or item.get('emphasis')))
             words = text.split()
-            if len(words) > 6 or len(text) > 45:
-                raise PromptError(f"FLOW_VISIBLE_TEXT_INVALID: allowed_text label ({text!r}) exceeds concise limit (max 6 words, <= 45 chars)")
+            if is_emphasis:
+                if len(words) > 6 or len(words) < 1 or len(text) > 45:
+                    raise PromptError(f"FLOW_VISIBLE_TEXT_INVALID: emphasis_text label ({text!r}) exceeds limit (1-6 uppercase words, max 45 chars)")
+            else:
+                if len(words) > 6 or len(text) > 45:
+                    raise PromptError(f"FLOW_VISIBLE_TEXT_INVALID: allowed_text label ({text!r}) exceeds concise limit (max 6 words, <= 45 chars)")
             if isinstance(item, dict):
                 for h_key in ('height', 'max_height', 'proportion', 'frame_height'):
                     if h_key in item:
                         h_val = item[h_key]
-                        if isinstance(h_val, (int, float)) and h_val >= 0.05:
-                            raise PromptError(f"FLOW_VISIBLE_TEXT_INVALID: allowed_text label height {h_val} exceeds compact proportion (< 5% frame height)")
+                        if isinstance(h_val, (int, float)):
+                            if is_emphasis and h_val > 0.10:
+                                raise PromptError(f"FLOW_VISIBLE_TEXT_INVALID: emphasis_text label height {h_val} exceeds limit (<= 10% frame height)")
+                            elif not is_emphasis and h_val >= 0.05:
+                                raise PromptError(f"FLOW_VISIBLE_TEXT_INVALID: allowed_text label height {h_val} exceeds compact proportion (< 5% frame height)")
         result.append(normalized)
     if len(result) != len({_hash(item) for item in result}):
         raise PromptError('FLOW_VISIBLE_TEXT_INVALID: duplicate exact lettering records')
@@ -286,6 +297,20 @@ def _data(data, purpose, version='1.0.0'):
     if purpose == 'variation' and (not preserve or not change):
         raise PromptError('FLOW_VARIATION_INVALID: declare both preserved composition and visible change')
     allowed = _allowed(data.get('allowed_text', []), version=version)
+    if data.get('emphasis_text'):
+        emph_str = _text(data['emphasis_text'], 'emphasis_text', version=version)
+        if any(c.islower() for c in emph_str):
+            raise PromptError(f"FLOW_VISIBLE_TEXT_INVALID: emphasis_text ({emph_str!r}) must be uppercase Vietnamese")
+        emph_words = emph_str.split()
+        if len(emph_words) < 1 or len(emph_words) > 6 or len(emph_str) > 45:
+            raise PromptError(f"FLOW_VISIBLE_TEXT_INVALID: emphasis_text ({emph_str!r}) exceeds limit (1-6 uppercase words, max 45 chars)")
+        if not any(item == emph_str or (isinstance(item, dict) and item.get('text') == emph_str) for item in allowed):
+            allowed.append({
+                'text': emph_str,
+                'is_emphasis': True,
+                'placement': 'upper-third',
+                'max_height': 0.10,
+            })
     normalized_setting = None
     if 'setting' in data and data['setting'] is not None:
         normalized_setting = _text(data['setting'], 'setting', version=version)
@@ -312,6 +337,8 @@ def _data(data, purpose, version='1.0.0'):
         normalized['setting'] = normalized_setting
     if normalized_action is not None:
         normalized['action'] = normalized_action
+    if data.get('emphasis_text'):
+        normalized['emphasis_text'] = emph_str
     if 'shot_type' in data:
         if version >= '1.6.0':
             allowed_shots = BASE_FULL_FRAME_SHOT_TYPES + LEGACY_REST_SHOT_TYPES + EXPLAINER_2D_SHOT_TYPES
@@ -390,10 +417,18 @@ def compile(model, purpose, data, version=CURRENT_VERSION):
             "extending continuously to all edges with zero reserved subtitle areas."
         )
         if visual.get('allowed_text'):
-            sections.append(
-                "Label constraint: all allowed_text lettering must be rendered as concise uppercase Vietnamese labels "
-                "locked to compact proportions (< 5% frame height) integrated cleanly with hand-drawn visual elements."
-            )
+            has_emphasis = any(isinstance(x, dict) and (x.get('is_emphasis') or x.get('emphasis')) for x in visual.get('allowed_text', [])) or bool(visual.get('emphasis_text'))
+            if has_emphasis:
+                sections.append(
+                    "Emphasis lettering instruction: render exact uppercase Vietnamese hand-lettered text in the upper third of the frame "
+                    "(strictly <= 10% frame height, 1-4 uppercase words, native hand-lettering integrated directly onto the flat canvas, "
+                    "strictly zero rectangular text cards, banners, or gradient overlays covering artwork)."
+                )
+            else:
+                sections.append(
+                    "Label constraint: all allowed_text lettering must be rendered as concise uppercase Vietnamese labels "
+                    "locked to compact proportions (< 5% frame height) integrated cleanly with hand-drawn visual elements."
+                )
     if version in FULL_FRAME_VERSIONS and visual.get('shot_type'):
         sections.append(spec['shot_types'][visual['shot_type']])
     if references['base']:

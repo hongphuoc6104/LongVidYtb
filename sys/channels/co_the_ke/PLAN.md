@@ -1,7 +1,7 @@
 # KẾ HOẠCH CHI TIẾT KÊNH: CƠ THỂ KỂ (`co_the_ke`)
 
 ## 1. Định Vị Kênh & Phân Tách Nền Tảng
-- **Mã kênh:** `co_the_ke` (Đợt triển khai: Wave 2)
+- **Mã kênh:** `co_the_ke` (Đợt triển khai: Wave 1)
 - **Nhánh GitHub độc lập:** `channel/co-the-ke` (`origin/channel/co-the-ke`)
 - **Thư mục phát triển trên máy:** `/home/hongphuoc6104/Desktop/vp-channels/channel-co-the-ke`
 - **Ngách nội dung:** Sức khỏe và cơ thể được nhân hóa

@@ -1,0 +1,28 @@
+{
+  "channel_id": "en_kindred_sketch",
+  "slug": "en-kindred-sketch",
+  "youtube_name": "Kindred Sketch",
+  "handle_candidates": [
+    "@KindredSketch",
+    "@KindredSketchHQ",
+    "@KindredDoodle",
+    "@TheKindredSketch"
+  ],
+  "description": "Welcome to the official Kindred Sketch channel!\n\nMake sense of relationship conflicts, attachment wounds, and emotional patterns with empathy.\nClear, visual, research-backed explainers crafted for couples, singles, and friends wanting emotionally mature, communicative relationships.\n\nCore topics: Attachment styles, relationship psychology, emotional intelligence & communication.\n\n#relationships #attachmentstyle #emotionalintelligence #communication #couples #mentalhealth",
+  "keywords": [
+    "relationships",
+    "attachmentstyle",
+    "emotionalintelligence",
+    "communication",
+    "couples",
+    "mentalhealth",
+    "Attachment styles, relationship psychology, emotional intelligence & communication"
+  ],
+  "assets": {
+    "avatar_800x800": "sys/channels/en_kindred_sketch/assets/avatar_800x800.png",
+    "banner_2048x1152": "sys/channels/en_kindred_sketch/assets/banner_2048x1152.png",
+    "watermark_150x150": "sys/channels/en_kindred_sketch/assets/watermark_150x150.png",
+    "endcard_16x9": "sys/channels/en_kindred_sketch/assets/endcard_16x9.jpg",
+    "endcard_9x16": "sys/channels/en_kindred_sketch/assets/endcard_9x16.jpg"
+  }
+}

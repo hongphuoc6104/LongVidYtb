@@ -405,6 +405,7 @@ class PackagingSpec:
     thumbnail_prompt: Optional[str] = None
     layout_mode: Optional[str] = None
     typography_style: Optional[str] = None
+    cta_plan: Optional[Dict[str, Any]] = None
 
     def compile_poster_prompt(self) -> str:
         """Return explicit thumbnail_prompt or compile an integrated poster prompt with large yellow typography."""
@@ -428,13 +429,16 @@ class PackagingSpec:
             thumb_dict["layout_mode"] = self.layout_mode
         if self.typography_style is not None:
             thumb_dict["typography_style"] = self.typography_style
-        return {
+        res: Dict[str, Any] = {
             "youtube_title": self.youtube_title,
             "thumbnail_spec": thumb_dict,
             "channel_pillar": self.channel_pillar,
             "funnel_tier": self.funnel_tier,
             "seo_keywords": list(self.seo_keywords),
         }
+        if self.cta_plan is not None:
+            res["cta_plan"] = dict(self.cta_plan)
+        return res
 
 
 @dataclass
@@ -484,6 +488,12 @@ class ResearchedBeat:
     allow_expression_shift: Optional[bool] = None
     has_character: Optional[bool] = None
     explanation: Optional[Dict[str, Any]] = None
+    tempo: Optional[str] = None
+    emphasis_text: Optional[str] = None
+    reuse_from: Optional[str] = None
+    focus: Optional[Dict[str, Any]] = None
+    is_endcard: bool = False
+    narrative_situation: Optional[str] = None
 
     def __post_init__(self) -> None:
         allowed_shots = {
@@ -562,6 +572,7 @@ class ResearchedScene:
     scene_description: str = ""
     tone: Optional[str] = None
     narrative_phase: Optional[str] = None
+    narrative_situation: Optional[str] = None
 
     def __post_init__(self) -> None:
         find_visual_cliche, find_laziness_pattern = _resolve_visual_prompt_validators()
@@ -603,6 +614,9 @@ class ResearchedTopic:
     enable_sound_design: Optional[bool] = None
     human_editorial: Optional[Dict[str, Any]] = None
     channel_id: Optional[str] = None
+    parent_long_id: Optional[str] = None
+    cta_plan: Optional[Dict[str, Any]] = None
+    engagement: Optional[Dict[str, Any]] = None
 
     def __post_init__(self) -> None:
         if not self.style:
@@ -823,6 +837,16 @@ def build_brief_v3(topic: ResearchedTopic, system_root: Optional[Path] = None) -
         brief["enable_sound_design"] = bool(topic.enable_sound_design)
     if getattr(topic, "spinoff_shorts", None):
         brief["spinoff_shorts"] = list(topic.spinoff_shorts)
+    if getattr(topic, "parent_long_id", None):
+        brief["parent_long_id"] = str(topic.parent_long_id)
+    if getattr(topic, "cta_plan", None):
+        brief["cta_plan"] = dict(topic.cta_plan)
+        if "packaging" in brief and "cta_plan" not in brief["packaging"]:
+            brief["packaging"]["cta_plan"] = dict(topic.cta_plan)
+    elif getattr(topic, "packaging", None) and getattr(topic.packaging, "cta_plan", None):
+        brief["cta_plan"] = dict(topic.packaging.cta_plan)
+    if getattr(topic, "engagement", None):
+        brief["engagement"] = dict(topic.engagement)
     if getattr(topic, "channel_id", None):
         from channels.registry import apply_channel
 
@@ -1181,6 +1205,34 @@ def validate_see_say_alignment(sentence: str, visual_desc: str) -> bool:
     return False
 
 
+def _partition_sentence_into_spans(sentence: str, k: int) -> List[str]:
+    """Partition a sentence into k distinct, ordered substrings that appear in sequence."""
+    sentence = sentence.strip()
+    if k <= 1 or not sentence:
+        return [sentence]
+    delims = [",", ";", ":", " - "]
+    for d in delims:
+        if d in sentence:
+            parts = [p.strip() for p in sentence.split(d) if p.strip()]
+            if len(parts) == k:
+                return parts
+    words = sentence.split()
+    if len(words) < k:
+        return [sentence] * k
+    spans = []
+    for i in range(k):
+        start_w = i * len(words) // k
+        end_w = (i + 1) * len(words) // k if i < k - 1 else len(words)
+        chunk = " ".join(words[start_w:end_w])
+        if chunk in sentence:
+            spans.append(chunk)
+        else:
+            p1 = sentence.find(words[start_w])
+            p2 = sentence.find(words[end_w - 1], p1) + len(words[end_w - 1])
+            spans.append(sentence[p1:p2].strip())
+    return spans
+
+
 def build_scenes_from_story_rows(
     story_rows: Any,
     character_id: str = "",
@@ -1226,15 +1278,30 @@ def build_scenes_from_story_rows(
         # Dynamically infer primary scene character if declared in row specs
         inferred_scene_char = None
         for _, spec in rows:
-            raw_shot = spec.partition("|")[0].strip()
-            if ":" in raw_shot:
-                _, _, c_part = raw_shot.partition(":")
-                c_part = c_part.strip()
-                if c_part and c_part.lower() not in ("none", "no_char", "character_free", "free", "empty"):
-                    chars = [c.strip() for c in c_part.split(",") if c.strip()]
-                    if chars:
-                        inferred_scene_char = chars[0]
-                        break
+            if isinstance(spec, list):
+                for v in spec:
+                    raw_spec = v.get("spec", "") if isinstance(v, dict) else str(v)
+                    raw_shot = raw_spec.partition("|")[0].strip()
+                    if ":" in raw_shot:
+                        _, _, c_part = raw_shot.partition(":")
+                        c_part = c_part.strip()
+                        if c_part and c_part.lower() not in ("none", "no_char", "character_free", "free", "empty"):
+                            chars = [c.strip() for c in c_part.split(",") if c.strip()]
+                            if chars:
+                                inferred_scene_char = chars[0]
+                                break
+                if inferred_scene_char:
+                    break
+            else:
+                raw_shot = str(spec).partition("|")[0].strip()
+                if ":" in raw_shot:
+                    _, _, c_part = raw_shot.partition(":")
+                    c_part = c_part.strip()
+                    if c_part and c_part.lower() not in ("none", "no_char", "character_free", "free", "empty"):
+                        chars = [c.strip() for c in c_part.split(",") if c.strip()]
+                        if chars:
+                            inferred_scene_char = chars[0]
+                            break
         if inferred_scene_char and scene_char_id == "CH01":
             scene_char_id = inferred_scene_char
 
@@ -1243,106 +1310,191 @@ def build_scenes_from_story_rows(
         base_id: Optional[str] = None
         seen_quotes: Dict[str, int] = {}
         variation_streak = 0
-        for beat_idx, (sentence, spec) in enumerate(rows, 1):
-            raw_shot, _, action_desc = spec.partition("|")
-            raw_shot = raw_shot.strip()
-            action_desc = action_desc.strip() or spec.strip()
-
-            if ":" in raw_shot:
-                shot_type, _, char_part = raw_shot.partition(":")
-                shot_type = shot_type.strip() or "full_scene"
-                char_part = char_part.strip()
-                if char_part.lower() in ("none", "no_char", "character_free", "free", "empty"):
-                    explicit_chars: List[str] = []
-                    has_explicit_chars = True
+        for _row_idx, (sentence, row_spec) in enumerate(rows, 1):
+            if isinstance(row_spec, list):
+                has_explicit = any(isinstance(v, dict) and v.get("anchor") for v in row_spec)
+                if not has_explicit and len(row_spec) > 1:
+                    spans = _partition_sentence_into_spans(sentence, len(row_spec))
+                    visuals_to_process = []
+                    for v_item, span in zip(row_spec, spans, strict=False):
+                        if isinstance(v_item, dict):
+                            v_copy = dict(v_item)
+                            v_copy["anchor"] = span
+                            visuals_to_process.append(v_copy)
+                        else:
+                            visuals_to_process.append({"spec": str(v_item), "anchor": span})
                 else:
-                    explicit_chars = [c.strip() for c in char_part.split(",") if c.strip()]
-                    has_explicit_chars = True
+                    visuals_to_process = row_spec
             else:
-                shot_type = raw_shot or "full_scene"
-                explicit_chars = []
-                has_explicit_chars = False
+                visuals_to_process = [{"spec": str(row_spec), "anchor": sentence.strip()}]
 
-            # Cap consecutive variations at MAX_CONSECUTIVE_VARIATION_BEATS (2)
-            if shot_type == "variation":
-                if variation_streak >= MAX_CONSECUTIVE_VARIATION_BEATS:
-                    shot_type = "full_scene"
-                    variation_streak = 0
+            for v_idx, v_item in enumerate(visuals_to_process, 1):
+                if isinstance(v_item, dict):
+                    v_dict = v_item
                 else:
-                    variation_streak += 1
-            else:
-                variation_streak = 0
+                    v_dict = {"spec": str(v_item), "anchor": sentence.strip()}
 
-            image_id = f"{scene_id}_I{beat_idx}"
-            quote = sentence.strip()
+                spec_str = str(v_dict.get("spec", ""))
+                v_anchor = str(v_dict.get("anchor") or sentence.strip())
+                v_id = str(v_dict.get("id") or f"I{len(beats) + 1}")
+                tempo = v_dict.get("tempo")
+                narrative_situation = v_dict.get("narrative_situation")
+                emphasis_text = v_dict.get("emphasis_text")
+                reuse_from = v_dict.get("reuse_from")
+                v_focus = v_dict.get("focus")
+                v_based_on = v_dict.get("based_on")
+                is_endcard = bool(v_dict.get("is_endcard") or spec_str == "endcard")
 
-            # Dynamic See-Say synthesis when action_desc is not specified
-            if not action_desc or action_desc == raw_shot or action_desc == shot_type:
-                action_desc = derive_see_say_visual_action(
-                    quote, shot_type=shot_type, setting=setting, character_id=scene_char_id
-                )
+                is_crop = spec_str.startswith("crop:")
+                if is_crop:
+                    target_vid = spec_str.partition(":")[2].strip()
+                    raw_shot = "cutaway_detail"
+                    action_desc = f"Focus crop on {target_vid}"
+                    matched_img = None
+                    for b in beats:
+                        if b.image_id.endswith(f"_{target_vid}") or b.image_id == target_vid:
+                            matched_img = b.image_id
+                            break
+                    image_id = matched_img or f"{scene_id}_{target_vid}"
+                elif is_endcard:
+                    raw_shot = "white_card"
+                    action_desc = "Channel endcard illustration on flat canvas with channel mascot and clear text"
+                    image_id = f"{scene_id}_{v_id}"
+                else:
+                    raw_shot, _, action_desc = spec_str.partition("|")
+                    raw_shot = raw_shot.strip()
+                    action_desc = action_desc.strip() or spec_str.strip()
+                    image_id = f"{scene_id}_{v_id}"
 
-            cliche = find_visual_cliche(action_desc) or find_visual_cliche(spec)
-            if cliche:
-                raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {image_id} visual action: contains banned {cliche}")
-            laziness = find_laziness_pattern(action_desc, version=visual_contract) or find_laziness_pattern(spec, version=visual_contract)
-            if laziness:
-                name, token = laziness
-                raise ValueError(f"LAZY_VISUAL_ACTION_FORBIDDEN in {image_id} visual action: contains banned {name} ({token!r})")
-
-            seen_quotes[quote] = seen_quotes.get(quote, 0) + 1
-            if shot_type == "full_scene":
-                base_id = image_id
-            based_on = (base_id or f"{scene_id}_I{max(1, beat_idx - 1)}") if shot_type == "variation" else None
-
-            has_expression_shift = bool(
-                re.search(
-                    r"\b(?:smile|smiles|smiling|grin|grins|grinning|frown|frowns|clench|clenches|cower|cowers|relaxes|relaxed|laugh|laughs|tears|sweat|dread|resilience|joy|paralyzed|overwhelmed|shaking|expression shift|facial shift|thay đổi biểu cảm|chuyển biểu cảm)\b",
-                    action_desc,
-                    re.I,
-                )
-            )
-            preserve = (
-                f"Keep the exact camera angle, room geometry and props in {setting}. "
-                "Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift."
-                if based_on else ""
-            )
-            desc = f"{setting} {action_desc}".strip()
-            cliche = find_visual_cliche(desc)
-            if cliche:
-                raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {image_id} description: contains banned {cliche}")
-            laziness = find_laziness_pattern(desc, version=visual_contract)
-            if laziness:
-                name, token = laziness
-                raise ValueError(f"LAZY_VISUAL_ACTION_FORBIDDEN in {image_id} description: contains banned {name} ({token!r})")
-
-            if has_explicit_chars:
-                beat_char_ids = list(explicit_chars)
-            else:
-                if shot_type in ("still_life", "environment", "visual_diagram", "cutaway_detail"):
-                    beat_char_ids = []
-                elif shot_type in ("full_scene", "variation"):
-                    beat_char_ids = [scene_char_id] if scene_char_id else []
-                elif shot_type in ("concept_metaphor", "macro_prop", "white_card", "white_isolated"):
-                    if _HUMAN_ACTOR_KEYWORDS_RE.search(action_desc):
-                        beat_char_ids = [scene_char_id] if scene_char_id else []
+                if ":" in raw_shot:
+                    shot_type, _, char_part = raw_shot.partition(":")
+                    shot_type = shot_type.strip() or "full_scene"
+                    char_part = char_part.strip()
+                    if char_part.lower() in ("none", "no_char", "character_free", "free", "empty"):
+                        explicit_chars: List[str] = []
+                        has_explicit_chars = True
                     else:
-                        beat_char_ids = []
+                        explicit_chars = [c.strip() for c in char_part.split(",") if c.strip()]
+                        has_explicit_chars = True
+                else:
+                    shot_type = raw_shot or "full_scene"
+                    explicit_chars = []
+                    has_explicit_chars = False
 
-            beats.append(ResearchedBeat(
-                image_id=image_id,
-                description=desc,
-                anchor_quote=quote,
-                anchor_occurrence=seen_quotes[quote],
-                reason="Narration-locked full-frame beat.",
-                character_ids=beat_char_ids,
-                effect="cut",
-                based_on=based_on,
-                preserve=preserve,
-                change=action_desc,
-                shot_type=shot_type,
-                allow_expression_shift=True if has_expression_shift and shot_type == "variation" else None,
-            ))
+                if v_based_on:
+                    shot_type = "variation"
+
+                # Cap consecutive variations at MAX_CONSECUTIVE_VARIATION_BEATS (2)
+                if shot_type == "variation":
+                    if variation_streak >= MAX_CONSECUTIVE_VARIATION_BEATS:
+                        shot_type = "full_scene"
+                        variation_streak = 0
+                    else:
+                        variation_streak += 1
+                else:
+                    variation_streak = 0
+
+                # Quote span calculation: span from anchor to next anchor
+                if len(visuals_to_process) > 1 and v_anchor and v_anchor in sentence:
+                    pos = sentence.find(v_anchor)
+                    if v_idx < len(visuals_to_process):
+                        next_a = str(visuals_to_process[v_idx].get("anchor") or "")
+                        next_pos = sentence.find(next_a, pos + len(v_anchor)) if next_a else -1
+                        quote = sentence[pos:next_pos].strip() if next_pos != -1 else sentence[pos:].strip()
+                    else:
+                        quote = sentence[pos:].strip()
+                else:
+                    quote = v_anchor or sentence.strip()
+                if not quote:
+                    quote = sentence.strip()
+
+                # Dynamic See-Say synthesis when action_desc is not specified
+                if not action_desc or action_desc == raw_shot or action_desc == shot_type:
+                    action_desc = derive_see_say_visual_action(
+                        quote, shot_type=shot_type, setting=setting, character_id=scene_char_id
+                    )
+
+                if not is_endcard and not is_crop:
+                    cliche = find_visual_cliche(action_desc) or find_visual_cliche(spec_str)
+                    if cliche:
+                        raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {image_id} visual action: contains banned {cliche}")
+                    laziness = find_laziness_pattern(action_desc, version=visual_contract) or find_laziness_pattern(spec_str, version=visual_contract)
+                    if laziness:
+                        name, token = laziness
+                        raise ValueError(f"LAZY_VISUAL_ACTION_FORBIDDEN in {image_id} visual action: contains banned {name} ({token!r})")
+
+                seen_quotes[quote] = seen_quotes.get(quote, 0) + 1
+                if shot_type == "full_scene":
+                    base_id = image_id
+
+                if shot_type == "variation":
+                    if v_based_on:
+                        based_on = f"{scene_id}_{v_based_on}" if not str(v_based_on).startswith("SC") else str(v_based_on)
+                    else:
+                        based_on = base_id or f"{scene_id}_I{max(1, len(beats))}"
+                else:
+                    based_on = None
+
+                has_expression_shift = bool(
+                    re.search(
+                        r"\b(?:smile|smiles|smiling|grin|grins|grinning|frown|frowns|clench|clenches|cower|cowers|relaxes|relaxed|laugh|laughs|tears|sweat|dread|resilience|joy|paralyzed|overwhelmed|shaking|expression shift|facial shift|thay đổi biểu cảm|chuyển biểu cảm)\b",
+                        action_desc,
+                        re.I,
+                    )
+                )
+                preserve = v_dict.get("preserve") or (
+                    f"Keep the exact camera angle, room geometry and props in {setting}. "
+                    "Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift."
+                    if based_on else ""
+                )
+                desc = f"{setting} {action_desc}".strip()
+                if not is_endcard and not is_crop:
+                    cliche = find_visual_cliche(desc)
+                    if cliche:
+                        raise ValueError(f"FLOW_CLICHE_FORBIDDEN in {image_id} description: contains banned {cliche}")
+                    laziness = find_laziness_pattern(desc, version=visual_contract)
+                    if laziness:
+                        name, token = laziness
+                        raise ValueError(f"LAZY_VISUAL_ACTION_FORBIDDEN in {image_id} description: contains banned {name} ({token!r})")
+
+                if has_explicit_chars:
+                    beat_char_ids = list(explicit_chars)
+                else:
+                    if shot_type in ("still_life", "environment", "visual_diagram", "cutaway_detail"):
+                        beat_char_ids = []
+                    elif shot_type in ("full_scene", "variation"):
+                        beat_char_ids = [scene_char_id] if scene_char_id else []
+                    elif shot_type in ("concept_metaphor", "macro_prop", "white_card", "white_isolated"):
+                        if _HUMAN_ACTOR_KEYWORDS_RE.search(action_desc):
+                            beat_char_ids = [scene_char_id] if scene_char_id else []
+                        else:
+                            beat_char_ids = []
+
+                vis_text = []
+                if emphasis_text:
+                    vis_text.append({"text": emphasis_text, "placement": "upper_third", "object": "emphasis"})
+
+                beats.append(ResearchedBeat(
+                    image_id=image_id,
+                    description=desc,
+                    anchor_quote=quote,
+                    anchor_occurrence=seen_quotes[quote],
+                    reason="Narration-locked full-frame beat.",
+                    character_ids=beat_char_ids,
+                    effect="cut",
+                    based_on=based_on,
+                    preserve=preserve,
+                    change=action_desc,
+                    shot_type=shot_type,
+                    allow_expression_shift=True if has_expression_shift and shot_type == "variation" else None,
+                    visible_text=vis_text,
+                    tempo=tempo,
+                    emphasis_text=emphasis_text,
+                    reuse_from=reuse_from,
+                    focus=v_focus,
+                    is_endcard=is_endcard,
+                    narrative_situation=narrative_situation,
+                ))
 
         scene_char_ids: List[str] = []
         for b in beats:
@@ -1359,7 +1511,18 @@ def build_scenes_from_story_rows(
         duration = round(pause_sec + (syl / nominal_rate) + p_tail, 2)
         tone = scene_tone or _infer_scene_tone(index, total, title, narration)
         resolved_phase = scene_phase or infer_editorial_section(index, total, title, narration)
-        first_action = rows[0][1].partition("|")[2].strip() if rows else title
+        if rows:
+            first_spec = rows[0][1]
+            if isinstance(first_spec, list) and first_spec:
+                first_spec_str = first_spec[0].get("spec", "") if isinstance(first_spec[0], dict) else str(first_spec[0])
+                first_action = first_spec_str.partition("|")[2].strip() or title
+            elif isinstance(first_spec, str):
+                first_action = first_spec.partition("|")[2].strip() or title
+            else:
+                first_action = title
+        else:
+            first_action = title
+        scene_situation = getattr(beats[0], "narrative_situation", None) if beats else None
         built_scenes.append(ResearchedScene(
             scene_id=scene_id,
             title=title,
@@ -1375,6 +1538,7 @@ def build_scenes_from_story_rows(
             visual_beats=beats,
             tone=tone,
             narrative_phase=resolved_phase,
+            narrative_situation=scene_situation,
         ))
     return built_scenes
 
@@ -1490,6 +1654,20 @@ def build_content_v3(
                 "kind": "scene",
                 "shot_type": effective_shot,
             }
+            if getattr(visual, "tempo", None) is not None:
+                image_entry["tempo"] = visual.tempo
+            if getattr(visual, "narrative_situation", None) is not None:
+                image_entry["narrative_situation"] = visual.narrative_situation
+            if getattr(visual, "emphasis_text", None) is not None:
+                image_entry["emphasis_text"] = visual.emphasis_text
+                if not any(isinstance(vt, dict) and vt.get("text") == visual.emphasis_text for vt in image_entry["visible_text"]):
+                    image_entry["visible_text"].append({"text": visual.emphasis_text, "placement": "upper_third", "object": "emphasis"})
+            if getattr(visual, "reuse_from", None) is not None:
+                image_entry["reuse_from"] = visual.reuse_from
+            if getattr(visual, "focus", None) is not None and isinstance(visual.focus, dict):
+                image_entry["focus"] = dict(visual.focus)
+            if getattr(visual, "is_endcard", False):
+                image_entry["is_endcard"] = True
             if getattr(visual, "allow_expression_shift", None) is not None:
                 image_entry["allow_expression_shift"] = bool(visual.allow_expression_shift)
             image_entry["has_character"] = visual.has_character if visual.has_character is not None else bool(resolved_character_ids)
@@ -1515,7 +1693,8 @@ def build_content_v3(
                     "source_terms": [src_term],
                     "visual_terms": [vis_term],
                 }
-            images.append(image_entry)
+            if not any(im["id"] == image_entry["id"] for im in images):
+                images.append(image_entry)
             anchor_payload: Dict[str, Any] = {
                 "vi": {
                     "quote": visual.anchor_quote,
@@ -1536,22 +1715,36 @@ def build_content_v3(
                 }
             safe_fx = round(min(0.65, max(0.35, float(visual.focus_x))), 2) if visual.focus_x != 0.5 else 0.5
             safe_fy = round(min(0.58, max(0.35, float(visual.focus_y))), 2) if visual.focus_y != 0.5 else 0.5
-            beats.append({
+            beat_payload: Dict[str, Any] = {
                 "id": f"{s_id}_B{beat_idx}",
                 "image_id": visual.image_id,
                 "purpose": sc.purpose,
                 "anchor": anchor_payload,
                 "effect": visual.effect,
                 "focus": {"x": safe_fx, "y": safe_fy},
-            })
+            }
+            if getattr(visual, "tempo", None) is not None:
+                beat_payload["tempo"] = visual.tempo
+            if getattr(visual, "narrative_situation", None) is not None:
+                beat_payload["narrative_situation"] = visual.narrative_situation
+            if getattr(visual, "focus", None) is not None and isinstance(visual.focus, dict):
+                fx = visual.focus.get("x", safe_fx)
+                fy = visual.focus.get("y", safe_fy)
+                b_focus = {"x": round(float(fx), 2), "y": round(float(fy), 2)}
+                if "scale" in visual.focus:
+                    b_focus["scale"] = round(float(visual.focus["scale"]), 2)
+                beat_payload["focus"] = b_focus
+            beats.append(beat_payload)
 
         from content.visual_quality import apply_room_continuity
         apply_room_continuity(images)
+        images_by_id = {img["id"]: img for img in images}
         previous_effect = None
-        for idx, (beat, image) in enumerate(zip(beats, images, strict=True)):
+        for idx, beat in enumerate(beats):
+            image = images_by_id.get(beat["image_id"], images[0] if images else {})
             if beat['effect'] in ('auto', 'cut', 'fade'):
                 beat['effect'] = select_semantic_camera_effect(
-                    image['description'] + ' ' + sc.camera,
+                    image.get('description', '') + ' ' + sc.camera,
                     previous_effect,
                     beat_index=idx,
                     shot_type=image.get("shot_type"),
@@ -1580,6 +1773,8 @@ def build_content_v3(
             scene_dict["tone"] = sc.tone
         if getattr(sc, "narrative_phase", None):
             scene_dict["narrative_phase"] = sc.narrative_phase
+        if getattr(sc, "narrative_situation", None):
+            scene_dict["narrative_situation"] = sc.narrative_situation
         if sc.narration_en:
             scene_dict["narration_en"] = sc.narration_en
 

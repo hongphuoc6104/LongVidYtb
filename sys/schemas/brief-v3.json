@@ -477,6 +477,47 @@
             "type": "string",
             "minLength": 1
           }
+        },
+        "cta_plan": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "bridge": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "close": {
+              "type": "string"
+            },
+            "endcard_text": {
+              "type": "string"
+            },
+            "mid_cta": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "additionalProperties": true
+        },
+        "editorial_stance": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": true
+        },
+        "actionable_value": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": true
         }
       },
       "required": [
@@ -650,6 +691,63 @@
         "user_recorded",
         "cdp_auto"
       ]
+    },
+    "parent_long_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "engagement": {
+      "type": "object",
+      "properties": {
+        "cta_voice": {
+          "type": "string"
+        },
+        "bridge_templates": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "close_templates": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "endcard_text": {
+          "type": "string"
+        },
+        "banned_cta_phrases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "cta_plan": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": true
+    },
+    "editorial_stance": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": true
+    },
+    "actionable_value": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": true
     }
   },
   "required": [

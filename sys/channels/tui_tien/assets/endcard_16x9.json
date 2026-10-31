@@ -1,0 +1,17 @@
+{
+  "jobId": "endcard_tui_tien_16x9",
+  "forgeId": "33b16820-b594-40eb-ad1c-5672f583a3bf",
+  "profile_id": "profile_4",
+  "prompt": "Requested aspect ratio: 16:9. Render a complete 100% full-bleed horizontal 16:9 widescreen 2D endcard illustration extending continuously to all four edges with zero letterbox bars, zero subtitle boxes, and zero dark vignette.\n\nVisual Style (ch_ledger_doodle): Hand-drawn 2D notebook-ledger explainer illustration: wobbly black marker outlines (#1F1F1F) on a flat warm grid-paper canvas (#FAF6E9 with faint #E3DCC8 square grid), flat unshaded fills in money green (#2F9E5B), coin gold (#F2C14E), loss red (#D64545) and ink navy (#24364F); hand-drawn bar charts, price tags and VND banknotes drawn as simple flat shapes; orthographic 2D, generous empty grid space, no gradients, no photorealism, no 3D. Palette: #FAF6E9, #2F9E5B, #F2C14E, #D64545, #24364F.\n\nCharacter Cast: Simple 2D doodle stickman with a white round head, black dot eyes, thin wire arms and round hands, small round glasses, always holding a pencil or a coin. Outfit: Flat coin-gold (#F2C14E) T-shirt and navy (#24364F) trousers, no folds, no shading.\n\nScene Composition: Position the character strictly on the far left 35% of the widescreen canvas, smiling and pointing toward the right. CRITICAL END-SCREEN RULE: The entire right 65% of the frame must remain completely flat, empty, solid background canvas with strictly zero characters, zero text, zero props, and zero decorations so YouTube video/subscribe cards can overlay cleanly.\n\nEmphasis lettering instruction: render exact uppercase Vietnamese hand-lettered text strictly on the far left 35% of the canvas integrated directly onto the flat canvas (strictly zero rectangular text cards, banners, or gradient overlays covering artwork): \"BẢN ĐẦY ĐỦ TRÊN YOUTUBE\" and \"TÚI TIỀN BIẾT NÓI\".",
+  "latency": 33.94,
+  "sha256": "73ef8ba56dd9ae0cea8f3fd4b5ccb1e46790afad595666ba5dc7001d69957e9d",
+  "aspect_ratio": "16:9",
+  "width": 1376,
+  "height": 768,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "verified",
+  "created_at": "2026-10-30T18:48:13.972558+00:00",
+  "channel_id": "tui_tien"
+}

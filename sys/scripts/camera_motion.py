@@ -103,14 +103,17 @@ def scene_camera_motions(scene: dict) -> list[str]:
         if motion in ('auto', 'cut', 'fade'):
             image = images.get(beat['image_id'], {})
             shot_type = str(image.get('shot_type', ''))
-            combined = image.get('description', '') + ' ' + scene.get('camera', '')
-            use_index = idx if (use_pool and _match_explicit_or_keyword_effect(combined.strip().lower(), shot_type=shot_type) is None) else None
-            motion = select_semantic_camera_effect(
-                combined,
-                motions[-1] if motions else None,
-                beat_index=use_index,
-                shot_type=shot_type,
-                narrative_phase=phase,
-            )
+            if (beat.get('focus') and isinstance(beat['focus'], dict) and beat['focus'].get('scale', 1.0) > 1.0) or beat.get('tempo') == 'hold' or beat.get('is_endcard'):
+                motion = 'hold'
+            else:
+                combined = image.get('description', '') + ' ' + scene.get('camera', '')
+                use_index = idx if (use_pool and _match_explicit_or_keyword_effect(combined.strip().lower(), shot_type=shot_type) is None) else None
+                motion = select_semantic_camera_effect(
+                    combined,
+                    motions[-1] if motions else None,
+                    beat_index=use_index,
+                    shot_type=shot_type,
+                    narrative_phase=phase,
+                )
         motions.append(motion)
     return motions

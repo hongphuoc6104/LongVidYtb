@@ -1,0 +1,28 @@
+{
+  "channel_id": "en_choke_point",
+  "slug": "en-choke-point",
+  "youtube_name": "Choke Point Maps",
+  "handle_candidates": [
+    "@ChokePointMaps",
+    "@ChokePointMapsHQ",
+    "@ChokePointInk",
+    "@StrategicMapsLab"
+  ],
+  "description": "Welcome to the official Choke Point Maps channel!\n\nTrace the narrow straits, canals, and geography that dictate world trade, power, and conflict.\nClear, visual, research-backed explainers crafted for geopolitics enthusiasts, history buffs, and global affairs observers.\n\nCore topics: Geopolitics, maritime choke points, resource geography & pivotal historical turning points.\n\n#geopolitics #maps #geography #trade #history #worldaffairs",
+  "keywords": [
+    "geopolitics",
+    "maps",
+    "geography",
+    "trade",
+    "history",
+    "worldaffairs",
+    "Geopolitics, maritime choke points, resource geography & pivotal historical turning points"
+  ],
+  "assets": {
+    "avatar_800x800": "sys/channels/en_choke_point/assets/avatar_800x800.png",
+    "banner_2048x1152": "sys/channels/en_choke_point/assets/banner_2048x1152.png",
+    "watermark_150x150": "sys/channels/en_choke_point/assets/watermark_150x150.png",
+    "endcard_16x9": "sys/channels/en_choke_point/assets/endcard_16x9.jpg",
+    "endcard_9x16": "sys/channels/en_choke_point/assets/endcard_9x16.jpg"
+  }
+}

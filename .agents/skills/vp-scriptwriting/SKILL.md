@@ -126,3 +126,8 @@ python3 sys/tools/script_diversity_linter.py path/to/content.json
 
 ## ContentPhilosophy `research_guide`
 - Hook theo kiểu tutorial: SC01 nêu vấn đề thực tế của người mới nghiên cứu + lời hứa kết quả rõ ràng. Diễn đạt chân phương, dễ hiểu theo phương pháp Feynman, chia sẻ giải pháp từng bước một cách mạch lạc.
+
+## V2 CTA, Bridge & Phễu Short→Long (`cta_tone_linter.py`)
+- Mọi short bắt buộc có `parent_long_id` liên kết video long mẹ; nội dung short là vòng lặp mở trả lời một nửa, nửa còn lại nằm trong long.
+- Đúng 1 CTA chính (close <= 24 âm tiết) + 1 bridge (<= 22 âm tiết) ở 15% thời lượng cuối, xuất hiện nguyên văn trong narration cảnh cuối; tuyệt đối không nằm trong hook 3s đầu. Long có <= 1 mid_cta ở 35-45% thời lượng.
+- Cấm cụm cứng nhắc: `đừng quên like`, `nhấn chuông`, `like share`, `đăng ký kênh`, `subscribe`...

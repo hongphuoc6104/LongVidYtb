@@ -1,0 +1,50 @@
+{
+  "schema_version": "2.0",
+  "channel_id": "thuong_cho_kheo",
+  "channel_slug": "thuong-cho-kheo",
+  "git_branch": "channel/thuong-cho-kheo",
+  "locked_at": "2026-10-31T05:38:12.486455+00:00",
+  "status": "LOCKED_RELEASE_READY",
+  "deliverables": {
+    "short_9x16": {
+      "job_id": "thuong-cho-kheo-week1-9x16-v2",
+      "format_profile": "short_9x16",
+      "mp4_relpath": "video/thuong-cho-kheo-week1-9x16-v2/thuong-cho-kheo-week1-9x16-v2.mp4",
+      "mp4_sha256": "b74da4591debc5e8447bf40901e841b4f2f80279a6cb3dc3df0f43f88dfc427b",
+      "mp4_bytes": 21811317,
+      "resolution": "1080x1920",
+      "fps": 30.0,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "mp4_duration_sec": 35.755,
+      "wav_duration_sec": 35.689,
+      "sync_delta_sec": 0.066,
+      "loudness_lufs": -15.1,
+      "true_peak_dbtp": -1.6,
+      "srt_relpath": "video/thuong-cho-kheo-week1-9x16-v2/thuong-cho-kheo-week1-9x16-v2.srt",
+      "srt_sha256": "c3ba1f210427801bcbe296652c183739ff9a9e6354b299cdecd76f60139de2a9",
+      "thumbnail_relpath": "video/thuong-cho-kheo-week1-9x16-v2/thumbnail_9x16.jpg",
+      "thumbnail_sha256": "209a9b7ef3690deb1f3585edd3e4733555c22cf4781dd9e88796ff95cfeb4722"
+    },
+    "long_16x9": {
+      "job_id": "thuong-cho-kheo-week1-16x9",
+      "format_profile": "long_16x9",
+      "mp4_relpath": "video/thuong-cho-kheo-week1-16x9/thuong-cho-kheo-week1-16x9.mp4",
+      "mp4_sha256": "313458c1aede743d6fc3f594c0b7260f2f342c4823204f6b651b3b5fbfe01a33",
+      "mp4_bytes": 145825601,
+      "resolution": "1920x1080",
+      "fps": 30.0,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "mp4_duration_sec": 317.163,
+      "wav_duration_sec": 317.081,
+      "sync_delta_sec": 0.082,
+      "loudness_lufs": -15.1,
+      "true_peak_dbtp": -1.6,
+      "srt_relpath": "video/thuong-cho-kheo-week1-16x9/thuong-cho-kheo-week1-16x9.srt",
+      "srt_sha256": "2fa3933297ce54dac100b13950209020b71d5dee744b697a06e14055a1a5dc19",
+      "thumbnail_relpath": "video/thuong-cho-kheo-week1-16x9/thumbnail_16x9.jpg",
+      "thumbnail_sha256": "118f188414ea47a2e726999f4eae4e27602a08529d13736b670b472c2bb89cc5"
+    }
+  }
+}

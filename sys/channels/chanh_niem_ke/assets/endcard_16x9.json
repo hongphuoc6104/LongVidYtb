@@ -1,0 +1,19 @@
+{
+  "jobId": "endcard_chanh_niem_ke_16x9",
+  "forgeId": "abdf5c1b-5c3b-4885-83c7-534200b6f100",
+  "profile_id": "profile_9",
+  "prompt": "Requested aspect ratio: 16:9. Render a complete 100% full-bleed horizontal 16:9 widescreen 2D endcard illustration extending continuously to all four edges with zero letterbox bars, zero subtitle boxes, and zero dark vignette.\n\nVisual Style (ch_zen_sumie): Serene 2D East-Asian Sumi-e ink-wash painting on handmade Xuan rice paper canvas (#F5EFE0 warm textured rice paper, #1C1C1C expressive calligraphy brush ink, #5F7A61 bamboo sage wash, #D98A76 soft lotus blush, #8C7A6B tea-earth) with generous meditative negative space, water ripples and swaying bamboo strokes; orthographic 2D, at least 65% negative space, zero 3D, zero gradients. Palette: #F5EFE0, #1C1C1C, #5F7A61, #D98A76, #8C7A6B.\n\nCharacter Cast: Peaceful minimalist brush-painted Zen practitioner with gentle facial contours, calm closed eyes, and flowing bamboo-sage linen robe. Outfit: Flowing unadorned bamboo-sage (#5F7A61) linen robe with wide sleeves, zero shading.\n\nScene Composition: Position the character strictly on the far left 35% of the widescreen canvas, smiling and pointing toward the right. CRITICAL END-SCREEN RULE: The entire right 65% of the frame must remain completely flat, empty, solid background canvas (#F5EFE0) with strictly zero characters, zero text, zero props, and zero decorations so YouTube video/subscribe cards can overlay cleanly.\n\nEmphasis lettering instruction: render exact uppercase Vietnamese hand-lettered text (crisp high-contrast dark ink lettering) strictly on the far left 35% of the canvas integrated directly onto the flat canvas (#F5EFE0) (strictly zero rectangular text cards, banners, or gradient overlays covering artwork): \"BẢN ĐẦY ĐỦ TRÊN YOUTUBE\" and \"CHÁNH NIỆM KỂ\".",
+  "latency": 37.92,
+  "sha256": "6905764d5fba26bfce442d1f34a065d907439b35245516182c070aa22f752348",
+  "aspect_ratio": "16:9",
+  "width": 1920,
+  "height": 1080,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "verified",
+  "created_at": "2026-10-31T18:09:38.279227+00:00",
+  "media_id": "abdf5c1b-5c3b-4885-83c7-534200b6f100",
+  "channel_id": "chanh_niem_ke",
+  "visual_profile": "ch_zen_sumie"
+}

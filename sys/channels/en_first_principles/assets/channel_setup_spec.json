@@ -1,0 +1,28 @@
+{
+  "channel_id": "en_first_principles",
+  "slug": "en-first-principles",
+  "youtube_name": "First Principles Ink",
+  "handle_candidates": [
+    "@FirstPrinciplesInk",
+    "@FirstPrinciplesHQ",
+    "@FirstPrinciplesLab",
+    "@MentalModelsInk"
+  ],
+  "description": "Welcome to the official First Principles Ink channel!\n\nStrip complex problems down to fundamental truths so you can think clearly from first principles.\nClear, visual, research-backed explainers crafted for engineers, founders, strategists, and curious analytical problem-solvers.\n\nCore topics: Mental models, game theory, logical paradoxes & first-principles decision making.\n\n#mentalmodels #gametheory #firstprinciples #decisionmaking #logic #strategy",
+  "keywords": [
+    "mentalmodels",
+    "gametheory",
+    "firstprinciples",
+    "decisionmaking",
+    "logic",
+    "strategy",
+    "Mental models, game theory, logical paradoxes & first-principles decision making"
+  ],
+  "assets": {
+    "avatar_800x800": "sys/channels/en_first_principles/assets/avatar_800x800.png",
+    "banner_2048x1152": "sys/channels/en_first_principles/assets/banner_2048x1152.png",
+    "watermark_150x150": "sys/channels/en_first_principles/assets/watermark_150x150.png",
+    "endcard_16x9": "sys/channels/en_first_principles/assets/endcard_16x9.jpg",
+    "endcard_9x16": "sys/channels/en_first_principles/assets/endcard_9x16.jpg"
+  }
+}

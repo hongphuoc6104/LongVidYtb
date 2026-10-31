@@ -1,0 +1,27 @@
+{
+  "channel_id": "la_ban_hoc_thuat",
+  "slug": "la-ban-hoc-thuat",
+  "youtube_name": "La Bàn Học Thuật",
+  "handle_candidates": [
+    "@LaBanHocThuatVN",
+    "@LaBanHocThuatOfficial",
+    "@KenhLaBanHocThuat",
+    "@LaBanHocThuat"
+  ],
+  "description": "Chào mừng bạn đến với kênh chính thức của La Bàn Học Thuật!\n\nBiến mọi tài liệu học thuật phức tạp thành quy trình từng bước ai cũng làm theo được.\nNội dung được thiết kế dễ hiểu, trực quan và hấp dẫn dành riêng cho sinh viên, học viên cao học, nhà nghiên cứu trẻ, người tự học chuyên sâu.\n\nChủ đề trọng tâm: Phương pháp tự học sâu, đọc hiểu tài liệu khoa học và nghiên cứu cho người mới.\n\n#labanhocthuat #phuongphaphoc #nghiencuukhoahoc #feynman #kienthuc",
+  "keywords": [
+    "labanhocthuat",
+    "phuongphaphoc",
+    "nghiencuukhoahoc",
+    "feynman",
+    "kienthuc",
+    "Phương pháp tự học sâu, đọc hiểu tài liệu khoa học và nghiên cứu cho người mới"
+  ],
+  "assets": {
+    "avatar_800x800": "sys/channels/la_ban_hoc_thuat/assets/avatar_800x800.png",
+    "banner_2048x1152": "sys/channels/la_ban_hoc_thuat/assets/banner_2048x1152.png",
+    "watermark_150x150": "sys/channels/la_ban_hoc_thuat/assets/watermark_150x150.png",
+    "endcard_16x9": "sys/channels/la_ban_hoc_thuat/assets/endcard_16x9.jpg",
+    "endcard_9x16": "sys/channels/la_ban_hoc_thuat/assets/endcard_9x16.jpg"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "jobId": "q1_vu_tru_ti_hon_9x16",
+  "forgeId": "fc4e13fa-0e99-4d5a-9d52-39bee73db8d5",
+  "profile_id": "profile_1",
+  "prompt": "Requested aspect ratio: 9:16. Render a complete 100% full-bleed vertical 9:16 2D endcard illustration extending continuously to all four edges with zero letterbox bars, zero subtitle boxes, and zero dark vignette.\n\nVisual Style (ch_cosmos_vector): Luminous Kurzgesagt-inspired 2D flat geometric space vector illustration on deep cosmic indigo canvas (#0B1026 deep cosmic indigo canvas, #4CC9F0 pulsar cyan, #FF6B6B supernova coral, #FFD166 starlight gold, #7209B7 nebula violet) with crisp rounded vector shapes, radiant celestial bodies, orbital trajectories and zero black marker outlines; orthographic 2D, at least 60% negative space, zero 3D, zero gradients. Palette: #0B1026, #4CC9F0, #FF6B6B, #FFD166, #7209B7, #FFFFFF.\n\nCharacter Cast: Adorable compact spherical robotic space-probe mascot Tí Hon with a glowing cyan visor eye and tiny thruster wings floating beside vibrant geometric planets. Outfit: Seamless white and polished gold chassis plating with glowing pulsar-cyan optic lens visor, no human clothes.\n\nScene Composition: The channel character stands centered in the frame, pointing upwards with a welcoming smile. Clean, minimalist composition with at least 60% open negative space on the solid flat background canvas (#0B1026).\n\nEmphasis lettering instruction: render exact uppercase Vietnamese hand-lettered text (crisp high-contrast white and gold lettering) in the upper third integrated directly onto the flat canvas (#0B1026) (strictly zero rectangular text cards, banners, or gradient overlays covering artwork): \"BẢN ĐẦY ĐỦ TRÊN YOUTUBE\" and \"VŨ TRỤ TÍ HON\".",
+  "latency": 27.92,
+  "sha256": "18017d85cfc51ba5725098553f112ed663c14d74082d0f6992e1982563bf246e",
+  "aspect_ratio": "9:16",
+  "width": 1080,
+  "height": 1920,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "verified",
+  "created_at": "2026-10-31T18:08:43.181686+00:00",
+  "media_id": "fc4e13fa-0e99-4d5a-9d52-39bee73db8d5",
+  "channel_id": "vu_tru_ti_hon"
+}

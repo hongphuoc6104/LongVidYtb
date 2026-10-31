@@ -1,0 +1,27 @@
+{
+  "channel_id": "thuong_cho_kheo",
+  "slug": "thuong-cho-kheo",
+  "youtube_name": "Thương Cho Khéo",
+  "handle_candidates": [
+    "@ThuongChoKheoVN",
+    "@ThuongChoKheoOfficial",
+    "@KenhThuongChoKheo",
+    "@ThuongChoKheo"
+  ],
+  "description": "Chào mừng bạn đến với kênh chính thức của Thương Cho Khéo!\n\nNhững tình huống tình cảm ai cũng gặp, và cách nói cho khéo.\nNội dung được thiết kế dễ hiểu, trực quan và hấp dẫn dành riêng cho người 18-30 đang yêu, độc thân hoặc mới chia tay.\n\nChủ đề trọng tâm: Tình cảm, giao tiếp và cách cư xử.\n\n#tinhyeu #tamsu #giaotiep #couple #learnontiktok",
+  "keywords": [
+    "tinhyeu",
+    "tamsu",
+    "giaotiep",
+    "couple",
+    "learnontiktok",
+    "Tình cảm, giao tiếp và cách cư xử"
+  ],
+  "assets": {
+    "avatar_800x800": "sys/channels/thuong_cho_kheo/assets/avatar_800x800.png",
+    "banner_2048x1152": "sys/channels/thuong_cho_kheo/assets/banner_2048x1152.png",
+    "watermark_150x150": "sys/channels/thuong_cho_kheo/assets/watermark_150x150.png",
+    "endcard_16x9": "sys/channels/thuong_cho_kheo/assets/endcard_16x9.jpg",
+    "endcard_9x16": "sys/channels/thuong_cho_kheo/assets/endcard_9x16.jpg"
+  }
+}

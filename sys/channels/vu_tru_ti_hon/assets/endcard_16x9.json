@@ -1,0 +1,18 @@
+{
+  "jobId": "q1_vu_tru_ti_hon_16x9",
+  "forgeId": "74fd0bb0-b1e8-441d-a3c7-d40de29113fd",
+  "profile_id": "profile_1",
+  "prompt": "Requested aspect ratio: 16:9. Render a complete 100% full-bleed horizontal 16:9 widescreen 2D endcard illustration extending continuously to all four edges with zero letterbox bars, zero subtitle boxes, and zero dark vignette.\n\nVisual Style (ch_cosmos_vector): Luminous Kurzgesagt-inspired 2D flat geometric space vector illustration on deep cosmic indigo canvas (#0B1026 deep cosmic indigo canvas, #4CC9F0 pulsar cyan, #FF6B6B supernova coral, #FFD166 starlight gold, #7209B7 nebula violet) with crisp rounded vector shapes, radiant celestial bodies, orbital trajectories and zero black marker outlines; orthographic 2D, at least 60% negative space, zero 3D, zero gradients. Palette: #0B1026, #4CC9F0, #FF6B6B, #FFD166, #7209B7, #FFFFFF.\n\nCharacter Cast: Adorable compact spherical robotic space-probe mascot Tí Hon with a glowing cyan visor eye and tiny thruster wings floating beside vibrant geometric planets. Outfit: Seamless white and polished gold chassis plating with glowing pulsar-cyan optic lens visor, no human clothes.\n\nScene Composition: Position the character strictly on the far left 35% of the widescreen canvas, smiling and pointing toward the right. CRITICAL END-SCREEN RULE: The entire right 65% of the frame must remain completely flat, empty, solid background canvas (#0B1026) with strictly zero characters, zero text, zero props, and zero decorations so YouTube video/subscribe cards can overlay cleanly.\n\nEmphasis lettering instruction: render exact uppercase Vietnamese hand-lettered text (crisp high-contrast white and gold lettering) strictly on the far left 35% of the canvas integrated directly onto the flat canvas (#0B1026) (strictly zero rectangular text cards, banners, or gradient overlays covering artwork): \"BẢN ĐẦY ĐỦ TRÊN YOUTUBE\" and \"VŨ TRỤ TÍ HON\".",
+  "latency": 40.67,
+  "sha256": "62d8f157713e8703a2f7ad289a6b380bb4b2482cb29421dee57cc05b408ec6f9",
+  "aspect_ratio": "16:9",
+  "width": 1920,
+  "height": 1080,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "verified",
+  "created_at": "2026-10-31T18:08:43.245991+00:00",
+  "media_id": "74fd0bb0-b1e8-441d-a3c7-d40de29113fd",
+  "channel_id": "vu_tru_ti_hon"
+}

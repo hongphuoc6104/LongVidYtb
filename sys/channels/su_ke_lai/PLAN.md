@@ -1,7 +1,7 @@
 # KẾ HOẠCH CHI TIẾT KÊNH: SỬ KỂ LẠI (`su_ke_lai`)
 
 ## 1. Định Vị Kênh & Phân Tách Nền Tảng
-- **Mã kênh:** `su_ke_lai` (Đợt triển khai: Wave 2)
+- **Mã kênh:** `su_ke_lai` (Đợt triển khai: Wave 1)
 - **Nhánh GitHub độc lập:** `channel/su-ke-lai` (`origin/channel/su-ke-lai`)
 - **Thư mục phát triển trên máy:** `/home/hongphuoc6104/Desktop/vp-channels/channel-su-ke-lai`
 - **Ngách nội dung:** Lịch sử Việt Nam và thế giới kể như phim

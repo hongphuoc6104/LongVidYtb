@@ -1,0 +1,27 @@
+{
+  "channel_id": "minh_triet_song",
+  "slug": "minh-triet-song",
+  "youtube_name": "Minh Triết Sống",
+  "handle_candidates": [
+    "@MinhTrietSongVN",
+    "@MinhTrietSongOfficial",
+    "@KenhMinhTrietSong",
+    "@MinhTrietSong"
+  ],
+  "description": "Chào mừng bạn đến với kênh chính thức của Minh Triết Sống!\n\nMột nguyên lý cổ xưa từ Lão Trang hoặc Khắc kỷ giúp bạn điềm tĩnh trước mọi biến cố đời thường.\nNội dung được thiết kế dễ hiểu, trực quan và hấp dẫn dành riêng cho người trưởng thành, người làm quản lý, người tìm kiếm bản lĩnh nội tâm và triết học ứng dụng.\n\nChủ đề trọng tâm: Minh triết Phương Đông (Lão Tử, Trang Tử) kết hợp Chủ nghĩa Khắc kỷ (Stoicism) giúp giữ tâm bất biến.\n\n#minhtrietsong #khacky #laotu #triethocungdung #binhtam",
+  "keywords": [
+    "minhtrietsong",
+    "khacky",
+    "laotu",
+    "triethocungdung",
+    "binhtam",
+    "Minh triết Phương Đông (Lão Tử, Trang Tử) kết hợp Chủ nghĩa Khắc kỷ (Stoicism) giúp giữ tâm bất biến"
+  ],
+  "assets": {
+    "avatar_800x800": "sys/channels/minh_triet_song/assets/avatar_800x800.png",
+    "banner_2048x1152": "sys/channels/minh_triet_song/assets/banner_2048x1152.png",
+    "watermark_150x150": "sys/channels/minh_triet_song/assets/watermark_150x150.png",
+    "endcard_16x9": "sys/channels/minh_triet_song/assets/endcard_16x9.jpg",
+    "endcard_9x16": "sys/channels/minh_triet_song/assets/endcard_9x16.jpg"
+  }
+}

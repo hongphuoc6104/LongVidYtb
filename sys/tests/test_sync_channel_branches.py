@@ -78,8 +78,15 @@ def test_is_excluded_and_preserved_rules() -> None:
     assert is_preserved_path(Path("sys/channels/nao_luoi/builder.py"))
     assert is_preserved_path(Path("sys/channels/tui_tien/builder.py"))
     assert is_preserved_path(Path("sys/channels/nao_luoi/PLAN.md"))
+    assert is_preserved_path(Path("sys/channels/nao_luoi/script_v2.py"))
+    assert is_preserved_path(Path("sys/channels/nao_luoi/release_links.json"))
+    assert is_preserved_path(Path("sys/channels/nao_luoi/week1_v2_release_lock.json"))
     assert is_preserved_path(Path("sys/runs/job-001/content.json"))
     assert is_preserved_path(Path("video/export.mp4"))
+
+    # Assets are core-owned and must NOT be preserved (they sync down)
+    assert not is_preserved_path(Path("sys/channels/nao_luoi/assets/endcard_9x16.jpg"))
+    assert not is_preserved_path(Path("sys/channels/nao_luoi/assets/endcard_16x9.jpg"))
 
     # Core files must NOT be preserved or excluded
     assert not is_preserved_path(Path("sys/tools/script_hook_scorer.py"))

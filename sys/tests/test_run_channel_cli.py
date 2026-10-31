@@ -7,9 +7,15 @@ from pathlib import Path
 
 import pytest
 from channels.registry import channel_ids, get_channel
+from test_channels_system import WAVE2_WEEK1_BUNDLES, WAVE3_WEEK1_BUNDLES, WAVE4_WEEK1_BUNDLES
+from tools.generate_channel_plans import WEEK1_BUNDLES
 from tools.run_channel import main, resolve_channel, run_channel
 
-ALL_8_CHANNELS = [
+WEEK1_BUNDLES.update(WAVE2_WEEK1_BUNDLES)
+WEEK1_BUNDLES.update(WAVE3_WEEK1_BUNDLES)
+WEEK1_BUNDLES.update(WAVE4_WEEK1_BUNDLES)
+
+ALL_CHANNELS = [
     "nao_luoi",
     "tui_tien",
     "ua_sao_vay",
@@ -18,16 +24,48 @@ ALL_8_CHANNELS = [
     "ho_so_ky_la",
     "co_the_ke",
     "ai_binh_dan",
+    "luat_ngam",
+    "ban_do_quyen_luc",
+    "dia_com",
+    "luat_doi_thuong",
+    "banh_rang",
+    "vu_tru_ti_hon",
+    "nghe_song_sot",
+    "la_ban_hoc_thuat",
+    "chanh_niem_ke",
+    "loi_sang_soi",
+    "minh_triet_song",
+    "tam_tinh_dem",
+    "en_lazy_brain",
+    "en_crowd_strings",
+    "en_kindred_sketch",
+    "en_ego_unmasked",
+    "en_first_principles",
+    "en_wallet_anatomy",
+    "en_macro_gears",
+    "en_plain_sight_ai",
+    "en_career_leverage",
+    "en_fine_print",
+    "en_inside_vessel",
+    "en_kitchen_molecules",
+    "en_wait_how",
+    "en_cold_case_ink",
+    "en_choke_point",
+    "en_pocket_cosmos",
+    "en_second_arrow",
+    "en_parable_lamp",
+    "en_bamboo_marble",
 ]
+ALL_8_CHANNELS = ALL_CHANNELS
 
 
 def test_channel_ids_match_expected() -> None:
-    assert channel_ids() == ALL_8_CHANNELS
+    assert channel_ids() == ALL_CHANNELS
 
 
-@pytest.mark.parametrize("cid", ALL_8_CHANNELS)
-def test_run_channel_package_only_all_eight_channels(tmp_path: Path, cid: str) -> None:
-    """Validate package-only mode across all 8 channels."""
+@pytest.mark.parametrize("cid", ALL_CHANNELS)
+def test_run_channel_package_only_all_channels(tmp_path: Path, cid: str) -> None:
+    """Validate package-only mode across all 20 channels."""
     out_dir = tmp_path / f"job-{cid}"
     ch = get_channel(cid)
     max_images = ch.speed_optimization.fast_short_max_images if ch.speed_optimization else 8

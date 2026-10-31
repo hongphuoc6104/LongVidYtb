@@ -1,7 +1,7 @@
 # KẾ HOẠCH CHI TIẾT KÊNH: THƯƠNG CHO KHÉO (`thuong_cho_kheo`)
 
 ## 1. Định Vị Kênh & Phân Tách Nền Tảng
-- **Mã kênh:** `thuong_cho_kheo` (Đợt triển khai: Wave 2)
+- **Mã kênh:** `thuong_cho_kheo` (Đợt triển khai: Wave 1)
 - **Nhánh GitHub độc lập:** `channel/thuong-cho-kheo` (`origin/channel/thuong-cho-kheo`)
 - **Thư mục phát triển trên máy:** `/home/hongphuoc6104/Desktop/vp-channels/channel-thuong-cho-kheo`
 - **Ngách nội dung:** Tình cảm, giao tiếp và cách cư xử

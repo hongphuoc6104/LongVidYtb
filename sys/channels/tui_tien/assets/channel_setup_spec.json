@@ -1,0 +1,27 @@
+{
+  "channel_id": "tui_tien",
+  "slug": "tui-tien",
+  "youtube_name": "Túi Tiền Biết Nói",
+  "handle_candidates": [
+    "@TuiTienBietNoiVN",
+    "@TuiTienVN",
+    "@TuiTienOfficial",
+    "@KenhTuiTien"
+  ],
+  "description": "Chào mừng bạn đến với kênh chính thức của Túi Tiền Biết Nói!\n\nBóc tách tiền bạc đằng sau những thứ bạn mua mỗi ngày.\nNội dung được thiết kế dễ hiểu, trực quan và hấp dẫn dành riêng cho sinh viên, người mới đi làm thu nhập 7-20 triệu.\n\nChủ đề trọng tâm: Tiền và kinh tế đời sống.\n\n#taichinhcanhan #kienthuckinhte #kinhte #tienbac #learnontiktok",
+  "keywords": [
+    "taichinhcanhan",
+    "kienthuckinhte",
+    "kinhte",
+    "tienbac",
+    "learnontiktok",
+    "Tiền và kinh tế đời sống"
+  ],
+  "assets": {
+    "avatar_800x800": "sys/channels/tui_tien/assets/avatar_800x800.png",
+    "banner_2048x1152": "sys/channels/tui_tien/assets/banner_2048x1152.png",
+    "watermark_150x150": "sys/channels/tui_tien/assets/watermark_150x150.png",
+    "endcard_16x9": "sys/channels/tui_tien/assets/endcard_16x9.jpg",
+    "endcard_9x16": "sys/channels/tui_tien/assets/endcard_9x16.jpg"
+  }
+}

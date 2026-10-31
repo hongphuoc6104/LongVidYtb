@@ -1,0 +1,28 @@
+{
+  "channel_id": "en_second_arrow",
+  "slug": "en-second-arrow",
+  "youtube_name": "The Second Arrow",
+  "handle_candidates": [
+    "@TheSecondArrowZen",
+    "@SecondArrowDoodle",
+    "@SecondArrowMind",
+    "@TheSecondArrowLab"
+  ],
+  "description": "Welcome to the official The Second Arrow channel!\n\nLearn to drop the second arrow of mental suffering through timeless Zen parables and mindfulness.\nClear, visual, research-backed explainers crafted for overthinkers, seekers of calm, and anyone navigating stress, grief, or emotional turbulence.\n\nCore topics: Secular & classical Buddhist psychology, Zen parables, mindfulness & letting go.\n\n#mindfulness #zen #buddhism #peace #meditation #mentalhealth",
+  "keywords": [
+    "mindfulness",
+    "zen",
+    "buddhism",
+    "peace",
+    "meditation",
+    "mentalhealth",
+    "Secular & classical Buddhist psychology, Zen parables, mindfulness & letting go"
+  ],
+  "assets": {
+    "avatar_800x800": "sys/channels/en_second_arrow/assets/avatar_800x800.png",
+    "banner_2048x1152": "sys/channels/en_second_arrow/assets/banner_2048x1152.png",
+    "watermark_150x150": "sys/channels/en_second_arrow/assets/watermark_150x150.png",
+    "endcard_16x9": "sys/channels/en_second_arrow/assets/endcard_16x9.jpg",
+    "endcard_9x16": "sys/channels/en_second_arrow/assets/endcard_9x16.jpg"
+  }
+}

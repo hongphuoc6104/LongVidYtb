@@ -67,8 +67,30 @@ CANDIDATE_PRESETS: Dict[str, Dict[str, Any]] = {
     },
 }
 
-NARRATIVE_CHANNELS = {"nao_luoi", "su_ke_lai", "thuong_cho_kheo", "ho_so_ky_la"}
-ENERGETIC_CHANNELS = {"tui_tien", "ua_sao_vay", "co_the_ke", "ai_binh_dan"}
+NARRATIVE_CHANNELS = {
+    "nao_luoi",
+    "su_ke_lai",
+    "thuong_cho_kheo",
+    "ho_so_ky_la",
+    "luat_ngam",
+    "luat_doi_thuong",
+    "vu_tru_ti_hon",
+    "chanh_niem_ke",
+    "loi_sang_soi",
+    "minh_triet_song",
+    "tam_tinh_dem",
+}
+ENERGETIC_CHANNELS = {
+    "tui_tien",
+    "ua_sao_vay",
+    "co_the_ke",
+    "ai_binh_dan",
+    "ban_do_quyen_luc",
+    "dia_com",
+    "banh_rang",
+    "nghe_song_sot",
+    "la_ban_hoc_thuat",
+}
 
 CHANNEL_SPECS: Dict[str, Dict[str, Any]] = {
     "nao_luoi": {
@@ -205,6 +227,552 @@ CHANNEL_SPECS: Dict[str, Dict[str, Any]] = {
         "audio_voice_chain": (
             "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-3.5,"
             "equalizer=f=2400:t=q:w=1.2:g=1.7,lowpass=f=13500"
+        ),
+    },
+    "luat_ngam": {
+        "voice": "VietNarrator_LuatNgam",
+        "channel_id": "luat_ngam",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.07,
+        "default_tone": "narrative_warm",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-3.0,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.5,lowpass=f=13500"
+        ),
+    },
+    "ban_do_quyen_luc": {
+        "voice": "VietNarrator_BanDoQuyenLuc",
+        "channel_id": "ban_do_quyen_luc",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.09,
+        "default_tone": "analytical_crisp",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-3.2,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.6,lowpass=f=13500"
+        ),
+    },
+    "dia_com": {
+        "voice": "VietNarrator_DiaCom",
+        "channel_id": "dia_com",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.11,
+        "default_tone": "analytical_crisp",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-3.1,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.5,lowpass=f=13500"
+        ),
+    },
+    "luat_doi_thuong": {
+        "voice": "VietNarrator_LuatDoiThuong",
+        "channel_id": "luat_doi_thuong",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.08,
+        "default_tone": "narrative_warm",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-3.0,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.4,lowpass=f=13500"
+        ),
+    },
+    "banh_rang": {
+        "voice": "VietNarrator_BanhRang",
+        "channel_id": "banh_rang",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.13,
+        "default_tone": "analytical_crisp",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-3.3,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.7,lowpass=f=13500"
+        ),
+    },
+    "vu_tru_ti_hon": {
+        "voice": "VietNarrator_VuTruTiHon",
+        "channel_id": "vu_tru_ti_hon",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.06,
+        "default_tone": "narrative_warm",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-2.8,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.4,lowpass=f=13500"
+        ),
+    },
+    "nghe_song_sot": {
+        "voice": "VietNarrator_NgheSongSot",
+        "channel_id": "nghe_song_sot",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.10,
+        "default_tone": "analytical_crisp",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-3.2,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.6,lowpass=f=13500"
+        ),
+    },
+    "la_ban_hoc_thuat": {
+        "voice": "VietNarrator_LaBanHocThuat",
+        "channel_id": "la_ban_hoc_thuat",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.15,
+        "default_tone": "analytical_crisp",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-3.4,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.7,lowpass=f=13500"
+        ),
+    },
+    "chanh_niem_ke": {
+        "voice": "VietNarrator_ChanhNiemKe",
+        "channel_id": "chanh_niem_ke",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.02,
+        "default_tone": "reflective_slow",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-2.8,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.3,lowpass=f=13500"
+        ),
+    },
+    "loi_sang_soi": {
+        "voice": "VietNarrator_LoiSangSoi",
+        "channel_id": "loi_sang_soi",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.05,
+        "default_tone": "narrative_warm",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-2.9,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.4,lowpass=f=13500"
+        ),
+    },
+    "minh_triet_song": {
+        "voice": "VietNarrator_MinhTrietSong",
+        "channel_id": "minh_triet_song",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.04,
+        "default_tone": "reflective_slow",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-2.7,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.3,lowpass=f=13500"
+        ),
+    },
+    "tam_tinh_dem": {
+        "voice": "VietNarrator_TamTinhDem",
+        "channel_id": "tam_tinh_dem",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.00,
+        "default_tone": "reflective_slow",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-2.5,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.2,lowpass=f=13500"
+        ),
+    },
+    "en_lazy_brain": {
+        "voice": "OmniVoice_EnLazyBrain",
+        "channel_id": "en_lazy_brain",
+        "language": "en",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.08,
+        "default_tone": "narrative_warm",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-3.0,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.5,lowpass=f=13500"
+        ),
+    },
+    "en_crowd_strings": {
+        "voice": "OmniVoice_EnCrowdStrings",
+        "channel_id": "en_crowd_strings",
+        "language": "en",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.10,
+        "default_tone": "analytical_crisp",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-3.2,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.6,lowpass=f=13500"
+        ),
+    },
+    "en_kindred_sketch": {
+        "voice": "OmniVoice_EnKindredSketch",
+        "channel_id": "en_kindred_sketch",
+        "language": "en",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.02,
+        "default_tone": "narrative_warm",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-2.8,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.3,lowpass=f=13500"
+        ),
+    },
+    "en_ego_unmasked": {
+        "voice": "OmniVoice_EnEgoUnmasked",
+        "channel_id": "en_ego_unmasked",
+        "language": "en",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.00,
+        "default_tone": "reflective_slow",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-2.6,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.3,lowpass=f=13500"
+        ),
+    },
+    "en_first_principles": {
+        "voice": "OmniVoice_EnFirstPrinciples",
+        "channel_id": "en_first_principles",
+        "language": "en",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.12,
+        "default_tone": "analytical_crisp",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-3.3,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.7,lowpass=f=13500"
+        ),
+    },
+    "en_wallet_anatomy": {
+        "voice": "OmniVoice_EnWalletAnatomy",
+        "channel_id": "en_wallet_anatomy",
+        "language": "en",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.10,
+        "default_tone": "analytical_crisp",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-3.1,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.5,lowpass=f=13500"
+        ),
+    },
+    "en_macro_gears": {
+        "voice": "OmniVoice_EnMacroGears",
+        "channel_id": "en_macro_gears",
+        "language": "en",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.12,
+        "default_tone": "analytical_crisp",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-3.2,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.6,lowpass=f=13500"
+        ),
+    },
+    "en_plain_sight_ai": {
+        "voice": "OmniVoice_EnPlainSightAI",
+        "channel_id": "en_plain_sight_ai",
+        "language": "en",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.14,
+        "default_tone": "analytical_crisp",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-3.4,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.7,lowpass=f=13500"
+        ),
+    },
+    "en_career_leverage": {
+        "voice": "OmniVoice_EnCareerLeverage",
+        "channel_id": "en_career_leverage",
+        "language": "en",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.10,
+        "default_tone": "analytical_crisp",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-3.1,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.5,lowpass=f=13500"
+        ),
+    },
+    "en_fine_print": {
+        "voice": "OmniVoice_EnFinePrint",
+        "channel_id": "en_fine_print",
+        "language": "en",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.08,
+        "default_tone": "analytical_crisp",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-3.0,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.4,lowpass=f=13500"
+        ),
+    },
+    "en_inside_vessel": {
+        "voice": "OmniVoice_EnInsideVessel",
+        "channel_id": "en_inside_vessel",
+        "language": "en",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.08,
+        "default_tone": "narrative_warm",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-2.9,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.5,lowpass=f=13500"
+        ),
+    },
+    "en_kitchen_molecules": {
+        "voice": "OmniVoice_EnKitchenMolecules",
+        "channel_id": "en_kitchen_molecules",
+        "language": "en",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.10,
+        "default_tone": "analytical_crisp",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-3.1,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.6,lowpass=f=13500"
+        ),
+    },
+    "en_wait_how": {
+        "voice": "OmniVoice_EnWaitHow",
+        "channel_id": "en_wait_how",
+        "language": "en",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.14,
+        "default_tone": "analytical_crisp",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-3.3,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.7,lowpass=f=13500"
+        ),
+    },
+    "en_cold_case_ink": {
+        "voice": "OmniVoice_EnColdCaseInk",
+        "channel_id": "en_cold_case_ink",
+        "language": "en",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.02,
+        "default_tone": "reflective_slow",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-2.8,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.4,lowpass=f=13500"
+        ),
+    },
+    "en_choke_point": {
+        "voice": "OmniVoice_EnChokePoint",
+        "channel_id": "en_choke_point",
+        "language": "en",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.10,
+        "default_tone": "analytical_crisp",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-3.1,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.5,lowpass=f=13500"
+        ),
+    },
+    "en_pocket_cosmos": {
+        "voice": "OmniVoice_EnPocketCosmos",
+        "channel_id": "en_pocket_cosmos",
+        "language": "en",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.06,
+        "default_tone": "narrative_warm",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-2.9,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.4,lowpass=f=13500"
+        ),
+    },
+    "en_second_arrow": {
+        "voice": "OmniVoice_EnSecondArrow",
+        "channel_id": "en_second_arrow",
+        "language": "en",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.00,
+        "default_tone": "reflective_slow",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-2.6,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.2,lowpass=f=13500"
+        ),
+    },
+    "en_parable_lamp": {
+        "voice": "OmniVoice_EnParableLamp",
+        "channel_id": "en_parable_lamp",
+        "language": "en",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.02,
+        "default_tone": "reflective_slow",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-2.7,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.3,lowpass=f=13500"
+        ),
+    },
+    "en_bamboo_marble": {
+        "voice": "OmniVoice_EnBambooMarble",
+        "channel_id": "en_bamboo_marble",
+        "language": "en",
+        "base_source": REF_CLEAN_B3,
+        "time_window": (0.00, 8.14),
+        "reference_text": REF_TEXT_CLEAN_B3,
+        "source_speed": 0.90,
+        "source_rel_path": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+        "pitch_factor": 1.000,
+        "eq_filter": "",
+        "recommended_speed": 1.00,
+        "default_tone": "reflective_slow",
+        "audio_voice_chain": (
+            "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-2.5,"
+            "equalizer=f=2400:t=q:w=1.2:g=1.2,lowpass=f=13500"
         ),
     },
 }
@@ -363,11 +931,12 @@ def build_channel_voice_profile(spec: Dict[str, Any], output_dir: Path) -> Path:
     base_src_name = spec["base_source"].name
     source_rel_path = spec.get("source_rel_path", f"assets/voices/viet_narrator/{base_src_name}")
     source_speed = float(spec.get("source_speed", 1.0))
+    lang = spec.get("language", "en" if spec["channel_id"].startswith("en_") else "vi")
     profile_data: Dict[str, Any] = {
         "voice": spec["voice"],
         "channel_id": spec["channel_id"],
-        "language": "vi",
-        "languages": ["vi", "en"],
+        "language": lang,
+        "languages": ["en", "vi"] if lang == "en" else ["vi", "en"],
         "reference_wav": "reference.wav",
         "reference_text": spec["reference_text"],
         "source_speed": source_speed,

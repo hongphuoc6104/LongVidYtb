@@ -142,7 +142,9 @@ export function buildCalmCameraPlan(scenes) {
     for (let i = 0; i < beats.length; i++) {
       const beat = beats[i];
       const previous = beats[i - 1];
-      const continues = previous && (beat.shot_type === 'variation' || (beat.src && beat.src === previous.src));
+      const isCrop = Boolean(beat.focus?.scale && Number(beat.focus.scale) > 1.0);
+      const wasCrop = Boolean(previous?.focus?.scale && Number(previous.focus.scale) > 1.0);
+      const continues = previous && (beat.shot_type === 'variation' || (beat.src && beat.src === previous.src)) && (!isCrop && !wasCrop);
       if (continues) {
         groups[groups.length - 1].last = i;
       } else {
@@ -156,6 +158,8 @@ export function buildCalmCameraPlan(scenes) {
       const start = Number(anchor.at) || 0;
       const end = Number(beats[group.last + 1]?.at ?? (scene.end - scene.start));
       const duration = Math.max(0, end - start);
+      const isCrop = Boolean(anchor.focus?.scale && Number(anchor.focus.scale) > 1.0);
+      let cropScale = isCrop ? Math.min(1.6, Math.max(1.0, Number(anchor.focus.scale))) : null;
       // Unknown legacy effects and lateral sweeps are steady in calm playback.
       // Keep the semantic selector available for authoring and contract checks.
       const explicit = anchor.camera_motion || anchor.effect || (typeof anchor.camera === 'object' ? anchor.camera?.motion : undefined);
@@ -164,17 +168,152 @@ export function buildCalmCameraPlan(scenes) {
       const requested = hasIntent ? selectSemanticCameraEffect(anchor, scene, group.first) : 'hold';
       const inward = ['zoom_in', 'push_in', 'punch_in', 'drift_diag_in'].includes(requested);
       const outward = ['zoom_out', 'pull_back', 'drift_diag_out'].includes(requested);
-      const locked = beats.slice(group.first, group.last + 1).some((beat) =>
+      const locked = isCrop || beats.slice(group.first, group.last + 1).some((beat) =>
         ['hold', 'static'].includes(beat.camera_motion || beat.effect) ||
+        Boolean(beat.emphasis_text) ||
+        Boolean(beat.is_endcard) ||
         ['white_card', 'white_isolated', 'macro_prop'].includes(beat.shot_type));
       const absoluteStart = Number(scene.start || 0) + start;
       const moving = !locked && (inward || outward) && duration >= CALM_MIN_MOTION_SECONDS && absoluteStart >= nextMotionAt;
       // smoothstep's peak derivative is 1.5. Include overscan in the speed budget.
-      const amplitude = moving ? Math.min(CALM_MAX_ZOOM, CALM_MAX_ZOOM_PER_SEC * duration / (1.5 * BASE_OVERSCAN)) : 0;
+      let amplitude = moving ? Math.min(CALM_MAX_ZOOM, CALM_MAX_ZOOM_PER_SEC * duration / (1.5 * BASE_OVERSCAN)) : 0;
+      let focusX = 50;
+      let focusY = 42;
+      if (cropScale) {
+        let effectiveCropScale = cropScale;
+        let rawX = anchor.focus?.x ?? 0.5;
+        let rawY = anchor.focus?.y ?? 0.42;
+
+        const hasLettering = Boolean(
+          anchor.emphasis_text ||
+          anchor.lettering_bbox ||
+          (anchor.visible_text && anchor.visible_text.length)
+        );
+        const letteringYMax = anchor.lettering_bbox ? anchor.lettering_bbox[3] : 0.14;
+
+        // 1. Lettering safety: must fully CONTAIN or fully EXCLUDE (zero partial cut)
+        if (hasLettering) {
+          let S = effectiveCropScale * BASE_OVERSCAN;
+          let invS = 1.0 / S;
+          let vy1 = rawY * (1.0 - invS);
+
+          // Partial overlap check: if top edge cuts into lettering [0, letteringYMax]
+          if (vy1 < letteringYMax + 0.015) {
+            // Attempt 1: Adjust crop downwards to safely EXCLUDE lettering
+            const neededY = (letteringYMax + 0.015) / Math.max(0.01, 1.0 - invS);
+            if (neededY <= 0.85) {
+              rawY = Math.max(rawY, neededY);
+            } else if (effectiveCropScale <= 1.25) {
+              // Attempt 2: Contain lettering if zoom is modest
+              effectiveCropScale = Math.min(1.15, effectiveCropScale);
+              S = effectiveCropScale * BASE_OVERSCAN;
+              rawX = 0.5;
+              rawY = 0.5 / S;
+            } else {
+              // Attempt 3: Degrade gracefully to full image with push-in
+              effectiveCropScale = null;
+            }
+          }
+        }
+
+        // 2. Primary-subject head safety: never partially intersect head bbox
+        if (effectiveCropScale) {
+          const hasChar = ['full_scene', 'variation', 'character'].includes(anchor.shot_type) || Boolean(anchor.head_bbox);
+          if (hasChar) {
+            let hx1 = 0.32, hy1 = 0.18, hx2 = 0.68, hy2 = 0.45;
+            if (anchor.head_bbox && Array.isArray(anchor.head_bbox) && anchor.head_bbox.length === 4) {
+              [hx1, hy1, hx2, hy2] = anchor.head_bbox;
+            } else if (rawX > 0.60) {
+              hx1 = 0.55; hx2 = 0.95;
+            } else if (rawX < 0.40) {
+              hx1 = 0.05; hx2 = 0.45;
+            }
+
+            const S = effectiveCropScale * BASE_OVERSCAN;
+            const invS = 1.0 / S;
+            const vx1 = rawX * (1.0 - invS);
+            const vx2 = rawX + (1.0 - rawX) * invS;
+            const vy1 = rawY * (1.0 - invS);
+            const vy2 = rawY + (1.0 - rawY) * invS;
+
+            const interX = Math.max(vx1, hx1) < Math.min(vx2, hx2);
+            const interY = Math.max(vy1, hy1) < Math.min(vy2, hy2);
+            const contains = (vx1 <= hx1 + 1e-4) && (vy1 <= hy1 + 1e-4) && (vx2 >= hx2 - 1e-4) && (vy2 >= hy2 - 1e-4);
+
+            if (interX && interY && !contains) {
+              // Partial intersection cuts character head! Fall back to centered, less-zoomed crop
+              rawX = 0.5;
+              effectiveCropScale = Math.min(1.15, effectiveCropScale);
+              const testS = effectiveCropScale * BASE_OVERSCAN;
+              const testInvS = 1.0 / testS;
+              const testVx1 = rawX * (1.0 - testInvS);
+              const testVx2 = rawX + (1.0 - rawX) * testInvS;
+              const testVy1 = rawY * (1.0 - testInvS);
+              const testVy2 = rawY + (1.0 - rawY) * testInvS;
+              const testInterX = Math.max(testVx1, hx1) < Math.min(testVx2, hx2);
+              const testInterY = Math.max(testVy1, hy1) < Math.min(testVy2, hy2);
+              const testContains = (testVx1 <= hx1 + 1e-4) && (testVy1 <= hy1 + 1e-4) && (testVx2 >= hx2 - 1e-4) && (testVy2 >= hy2 - 1e-4);
+
+              if (testInterX && testInterY && !testContains) {
+                // If still slicing head, degrade gracefully to full image
+                effectiveCropScale = null;
+              }
+            }
+          }
+        }
+
+        if (effectiveCropScale) {
+          const S = effectiveCropScale * BASE_OVERSCAN;
+          const halfSpan = 0.5 / S;
+          const minCenter = halfSpan;
+          const maxCenter = Math.max(minCenter, 1.0 - halfSpan);
+          focusX = Math.min(maxCenter, Math.max(minCenter, rawX)) * 100;
+          focusY = Math.min(maxCenter, Math.max(minCenter, rawY)) * 100;
+          cropScale = effectiveCropScale;
+        } else {
+          // Graceful degradation: full image with push-in
+          cropScale = null;
+          focusX = 50;
+          focusY = 42;
+        }
+      } else {
+        const hasLettering = Boolean(
+          anchor.emphasis_text ||
+          anchor.lettering_bbox ||
+          (anchor.visible_text && anchor.visible_text.length) ||
+          beats.slice(group.first, group.last + 1).some((b) => Boolean(b.emphasis_text))
+        );
+        let rawX = anchor.focus?.x ?? 0.5;
+        let rawY = anchor.focus?.y ?? 0.42;
+
+        if (hasLettering) {
+          // Rule: Lettering must be fully contained without clipping the top or side edges.
+          // Anchor focusY to top (0%) so vy1 = 0 and lettering top is never cropped by BASE_OVERSCAN.
+          // Move pivot toward lettering and cap zoom amplitude so edges stay within frame.
+          focusY = 0;
+          if (anchor.lettering_bbox && Array.isArray(anchor.lettering_bbox) && anchor.lettering_bbox.length === 4) {
+            const [lx1, , lx2] = anchor.lettering_bbox;
+            if (lx2 > 0.95 && lx1 > 0.04) {
+              focusX = 55;
+            } else if (lx1 < 0.05 && lx2 < 0.96) {
+              focusX = 45;
+            } else {
+              focusX = 50;
+            }
+          } else {
+            focusX = (rawX >= 0.55) ? 55 : (rawX <= 0.45 ? 45 : 50);
+          }
+          amplitude = Math.min(amplitude, 0.005);
+        } else {
+          focusX = Math.min(65, Math.max(35, rawX * 100));
+          focusY = Math.min(58, Math.max(35, rawY * 100));
+        }
+      }
       const camera = {
         start, end, amplitude, outward: outward && moving, shotType: anchor.shot_type,
-        focusX: Math.min(65, Math.max(35, (anchor.focus?.x ?? 0.5) * 100)),
-        focusY: Math.min(58, Math.max(35, (anchor.focus?.y ?? 0.42) * 100)),
+        cropScale,
+        focusX,
+        focusY,
       };
       if (moving) nextMotionAt = Number(scene.start || 0) + end + CALM_REST_SECONDS;
       for (let i = group.first; i <= group.last; i++) plan[i] = camera;
@@ -186,6 +325,13 @@ export function buildCalmCameraPlan(scenes) {
 /** @param {object | undefined} camera @param {number} relative */
 export function calmCameraFrame(camera, relative) {
   if (!camera) return {scale: BASE_OVERSCAN, focusX: 50, focusY: 42};
+  if (camera.cropScale) {
+    return {
+      scale: camera.cropScale * BASE_OVERSCAN,
+      focusX: camera.focusX,
+      focusY: camera.focusY,
+    };
+  }
   const duration = camera.end - camera.start;
   const progress = duration > 0 ? Math.max(0, Math.min(1, (relative - camera.start) / duration)) : 0;
   const eased = progress * progress * (3 - 2 * progress);

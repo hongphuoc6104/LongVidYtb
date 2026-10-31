@@ -1,0 +1,27 @@
+{
+  "channel_id": "co_the_ke",
+  "slug": "co-the-ke",
+  "youtube_name": "Cơ Thể Kể",
+  "handle_candidates": [
+    "@CoTheKeVN",
+    "@CoTheKeOfficial",
+    "@KenhCoTheKe",
+    "@CoTheKe"
+  ],
+  "description": "Chào mừng bạn đến với kênh chính thức của Cơ Thể Kể!\n\nCác cơ quan trong người bạn tự kể chuyện, vui mà đúng khoa học.\nNội dung được thiết kế dễ hiểu, trực quan và hấp dẫn dành riêng cho người 18-40 quan tâm sức khỏe, thói quen sinh hoạt.\n\nChủ đề trọng tâm: Sức khỏe và cơ thể được nhân hóa.\n\n#suckhoe #cothe #songkhoe #bacsi #learnontiktok",
+  "keywords": [
+    "suckhoe",
+    "cothe",
+    "songkhoe",
+    "bacsi",
+    "learnontiktok",
+    "Sức khỏe và cơ thể được nhân hóa"
+  ],
+  "assets": {
+    "avatar_800x800": "sys/channels/co_the_ke/assets/avatar_800x800.png",
+    "banner_2048x1152": "sys/channels/co_the_ke/assets/banner_2048x1152.png",
+    "watermark_150x150": "sys/channels/co_the_ke/assets/watermark_150x150.png",
+    "endcard_16x9": "sys/channels/co_the_ke/assets/endcard_16x9.jpg",
+    "endcard_9x16": "sys/channels/co_the_ke/assets/endcard_9x16.jpg"
+  }
+}

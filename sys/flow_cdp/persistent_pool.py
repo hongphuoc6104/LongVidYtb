@@ -81,14 +81,41 @@ async def remediate_profile_session(sess: Any) -> None:
 
 
 class DynamicProfilePool:
-    """Thread-safe pool managing active and standby Chrome profiles with cooldown quarantine."""
+    """Thread-safe and OS-flock-aware pool managing active and standby Chrome profiles."""
 
-    def __init__(self, profiles: list[dict[str, Any]], cooldown_seconds: float = 600.0):
+    def __init__(
+        self,
+        profiles: list[dict[str, Any]],
+        cooldown_seconds: float = 600.0,
+        enforce_os_locks: bool = True,
+    ):
         self.lock = threading.Lock()
         self.all_profiles = [dict(p) for p in profiles]
         self.in_use: set[str] = set()
         self.cooldowns: dict[str, float] = {}
         self.cooldown_seconds = cooldown_seconds
+        self.enforce_os_locks = enforce_os_locks
+        self._os_port_locks: dict[str, Any] = {}
+
+    def _try_lock_os_port(self, name: str, profile_cfg: dict[str, Any]) -> bool:
+        if not self.enforce_os_locks:
+            return True
+        port = int(profile_cfg.get("cdp_port") or profile_cfg.get("port") or 0)
+        if port <= 0:
+            return True
+        from .resource_locks import ProfilePortLock
+
+        plock = ProfilePortLock(port, owner_tag=f"flow_pool:{name}")
+        if plock.try_acquire():
+            self._os_port_locks[name] = plock
+            return True
+        logger.info("Profile %s (port %d) is locked by another OS process; skipping.", name, port)
+        return False
+
+    def _unlock_os_port(self, name: str) -> None:
+        plock = self._os_port_locks.pop(name, None)
+        if plock is not None:
+            plock.release()
 
     def acquire(
         self,
@@ -107,18 +134,22 @@ class DynamicProfilePool:
                             if self.cooldowns[required_name] > now:
                                 return None
                             del self.cooldowns[required_name]
+                        if not self._try_lock_os_port(required_name, p):
+                            return None
                         self.in_use.add(required_name)
                         return dict(p)
                 return None
 
             for p in self.all_profiles:
                 name = p.get("name") or p.get("id")
-                if name == current_name or name in self.in_use:
+                if not name or name == current_name or name in self.in_use:
                     continue
                 if name in self.cooldowns:
                     if self.cooldowns[name] > now:
                         continue
                     del self.cooldowns[name]
+                if not self._try_lock_os_port(name, p):
+                    continue
                 self.in_use.add(name)
                 return dict(p)
             return None
@@ -128,12 +159,15 @@ class DynamicProfilePool:
             name = profile_cfg.get("name") or profile_cfg.get("id")
             if name:
                 self.in_use.discard(name)
+                self._unlock_os_port(name)
                 if quarantine_reason:
                     self.cooldowns[name] = time.time() + self.cooldown_seconds
                     logger.warning("Profile %s quarantined for %ss: %s", name, self.cooldown_seconds, quarantine_reason)
 
     def release_all(self) -> None:
         with self.lock:
+            for name in list(self._os_port_locks.keys()):
+                self._unlock_os_port(name)
             self.in_use.clear()
 
     def get_status(self) -> dict[str, Any]:
@@ -162,6 +196,8 @@ class PersistentWorkerPool:
         proc_mgr: Any | None = None,
         session_factory: Callable[[dict[str, Any]], Any] | None = None,
         default_out_dir: Path | str | None = None,
+        enforce_os_locks: bool | None = None,
+        max_global_browsers: int | None = None,
     ):
         self.target_workers = max(1, target_workers)
         self.cooldown_seconds = cooldown_seconds
@@ -169,6 +205,8 @@ class PersistentWorkerPool:
         self.stagger_seconds = stagger_seconds
         self.headless = headless
         self.default_out_dir = Path(default_out_dir) if default_out_dir else None
+        self.enforce_os_locks = (session_factory is None) if enforce_os_locks is None else bool(enforce_os_locks)
+        self.max_global_browsers = max_global_browsers
 
         # Resolve profiles
         if profiles is None:
@@ -197,7 +235,11 @@ class PersistentWorkerPool:
             if "cdp_port" not in p and "port" in p:
                 p["cdp_port"] = p["port"]
 
-        self.profile_pool = DynamicProfilePool(self.raw_profiles, cooldown_seconds=cooldown_seconds)
+        self.profile_pool = DynamicProfilePool(
+            self.raw_profiles,
+            cooldown_seconds=cooldown_seconds,
+            enforce_os_locks=self.enforce_os_locks,
+        )
 
         # Process manager
         if proc_mgr is not None:
@@ -298,6 +340,13 @@ class PersistentWorkerPool:
                     if parent_prof in self.pinned_queues:
                         self.pinned_queues[parent_prof].put((priority, seq, task))
                         return
+                    else:
+                        self.shared_queue.put((priority, seq, task))
+                        return
+                elif task.get("baseMediaId"):
+                    # Pre-existing parent media already present on disk; no need to defer
+                    self.shared_queue.put((priority, seq, task))
+                    return
                 else:
                     # Parent shot not completed yet; defer task until parent finishes
                     self.deferred_tasks.setdefault(parent_id_str, []).append((priority, seq, task))
@@ -312,8 +361,9 @@ class PersistentWorkerPool:
         self.shared_queue.put((priority, seq, task))
 
     def _launch_browser(self, prof_cfg: dict[str, Any]) -> bool:
-        """Ensure Chrome is running for the designated profile."""
-        target_url = prof_cfg.get("url", "https://flow.google.com/")
+        """Ensure Chrome is running for the designated profile using lightweight Flow root URL."""
+        raw_url = str(prof_cfg.get("url", "https://flow.google.com/"))
+        target_url = "https://flow.google.com/" if "/project/" in raw_url else raw_url
         if self.proc_mgr and hasattr(self.proc_mgr, "launch"):
             return self.proc_mgr.launch(prof_cfg, url=target_url, headless=self.headless)
         try:
@@ -338,11 +388,25 @@ class PersistentWorkerPool:
         return DirectCDPProfileSession(prof_cfg)
 
     def _worker_thread_loop(self, worker_id: int, initial_profile: dict[str, Any]) -> None:
-        """Worker thread maintaining long-lived WebSocket session."""
+        """Worker thread maintaining long-lived WebSocket session within global hardware budget."""
         current_profile = initial_profile
         prof_name = current_profile["name"]
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
+
+        browser_slot = None
+        if self.enforce_os_locks:
+            from .resource_locks import GlobalBrowserSlot
+
+            browser_slot = GlobalBrowserSlot(
+                max_slots=self.max_global_browsers,
+                owner_tag=f"worker-{worker_id}:{prof_name}",
+            )
+            if not browser_slot.acquire(timeout=600.0):
+                logger.error("[Worker-%d] Timed out waiting for global browser slot; releasing %s.", worker_id, prof_name)
+                self.profile_pool.release(current_profile)
+                loop.close()
+                return
 
         sess = None
 
@@ -354,7 +418,7 @@ class PersistentWorkerPool:
                 if asyncio.iscoroutine(res):
                     loop.run_until_complete(res)
             if hasattr(s, "_wait_for_flow_ready"):
-                state = loop.run_until_complete(s._wait_for_flow_ready(timeout=12.0))
+                state = loop.run_until_complete(s._wait_for_flow_ready(timeout=30.0))
                 if isinstance(state, dict) and not state.get("hasAt"):
                     try:
                         if hasattr(s, "close"):
@@ -377,6 +441,8 @@ class PersistentWorkerPool:
 
         if sess is None or current_profile is None:
             logger.error("[Worker-%d] No healthy profiles available. Exiting.", worker_id)
+            if browser_slot is not None:
+                browser_slot.release()
             loop.close()
             return
 
@@ -504,8 +570,9 @@ class PersistentWorkerPool:
                         # Remediate in session
                         loop.run_until_complete(remediate_profile_session(sess))
 
-                        # Close session and quarantine profile for 10 minutes
+                        # Close session, shut down idle browser to free RAM/VRAM, and quarantine profile
                         old_name = prof_name
+                        old_port = int(current_profile.get("cdp_port") or current_profile.get("port") or 0)
                         try:
                             if hasattr(sess, "close"):
                                 close_res = sess.close()
@@ -513,6 +580,11 @@ class PersistentWorkerPool:
                                     loop.run_until_complete(close_res)
                         except Exception:
                             pass
+                        if self.enforce_os_locks and old_port > 0 and self.proc_mgr and hasattr(self.proc_mgr, "terminate_by_port"):
+                            try:
+                                self.proc_mgr.terminate_by_port(old_port, wait_interval=0.4)
+                            except Exception:
+                                pass
 
                         self.profile_pool.release(current_profile, quarantine_reason="rate_limit_error_7")
 
@@ -542,11 +614,14 @@ class PersistentWorkerPool:
                         # Standby profile swap
                         new_prof = self.profile_pool.acquire(current_name=old_name)
                         if not new_prof:
-                            logger.warning("[Worker-%d] No standby profiles available. Waiting 10s...", worker_id)
-                            time.sleep(10)
-                            new_prof = self.profile_pool.acquire()
+                            logger.warning("[Worker-%d] No standby profiles available. Waiting for cooldown...", worker_id)
+                            wait_start = time.time()
+                            max_wait = max(self.cooldown_seconds + 30.0, 360.0)
+                            while not new_prof and (time.time() - wait_start < max_wait) and not self.abort_event.is_set():
+                                time.sleep(15)
+                                new_prof = self.profile_pool.acquire()
                             if not new_prof:
-                                logger.error("[Worker-%d] All profiles exhausted. Terminating worker.", worker_id)
+                                logger.error("[Worker-%d] All profiles exhausted after waiting. Terminating worker.", worker_id)
                                 break
                         current_profile = new_prof
                         prof_name = current_profile["name"]
@@ -561,6 +636,21 @@ class PersistentWorkerPool:
 
                     else:
                         # Non-rate-limit exception (transient transport or download error)
+                        if any(k in err_str.lower() for k in ("transport", "connection", "reset by peer", "no page target", "target", "closed", "eof")):
+                            logger.warning("CDP transport drop on %s: %s, re-initializing session...", prof_name, err_str)
+                            try:
+                                if hasattr(sess, "close"):
+                                    c = sess.close()
+                                    if asyncio.iscoroutine(c):
+                                        loop.run_until_complete(c)
+                            except Exception:
+                                pass
+                            sess = None
+                            try:
+                                sess = init_session(current_profile)
+                            except Exception as reinit_err:
+                                logger.error("Failed re-initializing session on %s: %s", prof_name, reinit_err)
+
                         task["retries"] = task.get("retries", 0) + 1
                         if task["retries"] <= task.get("max_retries", 3):
                             self.shared_queue.put((0, seq, task))
@@ -594,7 +684,10 @@ class PersistentWorkerPool:
                             loop.run_until_complete(c)
                 except Exception:
                     pass
-            self.profile_pool.release(current_profile)
+            if current_profile is not None:
+                self.profile_pool.release(current_profile)
+            if browser_slot is not None:
+                browser_slot.release()
             loop.close()
 
     def _execute_task_rpc(self, loop: asyncio.AbstractEventLoop, sess: Any, task: dict[str, Any], prof_cfg: dict[str, Any]) -> dict[str, Any]:

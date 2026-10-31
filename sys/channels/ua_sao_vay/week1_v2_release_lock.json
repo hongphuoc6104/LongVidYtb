@@ -1,0 +1,50 @@
+{
+  "schema_version": "2.0",
+  "channel_id": "ua_sao_vay",
+  "channel_slug": "ua-sao-vay",
+  "git_branch": "channel/ua-sao-vay",
+  "locked_at": "2026-10-31T05:28:11.913854+00:00",
+  "status": "LOCKED_RELEASE_READY",
+  "deliverables": {
+    "short_9x16": {
+      "job_id": "ua-sao-vay-week1-9x16-v2",
+      "format_profile": "short_9x16",
+      "mp4_relpath": "video/ua-sao-vay-week1-9x16-v2/ua-sao-vay-week1-9x16-v2.mp4",
+      "mp4_sha256": "94818d27875370975118a78c36ec749586af38a110603d14483e85f74b730af0",
+      "mp4_bytes": 11794441,
+      "resolution": "1080x1920",
+      "fps": 30.0,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "mp4_duration_sec": 25.856,
+      "wav_duration_sec": 25.78,
+      "sync_delta_sec": 0.076,
+      "loudness_lufs": -15.1,
+      "true_peak_dbtp": -1.6,
+      "srt_relpath": "video/ua-sao-vay-week1-9x16-v2/ua-sao-vay-week1-9x16-v2.srt",
+      "srt_sha256": "035158545020e603bb60600e19fff50201443a026b33187507ef0ee7a25bd44d",
+      "thumbnail_relpath": "video/ua-sao-vay-week1-9x16-v2/thumbnail_9x16.jpg",
+      "thumbnail_sha256": "5bc2e810650c737f9649c14d5993f3f3eada501243dc0026bab4e4b14e474816"
+    },
+    "long_16x9": {
+      "job_id": "ua-sao-vay-week1-16x9",
+      "format_profile": "long_16x9",
+      "mp4_relpath": "video/ua-sao-vay-week1-16x9/ua-sao-vay-week1-16x9.mp4",
+      "mp4_sha256": "109b7f65069e1854f14f8e0299d53236fc1479a8df430bcef44a0e0421a6f1be",
+      "mp4_bytes": 138482644,
+      "resolution": "1920x1080",
+      "fps": 30.0,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "mp4_duration_sec": 251.861,
+      "wav_duration_sec": 251.799,
+      "sync_delta_sec": 0.062,
+      "loudness_lufs": -15.1,
+      "true_peak_dbtp": -1.6,
+      "srt_relpath": "video/ua-sao-vay-week1-16x9/ua-sao-vay-week1-16x9.srt",
+      "srt_sha256": "e0629847e25c9af6599864e6b1994c42b965024d7e81e671ff22928c978bcb52",
+      "thumbnail_relpath": "video/ua-sao-vay-week1-16x9/thumbnail_16x9.jpg",
+      "thumbnail_sha256": "7159cd09b9aca2379e5a67df9d8963746c2ab54bdb91efde57c347315e575b1b"
+    }
+  }
+}
