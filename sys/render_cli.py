@@ -1,6 +1,6 @@
 """Standalone Video Renderer Engine CLI Wrapper.
 
-Executes Remotion Chromium renderer with strict I/O contract:
+Executes native FFmpeg h264_nvenc (or libx264 CPU fallback) renderer with strict I/O contract:
 Inputs: <work_dir>/props.json and <work_dir>/public/
 Outputs: <work_dir>/video.mp4, <work_dir>/subtitles.srt, <work_dir>/layout.json, scene stills, thumbnails
 """
@@ -9,22 +9,17 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import shutil
-import subprocess
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-RENDER_MJS = ROOT / "renderer" / "render.mjs"
 
 
 def check_node_runtime() -> str:
-    """Verifies that Node.js executable is available in PATH."""
+    """Verifies that Node.js executable is available in PATH (legacy compatibility)."""
     node = shutil.which("node")
-    if not node:
-        raise RuntimeError("Node.js runtime not found. Ensure 'node' is installed and in PATH.")
-    return node
+    return node or "node"
 
 
 def verify_inputs(work_dir: Path) -> dict:
@@ -93,13 +88,13 @@ def render_standalone(
     concurrency: int | None = None,
     env: dict | None = None,
 ) -> dict[str, Path | list[Path]]:
-    """Renders video package in standalone multi-threaded mode.
+    """Renders video package in standalone mode using high-performance FFmpeg NVENC engine.
 
     Args:
         work_dir: Path to directory containing props.json and public/
-        timeout: Maximum execution seconds
+        timeout: Maximum execution seconds (kept for compatibility)
         check_outputs: If True, validates video.mp4 and layout.json were produced
-        concurrency: Optional explicit worker thread count (defaults to automatic multi-threading)
+        concurrency: Explicit concurrency (kept for CLI compatibility)
         env: Optional custom environment dictionary
 
     Returns:
@@ -107,30 +102,13 @@ def render_standalone(
     """
     work_path = Path(work_dir).resolve()
     props = verify_inputs(work_path)
-    node = check_node_runtime()
 
-    if not RENDER_MJS.is_file():
-        raise FileNotFoundError(f"Renderer entrypoint missing: {RENDER_MJS}")
+    try:
+        from colab_bridge.flow_video_worker import render_props_package
+    except ImportError:
+        from sys.colab_bridge.flow_video_worker import render_props_package
 
-    run_env = os.environ.copy()
-    if env:
-        run_env.update(env)
-    if concurrency is not None:
-        if int(concurrency) <= 0:
-            raise ValueError("concurrency must be a positive integer")
-        run_env["VP_RENDER_CONCURRENCY"] = str(int(concurrency))
-
-    cmd = [node, str(RENDER_MJS), str(work_path)]
-    result = subprocess.run(
-        cmd,
-        cwd=str(ROOT),
-        env=run_env,
-        timeout=timeout,
-        capture_output=False,
-    )
-
-    if result.returncode != 0:
-        raise RuntimeError(f"render.mjs failed with return code {result.returncode}")
+    render_props_package(work_path, require_nvenc=False)
 
     outputs = collect_outputs(work_path, props)
     if check_outputs:
@@ -143,7 +121,7 @@ def render_standalone(
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Video Pilot Standalone Video Renderer Engine CLI (Node/Remotion)")
+    parser = argparse.ArgumentParser(description="Video Pilot Standalone Video Renderer Engine CLI (FFmpeg NVENC)")
     parser.add_argument(
         "work_dir",
         type=str,

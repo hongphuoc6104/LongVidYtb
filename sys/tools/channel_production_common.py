@@ -8,7 +8,7 @@ SSOT shared production library supporting both short_9x16 and long_16x9:
 - Support for image reuse (reuse_from), variations (based_on), emphasis lettering,
   channel endcards, and focus-crop beats
 - Colab T4 OmniVoice TTS synthesis & PCM16 WAV assembly with trailing silence padding
-- Remote Colab Remotion rendering (h264_nvenc, 30 fps, external SRT for long)
+- Remote Colab Tesla T4 Native FFmpeg h264_nvenc rendering (30 fps, external SRT for long)
 - FFprobe validation & deliverable packaging
 """
 from __future__ import annotations
@@ -1831,7 +1831,7 @@ def stage_c_render(
     session_name: Optional[str] = None,
     inspect_dir: Optional[Path] = None,
 ) -> Tuple[Path, Optional[Client], Optional[str], Dict[str, Any]]:
-    """Execute Stage C: Remote Colab T4 Headless Remotion Render."""
+    """Execute Stage C: Remote Colab Tesla T4 Native FFmpeg h264_nvenc Render."""
     ch_raw = (
         brief.get("channel")
         or (brief.get("channel_profile", {}).get("id") if isinstance(brief.get("channel_profile"), dict) else brief.get("channel_profile"))
@@ -1848,7 +1848,7 @@ def stage_c_render(
     expected_width = 1920 if is_long else 1080
     expected_height = 1080 if is_long else 1920
 
-    logger.info(f"[*] GIAI ĐOẠN C: Render video Remotion từ xa trên Colab T4 cho {job_dir.name} ({format_profile})...")
+    logger.info(f"[*] GIAI ĐOẠN C: Render video Native FFmpeg h264_nvenc từ xa trên Colab T4 cho {job_dir.name} ({format_profile})...")
     render_dir = job_dir / "revisions/render/1"
     cache_dir = job_dir / "cache/colab-render"
     video_deliv_dir = root_dir / "video" / job_dir.name

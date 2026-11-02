@@ -335,4 +335,5 @@ def test_remote_source_manifest_contains_executable_camera_dependencies(tmp_path
                              'print(scene_camera_motions({"beats":[{"image_id":"I1","effect":"cut"}]}))',
                              str(tmp_path / 'source')], capture_output=True, text=True, check=True)
     assert result.stdout.strip() == "['pan_right']"
-    assert (tmp_path / 'source/renderer/camera.mjs').is_file()
+    assert (tmp_path / 'source/scripts/camera_motion.py').is_file()
+    assert (tmp_path / 'source/colab_bridge/flow_video_worker.py').is_file()

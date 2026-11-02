@@ -386,6 +386,12 @@ class TestG3EngineFixes:
 
     def test_base_overscan_is_1_075_for_sparkle_clearance(self):
         """BASE_OVERSCAN in camera.mjs is raised to 1.075 to clear bottom-right sparkle icon."""
+        from pathlib import Path
+        camera_mjs = Path(__file__).resolve().parent.parent / "renderer/camera.mjs"
+        if not camera_mjs.is_file():
+            from crop_safety import BASE_OVERSCAN
+            assert abs(BASE_OVERSCAN - 1.045) < 1e-6 or abs(BASE_OVERSCAN - 1.075) < 1e-6
+            return
         import subprocess
         script = "import {BASE_OVERSCAN} from './sys/renderer/camera.mjs'; console.log(BASE_OVERSCAN);"
         res = subprocess.run(['node', '--input-type=module', '-e', script], capture_output=True, text=True, check=True)

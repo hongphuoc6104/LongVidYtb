@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Video Pilot — Unified Flow Remotion E2E Runner (produce_unified_flow_remotion_e2e.py).
+"""Video Pilot — Unified Flow E2E Runner (produce_unified_flow_remotion_e2e.py).
 
 Combines:
 - Stage A: Flow CDP Full-Frame Images + Native Thumbnail (0-credit Nano Banana Pro / GEM_PIX_2)
@@ -8,8 +8,8 @@ Combines:
 - Authentic Start -> End 2-frame video synthesis (nprQif via DirectCDP / FlowVideoChainOrchestrator):
     * full_chain for Short 9x16: daisy chain across all non-endcard consecutive keyframes
     * hybrid for Long 16x9: hero clips for flow_motion beats (SC01 hook, midpoint, pre-outro)
-- Automatic Remotion beat metadata registration (trim_before, playback_rate clamped to [0.65, 1.45])
-- Stage C: Remote Colab Tesla T4 Headless Remotion NVENC render (1-word yellow/red captions on 9:16, BGM ducking, endcard watermark)
+- Automatic video beat metadata registration (trim_before, playback_rate clamped to [0.65, 1.45])
+- Stage C: Remote Colab Tesla T4 Native FFmpeg h264_nvenc render (1-word yellow/red captions on 9:16, BGM ducking, endcard watermark)
 - Review queue registration (sys/channels/video_review_queue.json with PENDING_REVIEW)
 - Publication kit generation
 """
@@ -578,7 +578,7 @@ def produce_unified_flow_remotion_e2e(
     dry_run: bool = False,
     credit_ledger: Optional[Any] = None,
 ) -> Dict[str, Any]:
-    """Execute Unified Flow + Remotion E2E production runner."""
+    """Execute Unified Flow + Native FFmpeg h264_nvenc E2E production runner."""
     channel_id, channel_slug = resolve_channel_ids(channel_arg)
     is_long = (format_profile == "long_16x9")
     aspect_ratio = "16:9" if is_long else "9:16"
@@ -649,7 +649,7 @@ def produce_unified_flow_remotion_e2e(
         visual_style_id = getattr(getattr(ch_profile, "visual", None), "profile_id", "handdrawn_2d_explainer")
 
         logger.info("=" * 76)
-        logger.info(f"  STARTING UNIFIED FLOW + REMOTION E2E PRODUCTION: {job_id}")
+        logger.info(f"  STARTING UNIFIED FLOW + COLAB NATIVE FFmpeg NVENC E2E PRODUCTION: {job_id}")
         logger.info(f"  Channel: {channel_id} ({ch_name})")
         logger.info(f"  Format: {format_profile} ({aspect_ratio})")
         logger.info(f"  Motion Mode: {resolved_motion_mode} | Video Model: {video_model}")
@@ -845,7 +845,7 @@ def produce_unified_flow_remotion_e2e(
             # -----------------------------------------------------------------
             clip_entries = orchestrator_report.get("clips") or orchestrator_report.get("tasks") or []
             if clip_entries and resolved_motion_mode != "images_only":
-                logger.info("[*] Bước D: Đăng ký video clips vào timeline Remotion (trim_before & playback_rate)...")
+                logger.info("[*] Bước D: Đăng ký video clips vào timeline (trim_before & playback_rate)...")
                 clips_generated_count = register_clips_to_timeline(
                     tasks=clip_entries,
                     images_payload=images_output,
@@ -856,7 +856,7 @@ def produce_unified_flow_remotion_e2e(
                     aspect_ratio=aspect_ratio,
                     audio_payload=audio_payload,
                 )
-                logger.info(f"  [✓] Đã đăng ký {clips_generated_count} video clip vào timeline Remotion.")
+                logger.info(f"  [✓] Đã đăng ký {clips_generated_count} video clip vào timeline.")
 
                 timeline_content_path = flow_video_dir / "timeline_content.json"
                 timeline_content_path.write_text(
@@ -873,9 +873,9 @@ def produce_unified_flow_remotion_e2e(
             logger.info("[*] Bước C/D: Chế độ images_only hoặc không đủ keyframes -> Giữ nguyên ảnh tĩnh Flow.")
 
         # ---------------------------------------------------------------------
-        # Step e: Stage C Remotion NVENC Render on Colab Tesla T4
+        # Step e: Stage C Native FFmpeg h264_nvenc Render on Colab Tesla T4
         # ---------------------------------------------------------------------
-        logger.info("[*] Bước E: Tiến hành Remotion Render trên Colab Tesla T4 NVENC...")
+        logger.info("[*] Bước E: Tiến hành Colab Tesla T4 Native FFmpeg h264_nvenc Render...")
         final_mp4, render_client, render_account, render_report = stage_c_render(
             sys_dir=active_sys_dir,
             job_dir=job_dir,
@@ -971,7 +971,7 @@ def produce_unified_flow_remotion_e2e(
         }
 
         print("\n" + "=" * 76)
-        print("  UNIFIED FLOW + REMOTION E2E COMPLETE:")
+        print("  UNIFIED FLOW + COLAB NATIVE FFmpeg NVENC E2E COMPLETE:")
         print(json.dumps(summary, indent=2, ensure_ascii=False))
         print("=" * 76 + "\n")
         return summary
@@ -988,7 +988,7 @@ def produce_unified_flow_remotion_e2e(
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Video Pilot — Unified Flow Remotion E2E Runner")
+    parser = argparse.ArgumentParser(description="Video Pilot — Unified Flow Native FFmpeg h264_nvenc E2E Runner")
     parser.add_argument("--channel", required=False, help="Channel identifier or slug (e.g. nao_luoi, tui_tien)")
     parser.add_argument("--job", "--job-id", dest="job", required=False, help="Job identifier (defaults to <channel_slug>-week1-<format>)")
     parser.add_argument("--format", default="short_9x16", choices=["short_9x16", "long_16x9"], help="Video format profile")

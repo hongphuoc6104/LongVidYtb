@@ -2,7 +2,7 @@
 """Adversarial Critique Scanner & HTML Report Generator (Station 1).
 
 Performs critical pre-flight checks:
-1. Colab GPU T4 Headless Safety Flags (prevents white tile drops & crashes).
+1. Colab Tesla T4 Native FFmpeg h264_nvenc Safety Check.
 2. Secret & Credential Leakage Scanner (ensures tokens/keys are not committed).
 3. Visual Cast & Script Invariants (stick-figure rules & vocabulary preservation).
 4. Root Directory Hygiene (verifies zero clutter in root).
@@ -44,42 +44,39 @@ def scan_critique(root_dir: Path) -> Tuple[bool, Dict[str, any]]:
         ),
     })
 
-    # Check 2: Headless Colab Safety Flags
-    wrapper_path = sys_dir / "colab_bridge/chrome-wrapper.sh"
-    renderer_path = sys_dir / "renderer/render.mjs"
-    mandatory_flags = [
-        "--no-sandbox",
-        "--disable-dev-shm-usage",
-        "--disable-gpu-rasterization",
-        "--run-all-compositor-stages-before-draw",
+    # Check 2: Colab Tesla T4 Native FFmpeg h264_nvenc Safety Check
+    flow_video_worker_path = sys_dir / "colab_bridge/flow_video_worker.py"
+    job_worker_path = sys_dir / "colab_bridge/job_worker.py"
+    nvenc_tokens = [
+        "h264_nvenc",
+        "-preset",
+        "p4",
+        "loudnorm=I=-11.0:TP=-1.0",
+        "T4",
     ]
-    colab_flag_missing = []
+    nvenc_missing = []
 
-    checked_files = [wrapper_path, renderer_path]
+    checked_files = [flow_video_worker_path, job_worker_path]
     combined_content = ""
     for cf in checked_files:
         if cf.is_file():
             combined_content += cf.read_text(encoding="utf-8", errors="ignore")
+        else:
+            nvenc_missing.append(f"Missing file: {cf.name}")
 
-    for pyf in (sys_dir / "colab_bridge").glob("*.py"):
-        combined_content += pyf.read_text(encoding="utf-8", errors="ignore")
+    for token in nvenc_tokens:
+        if token not in combined_content:
+            nvenc_missing.append(token)
 
-    for flag in mandatory_flags:
-        if flag not in combined_content:
-            colab_flag_missing.append(flag)
-
-    env_var_ok = "DISABLE_FROM_SURFACE" in combined_content
-
-    colab_ok = len(colab_flag_missing) == 0 and env_var_ok
+    nvenc_ok = len(nvenc_missing) == 0
     checks.append({
-        "name": "Headless Colab T4 Safety Flags",
-        "category": "Environment Risk",
-        "status": "PASS" if colab_ok else "WARN",
+        "name": "Colab Tesla T4 Native FFmpeg h264_nvenc Safety Check",
+        "category": "Render Engine Integrity",
+        "status": "PASS" if nvenc_ok else "FAIL",
         "detail": (
-            "Đã cấu hình đủ cờ an toàn Chromium chống rơi tile và tràn bộ nhớ /dev/shm."
-            if colab_ok
-            else f"Thiếu cờ an toàn hoặc biến môi trường: {', '.join(colab_flag_missing)}"
-            + (" (Thiếu DISABLE_FROM_SURFACE)" if not env_var_ok else "")
+            "Đã cấu hình đủ cờ tăng tốc phần cứng Native Tesla T4 FFmpeg h264_nvenc, preset p4 và chuẩn âm thanh loudnorm."
+            if nvenc_ok
+            else f"Thiếu cấu hình hoặc cờ an toàn NVENC: {', '.join(nvenc_missing)}"
         ),
     })
 

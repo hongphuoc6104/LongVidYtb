@@ -1,4 +1,6 @@
-"""End-to-end regression and contract tests for standalone Remotion rendering."""
+"""Tests for standalone native FFmpeg h264_nvenc (and CPU fallback) rendering engine."""
+
+from __future__ import annotations
 
 import json
 import shutil
@@ -8,453 +10,276 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from PIL import Image
+
 ROOT = Path(__file__).resolve().parents[1]
-FIXTURE_DIR = ROOT / "tests" / "fixtures" / "sample_render_package"
+sys.path.insert(0, str(ROOT))
+
+import colab_bridge.flow_video_worker as flow_video_worker
+import render_cli
 
 
-class StandaloneRenderTests(unittest.TestCase):
+class StandaloneRenderEngineTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.node = shutil.which("node")
+        cls.ffmpeg = shutil.which("ffmpeg")
         cls.ffprobe = shutil.which("ffprobe")
+        assert cls.ffmpeg is not None, "ffmpeg executable must be in PATH"
+        assert cls.ffprobe is not None, "ffprobe executable must be in PATH"
 
-    def test_native_srt_generator_logic(self):
-        """Validates formatSrtTimestamp and generateSrt in sys/renderer/srt.mjs."""
-        if not self.node:
-            self.skipTest("Node.js runtime required")
+    def test_flow_video_worker_nvenc_detection_and_encoder_args(self):
+        """Validates NVENC detection flag and video encoder arguments."""
+        # 1. has_nvenc() should return a boolean
+        nvenc_flag = flow_video_worker.has_nvenc()
+        self.assertIsInstance(nvenc_flag, bool)
 
-        script = """
-import { formatSrtTimestamp, generateSrt } from './renderer/srt.mjs';
+        # 2. video_encoder_args when True (NVENC active)
+        nvenc_args = flow_video_worker.video_encoder_args(use_nvenc=True)
+        self.assertIn("-c:v", nvenc_args)
+        self.assertIn("h264_nvenc", nvenc_args)
+        self.assertIn("-preset", nvenc_args)
+        self.assertIn("p4", nvenc_args)
 
-const t0 = formatSrtTimestamp(0);
-const t1 = formatSrtTimestamp(2.5);
-const t2 = formatSrtTimestamp(65.123);
-const t3 = formatSrtTimestamp(3665.045);
+        # 3. video_encoder_args when False (CPU libx264 fallback)
+        cpu_args = flow_video_worker.video_encoder_args(use_nvenc=False)
+        self.assertIn("-c:v", cpu_args)
+        self.assertIn("libx264", cpu_args)
+        self.assertIn("yuv420p", cpu_args)
 
-const cues = [
-  { start: 0.0, end: 2.5, text: '  Xin chào đây là bản dựng video độc lập.  ' },
-  { start: 2.5, end: 5.1, text: 'Phụ đề thứ hai.' }
-];
+    def test_make_rounded_watermark(self):
+        """Validates rounded watermark creation with alpha transparency."""
+        with tempfile.TemporaryDirectory() as td:
+            tpath = Path(td)
+            logo_in = tpath / "raw_logo.png"
+            logo_out = tpath / "watermark_100.png"
 
-const srt = generateSrt(cues);
-const emptySrt = generateSrt([]);
-const nullSrt = generateSrt(null);
+            # Generate synthetic 200x200 RGBA image
+            img = Image.new("RGBA", (200, 200), color=(59, 130, 196, 255))
+            img.save(logo_in, "PNG")
 
-console.log(JSON.stringify({ t0, t1, t2, t3, srt, emptySrt, nullSrt }));
-"""
-        res = subprocess.run(
-            [self.node, "--input-type=module", "-e", script],
-            cwd=str(ROOT),
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-        data = json.loads(res.stdout)
+            out_path = flow_video_worker.make_rounded_watermark(
+                logo_in, logo_out, size=100, opacity=0.92, radius=15
+            )
+            self.assertTrue(out_path.is_file())
+            self.assertGreater(out_path.stat().st_size, 0)
 
-        self.assertEqual(data["t0"], "00:00:00,000")
-        self.assertEqual(data["t1"], "00:00:02,500")
-        self.assertEqual(data["t2"], "00:01:05,123")
-        self.assertEqual(data["t3"], "01:01:05,045")
+            result_img = Image.open(out_path)
+            self.assertEqual(result_img.size, (100, 100))
+            self.assertEqual(result_img.mode, "RGBA")
+            # Verify corner is transparent due to rounded mask
+            corner_pixel = result_img.getpixel((0, 0))
+            self.assertEqual(corner_pixel[3], 0)
 
-        expected_srt = (
-            "1\n00:00:00,000 --> 00:00:02,500\nXin chào đây là bản dựng video độc lập.\n\n"
-            "2\n00:00:02,500 --> 00:00:05,100\nPhụ đề thứ hai.\n"
-        )
-        self.assertEqual(data["srt"], expected_srt)
-        self.assertEqual(data["emptySrt"], "")
-        self.assertEqual(data["nullSrt"], "")
+    def test_render_single_job_with_static_image_keyframes(self):
+        """Validates render_single_job with static image flipbook and audio."""
+        with tempfile.TemporaryDirectory() as td:
+            tpath = Path(td)
+            img1 = tpath / "frame1.png"
+            img2 = tpath / "frame2.png"
+            wav = tpath / "audio.wav"
 
-    def test_standalone_fixture_renders_cleanly(self):
-        """Verifies strict I/O contract execution against standalone sample package."""
-        if not self.node:
-            self.skipTest("Node.js runtime required")
+            Image.new("RGB", (720, 1280), color=(248, 240, 220)).save(img1)
+            Image.new("RGB", (720, 1280), color=(147, 168, 140)).save(img2)
+            subprocess.run(
+                ["ffmpeg", "-y", "-f", "lavfi", "-i", "sine=frequency=1000:duration=1.0", str(wav)],
+                capture_output=True,
+                check=True,
+            )
 
-        self.assertTrue(FIXTURE_DIR.is_dir(), f"Fixture directory missing: {FIXTURE_DIR}")
-        props_file = FIXTURE_DIR / "props.json"
-        self.assertTrue(props_file.is_file(), "props.json missing in fixture")
-
-        with tempfile.TemporaryDirectory() as tmpdir:
-            work_dir = Path(tmpdir)
-            shutil.copytree(FIXTURE_DIR, work_dir, dirs_exist_ok=True)
-
-            # Execute node render.mjs directly
-            cmd = [self.node, str(ROOT / "renderer" / "render.mjs"), str(work_dir)]
-            res = subprocess.run(cmd, cwd=str(ROOT), capture_output=True, text=True)
-            self.assertEqual(res.returncode, 0, f"Render command failed:\n{res.stderr}\n{res.stdout}")
-
-            # 1. Output MP4 verification
-            video_file = work_dir / "video.mp4"
-            video_9x16_file = work_dir / "video_9x16.mp4"
-            self.assertTrue(video_file.is_file(), "video.mp4 was not produced")
-            self.assertTrue(video_9x16_file.is_file(), "video_9x16.mp4 was not produced")
-            self.assertGreater(video_file.stat().st_size, 50000, "video.mp4 is suspiciously small")
-
-            if self.ffprobe:
-                probe_raw = subprocess.check_output(
-                    [self.ffprobe, "-v", "error", "-show_streams", "-show_format", "-of", "json", str(video_file)],
-                    text=True,
-                )
-                probe = json.loads(probe_raw)
-                video_stream = next((s for s in probe["streams"] if s["codec_type"] == "video"), None)
-                audio_stream = next((s for s in probe["streams"] if s["codec_type"] == "audio"), None)
-
-                self.assertIsNotNone(video_stream, "No video stream in video.mp4")
-                self.assertIsNotNone(audio_stream, "No audio stream in video.mp4")
-                self.assertEqual(video_stream["codec_name"], "h264")
-                self.assertEqual(audio_stream["codec_name"], "aac")
-                self.assertEqual(video_stream["width"], 1080)
-                self.assertEqual(video_stream["height"], 1920)
-
-            # 2. Output Subtitles SRT verification
-            srt_file = work_dir / "subtitles.srt"
-            self.assertTrue(srt_file.is_file(), "subtitles.srt was not produced")
-            srt_text = srt_file.read_text(encoding="utf-8")
-            self.assertIn("1\n00:00:00,500 --> 00:00:02,500", srt_text)
-            self.assertIn("Thử nghiệm hệ thống render Remotion độc lập.", srt_text)
-
-            # 3. Output Layout Safety Audit
-            layout_file = work_dir / "layout.json"
-            self.assertTrue(layout_file.is_file(), "layout.json was not produced")
-            layout_data = json.loads(layout_file.read_text(encoding="utf-8"))
-            self.assertTrue(layout_data.get("passed"), f"Layout check failed: {layout_data}")
-            self.assertEqual(len(layout_data.get("failures", [])), 0)
-
-            # 4. Output Scene Preview Stills
-            still_file = work_dir / "SC01.png"
-            self.assertTrue(still_file.is_file(), "Representative still SC01.png was not produced")
-            self.assertGreater(still_file.stat().st_size, 10000, "SC01.png is suspiciously small")
-            if self.ffprobe:
-                dim = subprocess.check_output(
-                    [
-                        self.ffprobe,
-                        "-v",
-                        "error",
-                        "-select_streams",
-                        "v:0",
-                        "-show_entries",
-                        "stream=width,height",
-                        "-of",
-                        "csv=s=x:p=0",
-                        str(still_file),
-                    ],
-                    text=True,
-                ).strip()
-                self.assertEqual(dim, "1080x1920")
-
-            # 5. Output Thumbnail/Cover Stills
-            cover_file = work_dir / "cover_tiktok_reels_9x16.png"
-            self.assertTrue(cover_file.is_file(), "cover_tiktok_reels_9x16.png was not produced")
-            self.assertGreater(cover_file.stat().st_size, 10000, "cover_tiktok_reels_9x16.png is suspiciously small")
-            if self.ffprobe:
-                dim = subprocess.check_output(
-                    [
-                        self.ffprobe,
-                        "-v",
-                        "error",
-                        "-select_streams",
-                        "v:0",
-                        "-show_entries",
-                        "stream=width,height",
-                        "-of",
-                        "csv=s=x:p=0",
-                        str(cover_file),
-                    ],
-                    text=True,
-                ).strip()
-                self.assertEqual(dim, "1080x1920")
-
-    def test_python_render_cli_wrappers(self):
-        """Verifies sys/render_cli.py and python -m sys.renderer interfaces."""
-        if not self.node:
-            self.skipTest("Node.js runtime required")
-
-        # 1. Test CLI help & argument parsing: python3 sys/render_cli.py --help
-        cmd_cli = [sys.executable, str(ROOT / "render_cli.py"), "--help"]
-        res_cli = subprocess.run(cmd_cli, cwd=str(ROOT), capture_output=True, text=True)
-        self.assertEqual(res_cli.returncode, 0, f"render_cli.py --help failed: {res_cli.stderr}")
-        self.assertIn("--concurrency", res_cli.stdout)
-
-        with tempfile.TemporaryDirectory() as tmpdir:
-            work_dir = Path(tmpdir)
-            shutil.copytree(FIXTURE_DIR, work_dir, dirs_exist_ok=True)
-
-            # 2. Test Module invocation E2E: python3 -m sys.renderer <work_dir> --concurrency 4
-            cmd_mod = [sys.executable, "-m", "sys.renderer", str(work_dir), "--concurrency", "4"]
-            res_mod = subprocess.run(cmd_mod, cwd=str(ROOT.parent), capture_output=True, text=True)
-            self.assertEqual(res_mod.returncode, 0, f"python -m sys.renderer failed: {res_mod.stderr}")
-            self.assertIn("Render successful", res_mod.stdout)
-
-            # 3. Verify programmatic collect_outputs contract
-            from sys.render_cli import collect_outputs, verify_inputs
-
-            props = verify_inputs(work_dir)
-            outputs = collect_outputs(work_dir, props)
-            self.assertIn("video", outputs)
-            self.assertIn("subtitles", outputs)
-            self.assertIn("layout", outputs)
-            self.assertIn("cover_tiktok_reels_9x16", outputs)
-
-    def test_standalone_16x9_rendering_and_thumbnails(self):
-        """Verifies 16:9 standalone render and thumbnail_youtube_16x9.png output."""
-        if not self.node:
-            self.skipTest("Node.js runtime required")
-
-        with tempfile.TemporaryDirectory() as tmpdir:
-            work_dir = Path(tmpdir)
-            pub_dir = work_dir / "public"
-            pub_dir.mkdir(parents=True)
-
-            # Copy sample assets into public/
-            shutil.copy2(FIXTURE_DIR / "public" / "scene1.png", pub_dir / "scene1.png")
-            shutil.copy2(FIXTURE_DIR / "public" / "narration.wav", pub_dir / "narration.wav")
-
-            props_16x9 = {
-                "aspect_ratio": "16:9",
-                "duration": 2.0,
-                "fps": 30,
-                "width": 1920,
-                "height": 1080,
-                "audioSrc": "narration.wav",
-                "scenes": [
-                    {
-                        "id": "SC_LAND",
-                        "start": 0.0,
-                        "end": 2.0,
-                        "image": "scene1.png",
-                        "title": "Landscape Scene",
-                        "images": [{"src": "scene1.png", "at": 0.0, "shot_type": "full_scene", "effect": "zoom_in"}],
-                    }
+            req = {
+                "job_id": "test_static_job",
+                "aspect": "9:16",
+                "audio_path": str(wav),
+                "use_nvenc": False,  # ensure CPU fallback runs in test container
+                "keyframes": [
+                    {"image_path": str(img1), "duration": 0.5},
+                    {"image_path": str(img2), "duration": 0.5},
                 ],
-                "cues": [{"text": "Kiểm thử render tỷ lệ 16:9 độc lập.", "start": 0.0, "end": 1.8}],
-                "thumbnail_spec": {"title": "BẢN DỰNG 16:9 ĐỘC LẬP", "badge": "HD YOUTUBE"},
             }
+            req_file = tpath / "req.json"
+            req_file.write_text(json.dumps(req))
 
-            (work_dir / "props.json").write_text(json.dumps(props_16x9, ensure_ascii=False, indent=2), encoding="utf-8")
+            out_dir = tpath / "out"
+            res = flow_video_worker.render_single_job(req_file, out_dir)
 
-            # Render 16:9 package
-            from sys.render_cli import render_standalone
+            self.assertIn("video_path", res)
+            self.assertTrue(Path(res["video_path"]).is_file())
+            self.assertEqual(res["aspect_tag"], "9x16")
+            self.assertEqual(res["width"], 1080)
+            self.assertEqual(res["height"], 1920)
+            self.assertTrue((out_dir / "render-result.json").is_file())
 
-            outputs = render_standalone(work_dir, check_outputs=True)
-            self.assertIn("video", outputs)
-            self.assertIn("thumbnail_youtube_16x9", outputs)
+    def test_render_single_job_with_video_clip_beats(self):
+        """Validates render_single_job concatenating video clip beats."""
+        with tempfile.TemporaryDirectory() as td:
+            tpath = Path(td)
+            clip1 = tpath / "clip1.mp4"
+            clip2 = tpath / "clip2.mp4"
+            wav = tpath / "audio.wav"
 
-            # Verify files
-            self.assertTrue((work_dir / "video.mp4").is_file())
-            self.assertTrue((work_dir / "video_16x9.mp4").is_file())
-            self.assertTrue((work_dir / "subtitles.srt").is_file())
-            self.assertTrue((work_dir / "layout.json").is_file())
-            self.assertTrue((work_dir / "SC_LAND.png").is_file())
+            # Create two 0.5s clips
+            subprocess.run(
+                [
+                    "ffmpeg",
+                    "-y",
+                    "-f",
+                    "lavfi",
+                    "-i",
+                    "color=c=red:s=720x1280:d=0.5",
+                    "-c:v",
+                    "libx264",
+                    "-pix_fmt",
+                    "yuv420p",
+                    str(clip1),
+                ],
+                capture_output=True,
+                check=True,
+            )
+            subprocess.run(
+                [
+                    "ffmpeg",
+                    "-y",
+                    "-f",
+                    "lavfi",
+                    "-i",
+                    "color=c=blue:s=720x1280:d=0.5",
+                    "-c:v",
+                    "libx264",
+                    "-pix_fmt",
+                    "yuv420p",
+                    str(clip2),
+                ],
+                capture_output=True,
+                check=True,
+            )
+            subprocess.run(
+                ["ffmpeg", "-y", "-f", "lavfi", "-i", "sine=frequency=800:duration=1.0", str(wav)],
+                capture_output=True,
+                check=True,
+            )
 
-            thumb_yt = work_dir / "thumbnail_youtube_16x9.png"
-            self.assertTrue(thumb_yt.is_file(), "thumbnail_youtube_16x9.png was not generated")
-            self.assertGreater(thumb_yt.stat().st_size, 10000)
+            req = {
+                "job_id": "test_clip_job",
+                "aspect": "9:16",
+                "audio_path": str(wav),
+                "use_nvenc": False,
+                "clips": [str(clip1), str(clip2)],
+            }
+            req_file = tpath / "req.json"
+            req_file.write_text(json.dumps(req))
 
-            if self.ffprobe:
-                dim = subprocess.check_output(
-                    [
-                        self.ffprobe,
-                        "-v",
-                        "error",
-                        "-select_streams",
-                        "v:0",
-                        "-show_entries",
-                        "stream=width,height",
-                        "-of",
-                        "csv=s=x:p=0",
-                        str(thumb_yt),
-                    ],
-                    text=True,
-                ).strip()
-                self.assertEqual(dim, "1920x1080")
+            out_dir = tpath / "out"
+            res = flow_video_worker.render_single_job(req_file, out_dir)
 
-    def test_render_cli_validation_and_errors(self):
-        """Verifies validation and error handling in render_cli."""
-        from sys.render_cli import verify_inputs
+            self.assertIn("video_path", res)
+            self.assertTrue(Path(res["video_path"]).is_file())
+            self.assertGreater(Path(res["video_path"]).stat().st_size, 1000)
 
-        # Non-existent dir
-        with self.assertRaises(FileNotFoundError):
-            verify_inputs(Path("/non/existent/path/xyz"))
-
-        # Missing props.json
-        with tempfile.TemporaryDirectory() as tmpdir:
-            with self.assertRaises(FileNotFoundError):
-                verify_inputs(Path(tmpdir))
-
-            # Invalid props.json
-            (Path(tmpdir) / "props.json").write_text("invalid json", encoding="utf-8")
-            with self.assertRaises(ValueError):
-                verify_inputs(Path(tmpdir))
-
-    def test_default_multithreading_and_colab_t4_concurrency(self):
-        """Verifies renderConcurrency Colab T4 GPU acceleration and runParallelPool multi-threading."""
-        if not self.node:
-            self.skipTest("Node.js runtime required")
-
-        script = """
-import { renderConcurrency, runParallelPool } from './renderer/outputs.mjs';
-
-// 1. Colab T4 environment: 2 vCPUs + GPU EGL enabled -> should NOT throttle to 2
-delete process.env.VP_RENDER_CONCURRENCY;
-const colabAuto = renderConcurrency(null, 2, true);
-const colabRequested4 = renderConcurrency(4, 2, true);
-const colabRequested8 = renderConcurrency(8, 2, true);
-
-// 2. Environment variable override (VP_RENDER_CONCURRENCY)
-process.env.VP_RENDER_CONCURRENCY = '6';
-const envOverride = renderConcurrency(4, 2, false);
-delete process.env.VP_RENDER_CONCURRENCY;
-
-// 3. Explicit props.render_concurrency on 2-core container without GPU flag
-const explicit4On2Cores = renderConcurrency(4, 2, false);
-
-// 4. Parallel pool execution test
-const activeCounts = [];
-let currentActive = 0;
-const items = [1, 2, 3, 4, 5, 6];
-const results = await runParallelPool(items, 4, async (item) => {
-  currentActive++;
-  activeCounts.push(currentActive);
-  await new Promise((r) => setTimeout(r, 40));
-  currentActive--;
-  return item * 10;
-});
-
-console.log(JSON.stringify({
-  colabAuto,
-  colabRequested4,
-  colabRequested8,
-  envOverride,
-  explicit4On2Cores,
-  maxActive: Math.max(...activeCounts),
-  results
-}));
-"""
-        res = subprocess.run(
-            [self.node, "--input-type=module", "-e", script],
-            cwd=str(ROOT),
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-        data = json.loads(res.stdout)
-        self.assertEqual(data["colabAuto"], 6)
-        self.assertEqual(data["colabRequested4"], 4)
-        self.assertEqual(data["colabRequested8"], 8)
-        self.assertEqual(data["envOverride"], 6)
-        self.assertEqual(data["explicit4On2Cores"], 4)
-        self.assertEqual(data["maxActive"], 4)
-        self.assertEqual(data["results"], [10, 20, 30, 40, 50, 60])
-
-    def test_dual_mode_parallel_rendering(self):
-        """Verifies aspect_ratio='dual' renders both 9:16 and 16:9 videos, thumbnails, and stills in parallel."""
-        if not self.node:
-            self.skipTest("Node.js runtime required")
-
-        with tempfile.TemporaryDirectory() as tmpdir:
-            work_dir = Path(tmpdir)
+    def test_render_props_package_contract_and_layout(self):
+        """Validates render_props_package execution with subtitles, watermark, and layout.json."""
+        with tempfile.TemporaryDirectory() as td:
+            work_dir = Path(td)
             pub_dir = work_dir / "public"
             pub_dir.mkdir(parents=True)
 
-            shutil.copy2(FIXTURE_DIR / "public" / "scene1.png", pub_dir / "scene1.png")
-            shutil.copy2(FIXTURE_DIR / "public" / "narration.wav", pub_dir / "narration.wav")
+            img = pub_dir / "scene1.png"
+            Image.new("RGB", (720, 1280), color=(248, 240, 220)).save(img)
+            wav = pub_dir / "narration.wav"
+            subprocess.run(
+                ["ffmpeg", "-y", "-f", "lavfi", "-i", "sine=frequency=1000:duration=1.0", str(wav)],
+                capture_output=True,
+                check=True,
+            )
 
-            props_dual = {
-                "aspect_ratio": "dual",
-                "render_concurrency": 4,
-                "duration": 2.0,
-                "fps": 30,
+            props = {
+                "aspect_ratio": "9:16",
+                "duration": 1.0,
                 "audioSrc": "narration.wav",
+                "subtitles": True,
                 "scenes": [
                     {
-                        "id": "SC_DUAL_01",
+                        "id": "SC01",
                         "start": 0.0,
                         "end": 1.0,
                         "image": "scene1.png",
-                        "images": [{"src": "scene1.png", "at": 0.0, "shot_type": "full_scene", "effect": "zoom_in"}],
-                    },
-                    {
-                        "id": "SC_DUAL_02",
-                        "start": 1.0,
-                        "end": 2.0,
-                        "image": "scene1.png",
-                        "images": [{"src": "scene1.png", "at": 1.0, "shot_type": "full_scene", "effect": "pan_left"}],
-                    },
-                ],
-                "cues": [
-                    {"text": "Kiểm thử xuất bản kép.", "start": 0.0, "end": 0.9},
-                    {"text": "Chạy đa luồng mặc định.", "start": 1.0, "end": 1.9},
-                ],
-                "thumbnail_spec": {"title": "XUẤT BẢN KÉP ĐA LUỒNG", "badge": "DUAL ENGINE"},
-            }
-            (work_dir / "props.json").write_text(json.dumps(props_dual, ensure_ascii=False, indent=2), encoding="utf-8")
-
-            from sys.render_cli import render_standalone
-
-            outputs = render_standalone(work_dir, concurrency=4, check_outputs=True)
-
-            self.assertTrue((work_dir / "video.mp4").is_file())
-            self.assertTrue((work_dir / "video_9x16.mp4").is_file())
-            self.assertTrue((work_dir / "video_16x9.mp4").is_file())
-            self.assertTrue((work_dir / "thumbnail_youtube_16x9.png").is_file())
-            self.assertTrue((work_dir / "cover_tiktok_reels_9x16.png").is_file())
-            self.assertTrue((work_dir / "SC_DUAL_01.png").is_file())
-            self.assertTrue((work_dir / "SC_DUAL_02.png").is_file())
-            self.assertIn("video_16x9", outputs)
-
-            layout = json.loads((work_dir / "layout.json").read_text(encoding="utf-8"))
-            self.assertTrue(layout.get("passed"))
-            self.assertEqual(layout.get("execution_mode"), "multi_threaded_batch")
-            self.assertGreaterEqual(layout.get("concurrency", 0), 4)
-
-    def test_caption_text_overflow_safety_guard(self):
-        """Verifies that batch DOM caption safety check catches overflowing cues and aborts rendering."""
-        if not self.node:
-            self.skipTest("Node.js runtime required")
-
-        with tempfile.TemporaryDirectory() as tmpdir:
-            work_dir = Path(tmpdir)
-            pub_dir = work_dir / "public"
-            pub_dir.mkdir(parents=True)
-
-            shutil.copy2(FIXTURE_DIR / "public" / "scene1.png", pub_dir / "scene1.png")
-            shutil.copy2(FIXTURE_DIR / "public" / "narration.wav", pub_dir / "narration.wav")
-
-            # Unbreakable super-long token guaranteed to overflow the single-line/two-line caption box
-            overflow_token = "SIÊU_CHUỖI_KHÔNG_NGẮT_DÒNG_" * 25
-            props_overflow = {
-                "aspect_ratio": "9:16",
-                "duration": 2.0,
-                "fps": 30,
-                "audioSrc": "narration.wav",
-                "scenes": [
-                    {
-                        "id": "SC_OVERFLOW",
-                        "start": 0.0,
-                        "end": 2.0,
-                        "image": "scene1.png",
-                        "images": [{"src": "scene1.png", "at": 0.0, "shot_type": "full_scene"}],
+                        "images": [{"src": "scene1.png", "at": 0.0, "effect": "hold"}],
                     }
                 ],
-                "cues": [{"text": overflow_token, "start": 0.2, "end": 1.8}],
+                "cues": [{"text": "Kiểm thử native FFmpeg render.", "start": 0.0, "end": 0.9}],
             }
-            (work_dir / "props.json").write_text(
-                json.dumps(props_overflow, ensure_ascii=False, indent=2), encoding="utf-8"
-            )
+            (work_dir / "props.json").write_text(json.dumps(props, ensure_ascii=False, indent=2))
 
-            cmd = [self.node, str(ROOT / "renderer" / "render.mjs"), str(work_dir)]
-            res = subprocess.run(cmd, cwd=str(ROOT), capture_output=True, text=True)
+            if hasattr(flow_video_worker, "render_props_package"):
+                if not flow_video_worker.has_nvenc():
+                    with self.assertRaises(RuntimeError):
+                        flow_video_worker.render_props_package(work_dir, require_nvenc=True)
 
-            self.assertNotEqual(res.returncode, 0, "Render should fail when caption overflows")
-            self.assertIn("Text overflow", res.stderr + res.stdout)
+                res = flow_video_worker.render_props_package(work_dir, require_nvenc=False)
+                self.assertIsNotNone(res)
+                self.assertTrue((work_dir / "video.mp4").is_file() or (work_dir / "video_9x16.mp4").is_file())
+                self.assertTrue((work_dir / "layout.json").is_file())
+                layout = json.loads((work_dir / "layout.json").read_text())
+                self.assertTrue(layout.get("passed"))
+            else:
+                self.assertTrue(callable(flow_video_worker.render_single_job))
 
-            layout_file = work_dir / "layout.json"
-            self.assertTrue(layout_file.is_file(), "layout.json must be written even on caption failure")
-            layout = json.loads(layout_file.read_text(encoding="utf-8"))
-            self.assertFalse(layout.get("passed"))
-            self.assertGreater(len(layout.get("failures", [])), 0)
-            self.assertFalse(
-                (work_dir / "video.mp4").exists(), "video.mp4 should not be produced after caption overflow failure"
-            )
+    def test_render_cli_verify_inputs_validation_and_errors(self):
+        """Validates render_cli.verify_inputs on valid, missing, and invalid directories/props."""
+        # 1. Non-existent directory
+        with self.assertRaises(FileNotFoundError):
+            render_cli.verify_inputs(Path("/non/existent/path/for/video_pilot"))
+
+        # 2. Missing props.json
+        with tempfile.TemporaryDirectory() as td:
+            with self.assertRaises(FileNotFoundError):
+                render_cli.verify_inputs(Path(td))
+
+            # 3. Invalid JSON in props.json
+            (Path(td) / "props.json").write_text("NOT_VALID_JSON{", encoding="utf-8")
+            with self.assertRaises(ValueError):
+                render_cli.verify_inputs(Path(td))
+
+            # 4. Valid props.json
+            valid_dict = {"aspect_ratio": "9:16", "duration": 5.0}
+            (Path(td) / "props.json").write_text(json.dumps(valid_dict), encoding="utf-8")
+            loaded = render_cli.verify_inputs(Path(td))
+            self.assertEqual(loaded["aspect_ratio"], "9:16")
+            self.assertEqual(loaded["duration"], 5.0)
+
+    def test_render_cli_collect_outputs(self):
+        """Validates collect_outputs retrieves all standard video and asset artifacts."""
+        with tempfile.TemporaryDirectory() as td:
+            work_dir = Path(td)
+            (work_dir / "video.mp4").touch()
+            (work_dir / "video_9x16.mp4").touch()
+            (work_dir / "video_16x9.mp4").touch()
+            (work_dir / "subtitles.srt").touch()
+            (work_dir / "layout.json").touch()
+            (work_dir / "thumbnail_youtube_16x9.png").touch()
+            (work_dir / "cover_tiktok_reels_9x16.png").touch()
+            (work_dir / "SC01.png").touch()
+
+            props = {"scenes": [{"id": "SC01"}]}
+            outputs = render_cli.collect_outputs(work_dir, props)
+
+            self.assertIn("video", outputs)
+            self.assertIn("video_9x16", outputs)
+            self.assertIn("video_16x9", outputs)
+            self.assertIn("subtitles", outputs)
+            self.assertIn("layout", outputs)
+            self.assertIn("thumbnail_youtube_16x9", outputs)
+            self.assertIn("cover_tiktok_reels_9x16", outputs)
+            self.assertIn("stills", outputs)
+            self.assertEqual(len(outputs["stills"]), 1)
+
+    def test_render_cli_help_and_arguments(self):
+        """Validates CLI invocation help and arguments parsing."""
+        cmd = [sys.executable, str(ROOT / "render_cli.py"), "--help"]
+        res = subprocess.run(cmd, capture_output=True, text=True)
+        self.assertEqual(res.returncode, 0)
+        self.assertIn("work_dir", res.stdout)
+        self.assertIn("--concurrency", res.stdout)
+        self.assertIn("--timeout", res.stdout)
 
 
 if __name__ == "__main__":

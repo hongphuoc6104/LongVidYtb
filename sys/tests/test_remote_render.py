@@ -117,11 +117,11 @@ class RenderTests(unittest.TestCase):
             manifest = json.loads(z.read("request.json"))
             self.assertTrue(all("local_path" not in x for x in manifest["files"]))
             self.assertEqual(manifest["brief"]["outputs"][0]["speed"], 1.0)
-            self.assertIn("source/renderer/outputs.mjs", z.namelist())
-            self.assertIn("source/renderer/srt.mjs", z.namelist())
-            self.assertEqual(z.read("source/renderer/captions.mjs"), (ROOT / "renderer/captions.mjs").read_bytes())
-            self.assertEqual(z.read("source/renderer/srt.mjs"), (ROOT / "renderer/srt.mjs").read_bytes())
-            self.assertEqual(z.read("source/renderer/index.tsx"), (ROOT / "renderer/index.tsx").read_bytes())
+            self.assertIn("source/colab_bridge/flow_video_worker.py", z.namelist())
+            self.assertEqual(
+                z.read("source/colab_bridge/flow_video_worker.py"),
+                (ROOT / "colab_bridge/flow_video_worker.py").read_bytes(),
+            )
         (self.root / "image.png").write_bytes(b"changed")
         with self.assertRaisesRegex(ValueError, "changed"):
             bundle(self.req, self.root / "changed.zip")
@@ -314,21 +314,29 @@ class WorkerRoutingTests(unittest.TestCase):
             req = build_render_request(ROOT, brief, content, images, audio, lambda x: folder / x)
             target = folder / "input.zip"
             bundle(req, target)
-            chrome = folder / "chrome"
-            chrome.touch()
-            actions = []
+            import importlib.util
 
-            def remote_run(argv, **kwargs):
-                actions.append(argv)
-                if argv[0] == "node":
-                    out = Path(argv[-1])
-                    (out / "video.mp4").write_bytes(b"\0\0\0\x18ftypisom" + b"fixture")
-                    write(out / "layout.json", {"passed": True})
-                    (out / "SC01.png").write_bytes(b"stillfixture")
+            def mock_render(out_path, require_nvenc=True):
+                out = Path(out_path)
+                (out / "video.mp4").write_bytes(b"\0\0\0\x18ftypisom" + b"fixture")
+                write(out / "layout.json", {"passed": True})
+                (out / "SC01.png").write_bytes(b"stillfixture")
+
+            orig_module_from_spec = importlib.util.module_from_spec
+
+            def fake_module_from_spec(spec):
+                mod = orig_module_from_spec(spec)
+                if spec.name == "vp_flow_video_worker":
+                    orig_loader_exec = spec.loader.exec_module
+
+                    def patched_exec(m):
+                        orig_loader_exec(m)
+                        m.render_props_package = mock_render
+
+                    spec.loader.exec_module = patched_exec
+                return mod
 
             def probe(argv, **kwargs):
-                if argv[0] == "node":
-                    return str(chrome) + "\n"
                 if argv[0] == "nvidia-smi":
                     return "fixture Tesla T4\n"
                 return json.dumps(
@@ -342,7 +350,7 @@ class WorkerRoutingTests(unittest.TestCase):
                 )
 
             with (
-                patch("colab_bridge.job_worker.subprocess.run", side_effect=remote_run),
+                patch("importlib.util.module_from_spec", side_effect=fake_module_from_spec),
                 patch("colab_bridge.job_worker.subprocess.check_output", side_effect=probe),
             ):
                 report = run(target, folder / "output", req["request_id"], req["worker_sha256"])

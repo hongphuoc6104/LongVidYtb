@@ -12,7 +12,7 @@ Read [AGENTS.md](AGENTS.md), identify the task and authority, then select the ro
 | Author or repair full-frame visual beats, continuity & camera motion (`full_frame_v1`) | [Full-frame quality guide](.agents/skills/vp-full-frame-quality/SKILL.md) | vp-full-frame-quality |
 | Package shared-image YouTube, Facebook & standalone Reels/TikTok deliverables | [Omni-platform guide](.agents/skills/vp-omni-platform/SKILL.md) | vp-omni-platform |
 | Automated image generation via Flow CDP | [Flow CDP Guide](.agents/skills/vp-flow-cdp/SKILL.md) | vp-flow-cdp |
-| Remote Colab T4 TTS synthesis & headless Remotion render | [Colab Bridge Guide](.agents/skills/vp-colab-bridge/SKILL.md) | vp-colab-bridge |
+| Remote Colab T4 TTS synthesis & native FFmpeg h264_nvenc render | [Colab Bridge Guide](.agents/skills/vp-colab-bridge/SKILL.md) | vp-colab-bridge |
 | Troubleshooting technical issues & proven remedies | [Troubleshooting handbook](.agents/skills/vp-troubleshooting/SKILL.md) | vp-troubleshooting |
 | Analyze a reference channel and derive an original production playbook | [Reference-video analysis](.agents/skills/vp-channel-patterns/SKILL.md) | vp-channel-patterns |
 | Upgrade the system | [Implementation progress (archived)](sys/docs/archive/normalization-progress.md) | vp-development |

@@ -211,7 +211,10 @@ def test_images_profile_exact_match_and_1_7_0_character_contract(tmp_path):
     assert captured['profile_id'] == 'profile-01'
 
 
-def test_video_worker_records_granular_stage_timings_and_remotion_concurrency(tmp_path):
+def test_video_worker_records_granular_stage_timings_and_nvenc_engine(tmp_path):
+    import importlib.util
+    from pathlib import Path
+
     import test_remote_render as render_fixtures
     from colab_bridge.job_protocol import build_render_request, bundle
     from colab_bridge.job_worker import run
@@ -267,39 +270,44 @@ def test_video_worker_records_granular_stage_timings_and_remotion_concurrency(tm
     req = build_render_request(render_fixtures.ROOT, brief, content, images, audio, lambda x: folder / x)
     target = folder / 'input.zip'
     bundle(req, target)
-    chrome = folder / 'chrome'
-    chrome.touch()
 
-    def remote_run(argv, **kwargs):
-        if argv[0] == 'node':
-            out = folder / 'output'
-            (out / 'video.mp4').write_bytes(b'\0\0\0\x18ftypisom' + b'fixture')
-            write(out / 'layout.json', {
-                'passed': True,
-                'concurrency': 6,
-                'remotion_concurrency': 2,
-                'host_cpus': 2,
-                'timings': {
-                    'bundle_seconds': 1.2,
-                    'layout_seconds': 0.5,
-                    'stills_seconds': 0.8,
-                    'render_media_seconds': 10.4,
-                },
-            })
-            (out / 'SC01.png').write_bytes(b'stillfixture')
+    def mock_render(out_path, require_nvenc=True):
+        out = Path(out_path)
+        (out / 'video.mp4').write_bytes(b'\0\0\0\x18ftypisom' + b'fixture')
+        render_fixtures.write(out / 'layout.json', {
+            'passed': True,
+            'renderer': 'ffmpeg_h264_nvenc',
+            'timings': {
+                'bundle_seconds': 1.2,
+                'render_seconds': 10.4,
+            },
+        })
+        (out / 'SC01.png').write_bytes(b'stillfixture')
+
+    orig_module_from_spec = importlib.util.module_from_spec
+
+    def fake_module_from_spec(spec):
+        mod = orig_module_from_spec(spec)
+        if spec.name == 'vp_flow_video_worker':
+            orig_loader_exec = spec.loader.exec_module
+
+            def patched_exec(m):
+                orig_loader_exec(m)
+                m.render_props_package = mock_render
+
+            spec.loader.exec_module = patched_exec
+        return mod
 
     def probe(argv, **kwargs):
-        if argv[0] == 'node':
-            return str(chrome) + '\n'
         if argv[0] == 'nvidia-smi':
             return 'fixture Tesla T4\n'
         return '{"format": {"duration": "5.0"}, "streams": [{"codec_type": "video", "codec_name": "h264", "width": 1080, "height": 1920}, {"codec_type": "audio", "codec_name": "aac"}]}'
 
-    with patch('colab_bridge.job_worker.subprocess.run', side_effect=remote_run), \
+    with patch('importlib.util.module_from_spec', side_effect=fake_module_from_spec), \
          patch('colab_bridge.job_worker.subprocess.check_output', side_effect=probe):
         report = run(target, folder / 'output', req['request_id'], req['worker_sha256'])
 
-    assert report['remotion_concurrency'] == 2
+    assert report['render_engine'] == 'ffmpeg_h264_nvenc'
     assert 'stage_timings' in report
     for key in ('unpack_seconds', 'timeline_seconds', 'runtime_setup_seconds', 'render_seconds', 'ffprobe_seconds'):
         assert key in report['stage_timings']

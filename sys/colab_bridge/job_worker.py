@@ -3,7 +3,6 @@
 import hashlib
 import json
 import math
-import os
 import re
 import shutil
 import subprocess
@@ -438,89 +437,11 @@ def run(bundle_path, output_dir, expected_id, expected_worker):
     timeline_seconds = round(time.monotonic() - t_timeline_start, 3)
 
     t_runtime_start = time.monotonic()
-    # Remote dependencies are cached by the pinned source package lock.
-    runtime = output.parent.parent / (
-        "render-runtime-" + hashlib.sha256((source / "package-lock.json").read_bytes()).hexdigest()[:16]
-    )
-    runtime.mkdir(exist_ok=True)
-    for name in ("package.json", "package-lock.json"):
-        shutil.copy2(source / name, runtime / name)
-    if not (runtime / "node_modules/@remotion/renderer").is_dir():
-        subprocess.run(["npm", "ci", "--no-audit", "--no-fund"], cwd=runtime, check=True, timeout=900)
-    shutil.copytree(source / "renderer", runtime / "renderer", dirs_exist_ok=True)
-    chrome = subprocess.check_output(
-        [
-            "node",
-            "--input-type=module",
-            "-e",
-            "import {chromium} from 'playwright'; console.log(chromium.executablePath())",
-        ],
-        cwd=runtime,
-        text=True,
-    ).strip()
-    if not Path(chrome).is_file():
-        subprocess.run(
-            ["npx", "--no-install", "playwright", "install", "--with-deps", "chromium"],
-            cwd=runtime,
-            check=True,
-            timeout=900,
-        )
-    if Path("/usr/lib64-nvidia/libEGL_nvidia.so.0").is_file():
-        vendor_dir = Path("/usr/share/glvnd/egl_vendor.d")
-        vendor_dir.mkdir(parents=True, exist_ok=True)
-        (vendor_dir / "10_nvidia.json").write_text(
-            json.dumps(
-                {"file_format_version": "1.0.0", "ICD": {"library_path": "/usr/lib64-nvidia/libEGL_nvidia.so.0"}},
-                indent=2,
-            )
-        )
-    wrapper = runtime / "chrome-wrapper.sh"
-    wrapper.write_text(f"""#!/usr/bin/env bash
-if [ -f "/usr/lib64-nvidia/libEGL_nvidia.so.0" ]; then
-  export LD_LIBRARY_PATH="/usr/lib64-nvidia:${{LD_LIBRARY_PATH}}"
-  exec "{chrome}" \\
-    --no-sandbox \\
-    --disable-dev-shm-usage \\
-    --use-gl=angle \\
-    --use-angle=gl-egl \\
-    --enable-gpu \\
-    --enable-gpu-rasterization \\
-    --enable-zero-copy \\
-    --ignore-gpu-blocklist \\
-    --run-all-compositor-stages-before-draw \\
-    --disable-checker-imaging \\
-    --disable-new-content-rendering-timeout \\
-    "$@"
-else
-  exec "{chrome}" \\
-    --no-sandbox \\
-    --disable-dev-shm-usage \\
-    --run-all-compositor-stages-before-draw \\
-    --disable-checker-imaging \\
-    --disable-new-content-rendering-timeout \\
-    --disable-gpu-rasterization \\
-    --enable-gpu \\
-    --ignore-gpu-blocklist \\
-    "$@"
-fi
-""")
-    wrapper.chmod(0o755)
-    env = dict(os.environ, VP_CHROME_PATH=str(wrapper), DISABLE_FROM_SURFACE="true")
-    env.pop("DISPLAY", None)
+    flow_worker = load("vp_flow_video_worker", "colab_bridge/flow_video_worker.py")
     runtime_setup_seconds = round(time.monotonic() - t_runtime_start, 3)
 
     started = time.monotonic()
-    render_cmd = ["node", str(runtime / "renderer/render.mjs"), str(output.resolve())]
-    res_render = subprocess.run(render_cmd, cwd=runtime, env=env, capture_output=True, text=True, timeout=3600)
-    if res_render is not None and getattr(res_render, "returncode", 0) != 0:
-        err_tail = ((res_render.stdout or "") + "\n" + (res_render.stderr or ""))[-4000:]
-        (output / "render-error.log").write_text(err_tail, encoding="utf-8")
-        raise subprocess.CalledProcessError(
-            res_render.returncode,
-            render_cmd,
-            output=res_render.stdout,
-            stderr=res_render.stderr,
-        )
+    flow_worker.render_props_package(output, require_nvenc=True)
     render_seconds = round(time.monotonic() - started, 3)
 
     t_ffprobe_start = time.monotonic()
@@ -631,6 +552,7 @@ fi
         "request_id": expected_id,
         "operation": "render",
         "processing_location": "colab",
+        "render_engine": "ffmpeg_h264_nvenc",
         "outputs": deliveries,
         "device": device,
         "files": files,

@@ -49,8 +49,8 @@ def test_git_vcs_and_remote():
 
 
 def test_media_tools_readiness():
-    """Verify that ffprobe, ffmpeg, and node are installed."""
-    for tool in ["ffmpeg", "ffprobe", "node"]:
+    """Verify that ffprobe and ffmpeg are installed."""
+    for tool in ["ffmpeg", "ffprobe"]:
         tool_bin = shutil.which(tool)
         assert tool_bin is not None, f"Tool '{tool}' not found in PATH"
         res = subprocess.run([tool_bin, "-version" if "ff" in tool else "--version"], capture_output=True, text=True)

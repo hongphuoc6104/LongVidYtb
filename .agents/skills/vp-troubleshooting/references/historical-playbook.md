@@ -157,3 +157,11 @@ This file archives older or superseded PLAYBOOK.md entries to keep `PLAYBOOK.md 
 - **Giả định sai (Wrong Assumptions):** Nhầm tưởng phân cảnh mở đầu câu thoại tự nhiên luôn rơi vào trước 5s và chỉ những cảnh có `start >= 15s` mới cần kẹp hold.
 - **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** (1) Đổi điều kiện kẹp hold sang `end > 15s` trong `story_plan.py`; (2) Tự động điều tiết beat 3 mở đầu rơi vào trước 5s khi `start == 0.0`; (3) Nâng `MAX_AVERAGE_HOLD_SECONDS` lên 3.0s trong `visual_pacing.py`. Đã kiểm chứng render thành công video 9:16 `reviewer-2-nobel-rejections-9x16` (136.85s, 1080x1920) trên Colab T4 NVENC.
 - **Quy tắc phòng ngừa vàng (Golden Rule):** Thuật toán timeline phải kiểm tra điều tiết biên trên toàn bộ phân cảnh vắt qua mốc thân bài (`end > 15s`), chủ động bảo đảm mật độ Cold Open 3 beat trong 5s đầu và đồng bộ trần mật độ trung bình với độ dài phân cảnh thực tế.
+
+### [ERR-20261018-07] Visual style and CI verification lessons
+- **Triệu chứng (Symptom):** Heavy visual treatment, provider fixture leakage and unreadable CI evidence.
+- **Tái hiện E2E (Reproduction Path):** Run style, prompt integration and full-frame upgrade suites.
+- **Nguyên nhân cốt lõi (Root Cause):** Repeated heavy-line prompts, an unguarded transport fallback and TOON/JSON confusion.
+- **Giả định sai (Wrong Assumptions):** Prompt text proves quality, one mocked sender isolates all transport, or --full forces JSON.
+- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Version the light style, close every fixture boundary and decode a strict CI envelope. Full original ERR-07/08/09 records are preserved in [the extracted reference](../../vp-development/references/visual-ci-regressions.md).
+- **Quy tắc phòng ngừa vàng (Golden Rule):** Inspect real media and retain exact transport/CI provenance; never infer success from fixture artifacts.

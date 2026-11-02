@@ -22,9 +22,9 @@ def job_config(pilot: Any, job: str | None = None) -> dict:
 def source_receipt(root: Path, module: str, cfg: dict) -> dict:
     """Record actual implementation hashes without changing old job journals."""
     paths = set(root.glob('*.py'))
-    for folder in ('content', 'scripts', 'tools', 'colab_bridge', 'flow_cdp', 'flow_prompts', 'renderer'):
+    for folder in ('content', 'scripts', 'tools', 'colab_bridge', 'flow_cdp', 'flow_prompts'):
         paths.update(p for p in (root / folder).rglob('*')
-                     if p.is_file() and p.suffix in {'.py', '.mjs', '.tsx', '.ts', '.json'}
+                     if p.is_file() and p.suffix in {'.py', '.json'}
                      and '__pycache__' not in p.parts and 'node_modules' not in p.parts)
     sources = {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(paths)}
 

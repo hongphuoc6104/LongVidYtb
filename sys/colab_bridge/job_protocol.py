@@ -69,17 +69,7 @@ def build_render_request(root, brief, content, images, audio, resolve):
         "scripts/story_plan.py",
         "scripts/subtitles.py",
         "scripts/camera_motion.py",
-        "renderer/render.mjs",
-        "renderer/index.tsx",
-        "renderer/outputs.mjs",
-        "renderer/captions.mjs",
-        "renderer/visual-style.mjs",
-        "renderer/brand_logo.ts",
-        "renderer/thumbnail.tsx",
-        "renderer/camera.mjs",
-        "renderer/srt.mjs",
-        "package.json",
-        "package-lock.json",
+        "colab_bridge/flow_video_worker.py",
     ]
     wants_sound_design = bool(
         brief.get("omni_platform")
@@ -252,7 +242,7 @@ def validate_render_result(folder, request):
             ]:
                 raise ValueError("Remote props scene ordering mismatch")
             images = {
-                (item.get("image_id", item["scene_id"]), item.get("ratio", aspect)): item
+                (item.get("image_id") or item.get("scene_id"), item.get("ratio", aspect)): item
                 for item in request.get("images", {}).get("items", [])
             }
             for got, scene in zip(actual_scenes, scenes, strict=False):

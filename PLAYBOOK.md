@@ -12,7 +12,15 @@ $$\text{1. Tái hiện E2E} \longrightarrow \text{2. Phân tích gốc rễ} \lo
 
 ## II. Danh Mục Bài Học & Sự Cố Chuẩn Hóa
 
-> Historical entries [ERR-20261010-08], [ERR-20261010-09], [ERR-20261011-01], [ERR-20261011-05], [ERR-20261014-01], [ERR-20261016-02], [ERR-20261017-02], [ERR-20261017-03], [ERR-20261017-04], [ERR-20261017-05], [ERR-20261017-06], [ERR-20261018-01], [ERR-20261018-02], [ERR-20261018-03], [ERR-20261018-05], and [ERR-20261018-06] are archived in .agents/skills/vp-troubleshooting/references/historical-playbook.md.
+> Historical entries [ERR-20261010-08], [ERR-20261010-09], [ERR-20261011-01], [ERR-20261011-05], [ERR-20261014-01], [ERR-20261016-02], [ERR-20261017-02], [ERR-20261017-03], [ERR-20261017-04], [ERR-20261017-05], [ERR-20261017-06], [ERR-20261018-01], [ERR-20261018-02], [ERR-20261018-03], [ERR-20261018-05], [ERR-20261018-06], and [ERR-20261018-07] are archived in .agents/skills/vp-troubleshooting/references/historical-playbook.md.
+
+### [ERR-20261102-01] Khai Tử Remotion `<OffthreadVideo>` Thắt Cổ Chai CPU/IPC & Chuẩn Hóa Native Colab Tesla T4 `FFmpeg h264_nvenc`
+- **Triệu chứng (Symptom):** Quá trình render video bằng Remotion `<OffthreadVideo>` quá chậm (`393.38s` trên T4 / `341.69s` trên TPU), nghẽn IPC shared memory, ngốn CPU và tốn thời gian khởi tạo Chrome browser.
+- **Tái hiện E2E (Reproduction Path):** Chạy tác vụ render pipeline với Remotion compositor trên Colab T4/TPU.
+- **Nguyên nhân cốt lõi (Root Cause):** Remotion phụ thuộc Chromium headless IPC, decode khung hình bằng CPU software thay vì tận dụng trực tiếp NVDEC/NVENC của Tesla T4, gây overhead lớn trong quá trình trích xuất và ghép video.
+- **Giả định sai (Wrong Assumptions):** Nhầm tưởng Chromium GPU flags và Headless EGL đủ nhanh cho video compositing mà không nhận ra Native FFmpeg pipeline bỏ qua hoàn toàn chi phí trình duyệt.
+- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Khai tử Remotion/Chromium/TPU; chuẩn hóa duy nhất bộ renderer Native Tesla T4 `FFmpeg h264_nvenc` (`-c:v h264_nvenc -preset p4 -b:v 6M`, `loudnorm=I=-11.0:TP=-1.0`, `0.0s` setup) trong `flow_video_worker.py` và `job_worker.py`. Sửa `has_nvenc` probe sang `s=256x256` (NVENC yêu cầu surface tối thiểu) và sửa mapping `image_id` trong `job_protocol.py`. Kiểm chứng thực tế E2E trên Colab Tesla T4 thật (`account-19`): render hoàn tất trong `19.99s` cho video 52.0s 1080x1920@30fps (`36.8MB`), `0.014s` setup. Tốc độ tăng gấp 20 lần so với Remotion (393s -> 19.99s).
+- **Quy tắc phòng ngừa vàng (Golden Rule):** Sử dụng duy nhất Native Tesla T4 `FFmpeg h264_nvenc` (`flow_video_worker.py` / `job_worker.py`) cho render video sản xuất; tuyệt đối không dùng Remotion, Chromium headless hay CPU compositing.
 
 ### [ERR-20261028-01] Chuẩn Hóa Chữ Sạch Không Trang Trí (Clean Unadorned Text) & Triệt Tiêu Clipart AI Trong Visual 2D
 - **Triệu chứng (Symptom):** Người xem phản ánh khung hình mang nặng tính "AI clipart" khi chứa tấm thẻ (`white_card`), băng keo 4 góc, ruy băng uốn lượn, rác sao/confetti, và hình vẽ não giải phẫu y khoa nhiều màu lạc quẻ so với phong cách doodle tối giản.
@@ -29,14 +37,6 @@ $$\text{1. Tái hiện E2E} \longrightarrow \text{2. Phân tích gốc rễ} \lo
 - **Giả định sai (Wrong Assumptions):** Nhầm tưởng mọi video 16:9 đều phải đổi hình dồn dập 2–3s/beat như TikTok mà không tính đến tính chất tĩnh tại, lắng đọng của thể loại phân tích nhận thức 3–4 phút.
 - **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** (1) Nâng cấp `check_see_say_beat_density` hỗ trợ linh hoạt format `long_16x9` / explainer (trần TB 6.0s, trần thân 8.5s, mở đầu 2–5 beat); (2) Động hóa trần giãn beat `maximum = max(3.75, avg_hold * 1.35)` trong `smooth_interpolated_beats`; (3) Truyền `format_profile` vào `job_worker.py`. 1097/1097 test pass 100%, render thành công video 16:9 `survivorship-bias-16x9_r1_final.mp4` (169.64s, 1920x1080@30fps NVENC).
 - **Quy tắc phòng ngừa vàng (Golden Rule):** Phân tách rõ ràng ngưỡng nhịp thị giác giữa video ngắn 9:16 (nhịp cắt nhanh) và video giải thích 16:9 (nhịp tĩnh tại, tập trung nhận thức); thuật toán làm trơn beat phải tự co giãn theo thời lượng thực tế của phân cảnh.
-
-### [ERR-20261018-07] Visual style and CI verification lessons
-- **Symptom:** Heavy visual treatment, provider fixture leakage and unreadable CI evidence.
-- **Reproduction Path:** Run style, prompt integration and full-frame upgrade suites.
-- **Root Cause:** Repeated heavy-line prompts, an unguarded transport fallback and TOON/JSON confusion.
-- **Wrong Assumptions:** Prompt text proves quality, one mocked sender isolates all transport, or --full forces JSON.
-- **Resolution & E2E Proof:** Version the light style, close every fixture boundary and decode a strict CI envelope. Full original ERR-07/08/09 records are preserved in [the extracted reference](.agents/skills/vp-development/references/visual-ci-regressions.md).
-- **Golden Rule:** Inspect real media and retain exact transport/CI provenance; never infer success from fixture artifacts.
 
 ### [ERR-20261018-10] Preserve Flow submission evidence across failures
 - **Symptom:** Direct transport errors rewrote requests as not_submitted, and profile failover could send the same unresolved generation again.
