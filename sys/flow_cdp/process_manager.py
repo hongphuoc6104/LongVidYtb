@@ -221,10 +221,17 @@ def clean_stale_chrome_tmp_artifacts(
 class ProcessGroupManager:
     """Manages Chrome process lifecycle with cross-process lock-safe registry and two-stage teardown."""
 
-    def __init__(self, registry_file: Path | str | None = None, auto_cleanup_on_exit: bool = True):
+    def __init__(
+        self,
+        registry_file: Path | str | None = None,
+        auto_cleanup_on_exit: bool = True,
+        headless: bool = True,
+        **kwargs: Any,
+    ):
         self.registry_file = Path(registry_file or DEFAULT_REGISTRY_FILE).expanduser().resolve()
         self.registry_lock_file = self.registry_file.with_suffix(".lock")
         self.active_processes: dict[int, dict[str, Any]] = {}
+        self.default_headless = headless
         self._lock = threading.RLock()
         self._ensure_registry_initialized()
         if auto_cleanup_on_exit:
@@ -443,6 +450,7 @@ class ProcessGroupManager:
         headless: bool = True,
         chrome_bin: str | None = None,
         startup_timeout: float = 20.0,
+        extra_args: list[str] | None = None,
     ) -> bool:
         """Launch Chrome with hardware acceleration, RAM /dev/shm IPC, and process group isolation."""
         port = int(profile_cfg.get("port") or profile_cfg.get("cdp_port", 0))
@@ -472,6 +480,14 @@ class ProcessGroupManager:
         # Clean stale locks before launch
         clean_singleton_locks(target_dir, prof_name)
 
+        merged_extra_args: list[str] = []
+        if profile_cfg.get("extra_args"):
+            merged_extra_args.extend(profile_cfg["extra_args"])
+        if profile_cfg.get("window_size"):
+            merged_extra_args.append(f"--window-size={profile_cfg['window_size']}")
+        if extra_args:
+            merged_extra_args.extend(extra_args)
+
         cmd, env = build_optimized_chrome_launch(
             binary=binary,
             user_data_dir=target_dir,
@@ -479,6 +495,7 @@ class ProcessGroupManager:
             port=port,
             url=url,
             headless=headless,
+            extra_args=merged_extra_args or None,
         )
 
         try:
@@ -670,3 +687,27 @@ def reset_process_manager() -> None:
     global _GLOBAL_PROCESS_MANAGER
     with _GLOBAL_LOCK:
         _GLOBAL_PROCESS_MANAGER = None
+
+
+def launch_chrome(
+    profile_cfg: dict[str, Any],
+    url: str = "https://flow.google.com/",
+    headless: bool = True,
+    chrome_bin: str | None = None,
+    startup_timeout: float = 20.0,
+    extra_args: list[str] | None = None,
+) -> bool:
+    """Launch Chrome using ProcessGroupManager with optional extra args and window sizing."""
+    return get_process_manager().launch(
+        profile_cfg=profile_cfg,
+        url=url,
+        headless=headless,
+        chrome_bin=chrome_bin,
+        startup_timeout=startup_timeout,
+        extra_args=extra_args,
+    )
+
+
+ProcessManager = ProcessGroupManager
+
+

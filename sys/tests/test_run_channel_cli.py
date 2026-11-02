@@ -39,7 +39,6 @@ ALL_CHANNELS = [
     "en_lazy_brain",
     "en_crowd_strings",
     "en_kindred_sketch",
-    "en_ego_unmasked",
     "en_first_principles",
     "en_wallet_anatomy",
     "en_macro_gears",

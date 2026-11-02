@@ -39,25 +39,25 @@ HOLLOW_CLICHE_PATTERNS: tuple[str, ...] = (
     r"hãy luôn giữ tinh thần tích cực",
     r"như chúng ta đã biết",
     r"tóm lại việc này vừa có lợi vừa có hại",
-)
-
-EDITORIAL_OPINION_MARKERS: tuple[str, ...] = (
-    "sự thật mất lòng",
-    "đừng nghe lời khuyên",
-    "sai lầm lớn nhất",
-    "điểm mù",
-    "góc nhìn thẳng thắn",
-    "nhìn thẳng vào thực tế",
-    "đánh giá công bằng",
-    "cái bẫy",
-    "ngược đời ở chỗ",
-    "nghịch lý nằm ở",
-    "thứ ít ai nói với bạn",
-    "đừng vội tin",
-    "cái giá phải trả",
-    "nói thẳng ra",
-    "thực chất",
-    "bản chất thật sự",
+    r"\bcó một sự thật mất lòng\b",
+    r"\bsự thật mất lòng là\b",
+    r"\bđánh giá công bằng thì\b",
+    r"\bnói đi cũng phải nói lại\b",
+    r"\bnghịch lý nằm ở chỗ\b",
+    r"\bnghịch lý nằm ở\b",
+    r"\bbí mật nằm ở\b",
+    r"\bchìa khóa nằm ở\b",
+    r"\bmấu chốt nằm ở\b",
+    r"\bđiều đáng sợ là\b",
+    r"\bđiều thú vị là\b",
+    r"\bđiều kỳ lạ là\b",
+    r"\btin vui là\b",
+    r"\btin buồn là\b",
+    r"\bnhiều người lầm tưởng rằng\b",
+    r"\bít ai biết rằng\b",
+    r"\bthứ ít ai nói với bạn\b",
+    r"\bnói cách khác là\b",
+    r"\btóm lại là\b",
 )
 
 
@@ -74,7 +74,6 @@ def lint_editorial_and_narrative_quality(
         "long_16x9" if brief.get("aspect_ratio") == "16:9" else "short_9x16"
     )
     is_short = format_profile == "short_9x16"
-    is_long = format_profile == "long_16x9"
 
     # 1. Check editorial_stance in brief.json
     editorial = brief.get("editorial_stance") or brief.get("packaging", {}).get("editorial_stance")
@@ -114,7 +113,6 @@ def lint_editorial_and_narrative_quality(
         if re.search(pat, full_narration):
             errors.append(f"HOLLOW_GENERIC_CLICHE: narration contains generic filler matching '{pat}'")
 
-    matched_markers = [m for m in EDITORIAL_OPINION_MARKERS if m in full_narration]
     editorial_scenes = [
         sc.get("id")
         for sc in scenes
@@ -122,10 +120,10 @@ def lint_editorial_and_narrative_quality(
         or any(b.get("narrative_situation") == "editorial_commentary" for b in sc.get("beats", []))
     ]
     min_ed_scenes = 1 if is_short else 2
-    if len(editorial_scenes) < min_ed_scenes and len(matched_markers) < 2:
+    if len(editorial_scenes) < min_ed_scenes:
         errors.append(
             f"INSUFFICIENT_EDITORIAL_COMMENTARY: expected >= {min_ed_scenes} scene(s) with "
-            "narrative_situation='editorial_commentary' (or >= 2 explicit evaluative commentary markers in narration)"
+            "narrative_situation='editorial_commentary' (on scene or beat)"
         )
 
     # 4. Check Short-to-Long Peak Cliffhanger Funnel on short_9x16
@@ -173,7 +171,6 @@ def lint_editorial_and_narrative_quality(
         "estimated_duration_sec": round(est_dur, 1),
         "avg_unique_image_hold_sec": round(est_dur / max(1, len(uniq_imgs)), 2),
         "editorial_scenes": editorial_scenes,
-        "opinion_markers_found": matched_markers,
         "narrative_situations": sit_counts,
         "supported_situations": list(NARRATIVE_SITUATION_TEMPO_MAP.keys()),
         "errors": errors,

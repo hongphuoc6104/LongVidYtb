@@ -32,6 +32,7 @@ for _p in (str(REPO_ROOT), str(SYS_DIR)):
 
 import tools.dashboard_catalog_engine as dashboard_catalog_engine
 import tools.dashboard_ui_template as dashboard_ui_template
+import tools.review_queue_manager as review_queue_manager
 from flow_cdp.resource_locks import build_optimized_chrome_launch
 from tools.dashboard_catalog_engine import (
     DEFAULT_CHANNEL_MAP_PATH,
@@ -49,6 +50,7 @@ from tools.dashboard_catalog_engine import (
     verify_channel_actual_video_count,
 )
 from tools.dashboard_ui_template import get_dashboard_html
+from tools.review_queue_manager import load_review_queue
 
 __all__ = [
     "extract_video_id",
@@ -112,9 +114,38 @@ def collect_dashboard_metrics(
     )
 
 
+def _populate_review_queue_media_mtime(q_data: Dict[str, Any]) -> Dict[str, Any]:
+    """Ensure updated_at / media_mtime is populated from video disk mtime to bust browser cache."""
+    if not isinstance(q_data, dict):
+        return q_data
+    items = q_data.get("items")
+    if not isinstance(items, dict):
+        return q_data
+    video_root = (REPO_ROOT / "video").resolve()
+    for it in items.values():
+        if not isinstance(it, dict):
+            continue
+        vpath = it.get("video_path") or it.get("mp4_path")
+        if not vpath and it.get("job_id"):
+            cand = video_root / it["job_id"] / f"{it['job_id']}.mp4"
+            if cand.is_file():
+                vpath = str(cand)
+        if vpath and Path(vpath).is_file():
+            mtime = int(Path(vpath).stat().st_mtime)
+            it["media_mtime"] = mtime
+            if not it.get("updated_at"):
+                it["updated_at"] = str(mtime)
+    return q_data
+
+
 def export_standalone_html(data: Dict[str, Any], output_html_path: Path) -> Path:
     """Generate and export a standalone self-contained HTML dashboard file."""
-    html_content = get_dashboard_html(embedded_data=data)
+    enriched = dict(data) if data else {}
+    try:
+        enriched["review_queue"] = _populate_review_queue_media_mtime(load_review_queue())
+    except Exception as exc:
+        logger.debug("Could not load review_queue for export: %s", exc)
+    html_content = dashboard_ui_template.get_dashboard_html(embedded_data=enriched)
     out_p = Path(output_html_path).resolve()
     out_p.parent.mkdir(parents=True, exist_ok=True)
     out_p.write_text(html_content, encoding="utf-8")
@@ -334,6 +365,7 @@ class DashboardHTTPHandler(BaseHTTPRequestHandler):
             try:
                 importlib.reload(dashboard_catalog_engine)
                 importlib.reload(dashboard_ui_template)
+                importlib.reload(review_queue_manager)
             except Exception as exc:
                 logger.debug("Failed reloading modules in do_GET: %s", exc)
 
@@ -345,7 +377,12 @@ class DashboardHTTPHandler(BaseHTTPRequestHandler):
             else:
                 data = collect_dashboard_metrics(self.channel_map_path, self.metrics_path)
 
-            html = get_dashboard_html(embedded_data=data)
+            try:
+                data["review_queue"] = _populate_review_queue_media_mtime(review_queue_manager.load_review_queue())
+            except Exception as exc:
+                logger.warning("Failed loading review queue in do_GET: %s", exc)
+
+            html = dashboard_ui_template.get_dashboard_html(embedded_data=data)
             content = html.encode("utf-8")
             self.send_response(HTTPStatus.OK)
             self._send_cors_headers()
@@ -353,6 +390,76 @@ class DashboardHTTPHandler(BaseHTTPRequestHandler):
             self.send_header("Content-Length", str(len(content)))
             self.end_headers()
             self.wfile.write(content)
+            return
+
+        if parsed.path == "/api/review-queue":
+            try:
+                q_data = _populate_review_queue_media_mtime(review_queue_manager.load_review_queue())
+            except Exception as exc:
+                q_data = {"schema_version": "1.0", "items": {}, "error": str(exc)}
+            content = json.dumps(q_data, ensure_ascii=False).encode("utf-8")
+            self.send_response(HTTPStatus.OK)
+            self._send_cors_headers()
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Content-Length", str(len(content)))
+            self.end_headers()
+            self.wfile.write(content)
+            return
+
+        if parsed.path.startswith("/media/"):
+            # Safe local media serving from video/<job_id>/
+            rel = urllib.parse.unquote(parsed.path[len("/media/"):]).lstrip("/")
+            video_root = (REPO_ROOT / "video").resolve()
+            target_file = (video_root / rel).resolve()
+            if not str(target_file).startswith(str(video_root)) or not target_file.is_file():
+                self.send_error(HTTPStatus.NOT_FOUND, "Media file not found")
+                return
+
+            ext = target_file.suffix.lower()
+            mime_map = {
+                ".mp4": "video/mp4",
+                ".jpg": "image/jpeg",
+                ".jpeg": "image/jpeg",
+                ".png": "image/png",
+                ".srt": "text/plain; charset=utf-8",
+            }
+            ctype = mime_map.get(ext, "application/octet-stream")
+            file_size = target_file.stat().st_size
+            range_header = self.headers.get("Range")
+
+            if range_header and range_header.startswith("bytes="):
+                try:
+                    byte_range = range_header.split("=", 1)[1].split(",")
+                    start_str, end_str = byte_range[0].split("-", 1)
+                    start = int(start_str) if start_str else 0
+                    end = int(end_str) if end_str else file_size - 1
+                    end = min(end, file_size - 1)
+                    length = max(0, end - start + 1)
+                    with open(target_file, "rb") as f:
+                        f.seek(start)
+                        chunk = f.read(length)
+                    self.send_response(HTTPStatus.PARTIAL_CONTENT)
+                    self._send_cors_headers()
+                    self.send_header("Content-Type", ctype)
+                    self.send_header("Cache-Control", "no-cache")
+                    self.send_header("Accept-Ranges", "bytes")
+                    self.send_header("Content-Range", f"bytes {start}-{end}/{file_size}")
+                    self.send_header("Content-Length", str(len(chunk)))
+                    self.end_headers()
+                    self.wfile.write(chunk)
+                    return
+                except Exception:
+                    pass
+
+            data_bytes = target_file.read_bytes()
+            self.send_response(HTTPStatus.OK)
+            self._send_cors_headers()
+            self.send_header("Content-Type", ctype)
+            self.send_header("Cache-Control", "no-cache")
+            self.send_header("Accept-Ranges", "bytes")
+            self.send_header("Content-Length", str(len(data_bytes)))
+            self.end_headers()
+            self.wfile.write(data_bytes)
             return
 
         if parsed.path == "/api/metrics":
@@ -363,13 +470,17 @@ class DashboardHTTPHandler(BaseHTTPRequestHandler):
 
             if self.metrics_path.exists():
                 try:
-                    content = self.metrics_path.read_bytes()
+                    data = json.loads(self.metrics_path.read_text(encoding="utf-8"))
                 except Exception:
                     data = collect_dashboard_metrics(self.channel_map_path, self.metrics_path)
-                    content = json.dumps(data, ensure_ascii=False).encode("utf-8")
             else:
                 data = collect_dashboard_metrics(self.channel_map_path, self.metrics_path)
-                content = json.dumps(data, ensure_ascii=False).encode("utf-8")
+
+            try:
+                data["review_queue"] = _populate_review_queue_media_mtime(review_queue_manager.load_review_queue())
+            except Exception:
+                pass
+            content = json.dumps(data, ensure_ascii=False).encode("utf-8")
 
             self.send_response(HTTPStatus.OK)
             self._send_cors_headers()
@@ -500,6 +611,65 @@ class DashboardHTTPHandler(BaseHTTPRequestHandler):
 
             res = launch_channel_chrome_studio(channel_id, self.channel_map_path)
             status_code = HTTPStatus.OK if res.get("status") == "ok" else HTTPStatus.BAD_REQUEST
+
+            self.send_response(status_code)
+            self._send_cors_headers()
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            content = json.dumps(res, ensure_ascii=False).encode("utf-8")
+            self.send_header("Content-Length", str(len(content)))
+            self.end_headers()
+            self.wfile.write(content)
+            return
+
+        if parsed.path == "/api/review-decision":
+            length = int(self.headers.get("Content-Length", 0))
+            body_bytes = self.rfile.read(length) if length > 0 else b"{}"
+            try:
+                payload = json.loads(body_bytes.decode("utf-8")) if body_bytes else {}
+            except Exception:
+                payload = {}
+
+            try:
+                q_data = review_queue_manager.load_review_queue()
+                items = q_data.setdefault("items", {})
+                from datetime import datetime, timezone
+
+                now_iso = datetime.now(timezone.utc).isoformat()
+                updated_ids: List[str] = []
+
+                if "decisions" in payload and isinstance(payload["decisions"], dict):
+                    for jid, dec in payload["decisions"].items():
+                        if jid in items and isinstance(dec, dict):
+                            st = str(dec.get("status", items[jid].get("status", "PENDING_REVIEW"))).upper()
+                            if st in review_queue_manager.VALID_STATUSES:
+                                items[jid]["status"] = st
+                                items[jid]["reviewed_at"] = now_iso if st in ("APPROVED", "REJECTED") else None
+                            if "review_notes" in dec:
+                                items[jid]["review_notes"] = str(dec.get("review_notes") or "")
+                            updated_ids.append(jid)
+                else:
+                    jid = str(payload.get("job_id", "")).strip()
+                    if not jid or jid not in items:
+                        raise KeyError(f"Job '{jid}' not found in review queue")
+                    st = str(payload.get("status", items[jid].get("status", "PENDING_REVIEW"))).upper()
+                    if st in review_queue_manager.VALID_STATUSES:
+                        items[jid]["status"] = st
+                        items[jid]["reviewed_at"] = now_iso if st in ("APPROVED", "REJECTED") else None
+                    if "review_notes" in payload:
+                        items[jid]["review_notes"] = str(payload.get("review_notes") or "")
+                    updated_ids.append(jid)
+
+                review_queue_manager.save_review_queue(q_data)
+                res = {
+                    "status": "ok",
+                    "updated": updated_ids,
+                    "review_queue": q_data,
+                }
+                status_code = HTTPStatus.OK
+            except Exception as exc:
+                logger.error("Review decision update error: %s", exc)
+                res = {"status": "error", "message": str(exc)}
+                status_code = HTTPStatus.BAD_REQUEST
 
             self.send_response(status_code)
             self._send_cors_headers()

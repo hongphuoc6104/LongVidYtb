@@ -423,10 +423,12 @@ def build_youtube_long_kit(
     end_screen_start = format_timestamp(max(0.0, total_duration - 20.0))
     mid_cta_str = format_timestamp(mid_cta_time)
 
+    has_zero_chapter = any(ch.strip().startswith("00:00") for ch in chapters)
+    intro_prefix = "" if has_zero_chapter else "00:00 - Giới thiệu\n"
+
     desc = f"""{topic}
 
-00:00 - Giới thiệu
-{chapters_block}
+{intro_prefix}{chapters_block}
 
 ---
 Chào mừng bạn đến với kênh chính thức của {channel_name}.

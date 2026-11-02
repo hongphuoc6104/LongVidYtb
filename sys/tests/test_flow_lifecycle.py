@@ -1,12 +1,10 @@
 """Unit tests for flow_cdp.lifecycle module."""
 from __future__ import annotations
 
-import unittest
-from unittest.mock import MagicMock, patch
-
-from pathlib import Path
 import tempfile
-from PIL import Image
+import unittest
+from pathlib import Path
+from unittest.mock import patch
 
 from flow_cdp.lifecycle import (
     RAMPUP_BATCH_TIERS,
@@ -16,6 +14,7 @@ from flow_cdp.lifecycle import (
     calculate_rampup_workers,
     get_workload_tier_info,
 )
+from PIL import Image
 from tools.editorial_compositor import apply_editorial_overlay, build_editorial_task_spec
 
 
@@ -30,18 +29,18 @@ class TestFlowLifecycle(unittest.TestCase):
         self.assertEqual(calculate_optimal_workers(5), 2)
         self.assertEqual(calculate_optimal_workers(8), 3)
 
-        # 9-20 images: 3-5 workers
-        self.assertEqual(calculate_optimal_workers(12), 3)
-        self.assertEqual(calculate_optimal_workers(16), 4)
-        self.assertEqual(calculate_optimal_workers(20), 5)
+        # 9-20 images: 6-10 workers (brisker scaling)
+        self.assertEqual(calculate_optimal_workers(12), 6)
+        self.assertEqual(calculate_optimal_workers(16), 8)
+        self.assertEqual(calculate_optimal_workers(20), 10)
 
-        # 21-50 images: 5-7 workers
-        self.assertEqual(calculate_optimal_workers(25), 5)
-        self.assertEqual(calculate_optimal_workers(48), 7)
+        # 21-50 images: 10-12 workers
+        self.assertEqual(calculate_optimal_workers(25), 10)
+        self.assertEqual(calculate_optimal_workers(48), 12)
 
-        # Bulk > 50 images: 8-10 workers
-        self.assertEqual(calculate_optimal_workers(75), 8)
-        self.assertEqual(calculate_optimal_workers(300), 10)
+        # Bulk > 50 images: up to 12 workers
+        self.assertEqual(calculate_optimal_workers(75), 12)
+        self.assertEqual(calculate_optimal_workers(300), 12)
 
     def test_calculate_rampup_workers_and_timeouts_5_tiers(self):
         # Tier 1: <= 10 images -> 4 workers, 120.0s timeout
@@ -123,15 +122,24 @@ class TestFlowLifecycle(unittest.TestCase):
 
         info_bulk = get_workload_tier_info(300)
         self.assertEqual(info_bulk["tier"], "bulk_long_video")
-        self.assertEqual(info_bulk["actual_workers"], 10)
+        self.assertEqual(info_bulk["actual_workers"], 12)
 
     @patch("flow_cdp.accounts.stop_profile_by_port")
     @patch("flow_cdp.accounts.launch_profile", return_value=True)
-    @patch("flow_cdp.accounts.is_port_listening", side_effect=[False, False, True])
+    @patch("flow_cdp.accounts.is_port_listening")
     @patch("flow_cdp.accounts.registry", return_value={"profiles": []})
     def test_lifecycle_manager_spawns_and_teardowns_exact_opened(
         self, mock_reg, mock_listening, mock_launch, mock_stop
     ):
+        listening_ports = set()
+        mock_listening.side_effect = lambda p: p in listening_ports
+
+        def fake_launch(prof, **kwargs):
+            listening_ports.add(prof.get("cdp_port", 9225))
+            return True
+
+        mock_launch.side_effect = fake_launch
+
         with ProfileLifecycleManager(auto_teardown=True) as mgr:
             prof = {"cdp_port": 9225, "user_data_dir": "/tmp/p1", "profile_dir": "Profile 1"}
             ok = mgr.launch_profile(prof)

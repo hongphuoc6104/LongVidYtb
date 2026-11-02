@@ -63,15 +63,15 @@ WORKLOAD_TIERS = [
 ]
 
 
-def calculate_optimal_workers(num_images: int, max_cap: int = 10, min_cap: int = 1) -> int:
+def calculate_optimal_workers(num_images: int, max_cap: int = 12, min_cap: int = 1) -> int:
     """Calculate the optimal number of parallel workers for a given image count.
 
     Strategy:
     - 1-3 images:   1 tab  (Startup overhead of multiple tabs is not justified)
     - 4-8 images:   2-3 tabs (Shorts 9:16 finishes in ~60-80s without wasting RAM)
-    - 9-20 images:  4-5 tabs (Medium chapter, finishes in ~1.5-2.5m)
-    - 21-50 images: 6-7 tabs (Standard full explainer)
-    - >50 images:   8-10 tabs (Large batch, capped at RAM safety limit)
+    - 9-20 images:  6-10 tabs (Brisker scaling for high-throughput hardware)
+    - 21-50 images: 10-12 tabs (Standard full explainer)
+    - >50 images:   up to 12 tabs (Large batch, capped at RAM safety limit)
     """
     if num_images <= 0:
         return min_cap
@@ -80,11 +80,11 @@ def calculate_optimal_workers(num_images: int, max_cap: int = 10, min_cap: int =
     elif num_images <= 8:
         target = max(2, math.ceil(num_images / 3))
     elif num_images <= 20:
-        target = max(3, math.ceil(num_images / 4))
+        target = max(6, math.ceil(num_images / 2))
     elif num_images <= 50:
-        target = max(5, math.ceil(num_images / 7))
+        target = max(10, math.ceil(num_images / 3))
     else:
-        target = min(max_cap, max(8, math.ceil(num_images / 15)))
+        target = min(max_cap, 12)
 
     return max(min_cap, min(max_cap, target))
 
@@ -226,11 +226,14 @@ class ProfileLifecycleManager:
             atexit.register(self._atexit_handler)
 
     def _record_pre_existing(self) -> None:
-        """Scan which profile ports are already listening."""
+        """Scan which profile ports are already listening across 9222..9269 and 9270+."""
+        candidate_ports = set(range(9222, 9270))
         reg = self.accounts.registry()
         for p in reg.get("profiles", []):
-            port = int(p["port"])
-            if self.accounts.is_port_listening(port):
+            candidate_ports.add(int(p.get("port", 0)))
+
+        for port in candidate_ports:
+            if port > 0 and self.accounts.is_port_listening(port):
                 self.pre_existing_ports.add(port)
 
     def launch_profile(
@@ -281,6 +284,14 @@ class ProfileLifecycleManager:
 
         if do_force:
             target_ports = set(self.pre_existing_ports).union(self.spawned_ports)
+            for port in range(9222, 9270):
+                if self.accounts.is_port_listening(port):
+                    target_ports.add(port)
+            reg = self.accounts.registry()
+            for p in reg.get("profiles", []):
+                p_port = int(p.get("port", 0))
+                if p_port > 0 and self.accounts.is_port_listening(p_port):
+                    target_ports.add(p_port)
         else:
             target_ports = set(self.spawned_ports)
 
@@ -323,7 +334,22 @@ class ProfileLifecycleManager:
 
 
 def stop_all_profiles(force_all: bool = True) -> list[int]:
-    """Terminate all running Flow Chrome instances and reap orphan processes."""
+    """Terminate all running Flow Chrome instances and reap orphan processes across 9222..9269 and 9270+."""
+    from . import accounts
     from .process_manager import get_process_manager
-    return get_process_manager().terminate_all()
+
+    pm = get_process_manager()
+    reg = accounts.registry()
+    all_ports = set(range(9222, 9270))
+    for p in reg.get("profiles", []):
+        port = int(p.get("port", 0))
+        if port > 0:
+            all_ports.add(port)
+    for port in sorted(all_ports):
+        if accounts.is_port_listening(port):
+            try:
+                pm.terminate_by_port(port)
+            except Exception:
+                pass
+    return pm.terminate_all()
 

@@ -38,6 +38,59 @@ STOP_WORDS = {
     "ra", "vào", "lại", "về", "như", "đã", "sẽ", "đang", "từ", "ở", "lên",
 }
 
+AI_CLICHE_PATTERNS: tuple[str, ...] = (
+    r"\bcó một sự thật mất lòng\b",
+    r"\bsự thật mất lòng là\b",
+    r"\bđánh giá công bằng thì\b",
+    r"\bnói đi cũng phải nói lại\b",
+    r"\bnghịch lý nằm ở chỗ\b",
+    r"\bnghịch lý nằm ở\b",
+    r"\bbí mật nằm ở\b",
+    r"\bchìa khóa nằm ở\b",
+    r"\bmấu chốt nằm ở\b",
+    r"\bđiều đáng sợ là\b",
+    r"\bđiều thú vị là\b",
+    r"\bđiều kỳ lạ là\b",
+    r"\btin vui là\b",
+    r"\btin buồn là\b",
+    r"\bnhiều người lầm tưởng rằng\b",
+    r"\bít ai biết rằng\b",
+    r"\bthứ ít ai nói với bạn\b",
+    r"\bnói cách khác là\b",
+    r"\btóm lại là\b",
+)
+
+
+def check_ai_cliche_phrases(scenes: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Detect repetitive Vietnamese AI translationese and canned discourse markers."""
+    violations: List[Dict[str, Any]] = []
+    for sc in scenes:
+        sc_id = sc.get("scene_id") or sc.get("id") or "UNKNOWN"
+        narration = sc.get("narration") or sc.get("text") or ""
+        if not narration and sc.get("beats"):
+            narration = " ".join(
+                str(b.get("narration") or b.get("text") or "") for b in sc.get("beats", [])
+            )
+        if not narration:
+            continue
+        narration_lower = narration.lower()
+        matched_spans: List[Tuple[int, int]] = []
+        for pat in AI_CLICHE_PATTERNS:
+            for m in re.finditer(pat, narration_lower):
+                span = m.span()
+                if any(s[0] <= span[0] < s[1] or s[0] < span[1] <= s[1] for s in matched_spans):
+                    continue
+                matched_spans.append(span)
+                violations.append({
+                    "type": "AI_CLICHE_PHRASE",
+                    "scene_id": sc_id,
+                    "pattern": pat,
+                    "matched_text": m.group(0),
+                    "snippet": narration[:140],
+                    "message": f"Spoken narration contains banned AI cliché: '{m.group(0)}'",
+                })
+    return violations
+
 
 def clean_sentence(text: str) -> str:
     cleaned = re.sub(r"\[pause:[^\]]+\]", " ", text, flags=re.IGNORECASE)
@@ -224,12 +277,46 @@ def check_intra_video_repetitions(
     return violations
 
 
+def get_known_channel_prefixes() -> List[str]:
+    channels_dir = SYS_DIR / "channels"
+    prefixes = []
+    if channels_dir.is_dir():
+        for p in channels_dir.iterdir():
+            if p.is_dir() and not p.name.startswith("__"):
+                prefixes.append(p.name.replace("_", "-"))
+    if not prefixes:
+        prefixes = [
+            "ai-binh-dan", "ban-do-quyen-luc", "banh-rang", "chanh-niem-ke", "co-the-ke",
+            "dia-com", "ho-so-ky-la", "la-ban-hoc-thuat", "loi-sang-soi", "luat-doi-thuong",
+            "luat-ngam", "minh-triet-song", "nao-luoi", "nghe-song-sot", "su-ke-lai",
+            "tam-tinh-dem", "thuong-cho-kheo", "tui-tien", "ua-sao-vay", "vu-tru-ti-hon",
+        ]
+    return sorted(prefixes, key=len, reverse=True)
+
+
+def extract_channel_from_name(name: str) -> str:
+    name_clean = name.strip().lower()
+    for c in get_known_channel_prefixes():
+        if name_clean.startswith(c):
+            return c
+    return ""
+
+
+def extract_stem_from_name(name: str) -> str:
+    s = re.sub(r"[-_](?:16x9|9x16|long|short)(?:[-_]\d+)?$", "", name, flags=re.IGNORECASE)
+    s = re.sub(r"[-_](?:auto[-_]short)$", "", s, flags=re.IGNORECASE)
+    return s.strip().lower()
+
+
 def check_corpus_cross_similarity(
     scenes: List[Dict[str, Any]],
-    corpus_dir: Path,
+    corpus_dir: Path | None = None,
+    runs_dir: Path | None = None,
+    current_run_name: str = "",
+    topic_title: str = "",
 ) -> List[Dict[str, Any]]:
     violations = []
-    if not scenes or not corpus_dir.is_dir():
+    if not scenes:
         return violations
 
     first_sc = scenes[0]
@@ -238,61 +325,160 @@ def check_corpus_cross_similarity(
     if not first_words:
         return violations
 
-    # Check against known past manifests in corpus_dir
-    for sub in corpus_dir.iterdir():
-        if sub.name in ("study_motivation_bundle", "attention_architect_bundle"):
-            continue
-        manifest_p = sub / "manifest" / "phonetic_normalized_script_8ch.json"
-        if not manifest_p.is_file():
-            continue
-        try:
-            corpus_data = json.loads(manifest_p.read_text(encoding="utf-8"))
-            past_texts: List[str] = []
-            if isinstance(corpus_data, dict):
-                if "chapters" in corpus_data and isinstance(corpus_data["chapters"], list):
-                    for ch in corpus_data["chapters"]:
-                        for s in ch.get("sentences", []):
+    target_raw = (first_sc.get("narration") or first_sc.get("text") or "").lower()
+    time_pattern = r"^\s*(?:\d+|tám|chín|mười|mười một|mười hai)\s+giờ\b"
+    state_pattern = r"\bbạn\s+ngồi\s+(?:bất động|chết lặng|im lìm|bần thần|thẫn thờ)\b"
+
+    # 1. Legacy corpus check (sys/exports/)
+    if corpus_dir and corpus_dir.is_dir():
+        for sub in corpus_dir.iterdir():
+            if sub.name in ("study_motivation_bundle", "attention_architect_bundle"):
+                continue
+            manifest_p = sub / "manifest" / "phonetic_normalized_script_8ch.json"
+            if not manifest_p.is_file():
+                continue
+            try:
+                corpus_data = json.loads(manifest_p.read_text(encoding="utf-8"))
+                past_texts: List[str] = []
+                if isinstance(corpus_data, dict):
+                    if "chapters" in corpus_data and isinstance(corpus_data["chapters"], list):
+                        for ch in corpus_data["chapters"]:
+                            for s in ch.get("sentences", []):
+                                past_texts.append(s.get("original_text", ""))
+                    elif "ch1" in corpus_data:
+                        for s in corpus_data["ch1"]:
                             past_texts.append(s.get("original_text", ""))
-                elif "ch1" in corpus_data:
-                    for s in corpus_data["ch1"]:
-                        past_texts.append(s.get("original_text", ""))
 
-            if not past_texts:
+                if not past_texts:
+                    continue
+
+                past_opening = clean_sentence(" ".join(past_texts[:3])).split()[:15]
+                if not past_opening:
+                    continue
+
+                overlap = set(first_words).intersection(set(past_opening))
+                content_overlap = [w for w in overlap if w not in {"và", "của", "là", "có", "được", "trong", "để", "cho", "với", "không"}]
+                if len(content_overlap) >= 3:
+                    violations.append({
+                        "type": "CORPUS_CROSS_SIMILARITY",
+                        "bundle": sub.name,
+                        "overlap_words": content_overlap,
+                        "target_opening": " ".join(first_words[:8]),
+                        "corpus_opening": " ".join(past_opening[:8]),
+                    })
+
+                past_raw = " ".join(past_texts[:2]).lower()
+                if (re.search(time_pattern, target_raw) and re.search(state_pattern, target_raw) and
+                    re.search(time_pattern, past_raw) and re.search(state_pattern, past_raw)):
+                    violations.append({
+                        "type": "CORPUS_CROSS_SIMILARITY",
+                        "bundle": sub.name,
+                        "overlap_words": ["time_state_template_clone"],
+                        "target_opening": " ".join(first_words[:8]),
+                        "corpus_opening": " ".join(past_opening[:8]),
+                    })
+            except Exception:
                 continue
 
-            # Compare first 3 sentences of past video
-            past_opening = clean_sentence(" ".join(past_texts[:3])).split()[:15]
-            if not past_opening:
+    # 2. Modern sys/runs/*/content.json cross-channel scan
+    active_runs = runs_dir
+    if active_runs is None:
+        if corpus_dir and (corpus_dir.parent / "runs").is_dir():
+            active_runs = corpus_dir.parent / "runs"
+        elif (SYS_DIR / "runs").is_dir() and (corpus_dir is None or str(corpus_dir).startswith(str(SYS_DIR))):
+            active_runs = SYS_DIR / "runs"
+
+    if active_runs and active_runs.is_dir():
+        curr_channel = extract_channel_from_name(current_run_name) if current_run_name else ""
+        curr_stem = extract_stem_from_name(current_run_name) if current_run_name else ""
+        norm_topic = topic_title.strip().lower()
+
+        for run_dir in active_runs.iterdir():
+            if not run_dir.is_dir():
+                continue
+            past_name = run_dir.name
+            if past_name.startswith("."):
+                continue
+            if current_run_name and past_name == current_run_name:
                 continue
 
-            # Calculate word overlap ratio on opening
-            overlap = set(first_words).intersection(set(past_opening))
-            content_overlap = [w for w in overlap if w not in {"và", "của", "là", "có", "được", "trong", "để", "cho", "với", "không"}]
-            if len(content_overlap) >= 3:
-                violations.append({
-                    "type": "CORPUS_CROSS_SIMILARITY",
-                    "bundle": sub.name,
-                    "overlap_words": content_overlap,
-                    "target_opening": " ".join(first_words[:8]),
-                    "corpus_opening": " ".join(past_opening[:8]),
-                })
+            past_stem = extract_stem_from_name(past_name)
+            if curr_stem and past_stem and curr_stem == past_stem:
+                continue
 
-            # Check structural template duplication: e.g. "[Time] + Bạn ngồi [state] trước [object]"
-            time_pattern = r"^\s*(?:\d+|tám|chín|mười|mười một|mười hai)\s+giờ\b"
-            state_pattern = r"\bbạn\s+ngồi\s+(?:bất động|chết lặng|im lìm|bần thần|thẫn thờ)\b"
-            target_raw = (first_sc.get("narration") or first_sc.get("text") or "").lower()
-            past_raw = " ".join(past_texts[:2]).lower()
-            if (re.search(time_pattern, target_raw) and re.search(state_pattern, target_raw) and
-                re.search(time_pattern, past_raw) and re.search(state_pattern, past_raw)):
-                violations.append({
-                    "type": "CORPUS_CROSS_SIMILARITY",
-                    "bundle": sub.name,
-                    "overlap_words": ["time_state_template_clone"],
-                    "target_opening": " ".join(first_words[:8]),
-                    "corpus_opening": " ".join(past_opening[:8]),
-                })
-        except Exception:
-            continue
+            past_channel = extract_channel_from_name(past_name)
+            # Skip same-channel runs to focus strictly on cross-channel cloning
+            if curr_channel and past_channel and curr_channel == past_channel:
+                continue
+
+            content_file = run_dir / "content.json"
+            if not content_file.is_file():
+                continue
+
+            try:
+                past_data = json.loads(content_file.read_text(encoding="utf-8"))
+                past_topic = str(past_data.get("topic") or "").strip().lower()
+                if norm_topic and past_topic and norm_topic == past_topic:
+                    continue
+
+                past_scenes = past_data.get("scenes", [])
+                if not past_scenes:
+                    continue
+
+                # Skip identical scene sets (the exact same production artifact)
+                if (
+                    len(past_scenes) == len(scenes)
+                    and clean_sentence(past_scenes[0].get("narration") or "") == sc_narration
+                ):
+                    if all(
+                        clean_sentence(past_scenes[i].get("narration") or "")
+                        == clean_sentence(scenes[i].get("narration") or "")
+                        for i in range(len(scenes))
+                    ):
+                        continue
+
+                past_texts = [
+                    str(sc.get("narration") or sc.get("text") or "")
+                    for sc in past_scenes[:3]
+                    if (sc.get("narration") or sc.get("text"))
+                ]
+                if not past_texts:
+                    continue
+
+                past_opening = clean_sentence(" ".join(past_texts[:3])).split()[:15]
+                if not past_opening:
+                    continue
+
+                # Significant content word overlap on opening
+                overlap = set(first_words).intersection(set(past_opening))
+                content_overlap = [w for w in overlap if w not in STOP_WORDS]
+                if len(content_overlap) >= 5:
+                    violations.append({
+                        "type": "CORPUS_CROSS_SIMILARITY",
+                        "bundle": past_name,
+                        "overlap_words": sorted(content_overlap),
+                        "target_opening": " ".join(first_words[:8]),
+                        "corpus_opening": " ".join(past_opening[:8]),
+                    })
+                    continue
+
+                # Structural template duplication: e.g. "[Time] + Bạn ngồi [state] trước [object]"
+                past_raw = " ".join(past_texts[:2]).lower()
+                if (
+                    re.search(time_pattern, target_raw)
+                    and re.search(state_pattern, target_raw)
+                    and re.search(time_pattern, past_raw)
+                    and re.search(state_pattern, past_raw)
+                ):
+                    violations.append({
+                        "type": "CORPUS_CROSS_SIMILARITY",
+                        "bundle": past_name,
+                        "overlap_words": ["time_state_template_clone"],
+                        "target_opening": " ".join(first_words[:8]),
+                        "corpus_opening": " ".join(past_opening[:8]),
+                    })
+            except Exception:
+                continue
 
     return violations
 
@@ -442,8 +628,13 @@ def lint_script(
     style: str | None = None,
     enforce_breathing_room: bool | None = None,
     strict: bool = False,
+    runs_dir: Path | None = None,
+    current_run_name: str = "",
 ) -> Dict[str, Any]:
     all_violations: List[Dict[str, Any]] = []
+
+    # AI discourse & filler clichés
+    all_violations.extend(check_ai_cliche_phrases(scenes))
 
     # 0. Visual prompt clichés
     all_violations.extend(check_visual_prompt_cliches(scenes, characters=characters, style=style))
@@ -518,8 +709,14 @@ def lint_script(
     all_violations.extend(ir_violations)
 
     # 4. Corpus cross similarity
-    if corpus_dir and corpus_dir.is_dir():
-        cs_violations = check_corpus_cross_similarity(scenes, corpus_dir)
+    if (corpus_dir and corpus_dir.is_dir()) or (runs_dir and runs_dir.is_dir()):
+        cs_violations = check_corpus_cross_similarity(
+            scenes,
+            corpus_dir=corpus_dir,
+            runs_dir=runs_dir,
+            current_run_name=current_run_name,
+            topic_title=topic_title,
+        )
         all_violations.extend(cs_violations)
 
     # 5. Human sentence rhythm metrics & optional hard enforcement
@@ -546,6 +743,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Lint video script for lexical and narrative diversity.")
     parser.add_argument("script_file", help="Path to content.json, script.json, or bundle manifest")
     parser.add_argument("--corpus-dir", default="sys/exports", help="Corpus directory to check against")
+    parser.add_argument(
+        "--runs-dir",
+        default=str(SYS_DIR / "runs"),
+        help="Runs directory to check against for cross-channel similarity",
+    )
     parser.add_argument(
         "--enforce-breathing-room",
         action="store_true",
@@ -616,6 +818,13 @@ def main() -> None:
             pass
 
     corpus_dir = Path(args.corpus_dir)
+    runs_dir = Path(args.runs_dir) if args.runs_dir else None
+    current_run_name = ""
+    if target_path.parent.parent.name == "runs":
+        current_run_name = target_path.parent.name
+    elif target_path.parent.name and (SYS_DIR / "runs" / target_path.parent.name).is_dir():
+        current_run_name = target_path.parent.name
+
     result = lint_script(
         scenes,
         corpus_dir=corpus_dir,
@@ -625,6 +834,8 @@ def main() -> None:
         style=data.get("style") if isinstance(data, dict) else None,
         enforce_breathing_room=args.enforce_breathing_room,
         strict=args.strict,
+        runs_dir=runs_dir,
+        current_run_name=current_run_name,
     )
 
     print("=" * 80)
@@ -642,6 +853,10 @@ def main() -> None:
                 print(f"[{idx}] {v_type} in {v['scene_id']} (Ch{v['chapter']}):")
                 print(f"    Forbidden keyword found: '{v['keyword']}'")
                 print(f"    Snippet: {v['snippet']}")
+            elif v_type == "AI_CLICHE_PHRASE":
+                print(f"[{idx}] {v_type} in {v['scene_id']}:")
+                print(f"    Banned AI cliché: '{v.get('matched_text', v.get('pattern', ''))}'")
+                print(f"    Snippet: {v.get('snippet', '')}")
             elif v_type in ("FORMULAIC_TRANSITION", "ACADEMIC_NAMEDROP_BLOAT", "CLARITY_GUIDANCE"):
                 print(f"[{idx}] {v_type} in {v['scene_id']} cue #{v.get('sentence_index', 1)}:")
                 print(f"    Message: {v.get('message', v.get('pattern', ''))}")

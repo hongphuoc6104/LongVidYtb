@@ -1,31 +1,70 @@
 {
-  "voice": "VietNarrator_LoiSangSoi",
+  "voice": "VietNarrator_loi_sang_soi",
   "channel_id": "loi_sang_soi",
+  "option_index": 2,
+  "voice_label": "Giọng kể chuyện dụ ngôn trầm ấm, nhân hậu, rõ từng chữ chuẩn phòng thu",
   "language": "vi",
   "languages": [
     "vi",
     "en"
   ],
   "reference_wav": "reference.wav",
-  "reference_text": "Đang ngồi đọc sách thì dưới chân bỗng có tiếng kêu meo meo dịu dàng. Nhà bạn có nuôi một chú mèo nào không, hãy bình luận nhé.",
-  "source_speed": 0.9,
-  "recommended_speed": 1.05,
-  "default_tone": "narrative_warm",
-  "audio_voice_chain": "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-2.9,equalizer=f=2400:t=q:w=1.2:g=1.4,lowpass=f=13500",
+  "reference_text": "Gió muốn thổi đâu thì thổi. Ông nghe tiếng gió, nhưng không biết gió từ đâu đến và thổi đi đâu. Ai bởi thần khí mà sinh ra thì cũng vậy.",
+  "duration_seconds": 11.07,
+  "acoustic_metrics": {
+    "dur": 11.07,
+    "rms_db": -16.18,
+    "peak_db": -1.1,
+    "p05_db": -140.0,
+    "p10_db": -61.7,
+    "p50_db": -18.6,
+    "p90_db": -11.9,
+    "dyn_db": 49.8,
+    "active_ratio": 0.68,
+    "min_1s_db": -22.5,
+    "start_60ms_db": -140.0,
+    "end_60ms_db": -140.0,
+    "hf_ratio": 0.0961,
+    "f0_spread_semitones": 6.06,
+    "quarter_rms_spread_db": 3.15
+  },
+  "span_provenance": {
+    "raw_sir_db": 11.42,
+    "avg_word_prob": 0.98,
+    "valley_start_db": -140.0,
+    "valley_end_db": -68.4,
+    "pause_before_s": 0.64,
+    "pause_after_s": 3.34
+  },
+  "source_speed": 1.0,
+  "recommended_speed": 1.09,
+  "default_tone": "warm_reverent",
+  "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
   "audio_lufs": -14.0,
-  "audio_peak_db": -1.5,
-  "sha256": "8ff1a7152a5e97124ba736b1295d6d41570f32b56cc217ecdb5e05f5438e383c",
+  "audio_peak_db": -1.2,
+  "sha256": "c102716dee467f410d330451198a5d9afcae69f8d04e96d5a5514b5d0ad1a1fb",
+  "demucs_vocal_isolated": true,
+  "studio_v3_restored": true,
+  "processing": {
+    "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+    "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+    "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+    "boundary_aligner": "faster-whisper large-v3 word_timestamps + 20ms valley<=33dB + 110ms/150ms silence",
+    "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+  },
   "sources": [
     {
-      "source": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+      "url": "https://www.youtube.com/watch?v=pxbkiVwW4EI",
+      "video_id": "pxbkiVwW4EI",
+      "source_channel": "Lm. LÊ QUANG UY, DCCT",
+      "video_title": "KINH THÁNH TÂN ƯỚC - TIN MỪNG THEO THÁNH GIOAN - Vườn Xanh Audio Book - Giọng đọc: ông HOÀNG HƯƠNG",
       "window_seconds": [
-        0.0,
-        8.14
-      ],
-      "pitch_factor": 1.0,
-      "eq": ""
+        843.82,
+        854.63
+      ]
     }
   ],
   "listening_verified": true,
-  "note": "Studio-tuned human voice profile for channel loi_sang_soi (narrative_warm, speed 1.05)."
+  "note": "Studio V3 restored reference voice (Giọng kể chuyện dụ ngôn trầm ấm, nhân hậu, rõ từng chữ chuẩn phòng thu) from 'Lm. LÊ QUANG UY, DCCT' (https://www.youtube.com/watch?v=pxbkiVwW4EI @ 843.82s-854.63s) at exact 1.0x original speed.",
+  "active_option": 2
 }

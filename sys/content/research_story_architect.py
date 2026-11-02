@@ -1540,6 +1540,40 @@ def build_scenes_from_story_rows(
             narrative_phase=resolved_phase,
             narrative_situation=scene_situation,
         ))
+
+    # Enforce AGENTS.md §6 hand-lettering density cap (<= 30% of beats) and top-anchor focus
+    non_endcard_beats = [
+        (sc_idx, b_idx, b)
+        for sc_idx, sc_obj in enumerate(built_scenes)
+        for b_idx, b in enumerate(sc_obj.visual_beats)
+        if not getattr(b, "is_endcard", False)
+    ]
+    emph_candidates = [
+        (sc_idx, b_idx, b)
+        for sc_idx, b_idx, b in non_endcard_beats
+        if getattr(b, "emphasis_text", None)
+    ]
+    if non_endcard_beats and len(emph_candidates) / len(non_endcard_beats) > 0.30:
+        max_allowed = max(1, int(len(non_endcard_beats) * 0.25))
+        first_per_scene = [(sc_idx, b_idx, b) for sc_idx, b_idx, b in emph_candidates if b_idx == 0]
+        if not first_per_scene:
+            first_per_scene = emph_candidates
+        step = max(1, round(len(first_per_scene) / max_allowed))
+        keep_ids = {id(item[2]) for item in first_per_scene[::step][:max_allowed]}
+        keep_ids.add(id(emph_candidates[0][2]))
+        for _, _, b in emph_candidates:
+            if id(b) not in keep_ids:
+                b.emphasis_text = None
+                if b.visible_text:
+                    b.visible_text = [
+                        vt for vt in b.visible_text
+                        if not (isinstance(vt, dict) and vt.get("object") == "emphasis")
+                    ]
+
+    for _, _, b in non_endcard_beats:
+        if getattr(b, "emphasis_text", None) and b.focus is None:
+            b.focus = {"x": 0.5, "y": 0.0}
+
     return built_scenes
 
 

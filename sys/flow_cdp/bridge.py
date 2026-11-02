@@ -366,6 +366,7 @@ def _execute_sub_batch(specs: list[dict[str, Any]], timeout: float = 120.0, sock
                 if not spec.get("charMediaId"):
                     try:
                         from adapters import _flow_media_reference
+
                         from pilot import Pilot
                         p_inst = Pilot(SYS_ROOT)
                         job = spec.get("jobId") or ""
@@ -526,7 +527,7 @@ def generate_cdp_image(
         if cand_sock.exists() or ensure_connected is not _ORIGINAL_ENSURE_CONNECTED:
             ensure_connected(sock_path=cand_sock)
     except Blocked as exc:
-        raise _mark_not_submitted(exc)
+        raise _mark_not_submitted(exc) from exc
 
     canonical_mascot = (SYS_ROOT / "assets/characters/channel-mascot/reference-v1.png").resolve()
     if use_character_ref and char_ref_path is None and canonical_mascot.exists():
@@ -624,6 +625,7 @@ def generate_cdp_batch(
     if profiles_cfg and job_id:
         from execution import is_job
         from flow_dispatch import job_profiles
+
         from pilot import Pilot
         p_obj = Pilot()
         try:

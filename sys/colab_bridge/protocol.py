@@ -29,9 +29,9 @@ def positive(value, name):
 
 
 TONE_SPEED_MULTIPLIERS = {
-    'narrative_warm': 0.98,
+    'narrative_warm': 1.00,
     'analytical_crisp': 1.02,
-    'reflective_slow': 0.92,
+    'reflective_slow': 0.98,
 }
 
 

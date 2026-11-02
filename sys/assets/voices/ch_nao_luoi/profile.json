@@ -1,31 +1,70 @@
 {
-  "voice": "VietNarrator_NaoLuoi",
+  "voice": "VietNarrator_nao_luoi",
   "channel_id": "nao_luoi",
+  "option_index": 3,
+  "voice_label": "Giọng giải mã tâm lý & não bộ trong trẻo, mạch lạc chuẩn phòng thu",
   "language": "vi",
   "languages": [
     "vi",
     "en"
   ],
   "reference_wav": "reference.wav",
-  "reference_text": "Đang ngồi đọc sách thì dưới chân bỗng có tiếng kêu meo meo dịu dàng. Nhà bạn có nuôi một chú mèo nào không, hãy bình luận nhé.",
-  "source_speed": 0.9,
+  "reference_text": "Còn người kia thì không. Nhà giáo dục người Nga, Ushinki đã từng nói, tập trung là cánh cửa duy nhất của tâm hồn chúng ta.",
+  "duration_seconds": 8.96,
+  "acoustic_metrics": {
+    "dur": 8.96,
+    "rms_db": -14.39,
+    "peak_db": -1.24,
+    "p05_db": -140.0,
+    "p10_db": -140.0,
+    "p50_db": -15.9,
+    "p90_db": -10.3,
+    "dyn_db": 129.7,
+    "active_ratio": 0.65,
+    "min_1s_db": -21.7,
+    "start_60ms_db": -140.0,
+    "end_60ms_db": -140.0,
+    "hf_ratio": 0.0256,
+    "f0_spread_semitones": 1.17,
+    "quarter_rms_spread_db": 3.02
+  },
+  "span_provenance": {
+    "raw_sir_db": 36.06,
+    "avg_word_prob": 0.983,
+    "valley_start_db": -140.0,
+    "valley_end_db": -140.0,
+    "pause_before_s": 0.16,
+    "pause_after_s": 0.46
+  },
+  "source_speed": 1.0,
   "recommended_speed": 1.08,
-  "default_tone": "narrative_warm",
-  "audio_voice_chain": "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-3.0,equalizer=f=2400:t=q:w=1.2:g=1.5,lowpass=f=13500",
+  "default_tone": "analytical_warm",
+  "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
   "audio_lufs": -14.0,
-  "audio_peak_db": -1.5,
-  "sha256": "8ff1a7152a5e97124ba736b1295d6d41570f32b56cc217ecdb5e05f5438e383c",
+  "audio_peak_db": -1.2,
+  "sha256": "81ef34144dd651f34155ec9f8f25cc2494a2142e92fb553c77aa3e87f455c347",
+  "demucs_vocal_isolated": true,
+  "studio_v3_restored": true,
+  "processing": {
+    "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+    "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+    "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+    "boundary_aligner": "faster-whisper large-v3 word_timestamps + 20ms valley<=33dB + 110ms/150ms silence",
+    "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+  },
   "sources": [
     {
-      "source": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+      "url": "https://www.youtube.com/watch?v=Zo2vYU2noeI",
+      "video_id": "Zo2vYU2noeI",
+      "source_channel": "Better Version",
+      "video_title": "Cách nhanh nhất để nâng cấp bản thân | Sách Dòng Chảy (Flow)",
       "window_seconds": [
-        0.0,
-        8.14
-      ],
-      "pitch_factor": 1.0,
-      "eq": ""
+        282.6,
+        291.3
+      ]
     }
   ],
   "listening_verified": true,
-  "note": "Studio-tuned human voice profile for channel nao_luoi (narrative_warm, speed 1.08)."
+  "note": "Studio V3 restored reference voice (Giọng giải mã tâm lý & não bộ trong trẻo, mạch lạc chuẩn phòng thu) from 'Better Version' (https://www.youtube.com/watch?v=Zo2vYU2noeI @ 282.6s-291.3s) at exact 1.0x original speed.",
+  "active_option": 3
 }

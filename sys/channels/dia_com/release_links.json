@@ -1,0 +1,14 @@
+{
+  "long": {
+    "job_id": "dia-com-batch2-16x9",
+    "youtube_url": "https://youtu.be/XM56LV7AE6E"
+  },
+  "shorts": {
+    "dia-com-batch2-9x16": {
+      "job_id": "dia-com-batch2-9x16",
+      "youtube_url": "https://youtube.com/shorts/MR1OD_cwqkA",
+      "tiktok_url": null,
+      "facebook_url": null
+    }
+  }
+}

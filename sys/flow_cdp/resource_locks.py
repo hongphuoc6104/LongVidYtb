@@ -28,7 +28,7 @@ from pathlib import Path
 from typing import IO, Any
 
 LOCKS_DIR = Path.home() / ".cache/video-pilot/locks"
-DEFAULT_MAX_GLOBAL_BROWSERS = int(os.environ.get("VP_MAX_CHROME_INSTANCES", "12"))
+DEFAULT_MAX_GLOBAL_BROWSERS = int(os.environ.get("VP_MAX_CHROME_INSTANCES", "16"))
 DEFAULT_MAX_BROWSER_SLOTS = DEFAULT_MAX_GLOBAL_BROWSERS
 MIN_DEV_SHM_FREE_MB = 512
 
@@ -80,6 +80,7 @@ def build_optimized_chrome_launch(
     headless: bool = True,
     env: dict[str, str] | None = None,
     shm_path: str | Path = "/dev/shm",
+    extra_args: list[str] | None = None,
 ) -> tuple[list[str], dict[str, str]]:
     """Construct hardware-accelerated, low-contention Chrome CLI arguments and environment."""
     has_display, out_env = detect_local_gpu_display(env)
@@ -141,6 +142,12 @@ def build_optimized_chrome_launch(
             "--hide-scrollbars",
             "--mute-audio",
         ])
+
+    if extra_args:
+        custom_window = next((a for a in extra_args if a.startswith("--window-size=")), None)
+        if custom_window:
+            cmd = [c for c in cmd if not c.startswith("--window-size=")]
+        cmd.extend(extra_args)
 
     cmd.append(url)
     return cmd, out_env

@@ -422,13 +422,13 @@ class TestVietNarratorContractIntegrity(unittest.TestCase):
             self.assertTrue(bool(hex_re.match(rev)), f"Model revision for {lang} must be 40-char hex hash: {rev}")
 
     def test_tone_speed_multipliers_and_base_speed_preservation(self):
-        self.assertEqual(TONE_SPEED_MULTIPLIERS.get("narrative_warm"), 0.98)
+        self.assertEqual(TONE_SPEED_MULTIPLIERS.get("narrative_warm"), 1.00)
         self.assertEqual(TONE_SPEED_MULTIPLIERS.get("analytical_crisp"), 1.02)
-        self.assertEqual(TONE_SPEED_MULTIPLIERS.get("reflective_slow"), 0.92)
+        self.assertEqual(TONE_SPEED_MULTIPLIERS.get("reflective_slow"), 0.98)
         # Base speed 1.0 preservation
-        self.assertEqual(resolve_tone_speed(1.0, "narrative_warm"), 0.98)
+        self.assertEqual(resolve_tone_speed(1.0, "narrative_warm"), 1.00)
         self.assertEqual(resolve_tone_speed(1.0, "analytical_crisp"), 1.02)
-        self.assertEqual(resolve_tone_speed(1.0, "reflective_slow"), 0.92)
+        self.assertEqual(resolve_tone_speed(1.0, "reflective_slow"), 0.98)
         self.assertEqual(resolve_tone_speed(1.0, None), 1.00)
 
 

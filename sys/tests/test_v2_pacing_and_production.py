@@ -315,8 +315,8 @@ class TestEndcardAndSilencePadding:
 
     def test_resource_partition_slice_lookup(self):
         flow_p, colab_a, sess = get_channel_slice("nao_luoi")
-        assert flow_p == ["profile_1", "profile_2"]
-        assert colab_a == ["account-01", "account-02"]
+        assert flow_p == ["profile_2", "profile_4"]
+        assert colab_a == ["account-01", "account-13"]
         assert sess == "vp-nao-luoi"
 
         cid, slug = resolve_channel_ids("channel-ua-sao-vay")

@@ -698,6 +698,22 @@
         "null"
       ]
     },
+    "video_engine": {
+      "type": "string",
+      "enum": [
+        "flow_video",
+        "remotion",
+        "hybrid"
+      ]
+    },
+    "chain_mode": {
+      "type": "string",
+      "enum": [
+        "daisy_chain",
+        "scene_pairs",
+        "zero_credit_flipbook"
+      ]
+    },
     "engagement": {
       "type": "object",
       "properties": {

@@ -4,24 +4,24 @@ from typing import List, Optional
 _EDITORIAL_SEQUENCE = ("pan_right", "zoom_in", "hold", "zoom_out", "pan_left", "punch_in")
 
 _PHASE_PREFERRED_EFFECTS = {
-    "hook": ("punch_in", "zoom_in", "pan_right", "zoom_out"),
-    "lead_in": ("zoom_in", "pan_right", "zoom_out", "pan_left"),
-    "lived_friction": ("zoom_in", "pan_right", "zoom_out", "pan_left"),
-    "problem": ("punch_in", "zoom_in", "pan_left", "zoom_out"),
-    "empirical_conflict": ("zoom_in", "pan_left", "punch_in", "zoom_out"),
-    "causal_mechanism": ("pan_right", "hold", "zoom_in", "zoom_out"),
-    "explanation": ("zoom_in", "pan_right", "hold", "zoom_out"),
-    "structural_model": ("pan_right", "hold", "zoom_in", "zoom_out"),
-    "counter_argument": ("punch_in", "pan_left", "zoom_in", "zoom_out"),
-    "takeaway": ("zoom_out", "hold", "zoom_in", "pan_right"),
-    "closing": ("zoom_out", "hold", "pan_right", "zoom_in"),
-    "actionable_resolution": ("zoom_out", "pan_right", "zoom_in", "hold"),
+    "hook": ("punch_in", "zoom_in", "zoom_out", "pan_right"),
+    "lead_in": ("zoom_in", "zoom_out", "punch_in", "pan_right"),
+    "lived_friction": ("zoom_in", "punch_in", "zoom_out", "pan_left"),
+    "problem": ("punch_in", "zoom_in", "zoom_out", "pan_left"),
+    "empirical_conflict": ("zoom_in", "punch_in", "zoom_out", "pan_left"),
+    "causal_mechanism": ("zoom_in", "zoom_out", "punch_in", "pan_right"),
+    "explanation": ("zoom_in", "zoom_out", "pan_right", "hold"),
+    "structural_model": ("zoom_in", "zoom_out", "pan_right", "hold"),
+    "counter_argument": ("punch_in", "zoom_in", "zoom_out", "pan_left"),
+    "takeaway": ("zoom_out", "zoom_in", "pan_right", "hold"),
+    "closing": ("zoom_out", "zoom_in", "pan_right", "hold"),
+    "actionable_resolution": ("zoom_out", "zoom_in", "punch_in", "pan_right"),
 }
 
 
 def _match_explicit_or_keyword_effect(text: str, shot_type: str = "") -> Optional[str]:
     st = (shot_type or "").strip().lower()
-    if st in ("visual_diagram", "white_card", "white_isolated"):
+    if st in ("white_card", "white_isolated"):
         return "hold"
     if text in ("zoom_in", "zoom_out", "punch_in", "pan_left", "pan_right", "hold"):
         return text

@@ -1,0 +1,27 @@
+{
+  "channel_id": "banh_rang",
+  "slug": "banh-rang",
+  "youtube_name": "Bánh Răng Thế Giới",
+  "handle_candidates": [
+    "@BanhRangTheGioiVN",
+    "@BanhRangTheGioiOfficial",
+    "@KenhBanhRangTheGioi",
+    "@BanhRangTheGioi"
+  ],
+  "description": "Chào mừng bạn đến với kênh chính thức của Bánh Răng Thế Giới!\n\nThấy rõ các bánh răng kinh tế ngầm đang tác động tới lương và giá cả quanh bạn.\nNội dung được thiết kế dễ hiểu, trực quan và hấp dẫn dành riêng cho người đi làm, nhà đầu tư cá nhân f0, chủ doanh nghiệp nhỏ.\n\nChủ đề trọng tâm: Kinh tế vĩ mô, lạm phát, lãi suất và chuỗi cung ứng toàn cầu giải thích bình dân.\n\n#banhrangthegioi #kinhtevimo #lamphat #dongtien #kienthuc",
+  "keywords": [
+    "banhrangthegioi",
+    "kinhtevimo",
+    "lamphat",
+    "dongtien",
+    "kienthuc",
+    "Kinh tế vĩ mô, lạm phát, lãi suất và chuỗi cung ứng toàn cầu giải thích bình dân"
+  ],
+  "assets": {
+    "avatar_800x800": "sys/channels/banh_rang/assets/avatar_800x800.png",
+    "banner_2048x1152": "sys/channels/banh_rang/assets/banner_2048x1152.png",
+    "watermark_150x150": "sys/channels/banh_rang/assets/watermark_150x150.png",
+    "endcard_16x9": "sys/channels/banh_rang/assets/endcard_16x9.jpg",
+    "endcard_9x16": "sys/channels/banh_rang/assets/endcard_9x16.jpg"
+  }
+}

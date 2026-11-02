@@ -347,7 +347,8 @@ else:
         if yt_map_file.is_file():
             yt_data = json.loads(yt_map_file.read_text(encoding="utf-8"))["channels"]
 
-        self.assertEqual(len(CHANNEL_RESOURCE_PARTITIONS), 39, "Must partition all 39 fleet channels")
+        expected_channels = len(yt_data) if yt_data is not None else 38
+        self.assertEqual(len(CHANNEL_RESOURCE_PARTITIONS), expected_channels, f"Must partition all {expected_channels} fleet channels")
         if yt_data is not None:
             self.assertEqual(set(CHANNEL_RESOURCE_PARTITIONS.keys()), set(yt_data.keys()))
 

@@ -1,0 +1,18 @@
+{
+  "jobId": "q1_dia_com_9x16",
+  "forgeId": "a3db8711-0e94-44b3-a430-89730bd2dfb3",
+  "profile_id": "profile_1",
+  "prompt": "Requested aspect ratio: 9:16. Render a complete 100% full-bleed vertical 9:16 2D endcard illustration extending continuously to all four edges with zero letterbox bars, zero subtitle boxes, and zero dark vignette.\n\nVisual Style (ch_culinary_mascots): Bold 2D kawaii culinary sticker-pop illustration on warm porcelain white canvas (#FFFDF7 warm porcelain white canvas, #FF6B6B chili coral, #FFD166 egg-yolk gold, #06D6A0 herb mint, #26547C cast-iron navy) with smooth dark outlines and chunky white sticker borders; expressive culinary ingredients, kitchen utensils and nutritional molecules; orthographic 2D, at least 60% clean negative space, zero 3D, zero gradients. Palette: #FFFDF7, #FF6B6B, #FFD166, #06D6A0, #26547C, #FFFFFF.\n\nCharacter Cast: Adorable recurring personified kitchen mascots led by Bé Gạo (plump white rice-grain character with rosy cheeks and tiny chef toque), Bé Lửa (cheerful kitchen flame sprite), and expressive amino and sugar molecule buddies with full rounded mascot anatomy and expressive faces. Outfit: Tiny white chef toque and red bandana on Bé Gạo; cheerful golden flame contour for Bé Lửa.\n\nScene Composition: The channel character stands centered in the frame, pointing upwards with a welcoming smile. Clean, minimalist composition with at least 60% open negative space on the solid flat background canvas (#FFFDF7).\n\nEmphasis lettering instruction: render exact uppercase Vietnamese hand-lettered text (crisp high-contrast dark ink lettering) in the upper third integrated directly onto the flat canvas (#FFFDF7) (strictly zero rectangular text cards, banners, or gradient overlays covering artwork): \"BẢN ĐẦY ĐỦ TRÊN YOUTUBE\" and \"ĐĨA CƠM KHOA HỌC\".",
+  "latency": 25.72,
+  "sha256": "eede4ebb0f591e7b5a9025f3db81b6165261d13c967df67235cd25d97542de9c",
+  "aspect_ratio": "9:16",
+  "width": 1080,
+  "height": 1920,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "verified",
+  "created_at": "2026-10-31T18:08:42.770810+00:00",
+  "media_id": "a3db8711-0e94-44b3-a430-89730bd2dfb3",
+  "channel_id": "dia_com"
+}

@@ -1564,6 +1564,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     </div>
 
     <div class="header-actions">
+      <button class="btn btn-emerald" id="btn-goto-review" onclick="switchTab('tab-review')" style="background: linear-gradient(135deg, #10b981, #059669); color: #fff; font-weight: 800; box-shadow: 0 0 14px rgba(16, 185, 129, 0.35);">
+        <span>✅</span> Duyệt Đăng Video Mới (<span id="header-review-count">40</span>)
+      </button>
       <button class="btn btn-primary" id="btn-refresh" onclick="refreshMetrics()">
         <span>↻</span> Làm mới chỉ số (Live Scrape)
       </button>
@@ -1670,6 +1673,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         <button class="tab-btn" id="btn-tab-refs" onclick="switchTab('tab-refs')">
           <span>📚</span> 5. Kho Kênh Mẫu, Email & Đề Tài Gợi Ý
           <span class="tab-count" id="count-tab-refs">0</span>
+        </button>
+        <button class="tab-btn" id="btn-tab-review" onclick="switchTab('tab-review')" style="border-color: rgba(16, 185, 129, 0.55); background: rgba(16, 185, 129, 0.12); color: #34d399; font-weight: 700;">
+          <span>✅</span> 6. Duyệt Đăng Video Mới & Ghi Chú Lỗi
+          <span class="tab-count" id="count-tab-review" style="background: #10b981; color: #022c22; font-weight: 800;">40</span>
         </button>
       </div>
     </div>
@@ -1989,6 +1996,65 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     </div>
   </div>
 
+  <!-- ===================================================================== -->
+  <!-- TAB 6: DUYỆT ĐĂNG VIDEO MỚI & GHI CHÚ SỬA LỖI (PRE-PUBLISH GATE) -->
+  <!-- ===================================================================== -->
+  <div class="tab-pane" id="tab-review">
+    <div class="catalog-container" style="padding: 18px;">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 14px;">
+        <div>
+          <div style="font-size: 16px; font-weight: 800; color: var(--text-white); display: flex; align-items: center; gap: 8px;">
+            <span>🛡️</span> Cổng Duyệt Đăng Video Mới & Ghi Chú Lỗi Cần Sửa (Pre-Publish Gate)
+          </div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">
+            Tất cả video mới tạo phải được bấm <b>"✅ Duyệt đăng (APPROVED)"</b> mới được đăng lên YouTube. Video bấm <b>"❌ Không duyệt / Cần sửa (REJECTED)"</b> sẽ bị chặn đăng và đọc ghi chú để sửa lại.
+          </div>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px;">
+          <select class="select-filter" id="review-status-filter" onchange="onReviewStatusFilterChange(this.value)">
+            <option value="all">Tất cả trạng thái duyệt (40)</option>
+            <option value="PENDING_REVIEW">⏳ Đang chờ duyệt (PENDING_REVIEW)</option>
+            <option value="APPROVED">✅ Đã duyệt đăng (APPROVED)</option>
+            <option value="REJECTED">❌ Không duyệt / Cần sửa (REJECTED)</option>
+          </select>
+
+          <button class="btn btn-emerald btn-sm" onclick="approveAllFilteredReviewVideos()" style="background: #10b981; color: #022c22; font-weight: 800;">
+            ✅ Duyệt Tất Cả Đang Lọc
+          </button>
+          <button class="btn btn-primary btn-sm" onclick="exportReviewDecisionsJSON()">
+            💾 Xuất File Quyết Định (review_decisions.json)
+          </button>
+        </div>
+      </div>
+
+      <!-- Review Summary Counters -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 18px;">
+        <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px 16px;">
+          <div style="font-size: 11.5px; color: var(--text-muted);">Tổng Video Trong Hàng Đợi</div>
+          <div style="font-size: 22px; font-weight: 800; color: var(--text-white); margin-top: 4px;" id="rev-stat-total">40</div>
+        </div>
+        <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.35); border-radius: 10px; padding: 12px 16px;">
+          <div style="font-size: 11.5px; color: #fbbf24;">⏳ Chờ Duyệt (PENDING_REVIEW)</div>
+          <div style="font-size: 22px; font-weight: 800; color: #fbbf24; margin-top: 4px;" id="rev-stat-pending">40</div>
+        </div>
+        <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 10px; padding: 12px 16px;">
+          <div style="font-size: 11.5px; color: #34d399;">✅ Đã Duyệt Đăng (APPROVED)</div>
+          <div style="font-size: 22px; font-weight: 800; color: #34d399; margin-top: 4px;" id="rev-stat-approved">0</div>
+        </div>
+        <div style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.35); border-radius: 10px; padding: 12px 16px;">
+          <div style="font-size: 11.5px; color: #f87171;">❌ Không Duyệt / Cần Sửa (REJECTED)</div>
+          <div style="font-size: 22px; font-weight: 800; color: #f87171; margin-top: 4px;" id="rev-stat-rejected">0</div>
+        </div>
+      </div>
+
+      <!-- Review Video Cards Grid -->
+      <div id="review-cards-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(430px, 1fr)); gap: 16px;">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- TOAST NOTIFICATION CONTAINER -->
@@ -2012,6 +2078,7 @@ const state = {
   waveFilter: 'all',
   langFilter: 'all',
   styleFilter: 'all',
+  reviewStatusFilter: 'all',
   sortBy: 'views_desc',
   page: 1,
   pageSize: 20,
@@ -2283,7 +2350,8 @@ function switchTab(tabId) {
     'tab-catalog': 'btn-tab-catalog',
     'tab-funnel': 'btn-tab-funnel',
     'tab-ops': 'btn-tab-ops',
-    'tab-refs': 'btn-tab-refs'
+    'tab-refs': 'btn-tab-refs',
+    'tab-review': 'btn-tab-review'
   };
   const activeBtn = document.getElementById(btnMap[tabId]);
   if (activeBtn) activeBtn.classList.add('active');
@@ -2295,6 +2363,8 @@ function switchTab(tabId) {
     renderCatalogTable();
   } else if (tabId === 'tab-refs') {
     renderReferencesTab();
+  } else if (tabId === 'tab-review') {
+    renderReviewTab();
   }
 }
 
@@ -3442,6 +3512,299 @@ function renderActiveViews() {
   renderFunnelTab();
   renderOpsTab();
   renderReferencesTab();
+  renderReviewTab();
+}
+
+// ==============================================================================
+// TAB 6: VIDEO REVIEW & PRE-PUBLISH APPROVAL GATE ENGINE
+// ==============================================================================
+function getReviewQueueItems() {
+  if (!state.raw || !state.raw.review_queue || !state.raw.review_queue.items) {
+    return [];
+  }
+  return Object.values(state.raw.review_queue.items);
+}
+
+function getFilteredReviewItems() {
+  const allItems = getReviewQueueItems();
+  const q = (state.searchQuery || '').toLowerCase();
+  return allItems.filter(item => {
+    if (state.reviewStatusFilter !== 'all' && item.status !== state.reviewStatusFilter) {
+      return false;
+    }
+    if (state.channelFilter !== 'all' && item.channel_id !== state.channelFilter) {
+      return false;
+    }
+    if (state.formatFilter === 'long' && item.format_profile !== 'long_16x9') {
+      return false;
+    }
+    if (state.formatFilter === 'short' && item.format_profile !== 'short_9x16') {
+      return false;
+    }
+    if (q) {
+      const hay = `${item.job_id || ''} ${item.channel_name || ''} ${item.channel_id || ''} ${item.title || ''} ${item.competitor_formula || ''} ${item.review_notes || ''}`.toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+function onReviewStatusFilterChange(val) {
+  state.reviewStatusFilter = val || 'all';
+  renderReviewTab();
+}
+
+function getMediaUrlForJob(item, kind) {
+  const jobId = item.job_id || '';
+  const isHttp = window.location.protocol.startsWith('http');
+  const ver = encodeURIComponent(item.updated_at || '');
+  const qs = ver ? `?v=${ver}` : '';
+  if (kind === 'mp4') {
+    if (isHttp) return `/media/${encodeURIComponent(jobId)}/${encodeURIComponent(jobId)}.mp4${qs}`;
+    return item.mp4_path ? `file://${item.mp4_path}` : '';
+  }
+  if (kind === 'thumb') {
+    const thumbFile = item.format_profile === 'short_9x16' ? 'thumbnail_9x16.jpg' : 'thumbnail_16x9.jpg';
+    if (isHttp) return `/media/${encodeURIComponent(jobId)}/${thumbFile}${qs}`;
+    return item.thumbnail_path ? `file://${item.thumbnail_path}` : '';
+  }
+  return '';
+}
+
+function renderReviewTab() {
+  const allItems = getReviewQueueItems();
+  const totalCnt = allItems.length;
+  const pendingCnt = allItems.filter(i => i.status === 'PENDING_REVIEW').length;
+  const approvedCnt = allItems.filter(i => i.status === 'APPROVED' || i.status === 'PUBLISHED').length;
+  const rejectedCnt = allItems.filter(i => i.status === 'REJECTED').length;
+
+  const badgeTab = document.getElementById('count-tab-review');
+  if (badgeTab) badgeTab.textContent = String(pendingCnt > 0 ? pendingCnt : totalCnt);
+  const badgeHeader = document.getElementById('header-review-count');
+  if (badgeHeader) badgeHeader.textContent = String(pendingCnt > 0 ? `${pendingCnt} chờ duyệt` : `${totalCnt}`);
+
+  const elTot = document.getElementById('rev-stat-total');
+  const elPend = document.getElementById('rev-stat-pending');
+  const elApp = document.getElementById('rev-stat-approved');
+  const elRej = document.getElementById('rev-stat-rejected');
+  if (elTot) elTot.textContent = String(totalCnt);
+  if (elPend) elPend.textContent = String(pendingCnt);
+  if (elApp) elApp.textContent = String(approvedCnt);
+  if (elRej) elRej.textContent = String(rejectedCnt);
+
+  const grid = document.getElementById('review-cards-grid');
+  if (!grid) return;
+
+  const filtered = getFilteredReviewItems();
+  if (filtered.length === 0) {
+    grid.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted); background: rgba(15,23,42,0.5); border-radius: 12px; border: 1px dashed rgba(255,255,255,0.12);">
+        Không tìm thấy video nào khớp bộ lọc hiện tại.
+      </div>
+    `;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(item => {
+    const jid = item.job_id || '';
+    const st = item.status || 'PENDING_REVIEW';
+    const isShort = item.format_profile === 'short_9x16';
+    const fmtBadge = isShort
+      ? `<span style="background: rgba(139, 92, 246, 0.2); color: #c4b5fd; border: 1px solid rgba(139,92,246,0.4); padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700;">📱 Short 9:16</span>`
+      : `<span style="background: rgba(59, 130, 246, 0.2); color: #93c5fd; border: 1px solid rgba(59,130,246,0.4); padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700;">🖥️ Long 16:9</span>`;
+
+    let statusPill = `<span style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245,158,11,0.45); padding: 3px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 800;">⏳ CHỜ DUYỆT (PENDING)</span>`;
+    let borderCol = 'rgba(255, 255, 255, 0.1)';
+    if (st === 'APPROVED' || st === 'PUBLISHED') {
+      statusPill = `<span style="background: rgba(16, 185, 129, 0.22); color: #34d399; border: 1px solid rgba(16,185,129,0.55); padding: 3px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 800;">✅ ĐÃ DUYỆT ĐĂNG (APPROVED)</span>`;
+      borderCol = 'rgba(16, 185, 129, 0.55)';
+    } else if (st === 'REJECTED') {
+      statusPill = `<span style="background: rgba(239, 68, 68, 0.22); color: #f87171; border: 1px solid rgba(239,68,68,0.55); padding: 3px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 800;">❌ KHÔNG DUYỆT / CẦN SỬA</span>`;
+      borderCol = 'rgba(239, 68, 68, 0.55)';
+    }
+
+    const mp4Url = getMediaUrlForJob(item, 'mp4');
+    const thumbUrl = getMediaUrlForJob(item, 'thumb');
+    const approveActiveStyle = st === 'APPROVED'
+      ? 'background: #10b981; color: #022c22; font-weight: 800; border: 1px solid #34d399;'
+      : 'background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4);';
+    const rejectActiveStyle = st === 'REJECTED'
+      ? 'background: #ef4444; color: #fff; font-weight: 800; border: 1px solid #f87171;'
+      : 'background: rgba(239, 68, 68, 0.12); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4);';
+
+    return `
+      <div style="background: rgba(15, 23, 42, 0.82); border: 2px solid ${borderCol}; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;">
+          <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+            <span style="font-size: 14px; font-weight: 800; color: var(--text-white);">${escHtml(item.channel_name || item.channel_id)}</span>
+            ${fmtBadge}
+            <span style="font-size: 11px; color: var(--text-muted);">⏱️ ${formatDuration(item.duration_sec)} (${Number(item.duration_sec || 0).toFixed(1)}s)</span>
+          </div>
+          ${statusPill}
+        </div>
+
+        <div style="font-size: 13.5px; font-weight: 700; color: #f8fafc; line-height: 1.4;">
+          ${escHtml(item.title || jid)}
+        </div>
+
+        <div style="background: #020617; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: center; align-items: center;">
+          <video controls preload="metadata" poster="${escHtml(thumbUrl)}" style="width: 100%; max-height: 280px; object-fit: contain; background: #000;">
+            <source src="${escHtml(mp4Url)}" type="video/mp4">
+          </video>
+        </div>
+
+        <div style="font-size: 11.5px; color: var(--text-muted); background: rgba(30, 41, 59, 0.55); padding: 7px 10px; border-radius: 8px;">
+          <b>🎯 Công thức kênh mẫu:</b> ${escHtml(item.competitor_formula || 'Standard High-Retention Formula')}
+          <div style="margin-top: 3px; font-family: monospace; font-size: 10.5px; color: #94a3b8;">Job ID: ${escHtml(jid)}</div>
+        </div>
+
+        <!-- NÚT BẤM DUYỆT ĐĂNG / KHÔNG DUYỆT -->
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 2px;">
+          <button class="btn btn-sm" style="flex: 1; justify-content: center; padding: 8px 10px; cursor: pointer; border-radius: 8px; ${approveActiveStyle}"
+                  onclick="setVideoReviewStatus('${escHtml(jid)}', 'APPROVED')">
+            ✅ Duyệt đăng (APPROVED)
+          </button>
+          <button class="btn btn-sm" style="flex: 1; justify-content: center; padding: 8px 10px; cursor: pointer; border-radius: 8px; ${rejectActiveStyle}"
+                  onclick="setVideoReviewStatus('${escHtml(jid)}', 'REJECTED')">
+            ❌ Không duyệt / Cần sửa
+          </button>
+          <button class="btn btn-secondary btn-sm" style="padding: 8px 10px; cursor: pointer; border-radius: 8px;"
+                  onclick="setVideoReviewStatus('${escHtml(jid)}', 'PENDING_REVIEW')" title="Đặt lại chờ duyệt">
+            ⏳
+          </button>
+        </div>
+
+        <!-- Ô NHẬP GHI CHÚ LỖI CẦN SỬA -->
+        <div style="display: flex; flex-direction: column; gap: 5px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <label style="font-size: 11.5px; font-weight: 700; color: #cbd5e1;">
+              📝 Ghi chú lỗi cần sửa (review_notes — dùng để sửa tự động nếu Không duyệt):
+            </label>
+            <button class="btn btn-secondary btn-sm" style="padding: 2px 8px; font-size: 11px;"
+                    onclick="saveVideoReviewNotes('${escHtml(jid)}')">
+              💾 Lưu ghi chú
+            </button>
+          </div>
+          <textarea id="review-notes-${escHtml(jid)}" rows="2"
+                    placeholder="Nhập lỗi cần sửa (ví dụ: giọng đọc đoạn đầu hơi nhanh, đổi ảnh cảnh 2, sửa tiêu đề)..."
+                    onblur="saveVideoReviewNotes('${escHtml(jid)}', true)"
+                    style="width: 100%; background: rgba(2, 6, 23, 0.75); border: 1px solid rgba(255,255,255,0.14); border-radius: 8px; color: #f8fafc; padding: 7px 10px; font-size: 12px; resize: vertical;">${escHtml(item.review_notes || '')}</textarea>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function setVideoReviewStatus(jobId, status) {
+  if (!state.raw || !state.raw.review_queue || !state.raw.review_queue.items) return;
+  const item = state.raw.review_queue.items[jobId];
+  if (!item) return;
+
+  const notesEl = document.getElementById(`review-notes-${jobId}`);
+  const notesVal = notesEl ? notesEl.value.trim() : (item.review_notes || '');
+
+  item.status = status;
+  item.review_notes = notesVal;
+  renderReviewTab();
+
+  try {
+    const res = await fetch('/api/review-decision', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ job_id: jobId, status: status, review_notes: notesVal })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.review_queue) state.raw.review_queue = data.review_queue;
+      renderReviewTab();
+      const label = status === 'APPROVED' ? '✅ ĐÃ DUYỆT ĐĂNG' : (status === 'REJECTED' ? '❌ KHÔNG DUYỆT (CẦN SỬA)' : '⏳ CHỜ DUYỆT');
+      showToast(`${label}: ${jobId}`, status === 'APPROVED' ? 'success' : (status === 'REJECTED' ? 'error' : 'info'));
+      return;
+    }
+  } catch (err) {
+    console.log('Offline review save fallback:', err.message);
+  }
+  showToast(`Đã cập nhật trạng thái ${status} cho ${jobId}`, 'info');
+}
+
+async function saveVideoReviewNotes(jobId, silentIfUnchanged = false) {
+  if (!state.raw || !state.raw.review_queue || !state.raw.review_queue.items) return;
+  const item = state.raw.review_queue.items[jobId];
+  if (!item) return;
+
+  const notesEl = document.getElementById(`review-notes-${jobId}`);
+  const notesVal = notesEl ? notesEl.value.trim() : '';
+  if (silentIfUnchanged && notesVal === (item.review_notes || '')) return;
+
+  item.review_notes = notesVal;
+  try {
+    const res = await fetch('/api/review-decision', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ job_id: jobId, status: item.status || 'PENDING_REVIEW', review_notes: notesVal })
+    });
+    if (res.ok) {
+      showToast(`💾 Đã lưu ghi chú cho ${jobId}`, 'success');
+      return;
+    }
+  } catch (err) {
+    console.log('Offline note save:', err.message);
+  }
+  showToast(`💾 Đã lưu ghi chú tạm cho ${jobId}`, 'info');
+}
+
+async function approveAllFilteredReviewVideos() {
+  const filtered = getFilteredReviewItems();
+  if (filtered.length === 0) return;
+
+  const decisions = {};
+  filtered.forEach(item => {
+    item.status = 'APPROVED';
+    decisions[item.job_id] = { status: 'APPROVED', review_notes: item.review_notes || '' };
+  });
+  renderReviewTab();
+
+  try {
+    const res = await fetch('/api/review-decision', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ decisions })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.review_queue) state.raw.review_queue = data.review_queue;
+      renderReviewTab();
+      showToast(`✅ Đã duyệt đăng ${filtered.length} video đang hiển thị!`, 'success');
+      return;
+    }
+  } catch (err) {
+    console.log('Bulk approve fallback:', err.message);
+  }
+  showToast(`✅ Đã đánh dấu duyệt ${filtered.length} video!`, 'success');
+}
+
+function exportReviewDecisionsJSON() {
+  const allItems = getReviewQueueItems();
+  const payload = {
+    exported_at: new Date().toISOString(),
+    decisions: {}
+  };
+  allItems.forEach(item => {
+    payload.decisions[item.job_id] = {
+      status: item.status || 'PENDING_REVIEW',
+      review_notes: item.review_notes || ''
+    };
+  });
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'review_decisions.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('💾 Đã xuất tệp review_decisions.json!', 'success');
 }
 
 // --- API ACTIONS ---
@@ -3600,6 +3963,10 @@ document.addEventListener('DOMContentLoaded', () => {
     renderDashboard(window.__INITIAL_DASHBOARD_DATA__);
   }
 
+  if (window.location.hash === '#review' || window.location.search.includes('tab=review')) {
+    switchTab('tab-review');
+  }
+
   // If served over HTTP/HTTPS, fetch latest live metrics
   if (window.location.protocol.startsWith('http')) {
     fetch('/api/metrics')
@@ -3628,7 +3995,16 @@ def get_dashboard_html(embedded_data: Optional[Dict[str, Any]] = None) -> str:
         100% offline without needing a running server.
     """
     if embedded_data is not None:
-        safe_json = json.dumps(embedded_data, ensure_ascii=False).replace(
+        enriched = dict(embedded_data)
+        if "review_queue" not in enriched:
+            try:
+                from pathlib import Path
+                rq_path = Path(__file__).resolve().parents[1] / "channels" / "video_review_queue.json"
+                if rq_path.is_file():
+                    enriched["review_queue"] = json.loads(rq_path.read_text(encoding="utf-8"))
+            except Exception:
+                pass
+        safe_json = json.dumps(enriched, ensure_ascii=False).replace(
             "</", "<\\/"
         )
         embedded_script = f"""<script id="__INITIAL_DATA__" type="application/json">

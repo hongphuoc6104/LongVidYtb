@@ -57,7 +57,6 @@ WAVE4_IDS = [
     "en_lazy_brain",
     "en_crowd_strings",
     "en_kindred_sketch",
-    "en_ego_unmasked",
     "en_first_principles",
     "en_wallet_anatomy",
     "en_macro_gears",
@@ -279,19 +278,6 @@ WAVE4_WEEK1_BUNDLES: Dict[str, Dict[str, object]] = {
             ("Fast-Short #4 (5 Flow images)", "How one phrasing shift stops arguments before they escalate.", "50s"),
         ],
     },
-    "en_ego_unmasked": {
-        "youtube_long": {
-            "title": "Carl Jung's Shadow Work Explained: Why What You Hate in Others Is Hidden in You",
-            "duration": "13 minutes (24 scenes)",
-            "hook": "What if the traits that irritate you most in other people are actually rejected parts of yourself?",
-        },
-        "tiktok_shorts": [
-            ("Spin-off #1 (0 new images)", "shadow projection", "45s"),
-            ("Spin-off #2 (0 new images)", "The spotlight effect: why nobody is judging you as much as you think.", "40s"),
-            ("Spin-off #3 (0 new images)", "How your ego uses non-stop busyness to hide deep insecurity.", "45s"),
-            ("Fast-Short #4 (5 Flow images)", "The persona trap: what happens when you become your social mask.", "50s"),
-        ],
-    },
     "en_first_principles": {
         "youtube_long": {
             "title": "Mental Models That Change How You Think: Second-Order Thinking & Game Theory",
@@ -497,7 +483,7 @@ WEEK1_BUNDLES.update(WAVE4_WEEK1_BUNDLES)
 def test_twenty_channels_registered_and_complete() -> None:
     assert channel_ids() == EXPECTED_IDS
     all_channels = channels()
-    assert len(all_channels) == 39
+    assert len(all_channels) == 38
     for cid, ch in all_channels.items():
         assert ch.id == cid
         assert ch.git_branch == f"channel/{cid.replace('_', '-')}"
@@ -547,7 +533,7 @@ def test_writer_brief_and_plan_generation(tmp_path: Path) -> None:
     assert "screen_capture_hybrid" in wb
     assert set(WEEK1_BUNDLES.keys()) == set(EXPECTED_IDS)
     written = generate_all_plans(tmp_path)
-    assert len(written) == 39
+    assert len(written) == 38
     for p in written:
         text = p.read_text(encoding="utf-8")
         assert "TikTok (`short_9x16`" in text
@@ -630,16 +616,16 @@ def test_ten_visual_archetypes_and_stickman_limits() -> None:
     from channels.registry import get_visual_archetype
 
     all_channels = channels()
-    assert len(all_channels) == 39
+    assert len(all_channels) == 38
 
-    upgraded_27 = {
+    upgraded_26 = {
         "luat_ngam", "ban_do_quyen_luc", "dia_com", "luat_doi_thuong", "banh_rang", "vu_tru_ti_hon", "la_ban_hoc_thuat",
         "chanh_niem_ke", "loi_sang_soi", "minh_triet_song", "tam_tinh_dem",
-        "en_crowd_strings", "en_kindred_sketch", "en_ego_unmasked", "en_first_principles", "en_wallet_anatomy",
+        "en_crowd_strings", "en_kindred_sketch", "en_first_principles", "en_wallet_anatomy",
         "en_macro_gears", "en_fine_print", "en_inside_vessel", "en_kitchen_molecules", "en_wait_how",
         "en_cold_case_ink", "en_choke_point", "en_pocket_cosmos", "en_second_arrow", "en_parable_lamp", "en_bamboo_marble",
     }
-    assert len(upgraded_27) == 27
+    assert len(upgraded_26) == 26
 
     allowed_stickman_channels = {
         "nao_luoi", "tui_tien", "ai_binh_dan", "nghe_song_sot", "en_lazy_brain", "en_plain_sight_ai", "en_career_leverage",
@@ -656,21 +642,21 @@ def test_ten_visual_archetypes_and_stickman_limits() -> None:
         if "stickman" in ch.visual.cast_appearance.lower():
             stickman_found.append(cid)
 
-        # 27 upgraded channels must have ZERO stickman, bald circle head, wire arms, or Nguệch Ngoạc
-        if cid in upgraded_27:
+        # 26 upgraded channels must have ZERO stickman, bald circle head, wire arms, or Nguệch Ngoạc
+        if cid in upgraded_26:
             for term in ("stickman", "bald circle head", "wire arms", "nguệch ngoạc"):
                 assert term not in ch.visual.cast_appearance.lower(), f"Forbidden '{term}' in {cid}.cast_appearance"
                 assert term not in ch.visual.style_description.lower(), f"Forbidden '{term}' in {cid}.style_description"
 
     assert len(stickman_found) <= 7
     assert set(stickman_found) == allowed_stickman_channels
-    assert not any(cid in upgraded_27 for cid in stickman_found)
+    assert not any(cid in upgraded_26 for cid in stickman_found)
 
     # 10 Archetype balance distribution
     counts = Counter(archetypes.values())
     expected_distribution = {
         "stickman_doodle": 6,
-        "noir_dossier": 5,
+        "noir_dossier": 4,
         "kawaii_sticker": 6,
         "pastel_duo": 2,
         "tactical_atlas": 2,
@@ -681,5 +667,5 @@ def test_ten_visual_archetypes_and_stickman_limits() -> None:
         "woodcut_gouache": 5,
     }
     assert counts == expected_distribution
-    assert counts["stickman_doodle"] / 39 == pytest.approx(6 / 39, 0.001)
+    assert counts["stickman_doodle"] / 38 == pytest.approx(6 / 38, 0.001)
 

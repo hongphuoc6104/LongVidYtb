@@ -1,0 +1,27 @@
+{
+  "channel_id": "nghe_song_sot",
+  "slug": "nghe-song-sot",
+  "youtube_name": "Nghề Sống Sót",
+  "handle_candidates": [
+    "@NgheSongSotVN",
+    "@NgheSongSotOfficial",
+    "@KenhNgheSongSot",
+    "@NgheSongSot"
+  ],
+  "description": "Chào mừng bạn đến với kênh chính thức của Nghề Sống Sót!\n\nHiểu luật chơi thật sự của thị trường lao động để không bao giờ bị đào thải.\nNội dung được thiết kế dễ hiểu, trực quan và hấp dẫn dành riêng cho nhân viên văn phòng, sinh viên mới ra trường và quản lý cấp trung.\n\nChủ đề trọng tâm: Chiến lược sự nghiệp, quy luật ngầm chốn công sở và thích nghi thời đại AI.\n\n#nghesongsot #chuyencongso #kinhnghiemdilam #phattriensunghiep #kienthuc",
+  "keywords": [
+    "nghesongsot",
+    "chuyencongso",
+    "kinhnghiemdilam",
+    "phattriensunghiep",
+    "kienthuc",
+    "Chiến lược sự nghiệp, quy luật ngầm chốn công sở và thích nghi thời đại AI"
+  ],
+  "assets": {
+    "avatar_800x800": "sys/channels/nghe_song_sot/assets/avatar_800x800.png",
+    "banner_2048x1152": "sys/channels/nghe_song_sot/assets/banner_2048x1152.png",
+    "watermark_150x150": "sys/channels/nghe_song_sot/assets/watermark_150x150.png",
+    "endcard_16x9": "sys/channels/nghe_song_sot/assets/endcard_16x9.jpg",
+    "endcard_9x16": "sys/channels/nghe_song_sot/assets/endcard_9x16.jpg"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "jobId": "q1_luat_ngam_9x16",
+  "forgeId": "ee1b8981-9796-45cb-8d76-98b5865454ab",
+  "profile_id": "profile_1",
+  "prompt": "Requested aspect ratio: 9:16. Render a complete 100% full-bleed vertical 9:16 2D endcard illustration extending continuously to all four edges with zero letterbox bars, zero subtitle boxes, and zero dark vignette.\n\nVisual Style (ch_crowd_noir): High-contrast 2D noir graphic-novel illustration on aged dossier paper canvas (#111111 heavy black ink, #E8E2D0 aged dossier paper, #5A5F66 smoke-slate, single #C0392B crimson accent for strings and stamps); shadowed crowd profiles, classified document dossiers, red connection threads and atmospheric silhouette contrasts; orthographic 2D, at least 60% negative space, zero 3D, zero shading gradients. Palette: #111111, #E8E2D0, #5A5F66, #C0392B, #FFFFFF.\n\nCharacter Cast: Stylized anonymous silhouette figures in sharp trench coats and shadowed crowd profiles with glowing white slit eyes, zero stick figures. Outfit: Sharp flat charcoal-black trench coat with crisp collar and single crimson lapel pin, no shading gradients.\n\nScene Composition: The channel character stands centered in the frame, pointing upwards with a welcoming smile. Clean, minimalist composition with at least 60% open negative space on the solid flat background canvas (#111111).\n\nEmphasis lettering instruction: render exact uppercase Vietnamese hand-lettered text (crisp high-contrast white and gold lettering) in the upper third integrated directly onto the flat canvas (#111111) (strictly zero rectangular text cards, banners, or gradient overlays covering artwork): \"BẢN ĐẦY ĐỦ TRÊN YOUTUBE\" and \"LUẬT NGẦM ĐÁM ĐÔNG\".",
+  "latency": 27.6,
+  "sha256": "236a45b0abe0cbf1b5941ce77b7a0ad51dadbab95df883c621c31d876932a99c",
+  "aspect_ratio": "9:16",
+  "width": 1080,
+  "height": 1920,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "verified",
+  "created_at": "2026-10-31T18:08:42.496552+00:00",
+  "media_id": "ee1b8981-9796-45cb-8d76-98b5865454ab",
+  "channel_id": "luat_ngam"
+}

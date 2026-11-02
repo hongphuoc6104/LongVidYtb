@@ -143,12 +143,29 @@ class FlowJobLeaseManager:
         count: int = 2,
         max_profiles_per_job: int = DEFAULT_MAX_PROFILES_PER_JOB,
         timeout: float = 180.0,
+        min_credits: int = 0,
+        credit_ledger: Any | None = None,
     ) -> list[dict[str, Any]]:
         """Atomically claim and lease up to 'count' idle profiles for a job, adhering to quota."""
         self.clean_stale_leases()
         start_time = time.time()
-        enabled_candidates = [p for p in pool_profiles if p.get("enabled", True)]
-        effective_quota = min(count, max_profiles_per_job, len(enabled_candidates))
+
+        if min_credits > 0 and credit_ledger is None:
+            try:
+                from .credit_ledger import get_credit_ledger
+                credit_ledger = get_credit_ledger()
+            except Exception:
+                credit_ledger = None
+
+        if min_credits > 0 and credit_ledger is not None:
+            candidates = credit_ledger.select_eligible_profiles(
+                [p for p in pool_profiles if p.get("enabled", True)],
+                min_credits=min_credits,
+            )
+        else:
+            candidates = [p for p in pool_profiles if p.get("enabled", True)]
+
+        effective_quota = min(count, max_profiles_per_job, len(candidates))
         if effective_quota <= 0:
             return []
         while True:
@@ -158,23 +175,28 @@ class FlowJobLeaseManager:
             # Re-verify already held profiles by this job in this instance
             for prof_id in list(self._open_handles.keys()):
                 if prof_id in current_held:
-                    p = next((x for x in pool_profiles if x["id"] == prof_id), None)
+                    p = next((x for x in pool_profiles if (x.get("id") or x.get("name")) == prof_id), None)
                     if p and p not in granted:
                         granted.append(p)
 
             allowed_new = max_profiles_per_job - len(current_held)
             new_acquired = 0
             if allowed_new > 0 and len(granted) < effective_quota:
-                for p in pool_profiles:
+                for p in candidates:
                     if len(granted) >= effective_quota or new_acquired >= allowed_new:
                         break
-                    prof_id = p["id"]
+                    prof_id = p.get("id") or p.get("name")
+                    if not prof_id:
+                        continue
                     if prof_id in current_held or not p.get("enabled", True):
                         continue
-                    if any(g["id"] == prof_id for g in granted):
+                    if any((g.get("id") or g.get("name")) == prof_id for g in granted):
                         continue
                     if self.is_profile_busy(prof_id):
                         continue
+                    if min_credits > 0 and credit_ledger is not None:
+                        if not credit_ledger.is_eligible(prof_id, min_credits=min_credits):
+                            continue
                     if self._try_acquire_lock(prof_id, job_id, p):
                         granted.append(p)
                         new_acquired += 1
@@ -225,16 +247,30 @@ class FlowJobLeaseManager:
         failed_profile_id: str,
         pool_profiles: list[dict[str, Any]],
         reason: str = "",
+        min_credits: int = 0,
+        credit_ledger: Any | None = None,
     ) -> dict[str, Any] | None:
         """Release a degraded profile and atomically lease a healthy idle replacement from the pool."""
         logger.warning(
             "Job %s requesting replacement for failed profile %s. Reason: %s",
             job_id, failed_profile_id, reason or "unspecified"
         )
+        if min_credits > 0 and credit_ledger is None:
+            try:
+                from .credit_ledger import get_credit_ledger
+                credit_ledger = get_credit_ledger()
+            except Exception:
+                credit_ledger = None
+
         candidates = [
             p for p in pool_profiles
-            if p["id"] != failed_profile_id and p.get("enabled", True) and not self.is_profile_busy(p["id"])
+            if (p.get("id") or p.get("name")) != failed_profile_id
+            and p.get("enabled", True)
+            and not self.is_profile_busy(p.get("id") or p.get("name"))
         ]
+        if min_credits > 0 and credit_ledger is not None:
+            candidates = credit_ledger.select_eligible_profiles(candidates, min_credits=min_credits)
+
         if not candidates:
             logger.warning(
                 "Job %s: No available idle profile in pool to replace %s. Retaining lease.",
@@ -247,8 +283,13 @@ class FlowJobLeaseManager:
 
         # Find replacement from candidates
         for p in candidates:
-            prof_id = p["id"]
+            prof_id = p.get("id") or p.get("name")
+            if not prof_id:
+                continue
             if not self.is_profile_busy(prof_id):
+                if min_credits > 0 and credit_ledger is not None:
+                    if not credit_ledger.is_eligible(prof_id, min_credits=min_credits):
+                        continue
                 if self._try_acquire_lock(prof_id, job_id, p):
                     logger.info("Job %s replaced %s with %s", job_id, failed_profile_id, prof_id)
                     return p

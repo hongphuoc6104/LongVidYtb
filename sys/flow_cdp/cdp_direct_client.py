@@ -9,16 +9,22 @@ without any external daemon or extension.
 from __future__ import annotations
 
 import asyncio
+import base64
 import json
 import logging
 import os
 import re
+import shutil
 import socket
+import subprocess
 import time
 import urllib.request
+from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any, Optional
 
 import websockets
+import websockets.exceptions
 
 from . import flow_rpc
 
@@ -207,14 +213,14 @@ CDP_RECAPTCHA_GUARD_JS = r"""
     await previous;
     try {
       let lastErr = null;
-      for (let i = 0; i < 2; i++) {
+      for (let i = 0; i < 15; i++) {
         try {
           const token = await executeWithAssignNeuter(resolveSitekey(), pageAction);
           if (token) return token;
         } catch (e) {
           lastErr = e;
         }
-        await new Promise((r) => setTimeout(r, 100));
+        await new Promise((r) => setTimeout(r, 500));
       }
       throw lastErr || new Error('captcha_mint_failed');
     } finally {
@@ -238,8 +244,8 @@ PROFILES = [
         "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-p2"),
         "profile_dir": "Profile 2",
         "cdp_port": 9223,
-        "url": "https://flow.google.com/project/917085b1-ed75-4d4e-aa3e-dad16f6ee7b4",
-        "project_id": "917085b1-ed75-4d4e-aa3e-dad16f6ee7b4",
+        "url": "https://flow.google.com/project/d85cc9de-8aa3-48a0-bf98-c92521056dc0",
+        "project_id": "d85cc9de-8aa3-48a0-bf98-c92521056dc0",
     },
     {
         "name": "profile_3",
@@ -334,8 +340,8 @@ PROFILES = [
         "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-profile16"),
         "profile_dir": "Profile 16",
         "cdp_port": 9235,
-        "url": "https://flow.google.com/project/e84b35f8-4ca8-4d9f-af5b-ce4feab88014",
-        "project_id": "e84b35f8-4ca8-4d9f-af5b-ce4feab88014",
+        "url": "https://flow.google.com/project/6e65cdc4-1063-4941-b66a-13ea3b13b984",
+        "project_id": "6e65cdc4-1063-4941-b66a-13ea3b13b984",
     },
     {
         "name": "profile_15",
@@ -382,8 +388,8 @@ PROFILES = [
         "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-profile8"),
         "profile_dir": "Profile 8",
         "cdp_port": 9241,
-        "url": "https://flow.google.com/project/4ea09bfe-ac0e-4dfe-af1b-ce0faefe4020",
-        "project_id": "4ea09bfe-ac0e-4dfe-af1b-ce0faefe4020",
+        "url": "https://flow.google.com/project/bde97c7e-487f-4eb7-b262-11960860e57c",
+        "project_id": "bde97c7e-487f-4eb7-b262-11960860e57c",
     },
     {
         "name": "profile_21",
@@ -414,14 +420,6 @@ PROFILES = [
         "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-en03"),
         "profile_dir": "Profile 12",
         "cdp_port": 9253,
-        "url": "https://flow.google.com/",
-        "project_id": "",
-    },
-    {
-        "name": "profile_en04",
-        "user_data_dir": os.path.expanduser("~/.config/google-chrome-cdp-en04"),
-        "profile_dir": "Profile 26",
-        "cdp_port": 9254,
         "url": "https://flow.google.com/",
         "project_id": "",
     },
@@ -548,6 +546,54 @@ PROFILES = [
 ]
 
 
+def _normalize_profile_dict(raw: dict[str, Any]) -> dict[str, Any]:
+    name = str(raw.get("name") or raw.get("id") or f"profile_{raw.get('cdp_port') or raw.get('port')}")
+    port = int(raw.get("cdp_port") or raw.get("port") or 9225)
+    profile_dir = str(raw.get("profile_dir") or raw.get("directory") or "Default")
+    user_data_dir = os.path.expanduser(str(raw.get("user_data_dir") or ""))
+    url = str(raw.get("url") or "https://flow.google.com/")
+    project_id = str(raw.get("project_id") or "")
+    return {
+        "name": name,
+        "id": name,
+        "user_data_dir": user_data_dir,
+        "profile_dir": profile_dir,
+        "directory": profile_dir,
+        "cdp_port": port,
+        "port": port,
+        "url": url,
+        "project_id": project_id,
+    }
+
+
+def get_all_configured_profiles() -> list[dict[str, Any]]:
+    """Return all 39 configured Chrome CDP profiles (plus any onboarded profiles in registry)."""
+    results: list[dict[str, Any]] = []
+    seen_names: set[str] = set()
+    for p in PROFILES:
+        norm = _normalize_profile_dict(p)
+        if norm["name"] == "profile_en04":
+            continue
+        results.append(norm)
+        seen_names.add(norm["name"])
+
+    reg_path = Path.home() / ".config/video-pilot/flow/profiles.json"
+    if reg_path.is_file():
+        try:
+            data = json.loads(reg_path.read_text(encoding="utf-8"))
+            for p in data.get("profiles", []):
+                if not p.get("enabled", True):
+                    continue
+                norm = _normalize_profile_dict(p)
+                if norm["name"] == "profile_en04" or norm["name"] in seen_names:
+                    continue
+                results.append(norm)
+                seen_names.add(norm["name"])
+        except Exception:
+            pass
+    return results
+
+
 def is_port_open(port: int) -> bool:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.settimeout(0.5)
@@ -617,14 +663,19 @@ class DirectCDPProfileSession:
 
     def __init__(self, profile_cfg: dict[str, Any]):
         self.profile_cfg = profile_cfg
-        self.name = profile_cfg["name"]
-        self.cdp_port = int(profile_cfg["cdp_port"])
-        self.default_url = profile_cfg["url"]
+        self.name = str(
+            profile_cfg.get("name")
+            or profile_cfg.get("id")
+            or f"profile_{profile_cfg.get('cdp_port') or profile_cfg.get('port')}"
+        )
+        self.cdp_port = int(profile_cfg.get("cdp_port") or profile_cfg.get("port") or 9225)
+        self.default_url = str(profile_cfg.get("url") or "https://flow.google.com/")
         self.project_id = profile_cfg.get("project_id") or self._extract_project_id(self.default_url)
         self.ws = None
         self.msg_id = 0
         self.pending: dict[int, asyncio.Future] = {}
         self._reader_task = None
+        self._model_catalog: Optional[list[dict[str, Any]]] = None
 
     @staticmethod
     def _extract_project_id(url: str) -> str:
@@ -680,7 +731,7 @@ class DirectCDPProfileSession:
         last_exc = None
         for _ in range(15):
             try:
-                target = get_flow_target(self.cdp_port)
+                target = await asyncio.to_thread(get_flow_target, self.cdp_port, 4)
                 if target and target.get("webSocketDebuggerUrl"):
                     break
             except Exception as e:
@@ -701,6 +752,7 @@ class DirectCDPProfileSession:
             ping_interval=None,
             ping_timeout=None,
             close_timeout=10,
+            open_timeout=30,
         )
         self._reader_task = asyncio.create_task(self._reader())
         await self.call("Page.enable")
@@ -769,6 +821,7 @@ class DirectCDPProfileSession:
         has_mint = await self.evaluate("typeof window.mintCaptcha === 'function'", await_promise=False)
         if not has_mint:
             await self.evaluate(CDP_RECAPTCHA_GUARD_JS, await_promise=False)
+        await asyncio.sleep(2.0)
 
     async def reconnect(self) -> None:
         """Re-acquire flow target and re-establish CDP websocket connection."""
@@ -894,7 +947,11 @@ class DirectCDPProfileSession:
         model: str = "BELUGA",
         base_media_id: Optional[str] = None,
         ref_media_ids: Optional[list[str]] = None,
+        reference_media_ids: Optional[list[str]] = None,
     ) -> dict[str, Any]:
+        if not self.project_id:
+            await self.ensure_project_id()
+        effective_refs = reference_media_ids if reference_media_ids is not None else ref_media_ids
         freq = flow_rpc.image_request(
             prompt=prompt,
             project_id=self.project_id,
@@ -902,7 +959,7 @@ class DirectCDPProfileSession:
             aspect=aspect,
             model=model,
             base_media_id=base_media_id,
-            ref_media_ids=ref_media_ids,
+            reference_media_ids=effective_refs,
         )
         js_code = f"""
         (async () => {{
@@ -971,9 +1028,13 @@ class DirectCDPProfileSession:
         model: str = "BELUGA",
         base_media_id: Optional[str] = None,
         ref_media_ids: Optional[list[str]] = None,
+        reference_media_ids: Optional[list[str]] = None,
     ) -> list[dict[str, Any]]:
         if not prompts or len(prompts) > 4:
             raise ValueError("prompts must contain 1 to 4 prompt strings")
+        if not self.project_id:
+            await self.ensure_project_id()
+        effective_refs = reference_media_ids if reference_media_ids is not None else ref_media_ids
         freq = flow_rpc.image_request(
             prompt=prompts[0],
             prompts=prompts,
@@ -982,7 +1043,7 @@ class DirectCDPProfileSession:
             aspect=aspect,
             model=model,
             base_media_id=base_media_id,
-            ref_media_ids=ref_media_ids,
+            reference_media_ids=effective_refs,
         )
         js_code = f"""
         (async () => {{
@@ -1046,4 +1107,433 @@ class DirectCDPProfileSession:
             }
             for im in images
         ]
+
+    async def _post_batchexecute(
+        self,
+        rpcid: str,
+        freq: str,
+        captcha_action: Optional[str] = None,
+        timeout: float = 180.0,
+    ) -> dict[str, Any]:
+        """Execute a signed-in batchexecute POST inside the active Flow tab."""
+        js_code = f"""
+        (async () => {{
+            let submissionAttempted = false;
+            try {{
+                let freqStr = {json.dumps(freq)};
+                const captchaAction = {json.dumps(captcha_action)};
+                if (captchaAction) {{
+                    const token = await window.mintCaptcha(captchaAction);
+                    if (!token) return {{ error: "CAPTCHA_FAILED: empty token", submitted: false }};
+                    freqStr = freqStr.split("__CAPTCHA__").join(token);
+                }}
+                const wiz = globalThis.WIZ_global_data || {{}};
+                const at = wiz.SNlM0e;
+                const sid = wiz.FdrFJe;
+                const bl = wiz.cfb2h;
+                if (!at) return {{ error: "NO_AT_TOKEN", submitted: false }};
+                const reqid = Math.floor(Math.random() * 900000) + 100000;
+                const sourcePath = location.pathname || "/";
+                const hl = (document.documentElement.lang || navigator.language || "en").split("-")[0];
+                const url = `/_/AiSandboxAngularFrontend/data/batchexecute?rpcids=${{encodeURIComponent({json.dumps(rpcid)})}}&source-path=${{encodeURIComponent(sourcePath)}}&bl=${{encodeURIComponent(bl || "")}}&f.sid=${{encodeURIComponent(sid || "")}}&hl=${{encodeURIComponent(hl)}}&_reqid=${{reqid}}&rt=c`;
+                submissionAttempted = true;
+                const resp = await fetch(url, {{
+                    method: "POST",
+                    credentials: "include",
+                    headers: {{
+                        "content-type": "application/x-www-form-urlencoded;charset=UTF-8",
+                        "x-same-domain": "1"
+                    }},
+                    body: new URLSearchParams({{ "f.req": freqStr, at }})
+                }});
+                const text = await resp.text();
+                return {{ status: resp.status, text: text.slice(0, 32000000), submitted: true }};
+            }} catch (err) {{
+                return {{ error: err.message || String(err), submitted: submissionAttempted }};
+            }}
+        }})()
+        """
+        out = await self.evaluate(js_code, await_promise=True, timeout=timeout)
+        if not isinstance(out, dict) or out.get("error"):
+            err_msg = out.get("error") if isinstance(out, dict) else "NO_CDP_RESPONSE"
+            err = RuntimeError(str(err_msg))
+            if isinstance(out, dict) and out.get("submitted") is False:
+                err.generation_submitted = False
+            raise err
+        return out
+
+    async def query_credits(self) -> dict[str, Any]:
+        """Query live Flow credit balance via `nzlxg` batchexecute RPC (0 credits cost)."""
+        out = await self._post_batchexecute(
+            rpcid=flow_rpc.RPC_CREDITS,
+            freq=flow_rpc.credits_request(),
+            captcha_action=None,
+            timeout=60.0,
+        )
+        payload = flow_rpc.first_payload(out.get("text", ""), flow_rpc.RPC_CREDITS)
+        info = flow_rpc.read_credits(payload)
+        info["profile"] = self.name
+        return info
+
+    async def ensure_project_id(self, title: str = "Video Pilot", force_new: bool = False) -> str:
+        """Return existing `project_id` or create a new project via `jHPbke` (0 credits cost)."""
+        if self.project_id and not force_new:
+            return self.project_id
+        out = await self._post_batchexecute(
+            rpcid=flow_rpc.RPC_CREATE_PROJECT,
+            freq=flow_rpc.create_project_request(title=title),
+            captcha_action=None,
+            timeout=60.0,
+        )
+        payload = flow_rpc.first_payload(out.get("text", ""), flow_rpc.RPC_CREATE_PROJECT)
+        pid = flow_rpc.read_project_id(payload)
+        self.project_id = pid
+        self.profile_cfg["project_id"] = pid
+        return pid
+
+    @staticmethod
+    def _detect_mime_type(raw_bytes: bytes, file_path: Path) -> str:
+        if len(raw_bytes) >= 3 and raw_bytes[:3] == b"\xff\xd8\xff":
+            return "image/jpeg"
+        if len(raw_bytes) >= 4 and raw_bytes[:4] == b"\x89PNG":
+            return "image/png"
+        if len(raw_bytes) >= 12 and raw_bytes[:4] == b"RIFF" and raw_bytes[8:12] == b"WEBP":
+            return "image/webp"
+        if len(raw_bytes) >= 4 and raw_bytes[:4] == b"GIF8":
+            return "image/gif"
+        ext = file_path.suffix.lower()
+        if ext in (".jpg", ".jpeg"):
+            return "image/jpeg"
+        if ext == ".webp":
+            return "image/webp"
+        if ext == ".gif":
+            return "image/gif"
+        return "image/png"
+
+    async def upload_image_file(
+        self,
+        image_path: str | os.PathLike[str],
+        asset_id: Optional[str] = None,
+        is_hidden: bool = False,
+    ) -> dict[str, Any]:
+        """Upload a local image file to Google Flow via `maseQ` (`Q9a`/`T9a`) and return its `media_id`."""
+        path_obj = Path(image_path).expanduser().resolve()
+        if not path_obj.is_file():
+            raise FileNotFoundError(f"Image file not found: {image_path}")
+        raw_bytes = path_obj.read_bytes()
+        if not raw_bytes:
+            raise ValueError(f"Image file is empty (0 bytes): {image_path}")
+
+        mime_type = self._detect_mime_type(raw_bytes, path_obj)
+        b64_data = base64.b64encode(raw_bytes).decode("ascii")
+        await self.ensure_project_id()
+
+        for attempt in range(2):
+            freq = flow_rpc.upload_image_request(
+                image_b64=b64_data,
+                mime_type=mime_type,
+                project_id=self.project_id,
+                file_name=path_obj.name,
+                asset_id=asset_id,
+                is_hidden=is_hidden,
+            )
+            out = await self._post_batchexecute(
+                rpcid=flow_rpc.RPC_UPLOAD_IMAGE,
+                freq=freq,
+                captcha_action=flow_rpc.CAPTCHA_UPLOAD_IMAGE,
+                timeout=120.0,
+            )
+            try:
+                payload = flow_rpc.first_payload(out.get("text", ""), flow_rpc.RPC_UPLOAD_IMAGE)
+                break
+            except Exception as ex:
+                if attempt == 0 and ("NOT_FOUND" in str(ex) or "5" in str(ex)):
+                    await self.ensure_project_id(force_new=True)
+                    continue
+                raise
+
+        uploaded = flow_rpc.read_uploaded_image(payload)
+        return {
+            "media_id": uploaded.media_id,
+            "url": uploaded.url,
+            "profile": self.name,
+            "project_id": self.project_id,
+            "file_name": path_obj.name,
+            "mime_type": mime_type,
+        }
+
+    async def download_authenticated_binary(
+        self,
+        url: str,
+        output_path: Optional[str | os.PathLike[str]] = None,
+        timeout: float = 120.0,
+    ) -> int | bytes:
+        """Download binary asset (image or MP4 video) from `flow-content.google` or signed GCS URL."""
+        if not url:
+            raise ValueError("Cannot download empty URL")
+
+        js_fetch = f"""
+        (async () => {{
+            const targetUrl = {json.dumps(url)};
+            let resp = null;
+            try {{
+                resp = await fetch(targetUrl, {{ credentials: "include" }});
+            }} catch (e) {{
+                resp = await fetch(targetUrl);
+            }}
+            if (!resp || !resp.ok) {{
+                resp = await fetch(targetUrl);
+            }}
+            if (!resp.ok) throw new Error("HTTP " + resp.status);
+            const blob = await resp.blob();
+            return await new Promise((resolve, reject) => {{
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result.split(",")[1]);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            }});
+        }})()
+        """
+        raw_bytes: Optional[bytes] = None
+        try:
+            b64_str = await self.evaluate(js_fetch, await_promise=True, timeout=timeout)
+            if isinstance(b64_str, str) and b64_str:
+                raw_bytes = base64.b64decode(b64_str)
+        except Exception:
+            raw_bytes = None
+
+        if not raw_bytes:
+            # Fallback: fetch in Python using cookies from the browser session
+            cookies_res = await self.call("Network.getAllCookies")
+            cookies = cookies_res.get("cookies", [])
+            cookie_hdr = "; ".join(
+                f"{c['name']}={c['value']}"
+                for c in cookies
+                if any(dom in c.get("domain", "") for dom in ("google.com", "flow-content.google", "labs.google"))
+            )
+            headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/136.0.0.0 Safari/537.36"}
+            if cookie_hdr and "storage.googleapis.com" not in url:
+                headers["Cookie"] = cookie_hdr
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                raw_bytes = resp.read()
+
+        if not raw_bytes:
+            raise RuntimeError(f"Downloaded 0 bytes from {url}")
+
+        if output_path is not None:
+            dest = Path(output_path).expanduser().resolve()
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(raw_bytes)
+            return len(raw_bytes)
+        return raw_bytes
+
+    async def _get_model_catalog(self) -> list[dict[str, Any]]:
+        if self._model_catalog is not None:
+            return self._model_catalog
+        try:
+            out = await self._post_batchexecute(
+                rpcid=flow_rpc.RPC_MODEL_CATALOG,
+                freq=flow_rpc.model_catalog_request(),
+                captcha_action=None,
+                timeout=30.0,
+            )
+            payload = flow_rpc.first_payload(out.get("text", ""), flow_rpc.RPC_MODEL_CATALOG)
+            self._model_catalog = flow_rpc.read_model_catalog(payload)
+        except Exception:
+            self._model_catalog = []
+        return self._model_catalog
+
+    @staticmethod
+    def _verify_mp4_with_ffprobe(mp4_path: Path) -> dict[str, Any]:
+        if not mp4_path.is_file() or mp4_path.stat().st_size == 0:
+            raise RuntimeError(f"Output MP4 missing or empty: {mp4_path}")
+        ffprobe_bin = shutil.which("ffprobe") or "ffprobe"
+        cmd = [
+            ffprobe_bin,
+            "-v",
+            "error",
+            "-show_entries",
+            "stream=width,height,codec_name,codec_type,duration,nb_frames",
+            "-show_entries",
+            "format=duration,size",
+            "-of",
+            "json",
+            str(mp4_path.resolve()),
+        ]
+        res = subprocess.run(cmd, capture_output=True, text=True, check=False)
+        if res.returncode != 0:
+            raise RuntimeError(f"ffprobe validation failed on {mp4_path}: {res.stderr.strip()}")
+        data = json.loads(res.stdout or "{}")
+        streams = data.get("streams", [])
+        vstream = next((s for s in streams if s.get("codec_type") == "video"), None)
+        if not vstream:
+            raise RuntimeError(f"No video stream in {mp4_path}")
+        width = int(vstream.get("width") or 0)
+        height = int(vstream.get("height") or 0)
+        dur = float(vstream.get("duration") or data.get("format", {}).get("duration") or 0.0)
+        if width <= 0 or height <= 0 or dur <= 0.0:
+            raise RuntimeError(f"Invalid video stream in {mp4_path}: {width}x{height}, duration={dur}s")
+        return {
+            "width": width,
+            "height": height,
+            "duration": round(dur, 4),
+            "codec_name": vstream.get("codec_name", ""),
+            "size_bytes": mp4_path.stat().st_size,
+        }
+
+    async def generate_video_from_frames(
+        self,
+        prompt: str,
+        first_frame_path_or_id: str | os.PathLike[str],
+        last_frame_path_or_id: Optional[str | os.PathLike[str]] = None,
+        output_mp4_path: Optional[str | os.PathLike[str]] = None,
+        aspect: str = "16:9",
+        model: str = "veo_3_1_fast",
+        duration_seconds: int = 5,
+        seed: Optional[int] = None,
+        poll_interval: float = 4.5,
+        poll_timeout: float = 360.0,
+    ) -> dict[str, Any]:
+        """Generate a Veo video clip from a start frame (and optional end frame) via Flow CDP.
+
+        Automatically uploads local frame files (`maseQ`), submits `eb1hJf` (`START_FRAME`)
+        or `nprQif` (`START_END_FRAMES`), polls `jwpduf`/`as29s` until completion, downloads
+        the MP4, validates with `ffprobe`, and writes a `{stem}.json` provenance sidecar.
+        """
+        await self.ensure_project_id()
+
+        first_str = str(first_frame_path_or_id)
+        if Path(first_str).expanduser().is_file():
+            up1 = await self.upload_image_file(first_str)
+            first_media_id = up1["media_id"]
+        else:
+            first_media_id = first_str
+
+        last_media_id: Optional[str] = None
+        if last_frame_path_or_id:
+            last_str = str(last_frame_path_or_id)
+            if Path(last_str).expanduser().is_file():
+                if Path(last_str).expanduser().resolve() == Path(first_str).expanduser().resolve():
+                    last_media_id = first_media_id
+                else:
+                    up2 = await self.upload_image_file(last_str)
+                    last_media_id = up2["media_id"]
+            else:
+                last_media_id = last_str
+
+        catalog = await self._get_model_catalog()
+        resolved_model = flow_rpc.resolve_video_model(
+            model,
+            aspect=aspect,
+            has_start_frame=True,
+            has_end_frame=bool(last_media_id),
+            catalog=catalog,
+            duration_seconds=duration_seconds,
+        )
+        rpcid, freq = flow_rpc.video_frames_request(
+            prompt=prompt,
+            project_id=self.project_id,
+            first_frame_media_id=first_media_id,
+            last_frame_media_id=last_media_id,
+            aspect=aspect,
+            model=resolved_model,
+            count=1,
+            catalog=catalog,
+            duration_seconds=duration_seconds,
+        )
+
+        out = await self._post_batchexecute(
+            rpcid=rpcid,
+            freq=freq,
+            captcha_action=flow_rpc.CAPTCHA_VIDEO,
+            timeout=180.0,
+        )
+        try:
+            sub_payload = flow_rpc.first_payload(out.get("text", ""), rpcid)
+        except Exception as ex:
+            if "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in str(ex) or "CAPTCHA" in str(ex):
+                err_block = RuntimeError(
+                    "FLOW_PROVIDER_BLOCKED: preserve the original session and reconcile; do not resubmit"
+                )
+                err_block.generation_submitted = False
+                raise err_block from ex
+            raise
+
+        sub_info = flow_rpc.read_video_submission(sub_payload)
+        media_id = sub_info["media_id"]
+        video_url = sub_info.get("url") or ""
+
+        deadline = time.monotonic() + poll_timeout
+        poll_count = 0
+        while not video_url and time.monotonic() < deadline:
+            await asyncio.sleep(poll_interval)
+            poll_count += 1
+            poll_out = await self._post_batchexecute(
+                rpcid=flow_rpc.RPC_OPERATION,
+                freq=flow_rpc.operation_request([media_id]),
+                captcha_action=None,
+                timeout=60.0,
+            )
+            poll_payload = flow_rpc.first_payload(poll_out.get("text", ""), flow_rpc.RPC_OPERATION)
+            poll_info = flow_rpc.read_video_poll(poll_payload, target_media_id=media_id)
+            if poll_info["status"] == "failed":
+                raise RuntimeError(poll_info.get("error") or f"Video generation failed for {media_id}")
+            if poll_info.get("url"):
+                video_url = poll_info["url"]
+                break
+
+            # Secondary check via as29s if jwpduf returned done without URL or periodically
+            if (poll_info["status"] == "completed" or poll_count % 2 == 0) and not video_url:
+                try:
+                    media_out = await self._post_batchexecute(
+                        rpcid=flow_rpc.RPC_MEDIA,
+                        freq=flow_rpc.media_request(media_id),
+                        captcha_action=None,
+                        timeout=60.0,
+                    )
+                    media_payload = flow_rpc.first_payload(media_out.get("text", ""), flow_rpc.RPC_MEDIA)
+                    media_info = flow_rpc.read_video_poll(media_payload, target_media_id=media_id)
+                    if media_info.get("url"):
+                        video_url = media_info["url"]
+                        break
+                except Exception:
+                    pass
+
+        if not video_url:
+            raise TimeoutError(f"Timed out after {poll_timeout}s waiting for video {media_id}")
+
+        result: dict[str, Any] = {
+            "media_id": media_id,
+            "url": video_url,
+            "profile": self.name,
+            "project_id": self.project_id,
+            "model": model,
+            "resolved_model": resolved_model,
+            "aspect": aspect,
+            "first_frame_media_id": first_media_id,
+            "last_frame_media_id": last_media_id,
+            "duration_seconds": duration_seconds,
+            "seed": seed,
+        }
+
+        if output_mp4_path is not None:
+            out_path = Path(output_mp4_path).expanduser().resolve()
+            await self.download_authenticated_binary(video_url, out_path, timeout=180.0)
+            probe_info = self._verify_mp4_with_ffprobe(out_path)
+            sidecar_path = out_path.with_suffix(".json")
+            result["output_mp4_path"] = str(out_path)
+            result["sidecar_path"] = str(sidecar_path)
+            result["ffprobe"] = probe_info
+            sidecar_data = {
+                **result,
+                "prompt": prompt,
+                "generated_at": datetime.now(timezone.utc).isoformat(),
+            }
+            sidecar_path.write_text(
+                json.dumps(sidecar_data, indent=2, ensure_ascii=False) + "\n",
+                encoding="utf-8",
+            )
+
+        return result
 

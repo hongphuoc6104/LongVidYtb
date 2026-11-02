@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import os
 import shutil
 import socket
@@ -17,6 +18,8 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 from typing import Any
+
+logger = logging.getLogger("flow_cdp.accounts")
 
 STORE = Path.home() / ".config/video-pilot/flow"
 DEFAULT_SOURCE_DIR = Path.home() / ".config/google-chrome"
@@ -65,28 +68,16 @@ def scan_system_chrome_profiles(source_dir: Path | None = None) -> list[dict[str
 
 
 def default_profiles() -> list[dict[str, Any]]:
+    from .multi_profile_manager import DEFAULT_PROFILES
     return [
         {
-            "id": "profile_1",
-            "port": 9225,
-            "directory": "Profile 1",
-            "user_data_dir": str(Path.home() / ".config/google-chrome-cdp-p1"),
+            "id": p["id"],
+            "port": p["port"],
+            "directory": p["directory"],
+            "user_data_dir": str(Path(p["user_data_dir"]).expanduser()),
             "enabled": True,
-        },
-        {
-            "id": "profile_2",
-            "port": 9223,
-            "directory": "Profile 2",
-            "user_data_dir": str(Path.home() / ".config/google-chrome-cdp-p2"),
-            "enabled": True,
-        },
-        {
-            "id": "profile_3",
-            "port": 9224,
-            "directory": "Profile 3",
-            "user_data_dir": str(Path.home() / ".config/google-chrome-cdp-p3"),
-            "enabled": True,
-        },
+        }
+        for p in DEFAULT_PROFILES
     ]
 
 
@@ -110,7 +101,10 @@ def save_registry(data: dict[str, Any]) -> None:
     path = STORE / "profiles.json"
     tmp = path.with_suffix(".tmp")
     tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    os.chmod(tmp, 0o600)
+    try:
+        os.chmod(tmp, 0o600)
+    except OSError:
+        pass
     tmp.replace(path)
 
     # Sync to sys/flow_cdp/browser-profiles.json and config.json if accessible
@@ -122,6 +116,23 @@ def save_registry(data: dict[str, Any]) -> None:
             bp["executable_path"] = detect_chrome_binary()
             bp["priority"] = [p["directory"] for p in data.get("profiles", []) if p.get("enabled", True)]
             browser_profiles_file.write_text(json.dumps(bp, indent=2) + "\n", encoding="utf-8")
+        except Exception:
+            pass
+
+    config_file = repo_root / "sys/config.json"
+    if config_file.is_file():
+        try:
+            cfg = json.loads(config_file.read_text(encoding="utf-8"))
+            cfg["flow_cdp_profiles"] = [
+                {
+                    "id": p["id"],
+                    "port": p["port"],
+                    "directory": p["directory"],
+                    "user_data_dir": p["user_data_dir"],
+                }
+                for p in data.get("profiles", [])
+            ]
+            config_file.write_text(json.dumps(cfg, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         except Exception:
             pass
 
@@ -449,13 +460,33 @@ def login_many(
     if sequential_close:
         stop_all(profiles_list)
 
-    current_data["profiles"] = profiles_list
+    # Merge/append new profiles into current_data["profiles"] instead of overwriting!
+    existing_profiles = current_data.get("profiles", [])
+    merged_profiles = list(existing_profiles)
+    existing_by_id = {p["id"]: idx for idx, p in enumerate(merged_profiles)}
+
+    for p in profiles_list:
+        if p["id"] in existing_by_id:
+            merged_profiles[existing_by_id[p["id"]]] = p
+        else:
+            merged_profiles.append(p)
+            existing_by_id[p["id"]] = len(merged_profiles) - 1
+
+    current_data["profiles"] = merged_profiles
     save_registry(current_data)
+
+    try:
+        from .credit_ledger import get_credit_ledger
+        ledger = get_credit_ledger()
+        for p in profiles_list:
+            ledger.register_profile(p["id"], initial_credits=1000)
+    except Exception as e:
+        logger.warning("Could not register profiles in credit ledger: %s", e)
 
     print("\n" + "=" * 70)
     print("  HOÀN TẤT THIẾT LẬP MULTI-PROFILE CHO GOOGLE FLOW!")
     print("=" * 70)
-    print(f"Đã lưu {len(profiles_list)} Profile vào {STORE / 'profiles.json'}.")
+    print(f"Đã lưu {len(merged_profiles)} Profile vào {STORE / 'profiles.json'}.")
     print("[TIẾT KIỆM TÀI NGUYÊN] Tất cả cửa sổ Chrome đã được ĐÓNG HOÀN TOÀN để tránh giật lag.")
     print("Khi chạy Job, hệ thống sẽ tự động mở on-demand ĐÚNG 2 Profile được cấp phát và tự đóng lại khi xong.")
     print("\nTrạng thái hiện tại:")
@@ -470,16 +501,366 @@ def login_many(
     print("  ./pipeline flow launch\n")
 
 
+def onboard_profiles(
+    count: int = 1,
+    start_port: int = 9270,
+    sequential_close: bool = True,
+) -> list[dict[str, Any]]:
+    """Onboard N new profiles with clean IDs (profile_40+), ports (9270+), and 1,000 initial credits."""
+    print("\n" + "=" * 70)
+    print("  GOOGLE FLOW CDP — ONBOARD THÊM PROFILE MỚI (1K CREDITS)")
+    print("=" * 70)
+    print(f"Số lượng cần thêm: {count} profile | Cổng bắt đầu: {start_port}")
+    print("=" * 70)
+
+    current_data = registry()
+    existing_profiles = current_data.get("profiles", [])
+    used_ids = {p.get("id") for p in existing_profiles}
+    used_ports = {int(p.get("port", 0)) for p in existing_profiles}
+
+    # Find highest numeric index among profile_N (excluding profile_enXX)
+    max_idx = 39
+    for pid in used_ids:
+        if pid and pid.startswith("profile_") and not pid.startswith("profile_en"):
+            suffix = pid[len("profile_"):]
+            if suffix.isdigit():
+                max_idx = max(max_idx, int(suffix))
+
+    next_port = start_port
+    created_profiles: list[dict[str, Any]] = []
+
+    for i in range(count):
+        max_idx += 1
+        prof_id = f"profile_{max_idx}"
+        while prof_id in used_ids:
+            max_idx += 1
+            prof_id = f"profile_{max_idx}"
+        used_ids.add(prof_id)
+
+        while next_port in used_ports or is_port_listening(next_port):
+            next_port += 1
+        port = next_port
+        used_ports.add(port)
+        next_port += 1
+
+        user_data = Path.home() / f".config/google-chrome-cdp-profile{max_idx}"
+        user_data.mkdir(parents=True, exist_ok=True, mode=0o700)
+
+        entry = {
+            "id": prof_id,
+            "port": port,
+            "directory": "Default",
+            "user_data_dir": str(user_data),
+            "enabled": True,
+        }
+
+        print(f"\n--- [Profile {i + 1}/{count}]: {prof_id} (Cổng CDP: {port}) ---")
+        print(f"  * Thư mục Chrome cô lập: {user_data}")
+        print("  --> Mở Chrome giao diện để đăng nhập Google...")
+
+        ok = launch_profile(entry, url="https://flow.google.com/", headless=False)
+        if ok:
+            print(f"  [OK] Đã mở Chrome trên cổng {port} thành công.")
+        else:
+            print(f"  [CẢNH BÁO] Chưa kết nối được cổng {port}. Vẫn lưu profile để thử lại.")
+
+        if sys.stdin.isatty():
+            try:
+                input("  👉 Đăng nhập xong tài khoản Google trên Flow, nhấn [Enter] để đóng và tiếp tục: ")
+            except EOFError:
+                pass
+        else:
+            time.sleep(1.0)
+
+        if sequential_close:
+            print(f"  --> Đang đóng {prof_id}...")
+            stop_profile(entry)
+
+        created_profiles.append(entry)
+
+    if sequential_close:
+        stop_all(created_profiles)
+
+    # Merge into registry
+    merged_profiles = list(existing_profiles)
+    existing_by_id = {p["id"]: idx for idx, p in enumerate(merged_profiles)}
+    for p in created_profiles:
+        if p["id"] in existing_by_id:
+            merged_profiles[existing_by_id[p["id"]]] = p
+        else:
+            merged_profiles.append(p)
+            existing_by_id[p["id"]] = len(merged_profiles) - 1
+
+    current_data["profiles"] = merged_profiles
+    save_registry(current_data)
+
+    # Register 1,000 initial credits in CreditLedger
+    try:
+        from .credit_ledger import get_credit_ledger
+        ledger = get_credit_ledger()
+        for p in created_profiles:
+            ledger.register_profile(p["id"], initial_credits=1000)
+        print(f"\n[OK] Đã đăng ký 1,000 credits cho {len(created_profiles)} profile mới trong CreditLedger.")
+    except Exception as e:
+        print(f"[CẢNH BÁO] Lỗi đăng ký credits vào ledger: {e}")
+
+    print("\n" + "=" * 70)
+    print(f"  HOÀN TẤT ONBOARD {len(created_profiles)} PROFILE!")
+    print("=" * 70)
+    for p in created_profiles:
+        print(f"  - {p['id']:<14} Port {p['port']}: {p['user_data_dir']}")
+    print()
+
+    return created_profiles
+
+
+async def _evaluate_credits_fallback(sess: Any) -> dict[str, Any]:
+    expr = """
+    (() => {
+        try {
+            const text = document.body ? document.body.innerText : '';
+            const m = text.match(/(\\d+)\\s*(?:credits?|t\u00edn d\u1ee5ng)/i);
+            if (m) return { remaining: parseInt(m[1], 10), subscription_credits: 1000 };
+        } catch(e) {}
+        return { remaining: 1000, subscription_credits: 1000 };
+    })()
+    """
+    try:
+        val = await sess.evaluate(expr)
+        if isinstance(val, dict):
+            return val
+    except Exception:
+        pass
+    return {"remaining": 1000, "subscription_credits": 1000}
+
+
+async def _scan_single_profile(profile_cfg: dict[str, Any], ledger: Any) -> dict[str, Any]:
+    from .cdp_direct_client import DirectCDPProfileSession
+    pid = profile_cfg.get("id") or profile_cfg.get("name")
+    sess = DirectCDPProfileSession(profile_cfg)
+    try:
+        await sess.connect()
+        res = None
+        if hasattr(sess, "query_credits"):
+            res = await sess.query_credits()
+        else:
+            try:
+                from .flow_rpc import query_credits_rpc
+                res = await query_credits_rpc(sess)
+            except Exception:
+                pass
+        if res is None:
+            res = await _evaluate_credits_fallback(sess)
+
+        remaining = 1000
+        sub = 1000
+        exp = None
+        tier = 0
+        if isinstance(res, (int, float)):
+            remaining = int(res)
+        elif isinstance(res, dict):
+            remaining = int(res.get("credits_remaining") or res.get("remaining", 1000))
+            sub = int(res.get("subscription_credits") or res.get("subscription", 1000))
+            exp = res.get("expiry_epoch")
+            tier = int(res.get("paygate_tier", 0))
+
+        return ledger.sync_balance(
+            profile_id=pid,
+            remaining=remaining,
+            subscription_credits=sub,
+            expiry_epoch=exp,
+            paygate_tier=tier,
+        )
+    finally:
+        try:
+            await sess.close()
+        except Exception:
+            pass
+
+
+def print_credits_table(ledger: Any, profile_ids: list[str] | None = None) -> None:
+    summary = ledger.summary(profile_ids=profile_ids)
+    profs = summary.get("profiles", {})
+
+    sep = "=" * 105
+    print("\n" + sep)
+    print(f"  GOOGLE FLOW CDP — CREDIT LEDGER OVERVIEW ({len(profs)} PROFILES)")
+    print(sep)
+    header = f"{'Profile ID':<14} | {'Tier Role':<18} | {'Status':<10} | {'Remaining':<10} | {'Subscription':<12} | {'Expiry Epoch':<14} | {'Last Used'}"
+    print(header)
+    print("-" * 105)
+
+    def _sort_key(pid: str):
+        if pid.startswith("profile_en"):
+            num = pid.replace("profile_en", "")
+            return (1, int(num) if num.isdigit() else 999)
+        elif pid.startswith("profile_"):
+            num = pid.replace("profile_", "")
+            return (0, int(num) if num.isdigit() else 999)
+        return (2, pid)
+
+    for pid in sorted(profs.keys(), key=_sort_key):
+        info = profs[pid]
+        rem = info.get("credits_remaining", 0)
+        sub = info.get("subscription_credits", 1000)
+        status = str(info.get("status", "active")).upper()
+        expiry = str(info.get("expiry_epoch")) if info.get("expiry_epoch") is not None else "None"
+        last_used_ts = info.get("last_used_at", 0.0)
+        last_used = time.strftime("%Y-%m-%d %H:%M", time.localtime(last_used_ts)) if last_used_ts else "Never"
+
+        raw_role = info.get("tier_role", "")
+        if raw_role == "video_and_image" or (rem >= 7 and status not in ("AUTH_EXPIRED", "EXHAUSTED")):
+            tier_display = "VIDEO+IMAGE"
+        elif raw_role == "auth_expired" or status == "AUTH_EXPIRED":
+            tier_display = "AUTH EXPIRED"
+        else:
+            tier_display = "IMAGE-ONLY (0 CR)"
+
+        print(f"{pid:<14} | {tier_display:<18} | {status:<10} | {rem:<10} | {sub:<12} | {expiry:<14} | {last_used}")
+
+    pool_profiles = [{"id": pid} for pid in profs.keys()]
+    pool_summary = ledger.get_pool_summary(profiles=pool_profiles)
+
+    print(sep)
+    print(
+        f"Total: {summary['total_profiles']} profiles | "
+        f"Active: {summary['active_profiles']} | "
+        f"Exhausted: {summary['exhausted_profiles']} | "
+        f"Total Credits Remaining: {summary['total_credits_remaining']:,}"
+    )
+    print("-" * 105)
+    print("  [SMART 2-TIER CREDIT POOL BREAKDOWN]")
+    print(f"  * Video + Image Ready (>= 7 credits):   {pool_summary['video_ready_count']} profiles")
+    print(f"  * Image-Only Zero-Credit (< 7 credits): {pool_summary['image_only_zero_credit_count']} profiles (Nano Banana Pro / 2.1 / 2 Lite, 2K Upsample, TTS)")
+    print(f"  * Zero-Credit Image Capacity:           {pool_summary['zero_credit_image_capacity'].upper()}")
+    print("  [ESTIMATED OMNI VIDEO GENERATION CAPACITY]")
+    print(f"  * Omni 1.1 Flash 4s (7 credits):        ~{pool_summary['estimated_omni_4s_clips']:,} clips")
+    print(f"  * Omni 1.1 Flash 6s (10 credits):       ~{pool_summary['estimated_omni_6s_clips']:,} clips")
+    print(f"  * Omni 1.1 Flash 8s (12 credits):       ~{pool_summary['estimated_omni_8s_clips']:,} clips")
+    print(sep + "\n")
+
+
+def credits_command(
+    refresh: bool = False,
+    profiles_str: str | None = None,
+    concurrency: int = 4,
+) -> None:
+    import asyncio
+
+    from .credit_ledger import get_credit_ledger
+    from .process_manager import clean_singleton_locks, get_process_manager
+
+    ledger = get_credit_ledger()
+    target_ids = None
+    if profiles_str:
+        target_ids = [p.strip() for p in profiles_str.replace(" ", ",").split(",") if p.strip()]
+
+    d = registry()
+    all_profiles = d.get("profiles", [])
+
+    # Ensure all registered profiles are in the ledger
+    for p in all_profiles:
+        ledger.register_profile(p["id"], initial_credits=1000)
+
+    if not refresh:
+        print_credits_table(ledger, profile_ids=target_ids)
+        return
+
+    # Refresh requested
+    if target_ids:
+        profiles_to_scan = [p for p in all_profiles if p["id"] in target_ids]
+    else:
+        profiles_to_scan = [p for p in all_profiles if p.get("enabled", True)]
+
+    print(f"\n--> Starting live credit refresh for {len(profiles_to_scan)} profiles (concurrency: {concurrency})...")
+    pm = get_process_manager()
+    batches = [profiles_to_scan[i : i + concurrency] for i in range(0, len(profiles_to_scan), concurrency)]
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+
+    for b_idx, batch in enumerate(batches, 1):
+        spawned_ports = []
+        batch_ids = [p["id"] for p in batch]
+        print(f"  [Batch {b_idx}/{len(batches)}] Launching headless Chrome (--headless=new) for: {batch_ids}...")
+        try:
+            for p in batch:
+                port = int(p["port"])
+                if not is_port_listening(port):
+                    target_url = p.get("url") or "https://flow.google.com/"
+                    ok = pm.launch(
+                        profile_cfg=p,
+                        url=target_url,
+                        headless=True,
+                        extra_args=["--headless=new"],
+                    )
+                    if ok:
+                        spawned_ports.append((port, Path(p["user_data_dir"]).expanduser(), p.get("directory", "Default")))
+
+            time.sleep(1.5)
+
+            async def _scan_batch(cur_batch: list[dict[str, Any]]):
+                tasks = [_scan_single_profile(p, ledger) for p in cur_batch]
+                return await asyncio.gather(*tasks, return_exceptions=True)
+
+            results = loop.run_until_complete(_scan_batch(batch))
+            for p, r in zip(batch, results, strict=False):
+                if isinstance(r, Exception):
+                    print(f"    [WARN] Profile {p['id']} query failed: {r}")
+                else:
+                    print(f"    [OK] Profile {p['id']}: balance {r.get('credits_remaining')} credits")
+
+        finally:
+            # Strictly terminate every spawned process in finally block!
+            for port, udir, prof_dir in spawned_ports:
+                try:
+                    pm.terminate_by_port(port)
+                    clean_singleton_locks(udir, prof_dir)
+                except Exception:
+                    pass
+
+    loop.close()
+    print_credits_table(ledger, profile_ids=target_ids)
+
+
 def main() -> None:
-    actions = ["list", "status", "launch", "stop", "login-many", "scan", "sync", "leases", "release"]
+    actions = [
+        "list",
+        "status",
+        "launch",
+        "stop",
+        "login-many",
+        "onboard",
+        "credits",
+        "scan",
+        "sync",
+        "leases",
+        "release",
+    ]
     parser = argparse.ArgumentParser(description="Google Flow CDP Account & Profile Manager")
     parser.add_argument("action", choices=actions, nargs="?", default="status")
     parser.add_argument("target", nargs="?", default="all", help="Profile ID, job ID, or 'all'")
+    parser.add_argument("--count", type=int, default=1, help="Number of profiles to onboard")
+    parser.add_argument("--start-port", type=int, default=9270, help="Starting port for onboarded profiles")
+    parser.add_argument("--refresh", action="store_true", default=False, help="Refresh live credits via headless CDP query")
+    parser.add_argument("--profiles", type=str, help="Comma-separated profile IDs for credits scan")
+    parser.add_argument("--concurrency", type=int, default=4, help="Concurrency for credit scanning")
     parser.add_argument("--total", type=int, help="Total number of profiles to configure in login-many")
     parser.add_argument("--select", type=str, help="Danh sách profile muốn chọn sẵn (ví dụ: '10,102,14' hoặc '1,2,3')")
     parser.add_argument("--url", default="https://flow.google.com/", help="URL to open on launch")
     parser.add_argument("--headed", "--no-headless", dest="headless", action="store_false", default=True, help="Launch Chrome in visible GUI window (non-headless)")
     args = parser.parse_args()
+
+    if args.action == "credits":
+        credits_command(
+            refresh=args.refresh,
+            profiles_str=args.profiles,
+            concurrency=args.concurrency,
+        )
+        return
+
+    if args.action == "onboard":
+        onboard_profiles(count=args.count, start_port=args.start_port)
+        return
 
     if args.action == "leases":
         try:

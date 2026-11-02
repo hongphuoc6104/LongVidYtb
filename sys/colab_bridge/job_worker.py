@@ -168,6 +168,9 @@ def _build_timeline(c, images, audio, language, ratio, load):
                     "is_endcard": is_endcard_beat,
                     "timing_method": timing_method,
                     "shot_type": image_item.get("shot_type", "full_scene"),
+                    "trim_before": bt.get("trim_before", 0),
+                    "playback_rate": bt.get("playback_rate", 1.0),
+                    "clip_duration": bt.get("clip_duration"),
                 }
             )
 
@@ -179,6 +182,17 @@ def _build_timeline(c, images, audio, language, ratio, load):
         for i in range(len(beats) - 1):
             if round(beats[i]["at"] * 30) >= round(beats[i + 1]["at"] * 30):
                 beats[i + 1]["at"] = round((round(beats[i]["at"] * 30) + 1) / 30.0, 4)
+
+        scene_dur = max(0.05, float(end) - float(start))
+        for i, b_item in enumerate(beats):
+            raw_clip_dur = float(b_item.get("clip_duration") or 0.0)
+            if raw_clip_dur > 0:
+                next_at = float(beats[i + 1]["at"]) if i + 1 < len(beats) else scene_dur
+                actual_beat_dur = max(0.15, next_at - float(b_item["at"]))
+                avail_clip = max(0.25, raw_clip_dur - (float(b_item.get("trim_before") or 0) / 30.0) - 0.05)
+                # Ensure playback_rate covers actual_beat_dur + J/L-cut & crossfade margin without EOF
+                safe_rate = avail_clip / (actual_beat_dur + 0.22)
+                b_item["playback_rate"] = round(max(0.25, min(1.45, safe_rate)), 3)
 
         methods = {beat["timing_method"] for beat in beats}
         scene_out = {
@@ -334,7 +348,7 @@ def run(bundle_path, output_dir, expected_id, expected_worker):
         "outputs": brief["outputs"],
         "primary_language": contract.primary_language(brief),
         "tracks": tracks,
-        "render_concurrency": 4,
+        "render_concurrency": 6,
         "modern_style": True,
         "reframe_mode": brief.get("reframe_mode", False),
         "omni_platform": brief.get("omni_platform", False),
@@ -497,7 +511,16 @@ fi
 
     started = time.monotonic()
     render_cmd = ["node", str(runtime / "renderer/render.mjs"), str(output.resolve())]
-    subprocess.run(render_cmd, cwd=runtime, env=env, check=True, timeout=3600)
+    res_render = subprocess.run(render_cmd, cwd=runtime, env=env, capture_output=True, text=True, timeout=3600)
+    if res_render is not None and getattr(res_render, "returncode", 0) != 0:
+        err_tail = ((res_render.stdout or "") + "\n" + (res_render.stderr or ""))[-4000:]
+        (output / "render-error.log").write_text(err_tail, encoding="utf-8")
+        raise subprocess.CalledProcessError(
+            res_render.returncode,
+            render_cmd,
+            output=res_render.stdout,
+            stderr=res_render.stderr,
+        )
     render_seconds = round(time.monotonic() - started, 3)
 
     t_ffprobe_start = time.monotonic()

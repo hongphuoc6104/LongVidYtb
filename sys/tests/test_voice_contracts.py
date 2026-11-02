@@ -104,21 +104,21 @@ class TestToneSpeedModulation(unittest.TestCase):
     """Validates tone speed modulation rules and base_speeds preservation."""
 
     def test_tone_speed_multipliers(self):
-        self.assertEqual(TONE_SPEED_MULTIPLIERS.get("narrative_warm"), 0.98)
+        self.assertEqual(TONE_SPEED_MULTIPLIERS.get("narrative_warm"), 1.00)
         self.assertEqual(TONE_SPEED_MULTIPLIERS.get("analytical_crisp"), 1.02)
-        self.assertEqual(TONE_SPEED_MULTIPLIERS.get("reflective_slow"), 0.92)
+        self.assertEqual(TONE_SPEED_MULTIPLIERS.get("reflective_slow"), 0.98)
 
     def test_resolve_tone_speed(self):
         # Base speed 1.0
-        self.assertEqual(resolve_tone_speed(1.0, "narrative_warm"), 0.98)
+        self.assertEqual(resolve_tone_speed(1.0, "narrative_warm"), 1.00)
         self.assertEqual(resolve_tone_speed(1.0, "analytical_crisp"), 1.02)
-        self.assertEqual(resolve_tone_speed(1.0, "reflective_slow"), 0.92)
+        self.assertEqual(resolve_tone_speed(1.0, "reflective_slow"), 0.98)
         self.assertEqual(resolve_tone_speed(1.0, None), 1.00)
 
         # Base speed scaling
-        self.assertEqual(resolve_tone_speed(1.1, "narrative_warm"), 1.078)
+        self.assertEqual(resolve_tone_speed(1.1, "narrative_warm"), 1.1)
         self.assertEqual(resolve_tone_speed(1.05, "analytical_crisp"), 1.071)
-        self.assertEqual(resolve_tone_speed(0.95, "reflective_slow"), 0.874)
+        self.assertEqual(resolve_tone_speed(0.95, "reflective_slow"), 0.931)
 
     def test_build_request_preserves_base_speeds_and_modulates_items(self):
         tmp = tempfile.TemporaryDirectory()
@@ -137,7 +137,7 @@ class TestToneSpeedModulation(unittest.TestCase):
             req = build_request(root, cfg, scenes)
             self.assertEqual(req.get("base_speeds", {}).get("vi"), 1.0)
             item_speeds = [it["speed"] for it in req["items"]]
-            self.assertEqual(item_speeds, [0.98, 1.02, 0.92])
+            self.assertEqual(item_speeds, [1.0, 1.02, 0.98])
         finally:
             tmp.cleanup()
 

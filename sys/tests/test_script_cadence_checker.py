@@ -712,6 +712,70 @@ class ScriptDiversityLinterTests(unittest.TestCase):
         self.assertTrue(any("OPENING_HOOK_TOO_LONG" in w for w in warns))
         self.assertTrue(any("BREATHLESS_CLAUSE" in w for w in warns))
 
+    def test_ai_cliche_phrases_detected_and_rejected(self):
+        from script_diversity_linter import check_ai_cliche_phrases, lint_script
+
+        cliche_scenes = [
+            {"id": "SC01", "narration": "Có một sự thật mất lòng là bạn đang dùng sai cách."},
+            {"id": "SC02", "narration": "Đánh giá công bằng thì công cụ này khá mạnh."},
+        ]
+        violations = check_ai_cliche_phrases(cliche_scenes)
+        self.assertEqual(len(violations), 2)
+        self.assertTrue(all(v["type"] == "AI_CLICHE_PHRASE" for v in violations))
+        self.assertIn("sự thật mất lòng", violations[0]["matched_text"])
+        self.assertIn("đánh giá công bằng thì", violations[1]["matched_text"])
+
+        # Soft warning when strict=False
+        res_soft = lint_script(cliche_scenes, strict=False)
+        self.assertEqual(res_soft["status"], "WARN")
+        self.assertTrue(any(v["type"] == "AI_CLICHE_PHRASE" for v in res_soft["violations"]))
+
+        # Hard failure when strict=True
+        res_strict = lint_script(cliche_scenes, strict=True)
+        self.assertEqual(res_strict["status"], "FAIL")
+
+        # Direct natural Vietnamese narration passes cleanly
+        natural_scenes = [
+            {"id": "SC01", "narration": "Bạn đang dùng sai cách ngay từ bước đầu tiên."},
+            {"id": "SC02", "narration": "Công cụ này xử lý dữ liệu rất nhanh nhưng chi phí lại quá đắt."},
+        ]
+        clean_violations = check_ai_cliche_phrases(natural_scenes)
+        self.assertEqual(len(clean_violations), 0)
+
+    def test_editorial_quality_linter_rejects_hollow_ai_cliche(self):
+        from editorial_value_linter import lint_editorial_and_narrative_quality
+
+        brief = {
+            "format_profile": "short_9x16",
+            "editorial_stance": {
+                "myth_debunked": "Cố gắng dậy sớm lúc bốn giờ sáng",
+                "channel_verdict": "Thiếu ngủ tàn phá nhận thức sâu sắc",
+                "why_generic_advice_fails": "Lời khuyên kỷ luật bỏ qua nhịp sinh học",
+                "tradeoff_or_blindspot": "Hiệu suất giảm mạnh vào buổi chiều",
+            },
+            "actionable_value": {
+                "core_mechanism": "Cơ chế tích tụ chất adenosine trong não",
+                "practical_rule_of_thumb": "Quy tắc ngủ đủ chu kỳ chín mươi phút",
+                "real_world_scenario": "Khi chuẩn bị cho kỳ thi căng thẳng",
+            },
+            "cta_plan": {
+                "cliffhanger_peak": "Bí mật về chu kỳ giấc ngủ sâu được giải mã ở video dài",
+            },
+        }
+        content = {
+            "scenes": [
+                {
+                    "id": "SC01",
+                    "narrative_situation": "editorial_commentary",
+                    "narration": "Sự thật mất lòng là bạn đang tự hủy hoại sức khỏe của mình.",
+                    "beats": [{"image_id": "img1", "narrative_situation": "editorial_commentary"}],
+                }
+            ]
+        }
+        report = lint_editorial_and_narrative_quality(brief, content)
+        self.assertFalse(report["passed"])
+        self.assertTrue(any("HOLLOW_GENERIC_CLICHE" in err for err in report["errors"]))
+
 
 if __name__ == "__main__":
     unittest.main()

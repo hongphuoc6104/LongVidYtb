@@ -33,6 +33,7 @@ from tools.channel_production_common import (  # noqa: E402
     resolve_channel_ids,
     stage_a_images,
     stage_b_audio,
+    stage_c_flow_video,
     stage_c_render,
 )
 
@@ -49,6 +50,9 @@ def produce_channel_long(
     session_name: Optional[str] = None,
     inspect_dir: Optional[Path] = None,
     skip_render: bool = False,
+    use_flow_video: bool = False,
+    video_model: str = "omni_flash",
+    chain_mode: str = "daisy_chain",
 ) -> Dict[str, Any]:
     """Execute end-to-end production for a channel's long_16x9 explainer video."""
     channel_id, channel_slug = resolve_channel_ids(channel_arg)
@@ -160,20 +164,36 @@ def produce_channel_long(
             logger.info(json.dumps(summary, indent=2))
             return summary
 
-        # Stage C: Remote Render (long 16:9, subtitles: false, external SRT)
-        final_mp4, render_client, render_account, render_report = stage_c_render(
-            sys_dir=active_sys_dir,
-            job_dir=job_dir,
-            root_dir=active_root_dir,
-            brief=brief,
-            content=content,
-            images_payload=images_output,
-            audio_payload=audio_payload,
-            format_profile="long_16x9",
-            colab_account=colab_account or (audio_account if audio_account in part_colab else part_colab[0]),
-            session_name=target_session,
-            inspect_dir=inspect_dir,
-        )
+        # Stage C: Render via Flow Video Start->End Frames or Remote Colab Remotion
+        enable_flow_video = bool(use_flow_video or brief.get("video_engine") == "flow_video")
+        if enable_flow_video:
+            final_mp4, render_client, render_account, render_report = stage_c_flow_video(
+                sys_dir=active_sys_dir,
+                job_dir=job_dir,
+                root_dir=active_root_dir,
+                brief=brief,
+                content=content,
+                images_payload=images_output,
+                audio_payload=audio_payload,
+                format_profile="long_16x9",
+                video_model=video_model,
+                chain_mode=chain_mode,
+                inspect_dir=inspect_dir,
+            )
+        else:
+            final_mp4, render_client, render_account, render_report = stage_c_render(
+                sys_dir=active_sys_dir,
+                job_dir=job_dir,
+                root_dir=active_root_dir,
+                brief=brief,
+                content=content,
+                images_payload=images_output,
+                audio_payload=audio_payload,
+                format_profile="long_16x9",
+                colab_account=colab_account or (audio_account if audio_account in part_colab else part_colab[0]),
+                session_name=target_session,
+                inspect_dir=inspect_dir,
+            )
         if render_client:
             last_active_client = render_client
         if render_account:
@@ -222,13 +242,17 @@ def produce_channel_long(
 def main():
     parser = argparse.ArgumentParser(description="Video Pilot — Universal E2E Long Production Runner (16:9 Explainer)")
     parser.add_argument("--channel", required=False, help="Channel identifier or slug (e.g. nao_luoi, tui_tien)")
-    parser.add_argument("--job", required=False, help="Job identifier (defaults to <channel_slug>-week1-16x9 or custom job dir)")
-    parser.add_argument("--colab-account", default=None, help="Target Colab account (with automatic slice failover)")
+    parser.add_argument("--job", "--job-id", dest="job", required=False, help="Job identifier (defaults to <channel_slug>-week1-16x9 or custom job dir)")
+    parser.add_argument("--colab-account", "--account", dest="colab_account", default=None, help="Target Colab account (with automatic slice failover)")
     parser.add_argument("--flow-profiles", default=None, help="Comma-separated slice of Chrome profiles")
     parser.add_argument("--force-audio", action="store_true", help="Force re-synthesis of Stage B audio + Stage C render")
     parser.add_argument("--skip-render", action="store_true", help="Run Stage A (Images) and Stage B (Audio) only, skipping Stage C render")
     parser.add_argument("--session", default=None, help="Colab session name")
     parser.add_argument("--inspect-dir", default=None, type=Path, help="Optional directory to copy deliverables for review")
+    parser.add_argument("--use-flow-video", action="store_true", help="Render Stage C via Flow Video Start->End Frames chain (Omni 1.1 Flash)")
+    parser.add_argument("--video-engine", choices=["remotion", "flow_video"], default="remotion", help="Video rendering engine (remotion or flow_video)")
+    parser.add_argument("--video-model", default="omni_flash", help="Flow video model when --use-flow-video is enabled (default: omni_flash)")
+    parser.add_argument("--chain-mode", default="daisy_chain", choices=["daisy_chain", "scene_pairs", "zero_credit_flipbook"], help="Flow video chain mode")
     args = parser.parse_args()
 
     channel = args.channel
@@ -247,6 +271,9 @@ def main():
         session_name=args.session,
         inspect_dir=args.inspect_dir,
         skip_render=args.skip_render,
+        use_flow_video=bool(args.use_flow_video or args.video_engine == "flow_video"),
+        video_model=args.video_model,
+        chain_mode=args.chain_mode,
     )
 
 

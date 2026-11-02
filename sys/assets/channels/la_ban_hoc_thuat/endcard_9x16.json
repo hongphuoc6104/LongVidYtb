@@ -1,0 +1,19 @@
+{
+  "jobId": "endcard_la_ban_hoc_thuat_9x16",
+  "forgeId": "99e31ea3-18f0-4a0f-a01d-ed9ba6858bba",
+  "profile_id": "profile_9",
+  "prompt": "Requested aspect ratio: 9:16. Render a complete 100% full-bleed vertical 9:16 2D endcard illustration extending continuously to all four edges with zero letterbox bars, zero subtitle boxes, and zero dark vignette.\n\nVisual Style (ch_academic_sketchbook): Classical Da Vinci and Oxford archival ivory vellum fountain-pen illustration on warm archival vellum canvas (#F6F1E3 warm archival vellum, #1F2D3D deep indigo fountain-pen ink, #B8860B antique brass compass gold, #4F6D5A botanical library sage) with fine ink linework, index cards, marginalia annotations and taxonomy diagrams; orthographic 2D, at least 60% negative space, zero 3D, zero gradients. Palette: #F6F1E3, #1F2D3D, #B8860B, #4F6D5A, #8C7A6B.\n\nCharacter Cast: Warm scholarly human presenter with wavy dark hair, round brass spectacles, and flat olive-tweed vest over rolled white sleeves, holding a fountain pen or open leather notebook. Outfit: Flat olive-tweed vest over crisp rolled-sleeve ivory oxford shirt with brass spectacles, no shading.\n\nScene Composition: The channel character stands centered in the frame, pointing upwards with a welcoming smile. Clean, minimalist composition with at least 60% open negative space on the solid flat background canvas (#F6F1E3).\n\nEmphasis lettering instruction: render exact uppercase Vietnamese hand-lettered text (crisp high-contrast dark ink lettering) in the upper third integrated directly onto the flat canvas (#F6F1E3) (strictly zero rectangular text cards, banners, or gradient overlays covering artwork): \"BẢN ĐẦY ĐỦ TRÊN YOUTUBE\" and \"LA BÀN HỌC THUẬT\".",
+  "latency": 29.3,
+  "sha256": "c3b467447676eee91b275acad3740ce00d64f95e6aa953e862f4e27b1784a952",
+  "aspect_ratio": "9:16",
+  "width": 1080,
+  "height": 1920,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "verified",
+  "created_at": "2026-10-31T18:09:38.045818+00:00",
+  "media_id": "99e31ea3-18f0-4a0f-a01d-ed9ba6858bba",
+  "channel_id": "la_ban_hoc_thuat",
+  "visual_profile": "ch_academic_sketchbook"
+}

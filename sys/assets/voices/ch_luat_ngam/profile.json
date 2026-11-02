@@ -1,31 +1,70 @@
 {
-  "voice": "VietNarrator_LuatNgam",
+  "voice": "VietNarrator_luat_ngam",
   "channel_id": "luat_ngam",
+  "option_index": 1,
+  "voice_label": "Giọng giải mã tâm lý đám đông sắc sảo, cuốn hút, rõ nét chuẩn phòng thu",
   "language": "vi",
   "languages": [
     "vi",
     "en"
   ],
   "reference_wav": "reference.wav",
-  "reference_text": "Đang ngồi đọc sách thì dưới chân bỗng có tiếng kêu meo meo dịu dàng. Nhà bạn có nuôi một chú mèo nào không, hãy bình luận nhé.",
-  "source_speed": 0.9,
+  "reference_text": "Trước khi bắt đầu, hãy cùng xem xét một ví dụ điển hình cho tâm lý bầy đàn. Sự mua sắm điên cuồng vào ngày Black Friday, thứ sáu đen. Black Friday là một trong những ngày mua sắm lớn nhất năm.",
+  "duration_seconds": 11.28,
+  "acoustic_metrics": {
+    "dur": 11.28,
+    "rms_db": -14.56,
+    "peak_db": -1.11,
+    "p05_db": -140.0,
+    "p10_db": -140.0,
+    "p50_db": -15.8,
+    "p90_db": -10.3,
+    "dyn_db": 129.7,
+    "active_ratio": 0.71,
+    "min_1s_db": -18.7,
+    "start_60ms_db": -140.0,
+    "end_60ms_db": -140.0,
+    "hf_ratio": 0.0218,
+    "f0_spread_semitones": 1.63,
+    "quarter_rms_spread_db": 2.7
+  },
+  "span_provenance": {
+    "raw_sir_db": 19.3,
+    "avg_word_prob": 0.979,
+    "valley_start_db": -140.0,
+    "valley_end_db": -77.5,
+    "pause_before_s": 1.6,
+    "pause_after_s": 0.32
+  },
+  "source_speed": 1.0,
   "recommended_speed": 1.07,
-  "default_tone": "narrative_warm",
-  "audio_voice_chain": "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-3.0,equalizer=f=2400:t=q:w=1.2:g=1.5,lowpass=f=13500",
+  "default_tone": "sharp_narrative",
+  "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
   "audio_lufs": -14.0,
-  "audio_peak_db": -1.5,
-  "sha256": "8ff1a7152a5e97124ba736b1295d6d41570f32b56cc217ecdb5e05f5438e383c",
+  "audio_peak_db": -1.2,
+  "sha256": "e496b0e111767af959a7e9d4744a1fcb5918c8de2e36f157051e10db00aba5b5",
+  "demucs_vocal_isolated": true,
+  "studio_v3_restored": true,
+  "processing": {
+    "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+    "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+    "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+    "boundary_aligner": "faster-whisper large-v3 word_timestamps + 20ms valley<=33dB + 110ms/150ms silence",
+    "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+  },
   "sources": [
     {
-      "source": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+      "url": "https://www.youtube.com/watch?v=kgtwTvxmAyE",
+      "video_id": "kgtwTvxmAyE",
+      "source_channel": "Spiderum",
+      "video_title": "'Hiệu ứng bầy đàn': Liệu bạn có phải MỘT CON CỪU? | Mạnh Chung | Quan Điểm",
       "window_seconds": [
-        0.0,
-        8.14
-      ],
-      "pitch_factor": 1.0,
-      "eq": ""
+        52.03,
+        63.05
+      ]
     }
   ],
   "listening_verified": true,
-  "note": "Studio-tuned human voice profile for channel luat_ngam (narrative_warm, speed 1.07)."
+  "note": "Studio V3 restored reference voice (Giọng giải mã tâm lý đám đông sắc sảo, cuốn hút, rõ nét chuẩn phòng thu) from 'Spiderum' (https://www.youtube.com/watch?v=kgtwTvxmAyE @ 52.03s-63.05s) at exact 1.0x original speed.",
+  "active_option": 1
 }

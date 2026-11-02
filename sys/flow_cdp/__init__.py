@@ -17,12 +17,6 @@ from .bridge import (
     require_queue_acceptance,
     send_raw_command,
 )
-from .multi_profile_manager import (
-    ChromeProfileWorker,
-    MultiProfileDispatcher,
-    MultiProfileManager,
-    ProfileState,
-)
 from .lifecycle import (
     ProfileLifecycleManager,
     calculate_optimal_workers,
@@ -32,6 +26,12 @@ from .lifecycle import (
     get_workload_tier_info,
     register_spawned_port,
     stop_all_profiles,
+)
+from .multi_profile_manager import (
+    ChromeProfileWorker,
+    MultiProfileDispatcher,
+    MultiProfileManager,
+    ProfileState,
 )
 from .patch_partitioner import Patch, PatchPartitioner
 

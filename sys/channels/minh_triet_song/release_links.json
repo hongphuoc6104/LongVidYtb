@@ -1,0 +1,14 @@
+{
+  "long": {
+    "job_id": "minh-triet-song-batch2-16x9",
+    "youtube_url": "https://youtu.be/MTqbmWU3P-U"
+  },
+  "shorts": {
+    "minh-triet-song-batch2-9x16": {
+      "job_id": "minh-triet-song-batch2-9x16",
+      "youtube_url": "https://youtube.com/shorts/mHj7X5Un4_U",
+      "tiktok_url": null,
+      "facebook_url": null
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "long": {
+    "job_id": "nghe-song-sot-batch2-16x9",
+    "youtube_url": "https://youtu.be/McZUDJjoBqs"
+  },
+  "shorts": {
+    "nghe-song-sot-batch2-9x16": {
+      "job_id": "nghe-song-sot-batch2-9x16",
+      "youtube_url": "https://youtube.com/shorts/umKnPnZb70Y",
+      "tiktok_url": null,
+      "facebook_url": null
+    }
+  }
+}

@@ -2,7 +2,7 @@ import {buildCalmCameraPlan, calmCameraFrame, calmCameraStyle} from './camera.mj
 import {Thumbnail} from './thumbnail';
 import React, {useLayoutEffect, useMemo} from 'react';
 import {portraitCaptionTokens, PORTRAIT_CAPTION_ACTIVE_COLOR, captionStyle, captionMaxHeight, portraitKineticWord, portraitKineticCaptionStyle} from './captions.mjs';
-import {BRAND_LOGO_DATA_URI} from './brand_logo';
+import {BRAND_LOGO_DATA_URI, resolveBrandLogoDataUri} from './brand_logo';
 import {vignetteBackground} from './visual-style.mjs';
 import {
   AbsoluteFill,
@@ -11,7 +11,7 @@ import {
   Composition,
   Easing,
   Img,
-  Video as RemotionVideo,
+  OffthreadVideo,
   interpolate,
   registerRoot,
   spring,
@@ -153,10 +153,41 @@ const Video: React.FC<any> = (p) => {
   const cameraPlan = cameraPlans[p.scenes.indexOf(scene)] || [];
   const camera = calmCameraFrame(cameraPlan[active], relative);
   const previousCamera = calmCameraFrame(cameraPlan[active - 1], relative);
-  const opacity = beat.effect === 'fade' ? transition : variationCrossfade;
+  const isVideoAsset = Boolean(currentImageSrc && (currentImageSrc.endsWith('.mp4') || currentImageSrc.endsWith('.webm')));
+  const trimBeforeFrames = Math.max(0, Math.round(Number(beat.trim_before || 0)));
+  const isDaisyChainVideo = Boolean(isVideoAsset && trimBeforeFrames >= 1);
+  const opacity = isDaisyChainVideo ? 1 : (beat.effect === 'fade' ? transition : variationCrossfade);
   const editorial = p.reframe_mode && height > width && !['macro_prop', 'white_card', 'white_isolated'].includes(cameraPlan[active]?.shotType ?? beat.shot_type);
   const previousEditorial = p.reframe_mode && height > width && !['macro_prop', 'white_card', 'white_isolated'].includes(cameraPlan[active - 1]?.shotType ?? imageList[active - 1]?.shot_type);
-  const isVideoAsset = currentImageSrc && (currentImageSrc.endsWith('.mp4') || currentImageSrc.endsWith('.webm'));
+  const sceneIdx = p.scenes.indexOf(scene);
+  const jlOffset = Number(scene.j_l_cut_offset ?? (p.enable_jl_cut ? -0.18 : 0));
+  const nextScene = sceneIdx >= 0 ? p.scenes[sceneIdx + 1] : undefined;
+  const nextJlOffset = nextScene ? Number(nextScene.j_l_cut_offset ?? (p.enable_jl_cut ? -0.18 : 0)) : 0;
+  const beatStartSec = Math.max(0, scene.start + Number(beat.at || 0) + (active === 0 && jlOffset < 0 ? jlOffset : 0));
+  const beatEndSec = active + 1 < imageList.length
+    ? scene.start + Number(imageList[active + 1].at || 0)
+    : scene.end + (nextJlOffset > 0 ? nextJlOffset : 0);
+  const beatStartFrame = Math.max(0, Math.floor(beatStartSec * fps));
+  const beatDurationFrames = Math.max(1, Math.ceil(Math.max(0.05, beatEndSec - beatStartSec) * fps) + 2);
+  const rawClipDur = Number(beat.clip_duration || 0);
+  const availClipDur = rawClipDur > 0 ? Math.max(0.2, rawClipDur - (trimBeforeFrames / fps) - 0.05) : 0;
+  const rawRate = Number(beat.playback_rate) > 0 ? Number(beat.playback_rate) : 1;
+  const safeMaxRate = availClipDur > 0 ? (availClipDur / (beatDurationFrames / fps)) : rawRate;
+  const videoPlaybackRate = Math.max(0.25, availClipDur > 0 ? Math.min(rawRate, safeMaxRate) : rawRate);
+
+  const prevBeat = active > 0 ? imageList[active - 1] : undefined;
+  const prevSrc = prevBeat?.src;
+  const isPrevVideo = Boolean(prevSrc && (prevSrc.endsWith('.mp4') || prevSrc.endsWith('.webm')));
+  const prevBeatStartSec = Math.max(0, scene.start + Number(prevBeat?.at || 0) + (active - 1 === 0 && jlOffset < 0 ? jlOffset : 0));
+  const prevBeatStartFrame = Math.max(0, Math.floor(prevBeatStartSec * fps));
+  const prevBeatDuration = Math.max(0.05, (scene.start + Number(beat.at || 0) - prevBeatStartSec) + 0.45);
+  const prevBeatDurationFrames = Math.max(1, Math.ceil(prevBeatDuration * fps) + 2);
+  const prevTrimBeforeFrames = Math.max(0, Math.round(Number(prevBeat?.trim_before || 0)));
+  const prevRawClipDur = Number(prevBeat?.clip_duration || 0);
+  const prevAvailClipDur = prevRawClipDur > 0 ? Math.max(0.2, prevRawClipDur - (prevTrimBeforeFrames / fps) - 0.05) : 0;
+  const prevRawRate = Number(prevBeat?.playback_rate) > 0 ? Number(prevBeat?.playback_rate) : 1;
+  const prevSafeMaxRate = prevAvailClipDur > 0 ? (prevAvailClipDur / (prevBeatDurationFrames / fps)) : prevRawRate;
+  const prevVideoPlaybackRate = Math.max(0.25, prevAvailClipDur > 0 ? Math.min(prevRawRate, prevSafeMaxRate) : prevRawRate);
 
   // Procedural Line Boiling (opt-in only for isolated assets; disabled on full-bleed 1080p)
   const isLineBoil = Boolean(scene.layers?.length && (beat.line_boil || beat.effect === 'line_boil' || p.line_boil));
@@ -301,34 +332,59 @@ const Video: React.FC<any> = (p) => {
         </AbsoluteFill>
       ) : (
         <>
-          {/* Dissolve retains the outgoing composition and camera framing. */}
-          {active > 0 && ((beat.effect === 'fade' && transition < 1) || (isVariationCut && variationCrossfade < 1)) && (
-            <Img
-              src={staticFile(imageList[active - 1].src)}
-              decoding="sync"
-              style={{
-                position: 'absolute',
-                width: '100%',
-                height: '100%',
-                objectFit: previousEditorial ? 'contain' : 'cover',
-                ...(previousEditorial ? {top: '25%', height: '48%', borderRadius: 24} : {}),
-                ...calmCameraStyle(previousCamera, previousEditorial),
-              }}
-            />
+          {/* Dissolve retains the outgoing composition and camera framing. Skip on crisp daisy_chain video splices */}
+          {active > 0 && !isDaisyChainVideo && ((beat.effect === 'fade' && transition < 1) || (isVariationCut && variationCrossfade < 1)) && (
+            isPrevVideo ? (
+              <Sequence from={prevBeatStartFrame} durationInFrames={prevBeatDurationFrames} layout="none">
+                <OffthreadVideo
+                  src={staticFile(prevSrc as string)}
+                  trimBefore={prevTrimBeforeFrames}
+                  playbackRate={prevVideoPlaybackRate}
+                  muted
+                  style={{
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                    objectFit: previousEditorial ? 'contain' : 'cover',
+                    ...(previousEditorial ? {top: '25%', height: '48%', borderRadius: 24, boxShadow: '0 12px 32px #0008'} : {}),
+                  }}
+                />
+              </Sequence>
+            ) : (
+              <Img
+                src={staticFile(imageList[active - 1].src)}
+                decoding="sync"
+                style={{
+                  position: 'absolute',
+                  width: '100%',
+                  height: '100%',
+                  objectFit: previousEditorial ? 'contain' : 'cover',
+                  ...(previousEditorial ? {top: '25%', height: '48%', borderRadius: 24} : {}),
+                  ...calmCameraStyle(previousCamera, previousEditorial),
+                }}
+              />
+            )
           )}
 
           {/* Main visual: steady framing or one restrained camera move. */}
           {currentImageSrc && (
             isVideoAsset ? (
-              <RemotionVideo
-                src={staticFile(currentImageSrc)}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'contain',
-                  opacity
-                }}
-              />
+              <Sequence from={beatStartFrame} durationInFrames={beatDurationFrames} layout="none">
+                <OffthreadVideo
+                  src={staticFile(currentImageSrc)}
+                  trimBefore={trimBeforeFrames}
+                  playbackRate={videoPlaybackRate}
+                  muted={!beat.unmute_video}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: editorial ? 'contain' : 'cover',
+                    ...(editorial ? {position: 'absolute', top: '25%', height: '48%', borderRadius: 24, boxShadow: '0 12px 32px #0008'} : {}),
+                    opacity,
+                    filter: combinedFilter,
+                  }}
+                />
+              </Sequence>
             ) : (
               <Img
                 src={staticFile(currentImageSrc)}
@@ -438,20 +494,20 @@ const Video: React.FC<any> = (p) => {
         );
       })()}
 
-      {/* Brand Channel Logo / Watermark Cover (Hiển thị cố định, tự động ẩn khi có emphasis_text hoặc is_endcard) */}
-      {!p.hide_logo && !p.hideLogo && !beat?.emphasis_text && !beat?.is_endcard && beat?.spec !== 'endcard' && (beat?.tempo !== 'hold' || width >= height) && (() => {
+      {/* Brand Channel Logo / Watermark Cover (Hiển thị cố định ở góc dưới bên phải bằng avatar của từng kênh) */}
+      {!p.hide_logo && !p.hideLogo && !beat?.is_endcard && beat?.spec !== 'endcard' && (beat?.tempo !== 'hold' || width >= height) && (() => {
         const isHorizontal = width >= height;
         const logoSize = isHorizontal ? Math.round(width * (108 / 1920)) : Math.round(width * (100 / 1080));
-        const logoRight = isHorizontal ? Math.round(width * (23 / 1920)) : Math.round(width * (32 / 1080));
+        const logoRight = isHorizontal ? Math.round(width * (23 / 1920)) : Math.round(width * (24 / 1080));
         const logoBottom = isHorizontal ? Math.round(height * (38 / 1080)) : Math.round(height * (50 / 1920));
         const logoRadius = Math.round(logoSize * (16 / 108));
+        const resolvedLogoSrc = p.brandLogoSrc ? staticFile(p.brandLogoSrc) : resolveBrandLogoDataUri(p);
         return (
           <div
             style={{
               position: 'absolute',
               right: logoRight,
-              bottom: isHorizontal ? logoBottom : undefined,
-              top: isHorizontal ? undefined : Math.round(height * (120 / 1920)),
+              bottom: logoBottom,
               width: logoSize,
               height: logoSize,
               borderRadius: logoRadius,
@@ -462,7 +518,7 @@ const Video: React.FC<any> = (p) => {
             }}
           >
             <Img
-              src={p.brandLogoSrc ? staticFile(p.brandLogoSrc) : BRAND_LOGO_DATA_URI}
+              src={resolvedLogoSrc}
               style={{
                 width: '100%',
                 height: '100%',

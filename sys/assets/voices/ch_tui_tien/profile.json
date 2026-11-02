@@ -1,31 +1,70 @@
 {
-  "voice": "VietNarrator_TuiTien",
+  "voice": "VietNarrator_tui_tien",
   "channel_id": "tui_tien",
+  "option_index": 3,
+  "voice_label": "Giọng phân tích tài chính cá nhân thông minh, rõ nét, lôi cuốn chuẩn studio",
   "language": "vi",
   "languages": [
     "vi",
     "en"
   ],
   "reference_wav": "reference.wav",
-  "reference_text": "Đang ngồi đọc sách thì dưới chân bỗng có tiếng kêu meo meo dịu dàng. Nhà bạn có nuôi một chú mèo nào không, hãy bình luận nhé.",
-  "source_speed": 0.9,
+  "reference_text": "Nói chung là một khi các bác đã tìm hiểu kỹ và đọc kỹ hợp đồng cũng như là các điều khoản của bảo hiểm thì không có lo gì đâu. Đây còn là một hình thức để bảo vệ bản thân an toàn rất cần thiết nữa ấy chứ.",
+  "duration_seconds": 9.03,
+  "acoustic_metrics": {
+    "dur": 9.03,
+    "rms_db": -15.2,
+    "peak_db": -1.19,
+    "p05_db": -63.9,
+    "p10_db": -51.3,
+    "p50_db": -15.8,
+    "p90_db": -11.4,
+    "dyn_db": 39.9,
+    "active_ratio": 0.76,
+    "min_1s_db": -16.7,
+    "start_60ms_db": -140.0,
+    "end_60ms_db": -140.0,
+    "hf_ratio": 0.0158,
+    "f0_spread_semitones": 5.35,
+    "quarter_rms_spread_db": 2.33
+  },
+  "span_provenance": {
+    "raw_sir_db": 7.1,
+    "avg_word_prob": 0.976,
+    "valley_start_db": -73.0,
+    "valley_end_db": -73.4,
+    "pause_before_s": 0.46,
+    "pause_after_s": 0.68
+  },
+  "source_speed": 1.0,
   "recommended_speed": 1.12,
-  "default_tone": "analytical_crisp",
-  "audio_voice_chain": "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-3.2,equalizer=f=2400:t=q:w=1.2:g=1.6,lowpass=f=13500",
+  "default_tone": "engaging_clear",
+  "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
   "audio_lufs": -14.0,
-  "audio_peak_db": -1.5,
-  "sha256": "8ff1a7152a5e97124ba736b1295d6d41570f32b56cc217ecdb5e05f5438e383c",
+  "audio_peak_db": -1.2,
+  "sha256": "4373647888b800271c8d2d6051651c3d3ed180639532688ad928d678e36af141",
+  "demucs_vocal_isolated": true,
+  "studio_v3_restored": true,
+  "processing": {
+    "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+    "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+    "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+    "boundary_aligner": "faster-whisper large-v3 word_timestamps + 20ms valley<=33dB + 110ms/150ms silence",
+    "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+  },
   "sources": [
     {
-      "source": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+      "url": "https://www.youtube.com/watch?v=8jcG7aSEbOM",
+      "video_id": "8jcG7aSEbOM",
+      "source_channel": "Học viện Bò và Gấu",
+      "video_title": "BẢO HIỂM - ĐẦU TƯ THÔNG MINH HAY PHÍ TIỀN VÔ ÍCH??? | CÂU CHUYỆN KIẾN THỨC",
       "window_seconds": [
-        0.0,
-        8.14
-      ],
-      "pitch_factor": 1.0,
-      "eq": ""
+        293.99,
+        302.76
+      ]
     }
   ],
   "listening_verified": true,
-  "note": "Studio-tuned human voice profile for channel tui_tien (analytical_crisp, speed 1.12)."
+  "note": "Studio V3 restored reference voice (Giọng phân tích tài chính cá nhân thông minh, rõ nét, lôi cuốn chuẩn studio) from 'Học viện Bò và Gấu' (https://www.youtube.com/watch?v=8jcG7aSEbOM @ 293.99s-302.76s) at exact 1.0x original speed.",
+  "active_option": 3
 }

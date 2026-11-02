@@ -185,7 +185,7 @@ class WorkerTests(unittest.TestCase):
         self.assertEqual(set(payload['tracks']),{'en'})
         self.assertEqual(payload['segments'][0]['text'],'A predator hunts for food.')
         self.assertEqual(payload['voice'],'VietNarrator')
-        self.assertEqual(seen[0]['items'][0]['speed'],0.98)
+        self.assertEqual(seen[0]['items'][0]['speed'],1.0)
         self.assertEqual(set(seen[0]['profiles']),{'en'})
         self.assertTrue((job/payload['wav']).is_file())
         self.assertIn('predator',(job/payload['srt']).read_text())

@@ -153,6 +153,9 @@ PYTHONPATH=sys python3 -m colab_bridge stop --account account-01 --session video
 7. **Mandatory Post-Job Colab T4 Unassignment & Chrome CDP Teardown (`ERR-20261012-01`)**:
    - Once all durable outputs (MP4 + SRT) of a job are collected and verified via `ffprobe`, immediately execute `ColabPoolManager().teardown_job_resources()` (`PYTHONPATH=sys python3 -m colab_bridge teardown` or automatic `release_job_resources()`), unless `--keep-warm` is explicitly requested.
    - This reconciles both `~/.config/video-pilot/colab/profiles/<acc>/sessions.json` and `/tmp/vp_colab_profiles/<acc>/sessions.json`, calls `client.unassign(endpoint)` directly on the Google Colab server to stop idle T4 quota drain, and terminates isolated Chrome CDP instances (`google-chrome-cdp-p1..p3`) to free ~5GB of local RAM.
+8. **Mandatory 45s Active Watchdog & 2-Account Fail-Fast Guard (`WATCHDOG-45S`)**:
+   - Whenever Lead or any Subagent launches a background Colab render/TTS task or subagent (`> 30s`), it **MUST** arm `schedule(DurationSeconds=45, TimerCondition="any")` and re-arm every 45s until completion, checking task logs, local `account_cli.py` PIDs, and `cache/colab-render/<acc>/<req>/state.json`. Never end a turn passively without an active watchdog while remote jobs are running.
+   - If `COLAB_EXEC_UNCONFIRMED` occurs on `2` distinct accounts in a row for the same request, stop failover immediately (`stage_c_render` fail-fast guard) and inspect remote stderr via `Client.exec` instead of rotating across remaining pool accounts.
 
 ---
 

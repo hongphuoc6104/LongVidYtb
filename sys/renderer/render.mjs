@@ -125,7 +125,9 @@ process.env.DISABLE_FROM_SURFACE = 'true';
 
 const hostCpus = Math.max(1, cpus().length);
 const effectiveConcurrency = renderConcurrency(props.render_concurrency, hostCpus, hasNvidiaEgl);
+// Remotion renderer strictly enforces concurrency <= hostCpus (number of cores on the system).
 const remotionConcurrency = Math.min(effectiveConcurrency, hostCpus);
+const remotionTimeoutMs = 120000;
 
 // Step 1: Run Batch DOM Caption Safety Check and close Playwright BEFORE opening Remotion browser
 const layoutStartedAt = Date.now();
@@ -226,11 +228,16 @@ try {
     serveUrl: url,
     id: 'Pilot',
     inputProps: plans[0].props,
-    puppeteerInstance: browser
+    puppeteerInstance: browser,
+    timeoutInMilliseconds: remotionTimeoutMs
   });
 
   const stillsFps = compStills.fps || 30;
-  for (const scene of plans[0].props.scenes) {
+  const hasVideoAssets = (plans[0].props.scenes || []).some((sc) =>
+    (sc.images || []).some((b) => typeof b?.src === 'string' && (b.src.endsWith('.mp4') || b.src.endsWith('.webm')))
+  );
+  const scenesForStills = hasVideoAssets ? (plans[0].props.scenes || []).slice(0, 1) : (plans[0].props.scenes || []);
+  await runParallelPool(scenesForStills, hasVideoAssets ? 1 : Math.min(2, remotionConcurrency), async (scene) => {
     let targetFrame = 0;
     if (scene.start !== undefined && scene.end !== undefined) {
       targetFrame = Math.round(((scene.start + scene.end) / 2) * stillsFps);
@@ -247,10 +254,11 @@ try {
       composition: compStills,
       inputProps: plans[0].props,
       puppeteerInstance: browser,
+      timeoutInMilliseconds: remotionTimeoutMs,
       frame: targetFrame,
       output: path.join(dir, scene.id + '.png')
     });
-  }
+  });
 
   // Render thumbnail and cover stills if thumbnail_spec is provided
   if (props.thumbnail_spec) {
@@ -288,13 +296,15 @@ try {
         serveUrl: url,
         id: 'Thumbnail',
         inputProps,
-        puppeteerInstance: browser
+        puppeteerInstance: browser,
+        timeoutInMilliseconds: remotionTimeoutMs
       });
       await renderStill({
         serveUrl: url,
         composition,
         inputProps,
         puppeteerInstance: browser,
+        timeoutInMilliseconds: remotionTimeoutMs,
         frame: 0,
         output: path.join(dir, file)
       });
@@ -304,17 +314,25 @@ try {
 
   const renderMediaStartedAt = Date.now();
   for (const plan of plans) {
-    const composition = await selectComposition({serveUrl: url, id: 'Pilot', inputProps: plan.props, puppeteerInstance: browser});
+    const composition = await selectComposition({
+      serveUrl: url,
+      id: 'Pilot',
+      inputProps: plan.props,
+      puppeteerInstance: browser,
+      timeoutInMilliseconds: remotionTimeoutMs
+    });
     await renderMedia({
       serveUrl: url,
       composition,
       inputProps: plan.props,
       puppeteerInstance: browser,
+      timeoutInMilliseconds: remotionTimeoutMs,
       codec: 'h264',
-      hardwareAcceleration: 'if-possible',
+      hardwareAcceleration: hasNvidiaEgl ? 'if-possible' : 'disable',
       videoBitrate: '6M',
       audioCodec: 'aac',
       concurrency: remotionConcurrency,
+      offthreadVideoCacheSizeInBytes: 512 * 1024 * 1024,
       outputLocation: path.join(dir, plan.file),
       onProgress: ({renderedFrames}) => {
         if (renderedFrames % 150 === 0) {

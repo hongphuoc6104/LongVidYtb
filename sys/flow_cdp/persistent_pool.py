@@ -45,6 +45,15 @@ UNUSUAL_ACTIVITY_PATTERNS = [
     re.compile(r"quota[\s_-]?exceeded", re.IGNORECASE),
 ]
 
+CREDIT_EXHAUSTION_PATTERNS = [
+    re.compile(r"insufficient[\s_-]?credits?", re.IGNORECASE),
+    re.compile(r"not[\s_-]?enough[\s_-]?credits?", re.IGNORECASE),
+    re.compile(r"credit[\s_-]?limit", re.IGNORECASE),
+    re.compile(r"public_error_quota", re.IGNORECASE),
+    re.compile(r"quota[\s_-]?exceeded", re.IGNORECASE),
+    re.compile(r"out[\s_-]?of[\s_-]?credits?", re.IGNORECASE),
+]
+
 
 def sha256_file(path: Path) -> str:
     h = hashlib.sha256()
@@ -88,6 +97,8 @@ class DynamicProfilePool:
         profiles: list[dict[str, Any]],
         cooldown_seconds: float = 600.0,
         enforce_os_locks: bool = True,
+        min_credits_required: int = 0,
+        credit_ledger: Any | None = None,
     ):
         self.lock = threading.Lock()
         self.all_profiles = [dict(p) for p in profiles]
@@ -95,7 +106,22 @@ class DynamicProfilePool:
         self.cooldowns: dict[str, float] = {}
         self.cooldown_seconds = cooldown_seconds
         self.enforce_os_locks = enforce_os_locks
+        self.min_credits_required = min_credits_required
+        if credit_ledger is None and min_credits_required > 0:
+            try:
+                from .credit_ledger import get_credit_ledger
+                self.credit_ledger = get_credit_ledger()
+            except Exception:
+                self.credit_ledger = None
+        else:
+            self.credit_ledger = credit_ledger
         self._os_port_locks: dict[str, Any] = {}
+
+    @property
+    def quarantined(self) -> set[str]:
+        with self.lock:
+            now = time.time()
+            return {k for k, v in self.cooldowns.items() if v > now}
 
     def _try_lock_os_port(self, name: str, profile_cfg: dict[str, Any]) -> bool:
         if not self.enforce_os_locks:
@@ -134,13 +160,22 @@ class DynamicProfilePool:
                             if self.cooldowns[required_name] > now:
                                 return None
                             del self.cooldowns[required_name]
+                        if self.credit_ledger is not None and self.min_credits_required > 0:
+                            if not self.credit_ledger.is_eligible(required_name, self.min_credits_required):
+                                return None
                         if not self._try_lock_os_port(required_name, p):
                             return None
                         self.in_use.add(required_name)
                         return dict(p)
                 return None
 
-            for p in self.all_profiles:
+            candidates = list(self.all_profiles)
+            if self.credit_ledger is not None and self.min_credits_required > 0:
+                candidates = self.credit_ledger.select_eligible_profiles(
+                    candidates, min_credits=self.min_credits_required
+                )
+
+            for p in candidates:
                 name = p.get("name") or p.get("id")
                 if not name or name == current_name or name in self.in_use:
                     continue
@@ -148,6 +183,9 @@ class DynamicProfilePool:
                     if self.cooldowns[name] > now:
                         continue
                     del self.cooldowns[name]
+                if self.credit_ledger is not None and self.min_credits_required > 0:
+                    if not self.credit_ledger.is_eligible(name, self.min_credits_required):
+                        continue
                 if not self._try_lock_os_port(name, p):
                     continue
                 self.in_use.add(name)
@@ -198,6 +236,8 @@ class PersistentWorkerPool:
         default_out_dir: Path | str | None = None,
         enforce_os_locks: bool | None = None,
         max_global_browsers: int | None = None,
+        min_credits_required: int = 0,
+        credit_ledger: Any | None = None,
     ):
         self.target_workers = max(1, target_workers)
         self.cooldown_seconds = cooldown_seconds
@@ -207,6 +247,8 @@ class PersistentWorkerPool:
         self.default_out_dir = Path(default_out_dir) if default_out_dir else None
         self.enforce_os_locks = (session_factory is None) if enforce_os_locks is None else bool(enforce_os_locks)
         self.max_global_browsers = max_global_browsers
+        self.min_credits_required = min_credits_required
+        self.credit_ledger = credit_ledger
 
         # Resolve profiles
         if profiles is None:
@@ -239,7 +281,11 @@ class PersistentWorkerPool:
             self.raw_profiles,
             cooldown_seconds=cooldown_seconds,
             enforce_os_locks=self.enforce_os_locks,
+            min_credits_required=self.min_credits_required,
+            credit_ledger=self.credit_ledger,
         )
+        if self.credit_ledger is None:
+            self.credit_ledger = self.profile_pool.credit_ledger
 
         # Process manager
         if proc_mgr is not None:
@@ -337,7 +383,11 @@ class PersistentWorkerPool:
                     task["pinned_profile"] = parent_prof
                     if parent_id_str in self.parent_media_map and not task.get("baseMediaId"):
                         task["baseMediaId"] = self.parent_media_map[parent_id_str]
-                    if parent_prof in self.pinned_queues:
+                    if parent_prof in self.profile_pool.quarantined:
+                        task["pinned_profile"] = None
+                        self.shared_queue.put((priority, seq, task))
+                        return
+                    elif parent_prof in self.pinned_queues:
                         self.pinned_queues[parent_prof].put((priority, seq, task))
                         return
                     else:
@@ -354,7 +404,11 @@ class PersistentWorkerPool:
 
             # Check if pre-pinned
             pinned = task.get("pinned_profile")
-            if pinned and pinned in self.pinned_queues:
+            if pinned and pinned in self.profile_pool.quarantined:
+                task["pinned_profile"] = None
+                self.shared_queue.put((priority, seq, task))
+                return
+            elif pinned and pinned in self.pinned_queues:
                 self.pinned_queues[pinned].put((priority, seq, task))
                 return
 
@@ -470,11 +524,16 @@ class PersistentWorkerPool:
                 pinned_to = task.get("pinned_profile")
                 if pinned_to and pinned_to != prof_name:
                     # Routed to foreign worker: re-route to correct pinned queue
-                    if pinned_to in self.pinned_queues:
-                        self.pinned_queues[pinned_to].put((priority, seq, task))
+                    # If pinned profile is quarantined or unserviced, adopt it on current worker
+                    if (
+                        pinned_to in self.profile_pool.quarantined
+                        or pinned_to not in self.pinned_queues
+                        or pinned_to not in self.profile_pool.in_use
+                    ):
+                        task["pinned_profile"] = prof_name
                     else:
-                        self.shared_queue.put((priority, seq, task))
-                    continue
+                        self.pinned_queues[pinned_to].put((priority, seq, task))
+                        continue
 
                 task_id = task.get("_registered_id") or str(seq)
 
@@ -550,11 +609,20 @@ class PersistentWorkerPool:
                         except Exception:
                             pass
 
+                    if self.credit_ledger is not None:
+                        try:
+                            amount = int(task.get("credit_cost") or 10)
+                            reason = str(task.get("credit_reason") or "video")
+                            self.credit_ledger.deduct_credits(prof_name, amount=amount, reason=reason)
+                        except Exception as deduct_err:
+                            logger.debug("Failed deducting credits for %s: %s", prof_name, deduct_err)
+
                     self._mark_task_finished()
 
                 except Exception as exc:
                     err_str = str(exc)
-                    is_rate_limit = any(p.search(err_str) for p in UNUSUAL_ACTIVITY_PATTERNS)
+                    is_credit_exhausted = any(p.search(err_str) for p in CREDIT_EXHAUSTION_PATTERNS)
+                    is_rate_limit = is_credit_exhausted or any(p.search(err_str) for p in UNUSUAL_ACTIVITY_PATTERNS)
 
                     incident = {
                         "task_id": task_id,
@@ -562,11 +630,25 @@ class PersistentWorkerPool:
                         "error": err_str,
                         "timestamp": datetime.now(timezone.utc).isoformat(),
                         "is_rate_limit": is_rate_limit,
+                        "is_credit_exhausted": is_credit_exhausted,
                     }
                     self.incidents.append(incident)
 
+                    if is_credit_exhausted and self.credit_ledger is not None:
+                        try:
+                            self.credit_ledger.mark_exhausted(prof_name, reason="insufficient_credits")
+                        except Exception as ledger_err:
+                            logger.warning("Failed to mark profile %s exhausted: %s", prof_name, ledger_err)
+
                     if is_rate_limit:
-                        logger.warning("[FAILOVER] Profile %s hit rate limit / unusual activity at task %s: %s", prof_name, task_id, err_str)
+                        quarantine_reason = "credit_exhausted" if is_credit_exhausted else "rate_limit_error_7"
+                        logger.warning(
+                            "[FAILOVER] Profile %s hit %s at task %s: %s",
+                            prof_name,
+                            quarantine_reason,
+                            task_id,
+                            err_str,
+                        )
                         # Remediate in session
                         loop.run_until_complete(remediate_profile_session(sess))
 
@@ -586,15 +668,15 @@ class PersistentWorkerPool:
                             except Exception:
                                 pass
 
-                        self.profile_pool.release(current_profile, quarantine_reason="rate_limit_error_7")
+                        self.profile_pool.release(current_profile, quarantine_reason=quarantine_reason)
 
                         # Re-queue task at HEAD of queue (priority=0)
                         task["retries"] = task.get("retries", 0) + 1
                         if task["retries"] <= task.get("max_retries", 3):
-                            # Note: if task was pinned to old_name, clear pinning so healthy profile can take it,
-                            # unless it depends on completed media
-                            if not task.get("based_on"):
-                                task.pop("pinned_profile", None)
+                            # Clear pinning and baseMediaId on retry so healthy standby can generate cleanly
+                            task.pop("pinned_profile", None)
+                            task["baseMediaId"] = None
+                            task["base_media_id"] = None
                             self.shared_queue.put((0, seq, task))
                         else:
                             logger.error("Task %s exceeded max retries after rate limit", task_id)
@@ -626,6 +708,24 @@ class PersistentWorkerPool:
                         current_profile = new_prof
                         prof_name = current_profile["name"]
                         logger.info("[Worker-%d] Swapped to standby profile %s", worker_id, prof_name)
+
+                        # Migrate any queued tasks from old_name's pinned queue so they are not orphaned
+                        if old_name in self.pinned_queues:
+                            migrated_count = 0
+                            while not self.pinned_queues[old_name].empty():
+                                try:
+                                    m_prio, m_seq, m_task = self.pinned_queues[old_name].get_nowait()
+                                    m_task["pinned_profile"] = prof_name
+                                    if prof_name in self.pinned_queues:
+                                        self.pinned_queues[prof_name].put((m_prio, m_seq, m_task))
+                                    else:
+                                        self.shared_queue.put((m_prio, m_seq, m_task))
+                                    migrated_count += 1
+                                except queue.Empty:
+                                    break
+                            if migrated_count:
+                                logger.info("[Worker-%d] Migrated %d pinned task(s) from %s to %s", worker_id, migrated_count, old_name, prof_name)
+
                         try:
                             sess = init_session(current_profile)
                         except Exception as switch_err:
@@ -696,18 +796,74 @@ class PersistentWorkerPool:
         aspect = task.get("ratio") or task.get("aspect") or "16:9"
         model = task.get("model", "BELUGA")
         base_media_id = task.get("baseMediaId") or task.get("base_media_id")
+        ref_media_ids = task.get("reference_media_ids") or task.get("ref_media_ids")
+
+        # If parent was generated on a different profile, or task is retrying, drop foreign base_media_id
+        parent_id = task.get("based_on") or task.get("parent_id")
+        if parent_id and str(parent_id) in self.parent_profile_map:
+            if self.parent_profile_map[str(parent_id)] != prof_cfg.get("name"):
+                base_media_id = None
+        if task.get("retries", 0) > 0:
+            base_media_id = None
 
         if hasattr(sess, "generate_image"):
-            gen_res = sess.generate_image(
-                prompt=prompt,
-                aspect=aspect,
-                model=model,
-                base_media_id=base_media_id,
+            import inspect
+
+            sig = inspect.signature(sess.generate_image)
+            has_ref_param = "ref_media_ids" in sig.parameters or "reference_media_ids" in sig.parameters or any(
+                p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values()
             )
-            if asyncio.iscoroutine(gen_res):
-                res = loop.run_until_complete(gen_res)
-            else:
-                res = gen_res
+
+            def _call_gen(target_model: str, target_base_media_id: Any) -> Any:
+                kwargs: dict[str, Any] = {
+                    "prompt": prompt,
+                    "aspect": aspect,
+                    "model": target_model,
+                    "base_media_id": target_base_media_id,
+                }
+                if has_ref_param and ref_media_ids:
+                    if "reference_media_ids" in sig.parameters:
+                        kwargs["reference_media_ids"] = ref_media_ids
+                    else:
+                        kwargs["ref_media_ids"] = ref_media_ids
+                call_res = sess.generate_image(**kwargs)
+                if asyncio.iscoroutine(call_res):
+                    return loop.run_until_complete(call_res)
+                return call_res
+
+            try:
+                res = _call_gen(model, base_media_id)
+            except Exception as rpc_ex:
+                if model == "GEM_PIX_2":
+                    logger.warning(
+                        "Generation with GEM_PIX_2 failed: %s; falling back to BELUGA",
+                        rpc_ex,
+                    )
+                    try:
+                        res = _call_gen("BELUGA", base_media_id)
+                    except Exception as fallback_ex:
+                        if base_media_id and (
+                            "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in str(fallback_ex)
+                            or "FLOW_PROVIDER_BLOCKED" in str(fallback_ex)
+                        ):
+                            logger.warning(
+                                "Variation with base_media_id %s rejected by provider; falling back to prompt-guided generation",
+                                base_media_id,
+                            )
+                            res = _call_gen("BELUGA", None)
+                        else:
+                            raise
+                elif base_media_id and (
+                    "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in str(rpc_ex)
+                    or "FLOW_PROVIDER_BLOCKED" in str(rpc_ex)
+                ):
+                    logger.warning(
+                        "Variation with base_media_id %s rejected by provider; falling back to prompt-guided generation",
+                        base_media_id,
+                    )
+                    res = _call_gen(model, None)
+                else:
+                    raise
         else:
             raise RuntimeError("Session does not support generate_image")
 

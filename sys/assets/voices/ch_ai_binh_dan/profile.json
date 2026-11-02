@@ -1,31 +1,70 @@
 {
-  "voice": "VietNarrator_AIBinhDan",
+  "voice": "VietNarrator_ai_binh_dan",
   "channel_id": "ai_binh_dan",
+  "option_index": 2,
+  "voice_label": "Giọng giải mã AI & công nghệ rõ chữ, cuốn hút, mạch lạc chuẩn phòng thu",
   "language": "vi",
   "languages": [
     "vi",
     "en"
   ],
   "reference_wav": "reference.wav",
-  "reference_text": "Đang ngồi đọc sách thì dưới chân bỗng có tiếng kêu meo meo dịu dàng. Nhà bạn có nuôi một chú mèo nào không, hãy bình luận nhé.",
-  "source_speed": 0.9,
-  "recommended_speed": 1.14,
-  "default_tone": "analytical_crisp",
-  "audio_voice_chain": "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-3.5,equalizer=f=2400:t=q:w=1.2:g=1.7,lowpass=f=13500",
+  "reference_text": "Thì để có thể hiểu rõ về trí tuệ nhân tạo AI, chúng ta cần phải tìm hiểu về hai khái niệm có thể gọi là nền tảng để tạo ra AI. Hai cái đó bao gồm, thứ nhất là Deep Learning.",
+  "duration_seconds": 11.39,
+  "acoustic_metrics": {
+    "dur": 11.39,
+    "rms_db": -14.43,
+    "peak_db": -1.16,
+    "p05_db": -60.7,
+    "p10_db": -47.0,
+    "p50_db": -15.3,
+    "p90_db": -10.7,
+    "dyn_db": 36.3,
+    "active_ratio": 0.81,
+    "min_1s_db": -15.1,
+    "start_60ms_db": -140.0,
+    "end_60ms_db": -140.0,
+    "hf_ratio": 0.0053,
+    "f0_spread_semitones": 3.6,
+    "quarter_rms_spread_db": 2.3
+  },
+  "span_provenance": {
+    "raw_sir_db": 13.1,
+    "avg_word_prob": 0.965,
+    "valley_start_db": -97.2,
+    "valley_end_db": -57.4,
+    "pause_before_s": 0.98,
+    "pause_after_s": 0.68
+  },
+  "source_speed": 1.0,
+  "recommended_speed": 1.07,
+  "default_tone": "modern_explainer",
+  "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
   "audio_lufs": -14.0,
-  "audio_peak_db": -1.5,
-  "sha256": "8ff1a7152a5e97124ba736b1295d6d41570f32b56cc217ecdb5e05f5438e383c",
+  "audio_peak_db": -1.2,
+  "sha256": "94bb1b30dffc30a181f15eb6c8ca0155490e4d78784f57fa0595e990193cd2fc",
+  "demucs_vocal_isolated": true,
+  "studio_v3_restored": true,
+  "processing": {
+    "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+    "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+    "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+    "boundary_aligner": "faster-whisper large-v3 word_timestamps + 20ms valley<=33dB + 110ms/150ms silence",
+    "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+  },
   "sources": [
     {
-      "source": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+      "url": "https://www.youtube.com/watch?v=NgepFbxFUyg",
+      "video_id": "NgepFbxFUyg",
+      "source_channel": "KIẾN THỨC THÚ VỊ Official",
+      "video_title": "Trí tuệ nhân tạo AI là gì? - AI có thống trị con người không?",
       "window_seconds": [
-        0.0,
-        8.14
-      ],
-      "pitch_factor": 1.0,
-      "eq": ""
+        51.22,
+        62.35
+      ]
     }
   ],
   "listening_verified": true,
-  "note": "Studio-tuned human voice profile for channel ai_binh_dan (analytical_crisp, speed 1.14)."
+  "note": "Studio V3 restored reference voice (Giọng giải mã AI & công nghệ rõ chữ, cuốn hút, mạch lạc chuẩn phòng thu) from 'KIẾN THỨC THÚ VỊ Official' (https://www.youtube.com/watch?v=NgepFbxFUyg @ 51.22s-62.35s) at exact 1.0x original speed.",
+  "active_option": 2
 }

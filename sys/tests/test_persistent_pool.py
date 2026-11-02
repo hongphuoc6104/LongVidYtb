@@ -294,6 +294,49 @@ class TestPersistentWorkerPool(unittest.TestCase):
         self.assertIn("SC_bad_var", callback_errors)
         self.assertIn("failed permanently", callback_errors["SC_bad_var"])
 
+    def test_pinned_dependent_tasks_migrated_on_standby_swap(self):
+        """When a profile with pinned dependent tasks swaps, all pinned tasks migrate without deadlock."""
+        def custom_factory(prof_cfg: dict[str, Any]) -> MockCDPSession:
+            sess = self.session_factory(prof_cfg)
+            # p1 succeeds on SC_P, then fails rate limit on SC_trigger
+            if prof_cfg["name"] == "p1":
+                orig_gen = sess.generate_image
+                def gen_with_failover(prompt, *args, **kwargs):
+                    if "Trigger failover" in prompt:
+                        raise RuntimeError("FLOW_PROVIDER_BLOCKED: rate_limit_error_7")
+                    return orig_gen(prompt, *args, **kwargs)
+                sess.generate_image = gen_with_failover
+            return sess
+
+        pool = PersistentWorkerPool(
+            target_workers=1,
+            cooldown_seconds=600.0,
+            stagger_seconds=0.0,
+            pacing_seconds=0.01,
+            profiles=self.test_profiles,  # p1, p2, p3, p4
+            proc_mgr=MagicMock(),
+            session_factory=custom_factory,
+        )
+
+        with pool:
+            # 1. Parent shot succeeds on p1
+            pool.submit_task({"id": "SC_P", "prompt": "Parent shot"})
+            # 2. Dependent shots wait for SC_P
+            pool.submit_task({"id": "SC_D1", "based_on": "SC_P", "prompt": "Child 1"})
+            pool.submit_task({"id": "SC_D2", "based_on": "SC_P", "prompt": "Child 2"})
+            # 3. Intermediate shot triggers rate limit on p1
+            pool.submit_task({"id": "SC_trigger", "prompt": "Trigger failover"})
+
+            # Must complete cleanly without deadlocking on timeout!
+            finished = pool.wait_completion(timeout=6.0)
+            self.assertTrue(finished, "Pool deadlocked when migrating pinned dependent tasks!")
+
+        # All 4 tasks must have succeeded (SC_P on p1, others completed on p2)
+        self.assertIn("SC_P", pool.results)
+        self.assertIn("SC_D1", pool.results)
+        self.assertIn("SC_D2", pool.results)
+        self.assertIn("SC_trigger", pool.results)
+
 
 if __name__ == "__main__":
     unittest.main()

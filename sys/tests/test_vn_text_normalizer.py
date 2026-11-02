@@ -644,13 +644,13 @@ class TestGroup17ToneSpeedsAndBilingualSpans:
     def test_tone_speed_multipliers(self):
         from colab_bridge.protocol import TONE_SPEED_MULTIPLIERS, resolve_tone_speed
 
-        assert TONE_SPEED_MULTIPLIERS["narrative_warm"] == 0.98
+        assert TONE_SPEED_MULTIPLIERS["narrative_warm"] == 1.00
         assert TONE_SPEED_MULTIPLIERS["analytical_crisp"] == 1.02
-        assert TONE_SPEED_MULTIPLIERS["reflective_slow"] == 0.92
+        assert TONE_SPEED_MULTIPLIERS["reflective_slow"] == 0.98
 
-        assert resolve_tone_speed(1.0, "narrative_warm") == 0.98
+        assert resolve_tone_speed(1.0, "narrative_warm") == 1.00
         assert resolve_tone_speed(1.0, "analytical_crisp") == 1.02
-        assert resolve_tone_speed(1.0, "reflective_slow") == 0.92
+        assert resolve_tone_speed(1.0, "reflective_slow") == 0.98
         assert resolve_tone_speed(1.0, None) == 1.0
 
     def test_english_parts_extraction_and_span_gap(self):

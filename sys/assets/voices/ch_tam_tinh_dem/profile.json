@@ -1,31 +1,70 @@
 {
-  "voice": "VietNarrator_TamTinhDem",
+  "voice": "VietNarrator_tam_tinh_dem",
   "channel_id": "tam_tinh_dem",
+  "option_index": 3,
+  "voice_label": "Giọng tâm sự đêm khuya dịu dàng, ấm áp, rõ nét chuẩn podcast studio",
   "language": "vi",
   "languages": [
     "vi",
     "en"
   ],
   "reference_wav": "reference.wav",
-  "reference_text": "Đang ngồi đọc sách thì dưới chân bỗng có tiếng kêu meo meo dịu dàng. Nhà bạn có nuôi một chú mèo nào không, hãy bình luận nhé.",
-  "source_speed": 0.9,
-  "recommended_speed": 1.0,
-  "default_tone": "reflective_slow",
-  "audio_voice_chain": "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-2.5,equalizer=f=2400:t=q:w=1.2:g=1.2,lowpass=f=13500",
+  "reference_text": "Mình từng nghĩ là cô đơn là khi mà mình chẳng có ai ở bên. Nhưng mà càng lớn thì mình càng hiểu là đôi khi cô đơn là lúc có người ở bên mà lòng mình thì vẫn thấy trống.",
+  "duration_seconds": 11.26,
+  "acoustic_metrics": {
+    "dur": 11.26,
+    "rms_db": -14.11,
+    "peak_db": -1.21,
+    "p05_db": -54.0,
+    "p10_db": -50.2,
+    "p50_db": -14.3,
+    "p90_db": -10.5,
+    "dyn_db": 39.7,
+    "active_ratio": 0.71,
+    "min_1s_db": -16.9,
+    "start_60ms_db": -140.0,
+    "end_60ms_db": -140.0,
+    "hf_ratio": 0.0129,
+    "f0_spread_semitones": 2.27,
+    "quarter_rms_spread_db": 1.02
+  },
+  "span_provenance": {
+    "raw_sir_db": 12.91,
+    "avg_word_prob": 0.965,
+    "valley_start_db": -65.9,
+    "valley_end_db": -68.4,
+    "pause_before_s": 1.28,
+    "pause_after_s": 1.2
+  },
+  "source_speed": 1.0,
+  "recommended_speed": 1.06,
+  "default_tone": "intimate_warm",
+  "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
   "audio_lufs": -14.0,
-  "audio_peak_db": -1.5,
-  "sha256": "8ff1a7152a5e97124ba736b1295d6d41570f32b56cc217ecdb5e05f5438e383c",
+  "audio_peak_db": -1.2,
+  "sha256": "ceba65c138bb98191851254e8334c35ad6fecb490c1b90a26b25b4d4c7716865",
+  "demucs_vocal_isolated": true,
+  "studio_v3_restored": true,
+  "processing": {
+    "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+    "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+    "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+    "boundary_aligner": "faster-whisper large-v3 word_timestamps + 20ms valley<=33dB + 110ms/150ms silence",
+    "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+  },
   "sources": [
     {
-      "source": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+      "url": "https://www.youtube.com/watch?v=pczGiz9aQyM",
+      "video_id": "pczGiz9aQyM",
+      "source_channel": "Hêu Podcast",
+      "video_title": "Lớn lên và cô đơn | Hêu Podcast",
       "window_seconds": [
-        0.0,
-        8.14
-      ],
-      "pitch_factor": 1.0,
-      "eq": ""
+        75.82,
+        86.82
+      ]
     }
   ],
   "listening_verified": true,
-  "note": "Studio-tuned human voice profile for channel tam_tinh_dem (reflective_slow, speed 1.0)."
+  "note": "Studio V3 restored reference voice (Giọng tâm sự đêm khuya dịu dàng, ấm áp, rõ nét chuẩn podcast studio) from 'Hêu Podcast' (https://www.youtube.com/watch?v=pczGiz9aQyM @ 75.82s-86.82s) at exact 1.0x original speed.",
+  "active_option": 3
 }

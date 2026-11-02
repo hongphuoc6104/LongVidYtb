@@ -65,6 +65,35 @@ Dưới đây là các ví dụ mẫu (exemplars) minh họa cách dùng chuỗi
 
 ---
 
+## Zero AI-Translationese & Canned Discourse Markers
+
+Để bảo toàn chất giọng tự nhiên của người luận thuyết tri thức, kịch bản **tuyệt đối cấm** các cụm từ đệm sáo rỗng, dịch máy (AI translationese) và các khẩu hiệu dẫn dắt giả tạo (throat-clearing meta-announcer markers). 
+
+### Danh sách cụm từ bị cấm (Banned AI Clichés):
+- `"Có một sự thật mất lòng là..."` / `"Sự thật mất lòng là..."`
+- `"Đánh giá công bằng thì..."` / `"Nói đi cũng phải nói lại..."`
+- `"Nghịch lý/Bí mật/Chìa khóa/Mấu chốt nằm ở..."` (`"Nghịch lý nằm ở chỗ..."`, `"Bí mật nằm ở..."`, `"Chìa khóa nằm ở..."`, `"Mấu chốt nằm ở..."`)
+- `"Điều đáng sợ/thú vị/kỳ lạ là..."`
+- `"Tin vui là..."` / `"Tin buồn là..."`
+- `"Nhiều người lầm tưởng rằng..."` / `"Ít ai biết rằng..."` / `"Thứ ít ai nói với bạn..."`
+- `"Nói cách khác là..."` / `"Tóm lại là..."`
+
+### Nguyên tắc chuyển đổi sang văn nói đời thường (Everyday Spoken Vietnamese):
+Đi thẳng vào **chủ ngữ + hành động / dữ kiện cụ thể**, xóa bỏ hoàn toàn phần dạo đầu máy móc:
+
+| ❌ Văn mẫu AI sáo rỗng (Throat-clearing Cliché) | ✅ Văn nói đời thường trực diện (Subject + Action / Fact) |
+| :--- | :--- |
+| *"Có một sự thật mất lòng là bạn đang dùng sai cách."* | *"Bạn đang dùng sai cách ngay từ bước đầu tiên."* |
+| *"Đánh giá công bằng thì công cụ này khá mạnh, nhưng..."* | *"Công cụ này xử lý dữ liệu rất nhanh, nhưng chi phí vận hành lại quá đắt."* |
+| *"Bí mật nằm ở chỗ hormone dopamine bị cạn kiệt."* | *"Lượng dopamine giảm xuống đáy khiến bạn mất sạch hứng thú."* |
+| *"Nghịch lý nằm ở chỗ bạn càng cố ngủ lại càng thức."* | *"Bạn càng ép mình nhắm mắt, nhịp tim lại càng đập nhanh hơn."* |
+| *"Điều thú vị là cơ thể không hề đốt mỡ lúc này."* | *"Lúc này, cơ thể chỉ rút đường trong cơ bắp ra dùng."* |
+| *"Tin vui là bạn có thể đảo ngược quá trình này."* | *"Chỉ cần thay đổi giờ ăn, đồng hồ sinh học sẽ tự cân chỉnh lại."* |
+| *"Ít ai biết rằng bộ não tiêu tốn hai mươi phần trăm năng lượng."* | *"Bộ não chỉ nặng hơn một ký nhưng ngốn tới hai mươi phần trăm năng lượng toàn thân."* |
+| *"Tóm lại là việc này lợi bất cập hại."* | *"Cái giá phải trả đắt hơn nhiều so với chút tiện lợi trước mắt."* |
+
+---
+
 ## 3. Viết Kịch Bản Gắn Kết Với Nhịp Hình Ảnh (`Clause/Sentence-Beat Pairing`)
 
 Soạn kịch bản theo từng cặp **`(Câu hoặc mệnh đề thoại tự nhiên, "loại_shot|Hành động hình ảnh cụ thể")`** (như trong hàm `build_scenes_from_story_rows` trong `sys/content/research_story_architect.py`):

@@ -1,31 +1,70 @@
 {
-  "voice": "VietNarrator_BanhRang",
+  "voice": "VietNarrator_banh_rang",
   "channel_id": "banh_rang",
+  "option_index": 1,
+  "voice_label": "Giọng giải thích kinh tế vĩ mô sắc bén, mạch lạc, rõ chữ chuẩn studio",
   "language": "vi",
   "languages": [
     "vi",
     "en"
   ],
   "reference_wav": "reference.wav",
-  "reference_text": "Đang ngồi đọc sách thì dưới chân bỗng có tiếng kêu meo meo dịu dàng. Nhà bạn có nuôi một chú mèo nào không, hãy bình luận nhé.",
-  "source_speed": 0.9,
-  "recommended_speed": 1.13,
-  "default_tone": "analytical_crisp",
-  "audio_voice_chain": "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-3.3,equalizer=f=2400:t=q:w=1.2:g=1.7,lowpass=f=13500",
+  "reference_text": "Nền kinh tế cũng vận hành theo cách tương tự. Chỉ khác là thay vì máu, thứ lưu thông chính là tiền, hàng hóa, dịch vụ và sức lao động. Khi dòng chảy này diễn ra thông suốt, nền kinh tế phát triển.",
+  "duration_seconds": 11.59,
+  "acoustic_metrics": {
+    "dur": 11.59,
+    "rms_db": -13.93,
+    "peak_db": -1.18,
+    "p05_db": -140.0,
+    "p10_db": -140.0,
+    "p50_db": -15.2,
+    "p90_db": -9.6,
+    "dyn_db": 130.4,
+    "active_ratio": 0.71,
+    "min_1s_db": -16.9,
+    "start_60ms_db": -140.0,
+    "end_60ms_db": -140.0,
+    "hf_ratio": 0.0449,
+    "f0_spread_semitones": 1.47,
+    "quarter_rms_spread_db": 2.12
+  },
+  "span_provenance": {
+    "raw_sir_db": 40.17,
+    "avg_word_prob": 0.999,
+    "valley_start_db": -140.0,
+    "valley_end_db": -140.0,
+    "pause_before_s": 0.62,
+    "pause_after_s": 0.7
+  },
+  "source_speed": 1.0,
+  "recommended_speed": 1.16,
+  "default_tone": "macro_analytical",
+  "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
   "audio_lufs": -14.0,
-  "audio_peak_db": -1.5,
-  "sha256": "8ff1a7152a5e97124ba736b1295d6d41570f32b56cc217ecdb5e05f5438e383c",
+  "audio_peak_db": -1.2,
+  "sha256": "01a89b705995a7b18eafbb8ee1b537888c505dca241d8025f2fb0586c55fd779",
+  "demucs_vocal_isolated": true,
+  "studio_v3_restored": true,
+  "processing": {
+    "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+    "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+    "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+    "boundary_aligner": "faster-whisper large-v3 word_timestamps + 20ms valley<=33dB + 110ms/150ms silence",
+    "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+  },
   "sources": [
     {
-      "source": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+      "url": "https://www.youtube.com/watch?v=tdcfkTcFym8",
+      "video_id": "tdcfkTcFym8",
+      "source_channel": "Góc Nhìn Tài Chính",
+      "video_title": "Kinh Tế Vĩ Mô Từ Lạm Phát Đến GDP: Nhìn Thấu Toàn Bộ Nền Kinh Tế Trong 1 Video",
       "window_seconds": [
-        0.0,
-        8.14
-      ],
-      "pitch_factor": 1.0,
-      "eq": ""
+        319.21,
+        330.54
+      ]
     }
   ],
   "listening_verified": true,
-  "note": "Studio-tuned human voice profile for channel banh_rang (analytical_crisp, speed 1.13)."
+  "note": "Studio V3 restored reference voice (Giọng giải thích kinh tế vĩ mô sắc bén, mạch lạc, rõ chữ chuẩn studio) from 'Góc Nhìn Tài Chính' (https://www.youtube.com/watch?v=tdcfkTcFym8 @ 319.21s-330.54s) at exact 1.0x original speed.",
+  "active_option": 1
 }

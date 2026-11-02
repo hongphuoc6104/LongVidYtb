@@ -9,9 +9,9 @@ export function renderConcurrency(requested, cores, hasGpuEgl = false) {
   // ensure multi-threaded execution is not bottlenecked to 2 vCPUs.
   const effectivePool = hasGpuEgl ? Math.max(available, 6) : Math.max(available, 4);
   if (Number.isInteger(requested) && requested > 0) {
-    return Math.min(requested, Math.max(effectivePool, requested));
+    return Math.min(Math.max(requested, effectivePool), 16);
   }
-  return Math.min(Math.max(4, effectivePool), 8);
+  return Math.min(Math.max(4, effectivePool), 16);
 }
 
 export async function runParallelPool(items, concurrency, taskFn) {

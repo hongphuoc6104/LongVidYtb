@@ -1,31 +1,70 @@
 {
-  "voice": "VietNarrator_MinhTrietSong",
+  "voice": "VietNarrator_minh_triet_song",
   "channel_id": "minh_triet_song",
+  "option_index": 3,
+  "voice_label": "Giọng thuyết minh triết học truyền cảm, sắc nét chuẩn phòng thu",
   "language": "vi",
   "languages": [
     "vi",
     "en"
   ],
   "reference_wav": "reference.wav",
-  "reference_text": "Đang ngồi đọc sách thì dưới chân bỗng có tiếng kêu meo meo dịu dàng. Nhà bạn có nuôi một chú mèo nào không, hãy bình luận nhé.",
-  "source_speed": 0.9,
-  "recommended_speed": 1.04,
-  "default_tone": "reflective_slow",
-  "audio_voice_chain": "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-2.7,equalizer=f=2400:t=q:w=1.2:g=1.3,lowpass=f=13500",
+  "reference_text": "Ông cũng khuyến khích nhà cầm quyền, nên cử, dùng những người tốt lành, tài cán, còn những kẻ yếu sức nên giáo hóa họ. Như vậy, dân khuyên nhau làm điều lành, vui với điều lành.",
+  "duration_seconds": 10.71,
+  "acoustic_metrics": {
+    "dur": 10.71,
+    "rms_db": -14.29,
+    "peak_db": -1.15,
+    "p05_db": -140.0,
+    "p10_db": -65.4,
+    "p50_db": -16.7,
+    "p90_db": -9.9,
+    "dyn_db": 55.5,
+    "active_ratio": 0.7,
+    "min_1s_db": -16.3,
+    "start_60ms_db": -140.0,
+    "end_60ms_db": -140.0,
+    "hf_ratio": 0.0103,
+    "f0_spread_semitones": 2.31,
+    "quarter_rms_spread_db": 1.95
+  },
+  "span_provenance": {
+    "raw_sir_db": 11.55,
+    "avg_word_prob": 0.988,
+    "valley_start_db": -140.0,
+    "valley_end_db": -140.0,
+    "pause_before_s": 0.54,
+    "pause_after_s": 0.5
+  },
+  "source_speed": 1.0,
+  "recommended_speed": 1.08,
+  "default_tone": "reflective_clear",
+  "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
   "audio_lufs": -14.0,
-  "audio_peak_db": -1.5,
-  "sha256": "8ff1a7152a5e97124ba736b1295d6d41570f32b56cc217ecdb5e05f5438e383c",
+  "audio_peak_db": -1.2,
+  "sha256": "c966a68589a9c5812ad7a8a334243a771e55fb782790e5fa6931c0928612b452",
+  "demucs_vocal_isolated": true,
+  "studio_v3_restored": true,
+  "processing": {
+    "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+    "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+    "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+    "boundary_aligner": "faster-whisper large-v3 word_timestamps + 20ms valley<=33dB + 110ms/150ms silence",
+    "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+  },
   "sources": [
     {
-      "source": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+      "url": "https://www.youtube.com/watch?v=ZJ1OLaus4r0",
+      "video_id": "ZJ1OLaus4r0",
+      "source_channel": "Spiderum",
+      "video_title": "Tư tưởng KHỔNG TỬ liệu còn PHÙ HỢP với HIỆN ĐẠI? | Gekki_ | Quan điểm",
       "window_seconds": [
-        0.0,
-        8.14
-      ],
-      "pitch_factor": 1.0,
-      "eq": ""
+        298.91,
+        309.36
+      ]
     }
   ],
   "listening_verified": true,
-  "note": "Studio-tuned human voice profile for channel minh_triet_song (reflective_slow, speed 1.04)."
+  "note": "Studio V3 restored reference voice (Giọng thuyết minh triết học truyền cảm, sắc nét chuẩn phòng thu) from 'Spiderum' (https://www.youtube.com/watch?v=ZJ1OLaus4r0 @ 298.91s-309.36s) at exact 1.0x original speed.",
+  "active_option": 3
 }

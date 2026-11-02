@@ -1,18 +1,27 @@
 import React from 'react';
-import {AbsoluteFill, Img, staticFile} from 'remotion';
+import {AbsoluteFill, Img, OffthreadVideo, staticFile} from 'remotion';
 
 export const Thumbnail: React.FC<any> = ({image, text, title, badge, width, height, overlay_card = false}) => {
   const displayTitle = title || text || '';
   const isPortrait = height > width;
+  const isVideo = typeof image === 'string' && (image.endsWith('.mp4') || image.endsWith('.webm'));
 
   return (
     <AbsoluteFill style={{background: '#FFFFFF', width, height}}>
       {image ? (
-        <Img
-          src={staticFile(image)}
-          decoding="sync"
-          style={{width: '100%', height: '100%', objectFit: isPortrait ? 'contain' : 'cover'}}
-        />
+        isVideo ? (
+          <OffthreadVideo
+            src={staticFile(image)}
+            muted
+            style={{width: '100%', height: '100%', objectFit: isPortrait ? 'contain' : 'cover'}}
+          />
+        ) : (
+          <Img
+            src={staticFile(image)}
+            decoding="sync"
+            style={{width: '100%', height: '100%', objectFit: isPortrait ? 'contain' : 'cover'}}
+          />
+        )
       ) : null}
       {overlay_card || (!image && displayTitle) ? (
         <>

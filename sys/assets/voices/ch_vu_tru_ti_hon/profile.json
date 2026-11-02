@@ -1,31 +1,70 @@
 {
-  "voice": "VietNarrator_VuTruTiHon",
+  "voice": "VietNarrator_vu_tru_ti_hon",
   "channel_id": "vu_tru_ti_hon",
+  "option_index": 2,
+  "voice_label": "Giọng kể chuyện vật lý & vũ trụ hiện đại, trong trẻo, sắc nét chuẩn studio",
   "language": "vi",
   "languages": [
     "vi",
     "en"
   ],
   "reference_wav": "reference.wav",
-  "reference_text": "Đang ngồi đọc sách thì dưới chân bỗng có tiếng kêu meo meo dịu dàng. Nhà bạn có nuôi một chú mèo nào không, hãy bình luận nhé.",
-  "source_speed": 0.9,
-  "recommended_speed": 1.06,
-  "default_tone": "narrative_warm",
-  "audio_voice_chain": "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-2.8,equalizer=f=2400:t=q:w=1.2:g=1.4,lowpass=f=13500",
+  "reference_text": "Big Bang thường bị hiểu nhầm là một vụ nổ trong không gian giống bom nổ với một tâm điểm và mảnh vỡ văng ra. Nhưng thật ra nó là sự giãn nở của chính không gian.",
+  "duration_seconds": 10.35,
+  "acoustic_metrics": {
+    "dur": 10.35,
+    "rms_db": -14.29,
+    "peak_db": -1.13,
+    "p05_db": -75.8,
+    "p10_db": -54.7,
+    "p50_db": -15.5,
+    "p90_db": -10.4,
+    "dyn_db": 44.3,
+    "active_ratio": 0.75,
+    "min_1s_db": -16.9,
+    "start_60ms_db": -140.0,
+    "end_60ms_db": -140.0,
+    "hf_ratio": 0.0468,
+    "f0_spread_semitones": 1.95,
+    "quarter_rms_spread_db": 2.9
+  },
+  "span_provenance": {
+    "raw_sir_db": 18.64,
+    "avg_word_prob": 0.969,
+    "valley_start_db": -75.7,
+    "valley_end_db": -140.0,
+    "pause_before_s": 0.72,
+    "pause_after_s": 2.8
+  },
+  "source_speed": 1.0,
+  "recommended_speed": 1.18,
+  "default_tone": "cosmos_explainer",
+  "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
   "audio_lufs": -14.0,
-  "audio_peak_db": -1.5,
-  "sha256": "8ff1a7152a5e97124ba736b1295d6d41570f32b56cc217ecdb5e05f5438e383c",
+  "audio_peak_db": -1.2,
+  "sha256": "d688ebec12fc858b949e696de178ccb5f3f7c4c83b8d9d134c9f3fa53b3c04e7",
+  "demucs_vocal_isolated": true,
+  "studio_v3_restored": true,
+  "processing": {
+    "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+    "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+    "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+    "boundary_aligner": "faster-whisper large-v3 word_timestamps + 20ms valley<=33dB + 110ms/150ms silence",
+    "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+  },
   "sources": [
     {
-      "source": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+      "url": "https://www.youtube.com/watch?v=7uVEvl14880",
+      "video_id": "7uVEvl14880",
+      "source_channel": "median",
+      "video_title": "Vật Lý Sau 2,500 Năm - Chúng Ta Đã Hiểu Gì Về Vũ Trụ?",
       "window_seconds": [
-        0.0,
-        8.14
-      ],
-      "pitch_factor": 1.0,
-      "eq": ""
+        896.38,
+        907.02
+      ]
     }
   ],
   "listening_verified": true,
-  "note": "Studio-tuned human voice profile for channel vu_tru_ti_hon (narrative_warm, speed 1.06)."
+  "note": "Studio V3 restored reference voice (Giọng kể chuyện vật lý & vũ trụ hiện đại, trong trẻo, sắc nét chuẩn studio) from 'median' (https://www.youtube.com/watch?v=7uVEvl14880 @ 896.38s-907.02s) at exact 1.0x original speed.",
+  "active_option": 2
 }

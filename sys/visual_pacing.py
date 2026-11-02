@@ -379,6 +379,10 @@ def audit_narrative_visual_density(
     if not scenes:
         return ["NARRATIVE_PACING_EMPTY: content.json has no scenes"]
 
+    if str(brief.get("video_engine") or "").lower() == "flow_video":
+        # Flow Video synthesizes continuous 5-10s AI video clips between keyframes; skip static image hold limits.
+        return []
+
     all_images = [img for sc in scenes for img in sc.get("images", []) if not img.get("is_crop")]
     all_beats = [b for sc in scenes for b in sc.get("beats", [])]
     uniq_img_ids = {b.get("image_id") for b in all_beats if b.get("image_id")} or {img.get("id") for img in all_images if img.get("id")}

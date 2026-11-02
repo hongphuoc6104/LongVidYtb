@@ -42,11 +42,92 @@ for _p in (str(REPO_ROOT), str(SYS_DIR)):
 from sys.flow_cdp.process_manager import ProcessGroupManager, is_port_listening
 from sys.flow_cdp.resource_locks import ProfilePortLock
 
+try:
+    from tools.review_queue_manager import check_publish_permission, set_review_decision
+except ImportError:
+    from sys.tools.review_queue_manager import check_publish_permission, set_review_decision
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
 )
 logger = logging.getLogger("publish_youtube_cdp")
+
+
+def verify_short_live(short_url_or_id: str) -> dict[str, Any]:
+    """Verify whether a YouTube Short displays the native Related Video pill live via Innertube HTML."""
+    vid = short_url_or_id.strip().rstrip("/").split("/")[-1].split("?")[0]
+    req = urllib.request.Request(
+        f"https://www.youtube.com/shorts/{vid}",
+        headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=12) as resp:
+            html = resp.read().decode("utf-8", errors="ignore")
+    except Exception as e:
+        return {"video_id": vid, "has_pill": False, "verified_live": False, "error": str(e)}
+
+    linked_title = None
+    m = re.search(r"var ytInitialData = ({.*?});</script>", html)
+    if not m:
+        m = re.search(r"ytInitialData\s*=\s*({.+?});</script>", html)
+
+    if m:
+        data_str = m.group(1)
+        chunks = data_str.split("id.reel_multi_format_link")
+        if len(chunks) > 1:
+            for c in chunks[1:]:
+                tm = re.search(r'"content":\s*"([^"]+)"', c[:400])
+                if tm:
+                    linked_title = tm.group(1)
+                    break
+
+    if not linked_title and "reel_multi_format_link" in html:
+        rm = re.search(r'"accessibilityId":\s*"id\.reel_multi_format_link".*?"content":\s*"([^"]+)"', html)
+        if rm:
+            linked_title = rm.group(1)
+
+    has_pill = "reel_multi_format_link" in html
+    return {
+        "video_id": vid,
+        "has_pill": has_pill,
+        "verified_live": bool(linked_title or has_pill),
+        "linked_title": linked_title,
+    }
+
+
+def fetch_youtube_title(video_url_or_id: str) -> Optional[str]:
+    """Fetch video title using local youtube_channel_map.json or YouTube oEmbed."""
+    if not video_url_or_id:
+        return None
+    vid = video_url_or_id.strip().rstrip("/").split("/")[-1].split("?")[0]
+    if not vid:
+        return None
+
+    # 1. Quick check against youtube_channel_map.json
+    try:
+        map_path = REPO_ROOT / "sys" / "channels" / "youtube_channel_map.json"
+        if map_path.exists():
+            data = json.loads(map_path.read_text(encoding="utf-8"))
+            for ch in data.get("channels", {}).values():
+                for v in ch.get("published_videos", []):
+                    u = v.get("video_url", "")
+                    if vid in u and v.get("title"):
+                        return v.get("title")
+    except Exception:
+        pass
+
+    # 2. Network check via oEmbed
+    req = urllib.request.Request(
+        f"https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v={vid}&format=json",
+        headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=6) as resp:
+            info = json.loads(resp.read().decode("utf-8", errors="ignore"))
+            return info.get("title")
+    except Exception:
+        return None
 
 
 class YouTubeCDPClient:
@@ -55,7 +136,7 @@ class YouTubeCDPClient:
     def __init__(
         self,
         profile_cfg: dict[str, Any],
-        headless: bool = False,
+        headless: bool = True,
         startup_timeout: float = 30.0,
     ):
         self.profile_cfg = profile_cfg
@@ -68,6 +149,7 @@ class YouTubeCDPClient:
         self._reader_task: Optional[asyncio.Task] = None
         self.pending: dict[int, asyncio.Future] = {}
         self._port_lock = ProfilePortLock(self.port, owner_tag="youtube_publisher")
+        self._is_hardening = False
 
     def ensure_browser(self) -> bool:
         """Launch Chrome profile if not already running."""
@@ -77,11 +159,13 @@ class YouTubeCDPClient:
             logger.info("Chrome is already listening on port %d", self.port)
             return True
         logger.info("Launching Chrome profile on port %d (headless=%s)...", self.port, self.headless)
+        extra_args = ["--window-size=1920,1080"] if self.headless else None
         return self.pm.launch(
             self.profile_cfg,
             url="https://studio.youtube.com",
             headless=self.headless,
             startup_timeout=self.startup_timeout,
+            extra_args=extra_args,
         )
 
     def _get_page_ws_url(self) -> str:
@@ -106,6 +190,32 @@ class YouTubeCDPClient:
             time.sleep(0.5)
         raise RuntimeError(f"Could not find YouTube Studio page target on port {self.port}")
 
+    async def configure_headless_hardening(self) -> None:
+        """Apply Anti-Interstitial User-Agent override and 1080p Emulation metrics."""
+        clean_ua = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+        try:
+            ver = await self.call("Browser.getVersion")
+            ua = ver.get("userAgent", "")
+            if ua:
+                clean_ua = ua.replace("HeadlessChrome/", "Chrome/")
+        except Exception as e:
+            logger.debug("Browser.getVersion fallback: %s", e)
+
+        try:
+            await self.call("Network.setUserAgentOverride", {"userAgent": clean_ua})
+            logger.info("Configured Network.setUserAgentOverride: %s", clean_ua)
+        except Exception as e:
+            logger.warning("Failed to set Network.setUserAgentOverride: %s", e)
+
+        try:
+            await self.call(
+                "Emulation.setDeviceMetricsOverride",
+                {"width": 1920, "height": 1080, "deviceScaleFactor": 1, "mobile": False},
+            )
+            logger.debug("Configured Emulation.setDeviceMetricsOverride: 1920x1080")
+        except Exception as e:
+            logger.warning("Failed to set Emulation.setDeviceMetricsOverride: %s", e)
+
     async def connect(self) -> None:
         """Connect WebSocket to Chrome CDP."""
         self.ensure_browser()
@@ -123,7 +233,19 @@ class YouTubeCDPClient:
         await self.call("Runtime.enable")
         await self.call("DOM.enable")
         try:
+            await self.call("Network.enable")
+        except Exception:
+            pass
+
+        await self.configure_headless_hardening()
+
+        try:
             await self.call("DOM.getDocument", {"depth": -1, "pierce": True})
+        except Exception:
+            pass
+
+        try:
+            await self.dismiss_studio_interstitials()
         except Exception:
             pass
 
@@ -160,6 +282,14 @@ class YouTubeCDPClient:
             self.pending.clear()
 
     async def call(self, method: str, params: Optional[dict] = None, timeout: float = 60.0) -> dict:
+        if method == "Page.navigate" and not getattr(self, "_is_hardening", False):
+            self._is_hardening = True
+            try:
+                await self.configure_headless_hardening()
+            except Exception:
+                pass
+            finally:
+                self._is_hardening = False
         self.msg_id += 1
         mid = self.msg_id
         fut = asyncio.get_running_loop().create_future()
@@ -230,6 +360,8 @@ class YouTubeCDPClient:
     async def open_upload_dialog(self) -> bool:
         """Click upload icon or create button to open the upload wizard."""
         logger.info("Opening upload dialog...")
+        await self.dismiss_studio_interstitials()
+        await asyncio.sleep(1.0)
         clicked = await self.evaluate("""
             (() => {
                 const btn = document.querySelector('#upload-icon') ||
@@ -243,6 +375,23 @@ class YouTubeCDPClient:
                 return false;
             })()
         """)
+        if not clicked:
+            logger.info("Upload button not immediately found; re-checking interstitials...")
+            await self.dismiss_studio_interstitials()
+            await asyncio.sleep(2.5)
+            clicked = await self.evaluate("""
+                (() => {
+                    const btn = document.querySelector('#upload-icon') ||
+                                document.querySelector('ytcp-icon-button#upload-icon') ||
+                                document.querySelector('#create-icon') ||
+                                document.querySelector('ytcp-button#create-icon');
+                    if (btn) {
+                        btn.click();
+                        return true;
+                    }
+                    return false;
+                })()
+            """)
         if not clicked:
             raise RuntimeError("Could not find YouTube Studio upload or create button!")
 
@@ -407,19 +556,24 @@ class YouTubeCDPClient:
             logger.info("Thumbnail attached successfully.")
             await asyncio.sleep(2.0)
 
-            # Check for verification modal
+            # Check for verification or blocking modal
             has_verify = await self.evaluate("""
                 Boolean(
                     document.querySelector('ytcp-feature-eligibility-dialog') ||
                     document.querySelector('ytcp-dialog[aria-label*="xác minh"]') ||
-                    document.querySelector('ytcp-dialog[aria-label*="verify"]')
+                    document.querySelector('ytcp-dialog[aria-label*="verify"]') ||
+                    document.querySelector('ytcp-permanent-operational-error-manager') ||
+                    document.querySelector('tp-yt-paper-dialog[aria-hidden="false"]')
                 )
             """)
             if has_verify:
-                logger.warning("Custom thumbnail requires phone verification; dismissing prompt to continue.")
+                logger.warning("Custom thumbnail requires verification or encountered modal; dismissing prompt to continue.")
                 await self.evaluate("""
                     (() => {
-                        const cancel = document.querySelector('#cancel-button') ||
+                        const cancel = document.querySelector('tp-yt-paper-dialog #close-button') ||
+                                       document.querySelector('tp-yt-paper-dialog #cancel-button') ||
+                                       document.querySelector('tp-yt-paper-dialog ytcp-button') ||
+                                       document.querySelector('#cancel-button') ||
                                        document.querySelector('ytcp-button#dismiss-button') ||
                                        document.querySelector('ytcp-dialog #close-button');
                         if (cancel) cancel.click();
@@ -431,36 +585,682 @@ class YouTubeCDPClient:
             logger.warning("Thumbnail upload encountered exception: %s", e)
             return False
 
-    async def link_related_video(self, related_url_or_id: str) -> bool:
-        """For Shorts: Link related video in the Studio dialog if accessible."""
-        if not related_url_or_id:
-            return False
-        logger.info("Attempting to configure related video: %s", related_url_or_id)
-        # Search for related video container
+    async def dismiss_studio_interstitials(self) -> bool:
+        """Dismiss Studio unsupported browser interstitial banner or proceed button if present."""
+        clicked = await self.evaluate("""
+            (() => {
+                const proceed = document.querySelector('#proceed-link');
+                if (proceed) {
+                    proceed.click();
+                    return true;
+                }
+                const btn = Array.from(document.querySelectorAll('a, button, ytcp-button, [role="button"], #proceed-link')).find(el => {
+                    if (el.id === 'proceed-link') return true;
+                    const txt = (el.innerText || '').toLowerCase();
+                    return txt.includes('skip to youtube studio') ||
+                           txt.includes('chuyển thẳng đến youtube studio') ||
+                           txt.includes('continue to youtube studio') ||
+                           txt.includes('tiếp tục truy cập youtube studio') ||
+                           txt.includes('tiếp tục chuyển đến youtube studio');
+                });
+                if (btn) {
+                    btn.click();
+                    return true;
+                }
+                return false;
+            })()
+        """)
+        if clicked:
+            logger.info("Dismissed YouTube Studio unsupported browser / proceed interstitial.")
+            await asyncio.sleep(2.0)
+        return bool(clicked)
+
+    def resolve_channel_handle(self, short_id: Optional[str] = None) -> Optional[str]:
+        """Resolve channel @handle from profile_cfg, youtube_channel_map.json, or short_id."""
+        if self.profile_cfg.get("handle"):
+            return self.profile_cfg["handle"]
+
+        map_path = REPO_ROOT / "sys" / "channels" / "youtube_channel_map.json"
+        if map_path.exists():
+            try:
+                data = json.loads(map_path.read_text(encoding="utf-8"))
+                channels = data.get("channels", {})
+                if short_id:
+                    for ch in channels.values():
+                        for v in ch.get("published_videos", []):
+                            if short_id in v.get("video_url", ""):
+                                if ch.get("handle"):
+                                    return ch["handle"]
+                pid = self.profile_cfg.get("id") or self.profile_cfg.get("profile_id")
+                if pid:
+                    for ch in channels.values():
+                        if ch.get("profile_id") == pid:
+                            return ch.get("handle")
+                port = self.port
+                if port:
+                    for ch in channels.values():
+                        if ch.get("cdp_port") == port:
+                            return ch.get("handle")
+                udd = self.profile_cfg.get("user_data_dir")
+                if udd:
+                    for ch in channels.values():
+                        if ch.get("user_data_dir") == udd:
+                            return ch.get("handle")
+            except Exception as e:
+                logger.warning("Error reading youtube_channel_map.json: %s", e)
+        return None
+
+    async def check_trust_tiers_dialog(self) -> dict[str, Any]:
+        """Detect if YouTube Studio popped up yt-trust-tiers-wizard-dialog or Tier 3 verification."""
         res = await self.evaluate("""
             (() => {
-                const picker = document.querySelector('ytcp-video-metadata-editor-advanced #related-video-picker') ||
-                               Array.from(document.querySelectorAll('ytcp-button, button')).find(b => b.innerText.includes('Video liên quan') || b.innerText.includes('Related video'));
-                if (picker) {
-                    picker.click();
+                const trustDialog = document.querySelector('yt-trust-tiers-wizard-dialog');
+                if (trustDialog) {
+                    const style = window.getComputedStyle(trustDialog);
+                    if (style.display !== 'none' && style.visibility !== 'hidden') {
+                        return {
+                            detected: true,
+                            source: 'tag:yt-trust-tiers-wizard-dialog',
+                            text: (trustDialog.innerText || '').substring(0, 300)
+                        };
+                    }
+                }
+
+                const dialogs = Array.from(document.querySelectorAll(
+                    'ytcp-dialog, tp-yt-paper-dialog, [role="dialog"], yt-dialog'
+                ));
+                for (const d of dialogs) {
+                    const style = window.getComputedStyle(d);
+                    if (style.display === 'none' || style.visibility === 'hidden') continue;
+                    const txt = (d.innerText || '').toLowerCase();
+                    if (
+                        txt.includes('one-time verification') ||
+                        txt.includes('xác minh một lần') ||
+                        txt.includes('xác minh 1 lần') ||
+                        txt.includes('trust-tiers') ||
+                        txt.includes('intermediate features') ||
+                        txt.includes('advanced features') ||
+                        txt.includes('tính năng nâng cao')
+                    ) {
+                        return {
+                            detected: true,
+                            source: 'dialog_text',
+                            text: d.innerText.substring(0, 300)
+                        };
+                    }
+                }
+                return { detected: false };
+            })()
+        """)
+        return res or {"detected": False}
+
+    async def dismiss_trust_tiers_dialog(self) -> bool:
+        """Dismiss yt-trust-tiers-wizard-dialog cleanly."""
+        dismissed = await self.evaluate("""
+            (() => {
+                const trustDialog = document.querySelector('yt-trust-tiers-wizard-dialog');
+                const dialogs = trustDialog
+                    ? [trustDialog]
+                    : Array.from(document.querySelectorAll('ytcp-dialog, tp-yt-paper-dialog, [role="dialog"]'));
+                for (const d of dialogs) {
+                    const closeBtn = d.querySelector(
+                        '#close-button, #cancel-button, ytcp-button#close-button, ytcp-button#cancel-button, ' +
+                        '[aria-label="Đóng"], [aria-label="Close"], [aria-label="Hủy"], [aria-label="Cancel"], .close-button'
+                    );
+                    if (closeBtn) {
+                        const btn = closeBtn.querySelector('button') || closeBtn;
+                        btn.click();
+                        return true;
+                    }
+                }
+                return false;
+            })()
+        """)
+        try:
+            await self.call("Input.dispatchKeyEvent", {"type": "rawKeyDown", "windowsVirtualKeyCode": 27, "key": "Escape", "code": "Escape"})
+            await self.call("Input.dispatchKeyEvent", {"type": "keyUp", "windowsVirtualKeyCode": 27, "key": "Escape", "code": "Escape"})
+        except Exception:
+            pass
+        await asyncio.sleep(1.5)
+        return bool(dismissed)
+
+    async def apply_clickable_handle_fallback(
+        self,
+        target_title: str,
+        handle: str,
+    ) -> bool:
+        """Apply Tier-1/2 Clickable Channel Fallback in YouTube Studio video edit page.
+
+        1. Prepends clickable @<Handle> callout to Description:
+           👉 Bấm ngay vào tên kênh @<Handle> để vào kênh xem trọn vẹn video bản dài: "<Target Long Title>" nhé!
+        2. Appends @<Handle> to Title if space allows (<= 100 chars).
+        3. Saves changes via Studio #save button and waits for persistence.
+        """
+        clean_handle = handle.strip()
+        if not clean_handle.startswith("@"):
+            clean_handle = f"@{clean_handle}"
+
+        callout = f'👉 Bấm ngay vào tên kênh {clean_handle} để vào kênh xem trọn vẹn video bản dài: "{target_title}" nhé!'
+        logger.info("Applying clickable handle fallback for %s with callout: '%s'", clean_handle, callout)
+
+        # 1. Update Description
+        desc_res = await self.evaluate(f"""
+            (() => {{
+                const descEl = document.querySelector('#description-textarea #textbox') ||
+                               document.querySelector('ytcp-mention-textbox#description-textarea #textbox') ||
+                               document.querySelector('#description-container #textbox');
+                if (!descEl) return {{ ok: false, error: 'no_desc_el' }};
+
+                const callout = {json.dumps(callout)};
+                let desc = descEl.innerText || '';
+
+                if (desc.startsWith(callout)) {{
+                    return {{ ok: true, changed: false, desc: desc.substring(0, 100) }};
+                }}
+
+                let newDesc = '';
+                if (desc.startsWith('👉 Bấm ngay vào tên kênh')) {{
+                    const lines = desc.split('\\n');
+                    lines[0] = callout;
+                    newDesc = lines.join('\\n');
+                }} else {{
+                    newDesc = desc.trim() ? (callout + '\\n\\n' + desc.trim()) : callout;
+                }}
+
+                descEl.focus();
+                document.execCommand('selectAll', false, null);
+                document.execCommand('delete', false, null);
+                document.execCommand('insertText', false, newDesc);
+                descEl.dispatchEvent(new Event('input', {{ bubbles: true, composed: true }}));
+                descEl.dispatchEvent(new Event('change', {{ bubbles: true, composed: true }}));
+                return {{ ok: true, changed: true, desc: newDesc.substring(0, 100) }};
+            }})()
+        """)
+        logger.info("Description fallback update result: %s", desc_res)
+
+        # 2. Update Title if room allows
+        title_res = await self.evaluate(f"""
+            (() => {{
+                const titleEl = document.querySelector('#title-textarea #textbox') ||
+                                document.querySelector('ytcp-mention-textbox#title-textarea #textbox');
+                if (!titleEl) return {{ ok: false, error: 'no_title_el' }};
+
+                const handle = {json.dumps(clean_handle)};
+                let title = (titleEl.innerText || '').trim();
+                if (title.toLowerCase().includes(handle.toLowerCase())) {{
+                    return {{ ok: true, changed: false, title: title }};
+                }}
+
+                if (title.length + handle.length + 1 <= 100) {{
+                    const newTitle = `${{title}} ${{handle}}`;
+                    titleEl.focus();
+                    document.execCommand('selectAll', false, null);
+                    document.execCommand('delete', false, null);
+                    document.execCommand('insertText', false, newTitle);
+                    titleEl.dispatchEvent(new Event('input', {{ bubbles: true, composed: true }}));
+                    titleEl.dispatchEvent(new Event('change', {{ bubbles: true, composed: true }}));
+                    return {{ ok: true, changed: true, title: newTitle }};
+                }}
+                return {{ ok: true, changed: false, title: title, reason: 'title_too_long' }};
+            }})()
+        """)
+        logger.info("Title fallback update result: %s", title_res)
+
+        # 3. Click Save button and wait for persistence
+        saved = False
+        for i in range(12):
+            await asyncio.sleep(0.5)
+            save_info = await self.evaluate("""
+                (() => {
+                    const saveBtn = document.querySelector('ytcp-button#save, #save-button, ytcp-video-metadata-editor #save');
+                    if (!saveBtn) return { found: false };
+                    const isAriaDisabled = saveBtn.getAttribute('aria-disabled') === 'true';
+                    const inner = saveBtn.querySelector('button') || saveBtn;
+                    if (!isAriaDisabled && !inner.disabled) {
+                        inner.click();
+                        return { found: true, clicked: true };
+                    }
+                    return { found: true, clicked: false, ariaDisabled: isAriaDisabled };
+                })()
+            """)
+            if save_info and save_info.get("clicked"):
+                logger.info("Save button clicked after applying fallback (%.1fs).", (i + 1) * 0.5)
+                saved = True
+                break
+
+        if not saved:
+            if desc_res and not desc_res.get("changed") and title_res and not title_res.get("changed"):
+                logger.info("Fallback was already applied previously and form is clean.")
+                return True
+            logger.warning("Could not click save button after applying fallback.")
+            return False
+
+        # Wait for Save RPC to complete
+        for j in range(15):
+            await asyncio.sleep(1.0)
+            st = await self.evaluate("""
+                (() => {
+                    const saveBtn = document.querySelector('ytcp-button#save, #save-button, ytcp-video-metadata-editor #save');
+                    return saveBtn ? saveBtn.getAttribute('aria-disabled') : null;
+                })()
+            """)
+            if st == "true":
+                logger.info("Save RPC completed and persisted after %ds.", j + 1)
+                break
+        await asyncio.sleep(2.0)
+        return True
+
+    async def link_related_video(self, related_url_or_id: str, target_title: Optional[str] = None) -> bool:
+        """For Shorts: Link related video in the Studio dialog or video edit page."""
+        if not related_url_or_id:
+            return False
+        raw_target = related_url_or_id.strip()
+        vid_id = raw_target.rstrip("/").split("/")[-1].split("?")[0]
+        logger.info("Attempting to configure related video: %s (vid_id=%s, target_title=%s)", raw_target, vid_id, target_title)
+        # Search for related video trigger in upload dialog or video details page
+        res = await self.evaluate("""
+            (() => {
+                const selectors = [
+                    'ytcp-video-metadata-editor-advanced #related-video-picker',
+                    'ytcp-video-metadata-editor-sidepanel #related-video',
+                    '#linked-video-editor-link',
+                    'ytcp-shorts-content-links-picker',
+                    'ytcp-linked-video-editor',
+                    'ytcp-video-elements-dialog #related-video-button'
+                ];
+                for (const sel of selectors) {
+                    const el = document.querySelector(sel);
+                    if (el) {
+                        el.scrollIntoView({ behavior: 'instant', block: 'center' });
+                        const btn = el.querySelector('.container, ytcp-button, button, #trigger, .edit-button') || el;
+                        btn.click();
+                        return true;
+                    }
+                }
+                const fallbackBtn = Array.from(document.querySelectorAll('ytcp-button, button, div[role="button"], ytcp-form-select')).find(b => {
+                    const txt = (b.innerText || b.getAttribute('aria-label') || '').toLowerCase();
+                    return txt.includes('video liên quan') || txt.includes('related video');
+                });
+                if (fallbackBtn) {
+                    fallbackBtn.scrollIntoView({ behavior: 'instant', block: 'center' });
+                    fallbackBtn.click();
                     return true;
                 }
                 return false;
             })()
         """)
         if res:
-            await asyncio.sleep(2.0)
+            await asyncio.sleep(2.5)
+            # Check if trust tiers dialog appeared
+            diag = await self.check_trust_tiers_dialog()
+            if diag.get("detected"):
+                logger.warning("Detected Tier 3 verification dialog during upload wizard. Dismissing dialog...")
+                await self.dismiss_trust_tiers_dialog()
+                return False
+            # Try typing into search input inside ytcp-entity-picker-dialog / ytcp-video-pick-dialog if present
             await self.evaluate(f"""
                 (() => {{
-                    const query = {json.dumps(related_url_or_id)};
-                    const item = Array.from(document.querySelectorAll('ytcp-entity-picker-dialog ytcp-entity-picker-item, ytcp-video-row')).find(it => it.innerText.includes(query) || (query.length > 5 && it.innerText.includes(query.substring(0, 15))));
-                    if (item) item.click();
+                    const q = {json.dumps(vid_id)};
+                    const dialog = document.querySelector('ytcp-entity-picker-dialog, ytcp-video-pick-dialog');
+                    if (!dialog) return;
+                    const input = dialog.querySelector('input');
+                    if (input) {{
+                        input.focus();
+                        input.value = q;
+                        input.dispatchEvent(new Event('input', {{ bubbles: true }}));
+                    }}
                 }})()
             """)
-            logger.info("Linked related video successfully.")
-            return True
-        logger.info("Related video picker not visible or already set.")
+            await asyncio.sleep(2.0)
+            picked = await self.evaluate(f"""
+                (() => {{
+                    const q_id = {json.dumps(vid_id)};
+                    const q_title = {json.dumps((target_title or "").lower())};
+                    const full = {json.dumps(raw_target)};
+                    const items = Array.from(document.querySelectorAll(
+                        'ytcp-video-pick-dialog ytcp-entity-card, ytcp-entity-card, ytcp-entity-picker-dialog ytcp-entity-picker-item, ytcp-video-pick-dialog ytcp-video-row'
+                    ));
+                    let match = items.find(it => {{
+                        const html = it.innerHTML || '';
+                        const txt = (it.innerText || '').toLowerCase();
+                        const aria = (it.getAttribute('aria-label') || '').toLowerCase();
+                        return (q_id && html.includes(q_id)) ||
+                               (q_title && (txt.includes(q_title) || aria.includes(q_title))) ||
+                               (full.length > 5 && txt.includes(full.substring(0, 15).toLowerCase()));
+                    }});
+                    if (!match && items.length > 0) {{
+                        // Pick the first non-Short (16:9 Long) video on the channel if ID isn't in innerHTML
+                        match = items.find(it => !((it.innerText || '').toLowerCase().includes('#shorts'))) || items[0];
+                    }}
+                    if (match) {{
+                        match.click();
+                        return true;
+                    }}
+                    return false;
+                }})()
+            """)
+            if picked:
+                await asyncio.sleep(1.5)
+                logger.info("Linked related video successfully (%s).", vid_id)
+                return True
+        logger.info("Related video picker not visible at current step.")
         return False
+
+    async def link_related_video_post_publish(
+        self,
+        short_url_or_id: str,
+        related_url_or_id: str,
+        target_title: Optional[str] = None,
+        handle: Optional[str] = None,
+    ) -> dict[str, Any]:
+        """Navigate to Studio video edit page for the Short and attach Related video + Save.
+
+        If YouTube Tier 3 verification (yt-trust-tiers-wizard-dialog) is required, cleanly dismisses
+        the dialog and applies Tier-1/2 Clickable Channel Fallback with @Handle callout in Description & Title.
+        """
+        if not short_url_or_id or not related_url_or_id:
+            return {
+                "linked_via_cdp": False,
+                "tier3_verification_required": False,
+                "clickable_handle_fallback_applied": False,
+                "handle": None,
+            }
+        short_id = short_url_or_id.strip().rstrip("/").split("/")[-1].split("?")[0]
+        raw_target = related_url_or_id.strip()
+        vid_id = raw_target.rstrip("/").split("/")[-1].split("?")[0]
+
+        resolved_handle = handle or self.resolve_channel_handle(short_id) or ""
+        if resolved_handle and not resolved_handle.startswith("@"):
+            resolved_handle = f"@{resolved_handle}"
+
+        if not target_title:
+            target_title = fetch_youtube_title(vid_id)
+
+        edit_url = f"https://studio.youtube.com/video/{short_id}/edit"
+        logger.info(
+            "Navigating to Short edit page for Related Video binding: %s (target=%s, title=%s, handle=%s)",
+            edit_url,
+            vid_id,
+            target_title,
+            resolved_handle,
+        )
+        await self.call("Page.navigate", {"url": edit_url})
+        await asyncio.sleep(4.0)
+
+        # 1. Dismiss interstitial if present
+        for _ in range(4):
+            d = await self.dismiss_studio_interstitials()
+            if d:
+                logger.info("Dismissed Studio interstitial banner.")
+                await asyncio.sleep(4.0)
+                break
+            await asyncio.sleep(1.0)
+
+        # Wait up to 15s for the edit page / picker to load
+        for _ in range(15):
+            has_editor = await self.evaluate("""
+                Boolean(document.querySelector('#linked-video-editor-link, ytcp-shorts-content-links-picker, #description-textarea'))
+            """)
+            if has_editor:
+                break
+            # Also check if banner reappeared
+            await self.dismiss_studio_interstitials()
+            await asyncio.sleep(1.0)
+
+        # 2. Check if already correctly linked AND verified live on YouTube
+        current_linked = await self.evaluate("""
+            (() => {
+                const el = document.querySelector('#linked-video-editor-link .dropdown-trigger-text');
+                return el ? el.innerText.trim() : null;
+            })()
+        """)
+        logger.info("Current linked title in Studio for %s: '%s'", short_id, current_linked)
+
+        live_check = verify_short_live(short_id)
+        is_live = live_check.get("has_pill", False)
+        logger.info("Current live check for %s: has_pill=%s", short_id, is_live)
+
+        if current_linked and current_linked not in ('Không có', 'None', ''):
+            matches_target = False
+            if target_title and (
+                target_title.lower() in current_linked.lower()
+                or current_linked.lower() in target_title.lower()
+            ):
+                matches_target = True
+            elif vid_id and vid_id in current_linked:
+                matches_target = True
+
+            if matches_target and is_live:
+                logger.info(
+                    "Short %s is already correctly linked to '%s' and verified live on YouTube.",
+                    short_id,
+                    current_linked,
+                )
+                return {
+                    "linked_via_cdp": True,
+                    "tier3_verification_required": False,
+                    "clickable_handle_fallback_applied": False,
+                    "handle": resolved_handle,
+                }
+
+            # If it matches in Studio but is NOT live, or if it does not match target:
+            # Clear existing link so Studio marks the form dirty and allows picking & re-saving
+            reason = "not live on YouTube" if matches_target else "does not match target"
+            logger.info("Existing link '%s' (%s). Clearing to re-link...", current_linked, reason)
+            await self.evaluate("""
+                (() => {
+                    const clearBtn = document.querySelector(
+                        '#linked-video-editor-link #right-icon, ytcp-shorts-content-links-picker #right-icon'
+                    );
+                    if (clearBtn) clearBtn.click();
+                })()
+            """)
+            await asyncio.sleep(2.0)
+
+        # 3. Open picker & monitor for Tier 3 verification modal
+        opened = False
+        tier3_detected = False
+
+        # Pre-check if trust tiers dialog is already open
+        initial_diag = await self.check_trust_tiers_dialog()
+        if initial_diag.get("detected"):
+            logger.warning(
+                "Tier 3 verification dialog already visible upon loading edit page: %s",
+                initial_diag.get("text", "")[:100],
+            )
+            tier3_detected = True
+
+        if not tier3_detected:
+            for attempt in range(5):
+                await self.evaluate("""
+                    (() => {
+                        const el = document.querySelector('#linked-video-editor-link, ytcp-shorts-content-links-picker');
+                        if (el) {
+                            el.scrollIntoView({ behavior: 'instant', block: 'center' });
+                            const btn = el.querySelector('.container, #trigger, button') || el;
+                            btn.click();
+                        }
+                    })()
+                """)
+                await asyncio.sleep(2.0)
+
+                # Check if trust tiers dialog appeared
+                diag = await self.check_trust_tiers_dialog()
+                if diag.get("detected"):
+                    logger.warning(
+                        "Detected YouTube Tier 3 verification dialog on attempt %d: '%s'",
+                        attempt + 1,
+                        diag.get("text", "")[:100],
+                    )
+                    tier3_detected = True
+                    break
+
+                card_count = await self.evaluate("""
+                    document.querySelectorAll(
+                        'ytcp-video-pick-dialog ytcp-entity-card, ytcp-entity-card, ' +
+                        'ytcp-entity-picker-dialog ytcp-entity-picker-item, ytcp-video-pick-dialog ytcp-video-row'
+                    ).length
+                """)
+                if card_count > 0:
+                    opened = True
+                    logger.info("Picker open with %d cards on attempt %d.", card_count, attempt + 1)
+                    break
+
+        if not opened and not tier3_detected:
+            # Final check for dialog
+            diag = await self.check_trust_tiers_dialog()
+            if diag.get("detected"):
+                tier3_detected = True
+
+        if tier3_detected:
+            logger.info("Dismissing Tier 3 verification dialog cleanly...")
+            await self.dismiss_trust_tiers_dialog()
+            logger.info("Applying Tier-1/2 Clickable Channel Fallback (%s) on Short edit page...", resolved_handle)
+            applied = await self.apply_clickable_handle_fallback(
+                target_title=target_title or "Video chính trên kênh",
+                handle=resolved_handle,
+            )
+            return {
+                "linked_via_cdp": False,
+                "tier3_verification_required": True,
+                "clickable_handle_fallback_applied": applied,
+                "handle": resolved_handle,
+            }
+
+        if not opened:
+            logger.warning("Failed to open related video picker dialog for Short %s.", short_id)
+            return {
+                "linked_via_cdp": False,
+                "tier3_verification_required": False,
+                "clickable_handle_fallback_applied": False,
+                "handle": resolved_handle,
+            }
+
+        # 4. Pick matching card (robust matching for 1 or 2 Long videos on channel)
+        picked = await self.evaluate(f"""
+            (() => {{
+                const cards = Array.from(document.querySelectorAll(
+                    'ytcp-video-pick-dialog ytcp-entity-card, ytcp-entity-card, ' +
+                    'ytcp-entity-picker-dialog ytcp-entity-picker-item, ytcp-video-pick-dialog ytcp-video-row'
+                ));
+                if (cards.length === 0) return {{ ok: false, error: 'no_cards' }};
+
+                const q_id = {json.dumps(vid_id)};
+                const current_short = {json.dumps(short_id)};
+                const q_title = {json.dumps((target_title or "").lower().strip())};
+                const title_prefix = q_title ? q_title.split(/[:,-]/)[0].trim() : '';
+
+                // Exclude the Short video itself from selection candidates
+                const candidate_cards = cards.filter(c => {{
+                    const html = c.innerHTML || '';
+                    const txt = (c.innerText || '').toLowerCase();
+                    if (current_short && (html.includes(current_short) || txt.includes(current_short))) {{
+                        return false;
+                    }}
+                    return true;
+                }});
+
+                const pool = candidate_cards.length > 0 ? candidate_cards : cards;
+
+                // Priority 1: Match by exact video ID in HTML (thumbnail src or link) or aria-label
+                let match = null;
+                if (q_id) {{
+                    match = pool.find(c => {{
+                        const html = c.innerHTML || '';
+                        const aria = (c.getAttribute('aria-label') || '');
+                        return html.includes(q_id) || aria.includes(q_id);
+                    }});
+                }}
+
+                // Priority 2: Match by exact target title
+                if (!match && q_title) {{
+                    match = pool.find(c => {{
+                        const txt = (c.innerText || '').toLowerCase();
+                        const aria = (c.getAttribute('aria-label') || '').toLowerCase();
+                        return txt.includes(q_title) || aria.includes(q_title) || q_title.includes(txt.trim());
+                    }});
+                }}
+
+                // Priority 3: Match by title prefix (first segment before colon)
+                if (!match && title_prefix && title_prefix.length >= 6) {{
+                    match = pool.find(c => {{
+                        const txt = (c.innerText || '').toLowerCase();
+                        const aria = (c.getAttribute('aria-label') || '').toLowerCase();
+                        return txt.includes(title_prefix) || aria.includes(title_prefix);
+                    }});
+                }}
+
+                // Priority 4 (Channel with 1 or 2 Long videos):
+                // Filter out any other Short videos (marked #shorts) and pick the matching Long video
+                if (!match) {{
+                    match = pool.find(c => {{
+                        const txt = (c.innerText || '').toLowerCase();
+                        return !txt.includes('#shorts') && !txt.includes('/shorts/');
+                    }}) || pool[0];
+                }}
+
+                if (match) {{
+                    match.click();
+                    return {{
+                        ok: true,
+                        text: (match.innerText || '').trim().replace(/\\s+/g, ' ').substring(0, 100)
+                    }};
+                }}
+                return {{ ok: false }};
+            }})()
+        """)
+        logger.info("Picked card result: %s", picked)
+        await asyncio.sleep(2.0)
+
+        # 5. Wait for save button enabled and click
+        saved = False
+        for i in range(12):
+            await asyncio.sleep(0.5)
+            save_info = await self.evaluate("""
+                (() => {
+                    const saveBtn = document.querySelector('ytcp-button#save, #save-button, ytcp-video-metadata-editor #save');
+                    if (!saveBtn) return { found: false };
+                    const isAriaDisabled = saveBtn.getAttribute('aria-disabled') === 'true';
+                    const inner = saveBtn.querySelector('button') || saveBtn;
+                    if (!isAriaDisabled && !inner.disabled) {
+                        inner.click();
+                        return { found: true, clicked: true };
+                    }
+                    return { found: true, clicked: false, ariaDisabled: isAriaDisabled };
+                })()
+            """)
+            if save_info and save_info.get("clicked"):
+                logger.info("Save button clicked after %.1fs.", (i + 1) * 0.5)
+                saved = True
+                break
+
+        if saved:
+            for j in range(15):
+                await asyncio.sleep(1.0)
+                st = await self.evaluate("""
+                    (() => {
+                        const saveBtn = document.querySelector('ytcp-button#save, #save-button, ytcp-video-metadata-editor #save');
+                        return saveBtn ? saveBtn.getAttribute('aria-disabled') : null;
+                    })()
+                """)
+                if st == "true":
+                    logger.info("Save RPC completed and persisted after %ds.", j + 1)
+                    break
+            await asyncio.sleep(2.0)
+            return {
+                "linked_via_cdp": True,
+                "tier3_verification_required": False,
+                "clickable_handle_fallback_applied": False,
+                "handle": resolved_handle,
+            }
+
+        logger.warning("Could not click save button or save was not enabled.")
+        return {
+            "linked_via_cdp": False,
+            "tier3_verification_required": False,
+            "clickable_handle_fallback_applied": False,
+            "handle": resolved_handle,
+        }
 
     async def advance_to_visibility_step(self) -> None:
         """Click next-button repeatedly until reaching Step 4 (Visibility)."""
@@ -563,20 +1363,45 @@ class YouTubeCDPClient:
         if not clicked:
             raise RuntimeError("Could not find Done / Publish button (#done-button)!")
 
-        # Wait for share confirmation dialog
+        # Wait for share confirmation dialog (and click 'Vẫn xuất bản' / 'Publish anyway' if checks warning modal appears)
         logger.info("Waiting for publication confirmation dialog...")
         confirmed_url = None
-        for _ in range(12):
+        for _ in range(25):
             await asyncio.sleep(1.0)
+            # Check if YouTube popped up 'Chúng tôi vẫn đang kiểm tra nội dung của bạn' -> click 'Vẫn xuất bản' / 'Publish anyway'
+            clicked_publish_anyway = await self.evaluate("""
+                (() => {
+                    const dialogs = Array.from(document.querySelectorAll('ytcp-confirmation-dialog, tp-yt-paper-dialog, ytcp-dialog'));
+                    for (const dlg of dialogs) {
+                        if (dlg.offsetParent === null) continue;
+                        const btns = Array.from(dlg.querySelectorAll('ytcp-button, button, #secondary-action-button, #confirm-button'));
+                        for (const b of btns) {
+                            const txt = (b.innerText || b.textContent || '').trim().toLowerCase();
+                            if (txt === 'vẫn xuất bản' || txt === 'publish anyway') {
+                                b.click();
+                                const inner = b.querySelector('button');
+                                if (inner) inner.click();
+                                return txt;
+                            }
+                        }
+                    }
+                    return null;
+                })()
+            """)
+            if clicked_publish_anyway:
+                logger.info("Clicked warning confirmation dialog button: %s", clicked_publish_anyway)
+                await asyncio.sleep(2.0)
+
             confirmed = await self.evaluate("""
                 (() => {
                     const shareDialog = document.querySelector('ytcp-video-share-dialog');
-                    const link = shareDialog ? shareDialog.querySelector('a')?.href : null;
-                    const title = shareDialog ? shareDialog.querySelector('#dialog-title')?.innerText?.trim() : null;
-                    return { found: Boolean(shareDialog), link, title };
+                    if (!shareDialog || shareDialog.offsetParent === null) return { found: false };
+                    const link = shareDialog.querySelector('a')?.href || null;
+                    const title = shareDialog.querySelector('#dialog-title')?.innerText?.trim() || null;
+                    return { found: true, link, title };
                 })()
             """)
-            if confirmed and confirmed.get("link"):
+            if confirmed and confirmed.get("found") and confirmed.get("link"):
                 confirmed_url = confirmed["link"]
                 logger.info("Publication confirmed: %s (Title: %s)", confirmed_url, confirmed.get("title"))
                 break
@@ -607,9 +1432,28 @@ async def publish_single_video(
     related_video_url: Optional[str] = None,
     screenshot_path: Optional[str | Path] = None,
     profile_cfg: Optional[dict[str, Any]] = None,
-    headless: bool = False,
+    headless: bool = True,
+    job_id: Optional[str] = None,
+    bypass_review_gate: bool = False,
 ) -> dict[str, Any]:
     """Execute end-to-end publish flow for a single video."""
+    # Mandatory Video Review & Approval Gate
+    effective_job_id = job_id
+    if not effective_job_id and video_path:
+        p = Path(video_path)
+        if p.parent.name and p.parent.name not in ("video", "runs", "sys", "Desktop", ""):
+            effective_job_id = p.parent.name
+        else:
+            effective_job_id = p.stem
+
+    if not bypass_review_gate and effective_job_id:
+        allowed, reason = check_publish_permission(effective_job_id)
+        if not allowed:
+            raise RuntimeError(
+                f"PUBLISH_BLOCKED_BY_REVIEW_GATE: Job '{effective_job_id}' is not APPROVED (status={reason}). "
+                "Please approve in the Review Dashboard first."
+            )
+
     if profile_cfg is None:
         profile_cfg = {
             "id": "profile_13",
@@ -625,10 +1469,15 @@ async def publish_single_video(
 
         # Step 0: Ensure browser is at YouTube Studio dashboard
         curr_url = await client.evaluate("window.location.href")
-        if "studio.youtube.com" not in curr_url:
-            logger.info("Navigating to https://studio.youtube.com...")
-            await client.call("Page.navigate", {"url": "https://studio.youtube.com"})
+        yt_chid = profile_cfg.get("youtube_channel_id") or profile_cfg.get("channel_id")
+        target_studio_url = f"https://studio.youtube.com/channel/{yt_chid}" if yt_chid and str(yt_chid).startswith("UC") else "https://studio.youtube.com"
+        if "studio.youtube.com" not in curr_url or (yt_chid and str(yt_chid).startswith("UC") and str(yt_chid) not in curr_url):
+            logger.info("Navigating to %s...", target_studio_url)
+            await client.call("Page.navigate", {"url": target_studio_url})
             await asyncio.sleep(6.0)
+
+        await client.dismiss_studio_interstitials()
+        await asyncio.sleep(2.0)
 
         # Step 1: Channel Info Verification
         await asyncio.sleep(4.0)
@@ -648,10 +1497,14 @@ async def publish_single_video(
         # Step 5: Fill Metadata (Title, Description, MFK)
         await client.fill_details(title=title, description=description, is_kids=False)
 
-        # Step 6: Custom Thumbnail (Long 16:9)
+        # Step 6: Custom Thumbnail (Long 16:9) or Related Video (Short 9:16)
         thumbnail_status = False
         if thumbnail_path and not is_short:
             thumbnail_status = await client.upload_thumbnail(thumbnail_path)
+
+        related_linked = False
+        if is_short and related_video_url:
+            related_linked = await client.link_related_video(related_video_url)
 
         # Step 7: Advance through wizard to Step 4 (Visibility)
         await client.advance_to_visibility_step()
@@ -666,6 +1519,93 @@ async def publish_single_video(
         final_url = await client.publish_and_finish(screenshot_path=screenshot_path)
         resolved_url = final_url or dialog_video_url
 
+        if visibility.upper() == "PUBLIC":
+            if not final_url:
+                raise RuntimeError(
+                    f"PUBLIC_VERIFICATION_FAILED: Share confirmation dialog never appeared for '{resolved_url}'. "
+                    "Video remained in Private/Draft in YouTube Studio."
+                )
+            if resolved_url and Path(video_path).exists():
+                vid_id = resolved_url.strip().rstrip("/").split("/")[-1].split("?")[0]
+                oembed_ok = False
+                if vid_id:
+                    oembed_endpoint = f"https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v={vid_id}&format=json"
+                    for attempt in range(1, 8):
+                        await asyncio.sleep(2.5)
+                        try:
+                            req = urllib.request.Request(
+                                oembed_endpoint,
+                                headers={"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) Chrome/136.0.0.0"},
+                            )
+                            with urllib.request.urlopen(req, timeout=8) as resp:
+                                if resp.status == 200:
+                                    oembed_ok = True
+                                    logger.info("Verified live PUBLIC oEmbed HTTP 200 for %s on attempt %d", vid_id, attempt)
+                                    break
+                        except Exception as exc:
+                            logger.warning("oEmbed PUBLIC check attempt %d/7 for %s not yet 200: %s", attempt, vid_id, exc)
+                if not oembed_ok:
+                    raise RuntimeError(
+                        f"PUBLIC_VERIFICATION_FAILED: Video '{resolved_url}' did not return HTTP 200 on public oEmbed! "
+                        "It is still Private/Draft in YouTube Studio."
+                    )
+
+        live_status: dict[str, Any] = {}
+        if is_short and related_video_url and resolved_url:
+            # YouTube takes 2-4 seconds after publish to expose the short page
+            await asyncio.sleep(3.0)
+            live_status = verify_short_live(resolved_url)
+            logger.info("Post-publish Short live check for %s: has_pill=%s", resolved_url, live_status.get("has_pill"))
+
+            # If has_pill is False (even if related_linked was True during wizard),
+            # run link_related_video_post_publish up to 2 times until verified
+            if not live_status.get("has_pill"):
+                logger.warning(
+                    "Short %s missing Related Video pill live (wizard selection dropped). "
+                    "Running link_related_video_post_publish repair loop (max 2 attempts)...",
+                    resolved_url,
+                )
+                for attempt in range(1, 3):
+                    logger.info("Attempt %d/2 to link related video post-publish for %s", attempt, resolved_url)
+                    post_res = await client.link_related_video_post_publish(
+                        resolved_url,
+                        related_video_url,
+                        target_title=title,
+                        handle=profile_cfg.get("handle") if profile_cfg else None,
+                    )
+                    post_ok = post_res.get("linked_via_cdp", False)
+                    if post_res.get("tier3_verification_required"):
+                        logger.warning(
+                            "Channel requires Tier 3 verification; applied clickable handle fallback (%s).",
+                            post_res.get("handle"),
+                        )
+                        break
+                    await asyncio.sleep(3.0)
+                    live_status = verify_short_live(resolved_url)
+                    if live_status.get("has_pill"):
+                        logger.info(
+                            "Confirmed Related Video pill live on attempt %d: '%s'",
+                            attempt,
+                            live_status.get("linked_title"),
+                        )
+                        related_linked = True
+                        break
+                    else:
+                        logger.warning(
+                            "Attempt %d finished (cdp_saved=%s), but live has_pill still False.",
+                            attempt,
+                            post_ok,
+                        )
+            else:
+                related_linked = True
+
+        if effective_job_id and resolved_url:
+            try:
+                set_review_decision(effective_job_id, "PUBLISHED", published_url=resolved_url)
+                logger.info("Updated review queue for %s to PUBLISHED (%s)", effective_job_id, resolved_url)
+            except Exception as e:
+                logger.warning("Could not update review queue status for %s: %s", effective_job_id, e)
+
         return {
             "status": "PUBLISHED",
             "channel_name": channel_info.get("channelName", "Sticker Vocabulary"),
@@ -674,11 +1614,17 @@ async def publish_single_video(
             "title": title,
             "visibility": visibility,
             "thumbnail_uploaded": thumbnail_status,
+            "related_video_linked": bool(related_linked),
+            "live_verified": bool(live_status.get("has_pill", False)),
+            "live_title": live_status.get("linked_title"),
             "screenshot_path": str(screenshot_path) if screenshot_path else None,
         }
     finally:
         await client.close()
         client.terminate_browser()
+
+
+publish_to_youtube_studio = publish_single_video
 
 
 def parse_metadata_file(md_path: str | Path) -> dict[str, str]:
@@ -702,19 +1648,23 @@ def parse_metadata_file(md_path: str | Path) -> dict[str, str]:
 
 def main():
     parser = argparse.ArgumentParser(description="Automated YouTube CDP Publisher for Video Pilot")
-    parser.add_argument("--video", required=True, help="Path to MP4 video file")
+    parser.add_argument("--video", "--video-file", dest="video", required=True, help="Path to MP4 video file")
     parser.add_argument("--channel", help="Channel ID (e.g., co_the_ke, ai_binh_dan) to resolve profile")
+    parser.add_argument("--job-id", help="Job ID")
     parser.add_argument("--profile", help="Explicit Chrome profile ID (e.g. profile_1)")
+    parser.add_argument("--cdp-port", type=int, help="CDP port override")
     parser.add_argument("--title", help="Video title (overrides metadata file)")
     parser.add_argument("--description", help="Video description (overrides metadata file)")
     parser.add_argument("--metadata", help="Path to markdown metadata file (youtube_long.md / youtube_shorts.md)")
     parser.add_argument("--thumbnail", help="Path to thumbnail image file (for 16:9)")
     parser.add_argument("--subtitles", help="Path to subtitles SRT file")
-    parser.add_argument("--visibility", default="PUBLIC", choices=["PUBLIC", "UNLISTED", "PRIVATE"])
+    parser.add_argument("--visibility", "--privacy", dest="visibility", default="PUBLIC", choices=["PUBLIC", "UNLISTED", "PRIVATE"])
     parser.add_argument("--short", action="store_true", help="Mark as Short (9:16)")
     parser.add_argument("--related-video", help="Related video URL or ID (for Shorts)")
     parser.add_argument("--screenshot", help="Output path for verification screenshot")
-    parser.add_argument("--headless", action="store_true", help="Run Chrome in headless mode")
+    parser.add_argument("--headless", action="store_true", default=True, help="Run Chrome in headless mode (default True)")
+    parser.add_argument("--no-headless", "--headed", dest="headless", action="store_false", help="Run Chrome with GUI")
+    parser.add_argument("--bypass-review-gate", action="store_true", help="Bypass mandatory review approval gate")
 
     args = parser.parse_args()
 
@@ -733,18 +1683,38 @@ def main():
     if not description:
         description = ""
 
+    # Check Review Gate before launching upload process
+    job_id = args.job_id
+    if not job_id and args.video:
+        p = Path(args.video)
+        if p.parent.name and p.parent.name not in ("video", "runs", "sys", "Desktop", ""):
+            job_id = p.parent.name
+        else:
+            job_id = p.stem
+
+    if not args.bypass_review_gate and job_id:
+        allowed, reason = check_publish_permission(job_id)
+        if not allowed:
+            raise RuntimeError(
+                f"PUBLISH_BLOCKED_BY_REVIEW_GATE: Job '{job_id}' is not APPROVED (status={reason}). "
+                "Please approve in the Review Dashboard first."
+            )
+
     profile_cfg = None
     map_file = REPO_ROOT / "sys" / "channels" / "youtube_channel_map.json"
     if args.channel and map_file.exists():
         ch_map = json.loads(map_file.read_text(encoding="utf-8"))
-        if args.channel in ch_map.get("channels", {}):
-            entry = ch_map["channels"][args.channel]
+        ch_key = args.channel if args.channel in ch_map.get("channels", {}) else args.channel.replace("-", "_")
+        if ch_key in ch_map.get("channels", {}):
+            entry = ch_map["channels"][ch_key]
             profile_cfg = {
                 "id": entry["profile_id"],
-                "port": entry["cdp_port"],
+                "port": args.cdp_port or entry["cdp_port"],
                 "directory": entry["directory"],
                 "user_data_dir": entry["user_data_dir"],
                 "email": entry["email"],
+                "handle": entry.get("handle"),
+                "youtube_channel_id": entry.get("youtube_channel_id"),
             }
     elif args.profile:
         flow_profiles_file = Path.home() / ".config/video-pilot/flow/profiles.json"
@@ -753,6 +1723,8 @@ def main():
             for p in data.get("profiles", []):
                 if p["id"] == args.profile:
                     profile_cfg = p
+                    if args.cdp_port:
+                        profile_cfg["port"] = args.cdp_port
                     break
 
     result = asyncio.run(
@@ -768,33 +1740,43 @@ def main():
             screenshot_path=args.screenshot,
             profile_cfg=profile_cfg,
             headless=args.headless,
+            job_id=job_id,
+            bypass_review_gate=args.bypass_review_gate,
         )
     )
 
     if args.channel and result.get("video_url") and map_file.exists():
         try:
-            ch_map = json.loads(map_file.read_text(encoding="utf-8"))
-            if args.channel in ch_map.get("channels", {}):
-                entry = ch_map["channels"][args.channel]
-                if args.short:
-                    entry["short_video_url"] = result["video_url"]
-                else:
-                    entry["long_video_url"] = result["video_url"]
-                if result.get("channel_id"):
-                    entry["youtube_channel_id"] = result["channel_id"]
-                    entry["youtube_channel_url"] = f"https://www.youtube.com/channel/{result['channel_id']}"
-                history = entry.setdefault("published_videos", [])
-                existing_urls = {v.get("video_url") for v in history if isinstance(v, dict)}
-                if result["video_url"] not in existing_urls:
-                    history.append({
-                        "video_url": result["video_url"],
-                        "title": title,
-                        "format": "short_9x16" if args.short else "long_16x9",
-                        "related_video_url": args.related_video,
-                        "published_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-                    })
-                map_file.write_text(json.dumps(ch_map, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-                logger.info("Updated youtube_channel_map.json for %s with %s", args.channel, result["video_url"])
+            import fcntl
+            lock_path = map_file.with_suffix(".lock")
+            with open(lock_path, "w", encoding="utf-8") as lock_fh:
+                fcntl.flock(lock_fh.fileno(), fcntl.LOCK_EX)
+                try:
+                    ch_map = json.loads(map_file.read_text(encoding="utf-8"))
+                    ch_key = args.channel if args.channel in ch_map.get("channels", {}) else args.channel.replace("-", "_")
+                    if ch_key in ch_map.get("channels", {}):
+                        entry = ch_map["channels"][ch_key]
+                        if args.short:
+                            entry["short_video_url"] = result["video_url"]
+                        else:
+                            entry["long_video_url"] = result["video_url"]
+                        if result.get("channel_id"):
+                            entry["youtube_channel_id"] = result["channel_id"]
+                            entry["youtube_channel_url"] = f"https://www.youtube.com/channel/{result['channel_id']}"
+                        history = entry.setdefault("published_videos", [])
+                        existing_urls = {v.get("video_url") for v in history if isinstance(v, dict)}
+                        if result["video_url"] not in existing_urls:
+                            history.append({
+                                "video_url": result["video_url"],
+                                "title": title,
+                                "format": "short_9x16" if args.short else "long_16x9",
+                                "related_video_url": args.related_video,
+                                "published_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                            })
+                        map_file.write_text(json.dumps(ch_map, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+                        logger.info("Updated youtube_channel_map.json for %s with %s", args.channel, result["video_url"])
+                finally:
+                    fcntl.flock(lock_fh.fileno(), fcntl.LOCK_UN)
         except Exception as e:
             logger.warning("Failed to update youtube_channel_map.json: %s", e)
 

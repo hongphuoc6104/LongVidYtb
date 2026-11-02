@@ -206,6 +206,8 @@ def detect_image_lettering_bbox(img_path: Path) -> Optional[Rect]:
     """Inspect genuine rendered image pixels to extract actual hand-lettering bounds if present."""
     if not img_path.is_file():
         return None
+    if img_path.suffix.lower() in (".mp4", ".mov", ".webm", ".mkv", ".avi"):
+        return None
     try:
         import numpy as np
         from PIL import Image
@@ -374,6 +376,18 @@ def check_beat_crop_safety(
     """
     b = beat or {}
     im = image_meta or {}
+
+    # Skip video clips (.mp4) from static image crop analysis
+    b_src = str(b.get("src") or b.get("path") or "")
+    im_path = str(im.get("path") or im.get("src") or "")
+    if (
+        b.get("kind") == "video"
+        or b_src.lower().endswith(".mp4")
+        or im_path.lower().endswith(".mp4")
+        or (image_path is not None and image_path.suffix.lower() in (".mp4", ".mov", ".webm"))
+    ):
+        return []
+
     focus = b.get("focus") or {}
     raw_scale = float(focus.get("scale", 1.0)) if isinstance(focus, dict) else 1.0
     camera_motion = str(b.get("camera_motion") or b.get("effect") or "hold")
@@ -529,7 +543,8 @@ def adjust_beat_crop(
 
         clamped_scale = min(1.15, scale) if scale > 1.0 else 1.0
         test_focus = {"x": cx, "y": cy, "scale": clamped_scale}
-        new_motion = "hold" if scale > 1.0 else ("push_in" if repaired_beat.get("camera_motion") in ("zoom_in", "push_in") else repaired_beat.get("camera_motion", "hold"))
+        raw_motion = repaired_beat.get("camera_motion") or repaired_beat.get("effect") or "hold"
+        new_motion = "hold" if scale > 1.0 else ("push_in" if raw_motion in ("zoom_in", "push_in", "punch_in") else raw_motion)
         test_beat = dict(repaired_beat, focus=test_focus, camera_motion=new_motion, effect=new_motion)
         if not check_beat_crop_safety(test_beat, scene_id, image_meta, sidecar, duration, base_overscan, image_path=image_path):
             repaired_beat["focus"] = test_focus

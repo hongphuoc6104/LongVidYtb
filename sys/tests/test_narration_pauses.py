@@ -161,7 +161,7 @@ class TestPauseAssembly(unittest.TestCase):
             wanted = request["segments" if language == "vi" else "secondary"]
             for segment, expected in zip(track["segments"], wanted, strict=True):
                 assert abs(segment["end"] - segment["content_end"] - expected["pause"]) < 1 / 48000
-        assert request["items"][request["secondary"][-1]["items"][0]]["speed"] == 0.92
+        assert request["items"][request["secondary"][-1]["items"][0]]["speed"] == 0.98
         # A newly planned request includes the policy in its content identity.
         primary, secondary, plan = plan_tracks(b, content, {}, "vi")
         one = build_request(self.root, self.cfg, primary, secondary_scenes=secondary, pause_plan=plan)

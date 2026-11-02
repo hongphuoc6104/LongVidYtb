@@ -833,6 +833,7 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             monetization=("YouTube AdSense", "Affiliate phần mềm / khóa học (có công khai)", "Template bán kèm"),
             philosophy_id="research_guide",
             wave=1,
+            speed=1.07,
             speed_optimization=SpeedOptimizationSpec(
                 render_mode="screen_capture_hybrid",
                 fast_short_max_images=4,
@@ -2041,87 +2042,6 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
                 banned_cta_phrases=ALL_BANNED_CTA_PHRASES,
             ),
             extra={"handle_candidates": ["@KindredSketch", "@KindredSketchHQ", "@KindredDoodle", "@TheKindredSketch"]},
-        ),
-        ChannelProfile(
-            id="en_ego_unmasked",
-            name="Ego Unmasked",
-            niche="Carl Jung depth psychology, Shadow Work, ego defense mechanisms & self-awareness",
-            promise="Examine the shadow parts of your psyche, dissolve ego defenses, and gain genuine self-knowledge.",
-            audience="Self-reflective adults interested in Jungian depth psychology and inner sovereignty",
-            persona="Calm philosophical analyst exploring the unconscious mind with respect and clarity",
-            tone="Reflective, profound, grounded, psychologically penetrating",
-            tone_rules=(
-                "Open with an uncomfortable ego defense mechanism viewers immediately recognize.",
-                "Deconstruct the unconscious drive using Carl Jung's concepts simply.",
-                "Keep the exploration objective, compassionate, and empowering.",
-                "Conclude with an integrative reflection question for quiet journaling.",
-            ),
-            hook_formulas=(
-                "Carl Jung's Shadow Work explained: why what you hate in others is hidden in you.",
-                "The spotlight effect: why nobody is judging you as much as you think.",
-                "How your ego uses busyness to hide deep insecurity.",
-                "The persona trap: what happens when you become your social mask.",
-            ),
-            avoid=("Superficial pop-spirituality clichés", "Demonizing psychological defenses", "Mystical jargon without grounding"),
-            short_spec=_short((35, 50), "Does this shadow dynamic ring true for you? Reflect with us below."),
-            long_spec=_long((480, 720), "Continue your inner exploration with our deep-dive on Ego Unmasked."),
-            visual=VisualIdentity(
-                profile_id="ch_en_jungian_noir",
-                label="Jungian chiaroscuro noir: dramatic graphic-novel engraving, golden alchemical mirror, shadow masks",
-                style_description=(
-                    "Dramatic 2D chiaroscuro graphic-novel engraving on ivory parchment canvas "
-                    "(#141418 obsidian ink black, #EAE2D3 ivory parchment, #C89B3C alchemical mirror gold, #9E2A2B shadow crimson); "
-                    "high-contrast psychological shadow archetypes, dual theater masks, and symbolic golden mirrors; "
-                    "orthographic 2D, at least 60% negative space, zero 3D, zero gradients."
-                ),
-                cast_appearance="Refined graphic-novel protagonist in charcoal high-collar coat holding an ivory theater mask beside a golden mirror silhouette",
-                outfit="High-collared charcoal frock coat over dark vest with alchemical gold pocket-watch chain, no shading",
-                palette=("#141418", "#EAE2D3", "#C89B3C", "#9E2A2B", "#FFFFFF"),
-                thumbnail_rule="Character removing ivory mask revealing golden silhouette + 2-4 uppercase words.",
-            ),
-            references=(
-                ReferenceChannel("Eternalised", "YouTube", "long", "In-depth explorations of Jungian archetypes, shadow, and existential philosophy."),
-                ReferenceChannel("Academy of Ideas", "YouTube", "long", "Psychological sovereignty, individualism, and Carl Jung case studies."),
-                ReferenceChannel("Man and His Symbols by Carl Jung & The Courage to Be Disliked", "Book/Scripture", "long", "Unconscious symbolism, shadow integration, and Adlerian psychology."),
-                ReferenceChannel("Jungian Reflections", "YouTube", "short", "Punchy 40-second reflections on projection and ego traps."),
-            ),
-            seed_topics=(
-                "Carl Jung's Shadow Work Explained: Why What You Hate in Others Is Hidden in You",
-                "The Spotlight Effect: Why Nobody Is Judging You as Much as You Think",
-                "How Your Ego Uses Busyness to Hide Deep Insecurity",
-                "The Persona Trap: What Happens When You Become Your Social Mask",
-                "5 Defense Mechanisms Your Mind Uses Without Your Permission",
-            ),
-            hashtags=("#psychology", "#carljung", "#shadowwork", "#philosophy", "#selfawareness", "#mindset"),
-            monetization=("YouTube AdSense (long)", "Shadow work guided workbook", "Depth philosophy book curation"),
-            philosophy_id="cognition",
-            voice="OmniVoice_EnEgoUnmasked",
-            speed=1.0,
-            wave=4,
-            language="en",
-            speed_optimization=SpeedOptimizationSpec(
-                render_mode="hybrid_motion",
-                fast_short_max_images=5,
-                spinoff_shorts_per_long=4,
-                remotion_motion_ratio=0.45,
-                estimated_short_minutes=(7, 10),
-                estimated_bundle_minutes=(28, 38),
-                notes="Remotion subtle shadow silhouette dissolve and mirror reflection animations.",
-            ),
-            engagement=EngagementSpec(
-                cta_voice="Thoughtful depth philosopher",
-                bridge_templates=(
-                    "Watch the complete Jungian shadow exploration on Ego Unmasked YouTube channel.",
-                    "See the full 15-minute examination of ego defense structures on our main channel.",
-                ),
-                close_templates=(
-                    "Which defense mechanism caught your awareness today? Leave a reflection below.",
-                    "Take a quiet breath and notice where this persona appears in your week.",
-                ),
-                endcard_text="FULL VIDEO ON YOUTUBE",
-                banned_cta_phrases=ALL_BANNED_CTA_PHRASES,
-            ),
-            extra={"handle_candidates": ["@EgoUnmasked", "@EgoUnmaskedHQ", "@EgoUnmaskedLab", "@TheEgoUnmasked"]},
         ),
         ChannelProfile(
             id="en_first_principles",
@@ -3373,11 +3293,10 @@ ARCHETYPE_MAP: Dict[str, Dict[str, str]] = {
     "en_lazy_brain": {"id": "stickman_doodle", "label": "1. Indie Doodle Stickman"},
     "en_plain_sight_ai": {"id": "stickman_doodle", "label": "1. Indie Doodle Stickman"},
     "en_career_leverage": {"id": "stickman_doodle", "label": "1. Indie Doodle Stickman"},
-    # 2. noir_dossier (5 channels)
+    # 2. noir_dossier (4 channels)
     "ho_so_ky_la": {"id": "noir_dossier", "label": "2. 2D Noir & Red-String Dossier"},
     "luat_ngam": {"id": "noir_dossier", "label": "2. 2D Noir & Red-String Dossier"},
     "en_crowd_strings": {"id": "noir_dossier", "label": "2. 2D Noir & Red-String Dossier"},
-    "en_ego_unmasked": {"id": "noir_dossier", "label": "2. 2D Noir & Red-String Dossier"},
     "en_cold_case_ink": {"id": "noir_dossier", "label": "2. 2D Noir & Red-String Dossier"},
     # 3. kawaii_sticker (6 channels)
     "ua_sao_vay": {"id": "kawaii_sticker", "label": "3. Kawaii Mascots & Sticker-Pop"},

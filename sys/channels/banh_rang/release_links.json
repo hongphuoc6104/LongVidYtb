@@ -1,0 +1,42 @@
+{
+  "channel_id": "banh_rang",
+  "channel_name": "Bánh Răng Thế Giới",
+  "channel_handle": "@BanhRangTheGioiVN",
+  "youtube_channel_id": "UCFM9xKoWX6m_TkuBvZuUApA",
+  "published_at": "2026-11-01T14:28:00Z",
+  "long": {
+    "job_id": "banh-rang-batch2-16x9",
+    "url": "https://youtu.be/8GZQulaB0f0",
+    "video_id": "8GZQulaB0f0",
+    "title": "Hiệu Ứng Cantillon: Vì Sao Lương Tăng Vẫn Nghèo Đi?",
+    "duration_seconds": 238.485,
+    "resolution": "1920x1080",
+    "fps": 30.0,
+    "visibility": "PUBLIC",
+    "mp4": "/home/hongphuoc6104/Desktop/vp-agent-core/video/banh-rang-batch2-16x9/banh-rang-batch2-16x9.mp4",
+    "thumbnail": "/home/hongphuoc6104/Desktop/vp-agent-core/video/banh-rang-batch2-16x9/thumbnail_16x9.jpg",
+    "subtitles": "/home/hongphuoc6104/Desktop/vp-agent-core/video/banh-rang-batch2-16x9/banh-rang-batch2-16x9.srt"
+  },
+  "short": {
+    "job_id": "banh-rang-batch2-9x16",
+    "url": "https://youtube.com/shorts/w58G-eCsOys",
+    "video_id": "w58G-eCsOys",
+    "title": "Vì Sao Lương Tăng Mỗi Năm Bạn Vẫn Nghèo Đi? @BanhRangTheGioiVN",
+    "duration_seconds": 45.952,
+    "resolution": "1080x1920",
+    "fps": 30.0,
+    "visibility": "PUBLIC",
+    "related_video": "https://youtu.be/8GZQulaB0f0",
+    "mp4": "/home/hongphuoc6104/Desktop/vp-agent-core/video/banh-rang-batch2-9x16/banh-rang-batch2-9x16.mp4",
+    "thumbnail": "/home/hongphuoc6104/Desktop/vp-agent-core/video/banh-rang-batch2-9x16/thumbnail_9x16.jpg",
+    "subtitles": "/home/hongphuoc6104/Desktop/vp-agent-core/video/banh-rang-batch2-9x16/banh-rang-batch2-9x16.srt"
+  },
+  "shorts": {
+    "banh-rang-batch2-9x16": {
+      "job_id": "banh-rang-batch2-9x16",
+      "youtube_url": "https://youtube.com/shorts/w58G-eCsOys",
+      "tiktok_url": null,
+      "facebook_url": null
+    }
+  }
+}

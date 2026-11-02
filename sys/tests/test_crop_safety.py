@@ -14,6 +14,8 @@ Also verifies:
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 from crop_safety import (
     BASE_OVERSCAN,
@@ -259,4 +261,24 @@ def test_enforce_scenes_crop_safety_batch_repair():
     assert count == 2
     # Re-validate repaired scenes: must be 100% compliant
     violations = validate_scenes_crop_safety(repaired_scenes, raise_on_error=False)
+    assert len(violations) == 0
+
+
+def test_validate_scenes_crop_safety_skips_mp4_without_pil_error(tmp_path: Path):
+    """Verify that video clips with .mp4 extensions are skipped without PIL crashing."""
+    mp4_file = tmp_path / "clip_001.mp4"
+    mp4_file.write_bytes(b"dummy mp4 content that PIL cannot open")
+
+    scenes = [
+        {
+            "id": "SC01",
+            "duration": 5.0,
+            "images": [{"id": "IMG01", "path": str(mp4_file), "shot_type": "full_scene"}],
+            "beats": [
+                {"id": "B1", "image_id": "IMG01", "src": str(mp4_file), "focus": {"x": 0.5, "y": 0.5, "scale": 1.35}},
+            ],
+        }
+    ]
+
+    violations = validate_scenes_crop_safety(scenes, images_dir=tmp_path, raise_on_error=True)
     assert len(violations) == 0

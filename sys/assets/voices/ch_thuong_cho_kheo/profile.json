@@ -1,31 +1,70 @@
 {
-  "voice": "VietNarrator_ThuongChoKheo",
+  "voice": "VietNarrator_thuong_cho_kheo",
   "channel_id": "thuong_cho_kheo",
+  "option_index": 1,
+  "voice_label": "Giọng kể chuyện tâm lý tình cảm thấu cảm, trong trẻo chuẩn phòng thu",
   "language": "vi",
   "languages": [
     "vi",
     "en"
   ],
   "reference_wav": "reference.wav",
-  "reference_text": "Đang ngồi đọc sách thì dưới chân bỗng có tiếng kêu meo meo dịu dàng. Nhà bạn có nuôi một chú mèo nào không, hãy bình luận nhé.",
-  "source_speed": 0.9,
-  "recommended_speed": 1.0,
-  "default_tone": "reflective_slow",
-  "audio_voice_chain": "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-2.5,equalizer=f=2400:t=q:w=1.2:g=1.2,lowpass=f=13500",
+  "reference_text": "Trong khi sự thật thì đơn giản hơn nhiều Người ta chỉ đăng những khoảnh khắc đẹp nhất của họ Còn bạn thì đang đem so sánh với toàn bộ cuộc sống thật của chính mình.",
+  "duration_seconds": 9.25,
+  "acoustic_metrics": {
+    "dur": 9.25,
+    "rms_db": -14.8,
+    "peak_db": -1.02,
+    "p05_db": -79.1,
+    "p10_db": -73.9,
+    "p50_db": -15.4,
+    "p90_db": -11.3,
+    "dyn_db": 62.7,
+    "active_ratio": 0.76,
+    "min_1s_db": -18.2,
+    "start_60ms_db": -140.0,
+    "end_60ms_db": -140.0,
+    "hf_ratio": 0.0382,
+    "f0_spread_semitones": 3.77,
+    "quarter_rms_spread_db": 1.88
+  },
+  "span_provenance": {
+    "raw_sir_db": 7.38,
+    "avg_word_prob": 0.978,
+    "valley_start_db": -88.7,
+    "valley_end_db": -79.2,
+    "pause_before_s": 0.7,
+    "pause_after_s": 0.84
+  },
+  "source_speed": 1.0,
+  "recommended_speed": 1.08,
+  "default_tone": "empathetic_clear",
+  "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
   "audio_lufs": -14.0,
-  "audio_peak_db": -1.5,
-  "sha256": "8ff1a7152a5e97124ba736b1295d6d41570f32b56cc217ecdb5e05f5438e383c",
+  "audio_peak_db": -1.2,
+  "sha256": "48c2a91d014b20744818e94cfd5c59ec993ff096a57bef0ec8cae3f194386909",
+  "demucs_vocal_isolated": true,
+  "studio_v3_restored": true,
+  "processing": {
+    "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+    "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+    "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+    "boundary_aligner": "faster-whisper large-v3 word_timestamps + 20ms valley<=33dB + 110ms/150ms silence",
+    "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+  },
   "sources": [
     {
-      "source": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+      "url": "https://www.youtube.com/watch?v=KdPzxtTuMRQ",
+      "video_id": "KdPzxtTuMRQ",
+      "source_channel": "Hêu Podcast",
+      "video_title": "Mạng xã hội và những ảo tưởng về tình yêu hoàn hảo của giới trẻ | Hêu Podcast",
       "window_seconds": [
-        0.0,
-        8.14
-      ],
-      "pitch_factor": 1.0,
-      "eq": ""
+        394.15,
+        403.14
+      ]
     }
   ],
   "listening_verified": true,
-  "note": "Studio-tuned human voice profile for channel thuong_cho_kheo (reflective_slow, speed 1.0)."
+  "note": "Studio V3 restored reference voice (Giọng kể chuyện tâm lý tình cảm thấu cảm, trong trẻo chuẩn phòng thu) from 'Hêu Podcast' (https://www.youtube.com/watch?v=KdPzxtTuMRQ @ 394.15s-403.14s) at exact 1.0x original speed.",
+  "active_option": 1
 }

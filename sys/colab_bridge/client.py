@@ -316,12 +316,19 @@ class Client:
 
     def _settle(self, request):
         # Collection remains possible even when setup/budget is no longer available.
-        budgets = self._budgets()
-        alias = "colab:" + self.account if self.account else None
-        if alias and budgets.snapshot(alias)["identity_configured"]:
-            budgets.settle(alias, request)
-        if hasattr(self.management, "unpin"):
-            self.management.unpin(request)
+        try:
+            budgets = self._budgets()
+            alias = "colab:" + self.account if self.account else None
+            if alias and budgets.snapshot(alias)["identity_configured"]:
+                budgets.settle(alias, request)
+        except Exception:
+            pass
+        finally:
+            if hasattr(self.management, "unpin"):
+                try:
+                    self.management.unpin(request)
+                except Exception:
+                    pass
 
     def start(self):
         self.ensure_authenticated()

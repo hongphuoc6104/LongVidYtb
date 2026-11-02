@@ -1,0 +1,32 @@
+{
+  "channel_id": "luat_doi_thuong",
+  "channel_name": "Luật Đời Thường",
+  "channel_handle": "@LuatDoiThuongVN",
+  "youtube_channel_id": "UCLd__GnjrpBq6LrXtWvidPg",
+  "published_at": "2026-11-01T13:57:33Z",
+  "long": {
+    "job_id": "luat-doi-thuong-batch2-16x9",
+    "url": "https://youtu.be/eC88KgPVD9k",
+    "video_id": "eC88KgPVD9k",
+    "title": "Bẫy Chuyển Khoản & Đặt Cọc Khiến Bạn Mất Trắng",
+    "duration_seconds": 261.76,
+    "resolution": "1920x1080",
+    "fps": 30.0,
+    "visibility": "PUBLIC",
+    "mp4": "/home/hongphuoc6104/Desktop/vp-agent-core/video/luat-doi-thuong-batch2-16x9/luat-doi-thuong-batch2-16x9.mp4",
+    "thumbnail": "/home/hongphuoc6104/Desktop/vp-agent-core/video/luat-doi-thuong-batch2-16x9/thumbnail_16x9.jpg",
+    "subtitles": "/home/hongphuoc6104/Desktop/vp-agent-core/video/luat-doi-thuong-batch2-16x9/luat-doi-thuong-batch2-16x9.srt"
+  },
+  "short": {
+    "job_id": "luat-doi-thuong-batch2-9x16",
+    "url": "https://youtube.com/shorts/9oRarGG71Sg",
+    "video_id": "9oRarGG71Sg",
+    "title": "Chuyển Khoản Ghi Thế Này Sẽ Mất Trắng Tiền Cho Vay @LuatDoiThuongVN",
+    "duration_seconds": 40.42,
+    "resolution": "1080x1920",
+    "fps": 30.0,
+    "visibility": "PUBLIC",
+    "related_video": "https://youtu.be/eC88KgPVD9k",
+    "mp4": "/home/hongphuoc6104/Desktop/vp-agent-core/video/luat-doi-thuong-batch2-9x16/luat-doi-thuong-batch2-9x16.mp4"
+  }
+}
