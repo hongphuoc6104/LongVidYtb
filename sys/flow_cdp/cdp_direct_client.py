@@ -966,7 +966,7 @@ class DirectCDPProfileSession:
             let submissionAttempted = false;
             try {{
                 let freqStr = {json.dumps(freq)};
-                const token = await window.mintCaptcha("IMAGE_GENERATION");
+                const token = await window.mintCaptcha({json.dumps(flow_rpc.CAPTCHA_IMAGE)});
                 if (!token) return {{ error: "CAPTCHA_FAILED: empty token", submitted: false }};
                 freqStr = freqStr.split("__CAPTCHA__").join(token);
                 const wiz = globalThis.WIZ_global_data || {{}};
@@ -1049,7 +1049,7 @@ class DirectCDPProfileSession:
         (async () => {{
             try {{
                 let freqStr = {json.dumps(freq)};
-                const token = await window.mintCaptcha("IMAGE_GENERATION");
+                const token = await window.mintCaptcha({json.dumps(flow_rpc.CAPTCHA_IMAGE)});
                 if (!token) return {{ error: "CAPTCHA_FAILED: empty token" }};
                 freqStr = freqStr.split("__CAPTCHA__").join(token);
                 const wiz = globalThis.WIZ_global_data || {{}};
@@ -1178,17 +1178,29 @@ class DirectCDPProfileSession:
     async def ensure_project_id(self, title: str = "Video Pilot", force_new: bool = False) -> str:
         """Return existing `project_id` or create a new project via `jHPbke` (0 credits cost)."""
         if self.project_id and not force_new:
-            return self.project_id
-        out = await self._post_batchexecute(
-            rpcid=flow_rpc.RPC_CREATE_PROJECT,
-            freq=flow_rpc.create_project_request(title=title),
-            captcha_action=None,
-            timeout=60.0,
-        )
-        payload = flow_rpc.first_payload(out.get("text", ""), flow_rpc.RPC_CREATE_PROJECT)
-        pid = flow_rpc.read_project_id(payload)
-        self.project_id = pid
-        self.profile_cfg["project_id"] = pid
+            pid = self.project_id
+        else:
+            out = await self._post_batchexecute(
+                rpcid=flow_rpc.RPC_CREATE_PROJECT,
+                freq=flow_rpc.create_project_request(title=title),
+                captcha_action=None,
+                timeout=60.0,
+            )
+            payload = flow_rpc.first_payload(out.get("text", ""), flow_rpc.RPC_CREATE_PROJECT)
+            pid = flow_rpc.read_project_id(payload)
+            self.project_id = pid
+            self.profile_cfg["project_id"] = pid
+
+        # Enforce valid /project/<pid> workspace path for batchexecute source-path integrity
+        try:
+            curr_url = await self.evaluate("location.href", await_promise=False)
+            target_prefix = f"https://flow.google.com/project/{pid}"
+            if not str(curr_url).startswith(target_prefix):
+                await self.call("Page.navigate", {"url": target_prefix})
+                await self._wait_for_flow_ready(timeout=15.0)
+        except Exception as nav_err:
+            logger.debug("Project workspace navigation check: %s", nav_err)
+
         return pid
 
     @staticmethod
@@ -1417,11 +1429,13 @@ class DirectCDPProfileSession:
                 if Path(last_str).expanduser().resolve() == Path(first_str).expanduser().resolve():
                     last_media_id = first_media_id
                 else:
+                    await asyncio.sleep(0.8)
                     up2 = await self.upload_image_file(last_str)
                     last_media_id = up2["media_id"]
             else:
                 last_media_id = last_str
 
+        await asyncio.sleep(1.2)
         catalog = await self._get_model_catalog()
         resolved_model = flow_rpc.resolve_video_model(
             model,

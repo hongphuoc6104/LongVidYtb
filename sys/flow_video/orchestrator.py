@@ -5,10 +5,13 @@ from __future__ import annotations
 import asyncio
 import base64
 import json
+import logging
 import subprocess
 import sys
 import time
 from datetime import datetime, timezone
+
+logger = logging.getLogger("flow_video.orchestrator")
 from pathlib import Path
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -157,7 +160,7 @@ class FlowVideoChainOrchestrator:
         headless: bool = True,
         resume: bool = True,
         dry_run: bool = False,
-        max_retries_per_clip: int = 3,
+        max_retries_per_clip: int = 20,
         skip_stitch: bool = False,
     ) -> None:
         self.spec = spec
@@ -195,10 +198,36 @@ class FlowVideoChainOrchestrator:
         self._launched_ports: set[int] = set()
         self._profiles_used: set[str] = set()
         self._credits_deducted: dict[str, int] = {}
+        self._profile_cooldowns: dict[str, float] = {}
         self._lock = asyncio.Lock()
 
+    # Proven high-success video profiles ordered by empirical completion rate;
+    # 0%-success flagged profiles are pushed to the back as last-resort fallback.
+    PROVEN_VIDEO_PROFILES: tuple[str, ...] = (
+        "profile_13",
+        "profile_en16",
+        "profile_en01",
+        "profile_18",
+        "profile_9",
+        "profile_4",
+        "profile_en13",
+        "profile_en03",
+        "profile_1",
+        "profile_en07",
+        "profile_en11",
+        "profile_19",
+        "profile_6",
+        "profile_en10",
+    )
+    KNOWN_BLOCKED_VIDEO_PROFILES: frozenset[str] = frozenset({
+        "profile_2", "profile_3", "profile_7", "profile_12", "profile_14",
+        "profile_15", "profile_17", "profile_20", "profile_21",
+        "profile_en09", "profile_en12",
+    })
+
     def _get_channel_profiles(self) -> list[dict[str, Any]]:
-        """Return profiles ordered by explicit VP_FLOW_PROFILES or channel slice priority."""
+        """Return profiles ordered by proven video health and rotated per job_id to prevent port collisions."""
+        import hashlib
         import os
 
         all_profiles = get_all_configured_profiles()
@@ -216,34 +245,32 @@ class FlowVideoChainOrchestrator:
             if explicit_primary:
                 return explicit_primary + rest
 
-        ch_id = getattr(self.spec, "channel_id", None)
-        if not ch_id or len(all_profiles) <= 2:
+        if len(all_profiles) <= 4:
             return all_profiles
-        try:
-            from sys.tools.channel_production_common import get_channel_slice, resolve_channel_ids
 
-            norm_id, _ = resolve_channel_ids(str(ch_id))
-            slice_names, _, _ = get_channel_slice(norm_id)
-            is_en = norm_id.startswith("en_")
-            primary = [p for p in all_profiles if p.get("name") in slice_names or p.get("id") in slice_names]
-            standby = [
-                p
-                for p in all_profiles
-                if p not in primary
-                and p.get("name") != "profile_11"
-                and (str(p.get("name", "")).startswith("profile_en") == is_en)
-            ]
-            other_pool_standby = [
-                p
-                for p in all_profiles
-                if p not in primary
-                and p not in standby
-                and p.get("name") != "profile_11"
-            ]
-            ordered = primary + standby + other_pool_standby
-            return ordered if ordered else all_profiles
-        except Exception:
-            return all_profiles
+        by_name = {str(p.get("name") or p.get("id")): p for p in all_profiles}
+        tier1_healthy = [by_name[n] for n in self.PROVEN_VIDEO_PROFILES if n in by_name]
+        tier2_secondary = [
+            p for p in all_profiles
+            if p not in tier1_healthy
+            and str(p.get("name") or p.get("id")) not in self.KNOWN_BLOCKED_VIDEO_PROFILES
+        ]
+        tier3_blocked = [
+            p for p in all_profiles
+            if p not in tier1_healthy and p not in tier2_secondary
+        ]
+
+        # Rotate tier1 and tier2 deterministically by job_id so concurrent jobs spread across ports
+        job_seed = str(getattr(self.spec, "job_id", "") or getattr(self.spec, "channel_id", "") or "default")
+        offset = int(hashlib.md5(job_seed.encode("utf-8")).hexdigest()[:8], 16)
+        if len(tier1_healthy) > 1:
+            rot1 = offset % len(tier1_healthy)
+            tier1_healthy = tier1_healthy[rot1:] + tier1_healthy[:rot1]
+        if len(tier2_secondary) > 1:
+            rot2 = offset % len(tier2_secondary)
+            tier2_secondary = tier2_secondary[rot2:] + tier2_secondary[:rot2]
+
+        return tier1_healthy + tier2_secondary + tier3_blocked
 
     def run(self) -> dict[str, Any]:
         """Synchronous convenience wrapper to execute pipeline."""
@@ -462,10 +489,7 @@ class FlowVideoChainOrchestrator:
                     self._launched_ports.discard(port)
                 except Exception:
                     pass
-                if any(
-                    tag in str(exc)
-                    for tag in ("UNUSUAL_ACTIVITY", "CAPTCHA", "QUOTA", "INSUFFICIENT_CREDITS", "FLOW_PROVIDER_BLOCKED")
-                ):
+                if "INSUFFICIENT_CREDITS" in str(exc) or "PUBLIC_ERROR_QUOTA" in str(exc):
                     self.credit_ledger.mark_exhausted(profile_name, reason=str(exc))
                 continue
             finally:
@@ -672,39 +696,50 @@ class FlowVideoChainOrchestrator:
 
                 while not success and attempts < self.max_retries:
                     attempts += 1
+                    profile_cfg = None
+                    wait_sec = 0.0
+
                     async with self._lock:
-                        # Find profile eligible for this specific clip_cost
-                        eligible_candidates = [
-                            p for p in available_profiles
-                            if self.credit_ledger.is_eligible(
-                                str(p.get("name") or p.get("profile_dir", "")),
-                                min_credits=clip_cost,
-                            )
-                        ]
+                        now = time.time()
+                        # Find profile eligible for this specific clip_cost and not on cooldown
+                        def is_candidate(p: dict[str, Any], cost: int = clip_cost, cur_now: float = now) -> bool:
+                            pname = str(p.get("name") or p.get("profile_dir", ""))
+                            return self.credit_ledger.is_eligible(pname, min_credits=cost) and self._profile_cooldowns.get(pname, 0.0) <= cur_now
+
+                        eligible_candidates = [p for p in available_profiles if is_candidate(p)]
                         if not eligible_candidates:
                             # Re-check eligible from pool
-                            fresh = self.credit_ledger.select_eligible_profiles(
-                                all_profiles, min_credits=clip_cost
-                            )
+                            fresh = self.credit_ledger.select_eligible_profiles(all_profiles, min_credits=clip_cost)
                             for fp in fresh:
                                 if fp not in available_profiles:
                                     available_profiles.append(fp)
-                            eligible_candidates = [
-                                p for p in available_profiles
-                                if self.credit_ledger.is_eligible(
-                                    str(p.get("name") or p.get("profile_dir", "")),
-                                    min_credits=clip_cost,
-                                )
+                            eligible_candidates = [p for p in available_profiles if is_candidate(p)]
+
+                        if not eligible_candidates:
+                            # All eligible profiles might be in cooldown
+                            cooldown_times = [
+                                self._profile_cooldowns.get(str(p.get("name") or p.get("profile_dir", "")), 0.0)
+                                for p in available_profiles
+                                if self.credit_ledger.is_eligible(str(p.get("name") or p.get("profile_dir", "")), min_credits=clip_cost)
                             ]
-                            if not eligible_candidates:
+                            active_cooldowns = [t for t in cooldown_times if t > now]
+                            if active_cooldowns:
+                                wait_sec = max(2.0, min(30.0, min(active_cooldowns) - now))
+                                attempts = max(0, attempts - 1)  # Do not burn attempt budget while waiting for cooldown
+                            else:
                                 task.status = "failed"
                                 task.error = f"All profiles exhausted or insufficient credits (needed {clip_cost})"
                                 self._save_manifest(tasks)
                                 worker_queue.task_done()
                                 return
+                        else:
+                            profile_cfg = eligible_candidates[0]
+                            available_profiles.remove(profile_cfg)
 
-                        profile_cfg = eligible_candidates[0]
-                        available_profiles.remove(profile_cfg)
+                    if wait_sec > 0:
+                        logger.info(f"All eligible profiles in cooldown. Waiting {wait_sec:.1f}s before retrying task {task.clip_id}...")
+                        await asyncio.sleep(wait_sec)
+                        continue
 
                     p_name = str(profile_cfg.get("name") or f"profile_{profile_cfg.get('cdp_port')}")
                     try:
@@ -718,19 +753,30 @@ class FlowVideoChainOrchestrator:
                             self._save_manifest(tasks)
                     except Exception as exc:
                         task.error = str(exc)
+                        now_exc = time.time()
                         if "Chrome port" in str(exc) and "busy" in str(exc) and port_skips < 15:
                             port_skips += 1
                             attempts = max(0, attempts - 1)
                         async with self._lock:
-                            # Check if quota/captcha exhausted
-                            if any(
-                                tag in str(exc)
-                                for tag in ("UNUSUAL_ACTIVITY", "CAPTCHA", "QUOTA", "INSUFFICIENT_CREDITS", "FLOW_PROVIDER_BLOCKED")
-                            ):
+                            # Check if real credit exhausted
+                            if "INSUFFICIENT_CREDITS" in str(exc) or "PUBLIC_ERROR_QUOTA" in str(exc):
                                 self.credit_ledger.mark_exhausted(p_name, reason=str(exc))
+                            elif "FLOW_PROVIDER_BLOCKED" in str(exc) or "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in str(exc):
+                                self._profile_cooldowns[p_name] = now_exc + 1800.0
+                                available_profiles.append(profile_cfg)
+                                attempts = max(0, attempts - 1)  # Do not burn attempt budget on temporary provider rate limit
                             else:
+                                # Put failed profile on 45s cooldown to rotate across other profiles
+                                self._profile_cooldowns[p_name] = now_exc + 45.0
                                 available_profiles.append(profile_cfg)
                             self._save_manifest(tasks)
+                        # Rotate immediately to next healthy profile with brief jitter instead of blocking worker for 45s
+                        if "TOO_MUCH_TRAFFIC" in str(exc) or "FLOW_PROVIDER_BLOCKED" in str(exc) or "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in str(exc):
+                            logger.warning(f"[RATE_LIMIT_ROTATE] Profile {p_name} rate-limited at clip {task.clip_id}. Cooldown 1800s; rotating in 2.5s...")
+                            await asyncio.sleep(2.5)
+                        else:
+                            # Brief backoff before rotating to next profile
+                            await asyncio.sleep(min(5.0, 1.0 * attempts))
 
                 if not success:
                     task.status = "failed"
