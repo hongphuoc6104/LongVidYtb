@@ -53,13 +53,13 @@
 - Sensational health fearmongering
 
 ## 4. Phong Cách Hình Ảnh & Thumbnail Flow Native
-- **Visual Profile ID:** `ch_en_organ_buddies` — Kawaii medical mascots: clean clinical white canvas, personified organ characters Ticker, Gurgle, Cortex
-- **Bảng màu khóa cứng:** `#FFFFFF`, `#222222`, `#F4A6A6`, `#F6C28B`, `#7FB3D5`, `#82E0AA`
-- **Tạo hình nhân vật (`CAST_APPEARANCE`):** Adorable recurring personified body mascots — brave Ticker the Heart, dramatic Gurgle the Stomach, calm Cortex the Brain, and armored little T-Cell defender with expressive faces and full character anatomy
-- **Trang phục (`DEFAULT_OUTFIT`):** Tiny white medical headband on Ticker; little warrior helmet on T-Cell defender
-- **Luật Thumbnail (100% Flow Native, `overlay_card: false`):** Cute Ticker the Heart sounding an alarm siren + 2-4 uppercase words on clean white.
+- **Visual Profile ID:** `ch_en_organ_buddies` — Vesalius & Gray's Anatomy Copperplate Medical Atlas: dip-pen anatomical cross-sections & mineral watercolor on vellum
+- **Bảng màu khóa cứng:** `#FAF7F0`, `#1E1B18`, `#C85A5A`, `#D99B66`, `#4A7C9B`, `#5E8C6A`
+- **Tạo hình nhân vật (`CAST_APPEARANCE`):** Anatomical cross-section human silhouette drawn in fine Da Vinci and Gray's Anatomy copperplate dip-pen cross-hatching on vellum, revealing illuminated internal heart chambers, vagus nerve branches, and cellular structures
+- **Trang phục (`DEFAULT_OUTFIT`):** Translucent classical anatomical muscle-and-vessel cross-section linework with brass surgical calipers and ink annotations, no modern clothing
+- **Luật Thumbnail (100% Flow Native, `overlay_card: false`):** Copperplate anatomical cross-section of brain and heart under 24-hour stress + 2-4 uppercase engraved words on vellum.
 - **Prompt Style gốc:**
-  > Clean 2D kawaii medical mascot illustration on pure clinical white canvas (#FFFFFF background, #222222 smooth outlines, #F4A6A6 heart pink, #F6C28B stomach peach, #7FB3D5 oxygen blue, #82E0AA immune-cell mint); cute personified human physiology, friendly cells, and cartoon anatomy; orthographic 2D, at least 60% negative space, zero 3D, zero gradients.
+  > Authentic 2D Vesalius and Gray's Anatomy medical copperplate ink etching and mineral watercolor cross-section atlas on warm archival vellum (#FAF7F0 fibrous vellum paper, #1E1B18 fine surgical dip-pen cross-hatching, #C85A5A arterial carmine wash, #D99B66 hepatic ochre, #4A7C9B venous slate-blue, #5E8C6A lymphatic sage); detailed anatomical organ cutaways, neural firing pathways, cellular capillaries, and handwritten Latin/English physiological callouts; orthographic 2D, tactile museum medical plate texture, at least 60% negative space, zero 3D CGI, zero kawaii cartoon faces, zero plastic AI glow, zero gradients.
 
 ## 5. Tối Ưu Thời Gian Sản Xuất (Kết Hợp Flow CDP + Remotion / Hyperframes)
 - **Chế độ Render chủ đạo:** `hybrid_motion` (Tỷ lệ đồ họa động Remotion/Hyperframes: **40%**)

@@ -1,45 +1,45 @@
 {
-  "candidate_id": "EN_V06",
+  "candidate_id": "EN_V11",
   "voice": "OmniVoice_EnWaitHow",
   "channel_id": "en_wait_how",
-  "target_channel_name": "Wait, How?",
-  "target_niche": "Everyday physics, counter-intuitive science & paradoxes",
-  "archetype": "Clear Macro Infrastructure & Systems Engineer",
-  "voice_label": "Giọng nam trầm ổn, mạch lạc, giải thích cơ chế vận hành hạ tầng & chuỗi cung ứng thế giới",
+  "target_channel_name": "Kitchen Molecules",
+  "target_niche": "Food science, Maillard reactions & culinary chemistry",
+  "archetype": "Crisp Culinary Chemistry & Food Science Explainer",
+  "voice_label": "Giọng hào hứng, rõ chữ, giải thích phản ứng hóa học trong căn bếp & khoa học ẩm thực",
   "language": "en",
   "languages": [
     "en",
     "vi"
   ],
   "reference_wav": "reference.wav",
-  "reference_text": "Changes in voltage can lead to brownouts or surges that damage connected equipment. One of the benefits of large power grids is electrical inertia.",
-  "duration_seconds": 9.08,
-  "composite_score": 79.59,
+  "reference_text": "The first version of pizza was created when the poor people of Naples placed tomatoes onto their yeast dough.",
+  "duration_seconds": 6.75,
+  "composite_score": 77.4,
   "acoustic_metrics": {
-    "dur": 9.08,
-    "rms_db": -15.53,
-    "peak_db": -1.04,
-    "p05_db": -53.9,
-    "p10_db": -48.9,
-    "p50_db": -16.2,
-    "p90_db": -12.0,
-    "dyn_db": 36.9,
-    "active_ratio": 0.85,
-    "min_1s_db": -18.0,
+    "dur": 6.75,
+    "rms_db": -14.94,
+    "peak_db": -1.03,
+    "p05_db": -48.1,
+    "p10_db": -43.4,
+    "p50_db": -17.1,
+    "p90_db": -11.0,
+    "dyn_db": 32.4,
+    "active_ratio": 0.84,
+    "min_1s_db": -17.1,
     "start_60ms_db": -140.0,
     "end_60ms_db": -140.0,
-    "hf_ratio": 0.1215,
-    "f0_hz": 126.3,
-    "f0_spread_semitones": 4.03,
-    "quarter_rms_spread_db": 1.15
+    "hf_ratio": 0.0557,
+    "f0_hz": 169.0,
+    "f0_spread_semitones": 6.26,
+    "quarter_rms_spread_db": 2.58
   },
   "span_provenance": {
-    "raw_sir_db": 42.38,
-    "avg_word_prob": 0.986,
-    "valley_start_db": -58.6,
-    "valley_end_db": -39.5,
-    "pause_before_s": 0.26,
-    "pause_after_s": 0.36
+    "raw_sir_db": 40.37,
+    "avg_word_prob": 0.995,
+    "valley_start_db": -67.5,
+    "valley_end_db": -36.5,
+    "pause_before_s": 0.36,
+    "pause_after_s": 0.18
   },
   "source_speed": 1.0,
   "recommended_speed": 1.14,
@@ -47,7 +47,7 @@
   "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
   "audio_lufs": -14.0,
   "audio_peak_db": -1.2,
-  "sha256": "983a62a64b54f8f1b3b1cdbb3acda124442e85e01473bea1a6d25343d79b37b7",
+  "sha256": "3ab7c9fa8250ce08c8699bf9d80251fc5e8a17aa622cdb81ea111bb172c8b03b",
   "demucs_vocal_isolated": true,
   "studio_v3_restored": true,
   "processing": {
@@ -59,17 +59,17 @@
   },
   "sources": [
     {
-      "url": "https://www.youtube.com/watch?v=v1BMWczn7JM",
-      "video_id": "v1BMWczn7JM",
-      "source_channel": "Practical Engineering",
-      "video_title": "How Does the Power Grid Work?",
+      "url": "https://www.youtube.com/watch?v=srMEoe_5y6g",
+      "video_id": "srMEoe_5y6g",
+      "source_channel": "Ethan Chlebowski",
+      "video_title": "Why Recipes are holding you back from learning how to cook",
       "window_seconds": [
-        325.33,
-        334.15
+        268.55,
+        275.04
       ]
     }
   ],
   "listening_verified": true,
-  "note": "Studio V3 English reference voice (Clear Macro Infrastructure & Systems Engineer) from 'Practical Engineering' (https://www.youtube.com/watch?v=v1BMWczn7JM @ 325.33s-334.15s).",
-  "assigned_from_candidate": "EN_V06"
+  "note": "Studio V3 English reference voice (Crisp Culinary Chemistry & Food Science Explainer) from 'Ethan Chlebowski' (https://www.youtube.com/watch?v=srMEoe_5y6g @ 268.55s-275.04s).",
+  "pool_voice_id": "EN_V11"
 }

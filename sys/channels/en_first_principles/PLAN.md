@@ -53,13 +53,13 @@
 - Dense mathematical notation without visual proof
 
 ## 4. Phong Cách Hình Ảnh & Thumbnail Flow Native
-- **Visual Profile ID:** `ch_en_blueprint_logic` — Prussian blueprint logic schematic: razor-sharp mental models, decision trees, amber node highlights
+- **Visual Profile ID:** `ch_en_blueprint_logic` — Archival Cyanotype Blueprint & Brass Ruling-Pen Schematic: tactile vellum, chalk drafting lines, amber stamps
 - **Bảng màu khóa cứng:** `#142B47`, `#F8FAFC`, `#FFB703`, `#38BDF8`, `#0F172A`
-- **Tạo hình nhân vật (`CAST_APPEARANCE`):** Sleek flat geometric mid-century strategist character with angular spectacles and crisp white drafting jacket pointing at clean decision trees and domino chains
-- **Trang phục (`DEFAULT_OUTFIT`):** Minimalist white drafting lab jacket over Prussian navy turtleneck with angular amber spectacles
-- **Luật Thumbnail (100% Flow Native, `overlay_card: false`):** Strategist pointing pointer at glowing amber root cause + 2-4 uppercase words.
+- **Tạo hình nhân vật (`CAST_APPEARANCE`):** Mid-century architectural draftsman drawn in crisp white ruling-pen ink with horn-rimmed spectacles, brass compass dividers, and rolled-sleeve drafting coat pointing at cyanotype decision trees
+- **Trang phục (`DEFAULT_OUTFIT`):** Hand-drafted white linen drafting coat over Prussian navy waistcoat with brass pocket dividers and spectacles
+- **Luật Thumbnail (100% Flow Native, `overlay_card: false`):** Draftsman using brass dividers on cyanotype paradox tree + 2-4 uppercase stenciled words.
 - **Prompt Style gốc:**
-  > Razor-sharp 2D Prussian blueprint and mental-model schematic on deep blueprint blue canvas (#142B47 deep blueprint blue canvas, #F8FAFC crisp white drafting lines, #FFB703 amber focal accent, #38BDF8 cyan node accent); clean systemic flowcharts, domino sequences, first-principles logic breakdowns; orthographic 2D, at least 60% negative space, zero 3D, zero gradients.
+  > Authentic 2D archival cyanotype blueprint and hand-drafted engineering schematic on textured Prussian blueprint vellum (#142B47 aged cyanotype Prussian blue paper grain, #F8FAFC chalk-white ruling-pen drafting lines, #FFB703 hand-stamped ochre focal accent, #38BDF8 compass-arc cyan); compass-and-straightedge geometry, physical domino sequences, hand-lettered first-principles logic trees; orthographic 2D, tactile vellum grain, at least 60% negative space, zero 3D CGI, zero neon AI glow, zero gradients.
 
 ## 5. Tối Ưu Thời Gian Sản Xuất (Kết Hợp Flow CDP + Remotion / Hyperframes)
 - **Chế độ Render chủ đạo:** `hybrid_motion` (Tỷ lệ đồ họa động Remotion/Hyperframes: **45%**)

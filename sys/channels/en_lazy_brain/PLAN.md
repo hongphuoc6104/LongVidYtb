@@ -53,13 +53,13 @@
 - Heavy peer-reviewed jargon without plain analogies
 
 ## 4. Phong Cách Hình Ảnh & Thumbnail Flow Native
-- **Visual Profile ID:** `ch_en_lazy_brain_doodle` — Lazy Brain Doodle — Cream canvas, blue-shirt stickman, brain & dopamine metaphors
+- **Visual Profile ID:** `ch_en_lazy_brain_doodle` — Lazy Brain Sketchbook — Textured cotton rag paper, fountain-pen ink cross-hatching, blue-shirt stickman
 - **Bảng màu khóa cứng:** `#F8F0DC`, `#3B82C4`, `#F2B88B`, `#93A88C`, `#2E4361`, `#FFFFFF`, `#000000`
-- **Tạo hình nhân vật (`CAST_APPEARANCE`):** Iconic 2D doodle stickman with oversized white (#FFFFFF) bald circle head, bold pitch-black (#000000) marker outline, tiny dot eyes, minimal smile, wire arms and round white circle hands
-- **Trang phục (`DEFAULT_OUTFIT`):** Flat cobalt-blue (#3B82C4) t-shirt over slate-gray pants, no shading
-- **Luật Thumbnail (100% Flow Native, `overlay_card: false`):** Stickman with exaggerated emotion staring at clock + 2-4 uppercase bold words on flat cream canvas.
+- **Tạo hình nhân vật (`CAST_APPEARANCE`):** Iconic 2D indie sketchbook stickman with oversized hand-drawn white (#FFFFFF) bald circle head, dip-pen pitch-black (#000000) ink outline with subtle graphite sketch marks, tiny dot eyes, minimal smile, wire arms and round white circle hands
+- **Trang phục (`DEFAULT_OUTFIT`):** Matte mineral-wash cobalt-blue (#3B82C4) t-shirt over slate-gray trousers with hand-inked pen contours, zero digital gradients
+- **Luật Thumbnail (100% Flow Native, `overlay_card: false`):** Hand-inked stickman staring at ticking mechanical clock on textured rag paper + 2-4 uppercase hand-lettered words.
 - **Prompt Style gốc:**
-  > Hand-drawn 2D neuroscience and focus doodle explainer: wobbly black marker outlines (#000000), flat unshaded fills in warm cream (#F8F0DC), bold cobalt blue (#3B82C4), coral (#F2B88B), sage (#93A88C) and white (#FFFFFF) on a solid cream canvas (#F8F0DC); oversized bald circle stickman in blue shirt with simple analog clock, neuron synapses and phone screens; orthographic 2D, minimal, at least 60% negative space, zero 3D, zero gradients.
+  > Hand-inked 2D indie neuroscience sketchbook explainer on textured warm cotton rag paper (#F8F0DC deckle-edge paper grain): visible graphite pencil construction lines and dip-pen black ink cross-hatching (#000000), matte mineral watercolor washes in cobalt blue (#3B82C4), terracotta coral (#F2B88B), dry sage (#93A88C) and raw paper white (#FFFFFF); expressive bald circle stickman in cobalt shirt alongside hand-drawn analog clocks, neural synapse sketches and notebook margin callouts; orthographic 2D, tactile physical paper texture, at least 60% negative space, zero 3D CGI, zero plastic AI sheen, zero smooth gradients.
 
 ## 5. Tối Ưu Thời Gian Sản Xuất (Kết Hợp Flow CDP + Remotion / Hyperframes)
 - **Chế độ Render chủ đạo:** `hybrid_motion` (Tỷ lệ đồ họa động Remotion/Hyperframes: **40%**)

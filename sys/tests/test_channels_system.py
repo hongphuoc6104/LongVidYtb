@@ -319,15 +319,15 @@ WAVE4_WEEK1_BUNDLES: Dict[str, Dict[str, object]] = {
     },
     "en_plain_sight_ai": {
         "youtube_long": {
-            "title": "Why Buying Expensive AI Tools Wastes Time: 3 Practical Free Workflows That Work",
-            "duration": "11 minutes (22 scenes)",
-            "hook": "Stop paying for fancy AI wrapper apps when three basic prompt structures do the job faster.",
+            "title": "From Egg to Cannibal Forest: How a Baby Komodo Dragon Survives Its First 5 Years",
+            "duration": "13 minutes (26 scenes)",
+            "hook": "The moment a baby Komodo dragon slices through its leathery egg, its biggest predator is waiting right outside the nest: its own mother.",
         },
         "tiktok_shorts": [
-            ("Spin-off #1 (0 new images)", "prompt structure test", "45s"),
-            ("Spin-off #2 (0 new images)", "Stop asking AI to write an email: use this 3-part prompt structure instead.", "40s"),
-            ("Spin-off #3 (0 new images)", "How to audit any contract for hidden red flags in 60 seconds with AI.", "45s"),
-            ("Fast-Short #4 (5 Flow images)", "Why AI hallucinates and the simple verification step most people skip.", "50s"),
+            ("Spin-off #1 (0 new images)", "Komodo hatchling tree sprint", "45s"),
+            ("Spin-off #2 (0 new images)", "How snakes lost their legs and evolved infrared thermal vision instead.", "45s"),
+            ("Spin-off #3 (0 new images)", "Inside the leathery egg: how reptiles broke free from the ocean.", "45s"),
+            ("Fast-Short #4 (5 Flow images)", "Why the crocodile body plan survived two mass extinctions unchanged.", "50s"),
         ],
     },
     "en_career_leverage": {
@@ -371,28 +371,28 @@ WAVE4_WEEK1_BUNDLES: Dict[str, Dict[str, object]] = {
     },
     "en_kitchen_molecules": {
         "youtube_long": {
-            "title": "The Chemistry of Everyday Cooking: 5 Myths Busted and Science-Backed Techniques",
-            "duration": "12 minutes (24 scenes)",
-            "hook": "Why does browning meat or onions make them taste a hundred times richer than boiling?",
+            "title": "Year 1 to Year 200: How a Strangler Fig Slowly Devours a Rainforest Giant",
+            "duration": "13 minutes (26 scenes)",
+            "hook": "It begins as a single sticky seed dropped by a bird high in the canopy, and ends two centuries later as a hollow cage around a dead forest giant.",
         },
         "tiktok_shorts": [
-            ("Spin-off #1 (0 new images)", "kitchen chemistry test", "45s"),
-            ("Spin-off #2 (0 new images)", "The chemistry of reused cooking oil: what happens at 350 degrees?", "40s"),
-            ("Spin-off #3 (0 new images)", "Never thaw frozen meat in hot water: here is the bacteria math.", "45s"),
-            ("Fast-Short #4 (5 Flow images)", "The Maillard reaction: why browning makes almost everything taste better.", "50s"),
+            ("Spin-off #1 (0 new images)", "strangler fig time-lapse", "45s"),
+            ("Spin-off #2 (0 new images)", "Why some pine cones refuse to open until a wildfire burns the forest alive.", "45s"),
+            ("Spin-off #3 (0 new images)", "The 60-million-year hostage pact between a fig tree and a dying wasp.", "45s"),
+            ("Fast-Short #4 (5 Flow images)", "How carnivorous pitcher plants lure, drown, and digest insects in acid water.", "50s"),
         ],
     },
     "en_wait_how": {
         "youtube_long": {
-            "title": "8 Everyday Science Myths Your School Teachers Got Completely Wrong",
-            "duration": "12 minutes (24 scenes)",
-            "hook": "Almost everything you were taught about how mirrors reflect or why ice is slippery is incomplete.",
+            "title": "Inside the Chrysalis: How a Caterpillar Dissolves into Liquid and Rebuilds Its Brain",
+            "duration": "13 minutes (26 scenes)",
+            "hook": "If you cut open a monarch chrysalis on Day 4, you will not find a half-formed butterfly—you will find digestive enzymes dissolving the caterpillar into soup.",
         },
         "tiktok_shorts": [
-            ("Spin-off #1 (0 new images)", "science myth debunk", "45s"),
-            ("Spin-off #2 (0 new images)", "Why mosquitoes only bite one specific person in a crowded room.", "40s"),
-            ("Spin-off #3 (0 new images)", "How airplanes actually stay up: why popular explanations are flawed.", "45s"),
-            ("Fast-Short #4 (5 Flow images)", "Why mirrors flip left and right, but never top and bottom.", "50s"),
+            ("Spin-off #1 (0 new images)", "chrysalis metamorphosis cutaway", "45s"),
+            ("Spin-off #2 (0 new images)", "Why every freshwater eel on Earth swims 4,000 miles to the Sargasso Sea to die.", "45s"),
+            ("Spin-off #3 (0 new images)", "17 years underground: how periodical cicadas count tree sap cycles in the dark.", "45s"),
+            ("Fast-Short #4 (5 Flow images)", "The immortal jellyfish: how Turritopsis dohrnii reverses its own life cycle.", "50s"),
         ],
     },
     "en_cold_case_ink": {
@@ -449,15 +449,15 @@ WAVE4_WEEK1_BUNDLES: Dict[str, Dict[str, object]] = {
     },
     "en_parable_lamp": {
         "youtube_long": {
-            "title": "The Parable of the Talents Explained: What a 2,000-Year-Old Story Reveals About Fear",
-            "duration": "13 minutes (24 scenes)",
-            "hook": "The servant who buried his single talent did not fail from lack of skill, but from paralyzing fear.",
+            "title": "When Giant 30-Foot Fungi Ruled the Continents Before Trees Evolved (Deep Time Strata)",
+            "duration": "14 minutes (26 scenes)",
+            "hook": "Four hundred million years ago, before a single tree existed on dry land, towering twenty-six-foot spires of living fungus dominated every coastline on Earth.",
         },
         "tiktok_shorts": [
-            ("Spin-off #1 (0 new images)", "ancient parable study", "45s"),
-            ("Spin-off #2 (0 new images)", "Why forgiving someone who hurt you is the only way to set yourself free.", "40s"),
-            ("Spin-off #3 (0 new images)", "The Prodigal Son: why both brothers missed the father's heart.", "45s"),
-            ("Fast-Short #4 (5 Flow images)", "5 timeless lessons on wealth and humility from the Book of Proverbs.", "50s"),
+            ("Spin-off #1 (0 new images)", "prehistoric giant fungi", "45s"),
+            ("Spin-off #2 (0 new images)", "The Great Dying: how one burrowing creature survived the Permian extinction.", "45s"),
+            ("Spin-off #3 (0 new images)", "Why evolution keeps turning unrelated crustaceans into crabs (carcinisation).", "45s"),
+            ("Fast-Short #4 (5 Flow images)", "How the Carboniferous forest fire era created all the coal on Earth.", "50s"),
         ],
     },
     "en_bamboo_marble": {

@@ -53,13 +53,13 @@
 - Generic resume formatting clichés
 
 ## 4. Phong Cách Hình Ảnh & Thumbnail Flow Native
-- **Visual Profile ID:** `ch_en_career_doodle` — Career Leverage Doodle — Royal-blue shirt stickman, leverage bars and corporate ladders
+- **Visual Profile ID:** `ch_en_career_doodle` — New Yorker Editorial Fountain-Pen & Ink Wash Sketchbook: cotton rag paper, royal-blue ink wash, stickman
 - **Bảng màu khóa cứng:** `#F8F0DC`, `#3B82C4`, `#F2B88B`, `#2E4361`, `#FFFFFF`, `#000000`
-- **Tạo hình nhân vật (`CAST_APPEARANCE`):** Iconic 2D doodle stickman with oversized white (#FFFFFF) bald circle head, bold black outline, professional lanyard, wire arms, and round circle hands
-- **Trang phục (`DEFAULT_OUTFIT`):** Flat royal-blue shirt (#3B82C4) with simple company lanyard, no shading
-- **Luật Thumbnail (100% Flow Native, `overlay_card: false`):** Stickman lifting a heavy corporate ladder using a leverage bar + 2-4 uppercase bold words.
+- **Tạo hình nhân vật (`CAST_APPEARANCE`):** Iconic 2D editorial sketchbook stickman with oversized hand-drawn white (#FFFFFF) bald circle head, dip-pen black outline, professional lanyard, wire arms, and round circle hands
+- **Trang phục (`DEFAULT_OUTFIT`):** Matte watercolor-wash royal-blue shirt (#3B82C4) with hand-inked company lanyard, zero digital gradients
+- **Luật Thumbnail (100% Flow Native, `overlay_card: false`):** Dip-pen stickman lifting a heavy corporate staircase using a wooden fulcrum + 2-4 uppercase hand-lettered words.
 - **Prompt Style gốc:**
-  > Hand-drawn 2D career strategy doodle explainer: wobbly black marker outlines (#000000), flat unshaded fills in warm cream (#F8F0DC), royal cobalt blue (#3B82C4), warm peach (#F2B88B), deep slate (#2E4361) and white (#FFFFFF) on a solid cream canvas (#F8F0DC); stickman in royal blue shirt with office lanyard standing by wooden levers, corporate ladder rungs, and meeting tables; orthographic 2D, minimal, at least 60% negative space, zero 3D.
+  > Hand-inked 2D New Yorker-inspired editorial career sketchbook on textured warm cotton rag paper (#F8F0DC visible paper grain): dip-pen black ink cross-hatching (#000000) with graphite construction lines, matte watercolor washes in royal cobalt (#3B82C4), warm ochre (#F2B88B), deep slate (#2E4361) and raw white (#FFFFFF); expressive bald circle stickman in cobalt shirt with office lanyard beside hand-drawn wooden fulcrums, architectural staircases, and boardroom tables; orthographic 2D, tactile pen-and-ink grain, at least 60% negative space, zero 3D CGI, zero plastic AI sheen.
 
 ## 5. Tối Ưu Thời Gian Sản Xuất (Kết Hợp Flow CDP + Remotion / Hyperframes)
 - **Chế độ Render chủ đạo:** `hybrid_motion` (Tỷ lệ đồ họa động Remotion/Hyperframes: **40%**)

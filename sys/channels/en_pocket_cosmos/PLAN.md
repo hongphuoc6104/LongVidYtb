@@ -53,13 +53,13 @@
 - Dry tensor mathematics without physical intuition
 
 ## 4. Phong Cách Hình Ảnh & Thumbnail Flow Native
-- **Visual Profile ID:** `ch_en_cosmos_vector` — Deep-space geometric vector: Kurzgesagt-style cosmic indigo, vibrant nebula colors, robotic probe Nova
-- **Bảng màu khóa cứng:** `#0B1026`, `#4CC9F0`, `#F72585`, `#FFD166`, `#7209B7`, `#FFFFFF`
-- **Tạo hình nhân vật (`CAST_APPEARANCE`):** Cute spherical golden-and-white deep-space probe mascot Nova with a glowing cyan digital eye and tiny solar-panel wings orbiting luminous geometric planets
-- **Trang phục (`DEFAULT_OUTFIT`):** Polished white ceramic body shell with gold accents and solar-panel wings, no human clothing
-- **Luật Thumbnail (100% Flow Native, `overlay_card: false`):** Mascot Nova orbiting a glowing ringed planet + 2-4 uppercase words on deep indigo.
+- **Visual Profile ID:** `ch_en_cosmos_vector` — Royal Observatory Celestial Copperplate Engraving & Brass Astrolabe Chart: deep indigo rag paper, engraved orbits
+- **Bảng màu khóa cứng:** `#0B1026`, `#F4EFE6`, `#4CC9F0`, `#FFD166`, `#D9534F`, `#FFFFFF`
+- **Tạo hình nhân vật (`CAST_APPEARANCE`):** Antique brass observatory astrolabe and copperplate-engraved astronomer's hand with brass dividers tracing relativistic spacetime curvature and planetary orbits on deep indigo chart paper
+- **Trang phục (`DEFAULT_OUTFIT`):** Engraved brass astrolabe rings, ivory parchment coordinate scales, and dip-pen ink annotations, no cartoon mascot clothing
+- **Luật Thumbnail (100% Flow Native, `overlay_card: false`):** Copperplate-engraved black hole gravitational well and brass astrolabe + 2-4 uppercase engraved words on deep indigo.
 - **Prompt Style gốc:**
-  > Vibrant Kurzgesagt-inspired 2D flat geometric space vector art on deep space indigo canvas (#0B1026 deep space indigo, #4CC9F0 pulsar cyan, #F72585 nebula magenta, #FFD166 solar gold, #7209B7 cosmic violet) with clean lineless rounded vector forms, geometric celestial spheres, gravitational lensing curves; orthographic 2D, at least 60% negative space, zero 3D, zero gradients.
+  > Authentic 19th-century Royal Observatory 2D celestial copperplate ink engraving and hand-tinted astrolabe chart on deep cosmic-indigo cotton paper (#0B1026 deep indigo rag paper grain, #F4EFE6 chalk-ivory engraved orbit lines, #4CC9F0 pulsar cyan ink wash, #FFD166 brass astrolabe gold, #D9534F red-shift carmine) with fine cross-hatched celestial spheres, hand-drafted gravitational lensing meshes, and brass telescope dial callouts; orthographic 2D, tactile antique star-chart texture, at least 60% negative space, zero 3D CGI, zero cartoon robot mascots, zero plastic AI glow, zero gradients.
 
 ## 5. Tối Ưu Thời Gian Sản Xuất (Kết Hợp Flow CDP + Remotion / Hyperframes)
 - **Chế độ Render chủ đạo:** `hybrid_motion` (Tỷ lệ đồ họa động Remotion/Hyperframes: **45%**)

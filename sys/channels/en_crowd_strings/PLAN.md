@@ -53,13 +53,13 @@
 - Academic jargon without tangible examples
 
 ## 4. Phong Cách Hình Ảnh & Thumbnail Flow Native
-- **Visual Profile ID:** `ch_en_crowd_noir` — Psychological crowd noir: high-contrast 2D graphic novel, aged dossier paper, crimson puppet strings
+- **Visual Profile ID:** `ch_en_crowd_noir` — Tactile Scratchboard & Archival Dossier Noir: carved ink cross-hatching on aged manila paper, crimson thread pins
 - **Bảng màu khóa cứng:** `#111111`, `#E8E2D0`, `#5A5F66`, `#C0392B`, `#FFFFFF`
-- **Tạo hình nhân vật (`CAST_APPEARANCE`):** Sharp-suited anonymous noir observer silhouette with glowing white lapel pin amidst shadowed crowd figures and crimson influence threads
-- **Trang phục (`DEFAULT_OUTFIT`):** Sharp charcoal-black suit silhouette with crisp white collar and glowing crimson pin, no shading
-- **Luật Thumbnail (100% Flow Native, `overlay_card: false`):** Noir silhouette cutting crimson puppet strings + 2-4 uppercase words on flat dossier background.
+- **Tạo hình nhân vật (`CAST_APPEARANCE`):** Sharp-suited anonymous noir observer drawn in heavy dip-pen ink cross-hatching with brass lapel pin amidst charcoal-washed crowd figures and physical crimson threads
+- **Trang phục (`DEFAULT_OUTFIT`):** Hand-inked charcoal-black trench suit silhouette with crisp ivory collar and crimson pin, tactile woodcut line work
+- **Luật Thumbnail (100% Flow Native, `overlay_card: false`):** Scratchboard noir silhouette cutting physical crimson strings + 2-4 uppercase stamped words on aged dossier paper.
 - **Prompt Style gốc:**
-  > High-contrast 2D psychological noir graphic-novel art on aged dossier paper canvas (#111111 ink black, #E8E2D0 dossier paper, #5A5F66 slate shadow, #C0392B crimson puppet-strings); sharp chiaroscuro ink shadows, dossier pins, connecting string matrices and anonymous crowd silhouettes; orthographic 2D, at least 60% negative space, zero 3D, zero gradients.
+  > Tactile 2D scratchboard and dip-pen chiaroscuro graphic-novel art on weathered archival dossier manila paper (#111111 India ink black, #E8E2D0 fibrous manila paper grain, #5A5F66 charcoal shadow wash, #C0392B crimson cotton thread); hand-carved woodcut cross-hatching, brass dossier pins, physical red string matrices and anonymous crowd ink silhouettes; orthographic 2D, authentic printmaking texture, at least 60% negative space, zero 3D CGI, zero plastic AI glow, zero gradients.
 
 ## 5. Tối Ưu Thời Gian Sản Xuất (Kết Hợp Flow CDP + Remotion / Hyperframes)
 - **Chế độ Render chủ đạo:** `hybrid_motion` (Tỷ lệ đồ họa động Remotion/Hyperframes: **40%**)

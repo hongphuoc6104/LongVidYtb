@@ -1,44 +1,44 @@
-# KẾ HOẠCH CHI TIẾT KÊNH: KITCHEN MOLECULES (`en_kitchen_molecules`)
+# KẾ HOẠCH CHI TIẾT KÊNH: ROOT & CANOPY (`en_kitchen_molecules`)
 
 ## 1. Định Vị Kênh & Phân Tách Nền Tảng
 - **Mã kênh:** `en_kitchen_molecules` (Đợt triển khai: Wave 4)
 - **Nhánh GitHub độc lập:** `channel/en-kitchen-molecules` (`origin/channel/en-kitchen-molecules`)
 - **Thư mục phát triển trên máy:** `/home/hongphuoc6104/Desktop/vp-channels/channel-en-kitchen-molecules`
-- **Ngách nội dung:** Food chemistry, kitchen safety myths, cooking reactions & ultra-processed food science
-- **Lời hứa thương hiệu (Value Proposition):** Unlock the fascinating science of cooking and debunk dangerous kitchen myths with microbiology.
-- **Khán giả mục tiêu:** Home cooks, foodies, and curious minds curious about culinary chemistry and safety
-- **Nhân vật dẫn chuyện (Persona):** Passionate food scientist who brings molecular kitchen reactions to life with stick figures
-- **Giọng văn (Tone):** Lively, appetizing, scientific, accessible, myth-busting | **Giọng TTS:** `OmniVoice_EnKitchenMolecules` (1.0x)
+- **Ngách nội dung:** Plant evolution through deep time, seed-to-giant life-cycle time-lapses & botanical warfare
+- **Lời hứa thương hiệu (Value Proposition):** Witness the hidden time-lapse warfare of plants—from dormant seed to 2,000-year canopy giant.
+- **Khán giả mục tiêu:** Nature documentary enthusiasts, botanical science fans, and viewers fascinated by time-lapse life cycles
+- **Nhân vật dẫn chuyện (Persona):** Botanical time-lapse chronicler revealing plants as slow-motion gladiators and chemical engineers
+- **Giọng văn (Tone):** Hypnotic, chronological, dramatic, revealing hidden underground and canopy survival battles | **Giọng TTS:** `OmniVoice_EnKitchenMolecules` (1.0x)
 - **Phân tách nền tảng bắt buộc:**
   - **TikTok (`short_9x16` — 9:16):** Video ngắn 35–50s, nhịp chuyển cảnh 2–5s. Mục tiêu: Lên xu hướng FYP, kéo follow và gắn Affiliate / dẫn phễu.
   - **YouTube (`long_16x9` — 16:9):** Video dài 8–12 phút, nhịp pattern-interrupt 20–30s. Mục tiêu: Bật kiếm tiền AdSense RPM cao & xây dựng uy tín lâu dài.
 
 ## 2. Kênh Mẫu Tham Chiếu (Bám Theo Cấu Trúc Đã Kiểm Chứng)
 ### Kênh mẫu TikTok Short (`short_9x16`)
-- **MinuteFood Shorts** (TikTok/YouTube Shorts): Bite-sized 45-second cooking science myth-busters.
+- **Botanical Time-Lapse Shorts** (TikTok/YouTube Shorts): 60-second seed-to-canopy growth and carnivorous plant traps.
 ### Kênh mẫu YouTube Long (`long_16x9`)
-- **MinuteFood** (YouTube): Snackable physics and chemistry behind everyday kitchen processes.
-- **Adam Ragusea** (YouTube): Practical food science, kitchen myths, and culinary culinary realities.
-- **On Food and Cooking by Harold McGee & Ultra-Processed People** (Book/Scripture): Masterwork of culinary chemistry, industrial food science, and emulsions.
+- **BBC Earth — The Green Planet (Sir David Attenborough)** (YouTube): Time-lapse cinematography framing plant growth as high-stakes predator-prey drama.
+- **Crime Pays But Botany Doesn't & PBS Eons** (YouTube): Evolutionary botany, plant ecology, and deep-time floral history.
+- **The Hidden Life of Trees by Peter Wohlleben & Finding the Mother Tree** (Book/Scripture): Mycorrhizal underground networks and forest survival strategies.
 
 ## 3. Luật Viết Kịch Bản & Công Thức Hook
 ### Nguyên tắc giọng kể
-- Hook with a common kitchen habit or cooking myth people do every day.
-- Explain the chemical or biological mechanism (e.g. Maillard reaction, bacterial curve).
-- Use relatable kitchen analogies with pans, thermometers, and molecules.
-- End with one simple chef-science technique that improves food quality or safety.
+- Open at Day 0 inside the dormant seed coat or underground root network within 3 seconds.
+- Use chronological time-lapse progression (Day 1 -> Month 6 -> Year 50 -> Century 10) to reveal plant movement as active warfare.
+- Show split soil-and-canopy cross-sections of root xylem conduits, mycorrhizal fungal webs, and chemical defense toxins.
+- End with how this botanical strategy reshaped Earth's atmosphere or forest ecosystems.
 ### Công thức Hook 3 giây đầu (viết 3 bản A/B/C, chấm điểm bằng `script_hook_scorer.py`)
-- `The chemistry of reused cooking oil: what actually happens at 350 degrees?`
-- `Never thaw frozen meat in hot water: here is the bacteria math.`
-- `The Maillard reaction: why browning makes almost everything taste better.`
-- `Is the 5-second dropped food rule real? What microbiology says.`
+- `Year 1 to Year 200: how a strangler fig slowly devours a rainforest giant from the sky down.`
+- `Why some pine cones refuse to open until a wildfire burns the forest alive.`
+- `The 60-million-year hostage pact between a fig tree and a dying wasp.`
+- `How carnivorous pitcher plants lure, drown, and digest prey in acid rainwater.`
 ### Cấu trúc giữ chân TikTok Short (`short_9x16`)
 1. Hook <= 3s: shocking claim or relatable pain + striking first frame
 1. Open loop: promise the answer, delay it
 1. Escalation beats every 2-5s (new visual, number or twist)
 1. Payoff: answer the loop in one clear image
 1. Closing line
-- **Câu kết (CTA):** Did this kitchen rule surprise you? Tell us your cooking habits below.
+- **Câu kết (CTA):** Did you know plants fought this fiercely in slow motion? Comment below.
 ### Cấu trúc giữ chân YouTube Long (`long_16x9`)
 1. Cold open 0-30s: strongest scene of the video, no channel intro
 1. Stakes: why this matters to the viewer's own life
@@ -46,49 +46,49 @@
 1. Pattern interrupt every 20-30s (story, number, visual gag)
 1. Synthesis + practical takeaway
 1. Closing line pointing to the next video
-- **Câu kết (CTA):** Master the science of delicious food with Kitchen Molecules on YouTube.
+- **Câu kết (CTA):** Watch the next botanical time-lapse survival story on Root & Canopy YouTube.
 ### Điều cấm kỵ (Avoid)
-- Extreme fad diet preaching
-- Sensational food fearmongering
-- Rejecting peer-reviewed nutritional science
+- Treating plants as passive static scenery
+- Childish cartoon flower faces
+- Dry gardening tips without evolutionary storytelling
 
 ## 4. Phong Cách Hình Ảnh & Thumbnail Flow Native
-- **Visual Profile ID:** `ch_en_culinary_sticker` — Food science sticker-pop cartoon: die-cut white borders, cheerful culinary mascots Sunny and Sizzle
-- **Bảng màu khóa cứng:** `#FFF9EB`, `#FF6B6B`, `#FFD166`, `#06D6A0`, `#118AB2`, `#2B2D42`
-- **Tạo hình nhân vật (`CAST_APPEARANCE`):** Cheerful anthropomorphic culinary mascots — Sunny the golden egg, Sizzle the skillet sprite, and bouncy flavor-molecule buddies with big expressive eyes
-- **Trang phục (`DEFAULT_OUTFIT`):** Tiny red chef kerchief on Sunny; cheerful blue steam plume on Sizzle sprite
-- **Luật Thumbnail (100% Flow Native, `overlay_card: false`):** Sunny the egg character dodging a smoking pan + 2-4 uppercase words on buttercream canvas.
+- **Visual Profile ID:** `ch_en_culinary_sticker` — Kew Gardens & Audubon Botanical Time-Lapse Codex: copperplate engraving, herbarium watercolor & soil strata cutaway
+- **Bảng màu khóa cứng:** `#F4EFE0`, `#3A6B4C`, `#B85D3B`, `#D4A359`, `#2B3A2E`, `#1E241E`
+- **Tạo hình nhân vật (`CAST_APPEARANCE`):** Botanical specimen cross-section plate drawn in fine copperplate dip-pen cross-hatching and mineral watercolor, tracing a living plant from buried seed coat cracking in dark terracotta soil strata up to mature forest canopy with brass magnifier callouts
+- **Trang phục (`DEFAULT_OUTFIT`):** Natural botanical bark, root xylem vascular cross-sections, and copperplate taxonomic specimen labels, zero human clothing
+- **Luật Thumbnail (100% Flow Native, `overlay_card: false`):** Split soil-and-canopy cross-section of giant root network and germinating seed + 2-4 uppercase engraved words.
 - **Prompt Style gốc:**
-  > Vibrant 2D die-cut sticker-pop food-science cartoon on warm buttercream canvas (#FFF9EB warm buttercream canvas, #FF6B6B sear coral, #FFD166 butter gold, #06D6A0 basil green, #118AB2 steam blue) with thick smooth outlines, chunky white sticker borders, and lively Maillard reaction sprites; orthographic 2D, at least 60% negative space, zero 3D, zero gradients.
+  > Authentic 2D Kew Gardens and Audubon botanical copperplate ink engraving and pressed-herbarium watercolor wash on warm deckle-edge rag paper (#F4EFE0 fibrous herbarium paper, #1E241E botanical India ink cross-hatching, #3A6B4C chlorophyll forest green, #B85D3B underground soil-strata terracotta, #D4A359 amber resin gold); split above-and-below-ground soil strata cross-sections showing chronological seed germination (Day 1 to Year 200), root xylem networks, mycorrhizal fungal threads, and carnivorous leaf traps; orthographic 2D, tactile botanical museum plate texture, at least 60% negative space, zero 3D CGI, zero kawaii stickers, zero plastic AI glow, zero gradients.
 
 ## 5. Tối Ưu Thời Gian Sản Xuất (Kết Hợp Flow CDP + Remotion / Hyperframes)
-- **Chế độ Render chủ đạo:** `hybrid_motion` (Tỷ lệ đồ họa động Remotion/Hyperframes: **40%**)
+- **Chế độ Render chủ đạo:** `hybrid_motion` (Tỷ lệ đồ họa động Remotion/Hyperframes: **45%**)
 - **Số ảnh Flow tối đa cho 1 TikTok Fast-Short:** **5 ảnh** (nhịp 2–4s/chuyển cảnh được tạo bằng Remotion camera beats, zoom/pan, kinetic badges).
 - **Số TikTok Spin-off trích xuất từ 1 YouTube Long:** **4 video ngắn** (qua `sys/omni_platform.py`, **0 phút sinh thêm ảnh Flow**).
 - **Thời gian mục tiêu:** **7–10 phút** cho 1 TikTok Short độc lập; **28–38 phút** cho trọn bộ (1 YouTube Long + 4 TikTok Shorts).
-- **Chiến thuật tốc độ riêng của kênh:** Remotion thermometer rise animation and molecular bonding visuals.
+- **Chiến thuật tốc độ riêng của kênh:** Remotion time-lapse Day/Year counters and underground root-growth cross-section reveals.
 
 ## 6. Lộ Trình Sản Xuất Tuần 1 (1 YouTube Long + Chuỗi TikTok Shorts)
 ### YouTube Long #1 (`long_16x9`)
-- **Tiêu đề:** *The Chemistry of Everyday Cooking: 5 Myths Busted and Science-Backed Techniques*
-- **Thời lượng:** 12 minutes (24 scenes)
-- **Câu mở đầu (Cold Open):** "Why does browning meat or onions make them taste a hundred times richer than boiling?"
+- **Tiêu đề:** *Year 1 to Year 200: How a Strangler Fig Slowly Devours a Rainforest Giant*
+- **Thời lượng:** 13 minutes (26 scenes)
+- **Câu mở đầu (Cold Open):** "It begins as a single sticky seed dropped by a bird high in the canopy, and ends two centuries later as a hollow cage around a dead forest giant."
 ### Danh sách TikTok Shorts Tuần 1 (`short_9x16`)
-- **Spin-off #1 (0 new images):** *kitchen chemistry test* (45s)
-- **Spin-off #2 (0 new images):** *The chemistry of reused cooking oil: what happens at 350 degrees?* (40s)
-- **Spin-off #3 (0 new images):** *Never thaw frozen meat in hot water: here is the bacteria math.* (45s)
-- **Fast-Short #4 (5 Flow images):** *The Maillard reaction: why browning makes almost everything taste better.* (50s)
+- **Spin-off #1 (0 new images):** *strangler fig time-lapse* (45s)
+- **Spin-off #2 (0 new images):** *Why some pine cones refuse to open until a wildfire burns the forest alive.* (45s)
+- **Spin-off #3 (0 new images):** *The 60-million-year hostage pact between a fig tree and a dying wasp.* (45s)
+- **Fast-Short #4 (5 Flow images):** *How carnivorous pitcher plants lure, drown, and digest insects in acid water.* (50s)
 
 ### Backlog chủ đề hạt giống tiếp theo
-- The Chemistry of Reused Cooking Oil: What Actually Happens at 350 Degrees?
-- Never Thaw Frozen Meat in Hot Water—Here Is the Bacteria Math
-- The Maillard Reaction: Why Browning Makes Almost Everything Taste Better
-- Is the 5-Second Dropped Food Rule Real? What Microbiology Says
-- Why Honey Never Spoils While Fresh Bread Molds in Days
+- Year 1 to Year 200: How a Strangler Fig Slowly Devours a Rainforest Giant
+- Why Some Pine Cones Refuse to Open Until a Wildfire Burns the Forest Alive
+- The 60-Million-Year Hostage Pact Between a Fig Tree and a Dying Wasp
+- How Carnivorous Pitcher Plants Lure, Drown, and Digest Insects in Acid Rainwater
+- How Grass Conquered the Planet and Engineered Grazing Mammals
 
 ## 7. Kiếm Tiền, Hashtag & Ngưỡng Quyết Định (14 Ngày)
-- **Bộ Hashtag chuẩn TikTok:** `#foodscience #cooking #chemistry #food #kitchen #science`
-- **Nguồn doanh thu:** YouTube AdSense (long), Kitchen science temperature guide cheat sheets, High-quality kitchenware sponsorship
+- **Bộ Hashtag chuẩn TikTok:** `#botany #plants #timelapse #evolution #naturedocumentary #lifecycle`
+- **Nguồn doanh thu:** YouTube AdSense (long), Archival botanical copperplate herbarium prints, Nature & science documentary sponsorship
 - **Lệnh làm việc nhanh trên máy:**
   ```bash
   cd /home/hongphuoc6104/Desktop/vp-channels/channel-en-kitchen-molecules

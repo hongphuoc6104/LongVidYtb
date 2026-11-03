@@ -53,13 +53,13 @@
 - Shaming small everyday pleasures
 
 ## 4. Phong Cách Hình Ảnh & Thumbnail Flow Native
-- **Visual Profile ID:** `ch_en_ledger_grid` — Financial ledger notebook sketch: fountain-pen ink on graph paper, green dollars, deficit red ink
+- **Visual Profile ID:** `ch_en_ledger_grid` — Tactile Dip-Pen Financial Ledger: iron-gall fountain-pen ink on cotton graph paper, bank-stamp red & emerald
 - **Bảng màu khóa cứng:** `#FAF6E9`, `#24364F`, `#2F9E5B`, `#F2C14E`, `#D64545`, `#E3DCC8`
-- **Tạo hình nhân vật (`CAST_APPEARANCE`):** Witty mid-century editorial bookkeeper character with neat side-parted hair, round tortoiseshell glasses, green visor and vest and fountain pen
-- **Trang phục (`DEFAULT_OUTFIT`):** Forest green accountant vest over rolled-up sleeve ivory shirt with neat navy tie and tortoiseshell glasses
-- **Luật Thumbnail (100% Flow Native, `overlay_card: false`):** Bookkeeper circling red deficit trap on giant ledger + 2-4 uppercase words.
+- **Tạo hình nhân vật (`CAST_APPEARANCE`):** Witty mid-century editorial bookkeeper drawn in crisp fountain-pen cross-hatching with neat side-parted hair, round tortoiseshell glasses, green visor, vest, and brass nib pen
+- **Trang phục (`DEFAULT_OUTFIT`):** Hand-inked forest-green accountant vest over rolled-up sleeve ivory shirt with neat navy tie and tortoiseshell glasses
+- **Luật Thumbnail (100% Flow Native, `overlay_card: false`):** Fountain-pen bookkeeper stamping red deficit seal on ledger + 2-4 uppercase hand-lettered words.
 - **Prompt Style gốc:**
-  > Hand-inked 2D financial ledger notebook illustration on warm square-grid graph paper (#FAF6E9 ivory paper with faint #E3DCC8 grid, #2F9E5B dollar emerald, #F2C14E bullion gold, #D64545 deficit red, #24364F fountain-pen navy); clean balance-sheet columns, cashflow conduits, and financial anatomy charts; orthographic 2D, at least 60% negative space, zero 3D, zero gradients.
+  > Tactile 2D dip-pen and iron-gall ink financial ledger notebook illustration on warm cotton square-grid graph paper (#FAF6E9 fibrous ivory paper with faint #E3DCC8 ruled grid, #2F9E5B bank-note emerald ink, #F2C14E brass coin ochre, #D64545 rubber-stamp deficit red, #24364F fountain-pen navy); hand-ruled balance-sheet columns, cross-hatched cashflow conduits, and anatomical receipt dissections; orthographic 2D, authentic paper fiber and ink nib texture, at least 60% negative space, zero 3D CGI, zero plastic AI sheen, zero gradients.
 
 ## 5. Tối Ưu Thời Gian Sản Xuất (Kết Hợp Flow CDP + Remotion / Hyperframes)
 - **Chế độ Render chủ đạo:** `hybrid_motion` (Tỷ lệ đồ họa động Remotion/Hyperframes: **40%**)

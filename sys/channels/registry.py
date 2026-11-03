@@ -1830,12 +1830,12 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             long_spec=_long((480, 720), "Join us next time as we explore more quirks of the human brain."),
             visual=VisualIdentity(
                 profile_id="ch_en_lazy_brain_doodle",
-                label="Lazy Brain Doodle — Cream canvas, blue-shirt stickman, brain & dopamine metaphors",
-                style_description="Hand-drawn 2D neuroscience and focus doodle explainer: wobbly black marker outlines (#000000), flat unshaded fills in warm cream (#F8F0DC), bold cobalt blue (#3B82C4), coral (#F2B88B), sage (#93A88C) and white (#FFFFFF) on a solid cream canvas (#F8F0DC); oversized bald circle stickman in blue shirt with simple analog clock, neuron synapses and phone screens; orthographic 2D, minimal, at least 60% negative space, zero 3D, zero gradients.",
-                cast_appearance="Iconic 2D doodle stickman with oversized white (#FFFFFF) bald circle head, bold pitch-black (#000000) marker outline, tiny dot eyes, minimal smile, wire arms and round white circle hands",
-                outfit="Flat cobalt-blue (#3B82C4) t-shirt over slate-gray pants, no shading",
+                label="Lazy Brain Sketchbook — Textured cotton rag paper, fountain-pen ink cross-hatching, blue-shirt stickman",
+                style_description="Hand-inked 2D indie neuroscience sketchbook explainer on textured warm cotton rag paper (#F8F0DC deckle-edge paper grain): visible graphite pencil construction lines and dip-pen black ink cross-hatching (#000000), matte mineral watercolor washes in cobalt blue (#3B82C4), terracotta coral (#F2B88B), dry sage (#93A88C) and raw paper white (#FFFFFF); expressive bald circle stickman in cobalt shirt alongside hand-drawn analog clocks, neural synapse sketches and notebook margin callouts; orthographic 2D, tactile physical paper texture, at least 60% negative space, zero 3D CGI, zero plastic AI sheen, zero smooth gradients.",
+                cast_appearance="Iconic 2D indie sketchbook stickman with oversized hand-drawn white (#FFFFFF) bald circle head, dip-pen pitch-black (#000000) ink outline with subtle graphite sketch marks, tiny dot eyes, minimal smile, wire arms and round white circle hands",
+                outfit="Matte mineral-wash cobalt-blue (#3B82C4) t-shirt over slate-gray trousers with hand-inked pen contours, zero digital gradients",
                 palette=("#F8F0DC", "#3B82C4", "#F2B88B", "#93A88C", "#2E4361", "#FFFFFF", "#000000"),
-                thumbnail_rule="Stickman with exaggerated emotion staring at clock + 2-4 uppercase bold words on flat cream canvas.",
+                thumbnail_rule="Hand-inked stickman staring at ticking mechanical clock on textured rag paper + 2-4 uppercase hand-lettered words.",
             ),
             references=(
                 ReferenceChannel("The Paint Explainer", "YouTube", "long", "Ultra-minimalist doodle explainer pacing and clear visual metaphors."),
@@ -1906,17 +1906,17 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             long_spec=_long((480, 720), "Explore our next deep-dive on social psychology on Crowd Strings."),
             visual=VisualIdentity(
                 profile_id="ch_en_crowd_noir",
-                label="Psychological crowd noir: high-contrast 2D graphic novel, aged dossier paper, crimson puppet strings",
+                label="Tactile Scratchboard & Archival Dossier Noir: carved ink cross-hatching on aged manila paper, crimson thread pins",
                 style_description=(
-                    "High-contrast 2D psychological noir graphic-novel art on aged dossier paper canvas "
-                    "(#111111 ink black, #E8E2D0 dossier paper, #5A5F66 slate shadow, #C0392B crimson puppet-strings); "
-                    "sharp chiaroscuro ink shadows, dossier pins, connecting string matrices and anonymous crowd silhouettes; "
-                    "orthographic 2D, at least 60% negative space, zero 3D, zero gradients."
+                    "Tactile 2D scratchboard and dip-pen chiaroscuro graphic-novel art on weathered archival dossier manila paper "
+                    "(#111111 India ink black, #E8E2D0 fibrous manila paper grain, #5A5F66 charcoal shadow wash, #C0392B crimson cotton thread); "
+                    "hand-carved woodcut cross-hatching, brass dossier pins, physical red string matrices and anonymous crowd ink silhouettes; "
+                    "orthographic 2D, authentic printmaking texture, at least 60% negative space, zero 3D CGI, zero plastic AI glow, zero gradients."
                 ),
-                cast_appearance="Sharp-suited anonymous noir observer silhouette with glowing white lapel pin amidst shadowed crowd figures and crimson influence threads",
-                outfit="Sharp charcoal-black suit silhouette with crisp white collar and glowing crimson pin, no shading",
+                cast_appearance="Sharp-suited anonymous noir observer drawn in heavy dip-pen ink cross-hatching with brass lapel pin amidst charcoal-washed crowd figures and physical crimson threads",
+                outfit="Hand-inked charcoal-black trench suit silhouette with crisp ivory collar and crimson pin, tactile woodcut line work",
                 palette=("#111111", "#E8E2D0", "#5A5F66", "#C0392B", "#FFFFFF"),
-                thumbnail_rule="Noir silhouette cutting crimson puppet strings + 2-4 uppercase words on flat dossier background.",
+                thumbnail_rule="Scratchboard noir silhouette cutting physical crimson strings + 2-4 uppercase stamped words on aged dossier paper.",
             ),
             references=(
                 ReferenceChannel("Charisma on Command", "YouTube", "long", "Deconstructing social dynamics and charisma in everyday conversations."),
@@ -1987,17 +1987,17 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             long_spec=_long((480, 720), "Discover the full relationship masterclass on Kindred Sketch YouTube."),
             visual=VisualIdentity(
                 profile_id="ch_en_pastel_duo",
-                label="Soft pastel warm-line duo: Psych2Go-inspired empathetic characters Leo and Maya on warm cream",
+                label="Cold-Press Watercolor & Charcoal Pencil Sketchbook: warm human linework of Leo and Maya on cotton paper",
                 style_description=(
-                    "Soft Psych2Go-inspired 2D pastel line-art illustration on warm cream canvas "
-                    "(#FFF8F0 warm cream canvas, #5B4636 smooth warm-espresso outlines, #F7C6C7 blush pink, #CDB4DB soft lavender, "
-                    "#BDE0C6 sage mint, #FFF1B5 butter yellow); gentle emotional storytelling, warm domestic and relational vignettes; "
-                    "orthographic 2D, at least 60% negative space, zero 3D, zero gradients."
+                    "Tactile 2D charcoal-pencil and mineral watercolor sketchbook illustration on cold-press cotton rag paper "
+                    "(#FFF8F0 textured cotton paper, #5B4636 raw umber graphite-and-ink outlines, #F7C6C7 muted rose wash, #CDB4DB dusty iris, "
+                    "#BDE0C6 dry sage watercolor, #FFF1B5 raw sienna wash); visible pencil construction strokes, organic watercolor paper bleed, intimate human storytelling vignettes; "
+                    "orthographic 2D, authentic hand-painted paper grain, at least 60% negative space, zero 3D CGI, zero plastic AI sheen, zero smooth digital gradients."
                 ),
-                cast_appearance="Recurring expressive young couple and friends duo — Leo (warm wavy brown hair, kind eyes, flat mint sweater) and Maya (shoulder-length dark bob hair, expressive eyes, flat blush cardigan)",
-                outfit="Leo in flat sage-mint (#BDE0C6) crewneck sweater; Maya in soft blush-pink (#F7C6C7) button cardigan",
+                cast_appearance="Recurring hand-sketched couple and friends duo drawn in warm charcoal pencil and watercolor wash — Leo (tousled brown hair, expressive ink eyes, sage knit sweater) and Maya (shoulder-length dark bob hair, warm eyes, muted rose cardigan)",
+                outfit="Leo in hand-washed sage-mint (#BDE0C6) textured knit sweater; Maya in muted rose (#F7C6C7) button cardigan with pencil-sketched cuffs",
                 palette=("#FFF8F0", "#5B4636", "#F7C6C7", "#CDB4DB", "#BDE0C6", "#FFF1B5"),
-                thumbnail_rule="Leo and Maya having an honest conversation + 2-4 uppercase words on soft cream canvas.",
+                thumbnail_rule="Charcoal-and-watercolor sketch of Leo and Maya in candid emotional tension + 2-4 uppercase hand-lettered words.",
             ),
             references=(
                 ReferenceChannel("Psych2Go", "YouTube", "long", "Gentle animated relationship breakdowns and attachment insights."),
@@ -2068,17 +2068,17 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             long_spec=_long((480, 720), "Master our next mental model in depth on First Principles Ink."),
             visual=VisualIdentity(
                 profile_id="ch_en_blueprint_logic",
-                label="Prussian blueprint logic schematic: razor-sharp mental models, decision trees, amber node highlights",
+                label="Archival Cyanotype Blueprint & Brass Ruling-Pen Schematic: tactile vellum, chalk drafting lines, amber stamps",
                 style_description=(
-                    "Razor-sharp 2D Prussian blueprint and mental-model schematic on deep blueprint blue canvas "
-                    "(#142B47 deep blueprint blue canvas, #F8FAFC crisp white drafting lines, #FFB703 amber focal accent, #38BDF8 cyan node accent); "
-                    "clean systemic flowcharts, domino sequences, first-principles logic breakdowns; "
-                    "orthographic 2D, at least 60% negative space, zero 3D, zero gradients."
+                    "Authentic 2D archival cyanotype blueprint and hand-drafted engineering schematic on textured Prussian blueprint vellum "
+                    "(#142B47 aged cyanotype Prussian blue paper grain, #F8FAFC chalk-white ruling-pen drafting lines, #FFB703 hand-stamped ochre focal accent, #38BDF8 compass-arc cyan); "
+                    "compass-and-straightedge geometry, physical domino sequences, hand-lettered first-principles logic trees; "
+                    "orthographic 2D, tactile vellum grain, at least 60% negative space, zero 3D CGI, zero neon AI glow, zero gradients."
                 ),
-                cast_appearance="Sleek flat geometric mid-century strategist character with angular spectacles and crisp white drafting jacket pointing at clean decision trees and domino chains",
-                outfit="Minimalist white drafting lab jacket over Prussian navy turtleneck with angular amber spectacles",
+                cast_appearance="Mid-century architectural draftsman drawn in crisp white ruling-pen ink with horn-rimmed spectacles, brass compass dividers, and rolled-sleeve drafting coat pointing at cyanotype decision trees",
+                outfit="Hand-drafted white linen drafting coat over Prussian navy waistcoat with brass pocket dividers and spectacles",
                 palette=("#142B47", "#F8FAFC", "#FFB703", "#38BDF8", "#0F172A"),
-                thumbnail_rule="Strategist pointing pointer at glowing amber root cause + 2-4 uppercase words.",
+                thumbnail_rule="Draftsman using brass dividers on cyanotype paradox tree + 2-4 uppercase stenciled words.",
             ),
             references=(
                 ReferenceChannel("Veritasium", "YouTube", "long", "Deductive scientific reasoning, counter-intuitive paradoxes, and first principles."),
@@ -2149,17 +2149,17 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             long_spec=_long((480, 720), "Build lasting financial clarity with our full breakdown on Wallet Anatomy."),
             visual=VisualIdentity(
                 profile_id="ch_en_ledger_grid",
-                label="Financial ledger notebook sketch: fountain-pen ink on graph paper, green dollars, deficit red ink",
+                label="Tactile Dip-Pen Financial Ledger: iron-gall fountain-pen ink on cotton graph paper, bank-stamp red & emerald",
                 style_description=(
-                    "Hand-inked 2D financial ledger notebook illustration on warm square-grid graph paper "
-                    "(#FAF6E9 ivory paper with faint #E3DCC8 grid, #2F9E5B dollar emerald, #F2C14E bullion gold, #D64545 deficit red, #24364F fountain-pen navy); "
-                    "clean balance-sheet columns, cashflow conduits, and financial anatomy charts; "
-                    "orthographic 2D, at least 60% negative space, zero 3D, zero gradients."
+                    "Tactile 2D dip-pen and iron-gall ink financial ledger notebook illustration on warm cotton square-grid graph paper "
+                    "(#FAF6E9 fibrous ivory paper with faint #E3DCC8 ruled grid, #2F9E5B bank-note emerald ink, #F2C14E brass coin ochre, #D64545 rubber-stamp deficit red, #24364F fountain-pen navy); "
+                    "hand-ruled balance-sheet columns, cross-hatched cashflow conduits, and anatomical receipt dissections; "
+                    "orthographic 2D, authentic paper fiber and ink nib texture, at least 60% negative space, zero 3D CGI, zero plastic AI sheen, zero gradients."
                 ),
-                cast_appearance="Witty mid-century editorial bookkeeper character with neat side-parted hair, round tortoiseshell glasses, green visor and vest and fountain pen",
-                outfit="Forest green accountant vest over rolled-up sleeve ivory shirt with neat navy tie and tortoiseshell glasses",
+                cast_appearance="Witty mid-century editorial bookkeeper drawn in crisp fountain-pen cross-hatching with neat side-parted hair, round tortoiseshell glasses, green visor, vest, and brass nib pen",
+                outfit="Hand-inked forest-green accountant vest over rolled-up sleeve ivory shirt with neat navy tie and tortoiseshell glasses",
                 palette=("#FAF6E9", "#24364F", "#2F9E5B", "#F2C14E", "#D64545", "#E3DCC8"),
-                thumbnail_rule="Bookkeeper circling red deficit trap on giant ledger + 2-4 uppercase words.",
+                thumbnail_rule="Fountain-pen bookkeeper stamping red deficit seal on ledger + 2-4 uppercase hand-lettered words.",
             ),
             references=(
                 ReferenceChannel("Two Cents (PBS)", "YouTube", "long", "Approachable, illustrated personal finance and money psychology."),
@@ -2230,17 +2230,17 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             long_spec=_long((480, 720), "Explore our complete global economy series on Macro Gears."),
             visual=VisualIdentity(
                 profile_id="ch_en_swiss_macro",
-                label="Swiss macroeconomic editorial vector: Economist-style clean geometry, trade routes, central bank navy",
+                label="Mid-Century Banknote Intaglio Engraving & Letterpress Infographic: salmon financial newsprint, cross-hatched ink",
                 style_description=(
-                    "Bold Economist-style 2D flat geometric Swiss editorial vector infographic on financial-press paper canvas "
-                    "(#F3EFE6 financial-press paper, #0F2C59 central-bank navy, #D9381E inflation vermilion, #2A9D8F trade teal, #E9C46A reserve gold) "
-                    "with zero marker wobble, precise economic indicators, container shipping icons and monetary policy levers; "
-                    "orthographic 2D, at least 60% negative space, zero 3D, zero gradients."
+                    "Tactile 2D mid-century banknote intaglio engraving and Swiss letterpress editorial print on warm salmon-ivory financial newsprint "
+                    "(#F3EFE6 fibrous financial-press paper, #0F2C59 intaglio central-bank navy, #D9381E letterpress vermilion, #2A9D8F maritime trade teal, #E9C46A bullion ochre) "
+                    "with fine steel-engraved cross-hatching, stamped freight manifests, container vessel woodcuts and mechanical monetary policy levers; "
+                    "orthographic 2D, authentic letterpress ink grain, at least 60% negative space, zero 3D CGI, zero flat corporate vector, zero gradients."
                 ),
-                cast_appearance="Crisp flat vector editorial host in structured navy suit and vermilion tie alongside clean cargo ships, interest-rate levers and currency bars",
-                outfit="Sharp tailored central-bank navy (#0F2C59) two-button suit with crisp white shirt and vermilion tie",
+                cast_appearance="Mid-century financial-press correspondent drawn in fine steel-engraved cross-hatching wearing structured navy suit and vermilion tie beside engraved cargo vessels and monetary levers",
+                outfit="Hand-engraved central-bank navy (#0F2C59) two-button suit with cross-hatched lapel, white shirt, and letterpress vermilion tie",
                 palette=("#F3EFE6", "#0F2C59", "#D9381E", "#2A9D8F", "#E9C46A"),
-                thumbnail_rule="Host pulling central-bank interest lever + 2-4 uppercase words on clean paper.",
+                thumbnail_rule="Engraved correspondent pulling central-bank interest lever + 2-4 uppercase letterpress words on newsprint.",
             ),
             references=(
                 ReferenceChannel("Economics Explained", "YouTube", "long", "Global macroeconomic systems, national economies, and currency dynamics."),
@@ -2288,79 +2288,82 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
         ),
         ChannelProfile(
             id="en_plain_sight_ai",
-            name="Plain Sight AI",
-            niche="Practical no-code AI workflows, prompt engineering & office automation for regular people",
-            promise="Demystify AI tools and provide repeatable 3-step prompt workflows that save hours of work.",
-            audience="Office workers, students, creators, and freelancers who want practical AI utility without coding",
-            persona="Down-to-earth tech guide who cuts through hype to deliver genuinely useful workflows",
-            tone="Direct, practical, encouraging, step-by-step, no-BS",
+            name="Scale & Bone",
+            niche="Reptile & amphibian evolution, egg-to-apex life-cycle survival stories & ancient biomechanics",
+            promise="Follow the visceral life-cycle of reptiles from leathery egg to apex survivor across 300 million years of evolution.",
+            audience="Nature documentary lovers, evolutionary biology fans, and viewers captivated by survival life-cycles",
+            persona="Field herpetologist and evolutionary anatomist narrating chronological survival from Day-1 hatchling to apex predator",
+            tone="Visceral, chronological, suspenseful, documentary-grade, grounded in evolutionary biomechanics",
             tone_rules=(
-                "Hook with a tedious office task that usually takes two hours.",
-                "Demonstrate the exact prompt formula and structure step by step.",
-                "Highlight the verification step to catch AI hallucinations cleanly.",
-                "End with a copy-pasteable prompt template viewers can use immediately.",
+                "Open inside the leathery egg or at Day 1 of the hatchling's survival gauntlet within 3 seconds.",
+                "Follow a strict chronological life-cycle arc: Egg -> Hatchling Sprint -> Juvenile Molting -> Adult Biomechanics -> Deep-Time Evolution.",
+                "Reveal anatomical cross-sections of venom glands, thermal pit organs, or osteoderm bone armor.",
+                "End with how this ancient reptile body plan survived mass extinctions that wiped out rival species.",
             ),
             hook_formulas=(
-                "Why buying expensive AI tools wastes your time: 3 free workflows that work.",
-                "Stop asking AI to write an email: use this 3-part prompt structure instead.",
-                "How to audit any contract for hidden red flags in 60 seconds with AI.",
-                "5 repeatable AI workflows that save 2 hours of office work every day.",
+                "From Day 1 to Year 15: how a tiny Komodo hatchling survives a forest of cannibal adults.",
+                "Inside the leathery egg: how reptiles broke free from the ocean 310 million years ago.",
+                "How snakes lost all four legs and evolved infrared thermal vision instead.",
+                "Why the crocodile body plan has barely changed since before the dinosaurs.",
             ),
-            avoid=("Selling get-rich-quick AI gimmicks", "Promoting unverified AI wrapper tools", "Overly complex code installations"),
-            short_spec=_short((35, 50), "Which repetitive task would you like automated next? Comment below."),
-            long_spec=_long((480, 720), "Download our free prompt workflow library on Plain Sight AI YouTube."),
+            avoid=("Plastic 3D CGI monsters", "Dry textbook taxonomy lists without chronological story", "Sensationalized fake creature myths"),
+            short_spec=_short((35, 50), "Which stage of this reptile's life cycle amazed you most? Comment below."),
+            long_spec=_long((480, 720), "Explore our next evolutionary life-cycle chronicle on Scale & Bone YouTube."),
             visual=VisualIdentity(
                 profile_id="ch_en_ai_doodle",
-                label="Plain Sight AI Doodle — Violet hoodie stickman, browser frames and prompt cards",
-                style_description="Hand-drawn 2D practical AI workflow doodle explainer: wobbly black marker outlines (#000000), flat unshaded fills in clean white (#FFFFFF), electric violet (#7C5CFF), tech cobalt (#3B82C4), mint green (#34D399) and dark slate (#2E4361) on a solid white canvas (#FFFFFF); stickman in violet hoodie pointing at clean browser cards, clipboard checklists, and prompt tags; orthographic 2D, minimal, at least 60% negative space, zero 3D.",
-                cast_appearance="Iconic 2D doodle stickman with oversized white (#FFFFFF) bald circle head, clean black outline, tech-savvy dot eyes, wire arms, and round circle hands",
-                outfit="Flat violet hoodie (#7C5CFF) with subtle cyan accent, no shading",
-                palette=("#FFFFFF", "#7C5CFF", "#3B82C4", "#34D399", "#2E4361", "#000000"),
-                thumbnail_rule="Stickman comparing an empty prompt vs a 3-part structure + 2-4 uppercase bold words.",
+                label="Darwin & Haeckel Zoological Field Codex: copperplate dip-pen cross-hatching & mineral watercolor on cotton rag paper",
+                style_description="Authentic 19th-century Darwin and Haeckel naturalist zoological field codex illustration on aged cotton rag paper (#F2EAD7 deckle-edge paper grain): razor-sharp iron-gall dip-pen cross-hatching (#1C1917), muted mineral watercolor washes in reptile olive-scale (#4A6B53), venom-gland ochre (#C86D51), fossil bone ivory (#D9C5A0) and slate (#2E4361); chronological life-cycle specimen plates (leathery egg cross-section, Day-1 hatchling, skin-shedding ecdysis, hollow fang biomechanics, and osteoderm armor) alongside a field naturalistsketchingstickman observer; orthographic 2D, tactile museum engraving texture, at least 60% negative space, zero 3D CGI, zero plastic AI sheen, zero gradients.",
+                cast_appearance="Iconic 2D field-expedition doodle stickman naturalist with oversized hand-drawn white (#FFFFFF) bald circle head, dip-pen black outline, expedition pith-helmet brim, wire arms, and round circle hands holding brass calipers beside detailed copperplate reptile specimens",
+                outfit="Matte olive-khaki (#4A6B53) field naturalist waistcoat with brass specimen magnifying lens, zero digital shading",
+                palette=("#F2EAD7", "#4A6B53", "#C86D51", "#D9C5A0", "#2E4361", "#1C1917"),
+                thumbnail_rule="Cross-section of reptile hatchling emerging from leathery egg on naturalist field codex + 2-4 uppercase inked words.",
             ),
             references=(
-                ReferenceChannel("Jeff Su", "YouTube", "long", "Practical productivity hacks, prompt structures, and office automation."),
-                ReferenceChannel("Matt Wolfe", "YouTube", "long", "Curated evaluations of genuinely useful AI software and workflows."),
-                ReferenceChannel("Anthropic & OpenAI Official Prompt Engineering Guides", "Book/Scripture", "long", "Systematic chain-of-thought and few-shot structuring benchmarks."),
-                ReferenceChannel("Jeff Su Shorts", "TikTok/YouTube Shorts", "short", "60-second productivity and prompt tips."),
+                ReferenceChannel("PBS Eons", "YouTube", "long", "Chronological deep-time evolutionary storytelling and fossil biomechanics."),
+                ReferenceChannel("TierZoo & Clint's Reptiles", "YouTube", "long", "Engaging herpetology, reptile survival mechanics, and evolutionary trade-offs."),
+                ReferenceChannel("Your Inner Fish by Neil Shubin & The Rise and Fall of the Dinosaurs", "Book/Scripture", "long", "Comparative vertebrate anatomy and amniotic egg evolution."),
+                ReferenceChannel("Natural History Life-Cycle Shorts", "TikTok/YouTube Shorts", "short", "60-second egg-to-apex reptile survival timelines."),
             ),
             seed_topics=(
-                "Why Buying Expensive AI Tools Wastes Your Time (And 3 Free Workflows That Work)",
-                "Stop Asking AI to Write an Email—Use This 3-Part Prompt Structure Instead",
-                "How to Audit Any Contract for Hidden Red Flags in 60 Seconds with AI",
-                "5 Repeatable AI Workflows That Save 2 Hours of Office Work Every Day",
-                "Why AI Hallucinates—And the Simple Verification Step Most People Skip",
+                "From Egg to Cannibal Forest: How a Baby Komodo Dragon Survives Its First 5 Years",
+                "How Snakes Lost Their Legs—And Evolved Infrared Thermal Pit Organs Instead",
+                "Inside the Leathery Egg: How Reptiles Conquered Dry Land 310 Million Years Ago",
+                "Why the Crocodile Body Plan Survived Two Mass Extinctions Unchanged",
+                "The Biomechanics of a Viper Fang: How a Saliva Gland Turned into a Hypodermic Syringe",
             ),
-            hashtags=("#ai", "#artificialintelligence", "#productivity", "#promptengineering", "#chatgpt", "#automation"),
-            monetization=("YouTube AdSense (long)", "Curated prompt workflow repository", "Productivity software sponsorship"),
-            philosophy_id="research_guide",
+            hashtags=("#reptiles", "#evolution", "#herpetology", "#lifecycle", "#naturedocumentary", "#biology"),
+            monetization=("YouTube AdSense (high documentary RPM)", "Naturalist copperplate reptile field prints", "Wildlife & science documentary sponsorship"),
+            philosophy_id="cognition",
             voice="OmniVoice_EnPlainSightAI",
             speed=1.0,
             wave=4,
             language="en",
             speed_optimization=SpeedOptimizationSpec(
-                render_mode="screen_capture_hybrid",
+                render_mode="hybrid_motion",
                 fast_short_max_images=5,
                 spinoff_shorts_per_long=4,
-                remotion_motion_ratio=0.5,
+                remotion_motion_ratio=0.45,
                 estimated_short_minutes=(6, 9),
                 estimated_bundle_minutes=(24, 34),
-                notes="Remotion interactive prompt typing previews and verification checklists.",
+                notes="Remotion chronological Day-1 to Year-15 timeline counters and anatomical cross-section callouts.",
             ),
             engagement=EngagementSpec(
-                cta_voice="Practical workflow coach",
+                cta_voice="Field herpetologist narrator",
                 bridge_templates=(
-                    "Watch the complete step-by-step tutorial on Plain Sight AI YouTube channel.",
-                    "See all five prompt templates with full live examples on our main channel.",
+                    "Watch the complete Egg-to-Apex reptile survival chronicle on Scale & Bone YouTube.",
+                    "See all five evolutionary stages and anatomical cross-sections on our main channel.",
                 ),
                 close_templates=(
-                    "What repetitive task do you want automated next? Tell us in the comments.",
-                    "Test this prompt template today and see how many minutes you save.",
+                    "Which reptile adaptation do you find most extraordinary? Tell us in the comments.",
+                    "Follow the next 300-million-year survival story in our evolutionary field archive.",
                 ),
                 endcard_text="FULL VIDEO ON YOUTUBE",
                 banned_cta_phrases=ALL_BANNED_CTA_PHRASES,
             ),
-            extra={"handle_candidates": ["@PlainSightAI", "@PlainSightAIHQ", "@PlainSightAILab", "@GetPlainSightAI"]},
+            extra={
+                "brand_slug": "en_scale_and_bone",
+                "handle_candidates": ["@ScaleAndBone", "@ScaleAndBoneHQ", "@ColdBloodCodex", "@ReptileEvolutionLab"],
+            },
         ),
         ChannelProfile(
             id="en_career_leverage",
@@ -2387,12 +2390,12 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             long_spec=_long((480, 720), "Gain complete career leverage with our full guide on Career Leverage."),
             visual=VisualIdentity(
                 profile_id="ch_en_career_doodle",
-                label="Career Leverage Doodle — Royal-blue shirt stickman, leverage bars and corporate ladders",
-                style_description="Hand-drawn 2D career strategy doodle explainer: wobbly black marker outlines (#000000), flat unshaded fills in warm cream (#F8F0DC), royal cobalt blue (#3B82C4), warm peach (#F2B88B), deep slate (#2E4361) and white (#FFFFFF) on a solid cream canvas (#F8F0DC); stickman in royal blue shirt with office lanyard standing by wooden levers, corporate ladder rungs, and meeting tables; orthographic 2D, minimal, at least 60% negative space, zero 3D.",
-                cast_appearance="Iconic 2D doodle stickman with oversized white (#FFFFFF) bald circle head, bold black outline, professional lanyard, wire arms, and round circle hands",
-                outfit="Flat royal-blue shirt (#3B82C4) with simple company lanyard, no shading",
+                label="New Yorker Editorial Fountain-Pen & Ink Wash Sketchbook: cotton rag paper, royal-blue ink wash, stickman",
+                style_description="Hand-inked 2D New Yorker-inspired editorial career sketchbook on textured warm cotton rag paper (#F8F0DC visible paper grain): dip-pen black ink cross-hatching (#000000) with graphite construction lines, matte watercolor washes in royal cobalt (#3B82C4), warm ochre (#F2B88B), deep slate (#2E4361) and raw white (#FFFFFF); expressive bald circle stickman in cobalt shirt with office lanyard beside hand-drawn wooden fulcrums, architectural staircases, and boardroom tables; orthographic 2D, tactile pen-and-ink grain, at least 60% negative space, zero 3D CGI, zero plastic AI sheen.",
+                cast_appearance="Iconic 2D editorial sketchbook stickman with oversized hand-drawn white (#FFFFFF) bald circle head, dip-pen black outline, professional lanyard, wire arms, and round circle hands",
+                outfit="Matte watercolor-wash royal-blue shirt (#3B82C4) with hand-inked company lanyard, zero digital gradients",
                 palette=("#F8F0DC", "#3B82C4", "#F2B88B", "#2E4361", "#FFFFFF", "#000000"),
-                thumbnail_rule="Stickman lifting a heavy corporate ladder using a leverage bar + 2-4 uppercase bold words.",
+                thumbnail_rule="Dip-pen stickman lifting a heavy corporate staircase using a wooden fulcrum + 2-4 uppercase hand-lettered words.",
             ),
             references=(
                 ReferenceChannel("Harvard Business Review Explainer", "YouTube", "long", "Evidence-based management, leadership, and workplace dynamics."),
@@ -2544,17 +2547,17 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             long_spec=_long((480, 720), "Journey deeper into your physiology with Inside the Vessel on YouTube."),
             visual=VisualIdentity(
                 profile_id="ch_en_organ_buddies",
-                label="Kawaii medical mascots: clean clinical white canvas, personified organ characters Ticker, Gurgle, Cortex",
+                label="Vesalius & Gray's Anatomy Copperplate Medical Atlas: dip-pen anatomical cross-sections & mineral watercolor on vellum",
                 style_description=(
-                    "Clean 2D kawaii medical mascot illustration on pure clinical white canvas "
-                    "(#FFFFFF background, #222222 smooth outlines, #F4A6A6 heart pink, #F6C28B stomach peach, #7FB3D5 oxygen blue, #82E0AA immune-cell mint); "
-                    "cute personified human physiology, friendly cells, and cartoon anatomy; "
-                    "orthographic 2D, at least 60% negative space, zero 3D, zero gradients."
+                    "Authentic 2D Vesalius and Gray's Anatomy medical copperplate ink etching and mineral watercolor cross-section atlas on warm archival vellum "
+                    "(#FAF7F0 fibrous vellum paper, #1E1B18 fine surgical dip-pen cross-hatching, #C85A5A arterial carmine wash, #D99B66 hepatic ochre, #4A7C9B venous slate-blue, #5E8C6A lymphatic sage); "
+                    "detailed anatomical organ cutaways, neural firing pathways, cellular capillaries, and handwritten Latin/English physiological callouts; "
+                    "orthographic 2D, tactile museum medical plate texture, at least 60% negative space, zero 3D CGI, zero kawaii cartoon faces, zero plastic AI glow, zero gradients."
                 ),
-                cast_appearance="Adorable recurring personified body mascots — brave Ticker the Heart, dramatic Gurgle the Stomach, calm Cortex the Brain, and armored little T-Cell defender with expressive faces and full character anatomy",
-                outfit="Tiny white medical headband on Ticker; little warrior helmet on T-Cell defender",
-                palette=("#FFFFFF", "#222222", "#F4A6A6", "#F6C28B", "#7FB3D5", "#82E0AA"),
-                thumbnail_rule="Cute Ticker the Heart sounding an alarm siren + 2-4 uppercase words on clean white.",
+                cast_appearance="Anatomical cross-section human silhouette drawn in fine Da Vinci and Gray's Anatomy copperplate dip-pen cross-hatching on vellum, revealing illuminated internal heart chambers, vagus nerve branches, and cellular structures",
+                outfit="Translucent classical anatomical muscle-and-vessel cross-section linework with brass surgical calipers and ink annotations, no modern clothing",
+                palette=("#FAF7F0", "#1E1B18", "#C85A5A", "#D99B66", "#4A7C9B", "#5E8C6A"),
+                thumbnail_rule="Copperplate anatomical cross-section of brain and heart under 24-hour stress + 2-4 uppercase engraved words on vellum.",
             ),
             references=(
                 ReferenceChannel("Institute of Human Anatomy", "YouTube", "long", "Fascinating organ-level physiology explained with immense clarity."),
@@ -2602,56 +2605,56 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
         ),
         ChannelProfile(
             id="en_kitchen_molecules",
-            name="Kitchen Molecules",
-            niche="Food chemistry, kitchen safety myths, cooking reactions & ultra-processed food science",
-            promise="Unlock the fascinating science of cooking and debunk dangerous kitchen myths with microbiology.",
-            audience="Home cooks, foodies, and curious minds curious about culinary chemistry and safety",
-            persona="Passionate food scientist who brings molecular kitchen reactions to life with stick figures",
-            tone="Lively, appetizing, scientific, accessible, myth-busting",
+            name="Root & Canopy",
+            niche="Plant evolution through deep time, seed-to-giant life-cycle time-lapses & botanical warfare",
+            promise="Witness the hidden time-lapse warfare of plants—from dormant seed to 2,000-year canopy giant.",
+            audience="Nature documentary enthusiasts, botanical science fans, and viewers fascinated by time-lapse life cycles",
+            persona="Botanical time-lapse chronicler revealing plants as slow-motion gladiators and chemical engineers",
+            tone="Hypnotic, chronological, dramatic, revealing hidden underground and canopy survival battles",
             tone_rules=(
-                "Hook with a common kitchen habit or cooking myth people do every day.",
-                "Explain the chemical or biological mechanism (e.g. Maillard reaction, bacterial curve).",
-                "Use relatable kitchen analogies with pans, thermometers, and molecules.",
-                "End with one simple chef-science technique that improves food quality or safety.",
+                "Open at Day 0 inside the dormant seed coat or underground root network within 3 seconds.",
+                "Use chronological time-lapse progression (Day 1 -> Month 6 -> Year 50 -> Century 10) to reveal plant movement as active warfare.",
+                "Show split soil-and-canopy cross-sections of root xylem conduits, mycorrhizal fungal webs, and chemical defense toxins.",
+                "End with how this botanical strategy reshaped Earth's atmosphere or forest ecosystems.",
             ),
             hook_formulas=(
-                "The chemistry of reused cooking oil: what actually happens at 350 degrees?",
-                "Never thaw frozen meat in hot water: here is the bacteria math.",
-                "The Maillard reaction: why browning makes almost everything taste better.",
-                "Is the 5-second dropped food rule real? What microbiology says.",
+                "Year 1 to Year 200: how a strangler fig slowly devours a rainforest giant from the sky down.",
+                "Why some pine cones refuse to open until a wildfire burns the forest alive.",
+                "The 60-million-year hostage pact between a fig tree and a dying wasp.",
+                "How carnivorous pitcher plants lure, drown, and digest prey in acid rainwater.",
             ),
-            avoid=("Extreme fad diet preaching", "Sensational food fearmongering", "Rejecting peer-reviewed nutritional science"),
-            short_spec=_short((35, 50), "Did this kitchen rule surprise you? Tell us your cooking habits below."),
-            long_spec=_long((480, 720), "Master the science of delicious food with Kitchen Molecules on YouTube."),
+            avoid=("Treating plants as passive static scenery", "Childish cartoon flower faces", "Dry gardening tips without evolutionary storytelling"),
+            short_spec=_short((35, 50), "Did you know plants fought this fiercely in slow motion? Comment below."),
+            long_spec=_long((480, 720), "Watch the next botanical time-lapse survival story on Root & Canopy YouTube."),
             visual=VisualIdentity(
                 profile_id="ch_en_culinary_sticker",
-                label="Food science sticker-pop cartoon: die-cut white borders, cheerful culinary mascots Sunny and Sizzle",
+                label="Kew Gardens & Audubon Botanical Time-Lapse Codex: copperplate engraving, herbarium watercolor & soil strata cutaway",
                 style_description=(
-                    "Vibrant 2D die-cut sticker-pop food-science cartoon on warm buttercream canvas "
-                    "(#FFF9EB warm buttercream canvas, #FF6B6B sear coral, #FFD166 butter gold, #06D6A0 basil green, #118AB2 steam blue) "
-                    "with thick smooth outlines, chunky white sticker borders, and lively Maillard reaction sprites; "
-                    "orthographic 2D, at least 60% negative space, zero 3D, zero gradients."
+                    "Authentic 2D Kew Gardens and Audubon botanical copperplate ink engraving and pressed-herbarium watercolor wash on warm deckle-edge rag paper "
+                    "(#F4EFE0 fibrous herbarium paper, #1E241E botanical India ink cross-hatching, #3A6B4C chlorophyll forest green, #B85D3B underground soil-strata terracotta, #D4A359 amber resin gold); "
+                    "split above-and-below-ground soil strata cross-sections showing chronological seed germination (Day 1 to Year 200), root xylem networks, mycorrhizal fungal threads, and carnivorous leaf traps; "
+                    "orthographic 2D, tactile botanical museum plate texture, at least 60% negative space, zero 3D CGI, zero kawaii stickers, zero plastic AI glow, zero gradients."
                 ),
-                cast_appearance="Cheerful anthropomorphic culinary mascots — Sunny the golden egg, Sizzle the skillet sprite, and bouncy flavor-molecule buddies with big expressive eyes",
-                outfit="Tiny red chef kerchief on Sunny; cheerful blue steam plume on Sizzle sprite",
-                palette=("#FFF9EB", "#FF6B6B", "#FFD166", "#06D6A0", "#118AB2", "#2B2D42"),
-                thumbnail_rule="Sunny the egg character dodging a smoking pan + 2-4 uppercase words on buttercream canvas.",
+                cast_appearance="Botanical specimen cross-section plate drawn in fine copperplate dip-pen cross-hatching and mineral watercolor, tracing a living plant from buried seed coat cracking in dark terracotta soil strata up to mature forest canopy with brass magnifier callouts",
+                outfit="Natural botanical bark, root xylem vascular cross-sections, and copperplate taxonomic specimen labels, zero human clothing",
+                palette=("#F4EFE0", "#3A6B4C", "#B85D3B", "#D4A359", "#2B3A2E", "#1E241E"),
+                thumbnail_rule="Split soil-and-canopy cross-section of giant root network and germinating seed + 2-4 uppercase engraved words.",
             ),
             references=(
-                ReferenceChannel("MinuteFood", "YouTube", "long", "Snackable physics and chemistry behind everyday kitchen processes."),
-                ReferenceChannel("Adam Ragusea", "YouTube", "long", "Practical food science, kitchen myths, and culinary culinary realities."),
-                ReferenceChannel("On Food and Cooking by Harold McGee & Ultra-Processed People", "Book/Scripture", "long", "Masterwork of culinary chemistry, industrial food science, and emulsions."),
-                ReferenceChannel("MinuteFood Shorts", "TikTok/YouTube Shorts", "short", "Bite-sized 45-second cooking science myth-busters."),
+                ReferenceChannel("BBC Earth — The Green Planet (Sir David Attenborough)", "YouTube", "long", "Time-lapse cinematography framing plant growth as high-stakes predator-prey drama."),
+                ReferenceChannel("Crime Pays But Botany Doesn't & PBS Eons", "YouTube", "long", "Evolutionary botany, plant ecology, and deep-time floral history."),
+                ReferenceChannel("The Hidden Life of Trees by Peter Wohlleben & Finding the Mother Tree", "Book/Scripture", "long", "Mycorrhizal underground networks and forest survival strategies."),
+                ReferenceChannel("Botanical Time-Lapse Shorts", "TikTok/YouTube Shorts", "short", "60-second seed-to-canopy growth and carnivorous plant traps."),
             ),
             seed_topics=(
-                "The Chemistry of Reused Cooking Oil: What Actually Happens at 350 Degrees?",
-                "Never Thaw Frozen Meat in Hot Water—Here Is the Bacteria Math",
-                "The Maillard Reaction: Why Browning Makes Almost Everything Taste Better",
-                "Is the 5-Second Dropped Food Rule Real? What Microbiology Says",
-                "Why Honey Never Spoils While Fresh Bread Molds in Days",
+                "Year 1 to Year 200: How a Strangler Fig Slowly Devours a Rainforest Giant",
+                "Why Some Pine Cones Refuse to Open Until a Wildfire Burns the Forest Alive",
+                "The 60-Million-Year Hostage Pact Between a Fig Tree and a Dying Wasp",
+                "How Carnivorous Pitcher Plants Lure, Drown, and Digest Insects in Acid Rainwater",
+                "How Grass Conquered the Planet and Engineered Grazing Mammals",
             ),
-            hashtags=("#foodscience", "#cooking", "#chemistry", "#food", "#kitchen", "#science"),
-            monetization=("YouTube AdSense (long)", "Kitchen science temperature guide cheat sheets", "High-quality kitchenware sponsorship"),
+            hashtags=("#botany", "#plants", "#timelapse", "#evolution", "#naturedocumentary", "#lifecycle"),
+            monetization=("YouTube AdSense (long)", "Archival botanical copperplate herbarium prints", "Nature & science documentary sponsorship"),
             philosophy_id="cognition",
             voice="OmniVoice_EnKitchenMolecules",
             speed=1.0,
@@ -2661,79 +2664,81 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
                 render_mode="hybrid_motion",
                 fast_short_max_images=5,
                 spinoff_shorts_per_long=4,
-                remotion_motion_ratio=0.4,
+                remotion_motion_ratio=0.45,
                 estimated_short_minutes=(7, 10),
                 estimated_bundle_minutes=(28, 38),
-                notes="Remotion thermometer rise animation and molecular bonding visuals.",
+                notes="Remotion time-lapse Day/Year counters and underground root-growth cross-section reveals.",
             ),
             engagement=EngagementSpec(
-                cta_voice="Culinary science teacher",
+                cta_voice="Botanical time-lapse chronicler",
                 bridge_templates=(
-                    "Watch the complete cooking oil chemistry experiment on Kitchen Molecules YouTube.",
-                    "See all five kitchen science myth-busters in full on our YouTube channel.",
+                    "Watch the complete 200-year botanical time-lapse chronicle on Root & Canopy YouTube.",
+                    "See all five stages of underground root warfare on our main YouTube channel.",
                 ),
                 close_templates=(
-                    "Which cooking myth were you taught growing up? Share your kitchen story below.",
-                    "Try browning at higher heat next time and taste the chemical difference.",
+                    "Which plant survival strategy surprised you most? Share your thoughts below.",
+                    "Look closely at the trees around you tomorrow—an ancient slow-motion battle is unfolding.",
                 ),
                 endcard_text="FULL VIDEO ON YOUTUBE",
                 banned_cta_phrases=ALL_BANNED_CTA_PHRASES,
             ),
-            extra={"handle_candidates": ["@KitchenMolecules", "@KitchenMoleculesHQ", "@KitchenScienceInk", "@FoodMoleculesLab"]},
+            extra={
+                "brand_slug": "en_root_and_canopy",
+                "handle_candidates": ["@RootAndCanopy", "@RootAndCanopyHQ", "@SilentKingdomBotany", "@BotanicalCodexLab"],
+            },
         ),
         ChannelProfile(
             id="en_wait_how",
-            name="Wait, How?",
-            niche="Everyday physics paradoxes, debunked school myths & surprising natural phenomena",
-            promise="Answer everyday physical curiosities with delightful clarity so you see the world anew.",
-            audience="Curious adults, students, and thinkers who love asking why everyday things work the way they do",
-            persona="Playful Feynman-style physics teacher who explains bizarre phenomena effortlessly",
-            tone="Playful, mind-expanding, intuitive, lucid, wonder-filled",
+            name="Spawn to Apex",
+            niche="Extreme animal & insect metamorphosis, deep-sea life cycles & parasite survival chronicles",
+            promise="Trace nature's most extreme life cycles from microscopic spawn to final metamorphosis.",
+            audience="Curious adults, biology lovers, and viewers hooked on bizarre chronological life-cycle transformations",
+            persona="Natural history metamorphosis chronicler tracking Day-1 larvae through impossible biological transformations",
+            tone="Riveting, chronological, wonder-filled, lucid, documentary-grade biological storytelling",
             tone_rules=(
-                "Hook with an everyday observation that sounds intuitive but is completely misunderstood.",
-                "Show why the popular schoolbook explanation is subtly incomplete.",
-                "Use clear mechanical stickman doodles to illustrate the true physical force.",
-                "End with an 'aha' moment that changes how viewers see that phenomenon forever.",
+                "Open at the most fragile or bizarre stage of the creature's life cycle within 3 seconds.",
+                "Track every metamorphosis instar chronologically with exact Day/Hour milestones.",
+                "Use cutaway lithograph plates to show what happens inside the cocoon, shell, or deep-sea abyss.",
+                "End with the evolutionary payoff that makes this extreme life cycle worth the 99% mortality rate.",
             ),
             hook_formulas=(
-                "8 everyday science myths your school teachers got completely wrong.",
-                "Why mosquitoes only bite one specific person in a crowded room.",
-                "How airplanes actually stay up: why both popular explanations are incomplete.",
-                "Why ice is slippery even below freezing temperatures.",
+                "Inside the chrysalis: how a caterpillar completely dissolves into soup and rebuilds its brain.",
+                "Why every freshwater eel on Earth swims 4,000 miles to the Sargasso Sea just to die.",
+                "Day 1 to Day 17 Years: how periodical cicadas count the seasons underground.",
+                "How the immortal jellyfish reverses its own aging process back into a polyp.",
             ),
-            avoid=("Overly formal university tensor equations", "Clickbait without legitimate physical answers", "Conspiracy pseudoscience"),
-            short_spec=_short((35, 50), "Did your teacher teach you this myth too? Let us know below."),
-            long_spec=_long((480, 720), "Discover the wonder behind everyday physics on Wait How on YouTube."),
+            avoid=("Childish cartoon mascots", "Clickbait fake biology", "Skipping stages of the chronological life cycle"),
+            short_spec=_short((35, 50), "Which stage of this metamorphosis blew your mind? Let us know below."),
+            long_spec=_long((480, 720), "Follow our next extreme life-cycle chronicle on Spawn to Apex on YouTube."),
             visual=VisualIdentity(
                 profile_id="ch_en_sticker_pop",
-                label="Electric sticker-pop science mascot: bouncy star-spark creature Quark with question-mark antenna",
+                label="Merian Natural History Metamorphosis Plate: dip-pen lithograph & watercolor life-cycle rings on specimen vellum",
                 style_description=(
-                    "Energetic 2D sticker-pop science cartoon on warm cream canvas "
-                    "(#FFF6D6 warm cream, #FFD23F electric lemon, #FF6B6B coral red, #2EC4B6 bright teal, #7B2CBF proton violet) "
-                    "with bold smooth outlines, chunky white sticker borders, and eye-opening everyday physics curiosities; "
-                    "orthographic 2D, at least 60% negative space, zero 3D, zero gradients."
+                    "Authentic 2D Maria Sibylla Merian and natural-history museum metamorphosis lithograph and dip-pen watercolor plate on warm specimen vellum "
+                    "(#F6F0DD fibrous specimen vellum, #1A1D24 fine lithographic dip-pen ink, #2E6F65 deep-sea bioluminescent teal wash, #D97941 chrysalis amber, #8C3B4A gill carmine); "
+                    "chronological life-cycle progression diagrams (Egg -> Larval Instar -> Translucent Chrysalis Cutaway -> Mature Specimen) with brass magnifying-lens callouts; "
+                    "orthographic 2D, tactile scientific lithograph texture, at least 60% negative space, zero 3D CGI, zero cartoon stickers, zero plastic AI glow, zero gradients."
                 ),
-                cast_appearance="Recurring mascot Quark — a bouncy round electric-lemon (#FFD23F) star-spark creature with huge curious oval eyes, tiny floating hands and a hovering question-mark antenna",
-                outfit="Natural golden spark glow, tiny teal bow tie and floating question-mark antenna, no human clothes",
-                palette=("#FFF6D6", "#FFD23F", "#FF6B6B", "#2EC4B6", "#7B2CBF", "#1D3557"),
-                thumbnail_rule="Mascot Quark with giant shocked eyes looking at everyday mystery + 2-4 uppercase words.",
+                cast_appearance="Sequential natural-history metamorphosis plate drawn in fine dip-pen cross-hatching and watercolor wash on specimen vellum, showing translucent egg, larva, cutaway chrysalis, and mature organism framed by a brass naturalist magnifier",
+                outfit="Natural biological exoskeletons, translucent chrysalis membranes, and engraved taxonomic stage markers, no human clothing",
+                palette=("#F6F0DD", "#2E6F65", "#D97941", "#8C3B4A", "#1D3557", "#1A1D24"),
+                thumbnail_rule="Translucent cutaway of chrysalis or deep-sea larva metamorphosis + 2-4 uppercase engraved words on vellum.",
             ),
             references=(
-                ReferenceChannel("MinutePhysics", "YouTube", "long", "Stick-figure animations explaining deep physical laws simply."),
-                ReferenceChannel("MinutePhysics Shorts", "TikTok/YouTube Shorts", "short", "Punchy 45-second physics paradox and thought-experiment animations."),
-                ReferenceChannel("AsapSCIENCE", "YouTube", "long", "Fun, dynamic science answers to everyday curiosities."),
-                ReferenceChannel("What If? by Randall Munroe (xkcd)", "Book/Scripture", "long", "Serious scientific answers to absurd hypothetical questions."),
-                ReferenceChannel("Steve Mould", "YouTube", "long", "Hands-on physical demonstrations of bizarre fluid and mechanical paradoxes."),
+                ReferenceChannel("Ze Frank & Deep Look (KQED)", "YouTube", "long", "Macro biological storytelling of insect metamorphosis, parasites, and marine life cycles."),
+                ReferenceChannel("Deep Look Shorts", "TikTok/YouTube Shorts", "short", "High-retention 45-second close-up metamorphosis and survival hooks."),
+                ReferenceChannel("Metamorphosis Insectorum Surinamensium by Maria Sibylla Merian", "Book/Scripture", "long", "Pioneering chronological life-cycle illustration uniting egg, larva, pupa, and host plant."),
+                ReferenceChannel("Journey to the Microcosmos", "YouTube", "long", "Poetic, hypnotic narration of microscopic and larval life cycles."),
             ),
             seed_topics=(
-                "8 Everyday Science Myths Your School Teachers Got Completely Wrong",
-                "Why Mosquitoes Only Bite One Specific Person in a Crowded Room",
-                "How Airplanes Actually Stay Up (Why Both Popular Explanations Are Incomplete)",
-                "Why Ice Is Slippery Even Below Freezing Temperature",
-                "Why Mirrors Flip Left and Right—But Never Top and Bottom",
+                "Inside the Chrysalis: How a Caterpillar Dissolves into Liquid and Rebuilds Its Brain",
+                "Why Every Eel on Earth Swims 4,000 Miles to the Sargasso Sea Just to Spawn and Die",
+                "17 Years Underground: How Periodical Cicadas Count Tree Sap Cycles in the Dark",
+                "The Immortal Jellyfish: How Turritopsis Dohrnii Reverses Its Own Life Cycle",
+                "How the Axolotl Refused to Grow Up—And Unlocked Whole-Limb Regeneration",
             ),
-            hashtags=("#physics", "#science", "#waithow", "#curiosity", "#education", "#stem"),
-            monetization=("YouTube AdSense (long)", "Illustrated science paradox poster prints", "Science educational app sponsor"),
+            hashtags=("#metamorphosis", "#lifecycle", "#biology", "#nature", "#evolution", "#science"),
+            monetization=("YouTube AdSense (long)", "Natural history metamorphosis lithograph prints", "Science & wildlife documentary sponsor"),
             philosophy_id="cognition",
             voice="OmniVoice_EnWaitHow",
             speed=1.0,
@@ -2743,25 +2748,28 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
                 render_mode="hybrid_motion",
                 fast_short_max_images=5,
                 spinoff_shorts_per_long=4,
-                remotion_motion_ratio=0.4,
+                remotion_motion_ratio=0.45,
                 estimated_short_minutes=(7, 10),
                 estimated_bundle_minutes=(28, 38),
-                notes="Remotion trajectory particle bursts and optical ray path animations.",
+                notes="Remotion chronological Stage 1-4 metamorphosis wheel and cutaway zoom transitions.",
             ),
             engagement=EngagementSpec(
-                cta_voice="Inquisitive science explorer",
+                cta_voice="Natural history metamorphosis chronicler",
                 bridge_templates=(
-                    "Watch the complete aerodynamics breakdown on Wait How YouTube channel.",
-                    "See all eight school science myths debunked on our main YouTube channel.",
+                    "Watch the complete Egg-to-Apex metamorphosis chronicle on Spawn to Apex YouTube.",
+                    "See every larval stage and cellular cutaway in full on our main YouTube channel.",
                 ),
                 close_templates=(
-                    "Which everyday mystery has always puzzled you? Tell us in the comments.",
-                    "Look closely at this phenomenon tomorrow and see the physics at play.",
+                    "Which biological transformation amazed you most? Tell us in the comments.",
+                    "Join us next time as we trace another impossible life cycle from Day 1.",
                 ),
                 endcard_text="FULL VIDEO ON YOUTUBE",
                 banned_cta_phrases=ALL_BANNED_CTA_PHRASES,
             ),
-            extra={"handle_candidates": ["@WaitHowScience", "@WaitHowDoodle", "@WaitHowExplained", "@WaitHowLab"]},
+            extra={
+                "brand_slug": "en_spawn_to_apex",
+                "handle_candidates": ["@SpawnToApex", "@SpawnToApexHQ", "@MetamorphosisFiles", "@LifeCycleCodex"],
+            },
         ),
         ChannelProfile(
             id="en_cold_case_ink",
@@ -2950,17 +2958,17 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             long_spec=_long((480, 720), "Journey through the wonders of spacetime with Pocket Cosmos on YouTube."),
             visual=VisualIdentity(
                 profile_id="ch_en_cosmos_vector",
-                label="Deep-space geometric vector: Kurzgesagt-style cosmic indigo, vibrant nebula colors, robotic probe Nova",
+                label="Royal Observatory Celestial Copperplate Engraving & Brass Astrolabe Chart: deep indigo rag paper, engraved orbits",
                 style_description=(
-                    "Vibrant Kurzgesagt-inspired 2D flat geometric space vector art on deep space indigo canvas "
-                    "(#0B1026 deep space indigo, #4CC9F0 pulsar cyan, #F72585 nebula magenta, #FFD166 solar gold, #7209B7 cosmic violet) "
-                    "with clean lineless rounded vector forms, geometric celestial spheres, gravitational lensing curves; "
-                    "orthographic 2D, at least 60% negative space, zero 3D, zero gradients."
+                    "Authentic 19th-century Royal Observatory 2D celestial copperplate ink engraving and hand-tinted astrolabe chart on deep cosmic-indigo cotton paper "
+                    "(#0B1026 deep indigo rag paper grain, #F4EFE6 chalk-ivory engraved orbit lines, #4CC9F0 pulsar cyan ink wash, #FFD166 brass astrolabe gold, #D9534F red-shift carmine) "
+                    "with fine cross-hatched celestial spheres, hand-drafted gravitational lensing meshes, and brass telescope dial callouts; "
+                    "orthographic 2D, tactile antique star-chart texture, at least 60% negative space, zero 3D CGI, zero cartoon robot mascots, zero plastic AI glow, zero gradients."
                 ),
-                cast_appearance="Cute spherical golden-and-white deep-space probe mascot Nova with a glowing cyan digital eye and tiny solar-panel wings orbiting luminous geometric planets",
-                outfit="Polished white ceramic body shell with gold accents and solar-panel wings, no human clothing",
-                palette=("#0B1026", "#4CC9F0", "#F72585", "#FFD166", "#7209B7", "#FFFFFF"),
-                thumbnail_rule="Mascot Nova orbiting a glowing ringed planet + 2-4 uppercase words on deep indigo.",
+                cast_appearance="Antique brass observatory astrolabe and copperplate-engraved astronomer's hand with brass dividers tracing relativistic spacetime curvature and planetary orbits on deep indigo chart paper",
+                outfit="Engraved brass astrolabe rings, ivory parchment coordinate scales, and dip-pen ink annotations, no cartoon mascot clothing",
+                palette=("#0B1026", "#F4EFE6", "#4CC9F0", "#FFD166", "#D9534F", "#FFFFFF"),
+                thumbnail_rule="Copperplate-engraved black hole gravitational well and brass astrolabe + 2-4 uppercase engraved words on deep indigo.",
             ),
             references=(
                 ReferenceChannel("Kurzgesagt – Space Series", "YouTube", "long", "Cosmic scale, existential risks, and theoretical astrophysics visualized."),
@@ -3089,56 +3097,56 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
         ),
         ChannelProfile(
             id="en_parable_lamp",
-            name="Parable & Lamp",
-            niche="Biblical parables, wisdom of Proverbs & Ecclesiastes, forgiveness, grace & hope illustrated",
-            promise="Illuminate timeless biblical parables, wisdom literature, and hope with heartwarming stick figures.",
-            audience="Faith seekers, lovers of timeless moral parables, and viewers seeking forgiveness and hope",
-            persona="Kind biblical storyteller unpacking ancient wisdom with warmth, grace, and humility",
-            tone="Warm, inspiring, reflective, gracious, literary",
+            name="Deep Time Strata",
+            niche="Paleo-evolutionary turning points, geological strata epochs, mass extinctions & ancient ecosystems",
+            promise="Excavate Earth's geological strata to witness how life survived five mass extinctions and conquered dry land.",
+            audience="Paleontology enthusiasts, deep-time history fans, and viewers captivated by ancient Earth ecosystems",
+            persona="Deep-time paleontologist narrating Earth's ancient ecosystems and evolutionary bottlenecks layer by rock layer",
+            tone="Epic, investigative, chronological, grounded in paleontology and geological stratigraphy",
             tone_rules=(
-                "Begin with an ancient moral parable and its immediate modern parallel.",
-                "Unpack the historical context and original literary meaning with care.",
-                "Emphasize forgiveness, self-examination, and stewardship over moral superiority.",
-                "End with an uplifting message of hope, reconciliation, and quiet purpose.",
+                "Open at a specific geological boundary layer (e.g. 252 million years ago during the Great Dying) within 3 seconds.",
+                "Unpack the chain reaction across ocean chemistry, atmosphere, and ancient reptiles/flora chronologically.",
+                "Use carved rock-strata cross-sections and fossil specimen plates to show what vanished and what adapted.",
+                "End with how that ancient evolutionary bottleneck shaped the anatomy of living creatures today.",
             ),
             hook_formulas=(
-                "The Parable of the Talents explained: what a 2,000-year-old story reveals about fear.",
-                "Why forgiving someone who hurt you is the only way to set yourself free.",
-                "The Prodigal Son: why both brothers missed the father's heart.",
-                "5 timeless lessons on wealth and humility from the Book of Proverbs.",
+                "When giant 100-foot fungi ruled the Earth before trees even evolved.",
+                "The Great Dying: how a tiny burrowing synapsid survived the worst extinction in Earth's history.",
+                "Why Evolution keeps turning completely unrelated animals into crabs (Carcinisation).",
+                "How a 60-million-year gap without wood-eating microbes created all the coal on Earth.",
             ),
-            avoid=("Sectarian doctrinal attacks", "Doomsday condemnation or fear-based messaging", "Twisting ancient texts out of context"),
-            short_spec=_short((35, 50), "Has this parable spoken to your journey today? Let us know below."),
-            long_spec=_long((480, 720), "Discover more timeless biblical wisdom on Parable & Lamp on YouTube."),
+            avoid=("Hollywood movie monster clichés", "Creationist or pseudoscientific timelines", "Dry mineral lists without survival drama"),
+            short_spec=_short((35, 50), "Which prehistoric epoch would you be most terrified to visit? Comment below."),
+            long_spec=_long((480, 720), "Excavate our next deep-time geological chronicle on Deep Time Strata on YouTube."),
             visual=VisualIdentity(
                 profile_id="ch_en_parable_woodcut",
-                label="Carved woodblock parable print: BibleProject linocut relief, radiant oil-lamp gold, ancient parchment",
+                label="Carved Paleo-Lithograph & Geological Strata Woodcut: aged fossil parchment, relief gouge lines, amber & fern green",
                 style_description=(
-                    "Expressive BibleProject-inspired 2D carved woodblock and linocut parable print on aged parchment canvas "
-                    "(#EFE4C8 aged parchment, #1E1E1E bold carved woodcut ink, #D9A520 glowing lamp gold, #5E7D3A olive-leaf green, #A44A3F Galilean terracotta); "
-                    "textured relief gouge lines, radiant lamps, olive trees and timeless architectural arches; "
-                    "orthographic 2D, at least 60% negative space, zero 3D, zero gradients."
+                    "Expressive 2D carved paleo-lithograph and linocut geological strata print on aged fossil-matrix parchment "
+                    "(#EFE4C8 aged fossil parchment, #1E1E1E bold carved woodcut ink, #D9A520 amber fossil gold, #5E7D3A Carboniferous fern green, #A44A3F Permian red-bed terracotta); "
+                    "textured woodblock relief gouge lines, geological rock-strata timelines, fossilized skeletons, amniotic eggs, and ancient giant fern forests; "
+                    "orthographic 2D, tactile hand-carved printmaking texture, at least 60% negative space, zero 3D CGI, zero plastic AI glow, zero gradients."
                 ),
-                cast_appearance="Warm woodcut human parable narrator in ancient woven cloak holding a radiant golden clay oil lamp and olive branch",
-                outfit="Hand-carved Galilean terracotta tunic draped under a woven ochre mantle, no modern garments",
+                cast_appearance="Carved woodcut field paleontologist in rugged expedition canvas coat holding a brass geological hammer and oil lantern beside stratified fossil cliff layers and prehistoric tetrapod footprints",
+                outfit="Hand-carved terracotta-and-ochre expedition canvas coat with leather field satchel and geological hammer, zero modern plastic details",
                 palette=("#EFE4C8", "#1E1E1E", "#D9A520", "#5E7D3A", "#A44A3F"),
-                thumbnail_rule="Woodcut narrator holding radiant oil lamp in dark courtyard + 2-4 uppercase words.",
+                thumbnail_rule="Woodcut geological cliff strata revealing giant fossil skeleton and amber egg + 2-4 uppercase carved words.",
             ),
             references=(
-                ReferenceChannel("BibleProject", "YouTube", "long", "Literary analysis and visual theology of biblical narratives."),
-                ReferenceChannel("IMBeggar", "YouTube", "long", "Poetic, hand-drawn reflections on forgiveness, humility, and grace."),
-                ReferenceChannel("Ascension Presents", "YouTube", "long", "Practical life wisdom derived from timeless moral scriptures."),
-                ReferenceChannel("BibleProject Shorts", "YouTube Shorts", "short", "60-second word studies and visual parable summaries."),
+                ReferenceChannel("PBS Eons & Moth Light Media", "YouTube", "long", "Deep-time paleontology, obscure evolutionary lineages, and mass extinction reconstructions."),
+                ReferenceChannel("History of the Earth", "YouTube", "long", "Chronological epoch-by-epoch documentary storytelling of ancient biospheres."),
+                ReferenceChannel("The Ends of the World by Peter Brannen & Annals of the Former World", "Book/Scripture", "long", "Geological stratigraphy and the five mass extinctions."),
+                ReferenceChannel("PBS Eons Shorts", "YouTube Shorts", "short", "60-second fossil mysteries and deep-time evolutionary twists."),
             ),
             seed_topics=(
-                "The Parable of the Talents Explained: What a 2,000-Year-Old Story Reveals About Fear",
-                "Why Forgiving Someone Who Hurt You Is the Only Way to Set Yourself Free",
-                "The Prodigal Son: Why Both Brothers Missed the Father's Heart",
-                "5 Timeless Lessons on Wealth and Humility from the Book of Proverbs",
-                "The Good Samaritan: Why Compassion Always Crosses Invisible Boundaries",
+                "When Giant 30-Foot Fungi Ruled the Continents Before Trees Evolved",
+                "The Great Dying: How One Burrowing Creature Survived the Permian Extinction",
+                "Why Evolution Keeps Turning Unrelated Crustaceans into Crabs (Carcinisation)",
+                "How the Carboniferous Forest Fire Era Created Earth's Coal Seams",
+                "How the First Tetrapods Crawled Out of Devonian Mud onto Dry Land",
             ),
-            hashtags=("#parables", "#wisdom", "#hope", "#faith", "#proverbs", "#forgiveness"),
-            monetization=("YouTube AdSense (long)", "Illustrated proverb study cards", "Christian literature and family audiobooks partner"),
+            hashtags=("#paleontology", "#deeptime", "#evolution", "#geology", "#fossils", "#prehistoric"),
+            monetization=("YouTube AdSense (long)", "Carved geological strata & fossil timeline prints", "Natural history museum & science sponsor"),
             philosophy_id="cognition",
             voice="OmniVoice_EnParableLamp",
             speed=1.0,
@@ -3151,22 +3159,25 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
                 remotion_motion_ratio=0.45,
                 estimated_short_minutes=(7, 10),
                 estimated_bundle_minutes=(28, 38),
-                notes="Remotion warm lamp glow overlays and parchment scroll unroll animations.",
+                notes="Remotion Million-Year geological depth counter and rock-strata scroll transitions.",
             ),
             engagement=EngagementSpec(
-                cta_voice="Gracious parable storyteller",
+                cta_voice="Deep-time paleontologist",
                 bridge_templates=(
-                    "Watch the complete Parable of the Talents breakdown on Parable & Lamp YouTube.",
-                    "See all five lessons on wisdom and grace on our main YouTube channel.",
+                    "Watch the complete Permian extinction chronicle on Deep Time Strata YouTube.",
+                    "See all five geological epochs excavated in full on our main YouTube channel.",
                 ),
                 close_templates=(
-                    "May this reminder bring peace, forgiveness, and renewal to your week ahead.",
-                    "Share this timeless story with someone who needs a word of encouragement.",
+                    "Which ancient evolutionary survivor fascinated you most? Share below.",
+                    "Every rock layer beneath your feet holds an entire lost world. See you in the next epoch.",
                 ),
                 endcard_text="FULL VIDEO ON YOUTUBE",
                 banned_cta_phrases=ALL_BANNED_CTA_PHRASES,
             ),
-            extra={"handle_candidates": ["@ParableAndLamp", "@ParableAndLampHQ", "@ParableLampDoodle", "@TheParableLamp"]},
+            extra={
+                "brand_slug": "en_deep_time_strata",
+                "handle_candidates": ["@DeepTimeStrata", "@DeepTimeStrataHQ", "@PaleoStrataCodex", "@TheDeepTimeStrata"],
+            },
         ),
         ChannelProfile(
             id="en_bamboo_marble",
@@ -3267,9 +3278,18 @@ def channel_ids() -> List[str]:
     return list(channels())
 
 
+CHANNEL_ALIASES: Dict[str, str] = {
+    "en_scale_and_bone": "en_plain_sight_ai",
+    "en_root_and_canopy": "en_kitchen_molecules",
+    "en_spawn_to_apex": "en_wait_how",
+    "en_deep_time_strata": "en_parable_lamp",
+}
+
+
 def get_channel(channel_id: str) -> ChannelProfile:
     key = (channel_id or "").strip()
-    found = channels().get(key)
+    resolved_key = CHANNEL_ALIASES.get(key, key)
+    found = channels().get(resolved_key)
     if found is None:
         raise ValueError(f"Unknown channel '{key}'. Allowed: {sorted(channels())}")
     return found

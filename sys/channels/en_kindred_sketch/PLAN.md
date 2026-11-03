@@ -53,13 +53,13 @@
 - Armchair relationship diagnosis
 
 ## 4. Phong Cách Hình Ảnh & Thumbnail Flow Native
-- **Visual Profile ID:** `ch_en_pastel_duo` — Soft pastel warm-line duo: Psych2Go-inspired empathetic characters Leo and Maya on warm cream
+- **Visual Profile ID:** `ch_en_pastel_duo` — Cold-Press Watercolor & Charcoal Pencil Sketchbook: warm human linework of Leo and Maya on cotton paper
 - **Bảng màu khóa cứng:** `#FFF8F0`, `#5B4636`, `#F7C6C7`, `#CDB4DB`, `#BDE0C6`, `#FFF1B5`
-- **Tạo hình nhân vật (`CAST_APPEARANCE`):** Recurring expressive young couple and friends duo — Leo (warm wavy brown hair, kind eyes, flat mint sweater) and Maya (shoulder-length dark bob hair, expressive eyes, flat blush cardigan)
-- **Trang phục (`DEFAULT_OUTFIT`):** Leo in flat sage-mint (#BDE0C6) crewneck sweater; Maya in soft blush-pink (#F7C6C7) button cardigan
-- **Luật Thumbnail (100% Flow Native, `overlay_card: false`):** Leo and Maya having an honest conversation + 2-4 uppercase words on soft cream canvas.
+- **Tạo hình nhân vật (`CAST_APPEARANCE`):** Recurring hand-sketched couple and friends duo drawn in warm charcoal pencil and watercolor wash — Leo (tousled brown hair, expressive ink eyes, sage knit sweater) and Maya (shoulder-length dark bob hair, warm eyes, muted rose cardigan)
+- **Trang phục (`DEFAULT_OUTFIT`):** Leo in hand-washed sage-mint (#BDE0C6) textured knit sweater; Maya in muted rose (#F7C6C7) button cardigan with pencil-sketched cuffs
+- **Luật Thumbnail (100% Flow Native, `overlay_card: false`):** Charcoal-and-watercolor sketch of Leo and Maya in candid emotional tension + 2-4 uppercase hand-lettered words.
 - **Prompt Style gốc:**
-  > Soft Psych2Go-inspired 2D pastel line-art illustration on warm cream canvas (#FFF8F0 warm cream canvas, #5B4636 smooth warm-espresso outlines, #F7C6C7 blush pink, #CDB4DB soft lavender, #BDE0C6 sage mint, #FFF1B5 butter yellow); gentle emotional storytelling, warm domestic and relational vignettes; orthographic 2D, at least 60% negative space, zero 3D, zero gradients.
+  > Tactile 2D charcoal-pencil and mineral watercolor sketchbook illustration on cold-press cotton rag paper (#FFF8F0 textured cotton paper, #5B4636 raw umber graphite-and-ink outlines, #F7C6C7 muted rose wash, #CDB4DB dusty iris, #BDE0C6 dry sage watercolor, #FFF1B5 raw sienna wash); visible pencil construction strokes, organic watercolor paper bleed, intimate human storytelling vignettes; orthographic 2D, authentic hand-painted paper grain, at least 60% negative space, zero 3D CGI, zero plastic AI sheen, zero smooth digital gradients.
 
 ## 5. Tối Ưu Thời Gian Sản Xuất (Kết Hợp Flow CDP + Remotion / Hyperframes)
 - **Chế độ Render chủ đạo:** `hybrid_motion` (Tỷ lệ đồ họa động Remotion/Hyperframes: **45%**)

@@ -8,7 +8,7 @@
 - **Lời hứa thương hiệu (Value Proposition):** Một mẹo AI làm được ngay trong 1 phút, không cần biết code.
 - **Khán giả mục tiêu:** Người đi làm văn phòng, sinh viên, chủ shop nhỏ
 - **Nhân vật dẫn chuyện (Persona):** Đồng nghiệp rành công nghệ, chỉ từng bước 'làm theo liền'
-- **Giọng văn (Tone):** Thực chiến, nhanh, hào hứng, chỉ từng bước | **Giọng TTS:** `VietNarrator` (1.0x)
+- **Giọng văn (Tone):** Thực chiến, nhanh, hào hứng, chỉ từng bước | **Giọng TTS:** `VietNarrator` (1.07x)
 - **Phân tách nền tảng bắt buộc:**
   - **TikTok (`short_9x16` — 9:16):** Video ngắn 30–60s, nhịp chuyển cảnh 2–5s. Mục tiêu: Lên xu hướng FYP, kéo follow và gắn Affiliate / dẫn phễu.
   - **YouTube (`long_16x9` — 16:9):** Video dài 10–20 phút, nhịp pattern-interrupt 20–30s. Mục tiêu: Bật kiếm tiền AdSense RPM cao & xây dựng uy tín lâu dài.

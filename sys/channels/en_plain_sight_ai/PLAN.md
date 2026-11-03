@@ -1,44 +1,44 @@
-# KẾ HOẠCH CHI TIẾT KÊNH: PLAIN SIGHT AI (`en_plain_sight_ai`)
+# KẾ HOẠCH CHI TIẾT KÊNH: SCALE & BONE (`en_plain_sight_ai`)
 
 ## 1. Định Vị Kênh & Phân Tách Nền Tảng
 - **Mã kênh:** `en_plain_sight_ai` (Đợt triển khai: Wave 4)
 - **Nhánh GitHub độc lập:** `channel/en-plain-sight-ai` (`origin/channel/en-plain-sight-ai`)
 - **Thư mục phát triển trên máy:** `/home/hongphuoc6104/Desktop/vp-channels/channel-en-plain-sight-ai`
-- **Ngách nội dung:** Practical no-code AI workflows, prompt engineering & office automation for regular people
-- **Lời hứa thương hiệu (Value Proposition):** Demystify AI tools and provide repeatable 3-step prompt workflows that save hours of work.
-- **Khán giả mục tiêu:** Office workers, students, creators, and freelancers who want practical AI utility without coding
-- **Nhân vật dẫn chuyện (Persona):** Down-to-earth tech guide who cuts through hype to deliver genuinely useful workflows
-- **Giọng văn (Tone):** Direct, practical, encouraging, step-by-step, no-BS | **Giọng TTS:** `OmniVoice_EnPlainSightAI` (1.0x)
+- **Ngách nội dung:** Reptile & amphibian evolution, egg-to-apex life-cycle survival stories & ancient biomechanics
+- **Lời hứa thương hiệu (Value Proposition):** Follow the visceral life-cycle of reptiles from leathery egg to apex survivor across 300 million years of evolution.
+- **Khán giả mục tiêu:** Nature documentary lovers, evolutionary biology fans, and viewers captivated by survival life-cycles
+- **Nhân vật dẫn chuyện (Persona):** Field herpetologist and evolutionary anatomist narrating chronological survival from Day-1 hatchling to apex predator
+- **Giọng văn (Tone):** Visceral, chronological, suspenseful, documentary-grade, grounded in evolutionary biomechanics | **Giọng TTS:** `OmniVoice_EnPlainSightAI` (1.0x)
 - **Phân tách nền tảng bắt buộc:**
   - **TikTok (`short_9x16` — 9:16):** Video ngắn 35–50s, nhịp chuyển cảnh 2–5s. Mục tiêu: Lên xu hướng FYP, kéo follow và gắn Affiliate / dẫn phễu.
   - **YouTube (`long_16x9` — 16:9):** Video dài 8–12 phút, nhịp pattern-interrupt 20–30s. Mục tiêu: Bật kiếm tiền AdSense RPM cao & xây dựng uy tín lâu dài.
 
 ## 2. Kênh Mẫu Tham Chiếu (Bám Theo Cấu Trúc Đã Kiểm Chứng)
 ### Kênh mẫu TikTok Short (`short_9x16`)
-- **Jeff Su Shorts** (TikTok/YouTube Shorts): 60-second productivity and prompt tips.
+- **Natural History Life-Cycle Shorts** (TikTok/YouTube Shorts): 60-second egg-to-apex reptile survival timelines.
 ### Kênh mẫu YouTube Long (`long_16x9`)
-- **Jeff Su** (YouTube): Practical productivity hacks, prompt structures, and office automation.
-- **Matt Wolfe** (YouTube): Curated evaluations of genuinely useful AI software and workflows.
-- **Anthropic & OpenAI Official Prompt Engineering Guides** (Book/Scripture): Systematic chain-of-thought and few-shot structuring benchmarks.
+- **PBS Eons** (YouTube): Chronological deep-time evolutionary storytelling and fossil biomechanics.
+- **TierZoo & Clint's Reptiles** (YouTube): Engaging herpetology, reptile survival mechanics, and evolutionary trade-offs.
+- **Your Inner Fish by Neil Shubin & The Rise and Fall of the Dinosaurs** (Book/Scripture): Comparative vertebrate anatomy and amniotic egg evolution.
 
 ## 3. Luật Viết Kịch Bản & Công Thức Hook
 ### Nguyên tắc giọng kể
-- Hook with a tedious office task that usually takes two hours.
-- Demonstrate the exact prompt formula and structure step by step.
-- Highlight the verification step to catch AI hallucinations cleanly.
-- End with a copy-pasteable prompt template viewers can use immediately.
+- Open inside the leathery egg or at Day 1 of the hatchling's survival gauntlet within 3 seconds.
+- Follow a strict chronological life-cycle arc: Egg -> Hatchling Sprint -> Juvenile Molting -> Adult Biomechanics -> Deep-Time Evolution.
+- Reveal anatomical cross-sections of venom glands, thermal pit organs, or osteoderm bone armor.
+- End with how this ancient reptile body plan survived mass extinctions that wiped out rival species.
 ### Công thức Hook 3 giây đầu (viết 3 bản A/B/C, chấm điểm bằng `script_hook_scorer.py`)
-- `Why buying expensive AI tools wastes your time: 3 free workflows that work.`
-- `Stop asking AI to write an email: use this 3-part prompt structure instead.`
-- `How to audit any contract for hidden red flags in 60 seconds with AI.`
-- `5 repeatable AI workflows that save 2 hours of office work every day.`
+- `From Day 1 to Year 15: how a tiny Komodo hatchling survives a forest of cannibal adults.`
+- `Inside the leathery egg: how reptiles broke free from the ocean 310 million years ago.`
+- `How snakes lost all four legs and evolved infrared thermal vision instead.`
+- `Why the crocodile body plan has barely changed since before the dinosaurs.`
 ### Cấu trúc giữ chân TikTok Short (`short_9x16`)
 1. Hook <= 3s: shocking claim or relatable pain + striking first frame
 1. Open loop: promise the answer, delay it
 1. Escalation beats every 2-5s (new visual, number or twist)
 1. Payoff: answer the loop in one clear image
 1. Closing line
-- **Câu kết (CTA):** Which repetitive task would you like automated next? Comment below.
+- **Câu kết (CTA):** Which stage of this reptile's life cycle amazed you most? Comment below.
 ### Cấu trúc giữ chân YouTube Long (`long_16x9`)
 1. Cold open 0-30s: strongest scene of the video, no channel intro
 1. Stakes: why this matters to the viewer's own life
@@ -46,49 +46,49 @@
 1. Pattern interrupt every 20-30s (story, number, visual gag)
 1. Synthesis + practical takeaway
 1. Closing line pointing to the next video
-- **Câu kết (CTA):** Download our free prompt workflow library on Plain Sight AI YouTube.
+- **Câu kết (CTA):** Explore our next evolutionary life-cycle chronicle on Scale & Bone YouTube.
 ### Điều cấm kỵ (Avoid)
-- Selling get-rich-quick AI gimmicks
-- Promoting unverified AI wrapper tools
-- Overly complex code installations
+- Plastic 3D CGI monsters
+- Dry textbook taxonomy lists without chronological story
+- Sensationalized fake creature myths
 
 ## 4. Phong Cách Hình Ảnh & Thumbnail Flow Native
-- **Visual Profile ID:** `ch_en_ai_doodle` — Plain Sight AI Doodle — Violet hoodie stickman, browser frames and prompt cards
-- **Bảng màu khóa cứng:** `#FFFFFF`, `#7C5CFF`, `#3B82C4`, `#34D399`, `#2E4361`, `#000000`
-- **Tạo hình nhân vật (`CAST_APPEARANCE`):** Iconic 2D doodle stickman with oversized white (#FFFFFF) bald circle head, clean black outline, tech-savvy dot eyes, wire arms, and round circle hands
-- **Trang phục (`DEFAULT_OUTFIT`):** Flat violet hoodie (#7C5CFF) with subtle cyan accent, no shading
-- **Luật Thumbnail (100% Flow Native, `overlay_card: false`):** Stickman comparing an empty prompt vs a 3-part structure + 2-4 uppercase bold words.
+- **Visual Profile ID:** `ch_en_ai_doodle` — Darwin & Haeckel Zoological Field Codex: copperplate dip-pen cross-hatching & mineral watercolor on cotton rag paper
+- **Bảng màu khóa cứng:** `#F2EAD7`, `#4A6B53`, `#C86D51`, `#D9C5A0`, `#2E4361`, `#1C1917`
+- **Tạo hình nhân vật (`CAST_APPEARANCE`):** Iconic 2D field-expedition doodle stickman naturalist with oversized hand-drawn white (#FFFFFF) bald circle head, dip-pen black outline, expedition pith-helmet brim, wire arms, and round circle hands holding brass calipers beside detailed copperplate reptile specimens
+- **Trang phục (`DEFAULT_OUTFIT`):** Matte olive-khaki (#4A6B53) field naturalist waistcoat with brass specimen magnifying lens, zero digital shading
+- **Luật Thumbnail (100% Flow Native, `overlay_card: false`):** Cross-section of reptile hatchling emerging from leathery egg on naturalist field codex + 2-4 uppercase inked words.
 - **Prompt Style gốc:**
-  > Hand-drawn 2D practical AI workflow doodle explainer: wobbly black marker outlines (#000000), flat unshaded fills in clean white (#FFFFFF), electric violet (#7C5CFF), tech cobalt (#3B82C4), mint green (#34D399) and dark slate (#2E4361) on a solid white canvas (#FFFFFF); stickman in violet hoodie pointing at clean browser cards, clipboard checklists, and prompt tags; orthographic 2D, minimal, at least 60% negative space, zero 3D.
+  > Authentic 19th-century Darwin and Haeckel naturalist zoological field codex illustration on aged cotton rag paper (#F2EAD7 deckle-edge paper grain): razor-sharp iron-gall dip-pen cross-hatching (#1C1917), muted mineral watercolor washes in reptile olive-scale (#4A6B53), venom-gland ochre (#C86D51), fossil bone ivory (#D9C5A0) and slate (#2E4361); chronological life-cycle specimen plates (leathery egg cross-section, Day-1 hatchling, skin-shedding ecdysis, hollow fang biomechanics, and osteoderm armor) alongside a field naturalistsketchingstickman observer; orthographic 2D, tactile museum engraving texture, at least 60% negative space, zero 3D CGI, zero plastic AI sheen, zero gradients.
 
 ## 5. Tối Ưu Thời Gian Sản Xuất (Kết Hợp Flow CDP + Remotion / Hyperframes)
-- **Chế độ Render chủ đạo:** `screen_capture_hybrid` (Tỷ lệ đồ họa động Remotion/Hyperframes: **50%**)
+- **Chế độ Render chủ đạo:** `hybrid_motion` (Tỷ lệ đồ họa động Remotion/Hyperframes: **45%**)
 - **Số ảnh Flow tối đa cho 1 TikTok Fast-Short:** **5 ảnh** (nhịp 2–4s/chuyển cảnh được tạo bằng Remotion camera beats, zoom/pan, kinetic badges).
 - **Số TikTok Spin-off trích xuất từ 1 YouTube Long:** **4 video ngắn** (qua `sys/omni_platform.py`, **0 phút sinh thêm ảnh Flow**).
 - **Thời gian mục tiêu:** **6–9 phút** cho 1 TikTok Short độc lập; **24–34 phút** cho trọn bộ (1 YouTube Long + 4 TikTok Shorts).
-- **Chiến thuật tốc độ riêng của kênh:** Remotion interactive prompt typing previews and verification checklists.
+- **Chiến thuật tốc độ riêng của kênh:** Remotion chronological Day-1 to Year-15 timeline counters and anatomical cross-section callouts.
 
 ## 6. Lộ Trình Sản Xuất Tuần 1 (1 YouTube Long + Chuỗi TikTok Shorts)
 ### YouTube Long #1 (`long_16x9`)
-- **Tiêu đề:** *Why Buying Expensive AI Tools Wastes Time: 3 Practical Free Workflows That Work*
-- **Thời lượng:** 11 minutes (22 scenes)
-- **Câu mở đầu (Cold Open):** "Stop paying for fancy AI wrapper apps when three basic prompt structures do the job faster."
+- **Tiêu đề:** *From Egg to Cannibal Forest: How a Baby Komodo Dragon Survives Its First 5 Years*
+- **Thời lượng:** 13 minutes (26 scenes)
+- **Câu mở đầu (Cold Open):** "The moment a baby Komodo dragon slices through its leathery egg, its biggest predator is waiting right outside the nest: its own mother."
 ### Danh sách TikTok Shorts Tuần 1 (`short_9x16`)
-- **Spin-off #1 (0 new images):** *prompt structure test* (45s)
-- **Spin-off #2 (0 new images):** *Stop asking AI to write an email: use this 3-part prompt structure instead.* (40s)
-- **Spin-off #3 (0 new images):** *How to audit any contract for hidden red flags in 60 seconds with AI.* (45s)
-- **Fast-Short #4 (5 Flow images):** *Why AI hallucinates and the simple verification step most people skip.* (50s)
+- **Spin-off #1 (0 new images):** *Komodo hatchling tree sprint* (45s)
+- **Spin-off #2 (0 new images):** *How snakes lost their legs and evolved infrared thermal vision instead.* (45s)
+- **Spin-off #3 (0 new images):** *Inside the leathery egg: how reptiles broke free from the ocean.* (45s)
+- **Fast-Short #4 (5 Flow images):** *Why the crocodile body plan survived two mass extinctions unchanged.* (50s)
 
 ### Backlog chủ đề hạt giống tiếp theo
-- Why Buying Expensive AI Tools Wastes Your Time (And 3 Free Workflows That Work)
-- Stop Asking AI to Write an Email—Use This 3-Part Prompt Structure Instead
-- How to Audit Any Contract for Hidden Red Flags in 60 Seconds with AI
-- 5 Repeatable AI Workflows That Save 2 Hours of Office Work Every Day
-- Why AI Hallucinates—And the Simple Verification Step Most People Skip
+- From Egg to Cannibal Forest: How a Baby Komodo Dragon Survives Its First 5 Years
+- How Snakes Lost Their Legs—And Evolved Infrared Thermal Pit Organs Instead
+- Inside the Leathery Egg: How Reptiles Conquered Dry Land 310 Million Years Ago
+- Why the Crocodile Body Plan Survived Two Mass Extinctions Unchanged
+- The Biomechanics of a Viper Fang: How a Saliva Gland Turned into a Hypodermic Syringe
 
 ## 7. Kiếm Tiền, Hashtag & Ngưỡng Quyết Định (14 Ngày)
-- **Bộ Hashtag chuẩn TikTok:** `#ai #artificialintelligence #productivity #promptengineering #chatgpt #automation`
-- **Nguồn doanh thu:** YouTube AdSense (long), Curated prompt workflow repository, Productivity software sponsorship
+- **Bộ Hashtag chuẩn TikTok:** `#reptiles #evolution #herpetology #lifecycle #naturedocumentary #biology`
+- **Nguồn doanh thu:** YouTube AdSense (high documentary RPM), Naturalist copperplate reptile field prints, Wildlife & science documentary sponsorship
 - **Lệnh làm việc nhanh trên máy:**
   ```bash
   cd /home/hongphuoc6104/Desktop/vp-channels/channel-en-plain-sight-ai

@@ -53,13 +53,13 @@
 - Abstract dogma without historical data
 
 ## 4. Phong Cách Hình Ảnh & Thumbnail Flow Native
-- **Visual Profile ID:** `ch_en_swiss_macro` — Swiss macroeconomic editorial vector: Economist-style clean geometry, trade routes, central bank navy
+- **Visual Profile ID:** `ch_en_swiss_macro` — Mid-Century Banknote Intaglio Engraving & Letterpress Infographic: salmon financial newsprint, cross-hatched ink
 - **Bảng màu khóa cứng:** `#F3EFE6`, `#0F2C59`, `#D9381E`, `#2A9D8F`, `#E9C46A`
-- **Tạo hình nhân vật (`CAST_APPEARANCE`):** Crisp flat vector editorial host in structured navy suit and vermilion tie alongside clean cargo ships, interest-rate levers and currency bars
-- **Trang phục (`DEFAULT_OUTFIT`):** Sharp tailored central-bank navy (#0F2C59) two-button suit with crisp white shirt and vermilion tie
-- **Luật Thumbnail (100% Flow Native, `overlay_card: false`):** Host pulling central-bank interest lever + 2-4 uppercase words on clean paper.
+- **Tạo hình nhân vật (`CAST_APPEARANCE`):** Mid-century financial-press correspondent drawn in fine steel-engraved cross-hatching wearing structured navy suit and vermilion tie beside engraved cargo vessels and monetary levers
+- **Trang phục (`DEFAULT_OUTFIT`):** Hand-engraved central-bank navy (#0F2C59) two-button suit with cross-hatched lapel, white shirt, and letterpress vermilion tie
+- **Luật Thumbnail (100% Flow Native, `overlay_card: false`):** Engraved correspondent pulling central-bank interest lever + 2-4 uppercase letterpress words on newsprint.
 - **Prompt Style gốc:**
-  > Bold Economist-style 2D flat geometric Swiss editorial vector infographic on financial-press paper canvas (#F3EFE6 financial-press paper, #0F2C59 central-bank navy, #D9381E inflation vermilion, #2A9D8F trade teal, #E9C46A reserve gold) with zero marker wobble, precise economic indicators, container shipping icons and monetary policy levers; orthographic 2D, at least 60% negative space, zero 3D, zero gradients.
+  > Tactile 2D mid-century banknote intaglio engraving and Swiss letterpress editorial print on warm salmon-ivory financial newsprint (#F3EFE6 fibrous financial-press paper, #0F2C59 intaglio central-bank navy, #D9381E letterpress vermilion, #2A9D8F maritime trade teal, #E9C46A bullion ochre) with fine steel-engraved cross-hatching, stamped freight manifests, container vessel woodcuts and mechanical monetary policy levers; orthographic 2D, authentic letterpress ink grain, at least 60% negative space, zero 3D CGI, zero flat corporate vector, zero gradients.
 
 ## 5. Tối Ưu Thời Gian Sản Xuất (Kết Hợp Flow CDP + Remotion / Hyperframes)
 - **Chế độ Render chủ đạo:** `hybrid_motion` (Tỷ lệ đồ họa động Remotion/Hyperframes: **40%**)
