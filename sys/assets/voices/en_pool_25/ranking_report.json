@@ -1,0 +1,2119 @@
+{
+  "total_extracted": 25,
+  "selected_18_channels": {
+    "en_bamboo_marble": {
+      "candidate_id": "EN_V18",
+      "rank": 20,
+      "score": 61.76,
+      "source_channel": "Daily Stoic",
+      "reference_text": "Epictetus says that you must undergo a hard winter's training. He's referring to how soldiers would train in the winter when they weren't at battle so they could be prepared when the battle did come."
+    },
+    "en_career_leverage": {
+      "candidate_id": "EN_V02",
+      "rank": 12,
+      "score": 72.27,
+      "source_channel": "Charisma on Command",
+      "reference_text": "So that means that you want to avoid saying things like you're a jerk which are blanket statements and instead, stick to speaking about the exact behavior that you take issue with."
+    },
+    "en_choke_point": {
+      "candidate_id": "EN_V14",
+      "rank": 10,
+      "score": 76.44,
+      "source_channel": "TLDR News Global",
+      "reference_text": "However, events at the Red Sea's southernmost checkpoint, the Bab el -Mandeb, are causing trouble for the canal and its Egyptian government -owned authority."
+    },
+    "en_cold_case_ink": {
+      "candidate_id": "EN_V15",
+      "rank": 15,
+      "score": 67.25,
+      "source_channel": "Astrum",
+      "reference_text": "Since AGNs are so much hotter and brighter than protoplanetary disks, ice can't form within the inner whirling disk, which poses a problem for the early stages of planet formation."
+    },
+    "en_crowd_strings": {
+      "candidate_id": "EN_V24",
+      "rank": 2,
+      "score": 88.88,
+      "source_channel": "Academy of Ideas",
+      "reference_text": "That would be the necessity and the indispensable condition if there were any question of perfection at all. For how can you perfect a thing if it is not complete?"
+    },
+    "en_fine_print": {
+      "candidate_id": "EN_V09",
+      "rank": 11,
+      "score": 75.72,
+      "source_channel": "What Is Law Even",
+      "reference_text": "That's the remedy of specific performance. Or more commonly, it could also tell me, since you broke your promise, how about you pay up the value of the food to make amends."
+    },
+    "en_first_principles": {
+      "candidate_id": "EN_V20",
+      "rank": 19,
+      "score": 62.2,
+      "source_channel": "Vsauce",
+      "reference_text": "I know that I feel things and that I have a sense of myself. I have intentions. But how do I know that you."
+    },
+    "en_inside_vessel": {
+      "candidate_id": "EN_V10",
+      "rank": 1,
+      "score": 88.95,
+      "source_channel": "Institute of Human Anatomy",
+      "reference_text": "This is what's called a lateral ventricle. Now there are actually two lateral ventricles, one in each hemisphere, but considering I'm only holding one hemisphere."
+    },
+    "en_kindred_sketch": {
+      "candidate_id": "EN_V03",
+      "rank": 8,
+      "score": 79.33,
+      "source_channel": "The School of Life",
+      "reference_text": "Knowing whether we can be classed as secure, avoidant or anxious in love should be a basic fact we grasp about ourselves."
+    },
+    "en_kitchen_molecules": {
+      "candidate_id": "EN_V11",
+      "rank": 9,
+      "score": 77.4,
+      "source_channel": "Ethan Chlebowski",
+      "reference_text": "The first version of pizza was created when the poor people of Naples placed tomatoes onto their yeast dough."
+    },
+    "en_lazy_brain": {
+      "candidate_id": "EN_V19",
+      "rank": 3,
+      "score": 82.18,
+      "source_channel": "The Paint Explainer",
+      "reference_text": "Often relying on others for support and decision -making, and may fear taking on adult responsibilities. The complex is said to become more apparent."
+    },
+    "en_macro_gears": {
+      "candidate_id": "EN_V06",
+      "rank": 7,
+      "score": 79.59,
+      "source_channel": "Practical Engineering",
+      "reference_text": "Changes in voltage can lead to brownouts or surges that damage connected equipment. One of the benefits of large power grids is electrical inertia."
+    },
+    "en_parable_lamp": {
+      "candidate_id": "EN_V17",
+      "rank": 4,
+      "score": 82.11,
+      "source_channel": "After Skool",
+      "reference_text": "This view is not without reasonable critiques and unreasonable misinterpretations. However, perhaps what is more important than Nietzsche's definition of the overman is what the concept serves to represent."
+    },
+    "en_plain_sight_ai": {
+      "candidate_id": "EN_V23",
+      "rank": 5,
+      "score": 81.05,
+      "source_channel": "Fireship",
+      "reference_text": "Most developers don't need to worry about how this hardware fits together because we have operating system kernels like Linux, Mac, and Windows that control all hardware resources via device drivers."
+    },
+    "en_pocket_cosmos": {
+      "candidate_id": "EN_V22",
+      "rank": 14,
+      "score": 67.36,
+      "source_channel": "PBS Space Time",
+      "reference_text": "There's also the hypothetical chameleon field, which is a dark energy candidate that has a distance -dependent variable mass that could do something similar."
+    },
+    "en_second_arrow": {
+      "candidate_id": "EN_V16",
+      "rank": 16,
+      "score": 66.2,
+      "source_channel": "Pursuit of Wonder",
+      "reference_text": "He would continue to both eat and meditate, not depriving his body, nor pursuing much beyond what his body needed for basic comfort."
+    },
+    "en_wait_how": {
+      "candidate_id": "EN_V25",
+      "rank": 13,
+      "score": 67.5,
+      "source_channel": "Mustard",
+      "reference_text": "Because one by one, countries started banning supersonic flights over their airspace. Evidence was also mounting that Concorde could damage the environment."
+    },
+    "en_wallet_anatomy": {
+      "candidate_id": "EN_V05",
+      "rank": 6,
+      "score": 80.1,
+      "source_channel": "The Swedish Investor",
+      "reference_text": "Don't aim to maximize your returns, because the higher the returns, the higher this fee typically is."
+    }
+  },
+  "ranked_pool": [
+    {
+      "candidate_id": "EN_V10",
+      "voice": "OmniVoice_EnInsideVessel",
+      "channel_id": "en_inside_vessel",
+      "target_channel_name": "Inside the Vessel",
+      "target_niche": "Human physiology, sleep, immunity & body signals",
+      "archetype": "Engaging Human Anatomy & Medical Science Narrator",
+      "voice_label": "Giọng bác sĩ/nhà giải phẫu học ấm áp, trực quan, giải mã tín hiệu cơ thể & giấc ngủ",
+      "language": "en",
+      "languages": [
+        "en",
+        "vi"
+      ],
+      "reference_wav": "reference.wav",
+      "reference_text": "This is what's called a lateral ventricle. Now there are actually two lateral ventricles, one in each hemisphere, but considering I'm only holding one hemisphere.",
+      "duration_seconds": 8.35,
+      "composite_score": 88.95,
+      "acoustic_metrics": {
+        "dur": 8.35,
+        "rms_db": -14.9,
+        "peak_db": -1.19,
+        "p05_db": -54.6,
+        "p10_db": -50.0,
+        "p50_db": -17.1,
+        "p90_db": -10.7,
+        "dyn_db": 39.3,
+        "active_ratio": 0.83,
+        "min_1s_db": -15.6,
+        "start_60ms_db": -140.0,
+        "end_60ms_db": -140.0,
+        "hf_ratio": 0.0142,
+        "f0_hz": 128.3,
+        "f0_spread_semitones": 1.74,
+        "quarter_rms_spread_db": 3.12
+      },
+      "span_provenance": {
+        "raw_sir_db": 43.63,
+        "avg_word_prob": 0.971,
+        "valley_start_db": -64.3,
+        "valley_end_db": -56.9,
+        "pause_before_s": 0.52,
+        "pause_after_s": 0.6
+      },
+      "source_speed": 1.0,
+      "recommended_speed": 1.08,
+      "default_tone": "narrative_warm",
+      "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+      "audio_lufs": -14.0,
+      "audio_peak_db": -1.2,
+      "sha256": "cc43bb78420aeca213c51c4195550f2f3fa44ae03e5f50ed294939baeaac9937",
+      "demucs_vocal_isolated": true,
+      "studio_v3_restored": true,
+      "processing": {
+        "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+        "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+        "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+        "boundary_aligner": "faster-whisper large-v3 (en) word_timestamps + valley<=28dB + 110ms/150ms silence",
+        "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+      },
+      "sources": [
+        {
+          "url": "https://www.youtube.com/watch?v=f1FOzJ9NWnE",
+          "video_id": "f1FOzJ9NWnE",
+          "source_channel": "Institute of Human Anatomy",
+          "video_title": "Why Sleep Is Important | Institute of Human Anatomy",
+          "window_seconds": [
+            118.92,
+            127.02
+          ]
+        }
+      ],
+      "listening_verified": true,
+      "note": "Studio V3 English reference voice (Engaging Human Anatomy & Medical Science Narrator) from 'Institute of Human Anatomy' (https://www.youtube.com/watch?v=f1FOzJ9NWnE @ 118.92s-127.02s).",
+      "rank": 1,
+      "assigned_channels": [
+        "en_inside_vessel"
+      ],
+      "selection_status": "SELECTED_TOP_18",
+      "status_badge": "ĐÃ CHỌN CHO KÊNH: en_inside_vessel"
+    },
+    {
+      "candidate_id": "EN_V24",
+      "voice": "OmniVoice_EnCrowdStrings",
+      "channel_id": "en_crowd_strings",
+      "target_channel_name": "Crowd Strings",
+      "target_niche": "Social dynamics, persuasion & crowd psychology",
+      "archetype": "Deep Psychological Essay & Philosophy Narrator (Pool #24)",
+      "voice_label": "Giọng đọc tiểu luận tâm lý học chiều sâu (Carl Jung, tâm lý học đám đông)",
+      "language": "en",
+      "languages": [
+        "en",
+        "vi"
+      ],
+      "reference_wav": "reference.wav",
+      "reference_text": "That would be the necessity and the indispensable condition if there were any question of perfection at all. For how can you perfect a thing if it is not complete?",
+      "duration_seconds": 9.37,
+      "composite_score": 88.88,
+      "acoustic_metrics": {
+        "dur": 9.37,
+        "rms_db": -14.39,
+        "peak_db": -1.15,
+        "p05_db": -140.0,
+        "p10_db": -140.0,
+        "p50_db": -15.0,
+        "p90_db": -10.4,
+        "dyn_db": 129.6,
+        "active_ratio": 0.79,
+        "min_1s_db": -18.0,
+        "start_60ms_db": -140.0,
+        "end_60ms_db": -140.0,
+        "hf_ratio": 0.1273,
+        "f0_hz": 138.7,
+        "f0_spread_semitones": 2.96,
+        "quarter_rms_spread_db": 2.26
+      },
+      "span_provenance": {
+        "raw_sir_db": 38.34,
+        "avg_word_prob": 0.984,
+        "valley_start_db": -140.0,
+        "valley_end_db": -63.9,
+        "pause_before_s": 0.54,
+        "pause_after_s": 0.42
+      },
+      "source_speed": 1.0,
+      "recommended_speed": 1.1,
+      "default_tone": "analytical_crisp",
+      "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+      "audio_lufs": -14.0,
+      "audio_peak_db": -1.2,
+      "sha256": "9256f918d9b1ac9e1d1b2cb0898dad960816ea458e5d06583f1420a7d1fe254d",
+      "demucs_vocal_isolated": true,
+      "studio_v3_restored": true,
+      "processing": {
+        "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+        "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+        "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+        "boundary_aligner": "faster-whisper large-v3 (en) word_timestamps + valley<=28dB + 110ms/150ms silence",
+        "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+      },
+      "sources": [
+        {
+          "url": "https://www.youtube.com/watch?v=ssuDqtUcKEw",
+          "video_id": "ssuDqtUcKEw",
+          "source_channel": "Academy of Ideas",
+          "video_title": "Carl Jung: What is the Individuation Process?",
+          "window_seconds": [
+            150.38,
+            159.49
+          ]
+        }
+      ],
+      "listening_verified": true,
+      "note": "Studio V3 English reference voice (Deep Psychological Essay & Philosophy Narrator (Pool #24)) from 'Academy of Ideas' (https://www.youtube.com/watch?v=ssuDqtUcKEw @ 150.38s-159.49s).",
+      "rank": 2,
+      "assigned_channels": [
+        "en_crowd_strings"
+      ],
+      "selection_status": "SELECTED_TOP_18",
+      "status_badge": "ĐÃ CHỌN CHO KÊNH: en_crowd_strings"
+    },
+    {
+      "candidate_id": "EN_V19",
+      "voice": "OmniVoice_EnLazyBrain",
+      "channel_id": "en_lazy_brain",
+      "target_channel_name": "Lazy Brain Lab",
+      "target_niche": "Neuroscience of procrastination, dopamine & habits",
+      "archetype": "Crisp Fast-Paced Doodle Explainer Narrator (Reserve #19)",
+      "voice_label": "Giọng Explainer 2D nhanh, gọn, bắt tai kiểu kênh hoạt hình giải thích tâm lý & não bộ",
+      "language": "en",
+      "languages": [
+        "en",
+        "vi"
+      ],
+      "reference_wav": "reference.wav",
+      "reference_text": "Often relying on others for support and decision -making, and may fear taking on adult responsibilities. The complex is said to become more apparent.",
+      "duration_seconds": 7.67,
+      "composite_score": 82.18,
+      "acoustic_metrics": {
+        "dur": 7.67,
+        "rms_db": -14.93,
+        "peak_db": -1.18,
+        "p05_db": -63.3,
+        "p10_db": -42.3,
+        "p50_db": -15.5,
+        "p90_db": -11.4,
+        "dyn_db": 30.9,
+        "active_ratio": 0.88,
+        "min_1s_db": -18.3,
+        "start_60ms_db": -140.0,
+        "end_60ms_db": -140.0,
+        "hf_ratio": 0.1058,
+        "f0_hz": 117.4,
+        "f0_spread_semitones": 1.13,
+        "quarter_rms_spread_db": 2.65
+      },
+      "span_provenance": {
+        "raw_sir_db": 41.85,
+        "avg_word_prob": 0.998,
+        "valley_start_db": -59.6,
+        "valley_end_db": -57.7,
+        "pause_before_s": 0.2,
+        "pause_after_s": 0.28
+      },
+      "source_speed": 1.0,
+      "recommended_speed": 1.08,
+      "default_tone": "narrative_warm",
+      "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+      "audio_lufs": -14.0,
+      "audio_peak_db": -1.2,
+      "sha256": "6025bd085b4fce35ba7d88761e09ae339a44d91f46a01bbf17f4821bfa78c002",
+      "demucs_vocal_isolated": true,
+      "studio_v3_restored": true,
+      "processing": {
+        "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+        "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+        "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+        "boundary_aligner": "faster-whisper large-v3 (en) word_timestamps + valley<=28dB + 110ms/150ms silence",
+        "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+      },
+      "sources": [
+        {
+          "url": "https://www.youtube.com/watch?v=8hGYaqZfZq4",
+          "video_id": "8hGYaqZfZq4",
+          "source_channel": "The Paint Explainer",
+          "video_title": "Every Mental Complex Explained in 8 Minutes",
+          "window_seconds": [
+            309.91,
+            317.32
+          ]
+        }
+      ],
+      "listening_verified": true,
+      "note": "Studio V3 English reference voice (Crisp Fast-Paced Doodle Explainer Narrator (Reserve #19)) from 'The Paint Explainer' (https://www.youtube.com/watch?v=8hGYaqZfZq4 @ 309.91s-317.32s).",
+      "rank": 3,
+      "assigned_channels": [
+        "en_lazy_brain"
+      ],
+      "selection_status": "SELECTED_TOP_18",
+      "status_badge": "ĐÃ CHỌN CHO KÊNH: en_lazy_brain"
+    },
+    {
+      "candidate_id": "EN_V17",
+      "voice": "OmniVoice_EnParableLamp",
+      "channel_id": "en_parable_lamp",
+      "target_channel_name": "Parable & Lamp",
+      "target_niche": "Philosophical parables, allegories & timeless stories",
+      "archetype": "Deep Reflective Philosophical Parable Narrator",
+      "voice_label": "Giọng kể chuyện ngụ ngôn triết học sâu lắng, chậm rãi, giàu chất chiêm nghiệm về cuộc đời",
+      "language": "en",
+      "languages": [
+        "en",
+        "vi"
+      ],
+      "reference_wav": "reference.wav",
+      "reference_text": "This view is not without reasonable critiques and unreasonable misinterpretations. However, perhaps what is more important than Nietzsche's definition of the overman is what the concept serves to represent.",
+      "duration_seconds": 10.82,
+      "composite_score": 82.11,
+      "acoustic_metrics": {
+        "dur": 10.82,
+        "rms_db": -15.32,
+        "peak_db": -1.17,
+        "p05_db": -61.9,
+        "p10_db": -59.0,
+        "p50_db": -16.4,
+        "p90_db": -11.8,
+        "dyn_db": 47.2,
+        "active_ratio": 0.83,
+        "min_1s_db": -20.0,
+        "start_60ms_db": -140.0,
+        "end_60ms_db": -140.0,
+        "hf_ratio": 0.1102,
+        "f0_hz": 114.3,
+        "f0_spread_semitones": 5.09,
+        "quarter_rms_spread_db": 2.86
+      },
+      "span_provenance": {
+        "raw_sir_db": 35.48,
+        "avg_word_prob": 0.996,
+        "valley_start_db": -63.7,
+        "valley_end_db": -52.0,
+        "pause_before_s": 0.42,
+        "pause_after_s": 0.42
+      },
+      "source_speed": 1.0,
+      "recommended_speed": 1.02,
+      "default_tone": "reflective_slow",
+      "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+      "audio_lufs": -14.0,
+      "audio_peak_db": -1.2,
+      "sha256": "b3c38c7174640631b826141773732f973795f84f8ff1bc7bb34055e6c7ecf9e0",
+      "demucs_vocal_isolated": true,
+      "studio_v3_restored": true,
+      "processing": {
+        "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+        "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+        "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+        "boundary_aligner": "faster-whisper large-v3 (en) word_timestamps + valley<=28dB + 110ms/150ms silence",
+        "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+      },
+      "sources": [
+        {
+          "url": "https://www.youtube.com/watch?v=-CbBgcpz3b0",
+          "video_id": "-CbBgcpz3b0",
+          "source_channel": "After Skool",
+          "video_title": "How to Find Meaning in a Meaningless World - Written by Pursuit of Wonder",
+          "window_seconds": [
+            199.4,
+            209.96
+          ]
+        }
+      ],
+      "listening_verified": true,
+      "note": "Studio V3 English reference voice (Deep Reflective Philosophical Parable Narrator) from 'After Skool' (https://www.youtube.com/watch?v=-CbBgcpz3b0 @ 199.4s-209.96s).",
+      "rank": 4,
+      "assigned_channels": [
+        "en_parable_lamp"
+      ],
+      "selection_status": "SELECTED_TOP_18",
+      "status_badge": "ĐÃ CHỌN CHO KÊNH: en_parable_lamp"
+    },
+    {
+      "candidate_id": "EN_V23",
+      "voice": "OmniVoice_EnPlainSightAI",
+      "channel_id": "en_plain_sight_ai",
+      "target_channel_name": "Plain Sight AI",
+      "target_niche": "Practical AI, algorithms & automation decoded",
+      "archetype": "Punchy Developer & Algorithm Explainer (Pool #23)",
+      "voice_label": "Giọng nhịp nhanh, dứt khoát, chuyên giải thích thuật toán & công nghệ phần mềm",
+      "language": "en",
+      "languages": [
+        "en",
+        "vi"
+      ],
+      "reference_wav": "reference.wav",
+      "reference_text": "Most developers don't need to worry about how this hardware fits together because we have operating system kernels like Linux, Mac, and Windows that control all hardware resources via device drivers.",
+      "duration_seconds": 9.67,
+      "composite_score": 81.05,
+      "acoustic_metrics": {
+        "dur": 9.67,
+        "rms_db": -13.59,
+        "peak_db": -1.19,
+        "p05_db": -26.5,
+        "p10_db": -22.1,
+        "p50_db": -14.0,
+        "p90_db": -10.7,
+        "dyn_db": 11.5,
+        "active_ratio": 0.97,
+        "min_1s_db": -14.1,
+        "start_60ms_db": -140.0,
+        "end_60ms_db": -140.0,
+        "hf_ratio": 0.0812,
+        "f0_hz": 107.1,
+        "f0_spread_semitones": 0.38,
+        "quarter_rms_spread_db": 1.44
+      },
+      "span_provenance": {
+        "raw_sir_db": 38.96,
+        "avg_word_prob": 0.986,
+        "valley_start_db": -36.2,
+        "valley_end_db": -32.3,
+        "pause_before_s": 0.18,
+        "pause_after_s": 0.22
+      },
+      "source_speed": 1.0,
+      "recommended_speed": 1.14,
+      "default_tone": "analytical_crisp",
+      "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+      "audio_lufs": -14.0,
+      "audio_peak_db": -1.2,
+      "sha256": "e6a4944e8396e905ddce629f9b42c0daf8ab8e11f71fe230667a5d44f193106f",
+      "demucs_vocal_isolated": true,
+      "studio_v3_restored": true,
+      "processing": {
+        "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+        "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+        "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+        "boundary_aligner": "faster-whisper large-v3 (en) word_timestamps + valley<=28dB + 110ms/150ms silence",
+        "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+      },
+      "sources": [
+        {
+          "url": "https://www.youtube.com/watch?v=-uleG_Vecis",
+          "video_id": "-uleG_Vecis",
+          "source_channel": "Fireship",
+          "video_title": "100+ Computer Science Concepts Explained",
+          "window_seconds": [
+            130.89,
+            140.3
+          ]
+        }
+      ],
+      "listening_verified": true,
+      "note": "Studio V3 English reference voice (Punchy Developer & Algorithm Explainer (Pool #23)) from 'Fireship' (https://www.youtube.com/watch?v=-uleG_Vecis @ 130.89s-140.3s).",
+      "rank": 5,
+      "assigned_channels": [
+        "en_plain_sight_ai"
+      ],
+      "selection_status": "SELECTED_TOP_18",
+      "status_badge": "ĐÃ CHỌN CHO KÊNH: en_plain_sight_ai"
+    },
+    {
+      "candidate_id": "EN_V05",
+      "voice": "OmniVoice_EnWalletAnatomy",
+      "channel_id": "en_wallet_anatomy",
+      "target_channel_name": "Wallet Anatomy",
+      "target_niche": "Behavioral finance, spending traps & money psychology",
+      "archetype": "Crisp Behavioral Finance & Money Psychology Analyst",
+      "voice_label": "Giọng rõ ràng, đĩnh đạc, chuyên mổ xẻ bẫy tài chính cá nhân và tâm lý tiền bạc",
+      "language": "en",
+      "languages": [
+        "en",
+        "vi"
+      ],
+      "reference_wav": "reference.wav",
+      "reference_text": "Don't aim to maximize your returns, because the higher the returns, the higher this fee typically is.",
+      "duration_seconds": 6.97,
+      "composite_score": 80.1,
+      "acoustic_metrics": {
+        "dur": 6.97,
+        "rms_db": -14.97,
+        "peak_db": -1.14,
+        "p05_db": -65.6,
+        "p10_db": -55.0,
+        "p50_db": -16.9,
+        "p90_db": -10.7,
+        "dyn_db": 44.3,
+        "active_ratio": 0.76,
+        "min_1s_db": -16.0,
+        "start_60ms_db": -140.0,
+        "end_60ms_db": -140.0,
+        "hf_ratio": 0.0867,
+        "f0_hz": 126.0,
+        "f0_spread_semitones": 5.74,
+        "quarter_rms_spread_db": 4.84
+      },
+      "span_provenance": {
+        "raw_sir_db": 41.3,
+        "avg_word_prob": 0.987,
+        "valley_start_db": -43.6,
+        "valley_end_db": -69.0,
+        "pause_before_s": 0.3,
+        "pause_after_s": 1.06
+      },
+      "source_speed": 1.0,
+      "recommended_speed": 1.1,
+      "default_tone": "analytical_crisp",
+      "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+      "audio_lufs": -14.0,
+      "audio_peak_db": -1.2,
+      "sha256": "a3c7fd29d479db9b62dafffaa887cd56ada458293653ac7804dbfadb986c5feb",
+      "demucs_vocal_isolated": true,
+      "studio_v3_restored": true,
+      "processing": {
+        "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+        "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+        "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+        "boundary_aligner": "faster-whisper large-v3 (en) word_timestamps + valley<=28dB + 110ms/150ms silence",
+        "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+      },
+      "sources": [
+        {
+          "url": "https://www.youtube.com/watch?v=TJDcGv9OH4Q",
+          "video_id": "TJDcGv9OH4Q",
+          "source_channel": "The Swedish Investor",
+          "video_title": "THE PSYCHOLOGY OF MONEY (BY MORGAN HOUSEL)",
+          "window_seconds": [
+            153.42,
+            160.14
+          ]
+        }
+      ],
+      "listening_verified": true,
+      "note": "Studio V3 English reference voice (Crisp Behavioral Finance & Money Psychology Analyst) from 'The Swedish Investor' (https://www.youtube.com/watch?v=TJDcGv9OH4Q @ 153.42s-160.14s).",
+      "rank": 6,
+      "assigned_channels": [
+        "en_wallet_anatomy"
+      ],
+      "selection_status": "SELECTED_TOP_18",
+      "status_badge": "ĐÃ CHỌN CHO KÊNH: en_wallet_anatomy"
+    },
+    {
+      "candidate_id": "EN_V06",
+      "voice": "OmniVoice_EnMacroGears",
+      "channel_id": "en_macro_gears",
+      "target_channel_name": "Macro Gears",
+      "target_niche": "Macro systems, supply chains & hidden infrastructure",
+      "archetype": "Clear Macro Infrastructure & Systems Engineer",
+      "voice_label": "Giọng nam trầm ổn, mạch lạc, giải thích cơ chế vận hành hạ tầng & chuỗi cung ứng thế giới",
+      "language": "en",
+      "languages": [
+        "en",
+        "vi"
+      ],
+      "reference_wav": "reference.wav",
+      "reference_text": "Changes in voltage can lead to brownouts or surges that damage connected equipment. One of the benefits of large power grids is electrical inertia.",
+      "duration_seconds": 9.08,
+      "composite_score": 79.59,
+      "acoustic_metrics": {
+        "dur": 9.08,
+        "rms_db": -15.53,
+        "peak_db": -1.04,
+        "p05_db": -53.9,
+        "p10_db": -48.9,
+        "p50_db": -16.2,
+        "p90_db": -12.0,
+        "dyn_db": 36.9,
+        "active_ratio": 0.85,
+        "min_1s_db": -18.0,
+        "start_60ms_db": -140.0,
+        "end_60ms_db": -140.0,
+        "hf_ratio": 0.1215,
+        "f0_hz": 126.3,
+        "f0_spread_semitones": 4.03,
+        "quarter_rms_spread_db": 1.15
+      },
+      "span_provenance": {
+        "raw_sir_db": 42.38,
+        "avg_word_prob": 0.986,
+        "valley_start_db": -58.6,
+        "valley_end_db": -39.5,
+        "pause_before_s": 0.26,
+        "pause_after_s": 0.36
+      },
+      "source_speed": 1.0,
+      "recommended_speed": 1.12,
+      "default_tone": "analytical_crisp",
+      "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+      "audio_lufs": -14.0,
+      "audio_peak_db": -1.2,
+      "sha256": "983a62a64b54f8f1b3b1cdbb3acda124442e85e01473bea1a6d25343d79b37b7",
+      "demucs_vocal_isolated": true,
+      "studio_v3_restored": true,
+      "processing": {
+        "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+        "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+        "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+        "boundary_aligner": "faster-whisper large-v3 (en) word_timestamps + valley<=28dB + 110ms/150ms silence",
+        "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+      },
+      "sources": [
+        {
+          "url": "https://www.youtube.com/watch?v=v1BMWczn7JM",
+          "video_id": "v1BMWczn7JM",
+          "source_channel": "Practical Engineering",
+          "video_title": "How Does the Power Grid Work?",
+          "window_seconds": [
+            325.33,
+            334.15
+          ]
+        }
+      ],
+      "listening_verified": true,
+      "note": "Studio V3 English reference voice (Clear Macro Infrastructure & Systems Engineer) from 'Practical Engineering' (https://www.youtube.com/watch?v=v1BMWczn7JM @ 325.33s-334.15s).",
+      "rank": 7,
+      "assigned_channels": [
+        "en_macro_gears"
+      ],
+      "selection_status": "SELECTED_TOP_18",
+      "status_badge": "ĐÃ CHỌN CHO KÊNH: en_macro_gears"
+    },
+    {
+      "candidate_id": "EN_V03",
+      "voice": "OmniVoice_EnKindredSketch",
+      "channel_id": "en_kindred_sketch",
+      "target_channel_name": "Kindred Sketch",
+      "target_niche": "Attachment styles, empathy & human relationships",
+      "archetype": "Warm Empathetic Attachment & Relationship Storyteller",
+      "voice_label": "Giọng trầm ấm, giàu sự thấu cảm, truyền tải tâm lý tình cảm & gắn kết gia đình sâu sắc",
+      "language": "en",
+      "languages": [
+        "en",
+        "vi"
+      ],
+      "reference_wav": "reference.wav",
+      "reference_text": "Knowing whether we can be classed as secure, avoidant or anxious in love should be a basic fact we grasp about ourselves.",
+      "duration_seconds": 8.81,
+      "composite_score": 79.33,
+      "acoustic_metrics": {
+        "dur": 8.81,
+        "rms_db": -14.88,
+        "peak_db": -1.13,
+        "p05_db": -56.0,
+        "p10_db": -48.3,
+        "p50_db": -17.8,
+        "p90_db": -10.4,
+        "dyn_db": 38.0,
+        "active_ratio": 0.82,
+        "min_1s_db": -15.4,
+        "start_60ms_db": -140.0,
+        "end_60ms_db": -140.0,
+        "hf_ratio": 0.1929,
+        "f0_hz": 123.7,
+        "f0_spread_semitones": 3.72,
+        "quarter_rms_spread_db": 4.03
+      },
+      "span_provenance": {
+        "raw_sir_db": 37.6,
+        "avg_word_prob": 0.974,
+        "valley_start_db": -76.7,
+        "valley_end_db": -58.8,
+        "pause_before_s": 1.02,
+        "pause_after_s": 0.46
+      },
+      "source_speed": 1.0,
+      "recommended_speed": 1.02,
+      "default_tone": "narrative_warm",
+      "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+      "audio_lufs": -14.0,
+      "audio_peak_db": -1.2,
+      "sha256": "bee091bdadad0b891cb8efd4c1f125036c9fdc82ad396c1e10611142ba2fef1c",
+      "demucs_vocal_isolated": true,
+      "studio_v3_restored": true,
+      "processing": {
+        "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+        "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+        "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+        "boundary_aligner": "faster-whisper large-v3 (en) word_timestamps + valley<=28dB + 110ms/150ms silence",
+        "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+      },
+      "sources": [
+        {
+          "url": "https://www.youtube.com/watch?v=2s9ACDMcpjA",
+          "video_id": "2s9ACDMcpjA",
+          "source_channel": "The School of Life",
+          "video_title": "What Is Your Attachment Style?",
+          "window_seconds": [
+            350.92,
+            359.48
+          ]
+        }
+      ],
+      "listening_verified": true,
+      "note": "Studio V3 English reference voice (Warm Empathetic Attachment & Relationship Storyteller) from 'The School of Life' (https://www.youtube.com/watch?v=2s9ACDMcpjA @ 350.92s-359.48s).",
+      "rank": 8,
+      "assigned_channels": [
+        "en_kindred_sketch"
+      ],
+      "selection_status": "SELECTED_TOP_18",
+      "status_badge": "ĐÃ CHỌN CHO KÊNH: en_kindred_sketch"
+    },
+    {
+      "candidate_id": "EN_V11",
+      "voice": "OmniVoice_EnKitchenMolecules",
+      "channel_id": "en_kitchen_molecules",
+      "target_channel_name": "Kitchen Molecules",
+      "target_niche": "Food science, Maillard reactions & culinary chemistry",
+      "archetype": "Crisp Culinary Chemistry & Food Science Explainer",
+      "voice_label": "Giọng hào hứng, rõ chữ, giải thích phản ứng hóa học trong căn bếp & khoa học ẩm thực",
+      "language": "en",
+      "languages": [
+        "en",
+        "vi"
+      ],
+      "reference_wav": "reference.wav",
+      "reference_text": "The first version of pizza was created when the poor people of Naples placed tomatoes onto their yeast dough.",
+      "duration_seconds": 6.75,
+      "composite_score": 77.4,
+      "acoustic_metrics": {
+        "dur": 6.75,
+        "rms_db": -14.94,
+        "peak_db": -1.03,
+        "p05_db": -48.1,
+        "p10_db": -43.4,
+        "p50_db": -17.1,
+        "p90_db": -11.0,
+        "dyn_db": 32.4,
+        "active_ratio": 0.84,
+        "min_1s_db": -17.1,
+        "start_60ms_db": -140.0,
+        "end_60ms_db": -140.0,
+        "hf_ratio": 0.0557,
+        "f0_hz": 169.0,
+        "f0_spread_semitones": 6.26,
+        "quarter_rms_spread_db": 2.58
+      },
+      "span_provenance": {
+        "raw_sir_db": 40.37,
+        "avg_word_prob": 0.995,
+        "valley_start_db": -67.5,
+        "valley_end_db": -36.5,
+        "pause_before_s": 0.36,
+        "pause_after_s": 0.18
+      },
+      "source_speed": 1.0,
+      "recommended_speed": 1.1,
+      "default_tone": "analytical_crisp",
+      "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+      "audio_lufs": -14.0,
+      "audio_peak_db": -1.2,
+      "sha256": "3ab7c9fa8250ce08c8699bf9d80251fc5e8a17aa622cdb81ea111bb172c8b03b",
+      "demucs_vocal_isolated": true,
+      "studio_v3_restored": true,
+      "processing": {
+        "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+        "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+        "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+        "boundary_aligner": "faster-whisper large-v3 (en) word_timestamps + valley<=28dB + 110ms/150ms silence",
+        "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+      },
+      "sources": [
+        {
+          "url": "https://www.youtube.com/watch?v=srMEoe_5y6g",
+          "video_id": "srMEoe_5y6g",
+          "source_channel": "Ethan Chlebowski",
+          "video_title": "Why Recipes are holding you back from learning how to cook",
+          "window_seconds": [
+            268.55,
+            275.04
+          ]
+        }
+      ],
+      "listening_verified": true,
+      "note": "Studio V3 English reference voice (Crisp Culinary Chemistry & Food Science Explainer) from 'Ethan Chlebowski' (https://www.youtube.com/watch?v=srMEoe_5y6g @ 268.55s-275.04s).",
+      "rank": 9,
+      "assigned_channels": [
+        "en_kitchen_molecules"
+      ],
+      "selection_status": "SELECTED_TOP_18",
+      "status_badge": "ĐÃ CHỌN CHO KÊNH: en_kitchen_molecules"
+    },
+    {
+      "candidate_id": "EN_V14",
+      "voice": "OmniVoice_EnChokePoint",
+      "channel_id": "en_choke_point",
+      "target_channel_name": "Choke Point Maps",
+      "target_niche": "Geopolitics, trade routes & strategic geography",
+      "archetype": "Compelling Geopolitical & Strategic Map Analyst",
+      "voice_label": "Giọng thuyết minh địa chính trị có chiều sâu, nhấn nhá kịch tính về bản đồ quyền lực & eo biển",
+      "language": "en",
+      "languages": [
+        "en",
+        "vi"
+      ],
+      "reference_wav": "reference.wav",
+      "reference_text": "However, events at the Red Sea's southernmost checkpoint, the Bab el -Mandeb, are causing trouble for the canal and its Egyptian government -owned authority.",
+      "duration_seconds": 9.18,
+      "composite_score": 76.44,
+      "acoustic_metrics": {
+        "dur": 9.18,
+        "rms_db": -15.36,
+        "peak_db": -1.01,
+        "p05_db": -42.1,
+        "p10_db": -30.6,
+        "p50_db": -17.0,
+        "p90_db": -11.8,
+        "dyn_db": 18.8,
+        "active_ratio": 0.91,
+        "min_1s_db": -18.4,
+        "start_60ms_db": -140.0,
+        "end_60ms_db": -140.0,
+        "hf_ratio": 0.1638,
+        "f0_hz": 150.0,
+        "f0_spread_semitones": 4.17,
+        "quarter_rms_spread_db": 3.2
+      },
+      "span_provenance": {
+        "raw_sir_db": 41.59,
+        "avg_word_prob": 0.988,
+        "valley_start_db": -59.4,
+        "valley_end_db": -43.9,
+        "pause_before_s": 0.28,
+        "pause_after_s": 0.2
+      },
+      "source_speed": 1.0,
+      "recommended_speed": 1.1,
+      "default_tone": "analytical_crisp",
+      "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+      "audio_lufs": -14.0,
+      "audio_peak_db": -1.2,
+      "sha256": "e0f4df39cbe8ace0c25012199d4202d370a8f2f3b719d2f8e61db0d68374ef69",
+      "demucs_vocal_isolated": true,
+      "studio_v3_restored": true,
+      "processing": {
+        "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+        "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+        "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+        "boundary_aligner": "faster-whisper large-v3 (en) word_timestamps + valley<=28dB + 110ms/150ms silence",
+        "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+      },
+      "sources": [
+        {
+          "url": "https://www.youtube.com/watch?v=h2M6lbuhQrE",
+          "video_id": "h2M6lbuhQrE",
+          "source_channel": "TLDR News Global",
+          "video_title": "Every Global Trade Chokepoint Explained",
+          "window_seconds": [
+            168.31,
+            177.23
+          ]
+        }
+      ],
+      "listening_verified": true,
+      "note": "Studio V3 English reference voice (Compelling Geopolitical & Strategic Map Analyst) from 'TLDR News Global' (https://www.youtube.com/watch?v=h2M6lbuhQrE @ 168.31s-177.23s).",
+      "rank": 10,
+      "assigned_channels": [
+        "en_choke_point"
+      ],
+      "selection_status": "SELECTED_TOP_18",
+      "status_badge": "ĐÃ CHỌN CHO KÊNH: en_choke_point"
+    },
+    {
+      "candidate_id": "EN_V09",
+      "voice": "OmniVoice_EnFinePrint",
+      "channel_id": "en_fine_print",
+      "target_channel_name": "Everyday Fine Print",
+      "target_niche": "Consumer law, contracts & everyday legal literacy",
+      "archetype": "Sharp Legal & Consumer Fine-Print Decoder",
+      "voice_label": "Giọng luật sư sắc bén, phát âm chuẩn xác từng chữ, bóc tách điều khoản ngầm & luật đời thường",
+      "language": "en",
+      "languages": [
+        "en",
+        "vi"
+      ],
+      "reference_wav": "reference.wav",
+      "reference_text": "That's the remedy of specific performance. Or more commonly, it could also tell me, since you broke your promise, how about you pay up the value of the food to make amends.",
+      "duration_seconds": 10.34,
+      "composite_score": 75.72,
+      "acoustic_metrics": {
+        "dur": 10.34,
+        "rms_db": -14.76,
+        "peak_db": -1.1,
+        "p05_db": -48.7,
+        "p10_db": -42.4,
+        "p50_db": -17.2,
+        "p90_db": -10.6,
+        "dyn_db": 31.7,
+        "active_ratio": 0.83,
+        "min_1s_db": -17.9,
+        "start_60ms_db": -140.0,
+        "end_60ms_db": -140.0,
+        "hf_ratio": 0.0468,
+        "f0_hz": 116.5,
+        "f0_spread_semitones": 2.64,
+        "quarter_rms_spread_db": 3.23
+      },
+      "span_provenance": {
+        "raw_sir_db": 27.86,
+        "avg_word_prob": 0.978,
+        "valley_start_db": -60.6,
+        "valley_end_db": -33.9,
+        "pause_before_s": 0.62,
+        "pause_after_s": 0.06
+      },
+      "source_speed": 1.0,
+      "recommended_speed": 1.08,
+      "default_tone": "analytical_crisp",
+      "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+      "audio_lufs": -14.0,
+      "audio_peak_db": -1.2,
+      "sha256": "f3ddc5ae1b13bd9acc42726b618d0e660c372f16f0cbcd0f7b07ec885a9a8bcc",
+      "demucs_vocal_isolated": true,
+      "studio_v3_restored": true,
+      "processing": {
+        "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+        "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+        "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+        "boundary_aligner": "faster-whisper large-v3 (en) word_timestamps + valley<=28dB + 110ms/150ms silence",
+        "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+      },
+      "sources": [
+        {
+          "url": "https://www.youtube.com/watch?v=VTQn0ogo4ms",
+          "video_id": "VTQn0ogo4ms",
+          "source_channel": "What Is Law Even",
+          "video_title": "Contract Law in 2 Minutes",
+          "window_seconds": [
+            57.56,
+            67.64
+          ]
+        }
+      ],
+      "listening_verified": true,
+      "note": "Studio V3 English reference voice (Sharp Legal & Consumer Fine-Print Decoder) from 'What Is Law Even' (https://www.youtube.com/watch?v=VTQn0ogo4ms @ 57.56s-67.64s).",
+      "rank": 11,
+      "assigned_channels": [
+        "en_fine_print"
+      ],
+      "selection_status": "SELECTED_TOP_18",
+      "status_badge": "ĐÃ CHỌN CHO KÊNH: en_fine_print"
+    },
+    {
+      "candidate_id": "EN_V02",
+      "voice": "OmniVoice_EnCrowdStrings",
+      "channel_id": "en_crowd_strings",
+      "target_channel_name": "Crowd Strings",
+      "target_niche": "Social dynamics, persuasion & crowd psychology",
+      "archetype": "Crisp Social Dynamics & Persuasion Analyst",
+      "voice_label": "Giọng phân tích sắc sảo, nhịp điệu dứt khoát, giải mã tâm lý đám đông & giao tiếp",
+      "language": "en",
+      "languages": [
+        "en",
+        "vi"
+      ],
+      "reference_wav": "reference.wav",
+      "reference_text": "So that means that you want to avoid saying things like you're a jerk which are blanket statements and instead, stick to speaking about the exact behavior that you take issue with.",
+      "duration_seconds": 9.73,
+      "composite_score": 72.27,
+      "acoustic_metrics": {
+        "dur": 9.73,
+        "rms_db": -15.49,
+        "peak_db": -1.43,
+        "p05_db": -42.0,
+        "p10_db": -36.1,
+        "p50_db": -16.8,
+        "p90_db": -11.5,
+        "dyn_db": 24.6,
+        "active_ratio": 0.88,
+        "min_1s_db": -18.3,
+        "start_60ms_db": -140.0,
+        "end_60ms_db": -140.0,
+        "hf_ratio": 0.1732,
+        "f0_hz": 119.1,
+        "f0_spread_semitones": 4.71,
+        "quarter_rms_spread_db": 4.46
+      },
+      "span_provenance": {
+        "raw_sir_db": 41.82,
+        "avg_word_prob": 0.957,
+        "valley_start_db": -40.4,
+        "valley_end_db": -69.2,
+        "pause_before_s": 0.28,
+        "pause_after_s": 0.48
+      },
+      "source_speed": 1.0,
+      "recommended_speed": 1.1,
+      "default_tone": "analytical_crisp",
+      "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+      "audio_lufs": -14.0,
+      "audio_peak_db": -1.2,
+      "sha256": "c1383b4a47d0fa03a9f8a817823ff67e4298a9d9715915fc60a3752ed94745e7",
+      "demucs_vocal_isolated": true,
+      "studio_v3_restored": true,
+      "processing": {
+        "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+        "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+        "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+        "boundary_aligner": "faster-whisper large-v3 (en) word_timestamps + valley<=28dB + 110ms/150ms silence",
+        "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+      },
+      "sources": [
+        {
+          "url": "https://www.youtube.com/watch?v=GFphNr0FK-0",
+          "video_id": "GFphNr0FK-0",
+          "source_channel": "Charisma on Command",
+          "video_title": "How To Command Respect Without Being A Jerk",
+          "window_seconds": [
+            514.7,
+            524.17
+          ]
+        }
+      ],
+      "listening_verified": true,
+      "note": "Studio V3 English reference voice (Crisp Social Dynamics & Persuasion Analyst) from 'Charisma on Command' (https://www.youtube.com/watch?v=GFphNr0FK-0 @ 514.7s-524.17s).",
+      "rank": 12,
+      "assigned_channels": [
+        "en_career_leverage"
+      ],
+      "selection_status": "SELECTED_TOP_18",
+      "status_badge": "ĐÃ CHỌN CHO KÊNH: en_career_leverage"
+    },
+    {
+      "candidate_id": "EN_V25",
+      "voice": "OmniVoice_EnMacroGears",
+      "channel_id": "en_macro_gears",
+      "target_channel_name": "Macro Gears",
+      "target_niche": "Macro systems, supply chains & hidden infrastructure",
+      "archetype": "Cinematic Industrial & Engineering Documentary Voice (Pool #25)",
+      "voice_label": "Giọng thuyết minh phim tài liệu kỹ thuật & công nghiệp nặng quy mô lớn",
+      "language": "en",
+      "languages": [
+        "en",
+        "vi"
+      ],
+      "reference_wav": "reference.wav",
+      "reference_text": "Because one by one, countries started banning supersonic flights over their airspace. Evidence was also mounting that Concorde could damage the environment.",
+      "duration_seconds": 9.53,
+      "composite_score": 67.5,
+      "acoustic_metrics": {
+        "dur": 9.53,
+        "rms_db": -14.52,
+        "peak_db": -1.16,
+        "p05_db": -79.3,
+        "p10_db": -61.7,
+        "p50_db": -14.9,
+        "p90_db": -11.3,
+        "dyn_db": 50.4,
+        "active_ratio": 0.85,
+        "min_1s_db": -16.8,
+        "start_60ms_db": -140.0,
+        "end_60ms_db": -140.0,
+        "hf_ratio": 0.0741,
+        "f0_hz": 141.2,
+        "f0_spread_semitones": 1.69,
+        "quarter_rms_spread_db": 0.72
+      },
+      "span_provenance": {
+        "raw_sir_db": 13.51,
+        "avg_word_prob": 0.976,
+        "valley_start_db": -54.0,
+        "valley_end_db": -54.5,
+        "pause_before_s": 0.12,
+        "pause_after_s": 0.36
+      },
+      "source_speed": 1.0,
+      "recommended_speed": 1.12,
+      "default_tone": "analytical_crisp",
+      "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+      "audio_lufs": -14.0,
+      "audio_peak_db": -1.2,
+      "sha256": "bac4af83191628f4b6a9d9734b2cca8513831cf203e7360a88a76d316908508a",
+      "demucs_vocal_isolated": true,
+      "studio_v3_restored": true,
+      "processing": {
+        "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+        "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+        "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+        "boundary_aligner": "faster-whisper large-v3 (en) word_timestamps + valley<=28dB + 110ms/150ms silence",
+        "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+      },
+      "sources": [
+        {
+          "url": "https://www.youtube.com/watch?v=sFBvPue70l8",
+          "video_id": "sFBvPue70l8",
+          "source_channel": "Mustard",
+          "video_title": "Why You Couldn’t Afford To Fly Concorde",
+          "window_seconds": [
+            479.92,
+            489.19
+          ]
+        }
+      ],
+      "listening_verified": true,
+      "note": "Studio V3 English reference voice (Cinematic Industrial & Engineering Documentary Voice (Pool #25)) from 'Mustard' (https://www.youtube.com/watch?v=sFBvPue70l8 @ 479.92s-489.19s).",
+      "rank": 13,
+      "assigned_channels": [
+        "en_wait_how"
+      ],
+      "selection_status": "SELECTED_TOP_18",
+      "status_badge": "ĐÃ CHỌN CHO KÊNH: en_wait_how"
+    },
+    {
+      "candidate_id": "EN_V22",
+      "voice": "OmniVoice_EnPocketCosmos",
+      "channel_id": "en_pocket_cosmos",
+      "target_channel_name": "Pocket Cosmos",
+      "target_niche": "Astrophysics, quantum mechanics & cosmic wonder",
+      "archetype": "Academic Space & Quantum Physics Narrator (Pool #22)",
+      "voice_label": "Giọng học thuật rõ ràng, chuyên sâu về vật lý thiên văn và cơ học lượng tử",
+      "language": "en",
+      "languages": [
+        "en",
+        "vi"
+      ],
+      "reference_wav": "reference.wav",
+      "reference_text": "There's also the hypothetical chameleon field, which is a dark energy candidate that has a distance -dependent variable mass that could do something similar.",
+      "duration_seconds": 10.57,
+      "composite_score": 67.36,
+      "acoustic_metrics": {
+        "dur": 10.57,
+        "rms_db": -14.26,
+        "peak_db": -1.16,
+        "p05_db": -56.8,
+        "p10_db": -41.9,
+        "p50_db": -15.4,
+        "p90_db": -10.7,
+        "dyn_db": 31.2,
+        "active_ratio": 0.87,
+        "min_1s_db": -15.9,
+        "start_60ms_db": -140.0,
+        "end_60ms_db": -140.0,
+        "hf_ratio": 0.095,
+        "f0_hz": 144.6,
+        "f0_spread_semitones": 5.27,
+        "quarter_rms_spread_db": 1.49
+      },
+      "span_provenance": {
+        "raw_sir_db": 25.58,
+        "avg_word_prob": 0.989,
+        "valley_start_db": -62.3,
+        "valley_end_db": -140.0,
+        "pause_before_s": 0.58,
+        "pause_after_s": 0.6
+      },
+      "source_speed": 1.0,
+      "recommended_speed": 1.06,
+      "default_tone": "narrative_warm",
+      "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+      "audio_lufs": -14.0,
+      "audio_peak_db": -1.2,
+      "sha256": "479a6029e842d7c91b6c1b4e6969071a550d1bc40e3d4f5d42624204289a1ee7",
+      "demucs_vocal_isolated": true,
+      "studio_v3_restored": true,
+      "processing": {
+        "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+        "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+        "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+        "boundary_aligner": "faster-whisper large-v3 (en) word_timestamps + valley<=28dB + 110ms/150ms silence",
+        "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+      },
+      "sources": [
+        {
+          "url": "https://www.youtube.com/watch?v=xRhsD-RQNHs",
+          "video_id": "xRhsD-RQNHs",
+          "source_channel": "PBS Space Time",
+          "video_title": "At What Point Does Spacetime Become Quantum?",
+          "window_seconds": [
+            484.98,
+            495.29
+          ]
+        }
+      ],
+      "listening_verified": true,
+      "note": "Studio V3 English reference voice (Academic Space & Quantum Physics Narrator (Pool #22)) from 'PBS Space Time' (https://www.youtube.com/watch?v=xRhsD-RQNHs @ 484.98s-495.29s).",
+      "rank": 14,
+      "assigned_channels": [
+        "en_pocket_cosmos"
+      ],
+      "selection_status": "SELECTED_TOP_18",
+      "status_badge": "ĐÃ CHỌN CHO KÊNH: en_pocket_cosmos"
+    },
+    {
+      "candidate_id": "EN_V15",
+      "voice": "OmniVoice_EnPocketCosmos",
+      "channel_id": "en_pocket_cosmos",
+      "target_channel_name": "Pocket Cosmos",
+      "target_niche": "Astrophysics, quantum mechanics & cosmic wonder",
+      "archetype": "Wonder-Filled Astrophysics & Cosmic Storyteller",
+      "voice_label": "Giọng truyền cảm hứng kỳ vĩ, trong trẻo, kể chuyện vũ trụ học & vật lý lượng tử",
+      "language": "en",
+      "languages": [
+        "en",
+        "vi"
+      ],
+      "reference_wav": "reference.wav",
+      "reference_text": "Since AGNs are so much hotter and brighter than protoplanetary disks, ice can't form within the inner whirling disk, which poses a problem for the early stages of planet formation.",
+      "duration_seconds": 11.61,
+      "composite_score": 67.25,
+      "acoustic_metrics": {
+        "dur": 11.61,
+        "rms_db": -15.62,
+        "peak_db": -1.1,
+        "p05_db": -140.0,
+        "p10_db": -140.0,
+        "p50_db": -16.2,
+        "p90_db": -12.2,
+        "dyn_db": 127.8,
+        "active_ratio": 0.82,
+        "min_1s_db": -20.9,
+        "start_60ms_db": -140.0,
+        "end_60ms_db": -140.0,
+        "hf_ratio": 0.2175,
+        "f0_hz": 91.3,
+        "f0_spread_semitones": 2.47,
+        "quarter_rms_spread_db": 2.97
+      },
+      "span_provenance": {
+        "raw_sir_db": 12.4,
+        "avg_word_prob": 0.976,
+        "valley_start_db": -140.0,
+        "valley_end_db": -42.4,
+        "pause_before_s": 0.62,
+        "pause_after_s": 0.72
+      },
+      "source_speed": 1.0,
+      "recommended_speed": 1.06,
+      "default_tone": "narrative_warm",
+      "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+      "audio_lufs": -14.0,
+      "audio_peak_db": -1.2,
+      "sha256": "963e0b3b0a68b345efd7ef68fa5381afeb8367dc50f9c1265c8212f08f6cf37c",
+      "demucs_vocal_isolated": true,
+      "studio_v3_restored": true,
+      "processing": {
+        "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+        "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+        "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+        "boundary_aligner": "faster-whisper large-v3 (en) word_timestamps + valley<=28dB + 110ms/150ms silence",
+        "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+      },
+      "sources": [
+        {
+          "url": "https://www.youtube.com/watch?v=PxJSOWyYWkc",
+          "video_id": "PxJSOWyYWkc",
+          "source_channel": "Astrum",
+          "video_title": "What Is It Like on the Surface of a Black Hole Planet?",
+          "window_seconds": [
+            557.11,
+            568.46
+          ]
+        }
+      ],
+      "listening_verified": true,
+      "note": "Studio V3 English reference voice (Wonder-Filled Astrophysics & Cosmic Storyteller) from 'Astrum' (https://www.youtube.com/watch?v=PxJSOWyYWkc @ 557.11s-568.46s).",
+      "rank": 15,
+      "assigned_channels": [
+        "en_cold_case_ink"
+      ],
+      "selection_status": "SELECTED_TOP_18",
+      "status_badge": "ĐÃ CHỌN CHO KÊNH: en_cold_case_ink"
+    },
+    {
+      "candidate_id": "EN_V16",
+      "voice": "OmniVoice_EnSecondArrow",
+      "channel_id": "en_second_arrow",
+      "target_channel_name": "The Second Arrow",
+      "target_niche": "Mindfulness, emotional regulation & Zen psychology",
+      "archetype": "Calm Mindful Zen & Emotional Regulation Voice",
+      "voice_label": "Giọng trầm tĩnh, thư thái, chữa lành, dẫn dắt chánh niệm và hóa giải mũi tên thứ hai",
+      "language": "en",
+      "languages": [
+        "en",
+        "vi"
+      ],
+      "reference_wav": "reference.wav",
+      "reference_text": "He would continue to both eat and meditate, not depriving his body, nor pursuing much beyond what his body needed for basic comfort.",
+      "duration_seconds": 7.55,
+      "composite_score": 66.2,
+      "acoustic_metrics": {
+        "dur": 7.55,
+        "rms_db": -15.15,
+        "peak_db": -1.18,
+        "p05_db": -140.0,
+        "p10_db": -71.8,
+        "p50_db": -15.9,
+        "p90_db": -11.1,
+        "dyn_db": 60.7,
+        "active_ratio": 0.81,
+        "min_1s_db": -16.5,
+        "start_60ms_db": -140.0,
+        "end_60ms_db": -140.0,
+        "hf_ratio": 0.0654,
+        "f0_hz": 111.6,
+        "f0_spread_semitones": 4.66,
+        "quarter_rms_spread_db": 1.76
+      },
+      "span_provenance": {
+        "raw_sir_db": 13.56,
+        "avg_word_prob": 0.996,
+        "valley_start_db": -82.1,
+        "valley_end_db": -77.8,
+        "pause_before_s": 0.54,
+        "pause_after_s": 0.5
+      },
+      "source_speed": 1.0,
+      "recommended_speed": 1.0,
+      "default_tone": "reflective_slow",
+      "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+      "audio_lufs": -14.0,
+      "audio_peak_db": -1.2,
+      "sha256": "78c585575a7d4d5396df3f3a034848297ceca35f19db8ed33c377dc0e1325e72",
+      "demucs_vocal_isolated": true,
+      "studio_v3_restored": true,
+      "processing": {
+        "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+        "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+        "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+        "boundary_aligner": "faster-whisper large-v3 (en) word_timestamps + valley<=28dB + 110ms/150ms silence",
+        "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+      },
+      "sources": [
+        {
+          "url": "https://www.youtube.com/watch?v=0VyyWklwpBE",
+          "video_id": "0VyyWklwpBE",
+          "source_channel": "Pursuit of Wonder",
+          "video_title": "The Art of Letting Go - The Philosophy of the Buddha",
+          "window_seconds": [
+            362.13,
+            369.42
+          ]
+        }
+      ],
+      "listening_verified": true,
+      "note": "Studio V3 English reference voice (Calm Mindful Zen & Emotional Regulation Voice) from 'Pursuit of Wonder' (https://www.youtube.com/watch?v=0VyyWklwpBE @ 362.13s-369.42s).",
+      "rank": 16,
+      "assigned_channels": [
+        "en_second_arrow"
+      ],
+      "selection_status": "SELECTED_TOP_18",
+      "status_badge": "ĐÃ CHỌN CHO KÊNH: en_second_arrow"
+    },
+    {
+      "candidate_id": "EN_V07",
+      "voice": "OmniVoice_EnPlainSightAI",
+      "channel_id": "en_plain_sight_ai",
+      "target_channel_name": "Plain Sight AI",
+      "target_niche": "Practical AI, algorithms & automation decoded",
+      "archetype": "Modern High-Clarity AI & Tech Storyteller",
+      "voice_label": "Giọng hiện đại, phát âm cực nét, giải thích công nghệ AI phức tạp thành ngôn ngữ đời thường",
+      "language": "en",
+      "languages": [
+        "en",
+        "vi"
+      ],
+      "reference_wav": "reference.wav",
+      "reference_text": "That weight can be changed to do learning and what a neuron does is take the activities on the connections times the weights, adds them all up and then decides whether to send an output.",
+      "duration_seconds": 11.28,
+      "composite_score": 65.46,
+      "acoustic_metrics": {
+        "dur": 11.28,
+        "rms_db": -14.88,
+        "peak_db": -1.11,
+        "p05_db": -71.0,
+        "p10_db": -48.7,
+        "p50_db": -16.0,
+        "p90_db": -11.2,
+        "dyn_db": 37.5,
+        "active_ratio": 0.74,
+        "min_1s_db": -19.3,
+        "start_60ms_db": -140.0,
+        "end_60ms_db": -140.0,
+        "hf_ratio": 0.0154,
+        "f0_hz": 142.9,
+        "f0_spread_semitones": 2.51,
+        "quarter_rms_spread_db": 1.37
+      },
+      "span_provenance": {
+        "raw_sir_db": 13.23,
+        "avg_word_prob": 0.95,
+        "valley_start_db": -140.0,
+        "valley_end_db": -43.0,
+        "pause_before_s": 2.16,
+        "pause_after_s": 0.59
+      },
+      "source_speed": 1.0,
+      "recommended_speed": 1.14,
+      "default_tone": "analytical_crisp",
+      "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+      "audio_lufs": -14.0,
+      "audio_peak_db": -1.2,
+      "sha256": "cededa8a988b38a547fffdfda78bd0550edc9be1dec51ddad3a319931b709cf2",
+      "demucs_vocal_isolated": true,
+      "studio_v3_restored": true,
+      "processing": {
+        "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+        "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+        "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+        "boundary_aligner": "faster-whisper large-v3 (en) word_timestamps + valley<=28dB + 110ms/150ms silence",
+        "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+      },
+      "sources": [
+        {
+          "url": "https://www.youtube.com/watch?v=IBe2o-cZncU",
+          "video_id": "IBe2o-cZncU",
+          "source_channel": "ColdFusion",
+          "video_title": "Who Invented A.I.? - The Pioneers of Our Future",
+          "window_seconds": [
+            284.57,
+            295.59
+          ]
+        }
+      ],
+      "listening_verified": true,
+      "note": "Studio V3 English reference voice (Modern High-Clarity AI & Tech Storyteller) from 'ColdFusion' (https://www.youtube.com/watch?v=IBe2o-cZncU @ 284.57s-295.59s).",
+      "rank": 17,
+      "assigned_channels": [],
+      "selection_status": "RESERVE_TOP_20",
+      "status_badge": "TOP 20 DỰ PHÒNG CAO CẤP (Sẵn sàng đổi)"
+    },
+    {
+      "candidate_id": "EN_V01",
+      "voice": "OmniVoice_EnLazyBrain",
+      "channel_id": "en_lazy_brain",
+      "target_channel_name": "Lazy Brain Lab",
+      "target_niche": "Neuroscience of procrastination, dopamine & habits",
+      "archetype": "Witty Conversational Behavioral & Habit Narrator",
+      "voice_label": "Giọng nam ấm, gần gũi, kể chuyện tâm lý học hành vi & thói quen trì hoãn cực kỳ tự nhiên",
+      "language": "en",
+      "languages": [
+        "en",
+        "vi"
+      ],
+      "reference_wav": "reference.wav",
+      "reference_text": "Worst of all, while procrastination hurts us in the long run, it does temporarily reduce our stress level.",
+      "duration_seconds": 7.85,
+      "composite_score": 65.01,
+      "acoustic_metrics": {
+        "dur": 7.85,
+        "rms_db": -15.8,
+        "peak_db": -1.17,
+        "p05_db": -140.0,
+        "p10_db": -140.0,
+        "p50_db": -16.9,
+        "p90_db": -11.6,
+        "dyn_db": 128.4,
+        "active_ratio": 0.74,
+        "min_1s_db": -18.8,
+        "start_60ms_db": -140.0,
+        "end_60ms_db": -140.0,
+        "hf_ratio": 0.2563,
+        "f0_hz": 127.7,
+        "f0_spread_semitones": 4.82,
+        "quarter_rms_spread_db": 2.85
+      },
+      "span_provenance": {
+        "raw_sir_db": 15.97,
+        "avg_word_prob": 0.997,
+        "valley_start_db": -140.0,
+        "valley_end_db": -63.5,
+        "pause_before_s": 0.78,
+        "pause_after_s": 0.18
+      },
+      "source_speed": 1.0,
+      "recommended_speed": 1.08,
+      "default_tone": "narrative_warm",
+      "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+      "audio_lufs": -14.0,
+      "audio_peak_db": -1.2,
+      "sha256": "13b149dd964700edee17ffe448fcbcfe7441db0e13d0f550d0009efaf35b3ceb",
+      "demucs_vocal_isolated": true,
+      "studio_v3_restored": true,
+      "processing": {
+        "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+        "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+        "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+        "boundary_aligner": "faster-whisper large-v3 (en) word_timestamps + valley<=28dB + 110ms/150ms silence",
+        "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+      },
+      "sources": [
+        {
+          "url": "https://www.youtube.com/watch?v=FWTNMzK9vG4",
+          "video_id": "FWTNMzK9vG4",
+          "source_channel": "TED-Ed",
+          "video_title": "Why you procrastinate even when it feels bad",
+          "window_seconds": [
+            245.23,
+            252.82
+          ]
+        }
+      ],
+      "listening_verified": true,
+      "note": "Studio V3 English reference voice (Witty Conversational Behavioral & Habit Narrator) from 'TED-Ed' (https://www.youtube.com/watch?v=FWTNMzK9vG4 @ 245.23s-252.82s).",
+      "rank": 18,
+      "assigned_channels": [],
+      "selection_status": "RESERVE_TOP_20",
+      "status_badge": "TOP 20 DỰ PHÒNG CAO CẤP (Sẵn sàng đổi)"
+    },
+    {
+      "candidate_id": "EN_V20",
+      "voice": "OmniVoice_EnFirstPrinciples",
+      "channel_id": "en_first_principles",
+      "target_channel_name": "First Principles Ink",
+      "target_niche": "Mental models, critical thinking & decision theory",
+      "archetype": "Iconic Deep Curiosity & Cognitive Science Narrator (Reserve #20)",
+      "voice_label": "Giọng kể chuyện khoa học nhận thức đặc trưng, đặt câu hỏi gợi mở cuốn hút người nghe",
+      "language": "en",
+      "languages": [
+        "en",
+        "vi"
+      ],
+      "reference_wav": "reference.wav",
+      "reference_text": "I know that I feel things and that I have a sense of myself. I have intentions. But how do I know that you.",
+      "duration_seconds": 8.73,
+      "composite_score": 62.2,
+      "acoustic_metrics": {
+        "dur": 8.73,
+        "rms_db": -15.11,
+        "peak_db": -1.05,
+        "p05_db": -58.6,
+        "p10_db": -48.3,
+        "p50_db": -17.8,
+        "p90_db": -10.8,
+        "dyn_db": 37.5,
+        "active_ratio": 0.74,
+        "min_1s_db": -18.3,
+        "start_60ms_db": -140.0,
+        "end_60ms_db": -140.0,
+        "hf_ratio": 0.0862,
+        "f0_hz": 173.3,
+        "f0_spread_semitones": 1.7,
+        "quarter_rms_spread_db": 7.51
+      },
+      "span_provenance": {
+        "raw_sir_db": 10.96,
+        "avg_word_prob": 0.977,
+        "valley_start_db": -67.3,
+        "valley_end_db": -43.0,
+        "pause_before_s": 0.18,
+        "pause_after_s": 0.24
+      },
+      "source_speed": 1.0,
+      "recommended_speed": 1.12,
+      "default_tone": "analytical_crisp",
+      "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+      "audio_lufs": -14.0,
+      "audio_peak_db": -1.2,
+      "sha256": "92fff784561a64f8a66ff3c984b5ae312b0d3dc9cf1367616f1dd36ab08db36c",
+      "demucs_vocal_isolated": true,
+      "studio_v3_restored": true,
+      "processing": {
+        "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+        "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+        "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+        "boundary_aligner": "faster-whisper large-v3 (en) word_timestamps + valley<=28dB + 110ms/150ms silence",
+        "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+      },
+      "sources": [
+        {
+          "url": "https://www.youtube.com/watch?v=qjfaoe847qQ",
+          "video_id": "qjfaoe847qQ",
+          "source_channel": "Vsauce",
+          "video_title": "What Is Consciousness?",
+          "window_seconds": [
+            132.18,
+            140.65
+          ]
+        }
+      ],
+      "listening_verified": true,
+      "note": "Studio V3 English reference voice (Iconic Deep Curiosity & Cognitive Science Narrator (Reserve #20)) from 'Vsauce' (https://www.youtube.com/watch?v=qjfaoe847qQ @ 132.18s-140.65s).",
+      "rank": 19,
+      "assigned_channels": [
+        "en_first_principles"
+      ],
+      "selection_status": "SELECTED_TOP_18",
+      "status_badge": "ĐÃ CHỌN CHO KÊNH: en_first_principles"
+    },
+    {
+      "candidate_id": "EN_V18",
+      "voice": "OmniVoice_EnBambooMarble",
+      "channel_id": "en_bamboo_marble",
+      "target_channel_name": "Bamboo & Marble",
+      "target_niche": "Stoicism, Taoist stillness & mental resilience",
+      "archetype": "Grounded Stoic & Eastern Wisdom Narrator",
+      "voice_label": "Giọng nam vững chãi, điềm tĩnh như đá cẩm thạch & tre trúc, truyền tải triết lý Khắc kỷ & Đạo gia",
+      "language": "en",
+      "languages": [
+        "en",
+        "vi"
+      ],
+      "reference_wav": "reference.wav",
+      "reference_text": "Epictetus says that you must undergo a hard winter's training. He's referring to how soldiers would train in the winter when they weren't at battle so they could be prepared when the battle did come.",
+      "duration_seconds": 11.44,
+      "composite_score": 61.76,
+      "acoustic_metrics": {
+        "dur": 11.44,
+        "rms_db": -14.18,
+        "peak_db": -1.19,
+        "p05_db": -53.5,
+        "p10_db": -42.4,
+        "p50_db": -15.1,
+        "p90_db": -10.5,
+        "dyn_db": 31.9,
+        "active_ratio": 0.86,
+        "min_1s_db": -17.4,
+        "start_60ms_db": -140.0,
+        "end_60ms_db": -140.0,
+        "hf_ratio": 0.0025,
+        "f0_hz": 169.0,
+        "f0_spread_semitones": 4.06,
+        "quarter_rms_spread_db": 1.53
+      },
+      "span_provenance": {
+        "raw_sir_db": 3.24,
+        "avg_word_prob": 0.971,
+        "valley_start_db": -140.0,
+        "valley_end_db": -60.6,
+        "pause_before_s": 2.1,
+        "pause_after_s": 0.4
+      },
+      "source_speed": 1.0,
+      "recommended_speed": 1.0,
+      "default_tone": "reflective_slow",
+      "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+      "audio_lufs": -14.0,
+      "audio_peak_db": -1.2,
+      "sha256": "920964523ccdc6ce25fffdf2bcfc146f2bdaf3f0b688dfef0ba22c1c3e66fec5",
+      "demucs_vocal_isolated": true,
+      "studio_v3_restored": true,
+      "processing": {
+        "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+        "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+        "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+        "boundary_aligner": "faster-whisper large-v3 (en) word_timestamps + valley<=28dB + 110ms/150ms silence",
+        "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+      },
+      "sources": [
+        {
+          "url": "https://www.youtube.com/watch?v=7XVIY7lqVEU",
+          "video_id": "7XVIY7lqVEU",
+          "source_channel": "Daily Stoic",
+          "video_title": "12 Ways Stoics Build Mental Strength And Resilience",
+          "window_seconds": [
+            574.81,
+            585.99
+          ]
+        }
+      ],
+      "listening_verified": true,
+      "note": "Studio V3 English reference voice (Grounded Stoic & Eastern Wisdom Narrator) from 'Daily Stoic' (https://www.youtube.com/watch?v=7XVIY7lqVEU @ 574.81s-585.99s).",
+      "rank": 20,
+      "assigned_channels": [
+        "en_bamboo_marble"
+      ],
+      "selection_status": "SELECTED_TOP_18",
+      "status_badge": "ĐÃ CHỌN CHO KÊNH: en_bamboo_marble"
+    },
+    {
+      "candidate_id": "EN_V04",
+      "voice": "OmniVoice_EnFirstPrinciples",
+      "channel_id": "en_first_principles",
+      "target_channel_name": "First Principles Ink",
+      "target_niche": "Mental models, critical thinking & decision theory",
+      "archetype": "Authoritative First-Principles Science & Logic Narrator",
+      "voice_label": "Giọng chuẩn mực, trí thức, dẫn dắt tư duy nguyên bản (First Principles) đầy thuyết phục",
+      "language": "en",
+      "languages": [
+        "en",
+        "vi"
+      ],
+      "reference_wav": "reference.wav",
+      "reference_text": "Uh, those also follow my rule. Okay. What's the rule? What are you thinking? Mortar by two. That is not my rule. What?",
+      "duration_seconds": 8.22,
+      "composite_score": 60.0,
+      "acoustic_metrics": {
+        "dur": 8.22,
+        "rms_db": -16.59,
+        "peak_db": -1.14,
+        "p05_db": -63.7,
+        "p10_db": -54.7,
+        "p50_db": -20.5,
+        "p90_db": -12.0,
+        "dyn_db": 42.7,
+        "active_ratio": 0.68,
+        "min_1s_db": -19.1,
+        "start_60ms_db": -140.0,
+        "end_60ms_db": -140.0,
+        "hf_ratio": 0.0443,
+        "f0_hz": 130.4,
+        "f0_spread_semitones": 5.48,
+        "quarter_rms_spread_db": 2.63
+      },
+      "span_provenance": {
+        "raw_sir_db": 7.63,
+        "avg_word_prob": 0.841,
+        "valley_start_db": -140.0,
+        "valley_end_db": -68.6,
+        "pause_before_s": 0.56,
+        "pause_after_s": 0.28
+      },
+      "source_speed": 1.0,
+      "recommended_speed": 1.12,
+      "default_tone": "analytical_crisp",
+      "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+      "audio_lufs": -14.0,
+      "audio_peak_db": -1.2,
+      "sha256": "0608da70a90d1d30791b4e321a0e516c75e0eb87ed150309c7dc809a258713bd",
+      "demucs_vocal_isolated": true,
+      "studio_v3_restored": true,
+      "processing": {
+        "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+        "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+        "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+        "boundary_aligner": "faster-whisper large-v3 (en) word_timestamps + valley<=28dB + 110ms/150ms silence",
+        "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+      },
+      "sources": [
+        {
+          "url": "https://www.youtube.com/watch?v=vKA4w2O61Xo",
+          "video_id": "vKA4w2O61Xo",
+          "source_channel": "Veritasium",
+          "video_title": "The Most Common Cognitive Bias",
+          "window_seconds": [
+            43.47,
+            51.43
+          ]
+        }
+      ],
+      "listening_verified": true,
+      "note": "Studio V3 English reference voice (Authoritative First-Principles Science & Logic Narrator) from 'Veritasium' (https://www.youtube.com/watch?v=vKA4w2O61Xo @ 43.47s-51.43s).",
+      "rank": 21,
+      "assigned_channels": [],
+      "selection_status": "ELIMINATED_AUTO",
+      "status_badge": "TỰ ĐỘNG LOẠI BỎ (Hạng #21-#25)"
+    },
+    {
+      "candidate_id": "EN_V08",
+      "voice": "OmniVoice_EnCareerLeverage",
+      "channel_id": "en_career_leverage",
+      "target_channel_name": "Career Leverage",
+      "target_niche": "Workplace leverage, negotiation & career strategy",
+      "archetype": "Executive Career Strategy & Negotiation Mentor",
+      "voice_label": "Giọng tự tin, chuyên nghiệp, chia sẻ đòn bẩy sự nghiệp và nghệ thuật đàm phán nơi công sở",
+      "language": "en",
+      "languages": [
+        "en",
+        "vi"
+      ],
+      "reference_wav": "reference.wav",
+      "reference_text": "Go on sites like Glassdoor, PayScale, Department of Labor. You've heard of them before. But what is most effective?",
+      "duration_seconds": 6.79,
+      "composite_score": 60.0,
+      "acoustic_metrics": {
+        "dur": 6.79,
+        "rms_db": -15.37,
+        "peak_db": -1.19,
+        "p05_db": -54.3,
+        "p10_db": -42.4,
+        "p50_db": -16.4,
+        "p90_db": -11.4,
+        "dyn_db": 31.0,
+        "active_ratio": 0.84,
+        "min_1s_db": -17.3,
+        "start_60ms_db": -140.0,
+        "end_60ms_db": -140.0,
+        "hf_ratio": 0.1093,
+        "f0_hz": 230.8,
+        "f0_spread_semitones": 3.04,
+        "quarter_rms_spread_db": 2.91
+      },
+      "span_provenance": {
+        "raw_sir_db": 15.59,
+        "avg_word_prob": 0.983,
+        "valley_start_db": -46.2,
+        "valley_end_db": -65.7,
+        "pause_before_s": 0.22,
+        "pause_after_s": 0.34
+      },
+      "source_speed": 1.0,
+      "recommended_speed": 1.1,
+      "default_tone": "analytical_crisp",
+      "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+      "audio_lufs": -14.0,
+      "audio_peak_db": -1.2,
+      "sha256": "6d940e144ba67b5933900d972a86e2b46efeb1cb1b6d9f8f399ade7264b15c09",
+      "demucs_vocal_isolated": true,
+      "studio_v3_restored": true,
+      "processing": {
+        "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+        "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+        "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+        "boundary_aligner": "faster-whisper large-v3 (en) word_timestamps + valley<=28dB + 110ms/150ms silence",
+        "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+      },
+      "sources": [
+        {
+          "url": "https://www.youtube.com/watch?v=urpxkLZEklc",
+          "video_id": "urpxkLZEklc",
+          "source_channel": "Harvard Business Review",
+          "video_title": "How to Negotiate Your Starting Salary",
+          "window_seconds": [
+            236.87,
+            243.4
+          ]
+        }
+      ],
+      "listening_verified": true,
+      "note": "Studio V3 English reference voice (Executive Career Strategy & Negotiation Mentor) from 'Harvard Business Review' (https://www.youtube.com/watch?v=urpxkLZEklc @ 236.87s-243.4s).",
+      "rank": 22,
+      "assigned_channels": [],
+      "selection_status": "ELIMINATED_AUTO",
+      "status_badge": "TỰ ĐỘNG LOẠI BỎ (Hạng #21-#25)"
+    },
+    {
+      "candidate_id": "EN_V12",
+      "voice": "OmniVoice_EnWaitHow",
+      "channel_id": "en_wait_how",
+      "target_channel_name": "Wait, How?",
+      "target_niche": "Everyday physics, counter-intuitive science & paradoxes",
+      "archetype": "Energetic Everyday Physics & Paradox Explorer",
+      "voice_label": "Giọng giàu năng lượng tò mò, lôi cuốn ngay từ câu đầu, giải thích nghịch lý vật lý đời thường",
+      "language": "en",
+      "languages": [
+        "en",
+        "vi"
+      ],
+      "reference_wav": "reference.wav",
+      "reference_text": "What I do know, however, is that the nations that have scientists researching the physics of curling are the same nations that most often have Olympic athletes on the podiums for curling.",
+      "duration_seconds": 10.25,
+      "composite_score": 60.0,
+      "acoustic_metrics": {
+        "dur": 10.25,
+        "rms_db": -15.25,
+        "peak_db": -1.19,
+        "p05_db": -46.7,
+        "p10_db": -37.4,
+        "p50_db": -16.9,
+        "p90_db": -11.2,
+        "dyn_db": 26.2,
+        "active_ratio": 0.88,
+        "min_1s_db": -18.1,
+        "start_60ms_db": -140.0,
+        "end_60ms_db": -140.0,
+        "hf_ratio": 0.0651,
+        "f0_hz": 132.6,
+        "f0_spread_semitones": 3.25,
+        "quarter_rms_spread_db": 7.8
+      },
+      "span_provenance": {
+        "raw_sir_db": 10.66,
+        "avg_word_prob": 0.991,
+        "valley_start_db": -60.7,
+        "valley_end_db": -64.3,
+        "pause_before_s": 0.24,
+        "pause_after_s": 0.6
+      },
+      "source_speed": 1.0,
+      "recommended_speed": 1.14,
+      "default_tone": "analytical_crisp",
+      "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+      "audio_lufs": -14.0,
+      "audio_peak_db": -1.2,
+      "sha256": "933683775a47c95945e3bef3d9d374f759d120a62ab00128e073b5259fc6ed22",
+      "demucs_vocal_isolated": true,
+      "studio_v3_restored": true,
+      "processing": {
+        "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+        "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+        "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+        "boundary_aligner": "faster-whisper large-v3 (en) word_timestamps + valley<=28dB + 110ms/150ms silence",
+        "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+      },
+      "sources": [
+        {
+          "url": "https://www.youtube.com/watch?v=7CUojMQgDpM",
+          "video_id": "7CUojMQgDpM",
+          "source_channel": "SmarterEveryDay",
+          "video_title": "The Controversial Physics of Curling - COLD HARD SCIENCE - Smarter Every Day 111",
+          "window_seconds": [
+            484.09,
+            494.08
+          ]
+        }
+      ],
+      "listening_verified": true,
+      "note": "Studio V3 English reference voice (Energetic Everyday Physics & Paradox Explorer) from 'SmarterEveryDay' (https://www.youtube.com/watch?v=7CUojMQgDpM @ 484.09s-494.08s).",
+      "rank": 23,
+      "assigned_channels": [],
+      "selection_status": "ELIMINATED_AUTO",
+      "status_badge": "TỰ ĐỘNG LOẠI BỎ (Hạng #21-#25)"
+    },
+    {
+      "candidate_id": "EN_V13",
+      "voice": "OmniVoice_EnColdCaseInk",
+      "channel_id": "en_cold_case_ink",
+      "target_channel_name": "Cold Case Ink",
+      "target_niche": "Historical mysteries, forensics & unsolved cases",
+      "archetype": "Deep Atmospheric Investigative & Mystery Narrator",
+      "voice_label": "Giọng trầm sâu, cuốn hút kiểu phim tài liệu điều tra, dẫn dắt các vụ án lịch sử bí ẩn",
+      "language": "en",
+      "languages": [
+        "en",
+        "vi"
+      ],
+      "reference_wav": "reference.wav",
+      "reference_text": "Also known as The Buzzer, is a shortwave radio station that broadcasts a short, monotonous buzz tone, repeating at a rate of approximately 25 tones per minute.",
+      "duration_seconds": 10.77,
+      "composite_score": 60.0,
+      "acoustic_metrics": {
+        "dur": 10.77,
+        "rms_db": -15.02,
+        "peak_db": -1.07,
+        "p05_db": -36.1,
+        "p10_db": -25.1,
+        "p50_db": -14.7,
+        "p90_db": -12.3,
+        "dyn_db": 12.8,
+        "active_ratio": 0.94,
+        "min_1s_db": -16.5,
+        "start_60ms_db": -140.0,
+        "end_60ms_db": -140.0,
+        "hf_ratio": 0.3219,
+        "f0_hz": 121.5,
+        "f0_spread_semitones": 3.41,
+        "quarter_rms_spread_db": 1.75
+      },
+      "span_provenance": {
+        "raw_sir_db": 13.4,
+        "avg_word_prob": 0.914,
+        "valley_start_db": -57.7,
+        "valley_end_db": -59.8,
+        "pause_before_s": 0.46,
+        "pause_after_s": 0.71
+      },
+      "source_speed": 1.0,
+      "recommended_speed": 1.02,
+      "default_tone": "reflective_slow",
+      "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+      "audio_lufs": -14.0,
+      "audio_peak_db": -1.2,
+      "sha256": "f023b8ab688f3fbc4dde2559f863dc0f9a0ba10fc7984012bbadca0baff75bbd",
+      "demucs_vocal_isolated": true,
+      "studio_v3_restored": true,
+      "processing": {
+        "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+        "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+        "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+        "boundary_aligner": "faster-whisper large-v3 (en) word_timestamps + valley<=28dB + 110ms/150ms silence",
+        "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+      },
+      "sources": [
+        {
+          "url": "https://www.youtube.com/watch?v=TwNPKb9ol8Y",
+          "video_id": "TwNPKb9ol8Y",
+          "source_channel": "LEMMiNO",
+          "video_title": "Top 10 Facts - Unsolved Mysteries [Part 1]",
+          "window_seconds": [
+            474.25,
+            484.75
+          ]
+        }
+      ],
+      "listening_verified": true,
+      "note": "Studio V3 English reference voice (Deep Atmospheric Investigative & Mystery Narrator) from 'LEMMiNO' (https://www.youtube.com/watch?v=TwNPKb9ol8Y @ 474.25s-484.75s).",
+      "rank": 24,
+      "assigned_channels": [],
+      "selection_status": "ELIMINATED_AUTO",
+      "status_badge": "TỰ ĐỘNG LOẠI BỎ (Hạng #21-#25)"
+    },
+    {
+      "candidate_id": "EN_V21",
+      "voice": "OmniVoice_EnWalletAnatomy",
+      "channel_id": "en_wallet_anatomy",
+      "target_channel_name": "Wallet Anatomy",
+      "target_niche": "Behavioral finance, spending traps & money psychology",
+      "archetype": "Macro Economics & Wealth Mechanics Narrator (Pool #21)",
+      "voice_label": "Giọng phân tích kinh tế vĩ mô & dòng tiền sắc nét, giọng đọc phóng sự tài chính",
+      "language": "en",
+      "languages": [
+        "en",
+        "vi"
+      ],
+      "reference_wav": "reference.wav",
+      "reference_text": "Guess what happens to the players who are at the top of their game? They are paid generously for it. It's not about how hard you work.",
+      "duration_seconds": 7.7,
+      "composite_score": 60.0,
+      "acoustic_metrics": {
+        "dur": 7.7,
+        "rms_db": -14.05,
+        "peak_db": -0.99,
+        "p05_db": -34.3,
+        "p10_db": -30.5,
+        "p50_db": -14.3,
+        "p90_db": -10.6,
+        "dyn_db": 19.9,
+        "active_ratio": 0.94,
+        "min_1s_db": -14.9,
+        "start_60ms_db": -140.0,
+        "end_60ms_db": -140.0,
+        "hf_ratio": 0.0687,
+        "f0_hz": 112.7,
+        "f0_spread_semitones": 4.37,
+        "quarter_rms_spread_db": 3.61
+      },
+      "span_provenance": {
+        "raw_sir_db": 8.17,
+        "avg_word_prob": 0.977,
+        "valley_start_db": -45.0,
+        "valley_end_db": -51.2,
+        "pause_before_s": 1.5,
+        "pause_after_s": 0.14
+      },
+      "source_speed": 1.0,
+      "recommended_speed": 1.1,
+      "default_tone": "analytical_crisp",
+      "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+      "audio_lufs": -14.0,
+      "audio_peak_db": -1.2,
+      "sha256": "9f93907107ba30685705bfb1465f8bceeeb5ffcf819e419ce8ec0f4bbe9a6f80",
+      "demucs_vocal_isolated": true,
+      "studio_v3_restored": true,
+      "processing": {
+        "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+        "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+        "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+        "boundary_aligner": "faster-whisper large-v3 (en) word_timestamps + valley<=28dB + 110ms/150ms silence",
+        "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+      },
+      "sources": [
+        {
+          "url": "https://www.youtube.com/watch?v=6mRbDEtDoyA",
+          "video_id": "6mRbDEtDoyA",
+          "source_channel": "James Jani",
+          "video_title": "The Untold Truth About Money: How to Build Wealth From Nothing.",
+          "window_seconds": [
+            427.21,
+            434.66
+          ]
+        }
+      ],
+      "listening_verified": true,
+      "note": "Studio V3 English reference voice (Macro Economics & Wealth Mechanics Narrator (Pool #21)) from 'James Jani' (https://www.youtube.com/watch?v=6mRbDEtDoyA @ 427.21s-434.66s).",
+      "rank": 25,
+      "assigned_channels": [],
+      "selection_status": "ELIMINATED_AUTO",
+      "status_badge": "TỰ ĐỘNG LOẠI BỎ (Hạng #21-#25)"
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "candidate_id": "EN_V14",
+  "voice": "OmniVoice_EnChokePoint",
+  "channel_id": "en_choke_point",
+  "target_channel_name": "Choke Point Maps",
+  "target_niche": "Geopolitics, trade routes & strategic geography",
+  "archetype": "Compelling Geopolitical & Strategic Map Analyst",
+  "voice_label": "Giọng thuyết minh địa chính trị có chiều sâu, nhấn nhá kịch tính về bản đồ quyền lực & eo biển",
+  "language": "en",
+  "languages": [
+    "en",
+    "vi"
+  ],
+  "reference_wav": "reference.wav",
+  "reference_text": "However, events at the Red Sea's southernmost checkpoint, the Bab el -Mandeb, are causing trouble for the canal and its Egyptian government -owned authority.",
+  "duration_seconds": 9.18,
+  "composite_score": 76.44,
+  "acoustic_metrics": {
+    "dur": 9.18,
+    "rms_db": -15.36,
+    "peak_db": -1.01,
+    "p05_db": -42.1,
+    "p10_db": -30.6,
+    "p50_db": -17.0,
+    "p90_db": -11.8,
+    "dyn_db": 18.8,
+    "active_ratio": 0.91,
+    "min_1s_db": -18.4,
+    "start_60ms_db": -140.0,
+    "end_60ms_db": -140.0,
+    "hf_ratio": 0.1638,
+    "f0_hz": 150.0,
+    "f0_spread_semitones": 4.17,
+    "quarter_rms_spread_db": 3.2
+  },
+  "span_provenance": {
+    "raw_sir_db": 41.59,
+    "avg_word_prob": 0.988,
+    "valley_start_db": -59.4,
+    "valley_end_db": -43.9,
+    "pause_before_s": 0.28,
+    "pause_after_s": 0.2
+  },
+  "source_speed": 1.0,
+  "recommended_speed": 1.1,
+  "default_tone": "analytical_crisp",
+  "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+  "audio_lufs": -14.0,
+  "audio_peak_db": -1.2,
+  "sha256": "e0f4df39cbe8ace0c25012199d4202d370a8f2f3b719d2f8e61db0d68374ef69",
+  "demucs_vocal_isolated": true,
+  "studio_v3_restored": true,
+  "processing": {
+    "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+    "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+    "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+    "boundary_aligner": "faster-whisper large-v3 (en) word_timestamps + valley<=28dB + 110ms/150ms silence",
+    "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+  },
+  "sources": [
+    {
+      "url": "https://www.youtube.com/watch?v=h2M6lbuhQrE",
+      "video_id": "h2M6lbuhQrE",
+      "source_channel": "TLDR News Global",
+      "video_title": "Every Global Trade Chokepoint Explained",
+      "window_seconds": [
+        168.31,
+        177.23
+      ]
+    }
+  ],
+  "listening_verified": true,
+  "note": "Studio V3 English reference voice (Compelling Geopolitical & Strategic Map Analyst) from 'TLDR News Global' (https://www.youtube.com/watch?v=h2M6lbuhQrE @ 168.31s-177.23s)."
+}

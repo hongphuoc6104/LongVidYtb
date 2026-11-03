@@ -1,31 +1,75 @@
 {
+  "candidate_id": "EN_V10",
   "voice": "OmniVoice_EnInsideVessel",
   "channel_id": "en_inside_vessel",
+  "target_channel_name": "Inside the Vessel",
+  "target_niche": "Human physiology, sleep, immunity & body signals",
+  "archetype": "Engaging Human Anatomy & Medical Science Narrator",
+  "voice_label": "Giọng bác sĩ/nhà giải phẫu học ấm áp, trực quan, giải mã tín hiệu cơ thể & giấc ngủ",
   "language": "en",
   "languages": [
     "en",
     "vi"
   ],
   "reference_wav": "reference.wav",
-  "reference_text": "Đang ngồi đọc sách thì dưới chân bỗng có tiếng kêu meo meo dịu dàng. Nhà bạn có nuôi một chú mèo nào không, hãy bình luận nhé.",
-  "source_speed": 0.9,
+  "reference_text": "This is what's called a lateral ventricle. Now there are actually two lateral ventricles, one in each hemisphere, but considering I'm only holding one hemisphere.",
+  "duration_seconds": 8.35,
+  "composite_score": 88.95,
+  "acoustic_metrics": {
+    "dur": 8.35,
+    "rms_db": -14.9,
+    "peak_db": -1.19,
+    "p05_db": -54.6,
+    "p10_db": -50.0,
+    "p50_db": -17.1,
+    "p90_db": -10.7,
+    "dyn_db": 39.3,
+    "active_ratio": 0.83,
+    "min_1s_db": -15.6,
+    "start_60ms_db": -140.0,
+    "end_60ms_db": -140.0,
+    "hf_ratio": 0.0142,
+    "f0_hz": 128.3,
+    "f0_spread_semitones": 1.74,
+    "quarter_rms_spread_db": 3.12
+  },
+  "span_provenance": {
+    "raw_sir_db": 43.63,
+    "avg_word_prob": 0.971,
+    "valley_start_db": -64.3,
+    "valley_end_db": -56.9,
+    "pause_before_s": 0.52,
+    "pause_after_s": 0.6
+  },
+  "source_speed": 1.0,
   "recommended_speed": 1.08,
   "default_tone": "narrative_warm",
-  "audio_voice_chain": "highpass=f=90,equalizer=f=185:t=q:w=1.2:g=-2.9,equalizer=f=2400:t=q:w=1.2:g=1.5,lowpass=f=13500",
+  "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
   "audio_lufs": -14.0,
-  "audio_peak_db": -1.5,
-  "sha256": "8ff1a7152a5e97124ba736b1295d6d41570f32b56cc217ecdb5e05f5438e383c",
+  "audio_peak_db": -1.2,
+  "sha256": "cc43bb78420aeca213c51c4195550f2f3fa44ae03e5f50ed294939baeaac9937",
+  "demucs_vocal_isolated": true,
+  "studio_v3_restored": true,
+  "processing": {
+    "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+    "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+    "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+    "boundary_aligner": "faster-whisper large-v3 (en) word_timestamps + valley<=28dB + 110ms/150ms silence",
+    "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+  },
   "sources": [
     {
-      "source": "assets/voices/viet_narrator/ref_clean_b3_24k.wav",
+      "url": "https://www.youtube.com/watch?v=f1FOzJ9NWnE",
+      "video_id": "f1FOzJ9NWnE",
+      "source_channel": "Institute of Human Anatomy",
+      "video_title": "Why Sleep Is Important | Institute of Human Anatomy",
       "window_seconds": [
-        0.0,
-        8.14
-      ],
-      "pitch_factor": 1.0,
-      "eq": ""
+        118.92,
+        127.02
+      ]
     }
   ],
   "listening_verified": true,
-  "note": "Studio-tuned human voice profile for channel en_inside_vessel (narrative_warm, speed 1.08)."
+  "note": "Studio V3 English reference voice (Engaging Human Anatomy & Medical Science Narrator) from 'Institute of Human Anatomy' (https://www.youtube.com/watch?v=f1FOzJ9NWnE @ 118.92s-127.02s).",
+  "assigned_from_candidate": "EN_V10"
 }
