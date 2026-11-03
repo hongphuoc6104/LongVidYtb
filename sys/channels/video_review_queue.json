@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-11-03T16:37:13.223883+00:00",
+  "updated_at": "2026-11-03T19:13:31.763461+00:00",
   "items": {
     "ai-binh-dan-batch3-16x9": {
       "job_id": "ai-binh-dan-batch3-16x9",
@@ -277,12 +277,12 @@
       "channel_id": "luat_ngam",
       "channel_name": "Luật Ngầm Đám Đông",
       "format_profile": "long_16x9",
-      "title": "Hiệu Ứng Người Ngoài Cuộc: Vì Sao Đám Đông Đứng Nhìn Mà Không Giúp?",
-      "mp4_path": "",
-      "thumbnail_path": "",
-      "srt_path": "",
-      "duration_sec": 0.0,
-      "competitor_formula": "Benchmark: Academy of Ideas (YouTube), Psych2Go Vietnam (TikTok) | Hook: 'Vì sao bạn luôn [hành vi bầy đàn] dù biết [hậu quả]?'",
+      "title": "luat-ngam-batch3-16x9",
+      "mp4_path": "/home/hongphuoc6104/Desktop/vp-agent-core/video/luat-ngam-batch3-16x9/luat-ngam-batch3-16x9.mp4",
+      "thumbnail_path": "/home/hongphuoc6104/Desktop/vp-agent-core/video/luat-ngam-batch3-16x9/thumbnail_16x9.jpg",
+      "srt_path": "/home/hongphuoc6104/Desktop/vp-agent-core/video/luat-ngam-batch3-16x9/luat-ngam-batch3-16x9.srt",
+      "duration_sec": 154.266667,
+      "competitor_formula": "",
       "status": "PENDING_REVIEW",
       "review_notes": "",
       "reviewed_at": null,
