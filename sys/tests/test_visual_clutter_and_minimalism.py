@@ -83,17 +83,15 @@ class TestVisualRegistryMinimalism:
         for field_name in ("style_description", "thumbnail_rule", "label", "cast_appearance", "outfit"):
             text = (getattr(vis, field_name, "") or "").lower()
             for banned in BANNED_CLUTTER_WORDS:
-                assert (
-                    banned not in text
-                ), f"Banned buzzword '{banned}' detected in {channel_id}.visual.{field_name}: {text}"
+                assert banned not in text, (
+                    f"Banned buzzword '{banned}' detected in {channel_id}.visual.{field_name}: {text}"
+                )
 
     @pytest.mark.parametrize("channel_id", ENGLISH_CHANNEL_IDS)
     def test_english_channel_has_distinct_3_tone_palette(self, channel_id: str) -> None:
         ch = get_channel(channel_id)
         palette = ch.visual.palette
-        assert (
-            len(palette) == 3
-        ), f"Channel {channel_id} palette must have exactly 3 hex codes, got {len(palette)}"
+        assert len(palette) == 3, f"Channel {channel_id} palette must have exactly 3 hex codes, got {len(palette)}"
         for color in palette:
             assert color.startswith("#") and len(color) == 7, f"Invalid hex code '{color}' in {channel_id}"
 
@@ -261,3 +259,61 @@ class TestVisualClutterGate:
         assert saved_data["passed"] is False
         assert len(saved_data["failing_images"]) == 1
         assert saved_data["failing_images"][0]["filename"] == "SC01_I2.jpg"
+
+
+class TestCompetitorDialogueFormulaAndV2Pilots:
+    """Verify all 18 English channels have competitor dialogue formulas, pause cadences, and V2 pilot reports."""
+
+    REBUILT_EN_SLUGS: List[str] = [
+        "en-first-principles",
+        "en-scale-and-bone",
+        "en-pocket-cosmos",
+        "en-deep-time-strata",
+        "en-inside-vessel",
+        "en-macro-gears",
+        "en-fine-print",
+        "en-crowd-strings",
+        "en-cold-case-ink",
+        "en-choke-point",
+        "en-root-and-canopy",
+        "en-spawn-to-apex",
+        "en-second-arrow",
+        "en-bamboo-marble",
+        "en-kindred-sketch",
+        "en-lazy-brain",
+        "en-career-leverage",
+        "en-wallet-anatomy",
+    ]
+
+    @pytest.mark.parametrize("slug", REBUILT_EN_SLUGS)
+    def test_rebuilt_spec_has_competitor_dialogue_formula_and_cadence(self, slug: str) -> None:
+        spec_path = (
+            Path(__file__).resolve().parents[1]
+            / "channels"
+            / "en_rebuilt_style_specs"
+            / slug
+            / f"{slug}_rebuilt_spec.json"
+        )
+        assert spec_path.exists(), f"Missing rebuilt spec for {slug}"
+        data = json.loads(spec_path.read_text(encoding="utf-8"))
+
+        formula = data.get("competitor_dialogue_formula", {})
+        assert formula.get("competitor_verbatim_transcript_20s"), f"{slug} missing verbatim transcript"
+        assert formula.get("sentence_structure_formula_vi"), f"{slug} missing sentence structure formula"
+        assert formula.get("pause_and_cadence_formula_vi"), f"{slug} missing pause cadence formula"
+        assert formula.get("transition_and_camera_formula_vi"), f"{slug} missing transition formula"
+
+        beats = data.get("beats", [])
+        assert len(beats) == 8, f"{slug} must have 8 beats"
+        for b in beats:
+            assert b.get("formula_stage"), f"{slug} {b.get('beat_id')} missing formula_stage"
+            assert 0.10 <= float(b.get("pause_after_sec", 0)) <= 0.65, f"{slug} invalid pause_after_sec"
+            assert b.get("camera_motion"), f"{slug} {b.get('beat_id')} missing camera_motion"
+            assert b.get("transition"), f"{slug} {b.get('beat_id')} missing transition"
+
+        report_path = spec_path.parent / "pilot_build_report.json"
+        assert report_path.exists(), f"Missing pilot_build_report.json for {slug}"
+        report = json.loads(report_path.read_text(encoding="utf-8"))
+        assert "VN_KINETIC_1WORD_RED_YELLOW_ASS" in report.get("subtitle_style_9x16", "")
+        assert report.get("transition_engine") == "2x_supersampled_zoompan_plus_xfade"
+        assert 15.0 <= float(report.get("duration_sec", 0)) <= 27.0

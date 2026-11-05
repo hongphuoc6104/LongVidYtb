@@ -1,8 +1,21 @@
 {
   "channel_slug": "en-wallet-anatomy",
   "status": "SUCCESS",
-  "duration_sec": 19.58,
+  "duration_sec": 20.4,
   "beats_count": 8,
+  "words_count": 52,
+  "beat_durations_sec": [
+    2.94,
+    1.95,
+    2.82,
+    2.12,
+    2.7075,
+    3.4,
+    2.415,
+    2.045
+  ],
+  "subtitle_style_9x16": "VN_KINETIC_1WORD_RED_YELLOW_ASS (Arial 100px, #FF3B30 / #FFE600, Outline=6, MarginV=400)",
+  "transition_engine": "2x_supersampled_zoompan_plus_xfade",
   "mp4_9x16": "/home/hongphuoc6104/.gemini/antigravity/brain/715cbad2-6a65-4677-b14e-8d30e126287f/rebuilt_pilots/en-wallet-anatomy/en-wallet-anatomy-pilot-9x16.mp4",
   "mp4_16x9": "/home/hongphuoc6104/.gemini/antigravity/brain/715cbad2-6a65-4677-b14e-8d30e126287f/rebuilt_pilots/en-wallet-anatomy/en-wallet-anatomy-pilot-16x9.mp4",
   "canonical_short_mp4": "/home/hongphuoc6104/Desktop/vp-agent-core/video/en-wallet-anatomy-test-20s-9x16/en-wallet-anatomy-test-20s-9x16.mp4",

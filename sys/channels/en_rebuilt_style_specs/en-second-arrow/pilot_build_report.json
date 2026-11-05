@@ -1,8 +1,21 @@
 {
   "channel_slug": "en-second-arrow",
   "status": "SUCCESS",
-  "duration_sec": 26.16,
+  "duration_sec": 21.64,
   "beats_count": 8,
+  "words_count": 54,
+  "beat_durations_sec": [
+    2.565,
+    2.5,
+    2.6025,
+    2.57,
+    2.49,
+    3.05,
+    3.045,
+    2.82
+  ],
+  "subtitle_style_9x16": "VN_KINETIC_1WORD_RED_YELLOW_ASS (Arial 100px, #FF3B30 / #FFE600, Outline=6, MarginV=400)",
+  "transition_engine": "2x_supersampled_zoompan_plus_xfade",
   "mp4_9x16": "/home/hongphuoc6104/.gemini/antigravity/brain/715cbad2-6a65-4677-b14e-8d30e126287f/rebuilt_pilots/en-second-arrow/en-second-arrow-pilot-9x16.mp4",
   "mp4_16x9": "/home/hongphuoc6104/.gemini/antigravity/brain/715cbad2-6a65-4677-b14e-8d30e126287f/rebuilt_pilots/en-second-arrow/en-second-arrow-pilot-16x9.mp4",
   "canonical_short_mp4": "/home/hongphuoc6104/Desktop/vp-agent-core/video/en-second-arrow-test-20s-9x16/en-second-arrow-test-20s-9x16.mp4",

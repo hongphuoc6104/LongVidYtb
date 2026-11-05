@@ -7,67 +7,97 @@
   "beats": [
     {
       "beat_id": "B01",
-      "time_range": "0.0s - 2.1s",
-      "narration": "Beneath the forest floor lies connection.",
+      "formula_stage": "1. Subterranean Sensory Hook",
+      "time_range": "0.0s - 2.2s",
+      "narration": "Deep beneath the silent forest floor—",
+      "pause_after_sec": 0.22,
       "camera_motion": "tilt_down",
+      "transition": "fade",
       "competitor_ref_frame": "frame_01s.jpg",
       "prompt": "BBC Earth Green Planet macro documentary cinematography, cross-section of deep damp forest soil, intricate subterranean mycorrhizal fungal root networks weaving between ancient tree roots, moisture droplets, hyper-detailed organic soil texture, volumetric rim lighting, 8k resolution, cinematic photorealism, no text overlays, no illustrations."
     },
     {
       "beat_id": "B02",
-      "time_range": "2.1s - 4.2s",
-      "narration": "Fungi pulses with biochemical signals everywhere.",
+      "formula_stage": "2. Microscopic Network Setup",
+      "time_range": "2.2s - 4.5s",
+      "narration": "a vast fungal network quietly breathes.",
+      "pause_after_sec": 0.35,
       "camera_motion": "push_in",
+      "transition": "smoothleft",
       "competitor_ref_frame": "frame_04s.jpg",
       "prompt": "Macro optical wildlife photography, bioluminescent ghost fungi fruiting bodies emerging from decaying damp mossy bark, soft blue-green bioluminescent glow illuminating forest floor humus, spore mist drifting in dark humid air, shallow depth of field, National Geographic botanical cinematography, photorealistic, no text."
     },
     {
       "beat_id": "B03",
-      "time_range": "4.2s - 6.3s",
-      "narration": "Moisture awakens dormant velvet green moss.",
+      "formula_stage": "3. Hydration Awaken",
+      "time_range": "4.5s - 6.8s",
+      "narration": "Morning moisture awakens dormant moss—",
+      "pause_after_sec": 0.22,
       "camera_motion": "pan_right",
+      "transition": "smoothup",
       "competitor_ref_frame": "frame_06s.jpg",
       "prompt": "Macro time-lapse cinematography, thick emerald velvet bryophyte moss swelling and hydrating across ancient granite boulder, morning dew drops glistening like crystal prisms, microscopic leaf fronds expanding, warm low-angle woodland morning sunlight, BBC Earth documentary quality, authentic optical realism."
     },
     {
       "beat_id": "B04",
-      "time_range": "6.3s - 8.4s",
-      "narration": "Young ferns uncurl toward filtered sunlight.",
+      "formula_stage": "4. Growth Acceleration",
+      "time_range": "6.8s - 9.3s",
+      "narration": "and young ferns uncurl toward filtered light.",
+      "pause_after_sec": 0.4,
       "camera_motion": "tilt_up",
+      "transition": "smoothright",
       "competitor_ref_frame": "frame_10s.jpg",
       "prompt": "Close-up botanical documentary shot, young emerald fern fiddlehead uncoiling from moist forest litter, delicate fuzzy hairs catching golden volumetric sunbeams streaming through rainforest canopy, lush wet foliage background, shallow focus, true optical macro lens, authentic documentary footage."
     },
     {
       "beat_id": "B05",
-      "time_range": "8.4s - 10.6s",
-      "narration": "Carnivorous sundews glisten with sticky dew.",
+      "formula_stage": "5. Secret Weapon Reveal",
+      "time_range": "9.3s - 11.9s",
+      "narration": "Even carnivorous sundews glisten with sticky traps—",
+      "pause_after_sec": 0.25,
       "camera_motion": "push_in",
+      "transition": "smoothup",
       "competitor_ref_frame": "frame_13s.jpg",
       "prompt": "Extreme optical macro photography, carnivorous round-leaved sundew glistening with viscous ruby-tipped glandular tentacles, sticky mucilage droplets refracting bright morning light, tiny gnats trapped on crimson leaves, damp peat moss bed, botanical science realism, crystal clear details, zero text."
     },
     {
       "beat_id": "B06",
-      "time_range": "10.6s - 12.8s",
-      "narration": "Purple foxgloves erupt in vibrant bloom.",
+      "formula_stage": "6. Bloom Expansion",
+      "time_range": "11.9s - 14.4s",
+      "narration": "as towering purple foxgloves burst open.",
+      "pause_after_sec": 0.38,
       "camera_motion": "tilt_up",
+      "transition": "smoothleft",
       "competitor_ref_frame": "frame_16s.jpg",
       "prompt": "BBC Earth Green Planet documentary cinematography, tall stately purple foxglove Digitalis purpurea flowering spikes opening in time lapse sequence, intricate speckled throat patterns inside bell flowers, surrounded by lush green ferns and moss-covered twisted oak branches, atmospheric morning mist."
     },
     {
       "beat_id": "B07",
-      "time_range": "12.8s - 15.0s",
-      "narration": "Ancient trees channel moisture and nutrients.",
+      "formula_stage": "7. Canopy Interconnection",
+      "time_range": "14.4s - 17.1s",
+      "narration": "Ancient trees share carbon through living threads—",
+      "pause_after_sec": 0.25,
       "camera_motion": "pan_left",
+      "transition": "smoothdown",
       "competitor_ref_frame": "frame_18s.jpg",
       "prompt": "Wide optical tracking shot through ancient temperate rainforest, giant moss-draped gnarled tree trunks, epiphytic ferns clinging to high branches, cascading shafts of god rays piercing misty canopy, rich deep greens and earthy bark textures, cinematic nature documentary, photorealism."
     },
     {
       "beat_id": "B08",
-      "time_range": "15.0s - 17.2s",
-      "narration": "The canopy breathes as one organism.",
+      "formula_stage": "8. Ecological Organism Closure",
+      "time_range": "17.1s - 20.0s",
+      "narration": "uniting the entire forest into one organism.",
+      "pause_after_sec": 0.3,
       "camera_motion": "zoom_out",
+      "transition": "fade",
       "competitor_ref_frame": "frame_20s.jpg",
       "prompt": "Sweeping upward anamorphic shot looking from emerald forest floor to towering ancient canopy opening into morning sky, warm sunlight flare through damp leaves, mist rising from wet canopy, hyper-realistic Mossy Earth and BBC Earth botanical cinematography, 8k nature documentary, no text."
     }
-  ]
+  ],
+  "competitor_dialogue_formula": {
+    "competitor_verbatim_transcript_20s": "[00:00-00:04.2s] 'Dramatic behavior... because to our eyes, it happens so slowly.' [pause 0.51s] -> [00:04.7-00:10.8s] 'But if time is compressed, and you shift perspective to the plant's point of view,' [pause 0.35s] -> [00:11.1-00:13.5s] 'their world comes spectacularly to life.' [pause 0.97s] -> [00:14.5-00:20.0s] 'The events in this woodland can build to a view of half a year in less than a minute.'",
+    "sentence_structure_formula_vi": "Công thức 5 bước BBC Earth / Sir David Attenborough: (1) Mở đầu bằng nghịch lý thị giác vi mô ('Deep beneath the silent forest floor...') -> (2) Chuyển động tiềm ẩn của mạng lưới ('a vast fungal network quietly breathes') -> (3) Đột phá độ ẩm đánh thức sự sống ('Morning moisture awakens dormant moss...') -> (4) Gia tốc sinh trưởng quang hợp ('and young ferns uncurl toward filtered light') -> (5) Vũ khí sinh tồn & cộng sinh tán rừng ('Carnivorous sundews glisten... uniting the entire forest into one organism').",
+    "pause_and_cadence_formula_vi": "Nhịp đọc trầm ấm, thư thái 142 WPM chuẩn tài liệu BBC: Nghỉ ngắn 0.22s sau mệnh đề thiết lập vị trí; nghỉ 0.35s sau cụm danh từ sinh học; nghỉ 0.40s trước bước ngoặt quang hợp; và nghỉ 0.30s ở câu kết để âm hưởng nhạc giao hưởng ngân vang.",
+    "transition_and_camera_formula_vi": "Chuyển động máy quay mượt mà không giật (tilt_down len vào lòng đất, push_in sát tơ nấm, tilt_up vươn theo chồi dương xỉ và cành hoa), kết hợp chuyển cảnh xfade tự nhiên (fade, smoothleft, smoothright, smoothup, smoothdown)."
+  }
 }

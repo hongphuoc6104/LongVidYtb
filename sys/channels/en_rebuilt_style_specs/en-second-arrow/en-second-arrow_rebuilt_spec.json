@@ -6,67 +6,97 @@
   "beats": [
     {
       "beat_id": "B01",
+      "formula_stage": "1. Sudden Strike Sensory Hook",
       "time_range": "0.0s - 2.2s",
-      "narration": "Life inevitably strikes us with sudden pain.",
+      "narration": "Life strikes us with unexpected pain—",
+      "pause_after_sec": 0.22,
       "camera_motion": "push_in",
+      "transition": "fade",
       "competitor_ref_frame": "frame_01s.jpg",
       "prompt": "Cinematic Caravaggio chiaroscuro realism of an ancient Roman temple interior, an iron-tipped arrow striking an ancient cracked marble target on a fluted stone column, sparks and marble dust flying, dramatic single-source volumetric beam of warm sunlight piercing dark stone colonnade, heavy atmospheric dust motes, museum oil painting texture, photorealistic historical depth, zero text."
     },
     {
       "beat_id": "B02",
-      "time_range": "2.2s - 4.4s",
-      "narration": "External misfortune is just an event.",
+      "formula_stage": "2. External Inevitability Setup",
+      "time_range": "2.2s - 4.5s",
+      "narration": "a sudden arrow pierces our shoulder.",
+      "pause_after_sec": 0.38,
       "camera_motion": "zoom_out",
+      "transition": "smoothleft",
       "competitor_ref_frame": "frame_04s.jpg",
       "prompt": "Severe rainstorm sweeping across an ancient Roman Forum courtyard at dusk, weathered Doric and Corinthian stone columns soaked in rain, lightning illuminating ancient Roman cobblestones, turbulent dark clouds, dramatic classical antiquity realism, deep chiaroscuro lighting, warm torchlight flickering under portico, photorealistic, no text."
     },
     {
       "beat_id": "B03",
-      "time_range": "4.4s - 6.6s",
-      "narration": "Yet true suffering is born inside.",
+      "formula_stage": "3. Expectation Collapse",
+      "time_range": "4.5s - 7.0s",
+      "narration": "Yet the wound itself brings only injury;",
+      "pause_after_sec": 0.42,
       "camera_motion": "push_in",
+      "transition": "smoothup",
       "competitor_ref_frame": "frame_06s.jpg",
       "prompt": "Close-up cinematic Caravaggio lighting on a weathered ancient Roman bronze bust of Seneca in a dimly lit study, deep expressive carved eyes, warm candlelight from brass sconces casting long flickering shadows across ancient parchment scrolls, dramatic chiaroscuro oil painting realism, photorealistic, no text."
     },
     {
       "beat_id": "B04",
-      "time_range": "6.6s - 8.8s",
-      "narration": "We forge the second arrow ourselves.",
+      "formula_stage": "4. Rhetorical Pivot Question",
+      "time_range": "7.0s - 9.6s",
+      "narration": "why does our mind turn it into agony?",
+      "pause_after_sec": 0.45,
       "camera_motion": "tilt_up",
+      "transition": "smoothright",
       "competitor_ref_frame": "frame_08s.jpg",
       "prompt": "Macro shot of a blacksmith forge in ancient Rome, glowing molten iron arrowhead on an anvil being struck by a hammer, glowing embers showering into the dark workshop, deep contrast chiaroscuro flame lighting, extreme fine texture of forged steel and rustic stonework, dramatic historical atmosphere, no text."
     },
     {
       "beat_id": "B05",
-      "time_range": "8.8s - 11.0s",
-      "narration": "Our judgment amplifies every bitter blow.",
+      "formula_stage": "5. Deictic Causal Mechanism",
+      "time_range": "9.6s - 12.2s",
+      "narration": "Because our anger forges a second arrow—",
+      "pause_after_sec": 0.22,
       "camera_motion": "pan_right",
+      "transition": "smoothdown",
       "competitor_ref_frame": "frame_10s.jpg",
       "prompt": "Weathered marble statue bust of a Stoic philosopher drenched in torrential rain in an ancient peristyle garden, raindrops dripping down cold sculpted stone cheeks, dark brooding stormy skies behind classical stone balustrade, Caravaggio moody contrast, photorealistic fine marble texture, no text."
     },
     {
       "beat_id": "B06",
-      "time_range": "11.0s - 13.2s",
-      "narration": "Marcus Aurelius chose an unshakeable mind.",
+      "formula_stage": "6. Self-Inflicted Consequence",
+      "time_range": "12.2s - 14.8s",
+      "narration": "firing bitter judgment into our own chest.",
+      "pause_after_sec": 0.38,
       "camera_motion": "push_in",
+      "transition": "smoothleft",
       "competitor_ref_frame": "frame_12s.jpg",
       "prompt": "Majestic full-length bronze statue of Emperor Marcus Aurelius draped in ornate Roman toga, standing tall in an ancient Roman atrium at night, a glowing full moon directly overhead, warm golden torchlight illuminating ancient stone architecture, deep cinematic shadows, museum-grade classical realism, no text."
     },
     {
       "beat_id": "B07",
-      "time_range": "13.2s - 15.4s",
-      "narration": "Release judgment, quiet the internal storm.",
+      "formula_stage": "7. Stoic Master Disarmament",
+      "time_range": "14.8s - 17.3s",
+      "narration": "Marcus Aurelius chose an unshakeable mind—",
+      "pause_after_sec": 0.25,
       "camera_motion": "zoom_out",
+      "transition": "smoothup",
       "competitor_ref_frame": "frame_16s.jpg",
       "prompt": "Low-angle heroic view of classical Greek Parthenon ruins under a brilliant night sky, ancient Doric colonnade standing firm against wind, glowing lanterns casting warm amber glow onto ancient limestone steps, serene stillness and timeless stoic endurance, photorealistic oil painting depth, no text."
     },
     {
       "beat_id": "B08",
-      "time_range": "15.4s - 17.6s",
-      "narration": "Disarm the arrow, master your peace.",
+      "formula_stage": "8. Timeless Poise Payoff",
+      "time_range": "17.3s - 20.0s",
+      "narration": "disarming the second arrow before it strikes.",
+      "pause_after_sec": 0.3,
       "camera_motion": "push_in",
+      "transition": "fade",
       "competitor_ref_frame": "frame_20s.jpg",
       "prompt": "Golden sunrise dawning over an ancient Roman temple terrace overlooking the Mediterranean, golden hour rays bathing a serene marble statue of Epictetus, broken iron arrows lying harmlessly on ancient stone mosaic floor, olive trees swaying gently in morning breeze, majestic peaceful atmosphere, hyper-realistic classical painting, no text."
     }
-  ]
+  ],
+  "competitor_dialogue_formula": {
+    "competitor_verbatim_transcript_20s": "[00:00-00:03.3s] 'And yet, despite all this, what do you see in those eyes?' [pause 0.20s] -> [00:03.5-00:05.9s] 'Not despair, not defeat,' [pause 0.50s] -> [00:06.5-00:10.2s] 'but something far more remarkable: an unshakable calm,' [pause 0.38s] -> [00:10.6-00:14.5s] 'a quiet dignity that refuses to be broken.' [pause 1.57s] -> [00:16.1-00:20.0s] 'It's as if these marble figures, frozen in time, hold a secret—a lesson in how to endure.'",
+    "sentence_structure_formula_vi": "Công thức 5 bước Khắc kỷ Einzelgänger / Daily Stoic: (1) Cú đánh bất ngờ của số phận ('Life strikes us with unexpected pain...') -> (2) Hiện thực khách quan mũi tên thứ nhất ('a sudden arrow pierces our shoulder') -> (3) Phân định ranh giới nỗi đau thể xác ('Yet the wound itself brings only injury') -> (4) Câu hỏi tu từ cốt lõi ('why does our mind turn it into agony?') -> (5) Mũi tên thứ hai tự tạo & Bản lĩnh Marcus Aurelius ('Because our anger forges a second arrow... disarming the second arrow before it strikes').",
+    "pause_and_cadence_formula_vi": "Nhịp đọc suy tư sâu lắng 143 WPM với quãng nghỉ có chủ đích: Nghỉ ngắn 0.22s sau mệnh đề nhát tên đầu; nghỉ 0.42s sau phân định vết thương; nghỉ sâu 0.45s sau câu hỏi tu từ để tâm trí tự soi chiếu; nghỉ 0.38s trước khi đưa ra tấm gương Marcus Aurelius.",
+    "transition_and_camera_formula_vi": "Chuyển động máy quay phong cách chiaroscuro Caravaggio uy nghiêm: push_in vào mũi tên trúng bia đá, zoom_out nhìn bão táp La Mã, push_in cận cảnh tượng đồng Seneca, tilt_up đe rèn sắt, pan_right tượng cẩm thạch dưới mưa, và fade vào bình minh quang đãng trên thềm đền cổ."
+  }
 }

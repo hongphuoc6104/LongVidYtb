@@ -1,8 +1,21 @@
 {
   "channel_slug": "en-crowd-strings",
   "status": "SUCCESS",
-  "duration_sec": 28.42,
+  "duration_sec": 21.88,
   "beats_count": 8,
+  "words_count": 44,
+  "beat_durations_sec": [
+    2.665,
+    3.025,
+    2.4025,
+    3.0775,
+    2.47,
+    2.99,
+    3.07,
+    2.175
+  ],
+  "subtitle_style_9x16": "VN_KINETIC_1WORD_RED_YELLOW_ASS (Arial 100px, #FF3B30 / #FFE600, Outline=6, MarginV=400)",
+  "transition_engine": "2x_supersampled_zoompan_plus_xfade",
   "mp4_9x16": "/home/hongphuoc6104/.gemini/antigravity/brain/715cbad2-6a65-4677-b14e-8d30e126287f/rebuilt_pilots/en-crowd-strings/en-crowd-strings-pilot-9x16.mp4",
   "mp4_16x9": "/home/hongphuoc6104/.gemini/antigravity/brain/715cbad2-6a65-4677-b14e-8d30e126287f/rebuilt_pilots/en-crowd-strings/en-crowd-strings-pilot-16x9.mp4",
   "canonical_short_mp4": "/home/hongphuoc6104/Desktop/vp-agent-core/video/en-crowd-strings-test-20s-9x16/en-crowd-strings-test-20s-9x16.mp4",

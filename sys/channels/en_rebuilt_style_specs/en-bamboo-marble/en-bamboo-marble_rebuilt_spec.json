@@ -6,67 +6,97 @@
   "beats": [
     {
       "beat_id": "B01",
-      "time_range": "0.00s - 4.10s",
-      "narration": "We exhaust ourselves fighting life's natural current.",
+      "formula_stage": "1. Restless Struggle Sensory Hook",
+      "time_range": "0.0s - 2.4s",
+      "narration": "We exhaust ourselves battling life's quiet current—",
+      "pause_after_sec": 0.22,
       "camera_motion": "push_in",
+      "transition": "fade",
       "competitor_ref_frame": "frame_01s.jpg",
       "prompt": "Moody anamorphic 35mm cinematic film still of a contemplative person sitting alone on tatami in an open wooden Kyoto pavilion at dusk, pouring hot tea into a rustic ceramic bowl, steam rising gently into cold evening air, soft warm glow from an authentic washi paper lantern on low cedar table, heavy rain glistening on stone garden pathway and moss outside, shallow depth of field, organic film grain, photorealistic chiaroscuro lighting, no text overlays"
     },
     {
       "beat_id": "B02",
-      "time_range": "4.10s - 8.20s",
-      "narration": "Every struggle stems from resisting what is.",
+      "formula_stage": "2. Frantic Control Setup",
+      "time_range": "2.4s - 4.9s",
+      "narration": "searching endlessly for peace in rigid routines.",
+      "pause_after_sec": 0.38,
       "camera_motion": "zoom_out",
+      "transition": "smoothleft",
       "competitor_ref_frame": "frame_04s.jpg",
       "prompt": "Cinematic 35mm documentary film still of a solitary figure in traditional linen attire standing under the deep wooden eaves of an ancient Kyoto zen temple, rain pouring steadily into a carved mossy stone water basin tsukubai with bamboo water ladle, concentric ripples reflecting soft grey overcast sky, dark weathered cedar architecture, lush wet bamboo grove in background, atmospheric rain haze, shallow focus, cinematic color grading, no text"
     },
     {
       "beat_id": "B03",
-      "time_range": "8.20s - 12.30s",
-      "narration": "Bamboo survives storms because it bends freely.",
+      "formula_stage": "3. Expectation Collapse",
+      "time_range": "4.9s - 7.4s",
+      "narration": "Yet true peace cannot be conquered by force;",
+      "pause_after_sec": 0.42,
       "camera_motion": "pan_right",
+      "transition": "smoothup",
       "competitor_ref_frame": "frame_08s.jpg",
       "prompt": "Atmospheric 35mm cinematic shot of a traveler walking slowly along a wet cobblestone path through a towering emerald bamboo forest in Kyoto during misty rain, tall slender green bamboo stalks swaying gracefully in the wind without breaking, misty atmosphere filtering soft diffused daylight, rich earth tones, wet bamboo leaves glistening with water droplets, natural film texture, cinematic anamorphic framing, no text overlays"
     },
     {
       "beat_id": "B04",
-      "time_range": "12.30s - 16.40s",
-      "narration": "Water overcomes rock not by force, but surrender.",
+      "formula_stage": "4. Rhetorical Pivot Question",
+      "time_range": "7.4s - 9.8s",
+      "narration": "what if surrender is the secret?",
+      "pause_after_sec": 0.45,
       "camera_motion": "push_in",
+      "transition": "smoothright",
       "competitor_ref_frame": "frame_10s.jpg",
       "prompt": "Extreme close-up cinematic 35mm film still of smooth rounded black river stones and glistening dark marbles submerged in a crystal clear shallow mountain stream, pure mountain water flowing effortlessly and seamlessly around the stones, dappled sunlight filtering through autumn maple leaves reflecting golden amber highlights, cinematic macro realism, hyper-detailed water caustics, shallow depth of field, organic film grain, no text"
     },
     {
       "beat_id": "B05",
-      "time_range": "16.40s - 20.50s",
-      "narration": "When you stop resisting, clarity finally arrives.",
+      "formula_stage": "5. Botanical Taoist Metaphor",
+      "time_range": "9.8s - 12.4s",
+      "narration": "Bamboo weathers violent typhoons by bending freely—",
+      "pause_after_sec": 0.22,
       "camera_motion": "push_in",
+      "transition": "smoothdown",
       "competitor_ref_frame": "frame_12s.jpg",
       "prompt": "Intimate 35mm cinematic portrait of a contemplative East Asian man in his 30s seated in quiet meditation inside a dark wooden temple room, warm amber light from a single flickering oil lamp casting soft dramatic chiaroscuro highlights on his calm weathered face, eyes closed in peaceful acceptance, dark shadowed background with faint texture of sliding shoji screens, photorealistic film still, natural skin texture, Kodak Vision3 500T tone, no text overlays"
     },
     {
       "beat_id": "B06",
-      "time_range": "20.50s - 24.60s",
-      "narration": "Control is an illusion born from fear.",
+      "formula_stage": "6. Water Flowing Consequence",
+      "time_range": "12.4s - 14.9s",
+      "narration": "while gentle water carves through solid rock.",
+      "pause_after_sec": 0.35,
       "camera_motion": "tilt_down",
+      "transition": "smoothleft",
       "competitor_ref_frame": "frame_14s.jpg",
       "prompt": "Cinematic 35mm close-up of steady hands gently placing a smooth dark river stone onto the raked white gravel of a traditional Kyoto karesansui zen garden at twilight, intricate circular rake patterns in fine dry sand, soft cool blue evening twilight blending with warm lantern light reflecting on wet flagstones nearby, serene meditative atmosphere, shallow depth of field, tactile realism, no text"
     },
     {
       "beat_id": "B07",
-      "time_range": "24.60s - 28.70s",
-      "narration": "Let go of how things should be.",
+      "formula_stage": "7. Releasing the Illusion",
+      "time_range": "14.9s - 17.4s",
+      "narration": "When you release how things should be—",
+      "pause_after_sec": 0.25,
       "camera_motion": "pan_left",
+      "transition": "smoothup",
       "competitor_ref_frame": "frame_18s.jpg",
       "prompt": "Wide anamorphic 35mm cinematic film still of a solitary person sitting on the outer polished wooden veranda engawa of a cliffside Kyoto temple, looking out over rolling misty forested mountain ridges at dusk, lingering sea of low-hanging white fog drifting through pine valleys, soft gradient of violet and indigo twilight sky, subtle warm glow emanating from paper lanterns inside, contemplative breathtaking vista, cinematic film grain, no text"
     },
     {
       "beat_id": "B08",
-      "time_range": "28.70s - 32.80s",
-      "narration": "Flow with life, and find quiet peace.",
+      "formula_stage": "8. Serene Harmony Payoff",
+      "time_range": "17.4s - 20.0s",
+      "narration": "you flow naturally, finding unshakeable calm.",
+      "pause_after_sec": 0.3,
       "camera_motion": "push_in",
+      "transition": "fade",
       "competitor_ref_frame": "frame_20s.jpg",
       "prompt": "Cinematic 35mm film still of a traveler in dark minimalist linen robes walking gently down a wet moss-lined stone garden path into the evening bamboo grove, viewed from behind at a slight angle, lanterns hanging from temple eaves casting warm golden reflections on wet stepping stones, tranquil nightfall, peaceful harmony between human and nature, anamorphic lens flare, masterwork cinematic realism, no text overlays"
     }
-  ]
+  ],
+  "competitor_dialogue_formula": {
+    "competitor_verbatim_transcript_20s": "[00:00-00:05.8s] 'Most of us, on some level, are chasing this feeling of peace.' [pause 0.40s] -> [00:06.2-00:10.5s] 'We seek out expensive therapists, read self-help books, listen to happiness gurus.' [pause 0.50s] -> [00:11.0-00:16.5s] 'Searching for answers that will hopefully make us better, more tranquil human beings.' [pause 0.65s] -> [00:17.1-00:20.0s] 'But what if it's simpler than all that?'",
+    "sentence_structure_formula_vi": "Công thức 5 nhịp tự sự Đạo giáo Pursuit of Wonder / Aperture: (1) Nỗi mệt mỏi khi cưỡng lại tự nhiên ('We exhaust ourselves battling life's quiet current...') -> (2) Ảo tưởng kiểm soát qua các quy tắc cứng nhắc ('searching endlessly for peace in rigid routines') -> (3) Đổ vỡ của nỗ lực áp đặt ('Yet true peace cannot be conquered by force') -> (4) Câu hỏi tu từ buông bỏ ('what if surrender is the secret?') -> (5) Ẩn dụ tre uốn mình & nước xẻ đá ('Bamboo weathers violent typhoons... finding unshakeable calm').",
+    "pause_and_cadence_formula_vi": "Nhịp điệu tự sự chiêm nghiệm 141 WPM: Nghỉ 0.22s sau mệnh đề mệt mỏi; nghỉ 0.38s sau thói quen cứng nhắc; nghỉ sâu 0.45s sau câu hỏi bước ngoặt ('what if surrender is the secret?'); nghỉ 0.35s sau ẩn dụ nước mềm xuyên đá cứng.",
+    "transition_and_camera_formula_vi": "Chuyển động máy quay anamorphic 35mm hoài niệm: push_in trong gian trà thất Kyoto tĩnh lặng, smoothleft dưới mái hiên chùa mưa rơi, smoothup xuyên qua rừng tre uốn gió, smoothdown trên suối nước đá cuội, và fade trầm tĩnh vào hoàng hôn."
+  }
 }

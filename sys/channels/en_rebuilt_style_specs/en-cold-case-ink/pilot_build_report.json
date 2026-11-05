@@ -1,8 +1,21 @@
 {
   "channel_slug": "en-cold-case-ink",
   "status": "SUCCESS",
-  "duration_sec": 29.69,
+  "duration_sec": 20.53,
   "beats_count": 8,
+  "words_count": 50,
+  "beat_durations_sec": [
+    2.215,
+    2.475,
+    2.465,
+    2.5825,
+    2.42,
+    3.0525,
+    2.2325,
+    3.0875
+  ],
+  "subtitle_style_9x16": "VN_KINETIC_1WORD_RED_YELLOW_ASS (Arial 100px, #FF3B30 / #FFE600, Outline=6, MarginV=400)",
+  "transition_engine": "2x_supersampled_zoompan_plus_xfade",
   "mp4_9x16": "/home/hongphuoc6104/.gemini/antigravity/brain/715cbad2-6a65-4677-b14e-8d30e126287f/rebuilt_pilots/en-cold-case-ink/en-cold-case-ink-pilot-9x16.mp4",
   "mp4_16x9": "/home/hongphuoc6104/.gemini/antigravity/brain/715cbad2-6a65-4677-b14e-8d30e126287f/rebuilt_pilots/en-cold-case-ink/en-cold-case-ink-pilot-16x9.mp4",
   "canonical_short_mp4": "/home/hongphuoc6104/Desktop/vp-agent-core/video/en-cold-case-ink-test-20s-9x16/en-cold-case-ink-test-20s-9x16.mp4",

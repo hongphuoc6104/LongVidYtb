@@ -1,8 +1,21 @@
 {
   "channel_slug": "en-first-principles",
   "status": "SUCCESS",
-  "duration_sec": 30.41,
+  "duration_sec": 22.49,
   "beats_count": 8,
+  "words_count": 58,
+  "beat_durations_sec": [
+    2.6275,
+    2.0625,
+    3.64,
+    2.87,
+    3.09,
+    2.895,
+    3.02,
+    2.2875
+  ],
+  "subtitle_style_9x16": "VN_KINETIC_1WORD_RED_YELLOW_ASS (Arial 100px, #FF3B30 / #FFE600, Outline=6, MarginV=400)",
+  "transition_engine": "2x_supersampled_zoompan_plus_xfade",
   "mp4_9x16": "/home/hongphuoc6104/.gemini/antigravity/brain/715cbad2-6a65-4677-b14e-8d30e126287f/rebuilt_pilots/en-first-principles/en-first-principles-pilot-9x16.mp4",
   "mp4_16x9": "/home/hongphuoc6104/.gemini/antigravity/brain/715cbad2-6a65-4677-b14e-8d30e126287f/rebuilt_pilots/en-first-principles/en-first-principles-pilot-16x9.mp4",
   "canonical_short_mp4": "/home/hongphuoc6104/Desktop/vp-agent-core/video/en-first-principles-test-20s-9x16/en-first-principles-test-20s-9x16.mp4",

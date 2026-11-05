@@ -7,67 +7,97 @@
   "beats": [
     {
       "beat_id": "B01",
+      "formula_stage": "1. Microscopic Ovum Hook",
       "time_range": "0.0s - 2.1s",
-      "narration": "Translucent eggs cluster beneath a leaf.",
+      "narration": "Clustered beneath a dew-covered leaf—",
+      "pause_after_sec": 0.22,
       "camera_motion": "push_in",
+      "transition": "fade",
       "competitor_ref_frame": "frame_01s.jpg",
       "prompt": "Deep Look PBS optical macro nature cinematography, cluster of spherical translucent insect eggs attached to underside of emerald leaf, microscopic embryos visible inside glowing membranes with delicate cellular veins, morning dew droplets, extreme macro lens, 8k documentary photorealism, no text."
     },
     {
       "beat_id": "B02",
-      "time_range": "2.1s - 4.2s",
-      "narration": "Microscopic heartbeats pulse within thin shells.",
+      "formula_stage": "2. Embryonic Heartbeat Setup",
+      "time_range": "2.1s - 4.4s",
+      "narration": "tiny translucent eggs harbor microscopic life.",
+      "pause_after_sec": 0.35,
       "camera_motion": "tilt_down",
+      "transition": "smoothleft",
       "competitor_ref_frame": "frame_04s.jpg",
       "prompt": "Extreme scientific macro photography, single translucent insect egg in razor-sharp focus, tiny compound eyes and twitching limbs visible through gelatinous shell, backlit by warm golden sunbeam, shallow depth of field, National Geographic macro photography, photorealistic, zero text."
     },
     {
       "beat_id": "B03",
-      "time_range": "4.2s - 6.3s",
-      "narration": "A hungry hatchling breaches its shell.",
+      "formula_stage": "3. Hatching Rupture",
+      "time_range": "4.4s - 6.8s",
+      "narration": "Suddenly, a hungry hatchling cracks its shell—",
+      "pause_after_sec": 0.22,
       "camera_motion": "pan_right",
+      "transition": "smoothright",
       "competitor_ref_frame": "frame_08s.jpg",
       "prompt": "High-speed macro cinematography, miniature insect larva nymph pushing through cracked eggshell, moist glistening antennae extending into open air, tiny articulated legs stepping onto leaf vein, Deep Look PBS authentic scientific footage, ultra-detailed chitin texture."
     },
     {
       "beat_id": "B04",
-      "time_range": "6.3s - 8.4s",
-      "narration": "Young predators immediately hunt for food.",
+      "formula_stage": "4. Instinctive Nymph Hunt",
+      "time_range": "6.8s - 9.3s",
+      "narration": "stepping into the open world to hunt.",
+      "pause_after_sec": 0.4,
       "camera_motion": "push_in",
+      "transition": "smoothup",
       "competitor_ref_frame": "frame_12s.jpg",
       "prompt": "Optical macro action shot, tiny praying mantis nymph stalking microscopic aphid across green foliage, translucent amber body, delicate raptorial forelegs raised in strike posture, natural forest floor bokeh, documentary wildlife realism, no illustrations."
     },
     {
       "beat_id": "B05",
-      "time_range": "8.4s - 10.6s",
-      "narration": "Splitting old chitin reveals new growth.",
+      "formula_stage": "5. Chitin Exoskeleton Molt",
+      "time_range": "9.3s - 11.9s",
+      "narration": "Splitting its rigid armor reveals rapid growth—",
+      "pause_after_sec": 0.25,
       "camera_motion": "tilt_up",
+      "transition": "smoothleft",
       "competitor_ref_frame": "frame_14s.jpg",
       "prompt": "Deep Look PBS time-lapse macro photography, molting insect nymph splitting open its old translucent exoskeleton along the dorsal suture, soft newly formed body wriggling out, glistening iridescent moist skin, extreme close-up, authentic nature documentary."
     },
     {
       "beat_id": "B06",
-      "time_range": "10.6s - 12.8s",
-      "narration": "A chrysalis forms its protective shield.",
+      "formula_stage": "6. Chrysalis Metamorphosis",
+      "time_range": "11.9s - 14.3s",
+      "narration": "before shielding inside a jade chrysalis.",
+      "pause_after_sec": 0.38,
       "camera_motion": "zoom_out",
+      "transition": "smoothdown",
       "competitor_ref_frame": "frame_16s.jpg",
       "prompt": "Macro optical cinematography, shimmering emerald chrysalis suspended from silk pad on twig, gold-flecked metallic perimeter dots catching morning light, soft wind swaying the pupa, damp botanical environment, high-end macro lens realism."
     },
     {
       "beat_id": "B07",
-      "time_range": "12.8s - 15.0s",
-      "narration": "The adult apex hunter emerges fully.",
+      "formula_stage": "7. Apex Emergence",
+      "time_range": "14.3s - 17.0s",
+      "narration": "Now, the adult predator unfurls deadly claws—",
+      "pause_after_sec": 0.25,
       "camera_motion": "push_in",
+      "transition": "smoothright",
       "competitor_ref_frame": "frame_18s.jpg",
       "prompt": "Majestic macro shot, adult apex praying mantis expanding its intricate veined wings, serrated raptorial claws held deadly still, large triangular head turning with compound eyes reflecting woodland light, predatory posture, Deep Look PBS cinematography."
     },
     {
       "beat_id": "B08",
-      "time_range": "15.0s - 17.2s",
-      "narration": "An undisputed master of the canopy.",
+      "formula_stage": "8. Crown of the Canopy Closure",
+      "time_range": "17.0s - 20.0s",
+      "narration": "an undisputed master of the forest canopy.",
+      "pause_after_sec": 0.3,
       "camera_motion": "pan_left",
+      "transition": "fade",
       "competitor_ref_frame": "frame_20s.jpg",
       "prompt": "Cinematic anamorphic wildlife shot, fully grown praying mantis poised on damp mossy branch in lush canopy, striking lightning fast at flying prey, dramatic natural side-lighting, razor-sharp focus on spiny forelegs, 8k nature documentary masterpiece, zero text overlays."
     }
-  ]
+  ],
+  "competitor_dialogue_formula": {
+    "competitor_verbatim_transcript_20s": "[00:00-00:02.4s] 'Pill bugs... Roly-polies... Potato bugs...' [pause 0.96s] -> [00:03.4-00:07.5s] 'Whatever you want to call them, somehow there's something less creepy about these guys' [pause 0.22s] -> [00:07.7-00:11.8s] 'than other insects. More lovable, or something.' [pause 0.40s] -> [00:12.2-00:15.5s] 'Maybe it's the way they roll into a perfect little armored sphere.' [pause 0.30s] -> [00:15.8-00:20.0s] 'Or maybe it's because they aren't actually insects at all.'",
+    "sentence_structure_formula_vi": "Công thức 5 giai đoạn vòng đời sinh học Deep Look PBS: (1) Trứng phôi thai siêu vi mô ('Clustered beneath a dew-covered leaf...') -> (2) Nhịp tim phôi thai hé lộ sự sống ('tiny translucent eggs harbor microscopic life') -> (3) Khoảnh khắc ấu trùng cắn vỏ nở ('Suddenly, a hungry hatchling cracks its shell...') -> (4) Bản năng săn mồi sơ sinh ('stepping into the open world to hunt') -> (5) Lột xác chitin, đóng kén nhộng và hóa thân thành kẻ săn mồi đỉnh cao ('Splitting its rigid armor... an undisputed master of the forest canopy').",
+    "pause_and_cadence_formula_vi": "Nhịp đọc truyền cảm hứng, tốc độ 145 WPM của phim tài liệu khoa học PBS: Nghỉ 0.22s sau mệnh đề mở cảnh; nghỉ 0.35s sau quan sát tế bào; nghỉ 0.40s sau bước ngoặt nở vỏ; và nghỉ 0.30s sau khi xòe càng săn mồi đỉnh cao.",
+    "transition_and_camera_formula_vi": "Chuỗi chuyển cảnh macro quang học liền mạch: fade mở đầu trên cụm trứng, smoothleft lia sang nhịp tim phôi, smoothright bám theo ấu trùng nở, smoothup hướng lên giai đoạn săn mồi, smoothdown theo vết lột xác và fade kết thúc trên dáng đứng uy dũng của kẻ săn mồi."
+  }
 }

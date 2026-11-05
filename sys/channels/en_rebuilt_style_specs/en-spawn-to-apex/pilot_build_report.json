@@ -1,8 +1,21 @@
 {
   "channel_slug": "en-spawn-to-apex",
   "status": "SUCCESS",
-  "duration_sec": 21.79,
+  "duration_sec": 23.99,
   "beats_count": 8,
+  "words_count": 52,
+  "beat_durations_sec": [
+    2.365,
+    3.6075,
+    3.1025,
+    2.4325,
+    3.145,
+    2.85,
+    3.5825,
+    2.9075
+  ],
+  "subtitle_style_9x16": "VN_KINETIC_1WORD_RED_YELLOW_ASS (Arial 100px, #FF3B30 / #FFE600, Outline=6, MarginV=400)",
+  "transition_engine": "2x_supersampled_zoompan_plus_xfade",
   "mp4_9x16": "/home/hongphuoc6104/.gemini/antigravity/brain/715cbad2-6a65-4677-b14e-8d30e126287f/rebuilt_pilots/en-spawn-to-apex/en-spawn-to-apex-pilot-9x16.mp4",
   "mp4_16x9": "/home/hongphuoc6104/.gemini/antigravity/brain/715cbad2-6a65-4677-b14e-8d30e126287f/rebuilt_pilots/en-spawn-to-apex/en-spawn-to-apex-pilot-16x9.mp4",
   "canonical_short_mp4": "/home/hongphuoc6104/Desktop/vp-agent-core/video/en-spawn-to-apex-test-20s-9x16/en-spawn-to-apex-test-20s-9x16.mp4",

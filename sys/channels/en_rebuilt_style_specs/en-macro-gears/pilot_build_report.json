@@ -1,8 +1,21 @@
 {
   "channel_slug": "en-macro-gears",
   "status": "SUCCESS",
-  "duration_sec": 28.08,
+  "duration_sec": 22.14,
   "beats_count": 8,
+  "words_count": 45,
+  "beat_durations_sec": [
+    3.29,
+    2.6375,
+    2.14,
+    2.6025,
+    3.02,
+    2.8775,
+    2.77,
+    2.8
+  ],
+  "subtitle_style_9x16": "VN_KINETIC_1WORD_RED_YELLOW_ASS (Arial 100px, #FF3B30 / #FFE600, Outline=6, MarginV=400)",
+  "transition_engine": "2x_supersampled_zoompan_plus_xfade",
   "mp4_9x16": "/home/hongphuoc6104/.gemini/antigravity/brain/715cbad2-6a65-4677-b14e-8d30e126287f/rebuilt_pilots/en-macro-gears/en-macro-gears-pilot-9x16.mp4",
   "mp4_16x9": "/home/hongphuoc6104/.gemini/antigravity/brain/715cbad2-6a65-4677-b14e-8d30e126287f/rebuilt_pilots/en-macro-gears/en-macro-gears-pilot-16x9.mp4",
   "canonical_short_mp4": "/home/hongphuoc6104/Desktop/vp-agent-core/video/en-macro-gears-test-20s-9x16/en-macro-gears-test-20s-9x16.mp4",
