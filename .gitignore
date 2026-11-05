@@ -207,3 +207,4 @@ sys/tools/provision_wave*.py
 sys/tools/setup_wave*.py
 sys/tools/cleanup_youtube_channels.py
 sys/flow_cdp/chrome-data-pool*
+sys/colab_bridge/accounts/

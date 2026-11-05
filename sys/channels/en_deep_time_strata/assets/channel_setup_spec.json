@@ -1,0 +1,28 @@
+{
+  "channel_id": "en_parable_lamp",
+  "slug": "en-parable-lamp",
+  "youtube_name": "Parable & Lamp",
+  "handle_candidates": [
+    "@ParableAndLamp",
+    "@ParableAndLampHQ",
+    "@ParableLampDoodle",
+    "@TheParableLamp"
+  ],
+  "description": "Welcome to the official Parable & Lamp channel!\n\nIlluminate timeless biblical parables, wisdom literature, and hope with heartwarming stick figures.\nClear, visual, research-backed explainers crafted for faith seekers, lovers of timeless moral parables, and viewers seeking forgiveness and hope.\n\nCore topics: Biblical parables, wisdom of Proverbs & Ecclesiastes, forgiveness, grace & hope illustrated.\n\n#parables #wisdom #hope #faith #proverbs #forgiveness",
+  "keywords": [
+    "parables",
+    "wisdom",
+    "hope",
+    "faith",
+    "proverbs",
+    "forgiveness",
+    "Biblical parables, wisdom of Proverbs & Ecclesiastes, forgiveness, grace & hope illustrated"
+  ],
+  "assets": {
+    "avatar_800x800": "sys/channels/en_parable_lamp/assets/avatar_800x800.png",
+    "banner_2048x1152": "sys/channels/en_parable_lamp/assets/banner_2048x1152.png",
+    "watermark_150x150": "sys/channels/en_parable_lamp/assets/watermark_150x150.png",
+    "endcard_16x9": "sys/channels/en_parable_lamp/assets/endcard_16x9.jpg",
+    "endcard_9x16": "sys/channels/en_parable_lamp/assets/endcard_9x16.jpg"
+  }
+}

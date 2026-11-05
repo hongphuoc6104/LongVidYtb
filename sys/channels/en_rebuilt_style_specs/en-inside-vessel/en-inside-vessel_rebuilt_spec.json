@@ -1,0 +1,73 @@
+{
+  "channel_slug": "en-inside-vessel",
+  "competitor_name": "Nucleus Medical Media / Institute of Human Anatomy",
+  "voice": "en-US-EricNeural",
+  "frame_by_frame_observations_vi": "Phân tích 20 khung hình thực tế (frame_01s.jpg đến frame_20s.jpg) từ thước phim đồ họa y khoa nội soi 3D của Nucleus Medical Media / Helix Animation:\n- 1s-4s: Góc máy nội soi 3D (endoscopic camera view) lướt sâu vào lòng mạch máu (vascular lumen), hàng trăm tế bào hồng cầu hình đĩa lõm hai mặt (biconcave red erythrocytes) trôi bồng bềnh trong huyết tương vàng nhạt.\n- 5s-9s: Thành mạch nội mô (endothelial tissue wall) màu hồng ấm ướt át, bề mặt phản chiếu ánh sáng đèn phẫu thuật y khoa chân thực với hiệu ứng tán xạ dưới bề mặt (sub-surface scattering - SSS).\n- 10s-15s: Dòng chảy tầng (laminar blood flow) cuộn xoáy tự nhiên, các tế bào hồng cầu uốn cong mềm dẻo khi di chuyển qua các nhánh rẽ mao mạch chật hẹp.\n- 16s-20s: Ánh sáng nội soi rực rỡ chiếu qua lớp màng tế bào bán trong suốt, chiều sâu quang học với bokeh mờ ảo của các tế bào ở xa, chi tiết giải phẫu học chính xác tuyệt đối.\nĐặc trưng thẩm mỹ: Chuẩn y khoa 3D cao cấp Nucleus Medical Media, hiệu ứng mô ướt chân thực (wet tissue lighting), độ trong suốt quang học của huyết cầu, KHÔNG dùng đồ họa nội tạng hoạt hình nhựa hay phông nền trống rỗng.",
+  "learned_style_summary_vi": "Phong cách giải phẫu y khoa 3D Nucleus Medical Media: Đồ họa nội soi hiển vi 3D siêu thực; hồng cầu đĩa lõm đỏ thẫm bóng bẩy; thành lòng mạch nội mô gợn sóng ẩm ướt với ánh phản quang phẫu thuật; dịch huyết tương có chiều sâu quang học; chuyển động dòng chảy huyết động học (hemodynamics) chân thực và sống động.",
+  "beats": [
+    {
+      "beat_id": "B01",
+      "time_range": "0.0s - 2.1s",
+      "narration": "Deep within the human microvascular network flows blood.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_01s.jpg",
+      "prompt": "Hyper-realistic 3D endoscopic medical cinematography inside a human arteriole lumen, hundreds of glossy ruby-red biconcave erythrocytes (red blood cells) floating smoothly through golden amber plasma, wet glistening endothelial tissue walls with microvascular cellular textures, soft surgical endoscopic fiber-optic lighting, 8k render, Nucleus Medical Media style."
+    },
+    {
+      "beat_id": "B02",
+      "time_range": "2.1s - 4.2s",
+      "narration": "Millions of biconcave red erythrocytes glide smoothly.",
+      "camera_motion": "pan_right",
+      "competitor_ref_frame": "frame_04s.jpg",
+      "prompt": "Macro close-up tracking shot alongside flexible red blood cells tumbling in laminar blood flow, sub-surface scattering making the edges of the erythrocytes translucent crimson, delicate highlights reflecting wet plasma, high visual depth."
+    },
+    {
+      "beat_id": "B03",
+      "time_range": "4.2s - 6.3s",
+      "narration": "Endothelial lumen walls glisten under surgical illumination.",
+      "camera_motion": "tilt_up",
+      "competitor_ref_frame": "frame_07s.jpg",
+      "prompt": "Detailed angle focusing on the curving interior wall of the blood vessel, moist endothelial cell membranes with organic ridges and wet specular reflections, warm directional illumination simulating medical camera probe optics, zero cartoon simplifications."
+    },
+    {
+      "beat_id": "B04",
+      "time_range": "6.3s - 8.5s",
+      "narration": "Pulsatile pressure surges from beating cardiac valves.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_10s.jpg",
+      "prompt": "Dynamic motion shot inside the aortic root near opening aortic semilunar valve leaflets, muscular ventricular tissue contracting in rhythm, swirling hydrodynamic vortex of oxygenated blood cells surging forward under pressure, anatomical precision."
+    },
+    {
+      "beat_id": "B05",
+      "time_range": "8.5s - 10.7s",
+      "narration": "Blood cells flex through narrow microscopic capillaries.",
+      "camera_motion": "pan_left",
+      "competitor_ref_frame": "frame_13s.jpg",
+      "prompt": "Ultra-macro microscopic view of a single red blood cell deforming and squeezing through a tight capillary pore, flexible cell membrane stretching, rich cellular detail, illuminated by warm biological transmitted light, medical animation mastery."
+    },
+    {
+      "beat_id": "B06",
+      "time_range": "10.7s - 12.9s",
+      "narration": "Hemoglobin delivers essential oxygen molecules to tissue.",
+      "camera_motion": "zoom_out",
+      "competitor_ref_frame": "frame_16s.jpg",
+      "prompt": "Microscopic visualization of oxygen diffusion across the vascular basement membrane into surrounding striated muscle cells, glowing microscopic energy exchange, realistic wet biological tissue depth with shallow focus, Nucleus Medical Media aesthetic."
+    },
+    {
+      "beat_id": "B07",
+      "time_range": "12.9s - 15.1s",
+      "narration": "Platelets hover ready to seal vascular damage.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_18s.jpg",
+      "prompt": "Close-up of activated spiked thrombocytes (platelets) and fibrin protein threads weaving along a blood vessel wall, red erythrocytes caught in protective mesh, glistening wet textures, advanced cellular biology visualization."
+    },
+    {
+      "beat_id": "B08",
+      "time_range": "15.1s - 17.4s",
+      "narration": "A relentless river sustains our living cells.",
+      "camera_motion": "tilt_down",
+      "competitor_ref_frame": "frame_20s.jpg",
+      "prompt": "Hero wide perspective flying down the winding expanse of a major blood vessel branching into countless microvessels, warm golden-crimson glow, millions of erythrocytes flowing into the distance, awe-inspiring journey through human physiological life."
+    }
+  ]
+}

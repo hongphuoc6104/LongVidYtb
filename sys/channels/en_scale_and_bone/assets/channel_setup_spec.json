@@ -1,0 +1,28 @@
+{
+  "channel_id": "en_plain_sight_ai",
+  "slug": "plain-sight-ai",
+  "youtube_name": "Plain Sight AI",
+  "handle_candidates": [
+    "@PlainSightAI",
+    "@PlainSightAIHQ",
+    "@PlainSightAILab",
+    "@GetPlainSightAI"
+  ],
+  "description": "Welcome to Plain Sight AI!\n\nOne practical, no-code AI workflow at a time—designed to save hours of real office work without the hype.\n\nCore topics: Practical AI workflows, prompt engineering, and everyday automation.\n\n#aiworkflows #productivity #promptengineering #nocode #automation",
+  "keywords": [
+    "plainsightai",
+    "aiworkflows",
+    "productivity",
+    "promptengineering",
+    "nocode",
+    "automation",
+    "Practical AI workflows, prompt engineering, and everyday automation"
+  ],
+  "assets": {
+    "avatar_800x800": "sys/channels/en_plain_sight_ai/assets/avatar_800x800.png",
+    "banner_2048x1152": "sys/channels/en_plain_sight_ai/assets/banner_2048x1152.png",
+    "watermark_150x150": "sys/channels/en_plain_sight_ai/assets/watermark_150x150.png",
+    "endcard_16x9": "sys/channels/en_plain_sight_ai/assets/endcard_16x9.jpg",
+    "endcard_9x16": "sys/channels/en_plain_sight_ai/assets/endcard_9x16.jpg"
+  }
+}

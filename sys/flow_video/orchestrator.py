@@ -754,7 +754,8 @@ class FlowVideoChainOrchestrator:
                     except Exception as exc:
                         task.error = str(exc)
                         now_exc = time.time()
-                        if "Chrome port" in str(exc) and "busy" in str(exc) and port_skips < 15:
+                        is_port_busy = "Chrome port" in str(exc) and "busy" in str(exc)
+                        if is_port_busy:
                             port_skips += 1
                             attempts = max(0, attempts - 1)
                         async with self._lock:
@@ -765,6 +766,10 @@ class FlowVideoChainOrchestrator:
                                 self._profile_cooldowns[p_name] = now_exc + 1800.0
                                 available_profiles.append(profile_cfg)
                                 attempts = max(0, attempts - 1)  # Do not burn attempt budget on temporary provider rate limit
+                            elif is_port_busy:
+                                # Port busy from another worker; retry this profile after brief 3s stagger
+                                self._profile_cooldowns[p_name] = now_exc + 3.0
+                                available_profiles.append(profile_cfg)
                             else:
                                 # Put failed profile on 45s cooldown to rotate across other profiles
                                 self._profile_cooldowns[p_name] = now_exc + 45.0

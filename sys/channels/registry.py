@@ -1830,12 +1830,17 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             long_spec=_long((480, 720), "Join us next time as we explore more quirks of the human brain."),
             visual=VisualIdentity(
                 profile_id="ch_en_lazy_brain_doodle",
-                label="Lazy Brain Sketchbook — Textured cotton rag paper, fountain-pen ink cross-hatching, blue-shirt stickman",
-                style_description="Hand-inked 2D indie neuroscience sketchbook explainer on textured warm cotton rag paper (#F8F0DC deckle-edge paper grain): visible graphite pencil construction lines and dip-pen black ink cross-hatching (#000000), matte mineral watercolor washes in cobalt blue (#3B82C4), terracotta coral (#F2B88B), dry sage (#93A88C) and raw paper white (#FFFFFF); expressive bald circle stickman in cobalt shirt alongside hand-drawn analog clocks, neural synapse sketches and notebook margin callouts; orthographic 2D, tactile physical paper texture, at least 60% negative space, zero 3D CGI, zero plastic AI sheen, zero smooth gradients.",
-                cast_appearance="Iconic 2D indie sketchbook stickman with oversized hand-drawn white (#FFFFFF) bald circle head, dip-pen pitch-black (#000000) ink outline with subtle graphite sketch marks, tiny dot eyes, minimal smile, wire arms and round white circle hands",
-                outfit="Matte mineral-wash cobalt-blue (#3B82C4) t-shirt over slate-gray trousers with hand-inked pen contours, zero digital gradients",
-                palette=("#F8F0DC", "#3B82C4", "#F2B88B", "#93A88C", "#2E4361", "#FFFFFF", "#000000"),
-                thumbnail_rule="Hand-inked stickman staring at ticking mechanical clock on textured rag paper + 2-4 uppercase hand-lettered words.",
+                label="Minimalist Cognitive Vector: flat cream canvas, cobalt focal subject, coral accent",
+                style_description=(
+                    "Minimalist flat-vector cognitive explainer in Primer and Kurzgesagt aesthetic on solid flat warm cream canvas (#F8F0DC). "
+                    "Exactly ONE single hero subject or behavioral metaphor per frame, rendered with clean solid flat fills and crisp defined outlines "
+                    "in cobalt blue (#3B82C4) with a vibrant coral red (#E63946) action accent. "
+                    "Flat 2D orthographic composition, strictly >=75% open negative space, zero textures, zero clutter."
+                ),
+                cast_appearance="Iconic 2D minimalist vector stickman with clean white (#FFFFFF) circle head, solid black contour, tiny dot eyes, minimal smile, clean wire arms and round circle hands",
+                outfit="Flat cobalt-blue (#3B82C4) t-shirt and dark trousers with crisp clean contours, zero shading, zero gradients",
+                palette=("#F8F0DC", "#3B82C4", "#E63946"),
+                thumbnail_rule="Extreme close-up of single cognitive hero subject with ticking clock metaphor on flat cream canvas + 2-4 uppercase bold words.",
             ),
             references=(
                 ReferenceChannel("The Paint Explainer", "YouTube", "long", "Ultra-minimalist doodle explainer pacing and clear visual metaphors."),
@@ -1906,17 +1911,17 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             long_spec=_long((480, 720), "Explore our next deep-dive on social psychology on Crowd Strings."),
             visual=VisualIdentity(
                 profile_id="ch_en_crowd_noir",
-                label="Tactile Scratchboard & Archival Dossier Noir: carved ink cross-hatching on aged manila paper, crimson thread pins",
+                label="Minimalist Editorial Noir Vector: solid deep slate canvas, ivory silhouette, crimson tension accent",
                 style_description=(
-                    "Tactile 2D scratchboard and dip-pen chiaroscuro graphic-novel art on weathered archival dossier manila paper "
-                    "(#111111 India ink black, #E8E2D0 fibrous manila paper grain, #5A5F66 charcoal shadow wash, #C0392B crimson cotton thread); "
-                    "hand-carved woodcut cross-hatching, brass dossier pins, physical red string matrices and anonymous crowd ink silhouettes; "
-                    "orthographic 2D, authentic printmaking texture, at least 60% negative space, zero 3D CGI, zero plastic AI glow, zero gradients."
+                    "Minimalist flat-vector editorial noir explainer in Vox aesthetic on solid flat deep slate canvas (#111827). "
+                    "Exactly ONE single hero focal subject or herd metaphor per frame, rendered with bold solid fills and razor-sharp contours "
+                    "in parchment ivory (#F3F4F6) and an electric crimson red (#DC2626) tension accent. "
+                    "Flat 2D orthographic composition, strictly >=75% open negative space, zero textures, zero clutter."
                 ),
-                cast_appearance="Sharp-suited anonymous noir observer drawn in heavy dip-pen ink cross-hatching with brass lapel pin amidst charcoal-washed crowd figures and physical crimson threads",
-                outfit="Hand-inked charcoal-black trench suit silhouette with crisp ivory collar and crimson pin, tactile woodcut line work",
-                palette=("#111111", "#E8E2D0", "#5A5F66", "#C0392B", "#FFFFFF"),
-                thumbnail_rule="Scratchboard noir silhouette cutting physical crimson strings + 2-4 uppercase stamped words on aged dossier paper.",
+                cast_appearance="Sharp-suited minimal silhouette observer with crisp ivory collar and single crimson lapel pin, flat 2D vector style with zero hatching",
+                outfit="Flat slate-black trench coat silhouette with crisp ivory collar and single crimson pin, clean vector contours",
+                palette=("#111827", "#F3F4F6", "#DC2626"),
+                thumbnail_rule="Extreme close-up of single silhouette cutting one crimson cord on flat deep slate canvas + 2-4 uppercase bold words.",
             ),
             references=(
                 ReferenceChannel("Charisma on Command", "YouTube", "long", "Deconstructing social dynamics and charisma in everyday conversations."),
@@ -1987,17 +1992,17 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             long_spec=_long((480, 720), "Discover the full relationship masterclass on Kindred Sketch YouTube."),
             visual=VisualIdentity(
                 profile_id="ch_en_pastel_duo",
-                label="Cold-Press Watercolor & Charcoal Pencil Sketchbook: warm human linework of Leo and Maya on cotton paper",
+                label="Minimalist Warm Relational Vector: soft cream canvas, espresso contours, warm rose accent",
                 style_description=(
-                    "Tactile 2D charcoal-pencil and mineral watercolor sketchbook illustration on cold-press cotton rag paper "
-                    "(#FFF8F0 textured cotton paper, #5B4636 raw umber graphite-and-ink outlines, #F7C6C7 muted rose wash, #CDB4DB dusty iris, "
-                    "#BDE0C6 dry sage watercolor, #FFF1B5 raw sienna wash); visible pencil construction strokes, organic watercolor paper bleed, intimate human storytelling vignettes; "
-                    "orthographic 2D, authentic hand-painted paper grain, at least 60% negative space, zero 3D CGI, zero plastic AI sheen, zero smooth digital gradients."
+                    "Minimalist flat-vector relational psychology explainer in Vox and Kurzgesagt aesthetic on solid flat soft cream canvas (#FDFBF7). "
+                    "Exactly ONE single hero interpersonal metaphor per frame, rendered with clean flat shapes and smooth organic contours "
+                    "in deep espresso (#382216) with an emotive warm rose (#E05A67) accent. "
+                    "Flat 2D orthographic composition, strictly >=75% open negative space, zero textures, zero clutter."
                 ),
-                cast_appearance="Recurring hand-sketched couple and friends duo drawn in warm charcoal pencil and watercolor wash — Leo (tousled brown hair, expressive ink eyes, sage knit sweater) and Maya (shoulder-length dark bob hair, warm eyes, muted rose cardigan)",
-                outfit="Leo in hand-washed sage-mint (#BDE0C6) textured knit sweater; Maya in muted rose (#F7C6C7) button cardigan with pencil-sketched cuffs",
-                palette=("#FFF8F0", "#5B4636", "#F7C6C7", "#CDB4DB", "#BDE0C6", "#FFF1B5"),
-                thumbnail_rule="Charcoal-and-watercolor sketch of Leo and Maya in candid emotional tension + 2-4 uppercase hand-lettered words.",
+                cast_appearance="Recurring minimal vector couple duo — Leo (tousled dark hair, warm espresso silhouette) and Maya (shoulder-length bob hair, warm rose accent)",
+                outfit="Leo in flat sage-mint knit pullover; Maya in flat warm rose (#E05A67) cardigan with clean vector contours",
+                palette=("#FDFBF7", "#382216", "#E05A67"),
+                thumbnail_rule="Extreme close-up of two expressive minimal figures in emotional tension on flat cream canvas + 2-4 uppercase bold words.",
             ),
             references=(
                 ReferenceChannel("Psych2Go", "YouTube", "long", "Gentle animated relationship breakdowns and attachment insights."),
@@ -2054,7 +2059,7 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             tone_rules=(
                 "Open with a widely accepted assumption that produces an absurd paradox.",
                 "Break the premise down to bedrock physical or mathematical truths.",
-                "Use visual logic trees and balance scale analogies rather than abstract math.",
+                "Use clean visual balance scale analogies and physical models rather than abstract math.",
                 "End with a practical decision framework for daily evaluation.",
             ),
             hook_formulas=(
@@ -2063,22 +2068,22 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
                 "Goodhart's Law: what happens when a measure becomes the target.",
                 "Second-order thinking: how great strategists see three moves ahead.",
             ),
-            avoid=("Unproven conspiracy models", "Dismissive intellectual arrogance", "Dense mathematical notation without visual proof"),
+            avoid=("Unproven conspiracy models", "Dismissive intellectual arrogance", "Dense mathematical formulas without visual proof"),
             short_spec=_short((35, 50), "Which move would you play in this paradox? Comment your choice."),
             long_spec=_long((480, 720), "Master our next mental model in depth on First Principles Ink."),
             visual=VisualIdentity(
-                profile_id="ch_en_blueprint_logic",
-                label="Archival Cyanotype Blueprint & Brass Ruling-Pen Schematic: tactile vellum, chalk drafting lines, amber stamps",
+                profile_id="ch_en_first_principles_logic",
+                label="Minimalist First-Principles Vector: deep navy canvas, chalk cyan structure, amber gold accent",
                 style_description=(
-                    "Authentic 2D archival cyanotype blueprint and hand-drafted engineering schematic on textured Prussian blueprint vellum "
-                    "(#142B47 aged cyanotype Prussian blue paper grain, #F8FAFC chalk-white ruling-pen drafting lines, #FFB703 hand-stamped ochre focal accent, #38BDF8 compass-arc cyan); "
-                    "compass-and-straightedge geometry, physical domino sequences, hand-lettered first-principles logic trees; "
-                    "orthographic 2D, tactile vellum grain, at least 60% negative space, zero 3D CGI, zero neon AI glow, zero gradients."
+                    "Minimalist flat-vector mental model explainer in Primer and Veritasium aesthetic on solid flat deep navy canvas (#0F172A). "
+                    "Exactly ONE single geometric mental model or physical paradox metaphor per frame, rendered with crisp solid shapes "
+                    "in chalk cyan (#38BDF8) and a bright amber gold (#F59E0B) focal point. "
+                    "Flat 2D orthographic composition, strictly >=75% open negative space, zero textures, zero clutter."
                 ),
-                cast_appearance="Mid-century architectural draftsman drawn in crisp white ruling-pen ink with horn-rimmed spectacles, brass compass dividers, and rolled-sleeve drafting coat pointing at cyanotype decision trees",
-                outfit="Hand-drafted white linen drafting coat over Prussian navy waistcoat with brass pocket dividers and spectacles",
-                palette=("#142B47", "#F8FAFC", "#FFB703", "#38BDF8", "#0F172A"),
-                thumbnail_rule="Draftsman using brass dividers on cyanotype paradox tree + 2-4 uppercase stenciled words.",
+                cast_appearance="Minimalist systems thinker in clean profile with horn-rimmed glasses, rendered in crisp chalk-cyan vector linework",
+                outfit="Flat white drafting shirt over navy vest with clean geometric contours, zero shading",
+                palette=("#0F172A", "#38BDF8", "#F59E0B"),
+                thumbnail_rule="Extreme close-up of single geometric paradox balancing on pivot point on flat navy canvas + 2-4 uppercase bold words.",
             ),
             references=(
                 ReferenceChannel("Veritasium", "YouTube", "long", "Deductive scientific reasoning, counter-intuitive paradoxes, and first principles."),
@@ -2107,7 +2112,7 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
                 remotion_motion_ratio=0.45,
                 estimated_short_minutes=(7, 10),
                 estimated_bundle_minutes=(28, 38),
-                notes="Remotion dynamic decision tree animations and domino tipping sequences.",
+                notes="Remotion dynamic paradox animations and balance tipping sequences.",
             ),
             engagement=EngagementSpec(
                 cta_voice="Rigorous systems thinker",
@@ -2148,18 +2153,18 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             short_spec=_short((35, 50), "Did this spending leak catch you this month? Tell us in the comments."),
             long_spec=_long((480, 720), "Build lasting financial clarity with our full breakdown on Wallet Anatomy."),
             visual=VisualIdentity(
-                profile_id="ch_en_ledger_grid",
-                label="Tactile Dip-Pen Financial Ledger: iron-gall fountain-pen ink on cotton graph paper, bank-stamp red & emerald",
+                profile_id="ch_en_ledger_anatomy",
+                label="Minimalist Financial Vector: sand ivory canvas, forest emerald subject, crimson alert accent",
                 style_description=(
-                    "Tactile 2D dip-pen and iron-gall ink financial ledger notebook illustration on warm cotton square-grid graph paper "
-                    "(#FAF6E9 fibrous ivory paper with faint #E3DCC8 ruled grid, #2F9E5B bank-note emerald ink, #F2C14E brass coin ochre, #D64545 rubber-stamp deficit red, #24364F fountain-pen navy); "
-                    "hand-ruled balance-sheet columns, cross-hatched cashflow conduits, and anatomical receipt dissections; "
-                    "orthographic 2D, authentic paper fiber and ink nib texture, at least 60% negative space, zero 3D CGI, zero plastic AI sheen, zero gradients."
+                    "Minimalist flat-vector personal finance explainer in Vox aesthetic on solid flat sand ivory canvas (#FAF8F5). "
+                    "Exactly ONE single tangible financial metaphor per frame, rendered with bold clean flat shapes "
+                    "in forest emerald (#1B4931) and an alert crimson red (#D9381E) leak accent. "
+                    "Flat 2D orthographic composition, strictly >=75% open negative space, zero textures, zero clutter."
                 ),
-                cast_appearance="Witty mid-century editorial bookkeeper drawn in crisp fountain-pen cross-hatching with neat side-parted hair, round tortoiseshell glasses, green visor, vest, and brass nib pen",
-                outfit="Hand-inked forest-green accountant vest over rolled-up sleeve ivory shirt with neat navy tie and tortoiseshell glasses",
-                palette=("#FAF6E9", "#24364F", "#2F9E5B", "#F2C14E", "#D64545", "#E3DCC8"),
-                thumbnail_rule="Fountain-pen bookkeeper stamping red deficit seal on ledger + 2-4 uppercase hand-lettered words.",
+                cast_appearance="Witty mid-century minimal bookkeeper with neat side-parted hair, round tortoiseshell spectacles, and clean flat vector contours",
+                outfit="Flat forest-green vest over ivory shirt with neat navy tie and clean geometric lines",
+                palette=("#FAF8F5", "#1B4931", "#D9381E"),
+                thumbnail_rule="Extreme close-up of single leaking wallet or coin balance metaphor on flat ivory canvas + 2-4 uppercase bold words.",
             ),
             references=(
                 ReferenceChannel("Two Cents (PBS)", "YouTube", "long", "Approachable, illustrated personal finance and money psychology."),
@@ -2230,17 +2235,17 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             long_spec=_long((480, 720), "Explore our complete global economy series on Macro Gears."),
             visual=VisualIdentity(
                 profile_id="ch_en_swiss_macro",
-                label="Mid-Century Banknote Intaglio Engraving & Letterpress Infographic: salmon financial newsprint, cross-hatched ink",
+                label="Minimalist Macroeconomic Vector: salmon cream canvas, navy slate structure, signal orange accent",
                 style_description=(
-                    "Tactile 2D mid-century banknote intaglio engraving and Swiss letterpress editorial print on warm salmon-ivory financial newsprint "
-                    "(#F3EFE6 fibrous financial-press paper, #0F2C59 intaglio central-bank navy, #D9381E letterpress vermilion, #2A9D8F maritime trade teal, #E9C46A bullion ochre) "
-                    "with fine steel-engraved cross-hatching, stamped freight manifests, container vessel woodcuts and mechanical monetary policy levers; "
-                    "orthographic 2D, authentic letterpress ink grain, at least 60% negative space, zero 3D CGI, zero flat corporate vector, zero gradients."
+                    "Minimalist flat-vector macroeconomic explainer in Vox Swiss editorial style on solid flat salmon cream canvas (#F7F2EB). "
+                    "Exactly ONE single macro monetary metaphor per frame, rendered with clean geometric silhouettes "
+                    "in navy slate (#1E293B) and a high-impact signal orange (#EA580C) pivot accent. "
+                    "Flat 2D orthographic composition, strictly >=75% open negative space, zero textures, zero clutter."
                 ),
-                cast_appearance="Mid-century financial-press correspondent drawn in fine steel-engraved cross-hatching wearing structured navy suit and vermilion tie beside engraved cargo vessels and monetary levers",
-                outfit="Hand-engraved central-bank navy (#0F2C59) two-button suit with cross-hatched lapel, white shirt, and letterpress vermilion tie",
-                palette=("#F3EFE6", "#0F2C59", "#D9381E", "#2A9D8F", "#E9C46A"),
-                thumbnail_rule="Engraved correspondent pulling central-bank interest lever + 2-4 uppercase letterpress words on newsprint.",
+                cast_appearance="Mid-century financial correspondent rendered in clean flat silhouette wearing structured navy suit and orange tie",
+                outfit="Solid navy slate (#1E293B) suit with flat white shirt and bold signal orange tie, clean vector edges",
+                palette=("#F7F2EB", "#1E293B", "#EA580C"),
+                thumbnail_rule="Extreme close-up of single monumental interest rate lever on flat cream canvas + 2-4 uppercase bold words.",
             ),
             references=(
                 ReferenceChannel("Economics Explained", "YouTube", "long", "Global macroeconomic systems, national economies, and currency dynamics."),
@@ -2311,12 +2316,17 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             long_spec=_long((480, 720), "Explore our next evolutionary life-cycle chronicle on Scale & Bone YouTube."),
             visual=VisualIdentity(
                 profile_id="ch_en_ai_doodle",
-                label="Darwin & Haeckel Zoological Field Codex: copperplate dip-pen cross-hatching & mineral watercolor on cotton rag paper",
-                style_description="Authentic 19th-century Darwin and Haeckel naturalist zoological field codex illustration on aged cotton rag paper (#F2EAD7 deckle-edge paper grain): razor-sharp iron-gall dip-pen cross-hatching (#1C1917), muted mineral watercolor washes in reptile olive-scale (#4A6B53), venom-gland ochre (#C86D51), fossil bone ivory (#D9C5A0) and slate (#2E4361); chronological life-cycle specimen plates (leathery egg cross-section, Day-1 hatchling, skin-shedding ecdysis, hollow fang biomechanics, and osteoderm armor) alongside a field naturalistsketchingstickman observer; orthographic 2D, tactile museum engraving texture, at least 60% negative space, zero 3D CGI, zero plastic AI sheen, zero gradients.",
-                cast_appearance="Iconic 2D field-expedition doodle stickman naturalist with oversized hand-drawn white (#FFFFFF) bald circle head, dip-pen black outline, expedition pith-helmet brim, wire arms, and round circle hands holding brass calipers beside detailed copperplate reptile specimens",
-                outfit="Matte olive-khaki (#4A6B53) field naturalist waistcoat with brass specimen magnifying lens, zero digital shading",
-                palette=("#F2EAD7", "#4A6B53", "#C86D51", "#D9C5A0", "#2E4361", "#1C1917"),
-                thumbnail_rule="Cross-section of reptile hatchling emerging from leathery egg on naturalist field codex + 2-4 uppercase inked words.",
+                label="Minimalist TierZoo Wildlife Vector: warm ivory canvas, deep moss creature, terracotta accent",
+                style_description=(
+                    "Minimalist flat-vector evolutionary biology explainer in TierZoo and BBC Earth aesthetic on solid flat warm ivory canvas (#F5F2EB). "
+                    "Exactly ONE single hero creature or anatomical adaptation metaphor per frame, rendered with clean flat shapes "
+                    "and smooth organic contours in deep moss green (#2D5A3A) with a vivid terracotta rust (#C85A32) vital accent. "
+                    "Flat 2D orthographic composition, strictly >=75% open negative space, zero textures, zero clutter."
+                ),
+                cast_appearance="Iconic 2D minimalist naturalist stickman with clean white (#FFFFFF) circle head, field hat, wire arms, and round circle hands",
+                outfit="Flat olive safari vest in deep moss green (#2D5A3A) over simple trousers, zero shading, zero gradients",
+                palette=("#F5F2EB", "#2D5A3A", "#C85A32"),
+                thumbnail_rule="Extreme close-up of single hatching reptile egg or predator silhouette on flat ivory canvas + 2-4 uppercase bold words.",
             ),
             references=(
                 ReferenceChannel("PBS Eons", "YouTube", "long", "Chronological deep-time evolutionary storytelling and fossil biomechanics."),
@@ -2390,12 +2400,17 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             long_spec=_long((480, 720), "Gain complete career leverage with our full guide on Career Leverage."),
             visual=VisualIdentity(
                 profile_id="ch_en_career_doodle",
-                label="New Yorker Editorial Fountain-Pen & Ink Wash Sketchbook: cotton rag paper, royal-blue ink wash, stickman",
-                style_description="Hand-inked 2D New Yorker-inspired editorial career sketchbook on textured warm cotton rag paper (#F8F0DC visible paper grain): dip-pen black ink cross-hatching (#000000) with graphite construction lines, matte watercolor washes in royal cobalt (#3B82C4), warm ochre (#F2B88B), deep slate (#2E4361) and raw white (#FFFFFF); expressive bald circle stickman in cobalt shirt with office lanyard beside hand-drawn wooden fulcrums, architectural staircases, and boardroom tables; orthographic 2D, tactile pen-and-ink grain, at least 60% negative space, zero 3D CGI, zero plastic AI sheen.",
-                cast_appearance="Iconic 2D editorial sketchbook stickman with oversized hand-drawn white (#FFFFFF) bald circle head, dip-pen black outline, professional lanyard, wire arms, and round circle hands",
-                outfit="Matte watercolor-wash royal-blue shirt (#3B82C4) with hand-inked company lanyard, zero digital gradients",
-                palette=("#F8F0DC", "#3B82C4", "#F2B88B", "#2E4361", "#FFFFFF", "#000000"),
-                thumbnail_rule="Dip-pen stickman lifting a heavy corporate staircase using a wooden fulcrum + 2-4 uppercase hand-lettered words.",
+                label="Minimalist Career Leverage Vector: light parchment canvas, slate figure, royal gold accent",
+                style_description=(
+                    "Minimalist flat-vector career strategy explainer in Vox editorial aesthetic on solid flat light parchment canvas (#F8F6F0). "
+                    "Exactly ONE single professional leverage metaphor per frame, rendered with clean flat shapes "
+                    "in deep slate (#2C3E50) and an elevated royal gold (#E5A93C) fulcrum accent. "
+                    "Flat 2D orthographic composition, strictly >=75% open negative space, zero textures, zero clutter."
+                ),
+                cast_appearance="Iconic 2D minimalist editorial stickman with clean white (#FFFFFF) circle head, crisp black contours, wire arms, and round circle hands",
+                outfit="Flat royal cobalt shirt (#3B82C4) with simple office lanyard, zero digital shading",
+                palette=("#F8F6F0", "#2C3E50", "#E5A93C"),
+                thumbnail_rule="Extreme close-up of single minimal figure lifting monumental corporate block on flat parchment canvas + 2-4 uppercase bold words.",
             ),
             references=(
                 ReferenceChannel("Harvard Business Review Explainer", "YouTube", "long", "Evidence-based management, leadership, and workplace dynamics."),
@@ -2465,18 +2480,18 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             short_spec=_short((35, 50), "Have you ever been trapped by fine print like this? Share below."),
             long_spec=_long((480, 720), "Protect your consumer rights with the full guide on Everyday Fine Print."),
             visual=VisualIdentity(
-                profile_id="ch_en_risograph_law",
-                label="Vintage legal risograph print: 3-color mid-century New Yorker editorial, red seal ink on newsprint",
+                profile_id="ch_en_legal_vector",
+                label="Minimalist Legal Editorial Vector: newsprint ivory canvas, midnight navy figure, vermilion seal accent",
                 style_description=(
-                    "Crisp 3-color mid-century New Yorker editorial risograph print on newsprint ivory canvas "
-                    "(#F4EFE6 newsprint ivory, #1D3557 navy ink, #E63946 red-seal ink, #457B9D steel blue); "
-                    "stippled halftone textures, magnifying-glass investigations and consumer protection clauses; "
-                    "orthographic 2D, at least 60% negative space, zero 3D, zero gradients."
+                    "Minimalist flat-vector legal investigative explainer in Vox journalistic aesthetic on solid flat newsprint ivory canvas (#F4EFE6). "
+                    "Exactly ONE single consumer trap metaphor per frame, rendered with bold crisp shapes "
+                    "in midnight navy (#1E293B) and a sharp legal seal vermilion (#E63946) focus accent. "
+                    "Flat 2D orthographic composition, strictly >=75% open negative space, zero textures, zero clutter."
                 ),
-                cast_appearance="Sharp-witted human consumer advocate drawn in expressive fountain-pen ink with neat hair, spectacles, navy blazer and brass magnifying glass inspecting red-stamped contract clauses",
-                outfit="Unshaded navy blazer with steel-blue collar, spectacles, and brass magnifying glass in pocket",
-                palette=("#F4EFE6", "#1D3557", "#E63946", "#457B9D", "#D8E2DC"),
-                thumbnail_rule="Consumer advocate holding magnifying glass over giant hidden fee clause + 2-4 uppercase words.",
+                cast_appearance="Sharp-witted minimal consumer advocate drawn in bold flat vector silhouette with round spectacles inspecting highlighted clauses",
+                outfit="Flat midnight navy blazer with vermilion pocket accent and round spectacles, clean vector edges",
+                palette=("#F4EFE6", "#1E293B", "#E63946"),
+                thumbnail_rule="Extreme close-up of single oversized magnifying glass exposing trap clause on flat ivory canvas + 2-4 uppercase bold words.",
             ),
             references=(
                 ReferenceChannel("LegalEagle", "YouTube", "long", "Entertaining yet rigorous legal analysis of real-world scenarios."),
@@ -2547,17 +2562,17 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             long_spec=_long((480, 720), "Journey deeper into your physiology with Inside the Vessel on YouTube."),
             visual=VisualIdentity(
                 profile_id="ch_en_organ_buddies",
-                label="Vesalius & Gray's Anatomy Copperplate Medical Atlas: dip-pen anatomical cross-sections & mineral watercolor on vellum",
+                label="Minimalist Physiological Vector: deep cellular navy canvas, arterial crimson organ, electric cyan accent",
                 style_description=(
-                    "Authentic 2D Vesalius and Gray's Anatomy medical copperplate ink etching and mineral watercolor cross-section atlas on warm archival vellum "
-                    "(#FAF7F0 fibrous vellum paper, #1E1B18 fine surgical dip-pen cross-hatching, #C85A5A arterial carmine wash, #D99B66 hepatic ochre, #4A7C9B venous slate-blue, #5E8C6A lymphatic sage); "
-                    "detailed anatomical organ cutaways, neural firing pathways, cellular capillaries, and handwritten Latin/English physiological callouts; "
-                    "orthographic 2D, tactile museum medical plate texture, at least 60% negative space, zero 3D CGI, zero kawaii cartoon faces, zero plastic AI glow, zero gradients."
+                    "Minimalist flat-vector human physiology explainer in Kurzgesagt aesthetic on solid flat cellular navy canvas (#0A192F). "
+                    "Exactly ONE single organ or biological mechanism metaphor per frame, rendered with vibrant solid vector shapes "
+                    "in arterial crimson (#EF4444) and an electric bio cyan (#06B6D4) energy pulse accent. "
+                    "Flat 2D orthographic composition, strictly >=75% open negative space, zero textures, zero clutter."
                 ),
-                cast_appearance="Anatomical cross-section human silhouette drawn in fine Da Vinci and Gray's Anatomy copperplate dip-pen cross-hatching on vellum, revealing illuminated internal heart chambers, vagus nerve branches, and cellular structures",
-                outfit="Translucent classical anatomical muscle-and-vessel cross-section linework with brass surgical calipers and ink annotations, no modern clothing",
-                palette=("#FAF7F0", "#1E1B18", "#C85A5A", "#D99B66", "#4A7C9B", "#5E8C6A"),
-                thumbnail_rule="Copperplate anatomical cross-section of brain and heart under 24-hour stress + 2-4 uppercase engraved words on vellum.",
+                cast_appearance="Stylized flat vector anatomical silhouette revealing illuminated heart chamber or brain neural pathway, clean geometric shapes",
+                outfit="Translucent flat organic vascular contours with vibrant bio-luminescent accents, zero clothing",
+                palette=("#0A192F", "#EF4444", "#06B6D4"),
+                thumbnail_rule="Extreme close-up of single glowing heart or brain neuron vessel on flat navy canvas + 2-4 uppercase bold words.",
             ),
             references=(
                 ReferenceChannel("Institute of Human Anatomy", "YouTube", "long", "Fascinating organ-level physiology explained with immense clarity."),
@@ -2628,17 +2643,17 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             long_spec=_long((480, 720), "Watch the next botanical time-lapse survival story on Root & Canopy YouTube."),
             visual=VisualIdentity(
                 profile_id="ch_en_culinary_sticker",
-                label="Kew Gardens & Audubon Botanical Time-Lapse Codex: copperplate engraving, herbarium watercolor & soil strata cutaway",
+                label="Minimalist Culinary Science Vector: stoneware linen canvas, olive sage subject, flame ochre accent",
                 style_description=(
-                    "Authentic 2D Kew Gardens and Audubon botanical copperplate ink engraving and pressed-herbarium watercolor wash on warm deckle-edge rag paper "
-                    "(#F4EFE0 fibrous herbarium paper, #1E241E botanical India ink cross-hatching, #3A6B4C chlorophyll forest green, #B85D3B underground soil-strata terracotta, #D4A359 amber resin gold); "
-                    "split above-and-below-ground soil strata cross-sections showing chronological seed germination (Day 1 to Year 200), root xylem networks, mycorrhizal fungal threads, and carnivorous leaf traps; "
-                    "orthographic 2D, tactile botanical museum plate texture, at least 60% negative space, zero 3D CGI, zero kawaii stickers, zero plastic AI glow, zero gradients."
+                    "Minimalist flat-vector culinary science explainer in Primer aesthetic on solid flat stoneware linen canvas (#F5EBE1). "
+                    "Exactly ONE single molecular cooking metaphor or culinary vessel per frame, rendered with clean flat shapes "
+                    "in olive sage (#4A6B53) and an active flame ochre (#D97706) heat accent. "
+                    "Flat 2D orthographic composition, strictly >=75% open negative space, zero textures, zero clutter."
                 ),
-                cast_appearance="Botanical specimen cross-section plate drawn in fine copperplate dip-pen cross-hatching and mineral watercolor, tracing a living plant from buried seed coat cracking in dark terracotta soil strata up to mature forest canopy with brass magnifier callouts",
-                outfit="Natural botanical bark, root xylem vascular cross-sections, and copperplate taxonomic specimen labels, zero human clothing",
-                palette=("#F4EFE0", "#3A6B4C", "#B85D3B", "#D4A359", "#2B3A2E", "#1E241E"),
-                thumbnail_rule="Split soil-and-canopy cross-section of giant root network and germinating seed + 2-4 uppercase engraved words.",
+                cast_appearance="Clean botanical and seed specimen profile rendered in flat vector shapes, tracing growth from split seed coat to green canopy",
+                outfit="Natural bark texture and olive foliage flat vector fills, zero human clothing",
+                palette=("#F5EBE1", "#4A6B53", "#D97706"),
+                thumbnail_rule="Extreme close-up of single searing pan with explosive flavor molecule burst on flat linen canvas + 2-4 uppercase bold words.",
             ),
             references=(
                 ReferenceChannel("BBC Earth — The Green Planet (Sir David Attenborough)", "YouTube", "long", "Time-lapse cinematography framing plant growth as high-stakes predator-prey drama."),
@@ -2712,17 +2727,17 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             long_spec=_long((480, 720), "Follow our next extreme life-cycle chronicle on Spawn to Apex on YouTube."),
             visual=VisualIdentity(
                 profile_id="ch_en_sticker_pop",
-                label="Merian Natural History Metamorphosis Plate: dip-pen lithograph & watercolor life-cycle rings on specimen vellum",
+                label="Minimalist Mechanism Vector: graphite slate canvas, safety amber gear, stark white accent",
                 style_description=(
-                    "Authentic 2D Maria Sibylla Merian and natural-history museum metamorphosis lithograph and dip-pen watercolor plate on warm specimen vellum "
-                    "(#F6F0DD fibrous specimen vellum, #1A1D24 fine lithographic dip-pen ink, #2E6F65 deep-sea bioluminescent teal wash, #D97941 chrysalis amber, #8C3B4A gill carmine); "
-                    "chronological life-cycle progression diagrams (Egg -> Larval Instar -> Translucent Chrysalis Cutaway -> Mature Specimen) with brass magnifying-lens callouts; "
-                    "orthographic 2D, tactile scientific lithograph texture, at least 60% negative space, zero 3D CGI, zero cartoon stickers, zero plastic AI glow, zero gradients."
+                    "Minimalist flat-vector mechanical explainer in Primer aesthetic on solid flat graphite slate canvas (#18181B). "
+                    "Exactly ONE single ingenious mechanism metaphor per frame, rendered with clean flat geometric silhouettes "
+                    "in safety amber (#F59E0B) and high-visibility stark white (#FAFAFA) motion indicators. "
+                    "Flat 2D orthographic composition, strictly >=75% open negative space, zero textures, zero clutter."
                 ),
-                cast_appearance="Sequential natural-history metamorphosis plate drawn in fine dip-pen cross-hatching and watercolor wash on specimen vellum, showing translucent egg, larva, cutaway chrysalis, and mature organism framed by a brass naturalist magnifier",
-                outfit="Natural biological exoskeletons, translucent chrysalis membranes, and engraved taxonomic stage markers, no human clothing",
-                palette=("#F6F0DD", "#2E6F65", "#D97941", "#8C3B4A", "#1D3557", "#1A1D24"),
-                thumbnail_rule="Translucent cutaway of chrysalis or deep-sea larva metamorphosis + 2-4 uppercase engraved words on vellum.",
+                cast_appearance="Bold geometric metamorphosis stage silhouette framed in clean vector circles, showing egg to mature organism",
+                outfit="Natural exoskeleton and amber shell flat vector forms, zero human clothing",
+                palette=("#18181B", "#F59E0B", "#FAFAFA"),
+                thumbnail_rule="Extreme close-up of single interlocking mechanism puzzle on flat slate canvas + 2-4 uppercase bold words.",
             ),
             references=(
                 ReferenceChannel("Ze Frank & Deep Look (KQED)", "YouTube", "long", "Macro biological storytelling of insect metamorphosis, parasites, and marine life cycles."),
@@ -2796,17 +2811,17 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             long_spec=_long((480, 720), "Explore our complete forensic archive on Cold Case Ink on YouTube."),
             visual=VisualIdentity(
                 profile_id="ch_en_forensic_noir",
-                label="Forensic noir graphic novel: deep ink black, aged case-file manila, red evidence tags, trench coat silhouette",
+                label="Minimalist Forensic Noir Vector: pitch black canvas, dossier white silhouette, evidence crimson accent",
                 style_description=(
-                    "Classic 2D forensic noir graphic-novel illustration on aged case-file manila canvas "
-                    "(#111111 deep ink black, #E8E2D0 aged case-file manila, #5A5F66 fog-slate, #C0392B forensic evidence crimson); "
-                    "chalk contours, archive folders, magnifying lenses, and high-contrast shadow drama; "
-                    "orthographic 2D, at least 60% negative space, zero 3D, zero gradients."
+                    "Minimalist flat-vector forensic mystery explainer in Vox noir aesthetic on solid flat pitch black canvas (#0B0F19). "
+                    "Exactly ONE single crucial evidence metaphor per frame, rendered with high-contrast flat silhouettes "
+                    "in stark dossier white (#F1F5F9) and a single glowing evidence crimson (#E11D48) point. "
+                    "Flat 2D orthographic composition, strictly >=75% open negative space, zero textures, zero clutter."
                 ),
-                cast_appearance="Shadowy faceless trench-coat detective silhouette in a fedora hat holding a warm lantern beam over crimson-tagged archival clues",
-                outfit="Classic flat charcoal trench coat with turned-up collar, wide-brim fedora hat, zero shading",
-                palette=("#111111", "#E8E2D0", "#5A5F66", "#C0392B", "#FFFFFF"),
-                thumbnail_rule="Trench coat detective lantern beam highlighting clue + 2-4 uppercase words.",
+                cast_appearance="Shadowy faceless trench-coat detective silhouette in fedora hat holding lantern beam over red-tagged clue",
+                outfit="Solid flat dark slate trench coat with turned-up collar and fedora silhouette, zero shading",
+                palette=("#0B0F19", "#F1F5F9", "#E11D48"),
+                thumbnail_rule="Extreme close-up of single trench-coat silhouette beam striking single red evidence key on flat dark canvas + 2-4 uppercase bold words.",
             ),
             references=(
                 ReferenceChannel("Lemmino", "YouTube", "long", "Peerless documentary pacing, forensic neutrality, and primary-source rigor."),
@@ -2877,17 +2892,17 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             long_spec=_long((480, 720), "Explore our full geopolitical map library on Choke Point Maps."),
             visual=VisualIdentity(
                 profile_id="ch_en_tactical_atlas",
-                label="Strategic maritime atlas: Vox-style flat cartography, sand topographic landmasses, choke point straits",
+                label="Minimalist Geopolitical Vector: maritime navy canvas, coastal sand landmass, blockade crimson accent",
                 style_description=(
-                    "Crisp Vox and Johnny Harris-inspired 2D flat strategic cartography illustration on deep maritime navy ocean canvas "
-                    "(#0D1B2A deep maritime navy ocean, #E6CCB2 topographic sand landmasses, #E63946 blockade crimson, #FFB703 shipping-lane gold, #4EA8DE strait cyan); "
-                    "fine topographic contour lines, container vessel icons, blockade vectors, and maritime choke points; "
-                    "orthographic 2D, at least 60% negative space, zero 3D, zero gradients."
+                    "Minimalist flat-vector strategic geography explainer in Vox and Johnny Harris cartographic aesthetic on solid flat maritime navy canvas (#0F172A). "
+                    "Exactly ONE single pivotal choke point strait or maritime vessel metaphor per frame, rendered with clean flat land contours "
+                    "in coastal sand ivory (#E2E8F0) and a single bold blockade crimson (#DC2626) vector. "
+                    "Flat 2D orthographic composition, strictly >=75% open negative space, zero textures, zero clutter."
                 ),
-                cast_appearance="Character-free strategic cartography emblem: precision compass rose, 2D flat tanker silhouettes, maritime choke-point contours, and glowing trade-corridor arrows (zero human characters)",
-                outfit="No human clothing; high-contrast gold and crimson cartographic vector overlays",
-                palette=("#0D1B2A", "#E6CCB2", "#E63946", "#FFB703", "#4EA8DE"),
-                thumbnail_rule="Glowing crimson blockade over strategic strait map + 2-4 uppercase words.",
+                cast_appearance="Character-free strategic cartography emblem: 2D flat container ship silhouette and glowing blockade vector, zero human figures",
+                outfit="Zero human clothing; clean vector maritime route indicators",
+                palette=("#0F172A", "#E2E8F0", "#DC2626"),
+                thumbnail_rule="Extreme close-up of single container ship entering glowing red blockade strait on flat navy canvas + 2-4 uppercase bold words.",
             ),
             references=(
                 ReferenceChannel("RealLifeLore", "YouTube", "long", "Global geographic analysis of strategic straits, logistics, and resource constraints."),
@@ -2958,17 +2973,17 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             long_spec=_long((480, 720), "Journey through the wonders of spacetime with Pocket Cosmos on YouTube."),
             visual=VisualIdentity(
                 profile_id="ch_en_cosmos_vector",
-                label="Royal Observatory Celestial Copperplate Engraving & Brass Astrolabe Chart: deep indigo rag paper, engraved orbits",
+                label="Minimalist Cosmic Vector: void black canvas, electric nebula cyan body, solar flare gold accent",
                 style_description=(
-                    "Authentic 19th-century Royal Observatory 2D celestial copperplate ink engraving and hand-tinted astrolabe chart on deep cosmic-indigo cotton paper "
-                    "(#0B1026 deep indigo rag paper grain, #F4EFE6 chalk-ivory engraved orbit lines, #4CC9F0 pulsar cyan ink wash, #FFD166 brass astrolabe gold, #D9534F red-shift carmine) "
-                    "with fine cross-hatched celestial spheres, hand-drafted gravitational lensing meshes, and brass telescope dial callouts; "
-                    "orthographic 2D, tactile antique star-chart texture, at least 60% negative space, zero 3D CGI, zero cartoon robot mascots, zero plastic AI glow, zero gradients."
+                    "Minimalist flat-vector astrophysics explainer in Kurzgesagt aesthetic on solid flat void black canvas (#050814). "
+                    "Exactly ONE single celestial body or gravitational spacetime metaphor per frame, rendered with vibrant flat geometric silhouettes "
+                    "in electric nebula cyan (#38BDF8) and a glowing solar flare gold (#FBBF24) event accent. "
+                    "Flat 2D orthographic composition, strictly >=75% open negative space, zero textures, zero clutter."
                 ),
-                cast_appearance="Antique brass observatory astrolabe and copperplate-engraved astronomer's hand with brass dividers tracing relativistic spacetime curvature and planetary orbits on deep indigo chart paper",
-                outfit="Engraved brass astrolabe rings, ivory parchment coordinate scales, and dip-pen ink annotations, no cartoon mascot clothing",
-                palette=("#0B1026", "#F4EFE6", "#4CC9F0", "#FFD166", "#D9534F", "#FFFFFF"),
-                thumbnail_rule="Copperplate-engraved black hole gravitational well and brass astrolabe + 2-4 uppercase engraved words on deep indigo.",
+                cast_appearance="Clean geometric celestial sphere with vibrant planetary orbital ring and golden focal star, zero human figures",
+                outfit="Flat geometric vector orbits, no clothing",
+                palette=("#050814", "#38BDF8", "#FBBF24"),
+                thumbnail_rule="Extreme close-up of single glowing celestial event horizon on flat void black canvas + 2-4 uppercase bold words.",
             ),
             references=(
                 ReferenceChannel("Kurzgesagt – Space Series", "YouTube", "long", "Cosmic scale, existential risks, and theoretical astrophysics visualized."),
@@ -3039,17 +3054,17 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             long_spec=_long((480, 720), "Find deep peace with our full mindful series on The Second Arrow."),
             visual=VisualIdentity(
                 profile_id="ch_en_zen_sumie",
-                label="Sumi-e Zen brush-ink wash: handmade Xuan paper, bamboo sage wash, mindful monk and tranquil water ripples",
+                label="Minimalist Zen Vector: rice paper cream canvas, sumi ink figure, lotus vermilion accent",
                 style_description=(
-                    "Minimalist 2D Zen Sumi-e brush-ink wash illustration on warm Xuan rice paper canvas "
-                    "(#F5EFE0 handmade rice paper, #1C1C1C calligraphy brush ink, #5F7A61 bamboo sage wash, #D98A76 lotus coral) "
-                    "with tranquil negative space, spontaneous calligraphy strokes, lotus blossoms, and quiet water ripples; "
-                    "orthographic 2D, at least 65% negative space, zero 3D, zero gradients."
+                    "Minimalist flat-vector mindfulness explainer in modern Zen aesthetic on solid flat rice paper cream canvas (#F7F4EB). "
+                    "Exactly ONE single meditative psychology metaphor per frame, rendered with serene bold flat shapes "
+                    "in deep sumi ink (#1E293B) and a single lotus vermilion (#E0564C) deflection accent. "
+                    "Flat 2D orthographic composition, strictly >=75% open negative space, zero textures, zero clutter."
                 ),
-                cast_appearance="Serene brush-painted mindfulness monk in flowing sage-linen robes beside calm water ripples, lotus blossoms and bamboo",
-                outfit="Loose-fitting bamboo-sage (#5F7A61) linen meditation robe with gentle brush-edge contours",
-                palette=("#F5EFE0", "#1C1C1C", "#5F7A61", "#D98A76", "#8C7A6B"),
-                thumbnail_rule="Serene monk deflecting the second arrow with calm mind + 2-4 uppercase words.",
+                cast_appearance="Serene seated meditator in clean flat sumi silhouette beside minimal lotus flower and calm circular ripple",
+                outfit="Simple dark sumi-ink robe silhouette with clean flowing vector contours",
+                palette=("#F7F4EB", "#1E293B", "#E0564C"),
+                thumbnail_rule="Extreme close-up of single serene seated figure deflecting a single arrow on flat cream canvas + 2-4 uppercase bold words.",
             ),
             references=(
                 ReferenceChannel("Plum Village", "YouTube", "long", "Teachings of Thich Nhat Hanh on deep listening, anger transformation, and presence."),
@@ -3119,18 +3134,18 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             short_spec=_short((35, 50), "Which prehistoric epoch would you be most terrified to visit? Comment below."),
             long_spec=_long((480, 720), "Excavate our next deep-time geological chronicle on Deep Time Strata on YouTube."),
             visual=VisualIdentity(
-                profile_id="ch_en_parable_woodcut",
-                label="Carved Paleo-Lithograph & Geological Strata Woodcut: aged fossil parchment, relief gouge lines, amber & fern green",
+                profile_id="ch_en_deep_strata_vector",
+                label="Minimalist Deep Time Vector: fossil ivory canvas, earth slate specimen, amber gold accent",
                 style_description=(
-                    "Expressive 2D carved paleo-lithograph and linocut geological strata print on aged fossil-matrix parchment "
-                    "(#EFE4C8 aged fossil parchment, #1E1E1E bold carved woodcut ink, #D9A520 amber fossil gold, #5E7D3A Carboniferous fern green, #A44A3F Permian red-bed terracotta); "
-                    "textured woodblock relief gouge lines, geological rock-strata timelines, fossilized skeletons, amniotic eggs, and ancient giant fern forests; "
-                    "orthographic 2D, tactile hand-carved printmaking texture, at least 60% negative space, zero 3D CGI, zero plastic AI glow, zero gradients."
+                    "Minimalist flat-vector deep time evolutionary explainer in TierZoo aesthetic on solid flat fossil ivory canvas (#F5EFE6). "
+                    "Exactly ONE single ancient creature silhouette or geological turning-point metaphor per frame, rendered with bold clean flat shapes "
+                    "in earth slate (#292524) and a radiant fossil amber gold (#D97706) vital spark accent. "
+                    "Flat 2D orthographic composition, strictly >=75% open negative space, zero textures, zero clutter."
                 ),
-                cast_appearance="Carved woodcut field paleontologist in rugged expedition canvas coat holding a brass geological hammer and oil lantern beside stratified fossil cliff layers and prehistoric tetrapod footprints",
-                outfit="Hand-carved terracotta-and-ochre expedition canvas coat with leather field satchel and geological hammer, zero modern plastic details",
-                palette=("#EFE4C8", "#1E1E1E", "#D9A520", "#5E7D3A", "#A44A3F"),
-                thumbnail_rule="Woodcut geological cliff strata revealing giant fossil skeleton and amber egg + 2-4 uppercase carved words.",
+                cast_appearance="Expedition paleontologist in flat vector silhouette holding a field lantern near ancient fossil tracks",
+                outfit="Flat earth-slate canvas field jacket and satchel, clean vector lines",
+                palette=("#F5EFE6", "#292524", "#D97706"),
+                thumbnail_rule="Extreme close-up of single fossilized amber specimen or giant predator skull silhouette on flat ivory canvas + 2-4 uppercase bold words.",
             ),
             references=(
                 ReferenceChannel("PBS Eons & Moth Light Media", "YouTube", "long", "Deep-time paleontology, obscure evolutionary lineages, and mass extinction reconstructions."),
@@ -3204,17 +3219,17 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             long_spec=_long((480, 720), "Unwind completely with our full nighttime philosophical fable on Bamboo & Marble."),
             visual=VisualIdentity(
                 profile_id="ch_en_twilight_stoic",
-                label="Twilight Stoic-Taoist gouache: deep slate-indigo canvas, warm marble ivory, celadon bamboo, golden crescent moon",
+                label="Minimalist Nocturnal Philosophy Vector: midnight slate canvas, marble ivory silhouette, lantern gold accent",
                 style_description=(
-                    "Tranquil 2D flat midnight gouache and classical ink bedtime illustration on deep twilight slate-indigo canvas "
-                    "(#1D2D44 deep twilight slate-indigo canvas, #F0EBD8 warm marble ivory, #84A98C bamboo celadon, #E9C46A warm lantern gold, #748CAB misty mountain blue); "
-                    "soft matte gouache silhouettes, tranquil bamboo groves, classical marble colonnades and moonlit water; "
-                    "orthographic 2D, at least 60% negative space, zero 3D, zero gradients."
+                    "Minimalist flat-vector philosophical explainer in tranquil nocturnal aesthetic on solid flat midnight slate canvas (#0F172A). "
+                    "Exactly ONE single contemplative metaphor per frame, rendered with serene flat shapes "
+                    "in pale marble ivory (#E2E8F0) and a gentle lantern gold (#F59E0B) crescent accent. "
+                    "Flat 2D orthographic composition, strictly >=75% open negative space, zero textures, zero clutter."
                 ),
-                cast_appearance="Calm philosopher traveler painted in soft flat gouache wearing a draped ivory-and-slate cloak standing peacefully between a classical marble column and swaying celadon bamboo under a golden crescent moon",
-                outfit="Flowing flat ivory-and-slate philosopher cloak with clean soft edges, no modern details",
-                palette=("#1D2D44", "#F0EBD8", "#84A98C", "#E9C46A", "#748CAB"),
-                thumbnail_rule="Philosopher traveler looking at golden moon between bamboo and marble + 2-4 uppercase words.",
+                cast_appearance="Calm philosopher traveler silhouette in draped ivory cloak standing peacefully under a golden crescent moon",
+                outfit="Flowing flat marble-ivory cloak with clean minimal contours",
+                palette=("#0F172A", "#E2E8F0", "#F59E0B"),
+                thumbnail_rule="Extreme close-up of single philosopher traveler silhouette gazing at golden crescent moon on flat midnight canvas + 2-4 uppercase bold words.",
             ),
             references=(
                 ReferenceChannel("Einzelgänger — Stoicism & Taoism", "YouTube", "long", "Harmonizing Western Stoic virtue with Eastern Taoist non-striving."),

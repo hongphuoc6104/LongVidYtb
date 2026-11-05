@@ -1,0 +1,73 @@
+{
+  "channel_slug": "en-fine-print",
+  "competitor_name": "LegalEagle / CNBC Make It",
+  "voice": "en-US-RogerNeural",
+  "frame_by_frame_observations_vi": "Phân tích 20 khung hình thực tế (frame_01s.jpg đến frame_20s.jpg) từ phim tài liệu điều tra pháp lý 'Terms and Conditions May Apply':\n- 1s-5s: Giao diện các thỏa thuận điều khoản người dùng (Terms of Service) và danh mục chứng khoán công nghệ hiển thị sắc nét trên màn hình; camera lia nhanh qua các ma trận dữ liệu pháp lý.\n- 6s-10s: Cận cảnh màn hình hiển thị quy trình thu thập dữ liệu người dùng của các tập đoàn công nghệ; ánh sáng phản chiếu từ màn hình rọi lên bàn làm việc văn phòng luật.\n- 11s-15s: Cận cảnh vĩ mô (macro cinematography) phóng đại cụm từ '1,500 elements' trong văn bản hợp đồng chia sẻ dữ liệu; độ sâu trường ảnh quang học cực nông, từ ngữ then chốt nổi bật rực rỡ trong khi các dòng chữ nhỏ xung quanh bị mờ nhòe điện ảnh.\n- 16s-20s: Các điều tra viên pháp lý cầm tập hồ sơ hợp đồng dày cộm hàng trăm trang với các dải mực đen che giấu (redaction bars); bối cảnh văn phòng tài chính hiện đại với ánh sáng tự nhiên từ cửa sổ kính lớn.\nĐặc trưng thẩm mỹ: Phong cách tài liệu điều tra tài chính và pháp lý chân thực 100%, macro text giấy tờ sắc nét, bàn gỗ gụ tối màu và ánh sáng spotlight kịch tính; hoàn toàn không có hoạt hình 2D nét vẽ nguệch ngoạc.",
+  "learned_style_summary_vi": "Phong cách tài liệu điều tra tài chính & pháp lý của LegalEagle / CNBC: Macro cinematography tài liệu hợp đồng in thực tế trên bàn gỗ gụ sẫm màu; hiệu ứng vệt bút dạ quang quang học (optical highlighter callout) trên câu chữ pháp lý sắc nét; phòng họp kính và văn phòng luật sư với ánh sáng kịch tính; hồ sơ pháp lý dày cộm với con dấu mộc đỏ, chữ ký mực xanh và thanh che bảo mật màu đen.",
+  "beats": [
+    {
+      "beat_id": "B01",
+      "time_range": "0.0s - 2.1s",
+      "narration": "Every digital agreement conceals restrictive clauses.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_01s.jpg",
+      "prompt": "Cinematic macro cinematography shot of a crisp printed legal contract lying on a dark polished mahogany desk in a corporate law firm library, dramatic directional warm side lighting revealing rich paper texture and sharp black serif typography, shallow depth of field, LegalEagle investigative documentary aesthetic."
+    },
+    {
+      "beat_id": "B02",
+      "time_range": "2.1s - 4.2s",
+      "narration": "Users blindly accept lengthy service terms.",
+      "camera_motion": "tilt_down",
+      "competitor_ref_frame": "frame_05s.jpg",
+      "prompt": "Extreme macro close-up of tiny printed fine print paragraph lines in an official consumer terms of service agreement, an optical translucent yellow highlighter callout glowing across a pivotal legal clause, microscopic paper fiber details, high-end 8k forensic documentary lighting."
+    },
+    {
+      "beat_id": "B03",
+      "time_range": "4.2s - 6.4s",
+      "narration": "Data brokers harvest personal behavioral profiles.",
+      "camera_motion": "pan_right",
+      "competitor_ref_frame": "frame_10s.jpg",
+      "prompt": "Atmospheric wide interior shot of a darkened financial surveillance archive room with glowing terminal screens reflecting off green bankers lamps and dark leather armchairs, rows of heavy red leather law volumes on dark oak bookshelves in the background, cinematic corporate noir realism."
+    },
+    {
+      "beat_id": "B04",
+      "time_range": "6.4s - 8.6s",
+      "narration": "Hidden mandatory arbitration blocks class actions.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_12s.jpg",
+      "prompt": "Macro shot of a legal dispute arbitration clause on parchment paper with a bold red embossed notary seal and blue ballpoint signature at the bottom corner, heavy gold-plated fountain pen resting nearby, sharp focus with soft bokeh, CNBC Make It investigative quality."
+    },
+    {
+      "beat_id": "B05",
+      "time_range": "8.6s - 10.8s",
+      "narration": "Optical highlighters reveal critical liability exemptions.",
+      "camera_motion": "tilt_up",
+      "competitor_ref_frame": "frame_14s.jpg",
+      "prompt": "Cinematic low-angle medium shot inside a modern glass-walled corporate boardroom overlooking city skyscraper spires at dusk, a mahogany conference table strewn with financial audit binders and legal brief folders, moody architectural interior lighting."
+    },
+    {
+      "beat_id": "B06",
+      "time_range": "10.8s - 13.0s",
+      "narration": "Thick redacted dossiers hide surveillance disclosures.",
+      "camera_motion": "pan_left",
+      "competitor_ref_frame": "frame_15s.jpg",
+      "prompt": "Overhead top-down knolling shot of a thick classified legal dossier, multiple white printed contract pages with heavy black rectangular redaction ink bars, metal bulldog paperclips, evidence sticker tabs, dramatic split lighting cutting across the dark wooden surface."
+    },
+    {
+      "beat_id": "B07",
+      "time_range": "13.0s - 15.2s",
+      "narration": "Corporate courtrooms enforce unilateral copyright waivers.",
+      "camera_motion": "zoom_out",
+      "competitor_ref_frame": "frame_18s.jpg",
+      "prompt": "Symmetrical wide shot of an empty mahogany federal courtroom with polished brass railings, judge's bench elevated under soft overhead recessed gallery lights, American oak judicial interior, solemn documentary atmosphere, photorealistic 8k detail."
+    },
+    {
+      "beat_id": "B08",
+      "time_range": "15.2s - 17.5s",
+      "narration": "Scrutinize the fine print before signing.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_20s.jpg",
+      "prompt": "Close-up of a stack of hundreds of legal agreement pages bound in black leather spine, a brass magnifying glass resting on the top sheet magnifying tiny fine print letters, warm golden library reading light creating beautiful rim reflections, definitive investigative documentary style."
+    }
+  ]
+}

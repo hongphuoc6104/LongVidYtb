@@ -2,6 +2,30 @@
 
 This file archives older or superseded PLAYBOOK.md entries to keep `PLAYBOOK.md <= 200` lines.
 
+### [ERR-20261018-10] Preserve Flow submission evidence across failures
+- **Symptom:** Direct transport errors rewrote requests as not_submitted, and profile failover could send the same unresolved generation again.
+- **Reproduction Path:** Run test_repository_checkpoint and test_multi_profile_manager with socket loss, provider refusal and partially completed batch fixtures.
+- **Root Cause:** A transport wrapper edited engine journals, string matching treated post-send failures as pre-send, and a single unsent patch could classify a mixed batch as wholly unsent.
+- **Wrong Assumptions:** A missing download proves generation was never submitted, or provider refusal makes account rotation safe.
+- **Resolution & E2E Proof:** Let the engine own journal transitions; require explicit pre-send evidence, preserve ambiguous/partial batches, stop provider refusals and do not repeat their RPC. Disabled profiles return without waiting. Offline regressions verify no journal mutation or duplicate dispatch.
+- **Golden Rule:** Reconcile the original request on its owner; see the Flow submission-safety reference. Never infer non-submission from error wording or missing media.
+
+### [ERR-20261018-11] Preserve measured anchors when smoothing visual holds
+- **Symptom:** A pacing repair moved image cuts away from measured word timestamps while still labeling the result acoustic.
+- **Reproduction Path:** Run test_repository_checkpoint with measured anchors and densely spaced interpolated fallback beats.
+- **Root Cause:** The smoothing loop moved every beat and forced an opening-density target without respecting the timing source.
+- **Wrong Assumptions:** Meeting hold limits justifies altering measured speech alignment.
+- **Resolution & E2E Proof:** Smooth only narration_anchor_interpolated beats, retain original estimates when adjusted and leave measured conflicts visible to validation. Restore the 0.83-second body minimum.
+- **Golden Rule:** Measured timing is authoritative; repair the authored plan when real anchors cannot satisfy visual pacing.
+
+### [ERR-20261018-12] Separate blueprint source from active job state
+- **Symptom:** Production builders could overwrite initialized run inputs; source tests depended on unpublished live runs and media.
+- **Reproduction Path:** Run source-factory validation, active-run export refusal and the production suites. Run media_acceptance separately against genuine local outputs.
+- **Root Cause:** Source exports, mutable execution state and delivered media shared assumptions about directory ownership.
+- **Wrong Assumptions:** A valid blueprint may be copied over an active job, or CI should contain local production MP4 files.
+- **Resolution & E2E Proof:** Default source exports to blueprints, reject active-job destinations, read committed blueprint fixtures and explicitly separate real-media acceptance. Existing thumbnail/MP4 checks pass against local files without publishing them.
+- **Golden Rule:** Use official job author/revision operations for live executions; source CI and genuine media acceptance remain separate evidence.
+
 ### [ERR-20261018-04] Bound Colab download path fallback
 - **Triệu chứng (Symptom):** Three transport regressions fail because a broad download exception handler doubles collection attempts, including timeouts.
 - **Tái hiện E2E (Reproduction Path):** Run `pytest sys/tests/test_colab_tts.py sys/tests/test_remote_render.py sys/tests/test_colab_download_paths.py`; the pre-fix recovery-limit test observes six calls instead of three.

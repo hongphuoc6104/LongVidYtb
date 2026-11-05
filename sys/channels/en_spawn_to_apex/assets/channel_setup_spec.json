@@ -1,0 +1,28 @@
+{
+  "channel_id": "en_wait_how",
+  "slug": "en-wait-how",
+  "youtube_name": "Wait, How?",
+  "handle_candidates": [
+    "@WaitHowScience",
+    "@WaitHowDoodle",
+    "@WaitHowExplained",
+    "@WaitHowLab"
+  ],
+  "description": "Welcome to the official Wait, How? channel!\n\nAnswer everyday physical curiosities with delightful clarity so you see the world anew.\nClear, visual, research-backed explainers crafted for curious adults, students, and thinkers who love asking why everyday things work the way they do.\n\nCore topics: Everyday physics paradoxes, debunked school myths & surprising natural phenomena.\n\n#physics #science #waithow #curiosity #education #stem",
+  "keywords": [
+    "physics",
+    "science",
+    "waithow",
+    "curiosity",
+    "education",
+    "stem",
+    "Everyday physics paradoxes, debunked school myths & surprising natural phenomena"
+  ],
+  "assets": {
+    "avatar_800x800": "sys/channels/en_wait_how/assets/avatar_800x800.png",
+    "banner_2048x1152": "sys/channels/en_wait_how/assets/banner_2048x1152.png",
+    "watermark_150x150": "sys/channels/en_wait_how/assets/watermark_150x150.png",
+    "endcard_16x9": "sys/channels/en_wait_how/assets/endcard_16x9.jpg",
+    "endcard_9x16": "sys/channels/en_wait_how/assets/endcard_9x16.jpg"
+  }
+}

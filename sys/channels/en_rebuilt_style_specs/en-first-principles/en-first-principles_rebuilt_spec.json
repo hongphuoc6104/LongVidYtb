@@ -1,0 +1,73 @@
+{
+  "channel_slug": "en-first-principles",
+  "competitor_name": "Veritasium",
+  "voice": "en-US-ChristopherNeural",
+  "frame_by_frame_observations_vi": "Phân tích 20 khung hình thực tế (frame_01s.jpg đến frame_20s.jpg) từ video thực nghiệm con quay hồi chuyển (gyroscopic precession) của Veritasium:\n- 1s-5s: Cận cảnh thiết bị thí nghiệm con quay xe đạp gắn trên bàn gỗ phòng thí nghiệm vật lý, khung bảng đen phấn phía sau; ánh sáng trường quay directional chiếu sáng các nan hoa kim loại và vành nhôm sáng bóng.\n- 6s-10s: Người thuyết trình nâng trục bánh xe, một đầu dây cáp giữ trục lơ lửng; xuất hiện vectơ mô-men lực quay màu sắc trực quan (mô-men quán tính L và trọng lực torque tau).\n- 11s-15s: Bánh xe được quay tít với vận tốc góc lớn, nan hoa chuyển động mờ (motion blur), trục bánh xe không hề bị kéo rơi xuống đất mà bắt đầu tự quay tròn theo phương ngang (precession).\n- 16s-20s: Chuyển động đảo trục ngang hoàn toàn ổn định chống lại trọng trường, camera đẩy cận cảnh (push in) vào ổ bi trung tâm và độ căng của sợi dây treo chịu lực.\nĐặc trưng thẩm mỹ: Thước phim thực nghiệm phòng lab đại học chân thực 100%, chất liệu kim loại cơ khí sắc nét, bề mặt phản chiếu tự nhiên, không gian có chiều sâu với bảng xanh phấn trắng, KHÔNG dùng hoạt hình 2D đơn giản hay bản vẽ blueprint phẳng.",
+  "learned_style_summary_vi": "Phong cách thực nghiệm vật lý thực tế của Veritasium: Thiết bị thí nghiệm vật lý 3D chân thực bằng thép, đồng thau và nhôm mạ bóng bẩy; ánh sáng spotlight phòng thí nghiệm nhấn mạnh các chi tiết cơ học, nan hoa kim loại và trục quay; phông nền là giảng đường/phòng lab với bảng đen viết công thức mờ ảo; chuyển động camera mượt mà, zoom và pan theo quỹ đạo chuyển động của định luật vật lý.",
+  "beats": [
+    {
+      "beat_id": "B01",
+      "time_range": "0.0s - 2.1s",
+      "narration": "Spin a heavy metal bicycle wheel horizontally.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_01s.jpg",
+      "prompt": "Cinematic medium close-up of a high-precision experimental physics laboratory apparatus, heavy chrome bicycle wheel gyroscope mounted on a polished steel axle, demonstration table in a university physics lecture hall, dark green chalkboard with faint white chalk equations in the background, sharp directional studio key lighting highlighting metallic spokes and brushed aluminum rim, photorealistic 8k documentary style."
+    },
+    {
+      "beat_id": "B02",
+      "time_range": "2.1s - 4.2s",
+      "narration": "Support only one end of the axle.",
+      "camera_motion": "pan_right",
+      "competitor_ref_frame": "frame_05s.jpg",
+      "prompt": "Close-up shot of a human hand holding a taut vertical nylon suspension cord connected to only one end of the spinning steel axle, the heavy bicycle wheel suspended mid-air in front of a dark green university laboratory chalkboard, high shutter speed capturing tension in the cord and gleaming metallic axle collar, authentic physics demonstration aesthetic."
+    },
+    {
+      "beat_id": "B03",
+      "time_range": "4.2s - 6.4s",
+      "narration": "Instead of falling, gravity makes it precess.",
+      "camera_motion": "tilt_up",
+      "competitor_ref_frame": "frame_10s.jpg",
+      "prompt": "Photorealistic cinematic angle of the spinning bicycle gyroscope defying gravity, remaining perfectly horizontal on its one-sided pivot, subtle motion blur on the rapidly rotating steel spokes, realistic physics laboratory lighting with warm highlights on the polished rim, shallow depth of field with soft blackboard background."
+    },
+    {
+      "beat_id": "B04",
+      "time_range": "6.4s - 8.6s",
+      "narration": "Angular momentum resists downward gravitational torque vectors.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_12s.jpg",
+      "prompt": "Detailed macro shot focusing on the central black hub assembly and sealed ball bearing of the spinning wheel gyroscope, intricate mechanical engineering, precision machined aluminum and steel parts, directional lab illumination casting realistic sharp shadows, physical mechanism demonstration."
+    },
+    {
+      "beat_id": "B05",
+      "time_range": "8.6s - 10.8s",
+      "narration": "The spinning axle sweeps horizontally in space.",
+      "camera_motion": "pan_left",
+      "competitor_ref_frame": "frame_15s.jpg",
+      "prompt": "Wide side-profile view of the suspended bicycle wheel gyroscope slowly precessing in a smooth horizontal 360 degree circle, physics laboratory interior with wooden demonstration bench and scientific measuring equipment, natural volumetric ambient lighting, documentary realism."
+    },
+    {
+      "beat_id": "B06",
+      "time_range": "10.8s - 13.0s",
+      "narration": "Faster rotation creates stiffer resistance against tilting.",
+      "camera_motion": "zoom_out",
+      "competitor_ref_frame": "frame_17s.jpg",
+      "prompt": "Dynamic low-angle perspective looking up at the high-speed rotating gyroscopic wheel, rapid rotational blur on the spoke pattern, intense studio rim light gleaming off the outer circumference, demonstrating rigid angular conservation of momentum in physical reality."
+    },
+    {
+      "beat_id": "B07",
+      "time_range": "13.0s - 15.2s",
+      "narration": "Friction gradually slows down the rim speed.",
+      "camera_motion": "tilt_down",
+      "competitor_ref_frame": "frame_19s.jpg",
+      "prompt": "Close-up of the slowing wheel gyroscope starting to wobble, showing subtle nutation oscillations on the horizontal axle, microscopic air resistance and bearing friction taking effect, authentic educational physics film aesthetics with high texture detail on worn metal surfaces."
+    },
+    {
+      "beat_id": "B08",
+      "time_range": "15.2s - 17.5s",
+      "narration": "Finally, gyroscopic stability collapses to the floor.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_20s.jpg",
+      "prompt": "Cinematic shot of the wheel gyroscope coming to a complete stop, resting securely on the dark demonstration lab bench next to brass weights and calipers, warm golden hour sunbeams cutting across the physics lecture room, beautiful realistic post-experiment atmosphere."
+    }
+  ]
+}

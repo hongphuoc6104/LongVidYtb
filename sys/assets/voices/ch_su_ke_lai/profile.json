@@ -1,48 +1,48 @@
 {
   "voice": "VietNarrator_su_ke_lai",
   "channel_id": "su_ke_lai",
-  "option_index": 1,
-  "voice_label": "Giọng thuyết minh lịch sử trầm hùng, đĩnh đạc, rõ từng chữ chuẩn studio",
+  "option_index": 3,
+  "voice_label": "Giọng thuyết minh hồ sơ bí ẩn trầm sâu sắc nét chuẩn phim tài liệu (Kế thừa từ Hồ Sơ Kỳ Lạ)",
   "language": "vi",
   "languages": [
     "vi",
     "en"
   ],
   "reference_wav": "reference.wav",
-  "reference_text": "Cùng với du kích Nga, người Cossack liên tục tập kích chớp nhoáng các tuyến tiếp tế và kho hậu cần của Pháp, buộc Napoleon phải điều động hàng nghìn binh sĩ bảo vệ.",
-  "duration_seconds": 9.37,
+  "reference_text": "Tesla được thuê để làm việc cho Edison Machine Works. Công việc của Tesla bắt đầu với kỹ thuật điện đơn giản và nhanh chóng tiến triển để giải quyết một số vấn đề khó khăn nhất của công ty.",
+  "duration_seconds": 10.11,
   "acoustic_metrics": {
-    "dur": 9.37,
-    "rms_db": -14.85,
-    "peak_db": -1.12,
-    "p05_db": -140.0,
-    "p10_db": -140.0,
-    "p50_db": -16.4,
-    "p90_db": -10.8,
-    "dyn_db": 129.2,
-    "active_ratio": 0.72,
-    "min_1s_db": -18.0,
+    "dur": 10.11,
+    "rms_db": -15.21,
+    "peak_db": -0.77,
+    "p05_db": -79.9,
+    "p10_db": -71.8,
+    "p50_db": -16.9,
+    "p90_db": -11.2,
+    "dyn_db": 60.6,
+    "active_ratio": 0.77,
+    "min_1s_db": -18.3,
     "start_60ms_db": -140.0,
     "end_60ms_db": -140.0,
-    "hf_ratio": 0.0329,
-    "f0_spread_semitones": 4.63,
-    "quarter_rms_spread_db": 3.34
+    "hf_ratio": 0.0404,
+    "f0_spread_semitones": 2.12,
+    "quarter_rms_spread_db": 1.92
   },
   "span_provenance": {
-    "raw_sir_db": 10.44,
-    "avg_word_prob": 0.932,
+    "raw_sir_db": 11.99,
+    "avg_word_prob": 0.992,
     "valley_start_db": -140.0,
     "valley_end_db": -140.0,
-    "pause_before_s": 0.74,
-    "pause_after_s": 1.71
+    "pause_before_s": 1.46,
+    "pause_after_s": 1.4
   },
   "source_speed": 1.0,
   "recommended_speed": 1.1,
-  "default_tone": "historical_authoritative",
+  "default_tone": "reflective_slow",
   "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
   "audio_lufs": -14.0,
   "audio_peak_db": -1.2,
-  "sha256": "5ebeb65efc952565f40a659af3f4a571945ce22dc156bedd67a60c186ee51a3e",
+  "sha256": "cd25365252033ee60333c92e3f071a8dae3a99c865fe9e527686c7cf04048a9d",
   "demucs_vocal_isolated": true,
   "studio_v3_restored": true,
   "processing": {
@@ -54,17 +54,17 @@
   },
   "sources": [
     {
-      "url": "https://www.youtube.com/watch?v=4rda5AKLFW8",
-      "video_id": "4rda5AKLFW8",
-      "source_channel": "CD Media - Quân Sự",
-      "video_title": "Napoleon 1812 - Cuộc Xâm Lược Kết Thúc Một Đế Chế",
+      "url": "https://www.youtube.com/watch?v=JmvOccN_IQI",
+      "video_id": "JmvOccN_IQI",
+      "source_channel": "CD Media - Khám Phá",
+      "video_title": "Những Bí Ẩn Về Cuộc Đời Nikola Tesla: Thiên Tài Không Bằng Cấp | Vũ Trụ Nguyên Thủy",
       "window_seconds": [
-        483.43,
-        492.54
+        174.07,
+        183.92
       ]
     }
   ],
   "listening_verified": true,
-  "note": "Studio V3 restored reference voice (Giọng thuyết minh lịch sử trầm hùng, đĩnh đạc, rõ từng chữ chuẩn studio) from 'CD Media - Quân Sự' (https://www.youtube.com/watch?v=4rda5AKLFW8 @ 483.43s-492.54s) at exact 1.0x original speed.",
-  "active_option": 1
+  "note": "Replaced with ho_so_ky_la voice (VietNarrator_ho_so_ky_la timbre) per user instruction.",
+  "active_option": 3
 }

@@ -1,0 +1,73 @@
+{
+  "channel_slug": "en-career-leverage",
+  "competitor_name": "Wall Street Journal / Harvard Business Review",
+  "frame_by_frame_observations_vi": "Phân tích 20 khung hình (frame_01s -> frame_20s): Báo chí tài chính điều tra phong cách Wall Street Journal. Khung 01s-05s là biểu đồ định giá vốn mờ và hình ảnh sự kiện truyền thông doanh nhân; khung 06s-10s là cảnh văn phòng hiện đại làm việc đêm muộn qua khung cửa kính cao tầng nhìn ra đường phố Manhattan, ánh sáng đèn bàn tương phản cao (chiaroscuro); khung 11s-16s là phỏng vấn hội nghị điều hành cấp cao; khung 17s-20s là hai nhà sáng lập và quản lý làm việc căng thẳng trước màn hình laptop. Phong cách ảnh phóng sự tài chính (editorial photojournalism) với ánh sáng góc cạnh, độ tương phản sắc nét, màu sắc trung tính điện ảnh. Không có đồ vật bàn làm việc rời rạc ngẫu nhiên; tập trung 100% vào nhân vật chuyên nghiệp thật, phòng họp kính, chiến lược đàm phán và đòn bẩy sự nghiệp.",
+  "learned_style_summary_vi": "Phong cách High-Contrast Editorial Photojournalism (WSJ / HBR): Tái hiện chân thực thế giới đàm phán nghề nghiệp và chiến lược quyền lực công sở. Các khung cảnh phòng họp kính tầng cao nhìn ra thành phố, chuyên gia tài chính đối thoại đàm phán lương bổng với thần thái đĩnh đạc, tài liệu hợp đồng và dữ liệu chiến lược, ánh sáng cửa sổ tự nhiên sắc nét kết hợp tương phản đậm chất phóng sự kinh tế quốc tế. Không có nét vẽ biếm họa, không có giấy thủ công.",
+  "voice": "en-US-EricNeural",
+  "beats": [
+    {
+      "beat_id": "B01",
+      "time_range": "0.0s-2.1s",
+      "narration": "In corporate negotiations, leverage is silent.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_08s.jpg",
+      "prompt": "Editorial photojournalism still of a confident senior executive seated across a sleek boardroom table in a high-rise corner office, panoramic glass window overlooking the Manhattan skyline at dusk, sharp contrast lighting, tailored dark charcoal wool blazer, intense composed eye contact, WSJ documentary photography aesthetic, photorealistic, no text overlays"
+    },
+    {
+      "beat_id": "B02",
+      "time_range": "2.1s-4.2s",
+      "narration": "It isn't about working harder.",
+      "camera_motion": "pan_left",
+      "competitor_ref_frame": "frame_05s.jpg",
+      "prompt": "High-contrast documentary photograph of a corporate professional walking through a minimalist glass corridor of a modern corporate headquarters, architectural reflections on polished concrete floors, clean geometric lines, sharp depth of field, serious executive determination, editorial magazine grade, no text overlays"
+    },
+    {
+      "beat_id": "B03",
+      "time_range": "4.2s-6.3s",
+      "narration": "It is about asymmetric alternatives.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_10s.jpg",
+      "prompt": "Cinematic macro shot of an executive signing an offer sheet with a heavy luxury fountain pen on a dark slate desk, crisp white paper with clean typography, sharp metallic rim light on the pen, shallow depth of field, tangible material weight, Bloomberg Businessweek editorial still, no text overlays"
+    },
+    {
+      "beat_id": "B04",
+      "time_range": "6.3s-8.4s",
+      "narration": "The party with options wins.",
+      "camera_motion": "zoom_out",
+      "competitor_ref_frame": "frame_12s.jpg",
+      "prompt": "Dramatic wide-angle boardroom photograph of a strategic corporate meeting, executives around a solid walnut conference table bathed in diffused daylight from floor-to-ceiling glass, high dynamic range, crisp professional suits, calculated body language of strategic power, photorealistic, no text overlays"
+    },
+    {
+      "beat_id": "B05",
+      "time_range": "8.4s-10.5s",
+      "narration": "Never argue from a corner.",
+      "camera_motion": "tilt_down",
+      "competitor_ref_frame": "frame_15s.jpg",
+      "prompt": "Cinematic medium close-up of a corporate negotiator listening calmly with hands steepled on the table, cold natural light from window illuminating sharp facial planes, unshakeable calm poker face in high-stakes discussion, 35mm editorial film grain, photorealistic masterpiece, no text overlays"
+    },
+    {
+      "beat_id": "B06",
+      "time_range": "10.5s-12.6s",
+      "narration": "Build market demand before asking.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_18s.jpg",
+      "prompt": "Realistic documentary photo of a modern corporate analyst presenting quarterly performance metrics on a large frosted glass presentation screen in an executive strategy suite, sleek office interior with subtle blue accent lighting, authentic professional setting, photorealistic, no text overlays"
+    },
+    {
+      "beat_id": "B07",
+      "time_range": "12.6s-14.7s",
+      "narration": "True power is walking away.",
+      "camera_motion": "pan_right",
+      "competitor_ref_frame": "frame_03s.jpg",
+      "prompt": "Cinematic editorial photo of an executive picking up their leather briefcase from a boardroom chair, standing tall and turning toward the exit door with calm resolve, golden evening light cutting across the glass room, high editorial contrast, photorealistic, no text overlays"
+    },
+    {
+      "beat_id": "B08",
+      "time_range": "14.7s-17.0s",
+      "narration": "Own your value without apology.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_08s.jpg",
+      "prompt": "Striking portrait of a visionary professional standing by the floor-to-ceiling window of a skyscraper office looking out at the city lights below, sharp silhouette rim lighting, powerful quiet confidence, Harvard Business Review cover photojournalism aesthetic, photorealistic, no text overlays"
+    }
+  ]
+}

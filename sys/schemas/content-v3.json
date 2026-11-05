@@ -359,6 +359,9 @@
                     "string",
                     "null"
                   ]
+                },
+                "motion_prompt": {
+                  "type": "string"
                 }
               },
               "required": [
@@ -513,6 +516,9 @@
                     "string",
                     "null"
                   ]
+                },
+                "is_endcard": {
+                  "type": "boolean"
                 }
               },
               "required": [

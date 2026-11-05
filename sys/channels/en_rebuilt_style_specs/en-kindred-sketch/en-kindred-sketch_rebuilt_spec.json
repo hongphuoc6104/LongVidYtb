@@ -1,0 +1,73 @@
+{
+  "channel_slug": "en-kindred-sketch",
+  "competitor_name": "Cinema Therapy / The School of Life",
+  "frame_by_frame_observations_vi": "Phân tích 20 khung hình (frame_01s -> frame_20s): Chuỗi khung hình điện ảnh 35mm quay cận cảnh một buổi ăn tối đối thoại căng thẳng giữa các cặp đôi. Ánh sáng ấm 3000K từ nến cốc và đèn tungsten nền mờ ảo, hiệu ứng bokeh xóa phông tự nhiên (f/2.0). Khung 01s-05s là góc medium over-the-shoulder người đàn ông giải thích; 06s-10s chuyển sang cận cảnh biểu cảm ngạc nhiên và che giấu cảm xúc của người phụ nữ; 11s-15s là góc nghiêng rót rượu vang với ánh sáng phản chiếu ly thủy tinh và ngọn nến; 16s-20s là góc cận đối mặt đẩy nhẹ (push-in) làm nổi bật ánh mắt ngập ngừng, nét mặt do dự trong mối quan hệ. Không hề có nét vẽ hoạt hình, không có giấy trắng hay phong cách gouache phẳng; 100% hình ảnh người thật chân thực, độ chi tiết cao, kết cấu da và vải tự nhiên, màu sắc điện ảnh đậm chất Kodak Vision3 500T.",
+  "learned_style_summary_vi": "Phong cách Cinematic 35mm Live-Action Film Still: Tái hiện chân thực tình huống tâm lý quan hệ con người (cặp đôi nói chuyện đêm muộn, ánh nến lung linh trong nhà hàng hoặc phòng bếp, bokeh ấm áp, mưa rơi ngoài cửa kính). Ánh sáng tungsten ấm áp kết hợp bóng đổ mềm mại, góc máy quay cận cảnh biểu cảm ánh mắt, chuyển động máy push-in hoặc pan nhẹ tạo sự sâu lắng và kết nối cảm xúc mãnh liệt. Tuyệt đối không dùng phong cách hoạt hình hay AI phẳng.",
+  "voice": "en-US-JennyNeural",
+  "beats": [
+    {
+      "beat_id": "B01",
+      "time_range": "0.0s-2.1s",
+      "narration": "Silence between two lovers isn't peaceful.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_01s.jpg",
+      "prompt": "Cinematic 35mm film still of a couple sitting at a dimly lit dining table, late night intimate atmosphere, warm candle in a glass jar flickering between them, soft warm tungsten bokeh in the dark restaurant background, Kodak Vision3 500T color grading, shallow depth of field f/1.8, expressive authentic human faces, subtle emotional tension, photorealistic, no text overlays"
+    },
+    {
+      "beat_id": "B02",
+      "time_range": "2.1s-4.2s",
+      "narration": "It is often loud with fear.",
+      "camera_motion": "pan_left",
+      "competitor_ref_frame": "frame_03s.jpg",
+      "prompt": "Close-up cinematic portrait of a young woman looking across the table with subtle hesitation in her eyes, holding a glass of dark red wine, warm ambient rim light contouring her cheek, delicate skin texture and loose strands of hair, cozy warm interior background softly blurred with circular tungsten bokeh, 35mm film grain, photorealistic masterpiece, no text overlays"
+    },
+    {
+      "beat_id": "B03",
+      "time_range": "4.2s-6.3s",
+      "narration": "When words feel like landmines,",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_06s.jpg",
+      "prompt": "Over-the-shoulder medium shot of a thoughtful man in a dark navy knit sweater speaking softly, leaning forward over a rustic wooden table with candles and wine glasses, expressive nuanced facial expression, authentic real-life human acting, cinematic movie lighting, shallow depth of field, warm indoor tones, photorealistic film still, no text overlays"
+    },
+    {
+      "beat_id": "B04",
+      "time_range": "6.3s-8.4s",
+      "narration": "we retreat into protective armor.",
+      "camera_motion": "zoom_out",
+      "competitor_ref_frame": "frame_09s.jpg",
+      "prompt": "Cinematic medium shot of a woman turning slightly toward a rainy window at night, city streetlights refracting through water droplets on the glass, soft melancholic mood, holding her warm coffee cup with both hands, warm indoor lamp contrasting with cool exterior rain, 35mm atmospheric cinematography, highly realistic, no text overlays"
+    },
+    {
+      "beat_id": "B05",
+      "time_range": "8.4s-10.5s",
+      "narration": "Our nervous system senses danger,",
+      "camera_motion": "tilt_up",
+      "competitor_ref_frame": "frame_12s.jpg",
+      "prompt": "Cinematic close-up of two adult hands resting inches apart on a dark wood table near a warm candle, hesitating to reach across and touch, exquisite micro-textures of skin and table grain, golden hour tungsten glow, intimate vulnerability, moody 35mm film still, photorealistic, no text overlays"
+    },
+    {
+      "beat_id": "B06",
+      "time_range": "10.5s-12.6s",
+      "narration": "mistaking intimacy for emotional betrayal.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_15s.jpg",
+      "prompt": "Cinematic close-up portrait of a man looking down then looking up with vulnerable honest eyes, soft tear glimmering, dramatic side tungsten lighting, dark intimate room background with gentle bokeh, raw emotional connection, photorealistic 35mm still, no text overlays"
+    },
+    {
+      "beat_id": "B07",
+      "time_range": "12.6s-14.7s",
+      "narration": "Real connection begins with safety.",
+      "camera_motion": "pan_right",
+      "competitor_ref_frame": "frame_18s.jpg",
+      "prompt": "Warm cinematic shot of the couple looking into each other's eyes across the kitchen counter in soft morning golden sunlight, subtle relief and gentle smiling expression, steam rising from ceramic mugs, warm home interior, depth of field f/2.0, authentic human warmth, 35mm photography, photorealistic, no text overlays"
+    },
+    {
+      "beat_id": "B08",
+      "time_range": "14.7s-17.0s",
+      "narration": "Lower your shield, breathe together.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_20s.jpg",
+      "prompt": "Cinematic film still of two partners holding hands tightly, gentle embrace in a warm living room bathed in amber late afternoon light, genuine relief and deep emotional attunement, cinematic film grain, beautiful photorealistic composition, no text overlays"
+    }
+  ]
+}

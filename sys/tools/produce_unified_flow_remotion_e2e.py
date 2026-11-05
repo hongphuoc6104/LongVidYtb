@@ -584,12 +584,27 @@ def produce_unified_flow_remotion_e2e(
     aspect_ratio = "16:9" if is_long else "9:16"
     aspect_tag = "16x9" if is_long else "9x16"
 
-    # Default motion mode: 100% continuous full_chain for both short and long while ANY Flow profile has credits;
-    # automatically falls back to dense multi-image (images_only) ONLY when 100% of Flow pool profiles are exhausted.
+    part_flow, part_colab, default_session = get_channel_slice(channel_id)
+    target_account = colab_account or (part_colab[0] if part_colab else "account-01")
+    target_session = session_name or default_session
+
+    # Evaluate credit pool across all configured profiles (entire 38-profile pool).
+    # Default motion mode: 100% continuous full_chain (Omni 1.1 Flash) while ANY Flow profile has credits;
+    # automatically falls back to dense multi-image (images_only) ONLY when 100% of the entire pool is exhausted.
+    channel_eval_profiles = None
+    if flow_profiles_arg:
+        try:
+            all_cfgs = get_all_configured_profiles()
+            explicit_names = {x.strip() for x in flow_profiles_arg.split(",") if x.strip()}
+            channel_eval_profiles = [p for p in all_cfgs if p.get("name") in explicit_names or p.get("id") in explicit_names]
+        except Exception:
+            channel_eval_profiles = None
+
     resolved_motion_mode = resolve_motion_mode(
         motion_mode=motion_mode,
         flow_profiles_arg=flow_profiles_arg,
         ledger=credit_ledger,
+        profiles=channel_eval_profiles,
     )
 
     job_id = job_id_arg or f"{channel_slug}-week1-{aspect_tag}"
@@ -810,6 +825,7 @@ def produce_unified_flow_remotion_e2e(
                 headless=True,
                 resume=True,
                 dry_run=dry_run,
+                max_retries_per_clip=20,
                 skip_stitch=True,
             )
             if credit_ledger is not None:
@@ -818,27 +834,46 @@ def produce_unified_flow_remotion_e2e(
             try:
                 orchestrator_report = orchestrator.run()
             except Exception as exc_orch:
-                err_str = str(exc_orch).lower()
-                is_credit_exhausted = any(
-                    term in err_str
-                    for term in (
-                        "exhausted",
-                        "insufficient credits",
-                        "no eligible chrome profiles",
-                        "quota_exceeded",
-                        "quota",
-                        "captcha",
-                    )
-                )
-                if is_credit_exhausted:
+                manifest_path = flow_video_dir / "chain_manifest.json"
+                completed_clips = []
+                total_manifest_tasks = 0
+                if manifest_path.is_file():
+                    try:
+                        m_data = json.loads(manifest_path.read_text(encoding="utf-8"))
+                        m_tasks = m_data.get("tasks", [])
+                        total_manifest_tasks = len(m_tasks)
+                        completed_clips = [t for t in m_tasks if t.get("status") == "completed"]
+                    except Exception:
+                        pass
+
+                pool_has_credits = True
+                try:
+                    from flow_cdp.credit_ledger import CreditLedger
+                    _ledger = CreditLedger()
+                    pool_has_credits = _ledger.get_total_balance() > 0
+                except Exception:
+                    pass
+
+                # Invariant: If pool still has credits, strictly prohibit partial fallback.
+                if pool_has_credits and not dry_run and (total_manifest_tasks == 0 or len(completed_clips) < total_manifest_tasks):
+                    raise RuntimeError(
+                        f"Flow Video synthesis failed with pool credits remaining ({len(completed_clips)}/{total_manifest_tasks} clips): {exc_orch}. "
+                        "Preserving Omni 1.1 Flash full_chain invariant."
+                    ) from exc_orch
+
+                if completed_clips:
                     logger.warning(
-                        f"[!] FlowVideoChainOrchestrator encountered pool-wide credit exhaustion: {exc_orch}. "
-                        "Automatically falling back to dense multi-image mode ('images_only') using all generated Flow keyframes!"
+                        f"[!] FlowVideoChainOrchestrator stopped with {len(completed_clips)} completed clips ({exc_orch}). "
+                        "Registering completed video clips into timeline."
+                    )
+                    orchestrator_report = {"clips": completed_clips, "tasks": completed_clips}
+                else:
+                    logger.warning(
+                        f"[!] FlowVideoChainOrchestrator encountered error or exhaustion: {exc_orch}. "
+                        "100% of Flow pool credits exhausted; falling back to dense multi-image mode ('images_only')."
                     )
                     orchestrator_report = {"clips": [], "tasks": [], "exhausted": True}
                     resolved_motion_mode = "images_only"
-                else:
-                    raise
 
             # -----------------------------------------------------------------
             # Step d: Register Generated MP4 Clips into Timeline & images_payload
@@ -876,6 +911,11 @@ def produce_unified_flow_remotion_e2e(
         # Step e: Stage C Native FFmpeg h264_nvenc Render on Colab Tesla T4
         # ---------------------------------------------------------------------
         logger.info("[*] Bước E: Tiến hành Colab Tesla T4 Native FFmpeg h264_nvenc Render...")
+        if "schema_version" not in render_content:
+            render_content["schema_version"] = brief.get("schema_version") or "3.0"
+        for sc in render_content.get("scenes", []):
+            if sc.get("layers"):
+                sc["layers"] = []
         final_mp4, render_client, render_account, render_report = stage_c_render(
             sys_dir=active_sys_dir,
             job_dir=job_dir,

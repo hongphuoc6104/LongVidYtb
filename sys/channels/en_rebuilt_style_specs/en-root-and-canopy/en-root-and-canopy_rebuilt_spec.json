@@ -1,0 +1,73 @@
+{
+  "channel_slug": "en-root-and-canopy",
+  "competitor_name": "BBC Earth / Mossy Earth",
+  "voice": "en-GB-RyanNeural",
+  "frame_by_frame_observations_vi": "Phân tích 20 frames thực tế 1-FPS (frame_01s.jpg - frame_20s.jpg) từ thước phim tài liệu thực vật BBC Life / The Green Planet: (1) Ánh sáng: Ánh sáng tự nhiên quang học xuyên qua tán rừng ôn đới (dappled woodland sunlight), tạo độ tương phản cao giữa vùng râm mát ẩm ướt và các giọt sương, giọt mật bắt sáng. (2) Chất cảm (Texture): Độ chi tiết siêu thực của rêu nhung (bryophytes), lông tơ bảo vệ trên thân cây (trichomes), vân gân lá dương xỉ, và sợi tơ nấm. Hoàn toàn là hình ảnh quang học macro máy quay thực tế, không có bất kỳ phong cách màu nước (watercolor), tranh vẽ minh họa hay flat 2D nào. (3) Camera motion & transitions: Cú máy time-lapse chuyển động êm ái (optical push-in và tilt-up) di chuyển từ mặt đất ẩm ướt, luồn qua các vòm đá phủ rêu, rồi vươn lên theo chiều sinh trưởng thẳng đứng của các ngọn hoa mao địa hoàng (foxgloves) và vòm cây cổ thụ.",
+  "learned_style_summary_vi": "Phong cách hình ảnh học từ BBC Earth / Mossy Earth: Điện ảnh tài liệu thực vật macro quang học cao cấp (Optical Macro Botany Cinematography). Sử dụng tiêu cự macro xóa phông nông, ống kính chuyên dụng bắt cận cảnh cấu trúc tế bào lá, giọt sương, hệ sợi rễ nấm ngầm (mycorrhizal network), rêu nhung ngậm nước và các loài thực vật ăn thịt / nấm phát quang. Tông màu tự nhiên sâu thẳm: xanh ngọc bích của rêu ẩm, nâu đen của đất mùn rừng, tím thẫm của hoa rừng và ánh sáng volumetric god rays len lỏi qua vòm lá.",
+  "beats": [
+    {
+      "beat_id": "B01",
+      "time_range": "0.0s - 2.1s",
+      "narration": "Beneath the forest floor lies connection.",
+      "camera_motion": "tilt_down",
+      "competitor_ref_frame": "frame_01s.jpg",
+      "prompt": "BBC Earth Green Planet macro documentary cinematography, cross-section of deep damp forest soil, intricate subterranean mycorrhizal fungal root networks weaving between ancient tree roots, moisture droplets, hyper-detailed organic soil texture, volumetric rim lighting, 8k resolution, cinematic photorealism, no text overlays, no illustrations."
+    },
+    {
+      "beat_id": "B02",
+      "time_range": "2.1s - 4.2s",
+      "narration": "Fungi pulses with biochemical signals everywhere.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_04s.jpg",
+      "prompt": "Macro optical wildlife photography, bioluminescent ghost fungi fruiting bodies emerging from decaying damp mossy bark, soft blue-green bioluminescent glow illuminating forest floor humus, spore mist drifting in dark humid air, shallow depth of field, National Geographic botanical cinematography, photorealistic, no text."
+    },
+    {
+      "beat_id": "B03",
+      "time_range": "4.2s - 6.3s",
+      "narration": "Moisture awakens dormant velvet green moss.",
+      "camera_motion": "pan_right",
+      "competitor_ref_frame": "frame_06s.jpg",
+      "prompt": "Macro time-lapse cinematography, thick emerald velvet bryophyte moss swelling and hydrating across ancient granite boulder, morning dew drops glistening like crystal prisms, microscopic leaf fronds expanding, warm low-angle woodland morning sunlight, BBC Earth documentary quality, authentic optical realism."
+    },
+    {
+      "beat_id": "B04",
+      "time_range": "6.3s - 8.4s",
+      "narration": "Young ferns uncurl toward filtered sunlight.",
+      "camera_motion": "tilt_up",
+      "competitor_ref_frame": "frame_10s.jpg",
+      "prompt": "Close-up botanical documentary shot, young emerald fern fiddlehead uncoiling from moist forest litter, delicate fuzzy hairs catching golden volumetric sunbeams streaming through rainforest canopy, lush wet foliage background, shallow focus, true optical macro lens, authentic documentary footage."
+    },
+    {
+      "beat_id": "B05",
+      "time_range": "8.4s - 10.6s",
+      "narration": "Carnivorous sundews glisten with sticky dew.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_13s.jpg",
+      "prompt": "Extreme optical macro photography, carnivorous round-leaved sundew glistening with viscous ruby-tipped glandular tentacles, sticky mucilage droplets refracting bright morning light, tiny gnats trapped on crimson leaves, damp peat moss bed, botanical science realism, crystal clear details, zero text."
+    },
+    {
+      "beat_id": "B06",
+      "time_range": "10.6s - 12.8s",
+      "narration": "Purple foxgloves erupt in vibrant bloom.",
+      "camera_motion": "tilt_up",
+      "competitor_ref_frame": "frame_16s.jpg",
+      "prompt": "BBC Earth Green Planet documentary cinematography, tall stately purple foxglove Digitalis purpurea flowering spikes opening in time lapse sequence, intricate speckled throat patterns inside bell flowers, surrounded by lush green ferns and moss-covered twisted oak branches, atmospheric morning mist."
+    },
+    {
+      "beat_id": "B07",
+      "time_range": "12.8s - 15.0s",
+      "narration": "Ancient trees channel moisture and nutrients.",
+      "camera_motion": "pan_left",
+      "competitor_ref_frame": "frame_18s.jpg",
+      "prompt": "Wide optical tracking shot through ancient temperate rainforest, giant moss-draped gnarled tree trunks, epiphytic ferns clinging to high branches, cascading shafts of god rays piercing misty canopy, rich deep greens and earthy bark textures, cinematic nature documentary, photorealism."
+    },
+    {
+      "beat_id": "B08",
+      "time_range": "15.0s - 17.2s",
+      "narration": "The canopy breathes as one organism.",
+      "camera_motion": "zoom_out",
+      "competitor_ref_frame": "frame_20s.jpg",
+      "prompt": "Sweeping upward anamorphic shot looking from emerald forest floor to towering ancient canopy opening into morning sky, warm sunlight flare through damp leaves, mist rising from wet canopy, hyper-realistic Mossy Earth and BBC Earth botanical cinematography, 8k nature documentary, no text."
+    }
+  ]
+}

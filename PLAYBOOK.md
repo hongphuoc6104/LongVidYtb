@@ -12,7 +12,15 @@ $$\text{1. Tái hiện E2E} \longrightarrow \text{2. Phân tích gốc rễ} \lo
 
 ## II. Danh Mục Bài Học & Sự Cố Chuẩn Hóa
 
-> Historical entries [ERR-20261010-08], [ERR-20261010-09], [ERR-20261011-01], [ERR-20261011-05], [ERR-20261014-01], [ERR-20261016-02], [ERR-20261017-02], [ERR-20261017-03], [ERR-20261017-04], [ERR-20261017-05], [ERR-20261017-06], [ERR-20261018-01], [ERR-20261018-02], [ERR-20261018-03], [ERR-20261018-05], [ERR-20261018-06], and [ERR-20261018-07] are archived in .agents/skills/vp-troubleshooting/references/historical-playbook.md.
+> Historical entries [ERR-20261010-08], [ERR-20261010-09], [ERR-20261011-01], [ERR-20261011-05], [ERR-20261014-01], [ERR-20261016-02], [ERR-20261017-02], [ERR-20261017-03], [ERR-20261017-04], [ERR-20261017-05], [ERR-20261017-06], [ERR-20261018-01], [ERR-20261018-02], [ERR-20261018-03], [ERR-20261018-05], [ERR-20261018-06], [ERR-20261018-07], [ERR-20261018-10], [ERR-20261018-11], and [ERR-20261018-12] are archived in .agents/skills/vp-troubleshooting/references/historical-playbook.md.
+
+### [ERR-20261104-01] Chuẩn Hóa Hình Ảnh Tối Giản 2026 (Clean Explainer Aesthetic), Cắt Bỏ Rác Thị Giác & Thêm Visual Clutter Gate
+- **Triệu chứng (Symptom):** Khung hình tạo ra bị quá tải chi tiết (Prompt Over-specification), đầy rác AI như cross-hatching, lưới ô ly, thước đo millimeter, sơ đồ kỹ thuật, calipers khiến tranh rối rắm, mất thẩm mỹ tối giản của kênh triệu view.
+- **Tái hiện E2E (Reproduction Path):** Chạy pipeline Flow CDP với brief chứa từ khóa kỹ thuật dày đặc; kiểm tra frame sinh ra có negative space < 40%.
+- **Nguyên nhân cốt lõi (Root Cause):** (1) Style description 18 kênh tiếng Anh nhồi nhét buzzwords đồ họa kỹ thuật; (2) Compiler thiếu directive cưỡng chế nền phẳng yên tĩnh và negative space >= 75%; (3) Thiếu cổng QA tự động đo lường độ rối.
+- **Giả định sai (Wrong Assumptions):** Cho rằng mô tả càng nhiều chi tiết kỹ thuật/giấy thủ công thì AI vẽ càng đẹp, vô tình biến khung hình thành một bức vẽ nhồi nhét rối loạn.
+- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** (1) Thêm `CLEAN_COMPOSITION_DIRECTIVE` và `CLEAN_NEGATIVE_DIRECTIVE` vào `compile_channel_scene_prompt` và `compile_channel_thumb_prompt`; (2) Viết lại 18 kênh tiếng Anh sang phong cách flat-vector tối giản (Kurzgesagt/Vox/Primer/TierZoo) với bảng màu 3 sắc (60/30/10) và cấm toàn bộ từ khóa rác; (3) Tạo `sys/tools/visual_clutter_gate.py` đo negative space theo low-variance tile phân biệt rõ ảnh sạch (0.83–0.90) vs ảnh rối (0.12–0.20) và xuất `clutter_report.json`; (4) 78/78 tests unit pass 100%, ruff pass.
+- **Quy tắc phòng ngừa vàng (Golden Rule):** Luôn áp dụng 4 Quy Tắc Vàng Tối Giản: Canvas phẳng yên tĩnh (>= 75% negative space), đúng 1 ẩn dụ trọng tâm, bảng màu 3 sắc nghiêm ngặt cho kênh EN (giữ Nguệch Ngoạc cho VN), cấm tiệt từ khóa rác thị giác và bắt buộc chạy visual clutter gate trước khi render.
 
 ### [ERR-20261102-01] Khai Tử Remotion `<OffthreadVideo>` Thắt Cổ Chai CPU/IPC & Chuẩn Hóa Native Colab Tesla T4 `FFmpeg h264_nvenc`
 - **Triệu chứng (Symptom):** Quá trình render video bằng Remotion `<OffthreadVideo>` quá chậm (`393.38s` trên T4 / `341.69s` trên TPU), nghẽn IPC shared memory, ngốn CPU và tốn thời gian khởi tạo Chrome browser.
@@ -37,28 +45,6 @@ $$\text{1. Tái hiện E2E} \longrightarrow \text{2. Phân tích gốc rễ} \lo
 - **Giả định sai (Wrong Assumptions):** Nhầm tưởng mọi video 16:9 đều phải đổi hình dồn dập 2–3s/beat như TikTok mà không tính đến tính chất tĩnh tại, lắng đọng của thể loại phân tích nhận thức 3–4 phút.
 - **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** (1) Nâng cấp `check_see_say_beat_density` hỗ trợ linh hoạt format `long_16x9` / explainer (trần TB 6.0s, trần thân 8.5s, mở đầu 2–5 beat); (2) Động hóa trần giãn beat `maximum = max(3.75, avg_hold * 1.35)` trong `smooth_interpolated_beats`; (3) Truyền `format_profile` vào `job_worker.py`. 1097/1097 test pass 100%, render thành công video 16:9 `survivorship-bias-16x9_r1_final.mp4` (169.64s, 1920x1080@30fps NVENC).
 - **Quy tắc phòng ngừa vàng (Golden Rule):** Phân tách rõ ràng ngưỡng nhịp thị giác giữa video ngắn 9:16 (nhịp cắt nhanh) và video giải thích 16:9 (nhịp tĩnh tại, tập trung nhận thức); thuật toán làm trơn beat phải tự co giãn theo thời lượng thực tế của phân cảnh.
-
-### [ERR-20261018-10] Preserve Flow submission evidence across failures
-- **Symptom:** Direct transport errors rewrote requests as not_submitted, and profile failover could send the same unresolved generation again.
-- **Reproduction Path:** Run test_repository_checkpoint and test_multi_profile_manager with socket loss, provider refusal and partially completed batch fixtures.
-- **Root Cause:** A transport wrapper edited engine journals, string matching treated post-send failures as pre-send, and a single unsent patch could classify a mixed batch as wholly unsent.
-- **Wrong Assumptions:** A missing download proves generation was never submitted, or provider refusal makes account rotation safe.
-- **Resolution & E2E Proof:** Let the engine own journal transitions; require explicit pre-send evidence, preserve ambiguous/partial batches, stop provider refusals and do not repeat their RPC. Disabled profiles return without waiting. Offline regressions verify no journal mutation or duplicate dispatch.
-- **Golden Rule:** Reconcile the original request on its owner; see the Flow submission-safety reference. Never infer non-submission from error wording or missing media.
-### [ERR-20261018-11] Preserve measured anchors when smoothing visual holds
-- **Symptom:** A pacing repair moved image cuts away from measured word timestamps while still labeling the result acoustic.
-- **Reproduction Path:** Run test_repository_checkpoint with measured anchors and densely spaced interpolated fallback beats.
-- **Root Cause:** The smoothing loop moved every beat and forced an opening-density target without respecting the timing source.
-- **Wrong Assumptions:** Meeting hold limits justifies altering measured speech alignment.
-- **Resolution & E2E Proof:** Smooth only narration_anchor_interpolated beats, retain original estimates when adjusted and leave measured conflicts visible to validation. Restore the 0.83-second body minimum.
-- **Golden Rule:** Measured timing is authoritative; repair the authored plan when real anchors cannot satisfy visual pacing.
-### [ERR-20261018-12] Separate blueprint source from active job state
-- **Symptom:** Production builders could overwrite initialized run inputs; source tests depended on unpublished live runs and media.
-- **Reproduction Path:** Run source-factory validation, active-run export refusal and the production suites. Run media_acceptance separately against genuine local outputs.
-- **Root Cause:** Source exports, mutable execution state and delivered media shared assumptions about directory ownership.
-- **Wrong Assumptions:** A valid blueprint may be copied over an active job, or CI should contain local production MP4 files.
-- **Resolution & E2E Proof:** Default source exports to blueprints, reject active-job destinations, read committed blueprint fixtures and explicitly separate real-media acceptance. Existing thumbnail/MP4 checks pass against local files without publishing them.
-- **Golden Rule:** Use official job author/revision operations for live executions; source CI and genuine media acceptance remain separate evidence.
 
 ### [ERR-20261018-13] Colab identity leases and truthful pool readiness
 - **Symptom:** Jobs contend for a pinned runtime while unused profiles are reported ready; an unknown request loses its local runner lock.

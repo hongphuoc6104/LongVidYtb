@@ -1,0 +1,73 @@
+{
+  "channel_slug": "en-spawn-to-apex",
+  "competitor_name": "Deep Look PBS",
+  "voice": "en-US-AndrewNeural",
+  "frame_by_frame_observations_vi": "Phân tích 20 frames thực tế 1-FPS (frame_01s.jpg - frame_20s.jpg) từ Deep Look PBS: (1) Quang học & Tiêu cự: Ống kính macro chuyên dụng cực đoan (extreme optical macro lens) với trường nét cực mỏng (razor-thin DOF), bokeh xóa phông hậu cảnh mịn mượt làm nổi bật từng vân chitin, giáp phân đốt, khớp chân và râu cảm giác của loài chân khớp. (2) Ánh sáng: Sử dụng đèn rọi góc nghiêng (glancing keylight) bắt sáng trên bề mặt bóng loáng của giáp lưng côn trùng, phản chiếu ánh sáng tự nhiên trên lớp mùn gỗ ẩm. Không có bất kỳ yếu tố hoạt họa hay 3D giả lập nào. (3) Camera motion: Chuyển động tracking push-in và pan chậm, bám sát từng chuyển động của đối tượng. Đảm bảo toàn bộ 8 visual beats tuân thủ nghiêm ngặt tiến trình vòng đời thời gian (chronological life-cycle timeline): B01-B02 Trứng côn trùng trong suốt -> B03-B04 Ấu trùng nở -> B05-B06 Lột xác/kén nhộng biến thái -> B07-B08 Kẻ săn mồi đỉnh cao trưởng thành.",
+  "learned_style_summary_vi": "Phong cách học từ Deep Look PBS: Nhiếp ảnh điện ảnh sinh học macro quang học đỉnh cao (Optical Macro Biology Cinematography). Tập trung cận cảnh vào cấu trúc giải phẫu siêu nhỏ, vỏ chitin sáng bóng, mắt kép, gai chân săn mồi và các quá trình biến thái sinh học tự nhiên theo trục thời gian thực. Bối cảnh rừng tự nhiên ẩm ướt, chân thực 100%, không text overlay.",
+  "beats": [
+    {
+      "beat_id": "B01",
+      "time_range": "0.0s - 2.1s",
+      "narration": "Translucent eggs cluster beneath a leaf.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_01s.jpg",
+      "prompt": "Deep Look PBS optical macro nature cinematography, cluster of spherical translucent insect eggs attached to underside of emerald leaf, microscopic embryos visible inside glowing membranes with delicate cellular veins, morning dew droplets, extreme macro lens, 8k documentary photorealism, no text."
+    },
+    {
+      "beat_id": "B02",
+      "time_range": "2.1s - 4.2s",
+      "narration": "Microscopic heartbeats pulse within thin shells.",
+      "camera_motion": "tilt_down",
+      "competitor_ref_frame": "frame_04s.jpg",
+      "prompt": "Extreme scientific macro photography, single translucent insect egg in razor-sharp focus, tiny compound eyes and twitching limbs visible through gelatinous shell, backlit by warm golden sunbeam, shallow depth of field, National Geographic macro photography, photorealistic, zero text."
+    },
+    {
+      "beat_id": "B03",
+      "time_range": "4.2s - 6.3s",
+      "narration": "A hungry hatchling breaches its shell.",
+      "camera_motion": "pan_right",
+      "competitor_ref_frame": "frame_08s.jpg",
+      "prompt": "High-speed macro cinematography, miniature insect larva nymph pushing through cracked eggshell, moist glistening antennae extending into open air, tiny articulated legs stepping onto leaf vein, Deep Look PBS authentic scientific footage, ultra-detailed chitin texture."
+    },
+    {
+      "beat_id": "B04",
+      "time_range": "6.3s - 8.4s",
+      "narration": "Young predators immediately hunt for food.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_12s.jpg",
+      "prompt": "Optical macro action shot, tiny praying mantis nymph stalking microscopic aphid across green foliage, translucent amber body, delicate raptorial forelegs raised in strike posture, natural forest floor bokeh, documentary wildlife realism, no illustrations."
+    },
+    {
+      "beat_id": "B05",
+      "time_range": "8.4s - 10.6s",
+      "narration": "Splitting old chitin reveals new growth.",
+      "camera_motion": "tilt_up",
+      "competitor_ref_frame": "frame_14s.jpg",
+      "prompt": "Deep Look PBS time-lapse macro photography, molting insect nymph splitting open its old translucent exoskeleton along the dorsal suture, soft newly formed body wriggling out, glistening iridescent moist skin, extreme close-up, authentic nature documentary."
+    },
+    {
+      "beat_id": "B06",
+      "time_range": "10.6s - 12.8s",
+      "narration": "A chrysalis forms its protective shield.",
+      "camera_motion": "zoom_out",
+      "competitor_ref_frame": "frame_16s.jpg",
+      "prompt": "Macro optical cinematography, shimmering emerald chrysalis suspended from silk pad on twig, gold-flecked metallic perimeter dots catching morning light, soft wind swaying the pupa, damp botanical environment, high-end macro lens realism."
+    },
+    {
+      "beat_id": "B07",
+      "time_range": "12.8s - 15.0s",
+      "narration": "The adult apex hunter emerges fully.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_18s.jpg",
+      "prompt": "Majestic macro shot, adult apex praying mantis expanding its intricate veined wings, serrated raptorial claws held deadly still, large triangular head turning with compound eyes reflecting woodland light, predatory posture, Deep Look PBS cinematography."
+    },
+    {
+      "beat_id": "B08",
+      "time_range": "15.0s - 17.2s",
+      "narration": "An undisputed master of the canopy.",
+      "camera_motion": "pan_left",
+      "competitor_ref_frame": "frame_20s.jpg",
+      "prompt": "Cinematic anamorphic wildlife shot, fully grown praying mantis poised on damp mossy branch in lush canopy, striking lightning fast at flying prey, dramatic natural side-lighting, razor-sharp focus on spiny forelegs, 8k nature documentary masterpiece, zero text overlays."
+    }
+  ]
+}

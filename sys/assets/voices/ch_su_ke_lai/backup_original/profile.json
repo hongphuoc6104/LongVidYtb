@@ -1,0 +1,70 @@
+{
+  "voice": "VietNarrator_su_ke_lai",
+  "channel_id": "su_ke_lai",
+  "option_index": 1,
+  "voice_label": "Giọng thuyết minh lịch sử trầm hùng, đĩnh đạc, rõ từng chữ chuẩn studio",
+  "language": "vi",
+  "languages": [
+    "vi",
+    "en"
+  ],
+  "reference_wav": "reference.wav",
+  "reference_text": "Cùng với du kích Nga, người Cossack liên tục tập kích chớp nhoáng các tuyến tiếp tế và kho hậu cần của Pháp, buộc Napoleon phải điều động hàng nghìn binh sĩ bảo vệ.",
+  "duration_seconds": 9.37,
+  "acoustic_metrics": {
+    "dur": 9.37,
+    "rms_db": -14.85,
+    "peak_db": -1.12,
+    "p05_db": -140.0,
+    "p10_db": -140.0,
+    "p50_db": -16.4,
+    "p90_db": -10.8,
+    "dyn_db": 129.2,
+    "active_ratio": 0.72,
+    "min_1s_db": -18.0,
+    "start_60ms_db": -140.0,
+    "end_60ms_db": -140.0,
+    "hf_ratio": 0.0329,
+    "f0_spread_semitones": 4.63,
+    "quarter_rms_spread_db": 3.34
+  },
+  "span_provenance": {
+    "raw_sir_db": 10.44,
+    "avg_word_prob": 0.932,
+    "valley_start_db": -140.0,
+    "valley_end_db": -140.0,
+    "pause_before_s": 0.74,
+    "pause_after_s": 1.71
+  },
+  "source_speed": 1.0,
+  "recommended_speed": 1.1,
+  "default_tone": "historical_authoritative",
+  "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+  "audio_lufs": -14.0,
+  "audio_peak_db": -1.2,
+  "sha256": "5ebeb65efc952565f40a659af3f4a571945ce22dc156bedd67a60c186ee51a3e",
+  "demucs_vocal_isolated": true,
+  "studio_v3_restored": true,
+  "processing": {
+    "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
+    "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
+    "enhancer": "DeepFilterNet3 48kHz (-D -a 18 --pf)",
+    "boundary_aligner": "faster-whisper large-v3 word_timestamps + 20ms valley<=33dB + 110ms/150ms silence",
+    "mastering": "Studio EQ + De-Esser + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
+  },
+  "sources": [
+    {
+      "url": "https://www.youtube.com/watch?v=4rda5AKLFW8",
+      "video_id": "4rda5AKLFW8",
+      "source_channel": "CD Media - Quân Sự",
+      "video_title": "Napoleon 1812 - Cuộc Xâm Lược Kết Thúc Một Đế Chế",
+      "window_seconds": [
+        483.43,
+        492.54
+      ]
+    }
+  ],
+  "listening_verified": true,
+  "note": "Studio V3 restored reference voice (Giọng thuyết minh lịch sử trầm hùng, đĩnh đạc, rõ từng chữ chuẩn studio) from 'CD Media - Quân Sự' (https://www.youtube.com/watch?v=4rda5AKLFW8 @ 483.43s-492.54s) at exact 1.0x original speed.",
+  "active_option": 1
+}

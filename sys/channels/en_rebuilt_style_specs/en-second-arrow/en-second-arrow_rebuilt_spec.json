@@ -1,0 +1,72 @@
+{
+  "channel_slug": "en-second-arrow",
+  "competitor_name": "Einzelgänger / Daily Stoic",
+  "frame_by_frame_observations_vi": "Quan sát 20 frame đối thủ từ t=1s đến t=20s: Frame 01s-10s là bức tượng đồng bán thân Marcus Aurelius / triết gia Khắc kỷ trong thư phòng La Mã cổ đại, ánh sáng tương phản cực mạnh (chiaroscuro / Caravaggio) với luồng sáng mặt trời chiếu chéo từ trên cao, đèn dầu và nến lung linh trên bàn đá đầy cuộn sách da cừu (camera slow zoom in). Frame 11s-20s chuyển cảnh sang toàn cảnh tượng đồng triết gia trong trang phục áo choàng toga La Mã đứng kiêu hãnh trên nền phế tích đền thờ Acropolis cổ đại dưới ánh trăng tròn vằng vặc ban đêm, ánh đuốc vàng ấm áp hắt lên các cột đá Corinthian cổ kính sừng sững, camera ngước nhìn lên uy nghiêm (tilt up / push in). Bối cảnh hoàn toàn đậm chất điện ảnh lịch sử, không có nét vẽ hoạt hình phẳng hay khoảng trống vô nghĩa.",
+  "learned_style_summary_vi": "Phong cách Caravaggio chiaroscuro điện ảnh cổ điển: Tượng đồng và cẩm thạch La Mã phong hóa chân thực, kiến trúc đền đài Hy Lạp - La Mã cổ đại tráng lệ, hàng cột đá Corinthian sừng sững, ánh sáng đơn nguồn tương phản mạnh mẽ (volumetric ray of sunlight, ánh đuốc bập bùng, ánh trăng tròn ban đêm), tông màu ấm áp vàng đồng kết hợp xanh thẫm huyền bí, chiều sâu không gian 100% không gian đầy đặn, hoàn toàn không có text overlay.",
+  "beats": [
+    {
+      "beat_id": "B01",
+      "time_range": "0.0s - 2.2s",
+      "narration": "Life inevitably strikes us with sudden pain.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_01s.jpg",
+      "prompt": "Cinematic Caravaggio chiaroscuro realism of an ancient Roman temple interior, an iron-tipped arrow striking an ancient cracked marble target on a fluted stone column, sparks and marble dust flying, dramatic single-source volumetric beam of warm sunlight piercing dark stone colonnade, heavy atmospheric dust motes, museum oil painting texture, photorealistic historical depth, zero text."
+    },
+    {
+      "beat_id": "B02",
+      "time_range": "2.2s - 4.4s",
+      "narration": "External misfortune is just an event.",
+      "camera_motion": "zoom_out",
+      "competitor_ref_frame": "frame_04s.jpg",
+      "prompt": "Severe rainstorm sweeping across an ancient Roman Forum courtyard at dusk, weathered Doric and Corinthian stone columns soaked in rain, lightning illuminating ancient Roman cobblestones, turbulent dark clouds, dramatic classical antiquity realism, deep chiaroscuro lighting, warm torchlight flickering under portico, photorealistic, no text."
+    },
+    {
+      "beat_id": "B03",
+      "time_range": "4.4s - 6.6s",
+      "narration": "Yet true suffering is born inside.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_06s.jpg",
+      "prompt": "Close-up cinematic Caravaggio lighting on a weathered ancient Roman bronze bust of Seneca in a dimly lit study, deep expressive carved eyes, warm candlelight from brass sconces casting long flickering shadows across ancient parchment scrolls, dramatic chiaroscuro oil painting realism, photorealistic, no text."
+    },
+    {
+      "beat_id": "B04",
+      "time_range": "6.6s - 8.8s",
+      "narration": "We forge the second arrow ourselves.",
+      "camera_motion": "tilt_up",
+      "competitor_ref_frame": "frame_08s.jpg",
+      "prompt": "Macro shot of a blacksmith forge in ancient Rome, glowing molten iron arrowhead on an anvil being struck by a hammer, glowing embers showering into the dark workshop, deep contrast chiaroscuro flame lighting, extreme fine texture of forged steel and rustic stonework, dramatic historical atmosphere, no text."
+    },
+    {
+      "beat_id": "B05",
+      "time_range": "8.8s - 11.0s",
+      "narration": "Our judgment amplifies every bitter blow.",
+      "camera_motion": "pan_right",
+      "competitor_ref_frame": "frame_10s.jpg",
+      "prompt": "Weathered marble statue bust of a Stoic philosopher drenched in torrential rain in an ancient peristyle garden, raindrops dripping down cold sculpted stone cheeks, dark brooding stormy skies behind classical stone balustrade, Caravaggio moody contrast, photorealistic fine marble texture, no text."
+    },
+    {
+      "beat_id": "B06",
+      "time_range": "11.0s - 13.2s",
+      "narration": "Marcus Aurelius chose an unshakeable mind.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_12s.jpg",
+      "prompt": "Majestic full-length bronze statue of Emperor Marcus Aurelius draped in ornate Roman toga, standing tall in an ancient Roman atrium at night, a glowing full moon directly overhead, warm golden torchlight illuminating ancient stone architecture, deep cinematic shadows, museum-grade classical realism, no text."
+    },
+    {
+      "beat_id": "B07",
+      "time_range": "13.2s - 15.4s",
+      "narration": "Release judgment, quiet the internal storm.",
+      "camera_motion": "zoom_out",
+      "competitor_ref_frame": "frame_16s.jpg",
+      "prompt": "Low-angle heroic view of classical Greek Parthenon ruins under a brilliant night sky, ancient Doric colonnade standing firm against wind, glowing lanterns casting warm amber glow onto ancient limestone steps, serene stillness and timeless stoic endurance, photorealistic oil painting depth, no text."
+    },
+    {
+      "beat_id": "B08",
+      "time_range": "15.4s - 17.6s",
+      "narration": "Disarm the arrow, master your peace.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_20s.jpg",
+      "prompt": "Golden sunrise dawning over an ancient Roman temple terrace overlooking the Mediterranean, golden hour rays bathing a serene marble statue of Epictetus, broken iron arrows lying harmlessly on ancient stone mosaic floor, olive trees swaying gently in morning breeze, majestic peaceful atmosphere, hyper-realistic classical painting, no text."
+    }
+  ]
+}

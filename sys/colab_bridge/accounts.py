@@ -159,7 +159,7 @@ def local_sessions(name: str) -> list[str]:
     return []
 
 
-def has_external_session(name: str, allowed_prefixes: tuple[str, ...] = ("video-pilot",)) -> bool:
+def has_external_session(name: str, allowed_prefixes: tuple[str, ...] = ("video-pilot", "vp-", "vp_")) -> bool:
     """Return True if account has active sessions belonging to other external projects."""
     sess_names = local_sessions(name)
     for s in sess_names:

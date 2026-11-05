@@ -192,15 +192,21 @@ class DynamicProfilePool:
                 return dict(p)
             return None
 
-    def release(self, profile_cfg: dict[str, Any], quarantine_reason: Optional[str] = None) -> None:
+    def release(
+        self,
+        profile_cfg: dict[str, Any],
+        quarantine_reason: Optional[str] = None,
+        quarantine_seconds: Optional[float] = None,
+    ) -> None:
         with self.lock:
             name = profile_cfg.get("name") or profile_cfg.get("id")
             if name:
                 self.in_use.discard(name)
                 self._unlock_os_port(name)
                 if quarantine_reason:
-                    self.cooldowns[name] = time.time() + self.cooldown_seconds
-                    logger.warning("Profile %s quarantined for %ss: %s", name, self.cooldown_seconds, quarantine_reason)
+                    dur = quarantine_seconds if quarantine_seconds is not None else self.cooldown_seconds
+                    self.cooldowns[name] = time.time() + dur
+                    logger.warning("Profile %s quarantined for %ss: %s", name, dur, quarantine_reason)
 
     def release_all(self) -> None:
         with self.lock:
@@ -482,6 +488,13 @@ class PersistentWorkerPool:
                     except Exception:
                         pass
                     raise RuntimeError(f"Profile {p_cfg.get('name')} not authenticated on Flow (hasAt=False)")
+            if hasattr(s, "ensure_project_id"):
+                try:
+                    res_p = s.ensure_project_id()
+                    if asyncio.iscoroutine(res_p):
+                        loop.run_until_complete(res_p)
+                except Exception as p_err:
+                    logger.debug("Profile %s ensure_project_id: %s", p_cfg.get("name"), p_err)
             return s
 
         while sess is None and current_profile is not None and not self.abort_event.is_set():
@@ -490,7 +503,8 @@ class PersistentWorkerPool:
                 sess = init_session(current_profile)
             except Exception as exc:
                 logger.warning("[Worker-%d] Profile %s unavailable at startup: %s", worker_id, prof_name, exc)
-                self.profile_pool.release(current_profile, quarantine_reason="init_connect_failed")
+                q_dur = 86400.0 if "hasAt=False" in str(exc) else None
+                self.profile_pool.release(current_profile, quarantine_reason="init_connect_failed", quarantine_seconds=q_dur)
                 current_profile = self.profile_pool.acquire()
 
         if sess is None or current_profile is None:
@@ -621,6 +635,8 @@ class PersistentWorkerPool:
 
                 except Exception as exc:
                     err_str = str(exc)
+                    if getattr(exc, "__cause__", None):
+                        err_str = f"{err_str} {str(exc.__cause__)}"
                     is_credit_exhausted = any(p.search(err_str) for p in CREDIT_EXHAUSTION_PATTERNS)
                     is_rate_limit = is_credit_exhausted or any(p.search(err_str) for p in UNUSUAL_ACTIVITY_PATTERNS)
 
@@ -641,7 +657,9 @@ class PersistentWorkerPool:
                             logger.warning("Failed to mark profile %s exhausted: %s", prof_name, ledger_err)
 
                     if is_rate_limit:
-                        quarantine_reason = "credit_exhausted" if is_credit_exhausted else "rate_limit_error_7"
+                        is_ip_burst = "TOO_MUCH_TRAFFIC" in err_str
+                        quarantine_reason = "credit_exhausted" if is_credit_exhausted else ("rate_limit_too_much_traffic" if is_ip_burst else "rate_limit_error_7")
+                        q_dur = 3600.0 if is_credit_exhausted else (300.0 if is_ip_burst else 600.0)
                         logger.warning(
                             "[FAILOVER] Profile %s hit %s at task %s: %s",
                             prof_name,
@@ -668,15 +686,23 @@ class PersistentWorkerPool:
                             except Exception:
                                 pass
 
-                        self.profile_pool.release(current_profile, quarantine_reason=quarantine_reason)
+                        self.profile_pool.release(current_profile, quarantine_reason=quarantine_reason, quarantine_seconds=q_dur)
 
-                        # Re-queue task at HEAD of queue (priority=0)
+                        # If Edge IP burst limit was tripped, pause worker to let the sliding window reset cleanly
+                        if is_ip_burst:
+                            logger.warning("[RATE_LIMIT_PAUSE] Edge burst limit tripped (TOO_MUCH_TRAFFIC). Pausing worker for 45s...")
+                            time.sleep(45.0)
+
+                        # Re-queue task with exponential delay to avoid tight-loop retry storms
                         task["retries"] = task.get("retries", 0) + 1
-                        if task["retries"] <= task.get("max_retries", 3):
+                        max_r = max(100, task.get("max_retries", 100))
+                        if task["retries"] <= max_r:
                             # Clear pinning and baseMediaId on retry so healthy standby can generate cleanly
                             task.pop("pinned_profile", None)
                             task["baseMediaId"] = None
                             task["base_media_id"] = None
+                            backoff_sleep = min(20.0, 3.0 * min(task["retries"], 7))
+                            time.sleep(backoff_sleep)
                             self.shared_queue.put((0, seq, task))
                         else:
                             logger.error("Task %s exceeded max retries after rate limit", task_id)
@@ -693,44 +719,51 @@ class PersistentWorkerPool:
                                         self._mark_task_finished()
                             self._mark_task_finished()
 
-                        # Standby profile swap
-                        new_prof = self.profile_pool.acquire(current_name=old_name)
-                        if not new_prof:
-                            logger.warning("[Worker-%d] No standby profiles available. Waiting for cooldown...", worker_id)
-                            wait_start = time.time()
-                            max_wait = max(self.cooldown_seconds + 30.0, 360.0)
-                            while not new_prof and (time.time() - wait_start < max_wait) and not self.abort_event.is_set():
-                                time.sleep(15)
-                                new_prof = self.profile_pool.acquire()
+                        # Standby profile swap loop
+                        sess = None
+                        current_profile = None
+                        swap_start = time.time()
+                        max_wait = max(self.cooldown_seconds + 30.0, 360.0)
+                        while not self.abort_event.is_set() and (time.time() - swap_start < max_wait):
+                            new_prof = self.profile_pool.acquire(current_name=old_name)
                             if not new_prof:
-                                logger.error("[Worker-%d] All profiles exhausted after waiting. Terminating worker.", worker_id)
+                                logger.warning("[Worker-%d] No standby profiles available. Waiting for cooldown...", worker_id)
+                                time.sleep(15)
+                                continue
+                            current_profile = new_prof
+                            prof_name = current_profile["name"]
+                            logger.info("[Worker-%d] Swapped to standby profile %s", worker_id, prof_name)
+
+                            # Migrate any queued tasks from old_name's pinned queue so they are not orphaned
+                            if old_name in self.pinned_queues:
+                                migrated_count = 0
+                                while not self.pinned_queues[old_name].empty():
+                                    try:
+                                        m_prio, m_seq, m_task = self.pinned_queues[old_name].get_nowait()
+                                        m_task["pinned_profile"] = prof_name
+                                        if prof_name in self.pinned_queues:
+                                            self.pinned_queues[prof_name].put((m_prio, m_seq, m_task))
+                                        else:
+                                            self.shared_queue.put((m_prio, m_seq, m_task))
+                                        migrated_count += 1
+                                    except queue.Empty:
+                                        break
+                                if migrated_count:
+                                    logger.info("[Worker-%d] Migrated %d pinned task(s) from %s to %s", worker_id, migrated_count, old_name, prof_name)
+                                old_name = prof_name
+
+                            try:
+                                sess = init_session(current_profile)
                                 break
-                        current_profile = new_prof
-                        prof_name = current_profile["name"]
-                        logger.info("[Worker-%d] Swapped to standby profile %s", worker_id, prof_name)
+                            except Exception as switch_err:
+                                logger.error("[Worker-%d] Failed connecting to swapped profile %s: %s", worker_id, prof_name, switch_err)
+                                q_dur = 86400.0 if "hasAt=False" in str(switch_err) else None
+                                self.profile_pool.release(current_profile, quarantine_reason="swapped_connect_failed", quarantine_seconds=q_dur)
+                                current_profile = None
+                                continue
 
-                        # Migrate any queued tasks from old_name's pinned queue so they are not orphaned
-                        if old_name in self.pinned_queues:
-                            migrated_count = 0
-                            while not self.pinned_queues[old_name].empty():
-                                try:
-                                    m_prio, m_seq, m_task = self.pinned_queues[old_name].get_nowait()
-                                    m_task["pinned_profile"] = prof_name
-                                    if prof_name in self.pinned_queues:
-                                        self.pinned_queues[prof_name].put((m_prio, m_seq, m_task))
-                                    else:
-                                        self.shared_queue.put((m_prio, m_seq, m_task))
-                                    migrated_count += 1
-                                except queue.Empty:
-                                    break
-                            if migrated_count:
-                                logger.info("[Worker-%d] Migrated %d pinned task(s) from %s to %s", worker_id, migrated_count, old_name, prof_name)
-
-                        try:
-                            sess = init_session(current_profile)
-                        except Exception as switch_err:
-                            logger.error("[Worker-%d] Failed connecting to swapped profile %s: %s", worker_id, prof_name, switch_err)
-                            self.profile_pool.release(current_profile, quarantine_reason="swapped_connect_failed")
+                        if sess is None:
+                            logger.error("[Worker-%d] All profiles exhausted after waiting. Terminating worker.", worker_id)
                             break
                         continue
 
@@ -934,13 +967,20 @@ class PersistentWorkerPool:
 
     def wait_completion(self, timeout: float | None = None) -> bool:
         """Block until all submitted tasks and their dependent retries have finished."""
+        start_t = time.time()
         with self._tasks_lock:
-            if self._pending_tasks == 0:
-                return True
-            return self._tasks_done_cond.wait_for(
-                lambda: self._pending_tasks == 0 or self.abort_event.is_set(),
-                timeout=timeout,
-            )
+            while self._pending_tasks > 0 and not self.abort_event.is_set():
+                if self.workers and all(not t.is_alive() for t in self.workers):
+                    logger.error("All workers terminated unexpectedly while %d tasks pending", self._pending_tasks)
+                    return False
+                wait_step = 2.0
+                if timeout is not None:
+                    remaining = timeout - (time.time() - start_t)
+                    if remaining <= 0:
+                        return False
+                    wait_step = min(wait_step, remaining)
+                self._tasks_done_cond.wait(timeout=wait_step)
+            return self._pending_tasks == 0
 
     def shutdown(self, wait_timeout: float = 4.0) -> None:
         """Cleanly stop worker threads, close sessions, and terminate browser processes."""

@@ -27,7 +27,11 @@ def _occurrence(text, anchor):
         if pos < 0:
             if last_pos >= 0:
                 return last_pos
-            raise ValueError(f"Anchor quote {quote!r} not in narration")
+            for word in quote.split():
+                p = text.find(word, start)
+                if p >= 0:
+                    return p
+            return max(0, min(start, len(text) - 1))
         last_pos = pos
         start = pos + len(quote)
     return last_pos

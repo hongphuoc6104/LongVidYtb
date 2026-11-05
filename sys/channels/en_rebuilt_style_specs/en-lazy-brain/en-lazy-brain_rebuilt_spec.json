@@ -1,0 +1,73 @@
+{
+  "channel_slug": "en-lazy-brain",
+  "competitor_name": "Kurzgesagt / Huberman Lab",
+  "frame_by_frame_observations_vi": "Phân tích 20 khung hình (frame_01s -> frame_20s): Mô phỏng đồ họa y sinh 3D điện ảnh chi tiết cao về bộ não người và hệ thống dẫn truyền thần kinh. Khung 01s-06s là mô hình bán phần đầu và não bộ 3D với đường dẫn truyền dopamine màu xanh ngọc (cyan) phát sáng chạy từ thân não (VTA) lên thùy trán (prefrontal cortex); khung 07s-12s hiển thị góc quay camera xoay quanh mạng lưới sợi thần kinh; khung 13s-20s là cận cảnh cụm nơ-ron đa cực (multipolar neurons) với sợi trục (axons) và đuôi gai (dendrites) liên kết phức tạp trên nền đen vũ trụ sâu thẳm, các xung điện thần kinh phát sáng tại synap. Hoàn toàn không có hình vẽ nguệch ngoạc bằng bút dạ trên giấy trắng; đây là sự kết hợp chuẩn mực giữa mô hình giải phẫu sinh học 3D chân thực và các phân cảnh điện ảnh về hành vi tập trung của con người.",
+  "learned_style_summary_vi": "Phong cách Cinematic 3D Biological & Behavioral Visualization: Mô phỏng không gian 3D chân thực của mạng lưới thần kinh não bộ với các đường truyền dopamine phát sáng rực rỡ (glowing cyan / amber neural pathways), cấu trúc nơ-ron và synap sinh học chi tiết trên nền đen điện ảnh sâu thẳm. Kết hợp đan xen với các cảnh quay điện ảnh góc cận người thật trong trạng thái mất tập trung trước màn hình smartphone và trạng thái tập trung sâu (deep work flow state). Camera di chuyển zoom chậm, xoay 3D hoặc pan mượt mà.",
+  "voice": "en-US-AndrewNeural",
+  "beats": [
+    {
+      "beat_id": "B01",
+      "time_range": "0.0s-2.1s",
+      "narration": "You are not lazy or broken.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_01s.jpg",
+      "prompt": "Cinematic 35mm portrait of a tired professional at a modern dark desk, face illuminated by the cold blue glow of a smartphone screen, ambient moody room lighting, shallow depth of field f/1.8, authentic exhausted expression, hyperrealistic, zero text overlays"
+    },
+    {
+      "beat_id": "B02",
+      "time_range": "2.1s-4.2s",
+      "narration": "Your dopamine circuitry was simply hijacked.",
+      "camera_motion": "zoom_out",
+      "competitor_ref_frame": "frame_05s.jpg",
+      "prompt": "Hyper-detailed 3D anatomical visualization of the human brain on a dark cosmic background, glowing electric cyan and neon blue dopamine pathways firing along the mesolimbic reward system from the ventral tegmental area to the nucleus accumbens, intricate translucent cortex structures, Octane render, photorealistic biomedical animation still, no text overlays"
+    },
+    {
+      "beat_id": "B03",
+      "time_range": "4.2s-6.3s",
+      "narration": "Every cheap notification floods receptors,",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_10s.jpg",
+      "prompt": "Extreme macro 3D medical visualization of glowing neural synapses in the human brain, golden amber neurotransmitter vesicles bursting across synaptic clefts, electric sparks of bio-electrical activity connecting dendrites, dark cinematic scientific backdrop, National Geographic science documentary aesthetic, photorealistic 8k render, no text overlays"
+    },
+    {
+      "beat_id": "B04",
+      "time_range": "6.3s-8.4s",
+      "narration": "raising the threshold for real effort.",
+      "camera_motion": "pan_right",
+      "competitor_ref_frame": "frame_15s.jpg",
+      "prompt": "Cinematic visual metaphor of a person sitting in front of an empty notebook, staring at the blank page with restless cognitive friction, warm desk lamp contrasting with cool shadow, shallow depth of field, authentic human focus struggle, 35mm film still, photorealistic, no text overlays"
+    },
+    {
+      "beat_id": "B05",
+      "time_range": "8.4s-10.5s",
+      "narration": "To restore deep focus today,",
+      "camera_motion": "tilt_up",
+      "competitor_ref_frame": "frame_18s.jpg",
+      "prompt": "Cinematic close-up shot of hands turning a smartphone facedown onto a solid oak desk, pushing it away deliberately, natural warm window light, tactile wood texture, deliberate mindfulness action, photorealistic documentary cinematography, no text overlays"
+    },
+    {
+      "beat_id": "B06",
+      "time_range": "10.5s-12.6s",
+      "narration": "embrace ninety seconds of boredom.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_20s.jpg",
+      "prompt": "Stunning 3D biological render of a serene neural network calming down, glowing bioluminescent neurons shifting from chaotic flashing red into calm coherent emerald and gold waves, intricate axons forming ordered pathways in deep space, hyper-detailed Octane 3D visualization, no text overlays"
+    },
+    {
+      "beat_id": "B07",
+      "time_range": "12.6s-14.7s",
+      "narration": "Baseline dopamine resets naturally.",
+      "camera_motion": "pan_left",
+      "competitor_ref_frame": "frame_02s.jpg",
+      "prompt": "Medium cinematic shot of an adult taking a deep breath with closed eyes, calm peaceful expression, soft morning sunlight illuminating their profile, plants in the softly blurred background, authentic human nervous system regulation, 35mm film still, photorealistic, no text overlays"
+    },
+    {
+      "beat_id": "B08",
+      "time_range": "14.7s-17.0s",
+      "narration": "Reclaim control of your mind.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_08s.jpg",
+      "prompt": "Cinematic view of an individual writing with focused precision in a journal, sharp concentration, glowing warm tungsten lamp, clean organized minimalist workspace, state of flow, crisp textures and natural cinematic film grain, photorealistic masterpiece, no text overlays"
+    }
+  ]
+}

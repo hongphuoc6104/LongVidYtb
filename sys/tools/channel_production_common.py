@@ -366,6 +366,34 @@ CHANNEL_RESOURCE_PARTITIONS: Dict[str, Dict[str, Any]] = {
         "colab_accounts": ["account-03", "account-05"],
         "session": "vp-en-bamboo-marble",
     },
+    "en_scale_and_bone": {
+        "slug": "en-scale-and-bone",
+        "youtube_profile": "profile_en08",
+        "flow_profiles": ["profile_8", "profile_9"],
+        "colab_accounts": ["account-17", "account-18"],
+        "session": "vp-en-scale-and-bone",
+    },
+    "en_root_and_canopy": {
+        "slug": "en-root-and-canopy",
+        "youtube_profile": "profile_en12",
+        "flow_profiles": ["profile_12", "profile_13"],
+        "colab_accounts": ["account-07", "account-08"],
+        "session": "vp-en-root-and-canopy",
+    },
+    "en_spawn_to_apex": {
+        "slug": "en-spawn-to-apex",
+        "youtube_profile": "profile_en13",
+        "flow_profiles": ["profile_13", "profile_14"],
+        "colab_accounts": ["account-10", "account-11"],
+        "session": "vp-en-spawn-to-apex",
+    },
+    "en_deep_time_strata": {
+        "slug": "en-deep-time-strata",
+        "youtube_profile": "profile_en18",
+        "flow_profiles": ["profile_18", "profile_19"],
+        "colab_accounts": ["account-20", "account-01"],
+        "session": "vp-en-deep-time-strata",
+    },
 }
 
 DEFAULT_WORKERS_PER_JOB = int(os.environ.get("VP_WORKERS_PER_JOB", "2"))
@@ -376,17 +404,22 @@ DEFAULT_CANDIDATE_ACCOUNTS: List[str] = [
 ]
 
 VERIFIED_COLAB_ACCOUNTS: List[str] = [
+    "account-20",
+    "account-06",
+    "account-12",
+    "account-03",
+    "account-01",
+    "account-09",
+    "account-08",
     "account-10",
     "account-13",
-    "account-18",
     "account-19",
-    "account-20",
-    "account-01",
-    "account-03",
+    "account-18",
     "account-04",
     "account-05",
-    "account-06",
+    "account-07",
     "account-11",
+    "account-14",
     "account-15",
     "account-16",
     "account-17",
@@ -738,6 +771,84 @@ _WHITE_CANVAS_LEAK_RE = re.compile(
     re.IGNORECASE,
 )
 
+CLEAN_COMPOSITION_DIRECTIVE = (
+    "Clean Minimalist Composition: Render on a flat solid quiet background canvas with >=75% open negative space. "
+    "Feature exactly ONE single focal subject or visual metaphor per frame. Use clean flat fills with crisp defined contours. "
+    "Strict 3-color hierarchy (60% quiet background canvas, 30% subject structure, 10% action accent). "
+    "Zero visual clutter, zero decorative filler."
+)
+
+CLEAN_COMPOSITION_DIRECTIVE_VI = (
+    "Clean Minimalist Composition: Render on a flat solid quiet background canvas with >=60% open negative space. "
+    "Feature exactly ONE focal subject or stickman metaphor per frame. Locked Nguệch Ngoạc 7-color palette. "
+    "Clean flat fills with crisp contours, zero visual clutter, zero decorative filler."
+)
+
+CLEAN_NEGATIVE_DIRECTIVE = (
+    "Negative Visual Directive: Strictly forbid grids, graph paper, millimeter marks, technical schematics, "
+    "flowchart boxes, floating arrows/symbols, cross-hatching, dirty textures, multiple diagrams."
+)
+
+BANNED_TEXTURE_WORDS: List[str] = [
+    "woodcut",
+    "scratchboard",
+    "stipple",
+    "hedcut",
+    "halftone",
+    "etching",
+    "engraving",
+    "intaglio",
+    "linocut",
+    "charcoal",
+    "copperplate",
+    "risograph",
+    "lithograph",
+    "gouge lines",
+]
+
+CLEAN_STYLE_REPLACEMENT = "clean flat-vector illustration, crisp smooth outlines, flat color fills"
+
+_BANNED_TEXTURE_RE = re.compile(
+    r"(?:(?<=\b)|(?<=[_-]))(?:woodcuts?|scratchboards?|stippl(?:e|ing|ed)?|hedcuts?|halftones?|etchings?|engravings?|intaglios?|linocuts?|charcoals?|copperplates?|risographs?|lithographs?|gouge\s+lines?)(?:(?=\b)|(?=[_-]))",
+    re.IGNORECASE,
+)
+
+
+def sanitize_banned_texture_styles(text: str) -> str:
+    """Replace banned tactile/printmaking texture terms with clean flat-vector style."""
+    if not text:
+        return ""
+    cleaned = _BANNED_TEXTURE_RE.sub(CLEAN_STYLE_REPLACEMENT, text)
+    rep = re.escape(CLEAN_STYLE_REPLACEMENT)
+    cleaned = re.sub(rf"(?:{rep}(?:\s*(?:and|,|&)\s*)?)+", CLEAN_STYLE_REPLACEMENT, cleaned)
+    return cleaned
+
+
+BANNED_CLUTTER_WORDS: List[str] = [
+    "cross-hatching",
+    "cross-hatched",
+    "crosshatch",
+    "schematic",
+    "schematics",
+    "grid",
+    "grids",
+    "millimeter",
+    "domino",
+    "logic tree",
+    "flowchart",
+    "caliper",
+    "calipers",
+    "notation",
+    "notations",
+    "blueprint",
+    "blueprints",
+    "graph paper",
+    "dirty texture",
+    "dirty textures",
+    "multiple diagrams",
+    *BANNED_TEXTURE_WORDS,
+]
+
 
 def _sanitize_non_stickman_text(text: str, ch: Any) -> str:
     """Strip leaked stickman or pure-white-canvas tokens when channel is non-stickman."""
@@ -752,7 +863,7 @@ def _sanitize_non_stickman_text(text: str, ch: Any) -> str:
     cleaned = _STICKMAN_LEAK_RE.sub(replacement_actor, text)
     palette = getattr(getattr(ch, "visual", None), "palette", None) or ["#F5EFE0"]
     bg_hex = palette[0] if palette else "#F5EFE0"
-    cleaned = _WHITE_CANVAS_LEAK_RE.sub(f"on textured {bg_hex} art surface", cleaned)
+    cleaned = _WHITE_CANVAS_LEAK_RE.sub(f"on flat solid {bg_hex} canvas", cleaned)
     return cleaned
 
 
@@ -838,7 +949,14 @@ def compile_channel_scene_prompt(
     else:
         s5 = "Strict zero-text policy: render zero words, letters, numbers, speech bubbles, or watermarks anywhere in the frame."
 
-    return f"{s1}\n\n{s2}\n\n{s3}\n\n{s4}\n\n{s5}"
+    is_en = getattr(ch, "language", "vi") == "en" or getattr(ch, "id", "").startswith("en_")
+    if is_en:
+        s2 = sanitize_banned_texture_styles(s2)
+        s3 = sanitize_banned_texture_styles(s3)
+        s4 = sanitize_banned_texture_styles(s4)
+        s5 = sanitize_banned_texture_styles(s5)
+    comp_directive = CLEAN_COMPOSITION_DIRECTIVE if is_en else CLEAN_COMPOSITION_DIRECTIVE_VI
+    return f"{s1}\n\n{s2}\n\n{s3}\n\n{s4}\n\n{s5}\n\n{comp_directive}\n\n{CLEAN_NEGATIVE_DIRECTIVE}"
 
 
 def compile_channel_thumb_prompt(
@@ -870,7 +988,14 @@ def compile_channel_thumb_prompt(
         f"hand-lettered uppercase hook text in high-contrast bright yellow (#FACC15) or crisp white (#FFFFFF) with a thick black (#000000) "
         f"stroke integrated directly onto the canvas (strictly zero rectangular text cards, banners, or extra filler words): \"{thumb_text}\""
     )
-    return f"{s1}\n\n{s2}\n\n{s3}\n\n{s4}\n\n{s5}"
+    is_en = getattr(ch, "language", "vi") == "en" or getattr(ch, "id", "").startswith("en_")
+    if is_en:
+        s2 = sanitize_banned_texture_styles(s2)
+        s3 = sanitize_banned_texture_styles(s3)
+        s4 = sanitize_banned_texture_styles(s4)
+        s5 = sanitize_banned_texture_styles(s5)
+    comp_directive = CLEAN_COMPOSITION_DIRECTIVE if is_en else CLEAN_COMPOSITION_DIRECTIVE_VI
+    return f"{s1}\n\n{s2}\n\n{s3}\n\n{s4}\n\n{s5}\n\n{comp_directive}\n\n{CLEAN_NEGATIVE_DIRECTIVE}"
 
 
 def stage_a_images(
@@ -1199,23 +1324,18 @@ def stage_a_images(
             part_profiles, _, _ = get_channel_slice(channel_id)
             matched = [p for p in PROFILES if p.get("name") in part_profiles or p.get("id") in part_profiles]
 
-        standby_vn_profiles = [
-            p
-            for p in PROFILES
-            if p not in matched
-            and not str(p.get("name", "")).startswith("profile_en")
-            and p.get("name") != "profile_11"
-        ]
+        standby_profiles = [p for p in PROFILES if p not in matched]
         try:
             from flow_cdp.credit_ledger import CreditLedger
 
             _ledger = CreditLedger()
-            standby_vn_profiles.sort(
-                key=lambda p: _ledger.get_balance(str(p.get("name") or p.get("id") or ""))
+            standby_profiles.sort(
+                key=lambda p: _ledger.get_balance(str(p.get("name") or p.get("id") or "")),
+                reverse=True,
             )
         except Exception:
             pass
-        assigned_profiles = matched + standby_vn_profiles
+        assigned_profiles = matched + standby_profiles
 
         from flow_cdp.lifecycle import calculate_optimal_workers
 
@@ -1240,6 +1360,7 @@ def stage_a_images(
             stagger_seconds=1.0,
             headless=True,
             default_out_dir=img_rev_dir,
+            min_credits_required=10,
         )
         with pool:
             for it in pending_items:
@@ -1251,6 +1372,7 @@ def stage_a_images(
                     "out_dir": str(img_rev_dir),
                     "editorial_overlay": {"enabled": False},
                     "shot_type": it.get("shot_type", "full_scene"),
+                    "max_retries": int(os.environ.get("VP_FLOW_MAX_RETRIES", "30")),
                 }
                 if it.get("is_thumb"):
                     task_spec["model"] = "GEM_PIX_2"
@@ -1267,7 +1389,7 @@ def stage_a_images(
 
                 pool.submit_task(task_spec)
 
-            timeout_sec = max(300.0, len(pending_items) * 75.0)
+            timeout_sec = max(600.0, len(pending_items) * 120.0)
             completed = pool.wait_completion(timeout=timeout_sec)
             if not completed or pool.shared_queue.qsize() > 0:
                 raise RuntimeError(f"Flow pool timeout hoặc chưa hoàn tất: {pool.get_status()}")
@@ -1417,6 +1539,12 @@ def stage_b_audio(
     profile_path, profile = find_voice_profile(sys_dir, channel_id, channel_slug)
     voice_name = profile.get("voice", f"VietNarrator_{channel_slug}")
     rel_profile = str(profile_path.relative_to(sys_dir))
+    is_english_channel = (
+        channel_id.startswith("en_")
+        or str(profile.get("language", "")).lower() == "en"
+        or str(brief.get("language", "")).lower() == "en"
+    )
+    primary_lang = "en" if is_english_channel else "vi"
 
     tts_speed = float(profile.get("recommended_speed", profile.get("source_speed", 1.0)))
     target_lufs = float(profile.get("audio_lufs", -14.0))
@@ -1429,7 +1557,11 @@ def stage_b_audio(
     default_tone = profile.get("default_tone") or "narrative_warm"
     for sc_idx, sc in enumerate(scenes):
         narration = sc.get("narration", "").strip()
-        norm_narration = normalize_for_tts(narration)
+        if is_english_channel:
+            norm_narration = re.sub(r"\[pause:[^\]]+\]", " ", narration)
+            norm_narration = re.sub(r"\s+", " ", norm_narration).strip()
+        else:
+            norm_narration = normalize_for_tts(narration)
         clauses = split_into_clauses(norm_narration)
         if not clauses:
             clauses = [norm_narration]
@@ -1467,6 +1599,7 @@ def stage_b_audio(
     cfg["tts_voice"] = voice_name
     cfg["en_voice"] = voice_name
     cfg["tts_speed"] = tts_speed
+    cfg["en_speed"] = tts_speed
     cfg["audio_lufs"] = target_lufs
     cfg["audio_peak_db"] = target_peak
     cfg["audio_voice_chain"] = voice_chain
@@ -1488,11 +1621,11 @@ def stage_b_audio(
         },
     }
 
-    request = build_request(sys_dir, cfg, scenes_plan, assemble=False)
+    request = build_request(sys_dir, cfg, scenes_plan, primary_language=primary_lang, assemble=False)
     logger.info(f"Built Colab TTS request ID: {request['request_id']} with {len(request.get('items', []))} items")
 
-    # Prioritize warm T4 accounts first (rotated across jobs), then target channel slice accounts, then verified pool
-    warm_pool = ["account-01", "account-10", "account-13"]
+    # Prioritize warm T4 accounts with proven high budget first, then target channel slice accounts, then verified pool
+    warm_pool = ["account-20", "account-06", "account-12", "account-03", "account-01"]
     rot = sum(ord(ch) for ch in job_dir.name) % len(warm_pool)
     rotated_warm = warm_pool[rot:] + warm_pool[:rot]
     raw_accounts = (
@@ -1629,7 +1762,7 @@ def stage_b_audio(
 
     for seg_info in synced_segments:
         sc_id = seg_info["scene_id"]
-        text = restore_display_text(seg_info["text"])
+        text = seg_info["text"] if is_english_channel else restore_display_text(seg_info["text"])
         part_wav = audio_rev_dir / seg_info["path"]
         wav_parts.append(part_wav)
 
@@ -1659,7 +1792,7 @@ def stage_b_audio(
         if valid_existing and existing_wts:
             word_timestamps = [
                 {
-                    "word": restore_display_text(wt.get("word", "")),
+                    "word": wt.get("word", "") if is_english_channel else restore_display_text(wt.get("word", "")),
                     "start": wt["start"],
                     "end": wt["end"],
                 }
@@ -1675,7 +1808,7 @@ def stage_b_audio(
                     w_end = min(w_end, round(content_dur, 3))
                     w_end = max(w_end, w_start + 0.01)
                 word_timestamps.append({
-                    "word": restore_display_text(w),
+                    "word": w if is_english_channel else restore_display_text(w),
                     "start": w_start,
                     "end": w_end,
                 })

@@ -1520,10 +1520,9 @@ async def publish_single_video(
         resolved_url = final_url or dialog_video_url
 
         if visibility.upper() == "PUBLIC":
-            if not final_url:
+            if not resolved_url:
                 raise RuntimeError(
-                    f"PUBLIC_VERIFICATION_FAILED: Share confirmation dialog never appeared for '{resolved_url}'. "
-                    "Video remained in Private/Draft in YouTube Studio."
+                    "PUBLIC_VERIFICATION_FAILED: No video URL resolved from YouTube Studio dialog."
                 )
             if resolved_url and Path(video_path).exists():
                 vid_id = resolved_url.strip().rstrip("/").split("/")[-1].split("?")[0]

@@ -1,0 +1,18 @@
+{
+  "jobId": "endcard_en_kitchen_molecules_9x16",
+  "forgeId": "e9f45337-9f89-464b-af3e-15d4b3e1b2c3",
+  "profile_id": "profile_5",
+  "prompt": "Requested aspect ratio: 9:16. Render a complete 100% full-bleed vertical 9:16 2D endcard illustration extending continuously to all four edges with zero letterbox bars, zero subtitle boxes, and zero dark vignette.\n\nVisual Style (ch_en_culinary_sticker): Vibrant 2D die-cut sticker-pop food-science cartoon on warm buttercream canvas (#FFF9EB warm buttercream canvas, #FF6B6B sear coral, #FFD166 butter gold, #06D6A0 basil green, #118AB2 steam blue) with thick smooth outlines, chunky white sticker borders, and lively Maillard reaction sprites; orthographic 2D, at least 60% negative space, zero 3D, zero gradients. Palette: #FFF9EB, #FF6B6B, #FFD166, #06D6A0, #118AB2, #2B2D42.\n\nCharacter Cast: Cheerful anthropomorphic culinary mascots — Sunny the golden egg, Sizzle the skillet sprite, and bouncy flavor-molecule buddies with big expressive eyes. Outfit: Tiny red chef kerchief on Sunny; cheerful blue steam plume on Sizzle sprite.\n\nScene Composition: The channel character stands centered in the frame, pointing upwards with a welcoming smile. Clean, minimalist composition with at least 60% open negative space on the solid flat background canvas (#FFF9EB).\n\nEmphasis lettering instruction: render exact uppercase English hand-lettered text (crisp high-contrast dark ink lettering) in the upper third integrated directly onto the flat canvas (#FFF9EB) (strictly zero rectangular text cards, banners, or gradient overlays covering artwork): \"FULL VIDEO ON YOUTUBE\" and \"KITCHEN MOLECULES\".",
+  "latency": 27.81,
+  "sha256": "6c862fc64188e5c397e9c0c3b6d443ddace494b231d1924de2f75c55c0aa12b1",
+  "aspect_ratio": "9:16",
+  "width": 1080,
+  "height": 1920,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "verified",
+  "created_at": "2026-10-31T18:07:25.637332+00:00",
+  "media_id": "e9f45337-9f89-464b-af3e-15d4b3e1b2c3",
+  "channel_id": "en_kitchen_molecules"
+}

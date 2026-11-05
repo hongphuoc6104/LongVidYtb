@@ -1,0 +1,73 @@
+{
+  "channel_slug": "en-crowd-strings",
+  "competitor_name": "Fern / Academy of Ideas",
+  "voice": "en-US-SteffanNeural",
+  "frame_by_frame_observations_vi": "Phân tích 20 khung hình thực tế (frame_01s.jpg đến frame_20s.jpg) từ video tài liệu chiến lược đồ họa 3D của Fern TV:\n- 1s-5s: Xe tăng chiến đấu quân sự di chuyển chậm qua vùng địa hình mù sương u ám; tông màu lạnh slate-grey và teal đặc trưng, ánh sáng khuếch tán tự nhiên qua sương mù mờ ảo.\n- 6s-10s: Cận cảnh mô hình 3D photorealistic thân tên lửa hành trình / drone trinh sát bay lướt trên bản đồ địa hình; bề mặt kim loại mạ bóng phản chiếu bầu trời và thảm thực vật bên dưới sắc nét.\n- 11s-15s: Đuôi động cơ phản lực 3D phun luồng lửa plasma tím neon rực sáng trong bóng tối; các cánh turbine thép chịu nhiệt phản quang rực rỡ, độ sâu trường ảnh điện ảnh hoàn hảo.\n- 16s-20s: Bảng hiển thị cơ học split-flap kích thước lớn trong phòng chỉ huy trung tâm; các phiến lật ký tự màu trắng trên nền đen lách cách cơ khí, ánh sáng directional kịch tính rọi từ góc trên.\nĐặc trưng thẩm mỹ: Môi trường 3D kiến trúc và chiến lược cao cấp chuẩn Fern TV, kết cấu kim loại và bề mặt bóng bẩy, ánh sáng thể tích (volumetric lighting); hoàn toàn loại bỏ tranh khắc gỗ woodcut cổ lỗ trên giấy trắng.",
+  "learned_style_summary_vi": "Phong cách đồ họa 3D tài liệu điều tra của Fern TV: Không gian 3D nội thất kiến trúc khí quyển, phòng điều khiển quân sự và chiến lược viễn thám; ánh sáng thể tích (volumetric haze/god rays) cắt qua không gian tối; bề mặt kim loại mạ mờ, turbine cơ khí, màn hình radar xanh lục và bảng lật split-flap cơ học; chuyển động camera điện ảnh mượt mà, chiều sâu thị giác đa tầng; không dùng hình vẽ khắc gỗ trên nền trắng.",
+  "beats": [
+    {
+      "beat_id": "B01",
+      "time_range": "0.0s - 2.1s",
+      "narration": "Unseen forces orchestrate modern mass behaviors.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_01s.jpg",
+      "prompt": "Cinematic 3D architectural rendering of a vast subterranean military crisis command center, giant glowing blue situational map wall casting volumetric light onto polished concrete floor, silhouettes of strategic operators at glowing console desks, moody desaturated teal atmosphere, Fern TV investigative documentary aesthetics."
+    },
+    {
+      "beat_id": "B02",
+      "time_range": "2.1s - 4.2s",
+      "narration": "Strategic command centers monitor global tensions.",
+      "camera_motion": "tilt_down",
+      "competitor_ref_frame": "frame_05s.jpg",
+      "prompt": "Close-up of an intricate 3D holographic digital radar table inside a darkened control room, glowing amber flight telemetry lines and green geopolitical border vectors pulsating in volumetric haze, metallic console textures with physical toggle switches, high-end 8k render."
+    },
+    {
+      "beat_id": "B03",
+      "time_range": "4.2s - 6.4s",
+      "narration": "Autonomous systems execute precision flight paths.",
+      "camera_motion": "pan_right",
+      "competitor_ref_frame": "frame_08s.jpg",
+      "prompt": "Photorealistic 3D medium shot of a sleek stealth autonomous drone flying at high altitude above a mist-shrouded mountain range, matte dark carbon fiber composite fuselage, optical sensor glass turret reflecting cold blue sky, smooth cinematic camera tracking."
+    },
+    {
+      "beat_id": "B04",
+      "time_range": "6.4s - 8.6s",
+      "narration": "Subtle psychological triggers steer public sentiment.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_10s.jpg",
+      "prompt": "Atmospheric 3D conceptual visualization of neural network pathways morphing into a crowd simulation grid, thousands of translucent glowing human silhouettes walking through an illuminated modern transit concourse, volumetric god rays filtering through brutalist concrete pillars."
+    },
+    {
+      "beat_id": "B05",
+      "time_range": "8.6s - 10.8s",
+      "narration": "Propulsion turbines drive rapid military readiness.",
+      "camera_motion": "tilt_up",
+      "competitor_ref_frame": "frame_12s.jpg",
+      "prompt": "Detailed 3D close-up of a jet turbine exhaust nozzle glowing with intense violet and cyan afterburner plasma, intricate overlapping heat-resistant ceramic alloy petals, subtle lens flare and heat distortion ripples, high-octane documentary realism."
+    },
+    {
+      "beat_id": "B06",
+      "time_range": "10.8s - 13.0s",
+      "narration": "Mechanical split flaps clack with updates.",
+      "camera_motion": "pan_left",
+      "competitor_ref_frame": "frame_15s.jpg",
+      "prompt": "Macro side shot of a massive retro-futuristic Solari split-flap departure board mounted in a brutalist government lobby, white alphanumeric letters flipping in motion, sharp directional spotlights creating strong specular highlights on black plastic cards, cinematic depth of field."
+    },
+    {
+      "beat_id": "B07",
+      "time_range": "13.0s - 15.2s",
+      "narration": "Vast crowds move through monitored concourses.",
+      "camera_motion": "zoom_out",
+      "competitor_ref_frame": "frame_18s.jpg",
+      "prompt": "Grand wide interior view looking down from high balconies into a crowded international airport terminal concourse at night, stream of moving human commuters under massive geometric glass canopy, moody cinematic color grading with warm terminal lamps and cold exterior shadows."
+    },
+    {
+      "beat_id": "B08",
+      "time_range": "15.2s - 17.5s",
+      "narration": "The invisible strings connect us all.",
+      "camera_motion": "push_in",
+      "competitor_ref_frame": "frame_20s.jpg",
+      "prompt": "Poetic cinematic shot of a glowing illuminated 3D wireframe globe rotating inside an empty architectural auditorium, delicate golden fiber-optic network threads connecting major world capitols, stunning volumetric dust motes dancing in spotlight beams, Fern TV signature finale."
+    }
+  ]
+}

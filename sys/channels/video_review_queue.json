@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-11-03T19:13:31.763461+00:00",
+  "updated_at": "2026-11-04T03:50:17.991336+00:00",
   "items": {
     "ai-binh-dan-batch3-16x9": {
       "job_id": "ai-binh-dan-batch3-16x9",
@@ -645,12 +645,12 @@
       "channel_id": "tam_tinh_dem",
       "channel_name": "Tâm Tĩnh Đêm",
       "format_profile": "long_16x9",
-      "title": "Câu Chuyện Chiếc Bình Nứt: Khi Vết Xước Là Nơi Ánh Sáng Đi Qua",
-      "mp4_path": "",
-      "thumbnail_path": "",
-      "srt_path": "",
-      "duration_sec": 0.0,
-      "competitor_formula": "Benchmark: Dare to do. Motivation (YouTube), Hạt Giống Tâm Hồn (YouTube) | Hook: 'Đêm nay trước khi nhắm mắt, có một câu chuyện ngắn mình muốn kể cho bạn nghe.'",
+      "title": "Chiếc Bình Nứt: Khi Vết Xước Là Nơi Ánh Sáng Đi Qua",
+      "mp4_path": "/home/hongphuoc6104/Desktop/vp-agent-core/video/tam-tinh-dem-batch3-16x9/tam-tinh-dem-batch3-16x9.mp4",
+      "thumbnail_path": "/home/hongphuoc6104/Desktop/vp-agent-core/video/tam-tinh-dem-batch3-16x9/thumbnail_16x9.jpg",
+      "srt_path": "/home/hongphuoc6104/Desktop/vp-agent-core/video/tam-tinh-dem-batch3-16x9/tam-tinh-dem-batch3-16x9.srt",
+      "duration_sec": 194.4,
+      "competitor_formula": "",
       "status": "PENDING_REVIEW",
       "review_notes": "",
       "reviewed_at": null,
@@ -672,6 +672,22 @@
       "reviewed_at": "2026-11-03T16:23:38.408992+00:00",
       "published_url": "https://youtube.com/shorts/LP17qC1N9xw",
       "allowed": true
+    },
+    "en-first-principles-batch1-9x16": {
+      "job_id": "en-first-principles-batch1-9x16",
+      "channel_id": "en_first_principles",
+      "channel_name": "First Principles Ink",
+      "format_profile": "short_9x16",
+      "title": "Seoul Demolished a Highway and Traffic Moved Faster",
+      "mp4_path": "/home/hongphuoc6104/Desktop/vp-agent-core/video/en-first-principles-batch1-9x16/en-first-principles-batch1-9x16.mp4",
+      "thumbnail_path": "/home/hongphuoc6104/Desktop/vp-agent-core/video/en-first-principles-batch1-9x16/thumbnail_9x16.jpg",
+      "srt_path": "/home/hongphuoc6104/Desktop/vp-agent-core/video/en-first-principles-batch1-9x16/en-first-principles-batch1-9x16.srt",
+      "duration_sec": 57.166667,
+      "competitor_formula": "",
+      "status": "PENDING_REVIEW",
+      "review_notes": "",
+      "reviewed_at": null,
+      "published_url": null
     }
   }
 }
