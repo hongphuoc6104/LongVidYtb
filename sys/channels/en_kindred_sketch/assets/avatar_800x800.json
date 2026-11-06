@@ -1,0 +1,16 @@
+{
+  "jobId": "logo_en-kindred-sketch",
+  "forgeId": "231658b0-339d-409e-b6f9-1ac64f64a4ef",
+  "profile_id": "profile_en07",
+  "prompt": "Minimalist human psychology emblem centered on a solid warm cream background (#FDFBF7). A bold continuous espresso-charcoal (#382216) line forming two facing minimalist profile silhouettes whose shared negative space creates a warm coral rose (#E05A67) heart bridge in the center. Pure clean vector symbol, high contrast, 25% empty margin around all edges, strictly no text, no letters, no words, no numbers, pure icon.",
+  "latency": 33.61,
+  "sha256": "bdbc88e9093aa1ddb6895146b55417ee787b60df50f5b41cb7439aba6e870887",
+  "aspect_ratio": "1:1",
+  "width": 1024,
+  "height": 1024,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "downloaded",
+  "created_at": "2026-11-05T21:00:19.864874+00:00"
+}

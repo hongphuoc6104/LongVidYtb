@@ -1,0 +1,16 @@
+{
+  "jobId": "logo_en-crowd-strings",
+  "forgeId": "029d1639-3521-43eb-8b21-cf4d2fd2a168",
+  "profile_id": "profile_en11",
+  "prompt": "Minimalist intelligence network emblem centered on a solid dark slate background (#111827). A bold geometric triangle of three crisp ivory white (#F3F4F6) node spheres connected from above by taut glowing crimson red (#DC2626) marionette control lines meeting at a single apex diamond. Pure noir vector symbol, high contrast, 25% empty margin around all edges, strictly no text, no letters, no words, no numbers, pure icon.",
+  "latency": 35.63,
+  "sha256": "8b543ff3c6020031edfb802a4fce74124a5dd96f152e873a8905e758fda351be",
+  "aspect_ratio": "1:1",
+  "width": 1024,
+  "height": 1024,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "downloaded",
+  "created_at": "2026-11-05T20:59:41.565676+00:00"
+}

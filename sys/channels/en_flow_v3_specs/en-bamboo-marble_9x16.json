@@ -1,0 +1,79 @@
+{
+  "job_id": "en-bamboo-marble-v3-demo-9x16",
+  "channel_slug": "en-bamboo-marble",
+  "aspect": "9:16",
+  "title": "Why Trying Too Hard Destroys Your Peace — The Taoist Art of Flow",
+  "voice": "en-US-BrianNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "G1",
+      "continues_prev": false,
+      "scene_anchor": "Ancient wooden Kyoto temple veranda at dusk photographed on 35mm anamorphic lens at f/2.0, gentle rain falling from cedar eaves into a mossy stone tsukubai water basin, warm washi paper lantern glow, strictly zero text",
+      "narration": "We constantly exhaust our minds trying to force every uncertain outcome into rigid control.",
+      "pause_after_sec": 0.28,
+      "camera_verb": "Moody 35mm anamorphic slow push-in",
+      "start_visual": "Moody 35mm anamorphic cinematic film shot in vertical 9:16: a solitary contemplative traveler in dark linen robes sits in quiet stillness on tatami beneath the deep cedar eaves of a Kyoto temple veranda at dusk. A soft warm glow from a rustic washi paper lantern illuminates steam rising gently from a dark ceramic tea bowl beside them as rain falls softly onto wet moss outside. Closed lips, silent contemplative expression, zero speaking or mouth movement, photorealistic chiaroscuro lighting, strictly zero text.",
+      "end_visual": "On the same rain-soaked Kyoto temple veranda at dusk, camera pushes closer past the warm paper lantern toward the edge of the polished wooden planks where glistening raindrops drip steadily from the weathered cedar roof into the dark garden, photorealistic 35mm film grain, strictly zero text.",
+      "subject_motion": "camera pushes gently forward past the warm washi lantern as delicate steam curls from the ceramic bowl and raindrops fall steadily into the mossy garden"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "G1",
+      "continues_prev": true,
+      "scene_anchor": "Ancient wooden Kyoto temple veranda at dusk photographed on 35mm anamorphic lens at f/2.0, gentle rain falling from cedar eaves into a mossy stone tsukubai water basin, warm washi paper lantern glow, strictly zero text",
+      "narration": "Yet demanding life obey our rigid expectations only breeds anxiety and silent exhaustion.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "Smooth lateral drift along wet temple veranda",
+      "end_visual": "Drifting slightly rightward along the exact same rain-drenched Kyoto temple veranda at dusk: an ancient carved mossy stone tsukubai basin catches falling raindrops, creating concentric water ripples reflecting the indigo twilight sky and warm lantern light, photorealistic 35mm anamorphic, strictly zero text.",
+      "subject_motion": "camera glides smoothly along the wet wooden veranda toward the mossy stone tsukubai basin as concentric raindrops ripple across the dark water surface"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "G2",
+      "continues_prev": false,
+      "scene_anchor": "Misty emerald bamboo grove in Kyoto during wind and rain photographed on 35mm anamorphic cinema glass, tall slender bamboo stalks swaying in mountain gusts, cool diffused twilight mist, strictly zero text",
+      "narration": "What if genuine peace only begins the exact moment you dare to surrender?",
+      "pause_after_sec": 0.38,
+      "camera_verb": "Intimate 35mm tracking push-in through bamboo",
+      "start_visual": "Cinematic vertical 9:16 35mm shot in a towering Kyoto bamboo forest during misty rain: a solitary traveler in dark linen robes walks slowly along a glistening wet stone pathway as tall emerald bamboo stalks sway gracefully in the mountain wind. Diffused cool twilight filters through wet foliage. Closed lips, calm surrendered expression, zero speaking or mouth movement, rich natural film grain, strictly zero text.",
+      "end_visual": "Further along the same wet cobblestone bamboo pathway in the misty rain, the traveler halts gently and looks up into the towering green canopy as the flexible bamboo stalks yield smoothly to a gust of wind without snapping, closed lips, tranquil expression, no mouth movement, strictly zero text.",
+      "subject_motion": "the solitary traveler pauses calmly along the wet stone path as towering bamboo stalks sway smoothly and yield gracefully to the misty wind"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "G2",
+      "continues_prev": true,
+      "scene_anchor": "Misty emerald bamboo grove in Kyoto during wind and rain photographed on 35mm anamorphic cinema glass, tall slender bamboo stalks swaying in mountain gusts, cool diffused twilight mist, strictly zero text",
+      "narration": "Watch how emerald bamboo withstands violent mountain storms not by fighting, but yielding.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Slow upward tilt-and-drift through bamboo canopy",
+      "end_visual": "Looking up into the exact same misty emerald bamboo canopy above the wet path: thick green bamboo stems bend deeply under the heavy storm wind and spring smoothly back upright, shedding glistening arcs of crystal water droplets, photorealistic 35mm anamorphic cinematography, strictly zero text.",
+      "subject_motion": "the flexible bamboo stalks bend resiliently under the mountain wind and spring gracefully back upright, scattering fine water droplets through misty air"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "G3",
+      "continues_prev": false,
+      "scene_anchor": "Macro 35mm close-up of a pure mountain stream with smooth black river stones and dark glistening marbles under dappled forest light, crystal water caustics, strictly zero text",
+      "narration": "Gentle mountain water never attacks massive jagged boulders, yet patiently carves deep stone canyons.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Macro 35mm low-angle water tracking pass",
+      "start_visual": "Photorealistic vertical 9:16 macro 35mm shot of a clear mountain stream: crystal water flows swiftly and effortlessly over smooth rounded black river stones and dark glistening marbles. Golden dappled sunlight filters through overhead cedar boughs, creating dancing amber caustic ripples across wet pebbles, f/2.0 shallow focus, strictly zero text.",
+      "end_visual": "Downstream along the same crystal mountain brook, the rushing water effortlessly parts around a massive jagged dark boulder and reunites seamlessly without hesitation, carving smooth polished curves into the ancient rock face, photorealistic fluid dynamics, strictly zero text.",
+      "subject_motion": "crystal stream water rushes smoothly over rounded black river marbles and effortlessly glides around the rugged rock face in continuous laminar flow"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "G4",
+      "continues_prev": false,
+      "scene_anchor": "Breathtaking wide 35mm anamorphic vista from a high cliffside Kyoto temple veranda overlooking sea of mist and rolling mountain ridges at twilight, warm hanging cedar lantern, strictly zero text",
+      "narration": "When you release rigid resistance, your mind flows forward with timeless, unshakeable clarity.",
+      "pause_after_sec": 0.3,
+      "camera_verb": "Serene centered pull-back into twilight vista",
+      "start_visual": "Cinematic vertical 9:16 wide shot on the high wooden veranda of a cliffside Kyoto temple at dusk: the solitary traveler in dark linen robes stands calmly at the wooden railing, gazing out at rolling misty mountain ridges bathed in deep indigo and amber twilight sky. Closed lips, peaceful stillness, zero speaking or mouth movement, warm glow from an overhead cedar lantern, strictly zero text.",
+      "end_visual": "Serene slow pull-back across the polished cedar veranda into deep twilight: the solitary traveler remains resting in tranquil harmony with the vast misty mountain landscape below, as low clouds drift through pine valleys, masterwork 35mm cinematic stillness, closed lips, no mouth movement, strictly zero text.",
+      "subject_motion": "camera pulls smoothly back along the wooden temple railing as the traveler rests in tranquil stillness and low clouds drift across the mountain valley"
+    }
+  ]
+}

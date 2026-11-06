@@ -969,8 +969,16 @@ class DirectCDPProfileSession:
                 const token = await window.mintCaptcha({json.dumps(flow_rpc.CAPTCHA_IMAGE)});
                 if (!token) return {{ error: "CAPTCHA_FAILED: empty token", submitted: false }};
                 freqStr = freqStr.split("__CAPTCHA__").join(token);
-                const wiz = globalThis.WIZ_global_data || {{}};
-                const at = wiz.SNlM0e;
+                let wiz = globalThis.WIZ_global_data || {{}};
+                let at = wiz.SNlM0e;
+                if (!at) {{
+                    for (let w = 0; w < 10; w++) {{
+                        await new Promise(r => setTimeout(r, 500));
+                        wiz = globalThis.WIZ_global_data || {{}};
+                        at = wiz.SNlM0e;
+                        if (at) break;
+                    }}
+                }}
                 const sid = wiz.FdrFJe;
                 const bl = wiz.cfb2h;
                 if (!at) return {{ error: "NO_AT_TOKEN", submitted: false }};
@@ -1052,8 +1060,16 @@ class DirectCDPProfileSession:
                 const token = await window.mintCaptcha({json.dumps(flow_rpc.CAPTCHA_IMAGE)});
                 if (!token) return {{ error: "CAPTCHA_FAILED: empty token" }};
                 freqStr = freqStr.split("__CAPTCHA__").join(token);
-                const wiz = globalThis.WIZ_global_data || {{}};
-                const at = wiz.SNlM0e;
+                let wiz = globalThis.WIZ_global_data || {{}};
+                let at = wiz.SNlM0e;
+                if (!at) {{
+                    for (let w = 0; w < 10; w++) {{
+                        await new Promise(r => setTimeout(r, 500));
+                        wiz = globalThis.WIZ_global_data || {{}};
+                        at = wiz.SNlM0e;
+                        if (at) break;
+                    }}
+                }}
                 const sid = wiz.FdrFJe;
                 const bl = wiz.cfb2h;
                 if (!at) return {{ error: "NO_AT_TOKEN" }};
@@ -1127,8 +1143,16 @@ class DirectCDPProfileSession:
                     if (!token) return {{ error: "CAPTCHA_FAILED: empty token", submitted: false }};
                     freqStr = freqStr.split("__CAPTCHA__").join(token);
                 }}
-                const wiz = globalThis.WIZ_global_data || {{}};
-                const at = wiz.SNlM0e;
+                let wiz = globalThis.WIZ_global_data || {{}};
+                let at = wiz.SNlM0e;
+                if (!at) {{
+                    for (let w = 0; w < 10; w++) {{
+                        await new Promise(r => setTimeout(r, 500));
+                        wiz = globalThis.WIZ_global_data || {{}};
+                        at = wiz.SNlM0e;
+                        if (at) break;
+                    }}
+                }}
                 const sid = wiz.FdrFJe;
                 const bl = wiz.cfb2h;
                 if (!at) return {{ error: "NO_AT_TOKEN", submitted: false }};

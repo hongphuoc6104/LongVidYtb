@@ -1,0 +1,79 @@
+{
+  "job_id": "en-deep-time-strata-v3-demo-9x16",
+  "channel_slug": "en-deep-time-strata",
+  "aspect": "9:16",
+  "title": "How Four Billion Years of Fire and Steam Built Earth's First Oceans",
+  "voice": "en-GB-RyanNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "G1",
+      "continues_prev": false,
+      "scene_anchor": "History of the Earth paleo-geological documentary cinematography with hyper-detailed mineral, basalt, and sedimentary textures under dramatic primordial atmospheric lighting, strictly zero text",
+      "narration": "Four billion years ago, Earth possessed neither blue oceans nor a single patch of green.",
+      "pause_after_sec": 0.32,
+      "camera_verb": "Heavy tectonic aerial survey glide",
+      "start_visual": "History of the Earth 8K paleo-geological documentary aerial shot: a vast primordial Hadean Earth under a dark charcoal-amber sky, towering jagged black volcanic basalt ridges crisscrossed by rivers of incandescent orange lava, zero vegetation, zero water, strictly zero text, zero numbers.",
+      "end_visual": "Gliding forward in the heavy aerial survey across the ancient planetary landscape: smoking volcanic craters and glowing fissures exhale dense sulfurous fumes into a suffocating sky heavy with volcanic ash and carbon dioxide, photorealistic geological cinematography, strictly zero text.",
+      "subject_motion": "camera glides heavily over black basalt volcanic plateaus as incandescent orange lava oozes through glowing tectonic fissures"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "G1",
+      "continues_prev": true,
+      "scene_anchor": "History of the Earth paleo-geological documentary cinematography with hyper-detailed mineral, basalt, and sedimentary textures under dramatic primordial atmospheric lighting, strictly zero text",
+      "narration": "A thousand-degree ocean of liquid magma boiled beneath a crushing sky of toxic steam.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "Slow geological cliff-strata tilt",
+      "end_visual": "Tilting down from towering cliffs of solidified obsidian into a churning subterranean magma ocean: bubbling viscous orange-red molten rock roils and pops with sulfur bubbles beneath a suffocating blanket of superheated water vapor, photorealistic fluid dynamics, strictly zero text.",
+      "subject_motion": "the viscous orange magma lake churns and bursts with glowing gas bubbles beneath heavy swirling steam clouds"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "G2",
+      "continues_prev": false,
+      "scene_anchor": "Dramatic primordial atmospheric storm cinematography with towering black clouds, volcanic lightning, and torrential rain over ancient volcanic stone, strictly zero text",
+      "narration": "How did this molten hellscape transform into a water world capable of supporting life?",
+      "pause_after_sec": 0.38,
+      "camera_verb": "Low-angle volcanic tilt-up to sky",
+      "start_visual": "Paleo-geological documentary shot looking up from jagged cooling basalt crags toward an apocalyptic sky: massive dark slate-grey storm clouds kilometers thick roil violently, illuminated by branching violet volcanic lightning strikes, strictly zero text, zero labels.",
+      "end_visual": "Looking straight up into the turbulent primordial cloud ceiling: cooler upper atmospheric currents cause the thick planetary blanket of water vapor to condense into colossal dark rain fronts, ready to unleash catastrophic rainfall, photorealistic storm simulation, strictly zero text.",
+      "subject_motion": "towering dark steam clouds condense violently as violent purple lightning forks across the churning primordial sky"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "G2",
+      "continues_prev": true,
+      "scene_anchor": "Dramatic primordial atmospheric storm cinematography with towering black clouds, volcanic lightning, and torrential rain over ancient volcanic stone, strictly zero text",
+      "narration": "As the planet cooled, catastrophic torrential rains fell continuously for nearly a thousand centuries.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Steady lateral deluge tracking glide",
+      "end_visual": "Tracking laterally through a torrential primordial downpour: immense sheets of dense rain slam relentlessly through sulfurous mist, striking smoking black rock plateaus and cascading down rugged basalt canyons in endless churning torrents, hyper-realistic water physics, strictly zero text.",
+      "subject_motion": "massive sheets of heavy rain pour down through volcanic mist, carving foaming runoff channels across the dark basalt stone"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "G3",
+      "continues_prev": false,
+      "scene_anchor": "Macro geological survey of cooling basalt and mineral-rich thermal water under dramatic volcanic dusk light, strictly zero text",
+      "narration": "Boiling downpours struck glowing basalt rock, carving ancient oceanic basins and dissolving vital minerals.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Intimate geological macro push-in",
+      "start_visual": "Close-up geological documentary shot: boiling rainwater crashes onto glowing red cracks in cooling basalt, sizzling into thick white steam clouds and quenching the molten rock into rounded dark pillow lavas, strictly zero text, zero numbers.",
+      "end_visual": "Pushing in along the steaming rocky channel: mineral-rich runoff loaded with dissolved silica, iron, and sodium pools into deep depressions between basalt cliffs, creating steaming emerald-tinted hot springs, hyper-detailed mineral textures, strictly zero text.",
+      "subject_motion": "scalding water torrents wash over fractured basalt, hissing into steam while mineral-rich green water pools in deep rocky basins"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "G4",
+      "continues_prev": false,
+      "scene_anchor": "Grand panoramic ancient ocean vista under a soft clearing primordial sunset, deep blue water meeting volcanic basalt shorelines, strictly zero text",
+      "narration": "From unimaginable fire and crushing pressure, deep time quietly built the cradle of existence.",
+      "pause_after_sec": 0.3,
+      "camera_verb": "Grand tectonic survey pull-back",
+      "start_visual": "History of the Earth wide establishing shot: the first vast global ocean ripples under a parting layer of amber clouds, gentle turquoise and deep navy waves lapping against black basalt coastlines under a pale early sun, strictly zero text.",
+      "end_visual": "Epic high-altitude pull-back over the primordial water world: endless blue ocean stretches to the curved horizon, ancient volcanic archipelagos smoking quietly in the distance, bathed in serene golden twilight, timeless paleo-documentary masterpiece, strictly zero text.",
+      "subject_motion": "camera rises high above the vast primordial blue ocean as gentle swells roll toward dark volcanic island coastlines"
+    }
+  ]
+}

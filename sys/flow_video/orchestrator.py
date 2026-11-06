@@ -31,6 +31,10 @@ from sys.flow_video.models import (
     VideoChainSpec,
     VideoClipTask,
 )
+from sys.flow_video.sparkle_unblend import (
+    clean_beluga_sparkle_file,
+    clean_omni_video_sparkle_mp4,
+)
 from sys.flow_video.stitcher import (
     ASPECT_RESOLUTIONS,
     probe_video_clip,
@@ -162,6 +166,7 @@ class FlowVideoChainOrchestrator:
         dry_run: bool = False,
         max_retries_per_clip: int = 20,
         skip_stitch: bool = False,
+        reuse_warm_sessions: bool = True,
     ) -> None:
         self.spec = spec
         base_dir = (
@@ -193,40 +198,52 @@ class FlowVideoChainOrchestrator:
         self.dry_run = bool(dry_run)
         self.max_retries = max(1, int(max_retries_per_clip))
         self.skip_stitch = bool(skip_stitch)
+        self.reuse_warm_sessions = bool(reuse_warm_sessions)
 
         self.credit_ledger = CreditLedger()
         self._launched_ports: set[int] = set()
         self._profiles_used: set[str] = set()
         self._credits_deducted: dict[str, int] = {}
         self._profile_cooldowns: dict[str, float] = {}
+        self._warm_sessions: dict[int, dict[str, Any]] = {}
+        self._warm_locks: dict[int, asyncio.Lock] = {}
         self._lock = asyncio.Lock()
 
-    # Proven high-success video profiles ordered by empirical completion rate;
-    # 0%-success flagged profiles are pushed to the back as last-resort fallback.
-    PROVEN_VIDEO_PROFILES: tuple[str, ...] = (
-        "profile_13",
-        "profile_en16",
-        "profile_en01",
-        "profile_18",
-        "profile_9",
-        "profile_4",
-        "profile_en13",
-        "profile_en03",
-        "profile_1",
-        "profile_en07",
-        "profile_en11",
-        "profile_19",
-        "profile_6",
-        "profile_en10",
-    )
-    KNOWN_BLOCKED_VIDEO_PROFILES: frozenset[str] = frozenset({
-        "profile_2", "profile_3", "profile_7", "profile_12", "profile_14",
-        "profile_15", "profile_17", "profile_20", "profile_21",
-        "profile_en09", "profile_en12",
-    })
+    def _get_warm_lock(self, port: int) -> asyncio.Lock:
+        if port not in self._warm_locks:
+            self._warm_locks[port] = asyncio.Lock()
+        return self._warm_locks[port]
+
+    async def _close_warm_port(self, port: int) -> None:
+        """Close and evict a single warm CDP session and release its locks without affecting other active ports."""
+        entry = self._warm_sessions.pop(port, None)
+        if entry:
+            session = entry.get("session")
+            if session and hasattr(session, "close"):
+                try:
+                    await session.close()
+                except Exception as ex:
+                    logger.debug("Error closing warm session on port %d: %s", port, ex)
+            try:
+                get_process_manager().terminate_by_port(port)
+            except Exception as ex:
+                logger.debug("Error terminating port %d: %s", port, ex)
+            self._launched_ports.discard(port)
+            pl = entry.get("port_lock")
+            if pl and hasattr(pl, "release"):
+                try:
+                    pl.release()
+                except Exception:
+                    pass
+            bs = entry.get("browser_slot")
+            if bs and hasattr(bs, "release"):
+                try:
+                    bs.release()
+                except Exception:
+                    pass
 
     def _get_channel_profiles(self) -> list[dict[str, Any]]:
-        """Return profiles ordered by proven video health and rotated per job_id to prevent port collisions."""
+        """Return profiles ordered dynamically by live CreditLedger balances, rotated across top accounts per job_id."""
         import hashlib
         import os
 
@@ -238,39 +255,28 @@ class FlowVideoChainOrchestrator:
                 p for p in all_profiles
                 if p.get("name") in explicit_names or p.get("id") in explicit_names
             ]
-            rest = [
-                p for p in all_profiles
-                if p not in explicit_primary and p.get("name") != "profile_11"
-            ]
             if explicit_primary:
-                return explicit_primary + rest
+                return explicit_primary
 
         if len(all_profiles) <= 4:
             return all_profiles
 
-        by_name = {str(p.get("name") or p.get("id")): p for p in all_profiles}
-        tier1_healthy = [by_name[n] for n in self.PROVEN_VIDEO_PROFILES if n in by_name]
-        tier2_secondary = [
-            p for p in all_profiles
-            if p not in tier1_healthy
-            and str(p.get("name") or p.get("id")) not in self.KNOWN_BLOCKED_VIDEO_PROFILES
-        ]
-        tier3_blocked = [
-            p for p in all_profiles
-            if p not in tier1_healthy and p not in tier2_secondary
-        ]
+        # Dynamic CreditLedger ordering: highest remaining video credits (>= 7) first,
+        # without stale static blocklists locking out topped-up accounts.
+        video_ready = self.credit_ledger.select_eligible_profiles(all_profiles, min_credits=7)
+        image_only = [p for p in all_profiles if p not in video_ready]
 
-        # Rotate tier1 and tier2 deterministically by job_id so concurrent jobs spread across ports
+        # Rotate within the top high-balance window (up to 12 profiles) deterministically
+        # by job_id so concurrent jobs spread across Chrome CDP ports cleanly.
         job_seed = str(getattr(self.spec, "job_id", "") or getattr(self.spec, "channel_id", "") or "default")
         offset = int(hashlib.md5(job_seed.encode("utf-8")).hexdigest()[:8], 16)
-        if len(tier1_healthy) > 1:
-            rot1 = offset % len(tier1_healthy)
-            tier1_healthy = tier1_healthy[rot1:] + tier1_healthy[:rot1]
-        if len(tier2_secondary) > 1:
-            rot2 = offset % len(tier2_secondary)
-            tier2_secondary = tier2_secondary[rot2:] + tier2_secondary[:rot2]
+        if len(video_ready) > 1:
+            rot_win = min(12, len(video_ready))
+            head = video_ready[:rot_win]
+            rot = offset % rot_win
+            video_ready = head[rot:] + head[:rot] + video_ready[rot_win:]
 
-        return tier1_healthy + tier2_secondary + tier3_blocked
+        return video_ready + image_only
 
     def run(self) -> dict[str, Any]:
         """Synchronous convenience wrapper to execute pipeline."""
@@ -331,53 +337,205 @@ class FlowVideoChainOrchestrator:
 
         finally:
             # STRICT TEARDOWN: Ensure 0 leaked Chrome processes!
-            self._teardown_all_chrome_processes()
+            await self._async_teardown_all_chrome_processes()
 
     # -------------------------------------------------------------------------
     # Step 1: Keyframe Resolution
     # -------------------------------------------------------------------------
     async def _ensure_keyframes(self) -> None:
-        """Verify image paths exist on disk or generate them via Flow CDP."""
-        items_to_check: list[tuple[str, str | None, str | None, Any]] = []
+        """Verify image paths exist on disk or generate them via Flow CDP in parallel topological DAG waves."""
+        items_to_check: list[tuple[str, str | None, str | None, Any, str | None]] = []
 
         if self.spec.keyframes:
             for kf in self.spec.keyframes:
                 items_to_check.append(
-                    (kf.id, kf.image_path, kf.image_prompt, kf)
+                    (kf.id, kf.image_path, kf.image_prompt, kf, getattr(kf, "based_on", None))
                 )
         else:
             for sp in self.spec.scene_pairs:
                 items_to_check.append(
-                    (f"{sp.id}_start", sp.start_image_path, sp.start_image_prompt, (sp, "start"))
+                    (
+                        f"{sp.id}_start",
+                        sp.start_image_path,
+                        sp.start_image_prompt,
+                        (sp, "start"),
+                        getattr(sp, "start_based_on", None),
+                    )
                 )
                 if sp.end_image_path or sp.end_image_prompt:
+                    end_ref = (
+                        f"{sp.id}_start"
+                        if getattr(sp, "end_based_on_start", False)
+                        else getattr(sp, "end_based_on", None)
+                    )
                     items_to_check.append(
-                        (f"{sp.id}_end", sp.end_image_path, sp.end_image_prompt, (sp, "end"))
+                        (
+                            f"{sp.id}_end",
+                            sp.end_image_path,
+                            sp.end_image_prompt,
+                            (sp, "end"),
+                            end_ref,
+                        )
                     )
 
-        for item_id, img_path, prompt, ref_obj in items_to_check:
+        resolved_paths: dict[str, str] = {}
+        all_item_ids = {it[0] for it in items_to_check}
+        pending_items: list[tuple[str, str | None, str | None, Any, str | None]] = []
+
+        # Pre-pass: resolve any item that already exists on disk, has a resume hit, or dry-run
+        for item_id, img_path, prompt, ref_obj, based_on_ref in items_to_check:
             if img_path and Path(img_path).is_file():
+                resolved_str = str(Path(img_path).resolve())
+                self._update_ref_path(ref_obj, resolved_str)
+                resolved_paths[item_id] = resolved_str
                 continue
 
-            # Need to generate missing frame
             dest_file = self.frames_dir / f"{item_id}.png"
             if self.resume and dest_file.is_file() and dest_file.stat().st_size > 0:
-                self._update_ref_path(ref_obj, str(dest_file.resolve()))
+                resolved_str = str(dest_file.resolve())
+                self._update_ref_path(ref_obj, resolved_str)
+                resolved_paths[item_id] = resolved_str
                 continue
 
             if self.dry_run:
                 self._create_dummy_image(dest_file, self.spec.aspect)
-                self._update_ref_path(ref_obj, str(dest_file.resolve()))
+                resolved_str = str(dest_file.resolve())
+                self._update_ref_path(ref_obj, resolved_str)
+                resolved_paths[item_id] = resolved_str
                 continue
 
-            if not prompt:
-                raise ValueError(
-                    f"Frame {item_id} has neither an existing image_path nor an image_prompt"
+            pending_items.append((item_id, img_path, prompt, ref_obj, based_on_ref))
+
+        if not pending_items:
+            return
+
+        semaphore = asyncio.Semaphore(max(1, self.max_workers))
+        all_profiles = self._get_channel_profiles()
+        eligible_profiles = (
+            self.credit_ledger.select_eligible_profiles(all_profiles, min_credits=0) or all_profiles
+        )
+
+        # Execute pending keyframe generation in parallel topological DAG waves
+        while pending_items:
+            # 1. Resolve any alias/link items whose target image has now appeared on disk or was resolved
+            still_pending: list[tuple[str, str | None, str | None, Any, str | None]] = []
+            made_progress = False
+
+            for it in pending_items:
+                item_id, img_path, prompt, ref_obj, based_on_ref = it
+                dep_stem = Path(img_path).stem if img_path else None
+
+                if img_path and Path(img_path).is_file():
+                    resolved_str = str(Path(img_path).resolve())
+                    self._update_ref_path(ref_obj, resolved_str)
+                    resolved_paths[item_id] = resolved_str
+                    made_progress = True
+                    continue
+
+                if dep_stem and dep_stem in resolved_paths:
+                    resolved_str = resolved_paths[dep_stem]
+                    self._update_ref_path(ref_obj, resolved_str)
+                    resolved_paths[item_id] = resolved_str
+                    made_progress = True
+                    continue
+
+                dest_file = self.frames_dir / f"{item_id}.png"
+                if dest_file.is_file() and dest_file.stat().st_size > 0:
+                    resolved_str = str(dest_file.resolve())
+                    self._update_ref_path(ref_obj, resolved_str)
+                    resolved_paths[item_id] = resolved_str
+                    made_progress = True
+                    continue
+
+                still_pending.append(it)
+
+            pending_items = still_pending
+            if not pending_items:
+                break
+
+            # 2. Select items whose dependencies are satisfied in this wave
+            ready_to_generate: list[tuple[str, str | None, str | None, Any, str | None]] = []
+            waiting_items: list[tuple[str, str | None, str | None, Any, str | None]] = []
+
+            for it in pending_items:
+                item_id, img_path, prompt, ref_obj, based_on_ref = it
+
+                if not prompt:
+                    dep_stem = Path(img_path).stem if img_path else None
+                    if dep_stem and dep_stem in all_item_ids:
+                        waiting_items.append(it)
+                        continue
+                    else:
+                        raise ValueError(
+                            f"Frame {item_id} has neither an existing image_path nor an image_prompt"
+                        )
+
+                dep_ready = True
+                if based_on_ref:
+                    if based_on_ref in resolved_paths:
+                        dep_ready = True
+                    elif Path(based_on_ref).is_file():
+                        dep_ready = True
+                    elif Path(based_on_ref).stem in resolved_paths:
+                        dep_ready = True
+                    else:
+                        dep_ready = False
+
+                if dep_ready:
+                    ready_to_generate.append(it)
+                else:
+                    waiting_items.append(it)
+
+            if not ready_to_generate and not made_progress:
+                unresolved = [it[0] for it in pending_items]
+                raise RuntimeError(
+                    f"Deadlock in keyframe DAG resolution. Unresolved pending items: {unresolved}"
                 )
 
-            # Generate via Flow CDP
-            await self._generate_single_image(prompt, dest_file)
-            self._update_ref_path(ref_obj, str(dest_file.resolve()))
+            if not ready_to_generate:
+                continue
+
+            # 3. Generate ready items concurrently via asyncio.gather with distinct profile hints
+            async def _generate_task(
+                item_tuple: tuple[str, str | None, str | None, Any, str | None],
+                prof_hint: dict[str, Any] | None,
+            ) -> None:
+                async with semaphore:
+                    it_id, _, it_prompt, it_ref_obj, it_based_on = item_tuple
+                    it_dest = self.frames_dir / f"{it_id}.png"
+
+                    ref_img_paths: list[str] = []
+                    if it_based_on:
+                        if it_based_on in resolved_paths and Path(resolved_paths[it_based_on]).is_file():
+                            ref_img_paths.append(resolved_paths[it_based_on])
+                        elif Path(it_based_on).is_file():
+                            ref_img_paths.append(str(Path(it_based_on).resolve()))
+                        elif (
+                            Path(it_based_on).stem in resolved_paths
+                            and Path(resolved_paths[Path(it_based_on).stem]).is_file()
+                        ):
+                            ref_img_paths.append(resolved_paths[Path(it_based_on).stem])
+
+                    await self._generate_single_image(
+                        it_prompt,  # type: ignore[arg-type]
+                        it_dest,
+                        reference_image_paths=ref_img_paths or None,
+                        preferred_profile=prof_hint,
+                    )
+                    res_path = str(it_dest.resolve())
+                    self._update_ref_path(it_ref_obj, res_path)
+                    resolved_paths[it_id] = res_path
+
+            tasks = [
+                _generate_task(
+                    it,
+                    eligible_profiles[idx % len(eligible_profiles)] if eligible_profiles else None,
+                )
+                for idx, it in enumerate(ready_to_generate)
+            ]
+            await asyncio.gather(*tasks)
+
+            pending_items = waiting_items
 
     def _update_ref_path(self, ref_obj: Any, path_str: str) -> None:
         if isinstance(ref_obj, tuple):
@@ -395,19 +553,46 @@ class FlowVideoChainOrchestrator:
         dest_path.parent.mkdir(parents=True, exist_ok=True)
         img.save(dest_path)
 
-    async def _generate_single_image(self, prompt: str, dest_file: Path) -> None:
+    async def _generate_single_image(
+        self,
+        prompt: str,
+        dest_file: Path,
+        reference_image_paths: list[str] | None = None,
+        preferred_profile: dict[str, Any] | str | None = None,
+    ) -> None:
         """Generate a single image frame using an eligible Chrome profile with automatic failover."""
         profiles = self._get_channel_profiles()
         eligible: list[dict[str, Any]] = []
 
-        if hasattr(self.credit_ledger, "pick_for_image_task"):
-            picked = self.credit_ledger.pick_for_image_task(profiles)
-            if picked:
-                eligible = [picked] if isinstance(picked, dict) else [p for p in profiles if (p.get("id") or p.get("name")) == picked]
-        elif hasattr(self.credit_ledger, "pick_profile"):
-            picked = self.credit_ledger.pick_profile(profiles)
-            if picked:
-                eligible = [picked] if isinstance(picked, dict) else [p for p in profiles if (p.get("id") or p.get("name")) == picked]
+        if preferred_profile:
+            pref_name = (
+                preferred_profile.get("name")
+                if isinstance(preferred_profile, dict)
+                else str(preferred_profile)
+            )
+            matches = [p for p in profiles if (p.get("name") == pref_name or p.get("id") == pref_name)]
+            if matches:
+                eligible = matches + [p for p in profiles if p not in matches]
+
+        if not eligible:
+            if hasattr(self.credit_ledger, "pick_for_image_task"):
+                picked = self.credit_ledger.pick_for_image_task(profiles)
+                if picked:
+                    first_list = (
+                        [picked]
+                        if isinstance(picked, dict)
+                        else [p for p in profiles if (p.get("id") or p.get("name")) == picked]
+                    )
+                    eligible = first_list + [p for p in profiles if p not in first_list]
+            elif hasattr(self.credit_ledger, "pick_profile"):
+                picked = self.credit_ledger.pick_profile(profiles)
+                if picked:
+                    first_list = (
+                        [picked]
+                        if isinstance(picked, dict)
+                        else [p for p in profiles if (p.get("id") or p.get("name")) == picked]
+                    )
+                    eligible = first_list + [p for p in profiles if p not in first_list]
 
         if not eligible:
             eligible = self.credit_ledger.select_eligible_profiles(profiles, min_credits=0)
@@ -424,39 +609,81 @@ class FlowVideoChainOrchestrator:
             port = int(profile_cfg.get("cdp_port", 9222))
             profile_name = str(profile_cfg.get("name") or f"profile_{port}")
 
-            port_lock = ProfilePortLock(port, owner_tag=f"img_{dest_file.stem}")
-            browser_slot = GlobalBrowserSlot(owner_tag=f"img_{dest_file.stem}")
-
-            if not browser_slot.acquire(timeout=60.0):
+            port_async_lock = self._get_warm_lock(port)
+            if port_async_lock.locked():
                 continue
 
             try:
-                if not port_lock.acquire(timeout=30.0):
-                    continue
-                try:
-                    pm = get_process_manager()
-                    launched = pm.launch(profile_cfg, headless=self.headless)
-                    if not launched:
-                        continue
-                    self._launched_ports.add(port)
+                await port_async_lock.acquire()
+            except Exception:
+                continue
 
-                    session = DirectCDPProfileSession(profile_cfg)
-                    await session.connect()
+            try:
+                if self.reuse_warm_sessions:
+                    warm_entry = self._warm_sessions.get(port)
+                    if warm_entry:
+                        session = warm_entry["session"]
+                    else:
+                        port_lock = ProfilePortLock(port, owner_tag=f"img_{dest_file.stem}")
+                        browser_slot = GlobalBrowserSlot(owner_tag=f"img_{dest_file.stem}")
+
+                        if not browser_slot.acquire(timeout=60.0):
+                            continue
+
+                        if not port_lock.acquire(timeout=30.0):
+                            browser_slot.release()
+                            continue
+
+                        pm = get_process_manager()
+                        launched = pm.launch(profile_cfg, headless=self.headless)
+                        if not launched:
+                            port_lock.release()
+                            browser_slot.release()
+                            continue
+                        self._launched_ports.add(port)
+
+                        session = DirectCDPProfileSession(profile_cfg)
+                        await session.connect()
+                        self._warm_sessions[port] = {
+                            "profile_cfg": profile_cfg,
+                            "session": session,
+                            "port_lock": port_lock,
+                            "browser_slot": browser_slot,
+                            "credits_synced": False,
+                        }
+
                     try:
-                        res = await session.generate_image(
-                            prompt=prompt,
-                            aspect=self.spec.aspect,
-                            model="BELUGA",
-                        )
+                        ref_media_ids: list[str] | None = None
+                        if reference_image_paths and hasattr(session, "upload_image_file"):
+                            uploaded: list[str] = []
+                            for ref_p in reference_image_paths:
+                                if Path(ref_p).is_file():
+                                    up_res = await session.upload_image_file(ref_p)
+                                    up_id = up_res.get("media_id") if isinstance(up_res, dict) else up_res
+                                    if up_id:
+                                        uploaded.append(str(up_id))
+                            if uploaded:
+                                ref_media_ids = uploaded
+
+                        gen_kwargs: dict[str, Any] = {
+                            "prompt": prompt,
+                            "aspect": self.spec.aspect,
+                            "model": "BELUGA",
+                        }
+                        if ref_media_ids:
+                            gen_kwargs["reference_media_ids"] = ref_media_ids
+
+                        res = await session.generate_image(**gen_kwargs)
                         url = res.get("url")
                         if not url:
                             raise RuntimeError(f"Image generation returned no URL: {res}")
 
                         await self._download_binary(session, url, dest_file)
 
-                        # Validate with PIL
+                        # Validate with PIL and unblend BELUGA corner star in-place
                         with Image.open(dest_file) as im:
                             im.verify()
+                        clean_beluga_sparkle_file(dest_file)
 
                         sidecar_file = dest_file.with_suffix(".json")
                         sidecar_data = {
@@ -466,6 +693,8 @@ class FlowVideoChainOrchestrator:
                             "prompt": prompt,
                             "aspect": self.spec.aspect,
                             "model": "BELUGA",
+                            "reference_images": reference_image_paths or [],
+                            "reference_media_ids": ref_media_ids or [],
                             "generated_at": datetime.now(timezone.utc).isoformat(),
                         }
                         sidecar_file.write_text(
@@ -473,27 +702,105 @@ class FlowVideoChainOrchestrator:
                             encoding="utf-8",
                         )
 
-                        self.credit_ledger.deduct_credits(profile_name, 10, reason="image")
+                        # BELUGA image generation is 0 credits on Google Flow!
                         self._profiles_used.add(profile_name)
                         return
+                    except Exception as exc:
+                        last_exc = exc
+                        await self._close_warm_port(port)
+                        if "INSUFFICIENT_CREDITS" in str(exc) or "PUBLIC_ERROR_QUOTA" in str(exc):
+                            self.credit_ledger.mark_exhausted(profile_name, reason=str(exc))
+                        continue
+                else:
+                    # Cold Launch Path
+                    port_lock = ProfilePortLock(port, owner_tag=f"img_{dest_file.stem}")
+                    browser_slot = GlobalBrowserSlot(owner_tag=f"img_{dest_file.stem}")
+
+                    if not browser_slot.acquire(timeout=60.0):
+                        continue
+
+                    try:
+                        if not port_lock.acquire(timeout=30.0):
+                            continue
+                        try:
+                            pm = get_process_manager()
+                            launched = pm.launch(profile_cfg, headless=self.headless)
+                            if not launched:
+                                continue
+                            self._launched_ports.add(port)
+
+                            session = DirectCDPProfileSession(profile_cfg)
+                            await session.connect()
+                            try:
+                                ref_media_ids_cold: list[str] | None = None
+                                if reference_image_paths and hasattr(session, "upload_image_file"):
+                                    uploaded_cold: list[str] = []
+                                    for ref_p in reference_image_paths:
+                                        if Path(ref_p).is_file():
+                                            up_res = await session.upload_image_file(ref_p)
+                                            up_id = up_res.get("media_id") if isinstance(up_res, dict) else up_res
+                                            if up_id:
+                                                uploaded_cold.append(str(up_id))
+                                    if uploaded_cold:
+                                        ref_media_ids_cold = uploaded_cold
+
+                                gen_kwargs_cold: dict[str, Any] = {
+                                    "prompt": prompt,
+                                    "aspect": self.spec.aspect,
+                                    "model": "BELUGA",
+                                }
+                                if ref_media_ids_cold:
+                                    gen_kwargs_cold["reference_media_ids"] = ref_media_ids_cold
+
+                                res = await session.generate_image(**gen_kwargs_cold)
+                                url = res.get("url")
+                                if not url:
+                                    raise RuntimeError(f"Image generation returned no URL: {res}")
+
+                                await self._download_binary(session, url, dest_file)
+
+                                with Image.open(dest_file) as im:
+                                    im.verify()
+                                clean_beluga_sparkle_file(dest_file)
+
+                                sidecar_file = dest_file.with_suffix(".json")
+                                sidecar_data = {
+                                    "media_id": res.get("media_id"),
+                                    "url": url,
+                                    "profile": profile_name,
+                                    "prompt": prompt,
+                                    "aspect": self.spec.aspect,
+                                    "model": "BELUGA",
+                                    "reference_images": reference_image_paths or [],
+                                    "reference_media_ids": ref_media_ids_cold or [],
+                                    "generated_at": datetime.now(timezone.utc).isoformat(),
+                                }
+                                sidecar_file.write_text(
+                                    json.dumps(sidecar_data, indent=2, ensure_ascii=False) + "\n",
+                                    encoding="utf-8",
+                                )
+                                self._profiles_used.add(profile_name)
+                                return
+                            finally:
+                                await session.close()
+                                pm.terminate_by_port(port)
+                                self._launched_ports.discard(port)
+                        finally:
+                            port_lock.release()
+                    except Exception as exc:
+                        last_exc = exc
+                        try:
+                            get_process_manager().terminate_by_port(port)
+                            self._launched_ports.discard(port)
+                        except Exception:
+                            pass
+                        if "INSUFFICIENT_CREDITS" in str(exc) or "PUBLIC_ERROR_QUOTA" in str(exc):
+                            self.credit_ledger.mark_exhausted(profile_name, reason=str(exc))
+                        continue
                     finally:
-                        await session.close()
-                        pm.terminate_by_port(port)
-                        self._launched_ports.discard(port)
-                finally:
-                    port_lock.release()
-            except Exception as exc:
-                last_exc = exc
-                try:
-                    get_process_manager().terminate_by_port(port)
-                    self._launched_ports.discard(port)
-                except Exception:
-                    pass
-                if "INSUFFICIENT_CREDITS" in str(exc) or "PUBLIC_ERROR_QUOTA" in str(exc):
-                    self.credit_ledger.mark_exhausted(profile_name, reason=str(exc))
-                continue
+                        browser_slot.release()
             finally:
-                browser_slot.release()
+                port_async_lock.release()
 
         raise RuntimeError(f"Failed to generate image frame {dest_file.name}: {last_exc}")
 
@@ -567,6 +874,8 @@ class FlowVideoChainOrchestrator:
                 ):
                     try:
                         probe_video_clip(out_p)
+                        if not self.dry_run:
+                            clean_omni_video_sparkle_mp4(out_p)
                         t.status = "completed"
                         t.output_mp4_path = str(out_p.resolve())
                         t.profile_used = cached.get("profile_used")
@@ -606,6 +915,7 @@ class FlowVideoChainOrchestrator:
                     pass
 
             target_dur = float(task.target_duration or task.duration_sec)
+            overscan = float(getattr(self.spec, "overscan_crop", 1.05))
             start_t = time.monotonic()
             if self.dry_run:
                 if Path(task.start_frame_path).is_file():
@@ -617,6 +927,7 @@ class FlowVideoChainOrchestrator:
                         width=tw,
                         height=th,
                         fps=self.spec.target_fps,
+                        overscan_crop=overscan,
                     )
                 else:
                     self._generate_dummy_clip(task)
@@ -629,6 +940,7 @@ class FlowVideoChainOrchestrator:
                     width=tw,
                     height=th,
                     fps=self.spec.target_fps,
+                    overscan_crop=overscan,
                 )
 
             elapsed = time.monotonic() - start_t
@@ -726,6 +1038,26 @@ class FlowVideoChainOrchestrator:
                             if active_cooldowns:
                                 wait_sec = max(2.0, min(30.0, min(active_cooldowns) - now))
                                 attempts = max(0, attempts - 1)  # Do not burn attempt budget while waiting for cooldown
+                            elif getattr(self.spec, "auto_fallback_zero_credit", True) and Path(task.start_frame_path).is_file():
+                                # 100% of account pool exhausted mid-run -> seamless slide fallback for remaining clip
+                                tw_fb, th_fb = ASPECT_RESOLUTIONS.get(self.spec.aspect, (1920, 1080))
+                                target_dur_fb = float(task.target_duration or task.duration_sec)
+                                render_flipbook_segment(
+                                    start_image=task.start_frame_path,
+                                    end_image=task.end_frame_path if task.end_frame_path and Path(task.end_frame_path).is_file() else None,
+                                    output_mp4=task.output_mp4_path,
+                                    duration_sec=target_dur_fb,
+                                    width=tw_fb,
+                                    height=th_fb,
+                                    fps=self.spec.target_fps,
+                                    overscan_crop=float(getattr(self.spec, "overscan_crop", 1.05)),
+                                )
+                                task.status = "completed"
+                                task.credit_cost = 0
+                                task.profile_used = "local_zero_credit_flipbook"
+                                self._save_manifest(tasks)
+                                success = True
+                                break
                             else:
                                 task.status = "failed"
                                 task.error = f"All profiles exhausted or insufficient credits (needed {clip_cost})"
@@ -824,40 +1156,74 @@ class FlowVideoChainOrchestrator:
         if hasattr(self.credit_ledger, "pick_and_reserve"):
             self.credit_ledger.pick_and_reserve(profile_id=p_name, cost=clip_cost)
 
-        port_lock = ProfilePortLock(port, owner_tag=f"clip_{clip.clip_id}")
-        browser_slot = GlobalBrowserSlot(owner_tag=f"clip_{clip.clip_id}")
-
-        if not browser_slot.acquire(timeout=60.0):
-            if hasattr(self.credit_ledger, "rollback"):
-                self.credit_ledger.rollback(p_name, clip_cost)
-            raise TimeoutError("All global browser slots busy")
+        port_async_lock = self._get_warm_lock(port)
+        await port_async_lock.acquire()
 
         try:
-            if not port_lock.acquire(timeout=1.5):
-                if hasattr(self.credit_ledger, "rollback"):
-                    self.credit_ledger.rollback(p_name, clip_cost)
-                raise TimeoutError(f"Chrome port {port} busy")
-            try:
-                pm = get_process_manager()
-                launched = pm.launch(profile_cfg, headless=self.headless)
-                if not launched:
-                    if hasattr(self.credit_ledger, "rollback"):
-                        self.credit_ledger.rollback(p_name, clip_cost)
-                    raise RuntimeError(f"Failed to launch Chrome on port {port}")
-                self._launched_ports.add(port)
+            if self.reuse_warm_sessions:
+                warm_entry = self._warm_sessions.get(port)
+                if warm_entry:
+                    session = warm_entry["session"]
+                else:
+                    port_lock = ProfilePortLock(port, owner_tag=f"clip_{clip.clip_id}")
+                    browser_slot = GlobalBrowserSlot(owner_tag=f"clip_{clip.clip_id}")
 
-                session = DirectCDPProfileSession(profile_cfg)
-                await session.connect()
+                    if not browser_slot.acquire(timeout=60.0):
+                        if hasattr(self.credit_ledger, "rollback"):
+                            self.credit_ledger.rollback(p_name, clip_cost)
+                        raise TimeoutError("All global browser slots busy")
+
+                    if not port_lock.acquire(timeout=1.5):
+                        browser_slot.release()
+                        if hasattr(self.credit_ledger, "rollback"):
+                            self.credit_ledger.rollback(p_name, clip_cost)
+                        raise TimeoutError(f"Chrome port {port} busy")
+
+                    pm = get_process_manager()
+                    launched = pm.launch(profile_cfg, headless=self.headless)
+                    if not launched:
+                        port_lock.release()
+                        browser_slot.release()
+                        if hasattr(self.credit_ledger, "rollback"):
+                            self.credit_ledger.rollback(p_name, clip_cost)
+                        raise RuntimeError(f"Failed to launch Chrome on port {port}")
+
+                    self._launched_ports.add(port)
+                    session = DirectCDPProfileSession(profile_cfg)
+                    await session.connect()
+
+                    warm_entry = {
+                        "profile_cfg": profile_cfg,
+                        "session": session,
+                        "port_lock": port_lock,
+                        "browser_slot": browser_slot,
+                        "credits_synced": False,
+                    }
+                    self._warm_sessions[port] = warm_entry
+
                 try:
-                    # Verify live credits
-                    if hasattr(session, "query_credits"):
+                    # Verify live credits (query once per warm session, cache subsequently)
+                    need_sync = not warm_entry.get("credits_synced", False)
+                    if need_sync and hasattr(session, "query_credits"):
                         credits_info = await session.query_credits()
                         rem = int(credits_info.get("remaining", 0))
                         self.credit_ledger.sync_balance(p_name, rem)
+                        warm_entry["credits_synced"] = True
                         if rem < clip_cost:
                             if hasattr(self.credit_ledger, "rollback"):
                                 self.credit_ledger.rollback(p_name, clip_cost)
                             self.credit_ledger.mark_exhausted(p_name, reason="INSUFFICIENT_CREDITS")
+                            await self._close_warm_port(port)
+                            raise RuntimeError(
+                                f"Live credits ({rem}) below required cost ({clip_cost}) for {p_name}"
+                            )
+                    else:
+                        rem = self.credit_ledger.get_balance(p_name)
+                        if rem < clip_cost:
+                            if hasattr(self.credit_ledger, "rollback"):
+                                self.credit_ledger.rollback(p_name, clip_cost)
+                            self.credit_ledger.mark_exhausted(p_name, reason="INSUFFICIENT_CREDITS")
+                            await self._close_warm_port(port)
                             raise RuntimeError(
                                 f"Live credits ({rem}) below required cost ({clip_cost}) for {p_name}"
                             )
@@ -883,8 +1249,10 @@ class FlowVideoChainOrchestrator:
                     elapsed = time.monotonic() - start_t
                     clip.generation_seconds = round(elapsed, 2)
 
-                    # Verify output clip
+                    # Verify output clip and unblend Omni Flash corner star in-place
                     probe_video_clip(clip.output_mp4_path)
+                    if not self.dry_run:
+                        clean_omni_video_sparkle_mp4(clip.output_mp4_path)
 
                     # Commit credits
                     if hasattr(self.credit_ledger, "commit"):
@@ -894,23 +1262,103 @@ class FlowVideoChainOrchestrator:
 
                     curr_ded = self._credits_deducted.get(p_name, 0)
                     self._credits_deducted[p_name] = curr_ded + clip_cost
-                finally:
-                    await session.close()
-                    pm.terminate_by_port(port)
-                    self._launched_ports.discard(port)
-            except Exception:
-                if hasattr(self.credit_ledger, "rollback"):
-                    self.credit_ledger.rollback(p_name, clip_cost)
-                try:
-                    get_process_manager().terminate_by_port(port)
-                    self._launched_ports.discard(port)
                 except Exception:
-                    pass
-                raise
-            finally:
-                port_lock.release()
+                    if hasattr(self.credit_ledger, "rollback"):
+                        self.credit_ledger.rollback(p_name, clip_cost)
+                    await self._close_warm_port(port)
+                    raise
+            else:
+                port_lock = ProfilePortLock(port, owner_tag=f"clip_{clip.clip_id}")
+                browser_slot = GlobalBrowserSlot(owner_tag=f"clip_{clip.clip_id}")
+
+                if not browser_slot.acquire(timeout=60.0):
+                    if hasattr(self.credit_ledger, "rollback"):
+                        self.credit_ledger.rollback(p_name, clip_cost)
+                    raise TimeoutError("All global browser slots busy")
+
+                try:
+                    if not port_lock.acquire(timeout=1.5):
+                        if hasattr(self.credit_ledger, "rollback"):
+                            self.credit_ledger.rollback(p_name, clip_cost)
+                        raise TimeoutError(f"Chrome port {port} busy")
+                    try:
+                        pm = get_process_manager()
+                        launched = pm.launch(profile_cfg, headless=self.headless)
+                        if not launched:
+                            if hasattr(self.credit_ledger, "rollback"):
+                                self.credit_ledger.rollback(p_name, clip_cost)
+                            raise RuntimeError(f"Failed to launch Chrome on port {port}")
+                        self._launched_ports.add(port)
+
+                        session = DirectCDPProfileSession(profile_cfg)
+                        await session.connect()
+                        try:
+                            # Verify live credits
+                            if hasattr(session, "query_credits"):
+                                credits_info = await session.query_credits()
+                                rem = int(credits_info.get("remaining", 0))
+                                self.credit_ledger.sync_balance(p_name, rem)
+                                if rem < clip_cost:
+                                    if hasattr(self.credit_ledger, "rollback"):
+                                        self.credit_ledger.rollback(p_name, clip_cost)
+                                    self.credit_ledger.mark_exhausted(p_name, reason="INSUFFICIENT_CREDITS")
+                                    raise RuntimeError(
+                                        f"Live credits ({rem}) below required cost ({clip_cost}) for {p_name}"
+                                    )
+
+                            # Synthesize video clip with exact duration_seconds
+                            start_t = time.monotonic()
+                            if hasattr(session, "generate_video_from_frames"):
+                                await session.generate_video_from_frames(
+                                    prompt=clip.motion_prompt,
+                                    first_frame_path_or_id=clip.start_frame_path,
+                                    last_frame_path_or_id=clip.end_frame_path,
+                                    output_mp4_path=clip.output_mp4_path,
+                                    aspect=clip.aspect,
+                                    model=clip.video_model,
+                                    duration_seconds=int(round(clip.duration_sec)),
+                                    seed=clip.seed,
+                                )
+                            else:
+                                raise NotImplementedError(
+                                    "session.generate_video_from_frames not available in cdp_direct_client"
+                                )
+
+                            elapsed = time.monotonic() - start_t
+                            clip.generation_seconds = round(elapsed, 2)
+
+                            # Verify output clip and unblend Omni Flash corner star in-place
+                            probe_video_clip(clip.output_mp4_path)
+                            if not self.dry_run:
+                                clean_omni_video_sparkle_mp4(clip.output_mp4_path)
+
+                            # Commit credits
+                            if hasattr(self.credit_ledger, "commit"):
+                                self.credit_ledger.commit(p_name, clip_cost)
+                            else:
+                                self.credit_ledger.deduct_credits(p_name, clip_cost, reason="video")
+
+                            curr_ded = self._credits_deducted.get(p_name, 0)
+                            self._credits_deducted[p_name] = curr_ded + clip_cost
+                        finally:
+                            await session.close()
+                            pm.terminate_by_port(port)
+                            self._launched_ports.discard(port)
+                    finally:
+                        port_lock.release()
+                except Exception:
+                    if hasattr(self.credit_ledger, "rollback"):
+                        self.credit_ledger.rollback(p_name, clip_cost)
+                    try:
+                        get_process_manager().terminate_by_port(port)
+                        self._launched_ports.discard(port)
+                    except Exception:
+                        pass
+                    raise
+                finally:
+                    browser_slot.release()
         finally:
-            browser_slot.release()
+            port_async_lock.release()
 
     async def _execute_clip_on_profile(
         self, task: VideoClipTask, profile_cfg: dict[str, Any], cost: int
@@ -957,6 +1405,7 @@ class FlowVideoChainOrchestrator:
             normalize_audio_lufs=self.spec.normalize_audio_lufs,
             keep_veo_audio=self.spec.keep_veo_audio,
             veo_audio_mix_weight=getattr(self.spec, "veo_audio_mix_weight", 0.45),
+            overscan_crop=float(getattr(self.spec, "overscan_crop", 1.05)),
         )
 
     def _finalize_reports(
@@ -1007,9 +1456,31 @@ class FlowVideoChainOrchestrator:
 
         return report
 
+    async def _async_teardown_all_chrome_processes(self) -> None:
+        """Async teardown closing all warm sessions cleanly and terminating Chrome processes."""
+        for port in list(self._warm_sessions.keys()):
+            await self._close_warm_port(port)
+        self._warm_sessions.clear()
+        self._teardown_all_chrome_processes()
+
     def _teardown_all_chrome_processes(self) -> None:
         """Strictly stop and clean up any Chrome processes launched by this run."""
         pm = get_process_manager()
+        for _port, entry in list(self._warm_sessions.items()):
+            pl = entry.get("port_lock")
+            if pl and hasattr(pl, "release"):
+                try:
+                    pl.release()
+                except Exception:
+                    pass
+            bs = entry.get("browser_slot")
+            if bs and hasattr(bs, "release"):
+                try:
+                    bs.release()
+                except Exception:
+                    pass
+        self._warm_sessions.clear()
+
         for port in list(self._launched_ports):
             try:
                 pm.terminate_by_port(port)

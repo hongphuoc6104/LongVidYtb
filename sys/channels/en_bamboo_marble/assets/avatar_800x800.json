@@ -1,0 +1,16 @@
+{
+  "jobId": "logo_en-bamboo-marble",
+  "forgeId": "89e5d8d5-4a3a-45b9-92a1-4affaf91f1f8",
+  "profile_id": "profile_18",
+  "prompt": "Minimalist classical philosophy emblem centered on a solid midnight navy background (#0F172A). A bold vertical emblem split down the center: left half a fluted ivory (#E2E8F0) Greco-Roman marble column, right half a segmented emerald-sage bamboo stalk, topped by a warm gold (#F59E0B) crescent arc. Pure flat vector symbol, high contrast, 25% empty margin around all edges, strictly no text, no letters, no words, no numbers, pure icon.",
+  "latency": 30.42,
+  "sha256": "a0b2aa53f8eda784c0cbb6d5ca0bce4bbf03e7ec04dd428fad0547499776d0d6",
+  "aspect_ratio": "1:1",
+  "width": 1024,
+  "height": 1024,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "downloaded",
+  "created_at": "2026-11-05T21:00:16.168058+00:00"
+}

@@ -41,7 +41,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 import edge_tts
-from PIL import Image, ImageChops, ImageDraw, ImageFont
+from PIL import Image, ImageChops, ImageDraw
 
 SYS_DIR = Path(__file__).resolve().parents[1]
 ROOT_DIR = SYS_DIR.parent
@@ -84,7 +84,7 @@ COMPETITOR_VIDEO_TARGETS: Dict[str, Dict[str, Any]] = {
         "search_query": "ytsearch1:melodysheep space planets cinematic",
         "start_sec": 20,
         "duration_sec": 20,
-        "voice": "en-US-GuyNeural",
+        "voice": "en-US-ChristopherNeural",
     },
     "en-deep-time-strata": {
         "niche": "Geology & Deep Earth History",
@@ -180,7 +180,7 @@ COMPETITOR_VIDEO_TARGETS: Dict[str, Dict[str, Any]] = {
         "search_query": "ytsearch1:The School of Life relationships attachment",
         "start_sec": 15,
         "duration_sec": 20,
-        "voice": "en-GB-SoniaNeural",
+        "voice": "en-US-JennyNeural",
     },
     "en-lazy-brain": {
         "niche": "Neuroscience of Dopamine, Focus & Habits",
@@ -470,33 +470,56 @@ def extract_competitor_frames(
     return manifest
 
 
+def resolve_channel_logo_source(channel_slug: str) -> Optional[Path]:
+    """Resolve the canonical 1:1 brand emblem PNG for an English or Vietnamese channel."""
+    ch_dir_name = channel_slug.strip().replace("-", "_")
+    candidates = [
+        ROOT_DIR / "sys/channels" / ch_dir_name / "assets/watermark_150x150.png",
+        ROOT_DIR / "sys/channels" / ch_dir_name / "assets/avatar_800x800.png",
+        ROOT_DIR / "sys/channels" / ch_dir_name / "assets/logo.png",
+        ROOT_DIR / "sys/assets/brand_logo.png",
+    ]
+    for p in candidates:
+        if p.is_file() and p.stat().st_size > 512:
+            return p
+    return None
+
+
 def make_channel_watermark(channel_slug: str, out_png: Path, size: int = 100) -> Path:
-    """Create a 100x100 rounded-corner watermark badge matching Vietnamese channel frame spec."""
+    """Create a 100x100 squircle brand emblem watermark (radius=16, opacity=0.92) from the channel's true logo."""
     out_png.parent.mkdir(parents=True, exist_ok=True)
-    existing_logo = ROOT_DIR / "sys/assets/brand_logo.png"
-    if existing_logo.is_file():
-        img = Image.open(existing_logo).convert("RGBA").resize((size, size), Image.Resampling.LANCZOS)
+    src_logo = resolve_channel_logo_source(channel_slug)
+    radius = max(12, int(round(size * 0.16)))
+
+    if src_logo is not None:
+        raw = Image.open(src_logo).convert("RGBA")
+        rw, rh = raw.size
+        # 2.5% safety margin crop in case raw source was not yet edge-cropped
+        margin_x = int(round(rw * 0.025))
+        margin_y = int(round(rh * 0.025))
+        if rw > 64 and rh > 64:
+            raw = raw.crop((margin_x, margin_y, rw - margin_x, rh - margin_y))
+        img = raw.resize((size, size), Image.Resampling.LANCZOS)
     else:
-        img = Image.new("RGBA", (size, size), (24, 28, 36, 235))
-        draw = ImageDraw.Draw(img)
-        draw.rounded_rectangle((2, 2, size - 3, size - 3), radius=15, outline=(255, 255, 255, 180), width=2)
-        initials = "".join(w[0].upper() for w in channel_slug.replace("en-", "").split("-")[:2])
-        font = None
-        for fc in (
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
-            "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
-        ):
-            if Path(fc).is_file():
-                font = ImageFont.truetype(fc, 36)
-                break
-        if font:
-            bbox = draw.textbbox((0, 0), initials, font=font)
-            tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
-            draw.text(((size - tw) // 2, (size - th) // 2 - 4), initials, font=font, fill=(255, 255, 255, 240))
+        raise FileNotFoundError(
+            f"Missing channel brand emblem for '{channel_slug}'. Expected watermark_150x150.png or avatar_800x800.png "
+            f"in sys/channels/{channel_slug.replace('-', '_')}/assets/."
+        )
+
+    # Subtle 1.5px adaptive edge ring for crisp separation on dark or bright video frames
+    ring_overlay = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    rdraw = ImageDraw.Draw(ring_overlay)
+    rdraw.rounded_rectangle(
+        (1, 1, size - 2, size - 2),
+        radius=radius,
+        outline=(255, 255, 255, 68),
+        width=2,
+    )
+    img = Image.alpha_composite(img, ring_overlay)
 
     mask = Image.new("L", (size, size), 0)
     mdraw = ImageDraw.Draw(mask)
-    mdraw.rounded_rectangle((0, 0, size - 1, size - 1), radius=15, fill=int(round(255 * 0.92)))
+    mdraw.rounded_rectangle((0, 0, size - 1, size - 1), radius=radius, fill=int(round(255 * 0.92)))
     _, _, _, a = img.split()
     img.putalpha(ImageChops.multiply(a, mask))
     img.save(out_png, format="PNG")
@@ -790,11 +813,12 @@ def build_vn_kinetic_1word_ass_and_srt(
     total_dur: float,
     ass_path: Path,
     srt_path: Path,
+    margin_v: int = 270,
 ) -> None:
     """Build:
     1. `subtitles_kinetic_9x16.ass`: Exact Vietnamese 9:16 1-word kinetic pop (`portraitKineticWord` /
        `portraitKineticCaptionStyle`: Alternating Red `#FF3B30` and Yellow `#FFE600`, `Arial`,
-       `FontSize=100`, `Bold=-1`, `Outline=6` `#000000`, `Shadow=4`, `MarginV=400`, `PlayResX=1080`, `PlayResY=1920`).
+       `FontSize=100`, `Bold=-1`, `Outline=6` `#000000`, `Shadow=4`, `MarginV=270` safe lower band, `PlayResX=1080`, `PlayResY=1920`).
     2. `subtitles.srt`: Clean phrase-level sidecar `.srt` for `16:9` and accessibility.
     """
     ass_lines = [
@@ -810,8 +834,8 @@ def build_vn_kinetic_1word_ass_and_srt(
         "Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, "
         "Alignment, MarginL, MarginR, MarginV, Encoding",
         # Red #FF3B30 -> ASS BGR &H00303BFF; Yellow #FFE600 -> ASS BGR &H0000E6FF
-        "Style: KineticRed,Arial,100,&H00303BFF,&H00303BFF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,6,4,2,40,40,400,1",
-        "Style: KineticYellow,Arial,100,&H0000E6FF,&H0000E6FF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,6,4,2,40,40,400,1",
+        f"Style: KineticRed,Arial,100,&H00303BFF,&H00303BFF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,6,4,2,40,40,{int(margin_v)},1",
+        f"Style: KineticYellow,Arial,100,&H0000E6FF,&H0000E6FF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,6,4,2,40,40,{int(margin_v)},1",
         "",
         "[Events]",
         "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text",
@@ -1091,7 +1115,13 @@ def render_vn_frame_video(
         nb_frames = max(1, int(round(seg_dur * fps)))
         cam_motion = str(beat.get("camera_motion", "push_in"))
         zp = _camera_zoompan_expr(cam_motion, nb_frames, width, height, fps=fps)
-        vf = f"scale={up_w}:{up_h}:force_original_aspect_ratio=increase,crop={up_w}:{up_h},setsar=1,{zp},format=yuv420p"
+        over_w = int(round(up_w * 1.05 / 2.0)) * 2
+        over_h = int(round(up_h * 1.05 / 2.0)) * 2
+        vf = (
+            f"scale={over_w}:{over_h}:force_original_aspect_ratio=increase,"
+            f"crop={up_w}:{up_h}:(in_w-{up_w})/2:(in_h-{up_h})/2,"
+            f"setsar=1,{zp},format=yuv420p"
+        )
         cmd_seg = [
             "ffmpeg",
             "-y",
@@ -1152,7 +1182,7 @@ def render_vn_frame_video(
         filter_chains.append(f"[{cur_v}]ass=filename='{escaped_ass}'[vsub]")
         cur_v = "vsub"
 
-    wm_pos = "W-w-24:H-h-50" if is_short else "W-w-36:H-h-36"
+    wm_pos = "W-w-24:H-h-56" if is_short else "W-w-36:H-h-36"
     filter_chains.append(f"[{cur_v}][{wm_idx}:v]overlay={wm_pos}[vout]")
     filter_chains.append(f"[{audio_idx}:a]aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo[aout]")
 

@@ -201,6 +201,30 @@ def _normalize_clip_input(
     return str(clip), False, None
 
 
+def _build_canvas_scale_filter(
+    tw: int,
+    th: int,
+    fps: int,
+    overscan_crop: float = 1.05,
+) -> str:
+    """Build FFmpeg canvas normalization filter with optional overscan edge crop.
+
+    When overscan_crop > 1.001 (default 1.05), scales slightly larger and center-crops
+    to exact (tw, th), cleanly removing raw Google Flow bottom-right sparkle marks.
+    """
+    if overscan_crop > 1.001:
+        ow = max(tw, int(round(tw * overscan_crop / 2.0)) * 2)
+        oh = max(th, int(round(th * overscan_crop / 2.0)) * 2)
+        return (
+            f"scale={ow}:{oh}:force_original_aspect_ratio=increase,"
+            f"crop={tw}:{th}:(in_w-{tw})/2:(in_h-{th})/2,setsar=1,fps={fps}"
+        )
+    return (
+        f"scale={tw}:{th}:force_original_aspect_ratio=decrease,"
+        f"pad={tw}:{th}:(ow-iw)/2:(oh-ih)/2,setsar=1,fps={fps}"
+    )
+
+
 def render_flipbook_segment(
     start_image: str | Path,
     end_image: str | Path | None,
@@ -210,6 +234,7 @@ def render_flipbook_segment(
     height: int = 1080,
     fps: int = 30,
     crossfade_sec: float = 0.45,
+    overscan_crop: float = 1.05,
 ) -> dict[str, Any]:
     """Render an animated flipbook video segment using local ffmpeg (0 credits).
 
@@ -238,6 +263,18 @@ def render_flipbook_segment(
     ffmpeg_bin = _get_ffmpeg_bin()
     nb_frames = max(1, int(round(dur * fps)))
     step = 0.04 / nb_frames
+    if overscan_crop > 1.001:
+        ow = max(width, int(round(width * overscan_crop / 2.0)) * 2)
+        oh = max(height, int(round(height * overscan_crop / 2.0)) * 2)
+        pre_crop = (
+            f"scale={ow}:{oh}:force_original_aspect_ratio=increase,"
+            f"crop={width}:{height}:(in_w-{width})/2:(in_h-{height})/2,setsar=1"
+        )
+    else:
+        pre_crop = (
+            f"scale={width}:{height}:force_original_aspect_ratio=decrease,"
+            f"pad={width}:{height}:(ow-iw)/2:(oh-ih)/2,setsar=1"
+        )
 
     if has_end:
         end_p = Path(end_image)  # type: ignore
@@ -247,11 +284,9 @@ def render_flipbook_segment(
         offset = max(0.0, dur - xfade_dur)
 
         filter_complex = (
-            f"[0:v]scale={width}:{height}:force_original_aspect_ratio=decrease,"
-            f"pad={width}:{height}:(ow-iw)/2:(oh-ih)/2,setsar=1,"
+            f"[0:v]{pre_crop},"
             f"zoompan=z='min(zoom+{step:.6f},1.04)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s={width}x{height}:fps={fps}[v0];"
-            f"[1:v]scale={width}:{height}:force_original_aspect_ratio=decrease,"
-            f"pad={width}:{height}:(ow-iw)/2:(oh-ih)/2,setsar=1,fps={fps}[v1];"
+            f"[1:v]{pre_crop},fps={fps}[v1];"
             f"[v0][v1]xfade=transition=fade:duration={xfade_dur:.4f}:offset={offset:.4f}[outv]"
         )
 
@@ -276,8 +311,7 @@ def render_flipbook_segment(
         ]
     else:
         vf = (
-            f"scale={width}:{height}:force_original_aspect_ratio=decrease,"
-            f"pad={width}:{height}:(ow-iw)/2:(oh-ih)/2,setsar=1,"
+            f"{pre_crop},"
             f"zoompan=z='min(zoom+{step:.6f},1.04)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s={width}x{height}:fps={fps}"
         )
         cmd = [
@@ -312,6 +346,7 @@ def stitch_video_chain(
     normalize_audio_lufs: bool = True,
     keep_veo_audio: bool = True,
     veo_audio_mix_weight: float = 0.45,
+    overscan_crop: float = 1.05,
 ) -> dict[str, Any]:
     """Stitch multiple video clips into a single continuous seamless MP4.
 
@@ -375,7 +410,10 @@ def stitch_video_chain(
     for i, (_, trim_first, target_dur, meta) in enumerate(parsed_clips):
         raw_dur = float(meta.get("duration", 0.0))
         if mode == ChainMode.DAISY_CHAIN:
-            clip_dur = raw_dur - (1.0 / fps) if (trim_first or i > 0) else raw_dur
+            if target_dur is not None and target_dur > 0:
+                clip_dur = target_dur
+            else:
+                clip_dur = raw_dur - (1.0 / fps) if (trim_first or i > 0) else raw_dur
         elif mode == ChainMode.ZERO_CREDIT_FLIPBOOK or str(mode).lower() == "zero_credit_flipbook":
             clip_dur = target_dur if target_dur is not None and target_dur > 0 else raw_dur
         else:
@@ -383,7 +421,7 @@ def stitch_video_chain(
             if target_dur is not None and target_dur > 0:
                 clip_dur = target_dur
             else:
-                clip_dur = raw_dur
+                clip_dur = raw_dur - (1.0 / fps) if trim_first else raw_dur
         total_video_dur += max(0.0, clip_dur)
 
     pad_final_dur = 0.0
@@ -395,38 +433,60 @@ def stitch_video_chain(
     video_labels: list[str] = []
     audio_labels: list[str] = []
 
-    base_scale = (
-        f"scale={tw}:{th}:force_original_aspect_ratio=decrease,"
-        f"pad={tw}:{th}:(ow-iw)/2:(oh-ih)/2,setsar=1,fps={fps}"
-    )
+    base_scale = _build_canvas_scale_filter(tw, th, fps, overscan_crop=overscan_crop)
 
     for i, (_, trim_first, target_dur, meta) in enumerate(parsed_clips):
-        raw_dur = meta["duration"]
+        raw_dur = float(meta["duration"])
         is_last_clip = (i == k - 1)
         tpad_str = f",tpad=stop_mode=clone:stop_duration={pad_final_dur:.3f}" if (is_last_clip and pad_final_dur > 0.001) else ""
 
         if mode == ChainMode.DAISY_CHAIN:
-            if trim_first or i > 0:
-                vfilter = f"[{i}:v]{base_scale},trim=start_frame=1{tpad_str},setpts=PTS-STARTPTS[v{i}]"
+            eff_raw_dur = max(0.05, raw_dur - (1.0 / fps)) if (trim_first or i > 0) else raw_dur
+            trim_step = ",trim=start_frame=1,setpts=PTS-STARTPTS" if (trim_first or i > 0) else ""
+            if target_dur is not None and target_dur > 0:
+                ratio = eff_raw_dur / target_dur
+                if 0.7 <= ratio <= 1.35:
+                    pts_factor = target_dur / eff_raw_dur
+                    vfilter = f"[{i}:v]{base_scale}{trim_step}{tpad_str},setpts={pts_factor:.6f}*PTS[v{i}]"
+                elif target_dur > eff_raw_dur * 1.35:
+                    extra = target_dur - eff_raw_dur + (pad_final_dur if is_last_clip else 0.0)
+                    vfilter = (
+                        f"[{i}:v]{base_scale}{trim_step},"
+                        f"tpad=stop_mode=clone:stop_duration={extra:.3f},"
+                        f"setpts=PTS-STARTPTS[v{i}]"
+                    )
+                else:
+                    speed_factor = 1.0 / 1.35
+                    vfilter = (
+                        f"[{i}:v]{base_scale}{trim_step},"
+                        f"setpts={speed_factor:.6f}*PTS,"
+                        f"trim=duration={target_dur:.3f}{tpad_str},"
+                        f"setpts=PTS-STARTPTS[v{i}]"
+                    )
             else:
-                vfilter = f"[{i}:v]{base_scale}{tpad_str},setpts=PTS-STARTPTS[v{i}]"
+                if trim_first or i > 0:
+                    vfilter = f"[{i}:v]{base_scale},trim=start_frame=1{tpad_str},setpts=PTS-STARTPTS[v{i}]"
+                else:
+                    vfilter = f"[{i}:v]{base_scale}{tpad_str},setpts=PTS-STARTPTS[v{i}]"
         elif mode == ChainMode.ZERO_CREDIT_FLIPBOOK or str(mode).lower() == "zero_credit_flipbook":
             vfilter = f"[{i}:v]{base_scale}{tpad_str},setpts=PTS-STARTPTS[v{i}]"
         else:
-            # SCENE_PAIRS pacing logic
+            # SCENE_PAIRS pacing logic (supports optional trim_first_frame for hybrid chains)
+            eff_raw_dur = max(0.05, raw_dur - (1.0 / fps)) if trim_first else raw_dur
+            trim_step = ",trim=start_frame=1,setpts=PTS-STARTPTS" if trim_first else ""
             if target_dur is not None and target_dur > 0:
-                ratio = raw_dur / target_dur
+                ratio = eff_raw_dur / target_dur
                 if 0.7 <= ratio <= 1.35:
                     # Smooth time-stretch so motion hits End Frame right on beat
-                    pts_factor = target_dur / raw_dur
+                    pts_factor = target_dur / eff_raw_dur
                     vfilter = (
-                        f"[{i}:v]{base_scale}{tpad_str},setpts={pts_factor:.6f}*PTS[v{i}]"
+                        f"[{i}:v]{base_scale}{trim_step}{tpad_str},setpts={pts_factor:.6f}*PTS[v{i}]"
                     )
-                elif target_dur > raw_dur * 1.35:
+                elif target_dur > eff_raw_dur * 1.35:
                     # Target is longer: play at natural speed, freeze last frame with tpad
-                    extra = target_dur - raw_dur + (pad_final_dur if is_last_clip else 0.0)
+                    extra = target_dur - eff_raw_dur + (pad_final_dur if is_last_clip else 0.0)
                     vfilter = (
-                        f"[{i}:v]{base_scale},"
+                        f"[{i}:v]{base_scale}{trim_step},"
                         f"tpad=stop_mode=clone:stop_duration={extra:.3f},"
                         f"setpts=PTS-STARTPTS[v{i}]"
                     )
@@ -434,13 +494,13 @@ def stitch_video_chain(
                     # Target is shorter: speed up up to 1.35x and trim remainder
                     speed_factor = 1.0 / 1.35
                     vfilter = (
-                        f"[{i}:v]{base_scale},"
+                        f"[{i}:v]{base_scale}{trim_step},"
                         f"setpts={speed_factor:.6f}*PTS,"
                         f"trim=duration={target_dur:.3f}{tpad_str},"
                         f"setpts=PTS-STARTPTS[v{i}]"
                     )
             else:
-                vfilter = f"[{i}:v]{base_scale}{tpad_str},setpts=PTS-STARTPTS[v{i}]"
+                vfilter = f"[{i}:v]{base_scale}{trim_step}{tpad_str},setpts=PTS-STARTPTS[v{i}]"
 
         filter_chains.append(vfilter)
         video_labels.append(f"[v{i}]")

@@ -1,0 +1,79 @@
+{
+  "job_id": "en-choke-point-v3-demo-9x16",
+  "channel_slug": "en-choke-point",
+  "aspect": "9:16",
+  "title": "Why 90% of Global Trade Squeezes Through Three Fragile Ocean Gaps",
+  "voice": "en-US-ChristopherNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "G1",
+      "continues_prev": false,
+      "scene_anchor": "RealLifeLore hyper-realistic 3D orbital satellite terrain and deep bathymetric navy ocean cinematography with blue atmospheric limb glow and golden vector highlights, unlabeled 3D satellite relief terrain, strictly zero map labels, zero words, zero letters, zero numbers, strictly zero text",
+      "narration": "Fifty thousand cargo vessels cross open oceans, carrying six million steel containers right now.",
+      "pause_after_sec": 0.28,
+      "camera_verb": "Orbital satellite-to-strait zoom descent",
+      "start_visual": "RealLifeLore 8K orbital satellite perspective looking down from high Earth orbit at the curved blue horizon: dark navy ocean waters of the Persian Gulf leading toward the narrow Strait of Hormuz, with volumetric white cloud swirls drifting over arid desert coastlines and subtle luminous golden maritime vector lines tracing ship lanes across the water, photorealistic satellite relief, strictly zero map labels, zero words, zero letters, zero numbers, zero borders, strictly zero text.",
+      "end_visual": "On the same orbital satellite view of the Strait of Hormuz, camera descends smoothly toward the narrow water neck as hundreds of luminous golden maritime stream particles intensify and compress into a dense luminous ribbon through the channel, photorealistic satellite relief, strictly zero map labels, zero words, zero letters, zero numbers, strictly zero text.",
+      "subject_motion": "camera descends from high Earth orbit toward the Strait of Hormuz as golden maritime trade particles drift smoothly through the dark ocean corridor"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "G1",
+      "continues_prev": true,
+      "scene_anchor": "RealLifeLore hyper-realistic 3D orbital satellite terrain and deep bathymetric navy ocean cinematography with blue atmospheric limb glow and golden vector highlights, unlabeled 3D satellite relief terrain, strictly zero map labels, zero words, zero letters, zero numbers, strictly zero text",
+      "narration": "Yet nearly ninety percent of global energy must squeeze through three narrow ocean bottlenecks.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "Smooth lateral 3D relief map flight",
+      "end_visual": "Gliding smoothly along the exact same orbital satellite corridor toward the Bab-el-Mandeb and Horn of Africa, three glowing golden arterial choke points pulse intensely against the deep navy sea while surrounding continents remain dark matte relief, photorealistic 8K satellite cartography, strictly zero map labels, zero words, zero letters, zero text, zero country names, zero numbers.",
+      "subject_motion": "camera glides laterally over the 3D oceanic corridor as three glowing golden bottleneck nodes pulse with concentrated maritime traffic flow"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "G2",
+      "continues_prev": false,
+      "scene_anchor": "Cinematic aerial documentary view of a narrow desert canal cutting through golden sand dunes under harsh midday sunlight, turquoise water, massive container vessel, strictly zero text, zero ship names, zero logos",
+      "narration": "What happens when a single sandstorm wedges one giant freighter across a desert canal?",
+      "pause_after_sec": 0.4,
+      "camera_verb": "Low-horizon aerial canal tracking pass",
+      "start_visual": "Photorealistic daylight aerial documentary shot over a narrow desert canal cutting straight through towering golden-ochre sand dunes: a colossal 400-meter dark green container ship stacked high with colorful shipping containers navigates the turquoise waterway under blazing desert sun, kicking up foaming white bow wash, strictly zero text, zero vessel names, zero numbers.",
+      "end_visual": "Over the same narrow desert canal, a sudden volumetric desert sandstorm haze sweeps across the dunes as the colossal container ship yaws diagonally across the turquoise channel, its dark steel bow nudging the sandy embankment, photorealistic aerial cinematography, strictly zero text or labels.",
+      "subject_motion": "the massive container ship drifts diagonally across the narrow canal as swirling desert dust sweeps across the water surface"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "G2",
+      "continues_prev": true,
+      "scene_anchor": "Cinematic aerial documentary view of a narrow desert canal cutting through golden sand dunes under harsh midday sunlight, turquoise water, massive container vessel, strictly zero text, zero ship names, zero logos",
+      "narration": "Twelve billion dollars in daily commerce halts instantly, stranding fuel supplies across two continents.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Slow dramatic aerial pull-back",
+      "end_visual": "Pulling back high above the exact same blocked desert canal, two powerful steel tugboats churn white foam around the wedged freighter's stern while a motionless queue of distant oil tankers and freighters stretches endlessly to the desert horizon, photorealistic 8K documentary, strictly zero text or logos.",
+      "subject_motion": "camera pulls back smoothly revealing an endless motionless queue of container ships waiting behind the wedged freighter as tugboats churn white foam"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "G3",
+      "continues_prev": false,
+      "scene_anchor": "Dark room 3D bathymetric global network map with deep teal oceans, matte dark charcoal landmasses, and glowing white and golden fiber-optic maritime streams, strictly zero map labels, zero words, zero letters, strictly zero text",
+      "narration": "These luminous shipping corridors aren't just trade routes—they are fragile arteries of civilization.",
+      "pause_after_sec": 0.32,
+      "camera_verb": "Sweeping 3D cartographic orbital arc",
+      "start_visual": "High-contrast 3D geopolitical data visualization: dark matte continental landmasses surrounded by deep teal ocean bathymetry, where thousands of glowing white and amber fiber-optic vessel tracks flow like living bloodstream pulses across the Indian Ocean and Malacca Strait, photorealistic cartography, strictly zero map labels, zero text, zero borders.",
+      "end_visual": "On the same 3D bathymetric network map, camera arcs smoothly around the Indonesian archipelago as the glowing maritime arterial streams pulse with synchronized golden light through the narrow straits, photorealistic data documentary aesthetic, strictly zero text, zero words, zero letters.",
+      "subject_motion": "camera arcs smoothly in 3D around the maritime corridor as thousands of glowing fiber-optic vessel tracks pulse and stream continuously through the straits"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "G4",
+      "continues_prev": false,
+      "scene_anchor": "Epic high-orbit planetary view of Earth at twilight terminator line, golden sunbeams skimming the atmospheric limb glow over dark oceans, strictly zero text, zero map pins",
+      "narration": "Whoever commands these geographic choke points holds the switch to the modern world's power.",
+      "pause_after_sec": 0.28,
+      "camera_verb": "Majestic high-orbit slow push-in",
+      "start_visual": "Breathtaking high-orbit view of Earth from space along the twilight terminator line: deep blue curved planetary horizon with golden sunrise light grazing the atmosphere, illuminated global maritime supply lines forming a delicate glowing golden lattice across the dark oceans below, cinematic IMAX realism, strictly zero text, zero pins.",
+      "end_visual": "On the same planetary perspective from space, the golden sunbeam flares gently along the planetary curved limb as the interconnected golden maritime trade network glows in calm, breathtaking equilibrium across the globe, cinematic 8K documentary climax, strictly zero text, zero letters, zero numbers.",
+      "subject_motion": "the camera glides slowly forward in high orbit as golden sunbeams flare along Earth's atmospheric limb and the planetary trade network glows in quiet harmony"
+    }
+  ]
+}

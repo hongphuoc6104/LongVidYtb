@@ -1,0 +1,79 @@
+{
+  "job_id": "en-spawn-to-apex-v3-demo-9x16",
+  "channel_slug": "en-spawn-to-apex",
+  "aspect": "9:16",
+  "title": "From Microscopic Egg to Apex Hunter: The Praying Mantis Transformation",
+  "voice": "en-US-AndrewNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "G1",
+      "continues_prev": false,
+      "scene_anchor": "Deep Look PBS extreme optical macro biology cinematography at f/2.8, underside of an emerald woodland leaf with translucent spherical insect eggs, morning dew droplets, clean dark velvet bokeh background, strictly zero text",
+      "narration": "Under a wet morning leaf, dozens of translucent insect eggs pulse with developing life.",
+      "pause_after_sec": 0.28,
+      "camera_verb": "Locked Laowa 24mm probe macro push-in",
+      "start_visual": "Deep Look PBS extreme optical macro shot at f/2.8: a cluster of delicate spherical translucent insect eggs attached firmly to the underside of a vibrant emerald leaf, tiny embryonic limbs and dark compound eye specks visible inside the glowing gelatinous membranes, morning dew drops glistening beside them against a dark woodland bokeh backdrop, strictly zero text.",
+      "end_visual": "Intimate probe-lens macro on the same egg cluster: inside the central translucent egg, tiny segmented legs twitch subtly as the egg membrane swells with internal embryonic pressure under warm glancing keylight, photorealistic PBS biology cinematography, strictly zero text.",
+      "subject_motion": "camera pushes slowly toward the translucent egg as tiny embryonic limbs twitch subtly within the swelling membrane"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "G1",
+      "continues_prev": true,
+      "scene_anchor": "Deep Look PBS extreme optical macro biology cinematography at f/2.8, underside of an emerald woodland leaf with translucent spherical insect eggs, morning dew droplets, clean dark velvet bokeh background, strictly zero text",
+      "narration": "Suddenly, a tiny predatory nymph splits its gelatinous shell and enters the open world.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "High-speed macro lateral tracking pass",
+      "end_visual": "On the exact same emerald leaf underside, the central eggshell ruptures open as a tiny amber praying mantis hatchling emerges, extending two moist antennae and stepping its articulated translucent legs onto the green leaf vein, extreme optical macro f/2.8, strictly zero text.",
+      "subject_motion": "the miniature mantis nymph pushes out of the cracked eggshell, extending its delicate antennae and stepping onto the leaf surface"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "G2",
+      "continues_prev": false,
+      "scene_anchor": "Deep Look PBS macro optical tracking on a damp moss-covered woodland twig, shallow depth of field, natural forest floor bokeh, warm directional glancing light, strictly zero text",
+      "narration": "How does a creature smaller than a rice grain survive relentless woodland dangers?",
+      "pause_after_sec": 0.4,
+      "camera_verb": "Ultra-shallow-DOF lateral specimen track",
+      "start_visual": "Optical macro cinematography on a damp moss-covered oak twig: a miniature amber praying mantis nymph, barely three millimeters long, stalks stealthily forward, raising its delicate raptorial forelegs in an instinctive hunting crouch toward a tiny green aphid, natural woodland bokeh behind, photorealistic, strictly zero text.",
+      "end_visual": "On the same mossy twig, the tiny mantis nymph strikes with lightning speed, capturing the aphid between its spiny raptorial forelegs and raising it to its mouthparts in precise predatory instinct, high-speed macro f/2.8, strictly zero text.",
+      "subject_motion": "the miniature mantis nymph creeps forward across moss and snaps its tiny raptorial forelegs forward in a lightning-fast micro-strike"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "G2",
+      "continues_prev": true,
+      "scene_anchor": "Deep Look PBS macro optical tracking on a damp moss-covered woodland twig, shallow depth of field, natural forest floor bokeh, warm directional glancing light, strictly zero text",
+      "narration": "By repeatedly shedding its rigid chitin armor, expanding into a deadlier form every molt.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Extreme macro time-lapse push-in",
+      "end_visual": "On the exact same mossy twig, the grown mantis nymph hangs inverted as its old dry amber exoskeleton splits along the dorsal seam, allowing a larger, glistening jade-green body to wriggle out into the humid air, authentic Deep Look time-lapse macro, strictly zero text.",
+      "subject_motion": "the old translucent exoskeleton splits down the back as the larger jade-green mantis pushes smoothly out into the humid air"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "G3",
+      "continues_prev": false,
+      "scene_anchor": "Macro optical portrait on a lush fern leaf under soft directional daylight, iridescent insect chitin textures, delicate venation, dark velvet foliage bokeh, strictly zero text",
+      "narration": "Within weeks, delicate wing buds unfurl into protective shields over serrated, lethal raptorial claws.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Smooth macro arc orbit",
+      "start_visual": "Macro optical shot on a broad fern frond: a near-adult praying mantis unfurls its newly expanded, intricately veined translucent wings, iridescent green chitin reflecting directional woodland daylight, heavily serrated raptorial forelegs held poised in lethal symmetry, strictly zero text.",
+      "end_visual": "Close-up macro orbit on the mantis wings: the delicate reticulated wing veins harden into glistening emerald armor shields as the mantis folds them smoothly against its elongated thorax, photorealistic macro cinematography, strictly zero text.",
+      "subject_motion": "the mantis gently vibrates and folds its newly hardened translucent wings flat against its green abdomen"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "G4",
+      "continues_prev": false,
+      "scene_anchor": "Majestic cinema macro shot of a fully grown apex praying mantis perched on a lichen-encrusted branch, dramatic natural rim light, soft dark green forest background, strictly zero text",
+      "narration": "The humble hatchling vanishes, replaced by an undisputed apex master of the forest canopy.",
+      "pause_after_sec": 0.28,
+      "camera_verb": "Slow authoritative macro push-in to center lock",
+      "start_visual": "Cinematic macro wildlife shot: a fully grown magnificent adult praying mantis stands tall on a lichen-covered tree branch in the upper canopy, large triangular head turning smoothly with gleaming black pseudopupils locked directly toward the lens, powerful spined forelegs folded in deadly readiness, strictly zero text.",
+      "end_visual": "Extreme close-up on the apex mantis face on the lichen branch: compound eyes gleam under warm golden canopy light as the mantis raises both serrated forelegs in a commanding, lightning-poised strike stance, National Geographic / Deep Look 8K masterpiece, strictly zero text.",
+      "subject_motion": "the adult praying mantis smoothly turns its triangular head toward the camera and elevates its spined raptorial claws into a poised strike posture"
+    }
+  ]
+}

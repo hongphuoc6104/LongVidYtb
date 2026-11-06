@@ -1,0 +1,79 @@
+{
+  "job_id": "en-root-and-canopy-v3-demo-9x16",
+  "channel_slug": "en-root-and-canopy",
+  "aspect": "9:16",
+  "title": "How Underground Fungi Build a Secret Internet That Powers the Forest",
+  "voice": "en-GB-RyanNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "G1",
+      "continues_prev": false,
+      "scene_anchor": "BBC Earth Green Planet subterranean macro optical cinematography, deep damp forest soil cross-section with dark humus, ancient gnarled tree roots, glowing mycorrhizal fungal threads, and glistening moisture droplets, strictly zero text",
+      "narration": "Beneath the quiet woodland floor lies an underground network vast enough to girdle Earth.",
+      "pause_after_sec": 0.32,
+      "camera_verb": "Subterranean optical probe macro glide",
+      "start_visual": "BBC Earth Green Planet macro documentary cinematography: a detailed cross-section of deep damp temperate forest soil, showing dark organic humus and thick ancient tree roots interlaced with an intricate, glowing pale-white mycorrhizal fungal root network, tiny crystal moisture droplets glistening under warm subterranean rim lighting, photorealistic optical macro, strictly zero text, zero illustrations.",
+      "end_visual": "Inside the same subterranean forest soil cross-section, the camera glides along the delicate pale-white fungal threads as faint bioluminescent amber nutrients begin to pulse smoothly through the branching hyphae pathways, photorealistic BBC botanical cinematography, strictly zero text.",
+      "subject_motion": "camera glides smoothly through the subterranean soil as delicate fungal hyphae threads pulse with luminous amber nutrient fluid"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "G1",
+      "continues_prev": true,
+      "scene_anchor": "BBC Earth Green Planet subterranean macro optical cinematography, deep damp forest soil cross-section with dark humus, ancient gnarled tree roots, glowing mycorrhizal fungal threads, and glistening moisture droplets, strictly zero text",
+      "narration": "Microscopic fungal threads link every root, trading soil minerals for sweet carbon synthesized in sunlight.",
+      "pause_after_sec": 0.38,
+      "camera_verb": "Extreme probe-lens macro push-in",
+      "end_visual": "Pushing in closer to the exact same fungal-root junction in the damp forest soil, microscopic amber carbon spheres flow smoothly into a fibrous oak root tip while glowing cyan phosphorus minerals transfer into the fungal hyphae, extreme optical macro f/2.8, photorealistic, strictly zero text or diagrams.",
+      "subject_motion": "camera pushes intimately into the root tip junction as luminous amber carbon and cyan mineral particles exchange smoothly between cells"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "G2",
+      "continues_prev": false,
+      "scene_anchor": "Lush temperate forest floor on 35mm optical macro lens at f/2.0, emerald velvet moss, uncurling fiddlehead ferns, and warm volumetric morning sunbeams streaming through canopy mist, strictly zero text",
+      "narration": "Can a mother tree really warn her saplings when hungry caterpillars attack neighboring branches?",
+      "pause_after_sec": 0.4,
+      "camera_verb": "Gentle woodland floor tilt-up",
+      "start_visual": "Photorealistic BBC Earth botanical documentary shot on the forest floor: thick emerald velvet moss covering an ancient damp granite stone, beside which a young oak sapling with delicate green leaves catches warm morning sunbeams piercing misty woodland air, tiny caterpillars crawling on an adjacent leaf, authentic optical macro, strictly zero text.",
+      "end_visual": "On the same sunlit mossy forest floor, as caterpillars nibble a leaf margin, the young oak sapling stem stiffens slightly while morning dew drops glisten like prisms on surrounding moss fronds, photorealistic nature cinematography, strictly zero text.",
+      "subject_motion": "dewdrops quiver on the velvety moss as sunlight shifts across the young oak sapling stem under warm forest sunbeams"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "G2",
+      "continues_prev": true,
+      "scene_anchor": "Lush temperate forest floor on 35mm optical macro lens at f/2.0, emerald velvet moss, uncurling fiddlehead ferns, and warm volumetric morning sunbeams streaming through canopy mist, strictly zero text",
+      "narration": "Chemical alarm pulses race through fungal pathways, triggering defensive toxins before leaves are chewed.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Smooth optical macro tracking pass",
+      "end_visual": "Tracking smoothly across the exact same mossy stone to an adjacent young fern and sapling cluster, glossy tannin droplets bead rapidly along leaf margins in defensive reaction while golden morning light streams through the canopy, BBC Earth optical macro realism, strictly zero text.",
+      "subject_motion": "camera tracks along the mossy base as glistening defensive tannin beads form along the sapling leaf margins under bright sunbeams"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "G3",
+      "continues_prev": false,
+      "scene_anchor": "Extreme optical macro photography of carnivorous sundew in a damp peat bog under misty woodland morning light, glistening ruby glandular tentacles and sticky mucilage droplets, strictly zero text",
+      "narration": "From hungry carnivorous sundews to towering oaks, no plant stands in solitary competition alone.",
+      "pause_after_sec": 0.32,
+      "camera_verb": "Precision macro focus pull push-in",
+      "start_visual": "Extreme optical macro photography: a carnivorous round-leaved sundew plant resting on damp sphagnum peat moss, dozens of vibrant crimson glandular tentacles tipped with glistening viscous mucilage droplets that sparkle brightly like rubies in morning woodland light, authentic botanical science realism, strictly zero text.",
+      "end_visual": "Close-up on the same glistening crimson sundew tentacles, a gentle woodland breeze sways the delicate glandular hairs without breaking the sticky glistening droplets as soft morning mist swirls in the background, photorealistic optical macro, strictly zero text.",
+      "subject_motion": "gentle morning breeze sways the ruby sundew tentacles as viscous dew droplets refract sparkling sunlight"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "G4",
+      "continues_prev": false,
+      "scene_anchor": "Sweeping upward optical cinema perspective looking from emerald forest floor to towering ancient oak and redwood canopy drenched in golden morning god rays, strictly zero text",
+      "narration": "This hidden subterranean web unites millions of trees into one resilient living organism.",
+      "pause_after_sec": 0.3,
+      "camera_verb": "Sweeping upward vertical crane tilt",
+      "start_visual": "Sweeping upward optical cinema perspective looking from the rich mossy forest floor up the towering trunks of ancient oak and beech trees into a vast leafy canopy drenched in golden morning god rays and rising moisture mist, hyper-realistic BBC Earth Green Planet documentary, strictly zero text.",
+      "end_visual": "Looking straight up into the crown of the majestic forest canopy, giant leafy branches touch tips in gentle canopy disengagement as brilliant golden sun flare breaks through emerald foliage, cinematic nature documentary climax, strictly zero text.",
+      "subject_motion": "the camera tilts majestically upward through rising morning mist as golden sunbeams pierce the emerald canopy branches"
+    }
+  ]
+}

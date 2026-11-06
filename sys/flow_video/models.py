@@ -52,6 +52,9 @@ class ScenePairSpec:
     end_image_prompt: str | None = None
     motion_prompt: str = ""
     target_duration: float | None = None
+    trim_first_frame: bool = False
+    start_based_on: str | None = None
+    end_based_on_start: bool = False
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -59,6 +62,8 @@ class ScenePairSpec:
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> ScenePairSpec:
         target_dur = data.get("target_duration")
+        if target_dur is None:
+            target_dur = data.get("target_duration_sec")
         return cls(
             id=str(data["id"]),
             start_image_path=data.get("start_image_path"),
@@ -67,6 +72,9 @@ class ScenePairSpec:
             end_image_prompt=data.get("end_image_prompt"),
             motion_prompt=str(data.get("motion_prompt", "")),
             target_duration=float(target_dur) if target_dur is not None else None,
+            trim_first_frame=bool(data.get("trim_first_frame", False)),
+            start_based_on=data.get("start_based_on"),
+            end_based_on_start=bool(data.get("end_based_on_start", False)),
         )
 
 
@@ -166,6 +174,7 @@ class VideoChainSpec:
     auto_duration: bool = True
     auto_fallback_zero_credit: bool = True
     channel_id: str | None = None
+    overscan_crop: float = 1.05
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -185,6 +194,7 @@ class VideoChainSpec:
             "auto_duration": self.auto_duration,
             "auto_fallback_zero_credit": self.auto_fallback_zero_credit,
             "channel_id": self.channel_id,
+            "overscan_crop": self.overscan_crop,
         }
 
     @classmethod
@@ -215,6 +225,7 @@ class VideoChainSpec:
             auto_duration=bool(data.get("auto_duration", True)),
             auto_fallback_zero_credit=bool(data.get("auto_fallback_zero_credit", True)),
             channel_id=data.get("channel_id"),
+            overscan_crop=float(data.get("overscan_crop", 1.05)),
         )
 
     def to_json_file(self, path: str | Path) -> None:

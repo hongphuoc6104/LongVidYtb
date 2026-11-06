@@ -1,0 +1,79 @@
+{
+  "job_id": "en-kindred-sketch-v3-demo-9x16",
+  "channel_slug": "en-kindred-sketch",
+  "aspect": "9:16",
+  "title": "Why We Push People Away When We Need Love Most",
+  "voice": "en-US-JennyNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "G1",
+      "continues_prev": false,
+      "scene_anchor": "Intimate dimly lit restaurant dining table photographed on 35mm cinema glass at f/1.8 with Kodak Vision3 500T color grading, flickering candle in glass jar, warm 3000K circular tungsten bokeh, dark rustic walnut table, strictly zero text",
+      "narration": "When someone we love suddenly pulls away, our immediate instinct is assuming they stopped caring.",
+      "pause_after_sec": 0.28,
+      "camera_verb": "Intimate 35mm table-level push-in",
+      "start_visual": "Intimate 35mm cinema still in vertical 9:16: a young couple sits across a rustic walnut dining table at late evening in a quiet dimly lit restaurant. A single warm candle in a glass jar flickers between them, casting soft amber light across dark wine glasses. The woman looks down in quiet withdrawal while the man watches with gentle concern. Kodak Vision3 500T tone, shallow depth of field f/1.8, closed lips, silent contemplative expressions, zero speaking or mouth movement, strictly zero text.",
+      "end_visual": "On the same candlelit walnut dining table, camera pushes slowly closer past the glowing candle flame toward the woman as she raises her gaze with subtle vulnerability, warm tungsten bokeh in the background, closed lips, silent emotional reserve, zero mouth movement, strictly zero text.",
+      "subject_motion": "camera pushes gently closer across the dark walnut table as the candle flame flickers softly and the woman slowly lifts her eyes in quiet contemplation"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "G1",
+      "continues_prev": true,
+      "scene_anchor": "Intimate dimly lit restaurant dining table photographed on 35mm cinema glass at f/1.8 with Kodak Vision3 500T color grading, flickering candle in glass jar, warm 3000K circular tungsten bokeh, dark rustic walnut table, strictly zero text",
+      "narration": "Yet emotional withdrawal is almost never indifference—it is usually an overwhelmed nervous system.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "Gentle over-the-shoulder focus rack",
+      "end_visual": "Intimate over-the-shoulder angle at the exact same candlelit walnut table: the woman holds a delicate wine glass with both hands near the warm candle, soft ambient amber light contouring her cheek and delicate strands of hair, authentic emotional nuance, closed lips, silent reflective gaze, zero speaking or lip movement, strictly zero text.",
+      "subject_motion": "camera racks focus gently to the woman's hands cradling the wine glass as subtle amber candle reflections dance across the dark table"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "G2",
+      "continues_prev": false,
+      "scene_anchor": "Moody warm apartment living room by a large rain-streaked window at night, city streetlights refracting into golden and cobalt bokeh through water droplets, Kodak Vision3 500T film grain, strictly zero text",
+      "narration": "Why do we pick furious fights precisely when we crave intimacy the most?",
+      "pause_after_sec": 0.38,
+      "camera_verb": "Subtle 35mm lateral tracking glide",
+      "start_visual": "Moody vertical 9:16 35mm film shot in a cozy apartment at night: a thoughtful man in a charcoal knit sweater stands quietly by a floor-to-ceiling rain-streaked window overlooking city streetlights. He holds a warm ceramic coffee mug with both hands, warm tungsten lamp behind him contrasting with cool blue night rain outside. Closed lips, silent introspective expression, zero speaking or mouth movement, photorealistic 35mm grain, strictly zero text.",
+      "end_visual": "Panning slowly closer to the rain-streaked glass beside the man: raindrops glide steadily down the dark windowpane, splitting the amber city traffic lights below into soft glowing streaks, closed lips, silent contemplative posture, no mouth movement, strictly zero text.",
+      "subject_motion": "camera glides smoothly alongside the man as raindrops trace delicate paths down the cold window glass against distant amber city lights"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "G2",
+      "continues_prev": true,
+      "scene_anchor": "Moody warm apartment living room by a large rain-streaked window at night, city streetlights refracting into golden and cobalt bokeh through water droplets, Kodak Vision3 500T film grain, strictly zero text",
+      "narration": "Because our ancient biology perceives rejection as physical danger, slamming down defensive stone walls.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Slow macro push toward rain reflection",
+      "end_visual": "Pushing closer to the man's reflection on the exact same rain-drenched windowpane: his mirrored face in the glass shows quiet defensive guard dissolving into gentle honesty, warm indoor light reflecting alongside cool blue rain droplets, closed lips, silent breathing stillness, zero speaking, strictly zero text.",
+      "subject_motion": "camera pushes softly toward the windowpane as the man's gentle reflection in the wet glass softens into calm acceptance"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "G3",
+      "continues_prev": false,
+      "scene_anchor": "Macro 35mm tabletop composition on dark rustic oak wood with two adult hands near a warm glass candle, shallow f/1.8 depth of field, warm 3000K tungsten glow, strictly zero text",
+      "narration": "Battering against those locked emotional doors only drives your partner deeper into defensive hiding.",
+      "pause_after_sec": 0.32,
+      "camera_verb": "Macro 35mm slow push-in",
+      "start_visual": "Macro vertical 9:16 35mm shot: on a rustic dark oak table bathed in warm candlelight, two adults sit in quiet reflection with hands resting three inches apart beside a small flickering candle glass. Rich skin micro-textures and dark wood grain, subtle hesitation in the fingertips, warm amber rim lighting, shallow focus f/1.8, closed lips, silent emotional vulnerability, zero speaking or mouth movement, strictly zero text.",
+      "end_visual": "On the exact same dark oak tabletop near the candle, one hand gently slides two inches forward across the wood, opening its palm in quiet non-demanding invitation right beside the other hand, warm golden highlights, closed lips, calm breathing stillness, zero speaking or mouth movement, photorealistic 35mm realism, strictly zero text.",
+      "subject_motion": "one hand slides gently across the dark oak grain toward the other, opening its fingers in a calm patient gesture near the warm candle flame"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "G4",
+      "continues_prev": false,
+      "scene_anchor": "Bright cozy apartment kitchen bathed in soft morning golden sunlight, natural oak counters, gentle steam rising from ceramic mugs, authentic emotional warmth, strictly zero text",
+      "narration": "True closeness returns only when you trade demanding reassurance for creating mutual emotional safety.",
+      "pause_after_sec": 0.28,
+      "camera_verb": "Calm 35mm push-in to warm portrait",
+      "start_visual": "Warm 35mm cinematic vertical 9:16 portrait: the couple stands together by a natural oak kitchen island in soft morning golden daylight. Their hands are gently intertwined on the counter beside two steaming white ceramic mugs. Closed lips, soft peaceful expressions of relief and deep attunement, zero speaking or mouth movement, Kodak Vision3 500T tones, strictly zero text.",
+      "end_visual": "Gentle slow push-in on the couple in the sunlit kitchen: they stand in peaceful emotional harmony, surrounded by warm dust motes dancing in morning sunbeams, closed lips, relaxed breathing, authentic human warmth and safety, photorealistic 35mm cinema still, strictly zero text.",
+      "subject_motion": "camera pushes softly closer as warm golden morning light bathes the couple in calm attunement while gentle steam rises from their coffee mugs"
+    }
+  ]
+}

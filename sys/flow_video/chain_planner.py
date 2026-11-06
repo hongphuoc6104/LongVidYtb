@@ -212,7 +212,7 @@ def build_scene_pair_tasks(
             video_model=video_model,
             duration_seconds=clip_dur,
             target_duration=sp.target_duration,
-            trim_first_frame=False,
+            trim_first_frame=bool(getattr(sp, "trim_first_frame", False)),
             seed=seed,
             status="pending",
             credit_cost=clip_cost,

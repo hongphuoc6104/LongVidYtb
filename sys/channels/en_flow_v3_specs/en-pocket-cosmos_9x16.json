@@ -1,0 +1,79 @@
+{
+  "job_id": "en-pocket-cosmos-v3-demo-9x16",
+  "channel_slug": "en-pocket-cosmos",
+  "aspect": "9:16",
+  "title": "Why Clouds Rain Liquid Iron on Exoplanet WASP-76b",
+  "voice": "en-US-ChristopherNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "G1",
+      "continues_prev": false,
+      "scene_anchor": "Melodysheep hyper-detailed IMAX deep-space cinematography lit by a single coherent off-screen star keylight against pure velvet interstellar void, strictly zero text",
+      "narration": "Six hundred light-years away, an exoplanet orbits so close its skies rain liquid iron.",
+      "pause_after_sec": 0.32,
+      "camera_verb": "Grand parabolic space-probe flyby",
+      "start_visual": "Melodysheep 8K cinematic deep-space view: a colossal tidally locked gas giant exoplanet floats against the velvet cosmic void, its blazing dayside illuminated in blistering orange-gold by an enormous close-proximity host star, subtle atmospheric limb scattering, strictly zero text, zero HUD, zero letters.",
+      "end_visual": "Gliding smoothly closer in the parabolic space-probe flyby: turbulent convective storm belts churn across the planet's incandescent orange-white atmosphere, showing massive cyclonic storms illuminated by fierce stellar radiation, hyper-detailed cosmic cinematography, strictly zero text.",
+      "subject_motion": "camera glides weightlessly past the glowing scorched planet as massive convective cloud bands swirl across its dayside"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "G1",
+      "continues_prev": true,
+      "scene_anchor": "Melodysheep hyper-detailed IMAX deep-space cinematography lit by a single coherent off-screen star keylight against pure velvet interstellar void, strictly zero text",
+      "narration": "On its permanent dayside, searing stellar heat vaporizes solid rock into dense mineral clouds.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "Slow weightless orbital push-in toward terminator line",
+      "end_visual": "Continuing the orbital push-in toward the blazing dayside atmosphere: superheated volcanic gas plumes and glowing metallic vapors rise from planetary depths, shimmering like liquid mirages under searing stellar ultraviolet light, photorealistic volumetric plasma, strictly zero text.",
+      "subject_motion": "superheated metallic vapor plumes rise and churn within the violent planetary atmosphere toward the upper cloud deck"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "G2",
+      "continues_prev": false,
+      "scene_anchor": "Cinematic high-contrast exoplanetary terminator boundary in deep space, razor-sharp division between incandescent dayside plasma and frozen velvet nightside, strictly zero text",
+      "narration": "What happens when these vaporized iron clouds whip across into perpetual night?",
+      "pause_after_sec": 0.38,
+      "camera_verb": "Zero-G lateral cosmic drift along terminator",
+      "start_visual": "IMAX deep-space cinematography locked on the planetary terminator boundary: on the left, blinding white-orange dayside atmosphere; on the right, pitch-black freezing nightside, divided by a dramatic twilight corridor where powerful atmospheric jet streams converge, strictly zero text, zero numbers.",
+      "end_visual": "Drifting laterally along the dark terminator division: violent hurricane-force jet streams whip luminous vaporized metal plumes out of the scorching day and into the sudden freezing shadow of the night hemisphere, realistic atmospheric fluid dynamics, strictly zero text.",
+      "subject_motion": "violent horizontal atmospheric jet streams drag glowing vapor clouds across the sharp terminator line into absolute night"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "G2",
+      "continues_prev": true,
+      "scene_anchor": "Cinematic high-contrast exoplanetary terminator boundary in deep space, razor-sharp division between incandescent dayside plasma and frozen velvet nightside, strictly zero text",
+      "narration": "Violent planetary winds drive gaseous iron past the terminator line, condensing into molten droplets.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Smooth macro atmospheric push-in",
+      "end_visual": "Moving deeper into the cool nightside cloud deck along the terminator: as temperatures drop thousands of degrees, the translucent gaseous iron vapor condenses into dense crimson clouds that spawn millions of glowing ruby-red liquid metal droplets, photorealistic volumetric physics, strictly zero text.",
+      "subject_motion": "translucent gaseous iron vapor cools rapidly and condenses into millions of gleaming ruby-red liquid metal droplets"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "G3",
+      "continues_prev": false,
+      "scene_anchor": "Atmospheric nightside alien surface terrain under faint starlight and distant lightning flashes, dark jagged obsidian basalt, strictly zero text",
+      "narration": "A torrential crimson downpour of molten metal slams across razor-sharp basalt alien obsidian plains.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Low-angle planetary tracking pass",
+      "start_visual": "Cinematic surface view of the alien exoplanet's dark nightside: heavy black storm clouds illuminated from within by crimson lightning bolts, rain streaks of incandescent liquid iron falling through dark sulfur mist onto jagged black obsidian rocks, strictly zero text.",
+      "end_visual": "Tracking low over the black obsidian plains: dense sheets of glowing liquid iron rain splash across glossy dark stone, pooling into sizzling glowing metallic rivulets that course between jagged basalt ridges, photorealistic fluid dynamics, strictly zero text.",
+      "subject_motion": "sheets of glowing molten iron rain strike the jagged obsidian rock and flow into glowing metallic rivulets across the dark terrain"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "G4",
+      "continues_prev": false,
+      "scene_anchor": "Melodysheep IMAX cosmic vista in deep space showing glowing planetary systems against the majestic Milky Way spiral, strictly zero text",
+      "narration": "Our galaxy holds trillions of worlds where physics creates wonders beyond human imagination.",
+      "pause_after_sec": 0.3,
+      "camera_verb": "Grand celestial pull-back to infinity",
+      "start_visual": "Breathtaking IMAX deep-space view pulling smoothly away from the dual-faced metal-rain exoplanet and its brilliant parent star, revealing shimmering dust clouds and distant sparkling star clusters in deep indigo void, strictly zero text.",
+      "end_visual": "Vast cosmic perspective pulling back into deep interstellar space: the planetary system becomes a jewel-like spark of light surrounded by sweeping starry nebulae and the grand luminous spiral arm of the Milky Way, magnificent Melodysheep documentary finale, strictly zero text.",
+      "subject_motion": "camera glides smoothly backward into deep space as the glowing planetary system recedes into the vast luminous cosmic starfield"
+    }
+  ]
+}

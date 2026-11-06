@@ -1,0 +1,79 @@
+{
+  "job_id": "en-scale-and-bone-v3-demo-9x16",
+  "channel_slug": "en-scale-and-bone",
+  "aspect": "9:16",
+  "title": "How the Peregrine Falcon Dives at 300 km/h Without Collapsing Its Lungs",
+  "voice": "en-GB-RyanNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "G1",
+      "continues_prev": false,
+      "scene_anchor": "High-altitude alpine airspace over rugged glaciated mountain peaks photographed on telephoto 400mm cinema glass with natural golden daylight, razor-sharp aerodynamic plumage textures, strictly zero text",
+      "narration": "At three hundred kilometers per hour, a peregrine falcon dives through air dense as water.",
+      "pause_after_sec": 0.32,
+      "camera_verb": "Telephoto 400mm shallow-DOF wildlife tracking shot",
+      "start_visual": "BBC Earth natural-history wildlife documentary shot on telephoto 400mm cinema lens at f/2.8: a majestic peregrine falcon cruises high above rugged alpine peaks, then folds its slate-blue wings into a tight aerodynamic teardrop bullet shape against a crisp azure sky, soft natural golden morning daylight, hyper-realistic plumage detail, strictly zero text, zero letters, zero numbers.",
+      "end_visual": "Same high-altitude alpine tracking view on telephoto cinema lens: the folded peregrine falcon accelerates violently downward through thin mountain clouds, feathers clamped tightly against its muscular torso as whistling air ripples past its head, photorealistic wildlife cinematography, strictly zero text.",
+      "subject_motion": "the peregrine falcon pulls its wings tightly against its torso into an aerodynamic teardrop and dives vertically downward through mountain clouds"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "G1",
+      "continues_prev": true,
+      "scene_anchor": "High-altitude alpine airspace over rugged glaciated mountain peaks photographed on telephoto 400mm cinema glass with natural golden daylight, razor-sharp aerodynamic plumage textures, strictly zero text",
+      "narration": "At this speed, ferocious wind pressure would blow mammalian lungs apart in seconds.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "Intimate eye-level optical push-in tracking shot",
+      "end_visual": "Tracking the plunging falcon at extreme speed on long cinema glass: high-velocity wind buffets violently around the bird's streamlined skull and piercing dark eye, faint vapor trails streaming off wingtips against distant snow-capped crags, photorealistic 8K nature cinematography, strictly zero text.",
+      "subject_motion": "camera maintains tight tracking lock beside the falcon's head as supersonic wind stream whips aerodynamic vapor trails off its wingtips"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "G2",
+      "continues_prev": false,
+      "scene_anchor": "Macro wildlife probe cinematography inside a bright natural daylight studio setting focused on raptor cranial anatomy, warm golden rim light on keratin beak and feathers, strictly zero text",
+      "narration": "How does this living raptor breathe while plummeting toward earth at terminal velocity?",
+      "pause_after_sec": 0.38,
+      "camera_verb": "Intimate macro optical push-in",
+      "start_visual": "Extreme BBC Earth macro probe shot of a peregrine falcon's head profile under warm natural sunlight: a piercing dark raptor eye and curved golden-yellow cere beak, showing the circular nostril opening with a tiny conical bone tubercle centered inside, crisp f/2.8 depth of field, strictly zero text, zero numbers.",
+      "end_visual": "Ultra-close macro probe view moving toward the dark circular nostril opening: high-pressure air currents approach the curved beak under golden rim lighting, revealing the precision geometric cone of the inner nostril bone, hyper-detailed anatomical nature photography, strictly zero text.",
+      "subject_motion": "camera glides smoothly inward toward the falcon's curved nostril opening as aerodynamic wind currents swirl around the beak"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "G2",
+      "continues_prev": true,
+      "scene_anchor": "Macro wildlife probe cinematography inside a bright natural daylight studio setting focused on raptor cranial anatomy, warm golden rim light on keratin beak and feathers, strictly zero text",
+      "narration": "Tiny bony nostril tubercles redirect supersonic shockwaves, spiraling calm oxygen into its lungs.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Slow precision macro reveal",
+      "end_visual": "In the exact same macro nostril view under warm natural rim lighting: high-pressure incoming air deflects off the small conical bone tubercle, breaking the violent ram-air shockwave into gentle swirling micro-vortices that flow smoothly down into the respiratory passage, photorealistic scientific wildlife visualization, strictly zero text.",
+      "subject_motion": "the violent incoming air shockwave divides around the small nostril bone cone and spirals into calm laminar micro-vortices entering the respiratory tract"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "G3",
+      "continues_prev": false,
+      "scene_anchor": "Hyper-detailed 3D vertebrate biomechanics cutaway isolated in warm atmospheric natural daylight with realistic bone, tendon, and muscle textures, strictly zero text",
+      "narration": "A reinforced skeletal wishbone locks its chest rigid, absorbing bone-crushing aerodynamic drag.",
+      "pause_after_sec": 0.32,
+      "camera_verb": "Slow crane reveal across anatomical structure",
+      "start_visual": "PBS Eons style 3D biomechanics cross-section in warm daylight: a realistic vertebrate raptor skeleton highlighting the fused clavicle furcula wishbone and deep sternum keel, supported by taut amber pectoral muscle fibers and white cartilage under tension, strictly zero text, zero labels, zero cartoon graphics.",
+      "end_visual": "On the same 3D vertebrate skeleton cutaway: aerodynamic pressure vectors flex across the ribcage as the rigid wishbone absorbs the immense compressive force, holding the chest cavity perfectly stable without bending, photorealistic anatomical simulation, strictly zero text.",
+      "subject_motion": "the fused skeletal wishbone and deep sternum keel absorb compressive load, holding the chest frame locked in rigid biomechanical stability"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "G4",
+      "continues_prev": false,
+      "scene_anchor": "Panoramic alpine canyon wilderness bathed in rich warm golden-hour sunset light, telephoto cinema perspective on flying raptor, strictly zero text",
+      "narration": "Evolution engineered a living supersonic interceptor millions of years before humans touched skies.",
+      "pause_after_sec": 0.3,
+      "camera_verb": "Composed panoramic optical pull-back",
+      "start_visual": "BBC Earth cinematic wide telephoto shot over a breathtaking alpine canyon at golden hour: the adult peregrine falcon snaps its long pointed wings wide open, banking smoothly into a majestic sweeping climb through warm amber sunlight, misty evergreen valleys far below, strictly zero text.",
+      "end_visual": "Wide panoramic pull-back across the alpine mountain wilderness: the solitary falcon soars effortlessly across the glowing mountain thermals, silhouetted against towering sunlit peaks and endless golden skies, breathtaking natural history documentary finale, strictly zero text.",
+      "subject_motion": "the falcon snaps its wings wide to brake out of the dive and soars gracefully upward on warm mountain thermals across the sunlit valley"
+    }
+  ]
+}

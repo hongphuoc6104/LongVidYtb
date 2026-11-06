@@ -1,0 +1,16 @@
+{
+  "jobId": "logo_en-lazy-brain",
+  "forgeId": "20a63f97-0dcd-4677-9da9-8aff5c66ca29",
+  "profile_id": "profile_13",
+  "prompt": "Minimalist cognitive neuroscience emblem centered on a solid warm cream background (#F8F0DC). A bold cobalt blue (#3B82C4) stylized brain silhouette encircled by a clean dark ink orbital loop with a vivid coral red (#E63946) lightning spark at the frontal lobe. Pure scientific vector symbol, high contrast, 25% empty margin around all edges, strictly no text, no letters, no words, no numbers, pure icon.",
+  "latency": 22.65,
+  "sha256": "8336daf9f4a972a0440d7af645a977dce791dbac26e1bfaefaa92a67de131062",
+  "aspect_ratio": "1:1",
+  "width": 1024,
+  "height": 1024,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "downloaded",
+  "created_at": "2026-11-05T21:00:09.700005+00:00"
+}

@@ -1,0 +1,79 @@
+{
+  "job_id": "en-lazy-brain-v3-demo-9x16",
+  "channel_slug": "en-lazy-brain",
+  "aspect": "9:16",
+  "title": "Why Hard Work Feels Painful — And How to Reset Dopamine in 90 Seconds",
+  "voice": "en-US-AndrewNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "G1",
+      "continues_prev": false,
+      "scene_anchor": "Moody modern dark-slate workspace at late night photographed on 35mm cinema lens at f/1.8, cool blue smartphone screen glow contrasting with warm desk lamp, authentic human focus struggle, strictly zero text",
+      "narration": "You assume that procrastination means you lack willpower, but that assumption is biologically wrong.",
+      "pause_after_sec": 0.28,
+      "camera_verb": "Moody 35mm shallow-DOF push-in",
+      "start_visual": "Cinematic vertical 9:16 35mm portrait: a tired young professional sits at a dark slate desk at midnight. The cool blue glow of an illuminated smartphone illuminates their face while an open blank notebook rests untouched under a warm tungsten desk lamp. Authentic cognitive fatigue, closed lips, silent contemplative expression, zero speaking or mouth movement, shallow depth of field f/1.8, strictly zero text or letters.",
+      "end_visual": "Pushing closer on the same dark slate desk: the professional's hand hovers indecisively over the glowing smartphone screen in cognitive friction before pulling back slightly, warm desk lamp casting long dramatic shadows, closed lips, silent stillness, no mouth movement, strictly zero text.",
+      "subject_motion": "camera pushes smoothly closer as the professional's hand hesitates over the glowing screen and draws slowly back in thoughtful cognitive pause"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "G2",
+      "continues_prev": false,
+      "scene_anchor": "High-contrast 8K 3D biomedical human brain visualization suspended in an obsidian-dark cosmic void, brilliant bioluminescent cyan dopamine pathways firing along the mesolimbic reward system, strictly zero text",
+      "narration": "Your brain is merely executing automated chemistry programmed over millions of evolutionary years.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "Sweeping 3D anatomical orbital arc",
+      "start_visual": "Hyper-detailed 8K 3D anatomical visualization in vertical 9:16: a translucent human brain profile suspended in an obsidian-dark void. Brilliant electric-cyan (#38BDF8) dopamine pathways fire in rhythmic pulses from the ventral tegmental area along the mesolimbic reward highway into the frontal cortex. Octane biomedical render, raytraced subsurface scattering, strictly zero text.",
+      "end_visual": "Orbital 3D camera sweeps around the same translucent brain structure in the dark void as pulsing cyan neural sparks travel in accelerated bursts across intricate cortical folds, illuminating translucent cellular geometry, photorealistic scientific animation still, strictly zero text.",
+      "subject_motion": "camera arcs smoothly around the translucent 3D brain as rhythmic electric-cyan dopamine pulses surge along the central neural pathways"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "G2",
+      "continues_prev": true,
+      "scene_anchor": "High-contrast 8K 3D biomedical human brain visualization suspended in an obsidian-dark cosmic void, brilliant bioluminescent cyan dopamine pathways firing along the mesolimbic reward system, strictly zero text",
+      "narration": "Every effortless digital dopamine spike trains your neural pathways to demand instant gratification.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Diving macro 3D zoom into synaptic cleft",
+      "end_visual": "Diving deep into the exact same 3D neural cortex: an extreme macro view of a synaptic cleft where glowing amber neurotransmitter vesicles burst rapidly across the microscopic gap between branching cyan dendrites, creating an intense chaotic surge of bio-electrical energy, photorealistic 8K render, strictly zero text.",
+      "subject_motion": "camera dives deep into the synaptic junction as luminous golden-amber neurotransmitter vesicles flood rapidly across the micro-gap between dendrites"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "G3",
+      "continues_prev": false,
+      "scene_anchor": "Macro 8K 3D biomedical model of post-synaptic dendritic receptor channels in deep dark navy space, closing and withdrawing under neurochemical saturation, strictly zero text",
+      "narration": "Why does sitting down to write or study suddenly feel almost physically painful?",
+      "pause_after_sec": 0.38,
+      "camera_verb": "Slow precision macro 3D push-in",
+      "start_visual": "Clean 8K 3D biological cross-section against deep midnight navy: post-synaptic receptor channels embedded in a bioluminescent cell membrane glow under heavy cyan stimulation, with subtle crimson strain rings forming around the receptor mouths, Octane scientific visualization, strictly zero text.",
+      "end_visual": "On the exact same 3D cellular membrane in deep navy, the overwhelmed receptor channels contract and withdraw downward into the lipid bilayer, dimming from bright cyan into a desaturated slate-grey state of down-regulated dormancy, strictly zero text.",
+      "subject_motion": "the overwhelmed 3D receptor channels constrict and slowly retract into the cell membrane, dimming into calm desaturated slate tones"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "G4",
+      "continues_prev": false,
+      "scene_anchor": "Clean organized minimalist oak desk workspace bathed in calm natural morning sunlight, tactile hardcover notebook, glass sand-timer, strictly zero text",
+      "narration": "Overstimulated neural receptors rapidly shut down, making ordinary focus feel like agonizing friction.",
+      "pause_after_sec": 0.32,
+      "camera_verb": "Calm 35mm tabletop tracking pass",
+      "start_visual": "Realistic 35mm documentary shot in vertical 9:16: on a natural solid oak desk in crisp morning daylight, a focused professional calmly flips the smartphone facedown and pushes it firmly thirty centimeters away beside a sleek glass sand-timer trickling fine white sand. Natural wood grain, closed lips, composed focus, zero speaking or mouth movement, strictly zero text.",
+      "end_visual": "On the same sunlit oak desk, the professional pulls a thick linen hardcover journal to center position beside the trickling glass sand-timer, opening to a clean blank cream page in quiet deliberate resolve, closed lips, silent composure, zero speaking or mouth movement, photorealistic 35mm, strictly zero text.",
+      "subject_motion": "the hands calmly slide the facedown phone away and center the open linen notebook beside the trickling glass sand-timer"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "G4",
+      "continues_prev": true,
+      "scene_anchor": "Clean organized minimalist oak desk workspace bathed in calm natural morning sunlight, tactile hardcover notebook, glass sand-timer, strictly zero text",
+      "narration": "Delay that cheap impulse for ninety seconds, and baseline focus chemistry naturally resets.",
+      "pause_after_sec": 0.28,
+      "camera_verb": "Calm authoritative push-in to flow state",
+      "end_visual": "Pushing closer on the exact same sunlit oak desk: the professional writes steadily with a black fountain pen across the cream page in effortless cognitive flow, warm sunbeams illuminating crisp paper texture and relaxed hand motion, closed lips, serene concentration, no mouth movement, strictly zero text.",
+      "subject_motion": "camera pushes softly closer as the fountain pen glides smoothly across the paper while the last white sand grains fall in the timer"
+    }
+  ]
+}

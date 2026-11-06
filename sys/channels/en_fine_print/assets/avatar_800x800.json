@@ -1,0 +1,16 @@
+{
+  "jobId": "logo_en-fine-print",
+  "forgeId": "754cafe5-27cf-499b-a1fb-7b3a0136f92c",
+  "profile_id": "profile_1",
+  "prompt": "Minimalist legal investigation emblem centered on a solid newsprint ivory background (#F4EFE6). A bold midnight navy (#1E293B) magnifying glass loupe centered over balanced justice scales, accented with a single vivid vermilion red (#E63946) circular wax dot at the fulcrum. Pure editorial vector symbol, high contrast, 25% empty margin around all edges, strictly no text, no letters, no words, no numbers, pure icon.",
+  "latency": 26.32,
+  "sha256": "3f49add45e9a10bfc817ecfe0381a09f48a946bfd99d1ff5ba00e7a8ec788c4f",
+  "aspect_ratio": "1:1",
+  "width": 1024,
+  "height": 1024,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "downloaded",
+  "created_at": "2026-11-05T20:59:33.338865+00:00"
+}

@@ -1,0 +1,79 @@
+{
+  "job_id": "en-second-arrow-v3-demo-9x16",
+  "channel_slug": "en-second-arrow",
+  "aspect": "9:16",
+  "title": "The Stoic Secret to Suffering Less: How to Disarm the Second Arrow",
+  "voice": "en-GB-RyanNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "G1",
+      "continues_prev": false,
+      "scene_anchor": "Classical Caravaggio chiaroscuro cinematography in an ancient Roman stone portico, weathered fluted marble column, single-source beam of warm volumetric sunlight piercing dark shadows, floating dust motes, strictly zero text, silent motionless stone",
+      "narration": "Life inevitably strikes every human with unexpected pain, a sudden arrow piercing without warning.",
+      "pause_after_sec": 0.3,
+      "camera_verb": "Contemplative slow museum dolly-in",
+      "start_visual": "Cinematic Caravaggio chiaroscuro realism inside an ancient Roman stone colonnade: an authentic forged iron-tipped archery arrow strikes with force into a cracked fluted marble column, sending white marble dust motes and tiny stone fragments bursting through a solitary golden shaft of sunlight, deep velvety shadows around, oil painting texture, strictly zero text, zero living faces.",
+      "end_visual": "On the same weathered marble column in the dramatic sunbeam, the iron arrow vibrates to a sudden standstill, its dark forged tip embedded deeply into the ancient cracked stone while illuminated dust motes drift lazily through the single sunbeam, photorealistic classical realism, strictly zero text.",
+      "subject_motion": "the iron arrow strikes and quivers to a complete halt inside the cracked marble pillar as illuminated dust motes float through the warm sunbeam"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "G1",
+      "continues_prev": true,
+      "scene_anchor": "Classical Caravaggio chiaroscuro cinematography in an ancient Roman stone portico, weathered fluted marble column, single-source beam of warm volumetric sunlight piercing dark shadows, floating dust motes, strictly zero text, silent motionless stone",
+      "narration": "Yet that first physical strike inflicts only simple injury, lasting until the body heals.",
+      "pause_after_sec": 0.38,
+      "camera_verb": "Slow composed optical pull-back",
+      "end_visual": "Pulling back slowly along the exact same colonnade portico, soft autumn rain begins to patter onto the marble floor outside while the single iron arrow remains lodged harmlessly in the cold cracked column under fading golden light, timeless classical stillness, strictly zero text.",
+      "subject_motion": "camera pulls back smoothly through the colonnade as soft raindrops fall onto the distant stone floor while the arrow remains motionless in the pillar"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "G2",
+      "continues_prev": false,
+      "scene_anchor": "Cinematic Caravaggio chiaroscuro in a dim ancient Roman library study, weathered bronze bust of Marcus Aurelius, warm flickering beeswax candlelight, unrolled parchment scrolls on dark walnut table, strictly zero text, completely motionless bronze sculpture with zero lip movement",
+      "narration": "Why then does our troubled mind turn temporary pain into weeks of bitter agony?",
+      "pause_after_sec": 0.4,
+      "camera_verb": "Slow chiaroscuro push-in on bronze sculpture",
+      "start_visual": "Cinematic chiaroscuro close-up in a dimly lit Roman philosopher's study: a weathered antique bronze bust of Marcus Aurelius with curly beard and stoic, unblinking sculpted eyes rests on a dark walnut table beside a flickering brass oil lamp, warm golden candlelight carving deep dramatic shadows across the motionless metallic face, strictly zero text, zero lip movement.",
+      "end_visual": "Closer on the motionless bronze bust in the flickering candlelit study: warm flame reflections dance slowly across the stoic bronze forehead and still cheeks while in the dark background, a cold iron hourglass steadily drops dark sand grains, museum-grade classical depth, strictly zero text, zero facial movement.",
+      "subject_motion": "camera pushes slowly toward the still bronze bust as warm candlelight flickers across the motionless metal contours"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "G2",
+      "continues_prev": true,
+      "scene_anchor": "Cinematic Caravaggio chiaroscuro in a dim ancient Roman library study, weathered bronze bust of Marcus Aurelius, warm flickering beeswax candlelight, unrolled parchment scrolls on dark walnut table, strictly zero text, completely motionless bronze sculpture with zero lip movement",
+      "narration": "Because our anger forges a second arrow, firing resentment, blame, and regret into ourselves.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "Smooth lateral pan toward shadow forge",
+      "end_visual": "Panning slightly from the still bronze bust to the shadowy stone alcove of the study, an open iron brazier glows with crimson embers where a second jagged iron arrow point glows red-hot on a stone anvil, showering tiny sparks into the dark, Caravaggio high-contrast lighting, strictly zero text.",
+      "subject_motion": "camera pans smoothly from the silent bronze bust to the glowing brazier as crimson embers pulse and release drifting golden sparks"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "G3",
+      "continues_prev": false,
+      "scene_anchor": "Dramatic night storm over an ancient classical marble temple courtyard, torrential rain washing over Doric colonnades, flashes of distant lightning illuminating weathered limestone, strictly zero text, monumental stillness",
+      "narration": "Stoic masters taught that while external storms arrive uninvited, all internal anguish is chosen.",
+      "pause_after_sec": 0.32,
+      "camera_verb": "Solemn low-angle architectural tilt-up",
+      "start_visual": "Dramatic Caravaggio night scene: torrential rain cascades across the worn stone steps of an ancient classical Greek temple, massive fluted limestone columns standing resolute and unmoved against sweeping wind, backlit by sudden distant lightning across storm clouds, strictly zero text.",
+      "end_visual": "Looking up at the majestic temple colonnade: wind and rain whip through the empty portico, yet the solid stone architrave and heavy entablature remain utterly anchored and unshaken in monumental stoic poise, photorealistic historical realism, strictly zero text.",
+      "subject_motion": "sheets of torrential rain sweep across the temple steps as a flash of distant lightning reflects off the wet, unmoved limestone columns"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "G4",
+      "continues_prev": false,
+      "scene_anchor": "Golden morning sunrise dawning over an ancient Roman marble terrace overlooking the calm Mediterranean sea, warm sunbeams illuminating olive branches and ancient mosaic stone tiles, strictly zero text",
+      "narration": "Refuse the bitter judgment, disarm the second arrow, and your inner citadel remains unconquered.",
+      "pause_after_sec": 0.3,
+      "camera_verb": "Calm authoritative slow push-in to center lock",
+      "start_visual": "Breathtaking golden morning sunrise on an ancient Roman marble terrace overlooking a serene turquoise Mediterranean sea: on the ornate geometric stone mosaic floor, a second iron arrow lies cleanly snapped in half, its broken shaft resting harmlessly beside a fallen green olive branch in the warm dawn light, strictly zero text.",
+      "end_visual": "On the same sunlit marble terrace, warm morning sunbeams sweep across the broken iron arrow and illuminate a noble white marble statue of a seated philosopher gazing peacefully toward the calm open sea horizon, majestic classical oil painting serenity, strictly zero text, zero facial movement.",
+      "subject_motion": "camera glides calmly across the sunlit mosaic floor past the broken arrow toward the horizon as golden morning sunbeams illuminate the peaceful marble terrace"
+    }
+  ]
+}

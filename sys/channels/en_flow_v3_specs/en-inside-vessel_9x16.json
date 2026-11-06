@@ -1,0 +1,79 @@
+{
+  "job_id": "en-inside-vessel-v3-demo-9x16",
+  "channel_slug": "en-inside-vessel",
+  "aspect": "9:16",
+  "title": "How Red Blood Cells Squeeze Through Impossible Capillaries",
+  "voice": "en-US-EricNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "G1",
+      "continues_prev": false,
+      "scene_anchor": "Nucleus Medical Media 8K 3D endoscopic biomedical cinematography with glistening subsurface tissue textures and clean surgical fiber-optic rim lighting, strictly zero text",
+      "narration": "Every second, millions of crimson red blood cells race through your pulsing arterial highway.",
+      "pause_after_sec": 0.3,
+      "camera_verb": "Smooth endoscopic forward lumen dolly",
+      "start_visual": "Nucleus Medical Media 8K 3D endoscopic view inside a large human artery: a wide translucent cylindrical blood vessel with moist glistening endothelial walls lit by soft surgical fiber-optic illumination. Dozens of glossy biconcave red blood cells surge forward in translucent amber plasma, photorealistic Octane render, strictly zero text, zero labels, zero overlays.",
+      "end_visual": "Endoscopic camera gliding forward through the pulsing arterial lumen: red blood cells tumble and glide smoothly in laminar flow, their smooth crimson surfaces reflecting subtle surgical highlights as the vessel wall flexes rhythmically with cardiac pulses, strictly zero text.",
+      "subject_motion": "glossy crimson biconcave red blood cells drift and swirl forward in synchronized pulsatile flow through the gleaming arterial lumen"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "G1",
+      "continues_prev": true,
+      "scene_anchor": "Nucleus Medical Media 8K 3D endoscopic biomedical cinematography with glistening subsurface tissue textures and clean surgical fiber-optic rim lighting, strictly zero text",
+      "narration": "Yet the tiniest capillaries feeding your brain are half the diameter of the cells.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "Macro anatomical tracking pass",
+      "end_visual": "Endoscopic camera decelerates as the wide artery branches into much narrower arterioles: the glistening vessel narrows dramatically toward microscopic capillary openings, where red blood cells begin queuing close together in fluid plasma, photorealistic biomedical cinematography, strictly zero text.",
+      "subject_motion": "red blood cells slow down and funnel toward the narrow entrance of a microscopic branching capillary"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "G2",
+      "continues_prev": false,
+      "scene_anchor": "Micro-cellular shallow-DOF biomedical view inside a narrow microscopic capillary channel with glistening endothelial cells and surgical rim lighting, strictly zero text",
+      "narration": "How do rigid-looking cells squeeze through these microscopic tunnels without tearing apart?",
+      "pause_after_sec": 0.38,
+      "camera_verb": "Micro-cellular shallow-DOF focus pull",
+      "start_visual": "High-magnification 3D biomedical view at the entrance of a razor-thin capillary: an eight-micrometer biconcave red blood cell hovers right at the opening of a four-micrometer endothelial tunnel, translucent cell membrane lit by cool surgical rim light, strictly zero text, zero numbers.",
+      "end_visual": "Macro focus pull as fluid pressure pushes the erythrocyte into the mouth of the narrow capillary: the leading edge of the red blood cell begins to compress gently against the smooth glistening endothelial lining without breaking, photorealistic 3D histology, strictly zero text.",
+      "subject_motion": "the front edge of the biconcave red blood cell deforms gently as it presses into the narrow opening of the capillary"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "G2",
+      "continues_prev": true,
+      "scene_anchor": "Micro-cellular shallow-DOF biomedical view inside a narrow microscopic capillary channel with glistening endothelial cells and surgical rim lighting, strictly zero text",
+      "narration": "Their biconcave disc structure folds smoothly like a soft parachute along flexible protein scaffolds.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Intimate macro lateral tracking pass",
+      "end_visual": "Tracking alongside the narrow capillary channel: the red blood cell flexes its spectrin protein cytoskeletal mesh, folding in half into an elegant streamlined parachute shape and gliding effortlessly through the tight lumen, photorealistic subsurface cellular rendering, strictly zero text.",
+      "subject_motion": "the crimson red blood cell folds smoothly into an elongated streamlined parachute shape and glides effortlessly down the narrow channel"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "G3",
+      "continues_prev": false,
+      "scene_anchor": "High-magnification molecular biomedical cross-section with translucent cell membranes and bioluminescent chemical exchange under dark studio illumination, strictly zero text",
+      "narration": "Single file, each cell glides against endothelial walls, releasing life-giving oxygen molecules within milliseconds.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Molecular cross-section orbital arc",
+      "start_visual": "Molecular 3D cross-section view: the folded red blood cell glides in direct contact with the translucent capillary wall, glistening cell membrane glowing under subtle crimson light against a deep navy biological fluid background, strictly zero text, zero labels.",
+      "end_visual": "Orbital arc around the capillary boundary: tiny luminous cyan (#06B6D4) oxygen packets diffuse smoothly from the folded red blood cell through the endothelial tissue membrane into surrounding muscle cells, hyper-detailed molecular medical visualization, strictly zero text.",
+      "subject_motion": "tiny luminous cyan oxygen packets detach from the red blood cell and diffuse across the capillary wall into neighboring tissue"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "G4",
+      "continues_prev": false,
+      "scene_anchor": "Grand 3D anatomical visualization in deep navy space showing illuminated human circulatory vascular tree glowing with millions of vessels, strictly zero text",
+      "narration": "This microscopic gymnastics routine repeats across sixty thousand miles of vessels every heartbeat.",
+      "pause_after_sec": 0.3,
+      "camera_verb": "Grand anatomical pull-back to full figure",
+      "start_visual": "Cinematic 3D biomedical pull-back: zooming out from the glowing microscopic capillary network to reveal intricate branching arterial trees shimmering with pulsating crimson flow throughout an anatomical organ, strictly zero text.",
+      "end_visual": "Full-figure 3D anatomical visualization isolated against deep navy space: a translucent human silhouette illuminated by sixty thousand miles of interconnected glowing crimson and cyan blood vessels pulsing in rhythmic harmony, magnificent Nucleus Medical Media finale, strictly zero text.",
+      "subject_motion": "camera pulls back continuously as microscopic vascular branches expand into a complete glowing human circulatory network pulsing with light"
+    }
+  ]
+}

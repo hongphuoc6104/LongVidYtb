@@ -1,0 +1,79 @@
+{
+  "job_id": "en-crowd-strings-v3-demo-9x16",
+  "channel_slug": "en-crowd-strings",
+  "aspect": "9:16",
+  "title": "How Algorithms Secretly Steer Millions in Sudden Panic",
+  "voice": "en-US-SteffanNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "G1",
+      "continues_prev": false,
+      "scene_anchor": "Fern TV moody 3D architectural diorama in desaturated slate-blue and concrete grey with cyan volumetric light cones, crowd simulation nodes, strictly zero text",
+      "narration": "Millions of users shift opinions simultaneously across social feeds without realizing anyone pushed them.",
+      "pause_after_sec": 0.28,
+      "camera_verb": "Dynamic isometric-to-low-angle 3D architectural dolly",
+      "start_visual": "Moody 3D architectural rendering of a vast brutalist concrete plaza at dusk in desaturated slate-blue (#1E293B): hundreds of stylized matte-grey mannequin human silhouettes walk across a glowing cyan geometric floor grid, illuminated by sharp volumetric spotlights, Fern TV investigative aesthetic, strictly zero text.",
+      "end_visual": "Lower angle 3D push-in across the same slate-blue concrete plaza: the crowd of matte-grey silhouettes smoothly turns ninety degrees in eerie synchronization as cyan grid lines beneath their feet pulse with directional energy, strictly zero text.",
+      "subject_motion": "the stylized mannequin crowd shifts direction simultaneously across the illuminated concrete plaza as cyan floor vectors ripple outward"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "G1",
+      "continues_prev": true,
+      "scene_anchor": "Fern TV moody 3D architectural diorama in desaturated slate-blue and concrete grey with cyan volumetric light cones, crowd simulation nodes, strictly zero text",
+      "narration": "We assume mass digital outrage erupts organically, yet automated systems amplify early reactions fiftyfold.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "Locked orthogonal tracking pass",
+      "end_visual": "Tracking closely behind the same synchronized crowd in the slate-blue plaza: three isolated silhouettes ignite with vivid amber-gold volumetric aura cones that rapidly project towering light beams across the dark crowd, strictly zero text.",
+      "subject_motion": "three amber spotlight cones ignite above individual crowd figures and cast expanding beams across the synchronized masses"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "G2",
+      "continues_prev": false,
+      "scene_anchor": "Fern TV subterranean command chamber with 3D holographic digital radar table, glowing amber and cyan telemetry rings, strictly zero text",
+      "narration": "How does an engineered wave trigger synchronized crowd behavior in under six hours?",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Slow subterranean crane descent",
+      "start_visual": "Atmospheric 3D visualization inside a dark subterranean command bunker: an intricate circular holographic radar table projects concentric rings of pulsing amber telemetry lines and floating geometric node clusters into misty volumetric air, strictly zero text.",
+      "end_visual": "Descending closer to the glowing circular holographic table in the dark bunker: a central geometric crystal node pulses rapidly, sending synchronized cyan ripple waves through thousands of orbiting data particles, Fern TV realism, strictly zero text.",
+      "subject_motion": "the central holographic crystal node pulses intensely, cascading concentric cyan ripple waves across orbiting geometric data rings"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "G2",
+      "continues_prev": true,
+      "scene_anchor": "Fern TV subterranean command chamber with 3D holographic digital radar table, glowing amber and cyan telemetry rings, strictly zero text",
+      "narration": "Subterranean recommendation engines reward volatility, funneling millions of isolated feeds into unified panic.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Precision macro 3D orbital arc",
+      "end_visual": "Orbital arc around the same holographic table: scattered chaotic amber particles are pulled by invisible magnetic vectors into a tight, spinning luminous vortex funneling downward through the table surface, strictly zero text.",
+      "subject_motion": "chaotic amber data particles spiral tightly together into a singular cohesive vortex channel driven by magnetic field lines"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "G3",
+      "continues_prev": false,
+      "scene_anchor": "Fern TV minimalist conceptual diorama with glowing fiber-optic marionette strings suspended over miniature city model, strictly zero text",
+      "narration": "By the time an individual reacts, they are echoing an artificially manufactured consensus.",
+      "pause_after_sec": 0.30,
+      "camera_verb": "Smooth vertical probe crane descent",
+      "start_visual": "Conceptual 3D diorama in midnight slate: glowing golden fiber-optic threads descend from dark mechanical reels high above onto a delicate miniature 3D architectural city model with tiny glowing street nodes, strictly zero text.",
+      "end_visual": "Crane descent along the vertical golden fiber-optic threads: as the mechanical overhead reels rotate, the golden threads pull taut, instantly illuminating entire neighborhoods on the miniature city grid below in warm amber unison, strictly zero text.",
+      "subject_motion": "the golden fiber-optic strings pull upward in crisp mechanical unison, lighting up coordinated sectors across the miniature city below"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "G4",
+      "continues_prev": false,
+      "scene_anchor": "Fern TV signature finale in vast architectural atrium with rotating wireframe globe and volumetric dust motes, strictly zero text",
+      "narration": "You are not forming opinions in a vacuum—this is how crowd strings pull.",
+      "pause_after_sec": 0.28,
+      "camera_verb": "Epic centered wide pull-back to infinite void",
+      "start_visual": "Fern TV signature wide shot in an immense dark brutalist auditorium: a large glowing 3D wireframe globe rotates serenely in center frame, enveloped by fine golden fiber-optic network threads stretching into the shadows, volumetric light rays, strictly zero text.",
+      "end_visual": "Pulling slowly back through the majestic dark auditorium: the glowing wireframe globe and delicate golden network threads stand isolated in contemplative stillness under a single cool spotlight, pure cinematic philosophical payoff, strictly zero text.",
+      "subject_motion": "the illuminated wireframe globe rotates smoothly in place as the camera glides back into the dark cavernous architectural space"
+    }
+  ]
+}

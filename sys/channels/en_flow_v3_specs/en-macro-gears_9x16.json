@@ -1,0 +1,79 @@
+{
+  "job_id": "en-macro-gears-v3-demo-9x16",
+  "channel_slug": "en-macro-gears",
+  "aspect": "9:16",
+  "title": "Why 400-Meter Megaships Flex Without Snapping in Storms",
+  "voice": "en-US-ChristopherNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "G1",
+      "continues_prev": false,
+      "scene_anchor": "Practical Engineering large-scale industrial infrastructure cinematography under crisp directional daylight, ultra-large container vessel in deep-ocean swells, strictly zero text",
+      "narration": "A four-hundred-meter container megaship flexes three feet in ocean swells without snapping.",
+      "pause_after_sec": 0.28,
+      "camera_verb": "High-altitude cinematic aerial push-in",
+      "start_visual": "Cinematic high-altitude aerial view of a massive 400-meter commercial container vessel cutting through deep navy-blue ocean swells under crisp morning daylight. Heavy steel container stacks tower above the hull as natural sea spray breaks across the bow. Practical Engineering documentary realism, strictly zero text, zero letters, zero numbers.",
+      "end_visual": "Closer aerial tracking angle of the same 400-meter container vessel as a long ocean wave crests beneath its center, showing the long steel deck subtly bowing upward with natural structural elasticity, strictly zero text.",
+      "subject_motion": "the colossal steel container vessel surges smoothly forward as long ocean swells lift its midsection, producing a gentle longitudinal elastic flex"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "G1",
+      "continues_prev": true,
+      "scene_anchor": "Practical Engineering large-scale industrial infrastructure cinematography under crisp directional daylight, ultra-large container vessel in deep-ocean swells, strictly zero text",
+      "narration": "Rigid steel would crack under that torque, yet the massive hull bends harmlessly.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "Smooth lateral aerial tracking glide",
+      "end_visual": "Tracking closely alongside the same 400-meter container ship deck, the towering rows of stacked containers sway in coordinated elastic rhythm with the flexing steel hull through rolling water swells, strictly zero text.",
+      "subject_motion": "the camera tracks steadily along the ship's length as towering stacks of shipping containers sway gently in unison with the flexing hull"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "G2",
+      "continues_prev": false,
+      "scene_anchor": "Wendover industrial engineering 3D technical cutaway under crisp studio rim lighting, revealing internal steel box girders and structural bulkheads, strictly zero text",
+      "narration": "How does twenty-four thousand tons of steel absorb continuous ocean pounding without fracturing?",
+      "pause_after_sec": 0.32,
+      "camera_verb": "Precision cutaway macro zoom-in",
+      "start_visual": "Crisp 3D engineering cutaway model of a container ship hull cross-section floating in a dark technical studio: thick high-tensile steel double-bottom plates and heavy vertical bulkheads glow with subtle cyan stress lines under directional overhead lighting, Wendover Productions documentary clarity, strictly zero text.",
+      "end_visual": "Closer technical zoom inside the same 3D double-hull cutaway, highlighting massive tubular steel torsion box girders running along the upper deck edge, redistributing torsional strain, strictly zero text.",
+      "subject_motion": "the camera zooms smoothly inside the structural hull cross-section as subtle cyan load lines trace through the internal steel torsion boxes"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "G2",
+      "continues_prev": true,
+      "scene_anchor": "Wendover industrial engineering 3D technical cutaway under crisp studio rim lighting, revealing internal steel box girders and structural bulkheads, strictly zero text",
+      "narration": "Heavy longitudinal torsion boxes and double hulls redirect twisting energy down the keel.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Smooth isometric orbit pull-back",
+      "end_visual": "Pulling back along the same 3D internal structural girder model, a wave of mechanical energy pulses smoothly through the welded steel ribcage and central keel girder, dissipating evenly without stress peaks, strictly zero text.",
+      "subject_motion": "the camera pulls back isometrically as rhythmic load vectors flow harmlessly along the welded steel longitudinal frames and central keel"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "G3",
+      "continues_prev": false,
+      "scene_anchor": "Practical Engineering heavy industrial macro cinematography on open ship deck under bright daylight, weathered steel container corner casting and forged twistlock, strictly zero text",
+      "narration": "On deck, forged steel twistlocks allow stacks to shift slightly, dissipating colossal inertia.",
+      "pause_after_sec": 0.30,
+      "camera_verb": "Crisp macro mechanical dolly push-in",
+      "start_visual": "Extreme macro cinematography on the open industrial deck of a ship: a heavy forged-steel mechanical twistlock lever locks securely into the oval corner casting hole between two shipping containers, weathered industrial paint and grease, crisp daylight, strictly zero text.",
+      "end_visual": "Macro push-in on the exact same forged steel twistlock mechanism as microscopic elastic play inside the steel collar smoothly dampens the lashing rod tension under load, photorealistic engineering macro, strictly zero text.",
+      "subject_motion": "the forged steel twistlock and heavy tensioned lashing rod absorb subtle microscopic shifting movement under heavy physical load"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "G4",
+      "continues_prev": false,
+      "scene_anchor": "Wendover epic maritime infrastructure cinematography at golden hour sunset, massive container ship steaming toward open ocean horizon, strictly zero text",
+      "narration": "Modern megastructures survive brutal ocean forces by yielding in calculated structural rhythm.",
+      "pause_after_sec": 0.28,
+      "camera_verb": "Authoritative wide horizon pull-back",
+      "start_visual": "Breathtaking wide telephoto cinematography at golden hour sunset: the loaded 400-meter container megaship glides steadily out of an industrial harbor fairway into the open ocean, glassy water reflecting warm golden light, distant port crane silhouettes, strictly zero text.",
+      "end_visual": "Wide majestic horizon pull-back as the container ship steams calmly into the vast golden ocean sunset, its massive steel structure navigating seamlessly between sky and water, strictly zero text.",
+      "subject_motion": "the massive container megaship cruises majestically toward the open horizon while the camera pulls smoothly back across glassy sunset water"
+    }
+  ]
+}

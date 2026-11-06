@@ -1,0 +1,79 @@
+{
+  "job_id": "en-cold-case-ink-v3-demo-9x16",
+  "channel_slug": "en-cold-case-ink",
+  "aspect": "9:16",
+  "title": "The 1888 Whitechapel Fog That Hid Britain's Darkest Mystery",
+  "voice": "en-GB-RyanNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "G1",
+      "continues_prev": false,
+      "scene_anchor": "LEMMiNO atmospheric noir 3D diorama of Victorian London rooftops and cobblestone alleys under dense volumetric midnight fog, strictly zero text",
+      "narration": "At four in the morning, Victorian London vanished into heavy river fog and silence.",
+      "pause_after_sec": 0.28,
+      "camera_verb": "Brooding noir crane descent through volumetric fog",
+      "start_visual": "Cinematic high-angle 3D diorama of Victorian London brick tenements and slate rooftops shrouded in dense swirling Thames river fog at midnight. A solitary flickering gas lamp casts a cold golden pool of light onto damp wet slate. LEMMiNO documentary noir aesthetic, deep midnight slate and charcoal tones, strictly zero words, zero letters, zero numbers.",
+      "end_visual": "Descending slowly through the thick volumetric mist down toward a deserted Victorian brick alleyway, damp cobblestones glistening with gaslight reflections under heavy night shadows, strictly zero text.",
+      "subject_motion": "the camera descends smoothly through drifting volumetric river fog toward the wet cobblestones reflecting flickering gaslight"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "G1",
+      "continues_prev": true,
+      "scene_anchor": "LEMMiNO atmospheric noir 3D diorama of Victorian London rooftops and cobblestone alleys under dense volumetric midnight fog, strictly zero text",
+      "narration": "Minutes later, an unmoving shadow on a cobblestone landing sparked Britain's most baffling manhunt.",
+      "pause_after_sec": 0.38,
+      "camera_verb": "Slow low-angle forward tracking glide",
+      "end_visual": "Low-angle tracking along the same wet cobblestone alley: at the base of dark exterior wooden stairs, a lone unmoving dark silhouette in an overcoat stands motionless under a dramatic crimson rim light before dissolving into the shadows, strictly zero text.",
+      "subject_motion": "the camera tracks along the glistening wet cobblestones toward the dark staircase where a motionless silhouette dissolves into swirling mist"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "G2",
+      "continues_prev": false,
+      "scene_anchor": "LEMMiNO forensic 3D evidence table in dark archive room with brass dividers, antique magnifying lens, and red thread pins, strictly zero text",
+      "narration": "How did a phantom predator strike five crowded alleys without leaving one conclusive clue?",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Forensic macro perpendicular push-in",
+      "start_visual": "Forensic tabletop close-up in a dark archive room: an antique wooden table holds aged blank sepia parchment maps displaying abstract ink contours, brass compass dividers, and small steel pins under a single warm tungsten desk lamp, strictly zero words, zero letters, zero numbers.",
+      "end_visual": "Macro push-in through the circular glass of an antique brass magnifying lens resting on the sepia map: five small brass pins cast long eerie shadows across the blank textured parchment paper, strictly zero text.",
+      "subject_motion": "the antique brass magnifying glass glides slowly across the parchment map as the five pinned brass markers cast shifting shadows"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "G2",
+      "continues_prev": true,
+      "scene_anchor": "LEMMiNO forensic 3D evidence table in dark archive room with brass dividers, antique magnifying lens, and red thread pins, strictly zero text",
+      "narration": "Scotland Yard pinned crimson evidence threads across street dioramas, yet every suspect alibi held firm.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "Smooth lateral tracking pass along evidence string",
+      "end_visual": "Tracking smoothly across the same aged map on the wooden table: a taut crimson-red silk thread connects the five brass pins in a jagged geometric polygon, glowing with subtle forensic contrast against the weathered paper, strictly zero text.",
+      "subject_motion": "the camera glides steadily along the taut crimson silk thread as it vibrates slightly under tension between the five brass pins"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "G3",
+      "continues_prev": false,
+      "scene_anchor": "LEMMiNO vintage police archive basement with steel filing cabinets, blank manila dossiers, and blank red wax seals, strictly zero text",
+      "narration": "Century-old inquest files preserve hundreds of theories, but zero confirmed fingerprint impressions.",
+      "pause_after_sec": 0.30,
+      "camera_verb": "Solemn slow dolly push-in",
+      "start_visual": "Atmospheric interior shot of a dim Victorian police archive basement: rows of heavy dark-oak filing drawers stand open, revealing thick bundles of aged blank manila dossiers tied with black twill tape and sealed with blank red wax emblems, soft dust motes in green banker's lamp light, strictly zero words, zero letters, zero numbers.",
+      "end_visual": "Slow macro push-in on an open blank dossier: a pristine brass fingerprint magnifying loupe sits over a clean blank cream card beside a cold iron key, bathed in solemn emerald archive light, strictly zero text.",
+      "subject_motion": "the camera pushes solemnly toward the open file drawer as delicate dust motes float through the green lamp beam"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "G4",
+      "continues_prev": false,
+      "scene_anchor": "LEMMiNO atmospheric panoramic silhouette of 19th-century London across the dark River Thames at dawn, strictly zero text",
+      "narration": "The witnesses faded into history—leaving an eternal unsolved mystery frozen in London mist.",
+      "pause_after_sec": 0.28,
+      "camera_verb": "Authoritative wide panoramic pull-back into fog",
+      "start_visual": "Wide cinematic establishing shot of Victorian London across the black water of the River Thames in the early dawn: tall masted sailing ships and distant cathedral dome silhouettes emerge through thick silver mist, cold monochrome chiaroscuro lighting, strictly zero text.",
+      "end_visual": "Wide panoramic pull-back as morning river fog rolls across the dark water, slowly obscuring the Victorian skyline until only a faint silver gaslight glimmers in the infinite cold grey dawn, definitive LEMMiNO unsolved mystery conclusion, strictly zero text.",
+      "subject_motion": "the camera pulls slowly back into the cold dawn mist as thick silver fog drifts across the quiet surface of the River Thames"
+    }
+  ]
+}

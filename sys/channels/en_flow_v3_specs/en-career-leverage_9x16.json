@@ -1,0 +1,79 @@
+{
+  "job_id": "en-career-leverage-v3-demo-9x16",
+  "channel_slug": "en-career-leverage",
+  "aspect": "9:16",
+  "title": "Why Hard Workers Get Passed Over — The Brutal Mathematics of Career Leverage",
+  "voice": "en-US-EricNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "G1",
+      "continues_prev": false,
+      "scene_anchor": "High-rise corporate corner office boardroom overlooking Manhattan skyline at dusk photographed on 35mm cinema glass at f/2.0, high-contrast WSJ editorial photojournalism, dark walnut conference table, architectural glass reflections, strictly zero text",
+      "narration": "In executive salary negotiations, real leverage is utterly silent—and hard work rarely creates it.",
+      "pause_after_sec": 0.28,
+      "camera_verb": "Authoritative low-angle 35mm push-in",
+      "start_visual": "WSJ high-contrast editorial photojournalism still in vertical 9:16: a confident senior executive in a tailored charcoal blazer sits calmly across a massive dark walnut boardroom table in a high-rise corner office. A floor-to-ceiling glass wall behind reveals the Manhattan skyline at dusk with glittering office lights. High dynamic range, sharp architectural contrast, closed lips, unshakeable composed eye contact, zero speaking or mouth movement, strictly zero text.",
+      "end_visual": "Pushing closer on the same executive across the dark walnut table: cold twilight reflections gleam on the glass wall while warm brass overhead directional lighting chisels sharp facial planes, closed lips, steady formidable silence, zero mouth movement, photorealistic editorial still, strictly zero text.",
+      "subject_motion": "camera pushes slowly and authoritatively toward the seated executive as twilight dusk deepens outside the panoramic glass window"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "G1",
+      "continues_prev": true,
+      "scene_anchor": "High-rise corporate corner office boardroom overlooking Manhattan skyline at dusk photographed on 35mm cinema glass at f/2.0, high-contrast WSJ editorial photojournalism, dark walnut conference table, architectural glass reflections, strictly zero text",
+      "narration": "Corporate hierarchies reward asymmetric market value, not the number of hours you endure.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "Smooth architectural lateral tracking pass",
+      "end_visual": "Tracking laterally across the exact same corner boardroom: past the seated executive, a younger professional works late at a glass side desk surrounded by glowing architectural models and skyline reflections, closed lips, intense professional composure, zero mouth movement, WSJ editorial contrast, strictly zero text.",
+      "subject_motion": "camera glides smoothly laterally past the executive toward the illuminated glass corridor reflecting the evening Manhattan skyline"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "G2",
+      "continues_prev": false,
+      "scene_anchor": "Macro 35mm editorial tabletop shot on dark slate desk with heavy brushed-titanium fountain pen and black stitched leather portfolio, sharp directional tungsten side-light, strictly zero text",
+      "narration": "Why do company workhorses get passed over while calm strategists command massive raises?",
+      "pause_after_sec": 0.38,
+      "camera_verb": "Macro 35mm precision push-in",
+      "start_visual": "Tactile 35mm macro shot in vertical 9:16: on a dark honed-slate desk, a heavy brushed-titanium fountain pen rests beside a rich stitched black leather executive portfolio. Sharp metallic rim light catches the pen nib and polished brass fittings under warm tungsten side-light, shallow depth of field f/2.0, strictly zero readable words, letters, or digits.",
+      "end_visual": "On the same dark slate desk, a calm hand in a crisp white cuff enters frame and firmly caps the heavy titanium pen with a solid mechanical click, resting it squarely on the leather portfolio, tangible executive weight, photorealistic 35mm, strictly zero text.",
+      "subject_motion": "a calm hand in a tailored cuff smoothly caps the heavy titanium fountain pen and rests it firmly on the black leather portfolio"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "G3",
+      "continues_prev": false,
+      "scene_anchor": "Minimalist high-ceiling executive strategy suite with solid marble conference table, cold natural architectural daylight, intense strategic poker faces, strictly zero text",
+      "narration": "Organizations never price compensation on personal effort; they price your exact replacement cost.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Composed wide boardroom push-in",
+      "start_visual": "Editorial photojournalism vertical 9:16 shot in a modern glass boardroom: three corporate decision-makers sit around a sleek white-veined black marble conference table in calculated silence. Cold architectural window daylight cuts sharp geometric shadows across tailored suits. Closed lips, calculating poker faces, zero speaking or mouth movement, Harvard Business Review aesthetic, strictly zero text.",
+      "end_visual": "Pushing closer across the black marble table: the lead negotiator sits motionless with hands steepled on the polished stone, gazing across the table with total unhurried confidence, closed lips, silent composure, zero mouth movement, photorealistic high contrast, strictly zero text.",
+      "subject_motion": "camera pushes slowly across the marble table toward the lead negotiator sitting in motionless, formidable composure"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "G3",
+      "continues_prev": true,
+      "scene_anchor": "Minimalist high-ceiling executive strategy suite with solid marble conference table, cold natural architectural daylight, intense strategic poker faces, strictly zero text",
+      "narration": "When you monopolize a critical business bottleneck, you quietly dictate the terms of engagement.",
+      "pause_after_sec": 0.32,
+      "camera_verb": "Intimate low-angle executive portrait push",
+      "end_visual": "Low-angle close-up of the exact same lead negotiator at the head of the marble table: a subtle confident tilt of the chin, sharp jawline lit by cold natural window light, eyes locked in absolute strategic mastery, closed lips, zero speaking or lip movement, photorealistic 35mm editorial still, strictly zero text.",
+      "subject_motion": "camera pushes slowly upward from table level as the negotiator holds an unyielding, confident gaze in complete silence"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "G4",
+      "continues_prev": false,
+      "scene_anchor": "Sunlit modern corporate executive corridor with frosted glass partitions, polished concrete floors, and warm brass architectural accents, strictly zero text",
+      "narration": "Build undeniable outside alternatives before negotiations start, because true leverage is walking away.",
+      "pause_after_sec": 0.28,
+      "camera_verb": "Authoritative WSJ pull-back tracking shot",
+      "start_visual": "Cinematic vertical 9:16 editorial shot: an executive in a tailored charcoal coat picks up a structured leather briefcase from a boardroom chair, turns with calm decisive posture, and walks toward the glass corridor exit into warm golden elevator lobby light. Closed lips, composed executive expression, zero speaking or mouth movement, strictly zero text.",
+      "end_visual": "Authoritative pull-back tracking down the sleek glass corridor: the executive strides forward into the warm elevator lobby with unhurried sovereign poise, reflections shimmering on polished concrete, leaving the glass boardroom behind in complete autonomy, closed lips, zero speaking or mouth movement, photorealistic 35mm, strictly zero text.",
+      "subject_motion": "camera pulls smoothly back down the modern glass corridor as the executive strides confidently toward the warm golden lobby lights"
+    }
+  ]
+}

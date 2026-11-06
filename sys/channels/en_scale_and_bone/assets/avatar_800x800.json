@@ -1,0 +1,16 @@
+{
+  "jobId": "logo_en-scale-and-bone",
+  "forgeId": "5a51dcad-3981-441a-a453-08ed1c989b71",
+  "profile_id": "profile_13",
+  "prompt": "Minimalist biomechanics anatomy emblem centered on a solid warm ivory background (#F5F2EB). A bold stylized cross-section of a vertebrate bone vertebra curving seamlessly into a logarithmic golden spiral, rendered in deep forest moss green (#2D5A3A) with a terracotta amber (#C85A32) marrow core. Pure flat vector symbol, sharp graphic contours, high contrast, 25% empty margin around all edges, strictly no text, no letters, no words, no numbers, pure icon.",
+  "latency": 35.17,
+  "sha256": "db680a0c8db7e6a339c43f65a585f48416de63ee00c8c515e214588833fe11d3",
+  "aspect_ratio": "1:1",
+  "width": 1024,
+  "height": 1024,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "downloaded",
+  "created_at": "2026-11-05T20:58:40.128002+00:00"
+}

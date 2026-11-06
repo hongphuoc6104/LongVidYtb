@@ -1,0 +1,16 @@
+{
+  "jobId": "logo_en-macro-gears",
+  "forgeId": "22728fa8-40df-4a3a-bf4d-f3d025717513",
+  "profile_id": "profile_18",
+  "prompt": "Minimalist heavy civil engineering emblem centered on a solid warm cream background (#F7F2EB). Two interlocking dark slate navy (#1E293B) precision gear cogs framing a bold industrial orange (#EA580C) structural truss triangle at the center. Pure Swiss graphic vector symbol, high contrast, 25% empty margin around all edges, strictly no text, no letters, no words, no numbers, pure icon.",
+  "latency": 33.78,
+  "sha256": "81cce57638d0edd37eaa8161e0d158dc631af631d3026791673cd0c33240e6b8",
+  "aspect_ratio": "1:1",
+  "width": 1024,
+  "height": 1024,
+  "shot_type": "full_scene",
+  "type": "image",
+  "source": "google-flow-browser",
+  "status": "downloaded",
+  "created_at": "2026-11-05T20:59:20.073240+00:00"
+}

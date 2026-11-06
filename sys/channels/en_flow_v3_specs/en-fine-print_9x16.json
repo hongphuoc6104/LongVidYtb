@@ -1,0 +1,79 @@
+{
+  "job_id": "en-fine-print-v3-demo-9x16",
+  "channel_slug": "en-fine-print",
+  "aspect": "9:16",
+  "title": "Why Terms of Service Secretly Ban You From Court",
+  "voice": "en-US-RogerNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "G1",
+      "continues_prev": false,
+      "scene_anchor": "CNBC Make It investigative documentary cinematography on dark mahogany executive desk with warm tungsten side lighting, abstract embossed parchment sheets, strictly zero text",
+      "narration": "Tapping I Agree on a routine phone update takes two seconds and zero thought.",
+      "pause_after_sec": 0.28,
+      "camera_verb": "Smooth 35mm tabletop macro push-in",
+      "start_visual": "Realistic 35mm macro close-up on a dark polished mahogany desk under warm tungsten side-lighting: a sleek matte-black smartphone rests beside a thick stack of textured cream parchment documents displaying clean abstract embossed geometric lines and an ornate red wax seal, LegalEagle investigative aesthetic, photorealistic f/2.0, strictly zero words, zero letters, zero numbers.",
+      "end_visual": "On the same mahogany desk under warm side-lighting, a fingertip taps the blank glowing screen of the matte-black smartphone, causing a soft amber light pulse to radiate across the blank embossed parchment documents, strictly zero text.",
+      "subject_motion": "a human hand gently taps the smartphone screen beside the cream parchment document as a subtle amber light wave reflects off the dark wood"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "G1",
+      "continues_prev": true,
+      "scene_anchor": "CNBC Make It investigative documentary cinematography on dark mahogany executive desk with warm tungsten side lighting, abstract embossed parchment sheets, strictly zero text",
+      "narration": "Yet buried inside that dense contract is a clause silently waiving your right to trial.",
+      "pause_after_sec": 0.38,
+      "camera_verb": "Smooth lateral tabletop tracking glide",
+      "end_visual": "Gliding across the exact same candlelit mahogany desk, the cream parchment document unfolds to reveal an intricate deep-embossed geometric lattice pattern beneath a heavy brass paperweight, lit by dramatic chiaroscuro shadows, strictly zero text.",
+      "subject_motion": "the camera glides smoothly across the mahogany table as the heavy parchment document settles firmly under the solid brass paperweight"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "G2",
+      "continues_prev": false,
+      "scene_anchor": "LegalEagle forensic tabletop documentary lighting on dark slate surface with brass magnifying loupe and abstract embossed document lines, strictly zero text",
+      "narration": "Why do ninety-nine percent of consumer tech companies demand mandatory arbitration before you register?",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Precision macro perpendicular push-in",
+      "start_visual": "High-contrast forensic macro view on a dark slate surface: a heavy brushed-brass magnifying loupe hovers over a pristine white card displaying rows of abstract geometric micro-embossed lines, warm directional spotlight casting sharp shadows, strictly zero words, zero letters, zero numbers.",
+      "end_visual": "Pushing closer through the circular glass of the brass magnifying loupe on the dark slate surface, an optical translucent gold spotlight illuminates an abstract geometric maze emblem etched deep into the paper fibers, strictly zero text.",
+      "subject_motion": "the heavy brass magnifying loupe glides slowly across the textured paper as a golden optical beam focuses through the glass lens"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "G2",
+      "continues_prev": true,
+      "scene_anchor": "LegalEagle forensic tabletop documentary lighting on dark slate surface with brass magnifying loupe and abstract embossed document lines, strictly zero text",
+      "narration": "It forces disputes behind closed doors, blocking public lawsuits and keeping corporate settlements secret.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "Smooth optical pull-back and rack focus",
+      "end_visual": "Pulling back slightly on the same dark slate surface, two heavy polished dark-walnut miniature folding screens swing shut around the paper and brass loupe, casting deep moody shadows across the frame, strictly zero text.",
+      "subject_motion": "the camera pulls back smoothly as twin polished walnut panels fold closed around the illuminated document, sealing it in deep shadow"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "G3",
+      "continues_prev": false,
+      "scene_anchor": "Symmetrical solemn legal boardroom cinematography with dark oak wood paneling, polished brass balance scale of justice, strictly zero text",
+      "narration": "A single consumer faces steep arbitration fees, while companies protect billions in disputed revenue.",
+      "pause_after_sec": 0.32,
+      "camera_verb": "Authoritative low-angle slow push-in",
+      "start_visual": "Solemn symmetrical 35mm cinematography inside a dim oak-paneled chamber: a gleaming brass balance scale of justice stands on an empty table under a single overhead recessed cone of warm gallery light, strictly zero words, zero letters, zero numbers.",
+      "end_visual": "Slow push-in on the same brass balance scale as one pan carrying a single small brass weight sinks down while the other pan loaded with heavy gold bars rises effortlessly into balance, moody documentary lighting, strictly zero text.",
+      "subject_motion": "the gleaming brass balance scale tilts deliberately as the single brass weight depresses one pan under directional overhead light"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "G4",
+      "continues_prev": false,
+      "scene_anchor": "CNBC Make It executive editorial cinematography on warm walnut library desk, rich black leather folio binder and brass ribbon seal, strictly zero text",
+      "narration": "You surrendered your legal leverage long before reading the very first sentence.",
+      "pause_after_sec": 0.28,
+      "camera_verb": "Composed editorial center-lock pull-back",
+      "start_visual": "Editorial 35mm close-up on a warm walnut library desk: two calm executive hands firmly close a rich black leather portfolio binder tied with a crimson silk ribbon and stamped with a blank circular brass seal, warm ambient lamp bokeh behind, strictly zero text.",
+      "end_visual": "Pulling back into a composed centered wide shot on the quiet walnut library desk, the closed black leather portfolio rests motionless in warm golden light beside an antique brass desk lamp, conveying definitive legal finality, strictly zero text.",
+      "subject_motion": "the hands calmly tie the crimson ribbon around the leather portfolio and step back as the camera pulls smoothly to a centered wide lock"
+    }
+  ]
+}
