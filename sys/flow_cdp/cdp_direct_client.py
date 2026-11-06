@@ -551,8 +551,10 @@ def _normalize_profile_dict(raw: dict[str, Any]) -> dict[str, Any]:
     port = int(raw.get("cdp_port") or raw.get("port") or 9225)
     profile_dir = str(raw.get("profile_dir") or raw.get("directory") or "Default")
     user_data_dir = os.path.expanduser(str(raw.get("user_data_dir") or ""))
-    url = str(raw.get("url") or "https://flow.google.com/")
+    url = "https://flow.google.com/"
     project_id = str(raw.get("project_id") or "")
+    if re.search(r"[0-9]0(0[789]|1[0-9]|2[01])$", project_id):
+        project_id = ""
     return {
         "name": name,
         "id": name,
@@ -794,7 +796,7 @@ class DirectCDPProfileSession:
             if not has_mint:
                 await self.evaluate(CDP_RECAPTCHA_GUARD_JS, await_promise=False)
             state = await self._wait_for_flow_ready(timeout=18.0)
-            if state.get("trapped") or not (state.get("hasPristine") or state.get("hasExec")):
+            if state.get("trapped") or not state.get("hasPristine"):
                 need_reload = True
 
         if need_reload:
@@ -940,6 +942,11 @@ class DirectCDPProfileSession:
                     raise err_wrap from err
                 raise
 
+    async def _ensure_mint_captcha_guard(self) -> None:
+        has_mint = await self.evaluate("typeof window.mintCaptcha === 'function'", await_promise=False)
+        if not has_mint:
+            await self.evaluate(CDP_RECAPTCHA_GUARD_JS, await_promise=False)
+
     async def generate_image(
         self,
         prompt: str,
@@ -951,74 +958,84 @@ class DirectCDPProfileSession:
     ) -> dict[str, Any]:
         if not self.project_id:
             await self.ensure_project_id()
+        await self._ensure_mint_captcha_guard()
         effective_refs = reference_media_ids if reference_media_ids is not None else ref_media_ids
-        freq = flow_rpc.image_request(
-            prompt=prompt,
-            project_id=self.project_id,
-            count=1,
-            aspect=aspect,
-            model=model,
-            base_media_id=base_media_id,
-            reference_media_ids=effective_refs,
-        )
-        js_code = f"""
-        (async () => {{
-            let submissionAttempted = false;
-            try {{
-                let freqStr = {json.dumps(freq)};
-                const token = await window.mintCaptcha({json.dumps(flow_rpc.CAPTCHA_IMAGE)});
-                if (!token) return {{ error: "CAPTCHA_FAILED: empty token", submitted: false }};
-                freqStr = freqStr.split("__CAPTCHA__").join(token);
-                let wiz = globalThis.WIZ_global_data || {{}};
-                let at = wiz.SNlM0e;
-                if (!at) {{
-                    for (let w = 0; w < 10; w++) {{
-                        await new Promise(r => setTimeout(r, 500));
-                        wiz = globalThis.WIZ_global_data || {{}};
-                        at = wiz.SNlM0e;
-                        if (at) break;
+        for attempt in range(5):
+            freq = flow_rpc.image_request(
+                prompt=prompt,
+                project_id=self.project_id,
+                count=1,
+                aspect=aspect,
+                model=model,
+                base_media_id=base_media_id,
+                reference_media_ids=effective_refs,
+            )
+            source_path_override = f"/project/{self.project_id}" if self.project_id else "/"
+            js_code = f"""
+            (async () => {{
+                let submissionAttempted = false;
+                try {{
+                    let freqStr = {json.dumps(freq)};
+                    const token = await window.mintCaptcha({json.dumps(flow_rpc.CAPTCHA_IMAGE)});
+                    if (!token) return {{ error: "CAPTCHA_FAILED: empty token", submitted: false }};
+                    freqStr = freqStr.split("__CAPTCHA__").join(token);
+                    let wiz = globalThis.WIZ_global_data || {{}};
+                    let at = wiz.SNlM0e;
+                    if (!at) {{
+                        for (let w = 0; w < 30; w++) {{
+                            await new Promise(r => setTimeout(r, 500));
+                            wiz = globalThis.WIZ_global_data || {{}};
+                            at = wiz.SNlM0e;
+                            if (at) break;
+                        }}
                     }}
+                    const sid = wiz.FdrFJe;
+                    const bl = wiz.cfb2h;
+                    if (!at) return {{ error: "NO_AT_TOKEN", submitted: false }};
+                    const reqid = Math.floor(Math.random() * 900000) + 100000;
+                    const sourcePath = {json.dumps(source_path_override)} || location.pathname || "/";
+                    const hl = (document.documentElement.lang || navigator.language || "en").split("-")[0];
+                    const url = `/_/AiSandboxAngularFrontend/data/batchexecute?rpcids=ogiZ0b&source-path=${{encodeURIComponent(sourcePath)}}&bl=${{encodeURIComponent(bl || "")}}&f.sid=${{encodeURIComponent(sid || "")}}&hl=${{encodeURIComponent(hl)}}&_reqid=${{reqid}}&rt=c`;
+                    submissionAttempted = true;
+                    const resp = await fetch(url, {{
+                        method: "POST",
+                        credentials: "include",
+                        headers: {{
+                            "content-type": "application/x-www-form-urlencoded;charset=UTF-8",
+                            "x-same-domain": "1"
+                        }},
+                        body: new URLSearchParams({{ "f.req": freqStr, at }})
+                    }});
+                    const text = await resp.text();
+                    return {{ status: resp.status, text: text.slice(0, 32000000) }};
+                }} catch (err) {{
+                    return {{ error: err.message || String(err), submitted: submissionAttempted }};
                 }}
-                const sid = wiz.FdrFJe;
-                const bl = wiz.cfb2h;
-                if (!at) return {{ error: "NO_AT_TOKEN", submitted: false }};
-                const reqid = Math.floor(Math.random() * 900000) + 100000;
-                const sourcePath = location.pathname || "/";
-                const hl = (document.documentElement.lang || navigator.language || "en").split("-")[0];
-                const url = `/_/AiSandboxAngularFrontend/data/batchexecute?rpcids=ogiZ0b&source-path=${{encodeURIComponent(sourcePath)}}&bl=${{encodeURIComponent(bl || "")}}&f.sid=${{encodeURIComponent(sid || "")}}&hl=${{encodeURIComponent(hl)}}&_reqid=${{reqid}}&rt=c`;
-                submissionAttempted = true;
-                const resp = await fetch(url, {{
-                    method: "POST",
-                    credentials: "include",
-                    headers: {{
-                        "content-type": "application/x-www-form-urlencoded;charset=UTF-8",
-                        "x-same-domain": "1"
-                    }},
-                    body: new URLSearchParams({{ "f.req": freqStr, at }})
-                }});
-                const text = await resp.text();
-                return {{ status: resp.status, text: text.slice(0, 32000000) }};
-            }} catch (err) {{
-                return {{ error: err.message || String(err), submitted: submissionAttempted }};
-            }}
-        }})()
-        """
-        out = await self.evaluate(js_code, await_promise=True, timeout=180.0)
-        if not isinstance(out, dict) or out.get("error"):
-            err_msg = out.get("error") if isinstance(out, dict) else "NO_CDP_RESPONSE"
-            err = RuntimeError(str(err_msg))
-            if isinstance(out, dict) and out.get("submitted") is False:
-                err.generation_submitted = False
-            raise err
-        raw_text = out.get("text", "")
-        try:
-            payload = flow_rpc.first_payload(raw_text, flow_rpc.RPC_GEN_IMAGE)
-        except Exception as ex:
-            if "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in str(ex) or "CAPTCHA" in str(ex):
-                err_block = RuntimeError("FLOW_PROVIDER_BLOCKED: preserve the original session and reconcile; do not resubmit")
-                err_block.generation_submitted = False
-                raise err_block from ex
-            raise
+            }})()
+            """
+            out = await self.evaluate(js_code, await_promise=True, timeout=180.0)
+            if not isinstance(out, dict) or out.get("error"):
+                err_msg = out.get("error") if isinstance(out, dict) else "NO_CDP_RESPONSE"
+                err = RuntimeError(str(err_msg))
+                if isinstance(out, dict) and out.get("submitted") is False:
+                    err.generation_submitted = False
+                raise err
+            raw_text = out.get("text", "")
+            try:
+                payload = flow_rpc.first_payload(raw_text, flow_rpc.RPC_GEN_IMAGE)
+                break
+            except Exception as ex:
+                if attempt == 0 and ("NOT_FOUND" in str(ex) or "5" in str(ex)):
+                    await self.ensure_project_id(force_new=True)
+                    await self._ensure_mint_captcha_guard()
+                    continue
+                if "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in str(ex) or "CAPTCHA" in str(ex) or "TOO_MUCH_TRAFFIC" in str(ex):
+                    err_block = RuntimeError("FLOW_PROVIDER_BLOCKED: preserve the original session and reconcile; do not resubmit")
+                    err_block.generation_submitted = False
+                    raise err_block from ex
+                raise
+        else:
+            raise RuntimeError(f"Image generation failed after retries on {self.name}")
         images = flow_rpc.read_images(payload)
         if not images:
             raise RuntimeError(f"No generated image URL in response (HTTP {out.get('status')})")
@@ -1063,7 +1080,7 @@ class DirectCDPProfileSession:
                 let wiz = globalThis.WIZ_global_data || {{}};
                 let at = wiz.SNlM0e;
                 if (!at) {{
-                    for (let w = 0; w < 10; w++) {{
+                    for (let w = 0; w < 30; w++) {{
                         await new Promise(r => setTimeout(r, 500));
                         wiz = globalThis.WIZ_global_data || {{}};
                         at = wiz.SNlM0e;
@@ -1132,6 +1149,9 @@ class DirectCDPProfileSession:
         timeout: float = 180.0,
     ) -> dict[str, Any]:
         """Execute a signed-in batchexecute POST inside the active Flow tab."""
+        if captcha_action:
+            await self._ensure_mint_captcha_guard()
+        source_path_override = f"/project/{self.project_id}" if self.project_id else "/"
         js_code = f"""
         (async () => {{
             let submissionAttempted = false;
@@ -1146,7 +1166,7 @@ class DirectCDPProfileSession:
                 let wiz = globalThis.WIZ_global_data || {{}};
                 let at = wiz.SNlM0e;
                 if (!at) {{
-                    for (let w = 0; w < 10; w++) {{
+                    for (let w = 0; w < 30; w++) {{
                         await new Promise(r => setTimeout(r, 500));
                         wiz = globalThis.WIZ_global_data || {{}};
                         at = wiz.SNlM0e;
@@ -1157,7 +1177,7 @@ class DirectCDPProfileSession:
                 const bl = wiz.cfb2h;
                 if (!at) return {{ error: "NO_AT_TOKEN", submitted: false }};
                 const reqid = Math.floor(Math.random() * 900000) + 100000;
-                const sourcePath = location.pathname || "/";
+                const sourcePath = {json.dumps(source_path_override)} || location.pathname || "/";
                 const hl = (document.documentElement.lang || navigator.language || "en").split("-")[0];
                 const url = `/_/AiSandboxAngularFrontend/data/batchexecute?rpcids=${{encodeURIComponent({json.dumps(rpcid)})}}&source-path=${{encodeURIComponent(sourcePath)}}&bl=${{encodeURIComponent(bl || "")}}&f.sid=${{encodeURIComponent(sid || "")}}&hl=${{encodeURIComponent(hl)}}&_reqid=${{reqid}}&rt=c`;
                 submissionAttempted = true;
@@ -1215,16 +1235,20 @@ class DirectCDPProfileSession:
             self.project_id = pid
             self.profile_cfg["project_id"] = pid
 
-        # Enforce valid /project/<pid> workspace path for batchexecute source-path integrity
+        # Enforce valid /project/<pid> workspace path for batchexecute source-path integrity & document_start guard
         try:
             curr_url = await self.evaluate("location.href", await_promise=False)
             target_prefix = f"https://flow.google.com/project/{pid}"
             if not str(curr_url).startswith(target_prefix):
                 await self.call("Page.navigate", {"url": target_prefix})
                 await self._wait_for_flow_ready(timeout=15.0)
+                after_url = await self.evaluate("location.href", await_promise=False)
+                if not str(after_url).startswith(target_prefix) and not force_new:
+                    return await self.ensure_project_id(title=title, force_new=True)
         except Exception as nav_err:
             logger.debug("Project workspace navigation check: %s", nav_err)
 
+        await self._ensure_mint_captcha_guard()
         return pid
 
     @staticmethod

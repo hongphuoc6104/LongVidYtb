@@ -6,6 +6,7 @@ import asyncio
 import base64
 import json
 import logging
+import re
 import subprocess
 import sys
 import time
@@ -151,6 +152,17 @@ except ImportError:
         def rollback(self, profile_id: str, cost: int = 10) -> None:
             pass
 
+        def is_on_cooldown(self, profile_id: str) -> bool:
+            return False
+
+        def mark_cooldown(
+            self, profile_id: str, seconds: float = 60.0, reason: str = ""
+        ) -> None:
+            pass
+
+        def touch_used(self, profile_id: str) -> None:
+            pass
+
 
 class FlowVideoChainOrchestrator:
     """End-to-end orchestrator for multi-account Flow Video pipelines."""
@@ -213,6 +225,39 @@ class FlowVideoChainOrchestrator:
         if port not in self._warm_locks:
             self._warm_locks[port] = asyncio.Lock()
         return self._warm_locks[port]
+
+    def _is_profile_cooled_down(self, profile_name: str) -> bool:
+        """Check if profile is currently on cooldown in local dict or CreditLedger."""
+        if self._profile_cooldowns.get(profile_name, 0.0) > time.time():
+            return True
+        if hasattr(self.credit_ledger, "is_on_cooldown") and self.credit_ledger.is_on_cooldown(profile_name):
+            return True
+        return False
+
+    def _record_profile_cooldown(
+        self, profile_name: str, seconds: float, reason: str = ""
+    ) -> None:
+        """Record profile cooldown locally and propagate to CreditLedger."""
+        self._profile_cooldowns[profile_name] = time.time() + seconds
+        if hasattr(self.credit_ledger, "mark_cooldown"):
+            self.credit_ledger.mark_cooldown(profile_name, seconds=seconds, reason=reason)
+
+    def _get_same_profile_media_id(
+        self, image_path: str | Path | None, profile_name: str
+    ) -> str | None:
+        """Return media_id if image sidecar proves it was generated on the exact same profile."""
+        if not image_path:
+            return None
+        p = Path(image_path)
+        sidecar = p.with_suffix(".json")
+        if sidecar.is_file():
+            try:
+                data = json.loads(sidecar.read_text(encoding="utf-8"))
+                if data.get("profile") == profile_name and data.get("media_id"):
+                    return str(data["media_id"])
+            except Exception:
+                pass
+        return None
 
     async def _close_warm_port(self, port: int) -> None:
         """Close and evict a single warm CDP session and release its locks without affecting other active ports."""
@@ -526,10 +571,49 @@ class FlowVideoChainOrchestrator:
                     self._update_ref_path(it_ref_obj, res_path)
                     resolved_paths[it_id] = res_path
 
+            def _get_item_profile_hint(
+                item_tuple: tuple[str, str | None, str | None, Any, str | None],
+                fallback_idx: int,
+            ) -> dict[str, Any] | None:
+                if not eligible_profiles:
+                    return None
+                it_id, _, _, _, it_based_on = item_tuple
+
+                # If based on a prior frame, inherit that frame's profile for warm reuse
+                if it_based_on:
+                    dep_path = resolved_paths.get(it_based_on) or (
+                        it_based_on if Path(it_based_on).is_file() else None
+                    )
+                    if not dep_path and Path(it_based_on).stem in resolved_paths:
+                        dep_path = resolved_paths[Path(it_based_on).stem]
+                    if dep_path:
+                        sidecar = Path(dep_path).with_suffix(".json")
+                        if sidecar.is_file():
+                            try:
+                                s_data = json.loads(sidecar.read_text(encoding="utf-8"))
+                                parent_prof = s_data.get("profile")
+                                if parent_prof:
+                                    for p in eligible_profiles:
+                                        if p.get("name") == parent_prof or p.get("id") == parent_prof:
+                                            return p
+                            except Exception:
+                                pass
+
+                # Extract scene number from it_id (e.g. S01_start -> shot index 0, group 0 // 2 = 0; S02_end -> shot index 1, group 1 // 2 = 0)
+                match = re.search(r"(\d+)", it_id)
+                if match:
+                    scene_num = int(match.group(1))
+                    shot_idx = max(0, scene_num - 1) if scene_num > 0 else 0
+                    group_idx = shot_idx // 2
+                else:
+                    group_idx = fallback_idx // 2
+
+                return eligible_profiles[group_idx % len(eligible_profiles)]
+
             tasks = [
                 _generate_task(
                     it,
-                    eligible_profiles[idx % len(eligible_profiles)] if eligible_profiles else None,
+                    _get_item_profile_hint(it, idx),
                 )
                 for idx, it in enumerate(ready_to_generate)
             ]
@@ -605,202 +689,257 @@ class FlowVideoChainOrchestrator:
             raise RuntimeError("No eligible Chrome profiles with credits available for image generation")
 
         last_exc: Exception | None = None
-        for profile_cfg in eligible:
-            port = int(profile_cfg.get("cdp_port", 9222))
-            profile_name = str(profile_cfg.get("name") or f"profile_{port}")
+        for _outer_attempt in range(60):
+            has_uncooled = any(
+                not self._is_profile_cooled_down(str(p.get("name") or f"profile_{p.get('cdp_port', 9222)}"))
+                for p in eligible
+            )
+            acquired_any = False
+            for profile_cfg in eligible:
+                port = int(profile_cfg.get("cdp_port", 9222))
+                profile_name = str(profile_cfg.get("name") or f"profile_{port}")
 
-            port_async_lock = self._get_warm_lock(port)
-            if port_async_lock.locked():
-                continue
+                if has_uncooled and self._is_profile_cooled_down(profile_name):
+                    continue
 
-            try:
-                await port_async_lock.acquire()
-            except Exception:
-                continue
+                port_async_lock = self._get_warm_lock(port)
+                if port_async_lock.locked():
+                    continue
 
-            try:
-                if self.reuse_warm_sessions:
-                    warm_entry = self._warm_sessions.get(port)
-                    if warm_entry:
-                        session = warm_entry["session"]
+                try:
+                    await port_async_lock.acquire()
+                    acquired_any = True
+                except Exception:
+                    continue
+
+                try:
+                    if self.reuse_warm_sessions:
+                        warm_entry = self._warm_sessions.get(port)
+                        if warm_entry:
+                            session = warm_entry["session"]
+                        else:
+                            port_lock = ProfilePortLock(port, owner_tag=f"img_{dest_file.stem}")
+                            browser_slot = GlobalBrowserSlot(owner_tag=f"img_{dest_file.stem}")
+
+                            if not browser_slot.acquire(timeout=60.0):
+                                continue
+
+                            if not port_lock.acquire(timeout=1.5):
+                                browser_slot.release()
+                                continue
+
+                            pm = get_process_manager()
+                            launched = pm.launch(profile_cfg, headless=self.headless)
+                            if not launched:
+                                port_lock.release()
+                                browser_slot.release()
+                                continue
+                            self._launched_ports.add(port)
+
+                            session = DirectCDPProfileSession(profile_cfg)
+                            await session.connect()
+                            self._warm_sessions[port] = {
+                                "profile_cfg": profile_cfg,
+                                "session": session,
+                                "port_lock": port_lock,
+                                "browser_slot": browser_slot,
+                                "credits_synced": False,
+                            }
+
+                        try:
+                            ref_media_ids: list[str] | None = None
+                            if reference_image_paths and hasattr(session, "upload_image_file"):
+                                uploaded: list[str] = []
+                                for ref_p in reference_image_paths:
+                                    if Path(ref_p).is_file():
+                                        cached_mid = self._get_same_profile_media_id(ref_p, profile_name)
+                                        if cached_mid:
+                                            uploaded.append(cached_mid)
+                                        else:
+                                            up_res = await session.upload_image_file(ref_p)
+                                            up_id = up_res.get("media_id") if isinstance(up_res, dict) else up_res
+                                            if up_id:
+                                                uploaded.append(str(up_id))
+                                if uploaded:
+                                    ref_media_ids = uploaded
+
+                            gen_kwargs: dict[str, Any] = {
+                                "prompt": prompt,
+                                "aspect": self.spec.aspect,
+                                "model": "BELUGA",
+                            }
+                            if ref_media_ids:
+                                gen_kwargs["reference_media_ids"] = ref_media_ids
+
+                            res = await session.generate_image(**gen_kwargs)
+                            url = res.get("url")
+                            if not url:
+                                raise RuntimeError(f"Image generation returned no URL: {res}")
+
+                            await self._download_binary(session, url, dest_file)
+
+                            # Validate with PIL and unblend BELUGA corner star in-place
+                            with Image.open(dest_file) as im:
+                                im.verify()
+                            clean_beluga_sparkle_file(dest_file)
+
+                            sidecar_file = dest_file.with_suffix(".json")
+                            sidecar_data = {
+                                "media_id": res.get("media_id"),
+                                "url": url,
+                                "profile": profile_name,
+                                "prompt": prompt,
+                                "aspect": self.spec.aspect,
+                                "model": "BELUGA",
+                                "reference_images": reference_image_paths or [],
+                                "reference_media_ids": ref_media_ids or [],
+                                "generated_at": datetime.now(timezone.utc).isoformat(),
+                            }
+                            sidecar_file.write_text(
+                                json.dumps(sidecar_data, indent=2, ensure_ascii=False) + "\n",
+                                encoding="utf-8",
+                            )
+
+                            # BELUGA image generation is 0 credits on Google Flow!
+                            self._profiles_used.add(profile_name)
+                            if hasattr(self.credit_ledger, "touch_used"):
+                                self.credit_ledger.touch_used(profile_name)
+                            return
+                        except Exception as exc:
+                            last_exc = exc
+                            await self._close_warm_port(port)
+                            exc_str = str(exc)
+                            if "INSUFFICIENT_CREDITS" in exc_str or "PUBLIC_ERROR_QUOTA" in exc_str:
+                                self.credit_ledger.mark_exhausted(profile_name, reason=exc_str)
+                            elif any(
+                                err in exc_str
+                                for err in (
+                                    "FLOW_PROVIDER_BLOCKED",
+                                    "PUBLIC_ERROR_UNUSUAL_ACTIVITY",
+                                    "TOO_MUCH_TRAFFIC",
+                                    "NO_AT_TOKEN",
+                                    "CAPTCHA_FAILED",
+                                )
+                            ):
+                                self._record_profile_cooldown(profile_name, 900.0, reason=exc_str)
+                                await asyncio.sleep(2.0)
+                            else:
+                                self._record_profile_cooldown(profile_name, 120.0, reason=exc_str)
+                            continue
                     else:
+                        # Cold Launch Path
                         port_lock = ProfilePortLock(port, owner_tag=f"img_{dest_file.stem}")
                         browser_slot = GlobalBrowserSlot(owner_tag=f"img_{dest_file.stem}")
 
                         if not browser_slot.acquire(timeout=60.0):
                             continue
 
-                        if not port_lock.acquire(timeout=30.0):
-                            browser_slot.release()
-                            continue
-
-                        pm = get_process_manager()
-                        launched = pm.launch(profile_cfg, headless=self.headless)
-                        if not launched:
-                            port_lock.release()
-                            browser_slot.release()
-                            continue
-                        self._launched_ports.add(port)
-
-                        session = DirectCDPProfileSession(profile_cfg)
-                        await session.connect()
-                        self._warm_sessions[port] = {
-                            "profile_cfg": profile_cfg,
-                            "session": session,
-                            "port_lock": port_lock,
-                            "browser_slot": browser_slot,
-                            "credits_synced": False,
-                        }
-
-                    try:
-                        ref_media_ids: list[str] | None = None
-                        if reference_image_paths and hasattr(session, "upload_image_file"):
-                            uploaded: list[str] = []
-                            for ref_p in reference_image_paths:
-                                if Path(ref_p).is_file():
-                                    up_res = await session.upload_image_file(ref_p)
-                                    up_id = up_res.get("media_id") if isinstance(up_res, dict) else up_res
-                                    if up_id:
-                                        uploaded.append(str(up_id))
-                            if uploaded:
-                                ref_media_ids = uploaded
-
-                        gen_kwargs: dict[str, Any] = {
-                            "prompt": prompt,
-                            "aspect": self.spec.aspect,
-                            "model": "BELUGA",
-                        }
-                        if ref_media_ids:
-                            gen_kwargs["reference_media_ids"] = ref_media_ids
-
-                        res = await session.generate_image(**gen_kwargs)
-                        url = res.get("url")
-                        if not url:
-                            raise RuntimeError(f"Image generation returned no URL: {res}")
-
-                        await self._download_binary(session, url, dest_file)
-
-                        # Validate with PIL and unblend BELUGA corner star in-place
-                        with Image.open(dest_file) as im:
-                            im.verify()
-                        clean_beluga_sparkle_file(dest_file)
-
-                        sidecar_file = dest_file.with_suffix(".json")
-                        sidecar_data = {
-                            "media_id": res.get("media_id"),
-                            "url": url,
-                            "profile": profile_name,
-                            "prompt": prompt,
-                            "aspect": self.spec.aspect,
-                            "model": "BELUGA",
-                            "reference_images": reference_image_paths or [],
-                            "reference_media_ids": ref_media_ids or [],
-                            "generated_at": datetime.now(timezone.utc).isoformat(),
-                        }
-                        sidecar_file.write_text(
-                            json.dumps(sidecar_data, indent=2, ensure_ascii=False) + "\n",
-                            encoding="utf-8",
-                        )
-
-                        # BELUGA image generation is 0 credits on Google Flow!
-                        self._profiles_used.add(profile_name)
-                        return
-                    except Exception as exc:
-                        last_exc = exc
-                        await self._close_warm_port(port)
-                        if "INSUFFICIENT_CREDITS" in str(exc) or "PUBLIC_ERROR_QUOTA" in str(exc):
-                            self.credit_ledger.mark_exhausted(profile_name, reason=str(exc))
-                        continue
-                else:
-                    # Cold Launch Path
-                    port_lock = ProfilePortLock(port, owner_tag=f"img_{dest_file.stem}")
-                    browser_slot = GlobalBrowserSlot(owner_tag=f"img_{dest_file.stem}")
-
-                    if not browser_slot.acquire(timeout=60.0):
-                        continue
-
-                    try:
-                        if not port_lock.acquire(timeout=30.0):
-                            continue
                         try:
-                            pm = get_process_manager()
-                            launched = pm.launch(profile_cfg, headless=self.headless)
-                            if not launched:
+                            if not port_lock.acquire(timeout=1.5):
                                 continue
-                            self._launched_ports.add(port)
-
-                            session = DirectCDPProfileSession(profile_cfg)
-                            await session.connect()
                             try:
-                                ref_media_ids_cold: list[str] | None = None
-                                if reference_image_paths and hasattr(session, "upload_image_file"):
-                                    uploaded_cold: list[str] = []
-                                    for ref_p in reference_image_paths:
-                                        if Path(ref_p).is_file():
-                                            up_res = await session.upload_image_file(ref_p)
-                                            up_id = up_res.get("media_id") if isinstance(up_res, dict) else up_res
-                                            if up_id:
-                                                uploaded_cold.append(str(up_id))
-                                    if uploaded_cold:
-                                        ref_media_ids_cold = uploaded_cold
+                                pm = get_process_manager()
+                                launched = pm.launch(profile_cfg, headless=self.headless)
+                                if not launched:
+                                    continue
+                                self._launched_ports.add(port)
 
-                                gen_kwargs_cold: dict[str, Any] = {
-                                    "prompt": prompt,
-                                    "aspect": self.spec.aspect,
-                                    "model": "BELUGA",
-                                }
-                                if ref_media_ids_cold:
-                                    gen_kwargs_cold["reference_media_ids"] = ref_media_ids_cold
+                                session = DirectCDPProfileSession(profile_cfg)
+                                await session.connect()
+                                try:
+                                    ref_media_ids_cold: list[str] | None = None
+                                    if reference_image_paths and hasattr(session, "upload_image_file"):
+                                        uploaded_cold: list[str] = []
+                                        for ref_p in reference_image_paths:
+                                            if Path(ref_p).is_file():
+                                                cached_mid = self._get_same_profile_media_id(ref_p, profile_name)
+                                                if cached_mid:
+                                                    uploaded_cold.append(cached_mid)
+                                                else:
+                                                    up_res = await session.upload_image_file(ref_p)
+                                                    up_id = up_res.get("media_id") if isinstance(up_res, dict) else up_res
+                                                    if up_id:
+                                                        uploaded_cold.append(str(up_id))
+                                        if uploaded_cold:
+                                            ref_media_ids_cold = uploaded_cold
 
-                                res = await session.generate_image(**gen_kwargs_cold)
-                                url = res.get("url")
-                                if not url:
-                                    raise RuntimeError(f"Image generation returned no URL: {res}")
+                                    gen_kwargs_cold: dict[str, Any] = {
+                                        "prompt": prompt,
+                                        "aspect": self.spec.aspect,
+                                        "model": "BELUGA",
+                                    }
+                                    if ref_media_ids_cold:
+                                        gen_kwargs_cold["reference_media_ids"] = ref_media_ids_cold
 
-                                await self._download_binary(session, url, dest_file)
+                                    res = await session.generate_image(**gen_kwargs_cold)
+                                    url = res.get("url")
+                                    if not url:
+                                        raise RuntimeError(f"Image generation returned no URL: {res}")
 
-                                with Image.open(dest_file) as im:
-                                    im.verify()
-                                clean_beluga_sparkle_file(dest_file)
+                                    await self._download_binary(session, url, dest_file)
 
-                                sidecar_file = dest_file.with_suffix(".json")
-                                sidecar_data = {
-                                    "media_id": res.get("media_id"),
-                                    "url": url,
-                                    "profile": profile_name,
-                                    "prompt": prompt,
-                                    "aspect": self.spec.aspect,
-                                    "model": "BELUGA",
-                                    "reference_images": reference_image_paths or [],
-                                    "reference_media_ids": ref_media_ids_cold or [],
-                                    "generated_at": datetime.now(timezone.utc).isoformat(),
-                                }
-                                sidecar_file.write_text(
-                                    json.dumps(sidecar_data, indent=2, ensure_ascii=False) + "\n",
-                                    encoding="utf-8",
-                                )
-                                self._profiles_used.add(profile_name)
-                                return
+                                    with Image.open(dest_file) as im:
+                                        im.verify()
+                                    clean_beluga_sparkle_file(dest_file)
+
+                                    sidecar_file = dest_file.with_suffix(".json")
+                                    sidecar_data = {
+                                        "media_id": res.get("media_id"),
+                                        "url": url,
+                                        "profile": profile_name,
+                                        "prompt": prompt,
+                                        "aspect": self.spec.aspect,
+                                        "model": "BELUGA",
+                                        "reference_images": reference_image_paths or [],
+                                        "reference_media_ids": ref_media_ids_cold or [],
+                                        "generated_at": datetime.now(timezone.utc).isoformat(),
+                                    }
+                                    sidecar_file.write_text(
+                                        json.dumps(sidecar_data, indent=2, ensure_ascii=False) + "\n",
+                                        encoding="utf-8",
+                                    )
+                                    self._profiles_used.add(profile_name)
+                                    if hasattr(self.credit_ledger, "touch_used"):
+                                        self.credit_ledger.touch_used(profile_name)
+                                    return
+                                finally:
+                                    await session.close()
+                                    pm.terminate_by_port(port)
+                                    self._launched_ports.discard(port)
                             finally:
-                                await session.close()
-                                pm.terminate_by_port(port)
+                                port_lock.release()
+                        except Exception as exc:
+                            last_exc = exc
+                            try:
+                                get_process_manager().terminate_by_port(port)
                                 self._launched_ports.discard(port)
+                            except Exception:
+                                pass
+                            exc_str = str(exc)
+                            if "INSUFFICIENT_CREDITS" in exc_str or "PUBLIC_ERROR_QUOTA" in exc_str:
+                                self.credit_ledger.mark_exhausted(profile_name, reason=exc_str)
+                            elif any(
+                                err in exc_str
+                                for err in (
+                                    "FLOW_PROVIDER_BLOCKED",
+                                    "PUBLIC_ERROR_UNUSUAL_ACTIVITY",
+                                    "TOO_MUCH_TRAFFIC",
+                                    "NO_AT_TOKEN",
+                                    "CAPTCHA_FAILED",
+                                )
+                            ):
+                                self._record_profile_cooldown(profile_name, 900.0, reason=exc_str)
+                            else:
+                                self._record_profile_cooldown(profile_name, 120.0, reason=exc_str)
+                            continue
                         finally:
-                            port_lock.release()
-                    except Exception as exc:
-                        last_exc = exc
-                        try:
-                            get_process_manager().terminate_by_port(port)
-                            self._launched_ports.discard(port)
-                        except Exception:
-                            pass
-                        if "INSUFFICIENT_CREDITS" in str(exc) or "PUBLIC_ERROR_QUOTA" in str(exc):
-                            self.credit_ledger.mark_exhausted(profile_name, reason=str(exc))
-                        continue
-                    finally:
-                        browser_slot.release()
-            finally:
-                port_async_lock.release()
+                            browser_slot.release()
+                finally:
+                    port_async_lock.release()
+            await asyncio.sleep(2.0)
+
+            if not acquired_any:
+                await asyncio.sleep(2.0)
 
         raise RuntimeError(f"Failed to generate image frame {dest_file.name}: {last_exc}")
 
@@ -1016,7 +1155,7 @@ class FlowVideoChainOrchestrator:
                         # Find profile eligible for this specific clip_cost and not on cooldown
                         def is_candidate(p: dict[str, Any], cost: int = clip_cost, cur_now: float = now) -> bool:
                             pname = str(p.get("name") or p.get("profile_dir", ""))
-                            return self.credit_ledger.is_eligible(pname, min_credits=cost) and self._profile_cooldowns.get(pname, 0.0) <= cur_now
+                            return self.credit_ledger.is_eligible(pname, min_credits=cost) and not self._is_profile_cooled_down(pname)
 
                         eligible_candidates = [p for p in available_profiles if is_candidate(p)]
                         if not eligible_candidates:
@@ -1065,7 +1204,22 @@ class FlowVideoChainOrchestrator:
                                 worker_queue.task_done()
                                 return
                         else:
-                            profile_cfg = eligible_candidates[0]
+                            # Prefer profile that generated start_frame_path for zero-upload fast-path
+                            matched_cand = None
+                            if task.start_frame_path:
+                                start_sidecar = Path(task.start_frame_path).with_suffix(".json")
+                                if start_sidecar.is_file():
+                                    try:
+                                        s_data = json.loads(start_sidecar.read_text(encoding="utf-8"))
+                                        s_prof = s_data.get("profile")
+                                        if s_prof:
+                                            for cand in eligible_candidates:
+                                                if cand.get("name") == s_prof or cand.get("id") == s_prof:
+                                                    matched_cand = cand
+                                                    break
+                                    except Exception:
+                                        pass
+                            profile_cfg = matched_cand or eligible_candidates[0]
                             available_profiles.remove(profile_cfg)
 
                     if wait_sec > 0:
@@ -1082,6 +1236,8 @@ class FlowVideoChainOrchestrator:
                         async with self._lock:
                             available_profiles.append(profile_cfg)
                             self._profiles_used.add(p_name)
+                            if hasattr(self.credit_ledger, "touch_used"):
+                                self.credit_ledger.touch_used(p_name)
                             self._save_manifest(tasks)
                     except Exception as exc:
                         task.error = str(exc)
@@ -1092,10 +1248,20 @@ class FlowVideoChainOrchestrator:
                             attempts = max(0, attempts - 1)
                         async with self._lock:
                             # Check if real credit exhausted
-                            if "INSUFFICIENT_CREDITS" in str(exc) or "PUBLIC_ERROR_QUOTA" in str(exc):
-                                self.credit_ledger.mark_exhausted(p_name, reason=str(exc))
-                            elif "FLOW_PROVIDER_BLOCKED" in str(exc) or "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in str(exc):
-                                self._profile_cooldowns[p_name] = now_exc + 1800.0
+                            exc_str = str(exc)
+                            if "INSUFFICIENT_CREDITS" in exc_str or "PUBLIC_ERROR_QUOTA" in exc_str:
+                                self.credit_ledger.mark_exhausted(p_name, reason=exc_str)
+                            elif any(
+                                err in exc_str
+                                for err in (
+                                    "FLOW_PROVIDER_BLOCKED",
+                                    "PUBLIC_ERROR_UNUSUAL_ACTIVITY",
+                                    "TOO_MUCH_TRAFFIC",
+                                    "NO_AT_TOKEN",
+                                    "CAPTCHA_FAILED",
+                                )
+                            ):
+                                self._record_profile_cooldown(p_name, 1800.0, reason=exc_str)
                                 available_profiles.append(profile_cfg)
                                 attempts = max(0, attempts - 1)  # Do not burn attempt budget on temporary provider rate limit
                             elif is_port_busy:
@@ -1103,12 +1269,21 @@ class FlowVideoChainOrchestrator:
                                 self._profile_cooldowns[p_name] = now_exc + 3.0
                                 available_profiles.append(profile_cfg)
                             else:
-                                # Put failed profile on 45s cooldown to rotate across other profiles
-                                self._profile_cooldowns[p_name] = now_exc + 45.0
+                                # Put failed profile on 120s cooldown so cooldown persists to CreditLedger
+                                self._record_profile_cooldown(p_name, 120.0, reason=exc_str)
                                 available_profiles.append(profile_cfg)
                             self._save_manifest(tasks)
                         # Rotate immediately to next healthy profile with brief jitter instead of blocking worker for 45s
-                        if "TOO_MUCH_TRAFFIC" in str(exc) or "FLOW_PROVIDER_BLOCKED" in str(exc) or "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in str(exc):
+                        if any(
+                            err in str(exc)
+                            for err in (
+                                "TOO_MUCH_TRAFFIC",
+                                "FLOW_PROVIDER_BLOCKED",
+                                "PUBLIC_ERROR_UNUSUAL_ACTIVITY",
+                                "NO_AT_TOKEN",
+                                "CAPTCHA_FAILED",
+                            )
+                        ):
                             logger.warning(f"[RATE_LIMIT_ROTATE] Profile {p_name} rate-limited at clip {task.clip_id}. Cooldown 1800s; rotating in 2.5s...")
                             await asyncio.sleep(2.5)
                         else:
@@ -1231,10 +1406,12 @@ class FlowVideoChainOrchestrator:
                     # Synthesize video clip with exact duration_seconds
                     start_t = time.monotonic()
                     if hasattr(session, "generate_video_from_frames"):
+                        first_arg = self._get_same_profile_media_id(clip.start_frame_path, p_name) or clip.start_frame_path
+                        last_arg = (self._get_same_profile_media_id(clip.end_frame_path, p_name) or clip.end_frame_path) if clip.end_frame_path else None
                         await session.generate_video_from_frames(
                             prompt=clip.motion_prompt,
-                            first_frame_path_or_id=clip.start_frame_path,
-                            last_frame_path_or_id=clip.end_frame_path,
+                            first_frame_path_or_id=first_arg,
+                            last_frame_path_or_id=last_arg,
                             output_mp4_path=clip.output_mp4_path,
                             aspect=clip.aspect,
                             model=clip.video_model,
@@ -1259,6 +1436,8 @@ class FlowVideoChainOrchestrator:
                         self.credit_ledger.commit(p_name, clip_cost)
                     else:
                         self.credit_ledger.deduct_credits(p_name, clip_cost, reason="video")
+                    if hasattr(self.credit_ledger, "touch_used"):
+                        self.credit_ledger.touch_used(p_name)
 
                     curr_ded = self._credits_deducted.get(p_name, 0)
                     self._credits_deducted[p_name] = curr_ded + clip_cost
@@ -1309,10 +1488,12 @@ class FlowVideoChainOrchestrator:
                             # Synthesize video clip with exact duration_seconds
                             start_t = time.monotonic()
                             if hasattr(session, "generate_video_from_frames"):
+                                first_arg = self._get_same_profile_media_id(clip.start_frame_path, p_name) or clip.start_frame_path
+                                last_arg = (self._get_same_profile_media_id(clip.end_frame_path, p_name) or clip.end_frame_path) if clip.end_frame_path else None
                                 await session.generate_video_from_frames(
                                     prompt=clip.motion_prompt,
-                                    first_frame_path_or_id=clip.start_frame_path,
-                                    last_frame_path_or_id=clip.end_frame_path,
+                                    first_frame_path_or_id=first_arg,
+                                    last_frame_path_or_id=last_arg,
                                     output_mp4_path=clip.output_mp4_path,
                                     aspect=clip.aspect,
                                     model=clip.video_model,
@@ -1337,6 +1518,8 @@ class FlowVideoChainOrchestrator:
                                 self.credit_ledger.commit(p_name, clip_cost)
                             else:
                                 self.credit_ledger.deduct_credits(p_name, clip_cost, reason="video")
+                            if hasattr(self.credit_ledger, "touch_used"):
+                                self.credit_ledger.touch_used(p_name)
 
                             curr_ded = self._credits_deducted.get(p_name, 0)
                             self._credits_deducted[p_name] = curr_ded + clip_cost

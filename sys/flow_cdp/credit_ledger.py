@@ -141,6 +141,8 @@ class CreditLedger:
                 "last_used_at": 0.0,
                 "last_synced_at": now,
                 "tier_role": compute_tier_role(initial_credits, status),
+                "cooldown_until": 0.0,
+                "cooldown_reason": None,
             }
             profiles[profile_id] = entry
             return dict(entry)
@@ -194,6 +196,8 @@ class CreditLedger:
                     "last_used_at": 0.0,
                     "last_synced_at": now,
                     "tier_role": compute_tier_role(default_credits, status),
+                    "cooldown_until": 0.0,
+                    "cooldown_reason": None,
                 }
                 profiles[profile_id] = entry
                 return default_credits
@@ -217,7 +221,7 @@ class CreditLedger:
             return int(entry.get("credits_remaining", 0))
 
     def is_eligible(self, profile_id: str, min_credits: int = 10) -> bool:
-        """Check if profile has enough remaining credits and is not exhausted."""
+        """Check if profile has enough remaining credits, is not exhausted, and is not on cooldown."""
         with self._locked_store() as data:
             profiles = data.setdefault("profiles", {})
             now = time.time()
@@ -233,11 +237,16 @@ class CreditLedger:
                     "last_used_at": 0.0,
                     "last_synced_at": now,
                     "tier_role": compute_tier_role(1000, status),
+                    "cooldown_until": 0.0,
+                    "cooldown_reason": None,
                 }
                 profiles[profile_id] = entry
                 return 1000 >= min_credits
 
             entry = profiles[profile_id]
+            if float(entry.get("cooldown_until") or 0.0) > now:
+                return False
+
             expiry = entry.get("expiry_epoch")
             if expiry is not None and now >= expiry:
                 sub_credits = entry.get("subscription_credits") or 1000
@@ -275,6 +284,8 @@ class CreditLedger:
                     "last_used_at": 0.0,
                     "last_synced_at": now,
                     "tier_role": compute_tier_role(new_bal, st),
+                    "cooldown_until": 0.0,
+                    "cooldown_reason": None,
                 }
                 profiles[profile_id] = entry
                 return dict(entry)
@@ -300,8 +311,8 @@ class CreditLedger:
         profiles: list[dict[str, Any]],
         min_credits: int = 10,
     ) -> list[dict[str, Any]]:
-        """Filter and sort eligible profiles, preferring higher remaining credits and LRU."""
-        eligible_items: list[tuple[int, float, dict[str, Any]]] = []
+        """Filter and sort eligible profiles, preferring tested profiles (last_used > 0), higher credits, and LRU."""
+        eligible_items: list[tuple[int, int, float, dict[str, Any]]] = []
 
         for p in profiles:
             pid = p.get("id") or p.get("name")
@@ -315,11 +326,12 @@ class CreditLedger:
                 remaining = int(entry.get("credits_remaining", 0))
                 last_used = float(entry.get("last_used_at", 0.0))
 
-            # Sort key: (-remaining, last_used) -> highest balance first, LRU tie-breaker
-            eligible_items.append((remaining, last_used, p))
+            untested_penalty = 0 if last_used > 0.0 else 1
+            # Sort key: (untested_penalty, -remaining, last_used)
+            eligible_items.append((untested_penalty, remaining, last_used, p))
 
-        eligible_items.sort(key=lambda x: (-x[0], x[1]))
-        return [item[2] for item in eligible_items]
+        eligible_items.sort(key=lambda x: (x[0], -x[1], x[2]))
+        return [item[3] for item in eligible_items]
 
     def pick_for_image_task(
         self,
@@ -360,10 +372,15 @@ class CreditLedger:
                         "last_used_at": 0.0,
                         "last_synced_at": now,
                         "tier_role": TIER_ROLE_VIDEO_AND_IMAGE,
+                        "cooldown_until": 0.0,
+                        "cooldown_reason": None,
                     }
                     store_profiles[pid] = entry
                 else:
                     entry = store_profiles[pid]
+
+                if float(entry.get("cooldown_until") or 0.0) > now:
+                    continue
 
                 status = entry.get("status", "active")
                 if status == "auth_expired":
@@ -441,10 +458,15 @@ class CreditLedger:
                         "last_used_at": 0.0,
                         "last_synced_at": now,
                         "tier_role": TIER_ROLE_VIDEO_AND_IMAGE,
+                        "cooldown_until": 0.0,
+                        "cooldown_reason": None,
                     }
                     store_profiles[pid] = entry
                 else:
                     entry = store_profiles[pid]
+
+                if float(entry.get("cooldown_until") or 0.0) > now:
+                    continue
 
                 status = entry.get("status", "active")
                 if status in ("auth_expired", "exhausted"):
@@ -500,6 +522,8 @@ class CreditLedger:
                     "last_used_at": 0.0,
                     "last_synced_at": now,
                     "tier_role": TIER_ROLE_VIDEO_AND_IMAGE,
+                    "cooldown_until": 0.0,
+                    "cooldown_reason": None,
                 }
 
             entry = profiles[profile_id]
@@ -507,6 +531,10 @@ class CreditLedger:
             new_bal = max(0, curr - amount)
             entry["credits_remaining"] = new_bal
             entry["last_used_at"] = now
+
+            if float(entry.get("cooldown_until") or 0.0) <= now:
+                entry["cooldown_until"] = 0.0
+                entry["cooldown_reason"] = None
 
             if new_bal <= 0:
                 entry["status"] = "exhausted"
@@ -563,11 +591,66 @@ class CreditLedger:
         logger.debug("Rollback called for profile %s with cost %d", profile_id, cost)
 
     def touch_used(self, profile_id: str) -> None:
-        """Update last_used_at timestamp without modifying credit balance."""
+        """Update last_used_at timestamp without modifying credit balance, clearing expired cooldown."""
         with self._locked_store() as data:
             profiles = data.setdefault("profiles", {})
             if profile_id in profiles:
-                profiles[profile_id]["last_used_at"] = time.time()
+                entry = profiles[profile_id]
+                now = time.time()
+                entry["last_used_at"] = now
+                if float(entry.get("cooldown_until") or 0.0) <= now:
+                    entry["cooldown_until"] = 0.0
+                    entry["cooldown_reason"] = None
+
+    def mark_cooldown(
+        self,
+        profile_id: str,
+        seconds: float = 900.0,
+        reason: str = "rate_limit",
+    ) -> None:
+        """Mark profile in cooldown until timestamp to avoid reuse on rate limits or errors."""
+        with self._locked_store() as data:
+            profiles = data.setdefault("profiles", {})
+            entry = profiles.setdefault(
+                profile_id,
+                {
+                    "credits_remaining": 1000,
+                    "subscription_credits": 1000,
+                    "expiry_epoch": None,
+                    "paygate_tier": 0,
+                    "status": "active",
+                    "exhausted_reason": None,
+                    "last_used_at": 0.0,
+                    "last_synced_at": time.time(),
+                    "tier_role": compute_tier_role(1000, "active"),
+                    "cooldown_until": 0.0,
+                    "cooldown_reason": None,
+                },
+            )
+            entry["cooldown_until"] = time.time() + max(0.0, float(seconds))
+            entry["cooldown_reason"] = str(reason)[:200]
+            logger.warning(
+                "Profile %s marked in cooldown for %.1fs (until %s): %s",
+                profile_id,
+                seconds,
+                entry["cooldown_until"],
+                entry["cooldown_reason"],
+            )
+
+    def clear_cooldown(self, profile_id: str) -> None:
+        """Clear active cooldown for profile."""
+        with self._locked_store() as data:
+            profiles = data.get("profiles", {})
+            if profile_id in profiles:
+                entry = profiles[profile_id]
+                entry["cooldown_until"] = 0.0
+                entry["cooldown_reason"] = None
+
+    def is_on_cooldown(self, profile_id: str) -> bool:
+        """Check if profile is currently on cooldown."""
+        with self._locked_store() as data:
+            entry = data.get("profiles", {}).get(profile_id, {})
+            return float(entry.get("cooldown_until") or 0.0) > time.time()
 
     def mark_exhausted(
         self,

@@ -31,6 +31,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 import shutil
 import subprocess
 import sys
@@ -871,6 +872,7 @@ def package_final_on_colab_t4_nvenc(
     xfade_pivot_sec: float = 0.24,
     overscan_crop: float = 1.05,
     scratch_dir: Path | None = None,
+    colab_account: str | None = None,
 ) -> dict[str, Any]:
     """Upload raw Flow AI clips and render 100% on remote Colab Tesla T4 FFmpeg h264_nvenc (zero local CPU encode)."""
     import fcntl
@@ -929,7 +931,11 @@ def package_final_on_colab_t4_nvenc(
 
     base_accounts = list(VERIFIED_COLAB_ACCOUNTS)
     rot = int(hashlib.md5(job_id.encode("utf-8")).hexdigest()[:8], 16) % len(base_accounts)
-    candidate_accounts = base_accounts[rot:] + base_accounts[:rot]
+    override_acc = colab_account or os.environ.get("VP_COLAB_ACCOUNT") or os.environ.get("COLAB_ACCOUNT")
+    if override_acc:
+        candidate_accounts = [override_acc] + [a for a in base_accounts if a != override_acc]
+    else:
+        candidate_accounts = base_accounts[rot:] + base_accounts[:rot]
     target_session = f"vp-en-{channel_slug}"
 
     last_exc: Exception | None = None
@@ -997,7 +1003,7 @@ def package_final_on_colab_t4_nvenc(
                     from tools.channel_production_common import cleanup_stale_colab_state
 
                     cleanup_stale_colab_state(client, acc, effective_session)
-                    client.session = effective_session
+                    client.session = target_session
                     client._ready(auto_start=True)
                 except Exception as ex_recover:
                     raise ex_ready from ex_recover
@@ -1198,6 +1204,7 @@ def stitch_hybrid_scene_groups_and_package(
     render_backend: str = "colab_nvenc",
     job_id: str | None = None,
     dry_run: bool = False,
+    colab_account: str | None = None,
 ) -> dict[str, Any]:
     """Canonical remote Colab Tesla T4 FFmpeg h264_nvenc hybrid scene-group stitcher & compositor.
     Zero local CPU video encoding in live production (dry_run synthetic stub only for unit tests).
@@ -1275,6 +1282,7 @@ def stitch_hybrid_scene_groups_and_package(
             xfade_pivot_sec=xfade_pivot_sec,
             overscan_crop=1.05,
             scratch_dir=scratch,
+            colab_account=colab_account,
         )
 
     if srt_path.is_file():
@@ -1293,6 +1301,8 @@ def produce_dynamic_flow_demo(
     dry_run: bool = False,
     render_backend: str = "colab_nvenc",
     teardown_colab: bool = False,
+    output_root: Path | None = None,
+    colab_account: str | None = None,
 ) -> dict[str, Any]:
     """Run full Audio-First Beat-Locked Dynamic Google Flow Video Pipeline (with 0-credit slide fallback)."""
     t0 = time.monotonic()
@@ -1304,7 +1314,7 @@ def produce_dynamic_flow_demo(
     voice = str(spec_data.get("voice") or target_cfg.get("voice") or "en-US-AndrewNeural")
 
     job_id = str(spec_data.get("job_id") or f"{channel_slug}-v3-demo-{aspect_tag}")
-    run_dir = V3_DEMOS_ROOT / job_id
+    run_dir = (output_root or V3_DEMOS_ROOT) / job_id
     audio_dir = run_dir / "audio"
     subs_dir = run_dir / "subs"
     flow_work_dir = run_dir / "flow_chain"
@@ -1468,6 +1478,7 @@ def produce_dynamic_flow_demo(
             render_backend=render_backend,
             job_id=job_id,
             dry_run=dry_run,
+            colab_account=colab_account,
         )
 
     if teardown_colab and final_meta.get("colab_account") and final_meta.get("colab_session"):
@@ -1554,9 +1565,23 @@ def main() -> int:
     )
     parser.add_argument(
         "--spec-json",
+        "--chain-spec",
+        dest="spec_json",
         type=str,
         default=None,
         help="Custom JSON spec file path to produce a dynamic Flow video demo",
+    )
+    parser.add_argument(
+        "--output-root",
+        type=str,
+        default=None,
+        help="Output root directory for runs (defaults to sys/runs/en_flow_v3_demos)",
+    )
+    parser.add_argument(
+        "--colab-account",
+        type=str,
+        default=None,
+        help="Preferred Colab T4 account for NVENC render",
     )
     parser.add_argument(
         "--max-workers",
@@ -1578,6 +1603,13 @@ def main() -> int:
     parser.add_argument("--no-resume", action="store_true", help="Force fresh generation without resuming cached clips")
     parser.add_argument("--dry-run", action="store_true", help="Run synthetic dry-run without opening Chrome")
     args = parser.parse_args()
+
+    if args.output_root:
+        global V3_DEMOS_ROOT
+        V3_DEMOS_ROOT = Path(args.output_root)
+
+    if args.colab_account:
+        os.environ["VP_COLAB_ACCOUNT"] = str(args.colab_account).strip()
 
     try:
         if args.regenerate_logos:
@@ -1609,6 +1641,8 @@ def main() -> int:
                     dry_run=args.dry_run,
                     render_backend=args.render_backend,
                     teardown_colab=args.teardown_colab,
+                    output_root=Path(args.output_root) if args.output_root else None,
+                    colab_account=args.colab_account,
                 )
     finally:
         get_process_manager().terminate_owned()

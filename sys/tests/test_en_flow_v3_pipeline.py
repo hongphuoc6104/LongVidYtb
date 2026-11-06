@@ -707,4 +707,94 @@ def test_package_final_on_colab_t4_nvenc_purges_local_cpu(tmp_path: Path) -> Non
         assert out_nvenc.with_suffix(".srt").is_file()
 
 
+def test_v3_3_credit_ledger_cooldown_and_cross_process_isolation(tmp_path: Path) -> None:
+    """Verify CreditLedger mark_cooldown prevents reuse of rate-limited profiles across waves and processes."""
+    credits_file = tmp_path / "credits_cooldown_test.json"
+    ledger1 = CreditLedger(path=credits_file)
+
+    ledger1.register_profile("prof_active", initial_credits=1000)
+    ledger1.register_profile("prof_limited", initial_credits=1000)
+    ledger1.register_profile("prof_expired", initial_credits=1000)
+
+    # Mark prof_limited on cooldown for 600s
+    ledger1.mark_cooldown("prof_limited", seconds=600.0, reason="rate_limit_exceeded")
+    # Mark prof_expired on cooldown in the past (already expired)
+    ledger1.mark_cooldown("prof_expired", seconds=-10.0, reason="old_temporary_glitch")
+
+    assert ledger1.is_on_cooldown("prof_limited") is True
+    assert ledger1.is_on_cooldown("prof_active") is False
+    assert ledger1.is_on_cooldown("prof_expired") is False
+
+    # is_eligible must strictly reject profiles currently on cooldown
+    assert ledger1.is_eligible("prof_limited", min_credits=7) is False
+    assert ledger1.is_eligible("prof_active", min_credits=7) is True
+    assert ledger1.is_eligible("prof_expired", min_credits=7) is True
+
+    # Cross-process check: a second CreditLedger instance accessing the same file
+    ledger2 = CreditLedger(path=credits_file)
+    assert ledger2.is_on_cooldown("prof_limited") is True
+    assert ledger2.is_eligible("prof_limited", min_credits=7) is False
+
+    # Clear cooldown restores eligibility immediately across all processes
+    ledger1.clear_cooldown("prof_limited")
+    assert ledger1.is_on_cooldown("prof_limited") is False
+    assert ledger2.is_on_cooldown("prof_limited") is False
+    assert ledger2.is_eligible("prof_limited", min_credits=7) is True
+
+
+def test_v3_3_credit_ledger_selection_untested_penalty_and_cooldown_filtering(tmp_path: Path) -> None:
+    """Verify select_eligible_profiles filters cooldowns and prefers tested (last_used > 0) profiles."""
+    credits_file = tmp_path / "credits_selection_test.json"
+    ledger = CreditLedger(path=credits_file)
+
+    ledger.register_profile("p_tested_low", initial_credits=50)
+    ledger.register_profile("p_tested_high", initial_credits=80)
+    ledger.register_profile("p_untested", initial_credits=100)
+    ledger.register_profile("p_cooldown", initial_credits=1000)
+
+    # Mark tested profiles as actually used before
+    ledger.touch_used("p_tested_low")
+    time.sleep(0.01)
+    ledger.touch_used("p_tested_high")
+
+    # Mark high-credit profile on cooldown
+    ledger.mark_cooldown("p_cooldown", seconds=300.0, reason="429_quota")
+
+    profiles_input = [
+        {"id": "p_tested_low", "port": 9221},
+        {"id": "p_tested_high", "port": 9222},
+        {"id": "p_untested", "port": 9223},
+        {"id": "p_cooldown", "port": 9224},
+    ]
+
+    selected = ledger.select_eligible_profiles(profiles_input, min_credits=7)
+    selected_ids = [p["id"] for p in selected]
+
+    # 1. p_cooldown is on cooldown and must be excluded completely
+    assert "p_cooldown" not in selected_ids
+
+    # 2. Tested profiles (untested_penalty=0) come before untested (untested_penalty=1),
+    #    and among tested profiles, p_tested_high (80) precedes p_tested_low (50)
+    assert selected_ids == ["p_tested_high", "p_tested_low", "p_untested"]
+
+    # 3. pick_for_video_task must skip p_cooldown (1000 credits) and pick highest non-cooldown video profile
+    picked_video = ledger.pick_for_video_task(profiles_input, cost=7)
+    assert picked_video is not None
+    assert picked_video["id"] == "p_untested"  # 100 credits > 80 credits, neither is on cooldown
+
+    # 4. pick_for_image_task must skip p_cooldown if marked on cooldown
+    picked_img = ledger.pick_for_image_task(profiles_input)
+    assert picked_img is not None
+    assert picked_img["id"] != "p_cooldown"
+
+    # 5. touch_used and deduct_credits clear expired cooldown
+    ledger.mark_cooldown("p_untested", seconds=-5.0, reason="expired_rate_limit")
+    assert ledger.is_on_cooldown("p_untested") is False  # already expired
+    ledger.touch_used("p_untested")
+    entry = ledger.summary(["p_untested"])["profiles"]["p_untested"]
+    assert entry["cooldown_until"] == 0.0
+    assert entry["cooldown_reason"] is None
+
+
+
 
