@@ -1,0 +1,100 @@
+{
+  "job_id": "en-first-principles-batch1-9x16",
+  "parent_long_id": "en-first-principles-batch1-16x9",
+  "channel_slug": "en-first-principles",
+  "aspect": "9:16",
+  "title": "Goodhart's Law: Why Measuring a Target Instantly Destroys It",
+  "youtube_title": "Goodhart's Law: The Metric Trap",
+  "thumbnail_spec": {
+    "visual_hook": "High-contrast brass balance scale with glowing cyan needle snapping under excess metric weights against dark slate slate-navy void",
+    "allowed_text": "METRIC TRAP",
+    "overlay_card": false
+  },
+  "voice": "en-US-ChristopherNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "G1",
+      "continues_prev": false,
+      "scene_anchor": "High-contrast 8K Veritasium scientific cinematography with crisp directional key light, deep slate-navy (#0F172A) contrast, and clean cyan and amber physical vector accents, strictly zero chalkboards or text",
+      "narration": "When a measure becomes an official performance target, it instantly ceases being useful.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Slow optical dolly push-in",
+      "start_visual": "Veritasium scientific demonstration bench: an ornate brass balance scale resting on polished dark slate under sharp directional keylight, strictly zero text.",
+      "end_visual": "Dolly in on the brass balance as calibrated metric weights drop into one pan, snapping the central needle toward red, strictly zero text.",
+      "subject_motion": "brass scale needle snaps violently to the right under sudden metric weight impact"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "G1",
+      "continues_prev": true,
+      "scene_anchor": "High-contrast 8K Veritasium scientific cinematography with crisp directional key light, deep slate-navy (#0F172A) contrast, and clean cyan and amber physical vector accents, strictly zero chalkboards or text",
+      "narration": "This is Goodhart’s Law, the iron rule governing every modern human performance metric.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Smooth horizontal lateral tracking pass",
+      "start_visual": "Close-up of the brass balance with the snapped needle vibrating under high-contrast spotlight.",
+      "end_visual": "Tracking laterally across the workbench revealing a row of precision mechanical dials all redlining under strain, strictly zero text.",
+      "subject_motion": "camera tracks sideways as multiple precision mechanical needle dials swing into maximum strain positions"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "G2",
+      "continues_prev": false,
+      "scene_anchor": "Cinematic precision physics demonstration table, machined steel gears, fluid dynamic tubes, and luminous geometric trajectory vectors against velvet dark studio backdrop, strictly zero text",
+      "narration": "When British hospitals graded surgeons on patient survival rates, doctors refused high-risk surgeries.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Slow optical dolly push-in",
+      "start_visual": "Stainless steel medical examination table with sterilized chrome surgical instruments bathed in sterile cyan laboratory illumination, strictly zero text.",
+      "end_visual": "Dolly closer as a mechanical barrier descends, walling off high-risk surgical instruments from the primary operating station, strictly zero text.",
+      "subject_motion": "frosted glass barrier lowers slowly across the chrome surgical instruments isolating the tray"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "G2",
+      "continues_prev": true,
+      "scene_anchor": "Cinematic precision physics demonstration table, machined steel gears, fluid dynamic tubes, and luminous geometric trajectory vectors against velvet dark studio backdrop, strictly zero text",
+      "narration": "Reported survival scores surged dramatically, while the sickest patients were left completely untreated.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Precise macro focus rack",
+      "start_visual": "Isolated surgical tray behind frosted glass barrier in high-contrast cyan laboratory lighting.",
+      "end_visual": "Focus racks from a glowing green percentage dial to a dark empty hospital corridor, strictly zero text.",
+      "subject_motion": "optical focus pulls from the glowing green dial to the deep shadow of the corridor"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "G3",
+      "continues_prev": false,
+      "scene_anchor": "High-contrast 8K Veritasium scientific cinematography with crisp directional key light, deep slate-navy (#0F172A) contrast, and clean cyan and amber physical vector accents, strictly zero chalkboards or text",
+      "narration": "Humans will always game the measured number rather than produce the genuine underlying goal.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Smooth horizontal lateral tracking pass",
+      "start_visual": "Dark navy tabletop with a row of frosted glass dominoes illuminated by sharp amber rim lighting, strictly zero text.",
+      "end_visual": "Tracking laterally as a robotic mechanical arm bypasses the domino runway to trip the final bell directly, strictly zero text.",
+      "subject_motion": "robotic articulated arm reaches around the domino obstacles to touch the target bell directly"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "G3",
+      "continues_prev": true,
+      "scene_anchor": "High-contrast 8K Veritasium scientific cinematography with crisp directional key light, deep slate-navy (#0F172A) contrast, and clean cyan and amber physical vector accents, strictly zero chalkboards or text",
+      "narration": "To fix complex systems, you must measure holistic outcomes instead of isolated single proxies.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Subtle low-angle scientific tilt-up",
+      "start_visual": "Robotic mechanical arm touching the brass bell under warm directional spotlight on obsidian surface.",
+      "end_visual": "Tilt up to reveal an interconnected spiderweb array of dynamic balancing weights maintaining multi-point equilibrium, strictly zero text.",
+      "subject_motion": "camera tilts up revealing a multi-axis hanging mobile of brass weights swinging in balanced harmony"
+    },
+    {
+      "shot_id": "S07",
+      "scene_group": "G4",
+      "continues_prev": false,
+      "scene_anchor": "High-contrast 8K Veritasium scientific cinematography with crisp directional key light, deep slate-navy (#0F172A) contrast, and clean cyan and amber physical vector accents, strictly zero chalkboards or text",
+      "narration": "Discover how counter-intuitive incentives reshape human behavior in our full second-order thinking breakdown.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Slow arc orbit around precision apparatus",
+      "start_visual": "Veritasium studio wide shot of the multi-axis balance mobile spinning gently in dark slate-navy twilight, strictly zero text.",
+      "end_visual": "Sweeping orbit around the gleaming brass mobile as keylights focus on the central balanced fulcrum, strictly zero text.",
+      "subject_motion": "camera orbits smoothly around the central brass fulcrum as balanced weights rotate gracefully in twilight"
+    }
+  ]
+}

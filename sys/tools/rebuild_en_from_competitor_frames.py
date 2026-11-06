@@ -531,32 +531,42 @@ async def _synthesize_beat_with_word_boundaries(
     voice: str,
     out_mp3: Path,
     rate: str = "+0%",
+    max_retries: int = 4,
 ) -> List[Dict[str, Any]]:
     """Synthesize a single beat's narration via edge_tts and return exact WordBoundary events."""
-    comm = edge_tts.Communicate(text=text, voice=voice, rate=rate, boundary="WordBoundary")
-    word_events: List[Dict[str, Any]] = []
-    audio_bytes = bytearray()
+    last_err: Optional[Exception] = None
+    for attempt in range(max_retries):
+        try:
+            comm = edge_tts.Communicate(text=text, voice=voice, rate=rate, boundary="WordBoundary")
+            word_events: List[Dict[str, Any]] = []
+            audio_bytes = bytearray()
 
-    async for chunk in comm.stream():
-        ctype = chunk.get("type")
-        if ctype == "audio":
-            audio_bytes.extend(chunk.get("data", b""))
-        elif ctype == "WordBoundary":
-            # offset and duration are in 100-nanosecond ticks (1e-7 seconds)
-            start_s = float(chunk.get("offset", 0)) / 10_000_000.0
-            dur_s = float(chunk.get("duration", 0)) / 10_000_000.0
-            w_text = str(chunk.get("text", "")).strip()
-            if w_text:
-                word_events.append(
-                    {
-                        "word": w_text,
-                        "start": round(start_s, 4),
-                        "end": round(start_s + max(0.06, dur_s), 4),
-                    }
-                )
+            async for chunk in comm.stream():
+                ctype = chunk.get("type")
+                if ctype == "audio":
+                    audio_bytes.extend(chunk.get("data", b""))
+                elif ctype == "WordBoundary":
+                    # offset and duration are in 100-nanosecond ticks (1e-7 seconds)
+                    start_s = float(chunk.get("offset", 0)) / 10_000_000.0
+                    dur_s = float(chunk.get("duration", 0)) / 10_000_000.0
+                    w_text = str(chunk.get("text", "")).strip()
+                    if w_text:
+                        word_events.append(
+                            {
+                                "word": w_text,
+                                "start": round(start_s, 4),
+                                "end": round(start_s + max(0.06, dur_s), 4),
+                            }
+                        )
 
-    out_mp3.write_bytes(bytes(audio_bytes))
-    return word_events
+            if not audio_bytes:
+                raise RuntimeError(f"Empty audio stream for text: {text[:40]!r}")
+            out_mp3.write_bytes(bytes(audio_bytes))
+            return word_events
+        except Exception as exc:
+            last_err = exc
+            await asyncio.sleep(0.6 * (attempt + 1))
+    raise RuntimeError(f"edge_tts failed after {max_retries} attempts: {last_err}") from last_err
 
 
 def _probe_duration(path: Path) -> float:
@@ -607,11 +617,25 @@ def synthesize_beats_with_competitor_cadence(
     global_words: List[Dict[str, Any]] = []
     cursor_sec = 0.0
 
+    async def _synth_all_beats() -> List[List[Dict[str, Any]]]:
+        sem = asyncio.Semaphore(6)
+
+        async def _worker(idx: int, beat: Dict[str, Any]) -> List[Dict[str, Any]]:
+            text = str(beat.get("narration", "")).strip() or "..."
+            rate = str(beat.get("speech_rate") or "+0%")
+            b_mp3 = scratch_a / f"beat_{idx:03d}.mp3"
+            tts_text = re.sub(r"\s*[—–-]+\s*$", ",", text)
+            async with sem:
+                return await _synthesize_beat_with_word_boundaries(tts_text, voice, b_mp3, rate=rate)
+
+        return await asyncio.gather(*(_worker(i, b) for i, b in enumerate(beats)))
+
+    all_words_per_beat = asyncio.run(_synth_all_beats())
+
     for idx, beat in enumerate(beats):
         text = str(beat.get("narration", "")).strip()
         if not text:
             text = "..."
-        rate = str(beat.get("speech_rate") or "+0%")
         # Competitor-modeled acoustic pause after this beat (default 0.28s beat pause; last beat 0.25s tail)
         raw_pause = beat.get("pause_after_sec")
         if raw_pause is not None:
@@ -627,13 +651,11 @@ def synthesize_beats_with_competitor_cadence(
             else:
                 pause_after = 0.30
 
-        b_mp3 = scratch_a / f"beat_{idx:02d}.mp3"
-        b_wav = scratch_a / f"beat_{idx:02d}.wav"
-        p_wav = scratch_a / f"pause_{idx:02d}.wav"
+        b_mp3 = scratch_a / f"beat_{idx:03d}.mp3"
+        b_wav = scratch_a / f"beat_{idx:03d}.wav"
+        p_wav = scratch_a / f"pause_{idx:03d}.wav"
 
-        # Clean trailing em-dash for TTS synthesis so final consonants are articulated cleanly
-        tts_text = re.sub(r"\s*[—–-]+\s*$", ",", text)
-        words = asyncio.run(_synthesize_beat_with_word_boundaries(tts_text, voice, b_mp3, rate=rate))
+        words = all_words_per_beat[idx]
 
         orig_tokens = text.split()
         if words:

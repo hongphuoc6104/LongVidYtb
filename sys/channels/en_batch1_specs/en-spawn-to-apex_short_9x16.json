@@ -1,0 +1,102 @@
+{
+  "job_id": "en-spawn-to-apex-batch1-9x16",
+  "channel_slug": "en-spawn-to-apex",
+  "aspect": "9:16",
+  "parent_long_id": "en-spawn-to-apex-batch1-16x9",
+  "title": "Hydraulic Strike: How a Dragonfly Nymph Fires Its Lower Jaw in 15 Milliseconds",
+  "youtube_title": "The 15-Millisecond Hydraulic Jaw Strike",
+  "voice": "en-US-EricNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "sg1_hook",
+      "continues_prev": false,
+      "scene_anchor": "Deep Look PBS extreme optical macro biology cinematography at f/2.8 with hyper-detailed microscopic anatomy isolated against a clean dark velvet bokeh backdrop, strictly zero text",
+      "narration": "Beneath murky freshwater lurks the fastest underwater strike in the entire animal kingdom.",
+      "pause_after_sec": 0.32,
+      "camera_verb": "locked Laowa 24mm probe macro push-in",
+      "start_visual": "Deep Look PBS extreme optical macro biology cinematography at f/2.8: murky underwater pond habitat with green duckweed and a camouflaged dragonfly nymph clinging to submerged reed, strictly zero text.",
+      "end_visual": "On the same submerged reed, camera pushes closer revealing the predatory nymph's faceted compound eyes glistening underwater against dark velvet aquatic bokeh, strictly zero text.",
+      "subject_motion": "the camouflaged dragonfly nymph clings motionlessly to the submerged reed as tiny water bubbles drift upward",
+      "speech_rate": "+3%"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "sg1_hook",
+      "continues_prev": true,
+      "scene_anchor": "Deep Look PBS extreme optical macro biology cinematography at f/2.8 with hyper-detailed microscopic anatomy isolated against a clean dark velvet bokeh backdrop, strictly zero text",
+      "narration": "Dragonfly nymphs possess a hinged lower jaw called a mask folded beneath their chin.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "ultra-shallow-DOF lateral specimen track",
+      "start_visual": "Extreme macro lateral profile of the dragonfly nymph head: articulated chitin plates showing the folded labium mask tucked tightly under its thorax, strictly zero text.",
+      "end_visual": "On the same close-up, glancing light highlights the serrated pincer claws at the tip of the folded labium mask, strictly zero text.",
+      "subject_motion": "camera tracks laterally across the nymph's armored head as aquatic keylight glints on the folded jaw structure",
+      "speech_rate": "+3%"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "sg2_mechanism",
+      "continues_prev": false,
+      "scene_anchor": "Deep Look PBS extreme optical macro biology cinematography at f/2.8 with hyper-detailed microscopic anatomy isolated against a clean dark velvet bokeh backdrop, strictly zero text",
+      "narration": "Instead of relying on muscle contraction, the nymph builds immense internal hydraulic pressure.",
+      "pause_after_sec": 0.32,
+      "camera_verb": "locked Laowa 24mm probe macro push-in",
+      "start_visual": "Translucent macro view showing the nymph's abdominal cavity contracting, compressing hemolymph fluid under high internal pressure, optical macro f/2.8, strictly zero text.",
+      "end_visual": "On the same specimen, internal fluid pressure shifts forward toward the thoracic labial hinge with subtle chitin tension, strictly zero text.",
+      "subject_motion": "the nymph's abdomen contracts subtly as internal fluid pressure builds behind the locked jaw joint",
+      "speech_rate": "+3%"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "sg2_mechanism",
+      "continues_prev": true,
+      "scene_anchor": "Deep Look PBS extreme optical macro biology cinematography at f/2.8 with hyper-detailed microscopic anatomy isolated against a clean dark velvet bokeh backdrop, strictly zero text",
+      "narration": "A microscopic cuticle catch releases stored fluid tension like a high-velocity mechanical spring.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "ultra-shallow-DOF lateral specimen track",
+      "start_visual": "Extreme macro shot of the microscopic labial latch joint, glistening chitin cuticle mechanism locked in high-tension position, strictly zero text.",
+      "end_visual": "On the exact same latch joint, the cuticle trigger releases smoothly as internal elastic tension uncoils, strictly zero text.",
+      "subject_motion": "the microscopic chitin latch slips free, unleashing pent-up hydraulic force with razor-sharp mechanical precision",
+      "speech_rate": "+3%"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "sg3_impact",
+      "continues_prev": false,
+      "scene_anchor": "Deep Look PBS extreme optical macro biology cinematography at f/2.8 with hyper-detailed microscopic anatomy isolated against a clean dark velvet bokeh backdrop, strictly zero text",
+      "narration": "The barbed labium launches outward in fifteen milliseconds, seizing prey before light reflects.",
+      "pause_after_sec": 0.32,
+      "camera_verb": "high-speed microscopic slow-motion pass",
+      "start_visual": "Ultra high-speed phantom macro camera view: the hinged lower mask explodes forward through clear pond water toward an unsuspecting water bug, strictly zero text.",
+      "end_visual": "In the same high-speed frame, the extended barbed pincers snap shut around the water bug with foaming micro-cavitation bubbles, strictly zero text.",
+      "subject_motion": "the hinged jaw shoots forward with blinding speed, snapping sharp terminal claws around the prey underwater",
+      "speech_rate": "+3%"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "sg3_impact",
+      "continues_prev": true,
+      "scene_anchor": "Deep Look PBS extreme optical macro biology cinematography at f/2.8 with hyper-detailed microscopic anatomy isolated against a clean dark velvet bokeh backdrop, strictly zero text",
+      "narration": "Sharp grasping pincers drag the victim backward directly into waiting serrated chewing mandibles.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "locked Laowa 24mm probe macro push-in",
+      "start_visual": "High-speed macro shot as the extended mask retracts rapidly, hauling the captured prey back beneath the nymph's armored head, strictly zero text.",
+      "end_visual": "On the same view, the serrated chewing mandibles open and begin processing the prey against dark aquatic bokeh, strictly zero text.",
+      "subject_motion": "the hydraulic mask retracts smoothly, pulling the trapped prey directly into the nymph's powerful chewing jaws",
+      "speech_rate": "+3%"
+    },
+    {
+      "shot_id": "S07",
+      "scene_group": "sg4_cta",
+      "continues_prev": false,
+      "scene_anchor": "Deep Look PBS extreme optical macro biology cinematography at f/2.8 with hyper-detailed microscopic anatomy isolated against a clean dark velvet bokeh backdrop, strictly zero text",
+      "narration": "Watch our full documentary to explore the terrifying micro weapons engineered by insects.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "steady micro-habitat orbit",
+      "start_visual": "Deep Look PBS extreme macro beauty shot: an iridescent adult dragonfly perched on a sunlit reed with crystalline gossamer wings reflecting rainbow highlights, strictly zero text.",
+      "end_visual": "On the same sunlit dragonfly, warm golden light catches its massive faceted compound eyes against clean dark woodland bokeh, strictly zero text.",
+      "subject_motion": "the adult dragonfly twitches its iridescent wings gently in warm sunlight against dark woodland bokeh",
+      "speech_rate": "+3%"
+    }
+  ]
+}

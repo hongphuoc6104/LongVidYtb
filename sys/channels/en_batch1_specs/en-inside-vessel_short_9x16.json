@@ -1,0 +1,95 @@
+{
+  "job_id": "en-inside-vessel-batch1-9x16",
+  "parent_long_id": "en-inside-vessel-batch1-16x9",
+  "channel_slug": "en-inside-vessel",
+  "aspect": "9:16",
+  "title": "The Hair-Thin Bottleneck: How Red Blood Cells Fold to Survive Crushing Capillary Pressure",
+  "youtube_title": "How Blood Cells Squeeze Through Capillaries",
+  "voice": "en-US-EricNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "G1",
+      "continues_prev": false,
+      "narration": "Human capillaries are mere hair-thin tunnels, half the diameter of the blood cells entering them.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Endoscopic capillary approach push",
+      "start_visual": "Nucleus Medical Media 9:16 vertical shot: endoscopic view inside a narrowing arteriole branching into microscopic capillaries, strictly zero text.",
+      "end_visual": "Approaching the tiny six-micrometer capillary entrance where blood plasma accelerates into the bottleneck, strictly zero text.",
+      "subject_motion": "camera navigates down the narrowing vessel toward the hair-thin capillary entrance",
+      "scene_anchor": "Nucleus Medical Media 8K 3D endoscopic biomedical cinematography with glistening subsurface tissue textures and clean surgical fiber-optic rim lighting, strictly zero text labels"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "G1",
+      "continues_prev": true,
+      "narration": "An eight-micrometer red blood cell must physically deform to squeeze into the narrow passage.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "Erythrocyte deformation macro push",
+      "start_visual": "Vertical view of an eight-micrometer biconcave disc red blood cell approaching the six-micrometer vessel mouth, strictly zero text.",
+      "end_visual": "Pushing closer as the flexible red cell compresses against the entrance, folding like a parachute, strictly zero text.",
+      "subject_motion": "the biconcave disc deforms elastically into an elongated bullet shape to enter the tube",
+      "scene_anchor": "Nucleus Medical Media 8K 3D endoscopic biomedical cinematography with glistening subsurface tissue textures and clean surgical fiber-optic rim lighting, strictly zero text labels"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "G2",
+      "continues_prev": false,
+      "narration": "Inside the cell membrane, elastic spectrin protein networks stretch without breaking under crushing pressures.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Membrane spectrin cytoskeleton zoom",
+      "start_visual": "Macro cutaway through erythrocyte membrane: glowing hexagonal spectrin protein cytoskeleton stretching under tension, strictly zero text.",
+      "end_visual": "Zooming into the flexible protein coils as they deform smoothly without tearing or losing structural integrity, strictly zero text.",
+      "subject_motion": "the hexagonal protein mesh stretches and elongates along the lines of mechanical stress",
+      "scene_anchor": "Nucleus Medical Media 8K 3D endoscopic biomedical cinematography with glistening subsurface tissue textures and clean surgical fiber-optic rim lighting, strictly zero text labels"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "G2",
+      "continues_prev": true,
+      "narration": "Tightly pressed against the vessel wall, the cell unloads oxygen molecules in milliseconds.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "Gas exchange molecular focus pull",
+      "start_visual": "Close-up inside the capillary: folded red blood cell sliding against glistening endothelial wall, strictly zero text.",
+      "end_visual": "Focus pulling to glowing cyan oxygen molecules diffusing across the ultra-thin vessel wall into tissue, strictly zero text.",
+      "subject_motion": "cyan oxygen molecules detach from hemoglobin and diffuse across the translucent capillary membrane",
+      "scene_anchor": "Nucleus Medical Media 8K 3D endoscopic biomedical cinematography with glistening subsurface tissue textures and clean surgical fiber-optic rim lighting, strictly zero text labels"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "G3",
+      "continues_prev": false,
+      "narration": "Exiting the bottleneck into wider venules, the resilient cell snaps back into shape.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Venule expansion tracking pass",
+      "start_visual": "Vertical shot of capillary widening into a venule: elongated red blood cell emerging from narrow tunnel, strictly zero text.",
+      "end_visual": "Tracking the cell as elastic tension instantly restores its classic biconcave disc geometry, strictly zero text.",
+      "subject_motion": "the elongated cell rebounds instantly into its symmetrical biconcave disc shape upon entering the venule",
+      "scene_anchor": "Nucleus Medical Media 8K 3D endoscopic biomedical cinematography with glistening subsurface tissue textures and clean surgical fiber-optic rim lighting, strictly zero text labels"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "G3",
+      "continues_prev": true,
+      "narration": "Your body performs this miraculous microscopic folding acrobatics billions of times every single second.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "Microvascular network sweep",
+      "start_visual": "Wide 9:16 vertical view of glowing capillary beds throughout human muscle tissue, strictly zero text.",
+      "end_visual": "Sweeping across the dense microvascular network as millions of cells fold and glide in perfect harmony, strictly zero text.",
+      "subject_motion": "thousands of red blood cells squeeze continuously through the shimmering capillary meshwork",
+      "scene_anchor": "Nucleus Medical Media 8K 3D endoscopic biomedical cinematography with glistening subsurface tissue textures and clean surgical fiber-optic rim lighting, strictly zero text labels"
+    },
+    {
+      "shot_id": "S07",
+      "scene_group": "G4",
+      "continues_prev": false,
+      "narration": "Explore the complete hour-by-hour vascular breakdown in our full deep-dive video linked below.",
+      "pause_after_sec": 0.25,
+      "camera_verb": "Grand anatomical harmony pull-back",
+      "start_visual": "Vertical anatomical view: glowing human cardiovascular silhouette illuminated by fiber-optic rim light, strictly zero text.",
+      "end_visual": "Pulling back into deep navy background as the complete vascular tree pulses peacefully in unison, strictly zero text.",
+      "subject_motion": "camera glides smoothly away as the luminous human circulatory system pulses with gentle life",
+      "scene_anchor": "Nucleus Medical Media 8K 3D endoscopic biomedical cinematography with glistening subsurface tissue textures and clean surgical fiber-optic rim lighting, strictly zero text labels"
+    }
+  ]
+}

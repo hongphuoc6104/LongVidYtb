@@ -1,0 +1,99 @@
+{
+  "job_id": "en-career-leverage-batch1-9x16",
+  "parent_long_id": "en-career-leverage-batch1-16x9",
+  "channel_slug": "en-career-leverage",
+  "aspect": "9:16",
+  "voice": "en-US-RogerNeural",
+  "title": "Output vs. Visibility: The Quiet Reason High Performers Get Passed Over for Promotion",
+  "youtube_title": "Why High Performers Get Passed Over",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "G1",
+      "continues_prev": false,
+      "scene_anchor": "High-rise corporate corner office boardroom overlooking Manhattan skyline at dusk photographed on 35mm cinema glass at f/2.0, high-contrast WSJ editorial photojournalism, dark walnut conference table, architectural glass reflections, strictly zero text",
+      "narration": "Being the hardest worker in your corporate department rarely leads to rapid leadership promotion.",
+      "pause_after_sec": 0.32,
+      "camera_verb": "Authoritative low-angle 35mm push-in",
+      "start_visual": "Vertical 9:16 portrait in a high-rise office at dusk: a lone specialist reviews dense charts behind monitors, skyscrapers glowing behind, closed lips, strictly zero text.",
+      "end_visual": "Pushing closer: reflections of dusk skyscrapers gleam across the glass desk as the worker methodically reviews data in silence, strictly zero text.",
+      "subject_motion": "camera pushes slowly toward the specialist working late into the twilight hours",
+      "speech_rate": "+10%"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "G1",
+      "continues_prev": true,
+      "scene_anchor": "High-rise corporate corner office boardroom overlooking Manhattan skyline at dusk photographed on 35mm cinema glass at f/2.0, high-contrast WSJ editorial photojournalism, dark walnut conference table, architectural glass reflections, strictly zero text",
+      "narration": "If you become indispensable at daily execution, management literally cannot afford to replace you.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Smooth lateral tracking across office partition",
+      "end_visual": "Tracking past glass office dividers: a heavy brass gear turns under immense load, essential to the operating machine, strictly zero text.",
+      "subject_motion": "camera glides across the glass divider as the heavy brass gear sustains continuous tension",
+      "speech_rate": "+10%"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "G2",
+      "continues_prev": false,
+      "scene_anchor": "Macro 35mm editorial tabletop shot on dark slate desk with heavy brushed-titanium fountain pen and black stitched leather portfolio, sharp directional tungsten side-light, strictly zero text",
+      "narration": "Corporate hierarchies always reward perceived strategic leverage and replacement cost, not silent midnight overtime.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Macro 35mm precision push-in on slate",
+      "start_visual": "Vertical 9:16 macro shot: a brushed-titanium fountain pen rests on a black leather portfolio under sharp tungsten light, strictly zero text.",
+      "end_visual": "Pushing into the titanium pen: a small brass fulcrum lever lifts a golden cube effortlessly, demonstrating leverage, strictly zero text.",
+      "subject_motion": "camera pushes into the titanium pen as the small mechanical lever lifts the golden cube",
+      "speech_rate": "+10%"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "G2",
+      "continues_prev": true,
+      "scene_anchor": "Macro 35mm editorial tabletop shot on dark slate desk with heavy brushed-titanium fountain pen and black stitched leather portfolio, sharp directional tungsten side-light, strictly zero text",
+      "narration": "High performers mistakenly assume that raw output speaks loudly enough on its own.",
+      "pause_after_sec": 0.32,
+      "camera_verb": "Slow vertical tilt down to unread report",
+      "end_visual": "Tilting downward onto the desk: a pristine leather-bound audit report lies unread in deep shadows, strictly zero text.",
+      "subject_motion": "camera tilts down onto the unread technical volume resting in ambient desk shadows",
+      "speech_rate": "+10%"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "G3",
+      "continues_prev": false,
+      "scene_anchor": "Minimalist high-ceiling executive strategy suite with solid marble conference table, cold natural architectural daylight, intense strategic composure, strictly zero text",
+      "narration": "In reality, high-level organizational decisions hinge on visibility, executive sponsorship, and asymmetric business impact.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Authoritative wide push-in across marble table",
+      "start_visual": "Vertical 9:16 view: senior board members converse calmly in a marble suite under bright morning daylight, strictly zero text.",
+      "end_visual": "Pushing into the marble table: a relaxed leader presents a clear systems diagram with composed authority, strictly zero text.",
+      "subject_motion": "camera pushes smoothly across the marble suite toward the poised leadership presentation",
+      "speech_rate": "+10%"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "G3",
+      "continues_prev": true,
+      "scene_anchor": "Minimalist high-ceiling executive strategy suite with solid marble conference table, cold natural architectural daylight, intense strategic composure, strictly zero text",
+      "narration": "Stop solving every tactical fire yourself and start documenting systems that multiply others.",
+      "pause_after_sec": 0.32,
+      "camera_verb": "Tactile macro shot of open playbook",
+      "end_visual": "Macro vertical shot: a clean linen playbook displays modular decision trees allowing junior teammates to operate autonomously, strictly zero text.",
+      "subject_motion": "camera tracks across the modular playbook pages as junior analysts work with confidence",
+      "speech_rate": "+10%"
+    },
+    {
+      "shot_id": "S07",
+      "scene_group": "G4",
+      "continues_prev": false,
+      "scene_anchor": "High-rise corporate corner office boardroom overlooking Manhattan skyline at dusk photographed on 35mm cinema glass at f/2.0, high-contrast WSJ editorial photojournalism, dark walnut conference table, architectural glass reflections, strictly zero text",
+      "narration": "For the complete corporate leverage playbook, check out our full breakdown linked below.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Calm centered vertical pull-back",
+      "start_visual": "Vertical 9:16 portrait: a composed executive gazes forward against the panoramic Manhattan skyline, posture upright, strictly zero text.",
+      "end_visual": "Pulling back into center frame: the clean boardroom radiates profound authority and strategic sovereignty, strictly zero text.",
+      "subject_motion": "camera retreats slowly into a centered, balanced vertical portrait of executive sovereignty",
+      "speech_rate": "+10%"
+    }
+  ]
+}

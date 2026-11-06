@@ -947,6 +947,33 @@ class DirectCDPProfileSession:
         if not has_mint:
             await self.evaluate(CDP_RECAPTCHA_GUARD_JS, await_promise=False)
 
+    async def _refresh_recaptcha_session(self) -> None:
+        """Clear stale _GRECAPTCHA cookies and origin storage, reload page, and re-arm pristine reCAPTCHA guard."""
+        try:
+            await self.call(
+                "Storage.clearDataForOrigin",
+                {
+                    "origin": "https://flow.google.com",
+                    "storageTypes": "appcache,cache_storage,file_systems,indexeddb,local_storage,service_workers,shader_cache,websql",
+                },
+            )
+            all_cookies = (await self.call("Network.getAllCookies")).get("cookies", [])
+            for c in all_cookies:
+                if "GRECAPTCHA" in c["name"] or c["name"].startswith("_ga"):
+                    await self.call(
+                        "Network.deleteCookies",
+                        {"name": c["name"], "domain": c["domain"], "path": c.get("path", "/")},
+                    )
+        except Exception:
+            pass
+        try:
+            await self.call("Page.reload", {"ignoreCache": False})
+            await self._wait_for_flow_ready(timeout=20.0)
+            await self._ensure_mint_captcha_guard()
+            await asyncio.sleep(2.0)
+        except Exception:
+            pass
+
     async def generate_image(
         self,
         prompt: str,
@@ -1013,10 +1040,16 @@ class DirectCDPProfileSession:
                 }}
             }})()
             """
+            from .resource_locks import stagger_cross_process_action
+
+            await asyncio.to_thread(stagger_cross_process_action, "flow_rpc_submit", 1.5)
             out = await self.evaluate(js_code, await_promise=True, timeout=180.0)
             if not isinstance(out, dict) or out.get("error"):
-                err_msg = out.get("error") if isinstance(out, dict) else "NO_CDP_RESPONSE"
-                err = RuntimeError(str(err_msg))
+                err_msg = str(out.get("error") if isinstance(out, dict) else "NO_CDP_RESPONSE")
+                if attempt < 2 and any(k in err_msg for k in ("NO_AT_TOKEN", "CAPTCHA_FAILED")):
+                    await self._refresh_recaptcha_session()
+                    continue
+                err = RuntimeError(err_msg)
                 if isinstance(out, dict) and out.get("submitted") is False:
                     err.generation_submitted = False
                 raise err
@@ -1030,6 +1063,10 @@ class DirectCDPProfileSession:
                     await self._ensure_mint_captcha_guard()
                     continue
                 if "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in str(ex) or "CAPTCHA" in str(ex) or "TOO_MUCH_TRAFFIC" in str(ex):
+                    if attempt < 2:
+                        await asyncio.sleep(2.5)
+                        await self._refresh_recaptcha_session()
+                        continue
                     err_block = RuntimeError("FLOW_PROVIDER_BLOCKED: preserve the original session and reconcile; do not resubmit")
                     err_block.generation_submitted = False
                     raise err_block from ex
@@ -1150,7 +1187,10 @@ class DirectCDPProfileSession:
     ) -> dict[str, Any]:
         """Execute a signed-in batchexecute POST inside the active Flow tab."""
         if captcha_action:
+            from .resource_locks import stagger_cross_process_action
+
             await self._ensure_mint_captcha_guard()
+            await asyncio.to_thread(stagger_cross_process_action, "flow_rpc_submit", 1.5)
         source_path_override = f"/project/{self.project_id}" if self.project_id else "/"
         js_code = f"""
         (async () => {{
@@ -1505,22 +1545,30 @@ class DirectCDPProfileSession:
             duration_seconds=duration_seconds,
         )
 
-        out = await self._post_batchexecute(
-            rpcid=rpcid,
-            freq=freq,
-            captcha_action=flow_rpc.CAPTCHA_VIDEO,
-            timeout=180.0,
-        )
-        try:
-            sub_payload = flow_rpc.first_payload(out.get("text", ""), rpcid)
-        except Exception as ex:
-            if "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in str(ex) or "CAPTCHA" in str(ex):
-                err_block = RuntimeError(
-                    "FLOW_PROVIDER_BLOCKED: preserve the original session and reconcile; do not resubmit"
+        sub_payload = None
+        for vid_attempt in range(3):
+            try:
+                out = await self._post_batchexecute(
+                    rpcid=rpcid,
+                    freq=freq,
+                    captcha_action=flow_rpc.CAPTCHA_VIDEO,
+                    timeout=180.0,
                 )
-                err_block.generation_submitted = False
-                raise err_block from ex
-            raise
+                sub_payload = flow_rpc.first_payload(out.get("text", ""), rpcid)
+                break
+            except Exception as ex:
+                ex_s = str(ex)
+                if any(k in ex_s for k in ("PUBLIC_ERROR_UNUSUAL_ACTIVITY", "CAPTCHA", "TOO_MUCH_TRAFFIC", "NO_AT_TOKEN")):
+                    if vid_attempt < 2:
+                        await asyncio.sleep(2.5)
+                        await self._refresh_recaptcha_session()
+                        continue
+                    err_block = RuntimeError(
+                        "FLOW_PROVIDER_BLOCKED: preserve the original session and reconcile; do not resubmit"
+                    )
+                    err_block.generation_submitted = False
+                    raise err_block from ex
+                raise
 
         sub_info = flow_rpc.read_video_submission(sub_payload)
         media_id = sub_info["media_id"]

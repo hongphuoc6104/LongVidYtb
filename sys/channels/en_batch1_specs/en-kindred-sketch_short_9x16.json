@@ -1,0 +1,102 @@
+{
+  "job_id": "en-kindred-sketch-batch1-9x16",
+  "channel_slug": "en-kindred-sketch",
+  "aspect": "9:16",
+  "title": "Why Silence Hurts: How the Brain Processes Emotional Withdrawal Like Physical Pain",
+  "youtube_title": "Why the Silent Treatment Hurts Physically",
+  "parent_long_id": "en-kindred-sketch-batch1-16x9",
+  "voice": "en-GB-RyanNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "short_hook",
+      "continues_prev": false,
+      "scene_anchor": "Intimate 35mm live-action film cinematography with Kodak Vision3 500T color grading, warm 3000K tungsten bokeh, natural skin and fabric grain, and quiet emotional interior architecture, completely silent introspective mood, strictly zero flat cartoon doodles",
+      "narration": "When someone gives you the silent treatment, your chest physically tightens in sharp pain.",
+      "pause_after_sec": 0.32,
+      "speech_rate": "+0%",
+      "camera_verb": "Empathetic slow 35mm table-level push-in",
+      "start_visual": "Intimate 35mm cinematography: a woman sitting alone at a wooden dining table at twilight, clutching her chest as rain trickles down the dark window pane, strictly zero text.",
+      "end_visual": "Her hands press gently against the warm fabric of her woolen sweater, breathing softly in the dim amber lamplight.",
+      "subject_motion": "her hands press gently against her sternum as she breathes softly in the warm amber lamplight"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "short_hook",
+      "continues_prev": true,
+      "scene_anchor": "Intimate 35mm live-action film cinematography with Kodak Vision3 500T color grading, warm 3000K tungsten bokeh, natural skin and fabric grain, and quiet emotional interior architecture, completely silent introspective mood, strictly zero flat cartoon doodles",
+      "narration": "Brain scans prove that emotional rejection activates the exact neural pathways as physical burns.",
+      "pause_after_sec": 0.36,
+      "speech_rate": "+0%",
+      "camera_verb": "Intimate over-the-shoulder focus pull",
+      "start_visual": "",
+      "end_visual": "A warm laboratory consultation lightbox displaying an illuminated brain scan showing the dorsal anterior cingulate cortex glowing in deep amber-red.",
+      "subject_motion": "the amber-red illumination on the brain scan display glows steadily in the quiet, darkened consultation room"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "short_mechanism",
+      "continues_prev": false,
+      "scene_anchor": "Intimate 35mm live-action film cinematography with Kodak Vision3 500T color grading, warm 3000K tungsten bokeh, natural skin and fabric grain, and quiet emotional interior architecture, completely silent introspective mood, strictly zero flat cartoon doodles",
+      "narration": "The anterior cingulate cortex cannot distinguish between a broken bone and cold emotional withdrawal.",
+      "pause_after_sec": 0.34,
+      "speech_rate": "+0%",
+      "camera_verb": "Gentle lateral drift across shared space",
+      "start_visual": "Close macro of an antique plaster anatomical hand sculpture with a clean fracture line, illuminated by dramatic side tungsten lighting.",
+      "end_visual": "The jagged fracture line casts a sharp shadow across the white plaster palm under soft, warm studio light.",
+      "subject_motion": "raking side light emphasizes the deep jagged crack running through the pale plaster hand sculpture"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "short_mechanism",
+      "continues_prev": true,
+      "scene_anchor": "Intimate 35mm live-action film cinematography with Kodak Vision3 500T color grading, warm 3000K tungsten bokeh, natural skin and fabric grain, and quiet emotional interior architecture, completely silent introspective mood, strictly zero flat cartoon doodles",
+      "narration": "For our ancient ancestors, sudden tribal ostracization signaled certain physical death in the wilderness.",
+      "pause_after_sec": 0.38,
+      "speech_rate": "+0%",
+      "camera_verb": "Empathetic slow 35mm table-level push-in",
+      "start_visual": "",
+      "end_visual": "A desolate windswept stone ridge at twilight where a lone silhouette walks into cold misty fog, clutching a dark woolen cloak.",
+      "subject_motion": "the solitary silhouette walks slowly along the foggy ridge as cold mountain mist drifts past"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "short_shift",
+      "continues_prev": false,
+      "scene_anchor": "Intimate 35mm live-action film cinematography with Kodak Vision3 500T color grading, warm 3000K tungsten bokeh, natural skin and fabric grain, and quiet emotional interior architecture, completely silent introspective mood, strictly zero flat cartoon doodles",
+      "narration": "Recognizing this ancient neurological alarm stops you from frantically begging for quick reassurance.",
+      "pause_after_sec": 0.34,
+      "speech_rate": "+0%",
+      "camera_verb": "Gentle lateral drift across shared space",
+      "start_visual": "A woman pausing before a closed wooden bedroom door, taking a slow, deep grounding breath as her hands relax to her sides.",
+      "end_visual": "Her fingers loosen their grip and drop peacefully to her sides as warm amber light glows beneath the closed door.",
+      "subject_motion": "her hands relax away from the door handle as her shoulders drop in calm, self-soothing release"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "short_shift",
+      "continues_prev": true,
+      "scene_anchor": "Intimate 35mm live-action film cinematography with Kodak Vision3 500T color grading, warm 3000K tungsten bokeh, natural skin and fabric grain, and quiet emotional interior architecture, completely silent introspective mood, strictly zero flat cartoon doodles",
+      "narration": "True emotional security begins when you comfort yourself through another person's temporary silence.",
+      "pause_after_sec": 0.38,
+      "speech_rate": "+0%",
+      "camera_verb": "Empathetic slow 35mm table-level push-in",
+      "start_visual": "",
+      "end_visual": "The woman sitting peacefully by the rain-streaked window with a warm mug of tea, watching city lights blur into golden bokeh.",
+      "subject_motion": "warm golden bokeh circles dance in the rain-streaked window as steam rises gently from the ceramic tea mug"
+    },
+    {
+      "shot_id": "S07",
+      "scene_group": "short_cta",
+      "continues_prev": false,
+      "scene_anchor": "Intimate 35mm live-action film cinematography with Kodak Vision3 500T color grading, warm 3000K tungsten bokeh, natural skin and fabric grain, and quiet emotional interior architecture, completely silent introspective mood, strictly zero flat cartoon doodles",
+      "narration": "Discover how opposite attachment styles heal their deepest traps in our full breakdown linked below.",
+      "pause_after_sec": 0.28,
+      "speech_rate": "+0%",
+      "camera_verb": "Gentle lateral drift across shared space",
+      "start_visual": "Two people sitting comfortably side by side on a warm living room sofa reading together in tranquil evening domestic peace.",
+      "end_visual": "Warm afternoon sunlight floods the entire apartment through sheer linen curtains in timeless, golden cinematic warmth.",
+      "subject_motion": "camera glides slowly toward the couple resting peacefully together in the sunlit, tranquil living room"
+    }
+  ]
+}

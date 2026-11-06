@@ -34,6 +34,7 @@ from typing import Any, Iterator
 from .resource_locks import (
     build_optimized_chrome_launch,
     is_port_locked_by_another_process,
+    stagger_cross_process_action,
 )
 
 logger = logging.getLogger("flow_cdp.process_manager")
@@ -477,8 +478,9 @@ class ProcessGroupManager:
         prof_name = profile_cfg.get("directory") or profile_cfg.get("profile_dir", "Profile 1")
         binary = chrome_bin or detect_chrome_binary()
 
-        # Clean stale locks before launch
+        # Clean stale locks before launch and stagger cross-process browser spawns by 1.8s
         clean_singleton_locks(target_dir, prof_name)
+        stagger_cross_process_action("chrome_launch", min_interval_sec=1.8)
 
         merged_extra_args: list[str] = []
         if profile_cfg.get("extra_args"):

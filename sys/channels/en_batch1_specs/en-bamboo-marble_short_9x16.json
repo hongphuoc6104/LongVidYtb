@@ -1,0 +1,102 @@
+{
+  "job_id": "en-bamboo-marble-batch1-9x16",
+  "channel_slug": "en-bamboo-marble",
+  "aspect": "9:16",
+  "title": "The Empty Boat: The 10-Second Zen Shift That Stops Anger Before It Starts",
+  "youtube_title": "The Empty Boat: Stop Taking Life Personally",
+  "parent_long_id": "en-bamboo-marble-batch1-16x9",
+  "voice": "en-US-RogerNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "short_hook",
+      "continues_prev": false,
+      "scene_anchor": "Aperture & Pursuit of Wonder moody 35mm anamorphic contemplative cinema with natural dusk/rain chiaroscuro, serene East Asian timber, moss, and misty mountain textures, muted pine greens and deep charcoal river stones, completely silent atmospheric world",
+      "narration": "If an empty wooden boat drifts downriver and bumps against your skiff, you feel nothing.",
+      "pause_after_sec": 0.32,
+      "speech_rate": "+8%",
+      "camera_verb": "Anamorphic 35mm slow horizontal drift",
+      "start_visual": "Moody 35mm anamorphic cinema: a weathered wooden rowboat drifts down a misty mountain river at dawn, completely empty of passengers, gentle water ripples around its hull, strictly zero text.",
+      "end_visual": "The empty boat drifts gently into the side of a moored skiff with a soft wooden thud, floating harmlessly beside it.",
+      "subject_motion": "the empty wooden boat glides smoothly through river mist and taps gently against the stationary skiff"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "short_hook",
+      "continues_prev": true,
+      "scene_anchor": "Aperture & Pursuit of Wonder moody 35mm anamorphic contemplative cinema with natural dusk/rain chiaroscuro, serene East Asian timber, moss, and misty mountain textures, muted pine greens and deep charcoal river stones, completely silent atmospheric world",
+      "narration": "Even an irritable person will not get angry at an empty drifting boat.",
+      "pause_after_sec": 0.36,
+      "speech_rate": "+8%",
+      "camera_verb": "Tranquil meditative push-in",
+      "start_visual": "",
+      "end_visual": "Close view of the two wooden hulls resting together in the gentle current, water lapping softly between mossy cedar planks under soft grey dawn sky.",
+      "subject_motion": "gentle mountain river ripples lap against the weathered wooden hulls as cool mist drifts downstream"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "short_mechanism",
+      "continues_prev": false,
+      "scene_anchor": "Aperture & Pursuit of Wonder moody 35mm anamorphic contemplative cinema with natural dusk/rain chiaroscuro, serene East Asian timber, moss, and misty mountain textures, muted pine greens and deep charcoal river stones, completely silent atmospheric world",
+      "narration": "But if a man sits in that boat, you immediately shout in sudden rage.",
+      "pause_after_sec": 0.34,
+      "speech_rate": "+8%",
+      "camera_verb": "Tranquil meditative push-in",
+      "start_visual": "A shadowy human silhouette sitting motionless in the approaching wooden boat in thick river fog, holding an oar.",
+      "end_visual": "The boat drifts closer through the mist, its dark outline sharp against the pale morning water.",
+      "subject_motion": "camera pushes through the drifting river fog toward the still silhouette in the approaching wooden craft"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "short_mechanism",
+      "continues_prev": true,
+      "scene_anchor": "Aperture & Pursuit of Wonder moody 35mm anamorphic contemplative cinema with natural dusk/rain chiaroscuro, serene East Asian timber, moss, and misty mountain textures, muted pine greens and deep charcoal river stones, completely silent atmospheric world",
+      "narration": "The physical collision is identical, yet your inner peace completely shatters into fury.",
+      "pause_after_sec": 0.38,
+      "speech_rate": "+8%",
+      "camera_verb": "Locked contemplative wide composition",
+      "start_visual": "",
+      "end_visual": "Close macro of river water churning violently around a submerged jagged granite boulder, white foam bubbling in chaotic turbulence.",
+      "subject_motion": "churning white water splashes violently against the jagged rock, creating chaotic frothy eddies in cold dawn light"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "short_shift",
+      "continues_prev": false,
+      "scene_anchor": "Aperture & Pursuit of Wonder moody 35mm anamorphic contemplative cinema with natural dusk/rain chiaroscuro, serene East Asian timber, moss, and misty mountain textures, muted pine greens and deep charcoal river stones, completely silent atmospheric world",
+      "narration": "Zhuangzi taught that the offense lives entirely within your own projected assumptions of blame.",
+      "pause_after_sec": 0.34,
+      "speech_rate": "+8%",
+      "camera_verb": "Anamorphic 35mm slow horizontal drift",
+      "start_visual": "A tranquil Japanese Zen stone garden where raked white gravel forms perfect concentric rings around dark mossy river stones.",
+      "end_visual": "A single dry autumn bamboo leaf falls silently into the center of the gravel pattern, resting without disturbing the lines.",
+      "subject_motion": "the yellow bamboo leaf settles softly upon the raked white gravel under calm morning light"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "short_shift",
+      "continues_prev": true,
+      "scene_anchor": "Aperture & Pursuit of Wonder moody 35mm anamorphic contemplative cinema with natural dusk/rain chiaroscuro, serene East Asian timber, moss, and misty mountain textures, muted pine greens and deep charcoal river stones, completely silent atmospheric world",
+      "narration": "When you realize everyone is merely drifting unconsciously, all personal grievance naturally evaporates.",
+      "pause_after_sec": 0.38,
+      "speech_rate": "+8%",
+      "camera_verb": "Tranquil meditative push-in",
+      "start_visual": "",
+      "end_visual": "The same misty river opening out into a vast, calm mountain lake where morning sunbeams pierce the fog, illuminating endless golden water.",
+      "subject_motion": "golden sunbeams break through the mountain mist, dissolving the cold grey fog into luminous morning warmth"
+    },
+    {
+      "shot_id": "S07",
+      "scene_group": "short_cta",
+      "continues_prev": false,
+      "scene_anchor": "Aperture & Pursuit of Wonder moody 35mm anamorphic contemplative cinema with natural dusk/rain chiaroscuro, serene East Asian timber, moss, and misty mountain textures, muted pine greens and deep charcoal river stones, completely silent atmospheric world",
+      "narration": "Uncover the deeper Taoist art of effortless flow in our complete breakdown linked below.",
+      "pause_after_sec": 0.28,
+      "speech_rate": "+8%",
+      "camera_verb": "Anamorphic 35mm slow horizontal drift",
+      "start_visual": "A magnificent panoramic view of an ancient cedar wooden pavilion overlooking mist-shrouded mountain peaks at golden dawn.",
+      "end_visual": "The golden morning sun rises over distant mountain ridges, bathing the tranquil pavilion and serene river valley in peace.",
+      "subject_motion": "camera glides past the wooden pavilion pillars toward the vast, sunlit mountain horizon in eternal stillness"
+    }
+  ]
+}

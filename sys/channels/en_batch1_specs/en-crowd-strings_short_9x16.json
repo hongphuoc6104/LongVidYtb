@@ -1,0 +1,107 @@
+{
+  "job_id": "en-crowd-strings-batch1-9x16",
+  "parent_long_id": "en-crowd-strings-batch1-16x9",
+  "channel_slug": "en-crowd-strings",
+  "aspect": "9:16",
+  "title": "The Gruen Transfer: The Exact Second a Store Layout Hijacks Your Impulse Control",
+  "youtube_title": "The Gruen Transfer: How Malls Hijack You",
+  "thumbnail_spec": {
+    "visual_hook": "Isometric 3D retail cutaway showing translucent shoppers diverted by glowing crimson vector curves",
+    "allowed_text": "GRUEN TRANSFER",
+    "overlay_card": false
+  },
+  "voice": "en-US-SteffanNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "G1",
+      "continues_prev": false,
+      "scene_anchor": "Fern TV moody 3D investigative documentary aesthetic in desaturated slate-blue and concrete grey with selective cyan and warm amber volumetric spotlights, strictly zero text",
+      "narration": "The moment you enter a modern shopping mall, you quietly lose conscious navigational control.",
+      "pause_after_sec": 0.32,
+      "speech_rate": "+3%",
+      "camera_verb": "Isometric 3D architectural dolly",
+      "start_visual": "Isometric 3D cutaway of a modern mall with translucent human silhouettes walking inside, strictly zero text.",
+      "end_visual": "Dollies low toward glass doors as glowing crimson vector arrows appear on the floor, strictly zero text.",
+      "subject_motion": "translucent silhouettes glide smoothly through the glass doors along glowing crimson floor vectors"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "G1",
+      "continues_prev": true,
+      "scene_anchor": "Fern TV moody 3D investigative documentary aesthetic in desaturated slate-blue and concrete grey with selective cyan and warm amber volumetric spotlights, strictly zero text",
+      "narration": "This psychological phenomenon is known in retail environmental architecture as the celebrated Gruen Transfer.",
+      "pause_after_sec": 0.32,
+      "speech_rate": "+3%",
+      "camera_verb": "Locked orthogonal tracking pass",
+      "start_visual": "Dollies low toward glass doors as glowing crimson vector arrows appear on the floor, strictly zero text.",
+      "end_visual": "The sharp floor grid lines dissolve into rippling organic curves under warm amber spotlights, strictly zero text.",
+      "subject_motion": "the floor grid dissolves into glowing fluid patterns, causing walking silhouettes to slow down"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "G2",
+      "continues_prev": false,
+      "scene_anchor": "Fern 3D architectural cutaway diorama in charcoal slate with glowing crimson navigational path vectors guiding translucent geometric human figures, strictly zero text",
+      "narration": "Malls deliberately eliminate windows and exterior clocks to distort your internal sense of time.",
+      "pause_after_sec": 0.32,
+      "speech_rate": "+3%",
+      "camera_verb": "High-angle architectural pan across wall facades",
+      "start_visual": "Monolithic concrete walls completely devoid of windows, sealed beneath a diffuse illuminated ceiling canopy, strictly zero text.",
+      "end_visual": "An elegant minimalist hourglass on a retail pedestal whose falling sand grains vanish into air, strictly zero text.",
+      "subject_motion": "falling sand particles inside the glass vessel dissolve completely before reaching the lower chamber"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "G2",
+      "continues_prev": true,
+      "scene_anchor": "Fern 3D architectural cutaway diorama in charcoal slate with glowing crimson navigational path vectors guiding translucent geometric human figures, strictly zero text",
+      "narration": "Corridors curve continuously to hide distant exits, keeping your eyes locked onto glowing storefronts.",
+      "pause_after_sec": 0.32,
+      "speech_rate": "+3%",
+      "camera_verb": "Curved tracking shot through labyrinth walls",
+      "start_visual": "An elegant minimalist hourglass on a retail pedestal whose falling sand grains vanish into air, strictly zero text.",
+      "end_visual": "Gliding along a curving slate wall that bends away smoothly, obscuring all distant exits, strictly zero text.",
+      "subject_motion": "the camera sweeps around the curving wall as ambient cyan light blends into amber shadow"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "G3",
+      "continues_prev": false,
+      "scene_anchor": "Moody low-angle 3D subterranean documentary cinematography in concrete graphite with sharp cyan volumetric spotlight cones, strictly zero text",
+      "narration": "Background audio plays at sixty-six beats per minute, systematically slowing footsteps and increasing spending.",
+      "pause_after_sec": 0.32,
+      "speech_rate": "+3%",
+      "camera_verb": "Macro perpendicular push-in on soundboard",
+      "start_visual": "An analog audio frequency display glowingly locked at sixty-six beats per minute, strictly zero text.",
+      "end_visual": "Translucent human footsteps visibly decelerate across polished tiles in rhythm with low-frequency pulses, strictly zero text.",
+      "subject_motion": "walking footsteps leave glowing amber impressions that linger longer on the dark floor tiles"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "G3",
+      "continues_prev": true,
+      "scene_anchor": "Moody low-angle 3D subterranean documentary cinematography in concrete graphite with sharp cyan volumetric spotlight cones, strictly zero text",
+      "narration": "You stop being an intentional buyer and become a passive, suggestive wandering retail consumer.",
+      "pause_after_sec": 0.32,
+      "speech_rate": "+3%",
+      "camera_verb": "Low-angle dolly toward register terminal",
+      "start_visual": "Translucent human footsteps visibly decelerate across polished tiles in rhythm with low-frequency pulses, strictly zero text.",
+      "end_visual": "Low-angle dolly toward a sleek register terminal unspooling a long white paper receipt, strictly zero text.",
+      "subject_motion": "the camera pushes forward as white receipt paper unspools smoothly from the register terminal"
+    },
+    {
+      "shot_id": "S07",
+      "scene_group": "G4",
+      "continues_prev": false,
+      "scene_anchor": "Isometric architectural city model in muted basalt and dark titanium with amber optical light trails, strictly zero text",
+      "narration": "For our complete investigative breakdown of behavioral architecture traps, watch the full documentary linked below.",
+      "pause_after_sec": 0.32,
+      "speech_rate": "+3%",
+      "camera_verb": "Composed center lock on 3D architectural model",
+      "start_visual": "Symmetrical overhead view of the retail architectural model with glowing cyan straight exit path, strictly zero text.",
+      "end_visual": "The camera locks into centered stillness as overhead lights dim, leaving only the cyan path, strictly zero text.",
+      "subject_motion": "ambient lights fade gracefully to deep charcoal, leaving a radiant cyan laser beam illuminating the exit"
+    }
+  ]
+}

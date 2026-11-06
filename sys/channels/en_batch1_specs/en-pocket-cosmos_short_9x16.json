@@ -1,0 +1,100 @@
+{
+  "job_id": "en-pocket-cosmos-batch1-9x16",
+  "parent_long_id": "en-pocket-cosmos-batch1-16x9",
+  "channel_slug": "en-pocket-cosmos",
+  "aspect": "9:16",
+  "title": "8 Minutes of Stolen Light: Why Earth Would Keep Orbiting an Empty Sky",
+  "youtube_title": "8 Minutes Before Earth Freezes in Space",
+  "thumbnail_spec": {
+    "visual_hook": "IMAX deep space vista of solar system plane with vanishing solar orb and outward gravitational ripple wave toward Earth",
+    "allowed_text": "STOLEN LIGHT",
+    "overlay_card": false
+  },
+  "voice": "en-US-ChristopherNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "G1",
+      "continues_prev": false,
+      "scene_anchor": "Melodysheep hyper-detailed IMAX deep-space cinematography lit by a single coherent off-screen star keylight against pure velvet interstellar void, strictly zero text",
+      "narration": "If the Sun vanished right now, Earth would not instantly plunge into darkness or freeze.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Grand parabolic space-probe flyby",
+      "start_visual": "Melodysheep IMAX deep space view of the blazing Sun abruptly disappearing, leaving an empty gravitational ring in space, strictly zero text.",
+      "end_visual": "Parabolic flyby past the empty solar coordinate into pitch-black void, strictly zero text.",
+      "subject_motion": "blazing solar disc vanishes abruptly into absolute velvet blackness leaving empty space"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "G1",
+      "continues_prev": true,
+      "scene_anchor": "Melodysheep hyper-detailed IMAX deep-space cinematography lit by a single coherent off-screen star keylight against pure velvet interstellar void, strictly zero text",
+      "narration": "For eight minutes and twenty seconds, we would orbit happily under bright borrowed sunlight.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Zero-G lateral cosmic drift",
+      "start_visual": "Deep-space view looking across ninety-three million miles of vacuum toward planet Earth.",
+      "end_visual": "Drifting alongside a vast beam of traveling solar photons streaming toward the blue planet, strictly zero text.",
+      "subject_motion": "camera drifts beside traveling beam of sunlight racing across ninety-three million miles of vacuum"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "G2",
+      "continues_prev": false,
+      "scene_anchor": "Melodysheep hyper-detailed IMAX deep-space cinematography lit by a single coherent off-screen star keylight against pure velvet interstellar void, strictly zero text",
+      "narration": "Photons and gravitational waves travel across spacetime at the exact same cosmic speed limit.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Slow weightless orbital push-in toward terminator line",
+      "start_visual": "Spacetime fabric visualized as a glowing cyan coordinate grid rippling with concentric gravitational waves.",
+      "end_visual": "Pushing in on the wave crests traveling in synchrony with the final boundary of light, strictly zero text.",
+      "subject_motion": "concentric gravitational ripples expand outward across spacetime at the speed of light"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "G2",
+      "continues_prev": true,
+      "scene_anchor": "Melodysheep hyper-detailed IMAX deep-space cinematography lit by a single coherent off-screen star keylight against pure velvet interstellar void, strictly zero text",
+      "narration": "Until that wave strikes, Earth feels the gravitational pull of a completely extinct star.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Grand parabolic space-probe flyby",
+      "start_visual": "High-angle view of the solar system plane showing Earth tracing its normal curved Keplerian ellipse.",
+      "end_visual": "Flyby as the planet continues curving in empty space, held by the receding wave, strictly zero text.",
+      "subject_motion": "Earth continues its curved orbital path around the empty point until the wave arrives"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "G3",
+      "continues_prev": false,
+      "scene_anchor": "Cinematic 8K orbital view of planet Earth floating against the deep velvet cosmic void, realistic Rayleigh atmospheric scattering and blue oceanic limb glow, strictly zero text",
+      "narration": "At eight minutes twenty seconds, daylight snaps black and our orbital tether cleanly breaks.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Slow weightless orbital push-in toward terminator line",
+      "start_visual": "Orbital perspective of daytime Earth as the sharp shadow border suddenly sweeps across continents.",
+      "end_visual": "Pushing in as city electrical lights ignite against absolute pitch-black cosmic space, strictly zero text.",
+      "subject_motion": "daylight instantly extinguishes across the planet, revealing glowing spiderwebs of city lights"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "G3",
+      "continues_prev": true,
+      "scene_anchor": "Melodysheep hyper-detailed IMAX deep-space cinematography lit by a single coherent off-screen star keylight against pure velvet interstellar void, strictly zero text",
+      "narration": "Earth slingshots tangentially into deep space at thirty kilometers every second as a rogue.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Zero-G lateral cosmic drift",
+      "start_visual": "Deep-space view as Earth's curved orbit snaps straight, releasing the dark planet into the void.",
+      "end_visual": "Drifting alongside the dark planet as it streaks through the starry Milky Way, strictly zero text.",
+      "subject_motion": "dark planet hurtles in a straight tangent line at thirty kilometers per second through space"
+    },
+    {
+      "shot_id": "S07",
+      "scene_group": "G4",
+      "continues_prev": false,
+      "scene_anchor": "Melodysheep hyper-detailed IMAX deep-space cinematography lit by a single coherent off-screen star keylight against pure velvet interstellar void, strictly zero text",
+      "narration": "Explore the complete chronological simulation of Earth's frozen survival in our full cosmic investigation.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Grand parabolic space-probe flyby",
+      "start_visual": "Melodysheep IMAX view of frozen Earth drifting past brilliant starry nebulae in the void.",
+      "end_visual": "Majestic pull-back flyby into the vast cosmic ocean as solitary Earth journeys into eternity, strictly zero text.",
+      "subject_motion": "camera sweeps wide into deep interstellar space as solitary frozen Earth journeys into eternity"
+    }
+  ]
+}

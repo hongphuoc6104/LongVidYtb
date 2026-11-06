@@ -1,0 +1,92 @@
+{
+  "job_id": "en-wallet-anatomy-batch1-9x16",
+  "parent_long_id": "en-wallet-anatomy-batch1-16x9",
+  "channel_slug": "en-wallet-anatomy",
+  "aspect": "9:16",
+  "voice": "en-US-AndrewNeural",
+  "title": "Pain of Paying: How Tap-to-Pay Quietly Disables Your Brain's Spending Brake",
+  "youtube_title": "How Tap-to-Pay Turns Off Your Spending Brake",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "G1",
+      "continues_prev": false,
+      "scene_anchor": "Sleek dark-slate modern retail checkout counter photographed on 35mm macro cinema lens at f/2.0 with warm tungsten background bokeh and crisp metallic highlights, strictly zero text",
+      "narration": "Ever notice how effortless it feels to tap your phone instead of counting physical cash?",
+      "pause_after_sec": 0.32,
+      "camera_verb": "Crisp 35mm tabletop lateral dolly",
+      "start_visual": "Vertical 9:16 macro shot: a matte-black smartphone hovers above an aluminum contactless terminal on dark slate, warm retail bokeh, strictly zero text.",
+      "end_visual": "The phone taps near the reader as a soft cyan light ring glows on the terminal glass, effortless and instant, strictly zero text.",
+      "subject_motion": "the smartphone dips smoothly toward the aluminum payment reader, triggering a soft cyan light ring"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "G1",
+      "continues_prev": true,
+      "scene_anchor": "Moody obsidian-dark scientific studio with a translucent 3D glass-and-light anatomical human brain sculpture lit by crisp crimson and cyan volumetric rim lighting, strictly zero text",
+      "narration": "Brain imaging proves that parting with physical banknotes activates your insular cortex pain center.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Slow precision macro zoom-in",
+      "end_visual": "Vertical 9:16 3D anatomical view: a translucent glass brain profile glows with a sharp crimson pulse deep inside the insular cortex, strictly zero text.",
+      "subject_motion": "camera zooms into the insular core as concentric crimson neural waves ripple outward through cortical pathways"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "G2",
+      "continues_prev": false,
+      "scene_anchor": "Moody obsidian-dark scientific studio with a translucent 3D glass-and-light anatomical human brain sculpture lit by crisp crimson and cyan volumetric rim lighting, strictly zero text",
+      "narration": "Contactless payments and digital wallets quietly numb that biological brake, increasing spending by twelve percent.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Smooth optical pull-back",
+      "start_visual": "Inside the translucent 3D glass brain, a smooth cool-cyan contactless wave sweeps across the cortex, dimming the crimson glow, strictly zero text.",
+      "end_visual": "The sharp crimson pain glow softens into calm, tranquil blue light as the biological spending brake goes completely silent, strictly zero text.",
+      "subject_motion": "a luminous cyan wave sweeps across the 3D brain, soothing the bright crimson glow into tranquil blue light"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "G2",
+      "continues_prev": true,
+      "scene_anchor": "Sleek dark-slate modern retail checkout counter photographed on 35mm macro cinema lens at f/2.0 with warm tungsten background bokeh and crisp metallic highlights, strictly zero text",
+      "narration": "When commerce removes physical friction, your brain treats digital transactions as completely abstract.",
+      "pause_after_sec": 0.32,
+      "camera_verb": "Macro push-in on contactless terminal sensor",
+      "end_visual": "On the dark slate checkout counter, gold coins glide effortlessly away out of frame without resistance under retail lights, strictly zero text.",
+      "subject_motion": "camera tracks as polished gold coins slide effortlessly away across the counter surface"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "G3",
+      "continues_prev": false,
+      "scene_anchor": "Sleek dark-slate modern retail checkout counter photographed on 35mm macro cinema lens at f/2.0 with warm tungsten background bokeh and crisp metallic highlights, strictly zero text",
+      "narration": "Retailers know that eliminating tactile purchase friction makes impulse spending feel completely painless.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Authoritative lateral tracking pass",
+      "start_visual": "Vertical 9:16 view: sleek luxury display cases glow with warm halogen downlights beside contactless POS checkout terminals, strictly zero text.",
+      "end_visual": "Pushing past the checkout: multiple luxury shopping bags slide across the counter effortlessly without hesitation, strictly zero text.",
+      "subject_motion": "camera glides laterally as luxury shopping items glide smoothly across the polished counter"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "G3",
+      "continues_prev": true,
+      "scene_anchor": "Sunlit morning natural oak cafe table photographed on 35mm lens at f/2.0 with warm golden window light and rich stitched brown leather wallet texture, steaming ceramic cup, strictly zero text",
+      "narration": "To regain control, pause three seconds and picture real paper bills leaving your wallet.",
+      "pause_after_sec": 0.32,
+      "camera_verb": "Calm authoritative slow push-in",
+      "end_visual": "Vertical 9:16 macro shot: two hands calmly fold a stitched brown leather wallet shut and rest it firmly on sunlit oak wood, strictly zero text.",
+      "subject_motion": "the hands calmly fold the stitched leather wallet shut and rest it firmly on the sunlit table"
+    },
+    {
+      "shot_id": "S07",
+      "scene_group": "G4",
+      "continues_prev": false,
+      "scene_anchor": "Sunlit morning natural oak cafe table photographed on 35mm lens at f/2.0 with warm golden window light and rich stitched brown leather wallet texture, steaming ceramic cup, strictly zero text",
+      "narration": "For the full breakdown on behavioral pricing traps, watch our complete video linked below.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Calm centered vertical pull-back",
+      "start_visual": "Vertical 9:16 portrait: a composed professional gazes forward in clear financial mindfulness, resting beside the closed wallet, strictly zero text.",
+      "end_visual": "Pulling back into center frame: the clean cafe table radiates calm financial sovereignty and mastery, strictly zero text.",
+      "subject_motion": "camera retreats slowly into a centered, balanced vertical portrait of financial sovereignty"
+    }
+  ]
+}

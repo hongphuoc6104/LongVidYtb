@@ -1,0 +1,100 @@
+{
+  "job_id": "en-fine-print-batch1-9x16",
+  "parent_long_id": "en-fine-print-batch1-16x9",
+  "channel_slug": "en-fine-print",
+  "aspect": "9:16",
+  "title": "Section 14.3: What You Actually Sign Away the Second You Click I Agree",
+  "youtube_title": "What Clicking 'I Agree' Really Signs Away",
+  "thumbnail_spec": {
+    "visual_hook": "Forensic magnifying loupe over smartphone screen highlighting hidden arbitration trap clause",
+    "allowed_text": "SECTION 14",
+    "overlay_card": false
+  },
+  "voice": "en-US-RogerNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "G1",
+      "continues_prev": false,
+      "scene_anchor": "CNBC Make It investigative documentary cinematography on dark mahogany executive desk with warm tungsten side lighting, abstract embossed parchment sheets, strictly zero text",
+      "narration": "Tapping I Agree on a routine phone update takes two seconds and zero thought.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Smooth 35mm tabletop macro push-in",
+      "start_visual": "Macro close-up on a dark mahogany desk: a dark smartphone displays a glowing button beside thick parchment sheets, strictly zero text.",
+      "end_visual": "A finger hovers above the glowing screen as warm light catches an embossed legal seal, strictly zero text.",
+      "subject_motion": "a human finger gently approaches the smartphone screen beside the cream parchment document"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "G1",
+      "continues_prev": true,
+      "scene_anchor": "CNBC Make It investigative documentary cinematography on dark mahogany executive desk with warm tungsten side lighting, abstract embossed parchment sheets, strictly zero text",
+      "narration": "Yet buried inside Section Fourteen is a clause silently waiving your right to trial.",
+      "pause_after_sec": 0.38,
+      "camera_verb": "Slow lateral tabletop tracking glide",
+      "start_visual": "A finger hovers above the glowing screen as warm light catches an embossed legal seal, strictly zero text.",
+      "end_visual": "Tracking past the smartphone toward an open contract page with intricate embossed geometric borders, strictly zero text.",
+      "subject_motion": "the camera glides smoothly across the mahogany table toward the dense embossed contract sheets"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "G2",
+      "continues_prev": false,
+      "scene_anchor": "LegalEagle forensic tabletop documentary lighting on dark slate surface with brass magnifying loupe and abstract embossed document lines, strictly zero text",
+      "narration": "Mandatory arbitration forces all disputes behind closed doors into expensive private corporate tribunals.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "Forensic macro perpendicular push-in",
+      "start_visual": "High-contrast forensic view on dark slate: a heavy brass magnifying loupe hovers over crisp embossed contract diagrams, strictly zero text.",
+      "end_visual": "Pushing through the circular loupe as a miniature marble courtroom door is padlocked shut, strictly zero text.",
+      "subject_motion": "the magnifying lens focuses sharply as a heavy brass chain secures the miniature courtroom doors"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "G2",
+      "continues_prev": true,
+      "scene_anchor": "LegalEagle forensic tabletop documentary lighting on dark slate surface with brass magnifying loupe and abstract embossed document lines, strictly zero text",
+      "narration": "You lose your jury trial, your right to discovery, and your right to appeal.",
+      "pause_after_sec": 0.38,
+      "camera_verb": "Smooth optical rack focus to dark shadow",
+      "start_visual": "Pushing through the circular loupe as a miniature marble courtroom door is padlocked shut, strictly zero text.",
+      "end_visual": "Rack focus to an empty dark glass conference chamber bathed in sterile overhead lighting, strictly zero text.",
+      "subject_motion": "the focus shifts smoothly to the sterile glass chamber where a single chair stands isolated"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "G3",
+      "continues_prev": false,
+      "scene_anchor": "CNBC Make It executive editorial cinematography on warm walnut library desk, rich black leather folio binder and brass ribbon seal, strictly zero text",
+      "narration": "Class action bans mean individual consumers cannot afford to arbitrate small stolen fees.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "Tabletop lateral tracking move",
+      "start_visual": "Walnut desk: a cluster of tiny brass figurines is separated by a polished ebony barrier, strictly zero text.",
+      "end_visual": "A single brass figurine stands completely alone surrounded by towering stacks of legal parchment, strictly zero text.",
+      "subject_motion": "the ebony divider separates the figurines, leaving one lone figure trapped among tall document stacks"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "G3",
+      "continues_prev": true,
+      "scene_anchor": "CNBC Make It executive editorial cinematography on warm walnut library desk, rich black leather folio binder and brass ribbon seal, strictly zero text",
+      "narration": "However, most companies allow you thirty days to send a written opt-out notice.",
+      "pause_after_sec": 0.4,
+      "camera_verb": "Macro push-in on stamped envelope",
+      "start_visual": "A single brass figurine stands completely alone surrounded by towering stacks of legal parchment, strictly zero text.",
+      "end_visual": "Pushing in on a crisp white envelope stamped with a formal brass opt-out certification, strictly zero text.",
+      "subject_motion": "a brass seal stamps firmly onto the envelope, creating a crisp golden relief on the paper"
+    },
+    {
+      "shot_id": "S07",
+      "scene_group": "G4",
+      "continues_prev": false,
+      "scene_anchor": "LegalEagle forensic tabletop documentary lighting on dark slate surface with brass magnifying loupe and abstract embossed document lines, strictly zero text",
+      "narration": "For our complete forensic investigation into these hidden contract traps, explore the full breakdown.",
+      "pause_after_sec": 0.45,
+      "camera_verb": "Composed center lock on balanced scales",
+      "start_visual": "Dark slate surface: balanced brass justice scales reflect warm golden light beside the forensic loupe, strictly zero text.",
+      "end_visual": "Editorial centered composition on the balanced scales resting in quiet dignity under a soft spotlight, strictly zero text.",
+      "subject_motion": "the brass scales settle into perfect horizontal balance as ambient lights fade down to soft gold"
+    }
+  ]
+}

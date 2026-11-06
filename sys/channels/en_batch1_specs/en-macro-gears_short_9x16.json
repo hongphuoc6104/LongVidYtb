@@ -1,0 +1,95 @@
+{
+  "job_id": "en-macro-gears-batch1-9x16",
+  "parent_long_id": "en-macro-gears-batch1-16x9",
+  "channel_slug": "en-macro-gears",
+  "aspect": "9:16",
+  "title": "Four Football Fields of Steel: Why Modern Megaships Bend Instead of Snapping in Storms",
+  "youtube_title": "Why Giant Container Ships Bend in Storms",
+  "voice": "en-US-ChristopherNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "G1",
+      "continues_prev": false,
+      "narration": "A four-hundred-meter container megaship actually bends like an enormous industrial bow in storm swells.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "High-altitude architectural aerial survey",
+      "start_visual": "Practical Engineering style 9:16 vertical shot: massive container ship loaded with colorful boxes crossing rough seas, strictly zero text.",
+      "end_visual": "Tracking the vessel profile: the long deck line visibly deflects vertically as ocean swells roll beneath, strictly zero text.",
+      "subject_motion": "the massive ship hull flexes gently with a visible two-meter vertical wave along its length",
+      "scene_anchor": "Practical Engineering & Wendover large-scale infrastructure documentary cinematography under crisp directional daylight, high-detail industrial materials, strictly zero text or map labels"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "G1",
+      "continues_prev": true,
+      "narration": "Giant ocean waves lift the bow and stern, leaving the heavy central midbody completely unsupported.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "Wave wavelength dynamic orbital",
+      "start_visual": "Vertical cutaway visualization: two wave crests supporting the hull ends while midships hangs over a deep trough, strictly zero text.",
+      "end_visual": "Orbiting the hull: glowing red stress vectors highlight intense downward sagging forces across the central keel, strictly zero text.",
+      "subject_motion": "ocean waves roll beneath the ship while red stress vectors pulse along the unsupported midsection",
+      "scene_anchor": "Practical Engineering & Wendover large-scale infrastructure documentary cinematography under crisp directional daylight, high-detail industrial materials, strictly zero text or map labels"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "G2",
+      "continues_prev": false,
+      "narration": "Engineers build the hull with high-tensile flexible steel designed to bend without fracturing.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Internal torsion box dolly glide",
+      "start_visual": "Vertical cross-section inside upper deck torsion box: heavy reinforced steel girder plates under directional daylight, strictly zero text.",
+      "end_visual": "Pushing through the steel corridor: high-strength EH47 steel plates flex under hydraulic simulation, absorbing bending forces, strictly zero text.",
+      "subject_motion": "thick steel plates absorb cyclic bending stresses with calculated elastic deflection",
+      "scene_anchor": "Practical Engineering & Wendover large-scale infrastructure documentary cinematography under crisp directional daylight, high-detail industrial materials, strictly zero text or map labels"
+    },
+    {
+      "narration": "Reinforced hollow torsion box girders along the deck absorb violent twisting forces from angled waves.",
+      "shot_id": "S04",
+      "scene_group": "G2",
+      "continues_prev": true,
+      "pause_after_sec": 0.36,
+      "camera_verb": "Torsional wave twisting visualization",
+      "start_visual": "Vertical 3D view: angled swells striking the ship from the quarter, trying to twist the open hull, strictly zero text.",
+      "end_visual": "Orbiting the deck: cyan stress contours channel rotational torque safely through the reinforced upper torsion boxes, strictly zero text.",
+      "subject_motion": "cyan structural force lines distribute rotational torque smoothly along the ship deck perimeter",
+      "scene_anchor": "Practical Engineering & Wendover large-scale infrastructure documentary cinematography under crisp directional daylight, high-detail industrial materials, strictly zero text or map labels"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "G3",
+      "continues_prev": false,
+      "narration": "If shipbuilders made this hull completely rigid, giant ocean waves would snap it in two.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Catastrophic failure finite element zoom",
+      "start_visual": "Vertical finite element model of a completely rigid hull: violent red stress concentrations flaring across midships, strictly zero text.",
+      "end_visual": "Zooming into midship welds: simulated brittle fracture lines spreading rapidly across the unyielding steel plate, strictly zero text.",
+      "subject_motion": "intense red stress concentrations spike across the rigid hull model until fracture cracks appear",
+      "scene_anchor": "Practical Engineering & Wendover large-scale infrastructure documentary cinematography under crisp directional daylight, high-detail industrial materials, strictly zero text or map labels"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "G3",
+      "continues_prev": true,
+      "narration": "By bending over two meters in heavy seas, these container giants survive the worst storms.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "Full-ship longitudinal profile glide",
+      "start_visual": "Vertical shot from ocean surface: 400-meter megaship cutting smoothly through heavy storm swells, strictly zero text.",
+      "end_visual": "Gliding along the hull: the long steel structure arches and flexes harmlessly with each passing wave, strictly zero text.",
+      "subject_motion": "the massive container ship flexes smoothly across ocean swells without taking structural damage",
+      "scene_anchor": "Practical Engineering & Wendover large-scale infrastructure documentary cinematography under crisp directional daylight, high-detail industrial materials, strictly zero text or map labels"
+    },
+    {
+      "shot_id": "S07",
+      "scene_group": "G4",
+      "continues_prev": false,
+      "narration": "Explore the complete megastructure engineering breakdown in our full video analysis linked below.",
+      "pause_after_sec": 0.25,
+      "camera_verb": "Grand maritime sunset pull-back",
+      "start_visual": "Vertical establishing shot: container megaship cruising toward a golden sunset on calm open waters, strictly zero text.",
+      "end_visual": "Pulling back high into evening clouds as the massive silhouette glides peacefully on the boundless ocean, strictly zero text.",
+      "subject_motion": "camera rises gracefully into the sunset sky as the giant container ship sails toward the horizon",
+      "scene_anchor": "Practical Engineering & Wendover large-scale infrastructure documentary cinematography under crisp directional daylight, high-detail industrial materials, strictly zero text or map labels"
+    }
+  ]
+}

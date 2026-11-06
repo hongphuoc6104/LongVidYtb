@@ -766,8 +766,14 @@ def build_scene_pairs_from_shots(
     pairs: list[ScenePairSpec] = []
     for idx, (shot, b_dur) in enumerate(zip(shots, beat_durations, strict=True)):
         shot_id = str(shot.get("shot_id") or f"S{idx + 1:02d}")
-        continues_prev = bool(shot.get("continues_prev", False)) and idx > 0
-        next_starts_new_group = (idx + 1 < n) and (not bool(shots[idx + 1].get("continues_prev", False)))
+        prev_has_end = idx > 0 and bool(str(shots[idx - 1].get("end_visual", "")).strip())
+        continues_prev = bool(shot.get("continues_prev", False)) and prev_has_end
+        next_continues = (
+            (idx + 1 < n)
+            and bool(shots[idx + 1].get("continues_prev", False))
+            and bool(str(shot.get("end_visual", "")).strip())
+        )
+        next_starts_new_group = (idx + 1 < n) and (not next_continues)
 
         # Add 0.24s overlap budget to the final shot of a scene group when another group follows
         eff_target_dur = round(float(b_dur) + (xfade_pivot_sec if next_starts_new_group else 0.0), 4)
@@ -808,7 +814,7 @@ def build_scene_pairs_from_shots(
                 end_based_on_start=bool(wrapped_end_prompt),
             )
         else:
-            start_vis = str(shot.get("start_visual", "")).strip()
+            start_vis = str(shot.get("start_visual") or shot.get("end_visual") or "").strip()
             if not start_vis:
                 raise ValueError(f"Scene-opening shot {shot_id} requires 'start_visual'")
             sp = ScenePairSpec(
@@ -1004,6 +1010,8 @@ def package_final_on_colab_t4_nvenc(
 
                     cleanup_stale_colab_state(client, acc, effective_session)
                     client.session = target_session
+                    cfg["colab_tts"]["session"] = target_session
+                    client.cfg["colab_tts"]["session"] = target_session
                     client._ready(auto_start=True)
                 except Exception as ex_recover:
                     raise ex_ready from ex_recover
@@ -1062,17 +1070,19 @@ for g_idx, indices in enumerate(groups):
         trim_step = ",trim=start_frame=1,setpts=PTS-STARTPTS" if trim_first else ""
         if target_dur is not None and target_dur > 0:
             ratio = eff_raw_dur / target_dur
-            if 0.7 <= ratio <= 1.35:
+            if 0.35 <= ratio <= 2.5:
                 pts_factor = target_dur / eff_raw_dur
-                vf = f"[{{local_i}}:v]{{base_scale}}{{trim_step}},setpts={{pts_factor:.6f}}*PTS[cv{{local_i}}]"
-            elif target_dur > eff_raw_dur * 1.35:
-                extra = target_dur - eff_raw_dur
-                vf = f"[{{local_i}}:v]{{base_scale}}{{trim_step}},tpad=stop_mode=clone:stop_duration={{extra:.3f}},setpts=PTS-STARTPTS[cv{{local_i}}]"
+                vf = f"[{{local_i}}:v]{{base_scale}}{{trim_step}},setpts={{pts_factor:.6f}}*PTS,fps={{fps}}[cv{{local_i}}]"
+            elif target_dur > eff_raw_dur * 2.5:
+                pts_factor = 1.0 / 0.35
+                stretched = eff_raw_dur * pts_factor
+                extra = max(0.01, target_dur - stretched)
+                vf = f"[{{local_i}}:v]{{base_scale}}{{trim_step}},setpts={{pts_factor:.6f}}*PTS,fps={{fps}},tpad=stop_mode=clone:stop_duration={{extra:.3f}},setpts=PTS-STARTPTS[cv{{local_i}}]"
             else:
-                speed_factor = 1.0 / 1.35
-                vf = f"[{{local_i}}:v]{{base_scale}}{{trim_step}},setpts={{speed_factor:.6f}}*PTS,trim=duration={{target_dur:.3f}},setpts=PTS-STARTPTS[cv{{local_i}}]"
+                speed_factor = 1.0 / 2.5
+                vf = f"[{{local_i}}:v]{{base_scale}}{{trim_step}},setpts={{speed_factor:.6f}}*PTS,fps={{fps}},trim=duration={{target_dur:.3f}},setpts=PTS-STARTPTS[cv{{local_i}}]"
         else:
-            vf = f"[{{local_i}}:v]{{base_scale}}{{trim_step}},setpts=PTS-STARTPTS[cv{{local_i}}]"
+            vf = f"[{{local_i}}:v]{{base_scale}}{{trim_step}},setpts=PTS-STARTPTS,fps={{fps}}[cv{{local_i}}]"
         g_filters.append(vf)
         g_vlabels.append(f"[cv{{local_i}}]")
     g_filters.append(f"{{''.join(g_vlabels)}}concat=n={{len(indices)}}:v=1:a=0[gvout]")
@@ -1214,10 +1224,11 @@ def stitch_hybrid_scene_groups_and_package(
     scratch = out_mp4.parent / f"_hybrid_stitch_{aspect.replace(':', 'x')}"
     scratch.mkdir(parents=True, exist_ok=True)
 
-    # Partition tasks into contiguous scene groups based on `continues_prev`
+    # Partition tasks into contiguous scene groups based on `continues_prev` and `prev_has_end`
     groups: list[list[int]] = []
     for idx, shot in enumerate(shots):
-        continues_prev = bool(shot.get("continues_prev", False)) and idx > 0
+        prev_has_end = idx > 0 and bool(str(shots[idx - 1].get("end_visual", "")).strip())
+        continues_prev = bool(shot.get("continues_prev", False)) and prev_has_end
         if not groups or not continues_prev:
             groups.append([idx])
         else:
@@ -1294,6 +1305,50 @@ def stitch_hybrid_scene_groups_and_package(
     return meta
 
 
+def _compute_midroll_ad_breaks(
+    shots: list[dict[str, Any]],
+    beat_durations: list[float],
+    total_dur: float,
+) -> list[dict[str, Any]]:
+    """Compute 3 optimal Mid-roll Ad Break timestamps at natural chapter pivots for 16:9 videos >= 480s."""
+    if total_dur < 180.0 or not beat_durations:
+        return []
+    target_fractions = (0.27, 0.55, 0.80)
+    breaks: list[dict[str, Any]] = []
+    cum = 0.0
+    boundaries: list[tuple[int, float, str]] = []
+    for idx, dur in enumerate(beat_durations[:-1]):
+        cum += dur
+        cur_grp = str(shots[idx].get("scene_group", ""))
+        nxt_grp = str(shots[idx + 1].get("scene_group", ""))
+        if cur_grp != nxt_grp or float(shots[idx].get("pause_after_sec", 0.3)) >= 0.42:
+            boundaries.append((idx + 1, round(cum, 2), nxt_grp or f"chapter_{idx + 1}"))
+    if not boundaries:
+        cum = 0.0
+        for idx, dur in enumerate(beat_durations[:-1]):
+            cum += dur
+            boundaries.append((idx + 1, round(cum, 2), f"shot_{idx + 1}"))
+    used_indices: set[int] = set()
+    for slot_no, frac in enumerate(target_fractions, 1):
+        target_sec = total_dur * frac
+        candidates = [b for b in boundaries if b[0] not in used_indices] or boundaries
+        best = min(candidates, key=lambda b: abs(b[1] - target_sec))
+        used_indices.add(best[0])
+        mm = int(best[1]) // 60
+        ss = int(round(best[1])) % 60
+        breaks.append(
+            {
+                "slot": slot_no,
+                "timestamp_sec": best[1],
+                "timestamp_mmss": f"{mm:02d}:{ss:02d}",
+                "before_shot_index": best[0],
+                "scene_group": best[2],
+            }
+        )
+    breaks.sort(key=lambda x: x["timestamp_sec"])
+    return breaks
+
+
 def produce_dynamic_flow_demo(
     spec_data: dict[str, Any],
     max_workers: int = 6,
@@ -1303,6 +1358,7 @@ def produce_dynamic_flow_demo(
     teardown_colab: bool = False,
     output_root: Path | None = None,
     colab_account: str | None = None,
+    prepare_only: bool = False,
 ) -> dict[str, Any]:
     """Run full Audio-First Beat-Locked Dynamic Google Flow Video Pipeline (with 0-credit slide fallback)."""
     t0 = time.monotonic()
@@ -1413,6 +1469,44 @@ def produce_dynamic_flow_demo(
         json.dumps(chain_spec.to_dict(), indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
+
+    midroll_breaks = _compute_midroll_ad_breaks(shots, beat_durations, total_audio_dur) if aspect == "16:9" else []
+    prep_summary = {
+        "job_id": job_id,
+        "channel_slug": channel_slug,
+        "aspect": aspect,
+        "title": spec_data.get("title", ""),
+        "youtube_title": spec_data.get("youtube_title") or spec_data.get("title", "")[:55],
+        "thumbnail_spec": spec_data.get("thumbnail_spec", {}),
+        "parent_long_id": spec_data.get("parent_long_id"),
+        "voice": voice,
+        "total_audio_duration_sec": round(total_audio_dur, 3),
+        "total_audio_duration_mmss": f"{int(total_audio_dur) // 60:02d}:{int(round(total_audio_dur)) % 60:02d}",
+        "nb_shots": len(shots),
+        "word_count": len(global_words),
+        "beat_durations_sec": [round(d, 3) for d in beat_durations],
+        "midroll_ad_breaks": midroll_breaks,
+        "monetization_midroll_eligible": bool(aspect == "16:9" and total_audio_dur >= 480.0),
+        "estimated_flow_credits": len(scene_pairs) * 20,
+        "audio_wav_path": str(norm_wav),
+        "word_alignment_path": str(audio_dir / "word_alignment.json"),
+        "srt_path": str(srt_path),
+        "ass_path": str(ass_path) if aspect == "9:16" else None,
+        "watermark_path": str(watermark_png),
+        "chain_spec_path": str(run_dir / "chain_spec.json"),
+        "status": "STAGE_A_PREPARED",
+    }
+    (run_dir / "prep_summary.json").write_text(
+        json.dumps(prep_summary, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+    if prepare_only:
+        logger.info(
+            f"[✓] [{job_id}] Stage A Prepared -> dur={total_audio_dur:.2f}s ({prep_summary['total_audio_duration_mmss']}), "
+            f"shots={len(shots)}, words={len(global_words)}, midrolls={len(midroll_breaks)}, "
+            f"est_credits={prep_summary['estimated_flow_credits']}"
+        )
+        return prep_summary
 
     eff_workers = min(max_workers, max(1, len(eligible_video_profiles))) if has_video_credits else max_workers
     orchestrator = FlowVideoChainOrchestrator(
@@ -1595,6 +1689,12 @@ def main() -> int:
         help="Preferred Colab T4 account for NVENC render",
     )
     parser.add_argument(
+        "--profiles",
+        type=str,
+        default=None,
+        help="Comma-separated Flow CDP profile names (sets VP_FLOW_PROFILES)",
+    )
+    parser.add_argument(
         "--max-workers",
         type=int,
         default=6,
@@ -1613,6 +1713,11 @@ def main() -> int:
     )
     parser.add_argument("--no-resume", action="store_true", help="Force fresh generation without resuming cached clips")
     parser.add_argument("--dry-run", action="store_true", help="Run synthetic dry-run without opening Chrome")
+    parser.add_argument(
+        "--prepare-only",
+        action="store_true",
+        help="Run Stage A preparation only (Audio-First WAV, word alignment, .ass/.srt subtitles, watermark, and chain_spec.json)",
+    )
     args = parser.parse_args()
 
     if args.output_root:
@@ -1621,6 +1726,8 @@ def main() -> int:
 
     if args.colab_account:
         os.environ["VP_COLAB_ACCOUNT"] = str(args.colab_account).strip()
+    if args.profiles:
+        os.environ["VP_FLOW_PROFILES"] = str(args.profiles).strip()
 
     try:
         if args.regenerate_logos:
@@ -1646,6 +1753,7 @@ def main() -> int:
                     teardown_colab=args.teardown_colab,
                     output_root=Path(args.output_root) if args.output_root else None,
                     colab_account=args.colab_account,
+                    prepare_only=args.prepare_only,
                 )
 
         if args.spec_json:
@@ -1661,6 +1769,7 @@ def main() -> int:
                     teardown_colab=args.teardown_colab,
                     output_root=Path(args.output_root) if args.output_root else None,
                     colab_account=args.colab_account,
+                    prepare_only=args.prepare_only,
                 )
     finally:
         get_process_manager().terminate_owned()

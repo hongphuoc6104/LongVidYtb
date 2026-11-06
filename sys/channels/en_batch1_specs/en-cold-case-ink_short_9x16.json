@@ -1,0 +1,100 @@
+{
+  "job_id": "en-cold-case-ink-batch1-9x16",
+  "parent_long_id": "en-cold-case-ink-batch1-16x9",
+  "channel_slug": "en-cold-case-ink",
+  "aspect": "9:16",
+  "title": "The Cut Tent & Katabatic Wind: The One Forensic Clue Everyone Misread at Dyatlov Pass",
+  "youtube_title": "The Dyatlov Clue Everyone Misunderstood",
+  "thumbnail_spec": {
+    "visual_hook": "Noir forensic macro view of slashed canvas tent on snow slope with crimson evidence thread",
+    "allowed_text": "DYATLOV CLUE",
+    "overlay_card": false
+  },
+  "voice": "en-GB-RyanNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "G1",
+      "continues_prev": false,
+      "scene_anchor": "LEMMiNO atmospheric noir 3D forensic documentary cinematography in deep midnight slate, monochrome silver, and selective crimson rim light, strictly zero readable text",
+      "narration": "In nineteen fifty-nine, nine experienced Russian hikers slashed through their tent and fled barefoot.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Brooding noir crane descent through blizzard",
+      "start_visual": "Desolate Ural mountain slope at midnight: violent blizzard winds whip snow across a torn tent, strictly zero text.",
+      "end_visual": "Three vertical slashed cuts in the canvas tent flutter violently in the freezing sub-zero gale, strictly zero text.",
+      "subject_motion": "swirling snow drift accelerates across the dark canvas as torn fabric flaps in violent wind"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "G1",
+      "continues_prev": true,
+      "scene_anchor": "LEMMiNO atmospheric noir 3D forensic documentary cinematography in deep midnight slate, monochrome silver, and selective crimson rim light, strictly zero readable text",
+      "narration": "For sixty years, people blamed secret Soviet missiles, infrasound panics, or Siberian mountain monsters.",
+      "pause_after_sec": 0.38,
+      "camera_verb": "Macro push-in on archival evidence board",
+      "start_visual": "Three vertical slashed cuts in the canvas tent flutter violently in the freezing sub-zero gale, strictly zero text.",
+      "end_visual": "Archival evidence board with black-and-white photographs connected by taut crimson strings under amber spotlights, strictly zero text.",
+      "subject_motion": "taut crimson strings vibrate under directional light as the camera focuses on the evidence board"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "G2",
+      "continues_prev": false,
+      "scene_anchor": "Brooding noir mountain topography simulation in dark granite and blizzard snow with golden katabatic wind streamline vectors, strictly zero text",
+      "narration": "However, the fatal clue was hidden in the snow excavation they dug that afternoon.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "Cross-sectional macro tracking along snowbank",
+      "start_visual": "3D mountain relief model showing the gentle sixteen-degree slope under cold silver moonlight, strictly zero text.",
+      "end_visual": "Cross-section of the clean vertical cut in the snowbank, weakening the supporting uphill slab, strictly zero text.",
+      "subject_motion": "the camera glides past the excavated snow trench, revealing the unsupported weight of the slab"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "G2",
+      "continues_prev": true,
+      "scene_anchor": "Brooding noir mountain topography simulation in dark granite and blizzard snow with golden katabatic wind streamline vectors, strictly zero text",
+      "narration": "Fierce katabatic winds piled tons of heavy snow onto the cut throughout the night.",
+      "pause_after_sec": 0.38,
+      "camera_verb": "High-altitude meteorological wind simulation",
+      "start_visual": "Cross-section of the clean vertical cut in the snowbank, weakening the supporting uphill slab, strictly zero text.",
+      "end_visual": "Luminous cyan wind streamlines sweep down the mountain, piling heavy snow directly above the tent, strictly zero text.",
+      "subject_motion": "cyan wind vectors curve down the slope, depositing a thick snow wedge above the tent cut"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "G3",
+      "continues_prev": false,
+      "scene_anchor": "LEMMiNO investigative laboratory tabletop in dark basalt with amber inspection spotlight and vintage analog topographic instruments, strictly zero text",
+      "narration": "Hours later, a massive cohesive snow slab collapsed directly onto the sleeping expedition members.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "Cross-sectional simulation of impact mechanics",
+      "start_visual": "The heavy snow slab detaches instantaneously along a five-meter fracture crown above the tent, strictly zero text.",
+      "end_visual": "Cross-sectional view showing the snow slab crushing down onto the tent floor in slow motion, strictly zero text.",
+      "subject_motion": "the dense white slab decelerates violently as it crushes the canvas roof against wooden skis"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "G3",
+      "continues_prev": true,
+      "scene_anchor": "LEMMiNO investigative laboratory tabletop in dark basalt with amber inspection spotlight and vintage analog topographic instruments, strictly zero text",
+      "narration": "Modern computer simulations proved this distributed granular impact broke ribs without bruising surface skin.",
+      "pause_after_sec": 0.4,
+      "camera_verb": "Forensic macro push-in on finite-element mesh",
+      "start_visual": "Cross-sectional view showing the snow slab crushing down onto the tent floor in slow motion, strictly zero text.",
+      "end_visual": "Digital finite-element mesh showing uniform compressive load spreading across the entire thoracic cavity, strictly zero text.",
+      "subject_motion": "finite element stress contours diffuse evenly across the ribcage, perfectly explaining the blunt internal trauma"
+    },
+    {
+      "shot_id": "S07",
+      "scene_group": "G4",
+      "continues_prev": false,
+      "scene_anchor": "Forensic archival crime diorama in charcoal slate with taut crimson evidence strings connecting physical topographic relics, volumetric snow drift, strictly zero text",
+      "narration": "For our complete forensic reconstruction of the Dyatlov mystery, watch the full documentary.",
+      "pause_after_sec": 0.45,
+      "camera_verb": "Composed center lock on resolved case dossier",
+      "start_visual": "Pristine black leather commemorative album stamped with nine silver stars on dark basalt desk, strictly zero text.",
+      "end_visual": "The camera locks into centered stillness as soft amber light illuminates the completed case file, strictly zero text.",
+      "subject_motion": "ambient lights dim to midnight slate, keeping a focused spotlight centered on the closed investigation album"
+    }
+  ]
+}

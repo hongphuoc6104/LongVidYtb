@@ -1,0 +1,100 @@
+{
+  "job_id": "en-scale-and-bone-batch1-9x16",
+  "parent_long_id": "en-scale-and-bone-batch1-16x9",
+  "channel_slug": "en-scale-and-bone",
+  "aspect": "9:16",
+  "title": "The First Leap: Why Eagle Mothers Stop Feeding Their Chicks on the Cliff Edge",
+  "youtube_title": "Why Eagle Mothers Starve Their Chicks",
+  "thumbnail_spec": {
+    "visual_hook": "Intimate telephoto wildlife frame of adult eagle holding trout out of chick reach on sheer vertical granite abyss",
+    "allowed_text": "HARSH LOVE",
+    "overlay_card": false
+  },
+  "voice": "en-GB-RyanNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "G1",
+      "continues_prev": false,
+      "scene_anchor": "BBC Earth natural-history wildlife cinematography on long-focal cinema glass, golden natural atmospheric daylight, rich organic terrain textures on sheer granite crag, strictly zero text",
+      "narration": "On a sheer three-thousand-foot Scottish cliff edge, an eagle mother abruptly stops feeding her chick.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Telephoto 400mm shallow-DOF wildlife tracking shot",
+      "start_visual": "BBC Earth wildlife frame: sheer Highland granite precipice shrouded in swirling mist with fledgling calling from nest, strictly zero text.",
+      "end_visual": "Telephoto push-in on the downy fledgling calling desperately from the sticks of the eyrie, strictly zero text.",
+      "subject_motion": "fledgling paced frantically on the cliff edge calling with sharp juvenile cries"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "G1",
+      "continues_prev": true,
+      "scene_anchor": "BBC Earth natural-history wildlife cinematography on long-focal cinema glass, golden natural atmospheric daylight, rich organic terrain textures on sheer granite crag, strictly zero text",
+      "narration": "She perches across the dizzying gulf, clutching fresh mountain prey just beyond its desperate reach.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Telephoto 400mm shallow-DOF wildlife tracking shot",
+      "start_visual": "Adult golden eagle perched on granite pinnacle fifty yards across the yawning canyon abyss.",
+      "end_visual": "Tracking the adult eagle tearing into game while deliberately withholding food from her starving fledgling, strictly zero text.",
+      "subject_motion": "adult eagle tears into food across the chasm, ignoring the desperate calls of her chick"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "G2",
+      "continues_prev": false,
+      "scene_anchor": "Authentic vertebrate muscular biomechanics and feather micro-textures reacting to alpine wind, shallow depth-of-field 400mm cinema lens, crisp natural mountain rim lighting, strictly zero text",
+      "narration": "This is not cruelty; it is a calculated life-or-death biological necessity for maiden flight survival.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Intimate eye-level optical push-in",
+      "start_visual": "Macro telephoto view of the chick's powerful breast muscles and developing dark flight quills, strictly zero text.",
+      "end_visual": "Pushing in as the fledgling stretches its wings against howling wind currents rising from below, strictly zero text.",
+      "subject_motion": "young eagle stretches its developing wings, testing aerodynamic wind resistance on the ledge"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "G2",
+      "continues_prev": true,
+      "scene_anchor": "Authentic vertebrate muscular biomechanics and feather micro-textures reacting to alpine wind, shallow depth-of-field 400mm cinema lens, crisp natural mountain rim lighting, strictly zero text",
+      "narration": "A well-fed heavy chick lacks sufficient pectoral lift and would crash directly into rocks.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Telephoto 400mm shallow-DOF wildlife tracking shot",
+      "start_visual": "Vertical view looking down the three-thousand-foot cliff face to jagged talus boulders below.",
+      "end_visual": "Tracking the chick's streamlined body as starvation burns off dead weight before the launch, strictly zero text.",
+      "subject_motion": "fledgling shifts its weight forward on the extreme lip of the stone precipice"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "G3",
+      "continues_prev": false,
+      "scene_anchor": "Vast alpine cinematic aerial survey, soaring mountain peaks shrouded in morning mist, crisp directional sunlight catching snow dust and rock faces, strictly zero text",
+      "narration": "Overwhelming hunger finally forces the terrified bird to leap forward into the roaring abyss.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Slow crane reveal across natural habitat",
+      "start_visual": "Cinematic wide shot of the fledgling poised at the outermost edge of the cliff.",
+      "end_visual": "Crane captures the fledgling stepping into empty space, plummeting five hundred feet in freefall, strictly zero text.",
+      "subject_motion": "young eagle steps into the void, plummeting downward before locking its wings into a glide"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "G3",
+      "continues_prev": true,
+      "scene_anchor": "Vast alpine cinematic aerial survey, soaring mountain peaks shrouded in morning mist, crisp directional sunlight catching snow dust and rock faces, strictly zero text",
+      "narration": "Its wings snap open, catching powerful thermal updrafts to soar sovereign across the glen.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Telephoto 400mm shallow-DOF wildlife tracking shot",
+      "start_visual": "Young eagle flaring its seven-foot wingspan, pulling out of the dive mere yards above boulders.",
+      "end_visual": "Tracking the bird soaring upward in a majestic climbing arc into sunlit alpine skies, strictly zero text.",
+      "subject_motion": "young eagle swoops gracefully upward on rising thermals, mastering its very first flight"
+    },
+    {
+      "shot_id": "S07",
+      "scene_group": "G4",
+      "continues_prev": false,
+      "scene_anchor": "Vast alpine cinematic aerial survey, soaring mountain peaks shrouded in morning mist, crisp directional sunlight catching snow dust and rock faces, strictly zero text",
+      "narration": "Watch the full alpine expedition to witness how young eagles master hundred-mile-per-hour mountain thermals.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Slow crane reveal across natural habitat",
+      "start_visual": "BBC Earth wide panorama of the sovereign eagle soaring above mist-shrouded Highland peaks.",
+      "end_visual": "Grand crane pulling back into the golden sunset sky as the monarch claims its domain, strictly zero text.",
+      "subject_motion": "camera sweeps upward into glorious golden sunset as the eagle glides sovereign over the wilderness"
+    }
+  ]
+}

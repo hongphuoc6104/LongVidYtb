@@ -1,0 +1,95 @@
+{
+  "job_id": "en-deep-time-strata-batch1-9x16",
+  "parent_long_id": "en-deep-time-strata-batch1-16x9",
+  "channel_slug": "en-deep-time-strata",
+  "aspect": "9:16",
+  "title": "Black Smokers: How Solid Rock Breathed Life Before Sunlight Reached Earth",
+  "youtube_title": "How Deep Ocean Vents Sparked First Life",
+  "voice": "en-GB-RyanNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "G1",
+      "continues_prev": false,
+      "narration": "Four billion years ago, Earth's volcanic ocean floor was utterly devoid of sunlit warmth.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Deep abyssal plunge descent",
+      "start_visual": "History of the Earth 9:16 vertical shot: camera plunging into pitch-black Hadean ocean depths toward distant volcanic glows, strictly zero text.",
+      "end_visual": "Arriving at the abyssal floor where towering black basalt ridges glow with geothermal heat, strictly zero text.",
+      "subject_motion": "camera descends swiftly through dark oceanic waters toward glowing volcanic fissures on the seabed",
+      "scene_anchor": "History of the Earth paleo-geological documentary cinematography with hyper-detailed mineral, basalt, and sedimentary textures under dramatic primordial atmospheric lighting, strictly zero text"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "G1",
+      "continues_prev": true,
+      "narration": "Colossal hydrothermal chimneys erupted scalding mineral plumes, creating towering cathedrals of solid porous stone.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "Towering chimney crane ascent",
+      "start_visual": "Vertical framing of a massive black smoker chimney rising from seafloor silt into dark ocean, strictly zero text.",
+      "end_visual": "Ascending along the ragged mineral spire as jet-black mineral clouds erupt from its crest, strictly zero text.",
+      "subject_motion": "dense black plumes of mineral sulfide particles billow violently into freezing abyssal water",
+      "scene_anchor": "History of the Earth paleo-geological documentary cinematography with hyper-detailed mineral, basalt, and sedimentary textures under dramatic primordial atmospheric lighting, strictly zero text"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "G2",
+      "continues_prev": false,
+      "narration": "Inside these rock spires, microscopic cavities honeycombed the basalt with millions of connected chambers.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Cell-scale microscopic push-in",
+      "start_visual": "Macro cross-section of porous basaltic vent stone: dense labyrinth of thirty-micrometer chambers glistening with pyrite, strictly zero text.",
+      "end_visual": "Pushing into an individual microscopic rock chamber where warm mineral fluid circulates gently, strictly zero text.",
+      "subject_motion": "warm mineral fluid circulates gently within the microscopic rock chamber, trapped by mineral walls",
+      "scene_anchor": "History of the Earth paleo-geological documentary cinematography with hyper-detailed mineral, basalt, and sedimentary textures under dramatic primordial atmospheric lighting, strictly zero text"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "G2",
+      "continues_prev": true,
+      "narration": "Steep chemical differences between alkaline fluids and acidic seawater turned the stone into batteries.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "Electrochemical field orbital arc",
+      "start_visual": "Vertical cutaway of porous rock septum: warm alkaline fluid on left and cold acidic ocean on right, strictly zero text.",
+      "end_visual": "Orbiting the rock boundary as glowing ionic fluxes highlight natural proton currents crossing the membrane, strictly zero text.",
+      "subject_motion": "protons stream across the semi-permeable stone barrier, generating a natural electrochemical voltage",
+      "scene_anchor": "History of the Earth paleo-geological documentary cinematography with hyper-detailed mineral, basalt, and sedimentary textures under dramatic primordial atmospheric lighting, strictly zero text"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "G3",
+      "continues_prev": false,
+      "narration": "These rock pores trapped organic molecules and provided the energetic spark for first life.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Catalytic reaction push-in",
+      "start_visual": "Close-up inside basalt pore: organic clusters assembling along catalytic iron-sulfur crystal facets, strictly zero text.",
+      "end_visual": "Pushing into forming chains of RNA molecules glowing amber in the warm convective micro-chamber, strictly zero text.",
+      "subject_motion": "luminous organic molecules link together along catalytic mineral facets, forming early polymers",
+      "scene_anchor": "History of the Earth paleo-geological documentary cinematography with hyper-detailed mineral, basalt, and sedimentary textures under dramatic primordial atmospheric lighting, strictly zero text"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "G3",
+      "continues_prev": true,
+      "narration": "Life ignited without needing sunlight, powered entirely by the cooling engine of solid rock.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "Cellular detachment tracking glide",
+      "start_visual": "Vertical view: a fully enclosed lipid proto-cell gently detaching from the interior stone wall, strictly zero text.",
+      "end_visual": "Tracking the autonomous living cell as it drifts outward into the dark fertile ocean, strictly zero text.",
+      "subject_motion": "a luminous self-contained cell drifts smoothly away from the dark mineral rock face into open sea",
+      "scene_anchor": "History of the Earth paleo-geological documentary cinematography with hyper-detailed mineral, basalt, and sedimentary textures under dramatic primordial atmospheric lighting, strictly zero text"
+    },
+    {
+      "shot_id": "S07",
+      "scene_group": "G4",
+      "continues_prev": false,
+      "narration": "Explore the complete deep-sea origin journey in our full documentary breakdown linked below.",
+      "pause_after_sec": 0.25,
+      "camera_verb": "Grand paleo-geological survey pull-back",
+      "start_visual": "Vertical establishing shot: towering hydrothermal chimneys venting across the ocean floor under soft floodlights, strictly zero text.",
+      "end_visual": "Pulling back into deep dark ocean waters as the luminous hydrothermal field glows below, strictly zero text.",
+      "subject_motion": "camera rises serenely above the glowing underwater vent field into tranquil abyssal water",
+      "scene_anchor": "History of the Earth paleo-geological documentary cinematography with hyper-detailed mineral, basalt, and sedimentary textures under dramatic primordial atmospheric lighting, strictly zero text"
+    }
+  ]
+}

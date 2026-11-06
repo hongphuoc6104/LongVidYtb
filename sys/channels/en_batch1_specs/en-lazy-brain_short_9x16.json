@@ -1,0 +1,92 @@
+{
+  "job_id": "en-lazy-brain-batch1-9x16",
+  "parent_long_id": "en-lazy-brain-batch1-16x9",
+  "channel_slug": "en-lazy-brain",
+  "aspect": "9:16",
+  "voice": "en-US-AndrewNeural",
+  "title": "Cheap Dopamine First: Why Checking Your Phone for 3 Minutes Wrecks 3 Hours of Focus",
+  "youtube_title": "How 3 Minutes of Scrolling Wrecks Focus",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "G1",
+      "continues_prev": false,
+      "scene_anchor": "Moody modern dark-slate workspace at late night photographed on 35mm cinema lens at f/1.8, cool blue smartphone screen glow contrasting with warm tungsten desk lamp, authentic human focus struggle, strictly zero text",
+      "narration": "You sit down to do deep work, but check your phone for three innocent minutes.",
+      "pause_after_sec": 0.32,
+      "camera_verb": "Moody 35mm shallow-DOF push-in",
+      "start_visual": "Vertical 9:16 portrait on a dark slate desk at midnight: an untouched paper notebook rests under warm lamplight while a professional taps a glowing smartphone, closed lips, silent focus, strictly zero text.",
+      "end_visual": "Pushing closer on the dark desk: the phone screen illuminates the professional's face with cool blue light as the notebook sits neglected in shadow, strictly zero text.",
+      "subject_motion": "camera pushes smoothly closer as the professional's fingers tap the luminous smartphone glass"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "G1",
+      "continues_prev": true,
+      "scene_anchor": "Moody modern dark-slate workspace at late night photographed on 35mm cinema lens at f/1.8, cool blue smartphone screen glow contrasting with warm tungsten desk lamp, authentic human focus struggle, strictly zero text",
+      "narration": "That brief scroll triggers an acute dopamine spike that immediately crashes your baseline neurochemistry.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Smooth lateral tabletop tracking pass",
+      "end_visual": "Tracking laterally across the phone screen: rapid abstract notification particles flash brightly before dimming abruptly into cold indigo darkness, strictly zero text.",
+      "subject_motion": "camera glides across the phone screen as bright cyan flashes fade into cold dark shadows"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "G2",
+      "continues_prev": false,
+      "scene_anchor": "High-contrast 8K 3D biomedical human brain visualization suspended in an obsidian-dark cosmic void, brilliant bioluminescent cyan dopamine pathways firing along the mesolimbic reward system, strictly zero text",
+      "narration": "When your baseline crashes, your prefrontal cortex interprets complex work as biological starvation.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Sweeping 3D anatomical orbital arc",
+      "start_visual": "Vertical 9:16 8K 3D human brain model in obsidian space: brilliant cyan neural pathways abruptly dim into cold desaturated gray across the frontal lobes, strictly zero text.",
+      "end_visual": "Orbiting the 3D brain: a thin amber warning pulse flickers weakly in the center as cortical activity slows, strictly zero text.",
+      "subject_motion": "camera orbits the 3D brain as glowing cyan pathways rapidly fade into dim slate gray"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "G2",
+      "continues_prev": true,
+      "scene_anchor": "High-contrast 8K 3D biomedical human brain visualization suspended in an obsidian-dark cosmic void, brilliant bioluminescent cyan dopamine pathways firing along the mesolimbic reward system, strictly zero text",
+      "narration": "You are not lazy or undisciplined; your brain is simply executing predictable evolutionary chemistry.",
+      "pause_after_sec": 0.32,
+      "camera_verb": "Diving 3D macro push into synaptic cleft",
+      "end_visual": "Diving into a microscopic synaptic junction: delicate neurotransmitter receptors close smoothly, conserving metabolic energy against distant abstract rewards, strictly zero text.",
+      "subject_motion": "camera dives deep into the synaptic junction as circular receptor ports smoothly contract and close"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "G3",
+      "continues_prev": false,
+      "scene_anchor": "Moody modern dark-slate workspace at late night photographed on 35mm cinema lens at f/1.8, cool blue smartphone screen glow contrasting with warm tungsten desk lamp, authentic human focus struggle, strictly zero text",
+      "narration": "The secret is never consuming cheap, high-stimulation rewards before finishing your high-friction goals.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "Authoritative 35mm desk push-in",
+      "start_visual": "Vertical 9:16 view: a calm hand places the smartphone inside a dark matte-black drawer and firmly slides it shut, strictly zero text.",
+      "end_visual": "Pushing into the closed drawer: the wooden edge seals flush as a clean fountain pen rests on open white paper, strictly zero text.",
+      "subject_motion": "the hand slides the wooden drawer firmly shut, removing the smartphone from view entirely"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "G3",
+      "continues_prev": true,
+      "scene_anchor": "Moody modern dark-slate workspace at late night photographed on 35mm cinema lens at f/1.8, cool blue smartphone screen glow contrasting with warm tungsten desk lamp, authentic human focus struggle, strictly zero text",
+      "narration": "Put the phone in another room and let boredom reset your dopamine sensitivity.",
+      "pause_after_sec": 0.32,
+      "camera_verb": "Tactile macro shot of fountain pen",
+      "end_visual": "Macro vertical shot: the fountain pen moves smoothly across textured cream paper, ink flowing into clean geometric thoughts under warm morning sunlight, strictly zero text.",
+      "subject_motion": "the fountain pen glides smoothly across the paper under warm, radiant morning sunbeams"
+    },
+    {
+      "shot_id": "S07",
+      "scene_group": "G4",
+      "continues_prev": false,
+      "scene_anchor": "Moody modern dark-slate workspace at late night photographed on 35mm cinema lens at f/1.8, cool blue smartphone screen glow contrasting with warm tungsten desk lamp, authentic human focus struggle, strictly zero text",
+      "narration": "For the full neuroscience blueprint on resetting your baseline, watch our linked breakdown.",
+      "pause_after_sec": 0.35,
+      "camera_verb": "Calm centered vertical pull-back",
+      "start_visual": "Vertical 9:16 portrait: a composed professional gazes forward in clear cognitive focus, open notebook before them under soft ambient lighting, closed lips, strictly zero text.",
+      "end_visual": "Pulling back slightly to center frame: the clean workspace radiates calm mastery and intellectual sovereignty, strictly zero text.",
+      "subject_motion": "camera retreats slowly into a centered, balanced vertical portrait of focused mastery"
+    }
+  ]
+}

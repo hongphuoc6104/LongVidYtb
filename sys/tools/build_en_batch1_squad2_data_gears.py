@@ -1,0 +1,655 @@
+#!/usr/bin/env python3
+"""Data generator for en-macro-gears Batch 1 specs (Long 16:9 and Short 9:16).
+Competitor: Practical Engineering / Wendover Productions | Voice: en-US-ChristopherNeural
+"""
+
+from typing import Any, Dict, List
+
+
+def get_macro_gears_long() -> Dict[str, Any]:
+    scene_anchor_base = (
+        "Practical Engineering & Wendover large-scale infrastructure documentary cinematography under crisp directional daylight, "
+        "high-detail industrial materials, strictly zero text or map labels"
+    )
+
+    chapters = [
+        ("ch1_hook", "The Scale of the 24,000 TEU Megaship"),
+        ("ch2_paradox", "The Structural Paradox: Why Rigid Steel Fails"),
+        ("ch3_mechanism", "Elastic Beam Physics and Hull Deflection"),
+        ("ch4_case_study_1", "The Open Hull Problem and Torsional Box Girders"),
+        ("ch5_escalation", "The Engine Room Megastructure and Propulsion"),
+        ("ch6_case_study_2", "Container Lashing Dynamics and Parametric Rolling"),
+        ("ch7_systemic_shift", "Canal Hydrodynamics and Bulbous Bow Physics"),
+        ("ch8_resolution", "The Global Arterial Lifeline of Commerce"),
+    ]
+
+    # 64 shots: 8 chapters x 8 shots.
+    # Grouping within each chapter: shots 0..3 (group A, S01 starts False, S02-04 True),
+    # shots 4..7 (group B, S05 starts False, S06-08 True).
+    # Word count per shot: strictly 21 to 22 words.
+    # pause_after_sec: 0.36 (internal), 0.40 (mid-chapter pivot), 0.55 (chapter end).
+
+    raw_shots_data = [
+        # Chapter 1: ch1_hook (S01 - S08)
+        {
+            "narration": "Stretching four hundred meters from bulbous bow to stern, modern ultra-large container ships are the largest moving machines built by human civilization.",
+            "camera_verb": "High-altitude architectural aerial survey",
+            "start_visual": "Practical Engineering style 8K aerial survey shot: massive 400-meter container ship loaded with colorful steel boxes cruising calm ocean waters, strictly zero text.",
+            "end_visual": "Gliding smoothly over the colossal vessel: endless geometric rows of stacked shipping containers extend toward the horizon under crisp morning daylight, strictly zero text.",
+            "subject_motion": "the massive container ship glides steadily through deep blue ocean swells, cutting a foaming white wake",
+        },
+        {
+            "narration": "To picture this staggering scale, lay the Empire State Building on its side; this single vessel is substantially longer and wider.",
+            "camera_verb": "Comparative architectural tracking pass",
+            "start_visual": "Isometric 3D engineering diagram: translucent wireframe of the Empire State Building lying horizontally beside the dark steel hull, strictly zero text.",
+            "end_visual": "Tracking the length comparison: the container ship hull extends dozens of meters beyond the building spire, emphasizing massive volume, strictly zero text.",
+            "subject_motion": "camera tracks alongside the two engineering structures as crisp directional sunlight illuminates architectural dimensions",
+        },
+        {
+            "narration": "When fully loaded, these colossal ocean freighters carry twenty-four thousand standardized steel containers, weighing a staggering two hundred forty thousand tons.",
+            "camera_verb": "Heavy cargo stack vertical crane",
+            "start_visual": "Low-angle crane shot looking up at towering stacks of shipping containers towering twelve tiers above the main weather deck, strictly zero text.",
+            "end_visual": "Ascending vertically past vibrant orange, blue, and green steel corrugated containers locked together with precision twist-locks, strictly zero text.",
+            "subject_motion": "camera ascends smoothly along the towering container stacks while sea spray mists gently around the hull",
+        },
+        {
+            "narration": "Inside those metal boxes sits everything from consumer smartphones and automobile engines to fresh refrigerated fruit and bulk winter wool apparel.",
+            "camera_verb": "Precision cutaway dolly push-in",
+            "start_visual": "Engineering cutaway view inside a forty-foot shipping container: densely packed pallets of precision electronics wrapped in clean industrial film, strictly zero text.",
+            "end_visual": "Pushing into neighboring container bays: industrial machinery crates and refrigerated cargo bays organized in modular grid arrays, strictly zero text.",
+            "subject_motion": "camera glides smoothly between open cutaway container cross-sections, revealing organized global freight cargo",
+        },
+        {
+            "narration": "Yet navigating the open ocean with a quarter-million tons of cargo exposes this steel giant to violent natural hydraulic forces.",
+            "camera_verb": "Rough sea bow tracking pass",
+            "start_visual": "High-angle exterior tracking pass: thirty-foot ocean swells crashing violently against the flared steel bow of the advancing megaship, strictly zero text.",
+            "end_visual": "Gliding alongside the hull: massive walls of emerald seawater smash across the forecastle, throwing up colossal explosions of white foam, strictly zero text.",
+            "subject_motion": "massive ocean waves slam against the dark steel bow, breaking into turbulent white curtains of spray",
+        },
+        {
+            "narration": "Deep ocean storm swells can span hundreds of meters, lifting the vessel bow and stern while leaving the midbody completely unsupported.",
+            "camera_verb": "Wave wavelength dynamic orbital",
+            "start_visual": "Isometric engineering visualization: two colossal wave crests supporting the ship ends while a deep trough yawns beneath midships, strictly zero text.",
+            "end_visual": "Orbiting the hull: glowing red stress vectors visualize intense downward gravitational sagging forces concentrating across the central keel section, strictly zero text.",
+            "subject_motion": "ocean swells roll beneath the ship while red force vectors pulse along the unsupported central hull",
+        },
+        {
+            "narration": "Seconds later, the wave pattern reverses, lifting the ship midbody on a single crest while the heavy ends hang in air.",
+            "camera_verb": "Hogging stress vector tilt",
+            "start_visual": "Engineering cutaway showing hogging condition: a colossal wave crest lifts the ship center while bow and stern plunge into troughs, strictly zero text.",
+            "end_visual": "Tilting along the deck line: tensile stress pulls across the upper deck coamings while compressive forces crush the lower keel, strictly zero text.",
+            "subject_motion": "the hull balances momentarily on the central wave crest as the bow and stern flex downward",
+        },
+        {
+            "narration": "If naval architects engineered this hull to remain completely rigid and unyielding, the colossal bending forces would snap it in two.",
+            "camera_verb": "Catastrophic failure finite element zoom",
+            "start_visual": "Finite element analysis model of a hypothetical rigid hull: violent crimson stress concentrations flaring bright red across midship welds, strictly zero text.",
+            "end_visual": "Zooming into the stressed plate: simulated brittle micro-cracks propagate across the rigid steel plate, demonstrating catastrophic structural failure, strictly zero text.",
+            "subject_motion": "crimson stress vectors spike rapidly across the rigid model until microscopic fracture lines appear in the steel",
+        },
+
+        # Chapter 2: ch2_paradox (S09 - S16)
+        {
+            "narration": "This reveals the foundational paradox of modern naval architecture: survival in heavy seas requires calculated structural flexibility rather than brute stiffness.",
+            "camera_verb": "Flexing beam engineering demonstration",
+            "start_visual": "Practical Engineering studio workshop bench: clean mechanical testing rig flexing a high-strength steel beam under hydraulic actuators, strictly zero text.",
+            "end_visual": "Pushing into the flexing steel beam: the metal bows smoothly under extreme loads and returns elastically without permanent deformation, strictly zero text.",
+            "subject_motion": "hydraulic pistons press smoothly against the steel beam, causing it to deflect smoothly into a clean arc",
+        },
+        {
+            "narration": "Steel is commonly imagined as completely rigid, but across a four-hundred-meter span, it behaves remarkably like an enormous industrial spring.",
+            "camera_verb": "Full-ship longitudinal profile glide",
+            "start_visual": "Widescreen profile view of the 400-meter megaship cutting through rolling swells under clear blue sky, strictly zero text.",
+            "end_visual": "Gliding from stern to bow: a subtle, elegant vertical wave undulation ripples smoothly along the entire upper deck railing, strictly zero text.",
+            "subject_motion": "the long horizontal profile of the ship hull flexes gently with a continuous two-meter vertical deflection",
+        },
+        {
+            "narration": "In severe North Atlantic storms, the bow of a modern container giant can deflect upward and downward by over two meters.",
+            "camera_verb": "Bridge wing perspective push",
+            "start_visual": "View from the bridge wing looking four hundred meters forward along the container stacks toward the distant bow jackstaff, strictly zero text.",
+            "end_visual": "Pushing along the container line: the distant bow visibly rises and dips relative to the bridge horizon as waves pass, strictly zero text.",
+            "subject_motion": "the bow rises and falls gracefully against the ocean horizon while the long steel hull flexes smoothly",
+        },
+        {
+            "narration": "This elastic flexing absorbs millions of foot-pounds of wave energy, harmlessly dissipating stresses that would otherwise tear structural bulkheads apart.",
+            "camera_verb": "Internal bulkhead stress dissipation track",
+            "start_visual": "Cutaway view inside a double-bottom fuel tank: heavy transverse steel frames and longitudinal stiffeners flexing in rhythmic harmony, strictly zero text.",
+            "end_visual": "Tracking the structural joints: high-tensile steel welds absorb cyclic bending loads without accumulating dangerous microscopic metal fatigue, strictly zero text.",
+            "subject_motion": "internal structural steel members expand and contract slightly under cyclic loading in fluid harmonic cadence",
+        },
+        {
+            "narration": "However, achieving this calculated structural flexibility becomes extraordinarily difficult because a container ship is essentially an open, lidless steel shoe box.",
+            "camera_verb": "Open shoebox cross-section push",
+            "start_visual": "Isometric engineering cross-section of container ship hull: open cargo hold devoid of continuous horizontal decks between container cells, strictly zero text.",
+            "end_visual": "Pushing into the cavernous cargo bay: vertical cell guides reach sixty feet down into the empty hull under daylight, strictly zero text.",
+            "subject_motion": "camera descends into the massive hollow cargo hold where vertical steel guide rails frame empty space",
+        },
+        {
+            "narration": "Unlike oil tankers, whose continuous steel weather decks provide immense torsional resistance, container ships must leave their cargo holds completely wide open.",
+            "camera_verb": "Tanker vs container ship comparison",
+            "start_visual": "Side-by-side engineering comparison: solid enclosed deck of an oil tanker next to the wide-open hold of a container carrier, strictly zero text.",
+            "end_visual": "Orbiting the two hull designs: glowing arrows highlight how enclosed tubular tanker hulls resist twisting far more naturally than open hulls, strictly zero text.",
+            "subject_motion": "comparative models rotate side-by-side as rotational torque vectors demonstrate differing resistance to twisting",
+        },
+        {
+            "narration": "Without a solid deck to lock the hull sides together, diagonal waves can twist the ship bow and stern in opposite directions.",
+            "camera_verb": "Torsional wave twisting visualization",
+            "start_visual": "3D ocean simulation: angled quartering waves striking the ship bow from the port side and stern from starboard, strictly zero text.",
+            "end_visual": "Tracking the resulting twist: the forward cargo hold warps clockwise while the stern twists counterclockwise along the longitudinal axis, strictly zero text.",
+            "subject_motion": "the long open hull twists diagonally along its centerline under opposing hydrodynamic torque from angled waves",
+        },
+        {
+            "narration": "This dangerous phenomenon, known as torsional warping, threatened to make ultra-large container ships structurally impossible until engineers invented the torsion box.",
+            "camera_verb": "Upper deck coaming macro push",
+            "start_visual": "Close-up on the upper edge of the container ship cargo hold: massive structural steel coaming running along the deck edge, strictly zero text.",
+            "end_visual": "Pushing into the interior of the coaming structure: revealing a hollow, reinforced rectangular steel box girder spanning the ship, strictly zero text.",
+            "subject_motion": "camera pushes through an access hatch into the reinforced interior of the hollow steel torsion box",
+        },
+
+        # Chapter 3: ch3_mechanism (S17 - S24)
+        {
+            "narration": "Running continuously along both upper deck edges sits the torsion box, a hollow steel megastructure built from plates up to one hundred millimeters.",
+            "camera_verb": "Internal torsion box dolly glide",
+            "start_visual": "Interior view inside the upper deck torsion box: an illuminated steel tunnel wide enough for technicians to walk through comfortably, strictly zero text.",
+            "end_visual": "Dollying down the endless steel corridor: heavy diagonal braces and stiffening rings reinforce the four-inch thick high-strength steel plating, strictly zero text.",
+            "subject_motion": "camera glides smoothly through the interior steel inspection corridor illuminated by industrial inspection lights",
+        },
+        {
+            "narration": "These massive enclosed longitudinal box girders act like rigid spine beams, restoring immense torsional stiffness to the otherwise open ship hull.",
+            "camera_verb": "Spine beam stress distribution orbital",
+            "start_visual": "Cutaway visualization of the entire ship hull: two glowing cyan longitudinal beams highlighting the torsion boxes on either deck edge, strictly zero text.",
+            "end_visual": "Orbiting the hull under twisting load: rotational shear forces transfer smoothly into the twin torsion boxes, preventing cargo hold warping, strictly zero text.",
+            "subject_motion": "cyan structural beams absorb twisting forces, channeling mechanical shear smoothly along the vessel perimeter",
+        },
+        {
+            "narration": "The steel used here is EH47 grade, an advanced metallurgical formulation offering four hundred sixty megapascals of yield strength and superior fatigue toughness.",
+            "camera_verb": "Metallurgical microstructure zoom",
+            "start_visual": "Macro view of polished steel plate surface: clean dark metallic grain structure illuminated under precision industrial inspection lighting, strictly zero text.",
+            "end_visual": "Zooming into microscopic grain boundaries: fine-grained ferritic-pearlitic crystal lattice designed to arrest crack propagation even at sub-zero temperatures, strictly zero text.",
+            "subject_motion": "atomic crystal lattice boundaries interlock tightly, deflecting microscopic shear stress lines without fracturing",
+        },
+        {
+            "narration": "Special crack-arresting design features ensure that even if a microscopic weld crack initiates in heavy storms, it cannot propagate across the deck.",
+            "camera_verb": "Weld crack arrestor cutaway push",
+            "start_visual": "Close-up on a heavy full-penetration butt weld joining two thick hull plates: smooth ground weld bead under magnetic particle inspection, strictly zero text.",
+            "end_visual": "Pushing into the crack-arrest steel insert: a specialized ductile steel boundary layer that halts and blunts any spreading micro-fracture, strictly zero text.",
+            "subject_motion": "simulated stress crack reaches the crack-arrest boundary insert and stops cleanly without expanding further",
+        },
+        {
+            "narration": "Beneath the cargo holds, a double-bottom structure provides a second immense horizontal flange, creating an overall cross-section resembling a giant I-beam.",
+            "camera_verb": "Double-bottom keel structural crane",
+            "start_visual": "Transverse cutaway of ship bottom: two meters of space separating the outer keel plating from the inner hold floor, strictly zero text.",
+            "end_visual": "Descending between the double hulls: heavy solid floors and longitudinal girders form an indestructible cellular egg-crate steel matrix, strictly zero text.",
+            "subject_motion": "camera descends into the reinforced cellular double bottom where seawater ballast tanks flank structural girders",
+        },
+        {
+            "narration": "This cellular double-bottom handles enormous compressive forces when the ship sags, while housing ballast tanks used to balance the ship trim.",
+            "camera_verb": "Ballast water flow cutaway dolly",
+            "start_visual": "Cutaway of cellular double-bottom tanks: massive high-capacity hydraulic pumps moving thousands of tons of seawater ballast between compartments, strictly zero text.",
+            "end_visual": "Dollying along the ballast piping manifold: automated valves adjust water distribution to counteract container weight imbalances in real time, strictly zero text.",
+            "subject_motion": "turbulent seawater rushes through heavy industrial piping, filling balancing ballast compartments smoothly",
+        },
+        {
+            "narration": "Between the upper torsion boxes and the double bottom sit vertical cell guides, precision vertical steel tracks that cradle containers inside holds.",
+            "camera_verb": "Cell guide vertical tracking descent",
+            "start_visual": "Looking straight down into a sixty-foot-deep cargo hold: vertical angle-iron steel tracks running from deck level to tank top, strictly zero text.",
+            "end_visual": "Descending along the vertical rails: precise four-inch clearances prevent loaded containers from shifting or jamming during rolling seas, strictly zero text.",
+            "subject_motion": "camera drops smoothly down vertical steel guide tracks where containers sit stacked ten tiers deep",
+        },
+        {
+            "narration": "Working together in dynamic harmony, these structural systems transform four football fields of hollow steel into a resilient, flex-tolerant maritime megastructure.",
+            "camera_verb": "Integrated structural system pull-back",
+            "start_visual": "Cutaway visualization highlighting all structural systems at once: green double-bottom, cyan torsion boxes, and orange transverse bulkheads, strictly zero text.",
+            "end_visual": "Pulling back to reveal the complete ship operating seamlessly in open ocean swells, balancing strength and elasticity in harmony, strictly zero text.",
+            "subject_motion": "all colored structural systems pulse with synchronized load-sharing harmony as the ship rides an ocean swell",
+        },
+
+        # Chapter 4: ch4_case_study_1 (S25 - S32)
+        {
+            "narration": "Securing twenty-four thousand heavy containers onto this flexing hull is an extraordinary engineering challenge governed by complex dynamic multi-body physics.",
+            "camera_verb": "Container deck layout aerial pass",
+            "start_visual": "Aerial tracking pass over weather deck: hundreds of container stacks arranged in twenty-four rows across the sixty-one-meter ship beam, strictly zero text.",
+            "end_visual": "Gliding across the colorful container tops: clean geometric alignment under bright sun, showing massive density of deck cargo, strictly zero text.",
+            "subject_motion": "camera glides smoothly across the colorful mosaic of shipping container roofs extending across the broad beam",
+        },
+        {
+            "narration": "Containers below deck sit firmly constrained by vertical cell guides, but containers stacked nine-high on the open weather deck require external lashing.",
+            "camera_verb": "Weather deck lashing bridge crane",
+            "start_visual": "Low-angle crane shot on the weather deck: elevated lashing bridges rising between container stacks with heavy diagonal steel rods, strictly zero text.",
+            "end_visual": "Ascending the lashing bridge: heavy galvanized steel turnbuckles and solid steel tension rods cross diagonally across container corners, strictly zero text.",
+            "subject_motion": "camera rises along the lashing bridge where massive tension rods cross in diagonal X-patterns",
+        },
+        {
+            "narration": "At every corner of every container sits a forged steel twist-lock, engaging the corner casting holes to lock stacked units together.",
+            "camera_verb": "Twist-lock mechanical macro push",
+            "start_visual": "Close-up of a heavy cast-steel twist-lock inserted between two corner castings of stacked shipping containers, strictly zero text.",
+            "end_visual": "Pushing into the mechanism: the internal conical shaft rotates ninety degrees, mechanically locking the upper container corner to the lower box, strictly zero text.",
+            "subject_motion": "the internal steel core of the twist-lock rotates firmly into the locked position with mechanical precision",
+        },
+        {
+            "narration": "High-tensile steel lashing rods connect the lower container tiers to deck fittings, creating rigid diagonal trusses that resist lateral racking forces.",
+            "camera_verb": "Lashing rod tension vector zoom",
+            "start_visual": "High-angle view of diagonal lashing rods under tension: heavy steel bars angling down from tier three to the lashing bridge deck, strictly zero text.",
+            "end_visual": "Zooming into the tensioned turnbuckle: glowing amber stress vectors illustrate thousands of pounds of static pre-tension securing the stack, strictly zero text.",
+            "subject_motion": "amber force vectors illuminate along the diagonal steel rods as they anchor the container stack against roll",
+        },
+        {
+            "narration": "When the ship rolls fifteen degrees in heavy swell, gravity and centrifugal acceleration try to tip the top containers overboard.",
+            "camera_verb": "Heavy roll ship dynamic angle",
+            "start_visual": "Dramatic low-angle shot from sea level: the massive container ship heeling fifteen degrees to port against rolling ocean swells, strictly zero text.",
+            "end_visual": "Tracking the container stacks: the top tier arches outward over open water, supported entirely by corner posts and lashing rods, strictly zero text.",
+            "subject_motion": "the massive ship rolls gracefully into a fifteen-degree heel as sea foam cascades off the port deck edge",
+        },
+        {
+            "narration": "The bottom container corner posts must withstand crushing compressive loads exceeding eighty metric tons from the towering stack resting above them.",
+            "camera_verb": "Corner post compression cutaway",
+            "start_visual": "Engineering cutaway of the lowest container corner post: hollow high-strength cold-formed steel tube supporting eight stacked containers above, strictly zero text.",
+            "end_visual": "Pushing into the steel post: finite element stress contours glow yellow and orange under eighty tons of combined compressive weight, strictly zero text.",
+            "subject_motion": "finite element stress contours pulse along the steel vertical post as dynamic rolling loads shift weight",
+        },
+        {
+            "narration": "If a single lashing rod loosens or fails under fatigue, the structural racking loads instantly cascade onto neighboring containers with catastrophic speed.",
+            "camera_verb": "Cascade failure dynamic simulation",
+            "start_visual": "Engineering simulation: one diagonal lashing rod snapping under extreme storm roll, allowing the upper container corner to lift, strictly zero text.",
+            "end_visual": "Tracking the cascade: corner castings crumple like accordion bellows, causing the entire stack to tilt and collapse like falling dominoes, strictly zero text.",
+            "subject_motion": "structural failure propagates rapidly across the container row as corner posts fold under concentrated shear",
+        },
+        {
+            "narration": "Precise tensioning of every lashing rod is therefore a critical safety discipline, protecting billions of dollars of freight on every voyage.",
+            "camera_verb": "Secured deck wide survey pull-back",
+            "start_visual": "Engineering crew inspecting turnbuckles with torque indicators along the elevated lashing bridge under golden afternoon sun, strictly zero text.",
+            "end_visual": "Pulling back high above the ship: perfectly secured container rows stand rock-solid as the vessel glides toward the horizon, strictly zero text.",
+            "subject_motion": "camera rises smoothly above the immaculate, secured container stacks into the calm maritime sky",
+        },
+
+        # Chapter 5: ch5_escalation (S33 - S40)
+        {
+            "narration": "Propelling this quarter-million-ton titan across open oceans requires the most powerful internal combustion engine ever manufactured in modern industrial history.",
+            "camera_verb": "Engine room cavernous crane descent",
+            "start_visual": "Interior view of the five-story-tall engine room: colossal cylinder heads and exhaust manifolds bathed in bright industrial floodlights, strictly zero text.",
+            "end_visual": "Descending past steel catwalks and service cranes: the massive engine block towers fifteen meters above the lower crankcase floor, strictly zero text.",
+            "subject_motion": "camera descends past multiple industrial catwalks along the colossal green steel engine block",
+        },
+        {
+            "narration": "Standing five stories tall and weighing twenty-three hundred tons, the two-stroke crosshead diesel engine generates over one hundred thousand horsepower.",
+            "camera_verb": "Two-stroke crosshead cutaway push",
+            "start_visual": "3D cutaway of a single cylinder: a one-meter-diameter piston traveling smoothly inside a thick cast-iron cylinder liner, strictly zero text.",
+            "end_visual": "Pushing into the combustion chamber: common-rail fuel injectors atomize fuel at two thousand bar, unleashing high-pressure combustion, strictly zero text.",
+            "subject_motion": "the massive piston moves downward in a smooth power stroke as atomized fuel combusts with intense yellow heat",
+        },
+        {
+            "narration": "Each individual cylinder bore measures nearly one meter wide, with a piston stroke exceeding two and a half meters of travel.",
+            "camera_verb": "Piston stroke dimension track",
+            "start_visual": "Cross-section showing piston travel: the massive steel piston head sliding smoothly down the honed cast-iron cylinder sleeve, strictly zero text.",
+            "end_visual": "Tracking the crosshead slider: crosshead shoes absorb sideways connecting-rod thrust, keeping the vertical piston rod perfectly aligned, strictly zero text.",
+            "subject_motion": "the massive crosshead slider glides smoothly between lubricated vertical guide plates under immense force",
+        },
+        {
+            "narration": "At full cruising speed, this mechanical titan rotates at just eighty revolutions per minute, direct-driving the propulsion shaft without a gearbox.",
+            "camera_verb": "Direct drive crankshaft orbital",
+            "start_visual": "Inside the lower crankcase: massive forged steel crankshaft webs rotating smoothly in giant oil-bathed journal bearings, strictly zero text.",
+            "end_visual": "Orbiting the rotating shaft: the three-foot-thick solid alloy steel propeller shaft extends hundred meters aft through the shaft alley, strictly zero text.",
+            "subject_motion": "the giant crankshaft turns with slow, hypnotic eighty-RPM rotational momentum in an amber mist of lubricating oil",
+        },
+        {
+            "narration": "Direct mechanical connection eliminates heavy gearbox friction losses, transferring over ninety-eight percent of generated engine power directly into the open ocean.",
+            "camera_verb": "Shaft alley longitudinal dolly",
+            "start_visual": "Looking down the long illuminated shaft alley tunnel: the massive rotating steel shaft supported by pedestal sleeve bearings, strictly zero text.",
+            "end_visual": "Dollying alongside the spinning shaft toward the stern tube seal where the shaft exits the hull into the sea, strictly zero text.",
+            "subject_motion": "camera tracks alongside the silently spinning solid steel drive shaft extending into the distance",
+        },
+        {
+            "narration": "Outside the stern sits the propeller, a thirty-foot-wide monolithic bronze casting weighing nearly one hundred tons with five sculpted blades.",
+            "camera_verb": "Underwater bronze propeller orbital",
+            "start_visual": "Underwater 8K shot: colossal five-bladed nickel-aluminum bronze propeller gleaming under blue ocean light behind the stern skeg, strictly zero text.",
+            "end_visual": "Orbiting the spinning blades: massive sheets of accelerated water swirl backward, generating hundreds of tons of forward thrust, strictly zero text.",
+            "subject_motion": "the massive bronze propeller blades turn majestically, shedding elegant helical tip vortex spirals into the sea",
+        },
+        {
+            "narration": "To maximize fuel economy, the propeller rotates slowly with massive pitch, displacing millions of gallons of water per minute with minimal cavitation.",
+            "camera_verb": "Propeller slipstream hydrodynamics zoom",
+            "start_visual": "Hydrodynamic flow visualization: streamlines of blue water accelerating smoothly across the polished bronze blade surfaces, strictly zero text.",
+            "end_visual": "Zooming into blade tips: smooth laminar water flow leaves zero destructive vacuum vapor bubbles, preserving metal life for decades, strictly zero text.",
+            "subject_motion": "clean hydrodynamic velocity streamlines glide effortlessly over the bronze blade without turbulent vapor tearing",
+        },
+        {
+            "narration": "Burning heavy fuel oil with sophisticated exhaust gas scrubbers, this colossal propulsion package consistently achieves thermal efficiencies exceeding fifty full percent.",
+            "camera_verb": "Engine exhaust scrubber cutaway",
+            "start_visual": "Cutaway of the funnel casing: towering exhaust gas cleaning scrubber spraying alkaline seawater through rising diesel exhaust, strictly zero text.",
+            "end_visual": "Pushing into the wash water chamber: sulfur oxides neutralize into harmless sulfates, discharging clean steam plumes into sky, strictly zero text.",
+            "subject_motion": "high-pressure seawater sprays mist through the exhaust column, cleansing sulfur particulates from the white steam",
+        },
+
+        # Chapter 6: ch6_case_study_2 (S41 - S48)
+        {
+            "narration": "Despite its immense size and tremendous propulsion power, the container ship faces a terrifying and counter-intuitive maritime danger known as parametric rolling.",
+            "camera_verb": "Parametric roll ocean overview",
+            "start_visual": "Dramatic aerial shot: container megaship steaming into heavy head seas with wave crests approaching directly from the front, strictly zero text.",
+            "end_visual": "Tracking the ship profile: wave crest passes beneath midships, followed immediately by a rapid and violent side-to-side roll, strictly zero text.",
+            "subject_motion": "the ship begins rocking side-to-side with increasing angular velocity as waves pass beneath the hull",
+        },
+        {
+            "narration": "Unlike ordinary rolling caused by beam waves hitting the side, parametric rolling occurs in head seas waves coming straight from ahead.",
+            "camera_verb": "Head seas waterline perspective",
+            "start_visual": "Low-angle camera on the waterline: steep head seas approaching the bow in regular periodic succession under dark skies, strictly zero text.",
+            "end_visual": "Pushing toward the bow: as the wave crest lifts midships, the flared bow and wide transom stern lift out of water, strictly zero text.",
+            "subject_motion": "regular head swells strike the bow consecutively while waterplanes expand and contract with each passing wave",
+        },
+        {
+            "narration": "When the wave crest passes directly beneath midships, the submerged waterplane area narrows sharply, slashing the hull righting stability in half.",
+            "camera_verb": "Metacentric height stability diagram",
+            "start_visual": "Transverse stability diagram: the metacentric height GM plunging downward as water falls away from the flared hull sides, strictly zero text.",
+            "end_visual": "Orbiting the cross-section: the ship righting lever diminishes, leaving the vessel temporarily defenseless against slight angular tilts, strictly zero text.",
+            "subject_motion": "the metacentric height indicator drops rapidly in sync with the passing wave crest, destabilizing equilibrium",
+        },
+        {
+            "narration": "Half a wave cycle later, wave troughs submerge the flared bow and stern, suddenly restoring immense righting torque with violent snap force.",
+            "camera_verb": "Snap righting torque cutaway",
+            "start_visual": "Cutaway view: the flared bow submerges deeply into wave trough, waterplane area expanding instantly like a wide outrigger, strictly zero text.",
+            "end_visual": "Tilting with the ship: the restored buoyancy snaps the hull upright so violently that momentum throws it into an opposite heel, strictly zero text.",
+            "subject_motion": "the hull snaps violently back to vertical and immediately overshoots into a deep roll in the opposite direction",
+        },
+        {
+            "narration": "If the encounter period between waves exactly matches half the natural roll period of the ship, resonance amplifies the roll exponentially.",
+            "camera_verb": "Resonance curve oscillation tracking",
+            "start_visual": "3D visualization: sinusoidal resonance wave synchronizing with hull roll angle, roll degrees climbing from five to thirty, strictly zero text.",
+            "end_visual": "Tracking the rolling ship: within three wave cycles, the quarter-million-ton vessel rolls forty degrees from vertical, strictly zero text.",
+            "subject_motion": "the container ship heels forty degrees to port, then snaps thirty-five degrees to starboard in terrifying rhythm",
+        },
+        {
+            "narration": "At thirty-five degrees of heel, container stacks experience brutal transverse accelerations of nearly one G, tearing lashing rods from deck welds.",
+            "camera_verb": "Extreme heel container stack strain",
+            "start_visual": "Looking down from the wheelhouse at thirty-five-degree list: container rows pointing directly toward boiling green sea below, strictly zero text.",
+            "end_visual": "Zooming to the lower lashings: steel rods stretch and buckle under dynamic transverse forces, shedding stacks into ocean, strictly zero text.",
+            "subject_motion": "top tiers of containers shift under extreme gravitational shear as sea spray washes over the submerged gunwale",
+        },
+        {
+            "narration": "To combat violent parametric roll, modern megaships deploy anti-roll passive stabilization tanks and sophisticated navigational Doppler radars that actively predict waves.",
+            "camera_verb": "Anti-roll tank fluid dynamic cutaway",
+            "start_visual": "Transverse cutaway of internal anti-roll tank: thousands of tons of water sloshing across a baffled central chamber, strictly zero text.",
+            "end_visual": "Tracking the fluid motion: water sloshes out of phase with ship roll, counteracting angular momentum before resonance can develop, strictly zero text.",
+            "subject_motion": "water inside the internal anti-roll tank sloshes opposite to the hull tilt, dampening angular roll motion",
+        },
+        {
+            "narration": "By altering course slightly by ten degrees or adjusting speed, officers immediately break the lethal harmonic resonance, calming the ship.",
+            "camera_verb": "Course adjustment aerial stabilization",
+            "start_visual": "Aerial survey shot: the container ship making a smooth, controlled ten-degree course alteration across ocean swells, strictly zero text.",
+            "end_visual": "Tracking the stabilized ship: the violent rolling immediately dampens away, returning the vessel to smooth, level ocean cruising, strictly zero text.",
+            "subject_motion": "the container ship turns smoothly onto a new heading, immediately settling into calm, level forward motion",
+        },
+
+        # Chapter 7: ch7_systemic_shift (S49 - S56)
+        {
+            "narration": "Even after surviving the brutal open ocean, the greatest hydrodynamic challenge occurs when entering shallow dredged harbor channels and navigation canals.",
+            "camera_verb": "Canal entrance high-angle glide",
+            "start_visual": "Aerial view: the 400-meter container ship entering the narrow, shallow confines of a dredged shipping canal under bright sunlight, strictly zero text.",
+            "end_visual": "Gliding above the waterway: narrow clearances between the hull and muddy canal banks highlight extreme spatial confinement, strictly zero text.",
+            "subject_motion": "the massive ship enters the narrow canal waterway flanked by flat sandy banks on either side",
+        },
+        {
+            "narration": "With twenty-four thousand containers loaded, the ship draws over sixteen meters of water, leaving barely two meters of under-keel clearance.",
+            "camera_verb": "Under-keel clearance sonar cutaway",
+            "start_visual": "Underwater cutaway profile: the dark steel keel hovering merely two meters above the dredged canal seabed sand, strictly zero text.",
+            "end_visual": "Tracking along the flat bottom: water squeezed under the hull accelerates into high-velocity narrow flow streams, strictly zero text.",
+            "subject_motion": "camera tracks beneath the flat steel keel where water rushes through the narrow two-meter clearance gap",
+        },
+        {
+            "narration": "Under Bernoulli's fluid principle, accelerated water flowing through the constricted gap beneath the keel drops in pressure, creating intense downward suction.",
+            "camera_verb": "Bernoulli pressure drop streamline",
+            "start_visual": "3D fluid dynamics visualization beneath keel: blue velocity streamlines turning cyan and purple as water velocity spikes, strictly zero text.",
+            "end_visual": "Pushing into the low-pressure zone: the pressure drop creates a downward hydrodynamic suction pulling the hull toward seabed, strictly zero text.",
+            "subject_motion": "purple low-pressure contours expand along the flat keel, pulling the heavy hull downward closer to the sand",
+        },
+        {
+            "narration": "This dangerous phenomenon, known as shallow water squat, causes the ship to sink deeper into the water and trim by bow.",
+            "camera_verb": "Hull squat waterline tracking pass",
+            "start_visual": "Exterior shot at the canal waterline: the ship draft marks sinking twenty centimeters deeper as forward speed increases, strictly zero text.",
+            "end_visual": "Tracking the bow: the bulbous bow dips lower into the muddy canal trench under hydrodynamic suction forces, strictly zero text.",
+            "subject_motion": "the entire ship body sinks deeper into the canal water as forward velocity creates downward hydrodynamic pull",
+        },
+        {
+            "narration": "Simultaneously, the bank effect pushes the bow away from the nearest canal wall while sucking the stern dangerously toward the bank.",
+            "camera_verb": "Bank effect lateral force orbital",
+            "start_visual": "Aerial view of ship traveling off-center in canal: high-pressure water cushion building between the port bow and canal bank, strictly zero text.",
+            "end_visual": "Orbiting to the stern: low-pressure suction behind the propeller pulls the stern toward the mud bank, initiating unwanted yaw, strictly zero text.",
+            "subject_motion": "the ship bow pushes away from the canal bank while the stern swings inward under asymmetric hydraulic suction",
+        },
+        {
+            "narration": "To maintain precision control, modern megaships rely on colossal spade rudders and high-torque bow thrusters powered by multi-megawatt electric motors.",
+            "camera_verb": "Bow thruster hydro-jet cutaway",
+            "start_visual": "Cutaway of the bulbous bow: two transverse tunnels housing high-pitch thruster propellers driven by powerful electric motors, strictly zero text.",
+            "end_visual": "Pushing into the thruster tunnel: the impeller spins up, discharging thousands of gallons of high-pressure water to maneuver bow, strictly zero text.",
+            "subject_motion": "the bow thruster impeller discharges a powerful jet of frothing water to shove the bow smoothly sideways",
+        },
+        {
+            "narration": "At the bow tip sits the bulbous bow, a hydrodynamic protrusion that cancels out the bow wave to reduce drag by fifteen percent.",
+            "camera_verb": "Bulbous bow wave cancellation zoom",
+            "start_visual": "Close-up on the underwater bulbous bow cutting through canal water: generating its own secondary bow wave right ahead of hull, strictly zero text.",
+            "end_visual": "Zooming out to wave interaction: the bulb wave trough coincides with the main hull wave crest, destructively canceling wake, strictly zero text.",
+            "subject_motion": "the secondary wave from the bulbous bow merges destructively with the main bow wave, flattening the surface water",
+        },
+        {
+            "narration": "Through these hydrodynamic innovations, a ship carrying twenty-four thousand containers navigates tight dredged waterways with surgical and microscopic millimeters of precision.",
+            "camera_verb": "Harbor approach high-altitude panorama",
+            "start_visual": "Wide panoramic aerial shot: the megaship gliding smoothly past harbor breakwaters toward automated container terminal docks, strictly zero text.",
+            "end_visual": "Tracking down toward the quay: giant automated ship-to-shore gantry cranes position their spreaders to begin container unloading, strictly zero text.",
+            "subject_motion": "the colossal container ship docks gracefully alongside the terminal pier flanked by four agile escort tugs",
+        },
+
+        # Chapter 8: ch8_resolution (S57 - S64)
+        {
+            "narration": "Arriving at the automated container terminal, dozens of electric ship-to-shore cranes immediately descend upon the ship with choreographed robotic speed.",
+            "camera_verb": "Automated terminal gantry crane sweep",
+            "start_visual": "Practical Engineering style wide shot: six giant red gantry cranes spanning the ship, hoisting containers in rapid rhythm, strictly zero text.",
+            "end_visual": "Sweeping along the terminal quay: automated guided vehicles transport containers smoothly across the paved yard to stacking blocks, strictly zero text.",
+            "subject_motion": "giant crane spreaders hoist shipping containers off the weather deck and lower them onto autonomous electric yard carriers",
+        },
+        {
+            "narration": "Every single container is tracked by laser sensors and optical scanners, logging weight and balance data into central automated logistics networks.",
+            "camera_verb": "Container scanner laser tracking pass",
+            "start_visual": "Close-up on a container spreader frame hoisting a forty-foot box: industrial laser scanners sweeping across the corrugated steel surface, strictly zero text.",
+            "end_visual": "Tracking the container onto an automated truck chassis: precision positioning pins engage with smooth, authoritative mechanical lock, strictly zero text.",
+            "subject_motion": "the spreader lowers the container onto the transport chassis with surgical accuracy as locking pins snap shut",
+        },
+        {
+            "narration": "Within forty-eight hours, this maritime hub will discharge twelve thousand containers and load twelve thousand more before setting sail again.",
+            "camera_verb": "Terminal timelapse aerial descent",
+            "start_visual": "High-altitude terminal view under afternoon sunlight: thousands of colorful containers moving across the automated grid like clockwork gears, strictly zero text.",
+            "end_visual": "Descending toward the ship: cargo holds empty and reload simultaneously without disturbing overall ship balance or stability, strictly zero text.",
+            "subject_motion": "constant motion of automated cranes and electric vehicles transferring containers in synchronized geometric flow",
+        },
+        {
+            "narration": "Over ninety percent of all physical goods manufactured on Earth travel across the ocean at least once during their lifecycle.",
+            "camera_verb": "Global trade network visualization",
+            "start_visual": "Widescreen 3D global trade map: illuminated shipping lane arcs connecting Asia, Europe, and America across dark blue oceans, strictly zero text.",
+            "end_visual": "Zooming into oceanic chokepoints: Malacca, Suez, and Panama glowing with concentrated streams of container vessel traffic, strictly zero text.",
+            "subject_motion": "streams of glowing maritime traffic pulse smoothly along global shipping routes across the spherical Earth",
+        },
+        {
+            "narration": "Without these twenty-four-thousand-container leviathans silently bridging the oceans, modern globalized commerce and just-in-time manufacturing networks would collapse completely within weeks.",
+            "camera_verb": "Global logistics chain push-in",
+            "start_visual": "Translucent view of automated factory assembly line: robotic arms assembling consumer electronics from just-arrived container parts, strictly zero text.",
+            "end_visual": "Pushing outward to harbor docks: the seamless physical link between ocean container transport and modern consumer availability, strictly zero text.",
+            "subject_motion": "robotic assembly arms work in rapid precision rhythm as components flow smoothly from shipping pallets",
+        },
+        {
+            "narration": "Yet this immense economic achievement rests not merely on digital logistics, but on pure mechanical, hydrodynamic, and high-tensile metallurgical structural mastery.",
+            "camera_verb": "Metallurgical hull surface glide",
+            "start_visual": "Close-up on the weathered dark steel hull plating meeting ocean waves, showing massive structural rivets, welds, and plating, strictly zero text.",
+            "end_visual": "Gliding along the flared bow: salt spray glistens on high-tensile steel designed to endure decades of brutal oceanic forces, strictly zero text.",
+            "subject_motion": "ocean water washes smoothly over the thick curved steel hull as the ship cuts forward through swells",
+        },
+        {
+            "narration": "From the hollow torsion box girders to the flexing double-bottom keel, human engineering mastered the ocean by learning to bend.",
+            "camera_verb": "Flexing hull engineering orbital",
+            "start_visual": "Cutaway visualization of the complete megaship riding an ocean swell, highlighting the subtle two-meter vertical deflection, strictly zero text.",
+            "end_visual": "Orbiting the vessel: stress vectors dissipate smoothly through structural joints without creating destructive strain concentrations, strictly zero text.",
+            "subject_motion": "the massive ship hull flexes gracefully across the rolling wave, absorbing and deflecting immense natural forces",
+        },
+        {
+            "narration": "Four football fields of steel, moving silently across the deep, proving that true engineering strength lies in harmony with nature.",
+            "camera_verb": "Grand maritime sunset pull-back",
+            "start_visual": "Cinematic wide shot: the 24,000-container ship cruising into a golden sunset on the open ocean, pristine white wake trailing behind, strictly zero text.",
+            "end_visual": "Epic high-altitude pull-back into the evening sky: the massive steel machine shrinks to a serene silhouette against the vast blue sea, strictly zero text.",
+            "subject_motion": "the giant container ship cruises toward the golden sunset horizon while gentle ocean waves roll across the boundless sea",
+        },
+    ]
+
+    shots: List[Dict[str, Any]] = []
+    for idx, raw in enumerate(raw_shots_data):
+        shot_num = idx + 1
+        ch_idx = idx // 8
+        ch_name, _ = chapters[ch_idx]
+        pos_in_ch = idx % 8
+
+        continues = pos_in_ch not in (0, 4)
+
+        if pos_in_ch == 7:
+            pause = 0.55
+        elif pos_in_ch == 3:
+            pause = 0.40
+        else:
+            pause = 0.36
+
+        words = raw["narration"].strip().split()
+        if not (20 <= len(words) <= 23):
+            raise ValueError(f"Shot S{shot_num:02d} has {len(words)} words; must be 20-23 words: {raw['narration']}")
+
+        shots.append(
+            {
+                "shot_id": f"S{shot_num:02d}",
+                "scene_group": ch_name,
+                "continues_prev": continues,
+                "scene_anchor": scene_anchor_base,
+                "narration": raw["narration"],
+                "pause_after_sec": pause,
+                "camera_verb": raw["camera_verb"],
+                "start_visual": raw["start_visual"],
+                "end_visual": raw["end_visual"],
+                "subject_motion": raw["subject_motion"],
+            }
+        )
+
+    return {
+        "job_id": "en-macro-gears-batch1-16x9",
+        "channel_slug": "en-macro-gears",
+        "aspect": "16:9",
+        "title": "The 24,000-Container Giant: The Hidden Megastructure Physics Powering Global Ocean Trade",
+        "youtube_title": "How a 24,000-Container Megaship Actually Works",
+        "voice": "en-US-ChristopherNeural",
+        "thumbnail_spec": {
+            "visual_hook": "Isometric engineering cutaway of a 400-meter container ship hull flexing across ocean swells with glowing stress vectors",
+            "allowed_text": "BUILT TO BEND",
+            "overlay_card": False,
+        },
+        "shots": shots,
+    }
+
+
+def get_macro_gears_short() -> Dict[str, Any]:
+    scene_anchor_base = (
+        "Practical Engineering & Wendover large-scale infrastructure documentary cinematography under crisp directional daylight, "
+        "high-detail industrial materials, strictly zero text or map labels"
+    )
+
+    # 7 shots, 13 to 15 words per shot, parent_long_id: en-macro-gears-batch1-16x9
+    raw_shots = [
+        {
+            "shot_id": "S01",
+            "scene_group": "G1",
+            "continues_prev": False,
+            "narration": "A four-hundred-meter container megaship actually bends like an enormous industrial bow in storm swells.",  # 14 words
+            "pause_after_sec": 0.34,
+            "camera_verb": "High-altitude architectural aerial survey",
+            "start_visual": "Practical Engineering style 9:16 vertical shot: massive container ship loaded with colorful boxes crossing rough seas, strictly zero text.",
+            "end_visual": "Tracking the vessel profile: the long deck line visibly deflects vertically as ocean swells roll beneath, strictly zero text.",
+            "subject_motion": "the massive ship hull flexes gently with a visible two-meter vertical wave along its length",
+        },
+        {
+            "shot_id": "S02",
+            "scene_group": "G1",
+            "continues_prev": True,
+            "narration": "Giant ocean waves lift the bow and stern, leaving the heavy central midbody completely unsupported.",  # 15 words
+            "pause_after_sec": 0.36,
+            "camera_verb": "Wave wavelength dynamic orbital",
+            "start_visual": "Vertical cutaway visualization: two wave crests supporting the hull ends while midships hangs over a deep trough, strictly zero text.",
+            "end_visual": "Orbiting the hull: glowing red stress vectors highlight intense downward sagging forces across the central keel, strictly zero text.",
+            "subject_motion": "ocean waves roll beneath the ship while red stress vectors pulse along the unsupported midsection",
+        },
+        {
+            "shot_id": "S03",
+            "scene_group": "G2",
+            "continues_prev": False,
+            "narration": "Engineers build the hull with high-tensile flexible steel designed to bend without fracturing.",  # 13 words
+            "pause_after_sec": 0.34,
+            "camera_verb": "Internal torsion box dolly glide",
+            "start_visual": "Vertical cross-section inside upper deck torsion box: heavy reinforced steel girder plates under directional daylight, strictly zero text.",
+            "end_visual": "Pushing through the steel corridor: high-strength EH47 steel plates flex under hydraulic simulation, absorbing bending forces, strictly zero text.",
+            "subject_motion": "thick steel plates absorb cyclic bending stresses with calculated elastic deflection",
+        },
+        {
+            "narration": "Reinforced hollow torsion box girders along the deck absorb violent twisting forces from angled waves.",  # 15 words
+            "shot_id": "S04",
+            "scene_group": "G2",
+            "continues_prev": True,
+            "pause_after_sec": 0.36,
+            "camera_verb": "Torsional wave twisting visualization",
+            "start_visual": "Vertical 3D view: angled swells striking the ship from the quarter, trying to twist the open hull, strictly zero text.",
+            "end_visual": "Orbiting the deck: cyan stress contours channel rotational torque safely through the reinforced upper torsion boxes, strictly zero text.",
+            "subject_motion": "cyan structural force lines distribute rotational torque smoothly along the ship deck perimeter",
+        },
+        {
+            "shot_id": "S05",
+            "scene_group": "G3",
+            "continues_prev": False,
+            "narration": "If modern shipbuilders made this hull completely rigid, ocean waves would easily snap it in two.",  # 16 words -> let's make 14 words: If shipbuilders made this hull completely rigid, giant ocean waves would snap it in two.
+            "pause_after_sec": 0.34,
+            "camera_verb": "Catastrophic failure finite element zoom",
+            "start_visual": "Vertical finite element model of a completely rigid hull: violent red stress concentrations flaring across midships, strictly zero text.",
+            "end_visual": "Zooming into midship welds: simulated brittle fracture lines spreading rapidly across the unyielding steel plate, strictly zero text.",
+            "subject_motion": "intense red stress concentrations spike across the rigid hull model until fracture cracks appear",
+        },
+        {
+            "shot_id": "S06",
+            "scene_group": "G3",
+            "continues_prev": True,
+            "narration": "By bending over two meters in heavy seas, these container giants survive the worst storms.",  # 15 words
+            "pause_after_sec": 0.36,
+            "camera_verb": "Full-ship longitudinal profile glide",
+            "start_visual": "Vertical shot from ocean surface: 400-meter megaship cutting smoothly through heavy storm swells, strictly zero text.",
+            "end_visual": "Gliding along the hull: the long steel structure arches and flexes harmlessly with each passing wave, strictly zero text.",
+            "subject_motion": "the massive container ship flexes smoothly across ocean swells without taking structural damage",
+        },
+        {
+            "shot_id": "S07",
+            "scene_group": "G4",
+            "continues_prev": False,
+            "narration": "Explore the complete megastructure engineering breakdown in our full video linked below.",  # 12 words -> let's make 13 words: Explore the complete megastructure engineering breakdown in our full video analysis linked below.
+            "pause_after_sec": 0.25,
+            "camera_verb": "Grand maritime sunset pull-back",
+            "start_visual": "Vertical establishing shot: container megaship cruising toward a golden sunset on calm open waters, strictly zero text.",
+            "end_visual": "Pulling back high into evening clouds as the massive silhouette glides peacefully on the boundless ocean, strictly zero text.",
+            "subject_motion": "camera rises gracefully into the sunset sky as the giant container ship sails toward the horizon",
+        },
+    ]
+
+    # Adjust S05 and S07 to be strictly 13-15 words
+    raw_shots[4]["narration"] = "If shipbuilders made this hull completely rigid, giant ocean waves would snap it in two."  # 14 words
+    raw_shots[6]["narration"] = "Explore the complete megastructure engineering breakdown in our full video analysis linked below."  # 13 words
+
+    for s in raw_shots:
+        s["scene_anchor"] = scene_anchor_base
+        w_cnt = len(s["narration"].strip().split())
+        if not (13 <= w_cnt <= 15):
+            raise ValueError(f"Shot {s['shot_id']} has {w_cnt} words; must be 13-15 words: {s['narration']}")
+
+    return {
+        "job_id": "en-macro-gears-batch1-9x16",
+        "parent_long_id": "en-macro-gears-batch1-16x9",
+        "channel_slug": "en-macro-gears",
+        "aspect": "9:16",
+        "title": "Four Football Fields of Steel: Why Modern Megaships Bend Instead of Snapping in Storms",
+        "youtube_title": "Why Giant Container Ships Bend in Storms",
+        "voice": "en-US-ChristopherNeural",
+        "shots": raw_shots,
+    }

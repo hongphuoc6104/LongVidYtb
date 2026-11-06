@@ -287,6 +287,20 @@ class FlowVideoChainOrchestrator:
                 except Exception:
                     pass
 
+    async def _evict_idle_warm_sessions_if_full(self, exclude_port: int | None = None) -> None:
+        """Ensure this orchestrator never holds more warm browser slots than `self.max_workers`."""
+        while len(self._warm_sessions) >= self.max_workers:
+            evicted = False
+            for old_port in list(self._warm_sessions.keys()):
+                if old_port == exclude_port:
+                    continue
+                if not self._get_warm_lock(old_port).locked():
+                    await self._close_warm_port(old_port)
+                    evicted = True
+                    break
+            if not evicted:
+                break
+
     def _get_channel_profiles(self) -> list[dict[str, Any]]:
         """Return profiles ordered dynamically by live CreditLedger balances, rotated across top accounts per job_id."""
         import hashlib
@@ -297,11 +311,17 @@ class FlowVideoChainOrchestrator:
         explicit_names = [x.strip() for x in explicit_raw.split(",") if x.strip()] if explicit_raw else []
         if explicit_names:
             explicit_primary = [
-                p for p in all_profiles
-                if p.get("name") in explicit_names or p.get("id") in explicit_names
+                p
+                for name in explicit_names
+                for p in all_profiles
+                if p.get("name") == name or p.get("id") == name
             ]
             if explicit_primary:
-                return explicit_primary
+                fallback_video = [
+                    p for p in self.credit_ledger.select_eligible_profiles(all_profiles, min_credits=7)
+                    if p not in explicit_primary
+                ]
+                return explicit_primary + fallback_video
 
         if len(all_profiles) <= 4:
             return all_profiles
@@ -608,7 +628,8 @@ class FlowVideoChainOrchestrator:
                 else:
                     group_idx = fallback_idx // 2
 
-                return eligible_profiles[group_idx % len(eligible_profiles)]
+                active_pool_size = max(1, min(self.max_workers, len(eligible_profiles)))
+                return eligible_profiles[group_idx % active_pool_size]
 
             tasks = [
                 _generate_task(
@@ -718,6 +739,7 @@ class FlowVideoChainOrchestrator:
                         if warm_entry:
                             session = warm_entry["session"]
                         else:
+                            await self._evict_idle_warm_sessions_if_full(exclude_port=port)
                             port_lock = ProfilePortLock(port, owner_tag=f"img_{dest_file.stem}")
                             browser_slot = GlobalBrowserSlot(owner_tag=f"img_{dest_file.stem}")
 
@@ -821,7 +843,7 @@ class FlowVideoChainOrchestrator:
                                     "CAPTCHA_FAILED",
                                 )
                             ):
-                                self._record_profile_cooldown(profile_name, 900.0, reason=exc_str)
+                                self._record_profile_cooldown(profile_name, 75.0, reason=exc_str)
                                 await asyncio.sleep(2.0)
                             else:
                                 self._record_profile_cooldown(profile_name, 120.0, reason=exc_str)
@@ -928,7 +950,7 @@ class FlowVideoChainOrchestrator:
                                     "CAPTCHA_FAILED",
                                 )
                             ):
-                                self._record_profile_cooldown(profile_name, 900.0, reason=exc_str)
+                                self._record_profile_cooldown(profile_name, 75.0, reason=exc_str)
                             else:
                                 self._record_profile_cooldown(profile_name, 120.0, reason=exc_str)
                             continue
@@ -1267,7 +1289,10 @@ class FlowVideoChainOrchestrator:
                     except Exception as exc:
                         task.error = str(exc)
                         now_exc = time.time()
-                        is_port_busy = "Chrome port" in str(exc) and "busy" in str(exc)
+                        is_port_busy = (
+                            ("Chrome port" in str(exc) and "busy" in str(exc))
+                            or ("All global browser slots busy" in str(exc))
+                        )
                         if is_port_busy:
                             port_skips += 1
                             attempts = max(0, attempts - 1)
@@ -1286,7 +1311,7 @@ class FlowVideoChainOrchestrator:
                                     "CAPTCHA_FAILED",
                                 )
                             ):
-                                self._record_profile_cooldown(p_name, 1800.0, reason=exc_str)
+                                self._record_profile_cooldown(p_name, 75.0, reason=exc_str)
                                 available_profiles.append(profile_cfg)
                                 attempts = max(0, attempts - 1)  # Do not burn attempt budget on temporary provider rate limit
                             elif is_port_busy:
@@ -1309,7 +1334,7 @@ class FlowVideoChainOrchestrator:
                                 "CAPTCHA_FAILED",
                             )
                         ):
-                            logger.warning(f"[RATE_LIMIT_ROTATE] Profile {p_name} rate-limited at clip {task.clip_id}. Cooldown 1800s; rotating in 2.5s...")
+                            logger.warning(f"[RATE_LIMIT_ROTATE] Profile {p_name} rate-limited at clip {task.clip_id}. Cooldown 75s; rotating in 2.5s...")
                             await asyncio.sleep(2.5)
                         else:
                             # Brief backoff before rotating to next profile
@@ -1365,6 +1390,7 @@ class FlowVideoChainOrchestrator:
                 if warm_entry:
                     session = warm_entry["session"]
                 else:
+                    await self._evict_idle_warm_sessions_if_full(exclude_port=port)
                     port_lock = ProfilePortLock(port, owner_tag=f"clip_{clip.clip_id}")
                     browser_slot = GlobalBrowserSlot(owner_tag=f"clip_{clip.clip_id}")
 

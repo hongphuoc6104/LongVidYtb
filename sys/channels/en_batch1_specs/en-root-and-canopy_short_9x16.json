@@ -1,0 +1,102 @@
+{
+  "job_id": "en-root-and-canopy-batch1-9x16",
+  "channel_slug": "en-root-and-canopy",
+  "aspect": "9:16",
+  "parent_long_id": "en-root-and-canopy-batch1-16x9",
+  "title": "The Wood-Wide Web: How Dying Forest Giants Pump Carbon to Their Own Offspring",
+  "youtube_title": "How Dying Trees Feed Their Own Offspring",
+  "voice": "en-GB-RyanNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "sg1_hook",
+      "continues_prev": false,
+      "scene_anchor": "BBC Earth Green Planet optical macro botany cinematography with rich damp soil and emerald cellular textures, shallow depth of field, and golden volumetric forest rim lighting, strictly zero text",
+      "narration": "When an ancient forest giant nears death, it does not hoard its resources.",
+      "pause_after_sec": 0.32,
+      "camera_verb": "gentle forest floor tracking glide",
+      "start_visual": "BBC Earth Green Planet macro documentary cinematography: ancient gnarled oak tree trunk in deep damp woodland, emerald moss clinging to bark, morning mist drifting through sunbeams, strictly zero text.",
+      "end_visual": "On the same mossy trunk, golden morning sunlight grazes the furrowed bark as dewdrops glisten on velvety lichen, strictly zero text.",
+      "subject_motion": "morning mist drifts gently through sunbeams grazing the moss-covered trunk of the ancient forest giant",
+      "speech_rate": "+2%"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "sg1_hook",
+      "continues_prev": true,
+      "scene_anchor": "BBC Earth Green Planet optical macro botany cinematography with rich damp soil and emerald cellular textures, shallow depth of field, and golden volumetric forest rim lighting, strictly zero text",
+      "narration": "Deep underground, fungal mycorrhizal networks link ancient mother trees directly to young saplings.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "subterranean-to-canopy vertical probe crane",
+      "start_visual": "Subterranean cross-section of damp rich forest soil showing thick ancient tree roots interlaced with glowing pale-white mycorrhizal fungal threads, glistening moisture droplets, optical macro, strictly zero text.",
+      "end_visual": "Inside the same subterranean soil cross-section, camera glides along the fungal hyphae as faint luminous amber pulses begin flowing between root tips, strictly zero text.",
+      "subject_motion": "camera glides through damp subterranean soil as delicate fungal hyphae pulse with glowing amber nutrients",
+      "speech_rate": "+2%"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "sg2_mechanism",
+      "continues_prev": false,
+      "scene_anchor": "BBC Earth Green Planet optical macro botany cinematography with rich damp soil and emerald cellular textures, shallow depth of field, and golden volumetric forest rim lighting, strictly zero text",
+      "narration": "In its final months, the dying tree releases massive pulses of stored carbon.",
+      "pause_after_sec": 0.32,
+      "camera_verb": "optical macro botanical dolly push-in",
+      "start_visual": "Extreme probe-lens macro at f/2.8 inside damp humus: fibrous root tips surrounded by glowing bioluminescent amber nutrient spheres flowing into fungal pathways, strictly zero text.",
+      "end_visual": "On the same root junction, glowing amber carbon streams accelerate through the branching fungal network toward distant roots, strictly zero text.",
+      "subject_motion": "luminous amber nutrient streams flow steadily through microscopic fungal hyphae branching through dark soil",
+      "speech_rate": "+2%"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "sg2_mechanism",
+      "continues_prev": true,
+      "scene_anchor": "BBC Earth Green Planet optical macro botany cinematography with rich damp soil and emerald cellular textures, shallow depth of field, and golden volumetric forest rim lighting, strictly zero text",
+      "narration": "Tracer experiments prove these nutrients flow preferentially toward the tree's closest genetic descendants.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "subterranean-to-canopy vertical probe crane",
+      "start_visual": "Split cross-section showing forest floor above with young saplings in moss and glowing nutrient hyphae connecting directly to their roots below, strictly zero text.",
+      "end_visual": "On the same split view, amber light pulses intensify as they reach the delicate roots of the youngest sapling, strictly zero text.",
+      "subject_motion": "luminous nutrient pulses travel along fungal threads and illuminate the tender root system of a young sapling",
+      "speech_rate": "+2%"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "sg3_impact",
+      "continues_prev": false,
+      "scene_anchor": "BBC Earth Green Planet optical macro botany cinematography with rich damp soil and emerald cellular textures, shallow depth of field, and golden volumetric forest rim lighting, strictly zero text",
+      "narration": "The fungal mycelium acts like a living neural internet across entire ancient forests.",
+      "pause_after_sec": 0.32,
+      "camera_verb": "optical macro botanical dolly push-in",
+      "start_visual": "3D subterranean visualization: thousands of branching white fungal threads forming a vast luminous network through dark forest earth, strictly zero text.",
+      "end_visual": "On the same network view, waves of bioluminescent amber and turquoise light ripple through interconnected fungal nodes, strictly zero text.",
+      "subject_motion": "waves of bioluminescent light ripple through the vast interconnected subterranean mycelial network",
+      "speech_rate": "+2%"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "sg3_impact",
+      "continues_prev": true,
+      "scene_anchor": "BBC Earth Green Planet optical macro botany cinematography with rich damp soil and emerald cellular textures, shallow depth of field, and golden volumetric forest rim lighting, strictly zero text",
+      "narration": "Even after falling, the decaying nurse log shields new seedlings for two centuries.",
+      "pause_after_sec": 0.34,
+      "camera_verb": "gentle forest floor tracking glide",
+      "start_visual": "Forest floor macro view of a fallen moss-covered nurse log, tiny vibrant green fern fiddleheads and saplings growing out of decomposing wood, strictly zero text.",
+      "end_visual": "On the same nurse log, warm sunlight filters through canopy mist, illuminating delicate green seedling leaves unfurling from rich humus, strictly zero text.",
+      "subject_motion": "canopy mist swirls gently over the mossy nurse log as sunlight illuminates unfurling green seedling leaves",
+      "speech_rate": "+2%"
+    },
+    {
+      "shot_id": "S07",
+      "scene_group": "sg4_cta",
+      "continues_prev": false,
+      "scene_anchor": "BBC Earth Green Planet optical macro botany cinematography with rich damp soil and emerald cellular textures, shallow depth of field, and golden volumetric forest rim lighting, strictly zero text",
+      "narration": "Watch our full documentary to explore the secret life and architecture of trees.",
+      "pause_after_sec": 0.36,
+      "camera_verb": "subterranean-to-canopy vertical probe crane",
+      "start_visual": "Majestic upward canopy view looking through towering rainforest trees toward sunlit emerald leaves swaying in gentle breeze, golden sunbeams streaming downward, strictly zero text.",
+      "end_visual": "On the same canopy perspective, the camera cranes gently upward toward the radiant blue sky through golden sunlit foliage, strictly zero text.",
+      "subject_motion": "camera cranes upward through the towering canopy as golden sunbeams stream through swaying emerald leaves",
+      "speech_rate": "+2%"
+    }
+  ]
+}

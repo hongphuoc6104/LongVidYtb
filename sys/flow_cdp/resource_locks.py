@@ -28,7 +28,7 @@ from pathlib import Path
 from typing import IO, Any
 
 LOCKS_DIR = Path.home() / ".cache/video-pilot/locks"
-DEFAULT_MAX_GLOBAL_BROWSERS = int(os.environ.get("VP_MAX_CHROME_INSTANCES", "16"))
+DEFAULT_MAX_GLOBAL_BROWSERS = int(os.environ.get("VP_MAX_CHROME_INSTANCES", "8"))
 DEFAULT_MAX_BROWSER_SLOTS = DEFAULT_MAX_GLOBAL_BROWSERS
 MIN_DEV_SHM_FREE_MB = 512
 
@@ -331,3 +331,40 @@ class JobExecutionLock(_FlockHandle):
             base / f"job_{safe_id}.lock",
             metadata={"job_id": job_id},
         )
+
+
+def stagger_cross_process_action(
+    action_name: str,
+    min_interval_sec: float = 1.2,
+    locks_dir: Path | None = None,
+) -> None:
+    """Enforce a minimum time gap between cross-process actions (e.g., Chrome launch or reCAPTCHA mint).
+
+    Prevents simultaneous multi-browser burst spikes from the same host IP or 4C/8T CPU.
+    """
+    if min_interval_sec <= 0:
+        return
+    safe_name = re.sub(r"[^A-Za-z0-9_.-]+", "_", action_name.strip()) or "default"
+    base = ensure_locks_dir(locks_dir)
+    stamp_path = base / f"stagger_{safe_name}.lock"
+    try:
+        with open(stamp_path, "a+", encoding="utf-8") as fh:
+            fcntl.flock(fh.fileno(), fcntl.LOCK_EX)
+            try:
+                fh.seek(0)
+                raw = fh.read().strip()
+                last_ts = float(raw) if raw else 0.0
+            except ValueError:
+                last_ts = 0.0
+            now = time.time()
+            wait_sec = (last_ts + min_interval_sec) - now
+            if 0.0 < wait_sec <= 15.0:
+                time.sleep(wait_sec)
+            new_ts = time.time()
+            fh.seek(0)
+            fh.truncate()
+            fh.write(f"{new_ts:.6f}\n")
+            fh.flush()
+            fcntl.flock(fh.fileno(), fcntl.LOCK_UN)
+    except OSError:
+        pass

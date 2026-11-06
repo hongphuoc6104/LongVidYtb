@@ -1,0 +1,102 @@
+{
+  "job_id": "en-second-arrow-batch1-9x16",
+  "channel_slug": "en-second-arrow",
+  "aspect": "9:16",
+  "title": "The Parable of the Second Arrow: Why the First Hit Is Fate, But Suffering Is Optional",
+  "youtube_title": "The Second Arrow: Why We Double Our Pain",
+  "parent_long_id": "en-second-arrow-batch1-16x9",
+  "voice": "en-US-SteffanNeural",
+  "shots": [
+    {
+      "shot_id": "S01",
+      "scene_group": "short_hook",
+      "continues_prev": false,
+      "scene_anchor": "Classical Caravaggio chiaroscuro cinematography over aged Greco-Roman marble, weathered bronze, and timeless Mediterranean stone architecture lit by single-source warm raking sunlight and solitary candle flames, deep velvety charcoal shadows, floating limestone dust, strictly zero modern objects, strictly zero text, museum oil painting stillness",
+      "narration": "Life inevitably strikes every human with unexpected adversity, like an arrow piercing without warning.",
+      "pause_after_sec": 0.32,
+      "speech_rate": "+6%",
+      "camera_verb": "Contemplative slow museum dolly-in",
+      "start_visual": "Classical Caravaggio chiaroscuro realism: a forged bronze archery arrow flies into frame and strikes an ancient weathered marble column, sending stone dust bursting into warm raking sunlight, strictly zero text.",
+      "end_visual": "The bronze arrow embeds firmly into the cracked marble pillar as illuminated dust motes drift through the golden sunbeam.",
+      "subject_motion": "the bronze arrow strikes the cracked column and settles into complete stillness as dust motes float through the sunbeam"
+    },
+    {
+      "shot_id": "S02",
+      "scene_group": "short_hook",
+      "continues_prev": true,
+      "scene_anchor": "Classical Caravaggio chiaroscuro cinematography over aged Greco-Roman marble, weathered bronze, and timeless Mediterranean stone architecture lit by single-source warm raking sunlight and solitary candle flames, deep velvety charcoal shadows, floating limestone dust, strictly zero modern objects, strictly zero text, museum oil painting stillness",
+      "narration": "That first strike brings inevitable physical pain, which heals with time and patience.",
+      "pause_after_sec": 0.36,
+      "speech_rate": "+6%",
+      "camera_verb": "Composed chiaroscuro lateral pan",
+      "start_visual": "",
+      "end_visual": "Pulling back slowly along the classical colonnade, soft rain patters onto the marble floor while the arrow remains lodged harmlessly in the weathered stone pillar under golden light.",
+      "subject_motion": "camera pulls back smoothly through the colonnade as soft raindrops fall onto the distant stone floor while the arrow remains motionless"
+    },
+    {
+      "shot_id": "S03",
+      "scene_group": "short_mechanism",
+      "continues_prev": false,
+      "scene_anchor": "Classical Caravaggio chiaroscuro cinematography over aged Greco-Roman marble, weathered bronze, and timeless Mediterranean stone architecture lit by single-source warm raking sunlight and solitary candle flames, deep velvety charcoal shadows, floating limestone dust, strictly zero modern objects, strictly zero text, museum oil painting stillness",
+      "narration": "Yet our troubled mind immediately draws a second bow of anger, blame, and regret.",
+      "pause_after_sec": 0.34,
+      "speech_rate": "+6%",
+      "camera_verb": "Slow chiaroscuro push-in on bronze sculpture",
+      "start_visual": "In a dim ancient Roman library study, an antique bronze bust of Marcus Aurelius rests beside a flickering brass oil lamp on a dark walnut table, dramatic chiaroscuro shadows across metal contours.",
+      "end_visual": "Warm flame reflections dance across the stoic bronze forehead while in the dark background, a cold iron hourglass drops dark sand grains.",
+      "subject_motion": "camera pushes slowly toward the still bronze bust as warm candlelight flickers across the motionless metal contours"
+    },
+    {
+      "shot_id": "S04",
+      "scene_group": "short_mechanism",
+      "continues_prev": true,
+      "scene_anchor": "Classical Caravaggio chiaroscuro cinematography over aged Greco-Roman marble, weathered bronze, and timeless Mediterranean stone architecture lit by single-source warm raking sunlight and solitary candle flames, deep velvety charcoal shadows, floating limestone dust, strictly zero modern objects, strictly zero text, museum oil painting stillness",
+      "narration": "We shoot this second phantom arrow directly into ourselves, doubling our own suffering.",
+      "pause_after_sec": 0.38,
+      "speech_rate": "+6%",
+      "camera_verb": "Composed chiaroscuro lateral pan",
+      "start_visual": "",
+      "end_visual": "Panning slightly to a dark stone alcove where an iron brazier glows with crimson embers and a second jagged iron arrow point glows red-hot on a stone anvil, showering tiny sparks into the dark.",
+      "subject_motion": "camera pans smoothly from the silent bronze bust to the glowing brazier as crimson embers pulse and release drifting golden sparks"
+    },
+    {
+      "shot_id": "S05",
+      "scene_group": "short_shift",
+      "continues_prev": false,
+      "scene_anchor": "Classical Caravaggio chiaroscuro cinematography over aged Greco-Roman marble, weathered bronze, and timeless Mediterranean stone architecture lit by single-source warm raking sunlight and solitary candle flames, deep velvety charcoal shadows, floating limestone dust, strictly zero modern objects, strictly zero text, museum oil painting stillness",
+      "narration": "Marcus Aurelius taught that external storms arrive uninvited, but all inner agony is chosen.",
+      "pause_after_sec": 0.34,
+      "speech_rate": "+6%",
+      "camera_verb": "Solemn low-angle architectural tilt-up",
+      "start_visual": "Dramatic night scene: torrential rain cascades across the worn stone steps of a classical temple, massive fluted limestone columns standing resolute against wind, backlit by distant lightning.",
+      "end_visual": "Looking up at the majestic temple colonnade: wind and rain whip through the portico, yet the solid stone architrave remains utterly anchored and unshaken in monumental stoic poise.",
+      "subject_motion": "sheets of rain sweep across the temple steps as a flash of distant lightning reflects off the wet, unmoved limestone columns"
+    },
+    {
+      "shot_id": "S06",
+      "scene_group": "short_shift",
+      "continues_prev": true,
+      "scene_anchor": "Classical Caravaggio chiaroscuro cinematography over aged Greco-Roman marble, weathered bronze, and timeless Mediterranean stone architecture lit by single-source warm raking sunlight and solitary candle flames, deep velvety charcoal shadows, floating limestone dust, strictly zero modern objects, strictly zero text, museum oil painting stillness",
+      "narration": "Refuse the bitter judgment, and the initial wound remains merely harmless, healing flesh.",
+      "pause_after_sec": 0.38,
+      "speech_rate": "+6%",
+      "camera_verb": "Contemplative slow museum dolly-in",
+      "start_visual": "",
+      "end_visual": "Golden morning sunrise on a Roman marble terrace overlooking the Mediterranean: on the geometric mosaic floor, a second iron arrow lies cleanly snapped in half beside a green olive branch in dawn light.",
+      "subject_motion": "camera glides calmly across the sunlit mosaic floor past the broken arrow toward the horizon as golden morning sunbeams illuminate the peaceful marble terrace"
+    },
+    {
+      "shot_id": "S07",
+      "scene_group": "short_cta",
+      "continues_prev": false,
+      "scene_anchor": "Classical Caravaggio chiaroscuro cinematography over aged Greco-Roman marble, weathered bronze, and timeless Mediterranean stone architecture lit by single-source warm raking sunlight and solitary candle flames, deep velvety charcoal shadows, floating limestone dust, strictly zero modern objects, strictly zero text, museum oil painting stillness",
+      "narration": "See how ancient Stoic mental armor defends against chaos in our full breakdown linked below.",
+      "pause_after_sec": 0.28,
+      "speech_rate": "+6%",
+      "camera_verb": "Solemn low-angle architectural tilt-up",
+      "start_visual": "Breathtaking wide view from the sunlit marble portico toward the calm open sea horizon where a noble white marble statue gazes peacefully into the distance.",
+      "end_visual": "Golden morning light sweeps across the classical terrace, illuminating the tranquil ocean and distant coastal cliffs in timeless serenity.",
+      "subject_motion": "camera pushes forward through the sunlit marble columns toward the endless turquoise sea horizon in triumphant peace"
+    }
+  ]
+}
