@@ -1405,7 +1405,7 @@ def produce_dynamic_flow_demo(
         target_fps=30,
         normalize_audio_lufs=False,
         auto_duration=True,
-        auto_fallback_zero_credit=True,
+        auto_fallback_zero_credit=False if has_video_credits else True,
         channel_id=channel_slug,
         overscan_crop=1.05,
     )
@@ -1430,6 +1430,17 @@ def produce_dynamic_flow_demo(
     # Reload completed tasks from manifest for final hybrid stitching & frame packaging
     manifest_data = json.loads((flow_work_dir / "chain_manifest.json").read_text(encoding="utf-8"))
     completed_tasks = [VideoClipTask.from_dict(td) for td in manifest_data["tasks"]]
+    if has_video_credits and not dry_run:
+        flipbook_leaks = [
+            t.clip_id
+            for t in completed_tasks
+            if t.profile_used == "local_zero_credit_flipbook"
+            or not Path(t.output_mp4_path).with_suffix(".json").is_file()
+        ]
+        if flipbook_leaks:
+            raise RuntimeError(
+                f"[{job_id}] Strict Dynamic Video Gate failed: clips {flipbook_leaks} fell back to static flipbook or lack .json sidecar!"
+            )
 
     final_mp4 = video_out_dir / f"{job_id}.mp4"
     actual_mode = str(chain_report.get("mode", chain_mode.value))
@@ -1619,15 +1630,22 @@ def main() -> int:
         if args.demo_key:
             keys = [k.strip() for k in args.demo_key.split(",") if k.strip()]
             for k in keys:
-                if k not in CURATED_V3_DEMO_SPECS:
-                    raise KeyError(f"Unknown --demo-key '{k}'. Choices: {list(CURATED_V3_DEMO_SPECS.keys())}")
+                spec_dict = CURATED_V3_DEMO_SPECS.get(k)
+                if spec_dict is None:
+                    candidate = Path(f"sys/channels/en_flow_v3_specs/{k.replace(':', '_')}.json")
+                    if candidate.exists():
+                        spec_dict = json.loads(candidate.read_text(encoding="utf-8"))
+                    else:
+                        raise KeyError(f"Unknown --demo-key '{k}'. Choices: {list(CURATED_V3_DEMO_SPECS.keys())} or sys/channels/en_flow_v3_specs/")
                 produce_dynamic_flow_demo(
-                    spec_data=CURATED_V3_DEMO_SPECS[k],
+                    spec_data=spec_dict,
                     max_workers=args.max_workers,
                     resume=not args.no_resume,
                     dry_run=args.dry_run,
                     render_backend=args.render_backend,
                     teardown_colab=args.teardown_colab,
+                    output_root=Path(args.output_root) if args.output_root else None,
+                    colab_account=args.colab_account,
                 )
 
         if args.spec_json:

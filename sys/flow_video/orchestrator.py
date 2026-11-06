@@ -1002,14 +1002,20 @@ class FlowVideoChainOrchestrator:
             self._save_manifest(tasks)
             return tasks
 
+        is_flipbook_mode = (
+            self.spec.mode == ChainMode.ZERO_CREDIT_FLIPBOOK
+            or str(self.spec.mode).lower() == "zero_credit_flipbook"
+        )
         for t in tasks:
             if t.clip_id in saved_clips:
                 cached = saved_clips[t.clip_id]
                 out_p = Path(cached.get("output_mp4_path", t.output_mp4_path))
+                is_flipbook_clip = cached.get("profile_used") == "local_zero_credit_flipbook"
                 if (
                     cached.get("status") == "completed"
                     and out_p.is_file()
                     and out_p.stat().st_size > 0
+                    and (is_flipbook_mode or not is_flipbook_clip)
                 ):
                     try:
                         probe_video_clip(out_p)
@@ -1021,6 +1027,8 @@ class FlowVideoChainOrchestrator:
                         t.generation_seconds = float(cached.get("generation_seconds", 0.0))
                     except Exception:
                         t.status = "pending"
+                else:
+                    t.status = "pending"
 
         self._save_manifest(tasks)
         return tasks
@@ -1167,15 +1175,32 @@ class FlowVideoChainOrchestrator:
                             eligible_candidates = [p for p in available_profiles if is_candidate(p)]
 
                         if not eligible_candidates:
-                            # All eligible profiles might be in cooldown
-                            cooldown_times = [
-                                self._profile_cooldowns.get(str(p.get("name") or p.get("profile_dir", "")), 0.0)
-                                for p in available_profiles
-                                if self.credit_ledger.is_eligible(str(p.get("name") or p.get("profile_dir", "")), min_credits=clip_cost)
-                            ]
+                            # All eligible profiles might be in cooldown (either local or CreditLedger cross-process)
+                            cooldown_times: list[float] = []
+                            cooled_with_credits: list[str] = []
+                            for p in all_profiles:
+                                pname = str(p.get("name") or p.get("profile_dir", ""))
+                                if pname and self.credit_ledger.get_balance(pname) >= clip_cost:
+                                    local_cd = self._profile_cooldowns.get(pname, 0.0)
+                                    ledger_cd = (
+                                        now + 10.0
+                                        if hasattr(self.credit_ledger, "is_on_cooldown")
+                                        and self.credit_ledger.is_on_cooldown(pname, now=now)
+                                        else 0.0
+                                    )
+                                    cd_until = max(local_cd, ledger_cd)
+                                    if cd_until > now:
+                                        cooldown_times.append(cd_until)
+                                        cooled_with_credits.append(pname)
                             active_cooldowns = [t for t in cooldown_times if t > now]
                             if active_cooldowns:
-                                wait_sec = max(2.0, min(30.0, min(active_cooldowns) - now))
+                                wait_sec = max(2.0, min(8.0, min(active_cooldowns) - now))
+                                # Unblock top cooled profile if all credit-bearing profiles are on long cooldown
+                                if cooled_with_credits and min(active_cooldowns) - now > 8.0:
+                                    unblock_p = cooled_with_credits[0]
+                                    self._profile_cooldowns.pop(unblock_p, None)
+                                    if hasattr(self.credit_ledger, "clear_cooldown"):
+                                        self.credit_ledger.clear_cooldown(unblock_p)
                                 attempts = max(0, attempts - 1)  # Do not burn attempt budget while waiting for cooldown
                             elif getattr(self.spec, "auto_fallback_zero_credit", True) and Path(task.start_frame_path).is_file():
                                 # 100% of account pool exhausted mid-run -> seamless slide fallback for remaining clip
