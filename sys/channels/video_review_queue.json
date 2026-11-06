@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-11-04T03:50:17.991336+00:00",
+  "updated_at": "2026-11-06T06:10:13.500471+00:00",
   "items": {
     "ai-binh-dan-batch3-16x9": {
       "job_id": "ai-binh-dan-batch3-16x9",
@@ -672,22 +672,6 @@
       "reviewed_at": "2026-11-03T16:23:38.408992+00:00",
       "published_url": "https://youtube.com/shorts/LP17qC1N9xw",
       "allowed": true
-    },
-    "en-first-principles-batch1-9x16": {
-      "job_id": "en-first-principles-batch1-9x16",
-      "channel_id": "en_first_principles",
-      "channel_name": "First Principles Ink",
-      "format_profile": "short_9x16",
-      "title": "Seoul Demolished a Highway and Traffic Moved Faster",
-      "mp4_path": "/home/hongphuoc6104/Desktop/vp-agent-core/video/en-first-principles-batch1-9x16/en-first-principles-batch1-9x16.mp4",
-      "thumbnail_path": "/home/hongphuoc6104/Desktop/vp-agent-core/video/en-first-principles-batch1-9x16/thumbnail_9x16.jpg",
-      "srt_path": "/home/hongphuoc6104/Desktop/vp-agent-core/video/en-first-principles-batch1-9x16/en-first-principles-batch1-9x16.srt",
-      "duration_sec": 57.166667,
-      "competitor_formula": "",
-      "status": "PENDING_REVIEW",
-      "review_notes": "",
-      "reviewed_at": null,
-      "published_url": null
     }
   }
 }
