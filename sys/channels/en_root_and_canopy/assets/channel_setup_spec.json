@@ -1,28 +1,28 @@
 {
-  "channel_id": "en_kitchen_molecules",
-  "slug": "en-kitchen-molecules",
-  "youtube_name": "Kitchen Molecules",
+  "channel_id": "en_root_and_canopy",
+  "slug": "en-root-and-canopy",
+  "youtube_name": "Root & Canopy",
   "handle_candidates": [
-    "@KitchenMolecules",
-    "@KitchenMoleculesHQ",
-    "@KitchenScienceInk",
-    "@FoodMoleculesLab"
+    "@RootAndCanopy",
+    "@RootAndCanopyHQ",
+    "@RootAndCanopyLab",
+    "@BotanicalWarfareInk"
   ],
-  "description": "Welcome to the official Kitchen Molecules channel!\n\nUnlock the fascinating science of cooking and debunk dangerous kitchen myths with microbiology.\nClear, visual, research-backed explainers crafted for home cooks, foodies, and curious minds curious about culinary chemistry and safety.\n\nCore topics: Food chemistry, kitchen safety myths, cooking reactions & ultra-processed food science.\n\n#foodscience #cooking #chemistry #food #kitchen #science",
+  "description": "Welcome to the official Root & Canopy channel!\n\nWitness the hidden time-lapse warfare of plants—from dormant seed to 2,000-year canopy giant.\nClear, visual, research-backed 2D hand-drawn explainers crafted for Nature documentary enthusiasts, botanical science fans, and viewers fascinated by time-lapse life cycles.\n\nCore topics: Plant evolution through deep time, seed-to-giant life-cycle time-lapses & botanical warfare.\n\n#botany #plants #timelapse #evolution #naturedocumentary #lifecycle",
   "keywords": [
-    "foodscience",
-    "cooking",
-    "chemistry",
-    "food",
-    "kitchen",
-    "science",
-    "Food chemistry, kitchen safety myths, cooking reactions & ultra-processed food science"
+    "botany",
+    "plants",
+    "timelapse",
+    "evolution",
+    "naturedocumentary",
+    "lifecycle",
+    "Plant evolution through deep time, seed-to-giant life-cycle time-lapses & botanical warfare"
   ],
   "assets": {
-    "avatar_800x800": "sys/channels/en_kitchen_molecules/assets/avatar_800x800.png",
-    "banner_2048x1152": "sys/channels/en_kitchen_molecules/assets/banner_2048x1152.png",
-    "watermark_150x150": "sys/channels/en_kitchen_molecules/assets/watermark_150x150.png",
-    "endcard_16x9": "sys/channels/en_kitchen_molecules/assets/endcard_16x9.jpg",
-    "endcard_9x16": "sys/channels/en_kitchen_molecules/assets/endcard_9x16.jpg"
+    "avatar_800x800": "sys/channels/en_root_and_canopy/assets/avatar_800x800.png",
+    "banner_2048x1152": "sys/channels/en_root_and_canopy/assets/banner_2048x1152.png",
+    "watermark_150x150": "sys/channels/en_root_and_canopy/assets/watermark_150x150.png",
+    "endcard_16x9": "sys/channels/en_root_and_canopy/assets/endcard_16x9.jpg",
+    "endcard_9x16": "sys/channels/en_root_and_canopy/assets/endcard_9x16.jpg"
   }
 }

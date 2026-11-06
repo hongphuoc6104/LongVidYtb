@@ -146,16 +146,20 @@ class YouTubeChannelSetupClient(YouTubeCDPClient):
         await asyncio.sleep(10.0)
         return True
 
-    async def switch_customization_tab(self, tab_label: str) -> bool:
-        """Switch between 'Xây dựng thương hiệu' (Branding) and 'Thông tin cơ bản' (Basic info)."""
-        logger.info("Switching customization tab to: %s", tab_label)
+    async def switch_customization_tab(self, tab_labels: str | List[str]) -> bool:
+        """Switch between 'Xây dựng thương hiệu' (Branding), 'Thông tin cơ bản' (Basic info), or 'Hồ sơ' (Profile)."""
+        labels = [tab_labels] if isinstance(tab_labels, str) else list(tab_labels)
+        logger.info("Switching customization tab to one of: %s", labels)
         switched = await self.evaluate(f"""
             (() => {{
-                const tabs = Array.from(document.querySelectorAll('tp-yt-paper-tab, .paper-tab, ytcp-tab'));
-                const target = tabs.find(t => t.innerText.toLowerCase().includes({json.dumps(tab_label.lower())}));
-                if (target) {{
-                    target.click();
-                    return true;
+                const candidates = {json.dumps([lbl.lower() for lbl in labels])};
+                const tabs = Array.from(document.querySelectorAll('tp-yt-paper-tab, .paper-tab, ytcp-tab, [role="tab"]'));
+                for (const kw of candidates) {{
+                    const target = tabs.find(t => t.innerText && t.innerText.toLowerCase().includes(kw));
+                    if (target) {{
+                        target.click();
+                        return target.innerText.trim();
+                    }}
                 }}
                 return false;
             }})()
@@ -169,8 +173,13 @@ class YouTubeChannelSetupClient(YouTubeCDPClient):
         res = await self.evaluate(f"""
             (() => {{
                 const input = document.querySelector('input.ytcpChannelEditingChannelNameFormInput') ||
-                              document.querySelector('input[placeholder*="tên kênh"]');
+                              document.querySelector('ytcp-channel-editing-channel-name input') ||
+                              document.querySelector('input[placeholder*="tên kênh" i]') ||
+                              document.querySelector('input[placeholder*="channel name" i]');
                 if (!input) return null;
+                if (input.value && input.value.trim() === {json.dumps(channel_name)}) {{
+                    return input.value.trim();
+                }}
                 input.focus();
                 document.execCommand('selectAll', false, null);
                 document.execCommand('delete', false, null);
@@ -185,13 +194,30 @@ class YouTubeChannelSetupClient(YouTubeCDPClient):
 
     async def set_handle(self, handle_candidates: List[str]) -> Optional[str]:
         """Try handle candidates in order until accepted."""
+        cur_handle = await self.evaluate("""
+            (() => {
+                const input = document.querySelector('input.YtcpChannelEditingChannelHandleHandleInput') ||
+                              document.querySelector('ytcp-channel-editing-channel-handle input') ||
+                              document.querySelector('input[placeholder*="tên người dùng" i]') ||
+                              document.querySelector('input[placeholder*="handle" i]');
+                return input ? (input.value || '').trim().replace(/^@/, '') : '';
+            })()
+        """)
+        if cur_handle:
+            for candidate in handle_candidates:
+                if cur_handle.lower() == candidate.lstrip("@").lower():
+                    logger.info("Channel handle already matches target candidate: @%s", cur_handle)
+                    return f"@{cur_handle}"
+
         for candidate in handle_candidates:
             clean_handle = candidate.lstrip("@")
             logger.info("Testing handle candidate: %s", clean_handle)
             await self.evaluate(f"""
                 (() => {{
                     const input = document.querySelector('input.YtcpChannelEditingChannelHandleHandleInput') ||
-                                  document.querySelector('input[placeholder*="tên người dùng"]');
+                                  document.querySelector('ytcp-channel-editing-channel-handle input') ||
+                                  document.querySelector('input[placeholder*="tên người dùng" i]') ||
+                                  document.querySelector('input[placeholder*="handle" i]');
                     if (!input) return false;
                     input.focus();
                     document.execCommand('selectAll', false, null);
@@ -202,7 +228,7 @@ class YouTubeChannelSetupClient(YouTubeCDPClient):
                     return input.value;
                 }})()
             """)
-            await asyncio.sleep(2.0)
+            await asyncio.sleep(2.5)
 
             has_error = await self.evaluate("""
                 (() => {
@@ -218,7 +244,7 @@ class YouTubeChannelSetupClient(YouTubeCDPClient):
                 return accepted_handle
             logger.warning("Handle @%s is unavailable or invalid, trying next...", clean_handle)
 
-        return None
+        return f"@{cur_handle}" if cur_handle else None
 
     async def set_description(self, description: str) -> Optional[str]:
         """Update Channel Description textbox."""
@@ -234,6 +260,8 @@ class YouTubeChannelSetupClient(YouTubeCDPClient):
                 document.execCommand('insertText', false, {json.dumps(description)});
                 box.dispatchEvent(new Event('input', {{ bubbles: true, composed: true }}));
                 box.dispatchEvent(new Event('change', {{ bubbles: true, composed: true }}));
+                box.blur();
+                window.scrollTo(0, 0);
                 return box.innerText ? box.innerText.substring(0, 80) : '';
             }})()
         """)
@@ -401,7 +429,7 @@ async def setup_youtube_channel(
         logger.info("Initial Studio state: %s", info)
         cur_url = await client.evaluate("window.location.href")
         m = re.search(r"/channel/(UC[a-zA-Z0-9_-]+)", cur_url or "")
-        cid_found = m.group(1) if m else info.get("channelId")
+        cid_found = m.group(1) if m else (info.get("channelId") or ch_entry.get("youtube_channel_id"))
 
         # Step 3: Navigate to Customization page
         if cid_found:
@@ -413,21 +441,38 @@ async def setup_youtube_channel(
         await client.call("Page.navigate", {"url": custom_url})
         await asyncio.sleep(7.0)
 
-        # Refresh channel ID from current location if not previously captured
+        # Also click Customization sidebar item if still not on /editing
         cur_url = await client.evaluate("window.location.href")
+        if "/editing" not in (cur_url or ""):
+            await client.evaluate("""
+                (() => {
+                    const link = document.querySelector('a[href*="/editing"]') ||
+                                 Array.from(document.querySelectorAll('a, tp-yt-paper-icon-item')).find(
+                                     el => el.innerText && (
+                                         el.innerText.toLowerCase().includes('customization') ||
+                                         el.innerText.toLowerCase().includes('tùy chỉnh')
+                                     )
+                                 );
+                    if (link) link.click();
+                })()
+            """)
+            await asyncio.sleep(5.0)
+            cur_url = await client.evaluate("window.location.href")
+
+        # Refresh channel ID from current location if not previously captured
         m = re.search(r"/channel/(UC[a-zA-Z0-9_-]+)", cur_url or "")
         if m:
             cid_found = m.group(1)
 
         # Step 4: Basic Info Tab (Name, Handle, Description)
-        # Try switching to 'Thông tin cơ bản' / 'Basic info' tab
-        await client.switch_customization_tab("Thông tin cơ bản")
+        # Try switching to 'Thông tin cơ bản' / 'Basic info' / 'Profile' tab
+        await client.switch_customization_tab(["Thông tin cơ bản", "Basic info", "Hồ sơ", "Profile"])
         await client.set_channel_name(spec["youtube_name"])
         accepted_handle = await client.set_handle(spec["handle_candidates"])
         await client.set_description(spec["description"])
 
         # Step 5: Branding Tab (Avatar, Banner)
-        await client.switch_customization_tab("Xây dựng thương hiệu")
+        await client.switch_customization_tab(["Xây dựng thương hiệu", "Branding", "Hồ sơ", "Profile"])
         avatar_uploaded = await client.upload_avatar(spec["assets"]["avatar_800x800"])
         banner_uploaded = await client.upload_banner(spec["assets"]["banner_2048x1152"])
 
@@ -440,15 +485,25 @@ async def setup_youtube_channel(
         await client.capture_screenshot(shot_path)
         logger.info("QA screenshot captured at: %s", shot_path)
 
-        # Step 8: Update channel map
+        # Step 8: Update channel map under flock
+        import fcntl
+        lock_path = MAP_PATH.with_suffix(".lock")
         channel_url = f"https://www.youtube.com/channel/{cid_found}" if cid_found else None
-        ch_entry["youtube_channel_id"] = cid_found
-        ch_entry["youtube_channel_url"] = channel_url
-        if accepted_handle:
-            ch_entry["handle"] = accepted_handle
-
-        ch_map_data["channels"][channel_id] = ch_entry
-        save_channel_map(ch_map_data)
+        with open(lock_path, "w", encoding="utf-8") as lock_fh:
+            fcntl.flock(lock_fh.fileno(), fcntl.LOCK_EX)
+            try:
+                latest_map = load_channel_map()
+                cur_entry = latest_map["channels"].get(channel_id, ch_entry)
+                cur_entry["channel_name"] = spec["youtube_name"]
+                if cid_found:
+                    cur_entry["youtube_channel_id"] = cid_found
+                    cur_entry["youtube_channel_url"] = channel_url
+                if accepted_handle:
+                    cur_entry["handle"] = accepted_handle
+                latest_map["channels"][channel_id] = cur_entry
+                save_channel_map(latest_map)
+            finally:
+                fcntl.flock(lock_fh.fileno(), fcntl.LOCK_UN)
 
         report = {
             "status": "SETUP_COMPLETED",

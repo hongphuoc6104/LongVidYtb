@@ -468,6 +468,8 @@ class _BudgetsProxy:
         alias = f"colab:{account_id}" if not account_id.startswith("colab:") else account_id
         now = time.time()
         try:
+            if reason == "stale_cleanup":
+                raise RuntimeError("Use bounded stale_cleanup duration")
             self._budgets.released(alias, session_name, at=now, evidence=reason)
         except Exception:
             try:
@@ -479,7 +481,11 @@ class _BudgetsProxy:
                         for it in data["accounts"][identity].get("intervals", []):
                             if it.get("session") == session_name and it.get("end") is None:
                                 start_t = float(it.get("start") or now)
-                                it["end"] = max(now, start_t + 1.0)
+                                it["end"] = (
+                                    min(now, start_t + 300.0)
+                                    if reason == "stale_cleanup"
+                                    else max(now, start_t + 1.0)
+                                )
                                 it["release_evidence"] = reason
                                 it["uncertain"] = False
             except Exception:

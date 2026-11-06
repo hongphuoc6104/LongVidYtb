@@ -1,28 +1,28 @@
 {
   "channel_id": "en_wait_how",
-  "slug": "en-wait-how",
-  "youtube_name": "Wait, How?",
+  "slug": "en-spawn-to-apex",
+  "youtube_name": "Spawn to Apex",
   "handle_candidates": [
-    "@WaitHowScience",
-    "@WaitHowDoodle",
-    "@WaitHowExplained",
-    "@WaitHowLab"
+    "@SpawnToApex",
+    "@SpawnToApexHQ",
+    "@SpawnToApexLab",
+    "@MetamorphosisInk"
   ],
-  "description": "Welcome to the official Wait, How? channel!\n\nAnswer everyday physical curiosities with delightful clarity so you see the world anew.\nClear, visual, research-backed explainers crafted for curious adults, students, and thinkers who love asking why everyday things work the way they do.\n\nCore topics: Everyday physics paradoxes, debunked school myths & surprising natural phenomena.\n\n#physics #science #waithow #curiosity #education #stem",
+  "description": "Welcome to the official Spawn to Apex channel!\n\nTrace nature's most extreme life cycles from microscopic spawn to final metamorphosis.\nClear, visual, research-backed 2D hand-drawn explainers crafted for Curious adults, biology lovers, and viewers hooked on bizarre chronological life-cycle transformations.\n\nCore topics: Extreme animal & insect metamorphosis, deep-sea life cycles & parasite survival chronicles.\n\n#metamorphosis #lifecycle #biology #nature #evolution #science",
   "keywords": [
-    "physics",
+    "metamorphosis",
+    "lifecycle",
+    "biology",
+    "nature",
+    "evolution",
     "science",
-    "waithow",
-    "curiosity",
-    "education",
-    "stem",
-    "Everyday physics paradoxes, debunked school myths & surprising natural phenomena"
+    "Extreme animal & insect metamorphosis, deep-sea life cycles & parasite survival chronicles"
   ],
   "assets": {
-    "avatar_800x800": "sys/channels/en_wait_how/assets/avatar_800x800.png",
-    "banner_2048x1152": "sys/channels/en_wait_how/assets/banner_2048x1152.png",
-    "watermark_150x150": "sys/channels/en_wait_how/assets/watermark_150x150.png",
-    "endcard_16x9": "sys/channels/en_wait_how/assets/endcard_16x9.jpg",
-    "endcard_9x16": "sys/channels/en_wait_how/assets/endcard_9x16.jpg"
+    "avatar_800x800": "sys/channels/en_spawn_to_apex/assets/avatar_800x800.png",
+    "banner_2048x1152": "sys/channels/en_spawn_to_apex/assets/banner_2048x1152.png",
+    "watermark_150x150": "sys/channels/en_spawn_to_apex/assets/watermark_150x150.png",
+    "endcard_16x9": "sys/channels/en_spawn_to_apex/assets/endcard_16x9.jpg",
+    "endcard_9x16": "sys/channels/en_spawn_to_apex/assets/endcard_9x16.jpg"
   }
 }

@@ -1019,7 +1019,20 @@ def package_final_on_colab_t4_nvenc(
             remote_dir = f"/content/vp_en_nvenc/{job_id}"
             remote_bundle = f"{remote_dir}/bundle.zip"
 
-            client.exec(f"from pathlib import Path\nPath({remote_dir!r}).mkdir(parents=True, exist_ok=True)")
+            try:
+                client.exec(f"from pathlib import Path\nPath({remote_dir!r}).mkdir(parents=True, exist_ok=True)")
+            except Exception as ex_exec:
+                if "COLAB_SESSION_NOT_FOUND" in str(ex_exec):
+                    from tools.channel_production_common import cleanup_stale_colab_state
+
+                    cleanup_stale_colab_state(client, acc, client.session)
+                    client.session = target_session
+                    cfg["colab_tts"]["session"] = target_session
+                    client.cfg["colab_tts"]["session"] = target_session
+                    client._ready(auto_start=True)
+                    client.exec(f"from pathlib import Path\nPath({remote_dir!r}).mkdir(parents=True, exist_ok=True)")
+                else:
+                    raise
             client.call("upload", "-s", client.session, str(bundle_zip.resolve()), remote_bundle, timeout=300)
 
             remote_render_script = f"""

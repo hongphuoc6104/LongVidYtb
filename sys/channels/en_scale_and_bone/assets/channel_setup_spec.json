@@ -1,28 +1,28 @@
 {
-  "channel_id": "en_plain_sight_ai",
-  "slug": "plain-sight-ai",
-  "youtube_name": "Plain Sight AI",
+  "channel_id": "en_scale_and_bone",
+  "slug": "en-scale-and-bone",
+  "youtube_name": "Scale & Bone",
   "handle_candidates": [
-    "@PlainSightAI",
-    "@PlainSightAIHQ",
-    "@PlainSightAILab",
-    "@GetPlainSightAI"
+    "@ScaleAndBone",
+    "@ScaleAndBoneHQ",
+    "@ScaleAndBoneLab",
+    "@ReptileEvolutionInk"
   ],
-  "description": "Welcome to Plain Sight AI!\n\nOne practical, no-code AI workflow at a time—designed to save hours of real office work without the hype.\n\nCore topics: Practical AI workflows, prompt engineering, and everyday automation.\n\n#aiworkflows #productivity #promptengineering #nocode #automation",
+  "description": "Welcome to the official Scale & Bone channel!\n\nFollow the visceral life-cycle of reptiles from leathery egg to apex survivor across 300 million years of evolution.\nClear, visual, research-backed 2D hand-drawn explainers crafted for Nature documentary lovers, evolutionary biology fans, and viewers captivated by survival life-cycles.\n\nCore topics: Reptile & amphibian evolution, egg-to-apex life-cycle survival stories & ancient biomechanics.\n\n#reptiles #evolution #herpetology #lifecycle #naturedocumentary #biology",
   "keywords": [
-    "plainsightai",
-    "aiworkflows",
-    "productivity",
-    "promptengineering",
-    "nocode",
-    "automation",
-    "Practical AI workflows, prompt engineering, and everyday automation"
+    "reptiles",
+    "evolution",
+    "herpetology",
+    "lifecycle",
+    "naturedocumentary",
+    "biology",
+    "Reptile & amphibian evolution, egg-to-apex life-cycle survival stories & ancient biomechanics"
   ],
   "assets": {
-    "avatar_800x800": "sys/channels/en_plain_sight_ai/assets/avatar_800x800.png",
-    "banner_2048x1152": "sys/channels/en_plain_sight_ai/assets/banner_2048x1152.png",
-    "watermark_150x150": "sys/channels/en_plain_sight_ai/assets/watermark_150x150.png",
-    "endcard_16x9": "sys/channels/en_plain_sight_ai/assets/endcard_16x9.jpg",
-    "endcard_9x16": "sys/channels/en_plain_sight_ai/assets/endcard_9x16.jpg"
+    "avatar_800x800": "sys/channels/en_scale_and_bone/assets/avatar_800x800.png",
+    "banner_2048x1152": "sys/channels/en_scale_and_bone/assets/banner_2048x1152.png",
+    "watermark_150x150": "sys/channels/en_scale_and_bone/assets/watermark_150x150.png",
+    "endcard_16x9": "sys/channels/en_scale_and_bone/assets/endcard_16x9.jpg",
+    "endcard_9x16": "sys/channels/en_scale_and_bone/assets/endcard_9x16.jpg"
   }
 }

@@ -1,28 +1,28 @@
 {
-  "channel_id": "en_parable_lamp",
-  "slug": "en-parable-lamp",
-  "youtube_name": "Parable & Lamp",
+  "channel_id": "en_deep_time_strata",
+  "slug": "en-deep-time-strata",
+  "youtube_name": "Deep Time Strata",
   "handle_candidates": [
-    "@ParableAndLamp",
-    "@ParableAndLampHQ",
-    "@ParableLampDoodle",
-    "@TheParableLamp"
+    "@DeepTimeStrata",
+    "@DeepTimeStrataHQ",
+    "@DeepTimeStrataLab",
+    "@DeepTimeFossils"
   ],
-  "description": "Welcome to the official Parable & Lamp channel!\n\nIlluminate timeless biblical parables, wisdom literature, and hope with heartwarming stick figures.\nClear, visual, research-backed explainers crafted for faith seekers, lovers of timeless moral parables, and viewers seeking forgiveness and hope.\n\nCore topics: Biblical parables, wisdom of Proverbs & Ecclesiastes, forgiveness, grace & hope illustrated.\n\n#parables #wisdom #hope #faith #proverbs #forgiveness",
+  "description": "Welcome to the official Deep Time Strata channel!\n\nExcavate Earth's geological strata to witness how life survived five mass extinctions and conquered dry land.\nClear, visual, research-backed 2D hand-drawn explainers crafted for Paleontology enthusiasts, deep-time history fans, and viewers captivated by ancient Earth ecosystems.\n\nCore topics: Paleo-evolutionary turning points, geological strata epochs, mass extinctions & ancient ecosystems.\n\n#paleontology #deeptime #evolution #geology #fossils #prehistoric",
   "keywords": [
-    "parables",
-    "wisdom",
-    "hope",
-    "faith",
-    "proverbs",
-    "forgiveness",
-    "Biblical parables, wisdom of Proverbs & Ecclesiastes, forgiveness, grace & hope illustrated"
+    "paleontology",
+    "deeptime",
+    "evolution",
+    "geology",
+    "fossils",
+    "prehistoric",
+    "Paleo-evolutionary turning points, geological strata epochs, mass extinctions & ancient ecosystems"
   ],
   "assets": {
-    "avatar_800x800": "sys/channels/en_parable_lamp/assets/avatar_800x800.png",
-    "banner_2048x1152": "sys/channels/en_parable_lamp/assets/banner_2048x1152.png",
-    "watermark_150x150": "sys/channels/en_parable_lamp/assets/watermark_150x150.png",
-    "endcard_16x9": "sys/channels/en_parable_lamp/assets/endcard_16x9.jpg",
-    "endcard_9x16": "sys/channels/en_parable_lamp/assets/endcard_9x16.jpg"
+    "avatar_800x800": "sys/channels/en_deep_time_strata/assets/avatar_800x800.png",
+    "banner_2048x1152": "sys/channels/en_deep_time_strata/assets/banner_2048x1152.png",
+    "watermark_150x150": "sys/channels/en_deep_time_strata/assets/watermark_150x150.png",
+    "endcard_16x9": "sys/channels/en_deep_time_strata/assets/endcard_16x9.jpg",
+    "endcard_9x16": "sys/channels/en_deep_time_strata/assets/endcard_9x16.jpg"
   }
 }
