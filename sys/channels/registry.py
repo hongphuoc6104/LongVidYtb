@@ -3709,3 +3709,177 @@ def writer_brief(channel_id: str, format_profile: str) -> str:
             ]
         )
     return "\n".join(lines)
+
+
+# ==============================================================================
+# Non-Destructive Competitor Rebuild Bridge (V3.3)
+# ==============================================================================
+
+REBUILT_CHANNEL_ALIASES: Dict[str, str] = {
+    # 4 renamed EN channels & aliases
+    "en_plain_sight_ai": "en-scale-and-bone",
+    "en-plain-sight-ai": "en-scale-and-bone",
+    "en_scale_and_bone": "en-scale-and-bone",
+    "en-scale-and-bone": "en-scale-and-bone",
+    "en_kitchen_molecules": "en-root-and-canopy",
+    "en-kitchen-molecules": "en-root-and-canopy",
+    "en_root_and_canopy": "en-root-and-canopy",
+    "en-root-and-canopy": "en-root-and-canopy",
+    "en_wait_how": "en-spawn-to-apex",
+    "en-wait-how": "en-spawn-to-apex",
+    "en_spawn_to_apex": "en-spawn-to-apex",
+    "en-spawn-to-apex": "en-spawn-to-apex",
+    "en_parable_lamp": "en-deep-time-strata",
+    "en-parable-lamp": "en-deep-time-strata",
+    "en_deep_time_strata": "en-deep-time-strata",
+    "en-deep-time-strata": "en-deep-time-strata",
+}
+
+
+def _resolve_rebuilt_channel_keys(channel_id: str) -> Tuple[str, str, str]:
+    """Resolve (lang, formula_key, norm_id) for any of the 38 channels + 4 aliases.
+
+    Returns:
+        (lang, formula_key, normalized_id)
+        where lang is 'VN' or 'EN', formula_key is the dictionary lookup key,
+        and normalized_id is underscore-separated ID (e.g. 'tui_tien', 'en_first_principles').
+    """
+    raw = (channel_id or "").strip().lower()
+    aliased = REBUILT_CHANNEL_ALIASES.get(raw, raw)
+    u = aliased.replace("-", "_")
+    h = aliased.replace("_", "-")
+
+    from channels.en_flow_video_formulas import EN_FLOW_VIDEO_FORMULAS
+    from channels.vn_flow_video_formulas import VN_FLOW_VIDEO_FORMULAS
+
+    if u in VN_FLOW_VIDEO_FORMULAS:
+        return "VN", u, u
+    if h in EN_FLOW_VIDEO_FORMULAS:
+        return "EN", h, h.replace("-", "_")
+
+    # Check if channel exists in legacy registry and map to rebuilt
+    if raw in CHANNEL_ALIASES:
+        leg_aliased = CHANNEL_ALIASES[raw]
+        leg_u = leg_aliased.replace("-", "_")
+        leg_h = leg_aliased.replace("_", "-")
+        if leg_u in VN_FLOW_VIDEO_FORMULAS:
+            return "VN", leg_u, leg_u
+        if leg_h in EN_FLOW_VIDEO_FORMULAS:
+            return "EN", leg_h, leg_h.replace("-", "_")
+
+    raise ValueError(f"Unknown rebuilt channel '{channel_id}'. Expected one of 38 channels or 4 aliases.")
+
+
+def get_rebuilt_competitor_formula(channel_id: str) -> Dict[str, Any]:
+    """Return the merged Flow physics + 5-stage dialogue formula dict for any of the 38 channels.
+
+    Supports all 20 Vietnamese channels, 18 English channels, and 4 renamed aliases.
+    """
+    lang, key, _norm_id = _resolve_rebuilt_channel_keys(channel_id)
+    if lang == "VN":
+        from channels.vn_competitor_script_formulas import VN_COMPETITOR_SCRIPT_FORMULAS
+        from channels.vn_flow_video_formulas import VN_FLOW_VIDEO_FORMULAS
+
+        flow_data = dict(VN_FLOW_VIDEO_FORMULAS[key])
+        script_data = VN_COMPETITOR_SCRIPT_FORMULAS.get(key, {})
+        merged = dict(flow_data)
+        for k, v in script_data.items():
+            if k not in merged or k in ("competitor_dialogue_formula", "competitor_name", "voice"):
+                merged[k] = v
+        return merged
+    else:
+        from channels.en_competitor_script_formulas import EN_COMPETITOR_SCRIPT_FORMULAS
+        from channels.en_flow_video_formulas import EN_FLOW_VIDEO_FORMULAS
+
+        flow_data = dict(EN_FLOW_VIDEO_FORMULAS[key])
+        script_data = EN_COMPETITOR_SCRIPT_FORMULAS.get(key, {})
+        merged = dict(flow_data)
+        for k, v in script_data.items():
+            if k not in merged or k in ("competitor_dialogue_formula", "competitor_name", "voice"):
+                merged[k] = v
+        return merged
+
+
+def get_rebuilt_visual_identity(channel_id: str) -> VisualIdentity:
+    """Return a VisualIdentity populated with the rebuilt competitor benchmark.
+
+    Resolves both VN channels (via VN_FLOW_VIDEO_FORMULAS) and EN channels + 4 renamed EN aliases
+    (via EN_FLOW_VIDEO_FORMULAS), with profile_id=f"ch_rebuilt_{norm_id}".
+    """
+    _lang, _key, norm_id = _resolve_rebuilt_channel_keys(channel_id)
+    formula = get_rebuilt_competitor_formula(channel_id)
+
+    # Resolve legacy channel profile if available for fallback appearance/palette
+    try:
+        legacy_ch = get_channel(channel_id)
+    except Exception:
+        legacy_ch = None
+
+    profile_id = f"ch_rebuilt_{norm_id}"
+    label = (
+        formula.get("new_visual_label")
+        or formula.get("competitor_benchmark")
+        or formula.get("competitor_name")
+        or (legacy_ch.visual.label if legacy_ch else f"Rebuilt {norm_id}")
+    )
+    style_description = (
+        formula.get("style_description")
+        or formula.get("continuity_anchor")
+        or (legacy_ch.visual.style_description if legacy_ch else "")
+    )
+    thumbnail_rule = (
+        formula.get("thumbnail_rule")
+        or (legacy_ch.visual.thumbnail_rule if legacy_ch else "")
+        or f"One high-contrast focal subject representing {formula.get('competitor_benchmark', norm_id)}, 2-4 uppercase bold words, zero overlay card, 25% margin"
+    )
+    cast_appearance = (
+        formula.get("cast_appearance")
+        or (legacy_ch.visual.cast_appearance if legacy_ch else "Realistic documentary subject with contextual focus")
+    )
+    outfit = (
+        formula.get("outfit")
+        or (legacy_ch.visual.outfit if legacy_ch else "Contextual documentary styling, zero cartoon elements")
+    )
+    palette = (
+        tuple(formula.get("palette", ()))
+        or (legacy_ch.visual.palette if legacy_ch else ("#0F172A", "#38BDF8", "#F59E0B", "#10B981"))
+    )
+
+    return VisualIdentity(
+        profile_id=profile_id,
+        label=label,
+        style_description=style_description,
+        cast_appearance=cast_appearance,
+        outfit=outfit,
+        palette=palette,
+        thumbnail_rule=thumbnail_rule,
+    )
+
+
+def apply_rebuilt_channel(brief: Mapping[str, Any], channel_id: str) -> Dict[str, Any]:
+    """Apply rebuilt competitor visual identity and formulas to brief.
+
+    Calls apply_channel(brief, channel_id), overrides out["style"] with rebuilt
+    competitor style_description, and attaches out["rebuilt_competitor_benchmark"].
+    """
+    out = apply_channel(brief, channel_id)
+    rebuilt_visual = get_rebuilt_visual_identity(channel_id)
+    formula = get_rebuilt_competitor_formula(channel_id)
+
+    out["style"] = rebuilt_visual.style_description
+    benchmark = (
+        formula.get("competitor_benchmark")
+        or formula.get("competitor_name")
+        or ""
+    )
+    out["rebuilt_competitor_benchmark"] = benchmark
+    out["rebuilt_visual_label"] = rebuilt_visual.label
+    out["rebuilt_profile_id"] = rebuilt_visual.profile_id
+
+    formula_voice = formula.get("voice")
+    if formula_voice and "outputs" in out:
+        for o in out["outputs"]:
+            o["voice"] = formula_voice
+
+    return out
+

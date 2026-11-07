@@ -47,9 +47,12 @@ from tools.script_hook_scorer import score_script  # noqa: E402
 
 from channels.registry import (  # noqa: E402
     ChannelProfile,
+    apply_rebuilt_channel,
     channel_cast,
     channels,
     get_channel,
+    get_rebuilt_competitor_formula,
+    get_rebuilt_visual_identity,
 )
 
 # ---------------------------------------------------------------------------
@@ -1208,6 +1211,7 @@ def build_channel_topic(
     topic_title: Optional[str] = None,
     seed_index: Optional[int] = None,
     cwd: Optional[Path] = None,
+    rebuilt_style: bool = False,
 ) -> ResearchedTopic:
     """Build a complete ResearchedTopic object for any channel matching all Schema 3.0 contracts."""
     ch = get_channel_or_active(channel_id, cwd=cwd)
@@ -1304,6 +1308,14 @@ def build_channel_topic(
     )
 
     lo, hi = spec.duration_seconds
+    rebuilt_vis = get_rebuilt_visual_identity(ch.id) if rebuilt_style else None
+    topic_style = rebuilt_vis.style_description if rebuilt_vis else ch.visual.style_description
+    topic_voice = ch.voice
+    if rebuilt_vis:
+        formula = get_rebuilt_competitor_formula(ch.id)
+        if formula.get("voice"):
+            topic_voice = formula["voice"]
+
     return ResearchedTopic(
         topic=chosen_title,
         audience=ch.audience,
@@ -1311,7 +1323,7 @@ def build_channel_topic(
         video_type="research_explainer",
         min_duration=float(lo),
         max_duration=float(hi),
-        style=ch.visual.style_description,
+        style=topic_style,
         aspect_ratio="9:16" if is_short else "16:9",
         format_profile=format_profile,
         sources=sources,
@@ -1321,7 +1333,7 @@ def build_channel_topic(
         tone=ch.tone,
         language="vi",
         subtitles=True,
-        voice=ch.voice,
+        voice=topic_voice,
         speed=ch.speed,
         channel_id=ch.id,
         conversational_facts=True,
@@ -1341,6 +1353,7 @@ def build_and_export_channel_package(
     spinoff_shorts: bool = False,
     allow_active: bool = False,
     cwd: Optional[Path] = None,
+    rebuilt_style: bool = False,
 ) -> Dict[str, Any]:
     """Assemble, write, validate, and score a complete Schema 3.0 package for a channel."""
     ch = get_channel_or_active(channel_id, cwd=cwd)
@@ -1350,6 +1363,7 @@ def build_and_export_channel_package(
         topic_title=topic_title,
         seed_index=seed_index,
         cwd=cwd,
+        rebuilt_style=rebuilt_style,
     )
 
     if output_dir is None:
@@ -1375,5 +1389,29 @@ def build_and_export_channel_package(
     result["channel_name"] = ch.name
     result["format_profile"] = format_profile
     result["hook_score"] = asdict(hook_score)
+    result["rebuilt_style"] = rebuilt_style
 
     return result
+
+
+def build_rebuilt_channel_brief(
+    channel_id: str,
+    topic: str,
+    format_profile: str = "short_9x16",
+) -> Dict[str, Any]:
+    """Construct an execution brief dictionary wired with rebuilt competitor visual identity and formulas."""
+    base_brief: Dict[str, Any] = {
+        "topic": topic,
+        "format_profile": format_profile,
+        "aspect_ratio": "9:16" if format_profile == "short_9x16" else "16:9",
+        "outputs": [
+            {
+                "format_profile": format_profile,
+            }
+        ],
+    }
+    applied = apply_rebuilt_channel(base_brief, channel_id)
+    formula = get_rebuilt_competitor_formula(channel_id)
+    applied["rebuilt_competitor_formula"] = formula
+    return applied
+
