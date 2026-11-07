@@ -42,25 +42,46 @@ def select_clip_duration_and_credits(
     if mode_str == "zero_credit_flipbook" or "flipbook" in vm or "zero_credit" in vm:
         return (max(1, int(round(target_sec))), 0)
 
-    is_omni = any(k in vm for k in ["omni", "abra"])
+    is_omni = any(k in vm for k in ["omni", "abra", "macaron"])
 
     if is_omni:
-        allowed = [4, 6, 8] if has_end_frame else [4, 6, 8, 10]
-        credit_map = {4: 7, 6: 10, 8: 12, 10: 15}
+        is_legacy_1_1 = any(k in vm for k in ["abra", "1_1", "1.1"])
+        if is_legacy_1_1:
+            allowed = [4, 6, 8] if has_end_frame else [4, 6, 8, 10]
+            credit_map = {4: 7, 6: 10, 8: 12, 10: 15}
 
-        if auto_duration:
-            if target_sec <= 4.8:
-                dur = 4
-            elif target_sec <= 6.8:
-                dur = 6
-            elif target_sec <= 8.8 or has_end_frame:
-                dur = 8
+            if auto_duration:
+                if target_sec <= 4.8:
+                    dur = 4
+                elif target_sec <= 6.8:
+                    dur = 6
+                elif target_sec <= 8.8 or has_end_frame:
+                    dur = 8
+                else:
+                    dur = 10
+                return (dur, credit_map[dur])
             else:
-                dur = 10
-            return (dur, credit_map[dur])
+                closest_dur = min(allowed, key=lambda d: abs(d - default_duration_sec))
+                return (closest_dur, credit_map[closest_dur])
         else:
-            closest_dur = min(allowed, key=lambda d: abs(d - default_duration_sec))
-            return (closest_dur, credit_map[closest_dur])
+            # Omni 1.2 Flash (macaron_cookie): 4s=12c, 6s=18c, 8s=24c, 10s=30c
+            # Both has_end_frame=True and False support 4s, 6s, 8s, 10s
+            allowed = [4, 6, 8, 10]
+            credit_map = {4: 12, 6: 18, 8: 24, 10: 30}
+
+            if auto_duration:
+                if target_sec <= 4.8:
+                    dur = 4
+                elif target_sec <= 6.8:
+                    dur = 6
+                elif target_sec <= 8.8:
+                    dur = 8
+                else:
+                    dur = 10
+                return (dur, credit_map[dur])
+            else:
+                closest_dur = min(allowed, key=lambda d: abs(d - default_duration_sec))
+                return (closest_dur, credit_map[closest_dur])
 
     if "lite" in vm:
         return (8, 10)
@@ -69,15 +90,15 @@ def select_clip_duration_and_credits(
     if "fast" in vm:
         return (8, 20)
 
-    # Fallback to omni_flash defaults
-    allowed = [4, 6, 8] if has_end_frame else [4, 6, 8, 10]
-    credit_map = {4: 7, 6: 10, 8: 12, 10: 15}
+    # Fallback to omni_flash (Omni 1.2 Flash) defaults
+    allowed = [4, 6, 8, 10]
+    credit_map = {4: 12, 6: 18, 8: 24, 10: 30}
     if auto_duration:
         if target_sec <= 4.8:
             dur = 4
         elif target_sec <= 6.8:
             dur = 6
-        elif target_sec <= 8.8 or has_end_frame:
+        elif target_sec <= 8.8:
             dur = 8
         else:
             dur = 10

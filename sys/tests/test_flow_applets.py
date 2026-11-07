@@ -281,7 +281,7 @@ class TestFlowAppletRpcAndManager(unittest.TestCase):
 
         # 3. Core Models & Keys
         self.assertIn("🍌 Nano Banana 2.1", tsx)
-        self.assertIn("Omni 1.1 Flash", tsx)
+        self.assertIn("Omni 1.2 Flash", tsx)
         self.assertIn(OMNI_STUDIO_STORAGE_KEY, tsx)
         self.assertIn("hybrid_video", tsx)
         self.assertIn("zero_credit_flipbook", tsx)

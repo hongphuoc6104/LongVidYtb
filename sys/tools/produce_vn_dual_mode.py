@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Video Pilot VN Dual-Mode Pipeline: Short Omni 1.1 Flash & Long Chapter-Chunked T4 NVENC Renderer.
+"""Video Pilot VN Dual-Mode Pipeline: Short Omni 1.2 Flash & Long Chapter-Chunked T4 NVENC Renderer.
 
 Implements two first-class Video Pilot production pipelines:
-- Mode 1: `build-short` (short_9x16 — full_chain Omni 1.1 Flash on Google Flow with Colab T4 NVENC packaging)
+- Mode 1: `build-short` (short_9x16 — full_chain Omni 1.2 Flash on Google Flow with Colab T4 NVENC packaging)
 - Mode 2: `build-long` (long_16x9 — 240–350 High-Density BELUGA 8K Multi-Image + 2x-supersampled
           zoompan + Directional xfade + FFMETADATA1 Chapters on Colab Tesla T4 h264_nvenc)
 - Mode 3: `dry-run-verify` (fast synthetic verification of chapter partitioning, FFMETADATA1 chapters,
@@ -416,7 +416,7 @@ def format_youtube_description_chapters(chapters: list[ChapterSpec]) -> str:
 
 
 # ---------------------------------------------------------------------------
-# 3. Short 9:16 Omni 1.1 Flash VideoChainSpec Construction
+# 3. Short 9:16 Omni 1.2 Flash VideoChainSpec Construction
 # ---------------------------------------------------------------------------
 
 
@@ -428,7 +428,7 @@ def build_short_video_chain_spec(
     beat_durations: list[float] | None = None,
     auto_fallback_zero_credit: bool = False,
 ) -> VideoChainSpec:
-    """Build canonical Short 9:16 Omni 1.1 Flash VideoChainSpec.
+    """Build canonical Short 9:16 Omni 1.2 Flash VideoChainSpec.
 
     Adheres strictly to the specification:
     - video_model="omni_flash"
@@ -442,7 +442,12 @@ def build_short_video_chain_spec(
     for i in range(max(1, n - 1)):
         shot_a = shots[i]
         shot_b = shots[i + 1] if i + 1 < n else shots[i]
-        target_dur = beat_durations[i] if beat_durations and i < len(beat_durations) else float(shot_a.get("duration", 4.0))
+        if beat_durations and i < len(beat_durations):
+            target_dur = beat_durations[i] + (
+                beat_durations[i + 1] if (n > 1 and len(beat_durations) == n and i == n - 2) else 0.0
+            )
+        else:
+            target_dur = float(shot_a.get("duration", 4.0))
 
         pair = ScenePairSpec(
             id=f"pair_{i:02d}",
@@ -815,7 +820,7 @@ def dispatch_long_image_dag_via_pool(
     beats: list[dict[str, Any]],
     output_dir: Path,
     image_model: str = "BELUGA",
-    max_workers: int = 4,
+    max_workers: int = 10,
     dry_run: bool = False,
     allowed_profiles: list[str] | None = None,
 ) -> list[Path]:
@@ -849,35 +854,89 @@ def dispatch_long_image_dag_via_pool(
 
     ledger = CreditLedger()
     resolved_profiles = resolve_authenticated_profiles(allowed_profiles, credit_ledger=ledger)
-    pool = PersistentWorkerPool(
-        target_workers=min(max_workers, len(resolved_profiles)) if resolved_profiles else max_workers,
-        headless=True,
-        profiles=resolved_profiles if resolved_profiles else None,
-        min_credits_required=1,
-        credit_ledger=ledger,
-        default_out_dir=out_dir,
-    )
+    target_workers = min(max_workers, len(resolved_profiles)) if resolved_profiles else max_workers
+    pool_kwargs: dict[str, Any] = {
+        "target_workers": target_workers,
+        "headless": True,
+        "profiles": resolved_profiles if resolved_profiles else None,
+        "min_credits_required": 1,
+        "credit_ledger": ledger,
+        "default_out_dir": out_dir,
+        "pacing_seconds": 0.35,
+        "stagger_seconds": 0.15,
+        "cooldown_seconds": 90.0,
+    }
+    import inspect
+
+    sig_params = inspect.signature(PersistentWorkerPool.__init__).parameters
+    if "enable_work_stealing" in sig_params:
+        pool_kwargs["enable_work_stealing"] = True
+    if "work_steal_threshold" in sig_params:
+        pool_kwargs["work_steal_threshold"] = 2
+    pool = PersistentWorkerPool(**pool_kwargs)
     pool.start()
 
     try:
+        beat_by_id: dict[str, tuple[int, dict[str, Any]]] = {
+            str(b.get("beat_id") or f"B{i:03d}"): (i, b) for i, b in enumerate(beats)
+        }
+
+        def get_root_anchor(parent_id: str | None) -> str | None:
+            if not parent_id or str(parent_id) not in beat_by_id:
+                return None
+            curr = str(parent_id)
+            visited = set()
+            while curr in beat_by_id and curr not in visited:
+                visited.add(curr)
+                next_parent = beat_by_id[curr][1].get("based_on")
+                if not next_parent or str(next_parent) not in beat_by_id or str(next_parent) == curr:
+                    return curr
+                curr = str(next_parent)
+            return curr
+
+        completed_on_disk_ids: set[str] = set()
+        for idx, beat in enumerate(beats):
+            img_p = out_dir / f"img_{idx:04d}.png"
+            b_id = str(beat.get("beat_id") or f"B{idx:03d}")
+            if img_p.is_file() and img_p.stat().st_size > 5000:
+                completed_on_disk_ids.add(b_id)
+
         tasks: list[dict[str, Any]] = []
         for idx, beat in enumerate(beats):
             img_p = out_dir / f"img_{idx:04d}.png"
             image_paths.append(img_p)
+            b_id = str(beat.get("beat_id") or f"B{idx:03d}")
             if img_p.is_file() and img_p.stat().st_size > 5000:
                 continue
+
+            raw_based_on = beat.get("based_on")
+            root_anchor = get_root_anchor(raw_based_on)
+
+            if (
+                root_anchor is None
+                or root_anchor in completed_on_disk_ids
+                or root_anchor not in beat_by_id
+                or root_anchor == b_id
+            ):
+                effective_based_on = None
+            else:
+                effective_based_on = root_anchor
 
             prompt = (
                 beat.get("prompt")
                 or f"Cinematic explainer photograph for {channel_slug}, 8k realistic documentary still"
             )
             task = {
-                "id": beat.get("beat_id", f"B{idx:03d}"),
+                "id": b_id,
                 "prompt": prompt,
                 "aspect": "16:9",
                 "model": image_model,
                 "output_path": str(img_p),
-                "based_on": beat.get("based_on"),
+                "based_on": effective_based_on,
+                "credit_cost": 0,
+                "credit_reason": "image",
+                "type": "image",
+                "editorial_overlay": {"enabled": False},
             }
             tasks.append(task)
             pool.submit_task(task)
@@ -1073,9 +1132,14 @@ def render_long_chapter_chunks_colab_t4(
 ) -> dict[str, Any]:
     """Execute 100% remote Chapter-Chunked rendering on Colab Tesla T4 GPU with native h264_nvenc.
 
-    Encodes each chunk of 15–22 beats via hardware h264_nvenc (-preset p4 -b:v 6M -g 30),
-    concatenates losslessly, and embeds YouTube FFMETADATA1 chapters.
+    Pre-scales images to JPEG Q92 in parallel (saving ~515MB upload), pre-encodes AAC audio,
+    encodes chunks in parallel (max_workers=3) directly to /dev/shm on Colab T4 with burned watermark,
+    and finishes with an instant 0.8s lossless concat stream-copy mux.
     """
+    import concurrent.futures
+
+    from PIL import Image
+
     scratch = (scratch_dir or out_mp4.parent / f"_colab_bundle_{job_id}").resolve()
     scratch.mkdir(parents=True, exist_ok=True)
 
@@ -1084,16 +1148,49 @@ def render_long_chapter_chunks_colab_t4(
     images_dir = bundle_dir / "images"
     images_dir.mkdir(parents=True, exist_ok=True)
 
-    # 1. Stage assets in bundle
-    shutil.copy2(audio_path, bundle_dir / "narration.wav")
+    # 1. Pre-encode audio to AAC narration.m4a (saves ~52MB upload vs uncompressed WAV)
+    narration_m4a = bundle_dir / "narration.m4a"
+    subprocess.run(
+        [
+            "ffmpeg",
+            "-y",
+            "-i",
+            str(audio_path.resolve()),
+            "-af",
+            "loudnorm=I=-11.0:TP=-1.0:LRA=7.0,aresample=48000",
+            "-c:a",
+            "aac",
+            "-b:a",
+            "192k",
+            "-ar",
+            "48000",
+            str(narration_m4a),
+        ],
+        check=True,
+        capture_output=True,
+    )
+
     shutil.copy2(watermark_png, bundle_dir / "watermark.png")
     shutil.copy2(metadata_path, bundle_dir / "chapters_metadata.txt")
 
-    img_rel_paths: list[str] = []
-    for idx, p in enumerate(image_paths):
-        dest = images_dir / f"img_{idx:04d}{p.suffix.lower()}"
-        shutil.copy2(p, dest)
-        img_rel_paths.append(f"images/{dest.name}")
+    # 2. Parallel image conversion to JPEG Q92 (~550MB PNG -> ~35MB JPEG Q92 in ~1.5s)
+    img_rel_paths: list[str] = ["" for _ in image_paths]
+
+    def _convert_image(idx_p: tuple[int, Path]) -> tuple[int, str]:
+        idx, p = idx_p
+        dest = images_dir / f"img_{idx:04d}.jpg"
+        if not dest.is_file() or dest.stat().st_size < 1000:
+            with Image.open(p) as im:
+                rgb_im = im.convert("RGB")
+                if rgb_im.width > 2048 or rgb_im.height > 1152:
+                    rgb_im = rgb_im.resize((1920, 1080), Image.Resampling.LANCZOS)
+                rgb_im.save(dest, format="JPEG", quality=92, optimize=False)
+        return idx, f"images/{dest.name}"
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool_ex:
+        results = pool_ex.map(_convert_image, enumerate(image_paths))
+        for idx, rel_p in results:
+            img_rel_paths[idx] = rel_p
 
     # Build manifest for remote worker
     manifest_chunks = []
@@ -1125,162 +1222,202 @@ def render_long_chapter_chunks_colab_t4(
     }
     (bundle_dir / "manifest.json").write_text(json.dumps(manifest_data, indent=2), encoding="utf-8")
 
+    # 3. Create render_job.py inside bundle for async background execution on Colab
+    render_job_script = """import json
+import os
+import shutil
+import subprocess
+import sys
+import traceback
+from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
+
+work = Path(__file__).resolve().parent
+
+def write_status(status, completed=0, total=0, error=None, tail=""):
+    data = {"status": status, "completed_chunks": completed, "total_chunks": total, "error": error, "tail": tail}
+    (work / "status.json").write_text(json.dumps(data), encoding="utf-8")
+
+try:
+    write_status("running", 0, 0, tail="Initializing remote render job...")
+    manifest_p = work / "manifest.json"
+    meta = json.loads(manifest_p.read_text(encoding="utf-8"))
+    w, h = int(meta["width"]), int(meta["height"])
+    fps = int(meta["fps"])
+    xfade_dur = float(meta["xfade_dur"])
+    total_dur = float(meta["total_duration"])
+    chunks = meta["chunks"]
+    total_chunks = len(chunks)
+    write_status("running", 0, total_chunks, tail=f"Loaded {total_chunks} chunks.")
+
+    # Check NVENC availability
+    res = subprocess.run(
+        ["ffmpeg", "-y", "-f", "lavfi", "-i", "color=c=black:s=256x256:d=0.04", "-c:v", "h264_nvenc", "-f", "null", "-"],
+        capture_output=True, text=True
+    )
+    if res.returncode != 0:
+        raise RuntimeError("COLAB_NVENC_UNAVAILABLE: h264_nvenc not supported on remote GPU: " + res.stderr)
+
+    # 1.25x supersampled zoompan (2400x1350 -> 1920x1080) for 1.5x faster CPU filter execution
+    up_w, up_h = int(w * 1.25), int(h * 1.25)
+    over_w = int(round(up_w * 1.05 / 2.0)) * 2
+    over_h = int(round(up_h * 1.05 / 2.0)) * 2
+
+    def zp_expr(motion, n):
+        m = (motion or "push_in").lower().strip()
+        if m in ("zoom_out", "pull_back", "pull_out"):
+            return f"zoompan=z='1.06-0.06*(on/{n})':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s={w}x{h}:fps={fps}"
+        if m in ("pan_right", "track_right"):
+            return f"zoompan=z='1.06':x='(iw-iw/zoom)*(on/{n})':y='ih/2-(ih/zoom/2)':d=1:s={w}x{h}:fps={fps}"
+        if m in ("pan_left", "track_left"):
+            return f"zoompan=z='1.06':x='(iw-iw/zoom)*(1.0-on/{n})':y='ih/2-(ih/zoom/2)':d=1:s={w}x{h}:fps={fps}"
+        if m in ("tilt_up", "rise"):
+            return f"zoompan=z='1.06':x='iw/2-(iw/zoom/2)':y='(ih-ih/zoom)*(1.0-on/{n})':d=1:s={w}x{h}:fps={fps}"
+        if m in ("tilt_down", "descend"):
+            return f"zoompan=z='1.06':x='iw/2-(iw/zoom/2)':y='(ih-ih/zoom)*(on/{n})':d=1:s={w}x{h}:fps={fps}"
+        return f"zoompan=z='1.00+0.06*(on/{n})':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s={w}x{h}:fps={fps}"
+
+    watermark_png = str(work / "watermark.png")
+    completed_count = 0
+
+    def render_chunk(c_data):
+        nonlocal completed_count
+        c_idx = c_data["chunk_index"]
+        c_mp4 = work / f"chunk_{c_idx:03d}.mp4"
+        beats = c_data["beats"]
+        n_b = len(beats)
+        seg_mp4s = []
+
+        for b_i, beat in enumerate(beats):
+            seg_mp4 = work / f"seg_{c_idx:03d}_{b_i:03d}.mp4"
+            seg_mp4s.append(seg_mp4)
+            dur = float(beat["duration"])
+            seg_dur = dur if b_i == (n_b - 1) else (dur + xfade_dur)
+            nb_frames = max(1, int(round(seg_dur * fps)))
+            zp = zp_expr(beat.get("camera_motion", "push_in"), nb_frames)
+            img_p = work / beat["image_file"]
+
+            vf = f"scale={over_w}:{over_h}:force_original_aspect_ratio=increase,crop={up_w}:{up_h}:(in_w-{up_w})/2:(in_h-{up_h})/2,setsar=1,{zp},format=yuv420p"
+            cmd = [
+                "ffmpeg", "-y", "-loop", "1", "-t", f"{seg_dur:.4f}", "-r", str(fps),
+                "-i", str(img_p),
+                "-vf", vf,
+                "-c:v", "h264_nvenc", "-preset", "p2", "-b:v", "6M", "-g", "30", "-pix_fmt", "yuv420p",
+                "-an", str(seg_mp4)
+            ]
+            p = subprocess.run(cmd, capture_output=True, text=True)
+            if p.returncode != 0:
+                raise RuntimeError(f"NVENC segment encode failed for chunk {c_idx} beat {b_i}: " + p.stderr[-500:])
+
+        c_cmd = ["ffmpeg", "-y"]
+        for sf in seg_mp4s:
+            c_cmd.extend(["-i", str(sf)])
+        wm_input_idx = len(seg_mp4s)
+        c_cmd.extend(["-i", watermark_png])
+
+        c_fc = []
+        if n_b == 1:
+            c_fc.append("[0:v]setsar=1[cv]")
+            cur_v = "cv"
+        else:
+            cum_offset = 0.0
+            prev_l = "0:v"
+            for i in range(1, n_b):
+                cum_offset += float(beats[i - 1]["duration"])
+                raw_trans = str(beats[i].get("transition", "fade")).lower().strip()
+                valid_xfades = ("fade", "smoothleft", "smoothright", "smoothup", "smoothdown", "dissolve")
+                trans = raw_trans if raw_trans in valid_xfades else "fade"
+                out_l = f"cx{i}"
+                c_fc.append(f"[{prev_l}][{i}:v]xfade=transition={trans}:duration={xfade_dur:.4f}:offset={max(0.05, cum_offset):.4f}[{out_l}]")
+                prev_l = out_l
+            cur_v = prev_l
+
+        # Burn watermark directly inside chunk pass
+        c_fc.append(f"[{cur_v}][{wm_input_idx}:v]overlay=W-w-36:H-h-36[cvout]")
+
+        c_dur = sum(float(b["duration"]) for b in beats)
+        c_cmd.extend([
+            "-filter_complex", ";".join(c_fc),
+            "-map", "[cvout]",
+            "-t", f"{c_dur:.4f}",
+            "-c:v", "h264_nvenc", "-preset", "p2", "-b:v", "6M", "-g", "30", "-pix_fmt", "yuv420p",
+            "-an", str(c_mp4)
+        ])
+        p_c = subprocess.run(c_cmd, capture_output=True, text=True)
+        if p_c.returncode != 0:
+            raise RuntimeError(f"NVENC chunk stitch failed for chunk {c_idx}: " + p_c.stderr[-500:])
+
+        for sf in seg_mp4s:
+            sf.unlink(missing_ok=True)
+
+        completed_count += 1
+        msg = f"Rendered chunk {c_idx} ({completed_count}/{total_chunks})"
+        write_status("running", completed_count, total_chunks, tail=msg)
+        print(f"COLAB_CHUNK_PROGRESS:{completed_count}/{total_chunks}", flush=True)
+        return c_idx, c_mp4
+
+    # Parallel chunk rendering on T4 GPU (up to 3 concurrent NVENC streams)
+    with ThreadPoolExecutor(max_workers=3) as executor:
+        chunk_results = list(executor.map(render_chunk, chunks))
+
+    chunk_results.sort(key=lambda x: x[0])
+    chunk_files = [x[1] for x in chunk_results]
+
+    chunks_txt = work / "chunks.txt"
+    chunks_txt.write_text("".join(f"file '{p.name}'\\n" for p in chunk_files), encoding="utf-8")
+
+    # Final assembly: 0.8s lossless stream-copy mux (zero video re-encode!)
+    narration_m4a = work / "narration.m4a"
+    metadata_txt = work / "chapters_metadata.txt"
+    final_mp4 = work / "final.mp4"
+
+    mux_cmd = [
+        "ffmpeg", "-y",
+        "-f", "concat", "-safe", "0", "-i", str(chunks_txt),
+        "-i", str(narration_m4a),
+        "-i", str(metadata_txt),
+        "-map", "0:v", "-map", "1:a",
+        "-map_metadata", "2",
+        "-c", "copy",
+        "-t", f"{total_dur:.4f}",
+        "-movflags", "+faststart",
+        str(final_mp4)
+    ]
+    p_mux = subprocess.run(mux_cmd, capture_output=True, text=True)
+    if p_mux.returncode != 0:
+        raise RuntimeError("Final concat stream-copy mux failed: " + p_mux.stderr[-800:])
+
+    for cp in chunk_files:
+        cp.unlink(missing_ok=True)
+
+    write_status("completed", total_chunks, total_chunks, tail="Video render complete.")
+    print("COLAB_LONG_NVENC_RENDER_SUCCESS", flush=True)
+
+except Exception as err:
+    traceback.print_exc()
+    write_status("failed", error=str(err), tail=f"ERROR: {err}")
+    print("COLAB_LONG_NVENC_ERROR:", repr(err), flush=True)
+    sys.exit(1)
+"""
+    (bundle_dir / "render_job.py").write_text(render_job_script, encoding="utf-8")
+
     bundle_zip = scratch / "bundle.zip"
-    with zipfile.ZipFile(bundle_zip, "w", zipfile.ZIP_DEFLATED) as zf:
+    with zipfile.ZipFile(bundle_zip, "w", zipfile.ZIP_STORED) as zf:
         for f in bundle_dir.rglob("*"):
             if f.is_file():
                 zf.write(f, f.relative_to(bundle_dir))
 
-    # 2. Remote Python script executed on Colab Tesla T4
-    remote_dir = f"/content/vp_long_nvenc/{job_id}"
-    remote_script = f"""
-import subprocess, sys, json, os, zipfile
-from pathlib import Path
+    # 4. Connect to Colab and execute asynchronously
+    if str(SYS_DIR) not in sys.path:
+        sys.path.insert(0, str(SYS_DIR))
+    from colab_bridge.accounts import select_pool
 
-work = Path({remote_dir!r})
-bundle_zip = work / "bundle.zip"
-with zipfile.ZipFile(bundle_zip, 'r') as zf:
-    zf.extractall(work)
-
-res = subprocess.run(
-    ["ffmpeg", "-y", "-f", "lavfi", "-i", "color=c=black:s=256x256:d=0.04", "-c:v", "h264_nvenc", "-f", "null", "-"],
-    capture_output=True, text=True
-)
-if res.returncode != 0:
-    raise RuntimeError("COLAB_NVENC_UNAVAILABLE: h264_nvenc not supported on remote GPU: " + res.stderr)
-
-meta = json.loads((work / "manifest.json").read_text())
-w, h = int(meta["width"]), int(meta["height"])
-fps = int(meta["fps"])
-xfade_dur = float(meta["xfade_dur"])
-total_dur = float(meta["total_duration"])
-up_w, up_h = int(w * 1.5), int(h * 1.5)
-over_w = int(round(up_w * 1.05 / 2.0)) * 2
-over_h = int(round(up_h * 1.05 / 2.0)) * 2
-
-def zp_expr(motion, n):
-    m = (motion or "push_in").lower().strip()
-    if m in ("zoom_out", "pull_back", "pull_out"):
-        return f"zoompan=z='1.06-0.06*(on/{{n}})':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s={{w}}x{{h}}:fps={{fps}}"
-    if m in ("pan_right", "track_right"):
-        return f"zoompan=z='1.06':x='(iw-iw/zoom)*(on/{{n}})':y='ih/2-(ih/zoom/2)':d=1:s={{w}}x{{h}}:fps={{fps}}"
-    if m in ("pan_left", "track_left"):
-        return f"zoompan=z='1.06':x='(iw-iw/zoom)*(1.0-on/{{n}})':y='ih/2-(ih/zoom/2)':d=1:s={{w}}x{{h}}:fps={{fps}}"
-    if m in ("tilt_up", "rise"):
-        return f"zoompan=z='1.06':x='iw/2-(iw/zoom/2)':y='(ih-ih/zoom)*(1.0-on/{{n}})':d=1:s={{w}}x{{h}}:fps={{fps}}"
-    if m in ("tilt_down", "descend"):
-        return f"zoompan=z='1.06':x='iw/2-(iw/zoom/2)':y='(ih-ih/zoom)*(on/{{n}})':d=1:s={{w}}x{{h}}:fps={{fps}}"
-    return f"zoompan=z='1.00+0.06*(on/{{n}})':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s={{w}}x{{h}}:fps={{fps}}"
-
-chunk_files = []
-for c_data in meta["chunks"]:
-    c_idx = c_data["chunk_index"]
-    c_mp4 = work / f"chunk_{{c_idx:03d}}.mp4"
-    beats = c_data["beats"]
-    n_b = len(beats)
-    seg_mp4s = []
-
-    for b_i, beat in enumerate(beats):
-        seg_mp4 = work / f"seg_{{c_idx:03d}}_{{b_i:03d}}.mp4"
-        seg_mp4s.append(seg_mp4)
-        dur = float(beat["duration"])
-        seg_dur = dur if b_i == (n_b - 1) else (dur + xfade_dur)
-        nb_frames = max(1, int(round(seg_dur * fps)))
-        zp = zp_expr(beat.get("camera_motion", "push_in"), nb_frames)
-        img_p = work / beat["image_file"]
-
-        vf = f"scale={{over_w}}:{{over_h}}:force_original_aspect_ratio=increase,crop={{up_w}}:{{up_h}}:(in_w-{{up_w}})/2:(in_h-{{up_h}})/2,setsar=1,{{zp}},format=yuv420p"
-        cmd = [
-            "ffmpeg", "-y", "-loop", "1", "-t", f"{{seg_dur:.4f}}", "-r", str(fps),
-            "-i", str(img_p),
-            "-vf", vf,
-            "-c:v", "h264_nvenc", "-preset", "p4", "-b:v", "6M", "-g", "30", "-pix_fmt", "yuv420p",
-            "-an", str(seg_mp4)
-        ]
-        p = subprocess.run(cmd, capture_output=True, text=True)
-        if p.returncode != 0:
-            raise RuntimeError(f"NVENC segment encode failed: {{p.stderr[-500:]}}")
-
-    c_cmd = ["ffmpeg", "-y"]
-    for sf in seg_mp4s:
-        c_cmd.extend(["-i", str(sf)])
-
-    if n_b == 1:
-        c_fc = ["[0:v]setsar=1[cvout]"]
-        cur_v = "cvout"
-    else:
-        c_fc = []
-        cum_offset = 0.0
-        prev_l = "0:v"
-        for i in range(1, n_b):
-            cum_offset += float(beats[i - 1]["duration"])
-            raw_trans = str(beats[i].get("transition", "fade")).lower().strip()
-            valid_xfades = ("fade", "smoothleft", "smoothright", "smoothup", "smoothdown", "dissolve")
-            trans = raw_trans if raw_trans in valid_xfades else "fade"
-            out_l = f"cx{{i}}"
-            c_fc.append(f"[{{prev_l}}][{{i}}:v]xfade=transition={{trans}}:duration={{xfade_dur:.4f}}:offset={{max(0.05, cum_offset):.4f}}[{{out_l}}]")
-            prev_l = out_l
-        cur_v = prev_l
-
-    c_dur = sum(float(b["duration"]) for b in beats)
-    c_cmd.extend([
-        "-filter_complex", ";".join(c_fc),
-        "-map", f"[{{cur_v}}]",
-        "-t", f"{{c_dur:.4f}}",
-        "-c:v", "h264_nvenc", "-preset", "p4", "-b:v", "6M", "-g", "30", "-pix_fmt", "yuv420p",
-        "-an", str(c_mp4)
-    ])
-    p_c = subprocess.run(c_cmd, capture_output=True, text=True)
-    if p_c.returncode != 0:
-        raise RuntimeError(f"NVENC chunk stitch failed: {{p_c.stderr[-500:]}}")
-
-    chunk_files.append(c_mp4)
-    for sf in seg_mp4s:
-        sf.unlink(missing_ok=True)
-
-chunks_txt = work / "chunks.txt"
-chunks_txt.write_text("".join(f"file '{{p.name}}'\\n" for p in chunk_files))
-
-merged_mp4 = work / "merged.mp4"
-subprocess.run(
-    ["ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", str(chunks_txt), "-c", "copy", str(merged_mp4)],
-    check=True
-)
-
-watermark_png = work / "watermark.png"
-audio_path = work / "narration.wav"
-metadata_path = work / "chapters_metadata.txt"
-final_mp4 = work / "final.mp4"
-
-fin_cmd = ["ffmpeg", "-y", "-i", str(merged_mp4), "-i", str(watermark_png), "-i", str(audio_path), "-i", str(metadata_path)]
-fc = [
-    "[0:v][1:v]overlay=W-w-36:H-h-36[vout]",
-    "[2:a]loudnorm=I=-11.0:TP=-1.0:LRA=7.0,aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo[aout]"
-]
-fin_cmd.extend([
-    "-filter_complex", ";".join(fc),
-    "-map", "[vout]",
-    "-map", "[aout]",
-    "-map_metadata", "3",
-    "-c:v", "h264_nvenc", "-preset", "p4", "-b:v", "6M", "-g", "30", "-pix_fmt", "yuv420p",
-    "-c:a", "aac", "-b:a", "192k", "-ar", "48000",
-    "-t", f"{{total_dur:.4f}}",
-    "-movflags", "+faststart",
-    str(final_mp4)
-])
-p_fin = subprocess.run(fin_cmd, capture_output=True, text=True)
-if p_fin.returncode != 0:
-    raise RuntimeError(f"NVENC final assembly failed: {{p_fin.stderr[-800:]}}")
-
-print("COLAB_LONG_NVENC_RENDER_SUCCESS")
-"""
-
-    # 3. Connect to Colab and execute
-    from sys.colab_bridge.accounts import get_all_accounts
-
-    accounts = [colab_account] if colab_account else get_all_accounts()
+    accounts = [colab_account] if colab_account else select_pool(session=f"vp-vn-long-{job_id[:16]}", role="render")
     cfg_base = SYS_DIR / "config.json"
     cfg: dict[str, Any] = json.loads(cfg_base.read_text(encoding="utf-8")) if cfg_base.is_file() else {}
+
+    last_exc: Exception | None = None
+    consecutive_unconfirmed = 0
 
     for acc in accounts:
         client = None
@@ -1300,12 +1437,90 @@ print("COLAB_LONG_NVENC_RENDER_SUCCESS")
             client._ready(auto_start=True)
             started = True
 
-            client.exec(f"from pathlib import Path\nPath({remote_dir!r}).mkdir(parents=True, exist_ok=True)", timeout=35)
-            client.call("upload", "-s", client.session, str(bundle_zip.resolve()), f"{remote_dir}/bundle.zip", timeout=300)
+            # Stage remote work in /dev/shm (RAM disk) if >= 1.5GB free, else /content
+            probe_out = client.exec(
+                f"import shutil, os\n"
+                f"free = shutil.disk_usage('/dev/shm').free if os.path.exists('/dev/shm') else 0\n"
+                f"p = '/dev/shm/vp_long_{job_id}' if free > 1.5 * (1024**3) else '/content/vp_long_{job_id}'\n"
+                f"from pathlib import Path; Path(p).mkdir(parents=True, exist_ok=True)\n"
+                f"print('WORK_DIR:' + p)",
+                timeout=35,
+            )
+            remote_dir = f"/dev/shm/vp_long_{job_id}"
+            for line in probe_out.splitlines():
+                if line.startswith("WORK_DIR:"):
+                    remote_dir = line.split(":", 1)[1].strip()
+                    break
 
-            exec_out = client.exec(remote_script, timeout=1200)
-            if "COLAB_LONG_NVENC_RENDER_SUCCESS" not in exec_out:
-                raise RuntimeError(f"Colab execution error: {exec_out[-500:]}")
+            remote_bundle = f"{remote_dir}/bundle.zip"
+            client.call("upload", "-s", client.session, str(bundle_zip.resolve()), remote_bundle, timeout=300)
+
+            # Unpack bundle
+            client.exec(
+                f"import zipfile\nwith zipfile.ZipFile({remote_bundle!r}, 'r') as zf:\n    zf.extractall({remote_dir!r})",
+                timeout=60,
+            )
+
+            # Launch render_job.py asynchronously in background
+            client.exec(
+                f"import subprocess\nsubprocess.Popen(['python3', f'{remote_dir}/render_job.py'], "
+                f"stdout=open(f'{remote_dir}/render.log', 'w'), stderr=subprocess.STDOUT)",
+                timeout=35,
+            )
+
+            # Poll status.json & render.log via short 30s client.exec calls
+            poll_script = f"""
+import json, os
+from pathlib import Path
+work = Path({remote_dir!r})
+stat_f = work / 'status.json'
+log_f = work / 'render.log'
+res = {{'status': 'unknown', 'completed_chunks': 0, 'total_chunks': 0, 'error': None, 'tail': ''}}
+if stat_f.is_file():
+    try:
+        res.update(json.loads(stat_f.read_text(encoding='utf-8')))
+    except Exception:
+        pass
+if log_f.is_file():
+    try:
+        lines = log_f.read_text(encoding='utf-8', errors='replace').splitlines()
+        if lines:
+            res['tail'] = lines[-1]
+    except Exception:
+        pass
+import json as _j; print('POLL_STATUS:' + _j.dumps(res))
+"""
+            start_poll = time.monotonic()
+            render_timeout = 900
+            completed = False
+
+            while time.monotonic() - start_poll < render_timeout:
+                time.sleep(6.0)
+                poll_out = client.exec(poll_script, timeout=30)
+                poll_data = {}
+                for line in poll_out.splitlines():
+                    if line.startswith("POLL_STATUS:"):
+                        try:
+                            poll_data = json.loads(line.split(":", 1)[1])
+                        except Exception:
+                            pass
+                        break
+
+                p_status = poll_data.get("status", "unknown")
+                comp = poll_data.get("completed_chunks", 0)
+                tot = poll_data.get("total_chunks", 0)
+                tail = poll_data.get("tail", "")
+                logger.info(f"[{job_id}] Colab T4 render progress: {comp}/{tot} chunks ({p_status}) - {tail}")
+
+                if p_status == "completed":
+                    completed = True
+                    break
+                elif p_status == "failed":
+                    err = poll_data.get("error", "Unknown render error")
+                    raise RuntimeError(f"Colab render_job failed: {err}")
+
+            if not completed:
+                raise TimeoutError(f"Colab long render timed out after {render_timeout}s")
 
             client.call("download", "-s", client.session, f"{remote_dir}/final.mp4", str(out_mp4.resolve()), timeout=300)
 
@@ -1314,7 +1529,17 @@ print("COLAB_LONG_NVENC_RENDER_SUCCESS")
             meta["colab_account"] = acc
             meta["colab_session"] = client.session
             return meta
+
         except Exception as exc:
+            last_exc = exc
+            is_unconfirmed = "COLAB_EXEC_UNCONFIRMED" in str(exc)
+            if is_unconfirmed:
+                consecutive_unconfirmed += 1
+            else:
+                consecutive_unconfirmed = 0
+            if consecutive_unconfirmed >= 2:
+                logger.error("Aborting failover after 2 consecutive COLAB_EXEC_UNCONFIRMED errors per AGENTS.md §5")
+                raise RuntimeError(f"Failover aborted after 2 consecutive COLAB_EXEC_UNCONFIRMED: {exc}") from exc
             logger.warning(f"Colab account {acc} failed: {exc}. Trying next candidate...")
             continue
         finally:
@@ -1325,7 +1550,7 @@ print("COLAB_LONG_NVENC_RENDER_SUCCESS")
                 except Exception as stop_exc:
                     logger.warning(f"Failed to cleanly stop Colab session {client.session}: {stop_exc}")
 
-    raise RuntimeError("All Colab accounts unavailable for T4 NVENC render")
+    raise RuntimeError(f"All Colab accounts unavailable for T4 NVENC render: {last_exc}")
 
 
 # ---------------------------------------------------------------------------
@@ -1371,9 +1596,9 @@ def render_dry_run_stub(
 
 
 def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
-    """Execute Mode 1: Short 9:16 Full-Chain Omni 1.1 Flash Video Generation & Packaging."""
-    logger.info(f"[{config.job_id}] Launching Mode 1: Short 9:16 Full-Chain Omni 1.1 Flash...")
-    out_dir = config.output_dir / config.job_id
+    """Execute Mode 1: Short 9:16 Full-Chain Omni 1.2 Flash Video Generation & Packaging."""
+    logger.info(f"[{config.job_id}] Launching Mode 1: Short 9:16 Full-Chain Omni 1.2 Flash...")
+    out_dir = config.output_dir if config.output_dir.name == config.job_id else config.output_dir / config.job_id
     out_dir.mkdir(parents=True, exist_ok=True)
     work_dir = out_dir / "_work_short"
     work_dir.mkdir(parents=True, exist_ok=True)
@@ -1458,7 +1683,82 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
     watermark_png = work_dir / "watermark_100x100.png"
     make_rounded_watermark(None, watermark_png, size=100, opacity=0.92, radius=15)
 
-    # 4. Short VideoChainSpec & FlowVideoChainOrchestrator
+    # 4. Short Keyframe Pre-generation & FlowVideoChainOrchestrator
+    frames_dir = work_dir / "frames"
+    frames_dir.mkdir(parents=True, exist_ok=True)
+
+    ledger = CreditLedger()
+    resolved_profiles = resolve_authenticated_profiles(config.profiles, credit_ledger=ledger)
+    if resolved_profiles:
+        profile_names = [p.get("name") or p.get("id") for p in resolved_profiles if (p.get("name") or p.get("id"))]
+        os.environ["VP_FLOW_PROFILES"] = ",".join(profile_names)
+
+    if not config.dry_run:
+        missing_frame_tasks: list[dict[str, Any]] = []
+        for i, beat in enumerate(beats):
+            beat_frame = frames_dir / f"beat_{i:02d}.png"
+            if not (beat_frame.is_file() and beat_frame.stat().st_size > 5000):
+                pair_start = frames_dir / f"pair_{i:02d}_start.png"
+                pair_end_prev = frames_dir / f"pair_{i - 1:02d}_end.png" if i > 0 else None
+                if pair_start.is_file() and pair_start.stat().st_size > 5000:
+                    shutil.copy2(pair_start, beat_frame)
+                elif pair_end_prev and pair_end_prev.is_file() and pair_end_prev.stat().st_size > 5000:
+                    shutil.copy2(pair_end_prev, beat_frame)
+                else:
+                    prompt = (
+                        beat.get("prompt")
+                        or f"Cinematic short vertical visual for {config.channel_slug}, beat {i + 1}"
+                    )
+                    missing_frame_tasks.append({
+                        "id": beat.get("beat_id", f"beat_{i:02d}"),
+                        "prompt": prompt,
+                        "aspect": "9:16",
+                        "model": config.image_model,
+                        "output_path": str(beat_frame),
+                        "credit_cost": 0,
+                        "credit_reason": "image",
+                        "type": "image",
+                        "editorial_overlay": {"enabled": False},
+                    })
+
+        if missing_frame_tasks:
+            target_workers = (
+                min(max(config.max_workers, 6), len(resolved_profiles))
+                if resolved_profiles
+                else max(config.max_workers, 6)
+            )
+            pool_kwargs: dict[str, Any] = {
+                "target_workers": target_workers,
+                "headless": True,
+                "profiles": resolved_profiles if resolved_profiles else None,
+                "min_credits_required": 1,
+                "credit_ledger": ledger,
+                "default_out_dir": frames_dir,
+                "pacing_seconds": 0.35,
+                "stagger_seconds": 0.15,
+                "cooldown_seconds": 90.0,
+            }
+            import inspect
+
+            sig_params = inspect.signature(PersistentWorkerPool.__init__).parameters
+            if "enable_work_stealing" in sig_params:
+                pool_kwargs["enable_work_stealing"] = True
+            if "work_steal_threshold" in sig_params:
+                pool_kwargs["work_steal_threshold"] = 2
+            pool = PersistentWorkerPool(**pool_kwargs)
+            pool.start()
+            try:
+                for t in missing_frame_tasks:
+                    pool.submit_task(t)
+                pool.join()
+            finally:
+                pool.shutdown()
+
+        for i, beat in enumerate(beats):
+            beat_frame = frames_dir / f"beat_{i:02d}.png"
+            if beat_frame.is_file() and beat_frame.stat().st_size > 5000:
+                beat["image_path"] = str(beat_frame.resolve())
+
     chain_spec = build_short_video_chain_spec(
         channel_slug=config.channel_slug,
         job_id=config.job_id,
@@ -1467,12 +1767,6 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
         beat_durations=beat_durations,
         auto_fallback_zero_credit=False,
     )
-
-    ledger = CreditLedger()
-    resolved_profiles = resolve_authenticated_profiles(config.profiles, credit_ledger=ledger)
-    if resolved_profiles:
-        profile_names = [p.get("name") or p.get("id") for p in resolved_profiles if (p.get("name") or p.get("id"))]
-        os.environ["VP_FLOW_PROFILES"] = ",".join(profile_names)
 
     completed_tasks: list[VideoClipTask] = []
     if config.dry_run:
@@ -1542,14 +1836,22 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
 def run_long_mode(config: DualModeJobConfig) -> dict[str, Any]:
     """Execute Mode 2: Long 16:9 Multi-Image BELUGA DAG & Chapter-Chunked T4 NVENC Renderer."""
     logger.info(f"[{config.job_id}] Launching Mode 2: Long 16:9 Multi-Image Chapter-Chunked T4 NVENC...")
-    out_dir = config.output_dir / config.job_id
+    out_dir = config.output_dir if config.output_dir.name == config.job_id else config.output_dir / config.job_id
     out_dir.mkdir(parents=True, exist_ok=True)
     work_dir = out_dir / "_work_long"
     work_dir.mkdir(parents=True, exist_ok=True)
 
     # 1. Load or synthesize Two-Tier 240–350 beats
     spec_data = {}
-    if config.spec_path and Path(config.spec_path).is_file():
+    aligned_candidate = out_dir / f"{config.job_id}_aligned_spec.json"
+    if not aligned_candidate.is_file():
+        aligned_candidate = out_dir / f"{config.channel_slug.replace('-', '_')}_long_305_aligned_spec.json"
+    if not aligned_candidate.is_file():
+        aligned_candidate = out_dir / "tui_tien_long_305_aligned_spec.json"
+    if aligned_candidate.is_file():
+        logger.info(f"[{config.job_id}] Loading cached audio-aligned spec from {aligned_candidate}")
+        spec_data = json.loads(aligned_candidate.read_text(encoding="utf-8"))
+    elif config.spec_path and Path(config.spec_path).is_file():
         spec_data = json.loads(Path(config.spec_path).read_text(encoding="utf-8"))
     else:
         def_p = SYS_DIR / f"channels/vn_rebuilt_style_specs/{config.channel_slug}/{config.channel_slug}_rebuilt_spec.json"
@@ -1771,7 +2073,7 @@ def run_dry_run_verify(config: DualModeJobConfig) -> dict[str, Any]:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Video Pilot VN Dual-Mode Pipeline: Short Omni 1.1 Flash & Long Chapter-Chunked T4 NVENC Renderer."
+        description="Video Pilot VN Dual-Mode Pipeline: Short Omni 1.2 Flash & Long Chapter-Chunked T4 NVENC Renderer."
     )
     parser.add_argument(
         "--mode",
@@ -1783,7 +2085,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--job-id", default="", help="Job identifier")
     parser.add_argument("--spec", help="Path to input rebuilt spec JSON")
     parser.add_argument("--audio-path", help="Path to pre-synthesized audio WAV")
-    parser.add_argument("--output-dir", default=str(ROOT_DIR / "video"), help="Base output directory")
+    parser.add_argument("--output-dir", "--out-dir", dest="output_dir", default=str(ROOT_DIR / "video"), help="Base output directory")
     parser.add_argument(
         "--render-backend",
         choices=["colab_nvenc", "local"],
@@ -1795,7 +2097,7 @@ def parse_args() -> argparse.Namespace:
         "--profiles",
         help="Comma-separated allowed profile names (e.g. profile_6,profile_16,profile_11)",
     )
-    parser.add_argument("--max-workers", type=int, default=4, help="Max Flow worker concurrency")
+    parser.add_argument("--max-workers", type=int, default=10, help="Max Flow worker concurrency")
     parser.add_argument("--dry-run", action="store_true", help="Perform fast credit-free verification")
     return parser.parse_args()
 

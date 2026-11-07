@@ -8,7 +8,7 @@
   "aspect": "9:16",
   "format_profile": "short_9x16",
   "total_duration_sec": 48.0,
-  "video_model": "omni_flash",
+  "video_model": "omni_1_2_flash",
   "chain_mode": "scene_pairs",
   "voice": "VietNarrator",
   "thumbnail_spec": {

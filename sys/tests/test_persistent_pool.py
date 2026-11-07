@@ -337,6 +337,103 @@ class TestPersistentWorkerPool(unittest.TestCase):
         self.assertIn("SC_D2", pool.results)
         self.assertIn("SC_trigger", pool.results)
 
+    def test_zero_credit_image_tasks_do_not_deduct_credits(self):
+        """0-credit BELUGA/image tasks do NOT deduct credits, but touch_used is called."""
+        mock_ledger = MagicMock()
+        mock_ledger.is_eligible.return_value = True
+
+        pool = PersistentWorkerPool(
+            target_workers=1,
+            stagger_seconds=0.0,
+            pacing_seconds=0.01,
+            profiles=self.test_profiles[:1],
+            proc_mgr=MagicMock(),
+            session_factory=self.session_factory,
+            credit_ledger=mock_ledger,
+        )
+
+        with pool:
+            # 1. Image task with BELUGA model -> 0 credits deducted
+            pool.submit_task({"id": "img_01", "prompt": "An image task", "type": "image", "model": "BELUGA"})
+            # 2. Video task with credit_cost=10 -> 10 credits deducted
+            pool.submit_task({"id": "vid_01", "prompt": "A video task", "type": "video", "credit_cost": 10})
+            finished = pool.wait_completion(timeout=5.0)
+            self.assertTrue(finished)
+
+        # deduct_credits should only have been called ONCE for vid_01!
+        self.assertEqual(mock_ledger.deduct_credits.call_count, 1)
+        args, kwargs = mock_ledger.deduct_credits.call_args
+        self.assertEqual(args[0], "p1")
+        amount_passed = kwargs.get("amount") if "amount" in kwargs else (args[1] if len(args) > 1 else None)
+        self.assertEqual(amount_passed, 10)
+
+        # touch_used should have been called for img_01
+        self.assertGreaterEqual(mock_ledger.touch_used.call_count, 1)
+        mock_ledger.touch_used.assert_called_with("p1")
+
+    def test_work_stealing_steals_overloaded_pinned_tasks_onto_idle_workers(self):
+        """enable_work_stealing=True allows idle worker to steal tasks from overloaded pinned queue."""
+        pool = PersistentWorkerPool(
+            target_workers=2,
+            stagger_seconds=0.0,
+            pacing_seconds=0.05,
+            profiles=self.test_profiles[:2],  # p1 and p2
+            proc_mgr=MagicMock(),
+            session_factory=self.session_factory,
+            enable_work_stealing=True,
+            work_steal_threshold=1,
+        )
+
+        # Populate p1's pinned queue with 4 tasks before workers run
+        for i in range(1, 5):
+            pool.pinned_queues["p1"].put(
+                (10, i, {"id": f"pinned_p1_{i}", "prompt": f"Task {i}", "pinned_profile": "p1"})
+            )
+        with pool._tasks_lock:
+            pool._pending_tasks += 4
+
+        with pool:
+            finished = pool.wait_completion(timeout=5.0)
+            self.assertTrue(finished)
+
+        # Both p1 and p2 should have processed at least 1 task because of work stealing!
+        self.assertIn("p1", self.sessions)
+        self.assertIn("p2", self.sessions)
+        p1_calls = self.sessions["p1"].generate_calls
+        p2_calls = self.sessions["p2"].generate_calls
+        self.assertGreater(len(p1_calls), 0)
+        self.assertGreater(len(p2_calls), 0)
+        self.assertEqual(len(p1_calls) + len(p2_calls), 4)
+
+    def test_configurable_cooldown_seconds_on_error_7(self):
+        """Custom cooldown_seconds=90.0 sets ~90s cooldown on Error 7 instead of 600s."""
+        def custom_factory(prof_cfg: dict[str, Any]) -> MockCDPSession:
+            sess = self.session_factory(prof_cfg)
+            if prof_cfg["name"] == "p1":
+                sess.should_fail_rate_limit = True
+            return sess
+
+        pool = PersistentWorkerPool(
+            target_workers=1,
+            cooldown_seconds=90.0,
+            stagger_seconds=0.0,
+            pacing_seconds=0.01,
+            profiles=self.test_profiles,
+            proc_mgr=MagicMock(),
+            session_factory=custom_factory,
+        )
+
+        t_before = time.time()
+        with pool:
+            pool.submit_task({"id": "shot_fast_cd", "prompt": "Fast cooldown task"})
+            pool.wait_completion(timeout=5.0)
+
+        self.assertIn("p1", pool.profile_pool.cooldowns)
+        cd_expiry = pool.profile_pool.cooldowns["p1"]
+        # Quarantined for ~90s from error occurrence
+        self.assertGreater(cd_expiry, t_before + 70.0)
+        self.assertLess(cd_expiry, t_before + 110.0)
+
 
 if __name__ == "__main__":
     unittest.main()

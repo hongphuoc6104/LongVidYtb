@@ -208,3 +208,6 @@ sys/tools/setup_wave*.py
 sys/tools/cleanup_youtube_channels.py
 sys/flow_cdp/chrome-data-pool*
 sys/colab_bridge/accounts/
+
+# Auto-generated high-density long plans (synthesized on-demand by vn_long_high_density_planner.py)
+sys/channels/vn_rebuilt_style_specs/*/*_long_high_density_plan.json

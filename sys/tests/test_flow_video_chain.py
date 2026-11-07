@@ -632,16 +632,16 @@ def test_orchestrator_credit_rotation_and_isolated_execution(tmp_path: Path) -> 
         report = orchestrator.run()
 
     assert report["success"] is True
-    # mock_profile_poor should be marked exhausted due to 5 < 10 credits
-    assert test_ledger.is_eligible("mock_profile_poor", min_credits=10) is False
+    # mock_profile_poor should be marked exhausted due to 5 < 18 credits
+    assert test_ledger.is_eligible("mock_profile_poor", min_credits=18) is False
     poor_summary = test_ledger.summary(["mock_profile_poor"])["profiles"]["mock_profile_poor"]
     assert poor_summary["status"] == "exhausted"
 
-    # mock_profile_rich should be used and had 10 credits deducted
+    # mock_profile_rich should be used and had 18 credits deducted (Omni 1.2 Flash 6s)
     assert "mock_profile_rich" in report["profiles_used"]
-    assert report["credits_deducted"]["mock_profile_rich"] == 10
+    assert report["credits_deducted"]["mock_profile_rich"] == 18
     rich_summary = test_ledger.summary(["mock_profile_rich"])["profiles"]["mock_profile_rich"]
-    assert rich_summary["credits_remaining"] == 90
+    assert rich_summary["credits_remaining"] == 82
 
 
 def test_flow_model_resolution_and_catalog_durations() -> None:
@@ -679,10 +679,18 @@ def test_flow_model_resolution_and_catalog_durations() -> None:
     )
     assert (
         flow_rpc.resolve_video_model("omni_flash", has_start_frame=True, has_end_frame=True)
-        == "omni_flash_i2v_8s_first_last"
+        == "macaron_cookie_i2v_fl_8s"
     )
     assert (
         flow_rpc.resolve_video_model("omni_flash", duration_seconds=10, has_start_frame=True, has_end_frame=False)
+        == "macaron_cookie_i2v_10s"
+    )
+    assert (
+        flow_rpc.resolve_video_model("omni_1_1_flash", has_start_frame=True, has_end_frame=True)
+        == "omni_flash_i2v_8s_first_last"
+    )
+    assert (
+        flow_rpc.resolve_video_model("abra", duration_seconds=10, has_start_frame=True, has_end_frame=False)
         == "abra_i2v_10s"
     )
 
@@ -786,7 +794,7 @@ def test_flow_model_resolution_and_catalog_durations() -> None:
 
 
 def test_omni_flash_auto_duration_and_credit_selection() -> None:
-    """Verify Omni 1.1 Flash defaults, 4s/6s/8s/10s auto-duration, credits (7/10/12/15), and chain planning."""
+    """Verify Omni 1.2 Flash defaults, 4s/6s/8s/10s auto-duration, credits (12/18/24/30), legacy 1.1 fallback, and chain planning."""
     from sys.flow_cdp import flow_rpc
     from sys.flow_video.chain_planner import (
         build_chain_plan,
@@ -824,30 +832,46 @@ def test_omni_flash_auto_duration_and_credit_selection() -> None:
         index=0,
         start_frame_path="/frame0.png",
     )
-    assert default_clip.credit_cost == 10
+    assert default_clip.credit_cost == 18
     assert default_clip.duration_sec == float(default_clip.duration_seconds)
     default_clip.duration_sec = 8.0
     assert default_clip.duration_seconds == 8
 
-    # 2. flow_rpc resolution for omni_flash / abra across 16:9 and 9:16
+    # 2. flow_rpc resolution for Omni 1.2 Flash across 16:9 and 9:16
     for dur, expected_fl in [
-        (4, "omni_flash_i2v_4s_first_last"),
-        (6, "omni_flash_i2v_6s_first_last"),
-        (8, "omni_flash_i2v_8s_first_last"),
-        (10, "omni_flash_i2v_8s_first_last"),  # clamped to 8s for first_last
+        (4, "macaron_cookie_i2v_fl_4s"),
+        (6, "macaron_cookie_i2v_fl_6s"),
+        (8, "macaron_cookie_i2v_fl_8s"),
+        (10, "macaron_cookie_i2v_fl_10s"),
     ]:
         # 16:9 Landscape
         res_fl_16x9 = flow_rpc.resolve_video_model(
             "omni_flash", aspect="16:9", duration_seconds=dur, has_start_frame=True, has_end_frame=True
         )
         assert res_fl_16x9 == expected_fl
-        # 9:16 Portrait (must NOT append _portrait, falls back to base key cleanly!)
+        # 9:16 Portrait (universal aspect in Omni 1.2 Flash)
         res_fl_9x16 = flow_rpc.resolve_video_model(
             "omni_flash", aspect="9:16", duration_seconds=dur, has_start_frame=True, has_end_frame=True
         )
         assert res_fl_9x16 == expected_fl
 
     for dur, expected_sf in [
+        (4, "macaron_cookie_i2v_4s"),
+        (6, "macaron_cookie_i2v_6s"),
+        (8, "macaron_cookie_i2v_8s"),
+        (10, "macaron_cookie_i2v_10s"),
+    ]:
+        res_sf_16x9 = flow_rpc.resolve_video_model(
+            "omni_flash", aspect="16:9", duration_seconds=dur, has_start_frame=True, has_end_frame=False
+        )
+        assert res_sf_16x9 == expected_sf
+        res_sf_9x16 = flow_rpc.resolve_video_model(
+            "omni_flash", aspect="9:16", duration_seconds=dur, has_start_frame=True, has_end_frame=False
+        )
+        assert res_sf_9x16 == expected_sf
+
+    # Omni 1.1 Flash / Abra legacy resolution
+    for dur, expected_abra in [
         (4, "abra_i2v_4s"),
         (6, "abra_i2v_6s"),
         (8, "abra_i2v_8s"),
@@ -856,32 +880,50 @@ def test_omni_flash_auto_duration_and_credit_selection() -> None:
         res_sf_16x9 = flow_rpc.resolve_video_model(
             "abra", aspect="16:9", duration_seconds=dur, has_start_frame=True, has_end_frame=False
         )
-        assert res_sf_16x9 == expected_sf
+        assert res_sf_16x9 == expected_abra
         res_sf_9x16 = flow_rpc.resolve_video_model(
             "abra", aspect="9:16", duration_seconds=dur, has_start_frame=True, has_end_frame=False
         )
-        assert res_sf_9x16 == expected_sf
+        assert res_sf_9x16 == expected_abra
+
+    for dur, expected_11_fl in [
+        (4, "omni_flash_i2v_4s_first_last"),
+        (6, "omni_flash_i2v_6s_first_last"),
+        (8, "omni_flash_i2v_8s_first_last"),
+        (10, "omni_flash_i2v_8s_first_last"),
+    ]:
+        res_11_fl = flow_rpc.resolve_video_model(
+            "omni_1_1_flash", aspect="16:9", duration_seconds=dur, has_start_frame=True, has_end_frame=True
+        )
+        assert res_11_fl == expected_11_fl
 
     # 3. select_clip_duration_and_credits tests
-    # Omni Flash auto-duration with start_end_frames
-    assert select_clip_duration_and_credits(3.0, "omni_flash", has_end_frame=True, auto_duration=True) == (4, 7)
-    assert select_clip_duration_and_credits(4.8, "omni_flash", has_end_frame=True, auto_duration=True) == (4, 7)
-    assert select_clip_duration_and_credits(5.0, "omni_flash", has_end_frame=True, auto_duration=True) == (6, 10)
-    assert select_clip_duration_and_credits(6.8, "omni_flash", has_end_frame=True, auto_duration=True) == (6, 10)
-    assert select_clip_duration_and_credits(7.2, "omni_flash", has_end_frame=True, auto_duration=True) == (8, 12)
-    assert select_clip_duration_and_credits(9.5, "omni_flash", has_end_frame=True, auto_duration=True) == (8, 12)
+    # Omni 1.2 Flash auto-duration with start_end_frames
+    assert select_clip_duration_and_credits(3.0, "omni_flash", has_end_frame=True, auto_duration=True) == (4, 12)
+    assert select_clip_duration_and_credits(4.8, "omni_flash", has_end_frame=True, auto_duration=True) == (4, 12)
+    assert select_clip_duration_and_credits(5.0, "omni_flash", has_end_frame=True, auto_duration=True) == (6, 18)
+    assert select_clip_duration_and_credits(6.8, "omni_flash", has_end_frame=True, auto_duration=True) == (6, 18)
+    assert select_clip_duration_and_credits(7.2, "omni_flash", has_end_frame=True, auto_duration=True) == (8, 24)
+    assert select_clip_duration_and_credits(9.5, "omni_flash", has_end_frame=True, auto_duration=True) == (10, 30)
 
-    # Omni Flash auto-duration with start_frame (can select 10s / 15 credits)
-    assert select_clip_duration_and_credits(3.0, "omni_flash", has_end_frame=False, auto_duration=True) == (4, 7)
-    assert select_clip_duration_and_credits(6.0, "omni_flash", has_end_frame=False, auto_duration=True) == (6, 10)
-    assert select_clip_duration_and_credits(8.0, "omni_flash", has_end_frame=False, auto_duration=True) == (8, 12)
-    assert select_clip_duration_and_credits(9.5, "omni_flash", has_end_frame=False, auto_duration=True) == (10, 15)
+    # Omni 1.2 Flash auto-duration with start_frame
+    assert select_clip_duration_and_credits(3.0, "omni_flash", has_end_frame=False, auto_duration=True) == (4, 12)
+    assert select_clip_duration_and_credits(6.0, "omni_flash", has_end_frame=False, auto_duration=True) == (6, 18)
+    assert select_clip_duration_and_credits(8.0, "omni_flash", has_end_frame=False, auto_duration=True) == (8, 24)
+    assert select_clip_duration_and_credits(9.5, "omni_flash", has_end_frame=False, auto_duration=True) == (10, 30)
 
     # Fixed duration (auto_duration=False)
-    assert select_clip_duration_and_credits(9.5, "omni_flash", has_end_frame=True, default_duration_sec=6, auto_duration=False) == (6, 10)
-    assert select_clip_duration_and_credits(9.5, "omni_flash", has_end_frame=True, default_duration_sec=4, auto_duration=False) == (4, 7)
-    assert select_clip_duration_and_credits(9.5, "omni_flash", has_end_frame=True, default_duration_sec=10, auto_duration=False) == (8, 12)
-    assert select_clip_duration_and_credits(9.5, "omni_flash", has_end_frame=False, default_duration_sec=10, auto_duration=False) == (10, 15)
+    assert select_clip_duration_and_credits(9.5, "omni_flash", has_end_frame=True, default_duration_sec=6, auto_duration=False) == (6, 18)
+    assert select_clip_duration_and_credits(9.5, "omni_flash", has_end_frame=True, default_duration_sec=4, auto_duration=False) == (4, 12)
+    assert select_clip_duration_and_credits(9.5, "omni_flash", has_end_frame=True, default_duration_sec=8, auto_duration=False) == (8, 24)
+    assert select_clip_duration_and_credits(9.5, "omni_flash", has_end_frame=True, default_duration_sec=10, auto_duration=False) == (10, 30)
+    assert select_clip_duration_and_credits(9.5, "omni_flash", has_end_frame=False, default_duration_sec=10, auto_duration=False) == (10, 30)
+
+    # Legacy abra / omni_1_1_flash auto-duration
+    assert select_clip_duration_and_credits(3.0, "abra", has_end_frame=True, auto_duration=True) == (4, 7)
+    assert select_clip_duration_and_credits(5.0, "omni_1_1_flash", has_end_frame=True, auto_duration=True) == (6, 10)
+    assert select_clip_duration_and_credits(7.2, "abra", has_end_frame=True, auto_duration=True) == (8, 12)
+    assert select_clip_duration_and_credits(9.5, "abra", has_end_frame=False, auto_duration=True) == (10, 15)
 
     # Veo models
     assert select_clip_duration_and_credits(5.0, "veo_3_1_lite", has_end_frame=True) == (8, 10)
@@ -890,9 +932,9 @@ def test_omni_flash_auto_duration_and_credit_selection() -> None:
 
     # 4. build_chain_plan total_credit_cost calculation
     sps = [
-        ScenePairSpec(id="p1", start_image_path="/a.png", end_image_path="/b.png", target_duration=3.5),  # 4s -> 7 credits
-        ScenePairSpec(id="p2", start_image_path="/b.png", end_image_path="/c.png", target_duration=5.5),  # 6s -> 10 credits
-        ScenePairSpec(id="p3", start_image_path="/c.png", end_image_path="/d.png", target_duration=7.5),  # 8s -> 12 credits
+        ScenePairSpec(id="p1", start_image_path="/a.png", end_image_path="/b.png", target_duration=3.5),  # 4s -> 12 credits
+        ScenePairSpec(id="p2", start_image_path="/b.png", end_image_path="/c.png", target_duration=5.5),  # 6s -> 18 credits
+        ScenePairSpec(id="p3", start_image_path="/c.png", end_image_path="/d.png", target_duration=7.5),  # 8s -> 24 credits
     ]
     spec = FlowVideoChainSpec(
         job_id="plan_test_job",
@@ -902,14 +944,14 @@ def test_omni_flash_auto_duration_and_credit_selection() -> None:
         auto_duration=True,
     )
     plan = build_chain_plan(spec)
-    assert plan.total_credit_cost == 7 + 10 + 12  # 29 credits
+    assert plan.total_credit_cost == 12 + 18 + 24  # 54 credits
     assert len(plan.clips) == 3
     assert plan.clips[0].duration_seconds == 4
-    assert plan.clips[0].credit_cost == 7
+    assert plan.clips[0].credit_cost == 12
     assert plan.clips[1].duration_seconds == 6
-    assert plan.clips[1].credit_cost == 10
+    assert plan.clips[1].credit_cost == 18
     assert plan.clips[2].duration_seconds == 8
-    assert plan.clips[2].credit_cost == 12
+    assert plan.clips[2].credit_cost == 24
 
 
 def _generate_synthetic_image(

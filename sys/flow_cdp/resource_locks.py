@@ -29,8 +29,6 @@ from pathlib import Path
 from typing import IO, Any
 
 LOCKS_DIR = Path.home() / ".cache/video-pilot/locks"
-DEFAULT_MAX_GLOBAL_BROWSERS = int(os.environ.get("VP_MAX_CHROME_INSTANCES", "8"))
-DEFAULT_MAX_BROWSER_SLOTS = DEFAULT_MAX_GLOBAL_BROWSERS
 MIN_DEV_SHM_FREE_MB = 512
 
 
@@ -76,6 +74,28 @@ def get_gpu_vram_mb(budget_ratio: float = 0.90) -> int | None:
     except Exception:
         pass
     return None
+
+
+def compute_optimal_browser_slots(
+    budget_ratio: float = 0.90,
+    per_browser_vram_mb: int = 110,
+    xorg_reserve_mb: int = 180,
+) -> int:
+    """Compute optimal concurrency slots based on GPU VRAM and display server overhead."""
+    env_max = os.environ.get("VP_MAX_CHROME_INSTANCES")
+    if env_max is not None and env_max.strip() != "":
+        try:
+            return max(1, int(env_max))
+        except ValueError:
+            pass
+    vram_mb = get_gpu_vram_mb(budget_ratio=budget_ratio)
+    if vram_mb is not None:
+        return max(8, min(16, (vram_mb - xorg_reserve_mb) // per_browser_vram_mb))
+    return 8
+
+
+DEFAULT_MAX_GLOBAL_BROWSERS = compute_optimal_browser_slots()
+DEFAULT_MAX_BROWSER_SLOTS = DEFAULT_MAX_GLOBAL_BROWSERS
 
 
 def detect_local_gpu_display(env: dict[str, str] | None = None) -> tuple[bool, dict[str, str]]:

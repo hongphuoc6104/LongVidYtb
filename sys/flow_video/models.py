@@ -96,7 +96,7 @@ class VideoClipTask:
     profile_used: str | None = None
     error: str | None = None
     generation_seconds: float = 0.0
-    credit_cost: int = 10
+    credit_cost: int = 18
 
     @property
     def duration_sec(self) -> float:

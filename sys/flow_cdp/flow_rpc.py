@@ -93,23 +93,36 @@ VIDEO_MODEL_BY_NICKNAME = {
     "VEO_3.1_LITE_4S": "veo_3_1_i2v_s_lite_4s_fl",
     "VEO_3_1_LITE_6S": "veo_3_1_i2v_s_lite_6s_fl",
     "VEO_3.1_LITE_6S": "veo_3_1_i2v_s_lite_6s_fl",
-    # Omni 1.1 Flash (abra)
-    "OMNI_FLASH": "omni_flash_i2v_8s_first_last",
+    # Omni 1.2 Flash (macaron_cookie) - Primary default
+    "OMNI_FLASH": "macaron_cookie_i2v_fl_8s",
+    "OMNI_1_2_FLASH": "macaron_cookie_i2v_fl_8s",
+    "OMNI_FLASH_1_2": "macaron_cookie_i2v_fl_8s",
+    "OMNI": "macaron_cookie_i2v_fl_8s",
+    "MACARON_COOKIE": "macaron_cookie_i2v_fl_8s",
+    "OMNI_FLASH_4S": "macaron_cookie_i2v_fl_4s",
+    "OMNI_FLASH_6S": "macaron_cookie_i2v_fl_6s",
+    "OMNI_FLASH_8S": "macaron_cookie_i2v_fl_8s",
+    "OMNI_FLASH_10S": "macaron_cookie_i2v_fl_10s",
+    "OMNI_1_2_FLASH_4S": "macaron_cookie_i2v_fl_4s",
+    "OMNI_1_2_FLASH_6S": "macaron_cookie_i2v_fl_6s",
+    "OMNI_1_2_FLASH_8S": "macaron_cookie_i2v_fl_8s",
+    "OMNI_1_2_FLASH_10S": "macaron_cookie_i2v_fl_10s",
+    "MACARON_COOKIE_4S": "macaron_cookie_i2v_fl_4s",
+    "MACARON_COOKIE_6S": "macaron_cookie_i2v_fl_6s",
+    "MACARON_COOKIE_8S": "macaron_cookie_i2v_fl_8s",
+    "MACARON_COOKIE_10S": "macaron_cookie_i2v_fl_10s",
+    # Omni 1.1 Flash (abra) - Backward compatibility
     "OMNI_1_1_FLASH": "omni_flash_i2v_8s_first_last",
-    "OMNI": "omni_flash_i2v_8s_first_last",
+    "OMNI_FLASH_1_1": "omni_flash_i2v_8s_first_last",
     "ABRA": "omni_flash_i2v_8s_first_last",
-    "OMNI_FLASH_4S": "omni_flash_i2v_4s_first_last",
-    "OMNI_FLASH_6S": "omni_flash_i2v_6s_first_last",
-    "OMNI_FLASH_8S": "omni_flash_i2v_8s_first_last",
-    "OMNI_FLASH_10S": "abra_i2v_10s",
-    "ABRA_4S": "omni_flash_i2v_4s_first_last",
-    "ABRA_6S": "omni_flash_i2v_6s_first_last",
-    "ABRA_8S": "omni_flash_i2v_8s_first_last",
-    "ABRA_10S": "abra_i2v_10s",
     "OMNI_1_1_FLASH_4S": "omni_flash_i2v_4s_first_last",
     "OMNI_1_1_FLASH_6S": "omni_flash_i2v_6s_first_last",
     "OMNI_1_1_FLASH_8S": "omni_flash_i2v_8s_first_last",
     "OMNI_1_1_FLASH_10S": "abra_i2v_10s",
+    "ABRA_4S": "omni_flash_i2v_4s_first_last",
+    "ABRA_6S": "omni_flash_i2v_6s_first_last",
+    "ABRA_8S": "omni_flash_i2v_8s_first_last",
+    "ABRA_10S": "abra_i2v_10s",
     # Upsamplers
     "VEO_3_1_UPSAMPLER_1080P": "veo_3_1_upsampler_1080p",
     "OMNI_UPSAMPLER_360P": "omni_upsampler_360p",
@@ -260,7 +273,8 @@ def resolve_video_model(
         if dur_upper in VIDEO_MODEL_BY_NICKNAME:
             upper = dur_upper
 
-    want_omni = any(k in upper for k in ["OMNI", "ABRA"])
+    want_omni = any(k in upper for k in ["OMNI", "ABRA", "MACARON"])
+    is_legacy_1_1 = any(k in upper for k in ["1_1", "1.1", "ABRA"])
     want_lite = "LITE" in upper
     want_fast = "QUALITY" not in upper and not want_lite and not want_omni
 
@@ -280,21 +294,38 @@ def resolve_video_model(
 
         # 2. Match target families
         target_fams: list[dict[str, Any]] = []
-        for fam in catalog:
-            fam_id = str(fam.get("id") or "").lower()
-            disp = str(fam.get("display_name") or "").lower()
-            if want_omni:
-                if "abra" in fam_id or "omni" in disp:
-                    target_fams.append(fam)
-            elif want_lite:
-                if "lite" in fam_id and "low_priority" not in fam_id:
-                    target_fams.append(fam)
-            elif want_fast:
-                if "fast" in fam_id and "low_priority" not in fam_id:
-                    target_fams.append(fam)
+        if want_omni:
+            omni_1_2_fams = [
+                f for f in catalog
+                if "macaron_cookie" in str(f.get("id") or "").lower()
+                or "1.2" in str(f.get("display_name") or "").lower()
+            ]
+            omni_1_1_fams = [
+                f for f in catalog
+                if "abra" in str(f.get("id") or "").lower()
+                or "1.1" in str(f.get("display_name") or "").lower()
+            ]
+            other_omni = [
+                f for f in catalog
+                if "omni" in str(f.get("display_name") or "").lower()
+                and f not in omni_1_2_fams and f not in omni_1_1_fams
+            ]
+            if is_legacy_1_1:
+                target_fams = omni_1_1_fams or omni_1_2_fams or other_omni
             else:
-                if "quality" in fam_id:
-                    target_fams.append(fam)
+                target_fams = omni_1_2_fams or omni_1_1_fams or other_omni
+        else:
+            for fam in catalog:
+                fam_id = str(fam.get("id") or "").lower()
+                if want_lite:
+                    if "lite" in fam_id and "low_priority" not in fam_id:
+                        target_fams.append(fam)
+                elif want_fast:
+                    if "fast" in fam_id and "low_priority" not in fam_id:
+                        target_fams.append(fam)
+                else:
+                    if "quality" in fam_id:
+                        target_fams.append(fam)
 
         if not target_fams:
             target_fams = catalog
@@ -336,33 +367,58 @@ def resolve_video_model(
             if m:
                 dur = int(m.group(1))
 
-        if has_end_frame:
-            # omni_flash start_end_frames supports 4s, 6s, 8s
-            if dur <= 4:
-                return "omni_flash_i2v_4s_first_last"
-            elif dur <= 6:
-                return "omni_flash_i2v_6s_first_last"
+        if is_legacy_1_1:
+            if has_end_frame:
+                # omni_flash 1.1 start_end_frames supports 4s, 6s, 8s
+                if dur <= 4:
+                    return "omni_flash_i2v_4s_first_last"
+                elif dur <= 6:
+                    return "omni_flash_i2v_6s_first_last"
+                else:
+                    return "omni_flash_i2v_8s_first_last"
             else:
-                return "omni_flash_i2v_8s_first_last"
+                # abra 1.1 start_frame supports 4s, 6s, 8s, 10s
+                if dur <= 4:
+                    return "abra_i2v_4s"
+                elif dur <= 6:
+                    return "abra_i2v_6s"
+                elif dur <= 8:
+                    return "abra_i2v_8s"
+                else:
+                    return "abra_i2v_10s"
         else:
-            # abra start_frame supports 4s, 6s, 8s, 10s
-            if dur <= 4:
-                return "abra_i2v_4s"
-            elif dur <= 6:
-                return "abra_i2v_6s"
-            elif dur <= 8:
-                return "abra_i2v_8s"
+            # Omni 1.2 Flash (macaron_cookie) supports 4s, 6s, 8s, 10s
+            if has_end_frame:
+                if dur <= 4:
+                    return "macaron_cookie_i2v_fl_4s"
+                elif dur <= 6:
+                    return "macaron_cookie_i2v_fl_6s"
+                elif dur <= 8:
+                    return "macaron_cookie_i2v_fl_8s"
+                else:
+                    return "macaron_cookie_i2v_fl_10s"
             else:
-                return "abra_i2v_10s"
+                if dur <= 4:
+                    return "macaron_cookie_i2v_4s"
+                elif dur <= 6:
+                    return "macaron_cookie_i2v_6s"
+                elif dur <= 8:
+                    return "macaron_cookie_i2v_8s"
+                else:
+                    return "macaron_cookie_i2v_10s"
 
     if upper in VIDEO_MODEL_BY_NICKNAME:
         base_key = VIDEO_MODEL_BY_NICKNAME[upper]
-        if not has_end_frame and base_key.endswith("_fl"):
-            base_key = base_key[:-3]
+        if not has_end_frame:
+            if "_i2v_fl_" in base_key:
+                base_key = base_key.replace("_i2v_fl_", "_i2v_")
+            elif base_key.endswith("_fl"):
+                base_key = base_key[:-3]
         if v_aspect == VIDEO_ASPECT_PORTRAIT and "_portrait" not in base_key:
             if base_key.endswith("_fl"):
                 return base_key[:-3] + "_portrait_fl"
-            return base_key + "_portrait"
+            elif not base_key.startswith("macaron_cookie") and not base_key.startswith("abra") and not base_key.startswith("omni_flash"):
+                return base_key + "_portrait"
         return base_key
 
     if raw and VIDEO_MODEL_ID_RE.fullmatch(raw):

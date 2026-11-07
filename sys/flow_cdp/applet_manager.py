@@ -41,7 +41,7 @@ KIND_MAP: dict[Any, str] = {
 # Omni Studio V2 State Storage Key
 OMNI_STUDIO_STORAGE_KEY = "VP_OMNI_STUDIO_V2_STATE"
 MODEL_NANO_BANANA_2_1 = "🍌 Nano Banana 2.1"
-MODEL_OMNI_FLASH = "Omni 1.1 Flash"
+MODEL_OMNI_FLASH = "Omni 1.2 Flash"
 ALLOWED_OMNI_DURATIONS = [4, 6, 8, 10]
 
 
@@ -263,7 +263,7 @@ def parse_applets_list(raw_input: Any) -> list[dict[str, Any]]:
 # Studio V2 State Builder
 # ---------------------------------------------------------------------------
 def resolve_omni_flash_duration(duration_seconds: float | int) -> int:
-    """Map arbitrary duration to closest supported Omni 1.1 Flash duration (4s, 6s, 8s, 10s)."""
+    """Map arbitrary duration to closest supported Omni 1.2 Flash duration (4s, 6s, 8s, 10s)."""
     try:
         sec = float(duration_seconds)
     except (TypeError, ValueError):
@@ -284,7 +284,7 @@ def build_vp_omni_studio_v2_state(
 ) -> dict[str, Any]:
     """Structure a project's state for VP Omni Chain Studio V2.
 
-    Includes storyboard scenes, keyframe prompts, Omni 1.1 Flash auto-durations
+    Includes storyboard scenes, keyframe prompts, Omni 1.2 Flash auto-durations
     (4s/6s/8s/10s), and zero_credit_flipbook fallback mode.
     """
     raw_spec = spec_dict or {}
@@ -372,7 +372,7 @@ import * as Flow from "flow-sdk";
 // ---------------------------------------------------------------------------
 const STORAGE_KEY = "VP_OMNI_STUDIO_V2_STATE";
 const MODEL_IMAGE = "🍌 Nano Banana 2.1";
-const MODEL_VIDEO = "Omni 1.1 Flash";
+const MODEL_VIDEO = "Omni 1.2 Flash";
 
 type EngineMode = "hybrid_video" | "zero_credit_flipbook";
 type SceneStatus = "IDLE" | "QUEUED" | "GENERATING_IMAGE" | "IMAGE_READY" | "GENERATING_VIDEO" | "VIDEO_READY" | "ERROR";
@@ -416,7 +416,7 @@ Khi bạn sở hữu một hệ thống vận hành tự động, thời gian s�
 Đừng bán thời gian lấy tiền, hãy xây dựng cỗ máy tạo ra dòng tiền bền vững.`;
 
 // ---------------------------------------------------------------------------
-// Helper: Resolve Omni 1.1 Flash Auto-Duration (4s | 6s | 8s | 10s)
+// Helper: Resolve Omni 1.2 Flash Auto-Duration (4s | 6s | 8s | 10s)
 // ---------------------------------------------------------------------------
 function resolveOmniDuration(seconds: number): 4 | 6 | 8 | 10 {
   if (seconds <= 4) return 4;
@@ -678,7 +678,7 @@ Chỉ trả về DUY NHẤT một mảng JSON hợp lệ dạng:
   };
 
   // -------------------------------------------------------------------------
-  // 4A. Mode 1: Omni 1.1 Flash Video Chain (Flow.generate.video)
+  // 4A. Mode 1: Omni 1.2 Flash Video Chain (Flow.generate.video)
   // -------------------------------------------------------------------------
   const handleRunOmniVideoChain = async () => {
     const curScenes = stateRef.current.scenes;
@@ -687,7 +687,7 @@ Chỉ trả về DUY NHẤT một mảng JSON hợp lệ dạng:
     setState(prev => ({
       ...prev,
       isProcessing: true,
-      statusMessage: "Bắt đầu chuỗi sinh Video Omni 1.1 Flash Auto-Duration..."
+      statusMessage: "Bắt đầu chuỗi sinh Video Omni 1.2 Flash Auto-Duration..."
     }));
 
     const updatedScenes = [...curScenes];
@@ -705,7 +705,7 @@ Chỉ trả về DUY NHẤT một mảng JSON hợp lệ dạng:
       setState(prev => ({
         ...prev,
         scenes: [...updatedScenes],
-        statusMessage: `Đang sinh video cảnh ${sc.sceneId} (${sc.omniDuration}s) với Omni 1.1 Flash...`
+        statusMessage: `Đang sinh video cảnh ${sc.sceneId} (${sc.omniDuration}s) với Omni 1.2 Flash...`
       }));
 
       try {
@@ -731,7 +731,7 @@ Chỉ trả về DUY NHẤT một mảng JSON hợp lệ dạng:
       ...stateRef.current,
       scenes: updatedScenes,
       isProcessing: false,
-      statusMessage: "Hoàn tất chuỗi sinh video Omni 1.1 Flash!"
+      statusMessage: "Hoàn tất chuỗi sinh video Omni 1.2 Flash!"
     });
   };
 
@@ -822,7 +822,7 @@ Chỉ trả về DUY NHẤT một mảng JSON hợp lệ dạng:
               </span>
             </div>
             <p className="text-[11px] font-medium text-zinc-400">
-              Dual-Engine: Nano Banana 2.1 (0 cr) + Omni 1.1 Flash (4s/6s/8s/10s)
+              Dual-Engine: Nano Banana 2.1 (0 cr) + Omni 1.2 Flash (4s/6s/8s/10s)
             </p>
           </div>
         </div>
@@ -997,7 +997,7 @@ Chỉ trả về DUY NHẤT một mảng JSON hợp lệ dạng:
             </div>
             <div className="flex justify-between items-center">
               <span className="text-zinc-500">Model video:</span>
-              <span className="font-bold text-indigo-400">Omni 1.1 Flash (4-10s)</span>
+              <span className="font-bold text-indigo-400">Omni 1.2 Flash (4-10s)</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-zinc-500">Thời lượng tự động:</span>
@@ -1041,7 +1041,7 @@ Chỉ trả về DUY NHẤT một mảng JSON hợp lệ dạng:
                   onClick={handleRunOmniVideoChain}
                   className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md shadow-indigo-600/20 transition-all disabled:opacity-50 flex items-center gap-2"
                 >
-                  <span>🎬</span> Sinh Video Omni 1.1 Flash
+                  <span>🎬</span> Sinh Video Omni 1.2 Flash
                 </button>
               ) : (
                 <button

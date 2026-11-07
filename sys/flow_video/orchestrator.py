@@ -1095,16 +1095,19 @@ class FlowVideoChainOrchestrator:
         norm = (model or "").lower().strip()
         if "flipbook" in norm or "zero_credit" in norm:
             return 0
-        elif "omni" in norm or "abra" in norm:
+        elif any(k in norm for k in ["abra", "1_1", "1.1"]):
             credit_map = {4: 7, 6: 10, 8: 12, 10: 15}
             return credit_map.get(duration_sec, 10)
+        elif "omni" in norm or "macaron" in norm:
+            credit_map = {3: 9, 4: 12, 5: 15, 6: 18, 7: 21, 8: 24, 9: 27, 10: 30}
+            return credit_map.get(duration_sec, 18)
         elif "lite" in norm:
             return 10
         elif "quality" in norm:
             return 100
         elif "fast" in norm:
             return 20
-        return 10
+        return 18
 
     def _reconcile_manifest(self, tasks: list[VideoClipTask]) -> list[VideoClipTask]:
         """Check existing manifest on disk to avoid re-generating finished clips."""

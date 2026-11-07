@@ -10,7 +10,7 @@
 - **Conveyor**: St1 Critique -> St2 AST & `pytest` -> St3 `PLAYBOOK.md` -> St4 `ruff` -> St5 PR (`gh-axi`) -> St6 Green CI.
 
 ## 3. Pipelines & Role Separation
-- **Production (`vp-production`)**: Priority: P1 `full_chain` (`Omni 1.1 Flash` continuous `.mp4` clips while any Flow pool profile has credits); P2 `images_only` (dense fallback when 100% of Flow pool hits 0 credits). Chain: `vp-research-architect` -> `vp-scriptwriting` -> `vp-full-frame-quality` -> `vp-omni-platform` -> Multi-T4 (`ColabPoolDispatcher` / `pilot.py` outline -> dialogue -> audio -> images -> video).
+- **Production (`vp-production`)**: Priority: P1 `full_chain` (`Omni 1.2 Flash` continuous `.mp4` clips while any Flow pool profile has credits); P2 `images_only` (dense fallback when 100% of Flow pool hits 0 credits). Chain: `vp-research-architect` -> `vp-scriptwriting` -> `vp-full-frame-quality` -> `vp-omni-platform` -> Multi-T4 (`ColabPoolDispatcher` / `pilot.py` outline -> dialogue -> audio -> images -> video).
 - **Remote GPU (`vp-colab-bridge`)**: Native Tesla T4 `FFmpeg h264_nvenc` (`sys/colab_bridge/flow_video_worker.py` via `job_worker.py` / `pilot.py`, `-c:v h264_nvenc -preset p4 -b:v 6M`, `0s` setup; no Remotion/Chromium/TPU/local render).
 - **Flow CDP (`vp-flow-cdp`)**: 39 profiles (`sys/flow_cdp/`), adaptive 1–16 workers, CreditLedger tracking, strict teardown. Valid AI image + `.json` sidecar.
 

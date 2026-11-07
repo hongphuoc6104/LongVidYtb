@@ -244,6 +244,8 @@ class PersistentWorkerPool:
         max_global_browsers: int | None = None,
         min_credits_required: int = 0,
         credit_ledger: Any | None = None,
+        enable_work_stealing: bool = False,
+        work_steal_threshold: int = 2,
     ):
         self.target_workers = max(1, target_workers)
         self.cooldown_seconds = cooldown_seconds
@@ -255,6 +257,8 @@ class PersistentWorkerPool:
         self.max_global_browsers = max_global_browsers
         self.min_credits_required = min_credits_required
         self.credit_ledger = credit_ledger
+        self.enable_work_stealing = enable_work_stealing
+        self.work_steal_threshold = max(1, work_steal_threshold)
 
         # Resolve profiles
         if profiles is None:
@@ -358,8 +362,6 @@ class PersistentWorkerPool:
             )
             self.workers.append(t)
             t.start()
-            if self.stagger_seconds > 0:
-                time.sleep(self.stagger_seconds)
 
     def _next_seq(self) -> int:
         with self._seq_lock:
@@ -447,12 +449,25 @@ class PersistentWorkerPool:
         from flow_cdp.cdp_direct_client import DirectCDPProfileSession
         return DirectCDPProfileSession(prof_cfg)
 
-    def _worker_thread_loop(self, worker_id: int, initial_profile: dict[str, Any]) -> None:
+    def _worker_thread_loop(
+        self,
+        worker_id: int,
+        initial_profile: dict[str, Any],
+        initial_session: Any | None = None,
+    ) -> None:
         """Worker thread maintaining long-lived WebSocket session within global hardware budget."""
         current_profile = initial_profile
         prof_name = current_profile["name"]
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
+
+        # Staggered startup delay for workers > 1 when session is not pre-connected
+        if initial_session is None and self.stagger_seconds > 0 and worker_id > 1:
+            delay = (worker_id - 1) * self.stagger_seconds
+            if self.abort_event.wait(timeout=delay):
+                self.profile_pool.release(current_profile)
+                loop.close()
+                return
 
         browser_slot = None
         if self.enforce_os_locks:
@@ -468,7 +483,7 @@ class PersistentWorkerPool:
                 loop.close()
                 return
 
-        sess = None
+        sess = initial_session
 
         def init_session(p_cfg: dict[str, Any]) -> Any:
             self._launch_browser(p_cfg)
@@ -533,10 +548,47 @@ class PersistentWorkerPool:
                     except queue.Empty:
                         pass
 
-                # 2. Check shared priority queue
+                # 2. Check shared priority queue (non-blocking)
                 if task_item is None:
                     try:
-                        task_item = self.shared_queue.get(timeout=0.3)
+                        task_item = self.shared_queue.get_nowait()
+                    except queue.Empty:
+                        pass
+
+                # 3. Work stealing when worker's queue and shared queue are both empty
+                if task_item is None and self.enable_work_stealing:
+                    for other_name, other_q in list(self.pinned_queues.items()):
+                        if other_name == prof_name:
+                            continue
+                        sz = other_q.qsize()
+                        is_cooldown = (
+                            other_name in self.profile_pool.cooldowns
+                            and self.profile_pool.cooldowns[other_name] > time.time()
+                        )
+                        if sz > self.work_steal_threshold or (sz >= 1 and is_cooldown):
+                            try:
+                                stolen_prio, stolen_seq, stolen_task = other_q.get_nowait()
+                                stolen_task.pop("pinned_profile", None)
+                                stolen_task["baseMediaId"] = None
+                                stolen_task["base_media_id"] = None
+                                task_item = (stolen_prio, stolen_seq, stolen_task)
+                                logger.info(
+                                    "[Worker-%d (%s)] Stole task %s from %s (qsize=%d, cooldown=%s)",
+                                    worker_id,
+                                    prof_name,
+                                    stolen_task.get("_registered_id", stolen_seq),
+                                    other_name,
+                                    sz,
+                                    is_cooldown,
+                                )
+                                break
+                            except queue.Empty:
+                                continue
+
+                # 4. If still no task, brief timed wait on shared queue
+                if task_item is None:
+                    try:
+                        task_item = self.shared_queue.get(timeout=0.2)
                     except queue.Empty:
                         continue
 
@@ -631,11 +683,27 @@ class PersistentWorkerPool:
 
                     if self.credit_ledger is not None:
                         try:
-                            amount = int(task.get("credit_cost") or 10)
-                            reason = str(task.get("credit_reason") or "video")
-                            self.credit_ledger.deduct_credits(prof_name, amount=amount, reason=reason)
+                            if "credit_cost" in task and task["credit_cost"] is not None:
+                                amount = int(task["credit_cost"])
+                            elif str(task.get("type", "")).lower() == "image" or str(
+                                task.get("model", "BELUGA")
+                            ).upper() in (
+                                "BELUGA",
+                                "IMAGEN_3_5",
+                                "IMAGEN_3",
+                                "GEM_PIX_2",
+                            ):
+                                amount = 0
+                            else:
+                                amount = 10
+
+                            reason = str(task.get("credit_reason") or ("image" if amount == 0 else "video"))
+                            if amount > 0:
+                                self.credit_ledger.deduct_credits(prof_name, amount=amount, reason=reason)
+                            else:
+                                self.credit_ledger.touch_used(prof_name)
                         except Exception as deduct_err:
-                            logger.debug("Failed deducting credits for %s: %s", prof_name, deduct_err)
+                            logger.debug("Failed updating credit ledger for %s: %s", prof_name, deduct_err)
 
                     self._mark_task_finished()
 
@@ -665,7 +733,7 @@ class PersistentWorkerPool:
                     if is_rate_limit:
                         is_ip_burst = "TOO_MUCH_TRAFFIC" in err_str
                         quarantine_reason = "credit_exhausted" if is_credit_exhausted else ("rate_limit_too_much_traffic" if is_ip_burst else "rate_limit_error_7")
-                        q_dur = 3600.0 if is_credit_exhausted else (300.0 if is_ip_burst else 600.0)
+                        q_dur = 3600.0 if is_credit_exhausted else (min(300.0, self.cooldown_seconds) if is_ip_burst else self.cooldown_seconds)
                         logger.warning(
                             "[FAILOVER] Profile %s hit %s at task %s: %s",
                             prof_name,
@@ -917,10 +985,13 @@ class PersistentWorkerPool:
         out_dir = Path(task.get("out_dir") or self.default_out_dir or (Path(tempfile.gettempdir()) / "video-pilot-pool-images"))
         out_dir.mkdir(parents=True, exist_ok=True)
         task_idx = task.get("index") or task.get("_registered_id") or "000"
-        filename = task.get("filename") or f"image_{task_idx}.jpg"
-
         # If a destination file path is already provided
-        img_dest = out_dir / filename
+        if task.get("output_path"):
+            img_dest = Path(task["output_path"])
+            filename = img_dest.name
+        else:
+            filename = task.get("filename") or f"image_{task_idx}.jpg"
+            img_dest = out_dir / filename
         width, height = 0, 0
 
         # Download binary if URL returned
@@ -951,8 +1022,8 @@ class PersistentWorkerPool:
             with Image.open(staging_path) as im:
                 im.load()
                 width, height = im.size
-            overlay_cfg = task.get("editorial_overlay", {"enabled": True})
-            if overlay_cfg and overlay_cfg.get("enabled", True):
+            overlay_cfg = task.get("editorial_overlay")
+            if overlay_cfg and isinstance(overlay_cfg, dict) and overlay_cfg.get("enabled", False):
                 from tools.editorial_compositor import apply_editorial_overlay
                 apply_editorial_overlay(staging_path, overlay_cfg)
             shutil.move(str(staging_path), str(img_dest))
@@ -993,6 +1064,10 @@ class PersistentWorkerPool:
                     wait_step = min(wait_step, remaining)
                 self._tasks_done_cond.wait(timeout=wait_step)
             return self._pending_tasks == 0
+
+    def join(self, timeout: float | None = None) -> bool:
+        """Alias for wait_completion to support standard pool join interface."""
+        return self.wait_completion(timeout=timeout)
 
     def shutdown(self, wait_timeout: float = 4.0) -> None:
         """Cleanly stop worker threads, close sessions, and terminate browser processes."""

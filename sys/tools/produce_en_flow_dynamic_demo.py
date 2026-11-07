@@ -947,6 +947,7 @@ def package_final_on_colab_t4_nvenc(
     target_session = f"vp-en-{channel_slug}"
 
     last_exc: Exception | None = None
+    consecutive_unconfirmed = 0
     for acc in candidate_accounts:
         lock_file = Path(f"/tmp/vp_en_colab_nvenc_{acc}.lock")
         lock_fd = None
@@ -961,6 +962,8 @@ def package_final_on_colab_t4_nvenc(
                     pass
             continue
 
+        client = None
+        started = False
         try:
             base_cfg_path = SYS_DIR / "config.json"
             cfg: dict[str, Any] = (
@@ -1007,6 +1010,7 @@ def package_final_on_colab_t4_nvenc(
             client.ensure_authenticated()
             try:
                 client._ready(auto_start=True)
+                started = True
             except Exception as ex_ready:
                 try:
                     from tools.channel_production_common import cleanup_stale_colab_state
@@ -1016,6 +1020,7 @@ def package_final_on_colab_t4_nvenc(
                     cfg["colab_tts"]["session"] = target_session
                     client.cfg["session"] = target_session
                     client._ready(auto_start=True)
+                    started = True
                 except Exception as ex_recover:
                     raise ex_ready from ex_recover
 
@@ -1040,6 +1045,7 @@ def package_final_on_colab_t4_nvenc(
                     cfg["colab_tts"]["session"] = target_session
                     client.cfg["session"] = target_session
                     client._ready(auto_start=True)
+                    started = True
                     client.exec(
                         f"from pathlib import Path\nPath({remote_dir!r}).mkdir(parents=True, exist_ok=True)",
                         timeout=35,
@@ -1049,161 +1055,168 @@ def package_final_on_colab_t4_nvenc(
             client.call("upload", "-s", client.session, str(bundle_zip.resolve()), remote_bundle, timeout=300)
 
             remote_render_script = f"""
-import subprocess, sys, json, os, zipfile
-from pathlib import Path
+try:
+    import subprocess, sys, json, os, zipfile
+    from pathlib import Path
 
-work = Path({remote_dir!r})
-bundle_zip = work / "bundle.zip"
-with zipfile.ZipFile(bundle_zip, 'r') as zf:
-    zf.extractall(work)
+    work = Path({remote_dir!r})
+    bundle_zip = work / "bundle.zip"
+    with zipfile.ZipFile(bundle_zip, 'r') as zf:
+        zf.extractall(work)
 
-res = subprocess.run(
-    ["ffmpeg", "-y", "-f", "lavfi", "-i", "color=c=black:s=256x256:d=0.04", "-c:v", "h264_nvenc", "-f", "null", "-"],
-    capture_output=True, text=True
-)
-if res.returncode != 0:
-    raise RuntimeError("COLAB_NVENC_UNAVAILABLE: h264_nvenc not supported on remote GPU: " + res.stderr)
-
-meta = json.loads((work / "bundle_manifest.json").read_text())
-is_short = meta["is_short"]
-tw, th = int(meta["tw"]), int(meta["th"])
-fps = int(meta["fps"])
-overscan_crop = float(meta["overscan_crop"])
-total_audio_dur = float(meta["total_audio_dur"])
-groups = meta["groups"]
-clips = meta["clips"]
-group_spoken_durs = meta["group_spoken_durs"]
-xfade_pivot_sec = float(meta["xfade_pivot_sec"])
-
-ow = max(tw, int(round(tw * overscan_crop / 2.0)) * 2)
-oh = max(th, int(round(th * overscan_crop / 2.0)) * 2)
-base_scale = f"scale={{ow}}:{{oh}}:force_original_aspect_ratio=increase,crop={{tw}}:{{th}}:(in_w-{{tw}})/2:(in_h-{{th}})/2,setsar=1,fps={{fps}}"
-
-# Step 1: Stitch each contiguous scene group on Tesla T4 h264_nvenc
-group_mp4s = []
-for g_idx, indices in enumerate(groups):
-    g_out = str(work / f"scene_group_{{g_idx:02d}}.mp4")
-    g_cmd = ["ffmpeg", "-y"]
-    g_filters = []
-    g_vlabels = []
-    for local_i, c_idx in enumerate(indices):
-        cs = clips[c_idx]
-        g_cmd.extend(["-i", str(work / cs["arcname"])])
-        raw_dur = float(cs["raw_dur"])
-        trim_first = bool(cs["trim_first"])
-        target_dur = cs["target_dur"]
-        eff_raw_dur = max(0.05, raw_dur - (1.0 / fps)) if trim_first else raw_dur
-        trim_step = ",trim=start_frame=1,setpts=PTS-STARTPTS" if trim_first else ""
-        if target_dur is not None and target_dur > 0:
-            ratio = eff_raw_dur / target_dur
-            if 0.35 <= ratio <= 2.5:
-                pts_factor = target_dur / eff_raw_dur
-                vf = f"[{{local_i}}:v]{{base_scale}}{{trim_step}},setpts={{pts_factor:.6f}}*PTS,fps={{fps}}[cv{{local_i}}]"
-            elif target_dur > eff_raw_dur * 2.5:
-                pts_factor = 1.0 / 0.35
-                stretched = eff_raw_dur * pts_factor
-                extra = max(0.01, target_dur - stretched)
-                vf = f"[{{local_i}}:v]{{base_scale}}{{trim_step}},setpts={{pts_factor:.6f}}*PTS,fps={{fps}},tpad=stop_mode=clone:stop_duration={{extra:.3f}},setpts=PTS-STARTPTS[cv{{local_i}}]"
-            else:
-                speed_factor = 1.0 / 2.5
-                vf = f"[{{local_i}}:v]{{base_scale}}{{trim_step}},setpts={{speed_factor:.6f}}*PTS,fps={{fps}},trim=duration={{target_dur:.3f}},setpts=PTS-STARTPTS[cv{{local_i}}]"
-        else:
-            vf = f"[{{local_i}}:v]{{base_scale}}{{trim_step}},setpts=PTS-STARTPTS,fps={{fps}}[cv{{local_i}}]"
-        g_filters.append(vf)
-        g_vlabels.append(f"[cv{{local_i}}]")
-    g_filters.append(f"{{''.join(g_vlabels)}}concat=n={{len(indices)}}:v=1:a=0[gvout]")
-    g_cmd.extend([
-        "-filter_complex", ";".join(g_filters),
-        "-map", "[gvout]",
-        "-c:v", "h264_nvenc", "-preset", "p4", "-b:v", "12M", "-pix_fmt", "yuv420p",
-        "-r", str(fps), g_out
-    ])
-    gp_res = subprocess.run(g_cmd, capture_output=True, text=True)
-    if gp_res.returncode != 0:
-        raise RuntimeError(f"Remote NVENC group {{g_idx}} stitch failed: " + gp_res.stderr[-800:])
-    group_mp4s.append(g_out)
-
-# Step 2: Join scene groups with 0.24s breath-aligned xfade (or sequential concat demuxer for >4 groups) + .ass captions + squircle logo on Tesla T4 h264_nvenc
-watermark_png = str(work / "watermark.png")
-audio_path = str(work / "audio.wav")
-ass_path = str(work / "subtitles.ass")
-
-filter_chains = []
-if len(group_mp4s) > 4:
-    concat_txt = work / "groups_concat.txt"
-    concat_txt.write_text(
-        "".join(f"file '{{Path(gp).name}}'\\n" for gp in group_mp4s),
-        encoding="utf-8",
+    res = subprocess.run(
+        ["ffmpeg", "-y", "-f", "lavfi", "-i", "color=c=black:s=256x256:d=0.04", "-c:v", "h264_nvenc", "-f", "null", "-"],
+        capture_output=True, text=True
     )
-    cmd = ["ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", str(concat_txt), "-i", watermark_png, "-i", audio_path]
-    wm_idx = 1
-    audio_idx = 2
-    filter_chains.append("[0:v]setsar=1[vjoined]")
-    cur_v = "vjoined"
-else:
-    cmd = ["ffmpeg", "-y"]
-    for gp in group_mp4s:
-        cmd.extend(["-i", gp])
-    wm_idx = len(group_mp4s)
-    cmd.extend(["-i", watermark_png])
-    audio_idx = len(group_mp4s) + 1
-    cmd.extend(["-i", audio_path])
-    if len(group_mp4s) == 1:
+    if res.returncode != 0:
+        raise RuntimeError("COLAB_NVENC_UNAVAILABLE: h264_nvenc not supported on remote GPU: " + res.stderr)
+
+    meta = json.loads((work / "bundle_manifest.json").read_text())
+    is_short = meta["is_short"]
+    tw, th = int(meta["tw"]), int(meta["th"])
+    fps = int(meta["fps"])
+    overscan_crop = float(meta["overscan_crop"])
+    total_audio_dur = float(meta["total_audio_dur"])
+    groups = meta["groups"]
+    clips = meta["clips"]
+    group_spoken_durs = meta["group_spoken_durs"]
+    xfade_pivot_sec = float(meta["xfade_pivot_sec"])
+
+    ow = max(tw, int(round(tw * overscan_crop / 2.0)) * 2)
+    oh = max(th, int(round(th * overscan_crop / 2.0)) * 2)
+    base_scale = f"scale={{ow}}:{{oh}}:force_original_aspect_ratio=increase,crop={{tw}}:{{th}}:(in_w-{{tw}})/2:(in_h-{{th}})/2,setsar=1,fps={{fps}}"
+
+    # Step 1: Stitch each contiguous scene group on Tesla T4 h264_nvenc
+    group_mp4s = []
+    for g_idx, indices in enumerate(groups):
+        g_out = str(work / f"scene_group_{{g_idx:02d}}.mp4")
+        g_cmd = ["ffmpeg", "-y"]
+        g_filters = []
+        g_vlabels = []
+        for local_i, c_idx in enumerate(indices):
+            cs = clips[c_idx]
+            g_cmd.extend(["-i", str(work / cs["arcname"])])
+            raw_dur = float(cs["raw_dur"])
+            trim_first = bool(cs["trim_first"])
+            target_dur = cs["target_dur"]
+            eff_raw_dur = max(0.05, raw_dur - (1.0 / fps)) if trim_first else raw_dur
+            trim_step = ",trim=start_frame=1,setpts=PTS-STARTPTS" if trim_first else ""
+            if target_dur is not None and target_dur > 0:
+                ratio = eff_raw_dur / target_dur
+                if 0.35 <= ratio <= 2.5:
+                    pts_factor = target_dur / eff_raw_dur
+                    vf = f"[{{local_i}}:v]{{base_scale}}{{trim_step}},setpts={{pts_factor:.6f}}*PTS,fps={{fps}}[cv{{local_i}}]"
+                elif target_dur > eff_raw_dur * 2.5:
+                    pts_factor = 1.0 / 0.35
+                    stretched = eff_raw_dur * pts_factor
+                    extra = max(0.01, target_dur - stretched)
+                    vf = f"[{{local_i}}:v]{{base_scale}}{{trim_step}},setpts={{pts_factor:.6f}}*PTS,fps={{fps}},tpad=stop_mode=clone:stop_duration={{extra:.3f}},setpts=PTS-STARTPTS[cv{{local_i}}]"
+                else:
+                    speed_factor = 1.0 / 2.5
+                    vf = f"[{{local_i}}:v]{{base_scale}}{{trim_step}},setpts={{speed_factor:.6f}}*PTS,fps={{fps}},trim=duration={{target_dur:.3f}},setpts=PTS-STARTPTS[cv{{local_i}}]"
+            else:
+                vf = f"[{{local_i}}:v]{{base_scale}}{{trim_step}},setpts=PTS-STARTPTS,fps={{fps}}[cv{{local_i}}]"
+            g_filters.append(vf)
+            g_vlabels.append(f"[cv{{local_i}}]")
+        g_filters.append(f"{{''.join(g_vlabels)}}concat=n={{len(indices)}}:v=1:a=0[gvout]")
+        g_cmd.extend([
+            "-filter_complex", ";".join(g_filters),
+            "-map", "[gvout]",
+            "-c:v", "h264_nvenc", "-preset", "p4", "-b:v", "12M", "-pix_fmt", "yuv420p",
+            "-r", str(fps), g_out
+        ])
+        gp_res = subprocess.run(g_cmd, capture_output=True, text=True)
+        if gp_res.returncode != 0:
+            raise RuntimeError(f"Remote NVENC group {{g_idx}} stitch failed: " + gp_res.stderr[-800:])
+        group_mp4s.append(g_out)
+
+    # Step 2: Join scene groups with 0.24s breath-aligned xfade (or sequential concat demuxer for >4 groups) + .ass captions + squircle logo on Tesla T4 h264_nvenc
+    watermark_png = str(work / "watermark.png")
+    audio_path = str(work / "audio.wav")
+    ass_path = str(work / "subtitles.ass")
+
+    filter_chains = []
+    if len(group_mp4s) > 4:
+        concat_txt = work / "groups_concat.txt"
+        concat_txt.write_text(
+            "".join(f"file '{{Path(gp).name}}'\\n" for gp in group_mp4s),
+            encoding="utf-8",
+        )
+        cmd = ["ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", str(concat_txt), "-i", watermark_png, "-i", audio_path]
+        wm_idx = 1
+        audio_idx = 2
         filter_chains.append("[0:v]setsar=1[vjoined]")
         cur_v = "vjoined"
     else:
-        cum_offset = 0.0
-        prev_lbl = "0:v"
-        for g_i in range(1, len(group_mp4s)):
-            cum_offset += group_spoken_durs[g_i - 1]
-            out_lbl = f"vg{{g_i}}"
-            filter_chains.append(
-                f"[{{prev_lbl}}][{{g_i}}:v]xfade=transition=fade:duration={{xfade_pivot_sec:.4f}}:offset={{max(0.05, cum_offset):.4f}}[{{out_lbl}}]"
-            )
-            prev_lbl = out_lbl
-        cur_v = prev_lbl
+        cmd = ["ffmpeg", "-y"]
+        for gp in group_mp4s:
+            cmd.extend(["-i", gp])
+        wm_idx = len(group_mp4s)
+        cmd.extend(["-i", watermark_png])
+        audio_idx = len(group_mp4s) + 1
+        cmd.extend(["-i", audio_path])
+        if len(group_mp4s) == 1:
+            filter_chains.append("[0:v]setsar=1[vjoined]")
+            cur_v = "vjoined"
+        else:
+            cum_offset = 0.0
+            prev_lbl = "0:v"
+            for g_i in range(1, len(group_mp4s)):
+                cum_offset += group_spoken_durs[g_i - 1]
+                out_lbl = f"vg{{g_i}}"
+                filter_chains.append(
+                    f"[{{prev_lbl}}][{{g_i}}:v]xfade=transition=fade:duration={{xfade_pivot_sec:.4f}}:offset={{max(0.05, cum_offset):.4f}}[{{out_lbl}}]"
+                )
+                prev_lbl = out_lbl
+            cur_v = prev_lbl
 
-if is_short and os.path.exists(ass_path):
-    escaped_ass = ass_path.replace("\\\\", "/").replace(":", r"\\:").replace("'", r"\\'")
-    filter_chains.append(f"[{{cur_v}}]ass=filename='{{escaped_ass}}'[vsub]")
-    cur_v = "vsub"
+    if is_short and os.path.exists(ass_path):
+        escaped_ass = ass_path.replace("\\\\", "/").replace(":", r"\\:").replace("'", r"\\'")
+        filter_chains.append(f"[{{cur_v}}]ass=filename='{{escaped_ass}}'[vsub]")
+        cur_v = "vsub"
 
-wm_pos = "W-w-24:H-h-56" if is_short else "W-w-36:H-h-36"
-filter_chains.append(f"[{{cur_v}}][{{wm_idx}}:v]overlay={{wm_pos}}[vout]")
-filter_chains.append(f"[{{audio_idx}}:a]aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo[aout]")
+    wm_pos = "W-w-24:H-h-56" if is_short else "W-w-36:H-h-36"
+    filter_chains.append(f"[{{cur_v}}][{{wm_idx}}:v]overlay={{wm_pos}}[vout]")
+    filter_chains.append(f"[{{audio_idx}}:a]aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo[aout]")
 
-out_mp4 = str(work / "final.mp4")
-cmd.extend([
-    "-filter_complex", ";".join(filter_chains),
-    "-map", "[vout]",
-    "-map", "[aout]",
-    "-c:v", "h264_nvenc",
-    "-preset", "p4",
-    "-b:v", "6M",
-    "-pix_fmt", "yuv420p",
-    "-r", str(fps),
-    "-c:a", "aac",
-    "-b:a", "192k",
-    "-ar", "48000",
-    "-t", f"{{total_audio_dur:.3f}}",
-    "-movflags", "+faststart",
-    out_mp4
-])
+    out_mp4 = str(work / "final.mp4")
+    cmd.extend([
+        "-filter_complex", ";".join(filter_chains),
+        "-map", "[vout]",
+        "-map", "[aout]",
+        "-c:v", "h264_nvenc",
+        "-preset", "p4",
+        "-b:v", "6M",
+        "-pix_fmt", "yuv420p",
+        "-r", str(fps),
+        "-c:a", "aac",
+        "-b:a", "192k",
+        "-ar", "48000",
+        "-t", f"{{total_audio_dur:.3f}}",
+        "-movflags", "+faststart",
+        out_mp4
+    ])
 
-p = subprocess.run(cmd, capture_output=True, text=True)
-if p.returncode != 0:
-    raise RuntimeError("Remote FFmpeg NVENC failed: " + p.stderr[-1000:])
+    p = subprocess.run(cmd, capture_output=True, text=True)
+    if p.returncode != 0:
+        raise RuntimeError("Remote FFmpeg NVENC failed: " + p.stderr[-1000:])
 
-try:
-    bundle_zip.unlink(missing_ok=True)
-    for gp_f in group_mp4s:
-        Path(gp_f).unlink(missing_ok=True)
-except Exception:
-    pass
+    try:
+        bundle_zip.unlink(missing_ok=True)
+        for gp_f in group_mp4s:
+            Path(gp_f).unlink(missing_ok=True)
+    except Exception:
+        pass
 
-print("NVENC_RENDER_SUCCESS")
+    print("NVENC_RENDER_SUCCESS")
+except Exception as _e:
+    import traceback
+    traceback.print_exc()
+    print("NVENC_SCRIPT_ERROR:", repr(_e), flush=True)
 """
             exec_out = client.exec(remote_render_script, timeout=240 if is_short else 600)
+            if "NVENC_SCRIPT_ERROR:" in exec_out:
+                raise RuntimeError(f"Deterministic Colab NVENC script error: {exec_out}")
             if "NVENC_RENDER_SUCCESS" not in exec_out:
                 raise RuntimeError(f"Colab NVENC execution failed: {exec_out}")
 
@@ -1224,9 +1237,26 @@ print("NVENC_RENDER_SUCCESS")
             return meta
         except Exception as exc:
             last_exc = exc
+            if "NVENC_SCRIPT_ERROR:" in str(exc) or "Deterministic Colab NVENC" in str(exc):
+                logger.error(f"Deterministic Colab script error on {acc}: {exc}")
+                raise
+            is_unconfirmed = "COLAB_EXEC_UNCONFIRMED" in str(exc)
+            if is_unconfirmed:
+                consecutive_unconfirmed += 1
+            else:
+                consecutive_unconfirmed = 0
+            if consecutive_unconfirmed >= 2:
+                logger.error("Aborting failover after 2 consecutive COLAB_EXEC_UNCONFIRMED errors per AGENTS.md §5")
+                raise RuntimeError(f"Failover aborted after 2 consecutive COLAB_EXEC_UNCONFIRMED errors: {exc}") from exc
             logger.warning(f"Colab account {acc} failed: {exc}. Trying next candidate...")
             continue
         finally:
+            if client is not None and started:
+                try:
+                    logger.info(f"Stopping Colab session {client.session} on account {acc}...")
+                    client.stop()
+                except Exception as stop_exc:
+                    logger.warning(f"Failed to cleanly stop Colab session {client.session}: {stop_exc}")
             if lock_fd:
                 try:
                     fcntl.flock(lock_fd, fcntl.LOCK_UN)
@@ -1263,10 +1293,23 @@ def stitch_hybrid_scene_groups_and_package(
     scratch = out_mp4.parent / f"_hybrid_stitch_{aspect.replace(':', 'x')}"
     scratch.mkdir(parents=True, exist_ok=True)
 
+    effective_shots = list(shots)
+    effective_durs = list(beat_durations)
+    if not dry_run and tasks and len(tasks) < len(shots):
+        effective_shots = list(shots[: len(tasks)])
+        effective_durs = list(beat_durations[: len(tasks)])
+        tail_dur = sum(float(d) for d in beat_durations[len(tasks) :])
+        effective_durs[-1] = round(effective_durs[-1] + tail_dur, 4)
+        if getattr(tasks[-1], "target_duration", None) is not None:
+            if float(tasks[-1].target_duration) < effective_durs[-1] - 1e-4:
+                tasks[-1].target_duration = round(float(tasks[-1].target_duration) + tail_dur, 4)
+            else:
+                tasks[-1].target_duration = effective_durs[-1]
+
     # Partition tasks into contiguous scene groups based on `continues_prev` and `prev_has_end`
     groups: list[list[int]] = []
-    for idx, shot in enumerate(shots):
-        prev_has_end = idx > 0 and bool(str(shots[idx - 1].get("end_visual", "")).strip())
+    for idx, shot in enumerate(effective_shots):
+        prev_has_end = idx > 0 and bool(str(effective_shots[idx - 1].get("end_visual", "")).strip())
         continues_prev = bool(shot.get("continues_prev", False)) and prev_has_end
         if not groups or not continues_prev:
             groups.append([idx])
@@ -1274,12 +1317,12 @@ def stitch_hybrid_scene_groups_and_package(
             groups[-1].append(idx)
 
     group_spoken_durs: list[float] = [
-        round(sum(float(beat_durations[i]) for i in indices), 4) for indices in groups
+        round(sum(float(effective_durs[i]) for i in indices), 4) for indices in groups
     ]
 
     if dry_run:
         tw, th = (1080, 1920) if is_short else (1920, 1080)
-        dur = max(0.5, sum(beat_durations))
+        dur = max(0.5, sum(effective_durs))
         subprocess.run(
             [
                 "ffmpeg",
@@ -1322,7 +1365,7 @@ def stitch_hybrid_scene_groups_and_package(
             groups=groups,
             tasks=tasks,
             group_spoken_durs=group_spoken_durs,
-            beat_durations=beat_durations,
+            beat_durations=effective_durs,
             audio_path=audio_path,
             ass_path=ass_path,
             srt_path=srt_path,

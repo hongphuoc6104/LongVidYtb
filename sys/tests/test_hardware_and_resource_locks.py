@@ -42,6 +42,7 @@ from flow_cdp.resource_locks import (  # noqa: E402
     JobExecutionLock,
     ProfilePortLock,
     build_optimized_chrome_launch,
+    compute_optimal_browser_slots,
     has_sufficient_dev_shm,
     is_port_locked_by_another_process,
 )
@@ -561,6 +562,32 @@ else:
             self.assertTrue(fresh_dir.exists())
             self.assertTrue(open_dir.exists())
             self.assertTrue(other_dir.exists())
+
+    def test_compute_optimal_browser_slots(self) -> None:
+        """Verify dynamic calculation of optimal Chrome browser slots based on GPU VRAM and env."""
+        # 1. Explicit env var overrides GPU detection
+        with patch.dict(os.environ, {"VP_MAX_CHROME_INSTANCES": "12"}):
+            self.assertEqual(compute_optimal_browser_slots(), 12)
+        with patch.dict(os.environ, {"VP_MAX_CHROME_INSTANCES": "4"}):
+            self.assertEqual(compute_optimal_browser_slots(), 4)
+
+        # 2. No env var -> uses get_gpu_vram_mb
+        with patch.dict(os.environ, {}, clear=True):
+            # No GPU detected -> fallback 8
+            with patch("flow_cdp.resource_locks.get_gpu_vram_mb", return_value=None):
+                self.assertEqual(compute_optimal_browser_slots(), 8)
+
+            # Quadro P620 (1843 MiB): (1843 - 180) // 110 = 15 slots
+            with patch("flow_cdp.resource_locks.get_gpu_vram_mb", return_value=1843):
+                self.assertEqual(compute_optimal_browser_slots(), 15)
+
+            # High-end GPU (8000 MiB): clamped to max 16
+            with patch("flow_cdp.resource_locks.get_gpu_vram_mb", return_value=8000):
+                self.assertEqual(compute_optimal_browser_slots(), 16)
+
+            # Constrained GPU (400 MiB): clamped to min 8
+            with patch("flow_cdp.resource_locks.get_gpu_vram_mb", return_value=400):
+                self.assertEqual(compute_optimal_browser_slots(), 8)
 
 
 if __name__ == "__main__":

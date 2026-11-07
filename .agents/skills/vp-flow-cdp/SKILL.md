@@ -5,7 +5,7 @@ description: "Generate images and seamless multi-clip video chains via Flow CDP 
 
 # VP Flow CDP & Video Chain Skill (`vp-flow-cdp` / `vp-flow-video`)
 
-`vp-flow-cdp` is the specialized skill and engine for automated high-fidelity visual generation on Google Flow (`flow.google.com`) using Chrome DevTools Protocol (CDP). It orchestrates both **AI Image Generation** (BELUGA / Imagen 3) and the **Flow Video Chain Engine** (`vp-flow-video` — Start & End Frame video synthesis powered by **Omni 1.1 Flash (`omni_flash` default)** and Veo 3.1) across a unified pool of 39+ Google accounts with multiprocess credit accounting and zero-stutter stitching.
+`vp-flow-cdp` is the specialized skill and engine for automated high-fidelity visual generation on Google Flow (`flow.google.com`) using Chrome DevTools Protocol (CDP). It orchestrates both **AI Image Generation** (BELUGA / Imagen 3) and the **Flow Video Chain Engine** (`vp-flow-video` — Start & End Frame video synthesis powered by **Omni 1.2 Flash (`omni_1_2_flash` / `omni_flash` default, family `macaron_cookie`)** and Veo 3.1) across a unified pool of 39+ Google accounts with multiprocess credit accounting and zero-stutter stitching.
 
 ---
 
@@ -17,8 +17,8 @@ Google Flow uses Google's internal `batchexecute` Angular frontend transport (`/
 
 | RPC ID | Function | Quota Cost | Purpose & Mechanics |
 |---|---|---|---|
-| `nprQif` | `video_start_end_frames_request` | **7–12 credits** | Generates video transitioning from Start Frame to End Frame (`START_END_FRAMES`, Omni Flash 4s=7c, 6s=10c, 8s=12c; Veo 3.1: 10–100c). |
-| `eb1hJf` | `video_start_frame_request` | **7–15 credits** | Generates video expanding outward from a single initial frame (`START_FRAME`, Omni Flash 4s=7c, 6s=10c, 8s=12c, 10s=15c; Veo 3.1: 10–100c). |
+| `nprQif` | `video_start_end_frames_request` | **12–30 credits** | Generates video transitioning from Start Frame to End Frame (`START_END_FRAMES`, Omni 1.2 Flash 4s=12c, 6s=18c, 8s=24c, 10s=30c; Veo 3.1: 10–100c). |
+| `eb1hJf` | `video_start_frame_request` | **12–30 credits** | Generates video expanding outward from a single initial frame (`START_FRAME`, Omni 1.2 Flash 4s=12c, 6s=18c, 8s=24c, 10s=30c; Veo 3.1: 10–100c). |
 | `maseQ` | `upload_image` | **0 credits** | Uploads local image frame into Google Flow project storage, returning `media_id` and CDN URL. Enables parallel multi-account rendering of a single chain by sharing local frames without cross-account permission blocks. |
 | `nzlxg` | `credits_request` | **0 credits** | Queries live account credit balance (`credits_remaining`, `subscription_credits`, `expiry_epoch`, `paygate_tier`). |
 | `jwpduf` | `operation_request` | **0 credits** | Polls status of ongoing video/image generation operations until state is `CAE` (Complete). |
@@ -102,16 +102,20 @@ Scene 2: [A2] ──tpad clone hold───> [B2] (natural speed + frozen hold)
 
 ### Default Model & Auto-Duration Architecture
 
-The video chain engine uses **`omni_flash` (`Omni 1.1 Flash`)** as the default video generation model with **Auto-Duration** enabled by default:
+The video chain engine uses **`omni_1_2_flash` / `omni_flash` (`Omni 1.2 Flash`, family ID `macaron_cookie`)** as the default video generation model with **Auto-Duration** enabled by default:
 - **`start_end_frames` (`nprQif`)**:
-  - `target_duration <= 4.8s` $\rightarrow$ **4s clip** (**7 credits**) — `omni_flash_i2v_4s_first_last`
-  - `4.8s < target_duration <= 6.8s` $\rightarrow$ **6s clip** (**10 credits**) — `omni_flash_i2v_6s_first_last`
-  - `target_duration > 6.8s` $\rightarrow$ **8s clip** (**12 credits**) — `omni_flash_i2v_8s_first_last`
+  - `target_duration <= 4.8s` $\rightarrow$ **4s clip** (**12 credits**) — `macaron_cookie_i2v_fl_4s`
+  - `4.8s < target_duration <= 6.8s` $\rightarrow$ **6s clip** (**18 credits**) — `macaron_cookie_i2v_fl_6s`
+  - `6.8s < target_duration <= 8.8s` $\rightarrow$ **8s clip** (**24 credits**) — `macaron_cookie_i2v_fl_8s`
+  - `target_duration > 8.8s` $\rightarrow$ **10s clip** (**30 credits**) — `macaron_cookie_i2v_fl_10s`
 - **`start_frame` (`eb1hJf`)**:
-  - `target_duration <= 4.8s` $\rightarrow$ **4s clip** (**7 credits**) — `abra_i2v_4s`
-  - `4.8s < target_duration <= 6.8s` $\rightarrow$ **6s clip** (**10 credits**) — `abra_i2v_6s`
-  - `6.8s < target_duration <= 8.8s` $\rightarrow$ **8s clip** (**12 credits**) — `abra_i2v_8s`
-  - `target_duration > 8.8s` $\rightarrow$ **10s clip** (**15 credits**) — `abra_i2v_10s`
+  - `target_duration <= 4.8s` $\rightarrow$ **4s clip** (**12 credits**) — `macaron_cookie_i2v_4s`
+  - `4.8s < target_duration <= 6.8s` $\rightarrow$ **6s clip** (**18 credits**) — `macaron_cookie_i2v_6s`
+  - `6.8s < target_duration <= 8.8s` $\rightarrow$ **8s clip** (**24 credits**) — `macaron_cookie_i2v_8s`
+  - `target_duration > 8.8s` $\rightarrow$ **10s clip** (**30 credits**) — `macaron_cookie_i2v_10s`
+- **Legacy Omni 1.1 Flash (`abra`)**: Supported for backward compatibility:
+  - `start_end_frames`: 4s (7c), 6s (10c), 8s (12c) — `omni_flash_i2v_{4s,6s,8s}_first_last`
+  - `start_frame`: 4s (7c), 6s (10c), 8s (12c), 10s (15c) — `abra_i2v_{4s,6s,8s,10s}`
 - **Fixed Duration Override**: Passing `--no-auto-duration --duration 6` locks every clip to a fixed 6s duration.
 - **Alternate Veo Models**:
   - `veo_3_1_fast`: 8s, 20 credits

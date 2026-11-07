@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import re
+import subprocess
 from pathlib import Path
 from sys.flow_video.models import ChainMode
 from sys.tools.produce_vn_dual_mode import (
@@ -193,14 +194,17 @@ def test_short_video_chain_spec_construction() -> None:
     assert spec.overscan_crop == 1.05
     assert spec.audio_path == "/tmp/test_audio.wav"
 
-    # Scene pairs verification: 4 shots -> 3 consecutive pairs
+    # Scene pairs verification: 4 shots -> 3 consecutive pairs with last duration folded into final pair
     assert len(spec.scene_pairs) == 3
     for idx, pair in enumerate(spec.scene_pairs):
         assert pair.id == f"pair_{idx:02d}"
-        assert pair.target_duration == durations[idx]
+        expected_dur = durations[idx] + (durations[idx + 1] if idx == len(spec.scene_pairs) - 1 else 0.0)
+        assert abs(pair.target_duration - expected_dur) < 1e-4
         assert pair.trim_first_frame is True
         assert pair.start_image_prompt == shots[idx]["prompt"]
         assert pair.end_image_prompt == shots[idx + 1]["prompt"]
+
+    assert abs(sum(p.target_duration for p in spec.scene_pairs) - sum(durations)) < 1e-4
 
 
 def test_kinetic_ass_subtitles_formatting(tmp_path: Path) -> None:
@@ -409,3 +413,311 @@ def test_profile_filtering_credit_ledger_and_cli_override(tmp_path: Path) -> Non
 
     assert "profile_2" in overridden_names
     assert "profile_en01" in overridden_names
+
+
+def test_short_video_chain_and_stitch_alignment_13_beats_12_clips(tmp_path: Path, monkeypatch) -> None:
+    """Verify that 13 beats produce 12 ScenePairSpec items covering 100% of audio duration,
+    and stitch_hybrid_scene_groups_and_package aligns effective_shots and effective_durs to 12
+    so groups never exceed len(clips) - 1, completely preventing IndexError on Colab.
+    """
+    shots = [
+        {"id": f"S{i:02d}", "narration": f"Beat {i}", "prompt": f"Prompt {i}", "duration": 2.5 + 0.1 * i}
+        for i in range(13)
+    ]
+    durations = [float(s["duration"]) for s in shots]
+    total_audio_dur = sum(durations)
+
+    # 1. Build short video chain spec
+    spec = build_short_video_chain_spec(
+        channel_slug="tui-tien",
+        job_id="test_align_job",
+        shots=shots,
+        audio_path="/tmp/test_narration.wav",
+        beat_durations=durations,
+    )
+    assert len(spec.scene_pairs) == 12
+    # Verify sum of pair durations exactly matches total audio duration (last duration folded into pair_11)
+    assert abs(sum(p.target_duration for p in spec.scene_pairs) - total_audio_dur) < 1e-4
+    assert abs(spec.scene_pairs[-1].target_duration - (durations[11] + durations[12])) < 1e-4
+
+    # 2. Simulate 12 completed tasks from orchestrator
+    from sys.flow_video.models import VideoClipTask
+
+    tasks = [
+        VideoClipTask(
+            clip_id=f"pair_{i:02d}",
+            index=i,
+            start_frame_path=f"/tmp/frame_{i}.png",
+            end_frame_path=f"/tmp/frame_{i+1}.png",
+            output_mp4_path=str(tmp_path / f"clip_{i:02d}.mp4"),
+            aspect="9:16",
+            video_model="omni_flash",
+            target_duration=spec.scene_pairs[i].target_duration,
+        )
+        for i in range(12)
+    ]
+
+    # Create dummy files for audio, ass, srt, watermark
+    audio_wav = tmp_path / "audio.wav"
+    audio_wav.write_bytes(b"RIFF" + b"\x00" * 100)
+    ass_path = tmp_path / "sub.ass"
+    ass_path.write_text("[Script Info]\n", encoding="utf-8")
+    srt_path = tmp_path / "sub.srt"
+    srt_path.write_text("1\n00:00:00,000 --> 00:00:01,000\nTest\n", encoding="utf-8")
+    wm_png = tmp_path / "wm.png"
+    wm_png.write_bytes(b"\x89PNG\r\n\x1a\n" + b"\x00" * 50)
+    out_mp4 = tmp_path / "out.mp4"
+
+    # Capture arguments passed to package_final_on_colab_t4_nvenc
+    captured_kwargs = {}
+
+    def mock_package(**kwargs):
+        captured_kwargs.update(kwargs)
+        return {"duration": total_audio_dur, "video_encoder": "colab_t4_h264_nvenc"}
+
+    import sys.tools.produce_en_flow_dynamic_demo as demo_mod
+    monkeypatch.setattr(demo_mod, "package_final_on_colab_t4_nvenc", mock_package)
+
+    from sys.tools.produce_en_flow_dynamic_demo import stitch_hybrid_scene_groups_and_package
+
+    meta = stitch_hybrid_scene_groups_and_package(
+        channel_slug="tui-tien",
+        aspect="9:16",
+        shots=shots,
+        tasks=tasks,
+        beat_durations=durations,
+        audio_path=audio_wav,
+        ass_path=ass_path,
+        srt_path=srt_path,
+        watermark_png=wm_png,
+        out_mp4=out_mp4,
+        dry_run=False,
+    )
+
+    assert meta["video_encoder"] == "colab_t4_h264_nvenc"
+    assert "groups" in captured_kwargs
+    passed_groups = captured_kwargs["groups"]
+    passed_durs = captured_kwargs["beat_durations"]
+
+    # Invariants:
+    # 1. Zero index in groups >= 12 (len(tasks) == 12, so max index is 11)
+    all_indices = [idx for grp in passed_groups for idx in grp]
+    assert max(all_indices) < 12
+    assert len(all_indices) == 12
+
+    # 2. Length of passed beat_durations is 12 and sum equals full 13-beat total_audio_dur
+    assert len(passed_durs) == 12
+    assert abs(sum(passed_durs) - total_audio_dur) < 1e-4
+
+    # 3. Last task target_duration folded the remaining beat duration
+    assert abs(tasks[-1].target_duration - (durations[11] + durations[12])) < 1e-4
+
+
+def test_dispatch_long_image_dag_flattening_and_resume_safety(tmp_path: Path, monkeypatch) -> None:
+    """Verify that dispatch_long_image_dag_via_pool:
+    1. Flattens multi-hop based_on chains (C -> B -> A => C -> A).
+    2. Clears based_on to None if the anchor image already exists on disk (preventing deadlock in deferred_tasks).
+    3. Keeps based_on pointing to root anchor if anchor is missing.
+    4. Passes credit_cost=0 and editorial_overlay={'enabled': False} on every task.
+    """
+    out_dir = tmp_path / "images"
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    # 6 beats:
+    # B000: Anchor 1
+    # B001: based_on B000
+    # B002: based_on B001 (multi-hop to B000)
+    # B003: based_on B002 (multi-hop to B000)
+    # B004: Anchor 2 (missing from disk)
+    # B005: based_on B004
+    beats = [
+        {"beat_id": "B000", "prompt": "Prompt 0", "based_on": None},
+        {"beat_id": "B001", "prompt": "Prompt 1", "based_on": "B000"},
+        {"beat_id": "B002", "prompt": "Prompt 2", "based_on": "B001"},
+        {"beat_id": "B003", "prompt": "Prompt 3", "based_on": "B002"},
+        {"beat_id": "B004", "prompt": "Prompt 4", "based_on": None},
+        {"beat_id": "B005", "prompt": "Prompt 5", "based_on": "B004"},
+    ]
+
+    # Simulate resume where B000 already finished on disk (>5000 bytes)
+    img_0000 = out_dir / "img_0000.png"
+    img_0000.write_bytes(b"\x89PNG\r\n\x1a\n" + b"\x00" * 6000)
+
+    submitted_tasks = []
+
+    class MockPool:
+        def __init__(self, **kwargs):
+            self.kwargs = kwargs
+
+        def start(self):
+            pass
+
+        def submit_task(self, task):
+            submitted_tasks.append(task)
+
+        def join(self):
+            pass
+
+        def shutdown(self):
+            pass
+
+    import sys.tools.produce_vn_dual_mode as dual_mod
+    monkeypatch.setattr(dual_mod, "PersistentWorkerPool", MockPool)
+    monkeypatch.setattr(dual_mod, "resolve_authenticated_profiles", lambda *args, **kwargs: [{"name": "profile_1"}])
+
+    image_paths = dual_mod.dispatch_long_image_dag_via_pool(
+        channel_slug="tui-tien",
+        beats=beats,
+        output_dir=out_dir,
+        max_workers=8,
+        dry_run=False,
+    )
+
+    assert len(image_paths) == 6
+    # B000 is skipped because it's already on disk
+    task_map = {t["id"]: t for t in submitted_tasks}
+    assert "B000" not in task_map
+    assert set(task_map.keys()) == {"B001", "B002", "B003", "B004", "B005"}
+
+    # B001, B002, B003 root anchor was B000. Since B000 is already on disk, based_on MUST be None!
+    assert task_map["B001"]["based_on"] is None
+    assert task_map["B002"]["based_on"] is None
+    assert task_map["B003"]["based_on"] is None
+
+    # B004 is missing anchor -> based_on is None
+    assert task_map["B004"]["based_on"] is None
+
+    # B005 root anchor is B004. B004 is NOT on disk yet -> based_on is "B004"
+    assert task_map["B005"]["based_on"] == "B004"
+
+    # Tasks have credit_cost=0 and editorial_overlay disabled
+    for t in submitted_tasks:
+        assert t["credit_cost"] == 0
+        assert t["credit_reason"] == "image"
+        assert t["editorial_overlay"] == {"enabled": False}
+
+
+def test_render_long_chapter_chunks_colab_t4_bundle_and_pool_select(tmp_path: Path, monkeypatch) -> None:
+    """Verify that render_long_chapter_chunks_colab_t4:
+    1. Imports and uses select_pool without ImportError.
+    2. Converts images to JPEG Q92 (~14x smaller bundle) and pre-encodes AAC narration.m4a.
+    3. Includes render_job.py inside bundle.zip using zipfile.ZIP_STORED.
+    4. Guarantees client.stop() teardown in finally block.
+    """
+    from colab_bridge.accounts import select_pool
+    accounts = select_pool(session="vp-test-session", role="render")
+    assert isinstance(accounts, list)
+    assert len(accounts) > 0
+
+    import sys.tools.produce_vn_dual_mode as dual_mod
+
+    # Create dummy images
+    from PIL import Image
+    image_paths = []
+    for i in range(3):
+        p = tmp_path / f"img_{i:04d}.png"
+        im = Image.new("RGB", (128, 72), (i * 40, 50, 60))
+        im.save(p, "PNG")
+        image_paths.append(p)
+
+    # Create dummy audio, watermark, metadata
+    audio_wav = tmp_path / "audio.wav"
+    subprocess.run(
+        ["ffmpeg", "-y", "-f", "lavfi", "-i", "sine=f=440:d=1.0", "-c:a", "pcm_s16le", str(audio_wav)],
+        check=True,
+        capture_output=True,
+    )
+    wm_png = tmp_path / "watermark.png"
+    wm_im = Image.new("RGBA", (32, 32), (255, 255, 255, 200))
+    wm_im.save(wm_png, "PNG")
+    meta_txt = tmp_path / "chapters_metadata.txt"
+    meta_txt.write_text(";FFMETADATA1\n", encoding="utf-8")
+    out_mp4 = tmp_path / "final.mp4"
+
+    from sys.tools.produce_vn_dual_mode import BeatChunk
+    chunks = [
+        BeatChunk(
+            chunk_index=0,
+            start_beat_idx=0,
+            end_beat_idx=3,
+            beats=[
+                {"camera_motion": "push_in", "transition": "fade"},
+                {"camera_motion": "zoom_out", "transition": "fade"},
+                {"camera_motion": "push_in", "transition": "fade"},
+            ],
+            beat_durations=[1.0, 1.0, 1.0],
+            start_time=0.0,
+            end_time=3.0,
+            chunk_duration=3.0,
+        )
+    ]
+
+    stopped_sessions = []
+    uploaded_files = {}
+
+    class MockClient:
+        def __init__(self, sys_dir, cfg):
+            self.account = cfg.get("colab_tts", {}).get("account", "account-01")
+            self.session = cfg.get("colab_tts", {}).get("session", "test-session")
+
+        def ensure_authenticated(self):
+            pass
+
+        def _ready(self, auto_start=True):
+            pass
+
+        def exec(self, cmd, timeout=30):
+            if "shutil.disk_usage" in cmd:
+                return "WORK_DIR:/dev/shm/vp_long_test_bundle"
+            if "status.json" in cmd:
+                return 'POLL_STATUS:{"status": "completed", "completed_chunks": 1, "total_chunks": 1}'
+            return ""
+
+        def call(self, action, *args, **kwargs):
+            if action == "upload":
+                # args: -s, session, local_p, remote_p
+                src = args[2]
+                uploaded_files["bundle.zip"] = Path(src).read_bytes()
+            elif action == "download":
+                # args: -s, session, remote_p, local_p
+                dest = Path(args[3])
+                # Generate a valid tiny MP4 so probe_video_clip succeeds
+                subprocess.run(
+                    ["ffmpeg", "-y", "-f", "lavfi", "-i", "color=c=black:s=64x64:d=0.1", "-c:v", "libx264", str(dest)],
+                    check=True,
+                    capture_output=True,
+                )
+
+        def stop(self):
+            stopped_sessions.append(self.session)
+
+    monkeypatch.setattr(dual_mod, "Client", MockClient)
+
+    res = dual_mod.render_long_chapter_chunks_colab_t4(
+        job_id="test_bundle",
+        chunks=chunks,
+        image_paths=image_paths,
+        audio_path=audio_wav,
+        metadata_path=meta_txt,
+        watermark_png=wm_png,
+        out_mp4=out_mp4,
+        colab_account="account-01",
+    )
+
+    assert res["video_encoder"] == "colab_t4_h264_nvenc"
+    assert "test-session" in stopped_sessions or any("vp-vn-long-" in s for s in stopped_sessions)
+    assert "bundle.zip" in uploaded_files
+
+    # Inspect uploaded bundle.zip contents
+    import io
+    import zipfile
+    with zipfile.ZipFile(io.BytesIO(uploaded_files["bundle.zip"]), "r") as zf:
+        namelist = zf.namelist()
+        assert "narration.m4a" in namelist
+        assert "render_job.py" in namelist
+        assert "manifest.json" in namelist
+        assert "chapters_metadata.txt" in namelist
+        assert "watermark.png" in namelist
+        assert "images/img_0000.jpg" in namelist
+        assert "images/img_0001.jpg" in namelist
+        assert "images/img_0002.jpg" in namelist
