@@ -1,0 +1,424 @@
+{
+  "channel_id": "tui_tien",
+  "channel_slug": "tui-tien",
+  "job_id": "tui-tien-short-fullchain",
+  "parent_long_id": "tui-tien-long-305-master",
+  "format_profile": "short_9x16",
+  "aspect": "9:16",
+  "video_model": "omni_flash",
+  "total_duration_sec": 48.0,
+  "youtube_title": "Bẫy Giá Mồi: Vì Sao Bạn Luôn Chọn Cỡ Lớn?",
+  "thumbnail_spec": {
+    "visual_hook": "Macro 35mm vertical 9:16 shot of three coffee cups with price labels under warm directional tungsten keylight",
+    "text_prompt": "BẪY GIÁ MỒI",
+    "prompt": "Cinematic documentary vertical 9:16 tabletop photograph of three glass cups of iced coffee arranged by small, medium, and large sizes on a dark textured slate table, bold uppercase text 'BẪY GIÁ MỒI' visible on coffee sleeve, warm directional tungsten keylight, crisp polymer VND currency notes, f/2.0 shallow depth of field, 8k documentary still, zero graphic overlay cards, no cartoons."
+  },
+  "cta_plan": {
+    "bridge": "Bản phân tích đầy đủ năm bẫy giá ẩn đang có trên video dài của kênh.",
+    "close": "Hãy kiểm tra lại hóa đơn gần nhất để giữ chặt túi tiền của bạn."
+  },
+  "beats": [
+    {
+      "beat_id": "SB01",
+      "at": 0.0,
+      "duration": 3.5,
+      "shot_type": "hook_tabletop",
+      "prompt": "Cinematic vertical 9:16 documentary photograph of an adult customer hand picking up a tall glass cup of iced Vietnamese milk coffee from a dark textured slate counter, condensation drops running down glass, warm 3200K directional tungsten keylight, WSJ consumer economics style, 8k documentary still, zero text overlays, no cartoons, no stickmen.",
+      "motion_prompt": "Slow smooth 35mm commercial dolly push-in toward the tall iced coffee cup on dark slate, hand gently lifting cup as ice cubes shift and settle with realistic fluid physics under warm directional keylight, locked geometry, zero morphing.",
+      "narration": "Cầm ly cà phê cỡ lớn năm mươi chín nghìn, bạn tưởng mình vừa chớp được món hời.",
+      "camera_motion": "push_in",
+      "transition": "fade"
+    },
+    {
+      "beat_id": "SB02",
+      "at": 3.5,
+      "duration": 3.6,
+      "shot_type": "decoy_lineup",
+      "prompt": "Cinematic vertical 9:16 tabletop photograph showing small and medium takeaway cups standing on dark slate beside a wooden café counter, warm amber lighting casting crisp cast shadows, commercial product photography, f/2.0 depth of field, zero text overlays, no cartoons, no stickmen.",
+      "motion_prompt": "Smooth eye-level lateral tabletop tracking pass from left to right, revealing the small cup and medium cup side by side under warm tungsten spotlight, steady specular reflections on polished counter, zero morphing.",
+      "narration": "Bảng giá quán niêm yết: cỡ nhỏ ba mươi chín nghìn và cỡ vừa năm mươi lăm nghìn đồng.",
+      "camera_motion": "pan_right",
+      "transition": "smoothright"
+    },
+    {
+      "beat_id": "SB03",
+      "at": 7.1,
+      "duration": 3.6,
+      "shot_type": "price_gap_reveal",
+      "prompt": "Cinematic vertical 9:16 macro shot of the narrow space between the medium cup and the tall large cup on slate surface, warm directional beam highlighting the four thousand dong price gap, tactile commercial cinematography, zero text overlays, no cartoons, no stickmen.",
+      "motion_prompt": "Slow optical rack-focus shifting from the medium cup to the tall large cup standing immediately beside it, amber liquid reflections catching keylight, crisp f/2.0 optical focus pull, zero morphing.",
+      "narration": "Khoảng cách giữa cỡ nhỏ và vừa tới mười sáu nghìn, nhưng lên cỡ lớn chỉ thêm bốn nghìn đồng.",
+      "camera_motion": "zoom_in",
+      "transition": "fade"
+    },
+    {
+      "beat_id": "SB04",
+      "at": 10.7,
+      "duration": 3.7,
+      "shot_type": "cognitive_comparison",
+      "prompt": "Cinematic vertical 9:16 tabletop composition showing all three cup sizes aligned vertically on slate, small, medium, and large, illuminated by precision commercial rim lights, WSJ consumer economics style, f/2.0 depth of field, zero text overlays, no cartoons, no stickmen.",
+      "motion_prompt": "Smooth slow vertical tilt up along the height profile of the three cups, showing dramatic volume contrast from small to large under consistent 3200K studio keylight, rigid physical geometry, zero morphing.",
+      "narration": "Não bạn lập tức so sánh: bốn nghìn đồng quá rẻ để đổi lấy ly nước gấp rưỡi dung tích.",
+      "camera_motion": "pan_up",
+      "transition": "smoothup"
+    },
+    {
+      "beat_id": "SB05",
+      "at": 14.4,
+      "duration": 3.6,
+      "shot_type": "cash_exchange",
+      "prompt": "Cinematic vertical 9:16 documentary close-up of customer hand handing crisp polymer Vietnamese banknotes across wooden counter edge to cashier, warm café interior softly blurred, commercial still, zero text overlays, no cartoons, no stickmen.",
+      "motion_prompt": "Slow deliberate push-in as customer hand hands polymer banknotes across counter edge, smooth paper bend and weight transfer under warm tungsten spotlight, clean commercial color grading, zero morphing.",
+      "narration": "Bạn vui vẻ rút ví chọn ly lớn nhất vì tin rằng mình vừa tiết kiệm được tiền.",
+      "camera_motion": "push_in",
+      "transition": "fade"
+    },
+    {
+      "beat_id": "SB06",
+      "at": 18.0,
+      "duration": 3.6,
+      "shot_type": "decoy_isolation",
+      "prompt": "Cinematic vertical 9:16 shot of the medium cup standing completely isolated under a single sharp theatrical spotlight on dark slate table, casting long dark shadow, visual metaphor of sacrifice, f/2.0 depth of field, zero text overlays, no cartoons, no stickmen.",
+      "motion_prompt": "Slow dramatic camera orbit around the isolated medium cup on dark slate, single narrow tungsten beam casting rotating shadow, pristine tabletop textures, silent commercial cinematography, zero morphing.",
+      "narration": "Nhưng thực tế, ly cỡ vừa sinh ra trên thực đơn chưa từng được tạo ra để bán.",
+      "camera_motion": "orbit_cw",
+      "transition": "dissolve"
+    },
+    {
+      "beat_id": "SB07",
+      "at": 21.6,
+      "duration": 3.7,
+      "shot_type": "mechanism_reveal",
+      "prompt": "Cinematic vertical 9:16 shot showing the medium cup in shadow while the large cup beside it is brightly bathed in warm amber keylight, stark visual contrast, WSJ consumer economics editorial photography, zero text overlays, no cartoons, no stickmen.",
+      "narration": "Nó chỉ là một con tốt thí mạng được lập trình làm mồi nhử tâm lý.",
+      "motion_prompt": "Lateral tracking pass from dark shadowed medium cup into fully illuminated large cup, light transition smoothly sweeping across slate surface, crisp specular highlights on glass, zero morphing.",
+      "camera_motion": "pan_right",
+      "transition": "smoothright"
+    },
+    {
+      "beat_id": "SB08",
+      "at": 25.3,
+      "duration": 3.7,
+      "shot_type": "ingredient_cost",
+      "prompt": "Cinematic vertical 9:16 macro shot of a barista pump dispensing a single squirt of flavored syrup and spoonful of condensed milk into measuring beaker, golden droplets freezing in directional studio flash, zero text overlays, no cartoons, no stickmen.",
+      "motion_prompt": "Macro slow motion shot of amber syrup droplet falling into glass beaker, liquid ripple expanding smoothly under sharp 3200K side-light, high-speed commercial food cinematography, zero morphing.",
+      "narration": "Chi phí sữa và siro thêm vào ly lớn thực chất tốn của quán chưa tới tám trăm đồng.",
+      "camera_motion": "zoom_in",
+      "transition": "fade"
+    },
+    {
+      "beat_id": "SB09",
+      "at": 29.0,
+      "duration": 3.8,
+      "shot_type": "wallet_impact",
+      "prompt": "Cinematic vertical 9:16 shot of an open artisan leather wallet on dark slate with two ten-thousand dong polymer banknotes being pulled out, warm tungsten side-light, f/2.0 depth of field, zero text overlays, no cartoons, no stickmen.",
+      "motion_prompt": "Slow push-in as two ten-thousand dong polymer banknotes are pulled smoothly from the leather wallet slot, tactile leather texture and crisp banknote physics under warm keylight, zero morphing.",
+      "narration": "Quán đã khéo léo móc thêm từ túi bạn hai mươi nghìn đồng so với nhu cầu uống thật.",
+      "camera_motion": "push_in",
+      "transition": "fade"
+    },
+    {
+      "beat_id": "SB10",
+      "at": 32.8,
+      "duration": 4.0,
+      "shot_type": "industry_pattern",
+      "prompt": "Cinematic vertical 9:16 wide view of a modern urban Vietnamese coffee chain interior during morning rush, barista team operating behind counter, customers ordering, warm amber ambiance, photojournalism still, zero text overlays, no cartoons, no stickmen.",
+      "motion_prompt": "Smooth eye-level lateral tracking shot through café interior, showing customers looking up at overhead menu boards with three-tier pricing columns, authentic commercial documentary atmosphere, zero morphing.",
+      "narration": "Đây chính là bẫy giá mồi kinh điển chi phối mọi thực đơn đồ uống và thức ăn nhanh.",
+      "camera_motion": "pan_left",
+      "transition": "smoothleft"
+    },
+    {
+      "beat_id": "SB11",
+      "at": 36.8,
+      "duration": 4.0,
+      "shot_type": "takeaway_defense",
+      "prompt": "Cinematic vertical 9:16 close-up of a shopper looking thoughtfully at a small coffee cup in hand with disciplined smile, standing beside café counter, warm natural morning light, 35mm film still, zero text overlays, no cartoons, no stickmen.",
+      "motion_prompt": "Slow gentle dolly pullback from the customer holding small cup, warm daylight softly illuminating face and coffee cup, calm intentional posture, commercial documentary realism, zero morphing.",
+      "narration": "Lần tới gọi món, hãy nhìn vào lượng nước bạn thực sự uống hết thay vì nhìn vào khoản chênh lệch.",
+      "camera_motion": "zoom_out",
+      "transition": "fade"
+    },
+    {
+      "beat_id": "SB12",
+      "at": 40.8,
+      "duration": 3.6,
+      "shot_type": "bridge_cta",
+      "prompt": "Cinematic vertical 9:16 macro tabletop shot of a smartphone lying beside a printed receipt on dark slate, screen displaying a high-density financial documentary thumbnail, warm tungsten task light, f/2.0 focus, zero text overlays, no cartoons, no stickmen.",
+      "motion_prompt": "Slow push-in toward the smartphone screen resting on slate counter, showing crisp documentary video frame beside coffee receipt, warm amber specular gleam, clean commercial cinematography, zero morphing.",
+      "narration": "Bản phân tích đầy đủ năm bẫy giá ẩn đang có trên video dài của kênh.",
+      "camera_motion": "push_in",
+      "transition": "fade"
+    },
+    {
+      "beat_id": "SB13",
+      "at": 44.4,
+      "duration": 3.6,
+      "shot_type": "close_cta",
+      "prompt": "Cinematic vertical 9:16 shot of hands gently closing an artisan leather wallet on dark slate counter with quiet confidence, morning sunlight touching wood grain, peace of mind concept, WSJ consumer economics style, zero text overlays, no cartoons, no stickmen.",
+      "motion_prompt": "Slow cinematic pullback as hands close the leather wallet with gentle finality on dark slate, warm morning sunbeam sweeping across wood grain, serene financial sovereignty mood, zero morphing.",
+      "narration": "Hãy kiểm tra lại hóa đơn gần nhất để giữ chặt túi tiền của bạn.",
+      "camera_motion": "zoom_out",
+      "transition": "fade"
+    }
+  ],
+  "scene_pairs": [
+    {
+      "id": "PAIR_01",
+      "start_beat_id": "SB01",
+      "end_beat_id": "SB02",
+      "target_duration": 3.5,
+      "motion_prompt": "Slow smooth 35mm commercial dolly push-in toward the tall iced coffee cup on dark slate, hand gently lifting cup as ice cubes shift and settle with realistic fluid physics under warm directional keylight, locked geometry, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_02",
+      "start_beat_id": "SB02",
+      "end_beat_id": "SB03",
+      "target_duration": 3.6,
+      "motion_prompt": "Smooth eye-level lateral tabletop tracking pass from left to right, revealing the small cup and medium cup side by side under warm tungsten spotlight, steady specular reflections on polished counter, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_03",
+      "start_beat_id": "SB03",
+      "end_beat_id": "SB04",
+      "target_duration": 3.6,
+      "motion_prompt": "Slow optical rack-focus shifting from the medium cup to the tall large cup standing immediately beside it, amber liquid reflections catching keylight, crisp f/2.0 optical focus pull, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_04",
+      "start_beat_id": "SB04",
+      "end_beat_id": "SB05",
+      "target_duration": 3.7,
+      "motion_prompt": "Smooth slow vertical tilt up along the height profile of the three cups, showing dramatic volume contrast from small to large under consistent 3200K studio keylight, rigid physical geometry, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_05",
+      "start_beat_id": "SB05",
+      "end_beat_id": "SB06",
+      "target_duration": 3.6,
+      "motion_prompt": "Slow deliberate push-in as customer hand hands polymer banknotes across counter edge, smooth paper bend and weight transfer under warm tungsten spotlight, clean commercial color grading, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_06",
+      "start_beat_id": "SB06",
+      "end_beat_id": "SB07",
+      "target_duration": 3.6,
+      "motion_prompt": "Slow dramatic camera orbit around the isolated medium cup on dark slate, single narrow tungsten beam casting rotating shadow, pristine tabletop textures, silent commercial cinematography, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_07",
+      "start_beat_id": "SB07",
+      "end_beat_id": "SB08",
+      "target_duration": 3.7,
+      "motion_prompt": "Lateral tracking pass from dark shadowed medium cup into fully illuminated large cup, light transition smoothly sweeping across slate surface, crisp specular highlights on glass, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_08",
+      "start_beat_id": "SB08",
+      "end_beat_id": "SB09",
+      "target_duration": 3.7,
+      "motion_prompt": "Macro slow motion shot of amber syrup droplet falling into glass beaker, liquid ripple expanding smoothly under sharp 3200K side-light, high-speed commercial food cinematography, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_09",
+      "start_beat_id": "SB09",
+      "end_beat_id": "SB10",
+      "target_duration": 3.8,
+      "motion_prompt": "Slow push-in as two ten-thousand dong polymer banknotes are pulled smoothly from the leather wallet slot, tactile leather texture and crisp banknote physics under warm keylight, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_10",
+      "start_beat_id": "SB10",
+      "end_beat_id": "SB11",
+      "target_duration": 4.0,
+      "motion_prompt": "Smooth eye-level lateral tracking shot through café interior, showing customers looking up at overhead menu boards with three-tier pricing columns, authentic commercial documentary atmosphere, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_11",
+      "start_beat_id": "SB11",
+      "end_beat_id": "SB12",
+      "target_duration": 4.0,
+      "motion_prompt": "Slow gentle dolly pullback from the customer holding small cup, warm daylight softly illuminating face and coffee cup, calm intentional posture, commercial documentary realism, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_12",
+      "start_beat_id": "SB12",
+      "end_beat_id": "SB13",
+      "target_duration": 3.6,
+      "motion_prompt": "Slow push-in toward the smartphone screen resting on slate counter, showing crisp documentary video frame beside coffee receipt, warm amber specular gleam, clean commercial cinematography, zero morphing.",
+      "mode": "boundary_extend"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "SC01",
+      "beat_id": "SB01",
+      "at": 0.0,
+      "duration": 3.5,
+      "shot_type": "hook_tabletop",
+      "narration": "Cầm ly cà phê cỡ lớn năm mươi chín nghìn, bạn tưởng mình vừa chớp được món hời.",
+      "prompt": "Cinematic vertical 9:16 documentary photograph of an adult customer hand picking up a tall glass cup of iced Vietnamese milk coffee from a dark textured slate counter, condensation drops running down glass, warm 3200K directional tungsten keylight, WSJ consumer economics style, 8k documentary still, zero text overlays, no cartoons, no stickmen.",
+      "motion_prompt": "Slow smooth 35mm commercial dolly push-in toward the tall iced coffee cup on dark slate, hand gently lifting cup as ice cubes shift and settle with realistic fluid physics under warm directional keylight, locked geometry, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade"
+    },
+    {
+      "id": "SC02",
+      "beat_id": "SB02",
+      "at": 3.5,
+      "duration": 3.6,
+      "shot_type": "decoy_lineup",
+      "narration": "Bảng giá quán niêm yết: cỡ nhỏ ba mươi chín nghìn và cỡ vừa năm mươi lăm nghìn đồng.",
+      "prompt": "Cinematic vertical 9:16 tabletop photograph showing small and medium takeaway cups standing on dark slate beside a wooden café counter, warm amber lighting casting crisp cast shadows, commercial product photography, f/2.0 depth of field, zero text overlays, no cartoons, no stickmen.",
+      "motion_prompt": "Smooth eye-level lateral tabletop tracking pass from left to right, revealing the small cup and medium cup side by side under warm tungsten spotlight, steady specular reflections on polished counter, zero morphing.",
+      "camera_motion": "pan_right",
+      "transition": "smoothright"
+    },
+    {
+      "id": "SC03",
+      "beat_id": "SB03",
+      "at": 7.1,
+      "duration": 3.6,
+      "shot_type": "price_gap_reveal",
+      "narration": "Khoảng cách giữa cỡ nhỏ và vừa tới mười sáu nghìn, nhưng lên cỡ lớn chỉ thêm bốn nghìn đồng.",
+      "prompt": "Cinematic vertical 9:16 macro shot of the narrow space between the medium cup and the tall large cup on slate surface, warm directional beam highlighting the four thousand dong price gap, tactile commercial cinematography, zero text overlays, no cartoons, no stickmen.",
+      "motion_prompt": "Slow optical rack-focus shifting from the medium cup to the tall large cup standing immediately beside it, amber liquid reflections catching keylight, crisp f/2.0 optical focus pull, zero morphing.",
+      "camera_motion": "zoom_in",
+      "transition": "fade"
+    },
+    {
+      "id": "SC04",
+      "beat_id": "SB04",
+      "at": 10.7,
+      "duration": 3.7,
+      "shot_type": "cognitive_comparison",
+      "narration": "Não bạn lập tức so sánh: bốn nghìn đồng quá rẻ để đổi lấy ly nước gấp rưỡi dung tích.",
+      "prompt": "Cinematic vertical 9:16 tabletop composition showing all three cup sizes aligned vertically on slate, small, medium, and large, illuminated by precision commercial rim lights, WSJ consumer economics style, f/2.0 depth of field, zero text overlays, no cartoons, no stickmen.",
+      "motion_prompt": "Smooth slow vertical tilt up along the height profile of the three cups, showing dramatic volume contrast from small to large under consistent 3200K studio keylight, rigid physical geometry, zero morphing.",
+      "camera_motion": "pan_up",
+      "transition": "smoothup"
+    },
+    {
+      "id": "SC05",
+      "beat_id": "SB05",
+      "at": 14.4,
+      "duration": 3.6,
+      "shot_type": "cash_exchange",
+      "narration": "Bạn vui vẻ rút ví chọn ly lớn nhất vì tin rằng mình vừa tiết kiệm được tiền.",
+      "prompt": "Cinematic vertical 9:16 documentary close-up of customer hand handing crisp polymer Vietnamese banknotes across wooden counter edge to cashier, warm café interior softly blurred, commercial still, zero text overlays, no cartoons, no stickmen.",
+      "motion_prompt": "Slow deliberate push-in as customer hand hands polymer banknotes across counter edge, smooth paper bend and weight transfer under warm tungsten spotlight, clean commercial color grading, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade"
+    },
+    {
+      "id": "SC06",
+      "beat_id": "SB06",
+      "at": 18.0,
+      "duration": 3.6,
+      "shot_type": "decoy_isolation",
+      "narration": "Nhưng thực tế, ly cỡ vừa sinh ra trên thực đơn chưa từng được tạo ra để bán.",
+      "prompt": "Cinematic vertical 9:16 shot of the medium cup standing completely isolated under a single sharp theatrical spotlight on dark slate table, casting long dark shadow, visual metaphor of sacrifice, f/2.0 depth of field, zero text overlays, no cartoons, no stickmen.",
+      "motion_prompt": "Slow dramatic camera orbit around the isolated medium cup on dark slate, single narrow tungsten beam casting rotating shadow, pristine tabletop textures, silent commercial cinematography, zero morphing.",
+      "camera_motion": "orbit_cw",
+      "transition": "dissolve"
+    },
+    {
+      "id": "SC07",
+      "beat_id": "SB07",
+      "at": 21.6,
+      "duration": 3.7,
+      "shot_type": "mechanism_reveal",
+      "narration": "Nó chỉ là một con tốt thí mạng được lập trình làm mồi nhử tâm lý.",
+      "prompt": "Cinematic vertical 9:16 shot showing the medium cup in shadow while the large cup beside it is brightly bathed in warm amber keylight, stark visual contrast, WSJ consumer economics editorial photography, zero text overlays, no cartoons, no stickmen.",
+      "motion_prompt": "Lateral tracking pass from dark shadowed medium cup into fully illuminated large cup, light transition smoothly sweeping across slate surface, crisp specular highlights on glass, zero morphing.",
+      "camera_motion": "pan_right",
+      "transition": "smoothright"
+    },
+    {
+      "id": "SC08",
+      "beat_id": "SB08",
+      "at": 25.3,
+      "duration": 3.7,
+      "shot_type": "ingredient_cost",
+      "narration": "Chi phí sữa và siro thêm vào ly lớn thực chất tốn của quán chưa tới tám trăm đồng.",
+      "prompt": "Cinematic vertical 9:16 macro shot of a barista pump dispensing a single squirt of flavored syrup and spoonful of condensed milk into measuring beaker, golden droplets freezing in directional studio flash, zero text overlays, no cartoons, no stickmen.",
+      "motion_prompt": "Macro slow motion shot of amber syrup droplet falling into glass beaker, liquid ripple expanding smoothly under sharp 3200K side-light, high-speed commercial food cinematography, zero morphing.",
+      "camera_motion": "zoom_in",
+      "transition": "fade"
+    },
+    {
+      "id": "SC09",
+      "beat_id": "SB09",
+      "at": 29.0,
+      "duration": 3.8,
+      "shot_type": "wallet_impact",
+      "narration": "Quán đã khéo léo móc thêm từ túi bạn hai mươi nghìn đồng so với nhu cầu uống thật.",
+      "prompt": "Cinematic vertical 9:16 shot of an open artisan leather wallet on dark slate with two ten-thousand dong polymer banknotes being pulled out, warm tungsten side-light, f/2.0 depth of field, zero text overlays, no cartoons, no stickmen.",
+      "motion_prompt": "Slow push-in as two ten-thousand dong polymer banknotes are pulled smoothly from the leather wallet slot, tactile leather texture and crisp banknote physics under warm keylight, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade"
+    },
+    {
+      "id": "SC10",
+      "beat_id": "SB10",
+      "at": 32.8,
+      "duration": 4.0,
+      "shot_type": "industry_pattern",
+      "narration": "Đây chính là bẫy giá mồi kinh điển chi phối mọi thực đơn đồ uống và thức ăn nhanh.",
+      "prompt": "Cinematic vertical 9:16 wide view of a modern urban Vietnamese coffee chain interior during morning rush, barista team operating behind counter, customers ordering, warm amber ambiance, photojournalism still, zero text overlays, no cartoons, no stickmen.",
+      "motion_prompt": "Smooth eye-level lateral tracking shot through café interior, showing customers looking up at overhead menu boards with three-tier pricing columns, authentic commercial documentary atmosphere, zero morphing.",
+      "camera_motion": "pan_left",
+      "transition": "smoothleft"
+    },
+    {
+      "id": "SC11",
+      "beat_id": "SB11",
+      "at": 36.8,
+      "duration": 4.0,
+      "shot_type": "takeaway_defense",
+      "narration": "Lần tới gọi món, hãy nhìn vào lượng nước bạn thực sự uống hết thay vì nhìn vào khoản chênh lệch.",
+      "prompt": "Cinematic vertical 9:16 close-up of a shopper looking thoughtfully at a small coffee cup in hand with disciplined smile, standing beside café counter, warm natural morning light, 35mm film still, zero text overlays, no cartoons, no stickmen.",
+      "motion_prompt": "Slow gentle dolly pullback from the customer holding small cup, warm daylight softly illuminating face and coffee cup, calm intentional posture, commercial documentary realism, zero morphing.",
+      "camera_motion": "zoom_out",
+      "transition": "fade"
+    },
+    {
+      "id": "SC12_OUTRO",
+      "beat_ids": [
+        "SB12",
+        "SB13"
+      ],
+      "at": 40.8,
+      "duration": 7.2,
+      "shot_type": "outro_cta",
+      "narration": "Bản phân tích đầy đủ năm bẫy giá ẩn đang có trên video dài của kênh. Hãy kiểm tra lại hóa đơn gần nhất để giữ chặt túi tiền của bạn.",
+      "bridge_cta": "Bản phân tích đầy đủ năm bẫy giá ẩn đang có trên video dài của kênh.",
+      "close_cta": "Hãy kiểm tra lại hóa đơn gần nhất để giữ chặt túi tiền của bạn.",
+      "prompt": "Cinematic vertical 9:16 shot of hands gently closing an artisan leather wallet on dark slate counter with quiet confidence, morning sunlight touching wood grain, peace of mind concept, WSJ consumer economics style, zero text overlays, no cartoons, no stickmen.",
+      "motion_prompt": "Slow cinematic pullback as hands close the leather wallet with gentle finality on dark slate, warm morning sunbeam sweeping across wood grain, serene financial sovereignty mood, zero morphing.",
+      "camera_motion": "zoom_out",
+      "transition": "fade"
+    }
+  ],
+  "metadata": {
+    "beats_count": 13,
+    "pairs_count": 12,
+    "total_duration_sec": 48.0,
+    "youtube_title_length": 41,
+    "bridge_syllables": 16,
+    "close_syllables": 15,
+    "bridge_start_sec": 40.8,
+    "close_start_sec": 44.4
+  }
+}

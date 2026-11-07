@@ -605,6 +605,10 @@ def resolve_channel_ids(raw_id: str) -> Tuple[str, str]:
 def get_channel_slice(channel_id: str) -> Tuple[List[str], List[str], str]:
     """Return (flow_profiles, colab_accounts, session_name) for a channel from contract §1."""
     part = CHANNEL_RESOURCE_PARTITIONS.get(channel_id)
+    if not part:
+        from channels.registry import REBUILT_CHANNEL_ALIASES
+        norm = REBUILT_CHANNEL_ALIASES.get(channel_id, channel_id).replace("-", "_")
+        part = CHANNEL_RESOURCE_PARTITIONS.get(norm)
     if part:
         return (
             list(part["flow_profiles"]),

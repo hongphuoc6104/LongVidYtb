@@ -23,6 +23,7 @@ import fcntl
 import json
 import os
 import re
+import subprocess
 import time
 from pathlib import Path
 from typing import IO, Any
@@ -58,6 +59,25 @@ def has_sufficient_dev_shm(min_free_mb: int = MIN_DEV_SHM_FREE_MB, shm_path: str
         return False
 
 
+def get_gpu_vram_mb(budget_ratio: float = 0.90) -> int | None:
+    """Detect total local NVIDIA GPU VRAM in MiB and return the budgeted amount (default 90%)."""
+    try:
+        out = subprocess.check_output(
+            ["nvidia-smi", "--query-gpu=memory.total", "--format=csv,noheader,nounits"],
+            stderr=subprocess.DEVNULL,
+            text=True,
+            timeout=2.0,
+        ).strip()
+        lines = [line.strip() for line in out.splitlines() if line.strip().isdigit()]
+        if lines:
+            total_mb = int(lines[0])
+            if total_mb > 0:
+                return max(256, int(total_mb * budget_ratio))
+    except Exception:
+        pass
+    return None
+
+
 def detect_local_gpu_display(env: dict[str, str] | None = None) -> tuple[bool, dict[str, str]]:
     """Prepare environment variables for local X11/NVIDIA hardware acceleration if available."""
     base_env = dict(os.environ if env is None else env)
@@ -68,6 +88,16 @@ def detect_local_gpu_display(env: dict[str, str] | None = None) -> tuple[bool, d
             xauth = os.path.expanduser("~/.Xauthority")
             if os.path.exists(xauth):
                 base_env["XAUTHORITY"] = xauth
+            else:
+                try:
+                    uid = os.getuid()
+                    gdm_auth = f"/run/user/{uid}/gdm/Xauthority"
+                    if os.path.exists(gdm_auth):
+                        base_env["XAUTHORITY"] = gdm_auth
+                except Exception:
+                    pass
+        base_env.setdefault("__NV_PRIME_RENDER_OFFLOAD", "1")
+        base_env.setdefault("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
     return has_display, base_env
 
 
@@ -132,9 +162,13 @@ def build_optimized_chrome_launch(
             "--enable-gpu-rasterization",
             "--ignore-gpu-blocklist",
             "--enable-zero-copy",
+            "--disable-software-rasterizer",
             "--use-gl=angle",
             "--use-angle=gl",
         ])
+        vram_mb = get_gpu_vram_mb(0.90)
+        if vram_mb:
+            cmd.append(f"--force-gpu-mem-available-mb={vram_mb}")
 
     if headless:
         cmd.extend([
@@ -142,11 +176,19 @@ def build_optimized_chrome_launch(
             "--hide-scrollbars",
             "--mute-audio",
         ])
+        if has_display:
+            cmd.append("--ozone-platform=x11")
 
     if extra_args:
         custom_window = next((a for a in extra_args if a.startswith("--window-size=")), None)
         if custom_window:
             cmd = [c for c in cmd if not c.startswith("--window-size=")]
+        custom_vram = next((a for a in extra_args if a.startswith("--force-gpu-mem-available-mb=")), None)
+        if custom_vram:
+            cmd = [c for c in cmd if not c.startswith("--force-gpu-mem-available-mb=")]
+        custom_ozone = next((a for a in extra_args if a.startswith("--ozone-platform=")), None)
+        if custom_ozone:
+            cmd = [c for c in cmd if not c.startswith("--ozone-platform=")]
         cmd.extend(extra_args)
 
     cmd.append(url)

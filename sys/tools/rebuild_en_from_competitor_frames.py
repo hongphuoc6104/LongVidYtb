@@ -925,18 +925,51 @@ def generate_flow_images_for_spec(
     img_dir.mkdir(parents=True, exist_ok=True)
     ledger = CreditLedger()
 
+    # Query CreditLedger profile entries to prioritize authenticated profiles (last_used_at > 0)
+    ledger_entries: Dict[str, Any] = {}
+    try:
+        with ledger._locked_store() as data:
+            ledger_entries = dict(data.get("profiles", {}))
+    except Exception as l_err:
+        logger.debug("CreditLedger read error: %s", l_err)
+
+    def _is_authenticated(p: Dict[str, Any]) -> bool:
+        pid = p.get("name") or p.get("id", "")
+        entry = ledger_entries.get(pid, {})
+        return float(entry.get("last_used_at", 0.0)) > 0.0
+
     all_healthy = [
-        p for p in PROFILES if ledger.get_balance(p["name"]) >= 10 and p["name"] not in ("profile_1", "profile_13")
+        p
+        for p in PROFILES
+        if ledger.get_balance(p["name"]) >= 10
+        and p["name"] not in ("profile_1", "profile_13")
+        and _is_authenticated(p)
     ]
+    # Fallback to any profile with balance >= 10 only if no authenticated profile is available
+    if not all_healthy:
+        all_healthy = [
+            p
+            for p in PROFILES
+            if ledger.get_balance(p["name"]) >= 10
+            and p["name"] not in ("profile_1", "profile_13")
+        ]
+
     if profile_names:
         preferred = [p for p in all_healthy if p["name"] in profile_names]
         fallback = [p for p in all_healthy if p["name"] not in profile_names]
-        candidate_profiles = preferred + fallback
+        candidate_profiles = preferred if len(preferred) >= max_workers else (preferred + fallback)
     else:
         candidate_profiles = all_healthy
 
     if not candidate_profiles:
-        candidate_profiles = [p for p in PROFILES if p["name"] not in ("profile_1", "profile_13")]
+        candidate_profiles = [
+            p
+            for p in PROFILES
+            if p["name"] not in ("profile_1", "profile_13")
+            and _is_authenticated(p)
+        ]
+        if not candidate_profiles:
+            candidate_profiles = [p for p in PROFILES if p["name"] not in ("profile_1", "profile_13")]
 
     tasks = []
     for idx, beat in enumerate(beats, 1):
@@ -997,7 +1030,7 @@ def generate_flow_images_for_spec(
             pool.start()
             for t in tasks:
                 pool.submit_task(t)
-            pool.wait_completion(timeout=900.0)
+            pool.wait_completion(timeout=360.0)
         finally:
             pool.shutdown()
 
@@ -1069,10 +1102,20 @@ def _camera_zoompan_expr(camera_motion: str, nb_frames: int, width: int, height:
             f"zoompan=z='1.02+0.05*(on/{n})':"
             f"x='(iw-iw/zoom)*(0.25+0.5*(on/{n}))':y='(ih-ih/zoom)*(0.25+0.5*(on/{n}))':d=1:s={width}x{height}:fps={fps}"
         )
-    if motion in ("drift_diag_out", "diag_out"):
+    if motion in ("drift_diag_out", "diag_out", "orbit_left"):
         return (
             f"zoompan=z='1.07-0.05*(on/{n})':"
             f"x='(iw-iw/zoom)*(0.75-0.5*(on/{n}))':y='(ih-ih/zoom)*(0.75-0.5*(on/{n}))':d=1:s={width}x{height}:fps={fps}"
+        )
+    if motion in ("orbit_right",):
+        return (
+            f"zoompan=z='1.02+0.05*(on/{n})':"
+            f"x='(iw-iw/zoom)*(0.20+0.6*(on/{n}))':y='(ih-ih/zoom)*(0.35+0.3*(on/{n}))':d=1:s={width}x{height}:fps={fps}"
+        )
+    if motion in ("static_hold", "hold"):
+        return (
+            f"zoompan=z='1.00+0.02*(on/{n})':"
+            f"x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s={width}x{height}:fps={fps}"
         )
     # Default: smooth optical push-in (zoom_in / push_in)
     return f"zoompan=z='1.00+0.06*(on/{n})':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s={width}x{height}:fps={fps}"
@@ -1147,6 +1190,8 @@ def render_vn_frame_video(
         cmd_seg = [
             "ffmpeg",
             "-y",
+            "-threads",
+            "2",
             "-loop",
             "1",
             "-t",
@@ -1168,11 +1213,11 @@ def render_vn_frame_video(
         ]
         subprocess.run(cmd_seg, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
 
-    with ThreadPoolExecutor(max_workers=4) as ex:
+    with ThreadPoolExecutor(max_workers=2) as ex:
         list(ex.map(_encode_seg, range(n_beats)))
 
     # Chain all segments with smooth competitor-learned xfade transitions at exact cumulative beat boundaries
-    cmd_final: List[str] = ["ffmpeg", "-y"]
+    cmd_final: List[str] = ["ffmpeg", "-y", "-threads", "4"]
     for sf in seg_files:
         cmd_final.extend(["-i", str(sf.resolve())])
 

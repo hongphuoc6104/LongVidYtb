@@ -503,6 +503,12 @@ class PersistentWorkerPool:
                 sess = init_session(current_profile)
             except Exception as exc:
                 logger.warning("[Worker-%d] Profile %s unavailable at startup: %s", worker_id, prof_name, exc)
+                port = int(current_profile.get("port") or current_profile.get("cdp_port", 0))
+                if port > 0:
+                    try:
+                        self.proc_mgr.terminate_by_port(port, wait_interval=0.4)
+                    except Exception as t_err:
+                        logger.debug("Failed to terminate port %d on startup failure: %s", port, t_err)
                 q_dur = 86400.0 if "hasAt=False" in str(exc) else None
                 self.profile_pool.release(current_profile, quarantine_reason="init_connect_failed", quarantine_seconds=q_dur)
                 current_profile = self.profile_pool.acquire()
@@ -757,6 +763,12 @@ class PersistentWorkerPool:
                                 break
                             except Exception as switch_err:
                                 logger.error("[Worker-%d] Failed connecting to swapped profile %s: %s", worker_id, prof_name, switch_err)
+                                port = int(current_profile.get("port") or current_profile.get("cdp_port", 0))
+                                if port > 0:
+                                    try:
+                                        self.proc_mgr.terminate_by_port(port, wait_interval=0.4)
+                                    except Exception as t_err:
+                                        logger.debug("Failed to terminate port %d on swap failure: %s", port, t_err)
                                 q_dur = 86400.0 if "hasAt=False" in str(switch_err) else None
                                 self.profile_pool.release(current_profile, quarantine_reason="swapped_connect_failed", quarantine_seconds=q_dur)
                                 current_profile = None

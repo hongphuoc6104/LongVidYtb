@@ -1,0 +1,153 @@
+{
+  "job_id": "ho-so-ky-la-short-48s-csx8888",
+  "parent_long_id": "ho-so-ky-la-long-645s-csx8888",
+  "channel_slug": "ho-so-ky-la",
+  "channel_id": "ho_so_ky_la",
+  "youtube_title": "Bí Ẩn Chuyến Tàu Ma 8888 Mất Lái Suốt 110 Km",
+  "title": "Bí Ẩn Chuyến Tàu Ma 8888 Mất Lái Suốt 110 Km",
+  "aspect": "9:16",
+  "format_profile": "short_9x16",
+  "total_duration_sec": 48.0,
+  "video_model": "omni_flash",
+  "chain_mode": "scene_pairs",
+  "voice": "VietNarrator",
+  "thumbnail_spec": {
+    "visual_hook": "Vertical 9:16 atmospheric noir 3D clay-figure diorama of CSX 8888 locomotive cab illuminated by warning lights in pouring rain, zero overlays, 25% margin",
+    "allowed_text": "ĐẦU MÁY MẤT LÁI",
+    "overlay_card": false
+  },
+  "packaging": {
+    "cta_plan": {
+      "bridge": "Bấm vào liên kết để xem bản điều tra đầy đủ.",
+      "close": "Xem toàn bộ hồ sơ vụ án trên kênh."
+    }
+  },
+  "cta_plan": {
+    "bridge": "Bấm vào liên kết để xem bản điều tra đầy đủ.",
+    "close": "Xem toàn bộ hồ sơ vụ án trên kênh."
+  },
+  "beats": [
+    {
+      "id": "S01",
+      "duration": 3.5,
+      "narration": "12 giờ 35 trưa tại Ohio, một đoàn tàu 3000 tấn bất ngờ mất lái.",
+      "prompt": "Vertical 9:16 cinematic 3D noir diorama of CSX 8888 locomotive rumbling through pouring rain at 12:35 PM, glaring headlight piercing mist, zero text",
+      "motion_prompt": "slow forward push-in toward glaring headlight beam through pouring rain",
+      "camera_motion": "push_in",
+      "based_on": null
+    },
+    {
+      "id": "S02",
+      "duration": 3.7,
+      "narration": "Trong buồng lái lúc này hoàn toàn không có một bóng người.",
+      "prompt": "Vertical 9:16 interior shot of empty locomotive cab, vacant swivel seat shaking under high speed, controls glowing in cold rain twilight, zero text",
+      "motion_prompt": "smooth camera orbit around empty driver seat to reveal open doorway",
+      "camera_motion": "orbit_cw",
+      "based_on": "S01"
+    },
+    {
+      "id": "S03",
+      "duration": 3.6,
+      "narration": "Phía sau là 47 toa xe chứa đầy axit phenol nóng chảy kịch độc.",
+      "prompt": "Vertical 9:16 high-angle tracking shot along 47 freight cars, focusing on two black hazardous chemical tanker cars curving through mist, zero text",
+      "motion_prompt": "crane tilt down following endless string of freight cars curving in rain",
+      "camera_motion": "pan_down",
+      "based_on": "S02"
+    },
+    {
+      "id": "S04",
+      "duration": 3.7,
+      "narration": "Cần ga bị gạt nhầm sang nấc cực đại khiến tàu lao đi với tốc độ 75 cây số.",
+      "prompt": "Vertical 9:16 macro of throttle lever locked in Notch 8 detention slot, sparks flying from spinning wheel treads on wet steel rails below, zero text",
+      "motion_prompt": "fast macro push-in on locked throttle notch then tilt down to wheel sparks",
+      "camera_motion": "zoom_in",
+      "based_on": "S03"
+    },
+    {
+      "id": "S05",
+      "duration": 3.6,
+      "narration": "Cảnh sát bắn ba phát đạn vào van cắt nhiên liệu nhưng bất thành.",
+      "prompt": "Vertical 9:16 tracking shot of police officers firing shotguns at the speeding locomotive underbelly, muzzle flashes lighting up rain drops, zero text",
+      "motion_prompt": "lateral tracking pass as bullet impacts spark harmlessly off steel armor",
+      "camera_motion": "pan_right",
+      "based_on": "S04"
+    },
+    {
+      "id": "S06",
+      "duration": 3.6,
+      "narration": "Thiết bị làm trật bánh di động bị khối thép 3000 tấn nghiền nát.",
+      "prompt": "Vertical 9:16 ground-level ultra slow-motion of steel derailer wedge shattering into flying fragments under the massive 180-ton locomotive wheel, zero text",
+      "motion_prompt": "slow-motion low-angle push-in as shattered derailer pieces fly outward",
+      "camera_motion": "push_in",
+      "based_on": "S05"
+    },
+    {
+      "id": "S07",
+      "duration": 3.7,
+      "narration": "Một đầu máy cứu viện số hiệu 383 được lệnh xuất kích từ phía sau.",
+      "prompt": "Vertical 9:16 heroic shot of locomotive 383 switching onto the mainline, diesel exhaust pouring into the storm as it begins the chase, zero text",
+      "motion_prompt": "rapid forward dolly tracking chasing locomotive accelerating onto track",
+      "camera_motion": "pan_up",
+      "based_on": "S06"
+    },
+    {
+      "id": "S08",
+      "duration": 3.8,
+      "narration": "Hai người thợ lái tăng tốc lên hơn 100 cây số một giờ để đuổi bắt.",
+      "prompt": "Vertical 9:16 cockpit view of locomotive 383, speedometer pegged at 65 mph, wipers slashing rain as they close the gap on the runaway train, zero text",
+      "motion_prompt": "dynamic cockpit push-in past vibrating dials toward rain-streaked glass",
+      "camera_motion": "push_in",
+      "based_on": "S07"
+    },
+    {
+      "id": "S09",
+      "duration": 3.8,
+      "narration": "Ở vận tốc 51 dặm một giờ, họ khóa thành công khớp nối vào đuôi tàu ma.",
+      "prompt": "Vertical 9:16 dramatic impact: steel couplers slamming together in explosive spray of rain and sparks, locking knuckle jaws shutting firmly, zero text",
+      "motion_prompt": "extreme macro push-in on colliding steel coupler knuckles snapping shut",
+      "camera_motion": "zoom_in",
+      "based_on": "S08"
+    },
+    {
+      "id": "S10",
+      "duration": 3.6,
+      "narration": "Hệ thống phanh động lực ghì tốc độ đoàn tàu xuống còn 17 cây số.",
+      "prompt": "Vertical 9:16 shot of locomotive 383 dynamic brake resistor grids glowing cherry red on the roof, dragging the runaway train down to jogging speed, zero text",
+      "motion_prompt": "high-angle tilt down from glowing resistor grids to decelerating train wheels",
+      "camera_motion": "pan_down",
+      "based_on": "S09"
+    },
+    {
+      "id": "S11",
+      "duration": 3.7,
+      "narration": "Tại điểm cắt Kenton, một trưởng ga dũng cảm nhảy lên bậc thang đầu máy.",
+      "prompt": "Vertical 9:16 dynamic slow-motion capture of Jack Sowers sprinting on gravel and grasping the side ladder of moving locomotive 8888, zero text",
+      "motion_prompt": "tracking camera moving alongside sprinting man as he leaps onto ladder",
+      "camera_motion": "pan_right",
+      "based_on": "S10"
+    },
+    {
+      "id": "S12",
+      "duration": 3.6,
+      "narration": "Ông gạt cần ga về số 0 và kéo phanh khẩn cấp, chặn đứng thảm họa.",
+      "prompt": "Vertical 9:16 interior cab view: hand slamming throttle back to idle zero and yanking red emergency air brake valve, train grinding to a dead halt, zero text",
+      "motion_prompt": "swift downward camera push following hand pulling emergency brake valve",
+      "camera_motion": "zoom_out",
+      "based_on": "S11"
+    },
+    {
+      "id": "S13",
+      "duration": 4.7,
+      "narration": "Tại sao hệ thống phanh lại biến thành máy gia tốc? Bấm vào liên kết để xem bản điều tra đầy đủ. Xem toàn bộ hồ sơ vụ án trên kênh.",
+      "prompt": "Vertical 9:16 moody archival finale: halted train steaming in rain beside open Ohio field, forensic dossier with red string pins in foreground, zero text",
+      "motion_prompt": "slow elegant pull-back reveal from case dossier to the silent train in mist",
+      "camera_motion": "zoom_out",
+      "based_on": "S12"
+    }
+  ],
+  "metadata": {
+    "total_beats": 13,
+    "total_duration_sec": 48.6,
+    "word_count": 213
+  }
+}

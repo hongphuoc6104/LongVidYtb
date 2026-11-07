@@ -12,7 +12,7 @@ $$\text{1. Tái hiện E2E} \longrightarrow \text{2. Phân tích gốc rễ} \lo
 
 ## II. Danh Mục Bài Học & Sự Cố Chuẩn Hóa
 
-> Historical entries [ERR-20261010-08], [ERR-20261010-09], [ERR-20261011-01], [ERR-20261011-05], [ERR-20261014-01], [ERR-20261016-02], [ERR-20261017-02], [ERR-20261017-03], [ERR-20261017-04], [ERR-20261017-05], [ERR-20261017-06], [ERR-20261018-01], [ERR-20261018-02], [ERR-20261018-03], [ERR-20261018-05], [ERR-20261018-06], [ERR-20261018-07], [ERR-20261018-10], [ERR-20261018-11], and [ERR-20261018-12] are archived in .agents/skills/vp-troubleshooting/references/historical-playbook.md.
+> Historical entries [ERR-20261010-08], [ERR-20261010-09], [ERR-20261011-01], [ERR-20261011-05], [ERR-20261014-01], [ERR-20261016-02], [ERR-20261017-02], [ERR-20261017-03], [ERR-20261017-04], [ERR-20261017-05], [ERR-20261017-06], [ERR-20261018-01], [ERR-20261018-02], [ERR-20261018-03], [ERR-20261018-05], [ERR-20261018-06], [ERR-20261018-07], [ERR-20261018-10], [ERR-20261018-11], [ERR-20261018-12], and [ERR-20261018-13] are archived in .agents/skills/vp-troubleshooting/references/historical-playbook.md.
 
 ### [ERR-20261106-01] Khử Giật Khung Hình `zoom_out` (`d=1` trên `-loop 1`), Cắt Âm Cuối Chuẩn `WordBoundary` & Chuẩn Hóa Công Thức Lời Thoại 5 Bước + Sub 1 Chữ Đỏ/Vàng Cho 18 Kênh EN
 - **Triệu chứng (Symptom):** (1) Video pilot 18 kênh EN bị giật mạnh 1 frame (`diff=43.15` ở frame 1->2) tại các nhịp `zoom_out`, chuyển cảnh `dissolve` bị nhiễu hạt pixel; (2) `silenceremove` đảo ngược cắt mất phụ âm cuối (`/p/`, `/k/`, `/d/`) hoặc bỏ đi thì dư `0.75s` đệm lặng của `edge-tts`; (3) Lời thoại rời rạc thiếu nhịp ngắt nghỉ đối thủ và phụ đề nhóm 3–4 từ thay vì 1 chữ Đỏ/Vàng như bản Việt.
@@ -54,13 +54,13 @@ $$\text{1. Tái hiện E2E} \longrightarrow \text{2. Phân tích gốc rễ} \lo
 - **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** (1) Nâng cấp `check_see_say_beat_density` hỗ trợ linh hoạt format `long_16x9` / explainer (trần TB 6.0s, trần thân 8.5s, mở đầu 2–5 beat); (2) Động hóa trần giãn beat `maximum = max(3.75, avg_hold * 1.35)` trong `smooth_interpolated_beats`; (3) Truyền `format_profile` vào `job_worker.py`. 1097/1097 test pass 100%, render thành công video 16:9 `survivorship-bias-16x9_r1_final.mp4` (169.64s, 1920x1080@30fps NVENC).
 - **Quy tắc phòng ngừa vàng (Golden Rule):** Phân tách rõ ràng ngưỡng nhịp thị giác giữa video ngắn 9:16 (nhịp cắt nhanh) và video giải thích 16:9 (nhịp tĩnh tại, tập trung nhận thức); thuật toán làm trơn beat phải tự co giãn theo thời lượng thực tế của phân cảnh.
 
-### [ERR-20261018-13] Colab identity leases and truthful pool readiness
-- **Symptom:** Jobs contend for a pinned runtime while unused profiles are reported ready; an unknown request loses its local runner lock.
-- **Reproduction Path:** The 2026-10-18 audit verified 20 profiles but only 15 Google identities, one live T4, five duplicate profile pairs and an exhausted preferred-account budget. Independent controllers reproduce the duplicate-alias race with real file locks.
-- **Root Cause:** Production replaced auto-idle selection with the selected default; selection and reservation were separate, locks used profile aliases, and token-file presence was counted as readiness.
-- **Wrong Assumptions:** Each profile is a distinct Google account; a free local lock proves the remote session is free; an authenticated account already has available GPU capacity.
-- **Resolution & E2E Proof:** Add a bounded health audit and identity-based atomic claims in the actual audio/render client. Preserve exact bindings and unresolved request journals, filter blocked/exhausted accounts and stagger allocations across controllers. Scheduler, transport ownership and dashboard regression tests pass; live audit and account-03 observation verify authentication/T4 response only, not a completed production request.
-- **Golden Rule:** Count unique verified identities, distinguish auth/allocation/kernel readiness, and collect an unknown request only on its original owner before another send.
+### [ERR-20261107-01] Khắc Phục Nghẽn CPU SwiftShader Chrome Mới (`--headless=new`), Cấp 90% VRAM & Chặn Rò Cổng `terminate_by_port`
+- **Triệu chứng (Symptom):** Khi chạy đa luồng Flow CDP trên Linux headless, Chrome `--headless=new` rơi về CPU SwiftShader khiến CPU nhảy 100%, timeout khi evaluate `hasAt=False`, và rò rỉ tiến trình/cổng CDP mồ côi.
+- **Tái hiện E2E (Reproduction Path):** Chạy `PersistentWorkerPool` trên máy Linux không X-display; kiểm tra `chrome_pids_global.json` và `top` CPU.
+- **Nguyên nhân cốt lõi (Root Cause):** Cờ `--headless=new` thiếu `--ozone-platform=x11` và `--force-gpu-mem-available-mb=1843` (90% VRAM 2GB) khiến GPU hardware rasterization bị vô hiệu hóa; khi session init thất bại `hasAt=False`, thiếu gọi `terminate_by_port(port)` để dọn process.
+- **Giả định sai (Wrong Assumptions):** Giả định `--headless=new` tự động nhận GPU NVIDIA trên Linux và Chrome tự thoát khi handshake thất bại.
+- **Giải pháp & Kiểm chứng (Resolution & E2E Proof):** Bổ sung `--ozone-platform=x11`, cấp 90% VRAM `--force-gpu-mem-available-mb=1843`, và kích hoạt `terminate_by_port` khi `hasAt=False`. 48/48 tests green, CPU giảm từ 100% về < 15%, không còn cổng mồ côi.
+- **Quy tắc phòng ngừa vàng (Golden Rule):** Luôn cấp `--ozone-platform=x11` và `--force-gpu-mem-available-mb=1843` cho Chrome headless trên Linux GPU; bắt buộc gọi `terminate_by_port` dọn sạch process ngay khi handshake `hasAt=False` thất bại.
 
 ### [ERR-20261018-14] Auto-Reclaim Stale Leases & Worker Availability Resilience
 - **Triệu chứng (Symptom):** Pipeline văng lỗi `No Chrome profile workers available` hoặc `JOB_RUNNING` khi tiến trình trước crash để lại file lock mồ côi, hoặc khi pool chỉ có 1 profile gặp lỗi tạm thời.

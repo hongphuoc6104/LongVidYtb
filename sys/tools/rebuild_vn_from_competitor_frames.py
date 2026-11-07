@@ -570,6 +570,7 @@ def build_vn_pilot_from_spec(
     profile_names: Optional[List[str]] = None,
     max_workers: int = 4,
     force_images: bool = False,
+    both_native: bool = False,
 ) -> Dict[str, Any]:
     """Execute full Vietnamese pilot build (Audio + 1-Word Red/Yellow ASS + Flow images + 9:16 & 16:9 MP4s)."""
     spec = json.loads(spec_path.read_text(encoding="utf-8"))
@@ -620,8 +621,14 @@ def build_vn_pilot_from_spec(
         profile_names=profile_names,
         max_workers=max_workers,
         force_regenerate=force_images,
-        both_native=True,
+        both_native=both_native,
     )
+
+    if len(images_map["9x16"]) < len(beats) or len(images_map["16x9"]) < len(beats):
+        raise RuntimeError(
+            f"[{channel_slug}] Incomplete Flow image generation: "
+            f"9x16={len(images_map['9x16'])}/{len(beats)}, 16x9={len(images_map['16x9'])}/{len(beats)}"
+        )
 
     # 3. Watermark icon
     wm_png = pilot_dir / "watermark_100px.png"
@@ -630,29 +637,29 @@ def build_vn_pilot_from_spec(
     # 4. Render 9:16 MP4
     mp4_9x16 = pilot_dir / f"{channel_slug}_pilot_9x16.mp4"
     render_vn_frame_video(
-        channel_slug=channel_slug,
-        aspect="9:16",
+        frames=images_map["9x16"],
         beats=beats,
         beat_durations=beat_durations,
-        image_paths=images_map["9x16"],
         audio_path=norm_wav,
         ass_path=ass_path,
+        srt_path=srt_path,
         watermark_png=wm_png,
         out_mp4=mp4_9x16,
+        aspect="9:16",
     )
 
     # 5. Render 16:9 MP4
     mp4_16x9 = pilot_dir / f"{channel_slug}_pilot_16x9.mp4"
     render_vn_frame_video(
-        channel_slug=channel_slug,
-        aspect="16:9",
+        frames=images_map["16x9"],
         beats=beats,
         beat_durations=beat_durations,
-        image_paths=images_map["16x9"],
         audio_path=norm_wav,
-        ass_path=None,
+        ass_path=ass_path,
+        srt_path=srt_path,
         watermark_png=wm_png,
         out_mp4=mp4_16x9,
+        aspect="16:9",
     )
 
     # 6. Publish canonical outputs to video/<slug>/
@@ -662,8 +669,31 @@ def build_vn_pilot_from_spec(
     vid_long_dir.mkdir(parents=True, exist_ok=True)
     shutil.copy2(mp4_9x16, vid_short_dir / f"{channel_slug}-test-20s-9x16.mp4")
     shutil.copy2(srt_path, vid_short_dir / f"{channel_slug}-test-20s-9x16.srt")
+    shutil.copy2(ass_path, vid_short_dir / "subtitles_kinetic_9x16.ass")
     shutil.copy2(mp4_16x9, vid_long_dir / f"{channel_slug}-pilot-16x9.mp4")
     shutil.copy2(srt_path, vid_long_dir / f"{channel_slug}-pilot-16x9.srt")
+
+    # 7. Extract 1-FPS verification frames from rendered 9:16 pilot
+    verify_dir = pilot_dir / "rendered_frames_9x16"
+    verify_dir.mkdir(parents=True, exist_ok=True)
+    for old_vf in verify_dir.glob("pilot_frame_*s.jpg"):
+        old_vf.unlink()
+    subprocess.run(
+        [
+            "ffmpeg",
+            "-y",
+            "-i",
+            str(mp4_9x16),
+            "-vf",
+            "fps=1",
+            "-q:v",
+            "2",
+            str(verify_dir / "pilot_frame_%02ds.jpg"),
+        ],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=True,
+    )
 
     report = {
         "channel_slug": channel_slug,
@@ -678,6 +708,7 @@ def build_vn_pilot_from_spec(
         "mp4_16x9": str(mp4_16x9),
         "canonical_short_mp4": str(vid_short_dir / f"{channel_slug}-test-20s-9x16.mp4"),
         "canonical_long_mp4": str(vid_long_dir / f"{channel_slug}-pilot-16x9.mp4"),
+        "rendered_frames_dir": str(verify_dir),
     }
     (pilot_dir / "pilot_build_report.json").write_text(
         json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8"

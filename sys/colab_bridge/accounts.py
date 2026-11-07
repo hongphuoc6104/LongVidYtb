@@ -26,6 +26,16 @@ def registry() -> dict[str, Any]:
     return json.loads(path.read_text()) if path.exists() else {"preferred": None, "accounts": []}
 
 
+def get_all_accounts() -> list[str]:
+    reg = registry()
+    accs = [a["id"] for a in reg.get("accounts", []) if a.get("enabled", True)]
+    pref = reg.get("preferred")
+    if pref and pref in accs:
+        accs.remove(pref)
+        accs.insert(0, pref)
+    return accs or ["account-01"]
+
+
 def save(data: dict[str, Any]) -> None:
     STORE.mkdir(parents=True, exist_ok=True, mode=0o700)
     os.chmod(STORE, 0o700)

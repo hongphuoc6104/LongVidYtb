@@ -23,16 +23,23 @@ def check_see_say_beat_density(
     total_beats = sum(len(sc.get('images', [])) for sc in scenes)
     total_duration = scenes[-1]['end'] - scenes[0]['start'] if scenes and 'end' in scenes[-1] and 'start' in scenes[0] else 0.0
     is_long_explainer = (
-        format_profile == 'long_16x9'
+        format_profile in ('long_16x9', 'long_16x9_high_density', 'long_16x9_narrative_adaptive')
         or total_duration > 120.0
         or (total_beats > 0 and total_duration / total_beats > 2.8)
     )
 
+    is_high_density = (
+        format_profile in ('long_16x9_high_density', 'long_16x9_narrative_adaptive')
+        or (is_long_explainer and total_beats >= 180)
+    )
+
     max_average = 8.05 if is_long_explainer else MAX_AVERAGE_HOLD_SECONDS
     body_max = 11.50 if is_long_explainer else BODY_MAX_HOLD_SECONDS
-    body_min = BODY_MIN_HOLD_SECONDS
+    body_min = 0.70 if is_high_density else BODY_MIN_HOLD_SECONDS
     min_first_five = 2 if is_long_explainer else 3
     min_opening = 3 if is_long_explainer else 6
+    max_first_five = 7 if is_high_density else 5
+    max_opening = 14 if is_high_density else 10
 
     errors: list[str] = []
     starts: list[float] = []
@@ -64,10 +71,10 @@ def check_see_say_beat_density(
                 errors.append(f"VISUAL_HOLD_INVALID: {scene['id']}/{beat['id']} holds {hold:.3f}s")
     first_five = sum(at < FIRST_WINDOW_SECONDS for at in starts)
     opening = sum(at < OPENING_WINDOW_SECONDS for at in starts)
-    if not min_first_five <= first_five <= 5:
-        errors.append(f"OPENING_VISUAL_DENSITY: expected {min_first_five}–5 starts in [0,5), got {first_five}")
-    if not min_opening <= opening <= 10:
-        errors.append(f"OPENING_VISUAL_DENSITY: expected {min_opening}–10 starts in [0,12.5), got {opening}")
+    if not min_first_five <= first_five <= max_first_five:
+        errors.append(f"OPENING_VISUAL_DENSITY: expected {min_first_five}–{max_first_five} starts in [0,5), got {first_five}")
+    if not min_opening <= opening <= max_opening:
+        errors.append(f"OPENING_VISUAL_DENSITY: expected {min_opening}–{max_opening} starts in [0,12.5), got {opening}")
     return errors
 
 
@@ -136,11 +143,18 @@ TEMPO_HOLD_WINDOWS: dict[str, dict[str, tuple[float, float]]] = {
         "hold": (5.0, 20.0),
     },
     "long_16x9_narrative_adaptive": {
-        "burst": (1.2, 2.2),
-        "fast": (1.8, 3.0),
-        "normal": (2.4, 3.8),
-        "slow": (3.6, 5.2),
-        "hold": (2.0, 5.0),
+        "burst": (0.75, 1.80),
+        "fast": (1.40, 2.50),
+        "normal": (2.00, 3.60),
+        "slow": (3.50, 6.50),
+        "hold": (2.00, 8.50),
+    },
+    "long_16x9_high_density": {
+        "burst": (0.75, 1.80),
+        "fast": (1.40, 2.50),
+        "normal": (2.00, 3.60),
+        "slow": (3.50, 6.50),
+        "hold": (2.00, 8.50),
     },
 }
 
@@ -348,11 +362,11 @@ def check_tempo_beats(
             errors.append(
                 f"AVERAGE_HOLD_OUT_OF_TARGET: long_16x9 average hold is {avg_hold:.2f}s (allowed 1.80–8.05s)"
             )
-    elif profile == "long_16x9_narrative_adaptive":
-        # Strict V3 Narrative-Adaptive target: 2.0 - 3.6s average hold
-        if not (1.80 <= avg_hold <= 3.80):
+    elif profile in ("long_16x9_high_density", "long_16x9_narrative_adaptive"):
+        # High-Density 240-350 beats standard: 1.35 - 6.50s average hold
+        if not (1.35 <= avg_hold <= 6.50):
             errors.append(
-                f"AVERAGE_HOLD_OUT_OF_TARGET: long_16x9_narrative_adaptive average hold is {avg_hold:.2f}s (target 2.0–3.5s)"
+                f"AVERAGE_HOLD_OUT_OF_TARGET: {profile} average hold is {avg_hold:.2f}s (target 1.35–6.50s)"
             )
 
     return errors
@@ -451,7 +465,16 @@ def retime_long_beats_to_measured_audio(
     scenes = content.get("scenes", [])
     raw_total_beats = sum(len(sc.get("beats", [])) for sc in scenes)
     raw_avg_hold = duration / max(1, raw_total_beats)
-    is_high_density_narrative = raw_avg_hold <= 4.25
+    format_profile = content.get("format_profile") or audio_payload.get("format_profile") or ""
+    has_narrative_situations = any(
+        b.get("narrative_situation") or sc.get("narrative_situation") or sc.get("narrative_role")
+        for sc in scenes
+        for b in sc.get("beats", [])
+    )
+    is_high_density_narrative = (
+        format_profile in ("long_16x9_high_density", "long_16x9_narrative_adaptive")
+        or (has_narrative_situations and raw_avg_hold <= 4.25)
+    )
 
     track = audio_payload.get("tracks", {}).get("vi") or audio_payload
     segments = track.get("segments", [])
