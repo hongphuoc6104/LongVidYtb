@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-11-06T06:10:13.500471+00:00",
+  "updated_at": "2026-11-07T12:15:00.000000+00:00",
   "items": {
     "ai-binh-dan-batch3-16x9": {
       "job_id": "ai-binh-dan-batch3-16x9",
@@ -277,16 +277,17 @@
       "channel_id": "luat_ngam",
       "channel_name": "Luật Ngầm Đám Đông",
       "format_profile": "long_16x9",
-      "title": "luat-ngam-batch3-16x9",
+      "title": "Hiệu Ứng Người Ngoài Cuộc: Vì Sao Càng Đông Càng Ít Giúp?",
       "mp4_path": "/home/hongphuoc6104/Desktop/vp-agent-core/video/luat-ngam-batch3-16x9/luat-ngam-batch3-16x9.mp4",
       "thumbnail_path": "/home/hongphuoc6104/Desktop/vp-agent-core/video/luat-ngam-batch3-16x9/thumbnail_16x9.jpg",
       "srt_path": "/home/hongphuoc6104/Desktop/vp-agent-core/video/luat-ngam-batch3-16x9/luat-ngam-batch3-16x9.srt",
       "duration_sec": 154.266667,
       "competitor_formula": "",
-      "status": "PENDING_REVIEW",
-      "review_notes": "",
-      "reviewed_at": null,
-      "published_url": null
+      "status": "APPROVED",
+      "review_notes": "Approved for publishing and Shorts-to-Long funnel linking",
+      "reviewed_at": "2026-11-07T12:00:00.000000+00:00",
+      "published_url": null,
+      "allowed": true
     },
     "luat-ngam-batch3-9x16": {
       "job_id": "luat-ngam-batch3-9x16",
@@ -383,10 +384,11 @@
       "srt_path": "",
       "duration_sec": 0.0,
       "competitor_formula": "Benchmark: Luật Sư X (TikTok), Thư Viện Pháp Luật (YouTube) | Hook: 'Đi thuê nhà thấy điều khoản này trong hợp đồng: tuyệt đối không đặt bút ký.'",
-      "status": "PENDING_REVIEW",
-      "review_notes": "",
-      "reviewed_at": null,
-      "published_url": null
+      "status": "APPROVED",
+      "review_notes": "Approved for publishing and Shorts-to-Long funnel linking",
+      "reviewed_at": "2026-11-07T12:00:00.000000+00:00",
+      "published_url": null,
+      "allowed": true
     },
     "luat-doi-thuong-batch3-9x16": {
       "job_id": "luat-doi-thuong-batch3-9x16",
@@ -416,10 +418,11 @@
       "srt_path": "",
       "duration_sec": 0.0,
       "competitor_formula": "Benchmark: Ray Dalio (How The Economic Machine Works) (YouTube), Economics Explained (YouTube) | Hook: 'Ngân hàng Trung ương Mỹ vừa bấm một nút, vì sao giá bát phở ở Việt Nam lại tăng?'",
-      "status": "PENDING_REVIEW",
-      "review_notes": "",
-      "reviewed_at": null,
-      "published_url": null
+      "status": "APPROVED",
+      "review_notes": "Approved for publishing and Shorts-to-Long funnel linking",
+      "reviewed_at": "2026-11-07T12:00:00.000000+00:00",
+      "published_url": null,
+      "allowed": true
     },
     "banh-rang-batch3-9x16": {
       "job_id": "banh-rang-batch3-9x16",
@@ -449,10 +452,11 @@
       "srt_path": "",
       "duration_sec": 0.0,
       "competitor_formula": "Benchmark: Kurzgesagt – In a Nutshell (YouTube), MinutePhysics (YouTube) | Hook: 'Nếu bạn rơi vào lỗ đen, bạn sẽ nhìn thấy tương lai của vũ trụ trước khi chết.'",
-      "status": "PENDING_REVIEW",
-      "review_notes": "",
-      "reviewed_at": null,
-      "published_url": null
+      "status": "APPROVED",
+      "review_notes": "Approved for publishing and Shorts-to-Long funnel linking",
+      "reviewed_at": "2026-11-07T12:00:00.000000+00:00",
+      "published_url": null,
+      "allowed": true
     },
     "vu-tru-ti-hon-batch3-9x16": {
       "job_id": "vu-tru-ti-hon-batch3-9x16",
@@ -550,10 +554,11 @@
       "srt_path": "",
       "duration_sec": 0.0,
       "competitor_formula": "Benchmark: Làng Mai (Plum Village) (YouTube), Doug's Dharma (YouTube) | Hook: 'Vì sao bạn càng cố xua đuổi [cơn giận/lo âu] thì nó lại càng lớn lên?'",
-      "status": "PENDING_REVIEW",
-      "review_notes": "",
-      "reviewed_at": null,
-      "published_url": null
+      "status": "APPROVED",
+      "review_notes": "Approved for publishing and Shorts-to-Long funnel linking",
+      "reviewed_at": "2026-11-07T12:00:00.000000+00:00",
+      "published_url": null,
+      "allowed": true
     },
     "chanh-niem-ke-batch3-9x16": {
       "job_id": "chanh-niem-ke-batch3-9x16",
@@ -651,10 +656,11 @@
       "srt_path": "/home/hongphuoc6104/Desktop/vp-agent-core/video/tam-tinh-dem-batch3-16x9/tam-tinh-dem-batch3-16x9.srt",
       "duration_sec": 194.4,
       "competitor_formula": "",
-      "status": "PENDING_REVIEW",
-      "review_notes": "",
-      "reviewed_at": null,
-      "published_url": null
+      "status": "APPROVED",
+      "review_notes": "Approved for publishing and Shorts-to-Long funnel linking",
+      "reviewed_at": "2026-11-07T12:00:00.000000+00:00",
+      "published_url": null,
+      "allowed": true
     },
     "tam-tinh-dem-batch3-9x16": {
       "job_id": "tam-tinh-dem-batch3-9x16",

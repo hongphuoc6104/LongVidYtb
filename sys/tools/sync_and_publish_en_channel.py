@@ -17,11 +17,13 @@ import asyncio
 import fcntl
 import json
 import logging
+import math
+import re
 import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, List, Tuple
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SYS_DIR = REPO_ROOT / "sys"
@@ -78,25 +80,224 @@ def build_short_description(spec_data: Dict[str, Any], ch_spec: Dict[str, Any]) 
     ).strip()
 
 
+def format_timestamp(seconds: float) -> str:
+    """Format seconds into MM:SS or HH:MM:SS for YouTube chapters."""
+    total_sec = max(0, int(math.floor(seconds)))
+    hours = total_sec // 3600
+    minutes = (total_sec % 3600) // 60
+    secs = total_sec % 60
+    if hours > 0:
+        return f"{hours:02d}:{minutes:02d}:{secs:02d}"
+    return f"{minutes:02d}:{secs:02d}"
+
+
+def compute_dynamic_chapters(spec_data: Dict[str, Any]) -> List[str]:
+    """Dynamically compute YouTube chapter timestamps from spec shots, scenes, or chain_spec.
+
+    Ensures:
+    - Starts at 00:00.
+    - Every chapter interval is strictly >= 10s.
+    - Groups by chapter / scene_group or 8-shot act boundaries.
+    """
+    # 1. If spec_data has explicit non-empty chapters, validate and return
+    explicit_chapters = spec_data.get("chapters", [])
+    if explicit_chapters:
+        raw_chaps: List[Tuple[float, str]] = []
+        for ch in explicit_chapters:
+            ts_str = str(ch.get("timestamp", "00:00")).strip()
+            title = str(ch.get("title", "Chapter")).strip()
+            parts = ts_str.split(":")
+            sec = 0.0
+            if len(parts) == 2:
+                sec = int(parts[0]) * 60 + int(parts[1])
+            elif len(parts) == 3:
+                sec = int(parts[0]) * 3600 + int(parts[1]) * 60 + int(parts[2])
+            raw_chaps.append((sec, title))
+
+        if raw_chaps:
+            emitted: List[Tuple[float, str]] = []
+            for idx, (t, ctitle) in enumerate(raw_chaps):
+                if idx == 0:
+                    emitted.append((0.0, ctitle))
+                    continue
+                last_t, last_title = emitted[-1]
+                if (math.floor(t) - math.floor(last_t)) < 10.0:
+                    emitted[-1] = (last_t, f"{last_title} & {ctitle}")
+                else:
+                    emitted.append((t, ctitle))
+            return [
+                f"{format_timestamp(t) if i > 0 else '00:00'} {ctitle}"
+                for i, (t, ctitle) in enumerate(emitted)
+            ]
+
+    shots = spec_data.get("shots", [])
+    scenes = spec_data.get("scenes", [])
+    job_id = spec_data.get("job_id", "")
+
+    # Look for chain_spec.json or prep_summary.json in runs directory
+    candidate_paths: List[Path] = []
+    if job_id:
+        candidate_paths.extend([
+            SYS_DIR / "runs" / "en_batch1_prod" / job_id / "prep_summary.json",
+            SYS_DIR / "runs" / job_id / "prep_summary.json",
+            SYS_DIR / "runs" / "en_batch1_prod" / job_id / "chain_spec.json",
+            SYS_DIR / "runs" / job_id / "chain_spec.json",
+        ])
+
+    beat_durations: List[float] = []
+    chain_spec_pairs: List[Dict[str, Any]] = []
+
+    for cp in candidate_paths:
+        if cp.is_file():
+            try:
+                data = json.loads(cp.read_text(encoding="utf-8"))
+                if "beat_durations_sec" in data and not beat_durations:
+                    beat_durations = [float(x) for x in data.get("beat_durations_sec", [])]
+                if "scene_pairs" in data and not chain_spec_pairs:
+                    chain_spec_pairs = data.get("scene_pairs", [])
+            except Exception:
+                pass
+
+    # If shots is empty but chain_spec_pairs has entries, use them as shots
+    if not shots and chain_spec_pairs:
+        shots = [
+            {
+                "id": p.get("id"),
+                "duration": p.get("target_duration", 8.0),
+                "narration": p.get("motion_prompt", ""),
+            }
+            for p in chain_spec_pairs
+        ]
+
+    # Case A: Shots present
+    if shots:
+        shot_durations: List[float] = []
+        for i, s in enumerate(shots):
+            if i < len(beat_durations) and beat_durations[i] > 0:
+                shot_durations.append(beat_durations[i])
+            elif s.get("duration"):
+                shot_durations.append(float(s["duration"]))
+            else:
+                words = len(str(s.get("narration", "")).split())
+                dur = max(6.0, (words / 2.5) + float(s.get("pause_after_sec", 0.4)))
+                shot_durations.append(dur)
+
+        groups: List[Tuple[str, List[float]]] = []
+        cur_grp = None
+        cur_durs: List[float] = []
+        has_explicit_groups = any(s.get("scene_group") for s in shots)
+
+        for i, s in enumerate(shots):
+            if has_explicit_groups and s.get("scene_group"):
+                grp_id = str(s.get("scene_group"))
+            else:
+                # 8-shot act boundaries
+                act_num = (i // 8) + 1
+                grp_id = f"act_{act_num}"
+
+            dur = shot_durations[i]
+            if grp_id != cur_grp:
+                if cur_durs:
+                    groups.append((cur_grp, cur_durs))
+                cur_grp = grp_id
+                cur_durs = [dur]
+            else:
+                cur_durs.append(dur)
+        if cur_durs:
+            groups.append((cur_grp, cur_durs))
+
+        CHAPTER_MAP: Dict[str, str] = {
+            "ch1_hook": "Introduction & The Core Mystery",
+            "ch2_paradox": "The Biological Paradox",
+            "ch3_mechanism": "The Hidden Neural Mechanism",
+            "ch4_case_study_1": "Real-World Case Study",
+            "ch5_escalation": "Why Conventional Advice Fails",
+            "ch6_case_study_2": "Clinical Trials & Scientific Evidence",
+            "ch7_systemic_shift": "The Systemic Shift Protocol",
+            "ch8_resolution": "Long-Term Resolution & Actionable Steps",
+        }
+        ACT_TITLES = [
+            "Introduction & Core Mystery",
+            "The Hidden Mechanism",
+            "The Biological Paradox",
+            "Real-World Breakdown",
+            "The Escalation Point",
+            "Scientific Evidence & Case Studies",
+            "The Systemic Shift",
+            "Final Resolution & Protocol",
+        ]
+
+        cur_time = 0.0
+        raw_chapters: List[Tuple[float, str]] = []
+        for idx, (grp, durs) in enumerate(groups):
+            if grp in CHAPTER_MAP:
+                title = CHAPTER_MAP[grp]
+            elif re.match(r"^act_(\d+)$", grp):
+                act_idx = int(re.match(r"^act_(\d+)$", grp).group(1)) - 1
+                title = ACT_TITLES[act_idx] if act_idx < len(ACT_TITLES) else f"Act {act_idx + 1}"
+            else:
+                clean = re.sub(r"^ch\d+_?", "", grp).replace("_", " ").strip().title()
+                title = clean or f"Chapter {idx + 1}"
+
+            raw_chapters.append((cur_time, title))
+            cur_time += sum(durs)
+
+        emitted = []
+        for idx, (t, title) in enumerate(raw_chapters):
+            if idx == 0:
+                emitted.append((0.0, title))
+                continue
+            last_t, last_title = emitted[-1]
+            if (math.floor(t) - math.floor(last_t)) < 10.0:
+                emitted[-1] = (last_t, f"{last_title} & {title}")
+            else:
+                emitted.append((t, title))
+
+        return [
+            f"{format_timestamp(t) if i > 0 else '00:00'} {title}"
+            for i, (t, title) in enumerate(emitted)
+        ]
+
+    # Case B: Scenes present
+    if scenes:
+        cur_time = 0.0
+        raw_scenes: List[Tuple[float, str]] = []
+        for i, sc in enumerate(scenes):
+            title = sc.get("title") or f"Part {i + 1}"
+            dur = float(sc.get("duration", 15.0))
+            raw_scenes.append((cur_time, title))
+            cur_time += dur
+
+        emitted = []
+        for idx, (t, title) in enumerate(raw_scenes):
+            if idx == 0:
+                emitted.append((0.0, title))
+                continue
+            last_t, last_title = emitted[-1]
+            if (math.floor(t) - math.floor(last_t)) < 10.0:
+                emitted[-1] = (last_t, f"{last_title} & {title}")
+            else:
+                emitted.append((t, title))
+        return [
+            f"{format_timestamp(t) if i > 0 else '00:00'} {title}"
+            for i, (t, title) in enumerate(emitted)
+        ]
+
+    # Fallback default
+    return [
+        "00:00 Introduction & Core Mystery",
+        "01:15 The Hidden Mechanism",
+        "03:30 Real-World Case Breakdown",
+        "06:00 The Deeper System Truth",
+    ]
+
+
 def build_long_description(spec_data: Dict[str, Any], ch_spec: Dict[str, Any]) -> str:
     full_title = spec_data.get("title") or spec_data.get("youtube_title") or ""
     shots = spec_data.get("shots", [])
     narration_lines = [s.get("narration", "").strip() for s in shots if s.get("narration")]
     summary_text = " ".join(narration_lines[:4])
-    chapters = spec_data.get("chapters", [])
-    chapter_lines = []
-    if chapters:
-        for ch in chapters:
-            ts = ch.get("timestamp", "00:00")
-            ctitle = ch.get("title", "Chapter")
-            chapter_lines.append(f"{ts} {ctitle}")
-    else:
-        chapter_lines = [
-            "00:00 Introduction & Core Mystery",
-            "02:05 The Hidden Mechanism",
-            "04:20 Real-World Chain Reaction",
-            "06:35 The Deeper System Truth",
-        ]
+    chapter_lines = compute_dynamic_chapters(spec_data)
     ch_desc = ch_spec.get("description", "")
     hashtags = [f"#{k}" for k in ch_spec.get("keywords", [])[:6] if " " not in k]
     tags_line = " ".join(["#explainer", "#documentary", "#deepdive"] + hashtags)

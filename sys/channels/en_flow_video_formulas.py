@@ -8,6 +8,7 @@ empirical frame-by-frame competitor documentary analysis.
 
 from __future__ import annotations
 
+import re
 from typing import Any, Dict
 
 # ==============================================================================
@@ -113,8 +114,8 @@ EN_FLOW_VIDEO_FORMULAS: Dict[str, Dict[str, Any]] = {
         ),
         "camera_grammar": ["slow optical dolly push-in", "smooth horizontal lateral tracking pass", "subtle low-angle scientific tilt-up"],
         "continuity_anchor": (
-            "High-contrast 8K Veritasium scientific cinematography with crisp directional key light, "
-            "deep slate-navy (#0F172A) contrast, and clean cyan/amber physical vector accents, strictly zero chalkboards or text"
+            "Veritasium scientific cinematography with crisp directional key light, deep slate-navy (#0F172A) palette, "
+            "f/2.8 lens depth-of-field, and rigid anti-morph kinematics allowing dynamic scale and subject shifts across scenes, strictly zero chalkboards or text"
         ),
         "forbidden_artifacts": ["chalkboards with gibberish equations", "cartoon doodle lines", "rubbery bending metal", "off-topic lab props"],
     },
@@ -129,8 +130,8 @@ EN_FLOW_VIDEO_FORMULAS: Dict[str, Dict[str, Any]] = {
         ),
         "camera_grammar": ["telephoto 400mm shallow-DOF wildlife tracking shot", "slow crane reveal across natural habitat", "intimate eye-level optical push-in"],
         "continuity_anchor": (
-            "BBC Earth natural-history wildlife cinematography on long-focal cinema glass, "
-            "golden natural atmospheric daylight, rich organic terrain textures, strictly zero text"
+            "BBC Earth natural-history wildlife cinematography on 400mm cinema glass with natural atmospheric daylight, "
+            "shallow depth-of-field, and organic biomechanical anti-morph physics across changing animal subjects and habitats, strictly zero text"
         ),
         "forbidden_artifacts": ["plastic skin or feathers", "extra morphing limbs", "cartoon animal faces", "sliding weightless feet"],
     },
@@ -146,7 +147,7 @@ EN_FLOW_VIDEO_FORMULAS: Dict[str, Dict[str, Any]] = {
         "camera_grammar": ["grand parabolic space-probe flyby", "slow weightless orbital push-in toward terminator line", "zero-G lateral cosmic drift"],
         "continuity_anchor": (
             "Melodysheep hyper-detailed IMAX deep-space cinematography lit by a single coherent off-screen star keylight "
-            "against pure velvet interstellar void, strictly zero text"
+            "against pure velvet void, telephoto depth-of-field, and Keplerian anti-morph celestial physics across shifting cosmic scales, strictly zero text"
         ),
         "forbidden_artifacts": ["flat 2D cartoon planets", "chaotic handheld shake", "melting planetary geometry", "sci-fi HUD text"],
     },
@@ -161,8 +162,8 @@ EN_FLOW_VIDEO_FORMULAS: Dict[str, Dict[str, Any]] = {
         ),
         "camera_grammar": ["heavy tectonic aerial survey glide", "slow geological cliff-strata tilt", "deep-ocean optical probe drift"],
         "continuity_anchor": (
-            "History of the Earth paleo-geological documentary cinematography with hyper-detailed mineral, basalt, "
-            "and sedimentary textures under dramatic primordial atmospheric lighting, strictly zero text"
+            "History of the Earth paleo-geological documentary cinematography under dramatic primordial atmospheric lighting, "
+            "deep geological depth-of-field, and tectonic anti-morph mass physics across ancient environments and scale transitions, strictly zero text"
         ),
         "forbidden_artifacts": ["modern human buildings or grass in ancient eras", "jelly-like water physics", "fast FPV drone banking"],
     },
@@ -177,8 +178,8 @@ EN_FLOW_VIDEO_FORMULAS: Dict[str, Dict[str, Any]] = {
         ),
         "camera_grammar": ["smooth endoscopic forward lumen dolly", "macro anatomical cross-section orbital arc", "micro-cellular shallow-DOF focus pull"],
         "continuity_anchor": (
-            "Nucleus Medical Media 8K 3D endoscopic biomedical cinematography with glistening subsurface tissue textures "
-            "and clean surgical fiber-optic rim lighting, strictly zero text labels"
+            "Nucleus Medical Media 8K 3D endoscopic biomedical cinematography with clean surgical fiber-optic rim lighting, "
+            "shallow optical depth-of-field, and fluid pulsatile anti-morph physics across changing anatomical scales and subjects, strictly zero text labels"
         ),
         "forbidden_artifacts": ["dry plastic anatomy models", "floating anatomical text callouts", "sharp robotic camera snaps"],
     },
@@ -194,7 +195,7 @@ EN_FLOW_VIDEO_FORMULAS: Dict[str, Dict[str, Any]] = {
         "camera_grammar": ["high-altitude architectural aerial survey", "steady lateral engineering tracking pass", "precision cutaway dolly push-in"],
         "continuity_anchor": (
             "Practical Engineering & Wendover large-scale infrastructure documentary cinematography under crisp directional daylight, "
-            "high-detail industrial materials, strictly zero text or map labels"
+            "architectural lens depth-of-field, and rigid load-bearing anti-morph physics across changing engineering subjects and scales, strictly zero text or map labels"
         ),
         "forbidden_artifacts": ["toy miniature blur", "rubbery bending steel beams", "gibberish signage or labels"],
     },
@@ -209,8 +210,8 @@ EN_FLOW_VIDEO_FORMULAS: Dict[str, Dict[str, Any]] = {
         ),
         "camera_grammar": ["forensic macro perpendicular push-in", "smooth tabletop lateral dolly", "composed editorial pull-back"],
         "continuity_anchor": (
-            "CNBC / LegalEagle investigative financial documentary cinematography with warm directional tungsten side-lighting, "
-            "rich mahogany and slate tones, and abstract geometric document lines with strictly zero readable words or letters"
+            "CNBC & LegalEagle investigative documentary cinematography with warm directional tungsten side-lighting, "
+            "deep slate and warm amber palette, macro f/2.0 shallow depth-of-field, and tactile anti-morph material physics across varying document scales, strictly zero readable words or letters"
         ),
         "forbidden_artifacts": ["warping AI gibberish typography", "cartoon wooden gavels", "shaky handheld camera"],
     },
@@ -225,8 +226,8 @@ EN_FLOW_VIDEO_FORMULAS: Dict[str, Dict[str, Any]] = {
         ),
         "camera_grammar": ["isometric-to-low-angle 3D architectural dolly", "locked orthogonal tracking pass", "slow subterranean crane descent"],
         "continuity_anchor": (
-            "Fern TV moody 3D investigative documentary aesthetic in desaturated slate-blue and concrete grey "
-            "with selective cyan and warm amber volumetric spotlights, strictly zero text"
+            "Fern TV moody 3D investigative documentary aesthetic in desaturated slate-blue palette with selective cyan and warm amber volumetric spotlights, "
+            "orthogonal lens depth, and synchronized anti-morph diorama physics across varying scene scopes and subjects, strictly zero text"
         ),
         "forbidden_artifacts": ["ragdoll crowd collisions", "bouncy 2D cartoon icons", "uncanny close-up facial distortion"],
     },
@@ -241,8 +242,8 @@ EN_FLOW_VIDEO_FORMULAS: Dict[str, Dict[str, Any]] = {
         ),
         "camera_grammar": ["brooding noir crane descent", "slow forensic macro push-in", "steady lateral diorama tracking pass"],
         "continuity_anchor": (
-            "LEMMiNO atmospheric noir 3D forensic documentary cinematography in deep midnight slate, monochrome silver, "
-            "and selective crimson/amber rim light, strictly zero readable text"
+            "LEMMiNO atmospheric noir 3D forensic documentary cinematography in deep midnight slate palette with selective crimson/amber rim light, "
+            "shallow forensic depth-of-field, and atmospheric anti-morph physics across shifting archival scales and subjects, strictly zero readable text"
         ),
         "forbidden_artifacts": ["cheap horror jumpscares", "gore", "neon cyberpunk colors", "gibberish newspaper text"],
     },
@@ -257,8 +258,8 @@ EN_FLOW_VIDEO_FORMULAS: Dict[str, Dict[str, Any]] = {
         ),
         "camera_grammar": ["orbital satellite-to-strait zoom descent", "smooth lateral 3D relief map flight", "low-horizon naval corridor pass"],
         "continuity_anchor": (
-            "RealLifeLore hyper-realistic 3D orbital satellite terrain and deep bathymetric navy ocean cinematography "
-            "with blue atmospheric limb glow and golden vector highlights, strictly zero map text or labels"
+            "RealLifeLore hyper-realistic 3D orbital-to-surface cartographic cinematography with blue atmospheric limb glow, "
+            "directional solar lighting, and fluid hydrodynamic anti-morph physics across varying maritime scales and geographic choke points, strictly zero map text or labels"
         ),
         "forbidden_artifacts": ["flat 2D Google Maps pins", "ships sliding onto dry land", "warping coastlines", "gibberish country names"],
     },
@@ -273,8 +274,8 @@ EN_FLOW_VIDEO_FORMULAS: Dict[str, Dict[str, Any]] = {
         ),
         "camera_grammar": ["subterranean-to-canopy vertical probe crane", "optical macro botanical dolly push-in", "gentle forest floor tracking glide"],
         "continuity_anchor": (
-            "BBC Earth Green Planet optical macro botany cinematography with rich damp soil and emerald cellular textures, "
-            "shallow depth of field, and golden volumetric forest rim lighting, strictly zero text"
+            "BBC Earth Green Planet macro-to-canopy botanical cinematography with golden volumetric sunbeams, "
+            "shallow f/2.8 depth-of-field, and organic cellular anti-morph physics across shifting botanical scales and flora subjects, strictly zero text"
         ),
         "forbidden_artifacts": ["plastic origami plants", "strobing timelapse flicker", "2D flat leaf cutouts"],
     },
@@ -289,8 +290,8 @@ EN_FLOW_VIDEO_FORMULAS: Dict[str, Dict[str, Any]] = {
         ),
         "camera_grammar": ["locked Laowa 24mm probe macro push-in", "ultra-shallow-DOF lateral specimen track", "steady micro-habitat orbit"],
         "continuity_anchor": (
-            "Deep Look PBS extreme optical macro biology cinematography at f/2.8 with hyper-detailed microscopic anatomy "
-            "isolated against a clean dark velvet bokeh backdrop, strictly zero text"
+            "Deep Look PBS extreme optical macro biology cinematography at f/2.8 with clean dark velvet bokeh, "
+            "warm glancing keylight, razor-thin depth-of-field, and articulated arthropod anti-morph biomechanics across diverse organism subjects and life-cycle scales, strictly zero text"
         ),
         "forbidden_artifacts": ["3D Pixar cartoon bug faces", "mutating leg counts", "gelatinous body melting"],
     },
@@ -305,8 +306,8 @@ EN_FLOW_VIDEO_FORMULAS: Dict[str, Dict[str, Any]] = {
         ),
         "camera_grammar": ["contemplative slow museum dolly-in", "solemn low-angle architectural tilt-up", "composed chiaroscuro lateral pan"],
         "continuity_anchor": (
-            "Classical Caravaggio chiaroscuro cinematography over aged Greco-Roman marble, weathered bronze, "
-            "and timeless Mediterranean stone architecture lit by single-source golden sunbeams, strictly zero text"
+            "Caravaggio chiaroscuro classical documentary cinematography with single-source golden sunbeams, "
+            "sculptural depth-of-field, and weathered material anti-morph physics across shifting philosophical metaphors and subjects, strictly zero text"
         ),
         "forbidden_artifacts": ["talking or smiling marble statues", "modern neon or cars", "fast shaky cuts"],
     },
@@ -321,8 +322,8 @@ EN_FLOW_VIDEO_FORMULAS: Dict[str, Dict[str, Any]] = {
         ),
         "camera_grammar": ["anamorphic 35mm slow horizontal drift", "tranquil meditative push-in", "locked contemplative wide composition"],
         "continuity_anchor": (
-            "Aperture & Pursuit of Wonder moody 35mm anamorphic contemplative cinema with natural dusk/rain chiaroscuro, "
-            "serene East Asian timber, moss, and misty mountain textures, strictly zero text"
+            "Aperture & Pursuit of Wonder 35mm anamorphic contemplative cinema with natural dusk/rain chiaroscuro lighting, "
+            "wide anamorphic depth-of-field, and serene atmospheric anti-morph physics across changing essayistic subjects and environments, strictly zero text"
         ),
         "forbidden_artifacts": ["anime fantasy effects", "neon cyberpunk colors", "abrupt whip pans"],
     },
@@ -338,7 +339,7 @@ EN_FLOW_VIDEO_FORMULAS: Dict[str, Dict[str, Any]] = {
         "camera_grammar": ["empathetic slow 35mm table-level push-in", "intimate over-the-shoulder focus pull", "gentle lateral drift across shared space"],
         "continuity_anchor": (
             "Intimate 35mm live-action film cinematography with Kodak Vision3 500T color grading, warm 3000K tungsten bokeh, "
-            "natural skin and fabric grain, and quiet emotional realism, strictly zero text, no speaking or lip movement"
+            "shallow f/1.8 depth-of-field, and quiet emotional anti-morph realism across changing character interactions and intimate spaces, strictly zero text, no speaking or lip movement"
         ),
         "forbidden_artifacts": ["talking mouth movement", "exaggerated soap-opera grimacing", "flat 2D cartoon doodles", "cold fluorescent hospital light"],
     },
@@ -353,8 +354,8 @@ EN_FLOW_VIDEO_FORMULAS: Dict[str, Dict[str, Any]] = {
         ),
         "camera_grammar": ["sweeping 3D synaptic orbital arc", "diving cortex macro zoom-in", "calm 35mm shallow-DOF focus push-in"],
         "continuity_anchor": (
-            "High-contrast 8K 3D biomedical neuroscience visualization in deep midnight space with bioluminescent cyan/amber "
-            "pathways and moody 35mm behavioral focus cinematography, strictly zero text"
+            "Kurzgesagt & Huberman Lab high-contrast 3D neuroscience and behavioral cinematography with bioluminescent cyan/amber lighting, "
+            "optical shallow depth-of-field, and bio-electrical anti-morph physics across shifting cognitive scales and behavioral environments, strictly zero text"
         ),
         "forbidden_artifacts": ["cartoon brain with eyes", "strobing seizure flashes", "flat MS-Paint stick figures"],
     },
@@ -369,8 +370,8 @@ EN_FLOW_VIDEO_FORMULAS: Dict[str, Dict[str, Any]] = {
         ),
         "camera_grammar": ["authoritative WSJ architectural lateral dolly", "low-angle executive push-in", "composed wide boardroom pull-back"],
         "continuity_anchor": (
-            "WSJ & HBR high-contrast editorial photojournalism cinematography in charcoal slate, crisp architectural glass, "
-            "and warm brass directional lighting at f/2.0 shallow depth of field, strictly zero text"
+            "WSJ & HBR high-contrast editorial photojournalism cinematography with charcoal slate palette, "
+            "warm directional brass lighting, f/2.0 shallow depth-of-field, and architectural anti-morph stability across shifting professional contexts and scales, strictly zero text"
         ),
         "forbidden_artifacts": ["cartoon money bags", "talking lip movement", "warping office furniture"],
     },
@@ -385,8 +386,8 @@ EN_FLOW_VIDEO_FORMULAS: Dict[str, Dict[str, Any]] = {
         ),
         "camera_grammar": ["smooth 35mm commercial dolly push-in", "eye-level lateral tabletop/aisle tracking", "clean macro product rack-focus"],
         "continuity_anchor": (
-            "WSJ Consumer Economics & Two Cents realistic 35mm documentary and tabletop macro cinematography "
-            "with crisp commercial lighting, rich physical textures, and strictly zero readable text, words, or price digits"
+            "WSJ Consumer Economics & Two Cents realistic 35mm tabletop and documentary cinematography with crisp commercial lighting, "
+            "f/2.0 optical depth-of-field, and tactile anti-morph physical dynamics across diverse consumer environments and product scales, strictly zero readable text, words, or price digits"
         ),
         "forbidden_artifacts": ["flat 2D cartoon paper cutouts", "off-topic grocery items in non-grocery scenes", "gibberish printed letters"],
     },
@@ -445,6 +446,70 @@ def build_reference_keyframe_prompt(
         f"Preserve exact subject geometry, color grade, and environment anchor ({anchor_clean}). "
         "Strict zero-text policy: zero words, zero letters, zero numbers, zero watermarks."
     )
+
+
+def validate_shot_visual_diversity(
+    shots: list[dict[str, str]],
+    max_jaccard: float = 0.72,
+) -> list[str]:
+    """Detect if consecutive shots repeat >72% identical visual tokens.
+
+    Prevents frozen visual repetition (e.g. 30-second single-prop cuticle bugs) by calculating
+    the pairwise Jaccard word-token similarity between adjacent shots.
+
+    Args:
+        shots: List of shot dictionaries (containing keys like 'visual', 'start_visual',
+               'end_visual', 'subject_motion', 'shot_id').
+        max_jaccard: Maximum allowed Jaccard token overlap between consecutive shots (default 0.72).
+
+    Returns:
+        List of warning/violation strings for each consecutive shot pair exceeding max_jaccard.
+    """
+    if len(shots) < 2:
+        return []
+
+    violations: list[str] = []
+
+    def _extract_tokens(shot: dict[str, str]) -> set[str]:
+        text_parts: list[str] = []
+        for key in ("visual", "start_visual", "end_visual", "subject_motion"):
+            val = shot.get(key)
+            if val and isinstance(val, str):
+                text_parts.append(val)
+        if not text_parts:
+            for k, val in shot.items():
+                if isinstance(val, str) and k not in ("shot_id", "id", "chain_mode", "stage", "camera_verb"):
+                    text_parts.append(val)
+        full_text = " ".join(text_parts).lower()
+        words = re.findall(r"\b[a-z0-9_]{3,}\b", full_text)
+        return set(words)
+
+    for i in range(len(shots) - 1):
+        shot_a = shots[i]
+        shot_b = shots[i + 1]
+
+        tokens_a = _extract_tokens(shot_a)
+        tokens_b = _extract_tokens(shot_b)
+
+        if not tokens_a or not tokens_b:
+            continue
+
+        intersection = tokens_a & tokens_b
+        union = tokens_a | tokens_b
+
+        if not union:
+            continue
+
+        jaccard = len(intersection) / len(union)
+        if jaccard > max_jaccard:
+            id_a = shot_a.get("shot_id") or f"shot_{i+1}"
+            id_b = shot_b.get("shot_id") or f"shot_{i+2}"
+            violations.append(
+                f"Consecutive shots {id_a} and {id_b} exceed visual token similarity threshold: "
+                f"Jaccard={jaccard:.3f} > {max_jaccard:.2f}"
+            )
+
+    return violations
 
 
 EN_CHANNEL_LOGO_PROMPTS: dict[str, str] = {
@@ -585,4 +650,5 @@ __all__ = [
     "UNIVERSAL_STABILITY_GUARDRAILS",
     "build_channel_motion_prompt",
     "build_reference_keyframe_prompt",
+    "validate_shot_visual_diversity",
 ]

@@ -24,6 +24,7 @@ Every package guarantees:
 from __future__ import annotations
 
 import json
+import re
 import sys
 from dataclasses import asdict
 from pathlib import Path
@@ -124,10 +125,16 @@ WEEK1_SHORT_STORIES: Dict[str, Dict[str, Any]] = {
                 "concept_metaphor:none|A green progress bar filling forward smoothly across a flat warm paper backdrop.",
             ),
             (
-                "Bạn có hay dọn phòng trước giờ nộp bài không, bình luận nhé?",
-                "full_scene:CH01|Stickman turns toward viewer with a friendly wink and points to comment bubble.",
+                "Bí quyết bẻ khóa vòng lặp tự trách mình mổ xẻ kỹ trong bản dài trên Não Lười. Gửi cho đứa bạn hay dọn phòng mỗi khi hạn nộp bài tới gần.",
+                "full_scene:CH01|Stickman turns toward viewer with a friendly wink and gestures toward the channel link on clean warm stage.",
             ),
         ],
+        "parent_long_id": "nao-luoi-week1-16x9",
+        "cta_plan": {
+            "bridge": "Bí quyết bẻ khóa vòng lặp tự trách mình mổ xẻ kỹ trong bản dài trên Não Lười.",
+            "close": "Gửi cho đứa bạn hay dọn phòng mỗi khi hạn nộp bài tới gần.",
+            "endcard_text": "BẢN ĐẦY ĐỦ TRÊN YOUTUBE",
+        },
     },
     "tui_tien": {
         "title": "Ly Trà Sữa 35 Nghìn: Chủ Quán Lời Thật Bao Nhiêu?",
@@ -181,10 +188,16 @@ WEEK1_SHORT_STORIES: Dict[str, Dict[str, Any]] = {
                 "concept_metaphor:CH01|Stickman points with a pencil to four small gold coins resting in a piggy bank.",
             ),
             (
-                "Lần tới uống trà sữa, bạn muốn mình bóc tách món nào tiếp theo?",
-                "full_scene:CH01|Stickman smiles warmly holding open ledger and waves to viewer on grid paper.",
+                "Công thức tính điểm hòa vốn chuẩn xác mình để ở bản dài trên YouTube. Lưu lại để tính nhẩm dòng tiền trước khi mở quán kinh doanh nhé.",
+                "full_scene:CH01|Stickman smiles warmly holding open ledger and gestures toward the channel link on grid paper.",
             ),
         ],
+        "parent_long_id": "tui-tien-week1-16x9",
+        "cta_plan": {
+            "bridge": "Công thức tính điểm hòa vốn chuẩn xác mình để ở bản dài trên YouTube.",
+            "close": "Lưu lại để tính nhẩm dòng tiền trước khi mở quán kinh doanh nhé.",
+            "endcard_text": "BẢN ĐẦY ĐỦ TRÊN YOUTUBE",
+        },
     },
     "ua_sao_vay": {
         "title": "Ủa Sao Muỗi Chỉ Đốt Đúng Một Người Trong Phòng?",
@@ -238,10 +251,16 @@ WEEK1_SHORT_STORIES: Dict[str, Dict[str, Any]] = {
                 "visual_diagram:none|Molecular diagram drawn simply with sticker borders on pastel background.",
             ),
             (
-                "Bạn có phải là nam châm hút muỗi trong nhà không, comment nhé?",
-                "full_scene:CH01|Bé Ủa holds up a friendly speech bubble with sparkling eyes on solid yellow canvas.",
+                "Cách thử nghiệm nhóm mùi khiến muỗi tránh xa, Bé Ủa bật mí trên bản dài YouTube. Ủa, bạn còn thắc mắc hiện tượng lạ nào, thả ngay vào bình luận nhé.",
+                "full_scene:CH01|Bé Ủa holds up a friendly speech bubble pointing excitedly to the channel banner on yellow canvas.",
             ),
         ],
+        "parent_long_id": "ua-sao-vay-week1-16x9",
+        "cta_plan": {
+            "bridge": "Cách thử nghiệm nhóm mùi khiến muỗi tránh xa, Bé Ủa bật mí trên bản dài YouTube.",
+            "close": "Ủa, bạn còn thắc mắc hiện tượng lạ nào, thả ngay vào bình luận nhé.",
+            "endcard_text": "BẢN ĐẦY ĐỦ TRÊN YOUTUBE",
+        },
     },
     "su_ke_lai": {
         "title": "Vì Sao Tướng Nam Hán Sa Vào Bẫy Sông Bạch Đằng?",
@@ -263,7 +282,7 @@ WEEK1_SHORT_STORIES: Dict[str, Dict[str, Any]] = {
         ],
         "rows": [
             (
-                "Vì sao tướng Nam Hán biết sông Bạch Đằng hiểm trở mà vẫn sa vào bẫy?",
+                "Vì sao tướng Nam Hán sa vào bẫy sông Bạch Đằng, bạn biết không?",
                 "full_scene:CH01|Dong Ho style commander stands on riverbank looking across calm water at dawn on do paper.",
             ),
             (
@@ -303,10 +322,16 @@ WEEK1_SHORT_STORIES: Dict[str, Dict[str, Any]] = {
                 "full_scene:CH01|Commander raises ceremonial bronze sword triumphantly under warm vermilion sunrise.",
             ),
             (
-                "Theo dõi Sử Kể Lại để khám phá những trận đánh vang danh tiếp theo nhé!",
-                "full_scene:CH01|Commander bows respectfully in traditional Vietnamese posture on warm do paper.",
+                "Nước cờ tính thủy triều bí mật của Ngô Quyền nằm trong bản dài Sử Kể Lại. Nếu tự hào về lịch sử dân tộc, theo dõi kênh để nghe tiếp những trận sau.",
+                "full_scene:CH01|Commander bows respectfully in traditional Vietnamese posture pointing toward historical scroll on do paper.",
             ),
         ],
+        "parent_long_id": "su-ke-lai-week1-16x9",
+        "cta_plan": {
+            "bridge": "Nước cờ tính thủy triều bí mật của Ngô Quyền nằm trong bản dài Sử Kể Lại.",
+            "close": "Nếu tự hào về lịch sử dân tộc, theo dõi kênh để nghe tiếp những trận sau.",
+            "endcard_text": "BẢN ĐẦY ĐỦ TRÊN YOUTUBE",
+        },
     },
     "thuong_cho_kheo": {
         "title": "Khi Người Yêu Nói Em Không Sao: Đừng Trả Lời Bản Năng",
@@ -360,10 +385,16 @@ WEEK1_SHORT_STORIES: Dict[str, Dict[str, Any]] = {
                 "full_scene:CH01|May smiles with gentle relief while Tun listens attentively on warm cream canvas.",
             ),
             (
-                "Bạn đã từng trải qua khoảnh khắc này chưa, tag người ấy vào đây nhé?",
-                "full_scene:CH01|Tun and May wave warmly side by side with friendly smiles to the viewer.",
+                "Ba bước lắng nghe để người ấy mở lòng, xem trọn vẹn trong bản dài trên YouTube. Nếu câu chuyện chạm vào bạn, gửi cho người ấy mà không cần nói thêm.",
+                "full_scene:CH01|Tun and May wave warmly side by side with friendly smiles toward channel endcard on warm cream canvas.",
             ),
         ],
+        "parent_long_id": "thuong-cho-kheo-week1-16x9",
+        "cta_plan": {
+            "bridge": "Ba bước lắng nghe để người ấy mở lòng, xem trọn vẹn trong bản dài trên YouTube.",
+            "close": "Nếu câu chuyện chạm vào bạn, gửi cho người ấy mà không cần nói thêm.",
+            "endcard_text": "BẢN ĐẦY ĐỦ TRÊN YOUTUBE",
+        },
     },
     "ho_so_ky_la": {
         "title": "Manh Mối Kỳ Lạ Nhất Trên Boong Tàu Mary Celeste",
@@ -385,7 +416,7 @@ WEEK1_SHORT_STORIES: Dict[str, Dict[str, Any]] = {
         ],
         "rows": [
             (
-                "Năm 1872, một con tàu trôi dạt giữa biển mà không còn một ai.",
+                "Năm 1872, một con tàu trôi dạt giữa biển mà không còn một bóng người.",
                 "full_scene:CH01|Silhouette detective in long slate coat inspects an antique compass on dark wooden desk in noir style.",
             ),
             (
@@ -417,10 +448,16 @@ WEEK1_SHORT_STORIES: Dict[str, Dict[str, Any]] = {
                 "full_scene:CH01|Detective traces a map route with red pencil under single focused beam of light.",
             ),
             (
-                "Theo bạn, điều gì đã thực sự xảy ra với thủy thủ đoàn năm ấy?",
-                "full_scene:CH01|Detective turns to viewer with open hands beside the vintage evidence case folder.",
+                "Lời giải cho hiện trường không vết xước nằm trong hồ sơ đầy đủ trên YouTube. Hồ sơ bí ẩn tiếp theo đang chờ bạn, theo dõi để không bỏ lỡ manh mối.",
+                "full_scene:CH01|Detective turns to viewer holding vintage case folder, pointing toward full dossier archive in soft lamplight.",
             ),
         ],
+        "parent_long_id": "ho-so-ky-la-week1-16x9",
+        "cta_plan": {
+            "bridge": "Lời giải cho hiện trường không vết xước nằm trong hồ sơ đầy đủ trên YouTube.",
+            "close": "Hồ sơ bí ẩn tiếp theo đang chờ bạn, theo dõi để không bỏ lỡ manh mối.",
+            "endcard_text": "BẢN ĐẦY ĐỦ TRÊN YOUTUBE",
+        },
     },
     "co_the_ke": {
         "title": "Dạ Dày Than Phiền Gì Khi Bạn Ăn Mì Gói Lúc Nửa Đêm?",
@@ -474,10 +511,16 @@ WEEK1_SHORT_STORIES: Dict[str, Dict[str, Any]] = {
                 "full_scene:CH01|Stomach character resting with a cooling ice bag on head, giving a gentle thumbs up.",
             ),
             (
-                "Bạn có hay đói cồn cào lúc nửa đêm không, lưu video lại để nhắc mình nhé?",
-                "full_scene:CH01|Stomach character waves cheerfully to viewer beside a friendly cup of warm water.",
+                "Bí mật ca trực phục hồi của gan và não, xem trọn vẹn trong bản dài YouTube. Dạ dày nhắn bạn lưu video lại để bớt ăn mì gói lúc nửa đêm nhé.",
+                "full_scene:CH01|Stomach character waves cheerfully to viewer beside a friendly cup of warm water and channel endcard.",
             ),
         ],
+        "parent_long_id": "co-the-ke-week1-16x9",
+        "cta_plan": {
+            "bridge": "Bí mật ca trực phục hồi của gan và não, xem trọn vẹn trong bản dài YouTube.",
+            "close": "Dạ dày nhắn bạn lưu video lại để bớt ăn mì gói lúc nửa đêm nhé.",
+            "endcard_text": "BẢN ĐẦY ĐỦ TRÊN YOUTUBE",
+        },
     },
     "ai_binh_dan": {
         "title": "Tóm Tắt File PDF 50 Trang Trong 30 Giây Bằng AI",
@@ -527,10 +570,16 @@ WEEK1_SHORT_STORIES: Dict[str, Dict[str, Any]] = {
                 "full_scene:CH01|Stickman smiles with satisfaction looking at clean summary card glowing with checkmarks.",
             ),
             (
-                "Bạn muốn mình chia sẻ mẹo AI cho công việc nào tiếp theo, bình luận nhé?",
-                "full_scene:CH01|Stickman leans forward with friendly gesture and points toward comment section.",
+                "Bốn câu lệnh mẫu tự động hóa toàn bộ công việc, xem ngay trong bản dài YouTube. Lưu video lại để áp dụng, gửi cho đồng nghiệp đang ngập trong báo cáo.",
+                "full_scene:CH01|Stickman leans forward with friendly gesture and points toward full video tutorial link on clean white stage.",
             ),
         ],
+        "parent_long_id": "ai-binh-dan-week1-16x9",
+        "cta_plan": {
+            "bridge": "Bốn câu lệnh mẫu tự động hóa toàn bộ công việc, xem ngay trong bản dài YouTube.",
+            "close": "Lưu video lại để áp dụng, gửi cho đồng nghiệp đang ngập trong báo cáo.",
+            "endcard_text": "BẢN ĐẦY ĐỦ TRÊN YOUTUBE",
+        },
     },
 }
 
@@ -860,7 +909,7 @@ WEEK1_LONG_STORIES: Dict[str, Dict[str, Any]] = {
         ],
         "rows": [
             (
-                "Năm 1872, một con tàu trôi dạt giữa đại dương mà không còn một bóng người nào?",
+                "Năm 1872, một con tàu trôi dạt giữa đại dương mà không còn một bóng người nào.",
                 "full_scene:CH01|Silhouette detective examines a weathered nautical chart with antique brass dividers in noir style.",
             ),
             (
@@ -917,7 +966,7 @@ WEEK1_LONG_STORIES: Dict[str, Dict[str, Any]] = {
         ],
         "rows": [
             (
-                "Nếu tối nay bạn thức trắng, đây là cuộc họp khẩn cấp diễn ra trong não và tim bạn?",
+                "Nếu bạn thức trắng đêm nay, đây là cuộc họp khẩn cấp diễn ra trong não và tim bạn.",
                 "full_scene:CH01|Four kawaii organ characters (Brain, Heart, Liver, Stomach) gather around a round table looking worried.",
             ),
             (
@@ -974,7 +1023,7 @@ WEEK1_LONG_STORIES: Dict[str, Dict[str, Any]] = {
         ],
         "rows": [
             (
-                "Đừng mất hai tiếng đọc báo cáo, một câu lệnh này giúp bạn có bảng tóm tắt ngay?",
+                "Đừng mất hai tiếng đọc báo cáo, một câu lệnh này giúp bạn có bảng tóm tắt ngay.",
                 "full_scene:CH01|Stickman in violet hoodie demonstrates a clean three-step workflow on laptop screen.",
             ),
             (
@@ -1067,10 +1116,19 @@ def generate_synthetic_story_for_channel(
 
     # Calibrate hook sentence
     clean_topic = topic_title.strip()
+    words = clean_topic.split()
+    lower = clean_topic.lower()
+
     if is_short:
-        hook_sentence = f"Vì sao bạn lại {clean_topic.lower()} mỗi ngày?"
+        if (lower.startswith("vì sao") or lower.startswith("tại sao")) and len(words) <= 12:
+            hook_sentence = clean_topic if clean_topic.endswith("?") else clean_topic + "?"
+        else:
+            hook_sentence = "Vì sao bạn lại gặp hiện tượng kỳ lạ này mỗi ngày?"
     else:
-        hook_sentence = f"Bạn đã bao giờ tự hỏi vì sao {clean_topic.lower()} lại xảy ra thường xuyên?"
+        if (lower.startswith("vì sao") or lower.startswith("tại sao") or lower.startswith("bạn có biết")) and len(words) <= 16:
+            hook_sentence = clean_topic if clean_topic.endswith("?") else clean_topic + "?"
+        else:
+            hook_sentence = "Bạn đã bao giờ tự hỏi vì sao nghịch lý này lại xảy ra thường xuyên?"
 
     sources = [
         {
@@ -1085,6 +1143,8 @@ def generate_synthetic_story_for_channel(
     ]
 
     if is_short:
+        bridge_cta = "Bí mật khoa học đằng sau cơ chế này, xem chi tiết trong bản dài trên YouTube."
+        close_cta = "Lưu lại video này và cùng thảo luận với bạn bè nhé."
         rows = [
             (
                 hook_sentence,
@@ -1107,7 +1167,7 @@ def generate_synthetic_story_for_channel(
                 "macro_prop:none|A bright golden key icon resting peacefully on clean flat canvas.",
             ),
             (
-                "Bạn có từng gặp trường hợp này không, bình luận số một nhé?",
+                f"{bridge_cta} {close_cta}",
                 f"full_scene:{char_id}|Character smiles warmly and gestures toward viewer inviting conversation.",
             ),
         ]
@@ -1134,7 +1194,7 @@ def generate_synthetic_story_for_channel(
                 "concept_metaphor:none|A solid progress milestone beacon illuminated on flat stage backdrop.",
             ),
             (
-                "Hãy cùng khám phá sâu hơn trong các video phân tích tiếp theo trên kênh nhé!",
+                "Theo dõi kênh để đón xem những video phân tích chuyên sâu tiếp theo nhé.",
                 f"full_scene:{char_id}|Character bows respectfully and waves cheerfully with warm smile to viewer.",
             ),
         ]
@@ -1165,11 +1225,15 @@ def build_channel_topic(
     if story_data:
         chosen_title = story_data["title"]
         yt_title = story_data["youtube_title"]
+        if len(yt_title) > 55:
+            yt_title = yt_title[:52].rstrip() + "..."
         text_overlay = story_data["text_overlay"]
         visual_hook = story_data["visual_hook"]
         contrast_pair = story_data["contrast_pair"]
         sources = story_data["sources"]
         rows = story_data["rows"]
+        cta_plan = story_data.get("cta_plan")
+        parent_long_id = story_data.get("parent_long_id") if is_short else None
     else:
         if seed_index is not None and 1 <= seed_index <= len(ch.seed_topics):
             chosen_title = ch.seed_topics[seed_index - 1]
@@ -1178,15 +1242,29 @@ def build_channel_topic(
         else:
             chosen_title = ch.seed_topics[0]
 
-        yt_title = chosen_title if len(chosen_title) <= 55 else chosen_title[:52] + "..."
+        yt_title = chosen_title if len(chosen_title) <= 55 else chosen_title[:52].rstrip() + "..."
         text_overlay = ch.name.upper()[:16]
         visual_hook = f"Nhân vật chính của kênh {ch.name} tương tác với chủ đề {chosen_title}"
         contrast_pair = "Nhận thức phổ thông vs. Sự thật khoa học"
         sources, rows = generate_synthetic_story_for_channel(ch, format_profile, chosen_title)
+        if is_short:
+            parent_long_id = f"{ch.slug}-week1-16x9"
+            cta_plan = {
+                "bridge": "Bí mật khoa học đằng sau cơ chế này, xem chi tiết trong bản dài trên YouTube.",
+                "close": "Lưu lại video này và cùng thảo luận với bạn bè nhé.",
+                "endcard_text": "BẢN ĐẦY ĐỦ TRÊN YOUTUBE",
+            }
+        else:
+            parent_long_id = None
+            cta_plan = {
+                "close": "Theo dõi kênh để đón xem những video phân tích chuyên sâu tiếp theo nhé.",
+                "endcard_text": "THEO DÕI KÊNH",
+            }
 
     # 2. Build Scenes
     char_id = "CH01"
-    story_tuples = [(chosen_title, f"Flat 2D {ch.visual.label} stage.", rows)]
+    safe_label = re.sub(r"\bgear\b", "mechanism", ch.visual.label, flags=re.IGNORECASE)
+    story_tuples = [(chosen_title, f"Flat 2D {safe_label} stage.", rows)]
     scenes = build_scenes_from_story_rows(story_tuples, character_id=char_id)
 
     # Distribute requirements and claims
@@ -1222,6 +1300,7 @@ def build_channel_topic(
         channel_pillar=DEFAULT_CHANNEL_PILLAR,
         funnel_tier="tier_1_broad",
         seo_keywords=seo_kws,
+        cta_plan=cta_plan,
     )
 
     lo, hi = spec.duration_seconds
@@ -1248,6 +1327,8 @@ def build_channel_topic(
         conversational_facts=True,
         visual_pacing_profile="full_frame_v1",
         packaging=packaging,
+        parent_long_id=parent_long_id if is_short else None,
+        cta_plan=cta_plan,
     )
 
 

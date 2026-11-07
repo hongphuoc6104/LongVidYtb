@@ -20,17 +20,20 @@ except ImportError:
 
 def main():
     raw_args = sys.argv[1:]
+    known_commands = {"list", "sessions", "status", "pool-status", "help"}
     if raw_args and raw_args[0] in ("--account", "-a"):
-        if len(raw_args) < 2:
-            raise SystemExit("Missing account argument")
+        if len(raw_args) < 2 or raw_args[1].startswith("-") or raw_args[1] in known_commands:
+            raise SystemExit("Missing or invalid account argument")
         account_id = raw_args[1]
         args = raw_args[2:]
         folder = Path.home() / ".config/video-pilot/colab/profiles" / account_id
     elif raw_args and raw_args[0].startswith("--account="):
         account_id = raw_args[0].split("=", 1)[1]
+        if not account_id or account_id.startswith("-") or account_id in known_commands:
+            raise SystemExit("Missing or invalid account argument")
         args = raw_args[1:]
         folder = Path.home() / ".config/video-pilot/colab/profiles" / account_id
-    elif raw_args and not raw_args[0].startswith("-"):
+    elif raw_args and not raw_args[0].startswith("-") and raw_args[0] not in known_commands:
         folder = Path(raw_args[0]).resolve()
         args = raw_args[1:]
     else:

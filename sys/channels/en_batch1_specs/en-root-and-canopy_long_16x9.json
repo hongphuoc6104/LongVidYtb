@@ -2,8 +2,8 @@
   "job_id": "en-root-and-canopy-batch1-16x9",
   "channel_slug": "en-root-and-canopy",
   "aspect": "16:9",
-  "title": "200-Year Siege: How a Single Strangler Fig Seed Slowly Devours a Rainforest Giant",
-  "youtube_title": "How a Strangler Fig Devours a Giant Tree",
+  "title": "The 200-Year Siege: How One Fig Devours a Giant Tree",
+  "youtube_title": "The 200-Year Siege: How One Fig Devours a Giant Tree",
   "thumbnail_spec": {
     "visual_hook": "Botanical cross-section of a hollow rainforest host trunk encased by a lattice cage of strangler fig roots",
     "allowed_text": "200-YEAR SIEGE",
@@ -842,6 +842,48 @@
       "end_visual": "Continuing on the same optical macro botanical view for ch8_resolution shot S64: strangler fig root structures expand across the textured host bark as warm golden sunlight grazes fused cambium layers and rich damp moss, photorealistic BBC nature cinematography, strictly zero text.",
       "subject_motion": "camera executes canopy top-down spiral descent along the vertical botanical trunk as moisture droplets glisten and delicate root tendrils expand across bark fissures",
       "speech_rate": "+0%"
+    }
+  ],
+  "chapters": [
+    {
+      "timestamp": "00:00",
+      "title": "A Seed 150 Feet in the Canopy",
+      "scene_group": "ch1_hook"
+    },
+    {
+      "timestamp": "00:59",
+      "title": "The Delicate Aerial Root Descent",
+      "scene_group": "ch2_paradox"
+    },
+    {
+      "timestamp": "02:01",
+      "title": "Tapping Soil: The Siege Begins",
+      "scene_group": "ch3_mechanism"
+    },
+    {
+      "timestamp": "03:04",
+      "title": "The Lattice of Wooden Armor",
+      "scene_group": "ch4_case_study_1"
+    },
+    {
+      "timestamp": "04:06",
+      "title": "Competing for Canopy Sunlight",
+      "scene_group": "ch5_escalation"
+    },
+    {
+      "timestamp": "05:08",
+      "title": "The Relentless Vascular Choke",
+      "scene_group": "ch6_case_study_2"
+    },
+    {
+      "timestamp": "06:10",
+      "title": "The Hollow Monument Remaining",
+      "scene_group": "ch7_systemic_shift"
+    },
+    {
+      "timestamp": "07:13",
+      "title": "Keystone of the Jungle Canopy",
+      "scene_group": "ch8_resolution"
     }
   ]
 }

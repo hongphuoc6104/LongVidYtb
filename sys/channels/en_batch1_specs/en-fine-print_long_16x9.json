@@ -2,8 +2,8 @@
   "job_id": "en-fine-print-batch1-16x9",
   "channel_slug": "en-fine-print",
   "aspect": "16:9",
-  "title": "The Hidden Clauses in Everyday Contracts: How Forced Arbitration & Data Waivers Cost You Thousands",
-  "youtube_title": "Hidden Contract Clauses Costing You Thousands",
+  "title": "The Fine Print Trap: Hidden Clauses That Cost You",
+  "youtube_title": "The Fine Print Trap: Hidden Clauses That Cost You",
   "thumbnail_spec": {
     "visual_hook": "Forensic magnifying lens over an ivory contract page revealing glowing yellow highlighted arbitration trap clauses",
     "allowed_text": "READ SECTION 14",
@@ -842,6 +842,48 @@
       "start_visual": "Pulling back to reveal the brass balance scale of justice returning to perfect, rock-solid level equilibrium on the slate table, strictly zero text.",
       "end_visual": "Centered wide composition of the balanced scales, brass loupe, and contract folio illuminated by a warm editorial spotlight against dark slate, strictly zero text.",
       "subject_motion": "the scene settles into pristine stillness as side lights fade down, leaving a dignified warm glow on the balanced scales"
+    }
+  ],
+  "chapters": [
+    {
+      "timestamp": "00:00",
+      "title": "The Click-Wrap Illusion",
+      "scene_group": "ch1_hook"
+    },
+    {
+      "timestamp": "01:08",
+      "title": "The Forced Arbitration Trap",
+      "scene_group": "ch2_paradox"
+    },
+    {
+      "timestamp": "02:21",
+      "title": "How Class Action Rights Vanish",
+      "scene_group": "ch3_mechanism"
+    },
+    {
+      "timestamp": "03:28",
+      "title": "Sneaky Perpetual License Rights",
+      "scene_group": "ch4_case_study_1"
+    },
+    {
+      "timestamp": "04:34",
+      "title": "Unilateral Modification Clauses",
+      "scene_group": "ch5_escalation"
+    },
+    {
+      "timestamp": "05:43",
+      "title": "Data Broker Resale Waivers",
+      "scene_group": "ch6_case_study_2"
+    },
+    {
+      "timestamp": "06:58",
+      "title": "Decoding Legal Asymmetry",
+      "scene_group": "ch7_systemic_shift"
+    },
+    {
+      "timestamp": "08:15",
+      "title": "Protecting Digital Sovereignty",
+      "scene_group": "ch8_resolution"
     }
   ]
 }

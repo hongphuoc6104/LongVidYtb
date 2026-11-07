@@ -2,8 +2,8 @@
   "job_id": "en-first-principles-batch1-16x9",
   "channel_slug": "en-first-principles",
   "aspect": "16:9",
-  "title": "Second-Order Thinking & The Cobra Effect: Why Well-Intentioned Fixes Create Worse Disasters",
-  "youtube_title": "Why Good Solutions Cause Worse Disasters",
+  "title": "The Cobra Effect: Why Good Fixes Create Disasters",
+  "youtube_title": "The Cobra Effect: Why Good Fixes Create Disasters",
   "thumbnail_spec": {
     "visual_hook": "Archival Prussian cyanotype blueprint showing a brass balance scale tipping a giant cobra domino into a row of collapsing gears",
     "allowed_text": "THE COBRA EFFECT",
@@ -778,6 +778,48 @@
       "start_visual": "Veritasium studio wide panorama: the glowing ripple tank, glass prism, and brass balance aligned along the slate workbench.",
       "end_visual": "Orbiting around the entire demonstration bench as the studio keylights dim down to a dignified, glowing slate-navy twilight finale.",
       "subject_motion": "camera executes a majestic sweeping pull-back orbit around the workbench as keylights fade to an iconic dark navy studio twilight"
+    }
+  ],
+  "chapters": [
+    {
+      "timestamp": "00:00",
+      "title": "The Snake Bounty That Backfired",
+      "scene_group": "ch1_hook"
+    },
+    {
+      "timestamp": "01:09",
+      "title": "First-Order vs Second-Order Mindset",
+      "scene_group": "ch2_paradox"
+    },
+    {
+      "timestamp": "02:19",
+      "title": "Goodhart's Law in Action",
+      "scene_group": "ch3_mechanism"
+    },
+    {
+      "timestamp": "03:29",
+      "title": "The Perverse Incentive Spiral",
+      "scene_group": "ch4_case_study_1"
+    },
+    {
+      "timestamp": "04:43",
+      "title": "Complex Systems Breakdown",
+      "scene_group": "ch5_escalation"
+    },
+    {
+      "timestamp": "06:02",
+      "title": "Real-World Policy Disasters",
+      "scene_group": "ch6_case_study_2"
+    },
+    {
+      "timestamp": "07:18",
+      "title": "Pre-Mortem Analytical Frameworks",
+      "scene_group": "ch7_systemic_shift"
+    },
+    {
+      "timestamp": "08:32",
+      "title": "Thinking in Generations",
+      "scene_group": "ch8_resolution"
     }
   ]
 }

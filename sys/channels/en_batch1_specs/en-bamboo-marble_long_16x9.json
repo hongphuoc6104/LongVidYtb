@@ -2,8 +2,8 @@
   "job_id": "en-bamboo-marble-batch1-16x9",
   "channel_slug": "en-bamboo-marble",
   "aspect": "16:9",
-  "title": "The Taoist Law of Wu Wei: Why Forcing Outcomes Breaks Your Focus (And How Water Wins)",
-  "youtube_title": "Wu Wei: Why Forcing Your Life Backfires",
+  "title": "The Law of Wu Wei: Why Forcing Outcomes Backfires",
+  "youtube_title": "The Law of Wu Wei: Why Forcing Outcomes Backfires",
   "thumbnail_spec": {
     "visual_hook": "Sumi-e ink wash and gold kintsugi stream carving effortlessly around a rigid cracked granite boulder in mist",
     "allowed_text": "EFFORTLESS FORCE",
@@ -842,6 +842,48 @@
       "start_visual": "Breathtaking wide view of a majestic river winding peacefully through endless mountain ranges toward a glowing horizon.",
       "end_visual": "The calm river shines with golden dawn reflections as distant peaks stand in eternal, majestic contemplative peace.",
       "subject_motion": "the wide river flows peacefully toward the glowing horizon between majestic mist-shrouded mountain peaks"
+    }
+  ],
+  "chapters": [
+    {
+      "timestamp": "00:00",
+      "title": "The Paradox of Grasping",
+      "scene_group": "ch1_hook"
+    },
+    {
+      "timestamp": "01:02",
+      "title": "The Ancient Wisdom of Water",
+      "scene_group": "ch2_paradox"
+    },
+    {
+      "timestamp": "02:02",
+      "title": "Neuroscience of Cognitive Flow",
+      "scene_group": "ch3_mechanism"
+    },
+    {
+      "timestamp": "03:17",
+      "title": "How Softness Carves Granite",
+      "scene_group": "ch4_case_study_1"
+    },
+    {
+      "timestamp": "04:20",
+      "title": "The Trap of Maximal Forcing",
+      "scene_group": "ch5_escalation"
+    },
+    {
+      "timestamp": "05:28",
+      "title": "Master Lieh-tzu's Archery Test",
+      "scene_group": "ch6_case_study_2"
+    },
+    {
+      "timestamp": "06:29",
+      "title": "The Art of Effortless Execution",
+      "scene_group": "ch7_systemic_shift"
+    },
+    {
+      "timestamp": "07:32",
+      "title": "Surrendering the Outcome",
+      "scene_group": "ch8_resolution"
     }
   ]
 }

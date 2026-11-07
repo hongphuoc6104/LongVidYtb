@@ -2,8 +2,8 @@
   "job_id": "en-crowd-strings-batch1-16x9",
   "channel_slug": "en-crowd-strings",
   "aspect": "16:9",
-  "title": "Invisible Architecture of Mass Choice: 7 Behavioral Traps Engineered into Modern Cities & Stores",
-  "youtube_title": "7 Behavioral Traps Built Into Every Store",
+  "title": "The Gruen Trap: 7 Hidden Tricks Stores Use on You",
+  "youtube_title": "The Gruen Trap: 7 Hidden Tricks Stores Use on You",
   "thumbnail_spec": {
     "visual_hook": "Isometric 3D architectural cutaway of a labyrinth retail floor with glowing crimson path vectors guiding translucent shoppers",
     "allowed_text": "ENGINEERED CHOICE",
@@ -778,6 +778,48 @@
       "start_visual": "Pulling back into a wide architectural view as a bold straight cyan laser path cuts through the retail labyrinth directly to the exit, strictly zero text.",
       "end_visual": "The camera locks into centered symmetry over the 3D architectural model as taut marionette strings snap and fall into darkness, strictly zero text.",
       "subject_motion": "the crimson cords part cleanly and fall away into shadow, leaving the architectural model standing in serene, clear white light"
+    }
+  ],
+  "chapters": [
+    {
+      "timestamp": "00:00",
+      "title": "Crossing the Retail Threshold",
+      "scene_group": "ch1_hook"
+    },
+    {
+      "timestamp": "01:10",
+      "title": "The Illusion of Shopper Autonomy",
+      "scene_group": "ch2_paradox"
+    },
+    {
+      "timestamp": "02:20",
+      "title": "The Gruen Transfer Trigger",
+      "scene_group": "ch3_mechanism"
+    },
+    {
+      "timestamp": "03:32",
+      "title": "Engineered Foot-Traffic Geometry",
+      "scene_group": "ch4_case_study_1"
+    },
+    {
+      "timestamp": "04:37",
+      "title": "Sensory Manipulation at Play",
+      "scene_group": "ch5_escalation"
+    },
+    {
+      "timestamp": "05:46",
+      "title": "Digital Traps Beyond Store Walls",
+      "scene_group": "ch6_case_study_2"
+    },
+    {
+      "timestamp": "06:59",
+      "title": "The Dopamine Reward Loop",
+      "scene_group": "ch7_systemic_shift"
+    },
+    {
+      "timestamp": "08:09",
+      "title": "Reclaiming Your Decision Freedom",
+      "scene_group": "ch8_resolution"
     }
   ]
 }

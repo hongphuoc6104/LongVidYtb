@@ -45,8 +45,57 @@ _OPEN_LOOP_EN = re.compile(
 _CLOSING_EN = re.compile(r"(?i)(\?|comment|part 2|follow|save|share|do you|thoughts)")
 
 
+_VI_DIACRITICS = re.compile(
+    r"[àáảãạâầấẩẫậăằắẳẵặèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ]",
+    re.IGNORECASE,
+)
+_EN_WORD = re.compile(r"^[a-zA-Z'-]+$")
+_VOWEL_GROUP = re.compile(r"[aeiouyAEIOUY]+")
+
+
+def count_english_word_syllables(word: str) -> int:
+    """Count syllables in an English ASCII word.
+
+    Counts vowel groups ([aeiouyAEIOUY]+), subtracting 1 for silent trailing 'e'
+    (when word length > 2 and not ending in 'le'), with a minimum of 1 syllable per word.
+    """
+    vowel_groups = _VOWEL_GROUP.findall(word)
+    count = len(vowel_groups)
+    lower = word.lower()
+    if lower.endswith("e") and not lower.endswith("le") and len(lower) > 2:
+        count -= 1
+    return max(1, count)
+
+
 def syllables(text: str) -> int:
-    return len([w for w in re.split(r"\s+", text.strip()) if re.search(r"\w", w)])
+    """Count syllables in text.
+
+    For Vietnamese words (words containing Vietnamese diacritics or in predominantly
+    Vietnamese text), 1 word = 1 syllable.
+    For English ASCII words (^[a-zA-Z'-]+$), count vowel groups ([aeiouyAEIOUY]+),
+    subtracting 1 for silent trailing 'e' (when word length > 2 and not ending in 'le'),
+    with a minimum of 1 syllable per word.
+    """
+    raw_words = [w for w in re.split(r"\s+", text.strip()) if re.search(r"\w", w)]
+    if not raw_words:
+        return 0
+
+    if _VI_DIACRITICS.search(text):
+        return len(raw_words)
+
+    total = 0
+    for w in raw_words:
+        clean = re.sub(r"^[^a-zA-Z0-9'-]+|[^a-zA-Z0-9'-]+$", "", w)
+        if not clean:
+            total += 1
+            continue
+        if _VI_DIACRITICS.search(clean):
+            total += 1
+        elif _EN_WORD.match(clean):
+            total += count_english_word_syllables(clean)
+        else:
+            total += 1
+    return total
 
 
 def sentences(text: str) -> List[str]:

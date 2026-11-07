@@ -2,8 +2,8 @@
   "job_id": "en-spawn-to-apex-batch1-16x9",
   "channel_slug": "en-spawn-to-apex",
   "aspect": "16:9",
-  "title": "Inside the Chrysalis & Beyond: How Insects Liquefy Their Bodies and Engineer Microscopic Weapons",
-  "youtube_title": "How Insects Liquefy and Rebuild Their Bodies",
+  "title": "Inside the Chrysalis: How Insects Liquefy to Live",
+  "youtube_title": "Inside the Chrysalis: How Insects Liquefy to Live",
   "thumbnail_spec": {
     "visual_hook": "Extreme macro backlit translucent chrysalis revealing glowing imaginal discs assembling compound eyes and wings",
     "allowed_text": "LIQUID REBIRTH",
@@ -842,6 +842,48 @@
       "end_visual": "Continuing on the same optical macro biology shot for ch8_resolution shot S64: delicate anatomical micro-structures shift subtly as glancing keylight reflects off iridescent chitin scales and pulsating tracheal vessels, photorealistic PBS biology cinematography, strictly zero text.",
       "subject_motion": "camera executes translucent dorsal cuticle glide across the translucent insect cuticle as internal cellular fluid and micro-appendages exhibit subtle biological motion",
       "speech_rate": "+3%"
+    }
+  ],
+  "chapters": [
+    {
+      "timestamp": "00:00",
+      "title": "Dissolving Inside the Chrysalis",
+      "scene_group": "ch1_hook"
+    },
+    {
+      "timestamp": "01:07",
+      "title": "The Miracle of Holometabolism",
+      "scene_group": "ch2_paradox"
+    },
+    {
+      "timestamp": "02:19",
+      "title": "Imaginal Discs and Cellular Soup",
+      "scene_group": "ch3_mechanism"
+    },
+    {
+      "timestamp": "03:28",
+      "title": "Rebuilding Eyes, Wings, and Brain",
+      "scene_group": "ch4_case_study_1"
+    },
+    {
+      "timestamp": "04:37",
+      "title": "Hydraulic Strikes in the Shallows",
+      "scene_group": "ch5_escalation"
+    },
+    {
+      "timestamp": "05:50",
+      "title": "Microscopic Chemical Artillery",
+      "scene_group": "ch6_case_study_2"
+    },
+    {
+      "timestamp": "07:01",
+      "title": "The Final Emergence Struggle",
+      "scene_group": "ch7_systemic_shift"
+    },
+    {
+      "timestamp": "08:11",
+      "title": "The Radical Triumph of Form",
+      "scene_group": "ch8_resolution"
     }
   ]
 }

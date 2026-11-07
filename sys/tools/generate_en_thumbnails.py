@@ -28,7 +28,7 @@ import time
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
+from PIL import Image, ImageDraw, ImageEnhance, ImageFont
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SYS_DIR = REPO_ROOT / "sys"
@@ -226,29 +226,35 @@ def generate_fallback_thumbnail_from_assets(
                 except Exception:
                     continue
 
-    # Priority 4: 9:16 Short anchor keyframe S01_start.png composited to 16:9 widescreen
+    # Priority 4: 9:16 Short anchor keyframe cropped/zoomed to full-bleed 16:9 widescreen
     if base_img is None:
-        kf_9 = BATCH1_RUNS_DIR / f"{slug}-batch1-9x16" / "flow_chain" / "frames" / "S01_start.png"
-        if kf_9.is_file() and kf_9.stat().st_size > 10_000:
-            try:
-                src_9 = Image.open(kf_9).convert("RGB")
-                w, h = src_9.size
-                # Ambient blurred background
-                bg = src_9.resize((target_width, int(target_width * h / w)), Image.Resampling.LANCZOS)
-                top_bg = max(0, (bg.height - target_height) // 2)
-                bg = bg.crop((0, top_bg, target_width, top_bg + target_height))
-                bg = bg.filter(ImageFilter.GaussianBlur(28))
-                bg = ImageEnhance.Brightness(bg).enhance(0.55)
+        cand_9_paths = [
+            BATCH1_RUNS_DIR / f"{slug}-batch1-9x16" / "flow_chain" / "frames" / "S01_start.png",
+        ]
+        any_kfs_9 = sorted(glob.glob(str(BATCH1_RUNS_DIR / f"{slug}-batch1-9x16" / "flow_chain" / "frames" / "*.png")))
+        cand_9_paths.extend([Path(p) for p in any_kfs_9 if Path(p) not in cand_9_paths])
+        for kf_9 in cand_9_paths:
+            if kf_9.is_file() and kf_9.stat().st_size > 10_000:
+                try:
+                    src_9 = Image.open(kf_9).convert("RGB")
+                    w, h = src_9.size
+                    # Crop a clean full-bleed 16:9 widescreen horizontal slice centered on the
+                    # upper-middle focal area (y from 18% to 50% of source height).
+                    # Eliminates all blurred sidebars so the subject fills 100% of the 16:9 frame.
+                    slice_h = int(round(w * (target_height / target_width)))
+                    crop_y1 = int(round(h * 0.18))
+                    if crop_y1 + slice_h > h:
+                        crop_y1 = max(0, h - slice_h)
+                    crop_y2 = min(h, crop_y1 + slice_h)
 
-                # Hero foreground placed in center
-                fg_h = target_height
-                fg_w = int(fg_h * w / h)
-                fg = src_9.resize((fg_w, fg_h), Image.Resampling.LANCZOS)
-                paste_x = (target_width - fg_w) // 2
-                bg.paste(fg, (paste_x, 0))
-                base_img = bg
-            except Exception as e:
-                logger.debug("[%s] Failed to composite 9:16 keyframe: %s", job_id, e)
+                    cropped = src_9.crop((0, crop_y1, w, crop_y2))
+                    base_img = cropped.resize((target_width, target_height), Image.Resampling.LANCZOS)
+                    # Contrast and sharpness enhancement on the cropped slice
+                    base_img = ImageEnhance.Contrast(base_img).enhance(1.10)
+                    base_img = ImageEnhance.Sharpness(base_img).enhance(1.18)
+                    break
+                except Exception as e:
+                    logger.debug("[%s] Failed to crop/zoom 9:16 keyframe %s: %s", job_id, kf_9, e)
 
     # Priority 5: Fallback clean gradient canvas
     if base_img is None:

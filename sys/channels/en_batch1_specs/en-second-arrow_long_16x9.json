@@ -2,8 +2,8 @@
   "job_id": "en-second-arrow-batch1-16x9",
   "channel_slug": "en-second-arrow",
   "aspect": "16:9",
-  "title": "The Citadel Within: How Marcus Aurelius & Epictetus Engineered Mental Immunity Under Crisis",
-  "youtube_title": "How Marcus Aurelius Built Mental Immunity",
+  "title": "The Citadel Within: Marcus Aurelius on Stoic Calm",
+  "youtube_title": "The Citadel Within: Marcus Aurelius on Stoic Calm",
   "thumbnail_spec": {
     "visual_hook": "Chiaroscuro marble bust of Marcus Aurelius standing calm as one bronze arrow stops in timber and a second phantom arrow dissolves into gold dust",
     "allowed_text": "THE SECOND ARROW",
@@ -842,6 +842,48 @@
       "start_visual": "A monumental classical stone fortress perched high on a sunlit cliff overlooking a vast, serene Mediterranean sea.",
       "end_visual": "Warm sunset light bathes the ancient stone battlements in deep gold as calm waves ripple far below in eternal peace.",
       "subject_motion": "golden evening sunlight illuminates the ancient stone battlements while calm ocean waters stretch to the horizon"
+    }
+  ],
+  "chapters": [
+    {
+      "timestamp": "00:00",
+      "title": "The Plague in Marcus's Camp",
+      "scene_group": "ch1_hook"
+    },
+    {
+      "timestamp": "01:08",
+      "title": "The First Arrow vs the Second",
+      "scene_group": "ch2_paradox"
+    },
+    {
+      "timestamp": "02:19",
+      "title": "Epictetus: What Is in Our Control",
+      "scene_group": "ch3_mechanism"
+    },
+    {
+      "timestamp": "03:25",
+      "title": "Marcus Aurelius's Private Journal",
+      "scene_group": "ch4_case_study_1"
+    },
+    {
+      "timestamp": "04:28",
+      "title": "Cognitive Reframing in Daily Life",
+      "scene_group": "ch5_escalation"
+    },
+    {
+      "timestamp": "05:32",
+      "title": "The Illusion of Helplessness",
+      "scene_group": "ch6_case_study_2"
+    },
+    {
+      "timestamp": "06:30",
+      "title": "The Stoic Emotional Quarantine",
+      "scene_group": "ch7_systemic_shift"
+    },
+    {
+      "timestamp": "07:35",
+      "title": "Building the Inner Citadel",
+      "scene_group": "ch8_resolution"
     }
   ]
 }

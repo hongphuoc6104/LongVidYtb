@@ -2,8 +2,8 @@
   "job_id": "en-cold-case-ink-batch1-16x9",
   "channel_slug": "en-cold-case-ink",
   "aspect": "16:9",
-  "title": "The Dyatlov Pass Incident: How Slab-Avalanche Physics & Katabatic Winds Solved the 1959 Mystery",
-  "youtube_title": "How Physics Solved the Dyatlov Pass Mystery",
+  "title": "Dyatlov Pass: How Avalanche Physics Solved the Case",
+  "youtube_title": "Dyatlov Pass: How Avalanche Physics Solved the Case",
   "thumbnail_spec": {
     "visual_hook": "Noir forensic diorama of a snow-buried canvas tent on a Ural mountain slope with crimson evidence string and wind vectors",
     "allowed_text": "CASE CLOSED",
@@ -778,6 +778,48 @@
       "start_visual": "Pulling back into an expansive, serene panoramic view of the Northern Ural mountains bathed in the gentle golden light of winter dawn, strictly zero text.",
       "end_visual": "The majestic mountain summit rests in quiet dignified balance under golden morning light as the frame slowly fades into serene blackness, strictly zero text.",
       "subject_motion": "the golden morning light glints off the snowy crest as the scene gently and respectfully dissolves into pure black"
+    }
+  ],
+  "chapters": [
+    {
+      "timestamp": "00:00",
+      "title": "The Mountain of the Dead",
+      "scene_group": "ch1_hook"
+    },
+    {
+      "timestamp": "01:06",
+      "title": "Why the Mystery Stood 60 Years",
+      "scene_group": "ch2_paradox"
+    },
+    {
+      "timestamp": "02:13",
+      "title": "Debunking the Bizarre Hypotheses",
+      "scene_group": "ch3_mechanism"
+    },
+    {
+      "timestamp": "03:23",
+      "title": "The 16-Degree Slab Avalanche",
+      "scene_group": "ch4_case_study_1"
+    },
+    {
+      "timestamp": "04:29",
+      "title": "The Swiss Mathematical Model",
+      "scene_group": "ch5_escalation"
+    },
+    {
+      "timestamp": "05:38",
+      "title": "Reconstructing Severe Trauma",
+      "scene_group": "ch6_case_study_2"
+    },
+    {
+      "timestamp": "06:42",
+      "title": "The Katabatic Wind Phenomenon",
+      "scene_group": "ch7_systemic_shift"
+    },
+    {
+      "timestamp": "07:53",
+      "title": "A Tragic Triumph of Physics",
+      "scene_group": "ch8_resolution"
     }
   ]
 }

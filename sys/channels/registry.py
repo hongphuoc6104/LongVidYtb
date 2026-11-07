@@ -94,6 +94,235 @@ ENGLISH_BANNED_CTA_PHRASES: Tuple[str, ...] = (
 
 ALL_BANNED_CTA_PHRASES: Tuple[str, ...] = DEFAULT_BANNED_CTA_PHRASES + ENGLISH_BANNED_CTA_PHRASES
 
+CHANNEL_ALIASES: Dict[str, str] = {
+    "en_scale_and_bone": "en_plain_sight_ai",
+    "en-scale-and-bone": "en_plain_sight_ai",
+    "en_root_and_canopy": "en_kitchen_molecules",
+    "en-root-and-canopy": "en_kitchen_molecules",
+    "en_spawn_to_apex": "en_wait_how",
+    "en-spawn-to-apex": "en_wait_how",
+    "en_deep_time_strata": "en_parable_lamp",
+    "en-deep-time-strata": "en_parable_lamp",
+}
+
+CHANNEL_DESCRIPTIONS: Dict[str, str] = {
+    # Wave 1 VN (8 channels)
+    "nao_luoi": (
+        "Giải mã tâm lý học hành vi và những phản ứng vô thức của não bộ trong đời sống "
+        "thường ngày bằng ngôn ngữ gần gũi, hài hước. Khám phá lý do vì sao bạn trì hoãn, "
+        "overthinking hay lo âu qua hình vẽ 2D doodle trực quan."
+    ),
+    "tui_tien": (
+        "Bóc tách dòng tiền, kinh tế học hành vi và những bẫy chi tiêu âm thầm rút cạn "
+        "ví tiền mỗi ngày. Hướng dẫn quản lý tài chính cá nhân thông minh, minh bạch và "
+        "thực tế cho người trẻ qua nét vẽ 2D doodle sinh động."
+    ),
+    "ua_sao_vay": (
+        "Khám phá những sự thật bất ngờ, nghịch lý khoa học thú vị và bí ẩn đời thường "
+        "trong tự nhiên qua các video giải thích ngắn gọn, súc tích. Trả lời thỏa đáng "
+        "những câu hỏi 'ủa sao vậy' bằng hình vẽ minh họa cuốn hút."
+    ),
+    "su_ke_lai": (
+        "Tái hiện lịch sử Việt Nam và thế giới qua lăng kính điện ảnh kịch tính, chân thực "
+        "và giàu cảm xúc. Mỗi tập phim là một câu chuyện lịch sử sống động, chính xác, "
+        "giúp người xem thấu hiểu sâu sắc cội nguồn và thời đại."
+    ),
+    "thuong_cho_kheo": (
+        "Thấu hiểu tâm lý tình cảm, phong cách gắn bó và nghệ thuật giao tiếp khéo léo "
+        "trong các mối quan hệ hiện đại. Cùng bóc tách xung đột, chữa lành tổn thương và "
+        "học cách yêu thương tỉnh thức qua minh họa 2D tinh tế."
+    ),
+    "ho_so_ky_la": (
+        "Lật mở những hồ sơ bí ẩn, sự kiện kỳ lạ và vụ án lịch sử có thật trên thế giới "
+        "dựa trên tư liệu điều tra xác thực. Lời kể điềm tĩnh, khách quan kết hợp phong "
+        "cách minh họa noir cuốn hút đến từng giây phút."
+    ),
+    "co_the_ke": (
+        "Lắng nghe các cơ quan nội tạng trong cơ thể bạn tự cất tiếng kể chuyện khoa học "
+        "y sinh đầy hóm hỉnh. Hiểu rõ cơ chế sinh học, nhịp sinh học và bí quyết chăm sóc "
+        "sức khỏe chủ động qua góc nhìn nhân hóa độc đáo."
+    ),
+    "ai_binh_dan": (
+        "Hướng dẫn ứng dụng trí tuệ nhân tạo và công cụ tự động hóa công việc cho người "
+        "bình thường, không cần biết lập trình. Tiết kiệm hàng giờ mỗi ngày bằng các mẹo "
+        "prompt, quy trình làm việc AI thực chiến và miễn phí."
+    ),
+    # Wave 2 VN (6 channels)
+    "luat_ngam": (
+        "Bóc tách những quy luật tâm lý xã hội ngầm, hiệu ứng bầy đàn và chiến thuật thao "
+        "túng đám đông trong cuộc sống thường nhật. Giúp bạn nâng cao tư duy phản biện, "
+        "làm chủ nghệ thuật đàm phán và bảo vệ bản thân."
+    ),
+    "ban_do_quyen_luc": (
+        "Nhìn vào bản đồ địa lý để giải mã các thế cờ địa chính trị, chiến lược tài nguyên "
+        "và các tuyến hàng hải huyết mạch toàn cầu. Phân tích nguyên nhân sâu xa của các "
+        "xung đột và trật tự quyền lực thế giới đương đại."
+    ),
+    "dia_com": (
+        "Khám phá những phản ứng hóa học thú vị và bí mật khoa học đằng sau bữa cơm gia đình "
+        "Việt mỗi ngày. Giúp bạn hiểu đúng về dinh dưỡng, an toàn thực phẩm và mẹo nấu nướng "
+        "khoa học để bảo vệ sức khỏe người thân."
+    ),
+    "luat_doi_thuong": (
+        "Cẩm nang pháp lý dân sự bình dân giải thích dễ hiểu về hợp đồng lao động, thuê nhà, "
+        "đặt cọc và quyền lợi tiêu dùng. Trang bị kiến thức luật thực tế giúp bạn tự tin "
+        "bảo vệ quyền và lợi ích hợp pháp của mình."
+    ),
+    "banh_rang": (
+        "Giải thích dễ hiểu các mắt xích kinh tế vĩ mô, chuỗi cung ứng, lãi suất và lạm "
+        "phát tác động trực tiếp đến thu nhập của bạn. Thấy rõ sự vận hành của cỗ máy kinh "
+        "tế toàn cầu qua nét vẽ minh họa trực quan."
+    ),
+    "vu_tru_ti_hon": (
+        "Giải mã những bí ẩn bao la của vũ trụ học, vật lý lượng tử và thuyết tương đối bằng "
+        "phong cách trực quan tối giản kiểu Feynman. Đưa những câu hỏi lớn về không-thời gian "
+        "trở nên gần gũi, truyền cảm hứng cho mọi người."
+    ),
+    # Wave 3 VN (6 channels)
+    "nghe_song_sot": (
+        "Khám phá chiến lược phát triển sự nghiệp, kỹ năng đòn bẩy và những quy luật ngầm "
+        "chốn công sở hiện đại. Giúp nhân sự trẻ và cấp quản lý định vị bản thân vững vàng "
+        "trước làn sóng tự động hóa và biến động thị trường."
+    ),
+    "la_ban_hoc_thuat": (
+        "Chia sẻ phương pháp tự học sâu, tư duy phản biện và kỹ năng đọc hiểu tài liệu nghiên "
+        "cứu khoa học chuẩn xác. Biến những công trình học thuật hàn lâm phức tạp thành kiến "
+        "thức ứng dụng thực tiễn cho cộng đồng học hỏi."
+    ),
+    "chanh_niem_ke": (
+        "Lắng đọng tâm hồn cùng những câu chuyện Thiền, triết lý Phật giáo ứng dụng và thực "
+        "hành chánh niệm giữa đời sống bận rộn. Giúp bạn buông bỏ âu lo, chuyển hóa phiền "
+        "muộn và tìm lại sự bình an nội tâm đích thực."
+    ),
+    "loi_sang_soi": (
+        "Giải mã các dụ ngôn Kinh Thánh và câu chuyện đức tin vượt thời gian qua nét vẽ 2D "
+        "ấm áp, mộc mạc. Khám phá bài học yêu thương, lòng tha thứ, hy vọng và chiều sâu triết "
+        "lý Kitô giáo ứng dụng vào đời sống hiện đại mỗi ngày."
+    ),
+    "minh_triet_song": (
+        "Kết tinh triết lý phương Đông của Lão Tử, Trang Tử cùng chủ nghĩa Khắc kỷ phương Tây "
+        "giúp rèn luyện bản lĩnh sống điềm tĩnh. Khám phá nghệ thuật vô vi, làm chủ cảm xúc "
+        "và vững vàng tâm trí trước mọi biến cố cuộc đời."
+    ),
+    "tam_tinh_dem": (
+        "Không gian lắng đọng buổi tối với những truyện ngụ ngôn ý nghĩa, chiêm nghiệm nhân "
+        "sinh và bài học chữa lành tâm hồn. Giúp bạn khép lại những muộn phiền ngày dài, cảm "
+        "nhận sự an yên và có một giấc ngủ thật thanh thản."
+    ),
+    # Wave 4 EN (18 channels)
+    "en_lazy_brain": (
+        "Decode why your brain procrastinates, craves quick dopamine, and sabotages deep work "
+        "through neuroscience and behavioral psychology. Clear 2D doodle animations breaking "
+        "down mental friction into actionable habits."
+    ),
+    "en_crowd_strings": (
+        "Expose the invisible psychological strings behind mass conformity, herd behavior, and "
+        "subtle societal manipulation. Research-backed explainer videos revealing how collective "
+        "illusions shape our everyday decisions."
+    ),
+    "en_kindred_sketch": (
+        "Deconstruct attachment theory, relationship dynamics, and emotional conflict with warmth "
+        "and clarity. Hand-drawn 2D explainers helping you understand interpersonal boundaries, "
+        "avoid burnout, and build authentic bonds."
+    ),
+    "en_first_principles": (
+        "Strip complex problems down to their fundamental truths through mental models, game "
+        "theory, and logical paradoxes. Visual essays designed to sharpen strategic thinking "
+        "and decision-making from first principles."
+    ),
+    "en_wallet_anatomy": (
+        "Dissect the behavioral economics, subtle subscription traps, and hidden financial "
+        "incentives draining your wallet. Practical, visual explainers transforming personal "
+        "finance literacy into high-leverage money habits."
+    ),
+    "en_macro_gears": (
+        "Explore how central bank interest rates, global supply chains, and currency flows drive "
+        "everyday economic realities. Engaging visual breakdowns of macroeconomic forces, inflation "
+        "dynamics, and market cycles."
+    ),
+    "en_plain_sight_ai": (
+        "Follow the visceral life-cycle of reptiles from leathery egg to apex survivor across 300 "
+        "million years of evolution. Chronological, research-backed 2D natural history explainers "
+        "uncovering ancient anatomical biomechanics."
+    ),
+    "en_career_leverage": (
+        "Master the unspoken rules of modern workplaces, salary negotiations, and high-leverage "
+        "professional skills. Strategic visual career guides helping ambitious knowledge workers "
+        "thrive in an AI-accelerated economy."
+    ),
+    "en_fine_print": (
+        "Uncover hidden clauses, fine print traps, and consumer rights buried inside everyday "
+        "terms of service and employment contracts. Practical legal literacy explainers empowering "
+        "you to protect your creative and financial rights."
+    ),
+    "en_inside_vessel": (
+        "Journey deep inside human physiology, cellular defense mechanisms, and circadian biology "
+        "through vivid visual metaphors. Understand how organs collaborate in real time to sustain "
+        "life and fight unseen microscopic threats."
+    ),
+    "en_kitchen_molecules": (
+        "Witness the hidden time-lapse warfare of plants—from dormant seed to 2,000-year canopy "
+        "giant. Explore chronological evolutionary battles, mycorrhizal networks, and botanical "
+        "adaptations through cinematic 2D explainer storytelling."
+    ),
+    "en_wait_how": (
+        "Trace nature's most extreme chronological life cycles from microscopic egg to terrifying "
+        "apex metamorphosis. Visual biology chronicles highlighting deep-sea adaptations, predatory "
+        "mechanics, and bizarre survival transformations."
+    ),
+    "en_cold_case_ink": (
+        "Re-examine history's greatest forensic mysteries, vanished expeditions, and scientific "
+        "cold cases through primary documents. Rigorous investigative 2D documentary storytelling "
+        "grounded in evidence, geography, and archival facts."
+    ),
+    "en_choke_point": (
+        "Analyze the strategic straits, vital canals, and geographic chokepoints that dictate "
+        "global trade, resource security, and geopolitical conflict. Clear cartographic explainers "
+        "mapping world power and naval logistics."
+    ),
+    "en_pocket_cosmos": (
+        "Unravel the mind-bending mysteries of astrophysics, black hole thermodynamics, and quantum "
+        "paradoxes with elegant clarity. Visual cosmic explainers putting the grandeur of spacetime "
+        "into intuitive, awe-inspiring perspectives."
+    ),
+    "en_second_arrow": (
+        "Learn to drop the second arrow of mental suffering through classical Buddhist psychology, "
+        "Stoic wisdom, and mindful fables. Gentle, research-grounded visual essays cultivating "
+        "emotional resilience and stillness in everyday life."
+    ),
+    "en_parable_lamp": (
+        "Excavate Earth's geological strata to uncover how ancient life survived five catastrophic "
+        "mass extinctions and conquered continents. Chronological paleo-evolutionary documentaries "
+        "tracing deep-time fossil ecosystems."
+    ),
+    "en_bamboo_marble": (
+        "Bridge Western Stoic fortitude with Eastern Taoist harmony to cultivate unshakeable inner "
+        "calm amidst modern chaos. Visual philosophical reflections merging Marcus Aurelius and Lao "
+        "Tzu for clear-minded living and restful nights."
+    ),
+    # Pivoted EN aliases mapped to their authentic descriptions
+    "en_scale_and_bone": (
+        "Follow the visceral life-cycle of reptiles from leathery egg to apex survivor across 300 "
+        "million years of evolution. Chronological, research-backed 2D natural history explainers "
+        "uncovering ancient anatomical biomechanics."
+    ),
+    "en_root_and_canopy": (
+        "Witness the hidden time-lapse warfare of plants—from dormant seed to 2,000-year canopy "
+        "giant. Explore chronological evolutionary battles, mycorrhizal networks, and botanical "
+        "adaptations through cinematic 2D explainer storytelling."
+    ),
+    "en_spawn_to_apex": (
+        "Trace nature's most extreme chronological life cycles from microscopic egg to terrifying "
+        "apex metamorphosis. Visual biology chronicles highlighting deep-sea adaptations, predatory "
+        "mechanics, and bizarre survival transformations."
+    ),
+    "en_deep_time_strata": (
+        "Excavate Earth's geological strata to uncover how ancient life survived five catastrophic "
+        "mass extinctions and conquered continents. Chronological paleo-evolutionary documentaries "
+        "tracing deep-time fossil ecosystems."
+    ),
+}
+
 
 @dataclass(frozen=True)
 class EngagementSpec:
@@ -133,6 +362,13 @@ class ChannelProfile:
     speed_optimization: Optional[SpeedOptimizationSpec] = None
     engagement: Optional[EngagementSpec] = None
     extra: Mapping[str, Any] = field(default_factory=dict)
+    description: str = ""
+
+    def __post_init__(self) -> None:
+        if not self.description:
+            desc = CHANNEL_DESCRIPTIONS.get(self.id) or CHANNEL_DESCRIPTIONS.get(CHANNEL_ALIASES.get(self.id, ""), "")
+            if desc:
+                object.__setattr__(self, "description", desc)
 
     @property
     def slug(self) -> str:
@@ -833,7 +1069,7 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             monetization=("YouTube AdSense", "Affiliate phần mềm / khóa học (có công khai)", "Template bán kèm"),
             philosophy_id="research_guide",
             wave=1,
-            speed=1.07,
+            speed=1.0,
             speed_optimization=SpeedOptimizationSpec(
                 render_mode="screen_capture_hybrid",
                 fast_short_max_images=4,
@@ -3293,21 +3529,28 @@ def channel_ids() -> List[str]:
     return list(channels())
 
 
-CHANNEL_ALIASES: Dict[str, str] = {
-    "en_scale_and_bone": "en_plain_sight_ai",
-    "en_root_and_canopy": "en_kitchen_molecules",
-    "en_spawn_to_apex": "en_wait_how",
-    "en_deep_time_strata": "en_parable_lamp",
-}
-
-
 def get_channel(channel_id: str) -> ChannelProfile:
     key = (channel_id or "").strip()
-    resolved_key = CHANNEL_ALIASES.get(key, key)
-    found = channels().get(resolved_key)
+    norm_key = key.replace("-", "_")
+    resolved_key = CHANNEL_ALIASES.get(key, CHANNEL_ALIASES.get(norm_key, norm_key))
+    found = channels().get(resolved_key) or channels().get(key)
     if found is None:
         raise ValueError(f"Unknown channel '{key}'. Allowed: {sorted(channels())}")
     return found
+
+
+def get_channel_description(channel_id: str) -> str:
+    """Return rich, niche-specific, SEO-optimized description (150-350 chars) for a channel."""
+    key = (channel_id or "").strip()
+    norm_key = key.replace("-", "_")
+    resolved_key = CHANNEL_ALIASES.get(key, CHANNEL_ALIASES.get(norm_key, norm_key))
+    if resolved_key in CHANNEL_DESCRIPTIONS:
+        return CHANNEL_DESCRIPTIONS[resolved_key]
+    try:
+        ch = get_channel(key)
+        return ch.description or CHANNEL_DESCRIPTIONS.get(ch.id, "")
+    except Exception:
+        return CHANNEL_DESCRIPTIONS.get(key, "")
 
 
 def channel_for_style(style: Optional[str]) -> Optional[ChannelProfile]:
@@ -3374,7 +3617,10 @@ ARCHETYPE_MAP: Dict[str, Dict[str, str]] = {
 
 def get_visual_archetype(channel_id: str) -> Dict[str, str]:
     """Return canonical 10-Archetype ID and badge label for a channel."""
-    return dict(ARCHETYPE_MAP.get(channel_id, {"id": "unknown", "label": "Unknown Archetype"}))
+    key = (channel_id or "").strip()
+    norm_key = key.replace("-", "_")
+    resolved_key = CHANNEL_ALIASES.get(key, CHANNEL_ALIASES.get(norm_key, norm_key))
+    return dict(ARCHETYPE_MAP.get(resolved_key, ARCHETYPE_MAP.get(key, {"id": "unknown", "label": "Unknown Archetype"})))
 
 
 def channel_profile_stamp(channel_id: str) -> Dict[str, Any]:

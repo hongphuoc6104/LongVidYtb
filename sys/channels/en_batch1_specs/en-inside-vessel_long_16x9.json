@@ -2,8 +2,8 @@
   "job_id": "en-inside-vessel-batch1-16x9",
   "channel_slug": "en-inside-vessel",
   "aspect": "16:9",
-  "title": "24 Hours Without Sleep: Hour-by-Hour Organ & Micro-Capillary Breakdown Inside Your Body",
-  "youtube_title": "Inside Your Body During 24 Hours Awake",
+  "title": "24 Hours Awake: What Sleep Deprivation Does to You",
+  "youtube_title": "24 Hours Awake: What Sleep Deprivation Does to You",
   "voice": "en-US-EricNeural",
   "thumbnail_spec": {
     "visual_hook": "Translucent 3D medical cutaway of cerebral capillaries and glowing neurons accumulating amber metabolic waste plaques",
@@ -842,6 +842,48 @@
       "start_visual": "Cinematic wide 3D visualization: human body glowing in serene indigo and gold harmony, circulatory and neural networks restored, strictly zero text.",
       "end_visual": "Pulling back into tranquil velvet void: the restored biological masterpiece pulses with calm, perfect life, strictly zero text.",
       "subject_motion": "camera rises gracefully away as the glowing, harmonious human circulatory network pulses in serene health"
+    }
+  ],
+  "chapters": [
+    {
+      "timestamp": "00:00",
+      "title": "The First Midnight Hours",
+      "scene_group": "ch1_hook"
+    },
+    {
+      "timestamp": "01:10",
+      "title": "Microvascular Blood Flow Changes",
+      "scene_group": "ch2_paradox"
+    },
+    {
+      "timestamp": "02:21",
+      "title": "Adenosine Build-Up in the Brain",
+      "scene_group": "ch3_mechanism"
+    },
+    {
+      "timestamp": "03:31",
+      "title": "The Endothelial Stress Response",
+      "scene_group": "ch4_case_study_1"
+    },
+    {
+      "timestamp": "04:40",
+      "title": "Cortisol Surge and Glucose Crash",
+      "scene_group": "ch5_escalation"
+    },
+    {
+      "timestamp": "05:48",
+      "title": "Cognitive Decline & Micro-Sleeps",
+      "scene_group": "ch6_case_study_2"
+    },
+    {
+      "timestamp": "07:04",
+      "title": "Cellular Repair Mechanisms Halt",
+      "scene_group": "ch7_systemic_shift"
+    },
+    {
+      "timestamp": "08:19",
+      "title": "The Biological Price of Exhaustion",
+      "scene_group": "ch8_resolution"
     }
   ]
 }

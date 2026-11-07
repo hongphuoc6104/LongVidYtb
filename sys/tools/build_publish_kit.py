@@ -182,54 +182,81 @@ def extract_chapters_from_audio_output(
 ) -> Tuple[List[str], Optional[float], float]:
     """Parse measured scene start times from revisions/audio/1/output.json.
 
+    Enforces strict YouTube chapter rules:
+    - Every chapter starts at 00:00.
+    - Every chapter interval is strictly >= 10 seconds.
+    - If Scene 1 is < 10s, merges Scene 1 and Scene 2 so the 2nd timestamp is >= 00:10.
+
     Returns:
         chapters: List of 'MM:SS - Scene Title' strings starting at 00:00.
         mid_cta_timestamp: Measured start time of scene around 35-45% of runtime.
         total_duration: Total audio duration in seconds.
     """
+    if not content_scenes:
+        return ["00:00 - Giới thiệu"], 0.0, 0.0
+
+    raw_candidates: List[Tuple[float, str]] = []
+    total_duration = 0.0
+
     if not audio_output_file.exists():
         # Fallback estimation without audio output
-        chapters: List[str] = []
         cur_time = 0.0
         for idx, sc in enumerate(content_scenes, 1):
             title = sc.get("title") or f"Phần {idx}"
-            time_str = "00:00" if idx == 1 else format_timestamp(cur_time)
-            chapters.append(f"{time_str} - {title}")
+            raw_candidates.append((cur_time, title))
             cur_time += float(sc.get("duration", 8.0))
-        mid_time = cur_time * 0.40
-        return chapters, mid_time, cur_time
+        total_duration = cur_time
+    else:
+        audio_data = json.loads(audio_output_file.read_text(encoding="utf-8"))
+        payload = audio_data.get("payload", {})
+        total_duration = float(payload.get("duration", 0.0))
+        segments = payload.get("segments", [])
 
-    audio_data = json.loads(audio_output_file.read_text(encoding="utf-8"))
-    payload = audio_data.get("payload", {})
-    total_duration = float(payload.get("duration", 0.0))
-    segments = payload.get("segments", [])
+        scene_starts: Dict[str, float] = {}
+        for seg in segments:
+            sc_id = seg.get("scene_id")
+            start = float(seg.get("start", 0.0))
+            if sc_id and sc_id not in scene_starts:
+                scene_starts[sc_id] = start
 
-    scene_starts: Dict[str, float] = {}
-    for seg in segments:
-        sc_id = seg.get("scene_id")
-        start = float(seg.get("start", 0.0))
-        if sc_id and sc_id not in scene_starts:
-            scene_starts[sc_id] = start
+        for idx, sc in enumerate(content_scenes, 1):
+            sc_id = sc.get("id", f"SC{idx:02d}")
+            title = sc.get("title", f"Phần {idx}")
+            start_sec = scene_starts.get(sc_id, 0.0)
+            raw_candidates.append((start_sec, title))
 
-    # Sort scenes by appearance in content_scenes
-    ordered_chapters: List[str] = []
-    first = True
-    for idx, sc in enumerate(content_scenes, 1):
-        sc_id = sc.get("id", f"SC{idx:02d}")
-        title = sc.get("title", f"Phần {idx}")
-        start_sec = scene_starts.get(sc_id, 0.0)
-        if first:
-            start_str = "00:00"
-            first = False
+    # Enforce YouTube chapter interval: strictly >= 10s between consecutive chapters
+    MIN_CHAPTER_GAP_SEC = 10.0
+    emitted: List[Tuple[float, str]] = []
+
+    for idx, (cand_sec, cand_title) in enumerate(raw_candidates):
+        if idx == 0:
+            emitted.append((0.0, cand_title))
+            continue
+
+        last_sec, last_title = emitted[-1]
+        # In YouTube, timestamps are rounded down to seconds by format_timestamp (MM:SS).
+        # Interval between consecutive formatted timestamps must be >= 10 seconds.
+        gap_sec = math.floor(cand_sec) - math.floor(last_sec)
+        if gap_sec < MIN_CHAPTER_GAP_SEC:
+            # Merge with previous chapter so we never emit an interval < 10s
+            combined_title = f"{last_title} & {cand_title}"
+            if len(combined_title) <= 60 and last_title.count("&") < 2:
+                emitted[-1] = (last_sec, combined_title)
         else:
-            start_str = format_timestamp(start_sec)
-        ordered_chapters.append(f"{start_str} - {title}")
+            emitted.append((cand_sec, cand_title))
+
+    # Format chapters: first is always 00:00
+    ordered_chapters: List[str] = [
+        f"{format_timestamp(t) if i > 0 else '00:00'} - {title}"
+        for i, (t, title) in enumerate(emitted)
+    ]
 
     # Find mid-CTA scene (roughly 35-45% of total runtime)
     target_mid = total_duration * 0.40
     closest_sc_time: Optional[float] = None
     min_diff = float("inf")
-    for start_sec in scene_starts.values():
+    for start_sec, _ in raw_candidates:
         diff = abs(start_sec - target_mid)
         if diff < min_diff:
             min_diff = diff

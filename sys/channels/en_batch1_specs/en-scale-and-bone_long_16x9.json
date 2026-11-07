@@ -2,8 +2,8 @@
   "job_id": "en-scale-and-bone-batch1-16x9",
   "channel_slug": "en-scale-and-bone",
   "aspect": "16:9",
-  "title": "Apex of the Ridge: How a Fragile Golden Eagle Chick Masters 100-MPH Alpine Thermals",
-  "youtube_title": "How Golden Eagle Chicks Survive the Ridge",
+  "title": "Apex of the Ridge: How Eagle Chicks Master Winds",
+  "youtube_title": "Apex of the Ridge: How Eagle Chicks Master Winds",
   "thumbnail_spec": {
     "visual_hook": "Macro wildlife frame of a golden eagle fledgling on a snow-dusted granite cliff edge facing a roaring alpine gale",
     "allowed_text": "FIRST LEAP",
@@ -778,6 +778,48 @@
       "start_visual": "Grand BBC Earth finale crane shot pulling back into the vast Scottish Highland sky as dusk settles over the mountains.",
       "end_visual": "Sweeping into the infinite twilight firmament as the solitary eagle soars higher until it becomes a jewel in the sky.",
       "subject_motion": "camera sweeps majestically backward and upward as the sovereign eagle soars higher into the twilight sky"
+    }
+  ],
+  "chapters": [
+    {
+      "timestamp": "00:00",
+      "title": "3,000 Feet Above the Chasm",
+      "scene_group": "ch1_hook"
+    },
+    {
+      "timestamp": "01:01",
+      "title": "The Protective Mother Pulls Away",
+      "scene_group": "ch2_paradox"
+    },
+    {
+      "timestamp": "02:07",
+      "title": "Anatomy of an Aerial Predator",
+      "scene_group": "ch3_mechanism"
+    },
+    {
+      "timestamp": "03:10",
+      "title": "Decoding Alpine Thermal Updrafts",
+      "scene_group": "ch4_case_study_1"
+    },
+    {
+      "timestamp": "04:15",
+      "title": "The Terror of the First Leap",
+      "scene_group": "ch5_escalation"
+    },
+    {
+      "timestamp": "05:16",
+      "title": "Surviving Mountain Turbulence",
+      "scene_group": "ch6_case_study_2"
+    },
+    {
+      "timestamp": "06:20",
+      "title": "Mastering the 100-MPH Dive",
+      "scene_group": "ch7_systemic_shift"
+    },
+    {
+      "timestamp": "07:21",
+      "title": "Sovereign of the Alpine Sky",
+      "scene_group": "ch8_resolution"
     }
   ]
 }

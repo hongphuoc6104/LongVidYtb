@@ -2,8 +2,8 @@
   "job_id": "en-choke-point-batch1-16x9",
   "channel_slug": "en-choke-point",
   "aspect": "16:9",
-  "title": "21 Miles of Leverage: Why the Strait of Hormuz & Malacca Dictate the Price of Everything You Buy",
-  "youtube_title": "Why One Narrow Strait Controls Global Prices",
+  "title": "21-Mile Chokehold: How 2 Straits Rule Global Trade",
+  "youtube_title": "21-Mile Chokehold: How 2 Straits Rule Global Trade",
   "thumbnail_spec": {
     "visual_hook": "Orbital satellite relief map of the Strait of Hormuz with glowing amber shipping lanes pinched into a 2-mile bottleneck",
     "allowed_text": "21-MILE CHOKEHOLD",
@@ -842,6 +842,48 @@
       "end_visual": "Continuing on the same orbital satellite view for ch8_resolution shot S64: camera glides along the water corridor as golden maritime vessel tracks concentrate into dense luminous ribbons through narrow strait bottlenecks, deep ocean bathymetry, photorealistic cartography, strictly zero map labels, zero words, zero letters, zero numbers, strictly zero text.",
       "subject_motion": "camera executes sweeping 3D cartographic orbital arc over the 3D maritime corridor as golden shipping vectors drift smoothly through the narrow ocean passage",
       "speech_rate": "+0%"
+    }
+  ],
+  "chapters": [
+    {
+      "timestamp": "00:00",
+      "title": "The Fragile Veins of Global Trade",
+      "scene_group": "ch1_hook"
+    },
+    {
+      "timestamp": "01:09",
+      "title": "The 21-Mile Strait of Hormuz",
+      "scene_group": "ch2_paradox"
+    },
+    {
+      "timestamp": "02:19",
+      "title": "Hydrographic Bathymetry Secrets",
+      "scene_group": "ch3_mechanism"
+    },
+    {
+      "timestamp": "03:30",
+      "title": "Malacca: The Asian Bottleneck",
+      "scene_group": "ch4_case_study_1"
+    },
+    {
+      "timestamp": "04:37",
+      "title": "Geopolitical Chokehold Warfare",
+      "scene_group": "ch5_escalation"
+    },
+    {
+      "timestamp": "05:47",
+      "title": "Bab-el-Mandeb Under Siege",
+      "scene_group": "ch6_case_study_2"
+    },
+    {
+      "timestamp": "06:56",
+      "title": "Strategic Global Bypass Routes",
+      "scene_group": "ch7_systemic_shift"
+    },
+    {
+      "timestamp": "08:04",
+      "title": "The Future of Maritime Power",
+      "scene_group": "ch8_resolution"
     }
   ]
 }

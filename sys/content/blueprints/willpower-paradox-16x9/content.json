@@ -5050,7 +5050,7 @@
       "action": "Stickman stands tall and upright, gazing forward with dignified calm on pure white field.",
       "setting": "Clean serene white field (#FFFFFF).",
       "camera": "Semantic full-frame sequence",
-      "narration": "Ý chí của bạn sinh ra, không phải để làm bia đỡ đạn cho các cạm bẫy công nghệ. Nó là ngọn lửa nhỏ cần được che chắn cẩn thận trước những cơn gió bão. Đừng cố gắng trở thành một người hùng chịu trận cô độc và kiệt quệ. Hãy là một kiến trúc sư thông minh biết thiết kế không gian làm việc của mình. Tạo ra ma sát vật lý cho cám dỗ, và mở rộng đường đi cho sự tập trung sâu. Làm chủ không gian xung quanh, bạn sẽ làm chủ hoàn toàn tâm trí mình. Nếu thấy video hữu ích, hãy bấm thích để ủng hộ kênh nhé. Và đừng quên nhấn đăng ký, để đón xem các góc nhìn tư duy tiếp theo. Cảm ơn bạn đã đồng hành, chúc bạn làm chủ không gian của mình!",
+      "narration": "Ý chí của bạn sinh ra, không phải để làm bia đỡ đạn cho các cạm bẫy công nghệ. Nó là ngọn lửa nhỏ cần được che chắn cẩn thận trước những cơn gió bão. Đừng cố gắng trở thành một người hùng chịu trận cô độc và kiệt quệ. Hãy là một kiến trúc sư thông minh biết thiết kế không gian làm việc của mình. Tạo ra ma sát vật lý cho cám dỗ, và mở rộng đường đi cho sự tập trung sâu. Làm chủ không gian xung quanh, bạn sẽ làm chủ hoàn toàn tâm trí mình. Mỗi rào cản bạn tự dựng lên sẽ bảo vệ năng lượng tập trung của bạn. Cùng đào sâu cơ chế tâm lý để làm chủ những cạm bẫy tiếp theo. Cảm ơn bạn đã đồng hành, chúc bạn làm chủ không gian của mình!",
       "requirements": [
         "R18"
       ],
@@ -5205,21 +5205,21 @@
         },
         {
           "id": "SC18_I7",
-          "description": "Clean serene white field (#FFFFFF). A clean minimalist doodle thumbs-up icon outlined in black marker with warm yellow fill floating freely on pure white canvas (#FFFFFF) beside clean bold unadorned black hand-lettered text reading 'THÍCH VIDEO'. Strictly zero card borders, zero boxes, zero banners, zero corner tape, zero floating stars, zero sparkles, zero confetti, zero ribbons, zero floor lines. 80% negative space.",
+          "description": "Clean serene white field (#FFFFFF). A clean minimalist hand-drawn blueprint notebook icon outlined in black marker with soft sage-green fill floating freely on pure white canvas (#FFFFFF) beside clean bold unadorned black hand-lettered text reading 'TƯ DUY NHẬN THỨC'. Strictly zero card borders, zero boxes, zero banners, zero corner tape, zero floating stars, zero sparkles, zero confetti, zero ribbons, zero floor lines. 80% negative space.",
           "character_ids": [],
           "based_on": null,
           "preserve": "",
-          "change": "A clean minimalist doodle thumbs-up icon outlined in black marker with warm yellow fill floating freely on pure white canvas (#FFFFFF) beside clean bold unadorned black hand-lettered text reading 'THÍCH VIDEO'. Strictly zero card borders, zero boxes, zero banners, zero corner tape, zero floating stars, zero sparkles, zero confetti, zero ribbons, zero floor lines. 80% negative space.",
+          "change": "A clean minimalist hand-drawn blueprint notebook icon outlined in black marker with soft sage-green fill floating freely on pure white canvas (#FFFFFF) beside clean bold unadorned black hand-lettered text reading 'TƯ DUY NHẬN THỨC'. Strictly zero card borders, zero boxes, zero banners, zero corner tape, zero floating stars, zero sparkles, zero confetti, zero ribbons, zero floor lines. 80% negative space.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
           "shot_type": "concept_metaphor",
           "has_character": false,
           "explanation": {
-            "quote": "Nếu thấy video hữu ích, hãy bấm thích để ủng hộ kênh nhé.",
+            "quote": "Mỗi rào cản bạn tự dựng lên sẽ bảo vệ năng lượng tập trung của bạn.",
             "relation": "context",
             "source_terms": [
-              "Nếu"
+              "Mỗi"
             ],
             "visual_terms": [
               "Clean"
@@ -5228,23 +5228,23 @@
         },
         {
           "id": "SC18_I8",
-          "description": "Clean serene white field (#FFFFFF). Stickman smiling warmly with open hand gesturing toward a minimalist black bell notification icon on pure white canvas (#FFFFFF) with clean bold unadorned black hand-lettered text reading 'ĐĂNG KÝ KÊNH'. Strictly zero room clutter, zero walls, zero floor lines. 75% negative space.",
+          "description": "Clean serene white field (#FFFFFF). Stickman smiling warmly with open hand gesturing toward an open horizon on pure white canvas (#FFFFFF) with clean bold unadorned black hand-lettered text reading 'ĐỒNG HÀNH'. Strictly zero room clutter, zero walls, zero floor lines. 75% negative space.",
           "character_ids": [
             "CH01"
           ],
           "based_on": "SC18_I1",
           "preserve": "Keep room layout, window geometry, furniture, props and figure design. Expression lock: preserve eyebrow tension, mouth shape and facial expression unless change explicitly requests a shift.",
-          "change": "Stickman smiling warmly with open hand gesturing toward a minimalist black bell notification icon on pure white canvas (#FFFFFF) with clean bold unadorned black hand-lettered text reading 'ĐĂNG KÝ KÊNH'. Strictly zero room clutter, zero walls, zero floor lines. 75% negative space.",
+          "change": "Stickman smiling warmly with open hand gesturing toward an open horizon on pure white canvas (#FFFFFF) with clean bold unadorned black hand-lettered text reading 'ĐỒNG HÀNH'. Strictly zero room clutter, zero walls, zero floor lines. 75% negative space.",
           "reason": "Narration-locked full-frame beat.",
           "visible_text": [],
           "kind": "scene",
           "shot_type": "variation",
           "has_character": true,
           "explanation": {
-            "quote": "Và đừng quên nhấn đăng ký, để đón xem các góc nhìn tư duy tiếp theo.",
+            "quote": "Cùng đào sâu cơ chế tâm lý để làm chủ những cạm bẫy tiếp theo.",
             "relation": "context",
             "source_terms": [
-              "Và"
+              "Cùng"
             ],
             "visual_terms": [
               "Clean"
@@ -5380,7 +5380,7 @@
           "purpose": "Triển khai bước 18: từ kẻ chịu trận sang kiến trúc sư không gian",
           "anchor": {
             "vi": {
-              "quote": "Nếu thấy video hữu ích, hãy bấm thích để ủng hộ kênh nhé.",
+              "quote": "Mỗi rào cản bạn tự dựng lên sẽ bảo vệ năng lượng tập trung của bạn.",
               "occurrence": 1
             }
           },
@@ -5396,7 +5396,7 @@
           "purpose": "Triển khai bước 18: từ kẻ chịu trận sang kiến trúc sư không gian",
           "anchor": {
             "vi": {
-              "quote": "Và đừng quên nhấn đăng ký, để đón xem các góc nhìn tư duy tiếp theo.",
+              "quote": "Cùng đào sâu cơ chế tâm lý để làm chủ những cạm bẫy tiếp theo.",
               "occurrence": 1
             }
           },

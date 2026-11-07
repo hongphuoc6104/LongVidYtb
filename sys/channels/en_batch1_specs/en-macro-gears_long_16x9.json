@@ -2,8 +2,8 @@
   "job_id": "en-macro-gears-batch1-16x9",
   "channel_slug": "en-macro-gears",
   "aspect": "16:9",
-  "title": "The 24,000-Container Giant: The Hidden Megastructure Physics Powering Global Ocean Trade",
-  "youtube_title": "How a 24,000-Container Megaship Actually Works",
+  "title": "Inside the Megaship: Physics of 24,000 Containers",
+  "youtube_title": "Inside the Megaship: Physics of 24,000 Containers",
   "voice": "en-US-ChristopherNeural",
   "thumbnail_spec": {
     "visual_hook": "Isometric engineering cutaway of a 400-meter container ship hull flexing across ocean swells with glowing stress vectors",
@@ -778,6 +778,48 @@
       "start_visual": "Cinematic wide shot: the 24,000-container ship cruising into a golden sunset on the open ocean, pristine white wake trailing behind, strictly zero text.",
       "end_visual": "Epic high-altitude pull-back into the evening sky: the massive steel machine shrinks to a serene silhouette against the vast blue sea, strictly zero text.",
       "subject_motion": "the giant container ship cruises toward the golden sunset horizon while gentle ocean waves roll across the boundless sea"
+    }
+  ],
+  "chapters": [
+    {
+      "timestamp": "00:00",
+      "title": "400 Meters of Floating Steel",
+      "scene_group": "ch1_hook"
+    },
+    {
+      "timestamp": "01:04",
+      "title": "The Scale of 24,000 Containers",
+      "scene_group": "ch2_paradox"
+    },
+    {
+      "timestamp": "02:14",
+      "title": "Hydrodynamic Hull Flexibility",
+      "scene_group": "ch3_mechanism"
+    },
+    {
+      "timestamp": "03:26",
+      "title": "Marine Diesel Engine Monsters",
+      "scene_group": "ch4_case_study_1"
+    },
+    {
+      "timestamp": "04:34",
+      "title": "Ballast Water Stability Science",
+      "scene_group": "ch5_escalation"
+    },
+    {
+      "timestamp": "05:44",
+      "title": "The Physics of Rogue Waves",
+      "scene_group": "ch6_case_study_2"
+    },
+    {
+      "timestamp": "06:55",
+      "title": "Port Automation & Crane Systems",
+      "scene_group": "ch7_systemic_shift"
+    },
+    {
+      "timestamp": "08:03",
+      "title": "The Backbone of Global Trade",
+      "scene_group": "ch8_resolution"
     }
   ]
 }

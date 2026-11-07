@@ -3,8 +3,8 @@
   "channel_slug": "en-lazy-brain",
   "aspect": "16:9",
   "voice": "en-US-AndrewNeural",
-  "title": "The Dopamine Baseline Paradox: Why Your Brain Procrastinates on High-Value Goals (And How to Reset It)",
-  "youtube_title": "Why Your Brain Loves to Procrastinate",
+  "title": "The Dopamine Trap: Why Your Brain Procrastinates",
+  "youtube_title": "The Dopamine Trap: Why Your Brain Procrastinates",
   "thumbnail_spec": {
     "visual_hook": "Vivid flat-shaded neuroscience diagram of a dopamine balance scale tipped down by glowing notification icons against a blank work desk",
     "allowed_text": "DOPAMINE TRAP",
@@ -794,6 +794,48 @@
       "end_visual": "Slow cinematic pull-back: the sunlit desk, open notebook, and calm professional settle into a timeless, balanced composition as soft amber vignetting completes the frame, strictly zero text.",
       "subject_motion": "camera draws slowly backward as warm ambient light envelops the centered workspace in quiet mastery",
       "speech_rate": "+12%"
+    }
+  ],
+  "chapters": [
+    {
+      "timestamp": "00:00",
+      "title": "The Blank Page Paralysis",
+      "scene_group": "ch1_hook"
+    },
+    {
+      "timestamp": "01:08",
+      "title": "Phasic vs Tonic Dopamine Split",
+      "scene_group": "ch2_paradox"
+    },
+    {
+      "timestamp": "02:27",
+      "title": "Why Cheap Hits Spike Baselines",
+      "scene_group": "ch3_mechanism"
+    },
+    {
+      "timestamp": "03:47",
+      "title": "Neurochemistry of Procrastination",
+      "scene_group": "ch4_case_study_1"
+    },
+    {
+      "timestamp": "05:02",
+      "title": "The High-Friction Action Threshold",
+      "scene_group": "ch5_escalation"
+    },
+    {
+      "timestamp": "06:24",
+      "title": "The 10-Minute Dopamine Reset",
+      "scene_group": "ch6_case_study_2"
+    },
+    {
+      "timestamp": "07:46",
+      "title": "Engineering Environmental Friction",
+      "scene_group": "ch7_systemic_shift"
+    },
+    {
+      "timestamp": "09:02",
+      "title": "Sustainable Long-Term Focus",
+      "scene_group": "ch8_resolution"
     }
   ]
 }

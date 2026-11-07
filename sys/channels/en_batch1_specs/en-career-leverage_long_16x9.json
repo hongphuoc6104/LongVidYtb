@@ -3,8 +3,8 @@
   "channel_slug": "en-career-leverage",
   "aspect": "16:9",
   "voice": "en-US-RogerNeural",
-  "title": "The Peter Principle & Asymmetric Leverage: Why the Hardest Worker Rarely Gets Promoted",
-  "youtube_title": "Why the Hardest Worker Rarely Gets Promoted",
+  "title": "The Promotion Trap: Why Hard Work Rarely Pays Off",
+  "youtube_title": "The Promotion Trap: Why Hard Work Rarely Pays Off",
   "thumbnail_spec": {
     "visual_hook": "Architectural corporate strategy diagram showing an overloaded brass gear at the bottom while a tiny fulcrum lever lifts the top executive platform",
     "allowed_text": "WORK VS LEVERAGE",
@@ -794,6 +794,48 @@
       "end_visual": "Slow cinematic pull-back: the high-rise boardroom, panoramic skyline, and composed executive settle into a timeless, balanced composition, strictly zero text.",
       "subject_motion": "camera retreats slowly into an expansive, dignified wide shot as warm ambient light completes the frame",
       "speech_rate": "+18%"
+    }
+  ],
+  "chapters": [
+    {
+      "timestamp": "00:00",
+      "title": "The Dedicated Worker's Trap",
+      "scene_group": "ch1_hook"
+    },
+    {
+      "timestamp": "01:22",
+      "title": "The Peter Principle Decoded",
+      "scene_group": "ch2_paradox"
+    },
+    {
+      "timestamp": "02:43",
+      "title": "Input vs Asymmetric Leverage",
+      "scene_group": "ch3_mechanism"
+    },
+    {
+      "timestamp": "04:05",
+      "title": "The Tale of Two Executives",
+      "scene_group": "ch4_case_study_1"
+    },
+    {
+      "timestamp": "05:28",
+      "title": "The Fatal Mistake of Executors",
+      "scene_group": "ch5_escalation"
+    },
+    {
+      "timestamp": "06:48",
+      "title": "Building Sovereign Influence",
+      "scene_group": "ch6_case_study_2"
+    },
+    {
+      "timestamp": "08:12",
+      "title": "Cultivating Rare Skill Stacks",
+      "scene_group": "ch7_systemic_shift"
+    },
+    {
+      "timestamp": "09:30",
+      "title": "The True Power of Leverage",
+      "scene_group": "ch8_resolution"
     }
   ]
 }

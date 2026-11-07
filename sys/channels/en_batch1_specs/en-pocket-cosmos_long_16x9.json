@@ -2,8 +2,8 @@
   "job_id": "en-pocket-cosmos-batch1-16x9",
   "channel_slug": "en-pocket-cosmos",
   "aspect": "16:9",
-  "title": "If the Sun Vanished Right Now: Hour-by-Hour Physics of Earth's Survival in Deep Space",
-  "youtube_title": "What If the Sun Vanished Right Now?",
+  "title": "If the Sun Vanished: What Happens to Earth in Space",
+  "youtube_title": "If the Sun Vanished: What Happens to Earth in Space",
   "thumbnail_spec": {
     "visual_hook": "Deep-space wide shot of Earth half-frozen in electric cyan twilight drifting away from an empty gravitational ring",
     "allowed_text": "8 MINUTES LEFT",
@@ -778,6 +778,48 @@
       "start_visual": "Grand Melodysheep documentary finale flyby pulling smoothly back from Earth into the vast luminous expanse of the Milky Way.",
       "end_visual": "Sweeping into the infinite starry firmament as the glowing planet becomes a radiant star among stars, immortal and unconquered.",
       "subject_motion": "camera executes a grand pull-back into deep interstellar space as Earth shines like a brilliant jewel in the Milky Way"
+    }
+  ],
+  "chapters": [
+    {
+      "timestamp": "00:00",
+      "title": "8 Minutes of Stolen Sunshine",
+      "scene_group": "ch1_hook"
+    },
+    {
+      "timestamp": "01:10",
+      "title": "Gravitational Flight into Deep Space",
+      "scene_group": "ch2_paradox"
+    },
+    {
+      "timestamp": "02:15",
+      "title": "The First 24 Hours in the Dark",
+      "scene_group": "ch3_mechanism"
+    },
+    {
+      "timestamp": "03:25",
+      "title": "Oceanic Freezing from Above",
+      "scene_group": "ch4_case_study_1"
+    },
+    {
+      "timestamp": "04:34",
+      "title": "Deep Geothermal Survival Zones",
+      "scene_group": "ch5_escalation"
+    },
+    {
+      "timestamp": "05:42",
+      "title": "Atmospheric Condensation into Ice",
+      "scene_group": "ch6_case_study_2"
+    },
+    {
+      "timestamp": "06:54",
+      "title": "Earth as an Interstellar Wanderer",
+      "scene_group": "ch7_systemic_shift"
+    },
+    {
+      "timestamp": "08:02",
+      "title": "The Cosmic Journey Beyond",
+      "scene_group": "ch8_resolution"
     }
   ]
 }

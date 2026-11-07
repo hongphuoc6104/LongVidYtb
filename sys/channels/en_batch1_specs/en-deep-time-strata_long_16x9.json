@@ -2,8 +2,8 @@
   "job_id": "en-deep-time-strata-batch1-16x9",
   "channel_slug": "en-deep-time-strata",
   "aspect": "16:9",
-  "title": "The Hadean Cauldron: How Boiling Basalt & Hydrothermal Vents Ignited Earth's First Life",
-  "youtube_title": "How Solid Rock Ignited Earth's First Life",
+  "title": "The Hadean Cauldron: How Boiling Rock Sparked Life",
+  "youtube_title": "The Hadean Cauldron: How Boiling Rock Sparked Life",
   "voice": "en-GB-RyanNeural",
   "thumbnail_spec": {
     "visual_hook": "Deep-ocean hydrothermal black smoker chimney erupting mineral plumes with glowing gold micro-pores in basalt rock",
@@ -778,6 +778,48 @@
       "start_visual": "Cinematic wide shot: dark volcanic basalt coastline meeting the eternal ocean under twilight, solitary hydrothermal vent glowing deep offshore, strictly zero text.",
       "end_visual": "Epic slow pull-back into starry night sky: the glowing blue and obsidian planet shines in peaceful cosmic majesty, strictly zero text.",
       "subject_motion": "camera glides high into the tranquil starlit cosmos as the glowing blue planetary sphere turns gracefully below"
+    }
+  ],
+  "chapters": [
+    {
+      "timestamp": "00:00",
+      "title": "Earth's Hadean Crucible",
+      "scene_group": "ch1_hook"
+    },
+    {
+      "timestamp": "01:05",
+      "title": "The Tidal Pool Myth Overturned",
+      "scene_group": "ch2_paradox"
+    },
+    {
+      "timestamp": "02:15",
+      "title": "Deep Ocean Hydrothermal Vents",
+      "scene_group": "ch3_mechanism"
+    },
+    {
+      "timestamp": "03:25",
+      "title": "Inorganic Proton Gradient Engines",
+      "scene_group": "ch4_case_study_1"
+    },
+    {
+      "timestamp": "04:38",
+      "title": "Mineral Micro-Chamber Dynamics",
+      "scene_group": "ch5_escalation"
+    },
+    {
+      "timestamp": "05:48",
+      "title": "From Geochemistry to Biochemistry",
+      "scene_group": "ch6_case_study_2"
+    },
+    {
+      "timestamp": "06:52",
+      "title": "LUCA: The Common Ancestor",
+      "scene_group": "ch7_systemic_shift"
+    },
+    {
+      "timestamp": "08:03",
+      "title": "The Rock That Breathed Life",
+      "scene_group": "ch8_resolution"
     }
   ]
 }

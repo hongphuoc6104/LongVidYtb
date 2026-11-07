@@ -2,8 +2,8 @@
   "job_id": "en-kindred-sketch-batch1-16x9",
   "channel_slug": "en-kindred-sketch",
   "aspect": "16:9",
-  "title": "The Anxious-Avoidant Trap: Why Opposite Attachment Styles Magnetize and Exhaust Each Other",
-  "youtube_title": "Why Anxious & Avoidant Partners Attract",
+  "title": "The Attachment Trap: Why Opposite Partners Attract",
+  "youtube_title": "The Attachment Trap: Why Opposite Partners Attract",
   "thumbnail_spec": {
     "visual_hook": "Warm charcoal and watercolor illustration of two figures connected by a taut crimson thread pulling in opposite directions across a table",
     "allowed_text": "PUSH AND PULL",
@@ -842,6 +842,48 @@
       "start_visual": "Breathtaking 35mm wide shot of a sunlit living room where two people sit peacefully side by side reading together.",
       "end_visual": "Warm afternoon sunlight floods the entire apartment through sheer linen curtains in timeless, golden cinematic warmth.",
       "subject_motion": "warm afternoon light illuminates the peaceful room as sheer linen curtains billow gently in the summer breeze"
+    }
+  ],
+  "chapters": [
+    {
+      "timestamp": "00:00",
+      "title": "The Chemistry of Opposites",
+      "scene_group": "ch1_hook"
+    },
+    {
+      "timestamp": "01:00",
+      "title": "Anxious vs Avoidant Blueprints",
+      "scene_group": "ch2_paradox"
+    },
+    {
+      "timestamp": "02:03",
+      "title": "The Magnetic Attraction Phase",
+      "scene_group": "ch3_mechanism"
+    },
+    {
+      "timestamp": "03:14",
+      "title": "The Protest Behavior Trigger",
+      "scene_group": "ch4_case_study_1"
+    },
+    {
+      "timestamp": "04:18",
+      "title": "The Deactivating Strategy Spiral",
+      "scene_group": "ch5_escalation"
+    },
+    {
+      "timestamp": "05:20",
+      "title": "Physical Pain of Distance",
+      "scene_group": "ch6_case_study_2"
+    },
+    {
+      "timestamp": "06:27",
+      "title": "Breaking the Pursuit Loop",
+      "scene_group": "ch7_systemic_shift"
+    },
+    {
+      "timestamp": "07:28",
+      "title": "Building Secure Attachment",
+      "scene_group": "ch8_resolution"
     }
   ]
 }

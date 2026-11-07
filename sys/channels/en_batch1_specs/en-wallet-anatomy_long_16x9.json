@@ -3,8 +3,8 @@
   "channel_slug": "en-wallet-anatomy",
   "aspect": "16:9",
   "voice": "en-US-AndrewNeural",
-  "title": "The Diderot Spiral & Frictionless Debt: Why Earning More Money Rarely Makes You Wealthy",
-  "youtube_title": "Why Earning More Rarely Makes You Rich",
+  "title": "The Diderot Spiral: Why Earning More Never Feels Rich",
+  "youtube_title": "The Diderot Spiral: Why Earning More Never Feels Rich",
   "thumbnail_spec": {
     "visual_hook": "Tactile studio mechanical brass cash register spiraling upward into a domino chain of luxury tags draining a glass vault",
     "allowed_text": "THE INCOME TRAP",
@@ -794,6 +794,48 @@
       "end_visual": "Slow cinematic pull-back: the sunlit oak table, closed leather wallet, and serene room settle into a timeless, balanced composition, strictly zero text.",
       "subject_motion": "camera draws slowly backward as warm golden ambient light envelops the centered workspace in quiet mastery",
       "speech_rate": "+10%"
+    }
+  ],
+  "chapters": [
+    {
+      "timestamp": "00:00",
+      "title": "The Six-Figure Paycheck Mystery",
+      "scene_group": "ch1_hook"
+    },
+    {
+      "timestamp": "01:13",
+      "title": "Denis Diderot & The Scarlet Robe",
+      "scene_group": "ch2_paradox"
+    },
+    {
+      "timestamp": "02:29",
+      "title": "Neuroeconomics of Painless Spending",
+      "scene_group": "ch3_mechanism"
+    },
+    {
+      "timestamp": "03:50",
+      "title": "Hedonic Treadmill Acceleration",
+      "scene_group": "ch4_case_study_1"
+    },
+    {
+      "timestamp": "05:03",
+      "title": "Upgrades That Bleed Cash Silently",
+      "scene_group": "ch5_escalation"
+    },
+    {
+      "timestamp": "06:21",
+      "title": "Federal Reserve Debt Data Exposed",
+      "scene_group": "ch6_case_study_2"
+    },
+    {
+      "timestamp": "07:38",
+      "title": "Engineering Financial Friction Gates",
+      "scene_group": "ch7_systemic_shift"
+    },
+    {
+      "timestamp": "08:51",
+      "title": "Redefining True Sovereign Wealth",
+      "scene_group": "ch8_resolution"
     }
   ]
 }

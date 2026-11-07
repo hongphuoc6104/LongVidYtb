@@ -363,16 +363,30 @@ class YouTubeCDPClient:
         await self.dismiss_studio_interstitials()
         await asyncio.sleep(1.0)
 
-        click_js = """
+        click_js = r"""
             (() => {
                 if (document.querySelector('ytcp-uploads-dialog input[type="file"]')) return 'ALREADY_OPEN';
-                const btn = document.querySelector('#upload-icon') ||
-                            document.querySelector('ytcp-icon-button#upload-icon') ||
-                            document.querySelector('#create-icon') ||
-                            document.querySelector('ytcp-button#create-icon') ||
-                            Array.from(document.querySelectorAll('ytcp-button, button')).find(
-                                el => /^(Create|Tạo)$/i.test((el.innerText || el.getAttribute('aria-label') || '').trim())
-                            );
+                let btn = document.querySelector('#upload-icon') ||
+                          document.querySelector('ytcp-icon-button#upload-icon') ||
+                          document.querySelector('ytcp-button#upload-icon') ||
+                          document.querySelector('#create-icon') ||
+                          document.querySelector('ytcp-button#create-icon') ||
+                          document.querySelector('ytcp-icon-button#create-icon') ||
+                          document.querySelector('button#create-icon') ||
+                          document.querySelector('button[aria-label*="Create"]') ||
+                          document.querySelector('button[aria-label*="Upload"]') ||
+                          document.querySelector('ytcp-button[aria-label*="Create"]') ||
+                          document.querySelector('ytcp-button[aria-label*="Upload"]') ||
+                          document.querySelector('[aria-label*="Create"]') ||
+                          document.querySelector('[aria-label*="Upload"]');
+                if (!btn) {
+                    btn = Array.from(document.querySelectorAll('ytcp-button, button, [role="button"]')).find(
+                        el => {
+                            const txt = (el.innerText || el.getAttribute('aria-label') || '').trim();
+                            return /^(Create|Tạo|Upload|Tải lên)$/i.test(txt) || /(Create|Tạo)\s*(video)?/i.test(txt);
+                        }
+                    );
+                }
                 if (btn) {
                     btn.click();
                     return 'CLICKED';
@@ -591,6 +605,41 @@ class YouTubeCDPClient:
             logger.warning("Thumbnail upload encountered exception: %s", e)
             return False
 
+    async def attach_subtitles(self, subtitles_path: str | Path) -> bool:
+        """Attach subtitles (.srt) file in YouTube Studio dialog if accessible."""
+        sub_path = Path(subtitles_path).resolve()
+        if not sub_path.is_file():
+            logger.warning("Subtitles file not found: %s", sub_path)
+            return False
+        logger.info("Attempting to attach subtitles from %s...", sub_path)
+        try:
+            has_input = await self.evaluate("""
+                Boolean(
+                    document.querySelector('input[type="file"][accept*=".srt"]') ||
+                    Array.from(document.querySelectorAll('input[type="file"]')).find(i => (i.accept || '').includes('.srt') || (i.name || '').includes('sub'))
+                )
+            """)
+            if has_input:
+                doc = await self.call("DOM.getDocument", {"depth": -1, "pierce": True})
+                root_id = doc.get("root", {}).get("nodeId", 1)
+                sub_node = await self.call("DOM.querySelector", {
+                    "nodeId": root_id,
+                    "selector": 'input[type="file"][accept*=".srt"], input[type="file"]',
+                })
+                node_id = sub_node.get("nodeId", 0)
+                if node_id > 0:
+                    await self.call("DOM.setFileInputFiles", {
+                        "nodeId": node_id,
+                        "files": [str(sub_path)],
+                    })
+                    logger.info("Attached subtitles file (%s) to file input successfully.", sub_path.name)
+                    return True
+            logger.info("Subtitle file input not directly exposed in current wizard step; logged for reference.")
+            return False
+        except Exception as e:
+            logger.warning("Subtitle attachment encountered non-fatal error: %s", e)
+            return False
+
     async def dismiss_studio_interstitials(self) -> bool:
         """Dismiss Studio unsupported browser interstitial banner or proceed button if present."""
         clicked = await self.evaluate("""
@@ -734,20 +783,36 @@ class YouTubeCDPClient:
         self,
         target_title: str,
         handle: str,
+        channel_name: str = "",
     ) -> bool:
         """Apply Tier-1/2 Clickable Channel Fallback in YouTube Studio video edit page.
 
         1. Prepends clickable @<Handle> callout to Description:
-           👉 Bấm ngay vào tên kênh @<Handle> để vào kênh xem trọn vẹn video bản dài: "<Target Long Title>" nhé!
-        2. Appends @<Handle> to Title if space allows (<= 100 chars).
+           - English: 👉 Tap @<Handle> to watch the full-length video: "<Target Long Title>"!
+           - Vietnamese: 👉 Bấm ngay vào tên kênh @<Handle> để vào kênh xem trọn vẹn video bản dài: "<Target Long Title>" nhé!
+        2. Keeps updated_title = title.strip()[:55] (never inflates with @<Handle>).
         3. Saves changes via Studio #save button and waits for persistence.
         """
         clean_handle = handle.strip()
         if not clean_handle.startswith("@"):
             clean_handle = f"@{clean_handle}"
 
-        callout = f'👉 Bấm ngay vào tên kênh {clean_handle} để vào kênh xem trọn vẹn video bản dài: "{target_title}" nhé!'
-        logger.info("Applying clickable handle fallback for %s with callout: '%s'", clean_handle, callout)
+        # Detect if channel/text is English
+        ch_meta = f"{channel_name} {self.profile_cfg.get('name', '')} {self.profile_cfg.get('channel_id', '')} {self.profile_cfg.get('slug', '')} {self.profile_cfg.get('id', '')}".lower()
+        vn_pattern = r"[àáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ]"
+        has_vn = bool(re.search(vn_pattern, f"{target_title} {channel_name}".lower()))
+        is_en = (
+            any(marker in ch_meta for marker in ("en_", "en-", "english", "lazy_brain", "wallet_anatomy"))
+            or clean_handle.lower().startswith(("@en_", "@en-", "en_", "en-"))
+            or not has_vn
+        )
+
+        if is_en:
+            callout = f'👉 Tap {clean_handle} to watch the full-length video: "{target_title}"!'
+        else:
+            callout = f'👉 Bấm ngay vào tên kênh {clean_handle} để vào kênh xem trọn vẹn video bản dài: "{target_title}" nhé!'
+
+        logger.info("Applying clickable handle fallback (is_en=%s) for %s with callout: '%s'", is_en, clean_handle, callout)
 
         # 1. Update Description
         desc_res = await self.evaluate(f"""
@@ -765,7 +830,7 @@ class YouTubeCDPClient:
                 }}
 
                 let newDesc = '';
-                if (desc.startsWith('👉 Bấm ngay vào tên kênh')) {{
+                if (desc.startsWith('👉 Bấm ngay vào tên kênh') || desc.startsWith('👉 Tap ')) {{
                     const lines = desc.split('\\n');
                     lines[0] = callout;
                     newDesc = lines.join('\\n');
@@ -784,31 +849,27 @@ class YouTubeCDPClient:
         """)
         logger.info("Description fallback update result: %s", desc_res)
 
-        # 2. Update Title if room allows
-        title_res = await self.evaluate(f"""
-            (() => {{
+        # 2. Update Title: keep updated_title = title.strip()[:55] (never append @Handle)
+        title_res = await self.evaluate("""
+            (() => {
                 const titleEl = document.querySelector('#title-textarea #textbox') ||
                                 document.querySelector('ytcp-mention-textbox#title-textarea #textbox');
-                if (!titleEl) return {{ ok: false, error: 'no_title_el' }};
+                if (!titleEl) return { ok: false, error: 'no_title_el' };
 
-                const handle = {json.dumps(clean_handle)};
                 let title = (titleEl.innerText || '').trim();
-                if (title.toLowerCase().includes(handle.toLowerCase())) {{
-                    return {{ ok: true, changed: false, title: title }};
-                }}
+                const updated_title = title.substring(0, 55).trim();
+                if (title === updated_title) {
+                    return { ok: true, changed: false, title: title };
+                }
 
-                if (title.length + handle.length + 1 <= 100) {{
-                    const newTitle = `${{title}} ${{handle}}`;
-                    titleEl.focus();
-                    document.execCommand('selectAll', false, null);
-                    document.execCommand('delete', false, null);
-                    document.execCommand('insertText', false, newTitle);
-                    titleEl.dispatchEvent(new Event('input', {{ bubbles: true, composed: true }}));
-                    titleEl.dispatchEvent(new Event('change', {{ bubbles: true, composed: true }}));
-                    return {{ ok: true, changed: true, title: newTitle }};
-                }}
-                return {{ ok: true, changed: false, title: title, reason: 'title_too_long' }};
-            }})()
+                titleEl.focus();
+                document.execCommand('selectAll', false, null);
+                document.execCommand('delete', false, null);
+                document.execCommand('insertText', false, updated_title);
+                titleEl.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+                titleEl.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
+                return { ok: true, changed: true, title: updated_title };
+            })()
         """)
         logger.info("Title fallback update result: %s", title_res)
 
@@ -1591,6 +1652,20 @@ async def publish_single_video(
         if thumbnail_path and not is_short:
             thumbnail_status = await client.upload_thumbnail(thumbnail_path)
 
+        # Step 6b: Subtitles (.srt) handling if provided and exists
+        subtitles_status = False
+        if subtitles_path:
+            sub_file = Path(subtitles_path).resolve()
+            if sub_file.is_file():
+                logger.info("Handling subtitles attachment from %s (%d bytes)...", sub_file, sub_file.stat().st_size)
+                if hasattr(client, "attach_subtitles"):
+                    try:
+                        subtitles_status = await client.attach_subtitles(sub_file)
+                    except Exception as sub_err:
+                        logger.warning("Could not attach subtitles via CDP (continuing publish): %s", sub_err)
+            else:
+                logger.warning("Subtitles path provided but file not found: %s", subtitles_path)
+
         related_linked = False
         if is_short and related_video_url:
             related_linked = await client.link_related_video(related_video_url)
@@ -1702,6 +1777,8 @@ async def publish_single_video(
             "title": title,
             "visibility": visibility,
             "thumbnail_uploaded": thumbnail_status,
+            "subtitles_path": str(subtitles_path) if subtitles_path else None,
+            "subtitles_uploaded": bool(subtitles_status),
             "related_video_linked": bool(related_linked),
             "live_verified": bool(live_status.get("has_pill", False)),
             "live_title": live_status.get("linked_title"),
@@ -1716,22 +1793,34 @@ publish_to_youtube_studio = publish_single_video
 
 
 def parse_metadata_file(md_path: str | Path) -> dict[str, str]:
-    """Parse title and description from markdown publication kit."""
+    """Parse title, description, and tags from markdown publication kit."""
     text = Path(md_path).read_text(encoding="utf-8")
     title = ""
     description = ""
+    tags = ""
 
     # Title extraction
-    m_title = re.search(r"## 1\. Tiêu đề[^\n]*\n```(?:text)?\n(.*?)\n```", text, re.DOTALL)
+    m_title = re.search(r"## 1\. (?:Tiêu đề|Title)[^\n]*\n```(?:text)?\n(.*?)\n```", text, re.DOTALL)
+    if not m_title:
+        m_title = re.search(r"## 1\. (?:Tiêu đề|Title)[^\n]*\n([^\n#]+)", text)
     if m_title:
         title = m_title.group(1).strip()
 
     # Description extraction
-    m_desc = re.search(r"## 2\. Mô tả[^\n]*\n```(?:text)?\n(.*?)\n```", text, re.DOTALL)
+    m_desc = re.search(r"## 2\. (?:Mô tả|Description)[^\n]*\n```(?:text)?\n(.*?)\n```", text, re.DOTALL)
+    if not m_desc:
+        m_desc = re.search(r"## 2\. (?:Mô tả|Description)[^\n]*\n([^\n#]+)", text)
     if m_desc:
         description = m_desc.group(1).strip()
 
-    return {"title": title, "description": description}
+    # Tags extraction
+    m_tags = re.search(r"## 3\.\s*(?:Thẻ từ khóa|Tags)[^\n]*\n```(?:text)?\n(.*?)\n```", text, re.DOTALL)
+    if not m_tags:
+        m_tags = re.search(r"## 3\.\s*(?:Thẻ từ khóa|Tags)[^\n]*\n([^\n#]+)", text)
+    if m_tags:
+        tags = m_tags.group(1).strip()
+
+    return {"title": title, "description": description, "tags": tags}
 
 
 def main():
