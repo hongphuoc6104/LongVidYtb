@@ -1,0 +1,104 @@
+{
+  "channel_id": "ua_sao_vay",
+  "channel_slug": "ua-sao-vay",
+  "competitor_name": "Veritasium / Zack D. Films",
+  "voice": "VietNarrator",
+  "frame_by_frame_observations_vi": "Phân tích 20 khung hình thực tế (frame_01s.jpg đến frame_20s.jpg) từ video mô phỏng y sinh học và vật lý của Zack D. Films và Veritasium: Khung 01s-05s là cận cảnh macro đồng tử mắt người co giãn và màng phim nước mắt phản chiếu ánh sáng studio sắc sảo; khung 06s-10s là mô phỏng 3D dòng xung thần kinh chạy dọc dây thần kinh thị giác với vận tốc hàng trăm mét mỗi giây; khung 11s-15s là hình ảnh cắt lớp các sợi cơ vòng mi co thắt lại trong vỏn vẹn hai mươi phần nghìn giây; khung 16s-20s là chuyển động siêu chậm 1000fps ghi lại phản xạ nhắm mắt tự vệ của con người khi gặp kích thích bất ngờ. Nhịp đọc tò mò, sôi nổi (~146 WPM), ngắt nghỉ dứt khoát 0.22s-0.38s sau các hiện tượng phản xạ sinh học.",
+  "learned_style_summary_vi": "Phong cách High-Definition Biomedical & Somatosensory Physics (Zack D. Films / Veritasium): Giải mã những hiện tượng cơ thể kỳ lạ bằng mô phỏng 3D giải phẫu học và quay phim siêu tốc chân thực. Bắt đầu bằng câu hỏi tò mò quen thuộc hàng ngày, giải thích cơ chế phản xạ vô thức của hệ thần kinh, chỉ ra tốc độ xử lý milli-giây thần tốc của tiến hóa, mô tả sự khóa chốt bảo vệ của cơ vòng mi, và đúc kết sự kỳ diệu của cỗ máy sinh học cơ thể người. Tuyệt đối không dùng nhân vật hoạt hình 2D hay stickman.",
+  "competitor_dialogue_formula": {
+    "competitor_verbatim_transcript_20s": "[00:00-00:04.2s] 'When you blink, your eyelids don't just close simultaneously.' [pause 0.25s] -> [00:04.5-00:08.8s] 'The upper lid sweeps down like a windshield wiper across your cornea.' [pause 0.35s] -> [00:09.2-00:14.0s] 'It takes less than a tenth of a second, but it spreads a fresh layer of tear film.' [pause 0.45s] -> [00:14.5-00:20.0s] 'And if something flies toward your face, your brainstem triggers this reflex before you even consciously see it.'",
+    "sentence_structure_formula_vi": "Công thức 5 bước Zack D. Films: (1) Đặt câu hỏi phản xạ giật mình ('Tại sao khi bị giật mình...') -> (2) Hé lộ mệnh lệnh vô thức của bộ não -> (3) Định danh phản xạ sinh tồn nguyên thủy & tốc độ milli-giây -> (4) Cơ chế cơ học bảo vệ của cơ bắp mi mắt -> (5) Khẳng định sự kỳ diệu bảo vệ cơ thể.",
+    "pause_and_cadence_formula_vi": "Nhịp đọc năng động, cuốn hút ~146 WPM: Nghỉ 0.22s sau câu hỏi mở; nghỉ 0.35s sau khi hé lộ cơ chế thần kinh; nghỉ 0.30s sau khi định danh phản xạ; nghỉ 0.38s sau con số milli-giây; nghỉ 0.30s trước kết luận.",
+    "transition_and_camera_formula_vi": "Micro push-in và tilt chuyển động nhanh, xfade 0.28s: fade khi tiếp cận mắt, smoothdown khi theo dõi giọt nước siêu chậm, smoothright khi quét dọc cung phản xạ thần kinh, smoothleft khi xem bó cơ mi co thắt."
+  },
+  "beats": [
+    {
+      "beat_id": "B01",
+      "formula_stage": "1. Câu hỏi phản xạ giật mình",
+      "time_range": "0.0s - 2.1s",
+      "narration": "Tại sao khi bị giật mình mắt bạn tự động nhắm?",
+      "pause_after_sec": 0.22,
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "competitor_ref_frame": "frame_01s.jpg",
+      "prompt": "Hyper-detailed 3D scientific macro render of a human eye in extreme close-up, iridescent amber iris textures, dilated pupil reflecting a sharp pinpoint of studio light, delicate eyelashes, Zack D Films high-definition biomedical realism, 8k render, photorealistic, no text overlays, no chalkboards, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B02",
+      "formula_stage": "2. Phản xạ vô thức tốc độ cao",
+      "time_range": "2.1s - 4.4s",
+      "narration": "Bộ não ra lệnh trước khi bạn kịp nhận ra nguy hiểm.",
+      "pause_after_sec": 0.35,
+      "camera_motion": "tilt_down",
+      "transition": "smoothdown",
+      "competitor_ref_frame": "frame_05s.jpg",
+      "prompt": "High-speed 1000fps macro cinematography of a crystal-clear water droplet suspended milliseconds above a calm liquid surface, crown splash formation, refraction of studio spotlights, extreme slow-motion physics, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B03",
+      "formula_stage": "3. Bản năng tiến hóa bảo vệ",
+      "time_range": "4.4s - 6.8s",
+      "narration": "Đây là phản xạ chớp mắt sinh tồn nguyên thủy,",
+      "pause_after_sec": 0.3,
+      "camera_motion": "pan_right",
+      "transition": "smoothright",
+      "competitor_ref_frame": "frame_08s.jpg",
+      "prompt": "Detailed 3D anatomical model of human facial nerves and blink reflex pathways, glowing translucent neural impulses flashing along optic nerve fibers toward the brainstem, clinical medical animation style, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B04",
+      "formula_stage": "4. Tốc độ milli-giây thần tốc",
+      "time_range": "6.8s - 9.3s",
+      "narration": "kích hoạt trong vỏn vẹn hai mươi phần nghìn giây.",
+      "pause_after_sec": 0.38,
+      "camera_motion": "push_in",
+      "transition": "smoothleft",
+      "competitor_ref_frame": "frame_10s.jpg",
+      "prompt": "Macro close-up of a human cornea with ultra-thin tear film reflecting soft studio ring light, microscopic fluid dynamics on eyeball surface, astonishing biological detail, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B05",
+      "formula_stage": "5. Đường tắt thần kinh tủy sống",
+      "time_range": "9.3s - 11.6s",
+      "narration": "Nó bỏ qua hoàn toàn vỏ não phân tích ý thức,",
+      "pause_after_sec": 0.22,
+      "camera_motion": "tilt_up",
+      "transition": "smoothup",
+      "competitor_ref_frame": "frame_12s.jpg",
+      "prompt": "Cinematic 3D render of the human cranial base and brainstem, soft bioluminescent pulses traveling along the trigeminal neural tract, dark medical studio background with dramatic rim lighting, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B06",
+      "formula_stage": "6. Khóa chốt cơ học cơ mi",
+      "time_range": "11.6s - 14.3s",
+      "narration": "để cơ vòng mi khép chặt bảo vệ giác mạc quý giá.",
+      "pause_after_sec": 0.35,
+      "camera_motion": "pan_left",
+      "transition": "smoothleft",
+      "competitor_ref_frame": "frame_15s.jpg",
+      "prompt": "Macro 3D cross-section of microscopic orbicularis oculi muscle fibers contracting tightly around ocular orbit, striated muscle tissue detail, clinical anatomical precision, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B07",
+      "formula_stage": "7. Hệ thống tự động giữ mạng",
+      "time_range": "14.3s - 16.9s",
+      "narration": "Hàng trăm phản xạ vô thức tương tự đang chạy ngầm—",
+      "pause_after_sec": 0.22,
+      "camera_motion": "push_in",
+      "transition": "smoothright",
+      "competitor_ref_frame": "frame_18s.jpg",
+      "prompt": "Striking slow-motion shot of a person blinking naturally captured with cinematic Phantom high-speed camera, studio lighting creating soft specular highlights on skin pores, photorealistic human physiology, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B08",
+      "formula_stage": "8. Sự kỳ diệu của cơ thể",
+      "time_range": "16.9s - 19.4s",
+      "narration": "để giữ cho bạn an toàn từng giây từng phút.",
+      "pause_after_sec": 0.3,
+      "camera_motion": "zoom_out",
+      "transition": "fade",
+      "competitor_ref_frame": "frame_20s.jpg",
+      "prompt": "Cinematic portrait lighting on human face against deep studio darkness, calm confident expression with eyes wide open catching crisp studio catchlights, Veritasium inquiry style finale, photorealistic 8k still, no text overlays, no chalkboards, no cartoons, no stickmen."
+    }
+  ]
+}

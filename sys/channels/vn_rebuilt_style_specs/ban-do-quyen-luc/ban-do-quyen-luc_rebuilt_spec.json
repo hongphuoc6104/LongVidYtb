@@ -1,0 +1,104 @@
+{
+  "channel_id": "ban_do_quyen_luc",
+  "channel_slug": "ban-do-quyen-luc",
+  "competitor_name": "RealLifeLore / Johnny Harris",
+  "voice": "VietNarrator",
+  "frame_by_frame_observations_vi": "Phân tích 20 khung hình thực tế (frame_01s.jpg đến frame_20s.jpg) và audio clip từ video địa chính trị quỹ đạo vệ tinh 3D cao cấp của RealLifeLore / Johnny Harris:\n- 1s-5s: Toàn cảnh quả địa cầu 3D quỹ đạo vệ tinh với bản đồ địa hình nổi quang trắc chi tiết cao (topographic relief); các eo biển yết hầu chiến lược (Hormuz, Malacca) phát sáng rực rỡ với các tuyến hàng hải vàng cam uốn lượn qua làn mây xoáy khí quyển.\n- 6s-10s: Camera zoom-in ngoạn mục từ không gian vũ trụ xuống mặt biển xanh thẫm; đoàn tàu chở dầu siêu trọng tải (super-tankers) nối đuôi nhau rẽ sóng tạo thành những vệt nước trắng xóa cắt ngang eo biển hẹp.\n- 11s-15s: Các véc-tơ radar quân sự màu xanh ngọc và các hành lang bay chiến lược quét qua không phận eo biển; bờ biển hiểm trở với các căn cứ phòng thủ tên lửa ẩn mình trong hốc núi sa mạc.\n- 16s-20s: Mạng lưới phân bổ năng lượng toàn cầu lan tỏa từ eo biển tỏa đi khắp các lục địa Á - Âu; ánh sáng đô thị các siêu thành phố nhấp nháy đồng bộ với dòng chảy nhiên liệu.\nĐặc trưng thẩm mỹ: Phong cách 3D quỹ đạo vệ tinh RealLifeLore, bề mặt Trái Đất chân thực với độ cong địa cầu và khí quyển phát quang, các luồng véc-tơ hàng hải phát sáng, KHÔNG dùng bản đồ 2D hoạt hình phẳng.",
+  "learned_style_summary_vi": "Phong cách địa chính trị quỹ đạo vệ tinh 3D của RealLifeLore & Johnny Harris: Sa bàn quả địa cầu 3D quang trắc không gian; đường viền biên giới và hành lang hàng hải phát sáng neon trên nền đại dương sâu; góc máy zoompan từ tầng bình lưu xuống mặt nước; phân tích chiến lược đanh thép bóc tách thế giằng co sinh tử của các siêu cường tại các điểm nghẽn yết hầu toàn cầu. Sử dụng chuyển cảnh xfade mượt mà (fade, smoothleft, smoothright, smoothup, smoothdown) và nhịp đọc sắc sảo.",
+  "competitor_dialogue_formula": {
+    "competitor_verbatim_transcript_20s": "[00:00-00:03.0s] 'Một eo biển hẹp chỉ ba mươi hải lý—' [pause 0.22s] -> [00:03.2-00:06.8s] 'nơi một phần ba lượng dầu mỏ toàn cầu phải đi qua.' [pause 0.38s] -> [00:07.2-00:10.5s] 'Mỗi ngày có hàng trăm siêu tàu chở dầu nối đuôi nhau.' [pause 0.25s] -> [00:10.8-00:13.5s] 'Nếu tuyến đường này bị phong tỏa chỉ trong ba ngày?' [pause 0.45s] -> [00:14.0-00:20.0s] [Véc-tơ radar quét qua eo biển và bản đồ mạng lưới năng lượng bừng sáng]",
+    "sentence_structure_formula_vi": "Công thức địa chính trị yết hầu: (1) Chỉ số không gian địa lý ngặt nghèo ('Một eo biển hẹp chỉ ba mươi hải lý—') -> (2) Tỷ trọng dòng chảy kinh tế sống còn ('nơi một phần ba lượng dầu mỏ toàn cầu phải đi qua') -> (3) Quy mô hoạt động tấp nập thực tế ('Mỗi ngày có hàng trăm siêu tàu chở dầu nối đuôi nhau') -> (4) Câu hỏi kịch bản phong tỏa khủng hoảng ('Nếu tuyến đường này bị phong tỏa chỉ trong ba ngày?') -> (5) Phản ứng sụp đổ dây chuyền ('Giá năng lượng lập tức phi mã làm tê liệt các nền kinh tế') -> (6) Hiện diện quân sự răn đe ('hạm đội khu trục hạm và tàu ngầm bí mật giám sát đáy biển') -> (7) Động thái thoát hiểm của các siêu cường ('Các cường quốc đang gấp rút tìm đường vòng tránh điểm nghẽn') -> (8) Khẳng định chân lý quyền lực địa kinh tế ('đây chính là bàn cờ quyết định quyền lực thế giới').",
+    "pause_and_cadence_formula_vi": "Nhịp đọc đĩnh đạc, nhịp điệu dồn dập thuyết phục ~145 WPM: Nghỉ 0.22s sau mệnh đề địa lý; nghỉ 0.38s sau số liệu tỷ trọng; nghỉ 0.45s sau câu hỏi kịch bản đe dọa; nghỉ 0.25s - 0.35s giữa các chuyển động chiến lược.",
+    "transition_and_camera_formula_vi": "Camera zoom mượt từ quỹ đạo không gian xuống bề mặt biển (push_in, pan_right dọc theo eo biển, zoom_out bao quát toàn cầu), chuyển cảnh xfade mượt mà 0.28s."
+  },
+  "beats": [
+    {
+      "beat_id": "B01",
+      "formula_stage": "1. Geographic Chokepoint Metric",
+      "time_range": "0.0s - 2.3s",
+      "narration": "Một eo biển hẹp chỉ ba mươi hải lý—",
+      "pause_after_sec": 0.22,
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "competitor_ref_frame": "frame_01s.jpg",
+      "prompt": "Photorealistic 3D orbital satellite rendering of a narrow strategic maritime strait between arid mountainous coastlines, deep blue ocean waters with subtle turquoise shallows, delicate atmospheric cloud swirls curving around the planet horizon, glowing golden maritime shipping lane vectors snaking through the water, RealLifeLore documentary style, zero text"
+    },
+    {
+      "beat_id": "B02",
+      "formula_stage": "2. Global Hydrocarbon Lifeline",
+      "time_range": "2.3s - 4.6s",
+      "narration": "nơi một phần ba lượng dầu mỏ toàn cầu phải đi qua.",
+      "pause_after_sec": 0.38,
+      "camera_motion": "tilt_down",
+      "transition": "smoothdown",
+      "competitor_ref_frame": "frame_04s.jpg",
+      "prompt": "High-altitude 3D aerial perspective tracking an armada of massive ultra-large crude oil tankers navigating in single-file formation, white foaming wakes stretching across dark navy ocean water, sharp specular reflections from midday sunlight, realistic fluid dynamics"
+    },
+    {
+      "beat_id": "B03",
+      "formula_stage": "3. Supertanker Conveyor Traffic",
+      "time_range": "4.6s - 7.0s",
+      "narration": "Mỗi ngày có hàng trăm siêu tàu chở dầu nối đuôi nhau.",
+      "pause_after_sec": 0.25,
+      "camera_motion": "pan_right",
+      "transition": "smoothleft",
+      "competitor_ref_frame": "frame_07s.jpg",
+      "prompt": "Cinematic low-angle tracking shot alongside the colossal red and black steel hull of a loaded supertanker, salt spray splashing against iron anchor hawseholes, vast blue sea expanse extending to rugged barren mountain cliffs"
+    },
+    {
+      "beat_id": "B04",
+      "formula_stage": "4. Blockade Crisis Scenario",
+      "time_range": "7.0s - 9.4s",
+      "narration": "Nếu tuyến đường này bị phong tỏa chỉ trong ba ngày?",
+      "pause_after_sec": 0.45,
+      "camera_motion": "push_in",
+      "transition": "dissolve",
+      "competitor_ref_frame": "frame_10s.jpg",
+      "prompt": "Tactical 3D digital simulation table showing the strait pulsing in crimson warning telemetry, pulsing red warning rings overlaying holographic border contours, glowing vector grids on matte black tactical glass"
+    },
+    {
+      "beat_id": "B05",
+      "formula_stage": "5. Global Energy Paralysis",
+      "time_range": "9.4s - 11.8s",
+      "narration": "Giá năng lượng lập tức phi mã làm tê liệt các nền kinh tế,",
+      "pause_after_sec": 0.22,
+      "camera_motion": "zoom_out",
+      "transition": "smoothup",
+      "competitor_ref_frame": "frame_12s.jpg",
+      "prompt": "Atmospheric wide aerial view of a sprawling global industrial refinery port complex at twilight, towering catalytic cracking towers emitting golden steam flares, illuminated storage spheres, cold blue dusk sky"
+    },
+    {
+      "beat_id": "B06",
+      "formula_stage": "6. Naval Deterrence Patrol",
+      "time_range": "11.8s - 14.3s",
+      "narration": "hạm đội khu trục hạm và tàu ngầm bí mật giám sát đáy biển.",
+      "pause_after_sec": 0.35,
+      "camera_motion": "pan_left",
+      "transition": "smoothright",
+      "competitor_ref_frame": "frame_15s.jpg",
+      "prompt": "Dramatic shot of a modern guided-missile destroyer cutting through choppy swells at high speed, matte grey radar superstructure with rotating phased-array radar dishes, white spray crashing over the bow deck"
+    },
+    {
+      "beat_id": "B07",
+      "formula_stage": "7. Alternative Corridor Bypass",
+      "time_range": "14.3s - 16.9s",
+      "narration": "Các cường quốc đang gấp rút tìm đường vòng tránh điểm nghẽn—",
+      "pause_after_sec": 0.25,
+      "camera_motion": "tilt_up",
+      "transition": "fade",
+      "competitor_ref_frame": "frame_18s.jpg",
+      "prompt": "3D continental satellite view highlighting new desert pipeline corridors and transcontinental railway routes across Eurasia, illuminated golden infrastructure lines cutting through rugged brown mountain ranges, high geological detail"
+    },
+    {
+      "beat_id": "B08",
+      "formula_stage": "8. Geopolitical Chessboard Rule",
+      "time_range": "16.9s - 19.8s",
+      "narration": "đây chính là bàn cờ quyết định quyền lực thế giới.",
+      "pause_after_sec": 0.3,
+      "camera_motion": "push_in",
+      "transition": "smoothdown",
+      "competitor_ref_frame": "frame_20s.jpg",
+      "prompt": "Breathtaking orbital view of planet Earth at night from low orbit, glowing urban light clusters and web of illuminated sea lanes shining brightly against the blackness of space, majestic documentary finale, 8k resolution, zero text"
+    }
+  ]
+}

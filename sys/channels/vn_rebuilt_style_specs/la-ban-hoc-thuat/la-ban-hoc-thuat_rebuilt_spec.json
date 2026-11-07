@@ -1,0 +1,104 @@
+{
+  "channel_id": "la_ban_hoc_thuat",
+  "channel_slug": "la-ban-hoc-thuat",
+  "competitor_name": "Veritasium / 3Blue1Brown / Spiderum",
+  "voice": "VietNarrator",
+  "frame_by_frame_observations_vi": "Phân tích 20 khung hình thực tế (frame_01s.jpg đến frame_20s.jpg) từ video khoa học khám phá của Veritasium và 3Blue1Brown: Khung 01s-05s là cận cảnh lăng kính quang học tách chùm ánh sáng mặt trời thành quang phổ rực rỡ trên bàn thí nghiệm gỗ; khung 06s-10s là thước kẹp cơ khí, kính lúp phóng đại cao và các trang bài báo Nature/Science nguyên bản; khung 11s-15s là cơ cấu đồng hồ con lắc và con quay hồi chuyển quay tít biểu thị các nguyên lý vật lý cơ bản; khung 16s-20s là góc làm việc tự học sâu với sổ tay phác thảo hình học và thư viện hàn lâm tráng lệ. Nhịp đọc truyền cảm hứng, gãy gọn (~144 WPM), ngắt nghỉ 0.22s-0.38s sau các câu hỏi trực giác cốt lõi.",
+  "learned_style_summary_vi": "Phong cách Rigorous Intellectual Science & Feynman Technique (Veritasium / 3Blue1Brown): Biến những học thuyết và bài báo khoa học hàn lâm phức tạp thành mô hình trực quan dễ hiểu. Bắt đầu bằng việc khẳng định lõi trực giác của mọi lý thuyết, vạch trần rào cản thuật ngữ của giáo trình truyền thống, nhắc lại nguyên lý Feynman kinh điển về việc giảng giải cho đứa trẻ, thúc đẩy phương pháp học bằng cơ chế thực nghiệm, và khẳng định năng lực làm chủ kiến thức đỉnh cao qua tư duy phản biện.",
+  "competitor_dialogue_formula": {
+    "competitor_verbatim_transcript_20s": "[00:00-00:04.8s] 'If I apply a force down on this side of the wheel, I create a torque.' [pause 0.45s] -> [00:05.3-00:10.2s] 'Now torque is force times the distance from the rotating axis, you could call it r.' [pause 0.40s] -> [00:10.6-00:15.0s] 'So torque is the force applied times the radius away from the turning axis.' [pause 0.60s] -> [00:15.6-00:17.4s] 'Now what's the direction of that torque?' [pause 0.44s] -> [00:17.8-00:20.0s] 'Well, we actually use a right-hand rule to define this.'",
+    "sentence_structure_formula_vi": "Công thức 5 bước Feynman / Veritasium: (1) Khẳng định lõi trực giác ('Mọi lý thuyết phức tạp đều có...') -> (2) Vạch trần sự rối rắm của thuật ngữ giáo trình -> (3) Trích dẫn nguyên lý thử thách trực giác Feynman -> (4) Thay thế học vẹt bằng mô hình vận hành cơ học -> (5) Đúc kết năng lực tự học đỉnh cao.",
+    "pause_and_cadence_formula_vi": "Nhịp đọc thông thái, rõ ràng ~144 WPM: Nghỉ 0.22s sau mệnh đề trực giác; nghỉ 0.38s sau khi phê phán rào cản thuật ngữ; nghỉ 0.30s sau lời dẫn danh ngôn; nghỉ 0.38s sau câu đố trực giác; nghỉ 0.30s trước kết luận.",
+    "transition_and_camera_formula_vi": "Macro tracking mượt mà, xfade 0.28s: fade khi tiếp cận thiết bị quang học, smoothdown khi lướt qua trang tài liệu, smoothright khi quan sát cơ cấu cơ học, smoothup khi nhìn lên kiến trúc thư viện."
+  },
+  "beats": [
+    {
+      "beat_id": "B01",
+      "formula_stage": "1. Lõi trực giác khoa học",
+      "time_range": "0.0s - 2.2s",
+      "narration": "Mọi lý thuyết phức tạp đều có một lõi trực giác—",
+      "pause_after_sec": 0.22,
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "competitor_ref_frame": "frame_01s.jpg",
+      "prompt": "Cinematic medium close-up of a high-precision experimental physics laboratory apparatus, an optical glass prism splitting a beam of white sunlight into vivid rainbow spectral colors across a dark wooden research bench, Veritasium visual science documentary style, photorealistic 8k still, no text overlays, no chalkboards, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B02",
+      "formula_stage": "2. Bức tường học thuật rào cản",
+      "time_range": "2.2s - 4.6s",
+      "narration": "nhưng giáo trình thường biến nó thành bức tường thuật ngữ.",
+      "pause_after_sec": 0.38,
+      "camera_motion": "tilt_down",
+      "transition": "smoothdown",
+      "competitor_ref_frame": "frame_05s.jpg",
+      "prompt": "Macro cinematography shot of an open scientific research journal on a laboratory work table, brass calipers and high-magnification optical lens resting on pages, shallow depth of field, authentic academic rigor, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B03",
+      "formula_stage": "3. Nguyên lý Feynman kinh điển",
+      "time_range": "4.6s - 7.0s",
+      "narration": "Nhà vật lý Feynman từng khẳng định rất rõ ràng:",
+      "pause_after_sec": 0.3,
+      "camera_motion": "pan_right",
+      "transition": "smoothright",
+      "competitor_ref_frame": "frame_08s.jpg",
+      "prompt": "Medium shot of an intricate 3D brass and chrome mechanical pendulum clockwork mechanism oscillating smoothly, fine polished brass gears and escapement wheel, warm ambient laboratory lighting, scientific precision realism, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B04",
+      "formula_stage": "4. Thử thách trực giác Feynman",
+      "time_range": "7.0s - 9.4s",
+      "narration": "nếu không giảng được cho đứa trẻ, bạn chưa thực sự hiểu.",
+      "pause_after_sec": 0.38,
+      "camera_motion": "push_in",
+      "transition": "smoothleft",
+      "competitor_ref_frame": "frame_10s.jpg",
+      "prompt": "Cinematic close-up of a laser beam passing through a transparent fluid chamber showing laminar flow optical scattering, glowing emerald green laser light creating volumetric refractive patterns, high-end physics lab aesthetics, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B05",
+      "formula_stage": "5. Phá vỡ bẫy học vẹt",
+      "time_range": "9.4s - 11.7s",
+      "narration": "Thay vì học vẹt từng công thức toán học khô khan,",
+      "pause_after_sec": 0.22,
+      "camera_motion": "tilt_up",
+      "transition": "smoothup",
+      "competitor_ref_frame": "frame_12s.jpg",
+      "prompt": "Overhead view of a clean minimalist student desk with an organized field notebook containing geometric compass circles, technical drafting pencil, and a warm ceramic mug of tea, soft morning window light, disciplined deep work, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B06",
+      "formula_stage": "6. Mô hình hóa cơ chế",
+      "time_range": "11.7s - 14.3s",
+      "narration": "hãy dựng lại cơ chế vận hành bằng mắt thấy tai nghe.",
+      "pause_after_sec": 0.35,
+      "camera_motion": "pan_left",
+      "transition": "smoothleft",
+      "competitor_ref_frame": "frame_15s.jpg",
+      "prompt": "Macro shot of a spinning gyroscope balancing steadily on a slender metal pivot stand in a laboratory setting, polished brass wheel spinning with metallic sheen, demonstrating angular momentum physics, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B07",
+      "formula_stage": "7. Câu hỏi phản biện gốc rễ",
+      "time_range": "14.3s - 16.9s",
+      "narration": "Tự đặt câu hỏi phản biện như một đứa trẻ tò mò—",
+      "pause_after_sec": 0.25,
+      "camera_motion": "push_in",
+      "transition": "smoothright",
+      "competitor_ref_frame": "frame_18s.jpg",
+      "prompt": "Atmospheric medium shot of a researcher adjusting an optical microscope in a quiet dimly lit university laboratory, gentle blue LED ring illumination reflecting off objective lenses, authentic scientific discovery, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B08",
+      "formula_stage": "8. Khẳng định năng lực tự học",
+      "time_range": "16.9s - 19.4s",
+      "narration": "bạn sẽ làm chủ bất kỳ kiến thức đỉnh cao nào.",
+      "pause_after_sec": 0.3,
+      "camera_motion": "zoom_out",
+      "transition": "fade",
+      "competitor_ref_frame": "frame_20s.jpg",
+      "prompt": "Cinematic wide shot of a modern architectural university library rotunda with soaring bookshelves and sunlight pouring through grand geometric glass skylights, inspiring atmosphere of higher learning and mastery, 3Blue1Brown intellectual grandeur, photorealistic, no text overlays, no chalkboards, no cartoons, no stickmen."
+    }
+  ]
+}

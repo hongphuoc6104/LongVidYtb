@@ -1,0 +1,104 @@
+{
+  "channel_id": "luat_ngam",
+  "channel_slug": "luat-ngam",
+  "competitor_name": "Fern TV / Academy of Ideas / CDTeam",
+  "voice": "VietNarrator",
+  "frame_by_frame_observations_vi": "Phân tích 20 khung hình thực tế (frame_01s.jpg đến frame_20s.jpg) từ video tài liệu chiến lược và điều tra 3D của Fern TV và Academy of Ideas: Khung 01s-05s là phòng chỉ huy trung tâm ngầm với màn hình bản đồ dữ liệu xanh lam khổng lồ phản chiếu ánh sáng lên sàn bê tông bóng loáng; khung 06s-10s là bàn radar 3D hiển thị các luồng di chuyển của đám đông và bảng split-flap cơ học lật chữ số sắc lạnh; khung 11s-15s là hình ảnh đám đông di chuyển qua các hành lang nhà ga hiện đại dưới ánh sáng kiến trúc brutalist; khung 16s-20s là mô hình quả cầu mạng lưới thông tin 3D phát sáng và cá nhân đứng vững giữa dòng người hối hả. Nhịp đọc dồn dập nhưng lạnh lùng (~142 WPM), ngắt nghỉ 0.22s-0.38s tạo kịch tính điều tra hệ thống.",
+  "learned_style_summary_vi": "Phong cách Strategic Documentary & Power Dynamics (Fern TV / Academy of Ideas): Vạch trần các quy luật thao túng tâm lý đám đông bằng hình ảnh đồ họa 3D điện ảnh và tư liệu điều tra. Mở đầu bằng sự kiện quy mô quần chúng, đặt câu hỏi nghi vấn về quyền kiểm soát ngầm, dẫn người xem vào cơ chế kích hoạt nỗi sợ và sự đồng thuận giả tạo của thuật toán, và kết thúc bằng việc giữ vững quyền làm chủ suy nghĩ cá nhân. Loại bỏ hoàn toàn hình vẽ hoạt hình hoặc mascot.",
+  "competitor_dialogue_formula": {
+    "competitor_verbatim_transcript_20s": "[00:00-00:04.5s] 'Hundreds of thousands of troops would need to reach the front as quickly as possible.' [pause 0.28s] -> [00:04.8-00:08.5s] 'How could Russia stop them while trying to overwhelm its targets?' [pause 0.35s] -> [00:08.8-00:11.5s] 'And how would the Baltics fight back?' [pause 0.40s] -> [00:11.9-00:14.5s] 'This is how it could all play out.' [pause 0.50s] -> [00:15.0-00:20.0s] [Split-flap mechanical flip and kinetic afterburners engage]",
+    "sentence_structure_formula_vi": "Công thức 5 bước Fern TV: (1) Thiết lập quy mô đám đông ('Hàng triệu người hành động...') -> (2) Định hình hệ thống ngầm điều phối -> (3) Câu hỏi tu từ phá vỡ ảo tưởng tự do ('Ai thực sự đang giật dây...?') -> (4) Hé lộ cơ chế thuật toán kích hoạt tâm lý -> (5) Khẳng định bản lĩnh độc lập tư duy.",
+    "pause_and_cadence_formula_vi": "Nhịp đọc sắc lạnh, kịch tính ~142 WPM: Nghỉ 0.22s sau quy mô đám đông; nghỉ 0.38s sau khi chỉ ra hệ thống ngầm; nghỉ 0.25s-0.38s sau các câu hỏi tu từ; nghỉ 0.28s trước lời khẳng định tự chủ.",
+    "transition_and_camera_formula_vi": "Zoompan mượt mà không snap; xfade 0.28s: fade khi vào không gian ngầm, smoothdown/smoothup khi lia qua radar và bảng split-flap, smoothleft/smoothright khi quét qua dòng người di chuyển."
+  },
+  "beats": [
+    {
+      "beat_id": "B01",
+      "formula_stage": "1. Thiết lập quy mô đám đông",
+      "time_range": "0.0s - 2.2s",
+      "narration": "Hàng triệu người hành động cùng một lúc—",
+      "pause_after_sec": 0.22,
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "competitor_ref_frame": "frame_01s.jpg",
+      "prompt": "Cinematic 3D architectural rendering of a vast modern subterranean crisis monitoring center, giant glowing blue data visualization map wall casting volumetric light onto polished concrete floor, silhouettes of strategic operators at consoles, moody desaturated teal atmosphere, Fern TV investigative documentary aesthetics, photorealistic, no text overlays, no chalkboards, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B02",
+      "formula_stage": "2. Hệ thống ngầm điều phối",
+      "time_range": "2.2s - 4.5s",
+      "narration": "dưới sự điều hướng vô hình của các hệ thống ngầm.",
+      "pause_after_sec": 0.38,
+      "camera_motion": "tilt_down",
+      "transition": "smoothdown",
+      "competitor_ref_frame": "frame_05s.jpg",
+      "prompt": "Close-up of an intricate 3D holographic digital radar console inside a darkened control room, glowing amber vector lines and data trajectories pulsating in volumetric haze, metallic console textures with physical toggle switches, high-end 8k render, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B03",
+      "formula_stage": "3. Câu hỏi tu từ quyền lực ngầm",
+      "time_range": "4.5s - 6.8s",
+      "narration": "Ai thực sự đang giật dây những quyết định đó?",
+      "pause_after_sec": 0.25,
+      "camera_motion": "pan_right",
+      "transition": "smoothleft",
+      "competitor_ref_frame": "frame_08s.jpg",
+      "prompt": "Atmospheric 3D conceptual visualization of neural network pathways morphing into a crowd transit corridor, thousands of moving human commuter silhouettes walking through an illuminated transit station, volumetric god rays filtering through brutalist concrete pillars, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B04",
+      "formula_stage": "4. Hoài nghi khả năng thao túng",
+      "time_range": "6.8s - 9.3s",
+      "narration": "Liệu cả một tập thể có thể bị dẫn dắt qua đêm?",
+      "pause_after_sec": 0.38,
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "competitor_ref_frame": "frame_10s.jpg",
+      "prompt": "Macro side shot of a massive retro-futuristic Solari split-flap departure board mounted in a brutalist government lobby, dark alphanumeric flaps flipping in motion, sharp directional spotlights creating strong specular highlights on black plastic cards, cinematic depth of field, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B05",
+      "formula_stage": "5. Khẩu hiệu ngụy trang",
+      "time_range": "9.3s - 11.6s",
+      "narration": "Đằng sau những khẩu hiệu tưởng chừng như tự phát,",
+      "pause_after_sec": 0.25,
+      "camera_motion": "tilt_up",
+      "transition": "smoothup",
+      "competitor_ref_frame": "frame_12s.jpg",
+      "prompt": "Cinematic wide interior view looking down from high balconies into a crowded international airport terminal concourse at night, stream of moving commuters under massive geometric glass canopy, moody cinematic color grading with warm terminal lamps and cold exterior shadows, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B06",
+      "formula_stage": "6. Thuật toán kích hoạt tâm lý",
+      "time_range": "11.6s - 14.3s",
+      "narration": "là các thuật toán kích hoạt nỗi sợ và sự đồng thuận giả tạo.",
+      "pause_after_sec": 0.35,
+      "camera_motion": "pan_left",
+      "transition": "smoothright",
+      "competitor_ref_frame": "frame_15s.jpg",
+      "prompt": "Detailed shot of an array of glowing server racks inside a subterranean data vault, cold cyan LED status lights blinking rapidly in dark metallic corridors, atmospheric cooling mist drifting near polished floor, Academy of Ideas systemic atmosphere, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B07",
+      "formula_stage": "7. Cảnh giác độc lập tư duy",
+      "time_range": "14.3s - 16.8s",
+      "narration": "Nhận diện luật chơi ngầm này trước khi bị cuốn theo—",
+      "pause_after_sec": 0.22,
+      "camera_motion": "zoom_out",
+      "transition": "fade",
+      "competitor_ref_frame": "frame_18s.jpg",
+      "prompt": "Poetic cinematic shot of a glowing illuminated 3D wireframe globe rotating inside an empty architectural auditorium, delicate golden fiber-optic network threads connecting major world nodes, stunning volumetric dust motes dancing in spotlight beams, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B08",
+      "formula_stage": "8. Tự chủ bản lĩnh cá nhân",
+      "time_range": "16.8s - 19.3s",
+      "narration": "để giữ vững quyền làm chủ suy nghĩ của chính mình.",
+      "pause_after_sec": 0.28,
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "competitor_ref_frame": "frame_20s.jpg",
+      "prompt": "Striking cinematic shot of a single resolute person standing still on a bustling modern city plaza at twilight, long exposure blurred crowd rushing past in motion streaks, warm streetlamps and dramatic deep blue sky, signature Fern TV finale, photorealistic, no text overlays, no chalkboards, no cartoons, no stickmen."
+    }
+  ]
+}

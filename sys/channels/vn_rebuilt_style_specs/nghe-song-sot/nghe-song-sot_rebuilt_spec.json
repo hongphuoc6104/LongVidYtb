@@ -1,0 +1,104 @@
+{
+  "channel_id": "nghe_song_sot",
+  "channel_slug": "nghe-song-sot",
+  "competitor_name": "Wall Street Journal / Harvard Business Review / Casgains",
+  "voice": "VietNarrator",
+  "frame_by_frame_observations_vi": "Phân tích 20 khung hình thực tế (frame_01s.jpg đến frame_20s.jpg) và audio clip từ video tài liệu chiến lược nghề nghiệp & đàm phán doanh nghiệp phong cách Wall Street Journal / HBR / Casgains:\n- 1s-5s: Khung hình phong cách phóng sự tài chính Wall Street Journal; phòng họp kính tầng cao nhìn ra đường chân trời các tòa nhà chọc trời Manhattan lúc hoàng hôn; ánh sáng phản chiếu sắc lạnh trên mặt bàn gỗ óc chó đánh bóng.\n- 6s-10s: Cận cảnh một chuyên gia điều hành mặc âu phục len màu than chì sẫm, ánh mắt kiên định, hai bàn tay đan vào nhau trên bàn đàm phán; tách cà phê sứ trắng bốc làn hơi mỏng.\n- 11s-15s: Sa bàn 3D isometric mô phỏng bàn cờ chiến lược doanh nghiệp; các quân cờ bằng kính và kim loại sáng bóng tượng trưng cho các mắt xích chuỗi giá trị và đòn bẩy thương lượng.\n- 16s-20s: Biểu đồ phân tích tài chính phản chiếu mờ ảo trên cửa kính; ánh đèn thành phố bên ngoài bừng sáng tượng trưng cho thị trường cơ hội bao la.\nĐặc trưng thẩm mỹ: Chuẩn ảnh phóng sự kinh tế cao cấp WSJ / HBR, ánh sáng tương phản kiến trúc sắc nét, chất liệu gỗ quý, thủy tinh và vải len cao cấp, LOẠI BỎ HOÀN TOÀN stickman sơ mi xanh hay hình vẽ trẻ con.",
+  "learned_style_summary_vi": "Phong cách nhiếp ảnh báo chí doanh nghiệp Wall Street Journal & Sa bàn chiến lược 3D Casgains: Kiến trúc văn phòng kính cao cấp, ánh sáng tương phản điện ảnh sắc sảo; chất liệu gỗ quý, thủy tinh và vải len cao cấp; phân tích chiến lược sắc bén bóc trần ảo tưởng chăm chỉ mù quáng và khẳng định nguyên tắc chi phí thay thế trong đàm phán giá trị sự nghiệp. Sử dụng chuyển cảnh xfade mượt mà (fade, smoothleft, smoothright, smoothup, smoothdown) và nhịp đọc quyền lực đĩnh đạc.",
+  "competitor_dialogue_formula": {
+    "competitor_verbatim_transcript_20s": "[00:00-00:03.0s] 'Chăm chỉ làm việc không giúp bạn tăng lương—' [pause 0.22s] -> [00:03.2-00:06.8s] 'mà vị thế đàm phán mới quyết định mức thu nhập.' [pause 0.38s] -> [00:07.2-00:10.5s] 'Doanh nghiệp chỉ trả tiền cho sự khó thay thế của kỹ năng.' [pause 0.25s] -> [00:10.8-00:13.5s] 'Tại sao người cống hiến nhiều nhất lại nhận phần thưởng ít nhất?' [pause 0.45s] -> [00:14.0-00:20.0s] [Quân cờ chiến lược di chuyển trên bàn cờ kính và đường chân trời thành phố rực sáng]",
+    "sentence_structure_formula_vi": "Công thức định giá vị thế nghề nghiệp: (1) Phá vỡ định kiến cày cuốc ngây thơ ('Chăm chỉ làm việc không giúp bạn...') -> (2) Thiết lập chân lý đòn bẩy thị trường ('mà vị thế đàm phán mới quyết định mức thu nhập') -> (3) Nguyên lý chi phí thay thế cốt lõi ('Doanh nghiệp chỉ trả tiền cho sự khó thay thế của kỹ năng') -> (4) Câu hỏi tu từ phơi bày nghịch lý cống hiến ('Tại sao người cống hiến nhiều nhất lại nhận phần thưởng ít nhất?') -> (5) Cạm bẫy mắt xích dễ dự đoán ('Bởi vì bạn trở thành mắt xích dễ dự đoán, không có lựa chọn ngoài luồng') -> (6) Lá bài quyền lực tối thượng ('sức mạnh thương lượng tối thượng là khả năng sẵn sàng bước ra đi') -> (7) Chiến lược tạo giá trị trước đàm phán ('Hãy tạo ra giá trị độc bản trước khi bước vào phòng thảo luận') -> (8) Đích đến tự chủ con đường sự nghiệp ('để sự nghiệp nằm trọn trong tay bạn').",
+    "pause_and_cadence_formula_vi": "Nhịp đọc đĩnh đạc, dứt khoát, quyền lực ~148 WPM: Nghỉ 0.22s sau mệnh đề lật ngược; nghỉ 0.38s sau khi định hình đòn bẩy; nghỉ 0.45s sau câu hỏi nghịch lý; nghỉ 0.25s - 0.35s giữa các nguyên tắc chiến lược.",
+    "transition_and_camera_formula_vi": "Camera trôi đĩnh đạc góc rộng và cận (push_in vào ánh mắt đàm phán, tilt_down xuống bàn cờ chiến lược, pan_left nhìn ra đường chân trời đô thị), chuyển cảnh xfade 0.28s dứt khoát."
+  },
+  "beats": [
+    {
+      "beat_id": "B01",
+      "formula_stage": "1. Labor Effort Myth Shatter",
+      "time_range": "0.0s - 2.2s",
+      "narration": "Chăm chỉ làm việc không giúp bạn tăng lương—",
+      "pause_after_sec": 0.22,
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "competitor_ref_frame": "frame_01s.jpg",
+      "prompt": "Editorial photojournalism still of a confident senior executive seated across a sleek boardroom table in a high-rise corner office, panoramic floor-to-ceiling glass window overlooking the Manhattan skyline at dusk, sharp contrast lighting, tailored dark charcoal wool blazer, composed resolute gaze, WSJ documentary photography aesthetic, photorealistic, zero text"
+    },
+    {
+      "beat_id": "B02",
+      "formula_stage": "2. Negotiation Leverage Axiom",
+      "time_range": "2.2s - 4.5s",
+      "narration": "mà vị thế đàm phán mới quyết định mức thu nhập.",
+      "pause_after_sec": 0.38,
+      "camera_motion": "pan_right",
+      "transition": "smoothleft",
+      "competitor_ref_frame": "frame_04s.jpg",
+      "prompt": "Close-up of polished black marble boardroom table reflecting golden sunset sky, an elegant fountain pen resting beside leather-bound strategic executive documents, tactile corporate luxury textures"
+    },
+    {
+      "beat_id": "B03",
+      "formula_stage": "3. Irreplaceable Replacement Cost Principle",
+      "time_range": "4.5s - 6.9s",
+      "narration": "Doanh nghiệp chỉ trả tiền cho sự khó thay thế của kỹ năng.",
+      "pause_after_sec": 0.25,
+      "camera_motion": "tilt_up",
+      "transition": "smoothdown",
+      "competitor_ref_frame": "frame_07s.jpg",
+      "prompt": "Cinematic isometric 3D architectural rendering of a corporate strategy chessboard, frosted glass and polished tungsten chess pieces positioned strategically on illuminated grid squares, Casgains style"
+    },
+    {
+      "beat_id": "B04",
+      "formula_stage": "4. Dedication Paradox Query",
+      "time_range": "6.9s - 9.3s",
+      "narration": "Tại sao người cống hiến nhiều nhất lại nhận phần thưởng ít nhất?",
+      "pause_after_sec": 0.45,
+      "camera_motion": "push_in",
+      "transition": "dissolve",
+      "competitor_ref_frame": "frame_10s.jpg",
+      "prompt": "Moody medium shot of an office worker working late into the evening behind glass partitions, cool architectural lighting with deep blue dusk shadows, sense of unreciprocated sacrifice, Harvard Business Review photography"
+    },
+    {
+      "beat_id": "B05",
+      "formula_stage": "5. Predictable Cog Trap",
+      "time_range": "9.3s - 11.7s",
+      "narration": "Bởi vì bạn trở thành mắt xích dễ dự đoán, không có lựa chọn ngoài luồng,",
+      "pause_after_sec": 0.22,
+      "camera_motion": "pan_left",
+      "transition": "smoothright",
+      "competitor_ref_frame": "frame_12s.jpg",
+      "prompt": "Detailed macro shot of an intricate mechanical watch tourbillon movement, interlocking gold and titanium gears spinning smoothly, metaphor for standard interchangeable organizational components, high-precision engineering render"
+    },
+    {
+      "beat_id": "B06",
+      "formula_stage": "6. Ultimate Walkaway Power",
+      "time_range": "11.7s - 14.2s",
+      "narration": "sức mạnh thương lượng tối thượng là khả năng sẵn sàng bước ra đi.",
+      "pause_after_sec": 0.35,
+      "camera_motion": "tilt_down",
+      "transition": "smoothdown",
+      "competitor_ref_frame": "frame_15s.jpg",
+      "prompt": "Cinematic medium tracking shot of an executive walking confidently through an illuminated modern glass concourse carrying a sleek leather briefcase, composed upright posture, freedom and autonomy, striking architectural perspective"
+    },
+    {
+      "beat_id": "B07",
+      "formula_stage": "7. Pre-Negotiation Value Stacking",
+      "time_range": "14.2s - 16.8s",
+      "narration": "Hãy tạo ra giá trị độc bản trước khi bước vào phòng thảo luận—",
+      "pause_after_sec": 0.25,
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "competitor_ref_frame": "frame_18s.jpg",
+      "prompt": "Dramatic close-up of hands firmly clasping across a polished mahogany conference table, warm specular edge-lighting, mutual professional respect and unwavering positioning, editorial realism"
+    },
+    {
+      "beat_id": "B08",
+      "formula_stage": "8. Career Sovereignty Climax",
+      "time_range": "16.8s - 19.8s",
+      "narration": "để sự nghiệp nằm trọn trong tay bạn.",
+      "pause_after_sec": 0.3,
+      "camera_motion": "zoom_out",
+      "transition": "smoothup",
+      "competitor_ref_frame": "frame_20s.jpg",
+      "prompt": "Breathtaking panoramic wide shot looking from a high-rise corner office over a sprawling metropolis at sunrise, golden morning rays piercing between glass skyscrapers, triumphant corporate documentary finale, 8k resolution, zero text"
+    }
+  ]
+}

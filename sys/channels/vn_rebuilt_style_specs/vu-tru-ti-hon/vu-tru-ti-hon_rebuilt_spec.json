@@ -1,0 +1,104 @@
+{
+  "channel_id": "vu_tru_ti_hon",
+  "channel_slug": "vu-tru-ti-hon",
+  "competitor_name": "Melodysheep / Astrum",
+  "voice": "VietNarrator",
+  "frame_by_frame_observations_vi": "Phân tích 20 khung hình thực tế (frame_01s.jpg đến frame_20s.jpg) từ video thiên văn học không gian sâu Melodysheep và Astrum: Khung 01s-05s là cận cảnh hành tinh ngoại hệ khổng lồ với bầu khí quyển màu lục lam tán xạ ánh sáng sao xanh trong khoảng không đen thẫm; khung 06s-10s là các tầng mây hơi sắt kim loại phát sáng đỏ rực và tia sét plasma xé toạc tầng đối lưu hành tinh; khung 11s-15s là vành đai tinh thể băng đá khổng lồ quay quanh hành tinh khí và tàn tích sao neutron phóng luồng phản lực tương đối tính; khung 16s-20s là quang cảnh kính thiên văn trên đỉnh núi hướng về dải Ngân Hà rực rỡ và Trái Đất hình lưỡi liềm mỏng manh. Nhịp đọc kính ngưỡng, kỳ vĩ (~138 WPM), ngắt nghỉ 0.22s-0.38s trước những bí ẩn vũ trụ vô tận.",
+  "learned_style_summary_vi": "Phong cách Cinematic Deep Space Documentary (Melodysheep / Astrum): Mô tả các bí ẩn thiên văn học bằng hình ảnh không gian sâu điện ảnh choáng ngợp. Bắt đầu bằng hành trình vượt ra ngoài Hệ Mặt Trời, khám phá những ngoại hành tinh với mây kim loại nóng chảy và hành tinh tái sinh từ sao chết, mở rộng quy mô đến hàng trăm tỷ thế giới trong dải Ngân Hà, và kết thúc bằng khát vọng khám phá vô tận của con người. Tuyệt đối không dùng hình vẽ doodle ngộ nghĩnh hay stickman.",
+  "competitor_dialogue_formula": {
+    "competitor_verbatim_transcript_20s": "[00:00.5-00:03.5s] '...with clouds made of metal.' [pause 0.40s] -> [00:04.5-00:08.5s] 'Zombie worlds, born from the ashes of dead ones.' [pause 0.45s] -> [00:09.5-00:15.5s] 'And hundreds of billions more are waiting for us in our galaxy alone.' [pause 0.50s] -> [00:16.5-00:20.0s] 'These worlds will give us a glimpse into the cosmic destiny.'",
+    "sentence_structure_formula_vi": "Công thức 5 bước Melodysheep: (1) Vượt qua ranh giới Hệ Mặt Trời ('Vượt qua ranh giới yên tĩnh...') -> (2) Mô tả thế giới kỳ dị phi thực -> (3) Hiện tượng mây kim loại nóng chảy & sao tái sinh -> (4) Mở rộng quy mô hàng trăm tỷ hành tinh trong Ngân Hà -> (5) Đúc kết sứ mệnh khám phá vũ trụ.",
+    "pause_and_cadence_formula_vi": "Nhịp đọc kỳ vĩ, sâu lắng ~138 WPM: Nghỉ 0.25s sau ranh giới Thái Dương Hệ; nghỉ 0.38s sau thế giới kỳ lạ; nghỉ 0.35s sau mây kim loại; nghỉ 0.38s sau tàn tích sao chết; nghỉ 0.30s trước kết luận không gian.",
+    "transition_and_camera_formula_vi": "Camera dolly-in vũ trụ chậm rãi, xfade 0.28s: fade khi bay vào khoảng không sâu, smoothdown khi hạ góc vào tầng mây plasma, smoothright khi lướt qua vành đai băng đá, smoothup khi chiêm ngưỡng tinh vân phát quang."
+  },
+  "beats": [
+    {
+      "beat_id": "B01",
+      "formula_stage": "1. Vượt qua ranh giới Thái Dương Hệ",
+      "time_range": "0.0s - 2.2s",
+      "narration": "Vượt qua ranh giới yên tĩnh của Hệ Mặt Trời—",
+      "pause_after_sec": 0.25,
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "competitor_ref_frame": "frame_01s.jpg",
+      "prompt": "Cinematic Melodysheep deep space cinematography, a hyper-detailed exoplanet floating in the void of interstellar space, thin luminous cyan atmospheric rim scattering light from a distant blue giant star, majestic cosmic scale, photorealistic 8k render, no text overlays, no chalkboards, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B02",
+      "formula_stage": "2. Thế giới kỳ dị dị thường",
+      "time_range": "2.2s - 4.5s",
+      "narration": "là những thế giới kỳ lạ ngoài sức tưởng tượng.",
+      "pause_after_sec": 0.38,
+      "camera_motion": "tilt_down",
+      "transition": "smoothdown",
+      "competitor_ref_frame": "frame_05s.jpg",
+      "prompt": "Close-up of a scorched gas giant exoplanet with violent turbulent iron-vapor clouds glowing deep crimson, streaks of metallic lightning tearing through pitch-black troposphere, Astrum space documentary realism, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B03",
+      "formula_stage": "3. Mây kim loại nóng chảy",
+      "time_range": "4.5s - 7.0s",
+      "narration": "Nơi mây trời được tạo thành từ kim loại nóng chảy,",
+      "pause_after_sec": 0.35,
+      "camera_motion": "pan_right",
+      "transition": "smoothright",
+      "competitor_ref_frame": "frame_08s.jpg",
+      "prompt": "Spectacular cinematic shot of an icy ocean moon orbiting a massive ringed gas planet, vast razor-sharp rings of frozen crystal debris stretching across cosmic darkness, starry Milky Way backdrop, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B04",
+      "formula_stage": "4. Hành tinh thây ma tái sinh",
+      "time_range": "7.0s - 9.5s",
+      "narration": "và những hành tinh hồi sinh từ tro tàn của sao chết.",
+      "pause_after_sec": 0.38,
+      "camera_motion": "push_in",
+      "transition": "smoothleft",
+      "competitor_ref_frame": "frame_10s.jpg",
+      "prompt": "Dazzling astrophysical visualization of a spinning pulsar neutron star emitting relativistic twin plasma jets of violet radiation into space, magnetic field lines twisting glowing ionized gas, Melodysheep cosmic awe, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B05",
+      "formula_stage": "5. Hàng trăm tỷ ngoại hành tinh",
+      "time_range": "9.5s - 11.8s",
+      "narration": "Hàng trăm tỷ hành tinh như thế đang trôi dạt,",
+      "pause_after_sec": 0.22,
+      "camera_motion": "tilt_up",
+      "transition": "smoothup",
+      "competitor_ref_frame": "frame_12s.jpg",
+      "prompt": "A breathtaking wide view of a vibrant planetary nebula with sweeping gossamer filaments of glowing emerald oxygen and amber hydrogen gas, distant stars twinkling through cosmic dust lanes, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B06",
+      "formula_stage": "6. Vị trí dải Ngân Hà",
+      "time_range": "11.8s - 14.4s",
+      "narration": "ngay trong dải Ngân Hà nơi chúng ta đang sống.",
+      "pause_after_sec": 0.35,
+      "camera_motion": "pan_left",
+      "transition": "smoothleft",
+      "competitor_ref_frame": "frame_15s.jpg",
+      "prompt": "Extreme wide-angle shot of our spiral Milky Way galaxy seen from deep void, glowing golden galactic core surrounded by curving arms of billions of stars, vast silent cosmic architecture, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B07",
+      "formula_stage": "7. Hạt bụi ánh sáng bầu trời",
+      "time_range": "14.4s - 16.9s",
+      "narration": "Mỗi chấm sáng nhỏ trên bầu trời đêm sâu thẳm—",
+      "pause_after_sec": 0.22,
+      "camera_motion": "push_in",
+      "transition": "smoothright",
+      "competitor_ref_frame": "frame_18s.jpg",
+      "prompt": "Poetic shot looking through a modern mountaintop astronomical observatory dome at night, gigantic optical telescope pointing toward a sky dense with diamond stars, cold crisp mountain air, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B08",
+      "formula_stage": "8. Khát vọng khám phá vũ trụ",
+      "time_range": "16.9s - 19.5s",
+      "narration": "đều là một câu đố đang chờ con người giải mã.",
+      "pause_after_sec": 0.3,
+      "camera_motion": "zoom_out",
+      "transition": "fade",
+      "competitor_ref_frame": "frame_20s.jpg",
+      "prompt": "Cinematic shot of Earth's slender blue crescent horizon fading into the infinite black cosmos, the glowing sunrise casting a razor-thin crescent of light over oceans and clouds, Melodysheep signature grand finale, photorealistic 8k still, no text overlays, no chalkboards, no cartoons, no stickmen."
+    }
+  ]
+}

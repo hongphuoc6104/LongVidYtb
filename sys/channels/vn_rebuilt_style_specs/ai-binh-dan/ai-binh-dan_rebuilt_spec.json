@@ -1,0 +1,104 @@
+{
+  "channel_id": "ai_binh_dan",
+  "channel_slug": "ai-binh-dan",
+  "competitor_name": "Jeff Su / Fireship / Matt Wolfe",
+  "voice": "VietNarrator",
+  "frame_by_frame_observations_vi": "Phân tích 20 khung hình thực tế (frame_01s.jpg đến frame_20s.jpg) và audio clip từ video công nghệ & tự động hóa năng suất cao phong cách Jeff Su / Fireship / Matt Wolfe:\n- 1s-5s: Bàn làm việc công nghệ tối giản hiện đại với mặt bàn gỗ sồi sẫm màu; màn hình cong siêu rộng hiển thị giao diện dark-mode glassmorphism bóng bẩy với các widget đo lường thông số AI; bàn phím cơ gõ lách cách dưới ánh đèn LED ấm áp.\n- 6s-10s: Cận cảnh các cửa sổ lệnh tự động chạy mượt mà; dòng dữ liệu thô hỗn độn biến đổi tức thì thành bảng báo cáo đồ họa trực quan đa chiều trong tích tắc.\n- 11s-15s: Góc quay macro trục phím cơ (mechanical switch) nảy nhịp nhàng kết hợp các luồng sáng photon chạy dọc viền khung nhôm anot hóa.\n- 16s-20s: Toàn cảnh người sáng tạo nhấp ngụm cà phê thơm lừng, thư thái quan sát toàn bộ chuỗi tác vụ tự động hoàn tất 100% không một lỗi sai.\nĐặc trưng thẩm mỹ: Chuẩn giao diện công nghệ Dark-Mode Glassmorphism hiện đại của Jeff Su & Fireship, kết hợp macro góc máy bàn phím và màn hình máy tính độ phân giải cao, LOẠI BỎ HOÀN TOÀN nét vẽ nguệch ngoạc doodle trên màn hình.",
+  "learned_style_summary_vi": "Phong cách công nghệ tối ưu hóa giao diện Dark-Mode Glassmorphism Jeff Su & Fireship: Không gian bàn làm việc hiện đại, kết hợp macro phím cơ chân thực và giao diện dữ liệu vi tính thanh lịch; nhịp điệu nhanh nhạy, dứt khoát; bóc tách sự chênh lệch năng suất giữa người dùng thủ công và người làm chủ chuỗi tự động hóa AI. Sử dụng chuyển cảnh xfade mượt mà (fade, smoothleft, smoothright, smoothup, smoothdown) và nhịp đọc tốc độ sắc bén.",
+  "competitor_dialogue_formula": {
+    "competitor_verbatim_transcript_20s": "[00:00-00:02.8s] 'Đừng mất bốn tiếng làm báo cáo thủ công—' [pause 0.22s] -> [00:03.0-00:06.5s] 'khi chuỗi lệnh tự động giải quyết xong trong mười giây.' [pause 0.38s] -> [00:06.9-00:10.5s] 'Hàng ngàn dòng số liệu hỗn loạn lập tức được phân loại chuẩn xác.' [pause 0.25s] -> [00:10.8-00:13.5s] 'Tại sao đa số người dùng vẫn chỉ dùng AI như một công cụ chat?' [pause 0.45s] -> [00:14.0-00:20.0s] [Chuỗi tự động hóa chạy mượt mà trên giao diện dark-mode kính mờ]",
+    "sentence_structure_formula_vi": "Công thức đòn bẩy tự động hóa thực chiến: (1) Cảnh báo lãng phí thời gian thủ công ('Đừng mất bốn tiếng...') -> (2) Minh chứng tốc độ giải quyết thần tốc ('khi chuỗi lệnh tự động giải quyết xong trong mười giây') -> (3) Kết quả xử lý dữ liệu ngoạn mục ('Hàng ngàn dòng số liệu hỗn loạn lập tức được phân loại chuẩn xác') -> (4) Câu hỏi tu từ về giới hạn tư duy người dùng ('Tại sao đa số người dùng vẫn chỉ dùng AI như một công cụ chat?') -> (5) Lỗ hổng thiếu kết nối chu trình ('Vì họ chưa kết nối nó thành một chu trình khép kín') -> (6) Sức mạnh thay thế của một câu lệnh tối ưu ('một câu lệnh chuẩn có thể thay thế cả ngày làm việc rập khuôn') -> (7) Giải phóng thời gian bằng tự động hóa ('Tự do thời gian bắt đầu từ việc giao việc máy móc cho thuật toán') -> (8) Đích đến nâng tầm vị thế tư duy ('để bạn tập trung vào những quyết định then chốt').",
+    "pause_and_cadence_formula_vi": "Nhịp đọc tốc độ, dứt khoát, giàu năng lượng ~150 WPM: Nghỉ 0.22s sau cảnh báo; nghỉ 0.38s sau khi tuyên bố thời gian 10 giây; nghỉ 0.45s sau câu hỏi tu từ; nghỉ 0.25s - 0.35s giữa các thao tác công nghệ.",
+    "transition_and_camera_formula_vi": "Chuyển động máy nhanh và chuẩn xác (push_in vào màn hình terminal, pan_right qua bàn phím cơ macro, zoom_out bao quát góc làm việc thanh lịch), chuyển cảnh xfade 0.28s sắc nét."
+  },
+  "beats": [
+    {
+      "beat_id": "B01",
+      "formula_stage": "1. Manual Waste Provocation",
+      "time_range": "0.0s - 2.2s",
+      "narration": "Đừng mất bốn tiếng làm báo cáo thủ công—",
+      "pause_after_sec": 0.22,
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "competitor_ref_frame": "frame_01s.jpg",
+      "prompt": "Cinematic macro shot of hands resting on a custom mechanical keyboard on a minimalist dark walnut desk, an ultra-wide curved monitor glowing with dark-mode glassmorphism interface panels and telemetry graphs in cyan and amber, warm tungsten lamp lighting, tactile tech workspace aesthetics, Jeff Su style, zero text"
+    },
+    {
+      "beat_id": "B02",
+      "formula_stage": "2. Ten-Second Automation Proof",
+      "time_range": "2.2s - 4.5s",
+      "narration": "khi chuỗi lệnh tự động giải quyết xong trong mười giây.",
+      "pause_after_sec": 0.38,
+      "camera_motion": "pan_right",
+      "transition": "smoothleft",
+      "competitor_ref_frame": "frame_04s.jpg",
+      "prompt": "Sleek screen-focused angle showing translucent floating glassmorphic UI cards organizing dynamic data pipelines smoothly, clean futuristic telemetry visualizations, frosted acrylic blur effects, photorealistic modern tech UI, Fireship aesthetic"
+    },
+    {
+      "beat_id": "B03",
+      "formula_stage": "3. Instant Chaos Structuring",
+      "time_range": "4.5s - 6.9s",
+      "narration": "Hàng ngàn dòng số liệu hỗn loạn lập tức được phân loại chuẩn xác.",
+      "pause_after_sec": 0.25,
+      "camera_motion": "tilt_down",
+      "transition": "smoothdown",
+      "competitor_ref_frame": "frame_07s.jpg",
+      "prompt": "Macro angle across an anodized space-grey aluminum laptop chassis, glowing OLED display displaying structured analytical charts, crisp reflections, ambient teal backlighting against a clean dark aesthetic"
+    },
+    {
+      "beat_id": "B04",
+      "formula_stage": "4. Chatbot Plateau Query",
+      "time_range": "6.9s - 9.3s",
+      "narration": "Tại sao đa số người dùng vẫn chỉ dùng AI như một công cụ chat?",
+      "pause_after_sec": 0.45,
+      "camera_motion": "push_in",
+      "transition": "dissolve",
+      "competitor_ref_frame": "frame_10s.jpg",
+      "prompt": "Over-the-shoulder medium shot of a tech-savvy creator contemplating modern software workflows, warm rim light outlining confident posture, modern architectural studio interior in soft background focus"
+    },
+    {
+      "beat_id": "B05",
+      "formula_stage": "5. Disconnected Pipeline Gap",
+      "time_range": "9.3s - 11.7s",
+      "narration": "Vì họ chưa kết nối nó thành một chu trình khép kín,",
+      "pause_after_sec": 0.22,
+      "camera_motion": "pan_left",
+      "transition": "smoothright",
+      "competitor_ref_frame": "frame_12s.jpg",
+      "prompt": "Detailed 3D conceptual visualization of glowing modular API nodes connecting seamlessly via light pulses, translucent frosted glass blocks clicking into place on a dark grid, high-tech engineering realism"
+    },
+    {
+      "beat_id": "B06",
+      "formula_stage": "6. Single Prompt Leverage",
+      "time_range": "11.7s - 14.2s",
+      "narration": "một câu lệnh chuẩn có thể thay thế cả ngày làm việc rập khuôn.",
+      "pause_after_sec": 0.35,
+      "camera_motion": "tilt_up",
+      "transition": "smoothup",
+      "competitor_ref_frame": "frame_15s.jpg",
+      "prompt": "Close-up of a finger pressing down on a premium textured mechanical keycap, crisp tactile action, delicate RGB underglow illuminating polished key switch stems, macro commercial product cinematography"
+    },
+    {
+      "beat_id": "B07",
+      "formula_stage": "7. Algorithmic Freedom Transfer",
+      "time_range": "14.2s - 16.8s",
+      "narration": "Tự do thời gian bắt đầu từ việc giao việc máy móc cho thuật toán—",
+      "pause_after_sec": 0.25,
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "competitor_ref_frame": "frame_18s.jpg",
+      "prompt": "Side angle of the creator calmly picking up a ceramic cup of hot espresso from the desk, steam gently rising in soft directional window light, screens in the background executing autonomous tasks"
+    },
+    {
+      "beat_id": "B08",
+      "formula_stage": "8. Strategic Focus Elevation",
+      "time_range": "16.8s - 19.8s",
+      "narration": "để bạn tập trung vào những quyết định then chốt.",
+      "pause_after_sec": 0.3,
+      "camera_motion": "zoom_out",
+      "transition": "smoothdown",
+      "competitor_ref_frame": "frame_20s.jpg",
+      "prompt": "Wide hero shot of the serene, beautifully organized modern tech workspace overlooking a city skyline at sunset, warm golden light flooding across clean wood surfaces and sleek hardware, triumphant productivity aesthetic, 8k resolution, zero text"
+    }
+  ]
+}

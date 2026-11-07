@@ -1,0 +1,104 @@
+{
+  "channel_id": "chanh_niem_ke",
+  "channel_slug": "chanh-niem-ke",
+  "competitor_name": "Pursuit of Wonder / Aperture",
+  "voice": "VietNarrator",
+  "frame_by_frame_observations_vi": "Phân tích 20 khung hình thực tế (frame_01s.jpg đến frame_20s.jpg) từ video triết học chữa lành của Pursuit of Wonder và Aperture: Khung 01s-05s là phim 35mm quay cảnh một người tĩnh lặng ngồi trên chiếu tatami trong gian nhà gỗ nhìn ra vườn thiền mưa bay lất phất; khung 06s-10s là làn khói trầm hương uốn lượn chậm rãi trong luồng sáng xiên qua rèm tre và chén trà gốm mộc tỏa hơi ấm; khung 11s-15s là những gợn sóng đồng tâm lan tỏa trên mặt hồ phẳng lặng và lá phong trôi êm đềm; khung 16s-20s là rặng núi mờ sương trong ánh hoàng hôn và hiên nhà rực ánh đèn lồng ấm áp. Giọng đọc trầm ấm, từ bi (~135 WPM), ngắt nghỉ dài và sâu 0.22s-0.38s giúp lắng dịu cảm xúc.",
+  "learned_style_summary_vi": "Phong cách Cinematic Wabi-Sabi & Mindfulness Philosophy (Pursuit of Wonder / Aperture): Giúp xoa dịu lo âu và căng thẳng bằng triết học chánh niệm ứng dụng và mỹ thuật điện ảnh u tịch. Mở đầu bằng sự kiệt sức khi con người cố chống lại dòng chảy cuộc đời, chỉ ra nghịch lý càng kiểm soát càng bất an, mời gọi người xem thả lỏng cơ thể và hạ thấp hơi thở, quan sát cảm xúc như mây trời vô thường, và định nghĩa lại bình yên đích thực từ bên trong. Tuyệt đối không dùng hình vẽ hoạt hình hay tranh biếm họa.",
+  "competitor_dialogue_formula": {
+    "competitor_verbatim_transcript_20s": "[00:00-00:05.8s] 'Most of us, on some level, are chasing this feeling of peace.' [pause 0.40s] -> [00:06.2-00:10.5s] 'We seek out expensive therapists, read self-help books, listen to happiness gurus.' [pause 0.50s] -> [00:11.0-00:16.5s] 'Searching for answers that will hopefully make us better, more tranquil human beings.' [pause 0.65s] -> [00:17.1-00:20.0s] 'But what if it's simpler than all that?'",
+    "sentence_structure_formula_vi": "Công thức 5 bước Pursuit of Wonder: (1) Cảnh báo sự kiệt sức khi chống lại dòng chảy ('Chúng ta kiệt sức khi...') -> (2) Nghịch lý tìm kiếm bình yên bên ngoài -> (3) Thắt nút lo âu do cố ghì chặt kiểm soát -> (4) Mời gọi thả lỏng cơ thể & quan sát mây trời -> (5) Khẳng định sự lắng dịu trọn vẹn từ bên trong.",
+    "pause_and_cadence_formula_vi": "Nhịp đọc trầm tĩnh, an nhiên ~135 WPM: Nghỉ 0.22s sau mệnh đề kiệt sức; nghỉ 0.35s sau tìm kiếm bên ngoài; nghỉ 0.30s sau kiểm soát tâm trí; nghỉ 0.38s sau khi chỉ ra lo âu; nghỉ 0.30s trước bến đỗ an yên.",
+    "transition_and_camera_formula_vi": "Camera trôi chậm contemplative drift, xfade 0.28s: fade khi vào gian nhà gỗ thiền, smoothdown khi hạ ánh nhìn vào chén trà, smoothright khi quét qua rặng tre xanh, smoothup khi nâng tầm mắt ngắm mây núi."
+  },
+  "beats": [
+    {
+      "beat_id": "B01",
+      "formula_stage": "1. Sự kiệt sức khi cưỡng ép",
+      "time_range": "0.0s - 2.2s",
+      "narration": "Chúng ta kiệt sức khi chống lại dòng chảy cuộc đời—",
+      "pause_after_sec": 0.22,
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "competitor_ref_frame": "frame_01s.jpg",
+      "prompt": "Moody anamorphic 35mm cinematic film still of a contemplative person sitting quietly on tatami inside an open wooden pavilion overlooking a misty Zen rock garden, rain droplets falling softly into a mossy stone water basin, Pursuit of Wonder contemplative aesthetic, photorealistic 8k still, no text overlays, no chalkboards, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B02",
+      "formula_stage": "2. Tìm kiếm sai hướng bên ngoài",
+      "time_range": "2.2s - 4.5s",
+      "narration": "mải miết tìm kiếm bình yên từ những thứ bên ngoài.",
+      "pause_after_sec": 0.35,
+      "camera_motion": "tilt_down",
+      "transition": "smoothdown",
+      "competitor_ref_frame": "frame_05s.jpg",
+      "prompt": "Macro cinematography shot of an earthen handmade ceramic teacup holding green tea on a dark rustic wooden table, delicate wisp of steam rising into a soft shaft of morning sunlight, wabi-sabi stillness, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B03",
+      "formula_stage": "3. Nghịch lý ghì chặt kiểm soát",
+      "time_range": "4.5s - 6.9s",
+      "narration": "Nhưng tâm trí càng cố ghì chặt sự kiểm soát,",
+      "pause_after_sec": 0.3,
+      "camera_motion": "pan_right",
+      "transition": "smoothright",
+      "competitor_ref_frame": "frame_08s.jpg",
+      "prompt": "Cinematic close-up of bamboo leaves gently swaying in a tranquil bamboo grove, soft misty morning fog drifting through slender green culms, soothing natural ambiance, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B04",
+      "formula_stage": "4. Nỗi lo âu siết chặt",
+      "time_range": "6.9s - 9.4s",
+      "narration": "nỗi lo âu lại càng siết chặt lấy bạn hơn.",
+      "pause_after_sec": 0.38,
+      "camera_motion": "push_in",
+      "transition": "smoothleft",
+      "competitor_ref_frame": "frame_10s.jpg",
+      "prompt": "Detailed macro shot of concentric ripples spreading slowly across the calm surface of a dark forest reflecting pool, a single fallen autumn leaf floating motionless, serene atmospheric mindfulness, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B05",
+      "formula_stage": "5. Mời gọi thả lỏng cơ thể",
+      "time_range": "9.4s - 11.7s",
+      "narration": "Hãy thử thả lỏng đôi vai và hạ thấp hơi thở,",
+      "pause_after_sec": 0.22,
+      "camera_motion": "tilt_up",
+      "transition": "smoothup",
+      "competitor_ref_frame": "frame_12s.jpg",
+      "prompt": "Atmospheric shot of a solitary incense stick glowing with tiny amber ember, a delicate plume of fragrant white smoke curving gracefully in dark shadow, soft side lighting, Aperture philosophical meditation, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B06",
+      "formula_stage": "6. Quan sát mây trời vô thường",
+      "time_range": "11.7s - 14.3s",
+      "narration": "quan sát cảm xúc trôi qua như đám mây trên bầu trời.",
+      "pause_after_sec": 0.35,
+      "camera_motion": "pan_left",
+      "transition": "smoothleft",
+      "competitor_ref_frame": "frame_15s.jpg",
+      "prompt": "Wide cinematic landscape of soft cumulus clouds drifting slowly above rolling mist-covered pine mountain ridges at sunrise, subtle pastel golden hour glow on mountain peaks, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B07",
+      "formula_stage": "7. Định nghĩa lại bình yên",
+      "time_range": "14.3s - 16.9s",
+      "narration": "Bình yên không phải là khi sóng gió ngừng lại—",
+      "pause_after_sec": 0.22,
+      "camera_motion": "push_in",
+      "transition": "smoothright",
+      "competitor_ref_frame": "frame_18s.jpg",
+      "prompt": "Cinematic close-up of smooth river pebbles resting beneath clear flowing shallow brook water, sunlight dancing in caustic patterns on riverbed stones, quiet natural harmony, photorealistic, no text overlays, no cartoons, no stickmen."
+    },
+    {
+      "beat_id": "B08",
+      "formula_stage": "8. Sự lắng dịu trọn vẹn",
+      "time_range": "16.9s - 19.5s",
+      "narration": "mà là khi tâm bạn không còn tự tạo bão giông.",
+      "pause_after_sec": 0.3,
+      "camera_motion": "zoom_out",
+      "transition": "fade",
+      "competitor_ref_frame": "frame_20s.jpg",
+      "prompt": "Wide contemplative shot of an open wooden veranda framing an ancient mossy courtyard garden as dusk gently settles, warm lantern glow illuminating wooden floor planks, deep stillness and enduring solace, Pursuit of Wonder signature finale, photorealistic 8k still, no text overlays, no chalkboards, no cartoons, no stickmen."
+    }
+  ]
+}

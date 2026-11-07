@@ -1,0 +1,104 @@
+{
+  "channel_id": "loi_sang_soi",
+  "channel_slug": "loi-sang-soi",
+  "competitor_name": "BibleProject / Caravaggio Chiaroscuro",
+  "voice": "VietNarrator",
+  "frame_by_frame_observations_vi": "Phân tích 20 khung hình thực tế (frame_01s.jpg đến frame_20s.jpg) và audio clip từ video ngụ ngôn triết lý phong cách Caravaggio Chiaroscuro & BibleProject:\n- 1s-5s: Ánh sáng đơn nguồn chiaroscuro tương phản sâu phong cách danh họa Caravaggio; ngọn đèn dầu cổ bằng đất nung tỏa ánh sáng vàng hổ phách ấm áp lên mặt bàn gỗ phong sương; bụi không gian (volumetric dust motes) lơ lửng trong chùm sáng huyền ảo.\n- 6s-10s: Bàn tay người lữ khách già chậm rãi mở cuộn da cừu (parchment scroll) cổ kính với các nét mực son phong hóa; vòm đá của tu viện cổ chìm trong bóng tối huyền bí.\n- 11s-15s: Chiếc bình gốm cổ nứt nẻ đổ tràn dòng nước trong vắt xuống nền đất khô cằn; giọt nước phản chiếu ánh chiều tà vàng óng qua khung cửa vòm Gothic cổ kính.\n- 16s-20s: Góc máy ngước lên (tilt-up) hàng cột đá cổ kính, ánh hoàng hôn chiếu xuyên qua tán cây olive ngàn năm tuổi; sự tĩnh tại vô biên lan tỏa khắp không gian.\nĐặc trưng thẩm mỹ: Hội họa sơn dầu ánh sáng Caravaggio bậc thầy, độ tương phản cực hạn giữa ánh lửa vàng ấm và màn đêm thẫm, chất liệu gỗ mộc và gốm phong hóa, KHÔNG dùng nét vẽ phẳng hay hoạt hình đơn giản.",
+  "learned_style_summary_vi": "Phong cách ngụ ngôn cổ xưa Caravaggio Chiaroscuro & BibleProject: Ánh sáng hội họa bậc thầy với độ tương phản cực hạn giữa ánh lửa vàng ấm và màn đêm sâu thẳm; chất liệu giấy da, gỗ mộc và gốm cổ phong hóa tự nhiên; không gian tĩnh lặng giàu chất thơ; lời dẫn triết lý sâu sắc thức tỉnh tâm hồn trước những ảo tưởng của lòng tham và gánh nặng cuộc đời. Sử dụng chuyển cảnh xfade mượt mà (fade, smoothleft, smoothright, smoothup, smoothdown) và nhịp đọc thong dong tĩnh tại.",
+  "competitor_dialogue_formula": {
+    "competitor_verbatim_transcript_20s": "[00:00-00:03.0s] 'Dưới ngọn đèn dầu cổ xưa leo lét—' [pause 0.22s] -> [00:03.2-00:07.0s] 'một bàn tay già cỗi trải phẳng cuộn da cừu ghi lời minh triết.' [pause 0.38s] -> [00:07.4-00:10.8s] 'Con người cả đời gom góp của cải để đổi lấy bình an.' [pause 0.25s] -> [00:11.1-00:13.8s] 'Nhưng lòng tham có bao giờ biết điểm dừng?' [pause 0.45s] -> [00:14.3-00:20.0s] [Chiếc bình gốm đổ tràn và ánh hoàng hôn rọi qua hàng cột đá cổ]",
+    "sentence_structure_formula_vi": "Công thức khai phóng ngụ ngôn: (1) Thiết lập không gian tĩnh mịch biểu tượng ('Dưới ngọn đèn dầu cổ xưa...') -> (2) Tiếp cận di sản minh triết ('một bàn tay già cỗi trải phẳng cuộn da cừu ghi lời minh triết') -> (3) Nghịch lý của kiếp nhân sinh ('Con người cả đời gom góp của cải để đổi lấy bình an') -> (4) Câu hỏi tu từ soi rọi lòng tham ('Nhưng lòng tham có bao giờ biết điểm dừng?') -> (5) Ẩn dụ chiếc bình và gánh nặng ('Chiếc bình càng đầy nước càng nặng gánh trên vai người lữ khách') -> (6) Khoảng trống của sự buông bỏ ('khi buông tay, khoảng trống mới là nơi đón nhận ánh sáng') -> (7) Ngọn đuốc nội tâm giữa phong ba ('Ngọn lửa nhỏ trong đêm soi rõ bản tâm giữa giông bão cuộc đời') -> (8) Đích đến an nhiên vững chãi ('sự giàu có đích thực bắt đầu từ tâm tĩnh lặng').",
+    "pause_and_cadence_formula_vi": "Nhịp đọc trầm ấm, tĩnh tại, thong dong ~130 WPM: Nghỉ 0.22s sau hình tượng ngọn đèn; nghỉ 0.38s sau khi lật mở trang giấy cổ; nghỉ sâu 0.45s sau câu hỏi tu từ để tâm trí lắng đọng; nghỉ 0.25s - 0.35s giữa các ẩn dụ triết lý.",
+    "transition_and_camera_formula_vi": "Camera trôi chậm rãi đầy chất thơ (push_in, tilt_up, zoom_out nhẹ), chuyển cảnh xfade mượt 0.28s mềm mại như vết mực hòa trong nước."
+  },
+  "beats": [
+    {
+      "beat_id": "B01",
+      "formula_stage": "1. Nocturnal Chiaroscuro Setting",
+      "time_range": "0.0s - 2.3s",
+      "narration": "Dưới ngọn đèn dầu cổ xưa leo lét—",
+      "pause_after_sec": 0.22,
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "competitor_ref_frame": "frame_01s.jpg",
+      "prompt": "Masterpiece Caravaggio chiaroscuro realism of an ancient stone scriptorium interior, a single clay oil lamp casting warm amber flickering light onto a rough weathered olive wood table, dramatic deep dark shadows concealing stone alcoves, dancing volumetric dust motes, rich Renaissance oil glazing texture, zero text"
+    },
+    {
+      "beat_id": "B02",
+      "formula_stage": "2. Ancient Wisdom Unfolding",
+      "time_range": "2.3s - 4.6s",
+      "narration": "một bàn tay già cỗi trải phẳng cuộn da cừu ghi lời minh triết.",
+      "pause_after_sec": 0.38,
+      "camera_motion": "tilt_down",
+      "transition": "smoothdown",
+      "competitor_ref_frame": "frame_04s.jpg",
+      "prompt": "Macro shot of an aged calloused hand gently unfurling an authentic antique vellum scroll, weathered cracked parchment textures, glowing golden candlelight highlighting the organic fibers of the animal hide, historical tactile depth"
+    },
+    {
+      "beat_id": "B03",
+      "formula_stage": "3. Temporal Accumulation Paradox",
+      "time_range": "4.6s - 7.0s",
+      "narration": "Con người cả đời gom góp của cải để đổi lấy bình an.",
+      "pause_after_sec": 0.25,
+      "camera_motion": "pan_right",
+      "transition": "smoothleft",
+      "competitor_ref_frame": "frame_07s.jpg",
+      "prompt": "Still life arrangement of tarnished ancient bronze and silver coins spilling from a worn leather pouch beside a simple clay water cup, dramatic side-lighting from an arched stone window, museum fine art aesthetic"
+    },
+    {
+      "beat_id": "B04",
+      "formula_stage": "4. Avarice Rhetorical Query",
+      "time_range": "7.0s - 9.4s",
+      "narration": "Nhưng lòng tham có bao giờ biết điểm dừng?",
+      "pause_after_sec": 0.45,
+      "camera_motion": "push_in",
+      "transition": "dissolve",
+      "competitor_ref_frame": "frame_10s.jpg",
+      "prompt": "Cinematic close-up of a weathered cracked ceramic vessel overflowing with water, crystal droplets spilling over ancient textured pottery onto dark cobblestones, sparkling in single warm ray of light"
+    },
+    {
+      "beat_id": "B05",
+      "formula_stage": "5. Heavy Vessel Metaphor",
+      "time_range": "9.4s - 11.8s",
+      "narration": "Chiếc bình càng đầy nước càng nặng gánh trên vai người lữ khách,",
+      "pause_after_sec": 0.22,
+      "camera_motion": "pan_left",
+      "transition": "smoothright",
+      "competitor_ref_frame": "frame_12s.jpg",
+      "prompt": "Atmospheric wide view of an ancient solitary traveler carrying a walking staff along a dusty hillside path at sunset, silhouetted against dramatic golden-hour clouds and ancient gnarled olive trees, Rembrandt warm amber tones"
+    },
+    {
+      "beat_id": "B06",
+      "formula_stage": "6. Receptive Emptiness Space",
+      "time_range": "11.8s - 14.3s",
+      "narration": "khi buông tay, khoảng trống mới là nơi đón nhận ánh sáng.",
+      "pause_after_sec": 0.35,
+      "camera_motion": "tilt_up",
+      "transition": "smoothup",
+      "competitor_ref_frame": "frame_15s.jpg",
+      "prompt": "Low-angle view looking upward inside an ancient vaulted stone monastery chapel, a radiant beam of pure golden sunlight cutting through high stone arches into the peaceful empty sanctuary"
+    },
+    {
+      "beat_id": "B07",
+      "formula_stage": "7. Internal Flame In Storm",
+      "time_range": "14.3s - 16.9s",
+      "narration": "Ngọn lửa nhỏ trong đêm soi rõ bản tâm giữa giông bão cuộc đời—",
+      "pause_after_sec": 0.25,
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "competitor_ref_frame": "frame_18s.jpg",
+      "prompt": "Intimate macro shot of a steady glowing candle wick surrounded by warm molten beeswax, unshaken by the soft breeze beyond the stone embrasure, rich oil painting chiaroscuro lighting"
+    },
+    {
+      "beat_id": "B08",
+      "formula_stage": "8. Serene Internal Wealth Payoff",
+      "time_range": "16.9s - 19.8s",
+      "narration": "sự giàu có đích thực bắt đầu từ tâm tĩnh lặng.",
+      "pause_after_sec": 0.3,
+      "camera_motion": "zoom_out",
+      "transition": "smoothdown",
+      "competitor_ref_frame": "frame_20s.jpg",
+      "prompt": "Panoramic peaceful sunset vista across ancient rolling Mediterranean hills dotted with stone watchtowers and olive groves, warm golden and lavender twilight sky, profound timeless contemplative tranquility, BibleProject inspired realism, zero text"
+    }
+  ]
+}

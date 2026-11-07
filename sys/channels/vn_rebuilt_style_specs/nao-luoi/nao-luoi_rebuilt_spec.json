@@ -1,0 +1,104 @@
+{
+  "channel_id": "nao_luoi",
+  "channel_slug": "nao-luoi",
+  "competitor_name": "Kurzgesagt Habit Science / Huberman Lab / The Paint Explainer",
+  "voice": "VietNarrator",
+  "frame_by_frame_observations_vi": "Phân tích 20 khung hình thực tế (frame_01s.jpg đến frame_20s.jpg) và audio clip từ video khoa học hành vi thần kinh học 3D của Huberman Lab / Kurzgesagt:\n- 1s-5s: Góc quay macro điện ảnh 35mm quay một người trẻ ngồi trước bàn làm việc ban đêm, ánh sáng xanh lạnh từ màn hình điện thoại rọi vào gương mặt mệt mỏi; ngón tay cái lướt vô thức trên màn hình bóng bẩy.\n- 6s-10s: Camera chuyển nhanh sang mô hình đồ họa y sinh 3D bên trong não bộ; các đường dẫn truyền thần kinh dopamine phát sáng màu ngọc lam (cyan) chạy rực rỡ từ vùng mái bụng (VTA) lên vỏ não trước trán (prefrontal cortex).\n- 11s-15s: Cận cảnh synap thần kinh siêu thực; các bọc dẫn truyền thần kinh (vesicles) vỡ ra, giải phóng hàng ngàn phân tử dopamine qua khe synap kết nối các đuôi gai nơ-ron đa cực trên nền không gian tối vô tận.\n- 16s-20s: Thụ thể màng tế bào quá tải co rút lại làm giảm độ nhạy; màn hình chia đôi tương phản giữa hành vi buông điện thoại hít thở sâu và đồ thị xung điện vỏ não ổn định trở lại.\nĐặc trưng thẩm mỹ: Chuẩn y sinh 3D cao cấp Huberman Lab, hiệu ứng nơ-ron phát quang sinh học (bioluminescent synapses), kết hợp phân cảnh điện ảnh người thật 35mm, LOẠI BỎ HOÀN TOÀN stickman nguệch ngoạc mắt chấm 1fps.",
+  "learned_style_summary_vi": "Phong cách Cinematic 3D Biological & Behavioral Visualization Huberman Lab & Kurzgesagt: Bắt đầu bằng việc xóa bỏ định kiến bản thân ('Bạn không hề thiếu ý chí tập trung...'), quy về cơ chế hóa sinh não bộ ('bộ não đang vận hành theo tín hiệu dopamine'), mô tả chi tiết con đường dẫn truyền dopamine kích thích synap nơ-ron, đặt câu hỏi tu từ bóc trần cảm giác đề kháng, và chốt lại bằng phác đồ tái lập ngưỡng tập trung sâu sau chín mươi giây. Sử dụng hiệu ứng chuyển cảnh xfade mượt mà (fade, smoothleft, smoothright, smoothup, smoothdown) và nhịp đọc khoa học đĩnh đạc.",
+  "competitor_dialogue_formula": {
+    "competitor_verbatim_transcript_20s": "[00:00-00:02.8s] 'Bạn không hề thiếu ý chí tập trung—' [pause 0.22s] -> [00:03.0-00:06.5s] 'mà bộ não đang vận hành theo tín hiệu dopamine.' [pause 0.38s] -> [00:06.9-00:10.5s] 'Mỗi lần lướt ngón tay, thụ thể thần kinh bị quá tải kích thích.' [pause 0.25s] -> [00:10.8-00:13.5s] 'Tại sao việc bắt đầu học tập lại đau đớn đến thế?' [pause 0.45s] -> [00:14.0-00:20.0s] [Dopamine phóng thích qua khe synap và vỏ não trước trán phục hồi kiểm soát]",
+    "sentence_structure_formula_vi": "Công thức hóa sinh thần kinh học hành vi: (1) Bác bỏ ảo tưởng thiếu ý chí ('Bạn không hề thiếu ý chí tập trung—') -> (2) Quy luật hóa sinh vận hành khách quan ('mà bộ não đang vận hành theo tín hiệu dopamine') -> (3) Cơ chế kích thích rẻ tiền làm quá tải ('Mỗi lần lướt ngón tay, thụ thể thần kinh bị quá tải kích thích') -> (4) Câu hỏi tu từ về cảm giác đề kháng tinh thần ('Tại sao việc bắt đầu học tập lại đau đớn đến thế?') -> (5) Phản ứng tự vệ hạ độ nhạy của thụ thể ('Vì synap đã hạ độ nhạy để tự bảo vệ trước dòng kích thích giá rẻ') -> (6) Giao thức vượt ngưỡng đề kháng chín mươi giây ('hãy kiên nhẫn chịu đựng chín mươi giây kháng cự đầu tiên') -> (7) Tái thiết lập kiểm soát thùy trán ('Khi xung điện ổn định, vỏ não trước trán sẽ chiếm quyền kiểm soát') -> (8) Đích đến tập trung sâu bền vững ('và sự tập trung sâu sẽ tự nhiên quay trở lại').",
+    "pause_and_cadence_formula_vi": "Nhịp đọc đĩnh đạc, hiện đại, thuyết phục ~144 WPM: Nghỉ 0.22s sau mệnh đề lật ngược; nghỉ 0.38s sau khi định hình tín hiệu hóa sinh; nghỉ 0.45s sau câu hỏi tu từ; nghỉ 0.25s - 0.35s giữa các cơ chế tế bào thần kinh.",
+    "transition_and_camera_formula_vi": "Camera trôi mượt mà kết hợp zoompan 2x (push_in vào ánh mắt, smoothleft sang mạng nơ-ron, smoothup lên thùy trán), chuyển cảnh xfade 0.28s dứt khoát."
+  },
+  "beats": [
+    {
+      "beat_id": "B01",
+      "formula_stage": "1. Debunking Willpower Assumption",
+      "time_range": "0.0s - 2.2s",
+      "narration": "Bạn không hề thiếu ý chí tập trung—",
+      "pause_after_sec": 0.22,
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "competitor_ref_frame": "frame_01s.jpg",
+      "prompt": "Cinematic 35mm film still of an exhausted young professional sitting at a dark modern desk late at night, face lit by the cool blue specular glow of a smartphone screen, subtle warm tungsten background bokeh f/1.8, authentic fatigued expression, shallow depth of field, photorealistic, zero text"
+    },
+    {
+      "beat_id": "B02",
+      "formula_stage": "2. Neurochemical Reality Pivot",
+      "time_range": "2.2s - 4.5s",
+      "narration": "mà bộ não đang vận hành theo tín hiệu dopamine.",
+      "pause_after_sec": 0.38,
+      "camera_motion": "pan_right",
+      "transition": "smoothleft",
+      "competitor_ref_frame": "frame_04s.jpg",
+      "prompt": "Stunning 3D biomedical anatomical rendering of the human brain inside a translucent skull silhouette, glowing bioluminescent cyan and gold dopamine reward pathways lighting up from the ventral tegmental area to the prefrontal cortex, cosmic dark background with floating neural particles, Huberman Lab visualization style"
+    },
+    {
+      "beat_id": "B03",
+      "formula_stage": "3. Cheap Stimulus Synaptic Overload",
+      "time_range": "4.5s - 6.9s",
+      "narration": "Mỗi lần lướt ngón tay, thụ thể thần kinh bị quá tải kích thích.",
+      "pause_after_sec": 0.25,
+      "camera_motion": "tilt_up",
+      "transition": "smoothdown",
+      "competitor_ref_frame": "frame_07s.jpg",
+      "prompt": "Macro microscopic 3D visualization of a single active neural synapse junction, hundreds of luminous neurotransmitter vesicles bursting across the synaptic cleft, electric blue and amber energy pulses firing between dendrite branches, high-end scientific realism"
+    },
+    {
+      "beat_id": "B04",
+      "formula_stage": "4. Resistance Friction Query",
+      "time_range": "6.9s - 9.3s",
+      "narration": "Tại sao việc bắt đầu học tập lại đau đớn đến thế?",
+      "pause_after_sec": 0.45,
+      "camera_motion": "push_in",
+      "transition": "dissolve",
+      "competitor_ref_frame": "frame_10s.jpg",
+      "prompt": "Cinematic medium portrait of the individual staring with intense psychological friction at an open notebook and laptop, shadows cutting across the room, visceral feeling of cognitive resistance, moody high-contrast lighting"
+    },
+    {
+      "beat_id": "B05",
+      "formula_stage": "5. Receptor Downregulation Mechanism",
+      "time_range": "9.3s - 11.7s",
+      "narration": "Vì synap đã hạ độ nhạy để tự bảo vệ trước dòng kích thích giá rẻ,",
+      "pause_after_sec": 0.22,
+      "camera_motion": "pan_left",
+      "transition": "smoothright",
+      "competitor_ref_frame": "frame_12s.jpg",
+      "prompt": "Ultra-macro view of postsynaptic cell membrane protein receptors folding inward to desensitize, intricate cellular lipid bilayer textures, glowing amber ions diffusing slowly, advanced molecular biology rendering"
+    },
+    {
+      "beat_id": "B06",
+      "formula_stage": "6. Ninety-Second Friction Protocol",
+      "time_range": "11.7s - 14.2s",
+      "narration": "hãy kiên nhẫn chịu đựng chín mươi giây kháng cự đầu tiên.",
+      "pause_after_sec": 0.35,
+      "camera_motion": "tilt_down",
+      "transition": "smoothdown",
+      "competitor_ref_frame": "frame_15s.jpg",
+      "prompt": "Split-screen cinematic contrast: on the left, an elegant brass sand hourglass slowly trickling golden sand grains; on the right, steady rhythmic neural electrical waves transitioning from erratic red spikes to smooth coherent cyan pulses"
+    },
+    {
+      "beat_id": "B07",
+      "formula_stage": "7. Prefrontal Circuit Dominance",
+      "time_range": "14.2s - 16.8s",
+      "narration": "Khi xung điện ổn định, vỏ não trước trán sẽ chiếm quyền kiểm soát—",
+      "pause_after_sec": 0.25,
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "competitor_ref_frame": "frame_18s.jpg",
+      "prompt": "Magnificent 3D visual of the prefrontal cortex glowing with steady emerald and sapphire light filaments, coordinated neural network firing with serene clarity, sweeping camera angle showing complex biological architecture"
+    },
+    {
+      "beat_id": "B08",
+      "formula_stage": "8. Deep Focus Restoration Climax",
+      "time_range": "16.8s - 19.8s",
+      "narration": "và sự tập trung sâu sẽ tự nhiên quay trở lại.",
+      "pause_after_sec": 0.3,
+      "camera_motion": "zoom_out",
+      "transition": "smoothup",
+      "competitor_ref_frame": "frame_20s.jpg",
+      "prompt": "Cinematic wide angle of the focused creator writing with calm flow at a clean wooden desk bathed in warm morning sunlight, peaceful posture, crisp atmospheric clarity, triumphant scientific productivity finale, 8k resolution, zero text"
+    }
+  ]
+}
