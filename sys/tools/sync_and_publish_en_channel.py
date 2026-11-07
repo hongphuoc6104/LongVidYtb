@@ -21,7 +21,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SYS_DIR = REPO_ROOT / "sys"
@@ -161,6 +161,7 @@ def process_single_channel(
     force_branding: bool = False,
     publish_short: bool = True,
     publish_long: bool = True,
+    visibility: str = "PUBLIC",
 ) -> Dict[str, Any]:
     ch_id = resolve_canonical_channel_id(raw_channel)
     slug = ch_id.replace("_", "-")
@@ -202,45 +203,7 @@ def process_single_channel(
             else:
                 logger.info("[%s] Branding V3 already verified for '%s'.", ch_id, ch_spec["youtube_name"])
 
-            # 2. Publish Short (9:16) if ready and not yet published
-            if publish_short and not summary["short_url"] and short_mp4.is_file():
-                short_spec = json.loads(short_spec_path.read_text(encoding="utf-8"))
-                yt_title = short_spec.get("youtube_title") or short_spec.get("title")
-                yt_desc = build_short_description(short_spec, ch_spec)
-                shot_out = Path(f"/home/hongphuoc6104/.gemini/antigravity/brain/715cbad2-6a65-4677-b14e-8d30e126287f/qa/publish_{short_job_id}.png")
-                cmd = [
-                    sys.executable,
-                    str(SYS_DIR / "tools" / "publish_youtube_cdp.py"),
-                    "--video",
-                    str(short_mp4),
-                    "--channel",
-                    ch_id,
-                    "--job-id",
-                    short_job_id,
-                    "--title",
-                    yt_title,
-                    "--description",
-                    yt_desc,
-                    "--short",
-                    "--visibility",
-                    "PUBLIC",
-                    "--headless",
-                    "--bypass-review-gate",
-                    "--screenshot",
-                    str(shot_out),
-                ]
-                if summary["long_url"]:
-                    cmd.extend(["--related-video", summary["long_url"]])
-                logger.info("[%s] Publishing Short MP4: %s (title=%r)...", ch_id, short_mp4.name, yt_title)
-                proc = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
-                if proc.returncode != 0:
-                    logger.error("[%s] Short publish failed:\n%s\n%s", ch_id, proc.stdout[-800:], proc.stderr[-800:])
-                    summary["short_error"] = proc.stderr[-500:] or proc.stdout[-500:]
-                else:
-                    summary["short_url"] = is_already_published(ch_id, "short_9x16")
-                    logger.info("[%s] Short published live: %s", ch_id, summary["short_url"])
-
-            # 3. Publish Long (16:9) if ready and not yet published
+            # 2. Publish Long (16:9) first so Short can bind to it as related video
             if publish_long and not summary["long_url"] and long_mp4.is_file():
                 long_spec = json.loads(long_spec_path.read_text(encoding="utf-8"))
                 yt_title = long_spec.get("youtube_title") or long_spec.get("title")
@@ -261,7 +224,7 @@ def process_single_channel(
                     "--description",
                     yt_desc,
                     "--visibility",
-                    "PUBLIC",
+                    visibility,
                     "--headless",
                     "--bypass-review-gate",
                     "--screenshot",
@@ -269,6 +232,12 @@ def process_single_channel(
                 ]
                 if long_srt.is_file():
                     cmd.extend(["--subtitles", str(long_srt)])
+                # Pass custom 16:9 thumbnail if present
+                long_thumb = REPO_ROOT / "video" / long_job_id / "thumbnail.png"
+                if not long_thumb.is_file():
+                    long_thumb = SYS_DIR / "runs" / "en_batch1_prod" / long_job_id / "thumbnail.png"
+                if long_thumb.is_file() and long_thumb.stat().st_size > 1000:
+                    cmd.extend(["--thumbnail", str(long_thumb)])
                 logger.info("[%s] Publishing Long MP4: %s (title=%r)...", ch_id, long_mp4.name, yt_title)
                 proc = subprocess.run(cmd, capture_output=True, text=True, timeout=900)
                 if proc.returncode != 0:
@@ -277,10 +246,149 @@ def process_single_channel(
                 else:
                     summary["long_url"] = is_already_published(ch_id, "long_16x9")
                     logger.info("[%s] Long published live: %s", ch_id, summary["long_url"])
+
+            # 3. Publish Short (9:16) if ready and not yet published
+            if publish_short and not summary["short_url"] and short_mp4.is_file():
+                short_spec = json.loads(short_spec_path.read_text(encoding="utf-8"))
+                yt_title = short_spec.get("youtube_title") or short_spec.get("title")
+                yt_desc = build_short_description(short_spec, ch_spec)
+                shot_out = Path(f"/home/hongphuoc6104/.gemini/antigravity/brain/715cbad2-6a65-4677-b14e-8d30e126287f/qa/publish_{short_job_id}.png")
+                cmd = [
+                    sys.executable,
+                    str(SYS_DIR / "tools" / "publish_youtube_cdp.py"),
+                    "--video",
+                    str(short_mp4),
+                    "--channel",
+                    ch_id,
+                    "--job-id",
+                    short_job_id,
+                    "--title",
+                    yt_title,
+                    "--description",
+                    yt_desc,
+                    "--short",
+                    "--visibility",
+                    visibility,
+                    "--headless",
+                    "--bypass-review-gate",
+                    "--screenshot",
+                    str(shot_out),
+                ]
+                if summary["long_url"]:
+                    cmd.extend(["--related-video", summary["long_url"]])
+                logger.info("[%s] Publishing Short MP4: %s (title=%r)...", ch_id, short_mp4.name, yt_title)
+                proc = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
+                if proc.returncode != 0:
+                    logger.error("[%s] Short publish failed:\n%s\n%s", ch_id, proc.stdout[-800:], proc.stderr[-800:])
+                    summary["short_error"] = proc.stderr[-500:] or proc.stdout[-500:]
+                else:
+                    summary["short_url"] = is_already_published(ch_id, "short_9x16")
+                    logger.info("[%s] Short published live: %s", ch_id, summary["short_url"])
         finally:
             fcntl.flock(studio_lk.fileno(), fcntl.LOCK_UN)
 
     return summary
+
+
+def update_channel_thumbnail(
+    raw_channel: str,
+    thumbnail_path: str | Path | None = None,
+) -> Dict[str, Any]:
+    """Retroactively attach custom 16:9 thumbnail to already-published Long video."""
+    ch_id = resolve_canonical_channel_id(raw_channel)
+    slug = ch_id.replace("_", "-")
+    long_job_id = f"{slug}-batch1-16x9"
+
+    # Find long video URL
+    if not MAP_PATH.exists():
+        raise FileNotFoundError(f"Missing channel map: {MAP_PATH}")
+
+    data = json.loads(MAP_PATH.read_text(encoding="utf-8"))
+    entry = data.get("channels", {}).get(ch_id, {})
+    long_url = entry.get("long_video_url")
+    if not long_url:
+        for v in entry.get("published_videos", []):
+            if v.get("format") == "long_16x9" and v.get("video_url"):
+                long_url = v["video_url"]
+                break
+
+    if not long_url:
+        logger.warning("[%s] No published long video found in channel map.", ch_id)
+        return {"channel_id": ch_id, "status": "SKIPPED_NO_LONG_VIDEO"}
+
+    # Resolve or generate thumbnail path
+    thumb_path = Path(thumbnail_path) if thumbnail_path else None
+    if not thumb_path or not thumb_path.is_file():
+        candidates = [
+            REPO_ROOT / "video" / long_job_id / "thumbnail.png",
+            SYS_DIR / "runs" / "en_batch1_prod" / long_job_id / "thumbnail.png",
+        ]
+        for c in candidates:
+            if c.is_file() and c.stat().st_size > 1000:
+                thumb_path = c
+                break
+
+    if not thumb_path or not thumb_path.is_file():
+        from sys.tools.generate_en_thumbnails import generate_thumbnail_for_job
+
+        thumb_path = generate_thumbnail_for_job(long_job_id)
+
+    logger.info("[%s] Updating live Long thumbnail for %s -> %s", ch_id, long_url, thumb_path)
+
+    STUDIO_LOCK_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with open(STUDIO_LOCK_PATH, "w", encoding="utf-8") as studio_lk:
+        logger.info("[%s] Waiting for global YouTube Studio lock...", ch_id)
+        fcntl.flock(studio_lk.fileno(), fcntl.LOCK_EX)
+        try:
+            cmd = [
+                sys.executable,
+                str(SYS_DIR / "tools" / "publish_youtube_cdp.py"),
+                "--channel",
+                ch_id,
+                "--video-url",
+                long_url,
+                "--update-thumbnail",
+                str(thumb_path),
+                "--headless",
+            ]
+            proc = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
+            if proc.returncode != 0:
+                logger.error("[%s] Thumbnail update failed:\n%s\n%s", ch_id, proc.stdout[-800:], proc.stderr[-800:])
+                return {
+                    "channel_id": ch_id,
+                    "video_url": long_url,
+                    "status": "FAILED",
+                    "error": proc.stderr[-500:] or proc.stdout[-500:],
+                }
+
+            logger.info("[✓] [%s] Custom thumbnail persisted for live video %s", ch_id, long_url)
+
+            # Record in youtube_channel_map.json
+            lock_path = MAP_PATH.with_suffix(".lock")
+            with open(lock_path, "w", encoding="utf-8") as lock_fh:
+                fcntl.flock(lock_fh.fileno(), fcntl.LOCK_EX)
+                try:
+                    ch_data = json.loads(MAP_PATH.read_text(encoding="utf-8"))
+                    if ch_id in ch_data.get("channels", {}):
+                        ch_data["channels"][ch_id]["thumbnail_path"] = str(thumb_path)
+                        ch_data["channels"][ch_id]["thumbnail_updated_at"] = time.strftime(
+                            "%Y-%m-%dT%H:%M:%SZ", time.gmtime()
+                        )
+                        MAP_PATH.write_text(
+                            json.dumps(ch_data, indent=2, ensure_ascii=False) + "\n",
+                            encoding="utf-8",
+                        )
+                finally:
+                    fcntl.flock(lock_fh.fileno(), fcntl.LOCK_UN)
+
+            return {
+                "channel_id": ch_id,
+                "video_url": long_url,
+                "thumbnail_path": str(thumb_path),
+                "status": "UPDATED_AND_PERSISTED",
+            }
+        finally:
+            fcntl.flock(studio_lk.fileno(), fcntl.LOCK_UN)
 
 
 def main() -> None:
@@ -288,22 +396,36 @@ def main() -> None:
     parser.add_argument("--channels", required=True, help="Comma-separated channel IDs or slugs")
     parser.add_argument("--force-branding", action="store_true", help="Force re-running channel branding setup")
     parser.add_argument("--branding-only", action="store_true", help="Only run channel branding setup")
+    parser.add_argument("--update-thumbnails", action="store_true", help="Retroactively update thumbnails on live Long videos")
+    parser.add_argument("--publish-videos", action="store_true", default=True, help="Publish completed videos")
+    parser.add_argument("--visibility", default="PUBLIC", choices=["PUBLIC", "UNLISTED", "PRIVATE"], help="Video visibility")
     args = parser.parse_args()
 
     channels = [c.strip() for c in args.channels.split(",") if c.strip()]
     results = []
-    for raw_ch in channels:
-        try:
-            res = process_single_channel(
-                raw_ch,
-                force_branding=args.force_branding,
-                publish_short=not args.branding_only,
-                publish_long=not args.branding_only,
-            )
-            results.append(res)
-        except Exception as e:
-            logger.exception("Error processing channel %s: %s", raw_ch, e)
-            results.append({"channel": raw_ch, "error": str(e)})
+
+    if args.update_thumbnails:
+        for raw_ch in channels:
+            try:
+                res = update_channel_thumbnail(raw_ch)
+                results.append(res)
+            except Exception as e:
+                logger.exception("Error updating thumbnail for channel %s: %s", raw_ch, e)
+                results.append({"channel": raw_ch, "error": str(e)})
+    else:
+        for raw_ch in channels:
+            try:
+                res = process_single_channel(
+                    raw_ch,
+                    force_branding=args.force_branding,
+                    publish_short=not args.branding_only,
+                    publish_long=not args.branding_only,
+                    visibility=args.visibility,
+                )
+                results.append(res)
+            except Exception as e:
+                logger.exception("Error processing channel %s: %s", raw_ch, e)
+                results.append({"channel": raw_ch, "error": str(e)})
 
     print("\n=== SYNC & PUBLISH SUMMARY ===")
     print(json.dumps(results, indent=2, ensure_ascii=False))

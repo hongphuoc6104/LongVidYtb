@@ -362,36 +362,38 @@ class YouTubeCDPClient:
         logger.info("Opening upload dialog...")
         await self.dismiss_studio_interstitials()
         await asyncio.sleep(1.0)
-        clicked = await self.evaluate("""
+
+        click_js = """
             (() => {
+                if (document.querySelector('ytcp-uploads-dialog input[type="file"]')) return 'ALREADY_OPEN';
                 const btn = document.querySelector('#upload-icon') ||
                             document.querySelector('ytcp-icon-button#upload-icon') ||
                             document.querySelector('#create-icon') ||
-                            document.querySelector('ytcp-button#create-icon');
+                            document.querySelector('ytcp-button#create-icon') ||
+                            Array.from(document.querySelectorAll('ytcp-button, button')).find(
+                                el => /^(Create|Tạo)$/i.test((el.innerText || el.getAttribute('aria-label') || '').trim())
+                            );
                 if (btn) {
                     btn.click();
-                    return true;
+                    return 'CLICKED';
                 }
-                return false;
+                return null;
             })()
-        """)
+        """
+        clicked = await self.evaluate(click_js)
         if not clicked:
-            logger.info("Upload button not immediately found; re-checking interstitials...")
-            await self.dismiss_studio_interstitials()
-            await asyncio.sleep(2.5)
-            clicked = await self.evaluate("""
+            logger.info("Upload button not immediately found; navigating to /videos/upload?d=ud fallback...")
+            await self.evaluate("""
                 (() => {
-                    const btn = document.querySelector('#upload-icon') ||
-                                document.querySelector('ytcp-icon-button#upload-icon') ||
-                                document.querySelector('#create-icon') ||
-                                document.querySelector('ytcp-button#create-icon');
-                    if (btn) {
-                        btn.click();
-                        return true;
-                    }
-                    return false;
+                    const m = window.location.href.match(/(https:\\/\\/studio\\.youtube\\.com\\/channel\\/[^\\/\\?#]+)/);
+                    const base = m ? m[1] : 'https://studio.youtube.com';
+                    window.location.href = base + '/videos/upload?d=ud';
                 })()
             """)
+            await asyncio.sleep(7.0)
+            await self.dismiss_studio_interstitials()
+            await asyncio.sleep(2.0)
+            clicked = await self.evaluate(click_js)
         if not clicked:
             raise RuntimeError("Could not find YouTube Studio upload or create button!")
 
@@ -558,13 +560,17 @@ class YouTubeCDPClient:
 
             # Check for verification or blocking modal
             has_verify = await self.evaluate("""
-                Boolean(
-                    document.querySelector('ytcp-feature-eligibility-dialog') ||
-                    document.querySelector('ytcp-dialog[aria-label*="xác minh"]') ||
-                    document.querySelector('ytcp-dialog[aria-label*="verify"]') ||
-                    document.querySelector('ytcp-permanent-operational-error-manager') ||
-                    document.querySelector('tp-yt-paper-dialog[aria-hidden="false"]')
-                )
+                (() => {
+                    const d = document.querySelector('ytcp-feature-eligibility-dialog, yt-trust-tiers-wizard-dialog');
+                    if (d && d.offsetParent !== null) return true;
+                    const errModal = document.querySelector('ytcp-permanent-operational-error-manager tp-yt-paper-dialog[aria-hidden="false"]');
+                    if (errModal && errModal.offsetParent !== null) return true;
+                    const activeDialogs = Array.from(document.querySelectorAll('tp-yt-paper-dialog[aria-hidden="false"], ytcp-dialog')).filter(diag => {
+                        const text = (diag.innerText || '').toLowerCase();
+                        return diag.offsetParent !== null && (text.includes('xác minh') || text.includes('verify') || text.includes('số điện thoại') || text.includes('phone'));
+                    });
+                    return activeDialogs.length > 0;
+                })()
             """)
             if has_verify:
                 logger.warning("Custom thumbnail requires verification or encountered modal; dismissing prompt to continue.")
@@ -1262,6 +1268,89 @@ class YouTubeCDPClient:
             "handle": resolved_handle,
         }
 
+    async def update_video_thumbnail_post_publish(
+        self,
+        video_url_or_id: str,
+        thumbnail_path: str | Path,
+    ) -> dict[str, Any]:
+        """Navigate to Studio video edit page, upload custom thumbnail, click #save, and persist."""
+        path_str = str(Path(thumbnail_path).resolve())
+        if not os.path.isfile(path_str):
+            raise FileNotFoundError(f"Thumbnail not found: {path_str}")
+
+        vid_id = video_url_or_id.strip().rstrip("/").split("/")[-1].split("?")[0]
+        edit_url = f"https://studio.youtube.com/video/{vid_id}/edit"
+        logger.info("Navigating to Video edit page for custom thumbnail update: %s", edit_url)
+        await self.call("Page.navigate", {"url": edit_url})
+        await asyncio.sleep(4.0)
+
+        # 1. Dismiss interstitials
+        for _ in range(4):
+            d = await self.dismiss_studio_interstitials()
+            if d:
+                logger.info("Dismissed Studio interstitial banner.")
+                await asyncio.sleep(3.0)
+                break
+            await asyncio.sleep(1.0)
+
+        # Wait up to 15s for the editor page to load
+        for _ in range(15):
+            has_editor = await self.evaluate("""
+                Boolean(document.querySelector('input#file-loader, ytcp-thumbnails-compact-editor, ytcp-video-thumbnail-editor, ytcp-video-metadata-editor'))
+            """)
+            if has_editor:
+                break
+            await self.dismiss_studio_interstitials()
+            await asyncio.sleep(1.0)
+
+        # 2. Upload thumbnail via upload_thumbnail (DOM.setFileInputFiles)
+        uploaded = await self.upload_thumbnail(path_str)
+        if not uploaded:
+            logger.warning("Failed to attach custom thumbnail on edit page for %s", vid_id)
+            return {"success": False, "video_id": vid_id, "error": "upload_failed"}
+
+        # 3. Wait for save button to become enabled and click save
+        saved = False
+        for i in range(30):
+            await asyncio.sleep(1.0)
+            save_info = await self.evaluate("""
+                (() => {
+                    const saveBtn = document.querySelector('ytcp-button#save, #save-button, ytcp-video-metadata-editor #save');
+                    if (!saveBtn) return { found: false };
+                    const isAriaDisabled = saveBtn.getAttribute('aria-disabled') === 'true';
+                    const inner = saveBtn.querySelector('button') || saveBtn;
+                    if (!isAriaDisabled && !inner.disabled) {
+                        inner.click();
+                        return { found: true, clicked: true };
+                    }
+                    return { found: true, clicked: false, ariaDisabled: isAriaDisabled };
+                })()
+            """)
+            if save_info and save_info.get("clicked"):
+                logger.info("Save button clicked after %ds.", i + 1)
+                saved = True
+                break
+            if (i + 1) % 5 == 0:
+                logger.info("Waiting for Save button to become enabled (%ds/30s)...", i + 1)
+
+        if saved:
+            for j in range(15):
+                await asyncio.sleep(1.0)
+                st = await self.evaluate("""
+                    (() => {
+                        const saveBtn = document.querySelector('ytcp-button#save, #save-button, ytcp-video-metadata-editor #save');
+                        return saveBtn ? saveBtn.getAttribute('aria-disabled') : null;
+                    })()
+                """)
+                if st == "true":
+                    logger.info("Thumbnail save RPC persisted after %ds.", j + 1)
+                    break
+            await asyncio.sleep(2.0)
+            return {"success": True, "video_id": vid_id, "thumbnail_path": path_str}
+
+        logger.warning("Could not click save button for thumbnail or save was not enabled.")
+        return {"success": False, "video_id": vid_id, "error": "save_button_not_clicked"}
+
     async def advance_to_visibility_step(self) -> None:
         """Click next-button repeatedly until reaching Step 4 (Visibility)."""
         logger.info("Advancing through wizard steps to Visibility step...")
@@ -1647,7 +1736,7 @@ def parse_metadata_file(md_path: str | Path) -> dict[str, str]:
 
 def main():
     parser = argparse.ArgumentParser(description="Automated YouTube CDP Publisher for Video Pilot")
-    parser.add_argument("--video", "--video-file", dest="video", required=True, help="Path to MP4 video file")
+    parser.add_argument("--video", "--video-file", dest="video", required=False, help="Path to MP4 video file")
     parser.add_argument("--channel", help="Channel ID (e.g., co_the_ke, ai_binh_dan) to resolve profile")
     parser.add_argument("--job-id", help="Job ID")
     parser.add_argument("--profile", help="Explicit Chrome profile ID (e.g. profile_1)")
@@ -1656,6 +1745,9 @@ def main():
     parser.add_argument("--description", help="Video description (overrides metadata file)")
     parser.add_argument("--metadata", help="Path to markdown metadata file (youtube_long.md / youtube_shorts.md)")
     parser.add_argument("--thumbnail", help="Path to thumbnail image file (for 16:9)")
+    parser.add_argument("--update-thumbnail", help="Retroactively upload thumbnail to an existing video (requires --video-url or --video-id and --channel)")
+    parser.add_argument("--video-url", help="Existing video URL")
+    parser.add_argument("--video-id", help="Existing video ID")
     parser.add_argument("--subtitles", help="Path to subtitles SRT file")
     parser.add_argument("--visibility", "--privacy", dest="visibility", default="PUBLIC", choices=["PUBLIC", "UNLISTED", "PRIVATE"])
     parser.add_argument("--short", action="store_true", help="Mark as Short (9:16)")
@@ -1677,8 +1769,10 @@ def main():
         if not description:
             description = meta.get("description")
 
-    if not title:
+    if not title and not args.update_thumbnail:
         parser.error("Title must be specified via --title or --metadata")
+    if not args.update_thumbnail and not args.video:
+        parser.error("--video is required when publishing a video")
     if not description:
         description = ""
 
@@ -1691,7 +1785,7 @@ def main():
         else:
             job_id = p.stem
 
-    if not args.bypass_review_gate and job_id:
+    if not args.bypass_review_gate and job_id and not args.update_thumbnail:
         allowed, reason = check_publish_permission(job_id)
         if not allowed:
             raise RuntimeError(
@@ -1725,6 +1819,26 @@ def main():
                     if args.cdp_port:
                         profile_cfg["port"] = args.cdp_port
                     break
+
+    if args.update_thumbnail:
+        target_video = args.video_url or args.video_id
+        if not target_video:
+            parser.error("--update-thumbnail requires --video-url or --video-id")
+        if not profile_cfg:
+            parser.error("--update-thumbnail requires a valid --channel or --profile")
+
+        async def _run_update():
+            c = YouTubeCDPClient(profile_cfg, headless=args.headless)
+            try:
+                await c.connect()
+                res = await c.update_video_thumbnail_post_publish(target_video, args.update_thumbnail)
+                return res
+            finally:
+                await c.close()
+
+        update_res = asyncio.run(_run_update())
+        print(json.dumps(update_res, indent=2))
+        sys.exit(0 if update_res.get("success") else 1)
 
     result = asyncio.run(
         publish_single_video(

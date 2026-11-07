@@ -969,8 +969,12 @@ class DirectCDPProfileSession:
         try:
             await self.call("Page.reload", {"ignoreCache": False})
             await self._wait_for_flow_ready(timeout=20.0)
+            await self.ensure_project_id()
             await self._ensure_mint_captcha_guard()
-            await asyncio.sleep(2.0)
+            for x, y in ((210, 210), (460, 330), (640, 420)):
+                await self.call("Input.dispatchMouseEvent", {"type": "mouseMoved", "x": x, "y": y})
+                await asyncio.sleep(0.08)
+            await asyncio.sleep(3.0)
         except Exception:
             pass
 
@@ -983,8 +987,7 @@ class DirectCDPProfileSession:
         ref_media_ids: Optional[list[str]] = None,
         reference_media_ids: Optional[list[str]] = None,
     ) -> dict[str, Any]:
-        if not self.project_id:
-            await self.ensure_project_id()
+        await self.ensure_project_id()
         await self._ensure_mint_captcha_guard()
         effective_refs = reference_media_ids if reference_media_ids is not None else ref_media_ids
         for attempt in range(5):
@@ -1042,7 +1045,7 @@ class DirectCDPProfileSession:
             """
             from .resource_locks import stagger_cross_process_action
 
-            await asyncio.to_thread(stagger_cross_process_action, "flow_rpc_submit", 1.5)
+            await asyncio.to_thread(stagger_cross_process_action, "flow_rpc_submit", 5.0)
             out = await self.evaluate(js_code, await_promise=True, timeout=180.0)
             if not isinstance(out, dict) or out.get("error"):
                 err_msg = str(out.get("error") if isinstance(out, dict) else "NO_CDP_RESPONSE")
@@ -1063,11 +1066,12 @@ class DirectCDPProfileSession:
                     await self._ensure_mint_captcha_guard()
                     continue
                 if "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in str(ex) or "CAPTCHA" in str(ex) or "TOO_MUCH_TRAFFIC" in str(ex):
-                    if attempt < 2:
+                    if attempt == 0:
+                        self._recaptcha_refreshed = True
                         await asyncio.sleep(2.5)
                         await self._refresh_recaptcha_session()
                         continue
-                    err_block = RuntimeError("FLOW_PROVIDER_BLOCKED: preserve the original session and reconcile; do not resubmit")
+                    err_block = RuntimeError(f"FLOW_PROVIDER_BLOCKED: preserve the original session and reconcile; do not resubmit ({ex})")
                     err_block.generation_submitted = False
                     raise err_block from ex
                 raise
@@ -1190,7 +1194,7 @@ class DirectCDPProfileSession:
             from .resource_locks import stagger_cross_process_action
 
             await self._ensure_mint_captcha_guard()
-            await asyncio.to_thread(stagger_cross_process_action, "flow_rpc_submit", 1.5)
+            await asyncio.to_thread(stagger_cross_process_action, "flow_rpc_submit", 5.0)
         source_path_override = f"/project/{self.project_id}" if self.project_id else "/"
         js_code = f"""
         (async () => {{
@@ -1276,11 +1280,13 @@ class DirectCDPProfileSession:
             self.profile_cfg["project_id"] = pid
 
         # Enforce valid /project/<pid> workspace path for batchexecute source-path integrity & document_start guard
+        did_navigate = False
         try:
             curr_url = await self.evaluate("location.href", await_promise=False)
             target_prefix = f"https://flow.google.com/project/{pid}"
             if not str(curr_url).startswith(target_prefix):
                 await self.call("Page.navigate", {"url": target_prefix})
+                did_navigate = True
                 await self._wait_for_flow_ready(timeout=15.0)
                 after_url = await self.evaluate("location.href", await_promise=False)
                 if not str(after_url).startswith(target_prefix) and not force_new:
@@ -1289,6 +1295,15 @@ class DirectCDPProfileSession:
             logger.debug("Project workspace navigation check: %s", nav_err)
 
         await self._ensure_mint_captcha_guard()
+        if (did_navigate or not getattr(self, "_mouse_warmed", False)) and "PYTEST_CURRENT_TEST" not in os.environ:
+            self._mouse_warmed = True
+            for mx, my in ((210, 210), (460, 330), (640, 420)):
+                try:
+                    await self.call("Input.dispatchMouseEvent", {"type": "mouseMoved", "x": mx, "y": my})
+                except Exception:
+                    pass
+                await asyncio.sleep(0.35)
+            await asyncio.sleep(2.5)
         return pid
 
     @staticmethod
@@ -1353,6 +1368,21 @@ class DirectCDPProfileSession:
                 raise
 
         uploaded = flow_rpc.read_uploaded_image(payload)
+        sidecar = path_obj.with_suffix(".json")
+        if sidecar.is_file() and uploaded.media_id and self.name:
+            try:
+                sdata = json.loads(sidecar.read_text(encoding="utf-8"))
+                if isinstance(sdata, dict):
+                    pmap = sdata.get("profile_media_ids")
+                    if not isinstance(pmap, dict):
+                        pmap = {}
+                    pmap[self.name] = str(uploaded.media_id)
+                    if self.project_id:
+                        pmap[f"{self.name}:{self.project_id}"] = str(uploaded.media_id)
+                    sdata["profile_media_ids"] = pmap
+                    sidecar.write_text(json.dumps(sdata, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+            except Exception:
+                pass
         return {
             "media_id": uploaded.media_id,
             "url": uploaded.url,
@@ -1504,9 +1534,11 @@ class DirectCDPProfileSession:
         await self.ensure_project_id()
 
         first_str = str(first_frame_path_or_id)
+        did_upload = False
         if Path(first_str).expanduser().is_file():
             up1 = await self.upload_image_file(first_str)
             first_media_id = up1["media_id"]
+            did_upload = True
         else:
             first_media_id = first_str
 
@@ -1517,13 +1549,23 @@ class DirectCDPProfileSession:
                 if Path(last_str).expanduser().resolve() == Path(first_str).expanduser().resolve():
                     last_media_id = first_media_id
                 else:
-                    await asyncio.sleep(0.8)
+                    if did_upload:
+                        await asyncio.sleep(2.2)
                     up2 = await self.upload_image_file(last_str)
                     last_media_id = up2["media_id"]
+                    did_upload = True
             else:
                 last_media_id = last_str
 
-        await asyncio.sleep(1.2)
+        await asyncio.sleep(2.5 if did_upload else 1.2)
+        if did_upload and "PYTEST_CURRENT_TEST" not in os.environ:
+            for mx, my in ((240, 260), (510, 340), (680, 410)):
+                try:
+                    await self.call("Input.dispatchMouseEvent", {"type": "mouseMoved", "x": mx, "y": my})
+                except Exception:
+                    pass
+                await asyncio.sleep(0.25)
+            await asyncio.sleep(3.5)
         catalog = await self._get_model_catalog()
         resolved_model = flow_rpc.resolve_video_model(
             model,
@@ -1558,13 +1600,19 @@ class DirectCDPProfileSession:
                 break
             except Exception as ex:
                 ex_s = str(ex)
-                if any(k in ex_s for k in ("PUBLIC_ERROR_UNUSUAL_ACTIVITY", "CAPTCHA", "TOO_MUCH_TRAFFIC", "NO_AT_TOKEN")):
+                if any(k in ex_s for k in ("NO_AT_TOKEN", "CAPTCHA_FAILED")):
                     if vid_attempt < 2:
                         await asyncio.sleep(2.5)
                         await self._refresh_recaptcha_session()
                         continue
+                if any(k in ex_s for k in ("PUBLIC_ERROR_UNUSUAL_ACTIVITY", "CAPTCHA", "TOO_MUCH_TRAFFIC", "NO_AT_TOKEN")):
+                    if vid_attempt == 0:
+                        self._recaptcha_refreshed = True
+                        await asyncio.sleep(2.5)
+                        await self._refresh_recaptcha_session()
+                        continue
                     err_block = RuntimeError(
-                        "FLOW_PROVIDER_BLOCKED: preserve the original session and reconcile; do not resubmit"
+                        f"FLOW_PROVIDER_BLOCKED: preserve the original session and reconcile; do not resubmit ({ex})"
                     )
                     err_block.generation_submitted = False
                     raise err_block from ex

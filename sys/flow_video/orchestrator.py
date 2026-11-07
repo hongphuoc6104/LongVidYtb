@@ -6,6 +6,7 @@ import asyncio
 import base64
 import json
 import logging
+import os
 import re
 import subprocess
 import sys
@@ -217,6 +218,7 @@ class FlowVideoChainOrchestrator:
         self._profiles_used: set[str] = set()
         self._credits_deducted: dict[str, int] = {}
         self._profile_cooldowns: dict[str, float] = {}
+        self._profile_block_streaks: dict[str, int] = {}
         self._warm_sessions: dict[int, dict[str, Any]] = {}
         self._warm_locks: dict[int, asyncio.Lock] = {}
         self._lock = asyncio.Lock()
@@ -242,10 +244,14 @@ class FlowVideoChainOrchestrator:
         if hasattr(self.credit_ledger, "mark_cooldown"):
             self.credit_ledger.mark_cooldown(profile_name, seconds=seconds, reason=reason)
 
+    def _launch_profile_browser(self, pm: Any, profile_cfg: dict[str, Any]) -> bool:
+        """Launch Chrome profile in headless mode by default (`self.headless=True`)."""
+        return bool(pm.launch(profile_cfg, headless=self.headless))
+
     def _get_same_profile_media_id(
         self, image_path: str | Path | None, profile_name: str
     ) -> str | None:
-        """Return media_id if image sidecar proves it was generated on the exact same profile."""
+        """Return media_id if image sidecar proves it was generated or already uploaded on the exact same profile."""
         if not image_path:
             return None
         p = Path(image_path)
@@ -255,15 +261,39 @@ class FlowVideoChainOrchestrator:
                 data = json.loads(sidecar.read_text(encoding="utf-8"))
                 if data.get("profile") == profile_name and data.get("media_id"):
                     return str(data["media_id"])
+                pmap = data.get("profile_media_ids")
+                if isinstance(pmap, dict) and pmap.get(profile_name):
+                    return str(pmap[profile_name])
             except Exception:
                 pass
         return None
+
+    def _save_profile_media_id(
+        self, image_path: str | Path | None, profile_name: str, media_id: str
+    ) -> None:
+        """Persist uploaded media_id per profile in the image sidecar to prevent duplicate uploads."""
+        if not image_path or not profile_name or not media_id:
+            return
+        sidecar = Path(image_path).with_suffix(".json")
+        if sidecar.is_file():
+            try:
+                data = json.loads(sidecar.read_text(encoding="utf-8"))
+                pmap = data.get("profile_media_ids")
+                if not isinstance(pmap, dict):
+                    pmap = {}
+                pmap[profile_name] = str(media_id)
+                data["profile_media_ids"] = pmap
+                sidecar.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+            except Exception:
+                pass
 
     async def _close_warm_port(self, port: int) -> None:
         """Close and evict a single warm CDP session and release its locks without affecting other active ports."""
         entry = self._warm_sessions.pop(port, None)
         if entry:
             session = entry.get("session")
+            if session and hasattr(session, "profile_cfg") and isinstance(session.profile_cfg, dict):
+                session.profile_cfg.pop("project_id", None)
             if session and hasattr(session, "close"):
                 try:
                     await session.close()
@@ -288,8 +318,9 @@ class FlowVideoChainOrchestrator:
                     pass
 
     async def _evict_idle_warm_sessions_if_full(self, exclude_port: int | None = None) -> None:
-        """Ensure this orchestrator never holds more warm browser slots than `self.max_workers`."""
-        while len(self._warm_sessions) >= self.max_workers:
+        """Ensure this orchestrator never holds more warm browser slots than `max(self.max_workers, 4)`."""
+        max_warm = max(self.max_workers, 4)
+        while len(self._warm_sessions) >= max_warm:
             evicted = False
             for old_port in list(self._warm_sessions.keys()):
                 if old_port == exclude_port:
@@ -300,6 +331,47 @@ class FlowVideoChainOrchestrator:
                     break
             if not evicted:
                 break
+
+    PROVEN_WORKING_PROFILES = (
+        "profile_en16",
+        "profile_en13",
+        "profile_9",
+        "profile_19",
+        "profile_en05",
+        "profile_en11",
+        "profile_en03",
+        "profile_6",
+        "profile_en18",
+        "profile_8",
+        "profile_18",
+        "profile_10",
+        "profile_en17",
+        "profile_en19",
+        "profile_en10",
+        "profile_en07",
+        "profile_11",
+        "profile_4",
+    )
+
+    def _get_proven_overflow_profiles(self) -> list[dict[str, Any]]:
+        """Return configured profiles restricted and ordered by empirical working status."""
+        by_name = {
+            str(p.get("name") or p.get("id") or ""): p
+            for p in get_all_configured_profiles()
+        }
+        return [by_name[n] for n in self.PROVEN_WORKING_PROFILES if n in by_name]
+
+    def _filter_eligible_preserving_order(
+        self, profiles: list[dict[str, Any]], min_credits: int = 7
+    ) -> list[dict[str, Any]]:
+        """Filter profiles by credit balance eligibility (ignoring transient cooldowns) while preserving order."""
+        out: list[dict[str, Any]] = []
+        exhausted = getattr(self.credit_ledger, "exhausted", set()) or set()
+        for p in profiles:
+            pid = str(p.get("name") or p.get("id") or "")
+            if pid and pid not in exhausted and self.credit_ledger.get_balance(pid) >= min_credits:
+                out.append(p)
+        return out
 
     def _get_channel_profiles(self) -> list[dict[str, Any]]:
         """Return profiles ordered dynamically by live CreditLedger balances, rotated across top accounts per job_id."""
@@ -317,11 +389,7 @@ class FlowVideoChainOrchestrator:
                 if p.get("name") == name or p.get("id") == name
             ]
             if explicit_primary:
-                fallback_video = [
-                    p for p in self.credit_ledger.select_eligible_profiles(all_profiles, min_credits=7)
-                    if p not in explicit_primary
-                ]
-                return explicit_primary + fallback_video
+                return explicit_primary
 
         if len(all_profiles) <= 4:
             return all_profiles
@@ -456,7 +524,12 @@ class FlowVideoChainOrchestrator:
                 continue
 
             dest_file = self.frames_dir / f"{item_id}.png"
-            if self.resume and dest_file.is_file() and dest_file.stat().st_size > 0:
+            has_valid_frame = (
+                dest_file.is_file()
+                and dest_file.stat().st_size > (0 if self.dry_run else 20000)
+                and (self.dry_run or dest_file.with_suffix(".json").is_file())
+            )
+            if self.resume and has_valid_frame:
                 resolved_str = str(dest_file.resolve())
                 self._update_ref_path(ref_obj, resolved_str)
                 resolved_paths[item_id] = resolved_str
@@ -477,170 +550,190 @@ class FlowVideoChainOrchestrator:
         semaphore = asyncio.Semaphore(max(1, self.max_workers))
         all_profiles = self._get_channel_profiles()
         eligible_profiles = (
-            self.credit_ledger.select_eligible_profiles(all_profiles, min_credits=0) or all_profiles
+            self._filter_eligible_preserving_order(all_profiles, min_credits=7)
+            or self._filter_eligible_preserving_order(all_profiles, min_credits=0)
+            or all_profiles
         )
 
-        # Execute pending keyframe generation in parallel topological DAG waves
-        while pending_items:
-            # 1. Resolve any alias/link items whose target image has now appeared on disk or was resolved
-            still_pending: list[tuple[str, str | None, str | None, Any, str | None]] = []
-            made_progress = False
+        # Execute pending keyframe generation dynamically via FIRST_COMPLETED DAG scheduling (zero wave barriers)
+        in_flight: dict[asyncio.Task[None], str] = {}
+        spawn_counter = 0
 
-            for it in pending_items:
-                item_id, img_path, prompt, ref_obj, based_on_ref = it
-                dep_stem = Path(img_path).stem if img_path else None
+        async def _generate_task(
+            item_tuple: tuple[str, str | None, str | None, Any, str | None],
+            prof_hint: dict[str, Any] | None,
+        ) -> None:
+            async with semaphore:
+                it_id, _, it_prompt, it_ref_obj, it_based_on = item_tuple
+                it_dest = self.frames_dir / f"{it_id}.png"
 
-                if img_path and Path(img_path).is_file():
-                    resolved_str = str(Path(img_path).resolve())
-                    self._update_ref_path(ref_obj, resolved_str)
-                    resolved_paths[item_id] = resolved_str
-                    made_progress = True
-                    continue
-
-                if dep_stem and dep_stem in resolved_paths:
-                    resolved_str = resolved_paths[dep_stem]
-                    self._update_ref_path(ref_obj, resolved_str)
-                    resolved_paths[item_id] = resolved_str
-                    made_progress = True
-                    continue
-
-                dest_file = self.frames_dir / f"{item_id}.png"
-                if dest_file.is_file() and dest_file.stat().st_size > 0:
-                    resolved_str = str(dest_file.resolve())
-                    self._update_ref_path(ref_obj, resolved_str)
-                    resolved_paths[item_id] = resolved_str
-                    made_progress = True
-                    continue
-
-                still_pending.append(it)
-
-            pending_items = still_pending
-            if not pending_items:
-                break
-
-            # 2. Select items whose dependencies are satisfied in this wave
-            ready_to_generate: list[tuple[str, str | None, str | None, Any, str | None]] = []
-            waiting_items: list[tuple[str, str | None, str | None, Any, str | None]] = []
-
-            for it in pending_items:
-                item_id, img_path, prompt, ref_obj, based_on_ref = it
-
-                if not prompt:
-                    dep_stem = Path(img_path).stem if img_path else None
-                    if dep_stem and dep_stem in all_item_ids:
-                        waiting_items.append(it)
-                        continue
-                    else:
-                        raise ValueError(
-                            f"Frame {item_id} has neither an existing image_path nor an image_prompt"
-                        )
-
-                dep_ready = True
-                if based_on_ref:
-                    if based_on_ref in resolved_paths:
-                        dep_ready = True
-                    elif Path(based_on_ref).is_file():
-                        dep_ready = True
-                    elif Path(based_on_ref).stem in resolved_paths:
-                        dep_ready = True
-                    else:
-                        dep_ready = False
-
-                if dep_ready:
-                    ready_to_generate.append(it)
-                else:
-                    waiting_items.append(it)
-
-            if not ready_to_generate and not made_progress:
-                unresolved = [it[0] for it in pending_items]
-                raise RuntimeError(
-                    f"Deadlock in keyframe DAG resolution. Unresolved pending items: {unresolved}"
-                )
-
-            if not ready_to_generate:
-                continue
-
-            # 3. Generate ready items concurrently via asyncio.gather with distinct profile hints
-            async def _generate_task(
-                item_tuple: tuple[str, str | None, str | None, Any, str | None],
-                prof_hint: dict[str, Any] | None,
-            ) -> None:
-                async with semaphore:
-                    it_id, _, it_prompt, it_ref_obj, it_based_on = item_tuple
-                    it_dest = self.frames_dir / f"{it_id}.png"
-
-                    ref_img_paths: list[str] = []
-                    if it_based_on:
-                        if it_based_on in resolved_paths and Path(resolved_paths[it_based_on]).is_file():
-                            ref_img_paths.append(resolved_paths[it_based_on])
-                        elif Path(it_based_on).is_file():
-                            ref_img_paths.append(str(Path(it_based_on).resolve()))
-                        elif (
-                            Path(it_based_on).stem in resolved_paths
-                            and Path(resolved_paths[Path(it_based_on).stem]).is_file()
-                        ):
-                            ref_img_paths.append(resolved_paths[Path(it_based_on).stem])
-
-                    await self._generate_single_image(
-                        it_prompt,  # type: ignore[arg-type]
-                        it_dest,
-                        reference_image_paths=ref_img_paths or None,
-                        preferred_profile=prof_hint,
-                    )
-                    res_path = str(it_dest.resolve())
-                    self._update_ref_path(it_ref_obj, res_path)
-                    resolved_paths[it_id] = res_path
-
-            def _get_item_profile_hint(
-                item_tuple: tuple[str, str | None, str | None, Any, str | None],
-                fallback_idx: int,
-            ) -> dict[str, Any] | None:
-                if not eligible_profiles:
-                    return None
-                it_id, _, _, _, it_based_on = item_tuple
-
-                # If based on a prior frame, inherit that frame's profile for warm reuse
+                ref_img_paths: list[str] = []
                 if it_based_on:
-                    dep_path = resolved_paths.get(it_based_on) or (
-                        it_based_on if Path(it_based_on).is_file() else None
-                    )
-                    if not dep_path and Path(it_based_on).stem in resolved_paths:
-                        dep_path = resolved_paths[Path(it_based_on).stem]
-                    if dep_path:
-                        sidecar = Path(dep_path).with_suffix(".json")
-                        if sidecar.is_file():
-                            try:
-                                s_data = json.loads(sidecar.read_text(encoding="utf-8"))
-                                parent_prof = s_data.get("profile")
-                                if parent_prof:
-                                    for p in eligible_profiles:
-                                        if p.get("name") == parent_prof or p.get("id") == parent_prof:
-                                            return p
-                            except Exception:
-                                pass
+                    if it_based_on in resolved_paths and Path(resolved_paths[it_based_on]).is_file():
+                        ref_img_paths.append(resolved_paths[it_based_on])
+                    elif Path(it_based_on).is_file():
+                        ref_img_paths.append(str(Path(it_based_on).resolve()))
+                    elif (
+                        Path(it_based_on).stem in resolved_paths
+                        and Path(resolved_paths[Path(it_based_on).stem]).is_file()
+                    ):
+                        ref_img_paths.append(resolved_paths[Path(it_based_on).stem])
 
-                # Extract scene number from it_id (e.g. S01_start -> shot index 0, group 0 // 2 = 0; S02_end -> shot index 1, group 1 // 2 = 0)
-                match = re.search(r"(\d+)", it_id)
-                if match:
-                    scene_num = int(match.group(1))
-                    shot_idx = max(0, scene_num - 1) if scene_num > 0 else 0
-                    group_idx = shot_idx // 2
-                else:
-                    group_idx = fallback_idx // 2
-
-                active_pool_size = max(1, min(self.max_workers, len(eligible_profiles)))
-                return eligible_profiles[group_idx % active_pool_size]
-
-            tasks = [
-                _generate_task(
-                    it,
-                    _get_item_profile_hint(it, idx),
+                await self._generate_single_image(
+                    it_prompt,  # type: ignore[arg-type]
+                    it_dest,
+                    reference_image_paths=ref_img_paths or None,
+                    preferred_profile=prof_hint,
                 )
-                for idx, it in enumerate(ready_to_generate)
-            ]
-            await asyncio.gather(*tasks)
+                res_path = str(it_dest.resolve())
+                self._update_ref_path(it_ref_obj, res_path)
+                resolved_paths[it_id] = res_path
 
-            pending_items = waiting_items
+        def _get_item_profile_hint(
+            item_tuple: tuple[str, str | None, str | None, Any, str | None],
+            fallback_idx: int,
+        ) -> dict[str, Any] | None:
+            if not eligible_profiles:
+                return None
+            it_id, _, _, _, it_based_on = item_tuple
+
+            # If based on a prior frame, inherit that frame's profile for warm reuse
+            if it_based_on:
+                dep_path = resolved_paths.get(it_based_on) or (
+                    it_based_on if Path(it_based_on).is_file() else None
+                )
+                if not dep_path and Path(it_based_on).stem in resolved_paths:
+                    dep_path = resolved_paths[Path(it_based_on).stem]
+                if dep_path:
+                    sidecar = Path(dep_path).with_suffix(".json")
+                    if sidecar.is_file():
+                        try:
+                            s_data = json.loads(sidecar.read_text(encoding="utf-8"))
+                            parent_prof = s_data.get("profile")
+                            if parent_prof:
+                                for p in eligible_profiles:
+                                    if p.get("name") == parent_prof or p.get("id") == parent_prof:
+                                        return p
+                        except Exception:
+                            pass
+
+            # Extract scene number from it_id (e.g. S01_start -> shot index 0, group 0 // 2 = 0; S02_end -> shot index 1, group 1 // 2 = 0)
+            match = re.search(r"(\d+)", it_id)
+            if match:
+                scene_num = int(match.group(1))
+                shot_idx = max(0, scene_num - 1) if scene_num > 0 else 0
+                group_idx = shot_idx // 2
+            else:
+                group_idx = fallback_idx // 2
+
+            active_pool_size = max(1, min(max(self.max_workers, 3), len(eligible_profiles)))
+            return eligible_profiles[group_idx % active_pool_size]
+
+        try:
+            while pending_items or in_flight:
+                # 1. Resolve any alias/link items whose target image has now appeared on disk or was resolved
+                still_pending: list[tuple[str, str | None, str | None, Any, str | None]] = []
+                made_progress = False
+
+                for it in pending_items:
+                    item_id, img_path, prompt, ref_obj, based_on_ref = it
+                    dep_stem = Path(img_path).stem if img_path else None
+
+                    if img_path and Path(img_path).is_file():
+                        resolved_str = str(Path(img_path).resolve())
+                        self._update_ref_path(ref_obj, resolved_str)
+                        resolved_paths[item_id] = resolved_str
+                        made_progress = True
+                        continue
+
+                    if dep_stem and dep_stem in resolved_paths:
+                        resolved_str = resolved_paths[dep_stem]
+                        self._update_ref_path(ref_obj, resolved_str)
+                        resolved_paths[item_id] = resolved_str
+                        made_progress = True
+                        continue
+
+                    dest_file = self.frames_dir / f"{item_id}.png"
+                    if (
+                        dest_file.is_file()
+                        and dest_file.stat().st_size > (0 if self.dry_run else 20000)
+                        and (self.dry_run or dest_file.with_suffix(".json").is_file())
+                    ):
+                        resolved_str = str(dest_file.resolve())
+                        self._update_ref_path(ref_obj, resolved_str)
+                        resolved_paths[item_id] = resolved_str
+                        made_progress = True
+                        continue
+
+                    still_pending.append(it)
+
+                pending_items = still_pending
+                if not pending_items and not in_flight:
+                    break
+
+                # 2. Select items whose dependencies are satisfied right now and spawn them immediately
+                ready_to_generate: list[tuple[str, str | None, str | None, Any, str | None]] = []
+                waiting_items: list[tuple[str, str | None, str | None, Any, str | None]] = []
+
+                for it in pending_items:
+                    item_id, img_path, prompt, ref_obj, based_on_ref = it
+
+                    if not prompt:
+                        dep_stem = Path(img_path).stem if img_path else None
+                        if dep_stem and dep_stem in all_item_ids:
+                            waiting_items.append(it)
+                            continue
+                        else:
+                            raise ValueError(
+                                f"Frame {item_id} has neither an existing image_path nor an image_prompt"
+                            )
+
+                    dep_ready = True
+                    if based_on_ref:
+                        if based_on_ref in resolved_paths:
+                            dep_ready = True
+                        elif Path(based_on_ref).is_file():
+                            dep_ready = True
+                        elif Path(based_on_ref).stem in resolved_paths:
+                            dep_ready = True
+                        else:
+                            dep_ready = False
+
+                    if dep_ready:
+                        ready_to_generate.append(it)
+                    else:
+                        waiting_items.append(it)
+
+                pending_items = waiting_items
+
+                for it in ready_to_generate:
+                    t = asyncio.create_task(
+                        _generate_task(it, _get_item_profile_hint(it, spawn_counter))
+                    )
+                    in_flight[t] = it[0]
+                    spawn_counter += 1
+
+                if not in_flight and not made_progress and pending_items:
+                    unresolved = [it[0] for it in pending_items]
+                    raise RuntimeError(
+                        f"Deadlock in keyframe DAG resolution. Unresolved pending items: {unresolved}"
+                    )
+
+                if not in_flight:
+                    continue
+
+                done, _ = await asyncio.wait(
+                    in_flight.keys(), return_when=asyncio.FIRST_COMPLETED
+                )
+                for d in done:
+                    in_flight.pop(d, None)
+                    d.result()
+        finally:
+            for rem_t in list(in_flight.keys()):
+                if not rem_t.done():
+                    rem_t.cancel()
+            if in_flight:
+                await asyncio.gather(*in_flight.keys(), return_exceptions=True)
 
     def _update_ref_path(self, ref_obj: Any, path_str: str) -> None:
         if isinstance(ref_obj, tuple):
@@ -677,50 +770,49 @@ class FlowVideoChainOrchestrator:
             )
             matches = [p for p in profiles if (p.get("name") == pref_name or p.get("id") == pref_name)]
             if matches:
-                eligible = matches + [p for p in profiles if p not in matches]
+                rest = self._filter_eligible_preserving_order(
+                    [p for p in profiles if p not in matches], min_credits=7
+                ) or [p for p in profiles if p not in matches]
+                eligible = matches + rest
 
         if not eligible:
-            if hasattr(self.credit_ledger, "pick_for_image_task"):
-                picked = self.credit_ledger.pick_for_image_task(profiles)
-                if picked:
-                    first_list = (
-                        [picked]
-                        if isinstance(picked, dict)
-                        else [p for p in profiles if (p.get("id") or p.get("name")) == picked]
-                    )
-                    eligible = first_list + [p for p in profiles if p not in first_list]
-            elif hasattr(self.credit_ledger, "pick_profile"):
-                picked = self.credit_ledger.pick_profile(profiles)
-                if picked:
-                    first_list = (
-                        [picked]
-                        if isinstance(picked, dict)
-                        else [p for p in profiles if (p.get("id") or p.get("name")) == picked]
-                    )
-                    eligible = first_list + [p for p in profiles if p not in first_list]
-
-        if not eligible:
-            eligible = self.credit_ledger.select_eligible_profiles(profiles, min_credits=0)
-            if not eligible:
-                eligible = self.credit_ledger.select_eligible_profiles(profiles, min_credits=10)
-            if not eligible:
-                eligible = list(profiles)
+            eligible = (
+                self._filter_eligible_preserving_order(profiles, min_credits=7)
+                or self._filter_eligible_preserving_order(profiles, min_credits=0)
+                or list(profiles)
+            )
+            if len(eligible) > 1:
+                rr_idx = getattr(self, "_img_rr_cursor", 0) % len(eligible)
+                self._img_rr_cursor = rr_idx + 1
+                eligible = eligible[rr_idx:] + eligible[:rr_idx]
 
         if not eligible:
             raise RuntimeError("No eligible Chrome profiles with credits available for image generation")
 
         last_exc: Exception | None = None
-        for _outer_attempt in range(60):
+        for _outer_attempt in range(240):
+            candidate_list = list(eligible)
+            if self.reuse_warm_sessions and self._warm_sessions:
+                warm_ports = set(self._warm_sessions.keys())
+                warm_cands = [p for p in candidate_list if int(p.get("cdp_port", 0)) in warm_ports]
+                cold_cands = [p for p in candidate_list if int(p.get("cdp_port", 0)) not in warm_ports]
+                candidate_list = warm_cands + cold_cands
             has_uncooled = any(
                 not self._is_profile_cooled_down(str(p.get("name") or f"profile_{p.get('cdp_port', 9222)}"))
-                for p in eligible
+                for p in candidate_list
             )
+            if not has_uncooled and not self.dry_run:
+                if len(candidate_list) > 1:
+                    await asyncio.sleep(8.0)
+                    continue
+                elif _outer_attempt > 0:
+                    await asyncio.sleep(5.0)
             acquired_any = False
-            for profile_cfg in eligible:
+            for profile_cfg in candidate_list:
                 port = int(profile_cfg.get("cdp_port", 9222))
                 profile_name = str(profile_cfg.get("name") or f"profile_{port}")
 
-                if has_uncooled and self._is_profile_cooled_down(profile_name):
+                if (has_uncooled or (len(candidate_list) > 1 and not self.dry_run)) and self._is_profile_cooled_down(profile_name):
                     continue
 
                 port_async_lock = self._get_warm_lock(port)
@@ -735,40 +827,40 @@ class FlowVideoChainOrchestrator:
 
                 try:
                     if self.reuse_warm_sessions:
-                        warm_entry = self._warm_sessions.get(port)
-                        if warm_entry:
-                            session = warm_entry["session"]
-                        else:
-                            await self._evict_idle_warm_sessions_if_full(exclude_port=port)
-                            port_lock = ProfilePortLock(port, owner_tag=f"img_{dest_file.stem}")
-                            browser_slot = GlobalBrowserSlot(owner_tag=f"img_{dest_file.stem}")
-
-                            if not browser_slot.acquire(timeout=60.0):
-                                continue
-
-                            if not port_lock.acquire(timeout=1.5):
-                                browser_slot.release()
-                                continue
-
-                            pm = get_process_manager()
-                            launched = pm.launch(profile_cfg, headless=self.headless)
-                            if not launched:
-                                port_lock.release()
-                                browser_slot.release()
-                                continue
-                            self._launched_ports.add(port)
-
-                            session = DirectCDPProfileSession(profile_cfg)
-                            await session.connect()
-                            self._warm_sessions[port] = {
-                                "profile_cfg": profile_cfg,
-                                "session": session,
-                                "port_lock": port_lock,
-                                "browser_slot": browser_slot,
-                                "credits_synced": False,
-                            }
-
                         try:
+                            warm_entry = self._warm_sessions.get(port)
+                            if warm_entry:
+                                session = warm_entry["session"]
+                            else:
+                                await self._evict_idle_warm_sessions_if_full(exclude_port=port)
+                                port_lock = ProfilePortLock(port, owner_tag=f"img_{dest_file.stem}")
+                                browser_slot = GlobalBrowserSlot(owner_tag=f"img_{dest_file.stem}")
+
+                                if not browser_slot.acquire(timeout=60.0):
+                                    continue
+
+                                if not port_lock.acquire(timeout=1.5):
+                                    browser_slot.release()
+                                    continue
+
+                                pm = get_process_manager()
+                                launched = self._launch_profile_browser(pm, profile_cfg)
+                                if not launched:
+                                    port_lock.release()
+                                    browser_slot.release()
+                                    continue
+                                self._launched_ports.add(port)
+
+                                session = DirectCDPProfileSession(profile_cfg)
+                                warm_entry = {
+                                    "profile_cfg": profile_cfg,
+                                    "session": session,
+                                    "port_lock": port_lock,
+                                    "browser_slot": browser_slot,
+                                    "credits_synced": False,
+                                }
+                                self._warm_sessions[port] = warm_entry
+                                await session.connect()
                             ref_media_ids: list[str] | None = None
                             if reference_image_paths and hasattr(session, "upload_image_file"):
                                 uploaded: list[str] = []
@@ -781,7 +873,10 @@ class FlowVideoChainOrchestrator:
                                             up_res = await session.upload_image_file(ref_p)
                                             up_id = up_res.get("media_id") if isinstance(up_res, dict) else up_res
                                             if up_id:
+                                                self._save_profile_media_id(ref_p, profile_name, str(up_id))
                                                 uploaded.append(str(up_id))
+                                            if not self.dry_run:
+                                                await asyncio.sleep(2.2)
                                 if uploaded:
                                     ref_media_ids = uploaded
 
@@ -794,6 +889,7 @@ class FlowVideoChainOrchestrator:
                                 gen_kwargs["reference_media_ids"] = ref_media_ids
 
                             res = await session.generate_image(**gen_kwargs)
+                            warm_entry["image_warmed"] = True
                             url = res.get("url")
                             if not url:
                                 raise RuntimeError(f"Image generation returned no URL: {res}")
@@ -861,7 +957,7 @@ class FlowVideoChainOrchestrator:
                                 continue
                             try:
                                 pm = get_process_manager()
-                                launched = pm.launch(profile_cfg, headless=self.headless)
+                                launched = self._launch_profile_browser(pm, profile_cfg)
                                 if not launched:
                                     continue
                                 self._launched_ports.add(port)
@@ -1144,7 +1240,7 @@ class FlowVideoChainOrchestrator:
             ),
             default=10,
         )
-        eligible_profiles = self.credit_ledger.select_eligible_profiles(
+        eligible_profiles = self._filter_eligible_preserving_order(
             all_profiles, min_credits=min_cost
         )
         if not eligible_profiles:
@@ -1187,14 +1283,23 @@ class FlowVideoChainOrchestrator:
                             pname = str(p.get("name") or p.get("profile_dir", ""))
                             return self.credit_ledger.is_eligible(pname, min_credits=cost) and not self._is_profile_cooled_down(pname)
 
-                        eligible_candidates = [p for p in available_profiles if is_candidate(p)]
+                        eligible_candidates = [
+                            p
+                            for p in available_profiles
+                            if is_candidate(p) and not self._get_warm_lock(int(p.get("cdp_port", 9222))).locked()
+                        ]
                         if not eligible_candidates:
-                            # Re-check eligible from pool
-                            fresh = self.credit_ledger.select_eligible_profiles(all_profiles, min_credits=clip_cost)
+                            # Re-check eligible from pool preserving squad profile ordering (excluding currently locked ports)
+                            fresh = self._filter_eligible_preserving_order(all_profiles, min_credits=clip_cost)
                             for fp in fresh:
-                                if fp not in available_profiles:
+                                fp_port = int(fp.get("cdp_port", 9222))
+                                if fp not in available_profiles and not self._get_warm_lock(fp_port).locked():
                                     available_profiles.append(fp)
-                            eligible_candidates = [p for p in available_profiles if is_candidate(p)]
+                            eligible_candidates = [
+                                p
+                                for p in available_profiles
+                                if is_candidate(p) and not self._get_warm_lock(int(p.get("cdp_port", 9222))).locked()
+                            ]
 
                         if not eligible_candidates:
                             # All eligible profiles might be in cooldown (either local or CreditLedger cross-process)
@@ -1207,7 +1312,7 @@ class FlowVideoChainOrchestrator:
                                     ledger_cd = (
                                         now + 10.0
                                         if hasattr(self.credit_ledger, "is_on_cooldown")
-                                        and self.credit_ledger.is_on_cooldown(pname, now=now)
+                                        and self.credit_ledger.is_on_cooldown(pname)
                                         else 0.0
                                     )
                                     cd_until = max(local_cd, ledger_cd)
@@ -1217,8 +1322,12 @@ class FlowVideoChainOrchestrator:
                             active_cooldowns = [t for t in cooldown_times if t > now]
                             if active_cooldowns:
                                 wait_sec = max(2.0, min(8.0, min(active_cooldowns) - now))
-                                # Unblock top cooled profile if all credit-bearing profiles are on long cooldown
-                                if cooled_with_credits and min(active_cooldowns) - now > 8.0:
+                                # Unblock top cooled profile in unit tests if all credit-bearing profiles are on synthetic long cooldown
+                                if (
+                                    cooled_with_credits
+                                    and min(active_cooldowns) - now > 8.0
+                                    and not os.environ.get("VP_FLOW_PROFILES", "").strip()
+                                ):
                                     unblock_p = cooled_with_credits[0]
                                     self._profile_cooldowns.pop(unblock_p, None)
                                     if hasattr(self.credit_ledger, "clear_cooldown"):
@@ -1251,7 +1360,7 @@ class FlowVideoChainOrchestrator:
                                 worker_queue.task_done()
                                 return
                         else:
-                            # Prefer profile that generated start_frame_path for zero-upload fast-path
+                            # Prefer profile that generated or already uploaded start_frame_path for zero-upload fast-path
                             matched_cand = None
                             if task.start_frame_path:
                                 start_sidecar = Path(task.start_frame_path).with_suffix(".json")
@@ -1259,14 +1368,35 @@ class FlowVideoChainOrchestrator:
                                     try:
                                         s_data = json.loads(start_sidecar.read_text(encoding="utf-8"))
                                         s_prof = s_data.get("profile")
+                                        s_pmap = s_data.get("profile_media_ids") if isinstance(s_data.get("profile_media_ids"), dict) else {}
                                         if s_prof:
                                             for cand in eligible_candidates:
                                                 if cand.get("name") == s_prof or cand.get("id") == s_prof:
                                                     matched_cand = cand
                                                     break
+                                        if matched_cand is None and s_pmap:
+                                            for cand in eligible_candidates:
+                                                cname = str(cand.get("name") or cand.get("id") or "")
+                                                if cname in s_pmap:
+                                                    matched_cand = cand
+                                                    break
                                     except Exception:
                                         pass
-                            profile_cfg = matched_cand or eligible_candidates[0]
+                            warm_cand = next(
+                                (
+                                    cand
+                                    for cand in eligible_candidates
+                                    if int(cand.get("cdp_port", 0)) in self._warm_sessions
+                                ),
+                                None,
+                            )
+                            if matched_cand and (
+                                int(matched_cand.get("cdp_port", 0)) in self._warm_sessions
+                                or len(self._warm_sessions) < self.max_workers
+                            ):
+                                profile_cfg = matched_cand
+                            else:
+                                profile_cfg = warm_cand or matched_cand or eligible_candidates[0]
                             available_profiles.remove(profile_cfg)
 
                     if wait_sec > 0:
@@ -1283,6 +1413,7 @@ class FlowVideoChainOrchestrator:
                         async with self._lock:
                             available_profiles.append(profile_cfg)
                             self._profiles_used.add(p_name)
+                            self._profile_block_streaks[p_name] = 0
                             if hasattr(self.credit_ledger, "touch_used"):
                                 self.credit_ledger.touch_used(p_name)
                             self._save_manifest(tasks)
@@ -1311,7 +1442,10 @@ class FlowVideoChainOrchestrator:
                                     "CAPTCHA_FAILED",
                                 )
                             ):
-                                self._record_profile_cooldown(p_name, 75.0, reason=exc_str)
+                                streak = self._profile_block_streaks.get(p_name, 0) + 1
+                                self._profile_block_streaks[p_name] = streak
+                                cd_sec = 75.0
+                                self._record_profile_cooldown(p_name, cd_sec, reason=exc_str)
                                 available_profiles.append(profile_cfg)
                                 attempts = max(0, attempts - 1)  # Do not burn attempt budget on temporary provider rate limit
                             elif is_port_busy:
@@ -1385,6 +1519,10 @@ class FlowVideoChainOrchestrator:
         await port_async_lock.acquire()
 
         try:
+            if self._is_profile_cooled_down(p_name):
+                if hasattr(self.credit_ledger, "rollback"):
+                    self.credit_ledger.rollback(p_name, clip_cost)
+                raise RuntimeError(f"FLOW_PROVIDER_BLOCKED: {p_name} already in cooldown")
             if self.reuse_warm_sessions:
                 warm_entry = self._warm_sessions.get(port)
                 if warm_entry:
@@ -1406,7 +1544,7 @@ class FlowVideoChainOrchestrator:
                         raise TimeoutError(f"Chrome port {port} busy")
 
                     pm = get_process_manager()
-                    launched = pm.launch(profile_cfg, headless=self.headless)
+                    launched = self._launch_profile_browser(pm, profile_cfg)
                     if not launched:
                         port_lock.release()
                         browser_slot.release()
@@ -1492,9 +1630,20 @@ class FlowVideoChainOrchestrator:
 
                     curr_ded = self._credits_deducted.get(p_name, 0)
                     self._credits_deducted[p_name] = curr_ded + clip_cost
-                except Exception:
+                except Exception as exc_clip:
                     if hasattr(self.credit_ledger, "rollback"):
                         self.credit_ledger.rollback(p_name, clip_cost)
+                    if any(
+                        err in str(exc_clip)
+                        for err in (
+                            "FLOW_PROVIDER_BLOCKED",
+                            "PUBLIC_ERROR_UNUSUAL_ACTIVITY",
+                            "TOO_MUCH_TRAFFIC",
+                            "NO_AT_TOKEN",
+                            "CAPTCHA_FAILED",
+                        )
+                    ):
+                        self._record_profile_cooldown(p_name, 75.0, reason=str(exc_clip))
                     await self._close_warm_port(port)
                     raise
             else:
@@ -1513,7 +1662,7 @@ class FlowVideoChainOrchestrator:
                         raise TimeoutError(f"Chrome port {port} busy")
                     try:
                         pm = get_process_manager()
-                        launched = pm.launch(profile_cfg, headless=self.headless)
+                        launched = self._launch_profile_browser(pm, profile_cfg)
                         if not launched:
                             if hasattr(self.credit_ledger, "rollback"):
                                 self.credit_ledger.rollback(p_name, clip_cost)

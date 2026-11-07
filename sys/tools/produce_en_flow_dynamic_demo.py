@@ -938,10 +938,12 @@ def package_final_on_colab_t4_nvenc(
     base_accounts = list(VERIFIED_COLAB_ACCOUNTS)
     rot = int(hashlib.md5(job_id.encode("utf-8")).hexdigest()[:8], 16) % len(base_accounts)
     override_acc = colab_account or os.environ.get("VP_COLAB_ACCOUNT") or os.environ.get("COLAB_ACCOUNT")
+    if override_acc == "account-10":
+        override_acc = "account-20"
     if override_acc:
-        candidate_accounts = [override_acc] + [a for a in base_accounts if a != override_acc]
+        candidate_accounts = [override_acc] + [a for a in base_accounts if a not in (override_acc, "account-10")] + ["account-10"]
     else:
-        candidate_accounts = base_accounts[rot:] + base_accounts[:rot]
+        candidate_accounts = [a for a in (base_accounts[rot:] + base_accounts[:rot]) if a != "account-10"] + ["account-10"]
     target_session = f"vp-en-{channel_slug}"
 
     last_exc: Exception | None = None
@@ -969,7 +971,7 @@ def package_final_on_colab_t4_nvenc(
             cfg.setdefault("colab_tts", {})
             cfg["colab_tts"]["session"] = target_session
             cfg["colab_tts"]["_session_explicit"] = True
-            cfg["colab_tts"]["render_timeout_seconds"] = 1800
+            cfg["colab_tts"]["render_timeout_seconds"] = 60
             cfg["colab_tts"]["account"] = acc
 
             client = Client(SYS_DIR, cfg)
@@ -1000,6 +1002,7 @@ def package_final_on_colab_t4_nvenc(
 
             client.session = effective_session
             cfg["colab_tts"]["session"] = effective_session
+            client.cfg["session"] = effective_session
 
             client.ensure_authenticated()
             try:
@@ -1011,26 +1014,36 @@ def package_final_on_colab_t4_nvenc(
                     cleanup_stale_colab_state(client, acc, effective_session)
                     client.session = target_session
                     cfg["colab_tts"]["session"] = target_session
-                    client.cfg["colab_tts"]["session"] = target_session
+                    client.cfg["session"] = target_session
                     client._ready(auto_start=True)
                 except Exception as ex_recover:
                     raise ex_ready from ex_recover
 
+            client.cfg["render_timeout_seconds"] = 600
             remote_dir = f"/content/vp_en_nvenc/{job_id}"
             remote_bundle = f"{remote_dir}/bundle.zip"
 
             try:
-                client.exec(f"from pathlib import Path\nPath({remote_dir!r}).mkdir(parents=True, exist_ok=True)")
+                client.exec(
+                    f"from pathlib import Path\nPath({remote_dir!r}).mkdir(parents=True, exist_ok=True)",
+                    timeout=35,
+                )
             except Exception as ex_exec:
-                if "COLAB_SESSION_NOT_FOUND" in str(ex_exec):
+                if any(
+                    k in str(ex_exec)
+                    for k in ("COLAB_SESSION_NOT_FOUND", "COLAB_COMMAND_FAILED", "COLAB_EXEC_UNCONFIRMED")
+                ):
                     from tools.channel_production_common import cleanup_stale_colab_state
 
                     cleanup_stale_colab_state(client, acc, client.session)
                     client.session = target_session
                     cfg["colab_tts"]["session"] = target_session
-                    client.cfg["colab_tts"]["session"] = target_session
+                    client.cfg["session"] = target_session
                     client._ready(auto_start=True)
-                    client.exec(f"from pathlib import Path\nPath({remote_dir!r}).mkdir(parents=True, exist_ok=True)")
+                    client.exec(
+                        f"from pathlib import Path\nPath({remote_dir!r}).mkdir(parents=True, exist_ok=True)",
+                        timeout=35,
+                    )
                 else:
                     raise
             client.call("upload", "-s", client.session, str(bundle_zip.resolve()), remote_bundle, timeout=300)
@@ -1110,34 +1123,45 @@ for g_idx, indices in enumerate(groups):
         raise RuntimeError(f"Remote NVENC group {{g_idx}} stitch failed: " + gp_res.stderr[-800:])
     group_mp4s.append(g_out)
 
-# Step 2: Join scene groups with 0.24s breath-aligned xfade + .ass captions + squircle logo on Tesla T4 h264_nvenc
+# Step 2: Join scene groups with 0.24s breath-aligned xfade (or sequential concat demuxer for >4 groups) + .ass captions + squircle logo on Tesla T4 h264_nvenc
 watermark_png = str(work / "watermark.png")
 audio_path = str(work / "audio.wav")
 ass_path = str(work / "subtitles.ass")
 
-cmd = ["ffmpeg", "-y"]
-for gp in group_mp4s:
-    cmd.extend(["-i", gp])
-wm_idx = len(group_mp4s)
-cmd.extend(["-i", watermark_png])
-audio_idx = len(group_mp4s) + 1
-cmd.extend(["-i", audio_path])
-
 filter_chains = []
-if len(group_mp4s) == 1:
+if len(group_mp4s) > 4:
+    concat_txt = work / "groups_concat.txt"
+    concat_txt.write_text(
+        "".join(f"file '{{Path(gp).name}}'\\n" for gp in group_mp4s),
+        encoding="utf-8",
+    )
+    cmd = ["ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", str(concat_txt), "-i", watermark_png, "-i", audio_path]
+    wm_idx = 1
+    audio_idx = 2
     filter_chains.append("[0:v]setsar=1[vjoined]")
     cur_v = "vjoined"
 else:
-    cum_offset = 0.0
-    prev_lbl = "0:v"
-    for g_i in range(1, len(group_mp4s)):
-        cum_offset += group_spoken_durs[g_i - 1]
-        out_lbl = f"vg{{g_i}}"
-        filter_chains.append(
-            f"[{{prev_lbl}}][{{g_i}}:v]xfade=transition=fade:duration={{xfade_pivot_sec:.4f}}:offset={{max(0.05, cum_offset):.4f}}[{{out_lbl}}]"
-        )
-        prev_lbl = out_lbl
-    cur_v = prev_lbl
+    cmd = ["ffmpeg", "-y"]
+    for gp in group_mp4s:
+        cmd.extend(["-i", gp])
+    wm_idx = len(group_mp4s)
+    cmd.extend(["-i", watermark_png])
+    audio_idx = len(group_mp4s) + 1
+    cmd.extend(["-i", audio_path])
+    if len(group_mp4s) == 1:
+        filter_chains.append("[0:v]setsar=1[vjoined]")
+        cur_v = "vjoined"
+    else:
+        cum_offset = 0.0
+        prev_lbl = "0:v"
+        for g_i in range(1, len(group_mp4s)):
+            cum_offset += group_spoken_durs[g_i - 1]
+            out_lbl = f"vg{{g_i}}"
+            filter_chains.append(
+                f"[{{prev_lbl}}][{{g_i}}:v]xfade=transition=fade:duration={{xfade_pivot_sec:.4f}}:offset={{max(0.05, cum_offset):.4f}}[{{out_lbl}}]"
+            )
+            prev_lbl = out_lbl
+        cur_v = prev_lbl
 
 if is_short and os.path.exists(ass_path):
     escaped_ass = ass_path.replace("\\\\", "/").replace(":", r"\\:").replace("'", r"\\'")
@@ -1170,9 +1194,16 @@ p = subprocess.run(cmd, capture_output=True, text=True)
 if p.returncode != 0:
     raise RuntimeError("Remote FFmpeg NVENC failed: " + p.stderr[-1000:])
 
+try:
+    bundle_zip.unlink(missing_ok=True)
+    for gp_f in group_mp4s:
+        Path(gp_f).unlink(missing_ok=True)
+except Exception:
+    pass
+
 print("NVENC_RENDER_SUCCESS")
 """
-            exec_out = client.exec(remote_render_script, timeout=900)
+            exec_out = client.exec(remote_render_script, timeout=240 if is_short else 600)
             if "NVENC_RENDER_SUCCESS" not in exec_out:
                 raise RuntimeError(f"Colab NVENC execution failed: {exec_out}")
 
@@ -1184,11 +1215,6 @@ print("NVENC_RENDER_SUCCESS")
                 str(out_mp4.resolve()),
                 timeout=300,
             )
-
-            try:
-                client.exec(f"import shutil\nshutil.rmtree({remote_dir!r}, ignore_errors=True)")
-            except Exception:
-                pass
 
             meta = probe_video_clip(out_mp4)
             meta["video_encoder"] = "colab_t4_h264_nvenc"
@@ -1553,7 +1579,22 @@ def produce_dynamic_flow_demo(
     actual_mode = str(chain_report.get("mode", chain_mode.value))
 
     logger.info(f"[{job_id}] Step 3/4: Packaging final {aspect} video -> {final_mp4} (mode={actual_mode})...")
-    if actual_mode == ChainMode.ZERO_CREDIT_FLIPBOOK.value and not dry_run:
+    reused_mp4_meta: dict[str, Any] | None = None
+    if resume and final_mp4.is_file() and final_mp4.stat().st_size > 1_000_000:
+        try:
+            cand_meta = probe_video_clip(final_mp4)
+            if abs(float(cand_meta.get("duration", 0.0)) - total_audio_dur) < 2.5:
+                cand_meta["video_encoder"] = "colab_t4_h264_nvenc"
+                cand_meta["colab_account"] = colab_account
+                cand_meta["colab_session"] = None
+                reused_mp4_meta = cand_meta
+                logger.info(f"[{job_id}] Reusing valid existing packaged MP4 ({cand_meta.get('duration')}s) -> {final_mp4}")
+        except Exception:
+            reused_mp4_meta = None
+
+    if reused_mp4_meta is not None:
+        final_meta = reused_mp4_meta
+    elif actual_mode == ChainMode.ZERO_CREDIT_FLIPBOOK.value and not dry_run:
         # Pure 0-credit slide fallback uses V2 supersampled zero-snap zoompan + xfade
         fallback_frames = [Path(t.start_frame_path) for t in completed_tasks]
         fallback_beats = [
@@ -1602,6 +1643,18 @@ def produce_dynamic_flow_demo(
     if teardown_colab and final_meta.get("colab_account") and final_meta.get("colab_session"):
         teardown_colab_session(final_meta["colab_account"], final_meta["colab_session"])
 
+    # Thumbnail Generation: Guaranteed high-contrast 16:9 thumbnail before Step 4 finishes
+    thumbnail_path = None
+    if aspect == "16:9":
+        try:
+            from sys.tools.generate_en_thumbnails import generate_thumbnail_for_job
+
+            thumb_file = generate_thumbnail_for_job(job_id=job_id, use_flow_cdp=True)
+            thumbnail_path = str(thumb_file)
+            logger.info(f"[{job_id}] Auto-generated 16:9 YouTube thumbnail -> {thumbnail_path}")
+        except Exception as ex_thumb:
+            logger.warning(f"[{job_id}] Thumbnail generation notice: {ex_thumb}")
+
     # 4. Extract 1-FPS QA Frames for Visual Frame-by-Frame Verification
     qa_frames_dir = run_dir / "qa_frames_1fps"
     if qa_frames_dir.exists():
@@ -1647,6 +1700,7 @@ def produce_dynamic_flow_demo(
         "final_mp4": str(final_mp4),
         "srt_path": str(final_mp4.with_suffix(".srt")),
         "ass_path": str(final_mp4.with_suffix(".ass")) if aspect == "9:16" else None,
+        "thumbnail_path": thumbnail_path or (str(final_mp4.parent / "thumbnail.png") if (final_mp4.parent / "thumbnail.png").is_file() else None),
         "qa_frames_dir": str(qa_frames_dir),
         "elapsed_seconds": elapsed,
     }

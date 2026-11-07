@@ -1092,3 +1092,9 @@ List of technical issues recorded during pipeline operation:
 - [colab-1793952188572074944.md](colab-1793952188572074944.md) — Colab TTS cần kiểm tra.
 
 - [colab-1793953220367711843.md](colab-1793953220367711843.md) — Colab TTS cần kiểm tra.
+
+- [colab-1793953875828289203.md](colab-1793953875828289203.md) — Colab TTS cần kiểm tra.
+
+- [colab-1793954699641366014.md](colab-1793954699641366014.md) — Colab TTS cần kiểm tra.
+
+- [colab-1793957924717903026.md](colab-1793957924717903026.md) — Colab TTS cần kiểm tra.
