@@ -1,0 +1,281 @@
+{
+  "channel_id": "ban_do_quyen_luc",
+  "channel_slug": "ban-do-quyen-luc",
+  "job_id": "vn_pilot_ban_do_quyen_luc_short_fullchain",
+  "parent_long_id": "ban-do-quyen-luc-long-master",
+  "format_profile": "short_9x16",
+  "aspect": "9:16",
+  "video_model": "omni_1_2_flash",
+  "chain_mode": "scene_pairs",
+  "voice": "VietNarrator",
+  "total_duration_sec": 48.76,
+  "youtube_title": "Eo Biển Hormuz: Nút Thắt Dầu Mỏ Khiến Thế Giới Nín Thở",
+  "title": "Eo Biển Hormuz: Nút Thắt Dầu Mỏ Khiến Thế Giới Nín Thở",
+  "thumbnail_spec": {
+    "visual_hook": "Vertical 9:16 3D orbital satellite relief map of the Strait of Hormuz with glowing maritime navigation vectors and oil supertanker convoys, zero overlays, 25% margin",
+    "allowed_text": "NÚT THẮT HORMUZ",
+    "overlay_card": false,
+    "prompt": "Vertical 9:16 3D orbital satellite relief map of the Strait of Hormuz with glowing maritime navigation vectors and oil supertanker convoys, zero overlays, 25% margin, bold uppercase text 'NÚT THẮT HORMUZ', RealLifeLore hyper-realistic 3D orbital-to-surface cartographic cinematography with blue atmospheric limb glow, directional solar lighting, and fluid hydrodynamic anti-morph physics across varying maritime scales and geographic choke points, strictly zero map text or country labels, strictly zero graphic overlays, no cartoons."
+  },
+  "packaging": {
+    "cta_plan": {
+      "bridge": "Xem toàn bộ hồ sơ địa chính trị Hormuz trên video dài của kênh.",
+      "close": "Hãy nhìn vào các điểm nghẽn để thấu hiểu ván cờ thế giới."
+    }
+  },
+  "cta_plan": {
+    "bridge": "Xem toàn bộ hồ sơ địa chính trị Hormuz trên video dài của kênh.",
+    "close": "Hãy nhìn vào các điểm nghẽn để thấu hiểu ván cờ thế giới."
+  },
+  "beats": [
+    {
+      "id": "S01",
+      "narration": "Một eo biển hẹp chỉ ba mươi hải lý quyết định giá dầu toàn cầu.",
+      "prompt": "Vertical 9:16 3D orbital satellite relief perspective of the Strait of Hormuz, rugged desert coastlines of Oman and Iran framing the turquoise narrow maritime passage, RealLifeLore investigative vector aesthetic, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow smooth 35mm orbital push-in toward the narrowest constriction of the strait, realistic sun glint on deep ocean water, locked geographic geometry, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.83,
+      "at": 0.0
+    },
+    {
+      "id": "S02",
+      "narration": "Nơi một phần năm lượng dầu mỏ tiêu thụ trên thế giới bắt buộc phải đi qua.",
+      "prompt": "Vertical 9:16 high-altitude survey of three massive VLCC crude oil supertankers sailing in line through the deep blue shipping lane, long white foam wakes trailing, strictly zero text, no cartoons.",
+      "motion_prompt": "Steady high-altitude tracking pass alongside the convoy of massive oil tankers cruising through the strait, zero morphing.",
+      "camera_motion": "pan_right",
+      "transition": "smoothright",
+      "based_on": "S01",
+      "duration": 4.18,
+      "at": 3.83
+    },
+    {
+      "id": "S03",
+      "narration": "Mỗi ngày có hàng trăm siêu tàu chở dầu rẽ sóng nối đuôi nhau.",
+      "prompt": "Vertical 9:16 telephoto maritime view of the bow of a 300,000-ton crude carrier slicing through calm blue water, giant red bulbous bow cutting ocean swell, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow telephoto push-in toward the towering ship bow, water spray churning in morning sunlight, monumental scale, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": "S02",
+      "duration": 3.63,
+      "at": 8.01
+    },
+    {
+      "id": "S04",
+      "narration": "Làn hàng hải quốc tế ở đây hẹp đến mức chỉ đủ hai tàu tránh nhau.",
+      "prompt": "Vertical 9:16 top-down satellite visualization of the twin two-mile-wide inbound and outbound separation channels in the strait, deep navy ocean water, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow downward zoom highlighting the narrow corridor between rugged island promontories, crisp bathymetric contours, zero morphing.",
+      "camera_motion": "zoom_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.86,
+      "at": 11.64
+    },
+    {
+      "id": "S05",
+      "narration": "Nằm kẹp giữa các thế lực địa chính trị lớn với toan tính quyền lực.",
+      "prompt": "Vertical 9:16 dramatic low-angle shot of rugged arid coastal cliffs towering over the narrow sea lane, deep desert shadows, harsh desert sunlight, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow cinematic lateral slide past the towering coastal bluffs looking down at distant tankers on the water, zero morphing.",
+      "camera_motion": "pan_left",
+      "transition": "smoothleft",
+      "based_on": null,
+      "duration": 3.68,
+      "at": 15.5
+    },
+    {
+      "id": "S06",
+      "narration": "Chỉ cần một biến cố nhỏ làm nghẽn dòng chảy qua eo biển Hormuz,",
+      "prompt": "Vertical 9:16 high-angle shot of a supertanker slowing to an emergency halt near a navigational buoy, anchor splash churning water into foam, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow-motion push-in as the massive ship slows and drops anchor, ripples expanding outward across the sea, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.75,
+      "at": 19.18
+    },
+    {
+      "id": "S07",
+      "narration": "giá nhiên liệu và chuỗi cung ứng thế giới sẽ rơi vào khủng hoảng.",
+      "prompt": "Vertical 9:16 macro shot of global financial market trading terminal monitors displaying fluctuating red and green candlestick charts in a dim room, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow optical rack focus across the glowing trading screens to a financial analyst hand resting on desk, zero morphing.",
+      "camera_motion": "zoom_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.61,
+      "at": 22.93
+    },
+    {
+      "id": "S08",
+      "narration": "Các nền kinh tế lớn đều phải cử hạm đội tàu tuần tra bảo vệ.",
+      "prompt": "Vertical 9:16 eye-level shot of a modern naval destroyer escorting a commercial crude carrier through open desert waters, steel gray hull slicing waves, strictly zero text, no cartoons.",
+      "motion_prompt": "Steady lateral tracking pass alongside the naval escort ship keeping vigilant guard, realistic maritime spray, zero morphing.",
+      "camera_motion": "pan_right",
+      "transition": "smoothright",
+      "based_on": null,
+      "duration": 3.75,
+      "at": 26.54
+    },
+    {
+      "id": "S09",
+      "narration": "Bản đồ quyền lực không nằm trên những tờ tuyên ngôn hoa mỹ.",
+      "prompt": "Vertical 9:16 top-down shot of an antique brass compass and callipers measuring distances on a detailed maritime nautical chart on mahogany desk, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow precision push-in toward the brass calliper tips measuring the narrow strait on the chart, warm study lamplight, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.47,
+      "at": 30.29
+    },
+    {
+      "id": "S10",
+      "narration": "Nó được định hình bởi những điểm nghẽn địa lý hiểm hóc trên mặt biển.",
+      "prompt": "Vertical 9:16 3D relief globe visualization highlighting the strategic maritime chokepoints of the world connected by glowing trade arcs, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow rotating orbit around the 3D relief globe, focusing on the Middle East maritime corridors, zero morphing.",
+      "camera_motion": "orbit_cw",
+      "transition": "dissolve",
+      "based_on": "S09",
+      "duration": 3.75,
+      "at": 33.76
+    },
+    {
+      "id": "S11",
+      "narration": "Kẻ nắm giữ yếu huyệt này sẽ có đòn bẩy điều tiết kinh tế toàn cầu.",
+      "prompt": "Vertical 9:16 wide sunset view from a high mountain ridge overlooking the entire Strait of Hormuz, sun sinking into golden waters as ships navigate calmly below, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow majestic tilt up from the sea lanes to the glorious golden sunset sky, grand geopolitical scale, zero morphing.",
+      "camera_motion": "pan_up",
+      "transition": "smoothup",
+      "based_on": null,
+      "duration": 3.9,
+      "at": 37.51
+    },
+    {
+      "id": "S12",
+      "narration": "Xem toàn bộ hồ sơ địa chính trị Hormuz trên video dài của kênh.",
+      "prompt": "Vertical 9:16 macro tabletop shot of an investigative maritime dossier with satellite photographs and nautical charts beside a tablet screen on slate, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow smooth push-in toward the tablet display and analytical maps, warm desk illumination, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 4.17,
+      "at": 41.41
+    },
+    {
+      "id": "S13",
+      "narration": "Hãy nhìn vào các điểm nghẽn để thấu hiểu ván cờ thế giới.",
+      "prompt": "Vertical 9:16 contemplative shot of a diplomat or analyst looking out a high glass office window toward a busy harbor at twilight, quiet strategic insight, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow elegant pullback from the observer into the tranquil office, harbor lights twinkling on the horizon, serene conclusion, zero morphing.",
+      "camera_motion": "zoom_out",
+      "transition": "fade",
+      "based_on": "S12",
+      "duration": 3.19,
+      "at": 45.58
+    }
+  ],
+  "scene_pairs": [
+    {
+      "id": "PAIR_01",
+      "start_beat_id": "S01",
+      "end_beat_id": "S02",
+      "target_duration": 3.83,
+      "motion_prompt": "Slow smooth 35mm orbital push-in toward the narrowest constriction of the strait, realistic sun glint on deep ocean water, locked geographic geometry, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_02",
+      "start_beat_id": "S02",
+      "end_beat_id": "S03",
+      "target_duration": 4.18,
+      "motion_prompt": "Steady high-altitude tracking pass alongside the convoy of massive oil tankers cruising through the strait, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_03",
+      "start_beat_id": "S03",
+      "end_beat_id": "S04",
+      "target_duration": 3.63,
+      "motion_prompt": "Slow telephoto push-in toward the towering ship bow, water spray churning in morning sunlight, monumental scale, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_04",
+      "start_beat_id": "S04",
+      "end_beat_id": "S05",
+      "target_duration": 3.86,
+      "motion_prompt": "Slow downward zoom highlighting the narrow corridor between rugged island promontories, crisp bathymetric contours, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_05",
+      "start_beat_id": "S05",
+      "end_beat_id": "S06",
+      "target_duration": 3.68,
+      "motion_prompt": "Slow cinematic lateral slide past the towering coastal bluffs looking down at distant tankers on the water, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_06",
+      "start_beat_id": "S06",
+      "end_beat_id": "S07",
+      "target_duration": 3.75,
+      "motion_prompt": "Slow-motion push-in as the massive ship slows and drops anchor, ripples expanding outward across the sea, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_07",
+      "start_beat_id": "S07",
+      "end_beat_id": "S08",
+      "target_duration": 3.61,
+      "motion_prompt": "Slow optical rack focus across the glowing trading screens to a financial analyst hand resting on desk, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_08",
+      "start_beat_id": "S08",
+      "end_beat_id": "S09",
+      "target_duration": 3.75,
+      "motion_prompt": "Steady lateral tracking pass alongside the naval escort ship keeping vigilant guard, realistic maritime spray, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_09",
+      "start_beat_id": "S09",
+      "end_beat_id": "S10",
+      "target_duration": 3.47,
+      "motion_prompt": "Slow precision push-in toward the brass calliper tips measuring the narrow strait on the chart, warm study lamplight, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_10",
+      "start_beat_id": "S10",
+      "end_beat_id": "S11",
+      "target_duration": 3.75,
+      "motion_prompt": "Slow rotating orbit around the 3D relief globe, focusing on the Middle East maritime corridors, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_11",
+      "start_beat_id": "S11",
+      "end_beat_id": "S12",
+      "target_duration": 3.9,
+      "motion_prompt": "Slow majestic tilt up from the sea lanes to the glorious golden sunset sky, grand geopolitical scale, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_12",
+      "start_beat_id": "S12",
+      "end_beat_id": "S13",
+      "target_duration": 4.17,
+      "motion_prompt": "Slow smooth push-in toward the tablet display and analytical maps, warm desk illumination, zero morphing.",
+      "mode": "boundary_extend"
+    }
+  ],
+  "metadata": {
+    "beats_count": 13,
+    "pairs_count": 12,
+    "total_duration_sec": 48.76,
+    "youtube_title_length": 54,
+    "bridge_syllables": 14,
+    "close_syllables": 13
+  }
+}

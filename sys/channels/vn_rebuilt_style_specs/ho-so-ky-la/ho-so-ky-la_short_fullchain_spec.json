@@ -67,8 +67,8 @@
       "id": "S05",
       "duration": 3.6,
       "narration": "Cảnh sát bắn ba phát đạn vào van cắt nhiên liệu nhưng bất thành.",
-      "prompt": "Vertical 9:16 tracking shot of police officers firing shotguns at the speeding locomotive underbelly, muzzle flashes lighting up rain drops, zero text",
-      "motion_prompt": "lateral tracking pass as bullet impacts spark harmlessly off steel armor",
+      "prompt": "Vertical 9:16 tracking shot of railway emergency response vehicle racing parallel to the speeding locomotive underbelly in heavy rain, high-intensity spotlight beam illuminating the red fuel cutoff valve on the steel tank, zero text",
+      "motion_prompt": "lateral tracking pass alongside speeding locomotive wheels and glowing red fuel valve in heavy rain",
       "camera_motion": "pan_right",
       "based_on": "S04"
     },

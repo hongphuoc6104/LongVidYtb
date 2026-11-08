@@ -1,6 +1,12 @@
 # Hướng Dẫn Chạy Tiếp Phần Âm Thanh, Tạo Hình & Render Trên Máy Của Bạn
 
-Gói dự án này đã được chuẩn bị sẵn toàn bộ các khâu thượng nguồn (**Brief -> Outline -> Dialogue/Content -> Kiểm định Cadence & Anti-Flop -> Khởi tạo Job Engine v4 -> Biên dịch trước Request Colab TTS & Prompt Ảnh Flow**) và đã vá các lỗi chặn pipeline.
+> **Cổng Đọc Ưu Tiên (Priority Document Gate)**:
+> Mọi phiên làm việc bắt buộc phải đọc trước:
+> 1. [AGENTS.md](../../AGENTS.md) (Kiến trúc chuẩn & Quy tắc bất biến).
+> 2. [PLAYBOOK.md](../../PLAYBOOK.md) (Sổ tay bài học vận hành & phòng ngừa lỗi).
+> 3. Kỹ năng domain tương ứng: [.agents/skills/vp-production/SKILL.md](../../.agents/skills/vp-production/SKILL.md).
+
+Gói dự án này đã được chuẩn bị sẵn toàn bộ các khâu thượng nguồn (**Brief -> Outline -> Dialogue/Content -> Kiểm định Cadence & Anti-Flop -> Khởi tạo Job Engine v4 -> Biên dịch trước Request Colab TTS & Prompt Ảnh Flow**) và đã vá các lỗi chặn pipeline theo chuẩn Video Pilot v4 Dual-Format (`short_9x16` Full-Chain `Omni 1.2 Flash` + `long_16x9` High-Density Multi-Image `h264_nvenc`).
 
 ## 1. Các Job đã tạo sẵn trong `sys/runs/` và `prebuilt_packages/`
 
@@ -40,4 +46,4 @@ cd sys
 python3 pilot.py observe full-frame-16x9-001
 python3 pilot.py run full-frame-16x9-001
 ```
-Hệ thống sẽ tự động bắt đầu ngay từ checkpoint **`audio`** (bỏ qua `outline` và `dialogue` vì đã hoàn tất), tiếp tục sang **`images`** (Flow CDP) và **`video`** (Colab Remotion H.264 NVENC), rồi xuất MP4/SRT cuối cùng ra `video/<JOB_ID>/`.
+Hệ thống sẽ tự động bắt đầu ngay từ checkpoint **`audio`** (bỏ qua `outline` và `dialogue` vì đã hoàn tất), tiếp tục sang **`images`** (Flow CDP) và **`video`** (Colab Tesla T4 FFmpeg H.264 NVENC), rồi xuất MP4/SRT cuối cùng ra `video/<JOB_ID>/`.

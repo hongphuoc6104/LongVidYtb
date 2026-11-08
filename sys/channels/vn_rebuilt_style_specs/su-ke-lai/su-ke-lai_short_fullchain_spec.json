@@ -1,0 +1,281 @@
+{
+  "channel_id": "su_ke_lai",
+  "channel_slug": "su-ke-lai",
+  "job_id": "vn_pilot_su_ke_lai_short_fullchain",
+  "parent_long_id": "su-ke-lai-long-master",
+  "format_profile": "short_9x16",
+  "aspect": "9:16",
+  "video_model": "omni_1_2_flash",
+  "chain_mode": "scene_pairs",
+  "voice": "VietNarrator",
+  "total_duration_sec": 51.3,
+  "youtube_title": "Kỳ Mưu Cọc Gỗ Sông Bạch Đằng Đánh Tan Giặc Nam Hán",
+  "title": "Kỳ Mưu Cọc Gỗ Sông Bạch Đằng Đánh Tan Giặc Nam Hán",
+  "thumbnail_spec": {
+    "visual_hook": "Vertical 9:16 3D historical battlefield diorama of Bach Dang river at low tide revealing sharpened iron-tipped wooden stakes with historical wooden war galleys, zero overlays, 25% margin",
+    "allowed_text": "BẠCH ĐẰNG 938",
+    "overlay_card": false,
+    "prompt": "Vertical 9:16 3D historical battlefield diorama of Bach Dang river at low tide revealing sharpened iron-tipped wooden stakes with historical wooden war galleys, zero overlays, 25% margin, bold uppercase text 'BẠCH ĐẰNG 938', Kings and Generals & Epic History TV tactical historical cinematography with dramatic atmospheric torchlight, deep slate-earth palette, and rigid hydrodynamic anti-morph physics across historical battlefields, strictly zero modern artifacts or text labels, strictly zero graphic overlays, no cartoons."
+  },
+  "packaging": {
+    "cta_plan": {
+      "bridge": "Xem phân tích sa bàn chiến thuật Bạch Đằng trên video dài của kênh.",
+      "close": "Hãy tự hào về hào khí ngàn năm của tiền nhân dựng nước."
+    }
+  },
+  "cta_plan": {
+    "bridge": "Xem phân tích sa bàn chiến thuật Bạch Đằng trên video dài của kênh.",
+    "close": "Hãy tự hào về hào khí ngàn năm của tiền nhân dựng nước."
+  },
+  "beats": [
+    {
+      "id": "S01",
+      "narration": "Đêm mùa đông năm chín ba tám, dòng sông Bạch Đằng cuộn sóng ngầm.",
+      "prompt": "Vertical 9:16 3D historical battlefield diorama of the wide Bach Dang estuary at midnight, cold moonlight glinting off churning brackish river water, mist swirling over tidal reeds, Kings and Generals epic historical aesthetic, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow smooth 35mm low-angle tracking pass along the misty river surface as cold moonlight reflects off rippling water, locked historical geometry, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 4.08,
+      "at": 0.0
+    },
+    {
+      "id": "S02",
+      "narration": "Dưới làn sương, hàng ngàn thân gỗ lim vót nhọn được cắm sâu xuống lòng sông.",
+      "prompt": "Vertical 9:16 underwater and waterline cross-section showing massive ironwood stakes with sharpened iron tips being driven deep into the riverbed silt, torchlight flickering above, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow vertical tilt down from torchlit waterline to the massive sharpened stakes firmly embedded in river sediment, realistic silt displacement, zero morphing.",
+      "camera_motion": "pan_down",
+      "transition": "smoothdown",
+      "based_on": "S01",
+      "duration": 4.23,
+      "at": 4.08
+    },
+    {
+      "id": "S03",
+      "narration": "Ngô Quyền đã tính toán quy luật con nước thủy triều chính xác từng khắc.",
+      "prompt": "Vertical 9:16 eye-level shot of ancient Vietnamese military commanders studying an earthen terrain sand table illuminated by bronze oil lamps in a command tent, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow cinematic push-in across the detailed river sand table toward the commander determined gaze, flickering warm torchlight, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.83,
+      "at": 8.31
+    },
+    {
+      "id": "S04",
+      "narration": "Sáng hôm sau, đoàn thuyền chiến Nam Hán ồ ạt tiến vào cửa sông lộng gió.",
+      "prompt": "Vertical 9:16 panoramic aerial view of hundreds of heavy Chinese Southern Han wooden war galleys with red silk sails sailing arrogantly up the high-tide river mouth, morning mist, strictly zero text, no cartoons.",
+      "motion_prompt": "High-angle sweeping tracking shot following the armada sailing upstream with full sails billowing in morning wind, zero morphing.",
+      "camera_motion": "pan_right",
+      "transition": "smoothright",
+      "based_on": null,
+      "duration": 4.52,
+      "at": 12.14
+    },
+    {
+      "id": "S05",
+      "narration": "Những thuyền nhỏ của quân ta vờ rút lui nhử giặc vào bẫy ngầm.",
+      "prompt": "Vertical 9:16 telephoto shot of agile Vietnamese light rowing boats feigning retreat through river channels, oars churning water rhythmically, strictly zero text, no cartoons.",
+      "motion_prompt": "Dynamic lateral tracking shot alongside the agile rowing boats maneuvering swiftly through tidal reeds, zero morphing.",
+      "camera_motion": "pan_left",
+      "transition": "smoothleft",
+      "based_on": "S04",
+      "duration": 3.68,
+      "at": 16.66
+    },
+    {
+      "id": "S06",
+      "narration": "Khi thủy triều rút nhanh, bãi cọc nhọn nhô lên khỏi mặt nước.",
+      "prompt": "Vertical 9:16 ground-level waterline shot of the river water rapidly receding, sharp dark ironwood stake points piercing through the retreating surface froth, dramatic lighting, strictly zero text, no cartoons.",
+      "motion_prompt": "Time-lapse style downward water movement revealing the endless field of jagged stakes rising from the riverbed, zero morphing.",
+      "camera_motion": "pan_down",
+      "transition": "smoothdown",
+      "based_on": "S02",
+      "duration": 3.75,
+      "at": 20.34
+    },
+    {
+      "id": "S07",
+      "narration": "Đội hình thuyền giặc va vào hàng cọc gỗ, vỡ toác và mắc cạn giữa dòng.",
+      "prompt": "Vertical 9:16 dynamic impact shot of a massive enemy war galley hull grinding to an abrupt halt atop submerged wooden stakes, heavy oak timbers splintering under vessel weight, water splashing, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow-motion dramatic push-in as the heavy wooden hull lodges firmly onto the stakes, realistic timber stress and water displacement, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": "S06",
+      "duration": 4.38,
+      "at": 24.09
+    },
+    {
+      "id": "S08",
+      "narration": "Quân ta từ các nhánh lau sậy đồng loạt phản công dưới tiếng trống trận.",
+      "prompt": "Vertical 9:16 heroic wide shot of Vietnamese war craft bursting out from hidden reed tributaries, bronze drums beating rhythmically on command decks, banner flags waving, strictly zero text, no cartoons.",
+      "motion_prompt": "Sweeping forward dolly tracking following the fleet advancing with unstoppable momentum into the open river, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.88,
+      "at": 28.47
+    },
+    {
+      "id": "S09",
+      "narration": "Chỉ trong một ngày, toàn bộ âm mưu xâm lược của giặc tan tành.",
+      "prompt": "Vertical 9:16 high-angle survey of the stranded armada abandoned on the muddy riverbed at low tide, smoke curling into overcast winter sky, victory mood, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow high-altitude crane pullback revealing the stranded fleet across the vast mudflats, majestic winter horizon, zero morphing.",
+      "camera_motion": "zoom_out",
+      "transition": "fade",
+      "based_on": "S08",
+      "duration": 3.69,
+      "at": 32.35
+    },
+    {
+      "id": "S10",
+      "narration": "Trận đánh mở ra kỷ nguyên độc lập tự chủ lâu dài cho non sông.",
+      "prompt": "Vertical 9:16 majestic panoramic view of Bach Dang river at sunset, calm golden water flowing peacefully past ancient green riverbanks, peaceful sovereign land, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow cinematic lateral tracking pass across the calm golden river surface, evening sunbeams touching sacred waters, zero morphing.",
+      "camera_motion": "pan_right",
+      "transition": "smoothright",
+      "based_on": null,
+      "duration": 3.81,
+      "at": 36.04
+    },
+    {
+      "id": "S11",
+      "narration": "Trí tuệ quân sự đỉnh cao là biết dựa vào sức mạnh tự nhiên để chiến thắng.",
+      "prompt": "Vertical 9:16 museum macro close-up of a preserved historical Bach Dang ironwood stake displayed on polished stone in a heritage hall, warm respectful lighting, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow push-in toward the thousand-year-old preserved wood grain and iron tip, solemn historical reverence, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 4.33,
+      "at": 39.85
+    },
+    {
+      "id": "S12",
+      "narration": "Xem phân tích sa bàn chiến thuật Bạch Đằng trên video dài của kênh.",
+      "prompt": "Vertical 9:16 tabletop shot of a 3D tactical terrain map of Bach Dang river estuary with miniature ships and tidal indicators beside a glowing tablet, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow smooth push-in toward the tactical river terrain table and historical documents, warm studio lamp, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.97,
+      "at": 44.18
+    },
+    {
+      "id": "S13",
+      "narration": "Hãy tự hào về hào khí ngàn năm của tiền nhân dựng nước.",
+      "prompt": "Vertical 9:16 grand closing shot of the modern Bach Dang river monument at sunrise, bronze statue standing proud against glowing dawn sky, peaceful homeland, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow majestic pullback from the monument toward the vast sunlit horizon, golden sunrise filling the frame with national pride, zero morphing.",
+      "camera_motion": "zoom_out",
+      "transition": "fade",
+      "based_on": "S12",
+      "duration": 3.13,
+      "at": 48.15
+    }
+  ],
+  "scene_pairs": [
+    {
+      "id": "PAIR_01",
+      "start_beat_id": "S01",
+      "end_beat_id": "S02",
+      "target_duration": 4.08,
+      "motion_prompt": "Slow smooth 35mm low-angle tracking pass along the misty river surface as cold moonlight reflects off rippling water, locked historical geometry, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_02",
+      "start_beat_id": "S02",
+      "end_beat_id": "S03",
+      "target_duration": 4.23,
+      "motion_prompt": "Slow vertical tilt down from torchlit waterline to the massive sharpened stakes firmly embedded in river sediment, realistic silt displacement, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_03",
+      "start_beat_id": "S03",
+      "end_beat_id": "S04",
+      "target_duration": 3.83,
+      "motion_prompt": "Slow cinematic push-in across the detailed river sand table toward the commander determined gaze, flickering warm torchlight, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_04",
+      "start_beat_id": "S04",
+      "end_beat_id": "S05",
+      "target_duration": 4.52,
+      "motion_prompt": "High-angle sweeping tracking shot following the armada sailing upstream with full sails billowing in morning wind, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_05",
+      "start_beat_id": "S05",
+      "end_beat_id": "S06",
+      "target_duration": 3.68,
+      "motion_prompt": "Dynamic lateral tracking shot alongside the agile rowing boats maneuvering swiftly through tidal reeds, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_06",
+      "start_beat_id": "S06",
+      "end_beat_id": "S07",
+      "target_duration": 3.75,
+      "motion_prompt": "Time-lapse style downward water movement revealing the endless field of jagged stakes rising from the riverbed, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_07",
+      "start_beat_id": "S07",
+      "end_beat_id": "S08",
+      "target_duration": 4.38,
+      "motion_prompt": "Slow-motion dramatic push-in as the heavy wooden hull lodges firmly onto the stakes, realistic timber stress and water displacement, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_08",
+      "start_beat_id": "S08",
+      "end_beat_id": "S09",
+      "target_duration": 3.88,
+      "motion_prompt": "Sweeping forward dolly tracking following the fleet advancing with unstoppable momentum into the open river, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_09",
+      "start_beat_id": "S09",
+      "end_beat_id": "S10",
+      "target_duration": 3.69,
+      "motion_prompt": "Slow high-altitude crane pullback revealing the stranded fleet across the vast mudflats, majestic winter horizon, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_10",
+      "start_beat_id": "S10",
+      "end_beat_id": "S11",
+      "target_duration": 3.81,
+      "motion_prompt": "Slow cinematic lateral tracking pass across the calm golden river surface, evening sunbeams touching sacred waters, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_11",
+      "start_beat_id": "S11",
+      "end_beat_id": "S12",
+      "target_duration": 4.33,
+      "motion_prompt": "Slow push-in toward the thousand-year-old preserved wood grain and iron tip, solemn historical reverence, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_12",
+      "start_beat_id": "S12",
+      "end_beat_id": "S13",
+      "target_duration": 3.97,
+      "motion_prompt": "Slow smooth push-in toward the tactical river terrain table and historical documents, warm studio lamp, zero morphing.",
+      "mode": "boundary_extend"
+    }
+  ],
+  "metadata": {
+    "beats_count": 13,
+    "pairs_count": 12,
+    "total_duration_sec": 51.3,
+    "youtube_title_length": 50,
+    "bridge_syllables": 14,
+    "close_syllables": 13
+  }
+}

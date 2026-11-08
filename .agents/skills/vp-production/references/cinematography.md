@@ -1,54 +1,55 @@
 # Cinematography and Shot Grammar for Full-Frame Explainer Videos (`full_frame_v1`)
 
-Visual standards, shot framing grammar, and cutting pace for full-frame explainer videos (`flow_prompts 1.5.0`), adapting composition to target aspect ratios (`9:16`, `16:9`) specified in `sys/format_profiles.py`. Read before planning visual beats and prompt authoring.
+Visual standards, shot framing grammar, and cutting pace for full-frame explainer videos (`flow_prompts 1.7.0`), adapting composition to target aspect ratios (`9:16`, `16:9`) specified in `sys/format_profiles.py`. Read before planning visual beats and prompt authoring.
 
-## 1. Mandatory Three-Step Process (Flash-Agent Simplified)
+## 1. Mandatory Process & Style Lock (`1.7.0 Nguệch Ngoạc`)
 1. **Author natural sentence-beat pairs**: Pair each spoken sentence with one concrete visual action (`shot_type|visual_action`), alternating short punchy sentences (`3–8` words) with explanatory sentences (`15–24` words).
-2. **Select full-frame `shot_type`**: Choose from all 7 standard shot types: `full_scene`, `variation`, `macro_prop`, `white_card`, `white_isolated`, `still_life`, or `environment`. Never guess manual `(x, y)` coordinates—code automatically centers `focus` safely. Semantic camera intent remains diverse; calm playback decides whether visible movement is warranted.
-3. **Author full-bleed prompts for Flow**: Generate one integrated 2D illustration per beat where anonymous stick figures, furniture, and props belong naturally to the same physical environment (no detached stickers, no white cutout borders). For character-free rest shots (`still_life`, `environment`), human figures and hands are completely excluded.
+2. **Lock 2D Doodle Style (`1.7.0 Nguệch Ngoạc`)**: Pure-white (`#FFFFFF`) bald circle head, bold pitch-black outline, solid black dot eyes low on the face, single-stroke eyebrows/mouth, no nose/ears, thin single-stroke solid-black wire arms ending in round white circle hands, and flat cerulean-blue (`#3B82C4`) shirt.
+3. **Select from 10 standard shot types**: Choose from all 10 supported shot types without guessing manual coordinates. Camera moves and cuts are executed natively via Colab Tesla T4 `FFmpeg h264_nvenc`.
 
 ---
 
-## 2. Frame Composition, Setting Brevity & Visual Breathing Room (`sys/format_profiles.py`)
+## 2. Frame Composition & Visual Pacing (`sys/format_profiles.py`)
 Composition adapts dynamically to the target `format_profile` configured in the job brief:
-- **Horizontal Framing (`long_16x9` — `1920x1080`, `full_frame_v1`)**:
-  - **100% Full-Bleed Canvas (`caption_clearance = null`)**: Landscape videos use external `.srt` (`subtitles: false` by default). Never instruct the AI to leave a blank bottom band.
-  - **Setting Brevity Invariant**: Setting descriptions must be strictly $\le 8$ words specifying only physical space and ambient lighting (e.g., `"A student desk under green lamp light."`). Prop or furniture enumeration (listing pens, highlighters, laptop screens, textbooks) is strictly forbidden in `setting`.
-  - **Setting Diversity & Continuity**: Use at most 2 consecutive scenes in the same physical room; across $\ge 10$ scenes no single setting may exceed 30%. Within one room, use `variation` (`based_on`) with `Expression lock` to animate character posture changes smoothly.
-  - **Visual Breathing Room**: To prevent character fatigue, at least 30% of beats in every 10-beat sliding window must be character-free rest shots (`still_life`, `environment`, or character-free `white_card`). Never exceed 4 consecutive beats containing human figures.
+- **Horizontal Framing (`long_16x9` — `1920x1080`)**:
+  - **100% Full-Bleed Canvas (`caption_clearance = null`)**: Landscape videos use external sidecar `.srt`.
+  - **4 Pacing Modes**: Rapid (`1.2–2.0s`), Normal (`2.2–3.2s`), Slow (`3.5–4.8s`), Hold (`5.0–6.5s`). Max 3 consecutive same tempo (fast <=5).
+  - **Setting Brevity Invariant**: Setting descriptions must be strictly $\le 8$ words specifying only physical space and ambient lighting. Prop enumeration is forbidden in `setting`.
+  - **Visual Breathing Room**: At least 30% of beats in every 10-beat sliding window must be character-free rest shots (`still_life`, `environment`, `white_card`). Never exceed 4 consecutive beats containing human figures.
 - **Vertical Framing (`short_9x16` — `1080x1920`)**:
-  - **Top & Middle Zone (Top 82%)**: Compose character posture, expressions, action and focal props together in the physical scene, or use `reframe_mode: true` from a `16:9` master.
-  - **Bottom 18% (`caption_clearance = 0.18`)**: Reserved for burn-in dynamic captions (`max_line_chars = 28`).
+  - **100% Full-Chain Video**: Continuous video clips generated from 11–15 `BELUGA` keyframes.
+  - **Top & Middle Zone (Top 82%)**: Character posture, actions and focal props.
+  - **Bottom 18% (`caption_clearance = 0.18`)**: Reserved for 1-word Red `#FF3B30` / Yellow `#FFE600` kinetic `.ass` subtitles.
 
 ---
 
-## 3. Standard Full-Frame Shot Types (`flow_prompts 1.5.0`)
+## 3. Standard 10 Shot Types (`flow_prompts 1.7.0`)
 | Shot Type | Purpose & Composition Rule | Practical Production Application |
 |---|---|---|
 | **`full_scene`** | Integrated physical environment with anonymous stick figure(s), furniture, and props drawn together. | Establishing rooms, experiments, lecture halls, cafes, or metaphorical landscapes. |
-| **`variation`** | Attached to prior `based_on` image; preserves exact room geometry, camera, and facial expression (`Expression lock`), changing only the declared action/prop. | Flipbook-style character pose changes (e.g., closing a book, lifting a pen) within the same room. |
-| **`macro_prop`** | Close-up on a concrete object, hand action, or diagram detail (simplified white four-finger cartoon hands with restrained charcoal outlines). | Highlighting a textbook, correcting an error with a red pen, inspecting a clock or gauge. |
-| **`white_card`** | Clean pure white `#FFFFFF` concept card with no room, floor, or scenery; renders only the requested icon/diagram and `allowed_text`. | Isolating a core paradox, comparison icon, or minimal conceptual diagram. |
-| **`white_isolated`** | Clean pure white `#FFFFFF` field with the requested figure or object integrated into a complete frame (no sticker border). | Single-subject conceptual emphasis without environmental distractions. |
-| **`still_life`** | Character-free close-up or medium focus on physical objects, documents, books, or instruments without human figures or cartoon hands. | Resting between character beats; inspecting an open highlighted textbook, ticking desk clock, or blueprint sheet. |
-| **`environment`** | Character-free wide establishing shot of a landscape, room architecture, or outdoor space completely devoid of human figures or crowds. | Visual rest and contemplative pacing; wide empty classroom, morning light over an urban corridor, or foggy landscape. |
+| **`variation`** | Attached to prior `based_on` image; preserves exact room geometry and camera (`Expression lock`), changing only the declared action/prop. | Flipbook-style character pose changes within the same room. |
+| **`macro_prop`** | Close-up on a concrete object or hand action (round white circle hands, thin black wire arms). | Highlighting a book, correcting an error with a red pen, inspecting a gauge. |
+| **`white_card`** | Clean pure white `#FFFFFF` field with icon/diagram and `allowed_text` (zero card border, zero tape, zero banners). | Isolating a core paradox or minimal conceptual diagram. |
+| **`white_isolated`** | Clean pure white `#FFFFFF` field with figure or object integrated into complete frame without background clutter. | Single-subject conceptual emphasis without distractions. |
+| **`still_life`** | Character-free close-up or medium focus on physical objects, documents, books, or instruments without human figures. | Resting between character beats; open highlighted textbook, ticking desk clock. |
+| **`environment`** | Character-free wide establishing shot of a landscape, room architecture, or outdoor space devoid of figures. | Visual rest and contemplative pacing; wide empty classroom, morning horizon. |
+| **`concept_metaphor`** | Pure conceptual visual metaphor embodying a cognitive paradox or cognitive framework. | Visualizing cognitive bias, feedback loops, or invisible market mechanisms. |
+| **`visual_diagram`** | Clean hand-drawn flowchart, comparison axis, or matrix diagram on flat canvas. | 3-Tier academic funnel, gap matrices, decision trees, or hypothesis models. |
+| **`cutaway_detail`** | Targeted cutaway revealing an unexpected mechanism or overlooked detail. | Zooming in on a crucial hidden footnote, broken instrument wire, or subtle reaction. |
 
 ---
 
-## 4. Transitions & Renderer-Compatible Effects
+## 4. Transitions & Colab Tesla T4 NVENC Rendering
 Refer to detailed parameters in [render-capabilities](../../../../sys/docs/render-capabilities.md).
 
 | Scene Effect | Operating Mechanism | Recommended Use Case |
 |---|---|---|
-| `cut` / `hold` | `transition: cut` switches beats cleanly (with automatic 85ms micro-dissolve on `variation` shots); `hold` keeps camera motionless for dense diagrams. | Standard beat cuts and diagram inspection. |
-| `zoom_in` / `zoom_out` | Calm playback: at most 1.5% scale change, peak velocity <= 0.004/s including overscan; smooth start/stop. | Move only on a composition held >= 2.4s, with at least 4s of camera rest between moving compositions. |
-| `punch_in` | Restrained push with the same speed budget; no spring or shake. | Convey surprise through the image and narration rather than an abrupt size jump. |
-| `pan_left` / `pan_right` | Intent is retained; calm playback holds the image steady. | Contrast through authored composition and edits. |
-| `slide_left` | Steady image cut in calm playback; no Whip pan or slide. | Topic changes use clean cuts. |
-| `shake` | Steady framing in full-frame playback; legacy Perlin helpers are not applied. | Convey impact through the depicted action. |
+| `cut` / `hold` | Switches beats cleanly; `hold` keeps camera motionless for dense diagrams. | Standard beat cuts and diagram inspection. |
+| `zoom_in` / `zoom_out` | Continuous zero-snap `zoompan`: continuous smooth function `z='1.06-0.06*(on/N)'` on 1.25x supersampled canvas. | Reveal context gently without frame jumps. |
+| `punch_in` | Restrained push with smooth endpoint velocities; no spring or shake. | Convey surprise through image and narration emphasis. |
+| `pan_left` / `pan_right` | Smooth horizontal sweep via analytical coordinates. | Contrast through authored composition and edits. |
+| `fade` / `xfade` | Directional optical transitions (`0.24s` duration; `smoothleft`, `smoothright`, `smoothup`, `smoothdown`, `fade`). | Soft scene transitions and chapter changes. |
 
-- **Continuity and breathing room**: Consecutive variations and repeated images share one camera clock, focal origin and portrait framing mode. Macro shots and white cards hold steady. During a dissolve the outgoing image retains its own framing. Global line-boil flags never displace full-frame images. Image beat density and narration timing remain independent of camera motion.
-
-- **Hand-drawn call-outs inside the AI art**: Request `"red hand-drawn circle or arrow pointing at..."` directly inside the image description when needed; **never** add external React/SVG floating callouts or coordinate overlays on top of the video.
+- **Hand-drawn call-outs inside AI art**: Request `"red hand-drawn circle or arrow pointing at..."` directly inside the image description when needed; **never** add external floating overlays on top of the video.
 - **Clean papers & books**: When `allowed_text` is empty, books and sheets must contain only abstract wavy ink lines—never invented words, titles, or equations.
-- **Renderer boundaries**: **Do not select multi-layer 3D parallax (Parallax 3D đa lớp)** or cutout sticker layers (`layers[]`) because standard rendering uses one complete 2D full-frame bitmap per beat. Whip pan is natively supported via `slide_left` with dynamic motion blur and inertia.
+- **Sole Canonical Engine**: All rendering is performed via Native Colab Tesla T4 `FFmpeg h264_nvenc` with `/dev/shm` parallel chunk processing (zero Remotion/Chromium overhead).

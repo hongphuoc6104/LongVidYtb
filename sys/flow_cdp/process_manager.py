@@ -478,9 +478,9 @@ class ProcessGroupManager:
         prof_name = profile_cfg.get("directory") or profile_cfg.get("profile_dir", "Profile 1")
         binary = chrome_bin or detect_chrome_binary()
 
-        # Clean stale locks before launch and stagger cross-process browser spawns by 1.8s
+        # Clean stale locks before launch and stagger cross-process browser spawns by >= 3.2s + jitter
         clean_singleton_locks(target_dir, prof_name)
-        stagger_cross_process_action("chrome_launch", min_interval_sec=1.8)
+        stagger_cross_process_action("chrome_launch", min_interval_sec=3.2, jitter_sec=0.6)
 
         merged_extra_args: list[str] = []
         if profile_cfg.get("extra_args"):

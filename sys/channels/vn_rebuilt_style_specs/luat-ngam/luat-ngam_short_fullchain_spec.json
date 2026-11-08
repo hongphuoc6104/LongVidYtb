@@ -1,0 +1,281 @@
+{
+  "channel_id": "luat_ngam",
+  "channel_slug": "luat-ngam",
+  "job_id": "vn_pilot_luat_ngam_short_fullchain",
+  "parent_long_id": "luat-ngam-long-master",
+  "format_profile": "short_9x16",
+  "aspect": "9:16",
+  "video_model": "omni_1_2_flash",
+  "chain_mode": "scene_pairs",
+  "voice": "VietNarrator",
+  "total_duration_sec": 49.17,
+  "youtube_title": "Quy Luật Ngầm Điều Khiển Hành Vi Của Đám Đông",
+  "title": "Quy Luật Ngầm Điều Khiển Hành Vi Của Đám Đông",
+  "thumbnail_spec": {
+    "visual_hook": "Vertical 9:16 3D investigative diorama of an architectural metro concourse with illuminated crowd path vectors under high-angle surveillance lighting, zero overlays, 25% margin",
+    "allowed_text": "QUY LUẬT NGẦM",
+    "overlay_card": false,
+    "prompt": "Vertical 9:16 3D investigative diorama of an architectural metro concourse with illuminated crowd path vectors under high-angle surveillance lighting, zero overlays, 25% margin, bold uppercase text 'QUY LUẬT NGẦM', Fern TV moody 3D investigative documentary aesthetic in desaturated slate-blue palette with selective cyan and warm amber volumetric spotlights, orthogonal lens depth, and synchronized anti-morph diorama physics across varying scene scopes, strictly zero text, strictly zero graphic overlays, no cartoons."
+  },
+  "packaging": {
+    "cta_plan": {
+      "bridge": "Xem bản bóc tách mười quy luật tâm lý ngầm trên video dài của kênh.",
+      "close": "Hãy giữ sự tỉnh táo trước mọi lựa chọn của đám đông."
+    }
+  },
+  "cta_plan": {
+    "bridge": "Xem bản bóc tách mười quy luật tâm lý ngầm trên video dài của kênh.",
+    "close": "Hãy giữ sự tỉnh táo trước mọi lựa chọn của đám đông."
+  },
+  "beats": [
+    {
+      "id": "S01",
+      "narration": "Bước vào một quán ăn đông đúc, bạn nghĩ mình tự chọn bàn ngồi.",
+      "prompt": "Vertical 9:16 high-angle architectural surveillance diorama of a bustling urban café interior, warm directional spotlights highlighting customer movement across slate floors, sleek Fern TV investigative aesthetic, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow smooth 35mm overhead crane push-in toward the central dining area, customers moving in natural fluid paths under warm spotlights, locked geometry, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.71,
+      "at": 0.0
+    },
+    {
+      "id": "S02",
+      "narration": "Nhưng mọi bước chân đã được sắp đặt từ trước qua kiến trúc không gian.",
+      "prompt": "Vertical 9:16 isometric cutaway model of the café layout showing illuminated pathways in soft amber light guiding movement from entrance to counter, architectural diorama, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow camera orbit around the isometric cutaway model, revealing subtle geometric floor partitions and directional lighting, zero morphing.",
+      "camera_motion": "orbit_cw",
+      "transition": "dissolve",
+      "based_on": "S01",
+      "duration": 3.75,
+      "at": 3.71
+    },
+    {
+      "id": "S03",
+      "narration": "Con người có xu hướng vô thức đi theo lối mòn nơi có nhiều bóng người.",
+      "prompt": "Vertical 9:16 eye-level shot of polished commercial marble floor reflecting soft footsteps of pedestrians moving along a curved glass corridor, strictly zero text, no cartoons.",
+      "motion_prompt": "Low-angle lateral tracking pass alongside moving footwear on polished marble, crisp specular reflections, zero morphing.",
+      "camera_motion": "pan_right",
+      "transition": "smoothright",
+      "based_on": null,
+      "duration": 3.69,
+      "at": 7.46
+    },
+    {
+      "id": "S04",
+      "narration": "Hiệu ứng bằng chứng xã hội khiến não bộ tắt cơ chế phản biện.",
+      "prompt": "Vertical 9:16 high-angle shot of a crowd standing on a city plaza, several individuals looking toward a central architectural sculpture, overcast daylight, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow vertical pedestal rise capturing the collective gaze of the crowd on the plaza, locked architectural perspective, zero morphing.",
+      "camera_motion": "pan_up",
+      "transition": "smoothup",
+      "based_on": null,
+      "duration": 3.66,
+      "at": 11.15
+    },
+    {
+      "id": "S05",
+      "narration": "Khi thấy mọi người cùng nhìn lên trời, bạn cũng sẽ ngước mắt nhìn theo.",
+      "prompt": "Vertical 9:16 low-angle upward shot from ground level showing silhouetted figures looking up toward an open atrium glass dome, soft diffused daylight, strictly zero text, no cartoons.",
+      "motion_prompt": "Smooth upward tilt toward the glass dome ceiling, following the synchronized angle of looking up, zero morphing.",
+      "camera_motion": "pan_up",
+      "transition": "smoothup",
+      "based_on": "S04",
+      "duration": 4.0,
+      "at": 14.81
+    },
+    {
+      "id": "S06",
+      "narration": "Các nhà thiết kế thương mại tận dụng quy luật này để dẫn dắt hành vi.",
+      "prompt": "Vertical 9:16 macro architectural blueprint model of a retail showroom with curved partitions and warm downlights, brass compass resting on blueprint paper, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow macro push-in across the curved miniature partitions on the blueprint, warm directional spotlight, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.78,
+      "at": 18.81
+    },
+    {
+      "id": "S07",
+      "narration": "Đặt những món sinh lời cao nhất ngang tầm mắt và giữa dòng người qua lại.",
+      "prompt": "Vertical 9:16 eye-level shot along a sleek retail display shelf, premium items spot-lit at golden ratio eye-height, soft background bokeh of shoppers, strictly zero text, no cartoons.",
+      "motion_prompt": "Steady eye-level tracking pass along the illuminated display shelf, glistening surfaces under spotlight, zero morphing.",
+      "camera_motion": "pan_right",
+      "transition": "smoothright",
+      "based_on": "S06",
+      "duration": 4.13,
+      "at": 22.59
+    },
+    {
+      "id": "S08",
+      "narration": "Đám đông tưởng mình tự do nhưng thực chất đang đi theo kịch bản định sẵn.",
+      "prompt": "Vertical 9:16 high-angle survey of a modern transit terminal with streaming crowds moving through parallel turnstiles, symmetrical architectural geometry, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow high-angle zoom out revealing the massive geometric flow of the terminal concourse, steady mechanical order, zero morphing.",
+      "camera_motion": "zoom_out",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 4.13,
+      "at": 26.72
+    },
+    {
+      "id": "S09",
+      "narration": "Nhận ra lực đẩy vô hình giúp bạn lấy lại quyền kiểm soát tâm trí.",
+      "prompt": "Vertical 9:16 ground-level shot of a single individual pausing still in the middle of a moving pedestrian concourse, calm deliberate posture, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow optical rack focus highlighting the still person as the crowd gently streams past on both sides, quiet defiance mood, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": "S08",
+      "duration": 3.75,
+      "at": 30.85
+    },
+    {
+      "id": "S10",
+      "narration": "Dừng lại một giây trước khi hùa theo dòng người đang vội vã.",
+      "prompt": "Vertical 9:16 close-up of a person taking a quiet step aside onto an open quiet granite landing, overlooking the busy city below, fresh morning breeze, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow lateral pan from the moving crowd onto the tranquil granite terrace, soft natural morning sunlight, zero morphing.",
+      "camera_motion": "pan_left",
+      "transition": "smoothleft",
+      "based_on": "S09",
+      "duration": 3.36,
+      "at": 34.6
+    },
+    {
+      "id": "S11",
+      "narration": "Bản lĩnh cá nhân bắt đầu từ lúc bạn dám bước chậm lại để quan sát.",
+      "prompt": "Vertical 9:16 wide composition of an observant person standing quietly beside a grand glass window in an architectural library, looking out at urban horizon, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow graceful pullback revealing the vast quiet library interior around the thoughtful observer, serene intellectual clarity, zero morphing.",
+      "camera_motion": "zoom_out",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.91,
+      "at": 37.96
+    },
+    {
+      "id": "S12",
+      "narration": "Xem bản bóc tách mười quy luật tâm lý ngầm trên video dài của kênh.",
+      "prompt": "Vertical 9:16 tabletop shot of a tablet displaying architectural behavior diagrams resting beside a pair of eyeglasses on dark slate, warm desk light, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow smooth push-in toward the tablet display and eyeglasses on slate counter, warm ambient study lighting, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 4.21,
+      "at": 41.87
+    },
+    {
+      "id": "S13",
+      "narration": "Hãy giữ sự tỉnh táo trước mọi lựa chọn của đám đông.",
+      "prompt": "Vertical 9:16 contemplative shot of an open balcony looking toward sunrise over the city skyline, single coffee mug resting on railing, calm sovereignty, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow cinematic pullback from the coffee mug toward the vast open dawn sky, golden sunlight filling the frame, peaceful resolution, zero morphing.",
+      "camera_motion": "zoom_out",
+      "transition": "fade",
+      "based_on": "S12",
+      "duration": 3.11,
+      "at": 46.08
+    }
+  ],
+  "scene_pairs": [
+    {
+      "id": "PAIR_01",
+      "start_beat_id": "S01",
+      "end_beat_id": "S02",
+      "target_duration": 3.71,
+      "motion_prompt": "Slow smooth 35mm overhead crane push-in toward the central dining area, customers moving in natural fluid paths under warm spotlights, locked geometry, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_02",
+      "start_beat_id": "S02",
+      "end_beat_id": "S03",
+      "target_duration": 3.75,
+      "motion_prompt": "Slow camera orbit around the isometric cutaway model, revealing subtle geometric floor partitions and directional lighting, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_03",
+      "start_beat_id": "S03",
+      "end_beat_id": "S04",
+      "target_duration": 3.69,
+      "motion_prompt": "Low-angle lateral tracking pass alongside moving footwear on polished marble, crisp specular reflections, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_04",
+      "start_beat_id": "S04",
+      "end_beat_id": "S05",
+      "target_duration": 3.66,
+      "motion_prompt": "Slow vertical pedestal rise capturing the collective gaze of the crowd on the plaza, locked architectural perspective, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_05",
+      "start_beat_id": "S05",
+      "end_beat_id": "S06",
+      "target_duration": 4.0,
+      "motion_prompt": "Smooth upward tilt toward the glass dome ceiling, following the synchronized angle of looking up, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_06",
+      "start_beat_id": "S06",
+      "end_beat_id": "S07",
+      "target_duration": 3.78,
+      "motion_prompt": "Slow macro push-in across the curved miniature partitions on the blueprint, warm directional spotlight, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_07",
+      "start_beat_id": "S07",
+      "end_beat_id": "S08",
+      "target_duration": 4.13,
+      "motion_prompt": "Steady eye-level tracking pass along the illuminated display shelf, glistening surfaces under spotlight, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_08",
+      "start_beat_id": "S08",
+      "end_beat_id": "S09",
+      "target_duration": 4.13,
+      "motion_prompt": "Slow high-angle zoom out revealing the massive geometric flow of the terminal concourse, steady mechanical order, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_09",
+      "start_beat_id": "S09",
+      "end_beat_id": "S10",
+      "target_duration": 3.75,
+      "motion_prompt": "Slow optical rack focus highlighting the still person as the crowd gently streams past on both sides, quiet defiance mood, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_10",
+      "start_beat_id": "S10",
+      "end_beat_id": "S11",
+      "target_duration": 3.36,
+      "motion_prompt": "Slow lateral pan from the moving crowd onto the tranquil granite terrace, soft natural morning sunlight, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_11",
+      "start_beat_id": "S11",
+      "end_beat_id": "S12",
+      "target_duration": 3.91,
+      "motion_prompt": "Slow graceful pullback revealing the vast quiet library interior around the thoughtful observer, serene intellectual clarity, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_12",
+      "start_beat_id": "S12",
+      "end_beat_id": "S13",
+      "target_duration": 4.21,
+      "motion_prompt": "Slow smooth push-in toward the tablet display and eyeglasses on slate counter, warm ambient study lighting, zero morphing.",
+      "mode": "boundary_extend"
+    }
+  ],
+  "metadata": {
+    "beats_count": 13,
+    "pairs_count": 12,
+    "total_duration_sec": 49.17,
+    "youtube_title_length": 45,
+    "bridge_syllables": 15,
+    "close_syllables": 12
+  }
+}

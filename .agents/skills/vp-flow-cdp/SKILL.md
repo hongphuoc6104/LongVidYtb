@@ -9,7 +9,23 @@ description: "Generate images and seamless multi-clip video chains via Flow CDP 
 
 ---
 
-## 1. Architecture & Verified `batchexecute` RPCs
+## 1. Five Mandatory Anti-IP-Ban & Purposeful Speed Invariants
+
+To guarantee uninterrupted production across the 39-profile pool without triggering IP bans or rate limits (`PUBLIC_ERROR_UNUSUAL_ACTIVITY`, `TOO_MUCH_TRAFFIC` / Error 7/8), the following 5 invariants are strictly enforced:
+
+1. **GPU Headless Chrome within 90% VRAM**: Headless Chrome on Linux MUST run on local GPU within 90% VRAM allocation:
+   ```bash
+   --headless=new --ozone-platform=x11 --disable-software-rasterizer --force-gpu-mem-available-mb=1843
+   ```
+   Zero fallback to CPU SwiftShader rasterization (which causes 100% CPU lockups and CDP handshake drops).
+2. **Cross-Process Staggered Chrome Launch**: All browser starts MUST adhere to cross-process staggering with `>= 3.2s + 0..0.6s` jitter via `stagger_cross_process_action("chrome_launch", gap=3.2, jitter=0.6)`. NEVER launch multiple Chrome instances into `flow.google.com` simultaneously.
+3. **Cross-Process Global Jittered RPC Pacer**: All Flow API submissions across all worker processes MUST pass through a global jittered pacer (`1.55s + 0..0.35s` via `stagger_cross_process_action("flow_rpc_submit", gap=1.55, jitter=0.35)`), capping aggregate submissions at `~34–38 RPCs/min` host-wide to prevent Cloudflare/Google rate limiting.
+4. **Warm Session Preservation (`ERR-20261010-07`)**: On Error 7/8 (`PUBLIC_ERROR_UNUSUAL_ACTIVITY` / `TOO_MUCH_TRAFFIC`), NEVER kill or relaunch the Chrome browser, and NEVER reload the tab. Instead, refresh reCAPTCHA in-place (`_refresh_recaptcha_session`), keep the warm Chrome instance alive while placing the profile on cooldown, and automatically quarantine `NO_AT_TOKEN` profiles to `unauthenticated_profiles.json`.
+5. **Multi-Prompt `ogiZ0b` Batching**: Independent anchor shots must be opportunistically batched in groups of 2–4 prompts via `generate_images_batch()` on endpoint `ogiZ0b`, achieving a 3X–4X throughput increase with 75% fewer RPC round-trips.
+
+---
+
+## 2. Architecture & Verified `batchexecute` RPCs
 
 Google Flow uses Google's internal `batchexecute` Angular frontend transport (`/_/AiSandboxAngularFrontend/data/batchexecute`). Automation communicates directly with signed-in Chrome instances via CDP (`sys/flow_cdp/cdp_direct_client.py` and `sys/flow_cdp/flow_rpc.py`), sending typed RPC envelopes and decoding multi-chunk responses.
 
@@ -22,13 +38,13 @@ Google Flow uses Google's internal `batchexecute` Angular frontend transport (`/
 | `maseQ` | `upload_image` | **0 credits** | Uploads local image frame into Google Flow project storage, returning `media_id` and CDN URL. Enables parallel multi-account rendering of a single chain by sharing local frames without cross-account permission blocks. |
 | `nzlxg` | `credits_request` | **0 credits** | Queries live account credit balance (`credits_remaining`, `subscription_credits`, `expiry_epoch`, `paygate_tier`). |
 | `jwpduf` | `operation_request` | **0 credits** | Polls status of ongoing video/image generation operations until state is `CAE` (Complete). |
-| `ogiZ0b` | `image_request` | **1 credit** | Synthesizes 2D images across models (`BELUGA`, `NARWHAL`, `GEM_PIX_2`). |
+| `ogiZ0b` | `image_request` | **1 credit** | Synthesizes 2D images across models (`BELUGA`, `NARWHAL`, `GEM_PIX_2`). Supports multi-prompt batching (`count=2..4`). |
 | `jHPbke` | `create_project_request` | **0 credits** | Creates isolated working canvas project (`projects/*`) for scoped asset storage. |
 | `as29s` | `media_request` | **0 credits** | Fetches detailed asset metadata for a single generated media item. |
 
 ---
 
-## 2. Unified 39+ Profile Pool & Credit Ledger (`sys/flow_cdp/credit_ledger.py`)
+## 3. Unified 39+ Profile Pool & Credit Ledger (`sys/flow_cdp/credit_ledger.py`)
 
 Video Pilot manages a scalable fleet of 39+ isolated Google Chrome profiles (`profile_1`..`profile_39`, extending to `profile_40+` on ports `9270+`).
 
@@ -68,7 +84,7 @@ Each onboarded profile receives an isolated Chrome user data directory (`~/.conf
 
 ---
 
-## 3. Flow Video Chain Engine (`vp-flow-video`)
+## 4. Flow Video Chain Engine (`vp-flow-video`)
 
 Located in `sys/flow_video/` with execution via `sys/tools/run_flow_video_chain.py`, the Flow Video Chain Engine transforms sequences of still keyframes into continuous, high-definition cinematic video.
 
@@ -90,7 +106,7 @@ Scene 2: [A2] ──tpad clone hold───> [B2] (natural speed + frozen hold)
   - In a raw chain, clip 0 ends on frame $F_1$ and clip 1 begins on frame $F_1$. Concatenating them directly causes an unsightly 1-frame visual stutter/freeze at every seam.
   - Video Pilot automatically applies boundary deduplication:
     - Clip 0 retains its complete duration (`trim_first_frame = False`).
-    - Every subsequent clip $i \ge 1$ sets `trim_first_frame = True`, invoking FFmpeg `trim=start_frame=1,setpts=PTS-STARTPTS` (or Remotion `trimBefore=1`).
+    - Every subsequent clip $i \ge 1$ sets `trim_first_frame = True`, invoking FFmpeg `trim=start_frame=1,setpts=PTS-STARTPTS`.
   - Result: The boundary frame is never duplicated, yielding seamless, fluid 60fps/30fps motion.
 
 #### Mode B: `scene_pairs` (`(A1 -> B1), (A2 -> B2), ...`)
@@ -113,9 +129,6 @@ The video chain engine uses **`omni_1_2_flash` / `omni_flash` (`Omni 1.2 Flash`,
   - `4.8s < target_duration <= 6.8s` $\rightarrow$ **6s clip** (**18 credits**) — `macaron_cookie_i2v_6s`
   - `6.8s < target_duration <= 8.8s` $\rightarrow$ **8s clip** (**24 credits**) — `macaron_cookie_i2v_8s`
   - `target_duration > 8.8s` $\rightarrow$ **10s clip** (**30 credits**) — `macaron_cookie_i2v_10s`
-- **Legacy Omni 1.1 Flash (`abra`)**: Supported for backward compatibility:
-  - `start_end_frames`: 4s (7c), 6s (10c), 8s (12c) — `omni_flash_i2v_{4s,6s,8s}_first_last`
-  - `start_frame`: 4s (7c), 6s (10c), 8s (12c), 10s (15c) — `abra_i2v_{4s,6s,8s,10s}`
 - **Fixed Duration Override**: Passing `--no-auto-duration --duration 6` locks every clip to a fixed 6s duration.
 - **Alternate Veo Models**:
   - `veo_3_1_fast`: 8s, 20 credits
@@ -145,11 +158,11 @@ The orchestrator (`FlowVideoChainOrchestrator`) leverages the 39+ profile pool t
 1. **0-Credit Frame Pre-Upload (`maseQ`)**: Uploads local keyframe images once per worker profile via `maseQ` RPC without credit consumption.
 2. **Parallel Task Dispatch**: Distributes clip generation tasks across multiple independent Chrome instances simultaneously via `CreditLedger` LRU selection.
 3. **Resilient Polling & Manifesting**: Polls status via `jwpduf`, records per-clip state in `chain_manifest.json`, and supports interrupted job resumption (`--resume`).
-4. **Remotion Integration**: Exports `remotion_beats.json` containing exact frame offsets, durations, and `trimBefore` metadata for editing inside `sys/renderer/`.
+4. **Timeline Export**: Exports `chain_manifest.json` containing exact frame offsets, durations, and stitch metadata for final Colab Tesla T4 `h264_nvenc` encoding.
 
 ---
 
-## 4. Flow Image Generation Engine
+## 5. Flow Image Generation Engine
 
 ### Workload Allocation Tiers
 
@@ -169,7 +182,7 @@ The orchestrator (`FlowVideoChainOrchestrator`) leverages the 39+ profile pool t
 
 ---
 
-## 5. CLI Reference & Workflows
+## 6. CLI Reference & Workflows
 
 ### Running Flow Video Chain (`run_flow_video_chain.py`)
 
@@ -199,7 +212,7 @@ PYTHONPATH=sys python3 sys/tools/run_flow_video_chain.py \
 
 #### Dry-Run Mode (Zero Credit Consumption)
 ```bash
-# Verify clip stitching, filtergraphs, and Remotion beats using synthetic test media:
+# Verify clip stitching, filtergraphs, and timelines using synthetic test media:
 PYTHONPATH=sys python3 sys/tools/run_flow_video_chain.py \
   --frames-dir tests/fixtures/sample_frames \
   --mode daisy_chain \
@@ -220,13 +233,13 @@ PYTHONPATH=sys python3 -m flow_cdp.multi_profile_manager stop
 
 ---
 
-## 6. Technical Invariants & Governance Summary
+## 7. Technical Invariants & Governance Summary
 
 - **Single Source of Truth**: Video Pilot invariants (`AGENTS.md`) take precedence. All voiceover dubs MUST hit `-11.0 LUFS` / `-1.0 dBTP`.
 - **Zero-Stutter Guarantee**: Daisy chains MUST trim the first frame on clips $i \ge 1$ (`trim=start_frame=1`).
 - **Lip-Sync Integrity**: Characters MUST NOT flap mouths during voiceover; prompts must enforce silent visual storytelling unless talking is explicitly requested.
 - **Resource Safety**: All Chrome processes spawned for generation MUST be tracked and cleanly killed via `ProfileLifecycleManager` and `process_manager.py`.
 - **Credit Safety & Fallback Hierarchy**:
-  - **Priority 1 (Default while ANY Flow pool profile has credit)**: `100% Full-Chain` (`produce_unified_flow_remotion_e2e.py --motion-mode full_chain`, `Omni 1.1 Flash` continuous keyframe-to-keyframe video chain across 16 parallel GPU Chrome workers + Remotion VietSub/watermark/audio render).
-  - **Priority 2 (Automatic Fallback ONLY when 100% of Flow pool profiles have 0 video credits left)**: Dense Multi-Image mode (`images_only` with high-density Flow keyframes: 10–14 images for `9:16` Short, 28–70+ images for `16:9` Long + Remotion camera motion/VietSub/audio render). Automatically triggered if all profiles reach 0 video credits or fail mid-chain.
+  - **Priority 1 (Default while ANY Flow pool profile has credit)**: `100% Full-Chain` (`produce_vn_dual_mode.py`, `Omni 1.2 Flash` continuous keyframe-to-keyframe video chain across parallel GPU Chrome workers + Native Colab Tesla T4 `FFmpeg h264_nvenc` burned-in VietSub/watermark/audio render).
+  - **Priority 2 (Automatic Fallback ONLY when 100% of Flow pool profiles have 0 video credits left)**: Dense Multi-Image mode (`images_only` with high-density Flow keyframes: 11–15 images for `9:16` Short, 240–350 images for `16:9` Long + Native Colab Tesla T4 `FFmpeg h264_nvenc` camera motion/VietSub/audio render). Automatically triggered if all profiles reach 0 video credits or fail mid-chain.
   - Never perform dry-run tests with live RPC calls; use `--dry-run` to validate pipeline stitching without burning 1,000-credit account quotas.

@@ -1,0 +1,281 @@
+{
+  "channel_id": "tam_tinh_dem",
+  "channel_slug": "tam-tinh-dem",
+  "job_id": "vn_pilot_tam_tinh_dem_short_fullchain",
+  "parent_long_id": "tam-tinh-dem-long-master",
+  "format_profile": "short_9x16",
+  "aspect": "9:16",
+  "video_model": "omni_1_2_flash",
+  "chain_mode": "scene_pairs",
+  "voice": "VietNarrator",
+  "total_duration_sec": 48.28,
+  "youtube_title": "Khoảng Lặng Nửa Đêm: Vỗ Về Mệt Mỏi Sau Ngày Dài",
+  "title": "Khoảng Lặng Nửa Đêm: Vỗ Về Mệt Mỏi Sau Ngày Dài",
+  "thumbnail_spec": {
+    "visual_hook": "Vertical 9:16 atmospheric midnight velvet and glowing golden lantern fable shot of a rain-streaked window overlooking a sleepy nocturnal city, zero overlays, 25% margin",
+    "allowed_text": "KHOẢNG LẶNG ĐÊM",
+    "overlay_card": false,
+    "prompt": "Vertical 9:16 atmospheric midnight velvet and glowing golden lantern fable shot of a rain-streaked window overlooking a sleepy nocturnal city, zero overlays, 25% margin, bold uppercase text 'KHOẢNG LẶNG ĐÊM', Studio Ghibli nocturnal & Pursuit of Wonder atmospheric fable cinematography with deep velvet indigo palette and warm glowing golden lantern light, shallow cinematic depth-of-field, and tranquil atmospheric anti-morph physics across peaceful nocturnal settings, strictly zero text, strictly zero graphic overlays, no cartoons."
+  },
+  "packaging": {
+    "cta_plan": {
+      "bridge": "Thưởng thức trọn vẹn câu chuyện ru ngủ vỗ về trên video dài của kênh.",
+      "close": "Hãy khép mi lại và đón nhận giấc ngủ an lành lúc này."
+    }
+  },
+  "cta_plan": {
+    "bridge": "Thưởng thức trọn vẹn câu chuyện ru ngủ vỗ về trên video dài của kênh.",
+    "close": "Hãy khép mi lại và đón nhận giấc ngủ an lành lúc này."
+  },
+  "beats": [
+    {
+      "id": "S01",
+      "narration": "Đêm nay hãy để mọi âu lo lại sau lưng, bạn đã cố gắng rất nhiều.",
+      "prompt": "Vertical 9:16 atmospheric midnight velvet and glowing golden lantern photograph of a rain-streaked bedroom window looking out at distant blurred city lights, warm amber lamp inside, Studio Ghibli nocturnal aesthetic, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow smooth 35mm push-in toward the rain-streaked window pane, water droplets tracing gentle paths in golden lamp glow, locked geometry, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 4.0,
+      "at": 0.0
+    },
+    {
+      "id": "S02",
+      "narration": "Tiếng mưa rơi êm đềm ru thế giới ngoài kia chìm vào giấc ngủ say.",
+      "prompt": "Vertical 9:16 macro shot of raindrops splashing softly on an old wooden windowsill, glistening in amber light, deep midnight blue shadows, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow-motion capture of raindrops pattering rhythmically on the wet sill, tranquil nocturnal mood, zero morphing.",
+      "camera_motion": "zoom_in",
+      "transition": "fade",
+      "based_on": "S01",
+      "duration": 3.77,
+      "at": 4.0
+    },
+    {
+      "id": "S03",
+      "narration": "Một ngày dài với những bộn bề và áp lực cuối cùng cũng đã khép lại.",
+      "prompt": "Vertical 9:16 cozy bedroom interior showing an open book resting upside down on a soft wool blanket beside a sleeping cat, warm bedside lamp, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow gentle tracking pass across the soft blanket and resting cat, deep cozy comfort, zero morphing.",
+      "camera_motion": "pan_right",
+      "transition": "smoothright",
+      "based_on": null,
+      "duration": 3.96,
+      "at": 7.77
+    },
+    {
+      "id": "S04",
+      "narration": "Ngọn đèn vàng ấm áp thắp sáng góc phòng quen thuộc và bình yên.",
+      "prompt": "Vertical 9:16 close-up of a vintage ceramic lamp with a pleated paper shade emitting soft 2700K golden light, casting gentle warm rings on a wooden nightstand, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow subtle push-in toward the glowing lamp shade, soothing amber warmth filling the frame, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": "S03",
+      "duration": 3.71,
+      "at": 11.73
+    },
+    {
+      "id": "S05",
+      "narration": "Thả lỏng toàn bộ cơ thể, lắng nghe từng hơi thở chậm rãi và nhịp nhàng.",
+      "prompt": "Vertical 9:16 peaceful shot of a person resting comfortably in soft linen bedding, breathing slowly in the dim golden room light, deep tranquility, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow gentle push-in on the peaceful sleeping profile, chest rising and falling in rhythmic rest, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 4.41,
+      "at": 15.44
+    },
+    {
+      "id": "S06",
+      "narration": "Không còn vội vã, không còn những kỳ vọng nặng trĩu trên đôi vai.",
+      "prompt": "Vertical 9:16 macro shot of a ceramic mug of warm chamomile tea resting on the nightstand, delicate curls of aromatic steam rising slowly, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow-motion tracking of the gentle steam curl dissolving into the midnight air, soothing stillness, zero morphing.",
+      "camera_motion": "pan_up",
+      "transition": "smoothup",
+      "based_on": "S04",
+      "duration": 3.98,
+      "at": 19.85
+    },
+    {
+      "id": "S07",
+      "narration": "Bạn xứng đáng có một khoảng lặng dịu dàng để vỗ về tâm hồn.",
+      "prompt": "Vertical 9:16 wide view of a quiet cottage balcony under a starry midnight sky, a paper lantern glowing softly as summer crickets hum, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow majestic camera pullback from the glowing paper lantern into the vast starry night, serene atmosphere, zero morphing.",
+      "camera_motion": "zoom_out",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.56,
+      "at": 23.83
+    },
+    {
+      "id": "S08",
+      "narration": "Hãy tha thứ cho những điều bạn chưa làm được trọn vẹn hôm nay.",
+      "prompt": "Vertical 9:16 macro shot of a fallen autumn blossom floating peacefully down a dark still garden pond under moonlight, ripples softening, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow tracking move following the blossom floating in calm water, gentle moonlight reflections, zero morphing.",
+      "camera_motion": "pan_right",
+      "transition": "smoothright",
+      "based_on": null,
+      "duration": 3.26,
+      "at": 27.39
+    },
+    {
+      "id": "S09",
+      "narration": "Ngày mai là một khởi đầu mới tinh khôi với những hy vọng mới.",
+      "prompt": "Vertical 9:16 subtle dawn twilight creeping over distant mountain silhouettes, first faint violet glow on the horizon while stars still twinkle, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow upward tilt toward the fading stars as dawn violet light touches the sky, peaceful promise, zero morphing.",
+      "camera_motion": "pan_up",
+      "transition": "smoothup",
+      "based_on": null,
+      "duration": 3.57,
+      "at": 30.65
+    },
+    {
+      "id": "S10",
+      "narration": "Giữ lấy sự dịu dàng trong lòng để bước tiếp con đường phía trước.",
+      "prompt": "Vertical 9:16 close-up of hands gently smoothing a soft cotton quilt over shoulders, feeling warmth and safety in the quiet night, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow gentle push-in as hands settle comfortably under the warm quilt, total security, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": "S05",
+      "duration": 3.54,
+      "at": 34.22
+    },
+    {
+      "id": "S11",
+      "narration": "Chúc bạn có một giấc ngủ thật ngon lành và bình yên đêm nay.",
+      "prompt": "Vertical 9:16 wide atmospheric view of the bedroom slowly dimming into deep peaceful midnight blue, nightlight glowing like a tiny firefly, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow graceful pullback as the room settles into profound silent slumber, tranquil nocturnal peace, zero morphing.",
+      "camera_motion": "zoom_out",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.25,
+      "at": 37.76
+    },
+    {
+      "id": "S12",
+      "narration": "Thưởng thức trọn vẹn câu chuyện ru ngủ vỗ về trên video dài của kênh.",
+      "prompt": "Vertical 9:16 macro tabletop shot of an illustrated fable book and glowing brass lantern beside a tablet screen on a bedside table, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow smooth push-in toward the glowing lantern and bedside tablet display, warm bedtime ambiance, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 4.23,
+      "at": 41.01
+    },
+    {
+      "id": "S13",
+      "narration": "Hãy khép mi lại và đón nhận giấc ngủ an lành lúc này.",
+      "prompt": "Vertical 9:16 serene closing shot of the rain stopping, moon emerging through clouds to cast silver light across the quiet sleeping room, absolute stillness, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow cinematic pullback toward the silver moonlit window, deep peaceful nocturnal lullaby conclusion, zero morphing.",
+      "camera_motion": "zoom_out",
+      "transition": "fade",
+      "based_on": "S12",
+      "duration": 3.06,
+      "at": 45.24
+    }
+  ],
+  "scene_pairs": [
+    {
+      "id": "PAIR_01",
+      "start_beat_id": "S01",
+      "end_beat_id": "S02",
+      "target_duration": 4.0,
+      "motion_prompt": "Slow smooth 35mm push-in toward the rain-streaked window pane, water droplets tracing gentle paths in golden lamp glow, locked geometry, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_02",
+      "start_beat_id": "S02",
+      "end_beat_id": "S03",
+      "target_duration": 3.77,
+      "motion_prompt": "Slow-motion capture of raindrops pattering rhythmically on the wet sill, tranquil nocturnal mood, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_03",
+      "start_beat_id": "S03",
+      "end_beat_id": "S04",
+      "target_duration": 3.96,
+      "motion_prompt": "Slow gentle tracking pass across the soft blanket and resting cat, deep cozy comfort, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_04",
+      "start_beat_id": "S04",
+      "end_beat_id": "S05",
+      "target_duration": 3.71,
+      "motion_prompt": "Slow subtle push-in toward the glowing lamp shade, soothing amber warmth filling the frame, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_05",
+      "start_beat_id": "S05",
+      "end_beat_id": "S06",
+      "target_duration": 4.41,
+      "motion_prompt": "Slow gentle push-in on the peaceful sleeping profile, chest rising and falling in rhythmic rest, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_06",
+      "start_beat_id": "S06",
+      "end_beat_id": "S07",
+      "target_duration": 3.98,
+      "motion_prompt": "Slow-motion tracking of the gentle steam curl dissolving into the midnight air, soothing stillness, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_07",
+      "start_beat_id": "S07",
+      "end_beat_id": "S08",
+      "target_duration": 3.56,
+      "motion_prompt": "Slow majestic camera pullback from the glowing paper lantern into the vast starry night, serene atmosphere, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_08",
+      "start_beat_id": "S08",
+      "end_beat_id": "S09",
+      "target_duration": 3.26,
+      "motion_prompt": "Slow tracking move following the blossom floating in calm water, gentle moonlight reflections, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_09",
+      "start_beat_id": "S09",
+      "end_beat_id": "S10",
+      "target_duration": 3.57,
+      "motion_prompt": "Slow upward tilt toward the fading stars as dawn violet light touches the sky, peaceful promise, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_10",
+      "start_beat_id": "S10",
+      "end_beat_id": "S11",
+      "target_duration": 3.54,
+      "motion_prompt": "Slow gentle push-in as hands settle comfortably under the warm quilt, total security, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_11",
+      "start_beat_id": "S11",
+      "end_beat_id": "S12",
+      "target_duration": 3.25,
+      "motion_prompt": "Slow graceful pullback as the room settles into profound silent slumber, tranquil nocturnal peace, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_12",
+      "start_beat_id": "S12",
+      "end_beat_id": "S13",
+      "target_duration": 4.23,
+      "motion_prompt": "Slow smooth push-in toward the glowing lantern and bedside tablet display, warm bedtime ambiance, zero morphing.",
+      "mode": "boundary_extend"
+    }
+  ],
+  "metadata": {
+    "beats_count": 13,
+    "pairs_count": 12,
+    "total_duration_sec": 48.28,
+    "youtube_title_length": 47,
+    "bridge_syllables": 15,
+    "close_syllables": 13
+  }
+}

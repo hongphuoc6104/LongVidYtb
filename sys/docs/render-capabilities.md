@@ -1,59 +1,61 @@
-# Renderer Capabilities
+# Video Pilot — Native Colab Tesla T4 FFmpeg NVENC Rendering Capabilities
 
-This document records the actual technical capabilities of the Remotion renderer (`sys/renderer/index.tsx`, `render.mjs`) in the Video Pilot system.
-
-Unlike the long-term stable cinematic grammar in `.agents/skills/vp-production/references/cinematography.md`, this document evolves with engine and renderer upgrades.
-
----
-
-## 1. Directly Supported Features in Renderer Source Code (Remotion Engine)
-
-Playback uses the calm composition plan in `sys/renderer/camera.mjs` and the image layers in `sys/renderer/index.tsx`. Existing `effect`, `camera_motion` and `focus` fields remain readable; authored direction diversity does not force visible movement on each beat. The initial comfort thresholds below are engineering defaults pending remote MP4 visual acceptance. Paths are evaluated from `useCurrentFrame()` with clamped progress, following [Remotion animation guidance](https://www.remotion.dev/docs/animating-properties).
-
-| Effect / Technique | Status in Code | Mechanism & Parameters | Usage Guidance |
-|---|---|---|---|
-| **Hard cut (`cut` / `hold`)** | Supported | Switches images at beat `at`; variations use an 85ms micro-dissolve while sharing camera time and origin. `hold` locks the composition. | Fast image edits do not require fast camera movement. |
-| **Cross-fade (`fade` / Dissolve)** | Supported | New image layer transitions opacity from 0 to 1 over up to 0.3s (or half beat duration), overlaying previous frame. | Suitable for time passage, flashbacks, or softening scene cuts. |
-| **Slide / Whip Pan (`slide_left`)** | Steady in calm playback | Legacy intent remains readable; the full-frame renderer switches images without lateral travel or blur. | Use clean cuts for topic changes. |
-| **Smooth Zoom In (`zoom_in` / `push_in`)** | Supported, budgeted | One composition-level smoothstep path, at most 1.5% zoom; peak scale velocity <= 0.004/s including overscan. | Compositions >= 2.4s only, with at least 4s rest before another moving composition. |
-| **Smooth Zoom Out (`zoom_out` / `pull_back`)** | Supported, budgeted | Same speed budget and smooth endpoint velocities as push-in. | Reveal context gently; never reset the path on a variation cut. |
-| **Punch Zoom (`punch_in`)** | Restrained push | Uses the calm zoom path, without spring, size snap or impact shake. | Let narration and depicted action carry emphasis. |
-| **Horizontal Pan (`pan_left` / `pan_right`)** | Steady in calm playback | Authored intent is preserved; no lateral image translation. | Use composition and cuts to compare subjects. |
-| **Auto Ken Burns** | Replaced by calm playback | Unknown/no-intent shots hold steady; independent shots shorter than 2.4s, macro shots and white cards hold. | Camera movement is optional. Image beat timing stays unchanged. |
-| **Focal Center (`focus`)** | Supported | Safely clamps existing normalized focus; variations/reused images retain the base composition origin and portrait framing mode. | Do not invent manual coordinates. Outgoing dissolves keep their own framing. |
-| **Camera Shake (`shake`)** | Steady in full-frame playback | Legacy Perlin helpers remain available, but are not applied to full-frame images. | Avoid whole-frame vibration. |
-| **Line Boil Effect (`line_boil`)** | Disabled for full-frame playback | Global and per-beat flags cannot enable displacement on full-frame imagery; dormant layered assets retain legacy handling. | Do not distort the entire illustration to simulate character animation. |
-| **Draw-on Transition (`draw_on`)** | Supported | Soft transition mask `maskImage: linear-gradient(135deg, ...)` sweeping diagonally from top-left to bottom-right across `draw_duration` (default 1.3s), accompanied by leading pencil icon `✏️`. Triggered via `draw_on: true` or `effect: 'draw_on'`. | Eye-catching scene openings, drawing sketches in real time with opening narrator lines. |
-| **Cinematic Overlays** | Supported | Subtle 4-corner vignette shading and film grain across the frame. | Blends 2D sketches into visual space, eliminating raw digital image feel. |
-| **Kinetic Keyword Typography** | Supported | Tokenizes captions, automatically highlighting target vocabulary (`target_word`) or uppercase English words in glowing yellow `#FACC15` with black drop shadows. | Highlights key terms without requiring static text drawn into illustrations. |
-| **Interactive Practice Counter** | Supported | Floating countdown bubble "3... 2... 1... 🎙️" automatically shown when cue has `practice` flag or contains repeat prompts. | Engages learners without manual per-frame compositing. |
-| **Layered Cut-out Motion (`scene.layers`)** | **Deprecated for new jobs** | Standard authoring and render validation accept full-frame `kind: "scene"` images with narration-anchored `beats[]`; `kind: "background"`, `kind: "sticker"`, and non-empty `layers[]` are rejected. `matte_sticker.py` is not bundled or invoked. | Use multi-beat full-frame scene images and `based_on` variations for continuity. Existing renderer code is retained only as dormant legacy code. |
+> **SSOT**: Colab Tesla T4 Native GPU FFmpeg `h264_nvenc` is the authoritative video rendering engine of Video Pilot (replacing legacy Remotion/Chromium/CPU compositors).
+> Execution is orchestrated via `sys/colab_bridge/flow_video_worker.py` and `sys/tools/produce_vn_dual_mode.py`.
 
 ---
 
-## 2. Techniques Handled at Script, Storyboard, and Timeline Level (No Custom Shaders Needed)
+## 1. Core Hardware & Codec Invariants
 
-These techniques do not require dedicated renderer code changes; they depend on how the director sequences content and timing:
-
-- **Match cut, Jump cut, Smash cut**: Create visual similarity or stark contrast via image content and appropriate beat timing (`at`).
-- **L-cut / J-cut**: Narration audio (`narration.wav`) runs continuously on its own audio track; visual scene transitions (`scene.start`) and beat switches (`beat.at`) are deliberately offset 0.2s - 0.5s before or after dialogue to create seamless visual flow.
-- **Visual beats & Pacing**: Distribute `images` array in each scene with `at` values aligning with spoken emphasis.
-- **B-roll**: Insert cutaway beats or short video clips (both `.mp4` and `.webm` supported via `RemotionVideo`).
-
----
-
-## 3. Techniques Handled at Prompt and Image Generation Level (Flow Generation)
-
-Camera angles and framing are established in the static image prompt for Flow, not via 3D transformations in the renderer:
-
-- **Shot Framing**: `Establishing shot`, `Close-up`, `Extreme close-up`, `Over-the-shoulder`, `POV shot`.
-- **Camera Angles**: `High angle`, `Low angle`, `Dutch angle` (request tilted horizon line in prompt).
-- **Hand-drawn Call-outs / Annotations**: Prompt directly for "red hand-drawn circle / arrow pointing at the focal object" in accordance with brand tolerance (avoids artificial mechanical graphic overlays).
-
----
-
-## 4. Unsupported Techniques
-
-| Technique | Status | Current Recommended Alternative |
+| Parameter | Specification | Purpose / Implementation |
 |---|---|---|
-| **True 3D Spatial Parallax / 3D Mesh Warping** | **Unsupported (Chưa hỗ trợ)**. The renderer does not support true 3D spatial camera simulation or 3D mesh warping. | Use semantic camera movement between full-frame images or illustrate compositions with deep 2D perspective. |
+| **GPU Encoder** | `-c:v h264_nvenc` | Hardware accelerated H.264 encode on Tesla T4 (`0.0s` startup overhead vs 300s+ Remotion). |
+| **Preset & Bitrate** | `-preset p4 -b:v 6M` | Balanced NVENC preset p4, target video bitrate `6.0 Mbps` ensuring broadcast-grade sharpness. |
+| **Audio Normalization** | `-af loudnorm=I=-11.0:TP=-1.0` | EBU R128 loudness normalization to `-11.0 LUFS` with `-1.0 dBTP` true peak limit. |
+| **RAM Disk Encoding** | `/dev/shm` multi-worker | Parallel encoding of video chunks across 3 workers directly on `/dev/shm` RAM disk. |
+| **Lossless Concatenation** | `<1.0s` `stream-copy` | Lossless concatenation (`-c copy`) of encoded chunk segments via FFmpeg concat demuxer. |
+
+---
+
+## 2. Dual-Format Delivery Profiles
+
+### A. Short-Form (`short_9x16`, 1080x1920, 48–60s)
+- **Engine**: 100% Full-Chain Video Generation (`Omni 1.2 Flash` continuous clips).
+- **Stitching**: `trim=start_frame=1` zero-stutter frame blending.
+- **Subtitles**: Kinetic 1-word `.ass` subtitles:
+  - Font: Bold sans-serif (`MarginV=400`, `Outline=6`).
+  - Palette: Alternating Red `#FF3B30` and Yellow `#FFE600` active word highlights.
+- **Delivery**: Burned-in `.ass`/`.srt` video deliverable.
+
+### B. Long-Form (`long_16x9`, 1920x1080, 8m30s–13m)
+- **Engine**: High-Density Multi-Image (`240–350` `BELUGA` 8K frames: `~100–120` Base Anchors + `~140–230` 1-hop Progressive States).
+- **Camera Dynamics**:
+  - `1.25x` supersampled canvas (`2400x1350`).
+  - Analytical zero-snap `zoompan`: continuous smooth function `z='1.06-0.06*(on/N)'` dependent strictly on `on/N` (prohibiting recursive state variables).
+- **Transitions**: Directional `xfade` optical transitions (`0.24s` duration; `smoothleft`, `smoothright`, `smoothup`, `smoothdown`, `fade`).
+- **Subtitles & Chapters**:
+  - Sidecar `.srt` matching exact spoken cadence.
+  - `8–12` YouTube Chapters embedded via `FFMETADATA1`.
+
+---
+
+## 3. Pacing Modes & Timing Contracts
+
+Visual beats strictly conform to `sys/visual_pacing.py`:
+- **Rapid**: `1.2–2.0s` hold (intense narrative conflict).
+- **Normal**: `2.2–3.2s` hold (standard explanatory progression).
+- **Slow**: `3.5–4.8s` hold (conceptual synthesis).
+- **Hold**: `5.0–6.5s` hold (reflection, key takeaways).
+
+---
+
+## 4. Operational Commands
+
+```bash
+# Verify local render pipeline & schema
+pytest sys/tests/test_colab_bridge_skill.py sys/tests/test_vn_dual_mode_pipeline.py -v
+
+# Production rendering via Colab dispatcher
+python3 sys/tools/produce_vn_dual_mode.py --mode build-short
+python3 sys/tools/produce_vn_dual_mode.py --mode build-long
+```

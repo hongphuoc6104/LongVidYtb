@@ -1,0 +1,281 @@
+{
+  "channel_id": "ai_binh_dan",
+  "channel_slug": "ai-binh-dan",
+  "job_id": "vn_pilot_ai_binh_dan_short_fullchain",
+  "parent_long_id": "ai-binh-dan-long-master",
+  "format_profile": "short_9x16",
+  "aspect": "9:16",
+  "video_model": "omni_1_2_flash",
+  "chain_mode": "scene_pairs",
+  "voice": "VietNarrator",
+  "total_duration_sec": 49.28,
+  "youtube_title": "Tự Động Hóa Bằng AI Tiết Kiệm Bốn Giờ Mỗi Ngày",
+  "title": "Tự Động Hóa Bằng AI Tiết Kiệm Bốn Giờ Mỗi Ngày",
+  "thumbnail_spec": {
+    "visual_hook": "Vertical 9:16 sleek dark-mode glassmorphism UI telemetry and tactile productivity desk macro showing AI automated pipeline workflows executing, zero overlays, 25% margin",
+    "allowed_text": "TỰ ĐỘNG HÓA AI",
+    "overlay_card": false,
+    "prompt": "Vertical 9:16 sleek dark-mode glassmorphism UI telemetry and tactile productivity desk macro showing AI automated pipeline workflows executing, zero overlays, 25% margin, bold uppercase text 'TỰ ĐỘNG HÓA AI', Jeff Su & Fireship sleek dark-mode glassmorphism UI and tactile workspace cinematography in obsidian and cyan palette, shallow f/2.0 optical depth-of-field, and rigid anti-morph hardware physics across tech environments, strictly zero readable software text or fake code lines, strictly zero graphic overlays, no cartoons."
+  },
+  "packaging": {
+    "cta_plan": {
+      "bridge": "Xem hướng dẫn thiết lập hệ thống tự động hóa trên video dài của kênh.",
+      "close": "Hãy thử ứng dụng trí tuệ nhân tạo vào công việc ngay hôm nay."
+    }
+  },
+  "cta_plan": {
+    "bridge": "Xem hướng dẫn thiết lập hệ thống tự động hóa trên video dài của kênh.",
+    "close": "Hãy thử ứng dụng trí tuệ nhân tạo vào công việc ngay hôm nay."
+  },
+  "beats": [
+    {
+      "id": "S01",
+      "narration": "Đừng mất bốn tiếng làm báo cáo thủ công mỗi ngày một cách vất vả.",
+      "prompt": "Vertical 9:16 sleek dark-mode glassmorphism photograph of a modern dual-monitor workstation, a tired office worker hand resting on a precision wireless mouse beside a messy stack of paper reports, Jeff Su productivity aesthetic, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow smooth 35mm push-in toward the glowing dark-mode monitors, cyan ambient backlight reflecting on dark desk surface, locked geometry, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.85,
+      "at": 0.0
+    },
+    {
+      "id": "S02",
+      "narration": "Khi một chuỗi lệnh tự động giải quyết xong chỉ trong mười giây.",
+      "prompt": "Vertical 9:16 macro shot of a sleek anodized aluminum mechanical keyboard with a glowing cyan enter key being pressed firmly, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow-motion precision push-in as the finger taps the glowing key, mechanical switch travel, crisp specular highlights, zero morphing.",
+      "camera_motion": "zoom_in",
+      "transition": "fade",
+      "based_on": "S01",
+      "duration": 3.27,
+      "at": 3.85
+    },
+    {
+      "id": "S03",
+      "narration": "Hàng ngàn dòng số liệu hỗn loạn lập tức được phân loại chuẩn xác.",
+      "prompt": "Vertical 9:16 dynamic visualization of glowing data nodes cascading into neat, organized isometric grid matrices on a dark glass screen, futuristic telemetry aesthetic, strictly zero text, no cartoons.",
+      "motion_prompt": "Rapid smooth tracking move following cascading data streams snapping into perfect symmetrical rows, zero morphing.",
+      "camera_motion": "pan_down",
+      "transition": "smoothdown",
+      "based_on": null,
+      "duration": 3.38,
+      "at": 7.12
+    },
+    {
+      "id": "S04",
+      "narration": "Trí tuệ nhân tạo không sinh ra để thay thế người lao động chăm chỉ.",
+      "prompt": "Vertical 9:16 warm eye-level shot of a professional smiling with relief as automated tasks complete, soft studio lighting, natural documentary realism, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow gentle push-in on the smiling professional enjoying a calm moment, natural warmth, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.98,
+      "at": 10.5
+    },
+    {
+      "id": "S05",
+      "narration": "Nó sinh ra để giải phóng bạn khỏi những thao tác lặp đi lặp lại nhàm chán.",
+      "prompt": "Vertical 9:16 macro split view of automated file icons flying effortlessly between folders on a glass screen, smooth fluid motion graphics, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow lateral slide following seamless file transfer animations on dark glassmorphic UI, zero morphing.",
+      "camera_motion": "pan_right",
+      "transition": "smoothright",
+      "based_on": null,
+      "duration": 4.32,
+      "at": 14.48
+    },
+    {
+      "id": "S06",
+      "narration": "Kết hợp các công cụ bảng tính với mô hình xử lý ngôn ngữ hiện đại.",
+      "prompt": "Vertical 9:16 3D geometric concept of two glowing digital puzzle pieces connecting: a spreadsheet grid and a neural network node, cyan and amber lights, strictly zero text, no cartoons.",
+      "motion_prompt": "Smooth 3D orbit around the two digital puzzle components snapping together, clean tech aesthetic, zero morphing.",
+      "camera_motion": "orbit_cw",
+      "transition": "dissolve",
+      "based_on": null,
+      "duration": 3.83,
+      "at": 18.8
+    },
+    {
+      "id": "S07",
+      "narration": "Bạn biến chiếc máy tính thành một trợ lý đắc lực làm việc suốt đêm.",
+      "prompt": "Vertical 9:16 nighttime shot of an ultra-clean minimalist desk with laptop running quietly under warm ambient desk light while room sleeps, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow smooth dolly pullback from the quiet glowing laptop, serene nighttime productivity mood, zero morphing.",
+      "camera_motion": "zoom_out",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.65,
+      "at": 22.63
+    },
+    {
+      "id": "S08",
+      "narration": "Dành quỹ thời gian quý báu cho quyết định chiến lược và sáng tạo.",
+      "prompt": "Vertical 9:16 close-up of a person sketching strategic mind-map concepts with a fountain pen on an elegant sketchbook, natural morning window light, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow push-in following the creative pen strokes on paper, peaceful high-level thinking mood, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.56,
+      "at": 26.28
+    },
+    {
+      "id": "S09",
+      "narration": "Ai biết tận dụng công cụ mới sẽ đi nhanh hơn phần còn lại gấp mười lần.",
+      "prompt": "Vertical 9:16 architectural time-lapse view of a sleek modern skyscraper office with daylight sweeping across desks as one professional works effortlessly, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow cinematic lateral tracking pass across the futuristic office floor, morning sunlight streaming in, zero morphing.",
+      "camera_motion": "pan_left",
+      "transition": "smoothleft",
+      "based_on": null,
+      "duration": 4.18,
+      "at": 29.84
+    },
+    {
+      "id": "S10",
+      "narration": "Công nghệ không phức tạp, chỉ cần bạn sẵn sàng thay đổi thói quen.",
+      "prompt": "Vertical 9:16 macro shot of a friendly human hand reaching out to touch an interactive glowing glass holographic interface, warm touch, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow precision push-in toward the fingertip touching the responsive glass panel, gentle light ripple, zero morphing.",
+      "camera_motion": "zoom_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.86,
+      "at": 34.02
+    },
+    {
+      "id": "S11",
+      "narration": "Làm chủ công nghệ để công nghệ phục vụ trọn vẹn cho cuộc sống của bạn.",
+      "prompt": "Vertical 9:16 serene wide shot of a professional leaving the office early on a sunny afternoon with bag over shoulder, satisfied smile, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow graceful pullback as the professional walks out into golden afternoon sunlight, work-life balance mastery, zero morphing.",
+      "camera_motion": "zoom_out",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.88,
+      "at": 37.88
+    },
+    {
+      "id": "S12",
+      "narration": "Xem hướng dẫn thiết lập hệ thống tự động hóa trên video dài của kênh.",
+      "prompt": "Vertical 9:16 macro tabletop shot of an automation workflow blueprint displayed on a tablet screen beside a wireless keyboard on walnut desk, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow smooth push-in toward the tablet screen and clean desk accessories, warm ambient study lighting, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 4.18,
+      "at": 41.76
+    },
+    {
+      "id": "S13",
+      "narration": "Hãy thử ứng dụng trí tuệ nhân tạo vào công việc ngay hôm nay.",
+      "prompt": "Vertical 9:16 inspiring closing shot of a bright modern home office with coffee cup steaming gently in morning sun, peaceful productive day ahead, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow elegant pullback from the inviting desk into the sunny room, empowering technological liberation conclusion, zero morphing.",
+      "camera_motion": "zoom_out",
+      "transition": "fade",
+      "based_on": "S12",
+      "duration": 3.35,
+      "at": 45.94
+    }
+  ],
+  "scene_pairs": [
+    {
+      "id": "PAIR_01",
+      "start_beat_id": "S01",
+      "end_beat_id": "S02",
+      "target_duration": 3.85,
+      "motion_prompt": "Slow smooth 35mm push-in toward the glowing dark-mode monitors, cyan ambient backlight reflecting on dark desk surface, locked geometry, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_02",
+      "start_beat_id": "S02",
+      "end_beat_id": "S03",
+      "target_duration": 3.27,
+      "motion_prompt": "Slow-motion precision push-in as the finger taps the glowing key, mechanical switch travel, crisp specular highlights, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_03",
+      "start_beat_id": "S03",
+      "end_beat_id": "S04",
+      "target_duration": 3.38,
+      "motion_prompt": "Rapid smooth tracking move following cascading data streams snapping into perfect symmetrical rows, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_04",
+      "start_beat_id": "S04",
+      "end_beat_id": "S05",
+      "target_duration": 3.98,
+      "motion_prompt": "Slow gentle push-in on the smiling professional enjoying a calm moment, natural warmth, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_05",
+      "start_beat_id": "S05",
+      "end_beat_id": "S06",
+      "target_duration": 4.32,
+      "motion_prompt": "Slow lateral slide following seamless file transfer animations on dark glassmorphic UI, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_06",
+      "start_beat_id": "S06",
+      "end_beat_id": "S07",
+      "target_duration": 3.83,
+      "motion_prompt": "Smooth 3D orbit around the two digital puzzle components snapping together, clean tech aesthetic, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_07",
+      "start_beat_id": "S07",
+      "end_beat_id": "S08",
+      "target_duration": 3.65,
+      "motion_prompt": "Slow smooth dolly pullback from the quiet glowing laptop, serene nighttime productivity mood, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_08",
+      "start_beat_id": "S08",
+      "end_beat_id": "S09",
+      "target_duration": 3.56,
+      "motion_prompt": "Slow push-in following the creative pen strokes on paper, peaceful high-level thinking mood, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_09",
+      "start_beat_id": "S09",
+      "end_beat_id": "S10",
+      "target_duration": 4.18,
+      "motion_prompt": "Slow cinematic lateral tracking pass across the futuristic office floor, morning sunlight streaming in, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_10",
+      "start_beat_id": "S10",
+      "end_beat_id": "S11",
+      "target_duration": 3.86,
+      "motion_prompt": "Slow precision push-in toward the fingertip touching the responsive glass panel, gentle light ripple, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_11",
+      "start_beat_id": "S11",
+      "end_beat_id": "S12",
+      "target_duration": 3.88,
+      "motion_prompt": "Slow graceful pullback as the professional walks out into golden afternoon sunlight, work-life balance mastery, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_12",
+      "start_beat_id": "S12",
+      "end_beat_id": "S13",
+      "target_duration": 4.18,
+      "motion_prompt": "Slow smooth push-in toward the tablet screen and clean desk accessories, warm ambient study lighting, zero morphing.",
+      "mode": "boundary_extend"
+    }
+  ],
+  "metadata": {
+    "beats_count": 13,
+    "pairs_count": 12,
+    "total_duration_sec": 49.28,
+    "youtube_title_length": 46,
+    "bridge_syllables": 15,
+    "close_syllables": 14
+  }
+}

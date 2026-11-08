@@ -1,0 +1,281 @@
+{
+  "channel_id": "chanh_niem_ke",
+  "channel_slug": "chanh-niem-ke",
+  "job_id": "vn_pilot_chanh_niem_ke_short_fullchain",
+  "parent_long_id": "chanh-niem-ke-long-master",
+  "format_profile": "short_9x16",
+  "aspect": "9:16",
+  "video_model": "omni_1_2_flash",
+  "chain_mode": "scene_pairs",
+  "voice": "VietNarrator",
+  "total_duration_sec": 50.66,
+  "youtube_title": "Nghệ Thuật Buông Bỏ Những Lo Âu Vô Hình Trong Đầu",
+  "title": "Nghệ Thuật Buông Bỏ Những Lo Âu Vô Hình Trong Đầu",
+  "thumbnail_spec": {
+    "visual_hook": "Vertical 9:16 35mm anamorphic Kyoto Zen sanctuary courtyard with raindrops falling onto a stone basin surrounded by moss, zero overlays, 25% margin",
+    "allowed_text": "NGHỆ THUẬT BUÔNG BỎ",
+    "overlay_card": false,
+    "prompt": "Vertical 9:16 35mm anamorphic Kyoto Zen sanctuary courtyard with raindrops falling onto a stone basin surrounded by moss, zero overlays, 25% margin, bold uppercase text 'NGHỆ THUẬT BUÔNG BỎ', Aperture & Pursuit of Wonder 35mm anamorphic contemplative cinema with natural dusk/rain chiaroscuro lighting, wide anamorphic depth-of-field, and serene atmospheric anti-morph physics across changing tranquil environments, strictly zero text, strictly zero graphic overlays, no cartoons."
+  },
+  "packaging": {
+    "cta_plan": {
+      "bridge": "Trọn bộ phương pháp thiền định buông xả đang có trên video dài của kênh.",
+      "close": "Hãy nhắm mắt thở sâu và buông bỏ gánh nặng ngay lúc này."
+    }
+  },
+  "cta_plan": {
+    "bridge": "Trọn bộ phương pháp thiền định buông xả đang có trên video dài của kênh.",
+    "close": "Hãy nhắm mắt thở sâu và buông bỏ gánh nặng ngay lúc này."
+  },
+  "beats": [
+    {
+      "id": "S01",
+      "narration": "Chúng ta thường kiệt sức vì những lo toan chưa từng xảy ra.",
+      "prompt": "Vertical 9:16 35mm anamorphic photograph of a quiet wooden veranda of a traditional Kyoto Zen temple overlooking a moss garden in gentle rain, raindrops rippling in a smooth stone water basin, Aperture meditative aesthetic, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow smooth 35mm dolly push-in toward the mossy stone basin as raindrops fall with realistic fluid physics, tranquil overcast light, locked geometry, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.35,
+      "at": 0.0
+    },
+    {
+      "id": "S02",
+      "narration": "Tâm trí mải miết chạy đua với hàng ngàn kịch bản tồi tệ tưởng tượng.",
+      "prompt": "Vertical 9:16 macro shot of fallen autumn leaves swirling gently in an eddy of clear mountain stream water over smooth dark river pebbles, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow-motion tracking pass following a golden leaf swirling calmly in the water eddy, realistic water refraction, zero morphing.",
+      "camera_motion": "pan_right",
+      "transition": "smoothright",
+      "based_on": "S01",
+      "duration": 3.85,
+      "at": 3.35
+    },
+    {
+      "id": "S03",
+      "narration": "Càng cố xua đuổi sự sợ hãi, bạn lại càng tiếp thêm năng lượng cho nó.",
+      "prompt": "Vertical 9:16 interior shot of a minimalist tatami room with a soft paper shoji screen casting diffused morning light onto a solitary meditation cushion, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow cinematic lateral tracking across the woven tatami mat toward the meditation cushion, serene soft lighting, zero morphing.",
+      "camera_motion": "pan_left",
+      "transition": "smoothleft",
+      "based_on": null,
+      "duration": 4.37,
+      "at": 7.2
+    },
+    {
+      "id": "S04",
+      "narration": "Hãy ngồi lại trong yên lặng và quan sát dòng suy nghĩ như mây trôi.",
+      "prompt": "Vertical 9:16 vertical composition showing soft white mist rolling slowly over deep green pine mountain ridges at dawn, wide negative space sky, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow gentle tilt up following the morning mist rising gracefully above pine tree silhouettes, serene atmospheric depth, zero morphing.",
+      "camera_motion": "pan_up",
+      "transition": "smoothup",
+      "based_on": null,
+      "duration": 3.76,
+      "at": 11.57
+    },
+    {
+      "id": "S05",
+      "narration": "Đám mây có thể u ám, nhưng bầu trời phía sau vẫn luôn bao la tĩnh lặng.",
+      "prompt": "Vertical 9:16 wide sky view showing a dark rain cloud drifting slowly away to reveal clear golden morning sunlight breaking through, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow time-lapse style tracking move as the cloud edge parts and golden light spills across the frame, zero morphing.",
+      "camera_motion": "pan_right",
+      "transition": "smoothright",
+      "based_on": "S04",
+      "duration": 4.52,
+      "at": 15.33
+    },
+    {
+      "id": "S06",
+      "narration": "Bạn không phải là suy nghĩ hỗn độn đó, bạn là không gian chứa đựng chúng.",
+      "prompt": "Vertical 9:16 macro shot of a single water droplet resting in perfect equilibrium on a broad lotus leaf, reflecting the morning sky, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow macro push-in on the spherical water droplet trembling slightly without breaking, glistening surface tension, zero morphing.",
+      "camera_motion": "zoom_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 4.27,
+      "at": 19.85
+    },
+    {
+      "id": "S07",
+      "narration": "Thả lỏng đôi vai, hít một hơi sâu và đón nhận hiện tại như nó vốn là.",
+      "prompt": "Vertical 9:16 close-up of a person seated in peaceful posture, hands resting softly on knees, shoulders gently lowering with a relaxed breath, soft window daylight, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow subtle push-in capturing the gentle release of physical tension in the posture, peaceful natural realism, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 4.36,
+      "at": 24.12
+    },
+    {
+      "id": "S08",
+      "narration": "Nỗi buồn hay niềm vui đến rồi cũng sẽ tự nhiên tan biến theo quy luật.",
+      "prompt": "Vertical 9:16 shot of gentle water ripples expanding outward across a still garden pond and smoothing back into a flawless mirror, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow high-angle tracking pass as the ripples dissipate completely, returning the water surface to glass-like calm, zero morphing.",
+      "camera_motion": "pan_down",
+      "transition": "smoothdown",
+      "based_on": null,
+      "duration": 3.93,
+      "at": 28.48
+    },
+    {
+      "id": "S09",
+      "narration": "Bình yên không nằm ở việc kiểm soát mọi thứ xung quanh.",
+      "prompt": "Vertical 9:16 shot of a weathered stone lantern standing peacefully in a bamboo grove as wind gently sways the tall green stalks, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow lateral pan past the stone lantern as bamboo stalks sway gracefully in the mountain breeze, zero morphing.",
+      "camera_motion": "pan_right",
+      "transition": "smoothright",
+      "based_on": null,
+      "duration": 3.17,
+      "at": 32.41
+    },
+    {
+      "id": "S10",
+      "narration": "Mà nằm ở sự vững vàng chấp nhận những điều không thể thay đổi.",
+      "prompt": "Vertical 9:16 macro shot of a smooth river stone resting solid and unmoved in the center of a swirling mountain brook, clear flowing water, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow push-in toward the immovable river stone as clean water streams smoothly around its flanks, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": "S09",
+      "duration": 3.61,
+      "at": 35.58
+    },
+    {
+      "id": "S11",
+      "narration": "Một tâm trí an tĩnh là món quà quý giá nhất bạn có thể tự tặng mình.",
+      "prompt": "Vertical 9:16 wide shot of an open wooden veranda looking out toward a calm Zen gravel garden raked in concentric circular ripples, morning warmth, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow graceful pullback along the veranda floorboards, peaceful harmony between architecture and nature, zero morphing.",
+      "camera_motion": "zoom_out",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 4.11,
+      "at": 39.19
+    },
+    {
+      "id": "S12",
+      "narration": "Trọn bộ phương pháp thiền định buông xả đang có trên video dài của kênh.",
+      "prompt": "Vertical 9:16 macro tabletop shot of a brass singing bowl with wooden mallet resting beside a warm glowing candle on a polished cedar table, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow smooth push-in toward the brass singing bowl and candle flame, warm amber meditative reflections, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 4.18,
+      "at": 43.3
+    },
+    {
+      "id": "S13",
+      "narration": "Hãy nhắm mắt thở sâu và buông bỏ gánh nặng ngay lúc này.",
+      "prompt": "Vertical 9:16 serene closing shot of a person sitting peacefully with eyes softly closed in warm morning sun, a gentle smile of relief on lips, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow gentle pullback revealing the tranquil room bathed in soft morning sunbeams, profound inner peace conclusion, zero morphing.",
+      "camera_motion": "zoom_out",
+      "transition": "fade",
+      "based_on": "S12",
+      "duration": 3.19,
+      "at": 47.48
+    }
+  ],
+  "scene_pairs": [
+    {
+      "id": "PAIR_01",
+      "start_beat_id": "S01",
+      "end_beat_id": "S02",
+      "target_duration": 3.35,
+      "motion_prompt": "Slow smooth 35mm dolly push-in toward the mossy stone basin as raindrops fall with realistic fluid physics, tranquil overcast light, locked geometry, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_02",
+      "start_beat_id": "S02",
+      "end_beat_id": "S03",
+      "target_duration": 3.85,
+      "motion_prompt": "Slow-motion tracking pass following a golden leaf swirling calmly in the water eddy, realistic water refraction, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_03",
+      "start_beat_id": "S03",
+      "end_beat_id": "S04",
+      "target_duration": 4.37,
+      "motion_prompt": "Slow cinematic lateral tracking across the woven tatami mat toward the meditation cushion, serene soft lighting, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_04",
+      "start_beat_id": "S04",
+      "end_beat_id": "S05",
+      "target_duration": 3.76,
+      "motion_prompt": "Slow gentle tilt up following the morning mist rising gracefully above pine tree silhouettes, serene atmospheric depth, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_05",
+      "start_beat_id": "S05",
+      "end_beat_id": "S06",
+      "target_duration": 4.52,
+      "motion_prompt": "Slow time-lapse style tracking move as the cloud edge parts and golden light spills across the frame, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_06",
+      "start_beat_id": "S06",
+      "end_beat_id": "S07",
+      "target_duration": 4.27,
+      "motion_prompt": "Slow macro push-in on the spherical water droplet trembling slightly without breaking, glistening surface tension, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_07",
+      "start_beat_id": "S07",
+      "end_beat_id": "S08",
+      "target_duration": 4.36,
+      "motion_prompt": "Slow subtle push-in capturing the gentle release of physical tension in the posture, peaceful natural realism, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_08",
+      "start_beat_id": "S08",
+      "end_beat_id": "S09",
+      "target_duration": 3.93,
+      "motion_prompt": "Slow high-angle tracking pass as the ripples dissipate completely, returning the water surface to glass-like calm, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_09",
+      "start_beat_id": "S09",
+      "end_beat_id": "S10",
+      "target_duration": 3.17,
+      "motion_prompt": "Slow lateral pan past the stone lantern as bamboo stalks sway gracefully in the mountain breeze, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_10",
+      "start_beat_id": "S10",
+      "end_beat_id": "S11",
+      "target_duration": 3.61,
+      "motion_prompt": "Slow push-in toward the immovable river stone as clean water streams smoothly around its flanks, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_11",
+      "start_beat_id": "S11",
+      "end_beat_id": "S12",
+      "target_duration": 4.11,
+      "motion_prompt": "Slow graceful pullback along the veranda floorboards, peaceful harmony between architecture and nature, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_12",
+      "start_beat_id": "S12",
+      "end_beat_id": "S13",
+      "target_duration": 4.18,
+      "motion_prompt": "Slow smooth push-in toward the brass singing bowl and candle flame, warm amber meditative reflections, zero morphing.",
+      "mode": "boundary_extend"
+    }
+  ],
+  "metadata": {
+    "beats_count": 13,
+    "pairs_count": 12,
+    "total_duration_sec": 50.66,
+    "youtube_title_length": 49,
+    "bridge_syllables": 15,
+    "close_syllables": 13
+  }
+}

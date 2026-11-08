@@ -1795,7 +1795,7 @@
       "tempo": "normal",
       "camera_move": "zoom_out",
       "xfade": "fade",
-      "prompt_spec": "Two police officer clay figurines in tactical raincoats kneeling beside track embankment holding 12-gauge shotguns ready, dark noir staging, zero text",
+      "prompt_spec": "Two police officer clay figurines in tactical raincoats kneeling beside track embankment holding tactical breaching tools ready, dark noir staging, zero text",
       "emphasis_text": null
     },
     {
@@ -1834,7 +1834,7 @@
       "tempo": "normal",
       "camera_move": "orbit_cw",
       "xfade": "dissolve",
-      "prompt_spec": "Ballistic trajectory visualization showing shotgun slugs slicing through misty air toward the locomotive underbelly, precision forensic angle, zero text",
+      "prompt_spec": "Ballistic trajectory visualization showing kinetic impact rounds slicing through misty air toward the locomotive underbelly, precision forensic angle, zero text",
       "emphasis_text": null
     },
     {
@@ -1860,7 +1860,7 @@
       "tempo": "normal",
       "camera_move": "orbit_ccw",
       "xfade": "dissolve",
-      "prompt_spec": "Cross-section showing heavy steel shielding deflecting the shotgun pellets away from the delicate internal trip lever, engineering armor, zero text",
+      "prompt_spec": "Cross-section showing heavy steel shielding deflecting the kinetic fragments away from the delicate internal trip lever, engineering armor, zero text",
       "emphasis_text": null
     },
     {
@@ -1899,7 +1899,7 @@
       "tempo": "normal",
       "camera_move": "pan_up",
       "xfade": "smoothup",
-      "prompt_spec": "Police officers lowering their shotguns in dismay as spent shotgun shells lie smoking in the wet ballast gravel, cold somber atmosphere, zero text",
+      "prompt_spec": "Police officers lowering their equipment in dismay as spent metal casings lie smoking in the wet ballast gravel, cold somber atmosphere, zero text",
       "emphasis_text": null
     },
     {
@@ -2068,7 +2068,7 @@
       "tempo": "slow",
       "camera_move": "orbit_cw",
       "xfade": "dissolve",
-      "prompt_spec": "Archival dossier showing two stamped RED FAILURE marks over the shotgun and derailer incident reports, cold clinical investigation presentation, zero text",
+      "prompt_spec": "Archival dossier showing two stamped RED FAILURE marks over the tactical intercept and derailer incident reports, cold clinical investigation presentation, zero text",
       "emphasis_text": null
     },
     {
@@ -6606,8 +6606,8 @@
       "event_kind": "MECHANISM_STEP_BUILD",
       "based_on": "CH05_A04",
       "narration": "Hai cảnh sát cầm súng.",
-      "prompt_spec": "Two police officer clay figurines in tactical raincoats kneeling beside track embankment holding 12-gauge shotguns ready, dark noir staging, zero text",
-      "prompt": "Two police officer clay figurines in tactical raincoats kneeling beside track embankment holding 12-gauge shotguns ready, dark noir staging, zero text",
+      "prompt_spec": "Two police officer clay figurines in tactical raincoats kneeling beside track embankment holding tactical breaching tools ready, dark noir staging, zero text",
+      "prompt": "Two police officer clay figurines in tactical raincoats kneeling beside track embankment holding tactical breaching tools ready, dark noir staging, zero text",
       "emphasis_text": null
     },
     {
@@ -6663,8 +6663,8 @@
       "event_kind": "MECHANISM_STEP_BUILD",
       "based_on": "CH05_A05",
       "narration": "Tiếng súng nổ đanh trong gió.",
-      "prompt_spec": "Ballistic trajectory visualization showing shotgun slugs slicing through misty air toward the locomotive underbelly, precision forensic angle, zero text",
-      "prompt": "Ballistic trajectory visualization showing shotgun slugs slicing through misty air toward the locomotive underbelly, precision forensic angle, zero text",
+      "prompt_spec": "Ballistic trajectory visualization showing kinetic impact rounds slicing through misty air toward the locomotive underbelly, precision forensic angle, zero text",
+      "prompt": "Ballistic trajectory visualization showing kinetic impact rounds slicing through misty air toward the locomotive underbelly, precision forensic angle, zero text",
       "emphasis_text": null
     },
     {
@@ -6701,8 +6701,8 @@
       "event_kind": "ANCHOR_ESTABLISH",
       "based_on": null,
       "narration": "Nhưng trúng nắp gang dày bảo.",
-      "prompt_spec": "Cross-section showing heavy steel shielding deflecting the shotgun pellets away from the delicate internal trip lever, engineering armor, zero text",
-      "prompt": "Cross-section showing heavy steel shielding deflecting the shotgun pellets away from the delicate internal trip lever, engineering armor, zero text",
+      "prompt_spec": "Cross-section showing heavy steel shielding deflecting the kinetic fragments away from the delicate internal trip lever, engineering armor, zero text",
+      "prompt": "Cross-section showing heavy steel shielding deflecting the kinetic fragments away from the delicate internal trip lever, engineering armor, zero text",
       "emphasis_text": null
     },
     {
@@ -6758,8 +6758,8 @@
       "event_kind": "ANCHOR_ESTABLISH",
       "based_on": null,
       "narration": "Kế hoạch bắn súng thất.",
-      "prompt_spec": "Police officers lowering their shotguns in dismay as spent shotgun shells lie smoking in the wet ballast gravel, cold somber atmosphere, zero text",
-      "prompt": "Police officers lowering their shotguns in dismay as spent shotgun shells lie smoking in the wet ballast gravel, cold somber atmosphere, zero text",
+      "prompt_spec": "Police officers lowering their equipment in dismay as spent metal casings lie smoking in the wet ballast gravel, cold somber atmosphere, zero text",
+      "prompt": "Police officers lowering their equipment in dismay as spent metal casings lie smoking in the wet ballast gravel, cold somber atmosphere, zero text",
       "emphasis_text": null
     },
     {
@@ -7005,8 +7005,8 @@
       "event_kind": "SPATIAL_COGNITIVE_HOLD",
       "based_on": "CH05_A12",
       "narration": "Cả hai phương án đều vô.",
-      "prompt_spec": "Archival dossier showing two stamped RED FAILURE marks over the shotgun and derailer incident reports, cold clinical investigation presentation, zero text",
-      "prompt": "Archival dossier showing two stamped RED FAILURE marks over the shotgun and derailer incident reports, cold clinical investigation presentation, zero text",
+      "prompt_spec": "Archival dossier showing two stamped RED FAILURE marks over the tactical intercept and derailer incident reports, cold clinical investigation presentation, zero text",
+      "prompt": "Archival dossier showing two stamped RED FAILURE marks over the tactical intercept and derailer incident reports, cold clinical investigation presentation, zero text",
       "emphasis_text": null
     },
     {

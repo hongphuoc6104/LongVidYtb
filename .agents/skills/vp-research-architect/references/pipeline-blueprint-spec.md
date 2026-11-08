@@ -81,8 +81,8 @@ Hồ sơ bàn giao đặt trong thư mục `sys/runs/<job>/` gồm:
   - **30 giây đầu (`SC01–SC02`):** Đẩy lên **`4.2 – 4.4` âm tiết/giây** (với giọng `VietNarrator` `speed: 1.0`) để cuốn người xem ngay từ giây `0:00`.
   - **Phần thân & kết:** `4.0` âm tiết/s ở phần giải phẫu cơ chế và `3.6 – 3.8` âm tiết/s ở phần đúc kết triết lý.
 
-### 2.3. Hợp đồng Tạo hình: Full-frame Visual Beats & Continuity (Flow CDP)
-- Mỗi beat là một ảnh hoàn chỉnh `kind: "scene"`, áp dụng bảng 7 shot types chuẩn: `full_scene`, `variation`, `macro_prop`, `white_card`, `white_isolated`, `still_life` (cận cảnh vật thể, tài liệu, dụng cụ không có người/bàn tay), và `environment` (cảnh rộng bối cảnh, phòng học, phong cảnh không có người).
+### 2.3. Hợp đồng Tạo hình: Full-frame Visual Beats & Continuity (Flow CDP 1.7.0)
+- Mỗi beat là một ảnh hoàn chỉnh `kind: "scene"`, áp dụng bảng 10 shot types chuẩn (`1.7.0 Nguệch Ngoạc`): `full_scene`, `variation`, `macro_prop`, `white_card`, `white_isolated`, `still_life`, `environment`, `concept_metaphor`, `visual_diagram`, `cutaway_detail`.
 - **Khoảng thở thị giác & Chống mệt mỏi nhân vật:** Sử dụng `still_life` và `environment` làm các nhịp nghỉ nhận thức giữa các cảnh có nhân vật. Bắt buộc đạt ít nhất 30% nhịp hình không có nhân vật trong mỗi chuỗi 10 nhịp trượt; tuyệt đối cấm vượt quá 4 nhịp hình có nhân vật liên tiếp.
 - **Quy chuẩn Bối cảnh (Setting Brevity):** Chuỗi `setting` của mỗi cảnh bắt buộc $\le 8$ từ (chỉ nêu không gian và ánh sáng), tuyệt đối cấm liệt kê bàn ghế, tài liệu, vật dụng trong trường `setting`.
 - Với cùng địa điểm và bố cục, dùng `based_on` trỏ tới ảnh trước, nêu rõ phần giữ lại trong `preserve` và thay đổi trong `change`. Với chuyển cảnh hoặc đổi góc lớn, dùng ảnh độc lập.
@@ -90,7 +90,7 @@ Hồ sơ bàn giao đặt trong thư mục `sys/runs/<job>/` gồm:
 - Không tạo `kind: "background"`/`kind: "sticker"`, `layers[]`, ảnh cut-out nền trắng hay viền sticker. Không dùng cơ khí sáo rỗng (`brain cutaway`, bàn tính, van ống nước, mỏ neo sắt).
 - Tuyệt đối không để lộ mã định danh (`SC01`, `CH01`, `SC01_I1`) trong `description`, `preserve`, `change`, hoặc `visible_text`.
 
-### 2.4. Hợp đồng Dựng Video & Vùng Nguy Hiểm 15s Đầu (Remotion Composition & Visual Beats)
+### 2.4. Hợp đồng Dựng Video & Vùng Nguy Hiểm 15s Đầu (Colab Tesla T4 FFmpeg h264_nvenc & Visual Beats)
 - **Tách ngưỡng giữ hình thành 2 vùng:**
   1. **Cold open (`0:00–0:12.5`):** Tạo khoảng 8–9 hình khi lời thoại hỗ trợ; dùng ngưỡng thời gian linh hoạt theo anchor và duyệt với WAV.
   2. **Vùng Thân Bài (`sau 0:15` / `SC03+`):** Giữ ngưỡng chuẩn **`0.83s – 3.80s`** theo thuật toán *Cue-Window Allocation* (`0.000s` drift tại mọi đầu câu thoại).

@@ -1,37 +1,41 @@
 # Start here — Video Pilot
 
-Read [AGENTS.md](AGENTS.md), identify the task and authority, then select the route:
+## Mandatory Pre-Task Reading Protocol (Priority Document Gate)
+Before initiating any task, every agent MUST follow the 3-tier reading protocol:
+1. **Tier 1 (Mandatory for ALL tasks)**: [AGENTS.md](AGENTS.md) and [PLAYBOOK.md](PLAYBOOK.md).
+2. **Tier 2 (Domain Skill SSOT)**: Read the specific `SKILL.md` matching your current task domain below.
+3. **Tier 3 (Deep Reference)**: Read specific reference guides in `.agents/skills/<skill>/references/` when diagnosing errors.
+
+---
+
+## Task Routing Table
 
 | Task | Guide | Skill |
 |---|---|---|
-| Download/clone or configure a machine | [Getting started](sys/docs/getting-started.md) | vp-setup |
+| Download/clone or configure a machine | [Getting started](sys/docs/getting-started.md) | [vp-setup](.agents/skills/vp-setup/SKILL.md) |
 | New chat or continuing unfinished work | [Session handoff](sys/docs/session-start.md) | Skill for the ongoing task |
-| Architect a new research topic, Packaging Contract & Spin-offs (`brief.json` & `content.json` v3.0) | [Research architect](.agents/skills/vp-research-architect/SKILL.md) | vp-research-architect |
-| Author conversational narration, Truth-Slap Hooks & verify acoustic cadence | [Scriptwriting guide](.agents/skills/vp-scriptwriting/SKILL.md) | vp-scriptwriting |
-| Create or repair a video (`long_16x9` or `short_9x16`) | [Workflow](sys/docs/workflow.md) | vp-production |
-| Author or repair full-frame visual beats, continuity & camera motion (`full_frame_v1`) | [Full-frame quality guide](.agents/skills/vp-full-frame-quality/SKILL.md) | vp-full-frame-quality |
-| Package shared-image YouTube, Facebook & standalone Reels/TikTok deliverables | [Omni-platform guide](.agents/skills/vp-omni-platform/SKILL.md) | vp-omni-platform |
-| Automated image generation via Flow CDP | [Flow CDP Guide](.agents/skills/vp-flow-cdp/SKILL.md) | vp-flow-cdp |
-| Remote Colab T4 TTS synthesis & native FFmpeg h264_nvenc render | [Colab Bridge Guide](.agents/skills/vp-colab-bridge/SKILL.md) | vp-colab-bridge |
-| Troubleshooting technical issues & proven remedies | [Troubleshooting handbook](.agents/skills/vp-troubleshooting/SKILL.md) | vp-troubleshooting |
-| Analyze a reference channel and derive an original production playbook | [Reference-video analysis](.agents/skills/vp-channel-patterns/SKILL.md) | vp-channel-patterns |
-| Upgrade the system | [Implementation progress (archived)](sys/docs/archive/normalization-progress.md) | vp-development |
-| Cleanup/archive/Git synchronization | [Maintenance](sys/docs/maintenance.md) | vp-maintenance |
+| Architect research narrative, 3-Tier Funnel Packaging & Spin-offs | [Research architect](.agents/skills/vp-research-architect/SKILL.md) | [vp-research-architect](.agents/skills/vp-research-architect/SKILL.md) |
+| Author conversational narration, Truth-Slap Hooks & verify acoustic cadence | [Scriptwriting guide](.agents/skills/vp-scriptwriting/SKILL.md) | [vp-scriptwriting](.agents/skills/vp-scriptwriting/SKILL.md) |
+| Dual-Format Production (`short_9x16` Full-Chain or `long_16x9` High-Density) | [Workflow](sys/docs/workflow.md) | [vp-production](.agents/skills/vp-production/SKILL.md) |
+| 2D Minimalist Doodle (`1.7.0 Nguệch Ngoạc`) Visual Quality & Continuity | [Full-frame quality guide](.agents/skills/vp-full-frame-quality/SKILL.md) | [vp-full-frame-quality](.agents/skills/vp-full-frame-quality/SKILL.md) |
+| Package shared-image YouTube, Facebook & standalone Reels/TikTok deliverables | [Omni-platform guide](.agents/skills/vp-omni-platform/SKILL.md) | [vp-omni-platform](.agents/skills/vp-omni-platform/SKILL.md) |
+| Automated image & video generation via Flow CDP pool | [Flow CDP Guide](.agents/skills/vp-flow-cdp/SKILL.md) | [vp-flow-cdp](.agents/skills/vp-flow-cdp/SKILL.md) |
+| Remote Colab T4 TTS synthesis & native FFmpeg h264_nvenc render | [Colab Bridge Guide](.agents/skills/vp-colab-bridge/SKILL.md) | [vp-colab-bridge](.agents/skills/vp-colab-bridge/SKILL.md) |
+| Troubleshooting technical issues & proven remedies | [Troubleshooting handbook](.agents/skills/vp-troubleshooting/SKILL.md) | [vp-troubleshooting](.agents/skills/vp-troubleshooting/SKILL.md) |
+| Analyze a reference channel and derive an original production playbook | [Reference-video analysis](.agents/skills/vp-channel-patterns/SKILL.md) | [vp-channel-patterns](.agents/skills/vp-channel-patterns/SKILL.md) |
+| Upgrade the engine, rules, skills, tests, and conveyor | [Implementation progress (archived)](sys/docs/archive/normalization-progress.md) | [vp-development](.agents/skills/vp-development/SKILL.md) |
+| Cleanup/archive/Git synchronization | [Maintenance](sys/docs/maintenance.md) | [vp-maintenance](.agents/skills/vp-maintenance/SKILL.md) |
 
-## Layout
+## System Layout & SSOT
 
 - `sys/`: code, docs, schemas, configuration and operational data.
-- `sys/format_profiles.py`: single source of truth for Dual-Format video profiles (`long_16x9` Landscape Explainer & `short_9x16` Vertical Spin-offs with dynamic duration based on narrative depth and measured audio).
+- `sys/format_profiles.py`: single source of truth for Dual-Format video profiles:
+  - `short_9x16`: 100% Full-Chain continuous video (`Omni 1.2 Flash`, 11–15 keyframes, kinetic 1-word `.ass` subtitles, Colab T4 NVENC).
+  - `long_16x9`: 240–350 high-density `BELUGA` 8K multi-image visual journey, 1.25x supersampled zero-snap `zoompan`, directional optical `xfade` (0.24s), sidecar `.srt`, and 8–12 chapters.
 - `sys/runs/<job>/`: content, versions, requests and artifacts.
-- `sys/.state/`: local state; `~/.config/google-chrome`: Flow CDP browser profiles, excluded from Git.
-- `sys/assets/`: visual/voice references; `video/<job>/`: collected products.
-- `sys/logs/issues/`: issue logbook and proven recovery remedies ("What worked to fix bugs").
-- `.agents/`: Rules and discoverable skills; corresponding links in `sys/` point here.
+- `sys/assets/`: visual and voice references (`VietNarrator` 1.0x).
+- `video/<job>/`: collected deliverables (MP4 / SRT / ASS).
+- `.agents/skills/`: discoverable skills and canonical references.
+- `PLAYBOOK.md`: operational lessons and root-cause fixes (mandatory reading).
 
-The root launcher is `python3 pilot.py`; operational examples use `sys/` as their working directory. Do not infer job/revision from MP4 filenames.
-
-## Upgrade status
-
-Engine 4 is active; [progress and evidence](sys/docs/archive/normalization-progress.md) identify verified capabilities. Existing jobs migrate only through compatibility-checked tools, never direct state/baseline edits.
-
-[Active documentation index](sys/docs/INDEX.md). [Layout migration](sys/docs/archive/layout-migration.md) and [branch synchronization](sys/docs/archive/branch-sync.md) are historical records.
+[Active documentation index](sys/docs/INDEX.md).

@@ -6,7 +6,7 @@ import time
 import unittest
 from pathlib import Path
 from typing import Any
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 SYS_DIR = Path(__file__).resolve().parent.parent
 if str(SYS_DIR) not in sys.path:
@@ -28,6 +28,10 @@ class MockCDPSession:
         self.generate_calls: list[dict[str, Any]] = []
         self.should_fail_rate_limit = False
         self.should_fail_transient = False
+        self.recaptcha_refreshed = False
+
+    async def _refresh_recaptcha_session(self):
+        self.recaptcha_refreshed = True
 
     async def connect(self):
         self.connect_count += 1
@@ -66,6 +70,38 @@ class MockCDPSession:
             "url": None,
             "profile": self.name,
         }
+
+
+class MockBatchCDPSession(MockCDPSession):
+    """Mock CDP profile session supporting generate_images_batch."""
+
+    def __init__(self, prof_cfg: dict[str, Any]):
+        super().__init__(prof_cfg)
+        self.generate_batch_calls: list[dict[str, Any]] = []
+
+    async def generate_images_batch(
+        self,
+        prompts: list[str],
+        aspect: str = "16:9",
+        model: str = "BELUGA",
+        base_media_id: str | None = None,
+        ref_media_ids: list[str] | None = None,
+    ):
+        self.generate_batch_calls.append({
+            "prompts": prompts,
+            "aspect": aspect,
+            "model": model,
+            "profile": self.name,
+            "timestamp": time.time(),
+        })
+        return [
+            {
+                "media_id": f"batch-media-{self.name}-{i}",
+                "url": None,
+                "profile": self.name,
+            }
+            for i, p in enumerate(prompts)
+        ]
 
 
 class TestPersistentWorkerPool(unittest.TestCase):
@@ -433,6 +469,108 @@ class TestPersistentWorkerPool(unittest.TestCase):
         # Quarantined for ~90s from error occurrence
         self.assertGreater(cd_expiry, t_before + 70.0)
         self.assertLess(cd_expiry, t_before + 110.0)
+
+    def test_warm_session_preservation_on_error_7(self):
+        """Browser session is kept warm in warm_sessions on Error 7 (not terminated), and closed on shutdown."""
+        mock_proc = MagicMock()
+
+        def custom_factory(prof_cfg: dict[str, Any]) -> MockCDPSession:
+            sess = self.session_factory(prof_cfg)
+            if prof_cfg["name"] == "p1":
+                sess.should_fail_rate_limit = True
+            return sess
+
+        pool = PersistentWorkerPool(
+            target_workers=1,
+            cooldown_seconds=600.0,
+            stagger_seconds=0.0,
+            pacing_seconds=0.01,
+            profiles=self.test_profiles,
+            proc_mgr=mock_proc,
+            session_factory=custom_factory,
+            enforce_os_locks=True,
+            max_global_browsers=8,
+        )
+
+        with pool:
+            pool.submit_task({"id": "shot_err7", "prompt": "Trigger Error 7"})
+            pool.wait_completion(timeout=5.0)
+
+            # p1 should be preserved in warm_sessions!
+            self.assertIn("p1", pool.warm_sessions)
+            p1_sess = pool.warm_sessions["p1"]
+            # p1 browser session was NOT closed while kept warm
+            self.assertEqual(p1_sess.close_count, 0)
+            # p1 was not terminated by port
+            self.assertNotIn(9221, [call[0][0] for call in mock_proc.terminate_by_port.call_args_list if call[0]])
+
+        # After pool shutdown, warm session must be cleanly closed
+        self.assertEqual(p1_sess.close_count, 1)
+        self.assertEqual(len(pool.warm_sessions), 0)
+
+    def test_multi_prompt_batching_independent_anchor_tasks(self):
+        """Multiple independent anchor tasks (no based_on / baseMediaId) are batched via generate_images_batch."""
+        batch_sessions: dict[str, MockBatchCDPSession] = {}
+
+        def batch_factory(prof_cfg: dict[str, Any]) -> MockBatchCDPSession:
+            sess = MockBatchCDPSession(prof_cfg)
+            batch_sessions[prof_cfg["name"]] = sess
+            return sess
+
+        pool = PersistentWorkerPool(
+            target_workers=1,
+            stagger_seconds=0.0,
+            pacing_seconds=0.01,
+            profiles=self.test_profiles[:1],
+            proc_mgr=MagicMock(),
+            session_factory=batch_factory,
+            enable_rpc_batching=True,
+            max_rpc_batch_size=4,
+        )
+        # Queue 4 independent anchor tasks before starting
+        for i in range(1, 5):
+            pool.submit_task({"id": f"anchor_{i}", "prompt": f"Anchor Prompt {i}", "aspect": "16:9", "model": "BELUGA"})
+
+        with pool:
+            finished = pool.wait_completion(timeout=5.0)
+            self.assertTrue(finished)
+
+        sess = batch_sessions["p1"]
+        # generate_images_batch was called with 4 prompts in a single round-trip!
+        self.assertEqual(len(sess.generate_batch_calls), 1)
+        batch_call = sess.generate_batch_calls[0]
+        self.assertEqual(len(batch_call["prompts"]), 4)
+        self.assertEqual(batch_call["prompts"], [f"Anchor Prompt {i}" for i in range(1, 5)])
+        # All 4 results recorded
+        for i in range(1, 5):
+            self.assertIn(f"anchor_{i}", pool.results)
+
+    def test_is_profile_unauthenticated_filtering(self):
+        """Unauthenticated profile is excluded from DynamicProfilePool.acquire."""
+        import tempfile
+
+        from flow_cdp.resource_locks import (
+            is_profile_unauthenticated,
+            mark_profile_unauthenticated,
+        )
+
+        with tempfile.TemporaryDirectory() as td:
+            locks_dir = Path(td)
+            self.assertFalse(is_profile_unauthenticated("p1", locks_dir=locks_dir))
+            mark_profile_unauthenticated("p1", ttl_sec=3600.0, locks_dir=locks_dir)
+            self.assertTrue(is_profile_unauthenticated("p1", locks_dir=locks_dir))
+
+            # DynamicProfilePool respects unauthenticated status
+            with patch("flow_cdp.persistent_pool.is_profile_unauthenticated", side_effect=lambda name: name == "p1"):
+                pool = PersistentWorkerPool(
+                    target_workers=1,
+                    profiles=self.test_profiles,
+                    session_factory=self.session_factory,
+                )
+                acquired = pool.profile_pool.acquire()
+                # p1 should be skipped, so p2 is acquired!
+                self.assertIsNotNone(acquired)
+                self.assertEqual(acquired["name"], "p2")
 
 
 if __name__ == "__main__":

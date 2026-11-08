@@ -1,0 +1,281 @@
+{
+  "channel_id": "loi_sang_soi",
+  "channel_slug": "loi-sang-soi",
+  "job_id": "vn_pilot_loi_sang_soi_short_fullchain",
+  "parent_long_id": "loi-sang-soi-long-master",
+  "format_profile": "short_9x16",
+  "aspect": "9:16",
+  "video_model": "omni_1_2_flash",
+  "chain_mode": "scene_pairs",
+  "voice": "VietNarrator",
+  "total_duration_sec": 51.22,
+  "youtube_title": "Dụ Ngôn Người Gieo Giống: Đất Tâm Hồn Của Bạn Là Gì?",
+  "title": "Dụ Ngôn Người Gieo Giống: Đất Tâm Hồn Của Bạn Là Gì?",
+  "thumbnail_spec": {
+    "visual_hook": "Vertical 9:16 Caravaggio chiaroscuro golden-hour oil-on-parchment parable shot of an ancient sower scattering golden wheat seeds across sunlit furrowed soil, zero overlays, 25% margin",
+    "allowed_text": "NGƯỜI GIEO GIỐNG",
+    "overlay_card": false,
+    "prompt": "Vertical 9:16 Caravaggio chiaroscuro golden-hour oil-on-parchment parable shot of an ancient sower scattering golden wheat seeds across sunlit furrowed soil, zero overlays, 25% margin, bold uppercase text 'NGƯỜI GIEO GIỐNG', Caravaggio chiaroscuro and BibleProject classical parable cinematography with golden-hour single-source sunbeams, sculptural depth-of-field, and weathered material anti-morph physics across ancient architectural settings, strictly zero text, strictly zero graphic overlays, no cartoons."
+  },
+  "packaging": {
+    "cta_plan": {
+      "bridge": "Xem bài học chiêm nghiệm cuộc sống sâu sắc trên video dài của kênh.",
+      "close": "Hãy chăm sóc mảnh đất tâm hồn của chính bạn mỗi ngày."
+    }
+  },
+  "cta_plan": {
+    "bridge": "Xem bài học chiêm nghiệm cuộc sống sâu sắc trên video dài của kênh.",
+    "close": "Hãy chăm sóc mảnh đất tâm hồn của chính bạn mỗi ngày."
+  },
+  "beats": [
+    {
+      "id": "S01",
+      "narration": "Một người gieo giống bước ra đồng, rải những hạt thóc đầu tiên.",
+      "prompt": "Vertical 9:16 Caravaggio chiaroscuro golden-hour oil-on-parchment photograph of an ancient sower walking along a furrowed hillside at dawn, hand scattering golden wheat seeds into the morning air, BibleProject parabolic aesthetic, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow smooth 35mm push-in following the sower hand as golden seeds scatter gracefully through warm sunbeams, locked biblical geometry, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.86,
+      "at": 0.0
+    },
+    {
+      "id": "S02",
+      "narration": "Hạt rơi bên vệ đường bị chim muông sà xuống ăn mất khi chưa kịp nảy mầm.",
+      "prompt": "Vertical 9:16 ground-level shot of wheat seeds lying exposed on hard-packed dirt path, gentle birds swooping down in soft morning light, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow-motion low-angle tracking pass across the dry roadside path as birds flutter softly, natural realism, zero morphing.",
+      "camera_motion": "pan_right",
+      "transition": "smoothright",
+      "based_on": "S01",
+      "duration": 4.26,
+      "at": 3.86
+    },
+    {
+      "id": "S03",
+      "narration": "Hạt rơi trên sỏi đá mọc lên nhanh chóng nhưng rễ không sâu nên sớm khô.",
+      "prompt": "Vertical 9:16 macro shot of a fragile green seedling sprouting in thin dust atop cracked limestone rock under harsh midday sun, drooping leaves, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow macro push-in on the withered green seedling on barren rock, harsh sunbeams accentuating shallow roots, zero morphing.",
+      "camera_motion": "zoom_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 4.08,
+      "at": 8.12
+    },
+    {
+      "id": "S04",
+      "narration": "Hạt rơi vào bụi gai bị gai góc bóp nghẹt, không thể đơm hoa kết trái.",
+      "prompt": "Vertical 9:16 close-up of sharp thorn bushes crowding out young wheat stalks, tangled branches casting deep shadows over choked shoots, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow tilt down through the tangle of dry thorny briars choking the delicate wheat stalk, zero morphing.",
+      "camera_motion": "pan_down",
+      "transition": "smoothdown",
+      "based_on": null,
+      "duration": 4.21,
+      "at": 12.2
+    },
+    {
+      "id": "S05",
+      "narration": "Chỉ những hạt rơi vào đất tốt màu mỡ mới sinh sôi gấp trăm lần.",
+      "prompt": "Vertical 9:16 lush macro shot of healthy, tall golden wheat heads swaying gently in rich dark loam soil under warm afternoon sun, bountiful harvest mood, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow upward tilt through golden wheat stalks glowing with rich amber light, abundant agricultural vitality, zero morphing.",
+      "camera_motion": "pan_up",
+      "transition": "smoothup",
+      "based_on": null,
+      "duration": 3.79,
+      "at": 16.41
+    },
+    {
+      "id": "S06",
+      "narration": "Hạt giống chính là lời minh triết và cơ hội quý giá trong đời bạn.",
+      "prompt": "Vertical 9:16 macro shot of open human hands holding a handful of radiant golden wheat grains, warm candlelight illuminating palm lines, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow gentle push-in toward the open hands filled with golden grain, warm spiritual reverence, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.78,
+      "at": 20.2
+    },
+    {
+      "id": "S07",
+      "narration": "Còn mảnh đất là trạng thái tâm hồn trước những biến thiên cuộc sống.",
+      "prompt": "Vertical 9:16 wide composition of an expansive cultivated field at golden hour, plowed soil furrows leading the eye toward a solitary olive tree, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow sweeping lateral tracking pass along the plowed soil furrows toward the ancient olive tree, zero morphing.",
+      "camera_motion": "pan_right",
+      "transition": "smoothright",
+      "based_on": null,
+      "duration": 3.63,
+      "at": 23.98
+    },
+    {
+      "id": "S08",
+      "narration": "Nếu lòng đầy gai góc của định kiến và lo toan, cơ hội quý cũng vụt mất.",
+      "prompt": "Vertical 9:16 moody chiaroscuro composition of dry thorny branches cast in deep silhouette against an overcast twilight sky, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow pullback from the dark silhouette of thorns into the quiet twilight landscape, contemplative mood, zero morphing.",
+      "camera_motion": "zoom_out",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 4.47,
+      "at": 27.61
+    },
+    {
+      "id": "S09",
+      "narration": "Muốn gặt quả ngọt, việc đầu tiên là nhổ sạch cỏ dại trong tâm trí.",
+      "prompt": "Vertical 9:16 ground-level shot of hands gently clearing dry weeds and pebbles from rich dark garden soil, preparing clean earth, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow push-in on the caring hands working the fertile earth with patience and devotion, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 4.37,
+      "at": 32.08
+    },
+    {
+      "id": "S10",
+      "narration": "Kiên nhẫn xới đất và nuôi dưỡng hạt mầm bằng tình yêu chân thành.",
+      "prompt": "Vertical 9:16 macro shot of a fresh green sprout bathed in gentle water drops falling like soft dew from a clay pitcher, morning sunlight, strictly zero text, no cartoons.",
+      "motion_prompt": "Ultra slow-motion capture of water drops nourishing the tiny green sprout in rich dark soil, sparkling light, zero morphing.",
+      "camera_motion": "zoom_in",
+      "transition": "fade",
+      "based_on": "S09",
+      "duration": 3.71,
+      "at": 36.45
+    },
+    {
+      "id": "S11",
+      "narration": "Khi tâm hồn được thanh lọc, mọi điều thiện lành sẽ tự nhiên đơm hoa.",
+      "prompt": "Vertical 9:16 wide panoramic shot of an endless golden wheat field rippling like ocean waves under a warm sunset sky, peace and abundance, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow sweeping dolly pullback across the sunlit wheat heads swaying in the evening breeze, breathtaking golden glow, zero morphing.",
+      "camera_motion": "zoom_out",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 4.11,
+      "at": 40.16
+    },
+    {
+      "id": "S12",
+      "narration": "Xem bài học chiêm nghiệm cuộc sống sâu sắc trên video dài của kênh.",
+      "prompt": "Vertical 9:16 macro tabletop shot of an ancient leather parchment scroll and brass oil lamp resting beside a glowing tablet screen on an olive wood desk, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow smooth push-in toward the parchment scroll and oil lamp flame, warm golden spiritual study ambiance, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.96,
+      "at": 44.27
+    },
+    {
+      "id": "S13",
+      "narration": "Hãy chăm sóc mảnh đất tâm hồn của chính bạn mỗi ngày.",
+      "prompt": "Vertical 9:16 serene closing shot of a person sitting peacefully beneath a large fig tree in a golden field, holding a single wheat stalk with gentle gratitude, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow elegant pullback from the peaceful figure beneath the tree, sunset light warming the pastoral landscape, tranquil ending, zero morphing.",
+      "camera_motion": "zoom_out",
+      "transition": "fade",
+      "based_on": "S12",
+      "duration": 3.0,
+      "at": 48.23
+    }
+  ],
+  "scene_pairs": [
+    {
+      "id": "PAIR_01",
+      "start_beat_id": "S01",
+      "end_beat_id": "S02",
+      "target_duration": 3.86,
+      "motion_prompt": "Slow smooth 35mm push-in following the sower hand as golden seeds scatter gracefully through warm sunbeams, locked biblical geometry, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_02",
+      "start_beat_id": "S02",
+      "end_beat_id": "S03",
+      "target_duration": 4.26,
+      "motion_prompt": "Slow-motion low-angle tracking pass across the dry roadside path as birds flutter softly, natural realism, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_03",
+      "start_beat_id": "S03",
+      "end_beat_id": "S04",
+      "target_duration": 4.08,
+      "motion_prompt": "Slow macro push-in on the withered green seedling on barren rock, harsh sunbeams accentuating shallow roots, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_04",
+      "start_beat_id": "S04",
+      "end_beat_id": "S05",
+      "target_duration": 4.21,
+      "motion_prompt": "Slow tilt down through the tangle of dry thorny briars choking the delicate wheat stalk, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_05",
+      "start_beat_id": "S05",
+      "end_beat_id": "S06",
+      "target_duration": 3.79,
+      "motion_prompt": "Slow upward tilt through golden wheat stalks glowing with rich amber light, abundant agricultural vitality, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_06",
+      "start_beat_id": "S06",
+      "end_beat_id": "S07",
+      "target_duration": 3.78,
+      "motion_prompt": "Slow gentle push-in toward the open hands filled with golden grain, warm spiritual reverence, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_07",
+      "start_beat_id": "S07",
+      "end_beat_id": "S08",
+      "target_duration": 3.63,
+      "motion_prompt": "Slow sweeping lateral tracking pass along the plowed soil furrows toward the ancient olive tree, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_08",
+      "start_beat_id": "S08",
+      "end_beat_id": "S09",
+      "target_duration": 4.47,
+      "motion_prompt": "Slow pullback from the dark silhouette of thorns into the quiet twilight landscape, contemplative mood, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_09",
+      "start_beat_id": "S09",
+      "end_beat_id": "S10",
+      "target_duration": 4.37,
+      "motion_prompt": "Slow push-in on the caring hands working the fertile earth with patience and devotion, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_10",
+      "start_beat_id": "S10",
+      "end_beat_id": "S11",
+      "target_duration": 3.71,
+      "motion_prompt": "Ultra slow-motion capture of water drops nourishing the tiny green sprout in rich dark soil, sparkling light, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_11",
+      "start_beat_id": "S11",
+      "end_beat_id": "S12",
+      "target_duration": 4.11,
+      "motion_prompt": "Slow sweeping dolly pullback across the sunlit wheat heads swaying in the evening breeze, breathtaking golden glow, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_12",
+      "start_beat_id": "S12",
+      "end_beat_id": "S13",
+      "target_duration": 3.96,
+      "motion_prompt": "Slow smooth push-in toward the parchment scroll and oil lamp flame, warm golden spiritual study ambiance, zero morphing.",
+      "mode": "boundary_extend"
+    }
+  ],
+  "metadata": {
+    "beats_count": 13,
+    "pairs_count": 12,
+    "total_duration_sec": 51.22,
+    "youtube_title_length": 52,
+    "bridge_syllables": 14,
+    "close_syllables": 12
+  }
+}

@@ -1,0 +1,281 @@
+{
+  "channel_id": "banh_rang",
+  "channel_slug": "banh-rang",
+  "job_id": "vn_pilot_banh_rang_short_fullchain",
+  "parent_long_id": "banh-rang-long-master",
+  "format_profile": "short_9x16",
+  "aspect": "9:16",
+  "video_model": "omni_1_2_flash",
+  "chain_mode": "scene_pairs",
+  "voice": "VietNarrator",
+  "total_duration_sec": 48.26,
+  "youtube_title": "Chuỗi Cung Ứng Biển: Mắt Xích Thầm Lặng Đổi Đời Bạn",
+  "title": "Chuỗi Cung Ứng Biển: Mắt Xích Thầm Lặng Đổi Đời Bạn",
+  "thumbnail_spec": {
+    "visual_hook": "Vertical 9:16 macro cross-section view of automated container terminal with giant yellow gantry cranes loading a 20,000 TEU vessel under morning daylight, zero overlays, 25% margin",
+    "allowed_text": "CHUỖI CUNG ỨNG",
+    "overlay_card": false,
+    "prompt": "Vertical 9:16 macro cross-section view of automated container terminal with giant yellow gantry cranes loading a 20,000 TEU vessel under morning daylight, zero overlays, 25% margin, bold uppercase text 'CHUỖI CUNG ỨNG', Practical Engineering & Wendover large-scale infrastructure documentary cinematography under crisp directional daylight, architectural lens depth-of-field, and rigid load-bearing anti-morph physics across changing engineering subjects, strictly zero text or map labels, strictly zero graphic overlays, no cartoons."
+  },
+  "packaging": {
+    "cta_plan": {
+      "bridge": "Khám phá toàn cảnh bài toán logistics biển trên video dài của kênh.",
+      "close": "Hãy trân trọng từng món đồ nhỏ bé bạn đang cầm trên tay."
+    }
+  },
+  "cta_plan": {
+    "bridge": "Khám phá toàn cảnh bài toán logistics biển trên video dài của kênh.",
+    "close": "Hãy trân trọng từng món đồ nhỏ bé bạn đang cầm trên tay."
+  },
+  "beats": [
+    {
+      "id": "S01",
+      "narration": "Một hành trình hai mươi nghìn cây số trên đại dương mênh mông,",
+      "prompt": "Vertical 9:16 aerial establishing shot of a massive industrial deepwater container shipping port terminal at dawn, rows of giant yellow gantry cranes loading a 400-meter container vessel, turquoise open ocean water, photorealistic Wendover Productions logistics aesthetic, 8k documentary still, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow smooth 35mm commercial dolly push-in toward the towering container vessel berthed at dawn dock, cranes lifting containers with locked physical geometry, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.35,
+      "at": 0.0
+    },
+    {
+      "id": "S02",
+      "narration": "tưởng như bình thường nhưng lại là kỳ quan chuỗi cung ứng ngầm.",
+      "prompt": "Vertical 9:16 eye-level architectural shot along the side of a massive 400-meter container ship, towering stacks of colorful metal shipping containers locked together, morning sun glinting off steel hulls, crisp f/5.6 depth of field, strictly zero text, no cartoons.",
+      "motion_prompt": "Steady lateral engineering tracking pass along the colossal steel hull, containers stacked in perfect rigid alignment, water wake lapping against hull, zero morphing.",
+      "camera_motion": "pan_right",
+      "transition": "smoothright",
+      "based_on": "S01",
+      "duration": 3.21,
+      "at": 3.35
+    },
+    {
+      "id": "S03",
+      "narration": "Mười lăm năm trước, những con tàu khổng lồ thế này là điều không tưởng,",
+      "prompt": "Vertical 9:16 high-angle architectural survey of a modern shipyard drydock with massive container ships under assembly, weathered industrial steel and safety orange accents, crisp directional daylight, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow cinematic vertical pedestal move rising above the drydock scaffolding, massive steel plates resting with rigid load-bearing stability, zero morphing.",
+      "camera_motion": "pan_up",
+      "transition": "smoothup",
+      "based_on": null,
+      "duration": 4.22,
+      "at": 6.56
+    },
+    {
+      "id": "S04",
+      "narration": "khi chiều dài của chúng bằng bốn sân bóng đá tiêu chuẩn cộng lại.",
+      "prompt": "Vertical 9:16 panoramic aerial view showing the full 400-meter length of a container ship navigating through a calm harbor channel, dramatic scale comparison with small tugboats guiding it, crisp blue ocean, strictly zero text, no cartoons.",
+      "motion_prompt": "High-altitude architectural aerial survey following the massive ship moving forward at steady speed, realistic bow waves cutting through calm harbor water, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": "S03",
+      "duration": 3.71,
+      "at": 10.78
+    },
+    {
+      "id": "S05",
+      "narration": "Hàng vạn thùng hàng được định vị chính xác bằng hệ thống điều phối tự động.",
+      "prompt": "Vertical 9:16 precision cutaway shot of an automated robotic port gantry crane spreader lowering onto a steel container with mechanical alignment, industrial hydraulic pistons, crisp metallic textures, strictly zero text, no cartoons.",
+      "motion_prompt": "Precision cutaway dolly push-in on the crane spreader locking smoothly into corner castings, realistic hydraulic dampening, steady industrial lighting, zero morphing.",
+      "camera_motion": "zoom_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.91,
+      "at": 14.49
+    },
+    {
+      "id": "S06",
+      "narration": "Chỉ cần một mắt xích tại cảng biển bị nghẽn trong nửa ngày,",
+      "prompt": "Vertical 9:16 wide shot of multiple container ships idling at sea outside a congested deepwater port, hazy sunset horizon, calm sea with anchor chains deployed, high atmospheric realism, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow gentle tracking pass across the idling fleet waiting offshore, water ripples catching golden sunset rays, massive ships holding locked position, zero morphing.",
+      "camera_motion": "pan_right",
+      "transition": "smoothright",
+      "based_on": "S05",
+      "duration": 3.23,
+      "at": 18.4
+    },
+    {
+      "id": "S07",
+      "narration": "hàng trăm chuyến tàu ngoài khơi lập tức phải xếp hàng dài trên biển.",
+      "prompt": "Vertical 9:16 telephoto compressed perspective showing five massive container ships anchored in single file off a foggy coastline, ocean swell, cool maritime grading, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow telephoto push-in compressing the line of anchored ships in the fog, gentle natural wave rolling against steel bows, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": "S06",
+      "duration": 3.65,
+      "at": 21.63
+    },
+    {
+      "id": "S08",
+      "narration": "Chi phí vận chuyển toàn cầu khi đó lập tức tăng vọt gấp năm lần.",
+      "prompt": "Vertical 9:16 macro shot of industrial brass ship throttle levers and navigational dials on a commercial vessel bridge, dials resting at idle, warm instrument backlighting, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow macro rack focus across the brass control levers to the bridge window overlooking the dark ocean, steady specular gleam, zero morphing.",
+      "camera_motion": "zoom_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.75,
+      "at": 25.28
+    },
+    {
+      "id": "S09",
+      "narration": "Hàng triệu món đồ trên bàn làm việc của bạn đều đi qua hải trình này.",
+      "prompt": "Vertical 9:16 warm indoor tabletop photograph of a modern wooden desk with a laptop, ceramic coffee mug, and notebook, bathed in soft morning window light, high aesthetic realism, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow smooth dolly pullback from the ceramic mug on the wooden desk, revealing a calm productive morning workspace, soft natural light, zero morphing.",
+      "camera_motion": "zoom_out",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.79,
+      "at": 29.03
+    },
+    {
+      "id": "S10",
+      "narration": "Từ linh kiện điện tử tinh xảo cho đến hạt cà phê thơm lừng buổi sáng.",
+      "prompt": "Vertical 9:16 macro top-down split composition showing raw roasted coffee beans beside a sleek anodized aluminum smartphone casing on polished slate, natural daylight, strictly zero text, no cartoons.",
+      "motion_prompt": "Gentle downward push-in highlighting the tactile contrast between organic coffee beans and precision milled metal, steady light, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": "S09",
+      "duration": 3.93,
+      "at": 32.82
+    },
+    {
+      "id": "S11",
+      "narration": "Tất cả đều vận hành trơn tru nhờ những bánh răng logistics thầm lặng.",
+      "prompt": "Vertical 9:16 majestic wide aerial view of a container mega-ship cruising through open blue ocean at full steam, white foam wake stretching to the horizon under clear sunny sky, strictly zero text, no cartoons.",
+      "motion_prompt": "Sweeping cinematic aerial tracking shot alongside the ship cruising steadily, foam wake trailing into deep turquoise water, grand monumental scale, zero morphing.",
+      "camera_motion": "pan_up",
+      "transition": "smoothup",
+      "based_on": null,
+      "duration": 4.04,
+      "at": 36.75
+    },
+    {
+      "id": "S12",
+      "narration": "Khám phá toàn cảnh bài toán logistics biển trên video dài của kênh.",
+      "prompt": "Vertical 9:16 macro tabletop shot of an architectural marine map and nautical compass resting on polished mahogany table beside a glowing tablet screen, warm amber studio light, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow deliberate push-in toward the brass nautical instruments and tablet display, warm reflections on polished wood, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 4.2,
+      "at": 40.79
+    },
+    {
+      "id": "S13",
+      "narration": "Hãy trân trọng từng món đồ nhỏ bé bạn đang cầm trên tay.",
+      "prompt": "Vertical 9:16 contemplative shot of human hands holding a warm ceramic coffee cup looking out a high window toward a distant industrial harbor at sunrise, tranquil mood, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow gentle dolly pullback from the hands and cup toward the sunrise harbor view, soft golden morning light, serene ending, zero morphing.",
+      "camera_motion": "zoom_out",
+      "transition": "fade",
+      "based_on": "S12",
+      "duration": 3.28,
+      "at": 44.99
+    }
+  ],
+  "scene_pairs": [
+    {
+      "id": "PAIR_01",
+      "start_beat_id": "S01",
+      "end_beat_id": "S02",
+      "target_duration": 3.35,
+      "motion_prompt": "Slow smooth 35mm commercial dolly push-in toward the towering container vessel berthed at dawn dock, cranes lifting containers with locked physical geometry, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_02",
+      "start_beat_id": "S02",
+      "end_beat_id": "S03",
+      "target_duration": 3.21,
+      "motion_prompt": "Steady lateral engineering tracking pass along the colossal steel hull, containers stacked in perfect rigid alignment, water wake lapping against hull, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_03",
+      "start_beat_id": "S03",
+      "end_beat_id": "S04",
+      "target_duration": 4.22,
+      "motion_prompt": "Slow cinematic vertical pedestal move rising above the drydock scaffolding, massive steel plates resting with rigid load-bearing stability, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_04",
+      "start_beat_id": "S04",
+      "end_beat_id": "S05",
+      "target_duration": 3.71,
+      "motion_prompt": "High-altitude architectural aerial survey following the massive ship moving forward at steady speed, realistic bow waves cutting through calm harbor water, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_05",
+      "start_beat_id": "S05",
+      "end_beat_id": "S06",
+      "target_duration": 3.91,
+      "motion_prompt": "Precision cutaway dolly push-in on the crane spreader locking smoothly into corner castings, realistic hydraulic dampening, steady industrial lighting, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_06",
+      "start_beat_id": "S06",
+      "end_beat_id": "S07",
+      "target_duration": 3.23,
+      "motion_prompt": "Slow gentle tracking pass across the idling fleet waiting offshore, water ripples catching golden sunset rays, massive ships holding locked position, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_07",
+      "start_beat_id": "S07",
+      "end_beat_id": "S08",
+      "target_duration": 3.65,
+      "motion_prompt": "Slow telephoto push-in compressing the line of anchored ships in the fog, gentle natural wave rolling against steel bows, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_08",
+      "start_beat_id": "S08",
+      "end_beat_id": "S09",
+      "target_duration": 3.75,
+      "motion_prompt": "Slow macro rack focus across the brass control levers to the bridge window overlooking the dark ocean, steady specular gleam, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_09",
+      "start_beat_id": "S09",
+      "end_beat_id": "S10",
+      "target_duration": 3.79,
+      "motion_prompt": "Slow smooth dolly pullback from the ceramic mug on the wooden desk, revealing a calm productive morning workspace, soft natural light, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_10",
+      "start_beat_id": "S10",
+      "end_beat_id": "S11",
+      "target_duration": 3.93,
+      "motion_prompt": "Gentle downward push-in highlighting the tactile contrast between organic coffee beans and precision milled metal, steady light, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_11",
+      "start_beat_id": "S11",
+      "end_beat_id": "S12",
+      "target_duration": 4.04,
+      "motion_prompt": "Sweeping cinematic aerial tracking shot alongside the ship cruising steadily, foam wake trailing into deep turquoise water, grand monumental scale, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_12",
+      "start_beat_id": "S12",
+      "end_beat_id": "S13",
+      "target_duration": 4.2,
+      "motion_prompt": "Slow deliberate push-in toward the brass nautical instruments and tablet display, warm reflections on polished wood, zero morphing.",
+      "mode": "boundary_extend"
+    }
+  ],
+  "metadata": {
+    "beats_count": 13,
+    "pairs_count": 12,
+    "total_duration_sec": 48.26,
+    "youtube_title_length": 51,
+    "bridge_syllables": 13,
+    "close_syllables": 13
+  }
+}

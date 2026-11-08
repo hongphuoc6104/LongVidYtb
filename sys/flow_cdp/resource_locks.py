@@ -22,6 +22,7 @@ from __future__ import annotations
 import fcntl
 import json
 import os
+import random
 import re
 import subprocess
 import time
@@ -30,6 +31,7 @@ from typing import IO, Any
 
 LOCKS_DIR = Path.home() / ".cache/video-pilot/locks"
 MIN_DEV_SHM_FREE_MB = 512
+UNAUTHENTICATED_FILE_NAME = "unauthenticated_profiles.json"
 
 
 def ensure_locks_dir(locks_dir: Path | None = None) -> Path:
@@ -397,18 +399,37 @@ class JobExecutionLock(_FlockHandle):
 
 def stagger_cross_process_action(
     action_name: str,
-    min_interval_sec: float = 1.2,
+    min_interval_sec: float = 2.0,
+    jitter_sec: float = 0.0,
     locks_dir: Path | None = None,
-) -> None:
-    """Enforce a minimum time gap between cross-process actions (e.g., Chrome launch or reCAPTCHA mint).
+) -> float:
+    """Enforce a minimum time gap between cross-process actions (e.g., Chrome launch or RPC submit).
 
     Prevents simultaneous multi-browser burst spikes from the same host IP or 4C/8T CPU.
     """
-    if min_interval_sec <= 0:
-        return
+    if isinstance(jitter_sec, (Path, str)):
+        locks_dir = Path(jitter_sec)
+        jitter_sec = 0.0
+
+    if min_interval_sec <= 0 and jitter_sec <= 0:
+        return 0.0
+
     safe_name = re.sub(r"[^A-Za-z0-9_.-]+", "_", action_name.strip()) or "default"
-    base = ensure_locks_dir(locks_dir)
+    # Use /dev/shm if available and no custom locks_dir is provided to eliminate disk I/O contention
+    if locks_dir is not None:
+        base = ensure_locks_dir(locks_dir)
+    elif Path("/dev/shm").is_dir() and os.access("/dev/shm", os.W_OK):
+        shm_locks = Path("/dev/shm/video-pilot-locks")
+        try:
+            shm_locks.mkdir(parents=True, exist_ok=True, mode=0o700)
+            base = shm_locks
+        except OSError:
+            base = ensure_locks_dir()
+    else:
+        base = ensure_locks_dir()
+
     stamp_path = base / f"stagger_{safe_name}.lock"
+    slept_sec = 0.0
     try:
         with open(stamp_path, "a+", encoding="utf-8") as fh:
             fcntl.flock(fh.fileno(), fcntl.LOCK_EX)
@@ -418,10 +439,17 @@ def stagger_cross_process_action(
                 last_ts = float(raw) if raw else 0.0
             except ValueError:
                 last_ts = 0.0
+
+            effective_interval = min_interval_sec
+            if jitter_sec > 0:
+                effective_interval += random.uniform(0.0, jitter_sec)
+
             now = time.time()
-            wait_sec = (last_ts + min_interval_sec) - now
+            wait_sec = (last_ts + effective_interval) - now
             if 0.0 < wait_sec <= 15.0:
                 time.sleep(wait_sec)
+                slept_sec = wait_sec
+
             new_ts = time.time()
             fh.seek(0)
             fh.truncate()
@@ -430,3 +458,70 @@ def stagger_cross_process_action(
             fcntl.flock(fh.fileno(), fcntl.LOCK_UN)
     except OSError:
         pass
+    return slept_sec
+
+
+def mark_profile_unauthenticated(
+    profile_name: str,
+    ttl_sec: float = 86400.0,
+    locks_dir: Path | None = None,
+) -> None:
+    """Record a profile as unauthenticated (e.g. NO_AT_TOKEN / hasAt=False) with a TTL."""
+    if not profile_name:
+        return
+    base = ensure_locks_dir(locks_dir)
+    target_file = base / UNAUTHENTICATED_FILE_NAME
+    lock_file = base / f"{UNAUTHENTICATED_FILE_NAME}.lock"
+    try:
+        with open(lock_file, "a+", encoding="utf-8") as lfh:
+            fcntl.flock(lfh.fileno(), fcntl.LOCK_EX)
+            data: dict[str, Any] = {}
+            if target_file.is_file():
+                try:
+                    data = json.loads(target_file.read_text(encoding="utf-8"))
+                except Exception:
+                    data = {}
+            data[str(profile_name)] = {
+                "marked_at": time.time(),
+                "ttl_sec": float(ttl_sec),
+            }
+            tmp_p = target_file.with_suffix(".tmp")
+            tmp_p.write_text(json.dumps(data, indent=2), encoding="utf-8")
+            tmp_p.replace(target_file)
+            fcntl.flock(lfh.fileno(), fcntl.LOCK_UN)
+    except OSError:
+        pass
+
+
+def is_profile_unauthenticated(
+    profile_name: str,
+    locks_dir: Path | None = None,
+) -> bool:
+    """Check if profile is marked unauthenticated and within its TTL."""
+    if not profile_name:
+        return False
+    base = ensure_locks_dir(locks_dir)
+    target_file = base / UNAUTHENTICATED_FILE_NAME
+    if not target_file.is_file():
+        return False
+    lock_file = base / f"{UNAUTHENTICATED_FILE_NAME}.lock"
+    try:
+        with open(lock_file, "a+", encoding="utf-8") as lfh:
+            fcntl.flock(lfh.fileno(), fcntl.LOCK_SH)
+            try:
+                data = json.loads(target_file.read_text(encoding="utf-8"))
+            except Exception:
+                data = {}
+            finally:
+                fcntl.flock(lfh.fileno(), fcntl.LOCK_UN)
+        entry = data.get(str(profile_name))
+        if not entry or not isinstance(entry, dict):
+            return False
+        marked_at = float(entry.get("marked_at", 0.0))
+        ttl_sec = float(entry.get("ttl_sec", 86400.0))
+        if time.time() < marked_at + ttl_sec:
+            return True
+        return False
+    except OSError:
+        return False
+

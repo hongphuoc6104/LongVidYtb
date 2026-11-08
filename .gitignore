@@ -2,34 +2,62 @@
 # Video Pilot & Explainer Pipeline - Production .gitignore
 # ==============================================================================
 
-# --- 1. Large Pipeline Artifacts & Media Runs ---
+# --- 1. Large Pipeline Artifacts, Video Jobs & Media Runs ---
+video/
 /video/
+video/**
+_work_short/
+_work_long/
+_tts_work/
+clips/
+frames/
+images/
+narration*.wav
 /sys/maintenance/
 /sys/research/evidence/
-runs
 runs/
+runs
+/runs/
+/sys/runs/
+sys/runs/
+sys/runs/**
 exports/
-scratch
 scratch/
+scratch
 out/
+/out/
+output/
+/output/
+renders/
+/renders/
+artifacts/
+/artifacts/
+tmp/
+/tmp/
+temp/
+/temp/
+.tmp/
+/.tmp/
+/tmp/*
 bundle/
 /experiments/
 batches/
 /sys/batches/
 build_*/
 /sys/build_*/
-/sys/runs/
-sys/runs/
 /sys/staging/
 sys/staging/
 /sys/reports/catch-*/
 *.bak
 *.bak_*
 *.zip
+*.tar
 *.tar.gz
+*.tgz
+*.7z
+*.iso
 
-
-# --- 2. Browser Automation & Google Flow Profiles ---
+# --- 2. Browser Automation, Chrome & Google Flow Profiles / Ledgers ---
 .gflow
 .gflow/
 test-results/
@@ -37,15 +65,31 @@ playwright-report/
 blob-report/
 chrome_debug.log
 Crashpad/
+sys/flow_cdp/chrome-data-pool*
+chrome-data-pool*
+sys/data/flow_credit_ledger.json
+**/flow_credit_ledger.json
+sys/flow_cdp/unauthenticated_profiles.json
+**/unauthenticated_profiles.json
+chrome_pids_global.json
+**/chrome_pids_global.json
+.chrome*
+chrome_profile*
+google-chrome-cdp*
+*.chrome*
 
-# --- 3. Local Runtime State & SQLite Databases ---
+# --- 3. Local Runtime State, Locks, PIDs & SQLite Databases ---
 .state/
+sys/.state/
 *.sqlite
 *.sqlite3
 *.db
 *.db-journal
 *.db-wal
 *.db-shm
+*.pid
+*.lock
+!uv.lock
 
 # --- 4. Python Environment & Build Artifacts ---
 __pycache__/
@@ -59,6 +103,8 @@ ENV/
 .env/
 env.bak/
 venv.bak/
+sys/.venv
+sys/.venv/
 .pytest_cache/
 .ruff_cache/
 .mypy_cache/
@@ -67,9 +113,13 @@ htmlcov/
 *.egg-info/
 dist/
 build/
+.cache/
+/.cache/
+sys/.cache/
 
 # --- 5. Node.js & Remotion Build Outputs ---
 node_modules
+sys/node_modules
 .remotion/
 .parcel-cache/
 .eslintcache
@@ -125,19 +175,33 @@ vocab/.ledger.lock
 sys/vocab/queue.json
 .ledger.lock
 
-# --- 10. Audio & Video Media Files (Exclude All Except assets/) ---
+# --- 10. Audio & Video Media Files (Exclude All Except sys/assets/) ---
 *.wav
-!sys/assets/voices/viet_narrator/reference.wav
-!sys/assets/voices/viet_narrator/sample.wav
+!sys/assets/voices/**/reference.wav
+!sys/assets/voices/*.wav
+!sys/assets/voices/**/ref_clean_*.wav
+!sys/assets/audio/**
+!sys/assets/sfx/**
+sys/assets/voices/**/sample.wav
+sys/assets/voices/**/audition_*.wav
+
+*.mp4
+*.mov
+*.mkv
+*.webm
+*.avi
+*.flv
 *.mp3
-*.ogg
+*.aac
 *.m4a
 *.flac
-*.mp4
+*.ogg
+*.opus
+
 !sys/assets/**
 !assets/**
 
-# Loose images in root and debug flow screenshots
+# Loose images in root and debug flow screenshots outside assets
 /*.png
 /*.jpg
 /*.jpeg
@@ -173,7 +237,6 @@ logs/
 !/sys/logs/
 !/sys/logs/**
 /sys/logs/issues/colab-*.md
-/sys/.cache/
 
 # Per-machine Flow identity; never sync another machine profile.
 /sys/experiments/b2_illustrator/machine.*.json
@@ -206,7 +269,6 @@ sys/channels/dashboard_history.jsonl
 sys/tools/provision_wave*.py
 sys/tools/setup_wave*.py
 sys/tools/cleanup_youtube_channels.py
-sys/flow_cdp/chrome-data-pool*
 sys/colab_bridge/accounts/
 
 # Auto-generated high-density long plans (synthesized on-demand by vn_long_high_density_planner.py)

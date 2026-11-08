@@ -1045,11 +1045,18 @@ class DirectCDPProfileSession:
             """
             from .resource_locks import stagger_cross_process_action
 
-            await asyncio.to_thread(stagger_cross_process_action, "flow_rpc_submit", 5.0)
+            await asyncio.to_thread(stagger_cross_process_action, "flow_rpc_submit", 1.55, 0.35)
             out = await self.evaluate(js_code, await_promise=True, timeout=180.0)
             if not isinstance(out, dict) or out.get("error"):
                 err_msg = str(out.get("error") if isinstance(out, dict) else "NO_CDP_RESPONSE")
-                if attempt < 2 and any(k in err_msg for k in ("NO_AT_TOKEN", "CAPTCHA_FAILED")):
+                if "NO_AT_TOKEN" in err_msg:
+                    from .resource_locks import mark_profile_unauthenticated
+
+                    mark_profile_unauthenticated(self.name)
+                    err = RuntimeError(err_msg)
+                    err.generation_submitted = False
+                    raise err
+                if attempt < 2 and "CAPTCHA_FAILED" in err_msg:
                     await self._refresh_recaptcha_session()
                     continue
                 err = RuntimeError(err_msg)
@@ -1061,17 +1068,36 @@ class DirectCDPProfileSession:
                 payload = flow_rpc.first_payload(raw_text, flow_rpc.RPC_GEN_IMAGE)
                 break
             except Exception as ex:
-                if attempt == 0 and ("NOT_FOUND" in str(ex) or "5" in str(ex)):
+                ex_str = str(ex)
+                if attempt == 0 and ("NOT_FOUND" in ex_str or "5" in ex_str):
                     await self.ensure_project_id(force_new=True)
                     await self._ensure_mint_captcha_guard()
                     continue
-                if "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in str(ex) or "CAPTCHA" in str(ex) or "TOO_MUCH_TRAFFIC" in str(ex):
+                if "NO_AT_TOKEN" in ex_str:
+                    from .resource_locks import mark_profile_unauthenticated
+
+                    mark_profile_unauthenticated(self.name)
+                    err_block = RuntimeError(f"FLOW_PROVIDER_BLOCKED: unauthenticated session ({ex})")
+                    err_block.generation_submitted = False
+                    raise err_block from ex
+                if "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in ex_str or "TOO_MUCH_TRAFFIC" in ex_str:
+                    self._recaptcha_refreshed = True
+                    try:
+                        await self._refresh_recaptcha_session()
+                    except Exception:
+                        pass
+                    err_block = RuntimeError(
+                        f"FLOW_PROVIDER_BLOCKED: preserve the original session and reconcile; do not resubmit ({ex})"
+                    )
+                    err_block.generation_submitted = False
+                    raise err_block from ex
+                if "CAPTCHA" in ex_str:
                     if attempt == 0:
                         self._recaptcha_refreshed = True
                         await asyncio.sleep(2.5)
                         await self._refresh_recaptcha_session()
                         continue
-                    err_block = RuntimeError(f"FLOW_PROVIDER_BLOCKED: preserve the original session and reconcile; do not resubmit ({ex})")
+                    err_block = RuntimeError(f"FLOW_PROVIDER_BLOCKED: captcha failed ({ex})")
                     err_block.generation_submitted = False
                     raise err_block from ex
                 raise
@@ -1151,6 +1177,10 @@ class DirectCDPProfileSession:
             }}
         }})()
         """
+        if "PYTEST_CURRENT_TEST" not in os.environ:
+            from .resource_locks import stagger_cross_process_action
+
+            await asyncio.to_thread(stagger_cross_process_action, "flow_rpc_submit", 1.55, 0.35)
         out = await self.evaluate(js_code, await_promise=True, timeout=180.0)
         if not isinstance(out, dict) or out.get("error"):
             err_msg = out.get("error") if isinstance(out, dict) else "NO_CDP_RESPONSE"
@@ -1194,7 +1224,7 @@ class DirectCDPProfileSession:
             from .resource_locks import stagger_cross_process_action
 
             await self._ensure_mint_captcha_guard()
-            await asyncio.to_thread(stagger_cross_process_action, "flow_rpc_submit", 5.0)
+            await asyncio.to_thread(stagger_cross_process_action, "flow_rpc_submit", 1.55, 0.35)
         source_path_override = f"/project/{self.project_id}" if self.project_id else "/"
         js_code = f"""
         (async () => {{
@@ -1550,7 +1580,7 @@ class DirectCDPProfileSession:
                     last_media_id = first_media_id
                 else:
                     if did_upload:
-                        await asyncio.sleep(2.2)
+                        await asyncio.sleep(3.0)
                     up2 = await self.upload_image_file(last_str)
                     last_media_id = up2["media_id"]
                     did_upload = True
@@ -1565,7 +1595,7 @@ class DirectCDPProfileSession:
                 except Exception:
                     pass
                 await asyncio.sleep(0.25)
-            await asyncio.sleep(3.5)
+            await asyncio.sleep(6.0)
         catalog = await self._get_model_catalog()
         resolved_model = flow_rpc.resolve_video_model(
             model,
@@ -1600,20 +1630,31 @@ class DirectCDPProfileSession:
                 break
             except Exception as ex:
                 ex_s = str(ex)
-                if any(k in ex_s for k in ("NO_AT_TOKEN", "CAPTCHA_FAILED")):
-                    if vid_attempt < 2:
-                        await asyncio.sleep(2.5)
+                if "NO_AT_TOKEN" in ex_s:
+                    from .resource_locks import mark_profile_unauthenticated
+
+                    mark_profile_unauthenticated(self.name)
+                    err_block = RuntimeError(f"FLOW_PROVIDER_BLOCKED: unauthenticated session ({ex})")
+                    err_block.generation_submitted = False
+                    raise err_block from ex
+                if "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in ex_s or "TOO_MUCH_TRAFFIC" in ex_s:
+                    self._recaptcha_refreshed = True
+                    try:
                         await self._refresh_recaptcha_session()
-                        continue
-                if any(k in ex_s for k in ("PUBLIC_ERROR_UNUSUAL_ACTIVITY", "CAPTCHA", "TOO_MUCH_TRAFFIC", "NO_AT_TOKEN")):
+                    except Exception:
+                        pass
+                    err_block = RuntimeError(
+                        f"FLOW_PROVIDER_BLOCKED: preserve the original session and reconcile; do not resubmit ({ex})"
+                    )
+                    err_block.generation_submitted = False
+                    raise err_block from ex
+                if "CAPTCHA_FAILED" in ex_s or "CAPTCHA" in ex_s:
                     if vid_attempt == 0:
                         self._recaptcha_refreshed = True
                         await asyncio.sleep(2.5)
                         await self._refresh_recaptcha_session()
                         continue
-                    err_block = RuntimeError(
-                        f"FLOW_PROVIDER_BLOCKED: preserve the original session and reconcile; do not resubmit ({ex})"
-                    )
+                    err_block = RuntimeError(f"FLOW_PROVIDER_BLOCKED: captcha failed ({ex})")
                     err_block.generation_submitted = False
                     raise err_block from ex
                 raise

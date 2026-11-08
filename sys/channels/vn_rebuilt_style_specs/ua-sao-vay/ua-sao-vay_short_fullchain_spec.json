@@ -1,0 +1,281 @@
+{
+  "channel_id": "ua_sao_vay",
+  "channel_slug": "ua-sao-vay",
+  "job_id": "vn_pilot_ua_sao_vay_short_fullchain",
+  "parent_long_id": "ua-sao-vay-long-master",
+  "format_profile": "short_9x16",
+  "aspect": "9:16",
+  "video_model": "omni_1_2_flash",
+  "chain_mode": "scene_pairs",
+  "voice": "VietNarrator",
+  "total_duration_sec": 51.07,
+  "youtube_title": "Tại Sao Mắt Bạn Tự Động Nhắm Khi Giật Mình?",
+  "title": "Tại Sao Mắt Bạn Tự Động Nhắm Khi Giật Mình?",
+  "thumbnail_spec": {
+    "visual_hook": "Vertical 9:16 3D macro cross-section anatomy of the human eye and optic nerve pathway reacting to an approaching object under studio lighting, zero overlays, 25% margin",
+    "allowed_text": "PHẢN XẠ CHỚP MẮT",
+    "overlay_card": false,
+    "prompt": "Vertical 9:16 3D macro cross-section anatomy of the human eye and optic nerve pathway reacting to an approaching object under studio lighting, zero overlays, 25% margin, bold uppercase text 'PHẢN XẠ CHỚP MẮT', Zack D. Films & Veritasium 3D cross-section scientific cinema with clean high-key studio lighting, neutral slate studio background, razer-sharp f/4.0 mechanical depth-of-field, and rigid anti-morph interlocking kinematics, strictly zero text or speech bubbles, strictly zero graphic overlays, no cartoons."
+  },
+  "packaging": {
+    "cta_plan": {
+      "bridge": "Khám phá trọn bộ phản xạ sinh tồn kỳ lạ trên video dài của kênh.",
+      "close": "Hãy quan sát những điều kỳ diệu ngay trong chính cơ thể bạn."
+    }
+  },
+  "cta_plan": {
+    "bridge": "Khám phá trọn bộ phản xạ sinh tồn kỳ lạ trên video dài của kênh.",
+    "close": "Hãy quan sát những điều kỳ diệu ngay trong chính cơ thể bạn."
+  },
+  "beats": [
+    {
+      "id": "S01",
+      "narration": "Một vật thể lao tới trước mặt, mi mắt bạn lập tức sập xuống.",
+      "prompt": "Vertical 9:16 high-speed macro photograph of an eye in ultra-slow motion beginning to close in response to a sudden gust of air, individual eyelashes sharp and clear, 3D Zack D Films anatomical clarity, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow-motion macro push-in toward the eye as the upper eyelid begins its rapid downward reflex, pristine ocular specular highlight, locked anatomy, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.98,
+      "at": 0.0
+    },
+    {
+      "id": "S02",
+      "narration": "Toàn bộ diễn ra trong một phần mười giây, nhanh hơn cả suy nghĩ.",
+      "prompt": "Vertical 9:16 3D biological cross-section showing the eyelid fully shielding the cornea, glistening tear film layer under clean studio side-lighting, strictly zero text, no cartoons.",
+      "motion_prompt": "Precision lateral tracking pass across the closed eyelid curve, showing soft skin texture and lash barrier, zero morphing.",
+      "camera_motion": "pan_right",
+      "transition": "smoothright",
+      "based_on": "S01",
+      "duration": 3.9,
+      "at": 3.98
+    },
+    {
+      "id": "S03",
+      "narration": "Đây là phản xạ chớp mắt sinh tồn nguyên thủy bảo vệ giác mạc quý giá.",
+      "prompt": "Vertical 9:16 3D cutaway visualization of the human cornea and crystalline lens glowing with natural bioluminescent clarity, dark velvet background, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow camera orbit around the transparent corneal dome, light refracting gently through optical layers, zero morphing.",
+      "camera_motion": "orbit_cw",
+      "transition": "dissolve",
+      "based_on": null,
+      "duration": 4.12,
+      "at": 7.88
+    },
+    {
+      "id": "S04",
+      "narration": "Tín hiệu ánh sáng không đi qua vỏ não mà truyền thẳng tới thân não.",
+      "prompt": "Vertical 9:16 3D neuro-anatomical illustration showing a glowing pulse of electrical signal traveling directly along the short reflex arc to the brainstem, strictly zero text, no cartoons.",
+      "motion_prompt": "Rapid smooth tracking move following the luminescent electrical impulse along the nerve pathway, clean dark-field microscopy aesthetic, zero morphing.",
+      "camera_motion": "pan_down",
+      "transition": "smoothdown",
+      "based_on": "S03",
+      "duration": 3.73,
+      "at": 12.0
+    },
+    {
+      "id": "S05",
+      "narration": "Thần kinh vận nhãn kích hoạt cơ vòng mi co lại với tốc độ tối đa.",
+      "prompt": "Vertical 9:16 detailed 3D model of the orbicularis oculi muscle fibers encircling the eye socket contracting smoothly, warm anatomical color palette, strictly zero text, no cartoons.",
+      "motion_prompt": "Macro push-in on the circular muscle fibers contracting inward with realistic biological elasticity, zero morphing.",
+      "camera_motion": "zoom_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.88,
+      "at": 15.73
+    },
+    {
+      "id": "S06",
+      "narration": "Một tấm khiên sinh học tự nhiên đóng lại ngăn mọi hạt bụi nguy hiểm.",
+      "prompt": "Vertical 9:16 high-speed macro shot of tiny airborne water droplets bouncing harmlessly off the smooth outer surface of closed eyelids, studio backlighting, strictly zero text, no cartoons.",
+      "motion_prompt": "Ultra slow-motion capture of micro droplets deflecting away from the eyelid skin, glistening liquid physics, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": "S05",
+      "duration": 4.06,
+      "at": 19.61
+    },
+    {
+      "id": "S07",
+      "narration": "Dù bạn có cố gắng mở to mắt đến đâu, bản năng cũng sẽ thắng lý trí.",
+      "prompt": "Vertical 9:16 eye-level portrait of a person attempting to hold gaze steady while a gentle puff of air approaches, eye naturally blinking shut, authentic human expression, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow steady push-in on the person face capturing the involuntary micro-expression as the reflex takes over, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 4.41,
+      "at": 23.67
+    },
+    {
+      "id": "S08",
+      "narration": "Cơ thể chúng ta được lập trình với hàng trăm cơ chế tự vệ kỳ diệu.",
+      "prompt": "Vertical 9:16 full-body transparent 3D anatomical silhouette showing glowing neural reflex centers in the spine and brainstem, deep slate background, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow vertical tilt down along the glowing spinal column reflex pathways, soft amber luminescence, zero morphing.",
+      "camera_motion": "pan_down",
+      "transition": "smoothdown",
+      "based_on": null,
+      "duration": 3.76,
+      "at": 28.08
+    },
+    {
+      "id": "S09",
+      "narration": "Mỗi phản xạ tự động đều là kết quả của hàng triệu năm tiến hóa.",
+      "prompt": "Vertical 9:16 artistic macro composition of a fossilized ammonite shell resting beside a modern microscope objective on clean glass, warm side lighting, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow lateral slide from the ancient spiral shell to the precision optical lens, timeless evolutionary mood, zero morphing.",
+      "camera_motion": "pan_right",
+      "transition": "smoothright",
+      "based_on": null,
+      "duration": 3.96,
+      "at": 31.84
+    },
+    {
+      "id": "S10",
+      "narration": "Giữ cho chúng ta bình an giữa vô vàn biến động của thế giới xung quanh.",
+      "prompt": "Vertical 9:16 serene portrait of a person taking a deep breath in a lush sunlit park, eyes gently opening to morning light, natural documentary realism, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow gentle dolly pullback as the person opens eyes with peaceful awareness, golden sun flare through green leaves, zero morphing.",
+      "camera_motion": "zoom_out",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 3.88,
+      "at": 35.8
+    },
+    {
+      "id": "S11",
+      "narration": "Lắng nghe cơ thể là bước đầu tiên để hiểu sự tinh xảo của tự nhiên.",
+      "prompt": "Vertical 9:16 macro shot of a hand resting gently against sunlight on a wooden porch railing, skin catching golden rim light, organic peaceful texture, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow push-in toward the hand in golden sunlight, soft warmth and tactile human presence, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": "S10",
+      "duration": 3.9,
+      "at": 39.68
+    },
+    {
+      "id": "S12",
+      "narration": "Khám phá trọn bộ phản xạ sinh tồn kỳ lạ trên video dài của kênh.",
+      "prompt": "Vertical 9:16 macro tabletop shot of an anatomical sketchbook and medical model resting beside a tablet screen on an oak desk, warm study lamp, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow smooth push-in toward the tablet screen and sketchbook on the wooden desk, warm evening ambiance, zero morphing.",
+      "camera_motion": "push_in",
+      "transition": "fade",
+      "based_on": null,
+      "duration": 4.21,
+      "at": 43.58
+    },
+    {
+      "id": "S13",
+      "narration": "Hãy quan sát những điều kỳ diệu ngay trong chính cơ thể bạn.",
+      "prompt": "Vertical 9:16 close-up of a human eye opening fully in clear morning daylight, pupil dilating naturally with crystal clarity and deep brown iris patterns, strictly zero text, no cartoons.",
+      "motion_prompt": "Slow graceful pullback from the crystal clear iris revealing the calm reflective face in soft morning window light, serene ending, zero morphing.",
+      "camera_motion": "zoom_out",
+      "transition": "fade",
+      "based_on": "S12",
+      "duration": 3.29,
+      "at": 47.79
+    }
+  ],
+  "scene_pairs": [
+    {
+      "id": "PAIR_01",
+      "start_beat_id": "S01",
+      "end_beat_id": "S02",
+      "target_duration": 3.98,
+      "motion_prompt": "Slow-motion macro push-in toward the eye as the upper eyelid begins its rapid downward reflex, pristine ocular specular highlight, locked anatomy, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_02",
+      "start_beat_id": "S02",
+      "end_beat_id": "S03",
+      "target_duration": 3.9,
+      "motion_prompt": "Precision lateral tracking pass across the closed eyelid curve, showing soft skin texture and lash barrier, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_03",
+      "start_beat_id": "S03",
+      "end_beat_id": "S04",
+      "target_duration": 4.12,
+      "motion_prompt": "Slow camera orbit around the transparent corneal dome, light refracting gently through optical layers, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_04",
+      "start_beat_id": "S04",
+      "end_beat_id": "S05",
+      "target_duration": 3.73,
+      "motion_prompt": "Rapid smooth tracking move following the luminescent electrical impulse along the nerve pathway, clean dark-field microscopy aesthetic, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_05",
+      "start_beat_id": "S05",
+      "end_beat_id": "S06",
+      "target_duration": 3.88,
+      "motion_prompt": "Macro push-in on the circular muscle fibers contracting inward with realistic biological elasticity, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_06",
+      "start_beat_id": "S06",
+      "end_beat_id": "S07",
+      "target_duration": 4.06,
+      "motion_prompt": "Ultra slow-motion capture of micro droplets deflecting away from the eyelid skin, glistening liquid physics, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_07",
+      "start_beat_id": "S07",
+      "end_beat_id": "S08",
+      "target_duration": 4.41,
+      "motion_prompt": "Slow steady push-in on the person face capturing the involuntary micro-expression as the reflex takes over, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_08",
+      "start_beat_id": "S08",
+      "end_beat_id": "S09",
+      "target_duration": 3.76,
+      "motion_prompt": "Slow vertical tilt down along the glowing spinal column reflex pathways, soft amber luminescence, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_09",
+      "start_beat_id": "S09",
+      "end_beat_id": "S10",
+      "target_duration": 3.96,
+      "motion_prompt": "Slow lateral slide from the ancient spiral shell to the precision optical lens, timeless evolutionary mood, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_10",
+      "start_beat_id": "S10",
+      "end_beat_id": "S11",
+      "target_duration": 3.88,
+      "motion_prompt": "Slow gentle dolly pullback as the person opens eyes with peaceful awareness, golden sun flare through green leaves, zero morphing.",
+      "mode": "boundary_extend"
+    },
+    {
+      "id": "PAIR_11",
+      "start_beat_id": "S11",
+      "end_beat_id": "S12",
+      "target_duration": 3.9,
+      "motion_prompt": "Slow push-in toward the hand in golden sunlight, soft warmth and tactile human presence, zero morphing.",
+      "mode": "reference_start_end"
+    },
+    {
+      "id": "PAIR_12",
+      "start_beat_id": "S12",
+      "end_beat_id": "S13",
+      "target_duration": 4.21,
+      "motion_prompt": "Slow smooth push-in toward the tablet screen and sketchbook on the wooden desk, warm evening ambiance, zero morphing.",
+      "mode": "boundary_extend"
+    }
+  ],
+  "metadata": {
+    "beats_count": 13,
+    "pairs_count": 12,
+    "total_duration_sec": 51.07,
+    "youtube_title_length": 43,
+    "bridge_syllables": 15,
+    "close_syllables": 13
+  }
+}

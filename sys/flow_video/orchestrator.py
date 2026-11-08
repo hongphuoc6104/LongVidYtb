@@ -318,8 +318,8 @@ class FlowVideoChainOrchestrator:
                     pass
 
     async def _evict_idle_warm_sessions_if_full(self, exclude_port: int | None = None) -> None:
-        """Ensure this orchestrator never holds more warm browser slots than `max(self.max_workers, 4)`."""
-        max_warm = max(self.max_workers, 4)
+        """Ensure this orchestrator never holds more warm browser slots than `max(self.max_workers + 8, 12)`."""
+        max_warm = max(self.max_workers + 8, 12)
         while len(self._warm_sessions) >= max_warm:
             evicted = False
             for old_port in list(self._warm_sessions.keys()):
@@ -379,6 +379,12 @@ class FlowVideoChainOrchestrator:
         import os
 
         all_profiles = get_all_configured_profiles()
+        try:
+            from flow_cdp.resource_locks import is_profile_unauthenticated
+        except ImportError:
+            from sys.flow_cdp.resource_locks import is_profile_unauthenticated
+
+        all_profiles = [p for p in all_profiles if not is_profile_unauthenticated(p.get("name") or p.get("id") or "")]
         explicit_raw = os.environ.get("VP_FLOW_PROFILES", "").strip()
         explicit_names = [x.strip() for x in explicit_raw.split(",") if x.strip()] if explicit_raw else []
         if explicit_names:
@@ -1456,8 +1462,8 @@ class FlowVideoChainOrchestrator:
                                 self._profile_cooldowns[p_name] = now_exc + 3.0
                                 available_profiles.append(profile_cfg)
                             else:
-                                # Put failed profile on 120s cooldown so cooldown persists to CreditLedger
-                                self._record_profile_cooldown(p_name, 120.0, reason=exc_str)
+                                cd_err = 5.0 if ("UNSAFE" in exc_str or "SAFETY" in exc_str) else 120.0
+                                self._record_profile_cooldown(p_name, cd_err, reason=exc_str)
                                 available_profiles.append(profile_cfg)
                             self._save_manifest(tasks)
                         # Rotate immediately to next healthy profile with brief jitter instead of blocking worker for 45s
@@ -1471,8 +1477,8 @@ class FlowVideoChainOrchestrator:
                                 "CAPTCHA_FAILED",
                             )
                         ):
-                            logger.warning(f"[RATE_LIMIT_ROTATE] Profile {p_name} rate-limited at clip {task.clip_id}. Cooldown 75s; rotating in 2.5s...")
-                            await asyncio.sleep(2.5)
+                            logger.warning(f"[RATE_LIMIT_ROTATE] Profile {p_name} rate-limited at clip {task.clip_id}. Cooldown 75s; rotating in 8.0s...")
+                            await asyncio.sleep(8.0)
                         else:
                             # Brief backoff before rotating to next profile
                             await asyncio.sleep(min(5.0, 1.0 * attempts))
@@ -1636,18 +1642,39 @@ class FlowVideoChainOrchestrator:
                 except Exception as exc_clip:
                     if hasattr(self.credit_ledger, "rollback"):
                         self.credit_ledger.rollback(p_name, clip_cost)
-                    if any(
-                        err in str(exc_clip)
+                    exc_str = str(exc_clip)
+                    if "NO_AT_TOKEN" in exc_str:
+                        try:
+                            from flow_cdp.resource_locks import mark_profile_unauthenticated
+                        except ImportError:
+                            from sys.flow_cdp.resource_locks import mark_profile_unauthenticated
+                        mark_profile_unauthenticated(p_name, ttl_sec=86400.0)
+                        self._record_profile_cooldown(p_name, 86400.0, reason=exc_str)
+                        await self._close_warm_port(port)
+                    elif any(
+                        err in exc_str
                         for err in (
                             "FLOW_PROVIDER_BLOCKED",
                             "PUBLIC_ERROR_UNUSUAL_ACTIVITY",
                             "TOO_MUCH_TRAFFIC",
-                            "NO_AT_TOKEN",
-                            "CAPTCHA_FAILED",
                         )
                     ):
-                        self._record_profile_cooldown(p_name, 75.0, reason=str(exc_clip))
-                    await self._close_warm_port(port)
+                        self._record_profile_cooldown(p_name, 60.0, reason=exc_str)
+                        if len(self._warm_sessions) < max(self.max_workers + 8, 12):
+                            try:
+                                if hasattr(session, "_refresh_recaptcha_session"):
+                                    await session._refresh_recaptcha_session()
+                            except Exception:
+                                pass
+                        else:
+                            await self._close_warm_port(port)
+                    elif "CAPTCHA_FAILED" in exc_str:
+                        self._record_profile_cooldown(p_name, 75.0, reason=exc_str)
+                        await self._close_warm_port(port)
+                    elif "UNSAFE" in exc_str or "SAFETY" in exc_str:
+                        self._record_profile_cooldown(p_name, 5.0, reason=exc_str)
+                    else:
+                        await self._close_warm_port(port)
                     raise
             else:
                 port_lock = ProfilePortLock(port, owner_tag=f"clip_{clip.clip_id}")

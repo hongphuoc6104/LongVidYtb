@@ -531,13 +531,24 @@ async def _synthesize_beat_with_word_boundaries(
     voice: str,
     out_mp3: Path,
     rate: str = "+0%",
-    max_retries: int = 4,
+    max_retries: int = 6,
 ) -> List[Dict[str, Any]]:
     """Synthesize a single beat's narration via edge_tts and return exact WordBoundary events."""
+    words_json = out_mp3.with_suffix(".words.json")
+    if out_mp3.is_file() and out_mp3.stat().st_size > 500 and words_json.is_file():
+        try:
+            return json.loads(words_json.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+
     last_err: Optional[Exception] = None
     for attempt in range(max_retries):
         try:
-            comm = edge_tts.Communicate(text=text, voice=voice, rate=rate, boundary="WordBoundary")
+            use_boundary = attempt < 3
+            kwargs = {"text": text, "voice": voice, "rate": rate}
+            if use_boundary:
+                kwargs["boundary"] = "WordBoundary"
+            comm = edge_tts.Communicate(**kwargs)
             word_events: List[Dict[str, Any]] = []
             audio_bytes = bytearray()
 
@@ -562,10 +573,25 @@ async def _synthesize_beat_with_word_boundaries(
             if not audio_bytes:
                 raise RuntimeError(f"Empty audio stream for text: {text[:40]!r}")
             out_mp3.write_bytes(bytes(audio_bytes))
+
+            if not word_events:
+                dur = _probe_duration(out_mp3)
+                words = [w for w in text.split() if w]
+                w_dur = max(0.08, dur / len(words)) if words else dur
+                for i, w in enumerate(words):
+                    word_events.append(
+                        {
+                            "word": w,
+                            "start": round(i * w_dur, 4),
+                            "end": round(min(dur, (i + 1) * w_dur), 4),
+                        }
+                    )
+
+            words_json.write_text(json.dumps(word_events, ensure_ascii=False), encoding="utf-8")
             return word_events
         except Exception as exc:
             last_err = exc
-            await asyncio.sleep(0.6 * (attempt + 1))
+            await asyncio.sleep(2.0 * (attempt + 1))
     raise RuntimeError(f"edge_tts failed after {max_retries} attempts: {last_err}") from last_err
 
 
@@ -618,17 +644,18 @@ def synthesize_beats_with_competitor_cadence(
     cursor_sec = 0.0
 
     async def _synth_all_beats() -> List[List[Dict[str, Any]]]:
-        sem = asyncio.Semaphore(6)
-
-        async def _worker(idx: int, beat: Dict[str, Any]) -> List[Dict[str, Any]]:
+        results: List[List[Dict[str, Any]]] = []
+        for idx, beat in enumerate(beats):
             text = str(beat.get("narration", "")).strip() or "..."
             rate = str(beat.get("speech_rate") or "+0%")
             b_mp3 = scratch_a / f"beat_{idx:03d}.mp3"
             tts_text = re.sub(r"\s*[—–-]+\s*$", ",", text)
-            async with sem:
-                return await _synthesize_beat_with_word_boundaries(tts_text, voice, b_mp3, rate=rate)
-
-        return await asyncio.gather(*(_worker(i, b) for i, b in enumerate(beats)))
+            if idx % 25 == 0 or idx == len(beats) - 1:
+                logger.info(f"Synthesizing narration beat {idx + 1}/{len(beats)}...")
+            w_res = await _synthesize_beat_with_word_boundaries(tts_text, voice, b_mp3, rate=rate)
+            results.append(w_res)
+            await asyncio.sleep(0.15)
+        return results
 
     all_words_per_beat = asyncio.run(_synth_all_beats())
 

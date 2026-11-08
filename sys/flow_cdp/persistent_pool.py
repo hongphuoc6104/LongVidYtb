@@ -29,6 +29,12 @@ from typing import Any, Callable, Optional
 
 from PIL import Image
 
+from .resource_locks import (
+    DEFAULT_MAX_GLOBAL_BROWSERS,
+    is_profile_unauthenticated,
+    mark_profile_unauthenticated,
+)
+
 logger = logging.getLogger("flow_cdp.persistent_pool")
 
 # Patterns indicating bot-detection, rate limiting, or abnormal activity
@@ -154,6 +160,8 @@ class DynamicProfilePool:
                 for p in self.all_profiles:
                     name = p.get("name") or p.get("id")
                     if name == required_name:
+                        if is_profile_unauthenticated(required_name):
+                            return None
                         if required_name in self.in_use:
                             return None
                         if required_name in self.cooldowns:
@@ -177,7 +185,7 @@ class DynamicProfilePool:
 
             for p in candidates:
                 name = p.get("name") or p.get("id")
-                if not name or name == current_name or name in self.in_use:
+                if not name or name == current_name or name in self.in_use or is_profile_unauthenticated(name):
                     continue
                 if name in self.cooldowns:
                     if self.cooldowns[name] > now:
@@ -246,6 +254,8 @@ class PersistentWorkerPool:
         credit_ledger: Any | None = None,
         enable_work_stealing: bool = False,
         work_steal_threshold: int = 2,
+        enable_rpc_batching: bool = True,
+        max_rpc_batch_size: int = 4,
     ):
         self.target_workers = max(1, target_workers)
         self.cooldown_seconds = cooldown_seconds
@@ -259,6 +269,11 @@ class PersistentWorkerPool:
         self.credit_ledger = credit_ledger
         self.enable_work_stealing = enable_work_stealing
         self.work_steal_threshold = max(1, work_steal_threshold)
+        self.enable_rpc_batching = enable_rpc_batching
+        self.max_rpc_batch_size = max(1, min(4, int(max_rpc_batch_size)))
+        self.warm_sessions: dict[str, Any] = {}
+        self.warm_sessions_lock = threading.Lock()
+        self.lock = self.warm_sessions_lock
 
         # Resolve profiles
         if profiles is None:
@@ -486,6 +501,19 @@ class PersistentWorkerPool:
         sess = initial_session
 
         def init_session(p_cfg: dict[str, Any]) -> Any:
+            p_name = p_cfg.get("name") or p_cfg.get("id") or ""
+            with self.warm_sessions_lock:
+                warm_s = self.warm_sessions.pop(p_name, None)
+            if warm_s is not None:
+                if hasattr(warm_s, "_refresh_recaptcha_session"):
+                    try:
+                        rf = warm_s._refresh_recaptcha_session()
+                        if asyncio.iscoroutine(rf):
+                            loop.run_until_complete(rf)
+                    except Exception as rf_err:
+                        logger.debug("Failed refreshing recaptcha on warm session %s: %s", p_name, rf_err)
+                return warm_s
+
             self._launch_browser(p_cfg)
             s = self._create_session(p_cfg)
             if hasattr(s, "connect"):
@@ -502,14 +530,15 @@ class PersistentWorkerPool:
                                 loop.run_until_complete(c)
                     except Exception:
                         pass
-                    raise RuntimeError(f"Profile {p_cfg.get('name')} not authenticated on Flow (hasAt=False)")
+                    mark_profile_unauthenticated(p_name)
+                    raise RuntimeError(f"Profile {p_name} not authenticated on Flow (hasAt=False)")
             if hasattr(s, "ensure_project_id"):
                 try:
                     res_p = s.ensure_project_id()
                     if asyncio.iscoroutine(res_p):
                         loop.run_until_complete(res_p)
                 except Exception as p_err:
-                    logger.debug("Profile %s ensure_project_id: %s", p_cfg.get("name"), p_err)
+                    logger.debug("Profile %s ensure_project_id: %s", p_name, p_err)
             return s
 
         while sess is None and current_profile is not None and not self.abort_event.is_set():
@@ -524,7 +553,10 @@ class PersistentWorkerPool:
                         self.proc_mgr.terminate_by_port(port, wait_interval=0.4)
                     except Exception as t_err:
                         logger.debug("Failed to terminate port %d on startup failure: %s", port, t_err)
-                q_dur = 86400.0 if "hasAt=False" in str(exc) else None
+                is_unauth = "hasAt=False" in str(exc) or "NO_AT_TOKEN" in str(exc)
+                if is_unauth:
+                    mark_profile_unauthenticated(prof_name)
+                q_dur = 86400.0 if is_unauth else None
                 self.profile_pool.release(current_profile, quarantine_reason="init_connect_failed", quarantine_seconds=q_dur)
                 current_profile = self.profile_pool.acquire()
 
@@ -607,6 +639,61 @@ class PersistentWorkerPool:
                         self.pinned_queues[pinned_to].put((priority, seq, task))
                         continue
 
+                is_anchor_shot = (
+                    not bool(
+                        task.get("baseMediaId")
+                        or task.get("base_media_id")
+                        or task.get("based_on")
+                        or task.get("parent_id")
+                    )
+                    and str(task.get("type", "image")).lower() == "image"
+                    and (task.get("credit_cost") is None or int(task.get("credit_cost")) == 0)
+                )
+                batch_tasks = [task]
+
+                if (
+                    is_anchor_shot
+                    and self.enable_rpc_batching
+                    and hasattr(sess, "generate_images_batch")
+                    and self.max_rpc_batch_size > 1
+                ):
+                    target_ratio = task.get("ratio") or task.get("aspect") or "16:9"
+                    target_model = task.get("model", "BELUGA")
+                    non_matching: list[tuple[int, int, dict[str, Any]]] = []
+
+                    while len(batch_tasks) < self.max_rpc_batch_size:
+                        try:
+                            cand_prio, cand_seq, cand_task = self.shared_queue.get_nowait()
+                        except queue.Empty:
+                            break
+
+                        cand_anchor = (
+                            not bool(
+                                cand_task.get("baseMediaId")
+                                or cand_task.get("base_media_id")
+                                or cand_task.get("based_on")
+                                or cand_task.get("parent_id")
+                            )
+                            and str(cand_task.get("type", "image")).lower() == "image"
+                            and (cand_task.get("credit_cost") is None or int(cand_task.get("credit_cost")) == 0)
+                        )
+                        cand_ratio = cand_task.get("ratio") or cand_task.get("aspect") or "16:9"
+                        cand_model = cand_task.get("model", "BELUGA")
+                        cand_pinned = cand_task.get("pinned_profile")
+
+                        if (
+                            cand_anchor
+                            and (not cand_pinned or cand_pinned == prof_name)
+                            and cand_ratio == target_ratio
+                            and cand_model == target_model
+                        ):
+                            batch_tasks.append(cand_task)
+                        else:
+                            non_matching.append((cand_prio, cand_seq, cand_task))
+
+                    for nm_item in non_matching:
+                        self.shared_queue.put(nm_item)
+
                 task_id = task.get("_registered_id") or str(seq)
 
                 # 3. Pacing gap enforcement (>= pacing_seconds per profile)
@@ -620,92 +707,165 @@ class PersistentWorkerPool:
                 # 4. Execute image generation
                 t0 = time.time()
                 try:
-                    res = self._execute_task_rpc(loop, sess, task, current_profile)
-                    last_request_time = time.time()
-                    latency = round(time.time() - t0, 2)
+                    if len(batch_tasks) > 1:
+                        batch_res = self._execute_batch_task_rpc(loop, sess, batch_tasks, current_profile)
+                        last_request_time = time.time()
+                        latency = round(time.time() - t0, 2)
 
-                    # Successful generation: store result & update DAG mappings
-                    media_id = res.get("media_id") or res.get("forge_id") or ""
-                    res["latency"] = latency
-                    res["profile_id"] = prof_name
+                        for b_task, b_res in zip(batch_tasks, batch_res, strict=False):
+                            b_tid = b_task.get("_registered_id") or str(b_task.get("id", "0"))
+                            b_mid = b_res.get("media_id") or b_res.get("forge_id") or ""
+                            b_res["latency"] = latency
+                            b_res["profile_id"] = prof_name
 
-                    # Write standardized JSON sidecar
-                    img_path_str = res.get("path")
-                    if img_path_str:
-                        sidecar_path = Path(img_path_str).with_suffix(".json")
-                        sidecar_payload = {
-                            "jobId": str(task.get("jobId") or task.get("id") or task_id),
-                            "forgeId": media_id,
-                            "profile_id": prof_name,
-                            "prompt": task.get("prompt", ""),
-                            "latency": latency,
-                            "sha256": res.get("sha256", ""),
-                            "aspect_ratio": task.get("ratio") or task.get("aspect") or "16:9",
-                            "width": res.get("width", 0),
-                            "height": res.get("height", 0),
-                            "shot_type": task.get("shot_type", "full_scene"),
-                            "type": "image",
-                            "source": "google-flow-browser",
-                            "status": "downloaded",
-                            "created_at": datetime.now(timezone.utc).isoformat(),
-                        }
-                        try:
-                            sidecar_path.write_text(
-                                json.dumps(sidecar_payload, ensure_ascii=False, indent=2),
-                                encoding="utf-8",
-                            )
-                            res["sidecar"] = str(sidecar_path)
-                        except Exception as sc_err:
-                            logger.warning("Failed writing sidecar %s: %s", sidecar_path, sc_err)
+                            # Write sidecar
+                            img_path_str = b_res.get("path")
+                            if img_path_str:
+                                sidecar_path = Path(img_path_str).with_suffix(".json")
+                                sidecar_payload = {
+                                    "jobId": str(b_task.get("jobId") or b_task.get("id") or b_tid),
+                                    "forgeId": b_mid,
+                                    "profile_id": prof_name,
+                                    "prompt": b_task.get("prompt", ""),
+                                    "latency": latency,
+                                    "sha256": b_res.get("sha256", ""),
+                                    "aspect_ratio": b_task.get("ratio") or b_task.get("aspect") or "16:9",
+                                    "width": b_res.get("width", 0),
+                                    "height": b_res.get("height", 0),
+                                    "shot_type": b_task.get("shot_type", "full_scene"),
+                                    "type": "image",
+                                    "source": "google-flow-browser",
+                                    "status": "downloaded",
+                                    "created_at": datetime.now(timezone.utc).isoformat(),
+                                }
+                                try:
+                                    sidecar_path.write_text(
+                                        json.dumps(sidecar_payload, ensure_ascii=False, indent=2),
+                                        encoding="utf-8",
+                                    )
+                                    b_res["sidecar"] = str(sidecar_path)
+                                except Exception as sc_err:
+                                    logger.warning("Failed writing sidecar %s: %s", sidecar_path, sc_err)
 
-                    with self.dag_lock:
-                        self.parent_profile_map[task_id] = prof_name
-                        if media_id:
-                            self.parent_media_map[task_id] = media_id
-                        self.results[task_id] = res
+                            with self.dag_lock:
+                                self.parent_profile_map[b_tid] = prof_name
+                                if b_mid:
+                                    self.parent_media_map[b_tid] = b_mid
+                                self.results[b_tid] = b_res
 
-                        # Release deferred dependent tasks waiting on this shot
-                        if task_id in self.deferred_tasks:
-                            for dep_priority, dep_seq, dep_task in self.deferred_tasks.pop(task_id):
-                                dep_task["pinned_profile"] = prof_name
-                                if media_id and not dep_task.get("baseMediaId"):
-                                    dep_task["baseMediaId"] = media_id
-                                if prof_name in self.pinned_queues:
-                                    self.pinned_queues[prof_name].put((dep_priority, dep_seq, dep_task))
+                                if b_tid in self.deferred_tasks:
+                                    for dep_priority, dep_seq, dep_task in self.deferred_tasks.pop(b_tid):
+                                        dep_task["pinned_profile"] = prof_name
+                                        if b_mid and not dep_task.get("baseMediaId"):
+                                            dep_task["baseMediaId"] = b_mid
+                                        if prof_name in self.pinned_queues:
+                                            self.pinned_queues[prof_name].put((dep_priority, dep_seq, dep_task))
+                                        else:
+                                            self.shared_queue.put((dep_priority, dep_seq, dep_task))
+
+                            if callable(b_task.get("callback")):
+                                try:
+                                    b_task["callback"](b_task, b_res, None)
+                                except Exception:
+                                    pass
+
+                            if self.credit_ledger is not None:
+                                try:
+                                    if "credit_cost" in b_task and b_task["credit_cost"] is not None and int(b_task["credit_cost"]) > 0:
+                                        self.credit_ledger.deduct_credits(prof_name, amount=int(b_task["credit_cost"]), reason="image")
+                                    else:
+                                        self.credit_ledger.touch_used(prof_name)
+                                except Exception:
+                                    pass
+
+                            self._mark_task_finished()
+                    else:
+                        res = self._execute_task_rpc(loop, sess, task, current_profile)
+                        last_request_time = time.time()
+                        latency = round(time.time() - t0, 2)
+
+                        # Successful generation: store result & update DAG mappings
+                        media_id = res.get("media_id") or res.get("forge_id") or ""
+                        res["latency"] = latency
+                        res["profile_id"] = prof_name
+
+                        # Write standardized JSON sidecar
+                        img_path_str = res.get("path")
+                        if img_path_str:
+                            sidecar_path = Path(img_path_str).with_suffix(".json")
+                            sidecar_payload = {
+                                "jobId": str(task.get("jobId") or task.get("id") or task_id),
+                                "forgeId": media_id,
+                                "profile_id": prof_name,
+                                "prompt": task.get("prompt", ""),
+                                "latency": latency,
+                                "sha256": res.get("sha256", ""),
+                                "aspect_ratio": task.get("ratio") or task.get("aspect") or "16:9",
+                                "width": res.get("width", 0),
+                                "height": res.get("height", 0),
+                                "shot_type": task.get("shot_type", "full_scene"),
+                                "type": "image",
+                                "source": "google-flow-browser",
+                                "status": "downloaded",
+                                "created_at": datetime.now(timezone.utc).isoformat(),
+                            }
+                            try:
+                                sidecar_path.write_text(
+                                    json.dumps(sidecar_payload, ensure_ascii=False, indent=2),
+                                    encoding="utf-8",
+                                )
+                                res["sidecar"] = str(sidecar_path)
+                            except Exception as sc_err:
+                                logger.warning("Failed writing sidecar %s: %s", sidecar_path, sc_err)
+
+                        with self.dag_lock:
+                            self.parent_profile_map[task_id] = prof_name
+                            if media_id:
+                                self.parent_media_map[task_id] = media_id
+                            self.results[task_id] = res
+
+                            # Release deferred dependent tasks waiting on this shot
+                            if task_id in self.deferred_tasks:
+                                for dep_priority, dep_seq, dep_task in self.deferred_tasks.pop(task_id):
+                                    dep_task["pinned_profile"] = prof_name
+                                    if media_id and not dep_task.get("baseMediaId"):
+                                        dep_task["baseMediaId"] = media_id
+                                    if prof_name in self.pinned_queues:
+                                        self.pinned_queues[prof_name].put((dep_priority, dep_seq, dep_task))
+                                    else:
+                                        self.shared_queue.put((dep_priority, dep_seq, dep_task))
+
+                        if callable(task.get("callback")):
+                            try:
+                                task["callback"](task, res, None)
+                            except Exception:
+                                pass
+
+                        if self.credit_ledger is not None:
+                            try:
+                                if "credit_cost" in task and task["credit_cost"] is not None:
+                                    amount = int(task["credit_cost"])
+                                elif str(task.get("type", "")).lower() == "image" or str(
+                                    task.get("model", "BELUGA")
+                                ).upper() in (
+                                    "BELUGA",
+                                    "IMAGEN_3_5",
+                                    "IMAGEN_3",
+                                    "GEM_PIX_2",
+                                ):
+                                    amount = 0
                                 else:
-                                    self.shared_queue.put((dep_priority, dep_seq, dep_task))
+                                    amount = 10
 
-                    if callable(task.get("callback")):
-                        try:
-                            task["callback"](task, res, None)
-                        except Exception:
-                            pass
+                                reason = str(task.get("credit_reason") or ("image" if amount == 0 else "video"))
+                                if amount > 0:
+                                    self.credit_ledger.deduct_credits(prof_name, amount=amount, reason=reason)
+                                else:
+                                    self.credit_ledger.touch_used(prof_name)
+                            except Exception as deduct_err:
+                                logger.debug("Failed updating credit ledger for %s: %s", prof_name, deduct_err)
 
-                    if self.credit_ledger is not None:
-                        try:
-                            if "credit_cost" in task and task["credit_cost"] is not None:
-                                amount = int(task["credit_cost"])
-                            elif str(task.get("type", "")).lower() == "image" or str(
-                                task.get("model", "BELUGA")
-                            ).upper() in (
-                                "BELUGA",
-                                "IMAGEN_3_5",
-                                "IMAGEN_3",
-                                "GEM_PIX_2",
-                            ):
-                                amount = 0
-                            else:
-                                amount = 10
-
-                            reason = str(task.get("credit_reason") or ("image" if amount == 0 else "video"))
-                            if amount > 0:
-                                self.credit_ledger.deduct_credits(prof_name, amount=amount, reason=reason)
-                            else:
-                                self.credit_ledger.touch_used(prof_name)
-                        except Exception as deduct_err:
-                            logger.debug("Failed updating credit ledger for %s: %s", prof_name, deduct_err)
-
-                    self._mark_task_finished()
+                        self._mark_task_finished()
 
                 except Exception as exc:
                     err_str = str(exc)
@@ -714,15 +874,17 @@ class PersistentWorkerPool:
                     is_credit_exhausted = any(p.search(err_str) for p in CREDIT_EXHAUSTION_PATTERNS)
                     is_rate_limit = is_credit_exhausted or any(p.search(err_str) for p in UNUSUAL_ACTIVITY_PATTERNS)
 
-                    incident = {
-                        "task_id": task_id,
-                        "profile": prof_name,
-                        "error": err_str,
-                        "timestamp": datetime.now(timezone.utc).isoformat(),
-                        "is_rate_limit": is_rate_limit,
-                        "is_credit_exhausted": is_credit_exhausted,
-                    }
-                    self.incidents.append(incident)
+                    for failed_task in batch_tasks:
+                        ft_id = failed_task.get("_registered_id") or str(failed_task.get("id", "0"))
+                        incident = {
+                            "task_id": ft_id,
+                            "profile": prof_name,
+                            "error": err_str,
+                            "timestamp": datetime.now(timezone.utc).isoformat(),
+                            "is_rate_limit": is_rate_limit,
+                            "is_credit_exhausted": is_credit_exhausted,
+                        }
+                        self.incidents.append(incident)
 
                     if is_credit_exhausted and self.credit_ledger is not None:
                         try:
@@ -732,8 +894,24 @@ class PersistentWorkerPool:
 
                     if is_rate_limit:
                         is_ip_burst = "TOO_MUCH_TRAFFIC" in err_str
-                        quarantine_reason = "credit_exhausted" if is_credit_exhausted else ("rate_limit_too_much_traffic" if is_ip_burst else "rate_limit_error_7")
-                        q_dur = 3600.0 if is_credit_exhausted else (min(300.0, self.cooldown_seconds) if is_ip_burst else self.cooldown_seconds)
+                        is_no_at = "NO_AT_TOKEN" in err_str or "hasAt=False" in err_str
+                        if is_no_at:
+                            mark_profile_unauthenticated(prof_name)
+
+                        quarantine_reason = (
+                            "credit_exhausted" if is_credit_exhausted else (
+                                "unauthenticated" if is_no_at else (
+                                    "rate_limit_too_much_traffic" if is_ip_burst else "rate_limit_error_7"
+                                )
+                            )
+                        )
+                        q_dur = (
+                            86400.0 if is_no_at else (
+                                3600.0 if is_credit_exhausted else (
+                                    min(300.0, self.cooldown_seconds) if is_ip_burst else self.cooldown_seconds
+                                )
+                            )
+                        )
                         logger.warning(
                             "[FAILOVER] Profile %s hit %s at task %s: %s",
                             prof_name,
@@ -741,57 +919,78 @@ class PersistentWorkerPool:
                             task_id,
                             err_str,
                         )
-                        # Remediate in session
-                        loop.run_until_complete(remediate_profile_session(sess))
 
-                        # Close session, shut down idle browser to free RAM/VRAM, and quarantine profile
                         old_name = prof_name
                         old_port = int(current_profile.get("cdp_port") or current_profile.get("port") or 0)
-                        try:
-                            if hasattr(sess, "close"):
-                                close_res = sess.close()
-                                if asyncio.iscoroutine(close_res):
-                                    loop.run_until_complete(close_res)
-                        except Exception:
-                            pass
-                        if self.enforce_os_locks and old_port > 0 and self.proc_mgr and hasattr(self.proc_mgr, "terminate_by_port"):
+                        max_browsers = self.max_global_browsers or DEFAULT_MAX_GLOBAL_BROWSERS
+
+                        # Non-destructive recaptcha refresh in-place if rate limited (NOT remediate_profile_session which breaks Object.assign)
+                        if not is_credit_exhausted and not is_no_at:
+                            if hasattr(sess, "_refresh_recaptcha_session"):
+                                try:
+                                    rf = sess._refresh_recaptcha_session()
+                                    if asyncio.iscoroutine(rf):
+                                        loop.run_until_complete(rf)
+                                except Exception:
+                                    pass
+
+                        can_keep_warm = (not is_credit_exhausted) and (not is_no_at)
+                        with self.warm_sessions_lock:
+                            if can_keep_warm and len(self.warm_sessions) < max_browsers:
+                                self.warm_sessions[old_name] = sess
+                                sess_kept_warm = True
+                            else:
+                                sess_kept_warm = False
+
+                        if not sess_kept_warm:
                             try:
-                                self.proc_mgr.terminate_by_port(old_port, wait_interval=0.4)
+                                if hasattr(sess, "close"):
+                                    close_res = sess.close()
+                                    if asyncio.iscoroutine(close_res):
+                                        loop.run_until_complete(close_res)
                             except Exception:
                                 pass
+                            if self.enforce_os_locks and old_port > 0 and self.proc_mgr and hasattr(self.proc_mgr, "terminate_by_port"):
+                                try:
+                                    self.proc_mgr.terminate_by_port(old_port, wait_interval=0.4)
+                                except Exception:
+                                    pass
 
                         self.profile_pool.release(current_profile, quarantine_reason=quarantine_reason, quarantine_seconds=q_dur)
 
                         # If Edge IP burst limit was tripped, pause worker to let the sliding window reset cleanly
                         if is_ip_burst:
-                            logger.warning("[RATE_LIMIT_PAUSE] Edge burst limit tripped (TOO_MUCH_TRAFFIC). Pausing worker for 45s...")
-                            time.sleep(45.0)
+                            logger.warning("[RATE_LIMIT_PAUSE] Edge burst limit tripped (TOO_MUCH_TRAFFIC). Pausing worker for 15s...")
+                            time.sleep(15.0)
 
-                        # Re-queue task with exponential delay to avoid tight-loop retry storms
-                        task["retries"] = task.get("retries", 0) + 1
-                        max_r = max(100, task.get("max_retries", 100))
-                        if task["retries"] <= max_r:
-                            # Clear pinning and baseMediaId on retry so healthy standby can generate cleanly
-                            task.pop("pinned_profile", None)
-                            task["baseMediaId"] = None
-                            task["base_media_id"] = None
-                            backoff_sleep = min(20.0, 3.0 * min(task["retries"], 7))
-                            time.sleep(backoff_sleep)
-                            self.shared_queue.put((0, seq, task))
-                        else:
-                            logger.error("Task %s exceeded max retries after rate limit", task_id)
-                            with self.dag_lock:
-                                if task_id in self.deferred_tasks:
-                                    for _dep_priority, dep_seq, dep_task in self.deferred_tasks.pop(task_id):
-                                        dep_id = dep_task.get("_registered_id") or str(dep_seq)
-                                        logger.error("Dependent task %s aborted because parent %s failed permanently", dep_id, task_id)
-                                        if callable(dep_task.get("callback")):
-                                            try:
-                                                dep_task["callback"](dep_task, None, RuntimeError(f"Parent task {task_id} failed permanently"))
-                                            except Exception:
-                                                pass
-                                        self._mark_task_finished()
-                            self._mark_task_finished()
+                        # Re-queue all tasks in batch_tasks with exponential delay to avoid tight-loop retry storms
+                        for r_task in batch_tasks:
+                            r_task["retries"] = r_task.get("retries", 0) + 1
+                            max_r = max(100, r_task.get("max_retries", 100))
+                            if r_task["retries"] <= max_r:
+                                # Clear pinning and baseMediaId on retry so healthy standby can generate cleanly
+                                r_task.pop("pinned_profile", None)
+                                r_task["baseMediaId"] = None
+                                r_task["base_media_id"] = None
+                                backoff_sleep = min(20.0, 3.0 * min(r_task["retries"], 7))
+                                time.sleep(backoff_sleep)
+                                r_seq = self._next_seq()
+                                self.shared_queue.put((0, r_seq, r_task))
+                            else:
+                                r_tid = r_task.get("_registered_id") or str(r_task.get("id", "0"))
+                                logger.error("Task %s exceeded max retries after rate limit", r_tid)
+                                with self.dag_lock:
+                                    if r_tid in self.deferred_tasks:
+                                        for _dep_priority, dep_seq, dep_task in self.deferred_tasks.pop(r_tid):
+                                            dep_id = dep_task.get("_registered_id") or str(dep_seq)
+                                            logger.error("Dependent task %s aborted because parent %s failed permanently", dep_id, r_tid)
+                                            if callable(dep_task.get("callback")):
+                                                try:
+                                                    dep_task["callback"](dep_task, None, RuntimeError(f"Parent task {r_tid} failed permanently"))
+                                                except Exception:
+                                                    pass
+                                            self._mark_task_finished()
+                                self._mark_task_finished()
 
                         # Standby profile swap loop
                         sess = None
@@ -837,7 +1036,10 @@ class PersistentWorkerPool:
                                         self.proc_mgr.terminate_by_port(port, wait_interval=0.4)
                                     except Exception as t_err:
                                         logger.debug("Failed to terminate port %d on swap failure: %s", port, t_err)
-                                q_dur = 86400.0 if "hasAt=False" in str(switch_err) else None
+                                is_sw_unauth = "hasAt=False" in str(switch_err) or "NO_AT_TOKEN" in str(switch_err)
+                                if is_sw_unauth:
+                                    mark_profile_unauthenticated(prof_name)
+                                q_dur = 86400.0 if is_sw_unauth else None
                                 self.profile_pool.release(current_profile, quarantine_reason="swapped_connect_failed", quarantine_seconds=q_dur)
                                 current_profile = None
                                 continue
@@ -864,29 +1066,32 @@ class PersistentWorkerPool:
                             except Exception as reinit_err:
                                 logger.error("Failed re-initializing session on %s: %s", prof_name, reinit_err)
 
-                        task["retries"] = task.get("retries", 0) + 1
-                        if task["retries"] <= task.get("max_retries", 3):
-                            self.shared_queue.put((0, seq, task))
-                            time.sleep(1.0)
-                        else:
-                            logger.error("Task %s failed permanently: %s", task_id, err_str)
-                            with self.dag_lock:
-                                if task_id in self.deferred_tasks:
-                                    for _dep_priority, dep_seq, dep_task in self.deferred_tasks.pop(task_id):
-                                        dep_id = dep_task.get("_registered_id") or str(dep_seq)
-                                        logger.error("Dependent task %s aborted because parent %s failed permanently", dep_id, task_id)
-                                        if callable(dep_task.get("callback")):
-                                            try:
-                                                dep_task["callback"](dep_task, None, RuntimeError(f"Parent task {task_id} failed permanently"))
-                                            except Exception:
-                                                pass
-                                        self._mark_task_finished()
-                            if callable(task.get("callback")):
-                                try:
-                                    task["callback"](task, None, exc)
-                                except Exception:
-                                    pass
-                            self._mark_task_finished()
+                        for r_task in batch_tasks:
+                            r_task["retries"] = r_task.get("retries", 0) + 1
+                            r_tid = r_task.get("_registered_id") or str(r_task.get("id", "0"))
+                            if r_task["retries"] <= r_task.get("max_retries", 3):
+                                r_seq = self._next_seq()
+                                self.shared_queue.put((0, r_seq, r_task))
+                                time.sleep(1.0)
+                            else:
+                                logger.error("Task %s failed permanently: %s", r_tid, err_str)
+                                with self.dag_lock:
+                                    if r_tid in self.deferred_tasks:
+                                        for _dep_priority, dep_seq, dep_task in self.deferred_tasks.pop(r_tid):
+                                            dep_id = dep_task.get("_registered_id") or str(dep_seq)
+                                            logger.error("Dependent task %s aborted because parent %s failed permanently", dep_id, r_tid)
+                                            if callable(dep_task.get("callback")):
+                                                try:
+                                                    dep_task["callback"](dep_task, None, RuntimeError(f"Parent task {r_tid} failed permanently"))
+                                                except Exception:
+                                                    pass
+                                            self._mark_task_finished()
+                                if callable(r_task.get("callback")):
+                                    try:
+                                        r_task["callback"](r_task, None, exc)
+                                    except Exception:
+                                        pass
+                                self._mark_task_finished()
 
         finally:
             if sess:
@@ -1042,6 +1247,94 @@ class PersistentWorkerPool:
             "profile_id": prof_cfg["name"],
         }
 
+    def _execute_batch_task_rpc(
+        self,
+        loop: asyncio.AbstractEventLoop,
+        sess: Any,
+        batch_tasks: list[dict[str, Any]],
+        prof_cfg: dict[str, Any],
+    ) -> list[dict[str, Any]]:
+        """Execute a single multi-prompt generate_images_batch RPC for 2..4 tasks."""
+        prompts = [t["prompt"] for t in batch_tasks]
+        aspect = batch_tasks[0].get("ratio") or batch_tasks[0].get("aspect") or "16:9"
+        model = batch_tasks[0].get("model", "BELUGA")
+
+        res_list = sess.generate_images_batch(prompts=prompts, aspect=aspect, model=model)
+        if asyncio.iscoroutine(res_list):
+            res_list = loop.run_until_complete(res_list)
+
+        if not isinstance(res_list, list) or len(res_list) != len(batch_tasks):
+            raise RuntimeError(
+                f"generate_images_batch returned {len(res_list) if isinstance(res_list, list) else type(res_list)} items, expected {len(batch_tasks)}"
+            )
+
+        task_results: list[dict[str, Any]] = []
+        for task, res in zip(batch_tasks, res_list, strict=False):
+            media_url = res.get("url")
+            media_id = res.get("media_id") or res.get("forge_id") or ""
+            out_dir = Path(task.get("out_dir") or self.default_out_dir or (Path(tempfile.gettempdir()) / "video-pilot-pool-images"))
+            out_dir.mkdir(parents=True, exist_ok=True)
+            task_idx = task.get("index") or task.get("_registered_id") or "000"
+
+            if task.get("output_path"):
+                img_dest = Path(task["output_path"])
+                filename = img_dest.name
+            else:
+                filename = task.get("filename") or f"image_{task_idx}.jpg"
+                img_dest = out_dir / filename
+            width, height = 0, 0
+
+            if media_url and media_url.startswith("http"):
+                staging_dir = out_dir.parent / ".staging"
+                staging_dir.mkdir(parents=True, exist_ok=True)
+                staging_path = staging_dir / f"temp_{task_idx}_{prof_cfg['name']}.jpg"
+
+                img_data = b""
+                for dl_attempt in range(3):
+                    try:
+                        req = urllib.request.Request(media_url, headers={"User-Agent": "video-pilot"})
+                        with urllib.request.urlopen(req, timeout=45) as resp:
+                            img_data = resp.read()
+                        if len(img_data) >= 5000:
+                            break
+                    except Exception as dl_err:
+                        if dl_attempt == 2:
+                            raise RuntimeError(f"Download failed after 3 attempts: {dl_err}") from dl_err
+                        time.sleep(1.0)
+
+                if len(img_data) < 5000:
+                    raise RuntimeError(f"Downloaded image too small ({len(img_data)} bytes)")
+
+                staging_path.write_bytes(img_data)
+                with Image.open(staging_path) as im:
+                    im.verify()
+                with Image.open(staging_path) as im:
+                    im.load()
+                    width, height = im.size
+                overlay_cfg = task.get("editorial_overlay")
+                if overlay_cfg and isinstance(overlay_cfg, dict) and overlay_cfg.get("enabled", False):
+                    from tools.editorial_compositor import apply_editorial_overlay
+
+                    apply_editorial_overlay(staging_path, overlay_cfg)
+                shutil.move(str(staging_path), str(img_dest))
+                f_hash = sha256_file(img_dest)
+            else:
+                img_dest.touch(exist_ok=True)
+                f_hash = "mock_sha256"
+
+            task_res = {
+                "path": str(img_dest),
+                "media_id": media_id,
+                "url": media_url,
+                "sha256": f_hash,
+                "width": width,
+                "height": height,
+                "profile_id": prof_cfg["name"],
+            }
+            task_results.append(task_res)
+
+        return task_results
+
     def _mark_task_finished(self) -> None:
         with self._tasks_lock:
             self._pending_tasks = max(0, self._pending_tasks - 1)
@@ -1078,6 +1371,20 @@ class PersistentWorkerPool:
         for t in self.workers:
             t.join(timeout=wait_timeout)
         self.workers.clear()
+
+        # Teardown warm sessions
+        with self.warm_sessions_lock:
+            for _w_name, w_sess in list(self.warm_sessions.items()):
+                try:
+                    if hasattr(w_sess, "close"):
+                        c = w_sess.close()
+                        if asyncio.iscoroutine(c):
+                            t_loop = asyncio.new_event_loop()
+                            t_loop.run_until_complete(c)
+                            t_loop.close()
+                except Exception:
+                    pass
+            self.warm_sessions.clear()
 
         self.profile_pool.release_all()
 

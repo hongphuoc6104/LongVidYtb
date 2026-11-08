@@ -657,16 +657,29 @@ def resolve_beat_transition(beat: dict[str, Any], idx: int) -> str:
     return "fade"
 
 
+KNOWN_UNAUTHENTICATED_PROFILES = {"profile_en06", "profile_en12"}
+
+
 def resolve_authenticated_profiles(
     profiles_filter: list[str] | None = None,
     credit_ledger: CreditLedger | None = None,
 ) -> list[dict[str, Any]]:
     """Filter candidate Chrome profiles ensuring unauthenticated profiles are excluded.
 
-    - If profiles_filter is provided (e.g. from --profiles), explicitly restrict to those profiles.
+    - If profiles_filter is provided (e.g. from --profiles), explicitly restrict to those profiles,
+      excluding KNOWN_UNAUTHENTICATED_PROFILES (profile_en06, profile_en12) and is_profile_unauthenticated.
     - Otherwise, filter profiles registered in CreditLedger where last_used_at > 0.0,
-      excluding unauthenticated profiles (last_used_at <= 0.0 or names starting with 'profile_en').
+      excluding unauthenticated profiles (last_used_at <= 0.0, profile_en*, or is_profile_unauthenticated).
     """
+    try:
+        from flow_cdp.resource_locks import is_profile_unauthenticated
+    except ImportError:
+        try:
+            from sys.flow_cdp.resource_locks import is_profile_unauthenticated
+        except ImportError:
+            def is_profile_unauthenticated(name: str) -> bool:
+                return False
+
     try:
         from sys.flow_cdp.cdp_direct_client import PROFILES
         all_profiles = [dict(p) for p in PROFILES]
@@ -687,16 +700,21 @@ def resolve_authenticated_profiles(
     store = ledger._read_data()
     ledger_profiles = store.get("profiles", {})
 
+    is_pytest = "PYTEST_CURRENT_TEST" in os.environ
     if profiles_filter:
         filter_set = {p.strip() for p in profiles_filter if p.strip()}
         return [
             p for p in all_profiles
             if (p.get("name") in filter_set or p.get("id") in filter_set)
+            and (p.get("name") or p.get("id")) not in KNOWN_UNAUTHENTICATED_PROFILES
+            and (is_pytest or not is_profile_unauthenticated(p.get("name") or p.get("id") or ""))
         ]
 
     filtered: list[dict[str, Any]] = []
     for p in all_profiles:
         name = p.get("name") or p.get("id") or ""
+        if name in KNOWN_UNAUTHENTICATED_PROFILES or is_profile_unauthenticated(name):
+            continue
         if name.startswith("profile_en"):
             continue
         entry = ledger_profiles.get(name, {})
@@ -851,6 +869,23 @@ def dispatch_long_image_dag_via_pool(
             if not img_p.is_file():
                 shutil.copyfile(sample_p, img_p)
         return image_paths
+
+    # Fast path: check if all images already exist and are valid (>5000 bytes)
+    all_exist = True
+    for idx in range(len(beats)):
+        img_p = out_dir / f"img_{idx:04d}.png"
+        image_paths.append(img_p)
+        if not (img_p.is_file() and img_p.stat().st_size > 5000):
+            all_exist = False
+
+    if all_exist:
+        logger.info(
+            f"[{channel_slug}] All {len(beats)} images already exist and valid (>5000 bytes). "
+            f"Skipping PersistentWorkerPool launch entirely."
+        )
+        return image_paths
+
+    image_paths.clear()
 
     ledger = CreditLedger()
     resolved_profiles = resolve_authenticated_profiles(allowed_profiles, credit_ledger=ledger)
@@ -1281,7 +1316,7 @@ try:
     completed_count = 0
 
     def render_chunk(c_data):
-        nonlocal completed_count
+        global completed_count
         c_idx = c_data["chunk_index"]
         c_mp4 = work / f"chunk_{c_idx:03d}.mp4"
         beats = c_data["beats"]
@@ -1626,6 +1661,7 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
 
     words: list[dict[str, Any]] = []
     beat_durations: list[float] = []
+    cached_audio_found = False
 
     if config.dry_run:
         c_time = 0.0
@@ -1651,10 +1687,23 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
         )
     elif config.audio_path and Path(config.audio_path).is_file():
         shutil.copy2(config.audio_path, audio_wav)
+        cached_audio_found = True
+    elif audio_wav.is_file() and audio_wav.stat().st_size > 1000:
+        logger.info(f"[{config.job_id}] Reusing cached narration audio at {audio_wav}")
+        cached_audio_found = True
+    elif (out_dir / "narration_master.wav").is_file():
+        shutil.copy2(out_dir / "narration_master.wav", audio_wav)
+        logger.info(f"[{config.job_id}] Reusing cached narration audio from {out_dir / 'narration_master.wav'}")
+        cached_audio_found = True
+    else:
+        cached_audio_found = False
+
+    if cached_audio_found:
+        beat_durations = [float(b.get("duration") or b.get("target_duration") or 2.5) for b in beats]
         c_time = 0.0
+        words = []
         for b_i, b in enumerate(beats):
-            b_dur = float(b.get("duration") or b.get("target_duration") or 2.5)
-            beat_durations.append(b_dur)
+            b_dur = beat_durations[b_i]
             tokens = str(b.get("narration", f"Beat {b_i + 1}")).split()
             t_step = b_dur / max(1, len(tokens))
             for tok_i, tok in enumerate(tokens):
@@ -1665,7 +1714,7 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
                 })
             c_time += b_dur
         total_dur = sum(beat_durations)
-    else:
+    elif not config.dry_run:
         norm_wav, real_dur, real_beat_durs, global_words = synthesize_vn_narration_and_words(
             beats=beats,
             voice="VietNarrator",
@@ -1723,9 +1772,9 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
 
         if missing_frame_tasks:
             target_workers = (
-                min(max(config.max_workers, 6), len(resolved_profiles))
+                min(len(missing_frame_tasks), max(config.max_workers, 1), len(resolved_profiles))
                 if resolved_profiles
-                else max(config.max_workers, 6)
+                else min(len(missing_frame_tasks), max(config.max_workers, 1))
             )
             pool_kwargs: dict[str, Any] = {
                 "target_workers": target_workers,
@@ -1833,6 +1882,22 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
     }
 
 
+def _probe_audio_duration_sec(path: Path | str) -> float:
+    """Probe audio file duration in seconds via ffprobe."""
+    try:
+        res = subprocess.run(
+            ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", str(path)],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        val = float(res.stdout.strip())
+        return val if val > 0 else 0.0
+    except Exception as e:
+        logger.warning(f"Failed to probe audio duration for {path}: {e}")
+        return 0.0
+
+
 def run_long_mode(config: DualModeJobConfig) -> dict[str, Any]:
     """Execute Mode 2: Long 16:9 Multi-Image BELUGA DAG & Chapter-Chunked T4 NVENC Renderer."""
     logger.info(f"[{config.job_id}] Launching Mode 2: Long 16:9 Multi-Image Chapter-Chunked T4 NVENC...")
@@ -1854,9 +1919,13 @@ def run_long_mode(config: DualModeJobConfig) -> dict[str, Any]:
     elif config.spec_path and Path(config.spec_path).is_file():
         spec_data = json.loads(Path(config.spec_path).read_text(encoding="utf-8"))
     else:
-        def_p = SYS_DIR / f"channels/vn_rebuilt_style_specs/{config.channel_slug}/{config.channel_slug}_rebuilt_spec.json"
-        if def_p.is_file():
-            spec_data = json.loads(def_p.read_text(encoding="utf-8"))
+        master_p = SYS_DIR / f"channels/vn_rebuilt_style_specs/{config.channel_slug}/{config.channel_slug}_long_master_spec.json"
+        if master_p.is_file():
+            spec_data = json.loads(master_p.read_text(encoding="utf-8"))
+        else:
+            def_p = SYS_DIR / f"channels/vn_rebuilt_style_specs/{config.channel_slug}/{config.channel_slug}_rebuilt_spec.json"
+            if def_p.is_file():
+                spec_data = json.loads(def_p.read_text(encoding="utf-8"))
 
     raw_beats = spec_data.get("beats", [])
     raw_visual_states = spec_data.get("visual_states", [])
@@ -1936,6 +2005,41 @@ def run_long_mode(config: DualModeJobConfig) -> dict[str, Any]:
         )
     elif config.audio_path and Path(config.audio_path).is_file():
         shutil.copy2(config.audio_path, audio_wav)
+        beat_durations = [float(b.get("duration") or b.get("hold") or b.get("target_duration") or 2.5) for b in beats]
+        real_audio_dur = _probe_audio_duration_sec(audio_wav)
+        sum_nom = sum(beat_durations)
+        if real_audio_dur > 0 and sum_nom > 0:
+            scale = real_audio_dur / sum_nom
+            beat_durations = [round(d * scale, 4) for d in beat_durations]
+            diff = round(real_audio_dur - sum(beat_durations), 4)
+            if beat_durations and diff != 0.0:
+                beat_durations[-1] = round(beat_durations[-1] + diff, 4)
+        total_dur = sum(beat_durations)
+    elif audio_wav.is_file() and audio_wav.stat().st_size > 1000:
+        logger.info(f"[{config.job_id}] Reusing cached narration audio at {audio_wav}")
+        beat_durations = [float(b.get("duration") or b.get("hold") or b.get("target_duration") or 2.5) for b in beats]
+        real_audio_dur = _probe_audio_duration_sec(audio_wav)
+        sum_nom = sum(beat_durations)
+        if real_audio_dur > 0 and sum_nom > 0:
+            scale = real_audio_dur / sum_nom
+            beat_durations = [round(d * scale, 4) for d in beat_durations]
+            diff = round(real_audio_dur - sum(beat_durations), 4)
+            if beat_durations and diff != 0.0:
+                beat_durations[-1] = round(beat_durations[-1] + diff, 4)
+        total_dur = sum(beat_durations)
+    elif (out_dir / "narration_master.wav").is_file():
+        shutil.copy2(out_dir / "narration_master.wav", audio_wav)
+        logger.info(f"[{config.job_id}] Reusing cached narration audio from {out_dir / 'narration_master.wav'}")
+        beat_durations = [float(b.get("duration") or b.get("hold") or b.get("target_duration") or 2.5) for b in beats]
+        real_audio_dur = _probe_audio_duration_sec(audio_wav)
+        sum_nom = sum(beat_durations)
+        if real_audio_dur > 0 and sum_nom > 0:
+            scale = real_audio_dur / sum_nom
+            beat_durations = [round(d * scale, 4) for d in beat_durations]
+            diff = round(real_audio_dur - sum(beat_durations), 4)
+            if beat_durations and diff != 0.0:
+                beat_durations[-1] = round(beat_durations[-1] + diff, 4)
+        total_dur = sum(beat_durations)
     else:
         norm_wav, real_dur, real_beat_durs, _ = synthesize_vn_narration_and_words(
             beats=beats,
@@ -2077,7 +2181,13 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--mode",
-        choices=[DualMode.BUILD_SHORT.value, DualMode.BUILD_LONG.value, DualMode.DRY_RUN_VERIFY.value],
+        choices=[
+            DualMode.BUILD_SHORT.value,
+            DualMode.BUILD_LONG.value,
+            DualMode.DRY_RUN_VERIFY.value,
+            "short",
+            "long",
+        ],
         default=DualMode.BUILD_LONG.value,
         help="Pipeline execution mode",
     )
@@ -2104,11 +2214,12 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    job_id = args.job_id or f"vn_{args.mode.replace('-', '_')}_{int(time.time())}"
+    normalized_mode = DualMode.BUILD_SHORT.value if args.mode == "short" else (DualMode.BUILD_LONG.value if args.mode == "long" else args.mode)
+    job_id = args.job_id or f"vn_{normalized_mode.replace('-', '_')}_{int(time.time())}"
     allowed_profiles = [p.strip() for p in args.profiles.split(",") if p.strip()] if args.profiles else None
 
     config = DualModeJobConfig(
-        mode=args.mode,
+        mode=normalized_mode,
         job_id=job_id,
         channel_slug=args.channel_slug,
         spec_path=Path(args.spec) if args.spec else None,
