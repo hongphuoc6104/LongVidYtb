@@ -7,8 +7,8 @@
   "aspect": "9:16",
   "video_model": "omni_1_2_flash",
   "chain_mode": "scene_pairs",
-  "voice": "VietNarrator",
-  "total_duration_sec": 52.5,
+  "voice": "VietNarrator_vu_tru_ti_hon",
+  "total_duration_sec": 46.585,
   "youtube_title": "Điều Gì Xảy Ra Khi Rơi Vào Bên Trong Hố Đen?",
   "title": "Điều Gì Xảy Ra Khi Rơi Vào Bên Trong Hố Đen?",
   "thumbnail_spec": {
@@ -36,7 +36,7 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.11,
+      "duration": 3.07,
       "at": 0.0
     },
     {
@@ -47,8 +47,8 @@
       "camera_motion": "orbit_cw",
       "transition": "dissolve",
       "based_on": "S01",
-      "duration": 3.96,
-      "at": 4.11
+      "duration": 3.481,
+      "at": 3.07
     },
     {
       "id": "S03",
@@ -58,8 +58,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": "S02",
-      "duration": 3.98,
-      "at": 8.07
+      "duration": 3.632,
+      "at": 6.55
     },
     {
       "id": "S04",
@@ -69,8 +69,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.21,
-      "at": 12.05
+      "duration": 3.764,
+      "at": 10.18
     },
     {
       "id": "S05",
@@ -80,8 +80,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.08,
-      "at": 16.26
+      "duration": 3.469,
+      "at": 13.95
     },
     {
       "id": "S06",
@@ -91,8 +91,8 @@
       "camera_motion": "pan_down",
       "transition": "smoothdown",
       "based_on": "S05",
-      "duration": 3.91,
-      "at": 20.34
+      "duration": 3.32,
+      "at": 17.42
     },
     {
       "id": "S07",
@@ -102,8 +102,8 @@
       "camera_motion": "zoom_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.25,
-      "at": 24.25
+      "duration": 3.645,
+      "at": 20.74
     },
     {
       "id": "S08",
@@ -113,8 +113,8 @@
       "camera_motion": "orbit_cw",
       "transition": "dissolve",
       "based_on": "S07",
-      "duration": 4.22,
-      "at": 28.5
+      "duration": 3.792,
+      "at": 24.38
     },
     {
       "id": "S09",
@@ -124,8 +124,8 @@
       "camera_motion": "pan_right",
       "transition": "smoothright",
       "based_on": null,
-      "duration": 4.59,
-      "at": 32.72
+      "duration": 3.919,
+      "at": 28.17
     },
     {
       "id": "S10",
@@ -135,8 +135,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.86,
-      "at": 37.31
+      "duration": 3.523,
+      "at": 32.09
     },
     {
       "id": "S11",
@@ -146,8 +146,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.0,
-      "at": 41.17
+      "duration": 3.957,
+      "at": 35.62
     },
     {
       "id": "S12",
@@ -157,8 +157,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.25,
-      "at": 45.17
+      "duration": 3.819,
+      "at": 39.57
     },
     {
       "id": "S13",
@@ -168,8 +168,8 @@
       "camera_motion": "pan_up",
       "transition": "smoothup",
       "based_on": "S12",
-      "duration": 3.1,
-      "at": 49.42
+      "duration": 3.194,
+      "at": 43.39
     }
   ],
   "scene_pairs": [
@@ -177,7 +177,7 @@
       "id": "PAIR_01",
       "start_beat_id": "S01",
       "end_beat_id": "S02",
-      "target_duration": 4.11,
+      "target_duration": 3.07,
       "motion_prompt": "Slow majestic camera push-in toward the swirling black hole shadow, gravitational lensing bending background constellations with mathematically locked geometry, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -185,7 +185,7 @@
       "id": "PAIR_02",
       "start_beat_id": "S02",
       "end_beat_id": "S03",
-      "target_duration": 3.96,
+      "target_duration": 3.481,
       "motion_prompt": "Slow camera orbit around the photon sphere, revealing the dramatic distortion of distant galaxies curved into concentric optical rings, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -193,7 +193,7 @@
       "id": "PAIR_03",
       "start_beat_id": "S03",
       "end_beat_id": "S04",
-      "target_duration": 3.98,
+      "target_duration": 3.632,
       "motion_prompt": "Slow forward glide skimming the curved edge of absolute darkness, stellar light bending into an infinite crescent, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -201,7 +201,7 @@
       "id": "PAIR_04",
       "start_beat_id": "S04",
       "end_beat_id": "S05",
-      "target_duration": 4.21,
+      "target_duration": 3.764,
       "motion_prompt": "Slow steady zoom out from the probe viewport, red-shifted light fading into extreme infrared darkness, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -209,7 +209,7 @@
       "id": "PAIR_05",
       "start_beat_id": "S05",
       "end_beat_id": "S06",
-      "target_duration": 4.08,
+      "target_duration": 3.469,
       "motion_prompt": "Rapid forward dolly plunge into the dark interior, overhead sky disc shrinking and shifting toward intense violet light, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -217,7 +217,7 @@
       "id": "PAIR_06",
       "start_beat_id": "S06",
       "end_beat_id": "S07",
-      "target_duration": 3.91,
+      "target_duration": 3.32,
       "motion_prompt": "Slow tilt down following glowing filament particles elongating along gravitational geodesics, pure particle physics realism, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -225,7 +225,7 @@
       "id": "PAIR_07",
       "start_beat_id": "S07",
       "end_beat_id": "S08",
-      "target_duration": 4.25,
+      "target_duration": 3.645,
       "motion_prompt": "Slow camera push-in toward the pinpoint singularity, grid lines warping into infinite curvature with locked geometry, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -233,7 +233,7 @@
       "id": "PAIR_08",
       "start_beat_id": "S08",
       "end_beat_id": "S09",
-      "target_duration": 4.22,
+      "target_duration": 3.792,
       "motion_prompt": "Slow rotating pan across the inverted spacetime horizon, silent cosmic awe, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -241,7 +241,7 @@
       "id": "PAIR_09",
       "start_beat_id": "S09",
       "end_beat_id": "S10",
-      "target_duration": 4.59,
+      "target_duration": 3.919,
       "motion_prompt": "Slow lateral tracking pass along the boundary as quantum particles separate gracefully into deep space, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -249,7 +249,7 @@
       "id": "PAIR_10",
       "start_beat_id": "S10",
       "end_beat_id": "S11",
-      "target_duration": 3.86,
+      "target_duration": 3.523,
       "motion_prompt": "Slow sweeping pull-back revealing the immense spiral galaxy swirling silently in deep space, humbling cosmic scale, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -257,7 +257,7 @@
       "id": "PAIR_11",
       "start_beat_id": "S11",
       "end_beat_id": "S12",
-      "target_duration": 4.0,
+      "target_duration": 3.957,
       "motion_prompt": "Slow gentle dolly pullback from the solitary stargazer on the desert crest, millions of stars glistening silently overhead, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -265,7 +265,7 @@
       "id": "PAIR_12",
       "start_beat_id": "S12",
       "end_beat_id": "S13",
-      "target_duration": 4.25,
+      "target_duration": 3.819,
       "motion_prompt": "Slow smooth push-in toward the tablet screen displaying astrophysics simulation blueprints, warm observatory red night-light, zero morphing.",
       "mode": "boundary_extend"
     }
@@ -273,9 +273,10 @@
   "metadata": {
     "beats_count": 13,
     "pairs_count": 12,
-    "total_duration_sec": 52.5,
+    "total_duration_sec": 46.585,
     "youtube_title_length": 44,
     "bridge_syllables": 15,
     "close_syllables": 12
-  }
+  },
+  "voice_profile": "assets/voices/ch_vu_tru_ti_hon/profile.json"
 }

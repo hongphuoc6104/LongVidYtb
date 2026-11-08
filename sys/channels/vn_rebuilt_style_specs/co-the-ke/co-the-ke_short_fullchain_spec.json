@@ -7,8 +7,8 @@
   "aspect": "9:16",
   "video_model": "omni_1_2_flash",
   "chain_mode": "scene_pairs",
-  "voice": "VietNarrator",
-  "total_duration_sec": 49.5,
+  "voice": "VietNarrator_co_the_ke",
+  "total_duration_sec": 45.426,
   "youtube_title": "Dạ Dày Cầu Cứu: Điều Gì Xảy Ra Khi Bạn Ăn Đêm?",
   "title": "Dạ Dày Cầu Cứu: Điều Gì Xảy Ra Khi Bạn Ăn Đêm?",
   "thumbnail_spec": {
@@ -36,7 +36,7 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.75,
+      "duration": 3.094,
       "at": 0.0
     },
     {
@@ -47,8 +47,8 @@
       "camera_motion": "pan_right",
       "transition": "smoothright",
       "based_on": "S01",
-      "duration": 4.09,
-      "at": 3.75
+      "duration": 3.683,
+      "at": 3.09
     },
     {
       "id": "S03",
@@ -58,8 +58,8 @@
       "camera_motion": "zoom_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.9,
-      "at": 7.84
+      "duration": 3.385,
+      "at": 6.78
     },
     {
       "id": "S04",
@@ -69,8 +69,8 @@
       "camera_motion": "orbit_cw",
       "transition": "dissolve",
       "based_on": "S03",
-      "duration": 3.82,
-      "at": 11.74
+      "duration": 3.354,
+      "at": 10.16
     },
     {
       "id": "S05",
@@ -80,8 +80,8 @@
       "camera_motion": "pan_right",
       "transition": "smoothright",
       "based_on": null,
-      "duration": 3.38,
-      "at": 15.56
+      "duration": 3.575,
+      "at": 13.52
     },
     {
       "id": "S06",
@@ -91,8 +91,8 @@
       "camera_motion": "pan_up",
       "transition": "smoothup",
       "based_on": null,
-      "duration": 4.13,
-      "at": 18.94
+      "duration": 3.749,
+      "at": 17.09
     },
     {
       "id": "S07",
@@ -102,8 +102,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": "S06",
-      "duration": 3.71,
-      "at": 23.07
+      "duration": 3.68,
+      "at": 20.84
     },
     {
       "id": "S08",
@@ -113,8 +113,8 @@
       "camera_motion": "zoom_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.82,
-      "at": 26.78
+      "duration": 3.434,
+      "at": 24.52
     },
     {
       "id": "S09",
@@ -124,8 +124,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.26,
-      "at": 30.6
+      "duration": 3.62,
+      "at": 27.95
     },
     {
       "id": "S10",
@@ -135,8 +135,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.5,
-      "at": 34.86
+      "duration": 3.507,
+      "at": 31.57
     },
     {
       "id": "S11",
@@ -146,8 +146,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.63,
-      "at": 38.36
+      "duration": 3.385,
+      "at": 35.08
     },
     {
       "id": "S12",
@@ -157,8 +157,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.25,
-      "at": 41.99
+      "duration": 3.888,
+      "at": 38.47
     },
     {
       "id": "S13",
@@ -168,8 +168,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": "S12",
-      "duration": 3.27,
-      "at": 46.24
+      "duration": 3.072,
+      "at": 42.35
     }
   ],
   "scene_pairs": [
@@ -177,7 +177,7 @@
       "id": "PAIR_01",
       "start_beat_id": "S01",
       "end_beat_id": "S02",
-      "target_duration": 3.75,
+      "target_duration": 3.094,
       "motion_prompt": "Slow smooth 35mm endoscopic push-in through the gastric cavity, natural physiological peristalsis movement with locked anatomical geometry, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -185,7 +185,7 @@
       "id": "PAIR_02",
       "start_beat_id": "S02",
       "end_beat_id": "S03",
-      "target_duration": 4.09,
+      "target_duration": 3.683,
       "motion_prompt": "Steady endoscopic tracking pass along the curving stomach wall, mucosal folds flexing under realistic biological elasticity, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -193,7 +193,7 @@
       "id": "PAIR_03",
       "start_beat_id": "S03",
       "end_beat_id": "S04",
-      "target_duration": 3.9,
+      "target_duration": 3.385,
       "motion_prompt": "Precision macro push-in on the gland pores secreting clear droplets, pristine biomedical fluid dynamics, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -201,7 +201,7 @@
       "id": "PAIR_04",
       "start_beat_id": "S04",
       "end_beat_id": "S05",
-      "target_duration": 3.82,
+      "target_duration": 3.354,
       "motion_prompt": "Slow camera orbit around the bubbling digestive fluid, soft luminous highlights on acid droplets, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -209,7 +209,7 @@
       "id": "PAIR_05",
       "start_beat_id": "S05",
       "end_beat_id": "S06",
-      "target_duration": 3.38,
+      "target_duration": 3.575,
       "motion_prompt": "Slow lateral slide along the mucosal boundary, cellular wall holding firm with locked geometry, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -217,7 +217,7 @@
       "id": "PAIR_06",
       "start_beat_id": "S06",
       "end_beat_id": "S07",
-      "target_duration": 4.13,
+      "target_duration": 3.749,
       "motion_prompt": "Slow tilt up from the stomach fundus toward the relaxed esophageal sphincter, realistic biological motion, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -225,7 +225,7 @@
       "id": "PAIR_07",
       "start_beat_id": "S07",
       "end_beat_id": "S08",
-      "target_duration": 3.71,
+      "target_duration": 3.68,
       "motion_prompt": "Slow forward tracking through the esophageal lumen, realistic tissue elasticity under clinical inspection light, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -233,7 +233,7 @@
       "id": "PAIR_08",
       "start_beat_id": "S08",
       "end_beat_id": "S09",
-      "target_duration": 3.82,
+      "target_duration": 3.434,
       "motion_prompt": "Slow zoom in on the cellular grid structure, soft green and blue biomedical fluorophores, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -241,7 +241,7 @@
       "id": "PAIR_09",
       "start_beat_id": "S09",
       "end_beat_id": "S10",
-      "target_duration": 4.26,
+      "target_duration": 3.62,
       "motion_prompt": "Slow dolly pullback from the half-eaten bowl, dim kitchen shadows stretching across table, solitary mood, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -249,7 +249,7 @@
       "id": "PAIR_10",
       "start_beat_id": "S10",
       "end_beat_id": "S11",
-      "target_duration": 3.5,
+      "target_duration": 3.507,
       "motion_prompt": "Slow graceful push-in through the peaceful rested gastric lumen, calm mucosal glow, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -257,7 +257,7 @@
       "id": "PAIR_11",
       "start_beat_id": "S11",
       "end_beat_id": "S12",
-      "target_duration": 3.63,
+      "target_duration": 3.385,
       "motion_prompt": "Slow gentle dolly pullback as clear water fills the cup, bright morning warmth and vibrant health aesthetic, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -265,7 +265,7 @@
       "id": "PAIR_12",
       "start_beat_id": "S12",
       "end_beat_id": "S13",
-      "target_duration": 4.25,
+      "target_duration": 3.888,
       "motion_prompt": "Slow smooth push-in toward the tablet display and organized wellness guide, warm daytime studio lighting, zero morphing.",
       "mode": "boundary_extend"
     }
@@ -273,9 +273,10 @@
   "metadata": {
     "beats_count": 13,
     "pairs_count": 12,
-    "total_duration_sec": 49.5,
+    "total_duration_sec": 45.426,
     "youtube_title_length": 46,
     "bridge_syllables": 16,
     "close_syllables": 13
-  }
+  },
+  "voice_profile": "assets/voices/ch_co_the_ke/profile.json"
 }

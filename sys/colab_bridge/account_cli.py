@@ -59,7 +59,17 @@ def main():
     auth.TOKEN_CONFIG_PATH = str(folder / "token.json")
     state._history = HistoryLogger(str(folder / "history"))
     sys.argv = ["colab", "--auth", "oauth2", "--config", str(folder / "sessions.json"), *args]
-    run()
+    code = 0
+    try:
+        res = run()
+        if isinstance(res, int):
+            code = res
+    except SystemExit as exc:
+        code = exc.code if isinstance(exc.code, int) else (1 if exc.code else 0)
+    finally:
+        sys.stdout.flush()
+        sys.stderr.flush()
+    os._exit(code)
 
 
 if __name__ == "__main__":

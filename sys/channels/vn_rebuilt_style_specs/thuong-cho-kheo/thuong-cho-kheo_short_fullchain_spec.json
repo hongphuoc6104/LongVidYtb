@@ -7,8 +7,8 @@
   "aspect": "9:16",
   "video_model": "omni_1_2_flash",
   "chain_mode": "scene_pairs",
-  "voice": "VietNarrator",
-  "total_duration_sec": 47.94,
+  "voice": "VietNarrator_thuong_cho_kheo",
+  "total_duration_sec": 38.233,
   "youtube_title": "Nghệ Thuật Lắng Nghe Để Thấu Hiểu Trọn Vẹn Người Khác",
   "title": "Nghệ Thuật Lắng Nghe Để Thấu Hiểu Trọn Vẹn Người Khác",
   "thumbnail_spec": {
@@ -36,7 +36,7 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.83,
+      "duration": 2.848,
       "at": 0.0
     },
     {
@@ -47,8 +47,8 @@
       "camera_motion": "zoom_in",
       "transition": "fade",
       "based_on": "S01",
-      "duration": 3.63,
-      "at": 3.83
+      "duration": 3.066,
+      "at": 2.85
     },
     {
       "id": "S03",
@@ -58,8 +58,8 @@
       "camera_motion": "pan_right",
       "transition": "smoothright",
       "based_on": null,
-      "duration": 4.01,
-      "at": 7.46
+      "duration": 3.189,
+      "at": 5.91
     },
     {
       "id": "S04",
@@ -69,8 +69,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": "S03",
-      "duration": 3.6,
-      "at": 11.47
+      "duration": 2.94,
+      "at": 9.1
     },
     {
       "id": "S05",
@@ -80,8 +80,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.61,
-      "at": 15.07
+      "duration": 2.911,
+      "at": 12.04
     },
     {
       "id": "S06",
@@ -91,8 +91,8 @@
       "camera_motion": "zoom_in",
       "transition": "fade",
       "based_on": "S05",
-      "duration": 3.54,
-      "at": 18.68
+      "duration": 2.667,
+      "at": 14.95
     },
     {
       "id": "S07",
@@ -102,8 +102,8 @@
       "camera_motion": "pan_left",
       "transition": "smoothleft",
       "based_on": null,
-      "duration": 4.0,
-      "at": 22.22
+      "duration": 2.769,
+      "at": 17.62
     },
     {
       "id": "S08",
@@ -113,8 +113,8 @@
       "camera_motion": "pan_up",
       "transition": "smoothup",
       "based_on": null,
-      "duration": 3.9,
-      "at": 26.22
+      "duration": 3.126,
+      "at": 20.39
     },
     {
       "id": "S09",
@@ -124,8 +124,8 @@
       "camera_motion": "pan_right",
       "transition": "smoothright",
       "based_on": null,
-      "duration": 3.36,
-      "at": 30.12
+      "duration": 2.963,
+      "at": 23.52
     },
     {
       "id": "S10",
@@ -135,8 +135,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.81,
-      "at": 33.48
+      "duration": 2.887,
+      "at": 26.48
     },
     {
       "id": "S11",
@@ -146,8 +146,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.6,
-      "at": 37.29
+      "duration": 2.858,
+      "at": 29.37
     },
     {
       "id": "S12",
@@ -157,8 +157,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.94,
-      "at": 40.89
+      "duration": 3.118,
+      "at": 32.22
     },
     {
       "id": "S13",
@@ -168,8 +168,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": "S12",
-      "duration": 3.12,
-      "at": 44.83
+      "duration": 2.891,
+      "at": 35.34
     }
   ],
   "scene_pairs": [
@@ -177,7 +177,7 @@
       "id": "PAIR_01",
       "start_beat_id": "S01",
       "end_beat_id": "S02",
-      "target_duration": 3.83,
+      "target_duration": 2.848,
       "motion_prompt": "Slow smooth 35mm dolly push-in toward the contemplative figure beside the window, soft golden-hour shadows stretching across wooden floor, locked geometry, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -185,7 +185,7 @@
       "id": "PAIR_02",
       "start_beat_id": "S02",
       "end_beat_id": "S03",
-      "target_duration": 3.63,
+      "target_duration": 3.066,
       "motion_prompt": "Slow optical rack focus from the ceramic mug to the delicate steam drifting into the warm air, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -193,7 +193,7 @@
       "id": "PAIR_03",
       "start_beat_id": "S03",
       "end_beat_id": "S04",
-      "target_duration": 4.01,
+      "target_duration": 3.189,
       "motion_prompt": "Slow lateral tracking pass along the coffee table, capturing the genuine emotional presence between the two people, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -201,7 +201,7 @@
       "id": "PAIR_04",
       "start_beat_id": "S04",
       "end_beat_id": "S05",
-      "target_duration": 3.6,
+      "target_duration": 2.94,
       "motion_prompt": "Slow gentle push-in as hand reaches across table with tender reassurance, warm natural daylight, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -209,7 +209,7 @@
       "id": "PAIR_05",
       "start_beat_id": "S05",
       "end_beat_id": "S06",
-      "target_duration": 3.61,
+      "target_duration": 2.911,
       "motion_prompt": "Slow subtle push-in on the compassionate expression, authentic emotional warmth, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -217,7 +217,7 @@
       "id": "PAIR_06",
       "start_beat_id": "S06",
       "end_beat_id": "S07",
-      "target_duration": 3.54,
+      "target_duration": 2.667,
       "motion_prompt": "Slow optical push-in toward the expressive eyes, delicate eyelid movement and natural breathing, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -225,7 +225,7 @@
       "id": "PAIR_07",
       "start_beat_id": "S07",
       "end_beat_id": "S08",
-      "target_duration": 4.0,
+      "target_duration": 2.769,
       "motion_prompt": "Slow tracking move alongside the bench capturing the gentle nod and comforting silence, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -233,7 +233,7 @@
       "id": "PAIR_08",
       "start_beat_id": "S08",
       "end_beat_id": "S09",
-      "target_duration": 3.9,
+      "target_duration": 3.126,
       "motion_prompt": "Slow tilt up along the healed leaf surface, dew droplets catching rainbow prism rays, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -241,7 +241,7 @@
       "id": "PAIR_09",
       "start_beat_id": "S09",
       "end_beat_id": "S10",
-      "target_duration": 3.36,
+      "target_duration": 2.963,
       "motion_prompt": "Slow sweeping lateral slide across the colorful wildflower garden swaying gently in summer breeze, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -249,7 +249,7 @@
       "id": "PAIR_10",
       "start_beat_id": "S10",
       "end_beat_id": "S11",
-      "target_duration": 3.81,
+      "target_duration": 2.887,
       "motion_prompt": "Slow graceful pullback revealing the safe, warm shelter of the cozy hearth, soothing ambiance, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -257,7 +257,7 @@
       "id": "PAIR_11",
       "start_beat_id": "S11",
       "end_beat_id": "S12",
-      "target_duration": 3.6,
+      "target_duration": 2.858,
       "motion_prompt": "Slow tracking shot from behind the two walking companions toward the glowing sunset horizon, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -265,7 +265,7 @@
       "id": "PAIR_12",
       "start_beat_id": "S12",
       "end_beat_id": "S13",
-      "target_duration": 3.94,
+      "target_duration": 3.118,
       "motion_prompt": "Slow smooth push-in toward the tablet screen and journal, warm ambient lamp glow, zero morphing.",
       "mode": "boundary_extend"
     }
@@ -273,9 +273,10 @@
   "metadata": {
     "beats_count": 13,
     "pairs_count": 12,
-    "total_duration_sec": 47.94,
+    "total_duration_sec": 38.233,
     "youtube_title_length": 53,
     "bridge_syllables": 14,
     "close_syllables": 13
-  }
+  },
+  "voice_profile": "assets/voices/ch_thuong_cho_kheo/profile.json"
 }

@@ -7,8 +7,8 @@
   "aspect": "9:16",
   "video_model": "omni_1_2_flash",
   "chain_mode": "scene_pairs",
-  "voice": "VietNarrator",
-  "total_duration_sec": 49.17,
+  "voice": "VietNarrator_luat_ngam",
+  "total_duration_sec": 39.348,
   "youtube_title": "Quy Luật Ngầm Điều Khiển Hành Vi Của Đám Đông",
   "title": "Quy Luật Ngầm Điều Khiển Hành Vi Của Đám Đông",
   "thumbnail_spec": {
@@ -36,7 +36,7 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.71,
+      "duration": 2.861,
       "at": 0.0
     },
     {
@@ -47,8 +47,8 @@
       "camera_motion": "orbit_cw",
       "transition": "dissolve",
       "based_on": "S01",
-      "duration": 3.75,
-      "at": 3.71
+      "duration": 3.157,
+      "at": 2.86
     },
     {
       "id": "S03",
@@ -58,8 +58,8 @@
       "camera_motion": "pan_right",
       "transition": "smoothright",
       "based_on": null,
-      "duration": 3.69,
-      "at": 7.46
+      "duration": 3.095,
+      "at": 6.02
     },
     {
       "id": "S04",
@@ -69,8 +69,8 @@
       "camera_motion": "pan_up",
       "transition": "smoothup",
       "based_on": null,
-      "duration": 3.66,
-      "at": 11.15
+      "duration": 2.761,
+      "at": 9.11
     },
     {
       "id": "S05",
@@ -80,8 +80,8 @@
       "camera_motion": "pan_up",
       "transition": "smoothup",
       "based_on": "S04",
-      "duration": 4.0,
-      "at": 14.81
+      "duration": 3.312,
+      "at": 11.87
     },
     {
       "id": "S06",
@@ -91,8 +91,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.78,
-      "at": 18.81
+      "duration": 3.119,
+      "at": 15.19
     },
     {
       "id": "S07",
@@ -102,8 +102,8 @@
       "camera_motion": "pan_right",
       "transition": "smoothright",
       "based_on": "S06",
-      "duration": 4.13,
-      "at": 22.59
+      "duration": 3.385,
+      "at": 18.31
     },
     {
       "id": "S08",
@@ -113,8 +113,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.13,
-      "at": 26.72
+      "duration": 3.351,
+      "at": 21.69
     },
     {
       "id": "S09",
@@ -124,8 +124,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": "S08",
-      "duration": 3.75,
-      "at": 30.85
+      "duration": 2.953,
+      "at": 25.04
     },
     {
       "id": "S10",
@@ -135,8 +135,8 @@
       "camera_motion": "pan_left",
       "transition": "smoothleft",
       "based_on": "S09",
-      "duration": 3.36,
-      "at": 34.6
+      "duration": 2.772,
+      "at": 27.99
     },
     {
       "id": "S11",
@@ -146,8 +146,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.91,
-      "at": 37.96
+      "duration": 2.875,
+      "at": 30.77
     },
     {
       "id": "S12",
@@ -157,8 +157,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.21,
-      "at": 41.87
+      "duration": 3.058,
+      "at": 33.64
     },
     {
       "id": "S13",
@@ -168,8 +168,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": "S12",
-      "duration": 3.11,
-      "at": 46.08
+      "duration": 2.649,
+      "at": 36.7
     }
   ],
   "scene_pairs": [
@@ -177,7 +177,7 @@
       "id": "PAIR_01",
       "start_beat_id": "S01",
       "end_beat_id": "S02",
-      "target_duration": 3.71,
+      "target_duration": 2.861,
       "motion_prompt": "Slow smooth 35mm overhead crane push-in toward the central dining area, customers moving in natural fluid paths under warm spotlights, locked geometry, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -185,7 +185,7 @@
       "id": "PAIR_02",
       "start_beat_id": "S02",
       "end_beat_id": "S03",
-      "target_duration": 3.75,
+      "target_duration": 3.157,
       "motion_prompt": "Slow camera orbit around the isometric cutaway model, revealing subtle geometric floor partitions and directional lighting, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -193,7 +193,7 @@
       "id": "PAIR_03",
       "start_beat_id": "S03",
       "end_beat_id": "S04",
-      "target_duration": 3.69,
+      "target_duration": 3.095,
       "motion_prompt": "Low-angle lateral tracking pass alongside moving footwear on polished marble, crisp specular reflections, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -201,7 +201,7 @@
       "id": "PAIR_04",
       "start_beat_id": "S04",
       "end_beat_id": "S05",
-      "target_duration": 3.66,
+      "target_duration": 2.761,
       "motion_prompt": "Slow vertical pedestal rise capturing the collective gaze of the crowd on the plaza, locked architectural perspective, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -209,7 +209,7 @@
       "id": "PAIR_05",
       "start_beat_id": "S05",
       "end_beat_id": "S06",
-      "target_duration": 4.0,
+      "target_duration": 3.312,
       "motion_prompt": "Smooth upward tilt toward the glass dome ceiling, following the synchronized angle of looking up, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -217,7 +217,7 @@
       "id": "PAIR_06",
       "start_beat_id": "S06",
       "end_beat_id": "S07",
-      "target_duration": 3.78,
+      "target_duration": 3.119,
       "motion_prompt": "Slow macro push-in across the curved miniature partitions on the blueprint, warm directional spotlight, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -225,7 +225,7 @@
       "id": "PAIR_07",
       "start_beat_id": "S07",
       "end_beat_id": "S08",
-      "target_duration": 4.13,
+      "target_duration": 3.385,
       "motion_prompt": "Steady eye-level tracking pass along the illuminated display shelf, glistening surfaces under spotlight, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -233,7 +233,7 @@
       "id": "PAIR_08",
       "start_beat_id": "S08",
       "end_beat_id": "S09",
-      "target_duration": 4.13,
+      "target_duration": 3.351,
       "motion_prompt": "Slow high-angle zoom out revealing the massive geometric flow of the terminal concourse, steady mechanical order, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -241,7 +241,7 @@
       "id": "PAIR_09",
       "start_beat_id": "S09",
       "end_beat_id": "S10",
-      "target_duration": 3.75,
+      "target_duration": 2.953,
       "motion_prompt": "Slow optical rack focus highlighting the still person as the crowd gently streams past on both sides, quiet defiance mood, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -249,7 +249,7 @@
       "id": "PAIR_10",
       "start_beat_id": "S10",
       "end_beat_id": "S11",
-      "target_duration": 3.36,
+      "target_duration": 2.772,
       "motion_prompt": "Slow lateral pan from the moving crowd onto the tranquil granite terrace, soft natural morning sunlight, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -257,7 +257,7 @@
       "id": "PAIR_11",
       "start_beat_id": "S11",
       "end_beat_id": "S12",
-      "target_duration": 3.91,
+      "target_duration": 2.875,
       "motion_prompt": "Slow graceful pullback revealing the vast quiet library interior around the thoughtful observer, serene intellectual clarity, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -265,7 +265,7 @@
       "id": "PAIR_12",
       "start_beat_id": "S12",
       "end_beat_id": "S13",
-      "target_duration": 4.21,
+      "target_duration": 3.058,
       "motion_prompt": "Slow smooth push-in toward the tablet display and eyeglasses on slate counter, warm ambient study lighting, zero morphing.",
       "mode": "boundary_extend"
     }
@@ -273,9 +273,10 @@
   "metadata": {
     "beats_count": 13,
     "pairs_count": 12,
-    "total_duration_sec": 49.17,
+    "total_duration_sec": 39.348,
     "youtube_title_length": 45,
     "bridge_syllables": 15,
     "close_syllables": 12
-  }
+  },
+  "voice_profile": "assets/voices/ch_luat_ngam/profile.json"
 }

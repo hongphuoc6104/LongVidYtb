@@ -7,8 +7,8 @@
   "aspect": "9:16",
   "video_model": "omni_1_2_flash",
   "chain_mode": "scene_pairs",
-  "voice": "VietNarrator",
-  "total_duration_sec": 51.07,
+  "voice": "VietNarrator_ua_sao_vay",
+  "total_duration_sec": 49.997,
   "youtube_title": "Tại Sao Mắt Bạn Tự Động Nhắm Khi Giật Mình?",
   "title": "Tại Sao Mắt Bạn Tự Động Nhắm Khi Giật Mình?",
   "thumbnail_spec": {
@@ -36,7 +36,7 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.98,
+      "duration": 3.44,
       "at": 0.0
     },
     {
@@ -47,8 +47,8 @@
       "camera_motion": "pan_right",
       "transition": "smoothright",
       "based_on": "S01",
-      "duration": 3.9,
-      "at": 3.98
+      "duration": 3.829,
+      "at": 3.44
     },
     {
       "id": "S03",
@@ -58,8 +58,8 @@
       "camera_motion": "orbit_cw",
       "transition": "dissolve",
       "based_on": null,
-      "duration": 4.12,
-      "at": 7.88
+      "duration": 4.06,
+      "at": 7.27
     },
     {
       "id": "S04",
@@ -69,8 +69,8 @@
       "camera_motion": "pan_down",
       "transition": "smoothdown",
       "based_on": "S03",
-      "duration": 3.73,
-      "at": 12.0
+      "duration": 3.991,
+      "at": 11.33
     },
     {
       "id": "S05",
@@ -80,8 +80,8 @@
       "camera_motion": "zoom_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.88,
-      "at": 15.73
+      "duration": 3.702,
+      "at": 15.32
     },
     {
       "id": "S06",
@@ -91,8 +91,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": "S05",
-      "duration": 4.06,
-      "at": 19.61
+      "duration": 4.008,
+      "at": 19.02
     },
     {
       "id": "S07",
@@ -102,8 +102,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.41,
-      "at": 23.67
+      "duration": 3.807,
+      "at": 23.03
     },
     {
       "id": "S08",
@@ -113,8 +113,8 @@
       "camera_motion": "pan_down",
       "transition": "smoothdown",
       "based_on": null,
-      "duration": 3.76,
-      "at": 28.08
+      "duration": 3.796,
+      "at": 26.84
     },
     {
       "id": "S09",
@@ -124,8 +124,8 @@
       "camera_motion": "pan_right",
       "transition": "smoothright",
       "based_on": null,
-      "duration": 3.96,
-      "at": 31.84
+      "duration": 3.681,
+      "at": 30.63
     },
     {
       "id": "S10",
@@ -135,8 +135,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.88,
-      "at": 35.8
+      "duration": 4.166,
+      "at": 34.31
     },
     {
       "id": "S11",
@@ -146,8 +146,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": "S10",
-      "duration": 3.9,
-      "at": 39.68
+      "duration": 3.891,
+      "at": 38.48
     },
     {
       "id": "S12",
@@ -157,8 +157,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.21,
-      "at": 43.58
+      "duration": 3.753,
+      "at": 42.37
     },
     {
       "id": "S13",
@@ -168,8 +168,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": "S12",
-      "duration": 3.29,
-      "at": 47.79
+      "duration": 3.873,
+      "at": 46.12
     }
   ],
   "scene_pairs": [
@@ -177,7 +177,7 @@
       "id": "PAIR_01",
       "start_beat_id": "S01",
       "end_beat_id": "S02",
-      "target_duration": 3.98,
+      "target_duration": 3.44,
       "motion_prompt": "Slow-motion macro push-in toward the eye as the upper eyelid begins its rapid downward reflex, pristine ocular specular highlight, locked anatomy, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -185,7 +185,7 @@
       "id": "PAIR_02",
       "start_beat_id": "S02",
       "end_beat_id": "S03",
-      "target_duration": 3.9,
+      "target_duration": 3.829,
       "motion_prompt": "Precision lateral tracking pass across the closed eyelid curve, showing soft skin texture and lash barrier, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -193,7 +193,7 @@
       "id": "PAIR_03",
       "start_beat_id": "S03",
       "end_beat_id": "S04",
-      "target_duration": 4.12,
+      "target_duration": 4.06,
       "motion_prompt": "Slow camera orbit around the transparent corneal dome, light refracting gently through optical layers, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -201,7 +201,7 @@
       "id": "PAIR_04",
       "start_beat_id": "S04",
       "end_beat_id": "S05",
-      "target_duration": 3.73,
+      "target_duration": 3.991,
       "motion_prompt": "Rapid smooth tracking move following the luminescent electrical impulse along the nerve pathway, clean dark-field microscopy aesthetic, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -209,7 +209,7 @@
       "id": "PAIR_05",
       "start_beat_id": "S05",
       "end_beat_id": "S06",
-      "target_duration": 3.88,
+      "target_duration": 3.702,
       "motion_prompt": "Macro push-in on the circular muscle fibers contracting inward with realistic biological elasticity, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -217,7 +217,7 @@
       "id": "PAIR_06",
       "start_beat_id": "S06",
       "end_beat_id": "S07",
-      "target_duration": 4.06,
+      "target_duration": 4.008,
       "motion_prompt": "Ultra slow-motion capture of micro droplets deflecting away from the eyelid skin, glistening liquid physics, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -225,7 +225,7 @@
       "id": "PAIR_07",
       "start_beat_id": "S07",
       "end_beat_id": "S08",
-      "target_duration": 4.41,
+      "target_duration": 3.807,
       "motion_prompt": "Slow steady push-in on the person face capturing the involuntary micro-expression as the reflex takes over, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -233,7 +233,7 @@
       "id": "PAIR_08",
       "start_beat_id": "S08",
       "end_beat_id": "S09",
-      "target_duration": 3.76,
+      "target_duration": 3.796,
       "motion_prompt": "Slow vertical tilt down along the glowing spinal column reflex pathways, soft amber luminescence, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -241,7 +241,7 @@
       "id": "PAIR_09",
       "start_beat_id": "S09",
       "end_beat_id": "S10",
-      "target_duration": 3.96,
+      "target_duration": 3.681,
       "motion_prompt": "Slow lateral slide from the ancient spiral shell to the precision optical lens, timeless evolutionary mood, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -249,7 +249,7 @@
       "id": "PAIR_10",
       "start_beat_id": "S10",
       "end_beat_id": "S11",
-      "target_duration": 3.88,
+      "target_duration": 4.166,
       "motion_prompt": "Slow gentle dolly pullback as the person opens eyes with peaceful awareness, golden sun flare through green leaves, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -257,7 +257,7 @@
       "id": "PAIR_11",
       "start_beat_id": "S11",
       "end_beat_id": "S12",
-      "target_duration": 3.9,
+      "target_duration": 3.891,
       "motion_prompt": "Slow push-in toward the hand in golden sunlight, soft warmth and tactile human presence, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -265,7 +265,7 @@
       "id": "PAIR_12",
       "start_beat_id": "S12",
       "end_beat_id": "S13",
-      "target_duration": 4.21,
+      "target_duration": 3.753,
       "motion_prompt": "Slow smooth push-in toward the tablet screen and sketchbook on the wooden desk, warm evening ambiance, zero morphing.",
       "mode": "boundary_extend"
     }
@@ -273,9 +273,10 @@
   "metadata": {
     "beats_count": 13,
     "pairs_count": 12,
-    "total_duration_sec": 51.07,
+    "total_duration_sec": 49.997,
     "youtube_title_length": 43,
     "bridge_syllables": 15,
     "close_syllables": 13
-  }
+  },
+  "voice_profile": "assets/voices/ch_ua_sao_vay/profile.json"
 }

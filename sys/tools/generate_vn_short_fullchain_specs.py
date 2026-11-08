@@ -17,7 +17,6 @@ from __future__ import annotations
 import json
 import logging
 import re
-import shutil
 import sys
 from pathlib import Path
 from typing import Any, Dict, List
@@ -28,12 +27,6 @@ if str(SYS_DIR) not in sys.path:
     sys.path.insert(0, str(SYS_DIR))
 
 import channels.vn_flow_video_formulas as vf
-from tools.produce_vn_dual_mode import (
-    build_clean_sidecar_srt,
-    build_vn_kinetic_ass_subtitles,
-    make_rounded_watermark,
-    synthesize_vn_narration_and_words,
-)
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("fleet_architect_shorts")
@@ -2564,15 +2557,27 @@ def process_channel(raw: Dict[str, Any], dry_tts: bool = False) -> Dict[str, Any
     work_dir.mkdir(parents=True, exist_ok=True)
 
     master_wav = video_dir / "narration_master.wav"
-    work_wav = work_dir / "narration.wav"
-    ass_path = work_dir / "subtitles_kinetic_9x16.ass"
-    srt_path = work_dir / "subtitles.srt"
-    watermark_png = work_dir / "watermark_100x100.png"
+    work_dir / "narration.wav"
+    work_dir / "subtitles_kinetic_9x16.ass"
+    work_dir / "subtitles.srt"
+    work_dir / "watermark_100x100.png"
     aligned_spec_file = video_dir / f"{slug_u}_short_aligned_spec.json"
 
-    # Fast cache check: if audio and spec are already present (>100KB), reuse and skip TTS
+    # Resolve authentic Studio V3 voice profile
+    ch_id = slug.replace("-", "_")
+    voices_dir = SYS_DIR / "assets/voices"
+    prof_file = voices_dir / f"ch_{ch_id}" / "profile.json"
+    if prof_file.is_file():
+        prof_data = json.loads(prof_file.read_text(encoding="utf-8"))
+        canonical_voice = prof_data.get("voice", f"VietNarrator_{ch_id}")
+    else:
+        canonical_voice = f"VietNarrator_{ch_id}"
+    spec["voice"] = canonical_voice
+    spec["voice_profile"] = f"assets/voices/ch_{ch_id}/profile.json"
+
+    # Fast cache check: if authentic Studio V3 OmniVoice audio is present, reuse and skip TTS
     if master_wav.is_file() and master_wav.stat().st_size > 100_000 and spec_file.is_file():
-        logger.info(f"[{slug}] Reusing cached audio ({master_wav.stat().st_size} bytes) and spec at {spec_file}")
+        logger.info(f"[{slug}] Reusing cached Studio V3 OmniVoice audio ({master_wav.stat().st_size} bytes) and spec at {spec_file}")
         cached_spec = json.loads(spec_file.read_text(encoding="utf-8"))
         words_count = 0
         if aligned_spec_file.is_file():
@@ -2587,58 +2592,18 @@ def process_channel(raw: Dict[str, Any], dry_tts: bool = False) -> Dict[str, Any
             "words_count": words_count,
         }
 
-    # Synthesize audio with edge-tts VietNarrator
-    logger.info(f"[{slug}] Synthesizing narration audio with VietNarrator...")
-    tts_work_dir = work_dir / "_tts_work"
-    norm_wav, real_total_dur, beat_durs, global_words = synthesize_vn_narration_and_words(
-        beats=spec["beats"],
-        voice="VietNarrator",
-        audio_dir=tts_work_dir,
-    )
-
-    # Copy normalized wav to both master and work paths
-    shutil.copy2(norm_wav, master_wav)
-    shutil.copy2(norm_wav, work_wav)
-    logger.info(f"[{slug}] Cached audio to {master_wav} ({master_wav.stat().st_size} bytes, {real_total_dur:.2f}s)")
-
-    # Build kinetic ASS and sidecar SRT
-    build_vn_kinetic_ass_subtitles(global_words, real_total_dur, ass_path, margin_v=270, outline=6)
-    build_clean_sidecar_srt(spec["beats"], beat_durs, real_total_dur, srt_path)
-    make_rounded_watermark(None, watermark_png, size=100, opacity=0.92, radius=15)
-
-    # Update spec with exact measured durations
-    spec["total_duration_sec"] = round(real_total_dur, 2)
-    spec["metadata"]["total_duration_sec"] = round(real_total_dur, 2)
-    cur_t = 0.0
-    for i, b in enumerate(spec["beats"]):
-        b_dur = round(beat_durs[i], 2)
-        b["duration"] = b_dur
-        b["at"] = round(cur_t, 2)
-        cur_t += b_dur
-
-    # Update scene pairs target durations
-    for i, p in enumerate(spec["scene_pairs"]):
-        if i < len(beat_durs):
-            p["target_duration"] = round(beat_durs[i], 2)
-
-    # Write spec file
-    spec_file.write_text(json.dumps(spec, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    logger.info(f"[{slug}] Saved updated spec to {spec_file}")
-
-    # Write aligned spec file with words
-    aligned_data = dict(spec)
-    aligned_data["words"] = global_words
-    aligned_data["beat_durations"] = [round(d, 2) for d in beat_durs]
-    aligned_spec_file.write_text(json.dumps(aligned_data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    logger.info(f"[{slug}] Saved aligned spec to {aligned_spec_file}")
-
+    # Synthesize audio with Colab Tesla T4 GPU OmniVoice
+    logger.info(f"[{slug}] Synthesizing narration audio with Colab T4 OmniVoice ({canonical_voice})...")
+    from tools.batch_colab_omnivoice_shorts import run_batch_synthesis_on_colab
+    res = run_batch_synthesis_on_colab([slug])
+    completed_info = res["channels_completed"][0]
     return {
         "slug": slug,
         "spec_file": str(spec_file),
-        "master_wav": str(master_wav),
-        "total_duration": real_total_dur,
-        "beats_count": len(spec["beats"]),
-        "words_count": len(global_words),
+        "master_wav": completed_info["master_wav"],
+        "total_duration": completed_info["duration"],
+        "beats_count": completed_info["beats"],
+        "words_count": completed_info["words"],
     }
 
 

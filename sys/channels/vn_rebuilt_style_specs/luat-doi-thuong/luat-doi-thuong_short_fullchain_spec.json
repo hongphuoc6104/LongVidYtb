@@ -7,8 +7,8 @@
   "aspect": "9:16",
   "video_model": "omni_1_2_flash",
   "chain_mode": "scene_pairs",
-  "voice": "VietNarrator",
-  "total_duration_sec": 50.59,
+  "voice": "VietNarrator_luat_doi_thuong",
+  "total_duration_sec": 39.934,
   "youtube_title": "3 Bẫy Hợp Đồng Thuê Nhà Khiến Bạn Mất Trắng Cọc",
   "title": "3 Bẫy Hợp Đồng Thuê Nhà Khiến Bạn Mất Trắng Cọc",
   "thumbnail_spec": {
@@ -36,7 +36,7 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.79,
+      "duration": 2.645,
       "at": 0.0
     },
     {
@@ -47,8 +47,8 @@
       "camera_motion": "zoom_in",
       "transition": "fade",
       "based_on": "S01",
-      "duration": 3.92,
-      "at": 3.79
+      "duration": 3.322,
+      "at": 2.65
     },
     {
       "id": "S03",
@@ -58,8 +58,8 @@
       "camera_motion": "pan_right",
       "transition": "smoothright",
       "based_on": null,
-      "duration": 4.06,
-      "at": 7.71
+      "duration": 3.369,
+      "at": 5.97
     },
     {
       "id": "S04",
@@ -69,8 +69,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": "S03",
-      "duration": 3.92,
-      "at": 11.77
+      "duration": 3.146,
+      "at": 9.34
     },
     {
       "id": "S05",
@@ -80,8 +80,8 @@
       "camera_motion": "pan_right",
       "transition": "smoothright",
       "based_on": null,
-      "duration": 3.75,
-      "at": 15.69
+      "duration": 3.219,
+      "at": 12.48
     },
     {
       "id": "S06",
@@ -91,8 +91,8 @@
       "camera_motion": "orbit_cw",
       "transition": "dissolve",
       "based_on": "S05",
-      "duration": 3.96,
-      "at": 19.44
+      "duration": 2.989,
+      "at": 15.7
     },
     {
       "id": "S07",
@@ -102,8 +102,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.17,
-      "at": 23.4
+      "duration": 3.349,
+      "at": 18.69
     },
     {
       "id": "S08",
@@ -113,8 +113,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.96,
-      "at": 27.57
+      "duration": 3.199,
+      "at": 22.04
     },
     {
       "id": "S09",
@@ -124,8 +124,8 @@
       "camera_motion": "pan_left",
       "transition": "smoothleft",
       "based_on": null,
-      "duration": 3.73,
-      "at": 31.53
+      "duration": 2.872,
+      "at": 25.24
     },
     {
       "id": "S10",
@@ -135,8 +135,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.28,
-      "at": 35.26
+      "duration": 3.023,
+      "at": 28.11
     },
     {
       "id": "S11",
@@ -146,8 +146,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.88,
-      "at": 39.54
+      "duration": 3.102,
+      "at": 31.13
     },
     {
       "id": "S12",
@@ -157,8 +157,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.0,
-      "at": 43.42
+      "duration": 2.9,
+      "at": 34.23
     },
     {
       "id": "S13",
@@ -168,8 +168,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": "S12",
-      "duration": 3.17,
-      "at": 47.42
+      "duration": 2.799,
+      "at": 37.13
     }
   ],
   "scene_pairs": [
@@ -177,7 +177,7 @@
       "id": "PAIR_01",
       "start_beat_id": "S01",
       "end_beat_id": "S02",
-      "target_duration": 3.79,
+      "target_duration": 2.645,
       "motion_prompt": "Slow smooth 35mm macro push-in toward the fountain pen nib hovering steadily over the contract signature line, golden desk lamp gleam on polished wood, locked geometry, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -185,7 +185,7 @@
       "id": "PAIR_02",
       "start_beat_id": "S02",
       "end_beat_id": "S03",
-      "target_duration": 3.92,
+      "target_duration": 3.322,
       "motion_prompt": "Slow optical rack focus shifting from the brass rim of the magnifying glass to the crisp paper weave underneath, steady warm lamplight, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -193,7 +193,7 @@
       "id": "PAIR_03",
       "start_beat_id": "S03",
       "end_beat_id": "S04",
-      "target_duration": 4.06,
+      "target_duration": 3.369,
       "motion_prompt": "Slow lateral tracking pass along the apartment wall highlighting the faint plaster scuff, realistic daylight texture, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -201,7 +201,7 @@
       "id": "PAIR_04",
       "start_beat_id": "S04",
       "end_beat_id": "S05",
-      "target_duration": 3.92,
+      "target_duration": 3.146,
       "motion_prompt": "Slow macro push-in toward the brass hinge, showing metallic texture and subtle wear marks under warm raking light, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -209,7 +209,7 @@
       "id": "PAIR_05",
       "start_beat_id": "S05",
       "end_beat_id": "S06",
-      "target_duration": 3.75,
+      "target_duration": 3.219,
       "motion_prompt": "Slow lateral tracking from glowing smartphone to the formal paper notice, contrasting modern chat with rigid paper requirement, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -217,7 +217,7 @@
       "id": "PAIR_06",
       "start_beat_id": "S06",
       "end_beat_id": "S07",
-      "target_duration": 3.96,
+      "target_duration": 2.989,
       "motion_prompt": "Slow camera orbit around the hand holding the smartphone in the empty sunlit room, gentle shadows stretching across floorboards, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -225,7 +225,7 @@
       "id": "PAIR_07",
       "start_beat_id": "S07",
       "end_beat_id": "S08",
-      "target_duration": 4.17,
+      "target_duration": 3.349,
       "motion_prompt": "Slow dolly pullback from the empty wallet and solitary key on the windowsill, warm dusk light slowly dimming, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -233,7 +233,7 @@
       "id": "PAIR_08",
       "start_beat_id": "S08",
       "end_beat_id": "S09",
-      "target_duration": 3.96,
+      "target_duration": 3.199,
       "motion_prompt": "Slow steady push-in down the center of the wooden table toward the documents between the two figures, warm ambient office light, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -241,7 +241,7 @@
       "id": "PAIR_09",
       "start_beat_id": "S09",
       "end_beat_id": "S10",
-      "target_duration": 3.73,
+      "target_duration": 2.872,
       "motion_prompt": "Slow cinematic lateral slide past the polished wooden gavel toward the leather-bound book spines, dignified warm lighting, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -249,7 +249,7 @@
       "id": "PAIR_10",
       "start_beat_id": "S10",
       "end_beat_id": "S11",
-      "target_duration": 4.28,
+      "target_duration": 3.023,
       "motion_prompt": "Slow precision push-in following the red pen stroke crossing the printed clause with decisive firmness, steady lamplight, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -257,7 +257,7 @@
       "id": "PAIR_11",
       "start_beat_id": "S11",
       "end_beat_id": "S12",
-      "target_duration": 3.88,
+      "target_duration": 3.102,
       "motion_prompt": "Slow gentle dolly pullback as hand grips apartment keys with calm confidence in warm daylight doorway, pristine realism, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -265,7 +265,7 @@
       "id": "PAIR_12",
       "start_beat_id": "S12",
       "end_beat_id": "S13",
-      "target_duration": 4.0,
+      "target_duration": 2.9,
       "motion_prompt": "Slow smooth push-in toward the tablet display and organized contract stack on the desk, warm evening study ambiance, zero morphing.",
       "mode": "boundary_extend"
     }
@@ -273,9 +273,10 @@
   "metadata": {
     "beats_count": 13,
     "pairs_count": 12,
-    "total_duration_sec": 50.59,
+    "total_duration_sec": 39.934,
     "youtube_title_length": 47,
     "bridge_syllables": 14,
     "close_syllables": 13
-  }
+  },
+  "voice_profile": "assets/voices/ch_luat_doi_thuong/profile.json"
 }

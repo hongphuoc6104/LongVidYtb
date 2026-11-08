@@ -7,8 +7,8 @@
   "aspect": "9:16",
   "video_model": "omni_1_2_flash",
   "chain_mode": "scene_pairs",
-  "voice": "VietNarrator",
-  "total_duration_sec": 51.3,
+  "voice": "VietNarrator_su_ke_lai",
+  "total_duration_sec": 37.952,
   "youtube_title": "Kỳ Mưu Cọc Gỗ Sông Bạch Đằng Đánh Tan Giặc Nam Hán",
   "title": "Kỳ Mưu Cọc Gỗ Sông Bạch Đằng Đánh Tan Giặc Nam Hán",
   "thumbnail_spec": {
@@ -36,7 +36,7 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.08,
+      "duration": 2.836,
       "at": 0.0
     },
     {
@@ -47,8 +47,8 @@
       "camera_motion": "pan_down",
       "transition": "smoothdown",
       "based_on": "S01",
-      "duration": 4.23,
-      "at": 4.08
+      "duration": 3.32,
+      "at": 2.84
     },
     {
       "id": "S03",
@@ -58,8 +58,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.83,
-      "at": 8.31
+      "duration": 3.118,
+      "at": 6.16
     },
     {
       "id": "S04",
@@ -69,8 +69,8 @@
       "camera_motion": "pan_right",
       "transition": "smoothright",
       "based_on": null,
-      "duration": 4.52,
-      "at": 12.14
+      "duration": 3.074,
+      "at": 9.27
     },
     {
       "id": "S05",
@@ -80,8 +80,8 @@
       "camera_motion": "pan_left",
       "transition": "smoothleft",
       "based_on": "S04",
-      "duration": 3.68,
-      "at": 16.66
+      "duration": 2.679,
+      "at": 12.35
     },
     {
       "id": "S06",
@@ -91,8 +91,8 @@
       "camera_motion": "pan_down",
       "transition": "smoothdown",
       "based_on": "S02",
-      "duration": 3.75,
-      "at": 20.34
+      "duration": 2.623,
+      "at": 15.03
     },
     {
       "id": "S07",
@@ -102,8 +102,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": "S06",
-      "duration": 4.38,
-      "at": 24.09
+      "duration": 2.986,
+      "at": 17.65
     },
     {
       "id": "S08",
@@ -113,8 +113,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.88,
-      "at": 28.47
+      "duration": 3.124,
+      "at": 20.64
     },
     {
       "id": "S09",
@@ -124,8 +124,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": "S08",
-      "duration": 3.69,
-      "at": 32.35
+      "duration": 2.691,
+      "at": 23.76
     },
     {
       "id": "S10",
@@ -135,8 +135,8 @@
       "camera_motion": "pan_right",
       "transition": "smoothright",
       "based_on": null,
-      "duration": 3.81,
-      "at": 36.04
+      "duration": 2.682,
+      "at": 26.45
     },
     {
       "id": "S11",
@@ -146,8 +146,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.33,
-      "at": 39.85
+      "duration": 3.248,
+      "at": 29.13
     },
     {
       "id": "S12",
@@ -157,8 +157,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.97,
-      "at": 44.18
+      "duration": 2.967,
+      "at": 32.38
     },
     {
       "id": "S13",
@@ -168,8 +168,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": "S12",
-      "duration": 3.13,
-      "at": 48.15
+      "duration": 2.604,
+      "at": 35.35
     }
   ],
   "scene_pairs": [
@@ -177,7 +177,7 @@
       "id": "PAIR_01",
       "start_beat_id": "S01",
       "end_beat_id": "S02",
-      "target_duration": 4.08,
+      "target_duration": 2.836,
       "motion_prompt": "Slow smooth 35mm low-angle tracking pass along the misty river surface as cold moonlight reflects off rippling water, locked historical geometry, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -185,7 +185,7 @@
       "id": "PAIR_02",
       "start_beat_id": "S02",
       "end_beat_id": "S03",
-      "target_duration": 4.23,
+      "target_duration": 3.32,
       "motion_prompt": "Slow vertical tilt down from torchlit waterline to the massive sharpened stakes firmly embedded in river sediment, realistic silt displacement, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -193,7 +193,7 @@
       "id": "PAIR_03",
       "start_beat_id": "S03",
       "end_beat_id": "S04",
-      "target_duration": 3.83,
+      "target_duration": 3.118,
       "motion_prompt": "Slow cinematic push-in across the detailed river sand table toward the commander determined gaze, flickering warm torchlight, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -201,7 +201,7 @@
       "id": "PAIR_04",
       "start_beat_id": "S04",
       "end_beat_id": "S05",
-      "target_duration": 4.52,
+      "target_duration": 3.074,
       "motion_prompt": "High-angle sweeping tracking shot following the armada sailing upstream with full sails billowing in morning wind, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -209,7 +209,7 @@
       "id": "PAIR_05",
       "start_beat_id": "S05",
       "end_beat_id": "S06",
-      "target_duration": 3.68,
+      "target_duration": 2.679,
       "motion_prompt": "Dynamic lateral tracking shot alongside the agile rowing boats maneuvering swiftly through tidal reeds, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -217,7 +217,7 @@
       "id": "PAIR_06",
       "start_beat_id": "S06",
       "end_beat_id": "S07",
-      "target_duration": 3.75,
+      "target_duration": 2.623,
       "motion_prompt": "Time-lapse style downward water movement revealing the endless field of jagged stakes rising from the riverbed, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -225,7 +225,7 @@
       "id": "PAIR_07",
       "start_beat_id": "S07",
       "end_beat_id": "S08",
-      "target_duration": 4.38,
+      "target_duration": 2.986,
       "motion_prompt": "Slow-motion dramatic push-in as the heavy wooden hull lodges firmly onto the stakes, realistic timber stress and water displacement, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -233,7 +233,7 @@
       "id": "PAIR_08",
       "start_beat_id": "S08",
       "end_beat_id": "S09",
-      "target_duration": 3.88,
+      "target_duration": 3.124,
       "motion_prompt": "Sweeping forward dolly tracking following the fleet advancing with unstoppable momentum into the open river, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -241,7 +241,7 @@
       "id": "PAIR_09",
       "start_beat_id": "S09",
       "end_beat_id": "S10",
-      "target_duration": 3.69,
+      "target_duration": 2.691,
       "motion_prompt": "Slow high-altitude crane pullback revealing the stranded fleet across the vast mudflats, majestic winter horizon, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -249,7 +249,7 @@
       "id": "PAIR_10",
       "start_beat_id": "S10",
       "end_beat_id": "S11",
-      "target_duration": 3.81,
+      "target_duration": 2.682,
       "motion_prompt": "Slow cinematic lateral tracking pass across the calm golden river surface, evening sunbeams touching sacred waters, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -257,7 +257,7 @@
       "id": "PAIR_11",
       "start_beat_id": "S11",
       "end_beat_id": "S12",
-      "target_duration": 4.33,
+      "target_duration": 3.248,
       "motion_prompt": "Slow push-in toward the thousand-year-old preserved wood grain and iron tip, solemn historical reverence, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -265,7 +265,7 @@
       "id": "PAIR_12",
       "start_beat_id": "S12",
       "end_beat_id": "S13",
-      "target_duration": 3.97,
+      "target_duration": 2.967,
       "motion_prompt": "Slow smooth push-in toward the tactical river terrain table and historical documents, warm studio lamp, zero morphing.",
       "mode": "boundary_extend"
     }
@@ -273,9 +273,10 @@
   "metadata": {
     "beats_count": 13,
     "pairs_count": 12,
-    "total_duration_sec": 51.3,
+    "total_duration_sec": 37.952,
     "youtube_title_length": 50,
     "bridge_syllables": 14,
     "close_syllables": 13
-  }
+  },
+  "voice_profile": "assets/voices/ch_su_ke_lai/profile.json"
 }

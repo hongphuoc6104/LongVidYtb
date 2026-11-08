@@ -7,8 +7,8 @@
   "aspect": "9:16",
   "video_model": "omni_1_2_flash",
   "chain_mode": "scene_pairs",
-  "voice": "VietNarrator",
-  "total_duration_sec": 49.28,
+  "voice": "VietNarrator_ai_binh_dan",
+  "total_duration_sec": 53.697,
   "youtube_title": "Tự Động Hóa Bằng AI Tiết Kiệm Bốn Giờ Mỗi Ngày",
   "title": "Tự Động Hóa Bằng AI Tiết Kiệm Bốn Giờ Mỗi Ngày",
   "thumbnail_spec": {
@@ -36,7 +36,7 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.85,
+      "duration": 4.01,
       "at": 0.0
     },
     {
@@ -47,8 +47,8 @@
       "camera_motion": "zoom_in",
       "transition": "fade",
       "based_on": "S01",
-      "duration": 3.27,
-      "at": 3.85
+      "duration": 4.052,
+      "at": 4.01
     },
     {
       "id": "S03",
@@ -58,8 +58,8 @@
       "camera_motion": "pan_down",
       "transition": "smoothdown",
       "based_on": null,
-      "duration": 3.38,
-      "at": 7.12
+      "duration": 4.038,
+      "at": 8.06
     },
     {
       "id": "S04",
@@ -69,8 +69,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.98,
-      "at": 10.5
+      "duration": 4.06,
+      "at": 12.1
     },
     {
       "id": "S05",
@@ -80,8 +80,8 @@
       "camera_motion": "pan_right",
       "transition": "smoothright",
       "based_on": null,
-      "duration": 4.32,
-      "at": 14.48
+      "duration": 4.517,
+      "at": 16.16
     },
     {
       "id": "S06",
@@ -91,8 +91,8 @@
       "camera_motion": "orbit_cw",
       "transition": "dissolve",
       "based_on": null,
-      "duration": 3.83,
-      "at": 18.8
+      "duration": 4.003,
+      "at": 20.68
     },
     {
       "id": "S07",
@@ -102,8 +102,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.65,
-      "at": 22.63
+      "duration": 4.054,
+      "at": 24.68
     },
     {
       "id": "S08",
@@ -113,8 +113,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.56,
-      "at": 26.28
+      "duration": 4.095,
+      "at": 28.73
     },
     {
       "id": "S09",
@@ -124,8 +124,8 @@
       "camera_motion": "pan_left",
       "transition": "smoothleft",
       "based_on": null,
-      "duration": 4.18,
-      "at": 29.84
+      "duration": 4.311,
+      "at": 32.83
     },
     {
       "id": "S10",
@@ -135,8 +135,8 @@
       "camera_motion": "zoom_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.86,
-      "at": 34.02
+      "duration": 4.184,
+      "at": 37.14
     },
     {
       "id": "S11",
@@ -146,8 +146,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.88,
-      "at": 37.88
+      "duration": 4.214,
+      "at": 41.32
     },
     {
       "id": "S12",
@@ -157,8 +157,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.18,
-      "at": 41.76
+      "duration": 4.254,
+      "at": 45.54
     },
     {
       "id": "S13",
@@ -168,8 +168,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": "S12",
-      "duration": 3.35,
-      "at": 45.94
+      "duration": 3.905,
+      "at": 49.79
     }
   ],
   "scene_pairs": [
@@ -177,7 +177,7 @@
       "id": "PAIR_01",
       "start_beat_id": "S01",
       "end_beat_id": "S02",
-      "target_duration": 3.85,
+      "target_duration": 4.01,
       "motion_prompt": "Slow smooth 35mm push-in toward the glowing dark-mode monitors, cyan ambient backlight reflecting on dark desk surface, locked geometry, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -185,7 +185,7 @@
       "id": "PAIR_02",
       "start_beat_id": "S02",
       "end_beat_id": "S03",
-      "target_duration": 3.27,
+      "target_duration": 4.052,
       "motion_prompt": "Slow-motion precision push-in as the finger taps the glowing key, mechanical switch travel, crisp specular highlights, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -193,7 +193,7 @@
       "id": "PAIR_03",
       "start_beat_id": "S03",
       "end_beat_id": "S04",
-      "target_duration": 3.38,
+      "target_duration": 4.038,
       "motion_prompt": "Rapid smooth tracking move following cascading data streams snapping into perfect symmetrical rows, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -201,7 +201,7 @@
       "id": "PAIR_04",
       "start_beat_id": "S04",
       "end_beat_id": "S05",
-      "target_duration": 3.98,
+      "target_duration": 4.06,
       "motion_prompt": "Slow gentle push-in on the smiling professional enjoying a calm moment, natural warmth, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -209,7 +209,7 @@
       "id": "PAIR_05",
       "start_beat_id": "S05",
       "end_beat_id": "S06",
-      "target_duration": 4.32,
+      "target_duration": 4.517,
       "motion_prompt": "Slow lateral slide following seamless file transfer animations on dark glassmorphic UI, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -217,7 +217,7 @@
       "id": "PAIR_06",
       "start_beat_id": "S06",
       "end_beat_id": "S07",
-      "target_duration": 3.83,
+      "target_duration": 4.003,
       "motion_prompt": "Smooth 3D orbit around the two digital puzzle components snapping together, clean tech aesthetic, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -225,7 +225,7 @@
       "id": "PAIR_07",
       "start_beat_id": "S07",
       "end_beat_id": "S08",
-      "target_duration": 3.65,
+      "target_duration": 4.054,
       "motion_prompt": "Slow smooth dolly pullback from the quiet glowing laptop, serene nighttime productivity mood, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -233,7 +233,7 @@
       "id": "PAIR_08",
       "start_beat_id": "S08",
       "end_beat_id": "S09",
-      "target_duration": 3.56,
+      "target_duration": 4.095,
       "motion_prompt": "Slow push-in following the creative pen strokes on paper, peaceful high-level thinking mood, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -241,7 +241,7 @@
       "id": "PAIR_09",
       "start_beat_id": "S09",
       "end_beat_id": "S10",
-      "target_duration": 4.18,
+      "target_duration": 4.311,
       "motion_prompt": "Slow cinematic lateral tracking pass across the futuristic office floor, morning sunlight streaming in, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -249,7 +249,7 @@
       "id": "PAIR_10",
       "start_beat_id": "S10",
       "end_beat_id": "S11",
-      "target_duration": 3.86,
+      "target_duration": 4.184,
       "motion_prompt": "Slow precision push-in toward the fingertip touching the responsive glass panel, gentle light ripple, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -257,7 +257,7 @@
       "id": "PAIR_11",
       "start_beat_id": "S11",
       "end_beat_id": "S12",
-      "target_duration": 3.88,
+      "target_duration": 4.214,
       "motion_prompt": "Slow graceful pullback as the professional walks out into golden afternoon sunlight, work-life balance mastery, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -265,7 +265,7 @@
       "id": "PAIR_12",
       "start_beat_id": "S12",
       "end_beat_id": "S13",
-      "target_duration": 4.18,
+      "target_duration": 4.254,
       "motion_prompt": "Slow smooth push-in toward the tablet screen and clean desk accessories, warm ambient study lighting, zero morphing.",
       "mode": "boundary_extend"
     }
@@ -273,9 +273,10 @@
   "metadata": {
     "beats_count": 13,
     "pairs_count": 12,
-    "total_duration_sec": 49.28,
+    "total_duration_sec": 53.697,
     "youtube_title_length": 46,
     "bridge_syllables": 15,
     "close_syllables": 14
-  }
+  },
+  "voice_profile": "assets/voices/ch_ai_binh_dan/profile.json"
 }

@@ -7,8 +7,8 @@
   "aspect": "9:16",
   "video_model": "omni_1_2_flash",
   "chain_mode": "scene_pairs",
-  "voice": "VietNarrator",
-  "total_duration_sec": 48.26,
+  "voice": "VietNarrator_banh_rang",
+  "total_duration_sec": 40.169,
   "youtube_title": "Chuỗi Cung Ứng Biển: Mắt Xích Thầm Lặng Đổi Đời Bạn",
   "title": "Chuỗi Cung Ứng Biển: Mắt Xích Thầm Lặng Đổi Đời Bạn",
   "thumbnail_spec": {
@@ -36,7 +36,7 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.35,
+      "duration": 2.878,
       "at": 0.0
     },
     {
@@ -47,8 +47,8 @@
       "camera_motion": "pan_right",
       "transition": "smoothright",
       "based_on": "S01",
-      "duration": 3.21,
-      "at": 3.35
+      "duration": 2.982,
+      "at": 2.88
     },
     {
       "id": "S03",
@@ -58,8 +58,8 @@
       "camera_motion": "pan_up",
       "transition": "smoothup",
       "based_on": null,
-      "duration": 4.22,
-      "at": 6.56
+      "duration": 3.315,
+      "at": 5.86
     },
     {
       "id": "S04",
@@ -69,8 +69,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": "S03",
-      "duration": 3.71,
-      "at": 10.78
+      "duration": 3.062,
+      "at": 9.18
     },
     {
       "id": "S05",
@@ -80,8 +80,8 @@
       "camera_motion": "zoom_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.91,
-      "at": 14.49
+      "duration": 3.505,
+      "at": 12.24
     },
     {
       "id": "S06",
@@ -91,8 +91,8 @@
       "camera_motion": "pan_right",
       "transition": "smoothright",
       "based_on": "S05",
-      "duration": 3.23,
-      "at": 18.4
+      "duration": 2.699,
+      "at": 15.74
     },
     {
       "id": "S07",
@@ -102,8 +102,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": "S06",
-      "duration": 3.65,
-      "at": 21.63
+      "duration": 3.223,
+      "at": 18.44
     },
     {
       "id": "S08",
@@ -113,8 +113,8 @@
       "camera_motion": "zoom_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.75,
-      "at": 25.28
+      "duration": 2.925,
+      "at": 21.66
     },
     {
       "id": "S09",
@@ -124,8 +124,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.79,
-      "at": 29.03
+      "duration": 3.159,
+      "at": 24.59
     },
     {
       "id": "S10",
@@ -135,8 +135,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": "S09",
-      "duration": 3.93,
-      "at": 32.82
+      "duration": 3.171,
+      "at": 27.75
     },
     {
       "id": "S11",
@@ -146,8 +146,8 @@
       "camera_motion": "pan_up",
       "transition": "smoothup",
       "based_on": null,
-      "duration": 4.04,
-      "at": 36.75
+      "duration": 3.209,
+      "at": 30.92
     },
     {
       "id": "S12",
@@ -157,8 +157,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.2,
-      "at": 40.79
+      "duration": 3.241,
+      "at": 34.13
     },
     {
       "id": "S13",
@@ -168,8 +168,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": "S12",
-      "duration": 3.28,
-      "at": 44.99
+      "duration": 2.8,
+      "at": 37.37
     }
   ],
   "scene_pairs": [
@@ -177,7 +177,7 @@
       "id": "PAIR_01",
       "start_beat_id": "S01",
       "end_beat_id": "S02",
-      "target_duration": 3.35,
+      "target_duration": 2.878,
       "motion_prompt": "Slow smooth 35mm commercial dolly push-in toward the towering container vessel berthed at dawn dock, cranes lifting containers with locked physical geometry, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -185,7 +185,7 @@
       "id": "PAIR_02",
       "start_beat_id": "S02",
       "end_beat_id": "S03",
-      "target_duration": 3.21,
+      "target_duration": 2.982,
       "motion_prompt": "Steady lateral engineering tracking pass along the colossal steel hull, containers stacked in perfect rigid alignment, water wake lapping against hull, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -193,7 +193,7 @@
       "id": "PAIR_03",
       "start_beat_id": "S03",
       "end_beat_id": "S04",
-      "target_duration": 4.22,
+      "target_duration": 3.315,
       "motion_prompt": "Slow cinematic vertical pedestal move rising above the drydock scaffolding, massive steel plates resting with rigid load-bearing stability, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -201,7 +201,7 @@
       "id": "PAIR_04",
       "start_beat_id": "S04",
       "end_beat_id": "S05",
-      "target_duration": 3.71,
+      "target_duration": 3.062,
       "motion_prompt": "High-altitude architectural aerial survey following the massive ship moving forward at steady speed, realistic bow waves cutting through calm harbor water, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -209,7 +209,7 @@
       "id": "PAIR_05",
       "start_beat_id": "S05",
       "end_beat_id": "S06",
-      "target_duration": 3.91,
+      "target_duration": 3.505,
       "motion_prompt": "Precision cutaway dolly push-in on the crane spreader locking smoothly into corner castings, realistic hydraulic dampening, steady industrial lighting, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -217,7 +217,7 @@
       "id": "PAIR_06",
       "start_beat_id": "S06",
       "end_beat_id": "S07",
-      "target_duration": 3.23,
+      "target_duration": 2.699,
       "motion_prompt": "Slow gentle tracking pass across the idling fleet waiting offshore, water ripples catching golden sunset rays, massive ships holding locked position, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -225,7 +225,7 @@
       "id": "PAIR_07",
       "start_beat_id": "S07",
       "end_beat_id": "S08",
-      "target_duration": 3.65,
+      "target_duration": 3.223,
       "motion_prompt": "Slow telephoto push-in compressing the line of anchored ships in the fog, gentle natural wave rolling against steel bows, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -233,7 +233,7 @@
       "id": "PAIR_08",
       "start_beat_id": "S08",
       "end_beat_id": "S09",
-      "target_duration": 3.75,
+      "target_duration": 2.925,
       "motion_prompt": "Slow macro rack focus across the brass control levers to the bridge window overlooking the dark ocean, steady specular gleam, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -241,7 +241,7 @@
       "id": "PAIR_09",
       "start_beat_id": "S09",
       "end_beat_id": "S10",
-      "target_duration": 3.79,
+      "target_duration": 3.159,
       "motion_prompt": "Slow smooth dolly pullback from the ceramic mug on the wooden desk, revealing a calm productive morning workspace, soft natural light, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -249,7 +249,7 @@
       "id": "PAIR_10",
       "start_beat_id": "S10",
       "end_beat_id": "S11",
-      "target_duration": 3.93,
+      "target_duration": 3.171,
       "motion_prompt": "Gentle downward push-in highlighting the tactile contrast between organic coffee beans and precision milled metal, steady light, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -257,7 +257,7 @@
       "id": "PAIR_11",
       "start_beat_id": "S11",
       "end_beat_id": "S12",
-      "target_duration": 4.04,
+      "target_duration": 3.209,
       "motion_prompt": "Sweeping cinematic aerial tracking shot alongside the ship cruising steadily, foam wake trailing into deep turquoise water, grand monumental scale, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -265,7 +265,7 @@
       "id": "PAIR_12",
       "start_beat_id": "S12",
       "end_beat_id": "S13",
-      "target_duration": 4.2,
+      "target_duration": 3.241,
       "motion_prompt": "Slow deliberate push-in toward the brass nautical instruments and tablet display, warm reflections on polished wood, zero morphing.",
       "mode": "boundary_extend"
     }
@@ -273,9 +273,10 @@
   "metadata": {
     "beats_count": 13,
     "pairs_count": 12,
-    "total_duration_sec": 48.26,
+    "total_duration_sec": 40.169,
     "youtube_title_length": 51,
     "bridge_syllables": 13,
     "close_syllables": 13
-  }
+  },
+  "voice_profile": "assets/voices/ch_banh_rang/profile.json"
 }

@@ -7,8 +7,8 @@
   "aspect": "9:16",
   "video_model": "omni_1_2_flash",
   "chain_mode": "scene_pairs",
-  "voice": "VietNarrator",
-  "total_duration_sec": 50.76,
+  "voice": "VietNarrator_nao_luoi",
+  "total_duration_sec": 49.623,
   "youtube_title": "Bẫy Dopamine: Vì Sao Bạn Càng Lướt Càng Thấy Mệt Mỏi?",
   "title": "Bẫy Dopamine: Vì Sao Bạn Càng Lướt Càng Thấy Mệt Mỏi?",
   "thumbnail_spec": {
@@ -36,7 +36,7 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.72,
+      "duration": 3.723,
       "at": 0.0
     },
     {
@@ -47,7 +47,7 @@
       "camera_motion": "zoom_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.71,
+      "duration": 4.044,
       "at": 3.72
     },
     {
@@ -58,8 +58,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": "S01",
-      "duration": 3.93,
-      "at": 8.43
+      "duration": 3.909,
+      "at": 7.77
     },
     {
       "id": "S04",
@@ -69,8 +69,8 @@
       "camera_motion": "orbit_cw",
       "transition": "dissolve",
       "based_on": "S02",
-      "duration": 3.67,
-      "at": 12.36
+      "duration": 3.998,
+      "at": 11.68
     },
     {
       "id": "S05",
@@ -80,8 +80,8 @@
       "camera_motion": "pan_down",
       "transition": "smoothdown",
       "based_on": "S02",
-      "duration": 4.22,
-      "at": 16.03
+      "duration": 3.964,
+      "at": 15.67
     },
     {
       "id": "S06",
@@ -91,8 +91,8 @@
       "camera_motion": "pan_right",
       "transition": "smoothright",
       "based_on": null,
-      "duration": 3.68,
-      "at": 20.25
+      "duration": 3.568,
+      "at": 19.64
     },
     {
       "id": "S07",
@@ -102,8 +102,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.31,
-      "at": 23.93
+      "duration": 3.858,
+      "at": 23.21
     },
     {
       "id": "S08",
@@ -113,8 +113,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.27,
-      "at": 28.24
+      "duration": 3.878,
+      "at": 27.06
     },
     {
       "id": "S09",
@@ -124,8 +124,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.67,
-      "at": 32.51
+      "duration": 3.804,
+      "at": 30.94
     },
     {
       "id": "S10",
@@ -135,8 +135,8 @@
       "camera_motion": "orbit_cw",
       "transition": "dissolve",
       "based_on": "S05",
-      "duration": 3.67,
-      "at": 36.18
+      "duration": 3.623,
+      "at": 34.75
     },
     {
       "id": "S11",
@@ -146,8 +146,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.94,
-      "at": 39.85
+      "duration": 3.755,
+      "at": 38.37
     },
     {
       "id": "S12",
@@ -157,8 +157,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.98,
-      "at": 43.79
+      "duration": 3.817,
+      "at": 42.12
     },
     {
       "id": "S13",
@@ -168,8 +168,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": "S12",
-      "duration": 2.98,
-      "at": 47.77
+      "duration": 3.682,
+      "at": 45.94
     }
   ],
   "scene_pairs": [
@@ -177,7 +177,7 @@
       "id": "PAIR_01",
       "start_beat_id": "S01",
       "end_beat_id": "S02",
-      "target_duration": 3.72,
+      "target_duration": 3.723,
       "motion_prompt": "Slow smooth 35mm push-in toward the smartphone screen blue light reflecting in tired eyes, dark room shadows, locked geometry, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -185,7 +185,7 @@
       "id": "PAIR_02",
       "start_beat_id": "S02",
       "end_beat_id": "S03",
-      "target_duration": 4.71,
+      "target_duration": 4.044,
       "motion_prompt": "Rapid smooth tracking move into the synaptic cleft as luminous dopamine molecules bind to receptors, vivid neural glow, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -193,7 +193,7 @@
       "id": "PAIR_03",
       "start_beat_id": "S03",
       "end_beat_id": "S04",
-      "target_duration": 3.93,
+      "target_duration": 3.909,
       "motion_prompt": "Slow-motion capture of thumb swiping upward in rhythm, glass surface catching dynamic ambient light reflections, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -201,7 +201,7 @@
       "id": "PAIR_04",
       "start_beat_id": "S04",
       "end_beat_id": "S05",
-      "target_duration": 3.67,
+      "target_duration": 3.998,
       "motion_prompt": "Slow camera orbit around the 3D transparent brain model, reward pathway pulsing with rhythmic amber light, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -209,7 +209,7 @@
       "id": "PAIR_05",
       "start_beat_id": "S05",
       "end_beat_id": "S06",
-      "target_duration": 4.22,
+      "target_duration": 3.964,
       "motion_prompt": "Slow tilt down as synaptic receptor ports close and the neural glow fades into muted blue, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -217,7 +217,7 @@
       "id": "PAIR_06",
       "start_beat_id": "S06",
       "end_beat_id": "S07",
-      "target_duration": 3.68,
+      "target_duration": 3.568,
       "motion_prompt": "Slow lateral slide past the neglected notebook and pen, quiet dust motes floating in afternoon sunbeam, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -225,7 +225,7 @@
       "id": "PAIR_07",
       "start_beat_id": "S07",
       "end_beat_id": "S08",
-      "target_duration": 4.31,
+      "target_duration": 3.858,
       "motion_prompt": "Slow gentle push-in on the person rubbing temples, authentic human vulnerability and cognitive fatigue, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -233,7 +233,7 @@
       "id": "PAIR_08",
       "start_beat_id": "S08",
       "end_beat_id": "S09",
-      "target_duration": 4.27,
+      "target_duration": 3.878,
       "motion_prompt": "Deliberate forward push-in as the wooden drawer slides shut with clean mechanical finality, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -241,7 +241,7 @@
       "id": "PAIR_09",
       "start_beat_id": "S09",
       "end_beat_id": "S10",
-      "target_duration": 3.67,
+      "target_duration": 3.804,
       "motion_prompt": "Slow dolly pullback from the water glass on the sunlit table, crisp morning freshness, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -249,7 +249,7 @@
       "id": "PAIR_10",
       "start_beat_id": "S10",
       "end_beat_id": "S11",
-      "target_duration": 3.67,
+      "target_duration": 3.623,
       "motion_prompt": "Slow graceful orbit around the restored neural synapse glowing with calm steady luminescence, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -257,7 +257,7 @@
       "id": "PAIR_11",
       "start_beat_id": "S11",
       "end_beat_id": "S12",
-      "target_duration": 3.94,
+      "target_duration": 3.755,
       "motion_prompt": "Slow elegant pullback revealing the productive quiet library atmosphere around the focused writer, deep flow state mood, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -265,7 +265,7 @@
       "id": "PAIR_12",
       "start_beat_id": "S12",
       "end_beat_id": "S13",
-      "target_duration": 3.98,
+      "target_duration": 3.817,
       "motion_prompt": "Slow smooth push-in toward the tablet display and organized productivity journal, warm desk lamp, zero morphing.",
       "mode": "boundary_extend"
     }
@@ -273,9 +273,10 @@
   "metadata": {
     "beats_count": 13,
     "pairs_count": 12,
-    "total_duration_sec": 50.76,
+    "total_duration_sec": 49.623,
     "youtube_title_length": 53,
     "bridge_syllables": 12,
     "close_syllables": 13
-  }
+  },
+  "voice_profile": "assets/voices/ch_nao_luoi/profile.json"
 }

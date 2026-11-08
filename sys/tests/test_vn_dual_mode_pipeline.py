@@ -705,7 +705,7 @@ def test_render_long_chapter_chunks_colab_t4_bundle_and_pool_select(tmp_path: Pa
     )
 
     assert res["video_encoder"] == "colab_t4_h264_nvenc"
-    assert "test-session" in stopped_sessions or any("vp-vn-long-" in s for s in stopped_sessions)
+    assert "video-pilot-tts" in stopped_sessions or "test-session" in stopped_sessions or any("vp-vn-long-" in s for s in stopped_sessions)
     assert "bundle.zip" in uploaded_files
 
     # Inspect uploaded bundle.zip contents
@@ -721,3 +721,31 @@ def test_render_long_chapter_chunks_colab_t4_bundle_and_pool_select(tmp_path: Pa
         assert "images/img_0000.jpg" in namelist
         assert "images/img_0001.jpg" in namelist
         assert "images/img_0002.jpg" in namelist
+
+
+def test_all_20_vietnamese_channels_voice_profile_gate() -> None:
+    """[ERR-20261108-03] Verify that all 20 Vietnamese channels resolve strictly to their
+    Studio V3 cloned human voice profiles (sys/assets/voices/ch_<channel_id>/profile.json)
+    and VietNarrator_<channel_id>, with 0 fallback to robot vi-VN-NamMinhNeural.
+    """
+    import json
+    from sys.channels.vn_long_high_density_planner import VN_LONG_DENSITY_PROFILES
+    from sys.tools.synthesize_vn_long_omnivoice import resolve_channel_ids
+
+    assert len(VN_LONG_DENSITY_PROFILES) == 20
+    for ch_id in sorted(VN_LONG_DENSITY_PROFILES.keys()):
+        voice_dir = Path(__file__).resolve().parents[1] / f"assets/voices/ch_{ch_id}"
+        profile_p = voice_dir / "profile.json"
+        ref_wav = voice_dir / "reference.wav"
+
+        assert profile_p.is_file(), f"Missing profile.json for channel {ch_id}: {profile_p}"
+        assert ref_wav.is_file(), f"Missing reference.wav for channel {ch_id}: {ref_wav}"
+
+        data = json.loads(profile_p.read_text(encoding="utf-8"))
+        voice_name = data.get("voice", "")
+        assert voice_name == f"VietNarrator_{ch_id}", f"Invalid voice name {voice_name} for channel {ch_id}"
+        assert "NamMinh" not in voice_name, f"Forbidden EdgeTTS fallback detected in channel {ch_id}"
+        assert "Neural" not in voice_name, f"Forbidden synthetic neural tag detected in channel {ch_id}"
+        assert "edge" not in voice_name.lower(), f"Forbidden edge tag detected in channel {ch_id}"
+        assert float(data.get("recommended_speed", 1.0)) >= 1.0, f"Speed < 1.0 in channel {ch_id}"
+

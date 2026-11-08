@@ -7,8 +7,8 @@
   "aspect": "9:16",
   "video_model": "omni_1_2_flash",
   "chain_mode": "scene_pairs",
-  "voice": "VietNarrator",
-  "total_duration_sec": 47.91,
+  "voice": "VietNarrator_minh_triet_song",
+  "total_duration_sec": 45.001,
   "youtube_title": "Bài Học Khắc Kỷ: Giữ Tâm Bình Thản Trước Sóng Gió",
   "title": "Bài Học Khắc Kỷ: Giữ Tâm Bình Thản Trước Sóng Gió",
   "thumbnail_spec": {
@@ -36,7 +36,7 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.11,
+      "duration": 3.208,
       "at": 0.0
     },
     {
@@ -47,8 +47,8 @@
       "camera_motion": "orbit_cw",
       "transition": "dissolve",
       "based_on": "S01",
-      "duration": 4.23,
-      "at": 4.11
+      "duration": 3.888,
+      "at": 3.21
     },
     {
       "id": "S03",
@@ -58,8 +58,8 @@
       "camera_motion": "pan_right",
       "transition": "smoothright",
       "based_on": null,
-      "duration": 3.38,
-      "at": 8.34
+      "duration": 2.979,
+      "at": 7.1
     },
     {
       "id": "S04",
@@ -69,8 +69,8 @@
       "camera_motion": "zoom_in",
       "transition": "fade",
       "based_on": "S03",
-      "duration": 3.56,
-      "at": 11.72
+      "duration": 3.459,
+      "at": 10.07
     },
     {
       "id": "S05",
@@ -80,8 +80,8 @@
       "camera_motion": "pan_up",
       "transition": "smoothup",
       "based_on": null,
-      "duration": 3.78,
-      "at": 15.28
+      "duration": 3.642,
+      "at": 13.53
     },
     {
       "id": "S06",
@@ -91,8 +91,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.54,
-      "at": 19.06
+      "duration": 3.413,
+      "at": 17.18
     },
     {
       "id": "S07",
@@ -102,8 +102,8 @@
       "camera_motion": "zoom_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.58,
-      "at": 22.6
+      "duration": 3.561,
+      "at": 20.59
     },
     {
       "id": "S08",
@@ -113,8 +113,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.41,
-      "at": 26.18
+      "duration": 3.27,
+      "at": 24.15
     },
     {
       "id": "S09",
@@ -124,8 +124,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.63,
-      "at": 29.59
+      "duration": 3.763,
+      "at": 27.42
     },
     {
       "id": "S10",
@@ -135,8 +135,8 @@
       "camera_motion": "orbit_cw",
       "transition": "dissolve",
       "based_on": null,
-      "duration": 4.14,
-      "at": 33.22
+      "duration": 3.318,
+      "at": 31.18
     },
     {
       "id": "S11",
@@ -146,8 +146,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.67,
-      "at": 37.36
+      "duration": 3.487,
+      "at": 34.5
     },
     {
       "id": "S12",
@@ -157,8 +157,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.81,
-      "at": 41.03
+      "duration": 3.788,
+      "at": 37.99
     },
     {
       "id": "S13",
@@ -168,8 +168,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": "S12",
-      "duration": 3.06,
-      "at": 44.84
+      "duration": 3.225,
+      "at": 41.78
     }
   ],
   "scene_pairs": [
@@ -177,7 +177,7 @@
       "id": "PAIR_01",
       "start_beat_id": "S01",
       "end_beat_id": "S02",
-      "target_duration": 4.11,
+      "target_duration": 3.208,
       "motion_prompt": "Slow smooth 35mm push-in toward the stoic marble bust, raking golden light revealing fine sculpted marble texture with locked geometry, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -185,7 +185,7 @@
       "id": "PAIR_02",
       "start_beat_id": "S02",
       "end_beat_id": "S03",
-      "target_duration": 4.23,
+      "target_duration": 3.888,
       "motion_prompt": "Slow camera orbit around the marble profile, light transition sweeping softly across the brow and cheekbone, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -193,7 +193,7 @@
       "id": "PAIR_03",
       "start_beat_id": "S03",
       "end_beat_id": "S04",
-      "target_duration": 3.38,
+      "target_duration": 2.979,
       "motion_prompt": "Slow lateral tracking pass between the brass rings and the glass hourglass containing falling sand, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -201,7 +201,7 @@
       "id": "PAIR_04",
       "start_beat_id": "S04",
       "end_beat_id": "S05",
-      "target_duration": 3.56,
+      "target_duration": 3.459,
       "motion_prompt": "Precision macro push-in on the steady trickle of sand grains falling with locked gravity physics, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -209,7 +209,7 @@
       "id": "PAIR_05",
       "start_beat_id": "S05",
       "end_beat_id": "S06",
-      "target_duration": 3.78,
+      "target_duration": 3.642,
       "motion_prompt": "Slow majestic tilt up from the crashing sea foam to the immovable granite cliff facing the dark storm, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -217,7 +217,7 @@
       "id": "PAIR_06",
       "start_beat_id": "S06",
       "end_beat_id": "S07",
-      "target_duration": 3.54,
+      "target_duration": 3.413,
       "motion_prompt": "Slow push-in following the deliberate movement of the quill or pen, warm candle flame flickering steadily, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -225,7 +225,7 @@
       "id": "PAIR_07",
       "start_beat_id": "S07",
       "end_beat_id": "S08",
-      "target_duration": 3.58,
+      "target_duration": 3.561,
       "motion_prompt": "Slow downward push-in toward the compass needle settling firmly pointing North, steady light, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -233,7 +233,7 @@
       "id": "PAIR_08",
       "start_beat_id": "S08",
       "end_beat_id": "S09",
-      "target_duration": 3.41,
+      "target_duration": 3.27,
       "motion_prompt": "Slow dolly pullback from the calm observer facing the vast sunrise valley, cool mountain wind in hair, serene posture, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -241,7 +241,7 @@
       "id": "PAIR_09",
       "start_beat_id": "S09",
       "end_beat_id": "S10",
-      "target_duration": 3.63,
+      "target_duration": 3.763,
       "motion_prompt": "Slow-motion capture of hammer striking the hot iron, sparks dancing in dark workshop, crisp metal physics, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -249,7 +249,7 @@
       "id": "PAIR_10",
       "start_beat_id": "S10",
       "end_beat_id": "S11",
-      "target_duration": 4.14,
+      "target_duration": 3.318,
       "motion_prompt": "Slow rotational sweep following the powerful lighthouse beam piercing through sea mist, rock reef standing immovable, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -257,7 +257,7 @@
       "id": "PAIR_11",
       "start_beat_id": "S11",
       "end_beat_id": "S12",
-      "target_duration": 3.67,
+      "target_duration": 3.487,
       "motion_prompt": "Slow graceful push-in through the stone archway toward the peaceful sunlit morning horizon, timeless dignity mood, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -265,7 +265,7 @@
       "id": "PAIR_12",
       "start_beat_id": "S12",
       "end_beat_id": "S13",
-      "target_duration": 3.81,
+      "target_duration": 3.788,
       "motion_prompt": "Slow smooth push-in toward the leather volume and brass accessories, warm scholarly study ambiance, zero morphing.",
       "mode": "boundary_extend"
     }
@@ -273,9 +273,10 @@
   "metadata": {
     "beats_count": 13,
     "pairs_count": 12,
-    "total_duration_sec": 47.91,
+    "total_duration_sec": 45.001,
     "youtube_title_length": 49,
     "bridge_syllables": 13,
     "close_syllables": 13
-  }
+  },
+  "voice_profile": "assets/voices/ch_minh_triet_song/profile.json"
 }

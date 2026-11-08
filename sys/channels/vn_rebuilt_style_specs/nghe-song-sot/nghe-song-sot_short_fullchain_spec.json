@@ -7,8 +7,8 @@
   "aspect": "9:16",
   "video_model": "omni_1_2_flash",
   "chain_mode": "scene_pairs",
-  "voice": "VietNarrator",
-  "total_duration_sec": 49.91,
+  "voice": "VietNarrator_nghe_song_sot",
+  "total_duration_sec": 43.136,
   "youtube_title": "Chiến Lược Đòn Bẩy: Chăm Chỉ Có Tăng Được Lương?",
   "title": "Chiến Lược Đòn Bẩy: Chăm Chỉ Có Tăng Được Lương?",
   "thumbnail_spec": {
@@ -36,7 +36,7 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.73,
+      "duration": 3.139,
       "at": 0.0
     },
     {
@@ -47,8 +47,8 @@
       "camera_motion": "zoom_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.29,
-      "at": 3.73
+      "duration": 3.449,
+      "at": 3.14
     },
     {
       "id": "S03",
@@ -58,8 +58,8 @@
       "camera_motion": "pan_up",
       "transition": "smoothup",
       "based_on": null,
-      "duration": 4.2,
-      "at": 8.02
+      "duration": 3.307,
+      "at": 6.59
     },
     {
       "id": "S04",
@@ -69,8 +69,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.44,
-      "at": 12.22
+      "duration": 3.208,
+      "at": 9.89
     },
     {
       "id": "S05",
@@ -80,8 +80,8 @@
       "camera_motion": "pan_right",
       "transition": "smoothright",
       "based_on": null,
-      "duration": 3.83,
-      "at": 15.66
+      "duration": 3.594,
+      "at": 13.1
     },
     {
       "id": "S06",
@@ -91,8 +91,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": "S05",
-      "duration": 3.67,
-      "at": 19.49
+      "duration": 3.14,
+      "at": 16.7
     },
     {
       "id": "S07",
@@ -102,8 +102,8 @@
       "camera_motion": "zoom_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.53,
-      "at": 23.16
+      "duration": 3.282,
+      "at": 19.84
     },
     {
       "id": "S08",
@@ -113,8 +113,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.12,
-      "at": 26.69
+      "duration": 3.408,
+      "at": 23.12
     },
     {
       "id": "S09",
@@ -124,8 +124,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.23,
-      "at": 30.81
+      "duration": 3.352,
+      "at": 26.53
     },
     {
       "id": "S10",
@@ -135,8 +135,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": "S09",
-      "duration": 3.86,
-      "at": 35.04
+      "duration": 3.492,
+      "at": 29.88
     },
     {
       "id": "S11",
@@ -146,8 +146,8 @@
       "camera_motion": "orbit_cw",
       "transition": "dissolve",
       "based_on": "S02",
-      "duration": 3.77,
-      "at": 38.9
+      "duration": 3.215,
+      "at": 33.37
     },
     {
       "id": "S12",
@@ -157,8 +157,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.12,
-      "at": 42.67
+      "duration": 3.585,
+      "at": 36.59
     },
     {
       "id": "S13",
@@ -168,8 +168,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": "S12",
-      "duration": 3.11,
-      "at": 46.79
+      "duration": 2.965,
+      "at": 40.17
     }
   ],
   "scene_pairs": [
@@ -177,7 +177,7 @@
       "id": "PAIR_01",
       "start_beat_id": "S01",
       "end_beat_id": "S02",
-      "target_duration": 3.73,
+      "target_duration": 3.139,
       "motion_prompt": "Slow smooth 35mm push-in down the center of the reflective conference table toward the floor-to-ceiling city window, locked geometry, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -185,7 +185,7 @@
       "id": "PAIR_02",
       "start_beat_id": "S02",
       "end_beat_id": "S03",
-      "target_duration": 4.29,
+      "target_duration": 3.449,
       "motion_prompt": "Slow optical rack focus from the pawns to the solitary silver knight, crisp reflections on marble, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -193,7 +193,7 @@
       "id": "PAIR_03",
       "start_beat_id": "S03",
       "end_beat_id": "S04",
-      "target_duration": 4.2,
+      "target_duration": 3.307,
       "motion_prompt": "Slow vertical pedestal rise over the uniform office cubicle grid, geometric architectural order, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -201,7 +201,7 @@
       "id": "PAIR_04",
       "start_beat_id": "S04",
       "end_beat_id": "S05",
-      "target_duration": 3.44,
+      "target_duration": 3.208,
       "motion_prompt": "Slow macro push-in on the precision mechanical watch movement and brushed steel bezel, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -209,7 +209,7 @@
       "id": "PAIR_05",
       "start_beat_id": "S05",
       "end_beat_id": "S06",
-      "target_duration": 3.83,
+      "target_duration": 3.594,
       "motion_prompt": "Precision lateral tracking as the two interlocking gears rotate smoothly in perfect mechanical synchronization, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -217,7 +217,7 @@
       "id": "PAIR_06",
       "start_beat_id": "S06",
       "end_beat_id": "S07",
-      "target_duration": 3.67,
+      "target_duration": 3.14,
       "motion_prompt": "Slow steady push-in toward the confident professional at the glass board, bright daylight, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -225,7 +225,7 @@
       "id": "PAIR_07",
       "start_beat_id": "S07",
       "end_beat_id": "S08",
-      "target_duration": 3.53,
+      "target_duration": 3.282,
       "motion_prompt": "Slow optical rack focus along the steel chain to the golden keystone link, tactile metallic textures, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -233,7 +233,7 @@
       "id": "PAIR_08",
       "start_beat_id": "S08",
       "end_beat_id": "S09",
-      "target_duration": 4.12,
+      "target_duration": 3.408,
       "motion_prompt": "Slow deliberate push-in down the boardroom table toward the poised professional, warm executive lighting, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -241,7 +241,7 @@
       "id": "PAIR_09",
       "start_beat_id": "S09",
       "end_beat_id": "S10",
-      "target_duration": 4.23,
+      "target_duration": 3.352,
       "motion_prompt": "Slow downward push-in highlighting the high-value learning workspace, crisp natural light, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -249,7 +249,7 @@
       "id": "PAIR_10",
       "start_beat_id": "S10",
       "end_beat_id": "S11",
-      "target_duration": 3.86,
+      "target_duration": 3.492,
       "motion_prompt": "Steady tracking shot behind the executive striding forward with calm purpose through the modern atrium, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -257,7 +257,7 @@
       "id": "PAIR_11",
       "start_beat_id": "S11",
       "end_beat_id": "S12",
-      "target_duration": 3.77,
+      "target_duration": 3.215,
       "motion_prompt": "Slow sweeping camera orbit around the triumphant silver piece, pristine marble surface reflections, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -265,7 +265,7 @@
       "id": "PAIR_12",
       "start_beat_id": "S12",
       "end_beat_id": "S13",
-      "target_duration": 4.12,
+      "target_duration": 3.585,
       "motion_prompt": "Slow smooth push-in toward the tablet display and strategic career guide, warm study light, zero morphing.",
       "mode": "boundary_extend"
     }
@@ -273,9 +273,10 @@
   "metadata": {
     "beats_count": 13,
     "pairs_count": 12,
-    "total_duration_sec": 49.91,
+    "total_duration_sec": 43.136,
     "youtube_title_length": 48,
     "bridge_syllables": 15,
     "close_syllables": 13
-  }
+  },
+  "voice_profile": "assets/voices/ch_nghe_song_sot/profile.json"
 }

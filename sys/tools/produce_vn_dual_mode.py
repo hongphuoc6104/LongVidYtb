@@ -119,6 +119,7 @@ class DualModeJobConfig:
     xfade_dur: float = DEFAULT_XFADE_DUR
     video_model: str = "omni_flash"
     image_model: str = "BELUGA"
+    visuals_only: bool = False
 
 
 # ---------------------------------------------------------------------------
@@ -729,8 +730,9 @@ def synthesize_vn_narration_and_words(
     beats: list[dict[str, Any]],
     voice: str = "VietNarrator",
     audio_dir: Path | None = None,
+    channel_slug: str | None = None,
 ) -> tuple[Path, float, list[float], list[dict[str, Any]]]:
-    """Synthesize each beat with real Vietnamese VietNarrator speech and capture exact word timestamps normalized to -11.0 LUFS / -1.0 dBTP."""
+    """Synthesize each beat with authentic Vietnamese Studio V3 OmniVoice speech and capture exact word timestamps normalized to -11.0 LUFS / -1.0 dBTP."""
     from sys.tools.rebuild_en_from_competitor_frames import synthesize_beats_with_competitor_cadence
     from sys.tools.rebuild_vn_from_competitor_frames import resolve_voice_for_tts
 
@@ -1446,8 +1448,14 @@ except Exception as err:
     if str(SYS_DIR) not in sys.path:
         sys.path.insert(0, str(SYS_DIR))
     from colab_bridge.accounts import select_pool
+    from colab_bridge.pool_manager import ColabPoolManager
 
-    accounts = [colab_account] if colab_account else select_pool(session=f"vp-vn-long-{job_id[:16]}", role="render")
+    if colab_account:
+        accounts = [a.strip() for a in colab_account.split(",") if a.strip()]
+    else:
+        accounts = select_pool(session=f"vp-vn-long-{job_id[:16]}", role="render")
+        if not accounts:
+            accounts = ["account-04", "account-12", "account-13", "account-14", "account-15", "account-16", "account-17", "account-18"]
     cfg_base = SYS_DIR / "config.json"
     cfg: dict[str, Any] = json.loads(cfg_base.read_text(encoding="utf-8")) if cfg_base.is_file() else {}
 
@@ -1459,7 +1467,18 @@ except Exception as err:
         started = False
         try:
             logger.info(f"Connecting to Colab Tesla T4 ({acc}) for Chapter-Chunked render...")
-            target_session = f"vp-vn-long-{int(time.time())}"
+            pm = ColabPoolManager()
+            sess_res = pm.run_account_cmd(acc, ["sessions"], check=False)
+            sess_out = (sess_res.stdout or "") + "\n" + (sess_res.stderr or "")
+            existing_sess = None
+            for line in sess_out.splitlines():
+                if "[" in line and "]" in line and "T4" in line:
+                    s_name = line.split("[", 1)[1].split("]", 1)[0].strip()
+                    if s_name and s_name != "?":
+                        existing_sess = s_name
+                        break
+
+            target_session = existing_sess or f"vp-vn-long-{int(time.time())}"
             c_cfg = dict(cfg)
             c_cfg.setdefault("colab_tts", {})
             c_cfg["colab_tts"]["session"] = target_session
@@ -1468,8 +1487,19 @@ except Exception as err:
             client = Client(SYS_DIR, c_cfg)
             client.account = acc
             client.session = target_session
+            client._runtime_role = "render"
             client.ensure_authenticated()
-            client._ready(auto_start=True)
+            if not existing_sess:
+                try:
+                    client._ready(auto_start=True)
+                except Exception as ready_err:
+                    logger.warning(f"Initial _ready failed for {acc}: {ready_err}. Attempting unassign + ledger release...")
+                    try:
+                        pm._unassign_server_endpoints(acc)
+                        pm._release_account_ledger(acc, target_session)
+                    except Exception:
+                        pass
+                    client.start()
             started = True
 
             # Stage remote work in /dev/shm (RAM disk) if >= 1.5GB free, else /content
@@ -1528,10 +1558,20 @@ import json as _j; print('POLL_STATUS:' + _j.dumps(res))
             start_poll = time.monotonic()
             render_timeout = 900
             completed = False
+            consecutive_poll_errors = 0
 
             while time.monotonic() - start_poll < render_timeout:
-                time.sleep(6.0)
-                poll_out = client.exec(poll_script, timeout=30)
+                time.sleep(10.0)
+                try:
+                    poll_out = client.exec(poll_script, timeout=60)
+                    consecutive_poll_errors = 0
+                except Exception as p_err:
+                    consecutive_poll_errors += 1
+                    logger.warning(f"[{job_id}] Poll exec error ({consecutive_poll_errors}/5): {p_err}")
+                    if consecutive_poll_errors >= 5:
+                        raise
+                    continue
+
                 poll_data = {}
                 for line in poll_out.splitlines():
                     if line.startswith("POLL_STATUS:"):
@@ -1699,7 +1739,38 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
         cached_audio_found = False
 
     if cached_audio_found:
-        beat_durations = [float(b.get("duration") or b.get("target_duration") or 2.5) for b in beats]
+        aligned_spec_file = out_dir / f"{config.channel_slug.replace('-', '_')}_short_aligned_spec.json"
+        loaded_from_aligned = False
+        if aligned_spec_file.is_file():
+            try:
+                aligned_data = json.loads(aligned_spec_file.read_text(encoding="utf-8"))
+                if aligned_data.get("words") and aligned_data.get("beat_durations"):
+                    words = aligned_data["words"]
+                    beat_durations = [float(d) for d in aligned_data["beat_durations"]]
+                    total_dur = sum(beat_durations)
+                    loaded_from_aligned = True
+                    logger.info(f"[{config.job_id}] Loaded exact word-level sync and beat durations from {aligned_spec_file.name}")
+            except Exception:
+                loaded_from_aligned = False
+
+        if not loaded_from_aligned:
+            beat_durations = [float(b.get("duration") or b.get("target_duration") or 2.5) for b in beats]
+            c_time = 0.0
+            words = []
+            for b_i, b in enumerate(beats):
+                b_dur = beat_durations[b_i]
+                tokens = str(b.get("narration", f"Beat {b_i + 1}")).split()
+                t_step = b_dur / max(1, len(tokens))
+                for tok_i, tok in enumerate(tokens):
+                    words.append({
+                        "word": tok,
+                        "start": round(c_time + tok_i * t_step, 4),
+                        "end": round(c_time + (tok_i + 1) * t_step, 4),
+                    })
+                c_time += b_dur
+            total_dur = sum(beat_durations)
+    elif config.visuals_only:
+        beat_durations = [float(b.get("duration") or b.get("target_duration") or 3.5) for b in beats]
         c_time = 0.0
         words = []
         for b_i, b in enumerate(beats):
@@ -1715,10 +1786,12 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
             c_time += b_dur
         total_dur = sum(beat_durations)
     elif not config.dry_run:
+        ch_voice = config.spec_data.get("voice") or f"VietNarrator_{config.channel_slug.replace('-', '_')}"
         norm_wav, real_dur, real_beat_durs, global_words = synthesize_vn_narration_and_words(
             beats=beats,
-            voice="VietNarrator",
+            voice=ch_voice,
             audio_dir=work_dir / "_tts_work",
+            channel_slug=config.channel_slug,
         )
         shutil.copy2(norm_wav, audio_wav)
         beat_durations = real_beat_durs
@@ -1846,6 +1919,16 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
         orchestrator.run()
         manifest_data = json.loads((work_dir / "chain_manifest.json").read_text(encoding="utf-8"))
         completed_tasks = [VideoClipTask.from_dict(td) for td in manifest_data.get("tasks", [])]
+
+    if config.visuals_only:
+        logger.info(f"[{config.job_id}] Visuals-only mode complete: {len(beats)} keyframes, {len(completed_tasks)} clips ready on disk.")
+        return {
+            "job_id": config.job_id,
+            "mode": config.mode,
+            "keyframes": len(beats),
+            "clips": len(completed_tasks),
+            "status": "visuals_ready",
+        }
 
     # 5. Hybrid Stitching & NVENC packaging
     final_mp4 = out_dir / f"{config.job_id}_9x16.mp4"
@@ -2209,6 +2292,11 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--max-workers", type=int, default=10, help="Max Flow worker concurrency")
     parser.add_argument("--dry-run", action="store_true", help="Perform fast credit-free verification")
+    parser.add_argument(
+        "--visuals-only",
+        action="store_true",
+        help="Pre-generate keyframes and Omni video clips only, skip audio/subtitles/stitch",
+    )
     return parser.parse_args()
 
 
@@ -2230,6 +2318,7 @@ def main() -> None:
         profiles=allowed_profiles,
         max_workers=args.max_workers,
         dry_run=args.dry_run,
+        visuals_only=args.visuals_only,
     )
 
     if config.mode == DualMode.BUILD_SHORT.value:

@@ -300,10 +300,11 @@ FORBIDDEN_POSITIVE_PROMPT_PATTERNS = [
 
 
 def resolve_voice_for_tts(voice: str) -> str:
-    """Map canonical VietNarrator to high-fidelity Vietnamese EdgeTTS neural voice."""
+    """Map canonical voice to high-fidelity neural voice identity, preserving Studio V3 channel profiles."""
     v = (voice or "").strip()
-    if not v or v.lower() == "vietnarrator" or v.lower().startswith("vietnarrator"):
-        return "vi-VN-NamMinhNeural"
+    if not v:
+        return "VietNarrator"
+    # Never collapse channel-specific Studio V3 voices to generic voices
     return v
 
 

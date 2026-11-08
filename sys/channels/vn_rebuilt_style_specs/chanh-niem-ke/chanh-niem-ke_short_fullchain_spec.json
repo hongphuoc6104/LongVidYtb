@@ -7,8 +7,8 @@
   "aspect": "9:16",
   "video_model": "omni_1_2_flash",
   "chain_mode": "scene_pairs",
-  "voice": "VietNarrator",
-  "total_duration_sec": 50.66,
+  "voice": "VietNarrator_chanh_niem_ke",
+  "total_duration_sec": 41.008,
   "youtube_title": "Nghệ Thuật Buông Bỏ Những Lo Âu Vô Hình Trong Đầu",
   "title": "Nghệ Thuật Buông Bỏ Những Lo Âu Vô Hình Trong Đầu",
   "thumbnail_spec": {
@@ -36,7 +36,7 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 3.35,
+      "duration": 2.857,
       "at": 0.0
     },
     {
@@ -47,8 +47,8 @@
       "camera_motion": "pan_right",
       "transition": "smoothright",
       "based_on": "S01",
-      "duration": 3.85,
-      "at": 3.35
+      "duration": 3.273,
+      "at": 2.86
     },
     {
       "id": "S03",
@@ -58,8 +58,8 @@
       "camera_motion": "pan_left",
       "transition": "smoothleft",
       "based_on": null,
-      "duration": 4.37,
-      "at": 7.2
+      "duration": 3.25,
+      "at": 6.13
     },
     {
       "id": "S04",
@@ -69,8 +69,8 @@
       "camera_motion": "pan_up",
       "transition": "smoothup",
       "based_on": null,
-      "duration": 3.76,
-      "at": 11.57
+      "duration": 3.164,
+      "at": 9.38
     },
     {
       "id": "S05",
@@ -80,8 +80,8 @@
       "camera_motion": "pan_right",
       "transition": "smoothright",
       "based_on": "S04",
-      "duration": 4.52,
-      "at": 15.33
+      "duration": 3.344,
+      "at": 12.54
     },
     {
       "id": "S06",
@@ -91,8 +91,8 @@
       "camera_motion": "zoom_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.27,
-      "at": 19.85
+      "duration": 3.461,
+      "at": 15.89
     },
     {
       "id": "S07",
@@ -102,8 +102,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.36,
-      "at": 24.12
+      "duration": 3.239,
+      "at": 19.35
     },
     {
       "id": "S08",
@@ -113,8 +113,8 @@
       "camera_motion": "pan_down",
       "transition": "smoothdown",
       "based_on": null,
-      "duration": 3.93,
-      "at": 28.48
+      "duration": 3.325,
+      "at": 22.59
     },
     {
       "id": "S09",
@@ -124,8 +124,8 @@
       "camera_motion": "pan_right",
       "transition": "smoothright",
       "based_on": null,
-      "duration": 3.17,
-      "at": 32.41
+      "duration": 2.61,
+      "at": 25.91
     },
     {
       "id": "S10",
@@ -135,8 +135,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": "S09",
-      "duration": 3.61,
-      "at": 35.58
+      "duration": 2.911,
+      "at": 28.52
     },
     {
       "id": "S11",
@@ -146,8 +146,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.11,
-      "at": 39.19
+      "duration": 3.237,
+      "at": 31.43
     },
     {
       "id": "S12",
@@ -157,8 +157,8 @@
       "camera_motion": "push_in",
       "transition": "fade",
       "based_on": null,
-      "duration": 4.18,
-      "at": 43.3
+      "duration": 3.396,
+      "at": 34.67
     },
     {
       "id": "S13",
@@ -168,8 +168,8 @@
       "camera_motion": "zoom_out",
       "transition": "fade",
       "based_on": "S12",
-      "duration": 3.19,
-      "at": 47.48
+      "duration": 2.941,
+      "at": 38.07
     }
   ],
   "scene_pairs": [
@@ -177,7 +177,7 @@
       "id": "PAIR_01",
       "start_beat_id": "S01",
       "end_beat_id": "S02",
-      "target_duration": 3.35,
+      "target_duration": 2.857,
       "motion_prompt": "Slow smooth 35mm dolly push-in toward the mossy stone basin as raindrops fall with realistic fluid physics, tranquil overcast light, locked geometry, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -185,7 +185,7 @@
       "id": "PAIR_02",
       "start_beat_id": "S02",
       "end_beat_id": "S03",
-      "target_duration": 3.85,
+      "target_duration": 3.273,
       "motion_prompt": "Slow-motion tracking pass following a golden leaf swirling calmly in the water eddy, realistic water refraction, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -193,7 +193,7 @@
       "id": "PAIR_03",
       "start_beat_id": "S03",
       "end_beat_id": "S04",
-      "target_duration": 4.37,
+      "target_duration": 3.25,
       "motion_prompt": "Slow cinematic lateral tracking across the woven tatami mat toward the meditation cushion, serene soft lighting, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -201,7 +201,7 @@
       "id": "PAIR_04",
       "start_beat_id": "S04",
       "end_beat_id": "S05",
-      "target_duration": 3.76,
+      "target_duration": 3.164,
       "motion_prompt": "Slow gentle tilt up following the morning mist rising gracefully above pine tree silhouettes, serene atmospheric depth, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -209,7 +209,7 @@
       "id": "PAIR_05",
       "start_beat_id": "S05",
       "end_beat_id": "S06",
-      "target_duration": 4.52,
+      "target_duration": 3.344,
       "motion_prompt": "Slow time-lapse style tracking move as the cloud edge parts and golden light spills across the frame, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -217,7 +217,7 @@
       "id": "PAIR_06",
       "start_beat_id": "S06",
       "end_beat_id": "S07",
-      "target_duration": 4.27,
+      "target_duration": 3.461,
       "motion_prompt": "Slow macro push-in on the spherical water droplet trembling slightly without breaking, glistening surface tension, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -225,7 +225,7 @@
       "id": "PAIR_07",
       "start_beat_id": "S07",
       "end_beat_id": "S08",
-      "target_duration": 4.36,
+      "target_duration": 3.239,
       "motion_prompt": "Slow subtle push-in capturing the gentle release of physical tension in the posture, peaceful natural realism, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -233,7 +233,7 @@
       "id": "PAIR_08",
       "start_beat_id": "S08",
       "end_beat_id": "S09",
-      "target_duration": 3.93,
+      "target_duration": 3.325,
       "motion_prompt": "Slow high-angle tracking pass as the ripples dissipate completely, returning the water surface to glass-like calm, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -241,7 +241,7 @@
       "id": "PAIR_09",
       "start_beat_id": "S09",
       "end_beat_id": "S10",
-      "target_duration": 3.17,
+      "target_duration": 2.61,
       "motion_prompt": "Slow lateral pan past the stone lantern as bamboo stalks sway gracefully in the mountain breeze, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -249,7 +249,7 @@
       "id": "PAIR_10",
       "start_beat_id": "S10",
       "end_beat_id": "S11",
-      "target_duration": 3.61,
+      "target_duration": 2.911,
       "motion_prompt": "Slow push-in toward the immovable river stone as clean water streams smoothly around its flanks, zero morphing.",
       "mode": "boundary_extend"
     },
@@ -257,7 +257,7 @@
       "id": "PAIR_11",
       "start_beat_id": "S11",
       "end_beat_id": "S12",
-      "target_duration": 4.11,
+      "target_duration": 3.237,
       "motion_prompt": "Slow graceful pullback along the veranda floorboards, peaceful harmony between architecture and nature, zero morphing.",
       "mode": "reference_start_end"
     },
@@ -265,7 +265,7 @@
       "id": "PAIR_12",
       "start_beat_id": "S12",
       "end_beat_id": "S13",
-      "target_duration": 4.18,
+      "target_duration": 3.396,
       "motion_prompt": "Slow smooth push-in toward the brass singing bowl and candle flame, warm amber meditative reflections, zero morphing.",
       "mode": "boundary_extend"
     }
@@ -273,9 +273,10 @@
   "metadata": {
     "beats_count": 13,
     "pairs_count": 12,
-    "total_duration_sec": 50.66,
+    "total_duration_sec": 41.008,
     "youtube_title_length": 49,
     "bridge_syllables": 15,
     "close_syllables": 13
-  }
+  },
+  "voice_profile": "assets/voices/ch_chanh_niem_ke/profile.json"
 }
