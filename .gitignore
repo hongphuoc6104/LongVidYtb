@@ -274,7 +274,10 @@ sys/colab_bridge/accounts/
 # Auto-generated high-density long plans (synthesized on-demand by vn_long_high_density_planner.py)
 sys/channels/vn_rebuilt_style_specs/*/*_long_high_density_plan.json
 
-# Auto-generated / runtime-mutated channel specs (regenerate via generate_vn_long_master_specs.py,
-# generate_vn_short_fullchain_specs.py; timings rewritten by TTS/batch tools on every run)
-sys/channels/vn_rebuilt_style_specs/*/*_long*_master_spec.json
-sys/channels/vn_rebuilt_style_specs/*/*_short_fullchain_spec.json
+# Channel spec dir: whitelist policy. Everything generated/runtime-mutated is ignored;
+# only the hand-authored source spec (<slug>_rebuilt_spec.json) is tracked.
+sys/channels/vn_rebuilt_style_specs/**/*
+!sys/channels/vn_rebuilt_style_specs/*/
+!sys/channels/vn_rebuilt_style_specs/*/*_rebuilt_spec.json
+!sys/channels/vn_rebuilt_style_specs/*.py
+!sys/channels/vn_rebuilt_style_specs/*.md
