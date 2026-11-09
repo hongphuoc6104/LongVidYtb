@@ -336,20 +336,55 @@ def run_batch_synthesis_on_colab(
     logger.info(f"Created staging bundle: {bundle_zip} ({bundle_zip.stat().st_size} bytes)")
 
     # Connect to Colab
+    from colab_bridge.pool_manager import ColabPoolManager
+    pm = ColabPoolManager()
+    sess_res = pm.run_account_cmd(colab_account, ["sessions"], check=False)
+    sess_out = (sess_res.stdout or "") + "\n" + (sess_res.stderr or "")
+    existing_sess = None
+    for line in sess_out.splitlines():
+        if "[" in line and "]" in line and "T4" in line:
+            s_name = line.split("[", 1)[1].split("]", 1)[0].strip()
+            if s_name and s_name != "?":
+                existing_sess = s_name
+                break
+
+    target_session = existing_sess or session_name
+    logger.info(f"Targeting session {target_session} on {colab_account} (reused={existing_sess is not None})")
+
     cfg_base = SYS_DIR / "config.json"
     cfg: Dict[str, Any] = json.loads(cfg_base.read_text(encoding="utf-8")) if cfg_base.is_file() else {}
     cfg.setdefault("colab_tts", {})
-    cfg["colab_tts"]["session"] = session_name
+    cfg["colab_tts"]["session"] = target_session
     cfg["colab_tts"]["account"] = colab_account
 
     client = Client(SYS_DIR, cfg)
     client.account = colab_account
-    client.session = session_name
+    client.session = target_session
     client.ensure_authenticated()
 
     # Reconcile & ensure ready
-    client.reconcile()
-    client._ready(auto_start=True)
+    try:
+        client.reconcile()
+    except Exception as e:
+        logger.warning(f"client.reconcile() skipped: {e}")
+    client.session = target_session
+    if not existing_sess:
+        try:
+            client._ready(auto_start=True)
+        except Exception as ready_err:
+            logger.warning(f"Initial _ready failed: {ready_err}. Unassigning + releasing ledger...")
+            try:
+                pm._unassign_server_endpoints(colab_account)
+                pm._release_account_ledger(colab_account, target_session)
+            except Exception:
+                pass
+            client.start()
+
+    try:
+        client.exec("import omnivoice, soundfile", timeout=25)
+    except Exception:
+        logger.info(f"Setting up OmniVoice runtime on {colab_account} ({client.session})...")
+        client.setup()
 
     remote_work = "/content/batch_tts_work"
     logger.info(f"Uploading bundle to remote {remote_work} on {colab_account}...")
@@ -503,7 +538,7 @@ def main():
     args = parser.parse_args()
 
     if args.channels:
-        target_channels = [c.strip() for c in args.channels.split(",") if c.strip()]
+        target_channels = [c.strip().replace("_", "-") for c in args.channels.split(",") if c.strip()]
         batch_label = f"CHANNELS ({','.join(target_channels)})"
     elif args.batch == "1":
         target_channels = BATCH_1_CHANNELS

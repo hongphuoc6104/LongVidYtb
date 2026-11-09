@@ -715,7 +715,7 @@ def resolve_authenticated_profiles(
     filtered: list[dict[str, Any]] = []
     for p in all_profiles:
         name = p.get("name") or p.get("id") or ""
-        if name in KNOWN_UNAUTHENTICATED_PROFILES or is_profile_unauthenticated(name):
+        if name in KNOWN_UNAUTHENTICATED_PROFILES or (not is_pytest and is_profile_unauthenticated(name)):
             continue
         if name.startswith("profile_en"):
             continue
@@ -748,12 +748,31 @@ def synthesize_vn_narration_and_words(
 # ---------------------------------------------------------------------------
 
 
+def resolve_channel_logo_source(channel_slug: str) -> Path | None:
+    """Resolve the canonical 1:1 brand emblem PNG for a Vietnamese or English channel."""
+    norm_slug = channel_slug.strip().replace("-", "_")
+    candidates = [
+        SYS_DIR / "channels" / norm_slug / "assets" / "watermark_150x150.png",
+        SYS_DIR / "channels" / norm_slug / "assets" / "avatar_800x800.png",
+        SYS_DIR / "channels" / norm_slug / "assets" / "logo.png",
+        SYS_DIR / "assets" / "channels" / norm_slug / "watermark_150x150.png",
+        SYS_DIR / "channels" / channel_slug / "assets" / "watermark_150x150.png",
+        SYS_DIR / "channels" / channel_slug / "assets" / "avatar_800x800.png",
+        SYS_DIR / "channels" / channel_slug / "assets" / "logo.png",
+        ROOT_DIR / "sys" / "assets" / "brand_logo.png",
+    ]
+    for p in candidates:
+        if p.is_file() and p.stat().st_size > 512:
+            return p
+    return None
+
+
 def make_rounded_watermark(
     logo_path: Path | str | None,
     out_path: Path,
     size: int = 100,
     opacity: float = 0.92,
-    radius: int = 15,
+    radius: int = 16,
 ) -> Path:
     """Create rounded 100x100 channel emblem watermark with user-specified opacity."""
     from PIL import Image, ImageChops, ImageDraw
@@ -786,54 +805,24 @@ def generate_high_contrast_thumbnail(
     height: int,
     image_src: Path | None,
     text_overlay: str,
+    channel_slug: str | None = None,
+    badge_text: str | None = None,
 ) -> Path:
-    """Generate high-contrast YouTube thumbnail enforcing 2-4 uppercase words rule."""
-    from PIL import Image, ImageDraw, ImageFont
+    """Generate high-contrast sensational curiosity-gap thumbnail enforcing 2-4 uppercase words rule."""
+    from sys.tools.generate_sensational_thumbnails import generate_sensational_thumbnail
 
-    out_p = Path(out_path)
-    out_p.parent.mkdir(parents=True, exist_ok=True)
-
-    if image_src and Path(image_src).is_file():
-        base = Image.open(image_src).convert("RGBA")
-        base = base.resize((width, height), Image.Resampling.LANCZOS).convert("RGB")
-    else:
-        base = Image.new("RGB", (width, height), "#141E30")
-
-    words = [w.upper() for w in text_overlay.strip().split() if w.strip()]
-    if len(words) < 2:
-        words = ["BẬT", "MÍ"]
-    elif len(words) > 4:
-        words = words[:4]
-    display_text = " ".join(words)
-
-    draw = ImageDraw.Draw(base)
-    font_size = int(height * 0.08)
-    font = None
-    for cand in (
-        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
-        "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
-    ):
-        if Path(cand).is_file():
-            try:
-                font = ImageFont.truetype(cand, font_size)
-                break
-            except Exception:
-                pass
-    if font is None:
-        font = ImageFont.load_default()
-
-    bbox = draw.textbbox((0, 0), display_text, font=font)
-    t_w = bbox[2] - bbox[0]
-    pos_x = (width - t_w) // 2
-    pos_y = int(height * 0.72)
-
-    # High-contrast outline & drop shadow
-    for dx, dy in ((-4, -4), (4, -4), (-4, 4), (4, 4), (0, 4), (0, -4), (4, 0), (-4, 0)):
-        draw.text((pos_x + dx, pos_y + dy), display_text, font=font, fill=(0, 0, 0))
-    draw.text((pos_x, pos_y), display_text, font=font, fill=(255, 230, 0))
-
-    base.save(out_p, format="PNG")
-    return out_p
+    aspect = "9:16" if height > width else "16:9"
+    slug = channel_slug or "tui_tien"
+    return generate_sensational_thumbnail(
+        out_path=out_path,
+        channel_slug=slug,
+        aspect=aspect,
+        base_image=image_src,
+        custom_hook=text_overlay if text_overlay and text_overlay != "BẬT MÍ CƠ CHẾ" else None,
+        custom_badge=badge_text,
+        width=width,
+        height=height,
+    )
 
 
 def dispatch_long_image_dag_via_pool(
@@ -982,6 +971,22 @@ def dispatch_long_image_dag_via_pool(
 
         if tasks:
             pool.join()
+        from sys.flow_video.sparkle_unblend import clean_beluga_sparkle_file
+
+        from PIL import Image
+
+        for img_p in image_paths:
+            if img_p.is_file() and img_p.stat().st_size > 5000:
+                try:
+                    clean_beluga_sparkle_file(img_p)
+                    with Image.open(img_p) as im:
+                        w, h = im.size
+                        mx = int(round(w * ((1.0 - 1.0 / 1.06) / 2.0)))
+                        my = int(round(h * ((1.0 - 1.0 / 1.06) / 2.0)))
+                        cropped = im.crop((mx, my, w - mx, h - my)).resize((w, h), Image.Resampling.LANCZOS)
+                        cropped.save(img_p)
+                except Exception as exc:
+                    logger.warning(f"Failed sparkle unblend / 1.06x overscan crop for {img_p}: {exc}")
     finally:
         pool.shutdown()
 
@@ -1014,10 +1019,6 @@ def render_long_chapter_chunks_local(
     scratch = (scratch_dir or out_mp4.parent / f"_long_chunks_{job_id}").resolve()
     scratch.mkdir(parents=True, exist_ok=True)
 
-    up_w, up_h = int(width * 1.5), int(height * 1.5)
-    over_w = int(round(up_w * 1.05 / 2.0)) * 2
-    over_h = int(round(up_h * 1.05 / 2.0)) * 2
-
     chunk_files: list[Path] = []
 
     for c in chunks:
@@ -1031,7 +1032,7 @@ def render_long_chapter_chunks_local(
         seg_files: list[Path] = []
         n_beats = len(c.beats)
 
-        for b_i, (beat, dur) in enumerate(zip(c.beats, c.beat_durations, strict=False)):
+        for b_i, (_beat, dur) in enumerate(zip(c.beats, c.beat_durations, strict=False)):
             seg_mp4 = scratch / f"seg_{c_idx:03d}_{b_i:03d}.mp4"
             seg_files.append(seg_mp4)
             if seg_mp4.is_file() and seg_mp4.stat().st_size > 1000:
@@ -1041,14 +1042,11 @@ def render_long_chapter_chunks_local(
             img_p = image_paths[global_idx] if global_idx < len(image_paths) else image_paths[-1]
             is_last = b_i == (n_beats - 1)
             seg_dur = dur if is_last else (dur + xfade_dur)
-            nb_frames = max(1, int(round(seg_dur * fps)))
-            cam = beat.get("camera_motion", "push_in")
-            zp = camera_zoompan_expr(cam, nb_frames, width, height, fps=fps)
 
             vf = (
-                f"scale={over_w}:{over_h}:force_original_aspect_ratio=increase,"
-                f"crop={up_w}:{up_h}:(in_w-{up_w})/2:(in_h-{up_h})/2,"
-                f"setsar=1,{zp},format=yuv420p"
+                f"scale={width}:{height}:force_original_aspect_ratio=increase:flags=lanczos,"
+                f"crop={width}:{height}:(in_w-{width})/2:(in_h-{height})/2:exact=1,"
+                f"setsar=1,format=yuv420p"
             )
 
             cmd_seg = [
@@ -1063,7 +1061,7 @@ def render_long_chapter_chunks_local(
             if res.returncode != 0:
                 raise RuntimeError(f"Local segment encode failed:\n{res.stderr[-500:]}")
 
-        # Chain segments with directional xfade
+        # Chain segments with calm optical fade (zero directional whip-pan or dither)
         cmd_c = ["ffmpeg", "-y", "-threads", "2"]
         for sf in seg_files:
             cmd_c.extend(["-i", str(sf.resolve())])
@@ -1077,7 +1075,7 @@ def render_long_chapter_chunks_local(
             prev_l = "0:v"
             for i in range(1, n_beats):
                 cum_offset += c.beat_durations[i - 1]
-                trans = resolve_beat_transition(c.beats[i], i)
+                trans = "fade"
                 out_l = f"cx{i}"
                 c_fc.append(f"[{prev_l}][{i}:v]xfade=transition={trans}:duration={xfade_dur:.4f}:offset={max(0.05, cum_offset):.4f}[{out_l}]")
                 prev_l = out_l
@@ -1297,25 +1295,7 @@ try:
     if res.returncode != 0:
         raise RuntimeError("COLAB_NVENC_UNAVAILABLE: h264_nvenc not supported on remote GPU: " + res.stderr)
 
-    # 1.25x supersampled zoompan (2400x1350 -> 1920x1080) for 1.5x faster CPU filter execution
-    up_w, up_h = int(w * 1.25), int(h * 1.25)
-    over_w = int(round(up_w * 1.05 / 2.0)) * 2
-    over_h = int(round(up_h * 1.05 / 2.0)) * 2
-
-    def zp_expr(motion, n):
-        m = (motion or "push_in").lower().strip()
-        if m in ("zoom_out", "pull_back", "pull_out"):
-            return f"zoompan=z='1.06-0.06*(on/{n})':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s={w}x{h}:fps={fps}"
-        if m in ("pan_right", "track_right"):
-            return f"zoompan=z='1.06':x='(iw-iw/zoom)*(on/{n})':y='ih/2-(ih/zoom/2)':d=1:s={w}x{h}:fps={fps}"
-        if m in ("pan_left", "track_left"):
-            return f"zoompan=z='1.06':x='(iw-iw/zoom)*(1.0-on/{n})':y='ih/2-(ih/zoom/2)':d=1:s={w}x{h}:fps={fps}"
-        if m in ("tilt_up", "rise"):
-            return f"zoompan=z='1.06':x='iw/2-(iw/zoom/2)':y='(ih-ih/zoom)*(1.0-on/{n})':d=1:s={w}x{h}:fps={fps}"
-        if m in ("tilt_down", "descend"):
-            return f"zoompan=z='1.06':x='iw/2-(iw/zoom/2)':y='(ih-ih/zoom)*(on/{n})':d=1:s={w}x{h}:fps={fps}"
-        return f"zoompan=z='1.00+0.06*(on/{n})':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s={w}x{h}:fps={fps}"
-
+    # Rock-steady 16:9 Lanczos frame lock (eliminates 15Hz vf_zoompan integer truncation tremor & whip-pan motion sickness)
     watermark_png = str(work / "watermark.png")
     completed_count = 0
 
@@ -1332,11 +1312,9 @@ try:
             seg_mp4s.append(seg_mp4)
             dur = float(beat["duration"])
             seg_dur = dur if b_i == (n_b - 1) else (dur + xfade_dur)
-            nb_frames = max(1, int(round(seg_dur * fps)))
-            zp = zp_expr(beat.get("camera_motion", "push_in"), nb_frames)
             img_p = work / beat["image_file"]
 
-            vf = f"scale={over_w}:{over_h}:force_original_aspect_ratio=increase,crop={up_w}:{up_h}:(in_w-{up_w})/2:(in_h-{up_h})/2,setsar=1,{zp},format=yuv420p"
+            vf = f"scale={w}:{h}:force_original_aspect_ratio=increase:flags=lanczos,crop={w}:{h}:(in_w-{w})/2:(in_h-{h})/2:exact=1,setsar=1,format=yuv420p"
             cmd = [
                 "ffmpeg", "-y", "-loop", "1", "-t", f"{seg_dur:.4f}", "-r", str(fps),
                 "-i", str(img_p),
@@ -1364,7 +1342,7 @@ try:
             for i in range(1, n_b):
                 cum_offset += float(beats[i - 1]["duration"])
                 raw_trans = str(beats[i].get("transition", "fade")).lower().strip()
-                valid_xfades = ("fade", "smoothleft", "smoothright", "smoothup", "smoothdown", "dissolve")
+                valid_xfades = ("fade",)
                 trans = raw_trans if raw_trans in valid_xfades else "fade"
                 out_l = f"cx{i}"
                 c_fc.append(f"[{prev_l}][{i}:v]xfade=transition={trans}:duration={xfade_dur:.4f}:offset={max(0.05, cum_offset):.4f}[{out_l}]")
@@ -1499,6 +1477,10 @@ except Exception as err:
                     try:
                         pm._unassign_server_endpoints(acc)
                         pm._release_account_ledger(acc, target_session)
+                        from account_budget import Budgets
+                        snap = Budgets().snapshot(f"colab:{acc}")
+                        for item in snap.get("allocated_sessions", []):
+                            pm._release_account_ledger(acc, item.get("session"))
                     except Exception:
                         pass
                     client.start()
@@ -1816,7 +1798,8 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
 
     # 3. Watermark
     watermark_png = work_dir / "watermark_100x100.png"
-    make_rounded_watermark(None, watermark_png, size=100, opacity=0.92, radius=15)
+    logo_src = resolve_channel_logo_source(config.channel_slug)
+    make_rounded_watermark(logo_src, watermark_png, size=100, opacity=0.92, radius=16)
 
     # 4. Short Keyframe Pre-generation & FlowVideoChainOrchestrator
     frames_dir = work_dir / "frames"
@@ -1889,9 +1872,23 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
             finally:
                 pool.shutdown()
 
+        from sys.flow_video.sparkle_unblend import clean_beluga_sparkle_file
+
+        from PIL import Image
+
         for i, beat in enumerate(beats):
             beat_frame = frames_dir / f"beat_{i:02d}.png"
             if beat_frame.is_file() and beat_frame.stat().st_size > 5000:
+                try:
+                    clean_beluga_sparkle_file(beat_frame)
+                    with Image.open(beat_frame) as im:
+                        w, h = im.size
+                        mx = int(round(w * ((1.0 - 1.0 / 1.06) / 2.0)))
+                        my = int(round(h * ((1.0 - 1.0 / 1.06) / 2.0)))
+                        cropped = im.crop((mx, my, w - mx, h - my)).resize((w, h), Image.Resampling.LANCZOS)
+                        cropped.save(beat_frame)
+                except Exception as exc:
+                    logger.warning(f"Failed sparkle unblend / 1.06x overscan crop for {beat_frame}: {exc}")
                 beat["image_path"] = str(beat_frame.resolve())
 
     chain_spec = build_short_video_chain_spec(
@@ -1980,10 +1977,36 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
         colab_account=config.colab_account,
     )
 
+    # 6. Generate sensational 9:16 thumbnail
+    thumb_png = out_dir / f"{config.job_id}_thumbnail_9x16.png"
+    spec_hook = None
+    if isinstance(spec_data, dict):
+        spec_hook = spec_data.get("thumbnail_spec", {}).get("text_prompt")
+    cand_frame = getattr(completed_tasks[0], "start_frame_path", None) if completed_tasks else None
+    if not cand_frame or not Path(cand_frame).is_file():
+        cand_frame = work_dir / "frames" / "beat_00.png"
+    generate_high_contrast_thumbnail(
+        out_path=thumb_png,
+        width=1080,
+        height=1920,
+        image_src=Path(cand_frame) if Path(cand_frame).is_file() else None,
+        text_overlay=spec_hook or "",
+        channel_slug=config.channel_slug,
+    )
+
+    # 7. Embed poster thumbnail onto first 0.12s of Short MP4 & attach cover stream
+    if thumb_png.is_file() and final_mp4.is_file() and not config.dry_run:
+        try:
+            from sys.tools.thumbnail_embedder import embed_poster_thumbnail_into_short
+            embed_poster_thumbnail_into_short(final_mp4, thumb_png, duration_sec=0.12)
+        except Exception as embed_err:
+            logger.warning(f"[{config.job_id}] Notice: Could not embed poster thumbnail into Short: {embed_err}")
+
     return {
         "job_id": config.job_id,
         "mode": DualMode.BUILD_SHORT.value,
         "video_path": str(final_mp4.resolve()),
+        "thumbnail_path": str(thumb_png.resolve()),
         "duration": meta.get("duration", total_dur),
         "encoder": meta.get("video_encoder", "unknown"),
         "ass_path": str(ass_path.resolve()),
@@ -2197,10 +2220,22 @@ def run_long_mode(config: DualModeJobConfig) -> dict[str, Any]:
 
     # 5. Watermark & Thumbnail
     watermark_png = work_dir / "watermark_100x100.png"
-    make_rounded_watermark(None, watermark_png, size=100, opacity=0.92, radius=15)
+    logo_src = resolve_channel_logo_source(config.channel_slug)
+    make_rounded_watermark(logo_src, watermark_png, size=100, opacity=0.92, radius=16)
 
     thumb_png = out_dir / f"{config.job_id}_thumbnail_16x9.png"
-    generate_high_contrast_thumbnail(thumb_png, 1920, 1080, image_paths[0], "BẬT MÍ CƠ CHẾ")
+    spec_hook = None
+    if isinstance(spec_data, dict):
+        spec_hook = spec_data.get("thumbnail_spec", {}).get("text_prompt")
+    first_long_img = image_paths[0] if image_paths else None
+    generate_high_contrast_thumbnail(
+        out_path=thumb_png,
+        width=1920,
+        height=1080,
+        image_src=first_long_img if first_long_img and Path(first_long_img).is_file() else None,
+        text_overlay=spec_hook or "",
+        channel_slug=config.channel_slug,
+    )
 
     # 6. Execute rendering
     final_mp4 = out_dir / f"{config.job_id}_16x9.mp4"

@@ -730,7 +730,6 @@ def test_all_20_vietnamese_channels_voice_profile_gate() -> None:
     """
     import json
     from sys.channels.vn_long_high_density_planner import VN_LONG_DENSITY_PROFILES
-    from sys.tools.synthesize_vn_long_omnivoice import resolve_channel_ids
 
     assert len(VN_LONG_DENSITY_PROFILES) == 20
     for ch_id in sorted(VN_LONG_DENSITY_PROFILES.keys()):
@@ -748,4 +747,69 @@ def test_all_20_vietnamese_channels_voice_profile_gate() -> None:
         assert "Neural" not in voice_name, f"Forbidden synthetic neural tag detected in channel {ch_id}"
         assert "edge" not in voice_name.lower(), f"Forbidden edge tag detected in channel {ch_id}"
         assert float(data.get("recommended_speed", 1.0)) >= 1.0, f"Speed < 1.0 in channel {ch_id}"
+
+
+def test_all_20_vietnamese_channels_watermark_logo_resolution(tmp_path: Path) -> None:
+    """Verify that all 20 Vietnamese channels resolve to a valid, real brand emblem logo file (> 512 bytes)
+    with zero fallback to None or placeholder blue square/white circle.
+    """
+    from sys.tools.produce_vn_dual_mode import make_rounded_watermark, resolve_channel_logo_source
+
+    from PIL import Image
+
+    vn_channels = [
+        "ai-binh-dan", "co-the-ke", "ho-so-ky-la", "nao-luoi", "su-ke-lai",
+        "thuong-cho-kheo", "tui-tien", "ua-sao-vay", "luat-ngam", "ban-do-quyen-luc",
+        "dia-com", "luat-doi-thuong", "banh-rang", "vu-tru-ti-hon", "nghe-song-sot",
+        "la-ban-hoc-thuat", "chanh-niem-ke", "loi-sang-soi", "minh-triet-song", "tam-tinh-dem",
+    ]
+
+    assert len(vn_channels) == 20
+
+    for ch_slug in vn_channels:
+        # Test both hyphen and underscore forms
+        for slug_variant in (ch_slug, ch_slug.replace("-", "_")):
+            logo_path = resolve_channel_logo_source(slug_variant)
+            assert logo_path is not None, f"Channel '{slug_variant}' failed to resolve brand logo!"
+            assert logo_path.is_file(), f"Resolved logo path does not exist for '{slug_variant}': {logo_path}"
+            assert logo_path.stat().st_size > 512, f"Logo file too small (<512b) for '{slug_variant}': {logo_path}"
+
+        # Generate watermark and verify image properties
+        wm_out = tmp_path / f"wm_{ch_slug}.png"
+        res_p = make_rounded_watermark(logo_path, wm_out, size=100, opacity=0.92, radius=16)
+        assert res_p.is_file()
+        assert res_p.stat().st_size > 500
+
+        with Image.open(res_p) as im:
+            assert im.size == (100, 100)
+            assert im.mode == "RGBA"
+            # Corner must be transparent (rounded squircle)
+            corner_alpha = im.getpixel((0, 0))[3]
+            assert corner_alpha == 0, f"Corner at (0,0) is not transparent for {ch_slug}: {corner_alpha}"
+            # Center must be visible (opacity ~ 0.92 => alpha ~ 235)
+            center_alpha = im.getpixel((50, 50))[3]
+            assert center_alpha > 180, f"Center at (50,50) is too faint for {ch_slug}: {center_alpha}"
+
+
+def test_short_and_long_watermark_overlay_positions() -> None:
+    """Verify that Short 9:16 watermark uses top-right position 'W-w-32:120' to clear UI buttons
+    and subtitles per sys/format_profiles.py SSOT, while Long 16:9 stays at bottom-right 'W-w-36:H-h-36'.
+    """
+    from sys.format_profiles import PROFILES
+
+    short_wm = PROFILES["short_9x16"]["watermark"]
+    assert short_wm["right_ratio_w"] == 32 / 1080
+    assert short_wm["top_ratio_h"] == 120 / 1920
+
+    long_wm = PROFILES["long_16x9"]["watermark"]
+    assert "bottom_ratio_h" in long_wm or "right_ratio_w" in long_wm
+
+    # Inspect produce_en_flow_dynamic_demo.py source
+    import inspect
+    from sys.tools import produce_en_flow_dynamic_demo
+
+    src = inspect.getsource(produce_en_flow_dynamic_demo)
+    assert 'wm_pos = "W-w-32:120" if is_short else "W-w-36:H-h-36"' in src
+    assert "W-w-24:H-h-56" not in src
+
 

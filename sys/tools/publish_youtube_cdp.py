@@ -1647,9 +1647,9 @@ async def publish_single_video(
         # Step 5: Fill Metadata (Title, Description, MFK)
         await client.fill_details(title=title, description=description, is_kids=False)
 
-        # Step 6: Custom Thumbnail (Long 16:9) or Related Video (Short 9:16)
+        # Step 6: Custom Thumbnail (Long 16:9 & Short 9:16)
         thumbnail_status = False
-        if thumbnail_path and not is_short:
+        if thumbnail_path:
             thumbnail_status = await client.upload_thumbnail(thumbnail_path)
 
         # Step 6b: Subtitles (.srt) handling if provided and exists

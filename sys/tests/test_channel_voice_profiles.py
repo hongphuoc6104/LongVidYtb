@@ -96,17 +96,17 @@ EXPECTED_CHANNELS = {
     },
     "vu_tru_ti_hon": {
         "voice": "VietNarrator_vu_tru_ti_hon",
-        "recommended_speed": 1.18,
+        "recommended_speed": 1.12,
         "default_tone": "narrative_warm",
     },
     "nghe_song_sot": {
         "voice": "VietNarrator_nghe_song_sot",
-        "recommended_speed": 1.18,
+        "recommended_speed": 1.12,
         "default_tone": "analytical_crisp",
     },
     "la_ban_hoc_thuat": {
         "voice": "VietNarrator_la_ban_hoc_thuat",
-        "recommended_speed": 1.24,
+        "recommended_speed": 1.12,
         "default_tone": "analytical_crisp",
     },
     "chanh_niem_ke": {

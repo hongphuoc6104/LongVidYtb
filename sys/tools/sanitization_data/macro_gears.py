@@ -122,25 +122,6 @@ DESCRIPTIONS_16X9 = {
     "SC11_I5": "Tactile 2D letterpress print on flat quiet solid navy financial paper #0E1A2B. A massive interlocking brass industrial gear #C98A2C rotating smoothly, >=75% negative space, zero clutter.",
     "SC11_I6": "Tactile 2D letterpress print on flat quiet solid navy financial paper #0E1A2B. Macro Gears official channel emblem featuring an engraved gear and clean typography, >=75% negative space, zero clutter.",
 }
-    "SC09_I1": "Tactile 2D letterpress print on flat quiet solid navy financial paper #0E1A2B. A massive industrial compute cluster warehouse silhouette standing silent at night, >=75% negative space, zero network maps.",
-    "SC09_I2": "Tactile 2D letterpress print on flat quiet solid navy financial paper #0E1A2B. A single tall high-voltage transmission pole silhouette, >=75% negative space, zero power balance charts.",
-    "SC09_I3": "Tactile 2D letterpress print on flat quiet solid navy financial paper #0E1A2B. A corporate bank check stamped with advance reservation markings, >=75% negative space, zero clutter.",
-    "SC09_I4": "Tactile 2D letterpress print on flat quiet solid navy financial paper #0E1A2B. A municipal power order ledger stamped with 'DEFERRED' in vermilion ink, >=75% negative space, zero clutter.",
-    "SC09_I5": "Tactile 2D letterpress print on flat quiet solid navy financial paper #0E1A2B. An aging electrical substation transformer with weathered metal housing, >=75% negative space, zero clutter.",
-    "SC09_I6": "Tactile 2D letterpress print on flat quiet solid navy financial paper #0E1A2B. An economic balance scale tilted toward private infrastructure, >=75% negative space, zero clutter.",
-    "SC10_I1": "Tactile 2D letterpress print on flat quiet solid navy financial paper #0E1A2B. A massive industrial gear train where a small gear halts against a heavy steel cog, >=75% negative space, zero clutter.",
-    "SC10_I2": "Tactile 2D letterpress print on flat quiet solid navy financial paper #0E1A2B. A single wind turbine silhouette standing motionless in quiet air, >=75% negative space, zero clutter.",
-    "SC10_I3": "Tactile 2D letterpress print on flat quiet solid navy financial paper #0E1A2B. An electric vehicle charging plug resting on a dark pedestal, >=75% negative space, zero clutter.",
-    "SC10_I4": "Tactile 2D letterpress print on flat quiet solid navy financial paper #0E1A2B. An antique hourglass with sand trickling slowly, counting physical lead time, >=75% negative space, zero progress bars.",
-    "SC10_I5": "Tactile 2D letterpress print on flat quiet solid navy financial paper #0E1A2B. An immense steel transformer core standing strong under pressure, >=75% negative space, zero digital cloud graphics.",
-    "SC10_I6": "Tactile 2D letterpress print on flat quiet solid navy financial paper #0E1A2B. A single clean hairline crack across a dark glass insulator, >=75% negative space, zero clutter.",
-    "SC11_I1": "Tactile 2D letterpress print on flat quiet solid navy financial paper #0E1A2B. A standardized universal transformer specification sheet stamped 'STANDARDIZED', >=75% negative space, zero clutter.",
-    "SC11_I2": "Tactile 2D letterpress print on flat quiet solid navy financial paper #0E1A2B. A new steel rolling mill facility silhouette under construction, >=75% negative space, zero clutter.",
-    "SC11_I3": "Tactile 2D letterpress print on flat quiet solid navy financial paper #0E1A2B. A multi-year calendar showing lead times decreasing back to 12 months in serene teal #2A9D8F, >=75% negative space, zero clutter.",
-    "SC11_I4": "Tactile 2D letterpress print on flat quiet solid navy financial paper #0E1A2B. The correspondent in navy suit pointing forward with confidence, >=75% negative space, zero clutter.",
-    "SC11_I5": "Tactile 2D letterpress print on flat quiet solid navy financial paper #0E1A2B. A massive interlocking brass industrial gear #C98A2C rotating smoothly, >=75% negative space, zero clutter.",
-    "SC11_I6": "Tactile 2D letterpress print on flat quiet solid navy financial paper #0E1A2B. Macro Gears official channel emblem featuring an engraved gear and clean typography, >=75% negative space, zero clutter.",
-}
 
 SCENE_SETTINGS_9X16 = {
     "SC01": "Flat quiet solid navy financial paper #0E1A2B with >=75% negative space, zero clutter.",

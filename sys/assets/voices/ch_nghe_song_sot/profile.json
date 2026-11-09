@@ -37,7 +37,7 @@
     "pause_after_s": 0.3
   },
   "source_speed": 1.0,
-  "recommended_speed": 1.18,
+  "recommended_speed": 1.12,
   "default_tone": "career_strategic",
   "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
   "audio_lufs": -14.0,

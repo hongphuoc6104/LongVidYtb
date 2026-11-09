@@ -1106,3 +1106,97 @@ List of technical issues recorded during pipeline operation:
 - [colab-1794116766446943383.md](colab-1794116766446943383.md) — Colab TTS cần kiểm tra.
 
 - [colab-1794145141415761837.md](colab-1794145141415761837.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794219046183040496.md](colab-1794219046183040496.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794219550004587874.md](colab-1794219550004587874.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794219672201890437.md](colab-1794219672201890437.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794220136204197323.md](colab-1794220136204197323.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794220760280772264.md](colab-1794220760280772264.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794220843448697291.md](colab-1794220843448697291.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794220882489086271.md](colab-1794220882489086271.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794220964672515981.md](colab-1794220964672515981.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794221185043381144.md](colab-1794221185043381144.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794221307306428817.md](colab-1794221307306428817.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794221467964118730.md](colab-1794221467964118730.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794221510518060628.md](colab-1794221510518060628.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794221539453819555.md](colab-1794221539453819555.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794221589178359041.md](colab-1794221589178359041.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794221631227431604.md](colab-1794221631227431604.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794221719353534121.md](colab-1794221719353534121.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794221754307509254.md](colab-1794221754307509254.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794221763321216930.md](colab-1794221763321216930.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794221883467742136.md](colab-1794221883467742136.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794222341701105854.md](colab-1794222341701105854.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794222533758281602.md](colab-1794222533758281602.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794222562953917377.md](colab-1794222562953917377.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794222650366887359.md](colab-1794222650366887359.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794222651878933643.md](colab-1794222651878933643.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794222749814706335.md](colab-1794222749814706335.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794222770916510181.md](colab-1794222770916510181.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794222784215214576.md](colab-1794222784215214576.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794222994250037782.md](colab-1794222994250037782.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794223066874838017.md](colab-1794223066874838017.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794223116587628363.md](colab-1794223116587628363.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794223579670852677.md](colab-1794223579670852677.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794225552374744501.md](colab-1794225552374744501.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794225725685848270.md](colab-1794225725685848270.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794225739592710501.md](colab-1794225739592710501.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794225788735402655.md](colab-1794225788735402655.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794225804649083039.md](colab-1794225804649083039.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794225860225724524.md](colab-1794225860225724524.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794225977363349059.md](colab-1794225977363349059.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794226835232844059.md](colab-1794226835232844059.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794228328990783835.md](colab-1794228328990783835.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794228449612427530.md](colab-1794228449612427530.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794228571951558426.md](colab-1794228571951558426.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794228692473932300.md](colab-1794228692473932300.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794228910616759623.md](colab-1794228910616759623.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794228918629096191.md](colab-1794228918629096191.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794228989472784069.md](colab-1794228989472784069.md) — Colab TTS cần kiểm tra.
+
+- [colab-1794243723317181716.md](colab-1794243723317181716.md) — Colab TTS cần kiểm tra.

@@ -4,7 +4,7 @@
 Generates smooth AI keyframe transitions (Start -> End Frames flipbook crossfade),
 stitches video clips, normalizes audio loudness (-11.0 LUFS / -1.0 dBTP), burns in
 Vietnamese .srt subtitles, overlays rounded channel watermark logos (100x100 at
-W-w-36:H-h-36 or W-w-24:H-h-50), and encodes with hardware-accelerated h264_nvenc
+W-w-36:H-h-36 or W-w-32:120), and encodes with hardware-accelerated h264_nvenc
 (or libx264 CPU fallback).
 """
 
@@ -882,7 +882,7 @@ def _render_delivery_plan(
 
         if watermark_png and watermark_png.is_file():
             cmd.extend(["-i", str(watermark_png.resolve())])
-            wm_pos = "W-w-24:H-h-50" if height > width else "W-w-36:H-h-36"
+            wm_pos = "W-w-32:120" if height > width else "W-w-36:H-h-36"
             enable_str = f":enable='between(t,0,{endcard_start:.3f})'" if endcard_start is not None else ""
             filter_chains.append(f"[{cur_v}][{inp_idx}:v]overlay={wm_pos}{enable_str}[vwm]")
             cur_v = "vwm"
@@ -1008,7 +1008,7 @@ def _render_delivery_plan(
 
         if watermark_png and watermark_png.is_file():
             cmd.extend(["-i", str(watermark_png.resolve())])
-            wm_pos = "W-w-24:H-h-50" if height > width else "W-w-36:H-h-36"
+            wm_pos = "W-w-32:120" if height > width else "W-w-36:H-h-36"
             enable_str = f":enable='between(t,0,{endcard_start:.3f})'" if endcard_start is not None else ""
             filter_chains.append(f"[{cur_v}][{inp_idx}:v]overlay={wm_pos}{enable_str}[vwm]")
             cur_v = "vwm"
@@ -1171,7 +1171,7 @@ def _render_delivery_plan(
 
         if watermark_png and watermark_png.is_file():
             cmd.extend(["-i", str(watermark_png.resolve())])
-            wm_pos = "W-w-24:H-h-50" if height > width else "W-w-36:H-h-36"
+            wm_pos = "W-w-32:120" if height > width else "W-w-36:H-h-36"
             enable_str = f":enable='between(t,0,{endcard_start:.3f})'" if endcard_start is not None else ""
             filter_chains.append(f"[{cur_v}][{inp_idx}:v]overlay={wm_pos}{enable_str}[vwm]")
             cur_v = "vwm"

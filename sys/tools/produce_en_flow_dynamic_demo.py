@@ -21,7 +21,7 @@ Implements:
      * Supersampled zero-snap `zoompan` + `xfade` fallback (`render_vn_frame_video`).
 3. Frame & Caption Packaging:
    - `9:16` Short (`1080x1920@30fps`): Vietnamese-standard 1-word alternating Red (`#FF3B30`) & Yellow (`#FFE600`)
-     kinetic `.ass` subtitles (`MarginV=400`) + rounded `100x100` channel emblem at `W-w-24:H-h-56`.
+     kinetic `.ass` subtitles (`MarginV=400`) + rounded `100x100` channel emblem at `W-w-32:120`.
    - `16:9` Long (`1920x1080@30fps`): Clean widescreen cinema frame + sidecar `.srt` + rounded `100x100`
      channel emblem at `W-w-36:H-h-36`.
 """
@@ -941,7 +941,8 @@ def package_final_on_colab_t4_nvenc(
     if override_acc == "account-10":
         override_acc = "account-20"
     if override_acc:
-        candidate_accounts = [override_acc] + [a for a in base_accounts if a not in (override_acc, "account-10")] + ["account-10"]
+        specified = [a.strip() for a in override_acc.split(",") if a.strip()]
+        candidate_accounts = specified + [a for a in base_accounts if a not in specified and a != "account-10"] + ["account-10"]
     else:
         candidate_accounts = [a for a in (base_accounts[rot:] + base_accounts[:rot]) if a != "account-10"] + ["account-10"]
     target_session = f"vp-en-{channel_slug}"
@@ -1084,7 +1085,8 @@ try:
 
     ow = max(tw, int(round(tw * overscan_crop / 2.0)) * 2)
     oh = max(th, int(round(th * overscan_crop / 2.0)) * 2)
-    base_scale = f"scale={{ow}}:{{oh}}:force_original_aspect_ratio=increase,crop={{tw}}:{{th}}:(in_w-{{tw}})/2:(in_h-{{th}})/2,setsar=1,fps={{fps}}"
+    delogo_step = "delogo=x=580:y=1130:w=105:h=105," if is_short else ""
+    base_scale = f"{{delogo_step}}scale={{ow}}:{{oh}}:force_original_aspect_ratio=increase,crop={{tw}}:{{th}}:(in_w-{{tw}})/2:(in_h-{{th}})/2,setsar=1,fps={{fps}}"
 
     # Step 1: Stitch each contiguous scene group on Tesla T4 h264_nvenc
     group_mp4s = []
@@ -1175,7 +1177,7 @@ try:
         filter_chains.append(f"[{{cur_v}}]ass=filename='{{escaped_ass}}'[vsub]")
         cur_v = "vsub"
 
-    wm_pos = "W-w-24:H-h-56" if is_short else "W-w-36:H-h-36"
+    wm_pos = "W-w-32:120" if is_short else "W-w-36:H-h-36"
     filter_chains.append(f"[{{cur_v}}][{{wm_idx}}:v]overlay={{wm_pos}}[vout]")
     filter_chains.append(f"[{{audio_idx}}:a]aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo[aout]")
 
@@ -1214,7 +1216,7 @@ except Exception as _e:
     traceback.print_exc()
     print("NVENC_SCRIPT_ERROR:", repr(_e), flush=True)
 """
-            exec_out = client.exec(remote_render_script, timeout=240 if is_short else 600)
+            exec_out = client.exec(remote_render_script, timeout=480 if is_short else 600)
             if "NVENC_SCRIPT_ERROR:" in exec_out:
                 raise RuntimeError(f"Deterministic Colab NVENC script error: {exec_out}")
             if "NVENC_RENDER_SUCCESS" not in exec_out:
@@ -1373,7 +1375,7 @@ def stitch_hybrid_scene_groups_and_package(
             out_mp4=out_mp4,
             fps=fps,
             xfade_pivot_sec=xfade_pivot_sec,
-            overscan_crop=1.05,
+            overscan_crop=1.08 if is_short else 1.05,
             scratch_dir=scratch,
             colab_account=colab_account,
         )
@@ -1697,6 +1699,17 @@ def produce_dynamic_flow_demo(
             logger.info(f"[{job_id}] Auto-generated 16:9 YouTube thumbnail -> {thumbnail_path}")
         except Exception as ex_thumb:
             logger.warning(f"[{job_id}] Thumbnail generation notice: {ex_thumb}")
+    elif aspect == "9:16" and final_mp4.is_file() and not dry_run:
+        cand_thumb = final_mp4.parent / f"{job_id}_thumbnail_9x16.png"
+        if not cand_thumb.is_file():
+            cand_thumb = final_mp4.parent / "thumbnail.png"
+        if cand_thumb.is_file():
+            try:
+                from sys.tools.thumbnail_embedder import embed_poster_thumbnail_into_short
+                embed_poster_thumbnail_into_short(final_mp4, cand_thumb, duration_sec=0.12)
+                thumbnail_path = str(cand_thumb)
+            except Exception as ex_thumb_embed:
+                logger.warning(f"[{job_id}] Short thumbnail embedding notice: {ex_thumb_embed}")
 
     # 4. Extract 1-FPS QA Frames for Visual Frame-by-Frame Verification
     qa_frames_dir = run_dir / "qa_frames_1fps"

@@ -9,32 +9,32 @@
     "en"
   ],
   "reference_wav": "reference.wav",
-  "reference_text": "Trong khi sự thật thì đơn giản hơn nhiều Người ta chỉ đăng những khoảnh khắc đẹp nhất của họ Còn bạn thì đang đem so sánh với toàn bộ cuộc sống thật của chính mình.",
-  "duration_seconds": 9.25,
+  "reference_text": "Thực ra một cách rất tương đồng, họ rất giống những người đi trên một cây cầu và rớt xuống. Họ hiểu rằng nguyên nhân là do trọng lực và họ muốn dẹp đi cái trọng lực này.",
+  "duration_seconds": 9.18,
   "acoustic_metrics": {
-    "dur": 9.25,
-    "rms_db": -14.8,
+    "dur": 9.18,
+    "rms_db": -14.32,
     "peak_db": -1.02,
-    "p05_db": -79.1,
-    "p10_db": -73.9,
-    "p50_db": -15.4,
-    "p90_db": -11.3,
-    "dyn_db": 62.7,
-    "active_ratio": 0.76,
-    "min_1s_db": -18.2,
+    "p05_db": -66.1,
+    "p10_db": -44.3,
+    "p50_db": -16.1,
+    "p90_db": -10.1,
+    "dyn_db": 34.2,
+    "active_ratio": 0.85,
+    "min_1s_db": -18.5,
     "start_60ms_db": -140.0,
     "end_60ms_db": -140.0,
-    "hf_ratio": 0.0382,
-    "f0_spread_semitones": 3.77,
-    "quarter_rms_spread_db": 1.88
+    "hf_ratio": 0.0059,
+    "f0_spread_semitones": 4.56,
+    "quarter_rms_spread_db": 1.81
   },
   "span_provenance": {
-    "raw_sir_db": 7.38,
-    "avg_word_prob": 0.978,
-    "valley_start_db": -88.7,
-    "valley_end_db": -79.2,
-    "pause_before_s": 0.7,
-    "pause_after_s": 0.84
+    "raw_sir_db": 34.57,
+    "avg_word_prob": 0.974,
+    "valley_start_db": -42.1,
+    "valley_end_db": -60.6,
+    "pause_before_s": 0.1,
+    "pause_after_s": 0.3
   },
   "source_speed": 1.0,
   "recommended_speed": 1.08,
@@ -42,7 +42,7 @@
   "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
   "audio_lufs": -14.0,
   "audio_peak_db": -1.2,
-  "sha256": "48c2a91d014b20744818e94cfd5c59ec993ff096a57bef0ec8cae3f194386909",
+  "sha256": "890c831a33e45575a1b59e5818bd62414abf0901facabfe84b7dabb6c7e2c05a",
   "demucs_vocal_isolated": true,
   "studio_v3_restored": true,
   "processing": {
@@ -54,17 +54,17 @@
   },
   "sources": [
     {
-      "url": "https://www.youtube.com/watch?v=KdPzxtTuMRQ",
-      "video_id": "KdPzxtTuMRQ",
-      "source_channel": "Hêu Podcast",
-      "video_title": "Mạng xã hội và những ảo tưởng về tình yêu hoàn hảo của giới trẻ | Hêu Podcast",
+      "url": "https://www.youtube.com/watch?v=-kDpegSXlmY",
+      "video_id": "-kDpegSXlmY",
+      "source_channel": "Tri Kỷ Cảm Xúc ",
+      "video_title": "Hiểu điều này, mọi “VẾT THƯƠNG LÒNG” trở nên NHẸ TÊNH - Tri Kỷ Cảm Xúc Web5ngay",
       "window_seconds": [
-        394.15,
-        403.14
+        508.6,
+        517.75
       ]
     }
   ],
   "listening_verified": true,
-  "note": "Studio V3 restored reference voice (Giọng kể chuyện tâm lý tình cảm thấu cảm, trong trẻo chuẩn phòng thu) from 'Hêu Podcast' (https://www.youtube.com/watch?v=KdPzxtTuMRQ @ 394.15s-403.14s) at exact 1.0x original speed.",
+  "note": "Studio V3 restored reference voice (Giọng kể chuyện tâm lý tình cảm thấu cảm, trong trẻo chuẩn phòng thu) from 'Tri Kỷ Cảm Xúc' (34.57 dB SIR) at exact 1.0x original speed.",
   "active_option": 1
 }

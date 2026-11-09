@@ -106,7 +106,7 @@ def main() -> None:
         "> 3. **Triệt Tiêu Hoàn Toàn Lỗi Giật Khung Hình (`zoom_out` 1-Frame Snap) & Áp Dụng Chuyển Cảnh Trượt/Hòa Mờ Tự Nhiên Của Đối Thủ:**",
         ">    - Loại bỏ hoàn toàn biểu thức `if(eq(on,1),1.08,...)` từng gây giật 8% tại frame đầu tiên của nhịp `zoom_out`.",
         ">    - Nâng cấp lên **Supersampling `2x` (`2160x3840`)** trước khi nội suy `zoompan` liên tục theo `on/nb_frames`, kết hợp chuyển cảnh `xfade` mượt mà học từ đối thủ (`smoothleft`, `smoothright`, `smoothup`, `smoothdown`, `fade`, `dissolve` `0.28s`).",
-        "> 4. **Khung Hiển Thị Chuẩn Kênh Việt (`9:16` & `16:9`):** Logo bo góc `100x100` tại `W-w-24:H-h-50` (`9:16`) và `W-w-36:H-h-36` (`16:9`), âm thanh chuẩn phát sóng `-11.0 LUFS / -1.0 dBTP`.",
+        "> 4. **Khung Hiển Thị Chuẩn Kênh Việt (`9:16` & `16:9`):** Logo bo góc `100x100` tại `W-w-32:120` (`9:16`) và `W-w-36:H-h-36` (`16:9`), âm thanh chuẩn phát sóng `-11.0 LUFS / -1.0 dBTP`.",
         "",
         "## Bảng Tổng Hợp 18 Kênh & Link Xem Nhanh Video Pilot (15–22s)",
         "",
