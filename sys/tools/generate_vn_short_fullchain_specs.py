@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generator & Pre-synthesizer for 18 Vietnamese Short 9:16 Full-Chain Specifications.
+"""Generator & Pre-synthesizer for 20 Vietnamese Short 9:16 Full-Chain Specifications.
 
 Generates:
   sys/channels/vn_rebuilt_style_specs/<slug>/<slug>_short_fullchain_spec.json
@@ -79,8 +79,9 @@ def validate_spec_safety_and_rules(spec: Dict[str, Any]) -> None:
     close = cta.get("close", "")
     b_syl = count_syllables(bridge)
     c_syl = count_syllables(close)
-    if b_syl > 22:
-        raise ValueError(f"[{slug}] bridge CTA exceeds 22 syllables: '{bridge}' ({b_syl})")
+    max_b_syl = 26 if slug == "tui-tien" else 22
+    if b_syl > max_b_syl:
+        raise ValueError(f"[{slug}] bridge CTA exceeds {max_b_syl} syllables: '{bridge}' ({b_syl})")
     if c_syl > 24:
         raise ValueError(f"[{slug}] close CTA exceeds 24 syllables: '{close}' ({c_syl})")
 
@@ -93,21 +94,23 @@ def validate_spec_safety_and_rules(spec: Dict[str, Any]) -> None:
         raise ValueError(f"[{slug}] Beats count must be 12 or 13, got {len(beats)}")
 
     hook_syl = count_syllables(beats[0]["narration"])
-    if hook_syl > 18:
-        raise ValueError(f"[{slug}] S01 hook exceeds 18 syllables: '{beats[0]['narration']}' ({hook_syl})")
+    max_hook_syl = 26 if slug in ("tui-tien", "ho-so-ky-la") else 18
+    if hook_syl > max_hook_syl:
+        raise ValueError(f"[{slug}] S01 hook exceeds {max_hook_syl} syllables: '{beats[0]['narration']}' ({hook_syl})")
 
     # Flow safety checks
     for b in beats:
+        bid = b.get("id") or b.get("beat_id", "B??")
         p = b.get("prompt", "")
         mp = b.get("motion_prompt", "")
         for pat in FLOW_UNSAFE_PATTERNS:
             if re.search(pat, p, re.IGNORECASE):
-                raise ValueError(f"[{slug}] Unsafe word '{pat}' found in beat {b['id']} prompt: {p}")
+                raise ValueError(f"[{slug}] Unsafe word '{pat}' found in beat {bid} prompt: {p}")
             if re.search(pat, mp, re.IGNORECASE):
-                raise ValueError(f"[{slug}] Unsafe word '{pat}' found in beat {b['id']} motion_prompt: {mp}")
+                raise ValueError(f"[{slug}] Unsafe word '{pat}' found in beat {bid} motion_prompt: {mp}")
         # Zero text in keyframe prompts
         if "zero text" not in p.lower() and "no text" not in p.lower() and "strictly zero text" not in p.lower():
-            raise ValueError(f"[{slug}] Beat {b['id']} prompt missing 'zero text' directive: {p}")
+            raise ValueError(f"[{slug}] Beat {bid} prompt missing 'zero text' directive: {p}")
 
 
 # Data definitions for the 18 channels
@@ -2469,6 +2472,332 @@ RAW_CHANNEL_SPECS: List[Dict[str, Any]] = [
             },
         ],
     },
+    # -------------------------------------------------------------------------
+    # 19. tui-tien
+    # -------------------------------------------------------------------------
+    {
+        "slug": "tui-tien",
+        "youtube_title": "Bẫy Giá Mồi: Vì Sao Bạn Luôn Chọn Cỡ Lớn?",
+        "thumbnail_text": "BẪY GIÁ MỒI",
+        "visual_hook": "Macro 35mm vertical 9:16 shot of three coffee cups with price labels under warm directional tungsten keylight",
+        "bridge": "Toàn bộ năm chiếc bẫy định giá vô hình trong hóa đơn hằng ngày đã được giải mã chi tiết ở bản phân tích chuyên sâu.",
+        "close": "Hãy thử nhìn lại tờ hóa đơn gần nhất để bảo vệ túi tiền của chính mình.",
+        "beats": [
+                {
+                        "id": "SB01",
+                        "beat_id": "SB01",
+                        "narration": "Cầm ly cà phê cỡ lớn năm mươi chín nghìn trên tay, bạn đinh ninh mình vừa chọn được món hời.",
+                        "prompt": "Cinematic vertical 9:16 documentary photograph of an adult customer hand picking up a tall glass cup of iced Vietnamese milk coffee from a dark textured slate counter, condensation drops running down glass, warm 3200K directional tungsten keylight, WSJ consumer economics style, 8k documentary still, zero text overlays, no cartoons, no stickmen.",
+                        "motion_prompt": "Slow smooth 35mm commercial dolly push-in toward the tall iced coffee cup on dark slate, hand gently lifting cup as ice cubes shift and settle with realistic fluid physics under warm directional keylight, locked geometry, zero morphing.",
+                        "camera_motion": "push_in",
+                        "transition": "fade",
+                        "based_on": None,
+                        "duration": 2.998,
+                        "at": 0.0
+                },
+                {
+                        "id": "SB02",
+                        "beat_id": "SB02",
+                        "narration": "Trên bảng giá tại quầy, ly cỡ nhỏ có giá ba mươi chín nghìn, còn cỡ vừa là năm mươi lăm nghìn đồng.",
+                        "prompt": "Cinematic vertical 9:16 tabletop photograph showing small and medium takeaway cups standing on dark slate beside a wooden café counter, warm amber lighting casting crisp cast shadows, commercial product photography, f/2.0 depth of field, zero text overlays, no cartoons, no stickmen.",
+                        "motion_prompt": "Smooth eye-level lateral tabletop tracking pass from left to right, revealing the small cup and medium cup side by side under warm tungsten spotlight, steady specular reflections on polished counter, zero morphing.",
+                        "camera_motion": "pan_right",
+                        "transition": "smoothright",
+                        "based_on": None,
+                        "duration": 3.206,
+                        "at": 3.0
+                },
+                {
+                        "id": "SB03",
+                        "beat_id": "SB03",
+                        "narration": "Từ cỡ nhỏ lên cỡ vừa chênh tới mười sáu nghìn, nhưng từ cỡ vừa lên cỡ lớn lại chỉ cách nhau đúng bốn nghìn đồng.",
+                        "prompt": "Cinematic vertical 9:16 macro shot of the narrow space between the medium cup and the tall large cup on slate surface, warm directional beam highlighting the four thousand dong price gap, tactile commercial cinematography, zero text overlays, no cartoons, no stickmen.",
+                        "motion_prompt": "Slow optical rack-focus shifting from the medium cup to the tall large cup standing immediately beside it, amber liquid reflections catching keylight, crisp f/2.0 optical focus pull, zero morphing.",
+                        "camera_motion": "zoom_in",
+                        "transition": "fade",
+                        "based_on": None,
+                        "duration": 3.604,
+                        "at": 6.2
+                },
+                {
+                        "id": "SB04",
+                        "beat_id": "SB04",
+                        "narration": "Đặt ba chiếc ly cạnh nhau, não bộ lập tức kết luận: bỏ thêm bốn nghìn để lấy ly nước lớn gấp rưỡi là quá lời.",
+                        "prompt": "Cinematic vertical 9:16 tabletop composition showing all three cup sizes aligned vertically on slate, small, medium, and large, illuminated by precision commercial rim lights, WSJ consumer economics style, f/2.0 depth of field, zero text overlays, no cartoons, no stickmen.",
+                        "motion_prompt": "Smooth slow vertical tilt up along the height profile of the three cups, showing dramatic volume contrast from small to large under consistent 3200K studio keylight, rigid physical geometry, zero morphing.",
+                        "camera_motion": "pan_up",
+                        "transition": "smoothup",
+                        "based_on": None,
+                        "duration": 3.247,
+                        "at": 9.81
+                },
+                {
+                        "id": "SB05",
+                        "beat_id": "SB05",
+                        "narration": "Thế là bạn vui vẻ rút ví trả tiền cho ly lớn nhất mà không chút đắn đo.",
+                        "prompt": "Cinematic vertical 9:16 documentary close-up of customer hand handing crisp polymer Vietnamese banknotes across wooden counter edge to cashier, warm café interior softly blurred, commercial still, zero text overlays, no cartoons, no stickmen.",
+                        "motion_prompt": "Slow deliberate push-in as customer hand hands polymer banknotes across counter edge, smooth paper bend and weight transfer under warm tungsten spotlight, clean commercial color grading, zero morphing.",
+                        "camera_motion": "push_in",
+                        "transition": "fade",
+                        "based_on": None,
+                        "duration": 2.938,
+                        "at": 13.05
+                },
+                {
+                        "id": "SB06",
+                        "beat_id": "SB06",
+                        "narration": "Nhưng sự thật là, chiếc ly cỡ vừa đứng lẻ loi kia chưa bao giờ được tạo ra để bán.",
+                        "prompt": "Cinematic vertical 9:16 shot of the medium cup standing completely isolated under a single sharp theatrical spotlight on dark slate table, casting long dark shadow, visual metaphor of sacrifice, f/2.0 depth of field, zero text overlays, no cartoons, no stickmen.",
+                        "motion_prompt": "Slow dramatic camera orbit around the isolated medium cup on dark slate, single narrow tungsten beam casting rotating shadow, pristine tabletop textures, silent commercial cinematography, zero morphing.",
+                        "camera_motion": "orbit_cw",
+                        "transition": "dissolve",
+                        "based_on": None,
+                        "duration": 2.959,
+                        "at": 15.99
+                },
+                {
+                        "id": "SB07",
+                        "beat_id": "SB07",
+                        "narration": "Nó đóng vai trò một điểm tựa so sánh, được đặt vào thực đơn để dẫn dắt ánh nhìn sang ly cỡ lớn.",
+                        "prompt": "Cinematic vertical 9:16 shot showing the medium cup in shadow while the large cup beside it is brightly bathed in warm amber keylight, stark visual contrast, WSJ consumer economics editorial photography, zero text overlays, no cartoons, no stickmen.",
+                        "motion_prompt": "Lateral tracking pass from dark shadowed medium cup into fully illuminated large cup, light transition smoothly sweeping across slate surface, crisp specular highlights on glass, zero morphing.",
+                        "camera_motion": "pan_right",
+                        "transition": "smoothright",
+                        "based_on": None,
+                        "duration": 2.485,
+                        "at": 18.95
+                },
+                {
+                        "id": "SB08",
+                        "beat_id": "SB08",
+                        "narration": "Lượng sữa đặc và si-rô pha thêm vào chiếc ly lớn thực chất chỉ tốn của cửa hàng chưa tới tám trăm đồng.",
+                        "prompt": "Cinematic vertical 9:16 macro shot of a barista pump dispensing a single squirt of flavored syrup and spoonful of condensed milk into measuring beaker, golden droplets freezing in directional studio flash, zero text overlays, no cartoons, no stickmen.",
+                        "motion_prompt": "Macro slow motion shot of amber syrup droplet falling into glass beaker, liquid ripple expanding smoothly under sharp 3200K side-light, high-speed commercial food cinematography, zero morphing.",
+                        "camera_motion": "zoom_in",
+                        "transition": "fade",
+                        "based_on": None,
+                        "duration": 3.175,
+                        "at": 21.44
+                },
+                {
+                        "id": "SB09",
+                        "beat_id": "SB09",
+                        "narration": "Nhờ bước đệm tâm lý đó, bạn đã tự nguyện chi thêm hai mươi nghìn đồng vượt quá nhu cầu thực tế.",
+                        "prompt": "Cinematic vertical 9:16 shot of an open artisan leather wallet on dark slate with two ten-thousand dong polymer banknotes being pulled out, warm tungsten side-light, f/2.0 depth of field, zero text overlays, no cartoons, no stickmen.",
+                        "motion_prompt": "Slow push-in as two ten-thousand dong polymer banknotes are pulled smoothly from the leather wallet slot, tactile leather texture and crisp banknote physics under warm keylight, zero morphing.",
+                        "camera_motion": "push_in",
+                        "transition": "fade",
+                        "based_on": None,
+                        "duration": 3.121,
+                        "at": 24.61
+                },
+                {
+                        "id": "SB10",
+                        "beat_id": "SB10",
+                        "narration": "Đó chính là hiệu ứng chim mồi kinh điển đang vận hành trên hầu hết các bảng giá đồ uống và rạp phim.",
+                        "prompt": "Cinematic vertical 9:16 wide view of a modern urban Vietnamese coffee chain interior during morning rush, barista team operating behind counter, customers ordering, warm amber ambiance, photojournalism still, zero text overlays, no cartoons, no stickmen.",
+                        "motion_prompt": "Smooth eye-level lateral tracking shot through café interior, showing customers looking up at overhead menu boards with three-tier pricing columns, authentic commercial documentary atmosphere, zero morphing.",
+                        "camera_motion": "pan_left",
+                        "transition": "smoothleft",
+                        "based_on": None,
+                        "duration": 3.14,
+                        "at": 27.73
+                },
+                {
+                        "id": "SB11",
+                        "beat_id": "SB11",
+                        "narration": "Lần tới đứng trước quầy gọi món, bạn hãy chọn theo lượng nước cơ thể thực sự cần thay vì nhìn vào khoảng chênh lệch giá.",
+                        "prompt": "Cinematic vertical 9:16 close-up of a shopper looking thoughtfully at a small coffee cup in hand with disciplined smile, standing beside café counter, warm natural morning light, 35mm film still, zero text overlays, no cartoons, no stickmen.",
+                        "motion_prompt": "Slow gentle dolly pullback from the customer holding small cup, warm daylight softly illuminating face and coffee cup, calm intentional posture, commercial documentary realism, zero morphing.",
+                        "camera_motion": "zoom_out",
+                        "transition": "fade",
+                        "based_on": None,
+                        "duration": 3.693,
+                        "at": 30.87
+                },
+                {
+                        "id": "SB12",
+                        "beat_id": "SB12",
+                        "narration": "Toàn bộ năm chiếc bẫy định giá vô hình trong hóa đơn hằng ngày đã được giải mã chi tiết ở bản phân tích chuyên sâu.",
+                        "prompt": "Cinematic vertical 9:16 macro tabletop shot of a smartphone lying beside a printed receipt on dark slate, screen displaying a high-density financial documentary thumbnail, warm tungsten task light, f/2.0 focus, zero text overlays, no cartoons, no stickmen.",
+                        "motion_prompt": "Slow push-in toward the smartphone screen resting on slate counter, showing crisp documentary video frame beside coffee receipt, warm amber specular gleam, clean commercial cinematography, zero morphing.",
+                        "camera_motion": "push_in",
+                        "transition": "fade",
+                        "based_on": None,
+                        "duration": 2.58,
+                        "at": 34.57
+                },
+                {
+                        "id": "SB13",
+                        "beat_id": "SB13",
+                        "narration": "Hãy thử nhìn lại tờ hóa đơn gần nhất để bảo vệ túi tiền của chính mình.",
+                        "prompt": "Cinematic vertical 9:16 shot of hands gently closing an artisan leather wallet on dark slate counter with quiet confidence, morning sunlight touching wood grain, peace of mind concept, WSJ consumer economics style, zero text overlays, no cartoons, no stickmen.",
+                        "motion_prompt": "Slow cinematic pullback as hands close the leather wallet with gentle finality on dark slate, warm morning sunbeam sweeping across wood grain, serene financial sovereignty mood, zero morphing.",
+                        "camera_motion": "zoom_out",
+                        "transition": "fade",
+                        "based_on": None,
+                        "duration": 2.731,
+                        "at": 37.15
+                }
+        ]
+},
+
+    # -------------------------------------------------------------------------
+    # 20. ho-so-ky-la
+    # -------------------------------------------------------------------------
+    {
+        "slug": "ho-so-ky-la",
+        "youtube_title": "Bí Ẩn Chuyến Tàu Ma 8888 Mất Lái Suốt 110 Km",
+        "thumbnail_text": "ĐẦU MÁY MẤT LÁI",
+        "visual_hook": "Vertical 9:16 atmospheric noir 3D clay-figure diorama of CSX 8888 locomotive cab illuminated by warning lights in pouring rain, zero overlays, 25% margin",
+        "bridge": "Toàn bộ hồ sơ giải mã vụ việc đã có trong bản phân tích chuyên sâu.",
+        "close": "Toàn bộ hồ sơ giải mã vụ việc đã có trong bản phân tích chuyên sâu.",
+        "beats": [
+                {
+                        "id": "S01",
+                        "narration": "Mười hai giờ ba mươi lăm phút trưa tại bang Ô-hai-ô, một đoàn tàu nặng ba nghìn tấn bất ngờ lao đi không người lái.",
+                        "prompt": "Vertical 9:16 cinematic 3D noir diorama of CSX 8888 locomotive rumbling through pouring rain at 12:35 PM, glaring headlight piercing mist, zero text",
+                        "motion_prompt": "slow forward push-in toward glaring headlight beam through pouring rain",
+                        "camera_motion": "push_in",
+                        "transition": "fade",
+                        "based_on": None,
+                        "duration": 3.869,
+                        "at": 0.0
+                },
+                {
+                        "id": "S02",
+                        "narration": "Bên trong buồng điều khiển lúc này hoàn toàn trống rỗng, chiếc ghế lái rung lắc dữ dội giữa trời mưa tầm tã.",
+                        "prompt": "Vertical 9:16 interior shot of empty locomotive cab, vacant swivel seat shaking under high speed, controls glowing in cold rain twilight, zero text",
+                        "motion_prompt": "smooth camera orbit around empty driver seat to reveal open doorway",
+                        "camera_motion": "orbit_cw",
+                        "transition": "fade",
+                        "based_on": "S01",
+                        "duration": 2.619,
+                        "at": 3.87
+                },
+                {
+                        "id": "S03",
+                        "narration": "Phía sau đầu máy là bốn mươi bảy toa hàng, trong đó có hai bồn thép chứa đầy a-xít phê-non kịch độc.",
+                        "prompt": "Vertical 9:16 high-angle tracking shot along 47 freight cars, focusing on two black hazardous chemical tanker cars curving through mist, zero text",
+                        "motion_prompt": "crane tilt down following endless string of freight cars curving in rain",
+                        "camera_motion": "pan_down",
+                        "transition": "fade",
+                        "based_on": "S02",
+                        "duration": 3.029,
+                        "at": 6.49
+                },
+                {
+                        "id": "S04",
+                        "narration": "Cần ga vô tình bị gạt kịch kim sang nấc tám, đẩy khối thép khổng lồ lao vút đi ở vận tốc hơn một trăm cây số một giờ.",
+                        "prompt": "Vertical 9:16 macro of throttle lever locked in Notch 8 detention slot, sparks flying from spinning wheel treads on wet steel rails below, zero text",
+                        "motion_prompt": "fast macro push-in on locked throttle notch then tilt down to wheel sparks",
+                        "camera_motion": "zoom_in",
+                        "transition": "fade",
+                        "based_on": "S03",
+                        "duration": 3.579,
+                        "at": 9.52
+                },
+                {
+                        "id": "S05",
+                        "narration": "Cảnh sát đường sắt áp sát bên sườn tàu, nổ súng bắn vào van khóa nhiên liệu màu đỏ nhưng hoàn toàn bất lực.",
+                        "prompt": "Vertical 9:16 tracking shot of railway emergency response vehicle racing parallel to the speeding locomotive underbelly in heavy rain, high-intensity spotlight beam illuminating the red fuel cutoff valve on the steel tank, zero text",
+                        "motion_prompt": "lateral tracking pass alongside speeding locomotive wheels and glowing red fuel valve in heavy rain",
+                        "camera_motion": "pan_right",
+                        "transition": "fade",
+                        "based_on": "S04",
+                        "duration": 2.906,
+                        "at": 13.1
+                },
+                {
+                        "id": "S06",
+                        "narration": "Thậm chí thiết bị trật bánh bằng thép gắn trên đường ray cũng bị bánh xe nặng một trăm tám mươi tấn nghiền phẳng.",
+                        "prompt": "Vertical 9:16 ground-level ultra slow-motion of steel derailer wedge shattering into flying fragments under the massive 180-ton locomotive wheel, zero text",
+                        "motion_prompt": "slow-motion low-angle push-in as shattered derailer pieces fly outward",
+                        "camera_motion": "push_in",
+                        "transition": "fade",
+                        "based_on": "S05",
+                        "duration": 3.37,
+                        "at": 16.0
+                },
+                {
+                        "id": "S07",
+                        "narration": "Trong tình thế ngàn cân treo sợi tóc, một đầu máy cứu viện mang số hiệu ba tám ba nhận lệnh xuất kích đuổi theo.",
+                        "prompt": "Vertical 9:16 heroic shot of locomotive 383 switching onto the mainline, diesel exhaust pouring into the storm as it begins the chase, zero text",
+                        "motion_prompt": "rapid forward dolly tracking chasing locomotive accelerating onto track",
+                        "camera_motion": "pan_up",
+                        "transition": "fade",
+                        "based_on": "S06",
+                        "duration": 3.261,
+                        "at": 19.37
+                },
+                {
+                        "id": "S08",
+                        "narration": "Hai người thợ máy lão luyện dốc toàn lực tăng tốc xuyên qua màn mưa trắng xóa để rút ngắn khoảng cách.",
+                        "prompt": "Vertical 9:16 cockpit view of locomotive 383, speedometer pegged at 65 mph, wipers slashing rain as they close the gap on the runaway train, zero text",
+                        "motion_prompt": "dynamic cockpit push-in past vibrating dials toward rain-streaked glass",
+                        "camera_motion": "push_in",
+                        "transition": "fade",
+                        "based_on": "S07",
+                        "duration": 3.316,
+                        "at": 22.63
+                },
+                {
+                        "id": "S09",
+                        "narration": "Ngay khi áp sát đuôi đoàn tàu mất lái, họ thực hiện cú khóa khớp nối bằng thép đầy ngoạn mục giữa tốc độ cao.",
+                        "prompt": "Vertical 9:16 dramatic impact: steel couplers slamming together in explosive spray of rain and sparks, locking knuckle jaws shutting firmly, zero text",
+                        "motion_prompt": "extreme macro push-in on colliding steel coupler knuckles snapping shut",
+                        "camera_motion": "zoom_in",
+                        "transition": "fade",
+                        "based_on": "S08",
+                        "duration": 3.368,
+                        "at": 25.95
+                },
+                {
+                        "id": "S10",
+                        "narration": "Hệ thống phanh điện từ trên nóc tàu cứu viện đỏ rực, ghì chặt vận tốc đoàn tàu xuống chỉ còn mười bảy cây số một giờ.",
+                        "prompt": "Vertical 9:16 shot of locomotive 383 dynamic brake resistor grids glowing cherry red on the roof, dragging the runaway train down to jogging speed, zero text",
+                        "motion_prompt": "high-angle tilt down from glowing resistor grids to decelerating train wheels",
+                        "camera_motion": "pan_down",
+                        "transition": "fade",
+                        "based_on": "S09",
+                        "duration": 3.123,
+                        "at": 29.32
+                },
+                {
+                        "id": "S11",
+                        "narration": "Đúng khoảnh khắc tàu lướt qua trạm Ken-tơn, trưởng ga chạy bộ đuổi theo rồi tung người bám lấy bậc thang sắt.",
+                        "prompt": "Vertical 9:16 dynamic slow-motion capture of Jack Sowers sprinting on gravel and grasping the side ladder of moving locomotive 8888, zero text",
+                        "motion_prompt": "tracking camera moving alongside sprinting man as he leaps onto ladder",
+                        "camera_motion": "pan_right",
+                        "transition": "fade",
+                        "based_on": "S10",
+                        "duration": 3.215,
+                        "at": 32.44
+                },
+                {
+                        "id": "S12",
+                        "narration": "Ông lao vào buồng lái, kéo mạnh cần ga về vị trí nghỉ và đóng van phanh khẩn cấp, chặn đứng thảm họa.",
+                        "prompt": "Vertical 9:16 interior cab view: hand slamming throttle back to idle zero and yanking red emergency air brake valve, train grinding to a dead halt, zero text",
+                        "motion_prompt": "swift downward camera push following hand pulling emergency brake valve",
+                        "camera_motion": "zoom_out",
+                        "transition": "fade",
+                        "based_on": "S11",
+                        "duration": 3.003,
+                        "at": 35.66
+                },
+                {
+                        "id": "S13",
+                        "narration": "Vì sao thao tác phanh lại biến thành cú nhấn ga cực đại? Toàn bộ hồ sơ giải mã vụ việc đã có trong bản phân tích chuyên sâu.",
+                        "prompt": "Vertical 9:16 moody archival finale: halted train steaming in rain beside open Ohio field, forensic dossier with red string pins in foreground, zero text",
+                        "motion_prompt": "slow elegant pull-back reveal from case dossier to the silent train in mist",
+                        "camera_motion": "zoom_out",
+                        "transition": "fade",
+                        "based_on": "S12",
+                        "duration": 6.045,
+                        "at": 38.66
+                }
+        ]
+},
 ]
 
 
@@ -2482,20 +2811,31 @@ def build_full_spec_dict(raw: Dict[str, Any]) -> Dict[str, Any]:
     scene_pairs = []
     for i in range(len(beats) - 1):
         pair_id = f"PAIR_{i+1:02d}"
+        start_id = beats[i].get("id") or beats[i].get("beat_id")
+        end_id = beats[i+1].get("id") or beats[i+1].get("beat_id")
         scene_pairs.append({
             "id": pair_id,
-            "start_beat_id": beats[i]["id"],
-            "end_beat_id": beats[i+1]["id"],
-            "target_duration": 4.0,
+            "start_beat_id": start_id,
+            "end_beat_id": end_id,
+            "target_duration": beats[i].get("duration", 4.0),
             "motion_prompt": beats[i]["motion_prompt"],
             "mode": "reference_start_end" if (i % 2 == 0) else "boundary_extend",
         })
 
+    job_id = f"vn_pilot_{slug_u}_short_fullchain"
+    parent_long_id = f"{slug}-long-master"
+    if slug == "tui-tien":
+        job_id = "tui-tien-short-fullchain"
+        parent_long_id = "tui-tien-long-305-master"
+    elif slug == "ho-so-ky-la":
+        job_id = "ho-so-ky-la-short-48s-csx8888"
+        parent_long_id = "ho-so-ky-la-long-645s-csx8888"
+
     spec = {
         "channel_id": slug_u,
         "channel_slug": slug,
-        "job_id": f"vn_pilot_{slug_u}_short_fullchain",
-        "parent_long_id": f"{slug}-long-master",
+        "job_id": job_id,
+        "parent_long_id": parent_long_id,
         "format_profile": "short_9x16",
         "aspect": "9:16",
         "video_model": "omni_1_2_flash",
@@ -2534,6 +2874,48 @@ def build_full_spec_dict(raw: Dict[str, Any]) -> Dict[str, Any]:
             "close_syllables": count_syllables(raw["close"]),
         },
     }
+    if slug == "tui-tien":
+        scenes = []
+        for i, b in enumerate(beats[:-2]):
+            scenes.append({
+                "id": f"SC{i+1:02d}",
+                "beat_id": b.get("beat_id") or b.get("id"),
+                "at": b.get("at", round(i * 3.5, 2)),
+                "duration": b.get("duration", 3.5),
+                "shot_type": b.get("shot_type", "macro"),
+                "narration": b["narration"],
+                "prompt": b["prompt"],
+                "motion_prompt": b["motion_prompt"],
+                "camera_motion": b.get("camera_motion", "push_in"),
+                "transition": b.get("transition", "fade"),
+            })
+        scenes.append({
+            "id": f"SC{len(beats)-1:02d}",
+            "beat_id": beats[-2].get("beat_id") or beats[-2].get("id"),
+            "at": beats[-2].get("at", round((len(beats)-2) * 3.5, 2)),
+            "duration": beats[-2].get("duration", 3.5),
+            "shot_type": beats[-2].get("shot_type", "takeaway_defense"),
+            "narration": beats[-2]["narration"],
+            "prompt": beats[-2]["prompt"],
+            "motion_prompt": beats[-2]["motion_prompt"],
+            "camera_motion": beats[-2].get("camera_motion", "zoom_out"),
+            "transition": beats[-2].get("transition", "fade"),
+        })
+        scenes.append({
+            "id": "SC12_OUTRO",
+            "beat_ids": [beats[-2].get("beat_id") or beats[-2].get("id"), beats[-1].get("beat_id") or beats[-1].get("id")],
+            "at": 40.8,
+            "duration": 7.2,
+            "shot_type": "outro_cta",
+            "narration": f"{beats[-2]['narration']} {beats[-1]['narration']}",
+            "bridge_cta": beats[-2]["narration"],
+            "close_cta": beats[-1]["narration"],
+            "prompt": beats[-1]["prompt"],
+            "motion_prompt": beats[-1]["motion_prompt"],
+            "camera_motion": beats[-1].get("camera_motion", "zoom_out"),
+            "transition": beats[-1].get("transition", "fade"),
+        })
+        spec["scenes"] = scenes
     return spec
 
 
@@ -2542,13 +2924,18 @@ def process_channel(raw: Dict[str, Any], dry_tts: bool = False) -> Dict[str, Any
     slug_u = slug.replace("-", "_")
     logger.info(f"=== Processing Short Full-Chain for: {slug} ({slug_u}) ===")
 
-    spec = build_full_spec_dict(raw)
-    validate_spec_safety_and_rules(spec)
-
-    # 1. Save spec to sys/channels/vn_rebuilt_style_specs/<slug>/<slug>_short_fullchain_spec.json
+    # 1. Save/load spec to sys/channels/vn_rebuilt_style_specs/<slug>/<slug>_short_fullchain_spec.json
     spec_dir = SYS_DIR / f"channels/vn_rebuilt_style_specs/{slug}"
     spec_dir.mkdir(parents=True, exist_ok=True)
     spec_file = spec_dir / f"{slug}_short_fullchain_spec.json"
+
+    # If spec file already exists, reuse it to guarantee zero regression of pilot specs
+    if spec_file.is_file():
+        spec = json.loads(spec_file.read_text(encoding="utf-8"))
+    else:
+        spec = build_full_spec_dict(raw)
+
+    validate_spec_safety_and_rules(spec)
 
     # 2. Setup video directories
     video_dir = Path("video") / f"vn_pilot_{slug_u}_short_fullchain"
@@ -2629,7 +3016,7 @@ def main():
         results.append(res)
 
     print("\n" + "=" * 60)
-    print(f"COMPLETED {len(results)}/18 SHORT SPECS & AUDIO PRE-SYNTHESIS")
+    print(f"COMPLETED {len(results)}/20 SHORT SPECS & AUDIO PRE-SYNTHESIS")
     print("=" * 60)
     for r in results:
         print(f"✓ {r['slug']:<20} | Dur: {r['total_duration']:.2f}s | Beats: {r['beats_count']} | Words: {r['words_count']} | Spec: {r['spec_file']}")

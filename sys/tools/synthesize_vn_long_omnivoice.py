@@ -12,6 +12,7 @@ import argparse
 import copy
 import json
 import logging
+import re
 import shutil
 import subprocess
 import sys
@@ -125,8 +126,7 @@ def synthesize_batch_job(ref_wav_path, payload_path, out_dir):
     speed = float(payload.get('speed', 1.0))
     batch_size = int(payload.get('batch_size', 8))
     num_step = int(payload.get('num_step', 32))
-    beats = payload['beats']
-    gap_sec = float(payload.get('gap_sec', 0.15))
+    gap_sec = float(payload.get('gap_sec', 0.22))
     gap_samples = round(gap_sec * SR)
 
     print(f'Creating prompt for {ref_wav_path}...')
@@ -138,50 +138,122 @@ def synthesize_batch_job(ref_wav_path, payload_path, out_dir):
 
     all_pieces = []
     beat_meta = []
-    total_beats = len(beats)
-    print(f'Synthesizing {total_beats} beats in batches of {batch_size}...')
 
-    t_start = time.time()
-    for b_idx in range(0, total_beats, batch_size):
-        chunk = beats[b_idx:b_idx + batch_size]
-        texts = [b['text'] for b in chunk]
+    if 'sentence_groups' in payload and payload['sentence_groups']:
+        sentence_groups = payload['sentence_groups']
+        total_groups = len(sentence_groups)
+        total_beats = sum(len(g.get('beats', [])) for g in sentence_groups)
+        print(f'Synthesizing {total_groups} sentence groups ({total_beats} beats) in batches of {batch_size}...')
 
-        t_batch0 = time.time()
-        gen = model.generate(
-            text=texts,
-            language=['vi'] * len(chunk),
-            voice_clone_prompt=[prompt] * len(chunk),
-            speed=[speed] * len(chunk),
-            num_step=num_step
-        )
-        batch_sec = time.time() - t_batch0
+        t_start = time.time()
+        for g_idx in range(0, total_groups, batch_size):
+            chunk_groups = sentence_groups[g_idx : g_idx + batch_size]
+            texts = [g['text'] for g in chunk_groups]
 
-        for item_idx, raw_w in enumerate(gen):
-            arr = np.asarray(raw_w, dtype=np.float32).reshape(-1)
-            arr = resample_poly(arr, 2, 1).astype(np.float32) # 24k -> 48k
-            if len(arr) >= 32:
-                arr = sosfiltfilt(sos, arr).astype(np.float32)
-            pk = float(np.max(np.abs(arr)))
-            if pk > 0.89:
-                arr *= (0.89 / pk)
-            arr = _trim_silence(arr, sr=SR)
-            dur = len(arr) / float(SR)
+            t_batch0 = time.time()
+            gen = model.generate(
+                text=texts,
+                language=['vi'] * len(chunk_groups),
+                voice_clone_prompt=[prompt] * len(chunk_groups),
+                speed=[speed] * len(chunk_groups),
+                num_step=num_step
+            )
+            batch_sec = time.time() - t_batch0
 
-            beat_info = chunk[item_idx]
-            beat_meta.append({
-                'beat_id': beat_info['id'],
-                'text': beat_info['text'],
-                'content_duration': round(dur, 4),
-                'total_duration': round(dur + gap_sec, 4)
-            })
+            for item_idx, raw_w in enumerate(gen):
+                g_info = chunk_groups[item_idx]
+                arr = np.asarray(raw_w, dtype=np.float32).reshape(-1)
+                arr = resample_poly(arr, 2, 1).astype(np.float32)  # 24k -> 48k
+                if len(arr) >= 32:
+                    arr = sosfiltfilt(sos, arr).astype(np.float32)
+                pk = float(np.max(np.abs(arr)))
+                if pk > 0.89:
+                    arr *= (0.89 / pk)
+                arr = _trim_silence(arr, sr=SR)
+                if not arr.size:
+                    arr = np.zeros(int(SR * 0.2), dtype=np.float32)
 
-            all_pieces.append(arr)
-            all_pieces.append(np.zeros(gap_samples, dtype=np.float32))
+                group_content_dur = len(arr) / float(SR)
+                group_total_dur = (len(arr) + gap_samples) / float(SR)
 
-        print(f'  Progress: {min(b_idx + batch_size, total_beats)}/{total_beats} beats ({batch_sec:.2f}s/batch)')
+                all_pieces.append(arr)
+                all_pieces.append(np.zeros(gap_samples, dtype=np.float32))
 
-    print(f'All {total_beats} beats generated in {time.time()-t_start:.2f}s')
-    master_arr = np.concatenate(all_pieces)
+                beats_in_group = g_info.get('beats', [])
+                tot_words = sum(b.get('word_count', 1) for b in beats_in_group)
+                accum_tot = 0.0
+                accum_cont = 0.0
+
+                for b_i, b_in in enumerate(beats_in_group):
+                    wc = b_in.get('word_count', 1)
+                    ratio = wc / float(tot_words) if tot_words > 0 else (1.0 / len(beats_in_group))
+                    if b_i < len(beats_in_group) - 1:
+                        b_tot = round(group_total_dur * ratio, 4)
+                        b_cont = round(group_content_dur * ratio, 4)
+                        accum_tot += b_tot
+                        accum_cont += b_cont
+                    else:
+                        b_tot = round(group_total_dur - accum_tot, 4)
+                        b_cont = round(group_content_dur - accum_cont, 4)
+
+                    beat_meta.append({
+                        'beat_id': b_in['id'],
+                        'text': b_in['text'],
+                        'content_duration': b_cont,
+                        'total_duration': b_tot,
+                    })
+
+            print(f'  Progress: {min(g_idx + batch_size, total_groups)}/{total_groups} groups ({batch_sec:.2f}s/batch)')
+
+        print(f'All {total_groups} sentence groups ({total_beats} beats) generated in {time.time()-t_start:.2f}s')
+
+    else:
+        beats = payload.get('beats', [])
+        total_beats = len(beats)
+        print(f'Synthesizing {total_beats} beats in batches of {batch_size}...')
+
+        t_start = time.time()
+        for b_idx in range(0, total_beats, batch_size):
+            chunk = beats[b_idx:b_idx + batch_size]
+            texts = [b['text'] for b in chunk]
+
+            t_batch0 = time.time()
+            gen = model.generate(
+                text=texts,
+                language=['vi'] * len(chunk),
+                voice_clone_prompt=[prompt] * len(chunk),
+                speed=[speed] * len(chunk),
+                num_step=num_step
+            )
+            batch_sec = time.time() - t_batch0
+
+            for item_idx, raw_w in enumerate(gen):
+                arr = np.asarray(raw_w, dtype=np.float32).reshape(-1)
+                arr = resample_poly(arr, 2, 1).astype(np.float32) # 24k -> 48k
+                if len(arr) >= 32:
+                    arr = sosfiltfilt(sos, arr).astype(np.float32)
+                pk = float(np.max(np.abs(arr)))
+                if pk > 0.89:
+                    arr *= (0.89 / pk)
+                arr = _trim_silence(arr, sr=SR)
+                dur = len(arr) / float(SR)
+
+                beat_info = chunk[item_idx]
+                beat_meta.append({
+                    'beat_id': beat_info['id'],
+                    'text': beat_info['text'],
+                    'content_duration': round(dur, 4),
+                    'total_duration': round(dur + gap_sec, 4)
+                })
+
+                all_pieces.append(arr)
+                all_pieces.append(np.zeros(gap_samples, dtype=np.float32))
+
+            print(f'  Progress: {min(b_idx + batch_size, total_beats)}/{total_beats} beats ({batch_sec:.2f}s/batch)')
+
+        print(f'All {total_beats} beats generated in {time.time()-t_start:.2f}s')
+
+    master_arr = np.concatenate(all_pieces) if all_pieces else np.zeros(SR, dtype=np.float32)
     raw_master_path = os.path.join(out_dir, 'raw_narration.wav')
     sf.write(raw_master_path, master_arr, SR, subtype='PCM_16')
 
@@ -223,16 +295,16 @@ def synthesize_long_channel(
     recommended_speed = float(profile.get("recommended_speed", 1.0))
     voice_chain = profile.get("audio_voice_chain") or "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500"
 
-    # 2. Spec resolution
+    # 2. Spec resolution (prefer canonical repo master specs first)
     if spec_path_arg and Path(spec_path_arg).is_file():
         spec_p = Path(spec_path_arg)
     else:
         cands = [
+            SYS_DIR / f"channels/vn_rebuilt_style_specs/{channel_slug}/{channel_slug}_long_305_master_spec.json",
+            SYS_DIR / f"channels/vn_rebuilt_style_specs/{channel_slug}/{channel_slug}_long_310_master_spec.json",
+            SYS_DIR / f"channels/vn_rebuilt_style_specs/{channel_slug}/{channel_slug}_long_master_spec.json",
             ROOT_DIR / f"video/vn_pilot_{channel_id}_long_305/{channel_id}_long_305_aligned_spec.json",
             ROOT_DIR / f"video/vn_pilot_{channel_id}_long_310/{channel_id}_long_310_aligned_spec.json",
-            SYS_DIR / f"channels/vn_rebuilt_style_specs/{channel_slug}/{channel_slug}_long_master_spec.json",
-            SYS_DIR / f"channels/vn_rebuilt_style_specs/{channel_slug}/{channel_slug}_long_310_master_spec.json",
-            SYS_DIR / f"channels/vn_rebuilt_style_specs/{channel_slug}/{channel_slug}_long_305_master_spec.json",
         ]
         spec_p = None
         for c in cands:
@@ -253,24 +325,83 @@ def synthesize_long_channel(
         out_dir = Path(out_dir_arg)
     else:
         out_dir = ROOT_DIR / f"video/vn_pilot_{channel_id}_long"
-        if "305" in str(spec_p):
-            out_dir = ROOT_DIR / f"video/vn_pilot_{channel_id}_long_305"
-        elif "310" in str(spec_p):
-            out_dir = ROOT_DIR / f"video/vn_pilot_{channel_id}_long_310"
     out_dir.mkdir(parents=True, exist_ok=True)
     work_dir = out_dir / "_work_long"
     work_dir.mkdir(parents=True, exist_ok=True)
 
     # 3. Prepare payload
-    payload_beats = []
+    # Normalize narration in-place for all beats first
     for b in beats:
-        b_id = b.get("beat_id") or b.get("id")
-        narr = (b.get("narration") or "").strip()
-        # Normalization
-        norm_narr = normalize_for_tts(narr)
-        payload_beats.append({
-            "id": b_id,
-            "text": norm_narr or "..."
+        raw_narr = (b.get("narration") or "").strip()
+        norm_narr = normalize_for_tts(raw_narr)
+        b["narration"] = norm_narr
+
+    # Group consecutive beats into sentence_groups
+    has_anchor_ids = any(re.match(r"^(CH\d+_A\d+)", (b.get("beat_id") or b.get("id") or "")) for b in beats)
+
+    grouped_raw_beats = []
+    if has_anchor_ids:
+        current_prefix = None
+        current_group = []
+        for b in beats:
+            b_id = b.get("beat_id") or b.get("id") or ""
+            m = re.match(r"^(CH\d+_A\d+)", b_id)
+            prefix = m.group(1) if m else b_id
+            if current_prefix is None or prefix == current_prefix:
+                current_prefix = prefix
+                current_group.append(b)
+            else:
+                grouped_raw_beats.append((current_prefix, current_group))
+                current_prefix = prefix
+                current_group = [b]
+        if current_group:
+            grouped_raw_beats.append((current_prefix, current_group))
+    else:
+        current_group = []
+        for b in beats:
+            current_group.append(b)
+            narr = (b.get("narration") or "").strip()
+            ends_sentence = narr.endswith((".", "?", "!")) and not (narr.endswith("...") or narr.endswith("…"))
+            if len(current_group) >= 3 or ends_sentence:
+                g_id = current_group[0].get("beat_id") or current_group[0].get("id") or f"G{len(grouped_raw_beats)+1:03d}"
+                grouped_raw_beats.append((g_id, current_group))
+                current_group = []
+        if current_group:
+            g_id = current_group[0].get("beat_id") or current_group[0].get("id") or f"G{len(grouped_raw_beats)+1:03d}"
+            grouped_raw_beats.append((g_id, current_group))
+
+    sentence_groups = []
+    payload_beats = []
+
+    for g_id, g_beats in grouped_raw_beats:
+        processed_texts = []
+        g_beat_entries = []
+
+        for b in g_beats:
+            b_id = b.get("beat_id") or b.get("id")
+            norm_narr = (b.get("narration") or "").strip()
+            t = norm_narr
+
+            processed_texts.append(t)
+            wc = max(1, len(norm_narr.split()))
+            g_beat_entries.append({
+                "id": b_id,
+                "text": norm_narr or "...",
+                "word_count": wc
+            })
+            payload_beats.append({
+                "id": b_id,
+                "text": norm_narr or "..."
+            })
+
+        comb_text = re.sub(r"\s+", " ", " ".join(processed_texts)).strip()
+        if not comb_text:
+            comb_text = "..."
+
+        sentence_groups.append({
+            "group_id": g_id,
+            "text": comb_text,
+            "beats": g_beat_entries
         })
 
     payload = {
@@ -279,7 +410,8 @@ def synthesize_long_channel(
         "speed": recommended_speed,
         "batch_size": batch_size,
         "num_step": num_step,
-        "gap_sec": 0.15,
+        "gap_sec": 0.22,
+        "sentence_groups": sentence_groups,
         "beats": payload_beats
     }
 
@@ -300,6 +432,13 @@ def synthesize_long_channel(
     client = Client(SYS_DIR, base_cfg)
     client.account = account
     client.session = session
+    client.ensure_authenticated()
+    try:
+        client.reconcile()
+    except Exception:
+        pass
+    client.session = session
+    client._ready(auto_start=True)
 
     remote_dir = f"/tmp/vp_long_tts_{channel_id}"
     client.exec(f"import os; os.makedirs('{remote_dir}', exist_ok=True)")
@@ -379,6 +518,8 @@ worker.synthesize_batch_job(
 
     total_dur = round(curr_time, 4)
     spec["total_duration_sec"] = total_dur
+    if "metadata" in spec and isinstance(spec["metadata"], dict):
+        spec["metadata"]["total_duration_sec"] = total_dur
     spec["beats"] = updated_beats
     if "visual_states" in spec:
         spec["visual_states"] = updated_beats
@@ -387,13 +528,29 @@ worker.synthesize_batch_job(
     chapters = spec.get("chapters", [])
     if chapters:
         num_ch = len(chapters)
-        ch_beats = total_dur / num_ch
-        c_start = 0.0
-        for i, ch in enumerate(chapters):
-            ch["start_sec"] = round(c_start, 3)
-            c_end = total_dur if i == num_ch - 1 else round(c_start + ch_beats, 3)
-            ch["end_sec"] = c_end
-            c_start = c_end
+        has_beat_ch_idx = any(b.get("chapter_index") is not None for b in updated_beats)
+        if has_beat_ch_idx:
+            for i, ch in enumerate(chapters):
+                ch_idx = ch.get("chapter_index", i + 1)
+                ch_beats = [b for b in updated_beats if b.get("chapter_index") == ch_idx]
+                if ch_beats:
+                    ch["start_sec"] = round(ch_beats[0]["at"], 3)
+                    ch["end_sec"] = round(ch_beats[-1]["at"] + ch_beats[-1]["duration"], 3)
+                else:
+                    prev_end = chapters[i - 1]["end_sec"] if i > 0 else 0.0
+                    ch["start_sec"] = prev_end
+                    ch["end_sec"] = prev_end
+            if chapters:
+                chapters[0]["start_sec"] = 0.0
+                chapters[-1]["end_sec"] = total_dur
+        else:
+            ch_beats = total_dur / num_ch
+            c_start = 0.0
+            for i, ch in enumerate(chapters):
+                ch["start_sec"] = round(c_start, 3)
+                c_end = total_dur if i == num_ch - 1 else round(c_start + ch_beats, 3)
+                ch["end_sec"] = c_end
+                c_start = c_end
 
     # Write subtitles.srt
     srt_content = "\n".join(srt_entries) + "\n"
@@ -416,19 +573,20 @@ worker.synthesize_batch_job(
     (work_dir / "chapters_metadata.txt").write_text("\n".join(lines), encoding="utf-8")
 
     # Save aligned spec
-    aligned_spec_p = out_dir / f"{channel_id}_long_aligned_spec.json"
-    if "305" in out_dir.name:
-        aligned_spec_p = out_dir / f"{channel_id}_long_305_aligned_spec.json"
-    elif "310" in out_dir.name:
-        aligned_spec_p = out_dir / f"{channel_id}_long_310_aligned_spec.json"
+    spec["voice"] = f"VietNarrator_{channel_id}"
+    spec["voice_profile"] = f"sys/assets/voices/ch_{channel_id}/profile.json"
 
+    aligned_spec_p = out_dir / f"{channel_id}_long_aligned_spec.json"
     aligned_spec_p.write_text(json.dumps(spec, ensure_ascii=False, indent=2), encoding="utf-8")
     logger.info(f"Saved aligned spec to: {aligned_spec_p}")
 
+    if "305" in spec_p.name or "310" in spec_p.name or len(beats) in (305, 310):
+        dense_aligned_spec_p = out_dir / f"{channel_id}_long_{len(beats)}_aligned_spec.json"
+        dense_aligned_spec_p.write_text(json.dumps(spec, ensure_ascii=False, indent=2), encoding="utf-8")
+        logger.info(f"Saved dense aligned spec to: {dense_aligned_spec_p}")
+
     # Also keep sys/channels/vn_rebuilt_style_specs synchronized
     repo_master_spec = SYS_DIR / f"channels/vn_rebuilt_style_specs/{channel_slug}/{channel_slug}_long_master_spec.json"
-    spec["voice"] = f"VietNarrator_{channel_id}"
-    spec["voice_profile"] = f"sys/assets/voices/ch_{channel_id}/profile.json"
     repo_master_spec.write_text(json.dumps(spec, ensure_ascii=False, indent=2), encoding="utf-8")
     logger.info(f"Saved master spec to: {repo_master_spec}")
 

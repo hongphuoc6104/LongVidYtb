@@ -445,10 +445,10 @@ def stitch_video_chain(
             trim_step = ",trim=start_frame=1,setpts=PTS-STARTPTS" if (trim_first or i > 0) else ""
             if target_dur is not None and target_dur > 0:
                 ratio = eff_raw_dur / target_dur
-                if 0.7 <= ratio <= 1.35:
+                if 0.55 <= ratio <= 1.50:
                     pts_factor = target_dur / eff_raw_dur
                     vfilter = f"[{i}:v]{base_scale}{trim_step}{tpad_str},setpts={pts_factor:.6f}*PTS[v{i}]"
-                elif target_dur > eff_raw_dur * 1.35:
+                elif target_dur > eff_raw_dur / 0.55:
                     extra = target_dur - eff_raw_dur + (pad_final_dur if is_last_clip else 0.0)
                     vfilter = (
                         f"[{i}:v]{base_scale}{trim_step},"
@@ -456,7 +456,7 @@ def stitch_video_chain(
                         f"setpts=PTS-STARTPTS[v{i}]"
                     )
                 else:
-                    speed_factor = 1.0 / 1.35
+                    speed_factor = 1.0 / 1.50
                     vfilter = (
                         f"[{i}:v]{base_scale}{trim_step},"
                         f"setpts={speed_factor:.6f}*PTS,"
@@ -476,13 +476,13 @@ def stitch_video_chain(
             trim_step = ",trim=start_frame=1,setpts=PTS-STARTPTS" if trim_first else ""
             if target_dur is not None and target_dur > 0:
                 ratio = eff_raw_dur / target_dur
-                if 0.7 <= ratio <= 1.35:
+                if 0.55 <= ratio <= 1.50:
                     # Smooth time-stretch so motion hits End Frame right on beat
                     pts_factor = target_dur / eff_raw_dur
                     vfilter = (
                         f"[{i}:v]{base_scale}{trim_step}{tpad_str},setpts={pts_factor:.6f}*PTS[v{i}]"
                     )
-                elif target_dur > eff_raw_dur * 1.35:
+                elif target_dur > eff_raw_dur / 0.55:
                     # Target is longer: play at natural speed, freeze last frame with tpad
                     extra = target_dur - eff_raw_dur + (pad_final_dur if is_last_clip else 0.0)
                     vfilter = (
@@ -491,8 +491,8 @@ def stitch_video_chain(
                         f"setpts=PTS-STARTPTS[v{i}]"
                     )
                 else:
-                    # Target is shorter: speed up up to 1.35x and trim remainder
-                    speed_factor = 1.0 / 1.35
+                    # Target is shorter: speed up up to 1.50x and trim remainder
+                    speed_factor = 1.0 / 1.50
                     vfilter = (
                         f"[{i}:v]{base_scale}{trim_step},"
                         f"setpts={speed_factor:.6f}*PTS,"

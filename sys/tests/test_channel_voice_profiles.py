@@ -36,7 +36,7 @@ EXPECTED_CHANNELS = {
     },
     "tui_tien": {
         "voice": "VietNarrator_tui_tien",
-        "recommended_speed": 1.12,
+        "recommended_speed": 1.08,
         "default_tone": "analytical_crisp",
     },
     "ua_sao_vay": {
@@ -56,7 +56,7 @@ EXPECTED_CHANNELS = {
     },
     "ho_so_ky_la": {
         "voice": "VietNarrator_ho_so_ky_la",
-        "recommended_speed": 1.06,
+        "recommended_speed": 1.03,
         "default_tone": "narrative_warm",
     },
     "co_the_ke": {

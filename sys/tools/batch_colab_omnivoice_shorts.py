@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import re
 import shutil
 import sys
 import tempfile
@@ -38,6 +39,7 @@ from tools.produce_vn_dual_mode import (
     build_vn_kinetic_ass_subtitles,
     make_rounded_watermark,
 )
+from tools.vn_text_normalizer import normalize_for_tts
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("batch_colab_omnivoice")
@@ -282,6 +284,18 @@ def prepare_channel_manifest(channels: List[str]) -> Tuple[Dict[str, Any], List[
         profile = json.loads(prof_file.read_text(encoding="utf-8"))
         spec = json.loads(spec_file.read_text(encoding="utf-8"))
 
+        norm_beats = []
+        for beat in spec.get("beats", []):
+            b_norm = dict(beat)
+            raw_narr = beat.get("narration", "")
+            norm_text = normalize_for_tts(raw_narr)
+            if re.search(r"\d", norm_text):
+                raise ValueError(
+                    f"Channel {slug} beat {beat.get('id', '?')} narration contains un-normalized digits: {norm_text}"
+                )
+            b_norm["narration"] = norm_text
+            norm_beats.append(b_norm)
+
         ref_wav_name = f"ref_{ch_id}.wav"
         manifest_channels.append({
             "slug": slug,
@@ -292,7 +306,7 @@ def prepare_channel_manifest(channels: List[str]) -> Tuple[Dict[str, Any], List[
             "default_tone": profile.get("default_tone", "narrative_warm"),
             "reference_text": profile["reference_text"],
             "ref_wav_filename": ref_wav_name,
-            "beats": spec.get("beats", []),
+            "beats": norm_beats,
         })
         files_to_copy.append((ref_file, ref_wav_name))
 
@@ -420,6 +434,9 @@ def run_batch_synthesis_on_colab(
         spec_path = specs_dir / slug / f"{slug}_short_fullchain_spec.json"
         spec = json.loads(spec_path.read_text(encoding="utf-8"))
 
+        for beat in spec.get("beats", []):
+            beat["narration"] = normalize_for_tts(beat.get("narration", ""))
+
         ass_path = ch_work_dir / "subtitles_kinetic_9x16.ass"
         srt_path = ch_work_dir / "subtitles.srt"
         build_vn_kinetic_ass_subtitles(words_data, total_dur, ass_path, margin_v=270, outline=6)
@@ -480,16 +497,23 @@ def run_batch_synthesis_on_colab(
 def main():
     parser = argparse.ArgumentParser(description="Batch Colab Tesla T4 GPU OmniVoice Synthesizer")
     parser.add_argument("--batch", type=str, choices=["1", "2", "all"], default="1", help="Batch to synthesize")
+    parser.add_argument("--channels", type=str, default=None, help="Comma-separated channel slugs to synthesize (e.g. tui-tien,ho-so-ky-la), overrides --batch")
     parser.add_argument("--account", type=str, default="account-01", help="Colab account to use")
     parser.add_argument("--session", type=str, default="video-pilot-tts", help="Colab session name")
     args = parser.parse_args()
 
-    if args.batch == "1":
+    if args.channels:
+        target_channels = [c.strip() for c in args.channels.split(",") if c.strip()]
+        batch_label = f"CHANNELS ({','.join(target_channels)})"
+    elif args.batch == "1":
         target_channels = BATCH_1_CHANNELS
+        batch_label = "BATCH 1"
     elif args.batch == "2":
         target_channels = BATCH_2_CHANNELS
+        batch_label = "BATCH 2"
     else:
         target_channels = ALL_20_CHANNELS
+        batch_label = "ALL 20 CHANNELS"
 
     res = run_batch_synthesis_on_colab(
         channels=target_channels,
@@ -498,7 +522,7 @@ def main():
     )
 
     print("\n" + "=" * 70)
-    print(f"BATCH {args.batch} COMPLETED ({len(res['channels_completed'])} CHANNELS) ON COLAB TESLA T4 OMNIVOICE")
+    print(f"{batch_label} COMPLETED ({len(res['channels_completed'])} CHANNELS) ON COLAB TESLA T4 OMNIVOICE")
     print("=" * 70)
     for c in res["channels_completed"]:
         print(f"✓ {c['slug']:<18} | {c['voice']:<26} | {c['duration']:.2f}s | {c['wav_bytes']:,} bytes | {c['master_wav']}")

@@ -791,32 +791,14 @@ class DirectCDPProfileSession:
             await asyncio.sleep(0.8)
 
         need_reload = reload_for_guard
-        if not need_reload:
-            has_mint = await self.evaluate("typeof window.mintCaptcha === 'function'", await_promise=False)
-            if not has_mint:
-                await self.evaluate(CDP_RECAPTCHA_GUARD_JS, await_promise=False)
-            state = await self._wait_for_flow_ready(timeout=18.0)
-            if state.get("trapped") or not state.get("hasPristine"):
-                need_reload = True
+        has_mint = await self.evaluate("typeof window.mintCaptcha === 'function'", await_promise=False)
+        if not has_mint:
+            await self.evaluate(CDP_RECAPTCHA_GUARD_JS, await_promise=False)
+        state = await self._wait_for_flow_ready(timeout=18.0)
+        if state.get("trapped"):
+            need_reload = True
 
         if need_reload:
-            try:
-                await self.call(
-                    "Storage.clearDataForOrigin",
-                    {
-                        "origin": "https://flow.google.com",
-                        "storageTypes": "appcache,cache_storage,file_systems,indexeddb,local_storage,service_workers,shader_cache,websql",
-                    },
-                )
-                all_cookies = (await self.call("Network.getAllCookies")).get("cookies", [])
-                for c in all_cookies:
-                    if "GRECAPTCHA" in c["name"] or c["name"].startswith("_ga"):
-                        await self.call(
-                            "Network.deleteCookies",
-                            {"name": c["name"], "domain": c["domain"], "path": c.get("path", "/")},
-                        )
-            except Exception:
-                pass
             await self.call("Page.reload", {"ignoreCache": False})
             await self._wait_for_flow_ready(timeout=25.0)
 
@@ -948,33 +930,13 @@ class DirectCDPProfileSession:
             await self.evaluate(CDP_RECAPTCHA_GUARD_JS, await_promise=False)
 
     async def _refresh_recaptcha_session(self) -> None:
-        """Clear stale _GRECAPTCHA cookies and origin storage, reload page, and re-arm pristine reCAPTCHA guard."""
+        """Refresh reCAPTCHA session in-place without reloading the tab or wiping _GRECAPTCHA trust cookies."""
         try:
-            await self.call(
-                "Storage.clearDataForOrigin",
-                {
-                    "origin": "https://flow.google.com",
-                    "storageTypes": "appcache,cache_storage,file_systems,indexeddb,local_storage,service_workers,shader_cache,websql",
-                },
-            )
-            all_cookies = (await self.call("Network.getAllCookies")).get("cookies", [])
-            for c in all_cookies:
-                if "GRECAPTCHA" in c["name"] or c["name"].startswith("_ga"):
-                    await self.call(
-                        "Network.deleteCookies",
-                        {"name": c["name"], "domain": c["domain"], "path": c.get("path", "/")},
-                    )
-        except Exception:
-            pass
-        try:
-            await self.call("Page.reload", {"ignoreCache": False})
-            await self._wait_for_flow_ready(timeout=20.0)
-            await self.ensure_project_id()
             await self._ensure_mint_captcha_guard()
-            for x, y in ((210, 210), (460, 330), (640, 420)):
+            for x, y in ((210, 210), (460, 330), (640, 420), (350, 280)):
                 await self.call("Input.dispatchMouseEvent", {"type": "mouseMoved", "x": x, "y": y})
-                await asyncio.sleep(0.08)
-            await asyncio.sleep(3.0)
+                await asyncio.sleep(0.12)
+            await asyncio.sleep(1.5)
         except Exception:
             pass
 
@@ -1045,7 +1007,7 @@ class DirectCDPProfileSession:
             """
             from .resource_locks import stagger_cross_process_action
 
-            await asyncio.to_thread(stagger_cross_process_action, "flow_rpc_submit", 1.55, 0.35)
+            await asyncio.to_thread(stagger_cross_process_action, "flow_rpc_submit", 2.25, 0.45)
             out = await self.evaluate(js_code, await_promise=True, timeout=180.0)
             if not isinstance(out, dict) or out.get("error"):
                 err_msg = str(out.get("error") if isinstance(out, dict) else "NO_CDP_RESPONSE")
@@ -1124,8 +1086,8 @@ class DirectCDPProfileSession:
     ) -> list[dict[str, Any]]:
         if not prompts or len(prompts) > 4:
             raise ValueError("prompts must contain 1 to 4 prompt strings")
-        if not self.project_id:
-            await self.ensure_project_id()
+        await self.ensure_project_id()
+        await self._ensure_mint_captcha_guard()
         effective_refs = reference_media_ids if reference_media_ids is not None else ref_media_ids
         freq = flow_rpc.image_request(
             prompt=prompts[0],
@@ -1137,6 +1099,7 @@ class DirectCDPProfileSession:
             base_media_id=base_media_id,
             reference_media_ids=effective_refs,
         )
+        source_path_override = f"/project/{self.project_id}" if self.project_id else "/"
         js_code = f"""
         (async () => {{
             try {{
@@ -1158,7 +1121,7 @@ class DirectCDPProfileSession:
                 const bl = wiz.cfb2h;
                 if (!at) return {{ error: "NO_AT_TOKEN" }};
                 const reqid = Math.floor(Math.random() * 900000) + 100000;
-                const sourcePath = location.pathname || "/";
+                const sourcePath = {json.dumps(source_path_override)} || location.pathname || "/";
                 const hl = (document.documentElement.lang || navigator.language || "en").split("-")[0];
                 const url = `/_/AiSandboxAngularFrontend/data/batchexecute?rpcids=ogiZ0b&source-path=${{encodeURIComponent(sourcePath)}}&bl=${{encodeURIComponent(bl || "")}}&f.sid=${{encodeURIComponent(sid || "")}}&hl=${{encodeURIComponent(hl)}}&_reqid=${{reqid}}&rt=c`;
                 const resp = await fetch(url, {{
@@ -1180,10 +1143,14 @@ class DirectCDPProfileSession:
         if "PYTEST_CURRENT_TEST" not in os.environ:
             from .resource_locks import stagger_cross_process_action
 
-            await asyncio.to_thread(stagger_cross_process_action, "flow_rpc_submit", 1.55, 0.35)
+            await asyncio.to_thread(stagger_cross_process_action, "flow_rpc_submit", 2.25, 0.45)
         out = await self.evaluate(js_code, await_promise=True, timeout=180.0)
         if not isinstance(out, dict) or out.get("error"):
             err_msg = out.get("error") if isinstance(out, dict) else "NO_CDP_RESPONSE"
+            if "NO_AT_TOKEN" in str(err_msg):
+                from .resource_locks import mark_profile_unauthenticated
+
+                mark_profile_unauthenticated(self.name)
             err = RuntimeError(str(err_msg))
             if isinstance(out, dict) and out.get("submitted") is False:
                 err.generation_submitted = False
@@ -1194,8 +1161,15 @@ class DirectCDPProfileSession:
         try:
             payload = flow_rpc.first_payload(raw_text, flow_rpc.RPC_GEN_IMAGE)
         except Exception as ex:
-            if "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in str(ex) or "CAPTCHA" in str(ex):
-                err_block = RuntimeError("FLOW_PROVIDER_BLOCKED: preserve the original session and reconcile; do not resubmit")
+            if "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in str(ex) or "TOO_MUCH_TRAFFIC" in str(ex) or "CAPTCHA" in str(ex):
+                self._recaptcha_refreshed = True
+                try:
+                    await self._refresh_recaptcha_session()
+                except Exception:
+                    pass
+                err_block = RuntimeError(
+                    f"FLOW_PROVIDER_BLOCKED: preserve the original session and reconcile; do not resubmit ({ex})"
+                )
                 err_block.generation_submitted = False
                 raise err_block from ex
             raise
@@ -1224,7 +1198,7 @@ class DirectCDPProfileSession:
             from .resource_locks import stagger_cross_process_action
 
             await self._ensure_mint_captcha_guard()
-            await asyncio.to_thread(stagger_cross_process_action, "flow_rpc_submit", 1.55, 0.35)
+            await asyncio.to_thread(stagger_cross_process_action, "flow_rpc_submit", 2.25, 0.45)
         source_path_override = f"/project/{self.project_id}" if self.project_id else "/"
         js_code = f"""
         (async () => {{

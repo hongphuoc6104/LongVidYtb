@@ -259,8 +259,10 @@ class FlowVideoChainOrchestrator:
         if sidecar.is_file():
             try:
                 data = json.loads(sidecar.read_text(encoding="utf-8"))
-                if data.get("profile") == profile_name and data.get("media_id"):
-                    return str(data["media_id"])
+                creator = data.get("profile") or data.get("profile_id")
+                mid = data.get("media_id") or data.get("forgeId")
+                if creator == profile_name and mid:
+                    return str(mid)
                 pmap = data.get("profile_media_ids")
                 if isinstance(pmap, dict) and pmap.get(profile_name):
                     return str(pmap[profile_name])
@@ -1116,18 +1118,19 @@ class FlowVideoChainOrchestrator:
         return 18
 
     def _reconcile_manifest(self, tasks: list[VideoClipTask]) -> list[VideoClipTask]:
-        """Check existing manifest on disk to avoid re-generating finished clips."""
-        if not self.resume or not self.manifest_path.is_file():
+        """Check existing manifest and clips on disk to avoid re-generating finished clips."""
+        if not self.resume:
             self._save_manifest(tasks)
             return tasks
 
-        try:
-            with open(self.manifest_path, "r", encoding="utf-8") as f:
-                saved = json.load(f)
-            saved_clips = {c["clip_id"]: c for c in saved.get("tasks", [])}
-        except Exception:
-            self._save_manifest(tasks)
-            return tasks
+        saved_clips: dict[str, dict[str, Any]] = {}
+        if self.manifest_path.is_file():
+            try:
+                with open(self.manifest_path, "r", encoding="utf-8") as f:
+                    saved = json.load(f)
+                saved_clips = {c["clip_id"]: c for c in saved.get("tasks", [])}
+            except Exception:
+                saved_clips = {}
 
         is_flipbook_mode = (
             self.spec.mode == ChainMode.ZERO_CREDIT_FLIPBOOK
@@ -1152,10 +1155,35 @@ class FlowVideoChainOrchestrator:
                         t.output_mp4_path = str(out_p.resolve())
                         t.profile_used = cached.get("profile_used")
                         t.generation_seconds = float(cached.get("generation_seconds", 0.0))
+                        continue
                     except Exception:
                         t.status = "pending"
-                else:
-                    t.status = "pending"
+
+            # Fallback: check if the clip MP4 already exists on disk in clips/ directory
+            out_p = Path(t.output_mp4_path)
+            if out_p.is_file() and out_p.stat().st_size > 10000:
+                sidecar_p = out_p.with_suffix(".json")
+                sidecar_prof = None
+                if sidecar_p.is_file():
+                    try:
+                        s_data = json.loads(sidecar_p.read_text(encoding="utf-8"))
+                        sidecar_prof = s_data.get("profile") or s_data.get("profile_used")
+                    except Exception:
+                        pass
+                is_flipbook_clip = sidecar_prof == "local_zero_credit_flipbook"
+                if is_flipbook_mode or not is_flipbook_clip:
+                    try:
+                        probe_video_clip(out_p)
+                        if not self.dry_run:
+                            clean_omni_video_sparkle_mp4(out_p)
+                        t.status = "completed"
+                        t.output_mp4_path = str(out_p.resolve())
+                        t.profile_used = sidecar_prof or "disk_cached_clip"
+                        continue
+                    except Exception:
+                        t.status = "pending"
+
+            t.status = "pending"
 
         self._save_manifest(tasks)
         return tasks
@@ -1376,7 +1404,7 @@ class FlowVideoChainOrchestrator:
                                 if start_sidecar.is_file():
                                     try:
                                         s_data = json.loads(start_sidecar.read_text(encoding="utf-8"))
-                                        s_prof = s_data.get("profile")
+                                        s_prof = s_data.get("profile") or s_data.get("profile_id")
                                         s_pmap = s_data.get("profile_media_ids") if isinstance(s_data.get("profile_media_ids"), dict) else {}
                                         if s_prof:
                                             for cand in eligible_candidates:
@@ -1399,13 +1427,7 @@ class FlowVideoChainOrchestrator:
                                 ),
                                 None,
                             )
-                            if matched_cand and (
-                                int(matched_cand.get("cdp_port", 0)) in self._warm_sessions
-                                or len(self._warm_sessions) < self.max_workers
-                            ):
-                                profile_cfg = matched_cand
-                            else:
-                                profile_cfg = warm_cand or matched_cand or eligible_candidates[0]
+                            profile_cfg = matched_cand or warm_cand or eligible_candidates[0]
                             available_profiles.remove(profile_cfg)
 
                     if wait_sec > 0:
@@ -1477,8 +1499,13 @@ class FlowVideoChainOrchestrator:
                                 "CAPTCHA_FAILED",
                             )
                         ):
-                            logger.warning(f"[RATE_LIMIT_ROTATE] Profile {p_name} rate-limited at clip {task.clip_id}. Cooldown 75s; rotating in 8.0s...")
-                            await asyncio.sleep(8.0)
+                            is_traffic_burst = "TOO_MUCH_TRAFFIC" in str(exc) or "UNUSUAL_ACTIVITY" in str(exc)
+                            pause_sec = 45.0 if is_traffic_burst else 8.0
+                            logger.warning(
+                                f"[RATE_LIMIT_ROTATE] Profile {p_name} rate-limited at clip {task.clip_id}. "
+                                f"Cooldown 75s; rotating in {pause_sec:.1f}s..."
+                            )
+                            await asyncio.sleep(pause_sec)
                         else:
                             # Brief backoff before rotating to next profile
                             await asyncio.sleep(min(5.0, 1.0 * attempts))

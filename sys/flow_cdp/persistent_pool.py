@@ -640,12 +640,7 @@ class PersistentWorkerPool:
                         continue
 
                 is_anchor_shot = (
-                    not bool(
-                        task.get("baseMediaId")
-                        or task.get("base_media_id")
-                        or task.get("based_on")
-                        or task.get("parent_id")
-                    )
+                    not bool(task.get("baseMediaId") or task.get("base_media_id"))
                     and str(task.get("type", "image")).lower() == "image"
                     and (task.get("credit_cost") is None or int(task.get("credit_cost")) == 0)
                 )
@@ -668,12 +663,7 @@ class PersistentWorkerPool:
                             break
 
                         cand_anchor = (
-                            not bool(
-                                cand_task.get("baseMediaId")
-                                or cand_task.get("base_media_id")
-                                or cand_task.get("based_on")
-                                or cand_task.get("parent_id")
-                            )
+                            not bool(cand_task.get("baseMediaId") or cand_task.get("base_media_id"))
                             and str(cand_task.get("type", "image")).lower() == "image"
                             and (cand_task.get("credit_cost") is None or int(cand_task.get("credit_cost")) == 0)
                         )
@@ -960,8 +950,8 @@ class PersistentWorkerPool:
 
                         # If Edge IP burst limit was tripped, pause worker to let the sliding window reset cleanly
                         if is_ip_burst:
-                            logger.warning("[RATE_LIMIT_PAUSE] Edge burst limit tripped (TOO_MUCH_TRAFFIC). Pausing worker for 15s...")
-                            time.sleep(15.0)
+                            logger.warning("[RATE_LIMIT_PAUSE] Edge burst limit tripped (TOO_MUCH_TRAFFIC). Pausing worker for 45s...")
+                            time.sleep(45.0)
 
                         # Re-queue all tasks in batch_tasks with exponential delay to avoid tight-loop retry storms
                         for r_task in batch_tasks:
@@ -1013,11 +1003,10 @@ class PersistentWorkerPool:
                                 while not self.pinned_queues[old_name].empty():
                                     try:
                                         m_prio, m_seq, m_task = self.pinned_queues[old_name].get_nowait()
-                                        m_task["pinned_profile"] = prof_name
-                                        if prof_name in self.pinned_queues:
-                                            self.pinned_queues[prof_name].put((m_prio, m_seq, m_task))
-                                        else:
-                                            self.shared_queue.put((m_prio, m_seq, m_task))
+                                        m_task.pop("pinned_profile", None)
+                                        m_task["baseMediaId"] = None
+                                        m_task["base_media_id"] = None
+                                        self.shared_queue.put((m_prio, m_seq, m_task))
                                         migrated_count += 1
                                     except queue.Empty:
                                         break
@@ -1160,9 +1149,13 @@ class PersistentWorkerPool:
                     try:
                         res = _call_gen("BELUGA", base_media_id)
                     except Exception as fallback_ex:
-                        if base_media_id and (
-                            "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in str(fallback_ex)
-                            or "FLOW_PROVIDER_BLOCKED" in str(fallback_ex)
+                        if (
+                            base_media_id
+                            and "TOO_MUCH_TRAFFIC" not in str(fallback_ex)
+                            and (
+                                "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in str(fallback_ex)
+                                or "FLOW_PROVIDER_BLOCKED" in str(fallback_ex)
+                            )
                         ):
                             logger.warning(
                                 "Variation with base_media_id %s rejected by provider; falling back to prompt-guided generation",
@@ -1171,9 +1164,13 @@ class PersistentWorkerPool:
                             res = _call_gen("BELUGA", None)
                         else:
                             raise
-                elif base_media_id and (
-                    "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in str(rpc_ex)
-                    or "FLOW_PROVIDER_BLOCKED" in str(rpc_ex)
+                elif (
+                    base_media_id
+                    and "TOO_MUCH_TRAFFIC" not in str(rpc_ex)
+                    and (
+                        "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in str(rpc_ex)
+                        or "FLOW_PROVIDER_BLOCKED" in str(rpc_ex)
+                    )
                 ):
                     logger.warning(
                         "Variation with base_media_id %s rejected by provider; falling back to prompt-guided generation",

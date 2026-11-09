@@ -326,11 +326,10 @@ class CreditLedger:
                 remaining = int(entry.get("credits_remaining", 0))
                 last_used = float(entry.get("last_used_at", 0.0))
 
-            untested_penalty = 0 if last_used > 0.0 else 1
-            # Sort key: (untested_penalty, -remaining, last_used)
-            eligible_items.append((untested_penalty, remaining, last_used, p))
+            # Sort key: (-remaining, last_used) to prioritize accounts with highest credits
+            eligible_items.append((0, remaining, last_used, p))
 
-        eligible_items.sort(key=lambda x: (x[0], -x[1], x[2]))
+        eligible_items.sort(key=lambda x: (-x[1], x[2]))
         return [item[3] for item in eligible_items]
 
     def pick_for_image_task(

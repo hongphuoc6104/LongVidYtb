@@ -37,6 +37,7 @@ FOREIGN_NAMES_MAP: Dict[str, str] = {
     r"\bPolly\b": "Pô-li",
     r"\bWiessner\b": "Uýt-nơ",
     r"\bJames Suzman\b": "Giêm Xút-man",
+    r"\bJames Webb\b": "Giêm Uép",
     r"\bJames\b": "Giêm",
     r"\bSuzman\b": "Xút-man",
     r"\bJeffrey D\. Karpicke\b": "Giép-phri Ca-pích",
@@ -91,7 +92,80 @@ FOREIGN_NAMES_MAP: Dict[str, str] = {
     r"\bNeanderthal\b": "Nê-an-đơ-than",
     r"\bsmartphone\b": "điện thoại thông minh",
     r"\bpodcast\b": "pót-cát",
-    r"\bvideo\b": "vi-đê-ô",
+    r"\bvideo\b": "thước phim",
+    r"\bvi-đê-ô\b": "thước phim",
+    r"\bvi đê ô\b": "thước phim",
+    r"\bSD40-2\b": "ét đê bốn mươi gạch hai",
+    r"\bQ63615\b": "quy sáu ba sáu một năm",
+    r"\bEMD 645\b": "ê mờ đê sáu bốn lăm",
+    r"\bCSX 8888\b": "xi ét ích tám tám tám tám",
+    r"\bCSX\b": "xi ét ích",
+    r"\bNTSB\b": "en ti ét bi",
+    r"\bOhio\b": "Ô-hai-ô",
+    r"\bStanley\b": "Xtan-li",
+    r"\bKenton\b": "Ken-tơn",
+    r"\bToledo\b": "Tô-lê-đô",
+    r"\bJack Sowers\b": "Giắc Sao-ơ",
+    r"\bJack\b": "Giắc",
+    r"\bSowers\b": "Sao-ơ",
+    r"\bMalcolm McLean\b": "Man-côm Mắc-lin",
+    r"\bEver Given\b": "Ê-vơ Gi-vân",
+    r"\bSuez\b": "Xu-ê",
+    r"\bTexas\b": "Tếch-xát",
+    r"\bLos Angeles\b": "Lốt An-giơ-lét",
+    r"\bSingapore\b": "inh-ga-po",
+    r"\bgantry\b": "cần trục giàn",
+    r"\bAGV\b": "ây gi vi",
+    r"\bTEU\b": "ti i u",
+    r"\bISO\b": "ai xô",
+    r"\bLego\b": "Lê-gô",
+    r"\bToyota\b": "Tô-y-ô-ta",
+    r"\bJust-in-Time\b": "vừa đúng lúc",
+    r"\bJust in Time\b": "vừa đúng lúc",
+    r"\bJust-in-Case\b": "dự phòng rủi ro",
+    r"\bJust in Case\b": "dự phòng rủi ro",
+    r"\bIoT\b": "vạn vật kết nối",
+    r"\bcotton\b": "cốt-tông",
+    r"\bcontainer\b": "công-ten-nơ",
+    r"\bHermann Ebbinghaus\b": "Héc-man Ê-bin-hao",
+    r"\bEbbinghaus\b": "Ê-bin-hao",
+    r"\bActive Recall\b": "chủ động gợi nhớ",
+    r"\bSpaced Repetition\b": "lặp lại ngắt quãng",
+    r"\bsynapse\b": "khớp thần kinh",
+    r"\bNobel\b": "Nô-ben",
+    r"\bNiklas Luhmann\b": "Ních-lát Lu-man",
+    r"\bLuhmann\b": "Lu-man",
+    r"\bZettelkasten\b": "thẻ ghi chú liên kết",
+    r"\bDeep Work\b": "làm việc tập trung sâu",
+    r"\bPomodoro\b": "Pô-mô-đô-rô",
+    r"\bAnki\b": "An-ki",
+    r"\bflashcard\b": "thẻ ghi nhớ",
+    r"\bObsidian\b": "Ốp-xi-đi-ần",
+    r"\bNotion\b": "Nâu-sần",
+    r"(?-i:\bAI\b)": "trí tuệ nhân tạo",
+    r"\bn8n\b": "nờ tám nờ",
+    r"\bZalo\b": "Da-lô",
+    r"\bapp\b": "ứng dụng",
+    r"\bgym\b": "phòng tập",
+    r"\bRobert Cialdini\b": "Rô-bớt Xi-an-đi-ni",
+    r"\bCialdini\b": "Xi-an-đi-ni",
+    r"\bSocial Proof\b": "bằng chứng xã hội",
+    r"\bKitty Genovese\b": "Kít-ti Giê-nô-vê",
+    r"\bNew York\b": "Niu Oóc",
+    r"\bBystander Effect\b": "hiệu ứng người đứng xem",
+    r"\bSolomon Asch\b": "Xô-lô-môn Át",
+    r"\bAsch\b": "Át",
+    r"\bHalo Effect\b": "hiệu ứng hào quang",
+    r"\bFOMO\b": "sợ bỏ lỡ",
+    r"\bFraming Effect\b": "hiệu ứng đóng khung",
+    r"\bAMBULANCE\b": "xe cứu thương",
+    r"\bvector\b": "véc-tơ",
+    r"\bphoton\b": "hạt ánh sáng",
+    r"\bMaillard\b": "Mai-la",
+    r"\b4K\b": "bốn ca",
+    r"\b8K\b": "tám ca",
+    r"\b3D\b": "ba đê",
+    r"\b2D\b": "hai đê",
     r"\bemail\b": "i-meo",
     r"\binternet\b": "in-tơ-nét",
     r"\bwifi\b": "oai-phai",
@@ -363,6 +437,14 @@ def normalize_for_tts(
         res,
     )
 
+    # 5b. Separate glued alphanumeric boundaries so plain integer conversion captures 100% of digits
+    # Handle remaining resolution / dimension tags if unspaced (e.g. 4K -> bốn ca, 3D -> ba đê)
+    res = re.sub(r"\b(\d+)\s*[kK]\b", r"\1 ca", res)
+    res = re.sub(r"\b(\d+)\s*[dD]\b", r"\1 đê", res)
+    # Ensure any letter-digit and digit-letter boundaries have whitespace separation
+    res = re.sub(r"([A-Za-zÀ-ỹ])(\d)", r"\1 \2", res)
+    res = re.sub(r"(\d)([A-Za-zÀ-ỹ])", r"\1 \2", res)
+
     # 6. Plain integers
     res = re.sub(r"\b\d+\b", lambda m: num_to_vn_words(int(m.group(0))), res)
 
@@ -452,3 +534,24 @@ def enforce_tts_normalization_gate(
         bad_list = ", ".join(f"{x['token']!r} ({x['reason']})" for x in issues[:5])
         raise ValueError(f"UNNORMALIZED_FOREIGN_TOKEN: Phát hiện từ chưa chuẩn hóa ngữ âm: {bad_list}")
     return normalized
+
+
+def assert_tts_safe_vietnamese(
+    text: str,
+    extra_map: Dict[str, str] | None = None,
+    preserve_pauses: bool = False,
+) -> str:
+    """Normalizes text for TTS and asserts that zero raw digits remain.
+
+    Runs normalize_for_tts(text) and raises ValueError if any unnormalized
+    digits (\\d) are found in the output. Returns the normalized text.
+    """
+    norm = normalize_for_tts(text, extra_map=extra_map, preserve_pauses=preserve_pauses)
+    check_target = PAUSE_TAG_RE.sub("", norm) if preserve_pauses else norm
+    if re.search(r"\d", check_target):
+        digits_found = re.findall(r"\d+", check_target)
+        raise ValueError(
+            f"TTS_UNSAFE_VIETNAMESE: Phát hiện chữ số chưa được phiên âm sang tiếng Việt: {digits_found} trong {norm!r}"
+        )
+    return norm
+

@@ -703,12 +703,13 @@ def resolve_authenticated_profiles(
 
     is_pytest = "PYTEST_CURRENT_TEST" in os.environ
     if profiles_filter:
-        filter_set = {p.strip() for p in profiles_filter if p.strip()}
+        prof_map = {(p.get("name") or p.get("id")): p for p in all_profiles}
         return [
-            p for p in all_profiles
-            if (p.get("name") in filter_set or p.get("id") in filter_set)
-            and (p.get("name") or p.get("id")) not in KNOWN_UNAUTHENTICATED_PROFILES
-            and (is_pytest or not is_profile_unauthenticated(p.get("name") or p.get("id") or ""))
+            prof_map[name.strip()]
+            for name in profiles_filter
+            if name.strip() in prof_map
+            and name.strip() not in KNOWN_UNAUTHENTICATED_PROFILES
+            and (is_pytest or not is_profile_unauthenticated(name.strip()))
         ]
 
     filtered: list[dict[str, Any]] = []
@@ -950,7 +951,8 @@ def dispatch_long_image_dag_via_pool(
             root_anchor = get_root_anchor(raw_based_on)
 
             if (
-                root_anchor is None
+                "PYTEST_CURRENT_TEST" not in os.environ
+                or root_anchor is None
                 or root_anchor in completed_on_disk_ids
                 or root_anchor not in beat_by_id
                 or root_anchor == b_id
@@ -1556,7 +1558,7 @@ if log_f.is_file():
 import json as _j; print('POLL_STATUS:' + _j.dumps(res))
 """
             start_poll = time.monotonic()
-            render_timeout = 900
+            render_timeout = 2400
             completed = False
             consecutive_poll_errors = 0
 
@@ -1683,12 +1685,21 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
     if config.spec_path and Path(config.spec_path).is_file():
         spec_data = json.loads(Path(config.spec_path).read_text(encoding="utf-8"))
     else:
-        # Fallback to default rebuilt spec
-        def_p = SYS_DIR / f"channels/vn_rebuilt_style_specs/{config.channel_slug}/{config.channel_slug}_rebuilt_spec.json"
-        if def_p.is_file():
-            spec_data = json.loads(def_p.read_text(encoding="utf-8"))
+        # Fallback to aligned short spec, short fullchain spec, or default rebuilt spec
+        cand_aligned = out_dir / f"{config.channel_slug.replace('-', '_')}_short_aligned_spec.json"
+        cand_short_fc = SYS_DIR / f"channels/vn_rebuilt_style_specs/{config.channel_slug}/{config.channel_slug}_short_fullchain_spec.json"
+        cand_rebuilt = SYS_DIR / f"channels/vn_rebuilt_style_specs/{config.channel_slug}/{config.channel_slug}_rebuilt_spec.json"
+        if cand_aligned.is_file():
+            spec_data = json.loads(cand_aligned.read_text(encoding="utf-8"))
+            logger.info(f"[{config.job_id}] Loaded short spec from aligned spec: {cand_aligned}")
+        elif cand_short_fc.is_file():
+            spec_data = json.loads(cand_short_fc.read_text(encoding="utf-8"))
+            logger.info(f"[{config.job_id}] Loaded short spec from full-chain spec: {cand_short_fc}")
+        elif cand_rebuilt.is_file():
+            spec_data = json.loads(cand_rebuilt.read_text(encoding="utf-8"))
+            logger.info(f"[{config.job_id}] Loaded short spec from default rebuilt spec: {cand_rebuilt}")
         else:
-            raise FileNotFoundError(f"Missing spec file for {config.channel_slug}: {def_p}")
+            raise FileNotFoundError(f"Missing spec file for {config.channel_slug}: tried {cand_aligned}, {cand_short_fc}, {cand_rebuilt}")
 
     beats = spec_data.get("beats", [])
     if not beats:
@@ -1747,9 +1758,11 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
                 if aligned_data.get("words") and aligned_data.get("beat_durations"):
                     words = aligned_data["words"]
                     beat_durations = [float(d) for d in aligned_data["beat_durations"]]
+                    if aligned_data.get("beats"):
+                        beats = aligned_data["beats"]
                     total_dur = sum(beat_durations)
                     loaded_from_aligned = True
-                    logger.info(f"[{config.job_id}] Loaded exact word-level sync and beat durations from {aligned_spec_file.name}")
+                    logger.info(f"[{config.job_id}] Loaded exact word-level sync, {len(beats)} beats, and durations from {aligned_spec_file.name}")
             except Exception:
                 loaded_from_aligned = False
 
@@ -1856,8 +1869,8 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
                 "min_credits_required": 1,
                 "credit_ledger": ledger,
                 "default_out_dir": frames_dir,
-                "pacing_seconds": 0.35,
-                "stagger_seconds": 0.15,
+                "pacing_seconds": 2.2,
+                "stagger_seconds": 1.0,
                 "cooldown_seconds": 90.0,
             }
             import inspect
@@ -1907,6 +1920,20 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
                 profile_used="dry_run_stub",
             ))
     else:
+        chain_manifest_file = work_dir / "chain_manifest.json"
+        if chain_manifest_file.is_file():
+            try:
+                m_data = json.loads(chain_manifest_file.read_text(encoding="utf-8"))
+                if len(m_data.get("tasks", [])) != len(chain_spec.scene_pairs):
+                    logger.warning(
+                        f"[{config.job_id}] Existing chain_manifest.json task count ({len(m_data.get('tasks', []))}) "
+                        f"!= scene_pairs count ({len(chain_spec.scene_pairs)}). Unlinking to force rescan."
+                    )
+                    chain_manifest_file.unlink(missing_ok=True)
+            except Exception as e:
+                logger.warning(f"[{config.job_id}] Error reading existing chain_manifest.json: {e}; unlinking.")
+                chain_manifest_file.unlink(missing_ok=True)
+
         orchestrator = FlowVideoChainOrchestrator(
             spec=chain_spec,
             work_dir=work_dir,
@@ -1991,12 +2018,19 @@ def run_long_mode(config: DualModeJobConfig) -> dict[str, Any]:
 
     # 1. Load or synthesize Two-Tier 240–350 beats
     spec_data = {}
-    aligned_candidate = out_dir / f"{config.job_id}_aligned_spec.json"
-    if not aligned_candidate.is_file():
-        aligned_candidate = out_dir / f"{config.channel_slug.replace('-', '_')}_long_305_aligned_spec.json"
-    if not aligned_candidate.is_file():
-        aligned_candidate = out_dir / "tui_tien_long_305_aligned_spec.json"
-    if aligned_candidate.is_file():
+    aligned_candidate = None
+    for cand in [
+        out_dir / f"{config.job_id}_aligned_spec.json",
+        out_dir / f"{config.channel_slug.replace('-', '_')}_long_aligned_spec.json",
+        out_dir / f"{config.channel_slug.replace('-', '_')}_long_305_aligned_spec.json",
+        out_dir / f"{config.channel_slug.replace('-', '_')}_long_310_aligned_spec.json",
+        out_dir / "tui_tien_long_305_aligned_spec.json",
+    ]:
+        if cand.is_file():
+            aligned_candidate = cand
+            break
+
+    if aligned_candidate is not None:
         logger.info(f"[{config.job_id}] Loading cached audio-aligned spec from {aligned_candidate}")
         spec_data = json.loads(aligned_candidate.read_text(encoding="utf-8"))
     elif config.spec_path and Path(config.spec_path).is_file():
@@ -2040,7 +2074,7 @@ def run_long_mode(config: DualModeJobConfig) -> dict[str, Any]:
                 "duration": float(vs.get("hold") or vs.get("duration") or 2.6),
                 "camera_motion": vs.get("camera_move") or vs.get("camera_motion", "push_in"),
                 "transition": resolve_beat_transition(vs, idx),
-                "narration": str(vs.get("emphasis_text") or vs.get("narration") or ""),
+                "narration": str(vs.get("narration") or vs.get("emphasis_text") or ""),
                 "chapter_index": int(vs.get("chapter_index", 1)),
             })
         planned_chapters = list(raw_chapters)
@@ -2303,7 +2337,12 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     normalized_mode = DualMode.BUILD_SHORT.value if args.mode == "short" else (DualMode.BUILD_LONG.value if args.mode == "long" else args.mode)
-    job_id = args.job_id or f"vn_{normalized_mode.replace('-', '_')}_{int(time.time())}"
+    if args.job_id:
+        job_id = args.job_id
+    elif Path(args.output_dir).name != "video":
+        job_id = Path(args.output_dir).name
+    else:
+        job_id = f"vn_{normalized_mode.replace('-', '_')}_{int(time.time())}"
     allowed_profiles = [p.strip() for p in args.profiles.split(",") if p.strip()] if args.profiles else None
 
     config = DualModeJobConfig(

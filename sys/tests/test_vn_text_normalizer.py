@@ -38,6 +38,7 @@ from format_profiles import get_profile
 from narration_pauses import settings_for_language, split_narration
 from script_cadence_checker import ScriptCadenceChecker
 from vn_text_normalizer import (
+    assert_tts_safe_vietnamese,
     detect_unnormalized_tokens,
     enforce_tts_normalization_gate,
     normalize_for_tts,
@@ -323,7 +324,7 @@ class TestGroup07ForeignProperNouns:
 
     def test_modern_loanwords(self):
         text = "Homo sapiens dùng smartphone xem video trên TikTok và YouTube rồi gửi email."
-        expected = "Hô-mô sa-pi-en dùng điện thoại thông minh xem vi-đê-ô trên Tích-tốc và Diu-túp rồi gửi i-meo."
+        expected = "Hô-mô sa-pi-en dùng điện thoại thông minh xem thước phim trên Tích-tốc và Diu-túp rồi gửi i-meo."
         res = normalize_for_tts(text)
         assert res == expected
         assert detect_unnormalized_tokens(res) == []
@@ -658,3 +659,51 @@ class TestGroup17ToneSpeedsAndBilingualSpans:
         parts = adapters.english_parts(text, words=["deep work"])
         assert any(p["lang"] == "en" for p in parts)
         assert any(p["lang"] == "vi" for p in parts)
+
+
+# ==============================================================================
+# Group 18: TTS Safe Assertions & Alphanumeric Glued Digits
+# ==============================================================================
+class TestGroup18TtsSafeAndAlphanumeric:
+    def test_video_banned_and_aliased_to_thuoc_phim(self):
+        assert normalize_for_tts("xem video ngắn") == "xem thước phim ngắn"
+        assert normalize_for_tts("xem vi-đê-ô ngắn") == "xem thước phim ngắn"
+        assert normalize_for_tts("xem vi đê ô ngắn") == "xem thước phim ngắn"
+
+    def test_domain_terms_and_proper_nouns(self):
+        # Transport / Runaway train
+        t1 = normalize_for_tts("Tàu CSX 8888 dùng đầu máy SD40-2 với động cơ EMD 645 qua Kenton Ohio.")
+        assert "xi ét ích tám tám tám tám" in t1
+        assert "ét đê bốn mươi gạch hai" in t1
+        assert "ê mờ đê sáu bốn lăm" in t1
+        assert "Ken-tơn Ô-hai-ô" in t1
+        assert_tts_safe_vietnamese(t1)
+
+        # Logistics
+        t2 = normalize_for_tts("Cảng Singapore dùng xe AGV và gantry để bốc xếp container theo chuẩn ISO và Just in Time.")
+        assert "cần trục giàn" in t2
+        assert "công-ten-nơ" in t2
+        assert "vừa đúng lúc" in t2
+        assert "ai xô" in t2
+        assert_tts_safe_vietnamese(t2)
+
+        # Psychology
+        t3 = normalize_for_tts("Theo Hermann Ebbinghaus, Active Recall và Spaced Repetition tối ưu synapse não bộ.")
+        assert "Héc-man Ê-bin-hao" in t3
+        assert "chủ động gợi nhớ" in t3
+        assert "lặp lại ngắt quãng" in t3
+        assert "khớp thần kinh" in t3
+        assert_tts_safe_vietnamese(t3)
+
+    def test_glued_alphanumerics(self):
+        assert normalize_for_tts("Xuất video chuẩn 4K và 3D") == "Xuất thước phim chuẩn bốn ca và ba đê"
+        assert normalize_for_tts("Top10 điều cần biết") == "Top mười điều cần biết"
+        assert normalize_for_tts("Xem tập1 ngay") == "Xem tập một ngay"
+        assert_tts_safe_vietnamese("Video 4K với 3D tại tập10")
+
+    def test_assert_tts_safe_vietnamese_raises_on_raw_digits(self, monkeypatch):
+        import vn_text_normalizer
+        monkeypatch.setattr(vn_text_normalizer, "normalize_for_tts", lambda *a, **k: "còn số 123")
+        with pytest.raises(ValueError, match="TTS_UNSAFE_VIETNAMESE"):
+            assert_tts_safe_vietnamese("test")
+
