@@ -386,9 +386,11 @@ def test_publish_20_long_batch_dry_run_workflow(tmp_path: Path):
     assert rel_updated["long"]["youtube_url"] == report_content["published_items"][ch_slug]["video_url"]
 
 
-def test_audit_20_channels_readiness_dry_run():
+def test_audit_20_channels_readiness_dry_run(tmp_path: Path):
     """Verify audit_20_channels dry run scans all 20 channels and writes summary report."""
-    report = audit_20_channels(dry_run=True)
+    out_file = tmp_path / "vn_20_channels_readiness_dry.json"
+    report = audit_20_channels(dry_run=True, output_file=out_file)
+    assert out_file.is_file()
     assert report["total_channels"] == 20
     assert report["ready_count"] == 20
     assert report["channel_mismatch_count"] == 0
@@ -498,6 +500,54 @@ def test_check_studio_readiness_tiers():
     assert readiness_eligible["tier2_eligible"] is False
     assert readiness_eligible["intermediate_features"] is False
     assert readiness_eligible["tier2_status_text"] == "Đủ điều kiện"
+
+
+def test_check_studio_readiness_lazy_mount_and_shadow_polling():
+    """Verify check_studio_readiness retries lazy-mounted Kênh item & supports bounded English/Vietnamese status parsing."""
+    from sys.tools.publish_youtube_cdp import YouTubeCDPClient
+
+    client = YouTubeCDPClient({"id": "profile_test", "port": 9234}, headless=True)
+    ch_attempts = {"n": 0}
+    feat_attempts = {"n": 0}
+
+    async def mock_eval_lazy(expr: str):
+        if "window.location.href" in expr:
+            return "https://studio.youtube.com/channel/UC_LAZY_123"
+        if "settingsBtn" in expr:
+            return True
+        if "is_visible" in expr or "dlg_ready" in expr or "dialog-type=" in expr or "tp-yt-paper-dialog" in expr:
+            return True
+        if "channelTab" in expr:
+            ch_attempts["n"] += 1
+            return ch_attempts["n"] >= 3  # Simulate 2 lazy-mount ticks before li#channel mounts
+        if "featTab" in expr:
+            feat_attempts["n"] += 1
+            return feat_attempts["n"] >= 2
+        if "tiers_mounted" in expr or ("tính năng bậc trung" in expr and "getStatus" not in expr):
+            return True
+        if "getStatus" in expr or "t1, t2, t3" in expr:
+            return {"t1": "Enabled", "t2": "Enabled", "t3": "Enabled"}
+        if "closeBtn" in expr:
+            return True
+        return None
+
+    client.evaluate = AsyncMock(side_effect=mock_eval_lazy)
+    client.call = AsyncMock()
+    client.get_channel_info = AsyncMock(return_value={"channelId": "UC_LAZY_123", "channelName": "Cơ Thể Kể"})
+
+    with patch("asyncio.sleep", new_callable=AsyncMock):
+        res = asyncio.run(client.check_studio_readiness())
+
+    assert ch_attempts["n"] == 3
+    assert feat_attempts["n"] == 2
+    assert res["standard_features"] is True
+    assert res["intermediate_features"] is True
+    assert res["advanced_features"] is True
+    assert res["tier2_eligible"] is True
+    assert res["tier3_eligible"] is True
+    assert res["tier1_status_text"] == "Enabled"
+    assert res["tier2_status_text"] == "Enabled"
+    assert res["audit_method"] == "settings_feature_eligibility"
 
 
 def test_wait_for_upload_complete_active_percentage():
@@ -790,3 +840,150 @@ def test_verify_video_edit_page_details_and_bottom_screenshot(tmp_path: Path):
     expected_bottom = tmp_path / "edit_qa_bottom.png"
     client.capture_screenshot.assert_any_call(shot_path)
     client.capture_screenshot.assert_any_call(expected_bottom)
+
+
+def test_upload_thumbnail_strict_verification_rejects_tier2_lock_and_accepts_preview(tmp_path: Path):
+    """Verify upload_thumbnail rejects hidden /edit placeholders or Tier-2 (?) tooltips and accepts real previews."""
+    from sys.tools.publish_youtube_cdp import YouTubeCDPClient
+
+    thumb = tmp_path / "thumb_16x9.png"
+    Image.new("RGB", (1280, 720), (10, 20, 30)).save(thumb)
+
+    # Case 1: Tier-2 tooltip (?) visible & no real preview -> raises under strict_thumbnail=True, False under strict=False
+    client = YouTubeCDPClient({"id": "profile_test", "port": 9234}, headless=True)
+    client.get_remote_object = AsyncMock(return_value={"objectId": "obj_file_input"})
+    client.call = AsyncMock()
+
+    async def mock_eval_locked(expr: str):
+        if "ytcp-feature-eligibility-dialog" in expr:
+            return False
+        if "ytcp-thumbnail-uploader" in expr:
+            return {
+                "ok": False,
+                "tooltipVisible": True,
+                "previewVisible": False,
+                "selectVisible": True,
+                "hasSelectedAttr": False,
+                "matchedSrc": None,
+            }
+        return None
+
+    client.evaluate = AsyncMock(side_effect=mock_eval_locked)
+    with patch("asyncio.sleep", new_callable=AsyncMock):
+        with pytest.raises(RuntimeError, match="CUSTOM_THUMBNAIL_REJECTED_OR_TIER2_REQUIRED"):
+            asyncio.run(client.upload_thumbnail(thumb, strict_thumbnail=True))
+        assert asyncio.run(client.upload_thumbnail(thumb, strict_thumbnail=False)) is False
+
+    # Case 2: Valid blob preview loads on second poll tick -> returns True
+    polls = {"n": 0}
+
+    async def mock_eval_ok(expr: str):
+        if "ytcp-feature-eligibility-dialog" in expr:
+            return False
+        if "ytcp-thumbnail-uploader" in expr:
+            polls["n"] += 1
+            if polls["n"] == 1:
+                return {"ok": False, "tooltipVisible": False, "previewVisible": False}
+            return {
+                "ok": True,
+                "tooltipVisible": False,
+                "previewVisible": True,
+                "selectVisible": False,
+                "hasSelectedAttr": True,
+                "matchedSrc": "blob:https://studio.youtube.com/12345",
+            }
+        return None
+
+    client.evaluate = AsyncMock(side_effect=mock_eval_ok)
+    with patch("asyncio.sleep", new_callable=AsyncMock):
+        assert asyncio.run(client.upload_thumbnail(thumb, strict_thumbnail=True)) is True
+    assert polls["n"] == 2
+    client.call.assert_any_call(
+        "DOM.setFileInputFiles",
+        {"files": [str(thumb.resolve())], "objectId": "obj_file_input"},
+    )
+
+
+def test_verify_video_edit_page_thumbnail_guard_excludes_edit_placeholder():
+    """Verify verify_video_edit_page JS check excludes hidden /edit placeholder img and #still-1 auto stills."""
+    import inspect
+    from sys.tools.publish_youtube_cdp import YouTubeCDPClient
+
+    src = inspect.getsource(YouTubeCDPClient.verify_video_edit_page)
+    assert "#select-tooltip-icon" in src
+    assert "src.includes('/edit')" in src
+    assert "img.naturalWidth" in src
+    assert "#still-1" not in src
+
+
+def test_publish_and_finish_shadow_fixed_warning_dialog_and_draft_banner_guard(tmp_path: Path):
+    """Verify publish_and_finish pierces Shadow DOM/fixed rect for 'Vẫn xuất bản', and draft banner blocks false PUBLIC."""
+    import inspect
+    from sys.tools.publish_youtube_cdp import YouTubeCDPClient
+
+    pf_src = inspect.getsource(YouTubeCDPClient.publish_and_finish)
+    assert "getBoundingClientRect" in pf_src
+    assert "shadowRoot" in pf_src
+    assert "vẫn xuất bản" in pf_src
+
+    client = YouTubeCDPClient({"id": "profile_test", "port": 9234}, headless=True)
+    shot_path = tmp_path / "share.png"
+    clicks = {"anyway": 0}
+
+    async def mock_eval_warn(expr: str):
+        if "#done-button" in expr and "click" in expr:
+            return True
+        if "vẫn xuất bản" in expr:
+            clicks["anyway"] += 1
+            return "vẫn xuất bản" if clicks["anyway"] == 1 else None
+        if "ytcp-video-share-dialog" in expr and "shareDialog" in expr:
+            if clicks["anyway"] >= 1:
+                return {"found": True, "link": "https://youtu.be/after_warn_123", "title": "Published"}
+            return {"found": False}
+        return None
+
+    client.evaluate = AsyncMock(side_effect=mock_eval_warn)
+    client.capture_screenshot = AsyncMock()
+    with patch("asyncio.sleep", new_callable=AsyncMock):
+        url = asyncio.run(client.publish_and_finish(screenshot_path=shot_path))
+    assert clicks["anyway"] == 1
+    assert client._last_publish_accepted is True
+    assert url == "https://youtu.be/after_warn_123"
+
+    # Also verify draft_banner_detected=True with empty visibility_text sets is_draft_or_private=True
+    # and prevents publish_single_video from marking DRAFT as PUBLISHED even if accepted=True.
+    edit_src = inspect.getsource(YouTubeCDPClient.verify_video_edit_page)
+    assert "draft_banner_detected" in edit_src
+    assert "trạng thái nháp" in edit_src
+
+    dummy_mp4 = tmp_path / "test_draft_guard.mp4"
+    dummy_mp4.write_bytes(b"\x00" * 1024)
+    with patch("sys.tools.publish_youtube_cdp.YouTubeCDPClient") as mock_client_cls, \
+         patch("urllib.request.urlopen", side_effect=Exception("HTTP 403 Forbidden")), \
+         patch("asyncio.sleep", new_callable=AsyncMock):
+        mc = AsyncMock()
+        mc.terminate_browser = MagicMock()
+        mc._last_publish_accepted = True
+        mc.evaluate.return_value = "https://studio.youtube.com/channel/UC_VALID"
+        mc.get_channel_info.return_value = {"channelId": "UC_VALID", "channelName": "AI Bình Dân"}
+        mc.publish_and_finish.return_value = "https://youtu.be/still_draft"
+        mc.verify_video_edit_page.return_value = {
+            "live_title": "Test",
+            "visibility_text": "",
+            "draft_banner_detected": True,
+            "draft_banner_text": "Video này đang ở trạng thái nháp Chỉnh sửa bản nháp",
+            "is_draft_or_private": True,
+        }
+        mock_client_cls.return_value = mc
+        with pytest.raises(RuntimeError, match="PUBLIC_VERIFICATION_FAILED"):
+            asyncio.run(
+                publish_single_video(
+                    video_path=dummy_mp4,
+                    title="Test",
+                    description="Desc",
+                    bypass_review_gate=True,
+                    is_short=False,
+                )
+            )
+
+

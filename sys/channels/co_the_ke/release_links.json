@@ -1,13 +1,18 @@
 {
   "long": {
-    "job_id": "co-the-ke-week1-16x9",
-    "youtube_url": "https://youtu.be/yl8E1WKjvWY"
+    "job_id": "vn_pilot_co_the_ke_long",
+    "youtube_url": "https://youtu.be/sgp65IoBMa8"
   },
   "shorts": {
     "co-the-ke-week1-9x16-v2": {
       "tiktok_url": null,
       "facebook_url": null,
       "youtube_shorts_url": "https://youtube.com/shorts/LdlG4OiEjR8"
+    },
+    "vn-pilot-co-the-ke-short-fullchain": {
+      "tiktok_url": null,
+      "facebook_url": null,
+      "youtube_shorts_url": "https://youtube.com/shorts/-dNqAE-nzf0"
     }
   }
 }

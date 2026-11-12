@@ -1,15 +1,21 @@
 {
   "long": {
-    "job_id": "vn_pilot_ban_do_quyen_luc_long",
-    "youtube_url": "https://youtu.be/9nNLPMeRJW8",
-    "url": "https://youtu.be/9nNLPMeRJW8",
-    "video_id": "9nNLPMeRJW8"
+    "job_id": "vn_ban_do_quyen_luc_ep04_thap_nuoc_tay_tang_long",
+    "youtube_url": "https://youtu.be/ZpMyEf5bRS8",
+    "url": "https://youtu.be/ZpMyEf5bRS8",
+    "video_id": "ZpMyEf5bRS8"
   },
   "shorts": {
     "ban-do-quyen-luc-batch2-9x16": {
       "tiktok_url": null,
       "facebook_url": null,
       "youtube_shorts_url": "https://youtube.com/shorts/AVBhtnb5xVk"
+    },
+    "vn_ban_do_quyen_luc_ep04_thap_nuoc_tay_tang_short": {
+      "tiktok_url": null,
+      "facebook_url": null,
+      "youtube_shorts_url": "https://youtube.com/shorts/9NsjCADHijg",
+      "parent_long_url": "https://youtu.be/ZpMyEf5bRS8"
     }
   }
 }

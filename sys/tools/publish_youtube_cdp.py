@@ -827,23 +827,90 @@ class YouTubeCDPClient:
                 "files": [path_str],
                 "objectId": obj_id,
             })
-            logger.info("Thumbnail attached successfully. Verifying preview...")
-            await asyncio.sleep(2.5)
+            logger.info("Thumbnail attached via file input. Polling preview & Tier-2 state...")
+            await asyncio.sleep(1.0)
 
-            # Check for verification or blocking modal
-            has_verify = await self.evaluate("""
-                (() => {
-                    const d = document.querySelector('ytcp-feature-eligibility-dialog, yt-trust-tiers-wizard-dialog');
-                    if (d && d.offsetParent !== null) return true;
-                    const errModal = document.querySelector('ytcp-permanent-operational-error-manager tp-yt-paper-dialog[aria-hidden="false"]');
-                    if (errModal && errModal.offsetParent !== null) return true;
-                    const activeDialogs = Array.from(document.querySelectorAll('tp-yt-paper-dialog[aria-hidden="false"], ytcp-dialog')).filter(diag => {
-                        const text = (diag.innerText || '').toLowerCase();
-                        return diag.offsetParent !== null && (text.includes('xác minh') || text.includes('verify') || text.includes('số điện thoại') || text.includes('phone'));
-                    });
-                    return activeDialogs.length > 0;
-                })()
-            """)
+            has_verify = False
+            thumb_state: dict[str, Any] = {"ok": False, "reason": "not_checked"}
+            for _ in range(10):
+                # Check for verification or blocking modal first
+                has_verify = await self.evaluate("""
+                    (() => {
+                        const d = document.querySelector('ytcp-feature-eligibility-dialog, yt-trust-tiers-wizard-dialog');
+                        if (d && d.offsetParent !== null) return true;
+                        const errModal = document.querySelector('ytcp-permanent-operational-error-manager tp-yt-paper-dialog[aria-hidden="false"]');
+                        if (errModal && errModal.offsetParent !== null) return true;
+                        const activeDialogs = Array.from(document.querySelectorAll('tp-yt-paper-dialog[aria-hidden="false"], ytcp-dialog')).filter(diag => {
+                            const text = (diag.innerText || '').toLowerCase();
+                            return diag.offsetParent !== null && (text.includes('xác minh') || text.includes('verify') || text.includes('số điện thoại') || text.includes('phone'));
+                        });
+                        return activeDialogs.length > 0;
+                    })()
+                """)
+                if has_verify:
+                    break
+
+                # Inspect real preview state inside ytcp-thumbnail-uploader (never match hidden /edit placeholder or auto stills)
+                thumb_state = await self.evaluate("""
+                    (() => {
+                        const uploader = document.querySelector('ytcp-thumbnail-uploader');
+                        if (!uploader) {
+                            return { ok: false, reason: 'no_uploader' };
+                        }
+                        const tooltipIcon = uploader.querySelector('#select-tooltip-icon, [icon="yt-sys-icons:help"]');
+                        const tooltipVisible = Boolean(tooltipIcon && tooltipIcon.offsetParent !== null);
+                        const previewBtn = uploader.querySelector('#preview-button');
+                        const previewVisible = Boolean(previewBtn && previewBtn.offsetParent !== null);
+                        const selectBtn = uploader.querySelector('#select-button');
+                        const selectVisible = Boolean(selectBtn && selectBtn.offsetParent !== null);
+                        const hasSelectedAttr = uploader.hasAttribute('selected');
+
+                        const imgs = Array.from(uploader.querySelectorAll('img[src]'));
+                        const validImg = imgs.find(img => {
+                            const src = (img.getAttribute('src') || img.src || '').trim();
+                            if (!src) return false;
+                            if (
+                                src.includes('placeholder') ||
+                                src.includes('/edit') ||
+                                src.includes('/upload') ||
+                                src.includes('studio.youtube.com/channel')
+                            ) {
+                                return false;
+                            }
+                            const visible = img.offsetParent !== null;
+                            const loaded = (img.naturalWidth || 0) > 0;
+                            const isCustomSrc = (
+                                src.startsWith('blob:') ||
+                                src.startsWith('data:image/') ||
+                                src.includes('ytimg.com') ||
+                                src.includes('googleusercontent.com')
+                            );
+                            return visible && loaded && isCustomSrc;
+                        });
+
+                        const ok = Boolean(
+                            validImg &&
+                            !tooltipVisible &&
+                            (hasSelectedAttr || previewVisible || !selectVisible)
+                        );
+                        return {
+                            ok,
+                            tooltipVisible,
+                            previewVisible,
+                            selectVisible,
+                            hasSelectedAttr,
+                            matchedSrc: validImg ? (validImg.getAttribute('src') || validImg.src || '').slice(0, 120) : null,
+                        };
+                    })()
+                """) or {"ok": False, "reason": "eval_none"}
+
+                if thumb_state.get("ok"):
+                    break
+                if thumb_state.get("tooltipVisible") and not thumb_state.get("previewVisible"):
+                    logger.warning("Tier-2 tooltip icon (?) visible on thumbnail uploader: %s", thumb_state)
+                    break
+                await asyncio.sleep(0.8)
+
             if has_verify:
                 logger.warning("Custom thumbnail requires verification or encountered modal; dismissing prompt to continue.")
                 await self.evaluate("""
@@ -861,31 +928,14 @@ class YouTubeCDPClient:
                     raise RuntimeError("CUSTOM_THUMBNAIL_REJECTED_OR_TIER2_REQUIRED")
                 return False
 
-            # Verify custom thumbnail preview appeared
-            thumb_ok = await self.evaluate("""
-                (() => {
-                    const uploader = document.querySelector('ytcp-thumbnail-uploader');
-                    if (uploader) {
-                        const img = uploader.querySelector('img[src]');
-                        if (img && img.src && !img.src.includes('placeholder')) return true;
-                    }
-                    const customTile = document.querySelector('ytcp-thumbnails-compact-editor-uploader #still-1') ||
-                                       document.querySelector('#still-1[selected]') ||
-                                       document.querySelector('ytcp-thumbnail-area [selected]');
-                    if (customTile) return true;
-                    const selectedThumb = document.querySelector('ytcp-thumbnail[selected], ytcp-thumbnail-pill[selected]');
-                    if (selectedThumb) return true;
-                    return false;
-                })()
-            """)
-            if thumb_ok:
-                logger.info("Custom thumbnail preview verified successfully.")
+            if thumb_state and thumb_state.get("ok"):
+                logger.info("Custom thumbnail preview verified successfully: %s", thumb_state.get("matchedSrc"))
                 return True
-            else:
-                logger.warning("Custom thumbnail attached but preview not explicitly confirmed.")
-                if strict_thumbnail:
-                    raise RuntimeError("CUSTOM_THUMBNAIL_REJECTED_OR_TIER2_REQUIRED")
-                return True
+
+            logger.warning("Custom thumbnail preview NOT confirmed (state=%s).", thumb_state)
+            if strict_thumbnail:
+                raise RuntimeError(f"CUSTOM_THUMBNAIL_REJECTED_OR_TIER2_REQUIRED: {thumb_state}")
+            return False
         except Exception as e:
             if "CUSTOM_THUMBNAIL_REJECTED_OR_TIER2_REQUIRED" in str(e):
                 raise
@@ -1333,7 +1383,7 @@ class YouTubeCDPClient:
                                         document.querySelector('#settings-button') ||
                                         document.querySelector('button[aria-label*="Cài đặt"]') ||
                                         document.querySelector('button[aria-label*="Settings"]') ||
-                                        Array.from(document.querySelectorAll('ytcp-navigation-item, button, a')).find(el => {
+                                        Array.from(document.querySelectorAll('ytcp-navigation-item, tp-yt-paper-icon-item, button, a')).find(el => {
                                             const t = (el.innerText || '').trim().toLowerCase();
                                             return t === 'cài đặt' || t === 'settings';
                                         });
@@ -1363,60 +1413,165 @@ class YouTubeCDPClient:
                         break
 
                 if dlg_ready:
-                    # 2. Click Channel / Kênh nav tab
-                    await self.evaluate("""
-                        (() => {
-                            const dlg = document.querySelector('ytcp-settings-dialog') || document;
-                            const tabs = Array.from(dlg.querySelectorAll('tp-yt-paper-tab, ytcp-navigation-item, .navigation-item, [role="tab"], tp-yt-paper-item'));
-                            const channelTab = tabs.find(t => {
-                                const text = (t.innerText || '').trim().toLowerCase();
-                                return text === 'kênh' || text === 'channel';
-                            });
-                            if (channelTab) channelTab.click();
-                        })()
-                    """)
-                    await asyncio.sleep(0.6)
+                    # 2. Wait up to 5s for Channel / Kênh nav item inside lazy-mounted dialog and click it
+                    for _ in range(10):
+                        await asyncio.sleep(0.5)
+                        ch_clicked = await self.evaluate("""
+                            (() => {
+                                const dlg = document.querySelector('ytcp-settings-dialog') || document;
+                                const allEls = [];
+                                function walk(root, depth = 0) {
+                                    if (!root || depth > 14) return;
+                                    if (root.nodeType === 1) {
+                                        allEls.push(root);
+                                        if (root.shadowRoot) walk(root.shadowRoot, depth + 1);
+                                    }
+                                    for (const c of root.children || []) walk(c, depth + 1);
+                                }
+                                walk(dlg);
+                                const channelTab =
+                                    allEls.find(el => (el.matches && el.matches('li#channel, [role="menuitem"]#channel')) && ((el.innerText || '').trim().toLowerCase() === 'kênh' || (el.innerText || '').trim().toLowerCase() === 'channel')) ||
+                                    allEls.find(el => {
+                                        if (!el.matches || !el.matches('li, [role="menuitem"], tp-yt-paper-tab, ytcp-navigation-item, .navigation-item, [role="tab"], tp-yt-paper-item, span.title-text')) return false;
+                                        const text = (el.innerText || '').trim().toLowerCase();
+                                        return text === 'kênh' || text === 'channel';
+                                    });
+                                if (channelTab) {
+                                    const clickable = (channelTab.closest && channelTab.closest('li, [role="menuitem"], ytcp-navigation-item, tp-yt-paper-tab')) || channelTab;
+                                    clickable.click();
+                                    if (clickable !== channelTab) channelTab.click();
+                                    return true;
+                                }
+                                return false;
+                            })()
+                        """)
+                        if ch_clicked:
+                            break
 
-                    # 3. Click Feature eligibility / Điều kiện sử dụng tính năng tab
-                    await self.evaluate("""
-                        (() => {
-                            const dlg = document.querySelector('ytcp-settings-dialog') || document;
-                            const tabs = Array.from(dlg.querySelectorAll('tp-yt-paper-tab, [role="tab"], .tab-header, button'));
-                            const featTab = tabs.find(t => {
-                                const text = (t.innerText || '').trim().toLowerCase();
-                                return text.includes('điều kiện') || text.includes('tính năng') || text.includes('feature eligibility');
-                            });
-                            if (featTab) featTab.click();
-                        })()
-                    """)
-                    await asyncio.sleep(0.8)
+                    # 3. Wait up to 3.5s for Feature eligibility / Điều kiện sử dụng tính năng tab and click it
+                    for _ in range(7):
+                        await asyncio.sleep(0.5)
+                        feat_clicked = await self.evaluate("""
+                            (() => {
+                                const dlg = document.querySelector('ytcp-settings-dialog') || document;
+                                const allEls = [];
+                                function walk(root, depth = 0) {
+                                    if (!root || depth > 14) return;
+                                    if (root.nodeType === 1) {
+                                        allEls.push(root);
+                                        if (root.shadowRoot) walk(root.shadowRoot, depth + 1);
+                                    }
+                                    for (const c of root.children || []) walk(c, depth + 1);
+                                }
+                                walk(dlg);
+                                const featTab = allEls.find(t => {
+                                    if (!t.matches || !t.matches('tp-yt-paper-tab, [role="tab"], .tab-header, button')) return false;
+                                    const text = (t.innerText || '').trim().toLowerCase();
+                                    return text === 'điều kiện sử dụng tính năng' ||
+                                           text === 'feature eligibility' ||
+                                           text.includes('điều kiện sử dụng tính năng') ||
+                                           text.includes('feature eligibility');
+                                });
+                                if (featTab) {
+                                    featTab.click();
+                                    return true;
+                                }
+                                return false;
+                            })()
+                        """)
+                        if feat_clicked:
+                            break
 
-                    # 4. Inspect Tier Rows
+                    # Wait up to 3.5s for tier cards/text to render inside dialog
+                    for _ in range(7):
+                        await asyncio.sleep(0.5)
+                        tiers_mounted = await self.evaluate("""
+                            (() => {
+                                const dlg = document.querySelector('ytcp-settings-dialog') || document;
+                                const txt = (dlg.innerText || '').toLowerCase();
+                                return txt.includes('tính năng bậc trung') || txt.includes('intermediate features') || txt.includes('tính năng cơ bản') || txt.includes('standard features');
+                            })()
+                        """)
+                        if tiers_mounted:
+                            break
+
+                    # 4. Inspect Tier Rows (Shadow-DOM + TrustTiers classes + bounded line parser)
                     tier_res = await self.evaluate("""
                         (() => {
                             const dlg = document.querySelector('ytcp-settings-dialog') || document;
+                            const STATUS_TOKENS = [
+                                'đã bật', 'enabled',
+                                'đủ điều kiện', 'eligible',
+                                'đang chờ xử lý', 'pending',
+                                'bị tắt', 'disabled',
+                                'chưa đủ điều kiện', 'ineligible',
+                                'tạm thời không dùng được', 'temporarily unavailable'
+                            ];
+                            function matchStatusLine(line) {
+                                const l = (line || '').trim().toLowerCase();
+                                if (!l) return '';
+                                if (STATUS_TOKENS.includes(l)) return line.trim();
+                                return '';
+                            }
                             function getStatus(section) {
                                 if (!section) return '';
-                                const badge = section.querySelector('.status, .badge, ytcp-chip, .feature-status, [class*="status"], [class*="badge"]');
-                                if (badge && badge.innerText) return badge.innerText.trim();
+                                const badges = section.querySelectorAll('.ytTrustTiersHomeLevelFeatureLevelStatusBar .label, .ytTrustTiersHomeLevelFeatureLevelStatusBar ytcp-badge, .ytTrustTiersHomeLevelFeatureLevelStatusBar, .status, .badge, ytcp-chip, ytcp-badge .label, ytcp-badge, .feature-status, [class*="status"], [class*="badge"]');
+                                for (const badge of badges) {
+                                    const bt = (badge.innerText || '').trim();
+                                    if (matchStatusLine(bt)) return matchStatusLine(bt);
+                                }
                                 const lines = (section.innerText || '').split('\\n').map(l => l.trim()).filter(Boolean);
                                 for (const line of lines) {
-                                    const l = line.toLowerCase();
-                                    if (l === 'đã bật' || l === 'enabled' || l === 'đủ điều kiện' || l === 'eligible' || l === 'bị tắt' || l === 'disabled') {
-                                        return line;
-                                    }
+                                    const m = matchStatusLine(line);
+                                    if (m) return m;
                                 }
                                 return '';
                             }
 
-                            const sections = Array.from(dlg.querySelectorAll('ytcp-feature-eligibility-section, .feature-section, ytcp-settings-section, tp-yt-paper-item, div[role="region"], .tier-container, .section'));
+                            const allEls = [];
+                            function walk(root, depth = 0) {
+                                if (!root || depth > 14) return;
+                                if (root.nodeType === 1) {
+                                    allEls.push(root);
+                                    if (root.shadowRoot) walk(root.shadowRoot, depth + 1);
+                                }
+                                for (const c of root.children || []) walk(c, depth + 1);
+                            }
+                            walk(dlg);
+
                             let t1 = '';
                             let t2 = '';
                             let t3 = '';
 
+                            // Primary selector: modern YouTube Trust Tiers components (.ytTrustTiersHomeLevelFeatureLevelName)
+                            const levelHeaders = allEls.filter(el =>
+                                el.classList && el.classList.contains('ytTrustTiersHomeLevelFeatureLevelName')
+                            );
+                            for (const hdr of levelHeaders) {
+                                const htxt = (hdr.innerText || '').trim().toLowerCase();
+                                let container = hdr.parentElement;
+                                let statusFound = '';
+                                for (let step = 0; step < 4 && container; step++) {
+                                    statusFound = getStatus(container);
+                                    if (statusFound) break;
+                                    container = container.parentElement;
+                                }
+                                if ((htxt.includes('cơ bản') || htxt.includes('chuẩn') || htxt.includes('standard')) && !t1) {
+                                    t1 = statusFound;
+                                } else if ((htxt.includes('bậc trung') || htxt.includes('intermediate')) && !t2) {
+                                    t2 = statusFound;
+                                } else if ((htxt.includes('nâng cao') || htxt.includes('advanced')) && !t3) {
+                                    t3 = statusFound;
+                                }
+                            }
+
+                            // Secondary selector: legacy feature sections
+                            const sections = allEls.filter(el =>
+                                el.matches && el.matches('ytcp-feature-eligibility-section, .feature-section, ytcp-settings-section, tp-yt-paper-item, div[role="region"], .tier-container, .section')
+                            );
                             for (const s of sections) {
                                 const t = (s.innerText || '').toLowerCase();
-                                if ((t.includes('chuẩn') || t.includes('standard')) && !t1) {
+                                if ((t.includes('cơ bản') || t.includes('chuẩn') || t.includes('standard')) && !t1) {
                                     t1 = getStatus(s);
                                 }
                                 if ((t.includes('bậc trung') || t.includes('intermediate') || t.includes('15 phút') || t.includes('15 minutes')) && !t2) {
@@ -1427,15 +1582,33 @@ class YouTubeCDPClient:
                                 }
                             }
 
-                            const bodyText = (dlg.innerText || '').toLowerCase();
-                            if (!t1 && (bodyText.includes('tính năng chuẩn') || bodyText.includes('standard features'))) {
-                                t1 = (bodyText.includes('chuẩn') && bodyText.includes('đã bật')) ? 'Đã bật' : (bodyText.includes('standard') && bodyText.includes('enabled') ? 'Enabled' : '');
-                            }
-                            if (!t2 && (bodyText.includes('tính năng bậc trung') || bodyText.includes('intermediate features'))) {
-                                t2 = (bodyText.includes('bậc trung') && bodyText.includes('đã bật')) ? 'Đã bật' : (bodyText.includes('đủ điều kiện') ? 'Đủ điều kiện' : (bodyText.includes('intermediate') && bodyText.includes('enabled') ? 'Enabled' : ''));
-                            }
-                            if (!t3 && (bodyText.includes('tính năng nâng cao') || bodyText.includes('advanced features'))) {
-                                t3 = (bodyText.includes('nâng cao') && bodyText.includes('đã bật')) ? 'Đã bật' : (bodyText.includes('đủ điều kiện') ? 'Đủ điều kiện' : (bodyText.includes('advanced') && bodyText.includes('enabled') ? 'Enabled' : ''));
+                            // Fallback: bounded line-by-line parser over dlg.innerText (never bleeds Tier 1 status into Tier 2)
+                            const rawLines = (dlg.innerText || '').split('\\n').map(l => l.trim()).filter(Boolean);
+                            let currentTier = 0;
+                            for (const line of rawLines) {
+                                const low = line.toLowerCase();
+                                if (/^1\\./.test(low) && (low.includes('cơ bản') || low.includes('chuẩn') || low.includes('standard'))) {
+                                    currentTier = 1;
+                                    continue;
+                                }
+                                if (/^2\\./.test(low) && (low.includes('bậc trung') || low.includes('intermediate'))) {
+                                    currentTier = 2;
+                                    continue;
+                                }
+                                if (/^3\\./.test(low) && (low.includes('nâng cao') || low.includes('advanced'))) {
+                                    currentTier = 3;
+                                    continue;
+                                }
+                                if (low === 'đóng' || low === 'close' || low === 'lưu' || low === 'save') {
+                                    currentTier = 0;
+                                    continue;
+                                }
+                                const matched = matchStatusLine(line);
+                                if (matched) {
+                                    if (currentTier === 1 && !t1) t1 = matched;
+                                    else if (currentTier === 2 && !t2) t2 = matched;
+                                    else if (currentTier === 3 && !t3) t3 = matched;
+                                }
                             }
 
                             return { t1, t2, t3 };
@@ -2353,6 +2526,8 @@ class YouTubeCDPClient:
                 const btn = document.querySelector('#done-button');
                 if (btn) {
                     btn.click();
+                    const inner = btn.querySelector('button');
+                    if (inner) inner.click();
                     return true;
                 }
                 return false;
@@ -2367,20 +2542,61 @@ class YouTubeCDPClient:
         for _ in range(25):
             await asyncio.sleep(1.0)
             # 1. Check if YouTube popped up 'Chúng tôi vẫn đang kiểm tra nội dung của bạn' -> click 'Vẫn xuất bản' / 'Publish anyway'
+            # Walks light + Shadow DOM and checks bounding rects so position:fixed dialogs (offsetParent===null) are handled reliably.
             clicked_publish_anyway = await self.evaluate("""
                 (() => {
-                    const dialogs = Array.from(document.querySelectorAll('ytcp-confirmation-dialog, tp-yt-paper-dialog, ytcp-dialog'));
-                    for (const dlg of dialogs) {
-                        if (dlg.offsetParent === null) continue;
-                        const btns = Array.from(dlg.querySelectorAll('ytcp-button, button, #secondary-action-button, #confirm-button'));
-                        for (const b of btns) {
-                            const txt = (b.innerText || b.textContent || '').trim().toLowerCase();
-                            if (txt === 'vẫn xuất bản' || txt === 'publish anyway') {
-                                b.click();
-                                const inner = b.querySelector('button');
-                                if (inner) inner.click();
-                                return txt;
+                    const targets = ['vẫn xuất bản', 'publish anyway'];
+                    const dialogTags = new Set([
+                        'YTCP-CONFIRMATION-DIALOG',
+                        'YTCP-PRECHECKS-WARNING-DIALOG',
+                        'YTCP-UPLOADS-STILL-CHECKING-DIALOG',
+                        'TP-YT-PAPER-DIALOG',
+                        'YTCP-DIALOG'
+                    ]);
+                    const nodes = [];
+                    function walk(root, depth = 0) {
+                        if (!root || depth > 16) return;
+                        if (root.nodeType === 1) {
+                            nodes.push(root);
+                            if (root.shadowRoot) walk(root.shadowRoot, depth + 1);
+                        }
+                        for (const c of root.children || []) walk(c, depth + 1);
+                    }
+                    walk(document.body);
+
+                    function insideDialog(el) {
+                        let cur = el;
+                        let steps = 0;
+                        while (cur && steps < 20) {
+                            steps++;
+                            if (cur.nodeType === 1) {
+                                const tag = (cur.tagName || '').toUpperCase();
+                                const role = (cur.getAttribute && cur.getAttribute('role')) || '';
+                                if (dialogTags.has(tag) || role === 'dialog' || role === 'alertdialog') {
+                                    return true;
+                                }
                             }
+                            cur = cur.parentElement || (cur.getRootNode && cur.getRootNode().host) || null;
+                        }
+                        return false;
+                    }
+
+                    // Keep selector hint 'ytcp-confirmation-dialog' for DOM queries/tests
+                    const fallbackConfirm = document.querySelectorAll('ytcp-confirmation-dialog');
+                    for (const el of nodes) {
+                        if (!el.matches || !el.matches('ytcp-button, ytcp-button-shape, button, [role="button"], #secondary-action-button, #confirm-button')) {
+                            continue;
+                        }
+                        const rect = el.getBoundingClientRect ? el.getBoundingClientRect() : null;
+                        if (!rect || rect.width <= 0 || rect.height <= 0) continue;
+                        const style = window.getComputedStyle(el);
+                        if (style.visibility === 'hidden' || style.display === 'none') continue;
+                        const txt = (el.innerText || el.textContent || el.getAttribute('aria-label') || '').trim().toLowerCase();
+                        if (targets.includes(txt) && (insideDialog(el) || fallbackConfirm.length > 0)) {
+                            const innerBtn = el.querySelector('button') || el;
+                            innerBtn.click();
+                            if (innerBtn !== el) el.click();
+                            return txt;
                         }
                     }
                     return null;
@@ -2388,6 +2604,7 @@ class YouTubeCDPClient:
             """)
             if clicked_publish_anyway:
                 logger.info("Clicked warning confirmation dialog button: %s", clicked_publish_anyway)
+                self._last_publish_accepted = True
                 await asyncio.sleep(2.0)
 
             # 2. Check for ytcp-video-share-dialog
@@ -2514,14 +2731,19 @@ class YouTubeCDPClient:
         await asyncio.sleep(3.0)
         await self.dismiss_studio_interstitials()
 
-        # Wait up to 10s for title editor
-        for _ in range(20):
-            has_title = await self.evaluate("Boolean(document.querySelector('#title-textarea #textbox'))")
+        # Wait up to 15s for hydrated title text inside editor
+        for _ in range(30):
+            has_title = await self.evaluate("""
+                (() => {
+                    const el = document.querySelector('#title-textarea #textbox');
+                    return Boolean(el && ((el.innerText || '').trim().length > 0));
+                })()
+            """)
             if has_title:
                 break
             await asyncio.sleep(0.5)
 
-        # Click #toggle-button (Show more / Hiển thị thêm) if collapsed
+        # Click #toggle-button (Show more / Hiển thị thêm) if collapsed and wait for #tags-container visibility
         await self.evaluate("""
             (() => {
                 const tagBox = document.querySelector('#tags-container');
@@ -2535,7 +2757,16 @@ class YouTubeCDPClient:
                 if (toggleBtn) toggleBtn.click();
             })()
         """)
-        await asyncio.sleep(1.0)
+        for _ in range(6):
+            await asyncio.sleep(0.5)
+            tags_vis = await self.evaluate("""
+                (() => {
+                    const tb = document.querySelector('#tags-container');
+                    return Boolean(tb && tb.offsetParent !== null);
+                })()
+            """)
+            if tags_vis:
+                break
 
         if screenshot_path:
             p = Path(screenshot_path)
@@ -2572,11 +2803,32 @@ class YouTubeCDPClient:
                 const description_length = descText.length;
                 const has_chapters_00_00 = descText.includes('00:00');
 
-                // Custom thumbnail check
-                const thumbUploader = document.querySelector('ytcp-thumbnail-uploader img[src]') ||
-                                      document.querySelector('#still-1[selected]') ||
-                                      document.querySelector('ytcp-thumbnails-compact-editor-uploader img[src]');
-                const has_custom_thumbnail = Boolean(thumbUploader);
+                // Custom thumbnail check (exclude hidden /edit fallback img and Tier-2 help tooltip lock)
+                const up = document.querySelector('ytcp-thumbnail-uploader');
+                let has_custom_thumbnail = false;
+                if (up) {
+                    const tip = up.querySelector('#select-tooltip-icon, [icon="yt-sys-icons:help"]');
+                    const tipVis = Boolean(tip && tip.offsetParent !== null);
+                    const pb = up.querySelector('#preview-button');
+                    const pbVis = Boolean(pb && pb.offsetParent !== null);
+                    const sb = up.querySelector('#select-button');
+                    const sbVis = Boolean(sb && sb.offsetParent !== null);
+                    const hasSel = up.hasAttribute('selected');
+                    const validThumbImg = Array.from(up.querySelectorAll('img[src]')).find(img => {
+                        const src = (img.getAttribute('src') || img.src || '').trim();
+                        if (!src || src.includes('placeholder') || src.includes('/edit') || src.includes('/upload')) {
+                            return false;
+                        }
+                        const isCustomSrc = (
+                            src.startsWith('blob:') ||
+                            src.startsWith('data:image/') ||
+                            src.includes('ytimg.com') ||
+                            src.includes('googleusercontent.com')
+                        );
+                        return img.offsetParent !== null && (img.naturalWidth || 0) > 0 && isCustomSrc;
+                    });
+                    has_custom_thumbnail = !tipVis && (Boolean(validThumbImg) || (hasSel && pbVis && !sbVis));
+                }
 
                 // Tags chips
                 const chips = Array.from(document.querySelectorAll('#tags-container ytcp-chip'));
@@ -2606,12 +2858,46 @@ class YouTubeCDPClient:
                               document.querySelector('#category-dropdown');
                 const category_text = catEl ? (catEl.innerText || catEl.textContent || '').trim() : '';
 
-                // Visibility
+                // Visibility + active draft notice banner check (piercing Shadow DOM)
                 const visBtn = document.querySelector('#visibility-button') ||
                                document.querySelector('#visibility') ||
                                document.querySelector('ytcp-video-metadata-visibility') ||
+                               document.querySelector('#visibility-container') ||
                                document.querySelector('.visibility-label');
                 const visibility_text = visBtn ? (visBtn.innerText || visBtn.textContent || '').trim() : '';
+
+                let draft_banner_detected = false;
+                let draft_banner_text = '';
+                const draftPhrases = [
+                    'trạng thái nháp',
+                    'chỉnh sửa bản nháp',
+                    'currently a draft',
+                    'video is a draft',
+                    'edit draft',
+                ];
+                function scanDraftNodes(root, depth = 0) {
+                    if (!root || depth > 10 || draft_banner_detected) return;
+                    if (root.nodeType === 1) {
+                        const tag = (root.tagName || '').toUpperCase();
+                        const cls = typeof root.className === 'string' ? root.className : '';
+                        if (!cls.includes('closing') && (tag === 'YTCP-BANNER' || tag === 'YTCP-TOP-BANNER' || tag === 'YTCP-BUTTON' || tag === 'BUTTON')) {
+                            const rect = root.getBoundingClientRect ? root.getBoundingClientRect() : null;
+                            const style = window.getComputedStyle(root);
+                            if (rect && rect.width > 0 && rect.height > 0 && style.display !== 'none' && style.visibility !== 'hidden') {
+                                const txt = (root.innerText || root.textContent || '').trim().replace(/\\s+/g, ' ');
+                                const low = txt.toLowerCase();
+                                if (txt.length <= 250 && draftPhrases.some(p => low.includes(p))) {
+                                    draft_banner_detected = true;
+                                    draft_banner_text = txt;
+                                    return;
+                                }
+                            }
+                        }
+                        if (root.shadowRoot) scanDraftNodes(root.shadowRoot, depth + 1);
+                    }
+                    for (const c of root.children || []) scanDraftNodes(c, depth + 1);
+                }
+                scanDraftNodes(document.body);
 
                 return {
                     live_title,
@@ -2625,13 +2911,17 @@ class YouTubeCDPClient:
                     language_text,
                     category_text,
                     visibility_text,
+                    draft_banner_detected,
+                    draft_banner_text,
                 };
             })()
         """)
         res = dict(summary) if isinstance(summary, dict) else {}
         v_low = (res.get("visibility_text") or "").lower()
         is_draft_or_private = (
-            "bản nháp" in v_low
+            bool(res.get("draft_banner_detected"))
+            or "bản nháp" in v_low
+            or "trạng thái nháp" in v_low
             or "draft" in v_low
             or "riêng tư" in v_low
             or "private" in v_low
@@ -2900,19 +3190,35 @@ async def publish_single_video(
                                 )
 
                             is_draft = edit_verification.get("is_draft_or_private", False) if edit_verification else False
+                            vis_low = (edit_verification.get("visibility_text") or "").strip().lower() if edit_verification else ""
+                            has_pub_or_pending_vis = any(
+                                kw in vis_low
+                                for kw in (
+                                    "công khai",
+                                    "public",
+                                    "đang chờ xử lý",
+                                    "pending",
+                                    "đang xử lý",
+                                    "processing",
+                                    "đã lên lịch",
+                                    "scheduled",
+                                )
+                            )
                             accepted = getattr(client, "_last_publish_accepted", False)
 
-                            if not is_draft or accepted:
+                            if not is_draft and (accepted or has_pub_or_pending_vis):
                                 logger.warning(
-                                    "Video %s confirmed queued/processing or publish accepted (not draft). "
+                                    "Video %s confirmed queued/processing or publish accepted (not draft, vis=%r). "
                                     "Marking as PUBLISHED with oembed_pending_processing=True.",
                                     vid_id,
+                                    vis_low,
                                 )
                                 oembed_pending = True
                             else:
                                 raise RuntimeError(
-                                    f"PUBLIC_VERIFICATION_FAILED: Video '{resolved_url}' confirmed as Draft/Private in YouTube Studio "
-                                    f"(visibility={edit_verification.get('visibility_text') if edit_verification else 'unknown'})."
+                                    f"PUBLIC_VERIFICATION_FAILED: Video '{resolved_url}' confirmed as Draft/Private or unconfirmed in YouTube Studio "
+                                    f"(is_draft={is_draft}, accepted={accepted}, visibility={edit_verification.get('visibility_text') if edit_verification else 'unknown'}, "
+                                    f"draft_banner={edit_verification.get('draft_banner_text') if edit_verification else ''})."
                                 )
                         else:
                             raise RuntimeError(
@@ -2959,7 +3265,7 @@ async def publish_single_video(
                     post_res = await client.link_related_video_post_publish(
                         resolved_url,
                         related_video_url,
-                        target_title=title,
+                        target_title=None,
                         handle=profile_cfg.get("handle") if profile_cfg else None,
                     )
                     post_ok = post_res.get("linked_via_cdp", False)

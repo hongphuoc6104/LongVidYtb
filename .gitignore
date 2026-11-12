@@ -67,6 +67,7 @@ sys/channels/vn_rebuilt_style_specs/**/*
 !sys/channels/vn_rebuilt_style_specs/*.md
 /sys/assets/channels/*/*.png
 /sys/channels/*/assets/
+/sys/channels/analytics_*/
 sys/channels/youtube_channel_map.json
 sys/channels/dashboard_metrics.json
 sys/channels/dashboard_history.jsonl
