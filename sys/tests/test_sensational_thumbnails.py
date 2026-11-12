@@ -62,10 +62,16 @@ def test_20_channels_blueprint_completeness():
         assert 2 <= len(hook_words) <= 4, f"Hook text '{bp['hook_text']}' not 2-4 words in {ch}"
 
         # Prompts must explicitly contain the hook text and safe zone guidelines
-        assert bp["hook_text"] in bp["flow_prompt_16x9"]
-        assert bp["hook_text"] in bp["flow_prompt_9x16"]
+        hook_16x9 = bp.get("hook_text_16x9") or bp["hook_text"]
+        hook_9x16 = bp.get("hook_text_9x16") or bp["hook_text"]
+        assert hook_16x9 in bp["flow_prompt_16x9"]
+        assert hook_9x16 in bp["flow_prompt_9x16"]
         assert "TOP-LEFT SAFE ZONE" in bp["flow_prompt_16x9"]
         assert "UPPER-CENTER SAFE ZONE" in bp["flow_prompt_9x16"]
+
+        if "hook_text_16x9" in bp:
+            hook_16x9_words = bp["hook_text_16x9"].strip().split()
+            assert 2 <= len(hook_16x9_words) <= 4, f"Hook text 16x9 '{bp['hook_text_16x9']}' not 2-4 words in {ch}"
 
 
 def test_clean_and_resize_flow_thumbnail_16x9():

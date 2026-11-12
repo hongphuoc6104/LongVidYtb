@@ -381,7 +381,7 @@ class YouTubeChannelSetupClient(YouTubeCDPClient):
 async def setup_youtube_channel(
     channel_id: str,
     profile_id: Optional[str] = None,
-    headless: bool = False,
+    headless: bool = True,
 ) -> Dict[str, Any]:
     """Execute end-to-end YouTube Channel Setup."""
     ch_map_data = load_channel_map()

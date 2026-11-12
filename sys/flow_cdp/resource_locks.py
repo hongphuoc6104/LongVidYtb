@@ -446,7 +446,8 @@ def stagger_cross_process_action(
 
             now = time.time()
             wait_sec = (last_ts + effective_interval) - now
-            if 0.0 < wait_sec <= 15.0:
+            max_wait = 15.0 if locks_dir is not None else 90.0
+            if 0.0 < wait_sec <= max_wait:
                 time.sleep(wait_sec)
                 slept_sec = wait_sec
 
@@ -459,6 +460,48 @@ def stagger_cross_process_action(
     except OSError:
         pass
     return slept_sec
+
+
+def trigger_cross_process_ip_cooldown(
+    action_name: str = "flow_rpc_submit",
+    cooldown_sec: float = 62.0,
+    locks_dir: Path | None = None,
+) -> None:
+    """Advance the cross-process stagger timestamp into the future to enforce a host-wide quiet window."""
+    safe_name = re.sub(r"[^A-Za-z0-9_.-]+", "_", action_name.strip()) or "default"
+    if locks_dir is not None:
+        base = ensure_locks_dir(locks_dir)
+    elif Path("/dev/shm").is_dir() and os.access("/dev/shm", os.W_OK):
+        shm_locks = Path("/dev/shm/video-pilot-locks")
+        try:
+            shm_locks.mkdir(parents=True, exist_ok=True, mode=0o700)
+            base = shm_locks
+        except OSError:
+            base = ensure_locks_dir()
+    else:
+        base = ensure_locks_dir()
+
+    stamp_path = base / f"stagger_{safe_name}.lock"
+    try:
+        with open(stamp_path, "a+", encoding="utf-8") as fh:
+            fcntl.flock(fh.fileno(), fcntl.LOCK_EX)
+            try:
+                fh.seek(0)
+                raw = fh.read().strip()
+                last_ts = float(raw) if raw else 0.0
+            except ValueError:
+                last_ts = 0.0
+            now = time.time()
+            # Idempotent across in-flight waves: only push forward if not already in a future cooldown
+            if last_ts < now + 10.0:
+                target_ts = now + float(cooldown_sec)
+                fh.seek(0)
+                fh.truncate()
+                fh.write(f"{target_ts:.6f}\n")
+                fh.flush()
+            fcntl.flock(fh.fileno(), fcntl.LOCK_UN)
+    except OSError:
+        pass
 
 
 def mark_profile_unauthenticated(

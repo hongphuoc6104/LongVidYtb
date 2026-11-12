@@ -225,30 +225,38 @@ def set_review_decision(
     if status not in VALID_STATUSES:
         raise ValueError(f"Invalid status '{status}'. Must be one of: {sorted(VALID_STATUSES)}")
 
-    queue = load_review_queue(queue_path)
-    items = queue.setdefault("items", {})
+    path = Path(queue_path or DEFAULT_QUEUE_PATH).resolve()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    op_lock_path = path.with_suffix(".op.lock")
+    with open(op_lock_path, "a", encoding="utf-8") as op_lock_fh:
+        fcntl.flock(op_lock_fh.fileno(), fcntl.LOCK_EX)
+        try:
+            queue = load_review_queue(queue_path)
+            items = queue.setdefault("items", {})
 
-    if job_id not in items:
-        raise KeyError(f"Job '{job_id}' not found in review queue.")
+            if job_id not in items:
+                raise KeyError(f"Job '{job_id}' not found in review queue.")
 
-    item = items[job_id]
-    item["status"] = status
+            item = items[job_id]
+            item["status"] = status
 
-    if review_notes:
-        item["review_notes"] = review_notes
+            if review_notes:
+                item["review_notes"] = review_notes
 
-    if status in {"APPROVED", "REJECTED"}:
-        item["reviewed_at"] = datetime.now(timezone.utc).isoformat()
-    elif status == "PENDING_REVIEW":
-        item["reviewed_at"] = None
+            if status in {"APPROVED", "REJECTED"}:
+                item["reviewed_at"] = datetime.now(timezone.utc).isoformat()
+            elif status == "PENDING_REVIEW":
+                item["reviewed_at"] = None
 
-    if published_url:
-        item["published_url"] = published_url
-    elif status == "PUBLISHED" and not item.get("published_url"):
-        item["published_url"] = published_url
+            if published_url:
+                item["published_url"] = published_url
+            elif status == "PUBLISHED" and not item.get("published_url"):
+                item["published_url"] = published_url
 
-    save_review_queue(queue, queue_path)
-    return item
+            save_review_queue(queue, queue_path)
+            return item
+        finally:
+            fcntl.flock(op_lock_fh.fileno(), fcntl.LOCK_UN)
 
 
 def check_publish_permission(job_id: str, queue_path: Optional[Union[str, Path]] = None) -> tuple[bool, str]:

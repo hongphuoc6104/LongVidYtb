@@ -51,6 +51,11 @@ CHANNELS_LIST = [
     "tui_tien",
     "ua_sao_vay",
     "vu_tru_ti_hon",
+    "ai_binh_dan",
+    "nao_luoi",
+    "nghe_song_sot",
+    "tam_tinh_dem",
+    "thuong_cho_kheo",
 ]
 
 
@@ -264,33 +269,55 @@ def publish_channel(slug: str) -> dict:
 
 
 def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="Batch YouTube Shorts Publisher for Video Pilot")
+    parser.add_argument("channels_pos", nargs="*", help="Channel slugs to publish (positional)")
+    parser.add_argument("--channels", "-c", nargs="*", help="Channel slugs to publish")
+    parser.add_argument("--force", action="store_true", help="Force republishing already published videos")
+    args, unknown = parser.parse_known_args()
+
+    channels = []
+    if args.channels:
+        for ch in args.channels:
+            channels.extend([c.strip() for c in ch.split(",") if c.strip()])
+    if args.channels_pos:
+        for ch in args.channels_pos:
+            channels.extend([c.strip() for c in ch.split(",") if c.strip()])
+    for u in unknown:
+        if not u.startswith("-"):
+            channels.append(u.strip())
+
+    channels_to_run = channels if channels else CHANNELS_LIST
+    force_run = args.force
+
     logger.info("==================================================")
-    logger.info("Video Pilot: Publishing 15 Shorts to 15 Channels")
+    logger.info("Video Pilot: Publishing Shorts to Channels: %s (force=%s)", channels_to_run, force_run)
     logger.info("==================================================")
 
     report = load_report()
 
-    for idx, slug in enumerate(CHANNELS_LIST, start=1):
+    for idx, slug in enumerate(channels_to_run, start=1):
         # Check if already published successfully
         existing = report.get("videos", {}).get(slug)
-        if existing and existing.get("success") and existing.get("short_url"):
-            logger.info("[%d/15] Channel %s ALREADY PUBLISHED: %s. Skipping.", idx, slug, existing["short_url"])
+        if not force_run and existing and existing.get("success") and existing.get("short_url"):
+            logger.info("[%d/%d] Channel %s ALREADY PUBLISHED: %s. Skipping.", idx, len(channels_to_run), slug, existing["short_url"])
             continue
 
-        logger.info("[%d/15] >>> Processing Channel: %s <<<", idx, slug)
-        update_state(slug, "UPLOADING", f"Channel {idx}/{len(CHANNELS_LIST)}")
+        logger.info("[%d/%d] >>> Processing Channel: %s <<<", idx, len(channels_to_run), slug)
+        update_state(slug, "UPLOADING", f"Channel {idx}/{len(channels_to_run)}")
 
         ch_res = publish_channel(slug)
 
         report["videos"][slug] = ch_res
         if ch_res["success"]:
-            logger.info(">>> SUCCESS [%d/15] %s: %s <<<", idx, slug, ch_res["short_url"])
+            logger.info(">>> SUCCESS [%d/%d] %s: %s <<<", idx, len(channels_to_run), slug, ch_res["short_url"])
         else:
-            logger.error(">>> FAILED [%d/15] %s (return_code=%s) <<<", idx, slug, ch_res["return_code"])
+            logger.error(">>> FAILED [%d/%d] %s (return_code=%s) <<<", idx, len(channels_to_run), slug, ch_res["return_code"])
 
         # Update summary counts
         report["published_count"] = sum(1 for v in report["videos"].values() if v.get("success"))
         report["failed_count"] = sum(1 for v in report["videos"].values() if not v.get("success"))
+        report["total_channels"] = len(report["videos"])
         save_report(report)
 
         update_state(slug, "FINISHED_CHANNEL", f"Success={ch_res['success']}")
@@ -299,13 +326,20 @@ def main():
         logger.info("Cooling down 4.5s before next channel...")
         time.sleep(4.5)
 
-    report["status"] = "COMPLETED" if report["published_count"] == len(CHANNELS_LIST) else "PARTIAL"
+    report["status"] = "COMPLETED" if report["failed_count"] == 0 else "PARTIAL"
     report["completed_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     save_report(report)
-    update_state("ALL", report["status"], f"Published {report['published_count']}/{len(CHANNELS_LIST)}")
+    update_state("ALL", report["status"], f"Published {report['published_count']}/{report['total_channels']}")
+
+    # Clean up any leftover browser processes from registry
+    try:
+        pm = get_process_manager()
+        pm.clean_orphans_from_registry(force_all=True)
+    except Exception as e:
+        logger.warning("Post-publish orphan cleanup warning: %s", e)
 
     logger.info("==================================================")
-    logger.info("Batch Publishing Complete: %d/%d published successfully", report["published_count"], len(CHANNELS_LIST))
+    logger.info("Batch Publishing Complete: %d/%d published successfully", report["published_count"], report["total_channels"])
     logger.info("Report saved to: %s", REPORT_FILE)
     logger.info("==================================================")
 

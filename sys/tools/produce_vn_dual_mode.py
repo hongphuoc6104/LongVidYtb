@@ -12,6 +12,7 @@ Implements two first-class Video Pilot production pipelines:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import logging
 import os
@@ -30,6 +31,7 @@ from typing import Any
 TOOL_DIR = Path(__file__).resolve().parent
 SYS_DIR = TOOL_DIR.parent
 ROOT_DIR = SYS_DIR.parent
+ROOT = ROOT_DIR
 
 for _p in (str(ROOT_DIR), str(SYS_DIR), str(TOOL_DIR)):
     if _p not in sys.path:
@@ -727,6 +729,115 @@ def resolve_authenticated_profiles(
     return filtered
 
 
+# ---------------------------------------------------------------------------
+# Channel Voice Profile Locks & Invariants
+# ---------------------------------------------------------------------------
+
+SU_KE_LAI_SHARED_VOICE_SHA256 = "cd25365252033ee60333c92e3f071a8dae3a99c865fe9e527686c7cf04048a9d"
+BANNED_DEPRECATED_VOICE_SHA256S = frozenset({
+    "5ebeb65efc952565f40a659af3f4a571945ce22dc156bedd67a60c186ee51a3e",
+})
+HARDCODED_CHANNEL_VOICE_LOCKS: dict[str, dict[str, Any]] = {
+    "su_ke_lai": {
+        "voice_profile_dir": "sys/assets/voices/ch_su_ke_lai",
+        "expected_sha256": SU_KE_LAI_SHARED_VOICE_SHA256,
+        "recommended_speed": 1.10,
+        "default_tone": "reflective_slow",
+    },
+    "ho_so_ky_la": {
+        "voice_profile_dir": "sys/assets/voices/ch_ho_so_ky_la",
+        "expected_sha256": SU_KE_LAI_SHARED_VOICE_SHA256,
+        "recommended_speed": 1.10,
+        "default_tone": "reflective_slow",
+    },
+}
+
+
+def verify_channel_voice_lock(channel_slug: str, root: Path = ROOT) -> dict[str, Any]:
+    """Verify that a channel's voice profile adheres to hardcoded voice lock invariants.
+
+    Whenever channel_slug is 'su_ke_lai' or 'ho_so_ky_la', it computes the actual SHA256
+    of reference.wav and checks profile.json['sha256'], raising a ValueError if either
+    does not equal SU_KE_LAI_SHARED_VOICE_SHA256 or matches BANNED_DEPRECATED_VOICE_SHA256S.
+    """
+    norm = channel_slug.strip().replace("-", "_").lower()
+    if norm.startswith("ch_"):
+        norm = norm[3:]
+
+    # Resolve voices base whether root is repository root or sys directory
+    if (root / "sys/assets/voices").is_dir():
+        voices_base = root / "sys/assets/voices"
+    elif (root / "assets/voices").is_dir():
+        voices_base = root / "assets/voices"
+    else:
+        voices_base = root
+
+    target_dir = voices_base / f"ch_{norm}"
+
+    if norm in HARDCODED_CHANNEL_VOICE_LOCKS:
+        lock = HARDCODED_CHANNEL_VOICE_LOCKS[norm]
+        lock_dir = root / lock["voice_profile_dir"]
+        if not lock_dir.is_dir():
+            lock_dir = target_dir
+
+        profile_json_path = lock_dir / "profile.json"
+        if not profile_json_path.is_file():
+            raise FileNotFoundError(f"Missing voice profile for locked channel {norm}: {profile_json_path}")
+        profile_data = json.loads(profile_json_path.read_text(encoding="utf-8"))
+        ref_file = lock_dir / profile_data.get("reference_wav", "reference.wav")
+        if not ref_file.is_file():
+            raise FileNotFoundError(f"Missing reference.wav for locked channel {norm}: {ref_file}")
+
+        hasher = hashlib.sha256()
+        with open(ref_file, "rb") as f:
+            hasher.update(f.read())
+        actual_sha256 = hasher.hexdigest()
+
+        if actual_sha256 in BANNED_DEPRECATED_VOICE_SHA256S:
+            raise ValueError(f"Channel {norm} reference.wav uses banned deprecated voice sha256: {actual_sha256}")
+        profile_sha = profile_data.get("sha256", "")
+        if profile_sha in BANNED_DEPRECATED_VOICE_SHA256S:
+            raise ValueError(f"Channel {norm} profile.json contains banned deprecated voice sha256: {profile_sha}")
+
+        expected = lock["expected_sha256"]
+        if actual_sha256 != expected:
+            raise ValueError(
+                f"Channel {norm} reference.wav SHA256 mismatch! Expected {expected}, got {actual_sha256}"
+            )
+        if profile_sha != expected:
+            raise ValueError(
+                f"Channel {norm} profile.json SHA256 mismatch! Expected {expected}, got {profile_sha}"
+            )
+        return profile_data
+
+    # For other channels, verify they do not use banned deprecated voice
+    profile_p = target_dir / "profile.json"
+    if profile_p.is_file():
+        data = json.loads(profile_p.read_text(encoding="utf-8"))
+        ref_name = data.get("reference_wav", "reference.wav")
+        ref_file = target_dir / ref_name
+        if ref_file.is_file():
+            hasher = hashlib.sha256()
+            with open(ref_file, "rb") as f:
+                hasher.update(f.read())
+            actual_sha256 = hasher.hexdigest()
+            if actual_sha256 in BANNED_DEPRECATED_VOICE_SHA256S:
+                raise ValueError(f"Channel {norm} reference.wav uses banned deprecated voice sha256: {actual_sha256}")
+        if data.get("sha256") in BANNED_DEPRECATED_VOICE_SHA256S:
+            raise ValueError(f"Channel {norm} profile.json contains banned deprecated voice sha256: {data.get('sha256')}")
+        return data
+
+    return {}
+
+
+def load_voice_profile(channel_arg: str, root: Path = ROOT) -> dict[str, Any]:
+    """Load and validate voice profile for a given channel, enforcing voice locks."""
+    norm = channel_arg.strip().replace("-", "_").lower()
+    if norm.startswith("ch_"):
+        norm = norm[3:]
+    return verify_channel_voice_lock(norm, root=root)
+
+
 def synthesize_vn_narration_and_words(
     beats: list[dict[str, Any]],
     voice: str = "VietNarrator",
@@ -736,6 +847,9 @@ def synthesize_vn_narration_and_words(
     """Synthesize each beat with authentic Vietnamese Studio V3 OmniVoice speech and capture exact word timestamps normalized to -11.0 LUFS / -1.0 dBTP."""
     from sys.tools.rebuild_en_from_competitor_frames import synthesize_beats_with_competitor_cadence
     from sys.tools.rebuild_vn_from_competitor_frames import resolve_voice_for_tts
+
+    if channel_slug:
+        verify_channel_voice_lock(channel_slug, root=ROOT)
 
     target_dir = Path(audio_dir) if audio_dir else Path(tempfile.mkdtemp(prefix="vn_tts_work_"))
     target_dir.mkdir(parents=True, exist_ok=True)
@@ -748,9 +862,39 @@ def synthesize_vn_narration_and_words(
 # ---------------------------------------------------------------------------
 
 
+# Hardcoded SSOT Channel -> Bottom-Right Watermark Logo Mapping (20 Vietnamese Channels)
+HARDCODED_CHANNEL_WATERMARK_MAP: dict[str, Path] = {
+    "ai_binh_dan": SYS_DIR / "channels/ai_binh_dan/assets/watermark_150x150.png",
+    "ban_do_quyen_luc": SYS_DIR / "channels/ban_do_quyen_luc/assets/watermark_150x150.png",
+    "banh_rang": SYS_DIR / "channels/banh_rang/assets/watermark_150x150.png",
+    "chanh_niem_ke": SYS_DIR / "channels/chanh_niem_ke/assets/watermark_150x150.png",
+    "co_the_ke": SYS_DIR / "channels/co_the_ke/assets/watermark_150x150.png",
+    "dia_com": SYS_DIR / "channels/dia_com/assets/watermark_150x150.png",
+    "ho_so_ky_la": SYS_DIR / "channels/ho_so_ky_la/assets/watermark_150x150.png",
+    "la_ban_hoc_thuat": SYS_DIR / "channels/la_ban_hoc_thuat/assets/watermark_150x150.png",
+    "loi_sang_soi": SYS_DIR / "channels/loi_sang_soi/assets/watermark_150x150.png",
+    "luat_doi_thuong": SYS_DIR / "channels/luat_doi_thuong/assets/watermark_150x150.png",
+    "luat_ngam": SYS_DIR / "channels/luat_ngam/assets/watermark_150x150.png",
+    "minh_triet_song": SYS_DIR / "channels/minh_triet_song/assets/watermark_150x150.png",
+    "nao_luoi": SYS_DIR / "channels/nao_luoi/assets/watermark_150x150.png",
+    "nghe_song_sot": SYS_DIR / "channels/nghe_song_sot/assets/watermark_150x150.png",
+    "su_ke_lai": SYS_DIR / "channels/su_ke_lai/assets/watermark_150x150.png",
+    "tam_tinh_dem": SYS_DIR / "channels/tam_tinh_dem/assets/watermark_150x150.png",
+    "thuong_cho_kheo": SYS_DIR / "channels/thuong_cho_kheo/assets/watermark_150x150.png",
+    "tui_tien": SYS_DIR / "channels/tui_tien/assets/watermark_150x150.png",
+    "ua_sao_vay": SYS_DIR / "channels/ua_sao_vay/assets/watermark_150x150.png",
+    "vu_tru_ti_hon": SYS_DIR / "channels/vu_tru_ti_hon/assets/watermark_150x150.png",
+}
+BOTTOM_RIGHT_WATERMARK_POS = "W-w-36:H-h-36"
+
+
 def resolve_channel_logo_source(channel_slug: str) -> Path | None:
-    """Resolve the canonical 1:1 brand emblem PNG for a Vietnamese or English channel."""
-    norm_slug = channel_slug.strip().replace("-", "_")
+    """Resolve the hardcoded canonical 1:1 brand emblem PNG for a Vietnamese or English channel."""
+    norm_slug = channel_slug.strip().replace("-", "_").lower()
+    if norm_slug in HARDCODED_CHANNEL_WATERMARK_MAP:
+        hardcoded_p = HARDCODED_CHANNEL_WATERMARK_MAP[norm_slug]
+        if hardcoded_p.is_file() and hardcoded_p.stat().st_size > 512:
+            return hardcoded_p
     candidates = [
         SYS_DIR / "channels" / norm_slug / "assets" / "watermark_150x150.png",
         SYS_DIR / "channels" / norm_slug / "assets" / "avatar_800x800.png",
@@ -880,13 +1024,15 @@ def dispatch_long_image_dag_via_pool(
     image_paths.clear()
 
     ledger = CreditLedger()
-    resolved_profiles = resolve_authenticated_profiles(allowed_profiles, credit_ledger=ledger)
+    is_free_image_model = str(image_model or "BELUGA").upper() in ("BELUGA", "NARWHAL", "HARBOR_SEAL", "IMAGEN_3_5", "IMAGEN_3")
+    min_creds = 0 if is_free_image_model else 1
+    resolved_profiles = resolve_authenticated_profiles(allowed_profiles, credit_ledger=ledger if min_creds > 0 else None)
     target_workers = min(max_workers, len(resolved_profiles)) if resolved_profiles else max_workers
     pool_kwargs: dict[str, Any] = {
         "target_workers": target_workers,
         "headless": True,
         "profiles": resolved_profiles if resolved_profiles else None,
-        "min_credits_required": 1,
+        "min_credits_required": min_creds,
         "credit_ledger": ledger,
         "default_out_dir": out_dir,
         "pacing_seconds": 0.35,
@@ -975,7 +1121,8 @@ def dispatch_long_image_dag_via_pool(
 
         from PIL import Image
 
-        for img_p in image_paths:
+        processed_paths = [Path(t["output_path"]) for t in tasks] if tasks else image_paths
+        for img_p in processed_paths:
             if img_p.is_file() and img_p.stat().st_size > 5000:
                 try:
                     clean_beluga_sparkle_file(img_p)
@@ -1661,6 +1808,7 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
     out_dir.mkdir(parents=True, exist_ok=True)
     work_dir = out_dir / "_work_short"
     work_dir.mkdir(parents=True, exist_ok=True)
+    verify_channel_voice_lock(config.channel_slug, root=ROOT)
 
     # 1. Load spec
     spec_data = {}
@@ -1722,7 +1870,13 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
         shutil.copy2(config.audio_path, audio_wav)
         cached_audio_found = True
     elif audio_wav.is_file() and audio_wav.stat().st_size > 1000:
-        logger.info(f"[{config.job_id}] Reusing cached narration audio at {audio_wav}")
+        real_audio_dur = _probe_audio_duration_sec(audio_wav)
+        if real_audio_dur < 10.0 and (out_dir / "narration_master.wav").is_file():
+            shutil.copy2(out_dir / "narration_master.wav", audio_wav)
+            real_audio_dur = _probe_audio_duration_sec(audio_wav)
+            logger.info(f"[{config.job_id}] Overwrote short audio with real narration_master.wav at {audio_wav} ({real_audio_dur:.2f}s)")
+        else:
+            logger.info(f"[{config.job_id}] Reusing cached narration audio at {audio_wav}")
         cached_audio_found = True
     elif (out_dir / "narration_master.wav").is_file():
         shutil.copy2(out_dir / "narration_master.wav", audio_wav)
@@ -1977,22 +2131,25 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
         colab_account=config.colab_account,
     )
 
-    # 6. Generate sensational 9:16 thumbnail
+    # 6. Generate sensational 9:16 thumbnail (preserve if already exists)
     thumb_png = out_dir / f"{config.job_id}_thumbnail_9x16.png"
-    spec_hook = None
-    if isinstance(spec_data, dict):
-        spec_hook = spec_data.get("thumbnail_spec", {}).get("text_prompt")
-    cand_frame = getattr(completed_tasks[0], "start_frame_path", None) if completed_tasks else None
-    if not cand_frame or not Path(cand_frame).is_file():
-        cand_frame = work_dir / "frames" / "beat_00.png"
-    generate_high_contrast_thumbnail(
-        out_path=thumb_png,
-        width=1080,
-        height=1920,
-        image_src=Path(cand_frame) if Path(cand_frame).is_file() else None,
-        text_overlay=spec_hook or "",
-        channel_slug=config.channel_slug,
-    )
+    if not (thumb_png.is_file() and thumb_png.stat().st_size > 50_000):
+        spec_hook = None
+        if isinstance(spec_data, dict):
+            spec_hook = spec_data.get("thumbnail_spec", {}).get("text_prompt")
+        cand_frame = getattr(completed_tasks[0], "start_frame_path", None) if completed_tasks else None
+        if not cand_frame or not Path(cand_frame).is_file():
+            cand_frame = work_dir / "frames" / "beat_00.png"
+        generate_high_contrast_thumbnail(
+            out_path=thumb_png,
+            width=1080,
+            height=1920,
+            image_src=Path(cand_frame) if Path(cand_frame).is_file() else None,
+            text_overlay=spec_hook or "",
+            channel_slug=config.channel_slug,
+        )
+    else:
+        logger.info(f"[{config.job_id}] Preserving pre-existing Flow BELUGA thumbnail ({thumb_png.stat().st_size} bytes): {thumb_png}")
 
     # 7. Embed poster thumbnail onto first 0.12s of Short MP4 & attach cover stream
     if thumb_png.is_file() and final_mp4.is_file() and not config.dry_run:
@@ -2038,6 +2195,7 @@ def run_long_mode(config: DualModeJobConfig) -> dict[str, Any]:
     out_dir.mkdir(parents=True, exist_ok=True)
     work_dir = out_dir / "_work_long"
     work_dir.mkdir(parents=True, exist_ok=True)
+    verify_channel_voice_lock(config.channel_slug, root=ROOT)
 
     # 1. Load or synthesize Two-Tier 240–350 beats
     spec_data = {}
@@ -2045,6 +2203,7 @@ def run_long_mode(config: DualModeJobConfig) -> dict[str, Any]:
     for cand in [
         out_dir / f"{config.job_id}_aligned_spec.json",
         out_dir / f"{config.channel_slug.replace('-', '_')}_long_aligned_spec.json",
+        out_dir / f"{config.channel_slug}_long_aligned_spec.json",
         out_dir / f"{config.channel_slug.replace('-', '_')}_long_305_aligned_spec.json",
         out_dir / f"{config.channel_slug.replace('-', '_')}_long_310_aligned_spec.json",
         out_dir / "tui_tien_long_305_aligned_spec.json",
@@ -2074,7 +2233,7 @@ def run_long_mode(config: DualModeJobConfig) -> dict[str, Any]:
     beats: list[dict[str, Any]] = []
     planned_chapters: list[dict[str, Any]] = []
 
-    if len(raw_beats) >= 150:
+    if len(raw_beats) >= 60:
         for idx, b in enumerate(raw_beats):
             beats.append({
                 "beat_id": b.get("beat_id") or b.get("id", f"B{idx:03d}"),
@@ -2088,7 +2247,7 @@ def run_long_mode(config: DualModeJobConfig) -> dict[str, Any]:
                 **{k: v for k, v in b.items() if k not in ("beat_id", "based_on", "prompt", "duration", "camera_motion", "transition", "narration", "chapter_index")},
             })
         planned_chapters = list(raw_chapters)
-    elif len(raw_visual_states) >= 150:
+    elif len(raw_visual_states) >= 60:
         for idx, vs in enumerate(raw_visual_states):
             beats.append({
                 "beat_id": vs.get("id") or vs.get("beat_id", f"VS{idx:03d}"),
@@ -2156,7 +2315,13 @@ def run_long_mode(config: DualModeJobConfig) -> dict[str, Any]:
                 beat_durations[-1] = round(beat_durations[-1] + diff, 4)
         total_dur = sum(beat_durations)
     elif audio_wav.is_file() and audio_wav.stat().st_size > 1000:
-        logger.info(f"[{config.job_id}] Reusing cached narration audio at {audio_wav}")
+        real_audio_dur = _probe_audio_duration_sec(audio_wav)
+        if real_audio_dur < 10.0 and (out_dir / "narration_master.wav").is_file():
+            shutil.copy2(out_dir / "narration_master.wav", audio_wav)
+            real_audio_dur = _probe_audio_duration_sec(audio_wav)
+            logger.info(f"[{config.job_id}] Overwrote short audio with real narration_master.wav at {audio_wav} ({real_audio_dur:.2f}s)")
+        else:
+            logger.info(f"[{config.job_id}] Reusing cached narration audio at {audio_wav}")
         beat_durations = [float(b.get("duration") or b.get("hold") or b.get("target_duration") or 2.5) for b in beats]
         real_audio_dur = _probe_audio_duration_sec(audio_wav)
         sum_nom = sum(beat_durations)
@@ -2181,10 +2346,12 @@ def run_long_mode(config: DualModeJobConfig) -> dict[str, Any]:
                 beat_durations[-1] = round(beat_durations[-1] + diff, 4)
         total_dur = sum(beat_durations)
     else:
+        ch_voice = config.spec_data.get("voice") or f"VietNarrator_{config.channel_slug.replace('-', '_')}"
         norm_wav, real_dur, real_beat_durs, _ = synthesize_vn_narration_and_words(
             beats=beats,
-            voice="VietNarrator",
+            voice=ch_voice,
             audio_dir=work_dir / "_tts_work",
+            channel_slug=config.channel_slug,
         )
         shutil.copy2(norm_wav, audio_wav)
         beat_durations = real_beat_durs
@@ -2221,21 +2388,31 @@ def run_long_mode(config: DualModeJobConfig) -> dict[str, Any]:
     # 5. Watermark & Thumbnail
     watermark_png = work_dir / "watermark_100x100.png"
     logo_src = resolve_channel_logo_source(config.channel_slug)
+    if watermark_png.is_file() and watermark_png.stat().st_size <= 2000:
+        watermark_png.unlink(missing_ok=True)
     make_rounded_watermark(logo_src, watermark_png, size=100, opacity=0.92, radius=16)
+    if watermark_png.is_file() and watermark_png.stat().st_size <= 2000 and logo_src:
+        watermark_png.unlink(missing_ok=True)
+        make_rounded_watermark(logo_src, watermark_png, size=100, opacity=0.92, radius=16)
+    assert watermark_png.is_file() and watermark_png.stat().st_size > 2000, (
+        f"[{config.job_id}] Watermark file {watermark_png} size "
+        f"{watermark_png.stat().st_size if watermark_png.is_file() else 0} bytes is not > 2000 bytes."
+    )
 
     thumb_png = out_dir / f"{config.job_id}_thumbnail_16x9.png"
-    spec_hook = None
-    if isinstance(spec_data, dict):
-        spec_hook = spec_data.get("thumbnail_spec", {}).get("text_prompt")
-    first_long_img = image_paths[0] if image_paths else None
-    generate_high_contrast_thumbnail(
-        out_path=thumb_png,
-        width=1920,
-        height=1080,
-        image_src=first_long_img if first_long_img and Path(first_long_img).is_file() else None,
-        text_overlay=spec_hook or "",
-        channel_slug=config.channel_slug,
-    )
+    if not (thumb_png.is_file() and thumb_png.stat().st_size > 50_000):
+        spec_hook = None
+        if isinstance(spec_data, dict):
+            spec_hook = spec_data.get("thumbnail_spec", {}).get("text_prompt")
+        first_long_img = image_paths[0] if image_paths else None
+        generate_high_contrast_thumbnail(
+            out_path=thumb_png,
+            width=1920,
+            height=1080,
+            image_src=first_long_img if first_long_img and Path(first_long_img).is_file() else None,
+            text_overlay=spec_hook or "",
+            channel_slug=config.channel_slug,
+        )
 
     # 6. Execute rendering
     final_mp4 = out_dir / f"{config.job_id}_16x9.mp4"
@@ -2272,6 +2449,9 @@ def run_long_mode(config: DualModeJobConfig) -> dict[str, Any]:
             colab_account=config.colab_account,
             scratch_dir=work_dir / "_colab_render",
         )
+
+    if final_mp4.is_file() and final_mp4.stat().st_size > 1_000_000:
+        shutil.copy2(final_mp4, out_dir / "final_long.mp4")
 
     return {
         "job_id": config.job_id,
@@ -2376,6 +2556,12 @@ def main() -> None:
         job_id = args.job_id
     elif Path(args.output_dir).name != "video":
         job_id = Path(args.output_dir).name
+    elif args.channel_slug:
+        cand_job = f"vn_pilot_{args.channel_slug.replace('-', '_')}_{'long' if 'long' in normalized_mode else 'short'}"
+        if (Path(args.output_dir) / cand_job).is_dir():
+            job_id = cand_job
+        else:
+            job_id = f"vn_{normalized_mode.replace('-', '_')}_{int(time.time())}"
     else:
         job_id = f"vn_{normalized_mode.replace('-', '_')}_{int(time.time())}"
     allowed_profiles = [p.strip() for p in args.profiles.split(",") if p.strip()] if args.profiles else None

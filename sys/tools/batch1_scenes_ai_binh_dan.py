@@ -1,0 +1,145 @@
+"""Story-aligned scene descriptions for ai_binh_dan (117 beats).
+Style: Modern dark-mode glassmorphism tech workspace illustration (Jeff Su / Fireship style).
+Pure ASCII, zero diacritics, zero buzzwords, zero text overlays, 100% unique.
+"""
+
+from typing import Dict
+
+AI_BINH_DAN_SCENES: Dict[str, str] = {
+    # Chapter 1: Con Bao Tu Dong Hoa & Ao Tuong Nang Suat (10 beats)
+    "CH01_A01": "Overwhelmed remote professional sitting at a dark slate desk at dawn, surrounded by glowing stacks of pending digital task icons and unsorted document tiles",
+    "CH01_A02": "Exhausted professional rubbing tired eyes in front of a flickering multi-monitor desk setup, an endless loop of monotonous copy-paste gestures repeating on glass panels",
+    "CH01_A03": "Dual split-screen interface showing manual row-by-row data copying from a messy legacy spreadsheet into another tabular window, magnifying tired eye strain",
+    "CH01_A04": "Hand organizing a cluttered digital desktop by manually dragging email attachments one by one into separate folders under dim desk lamp illumination",
+    "CH01_A05": "Glowing holographic news feed and tech conference broadcasts projecting dynamic artificial intelligence headlines across a dark glass tabletop",
+    "CH01_A06": "Solitary office worker watching a brilliant glowing wave of advanced technology from outside a frosted glass window with hesitant posture",
+    "CH01_A07": "Distant floating abstract robotic tech city floating far above ordinary desktop monitors, seeming unreachable and intimidating to the viewer",
+    "CH01_A08": "Silhouette of elite programmers in a corporate server room typing lines of terminal code under towering server racks and complex glowing monitors",
+    "CH01_A09": "Shattered glass mental barrier dissolving above a dark desk, exposing modern intuitive visual tools underneath the fear of technical complexity",
+    "CH01_A10": "Pair of hands breaking free from tangled glowing cords on a sleek workstation, reaching toward a clean minimalist workspace ready for meaningful work",
+
+    # Chapter 2: Boc Tach 3 Tac Vu Dang Dot Thoi Gian Nhat (11 beats)
+    "CH02_A01": "Circular glass timeline of an 8-hour workday glowing on a dark desk surface, dissected into color-coded time sectors showing actual productivity",
+    "CH02_A02": "Digital countdown clock spinning rapidly as over sixty percent of the glowing circular pie chart dissolves into gray low-value administrative tasks",
+    "CH02_A03": "Leaking holographic digital faucet dripping luminous energy droplets, visualizing slow energy drain from endless micro-interruptions and trivial chores",
+    "CH02_A04": "Overloaded email client window flooded with hundreds of unread message badges, with an inbox triage icon sorting through dense customer inquiries and spam",
+    "CH02_A05": "Split workstation showing two completely disconnected enterprise software windows with no sync bridge between them, requiring tedious manual retyping",
+    "CH02_A06": "Critical close-up of a misaligned comma in a financial spreadsheet cell causing red error highlight lines to cascade across adjacent financial columns",
+    "CH02_A07": "Monotonous email composer displaying a repetitive standardized reply template being copied and pasted into dozens of outbound customer messages",
+    "CH02_A08": "Tired office worker transcribing endless audio waveforms from a lengthy team meeting recording into a bulleted text document under cool desk backlighting",
+    "CH02_A09": "Hand compiling scattered numbers from multiple disparate browser tabs into a bulky weekly operational summary spreadsheet late in the afternoon",
+    "CH02_A10": "Staggering pile of printed quarterly performance reports binding valuable analyst hours without yielding any strategic executive insight",
+    "CH02_A11": "Contrast comparison between a cluttered desk of endless manual toil and a clean futuristic interface showcasing intelligent productivity systems",
+
+    # Chapter 3: Ban Thiet Ke Dong Chay Tu Dong Khong Can Code (11 beats)
+    "CH03_A01": "Sleek modern visual builder canvas in 2026 where complex programming code fades away into intuitive visual connecting nodes and elegant glass cards",
+    "CH03_A02": "Drag-and-drop workflow canvas showing modular rounded cards being effortlessly snapped together without requiring any technical computer science degrees",
+    "CH03_A03": "Modular visual workflow resembling vibrant interlocking building blocks, organized into three distinct hierarchical tiers across an ultrawide dark display",
+    "CH03_A04": "First workflow tier highlighting an incoming web registration form submission trigger node radiating an electric cyan pulse upon receiving new customer leads",
+    "CH03_A05": "Real-time trigger node igniting as an inbound corporate email arrives, instantly routing data along glowing vector pathways to the central processing engine",
+    "CH03_A06": "Second workflow tier showing a glassmorphic artificial intelligence parsing node analyzing unstructured email text like an experienced data analyst",
+    "CH03_A07": "Intelligent node parsing out customer intent, urgent phone numbers, and core service inquiries into neatly formatted structured data packets",
+    "CH03_A08": "Third workflow tier automatically populating a team spreadsheet database with verified contact details while posting an instant Slack notification",
+    "CH03_A09": "Autonomous drafting module generating a personalized polite reply preview in a secondary preview window within three seconds of trigger activation",
+    "CH03_A10": "High-speed optical data pulse racing across visual connection cables connecting trigger, logic engine, and response dispatch in the blink of an eye",
+    "CH03_A11": "Seamless three-node automation loop glowing serenely on the desktop, with a subtle warning indicator reminding that human supervision is essential",
+
+    # Chapter 4: Cam Bay Ao Giac & Loi He Thong Nghiem Trong (13 beats)
+    "CH04_A01": "Careless computer user walking away from a glowing unattended automation station with reckless overconfidence in unsupervised algorithmic execution",
+    "CH04_A02": "Statistical diagnostic display showing eighty percent of beginners stumbling into catastrophic errors due to blind reliance on unverified automation",
+    "CH04_A03": "Large language model hallucination visualization showing a neural network generating completely fabricated factual citations and nonexistent contract clauses",
+    "CH04_A04": "Eloquent but entirely fictitious legal document floating on a frosted glass screen, masking severe factual inaccuracies behind polished professional prose",
+    "CH04_A05": "Critical alert window showing an unverified fabricated email draft about to be broadcast to important enterprise clients, threatening corporate credibility",
+    "CH04_A06": "Security warning dashboard highlighting internal salary spreadsheet data accidentally exposed to a broad company mailing list through careless prompt logic",
+    "CH04_A07": "Runaway automation loop glitch firing thousands of duplicate spam messages per minute into a partner server, triggering instant mail gateway saturation",
+    "CH04_A08": "Company domain name being flagged on a digital firewall blacklist monitor, illustrating the severe real-world fallout of unconstrained automated scripts",
+    "CH04_A09": "Abstract glowing neural core shown as a probabilistic math equation engine devoid of human ethics, empathy, or legal accountability",
+    "CH04_A10": "Metaphorical concept of a toddler gripping the steering wheel of a heavy commercial transport truck on a bustling multi-lane digital highway",
+    "CH04_A11": "Balanced dual-pillar visual weighing lightning-fast machine processing speed against prudent human vigilance on a modern glass scale",
+    "CH04_A12": "Warning beacon pulsing over an unvetted script, cautioning professionals never to trade long-term corporate security for momentary convenience",
+    "CH04_A13": "Transition visual introducing the indispensable safety architecture that harmonizes autonomous speed with fail-safe reliability",
+
+    # Chapter 5: Nguyen Ly Kiem Soat Human-in-the-Loop (13 beats)
+    "CH05_A01": "Human-in-the-loop control checkpoint placed firmly between automated data processing and the final external communication gateway",
+    "CH05_A02": "Background algorithmic engine quietly ingesting messy records, running database lookups, and preparing a flawless draft for review",
+    "CH05_A03": "Polite notification dialogue popping up on an executive tablet featuring a prominent green approval button awaiting user confirmation",
+    "CH05_A04": "Ten-second verification scan of key summary metrics on a clean tablet dashboard, averting severe downstream operational errors with a single glance",
+    "CH05_A05": "User lightly tapping an inline text editor to polish a single sentence before tapping the green approve button to authorize outbound dispatch",
+    "CH05_A06": "Efficiency metrics graph demonstrating ninety percent time saved alongside a solid one-hundred percent accuracy score achieved via human review",
+    "CH05_A07": "Airplane cockpit metaphor showing an experienced captain calmly observing dual avionics flight management consoles in clear cruising altitude",
+    "CH05_A08": "Advanced commercial aircraft autopilot navigating smooth airways while the human pilot monitors flight path telemetry from the captain seat",
+    "CH05_A09": "Pilot hands gently taking manual control of the flight yoke during turbulent weather to execute a precision runway landing",
+    "CH05_A10": "Diligent digital software assistant sorting routine paperwork in the background while the knowledge worker focuses on high-level strategy",
+    "CH05_A11": "Knowledge worker acting as captain of their productivity ecosystem, steering the long-term vision and maintaining quality standards",
+    "CH05_A12": "Confident professional mastering automation tools without intimidation, feeling total ownership over digital workflows",
+    "CH05_A13": "Ascending illuminated steps representing elevated productivity tiers, inviting the user into an empowered architectural mindset",
+
+    # Chapter 6: Cu Lat Nguoc: Tu Nguoi Lam Den Nguoi Giam Sat (14 beats)
+    "CH06_A01": "Mental shift visualization from an overworked manual craftsman hunched over single tasks to an overarching workflow systems architect",
+    "CH06_A02": "Restaurant kitchen scene of an overwhelmed head chef trapped washing dirty dishes in a sink while dining room orders pile up in chaos",
+    "CH06_A03": "Head chef stepping out of the dish pit to design an efficient assembly-line kitchen workflow for preparation, cooking, and plating",
+    "CH06_A04": "Memory flashback to a frustrating spreadsheet screen filled with convoluted nested formulas and confusing parenthetical syntax errors",
+    "CH06_A05": "Entire financial balance sheet flashing harsh red syntax errors due to a single missing semicolon in a legacy formula string",
+    "CH06_A06": "Natural language prompt input field where the user simply types a clean conversational instruction to summarize quarterly profits",
+    "CH06_A07": "Intelligent AI assistant parsing the request and instantly outputting pristine spreadsheet formulas and auto-cleaned column headers",
+    "CH06_A08": "Master woodworker building a precision steel jig and master template once, enabling hundreds of identical flawless furniture cuts",
+    "CH06_A09": "Digital automation workflow acting as an invisible master template for knowledge workers, yielding hundreds of hours of compounding weekly time savings",
+    "CH06_A10": "Productivity value scale showing hours spent on manual keyboard typing plummeting while value of workflow architecture skyrockets",
+    "CH06_A11": "Chief workflow architect standing in front of an orchestral visual dashboard directing multiple synchronized autonomous digital agents",
+    "CH06_A12": "Relaxed professional enjoying clear mental headspace and calm breathing at a clean decluttered desk with zero unread alerts",
+    "CH06_A13": "Strategic thinker spotting high-impact business innovations and creative ideas on an expansive glass whiteboard wall",
+    "CH06_A14": "Practical case study interface preparing to tackle a towering mountain of one hundred unread customer emails on Monday morning",
+
+    # Chapter 7: Kich Ban Thuc Chien: Xu Ly 100 Email Trong 5 Phut (14 beats)
+    "CH07_A01": "Monday morning inbox crisis showing exactly one hundred unread incoming emails stacked menacingly in a dark-mode mail client",
+    "CH07_A02": "Frantic user wasting four hours clicking sequentially through unorganized emails where urgent client crises mingle with spam promotions",
+    "CH07_A03": "Automated smart sorting post office triage layout where every incoming message passes through an automated scanner filter",
+    "CH07_A04": "Inbound email queue automatically color-tagged with red badges for urgent client requests, green for internal updates, and muted gray for newsletters",
+    "CH07_A05": "Cleaned email client view where low-priority emails vanish into archives, leaving only top-priority red-labeled messages in sharp focus",
+    "CH07_A06": "AI extraction card distilling an urgent inquiry into three crisp bullet points specifying customer name, required resolution, and delivery deadline",
+    "CH07_A07": "Clean daily task planner table where extracted action items from urgent client emails automatically populate priority rows",
+    "CH07_A08": "Pre-drafted empathetic customer reply sitting safely inside a staging sandbox, cross-referenced with the internal departmental FAQ knowledge base",
+    "CH07_A09": "Calm professional sitting down at eight in the morning holding a steaming ceramic coffee mug in a peaceful sunlit home office corner",
+    "CH07_A10": "Reviewing a curated list of top ten AI-drafted responses presented in a sleek split-pane dashboard with executive summary cards",
+    "CH07_A11": "Quick personalized greeting tweak added with a few keystrokes before clicking the glowing dispatch button on each drafted reply",
+    "CH07_A12": "Clock showing only five minutes elapsed as all one hundred Monday morning emails reach zero unread status with zero mental friction",
+    "CH07_A13": "Delighted customer receiving an instantaneous accurate response while the professional reserves the entire morning for deep creative work",
+    "CH07_A14": "Transition to Friday afternoon productivity challenge: compiling complex multi-source weekly executive performance reports",
+
+    # Chapter 8: Ket Noi Bang Bieu & Tu Dong Xuat Bao Cao Tuan (13 beats)
+    "CH08_A01": "Somber Friday afternoon office scene where exhausted analysts dread compiling fragmented data scattered across multiple disconnected tools",
+    "CH08_A02": "Fatigued analyst with tired red eyes juggling seven open browser windows, manually cross-calculating sales totals into late evening hours",
+    "CH08_A03": "Unified digital pipeline architecture channeling disparate streams of sales, ad spend, and support metrics into a centralized data lake",
+    "CH08_A04": "Real-time central dashboard where transaction numbers update continuously throughout the week, triggering a Friday three PM automated digest",
+    "CH08_A05": "Analytical processing engine scanning weekly metrics, spotting sudden growth anomalies, and flagging departmental expense thresholds",
+    "CH08_A06": "Automated report compiler generating three lucid executive takeaway bullet points alongside vibrant dynamic bar charts and trend curves",
+    "CH08_A07": "Elegant weekly briefing document packed into an interactive executive slide deck waiting for final human approval in an approval inbox",
+    "CH08_A08": "Confident manager spending fifteen minutes reviewing key findings and formulating next week strategy instead of manual arithmetic",
+    "CH08_A09": "Impeccable executive presentation delivered on time with zero mathematical discrepancies, earning widespread leadership confidence",
+    "CH08_A10": "Professional calmly closing their sleek laptop at five in the evening on Friday to spend an uninterrupted weekend with family",
+    "CH08_A11": "Data security warning highlighting the critical necessity of safeguarding proprietary corporate secrets during automated data pipelining",
+    "CH08_A12": "Digital vault door locking securely against data leak vulnerabilities, emphasizing that data protection is the bedrock of productivity",
+    "CH08_A13": "Gateway checkpoint outlining three non-negotiable enterprise data defense protocols before running live automated workflows",
+
+    # Chapter 9: Quy Tac Vang Giu An Toan Du Lieu Doanh Nghiep (12 beats)
+    "CH09_A01": "Metaphor of confidential business documents carelessly left behind on an open public photocopier glass bed for any stranger to view",
+    "CH09_A02": "Risk visualization of raw customer records and secret contracts uploaded directly into public free AI tools that use inputs for public model training",
+    "CH09_A03": "Conceptual threat of proprietary enterprise trade secrets leaking into generic public chatbot responses seen by commercial competitors",
+    "CH09_A04": "First security rule showing automatic anonymization masking sensitive customer names and bank account numbers into Client A and Project B tags",
+    "CH09_A05": "Data scrubbing engine processing structural text semantics and numbers while real corporate identities remain securely encrypted and hidden",
+    "CH09_A06": "Second security rule depicting the principle of least privilege, handing a guest key only for the living room while keeping the family safe locked",
+    "CH09_A07": "Sandboxed automation directory restricted to task-specific files, isolating corporate cloud drives from unauthorized external script access",
+    "CH09_A08": "Third security rule showing a hand toggling off the chat history training toggle switch in the privacy preferences panel",
+    "CH09_A09": "Secure enterprise-tier workspace badge activating with zero-data-retention guarantees, establishing an impenetrable defensive moat",
+    "CH09_A10": "Monthly security maintenance dashboard where an administrator revokes obsolete API tokens and unbinds inactive third-party integration webhooks",
+    "CH09_A11": "High-performance sports car cornering smoothly at high speeds thanks to high-end disc brakes, illustrating that security fuels bold innovation",
+    "CH09_A12": "Professional equipped with both workflow automation blueprints and bulletproof data security keys, ready to launch their first custom system",
+
+    # Chapter 10: Xay Dung Co May Dau Tien Cua Rieng Ban (6 beats)
+    "CH10_A01": "Architectural blueprint warning against building an over-engineered mega-factory on day one, urging beginners to start with small wins",
+    "CH10_A02": "Simple desk setup with a clean sheet of paper where a pen circles a single repetitive task out of three listed chores to automate today",
+    "CH10_A03": "Hand-drawn three-box flowchart on notepad paper detailing input trigger, processing logic, and output destination before assembling digital blocks",
+    "CH10_A04": "Live test run processing three sample data rows with a human approval checkpoint, followed by a triumphant green success badge on screen",
+    "CH10_A05": "Liberated professional stretching comfortably at their desk, celebrating thirty minutes of daily life reclaimed from tedious manual chores",
+    "CH10_A06": "Peaceful home scene of a smiling professional enjoying dinner and laughter with their family, energized to pursue long-term life aspirations",
+}

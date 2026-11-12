@@ -1276,7 +1276,7 @@ def render_vn_frame_video(
         filter_chains.append(f"[{cur_v}]ass=filename='{escaped_ass}'[vsub]")
         cur_v = "vsub"
 
-    wm_pos = "W-w-32:120" if is_short else "W-w-36:H-h-36"
+    wm_pos = "W-w-36:H-h-36"
     filter_chains.append(f"[{cur_v}][{wm_idx}:v]overlay={wm_pos}[vout]")
     filter_chains.append(f"[{audio_idx}:a]aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo[aout]")
 

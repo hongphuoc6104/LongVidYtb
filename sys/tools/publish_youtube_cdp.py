@@ -130,6 +130,39 @@ def fetch_youtube_title(video_url_or_id: str) -> Optional[str]:
         return None
 
 
+def format_and_truncate_tags(tags: Optional[str | list[str]], max_chars: int = 480) -> list[str]:
+    """Parse comma/newline separated tags and truncate cleanly under max_chars total length.
+
+    YouTube imposes a strict 500-character cap on total tags. Keeping under 480 chars
+    safely avoids any rejected input.
+    """
+    if not tags:
+        return []
+    if isinstance(tags, str):
+        raw_list = re.split(r"[,\n]+", tags)
+    else:
+        raw_list = list(tags)
+
+    cleaned: list[str] = []
+    seen = set()
+    for t in raw_list:
+        clean_tag = str(t).strip().lstrip("#").strip()
+        if clean_tag and clean_tag.lower() not in seen:
+            seen.add(clean_tag.lower())
+            cleaned.append(clean_tag)
+
+    selected: list[str] = []
+    curr_len = 0
+    for tag in cleaned:
+        cost = len(tag) + (1 if selected else 0)
+        if curr_len + cost <= max_chars:
+            selected.append(tag)
+            curr_len += cost
+        else:
+            break
+    return selected
+
+
 class YouTubeCDPClient:
     """Direct CDP Controller for YouTube Studio."""
 
@@ -150,6 +183,7 @@ class YouTubeCDPClient:
         self.pending: dict[int, asyncio.Future] = {}
         self._port_lock = ProfilePortLock(self.port, owner_tag="youtube_publisher")
         self._is_hardening = False
+        self._last_publish_accepted = False
 
     def ensure_browser(self) -> bool:
         """Launch Chrome profile if not already running."""
@@ -340,7 +374,7 @@ class YouTubeCDPClient:
                 const title = document.title;
                 const url = window.location.href;
                 const m = url.match(/studio\\.youtube\\.com\\/channel\\/([^\\/\\?#]+)/);
-                const channelId = m ? m[1] : null;
+                let channelId = m ? m[1] : null;
 
                 // Channel name element on sidebar or avatar
                 const nameEl = document.querySelector('#channel-title') ||
@@ -352,9 +386,15 @@ class YouTubeCDPClient:
                     const mName = text.match(/Kênh của bạn[\\s\\n]+([^\\n]+)/);
                     if (mName) name = mName[1].trim();
                 }
+                if (!channelId && window.ytcfg && typeof window.ytcfg.get === 'function') {
+                    channelId = window.ytcfg.get('CHANNEL_ID') || null;
+                }
                 return { title, url, channelId, channelName: name };
             })()
         """)
+        curr_url = (info or {}).get("url", "")
+        if "accounts.google.com/v3/signin" in curr_url or "confirmidentifier" in curr_url or "accounts.google.com" in curr_url:
+            raise RuntimeError(f"GOOGLE_AUTH_REQUIRED: {curr_url}")
         return info or {}
 
     async def open_upload_dialog(self) -> bool:
@@ -499,8 +539,11 @@ class YouTubeCDPClient:
         title: str,
         description: str,
         is_kids: bool = False,
+        tags: Optional[str | list[str]] = None,
+        language: Optional[str] = None,
+        category: Optional[str] = None,
     ) -> None:
-        """Set title, description, and audience settings."""
+        """Set title, description, audience settings, tags, language, and category."""
         logger.info("Filling title: %s", title)
         title_res = await self.evaluate(f"""
             (() => {{
@@ -544,14 +587,227 @@ class YouTubeCDPClient:
         """)
         await asyncio.sleep(1.0)
 
-    async def upload_thumbnail(self, thumbnail_path: str | Path) -> bool:
+        # Expand 'Hiển thị thêm' / 'Show more' if tags, language, or category need to be set
+        clean_tags = format_and_truncate_tags(tags, max_chars=480)
+        if clean_tags or language or category:
+            await self.evaluate("""
+                (() => {
+                    const tagBox = document.querySelector('#tags-container') || document.querySelector('input#text-input[aria-label*="Tags"]');
+                    if (tagBox && tagBox.offsetParent !== null) return 'ALREADY_EXPANDED';
+                    const toggleBtn = document.querySelector('ytcp-uploads-video-details #toggle-button') ||
+                                      document.querySelector('#toggle-button') ||
+                                      document.querySelector('ytcp-button#toggle-button') ||
+                                      Array.from(document.querySelectorAll('ytcp-button, button')).find(b => {
+                                          const txt = (b.innerText || '').toLowerCase();
+                                          return txt.includes('hiển thị thêm') || txt.includes('show more');
+                                      });
+                    if (toggleBtn) {
+                        toggleBtn.click();
+                        return 'TOGGLED';
+                    }
+                    return null;
+                })()
+            """)
+            await asyncio.sleep(1.0)
+
+        # Tags handling
+        if clean_tags:
+            logger.info("Filling %d tags (total chars=%d)...", len(clean_tags), sum(len(t) for t in clean_tags) + max(0, len(clean_tags) - 1))
+            tags_csv = ",".join(clean_tags) + ","
+            tags_res = await self.evaluate(f"""
+                (() => {{
+                    const container = document.querySelector('#tags-container') ||
+                                      document.querySelector('ytcp-form-input-container#tags-container') ||
+                                      document.querySelector('ytcp-chip-bar');
+                    if (!container) return {{ success: false, reason: 'no_tags_container' }};
+                    container.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
+
+                    const input = container.querySelector('input#text-input') ||
+                                  container.querySelector('input') ||
+                                  document.querySelector('#tags-container input');
+                    if (!input) return {{ success: false, reason: 'no_input' }};
+
+                    input.focus();
+                    document.execCommand('insertText', false, {json.dumps(tags_csv)});
+                    input.dispatchEvent(new Event('input', {{ bubbles: true, composed: true }}));
+                    return {{ success: true }};
+                }})()
+            """)
+            await self.call("Input.dispatchKeyEvent", {"type": "rawKeyDown", "windowsVirtualKeyCode": 13, "key": "Enter", "code": "Enter"})
+            await self.call("Input.dispatchKeyEvent", {"type": "keyUp", "windowsVirtualKeyCode": 13, "key": "Enter", "code": "Enter"})
+            await asyncio.sleep(0.5)
+
+            # Check chip count; if 0, fallback to inserting each tag individually with CDP Enter
+            chip_count_res = await self.evaluate("""
+                (() => {
+                    const chips = document.querySelectorAll('#tags-container ytcp-chip');
+                    return chips.length;
+                })()
+            """)
+            chip_count = int(chip_count_res or 0)
+            if chip_count == 0:
+                logger.info("Tags CSV insertion produced 0 chips; falling back to individual tag insertion...")
+                for tag in clean_tags:
+                    await self.evaluate(f"""
+                        (() => {{
+                            const input = document.querySelector('#tags-container input#text-input') ||
+                                          document.querySelector('#tags-container input');
+                            if (!input) return;
+                            input.focus();
+                            document.execCommand('insertText', false, {json.dumps(tag)});
+                            input.dispatchEvent(new Event('input', {{ bubbles: true, composed: true }}));
+                        }})()
+                    """)
+                    await self.call("Input.dispatchKeyEvent", {"type": "rawKeyDown", "windowsVirtualKeyCode": 13, "key": "Enter", "code": "Enter"})
+                    await self.call("Input.dispatchKeyEvent", {"type": "keyUp", "windowsVirtualKeyCode": 13, "key": "Enter", "code": "Enter"})
+                    await asyncio.sleep(0.1)
+
+            final_chips = await self.evaluate("""
+                (() => {
+                    const chips = document.querySelectorAll('#tags-container ytcp-chip');
+                    return chips.length;
+                })()
+            """) or 0
+            logger.info("Tags filled result: %s, final chip count: %d", tags_res, final_chips)
+            await asyncio.sleep(0.5)
+
+        # Video Language
+        if language:
+            lang_candidates = [
+                '#language-input',
+                'ytcp-form-language-input',
+                'ytcp-text-dropdown-select#language-input',
+                '#language-and-close-captioning #language-input',
+            ]
+            await self._select_studio_dropdown_option(lang_candidates, language)
+
+        # Category
+        if category:
+            cat_candidates = [
+                '#category',
+                'ytcp-video-metadata-category',
+                'ytcp-text-dropdown-select#category',
+                '#category-dropdown',
+            ]
+            await self._select_studio_dropdown_option(cat_candidates, category)
+
+    async def _select_studio_dropdown_option(
+        self,
+        selector_candidates: list[str],
+        target_value: str,
+    ) -> bool:
+        """Select an option in a YouTube Studio custom dropdown (e.g. Language, Category)."""
+        if not target_value:
+            return False
+
+        logger.info("Selecting dropdown option for '%s'...", target_value)
+        val_lower = target_value.strip().lower()
+        synonyms = [val_lower]
+        if "tiếng việt" in val_lower or "vietnamese" in val_lower:
+            synonyms.extend(["tiếng việt", "vietnamese"])
+        elif "giáo dục" in val_lower or "education" in val_lower:
+            synonyms.extend(["giáo dục", "education"])
+        elif "khoa học" in val_lower or "science" in val_lower or "công nghệ" in val_lower:
+            synonyms.extend([
+                "khoa học và công nghệ",
+                "khoa học & công nghệ",
+                "science & technology",
+                "science and technology",
+            ])
+        elif "mọi người" in val_lower or "blog" in val_lower:
+            synonyms.extend([
+                "mọi người và blog",
+                "mọi người & blog",
+                "people & blogs",
+                "people and blogs",
+            ])
+
+        try:
+            clicked_trigger = await self.evaluate(f"""
+                (() => {{
+                    const candidates = {json.dumps(selector_candidates)};
+                    let container = null;
+                    for (const sel of candidates) {{
+                        const el = document.querySelector(sel);
+                        if (el && el.offsetParent !== null) {{
+                            container = el;
+                            break;
+                        }}
+                    }}
+                    if (!container) return false;
+                    container.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
+
+                    const trigger = container.querySelector('#trigger') ||
+                                    container.querySelector('ytcp-dropdown-trigger') ||
+                                    container.querySelector('.dropdown-trigger') ||
+                                    container.querySelector('[role="button"]') ||
+                                    container;
+                    trigger.click();
+                    return true;
+                }})()
+            """)
+            if not clicked_trigger:
+                logger.warning("Could not find dropdown container for %s from candidates %s", target_value, selector_candidates)
+                return False
+
+            await asyncio.sleep(0.8)
+
+            selected = await self.evaluate(f"""
+                (() => {{
+                    const synonyms = {json.dumps(synonyms)};
+                    const menus = Array.from(document.querySelectorAll(
+                        'tp-yt-paper-listbox, ytcp-text-menu, tp-yt-iron-dropdown, ytcp-dropdown-select-item-list'
+                    )).filter(m => m.offsetParent !== null && window.getComputedStyle(m).display !== 'none');
+
+                    const items = [];
+                    for (const m of menus) {{
+                        items.push(...Array.from(m.querySelectorAll('tp-yt-paper-item, ytcp-text-menu-item, [role="option"]')));
+                    }}
+                    if (items.length === 0) {{
+                        items.push(...Array.from(document.querySelectorAll('tp-yt-paper-item, [role="option"]')).filter(el => el.offsetParent !== null));
+                    }}
+
+                    for (const item of items) {{
+                        const text = (item.innerText || item.textContent || '').trim().toLowerCase();
+                        for (const syn of synonyms) {{
+                            if (text === syn || text.includes(syn)) {{
+                                item.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
+                                item.click();
+                                return {{ success: true, matched_text: text }};
+                            }}
+                        }}
+                    }}
+                    return {{ success: false, items_count: items.length }};
+                }})()
+            """)
+
+            if selected and selected.get("success"):
+                logger.info("Successfully selected '%s' in dropdown (matched: %s)", target_value, selected.get("matched_text"))
+                await asyncio.sleep(0.5)
+                return True
+            else:
+                logger.warning("Could not find matching option for '%s' in dropdown items: %s", target_value, selected)
+                await self.call("Input.dispatchKeyEvent", {"type": "rawKeyDown", "windowsVirtualKeyCode": 27, "key": "Escape", "code": "Escape"})
+                await self.call("Input.dispatchKeyEvent", {"type": "keyUp", "windowsVirtualKeyCode": 27, "key": "Escape", "code": "Escape"})
+                return False
+        except Exception as e:
+            logger.warning("Dropdown selection for '%s' encountered error: %s", target_value, e)
+            return False
+
+    async def upload_thumbnail(
+        self,
+        thumbnail_path: str | Path,
+        strict_thumbnail: bool = False,
+    ) -> bool:
         """Upload custom thumbnail if provided and supported."""
         path_str = str(Path(thumbnail_path).resolve())
         if not os.path.isfile(path_str):
             logger.warning("Thumbnail file does not exist: %s", path_str)
+            if strict_thumbnail:
+                raise RuntimeError(f"CUSTOM_THUMBNAIL_REJECTED_OR_TIER2_REQUIRED: File not found: {path_str}")
             return False
 
-        logger.info("Uploading custom thumbnail: %s", path_str)
+        logger.info("Uploading custom thumbnail: %s (strict=%s)", path_str, strict_thumbnail)
         thumb_obj = await self.get_remote_object("""
             (() => {
                 const input = document.querySelector('input#file-loader') ||
@@ -562,6 +818,8 @@ class YouTubeCDPClient:
         obj_id = thumb_obj.get("objectId")
         if not obj_id:
             logger.warning("Could not find thumbnail file input.")
+            if strict_thumbnail:
+                raise RuntimeError("CUSTOM_THUMBNAIL_REJECTED_OR_TIER2_REQUIRED: Thumbnail file input not found")
             return False
 
         try:
@@ -569,8 +827,8 @@ class YouTubeCDPClient:
                 "files": [path_str],
                 "objectId": obj_id,
             })
-            logger.info("Thumbnail attached successfully.")
-            await asyncio.sleep(2.0)
+            logger.info("Thumbnail attached successfully. Verifying preview...")
+            await asyncio.sleep(2.5)
 
             # Check for verification or blocking modal
             has_verify = await self.evaluate("""
@@ -599,11 +857,339 @@ class YouTubeCDPClient:
                         if (cancel) cancel.click();
                     })()
                 """)
+                if strict_thumbnail:
+                    raise RuntimeError("CUSTOM_THUMBNAIL_REJECTED_OR_TIER2_REQUIRED")
                 return False
+
+            # Verify custom thumbnail preview appeared
+            thumb_ok = await self.evaluate("""
+                (() => {
+                    const uploader = document.querySelector('ytcp-thumbnail-uploader');
+                    if (uploader) {
+                        const img = uploader.querySelector('img[src]');
+                        if (img && img.src && !img.src.includes('placeholder')) return true;
+                    }
+                    const customTile = document.querySelector('ytcp-thumbnails-compact-editor-uploader #still-1') ||
+                                       document.querySelector('#still-1[selected]') ||
+                                       document.querySelector('ytcp-thumbnail-area [selected]');
+                    if (customTile) return true;
+                    const selectedThumb = document.querySelector('ytcp-thumbnail[selected], ytcp-thumbnail-pill[selected]');
+                    if (selectedThumb) return true;
+                    return false;
+                })()
+            """)
+            if thumb_ok:
+                logger.info("Custom thumbnail preview verified successfully.")
+                return True
+            else:
+                logger.warning("Custom thumbnail attached but preview not explicitly confirmed.")
+                if strict_thumbnail:
+                    raise RuntimeError("CUSTOM_THUMBNAIL_REJECTED_OR_TIER2_REQUIRED")
+                return True
+        except Exception as e:
+            if "CUSTOM_THUMBNAIL_REJECTED_OR_TIER2_REQUIRED" in str(e):
+                raise
+            logger.warning("Thumbnail upload encountered exception: %s", e)
+            if strict_thumbnail:
+                raise RuntimeError(f"CUSTOM_THUMBNAIL_REJECTED_OR_TIER2_REQUIRED: {e}") from e
+            return False
+
+    async def _close_captions_modal(self) -> None:
+        """Safely close any open captions dialog so the main Upload Wizard is not blocked."""
+        try:
+            await self.evaluate("""
+                (() => {
+                    const dlgs = Array.from(document.querySelectorAll(
+                        'ytve-captions-editor-modal, ytve-captions-editor-upload-dialog, ytcp-captions-upload-dialog, ytcp-timedtext-editor-dialog, tp-yt-paper-dialog, ytcp-dialog'
+                    )).filter(d => {
+                        if (d.matches('ytcp-uploads-dialog')) return false;
+                        if (d.contains(document.querySelector('ytcp-uploads-video-details'))) return false;
+                        if (d.offsetParent === null) return false;
+                        return true;
+                    });
+                    if (dlgs.length > 0) {
+                        const topDlg = dlgs[dlgs.length - 1];
+                        const closeBtn = topDlg.querySelector('#close-button') ||
+                                         topDlg.querySelector('#cancel-button') ||
+                                         topDlg.querySelector('ytcp-button#close-button') ||
+                                         topDlg.querySelector('ytcp-button#cancel-button') ||
+                                         topDlg.querySelector('button[aria-label*="Đóng"]') ||
+                                         topDlg.querySelector('button[aria-label*="Close"]');
+                        if (closeBtn) closeBtn.click();
+                    }
+                })()
+            """)
+            await self.call("Input.dispatchKeyEvent", {"type": "rawKeyDown", "windowsVirtualKeyCode": 27, "key": "Escape", "code": "Escape"})
+            await self.call("Input.dispatchKeyEvent", {"type": "keyUp", "windowsVirtualKeyCode": 27, "key": "Escape", "code": "Escape"})
+        except Exception:
+            pass
+
+    async def _upload_srt_inside_open_captions_modal(self, sub_path: Path) -> bool:
+        """Upload SRT file inside open Studio captions editor modal (ytve-captions-editor-modal / dialog)."""
+        logger.info("Executing SRT upload sequence inside captions modal from %s...", sub_path)
+        try:
+            # 1. Poll up to 8.0s for modal upload options or 3-dot #more-actions-menu to mount
+            action_res = None
+            for _ in range(16):
+                await asyncio.sleep(0.5)
+                action_res = await self.evaluate("""
+                    (() => {
+                        const findDirect = () => {
+                            const items = Array.from(document.querySelectorAll(
+                                'tp-yt-paper-item[test-id="upload"], tp-yt-paper-item, ytcp-button, button, [role="button"], [role="menuitem"]'
+                            ));
+                            return items.find(b => {
+                                if (b.offsetParent === null) return false;
+                                const t = (b.innerText || b.textContent || '').trim().toLowerCase();
+                                return t.includes('tải tệp lên') || t.includes('upload file') || b.getAttribute('test-id') === 'upload';
+                            });
+                        };
+
+                        let btn = findDirect();
+                        if (btn) {
+                            btn.click();
+                            return { action: 'direct_upload_clicked' };
+                        }
+
+                        const moreBtn = document.querySelector('ytve-captions-editor-modal #more-actions-menu') ||
+                                        document.querySelector('#more-actions-menu') ||
+                                        document.querySelector('ytcp-icon-button#more-actions-menu') ||
+                                        document.querySelector('ytve-captions-editor-modal ytcp-icon-button[icon*="more"]');
+                        if (moreBtn && moreBtn.offsetParent !== null) {
+                            moreBtn.click();
+                            return { action: 'more_menu_clicked' };
+                        }
+                        return { action: 'none_found' };
+                    })()
+                """)
+                if action_res and action_res.get("action") in ("direct_upload_clicked", "more_menu_clicked"):
+                    break
+            logger.info("Captions upload initial action: %s", action_res)
+
+            if action_res and action_res.get("action") == "more_menu_clicked":
+                await asyncio.sleep(1.0)
+                # Click upload option from opened dropdown
+                clicked_menu = await self.evaluate("""
+                    (() => {
+                        const items = Array.from(document.querySelectorAll(
+                            'tp-yt-paper-item[test-id="upload"], tp-yt-paper-item, [role="menuitem"], ytcp-text-menu-item'
+                        ));
+                        const btn = items.find(b => {
+                            if (b.offsetParent === null) return false;
+                            const t = (b.innerText || b.textContent || '').trim().toLowerCase();
+                            return t.includes('tải tệp lên') || t.includes('upload file') || b.getAttribute('test-id') === 'upload';
+                        });
+                        if (btn) {
+                            btn.click();
+                            return true;
+                        }
+                        return false;
+                    })()
+                """)
+                logger.info("Clicked upload from more-actions menu: %s", clicked_menu)
+
+            await asyncio.sleep(1.5)
+
+            # 3. Handle upload dialog: select 'With timing' and click #confirm-button / Continue
+            await self.evaluate("""
+                (() => {
+                    const dlg = document.querySelector('ytve-captions-editor-upload-dialog') ||
+                                document.querySelector('ytcp-captions-upload-dialog') ||
+                                document.querySelector('tp-yt-paper-dialog') ||
+                                document;
+                    const radios = Array.from(dlg.querySelectorAll('tp-yt-paper-radio-button, input[type="radio"]'));
+                    const withTiming = radios.find(r => {
+                        const t = (r.innerText || r.textContent || '').toLowerCase();
+                        return t.includes('có thông tin thời gian') || t.includes('with timing') || r.getAttribute('name') === 'with-timing';
+                    });
+                    if (withTiming) withTiming.click();
+
+                    const confirmBtn = dlg.querySelector('#confirm-button button') ||
+                                       dlg.querySelector('#confirm-button') ||
+                                       Array.from(dlg.querySelectorAll('ytcp-button, button')).find(b => {
+                                           if (b.id === 'next-button') return false;
+                                           const t = (b.innerText || b.textContent || '').trim().toLowerCase();
+                                           return t === 'tiếp tục' || t === 'continue' || t.includes('tiếp tục');
+                                       });
+                    if (confirmBtn) confirmBtn.click();
+                })()
+            """)
+
+            # 4. Critical: Poll up to 6s (every 0.3s) for input#captions-file-loader
+            obj_id = None
+            for _ in range(20):
+                await asyncio.sleep(0.3)
+                input_obj = await self.get_remote_object("""
+                    (() => {
+                        const loader = document.querySelector('#captions-file-loader') ||
+                                       document.querySelector('input[type="file"]#captions-file-loader') ||
+                                       document.querySelector('ytve-captions-editor-upload-dialog input[type="file"]') ||
+                                       document.querySelector('ytcp-captions-upload-dialog input[type="file"]');
+                        if (loader) return loader;
+                        const allInputs = Array.from(document.querySelectorAll('input[type="file"]')).filter(
+                            i => !i.closest('ytcp-thumbnail-uploader') && !i.closest('ytcp-thumbnails-compact-editor-uploader')
+                        );
+                        return allInputs.find(i => (i.accept || '').includes('.srt') || (i.name || '').includes('sub') || (i.id || '').includes('captions')) || allInputs[0] || null;
+                    })()
+                """)
+                if input_obj and input_obj.get("objectId"):
+                    obj_id = input_obj["objectId"]
+                    break
+
+            if not obj_id:
+                logger.warning("Could not resolve objectId for captions file input.")
+                await self._close_captions_modal()
+                return False
+
+            await self.call("DOM.setFileInputFiles", {
+                "files": [str(sub_path)],
+                "objectId": obj_id,
+            })
+            logger.info("Subtitles file injected via CDP. Waiting 3.5s for Studio parsing & timeline population...")
+            await asyncio.sleep(3.5)
+
+            # 5. Click Done / Publish / Save in captions editor modal
+            saved = await self.evaluate("""
+                (() => {
+                    const finishBtn = document.querySelector('ytve-captions-editor-modal #publish-button button') ||
+                                      document.querySelector('ytve-captions-editor-modal #publish-button') ||
+                                      document.querySelector('ytcp-dialog #publish-button') ||
+                                      document.querySelector('ytve-captions-editor-modal #save-button') ||
+                                      Array.from(document.querySelectorAll('ytve-captions-editor-modal ytcp-button, ytve-captions-editor-modal button, ytcp-dialog button, ytcp-dialog ytcp-button')).find(b => {
+                                          if (b.id === 'next-button') return false;
+                                          const t = (b.innerText || b.textContent || '').trim().toLowerCase();
+                                          return t === 'xong' || t === 'done' || t === 'xuất bản' || t === 'publish' || t === 'lưu' || t === 'save';
+                                      });
+                    if (finishBtn && finishBtn.getAttribute('aria-disabled') !== 'true') {
+                        finishBtn.click();
+                        return true;
+                    }
+                    return false;
+                })()
+            """)
+            logger.info("Captions editor finish button clicked: %s", saved)
+
+            # 6. Wait up to 8s for ytve-captions-editor-modal and dialogs to close
+            closed = False
+            for _ in range(16):
+                await asyncio.sleep(0.5)
+                is_open = await self.evaluate("""
+                    (() => {
+                        const modal = document.querySelector('ytve-captions-editor-modal');
+                        if (modal && modal.offsetParent !== null && modal.getAttribute('aria-hidden') !== 'true') return true;
+                        const subDlg = document.querySelector('ytve-captions-editor-upload-dialog, ytcp-captions-upload-dialog');
+                        if (subDlg && subDlg.offsetParent !== null && subDlg.getAttribute('aria-hidden') !== 'true') return true;
+                        return false;
+                    })()
+                """)
+                if not is_open:
+                    closed = True
+                    break
+
+            if not closed:
+                logger.warning("Captions editor modal did not close within 8s; closing modal safely.")
+                await self._close_captions_modal()
+                return False
+
+            logger.info("Subtitles successfully uploaded and captions modal closed cleanly.")
             return True
         except Exception as e:
-            logger.warning("Thumbnail upload encountered exception: %s", e)
+            logger.warning("Subtitles upload inside modal encountered error: %s", e)
+            await self._close_captions_modal()
             return False
+
+    async def attach_subtitles_on_elements_step(self, subtitles_path: str | Path) -> bool:
+        """Attach subtitles (.srt) file during Step 2 (Video Elements / Thành phần video)."""
+        sub_path = Path(subtitles_path).resolve()
+        if not sub_path.is_file():
+            logger.warning("Subtitles file not found: %s", sub_path)
+            return False
+
+        logger.info("Attempting to attach subtitles on Elements step from %s...", sub_path)
+        try:
+            clicked_btn = await self.evaluate("""
+                (() => {
+                    let btn = document.querySelector('#subtitles-button') ||
+                              document.querySelector('ytcp-button#subtitles-button') ||
+                              document.querySelector('button#subtitles-button') ||
+                              document.querySelector('button[aria-label*="Phụ đề"]') ||
+                              document.querySelector('button[aria-label*="Subtitles"]') ||
+                              document.querySelector('ytcp-button[aria-label*="Phụ đề"]') ||
+                              document.querySelector('ytcp-button[aria-label*="Subtitles"]');
+                    if (!btn) {
+                        const rows = Array.from(document.querySelectorAll('ytcp-video-elements-row, ytcp-elements-row, [role="row"], .element-row'));
+                        const subRow = rows.find(r => {
+                            const t = (r.innerText || '').toLowerCase();
+                            return t.includes('phụ đề') || t.includes('subtitles');
+                        });
+                        if (subRow) {
+                            btn = subRow.querySelector('ytcp-button, button, #add-button');
+                        }
+                    }
+                    if (btn) {
+                        btn.click();
+                        return true;
+                    }
+                    return false;
+                })()
+            """)
+            if not clicked_btn:
+                logger.warning("Subtitles Add button not found on Video Elements step.")
+                return False
+
+            return await self._upload_srt_inside_open_captions_modal(sub_path)
+        except Exception as e:
+            logger.warning("Subtitles attachment on Elements step encountered error: %s", e)
+            await self._close_captions_modal()
+            return False
+
+    async def attach_subtitles_post_publish(self, video_url_or_id: str, subtitles_path: str | Path) -> bool:
+        """Attach subtitles (.srt) via Studio /video/<id>/edit page post-publication."""
+        sub_path = Path(subtitles_path).resolve()
+        if not sub_path.is_file():
+            logger.warning("Subtitles file not found for post-publish attachment: %s", sub_path)
+            return False
+
+        vid_id = str(video_url_or_id).strip()
+        if "/" in vid_id:
+            vid_id = vid_id.split("/")[-1].split("?")[0]
+        if "v=" in vid_id:
+            vid_id = vid_id.split("v=")[1].split("&")[0]
+
+        edit_url = f"https://studio.youtube.com/video/{vid_id}/edit"
+        logger.info("Navigating to %s for post-publish subtitles attachment...", edit_url)
+        await self.call("Page.navigate", {"url": edit_url})
+        await asyncio.sleep(3.5)
+        await self.dismiss_studio_interstitials()
+
+        # Poll up to 8s for #subtitles-editor-link or #subtitles-button on /edit page and click
+        clicked_sub_link = False
+        for _ in range(16):
+            clicked_sub_link = await self.evaluate("""
+                (() => {
+                    const link = document.querySelector('#subtitles-editor-link') ||
+                                 document.querySelector('a#subtitles-editor-link') ||
+                                 document.querySelector('#subtitles-button') ||
+                                 document.querySelector('ytcp-button#subtitles-button') ||
+                                 Array.from(document.querySelectorAll('a, button, ytcp-button')).find(el => {
+                                     const t = (el.innerText || el.textContent || '').trim().toLowerCase();
+                                     return t === 'phụ đề' || t === 'subtitles' || (el.getAttribute('aria-label') || '').toLowerCase().includes('phụ đề');
+                                 });
+                    if (link && link.offsetParent !== null) {
+                        link.click();
+                        return true;
+                    }
+                    return false;
+                })()
+            """)
+            if clicked_sub_link:
+                break
+            await asyncio.sleep(0.5)
+        if not clicked_sub_link:
+            logger.warning("Could not find subtitles link on /edit page for %s", vid_id)
+            return False
+
+        return await self._upload_srt_inside_open_captions_modal(sub_path)
 
     async def attach_subtitles(self, subtitles_path: str | Path) -> bool:
         """Attach subtitles (.srt) file in YouTube Studio dialog if accessible."""
@@ -704,6 +1290,215 @@ class YouTubeCDPClient:
             except Exception as e:
                 logger.warning("Error reading youtube_channel_map.json: %s", e)
         return None
+
+    async def check_studio_readiness(self) -> dict[str, Any]:
+        """Verify Studio Auth, live Channel Identity, and inspect Feature Eligibility (Tiers 1/2/3)."""
+        curr_url = await self.evaluate("window.location.href")
+        if not curr_url or "accounts.google.com" in curr_url or "confirmidentifier" in curr_url:
+            return {
+                "authenticated": False,
+                "auth_url": curr_url or "",
+                "channel_id": None,
+                "channel_name": None,
+                "handle": None,
+                "standard_features": False,
+                "intermediate_features": False,
+                "advanced_features": False,
+                "tier2_eligible": False,
+                "tier3_eligible": False,
+                "tier1_status_text": "",
+                "tier2_status_text": "",
+                "tier3_status_text": "",
+                "audit_method": "auth_required",
+                "error": f"GOOGLE_AUTH_REQUIRED: {curr_url}",
+            }
+
+        channel_info = await self.get_channel_info()
+        channel_id = channel_info.get("channelId")
+        channel_name = channel_info.get("channelName")
+        handle = self.resolve_channel_handle()
+
+        # Step: Inspect Studio Settings -> Channel -> Feature Eligibility
+        audit_method = "settings_unavailable"
+        tier1_text = ""
+        tier2_text = ""
+        tier3_text = ""
+
+        try:
+            # 1. Open Settings Dialog
+            opened = await self.evaluate("""
+                (() => {
+                    const settingsBtn = document.querySelector('#settings-item') ||
+                                        document.querySelector('ytcp-navigation-item#settings-item') ||
+                                        document.querySelector('#settings-button') ||
+                                        document.querySelector('button[aria-label*="Cài đặt"]') ||
+                                        document.querySelector('button[aria-label*="Settings"]') ||
+                                        Array.from(document.querySelectorAll('ytcp-navigation-item, button, a')).find(el => {
+                                            const t = (el.innerText || '').trim().toLowerCase();
+                                            return t === 'cài đặt' || t === 'settings';
+                                        });
+                    if (settingsBtn) {
+                        settingsBtn.click();
+                        return true;
+                    }
+                    return false;
+                })()
+            """)
+
+            if opened:
+                # Wait up to 6s for settings dialog
+                dlg_ready = False
+                for _ in range(12):
+                    await asyncio.sleep(0.5)
+                    is_visible = await self.evaluate("""
+                        (() => {
+                            const dlg = document.querySelector('ytcp-settings-dialog') ||
+                                        document.querySelector('ytcp-dialog[dialog-type="settings"]') ||
+                                        document.querySelector('tp-yt-paper-dialog.ytcp-settings-dialog');
+                            return Boolean(dlg && dlg.offsetParent !== null && dlg.getAttribute('aria-hidden') !== 'true');
+                        })()
+                    """)
+                    if is_visible:
+                        dlg_ready = True
+                        break
+
+                if dlg_ready:
+                    # 2. Click Channel / Kênh nav tab
+                    await self.evaluate("""
+                        (() => {
+                            const dlg = document.querySelector('ytcp-settings-dialog') || document;
+                            const tabs = Array.from(dlg.querySelectorAll('tp-yt-paper-tab, ytcp-navigation-item, .navigation-item, [role="tab"], tp-yt-paper-item'));
+                            const channelTab = tabs.find(t => {
+                                const text = (t.innerText || '').trim().toLowerCase();
+                                return text === 'kênh' || text === 'channel';
+                            });
+                            if (channelTab) channelTab.click();
+                        })()
+                    """)
+                    await asyncio.sleep(0.6)
+
+                    # 3. Click Feature eligibility / Điều kiện sử dụng tính năng tab
+                    await self.evaluate("""
+                        (() => {
+                            const dlg = document.querySelector('ytcp-settings-dialog') || document;
+                            const tabs = Array.from(dlg.querySelectorAll('tp-yt-paper-tab, [role="tab"], .tab-header, button'));
+                            const featTab = tabs.find(t => {
+                                const text = (t.innerText || '').trim().toLowerCase();
+                                return text.includes('điều kiện') || text.includes('tính năng') || text.includes('feature eligibility');
+                            });
+                            if (featTab) featTab.click();
+                        })()
+                    """)
+                    await asyncio.sleep(0.8)
+
+                    # 4. Inspect Tier Rows
+                    tier_res = await self.evaluate("""
+                        (() => {
+                            const dlg = document.querySelector('ytcp-settings-dialog') || document;
+                            function getStatus(section) {
+                                if (!section) return '';
+                                const badge = section.querySelector('.status, .badge, ytcp-chip, .feature-status, [class*="status"], [class*="badge"]');
+                                if (badge && badge.innerText) return badge.innerText.trim();
+                                const lines = (section.innerText || '').split('\\n').map(l => l.trim()).filter(Boolean);
+                                for (const line of lines) {
+                                    const l = line.toLowerCase();
+                                    if (l === 'đã bật' || l === 'enabled' || l === 'đủ điều kiện' || l === 'eligible' || l === 'bị tắt' || l === 'disabled') {
+                                        return line;
+                                    }
+                                }
+                                return '';
+                            }
+
+                            const sections = Array.from(dlg.querySelectorAll('ytcp-feature-eligibility-section, .feature-section, ytcp-settings-section, tp-yt-paper-item, div[role="region"], .tier-container, .section'));
+                            let t1 = '';
+                            let t2 = '';
+                            let t3 = '';
+
+                            for (const s of sections) {
+                                const t = (s.innerText || '').toLowerCase();
+                                if ((t.includes('chuẩn') || t.includes('standard')) && !t1) {
+                                    t1 = getStatus(s);
+                                }
+                                if ((t.includes('bậc trung') || t.includes('intermediate') || t.includes('15 phút') || t.includes('15 minutes')) && !t2) {
+                                    t2 = getStatus(s);
+                                }
+                                if ((t.includes('nâng cao') || t.includes('advanced')) && !t3) {
+                                    t3 = getStatus(s);
+                                }
+                            }
+
+                            const bodyText = (dlg.innerText || '').toLowerCase();
+                            if (!t1 && (bodyText.includes('tính năng chuẩn') || bodyText.includes('standard features'))) {
+                                t1 = (bodyText.includes('chuẩn') && bodyText.includes('đã bật')) ? 'Đã bật' : (bodyText.includes('standard') && bodyText.includes('enabled') ? 'Enabled' : '');
+                            }
+                            if (!t2 && (bodyText.includes('tính năng bậc trung') || bodyText.includes('intermediate features'))) {
+                                t2 = (bodyText.includes('bậc trung') && bodyText.includes('đã bật')) ? 'Đã bật' : (bodyText.includes('đủ điều kiện') ? 'Đủ điều kiện' : (bodyText.includes('intermediate') && bodyText.includes('enabled') ? 'Enabled' : ''));
+                            }
+                            if (!t3 && (bodyText.includes('tính năng nâng cao') || bodyText.includes('advanced features'))) {
+                                t3 = (bodyText.includes('nâng cao') && bodyText.includes('đã bật')) ? 'Đã bật' : (bodyText.includes('đủ điều kiện') ? 'Đủ điều kiện' : (bodyText.includes('advanced') && bodyText.includes('enabled') ? 'Enabled' : ''));
+                            }
+
+                            return { t1, t2, t3 };
+                        })()
+                    """)
+
+                    if isinstance(tier_res, dict):
+                        tier1_text = tier_res.get("t1", "")
+                        tier2_text = tier_res.get("t2", "")
+                        tier3_text = tier_res.get("t3", "")
+                        if tier1_text or tier2_text or tier3_text:
+                            audit_method = "settings_feature_eligibility"
+
+                    # 5. Cleanly close dialog
+                    await self.evaluate("""
+                        (() => {
+                            const dlg = document.querySelector('ytcp-settings-dialog');
+                            if (!dlg) return;
+                            const closeBtn = dlg.querySelector('#close-button') ||
+                                             dlg.querySelector('ytcp-button#close-button') ||
+                                             dlg.querySelector('#cancel-button') ||
+                                             dlg.querySelector('button[aria-label*="Đóng"]') ||
+                                             dlg.querySelector('button[aria-label*="Close"]');
+                            if (closeBtn) closeBtn.click();
+                        })()
+                    """)
+                    await self.call("Input.dispatchKeyEvent", {"type": "rawKeyDown", "windowsVirtualKeyCode": 27, "key": "Escape", "code": "Escape"})
+                    await self.call("Input.dispatchKeyEvent", {"type": "keyUp", "windowsVirtualKeyCode": 27, "key": "Escape", "code": "Escape"})
+                    await asyncio.sleep(0.5)
+        except Exception as err:
+            logger.warning("Feature eligibility inspection error (falling back): %s", err)
+
+        # Determine enabled ONLY when status text explicitly contains 'đã bật' or 'enabled'
+        t1_enabled = "đã bật" in tier1_text.lower() or "enabled" in tier1_text.lower()
+        t2_enabled = "đã bật" in tier2_text.lower() or "enabled" in tier2_text.lower()
+        t3_enabled = "đã bật" in tier3_text.lower() or "enabled" in tier3_text.lower()
+
+        # Default standard to True if channel is authenticated and active
+        if not t1_enabled and not tier1_text:
+            t1_enabled = True
+            tier1_text = "Đã bật"
+
+        return {
+            "authenticated": True,
+            "auth_url": curr_url,
+            "channel_id": channel_id,
+            "channel_name": channel_name,
+            "handle": handle,
+            "standard_features": t1_enabled,
+            "intermediate_features": t2_enabled,
+            "advanced_features": t3_enabled,
+            "tier2_eligible": t2_enabled,
+            "tier3_eligible": t3_enabled,
+            "tier1_status_text": tier1_text,
+            "tier2_status_text": tier2_text,
+            "tier3_status_text": tier3_text,
+            "audit_method": audit_method,
+            "details": {
+                "tier1_status": tier1_text,
+                "tier2_status": tier2_text,
+                "tier3_status": tier3_text,
+            },
+        }
 
     async def check_trust_tiers_dialog(self) -> dict[str, Any]:
         """Detect if YouTube Studio popped up yt-trust-tiers-wizard-dialog or Tier 3 verification."""
@@ -1469,36 +2264,89 @@ class YouTubeCDPClient:
                     const statusEl = document.querySelector('span.progress-label') ||
                                      document.querySelector('.ytcp-video-upload-progress') ||
                                      document.querySelector('ytcp-video-upload-progress');
+                    const errorEl = document.querySelector('ytcp-video-upload-progress .error-short, .error-area, ytcp-uploads-dialog .error-short, ytcp-badge[type="BADGE_STYLE_TYPE_RED"], #error-message');
                     const doneBtn = document.querySelector('#done-button');
                     const text = statusEl ? statusEl.innerText.trim() : '';
+                    const errText = errorEl ? errorEl.innerText.trim() : '';
                     const doneDisabled = doneBtn ? (doneBtn.hasAttribute('disabled') || doneBtn.getAttribute('aria-disabled') === 'true') : true;
-                    return { text, doneDisabled };
+                    return { text, errText, doneDisabled };
                 })()
             """)
             text = (state or {}).get("text", "")
+            err_text = (state or {}).get("errText", "")
             done_disabled = (state or {}).get("doneDisabled", True)
+
+            # Check for Tier-2 >15m triggers or verification required
+            combined_err = f"{err_text} {text}".strip()
+            comb_lower = combined_err.lower()
+            tier2_triggers = (
+                "hơn 15 phút",
+                "longer than 15 minutes",
+                "video quá dài",
+                "quá trình xử lý bị hủy",
+                "processing abandoned",
+                "cần xác minh",
+                "verify your account",
+            )
+            if done_disabled and any(trig in comb_lower for trig in tier2_triggers):
+                fatal_msg = err_text or text or "Video longer than 15 minutes / account verification required"
+                logger.error("Upload aborted due to Tier-2 duration or verification requirement: %s", fatal_msg)
+                raise RuntimeError(f"TIER2_DURATION_OR_VERIFICATION_REQUIRED: {fatal_msg}")
 
             now = time.time()
             if now - last_log > 5.0:
                 logger.info("Upload status: %r (Publish button ready: %s)", text, not done_disabled)
                 last_log = now
 
-            is_uploading = "đang tải lên" in text.lower() or "uploading" in text.lower()
-            if not done_disabled and not is_uploading:
-                logger.info("Upload complete and verified ready for publication.")
-                return True
+            t_lower = text.lower()
+            has_active_percent = (
+                "%" in text
+                and "100%" not in text
+                and "đang xử lý" not in t_lower
+                and "processing" not in t_lower
+            )
+            is_uploading = (
+                has_active_percent
+                or "còn " in t_lower
+                or "left" in t_lower
+                or "remaining" in t_lower
+                or "đang tải" in t_lower
+                or "uploading" in t_lower
+            )
+            is_processed = (
+                bool(text.strip())
+                and (
+                    "100%" in text
+                    or "đã xử lý" in t_lower
+                    or "đang xử lý" in t_lower
+                    or "quá trình xử lý" in t_lower
+                    or "đã tải lên" in t_lower
+                    or "uploaded" in t_lower
+                    or "đã hoàn tất" in t_lower
+                    or "đã kiểm tra" in t_lower
+                    or "kiểm tra hoàn tất" in t_lower
+                    or "không tìm thấy vấn đề" in t_lower
+                    or "không phát hiện vấn đề" in t_lower
+                    or "no issues found" in t_lower
+                    or "checks complete" in t_lower
+                    or "processing" in t_lower
+                )
+                and not is_uploading
+            )
 
-            if not done_disabled and ("100%" in text or "đã xử lý" in text.lower() or "đã hoàn tất" in text.lower() or "đã kiểm tra" in text.lower()):
-                logger.info("Upload progress reached 100%% / processing.")
+            # NEVER exit waiting with True unless upload is 100%/processed AND #done-button is enabled AND not actively uploading
+            if not done_disabled and is_processed and not is_uploading:
+                logger.info("Upload complete and verified ready for publication (Done button enabled).")
                 return True
 
             await asyncio.sleep(2.0)
 
-        logger.warning("Upload wait timed out after %.0fs; continuing publication.", max_wait_sec)
+        logger.warning("Upload wait timed out after %.0fs; done button or processing incomplete.", max_wait_sec)
         return False
 
     async def publish_and_finish(self, screenshot_path: Optional[str | Path] = None) -> Optional[str]:
-        """Click the Publish/Done button, capture share dialog, and extract confirmed URL."""
+        """Click the Publish/Done button, capture share/processing dialog, and extract confirmed URL."""
+        self._last_publish_accepted = False
         logger.info("Clicking Publish / Done button (#done-button)...")
         clicked = await self.evaluate("""
             (() => {
@@ -1513,12 +2361,12 @@ class YouTubeCDPClient:
         if not clicked:
             raise RuntimeError("Could not find Done / Publish button (#done-button)!")
 
-        # Wait for share confirmation dialog (and click 'Vẫn xuất bản' / 'Publish anyway' if checks warning modal appears)
+        # Wait for share confirmation dialog or processing modal
         logger.info("Waiting for publication confirmation dialog...")
         confirmed_url = None
         for _ in range(25):
             await asyncio.sleep(1.0)
-            # Check if YouTube popped up 'Chúng tôi vẫn đang kiểm tra nội dung của bạn' -> click 'Vẫn xuất bản' / 'Publish anyway'
+            # 1. Check if YouTube popped up 'Chúng tôi vẫn đang kiểm tra nội dung của bạn' -> click 'Vẫn xuất bản' / 'Publish anyway'
             clicked_publish_anyway = await self.evaluate("""
                 (() => {
                     const dialogs = Array.from(document.querySelectorAll('ytcp-confirmation-dialog, tp-yt-paper-dialog, ytcp-dialog'));
@@ -1542,24 +2390,102 @@ class YouTubeCDPClient:
                 logger.info("Clicked warning confirmation dialog button: %s", clicked_publish_anyway)
                 await asyncio.sleep(2.0)
 
+            # 2. Check for ytcp-video-share-dialog
             confirmed = await self.evaluate("""
                 (() => {
                     const shareDialog = document.querySelector('ytcp-video-share-dialog');
                     if (!shareDialog || shareDialog.offsetParent === null) return { found: false };
-                    const link = shareDialog.querySelector('a')?.href || null;
+                    const links = Array.from(shareDialog.querySelectorAll('a')).map(a => a.href).filter(Boolean);
+                    const ytLink = links.find(l => l.includes('youtu.be/') || l.includes('youtube.com/watch?v='));
                     const title = shareDialog.querySelector('#dialog-title')?.innerText?.trim() || null;
-                    return { found: true, link, title };
+                    return { found: true, link: ytLink || null, title };
                 })()
             """)
-            if confirmed and confirmed.get("found") and confirmed.get("link"):
-                confirmed_url = confirmed["link"]
-                logger.info("Publication confirmed: %s (Title: %s)", confirmed_url, confirmed.get("title"))
+            if confirmed and confirmed.get("found"):
+                self._last_publish_accepted = True
+                if confirmed.get("link"):
+                    confirmed_url = confirmed["link"]
+                    logger.info("Publication confirmed via share dialog: %s (Title: %s)", confirmed_url, confirmed.get("title"))
+                    break
+
+            # 3. Check for the processing modal ('Xử lý video' / 'Video processing' / 'Độ nét chuẩn' / 'Standard definition')
+            proc_dlg = await self.evaluate("""
+                (() => {
+                    const dlgs = Array.from(document.querySelectorAll(
+                        'ytcp-video-processing-dialog, ytcp-dialog, tp-yt-paper-dialog'
+                    ));
+                    for (const d of dlgs) {
+                        if (d.offsetParent === null || d.getAttribute('aria-hidden') === 'true') continue;
+                        const txt = (d.innerText || d.textContent || '').toLowerCase();
+                        if (
+                            txt.includes('xử lý video') ||
+                            txt.includes('video processing') ||
+                            txt.includes('độ nét chuẩn') ||
+                            txt.includes('standard definition')
+                        ) {
+                            const links = Array.from(d.querySelectorAll('a'));
+                            let link = null;
+                            for (const a of links) {
+                                const h = a.href || '';
+                                if (h.includes('youtu.be/') || h.includes('watch?v=') || h.includes('/video/')) {
+                                    link = h;
+                                    break;
+                                }
+                            }
+                            return { detected: true, link };
+                        }
+                    }
+                    return { detected: false };
+                })()
+            """)
+            if proc_dlg and proc_dlg.get("detected"):
+                self._last_publish_accepted = True
+                p_link = proc_dlg.get("link")
+                if p_link and ("youtu.be" in p_link or "watch?v=" in p_link):
+                    confirmed_url = p_link
+                logger.info("Publication confirmed via processing modal ('Xử lý video').")
+                if screenshot_path:
+                    try:
+                        await self.capture_screenshot(screenshot_path)
+                    except Exception as s_err:
+                        logger.warning("Could not capture screenshot of processing dialog: %s", s_err)
+                # Click Close button inside processing dialog
+                await self.evaluate("""
+                    (() => {
+                        const dlgs = Array.from(document.querySelectorAll(
+                            'ytcp-video-processing-dialog, ytcp-dialog, tp-yt-paper-dialog'
+                        ));
+                        for (const d of dlgs) {
+                            if (d.offsetParent === null) continue;
+                            const txt = (d.innerText || d.textContent || '').toLowerCase();
+                            if (
+                                txt.includes('xử lý video') ||
+                                txt.includes('video processing') ||
+                                txt.includes('độ nét chuẩn') ||
+                                txt.includes('standard definition')
+                            ) {
+                                const closeBtn = d.querySelector('#close-button') ||
+                                                 d.querySelector('ytcp-button#close-button') ||
+                                                 Array.from(d.querySelectorAll('ytcp-button, button')).find(b => {
+                                                     const bt = (b.innerText || '').trim().toLowerCase();
+                                                     return bt === 'đóng' || bt === 'close';
+                                                 });
+                                if (closeBtn) closeBtn.click();
+                                break;
+                            }
+                        }
+                    })()
+                """)
+                await asyncio.sleep(1.0)
                 break
 
-        if screenshot_path:
-            await self.capture_screenshot(screenshot_path)
+        if screenshot_path and not Path(screenshot_path).is_file():
+            try:
+                await self.capture_screenshot(screenshot_path)
+            except Exception:
+                pass
 
-        # Close share modal
+        # Close share modal if still present
         await self.evaluate("""
             (() => {
                 const closeBtn = document.querySelector('ytcp-video-share-dialog #close-button') ||
@@ -1569,6 +2495,159 @@ class YouTubeCDPClient:
         """)
         await asyncio.sleep(2.0)
         return confirmed_url
+
+    async def verify_video_edit_page(
+        self,
+        video_url_or_id: str,
+        screenshot_path: Optional[str | Path] = None,
+    ) -> dict[str, Any]:
+        """Navigate to studio.youtube.com/video/<vid_id>/edit, expose details, take screenshot, and return live summary."""
+        vid_id = str(video_url_or_id).strip()
+        if "/" in vid_id:
+            vid_id = vid_id.split("/")[-1].split("?")[0]
+        if "v=" in vid_id:
+            vid_id = vid_id.split("v=")[1].split("&")[0]
+
+        edit_url = f"https://studio.youtube.com/video/{vid_id}/edit"
+        logger.info("Navigating to video edit page: %s...", edit_url)
+        await self.call("Page.navigate", {"url": edit_url})
+        await asyncio.sleep(3.0)
+        await self.dismiss_studio_interstitials()
+
+        # Wait up to 10s for title editor
+        for _ in range(20):
+            has_title = await self.evaluate("Boolean(document.querySelector('#title-textarea #textbox'))")
+            if has_title:
+                break
+            await asyncio.sleep(0.5)
+
+        # Click #toggle-button (Show more / Hiển thị thêm) if collapsed
+        await self.evaluate("""
+            (() => {
+                const tagBox = document.querySelector('#tags-container');
+                if (tagBox && tagBox.offsetParent !== null) return 'ALREADY_EXPANDED';
+                const toggleBtn = document.querySelector('#toggle-button') ||
+                                  document.querySelector('ytcp-button#toggle-button') ||
+                                  Array.from(document.querySelectorAll('ytcp-button, button')).find(b => {
+                                      const txt = (b.innerText || '').toLowerCase();
+                                      return txt.includes('hiển thị thêm') || txt.includes('show more');
+                                  });
+                if (toggleBtn) toggleBtn.click();
+            })()
+        """)
+        await asyncio.sleep(1.0)
+
+        if screenshot_path:
+            p = Path(screenshot_path)
+            p.parent.mkdir(parents=True, exist_ok=True)
+            try:
+                await self.capture_screenshot(p)
+                logger.info("Captured edit verification screenshot to %s", p)
+            except Exception as sc_err:
+                logger.warning("Could not capture edit verification screenshot: %s", sc_err)
+
+            try:
+                await self.evaluate("""
+                    (() => {
+                        const el = document.querySelector('#tags-container') ||
+                                   document.querySelector('ytcp-form-input-container#tags-container');
+                        if (el) el.scrollIntoView({ behavior: 'instant', block: 'center' });
+                    })()
+                """)
+                await asyncio.sleep(0.5)
+                bottom_p = p.with_name(f"{p.stem}_bottom{p.suffix}")
+                await self.capture_screenshot(bottom_p)
+                logger.info("Captured edit verification bottom screenshot to %s", bottom_p)
+            except Exception as sc_bottom_err:
+                logger.warning("Could not capture edit verification bottom screenshot: %s", sc_bottom_err)
+
+        summary = await self.evaluate("""
+            (() => {
+                const titleEl = document.querySelector('#title-textarea #textbox') ||
+                                document.querySelector('#textbox[contenteditable="true"]');
+                const descEl = document.querySelector('#description-textarea #textbox');
+                const descText = descEl ? (descEl.innerText || '') : '';
+
+                const live_title = titleEl ? (titleEl.innerText || '').trim() : '';
+                const description_length = descText.length;
+                const has_chapters_00_00 = descText.includes('00:00');
+
+                // Custom thumbnail check
+                const thumbUploader = document.querySelector('ytcp-thumbnail-uploader img[src]') ||
+                                      document.querySelector('#still-1[selected]') ||
+                                      document.querySelector('ytcp-thumbnails-compact-editor-uploader img[src]');
+                const has_custom_thumbnail = Boolean(thumbUploader);
+
+                // Tags chips
+                const chips = Array.from(document.querySelectorAll('#tags-container ytcp-chip'));
+                const tags_chip_count = chips.length;
+                const tags_sample = chips.slice(0, 5).map(c => (c.innerText || c.textContent || '').trim()).filter(Boolean);
+
+                // Subtitles
+                const subBtn = document.querySelector('#subtitles-button') ||
+                               document.querySelector('#subtitles-editor-link') ||
+                               document.querySelector('ytcp-video-elements-row');
+                const subText = subBtn ? (subBtn.innerText || subBtn.textContent || '').trim() : '';
+                const subLower = subText.toLowerCase();
+                const subtitles_present = (
+                    subLower.includes('đã thêm') ||
+                    subLower.includes('added') ||
+                    (subText.length > 0 && !subLower.includes('thêm') && !subLower.includes('add'))
+                );
+
+                // Language & Category
+                const langEl = document.querySelector('#language-input') ||
+                               document.querySelector('ytcp-text-dropdown-select#language-input') ||
+                               document.querySelector('#language-and-close-captioning #language-input');
+                const language_text = langEl ? (langEl.innerText || langEl.textContent || '').trim() : '';
+
+                const catEl = document.querySelector('#category') ||
+                              document.querySelector('ytcp-text-dropdown-select#category') ||
+                              document.querySelector('#category-dropdown');
+                const category_text = catEl ? (catEl.innerText || catEl.textContent || '').trim() : '';
+
+                // Visibility
+                const visBtn = document.querySelector('#visibility-button') ||
+                               document.querySelector('#visibility') ||
+                               document.querySelector('ytcp-video-metadata-visibility') ||
+                               document.querySelector('.visibility-label');
+                const visibility_text = visBtn ? (visBtn.innerText || visBtn.textContent || '').trim() : '';
+
+                return {
+                    live_title,
+                    description_length,
+                    has_chapters_00_00,
+                    has_custom_thumbnail,
+                    tags_chip_count,
+                    tags_sample,
+                    subtitles_present,
+                    subtitles_status: subText,
+                    language_text,
+                    category_text,
+                    visibility_text,
+                };
+            })()
+        """)
+        res = dict(summary) if isinstance(summary, dict) else {}
+        v_low = (res.get("visibility_text") or "").lower()
+        is_draft_or_private = (
+            "bản nháp" in v_low
+            or "draft" in v_low
+            or "riêng tư" in v_low
+            or "private" in v_low
+        )
+        res["is_draft_or_private"] = is_draft_or_private
+        res["video_id"] = vid_id
+        res["edit_url"] = edit_url
+        logger.info(
+            "Studio edit page verified for %s: title='%s', vis='%s', chips=%s, draft=%s",
+            vid_id,
+            res.get("live_title"),
+            res.get("visibility_text"),
+            res.get("tags_chip_count"),
+            is_draft_or_private,
+        )
+        return res
 
 
 async def publish_single_video(
@@ -1585,6 +2664,13 @@ async def publish_single_video(
     headless: bool = True,
     job_id: Optional[str] = None,
     bypass_review_gate: bool = False,
+    tags: Optional[str | list[str]] = None,
+    language: Optional[str] = None,
+    category: Optional[str] = None,
+    strict_thumbnail: bool = False,
+    expected_channel_id: Optional[str] = None,
+    max_wait_sec: Optional[float] = None,
+    edit_screenshot_path: Optional[str | Path] = None,
 ) -> dict[str, Any]:
     """Execute end-to-end publish flow for a single video."""
     # Mandatory Video Review & Approval Gate
@@ -1613,15 +2699,22 @@ async def publish_single_video(
             "email": "",
         }
 
+    target_expected_channel_id = expected_channel_id
+    if target_expected_channel_id is None and profile_cfg:
+        target_expected_channel_id = profile_cfg.get("youtube_channel_id") or profile_cfg.get("channel_id")
+
     client = YouTubeCDPClient(profile_cfg, headless=headless)
     try:
         await client.connect()
 
         # Step 0: Ensure browser is at YouTube Studio dashboard
         curr_url = await client.evaluate("window.location.href")
+        if curr_url and ("accounts.google.com/v3/signin" in str(curr_url) or "confirmidentifier" in str(curr_url) or "accounts.google.com" in str(curr_url)):
+            raise RuntimeError(f"GOOGLE_AUTH_REQUIRED: {curr_url}")
+
         yt_chid = profile_cfg.get("youtube_channel_id") or profile_cfg.get("channel_id")
         target_studio_url = f"https://studio.youtube.com/channel/{yt_chid}" if yt_chid and str(yt_chid).startswith("UC") else "https://studio.youtube.com"
-        if "studio.youtube.com" not in curr_url or (yt_chid and str(yt_chid).startswith("UC") and str(yt_chid) not in curr_url):
+        if "studio.youtube.com" not in str(curr_url) or (yt_chid and str(yt_chid).startswith("UC") and str(yt_chid) not in str(curr_url)):
             logger.info("Navigating to %s...", target_studio_url)
             await client.call("Page.navigate", {"url": target_studio_url})
             await asyncio.sleep(6.0)
@@ -1629,10 +2722,21 @@ async def publish_single_video(
         await client.dismiss_studio_interstitials()
         await asyncio.sleep(2.0)
 
-        # Step 1: Channel Info Verification
+        # Step 1: Channel Info Verification & Channel Identity Lock
         await asyncio.sleep(4.0)
         channel_info = await client.get_channel_info()
         logger.info("Channel info: %s", channel_info)
+
+        curr_url = channel_info.get("url", "")
+        if "accounts.google.com/v3/signin" in curr_url or "confirmidentifier" in curr_url or "accounts.google.com" in curr_url:
+            raise RuntimeError(f"GOOGLE_AUTH_REQUIRED: {curr_url}")
+
+        if target_expected_channel_id and str(target_expected_channel_id).startswith("UC"):
+            live_chid = channel_info.get("channelId")
+            if live_chid != target_expected_channel_id:
+                raise RuntimeError(
+                    f"CHANNEL_IDENTITY_MISMATCH: expected={target_expected_channel_id}, got={channel_info}"
+                )
 
         # Step 2: Open Upload Dialog
         await client.open_upload_dialog()
@@ -1644,25 +2748,56 @@ async def publish_single_video(
         dialog_video_url = await client.extract_video_url()
         logger.info("Assigned video URL in dialog: %s", dialog_video_url)
 
-        # Step 5: Fill Metadata (Title, Description, MFK)
-        await client.fill_details(title=title, description=description, is_kids=False)
+        # Step 5: Fill Metadata (Title, Description, MFK, Tags, Language, Category)
+        await client.fill_details(
+            title=title,
+            description=description,
+            is_kids=False,
+            tags=tags,
+            language=language,
+            category=category,
+        )
 
         # Step 6: Custom Thumbnail (Long 16:9 & Short 9:16)
         thumbnail_status = False
         if thumbnail_path:
-            thumbnail_status = await client.upload_thumbnail(thumbnail_path)
+            thumbnail_status = await client.upload_thumbnail(
+                thumbnail_path,
+                strict_thumbnail=strict_thumbnail,
+            )
 
-        # Step 6b: Subtitles (.srt) handling if provided and exists
+        # Advance to Step 2 (Video Elements)
+        await client.evaluate("""
+            (() => {
+                const btn = document.querySelector('#next-button');
+                if (btn && btn.getAttribute('aria-disabled') !== 'true') btn.click();
+            })()
+        """)
+        # Wait up to 8s until Step 2 Video Elements renders
+        for _ in range(16):
+            has_elements = await client.evaluate("""
+                Boolean(
+                    document.querySelector('#subtitles-button') ||
+                    document.querySelector('#cards-button') ||
+                    document.querySelector('#endscreens-button') ||
+                    document.querySelector('ytcp-video-elements-row') ||
+                    document.querySelector('ytcp-uploads-video-elements')
+                )
+            """)
+            if has_elements:
+                break
+            await asyncio.sleep(0.5)
+
+        # Step 6b: Subtitles (.srt) handling on Elements step if provided and exists
         subtitles_status = False
         if subtitles_path:
             sub_file = Path(subtitles_path).resolve()
             if sub_file.is_file():
                 logger.info("Handling subtitles attachment from %s (%d bytes)...", sub_file, sub_file.stat().st_size)
-                if hasattr(client, "attach_subtitles"):
-                    try:
-                        subtitles_status = await client.attach_subtitles(sub_file)
-                    except Exception as sub_err:
-                        logger.warning("Could not attach subtitles via CDP (continuing publish): %s", sub_err)
+                try:
+                    subtitles_status = await client.attach_subtitles_on_elements_step(sub_file)
+                except Exception as sub_err:
+                    logger.warning("Could not attach subtitles on elements step (continuing publish): %s", sub_err)
             else:
                 logger.warning("Subtitles path provided but file not found: %s", subtitles_path)
 
@@ -1676,12 +2811,41 @@ async def publish_single_video(
         # Step 8: Set Visibility to PUBLIC
         await client.set_visibility(visibility)
 
-        # Step 9: Wait for upload completion
-        await client.wait_for_upload_complete()
+        # Step 9: Wait for upload completion (Dynamic timeout)
+        if max_wait_sec is None:
+            try:
+                p = Path(video_path)
+                file_mb = p.stat().st_size / (1024 * 1024) if p.is_file() else 300.0
+                effective_max_wait = max(600.0, file_mb * 1.6)
+            except Exception:
+                effective_max_wait = 600.0
+        else:
+            effective_max_wait = max_wait_sec
+
+        logger.info("Upload completion max wait timeout: %.1fs", effective_max_wait)
+        await client.wait_for_upload_complete(max_wait_sec=effective_max_wait)
 
         # Step 10: Finalize Publication & QA Screenshot
         final_url = await client.publish_and_finish(screenshot_path=screenshot_path)
         resolved_url = final_url or dialog_video_url
+
+        # Step 10b: Automatic post-publish subtitles fallback if wizard attachment failed
+        if subtitles_path and not subtitles_status and resolved_url:
+            sub_file = Path(subtitles_path).resolve()
+            if sub_file.is_file():
+                logger.info(
+                    "Subtitles not attached during wizard; running post-publish subtitles fallback on /edit for %s...",
+                    resolved_url,
+                )
+                try:
+                    subtitles_status = await client.attach_subtitles_post_publish(resolved_url, sub_file)
+                    logger.info("attach_subtitles_post_publish result: %s", subtitles_status)
+                except Exception as sub_post_err:
+                    logger.warning("Could not attach subtitles post-publish (continuing): %s", sub_post_err)
+
+        oembed_ok = False
+        oembed_pending = False
+        edit_verification: Optional[dict[str, Any]] = None
 
         if visibility.upper() == "PUBLIC":
             if not resolved_url:
@@ -1690,11 +2854,19 @@ async def publish_single_video(
                 )
             if resolved_url and Path(video_path).exists():
                 vid_id = resolved_url.strip().rstrip("/").split("/")[-1].split("?")[0]
-                oembed_ok = False
                 if vid_id:
                     oembed_endpoint = f"https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v={vid_id}&format=json"
-                    for attempt in range(1, 8):
-                        await asyncio.sleep(2.5)
+                    max_attempts = 7 if is_short else 18
+                    sleep_between = 2.5 if is_short else 5.0
+                    total_wait = max_attempts * sleep_between
+                    logger.info(
+                        "Verifying live PUBLIC status via YouTube oEmbed for %s (%d attempts, max %.0fs)...",
+                        vid_id,
+                        max_attempts,
+                        total_wait,
+                    )
+                    for attempt in range(1, max_attempts + 1):
+                        await asyncio.sleep(sleep_between)
                         try:
                             req = urllib.request.Request(
                                 oembed_endpoint,
@@ -1706,12 +2878,66 @@ async def publish_single_video(
                                     logger.info("Verified live PUBLIC oEmbed HTTP 200 for %s on attempt %d", vid_id, attempt)
                                     break
                         except Exception as exc:
-                            logger.warning("oEmbed PUBLIC check attempt %d/7 for %s not yet 200: %s", attempt, vid_id, exc)
-                if not oembed_ok:
-                    raise RuntimeError(
-                        f"PUBLIC_VERIFICATION_FAILED: Video '{resolved_url}' did not return HTTP 200 on public oEmbed! "
-                        "It is still Private/Draft in YouTube Studio."
-                    )
+                            logger.warning(
+                                "oEmbed PUBLIC check attempt %d/%d for %s not yet 200: %s",
+                                attempt,
+                                max_attempts,
+                                vid_id,
+                                exc,
+                            )
+
+                    if not oembed_ok:
+                        if not is_short:
+                            logger.info(
+                                "Long video %s did not return oEmbed 200 after %.0fs; running Studio edit verification fallback...",
+                                vid_id,
+                                total_wait,
+                            )
+                            if hasattr(client, "verify_video_edit_page"):
+                                edit_verification = await client.verify_video_edit_page(
+                                    vid_id,
+                                    screenshot_path=edit_screenshot_path,
+                                )
+
+                            is_draft = edit_verification.get("is_draft_or_private", False) if edit_verification else False
+                            accepted = getattr(client, "_last_publish_accepted", False)
+
+                            if not is_draft or accepted:
+                                logger.warning(
+                                    "Video %s confirmed queued/processing or publish accepted (not draft). "
+                                    "Marking as PUBLISHED with oembed_pending_processing=True.",
+                                    vid_id,
+                                )
+                                oembed_pending = True
+                            else:
+                                raise RuntimeError(
+                                    f"PUBLIC_VERIFICATION_FAILED: Video '{resolved_url}' confirmed as Draft/Private in YouTube Studio "
+                                    f"(visibility={edit_verification.get('visibility_text') if edit_verification else 'unknown'})."
+                                )
+                        else:
+                            raise RuntimeError(
+                                f"PUBLIC_VERIFICATION_FAILED: Video '{resolved_url}' did not return HTTP 200 on public oEmbed! "
+                                "It is still Private/Draft in YouTube Studio."
+                            )
+                    else:
+                        if edit_screenshot_path and hasattr(client, "verify_video_edit_page"):
+                            try:
+                                edit_verification = await client.verify_video_edit_page(
+                                    vid_id,
+                                    screenshot_path=edit_screenshot_path,
+                                )
+                            except Exception as ev_err:
+                                logger.warning("Could not capture edit verification for %s: %s", vid_id, ev_err)
+
+        if edit_screenshot_path and edit_verification is None and resolved_url and hasattr(client, "verify_video_edit_page"):
+            vid_id = resolved_url.strip().rstrip("/").split("/")[-1].split("?")[0]
+            try:
+                edit_verification = await client.verify_video_edit_page(
+                    vid_id,
+                    screenshot_path=edit_screenshot_path,
+                )
+            except Exception as ev_err:
+                logger.warning("Could not capture edit verification for %s: %s", vid_id, ev_err)
 
         live_status: dict[str, Any] = {}
         if is_short and related_video_url and resolved_url:
@@ -1762,7 +2988,7 @@ async def publish_single_video(
             else:
                 related_linked = True
 
-        if effective_job_id and resolved_url:
+        if effective_job_id and resolved_url and not bypass_review_gate:
             try:
                 set_review_decision(effective_job_id, "PUBLISHED", published_url=resolved_url)
                 logger.info("Updated review queue for %s to PUBLISHED (%s)", effective_job_id, resolved_url)
@@ -1783,6 +3009,10 @@ async def publish_single_video(
             "live_verified": bool(live_status.get("has_pill", False)),
             "live_title": live_status.get("linked_title"),
             "screenshot_path": str(screenshot_path) if screenshot_path else None,
+            "edit_screenshot_path": str(edit_screenshot_path) if edit_screenshot_path else None,
+            "oembed_ok": oembed_ok,
+            "oembed_pending_processing": oembed_pending,
+            "edit_verification": edit_verification,
         }
     finally:
         await client.close()
@@ -1793,11 +3023,14 @@ publish_to_youtube_studio = publish_single_video
 
 
 def parse_metadata_file(md_path: str | Path) -> dict[str, str]:
-    """Parse title, description, and tags from markdown publication kit."""
+    """Parse title, description, tags, language, and category from markdown publication kit."""
     text = Path(md_path).read_text(encoding="utf-8")
     title = ""
     description = ""
     tags = ""
+    language = "Tiếng Việt"
+    category = "Giáo dục"
+    pinned_comment = ""
 
     # Title extraction
     m_title = re.search(r"## 1\. (?:Tiêu đề|Title)[^\n]*\n```(?:text)?\n(.*?)\n```", text, re.DOTALL)
@@ -1820,7 +3053,43 @@ def parse_metadata_file(md_path: str | Path) -> dict[str, str]:
     if m_tags:
         tags = m_tags.group(1).strip()
 
-    return {"title": title, "description": description, "tags": tags}
+    # Language extraction (support bullet format under ## 4. and header blocks)
+    m_bullet_lang = re.search(r"-\s*\*\*Ngôn ngữ video(?:\s*\([^)]*\))?\*\*:\s*([^\n\r]+)", text, re.IGNORECASE)
+    if m_bullet_lang:
+        language = m_bullet_lang.group(1).strip()
+    else:
+        m_lang = re.search(r"##\s*(?:Ngôn ngữ|Language)[^\n]*\n```(?:text)?\n(.*?)\n```", text, re.DOTALL)
+        if not m_lang:
+            m_lang = re.search(r"##\s*(?:Ngôn ngữ|Language)[^\n]*\n([^\n#]+)", text)
+        if m_lang:
+            language = m_lang.group(1).strip()
+
+    # Category extraction (support bullet format under ## 4. and header blocks)
+    m_bullet_cat = re.search(r"-\s*\*\*Danh mục(?:\s*\([^)]*\))?\*\*:\s*([^\n\r]+)", text, re.IGNORECASE)
+    if m_bullet_cat:
+        category = m_bullet_cat.group(1).strip()
+    else:
+        m_cat = re.search(r"##\s*(?:Danh mục|Category)[^\n]*\n```(?:text)?\n(.*?)\n```", text, re.DOTALL)
+        if not m_cat:
+            m_cat = re.search(r"##\s*(?:Danh mục|Category)[^\n]*\n([^\n#]+)", text)
+        if m_cat:
+            category = m_cat.group(1).strip()
+
+    # Pinned comment extraction (supports ## 5. or ## 6. or ## Pinned Comment)
+    m_pin = re.search(r"##\s*(?:\d+\.)?\s*(?:Bình luận ghim|Pinned Comment)[^\n]*\n```(?:text)?\n(.*?)\n```", text, re.DOTALL | re.IGNORECASE)
+    if not m_pin:
+        m_pin = re.search(r"##\s*(?:\d+\.)?\s*(?:Bình luận ghim|Pinned Comment)[^\n]*\n([^\n#]+)", text, re.IGNORECASE)
+    if m_pin:
+        pinned_comment = m_pin.group(1).strip()
+
+    return {
+        "title": title,
+        "description": description,
+        "tags": tags,
+        "language": language,
+        "category": category,
+        "pinned_comment": pinned_comment,
+    }
 
 
 def main():
@@ -1832,8 +3101,13 @@ def main():
     parser.add_argument("--cdp-port", type=int, help="CDP port override")
     parser.add_argument("--title", help="Video title (overrides metadata file)")
     parser.add_argument("--description", help="Video description (overrides metadata file)")
+    parser.add_argument("--tags", help="Comma-separated tags (overrides metadata file)")
+    parser.add_argument("--language", default=None, help="Video language (e.g. Tiếng Việt)")
+    parser.add_argument("--category", default=None, help="Video category (e.g. Giáo dục)")
     parser.add_argument("--metadata", help="Path to markdown metadata file (youtube_long.md / youtube_shorts.md)")
     parser.add_argument("--thumbnail", help="Path to thumbnail image file (for 16:9)")
+    parser.add_argument("--strict-thumbnail", action="store_true", help="Raise error if custom thumbnail is rejected")
+    parser.add_argument("--expected-channel-id", help="Expected channel ID (e.g. UC...) to assert before upload")
     parser.add_argument("--update-thumbnail", help="Retroactively upload thumbnail to an existing video (requires --video-url or --video-id and --channel)")
     parser.add_argument("--video-url", help="Existing video URL")
     parser.add_argument("--video-id", help="Existing video ID")
@@ -1842,6 +3116,7 @@ def main():
     parser.add_argument("--short", action="store_true", help="Mark as Short (9:16)")
     parser.add_argument("--related-video", help="Related video URL or ID (for Shorts)")
     parser.add_argument("--screenshot", help="Output path for verification screenshot")
+    parser.add_argument("--edit-screenshot", help="Output path for post-publish Studio /edit verification screenshot")
     parser.add_argument("--headless", action="store_true", default=True, help="Run Chrome in headless mode (default True)")
     parser.add_argument("--no-headless", "--headed", dest="headless", action="store_false", help="Run Chrome with GUI")
     parser.add_argument("--bypass-review-gate", action="store_true", help="Bypass mandatory review approval gate")
@@ -1850,6 +3125,9 @@ def main():
 
     title = args.title
     description = args.description
+    tags = args.tags
+    language = args.language
+    category = args.category
 
     if args.metadata:
         meta = parse_metadata_file(args.metadata)
@@ -1857,6 +3135,12 @@ def main():
             title = meta.get("title")
         if not description:
             description = meta.get("description")
+        if not tags:
+            tags = meta.get("tags")
+        if not language:
+            language = meta.get("language")
+        if not category:
+            category = meta.get("category")
 
     if not title and not args.update_thumbnail:
         parser.error("Title must be specified via --title or --metadata")
@@ -1927,7 +3211,7 @@ def main():
 
         update_res = asyncio.run(_run_update())
         print(json.dumps(update_res, indent=2))
-        sys.exit(0 if update_res.get("success") else 1)
+        sys.exit(0 if (isinstance(update_res, dict) and update_res.get("success")) else 1)
 
     result = asyncio.run(
         publish_single_video(
@@ -1944,6 +3228,12 @@ def main():
             headless=args.headless,
             job_id=job_id,
             bypass_review_gate=args.bypass_review_gate,
+            tags=tags,
+            language=language,
+            category=category,
+            strict_thumbnail=args.strict_thumbnail,
+            expected_channel_id=args.expected_channel_id,
+            edit_screenshot_path=getattr(args, "edit_screenshot", None),
         )
     )
 

@@ -56,8 +56,8 @@ EXPECTED_CHANNELS = {
     },
     "ho_so_ky_la": {
         "voice": "VietNarrator_ho_so_ky_la",
-        "recommended_speed": 1.03,
-        "default_tone": "narrative_warm",
+        "recommended_speed": 1.10,
+        "default_tone": "reflective_slow",
     },
     "co_the_ke": {
         "voice": "VietNarrator_co_the_ke",
@@ -487,6 +487,63 @@ class TestChannelVoiceProfiles(unittest.TestCase):
             self.assertEqual(wt_data.get("sha256"), hasher.hexdigest())
             checked += 1
         self.assertGreaterEqual(checked, 8, "Expected at least 8 worktrees to be checked")
+
+    def test_su_ke_lai_and_ho_so_ky_la_share_canonical_voice_lock(self):
+        """Verifies su_ke_lai and ho_so_ky_la share the exact same canonical voice and runtime locks."""
+        from tools.produce_vn_dual_mode import (
+            BANNED_DEPRECATED_VOICE_SHA256S,
+            HARDCODED_CHANNEL_VOICE_LOCKS,
+            SU_KE_LAI_SHARED_VOICE_SHA256,
+            verify_channel_voice_lock,
+        )
+
+        canonical_sha = "cd25365252033ee60333c92e3f071a8dae3a99c865fe9e527686c7cf04048a9d"
+        banned_sha = "5ebeb65efc952565f40a659af3f4a571945ce22dc156bedd67a60c186ee51a3e"
+
+        self.assertEqual(SU_KE_LAI_SHARED_VOICE_SHA256, canonical_sha)
+        self.assertIn(banned_sha, BANNED_DEPRECATED_VOICE_SHA256S)
+        self.assertIn("su_ke_lai", HARDCODED_CHANNEL_VOICE_LOCKS)
+        self.assertIn("ho_so_ky_la", HARDCODED_CHANNEL_VOICE_LOCKS)
+
+        su_ke_dir = self.voices_dir / "ch_su_ke_lai"
+        ho_so_dir = self.voices_dir / "ch_ho_so_ky_la"
+
+        with open(su_ke_dir / "profile.json", "r", encoding="utf-8") as f:
+            su_ke_prof = json.load(f)
+        with open(ho_so_dir / "profile.json", "r", encoding="utf-8") as f:
+            ho_so_prof = json.load(f)
+
+        self.assertEqual(su_ke_prof["sha256"], canonical_sha)
+        self.assertEqual(ho_so_prof["sha256"], canonical_sha)
+        self.assertEqual(su_ke_prof.get("shared_voice_group"), "su_ke_lai_canonical_voice")
+        self.assertEqual(ho_so_prof.get("shared_voice_group"), "su_ke_lai_canonical_voice")
+
+        with open(su_ke_dir / "reference.wav", "rb") as f:
+            su_ke_bytes = f.read()
+        with open(ho_so_dir / "reference.wav", "rb") as f:
+            ho_so_bytes = f.read()
+
+        self.assertEqual(hashlib.sha256(su_ke_bytes).hexdigest(), canonical_sha)
+        self.assertEqual(hashlib.sha256(ho_so_bytes).hexdigest(), canonical_sha)
+        self.assertEqual(su_ke_bytes, ho_so_bytes, "reference.wav bytes must be identical")
+
+        # Verify banned SHA256 does not exist anywhere in sys/assets/voices/
+        for p in self.voices_dir.rglob("*"):
+            if p.is_file():
+                with open(p, "rb") as f:
+                    file_bytes = f.read()
+                file_hash = hashlib.sha256(file_bytes).hexdigest()
+                self.assertNotEqual(
+                    file_hash,
+                    banned_sha,
+                    f"Banned deprecated voice file found at: {p}",
+                )
+
+        # Verify verify_channel_voice_lock runtime guard succeeds
+        v1 = verify_channel_voice_lock("su_ke_lai", root=ROOT)
+        self.assertEqual(v1["sha256"], canonical_sha)
+        v2 = verify_channel_voice_lock("ho_so_ky_la", root=ROOT)
+        self.assertEqual(v2["sha256"], canonical_sha)
 
 
 if __name__ == "__main__":

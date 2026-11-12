@@ -50,8 +50,9 @@ async def setup_channel_branding(
     banner_path: str | Path,
     profile_cfg: dict,
     screenshot_path: str | Path,
+    headless: bool = True,
 ) -> dict:
-    client = YouTubeCDPClient(profile_cfg, headless=False)
+    client = YouTubeCDPClient(profile_cfg, headless=headless)
     await client.connect()
 
     try:

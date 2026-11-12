@@ -46,8 +46,8 @@ PROFILES: Dict[str, Dict[str, Any]] = {
         },
         "watermark": {
             "size_ratio_w": 100 / 1080,
-            "right_ratio_w": 32 / 1080,
-            "top_ratio_h": 120 / 1920,
+            "right_ratio_w": 36 / 1080,
+            "bottom_ratio_h": 36 / 1920,
         },
     },
     "long_16x9": {

@@ -132,39 +132,41 @@ FLOW_THUMBNAIL_BLUEPRINTS: dict[str, dict[str, Any]] = {
     "co_the_ke": {
         "channel_name": "Cơ Thể Kể",
         "niche": "Y Học, Sinh Học Cơ Thể & Sức Khỏe",
-        "visual_style": "2D Doodle Anatomical Cutaway Explainer, marker outlines",
-        "shock_concept": "Cross-section anatomical view of stickman body at 2 AM: Brain and stomach frantically waving emergency red warning signs while eyes stare transfixed at glowing blue smartphone screen",
-        "decorations": "Glowing red pulse target circles around heart and stomach, digital clock glowing '02:00 AM'",
-        "brand_identity": "Stickman with transparent anatomical torso, vibrant red/orange organ highlights",
-        "hook_text": "CƠ THỂ KÊU CỨU!",
+        "visual_style": "2D Doodle Explainer, marker outlines",
+        "shock_concept": "Bald stickman exhausted at 03:00 AM clock, glowing red sleep-deprivation lightning bolt striking skull with brain fog and toxin alert vs clean radiant brain glow",
+        "decorations": "Digital clock flashing '03:00 AM', glowing red sleep-deprivation lightning bolt, warning hazard toxin alert",
+        "brand_identity": "Bald doodle stickman in blue shirt #3B82C4, warm cream paper background #F8F0DC",
+        "hook_text": "ĂN ĐÊM PHÁ BỤNG!",
+        "hook_text_16x9": "THIẾU NGỦ PHÁ NÃO!",
         "text_placement_16x9": "Top-Left safe zone (X: 6%-50%, Y: 8%-36%), never bottom-right",
         "text_placement_9x16": "Upper-Center safe zone (X: 10%-90%, Y: 16%-32%), never bottom 40%",
         "text_size_spec": "14%-16% of canvas height (~160px on 1080p), occupying 22%-25% total area",
-        "font_spec": "Bold Hand-Brushed Warning Marker All-Caps, fiery crimson red (#FF2A2A) with thick black outline",
+        "font_spec": "Bold Hand-Brushed Warning Marker All-Caps, fiery crimson red (#FF2A2A) and yellow (#FFE600) with thick black outline",
         "flow_prompt_16x9": (
-            "Viral YouTube explainer thumbnail poster, 16:9 widescreen composition. 2D doodle anatomical explainer on warm cream paper. Dramatic cutaway anatomical cross-section of a bald stickman lying in bed at 2 AM: His eyes are hypnotic spirals glued to a blinding blue smartphone screen, while his internal organs—brain on fire with red sparks, acid-churning stomach, and racing heart—are animated miniature cartoon characters waving emergency red alarm flags. Glowing red circular sonar rings pulse around the stomach and brain. Clock displaying '02:00 AM'. IN TOP-LEFT SAFE ZONE (X: 6% to 50%, Y: 8% to 34%): Bold hand-brushed marker all-caps text with thick black outline and fiery crimson red #FF2A2A fill reading 'CƠ THỂ KÊU CỨU!'. Shocking medical contrast."
+            "Viral YouTube explainer thumbnail poster, 16:9 widescreen composition. 2D doodle explainer style with bold wobbly black marker contours on clean warm cream paper #F8F0DC background, minimal flat colors. Dominating the frame: Bald stickman wearing plain blue shirt #3B82C4, slumped exhausted with heavy dark eye bags next to an alarm clock glowing '03:00 AM'. A glowing red sleep-deprivation lightning bolt strikes his transparent skull, revealing dark toxic brain fog and warning hazard alert icon, in stark contrast to a clean, radiant glowing brain. IN TOP-LEFT SAFE ZONE (X: 6% to 50%, Y: 8% to 34%): Bold hand-brushed marker all-caps text with thick black outline and signal red #E63946 fill reading 'THIẾU NGỦ PHÁ NÃO!'. Clean negative space >=60%, uncluttered readability, zero bottom-right overlays, crisp master illustration."
         ),
         "flow_prompt_9x16": (
-            "Viral vertical YouTube Shorts thumbnail poster, 9:16 vertical composition. 2D doodle anatomical cutaway. Stickman body with transparent glowing torso showing screaming cartoon brain and burning stomach waving red hazard flags under midnight phone glare. Digital clock '02:00 AM'. IN UPPER-CENTER SAFE ZONE (X: 10% to 90%, Y: 16% to 32%): Bold hand-brushed marker all-caps text with thick black outline and fiery crimson red #FF2A2A fill reading 'CƠ THỂ KÊU CỨU!'. High medical curiosity, zero text in bottom 40%."
+            "Viral vertical YouTube Shorts thumbnail poster, 9:16 vertical composition. 2D doodle anatomical cutaway style. Bald stickman at 02:00 AM eating a blazing red bowl of spicy midnight noodles while inside his transparent glowing torso, his cartoon stomach is on fire in boiling acid and waving a giant red SOS emergency flag, with a bold red arrow pointing to the burning stomach. Digital clock '02:00 AM'. IN UPPER-CENTER SAFE ZONE (X: 10% to 90%, Y: 16% to 32%): Bold hand-brushed marker all-caps text with thick black outline, bright yellow #FFE600 and fiery red #FF2A2A fill reading 'ĂN ĐÊM PHÁ BỤNG!'. High medical shock value, zero text in bottom 40%."
         ),
     },
     "ua_sao_vay": {
         "channel_name": "Ủa Sao Vậy?",
         "niche": "Khoa Học Đời Thường & Hiện Tượng Kỳ Thú",
         "visual_style": "2D Doodle Explainer, playful high-curiosity composition",
-        "shock_concept": "Stickman standing in front of a flat mirror, but the mirror reflection points in the opposite direction with an expression of pure shock, gigantic red question mark floating between them",
-        "decorations": "Opposing two-headed curved arrows in red and cyan between real stickman and mirror reflection",
-        "brand_identity": "Stickman in blue shirt #3B82C4, warm cream paper background, oversized comic punctuation",
-        "hook_text": "GƯƠNG ĐÁNH LỪA?",
+        "shock_concept": "Bald stickman raising right hand in front of mirror frame, red double arrows showing Left-Right inversion vs glowing green arrow showing Top-Bottom unchanged, with bold question mark",
+        "decorations": "Red double horizontal arrows for mirror inversion, green vertical arrow for Top-Bottom unchanged, bold hand-drawn question mark",
+        "brand_identity": "Bald doodle stickman in blue shirt #3B82C4, warm cream paper background #F8F0DC",
+        "hook_text": "PHẢN XẠ 0.1 GIÂY!",
+        "hook_text_16x9": "BÍ MẬT TRỤC GƯƠNG!",
         "text_placement_16x9": "Top-Left safe zone (X: 6%-50%, Y: 8%-36%), never bottom-right",
         "text_placement_9x16": "Upper-Center safe zone (X: 10%-90%, Y: 16%-32%), never bottom 40%",
         "text_size_spec": "14%-16% of canvas height (~160px on 1080p), occupying 22%-25% total area",
-        "font_spec": "Bold Hand-Brushed Comic Marker All-Caps, bright lemon yellow (#FFE600) and white",
+        "font_spec": "Bold Hand-Brushed Comic Marker All-Caps, bright lemon yellow (#FFE600) and red with thick black outline",
         "flow_prompt_16x9": (
-            "Viral YouTube explainer thumbnail poster, 16:9 widescreen composition. 2D doodle explainer style on warm cream background. Bald stickman in blue shirt #3B82C4 standing in front of a full-length wall mirror pointing his right finger forward, but his reflection inside the mirror has an impossibly shocked dropped-jaw expression and is pointing completely in the wrong direction. Between real stickman and mirror floats a colossal hand-drawn question mark in bright red with opposing curved arrows in red and cyan showing optical reversal paradox. IN TOP-LEFT SAFE ZONE (X: 6% to 50%, Y: 8% to 34%): Bold hand-brushed marker all-caps text with thick black outline and bright lemon yellow #FFE600 fill reading 'GƯƠNG ĐÁNH LỪA?'. Fun curiosity gap, clean doodle lines."
+            "Viral YouTube explainer thumbnail poster, 16:9 widescreen composition. 2D doodle explainer style on clean warm cream paper #F8F0DC background. Bald doodle stickman in plain blue shirt #3B82C4 standing in front of a wooden mirror frame raising his right hand, looking puzzled with a bold hand-drawn comic question mark '?'. Big vibrant red marker horizontal double arrow pointing Left-Right between the stickman and mirror (labeled once 'TRÁI ↔ PHẢI'), contrasted with a glowing green vertical arrow pointing Top-Bottom upright with zero repeated labels and zero checkmarks next to the arrows. IN TOP-LEFT SAFE ZONE (X: 6% to 50%, Y: 8% to 34%): Bold hand-brushed comic marker all-caps text with thick black outline and bright lemon yellow #FFE600 fill reading 'BÍ MẬT TRỤC GƯƠNG!'. Clean negative space >=60%, uncluttered readability, zero bottom-right overlays, crisp master illustration."
         ),
         "flow_prompt_9x16": (
-            "Viral vertical YouTube Shorts thumbnail poster, 9:16 vertical composition. 2D doodle explainer style. Bald stickman pointing at mirror with impossible reversed reflection making a shocked funny face, giant red question mark floating above. Two-way contrasting arrows between them. IN UPPER-CENTER SAFE ZONE (X: 10% to 90%, Y: 16% to 32%): Bold hand-brushed marker all-caps text with thick black outline and bright lemon yellow #FFE600 fill reading 'GƯƠNG ĐÁNH LỪA?'. High playful curiosity, zero text in bottom 40%."
+            "Viral vertical YouTube Shorts thumbnail poster, 9:16 vertical composition. 2D doodle explainer style. Extreme close-up of a sharp flying object hurtling millimeters away from a shocked wide-open stickman eye inside a glowing red danger target ring, while a bright red lightning nerve reflex arc slams the eyelid shut with a '0.1s' timer before the brain even notices. IN UPPER-CENTER SAFE ZONE (X: 10% to 90%, Y: 16% to 32%): Bold hand-brushed marker all-caps text with thick black outline and bright lemon yellow #FFE600 fill reading 'PHẢN XẠ 0.1 GIÂY!'. High shock curiosity, zero text in bottom 40%."
         ),
     },
     "thuong_cho_kheo": {
@@ -273,20 +275,20 @@ FLOW_THUMBNAIL_BLUEPRINTS: dict[str, dict[str, Any]] = {
     "banh_rang": {
         "channel_name": "Bánh Răng Thế Giới",
         "niche": "Kỹ Thuật Công Nghệ & Chuỗi Cung Ứng Toàn Cầu",
-        "visual_style": "Macro 3D Mechanical Diorama, intricate industrial engineering realism",
-        "shock_concept": "Gigantic interconnected global supply chain machine with polished steel and brass gears; one critical central miniature cog fractured and throwing bright red sparks, threatening systemic collapse",
-        "decorations": "Glowing crimson crack lines emitting smoke, high-visibility yellow pointer arrow targeting fractured tooth",
-        "brand_identity": "Brushed gunmetal steel, warm brass gears, bright neon hazard accents",
-        "hook_text": "ĐỨT GÃY NGẦM!",
+        "visual_style": "Macro 3D Mechanical & Maritime Supply Chain Diorama, intricate industrial realism",
+        "shock_concept": "A colossal mega container ship wedged sideways across a narrow shipping canal, violently jamming and shattering giant interlocking brass and steel global economic gears beneath the water while hundreds of cargo ships pile up in red alert",
+        "decorations": "Glowing crimson bottleneck rings, exploding orange sparks from shattered gears, yellow danger arrow",
+        "brand_identity": "Brushed gunmetal steel, warm brass gears, deep ocean canal, bright neon hazard accents",
+        "hook_text": "KẸT TÀU VỠ TRẬN!",
         "text_placement_16x9": "Top-Left safe zone (X: 6%-50%, Y: 8%-36%), never bottom-right",
         "text_placement_9x16": "Upper-Center safe zone (X: 10%-90%, Y: 16%-32%), never bottom 40%",
         "text_size_spec": "14%-16% of canvas height (~160px on 1080p), occupying 22%-25% total area",
-        "font_spec": "Heavy Industrial Block Sans-Serif All-Caps, warning yellow (#FFE600) with deep machine shadow",
+        "font_spec": "Heavy Industrial Block Sans-Serif All-Caps, warning yellow (#FFE600) and red with deep machine shadow",
         "flow_prompt_16x9": (
-            "Viral YouTube explainer thumbnail poster, 16:9 widescreen composition. Macro 3D mechanical diorama of global industrial supply chain. A labyrinth of colossal interlocking polished steel, bronze, and titanium gears grinding together. Directly at the center of the mechanism, a critical miniature gear has shattered with glowing red molten fractures, violently spitting orange sparks and smoke, causing adjacent massive industrial cogs to seize up. A high-visibility bright yellow pointer arrow targets the fractured cog. IN TOP-LEFT SAFE ZONE (X: 6% to 50%, Y: 8% to 34%): Heavy industrial block sans-serif all-caps text with deep machine drop shadow and warning yellow #FFE600 fill reading 'ĐỨT GÃY NGẦM!'. High engineering drama, razor-sharp detail."
+            "Viral YouTube explainer thumbnail poster, 16:9 widescreen composition. Macro 3D mechanical and maritime supply chain diorama. A colossal mega container ship loaded with colorful containers is wedged sideways across a narrow sea canal, physically jamming and shattering gigantic interlocking brass and steel global economy gears beneath the water with violent orange sparks and smoke, while dozens of cargo ships back up in a glowing red alert zone. IN TOP-LEFT SAFE ZONE (X: 6% to 50%, Y: 8% to 34%): Heavy industrial block sans-serif all-caps text with deep black drop shadow and warning yellow #FFE600 fill reading 'KẸT TÀU VỠ TRẬN!'. High supply chain drama, razor-sharp detail."
         ),
         "flow_prompt_9x16": (
-            "Viral vertical YouTube Shorts thumbnail poster, 9:16 vertical composition. Macro 3D mechanical diorama. Interconnected massive brass and steel industrial gears with a central cracked gear violently showering sparks and smoke, threatening total system failure. IN UPPER-CENTER SAFE ZONE (X: 10% to 90%, Y: 16% to 32%): Heavy industrial block all-caps text with machine drop shadow and warning yellow #FFE600 fill reading 'ĐỨT GÃY NGẦM!'. Intense mechanical failure curiosity, zero text in bottom 40%."
+            "Viral vertical YouTube Shorts thumbnail poster, 9:16 vertical composition. Macro 3D maritime supply chain diorama. Colossal mega container ship wedged sideways blocking a narrow sea canal, crushing and shattering giant interlocking steel and brass economic gears with explosive orange sparks and red warning rings while ships queue behind. IN UPPER-CENTER SAFE ZONE (X: 10% to 90%, Y: 16% to 32%): Heavy industrial block all-caps text with thick black shadow and warning yellow #FFE600 fill reading 'KẸT TÀU VỠ TRẬN!'. Intense supply chain collapse curiosity, zero text in bottom 40%."
         ),
     },
     "tui_tien": {
@@ -377,16 +379,17 @@ FLOW_THUMBNAIL_BLUEPRINTS: dict[str, dict[str, Any]] = {
         "channel_name": "Chánh Niệm Kể",
         "niche": "Chánh Niệm, Thiền Định & Buông Bỏ Lo Âu",
         "visual_style": "Zen Ink Wash Painting (Thủy Mặc) meets High-Contrast Emotional Drama",
-        "shock_concept": "A serene meditating silhouette glowing with warm inner white-gold light amidst a furious vortex of incoming black storm arrows; one bright glowing red arrow ('The Second Arrow') strikes outward from his own mind",
-        "decorations": "Luminescent red trajectory arc on the self-inflicted inner second arrow, calming zen circle (Ensō)",
-        "brand_identity": "Monochromatic ink wash, deep charcoal storm, singular vibrant red focal accent",
+        "shock_concept": "Calm stickman standing serenely under gentle rain with a clear glass brimming into still ripples instead of overflowing, soft warm cream-blue palette",
+        "decorations": "Gentle doodle rain, smooth still ripples, warm inner golden aura, dissolving gray clouds",
+        "brand_identity": "Bald doodle stickman in blue shirt #3B82C4, soft warm cream #F8F0DC and tranquil blue palette",
         "hook_text": "MŨI TÊN THỨ 2!",
+        "hook_text_16x9": "BUÔNG BỎ ÂU LO!",
         "text_placement_16x9": "Top-Left safe zone (X: 6%-50%, Y: 8%-36%), never bottom-right",
         "text_placement_9x16": "Upper-Center safe zone (X: 10%-90%, Y: 16%-32%), never bottom 40%",
         "text_size_spec": "14%-16% of canvas height (~160px on 1080p), occupying 22%-25% total area",
-        "font_spec": "Bold Hand-Brushed Calligraphic Block All-Caps, pure white (#FFFFFF) and crimson (#FF2A2A)",
+        "font_spec": "Bold Hand-Brushed Marker All-Caps, calming deep blue (#1D3557) with thick black outline",
         "flow_prompt_16x9": (
-            "Viral YouTube mindfulness thumbnail poster, 16:9 widescreen composition. Zen ink wash painting (Thủy Mặc) combined with intense cinematic contrast. Center: A calm, serene cross-legged meditating silhouette glowing softly with inner white-gold moonlight. Surrounding him is a swirling tempest of hundreds of incoming black ink storm arrows deflected harmlessly by a subtle golden aura. However, a single piercing, blazing neon red arrow—'The Second Arrow'—shoots outward directly from his own forehead and curls back toward his heart with a glowing red trajectory arc. IN TOP-LEFT SAFE ZONE (X: 6% to 50%, Y: 8% to 34%): Bold hand-brushed calligraphic block all-caps text with dark outline, pure white #FFFFFF top line and crimson #FF2A2A bottom line reading 'MŨI TÊN THỨ 2!'. Deep psychological tension, peaceful yet shocking."
+            "Viral YouTube mindfulness thumbnail poster, 16:9 widescreen composition. 2D doodle explainer style on soft warm cream #F8F0DC and tranquil blue palette. In the center: A calm, serene bald stickman in blue shirt #3B82C4 standing peacefully under gentle minimalist doodle rain, holding a clear glass of water brimming into smooth motionless concentric ripples instead of overflowing. Soft warm inner golden glow, contrasting with tiny dissolving gray clouds. IN TOP-LEFT SAFE ZONE (X: 6% to 50%, Y: 8% to 34%): Bold hand-brushed marker all-caps text with thick black outline and calming deep blue #1D3557 fill reading 'BUÔNG BỎ ÂU LO!'. Mindful tranquility, >=60% negative space, zero bottom-right overlays, crisp master illustration."
         ),
         "flow_prompt_9x16": (
             "Viral vertical YouTube Shorts thumbnail poster, 9:16 vertical composition. Zen ink wash with dramatic focal lighting. Meditating figure surrounded by deflected black storm arrows, with a single luminous red arrow firing from his own thoughts. IN UPPER-CENTER SAFE ZONE (X: 10% to 90%, Y: 16% to 32%): Bold hand-brushed calligraphic block all-caps text with dark outline reading 'MŨI TÊN THỨ 2!'. Deep mindfulness intrigue, zero text in bottom 40%."
@@ -395,58 +398,58 @@ FLOW_THUMBNAIL_BLUEPRINTS: dict[str, dict[str, Any]] = {
     "minh_triet_song": {
         "channel_name": "Minh Triết Sống",
         "niche": "Triết Học Khắc Kỷ & Bản Lĩnh Sống",
-        "visual_style": "Cinematic Storm vs Stillness Classical Marble Realism",
-        "shock_concept": "A colossal marble bust of a Stoic philosopher (Marcus Aurelius) standing completely immovable, dry, and resolute while massive dark ocean tsunamis and jagged lightning bolts crash violently all around it",
-        "decorations": "Warm golden sunlight beam breaking through stormy black clouds directly illuminating the stoic face",
-        "brand_identity": "Weathered classical marble stone, turbulent dark seafoam slate, piercing warm sunlight",
-        "hook_text": "TÂM BẤT BIẾN!",
+        "visual_style": "Cinematic Storm vs Golden Forcefield Stillness, High-Contrast Epic Realism",
+        "shock_concept": "A resolute Stoic figure glowing with an unbreakable golden aura standing completely immovable while a chaotic tempest of fiery red lightning bolts, tidal waves, and dark storm arrows shatter harmlessly against his golden shield",
+        "decorations": "Blazing golden aura ring deflecting crimson storm arrows and lightning bolts",
+        "brand_identity": "Weathered classical marble and gold, turbulent dark storm, piercing warm sunlight",
+        "hook_text": "BẤT ĐỘNG GIỮA BÃO!",
         "text_placement_16x9": "Top-Left safe zone (X: 6%-50%, Y: 8%-36%), never bottom-right",
         "text_placement_9x16": "Upper-Center safe zone (X: 10%-90%, Y: 16%-32%), never bottom 40%",
         "text_size_spec": "14%-16% of canvas height (~160px on 1080p), occupying 22%-25% total area",
-        "font_spec": "Heavy Classical Roman Monumental Block All-Caps, radiant sunlight gold (#FFE600) with deep shadow",
+        "font_spec": "Heavy Classical Roman Monumental Block All-Caps, radiant sunlight gold (#FFE600) with deep black shadow",
         "flow_prompt_16x9": (
-            "Viral YouTube philosophy thumbnail poster, 16:9 widescreen composition. Epic cinematic realism: Storm versus Stillness. An enormous carved classical white marble bust of Stoic philosopher Marcus Aurelius stands completely immovable and bone-dry in the center. Colossal turbulent dark ocean tidal waves crash furiously against its base and jagged purple lightning bolts strike all around the violent tempest. A single narrow divine beam of warm golden sunlight pierces through the stormy dark clouds, illuminating the statue's calm, fearless eyes. IN TOP-LEFT SAFE ZONE (X: 6% to 50%, Y: 8% to 34%): Heavy classical Roman monumental block all-caps text with deep carved drop shadow and radiant sunlight gold #FFE600 fill reading 'TÂM BẤT BIẾN!'. Monumental fortitude, master artwork."
+            "Viral YouTube philosophy thumbnail poster, 16:9 widescreen composition. Epic high-contrast cinematic realism: Chaos versus Stoic Invincibility. In the center stands a resolute Stoic philosopher radiating a blazing golden forcefield aura of absolute calm. Surrounding him is a terrifying dark tempest of crashing ocean waves, panicked shadowy figures, and hundreds of fiery red lightning arrows that shatter into sparks the instant they touch his glowing golden shield. IN TOP-LEFT SAFE ZONE (X: 6% to 50%, Y: 8% to 34%): Heavy classical Roman monumental block all-caps text with deep black drop shadow and radiant sunlight gold #FFE600 fill reading 'BẤT ĐỘNG GIỮA BÃO!'. Extreme dramatic contrast, master artwork."
         ),
         "flow_prompt_9x16": (
-            "Viral vertical YouTube Shorts thumbnail poster, 9:16 vertical composition. Epic Stoic philosophy realism. Unshakable white marble bust of Roman philosopher standing calm in the center of crashing giant ocean storm waves and lightning, kissed by a single beam of golden sunlight. IN UPPER-CENTER SAFE ZONE (X: 10% to 90%, Y: 16% to 32%): Heavy Roman monumental block all-caps text with deep shadow and sunlight gold #FFE600 fill reading 'TÂM BẤT BIẾN!'. High stoic inspiration, zero text in bottom 40%."
+            "Viral vertical YouTube Shorts thumbnail poster, 9:16 vertical composition. High-contrast Stoic philosophy epic realism. Resolute Stoic figure at the center radiating a blazing golden forcefield shield while violent red lightning bolts, storm arrows, and crashing dark waves shatter into sparks all around him. IN UPPER-CENTER SAFE ZONE (X: 10% to 90%, Y: 16% to 32%): Heavy monumental block all-caps text with thick black shadow and radiant gold #FFE600 fill reading 'BẤT ĐỘNG GIỮA BÃO!'. High stoic power curiosity, zero text in bottom 40%."
         ),
     },
     "loi_sang_soi": {
         "channel_name": "Lời Sáng Soi",
         "niche": "Minh Triết Cổ Đại, Dụ Ngôn Soi Chiếu Cuộc Đời",
-        "visual_style": "Chiaroscuro Dramatic Illumination, Rembrandt oil painting warmth",
-        "shock_concept": "In pitch-black midnight, a solitary traveler holding an antique brass oil lantern that casts a blinding warm golden spotlight, suddenly illuminating a treacherous fork in the road right on the edge of a cliff",
-        "decorations": "Radial amber beam piercing the darkness, subtle glowing question mark at the crossroads",
-        "brand_identity": "Deep midnight indigo (#15102A), radiant lantern flame amber (#FFA000), dramatic chiaroscuro",
-        "hook_text": "NGỌN ĐÈN ĐỊNH MỆNH",
+        "visual_style": "Chiaroscuro Dramatic Split-Contrast Parable Illustration, Rembrandt warmth vs dark thorns",
+        "shock_concept": "Dramatic split-contrast Parable of the Sower: Left/upper side shows a glowing golden seed sprouting into a radiant tree of life in rich soil; right/lower side shows seeds being devoured by dark ravens and choked by sharp black thorns on barren rock",
+        "decorations": "Glowing golden lightning divider separating the fertile soil of the heart from the thorny rocky ground",
+        "brand_identity": "Deep midnight indigo (#15102A), radiant golden amber (#FFA000), crimson danger accents",
+        "hook_text": "TÂM BẠN ĐẤT GÌ?",
         "text_placement_16x9": "Top-Left safe zone (X: 6%-50%, Y: 8%-36%), never bottom-right",
         "text_placement_9x16": "Upper-Center safe zone (X: 10%-90%, Y: 16%-32%), never bottom 40%",
         "text_size_spec": "14%-16% of canvas height (~160px on 1080p), occupying 22%-25% total area",
-        "font_spec": "Bold High-Contrast Serif/Display All-Caps, warm luminescent white and golden amber (#FFE600)",
+        "font_spec": "Bold High-Contrast Display All-Caps, radiant golden amber (#FFE600) and white with heavy black outline",
         "flow_prompt_16x9": (
-            "Viral YouTube wisdom thumbnail poster, 16:9 widescreen composition. Rembrandt chiaroscuro oil painting aesthetic. Deep impenetrable midnight darkness: A hooded solitary wanderer raises a vintage brass oil lantern. The lantern casts a blinding, intense warm amber-golden cone of light across the rugged ground, suddenly revealing that he stands at a fateful crossroads where one path leads safely upward and the other plunges straight off a sheer cliff abyss. Golden dust motes dancing in the dramatic amber light beam. IN TOP-LEFT SAFE ZONE (X: 6% to 50%, Y: 8% to 34%): Bold high-contrast classical display all-caps text with deep dark shadow, warm luminescent white and golden amber #FFE600 fill reading 'NGỌN ĐÈN ĐỊNH MỆNH'. Mysterious spiritual gravity."
+            "Viral YouTube wisdom parable thumbnail poster, 16:9 widescreen composition. Dramatic high-contrast split biblical parable artwork (Parable of the Sower). Left side: Cracked barren stone ground where black ravens and wicked thorny vines with red sparks choke a dying seed in darkness. Right side: Rich illuminated soil where a glowing golden seed bursts into a magnificent radiant tree of life with golden fruit under a divine beam of light. IN TOP-LEFT SAFE ZONE (X: 6% to 50%, Y: 8% to 34%): Bold high-contrast classical display all-caps text with thick black shadow and golden amber #FFE600 fill reading 'TÂM BẠN ĐẤT GÌ?'. Intense spiritual and psychological curiosity."
         ),
         "flow_prompt_9x16": (
-            "Viral vertical YouTube Shorts thumbnail poster, 9:16 vertical composition. Chiaroscuro dramatic oil painting warmth. Wanderer holding a brilliant brass lantern casting a powerful cone of golden light revealing a fateful cliffside crossroads in pitch darkness. IN UPPER-CENTER SAFE ZONE (X: 10% to 90%, Y: 16% to 32%): Bold classical display all-caps text with deep dark shadow and golden amber #FFE600 fill reading 'NGỌN ĐÈN ĐỊNH MỆNH'. Profound curiosity, zero text in bottom 40%."
+            "Viral vertical YouTube Shorts thumbnail poster, 9:16 vertical composition. Dramatic split-contrast Parable of the Sower illustration. Upper half: A glowing golden seed sprouting into a radiant tree of life under warm divine light. Lower half: Seeds on cracked stone being choked by sharp black thorns and fierce dark ravens with glowing red eyes. IN UPPER-CENTER SAFE ZONE (X: 10% to 90%, Y: 16% to 32%): Bold classical display all-caps text with thick black outline and golden amber #FFE600 fill reading 'TÂM BẠN ĐẤT GÌ?'. Profound parable hook, zero text in bottom 40%."
         ),
     },
     "tam_tinh_dem": {
         "channel_name": "Tâm Tĩnh Đêm",
         "niche": "Chữa Lành Đêm Muộn, Giấc Ngủ & Xoa Dịu Tâm Hồn",
-        "visual_style": "Cinematic Warm Interior vs Cold Night Skyline, cozy lo-fi contemplative glow",
-        "shock_concept": "A cozy rain-streaked window overlooking a deep indigo starry city night; inside, a solitary silhouette sits by a steaming cup of tea, letting go of a massive boulder-heavy stone backpack dropping to the floor",
-        "decorations": "Steam curls rising from hot mug catching golden lamp light, heavy stone backpack with word 'LO ÂU' fading",
-        "brand_identity": "Warm amber lamplight (3000K), deep sapphire night sky, soft rain reflections",
-        "hook_text": "BUÔNG BỎ MỆT MỎI",
+        "visual_style": "High-Emotion Midnight Chiaroscuro vs Warm Golden Lamplight",
+        "shock_concept": "At 02:00 AM by a rain-streaked window, a weary person takes off a cracking porcelain 'fake smiling mask' that shatters into glowing fragments in their hands, revealing a single luminous tear of relief as heavy iron chains fall off their shoulders",
+        "decorations": "Cracking smiling mask shattering into golden dust, broken iron chains falling, 02:00 AM rain window",
+        "brand_identity": "Warm amber lamplight (3000K), deep sapphire night sky, dramatic emotional contrast",
+        "hook_text": "THÁO MẶT NẠ XUỐNG!",
         "text_placement_16x9": "Top-Left safe zone (X: 6%-50%, Y: 8%-36%), never bottom-right",
         "text_placement_9x16": "Upper-Center safe zone (X: 10%-90%, Y: 16%-32%), never bottom 40%",
         "text_size_spec": "14%-16% of canvas height (~160px on 1080p), occupying 22%-25% total area",
-        "font_spec": "Bold Clean Contemplative Sans-Serif All-Caps, soothing warm cream (#FFF8E7) with dark blue shadow",
+        "font_spec": "Bold Emotional Impact Sans-Serif All-Caps, glowing warm gold (#FFE600) and white with thick dark outline",
         "flow_prompt_16x9": (
-            "Viral YouTube bedtime healing thumbnail poster, 16:9 widescreen composition. Cinematic lo-fi atmospheric warmth. Extreme contrast of warm interior versus cold blue midnight: Inside a cozy room, warm 3000K amber reading lamp light glows on a wooden desk with a ceramic mug of steaming chamomile tea. A solitary tired silhouette unclips and drops a massive boulder-heavy granite backpack labeled 'LO ÂU' onto the floor with immense relief. Outside the large rain-streaked window is a deep sapphire indigo city skyline under gentle misty rain and stars. IN TOP-LEFT SAFE ZONE (X: 6% to 50%, Y: 8% to 34%): Bold clean contemplative sans-serif all-caps text with dark blue shadow and soothing warm cream #FFF8E7 fill reading 'BUÔNG BỎ MỆT MỎI'. Deep emotional comfort, peaceful sanctuary."
+            "Viral YouTube midnight healing thumbnail poster, 16:9 widescreen composition. Deeply emotional high-contrast cinematic midnight scene. By a rain-streaked window overlooking a deep sapphire 2 AM city night, a weary figure illuminated by warm 3000K golden lamplight removes a white porcelain 'fake happy smile' mask from their face; the mask is cracking and shattering into glowing golden fragments in their hands, revealing a single luminous tear of relief on their real face while heavy iron chains shatter off their shoulders. IN TOP-LEFT SAFE ZONE (X: 6% to 50%, Y: 8% to 34%): Bold emotional impact all-caps text with thick dark shadow and glowing warm gold #FFE600 fill reading 'THÁO MẶT NẠ XUỐNG!'. Instant emotional resonance and high CTR."
         ),
         "flow_prompt_9x16": (
-            "Viral vertical YouTube Shorts thumbnail poster, 9:16 vertical composition. Cinematic cozy lo-fi midnight atmosphere. Rain-streaked window overlooking deep sapphire night, steaming hot cup of tea under warm amber lamp light, heavy stone backpack dropped to the floor. IN UPPER-CENTER SAFE ZONE (X: 10% to 90%, Y: 16% to 32%): Bold clean contemplative sans-serif all-caps text with dark shadow and warm cream #FFF8E7 fill reading 'BUÔNG BỎ MỆT MỎI'. Soothing emotional release, zero text in bottom 40%."
+            "Viral vertical YouTube Shorts thumbnail poster, 9:16 vertical composition. Deeply emotional high-contrast midnight scene by a rain-streaked window at 2 AM. Under warm golden lamplight, hands remove a cracking porcelain fake-smile mask that shatters into glowing fragments, revealing a single luminous tear of relief while heavy chains fall away. IN UPPER-CENTER SAFE ZONE (X: 10% to 90%, Y: 16% to 32%): Bold impact all-caps text with thick black outline and glowing warm gold #FFE600 fill reading 'THÁO MẶT NẠ XUỐNG!'. Powerful midnight emotional hook, zero text in bottom 40%."
         ),
     },
 }
@@ -622,10 +625,11 @@ def generate_flow_native_thumbnails(
             task_id = f"thumb_{norm_slug}_{asp_clean}"
             raw_png = staging_dir / f"{task_id}_raw.png"
 
-            # Determine destination folder in video/
+            # Determine destination folder in video/ (or work_dir during dry_run tests)
             is_vertical = asp == "9:16"
             folder_suffix = "short_fullchain" if is_vertical else "long"
-            video_folder = ROOT_DIR / f"video/vn_pilot_{norm_slug}_{folder_suffix}"
+            base_out_root = work_dir if (dry_run and work_dir is not None) else ROOT_DIR
+            video_folder = base_out_root / f"video/vn_pilot_{norm_slug}_{folder_suffix}"
             video_folder.mkdir(parents=True, exist_ok=True)
             target_filename = f"vn_pilot_{norm_slug}_{folder_suffix}_thumbnail_{asp_clean}.png"
             target_path = video_folder / target_filename
@@ -662,8 +666,11 @@ def generate_flow_native_thumbnails(
 def _synthesize_dry_run_poster(channel_slug: str, aspect: str, out_path: Path) -> Path:
     """Generate high-quality synthetic dry-run poster respecting safe zones for tests."""
     bp = FLOW_THUMBNAIL_BLUEPRINTS.get(channel_slug, {})
-    hook_text = bp.get("hook_text", "SỰ THẬT SỐC!")
     is_vertical = aspect in ("9:16", "9x16", "vertical")
+    if is_vertical:
+        hook_text = bp.get("hook_text_9x16") or bp.get("hook_text", "SỰ THẬT SỐC!")
+    else:
+        hook_text = bp.get("hook_text_16x9") or bp.get("hook_text", "SỰ THẬT SỐC!")
     tw, th = (1080, 1920) if is_vertical else (1280, 720)
 
     # Pick atmospheric palette based on niche

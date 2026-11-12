@@ -5,6 +5,7 @@ Every agent session MUST read the required documents below before taking any pla
 - **Tier 1 (Mandatory for ALL tasks)**:
   - `AGENTS.md`: System-wide SSOT Architecture, Governance, & Hard Invariants.
   - `PLAYBOOK.md`: Operational Post-Mortems, Anti-Regression Rules, & Root Cause Fixes.
+  - `.agents/rules/gpu-headless-chrome.md`: Mandatory Rule for Hidden GPU Chrome (`--headless=new` + `90%` VRAM via `build_optimized_chrome_launch`).
 - **Tier 2 (Mandatory Domain Skill SSOT — read the exact domain `SKILL.md` before acting)**:
   - Video Production / Spin-offs / Dual-Mode E2E: `.agents/skills/vp-production/SKILL.md`
   - Flow CDP Image & Video Chain Engine: `.agents/skills/vp-flow-cdp/SKILL.md`

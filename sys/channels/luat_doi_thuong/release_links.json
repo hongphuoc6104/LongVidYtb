@@ -5,9 +5,9 @@
   "youtube_channel_id": "UCLd__GnjrpBq6LrXtWvidPg",
   "published_at": "2026-11-01T13:57:33Z",
   "long": {
-    "job_id": "luat-doi-thuong-batch2-16x9",
-    "url": "https://youtu.be/eC88KgPVD9k",
-    "video_id": "eC88KgPVD9k",
+    "job_id": "vn_pilot_luat_doi_thuong_long",
+    "url": "https://youtu.be/vu-zvDLN9g4",
+    "video_id": "vu-zvDLN9g4",
     "title": "Bẫy Chuyển Khoản & Đặt Cọc Khiến Bạn Mất Trắng",
     "duration_seconds": 261.76,
     "resolution": "1920x1080",
@@ -15,7 +15,8 @@
     "visibility": "PUBLIC",
     "mp4": "/home/hongphuoc6104/Desktop/vp-agent-core/video/luat-doi-thuong-batch2-16x9/luat-doi-thuong-batch2-16x9.mp4",
     "thumbnail": "/home/hongphuoc6104/Desktop/vp-agent-core/video/luat-doi-thuong-batch2-16x9/thumbnail_16x9.jpg",
-    "subtitles": "/home/hongphuoc6104/Desktop/vp-agent-core/video/luat-doi-thuong-batch2-16x9/luat-doi-thuong-batch2-16x9.srt"
+    "subtitles": "/home/hongphuoc6104/Desktop/vp-agent-core/video/luat-doi-thuong-batch2-16x9/luat-doi-thuong-batch2-16x9.srt",
+    "youtube_url": "https://youtu.be/vu-zvDLN9g4"
   },
   "short": {
     "job_id": "luat-doi-thuong-batch2-9x16",

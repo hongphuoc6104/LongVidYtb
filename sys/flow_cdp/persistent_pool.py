@@ -505,6 +505,10 @@ class PersistentWorkerPool:
             with self.warm_sessions_lock:
                 warm_s = self.warm_sessions.pop(p_name, None)
             if warm_s is not None:
+                if hasattr(warm_s, "ws") and getattr(warm_s, "ws", None) is None and hasattr(warm_s, "connect"):
+                    c_res = warm_s.connect()
+                    if asyncio.iscoroutine(c_res):
+                        loop.run_until_complete(c_res)
                 if hasattr(warm_s, "_refresh_recaptcha_session"):
                     try:
                         rf = warm_s._refresh_recaptcha_session()
@@ -700,6 +704,7 @@ class PersistentWorkerPool:
                     if len(batch_tasks) > 1:
                         batch_res = self._execute_batch_task_rpc(loop, sess, batch_tasks, current_profile)
                         last_request_time = time.time()
+                        current_profile["_ip_burst_streak"] = 0
                         latency = round(time.time() - t0, 2)
 
                         for b_task, b_res in zip(batch_tasks, batch_res, strict=False):
@@ -772,6 +777,7 @@ class PersistentWorkerPool:
                     else:
                         res = self._execute_task_rpc(loop, sess, task, current_profile)
                         last_request_time = time.time()
+                        current_profile["_ip_burst_streak"] = 0
                         latency = round(time.time() - t0, 2)
 
                         # Successful generation: store result & update DAG mappings
@@ -898,7 +904,7 @@ class PersistentWorkerPool:
                         q_dur = (
                             86400.0 if is_no_at else (
                                 3600.0 if is_credit_exhausted else (
-                                    min(300.0, self.cooldown_seconds) if is_ip_burst else self.cooldown_seconds
+                                    180.0 if is_ip_burst else self.cooldown_seconds
                                 )
                             )
                         )
@@ -927,6 +933,14 @@ class PersistentWorkerPool:
                         can_keep_warm = (not is_credit_exhausted) and (not is_no_at)
                         with self.warm_sessions_lock:
                             if can_keep_warm and len(self.warm_sessions) < max_browsers:
+                                if hasattr(sess, "ws") and getattr(sess, "ws", None) is not None and hasattr(sess, "close"):
+                                    try:
+                                        c_ws = sess.close()
+                                        if asyncio.iscoroutine(c_ws):
+                                            loop.run_until_complete(c_ws)
+                                        sess.ws = None
+                                    except Exception:
+                                        pass
                                 self.warm_sessions[old_name] = sess
                                 sess_kept_warm = True
                             else:
@@ -948,12 +962,12 @@ class PersistentWorkerPool:
 
                         self.profile_pool.release(current_profile, quarantine_reason=quarantine_reason, quarantine_seconds=q_dur)
 
-                        # If Edge IP burst limit was tripped, pause worker to let the sliding window reset cleanly
                         if is_ip_burst:
-                            logger.warning("[RATE_LIMIT_PAUSE] Edge burst limit tripped (TOO_MUCH_TRAFFIC). Pausing worker for 45s...")
-                            time.sleep(45.0)
+                            logger.warning("[RATE_LIMIT_SWAP] Profile %s hit TOO_MUCH_TRAFFIC; quarantined for %.0fs and swapping to healthy standby profile...", prof_name, q_dur)
+                            time.sleep(3.0)
 
-                        # Re-queue all tasks in batch_tasks with exponential delay to avoid tight-loop retry storms
+                        # Re-queue all tasks in batch_tasks immediately so healthy standby profile generates them
+                        time.sleep(1.0)
                         for r_task in batch_tasks:
                             r_task["retries"] = r_task.get("retries", 0) + 1
                             max_r = max(100, r_task.get("max_retries", 100))
@@ -962,8 +976,6 @@ class PersistentWorkerPool:
                                 r_task.pop("pinned_profile", None)
                                 r_task["baseMediaId"] = None
                                 r_task["base_media_id"] = None
-                                backoff_sleep = min(20.0, 3.0 * min(r_task["retries"], 7))
-                                time.sleep(backoff_sleep)
                                 r_seq = self._next_seq()
                                 self.shared_queue.put((0, r_seq, r_task))
                             else:
@@ -989,6 +1001,8 @@ class PersistentWorkerPool:
                         max_wait = max(self.cooldown_seconds + 30.0, 360.0)
                         while not self.abort_event.is_set() and (time.time() - swap_start < max_wait):
                             new_prof = self.profile_pool.acquire(current_name=old_name)
+                            if not new_prof and (time.time() - swap_start >= self.cooldown_seconds):
+                                new_prof = self.profile_pool.acquire(required_name=old_name)
                             if not new_prof:
                                 logger.warning("[Worker-%d] No standby profiles available. Waiting for cooldown...", worker_id)
                                 time.sleep(15)
@@ -1040,8 +1054,10 @@ class PersistentWorkerPool:
 
                     else:
                         # Non-rate-limit exception (transient transport or download error)
-                        if any(k in err_str.lower() for k in ("transport", "connection", "reset by peer", "no page target", "target", "closed", "eof")):
+                        if any(k in err_str.lower() for k in ("transport", "connection", "reset by peer", "no page target", "target", "closed", "eof", "nonetype")):
                             logger.warning("CDP transport drop on %s: %s, re-initializing session...", prof_name, err_str)
+                            with self.warm_sessions_lock:
+                                self.warm_sessions.pop(prof_name, None)
                             try:
                                 if hasattr(sess, "close"):
                                     c = sess.close()
@@ -1049,6 +1065,12 @@ class PersistentWorkerPool:
                                         loop.run_until_complete(c)
                             except Exception:
                                 pass
+                            t_port = int(current_profile.get("cdp_port") or current_profile.get("port") or 0)
+                            if t_port > 0 and self.proc_mgr and hasattr(self.proc_mgr, "terminate_by_port"):
+                                try:
+                                    self.proc_mgr.terminate_by_port(t_port, wait_interval=0.4)
+                                except Exception:
+                                    pass
                             sess = None
                             try:
                                 sess = init_session(current_profile)
@@ -1058,7 +1080,7 @@ class PersistentWorkerPool:
                         for r_task in batch_tasks:
                             r_task["retries"] = r_task.get("retries", 0) + 1
                             r_tid = r_task.get("_registered_id") or str(r_task.get("id", "0"))
-                            if r_task["retries"] <= r_task.get("max_retries", 3):
+                            if r_task["retries"] <= max(15, r_task.get("max_retries", 15)):
                                 r_seq = self._next_seq()
                                 self.shared_queue.put((0, r_seq, r_task))
                                 time.sleep(1.0)

@@ -792,24 +792,43 @@ def test_all_20_vietnamese_channels_watermark_logo_resolution(tmp_path: Path) ->
 
 
 def test_short_and_long_watermark_overlay_positions() -> None:
-    """Verify that Short 9:16 watermark uses top-right position 'W-w-32:120' to clear UI buttons
-    and subtitles per sys/format_profiles.py SSOT, while Long 16:9 stays at bottom-right 'W-w-36:H-h-36'.
+    """Verify that both Short 9:16 and Long 16:9 watermarks are hardcoded per channel
+    and positioned at bottom-right 'W-w-36:H-h-36' covering the AI watermark area.
     """
     from sys.format_profiles import PROFILES
+    from sys.tools.produce_vn_dual_mode import (
+        BOTTOM_RIGHT_WATERMARK_POS,
+        HARDCODED_CHANNEL_WATERMARK_MAP,
+    )
+
+    vn_channels = [
+        "ai-binh-dan", "co-the-ke", "ho-so-ky-la", "nao-luoi", "su-ke-lai",
+        "thuong-cho-kheo", "tui-tien", "ua-sao-vay", "luat-ngam", "ban-do-quyen-luc",
+        "dia-com", "luat-doi-thuong", "banh-rang", "vu-tru-ti-hon", "nghe-song-sot",
+        "la-ban-hoc-thuat", "chanh-niem-ke", "loi-sang-soi", "minh-triet-song", "tam-tinh-dem",
+    ]
+
+    assert BOTTOM_RIGHT_WATERMARK_POS == "W-w-36:H-h-36"
+    assert len(HARDCODED_CHANNEL_WATERMARK_MAP) == 20
+    for ch_slug in vn_channels:
+        norm = ch_slug.replace("-", "_")
+        assert norm in HARDCODED_CHANNEL_WATERMARK_MAP
+        assert HARDCODED_CHANNEL_WATERMARK_MAP[norm].is_file()
 
     short_wm = PROFILES["short_9x16"]["watermark"]
-    assert short_wm["right_ratio_w"] == 32 / 1080
-    assert short_wm["top_ratio_h"] == 120 / 1920
+    assert short_wm["right_ratio_w"] == 36 / 1080
+    assert short_wm["bottom_ratio_h"] == 36 / 1920
 
     long_wm = PROFILES["long_16x9"]["watermark"]
-    assert "bottom_ratio_h" in long_wm or "right_ratio_w" in long_wm
+    assert "bottom_ratio_h" in long_wm and "right_ratio_w" in long_wm
 
     # Inspect produce_en_flow_dynamic_demo.py source
     import inspect
     from sys.tools import produce_en_flow_dynamic_demo
 
     src = inspect.getsource(produce_en_flow_dynamic_demo)
-    assert 'wm_pos = "W-w-32:120" if is_short else "W-w-36:H-h-36"' in src
+    assert 'wm_pos = "W-w-36:H-h-36"' in src
     assert "W-w-24:H-h-56" not in src
+
 
 

@@ -1007,7 +1007,7 @@ class DirectCDPProfileSession:
             """
             from .resource_locks import stagger_cross_process_action
 
-            await asyncio.to_thread(stagger_cross_process_action, "flow_rpc_submit", 2.25, 0.45)
+            await asyncio.to_thread(stagger_cross_process_action, "flow_rpc_submit", 2.5, 0.4)
             out = await self.evaluate(js_code, await_promise=True, timeout=180.0)
             if not isinstance(out, dict) or out.get("error"):
                 err_msg = str(out.get("error") if isinstance(out, dict) else "NO_CDP_RESPONSE")
@@ -1143,7 +1143,7 @@ class DirectCDPProfileSession:
         if "PYTEST_CURRENT_TEST" not in os.environ:
             from .resource_locks import stagger_cross_process_action
 
-            await asyncio.to_thread(stagger_cross_process_action, "flow_rpc_submit", 2.25, 0.45)
+            await asyncio.to_thread(stagger_cross_process_action, "flow_rpc_submit", 2.5, 0.4)
         out = await self.evaluate(js_code, await_promise=True, timeout=180.0)
         if not isinstance(out, dict) or out.get("error"):
             err_msg = out.get("error") if isinstance(out, dict) else "NO_CDP_RESPONSE"
@@ -1198,7 +1198,7 @@ class DirectCDPProfileSession:
             from .resource_locks import stagger_cross_process_action
 
             await self._ensure_mint_captcha_guard()
-            await asyncio.to_thread(stagger_cross_process_action, "flow_rpc_submit", 2.25, 0.45)
+            await asyncio.to_thread(stagger_cross_process_action, "flow_rpc_submit", 2.5, 0.4)
         source_path_override = f"/project/{self.project_id}" if self.project_id else "/"
         js_code = f"""
         (async () => {{

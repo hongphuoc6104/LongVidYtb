@@ -27,7 +27,25 @@ for _p in (str(ROOT_DIR), str(SYS_DIR), str(SYS_DIR / "tools")):
         sys.path.insert(0, _p)
 
 from colab_bridge.client import Client
+from tools.produce_vn_dual_mode import (
+    BANNED_DEPRECATED_VOICE_SHA256S,
+    HARDCODED_CHANNEL_VOICE_LOCKS,
+    SU_KE_LAI_SHARED_VOICE_SHA256,
+    load_voice_profile,
+    verify_channel_voice_lock,
+)
 from tools.vn_text_normalizer import normalize_for_tts
+
+__all__ = [
+    "BANNED_DEPRECATED_VOICE_SHA256S",
+    "HARDCODED_CHANNEL_VOICE_LOCKS",
+    "SU_KE_LAI_SHARED_VOICE_SHA256",
+    "load_voice_profile",
+    "synthesize_long_channel",
+    "verify_channel_voice_lock",
+]
+
+ROOT = ROOT_DIR
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("synthesize_vn_long_omnivoice")
@@ -283,11 +301,8 @@ def synthesize_long_channel(
     logger.info(f"=== Synthesizing Long Explainer Audio for {channel_id} ({channel_slug}) on Colab T4 OmniVoice ===")
 
     # 1. Voice profile resolution
+    profile = load_voice_profile(channel_id, root=ROOT)
     voice_dir = SYS_DIR / f"assets/voices/ch_{channel_id}"
-    profile_p = voice_dir / "profile.json"
-    if not profile_p.is_file():
-        raise FileNotFoundError(f"Missing voice profile: {profile_p}")
-    profile = json.loads(profile_p.read_text(encoding="utf-8"))
     ref_wav = voice_dir / profile.get("reference_wav", "reference.wav")
     if not ref_wav.is_file():
         raise FileNotFoundError(f"Missing reference wav: {ref_wav}")
