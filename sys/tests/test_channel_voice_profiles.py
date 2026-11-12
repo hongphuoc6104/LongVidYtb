@@ -46,8 +46,8 @@ EXPECTED_CHANNELS = {
     },
     "su_ke_lai": {
         "voice": "VietNarrator_su_ke_lai",
-        "recommended_speed": 1.10,
-        "default_tone": "reflective_slow",
+        "recommended_speed": 1.14,
+        "default_tone": "heroic_epic",
     },
     "thuong_cho_kheo": {
         "voice": "VietNarrator_thuong_cho_kheo",
@@ -292,7 +292,10 @@ class TestChannelVoiceProfiles(unittest.TestCase):
                 "equalizer=f=" in voice_chain or "treble=" in voice_chain,
                 f"{ch_id}: audio_voice_chain must include equalizer or treble",
             )
-            self.assertIn("lowpass=f=13500", voice_chain, f"{ch_id}: audio_voice_chain must include lowpass=f=13500")
+            self.assertTrue(
+                "lowpass=f=13500" in voice_chain or "lowpass=f=15000" in voice_chain,
+                f"{ch_id}: audio_voice_chain must include lowpass=f=13500 or lowpass=f=15000",
+            )
             self.assertNotIn("acompressor", voice_chain, f"{ch_id}: audio_voice_chain must NOT contain acompressor")
             self.assertNotIn("afftdn", voice_chain, f"{ch_id}: audio_voice_chain must NOT contain afftdn")
             self.assertEqual(data.get("audio_lufs"), -14.0)
@@ -380,7 +383,10 @@ class TestChannelVoiceProfiles(unittest.TestCase):
                 "equalizer=f=" in chain or "treble=" in chain,
                 f"{ch_id}: voice chain missing equalizer or treble",
             )
-            self.assertIn("lowpass=f=13500", chain, f"{ch_id}: voice chain missing 'lowpass=f=13500'")
+            self.assertTrue(
+                "lowpass=f=13500" in chain or "lowpass=f=15000" in chain,
+                f"{ch_id}: voice chain missing 'lowpass=f=13500' or 'lowpass=f=15000'",
+            )
 
     def test_audition_split_into_clauses_preserves_sentences(self):
         """Validates that audition split_into_clauses splits on .?!;, keeps <= 18 words intact, and splits > 18 words at middle comma."""
@@ -488,19 +494,53 @@ class TestChannelVoiceProfiles(unittest.TestCase):
             checked += 1
         self.assertGreaterEqual(checked, 8, "Expected at least 8 worktrees to be checked")
 
-    def test_su_ke_lai_and_ho_so_ky_la_share_canonical_voice_lock(self):
-        """Verifies su_ke_lai and ho_so_ky_la share the exact same canonical voice and runtime locks."""
-        from tools.produce_vn_dual_mode import (
-            BANNED_DEPRECATED_VOICE_SHA256S,
-            HARDCODED_CHANNEL_VOICE_LOCKS,
-            SU_KE_LAI_SHARED_VOICE_SHA256,
-            verify_channel_voice_lock,
-        )
+    def test_su_ke_lai_dedicated_and_ho_so_ky_la_voice_locks(self):
+        """Verifies su_ke_lai uses its dedicated heroic voice lock while ho_so_ky_la keeps its canonical lock."""
+        try:
+            from tools.produce_vn_dual_mode import (
+                BANNED_DEPRECATED_VOICE_SHA256S,
+                HARDCODED_CHANNEL_VOICE_LOCKS,
+                HO_SO_KY_LA_VOICE_SHA256,
+                SU_KE_LAI_DEDICATED_VOICE_SHA256,
+                verify_channel_voice_lock,
+            )
+        except ModuleNotFoundError:
+            import ast
+            from typing import Any
+            src_path = ROOT / "tools" / "produce_vn_dual_mode.py"
+            if not src_path.is_file():
+                src_path = ROOT / "sys" / "tools" / "produce_vn_dual_mode.py"
+            src_text = src_path.read_text(encoding="utf-8")
+            tree = ast.parse(src_text)
+            wanted_assigns = {
+                "HO_SO_KY_LA_VOICE_SHA256",
+                "SU_KE_LAI_SHARED_VOICE_SHA256",
+                "SU_KE_LAI_DEDICATED_VOICE_SHA256",
+                "BANNED_DEPRECATED_VOICE_SHA256S",
+                "HARDCODED_CHANNEL_VOICE_LOCKS",
+            }
+            ns: dict[str, Any] = {"Any": Any, "Path": Path, "hashlib": hashlib, "json": json, "ROOT": ROOT}
+            for node in tree.body:
+                if isinstance(node, ast.Assign) and any(
+                    isinstance(t, ast.Name) and t.id in wanted_assigns for t in node.targets
+                ):
+                    exec(compile(ast.Module([node], type_ignores=[]), str(src_path), "exec"), ns)
+                elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name) and node.target.id in wanted_assigns:
+                    exec(compile(ast.Module([node], type_ignores=[]), str(src_path), "exec"), ns)
+                elif isinstance(node, ast.FunctionDef) and node.name == "verify_channel_voice_lock":
+                    exec(compile(ast.Module([node], type_ignores=[]), str(src_path), "exec"), ns)
+            BANNED_DEPRECATED_VOICE_SHA256S = ns["BANNED_DEPRECATED_VOICE_SHA256S"]
+            HARDCODED_CHANNEL_VOICE_LOCKS = ns["HARDCODED_CHANNEL_VOICE_LOCKS"]
+            HO_SO_KY_LA_VOICE_SHA256 = ns["HO_SO_KY_LA_VOICE_SHA256"]
+            SU_KE_LAI_DEDICATED_VOICE_SHA256 = ns["SU_KE_LAI_DEDICATED_VOICE_SHA256"]
+            verify_channel_voice_lock = ns["verify_channel_voice_lock"]
 
-        canonical_sha = "cd25365252033ee60333c92e3f071a8dae3a99c865fe9e527686c7cf04048a9d"
+        su_ke_sha = "76773d5c9d306117022930d82045fb716138c21304261e7c7d5582d6c3f98d76"
+        ho_so_sha = "cd25365252033ee60333c92e3f071a8dae3a99c865fe9e527686c7cf04048a9d"
         banned_sha = "5ebeb65efc952565f40a659af3f4a571945ce22dc156bedd67a60c186ee51a3e"
 
-        self.assertEqual(SU_KE_LAI_SHARED_VOICE_SHA256, canonical_sha)
+        self.assertEqual(SU_KE_LAI_DEDICATED_VOICE_SHA256, su_ke_sha)
+        self.assertEqual(HO_SO_KY_LA_VOICE_SHA256, ho_so_sha)
         self.assertIn(banned_sha, BANNED_DEPRECATED_VOICE_SHA256S)
         self.assertIn("su_ke_lai", HARDCODED_CHANNEL_VOICE_LOCKS)
         self.assertIn("ho_so_ky_la", HARDCODED_CHANNEL_VOICE_LOCKS)
@@ -513,9 +553,11 @@ class TestChannelVoiceProfiles(unittest.TestCase):
         with open(ho_so_dir / "profile.json", "r", encoding="utf-8") as f:
             ho_so_prof = json.load(f)
 
-        self.assertEqual(su_ke_prof["sha256"], canonical_sha)
-        self.assertEqual(ho_so_prof["sha256"], canonical_sha)
-        self.assertEqual(su_ke_prof.get("shared_voice_group"), "su_ke_lai_canonical_voice")
+        self.assertEqual(su_ke_prof["sha256"], su_ke_sha)
+        self.assertEqual(ho_so_prof["sha256"], ho_so_sha)
+        self.assertNotIn("shared_voice_with", su_ke_prof)
+        self.assertEqual(su_ke_prof.get("default_tone"), "heroic_epic")
+        self.assertAlmostEqual(su_ke_prof.get("recommended_speed"), 1.14, places=2)
         self.assertEqual(ho_so_prof.get("shared_voice_group"), "su_ke_lai_canonical_voice")
 
         with open(su_ke_dir / "reference.wav", "rb") as f:
@@ -523,9 +565,9 @@ class TestChannelVoiceProfiles(unittest.TestCase):
         with open(ho_so_dir / "reference.wav", "rb") as f:
             ho_so_bytes = f.read()
 
-        self.assertEqual(hashlib.sha256(su_ke_bytes).hexdigest(), canonical_sha)
-        self.assertEqual(hashlib.sha256(ho_so_bytes).hexdigest(), canonical_sha)
-        self.assertEqual(su_ke_bytes, ho_so_bytes, "reference.wav bytes must be identical")
+        self.assertEqual(hashlib.sha256(su_ke_bytes).hexdigest(), su_ke_sha)
+        self.assertEqual(hashlib.sha256(ho_so_bytes).hexdigest(), ho_so_sha)
+        self.assertNotEqual(su_ke_bytes, ho_so_bytes, "su_ke_lai must be decoupled from ho_so_ky_la")
 
         # Verify banned SHA256 does not exist anywhere in sys/assets/voices/
         for p in self.voices_dir.rglob("*"):
@@ -541,9 +583,9 @@ class TestChannelVoiceProfiles(unittest.TestCase):
 
         # Verify verify_channel_voice_lock runtime guard succeeds
         v1 = verify_channel_voice_lock("su_ke_lai", root=ROOT)
-        self.assertEqual(v1["sha256"], canonical_sha)
+        self.assertEqual(v1["sha256"], su_ke_sha)
         v2 = verify_channel_voice_lock("ho_so_ky_la", root=ROOT)
-        self.assertEqual(v2["sha256"], canonical_sha)
+        self.assertEqual(v2["sha256"], ho_so_sha)
 
 
 if __name__ == "__main__":

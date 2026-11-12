@@ -733,20 +733,22 @@ def resolve_authenticated_profiles(
 # Channel Voice Profile Locks & Invariants
 # ---------------------------------------------------------------------------
 
-SU_KE_LAI_SHARED_VOICE_SHA256 = "cd25365252033ee60333c92e3f071a8dae3a99c865fe9e527686c7cf04048a9d"
+HO_SO_KY_LA_VOICE_SHA256 = "cd25365252033ee60333c92e3f071a8dae3a99c865fe9e527686c7cf04048a9d"
+SU_KE_LAI_SHARED_VOICE_SHA256 = HO_SO_KY_LA_VOICE_SHA256
+SU_KE_LAI_DEDICATED_VOICE_SHA256 = "76773d5c9d306117022930d82045fb716138c21304261e7c7d5582d6c3f98d76"
 BANNED_DEPRECATED_VOICE_SHA256S = frozenset({
     "5ebeb65efc952565f40a659af3f4a571945ce22dc156bedd67a60c186ee51a3e",
 })
 HARDCODED_CHANNEL_VOICE_LOCKS: dict[str, dict[str, Any]] = {
     "su_ke_lai": {
         "voice_profile_dir": "sys/assets/voices/ch_su_ke_lai",
-        "expected_sha256": SU_KE_LAI_SHARED_VOICE_SHA256,
-        "recommended_speed": 1.10,
-        "default_tone": "reflective_slow",
+        "expected_sha256": SU_KE_LAI_DEDICATED_VOICE_SHA256,
+        "recommended_speed": 1.14,
+        "default_tone": "heroic_epic",
     },
     "ho_so_ky_la": {
         "voice_profile_dir": "sys/assets/voices/ch_ho_so_ky_la",
-        "expected_sha256": SU_KE_LAI_SHARED_VOICE_SHA256,
+        "expected_sha256": HO_SO_KY_LA_VOICE_SHA256,
         "recommended_speed": 1.10,
         "default_tone": "reflective_slow",
     },
