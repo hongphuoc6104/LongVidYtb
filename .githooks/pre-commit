@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# Video Pilot pre-commit guard: blocks oversized or junk commits.
+# Enable once per worktree:  git config --worktree core.hooksPath .githooks
+# Human-only override:       VP_ALLOW_LARGE_COMMIT=1 git commit ...
+set -euo pipefail
+
+[[ "${VP_ALLOW_LARGE_COMMIT:-0}" == "1" ]] && exit 0
+
+max_lines="${VP_MAX_COMMIT_LINES:-2000}"
+max_file_kb="${VP_MAX_FILE_KB:-1024}"
+fail=0
+
+# 1. Total added text lines (binary files report "-").
+added=$(git diff --cached --numstat --diff-filter=ACMR | awk '$1 != "-" {s += $1} END {print s + 0}')
+if (( added > max_lines )); then
+  echo "✗ pre-commit: ${added} added lines > ${max_lines}. Split the commit; move one-off/generated code to sys/scratch/." >&2
+  git diff --cached --numstat --diff-filter=ACMR | sort -rn | head -10 >&2
+  fail=1
+fi
+
+# 2. Newly added files that .gitignore says must stay local (catches `git add -f`).
+forced=$(git diff --cached --name-only --diff-filter=A -z | git check-ignore --no-index -z --stdin | tr '\0' '\n' || true)
+if [[ -n "$forced" ]]; then
+  echo "✗ pre-commit: staged files are gitignored (local-only):" >&2
+  echo "$forced" | head -20 >&2
+  fail=1
+fi
+
+# 3. Large new/changed blobs.
+while IFS= read -r -d '' path; do
+  size=$(git cat-file -s ":$path" 2>/dev/null || echo 0)
+  if (( size > max_file_kb * 1024 )); then
+    echo "✗ pre-commit: $path is $((size / 1024)) KB > ${max_file_kb} KB." >&2
+    fail=1
+  fi
+done < <(git diff --cached --name-only --diff-filter=ACMR -z)
+
+if (( fail )); then
+  echo "Commit blocked (AGENTS.md §6). Agents must fix the staging, not bypass this hook." >&2
+  exit 1
+fi

@@ -5,7 +5,7 @@ description: "First-time environment bootstrap, account login scripts, and machi
 
 # Setup and machine onboarding
 
-Use setup authority from AGENTS and permissions.md for initial machine onboarding and environment bootstrap. Read sys/docs/getting-started.md for a new machine.
+Use setup authority from `AGENTS.md` for initial machine onboarding and environment bootstrap. Read `sys/docs/getting-started.md` for a new machine.
 
 Setup responsibilities:
 1. Environment bootstrap: run `./pipeline setup` (or `python3 pilot.py setup`), install `uv`, configure `.venv`, install required project packages and verify operational tools.

@@ -99,7 +99,7 @@ Hồ sơ bàn giao đặt trong thư mục `sys/runs/<job>/` gồm:
 - **Nghiêm cấm cắt ngang video dài đem đăng TikTok:** Tuyệt đối không cắt thô giữa video `long_16x9` để đăng TikTok vì thiếu Hook độc lập và sai khung hình.
 - **Quy trình Spin-off chuẩn (`build_short_spinoff_topics`):**
   - Từ 1 hồ sơ nghiên cứu gốc, kiến trúc sư trích xuất **các nghịch lý đắt giá nhất** làm chủ đề cho các video ngắn độc lập.
-  - Mỗi bản Spin-off được đóng gói thành một hồ sơ `short_9x16` độc lập (`aspect_ratio: "9:16"`, `format_profile: "short_9x16"`, `subtitles: true`, `voice: "VietNarrator"`, `speed: 1.0`, thời lượng động theo kịch bản và audio WAV), có câu mở đầu **Counter-Intuitive Hook $\le 18$ âm tiết** viết mới hoàn toàn và phụ đề nhảy chữ theo `word_timestamps` (`max_line_chars: 28`).
+  - Mỗi bản Spin-off được đóng gói thành một hồ sơ `short_9x16` độc lập (`aspect_ratio: "9:16"`, `format_profile: "short_9x16"`, `subtitles: true`, `voice: "VietNarrator_<channel_id>"`, `speed: 1.0`, thời lượng động theo kịch bản và audio WAV), có câu mở đầu **Counter-Intuitive Hook $\le 18$ âm tiết** viết mới hoàn toàn và phụ đề nhảy chữ theo `word_timestamps` (`max_line_chars: 28`).
 
 ### 2.6. Hợp đồng Pháp lý & Tính Toàn Vẹn (Legal & Integrity Contract)
 - **`brief_hash` bất biến:** Tính SHA-256 trên chuỗi JSON tuần tự hóa canonical (`serialize_brief_json`, `indent=2`, `ensure_ascii=False`), khớp 100% với `pilot.py`.

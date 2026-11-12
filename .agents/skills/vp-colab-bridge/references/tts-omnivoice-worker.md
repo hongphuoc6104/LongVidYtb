@@ -18,7 +18,7 @@ Before constructing any TTS request or invoking synthesis, pass all Vietnamese t
 
 ## 2. Voice Profile, Tone Speed Modulation & Reference Checksums (`protocol.py`)
 
-The sole canonical voice profile across both Vietnamese (`vi`) and English (`en`) is `sys/assets/voices/viet_narrator/profile.json` (`"voice": "VietNarrator"`, `"languages": ["vi", "en"]`, nominal speed `1.00`, contract range `[0.90, 1.15]`). `sys/config.json` maps both `voices.vi` and `voices.en` to `assets/voices/viet_narrator/profile.json` with `tts_voice: "VietNarrator"`, `tts_speed: 1.0`, `en_voice: "VietNarrator"`, and `en_speed: 1.0`. The profile retains the denoised 12-second reference, source provenance and user-approved `sample.wav`; the generated sample's boundary repair is not a change to the reference audio or a general artifact-prevention guarantee.
+Per-channel production jobs use their dedicated human-cloned studio profile `VietNarrator_<channel_id>` at `sys/assets/voices/ch_<channel_id>/profile.json` (`ERR-20261108-03`, never `vi-VN-NamMinhNeural`), while the base fallback profile in `sys/config.json` is `sys/assets/voices/viet_narrator/profile.json` (`"voice": "VietNarrator"`, `"languages": ["vi", "en"]`, nominal speed `1.00`, contract range `[0.90, 1.15]`). `sys/config.json` maps default `voices.vi` and `voices.en` to `assets/voices/viet_narrator/profile.json` with `tts_voice: "VietNarrator"`, `tts_speed: 1.0`, `en_voice: "VietNarrator"`, and `en_speed: 1.0`. The profile retains the denoised 12-second reference and source provenance; generated sample boundary repair is not a change to the reference audio or a general artifact-prevention guarantee.
 `load_profiles()` and `build_request()` enforce strict validation before uploading to Colab:
 - `profile['voice']` and `lang in profile['languages']` must match the active configuration.
 - `reference_wav` must exist, match its SHA-256 `profile['sha256']`, and have a duration strictly between **3 and 15 seconds** (`3 <= frames / framerate <= 15`).
@@ -56,7 +56,7 @@ The sole canonical voice profile across both Vietnamese (`vi`) and English (`en`
 
 2. **Loudness & Scene Tail Assembly**:
    - When `request['assemble'] = True`, `worker.py` uploads and invokes `audio_processing.py`, `subtitles.py`, and `media_packaging.py` on Colab to master the final track:
-   - **Loudness Normalization**: Targets `audio_lufs: -14.0` and `audio_peak_db: -1.5`.
+   - **Loudness Normalization**: Final production render (`flow_video_worker.py` / `produce_vn_dual_mode.py`) enforces `-11.0 LUFS` / `-1.0 dBTP` (`loudnorm=I=-11.0:TP=-1.0:LRA=7.0`).
    - **Acoustic Silence Constants**:
      - format_v1 short/long scene tails: 0.30/0.40 s; final tails: 0.15/0.25 s; long-clause splits: 0.12/0.16 s.
      - Legacy timing remains 0.70 s scene / 0.35 s final / 0.30 s minor. Ordinary commas do not force a separate utterance.

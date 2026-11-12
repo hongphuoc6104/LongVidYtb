@@ -45,10 +45,10 @@ Refer to detailed parameters in [render-capabilities](../../../../sys/docs/rende
 | Scene Effect | Operating Mechanism | Recommended Use Case |
 |---|---|---|
 | `cut` / `hold` | Switches beats cleanly; `hold` keeps camera motionless for dense diagrams. | Standard beat cuts and diagram inspection. |
-| `zoom_in` / `zoom_out` | Continuous zero-snap `zoompan`: continuous smooth function `z='1.06-0.06*(on/N)'` on 1.25x supersampled canvas. | Reveal context gently without frame jumps. |
+| `zoom_in` / `zoom_out` | Continuous zero-snap `zoompan`: continuous smooth function `z='1.06-0.06*(on/N)'` on 1.25x supersampled canvas *(low-density/EN fallback only; high-density `long_16x9` 240–350 states uses static Lanczos frame lock with zero `zoompan`, ERR-20261109-01)*. | Reveal context gently without frame jumps. |
 | `punch_in` | Restrained push with smooth endpoint velocities; no spring or shake. | Convey surprise through image and narration emphasis. |
-| `pan_left` / `pan_right` | Smooth horizontal sweep via analytical coordinates. | Contrast through authored composition and edits. |
-| `fade` / `xfade` | Directional optical transitions (`0.24s` duration; `smoothleft`, `smoothright`, `smoothup`, `smoothdown`, `fade`). | Soft scene transitions and chapter changes. |
+| `pan_left` / `pan_right` | Smooth horizontal sweep via analytical coordinates *(disabled on high-density `long_16x9`)*. | Contrast through authored composition and edits. |
+| `fade` / `xfade` | High-density `long_16x9` locks strictly to optical `xfade=transition=fade` (`0.24s`; zero slide transitions `smoothleft/right/up/down`, ERR-20261109-01). | Soft scene transitions and chapter changes. |
 
 - **Hand-drawn call-outs inside AI art**: Request `"red hand-drawn circle or arrow pointing at..."` directly inside the image description when needed; **never** add external floating overlays on top of the video.
 - **Clean papers & books**: When `allowed_text` is empty, books and sheets must contain only abstract wavy ink lines—never invented words, titles, or equations.

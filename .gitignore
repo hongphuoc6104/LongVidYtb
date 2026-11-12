@@ -1,53 +1,41 @@
-# ==============================================================================
-# Video Pilot & Explainer Pipeline - Production .gitignore
-# ==============================================================================
+# Video Pilot .gitignore
+# Policy: commit reusable engine code, tests, docs and curated assets only.
+# Anything generated, per-run, per-machine or one-off stays local.
+# Order matters: later rules override earlier ones (re-ignores come after re-includes).
 
-# --- 1. Large Pipeline Artifacts, Video Jobs & Media Runs ---
-video/
+# --- 1. Job outputs, runs & scratch ---
 /video/
-video/**
+/sys/runs/
+runs/
 _work_short/
 _work_long/
 _tts_work/
 clips/
 frames/
 images/
-narration*.wav
-/sys/maintenance/
-/sys/research/evidence/
-runs/
-runs
-/runs/
-/sys/runs/
-sys/runs/
-sys/runs/**
 exports/
 scratch/
-scratch
 out/
-/out/
 output/
-/output/
 renders/
-/renders/
 artifacts/
-/artifacts/
-tmp/
-/tmp/
-temp/
-/temp/
-.tmp/
-/.tmp/
-/tmp/*
 bundle/
-/experiments/
 batches/
-/sys/batches/
+build/
 build_*/
-/sys/build_*/
+dist/
+tmp/
+temp/
+.tmp/
+/experiments/
+/qa/
 /sys/staging/
-sys/staging/
-/sys/reports/catch-*/
+/sys/maintenance/
+/sys/research/evidence/
+/sys/reports/
+.worktrees/
+*.tmp
+*.png.tmp
 *.bak
 *.bak_*
 *.zip
@@ -56,31 +44,100 @@ sys/staging/
 *.tgz
 *.7z
 *.iso
+/*REQUEST*.md
 
-# --- 2. Browser Automation, Chrome & Google Flow Profiles / Ledgers ---
+# --- 2. One-off agent scripts (put new ones in sys/scratch/; see AGENTS.md §6) ---
+/sys/tools/batch[0-9]*_*.py
+/sys/tools/*_worker[0-9]*.py
+/sys/tools/rebuild_worker*.py
+/sys/tools/channel_data_*.py
+/sys/tools/run_*_image_gen.py
+/sys/tools/verify_batch*.py
+/sys/tools/*_batch[0-9]*_*.py
+/sys/tools/provision_wave*.py
+/sys/tools/setup_wave*.py
+/sys/tools/cleanup_youtube_channels.py
+/sys/tools/specs_group_*/
+/sys/tools/explainer_generators/
+/sys/tools/explainer_specs/
+
+# --- 3. Generated channel specs, plans & brand images ---
+sys/channels/vn_rebuilt_style_specs/**/*
+!sys/channels/vn_rebuilt_style_specs/*.py
+!sys/channels/vn_rebuilt_style_specs/*.md
+/sys/assets/channels/*/*.png
+/sys/channels/*/assets/
+sys/channels/youtube_channel_map.json
+sys/channels/dashboard_metrics.json
+sys/channels/dashboard_history.jsonl
+/sys/blueprints/**/brief-current.json
+/sys/blueprints/**/execution-control.json
+/sys/blueprints/**/integrity.json
+/sys/blueprints/**/integrity-meta.json
+/sys/blueprints/**/workflow.json
+
+# --- 4. Media (only curated sys/assets/ may be tracked) ---
+*.wav
+*.mp4
+*.mov
+*.mkv
+*.webm
+*.avi
+*.flv
+*.mp3
+*.aac
+*.m4a
+*.flac
+*.ogg
+*.opus
+/*.png
+/*.jpg
+/*.jpeg
+/*.webp
+flow_*.png
+!/sys/assets/**
+!/assets/**
+# re-ignore generated files inside sys/assets (must stay after the re-include)
+/sys/assets/voices/**/sample.wav
+/sys/assets/voices/**/audition_*.wav
+/sys/assets/voices/**/audition-report.json
+/sys/assets/voices/**/backup_original/
+/sys/assets/voices/adam-bua*
+/sys/assets/channels/*/*.png
+
+# --- 5. Logs & issue logbook (auto-written by pilot.py / colab client) ---
+*.log
+logs/
+!/sys/logs/
+!/sys/logs/**
+/sys/logs/**/*.log
+/sys/logs/proofs/
+/sys/logs/issues/*
+!/sys/logs/issues/README.md
+/sys/logs/colab-account-audit-*.json
+/sys/logs/colab-auto-pool-activation-*.json
+/sys/logs/colab-scheduler-live-lock-proof-*.json
+/sys/logs/colab-test-isolation-cleanup-*.json
+
+# --- 6. Browser automation, Flow profiles & ledgers ---
 .gflow
 .gflow/
+chrome-data-pool*
+chrome_profile*
+google-chrome-cdp*
+.chrome*
+*.chrome*
+Crashpad/
+chrome_debug.log
+**/flow_credit_ledger.json
+**/unauthenticated_profiles.json
+**/chrome_pids_global.json
 test-results/
 playwright-report/
 blob-report/
-chrome_debug.log
-Crashpad/
-sys/flow_cdp/chrome-data-pool*
-chrome-data-pool*
-sys/data/flow_credit_ledger.json
-**/flow_credit_ledger.json
-sys/flow_cdp/unauthenticated_profiles.json
-**/unauthenticated_profiles.json
-chrome_pids_global.json
-**/chrome_pids_global.json
-.chrome*
-chrome_profile*
-google-chrome-cdp*
-*.chrome*
 
-# --- 3. Local Runtime State, Locks, PIDs & SQLite Databases ---
+# --- 7. Runtime state, locks & databases ---
 .state/
-sys/.state/
 *.sqlite
 *.sqlite3
 *.db
@@ -90,8 +147,13 @@ sys/.state/
 *.pid
 *.lock
 !uv.lock
+vocab/queue.json
+sys/vocab/queue.json
+/sys/experiments/b2_illustrator/machine.*.json
+/sys/experiments/b2_illustrator/results/
+sys/colab_bridge/accounts/
 
-# --- 4. Python Environment & Build Artifacts ---
+# --- 8. Python / Node build & caches ---
 __pycache__/
 *.py[cod]
 *$py.class
@@ -100,26 +162,14 @@ __pycache__/
 venv/
 env/
 ENV/
-.env/
-env.bak/
-venv.bak/
-sys/.venv
-sys/.venv/
 .pytest_cache/
 .ruff_cache/
 .mypy_cache/
 .coverage
 htmlcov/
 *.egg-info/
-dist/
-build/
 .cache/
-/.cache/
-sys/.cache/
-
-# --- 5. Node.js & Remotion Build Outputs ---
 node_modules
-sys/node_modules
 .remotion/
 .parcel-cache/
 .eslintcache
@@ -128,13 +178,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# --- 6. AI Tooling & Assistant Workspaces ---
-.claude/
-.gemini/
-.antigravity/
-.cursor/
-
-# --- 7. Secrets, Environment & Credentials ---
+# --- 9. Secrets & credentials ---
 .env
 .env.*
 !.env.example
@@ -149,9 +193,20 @@ credentials.json
 client_secret*.json
 cookies*.json
 
-# --- 8. OS & Editor Artifacts ---
+# --- 10. AI tooling & agent session files ---
+.claude/
+.gemini/
+.antigravity/
+.cursor/
+.agents/teamwork/
+.agents/teamwork_*
+.agents/sentinel*/
+.agents/ORIGINAL_REQUEST.md
+.agents/*preview*
+/account-*/
+
+# --- 11. OS & editor ---
 .DS_Store
-.DS_Store?
 ._*
 .Spotlight-V100
 .Trashes
@@ -166,120 +221,3 @@ desktop.ini
 *.swp
 *.swo
 *~
-
-# --- 9. Vocabulary Bank Scratch ---
-# Kho từ (sources/, bank.jsonl, ledger.json, briefs/) được theo dõi trong git;
-# chỉ hàng đợi tạm của pilot batch là không.
-vocab/queue.json
-vocab/.ledger.lock
-sys/vocab/queue.json
-.ledger.lock
-
-# --- 10. Audio & Video Media Files (Exclude All Except sys/assets/) ---
-*.wav
-!sys/assets/voices/**/reference.wav
-!sys/assets/voices/*.wav
-!sys/assets/voices/**/ref_clean_*.wav
-!sys/assets/audio/**
-!sys/assets/sfx/**
-sys/assets/voices/**/sample.wav
-sys/assets/voices/**/audition_*.wav
-
-*.mp4
-*.mov
-*.mkv
-*.webm
-*.avi
-*.flv
-*.mp3
-*.aac
-*.m4a
-*.flac
-*.ogg
-*.opus
-
-!sys/assets/**
-!assets/**
-
-# Loose images in root and debug flow screenshots outside assets
-/*.png
-/*.jpg
-/*.jpeg
-/*.webp
-flow_*.png
-sys/flow_*.png
-*.png.tmp
-
-# --- 11. Ephemeral Reports & Audio Batch Samples ---
-sys/reports/audio_samples/
-sys/reports/audio_samples*/
-sys/reports/audio_batch*
-sys/reports/drama-*
-sys/reports/scripts-*
-sys/reports/opening-*
-sys/reports/vocab-learning-plan*
-sys/reports/*/tmp/
-sys/assets/voices/adam-bua*
-
-# --- 12. Agent Session Ephemeral Files ---
-.agents/sentinel*/
-.agents/ORIGINAL_REQUEST.md
-.agents/teamwork/
-.agents/teamwork_*
-.agents/*preview*
-.agents/*_preview_*
-/*REQUEST*.md
-/*.tmp
-
-# --- 13. System Logs & Runtime Cache ---
-*.log
-logs/
-!/sys/logs/
-!/sys/logs/**
-/sys/logs/issues/colab-*.md
-
-# Per-machine Flow identity; never sync another machine profile.
-/sys/experiments/b2_illustrator/machine.*.json
-/sys/experiments/b2_illustrator/machine.local.json
-/sys/experiments/b2_illustrator/results/
-
-# --- 14. Pipeline Conveyor Proofs & Reports ---
-/sys/logs/proofs/
-/sys/reports/
-.worktrees/
-
-# Runtime state accidentally placed alongside blueprint source remains local.
-/sys/blueprints/**/brief-current.json
-/sys/blueprints/**/execution-control.json
-/sys/blueprints/**/integrity.json
-/sys/blueprints/**/integrity-meta.json
-/sys/blueprints/**/workflow.json
-
-# Per-machine account audits and local activation/cleanup proofs.
-/sys/logs/colab-account-audit-*.json
-/sys/logs/colab-auto-pool-activation-*.json
-/sys/logs/colab-scheduler-live-lock-proof-*.json
-/sys/logs/colab-test-isolation-cleanup-*.json
-
-# --- 15. Local Channel Identity Maps, Provisioning Scripts & QA Screenshots ---
-/qa/
-sys/channels/youtube_channel_map.json
-sys/channels/dashboard_metrics.json
-sys/channels/dashboard_history.jsonl
-sys/tools/provision_wave*.py
-sys/tools/setup_wave*.py
-sys/tools/cleanup_youtube_channels.py
-sys/colab_bridge/accounts/
-
-# Auto-generated high-density long plans (synthesized on-demand by vn_long_high_density_planner.py)
-sys/channels/vn_rebuilt_style_specs/*/*_long_high_density_plan.json
-
-# Channel spec dir: whitelist policy. Everything generated/runtime-mutated is ignored;
-# all specs (incl. *_rebuilt_spec.json) are tool-generated; only .py/.md tracked.
-sys/channels/vn_rebuilt_style_specs/**/*
-!sys/channels/vn_rebuilt_style_specs/*.py
-!sys/channels/vn_rebuilt_style_specs/*.md
-
-# Channel brand images regenerated by tools (avatar/logo/watermark).
-/sys/assets/channels/*/*.png
-/sys/channels/*/assets/

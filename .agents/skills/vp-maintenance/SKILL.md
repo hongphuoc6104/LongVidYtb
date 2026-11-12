@@ -5,7 +5,7 @@ description: "Perform cleanup, verified archives, and Git checkpoints without lo
 
 # Maintenance
 
-Use maintenance scope from permissions.md and [maintenance operations](../../../sys/docs/maintenance.md). Read-only inspection is the default; official cleanup/archive/Git operations require exact reviewed manifests and grants. Inventory owners, inflight/unknown requests, retention and reproducibility before selecting files. Cleanup is not completion of a video.
+Use maintenance scope from `AGENTS.md` and [maintenance operations](../../../sys/docs/maintenance.md). Read-only inspection is the default; official cleanup/archive/Git operations require exact reviewed manifests and grants. Inventory owners, inflight/unknown requests, retention and reproducibility before selecting files. Cleanup is not completion of a video.
 
 Only remove generated files demonstrably reproducible and no longer needed by a job/request/reference/evidence. Record exact candidates and before/after counts. Never clear runs/reviews/browser profile/global cache/trash with a wildcard. Keep credentials, models in use, ledgers and original evidence.
 

@@ -60,7 +60,7 @@ flowchart LR
 1. **Phụ đề an toàn (`sys/format_profiles.py`):**
    - Tối đa 2 dòng/cue; $\le 42$ ký tự/dòng (`84` ký tự/cue) cho `long_16x9` và $\le 28$ ký tự/dòng (`54` ký tự/cue) cho `short_9x16`, đồng bộ nhảy chữ theo `word_timestamps` âm học.
 2. **Chuyển thể Long-to-Short Spin-off (`short_9x16`):**
-   - Tuyệt đối không cắt ngang giữa video `16:9` đem đăng TikTok. Phải rút trích các nghịch lý đắt giá nhất thành các kịch bản `short_9x16` độc lập (thời lượng động theo kịch bản và audio, `subtitles: true`, `voice: "VietNarrator"`, `speed: 1.0`) có câu mở đầu Truth-Slap Hook $\le 18$ âm tiết riêng.
+   - Tuyệt đối không cắt ngang giữa video `16:9` đem đăng TikTok. Phải rút trích các nghịch lý đắt giá nhất thành các kịch bản `short_9x16` độc lập (thời lượng động theo kịch bản và audio, `subtitles: true`, `voice: "VietNarrator_<channel_id>"`, `speed: 1.0`) có câu mở đầu Truth-Slap Hook $\le 18$ âm tiết riêng.
 3. **Âm thanh & Foley:**
    - Khóa từ neo (*semantic anchors*) với Micro-SFX (`pop`, `whoosh`, tiếng lật trang giấy, tiếng đồng hồ) và Sidechain Ducking BGM (`-20dB` khi có thoại, `-14dB` khi nghỉ).
 
