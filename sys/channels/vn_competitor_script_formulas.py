@@ -361,9 +361,21 @@ VN_COMPETITOR_SCRIPT_FORMULAS: Dict[str, Dict[str, Any]] = {
     "su_ke_lai": {
         "channel_id": "su_ke_lai",
         "channel_slug": "su-ke-lai",
-        "niche": "Lịch sử Việt Nam và thế giới qua sa bàn chiến thuật (Epic History & Tactical Battlefields)",
-        "competitor_name": "Kings and Generals / Epic History TV / Fern",
+        "niche": "Lịch sử Việt Nam và thế giới qua góc nhìn điện ảnh sử thi 35mm (35mm Historical Live-Action Docudrama)",
+        "competitor_name": "Kingdom of Heaven / Ridley Scott Historical Cinema / Epic History Docudrama",
         "voice": "VietNarrator",
+        "voice_id": "VietNarrator_su_ke_lai",
+        "fast_cutting_visual_sub_beat_rule": {
+            "core_zero_filler_sentences": 120,
+            "visual_sub_beats_per_sentence": 2,
+            "total_visual_beats": 240,
+            "target_duration_range": "~9m15s-9m45s",
+            "avg_seconds_per_image": 2.35,
+            "rule_vi": (
+                "Nhịp cắt dựng nhanh V3: 120 câu cốt lõi không chữ thừa (zero-filler) x 2 sub-beat hình ảnh/câu "
+                "= 240 visual beats trong ~9m15s-9m45s, trung bình ~2.35s/ảnh."
+            ),
+        },
         "competitor_dialogue_formula": {
             "competitor_verbatim_transcript_20s": (
                 "[00:00-00:04.2s] 'Năm 938, trước hàng trăm chiến thuyền Nam Hán hung hãn...' [pause 0.35s] -> "
@@ -372,20 +384,24 @@ VN_COMPETITOR_SCRIPT_FORMULAS: Dict[str, Dict[str, Any]] = {
                 "[00:14.9-00:20.0s] 'để bãi cọc nhọn bọc sắt dưới đáy sông làm nhiệm vụ lịch sử của chúng.'"
             ),
             "sentence_structure_formula_vi": (
-                "Công thức kịch tính lịch sử 5 bước: (1) Mốc thời gian và tương quan lực lượng áp đảo ('Năm 938, hạm đội giặc hung hãn...') -> "
+                "Công thức kịch tính lịch sử 5 bước (120 câu zero-filler x 2 visual sub-beats = 240 beats over ~9m15s-9m45s, avg ~2.35s/image): "
+                "(1) Mốc thời gian và tương quan lực lượng áp đảo ('Năm 938, hạm đội giặc hung hãn...') -> "
                 "(2) Quyết định chiến thuật bất ngờ ('Ngô Quyền không đối đầu trực diện') -> "
                 "(3) Yếu tố thiên thời địa lợi ('Kiên nhẫn chờ nước thủy triều rút') -> "
                 "(4) Đòn phục kích chí mạng ('Bãi cọc sắt nhô lên khóa chặt chiến thuyền') -> "
                 "(5) Ý nghĩa bước ngoặt độc lập ngàn năm ('Mở ra kỷ nguyên tự chủ muôn đời cho non sông')."
             ),
             "pause_and_cadence_formula_vi": (
-                "Nhịp đọc hào hùng, điện ảnh, trầm bổng kịch tích 136 WPM: Micro-pause 0.25s sau mốc lịch sử; "
-                "beat-pause 0.40s sau hành động lui binh chiến thuật; dramatic-pause 0.48s trước khi thủy triều rút lộ bãi cọc; "
-                "pause 0.35s kết lại niềm tự hào dân tộc."
+                "Nhịp đọc hào hùng, điện ảnh, trầm bổng kịch tính khóa V3 (VietNarrator_su_ke_lai) tốc độ hiệu dụng 1.30x "
+                "(1.12x base OmniVoice synthesis + atempo=1.161 WSOLA + 0.06s inter-beat gap), "
+                "Studio Presence EQ (highpass=f=80,equalizer=f=180:t=q:w=1.1:g=1.2,equalizer=f=3200:t=q:w=1.0:g=2.2,"
+                "equalizer=f=6500:t=q:w=1.2:g=1.5,lowpass=f=15000), master -11.0 LUFS / -1.0 dBTP: "
+                "120 câu cốt lõi zero-filler x 2 visual sub-beats = 240 visual beats trong ~9m15s-9m45s (trung bình ~2.35s/ảnh)."
             ),
             "transition_and_camera_formula_vi": (
-                "Chuyển động sa bàn chiến thuật 3D quét từ trên cao kết hợp xfade 0.28s: smoothdown sà xuống mặt nước Bạch Đằng, "
-                "smoothleft bám theo mũi thuyền giặc mắc cạn, smoothup hướng lên bóng cờ khởi nghĩa, và fade trang trọng vào bia đá ghi công."
+                "Hệ hình ảnh 35mm Historical Live-Action Docudrama khóa V3 (su_ke_lai_35mm_live_action_v3) "
+                "xuất 2K 2560x1440@30fps static Lanczos kết hợp xfade=fade:duration=0.24: 120 câu x 2 sub-beat hình ảnh "
+                "(240 beats, ~2.35s/ảnh), quay phim 35mm Kodak Vision3 500T ánh đuốc chiaroscuro, giáp vảy Đại Việt & Tống, bùn ẩm và sương sông."
             ),
         },
     },

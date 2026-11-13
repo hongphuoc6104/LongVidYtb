@@ -527,38 +527,77 @@ VN_FLOW_VIDEO_FORMULAS: Dict[str, Dict[str, Any]] = {
     "su_ke_lai": {
         "channel_id": "su_ke_lai",
         "channel_slug": "su-ke-lai",
-        "niche": "Lịch sử Việt Nam và thế giới qua sa bàn chiến thuật (Epic History & Tactical Battlefields)",
-        "competitor_benchmark": "Kings and Generals / Epic History TV / Fern",
-        "new_visual_label": "3D Historical Battlefield & Imperial Torchlit Cinema",
+        "niche": "Lịch sử Việt Nam và thế giới qua góc nhìn điện ảnh sử thi 35mm (35mm Historical Live-Action Docudrama)",
+        "competitor_benchmark": "Kingdom of Heaven / Ridley Scott Historical Cinema / Epic History Docudrama",
+        "new_visual_label": "35mm Historical Live-Action Docudrama (su_ke_lai_35mm_live_action_v3)",
+        "visual_style_id": "su_ke_lai_35mm_live_action_v3",
+        "recommended_speed": 1.30,
+        "voice_profile_id": "VietNarrator_su_ke_lai",
+        "visual_style_lock": (
+            "Shot on 35mm Kodak Vision3 500T film, historical battle cinema docudrama, Ridley Scott Kingdom of Heaven aesthetic, "
+            "practical period-accurate 10th-11th century Dai Viet lamellar armor and Song Dynasty iron laminar armor, "
+            "authentic wet mud, river mist, torchlight chiaroscuro, shallow depth of field, natural film grain, "
+            "zero CGI plasticity, zero text in frame."
+        ),
+        "negative_constraints": (
+            "NO 2D cartoon, NO vector illustration, NO woodblock print, NO modern glasses, NO wristwatches, NO neon, "
+            "NO glowing magic, NO samurai katana, NO European plate armor, NO AI gibberish text, NO signage, "
+            "NO banners with text, NO cherry blossoms, NO plastic skin"
+        ),
+        "opening_shot_directives": {
+            "allowed_text": None,
+            "camera": "35mm anamorphic medium-wide establishing shot, slow handheld push-in through low river mist at dawn",
+            "lighting": "Cold pre-dawn steel-blue overcast light pierced by warm flickering pitch-pine torches",
+            "framing": "10th-11th century Dai Viet commander in weathered bronze-iron lamellar armor on muddy riverbank overlooking misty estuary",
+        },
+        "anchor_prompts": {
+            "protagonist_anchor": (
+                "Shot on 35mm Kodak Vision3 500T film, weathered 10th-11th century Dai Viet military commander in practical "
+                "laced iron-and-bronze lamellar armor over dark indigo hemp tunic, mud-splattered leather vambraces, "
+                "determined expression lit by flickering torchlight chiaroscuro, shallow depth of field, natural film grain, "
+                "allowed_text=None, zero text in frame."
+            ),
+            "world_anchor": (
+                "Shot on 35mm Kodak Vision3 500T film, misty estuarine riverbanks of 10th-11th century northern Dai Viet at dusk, "
+                "wet riverbank mud, wooden palisade watchtowers, dark timber war junks silhouetted in drifting fog, "
+                "Ridley Scott Kingdom of Heaven historical realism, natural film grain, allowed_text=None, zero text in frame."
+            ),
+            "prop_anchor": (
+                "Shot on 35mm Kodak Vision3 500T film, close-up of practical 10th-11th century iron-tipped ironwood river stakes, "
+                "forged bronze-hilted Dai Viet straight sword, and Song Dynasty iron laminar shield resting in wet mud beside "
+                "burning pitch torches, shallow depth of field, natural film grain, allowed_text=None, zero text in frame."
+            ),
+        },
         "style_description": (
-            "Kings and Generals and Epic History TV cinematic historical documentary aesthetic. Stylized 3D topographical relief battlegrounds, "
-            "weathered wooden warship hulls on misty waters (Bach Dang river stakes), ancient imperial citadels illuminated by flickering torches "
-            "and iron braziers. Deep charcoal, burnt sienna, imperial crimson, and bronze metal accents. Grand tactical overhead sweeps down to "
-            "grounded ground-level atmospheric tension."
+            "Locked V3 35mm Historical Live-Action Docudrama (su_ke_lai_35mm_live_action_v3) shot on Kodak Vision3 500T film "
+            "in Ridley Scott Kingdom of Heaven aesthetic: practical period-accurate 10th-11th century Dai Viet lamellar armor and "
+            "Song Dynasty iron laminar armor, authentic wet mud, drifting river mist, torchlight chiaroscuro, shallow depth of field, "
+            "natural 35mm film grain, zero CGI plasticity, and strictly zero text in frame."
         ),
         "subject_physics": (
-            "Hydrodynamic river currents and tidal ebbs around submerged wooden stakes, realistic volumetric torch flame and battlefield smoke drift, "
-            "heavy bronze and iron weaponry inertia, and cloth banner fluttering in gusting winds"
+            "Authentic water ripple and tidal current physics around submerged iron-tipped stakes, heavy wet cloth and mud-caked "
+            "lamellar armor weight, realistic torch ember drift and dense battlefield mist, natural human micro-expressions"
         ),
         "camera_grammar": [
-            "topographical 3D battlefield crane sweep",
-            "low-angle torchlit fortification tracking pass",
-            "slow push-in across tactical map diorama",
+            "35mm anamorphic low-angle tracking shot through river mist",
+            "handheld shallow-DOF close-up on mud-caked armor and torchlit faces",
+            "sweeping aerial crane over timber fleet formation in fog",
         ],
         "continuity_anchor": (
-            "Kings and Generals & Epic History TV tactical historical cinematography with dramatic atmospheric torchlight, "
-            "deep slate-earth palette, and rigid hydrodynamic anti-morph physics across historical battlefields, "
-            "strictly zero modern artifacts or text labels"
+            "Locked V3 su_ke_lai_35mm_live_action_v3 35mm Kodak Vision3 500T historical live-action docudrama with practical "
+            "10th-11th century Dai Viet lamellar and Song iron laminar armor, wet mud, river mist, torchlight chiaroscuro, "
+            "natural film grain, zero CGI plasticity, zero text in frame"
         ),
         "forbidden_artifacts": [
-            "modern clothing or wristwatches",
-            "cartoon soldiers or fantasy monsters",
-            "gibberish map text or labels",
-            "plastic sword props",
-            "cheap green-screen cutout edges",
+            "2D cartoon or vector illustration",
+            "woodblock print or parchment paper texture",
+            "modern glasses or wristwatches",
+            "samurai katana or European plate armor",
+            "AI gibberish text, signage, or banners with text",
+            "plastic CGI skin or glowing magic",
         ],
         "thumbnail_rule": (
-            "Dramatic torchlit silhouette of ancient warrior armor or spiked river battlefield under stormy sky, "
+            "35mm film close-up of mud-streaked Dai Viet commander in torchlit lamellar armor before misty river battle, "
             "2-4 bold uppercase words, high contrast, zero overlay card, 25% margin"
         ),
     },

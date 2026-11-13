@@ -735,7 +735,7 @@ def resolve_authenticated_profiles(
 
 HO_SO_KY_LA_VOICE_SHA256 = "cd25365252033ee60333c92e3f071a8dae3a99c865fe9e527686c7cf04048a9d"
 SU_KE_LAI_SHARED_VOICE_SHA256 = HO_SO_KY_LA_VOICE_SHA256
-SU_KE_LAI_DEDICATED_VOICE_SHA256 = "76773d5c9d306117022930d82045fb716138c21304261e7c7d5582d6c3f98d76"
+SU_KE_LAI_DEDICATED_VOICE_SHA256 = "7bf3594d89a04c8ac3615ae50f192c3bf5bd904c4a5bb890816f4ca977d43808"
 BANNED_DEPRECATED_VOICE_SHA256S = frozenset({
     "5ebeb65efc952565f40a659af3f4a571945ce22dc156bedd67a60c186ee51a3e",
 })
@@ -743,7 +743,7 @@ HARDCODED_CHANNEL_VOICE_LOCKS: dict[str, dict[str, Any]] = {
     "su_ke_lai": {
         "voice_profile_dir": "sys/assets/voices/ch_su_ke_lai",
         "expected_sha256": SU_KE_LAI_DEDICATED_VOICE_SHA256,
-        "recommended_speed": 1.14,
+        "recommended_speed": 1.30,
         "default_tone": "heroic_epic",
     },
     "ho_so_ky_la": {
@@ -752,6 +752,58 @@ HARDCODED_CHANNEL_VOICE_LOCKS: dict[str, dict[str, Any]] = {
         "recommended_speed": 1.10,
         "default_tone": "reflective_slow",
     },
+}
+
+BOTTOM_RIGHT_WATERMARK_POS = "W-w-36:H-h-36"
+
+SU_KE_LAI_PRODUCTION_LOCK: dict[str, Any] = {
+    "channel_id": "su_ke_lai",
+    "voice": "VietNarrator_su_ke_lai",
+    "voice_sha256": SU_KE_LAI_DEDICATED_VOICE_SHA256,
+    "recommended_speed": 1.30,
+    "speaking_rate": 1.30,
+    "base_omnivoice_speed": 1.12,
+    "atempo_factor": 1.161,
+    "inter_beat_gap_sec": 0.06,
+    "default_tone": "heroic_epic",
+    "studio_eq_filter": "highpass=f=80,equalizer=f=180:t=q:w=1.1:g=1.2,equalizer=f=3200:t=q:w=1.0:g=2.2,equalizer=f=6500:t=q:w=1.2:g=1.5,lowpass=f=15000",
+    "master_lufs": -11.0,
+    "master_true_peak_dbtp": -1.0,
+    "visual_style_id": "su_ke_lai_35mm_live_action_v3",
+    "style_prefix": (
+        "Shot on 35mm Kodak Vision3 500T film, historical battle cinema docudrama, "
+        "Ridley Scott Kingdom of Heaven aesthetic, natural film grain, zero CGI plasticity, zero text in frame."
+    ),
+    "style_Anchor": (
+        "35mm Kodak Vision3 500T historical live-action docudrama cinematography, torchlight chiaroscuro, "
+        "shallow depth of field, authentic wet mud and river mist, zero 2D cartoon or woodblock print."
+    ),
+    "subject_Anchor": (
+        "Practical period-accurate 10th-11th century Dai Viet lamellar armor and Song Dynasty iron laminar armor, "
+        "mud-splattered leather, weathered bronze-iron weaponry, authentic human grit."
+    ),
+    "environment_Anchor": (
+        "Misty 10th-11th century northern Dai Viet riverbanks and estuarine battlefields, wet mud, "
+        "timber palisades, dark wooden war junks in drifting fog, flickering pitch-pine torches."
+    ),
+    "negative_constraints": (
+        "NO 2D cartoon, NO vector illustration, NO woodblock print, NO modern glasses, NO wristwatches, NO neon, "
+        "NO glowing magic, NO samurai katana, NO European plate armor, NO AI gibberish text, NO signage, "
+        "NO banners with text, NO cherry blossoms, NO plastic skin"
+    ),
+    "camera_directives": [
+        "35mm anamorphic medium-wide establishing shot through drifting river mist",
+        "handheld shallow-DOF close-up on mud-caked lamellar armor and torchlit faces",
+        "low-angle tracking shot across wet riverbank mud and iron-tipped stakes",
+        "sweeping aerial crane over timber fleet formation in estuarine fog",
+    ],
+    "long_resolution": "2560x1440",
+    "short_resolution": "1080x1920",
+    "fps": 30,
+    "xfade_transition": "fade",
+    "xfade_duration_sec": 0.24,
+    "watermark_pos_2k": "W-w-48:H-h-48",
+    "watermark_pos_hd": BOTTOM_RIGHT_WATERMARK_POS,
 }
 
 
@@ -887,7 +939,6 @@ HARDCODED_CHANNEL_WATERMARK_MAP: dict[str, Path] = {
     "ua_sao_vay": SYS_DIR / "channels/ua_sao_vay/assets/watermark_150x150.png",
     "vu_tru_ti_hon": SYS_DIR / "channels/vu_tru_ti_hon/assets/watermark_150x150.png",
 }
-BOTTOM_RIGHT_WATERMARK_POS = "W-w-36:H-h-36"
 
 
 def resolve_channel_logo_source(channel_slug: str) -> Path | None:

@@ -22,9 +22,9 @@
 
 ## 3. Luật Viết Kịch Bản & Công Thức Hook
 ### Nguyên tắc giọng kể
-- Mở đầu bằng một điểm nghẽn địa lý hoặc tài nguyên bất ngờ trên bản đồ.
-- Mọi cuộc xung đột hay hiệp ước đều phải quy về dòng chảy tiền, dầu hoặc hàng hóa.
-- Dùng bản đồ phẳng 2D tối giản có mũi tên chiến lược rõ ràng.
+- Mở đầu bằng một điểm nghẽn địa lý hoặc tài nguyên bất ngờ ngoài thực địa hay trên sa bàn chiến lược.
+- Mọi cuộc xung đột hay hiệp ước đều phải quy về dòng chảy tiền, dầu, khoáng sản hoặc hàng hóa.
+- Hình ảnh tuân thủ 3 trụ cột nhiếp ảnh thực tế & vật lý: (1) Địa hình vệ tinh 3D màu tự nhiên & sa bàn bàn phân tích địa chất; (2) Nhiếp ảnh Macro 100mm cơ chế cơ khí/vật lý; (3) Ảnh phóng sự công nghiệp & địa chính trị thực địa — đa dạng góc máy, vật liệu và ánh sáng theo từng tập, tuyệt đối không dùng đồ họa vector 2D phẳng, vòng radar viễn tưởng, HUD hay chữ chèn trong các beat nội dung.
 - Không thiên vị chính trị; chỉ phân tích lợi ích quốc gia và địa lý cốt lõi.
 ### Công thức Hook 3 giây đầu (viết 3 bản A/B/C, chấm điểm bằng `script_hook_scorer.py`)
 - `Tử huyệt địa lý này giải thích vì sao [quốc gia] luôn [hành động].`
@@ -52,13 +52,13 @@
 - Dự đoán chiến tranh giật gân vô căn cứ
 
 ## 4. Phong Cách Hình Ảnh & Thumbnail Flow Native
-- **Visual Profile ID:** `ch_tactical_atlas` — Bản đồ chiến lược 2D: hải đồ, điểm nghẽn hàng hải, đường kinh tế trên nền đại dương sâu
-- **Bảng màu khóa cứng:** `#0F2439`, `#EDE3CE`, `#E63946`, `#F4A261`, `#2A9D8F`
-- **Tạo hình nhân vật (`CAST_APPEARANCE`):** Character-free cartographic emblem: brass compass rose, flat 2D naval vessels, strategic route arrows, and topographic landmass reliefs (zero human characters)
-- **Trang phục (`DEFAULT_OUTFIT`):** No human clothing; crisp brass and crimson cartographic vector markers
-- **Luật Thumbnail (100% Flow Native, `overlay_card: false`):** Strategic strait map with glowing red choke point + 2-4 uppercase VN words.
+- **Visual Profile ID:** `ch_tactical_atlas` — Nhiếp ảnh thực tế 3 trụ cột: Địa hình vệ tinh/Sa bàn thật, Macro 100mm cơ khí & Phóng sự công nghiệp
+- **Bảng màu khóa cứng:** `#10202E`, `#D8CBB8`, `#C83E3B`, `#D98A3C`, `#2A6F68`
+- **Tạo hình nhân vật (`CAST_APPEARANCE`):** Character-free physical realism: natural satellite terrain reliefs, real geological ore specimens, physical brass navigation instruments, precision laboratory wafers, and real maritime freight vessels (zero human cartoon figures)
+- **Trang phục (`DEFAULT_OUTFIT`):** No cartoon clothing; authentic industrial metals, natural mineral textures, laboratory steel, and weathered maritime hulls
+- **Luật Thumbnail (100% Flow Native, `overlay_card: false`):** Full-bleed dramatic studio macro & 3D physical terrain relief photography (crimson steel locking clamp gripping silicon wafer or metal bar over natural relief map) + 2-4 bold yellow uppercase VN words with thick black outline in clean dark upper safe zone.
 - **Prompt Style gốc:**
-  > Crisp 2D flat editorial cartography and strategic war-room atlas illustration on deep maritime navy canvas (#0F2439 deep maritime navy ocean, #EDE3CE parchment landmass with fine topographic contour lines, #E63946 strategic choke-point red, #F4A261 trade-route amber, #2A9D8F radar teal); clean vector contour lines, trade corridors, shipping routes and nautical coordinates; orthographic 2D, at least 60% negative space, zero 3D, zero gradients.
+  > Three-pillar photorealistic geopolitical documentary photography with diverse per-episode lighting, materials, and focal lengths: (1) True-color 3D orbital satellite relief photography and physical walnut tabletop geological relief maps with brass compasses, steel dividers, raw ore stones, and solid metal bars; (2) 100mm macro physical and mechanical photography of real machinery, copper motor coils, silver permanent magnets, cleanroom silicon wafers, and hydrometallurgical tanks; (3) Photorealistic industrial, maritime, and field documentary photography; strictly zero flat 2D vector graphics, zero sci-fi HUD or radar rings, zero on-screen text clutter in body beats.
 
 ## 5. Tối Ưu Thời Gian Sản Xuất (Kết Hợp Flow CDP + Remotion / Hyperframes)
 - **Chế độ Render chủ đạo:** `hybrid_motion` (Tỷ lệ đồ họa động Remotion/Hyperframes: **45%**)

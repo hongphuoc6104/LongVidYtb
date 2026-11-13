@@ -1,9 +1,9 @@
 {
   "long": {
-    "job_id": "vn_ban_do_quyen_luc_ep04_thap_nuoc_tay_tang_long",
-    "youtube_url": "https://youtu.be/ZpMyEf5bRS8",
-    "url": "https://youtu.be/ZpMyEf5bRS8",
-    "video_id": "ZpMyEf5bRS8"
+    "job_id": "vn_ban_do_quyen_luc_ep05_ban_do_dat_hiem_long",
+    "youtube_url": "https://youtu.be/HLmYROh1YfA",
+    "url": "https://youtu.be/HLmYROh1YfA",
+    "video_id": "HLmYROh1YfA"
   },
   "shorts": {
     "ban-do-quyen-luc-batch2-9x16": {
@@ -16,6 +16,14 @@
       "facebook_url": null,
       "youtube_shorts_url": "https://youtube.com/shorts/9NsjCADHijg",
       "parent_long_url": "https://youtu.be/ZpMyEf5bRS8"
+    },
+    "vn_ban_do_quyen_luc_ep05_ban_do_dat_hiem_short": {
+      "tiktok_url": null,
+      "facebook_url": null,
+      "youtube_shorts_url": "https://youtube.com/shorts/AMWZ3v30SJ4",
+      "video_id": "AMWZ3v30SJ4",
+      "parent_long_url": "https://youtu.be/HLmYROh1YfA",
+      "parent_long_id": "HLmYROh1YfA"
     }
   }
 }
