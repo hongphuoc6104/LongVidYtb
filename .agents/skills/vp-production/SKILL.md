@@ -9,6 +9,7 @@ Use production scope and sys/docs/workflow.md. One task/role; current brief and 
 
 ## Read guidance by step
 
+- **Channel-Specific Override Gate (Check First)**: Before planning visuals or pacing for a registered channel, check whether a dedicated channel SSOT skill exists — specifically [vp-channel-su-ke-lai](../vp-channel-su-ke-lai/SKILL.md) for `su_ke_lai` (**Sử Kể Lại**), which **fully overrides** 2D Doodle `vp-full-frame-quality` with Option 1 35mm live-action (`su_ke_lai_35mm_live_action_v3`), locks `VietNarrator_su_ke_lai` at `1.30x`, and enforces the 6-stage composition matrix.
 - New topic architecture, Packaging & SEO Contract (`youtube_title <= 55` chars, `thumbnail_spec`, `channel_philosophy` in `sys/pillars.py`, vocabulary queue `vocab/bank.py start`), relatable opening context, and Short-Form Spin-off Blueprints (`brief.json` & `content.json` Schema 3.0): [vp-research-architect](../vp-research-architect/SKILL.md).
 - Outline/narration/cadence (Feynman simple sentences, natural cadence, soft advisory checks): [script](references/script.md), [narration](references/narration-style.md), and [vp-scriptwriting](../vp-scriptwriting/SKILL.md) (`vn_text_normalizer.py` + `script_cadence_checker.py`).
 - Shot grammar & renderer limits (mandatory reading before creating beat/image plans — after dialogue is finalized, before writing prompts): [cinematography](references/cinematography.md) then [render-capabilities](../../../sys/docs/render-capabilities.md).

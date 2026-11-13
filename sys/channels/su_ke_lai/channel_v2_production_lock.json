@@ -1,0 +1,79 @@
+{
+  "schema_version": "2.0",
+  "channel_id": "su_ke_lai",
+  "channel_name": "Sử Kể Lại",
+  "status": "LOCKED_PRODUCTION_V2",
+  "voice_id": "VietNarrator_su_ke_lai",
+  "speaking_rate": 1.30,
+  "inter_beat_gap_sec": 0.06,
+  "watermark": {
+    "asset": "sys/channels/su_ke_lai/assets/watermark_150x150.png",
+    "source": "sys/channels/su_ke_lai/assets/watermark_v2_epic_150x150.png",
+    "dimensions": "150x150",
+    "format": "RGBA",
+    "sha256": "3fc377fb162e880581a044d791e8524f2cf3a877223be42498a3f2604272f665"
+  },
+  "visual_grammar": {
+    "version": "su_ke_lai_35mm_live_action_v3",
+    "label": "Option 1 — 35mm Historical Live-Action Docudrama",
+    "visual_style_lock": "Shot on 35mm Kodak Vision3 500T film, historical battle cinema docudrama, Ridley Scott Kingdom of Heaven aesthetic, practical period-accurate 10th-11th century Dai Viet lamellar armor and Song Dynasty iron laminar armor, authentic wet mud, river mist, torchlight chiaroscuro, shallow depth of field, natural film grain, zero CGI plasticity, zero text in frame.",
+    "negative_constraints": "NO 2D cartoon, NO vector illustration, NO woodblock print, NO modern glasses, NO wristwatches, NO neon, NO glowing magic, NO samurai katana, NO European plate armor, NO AI gibberish text, NO signage, NO banners with text, NO cherry blossoms, NO plastic skin",
+    "fast_cutting_rule": {
+      "core_zero_filler_sentences": 120,
+      "visual_sub_beats_per_sentence": 2,
+      "total_visual_beats": 240,
+      "target_duration_range": "~9m15s-9m45s",
+      "avg_seconds_per_image": 2.35
+    }
+  },
+  "voice_lock": {
+    "voice": "VietNarrator_su_ke_lai",
+    "reference_sha256": "7bf3594d89a04c8ac3615ae50f192c3bf5bd904c4a5bb890816f4ca977d43808",
+    "recommended_speed": 1.30,
+    "base_omnivoice_speed": 1.12,
+    "atempo_factor": 1.161,
+    "inter_beat_gap_sec": 0.12,
+    "default_tone": "heroic_epic",
+    "studio_eq_filter": "highpass=f=80,equalizer=f=180:t=q:w=1.1:g=1.2,equalizer=f=3200:t=q:w=1.0:g=2.2,equalizer=f=6500:t=q:w=1.2:g=1.5,lowpass=f=15000",
+    "master_lufs": -11.0,
+    "master_true_peak_dbtp": -1.0
+  },
+  "visual_lock": {
+    "visual_style_id": "su_ke_lai_3tier_epic_v2",
+    "tier_distribution": {
+      "TIER_1_WARROOM_MAP": 0.25,
+      "TIER_2_TACTICAL_CUTAWAY": 0.25,
+      "TIER_3_EPIC_BATTLE_PAINTING": 0.50
+    },
+    "tier_descriptions": {
+      "TIER_1_WARROOM_MAP": "3D topographical tactical warroom diorama (Kings and Generals / Fern), deep slate-earth topography, torchlit contours, military arrows and troop formations.",
+      "TIER_2_TACTICAL_CUTAWAY": "3D cross-section and mechanical military cutaway (submerged ironwood stakes, trebuchet/crossbow/fireship diagrams, layered defense geometry).",
+      "TIER_3_EPIC_BATTLE_PAINTING": "Dramatic heroic historical oil painting / cinema still in torchlight, iron and bronze armor, stormy battlefield skies, billowing smoke and crimson banners."
+    },
+    "long_resolution": "2560x1440",
+    "short_resolution": "1080x1920",
+    "fps": 30,
+    "xfade_transition": "fade",
+    "xfade_duration_sec": 0.24,
+    "watermark_pos_2k": "W-w-48:H-h-48",
+    "watermark_pos_hd": "W-w-36:H-h-36"
+  },
+  "benchmark_episode": {
+    "job_id": "vn_su_ke_lai_ep04_nhu_nguyet_1077_long",
+    "duration_sec": 582.875,
+    "nb_frames": 17486,
+    "beats_count": 240,
+    "chapters_count": 10,
+    "mp4_relpath": "video/vn_su_ke_lai_ep04_nhu_nguyet_1077_long/final_long_2k.mp4",
+    "mp4_bytes": 551657507,
+    "mp4_sha256": "e56a0df5e64ee5494007754689866ca87c3b7cd3c65c2f62a7f3eed0f178f8d0",
+    "short_benchmark": {
+      "job_id": "vn_su_ke_lai_ep04_nhu_nguyet_1077_short",
+      "duration_sec": 57.133,
+      "nb_frames": 1714,
+      "mp4_relpath": "video/vn_su_ke_lai_ep04_nhu_nguyet_1077_short/final_short_2k.mp4",
+      "mp4_bytes": 85931152,
+      "mp4_sha256": "c64bf93fa89927a265e41eea3ecd57045ea0477450283bf2a78f42eaba312c5a"
+    }
+  }
+}

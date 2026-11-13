@@ -94,3 +94,30 @@
   python3 sys/tools/script_hook_scorer.py --content sys/runs/<job>/content.json --channel su_ke_lai
   python3 sys/analytics/channel_metrics.py sys/channels/metrics.csv
   ```
+
+## 8. Chuẩn Sản Xuất V2 Đã Chốt (Voice 1.30x & 3-Tier Epic Historical Visuals)
+- **Trạng thái khóa:** `LOCKED_PRODUCTION_V2` (chi tiết máy đọc tại `sys/channels/su_ke_lai/channel_v2_production_lock.json`, đối chiếu chuẩn trên tập `vn_su_ke_lai_ep04_nhu_nguyet_1077_long` — 1169.801s, 240 beats, 10 chapters).
+- **Giọng đọc & Tốc độ (`voice_lock`):**
+  - **Voice Profile:** `VietNarrator_su_ke_lai` (`default_tone: "heroic_epic"`, reference SHA-256 `7bf3594d89a04c8ac3615ae50f192c3bf5bd904c4a5bb890816f4ca977d43808`).
+  - **Tốc độ hiệu dụng:** `1.30x` (tổng hợp OmniVoice nền `1.12x` + WSOLA `atempo=1.161` + khoảng nghỉ giữa các beat `0.12s`).
+  - **Chuỗi Studio EQ & Master Audio:** `highpass=f=80,equalizer=f=180:t=q:w=1.1:g=1.2,equalizer=f=3200:t=q:w=1.0:g=2.2,equalizer=f=6500:t=q:w=1.2:g=1.5,lowpass=f=15000`; chuẩn đầu ra `-11.0 LUFS` / `-1.0 dBTP`.
+- **Hệ thống Hình ảnh 3-Tier (`su_ke_lai_3tier_epic_v2`):**
+  - **25% `TIER_1_WARROOM_MAP`:** Bản đồ sa bàn địa hình chiến thuật 3D (phong cách Kings and Generals / Fern), địa hình đá phiến trầm, đường đồng mức ánh đuốc, mũi tên và đội hình hành quân.
+  - **25% `TIER_2_TACTICAL_CUTAWAY`:** Mặt cắt 3D & sơ đồ cơ khí quân sự (cọc gỗ lim đóng ngầm, máy bắn đá / nỏ / thuyền hỏa công, lớp phòng tuyến).
+  - **50% `TIER_3_EPIC_BATTLE_PAINTING`:** Tranh sơn dầu lịch sử sử thi / khung hình điện ảnh ánh đuốc, giáp sắt đồng, bầu trời bão tố, khói lửa và cờ đỏ.
+- **Chuẩn Render 2K & Chuyển cảnh:**
+  - **Độ phân giải:** `long_16x9` xuất chuẩn 2K `2560x1440` (`watermark_pos_2k: W-w-48:H-h-48`); `short_9x16` `1080x1920` (`watermark_pos_hd: W-w-36:H-h-36`), `30 fps`.
+  - **Chuyển cảnh:** `xfade=fade` thời lượng `0.24s` giữa các beat hình tĩnh Lanczos.
+
+## 9. Khóa Sản Xuất V3 Option 1 (`su_ke_lai_35mm_live_action_v3` — 35mm Historical Live-Action Docudrama)
+- **SSOT Skill Điều Phối Chính:** [.agents/skills/vp-channel-su-ke-lai/SKILL.md](../../../.agents/skills/vp-channel-su-ke-lai/SKILL.md) (kèm [visual-grammar-option1.md](../../../.agents/skills/vp-channel-su-ke-lai/references/visual-grammar-option1.md) và [pacing-and-script-rules.md](../../../.agents/skills/vp-channel-su-ke-lai/references/pacing-and-script-rules.md)).
+- **Mục lục phối hợp & ghi đè Skill:**
+  - **Topic & Packaging:** Kết hợp `vp-research-architect` (`brief.json`/`content.json` v3.0, `youtube_title <= 55`, `parent_long_id`).
+  - **Script & Pacing:** Kết hợp `vp-scriptwriting` + ghi đè cấu trúc (`10 chương × 12 câu zero-filler = 120 câu`, `~9m15s–9m45s`, tách `2` sub-beat/câu = `240` beats `~2.35s/ảnh`; Short `12` beats `~48–58s` với close CTA + cầu nối sang Long ở `15%` cuối).
+  - **Visual System:** **Ghi đè hoàn toàn** `vp-full-frame-quality` (không dùng 2D Doodle `1.7.0`); khóa **Option 1 (`su_ke_lai_35mm_live_action_v3`)** — `35mm Kodak Vision3 500T`, `allowed_text=None` trên 100% khung hình, `clean_beluga_sparkle_pil` + `1.045x` overscan.
+  - **Flow Generation:** Kết hợp `vp-flow-cdp` (`240` khung `16:9` BELUGA cho Long; `12` khung `9:16` + `12` clip `omni_flash` `single_frame_i2v` `end_image_path=None` cho Short; thumbnail Flow-native `2–4` từ in hoa `< 2MB`).
+  - **Audio & Colab T4 Render:** Kết hợp `vp-colab-bridge` + khóa `VietNarrator_su_ke_lai` (`speaking_rate=1.30`, `inter_beat_gap=0.06s`, `chapter_gap=0.18s`, `-11.0 LUFS / -1.0 dBTP`); `h264_nvenc` `2560x1440@30fps` Long (`xfade=fade:duration=0.18`, `FFMETADATA1` 10 chương) & `1440x2560@30fps` Short (`cas=0.55`); bundle `DejaVuSans.ttf`/`DejaVuSans-Bold.ttf` cho `libass`, kiểm tra `delogo` góc trên `omni_flash` trước khi ghim `sys/channels/su_ke_lai/assets/watermark_150x150.png` tại `W-w-36:H-h-36`.
+  - **Omni-platform & Publish:** Kết hợp `vp-omni-platform` + `vp-production`, xuất bản qua `sys/tools/publish_youtube_cdp.py --channel su_ke_lai` (**đăng Long trước**, lấy URL rồi đăng Short kèm `--related-video <LONG_URL>`).
+- **Watermark Bronze/Stone (`150x150` RGBA):** `sys/channels/su_ke_lai/assets/watermark_150x150.png` (SHA-256: `3fc377fb162e880581a044d791e8524f2cf3a877223be42498a3f2604272f665`).
+
+

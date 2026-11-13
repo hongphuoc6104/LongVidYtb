@@ -13,6 +13,6 @@ Root INDEX remains the entry point. Every agent MUST observe the Priority Docume
 | [Flow model prompts](flow-prompts.md) | Versioned model/purpose instructions (1.7.0 Nguệch Ngoạc lock), exact learner text and reference provenance |
 | [maintenance](maintenance.md) | Reproducibility manifests, verified archive, scoped Git history/branch/remote |
 | [AGY adapter](AGY-SETUP.md) | Compatibility entry point without duplicate Rules/reviewer |
-| [Rules](../../AGENTS.md), [13 Skills](../../.agents/skills) | Authority/execution/accounts/brand; one skill per workflow |
+| [Rules](../../AGENTS.md), [14 Skills](../../.agents/skills) | Authority/execution/accounts/brand; one skill per workflow, plus channel SSOT routing via [vp-channel-su-ke-lai](../../.agents/skills/vp-channel-su-ke-lai/SKILL.md) |
 
 Outdated historical planning documents and pre-normalization `legacy/` guides have been cleaned up and consolidated into the current documentation or archived in `sys/docs/archive/`.

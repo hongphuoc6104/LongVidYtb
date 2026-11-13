@@ -17,6 +17,7 @@ Before initiating any task, every agent MUST follow the 3-tier reading protocol:
 | Architect research narrative, 3-Tier Funnel Packaging & Spin-offs | [Research architect](.agents/skills/vp-research-architect/SKILL.md) | [vp-research-architect](.agents/skills/vp-research-architect/SKILL.md) |
 | Author conversational narration, Truth-Slap Hooks & verify acoustic cadence | [Scriptwriting guide](.agents/skills/vp-scriptwriting/SKILL.md) | [vp-scriptwriting](.agents/skills/vp-scriptwriting/SKILL.md) |
 | Dual-Format Production (`short_9x16` Full-Chain or `long_16x9` High-Density) | [Workflow](sys/docs/workflow.md) | [vp-production](.agents/skills/vp-production/SKILL.md) |
+| Sử Kể Lại (`su_ke_lai`) v3 Option 1 35mm Live-Action Channel SSOT | [Channel PLAN](sys/channels/su_ke_lai/PLAN.md) | [vp-channel-su-ke-lai](.agents/skills/vp-channel-su-ke-lai/SKILL.md) |
 | 2D Minimalist Doodle (`1.7.0 Nguệch Ngoạc`) Visual Quality & Continuity | [Full-frame quality guide](.agents/skills/vp-full-frame-quality/SKILL.md) | [vp-full-frame-quality](.agents/skills/vp-full-frame-quality/SKILL.md) |
 | Package shared-image YouTube, Facebook & standalone Reels/TikTok deliverables | [Omni-platform guide](.agents/skills/vp-omni-platform/SKILL.md) | [vp-omni-platform](.agents/skills/vp-omni-platform/SKILL.md) |
 | Automated image & video generation via Flow CDP pool | [Flow CDP Guide](.agents/skills/vp-flow-cdp/SKILL.md) | [vp-flow-cdp](.agents/skills/vp-flow-cdp/SKILL.md) |
@@ -25,6 +26,13 @@ Before initiating any task, every agent MUST follow the 3-tier reading protocol:
 | Analyze a reference channel and derive an original production playbook | [Reference-video analysis](.agents/skills/vp-channel-patterns/SKILL.md) | [vp-channel-patterns](.agents/skills/vp-channel-patterns/SKILL.md) |
 | Upgrade the engine, rules, skills, tests, and conveyor | [Implementation progress (archived)](sys/docs/archive/normalization-progress.md) | [vp-development](.agents/skills/vp-development/SKILL.md) |
 | Cleanup/archive/Git synchronization | [Maintenance](sys/docs/maintenance.md) | [vp-maintenance](.agents/skills/vp-maintenance/SKILL.md) |
+
+## Channel-to-Skill Routing & Composition Matrix (Mục Lục Điều Phối Kênh → Skill Kết Hợp)
+
+| Channel Scope | Primary SSOT Skill | Combined Pipeline Skills | Explicit Overrides |
+|---|---|---|---|
+| **`su_ke_lai` (Sử Kể Lại)** | [vp-channel-su-ke-lai](.agents/skills/vp-channel-su-ke-lai/SKILL.md) | `vp-research-architect`, `vp-scriptwriting`, `vp-flow-cdp`, `vp-colab-bridge`, `vp-omni-platform`, `vp-production` | **Overrides** `vp-full-frame-quality` (Option 1 `su_ke_lai_35mm_live_action_v3` replaces 2D Doodle `1.7.0`); locks `VietNarrator_su_ke_lai` (`1.30x`) & 2-clause `240`-beat Long / `12`-beat `omni_flash` Short cadence. |
+| **Standard 2D Doodle Channels** | [vp-production](.agents/skills/vp-production/SKILL.md) | `vp-research-architect`, `vp-scriptwriting`, `vp-full-frame-quality`, `vp-flow-cdp`, `vp-colab-bridge`, `vp-omni-platform` | Uses `vp-full-frame-quality` (`1.7.0 handdrawn_2d_explainer`) and default `sys/format_profiles.py` settings. |
 
 ## System Layout & SSOT
 

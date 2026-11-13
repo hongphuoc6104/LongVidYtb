@@ -46,7 +46,7 @@ EXPECTED_CHANNELS = {
     },
     "su_ke_lai": {
         "voice": "VietNarrator_su_ke_lai",
-        "recommended_speed": 1.14,
+        "recommended_speed": 1.30,
         "default_tone": "heroic_epic",
     },
     "thuong_cho_kheo": {
@@ -477,7 +477,10 @@ class TestChannelVoiceProfiles(unittest.TestCase):
                 "equalizer=f=" in wt_chain or "treble=" in wt_chain,
                 f"Worktree {slug}: missing equalizer or treble",
             )
-            self.assertIn("lowpass=f=13500", wt_chain, f"Worktree {slug}: missing lowpass=f=13500")
+            self.assertTrue(
+                "lowpass=f=13500" in wt_chain or "lowpass=f=15000" in wt_chain,
+                f"Worktree {slug}: missing lowpass=f=13500 or lowpass=f=15000",
+            )
             self.assertNotIn("acompressor", wt_chain, f"Worktree {slug}: must not contain acompressor")
             self.assertNotIn("afftdn", wt_chain, f"Worktree {slug}: must not contain afftdn")
             self.assertEqual(wt_data.get("audio_lufs"), -14.0)
@@ -535,7 +538,7 @@ class TestChannelVoiceProfiles(unittest.TestCase):
             SU_KE_LAI_DEDICATED_VOICE_SHA256 = ns["SU_KE_LAI_DEDICATED_VOICE_SHA256"]
             verify_channel_voice_lock = ns["verify_channel_voice_lock"]
 
-        su_ke_sha = "76773d5c9d306117022930d82045fb716138c21304261e7c7d5582d6c3f98d76"
+        su_ke_sha = "7bf3594d89a04c8ac3615ae50f192c3bf5bd904c4a5bb890816f4ca977d43808"
         ho_so_sha = "cd25365252033ee60333c92e3f071a8dae3a99c865fe9e527686c7cf04048a9d"
         banned_sha = "5ebeb65efc952565f40a659af3f4a571945ce22dc156bedd67a60c186ee51a3e"
 
@@ -557,7 +560,7 @@ class TestChannelVoiceProfiles(unittest.TestCase):
         self.assertEqual(ho_so_prof["sha256"], ho_so_sha)
         self.assertNotIn("shared_voice_with", su_ke_prof)
         self.assertEqual(su_ke_prof.get("default_tone"), "heroic_epic")
-        self.assertAlmostEqual(su_ke_prof.get("recommended_speed"), 1.14, places=2)
+        self.assertAlmostEqual(su_ke_prof.get("recommended_speed"), 1.30, places=2)
         self.assertEqual(ho_so_prof.get("shared_voice_group"), "su_ke_lai_canonical_voice")
 
         with open(su_ke_dir / "reference.wav", "rb") as f:

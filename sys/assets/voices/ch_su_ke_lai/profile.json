@@ -11,11 +11,11 @@
   ],
   "reference_wav": "reference.wav",
   "sample_wav": "sample.wav",
-  "reference_text": "Cư dân đế chế dần ít đi, với tỷ suất sinh đẻ giảm theo hàng năm. Các thị trấn nhỏ dần mất đi dân cư, trong khi các khu vực phía Bắc, các tộc người như là Goth và Hung xuất hiện.",
-  "duration_seconds": 12.7,
+  "reference_text": "Cư dân đế chế dần ít đi, với tỷ suất sinh đẻ giảm theo hàng năm. Các thị trấn nhỏ dần mất đi dân cư.",
+  "duration_seconds": 7.6152,
   "sample_rate": 24000,
   "acoustic_metrics": {
-    "dur": 12.7,
+    "dur": 7.6152,
     "rms_db": -15.44,
     "peak_db": -1.1,
     "p05_db": -67.1,
@@ -44,19 +44,19 @@
     "pause_after_s": 0.35
   },
   "source_speed": 1.0,
-  "recommended_speed": 1.14,
+  "recommended_speed": 1.30,
   "default_tone": "heroic_epic",
   "audio_voice_chain": "highpass=f=80,equalizer=f=180:t=q:w=1.1:g=1.2,equalizer=f=3200:t=q:w=1.0:g=2.2,equalizer=f=6500:t=q:w=1.2:g=1.5,lowpass=f=15000",
   "audio_lufs": -14.0,
   "audio_peak_db": -1.2,
-  "sha256": "76773d5c9d306117022930d82045fb716138c21304261e7c7d5582d6c3f98d76",
+  "sha256": "7bf3594d89a04c8ac3615ae50f192c3bf5bd904c4a5bb890816f4ca977d43808",
   "demucs_vocal_isolated": true,
   "studio_v3_restored": true,
   "processing": {
     "source_format": "48kHz stereo Opus/best -> 44.1kHz stereo PCM",
     "separator": "demucs htdemucs_ft --two-stems=vocals --shifts=2 (Tesla T4)",
     "enhancer": "None (clean raw_sir_db=20.50 dB stem preserved without DeepFilterNet high-frequency crushing)",
-    "boundary_aligner": "faster-whisper large-v3 word_timestamps + clean pause boundaries + 85ms/110ms silence",
+    "boundary_aligner": "faster-whisper large-v3 word_timestamps + clean pause boundaries + 120ms/200ms silence",
     "mastering": "Studio Presence EQ (lowpass=15000) + 2-Pass EBU R128 (-14.0 LUFS / -1.2 dBTP) -> 24kHz mono PCM16"
   },
   "sources": [
@@ -67,11 +67,11 @@
       "video_title": "Tóm tắt thời kỳ Trung Cổ trong 47 phút | Trần Phan | Thế Giới",
       "window_seconds": [
         214.42,
-        226.92
+        221.92
       ]
     }
   ],
   "listening_verified": true,
-  "note": "Dedicated heroic historical voice for Sử Kể Lại (decoupled from Hồ Sơ Kỳ Lạ; Tesla T4 OmniVoice).",
+  "note": "Dedicated heroic historical voice for Sử Kể Lại (decoupled from Hồ Sơ Kỳ Lạ; Tesla T4 OmniVoice). Locked to 1.30x achieved via 1.12x base OmniVoice synthesis + atempo=1.161 WSOLA time-scale + 0.12s inter-beat gap for 100% crisp articulation.",
   "active_option": 4
 }

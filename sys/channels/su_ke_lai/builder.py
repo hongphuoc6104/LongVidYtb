@@ -5,8 +5,8 @@ Generates complete Schema 3.0 production packages for:
 1. TikTok Fast-Shorts (short_9x16): 60-90s, <= 8 Flow images, high cadence, hook score >= 70.
 2. YouTube Long Explainers (long_16x9): 16-scene 5-act narrative arc with 3 omni-platform spinoff shorts.
 
-Visual Profile: ch_dong_ho_folk (Vietnamese Dong Ho folk woodcut on do paper).
-Voice: VietNarrator (1.0x).
+Visual Profile: su_ke_lai_35mm_live_action_v3 (Option 1 — 35mm Historical Live-Action Docudrama).
+Voice: VietNarrator_su_ke_lai (1.30x).
 Niche: Lịch sử Việt Nam và thế giới kể như phim.
 """
 
@@ -40,21 +40,32 @@ from tools.script_hook_scorer import score_content_file  # noqa: E402
 from channels.registry import get_channel  # noqa: E402
 
 CHANNEL_ID = "su_ke_lai"
+VISUAL_GRAMMAR_VERSION = "su_ke_lai_35mm_live_action_v3"
+VOICE_ID = "VietNarrator_su_ke_lai"
+SPEAKING_RATE = 1.30
+WATERMARK_SHA256 = "3fc377fb162e880581a044d791e8524f2cf3a877223be42498a3f2604272f665"
+VISUAL_STYLE_LOCK_V3 = (
+    "Shot on 35mm Kodak Vision3 500T film, historical battle cinema docudrama, Ridley Scott Kingdom of Heaven aesthetic, "
+    "practical period-accurate 10th-11th century Dai Viet lamellar armor and Song Dynasty iron laminar armor, "
+    "authentic wet mud, river mist, torchlight chiaroscuro, shallow depth of field, natural film grain, "
+    "zero CGI plasticity, zero text in frame."
+)
 DEFAULT_TOPIC_SHORT = "Trận Bạch Đằng Năm 938: Cái bẫy cọc gỗ của Ngô Quyền"
 DEFAULT_TOPIC_LONG = "Trận Bạch Đằng Năm 938: Ngô Quyền Tính Toán Thủy Triều Và Bẫy Cọc Gỗ"
 
 # ---------------------------------------------------------------------------
-# Background Settings: 100% Traditional Dong Ho Do-Paper Canvas
+# Background Settings: 35mm Kodak Vision3 500T Live-Action Docudrama
 # ---------------------------------------------------------------------------
-SETTINGS_DO_PAPER: List[str] = [
-    "Warm handmade do-paper canvas (#EFE4C8) with subtle paper fiber texture.",
-    "Flat traditional do-paper field (#EFE4C8) with authentic folk woodcut texture.",
-    "Warm cream do-paper background (#EFE4C8) with delicate woodblock grain.",
-    "Traditional Vietnamese do-paper surface (#EFE4C8) with natural fiber texture.",
-    "Warm folk do-paper canvas (#EFE4C8) with handcrafted woodblock print texture.",
-    "Traditional do-paper background (#EFE4C8) with subtle woodcut grain.",
-    "Warm handcrafted do-paper surface (#EFE4C8) with authentic folk print texture.",
+SETTINGS_35MM_CINEMA: List[str] = [
+    "Misty 10th-11th century Dai Viet river estuary at dawn, wet riverbank mud, 35mm Kodak Vision3 500T film grain.",
+    "Torchlit earthen command post beside dark estuarine waters, drifting river fog, chiaroscuro lighting.",
+    "Shallow muddy tidal flats at low water, glistening wet silt, overcast steel-blue 35mm cinema atmosphere.",
+    "Primeval northern Vietnamese forest at dusk, damp moss and timber, shafts of mist-filtered light.",
+    "Stormy open estuary under slate-gray clouds, choppy dark water, flickering pitch-pine torches on wooden decks.",
+    "Weathered timber palisade and watchtower overlooking the misty river bend, authentic wet mud and smoke.",
+    "Dawn mist clearing over calm estuarine waters, warm golden-amber rim light through smoke, 35mm film grain.",
 ]
+SETTINGS_DO_PAPER = SETTINGS_35MM_CINEMA
 
 
 def generate_thumbnail_poster(
@@ -192,8 +203,8 @@ def build_topic_short_9x16(topic_title: Optional[str] = None) -> ResearchedTopic
                 (
                     "Năm chín trăm ba mươi tám, bạn có biết bí mật nào giúp Ngô Quyền thắng lớn? "
                     "Một đạo quân phương Bắc hùng hậu vượt biển tiến vào nước ta.",
-                    "full_scene:CH01|General Ngo Quyen stands on a wooden observation post overlooking "
-                    "the Bach Dang river estuary on warm do-paper canvas.",
+                    "full_scene:CH01|35mm live-action wide shot of General Ngo Quyen in Dai Viet lamellar armor on a muddy "
+                    "timber observation post overlooking the misty Bach Dang river estuary.",
                 )
             ],
         ),
@@ -209,8 +220,8 @@ def build_topic_short_9x16(topic_title: Optional[str] = None) -> ResearchedTopic
                     "Nhưng điều bất ngờ là Ngô Quyền không hề chọn cách nghênh chiến trực diện ngoài biển. "
                     "Ông nhận ra con sông Bạch Đằng có một quy luật tự nhiên vô cùng đặc biệt. "
                     "Đó chính là biên độ thủy triều lên xuống chênh lệch tới gần bốn mét.",
-                    "full_scene:CH01|Folk woodcut illustration of Ngo Quyen pointing a bamboo ruler at the "
-                    "rising and falling tidal water level markers on do paper.",
+                    "full_scene:CH01|35mm medium shot of Ngo Quyen inspecting a notched bamboo tide gauge along the "
+                    "muddy riverbank in torchlight chiaroscuro.",
                 )
             ],
         ),
@@ -226,8 +237,8 @@ def build_topic_short_9x16(topic_title: Optional[str] = None) -> ResearchedTopic
                     "Hàng vạn thân gỗ già được đốn hạ từ rừng sâu chuyển về cửa biển. "
                     "Từng cây cọc được vót nhọn đầu rồi bịt sắt kiên cố để cắm ngầm dưới lòng sông. "
                     "Toàn bộ bãi cọc được ẩn giấu hoàn toàn khi con nước triều dâng ngập trắng xóa.",
-                    "full_scene:CH01|Dong Ho woodcut depiction of soldiers driving iron-tipped sharpened "
-                    "wooden stakes firmly into the muddy riverbed on flat do-paper field.",
+                    "full_scene:CH01|35mm handheld shot of Dai Viet soldiers in practical hemp tunics driving iron-tipped "
+                    "sharpened ironwood stakes into wet riverbank mud.",
                 )
             ],
         ),
@@ -243,8 +254,8 @@ def build_topic_short_9x16(topic_title: Optional[str] = None) -> ResearchedTopic
                     "Tướng Hoằng Tháo tự tin thúc đoàn chiến thuyền lớn ồ ạt tiến sâu vào lòng sông. "
                     "Quân ta dùng những chiến thuyền nhẹ giả vờ thua chạy để dụ giặc vượt qua bãi cọc. "
                     "Quân Nam Hán tưởng thắng lớn liền dốc toàn lực truy đuổi điên cuồng.",
-                    "full_scene:free|Folk woodblock illustration of light Vietnamese boats luring heavy enemy "
-                    "warships past hidden river markers on cream do paper.",
+                    "full_scene:free|35mm anamorphic tracking shot of light Dai Viet oar boats luring heavy enemy "
+                    "war junks through drifting river mist.",
                 )
             ],
         ),
@@ -260,8 +271,8 @@ def build_topic_short_9x16(topic_title: Optional[str] = None) -> ResearchedTopic
                     "Đúng thời khắc con nước rút nhanh, Ngô Quyền hạ lệnh tổng phản công dữ dội. "
                     "Đoàn thuyền giặc tháo chạy hỗn loạn va trúng bãi cọc nhọn đâm toạc thân tàu. "
                     "Thuyền lớn vỡ tan tành giữa dòng nước xiết, chủ tướng Hoằng Tháo đền tội tại trận.",
-                    "full_scene:CH01|Dong Ho print of Ngo Quyen waving a command battle flag as enemy ships "
-                    "impale on exposed sharp iron wooden stakes in rapid low tide.",
+                    "full_scene:CH01|35mm dramatic cinema shot of Ngo Quyen signaling counterattack by torchlight as enemy "
+                    "war junks impale on exposed iron-tipped stakes in ebbing tide.",
                 )
             ],
         ),
@@ -276,8 +287,8 @@ def build_topic_short_9x16(topic_title: Optional[str] = None) -> ResearchedTopic
                 (
                     "Trận Bạch Đằng năm chín trăm ba mươi tám, đã chấm dứt hoàn toàn hơn một nghìn năm Bắc thuộc. "
                     "Mở ra kỷ nguyên độc lập tự chủ lâu dài cho non sông đất nước Việt Nam.",
-                    "full_scene:CH01|Solemn 2D Dong Ho portrait of Ngo Quyen wearing king robes standing "
-                    "before an ancient Vietnamese bronze drum motif on do paper.",
+                    "full_scene:CH01|35mm shallow-DOF portrait of Ngo Quyen in weathered bronze-iron lamellar armor standing "
+                    "on the misty riverbank beside an ancient bronze drum.",
                 )
             ],
         ),
@@ -291,8 +302,8 @@ def build_topic_short_9x16(topic_title: Optional[str] = None) -> ResearchedTopic
             [
                 (
                     "Phần tiếp theo của trận chiến huyền thoại có trên YouTube, bạn có muốn xem tiếp không?",
-                    "full_scene:CH01|Dong Ho folk hero figure in decisive action pose pointing forward with "
-                    "carved woodcut calligraphic banners on traditional do paper.",
+                    "full_scene:CH01|35mm close-up of Dai Viet commander raising his bronze-hilted straight sword in dawn "
+                    "mist with zero text in frame.",
                 )
             ],
         ),
@@ -358,19 +369,17 @@ def build_topic_short_9x16(topic_title: Optional[str] = None) -> ResearchedTopic
 
     packaging = PackagingSpec(
         youtube_title="Bí Mật Bẫy Cọc Bạch Đằng Năm 938",
-        visual_hook="Tướng quân Ngô Quyền chỉ huy bãi cọc ngầm trên sông Bạch Đằng giấy dó",
+        visual_hook="Tướng quân Ngô Quyền chỉ huy bãi cọc ngầm trên sông Bạch Đằng trong sương mù ánh đuốc 35mm",
         text_overlay="BÍ MẬT BÃY CỌC",
         contrast_pair="Đoàn thuyền giặc ngạo mạn vs Bẫy cọc gỗ chìm sâu",
         channel_pillar="Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức",
         funnel_tier="tier_1_broad",
         seo_keywords=["trận bạch đằng", "ngô quyền", "lịch sử việt nam", "sử kể lại", "bẫy cọc gỗ"],
         thumbnail_prompt=(
-            "2D Vietnamese Dong Ho folk woodblock-print illustration in 9:16 vertical ratio. "
-            "Bold carved black woodcut outlines (#1E1E1E), flat natural-pigment fills in vermilion (#B5332E), "
-            "pagoda-tree yellow (#D9A520) and indigo (#2C4A6E) on warm handmade do-paper canvas (#EFE4C8) "
-            "with subtle paper fiber texture. Center features general Ngo Quyen in heroic action pose "
-            "pointing toward sharp river stakes. Bold woodcut text BÍ MẬT BÃY CỌC carved on top. "
-            "Orthographic 2D, zero 3D, zero gradients, zero photorealism."
+            "Shot on 35mm Kodak Vision3 500T film in 9:16 vertical ratio, historical battle cinema docudrama, "
+            "Ridley Scott Kingdom of Heaven aesthetic. Close-up of weathered 10th-century Dai Viet commander Ngo Quyen "
+            "in mud-splattered bronze-iron lamellar armor lit by flickering torchlight chiaroscuro before misty river "
+            "stakes, shallow depth of field, natural film grain, zero CGI plasticity."
         ),
     )
 
@@ -418,7 +427,7 @@ def build_topic_short_9x16(topic_title: Optional[str] = None) -> ResearchedTopic
         video_type="history_explainer",
         min_duration=60.0,
         max_duration=90.0,
-        style=ch.visual.style_description,
+        style=VISUAL_STYLE_LOCK_V3,
         aspect_ratio="9:16",
         format_profile="short_9x16",
         sources=sources,
@@ -428,8 +437,8 @@ def build_topic_short_9x16(topic_title: Optional[str] = None) -> ResearchedTopic
         tone=ch.tone,
         language="vi",
         subtitles=True,
-        voice="VietNarrator",
-        speed=1.0,
+        voice=VOICE_ID,
+        speed=SPEAKING_RATE,
         conversational_facts=True,
         visual_pacing_profile="full_frame_v1",
         human_editorial=human_editorial.to_dict(),
@@ -461,7 +470,7 @@ def build_topic_long_16x9(topic_title: Optional[str] = None) -> ResearchedTopic:
             [
                 (
                     "Mùa đông năm chín trăm ba mươi tám, bạn có biết đoàn chiến thuyền khổng lồ của quân Nam Hán tiến vào nước ta ra sao?",
-                    "full_scene:CH01|General Ngo Quyen stands on a wooden observation post overlooking the Bach Dang river estuary on warm do-paper canvas.",
+                    "full_scene:CH01|35mm live-action wide shot of General Ngo Quyen in Dai Viet lamellar armor on a muddy timber observation post overlooking the misty Bach Dang river estuary.",
                 ),
                 (
                     "Họ không hề biết rằng dưới mặt nước phẳng lặng kia là một tử địa đã được giăng sẵn.",
@@ -478,11 +487,11 @@ def build_topic_long_16x9(topic_title: Optional[str] = None) -> ResearchedTopic:
             [
                 (
                     "Lực lượng phương Bắc viễn chinh với hàng trăm chiến hạm kiên cố và vũ khí áp đảo.",
-                    "full_scene:free|Folk woodblock illustration of towering enemy warships advancing with billowing sails on do paper.",
+                    "full_scene:free|35mm anamorphic wide shot of towering timber war junks advancing through cold river mist with dark sails.",
                 ),
                 (
                     "Trong khi đó, non sông nước ta vừa mới giành lại quyền tự chủ sau thời kỳ dài Bắc thuộc.",
-                    "variation:CH01|Ngo Quyen consulting ancient scroll maps with village elders and regional chieftains.",
+                    "variation:CH01|35mm torchlit interior shot of Ngo Quyen consulting terrain sand-table with village elders and chieftains.",
                 ),
             ],
         ),
@@ -495,7 +504,7 @@ def build_topic_long_16x9(topic_title: Optional[str] = None) -> ResearchedTopic:
             [
                 (
                     "Nếu chọn đối đầu trực diện trên biển lớn, quân ta chắc chắn gặp bất lợi vô cùng nặng nề.",
-                    "full_scene:CH01|Ngo Quyen pacing before battle plans carved in woodblock style on warm do paper.",
+                    "full_scene:CH01|35mm medium shot of Ngo Quyen pacing inside a torchlit timber war tent beside wet riverbank mud.",
                 ),
                 (
                     "Ngô Quyền nhận định cần phải nắm chắc thời cơ để tạo ra một đòn quyết định.",
@@ -513,7 +522,7 @@ def build_topic_long_16x9(topic_title: Optional[str] = None) -> ResearchedTopic:
             [
                 (
                     "Sông Bạch Đằng là con đường thủy huyết mạch hiểm trở thông thẳng ra vịnh biển.",
-                    "full_scene:free|Panoramic 2D woodblock map of Bach Dang river showing winding riverbeds and tidal flats.",
+                    "full_scene:free|35mm aerial establishing shot of the winding Bach Dang river estuary and glistening tidal mudflats in dawn mist.",
                 ),
                 (
                     "Đặc điểm nổi bật nhất của dòng sông chính là biên độ thủy triều lên xuống gần bốn mét.",
@@ -530,7 +539,7 @@ def build_topic_long_16x9(topic_title: Optional[str] = None) -> ResearchedTopic:
             [
                 (
                     "Khi thủy triều dâng lên, lòng sông mênh mông nước ngập che phủ mọi chướng ngại ngầm.",
-                    "full_scene:free|High water concealing all riverbed markers under foaming estuary waves on do paper.",
+                    "full_scene:free|35mm low-angle shot of high tidal water concealing riverbed markers under choppy misty estuary waves.",
                 ),
                 (
                     "Nhưng khi con nước rút ra biển, mực nước tụt dốc cực nhanh làm lộ đáy bùn lầy.",
@@ -548,11 +557,11 @@ def build_topic_long_16x9(topic_title: Optional[str] = None) -> ResearchedTopic:
             [
                 (
                     "Hàng vạn quân dân đồng lòng vào rừng già chặt hạ những thân gỗ lim bền chắc nhất.",
-                    "full_scene:CH01|Dong Ho woodcut of soldiers felling sturdy ironwood trunks in primeval forests.",
+                    "full_scene:CH01|35mm handheld shot of Dai Viet soldiers felling sturdy ironwood trunks in primeval forest mist.",
                 ),
                 (
                     "Gỗ được kết thành bè lớn xuôi dòng về khu vực cửa biển chuẩn bị cho trận địa.",
-                    "variation:free|Massive wooden rafts floating downriver toward the strategic staging point on do paper.",
+                    "variation:free|35mm wide shot of massive ironwood rafts floating downriver through dawn fog toward the staging point.",
                 ),
             ],
         ),
@@ -582,7 +591,7 @@ def build_topic_long_16x9(topic_title: Optional[str] = None) -> ResearchedTopic:
             [
                 (
                     "Cả một cánh đồng cọc nhọn ẩn mình dưới dòng sông mà không hề để lại dấu vết.",
-                    "full_scene:free|The rising tide completely submerging the deadly forest of sharpened stakes on do paper.",
+                    "full_scene:free|35mm surface-level shot of rising tide submerging the forest of sharpened iron-tipped stakes in dark river water.",
                 ),
                 (
                     "Mọi chuẩn bị đã hoàn tất, chỉ còn chờ đợi đoàn thuyền của kẻ thù tiến vào cửa ải.",
@@ -600,7 +609,7 @@ def build_topic_long_16x9(topic_title: Optional[str] = None) -> ResearchedTopic:
             [
                 (
                     "Chủ tướng Hoằng Tháo ngạo mạn thúc hạm đội thuyền lớn ồ ạt vượt biển tiến vào cửa sông.",
-                    "full_scene:free|Dong Ho illustration of the Nam Han navy entering the estuary with flying banners.",
+                    "full_scene:free|35mm anamorphic shot of the enemy war fleet entering the misty estuary under stormy skies.",
                 ),
                 (
                     "Hắn tin rằng hỏa lực và kích thước khổng lồ của thuyền chiến sẽ nhanh chóng đè bẹp đối thủ.",
@@ -685,11 +694,11 @@ def build_topic_long_16x9(topic_title: Optional[str] = None) -> ResearchedTopic:
             [
                 (
                     "Chủ tướng Hoằng Tháo tử trận giữa dòng nước xiết, hơn nửa quân giặc bị tiêu diệt.",
-                    "full_scene:free|Folk woodblock scene of defeated enemy banners sinking in the swirling river tide.",
+                    "full_scene:free|35mm dramatic cinema shot of tattered enemy sails and broken hulls sinking in the swirling river tide.",
                 ),
                 (
                     "Tiếng reo hò khải hoàn của quân dân ta vang dội khắp một vùng sông nước Bạch Đằng.",
-                    "variation:CH01|Ngo Quyen standing atop his flagship saluting cheered victorious soldiers on do paper.",
+                    "variation:CH01|35mm torchlit shot of Ngo Quyen standing on his timber flagship saluting victorious Dai Viet troops in river mist.",
                 ),
             ],
         ),
@@ -703,11 +712,11 @@ def build_topic_long_16x9(topic_title: Optional[str] = None) -> ResearchedTopic:
             [
                 (
                     "Chiến thắng Bạch Đằng năm chín trăm ba mươi tám đã chấm dứt hoàn toàn một nghìn năm đô hộ.",
-                    "full_scene:CH01|Solemn commemorative woodcut of King Ngo Quyen crowned as founder of independent Vietnam.",
+                    "full_scene:CH01|35mm solemn film portrait of King Ngo Quyen in royal lamellar armor standing in dawn mist as founder of independent Dai Viet.",
                 ),
                 (
                     "Khẳng định quyền tự chủ bất khả xâm phạm và trí tuệ quân sự trác tuyệt của tiền nhân.",
-                    "variation:CH01|Ancient bronze drum and eternal flame burning bright on traditional do-paper background.",
+                    "variation:CH01|35mm close-up of an ancient Vietnamese bronze drum and flickering pitch-torch flame in morning mist.",
                 ),
             ],
         ),
@@ -720,11 +729,11 @@ def build_topic_long_16x9(topic_title: Optional[str] = None) -> ResearchedTopic:
             [
                 (
                     "Trận đánh này là minh chứng sống động cho nghệ thuật lấy nhu thắng cương của dân tộc.",
-                    "full_scene:CH01|Dong Ho folk hero figure in decisive action pose pointing forward on traditional do paper.",
+                    "full_scene:CH01|35mm shallow-DOF shot of Dai Viet commander raising his bronze-hilted sword in dawn light.",
                 ),
                 (
                     "Trong tập tiếp theo, chúng ta sẽ cùng khám phá cuộc dời đô lịch sử của Lý Công Uẩn.",
-                    "variation:CH01|Hero figure gesturing toward ancient Thang Long citadel scroll tease.",
+                    "variation:CH01|35mm aerial establishing shot of misty northern riverlands and distant ancient citadel ramparts at sunrise.",
                 ),
             ],
         ),
@@ -795,19 +804,17 @@ def build_topic_long_16x9(topic_title: Optional[str] = None) -> ResearchedTopic:
 
     packaging = PackagingSpec(
         youtube_title="Trận Bạch Đằng 938: Mưu Kế Bẫy Cọc Ngô Quyền",
-        visual_hook="Tướng quân Ngô Quyền chỉ huy bãi cọc ngầm trên sông Bạch Đằng giấy dó",
+        visual_hook="Tướng quân Ngô Quyền chỉ huy bãi cọc ngầm trên sông Bạch Đằng trong sương mù ánh đuốc 35mm",
         text_overlay="BẪY CỌC 938",
         contrast_pair="Chiến hạm Nam Hán khổng lồ vs Bãi cọc gỗ bịt sắt ngầm",
         channel_pillar="Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức",
         funnel_tier="tier_1_broad",
         seo_keywords=["trận bạch đằng", "ngô quyền", "lịch sử việt nam", "sử kể lại", "bẫy cọc gỗ"],
         thumbnail_prompt=(
-            "2D Vietnamese Dong Ho folk woodblock-print illustration. "
-            "Bold carved black woodcut outlines (#1E1E1E), flat natural-pigment fills in vermilion (#B5332E), "
-            "pagoda-tree yellow (#D9A520) and indigo (#2C4A6E) on warm handmade do-paper canvas (#EFE4C8) "
-            "with subtle paper fiber texture. Center features general Ngo Quyen in heroic action pose "
-            "pointing toward sharp river stakes. Bold woodcut text BẪY CỌC 938 carved on top. "
-            "Orthographic 2D, zero 3D, zero gradients, zero photorealism."
+            "Shot on 35mm Kodak Vision3 500T film in 16:9 widescreen ratio, historical battle cinema docudrama, "
+            "Ridley Scott Kingdom of Heaven aesthetic. Weathered 10th-century Dai Viet commander Ngo Quyen in "
+            "mud-splattered bronze-iron lamellar armor lit by flickering torchlight chiaroscuro before misty river "
+            "stakes and timber war junks, shallow depth of field, natural film grain, zero CGI plasticity."
         ),
     )
 
@@ -946,7 +953,7 @@ def build_topic_long_16x9(topic_title: Optional[str] = None) -> ResearchedTopic:
         video_type="history_explainer",
         min_duration=360.0,
         max_duration=600.0,
-        style=ch.visual.style_description,
+        style=VISUAL_STYLE_LOCK_V3,
         aspect_ratio="16:9",
         format_profile="long_16x9",
         sources=sources,
@@ -956,8 +963,8 @@ def build_topic_long_16x9(topic_title: Optional[str] = None) -> ResearchedTopic:
         tone=ch.tone,
         language="vi",
         subtitles=False,
-        voice="VietNarrator",
-        speed=1.0,
+        voice=VOICE_ID,
+        speed=SPEAKING_RATE,
         conversational_facts=True,
         visual_pacing_profile="full_frame_v1",
         human_editorial=human_editorial.to_dict(),
