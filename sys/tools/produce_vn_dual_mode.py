@@ -52,6 +52,8 @@ from sys.flow_video.models import (  # noqa: E402
 )
 from sys.flow_video.orchestrator import FlowVideoChainOrchestrator  # noqa: E402
 from sys.flow_video.stitcher import probe_video_clip  # noqa: E402
+from sys.fx_warehouse.fx_compositor import mix_fx_warehouse_audio, prepare_fx_hud_assets  # noqa: E402
+from sys.fx_warehouse.pipeline_bridge import FX_MODE_CHOICES, plan_and_prepare_dual_mode_fx  # noqa: E402
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("produce_vn_dual_mode")
@@ -122,6 +124,8 @@ class DualModeJobConfig:
     video_model: str = "omni_flash"
     image_model: str = "BELUGA"
     visuals_only: bool = False
+    fx_mode: str = "static"
+    video_topic: str = ""
 
 
 # ---------------------------------------------------------------------------
@@ -749,7 +753,7 @@ HARDCODED_CHANNEL_VOICE_LOCKS: dict[str, dict[str, Any]] = {
     "ho_so_ky_la": {
         "voice_profile_dir": "sys/assets/voices/ch_ho_so_ky_la",
         "expected_sha256": HO_SO_KY_LA_VOICE_SHA256,
-        "recommended_speed": 1.28,
+        "recommended_speed": 1.10,
         "default_tone": "forensic_investigative_crisp",
         "audio_lufs": -11.0,
         "audio_peak_db": -1.0,
@@ -811,10 +815,12 @@ SU_KE_LAI_PRODUCTION_LOCK: dict[str, Any] = {
 HO_SO_KY_LA_PRODUCTION_LOCK: dict[str, Any] = {
     "channel_id": "ho_so_ky_la",
     "voice": "VietNarrator_ho_so_ky_la",
-    "recommended_speed": 1.28,
-    "base_omnivoice_speed": 1.12,
-    "atempo_factor": 1.143,
-    "inter_beat_gap_sec": 0.06,
+    "recommended_speed": 1.10,
+    # V3.1 future TTS baseline (1.00 * 1.10); local 1.05 -> 1.10 retime uses atempo=1.047619
+    "base_omnivoice_speed": 1.00,
+    "atempo_factor": 1.10,
+    "local_retime_from_105_atempo": 1.047619,
+    "inter_beat_gap_sec": 0.10,
     "default_tone": "forensic_investigative_crisp",
     "master_lufs": -11.0,
     "master_true_peak_dbtp": -1.0,
@@ -1254,6 +1260,7 @@ def render_long_chapter_chunks_local(
     xfade_dur: float = DEFAULT_XFADE_DUR,
     scratch_dir: Path | None = None,
     delogo_bottom_right: bool = False,
+    beat_fx_specs: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """Safe chunked local CPU fallback renderer (-threads 2) strictly reserved for unit tests.
 
@@ -1286,20 +1293,45 @@ def render_long_chapter_chunks_local(
             is_last = b_i == (n_beats - 1)
             seg_dur = dur if is_last else (dur + xfade_dur)
 
-            vf = (
+            base_vf = (
                 f"scale={width}:{height}:force_original_aspect_ratio=increase:flags=lanczos,"
                 f"crop={width}:{height}:(in_w-{width})/2:(in_h-{height})/2:exact=1,"
-                f"setsar=1,format=yuv420p"
+                "setsar=1"
             )
+            fx_sp = beat_fx_specs[global_idx] if beat_fx_specs and global_idx < len(beat_fx_specs) else None
+            vfx_ffmpeg = str(fx_sp.get("vfx_ffmpeg") or "").strip() if fx_sp else ""
+            if vfx_ffmpeg:
+                base_vf = f"{base_vf},{vfx_ffmpeg}"
 
-            cmd_seg = [
-                "ffmpeg", "-y", "-threads", "2",
-                "-loop", "1", "-t", f"{seg_dur:.4f}", "-r", str(fps),
-                "-i", str(img_p.resolve()),
-                "-vf", vf,
-                "-c:v", "libx264", "-preset", "ultrafast", "-crf", "22",
-                "-an", str(seg_mp4.resolve()),
-            ]
+            hud_local = fx_sp.get("hud_local_path") if fx_sp else None
+            hud_path = Path(str(hud_local)) if hud_local else None
+            if hud_path is not None and hud_path.is_file():
+                hx = int(fx_sp.get("hud_x", 0))
+                hy = int(fx_sp.get("hud_y", 0))
+                fc = (
+                    f"[0:v]{base_vf}[vbase];"
+                    f"[vbase][1:v]overlay=x={hx}:y={hy}:eof_action=repeat,format=yuv420p[vout]"
+                )
+                cmd_seg = [
+                    "ffmpeg", "-y", "-threads", "2",
+                    "-loop", "1", "-t", f"{seg_dur:.4f}", "-r", str(fps),
+                    "-i", str(img_p.resolve()),
+                    "-i", str(hud_path.resolve()),
+                    "-filter_complex", fc,
+                    "-map", "[vout]",
+                    "-c:v", "libx264", "-preset", "ultrafast", "-crf", "22",
+                    "-an", str(seg_mp4.resolve()),
+                ]
+            else:
+                vf = f"{base_vf},format=yuv420p"
+                cmd_seg = [
+                    "ffmpeg", "-y", "-threads", "2",
+                    "-loop", "1", "-t", f"{seg_dur:.4f}", "-r", str(fps),
+                    "-i", str(img_p.resolve()),
+                    "-vf", vf,
+                    "-c:v", "libx264", "-preset", "ultrafast", "-crf", "22",
+                    "-an", str(seg_mp4.resolve()),
+                ]
             res = subprocess.run(cmd_seg, capture_output=True, text=True, check=False)
             if res.returncode != 0:
                 raise RuntimeError(f"Local segment encode failed:\n{res.stderr[-500:]}")
@@ -1418,6 +1450,8 @@ def render_long_chapter_chunks_colab_t4(
     colab_account: str | None = None,
     scratch_dir: Path | None = None,
     delogo_bottom_right: bool = False,
+    fx_summary: dict[str, Any] | None = None,
+    beat_fx_specs: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """Execute 100% remote Chapter-Chunked rendering on Colab Tesla T4 GPU with native h264_nvenc.
 
@@ -1481,18 +1515,41 @@ def render_long_chapter_chunks_colab_t4(
         for idx, rel_p in results:
             img_rel_paths[idx] = rel_p
 
+    if beat_fx_specs:
+        for sp in beat_fx_specs:
+            h_rel = str(sp.get("hud_file") or "").strip()
+            h_loc = sp.get("hud_local_path")
+            if h_rel and h_loc and Path(str(h_loc)).is_file():
+                dest_hud = bundle_dir / h_rel
+                dest_hud.parent.mkdir(parents=True, exist_ok=True)
+                if not dest_hud.exists():
+                    shutil.copy2(h_loc, dest_hud)
+
     # Build manifest for remote worker
     manifest_chunks = []
     for c in chunks:
         c_beats = []
         for b_i, (b, dur) in enumerate(zip(c.beats, c.beat_durations, strict=False)):
             g_idx = c.start_beat_idx + b_i
-            c_beats.append({
+            beat_manifest = {
                 "image_file": img_rel_paths[g_idx],
                 "duration": dur,
                 "camera_motion": b.get("camera_motion", "push_in"),
                 "transition": resolve_beat_transition(b, b_i),
-            })
+            }
+            if isinstance(b.get("fx_selected"), dict):
+                beat_manifest["fx_selected"] = b["fx_selected"]
+            if beat_fx_specs and g_idx < len(beat_fx_specs):
+                fx_sp = beat_fx_specs[g_idx]
+                beat_manifest["fx_cam_params"] = fx_sp.get("camera_params") or {}
+                beat_manifest["fx_vfx"] = str(fx_sp.get("vfx") or "none")
+                beat_manifest["fx_vfx_ffmpeg"] = str(fx_sp.get("vfx_ffmpeg") or "")
+                beat_manifest["hud_file"] = str(fx_sp.get("hud_file") or "")
+                beat_manifest["hud_x"] = int(fx_sp.get("hud_x", 0))
+                beat_manifest["hud_y"] = int(fx_sp.get("hud_y", 0))
+                beat_manifest["hud_w"] = int(fx_sp.get("hud_w", 0))
+                beat_manifest["hud_h"] = int(fx_sp.get("hud_h", 0))
+            c_beats.append(beat_manifest)
         manifest_chunks.append({
             "chunk_index": c.chunk_index,
             "chunk_duration": c.chunk_duration,
@@ -1509,6 +1566,7 @@ def render_long_chapter_chunks_colab_t4(
         "total_duration": total_dur,
         "delogo_filter": _compute_bottom_right_delogo_filter(width, height) if delogo_bottom_right else "",
         "watermark_pos": _resolve_watermark_overlay_pos(width, height),
+        "fx_warehouse": fx_summary or {"enabled": False, "fx_mode": "static"},
         "chunks": manifest_chunks,
     }
     (bundle_dir / "manifest.json").write_text(json.dumps(manifest_data, indent=2), encoding="utf-8")
@@ -1551,9 +1609,167 @@ try:
     if res.returncode != 0:
         raise RuntimeError("COLAB_NVENC_UNAVAILABLE: h264_nvenc not supported on remote GPU: " + res.stderr)
 
-    # Rock-steady 16:9 Lanczos frame lock (eliminates 15Hz vf_zoompan integer truncation tremor & whip-pan motion sickness)
+    # Rock-steady 16:9 Lanczos frame lock (default static) OR GPU/FFmpeg FX Warehouse compositing
     watermark_png = str(work / "watermark.png")
     completed_count = 0
+    fx_cfg = meta.get("fx_warehouse") or {}
+    fx_enabled = bool(fx_cfg.get("enabled"))
+    disallowed_vfx = set(fx_cfg.get("disallowed_vfx") or [])
+
+    has_cuda_fx = False
+    _cuda_lock = None
+    _cuda_base_grid = None
+    if fx_enabled:
+        try:
+            import math
+            import threading
+            import numpy as np
+            import torch
+            import torch.nn.functional as F
+            from PIL import Image
+
+            if torch.cuda.is_available():
+                has_cuda_fx = True
+                _cuda_lock = threading.Lock()
+                _ys = torch.linspace(-1.0, 1.0, h, device="cuda", dtype=torch.float32)
+                _xs = torch.linspace(-1.0, 1.0, w, device="cuda", dtype=torch.float32)
+                _gy, _gx = torch.meshgrid(_ys, _xs, indexing="ij")
+                _cuda_base_grid = (_gx, _gy)
+        except Exception:
+            has_cuda_fx = False
+
+    def _cover_resize_rgb(img_path):
+        with Image.open(img_path) as im:
+            rgb = im.convert("RGB")
+            iw, ih = rgb.size
+            scale = max(w / iw, h / ih)
+            nw, nh = int(round(iw * scale)), int(round(ih * scale))
+            if (nw, nh) != (iw, ih):
+                rgb = rgb.resize((nw, nh), Image.Resampling.LANCZOS)
+            left = max(0, (nw - w) // 2)
+            top = max(0, (nh - h) // 2)
+            rgb = rgb.crop((left, top, left + w, top + h))
+            return np.asarray(rgb, dtype=np.uint8)
+
+    def _render_fx_beat_cuda(img_path, seg_mp4, seg_dur, beat_info):
+        cam = beat_info.get("fx_cam_params") or {}
+        z0 = max(1.0, float(cam.get("z0", 1.0)))
+        z1 = max(1.0, float(cam.get("z1", 1.05)))
+        x0 = float(cam.get("x0", 0.0))
+        x1 = float(cam.get("x1", 0.0))
+        y0 = float(cam.get("y0", 0.0))
+        y1 = float(cam.get("y1", 0.0))
+        p_amp = float(cam.get("parallax_amp", 0.0))
+        vfx_name = str(beat_info.get("fx_vfx") or "none")
+        if vfx_name in disallowed_vfx:
+            vfx_name = "none"
+
+        hud_rel = str(beat_info.get("hud_file") or "").strip()
+        hud_p = (work / hud_rel) if hud_rel else None
+        hx = max(0, int(beat_info.get("hud_x", 0)))
+        hy = max(0, int(beat_info.get("hud_y", 0)))
+
+        arr_np = _cover_resize_rgb(img_path)
+        n_frames = max(1, int(round(seg_dur * fps)))
+
+        hud_np = None
+        if hud_p is not None and hud_p.is_file():
+            with Image.open(hud_p) as him:
+                him_rgba = him.convert("RGBA")
+                max_hw = max(1, w - hx)
+                max_hh = max(1, h - hy)
+                if him_rgba.width > max_hw or him_rgba.height > max_hh:
+                    him_rgba = him_rgba.crop((0, 0, min(him_rgba.width, max_hw), min(him_rgba.height, max_hh)))
+                hud_np = np.asarray(him_rgba, dtype=np.uint8)
+
+        enc_cmd = [
+            "ffmpeg", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24",
+            "-s", f"{w}x{h}", "-r", str(fps), "-i", "pipe:0",
+            "-c:v", "h264_nvenc", "-preset", "p2", "-b:v", "6M", "-g", "30", "-pix_fmt", "yuv420p",
+            "-an", str(seg_mp4),
+        ]
+        proc = subprocess.Popen(enc_cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        gx0, gy0 = _cuda_base_grid
+        r2_map = None
+        if vfx_name in ("hypoxic_vignette", "crimson_strobe_alert"):
+            r2_map = (gx0 * gx0 + gy0 * gy0).clamp(0.0, 1.5).unsqueeze(0).unsqueeze(0)
+
+        try:
+            with _cuda_lock:
+                src_t = torch.from_numpy(arr_np.copy()).to("cuda", dtype=torch.float32).permute(2, 0, 1).unsqueeze(0) / 255.0
+                depth_map = None
+                if p_amp > 0.0:
+                    luma = 0.299 * src_t[:, 0:1] + 0.587 * src_t[:, 1:2] + 0.114 * src_t[:, 2:3]
+                    depth_map = F.avg_pool2d(luma, kernel_size=31, stride=1, padding=15) - 0.5
+
+                hud_rgb_t = None
+                hud_a_t = None
+                hh = hw = 0
+                if hud_np is not None:
+                    ht = torch.from_numpy(hud_np.copy()).to("cuda", dtype=torch.float32).permute(2, 0, 1).unsqueeze(0) / 255.0
+                    hud_rgb_t = ht[:, :3]
+                    hud_a_t = ht[:, 3:4]
+                    hh, hw = hud_np.shape[0], hud_np.shape[1]
+
+                fade_frames = max(1, min(int(0.25 * fps), max(1, n_frames // 3)))
+                for f_idx in range(n_frames):
+                    p = f_idx / max(1, n_frames - 1)
+                    ease = 3.0 * p * p - 2.0 * p * p * p
+                    sc = z0 + (z1 - z0) * ease
+                    tx = x0 + (x1 - x0) * ease
+                    ty = y0 + (y1 - y0) * ease
+                    t_sec = f_idx / float(fps)
+
+                    if vfx_name == "camera_shake_impulse" and t_sec < 0.5:
+                        decay = math.exp(-6.0 * t_sec)
+                        tx += 0.008 * decay * math.sin(38.0 * t_sec)
+                        ty += 0.006 * decay * math.cos(31.0 * t_sec)
+
+                    gx = gx0 / sc - tx
+                    gy = gy0 / sc - ty
+                    grid = torch.stack([gx, gy], dim=-1).unsqueeze(0)
+                    if depth_map is not None:
+                        grid[..., 0] = grid[..., 0] + depth_map.squeeze(0).squeeze(0) * (p_amp * (ease - 0.5))
+
+                    out_t = F.grid_sample(src_t, grid, mode="bilinear", padding_mode="border", align_corners=True)
+
+                    if vfx_name in ("kodak_35mm_grain", "warm_dust_motes"):
+                        grain = (torch.randn((1, 1, h, w), device="cuda", dtype=torch.float32) * 0.012)
+                        out_t = (out_t + grain).clamp(0.0, 1.0)
+                    elif vfx_name == "hypoxic_vignette" and r2_map is not None:
+                        vig = (1.0 - 0.28 * r2_map).clamp(0.45, 1.0)
+                        out_t = (out_t * vig).clamp(0.0, 1.0)
+                    elif vfx_name == "crimson_strobe_alert" and r2_map is not None:
+                        pulse = 0.5 + 0.5 * math.sin(2.0 * math.pi * 1.6 * t_sec)
+                        edge_a = (0.22 * pulse * (r2_map - 0.35).clamp(0.0, 1.0))
+                        out_t[:, 0:1] = (out_t[:, 0:1] * (1.0 - edge_a) + edge_a).clamp(0.0, 1.0)
+                        out_t[:, 1:3] = (out_t[:, 1:3] * (1.0 - edge_a * 0.85)).clamp(0.0, 1.0)
+                    elif vfx_name == "chromatic_glitch_pulse" and (f_idx % 45) < 2 and w > 4:
+                        out_t[:, 0:1, :, 2:] = out_t[:, 0:1, :, :-2]
+                        out_t[:, 2:3, :, :-2] = out_t[:, 2:3, :, 2:]
+
+                    if hud_rgb_t is not None and hh > 0 and hw > 0:
+                        ha = min(1.0, (f_idx + 1) / float(fade_frames))
+                        ha = ha * ha * (3.0 - 2.0 * ha)
+                        a_eff = hud_a_t * ha
+                        roi = out_t[:, :, hy:hy + hh, hx:hx + hw]
+                        out_t[:, :, hy:hy + hh, hx:hx + hw] = roi * (1.0 - a_eff) + hud_rgb_t * a_eff
+
+                    rgb_u8 = (out_t.squeeze(0).permute(1, 2, 0).clamp(0.0, 1.0) * 255.0).to(torch.uint8).cpu().numpy()
+                    proc.stdin.write(rgb_u8.tobytes())
+
+                del src_t
+                if depth_map is not None:
+                    del depth_map
+                if hud_rgb_t is not None:
+                    del hud_rgb_t, hud_a_t
+            proc.stdin.close()
+            _, err_bytes = proc.communicate()
+            if proc.returncode != 0:
+                raise RuntimeError(f"NVENC piped FX encode failed: {err_bytes.decode('utf-8', errors='replace')[-500:]}")
+        finally:
+            if proc.stdin and not proc.stdin.closed:
+                proc.stdin.close()
 
     def render_chunk(c_data):
         global completed_count
@@ -1570,14 +1786,39 @@ try:
             seg_dur = dur if b_i == (n_b - 1) else (dur + xfade_dur)
             img_p = work / beat["image_file"]
 
-            vf = f"scale={w}:{h}:force_original_aspect_ratio=increase:flags=lanczos,crop={w}:{h}:(in_w-{w})/2:(in_h-{h})/2:exact=1,setsar=1,format=yuv420p"
-            cmd = [
-                "ffmpeg", "-y", "-loop", "1", "-t", f"{seg_dur:.4f}", "-r", str(fps),
-                "-i", str(img_p),
-                "-vf", vf,
-                "-c:v", "h264_nvenc", "-preset", "p2", "-b:v", "6M", "-g", "30", "-pix_fmt", "yuv420p",
-                "-an", str(seg_mp4)
-            ]
+            if fx_enabled and has_cuda_fx:
+                _render_fx_beat_cuda(img_p, seg_mp4, seg_dur, beat)
+                continue
+
+            base_vf = f"scale={w}:{h}:force_original_aspect_ratio=increase:flags=lanczos,crop={w}:{h}:(in_w-{w})/2:(in_h-{h})/2:exact=1,setsar=1"
+            vfx_ff = str(beat.get("fx_vfx_ffmpeg") or "").strip() if fx_enabled else ""
+            if vfx_ff:
+                base_vf = f"{base_vf},{vfx_ff}"
+
+            hud_rel = str(beat.get("hud_file") or "").strip() if fx_enabled else ""
+            hud_p = (work / hud_rel) if hud_rel else None
+            if hud_p is not None and hud_p.is_file():
+                hx = int(beat.get("hud_x", 0))
+                hy = int(beat.get("hud_y", 0))
+                fc = f"[0:v]{base_vf}[vbase];[vbase][1:v]overlay=x={hx}:y={hy}:eof_action=repeat,format=yuv420p[vout]"
+                cmd = [
+                    "ffmpeg", "-y", "-loop", "1", "-t", f"{seg_dur:.4f}", "-r", str(fps),
+                    "-i", str(img_p),
+                    "-i", str(hud_p),
+                    "-filter_complex", fc,
+                    "-map", "[vout]",
+                    "-c:v", "h264_nvenc", "-preset", "p2", "-b:v", "6M", "-g", "30", "-pix_fmt", "yuv420p",
+                    "-an", str(seg_mp4)
+                ]
+            else:
+                vf = f"{base_vf},format=yuv420p"
+                cmd = [
+                    "ffmpeg", "-y", "-loop", "1", "-t", f"{seg_dur:.4f}", "-r", str(fps),
+                    "-i", str(img_p),
+                    "-vf", vf,
+                    "-c:v", "h264_nvenc", "-preset", "p2", "-b:v", "6M", "-g", "30", "-pix_fmt", "yuv420p",
+                    "-an", str(seg_mp4)
+                ]
             p = subprocess.run(cmd, capture_output=True, text=True)
             if p.returncode != 0:
                 raise RuntimeError(f"NVENC segment encode failed for chunk {c_idx} beat {b_i}: " + p.stderr[-500:])
@@ -2210,6 +2451,17 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
         manifest_data = json.loads((work_dir / "chain_manifest.json").read_text(encoding="utf-8"))
         completed_tasks = [VideoClipTask.from_dict(td) for td in manifest_data.get("tasks", [])]
 
+    fx_summary = plan_and_prepare_dual_mode_fx(
+        channel_slug=config.channel_slug,
+        beats=beats,
+        beat_durations=beat_durations,
+        work_dir=work_dir,
+        fx_mode=config.fx_mode,
+        video_topic=config.video_topic,
+        spec_data=spec_data,
+        prepare_audio_assets=True,
+    )
+
     if config.visuals_only:
         logger.info(f"[{config.job_id}] Visuals-only mode complete: {len(beats)} keyframes, {len(completed_tasks)} clips ready on disk.")
         return {
@@ -2217,10 +2469,33 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
             "mode": config.mode,
             "keyframes": len(beats),
             "clips": len(completed_tasks),
+            "fx_mode": fx_summary["fx_mode"],
+            "fx_archetype": fx_summary["archetype_id"],
+            "fx_plan_path": fx_summary["fx_plan_path"],
+            "fx_summary": fx_summary,
             "status": "visuals_ready",
         }
 
     # 5. Hybrid Stitching & NVENC packaging
+    render_audio_wav = audio_wav
+    short_fx_hud_events: list[dict[str, Any]] | None = None
+    if fx_summary["enabled"]:
+        mixed_audio_wav = work_dir / "narration_fx_mixed.wav"
+        mix_info = mix_fx_warehouse_audio(audio_wav, Path(fx_summary["fx_plan_path"]), mixed_audio_wav)
+        if Path(mix_info["out_wav"]).is_file():
+            render_audio_wav = Path(mix_info["out_wav"])
+        short_fx_specs = prepare_fx_hud_assets(
+            fx_plan_path=Path(fx_summary["fx_plan_path"]),
+            beats=beats,
+            overlay_dir=work_dir / "_hud_short",
+            target_w=1080,
+            target_h=1920,
+            is_short=True,
+        )
+        short_fx_hud_events = [sp for sp in short_fx_specs if sp.get("hud_local_path")]
+        fx_summary["audio_mix"] = mix_info
+        fx_summary["hud_overlays_prepared"] = len(short_fx_hud_events)
+
     final_mp4 = out_dir / f"{config.job_id}_9x16.mp4"
     from sys.tools.produce_en_flow_dynamic_demo import stitch_hybrid_scene_groups_and_package
 
@@ -2230,7 +2505,7 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
         shots=beats,
         tasks=completed_tasks,
         beat_durations=beat_durations,
-        audio_path=audio_wav,
+        audio_path=render_audio_wav,
         ass_path=ass_path,
         srt_path=srt_path,
         watermark_png=watermark_png,
@@ -2241,6 +2516,7 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
         job_id=config.job_id,
         dry_run=config.dry_run,
         colab_account=config.colab_account,
+        fx_hud_events=short_fx_hud_events,
     )
 
     # 6. Generate sensational 9:16 thumbnail (preserve if already exists)
@@ -2280,6 +2556,10 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
         "encoder": meta.get("video_encoder", "unknown"),
         "ass_path": str(ass_path.resolve()),
         "srt_path": str(srt_path.resolve()),
+        "fx_mode": fx_summary["fx_mode"],
+        "fx_archetype": fx_summary["archetype_id"],
+        "fx_plan_path": fx_summary["fx_plan_path"],
+        "fx_summary": fx_summary,
         "status": "success",
     }
 
@@ -2531,16 +2811,48 @@ def run_long_mode(config: DualModeJobConfig) -> dict[str, Any]:
             channel_slug=config.channel_slug,
         )
 
+    # 5b. Plan Modular Motion / HUD / VFX / SFX & Bespoke Branching
+    planned_beats = [b for c in chunks for b in c.beats]
+    planned_durs = [d for c in chunks for d in c.beat_durations]
+    fx_summary = plan_and_prepare_dual_mode_fx(
+        channel_slug=config.channel_slug,
+        beats=planned_beats,
+        beat_durations=planned_durs,
+        work_dir=work_dir,
+        fx_mode=config.fx_mode,
+        video_topic=config.video_topic,
+        spec_data=spec_data,
+        prepare_audio_assets=True,
+    )
+
+    render_audio_wav = audio_wav
+    beat_fx_specs: list[dict[str, Any]] | None = None
+    if fx_summary["enabled"]:
+        mixed_audio_wav = work_dir / "narration_fx_mixed.wav"
+        mix_info = mix_fx_warehouse_audio(audio_wav, Path(fx_summary["fx_plan_path"]), mixed_audio_wav)
+        if Path(mix_info["out_wav"]).is_file():
+            render_audio_wav = Path(mix_info["out_wav"])
+        beat_fx_specs = prepare_fx_hud_assets(
+            fx_plan_path=Path(fx_summary["fx_plan_path"]),
+            beats=planned_beats,
+            overlay_dir=work_dir / "_hud_long",
+            target_w=target_w,
+            target_h=target_h,
+            is_short=False,
+        )
+        fx_summary["audio_mix"] = mix_info
+        fx_summary["hud_overlays_prepared"] = sum(1 for sp in beat_fx_specs if sp.get("hud_local_path"))
+
     # 6. Execute rendering
     final_mp4 = out_dir / f"{config.job_id}_16x9.mp4"
     if config.dry_run:
-        meta = render_dry_run_stub(config.job_id, final_mp4, audio_wav, target_w, target_h, duration=total_dur)
+        meta = render_dry_run_stub(config.job_id, final_mp4, render_audio_wav, target_w, target_h, duration=total_dur)
     elif config.render_backend == "local":
         meta = render_long_chapter_chunks_local(
             job_id=config.job_id,
             chunks=chunks,
             image_paths=image_paths,
-            audio_path=audio_wav,
+            audio_path=render_audio_wav,
             metadata_path=meta_txt,
             watermark_png=watermark_png,
             out_mp4=final_mp4,
@@ -2550,13 +2862,14 @@ def run_long_mode(config: DualModeJobConfig) -> dict[str, Any]:
             xfade_dur=config.xfade_dur,
             scratch_dir=work_dir / "_local_render",
             delogo_bottom_right=delogo_br,
+            beat_fx_specs=beat_fx_specs,
         )
     else:
         meta = render_long_chapter_chunks_colab_t4(
             job_id=config.job_id,
             chunks=chunks,
             image_paths=image_paths,
-            audio_path=audio_wav,
+            audio_path=render_audio_wav,
             metadata_path=meta_txt,
             watermark_png=watermark_png,
             out_mp4=final_mp4,
@@ -2567,6 +2880,8 @@ def run_long_mode(config: DualModeJobConfig) -> dict[str, Any]:
             colab_account=config.colab_account,
             scratch_dir=work_dir / "_colab_render",
             delogo_bottom_right=delogo_br,
+            fx_summary=fx_summary,
+            beat_fx_specs=beat_fx_specs,
         )
 
     if final_mp4.is_file() and final_mp4.stat().st_size > 1_000_000:
@@ -2583,6 +2898,10 @@ def run_long_mode(config: DualModeJobConfig) -> dict[str, Any]:
         "metadata_path": str(meta_txt.resolve()),
         "srt_path": str(srt_path.resolve()),
         "thumbnail_path": str(thumb_png.resolve()),
+        "fx_mode": fx_summary["fx_mode"],
+        "fx_archetype": fx_summary["archetype_id"],
+        "fx_plan_path": fx_summary["fx_plan_path"],
+        "fx_summary": fx_summary,
         "status": "success",
     }
 
@@ -2598,6 +2917,8 @@ def run_dry_run_verify(config: DualModeJobConfig) -> dict[str, Any]:
         output_dir=config.output_dir,
         render_backend="local",
         dry_run=True,
+        fx_mode=config.fx_mode,
+        video_topic=config.video_topic,
     )
     res_short = run_short_mode(cfg_short)
 
@@ -2609,6 +2930,8 @@ def run_dry_run_verify(config: DualModeJobConfig) -> dict[str, Any]:
         output_dir=config.output_dir,
         render_backend="local",
         dry_run=True,
+        fx_mode=config.fx_mode,
+        video_topic=config.video_topic,
     )
     res_long = run_long_mode(cfg_long)
 
@@ -2665,6 +2988,17 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Pre-generate keyframes and Omni video clips only, skip audio/subtitles/stitch",
     )
+    parser.add_argument(
+        "--fx-mode",
+        choices=list(FX_MODE_CHOICES),
+        default="static",
+        help="Motion/HUD/VFX/SFX warehouse mode: static (default Lanczos+fade), auto_niche, full_fx, or forensic_v2",
+    )
+    parser.add_argument(
+        "--video-topic",
+        default="",
+        help="Optional topic & universal FX trigger keywords (e.g. '[PRO_FX] [BESPOKE_FX] ...')",
+    )
     return parser.parse_args()
 
 
@@ -2698,6 +3032,8 @@ def main() -> None:
         max_workers=args.max_workers,
         dry_run=args.dry_run,
         visuals_only=args.visuals_only,
+        fx_mode=args.fx_mode,
+        video_topic=args.video_topic,
     )
 
     if config.mode == DualMode.BUILD_SHORT.value:

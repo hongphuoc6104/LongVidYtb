@@ -879,6 +879,7 @@ def package_final_on_colab_t4_nvenc(
     overscan_crop: float = 1.05,
     scratch_dir: Path | None = None,
     colab_account: str | None = None,
+    fx_hud_events: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """Upload raw Flow AI clips and render 100% on remote Colab Tesla T4 FFmpeg h264_nvenc (zero local CPU encode)."""
     import fcntl
@@ -928,6 +929,30 @@ def package_final_on_colab_t4_nvenc(
             "group_spoken_durs": group_spoken_durs,
             "xfade_pivot_sec": xfade_pivot_sec,
         }
+        packed_hud_events: list[dict[str, Any]] = []
+        for ev in fx_hud_events or []:
+            hud_rel = str(ev.get("hud_file") or "").strip()
+            hud_local = ev.get("hud_local_path")
+            if not hud_rel or not hud_local:
+                continue
+            hud_p = Path(str(hud_local))
+            if not hud_p.exists():
+                continue
+            zf.write(hud_p, hud_rel)
+            packed_hud_events.append(
+                {
+                    "beat_index": int(ev.get("beat_index", 0)),
+                    "t_start": float(ev.get("t_start", 0.0)),
+                    "duration": float(ev.get("duration", 0.0)),
+                    "hud_file": hud_rel,
+                    "hud_x": int(ev.get("hud_x", 0)),
+                    "hud_y": int(ev.get("hud_y", 0)),
+                    "hud_w": int(ev.get("hud_w", 0)),
+                    "hud_h": int(ev.get("hud_h", 0)),
+                }
+            )
+        if packed_hud_events:
+            manifest_meta["fx_hud_events"] = packed_hud_events
         zf.writestr("bundle_manifest.json", json.dumps(manifest_meta, indent=2))
 
     # Deterministic per-job rotation across verified Colab T4 accounts so parallel squads spread cleanly
@@ -1172,6 +1197,32 @@ try:
                 prev_lbl = out_lbl
             cur_v = prev_lbl
 
+    _fx_manifest_path = work / "bundle_manifest.json"
+    _fx_hud_events = []
+    if _fx_manifest_path.exists():
+        try:
+            _fx_hud_events = json.loads(_fx_manifest_path.read_text(encoding="utf-8")).get("fx_hud_events") or []
+        except Exception:
+            _fx_hud_events = []
+
+    _next_hud_idx = max(wm_idx, audio_idx) + 1
+    for _hud_idx_i, _hud_ev in enumerate(_fx_hud_events):
+        _hud_rel = str(_hud_ev.get("hud_file") or "")
+        _hud_abs = work / _hud_rel
+        if not _hud_rel or not _hud_abs.exists():
+            continue
+        _t0 = float(_hud_ev.get("t_start", 0.0))
+        _t1 = _t0 + max(0.2, float(_hud_ev.get("duration", 2.0)))
+        _hx = int(_hud_ev.get("hud_x", 0))
+        _hy = int(_hud_ev.get("hud_y", 0))
+        cmd.extend(["-i", str(_hud_abs)])
+        _out_lbl = f"vhud{{_hud_idx_i}}"
+        filter_chains.append(
+            f"[{{cur_v}}][{{_next_hud_idx}}:v]overlay=x={{_hx}}:y={{_hy}}:eof_action=repeat:enable='between(t,{{_t0:.3f}},{{_t1:.3f}})'[{{_out_lbl}}]"
+        )
+        cur_v = _out_lbl
+        _next_hud_idx += 1
+
     if is_short and os.path.exists(ass_path):
         escaped_ass = ass_path.replace("\\\\", "/").replace(":", r"\\:").replace("'", r"\\'")
         filter_chains.append(f"[{{cur_v}}]ass=filename='{{escaped_ass}}'[vsub]")
@@ -1286,6 +1337,7 @@ def stitch_hybrid_scene_groups_and_package(
     job_id: str | None = None,
     dry_run: bool = False,
     colab_account: str | None = None,
+    fx_hud_events: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """Canonical remote Colab Tesla T4 FFmpeg h264_nvenc hybrid scene-group stitcher & compositor.
     Zero local CPU video encoding in live production (dry_run synthetic stub only for unit tests).
@@ -1378,6 +1430,7 @@ def stitch_hybrid_scene_groups_and_package(
             overscan_crop=1.08 if is_short else 1.05,
             scratch_dir=scratch,
             colab_account=colab_account,
+            fx_hud_events=fx_hud_events,
         )
 
     if srt_path.is_file():
