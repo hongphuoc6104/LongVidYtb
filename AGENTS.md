@@ -3,9 +3,9 @@
 Read `PLAYBOOK.md` and the domain `SKILL.md` before acting. Precedence: `AGENTS.md` > `.agents/rules/*` > `PLAYBOOK.md` > `SKILL.md` > `references/`.
 
 ## 1. Products & Pipeline (`sys/format_profiles.py`, `vp-production`)
-- Dual-mode (`sys/tools/produce_vn_dual_mode.py`): `short_9x16` (48–60s, Omni 1.2 Flash full-chain) & `long_16x9` (8m30s–13m, 13m Explainer Blueprint, 240–350 BELUGA images, static Lanczos frame + `xfade=fade` only).
+- Dual-mode (`sys/tools/produce_vn_dual_mode.py`): `short_9x16` (48–60s, Omni 1.2 Flash full-chain) & `long_16x9` (8m30s–13m, 13m Explainer Blueprint, 240–350 BELUGA images, static Lanczos frame + `xfade=fade` default, or `--fx-mode auto_niche|full_fx|forensic_v2` with `[PRO_FX]`/`[BESPOKE_FX]` niche/topic branching).
 - Credit priority: P1 `full_chain` while any Flow profile has credit; P2 `images_only` only when 100% of pool is at 0 credits (cooldown ≠ 0 credits).
-- Chain: `vp-research-architect` → `vp-scriptwriting` → `vp-full-frame-quality` → `vp-omni-platform` → `vp-flow-cdp` → `vp-colab-bridge` → `vp-production`.
+- Chain: `vp-research-architect` → `vp-scriptwriting` → `vp-full-frame-quality` → `vp-motion-fx-warehouse` → `vp-omni-platform` → `vp-flow-cdp` → `vp-colab-bridge` → `vp-production`.
 - Philosophy: `sys/pillars.py` `ContentPhilosophy` (`cognition` default); tier-3 `screen_capture` requires user source.
 
 ## 2. Render, Audio & Chrome (`vp-colab-bridge`, `vp-flow-cdp`)

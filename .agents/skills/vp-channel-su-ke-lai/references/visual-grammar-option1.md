@@ -43,3 +43,13 @@ Rotate continuously through these 5 camera setups across consecutive beats and s
 | **3** | **Tight Action Macro** | 85mm–100mm, shallow DoF, close-up | Hands stringing crossbow, ironwood stake tip, oar biting water, mud-splattered lamellar plates |
 | **4** | **Atmospheric Landscape** | 35mm–50mm, low mist / storm sky / torchlit smoke | Weather shift, tidal change, dawn/dusk passage of time, dread or calm before battle |
 | **5** | **Low-Angle Hero** | 28mm–35mm, looking upward at subject | Commander, standard-bearer, or vanguard warrior framed against smoke and sky |
+
+## 5. Modular FX Warehouse Integration & Bespoke-Per-Campaign Rule
+
+`su_ke_lai` plugs directly into [vp-motion-fx-warehouse](../../vp-motion-fx-warehouse/SKILL.md) and the sharded `sys/fx_warehouse/` sub-modules (`archetypes`, `camera_vfx`, `hud_widgets`, `audio_sfx_bgm`, `selector`) via `selector.auto_select_beat_fx(..., channel_id="su_ke_lai", video_topic=...)`:
+
+- **Shared Warehouse Mapping (Option 1 Cinema)**:
+  - Pulls period-safe sub-pixel 2.5D camera moves (`camera_vfx`) aligned with the 5-shot camera rotation matrix.
+  - Pulls parchment/ink-compatible chapter & historical timestamp stamps (`hud_widgets`) only on explicit tactical/chapter beats while keeping `allowed_text=None` on 100% of raw Flow story frames.
+  - Pulls era-appropriate battlefield & riverine foley/BGM stems (`audio_sfx_bgm`: war drums, bowstrings, river currents, storm thunder).
+- **Non-Forced Bespoke Rule & Anti-Anachronism**: Strictly forbid modern digital radar reticles, oscilloscopes, or cyber HUDs on medieval/dynasty battles. Whenever a historical campaign requires unique tactical mechanics (e.g., Bạch Đằng tidal river-stake depth/tide chart, Như Nguyệt river fortification cross-section, siege trajectory arc) or era-specific procedural 48kHz SFX (e.g., bamboo fire-raft crackle, bronze war-horn resonance), MUST synthesize bespoke per-video/per-topic `bespoke_hud_spec` (`build_bespoke_topic_hud_patch`) and `bespoke_sfx_spec` (`synthesize_bespoke_topic_sfx`) instead of forcing anachronistic presets.

@@ -11,7 +11,8 @@
 |---|---|---|
 | **GPU Encoder** | `-c:v h264_nvenc` | Hardware accelerated H.264 encode on Tesla T4 (`0.0s` startup overhead vs 300s+ Remotion). |
 | **Preset & Bitrate** | `-preset p4 -b:v 6M` | Balanced NVENC preset p4, target video bitrate `6.0 Mbps` ensuring broadcast-grade sharpness. |
-| **Audio Normalization** | `-af loudnorm=I=-11.0:TP=-1.0` | EBU R128 loudness normalization to `-11.0 LUFS` with `-1.0 dBTP` true peak limit. |
+| **Audio Normalization** | `-af loudnorm=I=-11.0:TP=-1.0` | EBU R128 loudness normalization to `-11.0 LUFS` with `-1.0 dBTP` true peak limit (`VietNarrator_<channel_id>` on OmniVoice). |
+| **Watermark Lock** | `W-w-36:H-h-36` | Channel logo pinned bottom-right on both `short_9x16` and `long_16x9` (ERR-20261109-02). |
 | **RAM Disk Encoding** | `/dev/shm` multi-worker | Parallel encoding of video chunks across 3 workers directly on `/dev/shm` RAM disk. |
 | **Lossless Concatenation** | `<1.0s` `stream-copy` | Lossless concatenation (`-c copy`) of encoded chunk segments via FFmpeg concat demuxer. |
 
@@ -30,9 +31,10 @@
 ### B. Long-Form (`long_16x9`, 1920x1080, 8m30s–13m)
 - **Engine**: High-Density Multi-Image (`240–350` `BELUGA` 8K frames: `~100–120` Base Anchors + `~140–230` 1-hop Progressive States).
 - **Camera Dynamics**:
-  - `1.25x` supersampled canvas (`2400x1350`).
-  - Analytical zero-snap `zoompan`: continuous smooth function `z='1.06-0.06*(on/N)'` dependent strictly on `on/N` (prohibiting recursive state variables).
-- **Transitions**: Directional `xfade` optical transitions (`0.24s` duration; `smoothleft`, `smoothright`, `smoothup`, `smoothdown`, `fade`).
+  - **Default High-Density 2D Doodle Lock**: Static Lanczos frame (`scale=1920:1080:flags=lanczos,crop=1920:1080:exact=1`) with zero `vf_zoompan` (ERR-20261109-01).
+  - **Explicit 2.5D Parallax Warehouse Mode**: When GPU sub-pixel `float32` 2.5D parallax warehouse mode (`sys/fx_warehouse/camera_vfx.py`) is explicitly enabled, executes analytical sub-pixel parallax moves on Colab T4 NVENC.
+  - **Low-Density / EN Fallback**: `1.25x` supersampled canvas (`2400x1350`) with analytical zero-snap `zoompan` (`z='1.06-0.06*(on/N)'`, prohibiting recursive state variables).
+- **Transitions**: Optical `xfade=transition=fade` (`0.24s` duration only on high-density 2D Doodle `long_16x9`; zero directional slide transitions `smoothleft/smoothright/smoothup/smoothdown`, ERR-20261109-01).
 - **Subtitles & Chapters**:
   - Sidecar `.srt` matching exact spoken cadence.
   - `8–12` YouTube Chapters embedded via `FFMETADATA1`.
@@ -49,7 +51,16 @@ Visual beats strictly conform to `sys/visual_pacing.py`:
 
 ---
 
-## 4. Operational Commands
+## 4. Modular FX & Audio Warehouse (`sys/fx_warehouse/`)
+
+Refer to [vp-motion-fx-warehouse](../../.agents/skills/vp-motion-fx-warehouse/SKILL.md) for the sharded warehouse architecture:
+- **Sub-Warehouses**: `sys/fx_warehouse/archetypes.py` (`ARCHETYPE_PROFILES`, `CHANNEL_ARCHETYPE_MAP`), `camera_vfx.py` (`CAMERA_MOTION_CATALOG`, `VFX_SHADER_CATALOG`), `hud_widgets.py` (`HUD_WIDGET_CATALOG`, `render_hud_widget_patch`), `audio_sfx_bgm.py` (`SFX_CATALOG`, `BGM_CATALOG`, `ensure_warehouse_audio_assets`), and `selector.py` (`auto_select_beat_fx`).
+- **5 Niche Archetypes (20 Channels)**: All 20 Vietnamese channels map into 5 archetypes (`archetype_1_forensic_noir`, `archetype_2_geopolitics_history`, `archetype_3_science_xray`, `archetype_4_doodle_explainer`, `archetype_5_mindful_healing`), pulling dynamically from the shared sub-warehouses per beat while obeying archetype guardrails.
+- **Non-Forced Bespoke Rule**: When a video's topic or niche requires a visual effect, 30fps HUD overlay, or procedural sound stem not yet in the shared catalog, the pipeline/agent synthesizes a bespoke per-video/per-topic spec (`bespoke_hud_spec`, `bespoke_sfx_spec`) instead of forcing an incompatible existing effect, and shards new reusable catalogs into `sys/fx_warehouse/` submodules as the warehouse grows.
+
+---
+
+## 5. Operational Commands
 
 ```bash
 # Verify local render pipeline & schema

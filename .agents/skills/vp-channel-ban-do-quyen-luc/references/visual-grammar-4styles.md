@@ -32,3 +32,14 @@ To eliminate visual fatigue in `9–10m` long explainers and amplify comprehensi
 - **Resolution & Size**: `16:9` (`1280x720`, `< 2MB`), `9:16` (`1080x1920`, `< 2MB`).
 - **Composition**: Flow-native dramatic conflict or bottleneck photography showing the real geopolitical/resource subject in high contrast with `2–4` bold Vietnamese uppercase words (gold `#FFD60A` / cream `#FFFFFF` with crisp dark stroke) placed in clean upper/corner negative space away from YouTube timestamp (`bottom-right`).
 - **Prohibition**: Strictly zero fake PIL gradient overlay cards appended offline on top of raw images, zero repetitive tabletop props or steel clamps, and zero clickbait arrows covering faces/subjects.
+
+## 4. Modular FX Warehouse Integration & Bespoke-Per-Topic Rule
+
+`ban_do_quyen_luc` plugs directly into [vp-motion-fx-warehouse](../../vp-motion-fx-warehouse/SKILL.md) and the sharded `sys/fx_warehouse/` sub-modules (`archetypes`, `camera_vfx`, `hud_widgets`, `audio_sfx_bgm`, `selector`) via `selector.auto_select_beat_fx(..., channel_id="ban_do_quyen_luc", video_topic=...)`:
+
+- **Shared Warehouse Mapping (4 Modes)**:
+  - `CACH_1_HERO_STAMP`: pulls high-contrast metric/threshold stamp widgets (`hud_widgets`) + low-end impact/riser stems (`audio_sfx_bgm`).
+  - `CACH_2_SPLIT_COMPARE`: pulls 2-panel asymmetric comparison dividers (`hud_widgets`) paired with complementary photorealistic frames.
+  - `CACH_3_DOSSIER_LIST`: pulls right-docked dark glassmorphic intelligence dossier cards (`[01]`, `[02]`, `[03]`).
+  - `CACH_4_CINEMATIC_PACING`: pulls sub-pixel 2.5D camera moves (`zoom_in_center`, `zoom_out_reveal`, `pan_left_to_right`, `pan_right_to_left` from `camera_vfx`) and documentary ambient beds (`audio_sfx_bgm`).
+- **Non-Forced Bespoke Rule**: Never force generic cyber/sci-fi neon HUDs or unrelated templates onto physical geography or industrial supply chains. Whenever an episode's geopolitical chokepoint, energy corridor, or manufacturing bottleneck requires domain-specific mechanics (e.g., Strait of Hormuz tanker bottleneck meter, EUV lithography yield ladder, subsea cable route schematic, or bespoke 48kHz industrial/maritime ambience), MUST author bespoke per-video/per-topic `bespoke_hud_spec` (`build_bespoke_topic_hud_patch`) and `bespoke_sfx_spec` (`synthesize_bespoke_topic_sfx`) instead of forcing ill-fitting presets.

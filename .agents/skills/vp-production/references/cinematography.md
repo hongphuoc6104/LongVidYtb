@@ -45,11 +45,18 @@ Refer to detailed parameters in [render-capabilities](../../../../sys/docs/rende
 | Scene Effect | Operating Mechanism | Recommended Use Case |
 |---|---|---|
 | `cut` / `hold` | Switches beats cleanly; `hold` keeps camera motionless for dense diagrams. | Standard beat cuts and diagram inspection. |
-| `zoom_in` / `zoom_out` | Continuous zero-snap `zoompan`: continuous smooth function `z='1.06-0.06*(on/N)'` on 1.25x supersampled canvas *(low-density/EN fallback only; high-density `long_16x9` 240–350 states uses static Lanczos frame lock with zero `zoompan`, ERR-20261109-01)*. | Reveal context gently without frame jumps. |
+| `zoom_in` / `zoom_out` | Continuous zero-snap `zoompan`: continuous smooth function `z='1.06-0.06*(on/N)'` on 1.25x supersampled canvas *(low-density/EN fallback only; high-density `long_16x9` 240–350 states uses static Lanczos frame lock with zero `zoompan`, ERR-20261109-01, unless GPU sub-pixel `float32` 2.5D parallax warehouse mode is explicitly enabled)*. | Reveal context gently without frame jumps. |
 | `punch_in` | Restrained push with smooth endpoint velocities; no spring or shake. | Convey surprise through image and narration emphasis. |
-| `pan_left` / `pan_right` | Smooth horizontal sweep via analytical coordinates *(disabled on high-density `long_16x9`)*. | Contrast through authored composition and edits. |
+| `pan_left` / `pan_right` | Smooth horizontal sweep via analytical coordinates *(disabled on high-density `long_16x9` unless 2.5D parallax warehouse mode is enabled)*. | Contrast through authored composition and edits. |
 | `fade` / `xfade` | High-density `long_16x9` locks strictly to optical `xfade=transition=fade` (`0.24s`; zero slide transitions `smoothleft/right/up/down`, ERR-20261109-01). | Soft scene transitions and chapter changes. |
 
-- **Hand-drawn call-outs inside AI art**: Request `"red hand-drawn circle or arrow pointing at..."` directly inside the image description when needed; **never** add external floating overlays on top of the video.
+- **Hand-drawn call-outs inside AI art**: Request `"red hand-drawn circle or arrow pointing at..."` directly inside the image description when needed; never add HTML/Remotion floating overlays. When 30fps HUD/diagram overlays are needed for a beat, composite them natively via `sys/fx_warehouse/hud_widgets.py` on Colab Tesla T4 `FFmpeg h264_nvenc`.
 - **Clean papers & books**: When `allowed_text` is empty, books and sheets must contain only abstract wavy ink lines—never invented words, titles, or equations.
-- **Sole Canonical Engine**: All rendering is performed via Native Colab Tesla T4 `FFmpeg h264_nvenc` with `/dev/shm` parallel chunk processing (zero Remotion/Chromium overhead).
+- **Sole Canonical Engine**: All rendering is performed via Native Colab Tesla T4 `FFmpeg h264_nvenc` with `/dev/shm` parallel chunk processing (zero Remotion/Chromium overhead), `-11.0 LUFS / -1.0 dBTP` audio normalization, `VietNarrator_<channel_id>` on OmniVoice, and bottom-right watermark `W-w-36:H-h-36`.
+
+---
+
+## 5. Modular FX & Audio Warehouse (`sys/fx_warehouse/`)
+Refer to [vp-motion-fx-warehouse](../../vp-motion-fx-warehouse/SKILL.md) for beat-level camera, VFX, 30fps HUD, and procedural SFX/BGM selection across `sys/fx_warehouse/` (`archetypes.py`, `camera_vfx.py`, `hud_widgets.py`, `audio_sfx_bgm.py`, `selector.py`):
+- **5 Niche Archetypes (20 Channels)**: `CHANNEL_ARCHETYPE_MAP` groups all 20 channels into 5 archetypes (`archetype_1_forensic_noir`, `archetype_2_geopolitics_history`, `archetype_3_science_xray`, `archetype_4_doodle_explainer`, `archetype_5_mindful_healing`), pulling dynamically from the shared sub-warehouses per beat via `auto_select_beat_fx(...)` while obeying viewing-comfort guardrails.
+- **Non-Forced Bespoke Rule**: If a video's topic or niche requires a visual effect, HUD overlay, or sound stem not yet in the shared catalog, create a bespoke per-video/per-topic spec (`bespoke_hud_spec`, `bespoke_sfx_spec`) instead of forcing an incompatible existing preset, and shard new reusable catalogs into `sys/fx_warehouse/` submodules as the warehouse grows.
