@@ -300,7 +300,8 @@ def test_su_ke_lai_v3_skill_and_routing_index() -> None:
     assert "name: vp-channel-su-ke-lai" in skill_text
     assert "su_ke_lai_35mm_live_action_v3" in skill_text
     assert "VietNarrator_su_ke_lai" in skill_text
-    assert "Mục lục phối hợp & ghi đè Skill" in skill_text
+    assert "Bảng Ghép Nối Quy Trình Dùng Chung" in skill_text
+    assert "FULLY OVERRIDES" not in skill_text
     assert "vp-full-frame-quality" in skill_text
     assert "references/visual-grammar-option1.md" in skill_text
     assert "references/pacing-and-script-rules.md" in skill_text
@@ -322,7 +323,8 @@ def test_su_ke_lai_v3_skill_and_routing_index() -> None:
     assert "Channel-to-Skill Routing & Composition Matrix" in root_index
     assert "vp-channel-su-ke-lai" in docs_index
     assert "14 Skills" in docs_index
-    assert "vp-channel-su-ke-lai" in prod_skill
+    assert "vp-channel-su-ke-lai" not in prod_skill
+    assert "su_ke_lai" not in prod_skill
     assert ".agents/skills/vp-channel-su-ke-lai/SKILL.md" in plan_text
 
     worktree_root = Path("/home/hongphuoc6104/Desktop/vp-channels/channel-su-ke-lai")

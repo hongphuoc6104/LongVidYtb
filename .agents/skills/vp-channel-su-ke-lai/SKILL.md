@@ -1,30 +1,30 @@
 ---
 name: vp-channel-su-ke-lai
-description: "Production SSOT for the Sử Kể Lại (su_ke_lai) history channel. Use whenever planning topics, writing scripts, generating Option 1 35mm live-action visuals, synthesizing VietNarrator_su_ke_lai 1.30x audio, rendering 2K Long 16:9 or Short 9:16 videos, or publishing for su_ke_lai."
+description: "Dedicated channel specifications for Sử Kể Lại (su_ke_lai). Holds all channel-specific identity, Option 1 35mm live-action visual grammar, 2-clause 240-beat pacing, VietNarrator_su_ke_lai 1.30x voice profile, and 2K brand parameters to pair with shared workflow skills without overriding them."
 ---
 
-# Sử Kể Lại (`su_ke_lai`) — Channel Production SSOT (v3)
+# Sử Kể Lại (`su_ke_lai`) — Dedicated Channel Specifications (v3)
 
-Authoritative v3 production contract for **Sử Kể Lại**. Read [visual-grammar-option1.md](references/visual-grammar-option1.md) before authoring image/video prompts and [pacing-and-script-rules.md](references/pacing-and-script-rules.md) before writing scripts or beat splits.
+Channel-specific specification module for **Sử Kể Lại** (`@SuKeLaiVN`, `profile_5`, port `9226`). Shared workflow skills ([vp-research-architect](../vp-research-architect/SKILL.md), [vp-scriptwriting](../vp-scriptwriting/SKILL.md), [vp-flow-cdp](../vp-flow-cdp/SKILL.md), [vp-colab-bridge](../vp-colab-bridge/SKILL.md), [vp-omni-platform](../vp-omni-platform/SKILL.md), [vp-production](../vp-production/SKILL.md)) remain **100% shared and unmodified**; this skill supplies only the parameters unique to `su_ke_lai`. Read [visual-grammar-option1.md](references/visual-grammar-option1.md) for visual prompts and [pacing-and-script-rules.md](references/pacing-and-script-rules.md) for beat structure.
 
-## Mục lục phối hợp & ghi đè Skill (Skill Composition & Override Matrix)
+## Bảng Ghép Nối Quy Trình Dùng Chung ↔ Đặc Thù Riêng Kênh `su_ke_lai` (Shared Workflow ↔ Channel-Specific Matrix)
 
-| Stage | Skill Interaction | `su_ke_lai` v3 Contract & Override |
-|---|---|---|
-| **1. Topic & Packaging** | Combines with [vp-research-architect](../vp-research-architect/SKILL.md) | `brief.json` / `content.json` Schema 3.0, `youtube_title <= 55` chars, `parent_long_id` linkage on spin-offs. |
-| **2. Script & Pacing** | Combines with [vp-scriptwriting](../vp-scriptwriting/SKILL.md) + **overrides structure** via [pacing-and-script-rules.md](references/pacing-and-script-rules.md) | Long: `10 chapters × 12 zero-filler sentences = 120 sentences` (`~9m15s–9m45s`), split into `2` clause sub-beats/sentence (`240` beats, `~2.35s/image`). Short: `12` beats (`~48–58s`), close CTA + Long bridge in final `15%`. |
-| **3. Visual System** | **FULLY OVERRIDES** [vp-full-frame-quality](../vp-full-frame-quality/SKILL.md) | **Do NOT use 2D Doodle `1.7.0`.** Locks **Option 1 (`su_ke_lai_35mm_live_action_v3`)** per [visual-grammar-option1.md](references/visual-grammar-option1.md): `allowed_text=None` on 100% story frames, `clean_beluga_sparkle_pil` + `1.045x` overscan center-crop. |
-| **4. Flow Generation** | Combines with [vp-flow-cdp](../vp-flow-cdp/SKILL.md) | Long: `240` `16:9` BELUGA frames. Short: `12` `9:16` frames + `12` `omni_flash` `single_frame_i2v` clips (`end_image_path=None`). Thumbnails: Flow-native with `2–4` uppercase Vietnamese words (`< 2MB`, zero PIL/HTML overlay). |
-| **5. Audio & Colab T4 Render** | Combines with [vp-colab-bridge](../vp-colab-bridge/SKILL.md) + **overrides voice/render lock** | `VietNarrator_su_ke_lai` (`speaking_rate=1.30`, `inter_beat_gap=0.06s`, `chapter_gap=0.18s`, `-11.0 LUFS / -1.0 dBTP`). Colab T4 `h264_nvenc`: Long `2560x1440@30fps` (`xfade=fade:duration=0.18`, `FFMETADATA1` 10 chapters); Short `1440x2560@30fps` (`cas=0.55`). Bundle `DejaVuSans.ttf`/`DejaVuSans-Bold.ttf` (`fontsdir='fonts' + fc-cache -f`) for `libass`; run `omni_flash` corner `delogo` check before pinning `watermark_150x150.png` at `W-w-36:H-h-36`. |
-| **6. Omni-Platform & Publish** | Combines with [vp-omni-platform](../vp-omni-platform/SKILL.md) + [vp-production](../vp-production/SKILL.md) | Publish via `sys/tools/publish_youtube_cdp.py --channel su_ke_lai`: **publish Long first**, capture its live URL, then publish Short with `--related-video <LONG_URL>` and full SEO/chapters/funnel metadata. |
+| Shared Workflow Step (Unmodified) | `su_ke_lai` Channel-Specific Parameters (Plug-in Only) |
+|---|---|
+| **1. Research & Packaging** ([vp-research-architect](../vp-research-architect/SKILL.md)) | Niche: Vietnamese military & dynasty history (`su_ke_lai`, playlist `"Sử Kể Lại — Lịch Sử Việt Nam Kể Như Phim"`, `parent_long_id` Short-to-Long funnel). |
+| **2. Script & Beat Density** ([vp-scriptwriting](../vp-scriptwriting/SKILL.md)) | Per [pacing-and-script-rules.md](references/pacing-and-script-rules.md): Long = `10 chapters × 12 zero-filler sentences = 120 sentences` (`~9m15s–9m45s`), split into `2` clause sub-beats/sentence (`240` visual beats, `~2.35s/image`). Short = `12` beats (`~48–58s`). |
+| **3. Channel Visual Style** *(selected instead of 2D Doodle [vp-full-frame-quality](../vp-full-frame-quality/SKILL.md))* | Per [visual-grammar-option1.md](references/visual-grammar-option1.md): **Option 1 (`su_ke_lai_35mm_live_action_v3`)** — `35mm Kodak Vision3 500T` live-action historical cinema, 5-block prompt formula, 5-shot camera rotation, `allowed_text=None` on 100% story frames, `clean_beluga_sparkle_pil` + `1.045x` overscan. |
+| **4. Flow Asset Generation** ([vp-flow-cdp](../vp-flow-cdp/SKILL.md)) | Long: `240` `16:9` BELUGA frames. Short: `12` `9:16` frames + `12` `omni_flash` `single_frame_i2v` clips (`end_image_path=None`). Thumbnails: Flow-native 35mm live-action with `2–4` uppercase Vietnamese words (`< 2MB`). |
+| **5. Voice & 2K Render Specs** ([vp-colab-bridge](../vp-colab-bridge/SKILL.md)) | Voice: `VietNarrator_su_ke_lai` (`speaking_rate=1.30`, `inter_beat_gap=0.06s`, `chapter_gap=0.18s`, `heroic_epic` EQ). Render: Long `2560x1440@30fps` (`xfade=fade:duration=0.18`, `10` `FFMETADATA1` chapters); Short `1440x2560@30fps` (`cas=0.55`, bundled `DejaVuSans` fonts for `libass`, `omni_flash` corner `delogo` check). Watermark `watermark_150x150.png` at `W-w-36:H-h-36`. |
+| **6. Multi-Platform Publish** ([vp-omni-platform](../vp-omni-platform/SKILL.md) + [vp-production](../vp-production/SKILL.md)) | Target `--channel su_ke_lai`: publish Long first, capture live URL, publish Short with `--related-video <LONG_URL>`, pin `@SuKeLaiVN` funnel comment. |
 
-## SSOT Code Paths
+## Channel SSOT Code & Asset Paths
 
 - **Production Lock Manifest**: `sys/channels/su_ke_lai/channel_v2_production_lock.json`
 - **Video & Visual Formulas**: `sys/channels/vn_flow_video_formulas.py`
 - **Script & Hook Formulas**: `sys/channels/vn_competitor_script_formulas.py`
 - **Voice Profile**: `sys/assets/voices/ch_su_ke_lai/profile.json` (`VietNarrator_su_ke_lai`)
-- **Channel Watermark**: `sys/channels/su_ke_lai/assets/watermark_150x150.png` (pinned bottom-right `W-w-36:H-h-36`)
+- **Channel Watermark**: `sys/channels/su_ke_lai/assets/watermark_150x150.png` (`W-w-36:H-h-36`)
 
 ## Mandatory Verification Commands
 
