@@ -749,8 +749,10 @@ HARDCODED_CHANNEL_VOICE_LOCKS: dict[str, dict[str, Any]] = {
     "ho_so_ky_la": {
         "voice_profile_dir": "sys/assets/voices/ch_ho_so_ky_la",
         "expected_sha256": HO_SO_KY_LA_VOICE_SHA256,
-        "recommended_speed": 1.10,
-        "default_tone": "reflective_slow",
+        "recommended_speed": 1.28,
+        "default_tone": "forensic_investigative_crisp",
+        "audio_lufs": -11.0,
+        "audio_peak_db": -1.0,
     },
 }
 
@@ -805,6 +807,46 @@ SU_KE_LAI_PRODUCTION_LOCK: dict[str, Any] = {
     "watermark_pos_2k": "W-w-48:H-h-48",
     "watermark_pos_hd": BOTTOM_RIGHT_WATERMARK_POS,
 }
+
+HO_SO_KY_LA_PRODUCTION_LOCK: dict[str, Any] = {
+    "channel_id": "ho_so_ky_la",
+    "voice": "VietNarrator_ho_so_ky_la",
+    "recommended_speed": 1.28,
+    "base_omnivoice_speed": 1.12,
+    "atempo_factor": 1.143,
+    "inter_beat_gap_sec": 0.06,
+    "default_tone": "forensic_investigative_crisp",
+    "master_lufs": -11.0,
+    "master_true_peak_dbtp": -1.0,
+    "visual_style_id": "ho_so_ky_la_3d_noir_forensic_v3",
+    "long_resolution": "2560x1440",
+    "short_resolution": "1440x2560",
+    "video_codec": "h264_nvenc",
+    "fps": 30,
+    "xfade_transition": "fade",
+    "xfade_duration_sec": 0.24,
+    "delogo_bottom_right": True,
+    "watermark_pos_2k": "W-w-48:H-h-48",
+    "watermark_pos_hd": BOTTOM_RIGHT_WATERMARK_POS,
+}
+
+
+def _compute_bottom_right_delogo_filter(width: int, height: int) -> str:
+    """Compute bounded bottom-right FFmpeg delogo filter before watermark overlay."""
+    dw = max(64, int(round(width * 0.08)))
+    dh = max(48, int(round(height * 0.065)))
+    margin_x = max(12, int(round(width * 0.008)))
+    margin_y = max(12, int(round(height * 0.008)))
+    dx = max(1, min(width - dw - 2, width - dw - margin_x))
+    dy = max(1, min(height - dh - 2, height - dh - margin_y))
+    return f"delogo=x={dx}:y={dy}:w={dw}:h={dh}"
+
+
+def _resolve_watermark_overlay_pos(width: int, height: int) -> str:
+    """Return scaled bottom-right watermark overlay coordinates (2K vs HD)."""
+    if max(width, height) >= 2400:
+        return HO_SO_KY_LA_PRODUCTION_LOCK["watermark_pos_2k"]
+    return BOTTOM_RIGHT_WATERMARK_POS
 
 
 def verify_channel_voice_lock(channel_slug: str, root: Path = ROOT) -> dict[str, Any]:
@@ -1211,6 +1253,7 @@ def render_long_chapter_chunks_local(
     fps: int = 30,
     xfade_dur: float = DEFAULT_XFADE_DUR,
     scratch_dir: Path | None = None,
+    delogo_bottom_right: bool = False,
 ) -> dict[str, Any]:
     """Safe chunked local CPU fallback renderer (-threads 2) strictly reserved for unit tests.
 
@@ -1316,8 +1359,16 @@ def render_long_chapter_chunks_local(
         fin_cmd.extend(["-i", str(metadata_path.resolve())])
 
     fc = []
-    if has_wm:
-        fc.append("[0:v][1:v]overlay=W-w-36:H-h-36[vout]")
+    wm_pos = _resolve_watermark_overlay_pos(width, height)
+    if delogo_bottom_right:
+        delogo_f = _compute_bottom_right_delogo_filter(width, height)
+        if has_wm:
+            fc.append(f"[0:v]{delogo_f}[vclean];[vclean][1:v]overlay={wm_pos}[vout]")
+        else:
+            fc.append(f"[0:v]{delogo_f}[vout]")
+        v_lbl = "[vout]"
+    elif has_wm:
+        fc.append(f"[0:v][1:v]overlay={wm_pos}[vout]")
         v_lbl = "[vout]"
         a_idx = 2
         m_idx = 3 if has_meta else None
@@ -1366,6 +1417,7 @@ def render_long_chapter_chunks_colab_t4(
     xfade_dur: float = DEFAULT_XFADE_DUR,
     colab_account: str | None = None,
     scratch_dir: Path | None = None,
+    delogo_bottom_right: bool = False,
 ) -> dict[str, Any]:
     """Execute 100% remote Chapter-Chunked rendering on Colab Tesla T4 GPU with native h264_nvenc.
 
@@ -1419,8 +1471,8 @@ def render_long_chapter_chunks_colab_t4(
         if not dest.is_file() or dest.stat().st_size < 1000:
             with Image.open(p) as im:
                 rgb_im = im.convert("RGB")
-                if rgb_im.width > 2048 or rgb_im.height > 1152:
-                    rgb_im = rgb_im.resize((1920, 1080), Image.Resampling.LANCZOS)
+                if rgb_im.width > max(width, 2048) or rgb_im.height > max(height, 1152):
+                    rgb_im = rgb_im.resize((width, height), Image.Resampling.LANCZOS)
                 rgb_im.save(dest, format="JPEG", quality=92, optimize=False)
         return idx, f"images/{dest.name}"
 
@@ -1455,6 +1507,8 @@ def render_long_chapter_chunks_colab_t4(
         "fps": fps,
         "xfade_dur": xfade_dur,
         "total_duration": total_dur,
+        "delogo_filter": _compute_bottom_right_delogo_filter(width, height) if delogo_bottom_right else "",
+        "watermark_pos": _resolve_watermark_overlay_pos(width, height),
         "chunks": manifest_chunks,
     }
     (bundle_dir / "manifest.json").write_text(json.dumps(manifest_data, indent=2), encoding="utf-8")
@@ -1483,6 +1537,8 @@ try:
     fps = int(meta["fps"])
     xfade_dur = float(meta["xfade_dur"])
     total_dur = float(meta["total_duration"])
+    delogo_filter = str(meta.get("delogo_filter") or "")
+    wm_pos = str(meta.get("watermark_pos") or "W-w-36:H-h-36")
     chunks = meta["chunks"]
     total_chunks = len(chunks)
     write_status("running", 0, total_chunks, tail=f"Loaded {total_chunks} chunks.")
@@ -1549,8 +1605,11 @@ try:
                 prev_l = out_l
             cur_v = prev_l
 
-        # Burn watermark directly inside chunk pass
-        c_fc.append(f"[{cur_v}][{wm_input_idx}:v]overlay=W-w-36:H-h-36[cvout]")
+        # Burn watermark directly inside chunk pass (with optional bottom-right delogo)
+        if delogo_filter:
+            c_fc.append(f"[{cur_v}]{delogo_filter}[{cur_v}_clean]")
+            cur_v = f"{cur_v}_clean"
+        c_fc.append(f"[{cur_v}][{wm_input_idx}:v]overlay={wm_pos}[cvout]")
 
         c_dur = sum(float(b["duration"]) for b in beats)
         c_cmd.extend([
@@ -2438,15 +2497,20 @@ def run_long_mode(config: DualModeJobConfig) -> dict[str, Any]:
     chunks = partition_timeline_into_chunks(beats, beat_durations, min_chunk_size=15, max_chunk_size=22)
     logger.info(f"[{config.job_id}] Partitioned {len(beats)} beats into {len(chunks)} chunks (15-22 beats/chunk).")
 
-    # 5. Watermark & Thumbnail
-    watermark_png = work_dir / "watermark_100x100.png"
+    # 5. Resolution, Watermark & Thumbnail (2K for ho_so_ky_la v3.0)
+    is_hskl = config.channel_slug == "ho_so_ky_la"
+    target_w, target_h = (2560, 1440) if is_hskl else (1920, 1080)
+    wm_size = 150 if is_hskl else 100
+    delogo_br = bool(HO_SO_KY_LA_PRODUCTION_LOCK["delogo_bottom_right"]) if is_hskl else False
+
+    watermark_png = work_dir / f"watermark_{wm_size}x{wm_size}.png"
     logo_src = resolve_channel_logo_source(config.channel_slug)
     if watermark_png.is_file() and watermark_png.stat().st_size <= 2000:
         watermark_png.unlink(missing_ok=True)
-    make_rounded_watermark(logo_src, watermark_png, size=100, opacity=0.92, radius=16)
+    make_rounded_watermark(logo_src, watermark_png, size=wm_size, opacity=0.92, radius=16)
     if watermark_png.is_file() and watermark_png.stat().st_size <= 2000 and logo_src:
         watermark_png.unlink(missing_ok=True)
-        make_rounded_watermark(logo_src, watermark_png, size=100, opacity=0.92, radius=16)
+        make_rounded_watermark(logo_src, watermark_png, size=wm_size, opacity=0.92, radius=16)
     assert watermark_png.is_file() and watermark_png.stat().st_size > 2000, (
         f"[{config.job_id}] Watermark file {watermark_png} size "
         f"{watermark_png.stat().st_size if watermark_png.is_file() else 0} bytes is not > 2000 bytes."
@@ -2460,8 +2524,8 @@ def run_long_mode(config: DualModeJobConfig) -> dict[str, Any]:
         first_long_img = image_paths[0] if image_paths else None
         generate_high_contrast_thumbnail(
             out_path=thumb_png,
-            width=1920,
-            height=1080,
+            width=target_w,
+            height=target_h,
             image_src=first_long_img if first_long_img and Path(first_long_img).is_file() else None,
             text_overlay=spec_hook or "",
             channel_slug=config.channel_slug,
@@ -2470,7 +2534,7 @@ def run_long_mode(config: DualModeJobConfig) -> dict[str, Any]:
     # 6. Execute rendering
     final_mp4 = out_dir / f"{config.job_id}_16x9.mp4"
     if config.dry_run:
-        meta = render_dry_run_stub(config.job_id, final_mp4, audio_wav, 1920, 1080, duration=total_dur)
+        meta = render_dry_run_stub(config.job_id, final_mp4, audio_wav, target_w, target_h, duration=total_dur)
     elif config.render_backend == "local":
         meta = render_long_chapter_chunks_local(
             job_id=config.job_id,
@@ -2480,11 +2544,12 @@ def run_long_mode(config: DualModeJobConfig) -> dict[str, Any]:
             metadata_path=meta_txt,
             watermark_png=watermark_png,
             out_mp4=final_mp4,
-            width=1920,
-            height=1080,
+            width=target_w,
+            height=target_h,
             fps=config.fps,
             xfade_dur=config.xfade_dur,
             scratch_dir=work_dir / "_local_render",
+            delogo_bottom_right=delogo_br,
         )
     else:
         meta = render_long_chapter_chunks_colab_t4(
@@ -2495,12 +2560,13 @@ def run_long_mode(config: DualModeJobConfig) -> dict[str, Any]:
             metadata_path=meta_txt,
             watermark_png=watermark_png,
             out_mp4=final_mp4,
-            width=1920,
-            height=1080,
+            width=target_w,
+            height=target_h,
             fps=config.fps,
             xfade_dur=config.xfade_dur,
             colab_account=config.colab_account,
             scratch_dir=work_dir / "_colab_render",
+            delogo_bottom_right=delogo_br,
         )
 
     if final_mp4.is_file() and final_mp4.stat().st_size > 1_000_000:

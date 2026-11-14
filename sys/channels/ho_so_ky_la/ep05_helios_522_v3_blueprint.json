@@ -1,0 +1,90 @@
+{
+  "schema_version": "3.0",
+  "episode_id": "ep05_helios_522",
+  "channel_id": "ho_so_ky_la",
+  "channel_name": "Hồ Sơ Kỳ Lạ",
+  "handle": "@HoSoKyLaVN",
+  "status": "READY_TO_PRODUCE",
+  "title_long": "Chuyến Bay Ma Helios 522: Vì Sao Cả Khoang Lái Bất Tỉnh Giữa Trời?",
+  "title_short": "Chuyến Bay Ma 121 Người Bất Tỉnh Suốt 2 Giờ #Shorts",
+  "historical_case": {
+    "event": "Helios Airways Flight 522 Crash Investigation",
+    "date": "2005-08-14",
+    "aircraft": "Boeing 737-31S (5B-DBY)",
+    "route": "Larnaca (LCA) -> Athens (ATH) -> Prague (PRG)",
+    "souls_aboard": 121,
+    "root_causes": [
+      "Pressurization mode selector left on MAN instead of AUTO after overnight cabin leak test",
+      "Same intermittent horn used for both Takeoff Configuration Warning and Cabin Altitude Warning in Boeing 737-300",
+      "Crew misidentified altitude alarm at 12,040 ft and suffered insidious hypobaric hypoxia above 18,000 ft",
+      "Flight attendant Andreas Prodromou (holding UK CPL) used portable oxygen bottle to reach cockpit before fuel exhaustion"
+    ],
+    "official_source": "AAIASB (Air Accident Investigation and Aviation Safety Board of Greece) Official Report 11/2006"
+  },
+  "production_v3_lock": {
+    "voice": "VietNarrator_ho_so_ky_la",
+    "recommended_speed": 1.28,
+    "base_omnivoice_speed": 1.12,
+    "atempo_factor": 1.143,
+    "inter_beat_gap_sec": 0.06,
+    "tone": "forensic_investigative_crisp",
+    "master_lufs": -11.0,
+    "master_true_peak_dbtp": -1.0,
+    "long_resolution": "2560x1440",
+    "short_resolution": "1440x2560",
+    "fps": 30,
+    "xfade_transition": "fade",
+    "xfade_duration_sec": 0.24,
+    "delogo_bottom_right": true,
+    "watermark_asset": "sys/channels/ho_so_ky_la/assets/watermark_150x150.png",
+    "watermark_pos_2k": "W-w-48:H-h-48"
+  },
+  "visual_direction": {
+    "style_id": "ho_so_ky_la_3d_noir_forensic_v3",
+    "style_prompt": "3D Noir Forensic Diorama, miniature architectural scale model and realistic aviation cockpit telemetry cutaway, obsidian slate backdrop (#0A0B0E), dark dossier desk (#181B22), parchment aviation charts (#E8DFC8), volumetric overhead desk lamp beams, crisp red forensic laser line (#C0392B), brushed brass pressure gauges and black-box switches (#C9A24D), photorealistic macro depth of field, zero cartoonish stickmen, zero gore, zero unreadable gibberish text.",
+    "negative_prompt": "2D flat stick figure, cartoon comic, blood, gore, bright daytime sky clutter, watermarks, floating unreadable text",
+    "long_chapter_count": 10,
+    "long_target_beats": 260,
+    "short_target_beats": 18,
+    "thumbnail_flow_native": {
+      "concept": "3D Noir close-up of a dark Boeing cockpit pressurization dial switched sharply to red MAN with a silhouetted F-16 wingtip outside misty night clouds, embossed bold red-and-cream 3-word badge top corner: 'CHUYẾN BAY MA'",
+      "text_overlay": "CHUYẾN BAY MA"
+    }
+  },
+  "seo_packaging": {
+    "playlist": "Hồ Sơ Kỳ Lạ — Giải Mã Bí Ẩn Có Thật",
+    "category": "Education",
+    "language": "vi",
+    "hashtags": [
+      "#HoSoKyLa",
+      "#Helios522",
+      "#BiAnHangKhong",
+      "#BiAnCoThat",
+      "#HoSoDieuTra"
+    ],
+    "tags": [
+      "hồ sơ kỳ lạ",
+      "chuyến bay ma helios 522",
+      "helios 522",
+      "tai nạn hàng không bí ẩn",
+      "máy bay không người lái",
+      "hiện tượng thiếu oxy trên cao",
+      "công tắc điều áp máy bay",
+      "andreas prodromou",
+      "tiêm kích f16 hộ tống máy bay",
+      "giải mã tai nạn máy bay",
+      "hồ sơ điều tra hàng không",
+      "boeing 737-300",
+      "sự cố kỹ thuật hàng không",
+      "bí ẩn có thật",
+      "phân tích hộp đen",
+      "hồ sơ pháp y",
+      "kiến thức hàng không",
+      "phim tài liệu điều tra"
+    ]
+  },
+  "linked_files": {
+    "short_content": "sys/channels/ho_so_ky_la/ep05_content_short.json",
+    "long_content": "sys/channels/ho_so_ky_la/ep05_content_long.json"
+  }
+}

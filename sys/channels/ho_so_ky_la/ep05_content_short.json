@@ -1,0 +1,51 @@
+{
+  "schema_version": "3.0",
+  "episode_id": "ep05_helios_522",
+  "channel_id": "ho_so_ky_la",
+  "format": "short_9x16",
+  "topic": "Chuyến Bay Ma Helios 522: Công Tắc 2 Centimet Khiến 121 Người Bất Tỉnh",
+  "youtube_title": "Chuyến Bay Ma 121 Người Bất Tỉnh Suốt 2 Giờ #Shorts",
+  "duration": {
+    "min_seconds": 52.0,
+    "max_seconds": 60.0
+  },
+  "style": "3D Noir Forensic Diorama 9:16: dark obsidian cockpit telemetry scene (#0A0B0E), volumetric warm spotlight on brass cabin pressure dial (#C9A24D) and crimson alert indicator (#C0392B), photorealistic macro diorama depth, zero gore.",
+  "scenes": [
+    {
+      "id": "SC01",
+      "title": "3s Paradox Hook — Tiêm kích F-16 và khoang lái im lặng",
+      "narration": "Vì sao bạn thấy hai tiêm kích đuổi theo một chuyến bay không còn ai tỉnh táo? Năm hai nghìn không trăm lẻ năm, chuyến bay Helios năm hai hai cứ lượn vòng trên bầu trời Hy Lạp. Thế nhưng suốt gần hai giờ, không một phi công nào trả lời bộ đàm.",
+      "visual_prompt": "3D Noir Diorama 9:16: two Hellenic F-16 fighter jet scale silhouettes banking beside a silent commercial Boeing 737 cabin in dark moonlit clouds, faint red glow inside empty cockpit window."
+    },
+    {
+      "id": "SC02",
+      "title": "Open Loop — Nguồn cơn từ mặt đất",
+      "narration": "Hóa ra bi kịch bắt nguồn từ một công tắc chỉ nhỏ bằng đầu ngón tay trên trần khoang lái. Đêm hôm trước, thợ máy đã gạt công tắc điều áp sang chế độ chỉnh tay để kiểm tra rò rỉ cửa sau. Khi xong việc, người này quên gạt ngược về tự động.",
+      "visual_prompt": "3D Noir macro closeup on overhead aircraft panel in obsidian shadow (#0A0B0E), brass toggle switch flipped red to MAN instead of AUTO illuminated by a harsh red spotlight cone."
+    },
+    {
+      "id": "SC03",
+      "title": "Bẫy nhận thức âm thanh ở độ cao 3.600 mét",
+      "narration": "Sáng hôm sau, tổ lái đọc qua ba lượt danh sách kiểm tra nhưng vẫn không nhìn thấy vị trí nút gạt sai lệch. Khi máy bay vừa leo qua độ cao ba nghìn sáu trăm mét, còi báo động bỗng rú vang dội. Đáng tiếc trên dòng máy bay cũ đó, còi cảnh báo mất áp suất lại kêu giống hệt còi lỗi cấu hình cất cánh.",
+      "visual_prompt": "3D Noir forensic HUD diagram glowing in dark room: two red waveforms side by side showing identical sound patterns for Takeoff Config Warning and Cabin Altitude Alarm."
+    },
+    {
+      "id": "SC04",
+      "title": "Thiếu oxy thầm lặng trên độ cao 10.000 mét",
+      "narration": "Phi công tưởng nhầm hệ thống báo lỗi dưới đất nên tắt thiết bị làm mát mà không đeo mặt nạ oxy. Ở độ cao trên năm nghìn mét, mặt nạ hành khách bật rơi xuống nhưng chỉ đủ dùng mười lăm phút. Thiếu oxy khiến não bộ rơi vào trạng thái lơ mơ êm dịu nên phi công không hề nhận ra hiểm họa.",
+      "visual_prompt": "3D Noir diorama cutaway of darkened passenger cabin: yellow oxygen masks dangling softly in dim amber shafts while altimeter dial climbs past 34,000 feet."
+    },
+    {
+      "id": "SC05",
+      "title": "Người hùng mang bình dưỡng khí rời khỏi khoang khách",
+      "narration": "Chế độ lái tự động vẫn giữ máy bay bay thẳng lên độ cao mười nghìn mét như một con tàu ma. Mãi tới gần trưa, hai phi công F-16 mới giật mình thấy một tiếp viên trẻ bước vào buồng lái. Anh tên Andreas, có bằng phi công thương mại và sống sót nhờ ôm bình oxy di động.",
+      "visual_prompt": "3D Noir heroic frame from F-16 canopy angle looking into illuminated 737 cockpit: faint silhouette gripping captain yoke with silver portable oxygen cylinder beside seat."
+    },
+    {
+      "id": "SC06",
+      "title": "Nỗ lực cuối cùng & Câu hỏi tranh luận",
+      "narration": "Andreas cố gắng điều khiển máy bay tránh khu dân cư trước khi động cơ cạn sạch nhiên liệu. Vụ tai nạn đã buộc toàn ngành hàng không phải tách riêng đèn cảnh báo áp suất cho mọi dòng máy bay sau này. Theo bạn lỗi lớn nhất nằm ở thao tác thợ máy hay thiết kế còi cảnh báo, hãy nhấn vào video liên kết để xem trọn hồ sơ điều tra nhé?",
+      "visual_prompt": "3D Noir forensic evidence table: redacted aviation report folder stamped CHỨNG CỨ XÁC THỰC, brass compass, red string linking MAN switch photo to modern Master Caution panel."
+    }
+  ]
+}

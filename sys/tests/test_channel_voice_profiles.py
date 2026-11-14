@@ -56,8 +56,8 @@ EXPECTED_CHANNELS = {
     },
     "ho_so_ky_la": {
         "voice": "VietNarrator_ho_so_ky_la",
-        "recommended_speed": 1.10,
-        "default_tone": "reflective_slow",
+        "recommended_speed": 1.28,
+        "default_tone": "forensic_investigative_crisp",
     },
     "co_the_ke": {
         "voice": "VietNarrator_co_the_ke",
