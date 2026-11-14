@@ -1,13 +1,37 @@
 {
   "long": {
-    "job_id": "su-ke-lai-week1-16x9",
-    "youtube_url": "https://youtu.be/y5VeObQ7u1E"
+    "job_id": "vn_su_ke_lai_ep04_nhu_nguyet_1077_long",
+    "youtube_url": "https://youtu.be/7ht-AqW1ZmU",
+    "url": "https://youtu.be/7ht-AqW1ZmU",
+    "video_id": "7ht-AqW1ZmU"
+  },
+  "long_episodes": {
+    "su-ke-lai-week1-16x9": {
+      "job_id": "su-ke-lai-week1-16x9",
+      "youtube_url": "https://youtu.be/y5VeObQ7u1E",
+      "video_id": "y5VeObQ7u1E"
+    },
+    "vn_su_ke_lai_ep04_nhu_nguyet_1077_long": {
+      "job_id": "vn_su_ke_lai_ep04_nhu_nguyet_1077_long",
+      "youtube_url": "https://youtu.be/7ht-AqW1ZmU",
+      "video_id": "7ht-AqW1ZmU"
+    }
   },
   "shorts": {
     "su-ke-lai-week1-9x16-v2": {
       "tiktok_url": null,
       "facebook_url": null,
-      "youtube_shorts_url": "https://youtube.com/shorts/U-Z4ZkCGceM"
+      "youtube_shorts_url": "https://youtube.com/shorts/U-Z4ZkCGceM",
+      "parent_long_url": "https://youtu.be/y5VeObQ7u1E",
+      "parent_long_id": "y5VeObQ7u1E"
+    },
+    "vn_su_ke_lai_ep04_nhu_nguyet_1077_short": {
+      "tiktok_url": null,
+      "facebook_url": null,
+      "youtube_shorts_url": "https://youtube.com/shorts/18fBQSiYY2k",
+      "video_id": "18fBQSiYY2k",
+      "parent_long_url": "https://youtu.be/7ht-AqW1ZmU",
+      "parent_long_id": "7ht-AqW1ZmU"
     }
   }
 }

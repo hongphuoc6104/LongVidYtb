@@ -60,6 +60,8 @@
   },
   "benchmark_episode": {
     "job_id": "vn_su_ke_lai_ep04_nhu_nguyet_1077_long",
+    "video_id": "7ht-AqW1ZmU",
+    "youtube_url": "https://youtu.be/7ht-AqW1ZmU",
     "duration_sec": 582.875,
     "nb_frames": 17486,
     "beats_count": 240,
@@ -69,6 +71,9 @@
     "mp4_sha256": "e56a0df5e64ee5494007754689866ca87c3b7cd3c65c2f62a7f3eed0f178f8d0",
     "short_benchmark": {
       "job_id": "vn_su_ke_lai_ep04_nhu_nguyet_1077_short",
+      "video_id": "18fBQSiYY2k",
+      "youtube_shorts_url": "https://youtube.com/shorts/18fBQSiYY2k",
+      "parent_long_id": "7ht-AqW1ZmU",
       "duration_sec": 57.133,
       "nb_frames": 1714,
       "mp4_relpath": "video/vn_su_ke_lai_ep04_nhu_nguyet_1077_short/final_short_2k.mp4",
