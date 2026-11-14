@@ -1,0 +1,85 @@
+{
+  "schema_version": "3.0",
+  "channel_id": "ban_do_quyen_luc",
+  "channel_name": "Bản Đồ Quyền Lực",
+  "handle": "@BanDoQuyenLucVN",
+  "status": "LOCKED_PRODUCTION_V3",
+  "voice_id": "VietNarrator_ban_do_quyen_luc",
+  "recommended_speed": 1.15,
+  "watermark": {
+    "asset": "sys/channels/ban_do_quyen_luc/assets/watermark_150x150.png",
+    "dimensions": "150x150",
+    "format": "RGBA",
+    "sha256": "dc1d56665505fda5ce7432740d4b898ba223ef46573a98195fe24092f0e335c0"
+  },
+  "visual_grammar": {
+    "version": "ban_do_quyen_luc_4styles_photoreal_v3",
+    "label": "3-Pillar Photorealistic Geopolitical Documentary + 4-Mode Visual Storytelling Combination",
+    "three_pillars": [
+      "Orbital satellite relief & true-color physical geological geography",
+      "100mm macro mechanical, metallurgical, and cleanroom supply-chain engineering",
+      "On-site maritime, industrial, port, and geopolitical field documentary photography"
+    ],
+    "anti_repetition_rule": "Diverse subjects, locations, lighting, and physical textures per beat; strictly no locked tabletop desk or crimson steel clamp props across unrelated beats; allowed_text=None on raw Flow frames.",
+    "four_visual_modes": {
+      "CACH_1_HERO_STAMP": {
+        "share": 0.15,
+        "role": "Giant 2K kinetic typography stat/keyword hero card (156px/68px) on shocking figures and choke-point pivots"
+      },
+      "CACH_2_SPLIT_COMPARE": {
+        "share": 0.12,
+        "role": "Dual-image split-screen comparison (Red #FF3B30 vs Cyan #00F5D4) on geopolitical or value-chain asymmetries"
+      },
+      "CACH_3_DOSSIER_LIST": {
+        "share": 0.15,
+        "role": "Right-docked dark glassmorphic intelligence dossier panel (3 sequential checklist items) on multi-tier supply-chain breakdowns"
+      },
+      "CACH_4_CINEMATIC_PACING": {
+        "share": 0.58,
+        "role": "Uncluttered 2K dynamic camera pacing (zoom_in_center, zoom_out_reveal, pan_left_to_right, pan_right_to_left + key-beat I2V motion) and xfade=fade:duration=0.18"
+      }
+    }
+  },
+  "voice_lock": {
+    "voice": "VietNarrator_ban_do_quyen_luc",
+    "reference_sha256": "a518ba0761027e3a5858eeccd5a1f2d9b948a60f7e10c50f6c2689d82be76b0d",
+    "recommended_speed": 1.15,
+    "default_tone": "authoritative_clear",
+    "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+    "master_lufs": -11.0,
+    "master_true_peak_dbtp": -1.0
+  },
+  "visual_lock": {
+    "visual_style_id": "ban_do_quyen_luc_4styles_photoreal_v3",
+    "long_resolution": "2560x1440",
+    "short_resolution": "1440x2560",
+    "fps": 30,
+    "xfade_transition": "fade",
+    "xfade_duration_sec": 0.18,
+    "watermark_pos_2k": "W-w-36:H-h-36",
+    "watermark_pos_hd": "W-w-36:H-h-36"
+  },
+  "benchmark_episode": {
+    "job_id": "vn_ban_do_quyen_luc_ep05_ban_do_dat_hiem_long",
+    "video_id": "HLmYROh1YfA",
+    "video_url": "https://youtu.be/HLmYROh1YfA",
+    "duration_sec": 581.0,
+    "nb_frames": 17430,
+    "beats_count": 240,
+    "chapters_count": 9,
+    "mp4_relpath": "video/vn_ban_do_quyen_luc_ep05_ban_do_dat_hiem_long/final_long_2k.mp4",
+    "mp4_bytes": 1004555277,
+    "mp4_sha256": "47cbc0e9d8b342807c1fcbbaa482467bfa9153c927410dfd9a9ad0e1cff3486d",
+    "short_benchmark": {
+      "job_id": "vn_ban_do_quyen_luc_ep05_ban_do_dat_hiem_short",
+      "video_id": "AMWZ3v30SJ4",
+      "video_url": "https://youtube.com/shorts/AMWZ3v30SJ4",
+      "duration_sec": 48.469,
+      "nb_frames": 1454,
+      "beats_count": 14,
+      "mp4_relpath": "video/vn_ban_do_quyen_luc_ep05_ban_do_dat_hiem_short/final_short_2k.mp4",
+      "mp4_bytes": 206316316,
+      "mp4_sha256": "39d85d43c139afb2cd1bfb3811ba384a171598f126602a7bd05474c9ef961e94"
+    }
+  }
+}

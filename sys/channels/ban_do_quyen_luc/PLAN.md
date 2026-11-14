@@ -94,3 +94,14 @@
   python3 sys/tools/script_hook_scorer.py --content sys/runs/<job>/content.json --channel ban_do_quyen_luc
   python3 sys/analytics/channel_metrics.py sys/channels/metrics.csv
   ```
+
+## 8. Khóa Sản Xuất V3 (`ban_do_quyen_luc_4styles_photoreal_v3` — Nhiếp Ảnh Thực Tế 3 Trụ Cột & Kết Hợp 4 Cách Kể Chuyện Hình Ảnh 2K)
+- **SSOT Skill Đặc Thù Riêng Kênh:** [.agents/skills/vp-channel-ban-do-quyen-luc/SKILL.md](../../../.agents/skills/vp-channel-ban-do-quyen-luc/SKILL.md) (kèm [visual-grammar-4styles.md](../../../.agents/skills/vp-channel-ban-do-quyen-luc/references/visual-grammar-4styles.md) và [pacing-and-script-rules.md](../../../.agents/skills/vp-channel-ban-do-quyen-luc/references/pacing-and-script-rules.md)).
+- **File Khóa Tham Số Máy Đọc:** [channel_v3_production_lock.json](channel_v3_production_lock.json) (`LOCKED_PRODUCTION_V3`, đối chiếu chuẩn trên Tập 05 *Bản Đồ Đất Hiếm* — Long 2K `HLmYROh1YfA` `581.0s` / `240` beats / `9` chương & Short 2K `AMWZ3v30SJ4` `48.469s`).
+- **Nguyên tắc phối hợp (Không ghi đè quy trình chung):** Giữ nguyên 100% các skill quy trình dùng chung (`vp-research-architect`, `vp-scriptwriting`, `vp-flow-cdp`, `vp-colab-bridge`, `vp-omni-platform`, `vp-production`); tách toàn bộ thông số đặc thù của kênh vào [.agents/skills/vp-channel-ban-do-quyen-luc/SKILL.md](../../../.agents/skills/vp-channel-ban-do-quyen-luc/SKILL.md):
+  - **Hệ hình ảnh 3 trụ cột + 4 cách kết hợp (`ban_do_quyen_luc_4styles_photoreal_v3`):**
+    - Ảnh nền Flow (`allowed_text=None`, đa dạng bối cảnh theo đúng từng câu thoại, cấm khóa cứng mặt bàn óc chó hay kẹp sắt đỏ): (1) Địa hình vệ tinh 3D màu tự nhiên; (2) Macro 100mm cơ chế kỹ thuật/công nghiệp; (3) Phóng sự hiện trường hàng hải/nhà máy thực địa.
+    - Ghép nối 4 cách kể chuyện hình ảnh trên khung hình 2K (`2560x1440`): **Cách 1 (`CACH_1_HERO_STAMP`, ~15%)** nhấn con số/từ khóa chấn động `156px/68px`; **Cách 2 (`CACH_2_SPLIT_COMPARE`, ~12%)** chia đôi màn hình đối chiếu Đỏ/Xanh; **Cách 3 (`CACH_3_DOSSIER_LIST`, ~15%)** thẻ hồ sơ 3 ý bên phải khung hình; **Cách 4 (`CACH_4_CINEMATIC_PACING`, ~58%)** chuyển động máy quay 2K overscan `1.12x` + key-beat I2V và chuyển cảnh `xfade=fade:duration=0.18`.
+  - **Giọng đọc & Âm thanh:** `VietNarrator_ban_do_quyen_luc` (`recommended_speed=1.15`, `default_tone="authoritative_clear"`, master `-11.0 LUFS / -1.0 dBTP`).
+  - **Watermark & Xuất bản:** `sys/channels/ban_do_quyen_luc/assets/watermark_150x150.png` ghim góc phải dưới `W-w-36:H-h-36`; đăng bản Long 2K trước qua `profile_19` (cổng `9240`), sau đó đăng bản Short 2K gắn `Video có liên quan` trỏ về bản Long + bình luận khơi tranh luận.
+

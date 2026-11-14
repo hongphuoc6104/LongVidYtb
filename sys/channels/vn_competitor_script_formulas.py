@@ -442,6 +442,18 @@ VN_COMPETITOR_SCRIPT_FORMULAS: Dict[str, Dict[str, Any]] = {
         "niche": "Địa chính trị, kinh tế tài nguyên và hải trình chiến lược (Geopolitics & Strategic Chokepoints)",
         "competitor_name": "RealLifeLore / Johnny Harris",
         "voice": "VietNarrator",
+        "voice_id": "VietNarrator_ban_do_quyen_luc",
+        "visual_4styles_combination_rule": {
+            "version": "ban_do_quyen_luc_4styles_photoreal_v3",
+            "total_visual_beats_long": 240,
+            "target_duration_range": "~9m30s-10m00s",
+            "modes": {
+                "CACH_1_HERO_STAMP": "~15% beats — Giant 2K stat/keyword stamp (156px/68px) for shocking figures & chokepoint hooks",
+                "CACH_2_SPLIT_COMPARE": "~12% beats — Dual-image split comparison card (Red #FF3B30 vs Cyan #00F5D4) for asymmetries",
+                "CACH_3_DOSSIER_LIST": "~15% beats — Right-docked dark glassmorphic 3-item dossier list for tiered mechanisms",
+                "CACH_4_CINEMATIC_PACING": "~58% beats — Clean 2K camera pacing (zoom/pan + key-beat I2V) bridged by xfade=fade:duration=0.18",
+            },
+        },
         "competitor_dialogue_formula": {
             "competitor_verbatim_transcript_20s": (
                 "[00:00-00:04.2s] 'Eo biển Malacca chỉ hẹp vỏn vẹn một phẩy năm hải lý...' [pause 0.28s] -> "
@@ -450,20 +462,22 @@ VN_COMPETITOR_SCRIPT_FORMULAS: Dict[str, Dict[str, Any]] = {
                 "[00:14.9-00:20.0s] 'nền kinh tế của hàng chục siêu cường sẽ lập tức rơi vào khủng hoảng năng lượng.'"
             ),
             "sentence_structure_formula_vi": (
-                "Công thức địa chính trị yết hầu 5 bước: (1) Kích thước địa lý nhỏ bé bất ngờ ('Eo biển chỉ hẹp 1.5 hải lý...') -> "
+                "Công thức địa chính trị yết hầu 5 bước (kết hợp 4 cách kể chuyện hình ảnh trên ~240 beats): "
+                "(1) Kích thước địa lý nhỏ bé bất ngờ ('Eo biển chỉ hẹp 1.5 hải lý...') -> "
                 "(2) Tỷ trọng tài nguyên vận chuyển khổng lồ ('gánh một phần tư lượng dầu toàn cầu') -> "
                 "(3) Rủi ro tắc nghẽn dây chuyền ('Chỉ cần một sự cố làm nghẽn dòng chảy') -> "
                 "(4) Hệ lụy khủng hoảng toàn cầu ('Kinh tế các siêu cường lập tức ngưng trệ') -> "
                 "(5) Kết luận quy luật quyền lực địa lý ('Ai nắm giữ điểm nghẽn, người đó nắm quyền điều phối thế giới')."
             ),
             "pause_and_cadence_formula_vi": (
-                "Nhịp đọc khẩn trương, chiến lược, tầm nhìn bao quát 148 WPM: Micro-pause 0.22s sau số liệu hải lý; "
-                "beat-pause 0.38s sau tỷ trọng dầu mỏ; dramatic-pause 0.45s khi đặt tình huống tắc nghẽn; "
-                "pause 0.30s trước kết luận đòn bẩy địa chính trị."
+                "Nhịp đọc phân tích địa chính trị đĩnh đạc, sắc nét (VietNarrator_ban_do_quyen_luc, recommended_speed=1.15, -11.0 LUFS / -1.0 dBTP): "
+                "Micro-pause 0.22s sau số liệu chiến lược; beat-pause 0.38s trước thẻ so sánh hoặc liệt kê 3 tầng; "
+                "dramatic-pause 0.45s ngay trước câu chốt nhấn mạnh đòn bẩy địa chính trị."
             ),
             "transition_and_camera_formula_vi": (
-                "Supersampled 2x zoompan từ vệ tinh quỹ đạo lao xuống eo biển kết hợp xfade 0.28s: smoothright quét theo luồng hàng hải rực sáng, "
-                "smoothup nhìn bao quát toàn bộ bán đảo, smoothdown bám sát đoàn tàu chở dầu, và fade sắc nét vào bản đồ tài nguyên."
+                "Hệ hình ảnh nhiếp ảnh thực tế 3 trụ cột kết hợp 4 cách kể chuyện 2K (ban_do_quyen_luc_4styles_photoreal_v3) "
+                "xuất 2560x1440@30fps: CACH_1 Hero Stat Stamp, CACH_2 Split-Screen Comparison, CACH_3 Glassmorphic Dossier List, "
+                "và CACH_4 Dynamic 2K Camera Pacing (zoom/pan + key-beat I2V) nối mượt bằng xfade=fade:duration=0.18."
             ),
         },
     },

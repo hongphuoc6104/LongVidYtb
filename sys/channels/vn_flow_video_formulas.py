@@ -642,38 +642,44 @@ VN_FLOW_VIDEO_FORMULAS: Dict[str, Dict[str, Any]] = {
         "channel_id": "ban_do_quyen_luc",
         "channel_slug": "ban-do-quyen-luc",
         "niche": "Địa chính trị, kinh tế tài nguyên và hải trình chiến lược (Geopolitics & Strategic Chokepoints)",
-        "competitor_benchmark": "RealLifeLore / Johnny Harris",
-        "new_visual_label": "3D Orbital Satellite Relief & Maritime Chokepoint Vector Cinema",
+        "competitor_benchmark": "RealLifeLore / Johnny Harris / Fern Documentary",
+        "new_visual_label": "3-Pillar Photorealistic Geopolitical Documentary & 4-Mode Storytelling Cinema (ban_do_quyen_luc_4styles_photoreal_v3)",
+        "visual_style_id": "ban_do_quyen_luc_4styles_photoreal_v3",
+        "recommended_speed": 1.15,
+        "voice_profile_id": "VietNarrator_ban_do_quyen_luc",
         "style_description": (
-            "RealLifeLore and Johnny Harris hyper-realistic 3D orbital-to-surface cartographic cinematography. "
-            "Blue atmospheric Earth limb curve against dark space, high-resolution topographical relief mountains, "
-            "and vibrant golden navigational flow lines tracing narrow straits (Malacca, Suez, Hormuz, Taiwan Strait). "
-            "Deep oceanic navy (#0A192F), illuminated trade lanes, and crisp satellite sunlight. Strategic, authoritative, and visually monumental."
+            "Three-pillar photorealistic geopolitical documentary cinematography fused with a 4-mode visual storytelling system "
+            "(ban_do_quyen_luc_4styles_photoreal_v3): (1) True-color 3D orbital satellite relief, straits, and open-pit resource topography; "
+            "(2) 100mm shallow-DOF macro engineering and industrial process mechanisms; (3) On-site maritime, smelting, port logistics, "
+            "and geopolitical field photography with diverse per-beat locations, materials, and natural/industrial lighting "
+            "(strictly zero repetitive tabletop desk or clamp props across beats). Paired in 2K post-compositing with CACH_1_HERO_STAMP, "
+            "CACH_2_SPLIT_COMPARE, CACH_3_DOSSIER_LIST, and CACH_4_CINEMATIC_PACING."
         ),
         "subject_physics": (
-            "High-altitude orbital cloud swirl drift, luminous golden maritime flow vectors gliding smoothly along waterways, "
-            "and realistic ocean wake physics through narrow geographic corridors"
+            "Real-world geophysical relief lighting, authentic 100mm macro industrial metallurgy and fluidics, "
+            "oceanic vessel wakes through narrow chokepoints, and clean 2K overscan camera pacing (zoom/pan + key-beat I2V motion)"
         ),
         "camera_grammar": [
             "orbital satellite-to-strait zoom descent",
-            "smooth lateral 3D relief map flight pass",
-            "low-horizon naval corridor tracking pass",
+            "100mm macro engineering rack-focus",
+            "on-site industrial & maritime lateral tracking pass",
+            "2K overscan dynamic camera pacing (zoom_in_center / pan_left_to_right / xfade=fade)",
         ],
         "continuity_anchor": (
-            "RealLifeLore hyper-realistic 3D orbital-to-surface cartographic cinematography with blue atmospheric limb glow, "
-            "directional solar lighting, and fluid hydrodynamic anti-morph physics across varying maritime scales and geographic choke points, "
-            "strictly zero map text or country labels"
+            "RealLifeLore & Johnny Harris 3-pillar photorealistic geopolitical documentary cinematography combining orbital geography, "
+            "100mm industrial macro, and field logistics photography with per-beat environmental diversity and 4-mode 2K storytelling pacing, "
+            "strictly zero text, zero map labels, and zero repetitive tabletop props in raw Flow frames"
         ),
         "forbidden_artifacts": [
-            "flat 2D Google Maps pins",
-            "ships sliding onto dry land",
-            "warping coastlines",
-            "gibberish country names",
-            "blurry low-res satellite tiles",
+            "flat 2D Google Maps pins or vector cartoons",
+            "repetitive walnut tabletop desk or crimson steel clamp props",
+            "sci-fi holographic radar rings or glowing neon HUDs",
+            "ships sliding onto dry land or warping coastlines",
+            "AI gibberish country names or overlaid letters in raw Flow images",
         ],
         "thumbnail_rule": (
-            "Glowing 3D satellite relief map showing a narrow naval choke point with illuminated red shipping lines, "
-            "2-4 uppercase bold words, high contrast, zero overlay card, 25% margin"
+            "Flow-native high-CTR geopolitical conflict or bottleneck photography matching the episode topic (zero tabletop clamps), "
+            "2-4 bold uppercase Vietnamese words in clean dark negative space, high contrast, zero offline PIL overlay card, < 2MB"
         ),
     },
     "loi_sang_soi": {
