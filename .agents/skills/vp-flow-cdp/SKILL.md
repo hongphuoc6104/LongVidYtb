@@ -14,11 +14,16 @@ Orchestrates Google Flow (`flow.google.com`) via CDP across a 39+ profile pool (
 4. **Warm Session Preservation (`ERR-20261108-02`)**: On Error 7/8 (`PUBLIC_ERROR_UNUSUAL_ACTIVITY` / `TOO_MUCH_TRAFFIC`), never kill/reload Chrome — call `_refresh_recaptcha_session` in place and put the profile on cooldown. Quarantine `NO_AT_TOKEN` profiles to `unauthenticated_profiles.json`.
 5. **Multi-Prompt `ogiZ0b` Batching**: Batch independent anchor prompts in groups of 2–4 via `generate_images_batch()`.
 
-## 2. Verified `batchexecute` RPCs & Credit Ledger (`sys/flow_cdp/credit_ledger.py`)
-- **RPCs**: `ogiZ0b` (image, 1c, batch 2–4), `nprQif` (`start_end_frames` video, 12–30c), `eb1hJf` (`start_frame` video, 12–30c), `maseQ` (upload frame, 0c), `nzlxg` (credits, 0c), `jwpduf` (poll operation `CAE`, 0c), `jHPbke` (create project, 0c).
+## 2. Model Lifecycle, Dual-Model Router & Credit Ledger (`sys/flow_cdp/credit_ledger.py`)
+- **Deprecation Alert (2026)**: `Veo Extend` retired **Nov 5, 2026**; `Veo 3.1 Fast`, `Veo 3.1 Quality`, and `Omni 1.1` (`abra`) retire **Dec 5, 2026** (`is_video_model_deprecated()`). Default `VIDEO_MODEL` is **`macaron_cookie_i2v_fl_8s` (Omni 1.2 Flash)**.
+- **Dual-Model Router (`sys/flow_video/scene_map_planner.py`, `motion_library.py`, `chain_planner.py`)**:
+  - **Seam Mode (`veo_3_1_lite`, 10 credits flat for 4s/6s/8s @ 720p)**: Start-frame only (`end_frame_path=None`), 70–100w timecoded prompt (`[0-6.5s]` move + `[6.5-8s]` natural masked exit seam: `leaves_wipe`, `dark_opening`, `white_flash`, `dust_smoke_cloud`, `edge_pass`, `final_hold`), stitched with FFmpeg `0.15–0.20s` `xfade=fade` dissolve (`seam_dissolve_sec=0.18`). Mandatory when cast, location, or lighting changes (eliminates face morphing & cuts video credits ~60%).
+  - **Frame-Link Mode (`omni_flash` `macaron_cookie`, 12–30c @ 720p)**: `start_end_frames` (`nprQif`), 40–70w prompt. Route ONLY when consecutive scenes share identical cast (or both character-free) AND matching lighting.
+  - **Viewing-Comfort Lock**: `nao_luoi`, `en_lazy_brain`, and `archetype_5_mindful_healing` channels lock to `soft_fade` (`0.24s`) + gentle motion (aggressive flashes/whips blocked).
+- **RPCs**: `ogiZ0b` (image, 1c/0c free, batch 2–4), `nprQif` (`start_end_frames` video), `eb1hJf` (`start_frame` video), `maseQ` (upload frame, 0c), `nzlxg` (credits, 0c), `jwpduf` (poll operation `CAE`, 0c), `jHPbke` (create project, 0c).
 - **Ledger (`~/.config/video-pilot/flow/credits.json`)**: `fcntl.flock` multiprocess store; `select_eligible_profiles()` prioritizes `last_used_at > 0` + highest remaining balance (LRU tie-breaker).
 - **Credit Fallback Hierarchy**:
-  - **P1 (`full_chain`)**: Default while ANY pool profile has credit (`Omni 1.2 Flash` video chain + Colab T4 `h264_nvenc`).
+  - **P1 (`full_chain`)**: Default while ANY pool profile has credit (`veo_3_1_lite` Seam + `Omni 1.2 Flash` Frame-Link + Colab T4 `h264_nvenc`).
   - **P2 (`images_only`)**: Automatic fallback ONLY when 100% of pool profiles hit 0 credits (cooldown ≠ 0 credits).
 
 ## 3. Core CLI Commands

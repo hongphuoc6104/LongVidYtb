@@ -16,12 +16,14 @@ Authors and validates spoken Vietnamese/English explainer scripts (`long_16x9` a
 6. **V2 CTA & Short→Long Bridge (`cta_tone_linter.py`)**: Every short carries `parent_long_id`; final 15% contains exactly 1 close CTA ($\le 24$ syllables) + 1 channel-named bridge ($\le 22$ syllables) spoken verbatim in the last scene (zero CTA in the first 3s). Long videos allow $\le 1$ `mid_cta` at 35–45%. Never say *"like, share, subscribe, nhấn chuông, đăng ký kênh"*.
 7. **Active Pause Authoring (`format_v1`)**: Default pauses come from `sys/format_profiles.py` via `narration_pauses.py`. Use intentional pivot tags sparingly (`450ms` short / `600ms` long; $\le 3$ dramatic `800–900ms` tags in `SC02+`).
 
-## 2. Mandatory Linters
+## 2. Mandatory Linters (4 Gates)
 ```bash
+python3 sys/tools/fact_grounding_linter.py --content path/to/content.json --vault path/to/fact_vault.json --strict
 python3 sys/tools/script_cadence_checker.py path/to/content.json
 python3 sys/tools/script_diversity_linter.py path/to/content.json
 python3 sys/tools/cta_tone_linter.py path/to/content.json
 ```
+- **Fact Vault & TTS Glossary Rule**: Every quantitative metric, date, and mechanism in narration MUST trace back to `fact_vault.json` (`verified_facts[]`; strictly drop `"report-only"` claims). Normalize foreign symbols and figures into `spoken_numbers_vi` / `pronunciation_glossary` before OmniVoice TTS.
 
 ## 3. Progressive Disclosure References
 - **Conversational Essayist Framework & Exemplars**: [conversational-essayist-framework.md](references/conversational-essayist-framework.md)

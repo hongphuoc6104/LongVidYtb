@@ -23,6 +23,12 @@ New images lock to the **2D Vietnamese Indie Doodle** profile `1.7.0` (`handdraw
 - High-density `long_16x9` (240–350 `based_on` states) locks to a rock-steady static Lanczos frame (`scale=1920:1080:flags=lanczos,crop=1920:1080:exact=1`) with optical `xfade=transition=fade` (`0.24s`) only — zero `vf_zoompan` or directional slide `xfade` (ERR-20261109-01) — unless GPU sub-pixel `float32` 2.5D parallax warehouse mode (`sys/fx_warehouse/`) is explicitly enabled. When `zoompan` is used on low-density/EN fallback paths, use analytical continuous `z='1.06-0.06*(on/N)'` (never recursive `zoom`). Full-frame playback never enables line-boil displacement. Channel logo is pinned to bottom-right `W-w-36:H-h-36` on both formats (ERR-20261109-02).
 - Overscan `1.045` crops about 2.15% from each edge at rest. It provides a framing margin, not a guarantee that provider marks disappear. Inspect real edge pixels over the entire motion range before claiming removal.
 
+## Two-Stage Scene Map & Dynamic Channel Style Bible (`sys/flow_video/scene_map_planner.py`)
+
+For multi-scene continuity on any channel (and new episodes replacing legacy hardcoded EP01 dictionaries in `story_driven_prompt_builder.py`), author and verify prompts in two stages:
+1. **Stage 1 (`SceneMap` + Cast/Ref DAG)**: Plan the scene table (`Scene | Time | VO | Location | Hero | Cast (NEW / SAME as SCxx) | reference_scene_ids | camera_move | transition_mode | exit_seam`), validate zero consecutive `camera_move` duplicates and cast references via `validate_scene_map()`, and enforce viewing-comfort policies (`get_channel_motion_policy`: disables flash/edge-whip seams on 2D Doodle `nao_luoi`/`en_lazy_brain` & `archetype_5_mindful_healing`).
+2. **Stage 2 (Positive-Framing Prompt Compiler)**: Compile image prompts via `compile_scene_image_prompts()` / `build_positive_scene_prompt()` reading the Channel Style Bible dynamically (`vn_flow_video_formulas.py` / `en_flow_video_formulas.py` / `1.7.0` doodle) with Google-recommended positive framing (`"plain unmarked surfaces"` instead of negative spam).
+
 ## Modular FX & Audio Warehouse (5-Niche Archetype + Bespoke-Per-Video)
 
 Per-beat motion, 30fps HUD overlays, GPU frame shaders, and procedural SFX/BGM are governed by [vp-motion-fx-warehouse](../vp-motion-fx-warehouse/SKILL.md) and the sharded `sys/fx_warehouse/` package (`archetypes.py`, `camera_vfx.py`, `hud_widgets.py`, `audio_sfx_bgm.py`, `selector.py`), executed strictly on Colab Tesla T4 `FFmpeg h264_nvenc` (zero Remotion/Chromium):
