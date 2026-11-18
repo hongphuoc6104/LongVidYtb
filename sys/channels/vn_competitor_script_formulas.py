@@ -264,31 +264,30 @@ VN_COMPETITOR_SCRIPT_FORMULAS: Dict[str, Dict[str, Any]] = {
     "chanh_niem_ke": {
         "channel_id": "chanh_niem_ke",
         "channel_slug": "chanh-niem-ke",
-        "niche": "Triết lý Phật giáo ứng dụng, Chánh niệm & nghệ thuật buông bỏ (Applied Mindfulness & Zen Philosophy)",
-        "competitor_name": "Pursuit of Wonder / Aperture",
-        "voice": "VietNarrator",
+        "niche": "Hiểu Tận Gốc — Giải phẫu thảm họa kỹ thuật, đại dịch & sự cố sụp đổ hạ tầng trên bản đồ (Causal Disaster & Engineering Collapse Chronicles)",
+        "competitor_name": "Su De Hieu / LEMMiNO / Causal Chronicle",
+        "voice": "VietNarrator_chanh_niem_ke",
         "competitor_dialogue_formula": {
             "competitor_verbatim_transcript_20s": (
-                "[00:00-00:04.5s] 'Càng cố nắm chặt một nắm cát trong lòng bàn tay...' [pause 0.38s] -> "
-                "[00:04.9-00:09.2s] 'từng hạt cát càng len qua kẽ ngón tay rơi xuống đất.' [pause 0.45s] -> "
-                "[00:09.7-00:14.6s] 'Tâm trí bạn đối với những muộn phiền cũng hệt như vậy.' [pause 0.40s] -> "
-                "[00:15.0-00:20.0s] 'Bình yên không đến khi bạn cố kiểm soát tất cả, mà đến khi bạn học cách mở rộng bàn tay.'"
+                "[00:00-00:03.8s] 'Đêm 26 tháng 4 năm 1986, các kỹ sư chỉ bấm nút dừng khẩn cấp AZ-5...' [pause 0.45s] -> "
+                "[00:04.3-00:09.2s] 'nhưng chính nút cứu hộ này lại kích nổ lò phản ứng số 4 chỉ trong ba giây.' [pause 0.70s] -> "
+                "[00:09.9-00:14.8s] 'Vì sao một công tắc được thiết kế để dập tắt thảm họa...' [pause 0.48s] -> "
+                "[00:15.3-00:20.0s] 'lại biến thành ngòi nổ cho cú sập hạt nhân lớn nhất lịch sử nhân loại?'"
             ),
             "sentence_structure_formula_vi": (
-                "Công thức chánh niệm chữa lành 5 bước: (1) Ẩn dụ xúc giác tự nhiên quen thuộc ('Càng nắm chặt cát trong lòng tay...') -> "
-                "(2) Quy luật vật lý hiển nhiên ('cát càng lọt qua kẽ tay') -> "
-                "(3) So chiếu vào tâm thức con người ('Tâm trí bạn với phiền não cũng thế') -> "
-                "(4) Nghịch lý của sự cố chấp ('Càng cố kiểm soát càng kiệt sức') -> "
-                "(5) Bài học buông xả thảnh thơi ('Mở rộng bàn tay để đón nhận sự an yên')."
+                "Công thức 5-Act Causal Domino ('Hiểu đến tận gốc, không phải nhớ số liệu'): "
+                "(1) Móc nghịch lý hành động cứu hộ gây sập -> (2) Bối cảnh bản đồ GIS & các tác nhân lịch sử -> "
+                "(3) Dịch sang đời thường bằng 6 phép quy đổi vật lý gần gũi -> "
+                "(4) Mắt xích domino kỹ thuật nơi từng sai số nhỏ cộng hưởng -> (5) Hậu quả & thay đổi quy chuẩn vĩnh viễn."
             ),
             "pause_and_cadence_formula_vi": (
-                "Nhịp đọc trầm ấm, tĩnh tại, an yên, chữa lành 132 WPM: Micro-pause 0.25s sau mệnh đề hình ảnh; "
-                "beat-pause 0.42s sau quy luật cát rơi; dramatic-pause 0.50s sau câu soi chiếu nội tâm; "
-                "pause 0.38s trước lời nhắn nhủ buông xả."
+                "Nhịp KTTV Studio V3 (226-232 âm tiết/phút Hook & Body, 248-256 âm tiết/phút Outro): "
+                "pause_after_s biến thiên theo ngữ cảnh (0.48-0.75s thở bình thường, 0.90-1.35s nhấn điểm nghẽn, "
+                "2.50-4.80s mỗi ~45-55s nhường chỗ cho Sparse Realistic Foley SFX)."
             ),
             "transition_and_camera_formula_vi": (
-                "Chuyển động anamorphic 35mm tĩnh lặng, chậm rãi kết hợp xfade 0.28s: smoothleft lia dọc hiên chùa mưa bay, "
-                "smoothdown nhìn giọt nước đọng trên lá sen, smoothup theo làn khói trầm thanh tịnh, và fade mềm mại vào ánh hoàng hôn ấm áp."
+                "Bipolar V5.0 chuyển cảnh giữa World A (bản đồ GIS Web Mercator DEM + ghim tọa độ) và "
+                "World B (sa bàn giấy nhăn #DCDCD7, mặt cắt UE5 3D, clip Omni 1.2 Flash 6s và quét bút nhớ #FAD01A)."
             ),
         },
     },
@@ -333,6 +332,20 @@ VN_COMPETITOR_SCRIPT_FORMULAS: Dict[str, Dict[str, Any]] = {
         "niche": "Sức khỏe, tế bào sinh học và giải phẫu 3D (Human Physiology & Medical 3D)",
         "competitor_name": "Nucleus Medical Media / Zack D. Films",
         "voice": "VietNarrator",
+        "voice_id": "VietNarrator_co_the_ke",
+        "recommended_speed": 1.12,
+        "visual_4modes_biomedical_rule": {
+            "version": "co_the_ke_3d_biomedical_v3",
+            "long_chapter_count": 10,
+            "total_visual_beats_long": 240,
+            "total_visual_beats_short": 18,
+            "modes": {
+                "MODE_1_BIOMETRIC_STAMP": "~15% beats — Bold #0A192F dark-scrim physiological stat or cellular threshold callout",
+                "MODE_2_NORMAL_VS_STRESS_SPLIT": "~12% beats — Vertical Cyan (#06B6D4) vs Crimson (#EF4444) healthy baseline vs overload split",
+                "MODE_3_CASCADE_CHECKLIST": "~15% beats — Right-docked dark biotech dossier panel (#0F172A) showing [01]/[02]/[03] biological stages",
+                "MODE_4_ENDOSCOPIC_PACING": "~58% beats — Clean 2K 3D endoscopic movement (2560x1440@30fps, xfade=fade:duration=0.20)",
+            },
+        },
         "competitor_dialogue_formula": {
             "competitor_verbatim_transcript_20s": (
                 "[00:00-00:03.5s] 'Mỗi đêm khi bạn chìm vào giấc ngủ say...' [pause 0.25s] -> "
@@ -341,20 +354,23 @@ VN_COMPETITOR_SCRIPT_FORMULAS: Dict[str, Dict[str, Any]] = {
                 "[00:13.9-00:20.0s] 'được tích tụ suốt mười sáu tiếng làm việc căng thẳng trong ngày của bạn.'"
             ),
             "sentence_structure_formula_vi": (
-                "Công thức nhân hóa giải phẫu 5 bước: (1) Thời điểm cơ thể chuyển trạng thái ('Khi bạn ngủ say...') -> "
-                "(2) Hoạt động âm thầm của đội ngũ tế bào ('tế bào thần kinh mở van xả lũ') -> "
-                "(3) Nhiệm vụ sinh học sống còn ('Bơm dịch não tủy quét sạch mảng độc') -> "
-                "(4) Cảnh báo hậu quả nếu gián đoạn ('Thức khuya khiến rác độc tích tụ gây suy giảm trí nhớ') -> "
-                "(5) Lời khuyên yêu thương cơ thể ('Hãy đi ngủ đúng giờ để não bộ được dọn rác')."
+                "Công thức giải phẫu y sinh 3D 5 bước (kết hợp 4 chế độ hình ảnh trên ~240 beats / 10 chương Long & 18 beats Short): "
+                "(1) Sốc sinh lý ngay 3s đầu ('Khi bạn thức trắng 24 giờ, chuyện gì xảy ra?') -> "
+                "(2) Phản ứng âm thầm của tế bào ('Tế bào sát thủ tự nhiên NK sụt giảm 70%') -> "
+                "(3) Chuỗi dây chuyền liên cơ quan ('Não bắt đầu dọn rác lệch nhịp, cortisol tăng vọt') -> "
+                "(4) Đối chiếu bình thường vs quá tải ('Ngủ đủ 8 tiếng vs thức trắng một đêm') -> "
+                "(5) Giải pháp phục hồi dựa trên nghiên cứu & cầu nối sang Cơ Thể Kể (tuyệt đối không like/share/subscribe)."
             ),
             "pause_and_cadence_formula_vi": (
-                "Nhịp đọc sinh động, khoa học, gần gũi, ấm áp 142 WPM: Micro-pause 0.22s sau mệnh đề đêm khuya; "
-                "beat-pause 0.38s sau khi kích hoạt van xả lũ; dramatic-pause 0.42s sau khi nêu mảng bám độc hại; "
-                "pause 0.30s trước lời dặn bảo vệ sức khỏe."
+                "Nhịp đọc giải thích y sinh trực quan khóa V3 (VietNarrator_co_the_ke, recommended_speed=1.12x, "
+                "default_tone=authoritative_calm, EQ highpass=85/equalizer 190 -2dB & 3000 +1.4dB/lowpass=13500, master -11.0 LUFS / -1.0 dBTP): "
+                "Hook <= 18 âm tiết (Short) / <= 24 âm tiết (Long), zero [pause:...] ở Beat 1, Open Loop sớm sents[1:4], "
+                "tối thiểu 3 beat hình ảnh trong 0-5s đầu."
             ),
             "transition_and_camera_formula_vi": (
-                "Camera nội soi 3D trôi bồng bềnh trong khoang tế bào kết hợp xfade 0.28s: smoothright theo dòng chảy dịch não tủy, "
-                "smoothdown khi lọt qua khe mao mạch, smoothup hướng về tế bào nơ-ron, và fade mềm mại sang nhịp thở êm đềm."
+                "Hệ hình ảnh 8K 3D Endoscopic Biomedical Cinematography 2K khóa V3 (co_the_ke_3d_biomedical_v3) xuất 2560x1440@30fps (Long) / 1440x2560@30fps (Short): "
+                "MODE_1 Biometric Stamp, MODE_2 Normal vs Stress Split, MODE_3 Cascade Checklist, MODE_4 Endoscopic Pacing nối mượt bằng xfade=fade:duration=0.20, "
+                "lọc delogo góc phải dưới trước khi ghim watermark W-w-48:H-h-48."
             ),
         },
     },
@@ -411,6 +427,20 @@ VN_COMPETITOR_SCRIPT_FORMULAS: Dict[str, Dict[str, Any]] = {
         "niche": "Bí ẩn, hồ sơ kỳ lạ và giám định pháp y (Forensic Mysteries & Unsolved Archives)",
         "competitor_name": "LEMMiNO / Fern",
         "voice": "VietNarrator",
+        "voice_id": "VietNarrator_ho_so_ky_la",
+        "recommended_speed": 1.10,
+        "visual_4modes_forensic_rule": {
+            "version": "ho_so_ky_la_3d_noir_forensic_v3",
+            "long_chapter_count": 10,
+            "total_visual_beats_long": 260,
+            "total_visual_beats_short": 18,
+            "modes": {
+                "MODE_1_EVIDENCE_STAMP": "~15% beats — Bold dark-scrim forensic timestamp, altitude, or black-box metric callout",
+                "MODE_2_HYPOTHESIS_CONTRAST": "~12% beats — Dual comparison of competing hypotheses or AUTO vs MAN telemetry state",
+                "MODE_3_DOSSIER_CHECKLIST": "~15% beats — Right-docked archival dossier card with 3 sequential clues or failure findings",
+                "MODE_4_NOIR_CINEMATIC_PACING": "~58% beats — Clean 2K 3D Noir progression (2560x1440@30fps, xfade=fade:duration=0.24)",
+            },
+        },
         "competitor_dialogue_formula": {
             "competitor_verbatim_transcript_20s": (
                 "[00:00-00:03.8s] 'Tại căn phòng khóa trái cửa từ bên trong...' [pause 0.30s] -> "
@@ -419,20 +449,22 @@ VN_COMPETITOR_SCRIPT_FORMULAS: Dict[str, Dict[str, Any]] = {
                 "[00:14.1-00:20.0s] 'chính là người đàn ông vừa bước vào phòng mười phút trước đó.'"
             ),
             "sentence_structure_formula_vi": (
-                "Công thức hồ sơ trinh thám noir 5 bước: (1) Thiết lập hiện trường kín kỳ lạ ('Căn phòng khóa trái từ bên trong...') -> "
+                "Công thức hồ sơ trinh thám 3D Noir 5 bước (kết hợp 4 chế độ hình ảnh trên ~260 beats / 10 chương Long & 18 beats Short): "
+                "(1) Thiết lập nghịch lý hiện trường kín ('Căn phòng khóa trái từ bên trong...') -> "
                 "(2) Chi tiết loại trừ giả thuyết thông thường ('Đồ đạc nguyên vẹn không dấu hiệu trộm cắp') -> "
-                "(3) Điểm bất thường cốt lõi ('Chỉ có một điều duy nhất biến mất') -> "
-                "(4) Cú sốc nạn nhân bốc hơi ('Người đàn ông biến mất không tăm tích') -> "
-                "(5) Mở tập hồ sơ giải mã từng manh mối ('Sau đây là những sự thật bị che giấu suốt 30 năm')."
+                "(3) Mở vòng lặp bất thường cốt lõi ('Nhưng chỉ có một điều duy nhất biến mất') -> "
+                "(4) Đối chiếu vật lý & hộp đen loại trừ ('Người đàn ông biến mất dù mọi thông số đều bình thường') -> "
+                "(5) Kết luận dựa trên chứng cứ & câu hỏi tranh luận mở sang hồ sơ dài ('Theo bạn manh mối nào quyết định kết cục?')."
             ),
             "pause_and_cadence_formula_vi": (
-                "Nhịp đọc lạnh lùng, hồi hộp, chậm rãi, cuốn hút 134 WPM: Micro-pause 0.25s sau bối cảnh phòng kín; "
-                "beat-pause 0.42s sau chi tiết đồ vật; dramatic-pause 0.52s trước nút thắt nạn nhân biến mất; "
-                "pause 0.35s trước khi lật mở hồ sơ bằng chứng."
+                "Nhịp đọc điều tra sắc nét khóa V3.1 (VietNarrator_ho_so_ky_la, recommended_speed=1.10x: 1.00x base + atempo=1.10 + 0.10s gap; retime local 1.05->1.10 dùng atempo=1.047619, "
+                "default_tone=forensic_investigative_crisp, master -11.0 LUFS / -1.0 dBTP): Hook <= 18 âm tiết (Short) / <= 24 âm tiết (Long), "
+                "Open Loop sớm sents[1:4], Micro-pause 0.22s sau bối cảnh nghịch lý, dramatic-pause 0.40s trước nút thắt chứng cứ."
             ),
             "transition_and_camera_formula_vi": (
-                "Chuyển động máy quay noir chậm rãi trong ánh sáng mờ kết hợp xfade 0.28s: smoothdown lia từ trần nhà xuống ổ khóa bên trong, "
-                "smoothleft quét qua sợi dây bằng chứng màu đỏ, smoothright bám theo dấu vân tay, và fade tối vào màn sương bí ẩn."
+                "Hệ hình ảnh 3D Noir Forensic Diorama 2K khóa V3 (ho_so_ky_la_3d_noir_forensic_v3) xuất 2560x1440@30fps (Long) / 1440x2560@30fps (Short): "
+                "MODE_1 Evidence Stamp, MODE_2 Hypothesis Contrast, MODE_3 Dossier Checklist, MODE_4 Noir Pacing nối mượt bằng xfade=fade:duration=0.24, "
+                "lọc delogo góc phải dưới trước khi ghim watermark W-w-48:H-h-48."
             ),
         },
     },

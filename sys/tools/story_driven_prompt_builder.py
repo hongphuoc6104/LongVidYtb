@@ -77,12 +77,12 @@ CHANNEL_STYLE_PROFILES: Dict[str, ChannelStyleProfile] = {
     "chanh-niem-ke": ChannelStyleProfile(
         slug="chanh-niem-ke",
         channel_id="chanh_niem_ke",
-        benchmark="Pursuit of Wonder / Aperture",
-        style_prefix="Cinematic Wabi-Sabi & Zen Sumi-e mindfulness visual,",
-        aesthetic_traits="Pursuit of Wonder contemplative aesthetic, soft diffused natural morning mist, organic wood grain, serene water ripples, warm gentle sidelight, peaceful meditative atmosphere with generous empty negative space",
+        benchmark="Su De Hieu / LEMMiNO / Causal Chronicle",
+        style_prefix="Archival weathered documentary plate and 3D isometric engineering cutaway diorama,",
+        aesthetic_traits="muted warm Svema 1986 documentary film color grading and dark charcoal studio cutaway backdrop #141619, crisp industrial realism, standard clear composition with ample negative space",
         negative_rules="strictly zero text overlays, zero labels, zero logos, no watermark, no clutter",
         is_doodle=False,
-        actor_label="contemplative person",
+        actor_label="engineer or investigator",
     ),
     "nao-luoi": ChannelStyleProfile(
         slug="nao-luoi",
@@ -310,16 +310,16 @@ CHAPTER_THEMES_EN: Dict[str, List[str]] = {
         "geopolitical balance and strategic foresight",
     ],
     "chanh-niem-ke": [
-        "gentle afternoon rain falling onto wooden temple veranda",
-        "translucent raindrops trailing down cold misty windowpane",
-        "calm pond ripples expanding from a single falling raindrop",
-        "parable of the first arrow representing natural physical pain",
-        "parable of the second arrow representing mental overthinking and guilt",
-        "fallen golden leaf drifting gently down a tranquil stream",
-        "deep conscious breathing releasing mental tension and anxiety",
-        "decluttering physical space to restore inner mental clarity",
-        "three self-inquiry questions diffusing sudden anxious thoughts",
-        "returning to deep unshakeable inner peace and presence",
+        "1986 industrial control room at midnight before safety test",
+        "isometric cutaway of RBMK reactor core and vertical fuel channels",
+        "graphite-tipped boron control rod mechanics inside cooling tube",
+        "thermal steam void bubble cascade accelerating fission chain reaction",
+        "massive 2000-ton concrete upper biological shield lid rupture",
+        "archival Svema film view of emergency fire crews at reactor hall",
+        "aerial Mi-8 helicopter dropping sand, lead, and boron over glowing core",
+        "rooftop liquidator crews clearing graphite debris in 45-second shifts",
+        "concrete sarcophagus containment shell enclosing damaged reactor",
+        "long-term global nuclear safety lessons and environmental recovery",
     ],
     "nao-luoi": [
         "nighttime bed phone scrolling loop and guilt cycle",
@@ -711,32 +711,28 @@ CHANNEL_DOMAIN_PATTERNS: Dict[str, List[Tuple[re.Pattern, str]]] = {
     ],
     "chanh-niem-ke": [
         (
-            re.compile(r"hiên gỗ|cơn mưa|sân chùa|chiều buông|mái ngói", re.I),
-            "a quiet rustic wooden veranda overlooking a rain-swept courtyard garden, gentle raindrops falling onto stone paving and misty bamboo foliage",
+            re.compile(r"lò phản ứng|hạt nhân|az-5|rbmk|thanh điều khiển|than chì", re.I),
+            "3D isometric engineering cutaway of a nuclear reactor core showing vertical fuel channels and boron control rods with graphite tips on a dark charcoal studio backdrop",
         ),
         (
-            re.compile(r"giọt mưa|mặt kính|lăn dài|hơi sương", re.I),
-            "close-up of delicate translucent raindrops slowly trailing down a cool foggy glass windowpane, soft diffused grey twilight outside",
+            re.compile(r"phòng điều khiển|kỹ sư|nút bấm|đồng hồ|báo động", re.I),
+            "muted warm 1986 documentary film scene inside an industrial power plant control room with analog gauges and backlit indicator panels",
         ),
         (
-            re.compile(r"mặt nước hồ cá|vòng sóng lan tỏa|gợn sóng|hồ cá", re.I),
-            "a single clean raindrop disturbing the still surface of a garden pond, creating expanding concentric ripples that reflect the serene sky",
+            re.compile(r"vụ nổ|nắp lò|hơi nước|sụp đổ|khói lửa", re.I),
+            "dramatic isometric cutaway of steam overpressure lifting a heavy concrete reactor lid with glowing ember particles on a clean dark studio background",
         ),
         (
-            re.compile(r"mũi tên thứ nhất|nỗi đau thể xác|đau đớn", re.I),
-            "symbolic Zen illustration: a simple peaceful figure struck by a single wooden arrow representing natural physical pain, accepting it calmly",
+            re.compile(r"trực thăng|cứu hỏa|mái nhà|quan tài bê tông|dọn dẹp", re.I),
+            "archival 1986 documentary plate of emergency crews and helicopters operating above a damaged industrial concrete containment structure",
         ),
         (
-            re.compile(r"mũi tên thứ hai|sự phán xét|dằn vặt|tâm trí|lo âu", re.I),
-            "symbolic Zen illustration: a shadowy second arrow representing mental overthinking and self-criticism, visualizing unnecessary emotional suffering",
+            re.compile(r"sơ tán|xe buýt|pripyat|thành phố ma|rừng đỏ", re.I),
+            "muted overcast 1986 documentary photograph of a quiet Soviet apartment town with empty streets and parked evacuation buses",
         ),
         (
-            re.compile(r"dòng nước chảy|chiếc lá trôi|buông bỏ|dòng suối", re.I),
-            "a single weathered golden autumn leaf gently floating down a slow-moving crystal stream, drifting effortlessly around smooth river stones",
-        ),
-        (
-            re.compile(r"hơi thở|thở ra|nhẹ nhõm|bình yên|tĩnh tại", re.I),
-            "a solitary person sitting comfortably on a meditation cushion, shoulders dropped and posture relaxed in complete stillness and tranquility",
+            re.compile(r"đại dịch|cầu|đập thủy điện|tàu|máy bay|thảm họa", re.I),
+            "isometric structural engineering cutaway isolating the critical mechanical failure point against a dark studio background",
         ),
     ],
     "nao-luoi": [
@@ -1111,6 +1107,34 @@ def build_story_driven_prompt(
     return full_prompt
 
 
+def build_positive_scene_prompt(
+    scene_entry: dict[str, Any] | Any,
+    channel_slug: str,
+    format_profile: str = "long_16x9",
+    style_bible: str | None = None,
+) -> str:
+    """Compile a topic-agnostic positive-framing BELUGA prompt via Stage 2 SceneMap compiler.
+
+    Recommended for all new episodes so topics never inherit EP01 seed dictionaries.
+    """
+    from flow_video.scene_map_planner import SceneMap, SceneMapEntry, compile_scene_image_prompts
+
+    entry = (
+        scene_entry
+        if isinstance(scene_entry, SceneMapEntry)
+        else SceneMapEntry.from_dict(dict(scene_entry))
+    )
+    smap = SceneMap(
+        job_id="single_prompt",
+        channel_id=channel_slug.replace("-", "_"),
+        format_profile=format_profile,
+        scenes=[entry],
+    )
+    compiled = compile_scene_image_prompts(smap, style_bible_override=style_bible)
+    prompt = compiled[0]["image_prompt"]
+    return re.sub(r"\b(8k|4k|uhd|ultra\s*hd)\b", "detailed", _strip_non_ascii(prompt), flags=re.IGNORECASE)
+
+
 if __name__ == "__main__":
     test_cases = [
         ("ho-so-ky-la", "Mười hai giờ ba mươi lăm phút trưa, ngày mười lăm tháng năm năm hai nghìn không trăm linh một.", "Hồi 01: 12 Giờ 35 Tại Bãi Ga Stanley", "ANCHOR_ESTABLISH"),
@@ -1120,7 +1144,7 @@ if __name__ == "__main__":
         ("dia-com", "Trên mặt chảo gang nóng rực, những giọt mỡ bò đang nhảy múa và nổ lách tách.", "Hồi 01: Mùi Thơm Đánh Thức Vị Giác", "ANGLE_CUTAWAY"),
         ("tui-tien", "Ly vừa năm mươi lăm nghìn, nhưng chỉ thêm bốn nghìn nữa bạn được ly lớn.", "Hồi 01: Nghịch Lý Hóa Đơn & Hiệu Ứng Chim Mồi", "ANGLE_CUTAWAY"),
         ("ban-do-quyen-luc", "Dòng hải lưu hẹp uốn lượn như một chiếc phễu khổng lồ kẹp giữa đại dương.", "Hồi 01: Yếu Huyệt Hàng Hải", "ANCHOR_ESTABLISH"),
-        ("chanh-niem-ke", "Mũi tên thứ hai chính là sự phán xét và dằn vặt của tâm trí.", "Hồi 01: Cơn Mưa Trong Lòng", "ANGLE_CUTAWAY"),
+        ("chanh-niem-ke", "Nút dừng khẩn cấp AZ-5 đẩy thanh than chì vào lõi lò phản ứng đang quá nhiệt.", "Hồi 01: Cú Bấm Định Mệnh", "ANGLE_CUTAWAY"),
         ("nao-luoi", "Chắc hẳn bạn từng tự nhủ chỉ cầm điện thoại lướt mạng năm phút trước khi đi ngủ.", "Hồi 01: Vòng Lặp Lướt Màn Hình", "ANCHOR_ESTABLISH"),
     ]
 

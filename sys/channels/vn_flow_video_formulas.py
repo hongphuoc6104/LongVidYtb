@@ -412,38 +412,38 @@ VN_FLOW_VIDEO_FORMULAS: Dict[str, Dict[str, Any]] = {
     "chanh_niem_ke": {
         "channel_id": "chanh_niem_ke",
         "channel_slug": "chanh-niem-ke",
-        "niche": "Triết lý Phật giáo ứng dụng, Chánh niệm & nghệ thuật buông bỏ (Applied Mindfulness & Zen Philosophy)",
-        "competitor_benchmark": "Pursuit of Wonder / Aperture",
-        "new_visual_label": "35mm Anamorphic Kyoto Zen Sanctuary & Rain Cinema",
+        "niche": "Hiểu Tận Gốc — Giải phẫu thảm họa kỹ thuật, đại dịch & sự cố sụp đổ hạ tầng trên bản đồ (Causal Disaster & Engineering Collapse Chronicles)",
+        "competitor_benchmark": "Su De Hieu / LEMMiNO / Causal Chronicle",
+        "new_visual_label": "Bipolar V5.0 Real GIS Web Mercator & Crumpled Paper 3D Cutaway Hybrid",
         "style_description": (
-            "Pursuit of Wonder and Aperture contemplative 35mm anamorphic cinema. Weathered natural cedar wood, wet river stones, "
-            "mossy courtyard flagstones, and gentle drizzle rippling into stone water basins (tsukubai). Soft diffused overcast dawn light, "
-            "gentle paper shoji lantern glow (2400K), drifting incense smoke, and deep muted earth-tone palette (#2D3748, #3F372C, #718096, #D4AF37). "
-            "Calming, spacious visual silence."
+            "Permanent V5.0 topic-agnostic hybrid documentary system pairing Real GIS Web Mercator DEM territory maps "
+            "(ESRI World Imagery, Hillshade, Natural Earth 10m with forced Hoang Sa/Truong Sa sovereignty) against "
+            "warm crumpled paper studio plates (#DCDCD7), dark charcoal (#141619) UE5 isometric 3D technical cutaways, "
+            "Svema 1986 muted archival documentary plates, and crisp 30fps Vietnamese typography."
         ),
         "subject_physics": (
-            "Natural fluid rain ripples, gentle wind swaying bamboo leaves, slow organic drifting incense smoke curls, "
-            "soft light dissipation through textured washi paper, and peaceful water droplet surface tension"
+            "Rigid industrial cutaway geometry, authentic steam/fluid/structural failure cascades, "
+            "smooth 2.5D desk paper pans, and continuous Web Mercator map trajectories"
         ),
         "camera_grammar": [
-            "anamorphic 35mm slow horizontal drift across sanctuary",
-            "tranquil meditative push-in toward dripping eaves",
-            "locked contemplative wide composition of courtyard",
+            "smooth Web Mercator GIS flight arc between pin coordinates",
+            "2.5D crumpled-paper desk lateral pan across pinned archival Polaroids",
+            "steady isometric cutaway viewport push-in on mechanical failure trigger",
         ],
         "continuity_anchor": (
-            "Aperture & Pursuit of Wonder 35mm anamorphic contemplative cinema with natural dusk/rain chiaroscuro lighting, "
-            "wide anamorphic depth-of-field, and serene atmospheric anti-morph physics across changing tranquil environments, strictly zero text"
+            "Hiểu Tận Gốc V5.0 Bipolar GIS Map & Crumpled Paper documentary aesthetic (#141619 dark slate & #DCDCD7 paper) "
+            "with strictly 0% embedded text in raw Flow plates and deterministic Vietnamese PIL/GPU typography"
         ),
         "forbidden_artifacts": [
+            "AI-generated fake maps or distorted borders",
+            "gibberish Vietnamese text drawn inside Flow images",
             "anime fantasy effects",
-            "neon cyberpunk colors",
-            "abrupt whip pans",
             "talking human faces",
-            "distorted statues",
+            "neon cyberpunk colors",
         ],
         "thumbnail_rule": (
-            "Solitary brass bell or stone water basin in misty Kyoto courtyard with single falling raindrop, "
-            "2-4 uppercase bold words, high contrast, zero overlay card, 25% margin"
+            "5-layer deterministic GIS parchment map plate + #EFE8D5 double-bordered headline card + "
+            "B&W 0px-outline portrait cutout (< 2MB)"
         ),
     },
     "minh_triet_song": {
@@ -492,36 +492,56 @@ VN_FLOW_VIDEO_FORMULAS: Dict[str, Dict[str, Any]] = {
         "channel_slug": "co-the-ke",
         "niche": "Sức khỏe, tế bào sinh học và giải phẫu 3D (Human Physiology & Medical 3D)",
         "competitor_benchmark": "Nucleus Medical Media / Zack D. Films",
-        "new_visual_label": "8K 3D Endoscopic Biomedical Cinematography",
+        "new_visual_label": "8K 3D Endoscopic Biomedical Cinematography (co_the_ke_3d_biomedical_v3)",
+        "visual_style_id": "co_the_ke_3d_biomedical_v3",
+        "recommended_speed": 1.12,
+        "voice_profile_id": "VietNarrator_co_the_ke",
+        "visual_style_lock": "co_the_ke_3d_biomedical_v3",
         "style_description": (
-            "Nucleus Medical Media and Zack D. Films biomedical 3D endoscopic documentary cinematography. "
-            "Bioluminescent arterial reds (#EF4444), cyan capillaries (#06B6D4), and translucent cellular membranes. "
-            "Subsurface-scattered biological tissue elasticity, rhythmic pulsatile vascular flow, and clear fiber-optic surgical illumination. "
-            "Clinical precision without gore, beautiful physiological micro-worlds."
+            "Nucleus Medical Media and Zack D. Films locked V3 8K 3D Endoscopic Biomedical Cinematography "
+            "(co_the_ke_3d_biomedical_v3). Deep biomedical navy (#0A192F), anatomical slate shadow (#0F172A), "
+            "clinical X-ray cyan glow (#06B6D4), arterial crimson highlights (#EF4444), and crisp laboratory white (#F8FAFC). "
+            "Translucent internal organ cutaways, microscopic vascular flythroughs, cellular synaptic discharges, and subsurface scattering "
+            "paired in 2K post-compositing with MODE_1_BIOMETRIC_STAMP, MODE_2_NORMAL_VS_STRESS_SPLIT, MODE_3_CASCADE_CHECKLIST, "
+            "and MODE_4_ENDOSCOPIC_PACING, with mandatory bottom-right delogo prior to watermark overlay. Zero kawaii stickers, zero stickmen, zero gore."
         ),
         "subject_physics": (
-            "Subsurface-scattered wet biological tissue elasticity, rhythmic physiological pulsatile flow, "
-            "coherent cellular and molecular motion suspended in translucent fluid plasma media"
+            "Microscopic red blood cell perfusion with fluid drag, rhythmic cardiac valve muscular pulsing, "
+            "bioluminescent electrical impulses racing across synaptic clefts, and clean 2K overscan endoscopic tracking"
         ),
         "camera_grammar": [
-            "smooth endoscopic forward lumen dolly",
-            "macro anatomical cross-section orbital arc",
-            "micro-cellular shallow-DOF focus pull",
+            "microscopic endoscopic vascular flythrough",
+            "orbital 3D X-ray anatomical cutaway zoom",
+            "cellular synaptic macro rack-focus under bioluminescent rim lighting",
         ],
         "continuity_anchor": (
-            "Nucleus Medical Media 8K 3D endoscopic biomedical cinematography with clean surgical fiber-optic rim lighting, "
-            "shallow optical depth-of-field, and fluid pulsatile anti-morph physics across changing anatomical scales, strictly zero text labels"
+            "Unreal Engine 5 / Octane 3D biomedical endoscopic cinematography (co_the_ke_3d_biomedical_v3) in deep navy (#0A192F/#0F172A) "
+            "with clinical cyan (#06B6D4) and arterial crimson (#EF4444) physiological accents, shallow electron-microscope depth of field, "
+            "strictly zero text overlays, zero gibberish labels, zero 2D kawaii cartoon mascots, and zero stickmen"
         ),
+        "opening_shot_directives": [
+            "0-5s rapid 3D endoscopic vascular plunge illuminated by cyan-crimson neural alarm pulses",
+            "translucent 3D anatomical cervical spine or brain cortex glowing crimson at stress point",
+            "cellular macro close-up showing natural killer T-cells dimming inside arterial bloodstream",
+        ],
+        "anchor_prompts": {
+            "vascular_endoscopy": "Unreal Engine 5 3D endoscopic interior view through pulsing translucent crimson artery carrying glowing biconcave red blood cells against deep navy #0A192F depth, zero text",
+            "neural_synapse": "3D electron-microscope render of firing hippocampal neuron synapses pulsing bright clinical cyan #06B6D4 against obsidian neural void #0F172A, zero text",
+        },
         "forbidden_artifacts": [
             "dry plastic anatomy models",
             "floating anatomical text callouts",
-            "sharp robotic camera snaps",
+            "2D kawaii sticker cartoon organs with silly faces",
+            "doodle stickmen or MS-Paint outlines",
             "gratuitous surgical gore",
-            "cartoon organs with eyes",
         ],
+        "negative_constraints": (
+            "NO 2D flat kawaii cartoon stickers, NO doodle stickman, NO surgical gore or open blood, "
+            "NO AI gibberish text or illegible anatomy diagram letters, NO watermark corner sparkles"
+        ),
         "thumbnail_rule": (
-            "Luminous 3D cross-section of a heart valve or red blood cell squeezing through a capillary, "
-            "2-4 uppercase bold words, high contrast, zero overlay card, 25% margin"
+            "Flow-native 3D biomedical X-ray close-up of the single stressed organ in clinical cyan (#06B6D4) and arterial crimson (#EF4444) "
+            "against deep navy (#0A192F) with 2-4 crisp uppercase Vietnamese words drawn directly in Flow, zero PIL overlay card, < 2MB"
         ),
     },
     "su_ke_lai": {
@@ -606,12 +626,16 @@ VN_FLOW_VIDEO_FORMULAS: Dict[str, Dict[str, Any]] = {
         "channel_slug": "ho-so-ky-la",
         "niche": "Bí ẩn, hồ sơ kỳ lạ và giám định pháp y (Forensic Mysteries & Unsolved Archives)",
         "competitor_benchmark": "LEMMiNO / Fern",
-        "new_visual_label": "Atmospheric Noir 3D Forensic Crime-Scene Diorama",
+        "new_visual_label": "Atmospheric Noir 3D Forensic Crime-Scene Diorama (ho_so_ky_la_3d_noir_forensic_v3)",
+        "visual_style_id": "ho_so_ky_la_3d_noir_forensic_v3",
+        "recommended_speed": 1.10,
+        "voice_profile_id": "VietNarrator_ho_so_ky_la",
         "style_description": (
-            "LEMMiNO atmospheric noir 3D forensic documentary cinematography. Midnight charcoal (#0B0F19), desaturated slate, "
-            "and cold rainy mist pierced by a single 45-degree desk lamp or flashlight beam. Archival evidence dossiers, "
-            "red investigation thread connecting evidence pegs on cork, crime-scene diorama cutaways with forensic markers, "
-            "and moody rainy window reflections. Intellectual, eerie, and deeply atmospheric."
+            "LEMMiNO & Fern locked V3 3D Noir Forensic Diorama documentary cinematography (ho_so_ky_la_3d_noir_forensic_v3). "
+            "Midnight obsidian (#0A0B0E), dark slate dossier surface (#181B22), parchment forensic files (#E8DFC8), "
+            "single 45-degree volumetric desk spotlight, crisp crimson investigation laser line (#C0392B), and brushed brass gauges (#C9A24D). "
+            "Paired in 2K post-compositing with MODE_1_EVIDENCE_STAMP, MODE_2_HYPOTHESIS_CONTRAST, MODE_3_DOSSIER_CHECKLIST, and MODE_4_NOIR_CINEMATIC_PACING, "
+            "with mandatory bottom-right delogo prior to watermark overlay. Zero gore, zero 2D stickmen, zero AI gibberish text."
         ),
         "subject_physics": (
             "Slow volumetric fog and rain particle drift across wet asphalt, realistic wet surface specular reflections, "
@@ -623,19 +647,20 @@ VN_FLOW_VIDEO_FORMULAS: Dict[str, Dict[str, Any]] = {
             "steady lateral diorama tracking pass across crime scene",
         ],
         "continuity_anchor": (
-            "LEMMiNO atmospheric noir 3D forensic documentary cinematography in deep midnight slate palette with selective crimson/amber rim light, "
-            "shallow forensic depth-of-field, and atmospheric anti-morph physics across shifting archival scales, strictly zero readable text"
+            "LEMMiNO & Fern 3D Noir Forensic Diorama cinematography (ho_so_ky_la_3d_noir_forensic_v3) in obsidian slate palette (#0A0B0E/#181B22) "
+            "with selective crimson (#C0392B) and brushed brass (#C9A24D) highlights, shallow forensic depth-of-field, and atmospheric anti-morph physics, "
+            "strictly zero text, zero newspaper gibberish, and zero cartoon stickmen"
         ),
         "forbidden_artifacts": [
             "cheap horror jumpscares",
             "gratuitous blood or gore",
-            "neon cyberpunk colors",
+            "2D flat stick figures or cartoons",
             "gibberish newspaper headlines",
             "distorted screaming faces",
         ],
         "thumbnail_rule": (
-            "Dark noir silhouette under a single harsh spotlight with red evidence thread or mysterious locked door, "
-            "2-4 uppercase bold words, high contrast, zero overlay card, 25% margin"
+            "Dark 3D Noir cockpit or crime-scene macro under a single volumetric spotlight with crimson anomaly accent, "
+            "2-4 uppercase bold words drawn natively in Flow, high contrast, zero overlay card, < 2MB"
         ),
     },
     "ban_do_quyen_luc": {
@@ -975,10 +1000,10 @@ VN_CHANNEL_LOGO_PROMPTS: Dict[str, str] = {
         "strictly no text, no letters, no words, no numbers, pure icon."
     ),
     "chanh_niem_ke": (
-        "Minimalist Zen mindfulness emblem centered on a solid warm rice-paper cream background (#F7F4EB). "
-        "A bold charcoal sumi-e ink enso circle (#1E293B) enclosing a single pristine falling water droplet "
-        "rippling into concentric rings, accented with a warm gold (#D4AF37) leaf. "
-        "Pure meditative vector symbol, high contrast, 25% empty margin around all edges, "
+        "Minimalist Option W1 dark-slate circular chronicle emblem centered on a solid deep slate background (#141619). "
+        "A crisp warm parchment gold (#E5C158) concentric radar-target ring intersected by a bold crimson (#CD3430) "
+        "domino-vector arrow pointing to a central epicenter dot. "
+        "Pure flat vector symbol, high contrast, 25% empty margin around all edges, "
         "strictly no text, no letters, no words, no numbers, pure icon."
     ),
     "minh_triet_song": (

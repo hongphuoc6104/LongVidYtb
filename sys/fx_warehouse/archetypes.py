@@ -34,7 +34,7 @@ ARCHETYPE_PROFILES: dict[str, dict[str, Any]] = {
         ),
     },
     "archetype_2_geopolitics_history": {
-        "label": "Địa Chính Trị, Lịch Sử & Kinh Tế Vĩ Mô",
+        "label": "Địa Chính Trị, Lịch Sử, Kinh Tế Vĩ Mô & Giải Phẫu Thảm Họa",
         "accent_rgba": (212, 168, 72, 255),
         "secondary_rgba": (32, 212, 248, 255),
         "default_camera": "anamorphic_pan_lr",
@@ -42,15 +42,16 @@ ARCHETYPE_PROFILES: dict[str, dict[str, Any]] = {
         "default_bgm": "bgm_geopolitics_pulse.wav",
         "disallowed_vfx": (),
         "bespoke_synthesis_policy": (
-            "Phân biệt rạch ròi thời đại lịch sử và chuỗi cung ứng hiện đại: với sử cổ/trung đại phải tạo "
-            "HUD bản đồ chiến dịch cổ, gia phả triều đại hoặc trống trận/tù và; với địa chính trị & vĩ mô "
-            "hiện đại tạo biểu đồ eo biển, chuỗi cung ứng bán dẫn, hoặc bảng cán cân thương mại."
+            "Phân biệt rạch ròi thời đại lịch sử, chuỗi cung ứng hiện đại và thảm họa kỹ thuật/đại dịch: "
+            "với sử cổ/trung đại tạo HUD bản đồ chiến dịch cổ; với địa chính trị & vĩ mô tạo biểu đồ eo biển/thương mại; "
+            "với thảm họa hạt nhân/hạ tầng/đại dịch tạo bản đồ GIS phân tán, mặt cắt kỹ thuật 2D/3D và chuỗi domino nhân quả."
         ),
         "topic_bespoke_triggers": (
             "triều đại|cổ đại|trận đánh|kỵ binh|thành trì",
             "bán dẫn|chip|lithium|đất hiếm|chuỗi cung ứng",
             "lãi suất|trái phiếu|tỷ giá|dự trữ ngoại hối",
             "kênh đào|eo biển|cảng biển|hành lang năng lượng",
+            "lò phản ứng|hạt nhân|phóng xạ|đập thủy điện|đại dịch|sụp đổ",
         ),
     },
     "archetype_3_science_xray": {
@@ -118,10 +119,11 @@ CHANNEL_ARCHETYPE_MAP: dict[str, str] = {
     "ho_so_ky_la": "archetype_1_forensic_noir",
     "luat_ngam": "archetype_1_forensic_noir",
     "nghe_song_sot": "archetype_1_forensic_noir",
-    # Group 2: Geopolitics, History & Macro Economy
+    # Group 2: Geopolitics, History, Macro Economy & Causal Disaster Chronicles
     "ban_do_quyen_luc": "archetype_2_geopolitics_history",
     "su_ke_lai": "archetype_2_geopolitics_history",
     "banh_rang": "archetype_2_geopolitics_history",
+    "chanh_niem_ke": "archetype_2_geopolitics_history",
     # Group 3: Science, Cosmos & Anatomy/Mechanism X-Ray
     "vu_tru_ti_hon": "archetype_3_science_xray",
     "co_the_ke": "archetype_3_science_xray",
@@ -135,11 +137,53 @@ CHANNEL_ARCHETYPE_MAP: dict[str, str] = {
     "la_ban_hoc_thuat": "archetype_4_doodle_explainer",
     "thuong_cho_kheo": "archetype_4_doodle_explainer",
     # Group 5: Mindfulness, Wisdom & Night Reflections
-    "chanh_niem_ke": "archetype_5_mindful_healing",
     "minh_triet_song": "archetype_5_mindful_healing",
     "loi_sang_soi": "archetype_5_mindful_healing",
     "tam_tinh_dem": "archetype_5_mindful_healing",
 }
+
+# 18 English physical channels + 4 canonical aliases mapped across the 5 archetypes
+EN_CHANNEL_ARCHETYPE_MAP: dict[str, str] = {
+    # Group 1: Forensic Noir & Workplace/Crowd Laws
+    "en_cold_case_ink": "archetype_1_forensic_noir",
+    "en_crowd_strings": "archetype_1_forensic_noir",
+    "en_career_leverage": "archetype_1_forensic_noir",
+    # Group 2: Geopolitics, Deep Time & Macroeconomics
+    "en_choke_point": "archetype_2_geopolitics_history",
+    "en_macro_gears": "archetype_2_geopolitics_history",
+    "en_parable_lamp": "archetype_2_geopolitics_history",
+    "en_deep_time_strata": "archetype_2_geopolitics_history",
+    # Group 3: Science, Cosmos & Organism/Mechanism X-Ray
+    "en_inside_vessel": "archetype_3_science_xray",
+    "en_pocket_cosmos": "archetype_3_science_xray",
+    "en_plain_sight_ai": "archetype_3_science_xray",
+    "en_scale_and_bone": "archetype_3_science_xray",
+    "en_kitchen_molecules": "archetype_3_science_xray",
+    "en_root_and_canopy": "archetype_3_science_xray",
+    "en_wait_how": "archetype_3_science_xray",
+    "en_spawn_to_apex": "archetype_3_science_xray",
+    # Group 4: Behavioral Psych, Finance, Consumer Law & Mental Models
+    "en_lazy_brain": "archetype_4_doodle_explainer",
+    "en_wallet_anatomy": "archetype_4_doodle_explainer",
+    "en_fine_print": "archetype_4_doodle_explainer",
+    "en_kindred_sketch": "archetype_4_doodle_explainer",
+    "en_first_principles": "archetype_4_doodle_explainer",
+    # Group 5: Mindfulness, Wisdom & Night Reflections
+    "en_second_arrow": "archetype_5_mindful_healing",
+    "en_bamboo_marble": "archetype_5_mindful_healing",
+}
+
+
+def get_channel_archetype(channel_id: str) -> str:
+    """Resolve archetype for any VN, EN, or alias channel ID (supports dash or underscore)."""
+    norm = (channel_id or "").strip().replace("-", "_")
+    return (
+        CHANNEL_ARCHETYPE_MAP.get(channel_id)
+        or CHANNEL_ARCHETYPE_MAP.get(norm)
+        or EN_CHANNEL_ARCHETYPE_MAP.get(channel_id)
+        or EN_CHANNEL_ARCHETYPE_MAP.get(norm)
+        or "archetype_1_forensic_noir"
+    )
 
 CHANNEL_BESPOKE_RULES: dict[str, dict[str, Any]] = {
     "ho_so_ky_la": {
@@ -157,11 +201,11 @@ CHANNEL_BESPOKE_RULES: dict[str, dict[str, Any]] = {
         "topic_bespoke_triggers": ("rửa tiền", "mạng lưới", "thao túng", "lobby", "bóng tối"),
     },
     "nghe_song_sot": {
-        "focus": "Kỹ năng sinh tồn cực hạn, sinh lý học khẩn cấp, thoát hiểm",
-        "preferred_bespoke_hud_kind": "metric_meter",
-        "preferred_bespoke_sfx_profile": "biometric_pulse",
-        "bespoke_synthesis_policy": "Tạo đồng hồ sinh tồn theo biến số thực (thân nhiệt, oxy, độ sâu, thời gian vàng) và SFX môi trường tương ứng.",
-        "topic_bespoke_triggers": ("thân nhiệt", "hạ thân nhiệt", "ngạt", "sa mạc", "lạc rừng"),
+        "focus": "Chiến lược sự nghiệp công sở, đàm phán lương thưởng và năng lực sinh tồn kỷ nguyên AI",
+        "preferred_bespoke_hud_kind": "comparison_matrix",
+        "preferred_bespoke_sfx_profile": "noir_tension",
+        "bespoke_synthesis_policy": "Tạo bảng ma trận đàm phán, đòn bẩy sự nghiệp và thẻ so sánh chiến lược công sở thực tế cho từng kịch bản nghề nghiệp.",
+        "topic_bespoke_triggers": ("công sở", "đàm phán", "thăng tiến", "tự động hóa", "lương"),
     },
     "ban_do_quyen_luc": {
         "focus": "Địa chính trị, điểm nghẽn hàng hải, chuỗi cung ứng chiến lược",
@@ -206,11 +250,11 @@ CHANNEL_BESPOKE_RULES: dict[str, dict[str, Any]] = {
         "topic_bespoke_triggers": ("áp suất", "khúc xạ", "phản ứng", "tại sao", "hiện tượng"),
     },
     "dia_com": {
-        "focus": "Địa chất, đại dương, khí hậu và lịch sử tiến hóa Trái Đất",
+        "focus": "Hóa học ẩm thực, nhiệt động học căn bếp, dinh dưỡng và an toàn thực phẩm",
         "preferred_bespoke_hud_kind": "metric_meter",
-        "preferred_bespoke_sfx_profile": "earth_rumble",
-        "bespoke_synthesis_policy": "Tạo thước đo tầng địa chất, độ sâu đại dương hoặc chu kỳ băng hà riêng cho từng kỷ nguyên.",
-        "topic_bespoke_triggers": ("mảng kiến tạo", "động đất", "núi lửa", "đại dương", "băng hà"),
+        "preferred_bespoke_sfx_profile": "spark_chime",
+        "bespoke_synthesis_policy": "Tạo đồng hồ nhiệt độ Maillard, pH, kết cấu phân tử thực phẩm và cảnh báo an toàn bếp núc riêng cho từng món ăn.",
+        "topic_bespoke_triggers": ("maillard", "nhiệt độ", "chảo gang", "an toàn thực phẩm", "dinh dưỡng"),
     },
     "nao_luoi": {
         "focus": "Tâm lý hành vi, thiên kiến nhận thức, cơ chế trì hoãn",
@@ -255,11 +299,11 @@ CHANNEL_BESPOKE_RULES: dict[str, dict[str, Any]] = {
         "topic_bespoke_triggers": ("ứng xử", "từ chối", "lắng nghe", "ranh giới", "công sở"),
     },
     "chanh_niem_ke": {
-        "focus": "Thực hành chánh niệm, điều hòa hơi thở và bình an nội tâm",
-        "preferred_bespoke_hud_kind": "metric_meter",
-        "preferred_bespoke_sfx_profile": "zen_bowl",
-        "bespoke_synthesis_policy": "Tạo vòng tròn/thanh nhịp thở chánh niệm êm dịu và âm thanh chuông/thiên nhiên không giật.",
-        "topic_bespoke_triggers": ("chu kỳ thở", "4-7-8", "hít vào", "thở ra", "quán chiếu"),
+        "focus": "Hiểu Tận Gốc — Giải phẫu thảm họa kỹ thuật, sự cố hạt nhân, đại dịch và sụp đổ hạ tầng trên bản đồ GIS",
+        "preferred_bespoke_hud_kind": "sonar_radial",
+        "preferred_bespoke_sfx_profile": "geopolitical_radar",
+        "bespoke_synthesis_policy": "Dựng bản đồ địa hình GIS Web Mercator, mặt cắt kỹ thuật 2D/3D sự cố và chuỗi domino nhân quả cho từng thảm họa.",
+        "topic_bespoke_triggers": ("lò phản ứng", "phóng xạ", "đập thủy điện", "đại dịch", "sụp đổ"),
     },
     "minh_triet_song": {
         "focus": "Triết lý sống phương Đông - phương Tây, cổ học tinh hoa",
@@ -291,7 +335,7 @@ def resolve_niche_fx_blueprint(
     overrides: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Resolve archetype defaults, channel bespoke policy, and topic bespoke triggers."""
-    arch_id = CHANNEL_ARCHETYPE_MAP.get(channel_id, "archetype_1_forensic_noir")
+    arch_id = get_channel_archetype(channel_id)
     arch = ARCHETYPE_PROFILES[arch_id]
     ch_rule = CHANNEL_BESPOKE_RULES.get(channel_id, {})
     ovr = dict(overrides or {})

@@ -84,7 +84,10 @@ def select_clip_duration_and_credits(
                 return (closest_dur, credit_map[closest_dur])
 
     if "lite" in vm:
-        return (8, 10)
+        if auto_duration:
+            return (8, 10)
+        closest_dur = min([4, 6, 8], key=lambda d: abs(d - default_duration_sec))
+        return (closest_dur, 10)
     if "quality" in vm:
         return (8, 100)
     if "fast" in vm:
@@ -212,11 +215,16 @@ def build_scene_pair_tasks(
         raw_prompt = sp.motion_prompt or "cinematic scene transition"
         final_prompt = apply_prompt_guard(raw_prompt, no_talking_prompt_guard)
 
+        clip_model = getattr(sp, "video_model", None) or video_model
+        t_mode = str(getattr(sp, "transition_mode", "frame_link") or "frame_link")
+        is_seam_or_lite = ("lite" in clip_model.lower()) or t_mode in ("seam", "soft_fade")
+
         target_sec = float(sp.target_duration) if sp.target_duration is not None else float(duration_seconds)
-        has_end = bool(sp.end_image_path or sp.end_image_prompt)
+        end_frame_path = None if is_seam_or_lite else sp.end_image_path
+        has_end = bool(end_frame_path or (not is_seam_or_lite and sp.end_image_prompt))
         clip_dur, clip_cost = select_clip_duration_and_credits(
             target_sec=target_sec,
-            video_model=video_model,
+            video_model=clip_model,
             has_end_frame=has_end,
             default_duration_sec=duration_seconds,
             auto_duration=auto_duration,
@@ -226,21 +234,100 @@ def build_scene_pair_tasks(
             clip_id=clip_id,
             index=k,
             start_frame_path=sp.start_image_path or "",
-            end_frame_path=sp.end_image_path,
+            end_frame_path=end_frame_path,
             motion_prompt=final_prompt,
             output_mp4_path=str(out_path.resolve()),
             aspect=aspect,
-            video_model=video_model,
+            video_model=clip_model,
             duration_seconds=clip_dur,
             target_duration=sp.target_duration,
-            trim_first_frame=bool(getattr(sp, "trim_first_frame", False)),
+            trim_first_frame=False if is_seam_or_lite else bool(getattr(sp, "trim_first_frame", False)),
             seed=seed,
             status="pending",
             credit_cost=clip_cost,
+            transition_mode=t_mode,
+            exit_seam=getattr(sp, "exit_seam", None),
+            seam_dissolve_sec=float(getattr(sp, "seam_dissolve_sec", 0.0)),
         )
         tasks.append(task)
 
     return tasks
+
+
+def build_dual_model_chain_spec(
+    scene_map: Any,
+    work_dir: str | Path,
+    audio_path: str | Path | None = None,
+    aspect: str = "9:16",
+    prefer_credit_saving: bool = True,
+    image_paths_by_scene: dict[str, str] | None = None,
+) -> VideoChainSpec:
+    """Convert a validated SceneMap into a heterogeneous Dual-Model VideoChainSpec.
+
+    Routes incompatible cast/lighting cuts to `veo_3_1_lite` (10c Seam Mode) and
+    compatible continuous cuts to `omni_flash` (Frame-Link Mode), applying channel
+    viewing-comfort `seam_dissolve_sec` automatically.
+    """
+    from .motion_library import get_channel_motion_policy
+    from .scene_map_planner import (
+        SceneMap,
+        apply_auto_routing,
+        compile_scene_image_prompts,
+        compile_scene_video_prompts,
+    )
+
+    smap = scene_map if isinstance(scene_map, SceneMap) else SceneMap.from_dict(dict(scene_map))
+    apply_auto_routing(smap, prefer_credit_saving=prefer_credit_saving)
+    policy = get_channel_motion_policy(smap.channel_id)
+    img_map = image_paths_by_scene or {}
+
+    img_compiled = {item["scene_id"]: item for item in compile_scene_image_prompts(smap)}
+    vid_compiled = {item["scene_id"]: item for item in compile_scene_video_prompts(smap)}
+
+    dissolve_sec = float(policy["default_dissolve_sec"])
+    scene_pairs: list[ScenePairSpec] = []
+    scenes = smap.scenes
+    for idx, sc in enumerate(scenes):
+        nxt = scenes[idx + 1] if idx + 1 < len(scenes) else None
+        v_meta = vid_compiled[sc.scene_id]
+        i_meta = img_compiled[sc.scene_id]
+        start_img = img_map.get(sc.scene_id)
+        end_img = img_map.get(nxt.scene_id) if (nxt and sc.transition_mode == "frame_link") else None
+
+        scene_pairs.append(
+            ScenePairSpec(
+                id=f"{sc.scene_id}",
+                start_image_path=start_img,
+                end_image_path=end_img,
+                start_image_prompt=i_meta["image_prompt"],
+                end_image_prompt=img_compiled[nxt.scene_id]["image_prompt"] if (nxt and sc.transition_mode == "frame_link") else None,
+                motion_prompt=v_meta["video_prompt"],
+                target_duration=float(smap.clip_duration_sec),
+                trim_first_frame=False,
+                start_based_on=sc.reference_scene_ids[0] if sc.reference_scene_ids else None,
+                end_based_on_start=bool(nxt and sc.scene_id in nxt.reference_scene_ids),
+                video_model=sc.video_model,
+                transition_mode=sc.transition_mode,
+                exit_seam=sc.exit_seam,
+                seam_dissolve_sec=dissolve_sec,
+            )
+        )
+
+    has_omni = any("omni" in (sp.video_model or "").lower() for sp in scene_pairs)
+    return VideoChainSpec(
+        job_id=smap.job_id,
+        mode=ChainMode.SCENE_PAIRS,
+        aspect=aspect,
+        video_model="omni_flash" if has_omni else "veo_3_1_lite",
+        duration_seconds=smap.clip_duration_sec,
+        scene_pairs=scene_pairs,
+        audio_path=str(audio_path) if audio_path else None,
+        auto_duration=True,
+        auto_fallback_zero_credit=False,
+        channel_id=smap.channel_id,
+        overscan_crop=1.05,
+        seam_dissolve_sec=dissolve_sec,
+    )
 
 
 def build_flipbook_tasks(

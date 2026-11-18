@@ -61,7 +61,28 @@ IMAGE_MODEL_BY_NICKNAME = {
 }
 IMAGE_MODEL_ID_RE = re.compile(r"^[A-Z][A-Z0-9_]{1,95}$")
 
-VIDEO_MODEL = "veo_3_1_i2v_s_fast_fl"
+VIDEO_MODEL = "macaron_cookie_i2v_fl_8s"
+DEPRECATED_VIDEO_MODELS: dict[str, dict[str, str]] = {
+    "veo_3_1_fast": {"retire_date": "2026-12-05", "replacement": "macaron_cookie_i2v_fl_8s"},
+    "veo_3_1_i2v_s_fast": {"retire_date": "2026-12-05", "replacement": "veo_3_1_i2v_s_lite"},
+    "veo_3_1_i2v_s_fast_fl": {"retire_date": "2026-12-05", "replacement": "macaron_cookie_i2v_fl_8s"},
+    "veo_3_1_i2v_s_quality": {"retire_date": "2026-12-05", "replacement": "macaron_cookie_i2v_fl_8s"},
+    "veo_3_1_i2v_s_fl": {"retire_date": "2026-12-05", "replacement": "macaron_cookie_i2v_fl_8s"},
+    "omni_flash_i2v": {"retire_date": "2026-12-05", "replacement": "macaron_cookie_i2v_fl_8s"},
+    "abra_i2v": {"retire_date": "2026-12-05", "replacement": "macaron_cookie_i2v_8s"},
+    "veo_extend": {"retire_date": "2026-11-05", "replacement": "veo_3_1_i2v_s_lite"},
+}
+
+
+def is_video_model_deprecated(model_key: str) -> tuple[bool, str]:
+    """Return `(is_deprecated, notice)` for Flow video models retired or retiring."""
+    low = (model_key or "").strip().lower()
+    for prefix, meta in DEPRECATED_VIDEO_MODELS.items():
+        if low == prefix or low.startswith(prefix):
+            return True, f"{model_key} retired/retiring ({meta['retire_date']}); use {meta['replacement']}"
+    return False, ""
+
+
 VIDEO_MODEL_BY_NICKNAME = {
     # Veo 3.1 Fast (8s default)
     "VEO_3_1_FAST": "veo_3_1_i2v_s_fast_fl",
@@ -88,6 +109,7 @@ VIDEO_MODEL_BY_NICKNAME = {
     "VEO_3_1_LITE": "veo_3_1_interpolation_lite",
     "VEO_3.1_LITE": "veo_3_1_interpolation_lite",
     "VEO_LITE": "veo_3_1_interpolation_lite",
+    "VEO_3_1_LITE_8S": "veo_3_1_interpolation_lite",
     # Veo 3.1 Lite durations (4s, 6s)
     "VEO_3_1_LITE_4S": "veo_3_1_i2v_s_lite_4s_fl",
     "VEO_3.1_LITE_4S": "veo_3_1_i2v_s_lite_4s_fl",
@@ -406,6 +428,34 @@ def resolve_video_model(
                     return "macaron_cookie_i2v_8s"
                 else:
                     return "macaron_cookie_i2v_10s"
+
+    if want_lite and not catalog:
+        dur = 8
+        if duration_seconds is not None:
+            dur = int(duration_seconds)
+        else:
+            m = re.search(r"_(\d+)S?$", upper)
+            if m:
+                dur = int(m.group(1))
+        if has_end_frame:
+            if dur <= 4:
+                base_key = "veo_3_1_i2v_s_lite_4s_fl"
+            elif dur <= 6:
+                base_key = "veo_3_1_i2v_s_lite_6s_fl"
+            else:
+                base_key = "veo_3_1_interpolation_lite"
+        else:
+            if dur <= 4:
+                base_key = "veo_3_1_i2v_s_lite_4s"
+            elif dur <= 6:
+                base_key = "veo_3_1_i2v_s_lite_6s"
+            else:
+                base_key = "veo_3_1_i2v_s_lite"
+        if v_aspect == VIDEO_ASPECT_PORTRAIT and "_portrait" not in base_key:
+            if base_key.endswith("_fl"):
+                return base_key[:-3] + "_portrait_fl"
+            return base_key + "_portrait"
+        return base_key
 
     if upper in VIDEO_MODEL_BY_NICKNAME:
         base_key = VIDEO_MODEL_BY_NICKNAME[upper]

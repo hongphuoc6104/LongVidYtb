@@ -16,6 +16,7 @@ import hashlib
 import json
 import logging
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -36,6 +37,8 @@ ROOT = ROOT_DIR
 for _p in (str(ROOT_DIR), str(SYS_DIR), str(TOOL_DIR)):
     if _p not in sys.path:
         sys.path.insert(0, _p)
+if not hasattr(sys, "__path__"):
+    sys.__path__ = [str(SYS_DIR)]
 
 from sys.colab_bridge.client import Client  # noqa: E402
 from sys.flow_cdp.credit_ledger import CreditLedger  # noqa: E402
@@ -434,17 +437,22 @@ def build_short_video_chain_spec(
     audio_path: str | Path,
     beat_durations: list[float] | None = None,
     auto_fallback_zero_credit: bool = False,
+    routing_mode: str = "omni_only",
 ) -> VideoChainSpec:
-    """Build canonical Short 9:16 Omni 1.2 Flash VideoChainSpec.
+    """Build canonical Short 9:16 VideoChainSpec supporting `omni_only`, `veo_lite_seam`, or `dual_model_seam`.
 
-    Adheres strictly to the specification:
-    - video_model="omni_flash"
-    - aspect="9:16"
-    - mode=ChainMode.SCENE_PAIRS
-    - auto_fallback_zero_credit=False (strictly preserves video synthesis credits)
+    - `omni_only` (default): backward-compatible Omni 1.2 Flash `SCENE_PAIRS`.
+    - `veo_lite_seam`: routes all transitions through `veo_3_1_lite` (10c/clip Seam Mode + channel-safe dissolve).
+    - `dual_model_seam`: uses `omni_flash` Frame-Link only on continuous `based_on` / compatible cast transitions,
+      and routes cuts/cast changes through `veo_3_1_lite` 10c Seam Mode with zero face morphing.
     """
+    from flow_video.motion_library import get_channel_motion_policy
+
     scene_pairs: list[ScenePairSpec] = []
     n = len(shots)
+    norm_ch = channel_slug.replace("-", "_")
+    policy = get_channel_motion_policy(norm_ch)
+    dissolve_sec = float(policy["default_dissolve_sec"]) if routing_mode in ("veo_lite_seam", "dual_model_seam") else 0.0
 
     for i in range(max(1, n - 1)):
         shot_a = shots[i]
@@ -456,31 +464,67 @@ def build_short_video_chain_spec(
         else:
             target_dur = float(shot_a.get("duration", 4.0))
 
+        is_based_on_cont = bool(shot_b.get("based_on") == shot_a.get("id"))
+        same_cast = str(shot_a.get("cast", "none")).lower() == str(shot_b.get("cast", "none")).lower()
+
+        if routing_mode == "veo_lite_seam":
+            pair_model = "veo_3_1_lite"
+            pair_mode = policy["default_transition_mode"]
+            end_path = None
+            end_prompt = None
+            trim_first = False
+        elif routing_mode == "dual_model_seam":
+            if policy["allow_exit_seams"] and is_based_on_cont and same_cast:
+                pair_model = "omni_flash"
+                pair_mode = "frame_link"
+                end_path = shot_b.get("image_path") or shot_b.get("frame_path")
+                end_prompt = shot_b.get("prompt")
+                trim_first = True
+            else:
+                pair_model = "veo_3_1_lite"
+                pair_mode = policy["default_transition_mode"]
+                end_path = None
+                end_prompt = None
+                trim_first = False
+        else:
+            pair_model = "omni_flash"
+            pair_mode = "frame_link"
+            end_path = shot_b.get("image_path") or shot_b.get("frame_path")
+            end_prompt = shot_b.get("prompt")
+            trim_first = True
+
         pair = ScenePairSpec(
             id=f"pair_{i:02d}",
             start_image_path=shot_a.get("image_path") or shot_a.get("frame_path"),
-            end_image_path=shot_b.get("image_path") or shot_b.get("frame_path"),
+            end_image_path=end_path,
             start_image_prompt=shot_a.get("prompt"),
-            end_image_prompt=shot_b.get("prompt"),
+            end_image_prompt=end_prompt,
             motion_prompt=str(shot_a.get("motion_prompt") or shot_a.get("camera_motion", "gentle dynamic movement")),
             target_duration=round(target_dur, 3),
-            trim_first_frame=True,
+            trim_first_frame=trim_first,
             start_based_on=shot_a.get("based_on"),
-            end_based_on_start=bool(shot_b.get("based_on") == shot_a.get("id")),
+            end_based_on_start=is_based_on_cont,
+            video_model=pair_model,
+            transition_mode=pair_mode,
+            exit_seam=shot_a.get("exit_seam"),
+            seam_dissolve_sec=dissolve_sec,
         )
         scene_pairs.append(pair)
 
+    has_omni = any(sp.video_model == "omni_flash" for sp in scene_pairs)
+    top_model = "omni_flash" if (routing_mode == "omni_only" or has_omni) else "veo_3_1_lite"
     return VideoChainSpec(
         job_id=job_id,
         mode=ChainMode.SCENE_PAIRS,
         aspect="9:16",
-        video_model="omni_flash",
-        duration_seconds=6,
+        video_model=top_model,
+        duration_seconds=8 if top_model == "veo_3_1_lite" else 6,
         scene_pairs=scene_pairs,
         audio_path=str(audio_path),
         auto_fallback_zero_credit=auto_fallback_zero_credit,
         channel_id=channel_slug,
         overscan_crop=1.05,
+        seam_dissolve_sec=dissolve_sec,
     )
 
 
@@ -738,6 +782,7 @@ def resolve_authenticated_profiles(
 # ---------------------------------------------------------------------------
 
 HO_SO_KY_LA_VOICE_SHA256 = "cd25365252033ee60333c92e3f071a8dae3a99c865fe9e527686c7cf04048a9d"
+CO_THE_KE_VOICE_SHA256 = "0e5b0ac35ccd31565e31dceabfd20e8f110465ad370b84465f404e1c10f2f490"
 SU_KE_LAI_SHARED_VOICE_SHA256 = HO_SO_KY_LA_VOICE_SHA256
 SU_KE_LAI_DEDICATED_VOICE_SHA256 = "7bf3594d89a04c8ac3615ae50f192c3bf5bd904c4a5bb890816f4ca977d43808"
 BANNED_DEPRECATED_VOICE_SHA256S = frozenset({
@@ -755,6 +800,14 @@ HARDCODED_CHANNEL_VOICE_LOCKS: dict[str, dict[str, Any]] = {
         "expected_sha256": HO_SO_KY_LA_VOICE_SHA256,
         "recommended_speed": 1.10,
         "default_tone": "forensic_investigative_crisp",
+        "audio_lufs": -11.0,
+        "audio_peak_db": -1.0,
+    },
+    "co_the_ke": {
+        "voice_profile_dir": "sys/assets/voices/ch_co_the_ke",
+        "expected_sha256": "0e5b0ac35ccd31565e31dceabfd20e8f110465ad370b84465f404e1c10f2f490",
+        "recommended_speed": 1.12,
+        "default_tone": "authoritative_calm",
         "audio_lufs": -11.0,
         "audio_peak_db": -1.0,
     },
@@ -804,10 +857,12 @@ SU_KE_LAI_PRODUCTION_LOCK: dict[str, Any] = {
         "sweeping aerial crane over timber fleet formation in estuarine fog",
     ],
     "long_resolution": "2560x1440",
-    "short_resolution": "1080x1920",
+    "short_resolution": "1440x2560",
+    "video_codec": "h264_nvenc",
     "fps": 30,
     "xfade_transition": "fade",
     "xfade_duration_sec": 0.24,
+    "delogo_bottom_right": True,
     "watermark_pos_2k": "W-w-48:H-h-48",
     "watermark_pos_hd": BOTTOM_RIGHT_WATERMARK_POS,
 }
@@ -834,6 +889,33 @@ HO_SO_KY_LA_PRODUCTION_LOCK: dict[str, Any] = {
     "delogo_bottom_right": True,
     "watermark_pos_2k": "W-w-48:H-h-48",
     "watermark_pos_hd": BOTTOM_RIGHT_WATERMARK_POS,
+}
+
+CO_THE_KE_PRODUCTION_LOCK: dict[str, Any] = {
+    "channel_id": "co_the_ke",
+    "voice": "VietNarrator_co_the_ke",
+    "voice_sha256": CO_THE_KE_VOICE_SHA256,
+    "recommended_speed": 1.12,
+    "default_tone": "authoritative_calm",
+    "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+    "master_lufs": -11.0,
+    "master_true_peak_dbtp": -1.0,
+    "visual_style_id": "co_the_ke_3d_biomedical_v3",
+    "long_resolution": "2560x1440",
+    "short_resolution": "1440x2560",
+    "video_codec": "h264_nvenc",
+    "fps": 30,
+    "xfade_transition": "fade",
+    "xfade_duration_sec": 0.20,
+    "delogo_bottom_right": True,
+    "watermark_pos_2k": "W-w-48:H-h-48",
+    "watermark_pos_hd": BOTTOM_RIGHT_WATERMARK_POS,
+}
+
+V3_2K_CHANNEL_LOCKS: dict[str, dict[str, Any]] = {
+    "ho_so_ky_la": HO_SO_KY_LA_PRODUCTION_LOCK,
+    "co_the_ke": CO_THE_KE_PRODUCTION_LOCK,
+    "su_ke_lai": SU_KE_LAI_PRODUCTION_LOCK,
 }
 
 
@@ -2154,6 +2236,43 @@ def render_dry_run_stub(
 # ---------------------------------------------------------------------------
 
 
+def _resolve_channel_spec_file(
+    channel_slug: str,
+    suffixes: tuple[str, ...],
+) -> Path | None:
+    """Find rebuilt channel spec across underscore/hyphen slug variants, preferring latest _epXX_ spec."""
+    slug_variants: list[str] = []
+    for cand in (channel_slug, channel_slug.replace("_", "-"), channel_slug.replace("-", "_")):
+        if cand and cand not in slug_variants:
+            slug_variants.append(cand)
+    specs_root = SYS_DIR / "channels" / "vn_rebuilt_style_specs"
+
+    joined = " ".join(suffixes).lower()
+    ep_suffix = "short_spec.json" if "short" in joined else ("long_spec.json" if "long" in joined else "")
+    if ep_suffix:
+        ep_candidates: list[tuple[int, Path]] = []
+        ep_pat = re.compile(r"_ep(\d{1,3})_", re.IGNORECASE)
+        for dir_slug in slug_variants:
+            d = specs_root / dir_slug
+            if not d.is_dir():
+                continue
+            for cand_path in d.glob(f"*_ep*_{ep_suffix}"):
+                m = ep_pat.search(cand_path.name)
+                ep_num = int(m.group(1)) if m else 0
+                ep_candidates.append((ep_num, cand_path))
+        if ep_candidates:
+            ep_candidates.sort(key=lambda item: item[0], reverse=True)
+            return ep_candidates[0][1]
+
+    for suffix in suffixes:
+        for dir_slug in slug_variants:
+            for file_slug in slug_variants:
+                cand_path = specs_root / dir_slug / f"{file_slug}_{suffix}"
+                if cand_path.is_file():
+                    return cand_path
+    return None
+
+
 def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
     """Execute Mode 1: Short 9:16 Full-Chain Omni 1.2 Flash Video Generation & Packaging."""
     logger.info(f"[{config.job_id}] Launching Mode 1: Short 9:16 Full-Chain Omni 1.2 Flash...")
@@ -2170,19 +2289,20 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
     else:
         # Fallback to aligned short spec, short fullchain spec, or default rebuilt spec
         cand_aligned = out_dir / f"{config.channel_slug.replace('-', '_')}_short_aligned_spec.json"
-        cand_short_fc = SYS_DIR / f"channels/vn_rebuilt_style_specs/{config.channel_slug}/{config.channel_slug}_short_fullchain_spec.json"
-        cand_rebuilt = SYS_DIR / f"channels/vn_rebuilt_style_specs/{config.channel_slug}/{config.channel_slug}_rebuilt_spec.json"
+        resolved_spec = _resolve_channel_spec_file(
+            config.channel_slug,
+            ("short_fullchain_spec.json", "rebuilt_spec.json"),
+        )
         if cand_aligned.is_file():
             spec_data = json.loads(cand_aligned.read_text(encoding="utf-8"))
             logger.info(f"[{config.job_id}] Loaded short spec from aligned spec: {cand_aligned}")
-        elif cand_short_fc.is_file():
-            spec_data = json.loads(cand_short_fc.read_text(encoding="utf-8"))
-            logger.info(f"[{config.job_id}] Loaded short spec from full-chain spec: {cand_short_fc}")
-        elif cand_rebuilt.is_file():
-            spec_data = json.loads(cand_rebuilt.read_text(encoding="utf-8"))
-            logger.info(f"[{config.job_id}] Loaded short spec from default rebuilt spec: {cand_rebuilt}")
+        elif resolved_spec is not None:
+            spec_data = json.loads(resolved_spec.read_text(encoding="utf-8"))
+            logger.info(f"[{config.job_id}] Loaded short spec from resolved spec: {resolved_spec}")
         else:
-            raise FileNotFoundError(f"Missing spec file for {config.channel_slug}: tried {cand_aligned}, {cand_short_fc}, {cand_rebuilt}")
+            raise FileNotFoundError(
+                f"Missing spec file for {config.channel_slug}: tried {cand_aligned} and slug variants in vn_rebuilt_style_specs"
+            )
 
     beats = spec_data.get("beats", [])
     if not beats:
@@ -2303,10 +2423,13 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
     build_vn_kinetic_ass_subtitles(words, total_dur, ass_path, margin_v=270, outline=6)
     build_clean_sidecar_srt(beats, beat_durations, total_dur, srt_path)
 
-    # 3. Watermark
-    watermark_png = work_dir / "watermark_100x100.png"
+    # 3. Watermark (150x150 RGBA for 2K V3 channels, 100x100 for standard HD)
+    norm_slug = config.channel_slug.strip().replace("-", "_").lower()
+    is_2k_v3 = norm_slug in V3_2K_CHANNEL_LOCKS
+    wm_size = 150 if is_2k_v3 else 100
+    watermark_png = work_dir / f"watermark_{wm_size}x{wm_size}.png"
     logo_src = resolve_channel_logo_source(config.channel_slug)
-    make_rounded_watermark(logo_src, watermark_png, size=100, opacity=0.92, radius=16)
+    make_rounded_watermark(logo_src, watermark_png, size=wm_size, opacity=0.92, radius=16)
 
     # 4. Short Keyframe Pre-generation & FlowVideoChainOrchestrator
     frames_dir = work_dir / "frames"
@@ -2484,12 +2607,13 @@ def run_short_mode(config: DualModeJobConfig) -> dict[str, Any]:
         mix_info = mix_fx_warehouse_audio(audio_wav, Path(fx_summary["fx_plan_path"]), mixed_audio_wav)
         if Path(mix_info["out_wav"]).is_file():
             render_audio_wav = Path(mix_info["out_wav"])
+        short_tw, short_th = (1440, 2560) if is_2k_v3 else (1080, 1920)
         short_fx_specs = prepare_fx_hud_assets(
             fx_plan_path=Path(fx_summary["fx_plan_path"]),
             beats=beats,
             overlay_dir=work_dir / "_hud_short",
-            target_w=1080,
-            target_h=1920,
+            target_w=short_tw,
+            target_h=short_th,
             is_short=True,
         )
         short_fx_hud_events = [sp for sp in short_fx_specs if sp.get("hud_local_path")]
@@ -2610,13 +2734,13 @@ def run_long_mode(config: DualModeJobConfig) -> dict[str, Any]:
     elif config.spec_path and Path(config.spec_path).is_file():
         spec_data = json.loads(Path(config.spec_path).read_text(encoding="utf-8"))
     else:
-        master_p = SYS_DIR / f"channels/vn_rebuilt_style_specs/{config.channel_slug}/{config.channel_slug}_long_master_spec.json"
-        if master_p.is_file():
-            spec_data = json.loads(master_p.read_text(encoding="utf-8"))
-        else:
-            def_p = SYS_DIR / f"channels/vn_rebuilt_style_specs/{config.channel_slug}/{config.channel_slug}_rebuilt_spec.json"
-            if def_p.is_file():
-                spec_data = json.loads(def_p.read_text(encoding="utf-8"))
+        resolved_long = _resolve_channel_spec_file(
+            config.channel_slug,
+            ("long_master_spec.json", "rebuilt_spec.json"),
+        )
+        if resolved_long is not None:
+            logger.info(f"[{config.job_id}] Loading channel spec from {resolved_long}")
+            spec_data = json.loads(resolved_long.read_text(encoding="utf-8"))
 
     raw_beats = spec_data.get("beats", [])
     raw_visual_states = spec_data.get("visual_states", [])
@@ -2777,11 +2901,13 @@ def run_long_mode(config: DualModeJobConfig) -> dict[str, Any]:
     chunks = partition_timeline_into_chunks(beats, beat_durations, min_chunk_size=15, max_chunk_size=22)
     logger.info(f"[{config.job_id}] Partitioned {len(beats)} beats into {len(chunks)} chunks (15-22 beats/chunk).")
 
-    # 5. Resolution, Watermark & Thumbnail (2K for ho_so_ky_la v3.0)
-    is_hskl = config.channel_slug == "ho_so_ky_la"
-    target_w, target_h = (2560, 1440) if is_hskl else (1920, 1080)
-    wm_size = 150 if is_hskl else 100
-    delogo_br = bool(HO_SO_KY_LA_PRODUCTION_LOCK["delogo_bottom_right"]) if is_hskl else False
+    # 5. Resolution, Watermark & Thumbnail (2K for V3 channels: ho_so_ky_la, co_the_ke)
+    norm_slug = config.channel_slug.strip().replace("-", "_").lower()
+    v3_lock = V3_2K_CHANNEL_LOCKS.get(norm_slug)
+    is_v3_2k = v3_lock is not None
+    target_w, target_h = (2560, 1440) if is_v3_2k else (1920, 1080)
+    wm_size = 150 if is_v3_2k else 100
+    delogo_br = bool(v3_lock["delogo_bottom_right"]) if is_v3_2k else False
 
     watermark_png = work_dir / f"watermark_{wm_size}x{wm_size}.png"
     logo_src = resolve_channel_logo_source(config.channel_slug)

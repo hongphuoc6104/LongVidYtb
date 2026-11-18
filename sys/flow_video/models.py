@@ -55,6 +55,10 @@ class ScenePairSpec:
     trim_first_frame: bool = False
     start_based_on: str | None = None
     end_based_on_start: bool = False
+    video_model: str | None = None
+    transition_mode: str = "frame_link"  # "frame_link" | "seam" | "soft_fade"
+    exit_seam: str | None = None
+    seam_dissolve_sec: float = 0.0
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -75,6 +79,10 @@ class ScenePairSpec:
             trim_first_frame=bool(data.get("trim_first_frame", False)),
             start_based_on=data.get("start_based_on"),
             end_based_on_start=bool(data.get("end_based_on_start", False)),
+            video_model=data.get("video_model"),
+            transition_mode=str(data.get("transition_mode", "frame_link")),
+            exit_seam=data.get("exit_seam"),
+            seam_dissolve_sec=float(data.get("seam_dissolve_sec", 0.0)),
         )
 
 
@@ -97,6 +105,9 @@ class VideoClipTask:
     error: str | None = None
     generation_seconds: float = 0.0
     credit_cost: int = 18
+    transition_mode: str = "frame_link"
+    exit_seam: str | None = None
+    seam_dissolve_sec: float = 0.0
 
     @property
     def duration_sec(self) -> float:
@@ -147,6 +158,9 @@ class VideoClipTask:
             error=data.get("error"),
             generation_seconds=float(data.get("generation_seconds", 0.0)),
             credit_cost=int(data.get("credit_cost", 10)),
+            transition_mode=str(data.get("transition_mode", "frame_link")),
+            exit_seam=data.get("exit_seam"),
+            seam_dissolve_sec=float(data.get("seam_dissolve_sec", 0.0)),
         )
 
 
@@ -175,6 +189,7 @@ class VideoChainSpec:
     auto_fallback_zero_credit: bool = True
     channel_id: str | None = None
     overscan_crop: float = 1.05
+    seam_dissolve_sec: float = 0.0
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -195,6 +210,7 @@ class VideoChainSpec:
             "auto_fallback_zero_credit": self.auto_fallback_zero_credit,
             "channel_id": self.channel_id,
             "overscan_crop": self.overscan_crop,
+            "seam_dissolve_sec": self.seam_dissolve_sec,
         }
 
     @classmethod
@@ -226,6 +242,7 @@ class VideoChainSpec:
             auto_fallback_zero_credit=bool(data.get("auto_fallback_zero_credit", True)),
             channel_id=data.get("channel_id"),
             overscan_crop=float(data.get("overscan_crop", 1.05)),
+            seam_dissolve_sec=float(data.get("seam_dissolve_sec", 0.0)),
         )
 
     def to_json_file(self, path: str | Path) -> None:

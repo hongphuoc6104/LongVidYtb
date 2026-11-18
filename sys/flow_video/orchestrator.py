@@ -441,7 +441,10 @@ class FlowVideoChainOrchestrator:
                 min_cost = min(
                     (
                         getattr(t, "credit_cost", 0)
-                        or self._credit_cost_for_model(self.spec.video_model, int(round(t.duration_sec)))
+                        or self._credit_cost_for_model(
+                            getattr(t, "video_model", None) or self.spec.video_model,
+                            int(round(t.duration_sec)),
+                        )
                         for t in initial_tasks
                     ),
                     default=7,
@@ -1272,7 +1275,10 @@ class FlowVideoChainOrchestrator:
         min_cost = min(
             (
                 getattr(t, "credit_cost", 0)
-                or self._credit_cost_for_model(self.spec.video_model, int(round(t.duration_sec)))
+                or self._credit_cost_for_model(
+                    getattr(t, "video_model", None) or self.spec.video_model,
+                    int(round(t.duration_sec)),
+                )
                 for t in pending
             ),
             default=10,
@@ -1302,7 +1308,8 @@ class FlowVideoChainOrchestrator:
                     break
 
                 clip_cost = getattr(task, "credit_cost", 0) or self._credit_cost_for_model(
-                    self.spec.video_model, int(round(task.duration_sec))
+                    getattr(task, "video_model", None) or self.spec.video_model,
+                    int(round(task.duration_sec)),
                 )
                 success = False
                 attempts = 0
@@ -1530,7 +1537,8 @@ class FlowVideoChainOrchestrator:
     ) -> None:
         """Launch headless Chrome, query credits, and synthesize video clip via DirectCDP."""
         clip_cost = getattr(clip, "credit_cost", 0) or self._credit_cost_for_model(
-            self.spec.video_model, int(round(clip.duration_sec))
+            getattr(clip, "video_model", None) or self.spec.video_model,
+            int(round(clip.duration_sec)),
         )
 
         all_profiles = self._get_channel_profiles()
@@ -1846,6 +1854,7 @@ class FlowVideoChainOrchestrator:
             keep_veo_audio=self.spec.keep_veo_audio,
             veo_audio_mix_weight=getattr(self.spec, "veo_audio_mix_weight", 0.45),
             overscan_crop=float(getattr(self.spec, "overscan_crop", 1.05)),
+            seam_dissolve_sec=float(getattr(self.spec, "seam_dissolve_sec", 0.0)),
         )
 
     def _finalize_reports(

@@ -347,6 +347,7 @@ def stitch_video_chain(
     keep_veo_audio: bool = True,
     veo_audio_mix_weight: float = 0.45,
     overscan_crop: float = 1.05,
+    seam_dissolve_sec: float = 0.0,
 ) -> dict[str, Any]:
     """Stitch multiple video clips into a single continuous seamless MP4.
 
@@ -406,6 +407,7 @@ def stitch_video_chain(
     if has_ext_audio:
         ext_audio_dur = probe_audio_duration(audio_p)
 
+    clip_durs: list[float] = []
     total_video_dur = 0.0
     for i, (_, trim_first, target_dur, meta) in enumerate(parsed_clips):
         raw_dur = float(meta.get("duration", 0.0))
@@ -422,7 +424,18 @@ def stitch_video_chain(
                 clip_dur = target_dur
             else:
                 clip_dur = raw_dur - (1.0 / fps) if trim_first else raw_dur
-        total_video_dur += max(0.0, clip_dur)
+        clip_dur = max(0.05, clip_dur)
+        clip_durs.append(clip_dur)
+        total_video_dur += clip_dur
+
+    eff_dissolve = 0.0
+    if seam_dissolve_sec > 0.0 and k > 1:
+        min_clip_dur = min(clip_durs)
+        eff_dissolve = round(min(float(seam_dissolve_sec), min_clip_dur * 0.35), 4)
+        if eff_dissolve >= 0.02:
+            total_video_dur = max(0.05, total_video_dur - (k - 1) * eff_dissolve)
+        else:
+            eff_dissolve = 0.0
 
     pad_final_dur = 0.0
     if has_ext_audio and ext_audio_dur > total_video_dur + 0.01:
@@ -512,8 +525,30 @@ def stitch_video_chain(
             filter_chains.append(afilter)
             audio_labels.append(f"[a{i}]")
 
-    # Concat video and audio
-    if has_native_audio:
+    # Concat or xfade-dissolve video and audio
+    if eff_dissolve > 0.0 and k > 1:
+        xf_labels: list[str] = []
+        for idx, v_lbl in enumerate(video_labels):
+            cfr_lbl = f"[vcfr{idx}]"
+            filter_chains.append(f"{v_lbl}setpts=PTS-STARTPTS,fps={fps},settb=1/{fps}{cfr_lbl}")
+            xf_labels.append(cfr_lbl)
+        prev_v = xf_labels[0]
+        cum_dur = clip_durs[0]
+        for idx in range(1, k):
+            out_v = "[vconcat]" if idx == k - 1 else f"[vx{idx}]"
+            offset = max(0.01, round(cum_dur - eff_dissolve, 4))
+            filter_chains.append(
+                f"{prev_v}{xf_labels[idx]}xfade=transition=fade:duration={eff_dissolve:.4f}:offset={offset:.4f}{out_v}"
+            )
+            prev_v = out_v
+            cum_dur = offset + clip_durs[idx]
+        if has_native_audio:
+            prev_a = audio_labels[0]
+            for idx in range(1, k):
+                out_a = "[aconcat]" if idx == k - 1 else f"[ax{idx}]"
+                filter_chains.append(f"{prev_a}{audio_labels[idx]}acrossfade=d={eff_dissolve:.4f}{out_a}")
+                prev_a = out_a
+    elif has_native_audio:
         concat_inputs = "".join(f"{v}{a}" for v, a in zip(video_labels, audio_labels, strict=True))
         filter_chains.append(f"{concat_inputs}concat=n={k}:v=1:a=1[vconcat][aconcat]")
     else:

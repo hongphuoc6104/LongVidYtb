@@ -6,7 +6,7 @@ Sharded into modular sub-warehouses:
 - `hud_widgets`: 14 30fps HUD/layout widgets & dynamic `build_bespoke_topic_hud_patch`
 - `audio_sfx_bgm`: 25 stereo 48kHz SFX stems, 5 Niche BGM loops, & `synthesize_bespoke_topic_sfx`
 - `selector`: `auto_select_beat_fx` with comfort guardrails & automatic bespoke routing
-- `hud_forensic_v2`: 9 high-precision forensic/3D dossier 30fps HUD widgets
+- `hud_forensic_v2`: 10 high-precision forensic/3D dossier 30fps HUD widgets
 - `audio_suspense_v2`: 48kHz stereo suspense audio mixer (`A`/`B`/`C` variants)
 - `pipeline_bridge`: Unified `plan_and_prepare_dual_mode_fx` & `resolve_fx_intent_from_text`
 """
@@ -16,6 +16,8 @@ from .archetypes import (
     ARCHETYPE_PROFILES,
     CHANNEL_ARCHETYPE_MAP,
     CHANNEL_BESPOKE_RULES,
+    EN_CHANNEL_ARCHETYPE_MAP,
+    get_channel_archetype,
     resolve_niche_fx_blueprint,
 )
 from .audio_sfx_bgm import (
@@ -75,6 +77,7 @@ from .hud_forensic_v2 import (
     render_fuel_avoidance_vector,
     render_hypoxia_tuc_meter,
     render_lemmino_hairline_hud,
+    render_man_auto_switch,
     render_swiss_cheese_align,
     set_font_dir,
 )
@@ -103,6 +106,7 @@ __all__ = [
     "CAMERA_MOTION_CATALOG",
     "CHANNEL_ARCHETYPE_MAP",
     "CHANNEL_BESPOKE_RULES",
+    "EN_CHANNEL_ARCHETYPE_MAP",
     "EXISTING_SFX_FILES",
     "FORENSIC_HUD_V2_CATALOG",
     "FPS",
@@ -150,6 +154,7 @@ __all__ = [
     "render_hud_widget_patch",
     "render_hypoxia_tuc_meter",
     "render_lemmino_hairline_hud",
+    "render_man_auto_switch",
     "render_swiss_cheese_align",
     "resolve_fx_intent_from_text",
     "resolve_niche_fx_blueprint",

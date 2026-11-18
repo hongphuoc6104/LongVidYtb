@@ -11,7 +11,12 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from .archetypes import ARCHETYPE_PROFILES, CHANNEL_ARCHETYPE_MAP, resolve_niche_fx_blueprint
+from .archetypes import (
+    ARCHETYPE_PROFILES,
+    CHANNEL_ARCHETYPE_MAP,
+    get_channel_archetype,
+    resolve_niche_fx_blueprint,
+)
 from .camera_vfx import get_camera_motion
 
 STATIC_CAMERA_HUDS: frozenset[str] = frozenset({
@@ -159,7 +164,7 @@ def auto_select_beat_fx(
     allow_bespoke: bool = True,
 ) -> dict[str, Any]:
     """Select the best camera, HUD, VFX, SFX & BGM—or generate bespoke specs when presets don't fit."""
-    arch_id = CHANNEL_ARCHETYPE_MAP.get(channel_id, "archetype_1_forensic_noir")
+    arch_id = get_channel_archetype(channel_id)
     arch = ARCHETYPE_PROFILES[arch_id]
     txt = (beat_text or "").lower().strip()
     ovr = dict(overrides or {})
