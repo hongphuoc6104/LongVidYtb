@@ -15,6 +15,7 @@ Authors and validates spoken Vietnamese/English explainer scripts (`long_16x9` a
 5. **1-to-1 Sentence-Beat Pairing**: Pair each spoken sentence/clause (`split_long_sentence_into_beat_clauses()`) with `"shot_type|visual_action"` across the 10 standard shot types (`full_scene`, `variation`, `macro_prop`, `visual_diagram`, `concept_metaphor`, `cutaway_detail`, `white_card`, `white_isolated`, `still_life`, `environment`). Follow the Feynman Visual Formula (1 doodle stickman + 1 focal metaphor, $\ge 60\%$ negative space).
 6. **V2 CTA & Short→Long Bridge (`cta_tone_linter.py`)**: Every short carries `parent_long_id`; final 15% contains exactly 1 close CTA ($\le 24$ syllables) + 1 channel-named bridge ($\le 22$ syllables) spoken verbatim in the last scene (zero CTA in the first 3s). Long videos allow $\le 1$ `mid_cta` at 35–45%. Never say *"like, share, subscribe, nhấn chuông, đăng ký kênh"*.
 7. **Active Pause Authoring (`format_v1`)**: Default pauses come from `sys/format_profiles.py` via `narration_pauses.py`. Use intentional pivot tags sparingly (`450ms` short / `600ms` long; $\le 3$ dramatic `800–900ms` tags in `SC02+`).
+   - **Cinema Prosody (`sys/voice_prosody.py`)**: Pair `[pause:Xms]` silence splicing (`split_text_with_pauses()`) with `VOICE_DELIVERY_PROFILES` (`6` cinema delivery modes) alongside OmniVoice cloning where ElevenLabs v3 inline tags are unsupported.
 
 ## 2. Mandatory Linters (4 Gates)
 ```bash

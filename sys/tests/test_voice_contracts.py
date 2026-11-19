@@ -266,5 +266,124 @@ class TestStandaloneSpinoffHooksGate(unittest.TestCase):
         self.assertEqual(str(ctx.exception), "Remote duration/learner pause mismatch")
 
 
+class TestVoiceProsodyAndCinemaDeliveryModes(unittest.TestCase):
+    """Validates Wave 1A cinema prosody director and synchronized 6 cinema tone multipliers."""
+
+    EXPECTED_CINEMA_KEYS = (
+        "tense_whisper",
+        "narrative_cinema",
+        "tactical_breakdown",
+        "urgent_escalation",
+        "climax_heroic",
+        "reflective_lesson",
+    )
+
+    def test_delivery_profiles_exact_specs_and_speed_ordering(self):
+        from voice_prosody import (
+            BASELINE_LUFS,
+            VOICE_DELIVERY_PROFILES,
+            resolve_delivery_profile,
+        )
+
+        self.assertEqual(BASELINE_LUFS, -14.0)
+        self.assertEqual(set(VOICE_DELIVERY_PROFILES.keys()), set(self.EXPECTED_CINEMA_KEYS))
+
+        for mode, prof in VOICE_DELIVERY_PROFILES.items():
+            self.assertEqual(prof["mode"], mode)
+            self.assertEqual(
+                prof["effective_rate"],
+                round(prof["omni_speed"] * prof["atempo"], 3),
+            )
+            self.assertIn("highpass=", prof["eq_chain"])
+            self.assertIn("lowpass=", prof["eq_chain"])
+
+        # Exact numeric spot checks
+        self.assertEqual(VOICE_DELIVERY_PROFILES["tense_whisper"]["omni_speed"], 0.98)
+        self.assertEqual(VOICE_DELIVERY_PROFILES["tense_whisper"]["atempo"], 1.10)
+        self.assertEqual(VOICE_DELIVERY_PROFILES["tense_whisper"]["micro_gain_db"], -1.8)
+        self.assertEqual(VOICE_DELIVERY_PROFILES["urgent_escalation"]["omni_speed"], 1.16)
+        self.assertEqual(VOICE_DELIVERY_PROFILES["urgent_escalation"]["gap_after_sec"], 0.05)
+        self.assertEqual(VOICE_DELIVERY_PROFILES["climax_heroic"]["micro_gain_db"], 1.5)
+        self.assertEqual(VOICE_DELIVERY_PROFILES["reflective_lesson"]["gap_after_sec"], 0.32)
+
+        # Speed ordering: tense_whisper < reflective_lesson < narrative_cinema/tactical_breakdown < climax_heroic < urgent_escalation
+        eff = {k: VOICE_DELIVERY_PROFILES[k]["effective_rate"] for k in self.EXPECTED_CINEMA_KEYS}
+        self.assertLess(eff["tense_whisper"], eff["reflective_lesson"])
+        self.assertLess(eff["reflective_lesson"], eff["tactical_breakdown"])
+        self.assertLess(eff["reflective_lesson"], eff["narrative_cinema"])
+        self.assertLess(eff["tactical_breakdown"], eff["climax_heroic"])
+        self.assertLess(eff["narrative_cinema"], eff["climax_heroic"])
+        self.assertLess(eff["climax_heroic"], eff["urgent_escalation"])
+
+        # resolve_delivery_profile returns defensive copy and defaults unknown/None to narrative_cinema
+        resolved = resolve_delivery_profile("tactical_breakdown")
+        self.assertEqual(resolved["mode"], "tactical_breakdown")
+        resolved["omni_speed"] = 9.99
+        self.assertEqual(VOICE_DELIVERY_PROFILES["tactical_breakdown"]["omni_speed"], 1.06)
+
+        self.assertEqual(resolve_delivery_profile(None)["mode"], "narrative_cinema")
+        self.assertEqual(resolve_delivery_profile("nonexistent_mode")["mode"], "narrative_cinema")
+
+    def test_split_text_with_pauses_edge_cases(self):
+        from voice_prosody import split_text_with_pauses
+
+        self.assertEqual(split_text_with_pauses(""), [])
+        self.assertEqual(split_text_with_pauses("   \n\t  "), [])
+
+        # Plain text without pauses
+        self.assertEqual(
+            split_text_with_pauses("  Đêm mùng ba tại Hà Hồi.  "),
+            [{"type": "speech", "text": "Đêm mùng ba tại Hà Hồi."}],
+        )
+
+        # Mixed ms, s, and bare >10 ms values
+        parsed = split_text_with_pauses(
+            "Khoan đã. [pause:550ms] Nghe rõ tiếng trống? [pause:0.5s] Rút lui ngay. [pause:600]"
+        )
+        self.assertEqual(
+            parsed,
+            [
+                {"type": "speech", "text": "Khoan đã."},
+                {"type": "pause", "seconds": 0.55},
+                {"type": "speech", "text": "Nghe rõ tiếng trống?"},
+                {"type": "pause", "seconds": 0.5},
+                {"type": "speech", "text": "Rút lui ngay."},
+                {"type": "pause", "seconds": 0.6},
+            ],
+        )
+
+        # Leading/trailing pauses and consecutive whitespace-separated pauses merged cleanly
+        consec = split_text_with_pauses("  [pause:300ms] [pause:0.4s] Bắt đầu. [pause:0ms]  ")
+        self.assertEqual(
+            consec,
+            [
+                {"type": "pause", "seconds": 0.7},
+                {"type": "speech", "text": "Bắt đầu."},
+            ],
+        )
+
+    def test_protocol_and_output_contract_tone_multipliers_sync(self):
+        from output_contract import TONE_SPEED_MULTIPLIERS as CONTRACT_TONES
+        from output_contract import resolve_tone_speed as contract_resolve_tone_speed
+
+        expected_all = {
+            "narrative_warm": 1.00,
+            "analytical_crisp": 1.02,
+            "reflective_slow": 0.98,
+            "tense_whisper": 0.86,
+            "narrative_cinema": 0.95,
+            "tactical_breakdown": 0.96,
+            "urgent_escalation": 1.07,
+            "climax_heroic": 1.02,
+            "reflective_lesson": 0.88,
+        }
+        self.assertEqual(TONE_SPEED_MULTIPLIERS, expected_all)
+        self.assertEqual(CONTRACT_TONES, expected_all)
+
+        for key, mult in expected_all.items():
+            self.assertEqual(resolve_tone_speed(1.0, key), mult)
+            self.assertEqual(contract_resolve_tone_speed(1.0, key), mult)
+
+
 if __name__ == "__main__":
     unittest.main()

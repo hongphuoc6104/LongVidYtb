@@ -32,6 +32,12 @@ TONE_SPEED_MULTIPLIERS = {
     'narrative_warm': 1.00,
     'analytical_crisp': 1.02,
     'reflective_slow': 0.98,
+    'tense_whisper': 0.86,
+    'narrative_cinema': 0.95,
+    'tactical_breakdown': 0.96,
+    'urgent_escalation': 1.07,
+    'climax_heroic': 1.02,
+    'reflective_lesson': 0.88,
 }
 
 

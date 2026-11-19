@@ -10,6 +10,7 @@ import os
 import re
 import subprocess
 import sys
+import threading
 import time
 from datetime import datetime, timezone
 
@@ -180,6 +181,7 @@ class FlowVideoChainOrchestrator:
         max_retries_per_clip: int = 20,
         skip_stitch: bool = False,
         reuse_warm_sessions: bool = True,
+        skip_denied_tier0_lite: bool = False,
     ) -> None:
         self.spec = spec
         base_dir = (
@@ -212,6 +214,7 @@ class FlowVideoChainOrchestrator:
         self.max_retries = max(1, int(max_retries_per_clip))
         self.skip_stitch = bool(skip_stitch)
         self.reuse_warm_sessions = bool(reuse_warm_sessions)
+        self.skip_denied_tier0_lite = bool(skip_denied_tier0_lite)
 
         self.credit_ledger = CreditLedger()
         self._launched_ports: set[int] = set()
@@ -222,6 +225,9 @@ class FlowVideoChainOrchestrator:
         self._warm_sessions: dict[int, dict[str, Any]] = {}
         self._warm_locks: dict[int, asyncio.Lock] = {}
         self._lock = asyncio.Lock()
+        self._state_lock = threading.Lock()
+        self._tier0_veo_lite_denied_profiles: set[str] = set()
+        self._profile_credits_cache: dict[str, dict[str, Any]] = {}
 
     def _get_warm_lock(self, port: int) -> asyncio.Lock:
         if port not in self._warm_locks:
@@ -243,6 +249,134 @@ class FlowVideoChainOrchestrator:
         self._profile_cooldowns[profile_name] = time.time() + seconds
         if hasattr(self.credit_ledger, "mark_cooldown"):
             self.credit_ledger.mark_cooldown(profile_name, seconds=seconds, reason=reason)
+
+    def _reset_tier0_veo_lite_state(self) -> None:
+        """Reset session-scoped Veo Lite model-access denial tracking."""
+        with self._state_lock:
+            self._tier0_veo_lite_denied_profiles.clear()
+
+    def _record_tier0_veo_lite_denial(self, profile_name: str) -> int:
+        """Record a profile that denied `veo_3_1_lite` under thread lock and return count."""
+        with self._state_lock:
+            if profile_name:
+                self._tier0_veo_lite_denied_profiles.add(profile_name)
+            return len(self._tier0_veo_lite_denied_profiles)
+
+    def _read_ledger_profiles_snapshot(self, profile_ids: list[str]) -> dict[str, dict[str, Any]]:
+        """Safely read cached profile entries (including `paygate_tier`) from CreditLedger."""
+        if hasattr(self.credit_ledger, "summary"):
+            try:
+                res = self.credit_ledger.summary(profile_ids=profile_ids)
+                if isinstance(res, dict) and isinstance(res.get("profiles"), dict):
+                    return res["profiles"]
+            except Exception:
+                pass
+        return {}
+
+    def _get_profile_paygate_tier(
+        self,
+        profile_cfg: dict[str, Any],
+        ledger_profiles: dict[str, dict[str, Any]] | None = None,
+    ) -> int:
+        """Resolve `paygate_tier` from live cache, CreditLedger snapshot, or profile config."""
+        pname = str(profile_cfg.get("name") or profile_cfg.get("profile_dir") or profile_cfg.get("id") or "")
+        with self._state_lock:
+            cached = self._profile_credits_cache.get(pname)
+        if isinstance(cached, dict) and cached.get("paygate_tier") is not None:
+            return int(cached.get("paygate_tier") or 0)
+        if ledger_profiles and isinstance(ledger_profiles.get(pname), dict):
+            info = ledger_profiles[pname]
+            if info.get("paygate_tier") is not None:
+                return int(info.get("paygate_tier") or 0)
+        return int(profile_cfg.get("paygate_tier") or 0)
+
+    def _sync_live_credits_to_ledger(self, p_name: str, credits_info: dict[str, Any]) -> int:
+        """Cache live credits metadata (including `paygate_tier`) and sync balance to ledger."""
+        rem = int(credits_info.get("remaining", 0))
+        tier = int(credits_info.get("paygate_tier") or 0)
+        with self._state_lock:
+            self._profile_credits_cache[p_name] = dict(credits_info)
+        try:
+            self.credit_ledger.sync_balance(
+                p_name,
+                rem,
+                subscription_credits=int(credits_info.get("subscription_credits") or 1000),
+                expiry_epoch=credits_info.get("expiry_epoch"),
+                paygate_tier=tier,
+            )
+        except TypeError:
+            self.credit_ledger.sync_balance(p_name, rem)
+        return rem
+
+    def _downgrade_task_to_omni_seam(self, task: VideoClipTask) -> None:
+        """Convert a `veo_3_1_lite` task to Seam `omni_flash` (`end_frame_path=None`, 18c for 6s)."""
+        task.video_model = "omni_flash"
+        if getattr(task, "transition_mode", "seam") != "frame_link":
+            task.end_frame_path = None
+        task.credit_cost = self._credit_cost_for_model(
+            "omni_flash", int(round(task.duration_sec))
+        )
+
+    def _maybe_preroute_tier0_veo_lite(
+        self, task: VideoClipTask, all_profiles: list[dict[str, Any]]
+    ) -> tuple[bool, set[str], dict[str, dict[str, Any]]]:
+        """Pre-route `veo_3_1_lite` Seam tasks to `omni_flash` once >=2 profiles deny Lite and no Pro tier remains."""
+        active_model_name = getattr(task, "video_model", None) or self.spec.video_model or ""
+        is_lite_task = "lite" in active_model_name.lower()
+        all_pids = [
+            str(p.get("name") or p.get("profile_dir") or p.get("id") or "")
+            for p in all_profiles
+            if (p.get("name") or p.get("profile_dir") or p.get("id"))
+        ]
+        ledger_profiles = self._read_ledger_profiles_snapshot(all_pids)
+        with self._state_lock:
+            denied_snapshot = set(self._tier0_veo_lite_denied_profiles)
+
+        if not is_lite_task or (not self.skip_denied_tier0_lite and len(denied_snapshot) < 2):
+            return is_lite_task, denied_snapshot, ledger_profiles
+
+        exhausted_set = getattr(self.credit_ledger, "exhausted", set()) or set()
+        lite_cost = getattr(task, "credit_cost", 0) or self._credit_cost_for_model(
+            active_model_name, int(round(task.duration_sec))
+        )
+        eligible_non_denied: list[dict[str, Any]] = []
+        has_pro_candidate = False
+        for cand in all_profiles:
+            cname = str(cand.get("name") or cand.get("profile_dir") or cand.get("id") or "")
+            if not cname or cname in denied_snapshot or cname in exhausted_set:
+                continue
+            if self._is_profile_cooled_down(cname):
+                continue
+            if not self.credit_ledger.is_eligible(cname, min_credits=lite_cost):
+                continue
+            eligible_non_denied.append(cand)
+            if self._get_profile_paygate_tier(cand, ledger_profiles) >= 1:
+                has_pro_candidate = True
+                break
+
+        if has_pro_candidate:
+            return True, denied_snapshot, ledger_profiles
+
+        if self.skip_denied_tier0_lite and eligible_non_denied:
+            self._downgrade_task_to_omni_seam(task)
+            logger.warning(
+                f"[POOL_TIER0_DIRECT_OMNI] {len(eligible_non_denied)} eligible profile(s) are all "
+                f"paygate_tier<=0 (zero Pro candidates); routing clip {task.clip_id} straight to "
+                f"omni_flash (Seam start-frame only, {task.credit_cost}c) before RPC."
+            )
+            return False, denied_snapshot, ledger_profiles
+
+        if len(denied_snapshot) >= 2:
+            self._downgrade_task_to_omni_seam(task)
+            logger.warning(
+                f"[POOL_TIER0_MODEL_FALLBACK] {len(denied_snapshot)} profiles denied {active_model_name} "
+                f"and no healthy paygate_tier>=1 candidate remains; pre-routing clip "
+                f"{task.clip_id} straight to omni_flash (Seam start-frame only, "
+                f"{task.credit_cost}c) before RPC."
+            )
+            return False, denied_snapshot, ledger_profiles
+
+        return True, denied_snapshot, ledger_profiles
 
     def _launch_profile_browser(self, pm: Any, profile_cfg: dict[str, Any]) -> bool:
         """Launch Chrome profile in headless mode by default (`self.headless=True`)."""
@@ -1259,6 +1393,7 @@ class FlowVideoChainOrchestrator:
     # Step 3: Parallel Clip Generation Across Multi-Account Pool
     # -------------------------------------------------------------------------
     async def _generate_clips_parallel(self, tasks: list[VideoClipTask]) -> None:
+        self._reset_tier0_veo_lite_state()
         pending = [t for t in tasks if t.status != "completed"]
         if not pending:
             return
@@ -1307,10 +1442,6 @@ class FlowVideoChainOrchestrator:
                 except asyncio.QueueEmpty:
                     break
 
-                clip_cost = getattr(task, "credit_cost", 0) or self._credit_cost_for_model(
-                    getattr(task, "video_model", None) or self.spec.video_model,
-                    int(round(task.duration_sec)),
-                )
                 success = False
                 attempts = 0
                 port_skips = 0
@@ -1321,6 +1452,13 @@ class FlowVideoChainOrchestrator:
                     wait_sec = 0.0
 
                     async with self._lock:
+                        is_lite_task, denied_snapshot, ledger_profiles = self._maybe_preroute_tier0_veo_lite(
+                            task, all_profiles
+                        )
+                        clip_cost = getattr(task, "credit_cost", 0) or self._credit_cost_for_model(
+                            getattr(task, "video_model", None) or self.spec.video_model,
+                            int(round(task.duration_sec)),
+                        )
                         now = time.time()
                         # Find profile eligible for this specific clip_cost and not on cooldown
                         def is_candidate(p: dict[str, Any], cost: int = clip_cost, cur_now: float = now) -> bool:
@@ -1404,7 +1542,25 @@ class FlowVideoChainOrchestrator:
                                 worker_queue.task_done()
                                 return
                         else:
-                            # Prefer profile that generated or already uploaded start_frame_path for zero-upload fast-path
+                            # Deprioritize previously blocked profiles (and Lite-denied profiles on Lite tasks)
+                            def _cand_sort_key(
+                                item: tuple[int, dict[str, Any]],
+                                *,
+                                lite: bool = is_lite_task,
+                                denied: set[str] = denied_snapshot,
+                                ledger_snap: dict[str, dict[str, Any]] = ledger_profiles,
+                            ) -> tuple[int, int, int, int]:
+                                idx_c, cand = item
+                                cname = str(cand.get("name") or cand.get("profile_dir") or cand.get("id") or "")
+                                denied_rank = 1 if (lite and cname in denied) else 0
+                                tier_rank = -self._get_profile_paygate_tier(cand, ledger_snap) if lite else 0
+                                return (denied_rank, tier_rank, self._profile_block_streaks.get(cname, 0), idx_c)
+
+                            eligible_candidates = [
+                                cand
+                                for _, cand in sorted(enumerate(eligible_candidates), key=_cand_sort_key)
+                            ]
+                            # Prefer fresh (streak == 0) profile that generated/uploaded start_frame_path
                             matched_cand = None
                             if task.start_frame_path:
                                 start_sidecar = Path(task.start_frame_path).with_suffix(".json")
@@ -1415,13 +1571,22 @@ class FlowVideoChainOrchestrator:
                                         s_pmap = s_data.get("profile_media_ids") if isinstance(s_data.get("profile_media_ids"), dict) else {}
                                         if s_prof:
                                             for cand in eligible_candidates:
-                                                if cand.get("name") == s_prof or cand.get("id") == s_prof:
+                                                cname = str(cand.get("name") or cand.get("profile_dir") or cand.get("id") or "")
+                                                if (
+                                                    (cand.get("name") == s_prof or cand.get("id") == s_prof)
+                                                    and self._profile_block_streaks.get(cname, 0) == 0
+                                                    and not (is_lite_task and cname in denied_snapshot)
+                                                ):
                                                     matched_cand = cand
                                                     break
                                         if matched_cand is None and s_pmap:
                                             for cand in eligible_candidates:
-                                                cname = str(cand.get("name") or cand.get("id") or "")
-                                                if cname in s_pmap:
+                                                cname = str(cand.get("name") or cand.get("profile_dir") or cand.get("id") or "")
+                                                if (
+                                                    cname in s_pmap
+                                                    and self._profile_block_streaks.get(cname, 0) == 0
+                                                    and not (is_lite_task and cname in denied_snapshot)
+                                                ):
                                                     matched_cand = cand
                                                     break
                                     except Exception:
@@ -1431,6 +1596,15 @@ class FlowVideoChainOrchestrator:
                                     cand
                                     for cand in eligible_candidates
                                     if int(cand.get("cdp_port", 0)) in self._warm_sessions
+                                    and self._profile_block_streaks.get(
+                                        str(cand.get("name") or cand.get("profile_dir") or cand.get("id") or ""), 0
+                                    )
+                                    == 0
+                                    and not (
+                                        is_lite_task
+                                        and str(cand.get("name") or cand.get("profile_dir") or cand.get("id") or "")
+                                        in denied_snapshot
+                                    )
                                 ),
                                 None,
                             )
@@ -1465,11 +1639,29 @@ class FlowVideoChainOrchestrator:
                         if is_port_busy:
                             port_skips += 1
                             attempts = max(0, attempts - 1)
+                        is_model_access_fallback = False
+                        has_fresh_profile = False
+                        cd_sec = 120.0
                         async with self._lock:
                             # Check if real credit exhausted
                             exc_str = str(exc)
+                            active_model_name = getattr(task, "video_model", None) or self.spec.video_model or ""
                             if "INSUFFICIENT_CREDITS" in exc_str or "PUBLIC_ERROR_QUOTA" in exc_str:
                                 self.credit_ledger.mark_exhausted(p_name, reason=exc_str)
+                            elif "PUBLIC_ERROR_MODEL_ACCESS_DENIED" in exc_str and "lite" in active_model_name.lower():
+                                self._record_tier0_veo_lite_denial(p_name)
+                                self._downgrade_task_to_omni_seam(task)
+                                self._profile_cooldowns.pop(p_name, None)
+                                if hasattr(self.credit_ledger, "clear_cooldown"):
+                                    self.credit_ledger.clear_cooldown(p_name)
+                                available_profiles.append(profile_cfg)
+                                attempts = max(0, attempts - 1)
+                                is_model_access_fallback = True
+                                logger.warning(
+                                    f"[MODEL_ACCESS_FALLBACK] Profile {p_name} denied {active_model_name} at clip "
+                                    f"{task.clip_id}; downgrading clip to omni_flash (Seam start-frame only, "
+                                    f"{task.credit_cost}c) and retrying immediately."
+                                )
                             elif any(
                                 err in exc_str
                                 for err in (
@@ -1482,7 +1674,11 @@ class FlowVideoChainOrchestrator:
                             ):
                                 streak = self._profile_block_streaks.get(p_name, 0) + 1
                                 self._profile_block_streaks[p_name] = streak
-                                cd_sec = 75.0
+                                cd_sec = (
+                                    86400.0
+                                    if "NO_AT_TOKEN" in exc_str
+                                    else min(600.0, 120.0 * (2 ** min(streak - 1, 3)))
+                                )
                                 self._record_profile_cooldown(p_name, cd_sec, reason=exc_str)
                                 available_profiles.append(profile_cfg)
                                 attempts = max(0, attempts - 1)  # Do not burn attempt budget on temporary provider rate limit
@@ -1494,9 +1690,24 @@ class FlowVideoChainOrchestrator:
                                 cd_err = 5.0 if ("UNSAFE" in exc_str or "SAFETY" in exc_str) else 120.0
                                 self._record_profile_cooldown(p_name, cd_err, reason=exc_str)
                                 available_profiles.append(profile_cfg)
+                            has_fresh_profile = any(
+                                self.credit_ledger.is_eligible(
+                                    str(cp.get("name") or cp.get("profile_dir", "")),
+                                    min_credits=clip_cost,
+                                )
+                                and not self._is_profile_cooled_down(
+                                    str(cp.get("name") or cp.get("profile_dir", ""))
+                                )
+                                and self._profile_block_streaks.get(
+                                    str(cp.get("name") or cp.get("profile_dir", "")), 0
+                                )
+                                == 0
+                                for cp in all_profiles
+                            )
                             self._save_manifest(tasks)
-                        # Rotate immediately to next healthy profile with brief jitter instead of blocking worker for 45s
-                        if any(
+                        if is_model_access_fallback:
+                            await asyncio.sleep(0.5)
+                        elif any(
                             err in str(exc)
                             for err in (
                                 "TOO_MUCH_TRAFFIC",
@@ -1507,10 +1718,13 @@ class FlowVideoChainOrchestrator:
                             )
                         ):
                             is_traffic_burst = "TOO_MUCH_TRAFFIC" in str(exc) or "UNUSUAL_ACTIVITY" in str(exc)
-                            pause_sec = 45.0 if is_traffic_burst else 8.0
+                            if is_traffic_burst:
+                                pause_sec = 3.0 if has_fresh_profile else 45.0
+                            else:
+                                pause_sec = 3.0 if has_fresh_profile else 8.0
                             logger.warning(
                                 f"[RATE_LIMIT_ROTATE] Profile {p_name} rate-limited at clip {task.clip_id}. "
-                                f"Cooldown 75s; rotating in {pause_sec:.1f}s..."
+                                f"Cooldown {cd_sec:.0f}s (streak {self._profile_block_streaks.get(p_name, 1)}); rotating in {pause_sec:.1f}s..."
                             )
                             await asyncio.sleep(pause_sec)
                         else:
@@ -1614,8 +1828,7 @@ class FlowVideoChainOrchestrator:
                     need_sync = not warm_entry.get("credits_synced", False)
                     if need_sync and hasattr(session, "query_credits"):
                         credits_info = await session.query_credits()
-                        rem = int(credits_info.get("remaining", 0))
-                        self.credit_ledger.sync_balance(p_name, rem)
+                        rem = self._sync_live_credits_to_ledger(p_name, credits_info)
                         warm_entry["credits_synced"] = True
                         if rem < clip_cost:
                             if hasattr(self.credit_ledger, "rollback"):
@@ -1694,15 +1907,8 @@ class FlowVideoChainOrchestrator:
                             "TOO_MUCH_TRAFFIC",
                         )
                     ):
-                        self._record_profile_cooldown(p_name, 60.0, reason=exc_str)
-                        if len(self._warm_sessions) < max(self.max_workers + 8, 12):
-                            try:
-                                if hasattr(session, "_refresh_recaptcha_session"):
-                                    await session._refresh_recaptcha_session()
-                            except Exception:
-                                pass
-                        else:
-                            await self._close_warm_port(port)
+                        self._record_profile_cooldown(p_name, 120.0, reason=exc_str)
+                        await self._close_warm_port(port)
                     elif "CAPTCHA_FAILED" in exc_str:
                         self._record_profile_cooldown(p_name, 75.0, reason=exc_str)
                         await self._close_warm_port(port)
@@ -1740,8 +1946,7 @@ class FlowVideoChainOrchestrator:
                             # Verify live credits
                             if hasattr(session, "query_credits"):
                                 credits_info = await session.query_credits()
-                                rem = int(credits_info.get("remaining", 0))
-                                self.credit_ledger.sync_balance(p_name, rem)
+                                rem = self._sync_live_credits_to_ledger(p_name, credits_info)
                                 if rem < clip_cost:
                                     if hasattr(self.credit_ledger, "rollback"):
                                         self.credit_ledger.rollback(p_name, clip_cost)

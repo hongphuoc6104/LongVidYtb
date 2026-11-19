@@ -198,3 +198,26 @@ def test_bridge_capabilities_and_cli_roundtrip(tmp_path: Path) -> None:
         capture_output=True, text=True, check=False,
     )
     assert lint.returncode == 0, lint.stderr + lint.stdout
+
+
+def test_serialized_detail_short_prompt_and_fact_threshold() -> None:
+    prompts = render_channel_master_prompts(
+        channel_id="su_ke_lai",
+        topic="Chiến dịch Tết Kỷ Dậu 1789",
+        format_profile="serialized_detail_short",
+    )
+    assert "8-14" in prompts["notebook_3_chat_prompt"]
+    assert "Tập 1 / Tập 2 / Tập 3" in prompts["notebook_3_chat_prompt"]
+    assert "chronological" in prompts["notebook_1_pattern_prompt"]
+
+    vault = parse_notebooklm_markdown_to_fact_vault(
+        md_text=SAMPLE_VN_NOTES,
+        topic="Đêm Hà Hồi 1789",
+        channel_id="su_ke_lai",
+        format_profile="serialized_detail_short",
+    )
+    assert vault["research_mode"] == "deep_research"
+    # Fewer than 8 verified facts should fail serialized_detail_short default gate
+    val_low = validate_fact_vault(vault)
+    assert val_low["valid"] is False
+    assert val_low["required_min_facts"] == 8

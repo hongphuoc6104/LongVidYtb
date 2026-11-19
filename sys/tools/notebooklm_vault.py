@@ -276,7 +276,7 @@ def parse_notebooklm_markdown_to_fact_vault(
         "language": lang,
         "format_profile": format_profile,
         "audience": audience,
-        "research_mode": "deep_research" if format_profile == "long_16x9" else "fast_research",
+        "research_mode": "deep_research" if format_profile in ("long_16x9", "serialized_detail_short") else "fast_research",
         "source_mode": source_mode,
         "verified_facts": verified_facts,
         "report_only_claims": report_only_claims,
@@ -314,7 +314,11 @@ def validate_fact_vault(vault: dict[str, Any], min_verified_facts: int | None = 
     if not channel_id:
         errors.append("MISSING_CHANNEL_ID: FactVault requires 'channel_id'")
 
-    req_facts = min_verified_facts if min_verified_facts is not None else (8 if fmt == "long_16x9" else 4)
+    req_facts = (
+        min_verified_facts
+        if min_verified_facts is not None
+        else (8 if fmt in ("long_16x9", "serialized_detail_short") else 4)
+    )
     verified = list(vault.get("verified_facts") or [])
     report_only = list(vault.get("report_only_claims") or [])
 
@@ -431,19 +435,43 @@ def render_channel_master_prompts(
         channel_id,
         ARCHETYPE_SOURCE_PRIORITIES.get(arch_id, ARCHETYPE_SOURCE_PRIORITIES["archetype_1_forensic_noir"])[lang],
     )
-    research_mode = "Deep Research" if format_profile == "long_16x9" else "Fast Research"
-    fact_range = "12-22" if format_profile == "long_16x9" else "4-7"
+    is_long = format_profile == "long_16x9"
+    is_serialized = format_profile == "serialized_detail_short"
+    if is_long:
+        research_mode = "Deep Research"
+        fact_range = "12-22"
+        format_desc = "long-form documentaries"
+        pacing_phrase = " with 60-90s Retention Resets"
+    elif is_serialized:
+        research_mode = "Deep Research"
+        fact_range = "8-14"
+        format_desc = (
+            "5-Act Cinematic Tactical Breakdown serialized vertical shorts "
+            "(140-170s per episode, strictly < 180s YouTube Shorts ceiling, Tập 1/2/3; "
+            "\"nghe để học cái hay như xem phim\")"
+        )
+        pacing_phrase = (
+            " across 24-28 chronological beats (140-170s, strictly < 180s) organized as a "
+            "5-Act Cinematic Tactical Breakdown with climax breath-hold inflection point + cliffhanger episode splits (Part 1/2/3)"
+        )
+    else:
+        research_mode = "Fast Research"
+        fact_range = "4-7"
+        format_desc = "vertical shorts"
+        pacing_phrase = " across 12-18 beats"
     lang_label = "Vietnamese" if lang == "vi" else "English"
 
     nb1_prompt = (
         f"You are a retention analyst for {lang_label} "
-        f"{'long-form documentaries' if format_profile == 'long_16x9' else 'vertical shorts'} "
+        f"{format_desc} "
         f"({meta['display_name']}, niche: {meta['niche']}). Use ONLY the sources in this notebook. "
         "Study narrative structure ONLY — NEVER quote or reuse phrasing.\n"
-        f"Extract: (1) Top 4 hook formulas (first sentence <= {'24' if format_profile == 'long_16x9' else '18'} syllables), "
+        f"Extract: (1) Top 4 hook formulas (first sentence <= {'24' if is_long else '18'} syllables), "
         "(2) Beat/chapter pacing map"
-        + (" with 60-90s Retention Resets" if format_profile == "long_16x9" else " across 12-18 beats")
-        + ", (3) Top 5 retention techniques, (4) Natural closing CTA + Short-to-Long bridge rules (zero like/share/subscribe), "
+        + pacing_phrase
+        + ", (3) Top 5 retention techniques, (4) Natural closing CTA + Short-to-Long"
+        + (" & Part-to-Next-Part" if is_serialized else "")
+        + " bridge rules (zero like/share/subscribe), "
         "(5) Forbidden AI-translationese markers."
     )
 
@@ -470,11 +498,26 @@ def render_channel_master_prompts(
         if channel_id == "chanh_niem_ke"
         else ""
     )
+    serialized_extra = (
+        "\n- For `serialized_detail_short`: design a 5-Act Cinematic Tactical Breakdown "
+        "(target 140-170s, 24-28 beats, strictly < 180s YouTube Shorts ceiling; "
+        "\"nghe để học cái hay như xem phim\") with strict hour/day chronological ordering, "
+        "separating primary chronicles vs unconfirmed folklore (`\"dã sử / tương truyền\"` -> label `report-only` or quarantine in Section 8), "
+        "and propose a 3-part episodic split (`Tập 1 / Tập 2 / Tập 3`) with concrete cliffhanger pivots.\n"
+        "- Explicitly extract per episode: "
+        "(a) Strategic dilemma & failure mode (what breaks if 1 step fails), "
+        "(b) Causal/psychological/engineering mechanism (WHY it worked), "
+        "(c) Concrete human/tactical takeaway lesson, and "
+        "(d) Climax breath-hold inflection point.\n"
+        if is_serialized
+        else "\n"
+    )
     nb3_step2 = (
         f"TOPIC: {topic}\nCHANNEL: {channel_id} | FORMAT: {format_profile} | AUDIENCE: {audience}\n"
-        "Use ONLY original sources imported in this notebook. Claims only in a summary report without primary-source confirmation MUST be labeled \"report-only\".\n"
-        "Output Markdown sections:\n"
-        f"1. Key facts ({fact_range}): exact number, unit, date, and [Source Name] in brackets.\n"
+        "Use ONLY original sources imported in this notebook. Claims only in a summary report without primary-source confirmation MUST be labeled \"report-only\"."
+        + serialized_extra
+        + "Output Markdown sections:\n"
+        f"1. Key facts ({fact_range}{' chronological micro-details by exact hour/day, unit, weapon/mechanism' if is_serialized else ''}): exact number, unit, date, and [Source Name] in brackets.\n"
         "2. Most surprising hook fact and why viewers assume the opposite.\n"
         "3. How it works (step-by-step causal mechanism in plain spoken Vietnamese).\n"
         "4. Analogies & Vietnam Micro-Bridges (2-3 concrete comparisons for everyday VN viewers).\n"
@@ -594,14 +637,14 @@ def _build_arg_parser() -> argparse.ArgumentParser:
     rp = sub.add_parser("render-prompts", help="Render channel-tailored Notebook 1/2/3 Master Prompts")
     rp.add_argument("--channel", required=True)
     rp.add_argument("--topic", required=True)
-    rp.add_argument("--format", default="long_16x9", choices=["short_9x16", "long_16x9"])
+    rp.add_argument("--format", default="long_16x9", choices=["short_9x16", "long_16x9", "serialized_detail_short"])
     rp.add_argument("--audience", default="")
     rp.add_argument("--json", action="store_true")
 
     imp = sub.add_parser("import-notes", help="Parse NotebookLM Markdown notes into validated fact_vault.json")
     imp.add_argument("--channel", required=True)
     imp.add_argument("--topic", required=True)
-    imp.add_argument("--format", default="short_9x16", choices=["short_9x16", "long_16x9"])
+    imp.add_argument("--format", default="short_9x16", choices=["short_9x16", "long_16x9", "serialized_detail_short"])
     imp.add_argument("--audience", default="")
     imp.add_argument("--input", required=True, help="Markdown notes file exported from NotebookLM")
     imp.add_argument("--output", required=True, help="Destination fact_vault.json path")

@@ -25,6 +25,7 @@ from .motion_library import (  # noqa: E402
     EXIT_SEAMS,
     apply_positive_framing,
     build_timecoded_video_prompt,
+    get_channel_lens_spec,
     get_channel_motion_policy,
 )
 
@@ -52,6 +53,8 @@ class SceneMapEntry:
     person_count: int = 0
     secondary_motion: str = "subtle atmospheric air drift"
     same_world_continuous: bool = False
+    scene_type: str = "live_action"  # "live_action" | "tactical_sand_table"
+    delivery_mode: str = "narrative_cinema"
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -80,6 +83,8 @@ class SceneMapEntry:
             person_count=int(data.get("person_count", 0)),
             secondary_motion=str(data.get("secondary_motion", "subtle atmospheric air drift")),
             same_world_continuous=bool(data.get("same_world_continuous", False)),
+            scene_type=str(data.get("scene_type") or "live_action"),
+            delivery_mode=str(data.get("delivery_mode") or "narrative_cinema"),
         )
 
 
@@ -91,6 +96,7 @@ class SceneMap:
     clip_duration_sec: int = 8
     approved: bool = False
     scenes: list[SceneMapEntry] = field(default_factory=list)
+    series_meta: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -99,6 +105,7 @@ class SceneMap:
             "format_profile": self.format_profile,
             "clip_duration_sec": self.clip_duration_sec,
             "approved": self.approved,
+            "series_meta": dict(self.series_meta),
             "scenes": [s.to_dict() for s in self.scenes],
         }
 
@@ -111,6 +118,7 @@ class SceneMap:
             clip_duration_sec=int(data.get("clip_duration_sec", 8)),
             approved=bool(data.get("approved", False)),
             scenes=[SceneMapEntry.from_dict(s) for s in (data.get("scenes") or [])],
+            series_meta=dict(data.get("series_meta") or {}),
         )
 
     def to_json_file(self, path: str | Path) -> None:
@@ -357,30 +365,60 @@ def compile_scene_image_prompts(
                 f"keep the exact same subject and environment continuity: {sc.cast_spec}."
             )
         count_txt = sc.hero_count_phrase or f"One clear {sc.hero_subject}"
-        parts.append(f"{aspect_label} frame. {count_txt}, {sc.hero_frame_region}.")
-
-        if sc.cast_spec.lower() != "none":
+        is_portrait = scene_map.format_profile in ("short_9x16", "serialized_detail_short")
+        if is_portrait:
             parts.append(
-                f"Character specification: {sc.cast_spec}, simple calm pose with closed mouth and relaxed hands."
+                f"Vertical 9:16 frame with key focal detail placed strictly between 20% and 65% of vertical frame height, "
+                f"clear of lower caption band and bottom-right UI zone. {count_txt}, {sc.hero_frame_region}."
             )
         else:
-            parts.append("Uninhabited scene focused cleanly on the physical subject.")
+            parts.append(f"{aspect_label} frame. {count_txt}, {sc.hero_frame_region}.")
+
+        cast_low = (sc.cast_spec or "none").strip().lower()
+        is_formation = any(kw in cast_low for kw in ("army", "troops", "rows", "fleet", "đoàn quân", "binh sĩ"))
+        if sc.scene_type == "tactical_sand_table":
+            parts.append(
+                "Tactical Command Sand Table (practical 35mm photography): overhead 45-degree angle inside a dark timber war tent lit by warm 2200K oil-lamp lighting. "
+                "Hand-molded wet earth and raw clay topography relief across the command table, populated with rough hand-carved plain unmarked vermilion and dark-indigo wooden troop blocks. "
+                "A commander's weathered hand positions one wooden block across the sculpted clay relief, rendered with shallow 35mm cinema depth of field, authentic raw wood grain, and subtle floating dust motes. "
+                "Strictly plain raw wet clay, coarse rough-hewn timber grain, and unmarked hand-carved wooden blocks throughout every visible surface."
+            )
+            if cast_low != "none":
+                parts.append(f"Tactical staging detail: {sc.cast_spec}.")
+        elif cast_low == "none" and sc.person_count == 0:
+            parts.append("Block A Uninhabited Frame: pure physical subject and terrain with zero stray figures.")
+        elif is_formation:
+            parts.append(
+                f"Block B Ensemble Formation: {sc.cast_spec}, arranged calmly in neat formed rows holding the lower half under open upper sky."
+            )
+        elif sc.person_count >= 2:
+            parts.append(
+                f"Block B Small Group: {sc.cast_spec}, grouped naturally inside one third of the frame with calm closed-mouth poses so clear camera travel space stays open."
+            )
+        else:
+            parts.append(
+                f"Block B Single Subject Framing: {sc.cast_spec}, positioned in the left or right third at mid-distance turned slightly across or away from camera, calm closed-mouth pose with relaxed hands so only the camera moves."
+            )
 
         parts.append(f"Setting: {sc.location} during {sc.time_of_day} ({sc.lighting_key} lighting).")
         cam_rule = CAMERA_MOVES.get(sc.camera_move, CAMERA_MOVES["push_in"])["composition_rule"]
-        parts.append(f"Composition: {cam_rule}")
+        parts.append(
+            f"Composition & 3-Layer Depth: {cam_rule} Distinct foreground, midground, and background depth layers for clean parallax movement."
+        )
 
         seam_spec = EXIT_SEAMS.get(sc.exit_seam)
         if seam_spec and sc.transition_mode == "seam":
             parts.append(f"Exit seam setup: {seam_spec['start_image_setup']}")
 
         parts.append(
-            f"Channel style: {style_block}. Plain unmarked surfaces with zero text, zero captions, and ample breathing room."
+            f"Channel style: {style_block}. Plain unmarked surfaces, authentic material grain, and generous breathing room."
         )
         prompt_txt = apply_positive_framing(" ".join(parts))
 
         compiled.append({
             "scene_id": sc.scene_id,
+            "scene_type": sc.scene_type,
+            "delivery_mode": sc.delivery_mode,
             "reference_scene_ids": list(sc.reference_scene_ids),
             "camera_move": sc.camera_move,
             "transition_mode": sc.transition_mode,
@@ -390,13 +428,32 @@ def compile_scene_image_prompts(
     return compiled
 
 
+_VESSEL_OR_RIVER_RE = re.compile(
+    r"\b(?:river|ferry|barge|hull|fleet|estuary|junk)s?\b",
+    re.IGNORECASE,
+)
+
+
 def compile_scene_video_prompts(scene_map: SceneMap) -> list[dict[str, Any]]:
     """Stage 2: Compile timecoded low-risk video prompts for each approved scene."""
     bible = resolve_channel_style_bible(scene_map.channel_id)
+    lens_spec = get_channel_lens_spec(scene_map.channel_id)
     out: list[dict[str, Any]] = []
     n = len(scene_map.scenes)
     for idx, sc in enumerate(scene_map.scenes):
         nxt = scene_map.scenes[idx + 1] if idx + 1 < n else None
+        is_sand_table = sc.scene_type == "tactical_sand_table"
+        if is_sand_table:
+            has_person = False
+            anti_surfaces = "wooden command table, sculpted clay relief, and carved wooden blocks"
+        else:
+            has_person = sc.cast_spec.lower() != "none" or sc.person_count > 0
+            if scene_map.channel_id == "su_ke_lai" and not _VESSEL_OR_RIVER_RE.search(
+                f"{sc.location} {sc.hero_subject}"
+            ):
+                anti_surfaces = "timber fortifications, walls, banners, shields, and plain tunics"
+            else:
+                anti_surfaces = "masts, hulls, buildings, walls, and uniforms"
         prompt = build_timecoded_video_prompt(
             camera_move=sc.camera_move,
             hero_subject=sc.hero_subject,
@@ -408,10 +465,13 @@ def compile_scene_video_prompts(scene_map: SceneMap) -> list[dict[str, Any]]:
             seam_prop=sc.seam_prop,
             beat_role=sc.beat_role,
             secondary_motion=sc.secondary_motion,
-            has_person=(sc.cast_spec.lower() != "none" or sc.person_count > 0),
+            has_person=has_person,
             next_subject=nxt.hero_subject if nxt else "",
             next_location=nxt.location if nxt else "",
             style_cue=bible["label"],
+            anti_symbol_surfaces=anti_surfaces,
+            lens_spec=lens_spec,
+            scene_type=sc.scene_type,
         )
         out.append({
             "scene_id": sc.scene_id,

@@ -13,6 +13,10 @@ Offloads all TTS (`kjanh/KhanhTTS-OmniVoice` FP16) and video rendering (`FFmpeg 
 3. **Phonetic Normalization & Clean Audio (`ERR-20261025-01`)**: Normalize Vietnamese text via `sys/tools/vn_text_normalizer.py`; strip inter-letter hyphens before OmniVoice BPE; trim boundaries (`lead_ms=25, trail_ms=30, fade_ms=8`) preserving nasal codas (`-ng/-m/-n`) and auto-retrying (`batch_size=1`) if internal silence > `380ms`.
 4. **45s Watchdog & 2-Account Fail-Fast (`WATCHDOG-45S`)**: Workers running tasks >30s MUST arm `schedule(DurationSeconds=45, TimerCondition="any")` and check logs/PIDs/`state.json`. Stop multi-account failover after `2` consecutive `COLAB_EXEC_UNCONFIRMED` errors and inspect remote stderr.
 5. **Mandatory Post-Job Teardown (`ERR-20261012-01`)**: After verifying outputs with `ffprobe`, run `./pipeline colab teardown` (or `ColabPoolManager().teardown_job_resources()`) unless `--keep-warm` is requested.
+6. **Single-Pass 4-GPU Render Architecture (`sys/short_engine/render_single_pass.py` via `sys/tools/produce_serialized_short.py`)**:
+   - **Default `--render-mode single_pass` (`<= 15 phút` E2E, `~8–12 phút` goal)**: Splits `20` beats into `4` chunks (`0` overhang), runs `slice_ass_for_window()` per chunk, and dispatches via `ColabPoolDispatcher` (`--colab-render-workers 4`) so each T4 GPU renders a **complete 2K chunk in 1 pass** (`-bf 0 -g 30 -b:v 10M -preset p4`, `flags=bicubic` + `unsharp=3:3:0.45:3:3:0.25`, `heroic_banner` `>= 132px` at `anchor_y=150`, `.ass` subtitles, watermark), then joins locally via **lossless `<2s` concat (`ffmpeg -f concat -c:v copy -c:a copy`)**.
+   - **Compatibility `--render-mode two_pass`**: Optional fallback (Pass 1 chunk fan-out + Pass 2 `xfade` composite).
+   - **Session Safety Guards**: Both modes MUST clean up via `pm.stop_pool(..., unassign_server=True)` (protecting user external sessions) and abort multi-account failover after `2` consecutive `COLAB_EXEC_UNCONFIRMED` errors.
 
 ## 2. Quick CLI Reference
 ```bash

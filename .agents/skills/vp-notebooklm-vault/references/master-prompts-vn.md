@@ -35,6 +35,22 @@ Output 500 words max with these exact sections:
 If sources do not confirm an item, write "not shown in sources".
 ```
 
+### 1C. Serialized Cinematic Tactical Short Pattern Prompt (`serialized_detail_short`, 140–170s/tập · 24–28 beats · < 180s)
+```text
+You are a serialized short-form documentary analyst for [LANGUAGE: Vietnamese / English] multi-part vertical tactical breakdowns ([CHANNEL_NAME], niche: [NICHE]).
+Use ONLY the sources in this notebook. Study 5-act dramatic pacing, causal analysis, and cliffhanger architecture ONLY — NEVER quote or reuse phrases.
+Output 500 words max:
+1. Hook & Strategic Dilemma (Act 1, B00-B04): top 4 hook formulas (<= 18 syllables, zero pause), opening immediately inside a life-or-death strategic dilemma and counter-intuitive paradox.
+2. 5-Act Cinematic Tactical Breakdown (140-170s, 24-28 beats/tập, strictly < 180s ceiling): how a campaign splits into Tập 1 / Tập 2 / Tập 3 following:
+   - Act 1 (B00-B04): Strategic dilemma & paradox.
+   - Act 2-3 (B05-B13): Dissecting 2-3 interlocking trap layers, causal/psychological mechanism, and exact failure mode if 1 step slips ("sai 1 bước chết ở đâu").
+   - Act 4 (B14-B21): Tension compression (rapid short clauses) -> breath-hold climax inflection point ([pause:450-650ms] + silence vacuum) -> explosive payoff.
+   - Act 5 (B22-B27): Human tactical takeaway lesson + serialized cliffhanger for Tập tiếp theo.
+3. Causal & Psychological Mechanism Rules: how to weave verified terrain, timing, and human-psychology details explaining WHY the trap forced the enemy into error without textbook clichés.
+4. Part-to-Next-Part & Long-Form Bridge Rules: natural final 15% outro (bridge <= 22 syl, close <= 24 syl, combined <= 38 syl) teasing Tập tiếp theo & parent_long_id without begging like/share/subscribe.
+5. Source Hygiene: separating verified primary chronicles from unconfirmed folklore ("dã sử / tương truyền").
+```
+
 ---
 
 ## Notebook 2: Official Flow Prompt Rules Vault (Global SSOT)
@@ -67,7 +83,7 @@ Mark anything absent from official docs as "not in docs".
 ```text
 TOPIC: [TOPIC]
 CHANNEL: [CHANNEL_ID] ([NICHE])
-FORMAT: [short_9x16 | long_16x9]
+FORMAT: [short_9x16 | long_16x9 | serialized_detail_short]
 AUDIENCE: [AUDIENCE]
 Find authoritative primary sources in [RECOMMENDED_SOURCES].
 Prioritize verified facts with exact numbers/units/dates, causal mechanisms, physical/visual appearance details, and Vietnam-relevant context where applicable.
@@ -76,14 +92,14 @@ Prioritize verified facts with exact numbers/units/dates, causal mechanisms, phy
 ### Step 2 — Source-Grounded Chat Prompt (After Importing Checked Sources)
 ```text
 TOPIC: [TOPIC]
-CHANNEL: [CHANNEL_ID] | FORMAT: [short_9x16 | long_16x9] | AUDIENCE: [AUDIENCE]
+CHANNEL: [CHANNEL_ID] | FORMAT: [short_9x16 | long_16x9 | serialized_detail_short] | AUDIENCE: [AUDIENCE]
 Use ONLY the original sources imported into this notebook.
 If a Deep/Fast Research summary report is also attached, ONLY keep a claim from that report if at least one primary source in the notebook confirms it; otherwise place it inside section 8 labeled "report-only". Do NOT fill gaps from memory.
 
 Produce Research Notes in Vietnamese (with exact English technical terms only in parentheses if needed):
-1. Key facts ([4-7 for Short / 12-22 for Long]): each with exact number, unit, date/scope, and [Source Name] in brackets.
+1. Key facts ([4-7 for Short / 12-18 tactical & causal details for serialized_detail_short / 12-22 for Long]): each with exact number, unit, hour/date/scope, and [Source Name] in brackets. Separate verified primary chronicles from folklore ("dã sử / tương truyền" -> quarantine in section 8 as report-only if unverified).
 2. Most surprising paradox / counter-intuitive hook fact and why audiences assume the opposite.
-3. Step-by-step causal mechanism in plain spoken Vietnamese (easy to hear aloud).
+3. Step-by-step causal mechanism in plain spoken Vietnamese (easy to hear aloud; for serialized_detail_short also map the 5-act strategic dilemma, failure mode if 1 step slips, causal/psychological mechanism, breath-hold climax inflection point, human tactical takeaway lesson, and Tập 1 / Tập 2 / Tập 3 cliffhanger split).
 4. Analogies & Vietnam Micro-Bridges (2-3 concrete comparisons to everyday Vietnamese life, VND/km/scale, safe for the first 60 seconds).
 5. Visual appearance notes: concrete colors, textures, scale, instruments, locations, and time of day (for visual prompts without text on screen).
 6. Common misconception and exact source-backed correction.

@@ -50,6 +50,11 @@ Rotate continuously through these 5 camera setups across consecutive beats and s
 
 - **Shared Warehouse Mapping (Option 1 Cinema)**:
   - Pulls period-safe sub-pixel 2.5D camera moves (`camera_vfx`) aligned with the 5-shot camera rotation matrix.
-  - Pulls parchment/ink-compatible chapter & historical timestamp stamps (`hud_widgets`) only on explicit tactical/chapter beats while keeping `allowed_text=None` on 100% of raw Flow story frames.
+  - Pulls `heroic_banner` (`>= 132px`, `<= 4` words) on Shorts or chapter stamps (`hud_widgets`) on Long while keeping `allowed_text=None` on 100% of raw Flow story frames.
   - Pulls era-appropriate battlefield & riverine foley/BGM stems (`audio_sfx_bgm`: war drums, bowstrings, river currents, storm thunder).
 - **Non-Forced Bespoke Rule & Anti-Anachronism**: Strictly forbid modern digital radar reticles, oscilloscopes, or cyber HUDs on medieval/dynasty battles. Whenever a historical campaign requires unique tactical mechanics (e.g., Bạch Đằng tidal river-stake depth/tide chart, Như Nguyệt river fortification cross-section, siege trajectory arc) or era-specific procedural 48kHz SFX (e.g., bamboo fire-raft crackle, bronze war-horn resonance), MUST synthesize bespoke per-video/per-topic `bespoke_hud_spec` (`build_bespoke_topic_hud_patch`) and `bespoke_sfx_spec` (`synthesize_bespoke_topic_sfx`) instead of forcing anachronistic presets.
+
+## 6. Short V3 100% 35mm Epic Live-Action & Screen-Text Law (`heroic_banner`)
+
+- **100% 35mm Live-Action Epic Clarity (No Sand-Tables)**: Strictly **FORBID** clay/mud/wooden sand-tables (`tactical_sand_table`) and unlabelled symbol maps on `su_ke_lai` Shorts. Convey military maneuvers through immediately legible wide/aerial 35mm live-action cinema (torch-lit night sieges, monsoon cavalry ambushes, massed advancing columns, commander/king on war elephant, dawn banners unfurling).
+- **Screen-Text Law (`VIETSUB_FONT_SIZE >= 132px`)**: All post-render Short banner overlays (`heroic_banner`, `anchor_y=150`) MUST render at **`font_size >= VietSub` (`>= 132px` on `1440x2560`, target `136px`)**, **`<= 4` UPPERCASE words**, sharp `NotoSans-Bold.ttf` with thick black outline. Strictly **FORBID** multi-line telemetry boxes, small kickers, or tiny sublines. Raw Flow frames remain `allowed_text=None`.

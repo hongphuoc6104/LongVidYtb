@@ -148,6 +148,14 @@ POSITIVE_FRAMING_REPLACEMENTS: tuple[tuple[re.Pattern[str], str], ...] = (
 
 _DOODLE_STATIC_OR_SOFT_CHANNELS = frozenset({"nao_luoi", "en_lazy_brain"})
 _BIOMED_SPACE_CHANNELS = frozenset({"co_the_ke", "en_inside_vessel", "vu_tru_ti_hon", "en_pocket_cosmos"})
+_CINEMA_35MM_CHANNELS = frozenset({"su_ke_lai"})
+
+
+def get_channel_lens_spec(channel_id: str) -> str:
+    """Return optical lens specification suited to the channel's visual grammar."""
+    if (channel_id or "").strip().lower() in _CINEMA_35MM_CHANNELS:
+        return "35mm anamorphic film lens"
+    return "wide 28mm lens"
 
 
 def apply_positive_framing(text: str) -> str:
@@ -201,6 +209,22 @@ def _timecodes_for_clip(clip_duration_sec: int, is_final_hold: bool) -> tuple[st
     return ("0-6s", "6-8s") if is_final_hold else ("0-6.5s", "6.5-8s")
 
 
+def _normalize_tabletop_camera_sentence(cam_sentence: str) -> str:
+    """Adapt human-height camera templates into overhead 45-degree tabletop phrasing."""
+    replacements = (
+        ("at chest height", "over the tabletop at a high 45-degree angle"),
+        ("at hip height", "over the tabletop at a high 45-degree angle"),
+        ("at head height in", "from a high 45-degree overhead angle in"),
+        ("from low ground level beside", "from a high 45-degree tabletop angle above"),
+    )
+    out = cam_sentence
+    for old, new in replacements:
+        out = out.replace(old, new)
+    if "45-degree" not in out:
+        out = f"{out}, over the tabletop at a high 45-degree angle"
+    return out
+
+
 def build_timecoded_video_prompt(
     camera_move: str,
     hero_subject: str,
@@ -217,6 +241,8 @@ def build_timecoded_video_prompt(
     next_location: str = "",
     style_cue: str = "consistent documentary color grading and sharp optical depth",
     anti_symbol_surfaces: str = "masts, hulls, buildings, walls, and uniforms",
+    lens_spec: str = "wide 28mm lens",
+    scene_type: str = "live_action",
 ) -> str:
     """Build a low-risk timecoded video prompt calibrated for Veo 3.1 Lite or Omni 1.2 Flash."""
     move_key = camera_move if camera_move in CAMERA_MOVES else "push_in"
@@ -225,6 +251,7 @@ def build_timecoded_video_prompt(
     is_final = exit_seam == "final_hold"
     t_main, t_end = _timecodes_for_clip(clip_duration_sec, is_final)
     is_veo_lite = "lite" in (model or "").lower()
+    active_lens = (lens_spec or "wide 28mm lens").strip()
 
     if transition_mode == "frame_link" and not is_veo_lite and next_subject and next_location and not is_final:
         cam_sentence = move_spec["frame_link_template"].format(
@@ -233,6 +260,8 @@ def build_timecoded_video_prompt(
             next_subject=next_subject,
             next_setting=next_location,
         )
+        if active_lens != "wide 28mm lens":
+            cam_sentence = cam_sentence.replace("wide 28mm lens", active_lens)
         person_clause = (
             "Any person remains still with a closed mouth; only the camera travels."
             if has_person
@@ -247,6 +276,10 @@ def build_timecoded_video_prompt(
         return re.sub(r"\s{2,}", " ", prompt).strip()
 
     cam_sentence = move_spec["camera_template"].format(subject=hero_subject, setting=setting)
+    if active_lens != "wide 28mm lens":
+        cam_sentence = cam_sentence.replace("wide 28mm lens", active_lens)
+    if scene_type == "tactical_sand_table":
+        cam_sentence = _normalize_tabletop_camera_sentence(cam_sentence)
     seam_spec = EXIT_SEAMS.get(exit_seam if exit_seam in EXIT_SEAMS else "dark_opening", EXIT_SEAMS["dark_opening"])
     if transition_mode == "soft_fade" and not is_final:
         end_sentence = (
