@@ -1533,6 +1533,112 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); }
   ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: rgba(6, 182, 212, 0.4); }
+
+  /* SIMPLE COMMAND CENTER (38 CHANNELS MANAGEMENT & PRODUCTION) */
+  .simple-hub-wrapper {
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(10, 15, 28, 0.95));
+    border: 1.5px solid rgba(6, 182, 212, 0.35);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  }
+  .simple-hub-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    margin-bottom: 18px;
+  }
+  .simple-modes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+  @media (max-width: 1200px) {
+    .simple-modes-grid { grid-template-columns: 1fr; }
+  }
+  .simple-mode-card {
+    background: rgba(18, 28, 48, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+  .simple-mode-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-1px);
+  }
+  .simple-mode-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--text-white);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .simple-mode-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+  .simple-queue-bar {
+    background: rgba(6, 182, 212, 0.08);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .simple-filter-pills {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .simple-pill-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--text-gray);
+    border-radius: 20px;
+    padding: 6px 13px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .simple-pill-btn:hover, .simple-pill-btn.active {
+    background: var(--primary);
+    border-color: var(--primary-light);
+    color: #031525;
+    font-weight: 700;
+  }
+  .verdict-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+  }
+  .verdict-SCALE { background: rgba(16, 185, 129, 0.18); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.45); }
+  .verdict-ITERATE { background: rgba(245, 158, 11, 0.18); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.45); }
+  .verdict-REPAIR_FUNNEL { background: rgba(244, 63, 94, 0.18); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.45); }
+  .verdict-COLLECT { background: rgba(6, 182, 212, 0.16); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.4); }
 </style>
 </head>
 <body>
@@ -1546,17 +1652,17 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       </div>
       <div>
         <div class="brand-title">
-          Video Pilot V3
-          <span class="v-badge">FLEET & CATALOG</span>
+          Video Pilot — Hệ Thống Điều Hành 38 Kênh
+          <span class="v-badge">FLEET COMMAND V4</span>
         </div>
-        <div class="brand-subtitle">Scalable YouTube Multi-Channel Management • Batch Automation Architecture</div>
+        <div class="brand-subtitle">Điều Phối Sản Xuất Song Song · AI Chẩn Đoán & Cải Thiện Liên Tục 38 Kênh (20 VN + 18 EN)</div>
       </div>
     </div>
 
     <div class="header-status-group">
       <div class="live-pill" id="header-live-badge">
         <span class="live-dot"></span>
-        <span id="header-fleet-status">8/8 Kênh Active</span>
+        <span id="header-fleet-status">38/38 Kênh Active</span>
       </div>
       <div style="color: var(--text-muted); font-size: 11.5px;" id="header-updated-at">
         Cập nhật: --:--
@@ -1576,24 +1682,21 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       <button class="btn btn-emerald" id="btn-export-csv" onclick="exportCatalogCSV()">
         <span>📥</span> Xuất CSV Kho Video
       </button>
-      <button class="btn btn-secondary" onclick="copyServerCommand()">
-        <span>📋</span> Lệnh Server (:8765)
-      </button>
     </div>
   </div>
 </header>
 
 <div class="main-wrapper">
 
-  <!-- 6 KPI SUMMARY CARDS -->
+  <!-- 4 COMPACT HIGH-SIGNAL KPI SUMMARY CARDS -->
   <section class="kpi-grid">
     <div class="kpi-card">
       <div class="kpi-header">
-        <span class="kpi-title">Kênh Hoạt Động</span>
+        <span class="kpi-title">Hệ Thống Kênh</span>
         <span class="kpi-icon">🏢</span>
       </div>
-      <div class="kpi-value" id="kpi-channels">8 / 8</div>
-      <div class="kpi-subtitle" id="kpi-channels-subtitle">Hệ Thống Phân Phối Ngách</div>
+      <div class="kpi-value" id="kpi-channels">38 / 38</div>
+      <div class="kpi-subtitle" id="kpi-channels-subtitle">20 Kênh Việt · 18 Kênh Anh</div>
     </div>
 
     <div class="kpi-card">
@@ -1607,7 +1710,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
     <div class="kpi-card">
       <div class="kpi-header">
-        <span class="kpi-title">Tổng Lượt Xem</span>
+        <span class="kpi-title">Tổng Lượt Xem & Tương Tác</span>
         <span class="kpi-icon">👁️</span>
       </div>
       <div class="kpi-value">
@@ -1619,31 +1722,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
     <div class="kpi-card">
       <div class="kpi-header">
-        <span class="kpi-title">Tổng Lượt Thích</span>
-        <span class="kpi-icon">👍</span>
-      </div>
-      <div class="kpi-value">
-        <span id="kpi-likes">0</span>
-        <span class="kpi-delta" id="kpi-likes-delta" style="display:none;">+0</span>
-      </div>
-      <div class="kpi-subtitle" id="kpi-likes-avg">TB: 0 views/video</div>
-    </div>
-
-    <div class="kpi-card">
-      <div class="kpi-header">
-        <span class="kpi-title">Tổng Subscribers</span>
-        <span class="kpi-icon">👥</span>
-      </div>
-      <div class="kpi-value">
-        <span id="kpi-subs">0</span>
-        <span class="kpi-delta" id="kpi-subs-delta" style="display:none;">+0</span>
-      </div>
-      <div class="kpi-subtitle">Đồng Bộ Real-Time Từ YouTube</div>
-    </div>
-
-    <div class="kpi-card">
-      <div class="kpi-header">
-        <span class="kpi-title">Chuẩn Phễu V2</span>
+        <span class="kpi-title">Chuẩn Phễu & Duyệt Bài</span>
         <span class="kpi-icon">🔗</span>
       </div>
       <div class="kpi-value" id="kpi-funnel">100%</div>
@@ -1651,133 +1730,366 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     </div>
   </section>
 
-  <!-- STICKY GLOBAL NAVIGATION & FILTER BAR -->
+  <!-- STICKY 4-TAB WORKSPACE NAVIGATION BAR -->
   <nav class="nav-filter-bar">
-    <div class="tabs-row">
+    <div class="tabs-row" style="margin-bottom: 0;">
       <div class="tabs-group">
         <button class="tab-btn active" id="btn-tab-fleet" onclick="switchTab('tab-fleet')">
-          <span>🏢</span> 1. Tổng Quan Hệ Thống Kênh
-          <span class="tab-count" id="count-tab-fleet">8</span>
-        </button>
-        <button class="tab-btn" id="btn-tab-catalog" onclick="switchTab('tab-catalog')">
-          <span>🎬</span> 2. Kho Video Toàn Hệ Thống
-          <span class="tab-count" id="count-tab-catalog">0</span>
-        </button>
-        <button class="tab-btn" id="btn-tab-funnel" onclick="switchTab('tab-funnel')">
-          <span>🔗</span> 3. Ma Trận Phễu Long ↔ Short & Đợt Sản Xuất
-          <span class="tab-count" id="count-tab-funnel">0</span>
-        </button>
-        <button class="tab-btn" id="btn-tab-ops" onclick="switchTab('tab-ops')">
-          <span>⚡</span> 4. Điều Hành & Lịch Sử Tăng Trưởng
-        </button>
-        <button class="tab-btn" id="btn-tab-refs" onclick="switchTab('tab-refs')">
-          <span>📚</span> 5. Kho Kênh Mẫu, Email & Đề Tài Gợi Ý
-          <span class="tab-count" id="count-tab-refs">0</span>
+          <span>⚡</span> 1. Điều Phối & Sản Xuất 38 Kênh
+          <span class="tab-count" id="count-tab-fleet">38</span>
         </button>
         <button class="tab-btn" id="btn-tab-review" onclick="switchTab('tab-review')" style="border-color: rgba(16, 185, 129, 0.55); background: rgba(16, 185, 129, 0.12); color: #34d399; font-weight: 700;">
-          <span>✅</span> 6. Duyệt Đăng Video Mới & Ghi Chú Lỗi
+          <span>✅</span> 2. Duyệt Đăng Video Mới
           <span class="tab-count" id="count-tab-review" style="background: #10b981; color: #022c22; font-weight: 800;">40</span>
         </button>
+        <button class="tab-btn" id="btn-tab-catalog" onclick="switchTab('tab-catalog')">
+          <span>🎬</span> 3. Kho Video Đã Đăng
+          <span class="tab-count" id="count-tab-catalog">0</span>
+        </button>
+        <button class="tab-btn" id="btn-tab-refs" onclick="switchTab('tab-refs')">
+          <span>📚</span> 4. Hồ Sơ Kênh Mẫu & Tài Khoản
+          <span class="tab-count" id="count-tab-refs">38</span>
+        </button>
       </div>
-    </div>
-
-    <div class="filters-row">
-      <div class="search-box">
-        <span class="search-icon">🔍</span>
-        <input type="text" class="search-input" id="filter-search"
-               placeholder="Tìm nhanh theo tên kênh, @handle, email, ngách, video ID, đợt..."
-               oninput="onSearchInput(this.value)">
-        <button class="search-clear" id="search-clear-btn" onclick="clearSearch()">✕</button>
-      </div>
-
-      <select class="select-filter" id="filter-wave" onchange="onFilterChange()">
-        <option value="all">Tất cả Đợt Kênh (Wave 1, 2, 3, 4)</option>
-        <option value="1">Wave 1 — 8 Kênh Gốc</option>
-        <option value="2">Wave 2 — 8 Kênh Mở Rộng</option>
-        <option value="3">Wave 3 — 4 Kênh Tâm Linh & Minh Triết</option>
-        <option value="4">Wave 4 — 19 Kênh Tiếng Anh Quốc Tế</option>
-      </select>
-
-      <select class="select-filter" id="filter-lang" onchange="onFilterChange()">
-        <option value="all">🌐 Tất cả ngôn ngữ</option>
-        <option value="vi">🇻🇳 Tiếng Việt (VN)</option>
-        <option value="en">🇺🇸 Tiếng Anh Quốc Tế (EN)</option>
-      </select>
-
-      <select class="select-filter" id="filter-style" onchange="onFilterChange()">
-        <option value="all">🎨 Tất cả 10 Hệ Mỹ Thuật</option>
-        <option value="stickman_doodle">1. Indie Doodle Stickman</option>
-        <option value="noir_dossier">2. 2D Noir & Red-String Dossier</option>
-        <option value="kawaii_sticker">3. Kawaii Mascots & Sticker-Pop</option>
-        <option value="pastel_duo">4. Pastel Warm-Line Duo</option>
-        <option value="tactical_atlas">5. 2D Tactical Cartography (Maps)</option>
-        <option value="cosmos_vector">6. Deep-Space Geometric Vector</option>
-        <option value="blueprint_ledger">7. Ledger, Blueprint & Swiss Infographic</option>
-        <option value="editorial_risograph">8. Editorial Risograph Print</option>
-        <option value="zen_sumie">9. Sumi-e Zen Ink Wash</option>
-        <option value="woodcut_gouache">10. Woodblock Print & Night Gouache</option>
-      </select>
-
-      <select class="select-filter" id="filter-channel" onchange="onFilterChange()">
-        <option value="all">Tất cả Kênh</option>
-      </select>
-
-      <select class="select-filter" id="filter-batch" onchange="onFilterChange()">
-        <option value="all">Tất cả Đợt Sản Xuất</option>
-      </select>
-
-      <select class="select-filter" id="filter-format" onchange="onFilterChange()">
-        <option value="all">Tất cả Định dạng</option>
-        <option value="long">Long 16:9 Explainer</option>
-        <option value="short">Short 9:16 Spin-off</option>
-      </select>
-
-      <select class="select-filter" id="filter-sort" onchange="onFilterChange()">
-        <option value="views_desc">Lượt xem: Cao → Thấp</option>
-        <option value="published_desc">Mới xuất bản nhất</option>
-        <option value="views_asc">Lượt xem: Thấp → Cao</option>
-        <option value="likes_desc">Lượt thích: Cao → Thấp</option>
-        <option value="engagement_desc">Tỷ lệ tương tác (Likes/Views)</option>
-        <option value="channel_name_asc">Tên kênh: A → Z</option>
-        <option value="wave_asc">Đợt kênh (Wave 1 → 3)</option>
-        <option value="cdp_port_asc">Cổng CDP</option>
-      </select>
-
-      <button class="btn btn-secondary btn-sm" onclick="resetAllFilters()">
-        ↺ Đặt lại lọc
-      </button>
     </div>
   </nav>
 
   <!-- ===================================================================== -->
-  <!-- TAB 1: TỔNG QUAN HỆ THỐNG KÊNH -->
+  <!-- TAB 1: ĐIỀU PHỐI & SẢN XUẤT 38 KÊNH (PRIMARY COMMAND HUB)              -->
   <!-- ===================================================================== -->
   <div class="tab-pane active" id="tab-fleet">
-    <!-- Fleet Views Comparison Bar Chart -->
-    <div class="fleet-bar-chart-card">
-      <div class="chart-title-row">
-        <div class="chart-title" id="fleet-section-title">
-          <span>📊</span> So Sánh Lượt Xem Hệ Thống Kênh
+    <section class="simple-hub-wrapper" id="simple-command-hub">
+      <div class="simple-hub-header">
+        <div>
+          <div style="font-size: 18px; font-weight: 800; color: #f8fafc; display: flex; align-items: center; gap: 10px;">
+            <span>⚡</span> Trung Tâm Điều Phối & Sản Xuất 38 Kênh (20 VN + 18 EN)
+            <span class="v-badge" id="simple-38-badge">38 Kênh</span>
+          </div>
+          <div style="font-size: 12.5px; color: var(--text-muted); margin-top: 3px;">
+            3 chế độ sản xuất tự động (1 Kênh · Ca 3–4 Kênh Song Song · Cuốn Chiếu 38 Kênh) kết hợp AI Chẩn Đoán & Cải Thiện Liên Tục.
+          </div>
         </div>
-        <div class="batch-summary-pills" id="batch-pills-container">
-          <!-- Dynamic batch summary pills -->
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <button class="btn btn-primary btn-sm" onclick="runFleetDiagnosisNow()">
+            🧠 Chẩn Đoán Lại 38 Kênh
+          </button>
         </div>
       </div>
-      <div class="horizontal-chart-grid" id="fleet-chart-grid">
+
+      <!-- 3 PRODUCTION MODES BAR -->
+      <div class="simple-modes-grid">
+        <!-- MODE 1: SINGLE CHANNEL -->
+        <div class="simple-mode-card">
+          <div class="simple-mode-title">
+            <span>1️⃣ Chạy Chuyên Sâu 1 Kênh</span>
+            <span class="v-badge">--mode single</span>
+          </div>
+          <div class="simple-mode-desc">
+            Đọc Analytics ➔ Đồng bộ/Sửa Studio ➔ Sản xuất 1 cặp Long + Short chất lượng cao cho kênh được chọn.
+          </div>
+          <div style="display: flex; gap: 8px; margin-top: auto; flex-wrap: wrap;">
+            <select class="select-filter" id="simple-single-channel" style="flex: 1; min-width: 150px;" onchange="updateSimpleCommandPreview('single')">
+              <option value="ho_so_ky_la">Hồ Sơ Kỳ Lạ (ho_so_ky_la)</option>
+            </select>
+            <select class="select-filter" id="simple-single-action" onchange="updateSimpleCommandPreview('single')">
+              <option value="bundle">Trọn bộ (1 Long + Short)</option>
+              <option value="analytics">Quét Analytics & Chẩn đoán</option>
+              <option value="studio_sync">Đồng bộ & Phễu Studio</option>
+              <option value="short_only">Chỉ tạo Short 9:16</option>
+            </select>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-primary btn-sm" style="flex: 1; justify-content: center;" onclick="triggerSimpleFleetAction('single')">
+              ▶ Thực Thi Kênh Này
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="copySimpleModeCmd('single')">
+              📋 Copy Lệnh
+            </button>
+          </div>
+        </div>
+
+        <!-- MODE 2: WAVE 3-4 CHANNELS PARALLEL -->
+        <div class="simple-mode-card">
+          <div class="simple-mode-title">
+            <span>2️⃣ Chạy 1 Ca 3–4 Kênh Song Song</span>
+            <span class="v-badge" style="border-color: var(--purple); color: var(--purple-light);">--mode wave</span>
+          </div>
+          <div class="simple-mode-desc">
+            Chạy 3–4 kênh cùng lúc (6–8 video/ca): tận dụng song song Colab T4 (TTS/NVENC) và bể Chrome Flow CDP.
+          </div>
+          <div style="display: flex; gap: 8px; margin-top: auto; flex-wrap: wrap;">
+            <select class="select-filter" id="simple-wave-preset" style="flex: 1;" onchange="onWavePresetChange(this.value)">
+              <option value="checked">Các kênh đang tick chọn ở bảng dưới (<span id="checked-count-lbl">4</span>)</option>
+              <option value="tier_a_top4">Top 4 Kênh Mũi Nhọn (Tier-A)</option>
+              <option value="scale_top4">Top 4 Kênh Đang Thắng (SCALE)</option>
+              <option value="repair_top4">4 Kênh Cần Gắn Phễu (REPAIR)</option>
+            </select>
+            <select class="select-filter" id="simple-wave-size" onchange="updateSimpleCommandPreview('wave')">
+              <option value="4" selected>4 kênh / ca</option>
+              <option value="3">3 kênh / ca</option>
+            </select>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-primary btn-sm" style="flex: 1; justify-content: center; background: linear-gradient(135deg, #8b5cf6, #6d28d9);" onclick="triggerSimpleFleetAction('wave')">
+              ⚡ Chạy 1 Ca
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="copySimpleModeCmd('wave')">
+              📋 Copy Lệnh
+            </button>
+          </div>
+        </div>
+
+        <!-- MODE 3: ROLLING AUTO-QUEUE ALL 38 CHANNELS -->
+        <div class="simple-mode-card">
+          <div class="simple-mode-title">
+            <span>3️⃣ Dây Chuyền Cuốn Chiếu 38 Kênh</span>
+            <span class="v-badge" style="border-color: var(--emerald); color: var(--emerald-light);">--mode auto-queue</span>
+          </div>
+          <div class="simple-mode-desc">
+            Ra 1 lệnh duy nhất: Tự động chia 38 kênh thành từng cụm 3–4 kênh, xong cụm 1 tự nạp cụm 2 cho đến hết.
+          </div>
+          <div style="display: flex; gap: 8px; margin-top: auto; flex-wrap: wrap;">
+            <select class="select-filter" id="simple-queue-scope" style="flex: 1;" onchange="updateSimpleCommandPreview('auto_queue')">
+              <option value="all">Toàn bộ 38 Kênh (10 Ca × 4 kênh)</option>
+              <option value="vi">20 Kênh Tiếng Việt (5 Ca × 4 kênh)</option>
+              <option value="en">18 Kênh Tiếng Anh (5 Ca × 4 kênh)</option>
+              <option value="tier_a">Nhóm Mũi Nhọn Tier-A</option>
+            </select>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-emerald btn-sm" style="flex: 1; justify-content: center; background: #10b981; color: #022c22; font-weight: 800;" onclick="triggerSimpleFleetAction('auto_queue')">
+              🔄 Bắt Đầu Cuốn Chiếu
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="copySimpleModeCmd('auto_queue')">
+              📋 Copy Lệnh
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTIVE COMMAND & QUEUE STATUS BAR -->
+      <div class="simple-queue-bar" id="simple-queue-status-bar">
+        <div style="flex: 1; min-width: 260px;">
+          <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--primary-light); font-weight: 800; margin-bottom: 3px;" id="simple-queue-status-title">
+            ⚡ LỆNH THỰC THI SẴN SÀNG (CLI / AI COMMAND):
+          </div>
+          <code style="font-size: 12.5px; color: #f8fafc; word-break: break-all;" id="simple-cmd-preview-box">
+            cd /home/hongphuoc6104/Desktop/vp-agent-core && python3 sys/tools/vp_fleet_manager.py --mode auto-queue --channels all --wave-size 4
+          </code>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <span style="font-size: 12px; color: var(--emerald-light); font-weight: 700;" id="simple-queue-waves-summary">
+            Sẵn sàng điều phối 38 kênh
+          </span>
+          <button class="btn btn-primary btn-sm" onclick="copyText(document.getElementById('simple-cmd-preview-box').innerText, '✓ Đã copy lệnh!')">
+            📋 Sao Chép Lệnh
+          </button>
+        </div>
+      </div>
+
+      <!-- LIVE ACTION FEEDBACK & CHANNEL DIAGNOSIS PANEL -->
+      <div id="simple-action-result-panel" style="display: none; background: rgba(15, 23, 42, 0.94); border: 1.5px solid rgba(16, 185, 129, 0.45); border-radius: 12px; padding: 14px 16px; margin-bottom: 18px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px; margin-bottom: 10px;">
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <span style="font-size: 14px; font-weight: 800; color: #34d399;" id="simple-result-title">🚀 KẾT QUẢ ĐIỀU PHỐI & CHẨN ĐOÁN</span>
+            <span class="v-badge" id="simple-result-conn-badge">Sẵn sàng</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <button class="btn btn-secondary btn-sm" onclick="copyServerCommand()">🖥️ Copy Lệnh Mở Server (:8765)</button>
+            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('simple-action-result-panel').style.display='none'">✕ Đóng</button>
+          </div>
+        </div>
+        <div id="simple-result-body" style="font-size: 12.5px; color: var(--text-gray); line-height: 1.55;"></div>
+      </div>
+
+      <!-- QUICK FILTER PILLS FOR 38 CHANNELS TABLE -->
+      <div class="simple-filter-pills">
+        <button class="simple-pill-btn active" id="spill-all" onclick="setSimpleFilter('all')">
+          🌐 Tất cả (38 Kênh)
+        </button>
+        <button class="simple-pill-btn" id="spill-vi" onclick="setSimpleFilter('vi')">
+          🇻🇳 20 Kênh Việt
+        </button>
+        <button class="simple-pill-btn" id="spill-en" onclick="setSimpleFilter('en')">
+          🇺🇸 18 Kênh Anh
+        </button>
+        <button class="simple-pill-btn" id="spill-tier_a" onclick="setSimpleFilter('tier_a')">
+          🔥 Mũi Nhọn (Tier-A)
+        </button>
+        <button class="simple-pill-btn" id="spill-SCALE" onclick="setSimpleFilter('SCALE')">
+          🟢 SCALE (Đang thắng)
+        </button>
+        <button class="simple-pill-btn" id="spill-REPAIR_FUNNEL" onclick="setSimpleFilter('REPAIR_FUNNEL')">
+          🔧 Cần Gắn Phễu Short→Long
+        </button>
+        <button class="simple-pill-btn" id="spill-ITERATE" onclick="setSimpleFilter('ITERATE')">
+          🟡 ITERATE (Đổi Hook/Thumb)
+        </button>
+
+        <div style="margin-left: auto; display: flex; align-items: center; gap: 8px;">
+          <input type="text" class="search-input" id="simple-search-input"
+                 placeholder="Tìm nhanh trong 38 kênh..."
+                 style="width: 210px; padding: 6px 12px; font-size: 12px;"
+                 oninput="onSimpleSearch(this.value)">
+          <button class="btn btn-secondary btn-sm" onclick="selectTop4FilteredForWave()">
+            ☑️ Chọn 4 Kênh Đầu Vào Ca
+          </button>
+        </div>
+      </div>
+
+      <!-- COMPACT 38-CHANNEL MANAGEMENT & PRODUCTION TABLE -->
+      <div class="table-responsive" style="max-height: 580px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;">
+        <table class="catalog-table" id="simple-38-channels-table">
+          <thead>
+            <tr>
+              <th style="width: 42px; text-align: center;">Ca</th>
+              <th style="width: 265px;">Kênh, Email & CDP</th>
+              <th style="width: 155px;">Chỉ Số Thực Tế</th>
+              <th style="width: 145px;">Phễu & Duyệt</th>
+              <th>🧠 AI Chẩn Đoán & Đề Tài Cải Thiện Liên Tục</th>
+              <th style="text-align: right; width: 220px;">Sản Xuất & Quản Lý 1-Click</th>
+            </tr>
+          </thead>
+          <tbody id="simple-38-table-body">
+            <!-- Rendered via JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- TAB 2: DUYỆT ĐĂNG VIDEO MỚI & GHI CHÚ SỬA LỖI (PRE-PUBLISH GATE)      -->
+  <!-- ===================================================================== -->
+  <div class="tab-pane" id="tab-review">
+    <div class="catalog-container" style="padding: 18px;">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 14px;">
+        <div>
+          <div style="font-size: 16px; font-weight: 800; color: var(--text-white); display: flex; align-items: center; gap: 8px;">
+            <span>🛡️</span> Cổng Duyệt Đăng Video Mới & Ghi Chú Lỗi Cần Sửa (Pre-Publish Gate)
+          </div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">
+            Tất cả video mới tạo phải được bấm <b>"✅ Duyệt đăng (APPROVED)"</b> mới được đăng lên YouTube. Video bấm <b>"❌ Không duyệt / Cần sửa (REJECTED)"</b> sẽ bị chặn đăng và đọc ghi chú để sửa lại.
+          </div>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px;">
+          <select class="select-filter" id="review-status-filter" onchange="onReviewStatusFilterChange(this.value)">
+            <option value="all">Tất cả trạng thái duyệt (40)</option>
+            <option value="PENDING_REVIEW">⏳ Đang chờ duyệt (PENDING_REVIEW)</option>
+            <option value="APPROVED">✅ Đã duyệt đăng (APPROVED)</option>
+            <option value="REJECTED">❌ Không duyệt / Cần sửa (REJECTED)</option>
+          </select>
+
+          <button class="btn btn-emerald btn-sm" onclick="approveAllFilteredReviewVideos()" style="background: #10b981; color: #022c22; font-weight: 800;">
+            ✅ Duyệt Tất Cả Đang Lọc
+          </button>
+          <button class="btn btn-primary btn-sm" onclick="exportReviewDecisionsJSON()">
+            💾 Xuất File Quyết Định (review_decisions.json)
+          </button>
+        </div>
+      </div>
+
+      <!-- Review Summary Counters -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 18px;">
+        <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px 16px;">
+          <div style="font-size: 11.5px; color: var(--text-muted);">Tổng Video Trong Hàng Đợi</div>
+          <div style="font-size: 22px; font-weight: 800; color: var(--text-white); margin-top: 4px;" id="rev-stat-total">40</div>
+        </div>
+        <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.35); border-radius: 10px; padding: 12px 16px;">
+          <div style="font-size: 11.5px; color: #fbbf24;">⏳ Chờ Duyệt (PENDING_REVIEW)</div>
+          <div style="font-size: 22px; font-weight: 800; color: #fbbf24; margin-top: 4px;" id="rev-stat-pending">40</div>
+        </div>
+        <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 10px; padding: 12px 16px;">
+          <div style="font-size: 11.5px; color: #34d399;">✅ Đã Duyệt Đăng (APPROVED)</div>
+          <div style="font-size: 22px; font-weight: 800; color: #34d399; margin-top: 4px;" id="rev-stat-approved">0</div>
+        </div>
+        <div style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.35); border-radius: 10px; padding: 12px 16px;">
+          <div style="font-size: 11.5px; color: #f87171;">❌ Không Duyệt / Cần Sửa (REJECTED)</div>
+          <div style="font-size: 22px; font-weight: 800; color: #f87171; margin-top: 4px;" id="rev-stat-rejected">0</div>
+        </div>
+      </div>
+
+      <!-- Review Video Cards Grid -->
+      <div id="review-cards-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(430px, 1fr)); gap: 16px;">
         <!-- Rendered via JS -->
       </div>
-    </div>
-
-    <!-- 8 Scalable Channel Cards Grid -->
-    <div class="channels-grid" id="channels-card-grid">
-      <!-- Rendered via JS -->
     </div>
   </div>
 
   <!-- ===================================================================== -->
-  <!-- TAB 2: KHO VIDEO TOÀN HỆ THỐNG (MASTER PAGINATED CATALOG) -->
+  <!-- TAB 3: KHO VIDEO ĐÃ ĐĂNG TOÀN HỆ THỐNG (MASTER PAGINATED CATALOG)     -->
   <!-- ===================================================================== -->
   <div class="tab-pane" id="tab-catalog">
+    <div class="catalog-container" style="padding: 14px 16px; margin-bottom: 14px;">
+      <div class="filters-row">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" class="search-input" id="filter-search"
+                 placeholder="Tìm nhanh theo tên kênh, @handle, email, ngách, video ID, đợt..."
+                 oninput="onSearchInput(this.value)">
+          <button class="search-clear" id="search-clear-btn" onclick="clearSearch()">✕</button>
+        </div>
+
+        <select class="select-filter" id="filter-wave" onchange="onFilterChange()">
+          <option value="all">Tất cả Đợt Kênh (Wave 1, 2, 3, 4)</option>
+          <option value="1">Wave 1 — 8 Kênh Gốc</option>
+          <option value="2">Wave 2 — 8 Kênh Mở Rộng</option>
+          <option value="3">Wave 3 — 4 Kênh Tâm Linh & Minh Triết</option>
+          <option value="4">Wave 4 — 19 Kênh Tiếng Anh Quốc Tế</option>
+        </select>
+
+        <select class="select-filter" id="filter-lang" onchange="onFilterChange()">
+          <option value="all">🌐 Tất cả ngôn ngữ</option>
+          <option value="vi">🇻🇳 Tiếng Việt (VN)</option>
+          <option value="en">🇺🇸 Tiếng Anh Quốc Tế (EN)</option>
+        </select>
+
+        <select class="select-filter" id="filter-style" onchange="onFilterChange()">
+          <option value="all">🎨 Tất cả 10 Hệ Mỹ Thuật</option>
+          <option value="stickman_doodle">1. Indie Doodle Stickman</option>
+          <option value="noir_dossier">2. 2D Noir & Red-String Dossier</option>
+          <option value="kawaii_sticker">3. Kawaii Mascots & Sticker-Pop</option>
+          <option value="pastel_duo">4. Pastel Warm-Line Duo</option>
+          <option value="tactical_atlas">5. 2D Tactical Cartography (Maps)</option>
+          <option value="cosmos_vector">6. Deep-Space Geometric Vector</option>
+          <option value="blueprint_ledger">7. Ledger, Blueprint & Swiss Infographic</option>
+          <option value="editorial_risograph">8. Editorial Risograph Print</option>
+          <option value="zen_sumie">9. Sumi-e Zen Ink Wash</option>
+          <option value="woodcut_gouache">10. Woodblock Print & Night Gouache</option>
+        </select>
+
+        <select class="select-filter" id="filter-channel" onchange="onFilterChange()">
+          <option value="all">Tất cả Kênh</option>
+        </select>
+
+        <select class="select-filter" id="filter-batch" onchange="onFilterChange()">
+          <option value="all">Tất cả Đợt Sản Xuất</option>
+        </select>
+
+        <select class="select-filter" id="filter-format" onchange="onFilterChange()">
+          <option value="all">Tất cả Định dạng</option>
+          <option value="long">Long 16:9 Explainer</option>
+          <option value="short">Short 9:16 Spin-off</option>
+        </select>
+
+        <select class="select-filter" id="filter-sort" onchange="onFilterChange()">
+          <option value="views_desc">Lượt xem: Cao → Thấp</option>
+          <option value="published_desc">Mới xuất bản nhất</option>
+          <option value="views_asc">Lượt xem: Thấp → Cao</option>
+          <option value="likes_desc">Lượt thích: Cao → Thấp</option>
+          <option value="engagement_desc">Tỷ lệ tương tác (Likes/Views)</option>
+          <option value="channel_name_asc">Tên kênh: A → Z</option>
+          <option value="wave_asc">Đợt kênh (Wave 1 → 3)</option>
+          <option value="cdp_port_asc">Cổng CDP</option>
+        </select>
+
+        <button class="btn btn-secondary btn-sm" onclick="resetAllFilters()">
+          ↺ Đặt lại lọc
+        </button>
+      </div>
+    </div>
+
     <div class="catalog-container">
       <div class="catalog-controls-bar">
         <div class="catalog-stats-info" id="catalog-page-summary">
@@ -1837,140 +2149,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   </div>
 
   <!-- ===================================================================== -->
-  <!-- TAB 3: MA TRẬN PHỄU LONG ↔ SHORT & ĐỢT SẢN XUẤT -->
-  <!-- ===================================================================== -->
-  <div class="tab-pane" id="tab-funnel">
-    <!-- Batch Performance Comparison Cards -->
-    <div class="batch-cards-grid" id="batch-performance-grid">
-      <!-- Dynamic batch cards -->
-    </div>
-
-    <!-- Long ↔ Short Funnel Pairing Matrix -->
-    <div style="margin-bottom: 14px; font-size: 15px; font-weight: 700; color: var(--text-white); display: flex; align-items: center; justify-content: space-between;">
-      <span>🔗 Chi Tiết Các Cặp Phễu Long 16:9 ↔ Spin-off Short 9:16</span>
-      <span style="font-size: 12px; color: var(--emerald-light); font-weight: 600;" id="funnel-matrix-compliance-badge">
-        ✓ Chuẩn V2 Phễu Bắt Buộc
-      </span>
-    </div>
-
-    <div class="funnel-pairs-container" id="funnel-pairs-grid">
-      <!-- Rendered via JS -->
-    </div>
-  </div>
-
-  <!-- ===================================================================== -->
-  <!-- TAB 4: ĐIỀU HÀNH & LỊCH SỬ TĂNG TRƯỞNG -->
-  <!-- ===================================================================== -->
-  <div class="tab-pane" id="tab-ops">
-    <div class="ops-grid">
-      <!-- CLI Command Generator -->
-      <div class="ops-card">
-        <div class="ops-card-title">
-          <span>🛠️</span> Bộ Tạo Lệnh Điều Hành Tự Động (Multi-T4 & CDP)
-        </div>
-
-        <div class="cli-form-group">
-          <label class="cli-label">Kênh Mục Tiêu:</label>
-          <select class="select-filter" id="cli-channel-select" onchange="generateCLICommand()">
-            <option value="all">Tất cả 8 Kênh (Fleet-wide)</option>
-          </select>
-        </div>
-
-        <div class="cli-form-group">
-          <label class="cli-label">Đợt Sản Xuất (Batch):</label>
-          <select class="select-filter" id="cli-batch-select" onchange="generateCLICommand()">
-            <option value="batch2">batch2 (Đợt 2 - Hiện tại)</option>
-            <option value="batch3">batch3 (Đợt 3 - Kế tiếp)</option>
-            <option value="batch4">batch4 (Đợt 4)</option>
-            <option value="week1">week1 (Đợt 1)</option>
-          </select>
-        </div>
-
-        <div class="cli-form-group">
-          <label class="cli-label">Hành Động Cần Thực Hiện:</label>
-          <select class="select-filter" id="cli-action-select" onchange="generateCLICommand()">
-            <option value="produce_long">1. Sản xuất Long 16:9 E2E (Multi-T4 Colab)</option>
-            <option value="produce_short">2. Sản xuất Short 9:16 E2E (Multi-T4 Colab)</option>
-            <option value="publish_cdp">3. Xuất bản YouTube CDP (Auto Upload + Phễu V2)</option>
-            <option value="run_fleet">4. Chạy Toàn Bộ 8 Kênh Tự Động (run_fleet.py)</option>
-            <option value="refresh_metrics">5. Quét / Cập nhật Chỉ số Live Scrape</option>
-            <option value="serve_dashboard">6. Khởi chạy Server Web Dashboard (:8765)</option>
-          </select>
-        </div>
-
-        <div class="cli-output-box" id="cli-output-text">
-          python3 sys/tools/produce_channel_long_e2e.py --batch batch2
-        </div>
-
-        <button class="btn btn-primary" style="margin-top: 12px; width: 100%; justify-content: center;" onclick="copyCLICommand()">
-          <span>📋</span> Sao Chép Lệnh Thực Thi
-        </button>
-      </div>
-
-      <!-- Growth History Snapshots -->
-      <div class="ops-card">
-        <div class="ops-card-title">
-          <span>📈</span> Lịch Sử Tăng Trưởng & Snapshots Đã Lưu
-        </div>
-        <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
-          <table class="history-table">
-            <thead>
-              <tr>
-                <th>Thời Điểm</th>
-                <th>Tổng Vids</th>
-                <th>Tổng Views</th>
-                <th>Likes</th>
-                <th>Subs</th>
-                <th>Tăng Trưởng</th>
-              </tr>
-            </thead>
-            <tbody id="history-table-body">
-              <tr>
-                <td colspan="6" style="text-align: center; color: var(--text-dim); padding: 20px;">
-                  Chưa có dữ liệu lịch sử ghi nhận
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- CDP Ports & Chrome Studio Launcher Table -->
-    <div class="ops-card">
-      <div class="ops-card-title">
-        <span>🚀</span> Quản Lý Cổng Chrome CDP & Khởi Chạy YouTube Studio (Toàn Bộ Kênh Độc Lập)
-      </div>
-      <div class="table-responsive">
-        <table class="cdp-ports-table">
-          <thead>
-            <tr>
-              <th>Kênh</th>
-              <th>Handle & Wave</th>
-              <th>Profile Chrome</th>
-              <th>Cổng CDP</th>
-              <th>Email Đăng Nhập</th>
-              <th>Trạng Thái</th>
-              <th style="text-align: right;">Khởi Chạy</th>
-            </tr>
-          </thead>
-          <tbody id="cdp-ports-table-body">
-            <!-- Rendered via JS -->
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===================================================================== -->
-  <!-- TAB 5: KHO KÊNH MẪU, EMAIL & ĐỀ TÀI GỢI Ý -->
+  <!-- TAB 4: HỒ SƠ KÊNH MẪU, TÀI KHOẢN GOOGLE & ĐỀ TÀI HẠT GIỐNG            -->
   <!-- ===================================================================== -->
   <div class="tab-pane" id="tab-refs">
     <div class="catalog-container">
       <div class="catalog-controls-bar">
         <div class="catalog-stats-info" style="font-size: 14px; font-weight: 700; color: var(--text-white); display: flex; align-items: center; gap: 8px;">
-          <span>📚 Kho Kênh Mẫu, Nguồn Tham Khảo, Email Google & Đề Tài Hạt Giống</span>
-          <span class="v-badge" id="references-count-badge">0 Kênh</span>
+          <span>📚 Hồ Sơ Kênh Mẫu, Tài Khoản Google, Cổng CDP & Đề Tài Hạt Giống (38 Kênh)</span>
+          <span class="v-badge" id="references-count-badge">38 Kênh</span>
         </div>
         <div style="font-size: 12px; color: var(--text-muted);">
           Đồng bộ trực tiếp từ SSOT <code>sys/channels/registry.py</code> & <code>youtube_channel_map.json</code>
@@ -1996,62 +2182,38 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     </div>
   </div>
 
-  <!-- ===================================================================== -->
-  <!-- TAB 6: DUYỆT ĐĂNG VIDEO MỚI & GHI CHÚ SỬA LỖI (PRE-PUBLISH GATE) -->
-  <!-- ===================================================================== -->
-  <div class="tab-pane" id="tab-review">
-    <div class="catalog-container" style="padding: 18px;">
-      <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 14px;">
-        <div>
-          <div style="font-size: 16px; font-weight: 800; color: var(--text-white); display: flex; align-items: center; gap: 8px;">
-            <span>🛡️</span> Cổng Duyệt Đăng Video Mới & Ghi Chú Lỗi Cần Sửa (Pre-Publish Gate)
-          </div>
-          <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">
-            Tất cả video mới tạo phải được bấm <b>"✅ Duyệt đăng (APPROVED)"</b> mới được đăng lên YouTube. Video bấm <b>"❌ Không duyệt / Cần sửa (REJECTED)"</b> sẽ bị chặn đăng và đọc ghi chú để sửa lại.
-          </div>
-        </div>
-
-        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px;">
-          <select class="select-filter" id="review-status-filter" onchange="onReviewStatusFilterChange(this.value)">
-            <option value="all">Tất cả trạng thái duyệt (40)</option>
-            <option value="PENDING_REVIEW">⏳ Đang chờ duyệt (PENDING_REVIEW)</option>
-            <option value="APPROVED">✅ Đã duyệt đăng (APPROVED)</option>
-            <option value="REJECTED">❌ Không duyệt / Cần sửa (REJECTED)</option>
-          </select>
-
-          <button class="btn btn-emerald btn-sm" onclick="approveAllFilteredReviewVideos()" style="background: #10b981; color: #022c22; font-weight: 800;">
-            ✅ Duyệt Tất Cả Đang Lọc
-          </button>
-          <button class="btn btn-primary btn-sm" onclick="exportReviewDecisionsJSON()">
-            💾 Xuất File Quyết Định (review_decisions.json)
-          </button>
-        </div>
-      </div>
-
-      <!-- Review Summary Counters -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 18px;">
-        <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px 16px;">
-          <div style="font-size: 11.5px; color: var(--text-muted);">Tổng Video Trong Hàng Đợi</div>
-          <div style="font-size: 22px; font-weight: 800; color: var(--text-white); margin-top: 4px;" id="rev-stat-total">40</div>
-        </div>
-        <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.35); border-radius: 10px; padding: 12px 16px;">
-          <div style="font-size: 11.5px; color: #fbbf24;">⏳ Chờ Duyệt (PENDING_REVIEW)</div>
-          <div style="font-size: 22px; font-weight: 800; color: #fbbf24; margin-top: 4px;" id="rev-stat-pending">40</div>
-        </div>
-        <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 10px; padding: 12px 16px;">
-          <div style="font-size: 11.5px; color: #34d399;">✅ Đã Duyệt Đăng (APPROVED)</div>
-          <div style="font-size: 22px; font-weight: 800; color: #34d399; margin-top: 4px;" id="rev-stat-approved">0</div>
-        </div>
-        <div style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.35); border-radius: 10px; padding: 12px 16px;">
-          <div style="font-size: 11.5px; color: #f87171;">❌ Không Duyệt / Cần Sửa (REJECTED)</div>
-          <div style="font-size: 22px; font-weight: 800; color: #f87171; margin-top: 4px;" id="rev-stat-rejected">0</div>
-        </div>
-      </div>
-
-      <!-- Review Video Cards Grid -->
-      <div id="review-cards-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(430px, 1fr)); gap: 16px;">
-        <!-- Rendered via JS -->
-      </div>
+  <!-- HIDDEN LEGACY COMPATIBILITY DOM (Obsolete charts/tabs retired from visible UI) -->
+  <div id="legacy-compat-dom" style="display:none !important;">
+    <span id="kpi-likes">0</span>
+    <span id="kpi-likes-delta">+0</span>
+    <span id="kpi-likes-avg">TB: 0 views/video</span>
+    <span id="kpi-subs">0</span>
+    <span id="kpi-subs-delta">+0</span>
+    <span>1. Tổng Quan Hệ Thống Kênh</span>
+    <span>5. Kho Kênh Mẫu, Email & Đề Tài Gợi Ý</span>
+    <button class="tab-btn" id="btn-tab-funnel" onclick="switchTab('tab-funnel')">
+      <span>🔗</span> 3. Ma Trận Phễu Long ↔ Short & Đợt Sản Xuất
+      <span class="tab-count" id="count-tab-funnel">0</span>
+    </button>
+    <button class="tab-btn" id="btn-tab-ops" onclick="switchTab('tab-ops')">
+      <span>⚡</span> 4. Điều Hành & Lịch Sử Tăng Trưởng
+    </button>
+    <div id="fleet-section-title"></div>
+    <div id="batch-pills-container"></div>
+    <div id="fleet-chart-grid"></div>
+    <div id="channels-card-grid"></div>
+    <div class="tab-pane" id="tab-funnel">
+      <div id="batch-performance-grid"></div>
+      <div id="funnel-matrix-compliance-badge"></div>
+      <div id="funnel-pairs-grid"></div>
+    </div>
+    <div class="tab-pane" id="tab-ops">
+      <select id="cli-channel-select" onchange="generateCLICommand()"><option value="all">all</option></select>
+      <select id="cli-batch-select" onchange="generateCLICommand()"><option value="batch2">batch2</option></select>
+      <select id="cli-action-select" onchange="generateCLICommand()"><option value="produce_long">produce_long</option></select>
+      <div id="cli-output-text"></div>
+      <table><tbody id="history-table-body"></tbody></table>
+      <table><tbody id="cdp-ports-table-body"></tbody></table>
     </div>
   </div>
 
@@ -2067,6 +2229,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 // VIDEO PILOT V3 FRONTEND ENGINE
 // Self-contained Vanilla JS • Zero CDN Dependencies
 // ==============================================================================
+
+const API_BASE = window.location.protocol.startsWith('http') ? '' : 'http://127.0.0.1:8765';
+const REPO_CD_PREFIX = 'cd /home/hongphuoc6104/Desktop/vp-agent-core && ';
 
 const state = {
   raw: null,
@@ -2084,7 +2249,24 @@ const state = {
   pageSize: 20,
   expandedChannels: {},
   expandedReferences: {},
+  simpleFilter: 'all',
+  simpleSearch: '',
+  selectedWaveChannels: ['ban_do_quyen_luc', 'ho_so_ky_la', 'co_the_ke', 'su_ke_lai'],
+  hideAdvancedTabs: false,
 };
+
+const ALIAS_CHANNEL_IDS = new Set([
+  'en_scale_and_bone',
+  'en_root_and_canopy',
+  'en_spawn_to_apex',
+  'en_deep_time_strata'
+]);
+
+const TIER_A_SET = new Set([
+  'ban_do_quyen_luc', 'ho_so_ky_la', 'co_the_ke', 'su_ke_lai',
+  'chanh_niem_ke', 'ai_binh_dan', 'tui_tien', 'nao_luoi',
+  'en_plain_sight_ai', 'en_choke_point', 'en_cold_case_ink', 'en_inside_vessel'
+]);
 
 function getLangBadgeHtml(lang, channelId) {
   const isEn = lang === 'en' || (channelId && String(channelId).startsWith('en_'));
@@ -2120,6 +2302,14 @@ function normalizeDashboardData(raw) {
   if (!raw) return null;
   const data = JSON.parse(JSON.stringify(raw));
   data.channels = Array.isArray(data.channels) ? data.channels : [];
+
+  // Deduplicate legacy EN alias channels so physical fleet stays canonical (38 channels: 20 VN + 18 EN)
+  const rawChannelCount = data.channels.length;
+  const physicalChannels = data.channels.filter(c => !ALIAS_CHANNEL_IDS.has(c.channel_id));
+  const removedAliases = physicalChannels.length > 0 && physicalChannels.length < rawChannelCount;
+  if (removedAliases) {
+    data.channels = physicalChannels;
+  }
 
   // Normalize each channel's video catalog
   data.channels.forEach(ch => {
@@ -2229,13 +2419,19 @@ function normalizeDashboardData(raw) {
     }
   });
 
-  // Flatten all_videos
-  if (!Array.isArray(data.all_videos) || data.all_videos.length === 0) {
+  // Flatten or filter all_videos (re-derive cleanly if alias channels were deduplicated)
+  if (removedAliases) {
+    if (Array.isArray(data.all_videos) && data.all_videos.length > 0) {
+      data.all_videos = data.all_videos.filter(v => !ALIAS_CHANNEL_IDS.has(v.channel_id));
+    } else {
+      data.all_videos = data.channels.flatMap(c => c.videos || []);
+    }
+  } else if (!Array.isArray(data.all_videos) || data.all_videos.length === 0) {
     data.all_videos = data.channels.flatMap(c => c.videos || []);
   }
 
-  // Derive batches array if missing
-  if (!Array.isArray(data.batches) || data.batches.length === 0) {
+  // Derive batches array if missing or recompute after alias deduplication
+  if (removedAliases || !Array.isArray(data.batches) || data.batches.length === 0) {
     const batchMap = new Map();
     data.all_videos.forEach(v => {
       const bId = v.batch || 'week1';
@@ -2265,24 +2461,51 @@ function normalizeDashboardData(raw) {
     data.batches = Array.from(batchMap.values());
   }
 
-  // Calculate totals
-  data.totals = data.totals || {};
-  data.totals.total_channels = data.totals.total_channels || data.channels.length;
-  data.totals.total_videos = data.totals.total_videos || data.all_videos.length;
-  data.totals.total_long_videos = data.totals.total_long_videos ?? data.all_videos.filter(v => !v.is_short).length;
-  data.totals.total_short_videos = data.totals.total_short_videos ?? data.all_videos.filter(v => v.is_short).length;
-  data.totals.total_views = data.totals.total_views ?? data.all_videos.reduce((s, v) => s + (v.view_count || 0), 0);
-  data.totals.long_views = data.totals.long_views ?? data.all_videos.filter(v => !v.is_short).reduce((s, v) => s + (v.view_count || 0), 0);
-  data.totals.short_views = data.totals.short_views ?? data.all_videos.filter(v => v.is_short).reduce((s, v) => s + (v.view_count || 0), 0);
-  data.totals.total_likes = data.totals.total_likes ?? data.all_videos.reduce((s, v) => s + (v.like_count || 0), 0);
-  data.totals.total_subscribers = data.totals.total_subscribers ?? data.channels.reduce((s, c) => s + (c.subscriber_count || 0), 0);
-  data.totals.avg_views_per_video = data.totals.avg_views_per_video ?? (data.totals.total_videos > 0 ? Math.round(data.totals.total_views / data.totals.total_videos) : 0);
-
+  // Calculate totals (recompute cleanly from physical channels when aliases were removed)
+  const prevTotals = data.totals || {};
   const shorts = data.all_videos.filter(v => v.is_short);
   const linked = shorts.filter(v => Boolean(v.has_funnel_link || v.related_video_id || v.related_video_url)).length;
-  data.totals.funnel_total_shorts = data.totals.funnel_total_shorts ?? shorts.length;
-  data.totals.funnel_linked_shorts = data.totals.funnel_linked_shorts ?? linked;
-  data.totals.funnel_compliance_pct = data.totals.funnel_compliance_pct ?? (shorts.length > 0 ? Math.round((linked / shorts.length) * 100) : 100);
+  const computedLongs = data.all_videos.filter(v => !v.is_short).length;
+  const computedShorts = shorts.length;
+  const computedTotalViews = data.all_videos.reduce((s, v) => s + (v.view_count || 0), 0);
+  const computedLongViews = data.all_videos.filter(v => !v.is_short).reduce((s, v) => s + (v.view_count || 0), 0);
+  const computedShortViews = shorts.reduce((s, v) => s + (v.view_count || 0), 0);
+  const computedTotalLikes = data.all_videos.reduce((s, v) => s + (v.like_count || 0), 0);
+  const computedTotalSubs = data.channels.reduce((s, c) => s + (c.subscriber_count || 0), 0);
+
+  if (removedAliases) {
+    data.totals = {
+      ...prevTotals,
+      total_channels: data.channels.length,
+      total_videos: data.all_videos.length,
+      total_long_videos: computedLongs,
+      total_short_videos: computedShorts,
+      total_views: computedTotalViews,
+      long_views: computedLongViews,
+      short_views: computedShortViews,
+      total_likes: computedTotalLikes,
+      total_subscribers: computedTotalSubs,
+      avg_views_per_video: data.all_videos.length > 0 ? Math.round(computedTotalViews / data.all_videos.length) : 0,
+      funnel_total_shorts: computedShorts,
+      funnel_linked_shorts: linked,
+      funnel_compliance_pct: computedShorts > 0 ? Math.round((linked / computedShorts) * 100) : 100
+    };
+  } else {
+    data.totals = prevTotals;
+    data.totals.total_channels = data.totals.total_channels || data.channels.length;
+    data.totals.total_videos = data.totals.total_videos || data.all_videos.length;
+    data.totals.total_long_videos = data.totals.total_long_videos ?? computedLongs;
+    data.totals.total_short_videos = data.totals.total_short_videos ?? computedShorts;
+    data.totals.total_views = data.totals.total_views ?? computedTotalViews;
+    data.totals.long_views = data.totals.long_views ?? computedLongViews;
+    data.totals.short_views = data.totals.short_views ?? computedShortViews;
+    data.totals.total_likes = data.totals.total_likes ?? computedTotalLikes;
+    data.totals.total_subscribers = data.totals.total_subscribers ?? computedTotalSubs;
+    data.totals.avg_views_per_video = data.totals.avg_views_per_video ?? (data.totals.total_videos > 0 ? Math.round(data.totals.total_views / data.totals.total_videos) : 0);
+    data.totals.funnel_total_shorts = data.totals.funnel_total_shorts ?? computedShorts;
+    data.totals.funnel_linked_shorts = data.totals.funnel_linked_shorts ?? linked;
+    data.totals.funnel_compliance_pct = data.totals.funnel_compliance_pct ?? (computedShorts > 0 ? Math.round((linked / computedShorts) * 100) : 100);
+  }
 
   data.history = Array.isArray(data.history) ? data.history : [];
 
@@ -2523,55 +2746,72 @@ function renderKPIs() {
   const d = state.raw;
   if (!d) return;
 
+  const setText = (id, txt) => {
+    const el = document.getElementById(id);
+    if (el) el.innerText = txt;
+  };
+
   const t = d.totals || {};
   const numCh = t.total_channels || d.channels.length || 0;
-  document.getElementById('header-fleet-status').innerText = `${numCh}/${numCh} Kênh Active • ${t.total_videos || 0} Videos • ${(d.batches || []).length} Đợt`;
+  const viCount = d.channels.filter(c => (c.language || (String(c.channel_id || '').startsWith('en_') ? 'en' : 'vi')) === 'vi').length;
+  const enCount = Math.max(0, d.channels.length - viCount);
+
+  setText('header-fleet-status', `${numCh}/${numCh} Kênh Active • ${t.total_videos || 0} Videos`);
 
   if (d.generated_at) {
     const genDate = new Date(d.generated_at);
-    document.getElementById('header-updated-at').innerText = `Cập nhật: ${genDate.toLocaleTimeString('vi-VN')} (${d.scrape_duration_seconds || 0}s)`;
+    setText('header-updated-at', `Cập nhật: ${genDate.toLocaleTimeString('vi-VN')} (${d.scrape_duration_seconds || 0}s)`);
   }
 
-  document.getElementById('kpi-channels').innerText = `${numCh} / ${numCh}`;
-  document.getElementById('kpi-videos').innerText = formatNumber(t.total_videos || 0);
-  document.getElementById('kpi-videos-split').innerText = `${t.total_long_videos || 0} Long 16:9 · ${t.total_short_videos || 0} Short 9:16 (across ${(d.batches || []).length} Đợt)`;
+  setText('kpi-channels', `${numCh} / ${numCh}`);
+  setText('kpi-channels-subtitle', `${viCount} Kênh Việt · ${enCount} Kênh Anh`);
+  setText('kpi-videos', formatNumber(t.total_videos || 0));
+  setText('kpi-videos-split', `${t.total_long_videos || 0} Long 16:9 · ${t.total_short_videos || 0} Short 9:16`);
 
-  document.getElementById('kpi-views').innerText = formatNumber(t.total_views || 0);
+  setText('kpi-views', formatNumber(t.total_views || 0));
   if (t.views_delta) {
     const el = document.getElementById('kpi-views-delta');
-    el.innerText = `+${formatNumber(t.views_delta)}`;
-    el.style.display = 'inline-block';
+    if (el) {
+      el.innerText = `+${formatNumber(t.views_delta)}`;
+      el.style.display = 'inline-block';
+    }
   }
-  document.getElementById('kpi-views-split').innerText = `Shorts: ${formatNumber(t.short_views || 0)} · Longs: ${formatNumber(t.long_views || 0)}`;
+  setText(
+    'kpi-views-split',
+    `Shorts: ${formatNumber(t.short_views || 0)} · Longs: ${formatNumber(t.long_views || 0)} · ${formatNumber(t.total_likes || 0)} 👍 · ${formatNumber(t.total_subscribers || 0)} Subs`
+  );
 
-  document.getElementById('kpi-likes').innerText = formatNumber(t.total_likes || 0);
+  setText('kpi-likes', formatNumber(t.total_likes || 0));
   if (t.likes_delta) {
     const el = document.getElementById('kpi-likes-delta');
-    el.innerText = `+${formatNumber(t.likes_delta)}`;
-    el.style.display = 'inline-block';
+    if (el) {
+      el.innerText = `+${formatNumber(t.likes_delta)}`;
+      el.style.display = 'inline-block';
+    }
   }
-  document.getElementById('kpi-likes-avg').innerText = `TB: ${formatNumber(t.avg_views_per_video || 0)} views/video`;
+  setText('kpi-likes-avg', `TB: ${formatNumber(t.avg_views_per_video || 0)} views/video`);
 
-  document.getElementById('kpi-subs').innerText = formatNumber(t.total_subscribers || 0);
+  setText('kpi-subs', formatNumber(t.total_subscribers || 0));
   if (t.subs_delta) {
     const el = document.getElementById('kpi-subs-delta');
-    el.innerText = `+${formatNumber(t.subs_delta)}`;
-    el.style.display = 'inline-block';
+    if (el) {
+      el.innerText = `+${formatNumber(t.subs_delta)}`;
+      el.style.display = 'inline-block';
+    }
   }
 
   const compliance = t.funnel_compliance_pct ?? 100;
-  document.getElementById('kpi-funnel').innerText = `${compliance}% ✓`;
-  document.getElementById('kpi-funnel-sub').innerText = `${t.funnel_linked_shorts || 0}/${t.funnel_total_shorts || 0} Shorts gắn Related Long`;
+  const pendingRevCount = getReviewQueueItems().filter(x => (x.status || 'PENDING_REVIEW') === 'PENDING_REVIEW').length;
+  setText('kpi-funnel', `${compliance}% ✓`);
+  setText('kpi-funnel-sub', `${t.funnel_linked_shorts || 0}/${t.funnel_total_shorts || 0} Phễu · ${pendingRevCount} Chờ duyệt`);
 
   // Counters in Tab Navigation
-  document.getElementById('count-tab-fleet').innerText = numCh;
-  document.getElementById('count-tab-catalog').innerText = t.total_videos || 0;
-
-  const countTabRefs = document.getElementById('count-tab-refs');
-  if (countTabRefs) countTabRefs.innerText = numCh;
+  setText('count-tab-fleet', numCh);
+  setText('count-tab-catalog', t.total_videos || 0);
+  setText('count-tab-refs', numCh);
 
   const totalPairs = d.channels.reduce((sum, ch) => sum + (ch.funnel_pairs ? ch.funnel_pairs.length : 0), 0);
-  document.getElementById('count-tab-funnel').innerText = totalPairs;
+  setText('count-tab-funnel', totalPairs);
 }
 
 // --- POPULATE DROPDOWNS ---
@@ -2584,7 +2824,7 @@ function populateDropdowns() {
   // Channel dropdown
   const chSelect = document.getElementById('filter-channel');
   const cliChSelect = document.getElementById('cli-channel-select');
-  const curChVal = chSelect.value;
+  const curChVal = chSelect ? chSelect.value : 'all';
 
   let chOptions = `<option value="all">Tất cả ${numCh} Kênh</option>`;
   let cliOptions = `<option value="all">Tất cả ${numCh} Kênh (Fleet-wide)</option>`;
@@ -2592,14 +2832,16 @@ function populateDropdowns() {
     chOptions += `<option value="${ch.channel_id}">${ch.channel_name} (${ch.handle || ''})</option>`;
     cliOptions += `<option value="${ch.channel_id}">${ch.channel_name} (${ch.channel_id})</option>`;
   });
-  chSelect.innerHTML = chOptions;
-  if (curChVal) chSelect.value = curChVal;
+  if (chSelect) {
+    chSelect.innerHTML = chOptions;
+    if (curChVal) chSelect.value = curChVal;
+  }
   if (cliChSelect) cliChSelect.innerHTML = cliOptions;
 
   // Batch dropdown
   const bSelect = document.getElementById('filter-batch');
   const cliBatchSelect = document.getElementById('cli-batch-select');
-  const curBVal = bSelect.value;
+  const curBVal = bSelect ? bSelect.value : 'all';
 
   let bOptions = '<option value="all">Tất cả Đợt Sản Xuất</option>';
   let cliBOptions = '';
@@ -2607,8 +2849,10 @@ function populateDropdowns() {
     bOptions += `<option value="${b.batch_id}">${b.batch_label} (${b.videos_count} videos)</option>`;
     cliBOptions += `<option value="${b.batch_id}">${b.batch_id} (${b.batch_label})</option>`;
   });
-  bSelect.innerHTML = bOptions;
-  if (curBVal) bSelect.value = curBVal;
+  if (bSelect) {
+    bSelect.innerHTML = bOptions;
+    if (curBVal) bSelect.value = curBVal;
+  }
   if (cliBatchSelect && cliBOptions) cliBatchSelect.innerHTML = cliBOptions;
 }
 
@@ -2616,6 +2860,10 @@ function populateDropdowns() {
 function renderFleetTab() {
   const d = state.raw;
   if (!d) return;
+  const legacyWrap = document.getElementById('legacy-compat-dom');
+  const compatChartGrid = document.getElementById('fleet-chart-grid');
+  const compatCardGrid = document.getElementById('channels-card-grid');
+  if (!compatChartGrid || !compatCardGrid || (legacyWrap && legacyWrap.contains(compatCardGrid))) return;
 
   // 1. Dynamic header updates
   const totalCh = d.totals ? (d.totals.total_channels || d.channels.length) : d.channels.length;
@@ -3105,6 +3353,8 @@ function renderFunnelTab() {
 
   // 1. Batch performance cards
   const batchGrid = document.getElementById('batch-performance-grid');
+  const legacyWrap = document.getElementById('legacy-compat-dom');
+  if (!batchGrid || (legacyWrap && legacyWrap.contains(batchGrid))) return;
   const totalFleetViews = d.totals.total_views || 1;
 
   batchGrid.innerHTML = (d.batches || []).map(b => {
@@ -3241,6 +3491,8 @@ function renderOpsTab() {
 
   // 1. History Table
   const histBody = document.getElementById('history-table-body');
+  const legacyWrap = document.getElementById('legacy-compat-dom');
+  if (!histBody || (legacyWrap && legacyWrap.contains(histBody))) return;
   if (d.history && d.history.length > 0) {
     histBody.innerHTML = d.history.map((h, i) => {
       const prev = d.history[i + 1] || null;
@@ -3298,6 +3550,41 @@ function renderOpsTab() {
   generateCLICommand();
 }
 
+// --- HELPER: DEDUPE STALE PUBLISHED TOPICS ---
+function normalizeTopicForDedupe(text) {
+  return String(text || '')
+    .replace(/@\\S+/g, ' ')
+    .replace(/#\\S+/g, ' ')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D')
+    .normalize('NFD')
+    .replace(/[\\u0300-\\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+
+function isTopicPublishedInChannel(topicStr, ch) {
+  const stop = new Set(['vi', 'sao', 'nhung', 'cua', 'va', 'trong', 'cho', 'khi', 'nao', 'bi', 'mat', 'giai', 'ma', 'tap', 'moi', 'shorts', 'short', 've', 'khong', 'quyet', 'dinh', 'van', 'quan', 'nghe', 'thuat', 'chien', 'luoc', 'cach', 'nguoi', 'nam', 'bai', 'tran', 'nuoc', 'song', 'the', 'and', 'of', 'to', 'in', 'why', 'how']);
+  const tokList = normalizeTopicForDedupe(topicStr).split(/\\s+/).filter(w => w.length >= 2 && !stop.has(w));
+  if (tokList.length === 0) return false;
+  const tokSet = new Set(tokList);
+  const candYears = tokList.filter(w => /^\\d{3,}$/.test(w));
+  const candRare = tokList.filter(w => !/^\\d+$/.test(w) && w.length >= 7);
+  const vids = (ch && ch.videos) || [];
+  for (const v of vids) {
+    const exList = normalizeTopicForDedupe(v.title || '').split(/\\s+/).filter(w => w.length >= 2 && !stop.has(w));
+    if (exList.length === 0) continue;
+    const exSet = new Set(exList);
+    if (candYears.some(y => exSet.has(y))) return true;
+    const shared = tokList.filter(t => exSet.has(t));
+    if (shared.some(t => candRare.includes(t))) return true;
+    if (shared.length >= 3) return true;
+    if (shared.length >= 2 && (shared.length / Math.max(1, Math.min(tokSet.size, exSet.size))) >= 0.5) return true;
+  }
+  return false;
+}
+
 // --- TAB 5: MASTER REFERENCES & SEED TOPICS TABLE RENDER ---
 function renderReferencesTab() {
   const d = state.raw;
@@ -3305,6 +3592,11 @@ function renderReferencesTab() {
 
   const tbody = document.getElementById('references-table-body');
   if (!tbody) return;
+
+  const diagByCh = {};
+  if (d.fleet_diagnostics && Array.isArray(d.fleet_diagnostics.channels)) {
+    d.fleet_diagnostics.channels.forEach(dc => { diagByCh[dc.channel_id] = dc; });
+  }
 
   let chList = d.channels;
   if (state.waveFilter && state.waveFilter !== 'all') {
@@ -3346,8 +3638,19 @@ function renderReferencesTab() {
   tbody.innerHTML = chList.map(ch => {
     const waveBadgeClass = `badge-wave badge-wave-${ch.wave || 1}`;
     const refs = ch.references || [];
-    const topics = ch.seed_topics || [];
+    const diag = diagByCh[ch.channel_id] || {};
+    const learn = diag.learning || ch.learning_summary || {};
+    const audit = learn.change_impact_audit || {};
     const hooks = ch.hook_formulas || [];
+
+    const freshQueue = Array.isArray(diag.fresh_topic_queue) && diag.fresh_topic_queue.length > 0
+      ? diag.fresh_topic_queue
+      : (Array.isArray(ch.fresh_topic_queue) && ch.fresh_topic_queue.length > 0 ? ch.fresh_topic_queue : []);
+
+    const filteredSeeds = (ch.seed_topics || []).filter(t => !isTopicPublishedInChannel(t, ch));
+    const archivedTopics = Array.isArray(learn.completed_topics_archive) && learn.completed_topics_archive.length > 0
+      ? learn.completed_topics_archive
+      : ((ch.seed_topics || []).filter(t => isTopicPublishedInChannel(t, ch)));
 
     const refsHtml = refs.length > 0 ? refs.map(r => {
       const platLow = (r.platform || '').toLowerCase();
@@ -3371,11 +3674,37 @@ function renderReferencesTab() {
       `;
     }).join('') : '<span style="color:var(--text-dim); font-size:11px;">Chưa cập nhật nguồn mẫu</span>';
 
-    const topicsHtml = topics.length > 0 ? `
-      <ol style="margin: 0; padding-left: 18px; font-size: 11.5px; line-height: 1.6; color: var(--text-gray);">
-        ${topics.map(t => `<li>${escHtml(t)}</li>`).join('')}
-      </ol>
-    ` : '<span style="color:var(--text-dim); font-size:11px;">Chưa có đề tài mẫu</span>';
+    const freshListHtml = freshQueue.length > 0
+      ? `<div style="margin-bottom:6px;">
+          <span class="ref-section-title" style="color:#34d399;">🔥 Đề Tài Mới Cập Nhật Liên Tục (Chưa Đăng):</span>
+          <ol style="margin:4px 0 0; padding-left:18px; font-size:11.5px; line-height:1.55; color:#f8fafc;">
+            ${freshQueue.map(q => `<li><b style="color:#38bdf8;">[${escHtml(String(q.episode_tag || '').toUpperCase())}]</b> ${escHtml(q.long_title || '')}<div style="font-size:10.5px; color:var(--text-muted);">↳ Short: ${escHtml(q.short_title || '')}</div></li>`).join('')}
+          </ol>
+        </div>`
+      : (filteredSeeds.length > 0
+          ? `<ol style="margin:0; padding-left:18px; font-size:11.5px; line-height:1.6; color:var(--text-gray);">${filteredSeeds.map(t => `<li>${escHtml(t)}</li>`).join('')}</ol>`
+          : `<span style="color:#34d399; font-size:11px;">✓ Toàn bộ đề tài cũ đã làm xong — bấm "Chẩn Đoán Lại 38 Kênh" để nạp tập mới.</span>`);
+
+    const learnRuleTxt = learn.learned_rule_vi || '';
+    const impactBadgeTxt = audit.impact_badge_vi || (learn.impact_badge_vi || '');
+    const impactSumTxt = audit.impact_summary_vi || (learn.impact_summary_vi || '');
+    const learningHtml = (learnRuleTxt || impactBadgeTxt)
+      ? `<div style="margin-top:6px; padding:6px 8px; border-radius:6px; background:rgba(56,189,248,0.08); border:1px solid rgba(56,189,248,0.25); font-size:11px; line-height:1.45;">
+          ${impactBadgeTxt ? `<div style="color:#38bdf8; font-weight:700;">📊 ${escHtml(impactBadgeTxt)}${impactSumTxt ? ` <span style="font-weight:400; color:#cbd5e1;">(${escHtml(impactSumTxt)})</span>` : ''}</div>` : ''}
+          ${learnRuleTxt ? `<div style="color:#e2e8f0; margin-top:2px;">🧬 <b>Rút kinh nghiệm:</b> ${escHtml(learnRuleTxt)}</div>` : ''}
+        </div>`
+      : '';
+
+    const archiveHtml = archivedTopics.length > 0
+      ? `<details style="margin-top:6px; font-size:10.5px; color:var(--text-dim);">
+          <summary style="cursor:pointer; color:#94a3b8;">✅ Đã đăng / lưu trữ (${archivedTopics.length} bài — không gợi ý lại)</summary>
+          <ul style="margin:4px 0 0; padding-left:16px; opacity:0.78;">
+            ${archivedTopics.slice(0, 6).map(t => `<li style="text-decoration:line-through;">${escHtml(t)}</li>`).join('')}
+          </ul>
+        </details>`
+      : '';
+
+    const topicsHtml = freshListHtml + learningHtml + archiveHtml;
 
     const hooksHtml = hooks.length > 0 ? `
       <div style="margin-top: 8px; border-top: 1px dashed rgba(255,255,255,0.08); padding-top: 6px;">
@@ -3488,7 +3817,7 @@ function generateCLICommand() {
       cmd = `python3 sys/tools/youtube_dashboard.py --help`;
   }
 
-  outBox.innerText = cmd;
+  outBox.innerText = REPO_CD_PREFIX + cmd;
 }
 
 function copyCLICommand() {
@@ -3503,16 +3832,739 @@ function renderDashboard(data) {
 
   renderKPIs();
   populateDropdowns();
+  renderSimpleHub();
   renderActiveViews();
 }
 
 function renderActiveViews() {
+  renderSimpleHub();
   renderFleetTab();
   renderCatalogTable();
   renderFunnelTab();
   renderOpsTab();
   renderReferencesTab();
   renderReviewTab();
+}
+
+// ==============================================================================
+// SIMPLE 38-CHANNEL MANAGEMENT, DIAGNOSTICS & 3-MODE PRODUCTION HUB
+// ==============================================================================
+function getCanonical38ChannelsWithDiagnostics() {
+  if (!state.raw || !Array.isArray(state.raw.channels)) return [];
+  const diagMap = {};
+  if (state.raw.fleet_diagnostics && Array.isArray(state.raw.fleet_diagnostics.channels)) {
+    state.raw.fleet_diagnostics.channels.forEach(d => {
+      diagMap[d.channel_id] = d;
+    });
+  }
+  const revItems = getReviewQueueItems();
+  const revByCh = {};
+  revItems.forEach(it => {
+    const cid = it.channel_id || '';
+    if (!revByCh[cid]) revByCh[cid] = [];
+    revByCh[cid].push(it);
+  });
+
+  const physicalChannels = state.raw.channels.filter(c => !ALIAS_CHANNEL_IDS.has(c.channel_id));
+  const listToUse = physicalChannels.length > 0 ? physicalChannels : state.raw.channels;
+
+  return listToUse.map(ch => {
+    const cid = ch.channel_id;
+    const preDiag = diagMap[cid];
+    if (preDiag) {
+      return { ...ch, diag: preDiag };
+    }
+    const vids = ch.videos || [];
+    const longs = vids.filter(v => !v.is_short);
+    const shorts = vids.filter(v => v.is_short);
+    const views = Number(ch.channel_views || 0);
+    const unlinked = shorts.filter(v => !(v.has_funnel_link || v.related_video_id || v.related_video_url));
+    const chRevs = revByCh[cid] || [];
+    const pendingCnt = chRevs.filter(r => r.status === 'PENDING_REVIEW').length;
+
+    let tier = (TIER_A_SET.has(cid) || views >= 1000) ? 'tier_a' : (vids.length >= 4 || views >= 200 ? 'tier_b' : 'tier_c');
+    let tierLabel = tier === 'tier_a' ? '🔥 Tier-A (Mũi nhọn)' : (tier === 'tier_b' ? '📈 Tier-B (Tăng trưởng)' : '🌱 Tier-C (Ươm mầm)');
+
+    let verdict = 'COLLECT';
+    let verdictLabel = '🔵 COLLECT (Tạo thêm bài)';
+    let summary = `Có ${longs.length} Long + ${shorts.length} Short (${formatNumber(views)} views). Tiếp tục làm cặp 1 Long + 1 Short.`;
+    if (unlinked.length > 0 && longs.length > 0) {
+      verdict = 'REPAIR_FUNNEL';
+      verdictLabel = '🔧 Cần gắn Phễu Short→Long';
+      summary = `Có ${unlinked.length}/${shorts.length} Short chưa nối Related Video về bài Long.`;
+    } else if (views >= 1500) {
+      verdict = 'SCALE';
+      verdictLabel = '🟢 SCALE (Nhân rộng)';
+      summary = `Tín hiệu thắng (${formatNumber(views)} views). Ưu tiên làm cặp 1 Long (2K) + 2 Short vệ tinh.`;
+    } else if (vids.length >= 4 && views < 250) {
+      verdict = 'ITERATE';
+      verdictLabel = '🟡 ITERATE (Đổi Hook/Thumb)';
+      summary = `Đã có ${vids.length} video (${views} views). Cần đổi Hook 3s đầu và làm mới Thumbnail.`;
+    }
+
+    const sortedVids = [...vids].sort((a, b) => Number(b.view_count || 0) - Number(a.view_count || 0));
+    const topV = sortedVids[0] || null;
+    const filteredSeeds = (ch.seed_topics || []).filter(t => !isTopicPublishedInChannel(t, ch));
+    const nextTopic = filteredSeeds.length > 0
+      ? filteredSeeds[0]
+      : `Tập mới chuyên sâu cho ${ch.channel_name} (EP${String(longs.length + 1).padStart(2, '0')})`;
+    const fallbackLearn = ch.learning_summary || {
+      top_video: topV ? { title: topV.title || '', views: Number(topV.view_count || 0) } : null,
+      change_impact_audit: {
+        impact_badge_vi: unlinked.length > 0 && longs.length > 0 ? '🔧 Rò rỉ phễu' : (views >= 1500 ? '📈 Phát triển tốt' : '🔵 Đang tích lũy'),
+        impact_summary_vi: topV ? `Đỉnh: ${(topV.title || '').slice(0, 42)} (${formatNumber(topV.view_count || 0)} views)` : 'Chưa có dữ liệu so sánh',
+      },
+      learned_rule_vi: topV
+        ? `Ưu tiên nhân bản cấu trúc từ bài thắng nhất '${String(topV.title || '').slice(0, 46)}' (${formatNumber(topV.view_count || 0)} views).`
+        : 'Mở đầu bằng [Con số/Quy mô + Vật thể cụ thể] ngay 3s đầu.',
+      fresh_topic_queue: (ch.fresh_topic_queue && ch.fresh_topic_queue.length > 0)
+        ? ch.fresh_topic_queue
+        : filteredSeeds.slice(0, 3).map((t, i) => ({ episode_tag: `ep${String(longs.length + 1 + i).padStart(2, '0')}`, long_title: t, short_title: '' })),
+      completed_topics_archive: (ch.completed_topics_archive && ch.completed_topics_archive.length > 0)
+        ? ch.completed_topics_archive
+        : (ch.seed_topics || []).filter(t => isTopicPublishedInChannel(t, ch)),
+    };
+
+    return {
+      ...ch,
+      diag: {
+        channel_id: cid,
+        tier,
+        tier_label: tierLabel,
+        verdict,
+        verdict_label: verdictLabel,
+        diagnosis_summary: summary,
+        next_topic: nextTopic,
+        long_count: longs.length,
+        short_count: shorts.length,
+        funnel_linked_shorts: shorts.length - unlinked.length,
+        funnel_total_shorts: shorts.length,
+        funnel_ok: unlinked.length === 0,
+        pending_review_count: pendingCnt,
+        learning: fallbackLearn,
+        fresh_topic_queue: fallbackLearn.fresh_topic_queue || [],
+        completed_topics_archive: fallbackLearn.completed_topics_archive || [],
+      }
+    };
+  });
+}
+
+function getFilteredSimpleChannels() {
+  let list = getCanonical38ChannelsWithDiagnostics();
+  const f = state.simpleFilter || 'all';
+  if (f === 'vi') {
+    list = list.filter(c => (c.language || (c.channel_id.startsWith('en_') ? 'en' : 'vi')) === 'vi');
+  } else if (f === 'en') {
+    list = list.filter(c => (c.language || (c.channel_id.startsWith('en_') ? 'en' : 'vi')) === 'en');
+  } else if (f === 'tier_a') {
+    list = list.filter(c => c.diag.tier === 'tier_a');
+  } else if (f === 'SCALE' || f === 'REPAIR_FUNNEL' || f === 'ITERATE') {
+    list = list.filter(c => c.diag.verdict === f);
+  }
+
+  if (state.simpleSearch) {
+    const q = state.simpleSearch.toLowerCase();
+    list = list.filter(c =>
+      (c.channel_name && c.channel_name.toLowerCase().includes(q)) ||
+      (c.channel_id && c.channel_id.toLowerCase().includes(q)) ||
+      (c.handle && c.handle.toLowerCase().includes(q)) ||
+      (c.niche && c.niche.toLowerCase().includes(q)) ||
+      (c.diag && c.diag.next_topic && c.diag.next_topic.toLowerCase().includes(q))
+    );
+  }
+
+  const tierRank = { tier_a: 0, tier_b: 1, tier_c: 2 };
+  list.sort((a, b) => {
+    const ta = tierRank[a.diag.tier] ?? 9;
+    const tb = tierRank[b.diag.tier] ?? 9;
+    if (ta !== tb) return ta - tb;
+    return (b.channel_views || 0) - (a.channel_views || 0);
+  });
+  return list;
+}
+
+function renderSimpleHub() {
+  const all38 = getCanonical38ChannelsWithDiagnostics();
+  const badge38 = document.getElementById('simple-38-badge');
+  if (badge38) {
+    const viCnt = all38.filter(c => (c.language || (c.channel_id.startsWith('en_') ? 'en' : 'vi')) === 'vi').length;
+    const enCnt = all38.length - viCnt;
+    badge38.innerText = `${all38.length} Kênh (${viCnt} VN + ${enCnt} EN)`;
+  }
+
+  // Populate single channel selector
+  const singleSel = document.getElementById('simple-single-channel');
+  if (singleSel && all38.length > 0) {
+    const prevVal = singleSel.value;
+    singleSel.innerHTML = all38.map(c =>
+      `<option value="${escHtml(c.channel_id)}">${escHtml(c.channel_name)} (${escHtml(c.handle || c.channel_id)})</option>`
+    ).join('');
+    if (prevVal && all38.some(c => c.channel_id === prevVal)) {
+      singleSel.value = prevVal;
+    }
+  }
+
+  const chkLbl = document.getElementById('checked-count-lbl');
+  if (chkLbl) chkLbl.innerText = String(state.selectedWaveChannels.length);
+
+  // Queue state bar
+  if (state.raw && state.raw.fleet_queue && state.raw.fleet_queue.active_command) {
+    const fq = state.raw.fleet_queue;
+    const cmdBox = document.getElementById('simple-cmd-preview-box');
+    const sumBox = document.getElementById('simple-queue-waves-summary');
+    if (cmdBox && fq.active_command) {
+      cmdBox.innerText = fq.active_command.startsWith('cd ') ? fq.active_command : (REPO_CD_PREFIX + fq.active_command);
+    }
+    if (sumBox) {
+      sumBox.innerText = `${fq.status || 'READY'}: ${fq.total_channels || 0} kênh • ${fq.total_waves || (fq.waves ? fq.waves.length : 1)} ca chạy`;
+    }
+    if (Array.isArray(fq.waves) && fq.waves.length > 0) {
+      renderSimpleActionResultPanel(fq, { online: window.location.protocol.startsWith('http'), shouldScroll: false });
+    }
+  }
+
+  // Render table rows
+  const tbody = document.getElementById('simple-38-table-body');
+  if (!tbody) return;
+
+  const filtered = getFilteredSimpleChannels();
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:30px; color:var(--text-dim);">Không có kênh nào khớp bộ lọc.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(c => {
+    const cid = c.channel_id;
+    const d = c.diag;
+    const isChecked = state.selectedWaveChannels.includes(cid);
+    const funnelBadge = d.funnel_ok
+      ? `<span class="badge-funnel linked">✓ ${d.funnel_linked_shorts}/${d.funnel_total_shorts} Phễu</span>`
+      : `<span class="badge-funnel unlinked">⚠️ ${d.funnel_linked_shorts}/${d.funnel_total_shorts} Phễu</span>`;
+    const revBadge = d.pending_review_count > 0
+      ? `<span style="background:rgba(245,158,11,0.2); color:#fbbf24; border:1px solid rgba(245,158,11,0.4); border-radius:6px; padding:1px 6px; font-size:10.5px; font-weight:700; cursor:pointer;" onclick="openChannelReview('${escHtml(cid)}')">⏳ ${d.pending_review_count} chờ duyệt</span>`
+      : `<span style="font-size:10.5px; color:var(--text-dim);">✓ Sạch hàng đợi</span>`;
+    const waveNum = c.wave || 1;
+    const waveBadge = `<span class="badge-wave badge-wave-${waveNum}">W${waveNum}</span>`;
+    const emailHtml = c.email
+      ? `<span style="color:var(--text-gray); font-family:monospace; font-size:10.5px;">✉️ ${escHtml(c.email)}</span><button class="btn-copy-mini" onclick="copyText('${escHtml(c.email)}', '✓ Đã copy email ${escHtml(c.email)}!')" title="Copy Email Google">📋</button>`
+      : `<span style="color:var(--text-dim); font-size:10.5px;">Chưa gán Email</span>`;
+    const cdpMeta = `${escHtml(c.profile_id || cid)} • Port ${c.cdp_port || 9222}`;
+
+    const learn = d.learning || c.learning_summary || {};
+    const audit = learn.change_impact_audit || {};
+    const freshQ = Array.isArray(d.fresh_topic_queue) && d.fresh_topic_queue.length > 0
+      ? d.fresh_topic_queue
+      : (Array.isArray(learn.fresh_topic_queue) ? learn.fresh_topic_queue : []);
+    const next2 = freshQ.slice(1, 3).map(x => `[${String(x.episode_tag || '').toUpperCase()}] ${x.long_title || ''}`).filter(Boolean);
+    const impactTxt = audit.impact_badge_vi || learn.impact_badge_vi || '';
+    const impactSub = audit.impact_summary_vi || learn.impact_summary_vi || '';
+    const learnedRule = learn.learned_rule_vi || '';
+
+    return `
+      <tr>
+        <td style="text-align: center;">
+          <input type="checkbox" ${isChecked ? 'checked' : ''}
+                  onchange="toggleWaveChannelCheckbox('${escHtml(cid)}', this.checked)"
+                 style="width: 16px; height: 16px; cursor: pointer; accent-color: #06b6d4;">
+        </td>
+        <td>
+          <div style="font-weight: 700; color: var(--text-white); display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+            <a href="${escHtml(c.youtube_channel_url || '#')}" target="_blank" rel="noopener noreferrer">${escHtml(c.channel_name)}</a>
+            ${getLangBadgeHtml(c.language, cid)}
+            ${waveBadge}
+          </div>
+          <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+            <span>${escHtml(c.handle || cid)}</span>
+            <span>•</span>
+            <span style="color: var(--primary-light); font-weight: 600;">${escHtml(d.tier_label)}</span>
+          </div>
+          <div style="font-size: 10.5px; color: var(--text-dim); margin-top: 3px;">
+            🔌 ${cdpMeta}
+          </div>
+          <div style="margin-top: 2px; display: flex; align-items: center; gap: 5px; flex-wrap: wrap;">
+            ${emailHtml}
+          </div>
+        </td>
+        <td>
+          <div style="font-weight: 800; color: var(--text-white); font-size: 13px;">
+            👁️ ${formatNumber(c.channel_views)} views
+          </div>
+          <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
+            👥 ${formatNumber(c.subscriber_count)} subs • 🎬 ${d.long_count}L + ${d.short_count}S
+          </div>
+        </td>
+        <td>
+          <div>${funnelBadge}</div>
+          <div style="margin-top: 4px;">${revBadge}</div>
+        </td>
+        <td>
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
+            <span class="verdict-badge verdict-${escHtml(d.verdict)}">${escHtml(d.verdict_label)}</span>
+            <span style="font-size: 11.5px; color: var(--text-gray);">${escHtml(d.diagnosis_summary)}</span>
+          </div>
+          ${impactTxt ? `<div style="font-size: 11px; color: #38bdf8; margin-bottom: 2px;">📊 <b>Kiểm chứng:</b> ${escHtml(impactTxt)}${impactSub ? ` <span style="color:#94a3b8;">— ${escHtml(impactSub)}</span>` : ''}</div>` : ''}
+          ${learnedRule ? `<div style="font-size: 11px; color: #cbd5e1; margin-bottom: 3px;">🧬 <b>Rút kinh nghiệm:</b> ${escHtml(learnedRule)}</div>` : ''}
+          <div style="font-size: 11px; color: var(--purple-light);">
+            🎯 <b>Đề tài mới khóa sẵn:</b> ${escHtml(d.next_topic)}
+          </div>
+          ${next2.length > 0 ? `<div style="font-size: 10.5px; color: var(--text-dim); margin-top: 2px;">🔄 Kế tiếp: ${escHtml(next2.join(' • '))}</div>` : ''}
+        </td>
+        <td style="text-align: right; white-space: nowrap;">
+          <button class="btn btn-primary btn-sm" onclick="quickProduceSingleChannel('${escHtml(cid)}')" title="Chạy/Lấy lệnh sản xuất cặp 1 Long + Short cho kênh này">
+            🎬 Sản Xuất
+          </button>
+          <button class="btn btn-secondary btn-sm" onclick="openChromeStudio('${escHtml(cid)}')" title="Mở Chrome YouTube Studio (Port ${c.cdp_port || 9222})">
+            🚀 Studio
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function setSimpleFilter(filterKey) {
+  state.simpleFilter = filterKey;
+  document.querySelectorAll('.simple-pill-btn').forEach(b => b.classList.remove('active'));
+  const activeBtn = document.getElementById(`spill-${filterKey}`);
+  if (activeBtn) activeBtn.classList.add('active');
+  renderSimpleHub();
+}
+
+function onSimpleSearch(val) {
+  state.simpleSearch = (val || '').trim();
+  renderSimpleHub();
+}
+
+function toggleWaveChannelCheckbox(channelId, checked) {
+  const idx = state.selectedWaveChannels.indexOf(channelId);
+  if (checked && idx === -1) {
+    state.selectedWaveChannels.push(channelId);
+  } else if (!checked && idx !== -1) {
+    state.selectedWaveChannels.splice(idx, 1);
+  }
+  const presetEl = document.getElementById('simple-wave-preset');
+  if (presetEl) presetEl.value = 'checked';
+  updateSimpleCommandPreview('wave');
+  renderSimpleHub();
+}
+
+function selectTop4FilteredForWave() {
+  const filtered = getFilteredSimpleChannels().slice(0, 4);
+  state.selectedWaveChannels = filtered.map(c => c.channel_id);
+  const presetEl = document.getElementById('simple-wave-preset');
+  if (presetEl) presetEl.value = 'checked';
+  updateSimpleCommandPreview('wave');
+  renderSimpleHub();
+  showToast(`☑️ Đã chọn ${state.selectedWaveChannels.length} kênh đầu danh sách vào Ca chạy!`, 'success');
+}
+
+function onWavePresetChange(preset) {
+  const all38 = getCanonical38ChannelsWithDiagnostics();
+  if (preset === 'tier_a_top4') {
+    state.selectedWaveChannels = all38.filter(c => c.diag.tier === 'tier_a').slice(0, 4).map(c => c.channel_id);
+  } else if (preset === 'scale_top4') {
+    state.selectedWaveChannels = all38.filter(c => c.diag.verdict === 'SCALE').slice(0, 4).map(c => c.channel_id);
+  } else if (preset === 'repair_top4') {
+    state.selectedWaveChannels = all38.filter(c => c.diag.verdict === 'REPAIR_FUNNEL').slice(0, 4).map(c => c.channel_id);
+  }
+  updateSimpleCommandPreview('wave');
+  renderSimpleHub();
+}
+
+function buildSimpleModeCmd(mode) {
+  if (mode === 'single') {
+    const ch = (document.getElementById('simple-single-channel') || {}).value || 'ho_so_ky_la';
+    const act = (document.getElementById('simple-single-action') || {}).value || 'bundle';
+    return `${REPO_CD_PREFIX}python3 sys/tools/vp_fleet_manager.py --mode single --channel ${ch} --action ${act}`;
+  }
+  if (mode === 'wave') {
+    const wSize = (document.getElementById('simple-wave-size') || {}).value || '4';
+    const chs = state.selectedWaveChannels.length > 0
+      ? state.selectedWaveChannels.slice(0, parseInt(wSize, 10)).join(',')
+      : 'ban_do_quyen_luc,ho_so_ky_la,co_the_ke,su_ke_lai';
+    return `${REPO_CD_PREFIX}python3 sys/tools/vp_fleet_manager.py --mode wave --channels ${chs} --wave-size ${wSize}`;
+  }
+  const scope = (document.getElementById('simple-queue-scope') || {}).value || 'all';
+  return `${REPO_CD_PREFIX}python3 sys/tools/vp_fleet_manager.py --mode auto-queue --channels ${scope} --wave-size 4`;
+}
+
+function updateSimpleCommandPreview(mode) {
+  const cmd = buildSimpleModeCmd(mode);
+  const box = document.getElementById('simple-cmd-preview-box');
+  if (box) box.innerText = cmd;
+}
+
+function copySimpleModeCmd(mode) {
+  const cmd = buildSimpleModeCmd(mode);
+  updateSimpleCommandPreview(mode);
+  copyText(cmd, `✓ Đã sao chép lệnh (${mode}): ${cmd}`);
+}
+
+function buildOfflineFallbackPlan(mode, payload, cmd) {
+  const all38 = getCanonical38ChannelsWithDiagnostics();
+  const byId = {};
+  all38.forEach(c => { byId[c.channel_id] = c; });
+
+  let targets = [];
+  const rawCh = String(payload.channels || 'all').trim();
+  if (mode === 'single') {
+    if (byId[rawCh]) targets = [byId[rawCh]];
+  } else if (rawCh === 'all') {
+    targets = all38;
+  } else if (rawCh === 'vi') {
+    targets = all38.filter(c => (c.language || (c.channel_id.startsWith('en_') ? 'en' : 'vi')) === 'vi');
+  } else if (rawCh === 'en') {
+    targets = all38.filter(c => (c.language || (c.channel_id.startsWith('en_') ? 'en' : 'vi')) === 'en');
+  } else if (rawCh === 'tier_a') {
+    targets = all38.filter(c => c.diag && c.diag.tier === 'tier_a');
+  } else {
+    targets = rawCh.split(',').map(s => byId[s.trim()]).filter(Boolean);
+  }
+  if (targets.length === 0 && all38.length > 0) targets = [all38[0]];
+
+  const wSize = Math.max(1, parseInt(payload.wave_size || 4, 10));
+  const effSize = mode === 'single' ? 1 : wSize;
+  const act = payload.action || 'bundle';
+
+  const makeSteps = (c) => {
+    const cid = c.channel_id;
+    const d = c.diag || {};
+    const bp = d.episode_blueprint || {};
+    const isEn = cid.startsWith('en_');
+    const hyphenSlug = bp.hyphen_slug || cid.replace(/_/g, '-');
+    const epTag = bp.episode_tag || d.episode_tag || 'ep01';
+    const fxMode = bp.fx_mode || 'auto_niche';
+    const longTitle = (bp.long_title || d.next_topic || `Tap moi ${cid}`).replace(/"/g, "'");
+    const shortTitle = (bp.short_title || d.short_topic || `Short: ${longTitle}`).replace(/"/g, "'");
+    const longJobId = bp.long_job_id || `${isEn ? 'en' : 'vn'}_${cid}_${epTag}_long`;
+    const shortJobId = bp.short_job_id || `${isEn ? 'en' : 'vn'}_${cid}_${epTag}_short`;
+    const specLongPath = bp.spec_long_path || `sys/channels/vn_rebuilt_style_specs/${hyphenSlug}/${cid}_${epTag}_long_spec.json`;
+    const specShortPath = bp.spec_short_path || `sys/channels/vn_rebuilt_style_specs/${hyphenSlug}/${cid}_${epTag}_short_spec.json`;
+
+    if (act === 'analytics') {
+      return [
+        `${REPO_CD_PREFIX}python3 sys/tools/youtube_dashboard.py --sync-map`,
+        `${REPO_CD_PREFIX}python3 sys/tools/vp_fleet_manager.py --mode diagnose --channel ${cid}`
+      ];
+    }
+    if (act === 'studio_sync') {
+      return [
+        `${REPO_CD_PREFIX}python3 sys/tools/youtube_dashboard.py --open-studio ${cid}`,
+        `${REPO_CD_PREFIX}python3 sys/tools/youtube_dashboard.py --sync-map`
+      ];
+    }
+    const longCmdVn = `${REPO_CD_PREFIX}python3 sys/tools/produce_vn_dual_mode.py --channel ${hyphenSlug} --mode long --job-id ${longJobId} --spec ${specLongPath} --fx-mode ${fxMode} --video-topic "${longTitle}"`;
+    const shortCmdVn = `${REPO_CD_PREFIX}python3 sys/tools/produce_vn_dual_mode.py --channel ${hyphenSlug} --mode short --job-id ${shortJobId} --spec ${specShortPath} --fx-mode ${fxMode} --video-topic "${shortTitle}"`;
+    const gateStep = `${REPO_CD_PREFIX}python3 sys/tools/youtube_dashboard.py --sync-map  # Đưa ${longJobId} & ${shortJobId} vào Cổng Duyệt Tab 2 (chỉ chạy publish_youtube_cdp.py --channel ${cid} sau khi bấm APPROVED)`;
+
+    if (act === 'short_only') {
+      return [
+        isEn
+          ? `${REPO_CD_PREFIX}python3 sys/tools/produce_en_flow_dynamic_demo.py --demo-key ${hyphenSlug}:9x16`
+          : shortCmdVn,
+        gateStep
+      ];
+    }
+    if (act === 'long_only') {
+      return [
+        isEn
+          ? `${REPO_CD_PREFIX}python3 sys/tools/produce_en_flow_dynamic_demo.py --demo-key ${hyphenSlug}:16x9`
+          : longCmdVn,
+        gateStep
+      ];
+    }
+    const prod = isEn
+      ? [
+          `${REPO_CD_PREFIX}python3 sys/tools/produce_en_flow_dynamic_demo.py --demo-key ${hyphenSlug}:16x9`,
+          `${REPO_CD_PREFIX}python3 sys/tools/produce_en_flow_dynamic_demo.py --demo-key ${hyphenSlug}:9x16`
+        ]
+      : [longCmdVn, shortCmdVn];
+    return [
+      `${REPO_CD_PREFIX}python3 sys/tools/youtube_dashboard.py --sync-map`,
+      ...prod,
+      gateStep
+    ];
+  };
+
+  const waves = [];
+  for (let i = 0; i < targets.length; i += effSize) {
+    const chunk = targets.slice(i, i + effSize);
+    waves.push({
+      wave_index: Math.floor(i / effSize) + 1,
+      channels: chunk.map(c => c.channel_id),
+      channels_count: chunk.length,
+      status: 'READY',
+      items: chunk.map(c => {
+        const d = c.diag || {};
+        const bp = d.episode_blueprint || {};
+        return {
+          channel_id: c.channel_id,
+          channel_name: c.channel_name || c.channel_id,
+          language: c.language || (c.channel_id.startsWith('en_') ? 'en' : 'vi'),
+          verdict: d.verdict || 'COLLECT',
+          verdict_label: d.verdict_label || '🔵 COLLECT (Tạo thêm bài)',
+          diagnosis_summary: d.diagnosis_summary || '',
+          episode_tag: bp.episode_tag || d.episode_tag || 'ep01',
+          short_topic: bp.short_title || d.short_topic || '',
+          thumbnail_text: bp.thumbnail_text || d.thumbnail_text || '',
+          episode_blueprint: bp,
+          execution_mode: 'AUTO',
+          fx_mode: bp.fx_mode || 'auto_niche',
+          next_topic: d.next_topic || '',
+          hook_3s_formula: d.hook_3s_formula || '',
+          learning: d.learning || c.learning_summary || {},
+          fresh_topic_queue: d.fresh_topic_queue || [],
+          channel_views: c.channel_views || 0,
+          steps: makeSteps(c)
+        };
+      })
+    });
+  }
+
+  const firstItem = (waves[0] && waves[0].items && waves[0].items[0]) ? waves[0].items[0] : {};
+  const firstBp = firstItem.episode_blueprint || {};
+  const firstLearn = firstItem.learning || {};
+  const firstAudit = firstLearn.change_impact_audit || {};
+  const ai_autonomous_contract = {
+    zero_question_mode: true,
+    execution_mode: 'AUTO',
+    fx_mode: 'auto_niche',
+    post_render_gate: 'PENDING_REVIEW_TAB_2',
+    auto_create_missing_spec: true,
+    directive_vi: 'CHẾ ĐỘ THỰC THI: AUTO (Tự động 100% — KHÔNG HỎI LẠI USER về Đề tài, Chế độ Auto/Review, hay FX Mode)',
+    locked_episode_summary: `[${String(firstBp.episode_tag || firstItem.episode_tag || 'ep01').toUpperCase()}] Long: ${firstBp.long_title || firstItem.next_topic || ''} | Short: ${firstBp.short_title || firstItem.short_topic || ''} | Thumb: ${firstBp.thumbnail_text || firstItem.thumbnail_text || ''}`,
+    learning_feedback_applied: firstLearn.learned_rule_vi || '',
+    impact_audit_status: firstAudit.impact_badge_vi || '',
+    technical_contract: `--fx-mode auto_niche | Nguồn đề tài từ fresh_topic_queue + channel_learning_ledger.json; tự động khởi tạo spec tại ${firstBp.spec_long_path || ''} và ${firstBp.spec_short_path || ''} nếu chưa có -> chạy produce_vn_dual_mode.py -> dừng ở cổng PENDING_REVIEW trên Dashboard.`
+  };
+
+  return {
+    status: 'OFFLINE_READY',
+    mode,
+    action: act,
+    total_channels: targets.length,
+    total_waves: waves.length,
+    active_command: cmd,
+    ai_autonomous_contract,
+    waves
+  };
+}
+
+function renderSimpleActionResultPanel(plan, opts = {}) {
+  const panel = document.getElementById('simple-action-result-panel');
+  const titleEl = document.getElementById('simple-result-title');
+  const badgeEl = document.getElementById('simple-result-conn-badge');
+  const bodyEl = document.getElementById('simple-result-body');
+  if (!panel || !bodyEl || !plan) return;
+
+  const isOnline = Boolean(opts.online);
+  panel.style.display = 'block';
+  panel.style.borderColor = isOnline ? 'rgba(16, 185, 129, 0.55)' : 'rgba(245, 158, 11, 0.55)';
+
+  if (badgeEl) {
+    badgeEl.innerText = isOnline
+      ? '✅ Đã kết nối Server (:8765) & lưu hàng đợi'
+      : 'ℹ️ Offline HTML — Copy lệnh dán Terminal (hoặc bật Server :8765)';
+    badgeEl.style.borderColor = isOnline ? 'rgba(16, 185, 129, 0.6)' : 'rgba(245, 158, 11, 0.6)';
+    badgeEl.style.color = isOnline ? '#34d399' : '#fbbf24';
+  }
+
+  const modeNames = {
+    single: 'Chạy Chuyên Sâu 1 Kênh',
+    wave: 'Chạy 1 Ca Song Song',
+    auto_queue: 'Dây Chuyền Cuốn Chiếu',
+    diagnose: 'Báo Cáo Chẩn Đoán 38 Kênh'
+  };
+  if (titleEl) {
+    const lbl = modeNames[plan.mode] || plan.mode || 'Kết quả điều phối';
+    titleEl.innerText = `🚀 ${lbl} (${plan.total_channels || 0} kênh · ${plan.total_waves || (plan.waves ? plan.waves.length : 1)} ca)`;
+  }
+
+  const diagMap = {};
+  getCanonical38ChannelsWithDiagnostics().forEach(c => { diagMap[c.channel_id] = c; });
+
+  const contract = plan.ai_autonomous_contract || {};
+  const contractHtml = (contract.directive_vi || (plan.waves && plan.waves.length > 0))
+    ? `
+      <div style="background:rgba(16,185,129,0.10); border:1px solid rgba(16,185,129,0.45); border-radius:10px; padding:10px 12px; margin-bottom:10px;">
+        <div style="font-size:12.5px; font-weight:800; color:#34d399;">
+          🤖 Hợp Đồng Thực Thi Tự Động (Không Hỏi Lại): Chế độ ${escHtml(contract.execution_mode || 'AUTO')} • <code>--fx-mode ${escHtml(contract.fx_mode || 'auto_niche')}</code> • Đã khóa Đề tài &amp; Tập mới
+        </div>
+        ${contract.locked_episode_summary ? `<div style="margin-top:4px; font-size:12px; color:#f8fafc;">🎯 <b>Đề tài khóa:</b> ${escHtml(contract.locked_episode_summary)}</div>` : ''}
+        ${contract.learning_feedback_applied ? `<div style="margin-top:3px; font-size:11.5px; color:#38bdf8;">🧬 <b>Kinh nghiệm áp dụng:</b> ${contract.impact_audit_status ? `[${escHtml(contract.impact_audit_status)}] ` : ''}${escHtml(contract.learning_feedback_applied)}</div>` : ''}
+        ${contract.technical_contract ? `<div style="margin-top:2px; font-size:11.5px; color:#cbd5e1;">⚙️ ${escHtml(contract.technical_contract)}</div>` : ''}
+      </div>
+    `
+    : '';
+
+  const waves = Array.isArray(plan.waves) ? plan.waves : [];
+  const previewWaves = waves.slice(0, 4);
+  const itemsHtml = previewWaves.map(w => {
+    const itemCards = (w.items || []).map(it => {
+      const chMeta = diagMap[it.channel_id] || {};
+      const chDiag = chMeta.diag || {};
+      const bp = it.episode_blueprint || chDiag.episode_blueprint || {};
+      const chName = it.channel_name || chMeta.channel_name || it.channel_id;
+      const verdictLbl = it.verdict_label || chDiag.verdict_label || '🔵 COLLECT';
+      const summary = it.diagnosis_summary || chDiag.diagnosis_summary || '';
+      const nextTopic = it.next_topic || chDiag.next_topic || '';
+      const longTitle = bp.long_title || '';
+      const shortTitle = bp.short_title || it.short_topic || '';
+      const thumbTxt = bp.thumbnail_text || it.thumbnail_text || '';
+      const epTag = String(bp.episode_tag || it.episode_tag || '').toUpperCase();
+      const learn = it.learning || chDiag.learning || chMeta.learning_summary || {};
+      const audit = learn.change_impact_audit || {};
+      const impactBadge = audit.impact_badge_vi || learn.impact_badge_vi || '';
+      const impactSum = audit.impact_summary_vi || learn.impact_summary_vi || '';
+      const learnedRule = learn.learned_rule_vi || '';
+      const views = it.channel_views ?? chMeta.channel_views ?? 0;
+      const stepsHtml = (it.steps || []).map((st, idx) => `
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; background:rgba(2,6,23,0.75); border:1px solid rgba(255,255,255,0.08); border-radius:6px; padding:5px 8px; margin-top:4px;">
+          <code style="font-size:11.5px; color:#38bdf8; word-break:break-all;">${idx + 1}. ${escHtml(st)}</code>
+          <button class="btn-copy-mini" onclick="copyText(${JSON.stringify(st)}, '✓ Đã sao chép bước ${idx + 1}!')">📋 Copy</button>
+        </div>
+      `).join('');
+
+      return `
+        <div style="background:rgba(30,41,59,0.55); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:10px 12px; margin-top:8px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
+            <div>
+              <strong style="color:#f8fafc; font-size:13px;">${escHtml(chName)}</strong>
+              <span style="font-size:11px; color:var(--text-dim);">(${escHtml(it.channel_id)} · ${formatNumber(views)} views)</span>
+              ${epTag ? `<span class="v-badge" style="margin-left:6px; border-color:rgba(16,185,129,0.5); color:#34d399;">${escHtml(epTag)} • AUTO • ${escHtml(bp.fx_mode || it.fx_mode || 'auto_niche')}</span>` : ''}
+            </div>
+            <span class="verdict-badge verdict-${escHtml(it.verdict || chDiag.verdict || 'COLLECT')}">${escHtml(verdictLbl)}</span>
+          </div>
+          ${summary ? `<div style="margin-top:4px; color:#cbd5e1;">🧠 <b>Chẩn đoán:</b> ${escHtml(summary)}</div>` : ''}
+          ${impactBadge ? `<div style="margin-top:3px; font-size:11.5px; color:#38bdf8;">📊 <b>Kiểm chứng thay đổi:</b> ${escHtml(impactBadge)}${impactSum ? ` <span style="color:#94a3b8;">— ${escHtml(impactSum)}</span>` : ''}</div>` : ''}
+          ${learnedRule ? `<div style="margin-top:2px; font-size:11.5px; color:#e2e8f0;">🧬 <b>Rút kinh nghiệm:</b> ${escHtml(learnedRule)}</div>` : ''}
+          ${longTitle ? `<div style="margin-top:3px; color:#e9d5ff;">🎬 <b>Bài Long:</b> ${escHtml(longTitle)}${shortTitle ? ` <span style="color:#94a3b8;">|</span> <b>Short:</b> ${escHtml(shortTitle)}` : ''}${thumbTxt ? ` <span style="color:#94a3b8;">|</span> <b>Thumb:</b> <code>${escHtml(thumbTxt)}</code>` : ''}</div>` : (nextTopic ? `<div style="margin-top:2px; color:var(--purple-light);">💡 <b>Đề tài gợi ý:</b> ${escHtml(nextTopic)}</div>` : '')}
+          <div style="margin-top:6px;">${stepsHtml}</div>
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <div style="margin-top:8px;">
+        <div style="font-size:11.5px; font-weight:700; color:var(--primary-light);">
+          📦 Ca ${w.wave_index} (${w.channels_count || (w.channels || []).length} kênh): ${escHtml((w.channels || []).join(', '))}
+        </div>
+        ${itemCards}
+      </div>
+    `;
+  }).join('');
+
+  const extraNote = waves.length > 4
+    ? `<div style="margin-top:8px; font-size:11.5px; color:var(--text-muted);">... và ${waves.length - 4} ca tiếp theo trong hàng đợi cuốn chiếu.</div>`
+    : '';
+
+  bodyEl.innerHTML = contractHtml + itemsHtml + extraNote;
+  if (opts.shouldScroll !== false) {
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+async function triggerSimpleFleetAction(mode) {
+  const cmd = buildSimpleModeCmd(mode);
+  updateSimpleCommandPreview(mode);
+
+  let payload = { mode, wave_size: 4, action: 'bundle' };
+  if (mode === 'single') {
+    payload.channels = (document.getElementById('simple-single-channel') || {}).value || 'ho_so_ky_la';
+    payload.action = (document.getElementById('simple-single-action') || {}).value || 'bundle';
+  } else if (mode === 'wave') {
+    const wSize = parseInt((document.getElementById('simple-wave-size') || {}).value || '4', 10);
+    payload.wave_size = wSize;
+    payload.channels = state.selectedWaveChannels.length > 0
+      ? state.selectedWaveChannels.slice(0, wSize).join(',')
+      : 'ban_do_quyen_luc,ho_so_ky_la,co_the_ke,su_ke_lai';
+  } else {
+    payload.channels = (document.getElementById('simple-queue-scope') || {}).value || 'all';
+    payload.wave_size = 4;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/api/fleet-action`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.fleet_queue) {
+        state.raw.fleet_queue = data.fleet_queue;
+      }
+      if (data.fleet_diagnostics) {
+        state.raw.fleet_diagnostics = data.fleet_diagnostics;
+      }
+      renderSimpleHub();
+      renderReferencesTab();
+      const fq = data.fleet_queue || {};
+      renderSimpleActionResultPanel(fq, { online: true, shouldScroll: true });
+      showToast(`🚀 Đã lên lịch ${fq.total_channels || 1} kênh (${fq.total_waves || 1} ca chạy)!`, 'success');
+      return;
+    }
+  } catch (err) {
+    console.log('Offline fleet action fallback:', err.message);
+  }
+  const fallbackPlan = buildOfflineFallbackPlan(mode, payload, cmd);
+  state.raw.fleet_queue = fallbackPlan;
+  renderSimpleHub();
+  renderSimpleActionResultPanel(fallbackPlan, { online: false, shouldScroll: true });
+  copyText(cmd, `⚡ Đã hiển thị chi tiết & copy lệnh: ${cmd}`);
+}
+
+function quickProduceSingleChannel(channelId) {
+  const singleSel = document.getElementById('simple-single-channel');
+  if (singleSel) singleSel.value = channelId;
+  triggerSimpleFleetAction('single');
+}
+
+function openChannelReview(channelId) {
+  state.channelFilter = channelId;
+  const sel = document.getElementById('filter-channel');
+  if (sel) sel.value = channelId;
+  switchTab('tab-review');
+}
+
+async function runFleetDiagnosisNow() {
+  showToast('🧠 Đang chạy AI chẩn đoán & cập nhật kế hoạch cải thiện cho 38 kênh...', 'info');
+  try {
+    const res = await fetch(`${API_BASE}/api/fleet-action`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mode: 'diagnose' })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.fleet_diagnostics) state.raw.fleet_diagnostics = data.fleet_diagnostics;
+      renderSimpleHub();
+      renderReferencesTab();
+      const top4 = (data.fleet_diagnostics && Array.isArray(data.fleet_diagnostics.channels))
+        ? data.fleet_diagnostics.channels.slice(0, 4).map(c => c.channel_id).join(',')
+        : 'ban_do_quyen_luc,su_ke_lai,co_the_ke,ho_so_ky_la';
+      const preview = buildOfflineFallbackPlan('wave', { channels: top4, wave_size: 4, action: 'bundle' }, `${REPO_CD_PREFIX}python3 sys/tools/vp_fleet_manager.py --mode diagnose`);
+      preview.mode = 'diagnose';
+      preview.total_channels = 38;
+      renderSimpleActionResultPanel(preview, { online: true, shouldScroll: true });
+      showToast('✓ Đã cập nhật chẩn đoán & đề tài tiếp theo cho 38 kênh!', 'success');
+      return;
+    }
+  } catch (err) {
+    console.log('Offline diagnose fallback:', err.message);
+  }
+  renderSimpleHub();
+  const top4Off = getCanonical38ChannelsWithDiagnostics().slice(0, 4).map(c => c.channel_id).join(',');
+  const previewOff = buildOfflineFallbackPlan('wave', { channels: top4Off, wave_size: 4, action: 'bundle' }, `${REPO_CD_PREFIX}python3 sys/tools/vp_fleet_manager.py --mode diagnose`);
+  previewOff.mode = 'diagnose';
+  previewOff.total_channels = 38;
+  renderSimpleActionResultPanel(previewOff, { online: false, shouldScroll: true });
+  showToast('✓ Đã làm mới bảng chẩn đoán 38 kênh!', 'success');
+}
+
+function toggleAdvancedDashboardView() {
+  state.hideAdvancedTabs = false;
+  switchTab('tab-fleet');
 }
 
 // ==============================================================================
@@ -3708,7 +4760,7 @@ async function setVideoReviewStatus(jobId, status) {
   renderReviewTab();
 
   try {
-    const res = await fetch('/api/review-decision', {
+    const res = await fetch(`${API_BASE}/api/review-decision`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ job_id: jobId, status: status, review_notes: notesVal })
@@ -3738,7 +4790,7 @@ async function saveVideoReviewNotes(jobId, silentIfUnchanged = false) {
 
   item.review_notes = notesVal;
   try {
-    const res = await fetch('/api/review-decision', {
+    const res = await fetch(`${API_BASE}/api/review-decision`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ job_id: jobId, status: item.status || 'PENDING_REVIEW', review_notes: notesVal })
@@ -3765,7 +4817,7 @@ async function approveAllFilteredReviewVideos() {
   renderReviewTab();
 
   try {
-    const res = await fetch('/api/review-decision', {
+    const res = await fetch(`${API_BASE}/api/review-decision`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ decisions })
@@ -3816,7 +4868,7 @@ async function refreshMetrics() {
   showToast('Đang quét chỉ số live từ YouTube cho toàn bộ kênh...', 'info');
 
   try {
-    const res = await fetch('/api/refresh', { method: 'POST' });
+    const res = await fetch(`${API_BASE}/api/refresh`, { method: 'POST' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     renderDashboard(data);
@@ -3838,10 +4890,10 @@ async function syncChannelMap() {
   showToast('Đang đồng bộ dữ liệu từ youtube_channel_map.json...', 'info');
 
   try {
-    const res = await fetch('/api/sync-map', { method: 'POST' });
+    const res = await fetch(`${API_BASE}/api/sync-map`, { method: 'POST' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-    if (data.snapshot) renderDashboard(data.snapshot);
+    if (data.metrics || data.snapshot) renderDashboard(data.metrics || data.snapshot);
     showToast('✓ Đã đồng bộ video từ youtube_channel_map.json!', 'success');
   } catch (err) {
     console.error('Sync failed:', err);
@@ -3855,7 +4907,7 @@ async function syncChannelMap() {
 async function openChromeStudio(channelId) {
   showToast(`Đang mở Chrome Studio cho kênh ${channelId}...`, 'info');
   try {
-    const res = await fetch('/api/open-studio', {
+    const res = await fetch(`${API_BASE}/api/open-studio`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ channel_id: channelId })
@@ -3872,7 +4924,7 @@ async function openChromeStudio(channelId) {
 }
 
 function copyServerCommand() {
-  const cmd = 'python3 sys/tools/youtube_dashboard.py --serve --port 8765';
+  const cmd = `${REPO_CD_PREFIX}python3 sys/tools/youtube_dashboard.py --serve --port 8765`;
   copyText(cmd, '✓ Đã sao chép lệnh khởi chạy server: ' + cmd);
 }
 
@@ -3967,16 +5019,14 @@ document.addEventListener('DOMContentLoaded', () => {
     switchTab('tab-review');
   }
 
-  // If served over HTTP/HTTPS, fetch latest live metrics
-  if (window.location.protocol.startsWith('http')) {
-    fetch('/api/metrics')
-      .then(res => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return res.json();
-      })
-      .then(data => renderDashboard(data))
-      .catch(err => console.log('Live fetch note:', err.message));
-  }
+  // Sync latest live metrics (works both via HTTP server and file:// when local :8765 server is up)
+  fetch(`${API_BASE}/api/metrics`)
+    .then(res => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    })
+    .then(data => renderDashboard(data))
+    .catch(err => console.log('Live fetch note:', err.message));
 });
 </script>
 </body>

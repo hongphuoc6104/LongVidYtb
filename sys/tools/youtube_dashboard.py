@@ -33,6 +33,7 @@ for _p in (str(REPO_ROOT), str(SYS_DIR)):
 import tools.dashboard_catalog_engine as dashboard_catalog_engine
 import tools.dashboard_ui_template as dashboard_ui_template
 import tools.review_queue_manager as review_queue_manager
+import tools.vp_fleet_manager as vp_fleet_manager
 from flow_cdp.resource_locks import build_optimized_chrome_launch
 from tools.dashboard_catalog_engine import (
     DEFAULT_CHANNEL_MAP_PATH,
@@ -138,13 +139,25 @@ def _populate_review_queue_media_mtime(q_data: Dict[str, Any]) -> Dict[str, Any]
     return q_data
 
 
+def _enrich_with_fleet_state(data: Dict[str, Any]) -> Dict[str, Any]:
+    """Attach review_queue, fleet_diagnostics, and fleet_queue to dashboard data."""
+    if not isinstance(data, dict):
+        return data
+    try:
+        data["review_queue"] = _populate_review_queue_media_mtime(load_review_queue())
+    except Exception as exc:
+        logger.debug("Could not load review_queue: %s", exc)
+    try:
+        data["fleet_diagnostics"] = vp_fleet_manager.build_fleet_diagnostics(output_plan_path=None)
+        data["fleet_queue"] = vp_fleet_manager.load_queue_state()
+    except Exception as exc:
+        logger.debug("Could not load fleet diagnostics/queue: %s", exc)
+    return data
+
+
 def export_standalone_html(data: Dict[str, Any], output_html_path: Path) -> Path:
     """Generate and export a standalone self-contained HTML dashboard file."""
-    enriched = dict(data) if data else {}
-    try:
-        enriched["review_queue"] = _populate_review_queue_media_mtime(load_review_queue())
-    except Exception as exc:
-        logger.debug("Could not load review_queue for export: %s", exc)
+    enriched = _enrich_with_fleet_state(dict(data) if data else {})
     html_content = dashboard_ui_template.get_dashboard_html(embedded_data=enriched)
     out_p = Path(output_html_path).resolve()
     out_p.parent.mkdir(parents=True, exist_ok=True)
@@ -378,9 +391,9 @@ class DashboardHTTPHandler(BaseHTTPRequestHandler):
                 data = collect_dashboard_metrics(self.channel_map_path, self.metrics_path)
 
             try:
-                data["review_queue"] = _populate_review_queue_media_mtime(review_queue_manager.load_review_queue())
+                _enrich_with_fleet_state(data)
             except Exception as exc:
-                logger.warning("Failed loading review queue in do_GET: %s", exc)
+                logger.warning("Failed enriching fleet state in do_GET: %s", exc)
 
             html = dashboard_ui_template.get_dashboard_html(embedded_data=data)
             content = html.encode("utf-8")
@@ -477,11 +490,29 @@ class DashboardHTTPHandler(BaseHTTPRequestHandler):
                 data = collect_dashboard_metrics(self.channel_map_path, self.metrics_path)
 
             try:
-                data["review_queue"] = _populate_review_queue_media_mtime(review_queue_manager.load_review_queue())
+                _enrich_with_fleet_state(data)
             except Exception:
                 pass
             content = json.dumps(data, ensure_ascii=False).encode("utf-8")
 
+            self.send_response(HTTPStatus.OK)
+            self._send_cors_headers()
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Content-Length", str(len(content)))
+            self.end_headers()
+            self.wfile.write(content)
+            return
+
+        if parsed.path == "/api/fleet-status":
+            try:
+                res = {
+                    "status": "ok",
+                    "fleet_diagnostics": vp_fleet_manager.build_fleet_diagnostics(output_plan_path=None),
+                    "fleet_queue": vp_fleet_manager.load_queue_state(),
+                }
+            except Exception as exc:
+                res = {"status": "error", "message": str(exc)}
+            content = json.dumps(res, ensure_ascii=False).encode("utf-8")
             self.send_response(HTTPStatus.OK)
             self._send_cors_headers()
             self.send_header("Content-Type", "application/json; charset=utf-8")
@@ -668,6 +699,73 @@ class DashboardHTTPHandler(BaseHTTPRequestHandler):
                 status_code = HTTPStatus.OK
             except Exception as exc:
                 logger.error("Review decision update error: %s", exc)
+                res = {"status": "error", "message": str(exc)}
+                status_code = HTTPStatus.BAD_REQUEST
+
+            self.send_response(status_code)
+            self._send_cors_headers()
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            content = json.dumps(res, ensure_ascii=False).encode("utf-8")
+            self.send_header("Content-Length", str(len(content)))
+            self.end_headers()
+            self.wfile.write(content)
+            return
+
+        if parsed.path == "/api/fleet-action":
+            length = int(self.headers.get("Content-Length", 0))
+            body_bytes = self.rfile.read(length) if length > 0 else b"{}"
+            try:
+                payload = json.loads(body_bytes.decode("utf-8")) if body_bytes else {}
+            except Exception:
+                payload = {}
+
+            try:
+                mode = str(payload.get("mode", "single")).strip().lower().replace("-", "_")
+                if mode == "reset_queue":
+                    idle_state = vp_fleet_manager.save_queue_state({
+                        "schema_version": "1.0",
+                        "status": "IDLE",
+                        "mode": None,
+                        "wave_size": 4,
+                        "total_channels": 0,
+                        "completed_channels": 0,
+                        "waves": [],
+                        "active_command": "",
+                    })
+                    res = {"status": "ok", "fleet_queue": idle_state}
+                elif mode == "diagnose":
+                    diag = vp_fleet_manager.build_fleet_diagnostics()
+                    vp_fleet_manager._sync_metrics_file_with_learning(
+                        diag, vp_fleet_manager.DEFAULT_METRICS_PATH
+                    )
+                    res = {
+                        "status": "ok",
+                        "fleet_diagnostics": diag,
+                        "fleet_queue": vp_fleet_manager.load_queue_state(),
+                    }
+                else:
+                    channels_arg = str(payload.get("channels") or payload.get("channel") or "all")
+                    wave_size = int(payload.get("wave_size") or 4)
+                    action = str(payload.get("action") or "bundle")
+                    batch = str(payload.get("batch") or "next")
+                    exec_bg = bool(payload.get("execute_background", False))
+                    plan = vp_fleet_manager.trigger_fleet_action(
+                        mode=mode,
+                        channels_arg=channels_arg,
+                        wave_size=wave_size,
+                        action=action,
+                        batch=batch,
+                        execute_background=exec_bg,
+                        channel_map_path=self.channel_map_path,
+                    )
+                    res = {
+                        "status": "ok",
+                        "fleet_queue": plan,
+                        "fleet_diagnostics": vp_fleet_manager.build_fleet_diagnostics(output_plan_path=None),
+                    }
+                status_code = HTTPStatus.OK
+            except Exception as exc:
+                logger.error("Fleet action error: %s", exc)
                 res = {"status": "error", "message": str(exc)}
                 status_code = HTTPStatus.BAD_REQUEST
 
