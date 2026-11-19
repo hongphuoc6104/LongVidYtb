@@ -22,10 +22,18 @@ def check_see_say_beat_density(
     """
     total_beats = sum(len(sc.get('images', [])) for sc in scenes)
     total_duration = scenes[-1]['end'] - scenes[0]['start'] if scenes and 'end' in scenes[-1] and 'start' in scenes[0] else 0.0
+    is_flow_video_short = format_profile in ('serialized_detail_short', 'short_9x16_flow_video')
+    is_explicit_short = bool(format_profile and format_profile.startswith('short') and not is_flow_video_short)
     is_long_explainer = (
         format_profile in ('long_16x9', 'long_16x9_high_density', 'long_16x9_narrative_adaptive')
-        or total_duration > 120.0
-        or (total_beats > 0 and total_duration / total_beats > 2.8)
+        or (
+            not is_explicit_short
+            and not is_flow_video_short
+            and (
+                total_duration > 120.0
+                or (total_beats > 0 and total_duration / total_beats > 2.8)
+            )
+        )
     )
 
     is_high_density = (
@@ -33,13 +41,22 @@ def check_see_say_beat_density(
         or (is_long_explainer and total_beats >= 180)
     )
 
-    max_average = 8.05 if is_long_explainer else MAX_AVERAGE_HOLD_SECONDS
-    body_max = 11.50 if is_long_explainer else BODY_MAX_HOLD_SECONDS
-    body_min = 0.70 if is_high_density else BODY_MIN_HOLD_SECONDS
-    min_first_five = 2 if is_long_explainer else 3
-    min_opening = 3 if is_long_explainer else 6
-    max_first_five = 7 if is_high_density else 5
-    max_opening = 14 if is_high_density else 10
+    if is_flow_video_short:
+        max_average = 5.80
+        body_max = 6.80
+        body_min = 1.50
+        min_first_five = 1
+        max_first_five = 3
+        min_opening = 2
+        max_opening = 6
+    else:
+        max_average = 8.05 if is_long_explainer else MAX_AVERAGE_HOLD_SECONDS
+        body_max = 11.50 if is_long_explainer else BODY_MAX_HOLD_SECONDS
+        body_min = 0.70 if is_high_density else BODY_MIN_HOLD_SECONDS
+        min_first_five = 2 if is_long_explainer else 3
+        min_opening = 3 if is_long_explainer else 6
+        max_first_five = 7 if is_high_density else 5
+        max_opening = 14 if is_high_density else 10
 
     errors: list[str] = []
     starts: list[float] = []
@@ -134,6 +151,13 @@ TEMPO_HOLD_WINDOWS: dict[str, dict[str, tuple[float, float]]] = {
         "normal": (2.0, 3.5),
         "slow": (3.5, 5.5),
         "hold": (1.5, 3.0),
+    },
+    "serialized_detail_short": {
+        "burst": (1.5, 3.0),
+        "fast": (2.5, 4.2),
+        "normal": (3.2, 5.2),
+        "slow": (4.5, 6.5),
+        "hold": (3.5, 6.5),
     },
     "long_16x9": {
         "burst": (1.2, 2.2),

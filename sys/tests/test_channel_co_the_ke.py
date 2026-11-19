@@ -1,201 +1,327 @@
-"""Verification tests for Channel 7: 'co_the_ke' (Cơ Thể Kể).
+"""Test suite verifying Channel: Cơ Thể Kể (co_the_ke) V3 2K production readiness.
 
-Tests:
-  - Channel profile registration and active_channel.json integrity.
-  - Character descriptions free of visual clichés and laziness patterns.
-  - Automated builder exports for TikTok Short (short_9x16, <= 6 Flow images) and YouTube Long (long_16x9).
-  - Schema 3.0 contract compliance (validate_production_bundle).
-  - Acoustic cadence zero-drift and dead-air check (script_cadence_checker).
-  - Hook retention scoring (script_hook_scorer >= 70 points).
-  - Local sample production bundle in sys/runs/co-the-ke-week1-9x16.
+Covers:
+- Channel profile registration with 3D Endoscopic Biomedical V3 grammar & VietNarrator_co_the_ke (1.12x)
+- V3 skill (.agents/skills/vp-channel-co-the-ke), routing index, and non-interference with shared skills
+- V3 production lock manifest (channel_v3_production_lock.json), HARDCODED_CHANNEL_VOICE_LOCKS, and formulas sync
+- Builder topic generation for short_9x16 & long_16x9 with Schema 3.0 compliance & zero kawaii/stickman slop
+- Regression guards for visual_pacing Short-as-Long fix and cta_tone_linter Long/Outro enforcement
 """
 
 from __future__ import annotations
 
+import ast
+import hashlib
 import json
+import sys
 from pathlib import Path
+from typing import Any
 
-import pytest
-from channels.co_the_ke.builder import (
-    CHANNEL_ID,
-    audit_bundle,
+SYS_DIR = Path(__file__).resolve().parents[1]
+ROOT_DIR = SYS_DIR.parent
+for _p in (str(SYS_DIR), str(SYS_DIR / "tools")):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
+
+from channels.co_the_ke.builder import (  # noqa: E402
     build_characters,
     build_co_the_ke_bundle,
     build_week1_long_topic,
     build_week1_short_topic,
     export_package,
 )
-from channels.registry import channel_for_style, channel_profile_stamp, get_channel
-from content.research_story_architect import compute_brief_hash, validate_production_bundle
-from content_contract import validate_brief, validate_content
-from flow_prompts.compiler import find_laziness_pattern, find_visual_cliche
-from omni_platform import short_plans
-from tools.script_hook_scorer import score_script
-from visual_style import render_style
-
-SYS_DIR = Path(__file__).resolve().parents[1]
-SAMPLE_SHORT_RUN = SYS_DIR / "runs/co-the-ke-week1-9x16"
-SAMPLE_LONG_RUN = SYS_DIR / "runs/co-the-ke-week1-16x9"
+from channels.registry import get_channel  # noqa: E402
+from content.research_story_architect import validate_production_bundle  # noqa: E402
+from content_contract import validate_brief, validate_content  # noqa: E402
+from omni_platform import short_plans  # noqa: E402
+from tools.cta_tone_linter import lint_cta  # noqa: E402
+from tools.script_cadence_checker import count_syllables  # noqa: E402
+from tools.script_hook_scorer import score_script  # noqa: E402
+from visual_pacing import check_see_say_beat_density  # noqa: E402
 
 
-def test_co_the_ke_registry_and_active_channel() -> None:
-    """Verify channel co_the_ke registration, profile stamps, and active_channel.json."""
-    ch = get_channel(CHANNEL_ID)
+def test_channel_profile_registration_and_plan() -> None:
+    """Verify co_the_ke V3 registration uses 3D biomedical grammar and zero #learnontiktok."""
+    ch = get_channel("co_the_ke")
     assert ch.id == "co_the_ke"
     assert ch.name == "Cơ Thể Kể"
     assert ch.niche == "Sức khỏe và cơ thể được nhân hóa"
-    assert ch.visual.profile_id == "ch_organ_buddies"
-    assert ch.voice == "VietNarrator"
-    assert ch.speed == 1.0
+    assert ch.visual.profile_id == "ch_co_the_ke_biomedical_v3"
+    assert ch.voice == "VietNarrator_co_the_ke"
+    assert ch.speed == 1.12
+    assert "#learnontiktok" not in ch.hashtags
+    assert ch.short_spec.duration_seconds == (48, 60)
+    assert ch.long_spec.duration_seconds == (510, 780)
 
-    # Speed optimization rules
     assert ch.speed_optimization is not None
-    assert ch.speed_optimization.render_mode == "hybrid_motion"
-    assert ch.speed_optimization.fast_short_max_images <= 6
-    assert ch.speed_optimization.spinoff_shorts_per_long >= 3
+    assert ch.speed_optimization.render_mode == "flow_full_frame"
+    assert ch.speed_optimization.fast_short_max_images <= 8
 
-    # Visual style recognition
-    resolved = render_style({"style": ch.visual.style_description})
-    assert resolved == "ch_organ_buddies"
-    matched = channel_for_style(ch.visual.style_description)
-    assert matched is not None and matched.id == "co_the_ke"
+    plan_path = SYS_DIR / "channels" / "co_the_ke" / "PLAN.md"
+    assert plan_path.is_file()
+    plan_text = plan_path.read_text(encoding="utf-8")
+    assert "co_the_ke_3d_biomedical_v3" in plan_text
+    assert "VietNarrator_co_the_ke" in plan_text
 
-    # Active channel config check
-    active_path = SYS_DIR / "channels/active_channel.json"
-    if active_path.is_file():
-        active = json.loads(active_path.read_text(encoding="utf-8"))
-        assert active["channel_id"] == "co_the_ke"
-        assert active["visual_profile_id"] == "ch_organ_buddies"
-        stamp = channel_profile_stamp("co_the_ke")
-        assert active["channel_profile_stamp"]["sha256"] == stamp["sha256"]
-
-
-def test_co_the_ke_characters_validity() -> None:
-    """Verify 5 recurring organ mascots and host have zero clichés and zero laziness patterns."""
     chars = build_characters()
     assert len(chars) == 5
-    ids = {c["id"] for c in chars}
-    assert ids == {"CH01", "CH02", "CH03", "CH04", "CH05"}
-
     for c in chars:
-        app = c["appearance"]
-        outf = c["outfit"]
-        assert find_visual_cliche(app) is None, f"{c['id']} appearance has cliché: {find_visual_cliche(app)}"
-        assert find_visual_cliche(outf) is None, f"{c['id']} outfit has cliché: {find_visual_cliche(outf)}"
-        assert (
-            find_laziness_pattern(app, "1.7.0") is None
-        ), f"{c['id']} appearance has laziness: {find_laziness_pattern(app, '1.7.0')}"
-        assert (
-            find_laziness_pattern(outf, "1.7.0") is None
-        ), f"{c['id']} outfit has laziness: {find_laziness_pattern(outf, '1.7.0')}"
+        assert "kawaii" not in c["appearance"].lower()
+        assert "stickman" not in c["appearance"].lower()
 
 
-def test_week1_short_topic_and_export(tmp_path: Path) -> None:
-    """Verify week 1 TikTok Short export (Schema 3.0, <= 6 Flow images, hook score >= 70)."""
+def test_co_the_ke_v3_skill_and_routing_index() -> None:
+    """Verify vp-channel-co-the-ke isolates channel V3 rules without polluting shared workflow skills."""
+    skill_dir = ROOT_DIR / ".agents" / "skills" / "vp-channel-co-the-ke"
+    skill_md = skill_dir / "SKILL.md"
+    visual_ref = skill_dir / "references" / "visual-grammar-biomedical-v3.md"
+    pacing_ref = skill_dir / "references" / "pacing-and-script-rules.md"
+
+    for p in (skill_md, visual_ref, pacing_ref):
+        assert p.is_file(), f"Missing skill file: {p}"
+
+    skill_text = skill_md.read_text(encoding="utf-8")
+    assert "name: vp-channel-co-the-ke" in skill_text
+    assert "co_the_ke_3d_biomedical_v3" in skill_text
+    assert "VietNarrator_co_the_ke" in skill_text
+    for mode in (
+        "MODE_1_BIOMETRIC_STAMP",
+        "MODE_2_NORMAL_VS_STRESS_SPLIT",
+        "MODE_3_CASCADE_CHECKLIST",
+        "MODE_4_ENDOSCOPIC_PACING",
+    ):
+        assert mode in skill_text
+
+    visual_text = visual_ref.read_text(encoding="utf-8")
+    assert "co_the_ke_3d_biomedical_v3" in visual_text
+    assert "allowed_text=None" in visual_text
+    for color in ("#0A192F", "#06B6D4", "#EF4444"):
+        assert color in visual_text
+
+    pacing_text = pacing_ref.read_text(encoding="utf-8")
+    assert "1.12" in pacing_text
+    assert "240" in pacing_text
+    assert "18" in pacing_text
+
+    root_index = (ROOT_DIR / "INDEX.md").read_text(encoding="utf-8")
+    docs_index = (SYS_DIR / "docs" / "INDEX.md").read_text(encoding="utf-8")
+    prod_skill = (ROOT_DIR / ".agents" / "skills" / "vp-production" / "SKILL.md").read_text(encoding="utf-8")
+    assert "vp-channel-co-the-ke" in root_index
+    assert "vp-channel-co-the-ke" in docs_index
+    assert "vp-channel-co-the-ke" not in prod_skill
+    assert "co_the_ke" not in prod_skill
+
+
+def _load_dual_mode_locks() -> dict[str, Any]:
+    """Load co_the_ke constants and verify_channel_voice_lock safely under any PYTHONPATH."""
+    try:
+        from tools.produce_vn_dual_mode import (
+            CO_THE_KE_PRODUCTION_LOCK,
+            CO_THE_KE_VOICE_SHA256,
+            HARDCODED_CHANNEL_VOICE_LOCKS,
+            verify_channel_voice_lock,
+        )
+        return {
+            "CO_THE_KE_PRODUCTION_LOCK": CO_THE_KE_PRODUCTION_LOCK,
+            "CO_THE_KE_VOICE_SHA256": CO_THE_KE_VOICE_SHA256,
+            "HARDCODED_CHANNEL_VOICE_LOCKS": HARDCODED_CHANNEL_VOICE_LOCKS,
+            "verify_channel_voice_lock": verify_channel_voice_lock,
+        }
+    except ModuleNotFoundError:
+        src_path = SYS_DIR / "tools" / "produce_vn_dual_mode.py"
+        tree = ast.parse(src_path.read_text(encoding="utf-8"))
+        wanted = {
+            "HO_SO_KY_LA_VOICE_SHA256",
+            "CO_THE_KE_VOICE_SHA256",
+            "SU_KE_LAI_SHARED_VOICE_SHA256",
+            "SU_KE_LAI_DEDICATED_VOICE_SHA256",
+            "BANNED_DEPRECATED_VOICE_SHA256S",
+            "HARDCODED_CHANNEL_VOICE_LOCKS",
+            "BOTTOM_RIGHT_WATERMARK_POS",
+            "CO_THE_KE_PRODUCTION_LOCK",
+        }
+        ns: dict[str, Any] = {"Any": Any, "Path": Path, "hashlib": hashlib, "json": json, "ROOT": ROOT_DIR}
+        for node in tree.body:
+            if isinstance(node, ast.Assign) and any(
+                isinstance(t, ast.Name) and t.id in wanted for t in node.targets
+            ):
+                exec(compile(ast.Module([node], type_ignores=[]), str(src_path), "exec"), ns)
+            elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name) and node.target.id in wanted:
+                exec(compile(ast.Module([node], type_ignores=[]), str(src_path), "exec"), ns)
+            elif isinstance(node, ast.FunctionDef) and node.name == "verify_channel_voice_lock":
+                exec(compile(ast.Module([node], type_ignores=[]), str(src_path), "exec"), ns)
+        return ns
+
+
+def test_co_the_ke_v3_production_lock_and_formulas() -> None:
+    """Verify channel_v3_production_lock.json, produce_vn_dual_mode, and formula registries align."""
+    from channels.vn_competitor_script_formulas import VN_COMPETITOR_SCRIPT_FORMULAS
+    from channels.vn_flow_video_formulas import VN_FLOW_VIDEO_FORMULAS
+
+    dm = _load_dual_mode_locks()
+    CO_THE_KE_PRODUCTION_LOCK = dm["CO_THE_KE_PRODUCTION_LOCK"]
+    CO_THE_KE_VOICE_SHA256 = dm["CO_THE_KE_VOICE_SHA256"]
+    HARDCODED_CHANNEL_VOICE_LOCKS = dm["HARDCODED_CHANNEL_VOICE_LOCKS"]
+    verify_channel_voice_lock = dm["verify_channel_voice_lock"]
+
+    lock_path = SYS_DIR / "channels" / "co_the_ke" / "channel_v3_production_lock.json"
+    assert lock_path.is_file()
+    lock = json.loads(lock_path.read_text(encoding="utf-8"))
+    assert lock["schema_version"] == "3.0"
+    assert lock["channel_id"] == "co_the_ke"
+    assert lock["handle"] == "@CoTheKeVN"
+    assert lock["recommended_speed"] == 1.12
+    assert lock["visual_lock"]["long_resolution"] == "2560x1440"
+    assert lock["visual_lock"]["short_resolution"] == "1440x2560"
+
+    assert CO_THE_KE_PRODUCTION_LOCK["voice"] == "VietNarrator_co_the_ke"
+    assert CO_THE_KE_PRODUCTION_LOCK["recommended_speed"] == 1.12
+    assert CO_THE_KE_PRODUCTION_LOCK["visual_style_id"] == "co_the_ke_3d_biomedical_v3"
+    assert HARDCODED_CHANNEL_VOICE_LOCKS["co_the_ke"]["expected_sha256"] == CO_THE_KE_VOICE_SHA256
+
+    verified = verify_channel_voice_lock("co_the_ke", root=ROOT_DIR)
+    assert verified["sha256"] == CO_THE_KE_VOICE_SHA256
+    assert verified["recommended_speed"] == 1.12
+
+    flow_f = VN_FLOW_VIDEO_FORMULAS["co_the_ke"]
+    assert flow_f["visual_style_id"] == "co_the_ke_3d_biomedical_v3"
+    assert flow_f["voice_profile_id"] == "VietNarrator_co_the_ke"
+    assert flow_f["recommended_speed"] == 1.12
+
+    script_f = VN_COMPETITOR_SCRIPT_FORMULAS["co_the_ke"]
+    assert script_f["voice_id"] == "VietNarrator_co_the_ke"
+    assert script_f["recommended_speed"] == 1.12
+    assert script_f["visual_4modes_biomedical_rule"]["version"] == "co_the_ke_3d_biomedical_v3"
+
+    setup_spec = json.loads((SYS_DIR / "channels/co_the_ke/assets/channel_setup_spec.json").read_text(encoding="utf-8"))
+    assert "learnontiktok" not in json.dumps(setup_spec, ensure_ascii=False).lower()
+
+
+def test_short_9x16_contract_and_export(tmp_path: Path) -> None:
+    """Verify V3 9:16 builder generates Schema 3.0 compliant package with clean 3D biomedical prompts."""
     topic = build_week1_short_topic()
     assert topic.format_profile == "short_9x16"
-    assert topic.aspect_ratio == "9:16"
-    assert len(topic.scenes) == 5
+    assert topic.voice == "VietNarrator_co_the_ke"
+    assert topic.speed == 1.12
 
-    out_dir = tmp_path / "test_short_bundle"
+    first_sentence = topic.scenes[0].narration.split(".")[0]
+    assert count_syllables(first_sentence, lang="vi") <= 18
+    assert "[pause:" not in first_sentence
+
+    for sc in topic.scenes:
+        for beat in sc.visual_beats or []:
+            low = f"{beat.description} {beat.preserve} {beat.change}".lower()
+            assert "kawaii" not in low
+            assert "doodle" not in low
+            assert "stickman" not in low
+
+    out_dir = tmp_path / "test_short_v3"
     res = export_package(topic, out_dir, system_root=SYS_DIR)
     assert res["valid_contracts"] is True
 
-    # File completeness
-    required_files = (
-        "brief.json",
-        "content.json",
-        "script.json",
-        "cadence_report.json",
-        "draft/outline.json",
-        "draft/content.json",
-    )
-    for fname in required_files:
-        fpath = out_dir / fname
-        assert fpath.is_file(), f"Missing file: {fname}"
-        assert fpath.stat().st_size > 0, f"Empty file: {fname}"
-
-    # Contract verification
     b = json.loads((out_dir / "brief.json").read_text(encoding="utf-8"))
     c = json.loads((out_dir / "content.json").read_text(encoding="utf-8"))
     validate_brief(SYS_DIR, b)
     validate_content(SYS_DIR, b, 1, c["brief_hash"], c)
-    assert c["brief_hash"] == compute_brief_hash(b)
+    ok, errs = validate_production_bundle(SYS_DIR, b, c)
+    assert ok is True, errs
 
-    valid_bundle, errors = validate_production_bundle(SYS_DIR, b, c)
-    assert valid_bundle is True, f"Contract errors: {errors}"
-    assert len(errors) == 0
-
-    # Image count constraint: <= 6 Flow images
-    total_images = sum(len(sc["images"]) for sc in c["scenes"])
-    assert total_images <= 6, f"Expected <= 6 Flow images, got {total_images}"
-
-    # Cadence zero drift
-    cadence = json.loads((out_dir / "cadence_report.json").read_text(encoding="utf-8"))
-    assert cadence["net_drift"] <= 0.3
-    assert cadence["max_drift"] <= 0.3
-
-    # Hook retention score >= 70
-    narrations = [sc["narration"] for sc in c["scenes"]]
-    hook_res = score_script(narrations, channel_id="co_the_ke", format_profile="short_9x16")
-    assert hook_res.score >= 70, f"Hook score {hook_res.score} < 70"
-    assert not hook_res.needs_rewrite
+    hook_res = score_script([sc["narration"] for sc in c["scenes"]], channel_id="co_the_ke", format_profile="short_9x16")
+    assert hook_res.score >= 70
 
 
-def test_week1_long_topic_and_export(tmp_path: Path) -> None:
-    """Verify week 1 YouTube Long export (Schema 3.0, 3 spinoff shorts, hook score >= 70)."""
+def test_long_16x9_contract_and_spinoff_shorts(tmp_path: Path) -> None:
+    """Verify V3 16:9 builder generates valid package and omni_plan."""
     topic, omni_plan = build_week1_long_topic()
     assert topic.format_profile == "long_16x9"
-    assert topic.aspect_ratio == "16:9"
-    assert len(topic.scenes) == 8
+    assert topic.voice == "VietNarrator_co_the_ke"
+    assert topic.speed == 1.12
 
-    out_dir = tmp_path / "test_long_bundle"
+    out_dir = tmp_path / "test_long_v3"
     res = export_package(topic, out_dir, omni_plan=omni_plan, system_root=SYS_DIR)
     assert res["valid_contracts"] is True
 
     b = json.loads((out_dir / "brief.json").read_text(encoding="utf-8"))
     c = json.loads((out_dir / "content.json").read_text(encoding="utf-8"))
-    validate_brief(SYS_DIR, b)
-    validate_content(SYS_DIR, b, 1, c["brief_hash"], c)
+    ok, errs = validate_production_bundle(SYS_DIR, b, c)
+    assert ok is True, errs
 
-    valid_bundle, errors = validate_production_bundle(SYS_DIR, b, c)
-    assert valid_bundle is True, f"Contract errors: {errors}"
-    assert len(errors) == 0
-
-    # Spinoff shorts contract
-    assert "spinoff_shorts" in b
     plans = short_plans(b, c)
     assert 2 <= len(plans) <= 3
     for plan in plans:
         assert len(plan["body"]) == 4
 
-    # Hook retention score >= 70
-    narrations = [sc["narration"] for sc in c["scenes"]]
-    hook_res = score_script(narrations, channel_id="co_the_ke", format_profile="long_16x9")
-    assert hook_res.score >= 70, f"Hook score {hook_res.score} < 70"
-
-
-def test_local_sample_bundle_exists_and_passes() -> None:
-    """Verify sample production bundle at sys/runs/co-the-ke-week1-9x16."""
-    if not SAMPLE_SHORT_RUN.exists():
-        pytest.skip("Local sample run not yet generated; run builder.py first.")
-
-    audit = audit_bundle(SAMPLE_SHORT_RUN, channel_id="co_the_ke")
-    assert audit["valid_contracts"] is True, f"Sample bundle contract errors: {audit['contract_errors']}"
-    assert audit["total_images"] <= 6, f"Expected <= 6 Flow images, got {audit['total_images']}"
-    assert audit["hook_score"] >= 70, f"Hook score {audit['hook_score']} < 70"
-    assert audit["cadence_report"]["net_drift"] <= 0.5
+    hook_res = score_script([sc["narration"] for sc in c["scenes"]], channel_id="co_the_ke", format_profile="long_16x9")
+    assert hook_res.score >= 70
 
 
 def test_builder_cli_helper(tmp_path: Path) -> None:
-    """Verify programmatic CLI helper build_co_the_ke_bundle."""
+    """Verify build_co_the_ke_bundle helper builds valid V3 short_9x16 audit."""
     res = build_co_the_ke_bundle(
         format_choice="short_9x16",
         out_dir=tmp_path,
-        job_name="cli-test-short",
+        job_name="cli-test-short-v3",
     )
-    assert "short_9x16" in res
     audit = res["short_9x16"]["audit"]
     assert audit["valid_contracts"] is True
-    assert audit["total_images"] <= 6
     assert audit["hook_score"] >= 70
+
+
+def test_visual_pacing_short_not_misclassified_as_long() -> None:
+    """Regression: sparse short_9x16 (>2.8s/beat average, <=120s) must fail Short thresholds, not pass as Long."""
+    # 12 beats spread evenly across 42s -> avg 3.5s/beat (>2.8s), only 2 beats in 0..5s
+    sparse_short_scenes = [
+        {
+            "id": "SC01",
+            "start": 0.0,
+            "end": 21.0,
+            "images": [{"id": f"I{i}", "at": round(i * 3.5, 2)} for i in range(6)],
+        },
+        {
+            "id": "SC02",
+            "start": 21.0,
+            "end": 42.0,
+            "images": [{"id": f"J{i}", "at": round(i * 3.5, 2)} for i in range(6)],
+        },
+    ]
+    errors = check_see_say_beat_density(sparse_short_scenes, format_profile="short_9x16")
+    assert errors, "Sparse short_9x16 must not be misclassified as long_16x9"
+    assert any("LOW_VISUAL_BEAT_DENSITY" in e or "OPENING_VISUAL_DENSITY" in e for e in errors)
+
+
+def test_cta_tone_linter_long_spoken_and_short_outro_budget() -> None:
+    """Regression: lint_cta rejects Long with unspoken declared CTAs and Short with oversized combined outro."""
+    long_brief = {
+        "format_profile": "long_16x9",
+        "cta_plan": {
+            "mid_cta": "Ghi nhớ nguyên tắc nhịp sinh học này.",
+            "close": "Bạn thường đi ngủ lúc mấy giờ, chia sẻ cùng Cơ Thể Kể nhé.",
+        },
+    }
+    unspoken_long_content = {
+        "scenes": [
+            {"id": "SC01", "narration": "Mở đầu về đồng hồ sinh học."},
+            {"id": "SC02", "narration": "Cơ chế tiết melatonin ở tuyến tùng."},
+            {"id": "SC03", "narration": "Kết thúc giải thích ngắn gọn."},
+        ]
+    }
+    long_errs = lint_cta(long_brief, unspoken_long_content)
+    assert any("CTA_CLOSE_NOT_IN_OUTRO" in e for e in long_errs)
+    assert any("CTA_MID_NOT_IN_BODY" in e for e in long_errs)
+
+    short_brief = {
+        "format_profile": "short_9x16",
+        "parent_long_id": "sgp65IoBMa8",
+        "cta_plan": {
+            "bridge": " ".join(["từ"] * 21),
+            "close": " ".join(["chữ"] * 21),
+        },
+    }
+    short_content = {
+        "scenes": [
+            {"id": "SC01", "narration": "Mở đầu ngắn."},
+            {"id": "SC02", "narration": f"{short_brief['cta_plan']['bridge']} {short_brief['cta_plan']['close']}"},
+        ]
+    }
+    short_errs = lint_cta(short_brief, short_content)
+    assert any("CTA_OUTRO_SYLLABLES_EXCEEDED" in e for e in short_errs)

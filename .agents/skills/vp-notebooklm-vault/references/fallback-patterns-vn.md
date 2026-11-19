@@ -31,6 +31,19 @@ Zero `[pause:...]` in `SC01` (first 15s). Never start with *"Xin chào"*, *"Hôm
 - **35–45% Mark:** At most 1 natural `mid_cta` inviting perspective in comments.
 - **Final 10% (Closing Chapter):** Answer original Open Loop -> actionable mental/practical takeaway -> calm debate question.
 
+### C. `serialized_detail_short` (50–60s/tập · 12 beats · Series Tập 1 / Tập 2 / Tập 3)
+- **Beats 0–1 (0–8s):** Counter-intuitive turning-point Hook (`<= 18` syl, exact hour/date) + strategic paradox.
+- **Beats 2–5 (8–25s):** Granular chronological setup — terrain, hour-by-hour execution, specific verified mechanism (quarantine unverified folklore in `report_only_claims`).
+- **Beats 6–9 (25–43s):** Tactical turning point & psychological collapse / micro-detail payoff (each beat adds 1 concrete verifiable action).
+- **Beat 10 (43–49s):** Escalating historical **Cliffhanger** introducing the deadlier obstacle awaiting in Tập kế tiếp.
+- **Beat 11 (49–58s, final 15%):** **Ending Pattern #4 — `Serialized Cliffhanger Loop`**: concise bridge (`<= 22` syl) teasing Tập 2 + naming the channel + open question (`<= 24` syl, `<= 38` combined outro syllables). Zero *"like/share/subscribe"*.
+
+### D. 4 Ending Patterns (Quick Matrix)
+1. **Answer + Sting:** Resolve loop + 1 sharp lingering consequence.
+2. **Loop Back:** Closing clause echoes Beat 1 imagery to boost replays.
+3. **Channel Bridge + Debate Question:** Standard standalone Short funnel to `parent_long_id`.
+4. **Serialized Cliffhanger Loop:** End on the immediate next physical obstacle + tease `Tập tiếp theo trên [Tên Kênh]` + 1 prediction question for viewers.
+
 ---
 
 ## 3. Spoken Vietnamese & Banned Markers

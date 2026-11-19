@@ -187,15 +187,15 @@ WAVE2_WEEK1_BUNDLES: Dict[str, Dict[str, object]] = {
 WAVE3_WEEK1_BUNDLES: Dict[str, Dict[str, object]] = {
     "chanh_niem_ke": {
         "youtube_long": {
-            "title": "Ẩn Dụ Mũi Tên Thứ Hai: Vì Sao Nỗi Đau Là Bắt Buộc Nhưng Khổ Đau Là Tự Chọn? (Thiền Phật Giáo Ứng Dụng)",
-            "duration": "12 phút (24 cảnh)",
-            "hook": "Khi một chuyện tồi tệ xảy ra, nỗi đau thực tế chỉ là mũi tên thứ nhất, chính cách tâm trí bạn suy diễn mới là mũi tên thứ hai gây ra đau khổ.",
+            "title": "Thảm họa Chernobyl từ đầu đến cuối, dễ hiểu nhớ lâu",
+            "duration": "11 phút (bản đồ GIS + sa bàn 3D)",
+            "hook": "Đêm 26 tháng 4 năm 1986, các kỹ sư chỉ bấm nút dừng khẩn cấp AZ-5 — vậy tại sao chính nút cứu hộ này lại kích nổ lò phản ứng số 4?",
         },
         "tiktok_shorts": [
-            ("Spin-off #1 (0 ảnh mới)", "lắng dịu tâm trí", "45s"),
-            ("Spin-off #2 (0 ảnh mới)", "Khi cơn giận bốc lên: cách ôm ấp tâm mình theo tinh thần Thiền sư Thích Nhất Hạnh.", "40s"),
-            ("Spin-off #3 (0 ảnh mới)", "Câu chuyện chiếc thuyền rỗng: vì sao ta luôn giận người khác dù họ vô tình?", "45s"),
-            ("Fast-Short #4 (5 ảnh Flow)", "Nghệ thuật dừng lại 3 hơi thở khi tâm trí quá tải giữa đêm.", "50s"),
+            ("Spin-off #1 (0 ảnh mới)", "nút dừng khẩn cấp AZ-5", "52s"),
+            ("Spin-off #2 (0 ảnh mới)", "Vì sao nút dừng khẩn cấp lại làm nổ lò Chernobyl?", "50s"),
+            ("Spin-off #3 (0 ảnh mới)", "Con đập bê tông Vajont không vỡ nhưng sóng thần 250 mét san phẳng thung lũng.", "55s"),
+            ("Fast-Short #4 (6 ảnh Flow)", "Điểm mù máy phát điện tầng hầm trong sự cố Fukushima 2011.", "52s"),
         ],
     },
     "loi_sang_soi": {
@@ -659,11 +659,11 @@ def test_ten_visual_archetypes_and_stickman_limits() -> None:
         "noir_dossier": 4,
         "kawaii_sticker": 6,
         "pastel_duo": 2,
-        "tactical_atlas": 2,
+        "tactical_atlas": 3,
         "cosmos_vector": 2,
         "blueprint_ledger": 6,
         "editorial_risograph": 2,
-        "zen_sumie": 3,
+        "zen_sumie": 2,
         "woodcut_gouache": 5,
     }
     assert counts == expected_distribution

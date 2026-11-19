@@ -224,3 +224,126 @@ def test_export_package_dual_pipeline():
         assert res_16x9["contract_errors"] == []
         assert res_16x9["hook_score"] >= 70
         assert res_16x9["total_images"] == 28
+
+
+def test_ho_so_ky_la_v3_skill_and_routing_index() -> None:
+    """Verify vp-channel-ho-so-ky-la skill isolates channel specs without overriding shared workflows."""
+    skill_dir = ROOT_DIR / ".agents" / "skills" / "vp-channel-ho-so-ky-la"
+    skill_md = skill_dir / "SKILL.md"
+    visual_ref = skill_dir / "references" / "visual-grammar-noir-forensic.md"
+    pacing_ref = skill_dir / "references" / "pacing-and-script-rules.md"
+
+    for path in (skill_md, visual_ref, pacing_ref):
+        assert path.is_file(), f"Missing skill file: {path}"
+
+    skill_text = skill_md.read_text(encoding="utf-8")
+    assert "name: vp-channel-ho-so-ky-la" in skill_text
+    assert "ho_so_ky_la_3d_noir_forensic_v3" in skill_text
+    assert "VietNarrator_ho_so_ky_la" in skill_text
+    assert "Bảng Ghép Nối Quy Trình Dùng Chung" in skill_text
+    assert "100% shared and unmodified" in skill_text
+    for mode in (
+        "MODE_1_EVIDENCE_STAMP",
+        "MODE_2_HYPOTHESIS_CONTRAST",
+        "MODE_3_DOSSIER_CHECKLIST",
+        "MODE_4_NOIR_CINEMATIC_PACING",
+    ):
+        assert mode in skill_text
+    assert "references/visual-grammar-noir-forensic.md" in skill_text
+    assert "references/pacing-and-script-rules.md" in skill_text
+
+    visual_text = visual_ref.read_text(encoding="utf-8")
+    assert "ho_so_ky_la_3d_noir_forensic_v3" in visual_text
+    assert "allowed_text=None" in visual_text
+    for mode in (
+        "MODE_1_EVIDENCE_STAMP",
+        "MODE_2_HYPOTHESIS_CONTRAST",
+        "MODE_3_DOSSIER_CHECKLIST",
+        "MODE_4_NOIR_CINEMATIC_PACING",
+    ):
+        assert mode in visual_text
+
+    pacing_text = pacing_ref.read_text(encoding="utf-8")
+    assert "VietNarrator_ho_so_ky_la" in pacing_text
+    assert "1.10" in pacing_text
+    assert "260" in pacing_text
+    assert "18" in pacing_text
+
+    root_index = (ROOT_DIR / "INDEX.md").read_text(encoding="utf-8")
+    docs_index = (SYS_DIR / "docs" / "INDEX.md").read_text(encoding="utf-8")
+    prod_skill = (ROOT_DIR / ".agents" / "skills" / "vp-production" / "SKILL.md").read_text(encoding="utf-8")
+    plan_text = (SYS_DIR / "channels" / "ho_so_ky_la" / "PLAN.md").read_text(encoding="utf-8")
+
+    assert "vp-channel-ho-so-ky-la" in root_index
+    assert "vp-channel-ho-so-ky-la" in docs_index
+    assert "vp-channel-ho-so-ky-la" not in prod_skill
+    assert "ho_so_ky_la" not in prod_skill
+    assert ".agents/skills/vp-channel-ho-so-ky-la/SKILL.md" in plan_text
+
+
+def test_ho_so_ky_la_v3_production_lock_and_formulas() -> None:
+    """Verify channel_v3_production_lock.json and V3 formula entries stay synchronized."""
+    from channels.vn_competitor_script_formulas import VN_COMPETITOR_SCRIPT_FORMULAS
+    from channels.vn_flow_video_formulas import VN_FLOW_VIDEO_FORMULAS
+    from tools.produce_vn_dual_mode import HO_SO_KY_LA_PRODUCTION_LOCK
+
+    lock_path = SYS_DIR / "channels" / "ho_so_ky_la" / "channel_v3_production_lock.json"
+    assert lock_path.is_file(), f"Missing {lock_path}"
+
+    lock = json.loads(lock_path.read_text(encoding="utf-8"))
+    assert lock["schema_version"] == "3.0"
+    assert lock["channel_id"] == "ho_so_ky_la"
+    assert lock["status"] == "LOCKED_PRODUCTION_V3"
+    assert lock["voice_id"] == "VietNarrator_ho_so_ky_la"
+    assert lock["recommended_speed"] == 1.10
+    voice_lock = lock["voice_lock"]
+    assert voice_lock["recommended_speed"] == 1.10
+    assert voice_lock["base_omnivoice_speed"] == 1.00
+    assert voice_lock["atempo_factor"] == 1.10
+
+    prof = json.loads((SYS_DIR / "assets/voices/ch_ho_so_ky_la/profile.json").read_text(encoding="utf-8"))
+    assert prof["recommended_speed"] == 1.10
+    assert prof["base_omnivoice_speed"] == 1.00
+    assert prof["atempo_factor"] == 1.10
+
+    blueprint = json.loads((SYS_DIR / "channels/ho_so_ky_la/ep05_helios_522_v3_blueprint.json").read_text(encoding="utf-8"))
+    prod_lock = blueprint["production_v3_lock"]
+    assert prod_lock["recommended_speed"] == 1.10
+    assert prod_lock["base_omnivoice_speed"] == 1.00
+    assert prod_lock["atempo_factor"] == 1.10
+    assert HO_SO_KY_LA_PRODUCTION_LOCK["voice"] == lock["voice_id"]
+    assert HO_SO_KY_LA_PRODUCTION_LOCK["recommended_speed"] == lock["recommended_speed"]
+    assert HO_SO_KY_LA_PRODUCTION_LOCK["visual_style_id"] == lock["visual_lock"]["visual_style_id"]
+
+    vg = lock["visual_grammar"]
+    assert vg["version"] == "ho_so_ky_la_3d_noir_forensic_v3"
+    assert len(vg["three_pillars"]) == 3
+    assert set(vg["four_visual_modes"].keys()) == {
+        "MODE_1_EVIDENCE_STAMP",
+        "MODE_2_HYPOTHESIS_CONTRAST",
+        "MODE_3_DOSSIER_CHECKLIST",
+        "MODE_4_NOIR_CINEMATIC_PACING",
+    }
+    assert set(vg["visual_style_options"].keys()) == {
+        "STYLE_1_IMAX_35MM_LIVE_ACTION",
+        "STYLE_2_FERN_3D_XRAY_CUTAWAY",
+        "STYLE_3_LEMMINO_CHIAROSCURO_ARCHIVE",
+        "STYLE_4_VOX_INVESTIGATIVE_SPLIT_RADAR",
+    }
+
+    ep = lock["benchmark_episode"]
+    assert ep["episode_id"] == "ep05_helios_522"
+    assert ep["long_target_beats"] == 260
+    assert ep["long_chapter_count"] == 10
+    assert ep["short_target_beats"] == 18
+
+    flow = VN_FLOW_VIDEO_FORMULAS["ho_so_ky_la"]
+    assert flow["visual_style_id"] == "ho_so_ky_la_3d_noir_forensic_v3"
+    assert flow["voice_profile_id"] == "VietNarrator_ho_so_ky_la"
+    assert flow["recommended_speed"] == 1.10
+    assert "strictly zero text" in flow["continuity_anchor"].lower()
+
+    script_f = VN_COMPETITOR_SCRIPT_FORMULAS["ho_so_ky_la"]
+    assert script_f["voice_id"] == "VietNarrator_ho_so_ky_la"
+    assert script_f["visual_4modes_forensic_rule"]["version"] == "ho_so_ky_la_3d_noir_forensic_v3"
+

@@ -38,6 +38,7 @@ DEFAULT_BANNED_CTA_PHRASES: tuple[str, ...] = (
 
 MAX_BRIDGE_SYLLABLES = 22
 MAX_CLOSE_SYLLABLES = 24
+MAX_SHORT_OUTRO_SYLLABLES = 38
 
 
 def strip_diacritics(text: str) -> str:
@@ -124,7 +125,7 @@ def lint_cta(
                 f"CTA_CLOSE_SYLLABLES_EXCEEDED: close CTA has {close_syl} syllables (max {MAX_CLOSE_SYLLABLES}): '{close}'"
             )
 
-    # 3. Short requires bridge
+    # 3. Short requires bridge & compact combined outro budget for final 15%
     if is_short:
         if not bridge:
             errors.append("CTA_MISSING_BRIDGE: short_9x16 must declare exactly one bridge to the long video")
@@ -133,6 +134,13 @@ def lint_cta(
             if bridge_syl > MAX_BRIDGE_SYLLABLES:
                 errors.append(
                     f"CTA_BRIDGE_SYLLABLES_EXCEEDED: bridge CTA has {bridge_syl} syllables (max {MAX_BRIDGE_SYLLABLES}): '{bridge}'"
+                )
+        if bridge and close:
+            combined_outro_syl = count_syllables_whitespace(bridge) + count_syllables_whitespace(close)
+            if combined_outro_syl > MAX_SHORT_OUTRO_SYLLABLES:
+                errors.append(
+                    f"CTA_OUTRO_SYLLABLES_EXCEEDED: short bridge+close total {combined_outro_syl} syllables "
+                    f"(max {MAX_SHORT_OUTRO_SYLLABLES}) exceeds 15% outro budget"
                 )
         if mid_cta is not None:
             errors.append("CTA_SHORT_NO_MID_CTA: short_9x16 video cannot have a mid_cta")
@@ -183,6 +191,8 @@ def lint_cta(
             errors.append("CTA_INSIDE_HOOK: close CTA cannot appear in opening scene hook (SC01)")
         if bridge and _find_phrase_insensitive(bridge, sc01_narr):
             errors.append("CTA_INSIDE_HOOK: bridge CTA cannot appear in opening scene hook (SC01)")
+        if mid_cta and str(mid_cta).strip() and _find_phrase_insensitive(str(mid_cta), sc01_narr):
+            errors.append("CTA_INSIDE_HOOK: mid_cta cannot appear in opening scene hook (SC01)")
 
         # In short, bridge and close must be in the final scene
         if is_short and len(scenes) > 1:
@@ -191,6 +201,15 @@ def lint_cta(
                 errors.append("CTA_CLOSE_NOT_IN_OUTRO: short_9x16 close CTA must be in the final scene narration")
             if bridge and not _find_phrase_insensitive(bridge, last_narr):
                 errors.append("CTA_BRIDGE_NOT_IN_OUTRO: short_9x16 bridge CTA must be in the final scene narration")
+
+        # In long, declared close and mid_cta must actually be spoken in content scenes
+        if is_long and len(scenes) > 1:
+            if close and not any(_find_phrase_insensitive(close, sc.get("narration", "")) for sc in scenes[-2:]):
+                errors.append("CTA_CLOSE_NOT_IN_OUTRO: long_16x9 close CTA must appear in the closing scene narration")
+            if mid_cta and str(mid_cta).strip():
+                mid_str = str(mid_cta).strip()
+                if not any(_find_phrase_insensitive(mid_str, sc.get("narration", "")) for sc in scenes[1:]):
+                    errors.append("CTA_MID_NOT_IN_BODY: long_16x9 mid_cta must appear in a body scene narration")
 
     # 7. Measured timings placement checks
     if timings is not None:

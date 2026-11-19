@@ -1,0 +1,110 @@
+{
+  "schema_version": "3.0",
+  "channel_id": "ho_so_ky_la",
+  "channel_name": "Hồ Sơ Kỳ Lạ",
+  "handle": "@HoSoKyLaVN",
+  "channel_youtube_id": "UCEWZEZJTFpNCbURgtNLHA1A",
+  "chrome_profile": "profile_3",
+  "cdp_port": 9224,
+  "playlist": "Hồ Sơ Kỳ Lạ — Giải Mã Bí Ẩn Có Thật",
+  "status": "LOCKED_PRODUCTION_V3",
+  "voice_id": "VietNarrator_ho_so_ky_la",
+  "recommended_speed": 1.10,
+  "watermark": {
+    "asset": "sys/channels/ho_so_ky_la/assets/watermark_150x150.png",
+    "mirror_logo": "sys/assets/logos/ho_so_ky_la.png",
+    "dimensions": "150x150",
+    "format": "RGBA",
+    "sha256": "c3919639c27a15419d203272b134218a3bc7d95e5d4b157f818da306679d0c92"
+  },
+  "visual_grammar": {
+    "version": "ho_so_ky_la_3d_noir_forensic_v3",
+    "label": "3-Pillar 3D Noir Forensic Diorama + 4-Mode Investigative Storytelling",
+    "three_pillars": [
+      "3D Noir crime-scene and incident architectural scale diorama with single directional volumetric spotlight",
+      "100mm forensic macro hardware, black-box switch telemetry, brass gauges, and taut red evidence threads",
+      "Atmospheric archival field reconstruction under eerie nocturnal or cold industrial illumination"
+    ],
+    "color_palette": {
+      "midnight_obsidian": "#0A0B0E",
+      "dark_slate_dossier": "#181B22",
+      "aged_parchment": "#E8DFC8",
+      "forensic_crimson": "#C0392B",
+      "brushed_brass": "#C9A24D"
+    },
+    "anti_repetition_rule": "Vary diorama scale, camera framing, and evidence mechanisms across beats; strictly no 2D flat stickmen, no graphic gore, no AI gibberish text (`allowed_text=None` on raw Flow frames), and mandatory bottom-right delogo before watermark overlay.",
+    "four_visual_modes": {
+      "MODE_1_EVIDENCE_STAMP": {
+        "share": 0.15,
+        "role": "Bold dark-scrim forensic timestamp, altitude, pressure, or black-box stat callout in #C9A24D / #C0392B"
+      },
+      "MODE_2_HYPOTHESIS_CONTRAST": {
+        "share": 0.12,
+        "role": "Side-by-side investigative comparison (competing hypotheses, AUTO vs MAN system states, expectation vs forensic reality)"
+      },
+      "MODE_3_DOSSIER_CHECKLIST": {
+        "share": 0.15,
+        "role": "Right-docked #181B22 archival dossier card enumerating up to 3 sequential clues or root causes"
+      },
+      "MODE_4_NOIR_CINEMATIC_PACING": {
+        "share": 0.58,
+        "role": "Uncluttered 2K 3D Noir camera progression (2560x1440@30fps, xfade=fade:duration=0.24, plus key-beat omni_flash I2V motion)"
+      }
+    },
+    "visual_style_options": {
+      "STYLE_1_IMAX_35MM_LIVE_ACTION": "Full-scale 35mm Kodak Vision3 500T thriller live-action cinematography (strictly zero miniature/scale-model/wire effects) + clean .ass cinematic subtitles",
+      "STYLE_2_FERN_3D_XRAY_CUTAWAY": "Fern / Hoog-style Unreal Engine 5 / Octane 3D technical X-ray cutaway in full flight environment highlighting airflow, valves, and circuit pathways",
+      "STYLE_3_LEMMINO_CHIAROSCURO_ARCHIVE": "LEMMiNO-style ultra-minimalist stark chiaroscuro monochrome (#07080C >= 65% negative space) + crimson/silver rim-light & black-box CVR oscilloscope",
+      "STYLE_4_VOX_INVESTIGATIVE_SPLIT_RADAR": "Vox / Johnny Harris dark-mode investigative split-screen, 3-panel vertical triptych & live night satellite flight radar reticle"
+    },
+    "active_4style_combination": [
+      "STYLE_1_IMAX_35MM_LIVE_ACTION",
+      "STYLE_2_FERN_3D_XRAY_CUTAWAY",
+      "STYLE_3_LEMMINO_CHIAROSCURO_ARCHIVE",
+      "STYLE_4_VOX_INVESTIGATIVE_SPLIT_RADAR"
+    ]
+  },
+  "voice_lock": {
+    "voice": "VietNarrator_ho_so_ky_la",
+    "reference_sha256": "cd25365252033ee60333c92e3f071a8dae3a99c865fe9e527686c7cf04048a9d",
+    "recommended_speed": 1.10,
+    "base_omnivoice_speed": 1.00,
+    "atempo_factor": 1.10,
+    "local_retime_from_105_atempo": 1.047619,
+    "inter_beat_gap_sec": 0.1,
+    "default_tone": "forensic_investigative_crisp",
+    "audio_voice_chain": "highpass=f=85,equalizer=f=210:t=q:w=1.2:g=-1.2,equalizer=f=2800:t=q:w=1.0:g=2.4,equalizer=f=4800:t=q:w=1.1:g=1.8,equalizer=f=7500:t=q:w=1.3:g=1.0,lowpass=f=15000",
+    "reference_lufs": -14.0,
+    "reference_true_peak_dbtp": -1.2,
+    "master_lufs": -11.0,
+    "master_true_peak_dbtp": -1.0
+  },
+  "visual_lock": {
+    "visual_style_id": "ho_so_ky_la_3d_noir_forensic_v3",
+    "long_resolution": "2560x1440",
+    "short_resolution": "1440x2560",
+    "video_codec": "h264_nvenc",
+    "fps": 30,
+    "xfade_transition": "fade",
+    "xfade_duration_sec": 0.24,
+    "delogo_bottom_right": true,
+    "watermark_pos_2k": "W-w-48:H-h-48",
+    "watermark_pos_hd": "W-w-36:H-h-36"
+  },
+  "benchmark_episode": {
+    "episode_id": "ep05_helios_522",
+    "status": "READY_TO_PRODUCE",
+    "blueprint": "sys/channels/ho_so_ky_la/ep05_helios_522_v3_blueprint.json",
+    "long_content": "sys/channels/ho_so_ky_la/ep05_content_long.json",
+    "short_content": "sys/channels/ho_so_ky_la/ep05_content_short.json",
+    "long_target_beats": 260,
+    "long_chapter_count": 10,
+    "short_target_beats": 18,
+    "wave1_live_pairs": [
+      {"long_id": "Eu5QbfOg8wA", "short_id": "A2CuZnlIRCg"},
+      {"long_id": "3TXAOpjmNj4", "short_id": "8CtmTqXCB7k"},
+      {"long_id": "gjx2Gv0GhS0", "short_id": "bp9U0EtXqks"},
+      {"long_id": "cmYmJfbqJoM", "short_id": "Z72pJJ1TLGI"}
+    ]
+  }
+}

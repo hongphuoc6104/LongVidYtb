@@ -57,11 +57,11 @@ class TestStoryDrivenPromptBuilder:
         assert all(ord(c) < 128 for c in prompt)  # Strict pure ASCII
         assert "strictly zero text overlays" in prompt
 
-    def test_zen_mindfulness_chanh_niem_ke(self):
-        narr = "Mũi tên thứ hai chính là sự phán xét và dằn vặt của tâm trí."
+    def test_causal_chronicle_chanh_niem_ke(self):
+        narr = "Nút dừng khẩn cấp AZ-5 đẩy thanh than chì vào lõi lò phản ứng đang quá nhiệt."
         prompt = build_story_driven_prompt(narr, "chanh-niem-ke", event_kind="ANGLE_CUTAWAY")
-        assert "Cinematic Wabi-Sabi & Zen Sumi-e mindfulness visual" in prompt
-        assert "second arrow" in prompt or "mental overthinking" in prompt
+        assert "Archival weathered documentary plate" in prompt
+        assert "nuclear reactor core" in prompt or "boron control rods" in prompt
         assert "8k" not in prompt.lower()
         assert "strictly zero text overlays" in prompt
 

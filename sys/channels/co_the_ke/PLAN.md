@@ -1,96 +1,60 @@
-# KẾ HOẠCH CHI TIẾT KÊNH: CƠ THỂ KỂ (`co_the_ke`)
+# KẾ HOẠCH CHI TIẾT KÊNH: CƠ THỂ KỂ (`co_the_ke`) — v3.0
 
-## 1. Định Vị Kênh & Phân Tách Nền Tảng
-- **Mã kênh:** `co_the_ke` (Đợt triển khai: Wave 1)
-- **Nhánh GitHub độc lập:** `channel/co-the-ke` (`origin/channel/co-the-ke`)
-- **Thư mục phát triển trên máy:** `/home/hongphuoc6104/Desktop/vp-channels/channel-co-the-ke`
-- **Ngách nội dung:** Sức khỏe và cơ thể được nhân hóa
-- **Lời hứa thương hiệu (Value Proposition):** Các cơ quan trong người bạn tự kể chuyện, vui mà đúng khoa học.
-- **Khán giả mục tiêu:** Người 18-40 quan tâm sức khỏe, thói quen sinh hoạt
-- **Nhân vật dẫn chuyện (Persona):** Các cơ quan nội tạng biết nói, mỗi cơ quan một tính cách
-- **Giọng văn (Tone):** Hài, nhân hóa, dễ thương nhưng chính xác về khoa học | **Giọng TTS:** `VietNarrator` (1.0x)
-- **Phân tách nền tảng bắt buộc:**
-  - **TikTok (`short_9x16` — 9:16):** Video ngắn 30–45s, nhịp chuyển cảnh 2–5s. Mục tiêu: Lên xu hướng FYP, kéo follow và gắn Affiliate / dẫn phễu.
-  - **YouTube (`long_16x9` — 16:9):** Video dài 8–12 phút, nhịp pattern-interrupt 20–30s. Mục tiêu: Bật kiếm tiền AdSense RPM cao & xây dựng uy tín lâu dài.
+## 1. Định Vị Kênh & Khán Giả Mục Tiêu (Dữ Liệu Studio Thực Tế)
+- **Mã kênh:** `co_the_ke` (`@CoTheKeVN` — Channel ID: `UCgehIaP3nZ5jdcZfI3eI7RQ`, Chrome `profile_1`, cổng `9225`, email `phuocnguyen010204@gmail.com`)
+- **Ngách nội dung:** Giải phẫu 3D y sinh, sinh học cơ thể người, thần kinh học và miễn dịch học thực chiến
+- **Lời hứa thương hiệu (Value Proposition):** Giải mã những phản ứng kỳ diệu bên trong cơ thể người bằng mô phỏng giải phẫu 3D y sinh sắc nét và dẫn chứng khoa học xác thực, dễ hiểu cho đời sống hàng ngày.
+- **Tệp khán giả xác nhận từ YouTube Studio:**
+  - Quốc gia: Việt Nam (`95.87%`)
+  - Độ tuổi cốt lõi: 25–34 (`38.66%`) + 35–44 (`39.46%`) = **`78.12%` người trưởng thành quan tâm sức khỏe & hiệu suất sống**
+  - Thiết bị: Mobile (`50.4%`) + TV (`40.79%`) — đòi hỏi khung hình **2K `2560x1440` (Long)** / **`1440x2560` (Short)** sạch nét trên màn hình lớn TV 4K lẫn điện thoại.
+- **Nhân vật dẫn chuyện (Persona):** Người dẫn chuyện khoa học y sinh điềm tĩnh, đáng tin cậy (`authoritative_calm`), kể trực diện cơ chế sinh học bên trong từng cơ quan.
+- **Khóa Giọng Kể & Master Âm Thanh (`VietNarrator_co_the_ke` v3.0):**
+  - **Voice lock:** `VietNarrator_co_the_ke` (`sys/assets/voices/ch_co_the_ke/profile.json`, SHA256 `0e5b0ac35ccd31565e31dceabfd20e8f110465ad370b84465f404e1c10f2f490`)
+  - **Nhịp độ:** `recommended_speed = 1.12x` (`default_tone = "authoritative_calm"`)
+  - **Tone & EQ:** `highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500`
+  - **Chuẩn phát sóng (Master Target):** `-11.0 LUFS` / `-1.0 dBTP` (`48kHz` stereo; WAV tham chiếu `-14.0 LUFS / -1.2 dBTP`).
 
-## 2. Kênh Mẫu Tham Chiếu (Bám Theo Cấu Trúc Đã Kiểm Chứng)
-### Kênh mẫu TikTok Short (`short_9x16`)
-- **Zack D. Films** (YouTube Shorts/TikTok): Drop straight into 'what happens if' with zero intro (format only).
-- **Bác sĩ Huy** (TikTok): Vietnamese doctor-backed health myths busting.
-### Kênh mẫu YouTube Long (`long_16x9`)
-- **Kurzgesagt** (YouTube): Deep, well-sourced science explainers.
+## 2. Phân Tách Định Dạng & Phễu Chuyển Đổi Long <-> Short
+- **YouTube Long (`long_16x9` — `2560x1440@30fps` NVENC, `8.5–13 phút` / `510–780s`, `240` beats, `10` chương `00:00..`):**
+  - Bỏ vĩnh viễn lối 2D kawaii / stickman cũ của Wave 1 (`ch_organ_buddies`).
+  - Dùng `3-Pillar 3D Endoscopic Biomedical Cinematography` + `4 Visual Modes`, dẫn chứng nghiên cứu uy tín (WHO, NIH, AHA, CDC, Walker 2017...), có `End Screens` + `Info Cards` nối vòng các tập dài.
+- **YouTube Shorts (`short_9x16` — `1440x2560@30fps` NVENC, `48–60s`, `18` beats, `>= 3` beats trong `0–5s`):**
+  - Viết mới bản địa 100% (không cắt thô từ Long), luôn gắn `Related Video` (`parent_long_id`) trỏ thẳng về bản Long cùng chủ đề để biến traffic Shorts (`95.3%` nguồn kênh) thành Watch Time và Subscriber cho kênh.
 
-## 3. Luật Viết Kịch Bản & Công Thức Hook
-### Nguyên tắc giọng kể
-- Open with 'if you do X, this is what your body does'.
-- Let one organ character narrate in first person.
-- Every health claim must cite a medical source in the description.
-- Never claim cures; end with 'hỏi bác sĩ nếu...' when relevant.
-### Công thức Hook 3 giây đầu (viết 3 bản A/B/C, chấm điểm bằng `script_hook_scorer.py`)
-- `Nếu bạn [thói quen], đây là điều [cơ quan] phải chịu.`
-- `Điều gì xảy ra với cơ thể khi bạn [hành động] trong [thời gian]?`
-- `[Cơ quan] của bạn đang than phiền vì [thói quen].`
-- `Đừng [thói quen phổ biến] nữa, [cơ quan] sẽ cảm ơn bạn.`
-### Cấu trúc giữ chân TikTok Short (`short_9x16`)
-1. Hook <= 3s: shocking claim or relatable pain + striking first frame
-1. Open loop: promise the answer, delay it
-1. Escalation beats every 2-5s (new visual, number or twist)
-1. Payoff: answer the loop in one clear image
-1. Closing line
-- **Câu kết (CTA):** Hỏi: bạn có thói quen này không? Lưu lại để nhắc mình.
-### Cấu trúc giữ chân YouTube Long (`long_16x9`)
-1. Cold open 0-30s: strongest scene of the video, no channel intro
-1. Stakes: why this matters to the viewer's own life
-1. 3-5 chapters, each opens with a mini-hook and ends with a re-hook
-1. Pattern interrupt every 20-30s (story, number, visual gag)
-1. Synthesis + practical takeaway
-1. Closing line pointing to the next video
-- **Câu kết (CTA):** Gợi tập 'một ngày của cơ quan khác'.
-### Điều cấm kỵ (Avoid)
-- Cure or treatment claims
-- Supplement promotion without evidence
-- Body shaming
+## 3. Chuẩn Hình Ảnh v3.0: `co_the_ke_3d_biomedical_v3` (2K)
+- **Bảng màu khóa cứng:**
+  - Deep Biomedical Navy: `#0A192F`
+  - Anatomical Slate Shadow: `#0F172A`
+  - Clinical X-Ray Cyan: `#06B6D4` (`archetype_3_science_xray` accent)
+  - Arterial Danger Crimson: `#EF4444`
+  - Clean Laboratory White: `#F8FAFC`
+  - Bio-Energy Warm Amber: `#F59E0B`
+- **4 Chế độ Hình ảnh (Long 2K):**
+  - `MODE_1_BIOMETRIC_STAMP` (~15% beats): Card số liệu sinh học nổi bật (`27 KG`, `70% TẾ BÀO NK`, `02:00 AM`).
+  - `MODE_2_NORMAL_VS_STRESS_SPLIT` (~12% beats): Chia đôi Cyan `#06B6D4` (Bình thường) vs Crimson `#EF4444` (Quá tải).
+  - `MODE_3_CASCADE_CHECKLIST` (~15% beats): Bảng chuỗi cơ chế `[01]`, `[02]`, `[03]` bên phải khung X-ray 3D.
+  - `MODE_4_ENDOSCOPIC_PACING` (~58% beats): Khung 3D nội soi y sinh toàn màn hình `xfade=fade:duration=0.20` + `omni_flash` I2V ở beat đinh.
+- **Xử lý góc phải dưới & Watermark:** Áp dụng crop overscan `1.045x` + `delogo` góc phải dưới **trước khi** chèn `sys/channels/co_the_ke/assets/watermark_150x150.png` (`150x150` RGBA) tại `W-w-48:H-h-48` (2K) / `W-w-36:H-h-36` (HD).
+- **Luật Thumbnail Flow-Native (`< 2MB`):** Cảnh 3D y sinh đắt giá + `2–4` từ in hoa tiếng Việt sắc nét đúc trực tiếp trong cảnh Flow (cấm PIL/HTML đè chữ thô, cấm dấu `✦`).
 
-## 4. Phong Cách Hình Ảnh & Thumbnail Flow Native
-- **Visual Profile ID:** `ch_organ_buddies` — Nội tạng dễ thương: cơ quan có mặt và tính cách, nền trắng sạch
-- **Bảng màu khóa cứng:** `#FFFFFF`, `#F4A6A6`, `#F6C28B`, `#A23E48`, `#F28C9B`, `#7FB3D5`
-- **Tạo hình nhân vật (`CAST_APPEARANCE`):** Recurring organ characters: Tim (heart) brave and loud, Dạ Dày (stomach) dramatic complainer, Gan (liver) tired hard worker, Não (brain-shaped round pink blob) overthinking boss; plus a simple doodle human host with a round white head
-- **Trang phục (`DEFAULT_OUTFIT`):** Organs have no clothing; the human host wears a flat calm-blue (#7FB3D5) T-shirt
-- **Luật Thumbnail (100% Flow Native, `overlay_card: false`):** One organ character with a dramatic expression + 2-3 word warning in bold letters.
-- **Prompt Style gốc:**
-  > Clean 2D kawaii medical-explainer illustration: smooth medium black outlines (#222222), flat unshaded fills in soft organ pink (#F4A6A6), stomach peach (#F6C28B), liver maroon (#A23E48), lung rose (#F28C9B) and calm blue (#7FB3D5) on a flat solid white canvas (#FFFFFF); organs drawn as simplified anatomically recognizable characters with tiny faces, stubby arms and expressive eyebrows; orthographic 2D, no gore, no realistic anatomy textures, no gradients, no 3D.
+## 4. Luật Kịch Bản, An Toàn Y Khoa & Bộ Tag Chuẩn
+- **Hook & Open Loop:** Beat 1 `<= 18` âm tiết (Short) / `<= 24` (Long), zero `[pause:...]`; câu 2–4 gài nghịch lý sinh học (`nhưng`, `hóa ra`, `bên trong`).
+- **Quy tắc CTA (Tuyệt đối tuân thủ):** CẤM "like, share, subscribe, đăng ký kênh", CẤM `#learnontiktok`. Chỉ dùng câu hỏi sức khỏe / hành động thực tế + cầu nối sang **"Cơ Thể Kể"** (`<= 20` âm tiết ở 15% cuối Short).
+- **An toàn y khoa:** Không khẳng định "chữa khỏi bệnh", không quảng cáo thực phẩm chức năng thiếu bằng chứng; luôn nêu nguồn tham khảo xác thực trong mô tả.
+- **Hashtag chuẩn:** `#CoTheKe #KhoaHocCoThe #GiaiPhau3D #SucKhoeKhoaHoc #SinhHoc`
 
-## 5. Tối Ưu Thời Gian Sản Xuất (Kết Hợp Flow CDP + Remotion / Hyperframes)
-- **Chế độ Render chủ đạo:** `hybrid_motion` (Tỷ lệ đồ họa động Remotion/Hyperframes: **40%**)
-- **Số ảnh Flow tối đa cho 1 TikTok Fast-Short:** **6 ảnh** (nhịp 2–4s/chuyển cảnh được tạo bằng Remotion camera beats, zoom/pan, kinetic badges).
-- **Số TikTok Spin-off trích xuất từ 1 YouTube Long:** **4 video ngắn** (qua `sys/omni_platform.py`, **0 phút sinh thêm ảnh Flow**).
-- **Thời gian mục tiêu:** **7–10 phút** cho 1 TikTok Short độc lập; **30–40 phút** cho trọn bộ (1 YouTube Long + 4 TikTok Shorts).
-- **Chiến thuật tốc độ riêng của kênh:** Fixed 4 organ mascots (Tim, Dạ Dày, Gan, Não) + Remotion timeline timers ('Sau 15 phút...', 'Sau 2 giờ...').
+## 5. Tài Sản Video Đang Lưu Hành & Lộ Trình Bảo Toàn (KHÔNG XÓA VIDEO CŨ)
+- **Week 1 Pair:** Long `yl8E1WKjvWY` (*24 Giờ Thức Trắng: Tim, Gan Và Não Gánh Ra Sao?*) <-> Short `LdlG4OiEjR8`
+- **Batch 2 Pair:** Long `_JaLpnPf-q4` (*Cà Phê Lúc Đói: Dạ Dày Và Cortisol Trả Giá Ra Sao?*) <-> Short `MPnDTlsIPUw`
+- **Batch 3 Pair:** Long `e3AElaVVXJ4` (*Bỏ Bữa Sáng 30 Ngày: Cơ Thể Đốt Mỡ Hay Tự Hủy Cơ?*) <-> Short `5vtJPGj_qM0`
+- **Pilot 4 + 1:** Long `sgp65IoBMa8` (*24h Không Ngủ: Não 'Tự Ăn' & 70% Tế Bào Sát Thủ Tê Liệt*) (đang khuyết Short đôi — **NV #1 V3 2K sẽ sản xuất & ghép `related_video -> sgp65IoBMa8`**) & Short `-dNqAE-nzf0` (*TẠI SAO DA BẠN TỰ SẠM ĐI? Bí mật Tế Bào Sắc Tố...*)
+- **Top 4 Danh sách phát công khai (Playlists):**
+  1. `Cơ Thể Kể — Giải Mã Cơ Thể Chuyên Sâu (16:9)`
+  2. `Phản Xạ Cơ Thể 60 Giây (Shorts)`
+  3. `Giấc Ngủ, Não Bộ & Nhịp Sinh Học`
+  4. `Dinh Dưỡng, Chuyển Hóa & Thói Quen Sống`
 
-## 6. Lộ Trình Sản Xuất Tuần 1 (1 YouTube Long + Chuỗi TikTok Shorts)
-### YouTube Long #1 (`long_16x9`)
-- **Tiêu đề:** *Hành Trình 24 Giờ Bên Trong Cơ Thể Khi Bạn Thức Trắng Đêm: Tim, Gan Và Não Bộ Phải Gồng Gánh Ra Sao?*
-- **Thời lượng:** 10 phút (24 cảnh Kawaii y học)
-- **Câu mở đầu (Cold Open):** "Nếu tối nay bạn quyết định thức trắng để cày phim hoặc chạy deadline, đây là cuộc họp khẩn cấp diễn ra ngay bên trong não và tim bạn lúc 2 giờ sáng."
-### Danh sách TikTok Shorts Tuần 1 (`short_9x16`)
-- **Spin-off #1 (0 ảnh mới):** *Dạ dày than phiền gì khi bạn ăn mì gói lúc 11 giờ đêm?* (35s)
-- **Spin-off #2 (0 ảnh mới):** *Điều gì xảy ra trong não khi bạn bấm 'Ngủ nướng thêm 10 phút' liên tục?* (35s)
-- **Spin-off #3 (0 ảnh mới):** *Một ca làm việc quá tải của lá gan sau ly nước ngọt khổng lồ.* (40s)
-- **Fast-Short #4 (6 ảnh Flow):** *Vì sao cúi đầu nhìn điện thoại làm đốt sống cổ gánh sức nặng 27 kg?* (35s)
-
-### Backlog chủ đề hạt giống tiếp theo
-- Điều gì xảy ra khi bạn nhịn ăn sáng 1 tháng
-- Dạ dày nói gì khi bạn ăn khuya
-- Một ngày của lá gan sau bữa nhậu
-- Vì sao ngồi lâu làm đau lưng
-- Uống nước đá có thật sự hại không
-
-## 7. Kiếm Tiền, Hashtag & Ngưỡng Quyết Định (14 Ngày)
-- **Bộ Hashtag chuẩn TikTok:** `#suckhoe #cothe #songkhoe #bacsi #learnontiktok`
-- **Nguồn doanh thu:** YouTube AdSense, Affiliate đồ gia dụng sức khỏe (không tuyên bố chữa bệnh), Booking
-- **Lệnh làm việc nhanh trên máy:**
-  ```bash
-  cd /home/hongphuoc6104/Desktop/vp-channels/channel-co-the-ke
-  python3 sys/tools/script_hook_scorer.py --content sys/runs/<job>/content.json --channel co_the_ke
-  python3 sys/analytics/channel_metrics.py sys/channels/metrics.csv
-  ```
+## 6. Khóa Sản Xuất V3 & SSOT Skill Đặc Thù Riêng Kênh
+- **SSOT Skill:** [.agents/skills/vp-channel-co-the-ke/SKILL.md](../../../.agents/skills/vp-channel-co-the-ke/SKILL.md) (kèm [visual-grammar-biomedical-v3.md](../../../.agents/skills/vp-channel-co-the-ke/references/visual-grammar-biomedical-v3.md) và [pacing-and-script-rules.md](../../../.agents/skills/vp-channel-co-the-ke/references/pacing-and-script-rules.md))
+- **File Khóa Tham Số:** [channel_v3_production_lock.json](channel_v3_production_lock.json) (`LOCKED_PRODUCTION_V3`)

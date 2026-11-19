@@ -1,0 +1,87 @@
+{
+  "schema_version": "3.0",
+  "channel_id": "co_the_ke",
+  "channel_name": "Cơ Thể Kể",
+  "handle": "@CoTheKeVN",
+  "channel_ucid": "UCgehIaP3nZ5jdcZfI3eI7RQ",
+  "status": "LOCKED_PRODUCTION_V3",
+  "voice_id": "VietNarrator_co_the_ke",
+  "recommended_speed": 1.12,
+  "watermark": {
+    "asset": "sys/channels/co_the_ke/assets/watermark_150x150.png",
+    "dimensions": "150x150",
+    "format": "RGBA",
+    "logo_mirror": "sys/assets/logos/co_the_ke.png"
+  },
+  "visual_grammar": {
+    "version": "co_the_ke_3d_biomedical_v3",
+    "label": "8K 3D Endoscopic Biomedical Cinematography + 4-Mode Physiological Storytelling",
+    "three_pillars": [
+      "3D volumetric endoscopic flythrough of beating heart, cortical synapses, lungs, and blood vessels",
+      "100mm macro cellular bio-mechanism, hormone cascade, and immune defense physics without graphic gore",
+      "Human everyday habit trigger seamlessly cutting into internal 3D X-ray skeletal/organ response"
+    ],
+    "anti_repetition_rule": "Vary organ scale, cellular focal depth, and lighting contrast per beat; strictly zero 2D flat cartoon stickers (kawaii) or doodle stickmen in V3; allowed_text=None on raw Flow frames.",
+    "four_visual_modes": {
+      "MODE_1_BIOMETRIC_STAMP": {
+        "share": 0.15,
+        "role": "Bold 2K biometric metric callout card (Clinical Cyan #06B6D4 / Crimson #EF4444) on critical physiological thresholds"
+      },
+      "MODE_2_NORMAL_VS_STRESS_SPLIT": {
+        "share": 0.12,
+        "role": "Vertical glowing Cyan vs Crimson split comparison contrasting healthy homeostasis against stress overload"
+      },
+      "MODE_3_CASCADE_CHECKLIST": {
+        "share": 0.15,
+        "role": "Right-docked dark slate biotech card (#0F172A) listing sequential [01]/[02]/[03] biological stages or recovery steps"
+      },
+      "MODE_4_ENDOSCOPIC_PACING": {
+        "share": 0.58,
+        "role": "Uncluttered 2K full-bleed 3D biomedical cinematography with 1.045x overscan static Lanczos + xfade=fade:duration=0.20 and key-beat I2V motion"
+      }
+    }
+  },
+  "voice_lock": {
+    "voice": "VietNarrator_co_the_ke",
+    "reference_sha256": "0e5b0ac35ccd31565e31dceabfd20e8f110465ad370b84465f404e1c10f2f490",
+    "recommended_speed": 1.12,
+    "default_tone": "authoritative_calm",
+    "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+    "master_lufs": -11.0,
+    "master_true_peak_dbtp": -1.0
+  },
+  "visual_lock": {
+    "visual_style_id": "co_the_ke_3d_biomedical_v3",
+    "palette": [
+      "#0A192F",
+      "#0F172A",
+      "#06B6D4",
+      "#EF4444",
+      "#F8FAFC",
+      "#F59E0B"
+    ],
+    "long_resolution": "2560x1440",
+    "short_resolution": "1440x2560",
+    "fps": 30,
+    "xfade_transition": "fade",
+    "xfade_duration_sec": 0.20,
+    "delogo_br": true,
+    "overscan_crop": 1.045,
+    "watermark_pos_2k": "W-w-48:H-h-48",
+    "watermark_pos_hd": "W-w-36:H-h-36"
+  },
+  "pacing_lock": {
+    "long_duration_target_sec": [510, 780],
+    "long_beats_target": 240,
+    "long_chapters_target": 10,
+    "short_duration_target_sec": [48, 60],
+    "short_beats_target": 18,
+    "short_hook_0_5s_min_beats": 3
+  },
+  "benchmark_pilot": {
+    "pilot_long_video_id": "sgp65IoBMa8",
+    "pilot_long_url": "https://youtu.be/sgp65IoBMa8",
+    "pilot_long_title": "24h Không Ngủ: Não 'Tự Ăn' & 70% Tế Bào Sát Thủ Tê Liệt",
+    "pilot_long_duration_sec": 1163.233
+  }
+}

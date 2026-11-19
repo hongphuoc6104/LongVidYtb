@@ -45,12 +45,13 @@
     "pause_after_s": 1.4
   },
   "source_speed": 1.0,
-  "recommended_speed": 1.28,
-  "base_omnivoice_speed": 1.12,
-  "atempo_factor": 1.143,
-  "inter_beat_gap_sec": 0.06,
+  "recommended_speed": 1.10,
+  "base_omnivoice_speed": 1.00,
+  "atempo_factor": 1.10,
+  "local_retime_from_105_atempo": 1.047619,
+  "inter_beat_gap_sec": 0.1,
   "default_tone": "forensic_investigative_crisp",
-  "audio_voice_chain": "highpass=f=80,equalizer=f=180:t=q:w=1.1:g=1.2,equalizer=f=3200:t=q:w=1.0:g=2.2,equalizer=f=6500:t=q:w=1.2:g=1.5,lowpass=f=15000",
+  "audio_voice_chain": "highpass=f=85,equalizer=f=210:t=q:w=1.2:g=-1.2,equalizer=f=2800:t=q:w=1.0:g=2.4,equalizer=f=4800:t=q:w=1.1:g=1.8,equalizer=f=7500:t=q:w=1.3:g=1.0,lowpass=f=15000",
   "audio_lufs": -14.0,
   "audio_peak_db": -1.2,
   "master_lufs": -11.0,
@@ -78,6 +79,6 @@
     }
   ],
   "listening_verified": true,
-  "note": "Canonical shared voice from Sử Kể Lại (VietNarrator_su_ke_lai timbre) per user instruction.",
+  "note": "Canonical shared voice from Sử Kể Lại (VietNarrator_su_ke_lai timbre) per user instruction. V3.1 speed lock 1.10x (1.00 base_omnivoice_speed * 1.10 atempo; local WSOLA retime from existing 1.05x stems uses atempo=1.047619).",
   "active_option": 3
 }

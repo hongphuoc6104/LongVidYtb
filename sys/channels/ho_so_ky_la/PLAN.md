@@ -9,8 +9,8 @@
 - **Nhân vật dẫn chuyện (Persona):** Điều tra viên hiện trường điềm tĩnh, phân tích sắc sảo từng manh mối theo trình tự phá án.
 - **Khóa Giọng Kể & Master Âm Thanh (`VietNarrator_ho_so_ky_la` v3.0):**
   - **Voice lock:** `VietNarrator_ho_so_ky_la` (`sys/assets/voices/ch_ho_so_ky_la/profile.json`, SHA256 `cd25365252033ee60333c92e3f071a8dae3a99c865fe9e527686c7cf04048a9d`)
-  - **Nhịp độ:** `recommended_speed = 1.28x` (`base_omnivoice_speed = 1.12`, `atempo = 1.143`, `inter_beat_gap_sec = 0.06s`)
-  - **Tone & EQ:** `forensic_investigative_crisp` — `highpass=f=80,equalizer=f=180:t=q:w=1.1:g=1.2,equalizer=f=3200:t=q:w=1.0:g=2.2,equalizer=f=6500:t=q:w=1.2:g=1.5,lowpass=f=15000`
+  - **Nhịp độ:** `recommended_speed = 1.10x` (baseline TTS mới V3.1: `base_omnivoice_speed = 1.00`, `atempo = 1.10`, `inter_beat_gap_sec = 0.10s`; retime local từ stem `1.05x` cũ dùng WSOLA `atempo = 1.047619` để giữ rõ chữ & trầm lắng)
+  - **Tone & EQ:** `forensic_investigative_crisp` — `highpass=f=85,equalizer=f=210:t=q:w=1.2:g=-1.2,equalizer=f=2800:t=q:w=1.0:g=2.4,equalizer=f=4800:t=q:w=1.1:g=1.8,equalizer=f=7500:t=q:w=1.3:g=1.0,lowpass=f=15000`
   - **Chuẩn phát sóng (Master Target):** `-11.0 LUFS` / `-1.0 dBTP` (WAV tham chiếu giữ `-14.0 LUFS / -1.2 dBTP`).
 - **Phân tách định dạng & phễu chuyển đổi:**
   - **YouTube Shorts (`short_9x16` — 9:16, `1440x2560` / `1080x1920`, `52–60s`):** Mở khóa ngay 3 giây đầu bằng nghịch lý hiện trường, giữ nhịp `2–3.5s/beat`, gắn `related_video` & link phễu dẫn trực tiếp sang bản Long tương ứng. Mục tiêu: Đạt triệu view Viral Discovery + kéo subscriber vào xem Long.
@@ -64,3 +64,8 @@
   python3 sys/tools/script_hook_scorer.py --content sys/channels/ho_so_ky_la/ep05_content_long.json --channel ho_so_ky_la --format long_16x9
   pytest -q sys/tests/test_channel_voice_profiles.py sys/tests/test_channel_ho_so_ky_la.py sys/tests/test_vn_dual_mode_pipeline.py
   ```
+
+## 7. Khóa Sản Xuất V3 & SSOT Skill Đặc Thù Riêng Kênh (`ho_so_ky_la_3d_noir_forensic_v3`)
+- **SSOT Skill Đặc Thù Riêng Kênh:** [.agents/skills/vp-channel-ho-so-ky-la/SKILL.md](../../../.agents/skills/vp-channel-ho-so-ky-la/SKILL.md) (kèm [visual-grammar-noir-forensic.md](../../../.agents/skills/vp-channel-ho-so-ky-la/references/visual-grammar-noir-forensic.md) và [pacing-and-script-rules.md](../../../.agents/skills/vp-channel-ho-so-ky-la/references/pacing-and-script-rules.md)).
+- **File Khóa Tham Số Máy Đọc:** [channel_v3_production_lock.json](channel_v3_production_lock.json) (`LOCKED_PRODUCTION_V3`, đồng bộ `HO_SO_KY_LA_PRODUCTION_LOCK` trong `sys/tools/produce_vn_dual_mode.py`, giọng `VietNarrator_ho_so_ky_la` `1.10x`, `260` beats / `10` chương Long & `18` beats Short; kèm 4 phong cách hình ảnh đột phá: `STYLE_1_IMAX_35MM_LIVE_ACTION`, `STYLE_2_FERN_3D_XRAY_CUTAWAY`, `STYLE_3_LEMMINO_CHIAROSCURO_ARCHIVE`, `STYLE_4_VOX_INVESTIGATIVE_SPLIT_RADAR`).
+- **Nguyên tắc phối hợp (Không ghi đè quy trình chung):** Giữ nguyên 100% các skill quy trình dùng chung (`vp-research-architect`, `vp-scriptwriting`, `vp-flow-cdp`, `vp-colab-bridge`, `vp-omni-platform`, `vp-production`); toàn bộ ngữ pháp hình ảnh 3D Noir Forensic Diorama 4 chế độ (`MODE_1_EVIDENCE_STAMP`, `MODE_2_HYPOTHESIS_CONTRAST`, `MODE_3_DOSSIER_CHECKLIST`, `MODE_4_NOIR_CINEMATIC_PACING`), xử lý `delogo` góc phải dưới và cấu hình Studio `profile_3` (cổng `9224`) được cô lập hoàn toàn trong [.agents/skills/vp-channel-ho-so-ky-la/SKILL.md](../../../.agents/skills/vp-channel-ho-so-ky-la/SKILL.md).

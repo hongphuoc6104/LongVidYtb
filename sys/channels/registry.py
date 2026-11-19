@@ -190,9 +190,9 @@ CHANNEL_DESCRIPTIONS: Dict[str, str] = {
         "thức ứng dụng thực tiễn cho cộng đồng học hỏi."
     ),
     "chanh_niem_ke": (
-        "Lắng đọng tâm hồn cùng những câu chuyện Thiền, triết lý Phật giáo ứng dụng và thực "
-        "hành chánh niệm giữa đời sống bận rộn. Giúp bạn buông bỏ âu lo, chuyển hóa phiền "
-        "muộn và tìm lại sự bình an nội tâm đích thực."
+        "Hiểu Tận Gốc (@HieuTanGocVN) — Giải mã đến tận gốc các thảm họa kỹ thuật, sự cố hạt "
+        "nhân, sụp đổ hạ tầng, đại dịch và bước ngoặt lịch sử - địa chính trị qua bản đồ GIS "
+        "thực tế và mặt cắt kỹ thuật trực quan, giúp bạn hiểu bản chất mà không phải nhớ số liệu."
     ),
     "loi_sang_soi": (
         "Giải mã các dụ ngôn Kinh Thánh và câu chuyện đức tin vượt thời gian qua nét vẽ 2D "
@@ -933,78 +933,86 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
             id="co_the_ke",
             name="Cơ Thể Kể",
             niche="Sức khỏe và cơ thể được nhân hóa",
-            promise="Các cơ quan trong người bạn tự kể chuyện, vui mà đúng khoa học.",
-            audience="Người 18-40 quan tâm sức khỏe, thói quen sinh hoạt",
-            persona="Các cơ quan nội tạng biết nói, mỗi cơ quan một tính cách",
-            tone="Hài, nhân hóa, dễ thương nhưng chính xác về khoa học",
+            promise="Giải mã những phản ứng kỳ diệu bên trong cơ thể người qua giải phẫu 3D y sinh sắc nét và dẫn chứng khoa học xác thực.",
+            audience="Người trưởng thành 25-44 tuổi tại Việt Nam quan tâm sức khỏe, giấc ngủ, miễn dịch và hiệu suất sống",
+            persona="Người dẫn chuyện khoa học giải phẫu 3D y sinh điềm tĩnh, đáng tin cậy",
+            tone="Trực quan y sinh, điềm tĩnh, rõ cơ chế sinh học bên trong cơ thể (authoritative_calm)",
+            voice="VietNarrator_co_the_ke",
+            speed=1.12,
             tone_rules=(
-                "Open with 'if you do X, this is what your body does'.",
-                "Let one organ character narrate in first person.",
-                "Every health claim must cite a medical source in the description.",
-                "Never claim cures; end with 'hỏi bác sĩ nếu...' when relevant.",
+                "Drop straight into the immediate cellular or physiological shock within 3 seconds (zero channel intros).",
+                "Pair everyday habit triggers with internal 3D endoscopic, neural, or immune mechanism narration.",
+                "Every health claim must cite a peer-reviewed source (WHO, NIH, AHA, CDC, Nature) in the description.",
+                "Never claim miracle cures or sell unverified supplements; advise consulting a doctor when relevant.",
             ),
             hook_formulas=(
-                "Nếu bạn [thói quen], đây là điều [cơ quan] phải chịu.",
-                "Điều gì xảy ra với cơ thể khi bạn [hành động] trong [thời gian]?",
-                "[Cơ quan] của bạn đang than phiền vì [thói quen].",
-                "Đừng [thói quen phổ biến] nữa, [cơ quan] sẽ cảm ơn bạn.",
+                "Nếu bạn [thói quen] trong [thời gian], đây là phản ứng bên trong [cơ quan] bạn.",
+                "[Số liệu sinh học]% [tế bào/cơ quan] làm gì khi bạn [hành động]?",
+                "Điều gì thực sự xảy ra bên trong cơ thể khi bạn [thói quen phổ biến]?",
+                "Vì sao [triệu chứng quen thuộc] thực chất là tín hiệu cảnh báo từ [cơ quan]?",
             ),
-            avoid=("Cure or treatment claims", "Supplement promotion without evidence", "Body shaming"),
-            short_spec=_short((30, 45), "Hỏi: bạn có thói quen này không? Lưu lại để nhắc mình."),
-            long_spec=_long((480, 720), "Gợi tập 'một ngày của cơ quan khác'."),
+            avoid=("Cure or treatment claims", "Supplement promotion without evidence", "Graphic gore", "2D stickman or kawaii cartoon slop"),
+            short_spec=_short((48, 60), "Đặt câu hỏi phản xạ sức khỏe + cầu nối <= 20 âm tiết sang 'Cơ Thể Kể' (Related Video)."),
+            long_spec=_long((510, 780), "Gợi tập 'một ngày của cơ quan khác' trên Cơ Thể Kể.",
+                            ("Cold open: shocking physiological threshold in 0-12s",
+                             "Everyday trigger meets 3D endoscopic cellular cascade",
+                             "Hour-by-hour organ stress breakdown (10 chapters, re-hooks)",
+                             "Normal baseline vs overload comparison (Split X-Ray)",
+                             "Evidence-based recovery steps backed by medical studies",
+                             "Reflective health debate CTA & next organ episode tease")),
             visual=VisualIdentity(
-                profile_id="ch_organ_buddies",
-                label="Nội tạng dễ thương: cơ quan có mặt và tính cách, nền trắng sạch",
+                profile_id="ch_co_the_ke_biomedical_v3",
+                label="8K 3D Endoscopic Biomedical Cinematography & 4-Mode Storytelling (co_the_ke_3d_biomedical_v3)",
                 style_description=(
-                    "Clean 2D kawaii medical-explainer illustration: smooth medium black outlines (#222222), flat "
-                    "unshaded fills in soft organ pink (#F4A6A6), stomach peach (#F6C28B), liver maroon (#A23E48), lung "
-                    "rose (#F28C9B) and calm blue (#7FB3D5) on a flat solid white canvas (#FFFFFF); organs drawn as "
-                    "simplified anatomically recognizable characters with tiny faces, stubby arms and expressive "
-                    "eyebrows; orthographic 2D, no gore, no realistic anatomy textures, no gradients, no 3D."
+                    "8K Unreal Engine 5 / Octane 3D Endoscopic Biomedical Cinematography (co_the_ke_3d_biomedical_v3): "
+                    "translucent volumetric anatomical organ cutaways, arterial capillary flythroughs with glowing red blood cells, "
+                    "firing neural synapses and immune NK-cell physics lit by clinical X-ray cyan (#06B6D4) and arterial danger "
+                    "crimson (#EF4444) against deep biomedical navy (#0A192F) and slate shadow (#0F172A); fused in 2K post with "
+                    "MODE_1_BIOMETRIC_STAMP, MODE_2_NORMAL_VS_STRESS_SPLIT, MODE_3_CASCADE_CHECKLIST, and MODE_4_ENDOSCOPIC_PACING, "
+                    "strictly zero 2D cartoon stickers, zero surgical gore, zero legible gibberish text."
                 ),
                 cast_appearance=(
-                    "Recurring organ characters: Tim (heart) brave and loud, Dạ Dày (stomach) dramatic complainer, "
-                    "Gan (liver) tired hard worker, Não (brain-shaped round pink blob) overthinking boss; plus a simple "
-                    "doodle human host with a round white head"
+                    "Translucent glowing 3D anatomical organ assemblies (heart chambers, cortical neuron networks, alveolar sacs, "
+                    "hepatic lobules, cervical spinal discs) alongside clean photorealistic human silhouette overlays for habit context"
                 ),
-                outfit="Organs have no clothing; the human host wears a flat calm-blue (#7FB3D5) T-shirt",
-                palette=("#FFFFFF", "#F4A6A6", "#F6C28B", "#A23E48", "#F28C9B", "#7FB3D5"),
-                thumbnail_rule="One organ character with a dramatic expression + 2-3 word warning in bold letters.",
+                outfit="Translucent clinical X-ray anatomical silhouette rim-lit in clinical cyan (#06B6D4) over deep navy (#0A192F)",
+                palette=("#0A192F", "#0F172A", "#06B6D4", "#EF4444", "#F8FAFC", "#F59E0B"),
+                thumbnail_rule="Flow-native 3D biomedical X-ray close-up of the stressed organ in Cyan/Crimson with 2-4 crisp uppercase Vietnamese words, zero PIL card overlays.",
             ),
             references=(
                 ReferenceChannel("Zack D. Films", "YouTube Shorts/TikTok", "short",
-                                 "Drop straight into 'what happens if' with zero intro (format only)."),
-                ReferenceChannel("Kurzgesagt", "YouTube", "long", "Deep, well-sourced science explainers."),
-                ReferenceChannel("Bác sĩ Huy", "TikTok", "short", "Vietnamese doctor-backed health myths busting."),
+                                 "Drop straight into visceral 3D anatomical simulation within 2 seconds (format only)."),
+                ReferenceChannel("Nucleus Medical Media", "YouTube", "long", "Authoritative 3D physiological & cellular animation."),
+                ReferenceChannel("Kurzgesagt", "YouTube", "long", "Deep, peer-reviewed science explainers."),
             ),
             seed_topics=(
-                "Điều gì xảy ra khi bạn nhịn ăn sáng 1 tháng",
-                "Dạ dày nói gì khi bạn ăn khuya",
-                "Một ngày của lá gan sau bữa nhậu",
-                "Vì sao ngồi lâu làm đau lưng",
-                "Uống nước đá có thật sự hại không",
+                "24 giờ không ngủ: não tự ăn tế bào và 70% miễn dịch tê liệt ra sao",
+                "Điều gì xảy ra khi bạn bỏ bữa sáng 30 ngày liên tiếp",
+                "Uống cà phê lúc bụng rỗng tác động đến dạ dày và cortisol như thế nào",
+                "Cúi đầu nhìn điện thoại làm đốt sống cổ gánh áp lực 27 cân ra sao",
+                "Tại sao da tự sạm đen dưới tia UV để bảo vệ ADN tế bào",
             ),
-            hashtags=("#suckhoe", "#cothe", "#songkhoe", "#bacsi", "#learnontiktok"),
-            monetization=("YouTube AdSense", "Affiliate đồ gia dụng sức khỏe (không tuyên bố chữa bệnh)", "Booking"),
+            hashtags=("#CoTheKe", "#KhoaHocCoThe", "#GiaiPhau3D", "#SucKhoeKhoaHoc", "#SinhHoc"),
+            monetization=("YouTube AdSense (retention cao trên TV & Mobile)", "Series giải phẫu 3D chuyên sâu", "Membership"),
             wave=1,
             speed_optimization=SpeedOptimizationSpec(
-                render_mode="hybrid_motion",
-                fast_short_max_images=6,
+                render_mode="flow_full_frame",
+                fast_short_max_images=8,
                 spinoff_shorts_per_long=4,
-                remotion_motion_ratio=0.40,
-                estimated_short_minutes=(7, 10),
-                estimated_bundle_minutes=(30, 40),
-                notes="Fixed 4 organ mascots (Tim, Dạ Dày, Gan, Não) + Remotion timeline timers ('Sau 15 phút...', 'Sau 2 giờ...').",
+                remotion_motion_ratio=0.0,
+                estimated_short_minutes=(6, 10),
+                estimated_bundle_minutes=(30, 45),
+                notes="V3 2K 3D Endoscopic Biomedical (2560x1440 Long / 1440x2560 Short, VietNarrator_co_the_ke 1.12x, bottom-right delogo + watermark).",
             ),
             engagement=EngagementSpec(
-                cta_voice="Nội tạng biết nói",
+                cta_voice="Người dẫn chuyện khoa học y sinh",
                 bridge_templates=(
-                    "Muốn nghe tim, gan, não kể tiếp? Bản dài trên YouTube.",
+                    "Khám phá toàn bộ cơ chế 3D trong tập dài trên Cơ Thể Kể.",
                 ),
                 close_templates=(
-                    "Cái cổ của bạn nhờ mình nhắn: lưu video này giùm nó.",
+                    "Tối nay bạn định ngủ lúc mấy giờ? Đừng để tế bào miễn dịch kiệt sức nhé.",
                 ),
-                endcard_text="BẢN ĐẦY ĐỦ TRÊN YOUTUBE",
+                endcard_text="XEM TẬP ĐẦY ĐỦ TRÊN CƠ THỂ KỂ",
                 banned_cta_phrases=DEFAULT_BANNED_CTA_PHRASES,
             ),
         ),
@@ -1739,84 +1747,85 @@ def _build_channels() -> Tuple[ChannelProfile, ...]:
         ),
         ChannelProfile(
             id="chanh_niem_ke",
-            name="Chánh Niệm Kể",
-            niche="Triết lý Phật giáo ứng dụng, Chánh niệm (Mindfulness) và tâm lý học buông bỏ trong đời sống hiện đại",
-            promise="Một tích truyện Thiền và bài học Chánh niệm giúp bạn lắng dịu tâm trí, chuyển hóa khổ đau trong 60 giây.",
-            audience="Người đi làm căng thẳng, người muốn tìm sự bình an nội tâm và hiểu đúng triết lý Phật học nguyên thủy",
-            persona="Người kể chuyện nhà Thiền điềm đạm, giải thích Phật pháp bằng tâm lý học gần gũi, không mê tín",
-            tone="Trầm ấm, từ bi, tĩnh tại, sâu sắc, chữa lành",
+            name="Hiểu Tận Gốc",
+            niche="Giải mã đến tận gốc các thảm họa kỹ thuật, sự cố hạt nhân, sụp đổ hạ tầng, đại dịch và bước ngoặt lịch sử - địa chính trị",
+            promise="Mỗi tập dựng lại chuỗi nhân quả từ bản đồ địa lý GIS thực tế và mặt cắt kỹ thuật 2D, giúp bạn nhìn thấy chính xác mắt xích nào đã đứt gãy.",
+            audience="Khán giả Việt Nam 18–45 tuổi tò mò về bản chất các thảm họa kỹ thuật, sự cố hạt nhân, đại dịch và những cú sập lịch sử",
+            persona="Người kể chuyện tài liệu điềm tĩnh, giọng nam miền Bắc chuẩn KTTV Studio V3 — dịch kỹ thuật phức tạp sang hình ảnh đời thường",
+            tone="Điềm tĩnh, mạch lạc, nhân-quả sâu sắc, hài hước trớ trêu tinh tế",
             tone_rules=(
-                "Mở đầu bằng một tích truyện Thiền ngắn hoặc nỗi bất an tâm lý đời thường trong 3 giây.",
-                "Dùng ẩn dụ mũi tên thứ hai hoặc hạt giống tâm để giải thích cơ chế khổ đau.",
-                "Không mê tín dị đoan, không cầu xin ban phước; tập trung vào sự quán chiếu và buông bỏ của tự tâm.",
-                "Kết thúc bằng 1 bài tập thở hoặc câu hỏi quán chiếu giúp an trú trong hiện tại.",
+                "Mở đầu bằng một nghịch lý nhân-quả hoặc câu hỏi ngược trực giác trong 3 giây đầu.",
+                "Quy đổi thông số kỹ thuật sang hình ảnh vật lý đời thường, tránh nhồi nhét số liệu khô khan.",
+                "Kết nối trực tiếp bản đồ vệ tinh GIS (bắt buộc Hoàng Sa & Trường Sa trên bản đồ châu Á/Việt Nam) với sa bàn giấy nhăn 3D.",
+                "Chuyển chương bằng điểm chạm khẩu ngữ tự nhiên kèm khoảng lặng chiến lược cho Foley SFX.",
             ),
             hook_formulas=(
-                "Vì sao bạn càng cố xua đuổi [cơn giận/lo âu] thì nó lại càng lớn lên?",
-                "Mũi tên thứ hai: bí mật Phật học giúp bạn thoát khỏi 90% nỗi khổ cuộc đời.",
-                "Câu chuyện chiếc thuyền rỗng: vì sao bạn tức giận khi bị người khác va vào?",
-                "Khi tâm trí quá tải lúc nửa đêm, hãy thử dừng lại và làm điều này.",
+                "Nút dừng khẩn cấp được tạo ra để cứu lò phản ứng — vậy vì sao bấm nút này lại kích nổ Chernobyl?",
+                "Con đập bê tông không hề vỡ một vết nứt, vậy ngọn núi phía sau đã tạo ra thảm họa ra sao?",
+                "Không phải tảng băng trôi đơn thuần: 5 mắt xích đinh tán và thép đã xé toạc tàu Titanic thế nào?",
+                "Chỉ từ một tờ giấy phép bảo trì bị bỏ quên, giàn khoan ngoài khơi Biển Bắc sụp đổ trong 22 phút ra sao?",
             ),
-            avoid=("Mê tín dị đoan hoặc cúng bái giải hạn", "Giáo điều tôn giáo áp đặt", "Phán xét nghiệp chướng của người khác"),
-            short_spec=_short((45, 60), "Hỏi người xem: bạn đang vướng bận điều gì? Thở một hơi thật sâu và buông xuống nhé."),
-            long_spec=_long((600, 960), "Gợi tích truyện Thiền và bài tập chánh niệm tiếp theo."),
+            avoid=("Giáo điều hàn lâm khô khan", "Nhồi nhét niên biểu không có mạch nhân-quả", "Thuyết âm mưu vô căn cứ"),
+            short_spec=_short((45, 60), "Mời người xem bấm vào kênh Hiểu Tận Gốc để xem trọn bộ phân tích chuỗi nhân quả."),
+            long_spec=_long((540, 840), "Khép vòng lặp mở bài và mời người xem bình luận góc nhìn nhân-quả."),
             visual=VisualIdentity(
-                profile_id="ch_zen_sumie",
-                label="Tranh thủy mặc Sumi-e thiền định: mực tàu trên giấy xuyến chỉ, khoảng lặng tĩnh tại",
+                profile_id="ch_bipolar_chronicle",
+                label="Bipolar Map & 3D Crumpled Paper Chronicle: bản đồ vệ tinh tối màu + sa bàn giấy nhăn 3D",
                 style_description=(
-                    "Serene 2D East-Asian Sumi-e ink-wash painting on handmade Xuan rice paper canvas "
-                    "(#F5EFE0 warm textured rice paper, #1C1C1C expressive calligraphy brush ink, #5F7A61 bamboo sage wash, "
-                    "#D98A76 soft lotus blush, #8C7A6B tea-earth) with generous meditative negative space, water ripples and swaying bamboo strokes; "
-                    "orthographic 2D, at least 65% negative space, zero 3D, zero gradients."
+                    "Bipolar documentary collage aesthetic combining dark shaded-relief GIS cartography "
+                    "(#0B0D08 ocean, #3E403B relief, #7B3638/#3A6788 territory tints) with warm off-white "
+                    "3D crumpled archive paper (#E5E5E0), crisp dark charcoal studio cutaways (#141619), "
+                    "archival B&W documentary cutouts, and clean slab-serif callout pills (#FAD01A highlight, "
+                    "#EFE8D5 parchment cards); strictly zero AI text clutter."
                 ),
-                cast_appearance="Peaceful minimalist brush-painted Zen practitioner with gentle facial contours, calm closed eyes, and flowing bamboo-sage linen robe",
-                outfit="Flowing unadorned bamboo-sage (#5F7A61) linen robe with wide sleeves, zero shading",
-                palette=("#F5EFE0", "#1C1C1C", "#5F7A61", "#D98A76", "#8C7A6B"),
-                thumbnail_rule="Serene Zen monk meditating near ink-wash ripples + 2-4 uppercase VN words.",
+                cast_appearance="Archival B&W historical documentary cutouts and crisp 3D isometric engineering cutaway chambers on dark charcoal studio backdrop",
+                outfit="Period-accurate Soviet/industrial engineering attire and documentary archival portraits",
+                palette=("#0B0D08", "#E5E5E0", "#FFC93C", "#1F2A44", "#C83228"),
+                thumbnail_rule="5-layer @SuDehieukhongphainho template: double border + weathered GIS map + bullseye & red vectors + #EFE8D5 title card + 0px-outline B&W cutout.",
             ),
             references=(
-                ReferenceChannel("Làng Mai (Plum Village)", "YouTube", "long",
-                                 "Kể chuyện đời thường dịu dàng, dùng ẩn dụ hạt giống tâm và hơi thở để chuyển hóa cơn giận, lo âu."),
-                ReferenceChannel("Doug's Dharma", "YouTube", "long",
-                                 "Giải thích Phật học nguyên thủy (Tứ Diệu Đế, Mũi tên thứ hai, Vô thường) khách quan, rõ ràng cho người hiện đại."),
-                ReferenceChannel("Einzelgänger (Buddhism & Zen Series)", "YouTube", "long",
-                                 "Mở đầu bằng tích truyện Thiền ngắn 15s rồi phân tích tâm lý học ứng dụng sâu sắc."),
-                ReferenceChannel("Kinh Pháp Cú (Dhammapada)", "Book/Scripture", "short",
-                                 "Kho ẩn dụ gốc: Mũi tên thứ hai, Chiếc thuyền rỗng, Con voi bị thuần hóa."),
+                ReferenceChannel("Sử Để Hiểu (@SuDehieukhongphainho)", "YouTube", "long",
+                                 "Chuyển đổi nhịp giữa bản đồ địa hình nổi và sa bàn giấy nhăn, kể chuyện nhân-quả dễ hiểu không cần nhớ số liệu."),
+                ReferenceChannel("LEMMiNO", "YouTube", "long",
+                                 "Dựng lại mốc thời gian chính xác bằng 3D cutaway tối giản và khoảng lặng âm thanh có chủ đích."),
+                ReferenceChannel("Veritasium", "YouTube", "long",
+                                 "Dịch cơ chế vật lý/kỹ thuật phức tạp sang ẩn dụ đời thường sắc bén."),
+                ReferenceChannel("Sử Để Hiểu Shorts", "YouTube", "short",
+                                 "Mở đầu bằng nghịch lý 1 câu trong 3 giây và dẫn về tập tài liệu dài."),
             ),
             seed_topics=(
-                "lắng dịu tâm trí",
-                "Ẩn Dụ Mũi Tên Thứ Hai: Vì Sao Nỗi Đau Là Bắt Buộc Nhưng Khổ Đau Là Tự Chọn?",
-                "Khi Cơn Giận Bốc Lên: Cách Ôm Ấp Tâm Mình Theo Tinh Thần Thiền Sư Thích Nhất Hạnh",
-                "Câu Chuyện Chiếc Thuyền Rỗng: Vì Sao Ta Luôn Giận Người Khác Dù Họ Vô Tình?",
-                "Hiểu Đúng Về Chữ Duyên Và Chữ Nghiệp Để Không Tự Dằn Vặt Quá Khứ",
-                "Nghệ Thuật Dừng Lại 3 Hơi Thở Khi Tâm Trí Quá Tải Giữa Đêm",
+                "Thảm họa Chernobyl từ đầu đến cuối, dễ hiểu nhớ lâu",
+                "Vì sao nút dừng khẩn cấp lại làm nổ lò Chernobyl?",
+                "Thảm họa tàu Titanic 1912: 5 lỗi thiết kế khiến con tàu không thể chìm bị xé toạc",
+                "Thảm họa tràn đập Vajont 1963: Con đập không vỡ nhưng sóng thần 250m san phẳng thung lũng",
+                "Sự cố hạt nhân Fukushima 2011: Điểm mù máy phát điện dưới tầng hầm trước sóng thần",
+                "Vỡ đập Bản Kiều 1975: Hiệu ứng domino đánh sập 62 con đập trong một đêm bão",
             ),
-            hashtags=("#chanhniemke", "#phatgiaoungdung", "#thien", "#buongbo", "#chualanh"),
-            monetization=("YouTube AdSense", "Affiliate sách chánh niệm & chuông xoay", "Khóa thiền tĩnh tâm"),
+            hashtags=("#HieuTanGoc", "#ThamHoaKyThuat", "#GiaiMaNhanQua", "#LichSuTheGioi", "#DiaChinhTri"),
+            monetization=("YouTube AdSense", "Tài trợ giáo dục & sách lịch sử - khoa học", "Chuỗi tài liệu chuyên sâu"),
             philosophy_id="cognition",
             wave=3,
             speed_optimization=SpeedOptimizationSpec(
                 render_mode="hybrid_motion",
-                fast_short_max_images=5,
+                fast_short_max_images=6,
                 spinoff_shorts_per_long=4,
-                remotion_motion_ratio=0.45,
-                estimated_short_minutes=(7, 10),
-                estimated_bundle_minutes=(28, 38),
-                notes="Lotus ripples and two-arrows animations handled via Remotion kinetic SVG layers.",
+                remotion_motion_ratio=0.65,
+                estimated_short_minutes=(6, 9),
+                estimated_bundle_minutes=(24, 34),
+                notes="Bipolar 30fps GIS map + 3D crumpled paper collage engine rendered via Colab T4 h264_nvenc.",
             ),
             engagement=EngagementSpec(
-                cta_voice="Người kể chuyện nhà Thiền",
+                cta_voice="Người kể chuyện tài liệu Hiểu Tận Gốc",
                 bridge_templates=(
-                    "Toàn bộ bài giảng và mười phút thiền thở sâu mình chia sẻ trên YouTube Chánh Niệm Kể.",
+                    "Bấm vào kênh Hiểu Tận Gốc để xem trọn bộ chuỗi nhân quả từ đầu đến cuối nha.",
                 ),
                 close_templates=(
-                    "Thở vào tâm tĩnh lặng, thở ra miệng mỉm cười. Gửi video này cho người bạn thương nhé.",
+                    "Các bạn thấy mắt xích nào là đáng tiếc nhất? Bình luận góc nhìn của bạn bên dưới nha.",
                 ),
-                endcard_text="BẢN ĐẦY ĐỦ TRÊN YOUTUBE",
+                endcard_text="BẢN ĐẦY ĐỦ TRÊN HIỂU TẬN GỐC",
                 banned_cta_phrases=DEFAULT_BANNED_CTA_PHRASES,
             ),
-            extra={"handle_candidates": ["@ChanhNiemKeVN", "@ChanhNiemKeOfficial", "@KenhChanhNiemKe", "@ChanhNiemKe"]},
+            extra={"handle_candidates": ["@HieuTanGocVN", "@HieuTanGocOfficial", "@KenhHieuTanGoc", "@HieuTanGoc"]},
         ),
         ChannelProfile(
             id="loi_sang_soi",
@@ -3606,9 +3615,10 @@ ARCHETYPE_MAP: Dict[str, Dict[str, str]] = {
     # 4. pastel_duo (2 channels)
     "thuong_cho_kheo": {"id": "pastel_duo", "label": "4. Pastel Warm-Line Duo"},
     "en_kindred_sketch": {"id": "pastel_duo", "label": "4. Pastel Warm-Line Duo"},
-    # 5. tactical_atlas (2 channels)
+    # 5. tactical_atlas (3 channels)
     "ban_do_quyen_luc": {"id": "tactical_atlas", "label": "5. 2D Tactical Cartography (Maps)"},
     "en_choke_point": {"id": "tactical_atlas", "label": "5. 2D Tactical Cartography (Maps)"},
+    "chanh_niem_ke": {"id": "tactical_atlas", "label": "5. 2D Tactical Cartography (Maps)"},
     # 6. cosmos_vector (2 channels)
     "vu_tru_ti_hon": {"id": "cosmos_vector", "label": "6. Deep-Space Geometric Vector"},
     "en_pocket_cosmos": {"id": "cosmos_vector", "label": "6. Deep-Space Geometric Vector"},
@@ -3622,8 +3632,7 @@ ARCHETYPE_MAP: Dict[str, Dict[str, str]] = {
     # 8. editorial_risograph (2 channels)
     "luat_doi_thuong": {"id": "editorial_risograph", "label": "8. Editorial Risograph Print"},
     "en_fine_print": {"id": "editorial_risograph", "label": "8. Editorial Risograph Print"},
-    # 9. zen_sumie (3 channels)
-    "chanh_niem_ke": {"id": "zen_sumie", "label": "9. Sumi-e Zen Ink Wash"},
+    # 9. zen_sumie (2 channels)
     "minh_triet_song": {"id": "zen_sumie", "label": "9. Sumi-e Zen Ink Wash"},
     "en_second_arrow": {"id": "zen_sumie", "label": "9. Sumi-e Zen Ink Wash"},
     # 10. woodcut_gouache (5 channels)

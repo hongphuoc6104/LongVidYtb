@@ -2,12 +2,12 @@
 """Automated production bundle builder for channel 'co_the_ke' (Cơ Thể Kể).
 
 Channel Niche: Sức khỏe và cơ thể được nhân hóa.
-Persona: Các cơ quan nội tạng biết nói (Tim, Dạ Dày, Gan, Não, và Host).
-Visual: Clean 2D kawaii medical-explainer (profile 'ch_organ_buddies').
+Persona: Người dẫn chuyện khoa học giải phẫu 3D y sinh điềm tĩnh, đáng tin cậy.
+Visual: 8K 3D Endoscopic Biomedical Cinematography (profile 'ch_co_the_ke_biomedical_v3' / 'co_the_ke_3d_biomedical_v3').
 
 Builds Schema 3.0 bundles for:
-  - TikTok Short (short_9x16, <= 6 Flow images, 30-45s)
-  - YouTube Long (long_16x9, 8 scenes, 24 visual beats, with 3 standalone spinoff_shorts)
+  - YouTube/TikTok Short (short_9x16, <= 8 Flow images, 48-60s target)
+  - YouTube Long (long_16x9, 10 chapters / 240+ beats target, with standalone spinoff_shorts)
 """
 
 from __future__ import annotations
@@ -41,58 +41,62 @@ DEFAULT_SHORT_JOB = "co-the-ke-week1-9x16"
 DEFAULT_LONG_JOB = "co-the-ke-week1-16x9"
 
 # ---------------------------------------------------------------------------
-# CHARACTERS DEFINITION (SSOT for co_the_ke / ch_organ_buddies)
+# ANATOMICAL 3D ASSEMBLIES (SSOT for co_the_ke / co_the_ke_3d_biomedical_v3)
 # ---------------------------------------------------------------------------
 
 
 def build_characters() -> List[Dict[str, Any]]:
-    """Return recurring organ mascots and human host character specifications."""
+    """Return 3D biomedical anatomical focal assemblies for endoscopic visual consistency."""
     return [
         {
             "id": "CH01",
-            "name": "Tim (Quả tim dũng cảm)",
-            "role": "organ_mascot",
+            "name": "Hệ Tuần Hoàn & Tim 3D",
+            "role": "anatomical_3d_assembly",
             "appearance": (
-                "Cute 2D kawaii heart character Tim with bright red-pink body, tiny expressive face, "
-                "stubby arms and eyebrows, brave and energetic posture."
+                "Translucent 3D biomedical volumetric human heart and arterial capillary network "
+                "illuminated by pulsing arterial crimson (#EF4444) and clinical cyan (#06B6D4) over deep navy (#0A192F)."
             ),
-            "outfit": "No clothing, bare cute organ character.",
+            "outfit": "Pure anatomical 3D subsurface-scattering biological tissue, zero cartoon eyes or clothing.",
         },
         {
             "id": "CH02",
-            "name": "Dạ Dày (Cơ quan kịch tính)",
-            "role": "organ_mascot",
+            "name": "Niêm Mạc Dạ Dày & Hệ Tiêu Hóa 3D",
+            "role": "anatomical_3d_assembly",
             "appearance": (
-                "Cute 2D kawaii stomach character Da Day with peach-colored soft shape, "
-                "tiny dramatic round eyes and theatrical mouth."
+                "Unreal Engine 5 3D translucent human stomach cutaway showing mucosal rugae folds, "
+                "gastric acid micro-currents in luminous amber (#F59E0B) and alert crimson (#EF4444)."
             ),
-            "outfit": "No clothing, bare cute organ character.",
+            "outfit": "Clean photorealistic 3D endoscopic organ visualization, zero gore and zero cartoon face.",
         },
         {
             "id": "CH03",
-            "name": "Gan (Lá gan chăm chỉ)",
-            "role": "organ_mascot",
+            "name": "Tiểu Thùy Gan & Chuyển Hóa 3D",
+            "role": "anatomical_3d_assembly",
             "appearance": (
-                "Cute 2D kawaii liver character Gan with maroon-toned smooth rounded body, "
-                "tired but diligent eyes and tiny stubby arms."
+                "3D electron-microscope hepatic lobule cutaway with oxygenated vascular sinusoids, "
+                "glycogen energy granules, and toxin filtration pathways in cyan (#06B6D4) and warm amber (#F59E0B)."
             ),
-            "outfit": "No clothing, bare cute organ character.",
+            "outfit": "Scientific 3D biomedical macro structure on obsidian navy background (#0A192F).",
         },
         {
             "id": "CH04",
-            "name": "Não (Bộ não chỉ huy)",
-            "role": "organ_mascot",
+            "name": "Vỏ Não & Mạng Synap Thần Kinh 3D",
+            "role": "anatomical_3d_assembly",
             "appearance": (
-                "Cute 2D kawaii brain-shaped round pink blob mascot Nao with thoughtful eyebrows and stubby arms."
+                "Translucent 3D cortical brain cross-section and bioluminescent hippocampal neuron synapses "
+                "discharging electric cyan (#06B6D4) signals across cerebrospinal glymphatic channels."
             ),
-            "outfit": "No clothing, bare cute organ character.",
+            "outfit": "Anatomical 3D neural X-ray projection with zero sticky 2D cartoon traits.",
         },
         {
             "id": "CH05",
-            "name": "Chủ nhân cơ thể (Host)",
-            "role": "human_host",
-            "appearance": "Simple 2D indie doodle stickman with round white head, dot eyes and thin wire arms.",
-            "outfit": "Unshaded flat calm-blue (#7FB3D5) simple T-shirt and dark trousers.",
+            "name": "Hình Khối Giải Phẫu X-Quang 3D (Host)",
+            "role": "human_xray_subject",
+            "appearance": (
+                "Photorealistic translucent 3D X-ray human silhouette rim-lit in clinical cyan (#06B6D4) "
+                "revealing cervical spine, ribcage, and vascular core against deep biomedical navy (#0A192F)."
+            ),
+            "outfit": "Translucent diagnostic 3D medical silhouette without flat stickman outlines.",
         },
     ]
 
@@ -104,7 +108,7 @@ def build_characters() -> List[Dict[str, Any]]:
 STORY_WEEK1_SHORT: List[Tuple[str, str, str, str, str, List[Tuple[str, str]]]] = [
     (
         "Cú tát mở đầu với con số 27 cân",
-        "A bright minimalist medical clinic corner with a clean wooden consultation table.",
+        "A dark clinical 3D biomedical scan environment (#0A192F) illuminated by cyan-blue X-ray light.",
         "narrative_warm",
         "gentle_lived_friction",
         "lived_friction",
@@ -112,15 +116,15 @@ STORY_WEEK1_SHORT: List[Tuple[str, str, str, str, str, List[Tuple[str, str]]]] =
             (
                 "Nếu bạn cúi đầu nhìn điện thoại, cổ bạn phải gánh hai mươi bảy cân.",
                 (
-                    "full_scene:CH05|Doodle human host bends neck downward looking at glowing phone screen "
-                    "while heavy weight indicator badge appears on neck."
+                    "full_scene:CH05|Translucent 3D X-ray human profile bending neck 60 degrees over a phone screen "
+                    "while cervical vertebrae glow intense arterial crimson (#EF4444) under compressive stress."
                 ),
             ),
         ],
     ),
     (
         "Khối lượng tương đương đứa trẻ tám tuổi",
-        "A pure white studio space with an analytical comparison scale on the floor.",
+        "Deep navy biomedical laboratory space (#0A192F) with 3D volumetric biomechanical force vectors.",
         "analytical_crisp",
         "demystifying_truth",
         "empirical_conflict",
@@ -128,15 +132,15 @@ STORY_WEEK1_SHORT: List[Tuple[str, str, str, str, str, List[Tuple[str, str]]]] =
             (
                 "Nhưng điều bất ngờ là, áp lực này tương đương bạn cõng một đứa trẻ tám tuổi trên vai suốt cả ngày.",
                 (
-                    "concept_metaphor:CH05|Cute cartoon dumbbell labeled twenty-seven kilograms pressing "
-                    "down on human neck silhouette on clean canvas."
+                    "concept_metaphor:CH05|3D volumetric medical X-ray side-view contrasting neutral zero-degree cervical stack "
+                    "in calm cyan (#06B6D4) against strained 60-degree disc load in crimson (#EF4444), zero text."
                 ),
             ),
         ],
     ),
     (
         "Đốt sống cổ phát tín hiệu cầu cứu",
-        "A modern ergonomic laboratory with an anatomical spine display board.",
+        "3D endoscopic close-up inside strained cervical discs and stretched trapezius muscle fibers.",
         "analytical_crisp",
         "scientific_evidence",
         "empirical_conflict",
@@ -144,15 +148,15 @@ STORY_WEEK1_SHORT: List[Tuple[str, str, str, str, str, List[Tuple[str, str]]]] =
             (
                 "Khi đầu nghiêng sáu mươi độ, các đốt sống cổ lập tức phát tín hiệu đau buốt vì cơ bắp bị căng rách.",
                 (
-                    "concept_metaphor:CH04|Cute round pink blob brain mascot Nao waves warning alarm flag as "
-                    "mechanical spine diagram flashes soft red on white board."
+                    "concept_metaphor:CH04|Macro 3D Unreal Engine render of compressed intervertebral disc "
+                    "pulsing crimson nociceptor nerve spikes toward glowing cyan brainstem tracts."
                 ),
             ),
         ],
     ),
     (
         "Lưu lượng máu và oxy giảm sút",
-        "A clean vascular medical examination room with soft directional daylight.",
+        "3D internal vertebral artery endoscopy with flowing biconcave red blood cells.",
         "analytical_crisp",
         "mechanistic_dissection",
         "structural_model",
@@ -160,25 +164,25 @@ STORY_WEEK1_SHORT: List[Tuple[str, str, str, str, str, List[Tuple[str, str]]]] =
             (
                 "Lượng máu dẫn lên não sụt giảm, khiến bạn nhanh chóng hoa mắt và giảm hiệu suất làm việc.",
                 (
-                    "concept_metaphor:CH01|Cute kawaii heart mascot Tim pumps energetically holding tiny "
-                    "water hose pointing toward brain icon on white canvas."
+                    "concept_metaphor:CH01|3D endoscopic look inside constricted vertebral artery where arterial crimson "
+                    "red blood cells squeeze slowly through pinched vessel walls toward dimmed brain neurons."
                 ),
             ),
         ],
     ),
     (
         "Giải pháp nâng tầm mắt và lời kêu gọi",
-        "A sunny open morning room with clean white walls and a tidy standing desk.",
+        "Clean 3D clinical upright spine alignment studio illuminated in luminous X-ray cyan (#06B6D4).",
         "narrative_warm",
         "tactical_actionable",
         "actionable_resolution",
         [
             (
                 "Chỉ cần nâng điện thoại ngang tầm mắt là bạn đã cứu chiếc cổ của mình. "
-                "Bạn có hay cúi đầu dùng điện thoại không, lưu lại để nhắc mình nhé?",
+                "Bạn có hay cúi đầu dùng điện thoại không, chia sẻ cảm giác cổ vai gáy của bạn cùng Cơ Thể Kể nhé?",
                 (
-                    "full_scene:CH05|Doodle human host lifts phone straight to eye level with "
-                    "cheerful relaxed posture and upright spine."
+                    "full_scene:CH05|Translucent 3D X-ray human silhouette raising smartphone smoothly to eye level as "
+                    "cervical spine realigns upright and glows restorative cyan (#06B6D4)."
                 ),
             ),
         ],
@@ -263,8 +267,8 @@ def build_week1_short_topic(topic_title: Optional[str] = None) -> ResearchedTopi
         tone=ch.tone,
         language="vi",
         subtitles=True,
-        voice="VietNarrator",
-        speed=1.0,
+        voice="VietNarrator_co_the_ke",
+        speed=1.12,
         conversational_facts=True,
         visual_pacing_profile="full_frame_v1",
         channel_id=CHANNEL_ID,
@@ -287,174 +291,192 @@ def build_week1_short_topic(topic_title: Optional[str] = None) -> ResearchedTopi
 STORY_WEEK1_LONG: List[Tuple[str, str, str, str, str, List[Tuple[str, str]]]] = [
     (
         "Cuộc họp khẩn cấp lúc 2 giờ sáng",
-        "A clean 2D medical explainer room with a white wooden meeting desk.",
+        "Dark deep-navy 3D biomedical scan sanctuary (#0A192F) with volumetric volumetric neural alarm pulses.",
         "narrative_warm",
         "gentle_lived_friction",
         "lived_friction",
         [
             (
-                "Nếu bạn quyết định thức trắng đêm nay, đây là lúc các cơ quan họp khẩn.",
+                "Nếu bạn quyết định thức trắng đêm nay, đây là lúc các cơ quan kích hoạt báo động khẩn.",
                 (
-                    "full_scene:CH04|Cute round pink blob brain mascot Nao stands at whiteboard holding "
-                    "meeting notes beside meeting desk."
+                    "full_scene:CH04|3D translucent cortical brain cross-section glowing with arterial crimson (#EF4444) "
+                    "stress waves over deep biomedical navy (#0A192F) space at midnight."
                 ),
             ),
             (
                 "Nhưng điều kinh hoàng nhất không phải là cơn buồn ngủ ập đến.",
                 (
-                    "concept_metaphor:CH04|Large question mark drawn in soft peach ink floating over the clean meeting table."
+                    "concept_metaphor:CH04|Microscopic 3D X-ray camera diving through blood-brain barrier capillary walls "
+                    "lit by stark clinical cyan (#06B6D4) and crimson alarm rim lighting."
                 ),
             ),
             (
-                "Lúc hai giờ sáng, não bộ phát tín hiệu cầu cứu vì độc tố bắt đầu tích tụ.",
+                "Lúc hai giờ sáng, não bộ phát tín hiệu cầu cứu vì protein độc tố bắt đầu tích tụ.",
                 (
-                    "full_scene:CH04|Brain mascot Nao points nervously to chart showing rising red toxin indicators."
+                    "full_scene:CH04|3D electron-microscope view of dark protein plaque clusters accumulating around strained "
+                    "cortical neurons glowing faint crimson (#EF4444), zero text."
                 ),
             ),
             (
-                "Tim và gan phải gồng mình hoạt động gấp đôi để giữ bạn tỉnh táo.",
+                "Tim và gan phải gồng mình hoạt động gấp đôi để giữ cơ thể đứng vững.",
                 (
-                    "full_scene:CH01,CH03|Heart mascot Tim and liver mascot Gan stand ready with energetic and determined expressions."
+                    "full_scene:CH01,CH03|Translucent 3D volumetric human torso cutaway highlighting pulsating heart chambers "
+                    "and dense capillary hepatic lobules straining under crimson workload."
                 ),
             ),
         ],
     ),
     (
         "Não bộ và hệ thống dọn rác glymphatic bị đình trệ",
-        "A soft-lit ivory room with an analytical neurological cleaning diagram.",
+        "Translucent 3D cerebrospinal fluid space bathed in restorative cyan (#06B6D4) depth.",
         "analytical_crisp",
         "demystifying_truth",
         "empirical_conflict",
         [
             (
-                "Khi bạn ngủ say, hệ thống dọn rác trong não sẽ tự động xả nước rửa trôi protein rác.",
+                "Khi bạn ngủ say, hệ thống dọn rác trong não sẽ tự động xả dòng dịch rửa trôi protein độc.",
                 (
-                    "concept_metaphor:CH04|Brain mascot Nao holds tiny garden watering hose gently flushing "
-                    "away small gray clutter blocks."
+                    "concept_metaphor:CH04|Luminous clinical cyan (#06B6D4) cerebrospinal fluid surge washing cleanly through "
+                    "shrinking astrocyte perivascular channels in smooth 3D endoscopic motion."
                 ),
             ),
             (
-                "Nhưng nếu bạn thức trắng, van xả nước làm sạch hoàn toàn đóng chặt.",
+                "Nhưng nếu bạn thức trắng, van xả dòng làm sạch gần như khép chặt.",
                 (
-                    "visual_diagram:none|A clean hand-drawn diagram showing a closed golden door latch with zero water flow."
+                    "visual_diagram:none|3D biomedical cross-section of tight swollen astrocytes sealing narrow perivascular drains "
+                    "in deep obsidian slate (#0F172A) with zero fluid clearance."
                 ),
             ),
             (
-                "Chất độc beta-amyloid ứ đọng lại từng phút như rác thải ùn tắc.",
+                "Chất độc beta-amyloid ứ đọng lại từng phút như dòng thải ùn tắc.",
                 (
-                    "concept_metaphor:CH04|Tiny gray dust particles gathering in small clusters around thoughtful brain mascot Nao."
+                    "concept_metaphor:CH04|Dense crimson (#EF4444) beta-amyloid protein aggregates clinging to branching neural "
+                    "dendrites under moody deep-navy surgical lighting."
                 ),
             ),
             (
                 "Đây là lý do bạn cảm thấy đầu óc nặng trĩu và mờ mịt sau nửa đêm.",
                 (
-                    "full_scene:CH04|Brain mascot Nao holds tiny temples with stubby arms expressing cognitive fatigue."
+                    "full_scene:CH04|3D translucent human cranium filled with dim pulsing red hypoxic fog as synaptic "
+                    "electric sparks visibly stutter and weaken."
                 ),
             ),
         ],
     ),
     (
         "Trái tim tăng tốc trong đêm tĩnh lặng",
-        "A high-tech cardiology observation room with a glowing rhythmic pulse display.",
+        "3D internal cardiology chamber illuminated by arterial crimson (#EF4444) valve motion.",
         "analytical_crisp",
         "scientific_evidence",
         "empirical_conflict",
         [
             (
-                "Trong khi đó, quả tim dũng cảm Tim phải nhận lệnh tăng áp.",
+                "Trong khi đó, hệ tuần hoàn và cơ tim phải nhận lệnh tăng áp liên tục.",
                 (
-                    "full_scene:CH01|Cute kawaii heart mascot Tim holding miniature megaphone giving pumping signals on white floor."
+                    "full_scene:CH01|Unreal Engine 5 3D volumetric beating heart racing rapidly inside translucent chest ribs, "
+                    "coronary arteries pulsing fierce arterial crimson (#EF4444)."
                 ),
             ),
             (
-                "Nồng độ hormone cortisol tăng cao kích thích huyết áp nhảy múa liên tục.",
+                "Nồng độ hormone cortisol tăng cao kích thích huyết áp nhảy vọt liên tục.",
                 (
-                    "visual_diagram:none|Clean line chart showing blood pressure curve climbing upward sharply in soft pink ink."
+                    "visual_diagram:none|Macro 3D vascular tunnel showing red blood cell torrents surging past taut arterial "
+                    "endothelial walls lit in warm amber (#F59E0B) stress markers."
                 ),
             ),
             (
-                "Thay vì được nghỉ ngơi đập chậm lại từ bốn mươi đến năm mươi nhịp mỗi phút,",
+                "Thay vì được nghỉ ngơi hạ nhịp xuống bốn mươi đến năm mươi nhịp mỗi phút,",
                 (
-                    "concept_metaphor:CH01|Heart mascot Tim holding a tiny stopwatch measuring rhythmic ticking cadence."
+                    "concept_metaphor:CH01|Clean 3D anatomical split view contrasting serene cyan (#06B6D4) resting myocardium "
+                    "against stressed hyper-active crimson heart wall."
                 ),
             ),
             (
-                "tim bạn bị ép đập dồn dập như thể bạn đang leo dốc giữa đêm.",
+                "tim bạn bị ép co bóp dồn dập như thể bạn đang chạy dốc giữa đêm.",
                 (
-                    "full_scene:CH01|Heart mascot Tim jogs energetically along an inclined running track with determined brave expression."
+                    "full_scene:CH01|Rapid 3D endoscopic camera racing through turbulent aortic valve leaflets pounding against "
+                    "high systolic vascular resistance."
                 ),
             ),
         ],
     ),
     (
         "Lá gan kiệt sức trong nhà máy lọc độc",
-        "A modern hepatic laboratory with rows of glowing biochemical test tubes.",
+        "Microscopic 3D hepatic lobule sinusoids in deep biomedical navy (#0A192F).",
         "analytical_crisp",
         "mechanistic_dissection",
         "structural_model",
         [
             (
-                "Ở tầng dưới cơ thể, lá gan Gan đang đối diện một ca trực ác mộng.",
+                "Ở tầng dưới cơ thể, lá gan đang đối diện một ca trực quá tải.",
                 (
-                    "full_scene:CH03|Cute kawaii liver mascot Gan wearing forehead sweatband holding miniature wrench."
+                    "full_scene:CH03|Translucent 3D biomedical liver lobule cutaway illuminated by strained crimson (#EF4444) "
+                    "bile ducts and frantic metabolic enzyme streams."
                 ),
             ),
             (
                 "Ba giờ sáng vốn là khung giờ vàng để gan tái tạo tế bào và phân giải mỡ.",
                 (
-                    "concept_metaphor:CH03|Liver mascot Gan inspecting three clean glass filtering flasks labeled Glycogen on wooden shelf."
+                    "concept_metaphor:CH03|Macro 3D hepatocyte cell network shimmering with regenerative cyan (#06B6D4) repair "
+                    "pulses breaking down clean golden glycogen chains."
                 ),
             ),
             (
-                "Nhưng khi bạn thức, gan buộc phải chuyển hướng điều phối năng lượng khẩn cấp.",
+                "Nhưng khi bạn thức, gan buộc phải chuyển hướng điều phối đường huyết khẩn cấp.",
                 (
-                    "concept_metaphor:CH03|Liver mascot Gan hurriedly turning tiny valves redirecting golden energy droplets."
+                    "concept_metaphor:CH03|3D metabolic pathway animation redirecting amber (#F59E0B) glucose vesicles "
+                    "away from cellular repair toward emergency bloodstream supply."
                 ),
             ),
             (
                 "Lượng mỡ thừa không được xử lý kịp sẽ bắt đầu lắng đọng âm thầm.",
                 (
-                    "visual_diagram:none|Clean microscopic cellular diagram showing tiny lipid bubbles settling gently on white surface."
+                    "visual_diagram:none|Microscopic 3D cellular close-up of tiny amber lipid droplets accumulating inside "
+                    "liver hepatocyte vacuoles against dark slate #0F172A."
                 ),
             ),
         ],
     ),
     (
-        "Cơn đói đêm và tiếng kêu gào của dạ dày",
-        "A warm domestic kitchen nook with an open pantry at midnight.",
+        "Cơn đói đêm và phản ứng axit dạ dày",
+        "3D endoscopic gastric lumen with mucosal folds under clinical rim lighting.",
         "narrative_warm",
         "systemic_friction",
         "lived_friction",
         [
             (
-                "Đến bốn giờ sáng, cơ quan kịch tính nhất bắt đầu nổi loạn.",
+                "Đến bốn giờ sáng, hệ tiêu hóa phát ra tín hiệu đói giả đầy đánh lừa.",
                 (
-                    "full_scene:CH02|Cute kawaii peach stomach mascot Da Day holding empty metal bowl with dramatic frown."
+                    "full_scene:CH02|3D translucent human stomach churning empty with crimson (#EF4444) peristaltic contraction waves "
+                    "rippling across glistening mucosal folds."
                 ),
             ),
             (
                 "Hormone ghrelin kích thích cơn thèm ăn tăng vọt gấp rưỡi mức bình thường.",
                 (
-                    "visual_diagram:none|Hand-drawn bar chart contrasting normal appetite versus nighttime hunger spike in peach ink."
+                    "visual_diagram:none|3D cellular close-up of hormone ghrelin molecules binding greedily to glowing hypothalamic "
+                    "receptors in pulsing amber (#F59E0B) and crimson (#EF4444)."
                 ),
             ),
             (
-                "Dạ Dày liên tục gửi tín hiệu đòi nạp đường và tinh bột cay nóng.",
+                "Dạ dày liên tục thúc ép não tìm kiếm đồ ngọt và tinh bột cay nóng.",
                 (
-                    "full_scene:CH02|Stomach mascot Da Day waving tiny spoon dramatically demanding midnight instant noodles."
+                    "full_scene:CH02|Subsurface 3D X-ray zoom bridging stomach vagus nerve fibers ascending directly into the "
+                    "appetite center of the brain in glowing cyan-amber pulses."
                 ),
             ),
             (
-                "Nếu bạn nuông chiều ăn khuya, axit dịch vị sẽ cào xé thành dạ dày không thương tiếc.",
+                "Nếu bạn nuông chiều ăn khuya, axit dịch vị sẽ bào mòn lớp nhầy bảo vệ nhanh hơn.",
                 (
-                    "concept_metaphor:CH02|Stomach mascot Da Day dodging miniature splashing droplet bubbles of acid on white ground."
+                    "concept_metaphor:CH02|3D gastric acid droplets erupting toward strained stomach mucosal barrier eroding subtle "
+                    "surface mucus film in arterial crimson warning tones."
                 ),
             ),
         ],
     ),
     (
         "Cú sụp đổ năng lượng lúc 6 giờ sáng",
-        "A minimalist sunrise study corner with golden morning light.",
+        "3D neural receptor field bathed in stark cold morning biomedical contrast.",
         "analytical_crisp",
         "ironic_exposure",
         "empirical_conflict",
@@ -462,92 +484,103 @@ STORY_WEEK1_LONG: List[Tuple[str, str, str, str, str, List[Tuple[str, str]]]] = 
             (
                 "Sáu giờ sáng, ánh bình minh ló dạng cũng là lúc cơ thể chạm đáy năng lượng.",
                 (
-                    "full_scene:CH05|Doodle human host sitting at desk under gentle golden morning rays yawning softly."
+                    "full_scene:CH05|Translucent 3D anatomical silhouette sitting slumped in cold dawn window light as overall "
+                    "bioluminescent organ aura dims dramatically."
                 ),
             ),
             (
                 "Phân tử adenosine gây buồn ngủ đã lấp đầy mọi thụ thể thần kinh trong não.",
                 (
-                    "concept_metaphor:CH04|Brain mascot Nao surrounded by small receptor slots completely "
-                    "saturated with glowing adenosine tokens."
+                    "concept_metaphor:CH04|Macro 3D neuron membrane where hundreds of crimson-amber (#EF4444/#F59E0B) adenosine "
+                    "molecules lock tightly onto neural receptor pockets."
                 ),
             ),
             (
                 "Một ly cà phê đậm đặc lúc này chỉ là giải pháp đánh lừa tạm thời.",
                 (
-                    "concept_metaphor:CH04|A miniature porcelain coffee cup pushing aside an adenosine token without removing it."
+                    "concept_metaphor:CH04|Crystalline 3D caffeine molecules wedging temporarily into receptor caps while crowded "
+                    "adenosine swarms wait directly outside the gate."
                 ),
             ),
             (
                 "Cơn mệt mỏi nén lại sẽ bùng nổ dữ dội hơn vào đầu giờ chiều.",
                 (
-                    "full_scene:CH04|Brain mascot Nao waving caution sign as energy battery indicator shows one blinking red bar."
+                    "full_scene:CH04|Dramatic 3D neural wave crashing through receptors once caffeine clears, flooding cortex "
+                    "synapses with heavy deep fatigue pulses."
                 ),
             ),
         ],
     ),
     (
         "Hóa giải tổn thương và phục hồi khoa học",
-        "A peaceful wellness recovery lounge with calming indoor green plants.",
+        "Clean serene 3D homeostatic cellular restoration environment in luminous cyan (#06B6D4).",
         "narrative_warm",
         "tactical_actionable",
         "actionable_resolution",
         [
             (
-                "Để bù đắp sau một đêm thức trắng, đừng cố uống nhiều nước tăng lực.",
+                "Để bù đắp sau một đêm thức trắng, đừng cố lạm dụng nước tăng lực kích thích.",
                 (
-                    "concept_metaphor:none|A cartoon energy can crossed out with a neat diagonal pencil stroke on white paper."
+                    "concept_metaphor:none|3D cardiac artery showing jagged tachycardia spikes calmed back to steady turquoise-cyan "
+                    "harmonic pulse once stimulant surge is avoided."
                 ),
             ),
             (
                 "Hãy bù đắp cho não một giấc ngủ ngắn hai mươi phút vào buổi trưa.",
                 (
-                    "full_scene:CH04|Brain mascot Nao resting peacefully on a soft cloud-shaped white pillow."
+                    "full_scene:CH04|Serene 3D glowing cortical network clearing ambient static with gentle restorative cyan (#06B6D4) "
+                    "theta brainwaves during a brief rest window."
                 ),
             ),
             (
-                "Uống thêm nước ấm và ăn bữa sáng thanh nhẹ để giảm áp lực cho gan.",
+                "Uống đủ nước ấm và ăn bữa sáng cân bằng để giảm áp lực cho gan và dạ dày.",
                 (
-                    "full_scene:CH03|Liver mascot Gan smiling cheerfully beside a tall clear glass of fresh water."
+                    "full_scene:CH03|Luminous 3D cellular hydration waves infusing liver lobules and soothing gastric folds "
+                    "into calm translucent clinical balance."
                 ),
             ),
             (
-                "Tối hôm sau, hãy đi ngủ sớm trước mười một giờ để chu kỳ sinh học tự hồi phục.",
+                "Tối hôm sau, hãy ngủ trước hai mươi ba giờ để chu kỳ sinh học tự hồi phục.",
                 (
-                    "full_scene:CH01|Heart mascot Tim pumps at a calm relaxed pace beside a small moon crescent icon."
+                    "full_scene:CH01|Coordinated 3D transparent human torso glowing steadily at 60 BPM restful rhythm under "
+                    "balanced cyan-blue circadian light."
                 ),
             ),
         ],
     ),
     (
-        "Lắng nghe tiếng nói của cơ thể",
-        "A warm bright consultation hall with an inspiring anatomy mural.",
+        "Lắng nghe phản hồi sinh học của cơ thể",
+        "Harmonious 3D anatomical whole-body visualization in crisp cyan (#06B6D4) over deep navy (#0A192F).",
         "narrative_warm",
         "philosophical_anchor",
         "actionable_resolution",
         [
             (
-                "Cơ thể bạn là một cỗ máy kỳ diệu nhưng không phải vô hạn.",
+                "Cơ thể bạn là một cỗ máy sinh học kỳ diệu nhưng không phải vô hạn.",
                 (
-                    "concept_metaphor:none|A clean hand-drawn outline of human body with four friendly glowing mascot silhouettes inside."
+                    "concept_metaphor:none|Wide 3D X-ray silhouette revealing coordinated glowing heart, brain, lungs, and liver "
+                    "operating in synchronized cyan luminescence."
                 ),
             ),
             (
-                "Mỗi giờ bạn thức khuya là một lần các cơ quan phải gồng gánh mệt nhoài.",
+                "Mỗi giờ bạn thức khuya là một lần các tế bào miễn dịch phải gồng gánh kiệt sức.",
                 (
-                    "full_scene:CH05|Doodle human host standing side-by-side with Tim, Da Day, Gan and Nao in warm camaraderie."
+                    "full_scene:CH05|3D vascular overview showing natural killer immune cells slowing down inside darkened capillaries "
+                    "when circadian recovery is skipped."
                 ),
             ),
             (
-                "Yêu thương bản thân bắt đầu từ việc cho những người bạn bên trong được nghỉ ngơi.",
+                "Chăm sóc sức khỏe bắt đầu từ việc trả lại giờ ngủ cho bộ não và trái tim bên trong.",
                 (
-                    "full_scene:CH01,CH04|Heart Tim and Brain Nao high-five each other warmly on clean white canvas."
+                    "full_scene:CH01,CH04|Synchronized 3D brain neural pathways and rhythmic heart valves glowing warm cyan (#06B6D4) "
+                    "in deep nocturnal restoration."
                 ),
             ),
             (
-                "Bạn có hay thức khuya sau mười hai giờ đêm không, bình luận để cùng nhau thay đổi nhé?",
+                "Bạn thường ngủ lúc mấy giờ vào các đêm trong tuần, chia sẻ cùng Cơ Thể Kể ở phần bình luận nhé?",
                 (
-                    "full_scene:CH05|Doodle human host waves cheerful hand toward camera with friendly open gesture."
+                    "full_scene:CH05|Balanced upright 3D X-ray anatomical form glowing calm clinical cyan over clean deep navy "
+                    "negative space (#0A192F), zero text."
                 ),
             ),
         ],
@@ -599,7 +632,7 @@ def build_week1_long_spinoff_shorts() -> List[Dict[str, Any]]:
                 {
                     "parent_scene_id": "SC05",
                     "image_id": "SC05_I1",
-                    "segment_text": "Đến bốn giờ sáng, cơ quan kịch tính nhất bắt đầu nổi loạn.",
+                    "segment_text": "Đến bốn giờ sáng, hệ tiêu hóa phát ra tín hiệu đói giả đầy đánh lừa.",
                 },
                 {
                     "parent_scene_id": "SC05",
@@ -609,12 +642,12 @@ def build_week1_long_spinoff_shorts() -> List[Dict[str, Any]]:
                 {
                     "parent_scene_id": "SC05",
                     "image_id": "SC05_I3",
-                    "segment_text": "Dạ Dày liên tục gửi tín hiệu đòi nạp đường và tinh bột cay nóng.",
+                    "segment_text": "Dạ dày liên tục thúc ép não tìm kiếm đồ ngọt và tinh bột cay nóng.",
                 },
                 {
                     "parent_scene_id": "SC05",
                     "image_id": "SC05_I4",
-                    "segment_text": "Nếu bạn nuông chiều ăn khuya, axit dịch vị sẽ cào xé thành dạ dày không thương tiếc.",
+                    "segment_text": "Nếu bạn nuông chiều ăn khuya, axit dịch vị sẽ bào mòn lớp nhầy bảo vệ nhanh hơn.",
                 },
             ],
         },
@@ -628,17 +661,17 @@ def build_week1_long_spinoff_shorts() -> List[Dict[str, Any]]:
                 {
                     "parent_scene_id": "SC02",
                     "image_id": "SC02_I1",
-                    "segment_text": "Khi bạn ngủ say, hệ thống dọn rác trong não sẽ tự động xả nước rửa trôi protein rác.",
+                    "segment_text": "Khi bạn ngủ say, hệ thống dọn rác trong não sẽ tự động xả dòng dịch rửa trôi protein độc.",
                 },
                 {
                     "parent_scene_id": "SC02",
                     "image_id": "SC02_I2",
-                    "segment_text": "Nhưng nếu bạn thức trắng, van xả nước làm sạch hoàn toàn đóng chặt.",
+                    "segment_text": "Nhưng nếu bạn thức trắng, van xả dòng làm sạch gần như khép chặt.",
                 },
                 {
                     "parent_scene_id": "SC02",
                     "image_id": "SC02_I3",
-                    "segment_text": "Chất độc beta-amyloid ứ đọng lại từng phút như rác thải ùn tắc.",
+                    "segment_text": "Chất độc beta-amyloid ứ đọng lại từng phút như dòng thải ùn tắc.",
                 },
                 {
                     "parent_scene_id": "SC02",
@@ -657,7 +690,7 @@ def build_week1_long_spinoff_shorts() -> List[Dict[str, Any]]:
                 {
                     "parent_scene_id": "SC04",
                     "image_id": "SC04_I1",
-                    "segment_text": "Ở tầng dưới cơ thể, lá gan Gan đang đối diện một ca trực ác mộng.",
+                    "segment_text": "Ở tầng dưới cơ thể, lá gan đang đối diện một ca trực quá tải.",
                 },
                 {
                     "parent_scene_id": "SC04",
@@ -667,7 +700,7 @@ def build_week1_long_spinoff_shorts() -> List[Dict[str, Any]]:
                 {
                     "parent_scene_id": "SC04",
                     "image_id": "SC04_I3",
-                    "segment_text": "Nhưng khi bạn thức, gan buộc phải chuyển hướng điều phối năng lượng khẩn cấp.",
+                    "segment_text": "Nhưng khi bạn thức, gan buộc phải chuyển hướng điều phối đường huyết khẩn cấp.",
                 },
                 {
                     "parent_scene_id": "SC04",
@@ -699,7 +732,7 @@ def build_week1_long_topic(topic_title: Optional[str] = None) -> Tuple[Researche
     scenes[1].source_ids = ["SRC01"]
     scenes[1].claim_facts = [
         (
-            "hệ thống dọn rác trong não sẽ tự động xả nước rửa trôi protein rác",
+            "hệ thống dọn rác trong não sẽ tự động xả dòng dịch rửa trôi protein độc",
             "SRC01",
             "Hệ thống não dọn độc tố hiệu quả nhất khi ngủ say.",
         )
@@ -707,7 +740,7 @@ def build_week1_long_topic(topic_title: Optional[str] = None) -> Tuple[Researche
     scenes[2].source_ids = ["SRC03"]
     scenes[2].claim_facts = [
         (
-            "Nồng độ hormone cortisol tăng cao kích thích huyết áp nhảy múa liên tục",
+            "Nồng độ hormone cortisol tăng cao kích thích huyết áp nhảy vọt liên tục",
             "SRC03",
             "Thiếu ngủ kích hoạt hệ giao cảm làm tăng huyết áp và nhịp tim.",
         )
@@ -755,8 +788,8 @@ def build_week1_long_topic(topic_title: Optional[str] = None) -> Tuple[Researche
         tone=ch.tone,
         language="vi",
         subtitles=True,
-        voice="VietNarrator",
-        speed=1.0,
+        voice="VietNarrator_co_the_ke",
+        speed=1.12,
         conversational_facts=True,
         visual_pacing_profile="full_frame_v1",
         channel_id=CHANNEL_ID,

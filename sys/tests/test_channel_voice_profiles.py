@@ -56,7 +56,7 @@ EXPECTED_CHANNELS = {
     },
     "ho_so_ky_la": {
         "voice": "VietNarrator_ho_so_ky_la",
-        "recommended_speed": 1.28,
+        "recommended_speed": 1.10,
         "default_tone": "forensic_investigative_crisp",
     },
     "co_the_ke": {
@@ -561,6 +561,9 @@ class TestChannelVoiceProfiles(unittest.TestCase):
         self.assertNotIn("shared_voice_with", su_ke_prof)
         self.assertEqual(su_ke_prof.get("default_tone"), "heroic_epic")
         self.assertAlmostEqual(su_ke_prof.get("recommended_speed"), 1.30, places=2)
+        self.assertAlmostEqual(ho_so_prof.get("recommended_speed"), 1.10, places=2)
+        self.assertAlmostEqual(ho_so_prof.get("base_omnivoice_speed"), 1.00, places=2)
+        self.assertAlmostEqual(ho_so_prof.get("atempo_factor"), 1.10, places=2)
         self.assertEqual(ho_so_prof.get("shared_voice_group"), "su_ke_lai_canonical_voice")
 
         with open(su_ke_dir / "reference.wav", "rb") as f:

@@ -1,18 +1,76 @@
 {
   "long": {
     "job_id": "vn_pilot_co_the_ke_long",
-    "youtube_url": "https://youtu.be/sgp65IoBMa8"
+    "youtube_url": "https://youtu.be/sgp65IoBMa8",
+    "url": "https://youtu.be/sgp65IoBMa8",
+    "video_id": "sgp65IoBMa8"
+  },
+  "longs": {
+    "co-the-ke-week1-16x9": {
+      "video_id": "yl8E1WKjvWY",
+      "youtube_url": "https://youtu.be/yl8E1WKjvWY",
+      "title": "24 Giờ Thức Trắng: Tim, Gan Và Não Cầu Cứu Ra Sao?",
+      "facebook_url": null
+    },
+    "co-the-ke-batch2-16x9": {
+      "video_id": "_JaLpnPf-q4",
+      "youtube_url": "https://youtu.be/_JaLpnPf-q4",
+      "title": "Vì Sao Bạn Càng Căng Thẳng Não Càng Thèm Ngọt?",
+      "facebook_url": null
+    },
+    "co-the-ke-batch3-16x9": {
+      "video_id": "e3AElaVVXJ4",
+      "youtube_url": "https://youtu.be/e3AElaVVXJ4",
+      "title": "12 Giờ Của Dạ Dày Và Gan Sau Bữa Ăn Khuya Dầu Mỡ",
+      "facebook_url": null
+    },
+    "vn_pilot_co_the_ke_long": {
+      "video_id": "sgp65IoBMa8",
+      "youtube_url": "https://youtu.be/sgp65IoBMa8",
+      "title": "Điều Gì Thực Sự Xảy Ra Khi Bạn Thiếu Ngủ?",
+      "facebook_url": null
+    }
   },
   "shorts": {
     "co-the-ke-week1-9x16-v2": {
       "tiktok_url": null,
       "facebook_url": null,
-      "youtube_shorts_url": "https://youtube.com/shorts/LdlG4OiEjR8"
+      "youtube_shorts_url": "https://youtube.com/shorts/LdlG4OiEjR8",
+      "video_id": "LdlG4OiEjR8",
+      "parent_long_url": "https://youtu.be/yl8E1WKjvWY",
+      "parent_long_id": "yl8E1WKjvWY"
     },
-    "vn-pilot-co-the-ke-short-fullchain": {
+    "co-the-ke-batch2-9x16": {
       "tiktok_url": null,
       "facebook_url": null,
-      "youtube_shorts_url": "https://youtube.com/shorts/-dNqAE-nzf0"
+      "youtube_shorts_url": "https://youtube.com/shorts/MPnDTlsIPUw",
+      "video_id": "MPnDTlsIPUw",
+      "parent_long_url": "https://youtu.be/_JaLpnPf-q4",
+      "parent_long_id": "_JaLpnPf-q4"
+    },
+    "co-the-ke-batch3-9x16": {
+      "tiktok_url": null,
+      "facebook_url": null,
+      "youtube_shorts_url": "https://youtube.com/shorts/5vtJPGj_qM0",
+      "video_id": "5vtJPGj_qM0",
+      "parent_long_url": "https://youtu.be/e3AElaVVXJ4",
+      "parent_long_id": "e3AElaVVXJ4"
+    },
+    "vn_pilot_co_the_ke_short_fullchain": {
+      "tiktok_url": null,
+      "facebook_url": null,
+      "youtube_shorts_url": "https://youtube.com/shorts/-dNqAE-nzf0",
+      "video_id": "-dNqAE-nzf0",
+      "parent_long_url": "https://youtu.be/e3AElaVVXJ4",
+      "parent_long_id": "e3AElaVVXJ4"
+    },
+    "vn_co_the_ke_nv1_sleep_immune_short": {
+      "tiktok_url": null,
+      "facebook_url": null,
+      "youtube_shorts_url": "https://youtube.com/shorts/mrDeW4BzZSs",
+      "video_id": "mrDeW4BzZSs",
+      "parent_long_url": "https://youtu.be/sgp65IoBMa8",
+      "parent_long_id": "sgp65IoBMa8"
     }
   }
 }

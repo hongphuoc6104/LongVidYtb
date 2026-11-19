@@ -437,7 +437,11 @@ CHANNEL_GROWTH_PLAYBOOKS: dict[str, ChannelGrowthPlaybook] = {
         hook_3s_formula="Nhân hóa một cơ quan nội tạng đang gào thét đòi quyền lợi.",
         short_to_long_cliffhanger="Cắt ngang khi cơ quan chuẩn bị kích hoạt biện pháp tự vệ cực đoan.",
         long_retention_reset_rule="Cứ 100s chuyển mic phỏng vấn cơ quan lân cận đang chịu trận liên đới.",
-        visual_pacing_directive="Dạ dày, gan, thận vẽ dạng stickman đeo kính hài hước, phản ứng rung lắc.",
+        visual_pacing_directive=(
+            "3D nội soi y sinh 8K trong bảng màu #0A192F/#0F172A/#06B6D4/#EF4444 kết hợp 4 chế độ "
+            "(MODE_1 Biometric Stamp, MODE_2 Stress Split, MODE_3 Cascade Checklist, MODE_4 Endoscopic Pacing), "
+            ">= 3 beat trong 0-5s đầu, tuyệt đối không stickman hay kawaii 2D."
+        ),
         next_3_viral_blueprints=(
             {
                 "short_title": "Dạ Dày Gào Thét Gì Khi Bạn Nhịn Ăn Sáng?",
