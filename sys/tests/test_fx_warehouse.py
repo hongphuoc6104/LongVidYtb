@@ -116,6 +116,10 @@ from fx_warehouse.hud_forensic_v2 import (
     VERIFIED_MAP_ANCHORS_2K as SUB_VERIFIED_MAP_ANCHORS_2K,
 )
 from fx_warehouse.hud_forensic_v2 import (
+    _layout_ctx,
+    _place_card_xy,
+)
+from fx_warehouse.hud_forensic_v2 import (
     render_forensic_hud_v2 as sub_render_forensic_hud_v2,
 )
 from fx_warehouse.hud_widgets import (
@@ -270,19 +274,23 @@ def test_cross_niche_dynamic_selection_from_shared_warehouse() -> None:
     assert tri_fx["hud"] == "triptych_3col_evidence"
     assert tri_fx["sfx"] == "card_lock_thud.wav"
 
-    mind_fx = auto_select_beat_fx("Hít thở chậm lại trong tĩnh lặng đêm khuya", channel_id="chanh_niem_ke")
+    mind_fx = auto_select_beat_fx("Hít thở chậm lại trong tĩnh lặng đêm khuya", channel_id="minh_triet_song")
     assert mind_fx["camera"] == "breathing_drift"
     assert mind_fx["hud"] == "calligraphy_quote_dissolve"
     assert mind_fx["sfx"] == "singing_bowl_zen.wav"
 
+    chronicle_fx = auto_select_beat_fx("Thảm họa mất kiểm soát tại lò phản ứng hạt nhân", channel_id="chanh_niem_ke")
+    assert chronicle_fx["archetype_id"] == "archetype_2_geopolitics_history"
+    assert chronicle_fx["vfx"] == "camera_shake_impulse"
+
 
 def test_archetype_comfort_guardrail_and_override() -> None:
-    calm_fx = auto_select_beat_fx("Thảm họa mất kiểm soát của tâm trí", channel_id="chanh_niem_ke")
+    calm_fx = auto_select_beat_fx("Thảm họa mất kiểm soát của tâm trí", channel_id="minh_triet_song")
     assert calm_fx["vfx"] not in ("camera_shake_impulse", "crimson_strobe_alert")
 
     forced = auto_select_beat_fx(
         "Thảm họa mất kiểm soát",
-        channel_id="chanh_niem_ke",
+        channel_id="minh_triet_song",
         overrides={"vfx": "camera_shake_impulse"},
     )
     assert forced["vfx"] == "camera_shake_impulse"
@@ -453,7 +461,7 @@ def test_selector_static_camera_locks_and_suspense_metadata() -> None:
     assert hypoxia_fx["pause_tier"] == "T3"
     assert hypoxia_fx["recommended_pause_sec"] == PAUSE_TIER_DURATIONS["T3"]
 
-    calm_fx = auto_select_beat_fx("Hít thở chậm lại trong tĩnh lặng đêm khuya", channel_id="chanh_niem_ke")
+    calm_fx = auto_select_beat_fx("Hít thở chậm lại trong tĩnh lặng đêm khuya", channel_id="minh_triet_song")
     assert calm_fx["hud_v2_hint"] is None
     assert calm_fx["pause_tier"] == "T0"
 
@@ -469,9 +477,10 @@ def test_forensic_hud_v2_catalog_anchors_and_rendering() -> None:
         "calibrated_radar_overlay",
         "lemmino_hairline_hud",
         "chapter_title_bumper",
+        "man_auto_switch",
     }
     assert set(FORENSIC_HUD_V2_CATALOG.keys()) == expected_widgets
-    assert len(FORENSIC_HUD_V2_CATALOG) == 9
+    assert len(FORENSIC_HUD_V2_CATALOG) == 10
 
     expected_anchors = {
         "athens": (675, 830),
@@ -518,6 +527,79 @@ def test_forensic_hud_v2_catalog_anchors_and_rendering() -> None:
 
     with pytest.raises(ValueError):
         render_forensic_hud_v2("nonexistent_hud_v2", {}, t_beat=0.2, dur=1.0)
+
+
+def test_forensic_hud_v2_portrait_safe_zone_and_landscape_compat() -> None:
+    # 1. Portrait 9:16 (1440x2560) safe-zone layout context & card placement
+    ctx_9x16 = _layout_ctx(1440, 2560)
+    assert ctx_9x16["portrait"] is True
+    assert ctx_9x16["margin_x"] == 58
+    assert ctx_9x16["right_margin_x"] == 171
+    assert ctx_9x16["max_card_w"] == 1211
+    assert ctx_9x16["bottom_safe"] == 2010
+
+    assert _place_card_xy(ctx_9x16, 600, 300, {"align": "bottom_right"}) == (1440 - 171 - 600, 2010 - 300)
+    assert _place_card_xy(ctx_9x16, 600, 300, {"align": "bottom_center"}) == (58 + (1211 - 600) // 2, 2010 - 300)
+    assert _place_card_xy(ctx_9x16, 600, 300, {"x0": 1350}) == (1440 - 600 - 171, 2010 - 300)
+
+    # 2. Landscape 16:9 (2560x1440) geometry stays 100% backward-compatible
+    ctx_16x9 = _layout_ctx(2560, 1440)
+    assert ctx_16x9["portrait"] is False
+    assert ctx_16x9["margin_x"] == 64
+    assert ctx_16x9["right_margin_x"] == 64
+    assert ctx_16x9["max_card_w"] == 2560 - 2 * 64
+    assert ctx_16x9["bottom_safe"] == int(round(1440 * 0.836))
+    assert _place_card_xy(ctx_16x9, 600, 300, {"align": "bottom_center"}) == ((2560 - 600) // 2, ctx_16x9["bottom_safe"] - 300)
+    assert _place_card_xy(ctx_16x9, 600, 300, {"align": "bottom_right"}) == (2560 - 64 - 600, ctx_16x9["bottom_safe"] - 300)
+
+    # 3. Portrait 1440x2560 Option A widgets stay clear of right icon rail (x <= 1275) and bottom captions (y <= 2015)
+    portrait_specs = {
+        "alt_pressure_divergence": {"altitude_ft": 34000, "cabin_alt_ft": 24000},
+        "dual_horn_pulse": {"label_a": "TAKEOFF CONFIG", "label_b": "CABIN ALTITUDE"},
+        "hypoxia_tuc_meter": {"altitude_ft": 34000, "tuc_sec": 60, "spo2_pct": 62},
+        "classic_vs_ng_compare": {"left": "737-300 Classic", "right": "737 NG"},
+        "fuel_avoidance_vector": {"city": "Athens", "target": "Grammatiko", **VERIFIED_MAP_ANCHORS_2K},
+        "lemmino_hairline_hud": {
+            "mode": "timeline",
+            "kicker": "14.08.2005 // B00",
+            "headline": "CHUYẾN BAY HELIOS 522 — MẤT LIÊN LẠC",
+            "metric": "FL340",
+        },
+        "swiss_cheese_align": {"slices": ["MAN", "Dual Horn", "Hypoxia", "No Descent"]},
+        "man_auto_switch": {"status_badge": "NẤC MAN • VAN ĐUÔI MỞ CỨNG"},
+        "calibrated_radar_overlay": {
+            "coord_space": "target",
+            "athens_xy": (600, 1200),
+            "grammatiko_xy": (1100, 1000),
+            "aegean_xy": (1180, 1400),
+            "aegean_entry_xy": (1220, 1500),
+        },
+    }
+    for t_beat in (0.05, 0.65, 1.2):
+        for hud_id, spec in portrait_specs.items():
+            im = render_forensic_hud_v2(hud_id, spec, t_beat=t_beat, dur=2.5, width=1440, height=2560, variant="A")
+            assert im.size == (1440, 2560)
+            alpha = np.asarray(im, dtype=np.uint8)[:, :, 3]
+            ys, xs = np.where(alpha > 0)
+            assert len(xs) > 100, f"{hud_id} rendered sparse portrait frame at t={t_beat}"
+            assert int(xs.max()) <= 1275, f"{hud_id} bled into portrait right UI rail (max x={xs.max()}) at t={t_beat}"
+            assert int(ys.max()) <= 2015, f"{hud_id} bled into portrait caption zone (max y={ys.max()}) at t={t_beat}"
+
+    # 4. Landscape 2560x1440 renders cleanly across those widgets
+    for hud_id in (
+        "alt_pressure_divergence",
+        "dual_horn_pulse",
+        "hypoxia_tuc_meter",
+        "classic_vs_ng_compare",
+        "fuel_avoidance_vector",
+        "lemmino_hairline_hud",
+        "man_auto_switch",
+    ):
+        im_2k = render_forensic_hud_v2(hud_id, portrait_specs[hud_id], t_beat=0.65, dur=2.5, width=2560, height=1440, variant="A")
+        assert im_2k.size == (2560, 1440)
+        alpha_2k = np.asarray(im_2k, dtype=np.uint8)[:, :, 3]
+        assert int((alpha_2k > 0).sum()) > 500, f"{hud_id} failed 2K landscape render"
+
 
 
 def test_audio_suspense_v2_synthesis_stereo_and_4act_bgm() -> None:

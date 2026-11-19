@@ -1504,12 +1504,14 @@ def encode_calibrated_m4a_stereo(
     max_tp_db: float = -1.0,
     pre_aac_tp_db: float = -1.4,
     lra: float = 4.5,
+    skip_remaster: bool = False,
 ) -> dict[str, float]:
     """Transcode 48kHz WAV to stereo AAC 256k preserving true (N, 2) stereo imaging.
 
-    Pre-normalizes via 2-pass loudnorm (`I=-11.0:TP=-1.4:LRA=4.5`) and runs an adaptive
-    linked-stereo peak-limiter loop so the decoded `.m4a` verifies at
-    `-11.0 ± 0.4 LUFS` and `true_peak_dbfs <= -1.0 dBTP`.
+    Pre-normalizes via 2-pass loudnorm (`I=-11.0:TP=-1.4:LRA=4.5`) unless
+    `skip_remaster=True` (or the input WAV already satisfies `target_lufs ± 0.30`
+    and `pre_aac_tp_db`), then runs an adaptive linked-stereo peak-limiter loop
+    so the decoded `.m4a` verifies at `-11.0 ± 0.4 LUFS` and `true_peak_dbfs <= -1.0 dBTP`.
     """
     src_wav = Path(wav_path)
     dst_m4a = Path(out_m4a)
@@ -1523,18 +1525,33 @@ def encode_calibrated_m4a_stereo(
 
     with tempfile.TemporaryDirectory() as td:
         td_p = Path(td)
-        norm_wav = td_p / "loudnorm_pre_aac.wav"
-        master_2pass_wav_stereo(
-            src_wav,
-            norm_wav,
-            target_lufs=target_lufs,
-            max_tp_db=pre_aac_tp_db,
-            lra=lra,
-            sr=TARGET_SR,
-        )
+        effective_skip = bool(skip_remaster)
+        if not effective_skip:
+            try:
+                pre_stats = measure_ebur128(src_wav)
+                if (
+                    (target_lufs - 0.30) <= float(pre_stats.get("integrated_lufs", -99.0)) <= (target_lufs + 0.30)
+                    and float(pre_stats.get("true_peak_dbfs", 0.0)) <= float(pre_aac_tp_db)
+                ):
+                    effective_skip = True
+            except Exception:
+                effective_skip = False
 
-        # Preserve full linked stereo (N, 2) — NEVER collapse to mono [c0, c0]
-        dn = _read_wav_stereo(norm_wav, target_sr=TARGET_SR).copy()
+        if effective_skip:
+            # Input WAV is already mastered — preserve natural LRA and encode AAC 256k directly.
+            dn = _read_wav_stereo(src_wav, target_sr=TARGET_SR).copy()
+        else:
+            norm_wav = td_p / "loudnorm_pre_aac.wav"
+            master_2pass_wav_stereo(
+                src_wav,
+                norm_wav,
+                target_lufs=target_lufs,
+                max_tp_db=pre_aac_tp_db,
+                lra=lra,
+                sr=TARGET_SR,
+            )
+            # Preserve full linked stereo (N, 2) — NEVER collapse to mono [c0, c0]
+            dn = _read_wav_stereo(norm_wav, target_sr=TARGET_SR).copy()
         tw = td_p / "pre_aac_iter.wav"
         tr = td_p / "dec192_stereo.f32"
 

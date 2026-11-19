@@ -131,22 +131,31 @@ FLOW_THUMBNAIL_BLUEPRINTS: dict[str, dict[str, Any]] = {
     },
     "co_the_ke": {
         "channel_name": "Cơ Thể Kể",
-        "niche": "Y Học, Sinh Học Cơ Thể & Sức Khỏe",
-        "visual_style": "2D Doodle Explainer, marker outlines",
-        "shock_concept": "Bald stickman exhausted at 03:00 AM clock, glowing red sleep-deprivation lightning bolt striking skull with brain fog and toxin alert vs clean radiant brain glow",
-        "decorations": "Digital clock flashing '03:00 AM', glowing red sleep-deprivation lightning bolt, warning hazard toxin alert",
-        "brand_identity": "Bald doodle stickman in blue shirt #3B82C4, warm cream paper background #F8F0DC",
+        "niche": "Y Học, Sinh Học Cơ Thể & Giải Phẫu 3D",
+        "visual_style": "8K 3D Endoscopic Biomedical Cinematography (#0A192F / #06B6D4 / #EF4444)",
+        "shock_concept": "3D translucent human cranium and hippocampus neural network split between radiant cyan sleep clearance and arterial crimson synaptic burnout at 03:00 AM",
+        "decorations": "Subtle glowing cyan microglia clearance waves vs arterial red cortisol sparks (clean medical 3D, zero corner watermark sparkles)",
+        "brand_identity": "Deep biomedical navy #0A192F, clinical X-ray cyan #06B6D4, arterial danger crimson #EF4444",
         "hook_text": "ĂN ĐÊM PHÁ BỤNG!",
         "hook_text_16x9": "THIẾU NGỦ PHÁ NÃO!",
         "text_placement_16x9": "Top-Left safe zone (X: 6%-50%, Y: 8%-36%), never bottom-right",
         "text_placement_9x16": "Upper-Center safe zone (X: 10%-90%, Y: 16%-32%), never bottom 40%",
         "text_size_spec": "14%-16% of canvas height (~160px on 1080p), occupying 22%-25% total area",
-        "font_spec": "Bold Hand-Brushed Warning Marker All-Caps, fiery crimson red (#FF2A2A) and yellow (#FFE600) with thick black outline",
+        "font_spec": "Bold Condensed Scientific Documentary All-Caps in clean laboratory white (#F8FAFC) and arterial red (#EF4444) or cyan (#06B6D4) integrated in 3D space",
         "flow_prompt_16x9": (
-            "Viral YouTube explainer thumbnail poster, 16:9 widescreen composition. 2D doodle explainer style with bold wobbly black marker contours on clean warm cream paper #F8F0DC background, minimal flat colors. Dominating the frame: Bald stickman wearing plain blue shirt #3B82C4, slumped exhausted with heavy dark eye bags next to an alarm clock glowing '03:00 AM'. A glowing red sleep-deprivation lightning bolt strikes his transparent skull, revealing dark toxic brain fog and warning hazard alert icon, in stark contrast to a clean, radiant glowing brain. IN TOP-LEFT SAFE ZONE (X: 6% to 50%, Y: 8% to 34%): Bold hand-brushed marker all-caps text with thick black outline and signal red #E63946 fill reading 'THIẾU NGỦ PHÁ NÃO!'. Clean negative space >=60%, uncluttered readability, zero bottom-right overlays, crisp master illustration."
+            "High-CTR YouTube medical science documentary thumbnail poster, 16:9 widescreen composition. "
+            "8K 3D Endoscopic Biomedical Cinematography on deep biomedical navy background (#0A192F). "
+            "Translucent photorealistic 3D X-ray glass head in dramatic macro spotlight: one side glowing healthy clinical cyan (#06B6D4) "
+            "synapses clearing cellular waste, contrasted against the other side surging with arterial crimson (#EF4444) inflammation and dimmed immune cells. "
+            "IN TOP-LEFT SAFE ZONE (X: 6% to 50%, Y: 8% to 34%): Ultra-crisp bold uppercase Vietnamese typography rendered directly into clean dark navy negative space "
+            "reading 'THIẾU NGỦ PHÁ NÃO!' in laboratory white #F8FAFC and arterial red #EF4444, high contrast, zero flat box overlays, zero corner watermarks or sparkles, zero stickmen."
         ),
         "flow_prompt_9x16": (
-            "Viral vertical YouTube Shorts thumbnail poster, 9:16 vertical composition. 2D doodle anatomical cutaway style. Bald stickman at 02:00 AM eating a blazing red bowl of spicy midnight noodles while inside his transparent glowing torso, his cartoon stomach is on fire in boiling acid and waving a giant red SOS emergency flag, with a bold red arrow pointing to the burning stomach. Digital clock '02:00 AM'. IN UPPER-CENTER SAFE ZONE (X: 10% to 90%, Y: 16% to 32%): Bold hand-brushed marker all-caps text with thick black outline, bright yellow #FFE600 and fiery red #FF2A2A fill reading 'ĂN ĐÊM PHÁ BỤNG!'. High medical shock value, zero text in bottom 40%."
+            "Viral vertical YouTube Shorts medical documentary thumbnail poster, 9:16 vertical composition. "
+            "8K 3D Endoscopic Biomedical cutaway on deep biomedical navy background (#0A192F): photorealistic translucent 3D human stomach interior "
+            "at 02:00 AM erupting with glowing arterial crimson (#EF4444) gastric acid reflux pulses against strained mucus lining in clinical cyan (#06B6D4) depth. "
+            "IN UPPER-CENTER SAFE ZONE (X: 10% to 90%, Y: 16% to 32%): Crisp bold uppercase Vietnamese typography in white #F8FAFC and fiery red #EF4444 "
+            "reading 'ĂN ĐÊM PHÁ BỤNG!', zero flat rectangle banner overlays, zero corner sparkles, zero text in bottom 40%."
         ),
     },
     "ua_sao_vay": {
@@ -373,26 +382,26 @@ FLOW_THUMBNAIL_BLUEPRINTS: dict[str, dict[str, Any]] = {
     },
 
     # -------------------------------------------------------------------------
-    # NGÁCH 5: Triết Học, Chánh Niệm & Minh Triết (Điện Ảnh Tĩnh Lặng & Sức Nặng)
+    # NGÁCH 5: Triết Học, Chánh Niệm, Minh Triết & Giải Mã Thảm Họa Lịch Sử
     # -------------------------------------------------------------------------
     "chanh_niem_ke": {
-        "channel_name": "Chánh Niệm Kể",
-        "niche": "Chánh Niệm, Thiền Định & Buông Bỏ Lo Âu",
-        "visual_style": "Zen Ink Wash Painting (Thủy Mặc) meets High-Contrast Emotional Drama",
-        "shock_concept": "Calm stickman standing serenely under gentle rain with a clear glass brimming into still ripples instead of overflowing, soft warm cream-blue palette",
-        "decorations": "Gentle doodle rain, smooth still ripples, warm inner golden aura, dissolving gray clouds",
-        "brand_identity": "Bald doodle stickman in blue shirt #3B82C4, soft warm cream #F8F0DC and tranquil blue palette",
-        "hook_text": "MŨI TÊN THỨ 2!",
-        "hook_text_16x9": "BUÔNG BỎ ÂU LO!",
-        "text_placement_16x9": "Top-Left safe zone (X: 6%-50%, Y: 8%-36%), never bottom-right",
-        "text_placement_9x16": "Upper-Center safe zone (X: 10%-90%, Y: 16%-32%), never bottom 40%",
-        "text_size_spec": "14%-16% of canvas height (~160px on 1080p), occupying 22%-25% total area",
-        "font_spec": "Bold Hand-Brushed Marker All-Caps, calming deep blue (#1D3557) with thick black outline",
+        "channel_name": "Hiểu Tận Gốc",
+        "niche": "Giải Mã Thảm Họa Kỹ Thuật, Đại Dịch & Sự Cố Lịch Sử (Chernobyl, Titanic, Vajont)",
+        "visual_style": "5-Layer @SuDehieukhongphainho Archival GIS Map + #EFE8D5 Double-Bordered Card + Seamless B&W Portrait Cutout",
+        "shock_concept": "Weathered vintage GIS map of Ukraine and Belarus with crisp PRIPYAT concentric target bullseye, three bold red tactical arrows, double-bordered #EFE8D5 parchment title card, and seamless B&W archival portrait cutout (0px white outline)",
+        "decorations": "Double outer document border frame, clean PRIPYAT/CHERNOBYL/UKRAINE/BELARUS labels (zero AI gibberish), 3 terracotta-red tactical arrows, #EFE8D5 date stamp",
+        "brand_identity": "Weathered archival parchment (#EFE8D5), terracotta-red (#BA4A44), deep ink (#141414), mustard accent (#FFC93C)",
+        "hook_text": "NÚT AZ-5",
+        "hook_text_16x9": "THẢM HỌA CHERNOBYL",
+        "text_placement_16x9": "Top-Left safe zone (X: 3%-48%, Y: 6%-48%) inside #EFE8D5 double-bordered card, never bottom-right",
+        "text_placement_9x16": "Upper-Center safe zone (X: 7%-93%, Y: 7%-27%) inside #EFE8D5 double-bordered card, never bottom 40%",
+        "text_size_spec": "14%-18% of canvas height, crisp condensed all-caps",
+        "font_spec": "Condensed ExtraBold All-Caps (#141414) inside #EFE8D5 double-bordered parchment card",
         "flow_prompt_16x9": (
-            "Viral YouTube mindfulness thumbnail poster, 16:9 widescreen composition. 2D doodle explainer style on soft warm cream #F8F0DC and tranquil blue palette. In the center: A calm, serene bald stickman in blue shirt #3B82C4 standing peacefully under gentle minimalist doodle rain, holding a clear glass of water brimming into smooth motionless concentric ripples instead of overflowing. Soft warm inner golden glow, contrasting with tiny dissolving gray clouds. IN TOP-LEFT SAFE ZONE (X: 6% to 50%, Y: 8% to 34%): Bold hand-brushed marker all-caps text with thick black outline and calming deep blue #1D3557 fill reading 'BUÔNG BỎ ÂU LO!'. Mindful tranquility, >=60% negative space, zero bottom-right overlays, crisp master illustration."
+            "5-layer archival documentary thumbnail poster, 16:9 widescreen composition. Layer 1: dark outer border with thin #EFE8D5 inner hairline frame. Layer 2: weathered archival parchment & dusty terracotta map of Eastern Europe (strictly ZERO small map city names, ZERO gibberish micro-labels). Layer 3: glowing concentric orange-red bullseye flashpoint and 3 bold terracotta-red tactical arrows. Layer 4: IN TOP-LEFT SAFE ZONE (X: 4% to 48%, Y: 6% to 48%): crisp #EFE8D5 double-bordered parchment card reading 'THẢM HỌA CHERNOBYL' and 'CHỈ VÌ MỘT NÚT BẤM', plus bottom-left date stamp 'PRIPYAT, 26 - 4 - 1986'. Layer 5: bottom-right seamless B&W archival portrait cutout looking straight at camera with 0px white sticker border."
         ),
         "flow_prompt_9x16": (
-            "Viral vertical YouTube Shorts thumbnail poster, 9:16 vertical composition. Zen ink wash with dramatic focal lighting. Meditating figure surrounded by deflected black storm arrows, with a single luminous red arrow firing from his own thoughts. IN UPPER-CENTER SAFE ZONE (X: 10% to 90%, Y: 16% to 32%): Bold hand-brushed calligraphic block all-caps text with dark outline reading 'MŨI TÊN THỨ 2!'. Deep mindfulness intrigue, zero text in bottom 40%."
+            "5-layer archival documentary vertical thumbnail poster, 9:16 composition. Layer 1: double document border frame. Layer 2: weathered parchment & dusty terracotta map of Ukraine and Belarus (strictly ZERO gibberish micro-labels). Layer 3: crisp concentric red-orange bullseye flashpoint and 3 red tactical arrows. Layer 4: IN UPPER-CENTER SAFE ZONE (X: 7% to 93%, Y: 7% to 27%): #EFE8D5 double-bordered parchment card reading 'NÚT AZ-5' and 'LÀM NỔ CHERNOBYL?', plus lower-left stamp '26 - 4 - 1986'. Layer 5: bottom-right seamless B&W archival portrait cutout looking straight at camera with 0px white sticker border, zero text in bottom 40%."
         ),
     },
     "minh_triet_song": {

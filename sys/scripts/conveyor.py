@@ -532,6 +532,36 @@ def cmd_colab(args):
     sys.exit(res.returncode)
 
 
+def cmd_fleet(args):
+    env = dict(os.environ, PYTHONPATH=str(SYS_DIR))
+    action = getattr(args, "fleet_action", "status") or "status"
+    if action == "dashboard":
+        dash_script = SYS_DIR / "tools/youtube_dashboard.py"
+        cmd = [get_python_executable(), str(dash_script)]
+        if getattr(args, "serve", False):
+            cmd.extend(["--serve", "--port", str(getattr(args, "port", 8765))])
+        res = subprocess.run(cmd, cwd=str(REPO_ROOT), env=env)
+        sys.exit(res.returncode)
+
+    script = SYS_DIR / "tools/vp_fleet_manager.py"
+    cmd = [
+        get_python_executable(),
+        str(script),
+        "--mode",
+        action,
+        "--channels",
+        getattr(args, "channels", "all") or "all",
+        "--wave-size",
+        str(getattr(args, "wave_size", 4) or 4),
+    ]
+    if getattr(args, "channel", None):
+        cmd.extend(["--channel", args.channel])
+    if getattr(args, "action", None):
+        cmd.extend(["--action", args.action])
+    res = subprocess.run(cmd, cwd=str(REPO_ROOT), env=env)
+    sys.exit(res.returncode)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Video Pilot 6-Station No-Mistake Conveyor")
     subparsers = parser.add_subparsers(dest="command", help="Lệnh điều phối")
@@ -591,6 +621,20 @@ def main():
     colab_parser.add_argument("--accounts", type=str, help="Comma-separated account IDs for pool operations")
     colab_parser.add_argument("--max-workers", type=int, default=3, help="Max concurrent workers for pool-start")
 
+    fleet_parser = subparsers.add_parser("fleet", help="Quản lý, Chẩn đoán & Sản xuất 38 Kênh (Single / Wave / Auto-Queue / Dashboard)")
+    fleet_parser.add_argument(
+        "fleet_action",
+        choices=["status", "diagnose", "single", "wave", "auto-queue", "dashboard"],
+        nargs="?",
+        default="status",
+    )
+    fleet_parser.add_argument("--channel", type=str, help="Channel ID hoặc slug cho chế độ single")
+    fleet_parser.add_argument("--channels", type=str, default="all", help="Danh sách kênh ('all', 'vi', 'en', 'tier_a', hoặc phân cách dấu phẩy)")
+    fleet_parser.add_argument("--wave-size", type=int, default=4, help="Số kênh chạy song song mỗi ca (3-4)")
+    fleet_parser.add_argument("--action", type=str, default="bundle", help="Hành động (bundle, analytics, studio_sync, short_only)")
+    fleet_parser.add_argument("--serve", action="store_true", help="Khởi chạy web server Dashboard (:8765)")
+    fleet_parser.add_argument("--port", type=int, default=8765, help="Cổng server Dashboard")
+
     args = parser.parse_args()
 
     if args.command == "status":
@@ -608,6 +652,8 @@ def main():
         cmd_flow(args)
     elif args.command == "colab":
         cmd_colab(args)
+    elif args.command == "fleet":
+        cmd_fleet(args)
     else:
         parser.print_help()
         sys.exit(1)

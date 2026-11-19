@@ -58,9 +58,14 @@ def test_trigger_keyword_resolution_cross_channel_and_comfort_guardrails() -> No
     assert res_bespoke["force_bespoke"] is True
     assert res_bespoke["archetype_id"] == "archetype_4_doodle_explainer"
 
-    res_mindful = resolve_fx_intent_from_text("[FORENSIC_V2] chu kỳ thở 4-7-8", channel_id="chanh_niem_ke")
+    res_mindful = resolve_fx_intent_from_text("[FORENSIC_V2] chu kỳ thở 4-7-8", channel_id="minh_triet_song")
     assert res_mindful["comfort_downgraded"] is True
     assert res_mindful["effective_mode"] == "auto_niche"
+
+    res_chronicle = resolve_fx_intent_from_text("[FORENSIC_V2] thảm họa lò phản ứng trên bản đồ", channel_id="chanh_niem_ke")
+    assert res_chronicle["comfort_downgraded"] is False
+    assert res_chronicle["effective_mode"] == "forensic_v2"
+    assert res_chronicle["archetype_id"] == "archetype_2_geopolitics_history"
 
     res_static = resolve_fx_intent_from_text("[STATIC_CLEAN] bản vẽ 2d thuần", channel_id="nao_luoi")
     assert res_static["effective_mode"] == "static"
@@ -68,7 +73,7 @@ def test_trigger_keyword_resolution_cross_channel_and_comfort_guardrails() -> No
 
 
 def test_forensic_v2_exports_and_plan_routing(tmp_path: Path) -> None:
-    assert len(fx_wh.FORENSIC_HUD_V2_CATALOG) == 9
+    assert len(fx_wh.FORENSIC_HUD_V2_CATALOG) == 10
     assert set(fx_wh.VARIANT_PROFILES.keys()) == {"A", "B", "C"}
     assert callable(fx_wh.plan_and_prepare_dual_mode_fx)
 
@@ -89,7 +94,7 @@ def test_forensic_v2_exports_and_plan_routing(tmp_path: Path) -> None:
     assert summary["enabled"] is True
     assert summary["fx_mode"] == "forensic_v2"
     assert summary["forensic_v2"]["enabled"] is True
-    assert summary["forensic_v2"]["hud_catalog_count"] == 9
+    assert summary["forensic_v2"]["hud_catalog_count"] == 10
     assert summary["bespoke_beats"] >= 1
     assert summary["bespoke_sfx_files"]
     for wav_file in summary["bespoke_sfx_files"]:

@@ -1,6 +1,6 @@
 """Forensic Aviation Telemetry HUD v2 (30fps RGBA PIL Renderer, Colab-Portable).
 
-Standalone, zero-relative-import module providing 9 animated 30fps RGBA PIL HUD
+Standalone, zero-relative-import module providing 10 animated 30fps RGBA PIL HUD
 widgets + unified `render_forensic_hud_v2(...)` entrypoint for `Hồ Sơ Kỳ Lạ`
 and aviation forensic explainer productions (`Option A / B / C` at 2K 16:9,
 1080p, or 9:16 portrait).
@@ -43,7 +43,8 @@ FORENSIC_HUD_V2_CATALOG: dict[str, str] = {
     "fuel_avoidance_vector": "Dual fuel bars dropping to 0% (ENG 1 11:50, ENG 2 12:00) + Athens avoidance vector to Grammatiko 12:04.",
     "calibrated_radar_overlay": "Dynamic Bezier trajectory & radar sweep anchored to calibrated Athens/Grammatiko/Aegean coords.",
     "lemmino_hairline_hud": "Ultra-clean 1px hairline forensic typography/timeline for LEMMiNO Noir (Option B).",
-    "chapter_title_bumper": "Cinematic 1.3s animated dossier chapter title card (CH01..CH10 / Style 01..04).",
+    "chapter_title_bumper": "Cinematic minimalist 3.0s dossier chapter title card (CH02..CH10 / Style 01..04).",
+    "man_auto_switch": "Overhead P5 cabin pressure selector schematic (AUTO -> MAN) showing manual lock and open outflow valve.",
 }
 
 _HUD_ALIASES: dict[str, str] = {
@@ -65,6 +66,8 @@ _HUD_ALIASES: dict[str, str] = {
     "lemmino_hairline": "lemmino_hairline_hud",
     "render_chapter_title_bumper": "chapter_title_bumper",
     "chapter_bumper": "chapter_title_bumper",
+    "render_man_auto_switch": "man_auto_switch",
+    "man_auto": "man_auto_switch",
 }
 
 _CUSTOM_FONT_DIR: Path | None = None
@@ -84,7 +87,8 @@ def _resolve_font_path(style: str) -> str | None:
     if style in _FONT_PATH_CACHE:
         return _FONT_PATH_CACHE[style]
     filenames = {
-        "mono": ("NotoMono-Regular.ttf", "DejaVuSansMono-Bold.ttf", "DejaVuSansMono.ttf"),
+        # NotoSans renders uppercase Vietnamese stacked diacritics (Ồ/Ổ/Ổ) cleanly without NotoMono glyph defects
+        "mono": ("NotoSans-Regular.ttf", "NotoSans-Bold.ttf", "DejaVuSans.ttf"),
         "reg": ("NotoSans-Regular.ttf", "DejaVuSans.ttf"),
         "bold": ("NotoSans-Bold.ttf", "DejaVuSans-Bold.ttf"),
     }.get(style, ("NotoSans-Bold.ttf", "DejaVuSans-Bold.ttf"))
@@ -222,6 +226,7 @@ def _layout_ctx(width: int, height: int) -> dict[str, Any]:
     portrait = h > w
     s = (w / 1440.0 * 0.90) if portrait else min(w / 2560.0, h / 1440.0)
     margin_x = max(20, int(round(64 * s)))
+    right_margin_x = max(20, int(round(190 * s))) if portrait else margin_x
     top_safe = max(72, int(round(h * (0.105 if not portrait else 0.115))))
     bottom_safe = int(round(h * (0.836 if not portrait else 0.785)))
     return {
@@ -230,9 +235,10 @@ def _layout_ctx(width: int, height: int) -> dict[str, Any]:
         "s": s,
         "portrait": portrait,
         "margin_x": margin_x,
+        "right_margin_x": right_margin_x,
         "top_safe": top_safe,
         "bottom_safe": bottom_safe,
-        "max_card_w": w - 2 * margin_x,
+        "max_card_w": w - margin_x - right_margin_x,
         "px": lambda val: int(round(val * s)),
         "lw": lambda val: max(1, int(round(val * s))),
     }
@@ -366,10 +372,11 @@ def _draw_dashed_line(
 def _place_card_xy(ctx: dict[str, Any], pw: int, ph: int, spec: dict[str, Any], centered: bool = False) -> tuple[int, int]:
     align = str(spec.get("align", "bottom_center" if centered else "bottom_left")).lower()
     mx = ctx["margin_x"]
+    rmx = ctx.get("right_margin_x", mx)
     if "center" in align:
-        x0 = (ctx["w"] - pw) // 2
+        x0 = (mx + max(0, (ctx["w"] - mx - rmx - pw) // 2)) if ctx["portrait"] else (ctx["w"] - pw) // 2
     elif "right" in align:
-        x0 = ctx["w"] - mx - pw
+        x0 = ctx["w"] - rmx - pw
     else:
         x0 = mx
     if "top" in align:
@@ -380,7 +387,16 @@ def _place_card_xy(ctx: dict[str, Any], pw: int, ph: int, spec: dict[str, Any], 
         y0 = ctx["bottom_safe"] - ph
     x0 = int(spec.get("x0", x0))
     y0 = int(spec.get("y0", y0))
-    return max(8, min(ctx["w"] - pw - 8, x0)), max(8, min(ctx["h"] - ph - 8, y0))
+    max_x0 = ctx["w"] - pw - (rmx if ctx["portrait"] else 8)
+    return max(8, min(max_x0, x0)), max(8, min(ctx["h"] - ph - 8, y0))
+
+
+def _apply_slide_y(ctx: dict[str, Any], y0: int, ph: int, slide_dy: int, spec: dict[str, Any]) -> int:
+    """Apply slide offset while keeping portrait cards clear of bottom caption safe-zone."""
+    y0_slide = y0 + slide_dy
+    if ctx["portrait"] and "y0" not in spec:
+        return min(y0_slide, ctx["bottom_safe"] - ph)
+    return y0_slide
 
 
 def _draw_card_shell(
@@ -439,7 +455,7 @@ def render_alt_pressure_divergence(
     pw = ctx["max_card_w"] if ctx["portrait"] else min(px(1100), ctx["max_card_w"])
     ph = px(375 if not ctx["portrait"] else 430)
     x0, y0 = _place_card_xy(ctx, pw, ph, spec)
-    y0 += int(round((1.0 - slide) * px(28)))
+    y0 = _apply_slide_y(ctx, y0, ph, int(round((1.0 - slide) * px(28))), spec)
 
     _draw_card_shell(d, x0, y0, pw, ph, th, ctx, accent=th["crimson"])
 
@@ -581,7 +597,7 @@ def render_dual_horn_pulse(
     ph = px(332 if not ctx["portrait"] else 370)
     x0, y0 = _place_card_xy(ctx, pw, ph, spec)
     slide = _ease_out_cubic(_clamp01(t_beat / 0.25))
-    y0 += int(round((1.0 - slide) * px(24)))
+    y0 = _apply_slide_y(ctx, y0, ph, int(round((1.0 - slide) * px(24))), spec)
 
     _draw_card_shell(d, x0, y0, pw, ph, th, ctx, accent=th["crimson"])
 
@@ -615,8 +631,8 @@ def render_dual_horn_pulse(
     row_h = max(48, (row_area_bot - row_area_top - row_gap) // 2)
 
     lanes = [
-        (row_area_top, str(spec.get("wave1_label", "TAKEOFF CONFIG (MẶT ĐẤT)")), "250ms ON / 250ms OFF • 2.0Hz", th["cyan"]),
-        (row_area_top + row_h + row_gap, str(spec.get("wave2_label", "CABIN ALTITUDE (3.600M)")), "NHỊP XUNG GIỐNG HỆT • ~1000Hz", th["crimson"]),
+        (row_area_top, str(spec.get("wave1_label", spec.get("label_a", "CẢNH BÁO CẤT CÁNH (MẶT ĐẤT)"))), "250ms BẬT / 250ms TẮT • 2.0Hz", th["cyan"]),
+        (row_area_top + row_h + row_gap, str(spec.get("wave2_label", spec.get("label_b", "MẤT ÁP SUẤT CABIN (3.600M)"))), "NHỊP XUNG GIỐNG HỆT 100%", th["crimson"]),
     ]
 
     # Window spans 2.0 seconds = 4 full 0.50s cycles of 2.0Hz (250ms ON / 250ms OFF)
@@ -712,13 +728,13 @@ def render_hypoxia_tuc_meter(
     _draw_card_shell(d, x0, y0, pw, ph, th, ctx, accent=th["crimson"])
 
     pad = px(26)
-    badge_txt = str(spec.get("badge", "10.400M • KHÔNG NGẠT THỞ"))
+    badge_txt = str(spec.get("badge", "10.400M • KHÔNG CẢM GIÁC NGẠT"))
     f_b = _fit_font(d, badge_txt, pw // 3, px(19), "bold", 10)
     _, _, btw, _ = _text_size(d, badge_txt, f_b)
     badge_x = x0 + pw - pad - btw - px(28)
     _draw_pill(d, badge_x, y0 + px(16), badge_txt, f_b, (28, 16, 22, 235), th["brass"], outline=th["brass"], pad_x=px(14), pad_y=px(6), radius=px(6), outline_w=1)
 
-    kicker = str(spec.get("kicker", "SINH LÝ HỌC HYPOXIA • BẪY THIẾU OXY THẦM LẶNG"))
+    kicker = str(spec.get("kicker", "SINH LÝ THIẾU OXY GIẢM ÁP • TỤT NHẬN THỨC THẦM LẶNG"))
     f_k = _fit_font(d, kicker, max(120, badge_x - (x0 + pad) - px(20)), px(21), "mono", 10)
     _draw_text_top(d, x0 + pad, y0 + px(21), kicker, f_k, th["parchment"])
 
@@ -770,7 +786,7 @@ def render_hypoxia_tuc_meter(
     tuc_y1 = y0 + ph - px(18)
     d.rounded_rectangle([lx0, tuc_y0, x0 + pw - pad, tuc_y1], radius=px(10), fill=th["sub_bg"], outline=th["grid"], width=1)
 
-    tuc_title = str(spec.get("tuc_label", "TUC: 30-90 GIÂY"))
+    tuc_title = str(spec.get("tuc_label", "THỜI GIAN TỈNH TÁO: 30–90 GIÂY"))
     rem_sec = max(0.0, 90.0 * (1.0 - 0.68 * u))
     f_tuc = _fit_font(d, tuc_title, pw // 2, px(28), "bold", 13)
     _draw_text_top(d, lx0 + px(16), tuc_y0 + px(12), tuc_title, f_tuc, th["brass"])
@@ -842,7 +858,7 @@ def render_swiss_cheese_align(
         pad_x=px(14), pad_y=px(6), radius=px(6), outline_w=max(1, lw(2)),
     )
 
-    kicker = str(spec.get("kicker", "MÔ HÌNH PHÔ MAI THỤY SĨ (SWISS CHEESE) • CHUỖI SAI LẦM LIÊN HOÀN"))
+    kicker = str(spec.get("kicker", "CHUỖI MẮT XÍCH PHÁP Y • MÔ HÌNH PHÔ MAI THỤY SĨ"))
     f_k = _fit_font(d, kicker, max(120, st_x - (x0 + pad) - px(20)), px(22), "mono", 10)
     _draw_text_top(d, x0 + pad, y0 + px(21), kicker, f_k, th["brass"])
 
@@ -1011,18 +1027,20 @@ def render_classic_vs_ng_compare(
     ly2 = (g_y0 + g_y1 - lamp2_h) // 2
 
     # Lamp 1: CABIN ALTITUDE
+    l1_txt = str(spec.get("right_lamp1", "ÁP SUẤT CABIN"))
     l1_x = g_x0 + px(16)
     d.rounded_rectangle([l1_x, ly2, l1_x + lamp2_w, ly2 + lamp2_h], radius=px(6), fill=(185, 38, 36, int(190 + 60 * pulse)), outline=th["white"], width=max(1, lw(2)))
-    f_l1 = _fit_font(d, "CABIN ALTITUDE", lamp2_w - px(16), px(20), "bold", 10)
-    _, _, l1w, l1h = _text_size(d, "CABIN ALTITUDE", f_l1)
-    _draw_text_top(d, l1_x + (lamp2_w - l1w) // 2, ly2 + (lamp2_h - l1h) // 2, "CABIN ALTITUDE", f_l1, th["white"])
+    f_l1 = _fit_font(d, l1_txt, lamp2_w - px(16), px(20), "bold", 10)
+    _, _, l1w, l1h = _text_size(d, l1_txt, f_l1)
+    _draw_text_top(d, l1_x + (lamp2_w - l1w) // 2, ly2 + (lamp2_h - l1h) // 2, l1_txt, f_l1, th["white"])
 
     # Lamp 2: TAKEOFF CONFIG
+    l2_txt = str(spec.get("right_lamp2", "LỖI CẤT CÁNH"))
     l2_x = l1_x + lamp2_w + px(20)
     d.rounded_rectangle([l2_x, ly2, l2_x + lamp2_w, ly2 + lamp2_h], radius=px(6), fill=(26, 98, 125, 225), outline=th["cyan"], width=max(1, lw(2)))
-    f_l2 = _fit_font(d, "TAKEOFF CONFIG", lamp2_w - px(16), px(20), "bold", 10)
-    _, _, l2w, l2h = _text_size(d, "TAKEOFF CONFIG", f_l2)
-    _draw_text_top(d, l2_x + (lamp2_w - l2w) // 2, ly2 + (lamp2_h - l2h) // 2, "TAKEOFF CONFIG", f_l2, th["white"])
+    f_l2 = _fit_font(d, l2_txt, lamp2_w - px(16), px(20), "bold", 10)
+    _, _, l2w, l2h = _text_size(d, l2_txt, f_l2)
+    _draw_text_top(d, l2_x + (lamp2_w - l2w) // 2, ly2 + (lamp2_h - l2h) // 2, l2_txt, f_l2, th["white"])
 
     _draw_text_top(d, r_x0 + px(16), panel_y1 - px(36), "BẮT BUỘC TRƯỚC TẦM MẮT • TÁCH BIỆT 2 ĐÈN ĐỘC LẬP", f_bot, th["mint"])
 
@@ -1055,7 +1073,7 @@ def render_fuel_avoidance_vector(
     ph = px(332 if not ctx["portrait"] else 375)
     x0, y0 = _place_card_xy(ctx, pw, ph, spec)
     slide = _ease_out_cubic(_clamp01(t_beat / 0.25))
-    y0 += int(round((1.0 - slide) * px(24)))
+    y0 = _apply_slide_y(ctx, y0, ph, int(round((1.0 - slide) * px(24))), spec)
 
     _draw_card_shell(d, x0, y0, pw, ph, th, ctx, accent=th["crimson"])
 
@@ -1087,8 +1105,8 @@ def render_fuel_avoidance_vector(
     bar_w = max(80, bar_x1 - bar_x0)
 
     rows = [
-        (hdr_y + px(20), str(spec.get("eng1_label", "ENG 1 TẮT 11:50")), eng1_lvl, 0.18),
-        (hdr_y + px(92), str(spec.get("eng2_label", "ENG 2 TẮT 12:00")), eng2_lvl, 0.24),
+        (hdr_y + px(20), str(spec.get("eng1_label", "ĐỘNG CƠ 1 TẮT 11:50")), eng1_lvl, 0.18),
+        (hdr_y + px(92), str(spec.get("eng2_label", "ĐỘNG CƠ 2 TẮT 12:00")), eng2_lvl, 0.24),
     ]
     for ry, r_lbl, lvl, init_cap in rows:
         bh = px(48)
@@ -1112,7 +1130,7 @@ def render_fuel_avoidance_vector(
             _draw_text_top(d, bar_x0 + px(14), ry + px(14), "CẠN NHIÊN LIỆU (0.0%)", f_emp, (th["crimson"][0], th["crimson"][1], th["crimson"][2], 195))
 
         pct_val = int(round(lvl * init_cap * 100.0))
-        pct_txt = "0% FLAMEOUT" if is_empty else f"{pct_val:2d}% FUEL"
+        pct_txt = "0% TẮT MÁY" if is_empty else f"{pct_val:2d}% DẦU"
         f_p = _fit_font(d, pct_txt, pct_w, px(19), "mono", 10)
         _draw_text_top(d, bar_x1 + px(14), ry + px(12), pct_txt, f_p, th["crimson"] if is_empty else th["parchment"])
 
@@ -1209,7 +1227,11 @@ def render_calibrated_radar_overlay(
         d.ellipse([ax - px(6), ay - px(6), ax + px(6), ay + px(6)], fill=th["cyan"], outline=th["white"], width=1)
         ae_lbl = str(spec.get("aegean_label", "HÀNH LANG AEGEAN"))
         f_ae = _fit_font(d, ae_lbl, px(260), px(18), "mono", 10)
-        _draw_pill(d, int(ax + px(16)), int(ay + px(10)), ae_lbl, f_ae, (8, 14, 24, 210), th["cyan"], outline=(th["cyan"][0], th["cyan"][1], th["cyan"][2], 140), pad_x=px(10), pad_y=px(5), radius=px(5), outline_w=1)
+        ae_x = int(ax + px(16))
+        if ctx["portrait"]:
+            _, _, ae_tw, _ = _text_size(d, ae_lbl, f_ae)
+            ae_x = min(width - (ae_tw + px(10) * 2) - ctx["right_margin_x"], ae_x)
+        _draw_pill(d, ae_x, int(ay + px(10)), ae_lbl, f_ae, (8, 14, 24, 210), th["cyan"], outline=(th["cyan"][0], th["cyan"][1], th["cyan"][2], 140), pad_x=px(10), pad_y=px(5), radius=px(5), outline_w=1)
 
     # 3. Primary Progressive Avoidance Bezier Dashed Trajectory (Athens -> Grammatiko)
     arc_prog = _ease_out_cubic(_clamp01((t_beat - 0.10) / min(1.15, dur_s * 0.72)))
@@ -1247,7 +1269,8 @@ def render_calibrated_radar_overlay(
         bh = th_t + px(22)
         offset = px(76)
         lx = int(round((cx + offset) if side == "right" else (cx - offset - bw)))
-        lx = max(px(28), min(width - bw - px(28), lx))
+        right_pad = ctx["right_margin_x"] if ctx["portrait"] else px(28)
+        lx = max(px(28), min(width - bw - right_pad, lx))
         ly = int(round(max(ctx["top_safe"] + px(10), min(ctx["bottom_safe"] - bh - px(10), cy - bh // 2))))
         anchor_x = lx if side == "right" else (lx + bw)
         if (side == "right" and anchor_x > cx + pulse_r) or (side == "left" and anchor_x < cx - pulse_r):
@@ -1275,7 +1298,7 @@ def render_lemmino_hairline_hud(
     width: int = 2560,
     height: int = 1440,
 ) -> Image.Image:
-    """Render ultra-clean 1px hairline forensic typography/timeline HUD without heavy boxes."""
+    """Render ultra-clean 1px hairline forensic lower-third rule without spoilers or heavy boxes."""
     canvas = Image.new("RGBA", (width, height), (0, 0, 0, 0))
     d = ImageDraw.Draw(canvas, "RGBA")
     th = _theme("B")
@@ -1284,41 +1307,54 @@ def render_lemmino_hairline_hud(
     hair = max(1, int(round(min(width / 2560.0, height / 1440.0))))
 
     dur_s = max(0.25, float(dur))
-    prog = _ease_out_cubic(_clamp01(t_beat / min(dur_s * 0.72, 1.4)))
-    alpha = int(round(255 * _ease_out_cubic(_clamp01(t_beat / 0.25))))
+    prog = _ease_out_cubic(_clamp01(t_beat / min(dur_s * 0.72, 1.8)))
+    env_in = 0.25 + 0.75 * _ease_out_cubic(_clamp01(t_beat / 0.25))
+    rem = max(0.0, dur_s - float(t_beat))
+    env_out = _ease_out_cubic(_clamp01(rem / 0.28)) if (dur_s >= 1.5 and rem < 0.28) else 1.0
+    alpha = int(round(255 * env_in * env_out))
 
     mode = str(spec.get("mode", "timeline")).lower()
-    kicker = str(spec.get("kicker", "14.08.2005 // 12:04 LT — PHÂN TÍCH PHÁP Y"))
-    headline = str(spec.get("headline", "ĐỘ CAO 10.400 MÉT • ÁP SUẤT CABIN TỤT VỀ KHÔNG"))
-    metric = str(spec.get("metric", "TUC 90S"))
+    kicker = str(spec.get("kicker", "14.08.2005 • HỒ SƠ CHUYẾN BAY"))
+    headline = str(spec.get("headline", "HELIOS 522"))
+    metric = str(spec.get("metric", "")).strip()
 
     mx = ctx["margin_x"]
+    rmx = ctx.get("right_margin_x", mx)
     span_w = min(px(1180), ctx["max_card_w"])
-    x0 = mx if not ctx["portrait"] else (width - span_w) // 2
+    x0 = mx if not ctx["portrait"] else mx + max(0, (width - mx - rmx - span_w) // 2)
     x1 = x0 + span_w
-    base_y = ctx["bottom_safe"] - px(132)
+    base_y = ctx["bottom_safe"] - px(136)
+    rule_y = base_y + px(86)
 
     col_parch = (th["parchment"][0], th["parchment"][1], th["parchment"][2], alpha)
     col_white = (th["white"][0], th["white"][1], th["white"][2], alpha)
     col_brass = (th["brass"][0], th["brass"][1], th["brass"][2], alpha)
     col_red = (th["crimson"][0], th["crimson"][1], th["crimson"][2], alpha)
-    col_rule = (232, 223, 200, int(alpha * 0.38))
+    col_rule = (232, 223, 200, int(alpha * 0.44))
 
-    # Top thin vertical accent tick + spaced mono kicker (NO surrounding box)
-    d.line([(x0, base_y), (x0, base_y + px(62))], fill=col_brass, width=max(1, hair * 2))
-    f_k = _fit_font(d, kicker, int(span_w * 0.75), px(20), "mono", 10)
-    _draw_text_top(d, x0 + px(16), base_y + px(2), kicker, f_k, col_brass, shadow=True)
+    # Whisper-light borderless cinema scrim keeps small hairline typography crisp over bright terrain
+    has_markers = bool(list(spec.get("markers") or [])[:5])
+    scrim_y1 = rule_y + (px(36) if has_markers else px(14))
+    d.rounded_rectangle(
+        [x0 - px(14), base_y - px(10), x1 + px(14), scrim_y1],
+        radius=px(8),
+        fill=(8, 10, 14, int(alpha * 0.44)),
+    )
 
-    f_m = _fit_font(d, metric, int(span_w * 0.30), px(22), "mono", 11)
-    _, _, mw, _ = _text_size(d, metric, f_m)
-    _draw_text_top(d, x1 - mw, base_y + px(2), metric, f_m, col_red, shadow=True)
+    # Minimal vertical accent tick + clean time/place headline (NO box, NO spoilers)
+    d.line([(x0, base_y), (x0, base_y + px(68))], fill=col_brass, width=max(1, hair * 2))
+    k_max_w = int(span_w * (0.68 if metric else 0.94))
+    f_k = _fit_font(d, kicker, k_max_w, px(24), "mono", 10)
+    _draw_text_top(d, x0 + px(16), base_y, kicker, f_k, col_brass, shadow=True)
 
-    f_h = _fit_font(d, headline, span_w - px(24), px(34), "bold", 13)
-    _draw_text_top(d, x0 + px(16), base_y + px(30), headline, f_h, col_white, shadow=True)
+    if metric:
+        f_m = _fit_font(d, metric, int(span_w * 0.30), px(24), "mono", 11)
+        _, _, mw, _ = _text_size(d, metric, f_m)
+        _draw_text_top(d, x1 - mw, base_y, metric, f_m, col_parch, shadow=True)
 
-    rule_y = base_y + px(84)
+    f_h = _fit_font(d, headline, span_w - px(24), px(38), "bold", 13)
+    _draw_text_top(d, x0 + px(16), base_y + px(32), headline, f_h, col_white, shadow=True)
     if mode == "wave":
-        # Pure minimal single-line oscilloscope across hairline baseline
         d.line([(x0, rule_y), (x1, rule_y)], fill=col_rule, width=hair)
         pts = []
         for xi in range(x0, x1 + 1, max(2, px(5))):
@@ -1329,28 +1365,29 @@ def render_lemmino_hairline_hud(
         if len(pts) >= 2:
             d.line(pts, fill=col_red, width=max(1, hair * 2))
     else:
-        # Clean 1px horizontal timeline rule with milestone ticks & traveling pinpoint cursor
         d.line([(x0, rule_y), (x1, rule_y)], fill=col_rule, width=hair)
         cur_x = int(round(x0 + span_w * prog))
         d.line([(x0, rule_y), (cur_x, rule_y)], fill=col_brass, width=max(1, hair * 2))
-        r_dot = max(3, px(5))
-        d.ellipse([cur_x - r_dot, rule_y - r_dot, cur_x + r_dot, rule_y + r_dot], fill=col_red, outline=col_white, width=hair)
+        r_dot = max(3, px(4))
+        d.ellipse([cur_x - r_dot, rule_y - r_dot, cur_x + r_dot, rule_y + r_dot], fill=col_brass, outline=col_white, width=hair)
 
-        markers = list(spec.get("markers", ["09:07 LARNACA", "3.600M CÒI KÉP", "10.400M HYPOXIA", "12:04 GRAMMATIKO"]))[:5]
-        f_mk = _fit_font(d, "12:04 GRAMMATIKO", max(90, span_w // max(1, len(markers)) - px(12)), px(16), "mono", 9)
-        n_m = max(1, len(markers))
-        for mi, m_txt in enumerate(markers):
-            mx_i = x0 + int(round((mi / float(max(1, n_m - 1))) * span_w)) if n_m > 1 else x0
-            d.line([(mx_i, rule_y - px(6)), (mx_i, rule_y + px(6))], fill=col_parch, width=hair)
-            _, _, mtw, _ = _text_size(d, str(m_txt), f_mk)
-            tx = mx_i if mi == 0 else (mx_i - mtw if mi == n_m - 1 else mx_i - mtw // 2)
-            _draw_text_top(d, max(x0, min(x1 - mtw, tx)), rule_y + px(12), str(m_txt), f_mk, col_parch, shadow=True)
+        # Render optional bottom markers ONLY if explicitly provided in spec (never hardcode future spoilers)
+        markers = list(spec.get("markers") or [])[:5]
+        if markers:
+            f_mk = _fit_font(d, str(markers[0]), max(90, span_w // max(1, len(markers)) - px(12)), px(16), "mono", 9)
+            n_m = max(1, len(markers))
+            for mi, m_txt in enumerate(markers):
+                mx_i = x0 + int(round((mi / float(max(1, n_m - 1))) * span_w)) if n_m > 1 else x0
+                d.line([(mx_i, rule_y - px(6)), (mx_i, rule_y + px(6))], fill=col_parch, width=hair)
+                _, _, mtw, _ = _text_size(d, str(m_txt), f_mk)
+                tx = mx_i if mi == 0 else (mx_i - mtw if mi == n_m - 1 else mx_i - mtw // 2)
+                _draw_text_top(d, max(x0, min(x1 - mtw, tx)), rule_y + px(12), str(m_txt), f_mk, col_parch, shadow=True)
 
     return canvas
 
 
 # ---------------------------------------------------------------------------
-# 9. Chapter Title Bumper (1.3s Animated Dossier Card)
+# 9. Chapter Title Bumper (Minimalist 3.0s Docudrama Dossier Card)
 # ---------------------------------------------------------------------------
 
 def render_chapter_title_bumper(
@@ -1363,7 +1400,7 @@ def render_chapter_title_bumper(
     height: int = 1440,
     variant: str = "A",
 ) -> Image.Image:
-    """Render cinematic 1.3s animated dossier chapter card (`CH01..CH10` or Style 01..04)."""
+    """Render minimalist cinematic chapter card (`CHƯƠNG 02..10` / Style 01..04)."""
     canvas = Image.new("RGBA", (width, height), (0, 0, 0, 0))
     d = ImageDraw.Draw(canvas, "RGBA")
     th = _theme(variant)
@@ -1372,8 +1409,8 @@ def render_chapter_title_bumper(
 
     dur_s = max(0.35, float(dur))
     t = max(0.0, float(t_beat))
-    fade_in_t = min(0.24, dur_s * 0.22)
-    fade_out_t = min(0.24, dur_s * 0.22)
+    fade_in_t = min(0.36, dur_s * 0.22)
+    fade_out_t = min(0.36, dur_s * 0.22)
     if t < fade_in_t:
         env = _ease_out_cubic(t / max(1e-4, fade_in_t))
     elif t > dur_s - fade_out_t:
@@ -1383,90 +1420,242 @@ def render_chapter_title_bumper(
     if env <= 0.01:
         return canvas
 
-    # Deep archival backdrop scrim
-    bg_a = int(round((238 if th["variant"] == "B" else 224) * env))
-    d.rectangle([0, 0, width, height], fill=(6, 8, 12, bg_a))
+    # Deep serene cinema backdrop scrim (zero grid clutter)
+    bg_a = int(round((238 if th["variant"] == "B" else 232) * env))
+    d.rectangle([0, 0, width, height], fill=(5, 7, 11, bg_a))
 
-    # Subtle forensic crosshair grid in A/C
-    if th["variant"] != "B":
-        g_col = (255, 255, 255, int(14 * env))
-        step = max(60, px(160))
-        for gx in range(step, width, step):
-            d.line([(gx, 0), (gx, height)], fill=g_col, width=1)
-        for gy in range(step, height, step):
-            d.line([(0, gy), (width, gy)], fill=g_col, width=1)
+    raw_num = str(ch_num).strip()
+    if isinstance(ch_num, int):
+        eyebrow = f"CHƯƠNG {ch_num:02d}"
+    elif raw_num.upper().startswith("CH") and raw_num[2:].isdigit():
+        eyebrow = f"CHƯƠNG {int(raw_num[2:]):02d}"
+    elif raw_num.isdigit():
+        eyebrow = f"CHƯƠNG {int(raw_num):02d}"
+    else:
+        eyebrow = (raw_num or "CHƯƠNG 01").upper()
 
-    num_str = f"CH{ch_num:02d}" if isinstance(ch_num, int) else str(ch_num).strip()
-    if not num_str:
-        num_str = "CH01"
-
-    max_w = int(width * 0.76)
+    max_w = int(width * 0.74)
     cx = width // 2
-    cy = int(height * 0.48)
+    cy = int(height * 0.49)
 
     def _with_a(col: tuple[int, int, int, int], mul: float = 1.0) -> tuple[int, int, int, int]:
         return col[0], col[1], col[2], int(round(col[3] * env * mul))
 
-    # Top dossier kicker badge
-    kicker = f"HỒ SƠ PHÁP Y // {num_str.upper()}"
-    f_k = _fit_font(d, kicker, max_w, px(24), "mono", 12)
-    _, _, kw, kh = _text_size(d, kicker, f_k)
-    if th["variant"] == "B":
-        _draw_text_top(d, cx - kw // 2, cy - px(165), kicker, f_k, _with_a(th["brass"]))
-    else:
-        _draw_pill(
-            d, cx - (kw + px(36)) // 2, cy - px(176), kicker, f_k,
-            _with_a(th["sub_bg"]), _with_a(th["brass"]), outline=_with_a(th["crimson"]),
-            pad_x=px(18), pad_y=px(8), radius=px(6), outline_w=max(1, lw(2)),
-        )
+    # Minimalist bare brass eyebrow (no red pill box)
+    f_k = _fit_font(d, eyebrow, max_w, px(24), "bold", 12)
+    _, _, kw, _ = _text_size(d, eyebrow, f_k)
+    _draw_text_top(d, cx - kw // 2, cy - px(142), eyebrow, f_k, _with_a(th["brass"], 0.92))
 
-    # Wrapped chapter title (1-2 lines, never clipped horizontally)
-    title_clean = str(ch_title or "").strip() or f"PHẦN {num_str}"
-    f_t = _get_font(px(58 if not ctx["portrait"] else 48), "bold")
+    # Crisp 4-5 word Vietnamese headline
+    title_clean = str(ch_title or "").strip() or eyebrow
+    f_t = _get_font(px(64 if not ctx["portrait"] else 50), "bold")
     title_lines = _wrap_text(d, title_clean, f_t, max_w, max_lines=2)
     if sum(len(ln) for ln in title_lines) < len(title_clean) * 0.78:
-        f_t = _fit_font(d, title_clean, max_w * 2, px(44), "bold", 20)
+        f_t = _fit_font(d, title_clean, max_w * 2, px(48), "bold", 20)
         title_lines = _wrap_text(d, title_clean, f_t, max_w, max_lines=2)
 
-    title_slide = int(round((1.0 - _ease_out_cubic(_clamp01(t / 0.30))) * px(22)))
+    title_slide = int(round((1.0 - _ease_out_cubic(_clamp01(t / 0.34))) * px(16)))
     line_gap = px(14)
-    line_heights = [_text_size(d, ln, f_t)[3] for ln in title_lines] or [px(52)]
+    line_heights = [_text_size(d, ln, f_t)[3] for ln in title_lines] or [px(56)]
     tot_th = sum(line_heights) + line_gap * max(0, len(title_lines) - 1)
-    ty_cur = cy - tot_th // 2 - px(24) + title_slide
+    ty_cur = cy - tot_th // 2 - px(16) + title_slide
     for ln, lh in zip(title_lines, line_heights, strict=False):
         _, _, l_w, _ = _text_size(d, ln, f_t)
         _draw_text_top(d, cx - l_w // 2, ty_cur, ln, f_t, _with_a(th["white"]), shadow=True)
         ty_cur += lh + line_gap
 
-    # Expanding horizontal rule wipe
-    rule_w = int(round(min(max_w * 0.68, px(920)) * _ease_out_cubic(_clamp01((t - 0.06) / 0.34))))
-    rule_y = ty_cur + px(14)
+    # Clean expanding brass hairline rule
+    rule_w = int(round(min(max_w * 0.42, px(540)) * _ease_out_cubic(_clamp01((t - 0.08) / 0.36))))
+    rule_y = ty_cur + px(16)
     if rule_w > 4:
-        d.line([(cx - rule_w // 2, rule_y), (cx + rule_w // 2, rule_y)], fill=_with_a(th["crimson"] if th["variant"] != "B" else th["brass"]), width=max(1, lw(3 if th["variant"] != "B" else 1)))
+        d.line([(cx - rule_w // 2, rule_y), (cx + rule_w // 2, rule_y)], fill=_with_a(th["brass"], 0.85), width=max(1, lw(2)))
 
-    # Subtitle reveal
+    # Subtle timestamp / place subline
     sub_clean = str(subtitle or "").strip()
     if sub_clean:
-        sub_a = _ease_out_cubic(_clamp01((t - 0.14) / 0.24))
+        sub_a = _ease_out_cubic(_clamp01((t - 0.16) / 0.28))
         f_s = _fit_font(d, sub_clean, max_w, px(26), "reg", 12)
         sub_lines = _wrap_text(d, sub_clean, f_s, max_w, max_lines=2)
-        sy_cur = rule_y + px(24)
+        sy_cur = rule_y + px(22)
         for sln in sub_lines:
             _, _, slw, slh = _text_size(d, sln, f_s)
-            _draw_text_top(d, cx - slw // 2, sy_cur, sln, f_s, _with_a(th["parchment"], sub_a))
+            _draw_text_top(d, cx - slw // 2, sy_cur, sln, f_s, _with_a(th["parchment"], sub_a * 0.88))
             sy_cur += slh + px(8)
-
-    # Bottom thin dossier progress tick
-    prog_w = px(280)
-    prog_y = height - px(88)
-    d.line([(cx - prog_w // 2, prog_y), (cx + prog_w // 2, prog_y)], fill=_with_a(th["grid"]), width=max(1, lw(2)))
-    d.line([(cx - prog_w // 2, prog_y), (cx - prog_w // 2 + int(round(prog_w * _clamp01(t / dur_s))), prog_y)], fill=_with_a(th["brass"]), width=max(1, lw(3)))
 
     return canvas
 
 
 # ---------------------------------------------------------------------------
-# 10. Unified Entrypoint
+# 10. Overhead P5 MAN / AUTO Switch & Outflow Valve Schematic
+# ---------------------------------------------------------------------------
+
+def render_man_auto_switch(
+    spec: dict[str, Any],
+    t_beat: float,
+    dur: float,
+    width: int = 2560,
+    height: int = 1440,
+    variant: str = "A",
+) -> Image.Image:
+    """Render overhead P5 selector (AUTO -> MAN) + locked-open outflow valve schematic."""
+    canvas = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    d = ImageDraw.Draw(canvas, "RGBA")
+    th = _theme(variant)
+    ctx = _layout_ctx(width, height)
+    px, lw = ctx["px"], ctx["lw"]
+
+    turn_u = _ease_in_out_cubic(_clamp01((float(t_beat) - 0.25) / 1.15))
+    slide = _ease_out_cubic(_clamp01(t_beat / 0.28))
+
+    pw = ctx["max_card_w"] if ctx["portrait"] else min(px(1100), ctx["max_card_w"])
+    ph = px(355 if not ctx["portrait"] else 410)
+    x0, y0 = _place_card_xy(ctx, pw, ph, spec)
+    y0 = _apply_slide_y(ctx, y0, ph, int(round((1.0 - slide) * px(24))), spec)
+
+    accent_col = th["crimson"] if turn_u > 0.72 else th["brass"]
+    _draw_card_shell(d, x0, y0, pw, ph, th, ctx, accent=accent_col)
+
+    pad = px(26)
+    badge_txt = str(spec.get("status_badge", "NẤC MAN • VAN ĐUÔI MỞ CỨNG" if turn_u > 0.72 else "AUTO -> MAN"))
+    f_b = _fit_font(d, badge_txt, pw // 3 + px(40), px(19), "bold", 10)
+    _, _, btw, _ = _text_size(d, badge_txt, f_b)
+    badge_x = x0 + pw - pad - btw - px(28)
+    _draw_pill(
+        d, badge_x, y0 + px(16), badge_txt, f_b,
+        th["crimson"] if turn_u > 0.72 else th["sub_bg"],
+        th["white"] if turn_u > 0.72 else th["brass"],
+        outline=th["crimson"] if turn_u > 0.72 else th["brass"],
+        pad_x=px(14), pad_y=px(6), radius=px(6), outline_w=max(1, lw(1)),
+    )
+
+    kicker = str(spec.get("kicker", "BẢNG TRẦN P5 • CÔNG TẮC ĐIỀU ÁP CABIN"))
+    f_k = _fit_font(d, kicker, max(120, badge_x - (x0 + pad) - px(20)), px(21), "mono", 10)
+    _draw_text_top(d, x0 + pad, y0 + px(21), kicker, f_k, th["brass"])
+
+    hdr_y = y0 + px(62)
+    d.line([(x0 + pad, hdr_y), (x0 + pw - pad, hdr_y)], fill=th["grid"], width=1)
+
+    gap = px(20)
+    body_y0 = hdr_y + px(14)
+    body_y1 = y0 + ph - px(18)
+    left_w = int((pw - pad * 2 - gap) * 0.48)
+    lx0, lx1 = x0 + pad, x0 + pad + left_w
+    rx0, rx1 = lx1 + gap, x0 + pw - pad
+
+    # Left panel: P5 rotary switch (AUTO -> STBY -> MAN)
+    d.rounded_rectangle([lx0, body_y0, lx1, body_y1], radius=px(10), fill=th["sub_bg"], outline=th["grid"], width=1)
+    knob_cx = (lx0 + lx1) // 2
+    knob_cy = body_y0 + int((body_y1 - body_y0) * 0.56)
+    dial_r = max(24, min(px(58), (body_y1 - body_y0) // 3))
+
+    # Selector stops (-138 deg AUTO, -90 deg STBY, -42 deg MAN)
+    stops = [
+        (-138.0, "AUTO", th["mint"], turn_u < 0.30),
+        (-90.0, "DỰ PHÒNG", th["muted"], 0.30 <= turn_u <= 0.72),
+        (-42.0, "MAN", th["crimson"], turn_u > 0.72),
+    ]
+    arc_r = dial_r + px(18)
+    for deg, lbl, scol, active in stops:
+        rad = math.radians(deg)
+        sx = knob_cx + math.cos(rad) * arc_r
+        sy = knob_cy + math.sin(rad) * arc_r
+        dr = px(5) if active else px(3)
+        d.ellipse([sx - dr, sy - dr, sx + dr, sy + dr], fill=scol if active else th["grid"])
+        f_lbl = _fit_font(d, lbl, px(110), px(17), "bold" if active else "mono", 9)
+        _, _, ltw, lth = _text_size(d, lbl, f_lbl)
+        if deg < -100:
+            tx = int(round(sx - ltw - px(10)))
+            ty = int(round(sy - lth * 0.6))
+        elif deg > -80:
+            tx = int(round(sx + px(10)))
+            ty = int(round(sy - lth * 0.6))
+        else:
+            tx = int(round(sx - ltw // 2))
+            ty = int(round(sy - lth - px(8)))
+        tx = max(lx0 + px(10), min(lx1 - ltw - px(10), tx))
+        ty = max(body_y0 + px(8), min(body_y1 - lth - px(8), ty))
+        _draw_text_top(d, tx, ty, lbl, f_lbl, scol if active else th["muted"])
+
+    # Outer metal bezel + rotating pointer
+    ring_col = th["crimson"] if turn_u > 0.72 else th["brass"]
+    d.ellipse([knob_cx - dial_r, knob_cy - dial_r, knob_cx + dial_r, knob_cy + dial_r], fill=(22, 27, 38, 245), outline=ring_col, width=max(2, lw(3)))
+    inner_r = int(dial_r * 0.72)
+    d.ellipse([knob_cx - inner_r, knob_cy - inner_r, knob_cx + inner_r, knob_cy + inner_r], fill=(34, 41, 56, 250), outline=(255, 255, 255, 45), width=1)
+    ptr_deg = -138.0 + 96.0 * turn_u
+    ptr_rad = math.radians(ptr_deg)
+    d.line(
+        [(knob_cx - math.cos(ptr_rad) * dial_r * 0.32, knob_cy - math.sin(ptr_rad) * dial_r * 0.32),
+         (knob_cx + math.cos(ptr_rad) * dial_r * 0.88, knob_cy + math.sin(ptr_rad) * dial_r * 0.88)],
+        fill=th["crimson"] if turn_u > 0.72 else th["white"],
+        width=max(3, lw(6)),
+    )
+
+    knob_note = "TỰ ĐỘNG ĐIỀU ÁP: ĐÃ NGẮT" if turn_u > 0.72 else "ĐANG CHUYỂN SANG CHẾ ĐỘ TAY..."
+    f_kn = _fit_font(d, knob_note, left_w - px(24), px(17), "bold", 9)
+    _, _, knw, _ = _text_size(d, knob_note, f_kn)
+    _draw_text_top(d, knob_cx - knw // 2, body_y1 - px(32), knob_note, f_kn, th["crimson"] if turn_u > 0.72 else th["parchment"])
+
+    # Right panel: Outflow valve schematic (sealed vs locked open)
+    d.rounded_rectangle([rx0, body_y0, rx1, body_y1], radius=px(10), fill=th["sub_bg"], outline=th["crimson"] if turn_u > 0.72 else th["grid"], width=max(1, lw(2 if turn_u > 0.72 else 1)))
+    r_pad = px(18)
+    r_title = "VAN XẢ ĐUÔI (OUTFLOW VALVE)"
+    f_rt = _fit_font(d, r_title, rx1 - rx0 - r_pad * 2, px(19), "bold", 10)
+    _draw_text_top(d, rx0 + r_pad, body_y0 + px(12), r_title, f_rt, th["white"])
+
+    # Cross-section fuselage bottom duct + hinged valve door
+    duct_x0, duct_x1 = rx0 + r_pad, rx1 - r_pad
+    wall_y = body_y0 + int((body_y1 - body_y0) * 0.44)
+    hinge_x = (duct_x0 + duct_x1) // 2 + px(20)
+    gap_w = px(92)
+    d.line([(duct_x0, wall_y), (hinge_x - gap_w, wall_y)], fill=(170, 185, 205, 220), width=max(3, lw(5)))
+    d.line([(hinge_x + px(8), wall_y), (duct_x1, wall_y)], fill=(170, 185, 205, 220), width=max(3, lw(5)))
+
+    # Valve flap swings downward as turn_u -> 1.0
+    flap_ang = math.radians(176.0 - 44.0 * turn_u)
+    flap_len = float(gap_w)
+    fx_end = hinge_x + math.cos(flap_ang) * flap_len
+    fy_end = wall_y + math.sin(flap_ang) * flap_len
+    d.line([(hinge_x, wall_y), (fx_end, fy_end)], fill=th["crimson"] if turn_u > 0.55 else th["cyan"], width=max(4, lw(6)))
+    d.ellipse([hinge_x - px(5), wall_y - px(5), hinge_x + px(5), wall_y + px(5)], fill=th["brass"], outline=th["white"], width=1)
+
+    # Animated escaping compressed air streaks once open
+    if turn_u > 0.35:
+        flow_phase = (float(t_beat) * 2.2) % 1.0
+        for fi in range(3):
+            p = (flow_phase + fi * 0.33) % 1.0
+            sx = hinge_x - px(58) + fi * px(20) - p * px(18)
+            sy = wall_y - px(14) + p * px(62)
+            ex = sx - px(10)
+            ey = sy + px(16)
+            fa = int(round(230 * math.sin(p * math.pi) * _clamp01((turn_u - 0.35) / 0.4)))
+            d.line([(sx, sy), (ex, ey)], fill=(th["crimson"][0], th["crimson"][1], th["crimson"][2], fa), width=max(2, lw(3)))
+
+    s1 = "TRẠNG THÁI: GHIM MỞ TỐI ĐA" if turn_u > 0.72 else "TRẠNG THÁI: CHUẨN BỊ ĐÓNG"
+    s2 = "KHÍ NÉN PHỤT THẲNG RA NGOÀI KHI TĂNG GA"
+    f_s1 = _fit_font(d, s1, rx1 - rx0 - r_pad * 2, px(19), "bold", 10)
+    f_s2 = _fit_font(d, s2, rx1 - rx0 - r_pad * 2, px(16), "reg", 9)
+    _draw_text_top(d, rx0 + r_pad, body_y1 - px(58), s1, f_s1, th["crimson"] if turn_u > 0.72 else th["mint"])
+    _draw_text_top(d, rx0 + r_pad, body_y1 - px(32), s2, f_s2, th["parchment"])
+
+    return canvas
+
+
+def _apply_canvas_fade(canvas: Image.Image, t_beat: float, dur: float) -> Image.Image:
+    """Apply smooth 0.22s ease-in (non-empty at t=0.05) and 0.28s ease-out envelope for persistent clusters."""
+    dur_s = max(0.25, float(dur))
+    t = max(0.0, float(t_beat))
+    env_in = 0.25 + 0.75 * _ease_out_cubic(_clamp01(t / 0.22)) if t < 0.22 else 1.0
+    rem = max(0.0, dur_s - t)
+    env_out = _ease_out_cubic(_clamp01(rem / 0.28)) if (dur_s >= 1.5 and rem < 0.28) else 1.0
+    env = env_in * env_out
+    if env < 0.995:
+        alpha_band = canvas.getchannel("A").point(lambda a: int(round(a * env)))
+        canvas.putalpha(alpha_band)
+    return canvas
+
+
+# ---------------------------------------------------------------------------
+# 11. Unified Entrypoint
 # ---------------------------------------------------------------------------
 
 def render_forensic_hud_v2(
@@ -1484,19 +1673,21 @@ def render_forensic_hud_v2(
     cfg = dict(spec or {})
 
     if canon == "alt_pressure_divergence":
-        return render_alt_pressure_divergence(cfg, t_beat, dur, width=width, height=height, variant=variant)
+        return _apply_canvas_fade(render_alt_pressure_divergence(cfg, t_beat, dur, width=width, height=height, variant=variant), t_beat, dur)
     if canon == "dual_horn_pulse":
-        return render_dual_horn_pulse(cfg, t_beat, dur, width=width, height=height, variant=variant)
+        return _apply_canvas_fade(render_dual_horn_pulse(cfg, t_beat, dur, width=width, height=height, variant=variant), t_beat, dur)
     if canon == "hypoxia_tuc_meter":
-        return render_hypoxia_tuc_meter(cfg, t_beat, dur, width=width, height=height, variant=variant)
+        return _apply_canvas_fade(render_hypoxia_tuc_meter(cfg, t_beat, dur, width=width, height=height, variant=variant), t_beat, dur)
     if canon == "swiss_cheese_align":
-        return render_swiss_cheese_align(cfg, t_beat, dur, width=width, height=height, variant=variant)
+        return _apply_canvas_fade(render_swiss_cheese_align(cfg, t_beat, dur, width=width, height=height, variant=variant), t_beat, dur)
     if canon == "classic_vs_ng_compare":
-        return render_classic_vs_ng_compare(cfg, t_beat, dur, width=width, height=height, variant=variant)
+        return _apply_canvas_fade(render_classic_vs_ng_compare(cfg, t_beat, dur, width=width, height=height, variant=variant), t_beat, dur)
     if canon == "fuel_avoidance_vector":
-        return render_fuel_avoidance_vector(cfg, t_beat, dur, width=width, height=height, variant=variant)
+        return _apply_canvas_fade(render_fuel_avoidance_vector(cfg, t_beat, dur, width=width, height=height, variant=variant), t_beat, dur)
     if canon == "calibrated_radar_overlay":
-        return render_calibrated_radar_overlay(cfg, t_beat, dur, width=width, height=height, variant=variant)
+        return _apply_canvas_fade(render_calibrated_radar_overlay(cfg, t_beat, dur, width=width, height=height, variant=variant), t_beat, dur)
+    if canon == "man_auto_switch":
+        return _apply_canvas_fade(render_man_auto_switch(cfg, t_beat, dur, width=width, height=height, variant=variant), t_beat, dur)
     if canon == "lemmino_hairline_hud":
         return render_lemmino_hairline_hud(cfg, t_beat, dur, width=width, height=height)
     if canon == "chapter_title_bumper":
@@ -1525,6 +1716,7 @@ __all__ = [
     "render_fuel_avoidance_vector",
     "render_hypoxia_tuc_meter",
     "render_lemmino_hairline_hud",
+    "render_man_auto_switch",
     "render_swiss_cheese_align",
     "set_font_dir",
 ]

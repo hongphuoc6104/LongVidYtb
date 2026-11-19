@@ -888,7 +888,9 @@ def package_final_on_colab_t4_nvenc(
     from colab_bridge.client import Client
 
     is_short = aspect == "9:16"
-    tw, th = (1080, 1920) if is_short else (1920, 1080)
+    norm_slug = channel_slug.strip().replace("-", "_").lower()
+    is_2k_v3 = norm_slug in ("ho_so_ky_la", "co_the_ke")
+    tw, th = ((1440, 2560) if is_short else (2560, 1440)) if is_2k_v3 else ((1080, 1920) if is_short else (1920, 1080))
     scratch = scratch_dir or out_mp4.parent / f"_nvenc_scratch_{job_id}"
     scratch.mkdir(parents=True, exist_ok=True)
     bundle_zip = scratch / "nvenc_bundle.zip"
@@ -1229,8 +1231,13 @@ try:
         cur_v = "vsub"
 
     wm_pos = "W-w-36:H-h-36"
+    if max(tw, th) >= 2400:
+        wm_pos = "W-w-48:H-h-48"
     filter_chains.append(f"[{{cur_v}}][{{wm_idx}}:v]overlay={{wm_pos}}[vout]")
-    filter_chains.append(f"[{{audio_idx}}:a]aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo[aout]")
+    if max(tw, th) >= 2400:
+        filter_chains.append(f"[{{audio_idx}}:a]loudnorm=I=-11.0:TP=-1.0:LRA=7.0,aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo[aout]")
+    else:
+        filter_chains.append(f"[{{audio_idx}}:a]aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo[aout]")
 
     out_mp4 = str(work / "final.mp4")
     cmd.extend([
@@ -1375,7 +1382,9 @@ def stitch_hybrid_scene_groups_and_package(
     ]
 
     if dry_run:
-        tw, th = (1080, 1920) if is_short else (1920, 1080)
+        norm_slug = channel_slug.strip().replace("-", "_").lower()
+        is_2k_v3 = norm_slug in ("ho_so_ky_la", "co_the_ke")
+        tw, th = ((1440, 2560) if is_short else (2560, 1440)) if is_2k_v3 else ((1080, 1920) if is_short else (1920, 1080))
         dur = max(0.5, sum(effective_durs))
         subprocess.run(
             [
@@ -1559,9 +1568,11 @@ def produce_dynamic_flow_demo(
         f"({[round(d, 2) for d in beat_durations]}), {len(global_words)} words."
     )
 
-    # 2. Verify True Channel Emblem Watermark (100x100 squircle, radius=16, opacity=0.92)
-    watermark_png = run_dir / "watermark_100x100.png"
-    make_channel_watermark(channel_slug, watermark_png, size=100)
+    # 2. Verify True Channel Emblem Watermark (150x150 RGBA for 2K V3 channels, 100x100 for standard HD)
+    norm_slug_wm = channel_slug.strip().replace("-", "_").lower()
+    wm_size = 150 if norm_slug_wm in ("ho_so_ky_la", "co_the_ke") else 100
+    watermark_png = run_dir / f"watermark_{wm_size}x{wm_size}.png"
+    make_channel_watermark(channel_slug, watermark_png, size=wm_size)
 
     # 3. Credit-Gated Priority Check (Priority 1 = Dynamic Flow Video; Priority 2 = 0-Credit Slide Fallback)
     ledger = CreditLedger()

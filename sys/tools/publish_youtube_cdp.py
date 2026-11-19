@@ -807,6 +807,19 @@ class YouTubeCDPClient:
                 raise RuntimeError(f"CUSTOM_THUMBNAIL_REJECTED_OR_TIER2_REQUIRED: File not found: {path_str}")
             return False
 
+        thumb_bytes = os.path.getsize(path_str)
+        if thumb_bytes > 2 * 1024 * 1024:
+            logger.error(
+                "Thumbnail exceeds YouTube 2MB limit (%d bytes > 2097152 bytes): %s",
+                thumb_bytes,
+                path_str,
+            )
+            if strict_thumbnail:
+                raise RuntimeError(
+                    f"CUSTOM_THUMBNAIL_REJECTED_OR_TIER2_REQUIRED: Thumbnail exceeds 2MB limit ({thumb_bytes} bytes): {path_str}"
+                )
+            return False
+
         logger.info("Uploading custom thumbnail: %s (strict=%s)", path_str, strict_thumbnail)
         thumb_obj = await self.get_remote_object("""
             (() => {
@@ -2301,8 +2314,11 @@ class YouTubeCDPClient:
         self,
         video_url_or_id: str,
         thumbnail_path: str | Path,
+        *,
+        edit_screenshot_path: Optional[str | Path] = None,
+        strict_thumbnail: bool = False,
     ) -> dict[str, Any]:
-        """Navigate to Studio video edit page, upload custom thumbnail, click #save, and persist."""
+        """Navigate to Studio video edit page, upload custom thumbnail, click #save, and verify reload."""
         path_str = str(Path(thumbnail_path).resolve())
         if not os.path.isfile(path_str):
             raise FileNotFoundError(f"Thumbnail not found: {path_str}")
@@ -2333,7 +2349,7 @@ class YouTubeCDPClient:
             await asyncio.sleep(1.0)
 
         # 2. Upload thumbnail via upload_thumbnail (DOM.setFileInputFiles)
-        uploaded = await self.upload_thumbnail(path_str)
+        uploaded = await self.upload_thumbnail(path_str, strict_thumbnail=strict_thumbnail)
         if not uploaded:
             logger.warning("Failed to attach custom thumbnail on edit page for %s", vid_id)
             return {"success": False, "video_id": vid_id, "error": "upload_failed"}
@@ -2375,10 +2391,495 @@ class YouTubeCDPClient:
                     logger.info("Thumbnail save RPC persisted after %ds.", j + 1)
                     break
             await asyncio.sleep(2.0)
-            return {"success": True, "video_id": vid_id, "thumbnail_path": path_str}
+            edit_verify = await self.verify_video_edit_page(
+                vid_id,
+                screenshot_path=edit_screenshot_path,
+            )
+            has_custom = bool(edit_verify.get("has_custom_thumbnail"))
+            logger.info("Post-save reload check for %s: has_custom_thumbnail=%s", vid_id, has_custom)
+            if strict_thumbnail and not has_custom:
+                return {
+                    "success": False,
+                    "video_id": vid_id,
+                    "thumbnail_path": path_str,
+                    "error": "custom_thumbnail_not_persisted_on_reload",
+                    "edit_verification": edit_verify,
+                }
+            return {
+                "success": True,
+                "video_id": vid_id,
+                "thumbnail_path": path_str,
+                "has_custom_thumbnail": has_custom,
+                "edit_verification": edit_verify,
+            }
 
         logger.warning("Could not click save button for thumbnail or save was not enabled.")
         return {"success": False, "video_id": vid_id, "error": "save_button_not_clicked"}
+
+    async def post_and_pin_comment(
+        self,
+        video_url_or_id: str,
+        comment_text: str,
+        screenshot_path: Optional[str | Path] = None,
+    ) -> dict[str, Any]:
+        """Post a comment on a live PUBLIC video/Short watch page and pin it as the creator."""
+        raw_target = str(video_url_or_id or "").strip()
+        vid_id = raw_target
+        if "v=" in vid_id:
+            vid_id = vid_id.split("v=")[1].split("&")[0]
+        elif "/" in vid_id:
+            vid_id = vid_id.rstrip("/").split("/")[-1].split("?")[0]
+
+        clean_comment = str(comment_text or "").strip()
+        if not vid_id or not clean_comment:
+            return {
+                "success": False,
+                "video_id": vid_id,
+                "posted": False,
+                "pinned": False,
+                "error": "missing_video_id_or_comment",
+            }
+
+        watch_url = f"https://www.youtube.com/watch?v={vid_id}"
+        target_json = json.dumps(clean_comment, ensure_ascii=False)
+
+        async def _open_comments_panel() -> dict[str, Any]:
+            await self.evaluate(
+                """
+                (() => {
+                    document.querySelectorAll('video').forEach(v => {
+                        try { v.pause(); } catch (e) {}
+                    });
+                })()
+                """
+            )
+            cur_url = str(await self.evaluate("window.location.href") or "")
+            is_shorts = "/shorts/" in cur_url
+            if is_shorts:
+                opened = await self.evaluate(
+                    """
+                    (() => {
+                        const existingBox = document.querySelector('ytd-commentbox #contenteditable-root, ytd-comment-thread-renderer, #simplebox-placeholder');
+                        if (existingBox) {
+                            const r = existingBox.getBoundingClientRect();
+                            if (r.width > 0 && r.height > 0) return { is_shorts: true, already_open: true };
+                        }
+                        const selectors = [
+                            'ytd-reel-player-overlay-renderer #comments-button button',
+                            '#comments-button button',
+                            '#comments-button yt-button-shape button',
+                            'button[aria-label*="Bình luận"]',
+                            'button[aria-label*="Comments"]',
+                            'button[aria-label*="comments"]'
+                        ];
+                        for (const sel of selectors) {
+                            const btns = Array.from(document.querySelectorAll(sel));
+                            for (const btn of btns) {
+                                const r = btn.getBoundingClientRect();
+                                if (r.width > 0 && r.height > 0) {
+                                    btn.click();
+                                    return { is_shorts: true, clicked: sel };
+                                }
+                            }
+                        }
+                        return { is_shorts: true, clicked: null };
+                    })()
+                    """
+                )
+                await asyncio.sleep(2.0)
+                return opened if isinstance(opened, dict) else {"is_shorts": True}
+
+            await self.evaluate("window.scrollTo(0, 520);")
+            await asyncio.sleep(1.2)
+            await self.evaluate(
+                """
+                (() => {
+                    window.scrollTo(0, 920);
+                    document.querySelectorAll('video').forEach(v => {
+                        try { v.pause(); } catch (e) {}
+                    });
+                })()
+                """
+            )
+            await asyncio.sleep(1.5)
+            return {"is_shorts": False, "scrolled": True}
+
+        async def _find_matching_thread() -> dict[str, Any]:
+            js = """
+                (() => {
+                    const TARGET = __TARGET_COMMENT__;
+                    const norm = s => (s || '').replace(/\\s+/g, ' ').trim().toLowerCase();
+                    const prefix = norm(TARGET).slice(0, 42);
+                    const threads = Array.from(document.querySelectorAll('ytd-comment-thread-renderer'));
+                    for (let i = 0; i < threads.length; i++) {
+                        const t = threads[i];
+                        const contentEl = t.querySelector('#comment #content-text, ytd-comment-view-model #content-text, #content-text');
+                        const txt = norm(contentEl ? (contentEl.innerText || contentEl.textContent) : '');
+                        const badgeEl = t.querySelector('#pinned-comment-badge, ytd-pinned-comment-badge-renderer, #pinned-comment-badge-renderer');
+                        const badgeText = (badgeEl ? (badgeEl.innerText || badgeEl.textContent || '') : '').replace(/\\s+/g, ' ').trim();
+                        const hasPinnedWord = badgeText.toLowerCase().includes('ghim') || badgeText.toLowerCase().includes('pinned');
+                        if (prefix && txt.includes(prefix)) {
+                            return {
+                                found: true,
+                                index: i,
+                                pinned: Boolean(badgeEl && (hasPinnedWord || badgeEl.getBoundingClientRect().height > 0)),
+                                badge_text: badgeText,
+                                text: (contentEl ? (contentEl.innerText || contentEl.textContent || '') : '').trim().slice(0, 160),
+                                total_threads: threads.length,
+                            };
+                        }
+                    }
+                    const firstBadge = document.querySelector('ytd-comment-thread-renderer #pinned-comment-badge, ytd-comment-thread-renderer ytd-pinned-comment-badge-renderer');
+                    return {
+                        found: false,
+                        total_threads: threads.length,
+                        any_pinned_badge: Boolean(firstBadge),
+                    };
+                })()
+            """.replace("__TARGET_COMMENT__", target_json)
+            res = await self.evaluate(js)
+            return res if isinstance(res, dict) else {"found": False}
+
+        logger.info("Navigating to %s to post & pin comment...", watch_url)
+        await self.call("Page.navigate", {"url": watch_url})
+        await asyncio.sleep(4.5)
+        await _open_comments_panel()
+
+        # Wait up to 15s for comments section (either comment box or thread list)
+        comments_ready = False
+        for _ in range(30):
+            comments_ready = bool(
+                await self.evaluate(
+                    """
+                    Boolean(
+                        document.querySelector('#simplebox-placeholder, ytd-comment-simplebox-renderer #placeholder-area, ytd-commentbox #contenteditable-root, ytd-comment-thread-renderer')
+                    )
+                    """
+                )
+            )
+            if comments_ready:
+                break
+            await asyncio.sleep(0.5)
+
+        if not comments_ready:
+            # Retry opening panel once more in case page hydrated late
+            await _open_comments_panel()
+            await asyncio.sleep(2.0)
+
+        existing = await _find_matching_thread()
+        posted = False
+        already_present = bool(existing.get("found"))
+        already_pinned = bool(existing.get("found") and existing.get("pinned"))
+
+        if already_pinned:
+            logger.info("Comment on %s is already posted and pinned.", vid_id)
+            if screenshot_path:
+                await self.capture_screenshot(screenshot_path)
+            return {
+                "success": True,
+                "video_id": vid_id,
+                "watch_url": watch_url,
+                "posted": False,
+                "already_pinned": True,
+                "pinned": True,
+                "pinned_badge_text": existing.get("badge_text", ""),
+                "matched_comment_preview": existing.get("text", ""),
+                "screenshot_path": str(screenshot_path) if screenshot_path else None,
+            }
+
+        if not already_present:
+            # Click placeholder to reveal editable comment box if collapsed
+            await self.evaluate(
+                """
+                (() => {
+                    const ph = document.querySelector('#simplebox-placeholder') ||
+                               document.querySelector('ytd-comment-simplebox-renderer #placeholder-area') ||
+                               document.querySelector('#placeholder-area');
+                    if (ph) {
+                        ph.scrollIntoView({ block: 'center' });
+                        ph.click();
+                        return true;
+                    }
+                    return false;
+                })()
+                """
+            )
+            await asyncio.sleep(1.2)
+
+            typed_ok = False
+            for _ in range(12):
+                js_type = """
+                    (() => {
+                        const TARGET = __TARGET_COMMENT__;
+                        const boxes = Array.from(document.querySelectorAll('ytd-commentbox #contenteditable-root'));
+                        const ce = boxes.find(el => {
+                            const r = el.getBoundingClientRect();
+                            return r.width > 0 && r.height > 0;
+                        });
+                        if (!ce) return { ok: false, reason: 'no_contenteditable' };
+                        ce.scrollIntoView({ block: 'center' });
+                        ce.focus();
+                        ce.click();
+                        try {
+                            const sel = window.getSelection();
+                            const range = document.createRange();
+                            range.selectNodeContents(ce);
+                            sel.removeAllRanges();
+                            sel.addRange(range);
+                            document.execCommand('delete', false, null);
+                        } catch (e) {}
+                        let inserted = false;
+                        try {
+                            inserted = document.execCommand('insertText', false, TARGET);
+                        } catch (e) {}
+                        if (!inserted || !ce.innerText.trim()) {
+                            ce.textContent = TARGET;
+                        }
+                        ce.dispatchEvent(new InputEvent('input', { bubbles: true, data: TARGET, inputType: 'insertText' }));
+                        ce.dispatchEvent(new Event('change', { bubbles: true }));
+                        return {
+                            ok: ce.innerText.trim().length >= Math.min(8, TARGET.length),
+                            len: ce.innerText.trim().length,
+                        };
+                    })()
+                """.replace("__TARGET_COMMENT__", target_json)
+                type_res = await self.evaluate(js_type)
+                if isinstance(type_res, dict) and type_res.get("ok"):
+                    typed_ok = True
+                    break
+                await asyncio.sleep(0.5)
+
+            if not typed_ok:
+                if screenshot_path:
+                    await self.capture_screenshot(screenshot_path)
+                return {
+                    "success": False,
+                    "video_id": vid_id,
+                    "watch_url": watch_url,
+                    "posted": False,
+                    "pinned": False,
+                    "error": "comment_input_not_found_or_uneditable",
+                    "screenshot_path": str(screenshot_path) if screenshot_path else None,
+                }
+
+            await asyncio.sleep(0.6)
+            submitted = await self.evaluate(
+                """
+                (() => {
+                    const boxes = Array.from(document.querySelectorAll('ytd-commentbox #contenteditable-root'));
+                    const ce = boxes.find(el => {
+                        const r = el.getBoundingClientRect();
+                        return r.width > 0 && r.height > 0;
+                    });
+                    const root = ce ? ce.closest('ytd-commentbox') : document.querySelector('ytd-commentbox');
+                    if (!root) return { clicked: false, reason: 'no_commentbox' };
+                    const btn = root.querySelector('#submit-button button, #submit-button #button, ytd-button-renderer#submit-button button, #submit-button');
+                    if (!btn) return { clicked: false, reason: 'no_submit_button' };
+                    const disabled = btn.disabled || btn.getAttribute('aria-disabled') === 'true';
+                    if (disabled) return { clicked: false, reason: 'submit_disabled' };
+                    btn.click();
+                    return { clicked: true };
+                })()
+                """
+            )
+            if not (isinstance(submitted, dict) and submitted.get("clicked")):
+                if screenshot_path:
+                    await self.capture_screenshot(screenshot_path)
+                return {
+                    "success": False,
+                    "video_id": vid_id,
+                    "watch_url": watch_url,
+                    "posted": False,
+                    "pinned": False,
+                    "error": f"comment_submit_failed:{submitted}",
+                    "screenshot_path": str(screenshot_path) if screenshot_path else None,
+                }
+
+            # Poll up to 15s for the posted thread to render
+            for _ in range(30):
+                await asyncio.sleep(0.5)
+                chk = await _find_matching_thread()
+                if chk.get("found"):
+                    posted = True
+                    existing = chk
+                    break
+            if not posted:
+                logger.warning("Submitted comment on %s did not appear in DOM within 15s.", vid_id)
+                if screenshot_path:
+                    await self.capture_screenshot(screenshot_path)
+                return {
+                    "success": False,
+                    "video_id": vid_id,
+                    "watch_url": watch_url,
+                    "posted": False,
+                    "pinned": False,
+                    "error": "posted_comment_not_visible_after_submit",
+                    "screenshot_path": str(screenshot_path) if screenshot_path else None,
+                }
+
+        # Open three-dot action menu on the matching thread and pin it
+        logger.info("Pinning comment thread (index=%s) on %s...", existing.get("index"), vid_id)
+        menu_opened = await self.evaluate(
+            """
+            (() => {
+                const TARGET = __TARGET_COMMENT__;
+                const norm = s => (s || '').replace(/\\s+/g, ' ').trim().toLowerCase();
+                const prefix = norm(TARGET).slice(0, 42);
+                const threads = Array.from(document.querySelectorAll('ytd-comment-thread-renderer'));
+                const targetThread = threads.find(t => {
+                    const el = t.querySelector('#comment #content-text, ytd-comment-view-model #content-text, #content-text');
+                    return el && norm(el.innerText || el.textContent).includes(prefix);
+                });
+                if (!targetThread) return { ok: false, reason: 'thread_not_found' };
+                targetThread.scrollIntoView({ block: 'center' });
+                targetThread.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+                const commentNode = targetThread.querySelector('#comment, ytd-comment-view-model') || targetThread;
+                commentNode.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+                const btn = commentNode.querySelector('#action-menu button, #action-menu yt-icon-button button, button[aria-label*="Thao tác"], button[aria-label*="Action menu"], ytd-menu-renderer button');
+                if (!btn) return { ok: false, reason: 'action_menu_btn_not_found' };
+                btn.click();
+                return { ok: true };
+            })()
+            """.replace("__TARGET_COMMENT__", target_json)
+        )
+        if not (isinstance(menu_opened, dict) and menu_opened.get("ok")):
+            if screenshot_path:
+                await self.capture_screenshot(screenshot_path)
+            return {
+                "success": False,
+                "video_id": vid_id,
+                "watch_url": watch_url,
+                "posted": posted or already_present,
+                "pinned": False,
+                "error": f"pin_menu_open_failed:{menu_opened}",
+                "screenshot_path": str(screenshot_path) if screenshot_path else None,
+            }
+
+        await asyncio.sleep(0.8)
+        pin_clicked = False
+        for _ in range(10):
+            pin_res = await self.evaluate(
+                """
+                (() => {
+                    const containers = Array.from(document.querySelectorAll('ytd-popup-container, tp-yt-iron-dropdown'));
+                    const pool = [];
+                    containers.forEach(c => {
+                        c.querySelectorAll('tp-yt-paper-item, ytd-menu-service-item-renderer, yt-list-item-view-model, [role="menuitem"]').forEach(el => pool.push(el));
+                    });
+                    for (const item of pool) {
+                        const r = item.getBoundingClientRect();
+                        if (r.width <= 0 || r.height <= 0) continue;
+                        const txt = (item.innerText || item.textContent || '').replace(/\\s+/g, ' ').trim().toLowerCase();
+                        if (!txt || txt.includes('bỏ ghim') || txt.includes('unpin')) continue;
+                        if (txt === 'ghim' || txt === 'pin' || txt.startsWith('ghim ') || txt.startsWith('pin ')) {
+                            const innerClick = item.querySelector('tp-yt-paper-item, button, a, [role="menuitem"]') || item;
+                            innerClick.click();
+                            return { clicked: true, label: txt, tag: innerClick.tagName };
+                        }
+                    }
+                    return { clicked: false };
+                })()
+                """
+            )
+            if isinstance(pin_res, dict) and pin_res.get("clicked"):
+                pin_clicked = True
+                logger.info("Clicked pin menu item (%s, tag=%s) for %s", pin_res.get("label"), pin_res.get("tag"), vid_id)
+                break
+            await asyncio.sleep(0.4)
+
+        if not pin_clicked:
+            if screenshot_path:
+                await self.capture_screenshot(screenshot_path)
+            return {
+                "success": False,
+                "video_id": vid_id,
+                "watch_url": watch_url,
+                "posted": posted or already_present,
+                "pinned": False,
+                "error": "pin_menu_item_not_found",
+                "screenshot_path": str(screenshot_path) if screenshot_path else None,
+            }
+
+        await asyncio.sleep(0.8)
+        confirm_clicked = False
+        last_dialog_debug: Any = None
+        for _ in range(15):
+            conf_res = await self.evaluate(
+                """
+                (() => {
+                    const dialogs = [];
+                    const collectDialogs = (root) => {
+                        if (!root) return;
+                        root.querySelectorAll('tp-yt-paper-dialog, yt-confirm-dialog-renderer, yt-dialog-view-model, [role="dialog"]').forEach(d => {
+                            const r = d.getBoundingClientRect();
+                            if (r.width > 0 && r.height > 0) dialogs.push(d);
+                        });
+                    };
+                    collectDialogs(document);
+                    const btnDebug = [];
+                    const searchRoots = dialogs.length > 0 ? dialogs : Array.from(document.querySelectorAll('ytd-popup-container, body > tp-yt-iron-overlay-backdrop, body'));
+                    const seen = new Set();
+                    for (const root of searchRoots) {
+                        const btns = Array.from(root.querySelectorAll('button, tp-yt-paper-button, yt-button-shape button, [role="button"]'));
+                        for (const b of btns) {
+                            if (seen.has(b)) continue;
+                            seen.add(b);
+                            const r = b.getBoundingClientRect();
+                            if (r.width <= 0 || r.height <= 0) continue;
+                            const txt = (b.innerText || b.textContent || b.getAttribute('aria-label') || '').replace(/\\s+/g, ' ').trim().toLowerCase();
+                            btnDebug.push({ txt, id: b.id || (b.closest('[id]') ? b.closest('[id]').id : ''), tag: b.tagName });
+                            if (!txt || txt.includes('hủy') || txt.includes('cancel') || txt.includes('đóng') || txt.includes('close')) continue;
+                            const inConfirm = Boolean(b.closest('#confirm-button'));
+                            if (inConfirm || txt === 'ghim' || txt === 'pin' || txt === 'ghim bình luận' || txt === 'pin comment') {
+                                b.click();
+                                return { confirmed: true, text: txt, inConfirm };
+                            }
+                        }
+                    }
+                    return { confirmed: false, dialogCount: dialogs.length, btns: btnDebug.slice(0, 12) };
+                })()
+                """
+            )
+            last_dialog_debug = conf_res
+            if isinstance(conf_res, dict) and conf_res.get("confirmed"):
+                confirm_clicked = True
+                logger.info("Confirmed pin dialog (%s) for %s", conf_res.get("text"), vid_id)
+                break
+            await asyncio.sleep(0.4)
+
+        if not confirm_clicked:
+            logger.warning("Pin confirmation button did not appear or wasn't clicked for %s (debug=%s); checking state after reload.", vid_id, last_dialog_debug)
+
+        await asyncio.sleep(2.5)
+
+        # Reload watch URL cleanly and verify #pinned-comment-badge persisted
+        logger.info("Reloading %s to verify pinned comment badge...", watch_url)
+        await self.call("Page.navigate", {"url": watch_url})
+        await asyncio.sleep(4.5)
+        await _open_comments_panel()
+
+        verified: dict[str, Any] = {}
+        for _ in range(24):
+            verified = await _find_matching_thread()
+            if verified.get("found") and verified.get("pinned"):
+                break
+            await asyncio.sleep(0.5)
+
+        pinned_ok = bool(verified.get("found") and verified.get("pinned"))
+        if screenshot_path:
+            await self.capture_screenshot(screenshot_path)
+
+        return {
+            "success": pinned_ok,
+            "video_id": vid_id,
+            "watch_url": watch_url,
+            "posted": posted or already_present,
+            "pinned": pinned_ok,
+            "confirm_clicked": confirm_clicked,
+            "pinned_badge_text": verified.get("badge_text", ""),
+            "matched_comment_preview": verified.get("text", ""),
+            "screenshot_path": str(screenshot_path) if screenshot_path else None,
+        }
 
     async def advance_to_visibility_step(self) -> None:
         """Click next-button repeatedly until reaching Step 4 (Visibility)."""
@@ -2542,7 +3043,7 @@ class YouTubeCDPClient:
         for _ in range(25):
             await asyncio.sleep(1.0)
             # 1. Check if YouTube popped up 'Chúng tôi vẫn đang kiểm tra nội dung của bạn' -> click 'Vẫn xuất bản' / 'Publish anyway'
-            # Walks light + Shadow DOM and checks bounding rects so position:fixed dialogs (offsetParent===null) are handled reliably.
+            # Walks light + Shadow DOM (depth <= 48) and checks bounding rects so position:fixed / slotted dialogs are handled reliably.
             clicked_publish_anyway = await self.evaluate("""
                 (() => {
                     const targets = ['vẫn xuất bản', 'publish anyway'];
@@ -2555,7 +3056,7 @@ class YouTubeCDPClient:
                     ]);
                     const nodes = [];
                     function walk(root, depth = 0) {
-                        if (!root || depth > 16) return;
+                        if (!root || depth > 48) return;
                         if (root.nodeType === 1) {
                             nodes.push(root);
                             if (root.shadowRoot) walk(root.shadowRoot, depth + 1);
@@ -2567,12 +3068,12 @@ class YouTubeCDPClient:
                     function insideDialog(el) {
                         let cur = el;
                         let steps = 0;
-                        while (cur && steps < 20) {
+                        while (cur && steps < 48) {
                             steps++;
                             if (cur.nodeType === 1) {
                                 const tag = (cur.tagName || '').toUpperCase();
                                 const role = (cur.getAttribute && cur.getAttribute('role')) || '';
-                                if (dialogTags.has(tag) || role === 'dialog' || role === 'alertdialog') {
+                                if (dialogTags.has(tag) || tag.includes('DIALOG') || role === 'dialog' || role === 'alertdialog') {
                                     return true;
                                 }
                             }
@@ -2593,7 +3094,7 @@ class YouTubeCDPClient:
                         if (style.visibility === 'hidden' || style.display === 'none') continue;
                         const txt = (el.innerText || el.textContent || el.getAttribute('aria-label') || '').trim().toLowerCase();
                         if (targets.includes(txt) && (insideDialog(el) || fallbackConfirm.length > 0)) {
-                            const innerBtn = el.querySelector('button') || el;
+                            const innerBtn = (el.shadowRoot && el.shadowRoot.querySelector('button')) || el.querySelector('button') || el;
                             innerBtn.click();
                             if (innerBtn !== el) el.click();
                             return txt;
@@ -2961,6 +3462,8 @@ async def publish_single_video(
     expected_channel_id: Optional[str] = None,
     max_wait_sec: Optional[float] = None,
     edit_screenshot_path: Optional[str | Path] = None,
+    pinned_comment: Optional[str] = None,
+    comment_screenshot_path: Optional[str | Path] = None,
 ) -> dict[str, Any]:
     """Execute end-to-end publish flow for a single video."""
     # Mandatory Video Review & Approval Gate
@@ -3054,6 +3557,10 @@ async def publish_single_video(
             thumbnail_status = await client.upload_thumbnail(
                 thumbnail_path,
                 strict_thumbnail=strict_thumbnail,
+            )
+        elif is_short:
+            logger.warning(
+                "Short upload called without --thumbnail! On Tier-2+ channels YouTube will pick an arbitrary body frame instead of custom 9:16 cover."
             )
 
         # Advance to Step 2 (Video Elements)
@@ -3301,6 +3808,31 @@ async def publish_single_video(
             except Exception as e:
                 logger.warning("Could not update review queue status for %s: %s", effective_job_id, e)
 
+        pinned_comment_result: Optional[dict[str, Any]] = None
+        if (
+            pinned_comment
+            and str(pinned_comment).strip()
+            and visibility.upper() == "PUBLIC"
+            and resolved_url
+            and hasattr(client, "post_and_pin_comment")
+        ):
+            try:
+                await asyncio.sleep(2.0)
+                pinned_comment_result = await client.post_and_pin_comment(
+                    resolved_url,
+                    str(pinned_comment).strip(),
+                    screenshot_path=comment_screenshot_path,
+                )
+                logger.info("Post-publish pinned comment result: %s", pinned_comment_result)
+            except Exception as pin_err:
+                logger.warning("Could not post/pin comment for %s: %s", resolved_url, pin_err)
+                pinned_comment_result = {
+                    "success": False,
+                    "posted": False,
+                    "pinned": False,
+                    "error": str(pin_err),
+                }
+
         return {
             "status": "PUBLISHED",
             "channel_name": channel_info.get("channelName", "Sticker Vocabulary"),
@@ -3319,6 +3851,7 @@ async def publish_single_video(
             "oembed_ok": oembed_ok,
             "oembed_pending_processing": oembed_pending,
             "edit_verification": edit_verification,
+            "pinned_comment": pinned_comment_result,
         }
     finally:
         await client.close()
@@ -3415,6 +3948,11 @@ def main():
     parser.add_argument("--strict-thumbnail", action="store_true", help="Raise error if custom thumbnail is rejected")
     parser.add_argument("--expected-channel-id", help="Expected channel ID (e.g. UC...) to assert before upload")
     parser.add_argument("--update-thumbnail", help="Retroactively upload thumbnail to an existing video (requires --video-url or --video-id and --channel)")
+    parser.add_argument("--attach-subtitles", help="Retroactively attach .srt subtitles to an existing video (requires --video-url or --video-id and --channel)")
+    parser.add_argument("--post-pinned-comment", action="store_true", help="Retroactively post & pin comment on an existing PUBLIC video (requires --video-url or --video-id, --channel, and --pinned-comment or --metadata)")
+    parser.add_argument("--pinned-comment", help="Comment text to post & pin (defaults to ## 5. Binh luan ghim in --metadata)")
+    parser.add_argument("--no-pin-comment", action="store_true", help="Do not post/pin comment even if present in --metadata")
+    parser.add_argument("--comment-screenshot", help="Output path for pinned comment verification screenshot")
     parser.add_argument("--video-url", help="Existing video URL")
     parser.add_argument("--video-id", help="Existing video ID")
     parser.add_argument("--subtitles", help="Path to subtitles SRT file")
@@ -3434,6 +3972,7 @@ def main():
     tags = args.tags
     language = args.language
     category = args.category
+    pinned_comment = args.pinned_comment
 
     if args.metadata:
         meta = parse_metadata_file(args.metadata)
@@ -3447,10 +3986,17 @@ def main():
             language = meta.get("language")
         if not category:
             category = meta.get("category")
+        if not pinned_comment:
+            pinned_comment = meta.get("pinned_comment")
 
-    if not title and not args.update_thumbnail:
+    if args.no_pin_comment:
+        pinned_comment = None
+
+    retroactive_mode = bool(args.update_thumbnail or args.attach_subtitles or args.post_pinned_comment)
+
+    if not title and not retroactive_mode:
         parser.error("Title must be specified via --title or --metadata")
-    if not args.update_thumbnail and not args.video:
+    if not retroactive_mode and not args.video:
         parser.error("--video is required when publishing a video")
     if not description:
         description = ""
@@ -3464,7 +4010,7 @@ def main():
         else:
             job_id = p.stem
 
-    if not args.bypass_review_gate and job_id and not args.update_thumbnail:
+    if not args.bypass_review_gate and job_id and not retroactive_mode:
         allowed, reason = check_publish_permission(job_id)
         if not allowed:
             raise RuntimeError(
@@ -3510,14 +4056,68 @@ def main():
             c = YouTubeCDPClient(profile_cfg, headless=args.headless)
             try:
                 await c.connect()
-                res = await c.update_video_thumbnail_post_publish(target_video, args.update_thumbnail)
+                res = await c.update_video_thumbnail_post_publish(
+                    target_video,
+                    args.update_thumbnail,
+                    edit_screenshot_path=getattr(args, "edit_screenshot", None),
+                    strict_thumbnail=args.strict_thumbnail,
+                )
                 return res
             finally:
                 await c.close()
+                c.terminate_browser()
 
         update_res = asyncio.run(_run_update())
-        print(json.dumps(update_res, indent=2))
+        print(json.dumps(update_res, indent=2, ensure_ascii=False))
         sys.exit(0 if (isinstance(update_res, dict) and update_res.get("success")) else 1)
+
+    if args.attach_subtitles:
+        target_video = args.video_url or args.video_id
+        if not target_video:
+            parser.error("--attach-subtitles requires --video-url or --video-id")
+        if not profile_cfg:
+            parser.error("--attach-subtitles requires a valid --channel or --profile")
+
+        async def _run_subtitles():
+            c = YouTubeCDPClient(profile_cfg, headless=args.headless)
+            try:
+                await c.connect()
+                ok = await c.attach_subtitles_post_publish(target_video, args.attach_subtitles)
+                return {"success": bool(ok), "video": target_video, "subtitles_path": str(args.attach_subtitles)}
+            finally:
+                await c.close()
+                c.terminate_browser()
+
+        sub_res = asyncio.run(_run_subtitles())
+        print(json.dumps(sub_res, indent=2, ensure_ascii=False))
+        sys.exit(0 if sub_res.get("success") else 1)
+
+    if args.post_pinned_comment:
+        target_video = args.video_url or args.video_id
+        if not target_video:
+            parser.error("--post-pinned-comment requires --video-url or --video-id")
+        if not profile_cfg:
+            parser.error("--post-pinned-comment requires a valid --channel or --profile")
+        if not pinned_comment or not str(pinned_comment).strip():
+            parser.error("--post-pinned-comment requires --pinned-comment or --metadata containing ## 5. Binh luan ghim")
+
+        async def _run_pin_comment():
+            c = YouTubeCDPClient(profile_cfg, headless=args.headless)
+            try:
+                await c.connect()
+                res = await c.post_and_pin_comment(
+                    target_video,
+                    str(pinned_comment).strip(),
+                    screenshot_path=getattr(args, "comment_screenshot", None) or args.screenshot,
+                )
+                return res
+            finally:
+                await c.close()
+                c.terminate_browser()
+
+        pin_res = asyncio.run(_run_pin_comment())
+        print(json.dumps(pin_res, indent=2, ensure_ascii=False))
+        sys.exit(0 if (isinstance(pin_res, dict) and pin_res.get("success")) else 1)
 
     result = asyncio.run(
         publish_single_video(
@@ -3540,6 +4140,8 @@ def main():
             strict_thumbnail=args.strict_thumbnail,
             expected_channel_id=args.expected_channel_id,
             edit_screenshot_path=getattr(args, "edit_screenshot", None),
+            pinned_comment=pinned_comment,
+            comment_screenshot_path=getattr(args, "comment_screenshot", None),
         )
     )
 

@@ -196,12 +196,13 @@ def test_updated_thumbnail_blueprints_and_dry_run(tmp_path: Path):
     assert "TOP-LEFT SAFE ZONE" in bp_usv["flow_prompt_16x9"]
     assert "PHẢN XẠ 0.1 GIÂY!" in bp_usv["flow_prompt_9x16"]
 
-    # 3. chanh_niem_ke
+    # 3. chanh_niem_ke (Hiểu Tận Gốc)
     bp_cnk = FLOW_THUMBNAIL_BLUEPRINTS["chanh_niem_ke"]
-    assert bp_cnk.get("hook_text_16x9") == "BUÔNG BỎ ÂU LO!"
-    assert "BUÔNG BỎ ÂU LO!" in bp_cnk["flow_prompt_16x9"]
+    assert bp_cnk.get("channel_name") == "Hiểu Tận Gốc"
+    assert bp_cnk.get("hook_text_16x9") == "THẢM HỌA CHERNOBYL"
+    assert "THẢM HỌA CHERNOBYL" in bp_cnk["flow_prompt_16x9"]
     assert "TOP-LEFT SAFE ZONE" in bp_cnk["flow_prompt_16x9"]
-    assert "MŨI TÊN THỨ 2!" in bp_cnk["flow_prompt_9x16"]
+    assert "NÚT AZ-5" in bp_cnk["flow_prompt_9x16"]
 
     # 4. Synthesize dry-run posters in 16:9 and 9:16
     poster_16x9 = tmp_path / "thumb_co_the_ke_16x9.png"
@@ -985,5 +986,140 @@ def test_publish_and_finish_shadow_fixed_warning_dialog_and_draft_banner_guard(t
                     is_short=False,
                 )
             )
+
+
+def test_parse_metadata_file_extracts_pinned_comment(tmp_path: Path):
+    """Verify parse_metadata_file parses ## 5. Binh luan ghim cleanly without leaking headings."""
+    md = tmp_path / "youtube_short.md"
+    md.write_text(
+        "## 1. Tiêu đề\n```text\nTest Short Title #Shorts\n```\n\n"
+        "## 2. Mô tả\n```text\nMo ta ngan.\n```\n\n"
+        "## 3. Thẻ từ khóa\n```text\nlich su,su ke lai\n```\n\n"
+        "## 5. Bình luận ghim\n```text\nGóc nhìn của bạn về quyết định này là gì? Mời bạn xem tập đầy đủ ở Related Video!\n```\n",
+        encoding="utf-8",
+    )
+    parsed = parse_metadata_file(md)
+    assert parsed["pinned_comment"].startswith("Góc nhìn của bạn")
+    assert "##" not in parsed["pinned_comment"]
+
+
+def test_upload_thumbnail_rejects_over_2mb(tmp_path: Path):
+    """Verify YouTubeCDPClient.upload_thumbnail fails safely when thumbnail exceeds 2MB."""
+    from sys.tools.publish_youtube_cdp import YouTubeCDPClient
+
+    big_thumb = tmp_path / "oversized_thumb.png"
+    big_thumb.write_bytes(b"0" * (2 * 1024 * 1024 + 128))
+    client = YouTubeCDPClient({"id": "profile_5", "port": 9226}, headless=True)
+
+    assert asyncio.run(client.upload_thumbnail(big_thumb, strict_thumbnail=False)) is False
+    with pytest.raises(RuntimeError, match="CUSTOM_THUMBNAIL_REJECTED_OR_TIER2_REQUIRED"):
+        asyncio.run(client.upload_thumbnail(big_thumb, strict_thumbnail=True))
+
+
+def test_post_and_pin_comment_verifies_badge_after_reload(tmp_path: Path):
+    """Verify post_and_pin_comment posts, pins, reloads page, and checks #pinned-comment-badge."""
+    from sys.tools.publish_youtube_cdp import YouTubeCDPClient
+
+    client = YouTubeCDPClient({"id": "profile_5", "port": 9226}, headless=True)
+    screenshot_out = tmp_path / "pin_verify.png"
+    eval_calls = {"count": 0}
+
+    async def fake_call(method, params=None, timeout=60.0):
+        return {}
+
+    async def fake_eval(expr, await_promise=True, timeout=60.0):
+        eval_calls["count"] += 1
+        if "window.location.href" in expr:
+            return "https://www.youtube.com/watch?v=abc123XYZ"
+        if "Boolean(" in expr and "ytd-commentbox #contenteditable-root" in expr:
+            return True
+        if "const badgeEl = t.querySelector" in expr:
+            if "const prefix = norm(TARGET)" in expr:
+                # 1st lookup: not present; after submit (calls > 7): present unpinned; after reload: pinned!
+                if eval_calls["count"] < 7:
+                    return {"found": False, "total_threads": 0}
+                if eval_calls["count"] < 14:
+                    return {
+                        "found": True,
+                        "index": 0,
+                        "pinned": False,
+                        "badge_text": "",
+                        "text": "Theo bạn điều gì quan trọng nhất?",
+                    }
+                return {
+                    "found": True,
+                    "index": 0,
+                    "pinned": True,
+                    "badge_text": "Do @SuKeLaiVN ghim",
+                    "text": "Theo bạn điều gì quan trọng nhất?",
+                }
+        if "document.execCommand('insertText'" in expr:
+            return {"ok": True, "len": 35}
+        if "no_submit_button" in expr:
+            return {"clicked": True}
+        if "action_menu_btn_not_found" in expr:
+            return {"ok": True}
+        if "bỏ ghim" in expr:
+            return {"clicked": True, "label": "ghim", "tag": "TP-YT-PAPER-ITEM"}
+        if "dialogCount" in expr:
+            return {"confirmed": True, "text": "ghim", "inConfirm": True}
+        return {}
+
+    async def fake_shot(out_path):
+        Path(out_path).write_bytes(b"PNG")
+        return Path(out_path)
+
+    client.call = fake_call  # type: ignore[method-assign]
+    client.evaluate = fake_eval  # type: ignore[method-assign]
+    client.capture_screenshot = fake_shot  # type: ignore[method-assign]
+
+    with patch("sys.tools.publish_youtube_cdp.asyncio.sleep", new=AsyncMock()):
+        res = asyncio.run(
+            client.post_and_pin_comment(
+                "https://youtu.be/abc123XYZ",
+                "Theo bạn điều gì quan trọng nhất?",
+                screenshot_path=screenshot_out,
+            )
+        )
+
+    assert res["success"] is True
+    assert res["posted"] is True
+    assert res["pinned"] is True
+    assert screenshot_out.exists()
+
+
+def test_update_video_thumbnail_post_publish_strict_persistence(tmp_path: Path):
+    """Verify update_video_thumbnail_post_publish reloads /edit and raises error dict if not persisted."""
+    from sys.tools.publish_youtube_cdp import YouTubeCDPClient
+
+    thumb = tmp_path / "cover.jpg"
+    thumb.write_bytes(b"\xff\xd8\xff\xe0" + b"0" * 512)
+    client = YouTubeCDPClient({"id": "profile_5", "port": 9226}, headless=True)
+    client.call = AsyncMock(return_value={})  # type: ignore[method-assign]
+    client.dismiss_studio_interstitials = AsyncMock(return_value=False)  # type: ignore[method-assign]
+    client.upload_thumbnail = AsyncMock(return_value=True)  # type: ignore[method-assign]
+    client.verify_video_edit_page = AsyncMock(return_value={"has_custom_thumbnail": False})  # type: ignore[method-assign]
+
+    async def fake_eval(expr, await_promise=True, timeout=60.0):
+        if "clicked: true" in expr:
+            return {"found": True, "clicked": True}
+        if "getAttribute('aria-disabled')" in expr:
+            return "true"
+        return False
+
+    client.evaluate = fake_eval  # type: ignore[method-assign]
+
+    with patch("sys.tools.publish_youtube_cdp.asyncio.sleep", new=AsyncMock()):
+        res = asyncio.run(
+            client.update_video_thumbnail_post_publish(
+                "e3VP_U55Z00",
+                thumb,
+                strict_thumbnail=True,
+            )
+        )
+
+    assert res["success"] is False
+    assert res["error"] == "custom_thumbnail_not_persisted_on_reload"
+
 
 

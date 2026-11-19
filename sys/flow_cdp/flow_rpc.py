@@ -314,9 +314,7 @@ def resolve_video_model(
                 if u.get("key") == raw:
                     return str(u["key"])
 
-        # 2. Match target families
-        target_fams: list[dict[str, Any]] = []
-        if want_omni:
+        def _select_omni_fams(prefer_1_1: bool = False) -> list[dict[str, Any]]:
             omni_1_2_fams = [
                 f for f in catalog
                 if "macaron_cookie" in str(f.get("id") or "").lower()
@@ -332,24 +330,39 @@ def resolve_video_model(
                 if "omni" in str(f.get("display_name") or "").lower()
                 and f not in omni_1_2_fams and f not in omni_1_1_fams
             ]
-            if is_legacy_1_1:
-                target_fams = omni_1_1_fams or omni_1_2_fams or other_omni
-            else:
-                target_fams = omni_1_2_fams or omni_1_1_fams or other_omni
+            if prefer_1_1:
+                return omni_1_1_fams or omni_1_2_fams or other_omni
+            return omni_1_2_fams or omni_1_1_fams or other_omni
+
+        # 2. Match target families
+        target_fams: list[dict[str, Any]] = []
+        if want_omni:
+            target_fams = _select_omni_fams(prefer_1_1=is_legacy_1_1)
+        elif want_lite:
+            regular_lite = [
+                f for f in catalog
+                if "lite" in str(f.get("id") or "").lower()
+                and "low_priority" not in str(f.get("id") or "").lower()
+            ]
+            low_prio_lite = [
+                f for f in catalog
+                if "lite" in str(f.get("id") or "").lower()
+                and f not in regular_lite
+            ]
+            # Never fall back from want_lite into raw catalog (may pick Quality/Ultra);
+            # fall back safely to Omni 1.2 Flash if this profile has no Lite family.
+            target_fams = (regular_lite + low_prio_lite) or _select_omni_fams(prefer_1_1=False)
         else:
             for fam in catalog:
                 fam_id = str(fam.get("id") or "").lower()
-                if want_lite:
-                    if "lite" in fam_id and "low_priority" not in fam_id:
-                        target_fams.append(fam)
-                elif want_fast:
+                if want_fast:
                     if "fast" in fam_id and "low_priority" not in fam_id:
                         target_fams.append(fam)
                 else:
                     if "quality" in fam_id:
                         target_fams.append(fam)
 
-        if not target_fams:
+        if not target_fams and not want_lite:
             target_fams = catalog
 
         for fam in target_fams:
@@ -365,6 +378,10 @@ def resolve_video_model(
                 candidate_usages.append(u)
 
             if candidate_usages:
+                if "360P" not in upper:
+                    hd_usages = [u for u in candidate_usages if "_360p" not in str(u.get("key") or "").lower()]
+                    if hd_usages:
+                        candidate_usages = hd_usages
                 if duration_seconds is not None:
                     target_dur = int(duration_seconds)
                     match_exact = [u for u in candidate_usages if u.get("duration") == target_dur]
