@@ -15,6 +15,7 @@ frames/
 images/
 exports/
 scratch/
+/sys/scratch/
 out/
 output/
 renders/
@@ -27,6 +28,7 @@ dist/
 tmp/
 temp/
 .tmp/
+.benchmarks/
 /experiments/
 /qa/
 /sys/staging/
@@ -36,6 +38,9 @@ temp/
 .worktrees/
 *.tmp
 *.png.tmp
+*.part
+*.crdownload
+*.download
 *.bak
 *.bak_*
 *.zip
@@ -71,6 +76,9 @@ sys/channels/vn_rebuilt_style_specs/**/*
 sys/channels/youtube_channel_map.json
 sys/channels/dashboard_metrics.json
 sys/channels/dashboard_history.jsonl
+sys/channels/channel_learning_ledger.json
+sys/channels/fleet_improvement_plan.json
+sys/channels/fleet_queue_state*.json
 /sys/blueprints/**/brief-current.json
 /sys/blueprints/**/execution-control.json
 /sys/blueprints/**/integrity.json
@@ -105,6 +113,13 @@ flow_*.png
 /sys/assets/voices/**/backup_original/
 /sys/assets/voices/adam-bua*
 /sys/assets/channels/*/*.png
+/sys/assets/audio/bgm/bgm_*.wav
+/sys/assets/sfx/bespoke/
+/sys/assets/gis_cache/tiles/
+/sys/assets/gis_cache/prebaked/
+/sys/assets/gis_cache/geojson/ne_10m_*.geojson
+/sys/assets/gis_cache/**/*.tmp
+/sys/assets/gis_cache/**/*.npz
 
 # --- 5. Logs & issue logbook (auto-written by pilot.py / colab client) ---
 *.log
@@ -170,6 +185,11 @@ ENV/
 htmlcov/
 *.egg-info/
 .cache/
+*.npz
+*.onnx
+*.safetensors
+*.ckpt
+*.gguf
 node_modules
 .remotion/
 .parcel-cache/
