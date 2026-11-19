@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Main cannon barrel -->
+  <rect x="35" y="21" width="22" height="4.5" rx="1.5" fill="#FFFFFF"/>
+  <rect x="53" y="19.8" width="5" height="6.8" rx="1.2" fill="#FFFFFF"/>
+  <!-- Turret -->
+  <path d="M20 28 L24 19 L38 19 L42 28 Z" fill="#FFFFFF"/>
+  <!-- Hull -->
+  <path d="M11 35 L17 29 L48 29 L53 35 Z" fill="#FFFFFF"/>
+  <!-- Track assembly -->
+  <rect x="8" y="36" width="48" height="13" rx="6.5" stroke="#FFFFFF" stroke-width="4" fill="none"/>
+  <circle cx="16" cy="42.5" r="3" fill="#FFFFFF"/>
+  <circle cx="26.5" cy="42.5" r="3" fill="#FFFFFF"/>
+  <circle cx="37.5" cy="42.5" r="3" fill="#FFFFFF"/>
+  <circle cx="48" cy="42.5" r="3" fill="#FFFFFF"/>
+</svg>

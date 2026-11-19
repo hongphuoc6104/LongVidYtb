@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Sinking tilted ship hull + funnels -->
+  <g transform="rotate(28 32 34)">
+    <rect x="19" y="16" width="5" height="10" rx="1" fill="#FFFFFF"/>
+    <rect x="29" y="14" width="5" height="12" rx="1" fill="#FFFFFF"/>
+    <rect x="39" y="16" width="5" height="10" rx="1" fill="#FFFFFF"/>
+    <path d="M10 27 L55 27 L48 39 L15 39 Z" fill="#FFFFFF"/>
+  </g>
+  <!-- High ocean waves obscuring the bow -->
+  <path d="M6 48 Q14 42 22 48 T38 48 T58 48" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <path d="M8 55 Q16 50 24 55 T40 55 T56 55" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+</svg>

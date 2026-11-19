@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Outer safety ring -->
+  <circle cx="32" cy="32" r="24" stroke="#FFFFFF" stroke-width="3.5" fill="none"/>
+  <!-- Center core -->
+  <circle cx="32" cy="32" r="4.8" fill="#FFFFFF"/>
+  <!-- 3 trefoil blades -->
+  <path d="M27.5 24.2 L19.5 10.4 A21 21 0 0 1 44.5 10.4 L36.5 24.2 A9 9 0 0 0 27.5 24.2 Z" fill="#FFFFFF"/>
+  <path d="M39.8 36.5 L55.8 36.5 A21 21 0 0 1 43.3 52.8 L35.3 39 A9 9 0 0 0 39.8 36.5 Z" fill="#FFFFFF"/>
+  <path d="M24.2 36.5 L8.2 36.5 A21 21 0 0 0 20.7 52.8 L28.7 39 A9 9 0 0 1 24.2 36.5 Z" fill="#FFFFFF"/>
+</svg>

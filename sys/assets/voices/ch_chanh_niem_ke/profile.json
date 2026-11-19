@@ -1,48 +1,57 @@
 {
   "voice": "VietNarrator_chanh_niem_ke",
   "channel_id": "chanh_niem_ke",
-  "option_index": 3,
-  "voice_label": "Giọng kể chuyện chiêm nghiệm sâu lắng, rõ chữ, truyền cảm chuẩn phòng thu",
+  "option_index": 4,
+  "voice_label": "Giọng kể chuyện tài liệu thảm họa & nhân-quả miền Bắc trầm ấm, điềm tĩnh chuẩn phòng thu (KTTV Studio V3)",
   "language": "vi",
   "languages": [
     "vi",
     "en"
   ],
   "reference_wav": "reference.wav",
-  "reference_text": "Thực ra một cách rất tương đồng, họ rất giống những người đi trên một cây cầu và rớt xuống. Họ hiểu rằng nguyên nhân là do trọng lực và họ muốn dẹp đi cái trọng lực này.",
-  "duration_seconds": 9.18,
+  "reference_text": "Tinh thần sảng khoái, tỉnh táo khi làm việc. Điều đó chứng tỏ bạn ngủ đủ giấc. Còn nếu bạn mệt mỏi, mơ màng, ngáo ngáo ngơ ngơ thì như vậy là bạn đang thiếu ngủ.",
+  "duration_seconds": 9.81,
   "acoustic_metrics": {
-    "dur": 9.18,
-    "rms_db": -14.32,
-    "peak_db": -1.02,
-    "p05_db": -66.1,
-    "p10_db": -44.3,
-    "p50_db": -16.1,
-    "p90_db": -10.1,
-    "dyn_db": 34.2,
-    "active_ratio": 0.85,
-    "min_1s_db": -18.5,
+    "dur": 9.81,
+    "rms_db": -17.81,
+    "peak_db": -1.49,
+    "p05_db": -61.4,
+    "p10_db": -54.6,
+    "p50_db": -19.8,
+    "p90_db": -13.7,
+    "dyn_db": 40.9,
+    "active_ratio": 0.78,
+    "min_1s_db": -19.7,
     "start_60ms_db": -140.0,
     "end_60ms_db": -140.0,
-    "hf_ratio": 0.0059,
-    "f0_spread_semitones": 4.56,
-    "quarter_rms_spread_db": 1.81
+    "hf_ratio": 0.002,
+    "f0_spread_semitones": 4.18,
+    "quarter_rms_spread_db": 2.29
   },
   "span_provenance": {
-    "raw_sir_db": 34.57,
-    "avg_word_prob": 0.974,
-    "valley_start_db": -42.1,
-    "valley_end_db": -60.6,
-    "pause_before_s": 0.1,
-    "pause_after_s": 0.3
+    "raw_sir_db": 19.04,
+    "avg_word_prob": 0.964,
+    "valley_start_db": -33.7,
+    "valley_end_db": -74.2,
+    "pause_before_s": 0.04,
+    "pause_after_s": 0.38
   },
   "source_speed": 1.0,
   "recommended_speed": 1.12,
-  "default_tone": "calm_mindful",
-  "audio_voice_chain": "highpass=f=85,equalizer=f=190:t=q:w=1.2:g=-2.0,equalizer=f=3000:t=q:w=1.2:g=1.4,lowpass=f=13500",
+  "chronicle_synthesis_speed": 1.0,
+  "outro_synthesis_speed": 1.12,
+  "target_cadence_syl_per_min": {
+    "hook_body_min": 226,
+    "hook_body_max": 232,
+    "outro_min": 250,
+    "outro_max": 256
+  },
+  "target_f0_median_hz": 149.0,
+  "default_tone": "conversational_chronicle",
+  "audio_voice_chain": "highpass=f=75,equalizer=f=150:t=q:w=1.1:g=1.6,equalizer=f=260:t=q:w=1.2:g=-1.2,equalizer=f=3000:t=q:w=1.2:g=1.2,lowpass=f=13500",
   "audio_lufs": -14.0,
-  "audio_peak_db": -1.2,
-  "sha256": "890c831a33e45575a1b59e5818bd62414abf0901facabfe84b7dabb6c7e2c05a",
+  "audio_peak_db": -1.49,
+  "sha256": "90b418b718e0c5270f140cc39b67312d7928402323233bc5b8eafbf7c5bdf347",
   "demucs_vocal_isolated": true,
   "studio_v3_restored": true,
   "processing": {
@@ -54,17 +63,65 @@
   },
   "sources": [
     {
-      "url": "https://www.youtube.com/watch?v=-kDpegSXlmY",
-      "video_id": "-kDpegSXlmY",
-      "source_channel": "Tri Kỷ Cảm Xúc ",
-      "video_title": "Hiểu điều này, mọi “VẾT THƯƠNG LÒNG” trở nên NHẸ TÊNH - Tri Kỷ Cảm Xúc Web5ngay",
+      "url": "https://www.youtube.com/watch?v=nScuZCAb1JU",
+      "video_id": "nScuZCAb1JU",
+      "source_channel": "KIẾN THỨC THÚ VỊ Official",
+      "video_title": "Điều gì xảy ra trong cơ thể khi bạn ngủ??",
       "window_seconds": [
-        508.6,
-        517.75
+        63.15,
+        72.59
       ]
     }
   ],
   "listening_verified": true,
-  "note": "Studio V3 restored reference voice (Giọng kể chuyện chiêm nghiệm sâu lắng, rõ chữ, truyền cảm chuẩn phòng thu) from 'Tri Kỷ Cảm Xúc ' (https://www.youtube.com/watch?v=-kDpegSXlmY @ 508.6s-517.75s) at exact 1.0x original speed.",
-  "active_option": 3
+  "note": "KTTV Studio V3 documentary voice profile for chanh_niem_ke (calm northern male narrator, F0 median ~148 Hz, calibrated cadence 226-232 syl/min, default_tone conversational_chronicle) sourced from 'KIẾN THỨC THÚ VỊ Official' (https://www.youtube.com/watch?v=nScuZCAb1JU @ 62.78s-72.59s).",
+  "active_option": 4,
+  "legacy_mindfulness_backup": {
+    "option_index": 3,
+    "voice_label": "Giọng kể chuyện chiêm nghiệm sâu lắng, rõ chữ, truyền cảm chuẩn phòng thu",
+    "reference_text": "Thực ra một cách rất tương đồng, họ rất giống những người đi trên một cây cầu và rớt xuống. Họ hiểu rằng nguyên nhân là do trọng lực và họ muốn dẹp đi cái trọng lực này.",
+    "duration_seconds": 9.18,
+    "acoustic_metrics": {
+      "dur": 9.18,
+      "rms_db": -14.32,
+      "peak_db": -1.02,
+      "p05_db": -66.1,
+      "p10_db": -44.3,
+      "p50_db": -16.1,
+      "p90_db": -10.1,
+      "dyn_db": 34.2,
+      "active_ratio": 0.85,
+      "min_1s_db": -18.5,
+      "start_60ms_db": -140.0,
+      "end_60ms_db": -140.0,
+      "hf_ratio": 0.0059,
+      "f0_spread_semitones": 4.56,
+      "quarter_rms_spread_db": 1.81
+    },
+    "span_provenance": {
+      "raw_sir_db": 34.57,
+      "avg_word_prob": 0.974,
+      "valley_start_db": -42.1,
+      "valley_end_db": -60.6,
+      "pause_before_s": 0.1,
+      "pause_after_s": 0.3
+    },
+    "recommended_speed": 1.12,
+    "default_tone": "calm_mindful",
+    "sha256": "890c831a33e45575a1b59e5818bd62414abf0901facabfe84b7dabb6c7e2c05a",
+    "sources": [
+      {
+        "url": "https://www.youtube.com/watch?v=-kDpegSXlmY",
+        "video_id": "-kDpegSXlmY",
+        "source_channel": "Tri Kỷ Cảm Xúc ",
+        "video_title": "Hiểu điều này, mọi “VẾT THƯƠNG LÒNG” trở nên NHẸ TÊNH - Tri Kỷ Cảm Xúc Web5ngay",
+        "window_seconds": [
+          508.6,
+          517.75
+        ]
+      }
+    ],
+    "note": "Studio V3 restored reference voice (Giọng kể chuyện chiêm nghiệm sâu lắng, rõ chữ, truyền cảm chuẩn phòng thu) from 'Tri Kỷ Cảm Xúc ' (https://www.youtube.com/watch?v=-kDpegSXlmY @ 508.6s-517.75s) at exact 1.0x original speed.",
+    "active_option": 3
+  }
 }

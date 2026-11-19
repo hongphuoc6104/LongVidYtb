@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Main rotor blades -->
+  <rect x="10" y="15" width="44" height="3.5" rx="1.75" fill="#FFFFFF"/>
+  <rect x="30" y="18" width="4" height="6" fill="#FFFFFF"/>
+  <!-- Cabin fuselage -->
+  <path d="M18 32 C18 25 23 23 32 23 L38 23 C43 23 47 28 47 34 C47 39 42 42 35 42 L25 42 C20 42 18 38 18 32 Z" fill="#FFFFFF"/>
+  <!-- Tail boom + tail rotor -->
+  <path d="M19 31 L7 28 L7 33 L19 36 Z" fill="#FFFFFF"/>
+  <rect x="6" y="21" width="3.5" height="15" rx="1.5" fill="#FFFFFF"/>
+  <!-- Landing skids -->
+  <line x1="25" y1="42" x2="23" y2="49" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/>
+  <line x1="39" y1="42" x2="41" y2="49" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M17 49 L47 49 Q50 49 51 46" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+</svg>

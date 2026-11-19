@@ -1,0 +1,262 @@
+{
+  "schema_version": "4.0",
+  "channel_id": "chanh_niem_ke",
+  "channel_name": "Hiểu Tận Gốc",
+  "handle": "@HieuTanGocVN",
+  "youtube_channel_id": "UCXEFl4mz5LYr84ym7t1eI4A",
+  "youtube_channel_url": "https://www.youtube.com/channel/UCXEFl4mz5LYr84ym7t1eI4A",
+  "chrome_profile": "profile_7",
+  "cdp_port": 9228,
+  "directory": "Profile 11",
+  "user_data_dir": "/home/hongphuoc6104/.config/google-chrome-cdp-profile11",
+  "email": "phuocnguyenne01@gmail.com",
+  "playlist": "Hiểu Tận Gốc — Thảm Họa Hạt Nhân & Công Nghiệp",
+  "status": "LOCKED_CHRONICLE_V4",
+  "niche_id": "causal_disaster_pandemic_engineering_chronicles",
+  "niche_tagline": "Hiểu Đến Tận Gốc, Không Phải Nhớ Số Liệu",
+  "benchmark_study_ref": "sys/runs/su_de_hieu_study/01..05_*.md",
+  "voice_id": "VietNarrator_chanh_niem_ke",
+  "target_cadence_syl_per_min": {
+    "hook_and_body": [
+      226,
+      232
+    ],
+    "outro_60s": [
+      248,
+      256
+    ]
+  },
+  "watermark": {
+    "asset": "sys/channels/chanh_niem_ke/assets/watermark_150x150.png",
+    "dimensions": "150x150",
+    "format": "RGBA",
+    "sha256": "a39d5d176df7da061ec1d2be447395c25d48c72192db07c3b0086e75fecec8b1",
+    "position": "W-w-36:H-h-36",
+    "delogo_bottom_right": true
+  },
+  "visual_grammar": {
+    "version": "chanh_niem_ke_bipolar_chronicle_v4",
+    "label": "Bipolar Dual-Canvas Map & Paper Collage Chronicle Engine (30fps)",
+    "zero_static_hold_rule": "0% dead frames; every beat maintains continuous S-curve camera rig, subtle paper ambient drift, internal Polaroid Ken Burns, or 1.5-3.2s micro-beat HUD/VFX motion.",
+    "world_a_map_mode": {
+      "canvas_role": "Geographic causality, plume/pandemic dispersion, evacuation radii, structural epicenters, and cross-border impact",
+      "master_canvas_resolution": "3840x2160",
+      "palette": {
+        "ocean_bg": "#0B0D08",
+        "ocean_alt": [
+          "#080A05",
+          "#0D0F0A",
+          "#111312"
+        ],
+        "radial_vignette_drop_pct": -35.6,
+        "dem_land_base": "#3E403B",
+        "dem_land_range": [
+          "#2B2D2C",
+          "#62635E"
+        ],
+        "dem_ridge_highlights": [
+          "#9FA19C",
+          "#C4C6C2"
+        ],
+        "border_line_px": 1.5,
+        "border_line_color": "#CFD1CC",
+        "territory_danger_red": "#7B3638",
+        "territory_safe_blue": "#3A6788",
+        "territory_warning_amber": "#9E7227",
+        "frontline_red": "#E31C28",
+        "polygon_alpha": [
+          0.55,
+          0.65
+        ],
+        "polygon_border_px": 2
+      },
+      "sovereignty_mandate": {
+        "required_on_asia_world_vietnam_maps": true,
+        "markers": [
+          "HOÀNG SA",
+          "TRƯỜNG SA"
+        ],
+        "hoang_sa_red_dots": 7,
+        "label_style": "Bold uppercase white labels matching Vietnam territory color"
+      },
+      "camera_rig": {
+        "curve": "cubic-bezier / smoothstep (3p^2 - 2p^3)",
+        "continuous_inheritance": "Inherit (cx, cy, zoom) across consecutive same-region map beats",
+        "presets": {
+          "push_in": "+4% to +16% per sec",
+          "pull_out": "-3% to -15% per sec",
+          "regional_pan": "15 to 150 px/s @ 1080p",
+          "whip_pan": "200 to 380 px/s @ 1080p"
+        }
+      },
+      "vfx_and_overlays_30fps": [
+        "dotted_bezier_trajectory (ooo> with leading cloud/vehicle/ship sprite)",
+        "nuclear_shockwave_blast (3-phase: 0-0.25s white flash -> 0.15-1.8s expanding shockwave ring -> #F2E288 Gaussian glow)",
+        "concentric_pulse_rings",
+        "fireball_and_plume_additive_overlay"
+      ]
+    },
+    "world_b_paper_mode": {
+      "canvas_role": "Root-cause engineering breakdowns, quantitative shock proof, archival evidence, and human/actor portraits",
+      "palette": {
+        "paper_bg": "#DCDCD7",
+        "paper_range": [
+          "#CECFCA",
+          "#E4E4E0"
+        ],
+        "vignette_drop_pct": -7.6,
+        "inactive_pictogram": "#C5C7C2",
+        "washi_tape": "#C8C3B2",
+        "washi_tape_alpha": 0.65,
+        "polaroid_frame": "#EAE8E1",
+        "checkmark_green": "#348B36"
+      },
+      "ambient_motion": "Continuous subtle paper ambient drift (zero mirror seam, zero dead holds)",
+      "negative_space_target_pct": [
+        70,
+        82
+      ],
+      "elements": [
+        "2D top-down technical schematics (e.g., Reactor #4 cross-section, control rods, steam loop, valve/dam geometry)",
+        "Tilted Washi-tape Polaroids (±2 to ±4 deg, 2 opposite-corner tapes, soft drop shadow, slow 1-2%/s internal Ken Burns)",
+        "White-outlined B&W character cutouts (4-6px hard #FFFFFF border + drop shadow + 0.35s easeOutBack slide-in)",
+        "Bespoke paper props (TELEGRAM, BÁO CÁO MẬT, SÉC, CHECKLIST [X][X][✓])",
+        "Animated bar charts, rolling number counters, and waffle pictogram grids (1/4, 1/6, 1/7, 1/30, 1/100)"
+      ]
+    },
+    "five_tier_typography": {
+      "tier_1_display_highlighter": {
+        "style": "Uppercase Condensed Bold, ~8-11% frame height (85-120px @ 1080p)",
+        "sweep_color": "#FAD01A",
+        "sweep_duration_sec": 0.4
+      },
+      "tier_2_date_pill": {
+        "bg": "#F4C400",
+        "fg": "#111111"
+      },
+      "tier_3_typewriter_pill": {
+        "bg": "#161616",
+        "alpha": 0.85,
+        "fg": "#FFFFFF"
+      },
+      "tier_4_red_alert_pill": {
+        "bg": "#C83228",
+        "fg": "#FFFFFF"
+      },
+      "tier_5_grunge_stamp": {
+        "color": "#D84B2A",
+        "border": "double_border_distressed",
+        "slam_animation": "scale 1.25 -> 1.0 in 0.15s",
+        "auto_censor_sensitive_terms": true
+      }
+    },
+    "collision_guard": {
+      "safe_margin_top_px_1080p": 95,
+      "min_gap_y_px_1080p": 20,
+      "left_safe_margin_px_1080p": 51,
+      "bottom_right_watermark_clearance": "Keep W-w-36:H-h-36 clear of Polaroids, stamps, and labels"
+    },
+    "transitions": {
+      "world_a_to_b_polarity_flip": "hard_cut (0.00s, L1 > 120 pattern interrupt)",
+      "consecutive_same_region_map": "seamless_continuation_cut (0.00s preserving camera coordinates)",
+      "geographic_or_archival_blend": "cross_dissolve (0.35s - 0.60s)",
+      "act_break": "fade (0.24s - 0.45s synced with 2.5-5.5s SFX pause)"
+    },
+    "flow_cdp_asset_policy": {
+      "never_ai_generate": [
+        "maps",
+        "vietnamese_text_overlays",
+        "bar_charts",
+        "waffle_grids",
+        "technical_schematics"
+      ],
+      "flow_beluga_scope": "Clean B&W/sepia archival portrait plates & disaster scene Polaroid source plates (allowed_text=None, clean_beluga_sparkle_pil + 1.045x overscan) + 5-layer Flow-native thumbnails (<2MB)."
+    }
+  },
+  "voice_and_audio_lock": {
+    "voice": "VietNarrator_chanh_niem_ke",
+    "voice_profile_path": "sys/assets/voices/ch_chanh_niem_ke/profile.json",
+    "voice_style_source": "KTTV Studio V3 (calm northern male documentary narrator)",
+    "f0_median_hz": 148.0,
+    "target_syllables_per_min": 229.0,
+    "default_tone": "conversational_chronicle",
+    "pronunciation_normalizer": "chronicle_audio_mixer.py (compound-word protection + Vietnamese phonetic mapping e.g. Chernobyl -> Chéc-nô-bưn, Pripyat -> Pri-pi-át, RBMK -> Rờ-Bê-Mờ-Ca, AZ-5 -> A-Zét Năm, Sievert -> Xi-vơ)",
+    "variable_pause_after_s": {
+      "normal_sentence": [
+        0.45,
+        0.75
+      ],
+      "emphasis_pivot": [
+        0.85,
+        1.35
+      ],
+      "sparse_foley_sfx_or_chapter_transition": [
+        2.5,
+        5.5
+      ],
+      "sfx_pause_cadence_sec": [
+        45,
+        55
+      ]
+    },
+    "sfx_policy": "Sparse Realistic Foley Only (geiger_counter_burst, steam_reactor_explosion, control_room_siren, sub_bass_chapter_boom, stamp_slam_thud, fire_crackle, telegraph_ticker) — zero dense UI pop/ding spam.",
+    "bgm_policy": {
+      "hook_and_body": "Documentary Tension Strings / Pulse",
+      "outro": "Emotional Piano + Strings",
+      "ducking_under_voice_db": -20.0,
+      "chapter_pause_swell_db": 10.0,
+      "coverage_pct_min": 99.0
+    },
+    "master_lufs": -11.0,
+    "master_true_peak_dbtp": -1.0
+  },
+  "render_and_branching_lock": {
+    "execution_target": "Colab T4 GPU via ColabPoolDispatcher (h264_nvenc + OmniVoice); strictly zero local CPU video rendering; mandatory colab stop after completion.",
+    "formats": {
+      "long_16x9": {
+        "supported_resolutions": [
+          "1920x1080",
+          "2560x1440"
+        ],
+        "default_resolution": "1920x1080",
+        "fps": 30,
+        "codec": "h264_nvenc"
+      },
+      "short_9x16": {
+        "supported_resolutions": [
+          "1080x1920",
+          "1440x2560"
+        ],
+        "default_resolution": "1080x1920",
+        "fps": 30,
+        "codec": "h264_nvenc"
+      }
+    },
+    "branch_modules": {
+      "visual_engine": "sys/fx_warehouse/bipolar_map_paper_engine.py",
+      "audio_mixer": "sys/fx_warehouse/chronicle_audio_mixer.py",
+      "orchestrator": "sys/tools/produce_chanh_niem_ke_chronicle.py"
+    }
+  },
+  "packaging_and_pilot_ep01": {
+    "youtube_title_max_chars": 55,
+    "thumbnail_5_layer_template": {
+      "layer_1": "Double dark document border frame",
+      "layer_2": "Weathered dark-olive/terracotta/charcoal geopolitical map background",
+      "layer_3": "Glowing orange flashpoint ring + 3 bold vector arrows",
+      "layer_4": "Top-left cream double-border box (#EFE8D5) with bold dark condensed title + bottom-left date stamp",
+      "layer_5": "Bottom-right B&W/sepia catalyst portrait cutout looking straight into camera"
+    },
+    "pilot_episode_01": {
+      "episode_id": "ep01_chernobyl_1986",
+      "long_title": "Thảm họa Chernobyl từ đầu đến cuối, dễ hiểu nhớ lâu",
+      "long_title_chars": 51,
+      "short_title": "Vì sao nút dừng khẩn cấp lại làm nổ lò Chernobyl?",
+      "short_title_chars": 49,
+      "long_script": "sys/runs/chanh_niem_ke_chronicle_demo/script_long_16x9.json",
+      "short_script": "sys/runs/chanh_niem_ke_chronicle_demo/script_short_9x16.json",
+      "long_output_dir": "video/vn_chanh_niem_ke_ep01_chernobyl_long/",
+      "short_output_dir": "video/vn_chanh_niem_ke_ep01_chernobyl_short/"
+    }
+  }
+}

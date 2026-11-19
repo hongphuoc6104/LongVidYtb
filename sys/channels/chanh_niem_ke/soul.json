@@ -1,0 +1,94 @@
+{
+  "schema_version": "5.0",
+  "channel_id": "chanh_niem_ke",
+  "slug": "chanh-niem-ke",
+  "channel_name": "Hiểu Tận Gốc",
+  "handle": "@HieuTanGocVN",
+  "youtube_channel_id": "UCXEFl4mz5LYr84ym7t1eI4A",
+  "youtube_channel_url": "https://www.youtube.com/channel/UCXEFl4mz5LYr84ym7t1eI4A",
+  "chrome_profile": "profile_7",
+  "cdp_port": 9228,
+  "directory": "Profile 11",
+  "user_data_dir": "/home/hongphuoc6104/.config/google-chrome-cdp-profile11",
+  "email": "phuocnguyenne01@gmail.com",
+  "brand_pivot": {
+    "status": "REBRANDED_CHRONICLE_V5",
+    "overhaul_date": "2026-11-16",
+    "benchmark_reference": "@SuDehieukhongphainho (Map-Driven Causal Documentary Formula)",
+    "legacy_mindfulness_videos_policy": "Set all 6 legacy mindfulness videos (FMupcF80q4k, Yn42xhCRCUY, FHjg3LM1SWc, rlQ3UnqQD1o, iYdZCZSpByI, FxVeKXuxxYg) to PRIVATE on YouTube Studio; keep internal repo slug chanh_niem_ke unchanged."
+  },
+  "identity": {
+    "niche": "Giải Phẫu Thảm Họa Kỹ Thuật, Đại Dịch & Những Cú Sập Thay Đổi Nhân Loại Trên Bản Đồ (Causal Disaster, Pandemic & Engineering Collapse Chronicles)",
+    "tagline": "Hiểu Đến Tận Gốc, Không Phải Nhớ Số Liệu",
+    "value_proposition": "Giải phẫu từng mắt xích nhân-quả từ lỗi thiết kế nhỏ, sai lầm vận hành, dịch bệnh lan truyền đến những cú sập thay đổi lịch sử nhân loại trên bản đồ và sa bàn kỹ thuật — giúp người xem hiểu bản chất sự việc từ đầu đến cuối mà không phải học vẹt ngày tháng hay thông số khô khan.",
+    "target_audience": "Khán giả Việt Nam 18–45 tuổi tò mò về bản chất các thảm họa kỹ thuật, sự cố hạt nhân, đại dịch lịch sử và những cú sập hạ tầng lớn; yêu thích phong cách kể chuyện documentary mạch lạc, logic nhân-quả rõ ràng như podcast có bản đồ dẫn đường.",
+    "narrator_persona": "Người kể chuyện tài liệu điềm tĩnh, thông minh, giọng nam miền Bắc chuẩn KTTV Studio V3 — giải mã kỹ thuật phức tạp bằng ví dụ đời thường, xen kẽ hài hước trớ trêu tinh tế (deadpan irony) và liên hệ thực tế Việt Nam.",
+    "content_pillars": [
+      "Thảm họa hạt nhân, hóa chất & công nghiệp nặng (Chernobyl 1986, Bhopal 1984, Fukushima 2011, Piper Alpha 1988)",
+      "Sập công trình, đập thủy điện & thảm họa hạ tầng (Đập Bản Kiều 1975, Đập Vajont 1963, Sập cầu I-35W / Tacoma Narrows)",
+      "Đại dịch lịch sử & dịch tễ lan truyền trên bản đồ (Cúm Tây Ban Nha 1918, Cái Chết Đen 1347, Bão dịch hạch & kiểm dịch)",
+      "Thảm họa hàng hải, hàng không & không gian (Titanic 1912, Tàu con thoi Challenger 1986, Khinh khí cầu Hindenburg 1937)"
+    ]
+  },
+  "zero_overlap_boundaries": {
+    "ban_do_quyen_luc": "ban_do_quyen_luc covers contemporary geopolitics, trade/maritime chokepoints, and resource supply chains; chanh_niem_ke covers causal engineering collapses, industrial/nuclear disasters, and historical pandemics.",
+    "su_ke_lai": "su_ke_lai covers Vietnamese and world military campaigns & dynastic wars; chanh_niem_ke strictly avoids military warfare history and focuses on civilian engineering failures, pandemics, and systemic disasters.",
+    "ho_so_ky_la": "ho_so_ky_la covers unsolved mysteries, disappearances, and 3D noir crime/aviation forensics; chanh_niem_ke explains well-documented causal chains and public-record engineering/epidemiological breakdowns in bright-paper + dark-DEM bipolar infographic style.",
+    "co_the_ke": "co_the_ke covers first-person organ physiology and everyday personal health habits; chanh_niem_ke covers macro-scale geographic pandemic spread and systemic public-health/engineering collapses.",
+    "ua_sao_vay": "ua_sao_vay covers short curiosity facts and isolated science trivia; chanh_niem_ke delivers deep multi-act causal domino documentaries (long_16x9) paired with tightly scoped short_9x16 funnel hooks.",
+    "other_mindfulness_channels": "minh_triet_song, tam_tinh_dem, and loi_sang_soi continue covering Eastern philosophy, bedtime fables, and Christian parables; chanh_niem_ke leaves mindfulness/religion behind so there is 0% internal portfolio cannibalization."
+  },
+  "narrative_contract": {
+    "long_structure": "5-Act Causal Domino Chronicle (Cold Open In Medias Res + Counter-Intuitive Paradox Hook -> Systemic Design Flaw -> 24h Domino Escalation -> Collapse & Geographic Spread -> Scale Translation + Vietnam Micro-Bridges + Payoff Loop + Soft CTA)",
+    "short_structure": "4-Act Micro-Domino Funnel (<=18 syl Counter-Intuitive Hook with 0s pause in first 15s -> Physical/Technical Root Cause -> Consequence Contrast -> Close CTA + Hiểu Tận Gốc Bridge in last 15%)",
+    "six_everyday_translation_techniques": [
+      "1. Quy đổi số liệu trừu tượng sang hình ảnh vật lý đời sống (e.g., 2.000 tấn = ngang 1.000 chiếc ô tô con)",
+      "2. Ẩn dụ quan hệ xã hội / đời thường thay cho thuật ngữ kỹ thuật & dịch tễ khô khan",
+      "3. Bộ 4 chất keo khẩu ngữ ('Thế nhưng mà', 'Thế nên là', 'Tức là', 'khoảng')",
+      "4. Chuyển chương khẩu ngữ 1 chạm & Open Loops + Callbacks xuyên suốt tập",
+      "5. Neo Việt Nam (Vietnam Micro-Bridges: so sánh bán kính sơ tán Hà Nội–Hải Phòng, đo lường thực tế tại VN)",
+      "6. Hài hước trớ trêu (Deadpan Irony) đúng chất documentary thông minh"
+    ],
+    "forbidden_patterns": [
+      "Kêu gọi like, share, subscribe, bấm chuông (0% banned CTA phrases)",
+      "Mở đầu sáo rỗng ('Chào mừng các bạn đã quay trở lại với kênh...')",
+      "Nhồi nhét thông số kỹ thuật hoặc ngày tháng khô khan mà không dịch sang đời thường",
+      "Giọng đọc đều đều không có khoảng lặng chiến lược cho Foley SFX",
+      "Thuyết âm mưu vô căn cứ hoặc giật gân máu me phản cảm"
+    ],
+    "long_soft_cta": "Các bạn thấy thế nào? Cùng chia sẻ cảm nhận của các bạn nha."
+  },
+  "visual_contract": {
+    "visual_style_id": "chanh_niem_ke_bipolar_chronicle_v4",
+    "engine_branch": "sys/fx_warehouse/bipolar_map_paper_engine.py",
+    "world_a": "Dark Shaded-Relief DEM Map (#0B0D08 ocean, #3E403B-#62635E relief, #7B3638/#3A6788/#9E7227 territory polygons, mandatory HOÀNG SA & TRƯỜNG SA markers, continuous S-curve camera rig, dotted Bezier trajectories ooo>, 3-phase shockwave rings, fireball/plume overlays)",
+    "world_b": "Wrinkled Paper Collage (#DCDCD7 canvas, -7.6% vignette, ambient drift, 2D top-down technical schematics, tilted Washi-tape Polaroids ±2-4 deg, 4-6px white-outlined B&W cutouts, rolling counters, bar charts, waffle grids 1/30 & 1/100)",
+    "typography_and_guard": "5-tier typography with 0.40s #FAD01A highlighter sweep, #F4C400 date pills, #161616 typewriter pills, #C83228 alert pills, #D84B2A double-border grunge stamps; strict collision guard safe_margin_top >= 95px and min_gap_y >= 20px",
+    "sovereignty_rule": "Mandatory HOÀNG SA (7 red dots) & TRƯỜNG SA white uppercase labels matching Vietnam territory color on every Asia, East Sea, or World map frame."
+  },
+  "audio_contract": {
+    "voice_id": "VietNarrator_chanh_niem_ke",
+    "voice_profile_path": "sys/assets/voices/ch_chanh_niem_ke/profile.json",
+    "voice_source_standard": "KTTV Studio V3 (F0 median ~148 Hz, 226-232 syl/min Hook/Body, 248-256 syl/min Outro)",
+    "audio_mixer_branch": "sys/fx_warehouse/chronicle_audio_mixer.py",
+    "variable_pauses": "0.45-0.75s normal breath; 0.85-1.35s emphasis; 2.50-5.50s every ~45-55s for Sparse Realistic Foley SFX",
+    "bgm_ducking_db": -20.0,
+    "master_loudness": "-11.0 LUFS / -1.0 dBTP"
+  },
+  "execution_branch_refs": {
+    "shared_skills": [
+      ".agents/skills/vp-research-architect/SKILL.md",
+      ".agents/skills/vp-scriptwriting/SKILL.md",
+      ".agents/skills/vp-flow-cdp/SKILL.md",
+      ".agents/skills/vp-colab-bridge/SKILL.md",
+      ".agents/skills/vp-omni-platform/SKILL.md",
+      ".agents/skills/vp-production/SKILL.md"
+    ],
+    "dedicated_channel_skill": ".agents/skills/vp-channel-chanh-niem-ke/SKILL.md",
+    "dedicated_playbook": ".agents/skills/vp-channel-chanh-niem-ke/references/bipolar_chronicle_playbook.md",
+    "dedicated_lock": "sys/channels/chanh_niem_ke/channel_v4_chronicle_lock.json",
+    "dedicated_engine": "sys/fx_warehouse/bipolar_map_paper_engine.py",
+    "dedicated_audio_mixer": "sys/fx_warehouse/chronicle_audio_mixer.py",
+    "dedicated_orchestrator": "sys/tools/produce_chanh_niem_ke_chronicle.py"
+  }
+}

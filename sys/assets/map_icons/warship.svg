@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Superstructure & mast -->
+  <rect x="28" y="12" width="3.5" height="12" fill="#FFFFFF"/>
+  <rect x="24" y="16" width="11.5" height="3" fill="#FFFFFF"/>
+  <path d="M22 33 L24 23 L38 23 L41 33 Z" fill="#FFFFFF"/>
+  <!-- Forward turret + gun -->
+  <rect x="42" y="29" width="7" height="4" rx="1" fill="#FFFFFF"/>
+  <rect x="47" y="29.5" width="8" height="2.4" fill="#FFFFFF"/>
+  <!-- Hull -->
+  <path d="M7 34 L57 34 L50 45 L12 45 Z" fill="#FFFFFF"/>
+  <!-- Water wave line -->
+  <path d="M6 50 Q14 47 22 50 T38 50 T58 50" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+</svg>

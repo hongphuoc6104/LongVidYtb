@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Cannon barrel angled up-right -->
+  <path d="M18 33 L52 15 L55 21 L22 39 Z" fill="#FFFFFF"/>
+  <rect x="50" y="13" width="6" height="8" rx="1.5" transform="rotate(-28 50 13)" fill="#FFFFFF"/>
+  <!-- Breech & carriage -->
+  <path d="M12 46 L27 36 L34 42 L15 51 Z" fill="#FFFFFF"/>
+  <!-- Gun shield -->
+  <path d="M28 24 L34 22 L37 39 L31 40 Z" fill="#FFFFFF"/>
+  <!-- Heavy spoked wheel -->
+  <circle cx="34" cy="44" r="10.5" stroke="#FFFFFF" stroke-width="4.5" fill="none"/>
+  <circle cx="34" cy="44" r="3.5" fill="#FFFFFF"/>
+  <line x1="34" y1="34" x2="34" y2="54" stroke="#FFFFFF" stroke-width="2.5"/>
+  <line x1="24" y1="44" x2="44" y2="44" stroke="#FFFFFF" stroke-width="2.5"/>
+</svg>

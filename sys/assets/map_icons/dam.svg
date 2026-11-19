@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Reservoir upper water -->
+  <path d="M8 18 L24 18 L24 26 L8 26 Z" fill="#FFFFFF"/>
+  <!-- Concrete dam wall (sloped) -->
+  <path d="M22 14 L34 14 L46 48 L22 48 Z" fill="#FFFFFF"/>
+  <!-- Spillway water cascade & downstream wave -->
+  <path d="M36 22 Q45 26 48 44" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <path d="M41 20 Q52 25 55 44" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+  <path d="M6 52 Q16 48 26 52 T46 52 T58 52" stroke="#FFFFFF" stroke-width="3.8" stroke-linecap="round" fill="none"/>
+</svg>

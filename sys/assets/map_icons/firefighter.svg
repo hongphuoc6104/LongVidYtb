@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Ladder on top -->
+  <rect x="10" y="19" width="34" height="3.5" rx="1" fill="#FFFFFF"/>
+  <rect x="12" y="15" width="30" height="2.5" rx="1" fill="#FFFFFF"/>
+  <!-- Beacon light -->
+  <rect x="44" y="16" width="5" height="5" rx="1.5" fill="#FFFFFF"/>
+  <!-- Fire truck body + cab -->
+  <path d="M8 25 L39 25 L39 45 L8 45 Z" fill="#FFFFFF"/>
+  <path d="M41 25 L51 25 L56 35 L56 45 L41 45 Z" fill="#FFFFFF"/>
+  <!-- Wheels -->
+  <circle cx="18" cy="48" r="6" fill="#FFFFFF"/>
+  <circle cx="46" cy="48" r="6" fill="#FFFFFF"/>
+</svg>
