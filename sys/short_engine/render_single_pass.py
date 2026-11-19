@@ -80,7 +80,7 @@ def build_kenburns_filter(
         zp = f"z='1.02+0.04*(on/{n})':x='(iw-iw/zoom)*(0.2+0.6*(on/{n}))':y='ih/2-(ih/zoom/2)'"
     else:
         zp = f"z='1.0+0.06*(on/{n})':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)'"
-    up_w, up_h = width * 2, height * 2
+    up_w, up_h = (int(round(width * 1.15)) // 2) * 2, (int(round(height * 1.15)) // 2) * 2
     return (
         f"scale={up_w}:{up_h}:flags=bicubic:force_original_aspect_ratio=increase,"
         f"crop={up_w}:{up_h},setsar=1,"
@@ -486,8 +486,8 @@ else:
         fc.append(f"{prev}[vc{k + 1}]xfade=transition=fade:duration={ov / fps:.6f}:offset={cum_int / fps:.6f}{ol}" if ov > 0 else f"{prev}[vc{k + 1}]concat=n=2:v=1:a=0{ol}")
         prev = ol
 
-base_lbl = f"[vposter][vchunk]concat=n=2:v=1:a=0" if has_poster else "[vchunk]"
-fc.append(f"{base_lbl},fps={fps},settb=1/{fps},setsar=1,trim=end_frame={expected_frames},setpts=PTS-STARTPTS,format=yuv420p[vbase]")
+base_prefix = "[vposter][vchunk]concat=n=2:v=1:a=0," if has_poster else "[vchunk]"
+fc.append(f"{base_prefix}fps={fps},settb=1/{fps},setsar=1,trim=end_frame={expected_frames},setpts=PTS-STARTPTS,format=yuv420p[vbase]")
 cur_v = "[vbase]"
 for hi, hud in enumerate(huds):
     hs, he, hd, ay = float(hud["hud_start"]), float(hud["hud_end"]), float(hud["hud_dur"]), int(hud.get("anchor_y", 150))

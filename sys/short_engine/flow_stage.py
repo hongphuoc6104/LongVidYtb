@@ -435,9 +435,12 @@ def run_flow_stage_b(
 
     filtered_pairs: list[ScenePairSpec] = []
     idx_by_bid: dict[str, int] = {}
-    for b in flow_beats:
+    idx_by_cid: dict[str, int] = {}
+    for seq_i, b in enumerate(flow_beats):
         bid = str(b["beat_id"])
-        idx_by_bid[bid] = int(b["beat_index"])
+        orig_i = int(b["beat_index"])
+        idx_by_bid[bid] = orig_i
+        idx_by_cid[f"clip_{seq_i:03d}_{bid}"] = orig_i
         sp = copy.deepcopy(pair_by_id.get(bid) or ScenePairSpec(id=bid, start_image_path=img_map[bid]))
         sp.target_duration = float(b.get("duration_sec") or b.get("duration") or 5.0)
         sp.motion_prompt = str(b.get("motion_prompt") or sp.motion_prompt)
@@ -483,7 +486,13 @@ def run_flow_stage_b(
 
     for c in report.get("clips", []):
         cid = str(c["clip_id"])
-        orig_idx = idx_by_bid[cid]
+        orig_idx = idx_by_cid.get(cid)
+        if orig_idx is None:
+            orig_idx = idx_by_bid.get(cid)
+        if orig_idx is None:
+            orig_idx = idx_by_bid.get(cid.rsplit("_", 1)[-1])
+        if orig_idx is None:
+            raise KeyError(f"Unable to map orchestrator clip_id {cid!r} back to beat index")
         cp = Path(c["output_mp4_path"])
         dst = clips_dir / f"clip_{orig_idx:02d}.mp4"
         if cp.resolve() != dst.resolve():

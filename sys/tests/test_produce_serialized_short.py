@@ -275,3 +275,51 @@ def test_cli_prep_only_validates_single_pass_20_beat_v3(tmp_path: Path, capsys) 
     assert [c["items"] for c in r["chunks"]] == [5, 5, 5, 5]
     assert all(c["overhang_frames"] == 0 for c in r["chunks"])
     assert Path(r["hud_stamps_preview"]).is_file() and not out_bench.exists()
+
+
+def test_run_flow_stage_b_maps_orchestrator_clip_ids_to_beat_indices(monkeypatch, tmp_path: Path) -> None:
+    import short_engine.flow_stage as fs_mod
+    from PIL import Image
+
+    spec, _ = _make_synthetic_20_beat_v3_spec_and_timings()
+    spec_dir = tmp_path / "job_b"
+    frames_dir = spec_dir / "frames"
+    frames_dir.mkdir(parents=True)
+    rng = np.random.default_rng(42)
+    for b in spec["beats"]:
+        arr = rng.integers(0, 255, (1920, 1080, 3), dtype=np.uint8)
+        Image.fromarray(arr, mode="RGB").save(frames_dir / f"beat_{b['beat_index']:02d}.png")
+
+    class FakeOrchestrator:
+        def __init__(self, spec, work_dir, **_kwargs) -> None:
+            self.spec = spec
+            self.clips_dir = Path(work_dir) / "clips"
+            self.clips_dir.mkdir(parents=True, exist_ok=True)
+
+        def run(self) -> dict:
+            out_clips = []
+            for idx, sp in enumerate(self.spec.scene_pairs):
+                cid = f"clip_{idx:03d}_{sp.id}"
+                mp = self.clips_dir / f"{cid}.mp4"
+                mp.write_bytes(b"fake-mp4-" + sp.id.encode())
+                out_clips.append({"clip_id": cid, "output_mp4_path": str(mp)})
+            return {"clips": out_clips, "total_credit_cost": 120, "credits_deducted": {"profile_en17": 120}}
+
+    monkeypatch.setattr(fs_mod, "FlowVideoChainOrchestrator", FakeOrchestrator)
+    monkeypatch.setattr(fs_mod, "_cleanup_all_chrome", lambda: None)
+
+    res = fs_mod.run_flow_stage_b(spec, spec_dir, spec_dir / "_work_short", visual_mode="hybrid_2k", max_workers=2)
+    assert res["clips_count"] == 12
+    assert (spec_dir / "clips" / "clip_00.mp4").read_bytes() == b"fake-mp4-B00"
+    assert (spec_dir / "clips" / "clip_04.mp4").read_bytes() == b"fake-mp4-B04"
+    assert (spec_dir / "clips" / "clip_19.mp4").read_bytes() == b"fake-mp4-B19"
+    assert not (spec_dir / "clips" / "clip_02.mp4").exists()
+
+
+def test_remote_single_pass_chunk_script_has_clean_base_prefix_and_fast_kenburns() -> None:
+    import short_engine.render_single_pass as rsp_mod
+
+    kb = build_kenburns_filter("push_in", 120)
+    assert kb.startswith("scale=1656:2944:flags=bicubic:")
+    assert 'base_prefix = "[vposter][vchunk]concat=n=2:v=1:a=0," if has_poster else "[vchunk]"' in rsp_mod.REMOTE_SINGLE_PASS_CHUNK_SCRIPT
+    assert 'fc.append(f"{base_prefix}fps={fps}' in rsp_mod.REMOTE_SINGLE_PASS_CHUNK_SCRIPT
