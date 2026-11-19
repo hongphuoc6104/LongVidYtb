@@ -65,22 +65,22 @@ def build_kenburns_filter(
     height: int = HEIGHT,
     fps: int = FPS,
 ) -> str:
-    """Build smooth 1.0 -> 1.06 Ken Burns pan/zoom FFmpeg filter for 2K PNG inputs."""
+    """Build smooth 1.0 -> 1.12 cinematic 2.5D Ken Burns pan/zoom FFmpeg filter for 2K PNG inputs."""
     n = max(1, int(render_frames) - 1)
     move = (camera_move or "push_in").strip().lower()
     if move == "pull_back":
-        zp = f"z='1.06-0.06*(on/{n})':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)'"
+        zp = f"z='1.12-0.12*(on/{n})':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)'"
     elif move == "truck_lateral":
-        zp = f"z='1.06':x='(iw-iw/zoom)*(on/{n})':y='ih/2-(ih/zoom/2)'"
+        zp = f"z='1.12':x='(iw-iw/zoom)*(on/{n})':y='ih/2-(ih/zoom/2)'"
     elif move == "tracking_alongside":
-        zp = f"z='1.06':x='(iw-iw/zoom)*(1.0-on/{n})':y='ih/2-(ih/zoom/2)'"
+        zp = f"z='1.12':x='(iw-iw/zoom)*(1.0-on/{n})':y='ih/2-(ih/zoom/2)'"
     elif move == "crane_up":
-        zp = f"z='1.06':x='iw/2-(iw/zoom/2)':y='(ih-ih/zoom)*(1.0-on/{n})'"
+        zp = f"z='1.12':x='iw/2-(iw/zoom/2)':y='(ih-ih/zoom)*(1.0-on/{n})'"
     elif move == "orbit":
-        zp = f"z='1.02+0.04*(on/{n})':x='(iw-iw/zoom)*(0.2+0.6*(on/{n}))':y='ih/2-(ih/zoom/2)'"
+        zp = f"z='1.04+0.08*(on/{n})':x='(iw-iw/zoom)*(0.15+0.7*(on/{n}))':y='ih/2-(ih/zoom/2)'"
     else:
-        zp = f"z='1.0+0.06*(on/{n})':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)'"
-    up_w, up_h = (int(round(width * 1.15)) // 2) * 2, (int(round(height * 1.15)) // 2) * 2
+        zp = f"z='1.0+0.12*(on/{n})':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)'"
+    up_w, up_h = (int(round(width * 1.18)) // 2) * 2, (int(round(height * 1.18)) // 2) * 2
     return (
         f"scale={up_w}:{up_h}:flags=bicubic:force_original_aspect_ratio=increase,"
         f"crop={up_w}:{up_h},setsar=1,"
@@ -450,7 +450,7 @@ has_ass_events = any(ln.strip().startswith("Dialogue:") for ln in (work / "chunk
 cmd = ["ffmpeg", "-y", "-nostats"]
 clip_offset = 0
 if has_poster:
-    cmd.extend(["-loop", "1", "-framerate", str(fps), "-t", f"{poster_frames / fps + 0.2:.4f}", "-i", "poster_9x16.png"])
+    cmd.extend(["-i", "poster_9x16.png"])
     clip_offset = 1
 for ce in items:
     cmd.extend(["-i", ce["arcname"]])
@@ -461,18 +461,21 @@ wm_idx = hud_offset + len(huds)
 cmd.extend(["-i", "watermark_150x150.png"])
 
 fc = []
+dseg = f"{delogo_f}," if delogo_f else ""
 if has_poster:
-    fc.append(f"[0:v]scale={w}:{h}:flags=bicubic:force_original_aspect_ratio=increase,crop={w}:{h},setsar=1,fps={fps},settb=1/{fps},trim=end_frame={poster_frames},setpts=PTS-STARTPTS,fps={fps},settb=1/{fps},format=yuv420p[vposter]")
+    pn = max(1, poster_frames - 1)
+    pw, ph = (int(round(w * 1.14)) // 2) * 2, (int(round(h * 1.14)) // 2) * 2
+    fc.append(f"[0:v]scale={pw}:{ph}:flags=bicubic:force_original_aspect_ratio=increase,crop={pw}:{ph},setsar=1,zoompan=z='1.0+0.08*(on/{pn})':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d={poster_frames}:s={w}x{h}:fps={fps},setsar=1,{dseg}setpts=N/({fps}*TB),tpad=stop_mode=clone:stop_duration=0.2,fps={fps},settb=1/{fps},trim=end_frame={poster_frames},setpts=PTS-STARTPTS,fps={fps},settb=1/{fps},format=yuv420p[vposter]")
 
 for li, ce in enumerate(items):
     inp_i, rf = clip_offset + li, int(ce["render_frames"])
     if ce.get("asset_mode") == "2k_native_kenburns":
-        fc.append(f"[{inp_i}:v]{ce['kenburns_filter']},unsharp=3:3:0.45:3:3:0.25,setpts=N/({fps}*TB),tpad=stop_mode=clone:stop_duration=0.4,fps={fps},settb=1/{fps},trim=end_frame={rf},setpts=PTS-STARTPTS,fps={fps},settb=1/{fps},format=yuv420p[vc{li}]")
+        fc.append(f"[{inp_i}:v]{ce['kenburns_filter']},{dseg}unsharp=3:3:0.45:3:3:0.25,setpts=N/({fps}*TB),tpad=stop_mode=clone:stop_duration=0.4,fps={fps},settb=1/{fps},trim=end_frame={rf},setpts=PTS-STARTPTS,fps={fps},settb=1/{fps},format=yuv420p[vc{li}]")
     else:
         raw_dur, raw_fps = float(ce["raw_dur"]), float(ce.get("raw_fps") or 24.0)
         tfirst = bool(ce.get("trim_lead_frame", False))
         ptsf = (rf / float(fps)) / max(1.0, raw_dur - (1.0 / raw_fps if tfirst else 0.0))
-        dseg, lt = (f"{delogo_f}," if delogo_f else ""), ("trim=start_frame=1,setpts=PTS-STARTPTS," if tfirst else "")
+        lt = "trim=start_frame=1,setpts=PTS-STARTPTS," if tfirst else ""
         fc.append(f"[{inp_i}:v]{lt}scale={sw}:{sh}:flags=bicubic,crop={w}:{h}:(in_w-{w})/2:(in_h-{h})/2,setsar=1,{dseg}unsharp=3:3:0.45:3:3:0.25,setpts={ptsf:.8f}*PTS,tpad=stop_mode=clone:stop_duration=0.6,fps={fps},settb=1/{fps},trim=end_frame={rf},setpts=PTS-STARTPTS,fps={fps},settb=1/{fps},format=yuv420p[vc{li}]")
 
 if len(items) == 1:
@@ -541,23 +544,26 @@ has_poster, expected_frames, items = bool(manifest.get("has_poster", False)) and
 cmd = ["ffmpeg", "-y", "-nostats"]
 clip_offset = 0
 if has_poster:
-    cmd.extend(["-loop", "1", "-framerate", str(fps), "-t", f"{poster_frames / fps + 0.2:.4f}", "-i", "poster_9x16.png"])
+    cmd.extend(["-i", "poster_9x16.png"])
     clip_offset = 1
 for ce in items:
     cmd.extend(["-i", ce["arcname"]])
 
 fc = []
+dseg = f"{delogo_f}," if delogo_f else ""
 if has_poster:
-    fc.append(f"[0:v]scale={w}:{h}:flags=bicubic:force_original_aspect_ratio=increase,crop={w}:{h},setsar=1,fps={fps},settb=1/{fps},trim=end_frame={poster_frames},setpts=PTS-STARTPTS,fps={fps},settb=1/{fps},format=yuv420p[vposter]")
+    pn = max(1, poster_frames - 1)
+    pw, ph = (int(round(w * 1.14)) // 2) * 2, (int(round(h * 1.14)) // 2) * 2
+    fc.append(f"[0:v]scale={pw}:{ph}:flags=bicubic:force_original_aspect_ratio=increase,crop={pw}:{ph},setsar=1,zoompan=z='1.0+0.08*(on/{pn})':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d={poster_frames}:s={w}x{h}:fps={fps},setsar=1,{dseg}setpts=N/({fps}*TB),tpad=stop_mode=clone:stop_duration=0.2,fps={fps},settb=1/{fps},trim=end_frame={poster_frames},setpts=PTS-STARTPTS,fps={fps},settb=1/{fps},format=yuv420p[vposter]")
 for li, ce in enumerate(items):
     inp_i, rf = clip_offset + li, int(ce["render_frames"])
     if ce.get("asset_mode") == "2k_native_kenburns":
-        fc.append(f"[{inp_i}:v]{ce['kenburns_filter']},unsharp=3:3:0.45:3:3:0.25,setpts=N/({fps}*TB),tpad=stop_mode=clone:stop_duration=0.4,fps={fps},settb=1/{fps},trim=end_frame={rf},setpts=PTS-STARTPTS,fps={fps},settb=1/{fps},format=yuv420p[vc{li}]")
+        fc.append(f"[{inp_i}:v]{ce['kenburns_filter']},{dseg}unsharp=3:3:0.45:3:3:0.25,setpts=N/({fps}*TB),tpad=stop_mode=clone:stop_duration=0.4,fps={fps},settb=1/{fps},trim=end_frame={rf},setpts=PTS-STARTPTS,fps={fps},settb=1/{fps},format=yuv420p[vc{li}]")
     else:
         raw_dur, raw_fps = float(ce["raw_dur"]), float(ce.get("raw_fps") or 24.0)
         tfirst = bool(ce.get("trim_lead_frame", False))
         ptsf = (rf / float(fps)) / max(1.0, raw_dur - (1.0 / raw_fps if tfirst else 0.0))
-        dseg, lt = (f"{delogo_f}," if delogo_f else ""), ("trim=start_frame=1,setpts=PTS-STARTPTS," if tfirst else "")
+        lt = "trim=start_frame=1,setpts=PTS-STARTPTS," if tfirst else ""
         fc.append(f"[{inp_i}:v]{lt}scale={sw}:{sh}:flags=bicubic,crop={w}:{h}:(in_w-{w})/2:(in_h-{h})/2,setsar=1,{dseg}unsharp=3:3:0.45:3:3:0.25,setpts={ptsf:.8f}*PTS,tpad=stop_mode=clone:stop_duration=0.6,fps={fps},settb=1/{fps},trim=end_frame={rf},setpts=PTS-STARTPTS,fps={fps},settb=1/{fps},format=yuv420p[vc{li}]")
 if len(items) == 1:
     fc.append(f"[vc0]setpts=PTS-STARTPTS,fps={fps},settb=1/{fps}[vchunk_clips]")

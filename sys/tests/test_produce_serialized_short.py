@@ -198,8 +198,19 @@ def test_resolve_worker_count_and_kenburns_trajectories() -> None:
     assert 6 <= resolve_worker_count("auto") <= 10
     assert resolve_worker_count("9") == 9
     assert resolve_worker_count(0) == 1
-    for move in ("push_in", "pull_back", "truck_lateral", "tracking_alongside", "crane_up", "orbit"):
-        assert ":d=120:s=1440x2560:fps=30,setsar=1" in build_kenburns_filter(move, 120)
+    expected_z = {
+        "push_in": "z='1.0+0.12*(on/119)'",
+        "pull_back": "z='1.12-0.12*(on/119)'",
+        "truck_lateral": "z='1.12'",
+        "tracking_alongside": "z='1.12'",
+        "crane_up": "z='1.12'",
+        "orbit": "z='1.04+0.08*(on/119)'",
+    }
+    for move, z_expr in expected_z.items():
+        kb = build_kenburns_filter(move, 120)
+        assert kb.startswith("scale=1698:3020:flags=bicubic:")
+        assert z_expr in kb
+        assert ":d=120:s=1440x2560:fps=30,setsar=1" in kb
 
 
 def test_select_idle_colab_accounts_probes_with_refresh_auth_and_fast_boot_order(monkeypatch, tmp_path: Path) -> None:
@@ -320,6 +331,49 @@ def test_remote_single_pass_chunk_script_has_clean_base_prefix_and_fast_kenburns
     import short_engine.render_single_pass as rsp_mod
 
     kb = build_kenburns_filter("push_in", 120)
-    assert kb.startswith("scale=1656:2944:flags=bicubic:")
+    assert kb.startswith("scale=1698:3020:flags=bicubic:")
+    assert "z='1.0+0.12*(on/119)'" in kb
     assert 'base_prefix = "[vposter][vchunk]concat=n=2:v=1:a=0," if has_poster else "[vchunk]"' in rsp_mod.REMOTE_SINGLE_PASS_CHUNK_SCRIPT
     assert 'fc.append(f"{base_prefix}fps={fps}' in rsp_mod.REMOTE_SINGLE_PASS_CHUNK_SCRIPT
+
+    for script in (rsp_mod.REMOTE_SINGLE_PASS_CHUNK_SCRIPT, rsp_mod.REMOTE_PASS1_CHUNK_SCRIPT):
+        assert 'dseg = f"{delogo_f}," if delogo_f else ""' in script
+        assert "{ce['kenburns_filter']},{dseg}unsharp=3:3:0.45:3:3:0.25" in script
+        assert 'cmd.extend(["-i", "poster_9x16.png"])' in script
+        assert "zoompan=z='1.0+0.08*(on/{pn})'" in script
+        assert "trim=end_frame={poster_frames}" in script
+
+
+def test_write_short_kinetic_ass_2k_groups_phrases_cleanly(tmp_path: Path) -> None:
+    from short_engine.audio_epic import write_short_kinetic_ass_2k
+
+    # 5-word clause + emphatic 3-word clause across same/next segments
+    words = [
+        {"beat_id": "B00", "seg_idx": 0, "word": "Đêm", "start": 0.00, "end": 0.22, "seg_end": 1.40},
+        {"beat_id": "B00", "seg_idx": 0, "word": "mùng", "start": 0.22, "end": 0.44, "seg_end": 1.40},
+        {"beat_id": "B00", "seg_idx": 0, "word": "ba", "start": 0.44, "end": 0.68, "seg_end": 1.40},
+        {"beat_id": "B00", "seg_idx": 0, "word": "tháng", "start": 0.68, "end": 0.94, "seg_end": 1.40},
+        {"beat_id": "B00", "seg_idx": 0, "word": "Giêng,", "start": 0.94, "end": 1.32, "seg_end": 1.40},
+        {"beat_id": "B00", "seg_idx": 1, "word": "không", "start": 1.50, "end": 1.75, "seg_end": 2.40},
+        {"beat_id": "B00", "seg_idx": 1, "word": "một", "start": 1.75, "end": 2.00, "seg_end": 2.40},
+        {"beat_id": "B00", "seg_idx": 1, "word": "tiếng!", "start": 2.00, "end": 2.35, "seg_end": 2.40},
+    ]
+    out_ass = write_short_kinetic_ass_2k(words, total_duration=3.0, out_ass=tmp_path / "sub.ass")
+    text = out_ass.read_text(encoding="utf-8")
+    assert "Style: KineticRed,Noto Sans,132," in text
+    assert "Style: KineticYellow,Noto Sans,132," in text
+
+    dialogues = [ln for ln in text.splitlines() if ln.startswith("Dialogue:")]
+    assert len(dialogues) == 3
+    parsed = [d.split(",", 9) for d in dialogues]
+    texts = [p[9] for p in parsed]
+    styles = [p[3] for p in parsed]
+    assert texts == ["Đêm mùng ba", "tháng Giêng", "không một tiếng"]
+    assert styles == ["KineticYellow", "KineticYellow", "KineticRed"]
+    assert all(2 <= len(t.split()) <= 4 for t in texts)
+    assert parsed[0][1] == "0:00:00.00" and parsed[2][1] == "0:00:01.50"
+
+    sliced = slice_ass_for_window(out_ass, 0.50, 2.20, tmp_path / "chunk.ass")
+    s_lines = [ln for ln in sliced.read_text(encoding="utf-8").splitlines() if ln.startswith("Dialogue:")]
+    assert len(s_lines) == 3
+    assert s_lines[0].endswith(",Đêm mùng ba") and s_lines[-1].endswith(",không một tiếng")

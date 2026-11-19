@@ -33,7 +33,7 @@ from tools.cta_tone_linter import lint_cta
 from tools.produce_vn_dual_mode import build_clean_sidecar_srt, load_voice_profile
 from tools.vn_text_normalizer import detect_unnormalized_tokens
 from visual_pacing import check_see_say_beat_density
-from voice_prosody import BASELINE_LUFS, resolve_delivery_profile, split_text_with_pauses
+from voice_prosody import BASELINE_LUFS, DYNAMIC_MICRO_GAIN_DB, resolve_delivery_profile, split_text_with_pauses
 
 from . import ROOT_DIR, SYS_DIR, TARGET_SR, VIETSUB_FONT_SIZE, measure_ebur128, select_idle_colab_accounts
 
@@ -338,7 +338,8 @@ def _process_speech_segment(raw_wav: Path, post_wav: Path, *, atempo: float, eq_
     shaped_wav = post_wav.with_suffix(".shaped.wav")
     eq_part = f",{eq_chain}" if eq_chain else ""
     _run_ffmpeg_wav(raw_wav, f"atempo={atempo:.4f}{eq_part},aformat=sample_fmts=s16:channel_layouts=stereo", shaped_wav)
-    base_metrics = polish_lufs_true_peak(shaped_wav, target_lufs=BASELINE_LUFS, max_tp_db=-1.6, tp_guard_margin_db=0.15)
+    base_tp_ceiling = min(-1.6, -1.2 - max(0.0, float(micro_gain_db)))
+    base_metrics = polish_lufs_true_peak(shaped_wav, target_lufs=BASELINE_LUFS, max_tp_db=base_tp_ceiling, tp_guard_margin_db=0.15)
     _run_ffmpeg_wav(shaped_wav, f"volume={micro_gain_db:+.2f}dB", post_wav)
     shaped_wav.unlink(missing_ok=True)
     arr = _read_wav_stereo(post_wav, target_sr=TARGET_SR)
@@ -346,9 +347,17 @@ def _process_speech_segment(raw_wav: Path, post_wav: Path, *, atempo: float, eq_
 
 
 def _beat_voice_params(beat: dict[str, Any]) -> dict[str, Any]:
-    """Resolve explicit beat voice profile params or delivery-mode SSOT preset."""
+    """Resolve explicit beat voice profile params with widened dynamic-contrast micro gain."""
+    mode_key = str(beat.get("delivery_mode") or "").strip()
+    ssot = resolve_delivery_profile(mode_key)
     vp = beat.get("voice_profile_params")
-    return vp if isinstance(vp, dict) and vp else resolve_delivery_profile(beat.get("delivery_mode"))
+    if isinstance(vp, dict) and vp:
+        merged = dict(ssot)
+        merged.update(vp)
+        if mode_key in DYNAMIC_MICRO_GAIN_DB:
+            merged["micro_gain_db"] = float(DYNAMIC_MICRO_GAIN_DB[mode_key])
+        return merged
+    return ssot
 
 
 def _assemble_single_beat(beat: dict[str, Any], *, raw_dir: Path, post_dir: Path, atempo_override: float | None = None) -> dict[str, Any]:
@@ -494,11 +503,7 @@ def synthesize_heroic_epic_score(measured_beats: list[dict[str, Any]], short_spe
         sig = sum(a * np.sin(2.0 * np.pi * f * tt) * np.exp(-tt / d) for f, a, d in ((59.0, 0.55, 0.58), (118.0, 0.72, 0.92), (177.0, 0.52, 0.72), (312.0, 0.36, 0.50), (468.0, 0.16, 0.30))) * np.minimum(1.0, tt / 0.004)
         _mix(np.column_stack([sig * 0.92, np.roll(sig, int(0.004 * sr)) * 0.98]), t_sec, gain)
 
-    def _pluck(t_sec: float, freq: float, gain: float = 0.26, pan: float = 0.2) -> None:
-        tt = np.arange(int(0.65 * sr), dtype=np.float64) / sr
-        _mix((np.sin(2.0 * np.pi * freq * tt) + 0.45 * np.sin(4.0 * np.pi * freq * tt) + 0.20 * np.sin(6.0 * np.pi * freq * tt)) * np.minimum(1.0, tt / 0.004) * np.exp(-tt / 0.18), t_sec, gain, pan=pan)
-
-    def _brass_pad(t0: float, t1: float, freqs: tuple[float, ...], gain: float = 0.28, bright: float = 0.35, scoop: float = 0.0) -> None:
+    def _brass_pad(t0: float, t1: float, freqs: tuple[float, ...], gain: float = 0.28, bright: float = 0.35, scoop: float = 0.0, cutoff_hz: float = 420.0) -> None:
         s0, s1 = max(0, int(round(t0 * sr))), min(n_samples, int(round(t1 * sr)))
         if s1 <= s0 + 16:
             return
@@ -510,6 +515,9 @@ def synthesize_heroic_epic_score(measured_beats: list[dict[str, Any]], short_spe
             ph_l, ph_r, w_k = 2.0 * np.pi * np.cumsum(f0 * lfo * 0.9985) / sr, 2.0 * np.pi * np.cumsum(f0 * lfo * 1.0015) / sr, (0.85 if k > 0 else 1.0)
             left += w_k * (np.sin(ph_l) + bright * (0.48 * np.sin(2.0 * ph_l) + 0.24 * np.sin(3.0 * ph_l)))
             right += w_k * (np.sin(ph_r) + bright * (0.48 * np.sin(2.0 * ph_r) + 0.24 * np.sin(3.0 * ph_r)))
+        lp_sos = butter(3, min(0.95, float(cutoff_hz) / (0.5 * sr)), btype="lowpass", output="sos")
+        left = sosfilt(lp_sos, left)
+        right = sosfilt(lp_sos, right)
         norm = gain / max(1.0, len(freqs) * 0.85)
         buf[s0:s1, 0] += left * env * norm
         buf[s0:s1, 1] += right * env * norm
@@ -533,7 +541,6 @@ def synthesize_heroic_epic_score(measured_beats: list[dict[str, Any]], short_spe
             sec = "act1" if act == 1 else "act2_3"
         sections.append((mb, sec))
 
-    pentatonic = (293.66, 349.23, 392.00, 440.00, 523.25, 587.33)  # D4 F4 G4 A4 C5 D5
     climax_chords = ((73.42, 146.83, 174.61, 220.00), (58.27, 116.54, 146.83, 174.61), (65.41, 130.81, 164.81, 196.00), (73.42, 146.83, 174.61, 220.00), (55.00, 110.00, 138.59, 164.81), (73.42, 146.83, 185.00, 220.00))
     proud_chords = ((73.42, 146.83, 185.00, 220.00), (98.00, 146.83, 196.00, 246.94), (55.00, 110.00, 164.81, 220.00), (73.42, 146.83, 185.00, 293.66))
     act23_starts = [float(mb["start_sec"]) for mb, s in sections if s == "act2_3"]
@@ -543,7 +550,7 @@ def synthesize_heroic_epic_score(measured_beats: list[dict[str, Any]], short_spe
     if climax_bounds:
         c_t0, c_t1 = climax_bounds[0][0], climax_bounds[-1][1]
         for k, chord in enumerate(climax_chords):
-            _brass_pad(c_t0 + (c_t1 - c_t0) * (k / 6.0), c_t0 + (c_t1 - c_t0) * ((k + 1) / 6.0), chord, gain=0.52, bright=0.52)
+            _brass_pad(c_t0 + (c_t1 - c_t0) * (k / 6.0), c_t0 + (c_t1 - c_t0) * ((k + 1) / 6.0), chord, gain=0.52, bright=0.52, cutoff_hz=720.0)
 
     climax_idx = proud_idx = 0
     for idx_s, (mb, sec) in enumerate(sections):
@@ -553,19 +560,18 @@ def synthesize_heroic_epic_score(measured_beats: list[dict[str, Any]], short_spe
             if idx_s == 0:
                 _bronze_drum(t0, gain=0.50)
                 _war_drum(t0, gain=0.62, pitch_hz=68.0, punch=1.4)
-            _brass_pad(t0, t1, (73.42, 110.00, 146.83), gain=0.22, bright=0.16)
+            _brass_pad(t0, t1, (73.42, 110.00, 146.83), gain=0.22, bright=0.16, cutoff_hz=420.0)
             for t in np.arange(t0 + 0.77, max(t0 + 0.77, t1 - 0.12), 60.0 / 78.0):
                 _war_drum(float(t), gain=0.36, pitch_hz=74.0)
         elif sec == "act2_3":
-            _brass_pad(t0, t1, (73.42, 110.00, 174.61) if idx_s % 2 == 0 else (65.41, 110.00, 164.81), gain=0.24, bright=0.25)
+            is_whisper = deliv == "tense_whisper"
+            _brass_pad(t0, t1, (73.42, 110.00, 174.61) if idx_s % 2 == 0 else (65.41, 110.00, 164.81), gain=0.14 if is_whisper else 0.24, bright=0.18 if is_whisper else 0.25, cutoff_hz=420.0)
             prog = float(np.clip((t0 - t23_0) / t23_span, 0.0, 1.0))
             step = 60.0 / (88.0 + 20.0 * prog)
+            drum_scale = 0.50 if is_whisper else 1.0
             for k_step, t in enumerate(np.arange(t0, max(t0, t1 - 0.08), step)):
-                _war_drum(float(t), gain=0.40 if k_step % 2 == 0 else 0.25, pitch_hz=80.0 if k_step % 2 == 0 else 96.0)
-                _pluck(float(t), pentatonic[(idx_s * 3 + k_step) % 6], gain=0.22, pan=-0.28 if k_step % 2 == 0 else 0.28)
-                if k_step % 2 == 0 and t + 0.5 * step < t1 - 0.06:
-                    _pluck(float(t + 0.5 * step), pentatonic[(idx_s * 3 + k_step + 2) % 6], gain=0.15, pan=0.18)
-            if role in ("twist", "strategy", "mechanism") or deliv in ("urgent_escalation", "tactical_breakdown") or prog > 0.65:
+                _war_drum(float(t), gain=(0.40 if k_step % 2 == 0 else 0.25) * drum_scale, pitch_hz=80.0 if k_step % 2 == 0 else 96.0)
+            if not is_whisper and (role in ("twist", "strategy", "mechanism") or deliv in ("urgent_escalation", "tactical_breakdown") or prog > 0.65):
                 for r_i in range(8):
                     rt = max(t0, t1 - 1.15) + r_i * (1.05 / 8.0)
                     if rt < t1:
@@ -577,16 +583,33 @@ def synthesize_heroic_epic_score(measured_beats: list[dict[str, Any]], short_spe
                 if ft > 1:
                     buf[s0 : s0 + ft] *= np.linspace(1.0, 0.0, ft, dtype=np.float64)[:, None]
                 buf[s0 + ft : s1] = 0.0
-                r_dur = min(1.5, dur * 0.40)
+                r_dur = min(0.85, dur * 0.35)
                 rm = max(32, int(round(r_dur * sr)))
                 rtt = np.arange(rm, dtype=np.float64) / sr
-                r_tone = np.sin(2.0 * np.pi * np.cumsum(135.0 + 485.0 * (rtt / r_dur) ** 2.0) / sr)
-                r_noise = sosfilt(butter(2, [400.0 / (0.5 * sr), min(0.94, 4800.0 / (0.5 * sr))], btype="bandpass", output="sos"), rng.normal(0.0, 0.22, rm))
-                r_env = (rtt / r_dur) ** 2.4 * 0.28
-                _mix(np.column_stack([(r_tone + r_noise) * r_env, (r_tone * 0.96 + r_noise) * r_env]), t1 - r_dur)
+                prog_r = rtt / max(1e-6, r_dur)
+                rumble_bp = butter(3, [45.0 / (0.5 * sr), 160.0 / (0.5 * sr)], btype="bandpass", output="sos")
+                timpani_src_l = rng.normal(0.0, 0.70, rm) * (0.65 + 0.35 * np.cos(2.0 * np.pi * (9.0 + 7.0 * prog_r) * rtt))
+                timpani_src_r = rng.normal(0.0, 0.70, rm) * (0.65 + 0.35 * np.cos(2.0 * np.pi * (9.0 + 7.0 * prog_r) * rtt + 0.4))
+                for k_roll in range(7):
+                    k_idx = int(round((k_roll + 0.35) * (rm / 7.5)))
+                    k_len = min(rm - k_idx, int(0.18 * sr))
+                    if k_len > 8:
+                        kt = np.arange(k_len, dtype=np.float64) / sr
+                        stroke = np.sin(2.0 * np.pi * np.cumsum((56.0 + 2.5 * k_roll) * (1.0 + 0.8 * np.exp(-kt / 0.02))) / sr) * np.exp(-kt / 0.09)
+                        w_stroke = 0.25 + 0.75 * (k_roll / 6.0)
+                        timpani_src_l[k_idx : k_idx + k_len] += stroke * w_stroke
+                        timpani_src_r[k_idx : k_idx + k_len] += stroke * w_stroke * 0.96
+                r_rumble_l = sosfilt(rumble_bp, timpani_src_l)
+                r_rumble_r = sosfilt(rumble_bp, timpani_src_r)
+                r_rumble_l = (r_rumble_l / max(1e-6, float(np.max(np.abs(r_rumble_l))))) * 0.58
+                r_rumble_r = (r_rumble_r / max(1e-6, float(np.max(np.abs(r_rumble_r))))) * 0.58
+                air_bp = butter(2, [200.0 / (0.5 * sr), min(0.94, 1200.0 / (0.5 * sr))], btype="bandpass", output="sos")
+                r_air = sosfilt(air_bp, rng.normal(0.0, 0.14, rm))
+                r_env = (prog_r ** 2.2) * np.minimum(1.0, rtt / 0.04) * 0.42
+                _mix(np.column_stack([(r_rumble_l + r_air) * r_env, (r_rumble_r + np.roll(r_air, 11)) * r_env]), t1 - r_dur)
         elif sec == "act4_climax":
             if climax_idx == 0:
-                _brass_pad(t0, min(t1, t0 + 2.0), (36.71, 73.42, 110.00, 174.61, 293.66), gain=0.72, bright=0.65, scoop=0.018)
+                _brass_pad(t0, min(t1, t0 + 2.0), (36.71, 73.42, 110.00, 174.61, 293.66), gain=0.72, bright=0.65, scoop=0.018, cutoff_hz=720.0)
                 _bronze_drum(t0, gain=0.78)
                 _war_drum(t0, gain=0.88, pitch_hz=68.0, punch=1.5)
                 _cymbal_swell(t0 + 0.18, dur=1.2, gain=0.40)
@@ -594,14 +617,12 @@ def synthesize_heroic_epic_score(measured_beats: list[dict[str, Any]], short_spe
                 _war_drum(float(t), gain=0.84 if k_step % 4 == 0 else 0.58, pitch_hz=74.0 if k_step % 2 == 0 else 92.0, punch=1.2)
                 if k_step % 4 == 0:
                     _bronze_drum(float(t), gain=0.58)
-                if k_step % 2 == 1:
-                    _pluck(float(t), pentatonic[(climax_idx + k_step) % 6] * 2.0, gain=0.22, pan=0.32 if k_step % 4 == 1 else -0.32)
             if idx_s + 1 < len(sections) and sections[idx_s + 1][1] != "act4_climax":
                 _cymbal_swell(t1, dur=1.35, gain=0.34)
             climax_idx += 1
         elif sec == "act5_proud":
             is_last = idx_s == len(sections) - 1
-            _brass_pad(t0, t1, proud_chords[-1] if is_last else proud_chords[proud_idx % len(proud_chords)], gain=0.40, bright=0.40)
+            _brass_pad(t0, t1, proud_chords[-1] if is_last else proud_chords[proud_idx % len(proud_chords)], gain=0.40, bright=0.40, cutoff_hz=720.0)
             for k_step, t in enumerate(np.arange(t0, max(t0, t1 - 0.18), 60.0 / 92.0)):
                 _war_drum(float(t), gain=0.54 if k_step % 2 == 0 else 0.34, pitch_hz=76.0)
                 if k_step == 0:
@@ -647,7 +668,7 @@ def _build_bgm_and_sfx_bed(voice_buf: np.ndarray, measured_beats: list[dict[str,
         bgm_ducked = (score * (voice_active_rms / ref_rms)) * ((10.0 ** (pause_db / 20.0)) * rel_duck)[:, None]
         if vb:
             s_vs, s_ve = max(0, int(round(float(vb["start_sec"]) * TARGET_SR))), min(n_samples, int(round(float(vb["end_sec"]) * TARGET_SR)))
-            r_dur = min(1.5, max(0.05, float(vb["end_sec"]) - float(vb["start_sec"])) * 0.40)
+            r_dur = min(0.85, max(0.05, float(vb["end_sec"]) - float(vb["start_sec"])) * 0.35)
             s_riser = max(s_vs + 16, min(s_ve, s_ve - int(round(r_dur * TARGET_SR))))
             s_vz = min(s_riser, max(s_vs + 16, int(round((p_vac_start - 0.12) * TARGET_SR))) if p_vac_end > p_vac_start else s_vs + int(round(0.06 * TARGET_SR)))
             _apply_vacuum_duck(vac_env, s_vs, s_vz, s_riser)
@@ -716,14 +737,120 @@ def _build_bgm_and_sfx_bed(voice_buf: np.ndarray, measured_beats: list[dict[str,
         cur_pk, max_pk = (float(np.max(np.abs(stem_cal))) if len(stem_cal) else 0.0), voice_active_rms * 1.15
         if cur_pk > max_pk and not (bid == vac_bid and stem_name == "heartbeat_lub_dub.wav"):
             stem_cal *= max_pk / cur_pk
+        raw_offset_sec = float(cue.get("offset_sec", 0.1))
+        rel_beat_offset = placed_at - float(mb["start_sec"])
+        early_attenuated = bid != vac_bid and (raw_offset_sec < 0.28 or rel_beat_offset < 0.30)
+        if early_attenuated:
+            stem_cal *= 0.67
+            t_db -= 3.5
         place_stereo_sfx(sfx_buf, stem_cal, start_sec=placed_at, pan=float(cue.get("pan", 0.0)), gain=1.0, sr=TARGET_SR)
-        placed_events.append({"beat_id": bid, "stem": stem_name, "placed_at_sec": round(placed_at, 4), "target_rel_voice_db": round(t_db, 2)})
+        placed_events.append({"beat_id": bid, "stem": stem_name, "placed_at_sec": round(placed_at, 4), "target_rel_voice_db": round(t_db, 2), "early_beat_ducked": early_attenuated})
 
     return bgm_final, sfx_buf, {"voice_active_rms_db": round(voice_active_db, 2), "placed_events": placed_events}
 
 
+def _partition_phrase_clause(clause: list[dict[str, Any]]) -> list[list[dict[str, Any]]]:
+    """Partition a clause into readable 2–4 syllable phrase chunks (5 -> 3+2, avoiding 1-word tails)."""
+    chunks: list[list[dict[str, Any]]] = []
+    i, n = 0, len(clause)
+    while i < n:
+        r = n - i
+        if r <= 3:
+            k = r
+        elif r == 4:
+            k = 4 if sum(len(x["_clean"]) for x in clause[i : i + 4]) <= 22 else 2
+        elif r == 5:
+            k = 3
+        elif r == 6:
+            k = 3
+        elif r == 7:
+            k = 4 if sum(len(x["_clean"]) for x in clause[i : i + 4]) <= 22 else 3
+        else:
+            k = 3
+        chunks.append(clause[i : i + k])
+        i += k
+    return chunks
+
+
+def _group_words_into_phrases(words: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Group consecutive words of the same `(beat_id, seg_idx)` into meaningful 2–4 word phrases."""
+    segments: list[tuple[tuple[str, int], list[dict[str, Any]]]] = []
+    for w in words:
+        raw = str(w.get("word", "")).strip().replace("{", "").replace("}", "")
+        clean = re.sub(r"^[.,;:!?\"'“”‘’()\[\]]+|[.,;:!?\"'“”‘’()\[\]]+$", "", raw)
+        if not clean:
+            continue
+        item = {
+            **w,
+            "_clean": clean,
+            "_ends_punct": bool(re.search(r"[,.;:!?…—–][\"'”’)\]]*$", raw)),
+            "_emphatic": bool(re.search(r"[!?][\"'”’)\]]*$", raw)),
+            "_colon_end": bool(re.search(r":[\"'”’)\]]*$", raw)),
+        }
+        seg_key = (str(w.get("beat_id", "")), int(w.get("seg_idx", 0)))
+        if not segments or segments[-1][0] != seg_key:
+            segments.append((seg_key, [item]))
+        else:
+            segments[-1][1].append(item)
+
+    phrase_records: list[dict[str, Any]] = []
+    for seg_key, seg_words in segments:
+        clauses: list[list[dict[str, Any]]] = []
+        cur_clause: list[dict[str, Any]] = []
+        for item in seg_words:
+            cur_clause.append(item)
+            if item["_ends_punct"]:
+                clauses.append(cur_clause)
+                cur_clause = []
+        if cur_clause:
+            clauses.append(cur_clause)
+
+        raw_chunks: list[tuple[int, list[dict[str, Any]]]] = []
+        for cl_idx, clause in enumerate(clauses):
+            for ch in _partition_phrase_clause(clause):
+                raw_chunks.append((cl_idx, ch))
+
+        # Rebalance/merge any single-word trailing/leading chunk inside a multi-word segment
+        fixed: list[tuple[int, list[dict[str, Any]]]] = []
+        for cl_idx, ch in raw_chunks:
+            if len(ch) == 1 and fixed:
+                prev_cl, prev_ch = fixed[-1]
+                if len(prev_ch) <= 3:
+                    prev_ch.extend(ch)
+                else:
+                    combined = prev_ch + ch
+                    fixed[-1] = (prev_cl, combined[:3])
+                    fixed.append((cl_idx, combined[3:]))
+            else:
+                fixed.append((cl_idx, ch))
+        if len(fixed) >= 2 and len(fixed[0][1]) == 1:
+            first_cl, first_ch = fixed[0]
+            nxt_cl, nxt_ch = fixed[1]
+            if len(nxt_ch) <= 3:
+                fixed[1] = (nxt_cl, first_ch + nxt_ch)
+                fixed.pop(0)
+            else:
+                combined = first_ch + nxt_ch
+                fixed[0] = (first_cl, combined[:2])
+                fixed[1] = (nxt_cl, combined[2:])
+
+        for cl_idx, ch in fixed:
+            emphatic = any(x["_emphatic"] for x in ch)
+            phrase_records.append({
+                "seg_key": seg_key,
+                "clause_idx": cl_idx,
+                "words": ch,
+                "text": " ".join(x["_clean"] for x in ch),
+                "start": float(ch[0]["start"]),
+                "end": float(ch[-1]["end"]),
+                "seg_end": float(ch[-1].get("seg_end", ch[-1]["end"])),
+                "emphatic": emphatic,
+            })
+    return phrase_records
+
+
 def write_short_kinetic_ass_2k(words: list[dict[str, Any]], total_duration: float, out_ass: Path) -> Path:
-    """Write 2K kinetic ASS subtitles (`Noto Sans,132`, outline 8, shadow 5, MarginV=470)."""
+    """Write 2K phrase-grouped kinetic ASS subtitles (`Noto Sans,132`, outline 8, shadow 5, MarginV=470)."""
     ass_lines = [
         "[Script Info]", "ScriptType: v4.00+", "PlayResX: 1440", "PlayResY: 2560", "WrapStyle: 2", "ScaledBorderAndShadow: yes", "",
         "[V4+ Styles]",
@@ -732,14 +859,22 @@ def write_short_kinetic_ass_2k(words: list[dict[str, Any]], total_duration: floa
         f"Style: KineticYellow,Noto Sans,{VIETSUB_FONT_SIZE},{KINETIC_YELLOW_ASS},{KINETIC_YELLOW_ASS},&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,8,5,2,60,60,470,1",
         "", "[Events]", "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text",
     ]
-    for idx, w in enumerate(words):
-        ws, we, se = float(w["start"]), float(w["end"]), float(w.get("seg_end", total_duration))
-        we = min(float(words[idx + 1]["start"]), se + 0.03, max(we, we + 0.10)) if idx + 1 < len(words) else min(total_duration, se + 0.04, we + 0.10)
+    phrases = _group_words_into_phrases(words)
+    for idx, ph in enumerate(phrases):
+        ws = max(0.0, float(ph["start"]))
+        we = float(ph["end"])
+        se = float(ph.get("seg_end", total_duration))
+        if idx + 1 < len(phrases):
+            next_ws = float(phrases[idx + 1]["start"])
+            we = min(next_ws, se + 0.04, max(we, we + 0.08))
+        else:
+            we = min(total_duration, se + 0.05, max(we, we + 0.08))
+        we = min(total_duration, we)
         if we <= ws + 0.02:
             we = min(total_duration, ws + 0.05)
-        token = re.sub(r"^[.,;:]+|[.,;:]+$", "", str(w.get("word", "")).strip().replace("{", "").replace("}", ""))
-        if token:
-            ass_lines.append(f"Dialogue: 0,{_fmt_ass_ts(ws)},{_fmt_ass_ts(we)},{'KineticRed' if idx % 2 == 0 else 'KineticYellow'},,0,0,0,,{token}")
+        style = "KineticRed" if ph["emphatic"] else "KineticYellow"
+        if ph["text"]:
+            ass_lines.append(f"Dialogue: 0,{_fmt_ass_ts(ws)},{_fmt_ass_ts(we)},{style},,0,0,0,,{ph['text']}")
     out_ass.parent.mkdir(parents=True, exist_ok=True)
     out_ass.write_text("\n".join(ass_lines) + "\n", encoding="utf-8")
     return out_ass

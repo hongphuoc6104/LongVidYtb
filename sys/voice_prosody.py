@@ -119,12 +119,25 @@ VOICE_DELIVERY_PROFILES: dict[str, dict[str, Any]] = {
 }
 
 
+DYNAMIC_MICRO_GAIN_DB: dict[str, float] = {
+    "tense_whisper": -2.6,
+    "narrative_cinema": 0.0,
+    "tactical_breakdown": 0.3,
+    "urgent_escalation": 1.4,
+    "climax_heroic": 2.2,
+    "reflective_lesson": -0.4,
+}
+
+
 def resolve_delivery_profile(mode: str | None) -> dict[str, Any]:
-    """Return a copy of the prosody delivery profile, defaulting unknown/None to `narrative_cinema`."""
+    """Return a copy of the prosody delivery profile with widened cinema dynamic contrast."""
     key = (mode or "").strip()
     if key not in VOICE_DELIVERY_PROFILES:
         key = DEFAULT_DELIVERY_MODE
-    return dict(VOICE_DELIVERY_PROFILES[key])
+    prof = dict(VOICE_DELIVERY_PROFILES[key])
+    if key in DYNAMIC_MICRO_GAIN_DB:
+        prof["micro_gain_db"] = DYNAMIC_MICRO_GAIN_DB[key]
+    return prof
 
 
 def split_text_with_pauses(text: str) -> list[dict[str, Any]]:
@@ -167,6 +180,7 @@ def split_text_with_pauses(text: str) -> list[dict[str, Any]]:
 __all__ = [
     "BASELINE_LUFS",
     "DEFAULT_DELIVERY_MODE",
+    "DYNAMIC_MICRO_GAIN_DB",
     "PAUSE_RE",
     "VOICE_DELIVERY_PROFILES",
     "resolve_delivery_profile",
