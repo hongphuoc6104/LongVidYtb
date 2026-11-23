@@ -6,11 +6,11 @@ Reference specification for generating 35mm live-action historical battle cinema
 
 Construct every image prompt in this exact 5-block order:
 
-1. **Block 1 — Camera & Shot Framing**: Shot scale, angle, lens/perspective, and subject placement from the 5-shot rotation matrix (e.g., `Wide establishing 35mm anamorphic shot, eye-level across a misty river embankment...`).
+1. **Block 1 — Camera & Shot Framing**: Shot scale, angle, lens/perspective, and subject placement from the 5-shot rotation matrix (e.g., `Wide establishing 35mm anamorphic shot, eye-level across a clear-air riverbank embankment...`).
 2. **Block 2 — Primary Subject & Action**: Concrete physical action, posture, and period-accurate 10th–11th century Đại Việt or Northern Song combatants/craftspeople/commanders in motion.
 3. **Block 3 — Period Costume, Armor & Props**: Explicit tactile materials (lamellar/laminar iron scales, lacquered leather, ramie/hemp tunics, ironwood stakes, bamboo shields, Song halberds) matching the faction vocabulary below.
-4. **Block 4 — Environment, Lighting & Atmosphere**: 10th–11th century Red River Delta / northern frontier terrain, mud, river mist, rain, torchlight, campfire embers, or overcast storm sky.
-5. **Block 5 — Film Stock & Clean-Frame Lock**: `Shot on 35mm Kodak Vision3 500T film, historical battle cinema docudrama, natural film grain, shallow cinema depth of field, photorealistic practical wardrobe and set, no text, no captions, no watermarks, no UI overlays.`
+4. **Block 4 — Environment, Lighting & Atmosphere**: 10th–11th century Red River Delta / northern frontier terrain with **Clear-Air 35mm Anamorphic Cinema Clarity** (`crisp optical clarity, deep-focus 35mm anamorphic depth, dramatic directional sunlight or warm Caravaggio torchlight chiaroscuro, rich tactile armor and terrain detail`), wet mud or rain only when story-specific. Never inject blanket `"river mist"`, `"drifting gunsmoke fog"`, or `"dense battlefield mist"` into default style locks.
+5. **Block 5 — Film Stock & Clean-Frame Lock**: `Shot on 35mm Kodak Vision3 500T film, historical battle cinema docudrama, crisp optical clarity, deep-focus 35mm anamorphic depth, dramatic directional sunlight or warm Caravaggio torchlight chiaroscuro, rich tactile armor and terrain detail, natural film grain, photorealistic practical wardrobe and set, no text, no captions, no watermarks, no UI overlays.`
 
 ## 2. Period-Accurate Positive Vocabulary (10th–11th Century)
 
@@ -41,8 +41,8 @@ Rotate continuously through these 5 camera setups across consecutive beats and s
 | **1** | **Wide Establishing** | 24mm–35mm, elevated or riverbank horizon | Geography, troop scale, river width, defensive line layout |
 | **2** | **Medium OTS (Over-the-Shoulder)** | 50mm, shoulder-height behind commander/scout | Tactical perspective, tension before engagement, spatial orientation |
 | **3** | **Tight Action Macro** | 85mm–100mm, shallow DoF, close-up | Hands stringing crossbow, ironwood stake tip, oar biting water, mud-splattered lamellar plates |
-| **4** | **Atmospheric Landscape** | 35mm–50mm, low mist / storm sky / torchlit smoke | Weather shift, tidal change, dawn/dusk passage of time, dread or calm before battle |
-| **5** | **Low-Angle Hero** | 28mm–35mm, looking upward at subject | Commander, standard-bearer, or vanguard warrior framed against smoke and sky |
+| **4** | **Atmospheric Landscape** | 35mm–50mm, crisp optical clarity / directional sunlight / torchlit chiaroscuro | Weather shift, tidal change, dawn/dusk passage of time, tension before battle |
+| **5** | **Low-Angle Hero** | 28mm–35mm, looking upward at subject | Commander, standard-bearer, or vanguard warrior framed against dramatic sky or warm torchlight |
 
 ## 5. Modular FX Warehouse Integration & Bespoke-Per-Campaign Rule
 
@@ -58,3 +58,15 @@ Rotate continuously through these 5 camera setups across consecutive beats and s
 
 - **100% 35mm Live-Action Epic Clarity (No Sand-Tables)**: Strictly **FORBID** clay/mud/wooden sand-tables (`tactical_sand_table`) and unlabelled symbol maps on `su_ke_lai` Shorts. Convey military maneuvers through immediately legible wide/aerial 35mm live-action cinema (torch-lit night sieges, monsoon cavalry ambushes, massed advancing columns, commander/king on war elephant, dawn banners unfurling).
 - **Screen-Text Law (`VIETSUB_FONT_SIZE >= 132px`)**: All post-render Short banner overlays (`heroic_banner`, `anchor_y=150`) MUST render at **`font_size >= VietSub` (`>= 132px` on `1440x2560`, target `136px`)**, **`<= 4` UPPERCASE words**, sharp `NotoSans-Bold.ttf` with thick black outline. Strictly **FORBID** multi-line telemetry boxes, small kickers, or tiny sublines. Raw Flow frames remain `allowed_text=None`.
+
+## 7. Anti-Smoke-Spam & 8-Effect Cinematic Diversity Rule (`su_ke_lai_viral_v4.1`)
+
+- **Clear-Air 35mm Anamorphic Cinema Clarity Default**: Every prompt and style lock MUST replace blanket haze (`"river mist"`, `"drifting gunsmoke fog"`, `"dense battlefield mist"`) with `"crisp optical clarity, deep-focus 35mm anamorphic depth, dramatic directional sunlight or warm Caravaggio torchlight chiaroscuro, rich tactile armor and terrain detail"`.
+- **`dust_smoke_cloud` Cap (`<= 1` per 20-beat Short)**: Allow **at most `1`** `dust_smoke_cloud` exit seam per 20-beat Short, and **ONLY** on genuine cannon or fire-weapon beats. Even there, `EXIT_SEAMS["dust_smoke_cloud"]` uses only a thin wisp of warm torch embers at the frame edge while keeping the hero subject and face razor-sharp (never opaque fog white-outs).
+- **Mandatory Exit-Seam Rotation**: Rotate across the 5 clean cinematic exit seams so no two consecutive Veo clips repeat the same exit seam:
+  - `edge_pass` — Kurosawa foreground architectural pillar / silk war-banner / shield edge wipe
+  - `dark_opening` — Caravaggio deep torchlit shadow archway pass
+  - `leaves_wipe` — 3D foreground bamboo / foliage parallax sweep
+  - `white_flash` — warm golden anamorphic sunbeam / torch flare across the lens
+  - `final_hold` — shallow-DoF anamorphic rack-focus settle onto the hero subject
+- **Beat-Matched FFmpeg `xfade` Transitions (`sys/short_engine/render_single_pass.py`)**: Every clip boundary auto-rotates beat-matched cinematic `xfade` transitions (`fadeblack` for `dark_opening`; `smoothleft` / `smoothright` alternating for `edge_pass` / `truck_lateral` / `tracking_alongside`; `dissolve` / `circleopen` for `white_flash` / `crane_up`; `fade` / `dissolve` for `final_hold` / `push_in` / `pull_back` / `orbit`) instead of uniform `fade`.

@@ -1,0 +1,392 @@
+{
+  "schema_version": "4.1",
+  "vault_type": "notebook_1_long_pattern_vault",
+  "pattern_id": "su_ke_lai_long_v9_1_m1_v4_gold_standard",
+  "supersedes": "su_ke_lai_long_v9_m1_imax_analytical_9_15m",
+  "channel_id": "su_ke_lai",
+  "channel_name": "Sử Kể Lại",
+  "channel_handle": "@SuKeLaiVN",
+  "youtube_channel_id": "UCrLlAXwHQlxkDPFN3aW66PA",
+  "format_profile": "long_16x9",
+  "generated_at": "2026-11-23T18:55:00+07:00",
+  "source_reports": [
+    "sys/channels/su_ke_lai/long_viral_pattern_brief_v3.json",
+    "sys/channels/su_ke_lai/notebooklm_long_viral_sources_pack.md",
+    "sys/channels/analytics_su_ke_lai/trending_30d_vn_long_oct_nov_2026.json",
+    "sys/channels/analytics_su_ke_lai/trending_30d_global_long_oct_nov_2026.json",
+    "sys/runs/vn_su_ke_lai_m1_voi_chien_1789_long/notes_notebooklm_1789.md",
+    "sys/runs/vn_su_ke_lai_m1_voi_chien_1789_long/fact_vault.json",
+    "sys/runs/vn_su_ke_lai_1789_ngoc_hoi_dong_da_full_m1/render_m1_from_scratch.py"
+  ],
+  "structure_only_compliance": {
+    "zero_copied_phrasing": true,
+    "folklore_quarantined_in_report_only": true,
+    "primary_chronicle_min_facts_long_m1_9_15m": 24,
+    "flagship_m1_1789_fact_vault_validated": {
+      "vault_path": "sys/runs/vn_su_ke_lai_m1_voi_chien_1789_long/fact_vault.json",
+      "notes_path": "sys/runs/vn_su_ke_lai_m1_voi_chien_1789_long/notes_notebooklm_1789.md",
+      "valid": true,
+      "verified_fact_count": 26,
+      "report_only_count": 6,
+      "gis_anchors_count": 12,
+      "includes_hoang_sa_and_truong_sa": true,
+      "pronunciation_glossary_count": 50,
+      "vietnam_micro_bridges_count": 6,
+      "errors": [],
+      "warnings": []
+    },
+    "banned_cta_words": [
+      "like",
+      "share",
+      "subscribe",
+      "đăng ký",
+      "nhấn chuông",
+      "bấm chuông"
+    ],
+    "youtube_title_max_chars": 55,
+    "forbid_serialized_prefix_in_title": true,
+    "forbidden_title_prefixes": [
+      "P1",
+      "P2",
+      "P3",
+      "Tập 1",
+      "Tập 2",
+      "Phần 1",
+      "Phần 2",
+      "Tóm tắt:"
+    ],
+    "visual_style_lock": "su_ke_lai_m1_v4_minimalist_imax_239_pure_cinema_zero_dizziness",
+    "enforce_from_scratch_single_campaign_narrative": true,
+    "forbid_stitching_unrelated_older_shorts": true,
+    "enforce_100pct_native_16x9_moving_flow_mp4_chains": true,
+    "forbid_static_png_slides": true,
+    "forbid_cropped_9x16_portrait_clips": true,
+    "forbid_pillow_2d_3d_cartoon_maps_and_map_dive": true,
+    "forbid_horizontal_whip_slides_directional_flow_chain_transition": true,
+    "forbid_artificial_pan_zoom_jitter_on_moving_video": true,
+    "forbid_full_sentence_bottom_subtitles": true,
+    "forbid_two_tier_46px_titles_and_every_beat_text": true,
+    "forbid_chapter_card_subtitle_and_gold_divider": true,
+    "forbid_black_bar_text_chrome": true,
+    "forbid_rectangular_text_boxes_and_left_accent_bars": true,
+    "forbid_screen_shake_nausea": true,
+    "forbid_face_or_subject_text_overlap": true,
+    "forbid_smoke_fog_mist_transitions_long_16x9": true,
+    "forbid_blanket_mist_and_dark_muddy_grade": true,
+    "forbid_modern_five_pointed_star_flags": true,
+    "forbid_cyberpunk_hud_and_sniper_reticles": true,
+    "forbid_arcade_vs_health_bars_and_neon_slashes": true,
+    "flow_model_deprecation_lock": {
+      "allowed_active_models": [
+        "BELUGA (Nano Banana 2.1, 0 video credits)",
+        "veo_3_1_i2v_s_lite (10c flat Seam Mode)",
+        "macaron_cookie_i2v_fl_8s (Omni 1.2 Flash Frame-Link)"
+      ],
+      "forbidden_retired_or_retiring_models": [
+        "veo_extend (retired 2026-11-05)",
+        "veo_3_1_fast (retiring 2026-12-05)",
+        "veo_3_1_quality (retiring 2026-12-05)",
+        "omni_1_1 (retiring 2026-12-05)"
+      ]
+    }
+  },
+  "nine_to_fifteen_min_tactical_analysis_benchmark": {
+    "target_duration_window_sec": [540, 900],
+    "sweet_spot_duration_formatted": "10m00s - 12m00s (600s - 720s; flagship verified 621.70s = 10m21.7s)",
+    "strategic_rationale": "Oct-Nov 2026 empirical forensics + V4 (V9.1) Gold Standard user validation prove a 100% from-scratch 10-chapter / 100-beat (~10-12m) single-campaign analytical documentary delivers peak views/day velocity and big-screen TV/Desktop retention without stitched-short whiplash or mid-video bloat.",
+    "empirical_9_15m_benchmark_leaders": [
+      {
+        "channel": "BATTLECRY - NGƯỜI KỂ SỬ",
+        "video_ids": ["LbGjLmiz4MM (13m57s, 139.1k/d)", "PbgRXtWWdXg (13m39s, 13.0k/d)", "12EaXKXs8bE (14m17s, 3.7k/d)"],
+        "takeaway": "Tight 10m-14m tactical puzzle framing: asymmetric threat -> secret weapon/trap engineering -> chronological kill-chain climax."
+      },
+      {
+        "channel": "CD Media - Quân Sự",
+        "video_ids": ["H6QSWNJMQss (09m49s, 42.3k/d, 635k views)", "zzTysentMxw (16m50s, 9.0k/d)"],
+        "takeaway": "Counter-intuitive causal 'Why/How' engineering breakdowns with clear operational escalation."
+      },
+      {
+        "channel": "Chuyện Có Lý",
+        "video_ids": ["FraUmjAqJFk (14m40s, 10.6k/d)"],
+        "takeaway": "High-density myth-vs-fact chapter architecture sustaining 10m-14m curiosity loops with primary-source corrections."
+      },
+      {
+        "channel": "SandRhoman History",
+        "video_ids": ["haU-nt6-c90 (13m02s, 86.4k/d)"],
+        "takeaway": "Pre-modern warfare physics & comparative doctrinal evolution (why one unit/weapon beats a superior force)."
+      },
+      {
+        "channel": "CaspianReport & The Armchair Historian & Battle Order",
+        "video_ids": ["Fwl-tTfthJg (14m46s, 69.8k/d)", "EtGLIBsJuec (14m46s, 30.8k/d)", "nNfr7ChsF6c (14m26s, 18.9k/d)"],
+        "takeaway": "Disciplined chapter pacing combining geographic chokepoints, unit TO&E anatomy, and weapon physics."
+      },
+      {
+        "channel": "CLD Studio, Yarnhub, Epic History TV, Kings & Generals, The Operations Room",
+        "video_ids": ["w5W-oD5IPm8 (1.28M)", "ZCMIlZ2-eIU (915.5k/d)", "JhVc-bbn2p0 (258.1k/d)", "BTs75T-Ree8 (44.1k/d)", "EU-nV5FxKf0"],
+        "takeaway": "Unobstructed cinema coverage + 60-90s causal retention resets + 10 explicit chronological chapters."
+      }
+    ],
+    "chapter_architecture_10_chapters_100_beats": {
+      "from_scratch_single_campaign_only": true,
+      "forbid_stitching_unrelated_shorts": true,
+      "canonical_chapters": 10,
+      "canonical_beats": 100,
+      "native_16x9_flow_2beat_chains": 50,
+      "chapter_card_duration_sec": 3.6,
+      "chapter_card_min_full_opacity_sec": 3.0,
+      "ten_chapter_flagship_spine_1789": [
+        {
+          "chapter": 1,
+          "header": "CHƯƠNG I",
+          "core_title": "29 VẠN QUÂN THANH",
+          "beats": "beat_000..009",
+          "role": "Paradox Cold-Open Hook & Impossible Odds (beat_000 <= 24 syl, zero pause, 100% text-free)"
+        },
+        {
+          "chapter": 2,
+          "header": "CHƯƠNG II",
+          "core_title": "HÀNH QUÂN THẦN TỐC",
+          "beats": "beat_010..019",
+          "role": "Logistics Math, Coronation & Forced-March Speed (cáng 3 người thay phiên, ăn Tết trước)"
+        },
+        {
+          "chapter": 3,
+          "header": "CHƯƠNG III",
+          "core_title": "5 ĐẠO QUÂN TÂY SƠN",
+          "beats": "beat_020..029",
+          "role": "Multi-Pronged Strategic Deployment & Blocking Columns"
+        },
+        {
+          "chapter": 4,
+          "header": "CHƯƠNG IV",
+          "core_title": "ĐÊM HẠ ĐỒN HÀ HỒI",
+          "beats": "beat_030..039",
+          "role": "Intelligence Blackout & Bloodless Midnight Mùng 3 Surrender"
+        },
+        {
+          "chapter": 5,
+          "header": "CHƯƠNG V",
+          "core_title": "TỬ ĐỊA NGỌC HỒI",
+          "beats": "beat_040..049",
+          "role": "Asymmetric Fortress Chokepoint & Artillery Killing Zone"
+        },
+        {
+          "chapter": 6,
+          "header": "CHƯƠNG VI",
+          "core_title": "MỘC BÀI RƠM ƯỚT",
+          "beats": "beat_050..059",
+          "role": "Counter-Measure Engineering #1: Wet-Straw Mobile Wooden Shields"
+        },
+        {
+          "chapter": 7,
+          "header": "CHƯƠNG VII",
+          "core_title": "VOI CHIẾN & HỎA HỔ",
+          "beats": "beat_060..069",
+          "role": "Weapon & Unit Engineering #2: 100 Armored War Elephants + 900°C Hỏa Hổ Fire Tubes"
+        },
+        {
+          "chapter": 8,
+          "header": "CHƯƠNG VIII",
+          "core_title": "BIỂN LỬA ĐỐNG ĐA",
+          "beats": "beat_070..079",
+          "role": "Combined-Arms Dawn Climax, North Wind & Đống Đa / Đầm Mực Collapse"
+        },
+        {
+          "chapter": 9,
+          "header": "CHƯƠNG IX",
+          "core_title": "TIẾN VÀO THĂNG LONG",
+          "beats": "beat_080..089",
+          "role": "Gunpowder-Blackened Red War-Robe Capital Entry & Primary-Chronicle Proof"
+        },
+        {
+          "chapter": 10,
+          "header": "CHƯƠNG X",
+          "core_title": "NƯỚC CỜ GIẢ VƯƠNG",
+          "beats": "beat_090..099",
+          "role": "Post-War Diplomacy, Strategic Legacy & 2-Choice Debate Outro"
+        }
+      ],
+      "mandatory_retention_reset_every_60_90s": {
+        "cadence_sec": [60, 90],
+        "three_beat_formula": "Causal 'Why Didn't They Just...' Objection -> Physical/Tactical Constraint -> Counter-Intuitive Engineering Solution"
+      }
+    }
+  },
+  "mau_m1_imax_visual_and_typography_contract": {
+    "core_philosophy": "User-approved V4 (V9.1) Gold Standard: 100% from-scratch single-campaign 10-chapter/100-beat documentary built on 50 native 16:9 moving Flow .mp4 2-beat chains (zero static PNGs, zero 9:16 crops, zero Pillow cartoon maps), zero-dizziness continuous playback (zero whip-slides, zoom=1.0, dx=0.0, dy=0.0, calm 0.20s stationary dissolves), pure cinema-black IMAX 2.39:1 bars, minimalist CHƯƠNG I..X cards (no subtitle, no divider), and ultra-sparse (~20-25%) single-line verbatim emphasis keywords.",
+    "imax_239_letterbox_geometry": {
+      "aspect_ratio_target": "2.39:1",
+      "preview_360p": {
+        "canvas": "640x360@30fps",
+        "scale_factor": 1.0,
+        "bar_height_px": 38,
+        "active_picture_height_px": 284,
+        "gold_gate_hairline_rgba": [214, 174, 96, 170],
+        "gold_gate_hairline_width_px": 1,
+        "watermark_size_px": 34,
+        "watermark_margin_px": 10
+      },
+      "master_1080p": {
+        "canvas": "1920x1080@30fps",
+        "scale_factor": 3.0,
+        "crf": 16,
+        "source_decode_resolution": "1280x720 -> 1280x568 active -> INTER_LANCZOS4 upscale 1920x852 + optical unsharp + native vector typography",
+        "bar_height_px": 114,
+        "active_picture_height_px": 852,
+        "gold_gate_hairline_width_px": 3,
+        "watermark_asset": "sys/channels/su_ke_lai/assets/watermark_150x150.png",
+        "watermark_size_px": 84,
+        "watermark_margin_px": 30
+      },
+      "master_2k": {
+        "canvas": "2560x1440@30fps",
+        "scale_factor": 4.0,
+        "bar_height_px": 152,
+        "active_picture_height_px": 1136,
+        "gold_gate_hairline_width_px": 3,
+        "watermark_asset": "sys/channels/su_ke_lai/assets/watermark_150x150.png",
+        "watermark_position": "W-w-36:H-h-36"
+      },
+      "letterbox_chrome": {
+        "pure_cinema_black_bars": true,
+        "top_left": "",
+        "top_right": "",
+        "bottom_left": "",
+        "bottom_right": "@SuKeLaiVN watermark ONLY"
+      }
+    },
+    "minimalist_chapter_title_card_contract": {
+      "duration_sec": 3.6,
+      "kicker_format": "Small tracked CHƯƠNG I .. CHƯƠNG X (Oswald-Bold.ttf)",
+      "core_title_words_range": [3, 4],
+      "core_title_font_px": {
+        "preview_360p": 30,
+        "master_1080p": 90,
+        "master_2k_1440p": 120
+      },
+      "card_subtitle": "",
+      "gold_divider_line": false,
+      "background_mode": "Bright vivid native 16:9 moving cinema clip",
+      "background_vignette_range": [0.56, 0.72]
+    },
+    "bright_golden_dawn_color_grade": {
+      "function_ref": "apply_bright_golden_dawn_grade",
+      "exposure_lift": 0.17,
+      "warmth_bias": 0.14,
+      "gamma_ceiling": 0.85,
+      "upscale_kernel": "INTER_LANCZOS4",
+      "unsharp_optical_clarity_boost": true,
+      "anti_murk_rule": "Strictly ban dark, muddy, desaturated, or fog-choked battle frames; preserve luminous golden dawn highlights and crisp armor/terrain texture for 73.8% big-screen TV/Desktop viewers."
+    },
+    "sparse_single_line_verbatim_keywords": {
+      "density_pct_range": [20, 25],
+      "text_free_pure_cinema_pct_range": [75, 80],
+      "keywords_per_chapter_range": [2, 3],
+      "min_spacing_sec_range": [18, 25],
+      "forbid_on_chapter_opening_beat_x0": true,
+      "verified_flagship_count": "22/100 keyword beats (78/100 pure text-free cinema)",
+      "single_line_only": true,
+      "top_word": "",
+      "font_asset": "sys/assets/fonts/chanh_niem_ke/BarlowCondensed-ExtraBold.ttf",
+      "font_px": {
+        "preview_360p": 22,
+        "master_1080p": 66,
+        "master_2k_1440p": 88
+      },
+      "fill_hex": "#FFF5D6",
+      "optical_backing": "ROI-composited soft shadow in open-sky negative space; ZERO rectangular boxes, ZERO vertical accent bars, ZERO 2-tier 46px headers.",
+      "open_sky_face_avoidance_placement": {
+        "face_overlap_pct": 0,
+        "rule": "Always anchor in verified open-sky or upper negative space opposite hero subjects and faces."
+      },
+      "pop_in_animation_and_sync": {
+        "screen_shake_px": 0,
+        "optical_pop_scale": [1.06, 1.0],
+        "optical_pop_duration_sec": 0.16,
+        "easing": "ease_out_cubic",
+        "keyword_sync_source": "10ms RMS acoustic word alignment (_find_word_offset) synced verbatim to target_keyword"
+      },
+      "examples_1789": [
+        "TÔN SĨ NGHỊ",
+        "MỘC BÀI RƠM ƯỚT",
+        "ĐẠI BÁC TRÊN LƯNG",
+        "HỎA HỔ",
+        "ĐẠI PHÁ NGỌC HỒI"
+      ]
+    },
+    "audio_and_tactile_1789_sfx_contract": {
+      "voice_profile": "VietNarrator_su_ke_lai @ 1.30x (3.80-4.15 syl/s)",
+      "sample_rate_hz": 48000,
+      "channels": "stereo",
+      "master_loudness_target_lufs": -11.0,
+      "master_loudness_tolerance_lu": 0.7,
+      "true_peak_ceiling_dbtp": -1.0,
+      "tactile_sfx_relative_db": -14.0,
+      "tactile_sfx_trigger_policy": "ONLY on sparse keyword beats (~20-25% of beats); zero SFX hits on text-free beats",
+      "approved_1789_sfx_kinds": [
+        "elephant_trumpet",
+        "war_drum",
+        "fire_roar",
+        "steel_drum"
+      ],
+      "chapter_card_audio_bed": "Deep bronze war-drum + gong swell across 3.60s minimalist chapter card with 0.25s breathing silence before narration resumes",
+      "banned_sfx": [
+        "radar/sonar reticle pings",
+        "arcade laser/lightsaber slashes",
+        "sci-fi glitch bursts"
+      ]
+    }
+  },
+  "zero_dizziness_continuous_video_chain_contract": {
+    "native_16x9_moving_video_chains": {
+      "total_chains": 50,
+      "beats_per_chain": 2,
+      "total_beats_covered": 100,
+      "static_png_slides_allowed": 0,
+      "cropped_9x16_clips_allowed": 0,
+      "pillow_cartoon_map_dives_allowed": 0,
+      "moving_video_camera_lock": {
+        "zoom": 1.0,
+        "dx": 0.0,
+        "dy": 0.0,
+        "cy": 0.44
+      },
+      "intra_chain_continuous_playback": {
+        "even_beat_window_sec": [0.0, 3.3],
+        "odd_beat_window_sec": [3.3, 6.6],
+        "clip_clean_max_sec": 6.6,
+        "intra_chain_blend_sec": 0.0,
+        "intra_chain_mae_target": 0.0
+      },
+      "inter_chain_transition": {
+        "type": "stationary_optical_cross_dissolve",
+        "duration_sec": 0.2,
+        "pixel_shift_px": 0,
+        "smoke_transitions_pct": 0
+      },
+      "permanently_banned_transitions_and_inserts": [
+        "directional_flow_chain_transition (horizontal whip-slide)",
+        "map_dive / _render_3d_map_dive (Pillow 2D/3D vector cartoon maps)",
+        "dust_smoke_cloud",
+        "river_mist_map_dive",
+        "procedural_fog_wipe",
+        "procedural_mist_wipe"
+      ]
+    },
+    "single_campaign_cohesion_rule": {
+      "from_scratch_only": true,
+      "forbid_stitching_older_shorts": true,
+      "rule": "Every 9-15m flagship Long episode is written, voiced, and rendered 100% from scratch as one cohesive 10-chapter / 100-beat campaign, closing with a single 2-Choice Debate Outro exclusively at Chapter X."
+    }
+  },
+  "outro_debate_and_publish_lock": {
+    "publish_slots_gmt7": [
+      "Thursday 19:30 GMT+7",
+      "Sunday 19:30 GMT+7"
+    ],
+    "avoid_dead_zone_gmt7": "01:00-04:00 AM",
+    "target_comment_to_view_pct": ">= 0.15%",
+    "thumbnail_rule": "Flow-native 16:9 35mm live-action thumbnail with 2-4 uppercase Vietnamese words rendered directly in frame (< 2MB, zero PIL/HTML text overlays).",
+    "two_choice_debate_outro": "Final 15% closes the historical arc with ONE polarizing 2-choice historical judgment question mirrored verbatim in the @SuKeLaiVN Pinned Comment (zero banned CTA words)."
+  }
+}

@@ -6,6 +6,10 @@
   "voice_id": "VietNarrator_su_ke_lai",
   "speaking_rate": 1.30,
   "inter_beat_gap_sec": 0.06,
+  "publish_policy": {
+    "short_attach_related_video": false,
+    "short_attach_related_video_note": "Temporarily disabled per user request (2026-11-20): do not attach related long videos on su_ke_lai Shorts."
+  },
   "watermark": {
     "asset": "sys/channels/su_ke_lai/assets/watermark_150x150.png",
     "source": "sys/channels/su_ke_lai/assets/watermark_v2_epic_150x150.png",
@@ -15,8 +19,8 @@
   },
   "visual_grammar": {
     "version": "su_ke_lai_35mm_live_action_v3",
-    "label": "Option 1 — 35mm Historical Live-Action Docudrama",
-    "visual_style_lock": "Shot on 35mm Kodak Vision3 500T film, historical battle cinema docudrama, Ridley Scott Kingdom of Heaven aesthetic, practical period-accurate 10th-11th century Dai Viet lamellar armor and Song Dynasty iron laminar armor, authentic wet mud, river mist, torchlight chiaroscuro, shallow depth of field, natural film grain, zero CGI plasticity, zero text in frame.",
+    "label": "Option 1 — 35mm Historical Live-Action Docudrama (Clear-Air V4.1)",
+    "visual_style_lock": "Shot on 35mm Kodak Vision3 500T film, historical battle cinema docudrama, Ridley Scott Kingdom of Heaven aesthetic, practical period-accurate 10th-11th century Dai Viet lamellar armor and Song Dynasty iron laminar armor, authentic wet mud, crisp optical clarity, deep-focus 35mm anamorphic depth, dramatic directional sunlight or warm Caravaggio torchlight chiaroscuro, rich tactile armor and terrain detail, natural film grain, zero CGI plasticity, zero text in frame.",
     "negative_constraints": "NO 2D cartoon, NO vector illustration, NO woodblock print, NO modern glasses, NO wristwatches, NO neon, NO glowing magic, NO samurai katana, NO European plate armor, NO AI gibberish text, NO signage, NO banners with text, NO cherry blossoms, NO plastic skin",
     "fast_cutting_rule": {
       "core_zero_filler_sentences": 120,
@@ -48,7 +52,7 @@
     "tier_descriptions": {
       "TIER_1_WARROOM_MAP": "3D topographical tactical warroom diorama (Kings and Generals / Fern), deep slate-earth topography, torchlit contours, military arrows and troop formations.",
       "TIER_2_TACTICAL_CUTAWAY": "3D cross-section and mechanical military cutaway (submerged ironwood stakes, trebuchet/crossbow/fireship diagrams, layered defense geometry).",
-      "TIER_3_EPIC_BATTLE_PAINTING": "Dramatic heroic historical oil painting / cinema still in torchlight, iron and bronze armor, stormy battlefield skies, billowing smoke and crimson banners."
+      "TIER_3_EPIC_BATTLE_PAINTING": "Dramatic heroic historical cinema still with crisp optical clarity, deep-focus 35mm anamorphic depth, dramatic directional sunlight or warm Caravaggio torchlight chiaroscuro, rich tactile armor and terrain detail, and crimson banners."
     },
     "long_resolution": "2560x1440",
     "short_resolution": "1080x1920",
@@ -79,6 +83,124 @@
       "mp4_relpath": "video/vn_su_ke_lai_ep04_nhu_nguyet_1077_short/final_short_2k.mp4",
       "mp4_bytes": 85931152,
       "mp4_sha256": "c64bf93fa89927a265e41eea3ecd57045ea0477450283bf2a78f42eaba312c5a"
+    }
+  },
+  "viral_v4_protocol": {
+    "version": "su_ke_lai_viral_v4",
+    "cinematic_diversity_rule_v4_1": {
+      "version": "su_ke_lai_viral_v4.1",
+      "clear_air_style_lock": "crisp optical clarity, deep-focus 35mm anamorphic depth, dramatic directional sunlight or warm Caravaggio torchlight chiaroscuro, rich tactile armor and terrain detail",
+      "forbidden_default_haze_tokens": ["river mist", "drifting gunsmoke fog", "dense battlefield mist"],
+      "max_dust_smoke_cloud_seams_per_20_beat_short": 1,
+      "dust_smoke_cloud_allowed_only_on": "genuine cannon or fire-weapon beats (frame-edge translucent torch ember wisp only, never opaque fog white-out)",
+      "mandatory_seam_rotation": ["edge_pass", "dark_opening", "leaves_wipe", "white_flash", "final_hold"],
+      "beat_matched_xfade_transitions": ["fadeblack", "smoothleft", "smoothright", "dissolve", "circleopen", "fade"]
+    },
+    "target_views_range": "100,000 - 3,590,000+ views",
+    "standalone_mass_curiosity_packaging": {
+      "forbid_part_number_prefix_in_title": true,
+      "forbidden_title_prefixes": ["P1", "P2", "P3", "P4", "P5", "P6", "Tập 1", "Tập 2", "Phần 1", "Phần 2"],
+      "max_youtube_title_chars": 55,
+      "max_hook_b00_syllables": 18,
+      "target_hook_b00_syllables": 16,
+      "forbid_hook_b00_pause": true,
+      "forbid_obscure_geo_jargon_in_hook": true
+    },
+    "viral_content_pillars": [
+      {
+        "pillar_id": "PILLAR_1_FOLK_SAYING_ORIGIN",
+        "label_vi": "Giải Mã Câu Nói / Thành Ngữ Lịch Sử Quen Thuộc",
+        "examples_vi": ["Hăm mốt Lê Lai, hăm hai Lê Lợi", "Nợ như Chúa Chổm", "Sợ Tây Sơn như sợ cọp"]
+      },
+      {
+        "pillar_id": "PILLAR_2_ELITE_UNIT_SECRET_WEAPON",
+        "label_vi": "Binh Chủng Tinh Nhuệ & Vũ Khí Bí Mật Đại Việt",
+        "examples_vi": ["Tượng binh Tây Sơn", "Hỏa hổ & Thần cơ sang pháo", "Lính Cảm tử Sát Thát", "Nỏ Liên Châu"]
+      },
+      {
+        "pillar_id": "PILLAR_3_COMMANDER_EMPEROR_RANKING",
+        "label_vi": "Xếp Hạng / Đối Chiếu Danh Tướng & Hoàng Đế",
+        "examples_vi": ["Những vị Vua Việt Nam trực tiếp cầm gươm ra trận", "3 danh tướng chưa từng thua một trận nào"]
+      },
+      {
+        "pillar_id": "PILLAR_4_LIFE_OR_DEATH_DECEPTION",
+        "label_vi": "Khoảnh Khắc Sinh Tử & Cú Lừa Quân Sự Kinh Điển",
+        "examples_vi": ["Kế giả hàng và bức thư dụ địch", "Vườn không nhà trống", "Mật kế hành quân đêm giao thừa"]
+      },
+      {
+        "pillar_id": "PILLAR_5_POST_VICTORY_FATE",
+        "label_vi": "Số Phận & Góc Khuất Sau Chiến Thắng",
+        "examples_vi": ["Số phận các công thần khai quốc", "Bí ẩn sau đại thắng trong chính sử"]
+      }
+    ],
+    "dual_duration_pacing_modes": {
+      "viral_fast_loop_short": {
+        "mode_label": "Mode A+ (High-APV Fast Loop Viral Short)",
+        "duration_range_sec": [54, 72],
+        "beats_range": [15, 16],
+        "avg_sec_per_beat": 3.8,
+        "target_apv_pct": 90.0,
+        "reference_channels": ["CD Media - Quân Sự (51-74s, 456K-772K views)", "Sử Lược - Tóm Tắt Lịch Sử (43-55s, 213K-697K views)"]
+      },
+      "serialized_detail_short": {
+        "mode_label": "Mode B (Serialized Heroic & Multi-Case Short)",
+        "duration_range_sec": [105, 145],
+        "beats_range": [20, 24],
+        "default_beats": 20,
+        "default_chunks": 4,
+        "reference_channels": ["Dòng Máu Việt (137-167s, 761K-3.59M views)"]
+      }
+    },
+    "debate_trigger_ending_rule": {
+      "require_2_choice_judgment_question_in_outro": true,
+      "require_matching_pinned_comment": true,
+      "target_comment_to_view_ratio_pct": 0.15
+    },
+    "verified_competitor_benchmarks": [
+      {
+        "channel_name": "Dòng Máu Việt",
+        "channel_id": "UCpXhSnIKT-oxLAU4B-76GRg",
+        "harvested_shorts_count": 13,
+        "avg_views_30d": 1047638,
+        "peak_views_30d": 3591938,
+        "avg_duration_sec": 139.8,
+        "avg_syllables_per_sec": 4.15,
+        "top_short_ids": ["n9oZSIRTLUo", "7QrEPUHLzgI", "F4FUWZaVoaI", "exQOdR_i16A", "g3iwANHmzl4", "5OQg0SEiJrc", "a4uUFYSvJIc", "UQrgEvoyGgo", "Po0dZk8NSco"]
+      },
+      {
+        "channel_name": "CD Media - Quân Sự",
+        "channel_id": "UC35gdWUdW1hzgS02Oz8kMUQ",
+        "harvested_shorts_count": 9,
+        "avg_views_30d": 265639,
+        "peak_views_30d": 772480,
+        "recent_views_range": "91,874 - 456,641 (peak 772,480)",
+        "avg_duration_sec": 66.9,
+        "avg_syllables_per_sec": 3.60,
+        "top_short_ids": ["XN05y-9LIKE", "7pJgdZpuaNE", "qR5LJRcJebA", "3L9_4l_dSRM", "MK4BsPhNAec", "6r5Zu1SBbPA"]
+      },
+      {
+        "channel_name": "Sử Lược - Tóm Tắt Lịch Sử",
+        "channel_id": "UCJDueHzfSEXmgMhmKIa9esQ",
+        "avg_views": 455644,
+        "views_range": "213,342 - 697,946",
+        "avg_duration_sec": 49.0,
+        "avg_syllables_per_sec": 4.55
+      },
+      {
+        "channel_name": "EZ Sử",
+        "channel_id": "UCpaQwg8wZRAkFJe3mo1VKSA",
+        "avg_views": 283831,
+        "views_range": "194,964 - 372,698",
+        "avg_duration_sec": 59.5,
+        "avg_syllables_per_sec": 5.04
+      }
+    ],
+    "ssot_artifacts": {
+      "competitor_benchmark_30d": "sys/channels/analytics_su_ke_lai/viral_competitor_benchmark_30d.json",
+      "transcripts_dir_30d": "sys/channels/analytics_su_ke_lai/viral_transcripts_30d",
+      "notebooklm_sources_pack": "sys/channels/su_ke_lai/notebooklm_viral_sources_pack.md",
+      "viral_pattern_brief_v4": "sys/channels/su_ke_lai/viral_pattern_brief_v4.json",
+      "viral_topic_bank_100k_1m": "sys/channels/su_ke_lai/viral_topic_bank_100k_1m.json"
     }
   }
 }

@@ -1,0 +1,358 @@
+{
+  "schema_version": "3.2",
+  "vault_type": "notebook_1_long_pattern_vault",
+  "pattern_id": "su_ke_lai_long_v8_continuous_chain",
+  "supersedes": "su_ke_lai_long_v7_zero_box_breathing_cinema",
+  "channel_id": "su_ke_lai",
+  "channel_name": "Sử Kể Lại",
+  "channel_handle": "@SuKeLaiVN",
+  "youtube_channel_id": "UCrLlAXwHQlxkDPFN3aW66PA",
+  "format_profile": "long_16x9",
+  "generated_at": "2026-11-22T22:45:00+07:00",
+  "source_reports": [
+    "sys/channels/analytics_su_ke_lai/v8_full_10min_continuous_chain_plan.json",
+    "sys/channels/analytics_su_ke_lai/v7_breathing_pacing_cut_plan.json",
+    "sys/channels/analytics_su_ke_lai/v7_zero_box_typography_spec.json",
+    "sys/channels/analytics_su_ke_lai/v6_perspective4_notebooklm_deep_synthesis.json",
+    "sys/channels/analytics_su_ke_lai/trending_30d_vn_long_oct_nov_2026.json",
+    "sys/channels/analytics_su_ke_lai/trending_30d_global_long_oct_nov_2026.json",
+    "sys/channels/analytics_su_ke_lai/long_visual_vfx_story_formula_v2.json",
+    "sys/channels/analytics_su_ke_lai/su_ke_lai_existing_long_audit.json",
+    "sys/channels/su_ke_lai/notebooklm_long_viral_sources_pack.md",
+    "sys/runs/vn_su_ke_lai_long_viral_ep01_demo/fact_vault.json"
+  ],
+  "structure_only_compliance": {
+    "zero_copied_phrasing": true,
+    "folklore_quarantined_in_report_only": true,
+    "primary_chronicle_min_facts_long": 12,
+    "ep01_fact_vault_validated": {
+      "vault_path": "sys/runs/vn_su_ke_lai_long_viral_ep01_demo/fact_vault.json",
+      "valid": true,
+      "verified_fact_count": 20,
+      "report_only_count": 5,
+      "gis_anchors_count": 10,
+      "pronunciation_glossary_count": 30,
+      "errors": [],
+      "warnings": []
+    },
+    "banned_cta_words": [
+      "like",
+      "share",
+      "subscribe",
+      "đăng ký",
+      "nhấn chuông",
+      "bấm chuông"
+    ],
+    "youtube_title_max_chars": 55,
+    "forbid_serialized_prefix_in_title": true,
+    "forbidden_title_prefixes": [
+      "P1",
+      "P2",
+      "P3",
+      "Tập 1",
+      "Tập 2",
+      "Phần 1",
+      "Phần 2",
+      "Tóm tắt:"
+    ],
+    "visual_style_lock": "su_ke_lai_35mm_live_action_v3_clear_air_v4_1_plus_v8_continuous_2frame_chain_zero_smoke",
+    "forbid_blanket_mist_and_smoke_spam": true,
+    "forbid_smoke_fog_mist_transitions_long_16x9": true,
+    "forbid_river_mist_map_dive_long_16x9": true,
+    "forbid_dust_smoke_cloud_tail_over_5_15s": true,
+    "enforce_2frame_continuous_chain_same_scene": true,
+    "enforce_v8_comfortable_reading_hold": true,
+    "forbid_modern_five_pointed_star_flags": true,
+    "forbid_cyberpunk_hud_and_sniper_reticles": true,
+    "forbid_arcade_vs_health_bars_and_neon_slashes": true,
+    "forbid_opaque_cad_boxes_over_15pct_frame": true,
+    "forbid_rectangular_text_boxes_and_left_accent_bars": true,
+    "forbid_floating_paper_quote_rectangles_and_pill_badges": true,
+    "forbid_micro_cuts_under_3_2_sec": true,
+    "forbid_geometric_ms_paint_war_maps": true,
+    "forbid_decapitated_9x16_center_crops": true,
+    "forbid_unmotivated_mid_sentence_kinetic_slashes": true,
+    "flow_model_deprecation_lock": {
+      "allowed_active_models": [
+        "BELUGA (Nano Banana 2.1, 0 video credits)",
+        "veo_3_1_i2v_s_lite (10c flat Seam Mode)",
+        "macaron_cookie_i2v_fl_8s (Omni 1.2 Flash Frame-Link)"
+      ],
+      "forbidden_retired_or_retiring_models": [
+        "veo_extend (retired 2026-11-05)",
+        "veo_3_1_fast (retiring 2026-12-05)",
+        "veo_3_1_quality (retiring 2026-12-05)",
+        "omni_1_1 (retiring 2026-12-05)"
+      ]
+    }
+  },
+  "v6_prestige_documentary_cohesion_contract": {
+    "core_philosophy": "Google Flow 35mm live-action cinema is the HERO (80%-85% of runtime, >=85% of every cinema frame unobstructed). Graphics, relief cartography, and archival citations serve strictly as era-authentic museum/documentary accents that clarify geography, identity, and primary-source proof without ever clashing with Kodak 35mm optics.",
+    "visual_runtime_budget_pct": {
+      "unobstructed_35mm_live_cinema_and_diegetic_accents": [80, 85],
+      "fullscreen_shaded_relief_cartography_and_parchment_plates": [15, 20]
+    },
+    "ten_laws_contract": {
+      "law_01_diegetic_graphic_restraint": {
+        "min_unobstructed_cinema_frame_pct": 85,
+        "max_overlay_area_pct": 15,
+        "placement": "Natural negative space (bottom 15%, left/right 20% margin) with feathered gradient alpha (max 0.58 warm charcoal scrim); zero opaque CAD boxes."
+      },
+      "law_02_era_consistent_materiality_1785": {
+        "palette": {
+          "warm_ink_charcoal": "#1A1612",
+          "aged_parchment": "#E3D6BA",
+          "antique_bronze_gold": "#C49A52",
+          "cinnabar_vermilion": "#8F2B24",
+          "indigo_river_ink": "#2C4252",
+          "ivory_serif_text": "#F2E9D8"
+        },
+        "typography": "Editorial/woodblock serif for historical titles & chronicle quotes; understated small-caps humanist sans for dates/provenance.",
+        "banned_visual_tropes": [
+          "rotating sniper crosshair reticle",
+          "neon lightsaber diagonal slash",
+          "mobile-game VS health bars",
+          "cold #0C1017/#10151E opaque digital modals"
+        ]
+      },
+      "law_03_semantic_word_to_picture_lock": {
+        "clause_cut_cadence_sec": [3.0, 4.5],
+        "max_unbroken_shot_hold_sec": 5.5,
+        "subshot_split_rule": "Split every >5.5s spoken beat into Sub-shot A (Context/Establishing) -> Sub-shot B (Named Action/Close-Up/Corner Mini-Map PiP) matching exact spoken nouns and verbs."
+      },
+      "law_04_hybrid_map_to_cinema_bridge": {
+        "fullscreen_map_max_runtime_pct": 20,
+        "fullscreen_map_beat_sec": [4.0, 6.0],
+        "cartography_engine_requirement": "Real shaded topographic/bathymetric relief + organic river hydrology driven by Fact Vault [lon, lat] anchors (with explicit HOÀNG SA & TRƯỜNG SA markers on regional Vietnam maps); zero geometric oval diagrams.",
+        "live_battle_bridge": "Use subtle corner Tactical Mini-Map PiP (<=15% frame area, antique-bronze frame) over live 35mm combat footage, plus smooth Map-to-Cinema Camera Dive when entering a location."
+      },
+      "law_05_widescreen_16x9_integrity": {
+        "min_headroom_pct": 8,
+        "vertical_archive_rule": "Zero blind 9:16 center-crops. Use headroom-locked focal reframe (`y_anchor <= 0.15`) OR feathered 16:9 Museum Diptych staging (portrait intact on one side + aged-parchment dossier/map on opposite side)."
+      },
+      "law_06_motivated_cinematic_transitions": {
+        "straight_cuts_and_jl_cuts_pct": [70, 75],
+        "soft_film_or_ink_dissolves_pct": [15, 20],
+        "structural_map_dive_or_act_blackout_pct": [5, 10],
+        "jl_cut_audio_lead_sec": [0.25, 0.45],
+        "max_structural_wipes_per_5min": 4,
+        "zero_mid_sentence_kinetic_slashes": true
+      },
+      "law_07_sound_design_restraint_diegetic_foley": {
+        "master_target": "-11.0 LUFS (+/- 0.5 LU) / <= -1.0 dBTP @ 48000Hz stereo",
+        "voice_profile": "VietNarrator_su_ke_lai @ 1.30x (3.80-4.15 syl/s)",
+        "diegetic_foley_bed_db_under_voice": [-24, -18],
+        "max_punctuation_sfx_per_min": 2.0,
+        "approved_cues": [
+          "river_ebb_current_and_wood_creak",
+          "mangrove_night_tension_bed",
+          "parchment_brush_turn",
+          "distant_bronze_war_drum",
+          "black_powder_cannon_and_fire_bed"
+        ],
+        "banned_cues": [
+          "radar/sonar reticle pings",
+          "arcade metallic slash spam",
+          "sci-fi whoosh/glitch bursts"
+        ]
+      },
+      "law_08_shared_color_grading_and_grain": {
+        "shared_film_substrate": "Kodak Vision3 500T warm historical documentary grade across BOTH Google Flow clips and all synthetic maps/parchment overlays",
+        "synthetic_layer_grain_pct": [1.5, 2.5],
+        "max_cut_luma_jump": 45,
+        "subtle_corner_vignette_pct": 15
+      },
+      "law_09_dynamic_pacing_arc": {
+        "act_1_hook_0_to_60s_asl_sec": [3.2, 4.2],
+        "act_2_strategic_setup_asl_sec": [4.5, 6.0],
+        "act_3_ambush_suspense_asl_sec": [3.5, 4.5],
+        "act_4_battle_climax_asl_sec": [2.8, 3.8],
+        "act_5_aftermath_and_debate_asl_sec": [5.5, 7.0],
+        "mandatory_breathing_shots_per_episode": "2-3 completely graphic-free atmospheric cinema beats"
+      },
+      "law_10_verified_chronicle_diegetic_integration": {
+        "in_scene_provenance_caption": "Bottom-margin archival attribution (<=6% height, warm ivory, e.g., 'Sử liệu: Đại Nam Thực Lục, Q.12') on key factual beats",
+        "parchment_quote_plate": "Brief 3.5-4.5s aged rice-paper plate with cinnabar seal, serif typography, and subtle brush-stroke keyword underline (zero navy boxes or neon red highlight pills)"
+      }
+    }
+  },
+  "oct_nov_2026_benchmark_synthesis_32_videos": {
+    "vn_breakout_cohort": {
+      "count": 17,
+      "channel_brands": 10,
+      "key_v6_takeaways": {
+        "CLD Studio (1.28M views / 58.4k vpd)": "Proves 85/15 restraint: borderless bottom-scrim lower-thirds, 1px hairline callouts in negative space, matte parchment date/number plates.",
+        "BATTLECRY (139.1k vpd)": "Proves map-to-action cohesion via embedded live footage PiP inside tactical maps + strict voice-synced timeline pacing.",
+        "CD Media (42.3k vpd)": "Proves pure semantic coverage acceleration (13.3 -> 18.0 cpm) during physical engineering/combat sequences.",
+        "Tám Kể Sử (9.8k vpd)": "Proves warm Vietnamese parchment materiality, archival Polaroid framing (zero headless crops), and Hoàng Sa/Trường Sa map compliance.",
+        "Hồn Thiêng Sử Việt (9.5k vpd)": "Proves AI war cinema camera choreography (wide -> tunnel dolly -> POV -> silhouette) and recurring face continuity."
+      }
+    },
+    "global_breakout_cohort": {
+      "count": 15,
+      "distinct_channels": 13,
+      "combined_views": 35890488,
+      "key_v6_takeaways": {
+        "Yarnhub (915.5k vpd)": "Gold standard for 100% unobstructed 3.6-4.3s semantic coverage cuts (Wide -> Medium -> Close-up -> POV -> Macro) with zero HUD clutter.",
+        "Epic History TV (258.1k vpd)": "Gold standard for pre-modern materiality: engraved relief parchment maps, antique serif chapter cards, and soft vignette battle focus.",
+        "Fern (204.7k vpd)": "Gold standard for crisp visual-proof rhythm and optical clarity (adapted from modern cyan/slate to 1785 bronze/parchment).",
+        "SandRhoman History (86.4k vpd)": "Gold standard for pre-modern commander comparisons via museum illustration plates and physical staging instead of arcade VS bars.",
+        "Kings and Generals (44.1k vpd)": "Gold standard for shaded 3D topographic relief terrain + borderless corner serif HUD typography.",
+        "The Operations Room (9.1k vpd / 2.03% L/V)": "Gold standard for Map-to-Scene Camera Dive + small corner archival PiP."
+      }
+    }
+  },
+  "cold_open_and_chapter_spine_v6": {
+    "target_duration_sec": "600-840s (10m-14m core; scalable to 18-22m deep tactical chronicles)",
+    "explicit_chapters": "8-10 FFMETADATA1 chapters (6 chapters for compact 4-5m 360p Gate 0 demo)",
+    "speech_cadence_syl_per_sec": "3.80-4.15 (VietNarrator_su_ke_lai @ 1.30x)",
+    "opening_0_to_90s_blueprint": [
+      "0:00-0:15 — Cold-Open Paradox Sentence 1 (<=24 syl, zero pause) in 100% unobstructed 35mm Flow cinema (ASL 3.2-4.0s, zero heavy HUD overlays).",
+      "0:15-0:30 — Semantic clause cuts establishing stakes (20.000 vs 50.000 / 300 ships) with 1 understated antique-bronze lower-third date/location tag.",
+      "0:30-0:50 — 1 motivated 4.5-6.0s Real Shaded-Relief Map beat of Sông Tiền (Trà Tân -> Rạch Gầm -> Thới Sơn -> Xoài Mút -> Mỹ Tho) diving smoothly into live 35mm river footage.",
+      "0:50-1:30 — First commander grounding via Feathered 16:9 Museum Diptych (100% headroom portrait + translucent parchment biographical column) seamlessly returning to live narrative cinema."
+    ],
+    "pre_climax_tension_lock": "Before ambush detonation, hold a quiet 35mm close-up (gunner holding glowing fuse in mangrove mud) + [pause:450ms] + subtle low war-drum / river hush -> explosive straight cut into 2.8-3.8s battle montage with optional corner Tactical Mini-Map PiP."
+  },
+  "cost_saving_production_tiers_v6": [
+    {
+      "tier_id": "TIER_1_ZERO_CREDIT_V6_PRESTIGE_RECUT",
+      "flow_credit_cost": 0,
+      "description": "Re-orchestrate verified on-disk Google Flow clips/PNGs & OmniVoice WAV stems obeying all 10 V6.0 Laws: 3.0-4.5s semantic clause-cut matching across all 108 ep06 assets, headroom-locked reframing / feathered 16:9 Museum Diptychs (zero decapitated crops), real GIS shaded-relief cartography (<=20% runtime) + corner Tactical Mini-Map PiP, 1785 parchment/bronze materiality, straight/J-L cuts + continuous diegetic foley bed."
+    },
+    {
+      "tier_id": "TIER_2_NATIVE_16X9_BELUGA_SPARSE_HOOK_V6",
+      "flow_credit_cost_range": [0, 40],
+      "description": "Generate native 16:9 BELUGA Clear-Air 35mm coverage sets (Wide/Medium/Close-Up with 20-25% negative space reserved for diegetic accents, 0 video credits) + optional 3-4 Veo 3.1 Lite (10c Seam Mode) clips strictly in 0-30s Cold Open, fused with real GIS relief cartography and V6.0 1785 Museum Materiality."
+    },
+    {
+      "tier_id": "TIER_3_V6_360P_COHESION_DEMO_GATE",
+      "flow_credit_cost": 0,
+      "resolution": "640x360@30fps",
+      "description": "Mandatory Gate 0 local preview auditing all 10 V6.0 Laws (85/15 unobstructed frame compliance, 1785 materiality, zero decapitated crops, real relief map realism, 3.5s semantic clause-cut accuracy, diegetic foley -11.0 LUFS mix) via 10 QA frames + V2-vs-V6 comparison contact sheet BEFORE Colab T4 2K (`2560x1440`) render."
+    }
+  ],
+  "v7_zero_box_breathing_cinema_contract": {
+    "supersedes": "V6.0 rectangular museum plaques & 2.70s (87-subshot) micro-cuts",
+    "core_philosophy": "100% Zero-Box Pure Floating Cinema Typography over invisible cosine/Gaussian optical shadow scrims paired with breathing 4.5s-5.5s documentary shot pacing, continuous 5.8s-8.0s 2-beat shaded-relief war-maps, and smooth 12-16f cinema cross-dissolves.",
+    "zero_box_typography_lock": {
+      "banned_elements": [
+        "ImageDraw.rectangle / rounded_rectangle behind text",
+        "vertical left colored accent bars/stripes",
+        "1px rectangular box borders around lower-thirds, quotes, map legends, or debate options",
+        "[ ] corner ticks and pill badges ([SỬ LIỆU CHÍNH THỐNG])",
+        "3-line bullet-point resume paragraphs",
+        "floating beige paper rectangle over video",
+        "Commander VS rectangular progress-bar box",
+        "side-by-side Kahoot A/B debate boxes"
+      ],
+      "scrim_spec": "invisible cosine/Gaussian optical shadow scrim (sigma >= 20% frame height, zero visible edge)",
+      "lower_third_spec": "2 lines max (bold ivory serif name + 48px 1px fading gold filament + tracked warm-gold uppercase micro-caption <= 5-7 words)",
+      "chronicle_quote_spec": "monumental floating ivory serif directly over 38%-dimmed live slow-motion Flow footage with burnished gold (#F4CA78) glow emphasis"
+    },
+    "breathing_pacing_lock": {
+      "target_asl_range_sec": [4.5, 5.5],
+      "demo_target_shot_count_range": [50, 54],
+      "min_standard_live_shot_sec": 3.6,
+      "min_character_callout_quote_debate_sec": 4.5,
+      "character_callout_quote_target_range_sec": [4.5, 6.0],
+      "relief_warmap_continuous_hold_sec": [5.8, 8.0],
+      "micro_cut_hard_ban_below_sec": 3.2,
+      "beat_split_threshold_sec": 7.2,
+      "smooth_cinema_dissolve_sec": [0.40, 0.55],
+      "smooth_cinema_dissolve_frames": [12, 16],
+      "river_mist_map_dive_sec": 0.60,
+      "river_mist_map_dive_frames": 18,
+      "straight_cut_min_adjacent_hold_sec": 3.8,
+      "typography_breathing_window": {
+        "fade_in_start_sec": 0.25,
+        "fade_in_ramp_sec": 0.40,
+        "upward_drift_px": 4,
+        "fade_out_ramp_sec": 0.35,
+        "exit_buffer_before_outgoing_transition_sec": 0.40
+      }
+    }
+  },
+  "v8_continuous_2frame_chain_contract": {
+    "supersedes": "V7.0 river_mist_map_dive smoke transitions, per-beat stop-and-start camera resets, and tight 2.40s chapter-card / short text-hold windows",
+    "core_philosophy": "2-Frame Continuous Chain Cinema (Frame[i] -> Frame[i+1] -> Frame[i+2]) grouping 3-6 consecutive same-location beats (15s-30s) with unbroken directional camera momentum, 100% ban on smoke/fog/mist transitions (dust_smoke_cloud and river_mist_map_dive banned on Long 16:9), 4 professional chain-boundary transitions, and V8.0 comfortable Zero-Box reading holds.",
+    "rule_a_2frame_continuous_chain": {
+      "chain_pattern": "Frame[i] -> Frame[i+1] -> Frame[i+2]",
+      "chain_group_beats_range": [3, 6],
+      "chain_duration_sec_range": [15.0, 30.0],
+      "flow_frame_link_models": [
+        "veo_3_1_lite",
+        "macaron_cookie"
+      ],
+      "flow_frame_link_contract": "Start Frame = Frame[i], End Frame = Frame[i+1] so clip i connects directly into clip i+1 with unbroken camera momentum",
+      "in_chain_transition": "seam_chain_bridge",
+      "in_chain_transition_sec": 0.28,
+      "cut_chain_only_at_true_boundaries": true,
+      "allowed_chain_cut_boundaries": [
+        "scene_shift",
+        "location_shift",
+        "shaded_relief_warmap",
+        "act_or_chapter_boundary"
+      ]
+    },
+    "rule_b_zero_smoke_transitions_lock": {
+      "banned_long_16x9_transitions": [
+        "dust_smoke_cloud",
+        "river_mist_map_dive",
+        "procedural_fog_wipe",
+        "procedural_mist_wipe"
+      ],
+      "short_clip_reuse_clean_window_max_sec": 5.15,
+      "auto_trim_trailing_smoke_seams_over_sec": 5.15,
+      "professional_chain_boundary_transitions": {
+        "seam_chain_bridge": {
+          "duration_sec": 0.28,
+          "usage": "Velocity-matched 2-frame chain link inside continuous same-location scenes (zero stop, zero dark dip, zero smoke)"
+        },
+        "map_camera_zoom_match": {
+          "duration_sec": 0.55,
+          "usage": "3D geometric camera zoom + optical depth-of-field match into/out of shaded-relief war-map (zero smoke/mist)"
+        },
+        "optical_anamorphic_dissolve": {
+          "duration_sec": 0.45,
+          "usage": "35mm highlight-bloom lens dissolve for deliberate time or location shifts"
+        },
+        "hard_cut_j_cut": {
+          "usage": "Clean J/L-cut on action or sound bridge across opposing locations/forces"
+        },
+        "obsidian_act_fade": {
+          "duration_sec": 0.40,
+          "usage": "Smooth dip-to-obsidian entering/exiting 3.80s chapter cards"
+        }
+      }
+    },
+    "rule_c_comfortable_reading_hold_contract": {
+      "chapter_title_card": {
+        "chapters": "CHƯƠNG I..VI",
+        "total_duration_sec": 3.80,
+        "total_frames_30fps": 114,
+        "min_full_opacity_hold_sec": 3.10,
+        "start_delay_sec": 0.08,
+        "fade_in_sec": 0.25,
+        "fade_out_sec": 0.22
+      },
+      "in_scene_zero_box_typography": {
+        "start_delay_sec": 0.08,
+        "fade_in_sec": 0.25,
+        "fade_out_sec": 0.22,
+        "full_opacity_display_window_pct_range": [85, 90],
+        "full_opacity_reading_time_sec_range": [4.2, 5.5],
+        "zero_box_enforced": true
+      }
+    }
+  },
+  "outro_debate_and_publish_lock": {
+    "publish_slots_gmt7": [
+      "Thursday 19:30 GMT+7",
+      "Sunday 19:30 GMT+7"
+    ],
+    "avoid_dead_zone_gmt7": "01:00-04:00 AM",
+    "target_comment_to_view_pct": ">= 0.15%",
+    "two_choice_debate_outro": "Final 15% closes the historical loop over serene dawn 35mm Sông Tiền cinema with V8.0 zero-box floating borderless A/B reflection typography over soft bottom optical shadow (85%-90% full-opacity hold, zero quiz boxes or left bars, zero smoke), synced verbatim with @SuKeLaiVN Pinned Comment (zero banned CTA words)."
+  }
+}
