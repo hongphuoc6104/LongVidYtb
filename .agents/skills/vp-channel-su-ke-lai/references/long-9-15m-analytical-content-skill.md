@@ -1,10 +1,10 @@
-# V4 (`V9.1`) Gold Standard — 9–15 Minute Analytical Military History & Minimalist Mẫu M1 IMAX Visual Lock (`su_ke_lai_long_v9_1_m1_v4_gold_standard`)
+# V4 (`V9.1`) Gold Standard & V9.2 `M1-Flex` Turnkey Engine — 9–15 Minute Analytical Military History & Minimalist Mẫu M1 IMAX Visual Lock (`su_ke_lai_long_v9_1_m1_v4_gold_standard` & `su_ke_lai_long_v9_2_m1_flex_engine`)
 
-Permanently locked, user-approved production architecture, NotebookLM 3-Vault deep-extraction protocol, and **Mẫu M1 V4 (`V9.1`) Minimalist IMAX `2.39:1` Gold Standard** specification for **Sử Kể Lại** (`su_ke_lai`, `@SuKeLaiVN`) flagship **`9–15` minute (`540s–900s`, sweet spot `~10–12m`, `10` Chapters, `100` beats)** Long `16:9` military-history documentaries.
+Permanently locked, user-approved production architecture, NotebookLM 3-Vault deep-extraction protocol, **Mẫu M1 V4 (`V9.1`) Minimalist IMAX `2.39:1` Gold Standard**, and **V9.2 Parameterized `M1-Flex` Turnkey Engine (`sys/tools/produce_su_ke_lai_long_m1.py` — "Tựa Tựa Khuôn, Không Phải Y Đúc")** specification for **Sử Kể Lại** (`su_ke_lai`, `@SuKeLaiVN`) flagship **`9–15` minute (`540s–900s`, sweet spot `~10–12m`, `6–12` Chapters [default `10`], `60–120` beats [default `100`])** Long `16:9` military-history documentaries.
 
-Supersedes the older V9.0 draft (`su_ke_lai_long_v9_m1_imax_analytical_9_15m`) — permanently retiring 2-tier `46px` titles, horizontal whip-slide transitions (`directional_flow_chain_transition`), Pillow-drawn 2D/3D cartoon maps (`map_dive` / `_render_3d_map_dive`), black-bar header/footer clutter, every-beat titles, and multi-line chapter card subtitles. Synthesized from cross-market breakout forensics (`BATTLECRY` `139k/d`, `CLD Studio` `58k/d`, `CD Media - Quân Sự` `42k/d`, `Dòng Máu Việt` `746K` avg / `3.59M` peak, `Kings and Generals` `44.1k/d`, `Epic History TV` `258.1k/d`, `Yarnhub` `915.5k/d`, `The Operations Room`), Layer-0 **NotebookLM 3-Vault** grounding ([vp-notebooklm-vault](../../vp-notebooklm-vault/SKILL.md)), and the verified **V4 (`V9.1`)** production engine (`sys/runs/vn_su_ke_lai_1789_ngoc_hoi_dong_da_full_m1/render_m1_from_scratch.py`).
+Supersedes the older V9.0 draft (`su_ke_lai_long_v9_m1_imax_analytical_9_15m`) — permanently retiring 2-tier `46px` titles, horizontal whip-slide transitions (`directional_flow_chain_transition`), Pillow-drawn 2D/3D cartoon maps (`map_dive` / `_render_3d_map_dive`), black-bar header/footer clutter, every-beat titles, and multi-line chapter card subtitles. Synthesized from cross-market breakout forensics (`BATTLECRY` `139k/d`, `CLD Studio` `58k/d`, `CD Media - Quân Sự` `42k/d`, `Dòng Máu Việt` `746K` avg / `3.59M` peak, `Kings and Generals` `44.1k/d`, `Epic History TV` `258.1k/d`, `Yarnhub` `915.5k/d`, `The Operations Room`), Layer-0 **NotebookLM 3-Vault** grounding ([vp-notebooklm-vault](../../vp-notebooklm-vault/SKILL.md)), the verified **V4 (`V9.1`)** reference engine (`sys/runs/vn_su_ke_lai_1789_ngoc_hoi_dong_da_full_m1/render_m1_from_scratch.py`), and the permanent **V9.2 Parameterized `M1-Flex` CLI Tool (`sys/tools/produce_su_ke_lai_long_m1.py`)**.
 
-> **Scope & Compatibility Lock**: V4 (`V9.1`, `su_ke_lai_long_v9_1_m1_v4_gold_standard`) is the active Long `16:9` flagship lock for `su_ke_lai`, superseding V9.0 draft and building on V8.0 zero-smoke discipline, V7.0 Zero-Box typography, V6.0 feudal materiality, and Clear-Air Option 1 (`su_ke_lai_35mm_live_action_v3`). Shared workflow skills (`vp-notebooklm-vault`, `vp-research-architect`, `vp-scriptwriting`, `vp-flow-cdp`, `vp-colab-bridge`, `vp-omni-platform`, `vp-production`) remain **100% unmodified**.
+> **Scope & Compatibility Lock**: V4 (`V9.1`, `su_ke_lai_long_v9_1_m1_v4_gold_standard`) paired with V9.2 `M1-Flex` (`su_ke_lai_long_v9_2_m1_flex_engine`) is the active Long `16:9` flagship lock for `su_ke_lai`, superseding V9.0 draft and building on V8.0 zero-smoke discipline, V7.0 Zero-Box typography, V6.0 feudal materiality, and Clear-Air Option 1 (`su_ke_lai_35mm_live_action_v3`). Shared workflow skills (`vp-notebooklm-vault`, `vp-research-architect`, `vp-scriptwriting`, `vp-flow-cdp`, `vp-colab-bridge`, `vp-omni-platform`, `vp-production`) remain **100% unmodified**.
 
 ---
 
@@ -233,3 +233,75 @@ Canonical visual & motion specification permanently locked from `sys/runs/vn_su_
 4. **Sparse Single-Line Keyword Gate**: Verify keywords appear ONLY on `~20–25%` of beats (`2–3`/chapter, `18–25s` apart, **NEVER on `beat_*0`**), `75–80%` text-free beats, `top_word=""`, `#FFF5D6` (`66px@1080p / 88px@1440p`), `1.06x->1.00x` (`0.16s`) pop-in synced via `_find_word_offset`, and `-14dB` SFX strictly on keyword beats.
 5. **High-Res Container & Loudness Gate**: Verify via `ffprobe` (`1920x1080` or `2560x1440`, `30fps`, `h264`, `yuv420p`, `48000Hz` stereo `aac`) and `ffmpeg -af ebur128=peak=true` (**`-11.0 LUFS ±0.7 / <= -1.0 dBTP`**).
 6. **Publish Gate**: Package `youtube_title <= 55` chars (zero `P1/P2/Tập` prefix), `10` exact YouTube chapters, Flow-native `16:9` thumbnail (`2–4` uppercase Vietnamese words, `< 2MB`, zero PIL/HTML overlay), external `.srt` captions, and pinned `@SuKeLaiVN` 2-choice debate comment.
+
+---
+
+## 6. V9.2 Parameterized `M1-Flex` Engine & 4 Narrative Archetypes ("Tựa Tựa Khuôn, Không Phải Y Đúc" — `sys/tools/produce_su_ke_lai_long_m1.py`)
+
+To produce many future videos that share the exact same high-retention IMAX `2.39:1` moving-cinema DNA without feeling like rigid carbon copies (*"tựa tựa khuôn, không phải y đúc"*), use the permanent parameterized CLI engine **`sys/tools/produce_su_ke_lai_long_m1.py`** (`M1_FLEX_ENGINE_VERSION = "9.2.0"`). It locks all 6 V4/V9.1 Safety Invariants (`0%` Pillow cartoon maps, `0%` whip-slides, `0` black-bar text, `100%` moving `.mp4` verification, `beat_*0` always text-free, `top_word=""` single-line keywords) while allowing each episode to vary organically across **4 Narrative Archetypes**, **4 Color Presets**, **2 Chapter Styles**, **3 Chain Rhythms**, and **Keyword Density (`0.15..0.30`)**:
+
+### 6.1 The 4 Narrative Archetypes (`6–12` Chapters)
+
+| Archetype (`--archetype`) | Chapter Count | Narrative & Analytical Focus | Recommended `M1-Flex` Preset Combination | Canonical Campaign Examples |
+| :--- | :--- | :--- | :--- | :--- |
+| **`blitz_campaign`** (*Blitz Campaign / Chiến Dịch Thần Tốc*) | **`8–10` chapters** | Forced-march logistics math, intelligence blackout, multi-column encirclement, combined-arms dawn shock assault | `--color-preset golden_dawn_1789` · `--chapter-style minimal_center_card` · `--chain-pattern balanced_2beat` · `--keyword-density 0.22` | Ngọc Hồi – Đống Đa 1789, Chiến dịch mùa xuân 1789 |
+| **`siege_and_trap_anatomy`** (*Siege & Trap Anatomy / Giải Phẫu Vây Thành & Tử Địa*) | **`6–8` chapters** | Mountain-pass terrain bottleneck, feigned retreat, relief-column decapitation, siege counter-measure engineering | `--color-preset monsoon_siege_contrast` · `--chapter-style minimal_center_card` · `--chain-pattern dynamic_1_2_3beat` · `--keyword-density 0.24` | Chi Lăng – Xương Giang 1427, Vây thành Đông Quan |
+| **`commander_rivalry_duel`** (*Commander Rivalry Duel / Song Đấu Kỳ Phùng Địch Thủ*) | **`8–11` chapters** | Doctrinal & psychological chess match between two opposing generals, supply-line attrition, decisive counter-stroke | `--color-preset imperial_torch_amber` · `--chapter-style in_scene_cinema_title` · `--chain-pattern epic_3beat` · `--keyword-density 0.20` | Lý Thường Kiệt vs Quách Quỳ 1077, Trần Hưng Đạo vs Thoát Hoan |
+| **`naval_and_river_ambush`** (*Naval & River Ambush / Thủy Chiến & Đại Phục Kích Sông Nước*) | **`7–9` chapters** | Flood-to-ebb tidal clock, hidden ironwood stake-fields or mud-bank cannon batteries, fire-raft kill-zone closure | `--color-preset river_mist_teal_gold` · `--chapter-style in_scene_cinema_title` · `--chain-pattern dynamic_1_2_3beat` · `--keyword-density 0.22` | Bạch Đằng 938, Bạch Đằng 1288, Rạch Gầm – Xoài Mút 1785 |
+
+### 6.2 Creative Preset Reference Matrix (`sys/tools/produce_su_ke_lai_long_m1.py`)
+
+- **`--color-preset {golden_dawn_1789,river_mist_teal_gold,monsoon_siege_contrast,imperial_torch_amber}`**:
+  - `golden_dawn_1789`: Warm golden dawn (`lift=0.18, warmth=0.14`, default for open-field dawn campaigns).
+  - `river_mist_teal_gold`: Crisp river-fog silver-teal shadows with warm bronze/fire highlights (`lift=0.17, warmth=0.06`, naval campaigns).
+  - `monsoon_siege_contrast`: High-clarity slate & ember contrast (`lift=0.16, warmth=0.09`, mountain/fortress sieges).
+  - `imperial_torch_amber`: Deep court bronze & torchlight clarity (`lift=0.19, warmth=0.16`, dynastic intrigue & strategic council episodes).
+- **`--chapter-style {minimal_center_card,in_scene_cinema_title}`**:
+  - `minimal_center_card`: `3.2s–3.6s` (`3.60s`) dimmed moving-cinema card (`0.56..0.72` vignette) with tracked `CHƯƠNG I..N` + 3–4 word core title (`0` bottom subtitle sentence, `0` divider bar).
+  - `in_scene_cinema_title`: Netflix-style chapter title overlay directly on the first `3.5s` of the opening chapter scene (`beat_*0`) at full brightness without a separate card pause.
+- **`--chain-pattern {balanced_2beat,dynamic_1_2_3beat,epic_3beat}`**:
+  - `balanced_2beat`: `2` beats per `8.0s` Flow `.mp4` clip (`0.00->3.30s` + `3.30->6.60s` unbroken continuous playback).
+  - `dynamic_1_2_3beat`: Adaptive pacing — `3`-beat (`0.0->2.2->4.4->6.6s`) continuous long-take chains for opening/aftermath chapters, `2`-beat (`0.0->3.3->6.6s`) chains for setup chapters, and `1`-beat (`0.0->5.2s` `1.0x` real-time speed) rapid cuts during battle climax chapters.
+  - `epic_3beat`: `3` beats per `8.0s`/`10.0s` Flow `.mp4` clip (`0.0->2.2->4.4->6.6s`) for slower strategic/biographical episodes.
+- **`--keyword-density <float 0.15..0.30>`** (default `0.22`): Automatically enforces sparse single-line verbatim emphasis keywords (`~18–28%` of beats, `>= 70–72%` text-free pure cinema, **never on the first beat of any chapter `beat_*0`**, `top_word == ""`, compact `66px@1080p / 88px@1440p` ivory-gold `#FFF5D6`).
+
+### 6.3 Turnkey CLI Execution (`sys/tools/produce_su_ke_lai_long_m1.py`)
+
+```bash
+# 1. Validate M1-Flex V9.2 preset & safety invariants:
+PYTHONPATH=sys sys/.venv/bin/python sys/tools/produce_su_ke_lai_long_m1.py \
+  --stage validate-flex-spec \
+  --archetype naval_and_river_ambush \
+  --color-preset river_mist_teal_gold \
+  --chapter-style in_scene_cinema_title \
+  --chain-pattern dynamic_1_2_3beat \
+  --keyword-density 0.22 \
+  --resolution 1080p
+
+# 2. Build timeline, -11.0 LUFS master WAV, impact SRT & full Vietnamese CC SRT:
+PYTHONPATH=sys sys/.venv/bin/python sys/tools/produce_su_ke_lai_long_m1.py \
+  --stage build-timeline \
+  --job-dir sys/runs/<job_id> \
+  --script sys/runs/<job_id>/script.json \
+  --output-dir video/<job_id> \
+  --color-preset golden_dawn_1789 \
+  --chapter-style minimal_center_card \
+  --chain-pattern balanced_2beat \
+  --keyword-density 0.22 \
+  --resolution 1080p \
+  --total-shards 8
+
+# 3. Render 8 parallel shards (with mandatory 100% moving .mp4 verification):
+for sid in 1 2 3 4 5 6 7 8; do
+  PYTHONPATH=sys sys/.venv/bin/python sys/tools/produce_su_ke_lai_long_m1.py \
+    --stage render-shard --shard "$sid" \
+    --job-dir sys/runs/<job_id> --require-moving-video &
+done
+wait
+
+# 4. Losslessly assemble final MP4 + 20-panel showcase & regenerate full CC SRT:
+PYTHONPATH=sys sys/.venv/bin/python sys/tools/produce_su_ke_lai_long_m1.py \
+  --stage assemble --job-dir sys/runs/<job_id> --output-dir video/<job_id>
+PYTHONPATH=sys sys/.venv/bin/python sys/tools/produce_su_ke_lai_long_m1.py \
+  --stage full-cc-srt --job-dir sys/runs/<job_id>
+```

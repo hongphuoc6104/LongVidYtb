@@ -108,6 +108,60 @@ Tài liệu chuẩn hóa toàn bộ các bước cần làm khi sản xuất **m
 
 ---
 
+## Pha 4B: Turnkey `M1-Flex V9.2` 8-Shard 1080p / 2K IMAX Moving-Cinema Workflow (`su_ke_lai` & Analytical Long)
+Khi sản xuất tập Long `16:9` theo khuôn điện ảnh động **`M1-Flex V9.2` ("Tựa Tựa Khuôn, Không Phải Y Đúc" — `sys/tools/produce_su_ke_lai_long_m1.py`)**:
+1. **Chọn 1 trong 4 Khuôn Kịch Bản (`--archetype`, `6–12` chương) & Tổ Hợp Preset Sáng Tạo**:
+   - `blitz_campaign` (*Chiến dịch thần tốc*, `8–10` chương): `--color-preset golden_dawn_1789 --chapter-style minimal_center_card --chain-pattern balanced_2beat --keyword-density 0.22`
+   - `siege_and_trap_anatomy` (*Giải phẫu vây thành & tử địa*, `6–8` chương): `--color-preset monsoon_siege_contrast --chapter-style minimal_center_card --chain-pattern dynamic_1_2_3beat --keyword-density 0.24`
+   - `commander_rivalry_duel` (*Song đấu kỳ phùng địch thủ*, `8–11` chương): `--color-preset imperial_torch_amber --chapter-style in_scene_cinema_title --chain-pattern epic_3beat --keyword-density 0.20`
+   - `naval_and_river_ambush` (*Thủy chiến & phục kích sông nước*, `7–9` chương): `--color-preset river_mist_teal_gold --chapter-style in_scene_cinema_title --chain-pattern dynamic_1_2_3beat --keyword-density 0.22`
+2. **Quy Trình Turnkey 4 Bước (`sys/tools/produce_su_ke_lai_long_m1.py`)**:
+   ```bash
+   # Bước 1: Kiểm định cấu hình M1-Flex & khóa an toàn (0% bản đồ vẽ tay Pillow, 0% whip-slide, 0 chữ thanh đen IMAX)
+   PYTHONPATH=sys sys/.venv/bin/python sys/tools/produce_su_ke_lai_long_m1.py \
+     --stage validate-flex-spec \
+     --archetype <blitz_campaign|siege_and_trap_anatomy|commander_rivalry_duel|naval_and_river_ambush> \
+     --color-preset <golden_dawn_1789|river_mist_teal_gold|monsoon_siege_contrast|imperial_torch_amber> \
+     --chapter-style <minimal_center_card|in_scene_cinema_title> \
+     --chain-pattern <balanced_2beat|dynamic_1_2_3beat|epic_3beat> \
+     --keyword-density 0.22 \
+     --resolution <1080p|1440p|360p>
+
+   # Bước 2: Dựng Timeline, Master Audio (-11.0 LUFS / <= -1.0 dBTP), Impact SRT & Full Vietnamese CC SRT
+   PYTHONPATH=sys sys/.venv/bin/python sys/tools/produce_su_ke_lai_long_m1.py \
+     --stage build-timeline \
+     --job-dir sys/runs/<LONG_JOB_ID> \
+     --script sys/runs/<LONG_JOB_ID>/script.json \
+     --output-dir video/<LONG_JOB_ID> \
+     --color-preset golden_dawn_1789 \
+     --chapter-style minimal_center_card \
+     --chain-pattern balanced_2beat \
+     --keyword-density 0.22 \
+     --resolution 1080p \
+     --total-shards 8
+
+   # Bước 3: Render 8 Shard song song (bắt buộc --require-moving-video xác thực 100% clip .mp4 động native 16:9)
+   for sid in 1 2 3 4 5 6 7 8; do
+     PYTHONPATH=sys sys/.venv/bin/python sys/tools/produce_su_ke_lai_long_m1.py \
+       --stage render-shard --shard "$sid" \
+       --job-dir sys/runs/<LONG_JOB_ID> --require-moving-video &
+   done
+   wait
+
+   # Bước 4: Ghép Lossless (-c:v copy + pre-AAC brickwall alimiter=limit=0.77) + xuất Bảng Kiểm Định 20 Khung & Full CC SRT
+   PYTHONPATH=sys sys/.venv/bin/python sys/tools/produce_su_ke_lai_long_m1.py \
+     --stage assemble --job-dir sys/runs/<LONG_JOB_ID> --output-dir video/<LONG_JOB_ID>
+   PYTHONPATH=sys sys/.venv/bin/python sys/tools/produce_su_ke_lai_long_m1.py \
+     --stage full-cc-srt --job-dir sys/runs/<LONG_JOB_ID>
+   ```
+3. **Bất biến chất lượng M1-Flex V9.2 bắt buộc**:
+   - `100%` clip `.mp4` động native `16:9` (`0` ảnh tĩnh PNG, `0` clip dọc `9:16` cắt ngang, `0%` bản đồ vector Pillow `map_dive`).
+   - `0%` chuyển cảnh trượt ngang gây chóng mặt (`directional_flow_chain_transition` bị cấm vĩnh viễn); giữ cố định `zoom=1.0, dx=0.0, dy=0.0, cy=0.44` trong chuỗi và hòa mờ tĩnh `0.20s` (`0px` shift) giữa hai chuỗi.
+   - Thanh đen IMAX `2.39:1` trên/dưới đen tuyền `100%` (`0` chữ header/footer/badge trên thanh đen; **chỉ đặt duy nhất logo kênh ở góc dưới phải**).
+   - Từ khóa nhấn đơn dòng (`top_word=""`, `#FFF5D6`, `66px@1080p / 88px@1440p`) chỉ xuất hiện trên `15%–30%` số nhịp (`>= 70–72%` thuần điện ảnh không chữ, **cấm tuyệt đối hiện từ khóa ở nhịp mở đầu mỗi chương `beat_*0`**).
+
+---
+
 ## Pha 5: Kiểm Định Media Thực Tế & Bộ Publish Kit
 1. **Kiểm định Container & Loudness trên MP4 cuối**:
    - `ffprobe`: xác nhận độ phân giải (`2560x1440` / `1440x2560`), `30/1 fps`, `yuv420p`, `aac 48000 Hz stereo`, đủ `nb_frames` & `chapters` (Long).
@@ -164,7 +218,13 @@ Tài liệu chuẩn hóa toàn bộ các bước cần làm khi sản xuất **m
      - `--update-thumbnail <path> --video-id <ID> --strict-thumbnail` (cập nhật bìa)
      - `--attach-subtitles <path.srt> --video-id <ID>` (gắn bù phụ đề `.srt`)
      - `--post-pinned-comment --video-id <ID> --metadata <youtube_*.md> --comment-screenshot <png>` (đăng & ghim bình luận cho cả Long và Short)
-3. **Hoàn thiện Studio Pro & Kiểm tra hậu xuất bản (Parity chuẩn EP04)**:
+3. **Hoàn thiện Studio Pro & Kiểm tra hậu xuất bản (Parity chuẩn EP04 & Major-Channel M1-Flex V9.2 Publication Checklist)**:
+   - **Phụ đề Full CC Tiếng Việt (`subtitles_vi_full_cc.srt`)**: Với tập Long `M1-Flex V9.2`, luôn sinh và gắn file phụ đề lời thoại đầy đủ `subtitles_vi_full_cc.srt` (`produce_su_ke_lai_long_m1.py --stage full-cc-srt`) qua `--subtitles` hoặc `--attach-subtitles` để người xem TV/Desktop bật CC đọc trọn vẹn 100% câu thoại chuẩn dấu tiếng Việt (tránh YouTube ASR tự động nhận diện sai tên riêng lịch sử).
+   - **Chuẩn Kênh Lớn (Major-Channel Packaging & Retention Loop)**:
+     * Tiêu đề `<= 55` ký tự, độc lập 100% (cấm `P1/P2/Tập 1/Phần 2` ở đầu tiêu đề).
+     * Mô tả mở đầu bằng 2 dòng hook nghịch lý + **Danh mục Chapters chuẩn YouTube (`00:00 Chương I ...`)** khớp 100% với `timeline` + khối `"Nguồn tham khảo:"` trích từ `notebooklm_vault.py export-sources`.
+     * Thumbnail `16:9` Flow-native (`2–4` chữ IN HOA vẽ trực tiếp trong khung, `< 2.0 MB`, `--strict-thumbnail`), kiểm chứng `naturalWidth > 0` và `has_custom_thumbnail == true` sau khi reload trang `/edit`.
+     * **Bình luận ghim 2 lựa chọn tranh luận (`--post-pinned-comment`)**: Đăng & ghim ngay câu hỏi phán xét lịch sử 2 phương án (khớp với đoạn kết video, tuyệt đối không dùng `like/share/subscribe/đăng ký`), kiểm chứng huy hiệu `@Channel đã ghim` trên trang watch.
    - Thêm cả Long & Short vào danh sách phát chính của kênh (nếu có), gắn End Screen & Info Card trên Long trong YouTube Studio.
-   - Kiểm tra `yt-dlp -F <URL>` xác nhận YouTube đã xử lý xong độ phân giải `2560x1440` (Long) và `1440x2560` VP9/AV1 (Short).
+   - Kiểm tra `yt-dlp -F <URL>` và `oEmbed HTTP 200` xác nhận video đã `PUBLIC` (không kẹt `"trạng thái nháp"`), YouTube đã xử lý xong độ phân giải HD/`2560x1440` (Long) và `1440x2560` VP9/AV1 (Short).
    - Đọc screenshot `/edit`, screenshot watch page bình luận ghim, và ảnh tab `/videos/short` bằng `read_file`: xác nhận **cả Long lẫn Short đều có `has_custom_thumbnail == true`, `subtitles` tiếng Việt, `@Channel đã ghim` ở comment đầu, `has_pill: true` trên Short**, `youtube_channel_map.json` & `video_review_queue.json` đã cập nhật, và Chrome Studio đã đóng sạch (`listening_count: 0`).
