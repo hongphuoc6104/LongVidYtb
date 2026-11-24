@@ -1,1 +1,0 @@
-publish_15_shorts_batch.py

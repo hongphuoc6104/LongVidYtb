@@ -2,7 +2,9 @@
 """V3 maintenance: verify published videos, retain history/cache, clean empty scratch only."""
 
 import argparse
+import hashlib
 import json
+import os
 import re
 import shutil
 import sqlite3
@@ -12,6 +14,8 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = ROOT.parent
+VIDEO_DIR = REPO_ROOT / "video"
 EXPORTS_DIR = ROOT / "exports"
 RUNS_DIR = ROOT / "runs"
 SCRATCH_DIR = ROOT / "scratch"
@@ -19,6 +23,25 @@ GFLOW_DIR = ROOT / ".gflow"
 STATE_DIR = ROOT / ".state"
 DB_PATH = STATE_DIR / "jobs.sqlite"
 LOG_PATH = STATE_DIR / "cleanup.log"
+
+TRANSIENT_WORK_DIRS = frozenset({
+    "_colab_render",
+    "_colab_render_2k",
+    "render_2k",
+    "render",
+    "render_2k_15beat_backup",
+    "plates_2k",
+    "plates_raw",
+    "frames_2k",
+    "segments_110x",
+    ".staging",
+    "fonts",
+    "variant_A",
+    "variant_B",
+    "variant_C",
+    "variant_A_preview",
+})
+DEDUP_SUFFIXES = frozenset({".mp4", ".wav", ".png"})
 
 JOB_ID_REGEX = re.compile(r"^[a-zA-Z0-9_-]+$")
 
@@ -197,6 +220,247 @@ def prune_transient_logs_and_proofs(keep_latest_proofs: int = 5, dry_run: bool =
     return freed
 
 
+def _contains_symlink(path: Path) -> bool:
+    """Return True if path or any nested entry inside it is a symlink."""
+    if path.is_symlink():
+        return True
+    if not path.is_dir():
+        return False
+    for walk_root, dirs, files in os.walk(path, followlinks=False):
+        root_path = Path(walk_root)
+        if any((root_path / d).is_symlink() for d in dirs) or any((root_path / f).is_symlink() for f in files):
+            return True
+    return False
+
+
+def _remove_path(path: Path, label: str, dry_run: bool) -> int:
+    """Safely remove a non-symlink file or directory tree and return reclaimed bytes."""
+    if not path.exists() or _contains_symlink(path):
+        return 0
+    sz = get_dir_size(path)
+    if dry_run:
+        print(f"  [{label} - Sẽ dọn] {path} ({format_size(sz)})")
+        return sz
+    if path.is_dir():
+        shutil.rmtree(path, ignore_errors=True)
+    else:
+        path.unlink(missing_ok=True)
+    print(f"  [{label} - Đã dọn] {path} ({format_size(sz)})")
+    return sz
+
+
+def _sha256_file(path: Path) -> str:
+    """Compute SHA-256 digest of a regular file."""
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _job_is_quiet(job_dir: Path, cutoff: float) -> bool:
+    """Return True if no lock file or recently modified entry is active in job_dir."""
+    if list(job_dir.glob("*.lock")):
+        return False
+    try:
+        entries = list(job_dir.iterdir())
+        for work_dir in job_dir.glob("_work*"):
+            if work_dir.is_dir() and not work_dir.is_symlink():
+                if list(work_dir.glob("*.lock")):
+                    return False
+                entries.extend(work_dir.iterdir())
+        for entry in entries:
+            if not entry.is_symlink() and entry.stat().st_mtime >= cutoff:
+                return False
+    except OSError:
+        return False
+    return True
+
+
+def _nonempty_dir(path: Path) -> bool:
+    return path.is_dir() and not path.is_symlink() and any(path.iterdir())
+
+
+def deduplicate_identical_job_deliverables(
+    job_dir: Path,
+    min_bytes: int = 1024 * 1024,
+    dry_run: bool = False,
+) -> int:
+    """Replace byte-identical top-level deliverables in a job directory with hardlinks."""
+    if job_dir.is_symlink() or not job_dir.is_dir():
+        return 0
+    by_size: dict[int, list[Path]] = {}
+    for entry in sorted(job_dir.iterdir()):
+        if not entry.is_file() or entry.is_symlink() or entry.suffix.lower() not in DEDUP_SUFFIXES:
+            continue
+        try:
+            st = entry.stat()
+        except OSError:
+            continue
+        if st.st_size >= min_bytes:
+            by_size.setdefault(st.st_size, []).append(entry)
+
+    freed = 0
+    for size_bytes, paths in by_size.items():
+        if len(paths) < 2 or len({p.stat().st_ino for p in paths}) < 2:
+            continue
+        by_hash: dict[str, list[Path]] = {}
+        for path in paths:
+            try:
+                by_hash.setdefault(_sha256_file(path), []).append(path)
+            except OSError:
+                continue
+        for same_files in by_hash.values():
+            if len(same_files) < 2:
+                continue
+            canonical = sorted(
+                same_files,
+                key=lambda p: (-p.stat().st_nlink, len(p.name), p.name),
+            )[0]
+            canonical_ino = canonical.stat().st_ino
+            seen_inodes = {canonical_ino}
+            for dup in same_files:
+                dup_ino = dup.stat().st_ino
+                if dup_ino == canonical_ino:
+                    continue
+                if dup_ino not in seen_inodes:
+                    seen_inodes.add(dup_ino)
+                    freed += size_bytes
+                if dry_run:
+                    print(
+                        f"  [Dedup - Sẽ hardlink bản trùng] {job_dir.name}/{dup.name} -> "
+                        f"{canonical.name} ({format_size(size_bytes)})"
+                    )
+                    continue
+                tmp_link = dup.with_name(f".dedup_{os.getpid()}_{dup.name}")
+                try:
+                    tmp_link.unlink(missing_ok=True)
+                    os.link(canonical, tmp_link)
+                    os.replace(tmp_link, dup)
+                    print(
+                        f"  [Dedup - Đã hardlink bản trùng] {job_dir.name}/{dup.name} -> "
+                        f"{canonical.name} ({format_size(size_bytes)})"
+                    )
+                except OSError:
+                    tmp_link.unlink(missing_ok=True)
+    return freed
+
+
+def prune_verified_video_work_intermediates(
+    video_dir: Path | None = None,
+    retention_hours: float = 2.0,
+    dry_run: bool = False,
+) -> int:
+    """Prune regenerable render/audio/backup intermediates in verified finished video jobs."""
+    target_dir = video_dir or VIDEO_DIR
+    if target_dir.is_symlink() or not target_dir.is_dir():
+        return 0
+    cutoff = time.time() - max(0.0, retention_hours) * 3600.0
+    freed = 0
+
+    for job_dir in sorted(target_dir.iterdir()):
+        if not job_dir.is_dir() or job_dir.is_symlink():
+            continue
+        if not _job_is_quiet(job_dir, cutoff):
+            continue
+
+        candidates = [
+            p
+            for p in sorted(job_dir.glob("*.mp4"))
+            if p.is_file() and not p.is_symlink() and "backup" not in p.name and "preview" not in p.name
+        ]
+        if not any(validate_video_integrity(mp4)[0] for mp4 in candidates):
+            continue
+
+        has_frames = _nonempty_dir(job_dir / "frames")
+        has_clips = _nonempty_dir(job_dir / "clips")
+        has_master_wav = (job_dir / "narration_master.wav").is_file() or (job_dir / "audio_master.wav").is_file()
+
+        for work_dir in sorted(job_dir.glob("_work*")):
+            if not work_dir.is_dir() or work_dir.is_symlink():
+                continue
+            has_work_images = _nonempty_dir(work_dir / "images")
+            has_work_wav = has_master_wav or (work_dir / "narration.wav").is_file()
+
+            for sub in sorted(work_dir.iterdir()):
+                name = sub.name
+                if name in TRANSIENT_WORK_DIRS:
+                    freed += _remove_path(sub, "VideoWork", dry_run)
+                elif name == "audio_work" and has_work_wav:
+                    freed += _remove_path(sub / "raw_wavs", "VideoWork", dry_run)
+                elif sub.is_file() and sub.suffix.lower() == ".zip":
+                    freed += _remove_path(sub, "VideoWork", dry_run)
+                elif name in ("raw_narration.wav", "narration_dry_master_110x.wav", "narration_master_110x.m4a") and has_work_wav:
+                    freed += _remove_path(sub, "VideoWork", dry_run)
+                elif (name.startswith("images_old_") or name.startswith("images_backup_")) and (has_work_images or has_frames):
+                    freed += _remove_path(sub, "VideoWork", dry_run)
+
+        if has_frames and has_clips:
+            for backup_item in sorted(job_dir.glob("*_15beat_backup*")) + sorted(job_dir.glob("*_20beat_backup*")):
+                freed += _remove_path(backup_item, "VideoBackup", dry_run)
+
+        freed += deduplicate_identical_job_deliverables(job_dir, dry_run=dry_run)
+
+    return freed
+
+
+def prune_periodic_scratch_and_caches(
+    repo_root: Path | None = None,
+    scratch_dir: Path | None = None,
+    retention_hours: float = 2.0,
+    dry_run: bool = False,
+) -> int:
+    """Prune stale scratch render/audio work dirs, Python/linter caches, and empty stray dirs."""
+    root = repo_root or REPO_ROOT
+    target_scratch = scratch_dir or SCRATCH_DIR
+    cutoff = time.time() - max(0.0, retention_hours) * 3600.0
+    freed = 0
+
+    if target_scratch.is_dir() and not target_scratch.is_symlink():
+        for item in sorted(target_scratch.iterdir()):
+            if item.is_symlink():
+                continue
+            if item.is_dir() and (
+                item.name.endswith(("_render_work", "_audio_work", "_prep_work"))
+                or item.name.startswith("qa_frames_")
+            ):
+                try:
+                    if item.stat().st_mtime < cutoff:
+                        freed += _remove_path(item, "ScratchWork", dry_run)
+                except OSError:
+                    continue
+
+    if root.is_dir() and not root.is_symlink():
+        for walk_root, dirs, _ in os.walk(root, followlinks=False):
+            dirs[:] = [d for d in dirs if not d.startswith(".venv") and d != ".git"]
+            if "__pycache__" in dirs:
+                dirs.remove("__pycache__")
+                freed += _remove_path(Path(walk_root) / "__pycache__", "Cache", dry_run)
+
+        for rel in (".pytest_cache", ".ruff_cache", ".agents/teamwork"):
+            freed += _remove_path(root / rel, "Cache", dry_run)
+
+        stray_sys = root / "sys" / "sys"
+        if stray_sys.is_dir() and not _contains_symlink(stray_sys):
+            has_files = any(p.is_file() for p in stray_sys.rglob("*"))
+            if not has_files:
+                freed += _remove_path(stray_sys, "StrayDir", dry_run)
+
+        stray_acct = root / "account-08"
+        if stray_acct.is_dir() and not _contains_symlink(stray_acct):
+            lock_file = stray_acct / "sessions.json.lock"
+            history_dir = stray_acct / "history"
+            files = [p for p in stray_acct.rglob("*") if p.is_file()]
+            only_empty_lock = (
+                files == [lock_file] and lock_file.stat().st_size == 0
+                and (not history_dir.exists() or not any(history_dir.iterdir()))
+            )
+            if not files or only_empty_lock:
+                freed += _remove_path(stray_acct, "StrayDir", dry_run)
+
+    return freed
+
+
 def clean_completed_job(job_id: str, dry_run: bool = False) -> int:
     """Safely validates and prunes unapproved revisions of a completed job."""
     try:
@@ -260,6 +524,9 @@ def main():
         # Step 2: Scratch Whitelist & Proof/Report Log Rotation
         total_freed += clean_scratch_whitelist(retention_days=3, dry_run=args.dry_run)
         total_freed += prune_transient_logs_and_proofs(keep_latest_proofs=5, dry_run=args.dry_run)
+        if args.periodic:
+            total_freed += prune_verified_video_work_intermediates(dry_run=args.dry_run)
+            total_freed += prune_periodic_scratch_and_caches(dry_run=args.dry_run)
 
         # Step 3: Scan all runs/ for completed, approved jobs
         print("\n--- [Tầng 3] Tối ưu hóa các Job đã nghiệm thu hoàn tất ---")

@@ -9,7 +9,18 @@
 runs/
 _work_short/
 _work_long/
+_work_*/
 _tts_work/
+_audio_work/
+*_render_work/
+*_audio_work/
+*_prep_work/
+render_shards*/
+render_bundle*/
+/sys/sys/
+**/sys/runs/
+/sys/.state/
+/sys/.cache/
 clips/
 frames/
 images/
@@ -65,6 +76,11 @@ temp/
 /sys/tools/specs_group_*/
 /sys/tools/explainer_generators/
 /sys/tools/explainer_specs/
+/sys/tools/sanitization_data/
+/sys/tools/squad3_data_*.py
+/sys/tools/data_en_*.py
+/sys/tools/gen_specs_en_*.py
+/sys/tools/build_*_batch3.py
 
 # --- 3. Generated channel specs, plans & brand images ---
 sys/channels/vn_rebuilt_style_specs/**/*
@@ -73,6 +89,16 @@ sys/channels/vn_rebuilt_style_specs/**/*
 /sys/assets/channels/*/*.png
 /sys/channels/*/assets/
 /sys/channels/analytics_*/
+sys/channels/**/analytics*/
+sys/channels/*/publish_backfill/
+sys/channels/**/studio_jobs*/
+sys/channels/video_review_queue.json
+sys/channels/fleet_lifecycle.json
+sys/channels/metrics.csv
+sys/channels/*_queue*.json
+sys/channels/*_state*.json
+sys/channels/*_ledger*.json
+sys/channels/*_history*.json*
 sys/channels/youtube_channel_map.json
 sys/channels/dashboard_metrics.json
 sys/channels/dashboard_history.jsonl
@@ -111,10 +137,13 @@ flow_*.png
 /sys/assets/voices/**/audition_*.wav
 /sys/assets/voices/**/audition-report.json
 /sys/assets/voices/**/backup_original/
+/sys/assets/voices/**/provenance/cache*/
 /sys/assets/voices/adam-bua*
 /sys/assets/channels/*/*.png
 /sys/assets/audio/bgm/bgm_*.wav
 /sys/assets/sfx/bespoke/
+/sys/fx_warehouse/**/preview*/
+/sys/fx_warehouse/**/smoke*/
 /sys/assets/gis_cache/tiles/
 /sys/assets/gis_cache/prebaked/
 /sys/assets/gis_cache/geojson/ne_10m_*.geojson
@@ -125,15 +154,10 @@ flow_*.png
 *.log
 logs/
 !/sys/logs/
-!/sys/logs/**
-/sys/logs/**/*.log
-/sys/logs/proofs/
+/sys/logs/*
+!/sys/logs/issues/
 /sys/logs/issues/*
 !/sys/logs/issues/README.md
-/sys/logs/colab-account-audit-*.json
-/sys/logs/colab-auto-pool-activation-*.json
-/sys/logs/colab-scheduler-live-lock-proof-*.json
-/sys/logs/colab-test-isolation-cleanup-*.json
 
 # --- 6. Browser automation, Flow profiles & ledgers ---
 .gflow
@@ -224,6 +248,11 @@ cookies*.json
 .agents/sentinel*/
 .agents/ORIGINAL_REQUEST.md
 .agents/*preview*
+.agents/swarm*/
+.agents/scratch/
+.agents/logs/
+.agents/cache/
+**/account-[0-9]*/
 /account-*/
 
 # --- 11. OS & editor ---
