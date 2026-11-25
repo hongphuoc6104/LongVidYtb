@@ -141,6 +141,7 @@ flow_*.png
 /sys/assets/voices/adam-bua*
 /sys/assets/channels/*/*.png
 /sys/assets/audio/bgm/bgm_*.wav
+/sys/assets/audio/bgm_v5_cinema/*.wav
 /sys/assets/sfx/bespoke/
 /sys/fx_warehouse/**/preview*/
 /sys/fx_warehouse/**/smoke*/
@@ -271,3 +272,21 @@ desktop.ini
 *.swp
 *.swo
 *~
+
+# --- 12. Dedicated heavy / oversized local vault (>2000 lines or >1MB) ---
+/heavy_local/*
+!/heavy_local/README.md
+# Symlinks / in-place oversized local modules excluded per .githooks/pre-commit
+/sys/channels/su_ke_lai/multi_series_detailed_20beat_master_plan.json
+/sys/channels/su_ke_lai/v12_cinema_research/06_10_short_distinct_filmmaking_grammars.json
+/sys/dashboard/director_v7.js
+/sys/fx_warehouse/acoustic_styles_10x10.py
+/sys/fx_warehouse/bipolar_map_paper_engine.py
+/sys/fx_warehouse/history_styles_10x10.py
+/sys/fx_warehouse/su_ke_lai_long_v5_fx.py
+/sys/fx_warehouse/tactical_battle_map_v8.py
+/sys/fx_warehouse/tactical_battle_map_v9.py
+/sys/tools/build_su_ke_lai_long_360p_demo.py
+/sys/tools/produce_chanh_niem_ke_chronicle.py
+/sys/tools/studio_director_v7.py
+/sys/tools/vp_fleet_manager.py
