@@ -57,6 +57,6 @@ Refer to detailed parameters in [render-capabilities](../../../../sys/docs/rende
 ---
 
 ## 5. Modular FX & Audio Warehouse (`sys/fx_warehouse/`)
-Refer to [vp-motion-fx-warehouse](../../vp-motion-fx-warehouse/SKILL.md) for beat-level camera, VFX, 30fps HUD, and procedural SFX/BGM selection across `sys/fx_warehouse/` (`archetypes.py`, `camera_vfx.py`, `hud_widgets.py`, `audio_sfx_bgm.py`, `selector.py`):
+Refer to [vp-visual-fx](../../vp-visual-fx/SKILL.md) for beat-level camera, VFX, 30fps HUD, and procedural SFX/BGM selection across `sys/fx_warehouse/` (`archetypes.py`, `camera_vfx.py`, `hud_widgets.py`, `audio_sfx_bgm.py`, `selector.py`):
 - **5 Niche Archetypes (20 Channels)**: `CHANNEL_ARCHETYPE_MAP` groups all 20 channels into 5 archetypes (`archetype_1_forensic_noir`, `archetype_2_geopolitics_history`, `archetype_3_science_xray`, `archetype_4_doodle_explainer`, `archetype_5_mindful_healing`), pulling dynamically from the shared sub-warehouses per beat via `auto_select_beat_fx(...)` while obeying viewing-comfort guardrails.
 - **Non-Forced Bespoke Rule**: If a video's topic or niche requires a visual effect, HUD overlay, or sound stem not yet in the shared catalog, create a bespoke per-video/per-topic spec (`bespoke_hud_spec`, `bespoke_sfx_spec`) instead of forcing an incompatible existing preset, and shard new reusable catalogs into `sys/fx_warehouse/` submodules as the warehouse grows.

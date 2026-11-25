@@ -1,6 +1,6 @@
 # Causal Explanatory Script & Cadence Standards
 
-Read the brief/profile, packaging contract, audience and required points. Every video script adheres to the **Conversational Essayist** standard, the **3-Tier Funnel** (*"Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức"*), and the adaptive storytelling flow ([vp-scriptwriting](../../vp-scriptwriting/SKILL.md)):
+Read the brief/profile, packaging contract, audience and required points. Every video script adheres to the **Conversational Essayist** standard, the **3-Tier Funnel** (*"Tư Duy Nhận Thức, Phương Pháp Luận & Bản Chất Tri Thức"*), and the adaptive storytelling flow ([vp-content-studio](../../vp-content-studio/SKILL.md)):
 1. **Relatable Hook & Problem Framing:** Open with a relatable real-world observation or counter-intuitive dilemma in `SC01` (`VietNarrator` `speed: 1.0` on `short_9x16` and `long_16x9`), establishing immediate viewer connection.
 2. **Reframe & Cognitive Tension:** Challenge conventional assumptions, exposing the gap between common perception and underlying mechanism.
 3. **Causal Evidence & Feynman Explanation:** Deconstruct the core mechanism using simple declarative sentences chained together (Feynman Technique), supported by clear visual diagrams and empirical evidence.
@@ -12,7 +12,7 @@ To maintain natural acoustic flow and audio synchronization:
 - Apply the acoustic dead-air formula:
   $$\text{Target Syllables} = \text{round}\Big((\text{Duration} - P_{\text{tail}} - T_{\text{pause}}) \times 4.0\Big)$$
   where $P_{\text{tail}} = 0.70\text{s}$ for intermediate scenes (`para`) and $0.35\text{s}$ for the final scene (`tail`).
-- Timeline tolerance guideline: absolute drift within **$\pm 0.5\text{s}$** (optimal drift $\le 0.30\text{s}$). See [voice-cadence-pacing.md](../../vp-channel-patterns/references/voice-cadence-pacing.md) and [adaptation-playbook.md](../../vp-channel-patterns/references/adaptation-playbook.md).
+- Timeline tolerance guideline: absolute drift within **$\pm 0.5\text{s}$** (optimal drift $\le 0.30\text{s}$). See [voice-cadence-pacing.md](../../vp-content-studio/references/voice-cadence-pacing.md) and [adaptation-playbook.md](../../vp-content-studio/references/adaptation-playbook.md).
 - Validate scripts using `sys/tools/script_cadence_checker.py` (runs in soft advisory mode by default; `--strict` is optional):
   ```bash
   python3 sys/tools/script_cadence_checker.py path/to/content.json

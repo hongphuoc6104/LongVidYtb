@@ -1,6 +1,6 @@
 # Remote Audio Delivery & Cadence Standards
 
-Voice/reference/rate come from the current brief, with request provenance. Synthesized audio must adhere to the vocal persona matrix and pacing standards documented in [voice-cadence-pacing.md](../../vp-channel-patterns/references/voice-cadence-pacing.md) and [vp-scriptwriting](../../vp-scriptwriting/SKILL.md).
+Voice/reference/rate come from the current brief, with request provenance. Synthesized audio must adhere to the vocal persona matrix and pacing standards documented in [voice-cadence-pacing.md](../../vp-content-studio/references/voice-cadence-pacing.md) and [vp-content-studio](../../vp-content-studio/SKILL.md).
 
 ## 1. Format-aware pause policy
 
