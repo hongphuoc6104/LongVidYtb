@@ -556,7 +556,8 @@ VN_FLOW_VIDEO_FORMULAS: Dict[str, Dict[str, Any]] = {
         "visual_style_lock": (
             "Shot on 35mm Kodak Vision3 500T film, historical battle cinema docudrama, Ridley Scott Kingdom of Heaven aesthetic, "
             "practical period-accurate 10th-11th century Dai Viet lamellar armor and Song Dynasty iron laminar armor, "
-            "authentic wet mud, river mist, torchlight chiaroscuro, shallow depth of field, natural film grain, "
+            "authentic wet mud, crisp optical clarity, deep-focus 35mm anamorphic depth, dramatic directional sunlight or "
+            "warm Caravaggio torchlight chiaroscuro, rich tactile armor and terrain detail, natural film grain, "
             "zero CGI plasticity, zero text in frame."
         ),
         "negative_constraints": (
@@ -566,46 +567,50 @@ VN_FLOW_VIDEO_FORMULAS: Dict[str, Dict[str, Any]] = {
         ),
         "opening_shot_directives": {
             "allowed_text": None,
-            "camera": "35mm anamorphic medium-wide establishing shot, slow handheld push-in through low river mist at dawn",
-            "lighting": "Cold pre-dawn steel-blue overcast light pierced by warm flickering pitch-pine torches",
-            "framing": "10th-11th century Dai Viet commander in weathered bronze-iron lamellar armor on muddy riverbank overlooking misty estuary",
+            "camera": "35mm anamorphic medium-wide establishing shot, slow handheld push-in with crisp optical clarity at dawn",
+            "lighting": "Cold pre-dawn steel-blue directional light pierced by warm Caravaggio pitch-pine torchlight chiaroscuro",
+            "framing": "10th-11th century Dai Viet commander in weathered bronze-iron lamellar armor on muddy riverbank overlooking clear-air tidal estuary",
         },
         "anchor_prompts": {
             "protagonist_anchor": (
                 "Shot on 35mm Kodak Vision3 500T film, weathered 10th-11th century Dai Viet military commander in practical "
                 "laced iron-and-bronze lamellar armor over dark indigo hemp tunic, mud-splattered leather vambraces, "
-                "determined expression lit by flickering torchlight chiaroscuro, shallow depth of field, natural film grain, "
-                "allowed_text=None, zero text in frame."
+                "determined expression lit by warm Caravaggio torchlight chiaroscuro, crisp optical clarity, deep-focus 35mm anamorphic depth, "
+                "natural film grain, allowed_text=None, zero text in frame."
             ),
             "world_anchor": (
-                "Shot on 35mm Kodak Vision3 500T film, misty estuarine riverbanks of 10th-11th century northern Dai Viet at dusk, "
-                "wet riverbank mud, wooden palisade watchtowers, dark timber war junks silhouetted in drifting fog, "
-                "Ridley Scott Kingdom of Heaven historical realism, natural film grain, allowed_text=None, zero text in frame."
+                "Shot on 35mm Kodak Vision3 500T film, clear-air estuarine riverbanks of 10th-11th century northern Dai Viet at dusk, "
+                "wet riverbank mud, wooden palisade watchtowers, dark timber war junks in crisp optical clarity under dramatic directional sunlight "
+                "and warm Caravaggio torchlight chiaroscuro, Ridley Scott Kingdom of Heaven historical realism, natural film grain, "
+                "allowed_text=None, zero text in frame."
             ),
             "prop_anchor": (
                 "Shot on 35mm Kodak Vision3 500T film, close-up of practical 10th-11th century iron-tipped ironwood river stakes, "
                 "forged bronze-hilted Dai Viet straight sword, and Song Dynasty iron laminar shield resting in wet mud beside "
-                "burning pitch torches, shallow depth of field, natural film grain, allowed_text=None, zero text in frame."
+                "burning pitch torches, crisp optical clarity, rich tactile armor and terrain detail, natural film grain, allowed_text=None, zero text in frame."
             ),
         },
         "style_description": (
             "Locked V3 35mm Historical Live-Action Docudrama (su_ke_lai_35mm_live_action_v3) shot on Kodak Vision3 500T film "
             "in Ridley Scott Kingdom of Heaven aesthetic: practical period-accurate 10th-11th century Dai Viet lamellar armor and "
-            "Song Dynasty iron laminar armor, authentic wet mud, drifting river mist, torchlight chiaroscuro, shallow depth of field, "
+            "Song Dynasty iron laminar armor, authentic wet mud, crisp optical clarity, deep-focus 35mm anamorphic depth, "
+            "dramatic directional sunlight or warm Caravaggio torchlight chiaroscuro, rich tactile armor and terrain detail, "
             "natural 35mm film grain, zero CGI plasticity, and strictly zero text in frame."
         ),
         "subject_physics": (
             "Authentic water ripple and tidal current physics around submerged iron-tipped stakes, heavy wet cloth and mud-caked "
-            "lamellar armor weight, realistic torch ember drift and dense battlefield mist, natural human micro-expressions"
+            "lamellar armor weight, subtle localized torch ember parallax at frame edges without obscuring crisp optical clarity, "
+            "natural human micro-expressions"
         ),
         "camera_grammar": [
-            "35mm anamorphic low-angle tracking shot through river mist",
-            "handheld shallow-DOF close-up on mud-caked armor and torchlit faces",
-            "sweeping aerial crane over timber fleet formation in fog",
+            "35mm anamorphic low-angle tracking shot with crisp optical clarity and deep-focus parallax",
+            "handheld shallow-DOF close-up on mud-caked armor and warm Caravaggio torchlit faces",
+            "sweeping aerial crane over timber fleet formation under dramatic directional sunlight",
         ],
         "continuity_anchor": (
             "Locked V3 su_ke_lai_35mm_live_action_v3 35mm Kodak Vision3 500T historical live-action docudrama with practical "
-            "10th-11th century Dai Viet lamellar and Song iron laminar armor, wet mud, river mist, torchlight chiaroscuro, "
+            "10th-11th century Dai Viet lamellar and Song iron laminar armor, crisp optical clarity, deep-focus 35mm anamorphic depth, "
+            "dramatic directional sunlight or warm Caravaggio torchlight chiaroscuro, rich tactile armor and terrain detail, "
             "natural film grain, zero CGI plasticity, zero text in frame"
         ),
         "forbidden_artifacts": [
@@ -617,9 +622,15 @@ VN_FLOW_VIDEO_FORMULAS: Dict[str, Dict[str, Any]] = {
             "plastic CGI skin or glowing magic",
         ],
         "thumbnail_rule": (
-            "35mm film close-up of mud-streaked Dai Viet commander in torchlit lamellar armor before misty river battle, "
+            "35mm film close-up of mud-streaked Dai Viet commander in Caravaggio torchlit lamellar armor with crisp optical clarity, "
             "2-4 bold uppercase words, high contrast, zero overlay card, 25% margin"
         ),
+        "cinematic_diversity_rule_v4_1": {
+            "rule_id": "su_ke_lai_viral_v4.1",
+            "max_dust_smoke_cloud_seams_per_20_beat_short": 1,
+            "mandatory_seam_rotation": ["edge_pass", "dark_opening", "leaves_wipe", "white_flash", "final_hold"],
+            "beat_matched_xfade_transitions": ["fadeblack", "smoothleft", "smoothright", "dissolve", "circleopen", "fade"],
+        },
     },
     "ho_so_ky_la": {
         "channel_id": "ho_so_ky_la",

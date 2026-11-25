@@ -77,15 +77,15 @@
   },
   "execution_branch_refs": {
     "shared_skills": [
-      ".agents/skills/vp-research-architect/SKILL.md",
-      ".agents/skills/vp-scriptwriting/SKILL.md",
+      ".agents/skills/vp-channel-registry/SKILL.md",
+      ".agents/skills/vp-content-studio/SKILL.md",
+      ".agents/skills/vp-visual-fx/SKILL.md",
       ".agents/skills/vp-flow-cdp/SKILL.md",
       ".agents/skills/vp-colab-bridge/SKILL.md",
-      ".agents/skills/vp-omni-platform/SKILL.md",
       ".agents/skills/vp-production/SKILL.md"
     ],
-    "dedicated_channel_skill": ".agents/skills/vp-channel-chanh-niem-ke/SKILL.md",
-    "dedicated_playbook": ".agents/skills/vp-channel-chanh-niem-ke/references/bipolar_chronicle_playbook.md",
+    "dedicated_channel_overview": "sys/channels/chanh_niem_ke/playbook/overview.md",
+    "dedicated_playbook": "sys/channels/chanh_niem_ke/playbook/content.md",
     "dedicated_lock": "sys/channels/chanh_niem_ke/channel_v4_chronicle_lock.json",
     "dedicated_engine": "sys/fx_warehouse/bipolar_map_paper_engine.py",
     "dedicated_audio_mixer": "sys/fx_warehouse/chronicle_audio_mixer.py",

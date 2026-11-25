@@ -55,6 +55,6 @@
   3. `Giấc Ngủ, Não Bộ & Nhịp Sinh Học`
   4. `Dinh Dưỡng, Chuyển Hóa & Thói Quen Sống`
 
-## 6. Khóa Sản Xuất V3 & SSOT Skill Đặc Thù Riêng Kênh
-- **SSOT Skill:** [.agents/skills/vp-channel-co-the-ke/SKILL.md](../../../.agents/skills/vp-channel-co-the-ke/SKILL.md) (kèm [visual-grammar-biomedical-v3.md](../../../.agents/skills/vp-channel-co-the-ke/references/visual-grammar-biomedical-v3.md) và [pacing-and-script-rules.md](../../../.agents/skills/vp-channel-co-the-ke/references/pacing-and-script-rules.md))
+## 6. Khóa Sản Xuất V3 & SSOT Playbook Riêng Kênh
+- **SSOT Playbook (`vp-channel-registry`):** [playbook/overview.md](playbook/overview.md) (kèm [visual.md](playbook/visual.md) và [pacing.md](playbook/pacing.md), điều phối qua [.agents/skills/vp-channel-registry/SKILL.md](../../../.agents/skills/vp-channel-registry/SKILL.md))
 - **File Khóa Tham Số:** [channel_v3_production_lock.json](channel_v3_production_lock.json) (`LOCKED_PRODUCTION_V3`)

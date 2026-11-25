@@ -266,7 +266,8 @@ VN_COMPETITOR_SCRIPT_FORMULAS: Dict[str, Dict[str, Any]] = {
         "channel_slug": "chanh-niem-ke",
         "niche": "Hiểu Tận Gốc — Giải phẫu thảm họa kỹ thuật, đại dịch & sự cố sụp đổ hạ tầng trên bản đồ (Causal Disaster & Engineering Collapse Chronicles)",
         "competitor_name": "Su De Hieu / LEMMiNO / Causal Chronicle",
-        "voice": "VietNarrator_chanh_niem_ke",
+        "voice": "VietNarrator",
+        "voice_id": "VietNarrator_chanh_niem_ke",
         "competitor_dialogue_formula": {
             "competitor_verbatim_transcript_20s": (
                 "[00:00-00:03.8s] 'Đêm 26 tháng 4 năm 1986, các kỹ sư chỉ bấm nút dừng khẩn cấp AZ-5...' [pause 0.45s] -> "
@@ -378,9 +379,10 @@ VN_COMPETITOR_SCRIPT_FORMULAS: Dict[str, Dict[str, Any]] = {
         "channel_id": "su_ke_lai",
         "channel_slug": "su-ke-lai",
         "niche": "Lịch sử Việt Nam và thế giới qua góc nhìn điện ảnh sử thi 35mm (35mm Historical Live-Action Docudrama)",
-        "competitor_name": "Kingdom of Heaven / Ridley Scott Historical Cinema / Epic History Docudrama",
+        "competitor_name": "Dòng Máu Việt / CD Media - Quân Sự / Sử Lược - Tóm Tắt Lịch Sử / EZ Sử / Kingdom of Heaven Historical Cinema",
         "voice": "VietNarrator",
         "voice_id": "VietNarrator_su_ke_lai",
+        "recommended_speed": 1.30,
         "fast_cutting_visual_sub_beat_rule": {
             "core_zero_filler_sentences": 120,
             "visual_sub_beats_per_sentence": 2,
@@ -392,32 +394,112 @@ VN_COMPETITOR_SCRIPT_FORMULAS: Dict[str, Dict[str, Any]] = {
                 "= 240 visual beats trong ~9m15s-9m45s, trung bình ~2.35s/ảnh."
             ),
         },
+        "viral_v4_breakout_protocol": {
+            "version": "su_ke_lai_viral_v4",
+            "target_views_range": "100,000 - 3,590,000+ views",
+            "verified_competitor_benchmarks": {
+                "dong_mau_viet": {
+                    "channel_id": "UCpXhSnIKT-oxLAU4B-76GRg",
+                    "name": "Dòng Máu Việt",
+                    "harvested_shorts_count": 13,
+                    "avg_short_views_30d": 1047638,
+                    "peak_short_views_30d": 3591938,
+                    "avg_duration_sec": 139.8,
+                    "avg_syllables_per_sec": 4.15,
+                    "signature_duration_sec": "121-177s (Mode B) + 52s (Mode A+)",
+                    "breakout_video_ids": ["n9oZSIRTLUo", "7QrEPUHLzgI", "F4FUWZaVoaI", "exQOdR_i16A", "g3iwANHmzl4", "5OQg0SEiJrc", "a4uUFYSvJIc", "UQrgEvoyGgo", "Po0dZk8NSco"],
+                },
+                "cd_media_quan_su": {
+                    "channel_id": "UC35gdWUdW1hzgS02Oz8kMUQ",
+                    "name": "CD Media - Quân Sự",
+                    "harvested_shorts_count": 9,
+                    "avg_short_views_30d": 265639,
+                    "peak_short_views_30d": 772480,
+                    "recent_short_views_30d": "91,874 - 456,641 (peak 772,480)",
+                    "avg_duration_sec": 66.9,
+                    "avg_syllables_per_sec": 3.60,
+                    "signature_duration_sec": "51-74s (Mode A+)",
+                    "breakout_video_ids": ["XN05y-9LIKE", "7pJgdZpuaNE", "qR5LJRcJebA", "3L9_4l_dSRM", "MK4BsPhNAec", "6r5Zu1SBbPA"],
+                },
+                "su_luoc": {
+                    "channel_id": "UCJDueHzfSEXmgMhmKIa9esQ",
+                    "name": "Sử Lược - Tóm Tắt Lịch Sử",
+                    "evergreen_short_views": "213,342 - 697,946 (avg 455,644)",
+                    "avg_duration_sec": 49.0,
+                    "avg_syllables_per_sec": 4.55,
+                    "signature_duration_sec": "43-55s",
+                },
+                "ez_su": {
+                    "channel_id": "UCpaQwg8wZRAkFJe3mo1VKSA",
+                    "name": "EZ Sử",
+                    "evergreen_short_views": "194,964 - 372,698 (avg 283,831)",
+                    "avg_duration_sec": 59.5,
+                    "avg_syllables_per_sec": 5.04,
+                    "signature_duration_sec": "50-75s",
+                },
+            },
+            "standalone_packaging_rule": (
+                "Rule 1 — Standalone Mass-Curiosity Packaging: CẤM đánh số P1/P2/P3/Tập 1 ở đầu tiêu đề (youtube_title <= 55 chars); "
+                "Beat 0 hook <= 16-18 âm tiết, zero [pause:...], mở thẳng bằng khoảng trống tò mò đại chúng "
+                "(thành ngữ lịch sử, binh chủng/vũ khí bí mật, đối chiếu danh tướng/hoàng đế, cú lừa sinh tử, con số gây sốc), "
+                "tuyệt đối không mở đầu bằng địa danh vi mô xa lạ."
+            ),
+            "viral_content_pillars": [
+                "1. Giải Mã Câu Nói / Thành Ngữ Lịch Sử Quen Thuộc ('Hăm mốt Lê Lai, hăm hai Lê Lợi', 'Nợ như Chúa Chổm', 'Sợ Tây Sơn như sợ cọp')",
+                "2. Binh Chủng Tinh Nhuệ & Vũ Khí Bí Mật Đại Việt (Tượng binh Tây Sơn, Hỏa hổ, Thần cơ sang pháo, Lính Cảm tử Sát Thát)",
+                "3. Xếp Hạng / Đối Chiếu Danh Tướng & Hoàng Đế ('Những vị Vua Việt Nam trực tiếp cầm gươm ra trận', '3 danh tướng chưa từng thua một trận nào')",
+                "4. Khoảnh Khắc Sinh Tử & Cú Lừa Quân Sự Kinh Điển (Giả hàng, nghi binh, kế vườn không nhà trống, mật kế đêm giao thừa)",
+                "5. Số Phận & Góc Khuất Sau Chiến Thắng (Bí ẩn hậu chiến và sự hy sinh thầm lặng được ghi trong chính sử)",
+            ],
+            "dual_duration_pacing_modes": {
+                "mode_a_plus_viral_fast_loop_short": {
+                    "mode_id": "viral_fast_loop_short",
+                    "duration_range_sec": "54-72s",
+                    "beats_range": "15-16 beats (~3.8s/beat)",
+                    "target_apv": ">90%",
+                    "benchmark_model": "CD Media - Quân Sự (51-74s, 456K-772K views) & Sử Lược (43-55s, 213K-697K views)",
+                },
+                "mode_b_serialized_detail_short": {
+                    "mode_id": "serialized_detail_short",
+                    "duration_range_sec": "105-145s (default 20 beats ~105-118s, <125s, 4 chunks x 5 beats)",
+                    "beats_range": "20-24 beats",
+                    "benchmark_model": "Dòng Máu Việt (137-167s, 761K-3.59M views)",
+                },
+            },
+            "debate_trigger_ending_rule": (
+                "Rule 4 — Debate-Trigger Ending & Pinned Comment Loop: 15% cuối kịch bản + Bình luận ghim (@SuKeLaiVN) "
+                "bắt buộc đặt câu hỏi phán xét lịch sử 2 lựa chọn để kéo tỷ lệ bình luận/lượt xem > 0.15% và kích hoạt vòng lặp xem lại."
+            ),
+        },
         "competitor_dialogue_formula": {
             "competitor_verbatim_transcript_20s": (
-                "[00:00-00:04.2s] 'Năm 938, trước hàng trăm chiến thuyền Nam Hán hung hãn...' [pause 0.35s] -> "
-                "[00:04.6-00:09.5s] 'Ngô Quyền không hề đem quân ra nghênh chiến trực diện.' [pause 0.45s] -> "
-                "[00:10.0-00:14.5s] 'Ông kiên nhẫn chờ đợi con nước thủy triều sông Bạch Đằng rút xuống...' [pause 0.38s] -> "
-                "[00:14.9-00:20.0s] 'để bãi cọc nhọn bọc sắt dưới đáy sông làm nhiệm vụ lịch sử của chúng.'"
+                "[00:00-00:03.6s] 'Vì sao người Việt có câu: Hăm mốt Lê Lai, hăm hai Lê Lợi?' [pause 0.30s] -> "
+                "[00:03.9-00:08.8s] 'Năm 1418 tại núi Chí Linh, nghĩa quân Lam Sơn bị quân Minh vây chặt bốn bề, hết sạch lương thảo.' [pause 0.42s] -> "
+                "[00:09.2-00:14.2s] 'Giữa đêm sinh tử, tướng Lê Lai tự nguyện khoác hoàng bào, cưỡi voi chiến xông thẳng vào trại giặc...' [pause 0.45s] -> "
+                "[00:14.7-00:20.0s] 'để đánh đổi mạng sống của chính mình lấy mười năm độc lập cho cả dân tộc Đại Việt.'"
             ),
             "sentence_structure_formula_vi": (
-                "Công thức kịch tính lịch sử 5 bước (120 câu zero-filler x 2 visual sub-beats = 240 beats over ~9m15s-9m45s, avg ~2.35s/image): "
-                "(1) Mốc thời gian và tương quan lực lượng áp đảo ('Năm 938, hạm đội giặc hung hãn...') -> "
-                "(2) Quyết định chiến thuật bất ngờ ('Ngô Quyền không đối đầu trực diện') -> "
-                "(3) Yếu tố thiên thời địa lợi ('Kiên nhẫn chờ nước thủy triều rút') -> "
-                "(4) Đòn phục kích chí mạng ('Bãi cọc sắt nhô lên khóa chặt chiến thuyền') -> "
-                "(5) Ý nghĩa bước ngoặt độc lập ngàn năm ('Mở ra kỷ nguyên tự chủ muôn đời cho non sông')."
+                "Công thức kịch tính lịch sử V4 Viral Breakout 5 bước (Long 120 câu zero-filler x 2 sub-beats = 240 beats ~2.35s/ảnh; "
+                "Short Mode A+ 15-16 beats 54-72s & Mode B 20-24 beats 105-145s theo chuẩn Dòng Máu Việt & CD Media - Quân Sự): "
+                "(1) Hook tò mò đại chúng <= 16-18 âm tiết, zero pause, cấm đánh số P1/P2 ('Vì sao có câu Hăm mốt Lê Lai, hăm hai Lê Lợi?' / 'Đội tượng binh nào khiến cả Đông Nam Á khiếp sợ?') -> "
+                "(2) Thế cờ sinh tử & nghịch lý lực lượng từ chính sử ('Nghĩa quân bị vây bốn bề tại Chí Linh...') -> "
+                "(3) Giải phẫu vũ khí, binh chủng tinh nhuệ hoặc mưu kế lật cờ ('Khoác hoàng bào giả làm chúa Lam Sơn xông trận / Hỏa hổ phun lửa thiêu rụi kỵ binh') -> "
+                "(4) Khoảng lặng tim đập [pause:450-650ms] & đòn quyết định xoay chuyển lịch sử ('Một mạng người đổi lấy sinh mệnh của cả cuộc khởi nghĩa') -> "
+                "(5) Đúc kết hào khí dân tộc & câu hỏi tranh luận 2 lựa chọn kích hoạt bình luận ghim ('Theo bạn, đây là mưu kế quân sự hay đỉnh cao lòng trung nghĩa?')."
             ),
             "pause_and_cadence_formula_vi": (
-                "Nhịp đọc hào hùng, điện ảnh, trầm bổng kịch tính khóa V3 (VietNarrator_su_ke_lai) tốc độ hiệu dụng 1.30x "
-                "(1.12x base OmniVoice synthesis + atempo=1.161 WSOLA + 0.06s inter-beat gap), "
+                "Nhịp đọc hào hùng, điện ảnh, trầm bổng kịch tính khóa V3/V4 (VietNarrator_su_ke_lai) tốc độ hiệu dụng 1.30x "
+                "(1.12x base OmniVoice synthesis + atempo=1.161 WSOLA + 0.06s inter-beat gap), kết hợp 6-Mode Voice Prosody "
+                "(tense_whisper, narrative_cinema, tactical_breakdown, urgent_escalation, climax_heroic, reflective_lesson) "
+                "và [pause:450-650ms] trên silence_vacuum tim đập trước cao trào; "
                 "Studio Presence EQ (highpass=f=80,equalizer=f=180:t=q:w=1.1:g=1.2,equalizer=f=3200:t=q:w=1.0:g=2.2,"
-                "equalizer=f=6500:t=q:w=1.2:g=1.5,lowpass=f=15000), master -11.0 LUFS / -1.0 dBTP: "
-                "120 câu cốt lõi zero-filler x 2 visual sub-beats = 240 visual beats trong ~9m15s-9m45s (trung bình ~2.35s/ảnh)."
+                "equalizer=f=6500:t=q:w=1.2:g=1.5,lowpass=f=15000), master -11.0 LUFS / -1.0 dBTP."
             ),
             "transition_and_camera_formula_vi": (
-                "Hệ hình ảnh 35mm Historical Live-Action Docudrama khóa V3 (su_ke_lai_35mm_live_action_v3) "
-                "xuất 2K 2560x1440@30fps static Lanczos kết hợp xfade=fade:duration=0.24: 120 câu x 2 sub-beat hình ảnh "
-                "(240 beats, ~2.35s/ảnh), quay phim 35mm Kodak Vision3 500T ánh đuốc chiaroscuro, giáp vảy Đại Việt & Tống, bùn ẩm và sương sông."
+                "Hệ hình ảnh 35mm Historical Live-Action Docudrama khóa V3/V4 (su_ke_lai_35mm_live_action_v3 & su_ke_lai_viral_v4) "
+                "xuất 2K 2560x1440@30fps (Long static Lanczos + xfade=fade:duration=0.24, 240 beats) & 1440x2560@30fps "
+                "(Short Mode A+ 15-16 beats 54-72s / Mode B 20-24 beats 105-145s single-pass 4-GPU Colab T4, 100% 35mm live-action, "
+                "heroic_banner >= 132px, VietSub Noto Sans 132px, watermark W-w-36:H-h-36)."
             ),
         },
     },
