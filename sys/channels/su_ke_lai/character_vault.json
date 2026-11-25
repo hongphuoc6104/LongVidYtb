@@ -1,0 +1,1259 @@
+{
+  "vault_version": "7.0.0",
+  "channel_id": "su_ke_lai",
+  "channel_name": "Sử Kể Lại",
+  "handle": "@SuKeLaiVN",
+  "visual_grammar": "su_ke_lai_35mm_live_action_v3",
+  "clean_frame_rule": "Every story frame enforces allowed_text=None (Zero AI-Drawn Text), plain unmarked solid-color banners with zero letters or glyphs, benign fictionalized period-archetype facial descriptions with zero celebrity likeness, and Clear-Air 35mm Kodak Vision3 500T anamorphic optical clarity.",
+  "faction_style_locks": {
+    "dai_viet": {
+      "faction_id": "dai_viet",
+      "name_vi": "Đại Việt Các Triều Đại (Ngô · Đinh · Tiền Lê · Lý · Trần · Lê Sơ · Tây Sơn)",
+      "historical_span": "938–1789",
+      "palette_hex": {
+        "primary_hex": "#8B1E24",
+        "accent_hex": "#D4A037",
+        "banner_hex": "#7A161B"
+      },
+      "armor_and_wardrobe_lock": "Period-accurate Vietnamese dark bronze and lacquered-leather lamellar cuirass (giáp vảy đồng/sắt sơn mài), cross-collar ramie or silk war tunics (áo giao lĩnh) or round-collar noble brocade robes (áo viên lĩnh) in deep crimson, indigo, and earthy brown, cloth-wrapped shins (xà cạp), and conical woven-rattan or bronze-ribbed dome helmets (nón mẫu dứa / mũ trụ đồng).",
+      "weapons_and_vessels_lock": "Straight double-edged steel command swords (kiếm), curved broad-bladed sabers (đao), iron-tipped hardwood spears (giáo), anti-cavalry hooked polearms (câu liêm), bamboo-and-horn crossbows (nỏ), woven rattan shields, sharpened 75-degree ironwood river stakes (cọc gỗ lim), armored war elephants, and sleek low-slung oared hardwood river galleys.",
+      "banners_and_insignia_lock": "Weathered solid dark-crimson and antique-gold silk war pennants frayed by wind, completely plain and unmarked with zero Chinese characters, zero Vietnamese letters, and zero printed emblems.",
+      "anti_anachronism_bans": [
+        "no Japanese samurai kabuto, sode shoulder plates, or katana",
+        "no European medieval plate armor, longswords, or heater shields",
+        "no Qing Manchu braided queues or horsehoof cuffs",
+        "no text, calligraphy, letters, or numbers on banners or shields"
+      ]
+    },
+    "southern_han": {
+      "faction_id": "southern_han",
+      "name_vi": "Nam Hán (Ngũ Đại Thập Quốc)",
+      "historical_span": "917–971",
+      "palette_hex": {
+        "primary_hex": "#2F3E46",
+        "accent_hex": "#9E6B3B",
+        "banner_hex": "#3B4252"
+      },
+      "armor_and_wardrobe_lock": "10th-century Five Dynasties Southern Han heavy rectangular iron lamellar chest and skirt armor laced with dark rawhide thongs over slate-grey and muted ochre padded hemp tunics, iron-ribbed dome helmets with riveted leather neck-flaps, and dark leather bracers.",
+      "weapons_and_vessels_lock": "Heavy iron pole-spears, broad single-edged Tang-style dao sabers, iron-rimmed wooden shields, and towering deep-draft multi-decked Southern Han wooden warships (lâu thuyền) with dark pitched hulls.",
+      "banners_and_insignia_lock": "Dark slate-indigo and weathered ochre silk pennants whipping from tall wooden masts, strictly plain and unmarked with zero characters or glyphs.",
+      "anti_anachronism_bans": [
+        "no gunpowder cannons or muskets in 938",
+        "no Ming or Qing dynasty hats or queues",
+        "no European plate mail or Viking helmets",
+        "no characters or text on sails or flags"
+      ]
+    },
+    "northern_song": {
+      "faction_id": "northern_song",
+      "name_vi": "Bắc Tống (Triều Tống Phương Bắc)",
+      "historical_span": "960–1127",
+      "palette_hex": {
+        "primary_hex": "#354F6B",
+        "accent_hex": "#A63A2B",
+        "banner_hex": "#6E2620"
+      },
+      "armor_and_wardrobe_lock": "11th-century Northern Song heavy iron laminar and mountain-pattern armor (shanwenjia) laced tightly with leather cords over padded slate-blue or dark-crimson gambesons, iron-rimmed round helmets with hanging lamellar ear-and-neck guards (bảo đầu), and heavy leather boots.",
+      "weapons_and_vessels_lock": "Long-shafted crescent Song halberds (kích), mechanical heavy bronze-trigger Thần Tý crossbows, iron-strapped wooden tower shields, counterweighted timber traction trebuchets, and multi-oared armored river barges.",
+      "banners_and_insignia_lock": "Weathered dark-crimson, ochre, and slate-indigo silk war standards, strictly blank with zero Chinese characters or text.",
+      "anti_anachronism_bans": [
+        "no cast-iron gunpowder tube cannons or matchlock muskets",
+        "no Japanese samurai armor or Qing Manchu robes",
+        "no glowing fantasy weapons or mirror-chrome metal",
+        "no text or characters on fortress gates or banners"
+      ]
+    },
+    "mongol_yuan": {
+      "faction_id": "mongol_yuan",
+      "name_vi": "Nguyên Mông (Đế Chế Đại Nguyên)",
+      "historical_span": "1271–1368",
+      "palette_hex": {
+        "primary_hex": "#3D352E",
+        "accent_hex": "#B87333",
+        "banner_hex": "#2B2623"
+      },
+      "armor_and_wardrobe_lock": "13th-century Mongol-Yuan heavy rawhide-and-iron lamellar war coats (khatangu degel) trimmed with dark wolf or sheepskin fur at the collar and cuffs over weather-beaten oxblood and charcoal wool tunics, conical iron-and-leather helmets with fur-lined lamellar aventails, and heavy riding boots.",
+      "weapons_and_vessels_lock": "Horn-and-sinew composite recurve steppe bows, curved saber blades, heavy iron maces, shaggy muscular steppe warhorses, and massive deep-hulled wooden Yuan naval war junks and grain barges.",
+      "banners_and_insignia_lock": "Horsehair tug standards and dark weathered cloth pennants with zero script, zero letters, and zero emblems.",
+      "anti_anachronism_bans": [
+        "no horned Viking helmets or European knight plate",
+        "no Qing Manchu shaved-forehead queues",
+        "no modern steel rigging or firearms",
+        "no script or text on ship hulls, sails, or grain casks"
+      ]
+    },
+    "ming": {
+      "faction_id": "ming",
+      "name_vi": "Nhà Minh (Đại Minh Viễn Chinh)",
+      "historical_span": "1368–1644",
+      "palette_hex": {
+        "primary_hex": "#5C4033",
+        "accent_hex": "#C59B27",
+        "banner_hex": "#8C5A2B"
+      },
+      "armor_and_wardrobe_lock": "Early 15th-century Yongle-Xuande Ming expeditionary iron brigandine coats (cloth-covered studded plate armor) and gilded mountain-scale commander cuirasses with round bronze heart-mirror plates (hộ tâm kính), tall iron helmets with red horsehair plumes for officers and brimmed iron kettle-helmets for infantry.",
+      "weapons_and_vessels_lock": "Ming cavalry lances, curved goose-quill sabers (nhạn linh đao), early socketed bronze hand-cannons (thần cơ thương), iron-barded heavy northern warhorses, and fortified brick-and-timber siege camps.",
+      "banners_and_insignia_lock": "Ochre-gold and dark-rust silk expeditionary banners bordered in plain dark trim, strictly blank with zero characters or glyphs.",
+      "anti_anachronism_bans": [
+        "no 19th-century rifles or percussion firearms",
+        "no Qing Manchu queues or conical tassel hats",
+        "no Japanese samurai masks or European plate",
+        "no Chinese characters on Ming helmets, chest mirrors, or banners"
+      ]
+    },
+    "qing": {
+      "faction_id": "qing",
+      "name_vi": "Nhà Thanh (Bát Kỳ – Lục Doanh)",
+      "historical_span": "1644–1912",
+      "palette_hex": {
+        "primary_hex": "#23395B",
+        "accent_hex": "#C83E37",
+        "banner_hex": "#2B4570"
+      },
+      "armor_and_wardrobe_lock": "Late 18th-century Qianlong-era Qing Eight Banners and Green Standard padded dark slate-blue and bordered-satin brigandine coats (mianjia) studded with brass rivets, fur-trimmed winter command surcoats, conical rattan-and-felt winter official war hats topped with red horsehair tassels, and period-specific Qing braided hair queues.",
+      "weapons_and_vessels_lock": "18th-century smoothbore matchlock muskets (súng điểu thương), cast-iron rampart cannons on timber carriages, iron caltrops, curved Qing yaodao sabers, and bamboo-palisaded earthen redoubts.",
+      "banners_and_insignia_lock": "Plain solid slate-blue and crimson bordered silk war standards without any written Manchu or Chinese characters.",
+      "anti_anachronism_bans": [
+        "no bolt-action rifles, Gatling guns, or modern artillery",
+        "no medieval European plate armor or samurai helmets",
+        "no modern uniforms, eyeglasses, or concrete bunkers",
+        "no written text, characters, or numbers on banners or lanterns"
+      ]
+    }
+  },
+  "characters": [
+    {
+      "character_id": "ngo_quyen",
+      "name_vi": "Ngô Quyền",
+      "aliases": [
+        "Ngô Quyền",
+        "Ngo Quyen",
+        "Tiền Ngô Vương",
+        "Tien Ngo Vuong",
+        "Ngô Vương Quyền",
+        "ngo_quyen_938"
+      ],
+      "dynasty_era": "Nhà Ngô (938–944)",
+      "era_group": "ngo_dinh_tien_le",
+      "years_active": "938–944",
+      "faction": "dai_viet",
+      "side": "dai_viet_hero",
+      "role_archetype": "Bậc Tổ Trung Hưng · Kiến Trúc Sư Thủy Chiến Bạch Đằng 938",
+      "face_and_age_dna": "A commanding 40-year-old 10th-century Vietnamese supreme general with a weathered sun-bronzed square jaw, prominent cheekbones, resolute deep-set dark eyes, short trimmed black beard and mustache, black hair tied tightly beneath his war helmet, lips firmly closed in calm strategic authority, entirely original historical archetype with zero celebrity likeness.",
+      "armor_and_wardrobe_lock": "10th-century early Đại Việt dark bronze rectangular lamellar chest and shoulder armor laced with rawhide over a coarse indigo-and-crimson cross-collar hemp war tunic, embossed bronze forearm bracers, and a low-domed bronze-ribbed leather helmet.",
+      "signature_weapons_and_props": [
+        "straight double-edged bronze-hilted iron command sword",
+        "sharpened iron-tipped ironwood Bạch Đằng river stake model",
+        "carved wooden command galley prow"
+      ],
+      "lighting_and_color_palette": {
+        "primary_hex": "#8B5A2B",
+        "accent_hex": "#D4A037",
+        "lighting_key": "golden_dawn_estuary"
+      },
+      "voice_and_persona_note_vi": "Điềm tĩnh, quyết đoán, tầm nhìn chiến lược mở ra kỷ nguyên độc lập sau 1.000 năm Bắc thuộc; nhịp đọc dứt khoát, uy nghi như sóng triều Bạch Đằng.",
+      "anti_anachronism_bans": [
+        "no gunpowder cannons or firearms in 938",
+        "no samurai kabuto or European plate armor",
+        "no Qing queues or Ming court robes",
+        "no text or characters on ship banners"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_ep12_3_danh_tuong_bat_bai_short/frames/beat_02.png"
+    },
+    {
+      "character_id": "dinh_bo_linh",
+      "name_vi": "Đinh Bộ Lĩnh",
+      "aliases": [
+        "Đinh Bộ Lĩnh",
+        "Dinh Bo Linh",
+        "Đinh Tiên Hoàng",
+        "Dinh Tien Hoang",
+        "Vạn Thắng Vương",
+        "Van Thang Vuong",
+        "dinh_bo_linh_968"
+      ],
+      "dynasty_era": "Nhà Đinh · Đại Cồ Việt (968–979)",
+      "era_group": "ngo_dinh_tien_le",
+      "years_active": "951–979",
+      "faction": "dai_viet",
+      "side": "dai_viet_hero",
+      "role_archetype": "Vạn Thắng Vương Dẹp Loạn 12 Sứ Quân · Hoàng Đế Khai Quốc Đại Cồ Việt",
+      "face_and_age_dna": "A rugged 44-year-old 10th-century Vietnamese warrior-emperor with broad shoulders, sun-weathered olive-bronze skin, strong brow ridge, fierce eagle-like dark eyes, full neatly kept dark beard, and closed mouth radiating indomitable highland charisma, pure historical cinema archetype with zero celebrity likeness.",
+      "armor_and_wardrobe_lock": "10th-century Đại Cồ Việt heavy lacquered dark-leather and bronze scale cuirass worn over a deep vermilion-crimson silk war robe with antique-gold woven borders, wide bronze-studded leather waist belt, and a ceremonial bronze-crested leather war crown-helmet.",
+      "signature_weapons_and_props": [
+        "heavy bronze-hilted broad war saber",
+        "wild reed-blossom tactical pennant motif (cờ bông lau)",
+        "jagged Hoa Lư limestone fortress rampart"
+      ],
+      "lighting_and_color_palette": {
+        "primary_hex": "#9B2226",
+        "accent_hex": "#E9C46A",
+        "lighting_key": "torchlit_karst_citadel"
+      },
+      "voice_and_persona_note_vi": "Hào sảng, quyết liệt, bản lĩnh thủ lĩnh bước ra từ thung lũng Hoa Lư thống nhất giang sơn; giọng kể trầm hùng, giàu nội lực.",
+      "anti_anachronism_bans": [
+        "no gunpowder weapons or cannons",
+        "no Ming/Qing dragon robes or Manchu queues",
+        "no European knightly crowns or plate mail",
+        "no written letters or characters on banners"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_ep05_chieu_doi_do_1010_short/frames/beat_00.png"
+    },
+    {
+      "character_id": "le_hoan",
+      "name_vi": "Lê Hoàn (Lê Đại Hành)",
+      "aliases": [
+        "Lê Hoàn",
+        "Le Hoan",
+        "Lê Đại Hành",
+        "Le Dai Hanh",
+        "Thập Đạo Tướng Quân Lê Hoàn",
+        "le_hoan_981"
+      ],
+      "dynasty_era": "Nhà Tiền Lê (980–1005)",
+      "era_group": "ngo_dinh_tien_le",
+      "years_active": "980–1005",
+      "faction": "dai_viet",
+      "side": "dai_viet_hero",
+      "role_archetype": "Hoàng Đế Cầm Gươm Xung Trận · Phá Tống Bình Chiêm 981",
+      "face_and_age_dna": "A battle-hardened 40-year-old 10th-century Vietnamese warrior-emperor with sharp chiseled cheekbones, weathered tan skin, intense unblinking dark eyes, short coarse dark mustache and chin beard, and firmly closed lips set in iron resolve, zero celebrity likeness.",
+      "armor_and_wardrobe_lock": "10th-century Tiền Lê dark leather-and-bronze scale battle cuirass with layered lamellar pauldrons over an earth-crimson cross-collar war tunic, dark leather bracers, mud-splattered cloth shin wraps, and a bronze-rimmed domed iron helmet.",
+      "signature_weapons_and_props": [
+        "straight double-edged bronze-hilted steel war sword",
+        "981 Bạch Đằng river stake barricade",
+        "swift carved hardwood imperial command warboat"
+      ],
+      "lighting_and_color_palette": {
+        "primary_hex": "#7F1D1D",
+        "accent_hex": "#CA8A04",
+        "lighting_key": "crisp_dawn_riverfront"
+      },
+      "voice_and_persona_note_vi": "Thép nguội, thực chiến, luôn đứng mũi thuyền đầu sóng thay vì ngồi sau cung cấm Hoa Lư; nhịp kể nhanh, mạnh, dứt khoát.",
+      "anti_anachronism_bans": [
+        "no firearms or cannons in 981",
+        "no samurai armor or European broadswords",
+        "no Qing or Ming dynasty court attire",
+        "no text or calligraphy on war standards"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_ep09_3_hoang_de_cam_guom_xung_tran_short/frames/beat_02.png"
+    },
+    {
+      "character_id": "ly_cong_uan",
+      "name_vi": "Lý Công Uẩn (Lý Thái Tổ)",
+      "aliases": [
+        "Lý Công Uẩn",
+        "Ly Cong Uan",
+        "Lý Thái Tổ",
+        "Ly Thai To",
+        "Vua Lý Thái Tổ",
+        "ly_cong_uan_1010"
+      ],
+      "dynasty_era": "Nhà Lý (1009–1028)",
+      "era_group": "ly_tran",
+      "years_active": "1009–1028",
+      "faction": "dai_viet",
+      "side": "dai_viet_hero",
+      "role_archetype": "Minh Quân Kiến Tạo Kinh Đô Thăng Long · Tầm Nhìn Địa Chiến Lược 1010",
+      "face_and_age_dna": "A dignified 36-year-old 11th-century Vietnamese monarch with calm noble features, warm olive complexion, clear perceptive dark eyes, neatly trimmed thin mustache and short beard, topknot secured by an antique-gold lotus hairpin, and serene closed lips, zero celebrity likeness.",
+      "armor_and_wardrobe_lock": "Early 11th-century Lý Dynasty imperial antique-gold and deep-vermilion woven silk round-collar court-and-campaign robe (áo viên lĩnh) with subtle embossed coiled-dragon medallions, jade-set leather belt, and dark bronze ceremonial shoulder guards when inspecting river fleets.",
+      "signature_weapons_and_props": [
+        "bound bamboo-and-mulberry royal edict scroll (unreadable texture, zero text)",
+        "carved dark-timber Red River Delta terrain relief table",
+        "golden-eaved Lý imperial dragon barge"
+      ],
+      "lighting_and_color_palette": {
+        "primary_hex": "#B45309",
+        "accent_hex": "#F59E0B",
+        "lighting_key": "warm_amber_sunbeam"
+      },
+      "voice_and_persona_note_vi": "Điềm đạm, sâu sắc, nhìn xa trông rộng hàng thế kỷ về thủy vận và thế đất Đại La – Thăng Long; giọng đọc trang trọng, khai mở.",
+      "anti_anachronism_bans": [
+        "no Qing Manchu dragon robes or queues",
+        "no modern paper maps with printed Latin/Chinese labels",
+        "no eyeglasses or modern masonry",
+        "no readable calligraphy or letters on scrolls"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_ep05_chieu_doi_do_1010_short/frames/beat_05.png"
+    },
+    {
+      "character_id": "ly_thuong_kiet",
+      "name_vi": "Lý Thường Kiệt",
+      "aliases": [
+        "Lý Thường Kiệt",
+        "Ly Thuong Kiet",
+        "Thái úy Lý Thường Kiệt",
+        "Thai uy Ly Thuong Kiet",
+        "Ngô Tuấn",
+        "Việt Quốc Công",
+        "ly_thuong_kiet_1075"
+      ],
+      "dynasty_era": "Nhà Lý (1075–1077)",
+      "era_group": "ly_tran",
+      "years_active": "1069–1105",
+      "faction": "dai_viet",
+      "side": "dai_viet_hero",
+      "role_archetype": "Thái Úy Phụ Quốc · Bậc Thầy Tiên Phát Chế Nhân & Phòng Tuyến Như Nguyệt",
+      "face_and_age_dna": "A weathered 56-year-old 11th-century Đại Việt grand marshal with high angular cheekbones, sun-and-rain-etched bronze skin, calm piercing dark eyes, salt-and-pepper mustache and short goatee, hair tied beneath his war helmet, and firmly clenched jaw with closed lips, zero celebrity likeness.",
+      "armor_and_wardrobe_lock": "11th-century Lý Dynasty gilded-bronze embossed dragon chest plate and layered bronze lamellar shoulder pauldrons worn over a deep indigo-and-crimson cross-collar silk war tunic, scarred bronze vambraces, and a signature conical woven-rattan and embossed-bronze Lý war helmet.",
+      "signature_weapons_and_props": [
+        "straight steel Lý command war-sword in bronze-mounted scabbard",
+        "split-bamboo soil siege basket (Thổ Sơn Ung Châu)",
+        "4-meter thorny bamboo rampart stake (Phòng tuyến Như Nguyệt)"
+      ],
+      "lighting_and_color_palette": {
+        "primary_hex": "#9A6B26",
+        "accent_hex": "#7C1D24",
+        "lighting_key": "amber_brazier"
+      },
+      "voice_and_persona_note_vi": "Táo bạo khi phủ đầu Ung Châu, kiên định như thép trước sông Như Nguyệt, lại thấu hiểu tâm lý và ngoại giao biết mở đường hiếu sinh; giọng đọc sắc lạnh, trí tuệ.",
+      "anti_anachronism_bans": [
+        "no gunpowder cannons or matchlocks in 1075-1077",
+        "no Japanese samurai kabuto or katana",
+        "no European plate armor or Qing robes",
+        "no AI-drawn text on Phạt Tống Lộ Bố Văn scrolls or banners"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_v6_prestige_ung_chau_1075_short/frames/beat_12.png"
+    },
+    {
+      "character_id": "tran_hung_dao",
+      "name_vi": "Trần Hưng Đạo (Trần Quốc Tuấn)",
+      "aliases": [
+        "Trần Hưng Đạo",
+        "Tran Hung Dao",
+        "Trần Quốc Tuấn",
+        "Tran Quoc Tuan",
+        "Hưng Đạo Đại Vương",
+        "Hung Dao Dai Vuong",
+        "Hưng Đạo Vương",
+        "Quốc Công Tiết Chế",
+        "tran_hung_dao_1288",
+        "tran_quoc_tuan"
+      ],
+      "dynasty_era": "Nhà Trần (1285–1288)",
+      "era_group": "ly_tran",
+      "years_active": "1258–1300",
+      "faction": "dai_viet",
+      "side": "dai_viet_hero",
+      "role_archetype": "Quốc Công Tiết Chế · Đại Tư Đồ Diệt Nguyên Mông Ba Lần",
+      "face_and_age_dna": "A majestic 56-year-old 13th-century Đại Việt supreme commander with noble high cheekbones, weathered bronze skin, calm penetrating dark eyes, dignified silver-streaked long beard and mustache, and composed closed lips radiating unshakeable strategic wisdom, zero celebrity likeness.",
+      "armor_and_wardrobe_lock": "13th-century Trần Dynasty dark bronze-and-iron lamellar cuirass with antique-gold border trim and round bronze chest medallion worn over a deep oxblood-crimson silk command robe and dark indigo under-tunic, engraved bronze vambraces, and a peaked bronze-ribbed iron helmet with lamellar neck-guard.",
+      "signature_weapons_and_props": [
+        "straight steel royal command sword (Thượng phương bảo kiếm)",
+        "bound bamboo Binh Thư Yếu Lược strategy scroll (plain texture, zero text)",
+        "75-degree slanted ironwood Bạch Đằng tidal stakes"
+      ],
+      "lighting_and_color_palette": {
+        "primary_hex": "#7A1C24",
+        "accent_hex": "#C89B3C",
+        "lighting_key": "torchlit_tidal_dawn"
+      },
+      "voice_and_persona_note_vi": "Đỉnh cao trí tuệ dĩ đoản chế trường, lấy nhu thắng cương, khoan thư sức dân làm kế sâu rễ bền gốc; giọng đọc uy nghiêm, đĩnh đạc, truyền lửa Đông A.",
+      "anti_anachronism_bans": [
+        "no gunpowder cannons or muskets in 1285-1288",
+        "no samurai kabuto/katana or European plate mail",
+        "no Qing queues or modern steel ships",
+        "no text, letters, or calligraphy on flags or scrolls"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_v7_bach_dang_1288_short/frames/beat_07.png"
+    },
+    {
+      "character_id": "tran_quang_khai",
+      "name_vi": "Trần Quang Khải",
+      "aliases": [
+        "Trần Quang Khải",
+        "Tran Quang Khai",
+        "Chiêu Minh Đại Vương",
+        "Chiêu Minh Vương",
+        "Thượng tướng Trần Quang Khải",
+        "tran_quang_khai_1285"
+      ],
+      "dynasty_era": "Nhà Trần (1285–1288)",
+      "era_group": "ly_tran",
+      "years_active": "1258–1294",
+      "faction": "dai_viet",
+      "side": "dai_viet_hero",
+      "role_archetype": "Thượng Tướng Thái Sư · Mũi Giáo Phản Công Chương Dương – Hàm Tử 1285",
+      "face_and_age_dna": "A refined yet battle-hardened 44-year-old 13th-century Đại Việt royal general-chancellor with aristocratic bone structure, sun-darkened skin, keen focused eyes, neatly trimmed black beard and mustache, and firm closed lips balancing scholar elegance with frontline ferocity, zero celebrity likeness.",
+      "armor_and_wardrobe_lock": "13th-century Trần Dynasty polished dark-bronze lamellar battle armor with gilded shoulder plates worn over an imperial crimson-and-indigo brocade command robe, embossed leather belt, bronze bracers, and a plumed bronze-flanged Trần war helmet.",
+      "signature_weapons_and_props": [
+        "long-shafted Trần steel spear (giáo đoạt Chương Dương)",
+        "forged straight command saber",
+        "Thánh Dực royal river assault warboat"
+      ],
+      "lighting_and_color_palette": {
+        "primary_hex": "#8C1D28",
+        "accent_hex": "#D9A441",
+        "lighting_key": "sunlit_river_counterattack"
+      },
+      "voice_and_persona_note_vi": "Văn võ song toàn, khí thế bừng bừng phản công Chương Dương – Hàm Tử giải phóng kinh sư Thăng Long; giọng đọc hào hùng, sảng khoái.",
+      "anti_anachronism_bans": [
+        "no firearms or cannons in 1285",
+        "no samurai or European armor",
+        "no Qing Manchu attire",
+        "no written text or characters on war banners"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_ep10_cam_tu_sat_that_1285_short/frames/beat_13.png"
+    },
+    {
+      "character_id": "tran_quoc_toan",
+      "name_vi": "Trần Quốc Toản",
+      "aliases": [
+        "Trần Quốc Toản",
+        "Tran Quoc Toan",
+        "Hoài Văn Hầu",
+        "Hoai Van Hau",
+        "Hoài Văn Vương",
+        "tran_quoc_toan_1285"
+      ],
+      "dynasty_era": "Nhà Trần (1282–1285)",
+      "era_group": "ly_tran",
+      "years_active": "1282–1285",
+      "faction": "dai_viet",
+      "side": "dai_viet_hero",
+      "role_archetype": "Thiếu Niên Anh Hùng 16 Tuổi · Chủ Soái Đội Quân Gia Nô Cờ Sáu Chữ Vàng",
+      "face_and_age_dna": "A fierce 16-year-old 13th-century Vietnamese young nobleman with youthful sharp jawline, smooth sun-kissed bronze skin, blazing determined dark eyes, clean-shaven youthful face, jet-black hair tied cleanly in a high topknot, and taut closed lips burning with patriotic resolve, zero celebrity likeness.",
+      "armor_and_wardrobe_lock": "13th-century Trần Dynasty young marquis crimson silk round-collar brocade tunic (áo viên lĩnh) embroidered with antique-gold collar scrollwork and tied with a wide crimson waist sash at Bình Than, transitioning in battle to agile dark-bronze lamellar chest plates over crimson silk.",
+      "signature_weapons_and_props": [
+        "crushed ripe golden-orange fruit held in a taut fist",
+        "tall solid dark-crimson silk war standard with woven antique-gold border (plain unmarked in raw frame, zero letters)",
+        "notched steel cavalry-and-river saber"
+      ],
+      "lighting_and_color_palette": {
+        "primary_hex": "#9E1B24",
+        "accent_hex": "#F4A261",
+        "lighting_key": "golden_river_wharf"
+      },
+      "voice_and_persona_note_vi": "Nhiệt huyết tuổi trẻ sục sôi, biến nỗi tủi phận bên bến Bình Than thành kỷ luật quân sự cùng hơn 1.000 gia nô xung phong tuyến đầu; nhịp đọc dồn dập, xúc động.",
+      "anti_anachronism_bans": [
+        "no readable Chinese or Vietnamese characters drawn on the crimson banner in raw Flow frames (keep plain crimson-gold weave)",
+        "no firearms or samurai gear",
+        "no adult beard on 16-year-old Trần Quốc Toản"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_v5_remaster_ep28_tran_quoc_toan_1285_short/frames/beat_00.png"
+    },
+    {
+      "character_id": "tran_binh_trong",
+      "name_vi": "Trần Bình Trọng",
+      "aliases": [
+        "Trần Bình Trọng",
+        "Tran Binh Trong",
+        "Bảo Nghĩa Vương",
+        "Bao Nghia Vuong",
+        "Bảo Nghĩa Hầu",
+        "tran_binh_trong_1285"
+      ],
+      "dynasty_era": "Nhà Trần (1285)",
+      "era_group": "ly_tran",
+      "years_active": "1285",
+      "faction": "dai_viet",
+      "side": "dai_viet_hero",
+      "role_archetype": "Danh Tướng Chặn Hậu Đà Mạc · Biểu Tượng Khí Tiết Bất Khuất Tuổi 26",
+      "face_and_age_dna": "A fearless 26-year-old 13th-century Đại Việt rear-guard general with strong square jaw, mud-and-ash-streaked bronze face, blazing defiant dark eyes, light youthful stubble, tied dark hair, and firmly closed mouth standing tall in unbowed dignity, zero celebrity likeness.",
+      "armor_and_wardrobe_lock": "Battle-scarred 13th-century Trần Dynasty bronze lamellar cuirass and leather shoulder guards over a torn mud-stained crimson-and-brown war tunic, scarred leather bracers, cloth shin wraps, and woven rattan-and-bronze helmet.",
+      "signature_weapons_and_props": [
+        "notched single-edged steel saber",
+        "arrow-scarred woven rattan shield",
+        "untouched silver banquet tray spurned in enemy captivity"
+      ],
+      "lighting_and_color_palette": {
+        "primary_hex": "#7F231C",
+        "accent_hex": "#D97706",
+        "lighting_key": "chiaroscuro_captivity_brazier"
+      },
+      "voice_and_persona_note_vi": "Cương trực, can trường chặn hậu bãi Đà Mạc bảo vệ hai vua Trần, khẳng khái 'Ta thà làm ma nước Nam chứ không thèm làm vương đất Bắc'; giọng kể đanh thép, nghẹn tự hào.",
+      "anti_anachronism_bans": [
+        "no firearms or modern steel shackles",
+        "no samurai armor or European shields",
+        "no text or letters on tents or seals"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_ep15_tran_binh_trong_1285_short/frames/beat_00.png"
+    },
+    {
+      "character_id": "tran_khanh_du",
+      "name_vi": "Trần Khánh Dư",
+      "aliases": [
+        "Trần Khánh Dư",
+        "Tran Khanh Du",
+        "Nhân Huệ Vương",
+        "Nhan Hue Vuong",
+        "Phó Đô tướng quân Trần Khánh Dư",
+        "tran_khanh_du_1288"
+      ],
+      "dynasty_era": "Nhà Trần (1285–1288)",
+      "era_group": "ly_tran",
+      "years_active": "1258–1339",
+      "faction": "dai_viet",
+      "side": "dai_viet_hero",
+      "role_archetype": "Phó Đô Tướng Quân Thủy Chiến · Đòn Cắt Yết Hầu 17 Vạn Thạch Lương Vân Đồn",
+      "face_and_age_dna": "A rugged 48-year-old 13th-century Đại Việt sea-wolf general with wind-chiseled cheekbones, salt-tanned skin, keen calculating eyes narrowed against sea spray, coarse dark beard streaked with grey, and tight closed lips, zero celebrity likeness.",
+      "armor_and_wardrobe_lock": "Agile 13th-century Trần naval commander dark lacquered leather-and-bronze scale vest over a sea-indigo and dark-crimson short war tunic suited for fast shipboard boarding, hemp waist sash, leather bracers, and a wide-brimmed conical woven-rattan Ma Lôi hat reinforced with bronze.",
+      "signature_weapons_and_props": [
+        "curved naval boarding saber",
+        "pitch-soaked bamboo fire-arrows and fire-jars",
+        "sleek low-slung Vân Đồn coastal ambush galley"
+      ],
+      "lighting_and_color_palette": {
+        "primary_hex": "#1D4E5F",
+        "accent_hex": "#E76F51",
+        "lighting_key": "firelit_emerald_strait"
+      },
+      "voice_and_persona_note_vi": "Gai góc, thực dụng, từ người bán than bến Bình Than đứng dậy lập kỳ công đốt sạch thuyền lương Trương Văn Hổ ở Vân Đồn; giọng kể sắc sảo, gai góc.",
+      "anti_anachronism_bans": [
+        "no shipboard cast-iron cannon broadsides in 1288",
+        "no pirate tricorn hats or European galleons",
+        "no text or characters on grain sacks or sails"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_ep27_khac_che_thiet_ky_mong_co_1285_short/frames/beat_13.png"
+    },
+    {
+      "character_id": "le_loi",
+      "name_vi": "Lê Lợi (Lê Thái Tổ)",
+      "aliases": [
+        "Lê Lợi",
+        "Le Loi",
+        "Bình Định Vương",
+        "Binh Dinh Vuong",
+        "Lê Thái Tổ",
+        "Le Thai To",
+        "Chúa Lam Sơn",
+        "le_loi_1427"
+      ],
+      "dynasty_era": "Khởi Nghĩa Lam Sơn · Nhà Lê Sơ (1418–1433)",
+      "era_group": "le_so_tay_son",
+      "years_active": "1418–1433",
+      "faction": "dai_viet",
+      "side": "dai_viet_hero",
+      "role_archetype": "Bình Định Vương Nếm Mật Nằm Gai · Hoàng Đế Khai Sáng Nhà Hậu Lê",
+      "face_and_age_dna": "A resolute 42-year-old 15th-century Vietnamese rebel leader and emperor with high forehead, lean sun-darkened face honed by ten years in highland jungles, deep luminous dark eyes, full dark beard and mustache, and calm closed mouth projecting quiet gravitas, zero celebrity likeness.",
+      "armor_and_wardrobe_lock": "15th-century Lam Sơn campaign mud-weathered dark leather and iron lamellar cuirass worn over a deep crimson-and-antique-gold silk command robe (and golden imperial round-collar dragon robe upon ascending Kính Thiên Hall in 1428), dark bronze bracers, and a bronze-crested war helmet.",
+      "signature_weapons_and_props": [
+        "forged Thuận Thiên straight steel imperial command sword",
+        "golden-embroidered Lam Sơn royal battle cloak",
+        "bamboo command map of Chi Lăng – Đông Quan"
+      ],
+      "lighting_and_color_palette": {
+        "primary_hex": "#854D0E",
+        "accent_hex": "#EAB308",
+        "lighting_key": "highland_dawn_torchlight"
+      },
+      "voice_and_persona_note_vi": "Kiên tâm bền chí suốt 10 năm nếm mật nằm gai từ rừng núi Chí Linh đến Hội thề Đông Quan, trọng hiền tài và nghĩa khí; giọng đọc trầm ấm, kiên cường.",
+      "anti_anachronism_bans": [
+        "no modern rifles or 19th-century uniforms",
+        "no Qing Manchu robes or queues",
+        "no samurai armor or European broadswords",
+        "no readable characters on sword blades or edicts"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_ep09_3_hoang_de_cam_guom_xung_tran_short/frames/beat_07.png"
+    },
+    {
+      "character_id": "le_lai",
+      "name_vi": "Lê Lai",
+      "aliases": [
+        "Lê Lai",
+        "Le Lai",
+        "Bình Chương Lê Lai",
+        "Hăm mốt Lê Lai",
+        "le_lai_1419"
+      ],
+      "dynasty_era": "Khởi Nghĩa Lam Sơn (1416–1419)",
+      "era_group": "le_so_tay_son",
+      "years_active": "1416–1419",
+      "faction": "dai_viet",
+      "side": "dai_viet_hero",
+      "role_archetype": "Đệ Nhất Công Thần Liều Mình Cứu Chúa · Tượng Đài Trung Nghĩa Núi Chí Linh",
+      "face_and_age_dna": "A stern, broad-shouldered 45-year-old 15th-century Vietnamese highland general with rugged weathered features, square jaw, fearless compassionate dark eyes, thick dark beard, and firmly closed lips stepping into sacrifice without hesitation, zero celebrity likeness.",
+      "armor_and_wardrobe_lock": "15th-century Lam Sơn dark leather-and-iron lamellar armor draped dramatically in his lord's mud-spattered golden-embroidered royal silk battle robe to deceive the Ming siege army at Chí Linh, heavy leather gauntlets, and iron-ribbed war helmet.",
+      "signature_weapons_and_props": [
+        "golden-embroidered royal decoy battle robe",
+        "heavy curved iron war saber",
+        "pair of armored Lam Sơn war elephants charging down Chí Linh slope"
+      ],
+      "lighting_and_color_palette": {
+        "primary_hex": "#A16207",
+        "accent_hex": "#DC2626",
+        "lighting_key": "torchlit_bamboo_shelter"
+      },
+      "voice_and_persona_note_vi": "Bi tráng, trung liệt tột đỉnh giữa vòng vây tuyệt lương núi Chí Linh năm 1419; giọng đọc trang nghiêm, lắng đọng rồi bùng nổ lúc mở cổng trại xung trận.",
+      "anti_anachronism_bans": [
+        "no firearms in the 1419 Chí Linh breakout",
+        "no Qing or samurai armor",
+        "no readable text on robes or banners"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_ep08_ham_mot_le_lai_ham_hai_le_loi_1419_short/frames/beat_07.png"
+    },
+    {
+      "character_id": "nguyen_trai",
+      "name_vi": "Nguyễn Trãi (Ức Trai)",
+      "aliases": [
+        "Nguyễn Trãi",
+        "Nguyen Trai",
+        "Ức Trai",
+        "Uc Trai",
+        "Quan Phục Hầu",
+        "nguyen_trai_1427"
+      ],
+      "dynasty_era": "Khởi Nghĩa Lam Sơn · Nhà Lê Sơ (1418–1442)",
+      "era_group": "le_so_tay_son",
+      "years_active": "1418–1442",
+      "faction": "dai_viet",
+      "side": "dai_viet_hero",
+      "role_archetype": "Quân Sư Tâm Công Lam Sơn · Tác Giả Bình Ngô Đại Cáo",
+      "face_and_age_dna": "A poised 48-year-old 15th-century Vietnamese scholar-strategist with refined high forehead, lean dignified cheekbones, luminous contemplative dark eyes, neat silver-streaked long beard and mustache, and calm closed lips embodying humane intellect, zero celebrity likeness.",
+      "armor_and_wardrobe_lock": "15th-century early Lê Dynasty deep dark-indigo cross-collar silk scholar-official robes (áo giao lĩnh / viên lĩnh) with wide sleeves, dark gauze winged scholar cap (mũ cánh chuồn / mũ chữ Đinh), and jade belt clasp; zero heavy metal battle armor.",
+      "signature_weapons_and_props": [
+        "fine bamboo calligraphy brush and carved stone inkwell",
+        "unrolled handmade mulberry parchment scroll (textured grain only, zero readable script)",
+        "oil candle lamp in timber strategy pavilion"
+      ],
+      "lighting_and_color_palette": {
+        "primary_hex": "#1E3A5F",
+        "accent_hex": "#E0A96D",
+        "lighting_key": "candlelit_scholar_pavilion"
+      },
+      "voice_and_persona_note_vi": "Bậc đại trí dùng ngòi bút mạnh hơn mười vạn tinh binh, lấy đại nghĩa thắng hung tàn, đem chí nhân thay cường bạo; giọng đọc sâu lắng, chuẩn mực, hào sảng.",
+      "anti_anachronism_bans": [
+        "no heavy plate armor on scholar Nguyễn Trãi",
+        "no modern fountain pens, bound hardcover books, or eyeglasses",
+        "no Qing queues or Manchu robes",
+        "no readable characters or AI-drawn text on parchment"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_ep16_bi_kich_nguyen_trai_1442_short/frames/beat_00.png"
+    },
+    {
+      "character_id": "quang_trung",
+      "name_vi": "Quang Trung (Nguyễn Huệ)",
+      "aliases": [
+        "Quang Trung",
+        "Nguyễn Huệ",
+        "Nguyen Hue",
+        "Vua Quang Trung",
+        "Hoàng đế Quang Trung",
+        "Bắc Bình Vương",
+        "Bac Binh Vuong",
+        "Quang Trung Nguyễn Huệ",
+        "quang_trung_1789",
+        "quang_trung_nguyen_hue"
+      ],
+      "dynasty_era": "Nhà Tây Sơn (1771–1792)",
+      "era_group": "le_so_tay_son",
+      "years_active": "1771–1792",
+      "faction": "dai_viet",
+      "side": "dai_viet_hero",
+      "role_archetype": "Hoàng Đế Bách Chiến Bách Thắng · Thiên Tài Thần Tốc Rạch Gầm 1785 & Ngọc Hồi 1789",
+      "face_and_age_dna": "A commanding 36-year-old late-18th-century Vietnamese warrior-emperor with powerful square jaw, sun-bronzed muscular build, blazing hawk-like dark eyes, clean-shaven or faint battle-stubble jawline, black hair bound tightly under a crimson war headband, and firmly closed lips radiating lightning command, zero celebrity likeness.",
+      "armor_and_wardrobe_lock": "Late 18th-century Tây Sơn dark blackened-iron lamellar chest and shoulder armor worn over an iconic vivid crimson silk battle robe (gunpowder-soot-darkened after Ngọc Hồi) and dark indigo trousers, embossed leather bracers, and a signature crimson silk war headband centered with a round antique-gold medallion.",
+      "signature_weapons_and_props": [
+        "armored royal command war elephant mounting a carved hardwood howdah and cast-bronze swivel cannon",
+        "triple-plank hardwood assault shield wrapped in dripping river-soaked rice straw",
+        "iron-bound bamboo hỏa hổ resin fire-lance and curved steel Tây Sơn saber"
+      ],
+      "lighting_and_color_palette": {
+        "primary_hex": "#991B1B",
+        "accent_hex": "#F59E0B",
+        "lighting_key": "winter_dawn_firelight"
+      },
+      "voice_and_persona_note_vi": "Thần tốc, táo bạo, ứng biến vật lý và tâm lý chiến bậc thầy từ Rạch Gầm – Xoài Mút đến đại thắng mùa xuân Kỷ Dậu 1789; nhịp đọc cuồn cuộn như bão lửa.",
+      "anti_anachronism_bans": [
+        "no 19th/20th-century breech-loading rifles or modern artillery",
+        "no Qing Manchu queues on Tây Sơn troops",
+        "no samurai kabuto or European tricorns",
+        "no written text or characters on crimson war standards"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_ep07_tuong_binh_hoa_ho_tay_son_1789_short/frames/beat_03.png"
+    },
+    {
+      "character_id": "luu_hoang_thao",
+      "name_vi": "Lưu Hoằng Tháo",
+      "aliases": [
+        "Lưu Hoằng Tháo",
+        "Luu Hoang Thao",
+        "Lưu Hoằng Thao",
+        "Hoằng Tháo",
+        "Giao Vương Lưu Hoằng Tháo",
+        "Vạn Vương Lưu Hoằng Tháo",
+        "luu_hoang_thao_938"
+      ],
+      "dynasty_era": "Nam Hán (938)",
+      "era_group": "ngo_dinh_tien_le",
+      "years_active": "938",
+      "faction": "southern_han",
+      "side": "opposing_commander",
+      "role_archetype": "Thái Tử Nam Hán Kiêu Binh · Chủ Soái Thủy Quân Thất Bại Bạch Đằng 938",
+      "face_and_age_dna": "An arrogant 25-year-old 10th-century Southern Han royal prince-commander with sharp narrow features, pale-olive skin flushed with reckless pride, narrowed haughty dark eyes, thin trimmed mustache, and tightly closed mouth shifting from hubris to shock, zero celebrity likeness.",
+      "armor_and_wardrobe_lock": "10th-century Southern Han ornate gilded-iron rectangular lamellar prince armor laced over a dark slate-purple and ochre silk brocade surcoat, iron-ribbed helmet with bronze crest and leather neck-flaps, and heavy dark cloak.",
+      "signature_weapons_and_props": [
+        "gilded-hilt Tang-style straight command dao",
+        "tall heavy deep-draft Southern Han wooden flagship (lâu thuyền)",
+        "splintered hull timbers wedged on Bạch Đằng ironwood stakes"
+      ],
+      "lighting_and_color_palette": {
+        "primary_hex": "#2F3E46",
+        "accent_hex": "#B07D46",
+        "lighting_key": "stormy_estuary_overcast"
+      },
+      "voice_and_persona_note_vi": "Trẻ tuổi ngạo mạn, ỷ thế thuyền to quân đông coi thường thủy triều Bạch Đằng nên lao thẳng vào tử địa; giọng kể đối lập sắc lạnh.",
+      "anti_anachronism_bans": [
+        "no shipboard gunpowder cannons in 938",
+        "no Qing queues or European galleons",
+        "no written characters on Southern Han sails or banners"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_ep12_3_danh_tuong_bat_bai_short/frames/beat_04.png"
+    },
+    {
+      "character_id": "to_giam",
+      "name_vi": "Tô Giám",
+      "aliases": [
+        "Tô Giám",
+        "To Giam",
+        "Đô giám Tô Giám",
+        "Do giam To Giam",
+        "Tri châu Tô Giám",
+        "to_giam_1075"
+      ],
+      "dynasty_era": "Bắc Tống (1075–1076)",
+      "era_group": "ly_tran",
+      "years_active": "1075–1076",
+      "faction": "northern_song",
+      "side": "opposing_commander",
+      "role_archetype": "Đô Giám Thành Ung Châu · Đối Thủ Tử Thủ Kiên Cường 42 Ngày Đêm",
+      "face_and_age_dna": "A grizzled 58-year-old 11th-century Northern Song fortress commander with deep facial lines, soot-darkened weathered skin, grim resolute dark eyes, grey-streaked beard and mustache, and tightly set closed lips showing stoic desperation under siege, zero celebrity likeness.",
+      "armor_and_wardrobe_lock": "11th-century Northern Song heavy cold-steel mountain-pattern laminar armor (shanwenjia) laced over a dark slate-blue padded gambeson, scarred bronze-rimmed round iron helmet with hanging lamellar neck-guards, and soot-stained crimson command cloak.",
+      "signature_weapons_and_props": [
+        "Northern Song iron-hilted broad dao",
+        "heavy mechanical Thần Tý garrison crossbow",
+        "grey limestone Ung Châu battlement parapet"
+      ],
+      "lighting_and_color_palette": {
+        "primary_hex": "#334E68",
+        "accent_hex": "#B84A39",
+        "lighting_key": "firelit_stone_battlement"
+      },
+      "voice_and_persona_note_vi": "Khắc họa khách quan đúng sử học: vị tướng giữ thành Ung Châu ngoan cường suốt 42 ngày đêm để làm nổi bật độ khó và mưu đắp Thổ Sơn của Lý Thường Kiệt.",
+      "anti_anachronism_bans": [
+        "no cast-iron tube cannons or muskets on Ung Châu walls",
+        "no Qing queues or samurai helmets",
+        "no Chinese characters on fortress plaques or flags"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_v6_prestige_ung_chau_1075_short/frames/beat_07.png"
+    },
+    {
+      "character_id": "quach_quy",
+      "name_vi": "Quách Quỳ",
+      "aliases": [
+        "Quách Quỳ",
+        "Quach Quy",
+        "Thống soái Quách Quỳ",
+        "Chiêu thảo sứ Quách Quỳ",
+        "quach_quy_1077"
+      ],
+      "dynasty_era": "Bắc Tống (1077)",
+      "era_group": "ly_tran",
+      "years_active": "1076–1077",
+      "faction": "northern_song",
+      "side": "opposing_commander",
+      "role_archetype": "Chiêu Thảo Sứ An Nam Đạo · Thống Soái 10 Vạn Quân Tống Sa Lầy Như Nguyệt",
+      "face_and_age_dna": "A stern, cautious 55-year-old 11th-century Northern Song expeditionary marshal with heavy brow, weathered northern complexion, exhausted calculating eyes, full grey-brown beard, and tightly closed mouth weighed down by logistical attrition, zero celebrity likeness.",
+      "armor_and_wardrobe_lock": "11th-century Northern Song supreme commander heavy iron laminar cuirass with bronze shoulder guards over a dark crimson-and-slate silk surcoat, iron helmet with full lamellar aventail, and heavy leather gauntlets.",
+      "signature_weapons_and_props": [
+        "bronze Song imperial command baton",
+        "towering timber-framed traction trebuchet mired in red mud",
+        "halted Northern Song river pontoon timbers"
+      ],
+      "lighting_and_color_palette": {
+        "primary_hex": "#2B3A4A",
+        "accent_hex": "#9E2A2B",
+        "lighting_key": "cold_dawn_riverbank"
+      },
+      "voice_and_persona_note_vi": "Lão tướng dạn dày biên ải Tây Hạ nhưng bị trói chân trước lũy tre gai 100 km và đòn tâm lý chiến đêm sông Như Nguyệt; giọng kể trầm nặng, căng thẳng.",
+      "anti_anachronism_bans": [
+        "no gunpowder tube artillery or rifles in 1077",
+        "no European counterweight trebuchets with modern steel cables",
+        "no Qing Manchu attire or text on banners"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_ep04_nhu_nguyet_1077_short/frames/beat_03.png"
+    },
+    {
+      "character_id": "thoat_hoan",
+      "name_vi": "Thoát Hoan",
+      "aliases": [
+        "Thoát Hoan",
+        "Thoat Hoan",
+        "Trấn Nam Vương",
+        "Tran Nam Vuong",
+        "Trấn Nam Vương Thoát Hoan",
+        "Toghon",
+        "thoat_hoan_1285"
+      ],
+      "dynasty_era": "Nguyên Mông (1285–1288)",
+      "era_group": "ly_tran",
+      "years_active": "1284–1288",
+      "faction": "mongol_yuan",
+      "side": "opposing_commander",
+      "role_archetype": "Trấn Nam Vương Hoàng Tử Nhà Nguyên · Tổng Chỉ Huy 50 Vạn Quân Hai Lần Tháo Chạy",
+      "face_and_age_dna": "A broad-faced 38-year-old 13th-century Mongol-Yuan imperial prince with prominent cheekbones, wind-burned steppe complexion, fierce frustrated dark eyes, braided side locks under his helmet, drooping dark mustache and chin tuft, and clenched closed mouth, zero celebrity likeness.",
+      "armor_and_wardrobe_lock": "13th-century Mongol-Yuan imperial prince heavy dark-iron and lacquered rawhide lamellar war coat (khatangu degel) trimmed generously with dark wolf fur at shoulders and cuffs over deep burgundy steppe silk, embossed bronze belt, and a pointed iron helmet with fur-lined lamellar neck-guard.",
+      "signature_weapons_and_props": [
+        "gold-inlaid curved Mongol saber",
+        "bronze fleet tokens swept across Vạn Kiếp timber war table",
+        "heavy bronze-reinforced wooden retreat palanquin/wagon"
+      ],
+      "lighting_and_color_palette": {
+        "primary_hex": "#3B2F2F",
+        "accent_hex": "#B45309",
+        "lighting_key": "amber_brazier"
+      },
+      "voice_and_persona_note_vi": "Hoàng tử kiêu hãnh mang đại binh 50 vạn tràn xuống nhưng hai lần rơi vào cảnh vườn không nhà trống, đứt lương thảo phải tháo chạy về Bắc.",
+      "anti_anachronism_bans": [
+        "no horned fantasy helmets or European plate",
+        "no Qing Manchu queues",
+        "no firearms or readable script on war maps or flags"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_v7_bach_dang_1288_short/frames/beat_04.png"
+    },
+    {
+      "character_id": "o_ma_nhi",
+      "name_vi": "Ô Mã Nhi",
+      "aliases": [
+        "Ô Mã Nhi",
+        "O Ma Nhi",
+        "Thủy tướng Ô Mã Nhi",
+        "Omar",
+        "Ô Mã Nhi Bạt Đô",
+        "o_ma_nhi_1288"
+      ],
+      "dynasty_era": "Nguyên Mông (1285–1288)",
+      "era_group": "ly_tran",
+      "years_active": "1284–1288",
+      "faction": "mongol_yuan",
+      "side": "opposing_commander",
+      "role_archetype": "Thủy Quân Đô Thống Thiện Chiến Nhà Nguyên · Con Mồi Của Bẫy Triều Bạch Đằng 1288",
+      "face_and_age_dna": "A fierce, rugged 45-year-old 13th-century Yuan naval admiral with weathered angular jaw, deep brow furrow, intense dark eyes hardened by decades of river campaigns, full coarse dark beard and mustache, and tightly closed lips gripping the ship rail in grim tension, zero celebrity likeness.",
+      "armor_and_wardrobe_lock": "13th-century Yuan naval commander dark iron-and-bronze lamellar chest cuirass and layered shoulder plates laced over a deep oxblood-crimson wool tunic and dark slate trousers, riveted iron vambraces, and a pointed iron helmet with riveted lamellar neck-skirt.",
+      "signature_weapons_and_props": [
+        "heavy curved Yuan naval saber",
+        "towering dark-timber Yuan flagship prow with bronze rail",
+        "empty wooden grain casks forcing the Bạch Đằng retreat"
+      ],
+      "lighting_and_color_palette": {
+        "primary_hex": "#3E3630",
+        "accent_hex": "#C97A2B",
+        "lighting_key": "amber_brazier"
+      },
+      "voice_and_persona_note_vi": "Tướng thủy chiến hung hãn bậc nhất nhà Nguyên nhưng bị khóa sạch lương ở Vân Đồn và chặn hết ngả rẽ ở Trúc Động, buộc phải đưa 600 thuyền vào rừng cọc Bạch Đằng.",
+      "anti_anachronism_bans": [
+        "no shipboard cast-iron cannons or gunpowder broadsides",
+        "no European pirate galleons or Qing queues",
+        "no characters, letters, or flags with text on Yuan war junks"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_v7_bach_dang_1288_short/frames/beat_00.png"
+    },
+    {
+      "character_id": "lieu_thang",
+      "name_vi": "Liễu Thăng",
+      "aliases": [
+        "Liễu Thăng",
+        "Lieu Thang",
+        "An Viễn Hầu",
+        "An Vien Hau",
+        "An Viễn Hầu Liễu Thăng",
+        "Tổng binh Liễu Thăng",
+        "lieu_thang_1427"
+      ],
+      "dynasty_era": "Nhà Minh (1427)",
+      "era_group": "le_so_tay_son",
+      "years_active": "1406–1427",
+      "faction": "ming",
+      "side": "opposing_commander",
+      "role_archetype": "An Viễn Hầu Chủ Tướng 10 Vạn Viện Binh Minh · Tử Trận Đầm Lầy Mã Yên 1427",
+      "face_and_age_dna": "A proud, battle-scarred 52-year-old early-15th-century Ming veteran general with broad weathered face, heavy arrogant brow, disdainful narrowed dark eyes, grey-streaked mustache, and firmly closed mouth radiating overconfident hubris, zero celebrity likeness.",
+      "armor_and_wardrobe_lock": "Early 15th-century Ming commander ornate gilded mountain-scale iron armor with a polished circular bronze heart-mirror plate (hộ tâm kính) on the chest over a dark crimson wool battle coat and tattered crimson cape, engraved bronze vambraces, and a tall Ming iron helmet crowned with a long wind-whipped red horsehair plume.",
+      "signature_weapons_and_props": [
+        "long Ming cavalry spear and curved goose-quill saber",
+        "iron-barded black northern warhorse",
+        "dented crimson-plumed helmet half-sunk in black Mã Yên marsh mud"
+      ],
+      "lighting_and_color_palette": {
+        "primary_hex": "#5C3D2E",
+        "accent_hex": "#D4AF37",
+        "lighting_key": "harsh_gorge_daylight"
+      },
+      "voice_and_persona_note_vi": "Lão tướng nhiều công trạng của nhà Minh nhưng cực kỳ kiêu ngạo, trúng kế giả thua 5 lần của Trần Lựu nên tách 100 kỵ binh lao thẳng vào đầm lầy Mã Yên.",
+      "anti_anachronism_bans": [
+        "no 19th-century firearms or modern steel bridges",
+        "no Qing Manchu shaved-forehead queues on Ming troops",
+        "no Chinese characters on chest mirror or banners"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_ep25_chi_lang_chem_lieu_thang_1427_short/frames/beat_08.png"
+    },
+    {
+      "character_id": "ton_si_nghi",
+      "name_vi": "Tôn Sĩ Nghị",
+      "aliases": [
+        "Tôn Sĩ Nghị",
+        "Ton Si Nghi",
+        "Tổng đốc Tôn Sĩ Nghị",
+        "Tong doc Ton Si Nghi",
+        "Tôn Sỹ Nghị",
+        "ton_si_nghi_1789"
+      ],
+      "dynasty_era": "Nhà Thanh (1788–1789)",
+      "era_group": "le_so_tay_son",
+      "years_active": "1788–1789",
+      "faction": "qing",
+      "side": "opposing_commander",
+      "role_archetype": "Tổng Đốc Lưỡng Quảng · Chủ Soái 29 Vạn Quân Thanh Vỡ Trận Mùa Xuân 1789",
+      "face_and_age_dna": "A complacent 68-year-old late-18th-century Qing viceroy-commander with aged lined cheeks, calculating hooded dark eyes, thin grey drooping mustache and wispy goatee, period-authentic Qing shaved forehead with braided queue behind, and closed lips shifting from smug composure to midnight panic, zero celebrity likeness.",
+      "armor_and_wardrobe_lock": "Late 18th-century Qianlong-era Qing high-commander ornate slate-blue satin padded brigandine war coat (mianjia) studded with brass rivets and trimmed with dark sable fur at collar and cuffs, conical winter official war hat topped with crimson horsehair tassel and finial, and embroidered silk belt.",
+      "signature_weapons_and_props": [
+        "jade-hilted curved Qing commander saber",
+        "candlelit Thăng Long headquarters scroll desk",
+        "panicked unsaddled warhorse fleeing across the Red River pontoon bridge"
+      ],
+      "lighting_and_color_palette": {
+        "primary_hex": "#23395B",
+        "accent_hex": "#C83E37",
+        "lighting_key": "candlelit_headquarters_contrast"
+      },
+      "voice_and_persona_note_vi": "Quan đại thần nhà Thanh chủ quan khinh địch, yên tâm ăn Tết ở Thăng Long vì tưởng Tây Sơn ở xa, đến khi Ngọc Hồi – Đống Đa rực lửa thì không kịp mặc giáp lên ngựa.",
+      "anti_anachronism_bans": [
+        "no 19th/20th-century modern rifles, telegraph wires, or eyeglasses",
+        "no medieval European plate armor",
+        "no readable Chinese/Manchu script on lanterns, edicts, or banners"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_ep13_cu_lua_ha_hoi_1789_short/frames/beat_06.png"
+    }
+  ],
+  "sets": [
+    {
+      "set_id": "bach_dang_tidal_estuary",
+      "location_id": "bach_dang_tidal_estuary",
+      "name_vi": "Cửa Sông & Bãi Cọc Bạch Đằng (938 · 981 · 1288)",
+      "dynasty_eras": [
+        "Nhà Ngô (938)",
+        "Nhà Tiền Lê (981)",
+        "Nhà Trần (1288)"
+      ],
+      "keywords": [
+        "bạch đằng",
+        "bach dang",
+        "tràng kênh",
+        "trang kenh",
+        "yên giang",
+        "yen giang",
+        "trúc động",
+        "truc dong",
+        "đá bạc",
+        "da bac",
+        "chánh",
+        "ruột lợn",
+        "cọc gỗ lim",
+        "ironwood stakes"
+      ],
+      "time_of_day": "dawn_ebb_tide",
+      "lighting_key": "amber_brazier",
+      "palette_hex": {
+        "primary_hex": "#2C4A52",
+        "accent_hex": "#D97706"
+      },
+      "terrain_and_architecture_dna": "Towering jagged dark-grey Tràng Kênh limestone karst cliffs flanking the wide churning Bạch Đằng tidal estuary in northern Vietnam, firm grey clay riverbeds holding staggered rows of massive sharpened ironwood stakes angled 75 degrees upstream against foaming 4-meter ebb-tide swells, crisp optical clarity on 35mm anamorphic film.",
+      "atmosphere_lock": "Clear-air 35mm Kodak Vision3 500T optical clarity with dramatic directional golden-amber dawn rays breaking through storm clouds and warm Caravaggio fire-raft chiaroscuro reflecting off surging olive-brown tidal water; zero blanket fog.",
+      "recommended_lens_pairings": [
+        "24mm Wide Establishing (estuary & Tràng Kênh karst cliffs)",
+        "35mm Low-Angle Hero (commander on galley prow above surging waves)",
+        "85mm Tight Action Macro (ironwood stake tip ripping oak hull planks)"
+      ],
+      "anti_anachronism_bans": [
+        "no modern steel bridges, cargo ships, or concrete riverbanks",
+        "no blanket dense fog obscuring stakes or warships",
+        "no text or labels on water or banners"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_v7_bach_dang_1288_short/frames/beat_08.png"
+    },
+    {
+      "set_id": "nhu_nguyet_bamboo_defense_line",
+      "location_id": "nhu_nguyet_bamboo_defense_line",
+      "name_vi": "Phòng Tuyến Sông Như Nguyệt – Lũy Tre Gai (1077 · 1285)",
+      "dynasty_eras": [
+        "Nhà Lý (1077)",
+        "Nhà Trần (1285)"
+      ],
+      "keywords": [
+        "như nguyệt",
+        "nhu nguyet",
+        "sông cầu",
+        "song cau",
+        "lũy tre gai",
+        "thorny bamboo",
+        "trương hống",
+        "trương hát",
+        "phòng tuyến như nguyệt"
+      ],
+      "time_of_day": "predawn_torchlight",
+      "lighting_key": "cold_dawn_riverbank",
+      "palette_hex": {
+        "primary_hex": "#283845",
+        "accent_hex": "#D97724"
+      },
+      "terrain_and_architecture_dna": "Wide churning red-silt Như Nguyệt River bordered along its entire southern bank by a monumental multi-tiered compacted red-earth rampart crowned with dense 4-meter-tall razor-sharp thorny bamboo palisades, charred ironwood posts, bamboo caltrop ditches, and low-slung timber watchtowers.",
+      "atmosphere_lock": "Crisp 35mm optical contrast clashing warm 2200K iron watchtower braziers against cool 5600K pre-dawn river light with razor-sharp detail on wet red earth, bamboo thorns, and rushing water.",
+      "recommended_lens_pairings": [
+        "24mm Elevated Wide Establishing (100km winding river rampart)",
+        "50mm Medium OTS (sentinel behind bamboo parapet facing northern camp)",
+        "85mm Tight Action Macro (sharpened bamboo caltrops and iron spearheads)"
+      ],
+      "anti_anachronism_bans": [
+        "no modern concrete dikes, barbed steel wire, or searchlights",
+        "no gunpowder artillery batteries",
+        "no text or calligraphy on temple walls"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_ep04_nhu_nguyet_1077_short/frames/beat_05.png"
+    },
+    {
+      "set_id": "ung_chau_stone_siege_fortress",
+      "location_id": "ung_chau_stone_siege_fortress",
+      "name_vi": "Thành Đá Ung Châu & Núi Đất Thổ Sơn (1075–1076)",
+      "dynasty_eras": [
+        "Nhà Lý – Bắc Tống (1075–1076)"
+      ],
+      "keywords": [
+        "ung châu",
+        "ung chau",
+        "thổ sơn",
+        "tho son",
+        "khâm châu",
+        "kham chau",
+        "liêm châu",
+        "liem chau"
+      ],
+      "time_of_day": "stormy_siege_dawn",
+      "lighting_key": "firelit_stone_battlement",
+      "palette_hex": {
+        "primary_hex": "#3B4252",
+        "accent_hex": "#E07A5F"
+      },
+      "terrain_and_architecture_dna": "Colossal 11th-century grey limestone fortress walls and crenelated stone gatehouse of Ung Châu surrounded by rain-churned mud siege ditches, splintered oak scaling ladders, and a towering man-made earthen siege ramp (Thổ Sơn) stacked from tens of thousands of split-bamboo soil baskets reaching the parapet.",
+      "atmosphere_lock": "Clear-air 35mm Kodak Vision3 500T siege cinema with cold slate stone wetness contrasted against blazing amber fire-arrows, boiling oil cauldrons, and golden-crimson sunrise breaking over the Thổ Sơn crest.",
+      "recommended_lens_pairings": [
+        "28mm Low-Angle Hero (towering Thổ Sơn earth ramp meeting stone wall)",
+        "50mm Medium OTS (relay chain hauling bamboo soil baskets)",
+        "100mm Tight Macro (bronze crossbow trigger & rain-slicked lamellar scales)"
+      ],
+      "anti_anachronism_bans": [
+        "no gunpowder bombards or cannon breaches",
+        "no European Gothic castle towers",
+        "no Chinese characters carved above city gates"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_v6_prestige_ung_chau_1075_short/frames/beat_06.png"
+    },
+    {
+      "set_id": "hoa_lu_thang_long_imperial_citadel",
+      "location_id": "hoa_lu_thang_long_imperial_citadel",
+      "name_vi": "Thành Đá Hoa Lư & Kinh Đô Thăng Long – Đông Bộ Đầu (968 · 1010 · 1285 · 1428)",
+      "dynasty_eras": [
+        "Nhà Đinh – Tiền Lê (968–1009)",
+        "Nhà Lý – Trần (1010–1400)",
+        "Nhà Lê Sơ (1428)"
+      ],
+      "keywords": [
+        "hoa lư",
+        "hoa lu",
+        "thăng long",
+        "thang long",
+        "đại la",
+        "dai la",
+        "đông bộ đầu",
+        "dong bo dau",
+        "bình than",
+        "binh than",
+        "kính thiên",
+        "kinh thien",
+        "chương dương",
+        "hàm tử",
+        "đà mạc",
+        "côn sơn"
+      ],
+      "time_of_day": "golden_sunrise",
+      "lighting_key": "warm_amber_sunbeam",
+      "palette_hex": {
+        "primary_hex": "#7C2D12",
+        "accent_hex": "#F59E0B"
+      },
+      "terrain_and_architecture_dna": "Monumental 11th–15th century Đại Việt imperial riverfront capital at the Red River confluence: terracotta-tiled curved palace roofs supported by massive ironwood columns, carved stone dragon balustrades of Kính Thiên Hall, bustling hardwood river wharves of Đông Bộ Đầu and Bình Than moored with dragon war barges, flanked historically by Hoa Lư's sheer limestone valley gates.",
+      "atmosphere_lock": "Radiant golden-hour 35mm anamorphic cinema sunlight gleaming across shimmering Red River silt currents, lacquered crimson timber columns, and crisp distant mountain horizons.",
+      "recommended_lens_pairings": [
+        "24mm Aerial/Wide Establishing (Red River confluence & imperial citadel)",
+        "35mm Low-Angle Hero (carved stone dragon steps & royal wharf)",
+        "85mm Portrait/Macro (bamboo edict scroll, bronze censer, royal seal)"
+      ],
+      "anti_anachronism_bans": [
+        "no Beijing Forbidden City Qing yellow-glazed architecture",
+        "no modern Hanoi bridges, power lines, or concrete",
+        "no readable calligraphy on palace plaques or banners"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_ep05_chieu_doi_do_1010_short/frames/beat_10.png"
+    },
+    {
+      "set_id": "van_don_coastal_supply_strait",
+      "location_id": "van_don_coastal_supply_strait",
+      "name_vi": "Hải Đạo Vân Đồn – Vịnh Đảo Đá Vôi Cắt Lương (1288)",
+      "dynasty_eras": [
+        "Nhà Trần (1288)"
+      ],
+      "keywords": [
+        "vân đồn",
+        "van don",
+        "bái tử long",
+        "bai tu long",
+        "cửa lục",
+        "cua luc",
+        "thuyền lương",
+        "trương văn hổ"
+      ],
+      "time_of_day": "winter_sea_dusk_firelight",
+      "lighting_key": "firelit_emerald_strait",
+      "palette_hex": {
+        "primary_hex": "#1B4965",
+        "accent_hex": "#F97316"
+      },
+      "terrain_and_architecture_dna": "Narrow emerald-and-indigo coastal sea channels threading between sheer dark-grey karst limestone islets of Vân Đồn and Bái Tử Long Bay, hidden rocky ambush coves, and deep-hulled wooden grain junks listing across rocky sea shoals.",
+      "atmosphere_lock": "Razor-sharp 35mm optical sea clarity contrasting cool turquoise-indigo winter swells against roaring amber flames and glowing embers from burning grain transport hulls.",
+      "recommended_lens_pairings": [
+        "28mm Orbiting Wide Shot (karst sea channel & blazing supply fleet)",
+        "50mm Tracking Alongside (sleek Đại Việt assault galleys darting from cove)",
+        "85mm Macro (fire-arrows striking cordage-lashed rice barrels)"
+      ],
+      "anti_anachronism_bans": [
+        "no modern tourist boats, lighthouses, or steel buoys",
+        "no gunpowder naval cannons",
+        "no text on sails or rice casks"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_v7_bach_dang_1288_short/frames/beat_03.png"
+    },
+    {
+      "set_id": "chi_lang_ma_yen_ambush_gorge",
+      "location_id": "chi_lang_ma_yen_ambush_gorge",
+      "name_vi": "Ải Chi Lăng – Đầm Lầy Mã Yên & Núi Rừng Lam Sơn (1419 · 1427)",
+      "dynasty_eras": [
+        "Khởi Nghĩa Lam Sơn – Lê Sơ (1418–1427)"
+      ],
+      "keywords": [
+        "chi lăng",
+        "chi lang",
+        "mã yên",
+        "ma yen",
+        "pha lũy",
+        "pha luy",
+        "lưu quan",
+        "luu quan",
+        "chí linh",
+        "chi linh",
+        "xương giang",
+        "đông quan",
+        "lam sơn"
+      ],
+      "time_of_day": "crisp_autumn_morning",
+      "lighting_key": "harsh_gorge_daylight",
+      "palette_hex": {
+        "primary_hex": "#3F4E4F",
+        "accent_hex": "#C59B27"
+      },
+      "terrain_and_architecture_dna": "Narrow 20-kilometer oval canyon of Chi Lăng walled on both flanks by vertical pale-grey limestone cliffs and dense subtropical crags, bottlenecking southward at saddle-shaped Mã Yên mountain into deceptive golden-green marsh reeds concealing deep slick black bog mud and a narrow splintered timber creek bridge.",
+      "atmosphere_lock": "Clear-air 35mm directional highland sunlight raking starkly across sheer limestone rock faces, gleaming black marsh mud, and glinting iron spearheads hidden in cliff crevices.",
+      "recommended_lens_pairings": [
+        "24mm High-Ridge Establishing (entire walled Chi Lăng valley & Mã Yên)",
+        "50mm Over-the-Shoulder Ambush (scout on karst ledge above cavalry column)",
+        "85mm Low-Angle Macro (iron-shod warhorse hooves sinking in black bog mud)"
+      ],
+      "anti_anachronism_bans": [
+        "no paved asphalt highway, railway tracks, or power pylons",
+        "no modern rifles or concrete bridges",
+        "no carved stone text or Chinese characters on pass gates"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_ep25_chi_lang_chem_lieu_thang_1427_short/frames/beat_04.png"
+    },
+    {
+      "set_id": "rach_gam_xoai_mut_river_artillery_trap",
+      "location_id": "rach_gam_xoai_mut_river_artillery_trap",
+      "name_vi": "Sông Tiền Rạch Gầm – Xoài Mút & Cù Lao Thới Sơn (1785)",
+      "dynasty_eras": [
+        "Nhà Tây Sơn (1785)"
+      ],
+      "keywords": [
+        "rạch gầm",
+        "rach gam",
+        "xoài mút",
+        "xoai mut",
+        "thới sơn",
+        "thoi son",
+        "sông tiền",
+        "song tien",
+        "mỹ tho",
+        "my tho",
+        "quân xiêm"
+      ],
+      "time_of_day": "dawn_ebb_ambush",
+      "lighting_key": "river_cannon_firelight",
+      "palette_hex": {
+        "primary_hex": "#2D5A4C",
+        "accent_hex": "#EA580C"
+      },
+      "terrain_and_architecture_dna": "Broad ochre-brown alluvial Tiền River in southern Vietnam narrowed into a lethal kill-corridor by lush emerald mangrove-and-nipa-palm banks of Thới Sơn island, twin concealed tributary creek mouths of Rạch Gầm and Xoài Mút, and camouflaged timber-and-earth batteries housing gleaming 18th-century cast-bronze Tây Sơn cannons.",
+      "atmosphere_lock": "Crisp 35mm riverine optical depth where dark predawn water erupts with synchronized vivid orange muzzle flashes from mangrove banks and blazing bamboo fire-rafts.",
+      "recommended_lens_pairings": [
+        "24mm Wide River Corridor (Thới Sơn island bottleneck & jammed fleet)",
+        "35mm Low-Angle Battery Shot (cast-bronze Tây Sơn cannons firing point-blank)",
+        "85mm Macro (glowing slow-match touching cannon vent & splintering teak hull)"
+      ],
+      "anti_anachronism_bans": [
+        "no Bạch Đằng wooden river stakes placed in Rạch Gầm alluvial mud",
+        "no modern motorized sampans, steel bridges, or modern artillery",
+        "no text or flags with script"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_ep19_bach_dang_va_rach_gam_khac_nhau_gi_short/frames/beat_11.png"
+    },
+    {
+      "set_id": "ngoc_hoi_dong_da_winter_redoubt",
+      "location_id": "ngoc_hoi_dong_da_winter_redoubt",
+      "name_vi": "Đồn Ngọc Hồi – Gò Đống Đa & Chiến Tuyến Mùa Đông Thăng Long (1789)",
+      "dynasty_eras": [
+        "Nhà Tây Sơn – Quang Trung (1789)"
+      ],
+      "keywords": [
+        "ngọc hồi",
+        "ngoc hoi",
+        "đống đa",
+        "dong da",
+        "hà hồi",
+        "ha hoi",
+        "thanh trì",
+        "thanh tri",
+        "tam điệp",
+        "tam diep",
+        "núi bân",
+        "nui ban",
+        "kỷ dậu",
+        "hỏa hổ",
+        "ván rơm ướt"
+      ],
+      "time_of_day": "winter_dawn_assault",
+      "lighting_key": "winter_dawn_firelight",
+      "palette_hex": {
+        "primary_hex": "#7F1D1D",
+        "accent_hex": "#F59E0B"
+      },
+      "terrain_and_architecture_dna": "Flat frost-chilled winter clay plains of Thanh Trì stretching before the towering rammed-earth Ngọc Hồi fortress ringed with spiked iron caltrops, deep ditches, bamboo palisades, and cast-iron rampart cannons, assaulted by 100 armored Tây Sơn war elephants, dripping wet-straw triple-plank wooden shields, and blazing hỏa hổ resin fire-lances.",
+      "atmosphere_lock": "Crisp 35mm Kodak Vision3 500T winter dawn clarity contrasting cold steel-blue northern air with roaring amber hỏa hổ flames, flying wet mud clods, and soot-streaked crimson banners; zero opaque smoke white-outs.",
+      "recommended_lens_pairings": [
+        "24mm Wide Battle Line (20 wet-straw shield squads & 100 war elephants)",
+        "35mm Low-Angle Hero (Quang Trung atop armored war elephant howdah)",
+        "85mm Tight Macro (lead musket balls embedding harmlessly in wet rice straw)"
+      ],
+      "anti_anachronism_bans": [
+        "no modern rifles, barbed wire, or concrete trenches",
+        "no Qing queues on Tây Sơn troops",
+        "no readable characters on lanterns, shields, or banners"
+      ],
+      "sample_frame_relpath": "video/vn_su_ke_lai_ep07_tuong_binh_hoa_ho_tay_son_1789_short/frames/beat_01.png"
+    }
+  ]
+}
