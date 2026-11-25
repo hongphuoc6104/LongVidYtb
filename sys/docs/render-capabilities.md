@@ -53,7 +53,7 @@ Visual beats strictly conform to `sys/visual_pacing.py`:
 
 ## 4. Modular FX & Audio Warehouse (`sys/fx_warehouse/`)
 
-Refer to [vp-motion-fx-warehouse](../../.agents/skills/vp-motion-fx-warehouse/SKILL.md) for the sharded warehouse architecture:
+Refer to [vp-visual-fx](../../.agents/skills/vp-visual-fx/SKILL.md) for the sharded warehouse architecture:
 - **Sub-Warehouses**: `sys/fx_warehouse/archetypes.py` (`ARCHETYPE_PROFILES`, `CHANNEL_ARCHETYPE_MAP`), `camera_vfx.py` (`CAMERA_MOTION_CATALOG`, `VFX_SHADER_CATALOG`), `hud_widgets.py` (`HUD_WIDGET_CATALOG`, `render_hud_widget_patch`), `audio_sfx_bgm.py` (`SFX_CATALOG`, `BGM_CATALOG`, `ensure_warehouse_audio_assets`), and `selector.py` (`auto_select_beat_fx`).
 - **5 Niche Archetypes (20 Channels)**: All 20 Vietnamese channels map into 5 archetypes (`archetype_1_forensic_noir`, `archetype_2_geopolitics_history`, `archetype_3_science_xray`, `archetype_4_doodle_explainer`, `archetype_5_mindful_healing`), pulling dynamically from the shared sub-warehouses per beat while obeying archetype guardrails.
 - **Non-Forced Bespoke Rule**: When a video's topic or niche requires a visual effect, 30fps HUD overlay, or procedural sound stem not yet in the shared catalog, the pipeline/agent synthesizes a bespoke per-video/per-topic spec (`bespoke_hud_spec`, `bespoke_sfx_spec`) instead of forcing an incompatible existing effect, and shards new reusable catalogs into `sys/fx_warehouse/` submodules as the warehouse grows.

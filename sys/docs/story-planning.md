@@ -1,7 +1,7 @@
 # Script, Storyboard and Planning Specs (`full_frame_v1`)
 
 ## 1. Scope & Workflow
-- **Contract source:** Read job contract/profile (`sys/format_profiles.py`) and references: [script](../../.agents/skills/vp-production/references/script.md), [narration](../../.agents/skills/vp-production/references/narration-style.md), [visuals](../../.agents/skills/vp-production/references/visuals.md), and [full-frame quality](../../.agents/skills/vp-full-frame-quality/SKILL.md).
+- **Contract source:** Read job contract/profile (`sys/format_profiles.py`) and references: [script](../../.agents/skills/vp-production/references/script.md), [narration](../../.agents/skills/vp-production/references/narration-style.md), [visuals](../../.agents/skills/vp-production/references/visuals.md), and [visual FX quality](../../.agents/skills/vp-visual-fx/SKILL.md).
 - **Workflow modes:** Review mode stops at `outline` and `dialogue` checkpoints; Auto mode proceeds without human review.
 - **Scene counts & Flash-Friendly Authoring:** Dynamic scene counts based on causal progression (`local experience -> experimental evidence -> mechanism/metaphor -> practical return`). Prefer authoring via `(sentence, "shot_type|visual_action")` pairs (`build_scenes_from_story_rows` in `sys/content/research_story_architect.py`) so code automatically computes exact anchors, durations, and `based_on` continuity without manual math or coordinate guessing.
 

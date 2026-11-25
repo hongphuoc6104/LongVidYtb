@@ -3,58 +3,44 @@
 ## Mandatory Pre-Task Reading Protocol (Priority Document Gate)
 Before initiating any task, every agent MUST follow the 3-tier reading protocol:
 1. **Tier 1 (Mandatory for ALL tasks)**: [AGENTS.md](AGENTS.md) and [PLAYBOOK.md](PLAYBOOK.md).
-2. **Tier 2 (Domain Skill SSOT)**: Read the specific `SKILL.md` matching your current task domain below.
-3. **Tier 3 (Deep Reference)**: Read specific reference guides in `.agents/skills/<skill>/references/` when diagnosing errors.
+2. **Tier 2 (Domain Skill SSOT)**: Read one of the 7 Core `SKILL.md` modules below.
+3. **Tier 3 (Channel Data & Deep Reference)**: Inspect `sys/channels/<channel_id>/playbook/{overview,content,visual,pacing}.md` (`./vp playbook <id>`) and `.agents/skills/<skill>/references/`.
 
 ---
 
-## Task Routing Table
+## Task Routing Table (7 Consolidated Core Skills)
 
-| Task | Guide | Skill |
+| Task | Guide | Core Skill |
 |---|---|---|
-| Download/clone or configure a machine | [Getting started](sys/docs/getting-started.md) | [vp-setup](.agents/skills/vp-setup/SKILL.md) |
-| New chat or continuing unfinished work | [Session handoff](sys/docs/session-start.md) | Skill for the ongoing task |
-| Architect research narrative, 3-Tier Funnel Packaging & Spin-offs | [Research architect](.agents/skills/vp-research-architect/SKILL.md) | [vp-research-architect](.agents/skills/vp-research-architect/SKILL.md) |
-| Layer-0 3-Vault NotebookLM Grounding (Pattern, Flow Rules & Fact Vault) | [NotebookLM Vault](.agents/skills/vp-notebooklm-vault/SKILL.md) | [vp-notebooklm-vault](.agents/skills/vp-notebooklm-vault/SKILL.md) |
-| Dual-Format Production (`short_9x16` Full-Chain or `long_16x9` High-Density) | [Workflow](sys/docs/workflow.md) | [vp-production](.agents/skills/vp-production/SKILL.md) |
-| Modular Motion, 30fps HUD, GPU VFX, SFX/BGM & Bespoke Per-Video FX (`--fx-mode auto_niche`) | [Motion FX Warehouse](.agents/skills/vp-motion-fx-warehouse/SKILL.md) | [vp-motion-fx-warehouse](.agents/skills/vp-motion-fx-warehouse/SKILL.md) |
-| Author conversational narration, Truth-Slap Hooks & verify acoustic cadence | [Scriptwriting guide](.agents/skills/vp-scriptwriting/SKILL.md) | [vp-scriptwriting](.agents/skills/vp-scriptwriting/SKILL.md) |
-| Bản Đồ Quyền Lực (`ban_do_quyen_luc`) v3 4-Style Photorealistic Geopolitical Channel SSOT | [Channel PLAN](sys/channels/ban_do_quyen_luc/PLAN.md) | [vp-channel-ban-do-quyen-luc](.agents/skills/vp-channel-ban-do-quyen-luc/SKILL.md) |
-| Hiểu Tận Gốc (`chanh_niem_ke` / `@HieuTanGocVN`) V5.0 Causal Disaster & GIS Hybrid SSOT | [Channel PLAN](sys/channels/chanh_niem_ke/PLAN.md) | [vp-channel-chanh-niem-ke](.agents/skills/vp-channel-chanh-niem-ke/SKILL.md) |
-| Hồ Sơ Kỳ Lạ (`ho_so_ky_la`) v3 3D Noir Forensic Diorama Channel SSOT | [Channel PLAN](sys/channels/ho_so_ky_la/PLAN.md) | [vp-channel-ho-so-ky-la](.agents/skills/vp-channel-ho-so-ky-la/SKILL.md) |
-| Cơ Thể Kể (`co_the_ke`) v3 3D Endoscopic Biomedical Channel SSOT | [Channel PLAN](sys/channels/co_the_ke/PLAN.md) | [vp-channel-co-the-ke](.agents/skills/vp-channel-co-the-ke/SKILL.md) |
-| Sử Kể Lại (`su_ke_lai`) v3 Option 1 35mm Live-Action Channel SSOT | [Channel PLAN](sys/channels/su_ke_lai/PLAN.md) | [vp-channel-su-ke-lai](.agents/skills/vp-channel-su-ke-lai/SKILL.md) |
-| 2D Minimalist Doodle (`1.7.0 Nguệch Ngoạc`) Visual Quality & Continuity | [Full-frame quality guide](.agents/skills/vp-full-frame-quality/SKILL.md) | [vp-full-frame-quality](.agents/skills/vp-full-frame-quality/SKILL.md) |
-| Package shared-image YouTube, Facebook & standalone Reels/TikTok deliverables | [Omni-platform guide](.agents/skills/vp-omni-platform/SKILL.md) | [vp-omni-platform](.agents/skills/vp-omni-platform/SKILL.md) |
-| Automated image & video generation via Flow CDP pool | [Flow CDP Guide](.agents/skills/vp-flow-cdp/SKILL.md) | [vp-flow-cdp](.agents/skills/vp-flow-cdp/SKILL.md) |
-| Remote Colab T4 TTS synthesis & native FFmpeg h264_nvenc render | [Colab Bridge Guide](.agents/skills/vp-colab-bridge/SKILL.md) | [vp-colab-bridge](.agents/skills/vp-colab-bridge/SKILL.md) |
-| Troubleshooting technical issues & proven remedies | [Troubleshooting handbook](.agents/skills/vp-troubleshooting/SKILL.md) | [vp-troubleshooting](.agents/skills/vp-troubleshooting/SKILL.md) |
-| Analyze a reference channel and derive an original production playbook | [Reference-video analysis](.agents/skills/vp-channel-patterns/SKILL.md) | [vp-channel-patterns](.agents/skills/vp-channel-patterns/SKILL.md) |
-| Upgrade the engine, rules, skills, tests, and conveyor | [Implementation progress (archived)](sys/docs/archive/normalization-progress.md) | [vp-development](.agents/skills/vp-development/SKILL.md) |
-| Cleanup/archive/Git synchronization | [Maintenance](sys/docs/maintenance.md) | [vp-maintenance](.agents/skills/vp-maintenance/SKILL.md) |
+| Lookup any of the 38 VN/EN channels (`wave_0..5`, 5 Archetypes, 3-pillar data playbooks) | `./vp playbook <id>` | [vp-channel-registry](.agents/skills/vp-channel-registry/SKILL.md) |
+| Layer-0 3-Vault NotebookLM, Pattern Forensics, Research Architect, Scriptwriting & 4 Linters | [Story planning](sys/docs/story-planning.md) | [vp-content-studio](.agents/skills/vp-content-studio/SKILL.md) |
+| Visual Grammar (`1.7.0 Nguệch Ngoạc`), Two-Stage SceneMap & Sharded 30fps FX Warehouse (`--fx-mode auto_niche`) | [Render capabilities](sys/docs/render-capabilities.md) | [vp-visual-fx](.agents/skills/vp-visual-fx/SKILL.md) |
+| Automated Flow CDP image (`BELUGA`) & Dual-Model video generation (`veo_3_1_lite` / `omni_flash`) | [Flow prompts](sys/docs/flow-prompts.md) | [vp-flow-cdp](.agents/skills/vp-flow-cdp/SKILL.md) |
+| Remote Colab T4 OmniVoice TTS (`-11.0 LUFS`) & native FFmpeg `h264_nvenc` render | [Colab TTS](sys/docs/colab-tts.md) | [vp-colab-bridge](.agents/skills/vp-colab-bridge/SKILL.md) |
+| Dual-Format Production (`short_9x16`, `long_16x9`), New Episode Setup & Omni-Platform Publish (`./vp`) | [Workflow](sys/docs/workflow.md) | [vp-production](.agents/skills/vp-production/SKILL.md) |
+| Engine development, 6-station conveyor (`./pipeline`), machine setup, maintenance/Git & troubleshooting | [Getting started](sys/docs/getting-started.md) · [Maintenance](sys/docs/maintenance.md) | [vp-engineering](.agents/skills/vp-engineering/SKILL.md) |
 
-## Channel-to-Skill Routing & Composition Matrix (Mục Lục Điều Phối Quy Trình Chung & Skill Riêng Từng Kênh)
+## Channel-to-Skill Routing & Composition Matrix (Mục Lục Điều Phối 7 Core Skills ↔ 38 Hồ Sơ Kênh)
 
-Shared workflow skills (`vp-research-architect`, `vp-scriptwriting`, `vp-motion-fx-warehouse`, `vp-flow-cdp`, `vp-colab-bridge`, `vp-omni-platform`, `vp-production`) form the **universal Shared Spine** (`--fx-mode auto_niche` + `[PRO_FX]`/`[FULL_FX]`/`[BESPOKE_FX]`), then branch cleanly to one of 5 Niche Archetypes (`sys/fx_warehouse/archetypes.py`) and per-video bespoke assets without modifying shared skills. Channel-specific parameters and visual styles are isolated in dedicated channel skills:
+All 38 physical channels share the **6-Core-Skill Production Spine** (`vp-channel-registry` -> `vp-content-studio` -> `vp-visual-fx` [`--fx-mode auto_niche` + `[PRO_FX]`/`[FULL_FX]`/`[BESPOKE_FX]`] -> `vp-flow-cdp` -> `vp-colab-bridge` -> `vp-production`) while isolating channel specs inside `sys/channels/<channel_id>/playbook/`:
 
-| Channel Scope | Shared Workflow Skills (Unmodified) | Channel-Specific Style & Parameter Skill | Channel-Specific Scope |
-|---|---|---|---|
-| **`ban_do_quyen_luc` (Bản Đồ Quyền Lực)** | `vp-research-architect`, `vp-scriptwriting`, `vp-flow-cdp`, `vp-colab-bridge`, `vp-omni-platform`, `vp-production` | [vp-channel-ban-do-quyen-luc](.agents/skills/vp-channel-ban-do-quyen-luc/SKILL.md) | Supplies `ban_do_quyen_luc_4styles_photoreal_v3` (3-pillar photorealistic base + 4-mode storytelling combination), `VietNarrator_ban_do_quyen_luc` (`1.15x`), `240`-beat 9-chapter Long / `12–14`-beat Short pacing, and 2K brand specs. |
-| **`ho_so_ky_la` (Hồ Sơ Kỳ Lạ)** | `vp-research-architect`, `vp-scriptwriting`, `vp-flow-cdp`, `vp-colab-bridge`, `vp-omni-platform`, `vp-production` | [vp-channel-ho-so-ky-la](.agents/skills/vp-channel-ho-so-ky-la/SKILL.md) | Supplies `ho_so_ky_la_3d_noir_forensic_v3` (3-pillar 3D Noir Forensic Diorama + 4 investigative visual modes), `VietNarrator_ho_so_ky_la` (`1.10x`), `260`-beat 10-chapter Long / `18`-beat Short pacing, bottom-right `delogo`, and 2K brand specs. |
-| **`co_the_ke` (Cơ Thể Kể)** | `vp-research-architect`, `vp-scriptwriting`, `vp-flow-cdp`, `vp-colab-bridge`, `vp-omni-platform`, `vp-production` | [vp-channel-co-the-ke](.agents/skills/vp-channel-co-the-ke/SKILL.md) | Supplies `co_the_ke_3d_biomedical_v3` (3-pillar 3D Endoscopic Biomedical Cinematography + 4 physiological visual modes), `VietNarrator_co_the_ke` (`1.12x`), `240`-beat 10-chapter Long / `18`-beat Short pacing, bottom-right `delogo`, and 2K brand specs. |
-| **`su_ke_lai` (Sử Kể Lại)** | `vp-research-architect`, `vp-scriptwriting`, `vp-flow-cdp`, `vp-colab-bridge`, `vp-omni-platform`, `vp-production` | [vp-channel-su-ke-lai](.agents/skills/vp-channel-su-ke-lai/SKILL.md) | Supplies Option 1 `su_ke_lai_35mm_live_action_v3` visual grammar, `VietNarrator_su_ke_lai` (`1.30x`), 2-clause `240`-beat Long / `12`-beat `omni_flash` Short pacing, and 2K brand specs. |
-| **Standard 2D Doodle Channels** | `vp-research-architect`, `vp-scriptwriting`, `vp-flow-cdp`, `vp-colab-bridge`, `vp-omni-platform`, `vp-production` | [vp-full-frame-quality](.agents/skills/vp-full-frame-quality/SKILL.md) | Supplies `1.7.0 handdrawn_2d_explainer` visual grammar and default `sys/format_profiles.py` settings. |
+| Channel Scope | Archetype / Format Focus | 3-Pillar Data Playbook (`overview`, `content`, `visual`, `pacing`) |
+|---|---|---|
+| **`su_ke_lai` (Sử Kể Lại — Wave 0 Active)** | `archetype_2_geopolitics_history` (`heroic_vietnam_epic` Short V4 + Option 1 35mm M1-Flex V9.2 Long, `1.30x`) | [su_ke_lai playbook](sys/channels/su_ke_lai/playbook/overview.md) |
+| **`ban_do_quyen_luc` (Bản Đồ Quyền Lực — Wave 1)** | `archetype_2_geopolitics_history` (`ban_do_quyen_luc_4styles_photoreal_v3`, `1.15x`) | [ban_do_quyen_luc playbook](sys/channels/ban_do_quyen_luc/playbook/overview.md) |
+| **`chanh_niem_ke` (Hiểu Tận Gốc — Wave 1)** | `archetype_2_geopolitics_history` (Web Mercator GIS + Bipolar V5.0 Hybrid Chronicle) | [chanh_niem_ke playbook](sys/channels/chanh_niem_ke/playbook/overview.md) |
+| **`ho_so_ky_la` (Hồ Sơ Kỳ Lạ — Wave 1)** | `archetype_1_forensic_noir` (`ho_so_ky_la_3d_noir_forensic_v3`, `1.10x`) | [ho_so_ky_la playbook](sys/channels/ho_so_ky_la/playbook/overview.md) |
+| **`co_the_ke` (Cơ Thể Kể — Wave 1)** | `archetype_3_science_xray` (`co_the_ke_3d_biomedical_v3`, `1.12x`) | [co_the_ke playbook](sys/channels/co_the_ke/playbook/overview.md) |
+| **33 Remaining VN & EN Channels (Wave 2–5)** | Routed by [vp-channel-registry](.agents/skills/vp-channel-registry/SKILL.md) & `1.7.0` / Archetype 1–5 specs | `./vp playbook <channel_id>` -> `sys/channels/<channel_id>/playbook/overview.md` |
 
 ## System Layout & SSOT
 
-- `sys/`: code, docs, schemas, configuration and operational data.
-- `sys/format_profiles.py`: single source of truth for Dual-Format video profiles:
-  - `short_9x16`: 100% Full-Chain continuous video (`Omni 1.2 Flash`, 11–15 keyframes, kinetic 1-word `.ass` subtitles, Colab T4 NVENC).
-  - `long_16x9`: 240–350 high-density `BELUGA` 8K multi-image visual journey, 1.25x supersampled zero-snap `zoompan`, directional optical `xfade` (0.24s), sidecar `.srt`, and 8–12 chapters.
+- `sys/`: code, docs, schemas, configuration and channel playbooks (`sys/channels/<id>/playbook/`).
+- `sys/format_profiles.py`: single source of truth for Dual-Format video profiles (`short_9x16` & `long_16x9`).
 - `sys/runs/<job>/`: content, versions, requests and artifacts.
-- `sys/assets/`: visual and voice references (`VietNarrator` 1.0x).
+- `sys/assets/`: visual and studio voice references (`VietNarrator_<channel_id>` / `EnNarrator_<channel_id>`).
 - `video/<job>/`: collected deliverables (MP4 / SRT / ASS).
-- `.agents/skills/`: discoverable skills and canonical references.
+- `.agents/skills/`: **7 consolidated Core Skills** (`vp-channel-registry`, `vp-content-studio`, `vp-visual-fx`, `vp-flow-cdp`, `vp-colab-bridge`, `vp-production`, `vp-engineering`).
 - `PLAYBOOK.md`: operational lessons and root-cause fixes (mandatory reading).
 
 [Active documentation index](sys/docs/INDEX.md).
