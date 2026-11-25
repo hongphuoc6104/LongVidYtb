@@ -1,0 +1,505 @@
+{
+  "schema_version": "12.0",
+  "artifact_id": "08_vn_analytical_commentary_and_rubric",
+  "channel_id": "su_ke_lai",
+  "channel_handle": "@SuKeLaiVN",
+  "created_at": "2026-11-25",
+  "thread": "2D",
+  "owner_agent": "vn-commentary-master",
+  "user_intent": "video càng khó làm càng hay — nội dung giá trị cao, hình ảnh nâng tầm, phân tích chuyển cảnh, diễn đạt, đưa ra ý kiến, miêu tả — do AI quyết định đánh giá theo thang chấm điểm kênh mẫu. Mục tiêu: tiếng Việt, phù hợp người Việt.",
+  "reference_channels_forensic_basis": [
+    {"channel": "BATTLECRY - NGƯỜI KỂ SỬ", "views_per_day": "139100", "asl_seconds": "4.50"},
+    {"channel": "CLD Studio", "views_30d": "1284199", "views_per_day": "58400", "chapters": 8},
+    {"channel": "CD Media - Quân Sự", "views_per_day": "42300", "asl_seconds": "4.29"},
+    {"channel": "Tám Kể Sử", "views_per_day": "9800", "asl_seconds": "3.33"},
+    {"channel": "Hồn Thiêng Sử Việt", "asl_seconds": "6.43", "note": "pure AI cinema — capped by zero tactical annotation"},
+    {"channel": "Yarnhub (global)", "views_per_day": "915500", "asl_seconds": "4.62"},
+    {"channel": "Epic History TV (global)", "views_per_day": "258100"},
+    {"channel": "Kings and Generals (global)", "views_per_day": "44100"},
+    {"channel": "The Operations Room (global)", "views_per_day": "9100"}
+  ],
+
+  "section_A_vn_analytical_storytelling_framework": {
+    "title": "Vietnamese Analytical & Opinionated Storytelling Framework for Sử Kể Lại",
+    "version": "V12",
+    "philosophy": "Mỗi câu nói phải làm được ÍT NHẤT MỘT trong ba việc: (1) phân tích cơ chế ẩn — tại sao điều đó xảy ra chứ không chỉ điều gì xảy ra; (2) đưa ra phán xét lịch sử sắc bén có căn cứ sử liệu; (3) khoan sâu vào giác quan vi mô của con người trong khoảnh khắc đó. Tuyệt đối không lặp lại sự kiện đơn thuần.",
+
+    "sentence_architecture_7_modes": [
+      {
+        "mode_id": "M1",
+        "name": "Giải Phẫu Cơ Chế Ẩn (Hidden Mechanics Dissection)",
+        "description": "Phơi bày nguyên lý vật lý/chiến thuật/tâm lý mà biên niên sử không ghi thẳng. Câu dạng Fact → Physics → Consequence.",
+        "template_pattern": "[Hành động lịch sử X] — [tại sao X có thể xảy ra theo cơ chế Y] — [điều đó có nghĩa là Z với toàn bộ trận đánh].",
+        "example_vn": "Mộc bài rơm ướt không phải là khiên mộc bình thường — lớp rơm ngâm nước hấp thụ sức nổ của đạn thần công rồi phân tán nhiệt sang hai bên, khiến 20 người đẩy một tấm còn nguyên vẹn tiến tới tận chân đồn.",
+        "linter_check": "Câu đơn, không quá 25 âm tiết, không dùng 'bí mật nằm ở', 'ít ai biết rằng'.",
+        "cadence_target_syllables": "18-24"
+      },
+      {
+        "mode_id": "M2",
+        "name": "Phán Xét Chiến Lược Sắc Bén (Sharp Strategic Verdict)",
+        "description": "Đưa ra kết luận opinionated, có thể gây tranh cãi, dựa trên dữ liệu sử liệu. Không né tránh. Không 'theo một số ý kiến'.",
+        "template_pattern": "[Tên nhân vật/quyết định] [động từ phán xét mạnh] vì [lý do chiến lược cụ thể], không phải vì [lý do thông thường/sai lầm].",
+        "example_vn": "Ô Mã Nhi thua không phải vì thiếu dũng cảm — ông ta thua vì giáo lý thủy chiến Mông Cổ không tính đến thủy triều lên-xuống hai lần mỗi ngày trên một con sông cửa đồng bằng.",
+        "linter_check": "Không dùng 'đánh giá công bằng thì', 'nói đi cũng phải nói lại'.",
+        "cadence_target_syllables": "16-22"
+      },
+      {
+        "mode_id": "M3",
+        "name": "Zoom Vi Giác Quan (Sensory Micro-Detail Zoom)",
+        "description": "Đưa người xem VÀO khoảnh khắc bằng chi tiết giác quan cụ thể: mùi, âm thanh, nhiệt độ, trọng lượng, kết cấu. Tuyệt đối không dùng 'ngàn chiến binh anh dũng'.",
+        "template_pattern": "Tả [1 chi tiết giác quan rất cụ thể] trong [thời điểm/không gian cụ thể].",
+        "example_vn": "Lúc 3 giờ sáng, nước triều đã kéo cọc lim xuống ngang mặt sông — không ai nhìn thấy, nhưng ai chạm vào cũng nghe tiếng gỗ rít lên dưới làn nước đen.",
+        "linter_check": "Câu ngắn, cụ thể, không dùng tính từ chung chung như 'hùng tráng', 'bi thương'.",
+        "cadence_target_syllables": "14-20"
+      },
+      {
+        "mode_id": "M4",
+        "name": "Phản Vấn Sắc Bén (Sharp Counter-Question)",
+        "description": "Đặt câu hỏi mà câu trả lời ngay sau đó lật ngược kỳ vọng của người xem. Hook cho retention reset.",
+        "template_pattern": "Nhưng [câu hỏi logic thông thường]? [Câu trả lời đảo ngược + lý do vật lý/chiến thuật].",
+        "example_vn": "Nhưng tại sao 5 vạn quân Xiêm không chia đôi hạm đội đánh bọc hậu? Vì thuyền chiến Xiêm tải nặng cần nước triều lên mới ra được vịnh — và Nguyễn Huệ biết điều đó trước khi khai trận.",
+        "linter_check": "Zero [pause:...] ở câu hỏi, câu hỏi ≤ 16 âm tiết.",
+        "cadence_target_syllables": "12-18 (câu hỏi) + 14-20 (đáp)"
+      },
+      {
+        "mode_id": "M5",
+        "name": "Cầu Nối Hiện Đại Việt Nam (Vietnam Micro-Bridge)",
+        "description": "Chuyển đổi đơn vị lịch sử sang cái mà người Việt hiện đại cảm nhận được ngay: km đường QL, trọng lượng xe máy, diện tích quận.",
+        "template_pattern": "[Số liệu lịch sử] — tương đương [analog Việt Nam hiện đại quen thuộc].",
+        "example_vn": "Ba vạn quân Tây Sơn hành quân từ Phú Xuân ra Thăng Long trong 5 ngày — tức 600 km, bằng đúng khoảng cách Hà Nội đi Đà Nẵng ngày nay, không có đường trải nhựa.",
+        "linter_check": "Không dùng đơn vị quá chuyên biệt hoặc quá hiện đại (USD, feet). Dùng km, kg, giờ đi xe.",
+        "cadence_target_syllables": "16-22"
+      },
+      {
+        "mode_id": "M6",
+        "name": "Phán Quyết Lịch Sử Đáng Nhớ (Memorable Historical Verdict)",
+        "description": "Câu kết chương hoặc câu cuối video — ngắn, sắc, mang hơi thở phán xét thế hệ, dễ share. Không giải thích thêm.",
+        "template_pattern": "[Nhân vật/sự kiện] [động từ mạnh, thể hiện irony hoặc tragedy hoặc triumph] — [1 từ/cụm mang tính kết luận vĩnh cửu].",
+        "example_vn": "Thoát Hoan thoát thân trong ống đồng vì sợ tên độc — và chính cái sợ đó cứu Đại Việt khỏi một cuộc chiến thứ tư.",
+        "linter_check": "≤ 20 âm tiết. Zero 'like/share/subscribe/đăng ký/nhấn chuông'.",
+        "cadence_target_syllables": "12-18"
+      },
+      {
+        "mode_id": "M7",
+        "name": "Miêu Tả Phim Ngôn Ngữ (Cinematic Description Language)",
+        "description": "Dùng ngôn ngữ của đạo diễn/biên kịch phim để tả cảnh — không phải ngôn ngữ giáo khoa. Dùng thì hiện tại, góc máy, ánh sáng.",
+        "template_pattern": "Máy quay [góc/hướng] bắt [hành động cụ thể] — [ánh sáng/thời điểm] — [cảm xúc/ý nghĩa trong 1 từ].",
+        "example_vn": "Góc rộng từ trên cao: 300 thuyền chiến Xiêm giống như một tấm thảm đỏ từ từ trôi vào hẻm núi — và hẻm núi đó đang đóng lại từ cả hai phía.",
+        "linter_check": "Không có từ 'hùng tráng', 'bi tráng', 'oai phong'. Dùng danh từ hình ảnh.",
+        "cadence_target_syllables": "16-24"
+      }
+    ],
+
+    "sentence_construction_rules": {
+      "max_sentence_syllables": 25,
+      "max_clause_syllables_before_comma": 18,
+      "forbidden_openers": [
+        "Chào mừng các bạn",
+        "Trong video hôm nay",
+        "Hãy cùng khám phá",
+        "Như chúng ta đã biết",
+        "Ít ai biết rằng",
+        "Bí mật nằm ở",
+        "Điều thú vị là",
+        "Nghịch lý nằm ở"
+      ],
+      "forbidden_cta_phrases": [
+        "like", "share", "subscribe", "đăng ký", "nhấn chuông", "bấm chuông", "theo dõi kênh", "ủng hộ kênh"
+      ],
+      "mode_rotation_rule": "Mỗi chương 10 beats phải dùng ít nhất 4 trong 7 modes. Không dùng cùng mode 2 beats liên tiếp. M6 chỉ dùng ở cuối chương hoặc cuối video.",
+      "retention_reset_every_60_90s": {
+        "structure": "WHY_NOT → PHYSICAL_CONSTRAINT → COUNTER_INTUITIVE_SOLUTION",
+        "trigger_modes": ["M4", "M1"],
+        "example": {
+          "why_not": "Nhưng tại sao Quang Trung không chờ đại bác về đủ rồi mới đánh?",
+          "constraint": "Quân Thanh có 2 tháng lương — đủ chờ đến mùa hè, khi nhiệt độ Thăng Long giết chết quân miền Nam.",
+          "solution": "Nên Tết chính là deadline sinh tử — và ăn Tết trước 3 ngày là một mệnh lệnh chiến thuật, không phải nghi lễ."
+        }
+      }
+    },
+
+    "linter_compliance_matrix": {
+      "fact_grounding_linter": {
+        "rule": "Mọi số liệu cụ thể (năm, số quân, km, ngày) PHẢI có trong fact_vault.json verified_facts. Không có số liệu từ trí nhớ LLM.",
+        "gate": "fact_grounding_linter.py --strict → 0 REPORT_ONLY_LEAKAGE, 0 UNGROUNDED_NUMBERS"
+      },
+      "script_cadence_checker": {
+        "rule": "Câu mở ≤ 24 âm tiết, zero [pause:...] ở SC01. Speech rate 3.2–4.5 syl/s. Drift ≤ 0.5s.",
+        "gate": "script_cadence_checker.py → 0 OPENING_SCENE_PAUSE_FORBIDDEN, 0 OPENING_HOOK_TOO_LONG"
+      },
+      "script_diversity_linter": {
+        "rule": "Zero AI_CLICHE_PHRASE, stddev độ dài câu ≥ 1.8, zero INTRA_VIDEO_REPETITION trong 4-beat window.",
+        "gate": "script_diversity_linter.py → status PASS"
+      },
+      "cta_tone_linter": {
+        "rule": "bridge ≤ 22 token, close ≤ 24 token, combined outro ≤ 38 token. Zero banned CTA. Phải có parent_long_id cho Short.",
+        "gate": "cta_tone_linter.py → 0 CTA_BANNED_PHRASE"
+      }
+    },
+
+    "short_to_long_channel_bridge_contract": {
+      "placement": "Final 15% of Short script (Hồi 5, beats B16–B19 for Mode B; beats B13–B15 for Mode A+)",
+      "bridge_template_vn": "Toàn bộ trận đánh này — từ chiến thuật cọc gỗ cho đến bài toán thủy triều — được phân tích chi tiết trong tập dài trên Sử Kể Lại.",
+      "close_template_vn": "Bạn nghĩ đâu là quyết định then chốt nhất?",
+      "syllable_check": "bridge ≤ 22, close ≤ 24, combined ≤ 38",
+      "forbidden": ["like", "share", "subscribe", "đăng ký", "nhấn chuông", "ủng hộ kênh"]
+    }
+  },
+
+  "section_B_v12_masterpiece_evaluation_rubric": {
+    "title": "V12 Masterpiece Evaluation Rubric — 100-Point Benchmark",
+    "version": "12.0",
+    "total_points": 100,
+    "auto_fail_gates": [
+      {
+        "gate_id": "AF-01",
+        "name": "Dark Pill / Box / VS Overlay Gate",
+        "condition": "Any dark rectangular pill, gold-bordered box, VS badge, Kahoot A/B quiz box, Street Fighter HP bar, opaque #0C1017/#10151E CAD modal, or pill badge [SỬ LIỆU CHÍNH THỐNG] rendered over live cinema frame.",
+        "result": "0/100 FAIL — ZERO EXCEPTIONS",
+        "detection_signals": ["ImageDraw.rectangle", "rounded_rectangle", "border=", "VS_badge", "pill_badge", "stat_versus"],
+        "reference": "V7 Law A, V8 Rule A, V9.1 Invariant §3.2"
+      },
+      {
+        "gate_id": "AF-02",
+        "name": "Map Text / Label / Animation Speed Gate",
+        "conditions": [
+          "Map label text height < 5% of frame height",
+          "Map label > 3 words",
+          "Map animation / maneuver hold < 6 seconds"
+        ],
+        "result": "0/100 FAIL on any single violation",
+        "reference": "V6.0 Law 4, V7 Law C (5.8s–8.0s map hold), V9.1 §4.1"
+      },
+      {
+        "gate_id": "AF-03",
+        "name": "Static Image Hold Gate (First 60s of Long)",
+        "condition": "Any static PNG/BELUGA frame held > 3.5s during beats 0–18 (first 60 seconds) of Long 16:9 without actual camera motion in the clip.",
+        "result": "0/100 FAIL",
+        "reference": "V9.1 Invariant §2 — 100% native 16:9 moving Flow .mp4; V7 Law B ≥ 3.6s floor"
+      },
+      {
+        "gate_id": "AF-04",
+        "name": "Missing Macro Tactile Inserts / Angle Diversity Gate",
+        "condition": "Any chapter (10 beats) has 0 macro tactile insert shots (Tight Action Macro slot 3 or Low-Angle Hero slot 5 from 5-shot rotation matrix), OR any 3 consecutive beats share the same camera angle/scale.",
+        "result": "0/100 FAIL",
+        "reference": "visual.md §4 — 5-Shot Camera Rotation Matrix; pacing.md §2 Sub-beat A/B law"
+      }
+    ],
+
+    "scoring_dimensions": [
+      {
+        "dimension_id": "D1",
+        "name": "Nội Dung Phân Tích & Độ Sâu Lịch Sử (Analytical Content & Historical Depth)",
+        "max_points": 30,
+        "sub_criteria": [
+          {
+            "criterion": "Mật độ Hidden Mechanics (M1) — số beat dùng M1 chia tổng beats",
+            "points": 10,
+            "scoring": {
+              "10": "≥ 30% beats dùng M1 Giải Phẫu Cơ Chế Ẩn với lý do vật lý/chiến thuật cụ thể, fact-vault grounded",
+              "7": "20–29% beats",
+              "4": "10–19% beats",
+              "0": "< 10% beats hoặc fail fact_grounding_linter"
+            }
+          },
+          {
+            "criterion": "Phán Xét Opinionated (M2 + M6) — độ sắc bén và can đảm phân tích",
+            "points": 10,
+            "scoring": {
+              "10": "≥ 2 phán quyết lịch sử sắc bén mang tính thesis per episode, không né tránh, dẫn chứng sử liệu rõ ràng",
+              "7": "1 phán quyết rõ ràng + ≥ 2 M6 memorable verdicts",
+              "4": "Có nhận định nhưng thiếu thesis mạnh, dùng ngôn ngữ mờ nhạt",
+              "0": "Chỉ kể sự kiện, zero opinionated analysis"
+            }
+          },
+          {
+            "criterion": "Retention Reset Quality — 3-step WHY_NOT→CONSTRAINT→SOLUTION",
+            "points": 10,
+            "scoring": {
+              "10": "≥ 3 retention resets trong episode, mỗi cái có câu hỏi phản vấn ≤ 16 syl + constraint vật lý/tác chiến + giải pháp đảo ngược kỳ vọng",
+              "7": "2 resets đạt chuẩn",
+              "4": "1 reset hoặc resets quá chung chung",
+              "0": "Zero retention reset chuẩn"
+            }
+          }
+        ]
+      },
+      {
+        "dimension_id": "D2",
+        "name": "Chuyển Cảnh & Nhịp Phim (Transition & Cinematic Pacing)",
+        "max_points": 20,
+        "sub_criteria": [
+          {
+            "criterion": "Transition Type Diversity & Appropriateness",
+            "points": 10,
+            "scoring": {
+              "10": "≥ 4 loại transition khác nhau trong episode; seam_chain_bridge/optical_anamorphic_dissolve/obsidian_act_fade/map_camera_zoom_match dùng đúng ngữ cảnh; 0 smoke/fog/mist transitions; 0 horizontal whip-slides",
+              "7": "3 loại, không có smoke",
+              "4": "2 loại, hoặc có ≤ 1 smoke seam không đúng ngữ cảnh",
+              "0": "Uniform crossfade hoặc có smoke/fog/VS/whip-slide"
+            }
+          },
+          {
+            "criterion": "Shot Duration Arc (5-Act Pacing)",
+            "points": 10,
+            "scoring": {
+              "10": "ASL per act: Hook 3.2–4.2s → Setup 4.5–6.0s → Suspense 3.5–4.5s → Climax 2.8–3.8s → Aftermath 5.5–7.0s. Zero shots < 3.2s ngoại trừ matched-action",
+              "7": "3 trong 5 acts đúng range, zero micro-cuts < 2.8s",
+              "4": "ASL trung bình trong range nhưng arc không rõ ràng",
+              "0": "Flat uniform pacing hoặc có nhiều micro-cuts < 2.8s"
+            }
+          }
+        ]
+      },
+      {
+        "dimension_id": "D3",
+        "name": "Diễn Đạt Tiếng Việt & Giọng Kể (Vietnamese Narration Quality)",
+        "max_points": 20,
+        "sub_criteria": [
+          {
+            "criterion": "Lexical Diversity & Anti-Cliché (script_diversity_linter)",
+            "points": 8,
+            "scoring": {
+              "8": "stddev câu ≥ 2.0, 0 AI_CLICHE_PHRASE, 0 INTRA_VIDEO_REPETITION, dùng đủ ≥ 4 modes trong 7",
+              "5": "stddev ≥ 1.8, ≤ 2 cliché flag",
+              "3": "stddev 1.5–1.8, ≤ 4 cliché",
+              "0": "script_diversity_linter FAIL"
+            }
+          },
+          {
+            "criterion": "Cadence & Vocal Profile Matching (script_cadence_checker)",
+            "points": 7,
+            "scoring": {
+              "7": "0 DEAD_AIR, 0 TIMELINE_DRIFT > 0.5s, 0 OPENING_SCENE_PAUSE_FORBIDDEN, hook ≤ 24 syl, 6-mode delivery_mode rotation dùng đúng vị trí",
+              "5": "≤ 2 drift warning, hook ≤ 24 syl",
+              "3": "Hook OK nhưng có drift",
+              "0": "cadence_checker FAIL hoặc hook > 24 syl"
+            }
+          },
+          {
+            "criterion": "Sensory Micro-Detail Density (M3 mode count)",
+            "points": 5,
+            "scoring": {
+              "5": "≥ 15% beats dùng M3 Zoom Vi Giác Quan với ≥ 1 chi tiết giác quan rất cụ thể (không dùng tính từ chung)",
+              "3": "8–14% beats",
+              "1": "1–7% beats",
+              "0": "Zero M3"
+            }
+          }
+        ]
+      },
+      {
+        "dimension_id": "D4",
+        "name": "Hình Ảnh & Chất Lượng Thị Giác (Visual Quality & Cinematic Excellence)",
+        "max_points": 20,
+        "sub_criteria": [
+          {
+            "criterion": "Zero-Box Typography Purity",
+            "points": 8,
+            "scoring": {
+              "8": "100% zero-box — 0 ImageDraw.rectangle, 0 pill badge, 0 VS bar, 0 vertical stripe; keywords chỉ ở 20–25% beats; 100% opacity 85–90% display window",
+              "5": "1–2 minor overlay sai (không phải AF-01 level)",
+              "2": "3–5 minor overlays",
+              "0": "AF-01 → 0/100 FAIL"
+            }
+          },
+          {
+            "criterion": "Camera Rotation & Tactile Insert Coverage",
+            "points": 7,
+            "scoring": {
+              "7": "5-shot rotation đủ; ≥ 2 macro tactile insert per chapter; zero 3 consecutive same angle; zoom=1.0,dx=0.0 trên moving clips",
+              "5": "4-shot rotation, ≥ 1 macro per chapter",
+              "3": "3-shot, ít macro",
+              "0": "AF-04 → 0/100 FAIL"
+            }
+          },
+          {
+            "criterion": "Color Grade & Film Grain Coherence",
+            "points": 5,
+            "scoring": {
+              "5": "Unified Kodak Vision3 500T LUT + 1.5–2.5% film grain across BOTH Flow clips và GIS maps/parchment; gamma ≤ 0.85; luminance jump ≤ 45 luma units across cuts",
+              "3": "LUT áp dụng nhưng grain không khớp giữa Flow và graphics",
+              "1": "Áp dụng thủ công, không nhất quán",
+              "0": "No LUT / no grain"
+            }
+          }
+        ]
+      },
+      {
+        "dimension_id": "D5",
+        "name": "Giá Trị Học Thuật & Nguồn Sử Liệu (Scholarly Grounding & Source Authority)",
+        "max_points": 10,
+        "sub_criteria": [
+          {
+            "criterion": "Fact Vault Depth & Zero Leakage (fact_grounding_linter)",
+            "points": 7,
+            "scoring": {
+              "7": "≥ 24 verified facts (Long) / ≥ 12 (Short); 0 REPORT_ONLY_LEAKAGE; 0 UNGROUNDED_NUMBERS (strict mode); ≥ 10 GIS anchors; ≥ 30 pronunciation entries",
+              "5": "≥ 12 verified, 0 leakage nhưng strict có ungrounded numbers",
+              "3": "≥ 8 verified, ≤ 2 leakage",
+              "0": "fact_grounding_linter FAIL"
+            }
+          },
+          {
+            "criterion": "Primary Chronicle Authority Display (Dó-parchment plates & provenance captions)",
+            "points": 3,
+            "scoring": {
+              "3": "≥ 1 aged Dó-paper quote plate (≤ 68%×44%, cinnabar seal, watercolor underline) OR margin provenance caption (≤ 6% height) per episode, verifying Tier A chronicles only",
+              "2": "Có display nhưng thiếu cinnabar seal hoặc thiếu watercolor underline",
+              "1": "Có trích dẫn nhưng dạng navy modal hoặc neon pill",
+              "0": "Zero provenance display"
+            }
+          }
+        ]
+      }
+    ],
+
+    "scoring_grade_table": [
+      {"range": "95–100", "grade": "V12 MASTERPIECE", "action": "Publish immediately. Nominate for pinned playlist 'Kiệt Tác Sử Kể Lại'."},
+      {"range": "88–94", "grade": "PRESTIGE", "action": "Publish. Flag 1–2 specific improvements for next episode."},
+      {"range": "75–87", "grade": "SOLID", "action": "Publish. Mandatory post-mortem on lowest sub-criterion."},
+      {"range": "60–74", "grade": "PASSABLE", "action": "Conditional publish. Fix top 2 scoring gaps first."},
+      {"range": "40–59", "grade": "REWORK", "action": "Do NOT publish. Rework narration (D3) and visuals (D4) first."},
+      {"range": "0–39", "grade": "REJECT / FAIL", "action": "Return to production. At least one AF gate likely triggered."}
+    ],
+
+    "auto_fail_precedence_note": "Bất kỳ AF gate nào trigger → toàn bộ điểm = 0/100 bất kể các dimension khác. AF gates được kiểm tra TRƯỚC khi tính điểm.",
+
+    "evaluation_workflow": {
+      "step_1": "Run all 4 auto-fail gate checks (AF-01..AF-04). If any fails → 0/100, stop.",
+      "step_2": "Run fact_grounding_linter.py --strict → score D5-C1.",
+      "step_3": "Run script_cadence_checker.py → score D3-C2.",
+      "step_4": "Run script_diversity_linter.py → score D3-C1.",
+      "step_5": "Run cta_tone_linter.py → verify D3-C2 CTA compliance.",
+      "step_6": "Human/AI visual review → score D1, D2, D4.",
+      "step_7": "Sum all points → apply grade table."
+    }
+  },
+
+  "section_C_reference_channel_benchmarks": {
+    "title": "Per-Channel Rubric Benchmarks (What 'Perfect' Looks Like Per Reference)",
+    "benchmarks": [
+      {
+        "channel": "CLD Studio (VN #1 30d, 1.28M views)",
+        "d1_score_estimate": 26,
+        "d2_score_estimate": 18,
+        "d3_score_estimate": 17,
+        "d4_score_estimate": 17,
+        "d5_score_estimate": 9,
+        "estimated_total": 87,
+        "signature_strengths": "85–90% unobstructed live frame; 8-chapter Dossier arc; period-consistent bronze hairlines; 0 opaque CAD boxes; Kodak warm LUT unified across maps",
+        "gap_vs_v12": "Crimson/navy animated vector map bounding-box pins occasionally exceed 15% overlay threshold (V12 downgrade in D4)"
+      },
+      {
+        "channel": "BATTLECRY (VN #1 velocity, 139k/d)",
+        "d1_score_estimate": 28,
+        "d2_score_estimate": 15,
+        "d3_score_estimate": 16,
+        "d4_score_estimate": 14,
+        "d5_score_estimate": 7,
+        "estimated_total": 80,
+        "signature_strengths": "War-Room 60/40 split timeline; 945-dot force matrix; retention resets every 60s; opinionated thesis-driven narration",
+        "gap_vs_v12": "Sniper crosshair metaphor (AF-01 violation in V12 framework); some arcade SFX spam"
+      },
+      {
+        "channel": "CD Media - Quân Sự (42k/d)",
+        "d1_score_estimate": 22,
+        "d2_score_estimate": 16,
+        "d3_score_estimate": 15,
+        "d4_score_estimate": 15,
+        "d5_score_estimate": 7,
+        "estimated_total": 75,
+        "signature_strengths": "< 10 min tight explainer burst; 5-stage Satellite Roadmap; counter-intuitive systemic WHY explainer structure",
+        "gap_vs_v12": "Lacks deep sensory micro-detail (M3); map animation sometimes < 6s (AF-02 risk)"
+      },
+      {
+        "channel": "Yarnhub (global #1, 915k/d)",
+        "d1_score_estimate": 20,
+        "d2_score_estimate": 19,
+        "d3_score_estimate": 14,
+        "d4_score_estimate": 18,
+        "d5_score_estimate": 7,
+        "estimated_total": 78,
+        "signature_strengths": "Zero consecutive same angle; 3.6s soft ASL with perfect shot variety; macro inserts every chapter; Armored Spec Dossier card pure cinema",
+        "gap_vs_v12": "English narration — no Vietnamese analytical opinionated mode; lacks VN primary chronicle grounding"
+      },
+      {
+        "channel": "Hồn Thiêng Sử Việt (pure AI film, 9.5k/d)",
+        "d1_score_estimate": 10,
+        "d2_score_estimate": 15,
+        "d3_score_estimate": 12,
+        "d4_score_estimate": 16,
+        "d5_score_estimate": 5,
+        "estimated_total": 58,
+        "signature_strengths": "Strong cinematic camera variety; recurring face continuity; long 6.43s ASL breathing",
+        "gap_vs_v12": "Zero tactical annotation → cannot explain mechanism; pure narrative, no analysis modes M1/M2/M4; capped velocity 6x–14x below annotated channels"
+      }
+    ]
+  },
+
+  "section_D_linter_pass_examples": {
+    "title": "Example Scripts Passing All 4 Linters — Mode Rotation Demonstration",
+    "examples": [
+      {
+        "example_id": "EX-01",
+        "topic": "Trận Rạch Gầm - Xoài Mút 1785",
+        "chapter": "CHƯƠNG I — Thế Cờ Nghịch Lý",
+        "beats": [
+          {
+            "beat": "B000",
+            "mode": "M4",
+            "text_vn": "5 vạn quân Xiêm tiến vào Rạch Gầm giữa ban đêm — tại sao một đô đốc dày dạn chiến trường lại dẫn hạm đội vào một con sông mình chưa từng khảo sát?",
+            "syllable_count": 36,
+            "cadence_note": "Hook ≤ 24 syl cần chia thành 2 beats — beat này là B000a (câu hỏi) ≤ 18 syl",
+            "linter_flags": "OPENING_HOOK_TOO_LONG nếu 36 syl — cần split"
+          },
+          {
+            "beat": "B000_corrected",
+            "mode": "M4",
+            "text_vn": "5 vạn quân Xiêm tiến vào Rạch Gầm giữa ban đêm — tại sao đô đốc lại chọn con sông chưa ai khảo sát?",
+            "syllable_count": 22,
+            "cadence_note": "Hook 22 syl ≤ 24 — PASS opening hook gate",
+            "linter_flags": "PASS"
+          },
+          {
+            "beat": "B001",
+            "mode": "M1",
+            "text_vn": "Thuyền chiến Xiêm tải nặng cần nước triều lên mới ra được vịnh — và Nguyễn Huệ biết điều đó trước khi khai trận.",
+            "syllable_count": 21,
+            "linter_flags": "PASS — không dùng AI cliché, fact grounded (tidal mechanics)"
+          },
+          {
+            "beat": "B002",
+            "mode": "M3",
+            "text_vn": "3 giờ sáng, sương mù chưa tan — 300 thuyền giống tấm thảm đen trôi chậm vào khoảng tối giữa hai cù lao.",
+            "syllable_count": 20,
+            "linter_flags": "PASS — sensory specific, no generic adjectives"
+          },
+          {
+            "beat": "B003",
+            "mode": "M2",
+            "text_vn": "Chiêu Tăng không thua vì thiếu quân số — ông ta thua vì giáo lý thủy chiến Xiêm không có khái niệm 'bẫy hai đầu sông'.",
+            "syllable_count": 23,
+            "linter_flags": "PASS — opinionated verdict, no AI cliché 'nói đi cũng phải nói lại'"
+          }
+        ]
+      }
+    ]
+  },
+
+  "section_E_deployment_checklist": {
+    "title": "V12 Pre-Publish Quality Checklist",
+    "checklist": [
+      {"id": "QC-01", "check": "AF-01: Scan final render for ANY rectangular box, pill badge, VS bar, Kahoot element", "tool": "sys/fx_warehouse/historical_visual_qc.py + manual frame inspection"},
+      {"id": "QC-02", "check": "AF-02: Measure map label height ≥ 5% frame, label ≤ 3 words, map hold ≥ 6s", "tool": "ffprobe + visual inspection"},
+      {"id": "QC-03", "check": "AF-03: Verify first 60s (beats 0–18) have ZERO static frame > 3.5s", "tool": "verify_frames + ffprobe"},
+      {"id": "QC-04", "check": "AF-04: Every chapter has ≥ 2 macro tactile inserts, no 3 consecutive same angle", "tool": "5-shot rotation audit in visual_manifest.json"},
+      {"id": "QC-05", "check": "fact_grounding_linter.py --strict → PASS", "tool": "sys/tools/fact_grounding_linter.py"},
+      {"id": "QC-06", "check": "script_cadence_checker.py → PASS, hook ≤ 24 syl", "tool": "sys/tools/script_cadence_checker.py"},
+      {"id": "QC-07", "check": "script_diversity_linter.py → PASS, stddev ≥ 1.8, 0 AI_CLICHE_PHRASE", "tool": "sys/tools/script_diversity_linter.py"},
+      {"id": "QC-08", "check": "cta_tone_linter.py → PASS, 0 banned CTA phrases", "tool": "sys/tools/cta_tone_linter.py"},
+      {"id": "QC-09", "check": "Audio: -11.0 LUFS (±0.7), ≤ -1.0 dBTP, 48000Hz stereo", "tool": "ffmpeg -af ebur128=peak=true"},
+      {"id": "QC-10", "check": "Score all 5 dimensions → total ≥ 75 before publish", "tool": "Manual AI evaluation against rubric above"}
+    ]
+  }
+}

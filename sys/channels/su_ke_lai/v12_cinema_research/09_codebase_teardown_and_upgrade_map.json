@@ -1,0 +1,493 @@
+{
+  "schema_version": "12.0.0",
+  "artifact_id": "09_codebase_teardown_and_upgrade_map",
+  "thread": "3A",
+  "author_agent": "code-hud-auditor",
+  "generated_at": "2026-11-25T10:55:00+07:00",
+  "defect_screenshot_forensics": [
+    {
+      "screenshot": "/home/hongphuoc6104/.gemini/antigravity/brain/252bc777-531f-427f-a88f-01bbddc34590/.user_uploaded/media_1795577556825_43560abb.png",
+      "observed_text": "NỬA ĐÊM 06/08/1442 | 48 GIỜ BƯNG BÍT TIN DỮ",
+      "visual_defect": "Dark obsidian rounded rectangular pill (fill=(10,14,20,178), radius=8) with left 4px vertical gold stripe (fill=(226,188,96,235)) and thin gold bottom hairline covering the dark architectural frame.",
+      "root_cause_file": "sys/short_engine/render_single_pass.py",
+      "root_cause_function": "render_prestige_dateline_png",
+      "root_cause_lines": "321-346 (specifically L340-L342)",
+      "v12_remedy": "ABOLISH box/stripe/line. Replace with Zero-Box Cinema Typography (bare warm ivory/antique-gold text with soft Gaussian optical drop-shadow or pure no-overlay cinema when scene speaks for itself)."
+    },
+    {
+      "screenshot": "/home/hongphuoc6104/.gemini/antigravity/brain/252bc777-531f-427f-a88f-01bbddc34590/.user_uploaded/media_1795577569660_b4602a02.png",
+      "observed_text": "TỐC ĐỘ KẾT ÁN THẦN TỐC 1442 | TỪ LÚC PHÁT TANG: ĐÚNG 10 NGÀY [VS] BẢN ÁN 16/08: TRU DI 3 HỌ",
+      "visual_defect": "Full-width dark rectangular HUD box (fill=(10,14,22,224), outline=(232,190,88,210) width=3, radius=18) with left gold bar, right crimson bar, vertical gold divider, and red rounded-rectangle 'VS' badge (fill=(198,44,34,245), outline=(255,216,102,245)).",
+      "root_cause_file": "sys/short_engine/render_single_pass.py",
+      "root_cause_function": "render_v7_stat_versus_png",
+      "root_cause_lines": "512-599 (specifically L542-L563 for VS mode, L590-L591 for single counter mode)",
+      "v12_remedy": "ABOLISH dark box, gold borders, side bars, and VS badge. In Short/Long, render at most 1-line boxless floating key metric over feathered Gaussian scrim or omit completely for pure no-overlay cinema."
+    },
+    {
+      "screenshot": "/home/hongphuoc6104/.gemini/antigravity/brain/252bc777-531f-427f-a88f-01bbddc34590/.user_uploaded/media_1795577586131_ec18d5fd.png",
+      "observed_text": "THÁNG 07/1464 · QUANG THUẬN 5 | 22 NĂM RỬA OAN",
+      "visual_defect": "Dark obsidian rectangular pill bar with left gold stripe and gold underline cutting horizontally across roof tiles.",
+      "root_cause_file": "sys/short_engine/render_single_pass.py",
+      "root_cause_function": "render_prestige_dateline_png",
+      "root_cause_lines": "321-346 (specifically L340-L342)",
+      "v12_remedy": "ABOLISH rounded_rectangle + vertical stripe + bottom line. Render bare small-caps dateline in lower-safe/upper-safe area with optical shadow only, or fold into voiceover."
+    },
+    {
+      "screenshot": "/home/hongphuoc6104/.gemini/antigravity/brain/252bc777-531f-427f-a88f-01bbddc34590/.user_uploaded/media_1795577641961_154afc27.jpg",
+      "observed_text": "ĐẠI PHÁ ẢI CHI LĂNG – MÃ YÊN 1427 | PHA I... | 9 VẠN ĐẠI QUÂN MINH | QUỶ MÔN QUAN | 1 VẠN KỴ · LIỄU THĂNG | VÁCH ĐÁ CAI KINH | ẢI CHI LĂNG | TRẦN LỰU · NHỬ ĐỊCH | NÚI MÃ YÊN | -0.8m | ĐẠI VIỆT (LAM SƠN) vs VIỆN BINH NHÀ MINH",
+      "visual_defect": "Five simultaneous failures on 9:16 map frame: (1) Tiny unreadable fonts (14.5-21px * ui_scale, title faded/dimmed by zoom-match hud_opacity fade-out), (2) 9 crowded multi-word labels (4 callouts + 5 unit badges) overlapping narrow gorge, (3) Cluttered left vertical side gauge (-0.8m), (4) Bottom force-ratio bar colliding with captions/bottom UI, (5) Fast 4.8s default duration compressing arrows/units into <2.5s.",
+      "root_cause_file": "sys/fx_warehouse/tactical_battle_map_v8.py",
+      "root_cause_functions_and_lines": [
+        "_build_presets['chi_lang_1427'] (L472-L623)",
+        "compute_map_camera_zoom_state (L1462-L1513: duration_sec=4.8, L1494 hud_opacity fade)",
+        "_ViewportProjector (L1519-L1540: ui_scale = width/1080.0)",
+        "_draw_moving_unit_blocks (L2028-L2128: L2044 f_badge=19*sc)",
+        "_draw_callout_pins (L2162-L2268: L2181 f_head=20.5*sc, L2182 f_sub=15.0*sc)",
+        "_draw_hud_chrome (L2290-L2460: L2333-L2363 tiny header, L2371-L2425 side tide/gorge gauge, L2426-L2459 bottom force-ratio bar)",
+        "render_tactical_map_frame / bake_tactical_map_mp4 (L2498, L2568: duration_sec=4.8)"
+      ],
+      "v12_remedy": "Upgrade to V12 Minimalist Slow-Paced Cinema Cartography: (1) font >= 5% frame height (~96px on 1920h, >= 54px on 1080h) for primary labels, (2) <= 3 words/label & max 2-3 staged callouts active at once, (3) ABOLISH side tide/depth gauge and bottom force-ratio bar by default, (4) >= 6.0-8.0s maneuver duration per sequence (180-240 frames @ 30fps) with zero premature hud_opacity fadeout."
+    }
+  ],
+  "hud_and_box_teardown_map": [
+    {
+      "file": "sys/short_engine/render_single_pass.py",
+      "total_lines": 1937,
+      "findings": [
+        {
+          "symbol": "render_chronicle_stamp_png",
+          "lines": "275-298",
+          "status": "KEEP_REFINE",
+          "current_behavior": "Already boxless antique-gold text (fill=(238,206,126,245), stroke_width=3) with drop shadow, no rectangle.",
+          "upgrade_action": "Keep boxless design; allow optional opt-out (`allow_hud=False` / no-overlay cinema mode) and ensure `anchor_y` never collides with `MarginV=660` ASS subtitles."
+        },
+        {
+          "symbol": "render_ai_disclosure_pill_png",
+          "lines": "301-318",
+          "status": "KEEP_MINIMAL",
+          "current_behavior": "Misnamed `_pill_` in symbol name, actually renders borderless translucent small text (fill=(245,242,232,165)) with no box.",
+          "upgrade_action": "Keep no-box rendering; optionally alias/rename in V12 without breaking imports."
+        },
+        {
+          "symbol": "render_prestige_dateline_png",
+          "lines": "321-346",
+          "status": "ABOLISH_BOX_REPLACE_ZERO_BOX",
+          "offending_lines": [
+            "L340: draw.rounded_rectangle([0, 0, cw - 1, ch - 1], radius=8, fill=(10, 14, 20, 178))",
+            "L341: draw.rectangle([0, 6, 4, ch - 7], fill=(226, 188, 96, 235))",
+            "L342: draw.line([(16, ch - 3), (cw - 16, ch - 3)], fill=(226, 188, 96, 140), width=2)"
+          ],
+          "upgrade_action": "Remove L340-L342 entirely. Replace with Zero-Box Cinema Typography: subtle feathered optical shadow/scrim behind bare uppercase ivory/gold dateline (font_size >= 44px on 1440w), or omit when `overlay_mode == 'pure_cinema'`."
+        },
+        {
+          "symbol": "render_heroic_banner_png",
+          "lines": "349-424",
+          "status": "KEEP_REFINE_REMOVE_UNDERLINE_BAR",
+          "offending_lines": [
+            "L417-L421: draw.rounded_rectangle([bx0, bar_y, ...]) crimson+gold underline pill bars under headline"
+          ],
+          "upgrade_action": "Keep giant >=132px <=4-word boxless typography for Heroic Shorts when explicitly requested; make underline pill bar (L412-L421) optional/off by default in V12 (`show_underline_bar=False`)."
+        },
+        {
+          "symbol": "render_v7_hook_headline_png",
+          "lines": "450-509",
+          "status": "ABOLISH_BOX_REPLACE_ZERO_BOX",
+          "offending_lines": [
+            "L484: draw.rounded_rectangle([0, 0, canvas_w - 1, canvas_h - 1], radius=18, fill=(10, 14, 22, 214), outline=(232, 190, 88, 195), width=3)",
+            "L485: draw.rounded_rectangle([0, 14, 8, canvas_h - 15], radius=3, fill=(238, 196, 94, 245))",
+            "L505-L508: draw.rounded_rectangle([bx0, bar_y, ...]) red+gold progress/accent bar"
+          ],
+          "upgrade_action": "Remove dark obsidian card, gold border, left accent stripe, and bottom bar (L484-L485, L502-L508). Replace with Zero-Box Cinema Title (bare 88-108px BeVietnamPro-ExtraBold with deep optical drop-shadow + optional feathered soft scrim) or pure cinema (no hook card if thumbnail poster + voiceover carry hook)."
+        },
+        {
+          "symbol": "render_v7_stat_versus_png",
+          "lines": "512-599",
+          "status": "ABOLISH",
+          "offending_lines": [
+            "L542: draw.rounded_rectangle([0, 0, cw - 1, ch - 1], radius=18, fill=(10, 14, 22, 224), outline=(232, 190, 88, 210), width=3)",
+            "L543-L544: draw.rectangle([0, 14, 8, ...]) gold left bar & crimson right bar",
+            "L559: draw.line([(mid_x, top_y + 6), ...]) vertical gold divider",
+            "L560-L563: VS badge draw.rounded_rectangle(..., fill=(198, 44, 34, 245), outline=(255, 216, 102, 245)) + 'VS' text",
+            "L590-L591: Single counter mode rounded_rectangle + gold left stripe"
+          ],
+          "upgrade_action": "ABOLISH `v7_stat_versus` boxed VS card and single counter box. Replace with Zero-Box Cinema Data Callout (single bare numeral + <=3-word label with soft optical shadow) or pure no-overlay narration."
+        },
+        {
+          "symbol": "build_hud_stamps",
+          "lines": "602-778",
+          "status": "REFACTOR_DISPATCH_AND_DEFAULT_NO_BOX",
+          "offending_lines": [
+            "L661-L672: dispatches v7_hook_headline, v7_stat_versus, prestige_dateline",
+            "L676-L707: dispatches style_signature_hud & S02/S04/S05/S06/S07/S09 boxed Short cards from history_styles_10x10.py",
+            "L708-L715: fallback to build_bespoke_topic_hud_patch (boxed cards)",
+            "L731-L735: pop_y motion applied to V7 boxed cards"
+          ],
+          "upgrade_action": "Add V12 `cinema_typography_mode` (`pure_no_overlay` | `zero_box_typography`). When `pure_no_overlay`, return `[]` (except optional bare `ai_disclosure` if required). When `zero_box_typography`, route all legacy kinds (`v7_hook_headline`, `prestige_dateline`, `v7_stat_versus`) to boxless renderers and reject/warn on `rounded_rectangle` boxes."
+        },
+        {
+          "symbol": "REMOTE_SINGLE_PASS_CHUNK_SCRIPT / REMOTE_PASS2_SCRIPT",
+          "lines": "1204-1215, 1456-1467",
+          "status": "KEEP_VERIFY",
+          "current_behavior": "Composites `hud_stamps` PNGs at `anchor_y` with `pop_y` bounce (`+38*pow(...)`) and fade.",
+          "upgrade_action": "Remove mandatory `is_v7_chunk` pop_y bounce (L1208, L1460) for Zero-Box cinema titles so typography fades/settles cleanly without arcade bounce."
+        }
+      ]
+    },
+    {
+      "file": "sys/fx_warehouse/hud_widgets.py",
+      "total_lines": 438,
+      "findings": [
+        {
+          "symbol": "build_bespoke_topic_hud_patch",
+          "lines": "77-190",
+          "status": "ABOLISH_BOXES_REPLACE_ZERO_BOX",
+          "offending_lines": [
+            "L114: metric_meter rounded_rectangle card (bg_col + outline=acc width=3)",
+            "L133: timeline_nodes rounded_rectangle card",
+            "L151: comparison_matrix rounded_rectangle card",
+            "L168: sonar_radial rounded_rectangle card",
+            "L184-L185: telemetry_card rounded_rectangle + left 10px vertical stripe"
+          ],
+          "upgrade_action": "Replace solid dark card backgrounds (`fill=bg_col, outline=acc`) with Zero-Box feathered optical scrim + bare typography/hairlines (matching `history_styles_10x10._render_long_zero_box_hud`), or disable HUD emission for `su_ke_lai` V12."
+        },
+        {
+          "symbol": "render_hud_widget_patch",
+          "lines": "193-438",
+          "status": "ABOLISH_BOXES_FOR_CINEMA_OR_ISOLATE",
+          "offending_lines": [
+            "L233: typewriter_telemetry_tag dark rounded_rectangle pill",
+            "L248: altitude_stat_counter dark rounded_rectangle card",
+            "L271: kinetic_stamp_slam crimson-outlined dark card",
+            "L285-L292: xray_mode_switch_particles dark box + button pills",
+            "L302-L304: dual_oscilloscope_compare dark box + red badge pill",
+            "L323: countdown_cvr_waveform dark box",
+            "L339-L340: lemmino_dossier_card dark box + left 10px brass stripe",
+            "L374: laser_split_screen two dark boxes",
+            "L386: triptych_3col_evidence three dark boxes",
+            "L395: verdict_lower_third 1480px dark box",
+            "L406: doodle_spring_pop_badge rounded card",
+            "L419: highlighter_stroke_bar rounded card",
+            "L433: calligraphy_quote_dissolve rounded card"
+          ],
+          "upgrade_action": "All 13 boxed widgets draw `rounded_rectangle`/`rectangle` containers. Gate behind `zero_box=True` for V12 cinema channels (`su_ke_lai`), replacing `lemmino_dossier_card` and `verdict_lower_third` with borderless feathered scrim + hairline typography."
+        }
+      ]
+    },
+    {
+      "file": "sys/fx_warehouse/hud_forensic_v2.py",
+      "total_lines": 1722,
+      "findings": [
+        {
+          "symbol": "_draw_pill",
+          "lines": "288-306",
+          "status": "DEPRECATE_FOR_V12_CINEMA",
+          "offending_lines": ["L304: draw.rounded_rectangle([x, y, x + pw, y + ph], radius=radius, fill=bg, outline=outline)"],
+          "upgrade_action": "Do not invoke for `su_ke_lai` V12 cinema. Keep only for aviation/forensic channels (`ho_so_ky_la`) unless upgraded to borderless tags."
+        },
+        {
+          "symbol": "_draw_card_shell",
+          "lines": "402-430",
+          "status": "DEPRECATE_FOR_V12_CINEMA",
+          "offending_lines": [
+            "L415: draw.rounded_rectangle([x0, y0, x0 + pw, y0 + ph], radius=rad, fill=th['card_bg'], outline=acc, width=bw)",
+            "L429: draw.rounded_rectangle([x0, y0 + px(12), x0 + bar_w, y0 + ph - px(12)], radius=2, fill=acc) (Variant A left vertical stripe)"
+          ],
+          "upgrade_action": "Used by 8 forensic widgets (L436-L1147, L1492-L1640: `alt_pressure_divergence`, `dual_horn_pulse`, `hypoxia_tuc_meter`, `swiss_cheese_align`, `classic_vs_ng_compare`, `fuel_avoidance_vector`, `man_auto_switch`, plus `calibrated_radar_overlay` callout boxes at L1234, L1279). Keep isolated to forensic/technical explainer channels; forbid routing `su_ke_lai` history beats to these boxed shells."
+        },
+        {
+          "symbol": "render_lemmino_hairline_hud",
+          "lines": "1294-1386",
+          "status": "REFINE_REMOVE_SCIM_RECT",
+          "offending_lines": [
+            "L1338-L1342: d.rounded_rectangle([x0 - px(14), base_y - px(10), x1 + px(14), scrim_y1], radius=px(8), fill=(8, 10, 14, int(alpha * 0.44)))",
+            "L1345: d.line([(x0, base_y), (x0, base_y + px(68))], fill=col_brass, width=max(1, hair * 2))"
+          ],
+          "upgrade_action": "Replace hard `rounded_rectangle` scrim (L1338-L1342) with Gaussian-blurred feathered optical gradient scrim so there is zero rectangular edge."
+        },
+        {
+          "symbol": "render_chapter_title_bumper",
+          "lines": "1393-1485",
+          "status": "KEEP_V12_COMPLIANT",
+          "current_behavior": "Full-frame dark cinema card with bare brass eyebrow (no pill box, explicit comment L1444), crisp centered headline, horizontal expanding brass hairline, and subtitle.",
+          "upgrade_action": "Already compliant with V12 Zero-Box rules; preserve as canonical Long chapter card."
+        }
+      ]
+    },
+    {
+      "file": "sys/fx_warehouse/history_styles_10x10.py",
+      "total_lines": 3497,
+      "findings": [
+        {
+          "symbol": "_SHORT_STYLES_LIST / HUD presets",
+          "lines": "426-427, 486, 546, 606, 666, 726, 786, 846, 906, 966",
+          "status": "UPDATE_PRESETS",
+          "offending_lines": "All 10 Short styles list boxed `v7_hook_headline`, `v7_stat_versus`, `prestige_dateline` in `hud_preset_kinds`.",
+          "upgrade_action": "Replace `hud_preset_kinds` for V12 Short styles with `('zero_box_hook_title', 'zero_box_dateline', 'chronicle_stamp', 'ai_disclosure_pill')` or `()` for pure cinema."
+        },
+        {
+          "symbol": "_build_short_hud_stamps",
+          "lines": "1730-1967",
+          "status": "ABOLISH_BOXED_STAMP_EMISSION",
+          "offending_lines": [
+            "L1744-L1752: emits kind='v7_hook_headline'",
+            "L1774, L1785: emits boxed 'pov_survival_gauge'",
+            "L1799, L1891, L1921: emits boxed 'prestige_dateline'",
+            "L1806, L1938, L1958: emits boxed 'v7_stat_versus' (including 'VS' showdown and forced 2-option end card)",
+            "L1820, L1840, L1862, L1876, L1908: emits boxed S04/S05/S06/S07/S09 cards"
+          ],
+          "upgrade_action": "Replace with V12 Zero-Box or pure no-overlay stamp planner (max 1-2 bare typography stamps per Short, zero VS cards, zero dark boxes)."
+        },
+        {
+          "symbol": "_render_s02_... through _render_generic_short_style_card",
+          "lines": "2786-3133",
+          "status": "ABOLISH_BOXES_PORT_TO_ZERO_BOX",
+          "offending_lines": [
+            "L2792-L2793: _render_s02_pov_survival_card rounded_rectangle + left stripe",
+            "L2856-L2857, L2887: _render_s04_forensic_dossier_card rounded_rectangle + left stripe + red pill",
+            "L2902-L2903: _render_s05_myth_vs_chronicle_card rounded_rectangle + crimson top box",
+            "L2944, L2950: _render_s06_weapon_spec_card rounded_rectangle + inner diagram box",
+            "L3000-L3003, L3014: _render_s07_commander_duel_card rounded_rectangle + left/right stripes + 'ĐẤU TRÍ 1V1' pill",
+            "L3054: _render_s09_counterfactual_branch_card rounded_rectangle",
+            "L3106-L3107: _render_generic_short_style_card rounded_rectangle + left stripe"
+          ],
+          "upgrade_action": "Port Short style renderers in `render_style_signature_hud_png` (L3248-L3270) to use feathered Gaussian scrim + Zero-Box Cinema Typography matching `_render_long_zero_box_hud` (L3136-L3217), which already obeys ERR-20261122-01 Zero-Box."
+        }
+      ]
+    },
+    {
+      "file": "sys/tools/studio_director_v7.py",
+      "total_lines": 4892,
+      "findings": [
+        {
+          "symbol": "readiness_gates hook_0_3s_card & competitor scorecard & scaffold_v7_episode",
+          "lines": "1754-1770, 3094, 3127, 4145-4252",
+          "status": "UPDATE_SCAFFOLD_AND_GATES",
+          "offending_lines": [
+            "L1755-L1770: readiness gate requires `v7_hook_headline` or `heroic_banner` at B00",
+            "L4145-L4252: scaffolds 11 `hud_stamps` including 1 `v7_hook_headline`, 3 `prestige_dateline`, and 4 `v7_stat_versus` cards"
+          ],
+          "upgrade_action": "Update `scaffold` and readiness gates to accept Zero-Box Cinema Typography or pure no-overlay cinema (`hud_stamps=[]` or zero-box stamps) without failing gate 1."
+        }
+      ]
+    },
+    {
+      "file": "sys/short_engine/neural_soundstage_v5.py",
+      "total_lines": 1343,
+      "findings": [
+        {
+          "symbol": "build_v7_model_twin_soundstage_mix (HUD tick cues)",
+          "lines": "1294-1326",
+          "status": "UPDATE_KIND_WHITELIST",
+          "offending_lines": ["L1301: if kind not in ('v7_hook_headline', 'v7_stat_versus', 'chronicle_stamp', 'heroic_banner'):"],
+          "upgrade_action": "Add V12 Zero-Box kinds (or skip mechanical HUD tick SFX in pure cinema mode where no HUD cards pop in)."
+        }
+      ]
+    },
+    {
+      "file": "sys/tools/produce_vn_dual_mode.py",
+      "total_lines": 3207,
+      "findings": [
+        {
+          "symbol": "make_rounded_watermark",
+          "lines": "1128-1157",
+          "status": "KEEP_COMPLIANT",
+          "current_behavior": "Creates rounded channel emblem watermark (`W-w-36:H-h-36` via `_resolve_watermark_overlay_pos` L933-L937), required by AGENTS.md.",
+          "upgrade_action": "Keep channel emblem watermark; ensure `delogo_bottom_right` runs before overlay."
+        },
+        {
+          "symbol": "camera_zoompan_expr",
+          "lines": "655-688",
+          "status": "LEGACY_NOT_USED_IN_LONG_DEFAULT",
+          "current_behavior": "Defines `zoompan` filter strings, though `render_long_chapter_chunks_local` (L1409-L1413) and `render_long_chapter_chunks_colab_t4` (L1906) default to static Lanczos scale+crop + `xfade=fade` when `fx_mode=static`.",
+          "upgrade_action": "In Long V12, enforce first-60s cold-open <=3.5s/beat pacing (never static >3.5s in first 60s) via living Flow clips or gentle CUDA `grid_sample` / `tactical_battle_map_v8` motion; keep `fx_compositor.prepare_fx_hud_assets` (L2642, L2992) disabled (`fx_mode='static'` or `zero_box`) so boxed HUDs from `hud_widgets.py` / `hud_forensic_v2.py` are NEVER stamped onto `su_ke_lai`."
+        },
+        {
+          "symbol": "build_vn_kinetic_ass_subtitles",
+          "lines": "560-613",
+          "status": "LEGACY_1WORD_RED_YELLOW",
+          "current_behavior": "1-word alternating Red/Yellow ASS at `PlayRes=1080x1920, MarginV=270` (whereas `short_engine/audio_epic.py` uses `1440x2560, MarginV=660`).",
+          "upgrade_action": "Ensure V12 Shorts route through `short_engine` (`audio_epic.write_short_v7_kinetic_cinema_ass_2k` or V12 clean ivory subtitle style), not legacy 1-word red/yellow `produce_vn_dual_mode.run_short_mode`."
+        }
+      ]
+    },
+    {
+      "file": "sys/tools/produce_serialized_short.py",
+      "total_lines": 223,
+      "findings": [
+        {
+          "symbol": "main / facade",
+          "lines": "1-223",
+          "status": "KEEP_FACADE_PASS_FLAGS",
+          "current_behavior": "Thin CLI facade delegating to `short_engine.audio_epic`, `short_engine.flow_stage`, `short_engine.render_single_pass`.",
+          "upgrade_action": "Optionally expose `--overlay-mode pure_cinema|zero_box|legacy` or read `overlay_mode` from `short_spec.json`."
+        }
+      ]
+    },
+    {
+      "file": "sys/short_engine/flow_stage.py",
+      "total_lines": 663,
+      "findings": [
+        {
+          "symbol": "classify_hybrid_beats",
+          "lines": "51-102",
+          "status": "REVIEW_PACING_AND_MAP_ROUTING",
+          "current_behavior": "In `hybrid_2k`, forces `tactical_sand_table` (L89) and calm `context/mechanism/payoff` outside Act 4 (L91-L96) to `2k_native_kenburns` instead of living video or procedural `tactical_battle_map_v8` MP4.",
+          "upgrade_action": "Ensure `scene_type == 'gis_map'` / `'tactical_map'` can route to baked `tactical_battle_map_v8` MP4 clips (not static Ken Burns images) and preserve `flow_video` budget on Ultra credits for live-action hero/tactile cuts."
+        },
+        {
+          "symbol": "run_flow_stage_a / _ordered_stage_a_profiles",
+          "lines": "264-473",
+          "status": "KEEP_COMPLIANT",
+          "current_behavior": "Prioritizes Google AI Ultra 25k+ pools (`credits_rem >= 5000 or ptier >= 2`) at Tier -1, cleans BELUGA sparkle, enforces `GlobalFlowProductionLock`.",
+          "upgrade_action": "Preserve; no boxed HUD logic here."
+        }
+      ]
+    },
+    {
+      "file": "sys/fx_warehouse/historical_visual_qc.py",
+      "total_lines": 1352,
+      "findings": [
+        {
+          "symbol": "Constants & audit_rendered_2k_frame & audit_sub_cut_crop_geometry",
+          "lines": "45-82, 679-811, 829-1000, 1156-1340",
+          "status": "EXTEND_FOR_V12_GATES",
+          "current_behavior": "Checks prompt anachronisms, `CLEAN_FRAME_NO_TEXT_LOCK`, sub-cut crop head zone `[0.18..0.46]` vs `MarginV=660`, dynamic range `>=85`, Laplacian `>=25`, watermark contrast, subtitle contrast, `<2MB` thumbnail.",
+          "upgrade_action": "Add V12 hard-fail gates: (1) `no_boxed_hud_overlay` check on `hud_stamps` / rendered frames (reject `v7_hook_headline`, `v7_stat_versus`, `prestige_dateline` and dark rectangular HUD boxes), (2) `map_legibility_and_pacing` gate (`duration_sec >= 6.0`, font height `>= 5%` frame height, `<= 3` words/label), (3) `cold_open_first_60s_pacing` gate on Long specs (no beat `> 3.5s` static hold in `0..60s`)."
+        }
+      ]
+    }
+  ],
+  "tactical_map_v8_teardown": {
+    "file": "sys/fx_warehouse/tactical_battle_map_v8.py",
+    "total_lines": 2649,
+    "root_causes_matching_defect_screenshot": [
+      {
+        "category": "TINY_UNREADABLE_FONTS",
+        "locations": [
+          "L1532, L1538 (_ViewportProjector): ui_scale = self.width / 1080.0 (9:16) or self.height / 1080.0 (16:9) — base font constants are calibrated for ~1080px, producing 14-21px text on 1080x1920!",
+          "L2044 (_draw_moving_unit_blocks): f_badge = _get_font(int(round(19.0 * sc)), role='condensed') (~22px on 1080x1920 = 1.15% of frame height, far below >= 5% target).",
+          "L2181-L2182 (_draw_callout_pins): f_head = _get_font(int(round(20.5 * sc))) (~24px) and f_sub = _get_font(int(round(15.0 * sc))) (~17px).",
+          "L2333-L2363 (_draw_hud_chrome header): date_txt max 21*sc (min 14*sc), title_txt max 40*sc (min 22*sc), phase_label max 22*sc (min 14*sc — shrinks to ~14px on long phase descriptions!).",
+          "L2414-L2415 (_draw_hud_chrome tide bar): f_tb_sm = 14.5*sc (~14.5px!), f_tb_val = 21.0*sc (~21px).",
+          "L2443-L2444 (_draw_hud_chrome force-ratio bar): f_fac = 20*sc, f_stat = 16*sc."
+        ],
+        "v12_target": "Raise primary map labels/locations to >= 5% of frame height (>= 54px on 1080h, >= 96px on 1920h, >= 128px on 2560h), remove `sub` secondary tiny lines entirely, remove `_fit_font` shrinking down to 14px."
+      },
+      {
+        "category": "CROWDED_MULTI_WORD_LABELS",
+        "locations": [
+          "L300-L1107 (_build_presets): Each preset packs 4-5 `units` (all with multi-word badges like '1 VẠN KỴ • LIỄU THĂNG', '9 VẠN ĐẠI QUÂN MINH') + 4 `callouts` each with `label` + `sub` (e.g., 'VÁCH ĐÁ CAI KINH' + 'NÚI ĐÁ DỰNG ĐỨNG'), simultaneously visible in the middle 50% of the screen.",
+          "L2075-L2113 (_draw_moving_unit_blocks): Draws unit badge for every active unit at once.",
+          "L2162-L2268 (_draw_callout_pins): Renders both `label` and `sub` + leader lines for all callouts with `t_norm >= t_appear` (typically 0.0..0.25, so all 4 stay on screen together)."
+        ],
+        "v12_target": "Enforce `<= 3` words per label (e.g., 'ẢI CHI LĂNG', 'NÚI MÃ YÊN', 'LIỄU THĂNG'), drop `sub` sublines, and stage callouts (`t_appear`..`t_disappear`) so at most 2-3 labels occupy the viewport simultaneously with generous negative space."
+      },
+      {
+        "category": "SIDE_GAUGES_AND_BOTTOM_BARS",
+        "locations": [
+          "L2014-L2025 (_seed_hud_exclusion_rects): Reserves top 15.5-16.5%, bottom 17-18%, and side tide rail 235*sc, squeezing actual map action into a narrow central corridor.",
+          "L2370-L2425 (_draw_hud_chrome part 2): Draws vertical Tide-Level / Gorge-Depth gauge (`rounded_rectangle` track + meniscus + '-0.8m' / 'ĐỘ SÂU LỌT ẢI CHI LĂNG' tiny text).",
+          "L2426-L2459 (_draw_hud_chrome part 3): Draws bottom Force-Ratio bar (`rounded_rectangle` split bar + 'ĐẠI VIỆT vs NGUYÊN MÔNG' + tiny stats at H-185*sc in 9:16 colliding with captions/UI).",
+          "L2365-L2368 (_draw_engraved_compass): Top-right compass rose near Shorts top-right UI."
+        ],
+        "v12_target": "ABOLISH side gauge (L2371-L2425) and bottom force-ratio bar (L2426-L2459) completely in V12 default mode; keep map edge-to-edge full-bleed with at most a clean bare top chapter/date line (>= 48px) and clean bottom margin for captions/watermark."
+      },
+      {
+        "category": "FAST_ANIMATION_AND_HUD_FADEOUT",
+        "locations": [
+          "L1466, L2498, L2568: Default `duration_sec = 4.8` across `compute_map_camera_zoom_state`, `render_tactical_map_frame`, and `bake_tactical_map_mp4`.",
+          "L1494 (compute_map_camera_zoom_state): `hud_opacity = _clamp(1.0 - u_zm * 1.45)` fades title/labels to faint gray before the clip even finishes when `map_camera_zoom_match=True` (visible in defect screenshot #4!).",
+          "L386-L457, L539-L611: Arrow/unit `t_start..t_end` spans (e.g. `0.02..0.34`, `0.08..0.54`) complete in ~1.5-2.5 seconds at `duration_sec=4.8`.",
+          "L1658 (_composite_water_and_ripples): Ripple speed `0.42 * speed_boost`.",
+          "L1909, L1920 (_draw_shockwave_engagement_rings): Fast pulsing `elapsed * 1.45` and `sin(elapsed * 18.0)`.",
+          "L2067 (_draw_moving_unit_blocks): Fast jitter `0.22 * math.sin(t_norm * 20.0 + u_idx)` on damaged units."
+        ],
+        "v12_target": "Raise V12 default `duration_sec` to `7.5` (minimum `6.0s` per tactical maneuver), stretch arrow/unit `t_start..t_end` smoothly across `[0.05..0.90]`, remove jittery shockwave/damaged oscillation (`sin(20*t)`), and stop dimming primary map labels via premature `hud_opacity` fadeout (only dissolve cleanly in final 0.25s if zooming)."
+      }
+    ]
+  },
+  "unit_tests_requiring_wave2_update": [
+    {
+      "test_file": "sys/tests/test_su_ke_lai_short_v7_upgrade.py",
+      "lines": "26-31, 86-115, 290-346",
+      "current_assertions": [
+        "Imports and tests `render_v7_hook_headline_png` and `render_v7_stat_versus_png` (L29-30, L290-315).",
+        "Asserts `huds[0]['kind'] == 'v7_hook_headline'` and `all(h['motion_style'] == 'pop_y' for h in huds)` (L317-322).",
+        "Tests `pop_y` FFmpeg overlay bounce on V7 boxed HUD PNG (L324-346)."
+      ],
+      "wave2_update_action": "Update or replace with Zero-Box Cinema Typography tests (assert zero rectangular opaque boxes/VS badges in rendered alpha channel) or gate legacy V7 HUD assertions behind explicit legacy compat tests."
+    },
+    {
+      "test_file": "sys/tests/test_tactical_battle_map_v8.py",
+      "lines": "46-50, 120-141, 197-235",
+      "current_assertions": [
+        "L50: `assert len(full['callouts']) >= 3` on every preset.",
+        "L121-131: Calls `compute_map_camera_zoom_state(..., duration_sec=4.8)` and asserts `s_end['hud_opacity'] == 0.0`.",
+        "L197-235: Bakes 1.2s and 1.0s MP4s for `bake_tactical_map_mp4`."
+      ],
+      "wave2_update_action": "Add V12 assertions verifying: (1) font heights >= 5% of frame height, (2) <= 3 words per callout/unit label, (3) zero side tide gauges & zero bottom force-ratio bars in V12 default mode, (4) default/maneuver `duration_sec >= 6.0` (while keeping quick 1.2s smoke test if explicitly passed `allow_fast_smoke=True` or testing `duration_sec=6.5`)."
+    },
+    {
+      "test_file": "sys/tests/test_history_styles_10x10.py",
+      "lines": "197-231, 320-360",
+      "current_assertions": [
+        "L197-220: Asserts `apply_short_style_to_spec` emits `pov_survival_gauge`, `forensic_evidence_stamp`, `myth_vs_chronicle_split`, `weapon_engineering_spec`, `commander_duel_1v1`, `counterfactual_branch_stamp`.",
+        "L231: `assert len(compiled['hud_stamps']) >= 4`.",
+        "L320-359: Renders all `S02/S04/S05/S06/S07/S09` boxed cards and checks `non_transparent_ratio > 0.015`."
+      ],
+      "wave2_update_action": "Update `apply_short_style_to_spec` and `render_style_signature_hud_png` Short tests to assert Zero-Box Cinema compliance (same `high_opacity_ratio < 0.15` / zero-box border check already enforced on `L*` Long styles at L342-345!)."
+    },
+    {
+      "test_file": "sys/tests/test_studio_director_v7.py",
+      "lines": "54, 65, 270, 281",
+      "current_assertions": [
+        "L54, L65: Hardcodes `hud_count == 11` / `len(ep['hud_stamps']) == 11` on `vn_su_ke_lai_v7_bach_dang_1288_short`.",
+        "L270, L281: Hardcodes `len(scaf_res['episode']['hud_stamps']) == 11` on `scaffold-v7`."
+      ],
+      "wave2_update_action": "Update scaffold & director tests when `scaffold-v7`/`v12` switches from 11 boxed `v7_hook_headline`/`v7_stat_versus`/`prestige_dateline` stamps to Zero-Box or pure no-overlay cinema (`0..3` bare stamps)."
+    },
+    {
+      "test_file": "sys/tests/test_su_ke_lai_short_v5_upgrade.py",
+      "lines": "96-129",
+      "current_assertions": [
+        "L99-102: Tests `render_chronicle_stamp_png` and `render_ai_disclosure_pill_png`.",
+        "L108-128: Tests `build_hud_stamps` with `ai_disclosure_pill` + `chronicle_stamp`."
+      ],
+      "wave2_update_action": "Both `chronicle_stamp` and `ai_disclosure_pill` are ALREADY boxless! Keep passing; optionally add assertion confirming zero opaque box background."
+    },
+    {
+      "test_file": "sys/tests/test_produce_serialized_short.py",
+      "lines": "99-112, 153-162, 287",
+      "current_assertions": [
+        "L99-105, L287: Asserts `hud_stamps_count == 5` for 5 `heroic_banner` stamps.",
+        "L153-162: Asserts `render_heroic_banner_png` enforces `>= 132px` and `1..4` words."
+      ],
+      "wave2_update_action": "Keep `heroic_banner` (`>=132px`, `<=4` words) tests intact; add test coverage for V12 `pure_no_overlay` (`hud_stamps_count == 0`) and `show_underline_bar=False`."
+    },
+    {
+      "test_file": "sys/tests/test_fx_warehouse.py",
+      "lines": "299-366",
+      "current_assertions": [
+        "L299-306: Renders all 14 `HUD_WIDGET_CATALOG` widgets (currently boxed).",
+        "L309-366: Renders all 5 `build_bespoke_topic_hud_patch` kinds (currently boxed)."
+      ],
+      "wave2_update_action": "Add `zero_box=True` / `su_ke_lai` theme verification tests so Wave-2 can upgrade bespoke & editorial HUDs to Zero-Box without breaking non-cinema channel tests."
+    },
+    {
+      "test_file": "sys/tests/test_historical_visual_qc.py",
+      "lines": "1-515",
+      "current_assertions": [
+        "Audits prompt anachronisms, sub-cut crop geometry, 2K frame contrast/sharpness, and full episode readiness."
+      ],
+      "wave2_update_action": "Add unit tests for the new V12 gates in `historical_visual_qc.py`: (a) boxed HUD / VS-badge / pill rejection on `su_ke_lai`, (b) map legibility & >=6s duration gate, (c) Long first-60s <=3.5s/beat pacing gate."
+    },
+    {
+      "test_file": "sys/tests/test_short_engine_mode_aplus.py",
+      "lines": "130-143, 146-313",
+      "current_assertions": [
+        "Validates 15-16 beat `viral_fast_loop_short` duration bounds `(52.0, 75.0)` and 4-chunk 0-overhang timeline."
+      ],
+      "wave2_update_action": "No boxed HUD assertions here; keep passing as-is, and optionally add a Mode A+ test with `hud_stamps=[]` (pure no-overlay cinema) and `tactical_battle_map_v8` beat pacing."
+    }
+  ]
+}
