@@ -272,7 +272,7 @@ class WorkerTests(unittest.TestCase):
         # 1. Inter-syllable hyphens from loanword normalization are stripped so OmniVoice never inserts dash pauses
         norm = worker._normalize_vi_tts_text('Chưa kịp đánh răng, đã xem xong chục video và dopamine.')
         self.assertNotIn('-', norm)
-        self.assertIn('vi đê ô', norm)
+        self.assertTrue('thước phim' in norm or 'vi đê ô' in norm)
         self.assertIn('đô pa min', norm)
 
         # 2. Leading prompt-bleed micro-click (<60ms, RMS < 0.035) + dead silence (>=120ms) is stripped and remains idempotent

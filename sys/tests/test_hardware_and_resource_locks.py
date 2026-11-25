@@ -39,6 +39,7 @@ from flow_cdp.process_manager import (  # noqa: E402
 )
 from flow_cdp.resource_locks import (  # noqa: E402
     GlobalBrowserSlot,
+    GlobalFlowProductionLock,
     JobExecutionLock,
     ProfilePortLock,
     build_optimized_chrome_launch,
@@ -564,30 +565,57 @@ else:
             self.assertTrue(other_dir.exists())
 
     def test_compute_optimal_browser_slots(self) -> None:
-        """Verify dynamic calculation of optimal Chrome browser slots based on GPU VRAM and env."""
-        # 1. Explicit env var overrides GPU detection
+        """Verify dynamic calculation of Chrome browser slots bounded by GPU VRAM, host RAM, and CPU."""
+        # 1. Explicit env var overrides GPU/RAM/CPU detection
         with patch.dict(os.environ, {"VP_MAX_CHROME_INSTANCES": "12"}):
             self.assertEqual(compute_optimal_browser_slots(), 12)
         with patch.dict(os.environ, {"VP_MAX_CHROME_INSTANCES": "4"}):
             self.assertEqual(compute_optimal_browser_slots(), 4)
 
-        # 2. No env var -> uses get_gpu_vram_mb
+        # 2. High-RAM / many-core host -> VRAM drives slots
         with patch.dict(os.environ, {}, clear=True):
-            # No GPU detected -> fallback 8
             with patch("flow_cdp.resource_locks.get_gpu_vram_mb", return_value=None):
-                self.assertEqual(compute_optimal_browser_slots(), 8)
-
-            # Quadro P620 (1843 MiB): (1843 - 180) // 110 = 15 slots
+                self.assertEqual(compute_optimal_browser_slots(ram_total_mb=65536, cpu_threads=32), 8)
             with patch("flow_cdp.resource_locks.get_gpu_vram_mb", return_value=1843):
-                self.assertEqual(compute_optimal_browser_slots(), 15)
-
-            # High-end GPU (8000 MiB): clamped to max 16
+                self.assertEqual(compute_optimal_browser_slots(ram_total_mb=65536, cpu_threads=32), 15)
             with patch("flow_cdp.resource_locks.get_gpu_vram_mb", return_value=8000):
-                self.assertEqual(compute_optimal_browser_slots(), 16)
-
-            # Constrained GPU (400 MiB): clamped to min 8
+                self.assertEqual(compute_optimal_browser_slots(ram_total_mb=65536, cpu_threads=32), 16)
             with patch("flow_cdp.resource_locks.get_gpu_vram_mb", return_value=400):
-                self.assertEqual(compute_optimal_browser_slots(), 8)
+                self.assertEqual(compute_optimal_browser_slots(ram_total_mb=65536, cpu_threads=32), 8)
+
+            # 3. 15 GiB RAM / 8-thread workstation (Quadro P620) must be safely capped at 4
+            with patch("flow_cdp.resource_locks.get_gpu_vram_mb", return_value=1843):
+                self.assertEqual(compute_optimal_browser_slots(ram_total_mb=15360, cpu_threads=8), 4)
+
+    def test_headless_chrome_low_ram_flags_and_global_flow_lock(self) -> None:
+        """Verify renderer memory caps on headless Chrome and GlobalFlowProductionLock re-entrancy."""
+        cmd, env = build_optimized_chrome_launch(
+            binary="/opt/google/chrome/chrome",
+            user_data_dir="/tmp/prof_low_ram",
+            profile_dir="Profile 1",
+            port=9222,
+            url="https://flow.google.com/",
+            headless=True,
+        )
+        self.assertIn("--renderer-process-limit=2", cmd)
+        self.assertIn("--js-flags=--max-old-space-size=384", cmd)
+        self.assertIn("--alsa-output-device=null", cmd)
+        self.assertIn("--disable-background-networking", cmd)
+        self.assertTrue(any("AudioServiceOutOfProcess" in c for c in cmd))
+        self.assertEqual(env.get("MALLOC_ARENA_MAX"), "2")
+
+        with tempfile.TemporaryDirectory() as tmp:
+            locks_dir = Path(tmp) / "locks"
+            os.environ.pop(GlobalFlowProductionLock.ENV_OWNER_KEY, None)
+            l1 = GlobalFlowProductionLock(job_id="ep_a", stage="stage_a", locks_dir=locks_dir)
+            l2 = GlobalFlowProductionLock(job_id="ep_a", stage="stage_b", locks_dir=locks_dir)
+            self.assertTrue(l1.try_acquire())
+            self.assertEqual(l1.read_holder().get("job_id"), "ep_a")
+            # Re-entrant acquisition in same PID succeeds without deadlock
+            self.assertTrue(l2.try_acquire())
+            l2.release()
+            l1.release()
+            self.assertNotIn(GlobalFlowProductionLock.ENV_OWNER_KEY, os.environ)
 
 
 if __name__ == "__main__":

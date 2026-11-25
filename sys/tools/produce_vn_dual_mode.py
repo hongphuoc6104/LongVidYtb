@@ -1070,14 +1070,45 @@ HARDCODED_CHANNEL_WATERMARK_MAP: dict[str, Path] = {
     "vu_tru_ti_hon": SYS_DIR / "channels/vu_tru_ti_hon/assets/watermark_150x150.png",
 }
 
+# Hardcoded SSOT Channel -> Bottom-Right Watermark Logo Mapping (18 English Twin Channels)
+EN_CHANNEL_WATERMARK_MAP: dict[str, Path] = {
+    "en_bamboo_marble": SYS_DIR / "channels/en_bamboo_marble/assets/watermark_150x150.png",
+    "en_career_leverage": SYS_DIR / "channels/en_career_leverage/assets/watermark_150x150.png",
+    "en_choke_point": SYS_DIR / "channels/en_choke_point/assets/watermark_150x150.png",
+    "en_cold_case_ink": SYS_DIR / "channels/en_cold_case_ink/assets/watermark_150x150.png",
+    "en_crowd_strings": SYS_DIR / "channels/en_crowd_strings/assets/watermark_150x150.png",
+    "en_fine_print": SYS_DIR / "channels/en_fine_print/assets/watermark_150x150.png",
+    "en_first_principles": SYS_DIR / "channels/en_first_principles/assets/watermark_150x150.png",
+    "en_inside_vessel": SYS_DIR / "channels/en_inside_vessel/assets/watermark_150x150.png",
+    "en_kindred_sketch": SYS_DIR / "channels/en_kindred_sketch/assets/watermark_150x150.png",
+    "en_kitchen_molecules": SYS_DIR / "channels/en_kitchen_molecules/assets/watermark_150x150.png",
+    "en_lazy_brain": SYS_DIR / "channels/en_lazy_brain/assets/watermark_150x150.png",
+    "en_macro_gears": SYS_DIR / "channels/en_macro_gears/assets/watermark_150x150.png",
+    "en_parable_lamp": SYS_DIR / "channels/en_parable_lamp/assets/watermark_150x150.png",
+    "en_plain_sight_ai": SYS_DIR / "channels/en_plain_sight_ai/assets/watermark_150x150.png",
+    "en_pocket_cosmos": SYS_DIR / "channels/en_pocket_cosmos/assets/watermark_150x150.png",
+    "en_second_arrow": SYS_DIR / "channels/en_second_arrow/assets/watermark_150x150.png",
+    "en_wait_how": SYS_DIR / "channels/en_wait_how/assets/watermark_150x150.png",
+    "en_wallet_anatomy": SYS_DIR / "channels/en_wallet_anatomy/assets/watermark_150x150.png",
+}
+
+_WATERMARK_ALIAS_MAP: dict[str, str] = {
+    "en_scale_and_bone": "en_plain_sight_ai",
+    "en_root_and_canopy": "en_kitchen_molecules",
+    "en_spawn_to_apex": "en_wait_how",
+    "en_deep_time_strata": "en_parable_lamp",
+}
+
 
 def resolve_channel_logo_source(channel_slug: str) -> Path | None:
-    """Resolve the hardcoded canonical 1:1 brand emblem PNG for a Vietnamese or English channel."""
-    norm_slug = channel_slug.strip().replace("-", "_").lower()
-    if norm_slug in HARDCODED_CHANNEL_WATERMARK_MAP:
-        hardcoded_p = HARDCODED_CHANNEL_WATERMARK_MAP[norm_slug]
-        if hardcoded_p.is_file() and hardcoded_p.stat().st_size > 512:
-            return hardcoded_p
+    """Resolve the hardcoded canonical 1:1 brand emblem PNG for any of the 38 VN/EN channels."""
+    raw_norm = channel_slug.strip().replace("-", "_").lower()
+    norm_slug = _WATERMARK_ALIAS_MAP.get(raw_norm, raw_norm)
+    for table in (HARDCODED_CHANNEL_WATERMARK_MAP, EN_CHANNEL_WATERMARK_MAP):
+        if norm_slug in table:
+            hardcoded_p = table[norm_slug]
+            if hardcoded_p.is_file() and hardcoded_p.stat().st_size > 512:
+                return hardcoded_p
     candidates = [
         SYS_DIR / "channels" / norm_slug / "assets" / "watermark_150x150.png",
         SYS_DIR / "channels" / norm_slug / "assets" / "avatar_800x800.png",

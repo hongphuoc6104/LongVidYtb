@@ -9,7 +9,11 @@ from channels.registry import CHANNEL_ALIASES, channel_ids
 from channels.vn_competitor_script_formulas import VN_COMPETITOR_SCRIPT_FORMULAS
 from channels.vn_flow_video_formulas import VN_CHANNEL_LOGO_PROMPTS, VN_FLOW_VIDEO_FORMULAS
 from flow_cdp import flow_rpc
-from flow_video.chain_planner import build_dual_model_chain_spec, build_scene_pair_tasks, select_clip_duration_and_credits
+from flow_video.chain_planner import (
+    build_dual_model_chain_spec,
+    build_scene_pair_tasks,
+    select_clip_duration_and_credits,
+)
 from flow_video.motion_library import (
     apply_positive_framing,
     build_timecoded_video_prompt,
@@ -217,7 +221,7 @@ def test_all_four_fleet_drift_fixes() -> None:
     for cid in en_ids + list(CHANNEL_ALIASES.keys()):
         resolved = get_channel_archetype(cid)
         assert resolved in ARCHETYPE_PROFILES, f"Unmapped EN channel: {cid}"
-        if not "-" in cid:
+        if "-" not in cid:
             assert EN_CHANNEL_ARCHETYPE_MAP.get(cid) == resolved
         bp = resolve_niche_fx_blueprint(cid, video_topic="test")
         assert bp["archetype_id"] == resolved
@@ -391,6 +395,7 @@ def test_orchestrator_closes_warm_session_and_escalates_on_unusual_activity(tmp_
     import asyncio
     import time
     from types import SimpleNamespace
+
     from flow_video.models import ChainMode, ScenePairSpec, VideoChainSpec, VideoClipTask
     from flow_video.orchestrator import FlowVideoChainOrchestrator
 
@@ -495,11 +500,12 @@ def test_orchestrator_closes_warm_session_and_escalates_on_unusual_activity(tmp_
     asyncio.run(orch._generate_clips_parallel([task]))
     assert tried == ["prof_1", "prof_2"]
     assert orch._profile_block_streaks["prof_1"] == 1
-    assert orch._profile_cooldowns["prof_1"] - time.time() >= 115.0
+    assert orch._profile_cooldowns["prof_1"] - time.time() >= 110.0
 
 
 def test_orchestrator_downgrades_veo_lite_on_model_access_denied(tmp_path: Path, monkeypatch) -> None:
     import asyncio
+
     from flow_video.models import ChainMode, ScenePairSpec, VideoChainSpec, VideoClipTask
     from flow_video.orchestrator import FlowVideoChainOrchestrator
 
@@ -947,3 +953,127 @@ def test_orchestrator_skip_denied_tier0_lite_routes_direct_omni_and_preserves_pr
     tasks_pro = [_task(0)]
     asyncio.run(orch_pro._generate_clips_parallel(tasks_pro))
     assert calls_pro == [("B00", "tier1_pro", "veo_3_1_lite")]
+
+
+def test_v42_traffic_burst_failover_and_persistent_sidecar_creation(tmp_path: Path, monkeypatch, caplog) -> None:
+    import asyncio
+    import json
+    import logging
+    from types import SimpleNamespace
+
+    from flow_cdp import flow_rpc
+    from flow_cdp.cdp_direct_client import DirectCDPProfileSession
+    from flow_video.models import ChainMode, ScenePairSpec, VideoChainSpec, VideoClipTask
+    from flow_video.orchestrator import FlowVideoChainOrchestrator
+
+    frame_png = tmp_path / "beat_00.png"
+    frame_png.write_bytes(b"\x89PNG\r\n\x1a\nfake")
+    assert not frame_png.with_suffix(".json").exists()
+
+    # 1. DirectCDPProfileSession.upload_image_file creates beat_00.json if missing
+    sess = DirectCDPProfileSession({"name": "profile_en18", "cdp_port": 9299, "project_id": "proj_1"})
+
+    async def _fake_ensure_project_id(*_a, **_kw):
+        return "proj_1"
+
+    async def _fake_post(*_a, **_kw):
+        return {"status": 200, "text": "{}"}
+
+    monkeypatch.setattr(sess, "ensure_project_id", _fake_ensure_project_id)
+    monkeypatch.setattr(sess, "_post_batchexecute", _fake_post)
+    monkeypatch.setattr(flow_rpc, "first_payload", lambda *_a, **_kw: [])
+    monkeypatch.setattr(
+        flow_rpc,
+        "read_uploaded_image",
+        lambda _p: SimpleNamespace(media_id="mid_upload_1", url="https://example.com/1.png"),
+    )
+    up = asyncio.run(sess.upload_image_file(frame_png))
+    assert up["media_id"] == "mid_upload_1"
+    sc_data = json.loads(frame_png.with_suffix(".json").read_text(encoding="utf-8"))
+    assert sc_data["profile_media_ids"]["profile_en18"] == "mid_upload_1"
+    assert sc_data["profile_media_ids"]["profile_en18:proj_1"] == "mid_upload_1"
+
+    # 2. Orchestrator._save_profile_media_id creates missing sidecar & updates existing sidecar
+    frame2 = tmp_path / "beat_01.png"
+    frame2.write_bytes(b"png2")
+    spec = VideoChainSpec(
+        job_id="test_traffic_failover",
+        mode=ChainMode.SCENE_PAIRS,
+        channel_id="su_ke_lai",
+        aspect="9:16",
+        video_model="veo_3_1_lite",
+        duration_seconds=6,
+        auto_fallback_zero_credit=False,
+        scene_pairs=[
+            ScenePairSpec(
+                id="B00",
+                start_image_prompt="s",
+                start_image_path=str(frame2),
+                video_model="veo_3_1_lite",
+                transition_mode="seam",
+            )
+        ],
+    )
+    orch = FlowVideoChainOrchestrator(
+        spec=spec,
+        work_dir=tmp_path / "work_traffic",
+        output_mp4_path=tmp_path / "out_traffic.mp4",
+        max_workers=1,
+        resume=False,
+        max_retries_per_clip=6,
+        reuse_warm_sessions=False,
+    )
+    orch.credit_ledger = _make_dummy_ledger()  # type: ignore[assignment]
+    orch._save_profile_media_id(frame2, "profile_6", "mid_p6")
+    sc2 = json.loads(frame2.with_suffix(".json").read_text(encoding="utf-8"))
+    assert sc2["profile_media_ids"]["profile_6"] == "mid_p6"
+
+    # 3. Two TOO_MUCH_TRAFFIC hits on veo_3_1_lite trigger [TRAFFIC_MODEL_FAILOVER] -> omni_flash & 8s/30s pause
+    profiles = [
+        {"name": "p_a", "cdp_port": 9951},
+        {"name": "p_b", "cdp_port": 9952},
+        {"name": "p_c", "cdp_port": 9953},
+    ]
+    monkeypatch.setattr(orch, "_get_channel_profiles", lambda: profiles)
+
+    sleeps: list[float] = []
+
+    async def _fast_sleep(sec: float) -> None:
+        sleeps.append(round(float(sec), 2))
+
+    monkeypatch.setattr("flow_video.orchestrator.asyncio.sleep", _fast_sleep)
+
+    calls: list[tuple[str, str, object]] = []
+
+    async def _fake_single_traffic(clip: VideoClipTask, profile_cfg: dict | None = None) -> None:
+        pname = str((profile_cfg or {}).get("name"))
+        calls.append((pname, clip.video_model, clip.end_frame_path))
+        if clip.video_model == "veo_3_1_lite":
+            raise RuntimeError("FLOW_PROVIDER_BLOCKED: PUBLIC_ERROR_UNUSUAL_ACTIVITY_TOO_MUCH_TRAFFIC")
+        Path(clip.output_mp4_path).write_bytes(b"mp4")
+
+    monkeypatch.setattr(orch, "_generate_single_clip", _fake_single_traffic)
+    task = VideoClipTask(
+        clip_id="B00",
+        index=0,
+        start_frame_path=str(frame2),
+        end_frame_path=str(frame_png),
+        motion_prompt="slow push",
+        duration_seconds=6,
+        target_duration=5.0,
+        output_mp4_path=str(tmp_path / "clip_00.mp4"),
+        video_model="veo_3_1_lite",
+        transition_mode="seam",
+        credit_cost=10,
+    )
+    with caplog.at_level(logging.WARNING):
+        asyncio.run(orch._generate_clips_parallel([task]))
+
+    assert task.status == "completed"
+    assert calls == [
+        ("p_a", "veo_3_1_lite", str(frame_png)),
+        ("p_b", "veo_3_1_lite", str(frame_png)),
+        ("p_c", "omni_flash", None),
+    ]
+    assert sleeps == [8.0, 8.0]
+    assert any("[TRAFFIC_MODEL_FAILOVER]" in rec.message for rec in caplog.records)

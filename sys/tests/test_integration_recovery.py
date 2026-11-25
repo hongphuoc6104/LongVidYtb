@@ -63,7 +63,8 @@ def test_provider_rejection_does_not_change_prompt_or_resubmit():
             asyncio.run(session.generate_image('Keep the approved authored composition.'))
     assert wire.call_count == 1
     assert wire.call_args.kwargs['prompt'] == 'Keep the approved authored composition.'
-    assert session.evaluate.await_count == 1
+    rpc_submits = [c for c in session.evaluate.await_args_list if 'batchexecute' in str(c.args[0])]
+    assert len(rpc_submits) == 1
 
 
 def test_editorial_questions_survive_standard_content_export():

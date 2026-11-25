@@ -71,17 +71,21 @@ def test_channel_profile_registration_and_plan() -> None:
 
 
 def test_co_the_ke_v3_skill_and_routing_index() -> None:
-    """Verify vp-channel-co-the-ke isolates channel V3 rules without polluting shared workflow skills."""
-    skill_dir = ROOT_DIR / ".agents" / "skills" / "vp-channel-co-the-ke"
-    skill_md = skill_dir / "SKILL.md"
-    visual_ref = skill_dir / "references" / "visual-grammar-biomedical-v3.md"
-    pacing_ref = skill_dir / "references" / "pacing-and-script-rules.md"
+    """Verify co_the_ke 3-pillar data playbook and zero legacy per-channel skill isolation."""
+    registry_skill = ROOT_DIR / ".agents" / "skills" / "vp-channel-registry" / "SKILL.md"
+    legacy_skill_dir = ROOT_DIR / ".agents" / "skills" / "vp-channel-co-the-ke"
+    pb_dir = ROOT_DIR / "sys" / "channels" / "co_the_ke" / "playbook"
+    skill_md = pb_dir / "overview.md"
+    content_ref = pb_dir / "content.md"
+    visual_ref = pb_dir / "visual.md"
+    pacing_ref = pb_dir / "pacing.md"
 
-    for p in (skill_md, visual_ref, pacing_ref):
-        assert p.is_file(), f"Missing skill file: {p}"
+    assert registry_skill.is_file(), f"Missing consolidated registry skill: {registry_skill}"
+    assert not legacy_skill_dir.exists(), f"Per-channel skill should be retired: {legacy_skill_dir}"
+    for p in (skill_md, content_ref, visual_ref, pacing_ref):
+        assert p.is_file(), f"Missing playbook file: {p}"
 
     skill_text = skill_md.read_text(encoding="utf-8")
-    assert "name: vp-channel-co-the-ke" in skill_text
     assert "co_the_ke_3d_biomedical_v3" in skill_text
     assert "VietNarrator_co_the_ke" in skill_text
     for mode in (
@@ -106,10 +110,14 @@ def test_co_the_ke_v3_skill_and_routing_index() -> None:
     root_index = (ROOT_DIR / "INDEX.md").read_text(encoding="utf-8")
     docs_index = (SYS_DIR / "docs" / "INDEX.md").read_text(encoding="utf-8")
     prod_skill = (ROOT_DIR / ".agents" / "skills" / "vp-production" / "SKILL.md").read_text(encoding="utf-8")
-    assert "vp-channel-co-the-ke" in root_index
-    assert "vp-channel-co-the-ke" in docs_index
+    plan_text = (SYS_DIR / "channels" / "co_the_ke" / "PLAN.md").read_text(encoding="utf-8")
+    assert "vp-channel-registry" in root_index
+    assert "co_the_ke/playbook/overview.md" in root_index
+    assert "vp-channel-registry" in docs_index
+    assert "co_the_ke/playbook/overview.md" in docs_index
     assert "vp-channel-co-the-ke" not in prod_skill
     assert "co_the_ke" not in prod_skill
+    assert "playbook/overview.md" in plan_text
 
 
 def _load_dual_mode_locks() -> dict[str, Any]:

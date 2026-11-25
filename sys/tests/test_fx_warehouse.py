@@ -388,7 +388,7 @@ def test_auto_select_beat_fx_bespoke_routing_and_registration(tmp_path: Path) ->
 
 
 def test_vp_motion_fx_warehouse_skill_and_cross_links_exist() -> None:
-    skill_dir = REPO_ROOT / ".agents" / "skills" / "vp-motion-fx-warehouse"
+    skill_dir = REPO_ROOT / ".agents" / "skills" / "vp-visual-fx"
     skill_md = skill_dir / "SKILL.md"
     ref_catalog = skill_dir / "references" / "sub-warehouse-catalog.md"
     ref_rules = skill_dir / "references" / "niche-bespoke-synthesis-rules.md"
@@ -398,10 +398,10 @@ def test_vp_motion_fx_warehouse_skill_and_cross_links_exist() -> None:
     assert ref_rules.is_file(), f"Missing {ref_rules}"
 
     linked_files = [
-        REPO_ROOT / ".agents" / "skills" / "vp-channel-ho-so-ky-la" / "SKILL.md",
-        REPO_ROOT / ".agents" / "skills" / "vp-channel-ban-do-quyen-luc" / "SKILL.md",
-        REPO_ROOT / ".agents" / "skills" / "vp-channel-su-ke-lai" / "SKILL.md",
-        REPO_ROOT / ".agents" / "skills" / "vp-full-frame-quality" / "SKILL.md",
+        REPO_ROOT / "sys" / "channels" / "ho_so_ky_la" / "playbook" / "overview.md",
+        REPO_ROOT / "sys" / "channels" / "ban_do_quyen_luc" / "playbook" / "overview.md",
+        REPO_ROOT / "sys" / "channels" / "su_ke_lai" / "playbook" / "overview.md",
+        REPO_ROOT / ".agents" / "skills" / "vp-visual-fx" / "references" / "full-frame-doodle-contract.md",
         REPO_ROOT / ".agents" / "skills" / "vp-production" / "SKILL.md",
         REPO_ROOT / ".agents" / "skills" / "vp-production" / "references" / "cinematography.md",
         REPO_ROOT / "sys" / "docs" / "render-capabilities.md",
@@ -409,7 +409,7 @@ def test_vp_motion_fx_warehouse_skill_and_cross_links_exist() -> None:
     for path in linked_files:
         assert path.is_file(), f"Missing linked doc: {path}"
         content = path.read_text(encoding="utf-8")
-        assert "vp-motion-fx-warehouse" in content, f"{path} does not link vp-motion-fx-warehouse"
+        assert "vp-visual-fx" in content, f"{path} does not link vp-visual-fx"
 
 
 def test_selector_static_camera_locks_and_suspense_metadata() -> None:

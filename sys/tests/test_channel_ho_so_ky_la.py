@@ -227,17 +227,21 @@ def test_export_package_dual_pipeline():
 
 
 def test_ho_so_ky_la_v3_skill_and_routing_index() -> None:
-    """Verify vp-channel-ho-so-ky-la skill isolates channel specs without overriding shared workflows."""
-    skill_dir = ROOT_DIR / ".agents" / "skills" / "vp-channel-ho-so-ky-la"
-    skill_md = skill_dir / "SKILL.md"
-    visual_ref = skill_dir / "references" / "visual-grammar-noir-forensic.md"
-    pacing_ref = skill_dir / "references" / "pacing-and-script-rules.md"
+    """Verify ho_so_ky_la 3-pillar data playbook and consolidated registry isolation."""
+    registry_skill = ROOT_DIR / ".agents" / "skills" / "vp-channel-registry" / "SKILL.md"
+    legacy_skill_dir = ROOT_DIR / ".agents" / "skills" / "vp-channel-ho-so-ky-la"
+    pb_dir = ROOT_DIR / "sys" / "channels" / "ho_so_ky_la" / "playbook"
+    skill_md = pb_dir / "overview.md"
+    content_ref = pb_dir / "content.md"
+    visual_ref = pb_dir / "visual.md"
+    pacing_ref = pb_dir / "pacing.md"
 
-    for path in (skill_md, visual_ref, pacing_ref):
-        assert path.is_file(), f"Missing skill file: {path}"
+    assert registry_skill.is_file(), f"Missing consolidated registry skill: {registry_skill}"
+    assert not legacy_skill_dir.exists(), f"Per-channel skill should be retired: {legacy_skill_dir}"
+    for path in (skill_md, content_ref, visual_ref, pacing_ref):
+        assert path.is_file(), f"Missing playbook file: {path}"
 
     skill_text = skill_md.read_text(encoding="utf-8")
-    assert "name: vp-channel-ho-so-ky-la" in skill_text
     assert "ho_so_ky_la_3d_noir_forensic_v3" in skill_text
     assert "VietNarrator_ho_so_ky_la" in skill_text
     assert "Bảng Ghép Nối Quy Trình Dùng Chung" in skill_text
@@ -249,8 +253,8 @@ def test_ho_so_ky_la_v3_skill_and_routing_index() -> None:
         "MODE_4_NOIR_CINEMATIC_PACING",
     ):
         assert mode in skill_text
-    assert "references/visual-grammar-noir-forensic.md" in skill_text
-    assert "references/pacing-and-script-rules.md" in skill_text
+    assert "(visual.md)" in skill_text
+    assert "(pacing.md)" in skill_text
 
     visual_text = visual_ref.read_text(encoding="utf-8")
     assert "ho_so_ky_la_3d_noir_forensic_v3" in visual_text
@@ -274,11 +278,13 @@ def test_ho_so_ky_la_v3_skill_and_routing_index() -> None:
     prod_skill = (ROOT_DIR / ".agents" / "skills" / "vp-production" / "SKILL.md").read_text(encoding="utf-8")
     plan_text = (SYS_DIR / "channels" / "ho_so_ky_la" / "PLAN.md").read_text(encoding="utf-8")
 
-    assert "vp-channel-ho-so-ky-la" in root_index
-    assert "vp-channel-ho-so-ky-la" in docs_index
+    assert "vp-channel-registry" in root_index
+    assert "ho_so_ky_la/playbook/overview.md" in root_index
+    assert "vp-channel-registry" in docs_index
+    assert "ho_so_ky_la/playbook/overview.md" in docs_index
     assert "vp-channel-ho-so-ky-la" not in prod_skill
     assert "ho_so_ky_la" not in prod_skill
-    assert ".agents/skills/vp-channel-ho-so-ky-la/SKILL.md" in plan_text
+    assert "playbook/overview.md" in plan_text
 
 
 def test_ho_so_ky_la_v3_production_lock_and_formulas() -> None:

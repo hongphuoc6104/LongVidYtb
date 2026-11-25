@@ -145,7 +145,7 @@ class BenchmarkCadenceTests(unittest.TestCase):
     def test_parse_and_check_live_voice_cadence_pacing_doc(self):
         from script_diversity_linter import check_formulaic_transitions
 
-        playbook_path = ROOT.parent / ".agents/skills/vp-channel-patterns/references/voice-cadence-pacing.md"
+        playbook_path = ROOT.parent / ".agents/skills/vp-content-studio/references/voice-cadence-pacing.md"
         checker = ScriptCadenceChecker(
             forbid_opening_pause=True,
             max_opening_hook_syllables=18,

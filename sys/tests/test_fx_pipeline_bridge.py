@@ -202,7 +202,7 @@ def test_cli_flags_and_universal_docs_contract() -> None:
     index_text = (ROOT_DIR / "INDEX.md").read_text(encoding="utf-8")
     agents_text = (ROOT_DIR / "AGENTS.md").read_text(encoding="utf-8")
     prod_text = (ROOT_DIR / ".agents/skills/vp-production/SKILL.md").read_text(encoding="utf-8")
-    wh_text = (ROOT_DIR / ".agents/skills/vp-motion-fx-warehouse/SKILL.md").read_text(encoding="utf-8")
+    wh_text = (ROOT_DIR / ".agents/skills/vp-visual-fx/SKILL.md").read_text(encoding="utf-8")
 
     for text in (index_text, agents_text, prod_text, wh_text):
         assert "auto_niche" in text

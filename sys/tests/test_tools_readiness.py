@@ -90,11 +90,12 @@ def test_topic_to_video_skill_chain_and_token_budget():
     assert len(agents_text.encode("utf-8")) <= 4096, "AGENTS.md exceeded 4KB token-economy budget"
 
     core_skills = (
-        "vp-research-architect",
-        "vp-scriptwriting",
-        "vp-production",
+        "vp-channel-registry",
+        "vp-content-studio",
+        "vp-visual-fx",
         "vp-flow-cdp",
         "vp-colab-bridge",
+        "vp-production",
     )
     for skill_name in core_skills:
         assert skill_name in agents_text, f"AGENTS.md missing core skill in chain: {skill_name}"
@@ -105,8 +106,9 @@ def test_topic_to_video_skill_chain_and_token_budget():
 
     prod_text = prod_skill_md.read_text(encoding="utf-8")
     for upstream_or_downstream in (
-        "../vp-research-architect/SKILL.md",
-        "../vp-scriptwriting/SKILL.md",
+        "../vp-channel-registry/SKILL.md",
+        "../vp-content-studio/SKILL.md",
+        "../vp-visual-fx/SKILL.md",
         "../vp-flow-cdp/SKILL.md",
         "../vp-colab-bridge/SKILL.md",
         "vocab/bank.py start",

@@ -53,6 +53,27 @@ logging.basicConfig(
 )
 logger = logging.getLogger("publish_youtube_cdp")
 
+SISTER_CHANNEL_FORBIDDEN_TOKENS: tuple[str, ...] = (
+    "@firstprinciplesink",
+    "@luatngamdamdongvn",
+    "firstprinciplesink",
+    "luatngamdamdongvn",
+    "luật ngầm đám đông",
+    "first principles ink",
+)
+
+
+def validate_no_sister_channel_leak(channel_id: str | None, *texts: str | None) -> None:
+    """Reject cross-channel sister-account handles/mentions on su_ke_lai to prevent sockpuppet detection."""
+    ch_norm = str(channel_id or "").strip().lower().replace("-", "_")
+    if ch_norm and ch_norm != "su_ke_lai":
+        return
+    for txt in texts:
+        low = str(txt or "").lower()
+        for tok in SISTER_CHANNEL_FORBIDDEN_TOKENS:
+            if tok in low:
+                raise ValueError(f"SISTER_CHANNEL_COMMENT_FORBIDDEN: found {tok!r} in channel={channel_id!r} payload")
+
 
 def verify_short_live(short_url_or_id: str) -> dict[str, Any]:
     """Verify whether a YouTube Short displays the native Related Video pill live via Innertube HTML."""
@@ -542,8 +563,9 @@ class YouTubeCDPClient:
         tags: Optional[str | list[str]] = None,
         language: Optional[str] = None,
         category: Optional[str] = None,
+        altered_content: str = "unset",
     ) -> None:
-        """Set title, description, audience settings, tags, language, and category."""
+        """Set title, description, audience settings, altered-content disclosure, tags, language, and category."""
         logger.info("Filling title: %s", title)
         title_res = await self.evaluate(f"""
             (() => {{
@@ -587,9 +609,9 @@ class YouTubeCDPClient:
         """)
         await asyncio.sleep(1.0)
 
-        # Expand 'Hiển thị thêm' / 'Show more' if tags, language, or category need to be set
+        # Expand 'Hiển thị thêm' / 'Show more' if tags, language, category, or altered content need to be set
         clean_tags = format_and_truncate_tags(tags, max_chars=480)
-        if clean_tags or language or category:
+        if clean_tags or language or category or altered_content in ("yes", "no"):
             await self.evaluate("""
                 (() => {
                     const tagBox = document.querySelector('#tags-container') || document.querySelector('input#text-input[aria-label*="Tags"]');
@@ -609,6 +631,9 @@ class YouTubeCDPClient:
                 })()
             """)
             await asyncio.sleep(1.0)
+
+        if altered_content in ("yes", "no"):
+            await self.set_altered_content_disclosure(altered_content)
 
         # Tags handling
         if clean_tags:
@@ -690,6 +715,26 @@ class YouTubeCDPClient:
                 '#category-dropdown',
             ]
             await self._select_studio_dropdown_option(cat_candidates, category)
+
+    async def set_altered_content_disclosure(self, mode: str) -> dict[str, Any]:
+        """Set YouTube Studio Altered/Synthetic Content radio (`yes` or `no`)."""
+        norm = str(mode or "unset").strip().lower()
+        if norm not in ("yes", "no"):
+            return {"applied": False, "mode": norm}
+        radio_name = "VIDEO_HAS_ALTERED_CONTENT_YES" if norm == "yes" else "VIDEO_HAS_ALTERED_CONTENT_NO"
+        res = await self.evaluate(f"""
+            (() => {{
+                const radio = document.querySelector('tp-yt-paper-radio-button[name="{radio_name}"]') ||
+                              document.querySelector('[name="{radio_name}"]');
+                if (!radio) return {{ applied: false, reason: 'altered_radio_not_found' }};
+                radio.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
+                radio.click();
+                return {{ applied: true, radio: '{radio_name}' }};
+            }})()
+        """)
+        logger.info("Altered content disclosure (%s): %s", norm, res)
+        await asyncio.sleep(0.5)
+        return res if isinstance(res, dict) else {"applied": False}
 
     async def _select_studio_dropdown_option(
         self,
@@ -2310,6 +2355,122 @@ class YouTubeCDPClient:
             "handle": resolved_handle,
         }
 
+    async def clear_related_video_post_publish(
+        self,
+        short_url_or_id: str,
+        *,
+        edit_screenshot_path: Optional[str | Path] = None,
+    ) -> dict[str, Any]:
+        """Navigate to Studio video edit page for a Short, remove the linked Related Video, and Save."""
+        short_id = short_url_or_id.strip().rstrip("/").split("/")[-1].split("?")[0]
+        edit_url = f"https://studio.youtube.com/video/{short_id}/edit"
+        logger.info("Navigating to Short edit page to clear Related Video: %s", edit_url)
+        await self.call("Page.navigate", {"url": edit_url})
+        await asyncio.sleep(4.0)
+
+        for _ in range(4):
+            d = await self.dismiss_studio_interstitials()
+            if d:
+                logger.info("Dismissed Studio interstitial banner.")
+                await asyncio.sleep(3.0)
+                break
+            await asyncio.sleep(1.0)
+
+        for _ in range(15):
+            has_editor = await self.evaluate("""
+                Boolean(document.querySelector('#linked-video-editor-link, ytcp-shorts-content-links-picker, #description-textarea'))
+            """)
+            if has_editor:
+                break
+            await self.dismiss_studio_interstitials()
+            await asyncio.sleep(1.0)
+
+        before_title = await self.evaluate("""
+            (() => {
+                const el = document.querySelector('#linked-video-editor-link .dropdown-trigger-text, ytcp-shorts-content-links-picker .dropdown-trigger-text');
+                return el ? el.innerText.trim() : null;
+            })()
+        """)
+        logger.info("Related video before clear for %s: %r", short_id, before_title)
+
+        clicked_delete = await self.evaluate("""
+            (() => {
+                const clearBtn = document.querySelector(
+                    '#linked-video-editor-link #right-icon, ytcp-shorts-content-links-picker #right-icon'
+                );
+                if (clearBtn) {
+                    clearBtn.scrollIntoView({ behavior: 'instant', block: 'center' });
+                    clearBtn.click();
+                    return { found: true, clicked: true, selector: '#right-icon' };
+                }
+                return { found: false, clicked: false, reason: 'no_right_icon_found' };
+            })()
+        """)
+        logger.info("Clear related video click result for %s: %s", short_id, clicked_delete)
+
+        saved = False
+        if clicked_delete and clicked_delete.get("clicked"):
+            await asyncio.sleep(1.5)
+            for i in range(20):
+                await asyncio.sleep(1.0)
+                save_info = await self.evaluate("""
+                    (() => {
+                        const saveBtn = document.querySelector('ytcp-button#save, #save-button, ytcp-video-metadata-editor #save');
+                        if (!saveBtn) return { found: false };
+                        const isAriaDisabled = saveBtn.getAttribute('aria-disabled') === 'true';
+                        const inner = saveBtn.querySelector('button') || saveBtn;
+                        if (!isAriaDisabled && !inner.disabled) {
+                            inner.click();
+                            return { found: true, clicked: true };
+                        }
+                        return { found: true, clicked: false, ariaDisabled: isAriaDisabled };
+                    })()
+                """)
+                if save_info and save_info.get("clicked"):
+                    logger.info("Clicked Save after clearing Related Video (%ds).", i + 1)
+                    saved = True
+                    break
+            if saved:
+                for j in range(15):
+                    await asyncio.sleep(1.0)
+                    st = await self.evaluate("""
+                        (() => {
+                            const saveBtn = document.querySelector('ytcp-button#save, #save-button, ytcp-video-metadata-editor #save');
+                            return saveBtn ? saveBtn.getAttribute('aria-disabled') : null;
+                        })()
+                    """)
+                    if st == "true":
+                        logger.info("Clear Related Video save persisted after %ds.", j + 1)
+                        break
+                await asyncio.sleep(2.0)
+
+        # Reload edit page and verify Related Video is empty
+        await self.call("Page.navigate", {"url": edit_url})
+        await asyncio.sleep(4.5)
+        after_title = await self.evaluate("""
+            (() => {
+                const el = document.querySelector('#linked-video-editor-link .dropdown-trigger-text, ytcp-shorts-content-links-picker .dropdown-trigger-text');
+                return el ? el.innerText.trim() : null;
+            })()
+        """)
+        if edit_screenshot_path:
+            out_p = Path(edit_screenshot_path)
+            out_p.parent.mkdir(parents=True, exist_ok=True)
+            await self.capture_screenshot(out_p)
+
+        cleared_ok = (not after_title) or (after_title in ("Không có", "None", ""))
+        live_check = verify_short_live(short_id)
+        return {
+            "success": bool(cleared_ok),
+            "video_id": short_id,
+            "before_title": before_title,
+            "after_title": after_title,
+            "clicked_delete": clicked_delete,
+            "saved": saved,
+            "live_has_pill": bool(live_check.get("has_pill", False)),
+            "screenshot": str(edit_screenshot_path) if edit_screenshot_path else None,
+        }
+
     async def update_video_thumbnail_post_publish(
         self,
         video_url_or_id: str,
@@ -3134,6 +3295,7 @@ class YouTubeCDPClient:
                     ));
                     for (const d of dlgs) {
                         if (d.offsetParent === null || d.getAttribute('aria-hidden') === 'true') continue;
+                        if (d.closest('ytcp-uploads-dialog') || d.querySelector('#done-button, ytcp-video-visibility-select')) continue;
                         const txt = (d.innerText || d.textContent || '').toLowerCase();
                         if (
                             txt.includes('xử lý video') ||
@@ -3175,6 +3337,7 @@ class YouTubeCDPClient:
                         ));
                         for (const d of dlgs) {
                             if (d.offsetParent === null) continue;
+                            if (d.closest('ytcp-uploads-dialog') || d.querySelector('#done-button, ytcp-video-visibility-select')) continue;
                             const txt = (d.innerText || d.textContent || '').toLowerCase();
                             if (
                                 txt.includes('xử lý video') ||
@@ -3441,6 +3604,32 @@ class YouTubeCDPClient:
         return res
 
 
+def is_short_related_video_disabled(channel_id: Optional[str]) -> bool:
+    """Return True if channel production lock or channel map disables Short Related Video links."""
+    if not channel_id:
+        return False
+    ch_norm = str(channel_id).strip().replace("-", "_")
+    lock_file = REPO_ROOT / "sys" / "channels" / ch_norm / "channel_v2_production_lock.json"
+    if lock_file.exists():
+        try:
+            lock_data = json.loads(lock_file.read_text(encoding="utf-8"))
+            policy = lock_data.get("publish_policy") or {}
+            if policy.get("short_attach_related_video") is False:
+                return True
+        except Exception as exc:
+            logger.warning("Could not read publish_policy from %s: %s", lock_file, exc)
+    map_file = REPO_ROOT / "sys" / "channels" / "youtube_channel_map.json"
+    if map_file.exists():
+        try:
+            ch_map = json.loads(map_file.read_text(encoding="utf-8"))
+            entry = (ch_map.get("channels") or {}).get(ch_norm) or {}
+            if entry.get("disable_short_related_video") is True:
+                return True
+        except Exception as exc:
+            logger.warning("Could not read disable_short_related_video from %s: %s", map_file, exc)
+    return False
+
+
 async def publish_single_video(
     video_path: str | Path,
     title: str,
@@ -3464,6 +3653,7 @@ async def publish_single_video(
     edit_screenshot_path: Optional[str | Path] = None,
     pinned_comment: Optional[str] = None,
     comment_screenshot_path: Optional[str | Path] = None,
+    altered_content: str = "unset",
 ) -> dict[str, Any]:
     """Execute end-to-end publish flow for a single video."""
     # Mandatory Video Review & Approval Gate
@@ -3541,7 +3731,7 @@ async def publish_single_video(
         dialog_video_url = await client.extract_video_url()
         logger.info("Assigned video URL in dialog: %s", dialog_video_url)
 
-        # Step 5: Fill Metadata (Title, Description, MFK, Tags, Language, Category)
+        # Step 5: Fill Metadata (Title, Description, MFK, Altered Content, Tags, Language, Category)
         await client.fill_details(
             title=title,
             description=description,
@@ -3549,6 +3739,7 @@ async def publish_single_video(
             tags=tags,
             language=language,
             category=category,
+            altered_content=altered_content,
         )
 
         # Step 6: Custom Thumbnail (Long 16:9 & Short 9:16)
@@ -3812,7 +4003,7 @@ async def publish_single_video(
         if (
             pinned_comment
             and str(pinned_comment).strip()
-            and visibility.upper() == "PUBLIC"
+            and visibility.upper() in ("PUBLIC", "UNLISTED")
             and resolved_url
             and hasattr(client, "post_and_pin_comment")
         ):
@@ -3870,6 +4061,7 @@ def parse_metadata_file(md_path: str | Path) -> dict[str, str]:
     language = "Tiếng Việt"
     category = "Giáo dục"
     pinned_comment = ""
+    altered_content = "unset"
 
     # Title extraction
     m_title = re.search(r"## 1\. (?:Tiêu đề|Title)[^\n]*\n```(?:text)?\n(.*?)\n```", text, re.DOTALL)
@@ -3921,6 +4113,14 @@ def parse_metadata_file(md_path: str | Path) -> dict[str, str]:
     if m_pin:
         pinned_comment = m_pin.group(1).strip()
 
+    m_altered = re.search(r"-\s*\*\*Nội dung đã chỉnh sửa(?:\s*\([^)]*\))?\*\*:\s*([^\n\r]+)", text, re.IGNORECASE)
+    if m_altered:
+        raw_alt = m_altered.group(1).strip().lower()
+        if any(tok in raw_alt for tok in ("có", "yes", "true")):
+            altered_content = "yes"
+        elif any(tok in raw_alt for tok in ("không", "no", "false")):
+            altered_content = "no"
+
     return {
         "title": title,
         "description": description,
@@ -3928,6 +4128,7 @@ def parse_metadata_file(md_path: str | Path) -> dict[str, str]:
         "language": language,
         "category": category,
         "pinned_comment": pinned_comment,
+        "altered_content": altered_content,
     }
 
 
@@ -3959,11 +4160,18 @@ def main():
     parser.add_argument("--visibility", "--privacy", dest="visibility", default="PUBLIC", choices=["PUBLIC", "UNLISTED", "PRIVATE"])
     parser.add_argument("--short", action="store_true", help="Mark as Short (9:16)")
     parser.add_argument("--related-video", help="Related video URL or ID (for Shorts)")
+    parser.add_argument("--clear-related-video", action="store_true", help="Retroactively clear Related Video from an existing Short (requires --video-url or --video-id and --channel)")
     parser.add_argument("--screenshot", help="Output path for verification screenshot")
     parser.add_argument("--edit-screenshot", help="Output path for post-publish Studio /edit verification screenshot")
     parser.add_argument("--headless", action="store_true", default=True, help="Run Chrome in headless mode (default True)")
     parser.add_argument("--no-headless", "--headed", dest="headless", action="store_false", help="Run Chrome with GUI")
     parser.add_argument("--bypass-review-gate", action="store_true", help="Bypass mandatory review approval gate")
+    parser.add_argument(
+        "--altered-content",
+        choices=["unset", "yes", "no"],
+        default="unset",
+        help="YouTube Studio altered/synthetic content disclosure radio (`yes` for AI/35mm channels, `no`, or `unset`).",
+    )
 
     args = parser.parse_args()
 
@@ -3973,6 +4181,7 @@ def main():
     language = args.language
     category = args.category
     pinned_comment = args.pinned_comment
+    altered_content = args.altered_content
 
     if args.metadata:
         meta = parse_metadata_file(args.metadata)
@@ -3988,11 +4197,20 @@ def main():
             category = meta.get("category")
         if not pinned_comment:
             pinned_comment = meta.get("pinned_comment")
+        if altered_content == "unset" and meta.get("altered_content") in ("yes", "no"):
+            altered_content = meta["altered_content"]
 
     if args.no_pin_comment:
         pinned_comment = None
 
-    retroactive_mode = bool(args.update_thumbnail or args.attach_subtitles or args.post_pinned_comment)
+    validate_no_sister_channel_leak(args.channel, description, pinned_comment)
+
+    retroactive_mode = bool(
+        args.update_thumbnail
+        or args.attach_subtitles
+        or args.post_pinned_comment
+        or args.clear_related_video
+    )
 
     if not title and not retroactive_mode:
         parser.error("Title must be specified via --title or --metadata")
@@ -4119,6 +4337,40 @@ def main():
         print(json.dumps(pin_res, indent=2, ensure_ascii=False))
         sys.exit(0 if (isinstance(pin_res, dict) and pin_res.get("success")) else 1)
 
+    if args.clear_related_video:
+        target_video = args.video_url or args.video_id
+        if not target_video:
+            parser.error("--clear-related-video requires --video-url or --video-id")
+        if not profile_cfg:
+            parser.error("--clear-related-video requires a valid --channel or --profile")
+
+        async def _run_clear_related():
+            c = YouTubeCDPClient(profile_cfg, headless=args.headless)
+            try:
+                await c.connect()
+                res = await c.clear_related_video_post_publish(
+                    target_video,
+                    edit_screenshot_path=getattr(args, "edit_screenshot", None) or args.screenshot,
+                )
+                return res
+            finally:
+                await c.close()
+                c.terminate_browser()
+
+        clr_res = asyncio.run(_run_clear_related())
+        print(json.dumps(clr_res, indent=2, ensure_ascii=False))
+        sys.exit(0 if (isinstance(clr_res, dict) and clr_res.get("success")) else 1)
+
+    effective_related_video = args.related_video
+    if args.short and args.channel and is_short_related_video_disabled(args.channel):
+        if effective_related_video:
+            logger.info(
+                "Channel '%s' has short_attach_related_video disabled — ignoring --related-video=%s.",
+                args.channel,
+                effective_related_video,
+            )
+        effective_related_video = None
+
     result = asyncio.run(
         publish_single_video(
             video_path=args.video,
@@ -4128,7 +4380,7 @@ def main():
             subtitles_path=args.subtitles,
             visibility=args.visibility,
             is_short=args.short,
-            related_video_url=args.related_video,
+            related_video_url=effective_related_video,
             screenshot_path=args.screenshot,
             profile_cfg=profile_cfg,
             headless=args.headless,
@@ -4142,6 +4394,7 @@ def main():
             edit_screenshot_path=getattr(args, "edit_screenshot", None),
             pinned_comment=pinned_comment,
             comment_screenshot_path=getattr(args, "comment_screenshot", None),
+            altered_content=altered_content,
         )
     )
 
@@ -4170,7 +4423,7 @@ def main():
                                 "video_url": result["video_url"],
                                 "title": title,
                                 "format": "short_9x16" if args.short else "long_16x9",
-                                "related_video_url": args.related_video,
+                                "related_video_url": effective_related_video,
                                 "published_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
                             })
                         map_file.write_text(json.dumps(ch_map, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")

@@ -287,24 +287,28 @@ def test_su_ke_lai_v2_production_lock_invariants() -> None:
 
 
 def test_su_ke_lai_v3_skill_and_routing_index() -> None:
-    """Verify vp-channel-su-ke-lai skill, routing index links, and worktree parity."""
-    skill_dir = ROOT_DIR / ".agents" / "skills" / "vp-channel-su-ke-lai"
-    skill_md = skill_dir / "SKILL.md"
-    visual_ref = skill_dir / "references" / "visual-grammar-option1.md"
-    pacing_ref = skill_dir / "references" / "pacing-and-script-rules.md"
+    """Verify su_ke_lai 3-pillar data playbook, consolidated registry router, and index routing."""
+    registry_skill = ROOT_DIR / ".agents" / "skills" / "vp-channel-registry" / "SKILL.md"
+    legacy_skill_dir = ROOT_DIR / ".agents" / "skills" / "vp-channel-su-ke-lai"
+    pb_dir = SYS_DIR / "channels" / "su_ke_lai" / "playbook"
+    skill_md = pb_dir / "overview.md"
+    content_ref = pb_dir / "content.md"
+    visual_ref = pb_dir / "visual.md"
+    pacing_ref = pb_dir / "pacing.md"
 
-    for path in (skill_md, visual_ref, pacing_ref):
-        assert path.is_file(), f"Missing skill file: {path}"
+    assert registry_skill.is_file(), f"Missing consolidated registry skill: {registry_skill}"
+    assert not legacy_skill_dir.exists(), f"Per-channel skill should be retired: {legacy_skill_dir}"
+    for path in (skill_md, content_ref, visual_ref, pacing_ref):
+        assert path.is_file(), f"Missing playbook file: {path}"
 
     skill_text = skill_md.read_text(encoding="utf-8")
-    assert "name: vp-channel-su-ke-lai" in skill_text
     assert "su_ke_lai_35mm_live_action_v3" in skill_text
     assert "VietNarrator_su_ke_lai" in skill_text
     assert "Bảng Ghép Nối Quy Trình Dùng Chung" in skill_text
     assert "FULLY OVERRIDES" not in skill_text
-    assert "vp-full-frame-quality" in skill_text
-    assert "references/visual-grammar-option1.md" in skill_text
-    assert "references/pacing-and-script-rules.md" in skill_text
+    assert "vp-visual-fx" in skill_text
+    assert "(visual.md)" in skill_text
+    assert "(pacing.md)" in skill_text
 
     visual_text = visual_ref.read_text(encoding="utf-8")
     assert "su_ke_lai_35mm_live_action_v3" in visual_text
@@ -319,28 +323,220 @@ def test_su_ke_lai_v3_skill_and_routing_index() -> None:
     prod_skill = (ROOT_DIR / ".agents" / "skills" / "vp-production" / "SKILL.md").read_text(encoding="utf-8")
     plan_text = (SYS_DIR / "channels" / "su_ke_lai" / "PLAN.md").read_text(encoding="utf-8")
 
-    assert "vp-channel-su-ke-lai" in root_index
+    assert "vp-channel-registry" in root_index
+    assert "su_ke_lai/playbook/overview.md" in root_index
     assert "Channel-to-Skill Routing & Composition Matrix" in root_index
-    assert "vp-channel-su-ke-lai" in docs_index
-    assert "14 Skills" in docs_index
+    assert "vp-channel-registry" in docs_index
+    assert "su_ke_lai/playbook/overview.md" in docs_index
+    assert "Skills" in docs_index
     assert "vp-channel-su-ke-lai" not in prod_skill
     assert "su_ke_lai" not in prod_skill
-    assert ".agents/skills/vp-channel-su-ke-lai/SKILL.md" in plan_text
+    assert "playbook/overview.md" in plan_text
 
-    worktree_root = Path("/home/hongphuoc6104/Desktop/vp-channels/channel-su-ke-lai")
-    parity_relpaths = (
-        ".agents/skills/vp-channel-su-ke-lai/SKILL.md",
-        ".agents/skills/vp-channel-su-ke-lai/references/visual-grammar-option1.md",
-        ".agents/skills/vp-channel-su-ke-lai/references/pacing-and-script-rules.md",
-        ".agents/skills/vp-production/SKILL.md",
-        "INDEX.md",
-        "sys/docs/INDEX.md",
-        "sys/channels/su_ke_lai/PLAN.md",
-        "sys/tests/test_channel_su_ke_lai.py",
+    # Verify V4 Viral Breakout Protocol (su_ke_lai_viral_v4) upgrades
+    assert "su_ke_lai_viral_v4" in skill_text
+    assert "viral_fast_loop_short" in skill_text
+    assert "serialized_detail_short" in skill_text
+    assert "Dòng Máu Việt" in skill_text
+    assert "CD Media - Quân Sự" in skill_text
+    assert "su_ke_lai_viral_v4" in pacing_text
+    assert "viral_fast_loop_short" in pacing_text
+    assert "serialized_detail_short" in pacing_text
+
+    # Verify V6.0 Prestige Documentary Cohesion (su_ke_lai_long_v6_prestige_cohesion) lock
+    v6_required_markers = (
+        "su_ke_lai_long_v6_prestige_cohesion",
+        "85/15",
+        "#1A1612",
+        "#E3D6BA",
+        "#C49A52",
+        "#8F2B24",
+        "2.7s–4.2s",
+        "Tactical Mini-Map PiP",
+        "Map-to-Cinema Dive",
+        "HOÀNG SA",
+        "TRƯỜNG SA",
+        "Museum Diptych",
+        "1.12x",
+        "63%+",
+        "75%+",
+        "long_viral_pattern_brief_v3.json",
     )
-    for rel in parity_relpaths:
-        src = ROOT_DIR / rel
-        dst = worktree_root / rel
-        assert dst.is_file(), f"Missing worktree mirror file: {dst}"
-        assert src.read_bytes() == dst.read_bytes(), f"Worktree parity mismatch for {rel}"
+    for marker in v6_required_markers:
+        assert marker in skill_text, f"Missing V6.0 marker {marker!r} in overview.md"
+        assert marker in pacing_text, f"Missing V6.0 marker {marker!r} in pacing.md"
+    assert "10 Laws of Professional Google Flow Documentary Integration" in skill_text
+    assert "10 Laws of Professional Google Flow Documentary Integration" in pacing_text
+
+    # Verify V7.0 Zero-Box Pure Cinema Typography & Breathing 4.5s-5.5s Pacing lock
+    v7_required_markers = (
+        "su_ke_lai_long_v7_zero_box_breathing_cinema",
+        "Zero-Box Pure",
+        "4.5s–5.5s",
+        "3.6s",
+        "5.8s–8.0s",
+        "0.40s–0.55s",
+        "0.60s",
+        "river_mist_map_dive",
+        "Typography Breathing Window",
+        "v7_breathing_pacing_cut_plan.json",
+    )
+    for marker in v7_required_markers:
+        assert marker in skill_text, f"Missing V7.0 marker {marker!r} in overview.md"
+        assert marker in pacing_text, f"Missing V7.0 marker {marker!r} in pacing.md"
+
+    # Verify V8.0 Seamless 2-Frame Continuous Chain, Zero-Smoke Transitions & Reading Hold Comfort lock
+    v8_required_markers = (
+        "su_ke_lai_long_v8_continuous_chain",
+        "Frame[i] -> Frame[i+1] -> Frame[i+2]",
+        "3–6 beats = 15s–30s",
+        "Start Frame = Frame[i]",
+        "End Frame = Frame[i+1]",
+        "dust_smoke_cloud",
+        "5.15s",
+        "seam_chain_bridge",
+        "0.28s",
+        "map_camera_zoom_match",
+        "0.55s",
+        "optical_anamorphic_dissolve",
+        "0.45s",
+        "hard_cut_j_cut",
+        "obsidian_act_fade",
+        "0.40s",
+        "3.80s",
+        "114 frames",
+        "3.10s",
+        "0.08s",
+        "0.25s",
+        "0.22s",
+        "85%–90%",
+        "4.2s–5.5s",
+        "v8_full_10min_continuous_chain_plan.json",
+    )
+    for marker in v8_required_markers:
+        assert marker in skill_text, f"Missing V8.0 marker {marker!r} in overview.md"
+        assert marker in pacing_text, f"Missing V8.0 marker {marker!r} in pacing.md"
+
+
+def test_su_ke_lai_v7_breathing_pacing_plan_and_brief() -> None:
+    """Verify V7.0 Zero-Box & Breathing Documentary Pacing cut plan + pattern brief invariants."""
+    plan_path = SYS_DIR / "channels" / "analytics_su_ke_lai" / "v7_breathing_pacing_cut_plan.json"
+    brief_path = SYS_DIR / "channels" / "su_ke_lai" / "long_viral_pattern_brief_v3.json"
+    assert plan_path.is_file(), f"Missing {plan_path}"
+    assert brief_path.is_file(), f"Missing {brief_path}"
+
+    plan = json.loads(plan_path.read_text(encoding="utf-8"))
+    brief = json.loads(brief_path.read_text(encoding="utf-8"))
+
+    assert brief["pattern_id"] == "su_ke_lai_long_v8_continuous_chain"
+    assert brief["supersedes"] == "su_ke_lai_long_v7_zero_box_breathing_cinema"
+    assert brief["structure_only_compliance"]["forbid_rectangular_text_boxes_and_left_accent_bars"] is True
+    assert brief["structure_only_compliance"]["forbid_micro_cuts_under_3_2_sec"] is True
+    v7_brief = brief["v7_zero_box_breathing_cinema_contract"]
+    assert v7_brief["breathing_pacing_lock"]["min_standard_live_shot_sec"] >= 3.6
+    assert v7_brief["breathing_pacing_lock"]["min_character_callout_quote_debate_sec"] >= 4.5
+    assert v7_brief["breathing_pacing_lock"]["relief_warmap_continuous_hold_sec"] == [5.8, 8.0]
+
+    assert plan["schema_version"] == "7.0"
+    assert len(plan["v3_87_subshot_chop_audit"]) == 87
+
+    v7_metrics = plan["v3_vs_v7_metrics_comparison"]["v7_metrics"]
+    assert 50 <= v7_metrics["total_timeline_shots_incl_5_cards"] <= 54
+    assert 4.5 <= v7_metrics["avg_all_shots_sec"] <= 5.5
+    assert v7_metrics["shots_under_3_2s_count"] == 0
+    assert v7_metrics["shots_under_3_6s_count"] == 0
+    assert v7_metrics["beats_conserved_count"] == 47
+    assert v7_metrics["zero_frame_cumulative_drift_verified"] is True
+
+    schedule = plan["v7_shot_schedule"]
+    assert len(schedule) == v7_metrics["total_timeline_shots_incl_5_cards"]
+    warmaps = []
+    for idx, shot in enumerate(schedule):
+        dur = float(shot["duration_sec"])
+        cat = shot["shot_category"]
+        if cat != "chapter_card":
+            assert dur >= 3.6, f"{shot['shot_id']} violates 3.6s floor ({dur}s)"
+        if cat in ("character_intro", "object_spotlight", "monumental_quote", "debate_outro"):
+            assert dur >= 4.5, f"{shot['shot_id']} violates 4.5s floor ({dur}s)"
+        if cat == "relief_warmap":
+            assert 5.8 <= dur <= 8.0, f"{shot['shot_id']} violates 5.8-8.0s warmap hold ({dur}s)"
+            assert "warmap_3phase_choreography" in shot
+            warmaps.append(shot)
+        typo = shot["v7_typography"]
+        assert typo["zero_box_enforced"] is True
+        if typo["mode"] == "v7_zero_box_pure_cinema":
+            bw = typo["breathing_window"]
+            assert 0.08 <= bw["fade_in_start_sec"] <= 0.25
+            assert bw["exit_buffer_before_cut_sec"] >= 0.08
+        if idx < len(schedule) - 1 and shot["transition_out"]["type"] == "straight_cut":
+            nxt = schedule[idx + 1]
+            assert dur >= 3.8 and float(nxt["duration_sec"]) >= 3.8
+    assert len(warmaps) == 3
+
+
+def test_su_ke_lai_v8_continuous_chain_brief_and_playbook() -> None:
+    """Verify V8.0 2-Frame Continuous Chain, Zero-Smoke Transitions, Reading Hold & PLAYBOOK lock."""
+    brief_path = SYS_DIR / "channels" / "su_ke_lai" / "long_viral_pattern_brief_v3.json"
+    brief = json.loads(brief_path.read_text(encoding="utf-8"))
+
+    assert brief["schema_version"] == "3.2"
+    assert brief["pattern_id"] == "su_ke_lai_long_v8_continuous_chain"
+    assert brief["supersedes"] == "su_ke_lai_long_v7_zero_box_breathing_cinema"
+
+    comp = brief["structure_only_compliance"]
+    assert comp["forbid_smoke_fog_mist_transitions_long_16x9"] is True
+    assert comp["forbid_river_mist_map_dive_long_16x9"] is True
+    assert comp["forbid_dust_smoke_cloud_tail_over_5_15s"] is True
+    assert comp["enforce_2frame_continuous_chain_same_scene"] is True
+    assert comp["enforce_v8_comfortable_reading_hold"] is True
+
+    v8 = brief["v8_continuous_2frame_chain_contract"]
+    rule_a = v8["rule_a_2frame_continuous_chain"]
+    assert rule_a["chain_group_beats_range"] == [3, 6]
+    assert rule_a["chain_duration_sec_range"] == [15.0, 30.0]
+    assert rule_a["in_chain_transition"] == "seam_chain_bridge"
+    assert rule_a["in_chain_transition_sec"] == 0.28
+    assert rule_a["cut_chain_only_at_true_boundaries"] is True
+
+    rule_b = v8["rule_b_zero_smoke_transitions_lock"]
+    assert "dust_smoke_cloud" in rule_b["banned_long_16x9_transitions"]
+    assert "river_mist_map_dive" in rule_b["banned_long_16x9_transitions"]
+    assert rule_b["short_clip_reuse_clean_window_max_sec"] == 5.15
+    transitions = rule_b["professional_chain_boundary_transitions"]
+    assert transitions["seam_chain_bridge"]["duration_sec"] == 0.28
+    assert transitions["map_camera_zoom_match"]["duration_sec"] == 0.55
+    assert transitions["optical_anamorphic_dissolve"]["duration_sec"] == 0.45
+    assert "hard_cut_j_cut" in transitions
+    assert transitions["obsidian_act_fade"]["duration_sec"] == 0.40
+
+    rule_c = v8["rule_c_comfortable_reading_hold_contract"]
+    card = rule_c["chapter_title_card"]
+    assert card["total_duration_sec"] == 3.80
+    assert card["total_frames_30fps"] == 114
+    assert card["min_full_opacity_hold_sec"] == 3.10
+    assert card["start_delay_sec"] == 0.08
+    assert card["fade_in_sec"] == 0.25
+    assert card["fade_out_sec"] == 0.22
+
+    in_scene = rule_c["in_scene_zero_box_typography"]
+    assert in_scene["start_delay_sec"] == 0.08
+    assert in_scene["fade_in_sec"] == 0.25
+    assert in_scene["fade_out_sec"] == 0.22
+    assert in_scene["full_opacity_display_window_pct_range"] == [85, 90]
+    assert in_scene["full_opacity_reading_time_sec_range"] == [4.2, 5.5]
+    assert in_scene["zero_box_enforced"] is True
+
+    playbook_path = ROOT_DIR / "PLAYBOOK.md"
+    playbook_lines = playbook_path.read_text(encoding="utf-8").splitlines()
+    assert len(playbook_lines) <= 200, f"PLAYBOOK.md exceeds 200 lines ({len(playbook_lines)})"
+    playbook_text = "\n".join(playbook_lines)
+    assert "[ERR-20261122-01]" in playbook_text
+    assert "SU_KE_LAI_V8_CONTINUOUS_2FRAME_CHAIN_ZERO_SMOKE" in playbook_text
+    assert "seam_chain_bridge" in playbook_text
+    assert "map_camera_zoom_match" in playbook_text
+    assert "optical_anamorphic_dissolve" in playbook_text
+    assert "obsidian_act_fade" in playbook_text
+    assert "3.80s" in playbook_text
+    assert "3.10s" in playbook_text
+
 
