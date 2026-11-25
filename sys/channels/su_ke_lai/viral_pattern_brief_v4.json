@@ -1,0 +1,675 @@
+{
+  "schema_version": "4.0",
+  "vault_type": "notebook_1_pattern_vault",
+  "pattern_id": "su_ke_lai_viral_v4",
+  "channel_id": "su_ke_lai",
+  "channel_name": "Sử Kể Lại",
+  "channel_handle": "@SuKeLaiVN",
+  "target_view_tier": "100K-1M+",
+  "generated_at": "2026-11-21T23:00:00+07:00",
+  "structure_only_compliance": {
+    "zero_copied_phrasing": true,
+    "folklore_quarantined_in_report_only": true,
+    "banned_cta_words_blocked": [
+      "like",
+      "share",
+      "subscribe",
+      "đăng ký",
+      "nhấn chuông",
+      "bấm chuông"
+    ],
+    "short_attach_related_video": false
+  },
+  "empirical_corpus_summary": {
+    "curated_viral_shorts_count": 15,
+    "clean_vi_orig_transcript_count": 14,
+    "combined_views": 11427257,
+    "average_views_per_short": 761817,
+    "median_views_per_short": 296615,
+    "view_range": [
+      91870,
+      3591907
+    ],
+    "primary_benchmark_channels": [
+      {
+        "channel_name": "Dòng Máu Việt",
+        "channel_id": "UCpXhSnIKT-oxLAU4B-76GRg",
+        "sample_count_in_15": 9,
+        "clean_vi_orig_transcript_count": 9,
+        "views_range": [
+          272845,
+          3591907
+        ],
+        "dominant_duration_sec": "121-177s (Mode B Deep Story & Multi-Case Ranking) + 52s (Mode A+ Emotional Hook)",
+        "measured_speech_rate_syl_per_sec": 4.19
+      },
+      {
+        "channel_name": "CD Media - Quân Sự",
+        "channel_id": "UC35gdWUdW1hzgS02Oz8kMUQ",
+        "sample_count_in_15": 6,
+        "clean_vi_orig_transcript_count": 5,
+        "views_range": [
+          91870,
+          456641
+        ],
+        "dominant_duration_sec": "61-86s (Mode A+ Elite Military Unit & Secret Weapon Explainer)",
+        "measured_speech_rate_syl_per_sec": 3.55,
+        "asr_note": "Computed strictly over 5 verified vi-orig ASR tracks (3.27, 3.67, 3.94, 3.42, 3.45 syl/s); excludes 7pJgdZpuaNE which lacks a vi-orig ASR track."
+      }
+    ],
+    "contrast_baselines": [
+      {
+        "channel_name": "Sử Kể Lại (@SuKeLaiVN)",
+        "source_file": "sys/channels/analytics_su_ke_lai/peak_hours_analysis.json",
+        "top_recent_shorts": [
+          {
+            "video_id": "pXLQ8kCxllk",
+            "published_gmt7": "2026-11-20 23:53",
+            "total_views": 3227,
+            "views_1h": 584,
+            "views_12h": 2926
+          },
+          {
+            "video_id": "tPEyN3mAFL4",
+            "published_gmt7": "2026-11-10 00:07",
+            "total_views": 2370,
+            "views_1h": 1088,
+            "views_12h": 1788
+          },
+          {
+            "video_id": "18fBQSiYY2k",
+            "published_gmt7": "2026-11-14 01:43",
+            "total_views": 2139,
+            "views_1h": 601,
+            "views_12h": 1796
+          },
+          {
+            "video_id": "e3VP_U55Z00",
+            "published_gmt7": "2026-11-16 03:56",
+            "total_views": 1863,
+            "views_1h": 706,
+            "views_12h": 1550
+          }
+        ],
+        "diagnosis": "Strong initial seed velocity (584-1,088 views in first hour) proves YouTube tests every upload on the Shorts shelf, but secondary expansion plateaus at 1.8K-3.2K views when titles carry serialized 'P1/P2/P3' prefixes or narrow sub-geography jargon ('Cổ Chai Thới Sơn', 'Đồn Trà Tân') that cold viewers do not recognize."
+      },
+      {
+        "channel_name": "Việt Sử Kiêu Hùng",
+        "channel_id": "UCUSY8cBaPNAif3SeztpRK5Q",
+        "video_id": "7CsvUgnl1nI",
+        "title": "Quân Xiêm tan tác ở Đại Việt",
+        "duration_sec": 86,
+        "view_count": 17299,
+        "diagnosis": "Generic textbook battle summary without a counter-intuitive hook or folk/character curiosity angle caps under 20K views even on an established history brand."
+      }
+    ]
+  },
+  "curated_15_viral_shorts": [
+    {
+      "rank": 1,
+      "video_id": "n9oZSIRTLUo",
+      "url": "https://www.youtube.com/shorts/n9oZSIRTLUo",
+      "title": "Những Lần Bác Hồ Suýt Mất Mạng",
+      "channel": "Dòng Máu Việt",
+      "channel_id": "UCpXhSnIKT-oxLAU4B-76GRg",
+      "upload_date": "20261002",
+      "duration_sec": 146,
+      "view_count": 3591907,
+      "like_count": 38436,
+      "comment_count": 791,
+      "like_to_view_pct": 1.07,
+      "comment_to_view_pct": 0.022,
+      "transcript_syllables": 609,
+      "syllables_per_sec": 4.17,
+      "viral_archetype_id": "archetype_4_life_or_death_turning_point",
+      "pacing_mode": "serialized_detail_short",
+      "opening_hook_mechanism": "8-syllable direct survival stakes announcement followed immediately by Year 1929 death-sentence escalation."
+    },
+    {
+      "rank": 2,
+      "video_id": "7QrEPUHLzgI",
+      "url": "https://www.youtube.com/shorts/7QrEPUHLzgI",
+      "title": "Cuộc Đời Huyền Thoại Bầu Trời Nguyễn Văn Bảy",
+      "channel": "Dòng Máu Việt",
+      "channel_id": "UCpXhSnIKT-oxLAU4B-76GRg",
+      "upload_date": "20261007",
+      "duration_sec": 167,
+      "view_count": 2899147,
+      "like_count": 41508,
+      "comment_count": 1200,
+      "like_to_view_pct": 1.43,
+      "comment_to_view_pct": 0.041,
+      "transcript_syllables": 670,
+      "syllables_per_sec": 4.01,
+      "viral_archetype_id": "archetype_2_commander_emperor_1v1_ranking",
+      "pacing_mode": "serialized_detail_short",
+      "opening_hook_mechanism": "Heroic title stamp + relatable origin twist (ran away at age 17 to avoid arranged marriage, became 7-kill MiG-17 ace)."
+    },
+    {
+      "rank": 3,
+      "video_id": "F4FUWZaVoaI",
+      "url": "https://www.youtube.com/shorts/F4FUWZaVoaI",
+      "title": "Nhĩ Trung - Trận Đánh Tay Đôi Giữa Người Việt Và Người Mỹ",
+      "channel": "Dòng Máu Việt",
+      "channel_id": "UCpXhSnIKT-oxLAU4B-76GRg",
+      "upload_date": "20261028",
+      "duration_sec": 136,
+      "view_count": 780615,
+      "like_count": 11546,
+      "comment_count": 325,
+      "like_to_view_pct": 1.48,
+      "comment_to_view_pct": 0.042,
+      "transcript_syllables": 594,
+      "syllables_per_sec": 4.37,
+      "viral_archetype_id": "archetype_4_life_or_death_turning_point",
+      "pacing_mode": "serialized_detail_short",
+      "opening_hook_mechanism": "1v1 close-combat shock framing with numbered secrets ('Thứ nhất...')."
+    },
+    {
+      "rank": 4,
+      "video_id": "exQOdR_i16A",
+      "url": "https://www.youtube.com/shorts/exQOdR_i16A",
+      "title": "Những Đế-Vương Phương Bắc Từng Xâm Lược Nước Ta",
+      "channel": "Dòng Máu Việt",
+      "channel_id": "UCpXhSnIKT-oxLAU4B-76GRg",
+      "upload_date": "20260916",
+      "duration_sec": 140,
+      "view_count": 761518,
+      "like_count": 8159,
+      "comment_count": 590,
+      "like_to_view_pct": 1.07,
+      "comment_to_view_pct": 0.077,
+      "transcript_syllables": 577,
+      "syllables_per_sec": 4.12,
+      "viral_archetype_id": "archetype_2_commander_emperor_1v1_ranking",
+      "pacing_mode": "serialized_detail_short",
+      "opening_hook_mechanism": "12-syllable listicle declaration launching straight into Emperor #1 at 2.4s."
+    },
+    {
+      "rank": 5,
+      "video_id": "g3iwANHmzl4",
+      "url": "https://www.youtube.com/shorts/g3iwANHmzl4",
+      "title": "Sáu Chiến Sĩ Mãi Mãi Không Trở Về Giữa Thời Bình",
+      "channel": "Dòng Máu Việt",
+      "channel_id": "UCpXhSnIKT-oxLAU4B-76GRg",
+      "upload_date": "20261114",
+      "duration_sec": 121,
+      "view_count": 524032,
+      "like_count": 9230,
+      "comment_count": 634,
+      "like_to_view_pct": 1.76,
+      "comment_to_view_pct": 0.121,
+      "transcript_syllables": 521,
+      "syllables_per_sec": 4.31,
+      "viral_archetype_id": "archetype_5_tragic_destiny_after_victory",
+      "pacing_mode": "serialized_detail_short",
+      "opening_hook_mechanism": "Immediate emotional sacrifice contrast ('giữa thời bình')."
+    },
+    {
+      "rank": 6,
+      "video_id": "XN05y-9LIKE",
+      "url": "https://www.youtube.com/shorts/XN05y-9LIKE",
+      "title": "Voltigeur - Lính Tản Khai Thời Napoleon #shorts",
+      "channel": "CD Media - Quân Sự",
+      "channel_id": "UC35gdWUdW1hzgS02Oz8kMUQ",
+      "upload_date": "20261110",
+      "duration_sec": 74,
+      "view_count": 456641,
+      "like_count": 9577,
+      "comment_count": 170,
+      "like_to_view_pct": 2.1,
+      "comment_to_view_pct": 0.037,
+      "transcript_syllables": 242,
+      "syllables_per_sec": 3.27,
+      "viral_archetype_id": "archetype_3_elite_unit_secret_weapon",
+      "pacing_mode": "viral_fast_loop_short",
+      "opening_hook_mechanism": "Visual battlefield anomaly question ('Họ là ai và đứng đó để làm gì?') solved in 74s."
+    },
+    {
+      "rank": 7,
+      "video_id": "5OQg0SEiJrc",
+      "url": "https://www.youtube.com/shorts/5OQg0SEiJrc",
+      "title": "Bữa Sáng Nghẹn Lòng Dành Cho Hai Liệt Sĩ",
+      "channel": "Dòng Máu Việt",
+      "channel_id": "UCpXhSnIKT-oxLAU4B-76GRg",
+      "upload_date": "20261102",
+      "duration_sec": 52,
+      "view_count": 432784,
+      "like_count": 8487,
+      "comment_count": 317,
+      "like_to_view_pct": 1.96,
+      "comment_to_view_pct": 0.073,
+      "transcript_syllables": 216,
+      "syllables_per_sec": 4.15,
+      "viral_archetype_id": "archetype_5_tragic_destiny_after_victory",
+      "pacing_mode": "viral_fast_loop_short",
+      "opening_hook_mechanism": "Visceral human object anchor ('Bữa sáng nghẹn lòng') in 52s high-replay format."
+    },
+    {
+      "rank": 8,
+      "video_id": "a4uUFYSvJIc",
+      "url": "https://www.youtube.com/shorts/a4uUFYSvJIc",
+      "title": "Những Vị Hoàng Đế Đánh Solo 1-1 Mạnh Nhất",
+      "channel": "Dòng Máu Việt",
+      "channel_id": "UCpXhSnIKT-oxLAU4B-76GRg",
+      "upload_date": "20260915",
+      "duration_sec": 177,
+      "view_count": 296615,
+      "like_count": 4617,
+      "comment_count": 198,
+      "like_to_view_pct": 1.56,
+      "comment_to_view_pct": 0.067,
+      "transcript_syllables": 767,
+      "syllables_per_sec": 4.33,
+      "viral_archetype_id": "archetype_2_commander_emperor_1v1_ranking",
+      "pacing_mode": "serialized_detail_short",
+      "opening_hook_mechanism": "11-syllable gamified historical power-scaling hook ('Hoàng đế đánh solo 1-1 mạnh nhất')."
+    },
+    {
+      "rank": 9,
+      "video_id": "UQrgEvoyGgo",
+      "url": "https://www.youtube.com/shorts/UQrgEvoyGgo",
+      "title": "Hăm Mốt Lê Lai, Hăm Hai Lê Lợi",
+      "channel": "Dòng Máu Việt",
+      "channel_id": "UCpXhSnIKT-oxLAU4B-76GRg",
+      "upload_date": "20261006",
+      "duration_sec": 137,
+      "view_count": 275792,
+      "like_count": 5572,
+      "comment_count": 150,
+      "like_to_view_pct": 2.02,
+      "comment_to_view_pct": 0.054,
+      "transcript_syllables": 548,
+      "syllables_per_sec": 4.0,
+      "viral_archetype_id": "archetype_1_folk_saying_history_decoder",
+      "pacing_mode": "serialized_detail_short",
+      "opening_hook_mechanism": "Universal 8-word folk saying title paired with time-travel witness hook into starving Lam Sơn camp."
+    },
+    {
+      "rank": 10,
+      "video_id": "Po0dZk8NSco",
+      "url": "https://www.youtube.com/shorts/Po0dZk8NSco",
+      "title": "Những Sự Kiện Lịch Sử Diễn Ra Gần Nhau Đến Bất Ngờ",
+      "channel": "Dòng Máu Việt",
+      "channel_id": "UCpXhSnIKT-oxLAU4B-76GRg",
+      "upload_date": "20261027",
+      "duration_sec": 145,
+      "view_count": 272845,
+      "like_count": 5693,
+      "comment_count": 74,
+      "like_to_view_pct": 2.09,
+      "comment_to_view_pct": 0.027,
+      "transcript_syllables": 614,
+      "syllables_per_sec": 4.23,
+      "viral_archetype_id": "archetype_1_folk_saying_history_decoder",
+      "pacing_mode": "serialized_detail_short",
+      "opening_hook_mechanism": "Chronological perception shock contrasting ancient Vietnam with global milestones."
+    },
+    {
+      "rank": 11,
+      "video_id": "7pJgdZpuaNE",
+      "url": "https://www.youtube.com/shorts/7pJgdZpuaNE",
+      "title": "Cuirassier - Đơn vị đắt giá nhất trong chiến tranh Napoleon #shorts",
+      "channel": "CD Media - Quân Sự",
+      "channel_id": "UC35gdWUdW1hzgS02Oz8kMUQ",
+      "upload_date": "20260915",
+      "duration_sec": 61,
+      "view_count": 154942,
+      "like_count": 4079,
+      "comment_count": 228,
+      "like_to_view_pct": 2.63,
+      "comment_to_view_pct": 0.147,
+      "transcript_syllables": null,
+      "syllables_per_sec": null,
+      "asr_note": "No vi-orig ASR track on YouTube (misclassified as en-orig due to French loanword 'Cuirassier'); excluded from clean vi-orig syllable averages.",
+      "viral_archetype_id": "archetype_3_elite_unit_secret_weapon",
+      "pacing_mode": "viral_fast_loop_short",
+      "opening_hook_mechanism": "Superlative cost & armor hook ('Đơn vị đắt giá nhất') driving 0.147% comment debate."
+    },
+    {
+      "rank": 12,
+      "video_id": "qR5LJRcJebA",
+      "url": "https://www.youtube.com/shorts/qR5LJRcJebA",
+      "title": "Fusilier - Xương Sống Bộ Binh Thời Napoleon",
+      "channel": "CD Media - Quân Sự",
+      "channel_id": "UC35gdWUdW1hzgS02Oz8kMUQ",
+      "upload_date": "20261030",
+      "duration_sec": 85,
+      "view_count": 122054,
+      "like_count": 3444,
+      "comment_count": 78,
+      "like_to_view_pct": 2.82,
+      "comment_to_view_pct": 0.064,
+      "transcript_syllables": 312,
+      "syllables_per_sec": 3.67,
+      "viral_archetype_id": "archetype_3_elite_unit_secret_weapon",
+      "pacing_mode": "viral_fast_loop_short",
+      "opening_hook_mechanism": "12-syllable core-role definition ('Xương sống của mọi đạo quân') + formation anatomy."
+    },
+    {
+      "rank": 13,
+      "video_id": "3L9_4l_dSRM",
+      "url": "https://www.youtube.com/shorts/3L9_4l_dSRM",
+      "title": "Pháo Binh Napoleon - Binh Chủng Từng Khiến Cả Châu Âu Khiếp Sợ",
+      "channel": "CD Media - Quân Sự",
+      "channel_id": "UC35gdWUdW1hzgS02Oz8kMUQ",
+      "upload_date": "20261020",
+      "duration_sec": 66,
+      "view_count": 103256,
+      "like_count": 2536,
+      "comment_count": 77,
+      "like_to_view_pct": 2.46,
+      "comment_to_view_pct": 0.075,
+      "transcript_syllables": 260,
+      "syllables_per_sec": 3.94,
+      "viral_archetype_id": "archetype_3_elite_unit_secret_weapon",
+      "pacing_mode": "viral_fast_loop_short",
+      "opening_hook_mechanism": "Weapon dominance hook ('Khiến cả châu Âu khiếp sợ') in a tight 66s tactical loop."
+    },
+    {
+      "rank": 14,
+      "video_id": "MK4BsPhNAec",
+      "url": "https://www.youtube.com/shorts/MK4BsPhNAec",
+      "title": "Uhlans – Những Kỵ Binh Cầm Giáo Khét Tiếng Châu Âu #shorts",
+      "channel": "CD Media - Quân Sự",
+      "channel_id": "UC35gdWUdW1hzgS02Oz8kMUQ",
+      "upload_date": "20260925",
+      "duration_sec": 62,
+      "view_count": 94563,
+      "like_count": 2078,
+      "comment_count": 66,
+      "like_to_view_pct": 2.2,
+      "comment_to_view_pct": 0.07,
+      "transcript_syllables": 212,
+      "syllables_per_sec": 3.42,
+      "viral_archetype_id": "archetype_3_elite_unit_secret_weapon",
+      "pacing_mode": "viral_fast_loop_short",
+      "opening_hook_mechanism": "Plain-spoken physical weapon image ('Một người lính cầm cái que nhọn dài ngồi trên lưng ngựa')."
+    },
+    {
+      "rank": 15,
+      "video_id": "6r5Zu1SBbPA",
+      "url": "https://www.youtube.com/shorts/6r5Zu1SBbPA",
+      "title": "Grenadier - Lực Lượng Danh Dự Nhất Của Quân Đội Napoleon #shorts",
+      "channel": "CD Media - Quân Sự",
+      "channel_id": "UC35gdWUdW1hzgS02Oz8kMUQ",
+      "upload_date": "20261102",
+      "duration_sec": 86,
+      "view_count": 91870,
+      "like_count": 2705,
+      "comment_count": 128,
+      "like_to_view_pct": 2.94,
+      "comment_to_view_pct": 0.139,
+      "transcript_syllables": 297,
+      "syllables_per_sec": 3.45,
+      "viral_archetype_id": "archetype_3_elite_unit_secret_weapon",
+      "pacing_mode": "viral_fast_loop_short",
+      "opening_hook_mechanism": "14-syllable elite identity opener ('Họ là những người lính tinh nhuệ nhất của bộ binh')."
+    }
+  ],
+  "five_root_cause_gaps_vs_current_su_ke_lai": [
+    {
+      "gap_id": "GAP_1_PACKAGING_BARRIER",
+      "current_su_ke_lai_pattern": "Serialized prefixes ('Rạch Gầm 1785 P2: Cổ Chai Thới Sơn & Pháo Trên Bùn') signal to cold swipe-feed viewers that they missed Part 1, causing immediate swipe-away.",
+      "viral_100k_1m_pattern": "100% of the 15 breakout Shorts (91K-3.59M views) use standalone mass-curiosity titles (<= 55 chars, zero 'P1/P2/P3' prefix) that any cold Vietnamese viewer understands in 1.5 seconds."
+    },
+    {
+      "gap_id": "GAP_2_HOOK_SYLLABLE_AND_JARGON_COMPRESSION",
+      "current_su_ke_lai_pattern": "17-18 syllable hooks loaded with 2-3 unfamiliar micro-toponyms ('Cù lao Thới Sơn', 'Đồn Trà Tân', 'Sông An Đức') in the first 2.5 seconds.",
+      "viral_100k_1m_pattern": "0.0-2.5s Instant Curiosity Hook strictly <= 16 syllables, zero obscure geography jargon, zero [pause:...], anchoring on a household folk saying, a visceral life-or-death choice, an elite weapon, or a 1v1 commander comparison."
+    },
+    {
+      "gap_id": "GAP_3_TOPIC_ARCHETYPE_BREADTH",
+      "current_su_ke_lai_pattern": "6 consecutive Shorts slicing a single river battle (Rạch Gầm 1785) into narrow technical sub-steps.",
+      "viral_100k_1m_pattern": "Rotates across the 5 Proven Viral Content Pillars: (1) Folk-Saying Decoder, (2) 1v1 Emperor/Commander Ranking, (3) Elite Đại Việt Military Unit / Secret Weapon, (4) Life-or-Death Deception / Historical Mystery, (5) Tragic Post-Victory Destiny."
+    },
+    {
+      "gap_id": "GAP_4_DUAL_DURATION_PACING_MODES",
+      "current_su_ke_lai_pattern": "Single fixed ~100s 20-beat template used for every topic regardless of cognitive density.",
+      "viral_100k_1m_pattern": "Dual-Duration Pacing Router: Mode A+ ('viral_fast_loop_short', 54-72s / 55-75s, 15-16 beats @ ~3.8s/beat) for >95% APV replay loops on single weapons/idioms (CD Media 456K model), and Mode B ('serialized_detail_short', 105-145s / 115-145s, 20-24 beats) for 3-case rankings & heroic sagas (Dòng Máu Việt 761K-3.59M model)."
+    },
+    {
+      "gap_id": "GAP_5_COMMENT_DEBATE_CONTROVERSY_LOOP",
+      "current_su_ke_lai_pattern": "Informational cliffhanger ending ('Xem Phần 3 trên Sử Kể Lại') that informs but does not provoke comment debate.",
+      "viral_100k_1m_pattern": "Final 15% + Pinned Creator Comment pose a polarizing 2-choice historical judgment question (driving >0.15% comment/view ratio while the video loops behind the open comment drawer)."
+    }
+  ],
+  "hook_formulas_v4": [
+    {
+      "formula_id": "HOOK_V4_1_FOLK_SAYING_PARADOX",
+      "archetype_fit": "archetype_1_folk_saying_history_decoder",
+      "max_syllables": 16,
+      "landing_window_sec": "0.0-2.4s",
+      "structural_template_vi": "Vì sao dân Việt [hành động/câu nói quen] trước [nhân vật/sự kiện] đúng [con số]?",
+      "example_vi": "Vì sao dân Việt cúng giỗ Lê Lai trước vua Lê Lợi đúng một ngày?",
+      "example_syllables": 15
+    },
+    {
+      "formula_id": "HOOK_V4_2_COMMANDER_EMPEROR_1V1",
+      "archetype_fit": "archetype_2_commander_emperor_1v1_ranking",
+      "max_syllables": 16,
+      "landing_window_sec": "0.0-2.3s",
+      "structural_template_vi": "[Con số] vị [vua/danh tướng] Việt Nam nào [hành động phi thường] mà chưa từng [thất bại]?",
+      "example_vi": "Ba vị vua Việt Nam nào không ngồi ngai vàng mà trực tiếp chém giặc?",
+      "example_syllables": 15
+    },
+    {
+      "formula_id": "HOOK_V4_3_ELITE_UNIT_WEAPON_SHOCK",
+      "archetype_fit": "archetype_3_elite_unit_secret_weapon",
+      "max_syllables": 16,
+      "landing_window_sec": "0.0-2.4s",
+      "structural_template_vi": "[Số lượng] [binh chủng/vũ khí Đại Việt] [cơ chế đặc biệt] nghiền nát [đối thủ] ra sao?",
+      "example_vi": "Một trăm voi chiến Tây Sơn cõng đại bác nghiền nát kỵ binh ra sao?",
+      "example_syllables": 15
+    },
+    {
+      "formula_id": "HOOK_V4_4_IMPOSSIBLE_DECEPTION_MYSTERY",
+      "archetype_fit": "archetype_4_life_or_death_turning_point",
+      "max_syllables": 16,
+      "landing_window_sec": "0.0-2.4s",
+      "structural_template_vi": "Không tốn [vũ khí nhỏ], [danh tướng] lấy trọn [mục tiêu lớn] chỉ trong [thời gian].",
+      "example_vi": "Không bắn một mũi tên, vua Quang Trung lấy trọn đồn giặc chỉ trong đêm.",
+      "example_syllables": 15
+    },
+    {
+      "formula_id": "HOOK_V4_5_TRAGIC_AFTERMATH_IRONY",
+      "archetype_fit": "archetype_5_tragic_destiny_after_victory",
+      "max_syllables": 16,
+      "landing_window_sec": "0.0-2.5s",
+      "structural_template_vi": "Giúp vua [chiến công lớn], vì sao [công thần] lại chịu kết cục bi thương?",
+      "example_vi": "Giúp vua đánh đuổi giặc Minh, vì sao công thần lại chịu kết cục bi thương?",
+      "example_syllables": 16
+    }
+  ],
+  "five_viral_topic_archetypes": [
+    {
+      "archetype_id": "archetype_1_folk_saying_history_decoder",
+      "order": 1,
+      "label_vi": "Giải mã câu nói dân gian / thành ngữ lịch sử quen thuộc",
+      "benchmark_proof": "Dòng Máu Việt 'Hăm Mốt Lê Lai, Hăm Hai Lê Lợi' (UQrgEvoyGgo, 275,792 views, 2.02% like/view) & 'Những Sự Kiện Lịch Sử Diễn Ra Gần Nhau Đến Bất Ngờ' (Po0dZk8NSco, 272,845 views).",
+      "psychology_mechanism": "Exploits an existing memory hook already stored in 90%+ of Vietnamese brains (a folk rhyme or proverb heard since childhood) and reveals the bloody or shocking historical event behind it.",
+      "recommended_pacing_mode": "both (Mode A+ 55-75s for single proverb origin; Mode B 115-145s for full dramatic sacrifice story)",
+      "su_ke_lai_topics": [
+        "Hăm mốt Lê Lai, hăm hai Lê Lợi (Núi Chí Linh 1419 & Di chiếu 1433)",
+        "Nợ như Chúa Chổm (Hành trình từ hoàng tử ăn chịu Lê Duy Ninh lên ngôi vua Lê Trang Tông 1533)"
+      ]
+    },
+    {
+      "archetype_id": "archetype_2_commander_emperor_1v1_ranking",
+      "order": 2,
+      "label_vi": "Xếp hạng / Đối chiếu Hoàng đế & Danh tướng 1v1",
+      "benchmark_proof": "Dòng Máu Việt 'Cuộc Đời Huyền Thoại Bầu Trời Nguyễn Văn Bảy' (7QrEPUHLzgI, 2,899,147 views), 'Những Đế-Vương Phương Bắc Từng Xâm Lược Nước Ta' (exQOdR_i16A, 761,518 views, 590 comments), 'Những Vị Hoàng Đế Đánh Solo 1-1 Mạnh Nhất' (a4uUFYSvJIc, 296,615 views).",
+      "psychology_mechanism": "Gamified power-scaling and numbered progression ('Vị thứ nhất -> Vị thứ hai -> Vị thứ ba') lock viewer retention through completion compulsion while sparking intense ranking debates in comments.",
+      "recommended_pacing_mode": "Mode B (serialized_detail_short, 115-145s, 20-24 beats — ~35-40s per commander/emperor)",
+      "su_ke_lai_topics": [
+        "3 vị Hoàng đế Việt Nam trực tiếp cầm gươm xông pha tiền tuyến (Lê Hoàn, Lê Thái Tổ, Quang Trung)",
+        "3 danh tướng Đại Việt chưa từng thua một trận lớn nào (Ngô Quyền, Trần Quốc Tuấn, Nguyễn Huệ)"
+      ]
+    },
+    {
+      "archetype_id": "archetype_3_elite_unit_secret_weapon",
+      "order": 3,
+      "label_vi": "Binh chủng tinh nhuệ & Vũ khí bí mật Đại Việt",
+      "benchmark_proof": "CD Media - Quân Sự Nov 2026 breakout series: 'Voltigeur - Lính Tản Khai' (XN05y-9LIKE, 456,641 views, 74s), 'Cuirassier' (7pJgdZpuaNE, 154,942 views, 61s, 2.63% likes), 'Fusilier' (qR5LJRcJebA, 122,054 views), 'Pháo Binh' (3L9_4l_dSRM, 103,256 views), 'Uhlans' (MK4BsPhNAec, 94,563 views), 'Grenadier' (6r5Zu1SBbPA, 91,870 views, 2.94% likes).",
+      "psychology_mechanism": "Treats an ancient elite military unit or weapon like a high-spec engineering teardown: (1) Visual silhouette anomaly -> (2) Loadout & armor specs -> (3) Battlefield shock mechanism -> (4) Fatal weakness or decisive battle.",
+      "recommended_pacing_mode": "Mode A+ (viral_fast_loop_short, 55-75s / 54-72s, 15-16 beats @ ~3.8s/beat)",
+      "su_ke_lai_topics": [
+        "Tượng binh Tây Sơn & Hỏa hổ: Binh chủng 'xe tăng sống' cõng đại bác nghiền nát quân Thanh 1789",
+        "Quân Thánh Dực Dũng Nghĩa & chữ 'Sát Thát' xăm mực đen khiến kỵ binh Mông - Nguyên khiếp sợ (1285)"
+      ]
+    },
+    {
+      "archetype_id": "archetype_4_life_or_death_turning_point",
+      "order": 4,
+      "label_vi": "Khoảnh khắc sinh tử / Nghi án & Cú lừa quân sự kinh điển",
+      "benchmark_proof": "Dòng Máu Việt 'Những Lần Bác Hồ Suýt Mất Mạng' (n9oZSIRTLUo, 3,591,907 views, 146s) & 'Nhĩ Trung - Trận Đánh Tay Đôi' (F4FUWZaVoaI, 780,615 views, 136s).",
+      "psychology_mechanism": "Places the viewer inside a ticking life-or-death trap or historical enigma where conventional military logic says defeat is 100% certain, then reveals the psychological or engineering twist.",
+      "recommended_pacing_mode": "Mode A+ (55-75s for single tactical deception) or Mode B (115-145s for multi-layer mystery)",
+      "su_ke_lai_topics": [
+        "Cú lừa loa truyền tiếng thét đêm mùng 3 Tết Kỷ Dậu (1789) khiến đồn Hà Hồi hàng trắng không tốn một mũi tên",
+        "Nghi án nhà Hồ 1407: Có súng thần cơ và thành đá Tây Đô kiên cố bậc nhất Đông Nam Á, vì sao Hồ Quý Ly vẫn thua?"
+      ]
+    },
+    {
+      "archetype_id": "archetype_5_tragic_destiny_after_victory",
+      "order": 5,
+      "label_vi": "Số phận bi tráng & góc khuất sau chiến thắng",
+      "benchmark_proof": "Dòng Máu Việt 'Sáu Chiến Sĩ Mãi Mãi Không Trở Về Giữa Thời Bình' (g3iwANHmzl4, 524,032 views, 634 comments) & 'Bữa Sáng Nghẹn Lòng Dành Cho Hai Liệt Sĩ' (5OQg0SEiJrc, 432,784 views, 52s).",
+      "psychology_mechanism": "High emotional resonance and moral gravity drive massive shareability and empathetic comment floods ('Xót xa quá', 'Ngàn năm ghi nhớ').",
+      "recommended_pacing_mode": "Mode B (115-145s for dynastic tragedy) or Mode A+ (55-75s for single heroic last stand)",
+      "su_ke_lai_topics": [
+        "Số phận bi tráng của khai quốc công thần Lam Sơn (Trần Nguyên Hãn, Phạm Văn Xảo, Nguyễn Trãi) sau ngày toàn thắng",
+        "Khoảnh khắc sinh tử và câu nói bất hủ của Bảo Nghĩa Vương Trần Bình Trọng tại bãi Đà Mạc năm 1285"
+      ]
+    }
+  ],
+  "dual_duration_pacing_maps": {
+    "mode_a_plus_viral_fast_loop_short": {
+      "mode_id": "viral_fast_loop_short",
+      "duration_window_sec": "54-72s (55-75s benchmark envelope)",
+      "beat_count": "15-16 beats",
+      "avg_beat_duration_sec": 3.8,
+      "target_retention_apv_pct": ">= 92%",
+      "visual_mode": "hybrid_2k (10 flow_video beats + 5-6 2k_native_kenburns beats) or full_video",
+      "act_breakdown": [
+        {
+          "act": "Act 1 — Instant Curiosity Hook & Paradox",
+          "beats": "B00-B02 (0.0s-10.5s)",
+          "syllable_budget_per_beat": "B00 <= 16 syl (zero pause); B01-B02 15-18 syl",
+          "delivery_mode": "climax_heroic -> narrative_cinema",
+          "job": "Shatter viewer assumption in < 2.5s; anchor on everyday Vietnamese micro-bridge or elite weapon silhouette."
+        },
+        {
+          "act": "Act 2 — Anatomy of the Weapon / Proverb / Trap",
+          "beats": "B03-B07 (10.5s-29.5s)",
+          "syllable_budget_per_beat": "16-20 syl",
+          "delivery_mode": "tactical_breakdown",
+          "job": "Deliver 3 concrete primary-chronicle numbers/specs (weight, count, date, distance) with rapid 35mm visual cuts."
+        },
+        {
+          "act": "Act 3 — Breath-Hold Climax & Payoff Turn",
+          "beats": "B08-B12 (29.5s-49.0s)",
+          "syllable_budget_per_beat": "B09 includes [pause:450ms] + silence_vacuum; 15-19 syl",
+          "delivery_mode": "tense_whisper -> urgent_escalation -> climax_heroic",
+          "job": "Compress tension into a 450ms heartbeat silence vacuum, then erupt with the decisive battlefield or historical payoff."
+        },
+        {
+          "act": "Act 4 — Loop-Back Takeaway & 2-Choice Debate Trigger",
+          "beats": "B13-B15 (49.0s-60.0s, final 15%)",
+          "syllable_budget_per_beat": "Close <= 24 syl + Bridge <= 22 syl (combined outro <= 38 syl)",
+          "delivery_mode": "reflective_lesson",
+          "job": "Echo B00 imagery for seamless replay loop while posing a polarizing 2-choice judgment question answered in the Pinned Comment."
+        }
+      ]
+    },
+    "mode_b_serialized_detail_short": {
+      "mode_id": "serialized_detail_short",
+      "duration_window_sec": "105-145s (115-145s Dòng Máu Việt benchmark sweet spot, strictly < 180s)",
+      "beat_count": "20-24 beats (4 chunks x 5-6 beats)",
+      "avg_beat_duration_sec": 5.2,
+      "target_retention_apv_pct": ">= 78%",
+      "visual_mode": "hybrid_2k (12 flow_video beats + 8 2k_native_kenburns beats across 4 single-pass Colab T4 GPU chunks)",
+      "act_breakdown": [
+        {
+          "act": "Hồi 1 — Thế Cờ Sinh Tử & Câu Hỏi Đại Chúng",
+          "beats": "B00-B03 (0s-21s, Chunk 1)",
+          "syllable_budget_per_beat": "B00 <= 16 syl (zero pause); B01-B03 16-21 syl",
+          "delivery_mode": "climax_heroic -> narrative_cinema -> tense_whisper",
+          "job": "Open with a standalone mass-curiosity hook (<= 16 syl) and immediately establish the life-or-death historical dilemma."
+        },
+        {
+          "act": "Hồi 2 & Hồi 3 — Giải Phẫu Mưu Lược / 3 Nhân Vật Đối Chiếu",
+          "beats": "B04-B11 (21s-65s, Chunks 1-3)",
+          "syllable_budget_per_beat": "16-22 syl (varied wave cadence)",
+          "delivery_mode": "tactical_breakdown & narrative_cinema",
+          "job": "Dissect the 2-3 interlocking tactical layers or 3 ranked historical figures with verified chronicle citations and a mid-video Retention Reset at 45s."
+        },
+        {
+          "act": "Hồi 4 — Nén Căng Thẳng + [pause:500ms] Silence Vacuum + Cao Trào Bùng Nổ",
+          "beats": "B12-B15 (65s-88s, Chunks 3-4)",
+          "syllable_budget_per_beat": "B12 15-18 syl + [pause:500ms]; B13-B15 16-21 syl",
+          "delivery_mode": "urgent_escalation -> tense_whisper -> climax_heroic",
+          "job": "Drop BGM to a bare heartbeat during [pause:500ms], then unleash Act 4 braaam + taiko + D-major brass over the decisive historical turning point."
+        },
+        {
+          "act": "Hồi 5 — Đúc Kết Hào Khí & Câu Hỏi Tranh Luận 2 Chiều",
+          "beats": "B16-B19 (88s-115s, Chunk 4, final 15%)",
+          "syllable_budget_per_beat": "B16-B17 16-19 syl; B18+B19 combined <= 38 syl (bridge <= 22, close <= 24)",
+          "delivery_mode": "reflective_lesson",
+          "job": "Deliver the timeless strategic takeaway, anchor Sử Kể Lại, and launch the polarizing 2-choice debate question synced with the Pinned Comment."
+        }
+      ]
+    }
+  },
+  "comment_debate_and_pinned_loop": {
+    "target_comment_to_view_pct": ">= 0.15%",
+    "outro_constraints": {
+      "max_close_cta_syllables": 24,
+      "max_channel_bridge_syllables": 22,
+      "max_combined_outro_syllables": 38,
+      "forbidden_words": [
+        "like",
+        "share",
+        "subscribe",
+        "đăng ký",
+        "nhấn chuông",
+        "bấm chuông"
+      ]
+    },
+    "debate_trigger_mechanisms": [
+      {
+        "mechanism_id": "DEBATE_1_TACTICAL_CHOICE_DILEMMA",
+        "description": "Ask viewers whether Decision A (audacious sacrifice/deception) or Factor B (enemy arrogance/terrain) was the true decisive factor.",
+        "pinned_comment_template_vi": "📌 [GÓC TRANH LUẬN SỬ KỂ LẠI]: Theo bạn, điều gì quyết định thắng lợi tại [Sự kiện]: (1) [Quyết định táo bạo A] hay (2) [Sai lầm chí mạng của đối phương B]? Để lại góc nhìn của bạn bên dưới!"
+      },
+      {
+        "mechanism_id": "DEBATE_2_COMMANDER_TIER_VOTE",
+        "description": "In 3-commander or 3-emperor episodes, challenge viewers to crown the #1 military mind or suggest a missing hero.",
+        "pinned_comment_template_vi": "📌 [BÌNH CHỌN DANH TƯỚNG ĐẠI VIỆT]: Trong 3 bậc kỳ tài [Tên 1 - Tên 2 - Tên 3], theo bạn ai mới là nhà cầm quân xuất sắc nhất lịch sử nước nhà? Chọn số 1, 2 hay 3?"
+      }
+    ]
+  },
+  "peak_publish_windows_gmt7": {
+    "source_analysis": "sys/channels/analytics_su_ke_lai/peak_hours_analysis.json",
+    "recommended_schedule_slots_gmt7": [
+      {
+        "slot_id": "PRIME_EVENING_SLOT",
+        "publish_time_gmt7": "18:45-19:15 GMT+7",
+        "hourly_share_pct": 15.44,
+        "rationale": "Captures the 19:00-20:59 evening surge (957 + 1,163 views in hourly_table; QCIllvquEL0 hit +697 delta at 20:00)."
+      },
+      {
+        "slot_id": "PRIME_LATE_NIGHT_SURGE_SLOT",
+        "publish_time_gmt7": "23:30-00:15 GMT+7",
+        "hourly_share_pct": 32.6,
+        "rationale": "Captures the 00:00-02:59 midnight history-binge wave (12.71% + 9.52% + 10.37% = 32.60% of all channel views; pXLQ8kCxllk reached 3,227 views and tPEyN3mAFL4 hit 1,088 views in 1h)."
+      },
+      {
+        "slot_id": "MORNING_ORGANIC_SUSTAIN_SLOT",
+        "publish_time_gmt7": "06:30-07:15 GMT+7",
+        "hourly_share_pct": 12.15,
+        "rationale": "Captures the 06:00-09:59 organic post-6h shelf wave (highest organic_after_6h_views: 436-448 views/hr at 07:00-09:59)."
+      }
+    ]
+  }
+}
