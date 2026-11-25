@@ -1,0 +1,405 @@
+{
+  "schema_version": "12.0.0",
+  "document_id": "v12_thread_1a_long_first60s_anti_slideshow_bible",
+  "generated_at_utc": "2026-11-25T04:09:00Z",
+  "owner_agent": "long-hook-frames",
+  "target_channel": {
+    "channel_id": "su_ke_lai",
+    "handle": "@SuKeLaiVN",
+    "format": "long_16x9",
+    "resolution_targets": [
+      "1920x1080@30fps",
+      "2560x1440@30fps"
+    ],
+    "core_audience_profile": "76.1% Male, 74.1% aged 35+, 73.8% Big-Screen TV (42.2%) + Desktop (31.6%)"
+  },
+  "enforced_ssot_locks": [
+    "ERR-20261122-01: Zero-Box Floating Typography (0 rectangular containers/pills/stripes) + 100% Ban on Smoke/Fog/Mist Wipes (dust_smoke_cloud, river_mist_map_dive) + Short clip reuse trimmed <= 5.15s",
+    "ERR-20261109-01: Ban FFmpeg C vf_zoompan integer-rounding 15Hz micro-jitter; use native living Flow 16:9 video or GPU float32 Lanczos/bicubic sub-pixel affine transforms",
+    "ERR-20261109-02: Hardcoded bottom-right @SuKeLaiVN watermark at W-w-36:H-h-36",
+    "ERR-20261108-03 & ERR-20261125-02: VietNarrator_su_ke_lai on Colab T4 OmniVoice (-11.0 LUFS / <= -1.0 dBTP calibrated AAC @ 48kHz stereo, fps=30 before trim=end_frame)"
+  ],
+  "annotated_forensic_contact_sheets": [
+    {
+      "path": "/home/hongphuoc6104/.gemini/antigravity/brain/f1a47882-d7c4-4f8c-a810-1f8a1b240b10/forensic_01_fern_vs_sukelai_first60s_comparison.png",
+      "caption_10w_max": "Fern 0:00-1:15 living hook vs rejected SuKeLai frozen 1fps slideshow",
+      "channels_shown": [
+        "Fern (@fern-tv, kp0jkUqVuok, 5.12M views)",
+        "@SuKeLaiVN Baseline Rejected Long (EP05 0:00-0:15 @ 1fps)"
+      ]
+    },
+    {
+      "path": "/home/hongphuoc6104/.gemini/antigravity/brain/f1a47882-d7c4-4f8c-a810-1f8a1b240b10/forensic_02_multi_channel_continuous_motion_matrix.png",
+      "caption_10w_max": "Four global archetypes sustaining continuous 0:00-1:15 motion without static holds",
+      "channels_shown": [
+        "Yarnhub (ZCMIlZ2-eIU, 5.49M views)",
+        "Epic History TV (JhVc-bbn2p0, 774K views)",
+        "The Operations Room (EU-nV5FxKf0, 454K views)",
+        "Kings and Generals (BTs75T-Ree8, 238K views)"
+      ]
+    },
+    {
+      "path": "/home/hongphuoc6104/.gemini/antigravity/brain/f1a47882-d7c4-4f8c-a810-1f8a1b240b10/forensic_03_hook_to_thesis_analytical_transitions.png",
+      "caption_10w_max": "IMPERIAL, LEMMiNO, MagnatesMedia and 1fps progressive hook-to-thesis transitions",
+      "channels_shown": [
+        "IMPERIAL (@IMPERIALYT, Nz7BoIlLdAc, 5.48M views)",
+        "LEMMiNO (@LEMMiNO, 5u7euN1HTuU 15.5M & jVpsLMCIB0Y 9.4M views)",
+        "MagnatesMedia (@MagnatesMedia, c9Xm1bT50DQ 2.0M & dsDcQmJHwQc 1.2M views)",
+        "1-FPS Progressive Analytical Canvas Rig (54s-103s)"
+      ]
+    }
+  ],
+  "failed_baseline_autopsy": {
+    "user_verdict_verbatim": "như slide, tôi chỉ xem 15s đầu là chán rồi nên tất cả video đều rớt",
+    "inspected_local_controls": [
+      "video/vn_su_ke_lai_ep04_nhu_nguyet_1077_long/vn_su_ke_lai_ep04_nhu_nguyet_1077_long_16x9.mp4 (0:00-1:15 @ 1fps 5x6)",
+      "video/vn_su_ke_lai_ep05_chieu_doi_do_1010_long/vn_su_ke_lai_ep05_chieu_doi_do_1010_long.mp4 (0:00-1:15 @ 1fps 5x6)",
+      "V10 L01..L10 architecture (7 living clips across 725s = <7.5% motion coverage, >92.5% pre-graded static JPEGs via tpad=stop_mode=clone + boxed dark pills)"
+    ],
+    "measured_failure_metrics": {
+      "ep04_0_75s_freezedetect_segments_over_1s": 33,
+      "ep04_0_75s_total_frozen_sec": 66.1,
+      "ep04_0_75s_frozen_frame_pct": 88.1,
+      "ep04_0_75s_scdet12_hard_cuts": 1,
+      "ep04_ep05_motion_clips_in_first_30s": 0,
+      "ep05_0_15s_pixel_identical_stills_count": 6,
+      "ep05_0_30s_back_of_head_tableau_ratio_pct": 46.7,
+      "youtube_studio_live_retention_drop": {
+        "ep01_at_0_14s_pct": 41,
+        "ep01_at_0_28s_pct": 25,
+        "ep05_at_0_11s_pct": 61,
+        "ep05_at_0_28s_pct": 38
+      }
+    },
+    "four_root_causes_of_slideshow_perception": [
+      {
+        "id": "RC_01_ZERO_OPTICAL_FLOW_CLONES",
+        "cause": "After ERR-20261109-01 disabled FFmpeg C vf_zoompan, static BELUGA images were held via tpad=stop_mode=clone with 0.00 px/frame optical flow for 2.3s-6.5s at a time. On 73.8% TV/Desktop screens, 2.5s of dead-frozen pixels registers immediately as a PowerPoint slide."
+      },
+      {
+        "id": "RC_02_UNIFORM_MUSHY_XFADE_SMEAR",
+        "cause": "Connecting static PNGs every 2.4s with uniform xfade=fade (0.18s-0.24s) yielded only 1 crisp scdet>=12 cut in 75 seconds, creating rhythmic hypnosis instead of crisp action-motivated J-cuts."
+      },
+      {
+        "id": "RC_03_POSTCARD_BACK_OF_HEAD_STAGING",
+        "cause": "Nearly half of 0s-30s frames showed static rear-view silhouettes staring at landscapes with zero causal progression (no Eyeline -> Optical POV -> Tactile Prop Insert -> Reaction chain)."
+      },
+      {
+        "id": "RC_04_SLAPPED_ON_DARK_RECTANGLE_HUD",
+        "cause": "Overlaying semi-transparent dark pills with gold left borders or VS badges on frozen/slow backgrounds amplified the cheap AI-template slide look."
+      }
+    ]
+  },
+  "world_class_benchmark_metrics": {
+    "channels_inspected_count": 10,
+    "core_reference_channels": [
+      {
+        "channel": "Fern (@fern-tv)",
+        "sample_videos": [
+          "kp0jkUqVuok (5.12M views — NATO's Plan If Russia Attacks Tomorrow)",
+          "oc8G53Tbsvs (6.40M views — How the Internet Exposed a $10,000,000 Scam)",
+          "grBaH7LMnEY (3.20M views — The iPhone Battery Conspiracy)"
+        ],
+        "window_0_15s": {
+          "hard_cuts": 4,
+          "visual_events": 6,
+          "hard_asl_sec": 3.5,
+          "visual_event_interval_sec": 2.3,
+          "max_static_hold_sec": 0.0,
+          "pattern": "00:00 Live kinetic armored bridge unfolding -> 00:04 Dark-slate map push-in + cyan NATO pulse -> 00:10 Tight Baltic zoom + 3 sequential white invasion arrows + NATO emblem pop"
+        },
+        "window_15_60s": {
+          "hard_cuts_in_45s": 16,
+          "visual_events_in_45s": 21,
+          "hard_asl_sec": 2.81,
+          "soft_asl_sec": 2.14,
+          "max_static_hold_sec": 0.0,
+          "pattern": "00:16 Full-continent Article 5 cyan cascade -> 00:23-00:43 7-cut multi-scale hardware montage (winter infantry column -> banking F-16s -> 100mm macro missile nosecone -> hovering tactical drone) -> 00:45-00:58 3-angle 3D mechanical split-flap title slam ('HOW WOULD A WAR AGAINST RUSSIA UNFOLD?')"
+        },
+        "hook_to_thesis_60_75s": {
+          "duration_sec": 15.0,
+          "mechanic": "Pitch-black (#050507) stage + overhead volumetric white spotlight cone (01:00) -> central scope note inside light beam (01:05) -> 3 progressive source icons (Wargames -> NATO assessments -> Expert analyses @ 01:10) -> hard cut to live NATO HQ exterior (01:15)"
+        }
+      },
+      {
+        "channel": "IMPERIAL (@IMPERIALYT)",
+        "sample_videos": [
+          "Nz7BoIlLdAc (5.48M views — The Most Famous Killing in History)",
+          "tjrG7CT3vIg (2.30M views — The Evil Genius of Fascist Design)",
+          "ujj1sUW_kzA (938K views — How Britain Defeated its Hitler)"
+        ],
+        "window_0_15s": {
+          "hard_cuts": 4,
+          "visual_events": 5,
+          "hard_asl_sec": 3.6,
+          "visual_event_interval_sec": 2.8,
+          "max_static_hold_sec": 0.0,
+          "pattern": "Drops in media res at exact minute of death ('March 15, 44 BC... walks through the doors of the Curia'): unbroken 3D Blender dolly through bronze doors -> marble blood/dagger focal floor -> bold crimson/marble Caesar bust with primary citations"
+        },
+        "window_15_60s": {
+          "hard_cuts_in_45s": 12,
+          "visual_events_in_45s": 16,
+          "hard_asl_sec": 3.75,
+          "soft_asl_sec": 2.8,
+          "max_static_hold_sec": 0.0,
+          "pattern": "Tilt-shift 3D Roman urban scale ladder (City -> Forum -> Curia interior blocking) interleaved with historiographical contradiction beats (Suetonius/Plutarch written decades later vs physical room geometry)"
+        },
+        "hook_to_thesis_60_75s": {
+          "duration_sec": 16.0,
+          "mechanic": "3.20s acoustic silence vacuum + dark architectural pull-back framing the central investigative paradox -> clean boxless chapter title reveal -> tabletop primary source comparison"
+        }
+      },
+      {
+        "channel": "LEMMiNO (@LEMMiNO)",
+        "sample_videos": [
+          "5u7euN1HTuU (15.55M views — The Kennedy Assassination: Inside the Book Depository)",
+          "jVpsLMCIB0Y (9.42M views — The Unbreakable Kryptos Code)",
+          "uFI5WpK2sgg (4.90M views — Shouting at Stars: A History of Interstellar Messages)"
+        ],
+        "window_0_15s": {
+          "hard_cuts": 3,
+          "visual_events": 5,
+          "hard_asl_sec": 4.2,
+          "visual_event_interval_sec": 2.9,
+          "max_static_hold_sec": 0.0,
+          "pattern": "Continuous 3D isometric/orthographic camera orbit onto the exact physical building/sculpture while establishing timestamp & spatial anomaly (zero greeting, 119.3 WPM measured gravitas)"
+        },
+        "window_15_60s": {
+          "hard_cuts_in_45s": 10,
+          "visual_events_in_45s": 15,
+          "hard_asl_sec": 4.5,
+          "soft_asl_sec": 3.0,
+          "max_static_hold_sec": 0.0,
+          "pattern": "Walls turn translucent wireframe to highlight crimson internal stairwell/elevator shafts and 6th-floor carton geometry, alternating with dark-desk witness cards over softly glowing map trajectories"
+        },
+        "hook_to_thesis_60_75s": {
+          "duration_sec": 18.0,
+          "mechanic": "Poses single surgical question ('What actually happened inside this building before, during, and after?') -> 1.88s-4.20s pitch-black silence vacuum -> Chapter I Roman-numeral title -> smooth dolly onto floorplan witness timeline"
+        }
+      },
+      {
+        "channel": "MagnatesMedia (@MagnatesMedia)",
+        "sample_videos": [
+          "c9Xm1bT50DQ (2.00M views — The $47 Billion Cult)",
+          "dsDcQmJHwQc (1.20M views — The INSANE Truth About OpenAI)",
+          "AafeUIwSLvw (262K views — Thomas Edison: The IDIOT Who Changed The World)"
+        ],
+        "window_0_15s": {
+          "hard_cuts": 6,
+          "visual_events": 8,
+          "hard_asl_sec": 2.4,
+          "visual_event_interval_sec": 1.8,
+          "max_static_hold_sec": 0.0,
+          "pattern": "High-velocity 3-plane 2.5D parallax (foreground cutout at 1.8x velocity, subject at 1.0x, volumetric fire/neon/archival background at 0.4x) + dramatic lighting colour-ramps + sub-bass impacts"
+        },
+        "window_15_60s": {
+          "hard_cuts_in_45s": 15,
+          "visual_events_in_45s": 20,
+          "hard_asl_sec": 3.0,
+          "soft_asl_sec": 2.25,
+          "max_static_hold_sec": 0.0,
+          "pattern": "Rack-focus depth shifts across layered character compositions (foreground blurred -> midground sharp -> floating minimalist green/gold callout tag) + 3D historical character close-ups"
+        },
+        "hook_to_thesis_60_75s": {
+          "duration_sec": 12.0,
+          "mechanic": "Escalating music riser snaps to silence on paradoxical question -> 3D neon/gold chapter title inside dark volumetric room -> chronological origin scene"
+        }
+      },
+      {
+        "channel": "HistoryMarche & War-Room Titans (@HistoryMarche, @Yarnhub, @Epichistorytv, @TheOperationsRoom, @KingsandGenerals)",
+        "sample_videos": [
+          "HistoryMarche 2iY1DrjsdEk (2.45M views — Battle of Koniggratz 1866) & CBIGgKGmQdk (547K — Turin 1706)",
+          "Yarnhub ZCMIlZ2-eIU (5.49M views — When Tigers and Joseph Stalin Clashed)",
+          "Epic History TV JhVc-bbn2p0 (774K views — The First Crusade)",
+          "The Operations Room EU-nV5FxKf0 (454K views — Pearl Harbor 3/3)"
+        ],
+        "window_0_15s": {
+          "hard_cuts": 4,
+          "visual_events": 5,
+          "hard_asl_sec": 3.6,
+          "visual_event_interval_sec": 2.8,
+          "max_static_hold_sec": 0.0,
+          "pattern": "Yarnhub cycles Low-Angle Hero (00:00) -> Medium Hatch Reverse (00:05) -> True 16:9 Vertical Ambush Split-Screen (00:10) -> Tight Eyes Push (00:15); HistoryMarche shatters textbook determinism over ridge-top POV + continuous 3D terrain sweep"
+        },
+        "window_15_60s": {
+          "hard_cuts_in_45s": 12,
+          "visual_events_in_45s": 15,
+          "hard_asl_sec": 3.75,
+          "soft_asl_sec": 3.0,
+          "max_static_hold_sec": 0.0,
+          "pattern": "Yarnhub rotates Dark Tank Interior -> Armored Vision-Slit POV -> Over-Barrel Tracking -> Side Turret Pan; Epic History & Ops Room sustain continuous 3D camera glides while firing new territory floods, Bezier arrows, or corner archival PiPs every 3.0s-4.5s"
+        },
+        "hook_to_thesis_60_75s": {
+          "duration_sec": 15.0,
+          "mechanic": "Operations Room 65%-dimmed Selective Spotlight Zoom-Box (01:05) locks onto target sector and zooms straight through box into micro-tactical harbor/battlefield geometry (01:10); Epic History smashes from fiery Manzikert map badge (00:55) into 2.5D multi-plane battle parallax (01:00)"
+        }
+      }
+    ],
+    "universal_quantitative_laws": {
+      "window_0_15s_shot_cut_interval_sec": {
+        "min": 2.0,
+        "target_median": 3.0,
+        "max_ceiling": 3.8,
+        "required_shots_count": [4, 6],
+        "required_visual_events_count": [6, 9]
+      },
+      "window_15_60s_shot_or_event_interval_sec": {
+        "cinematic_hard_cut_asl_sec": [2.5, 4.2],
+        "cartographic_visual_event_interval_sec": [2.2, 3.8],
+        "max_single_angle_hold_without_internal_event_sec": 4.2,
+        "required_total_visual_events_0_60s": [18, 26]
+      },
+      "static_frozen_image_tolerance_0_60s": {
+        "allowed_6_to_8s_static_images": 0,
+        "allowed_3_5s_static_images": 0,
+        "max_frozen_pixel_run_sec": 0.35,
+        "why_zero_6_8s_static_holds_exist": "Human visual cortex habituates to a stationary 2D image on a 16:9 TV/Desktop monitor within 1.8s-2.2s. World-class channels ensure 100% of frames in 0s-60s possess either (a) real 3D/live subject + camera translation, (b) continuous sub-pixel multi-plane parallax, or (c) clause-synced vector/spotlight build events every 1.8s-3.2s."
+      }
+    }
+  },
+  "six_continuous_motion_engines_for_v12": [
+    {
+      "engine_id": "M1_LIVING_FLOW_MULTI_ANGLE_COVERAGE",
+      "role_in_first_60s": "Primary visual spine (65%-75% of 0s-60s = 12 to 15 native 16:9 living Flow clips per Long)",
+      "flow_implementation": "Generate native 16:9 Veo 3.1 Lite (10c Seam) + Omni 1.2 Flash (macaron_cookie 8s Frame-Link) clips cut tightly to their peak 2.5s-4.2s physical action window. Enforce 12-slot camera rotation (Wide Establishing -> OTS Dirty -> Macro Prop -> Ground Mud -> Reaction Micro -> God's-Eye) so zero adjacent cuts share scale or angle.",
+      "anti_slide_guarantee": "True 30fps subject + camera optical flow on every frame; zero static BELUGA stills permitted anywhere in 0s-60s."
+    },
+    {
+      "engine_id": "M2_ACTION_EYELINE_MATCH_CUTS_AND_SPLIT_SCREEN",
+      "role_in_first_60s": "Rhythmic glue replacing mushy xfade=fade (75%-85% of cuts in 0s-60s)",
+      "flow_implementation": "Use 0-frame crisp straight cuts with -0.18s to -0.24s audio J-cut pre-lap (hard_cut_j_cut) on physical motion peaks, paired with 1 optical POV framing shot ( bamboo palisade slit / spyglass / ridge OTS) or 1 true 16:9 vertical split-screen (2px matte antique-bronze seam: advancing enemy column on Left vs hidden Đại Việt ambush crew on Right, zero VS badge).",
+      "anti_slide_guarantee": "Restores scdet>=12 crisp cut energy (14-20 cuts/min) and eliminates slideshow crossfade smear."
+    },
+    {
+      "engine_id": "M3_GPU_FLOAT32_MULTIPLANE_PARALLAX",
+      "role_in_first_60s": "Archival/chronicle/illustration motion engine in body (>60s) and hybrid cutaways",
+      "flow_implementation": "Bans FFmpeg C vf_zoompan (15Hz integer jitter). Uses Python/GPU float32 cv2.warpAffine(..., flags=cv2.INTER_LANCZOS4) sub-pixel homography + 2-to-3 Z-plane separation (foreground silhouette 1.7x drift, midground focal subject 1.0x, background terrain 0.45x) + real-time warm torchlight/dust particle pass.",
+      "anti_slide_guarantee": "0.000px integer jitter with continuous smooth 30fps parallax depth."
+    },
+    {
+      "engine_id": "M4_PROGRESSIVE_SELECTIVE_SPOTLIGHTING",
+      "role_in_first_60s": "Story-emphasis visual proof (1-2 beats in 0s-60s, every 20-30s in body)",
+      "flow_implementation": "Smoothly dims outer 65%-75% of live moving frame or shaded-relief GIS map via cosine luminance vignette (sigma >= 0.20*H, zero rectangular box border) to isolate the exact spoken weapon, flaw, or river chokepoint, followed by map_camera_zoom_match (0.55s geometric 1.0x -> 2.6x dive, zero smoke).",
+      "anti_slide_guarantee": "Directs eye organically inside living footage instead of slapping dead rectangular HUD cards over static pictures."
+    },
+    {
+      "engine_id": "M5_MACRO_TACTILE_ZERO_FACE_INSERTS",
+      "role_in_first_60s": "Sensory grounding & AI-face fatigue breaker (>=2 inserts in 0s-15s, >=4 in 0s-60s)",
+      "flow_implementation": "Dedicated 100mm-135mm shallow-DoF zero-face BELUGA->Flow clips: cinnabar seal pressed into Dó paper, ironwood stake tip slicing brown ebb current, thumb cocking bronze crossbow trigger, torch sparks hitting wet straw shield, muddy sandals gripping bamboo rampart.",
+      "anti_slide_guarantee": "Injects visceral physical micro-motion and authentic historical materiality every 8s-12s."
+    },
+    {
+      "engine_id": "M6_CLEAN_PROGRESSIVE_ANALYTICAL_STAGE",
+      "role_in_first_60s": "50s-75s Hook-to-Thesis reset & body analytical breakdowns",
+      "flow_implementation": "Dedicated pure obsidian (#07080B) volumetric spotlight stage (Fern style) OR aged Dó-paper physical tabletop rig (LEMMiNO/Sử Dễ Hiểu style) where 1-3 word giant boxless labels, hairline links, or unit silhouettes animate progressively every 1.5s-2.5s on exact spoken word timestamps.",
+      "anti_slide_guarantee": "Canvas actively constructs the argument beat-by-beat in real time — never displays a pre-baked static chart for 6-8s."
+    }
+  ],
+  "first_60s_master_timeline_contract": {
+    "total_cold_open_duration_sec": [58.0, 72.0],
+    "flow_living_clips_budget": [12, 16],
+    "static_png_holds_allowed": 0,
+    "phases": [
+      {
+        "phase_id": "P1_15S_SURVIVAL_GATE",
+        "window_sec": "0.0s - 15.0s",
+        "beats_count": [4, 5],
+        "target_asl_sec": 3.0,
+        "max_shot_len_sec": 3.8,
+        "narration_contract": "Beat 0 <= 20-24 Vietnamese syllables, zero [pause:...], zero greeting, immediate historical paradox or exact minute of crisis @ 3.95-4.15 syl/s.",
+        "visual_choreography": [
+          "0.0s-3.2s (Shot 1 - Kinetic Anomaly): In-media-res living 16:9 35mm action (e.g. ground-level mud charge / torchlit palace doors bursting open / macro burning fuse) + +5dB sub-boom at t=0.05s. 100% text-free or max 3-word giant boxless year/place in open sky.",
+          "3.2s-6.2s (Shot 2 - Macro Tactile Proof): Hard J-cut (-0.20s audio lead) to 100mm zero-face physical insert (edict seal / ironwood stake / crossbow trigger / severed supply rope).",
+          "6.2s-9.6s (Shot 3 - Spatial Scale / 16:9 Split-Screen): Hard cut to God's-eye river/mountain scale OR 2px-bronze 16:9 Split-Screen contrasting opposing forces.",
+          "9.6s-12.5s (Shot 4 - OTS Dirty / Commander Tension): Over-the-shoulder perspective locking spatial stakes.",
+          "12.5s-15.0s (Shot 5 - Reaction Micro / Optical POV): Extreme close-up eyes in torchlight or palisade slit POV."
+        ]
+      },
+      {
+        "phase_id": "P2_SPATIAL_LOCK_AND_CONTRADICTION_ESCALATION",
+        "window_sec": "15.0s - 48.0s",
+        "beats_count": [8, 10],
+        "target_asl_sec": 3.4,
+        "max_shot_len_sec": 4.2,
+        "narration_contract": "Stack 2-3 concrete numeric/chronicle contradictions or fatal tactical constraints (supply clock, tidal drop, 1:5 force mismatch) that make textbook explanations collapse.",
+        "visual_choreography": [
+          "15.0s-24.0s (Slow Giant-Type Animated GIS Map Beat, 8-9s continuous): Enter via map_camera_zoom_match (0.55s, zero smoke) into tactical_battle_map_v9; continuous 3D terrain glide firing 3 timed visual events (t+0s terrain lock -> t+2.8s giant 1-2 word faction block -> t+5.6s slow Bezier threat arrow + spotlight pulse).",
+          "24.0s-48.0s (7-8 Living Multi-Angle Escalation Cuts @ 3.0s-3.6s ASL): Rapid matched-action progression alternating live 35mm blocking, 100mm weapon/terrain macro inserts, and 65%-dimmed Selective Spotlight focal isolation."
+        ]
+      },
+      {
+        "phase_id": "P3_THESIS_PIVOT_AND_ANALYTICAL_BRIDGE",
+        "window_sec": "48.0s - 68.0s",
+        "beats_count": [3, 4],
+        "target_asl_sec": 3.8,
+        "narration_contract": "Isolate ONE surgical investigative question ('Vậy bằng cách nào...') -> 0.80s-1.20s acoustic silence vacuum -> smooth launch into Chapter I analytical investigation.",
+        "visual_choreography": [
+          "48.0s-56.0s: Clean Obsidian Spotlight Cone / 3D Architectural Pull-Back / Progressive Dó-Paper Evidence Rig framing the central unanswered question with 1.8s-spaced progressive nodes.",
+          "56.0s-60.0s: 0.85s BGM vacuum + obsidian_act_fade (0.40s) OR in_scene_cinema_title ('CHƯƠNG I' 3-4 word core title over living 16:9 cinema, >=3.10s full opacity, zero subtitle clutter).",
+          "60.0s-68.0s+: Chapter I opens immediately inside a moving 2-Frame Continuous Chain or progressive analytical canvas (zero post-title static slide drop!)."
+        ]
+      }
+    ]
+  },
+  "four_hook_to_thesis_transition_blueprints": [
+    {
+      "blueprint_id": "T1_OBSIDIAN_VOLUMETRIC_SPOTLIGHT_CONE",
+      "inspired_by": "Fern (kp0jkUqVuok 00:55-01:15)",
+      "target_long_styles": ["L02_DARK_FORENSIC_INVESTIGATION", "L07_BIOGRAPHY_OF_IRON_MINDS", "L09_GEOPOLITICAL_CHESSBOARD"],
+      "sequence_spec": "Peak live escalation cut (48s) -> hard bass-drop cut to #07080B obsidian canvas with soft top-down volumetric light cone (50s) -> giant 3-4 word boxless question settles (52s) -> 3 minimalist investigative icons/pillars illuminate left-to-right at +1.8s intervals synced to narrator's 3-part roadmap (54s-60s) -> crisp J-cut (-0.22s foley pre-lap) into Chapter I living 35mm scene."
+    },
+    {
+      "blueprint_id": "T2_SELECTIVE_SPOTLIGHT_MAP_ZOOM_THROUGH",
+      "inspired_by": "The Operations Room (EU-nV5FxKf0 01:05-01:15) + Epic History TV (JhVc-bbn2p0 00:55-01:05)",
+      "target_long_styles": ["L01_EPIC_CAMPAIGN_CHRONICLE", "L03_GRAND_STRATEGY_WAR_ROOM", "L05_REALTIME_COUNTDOWN_CHRONICLE"],
+      "sequence_spec": "Theatre GIS map establishes strategic trap (46s-54s) -> outer 68% of map dims smoothly while target river/pass sector glows inside a crisp antique-gold hairline frame (55s) -> camera dives 1.0x -> 2.8x directly through the lit sector via map_camera_zoom_match (0.55s, zero smoke) -> cross-resolves seamlessly into ground-level 35mm river/canyon cinema bearing Netflix-style in_scene_cinema_title 'CHƯƠNG I' (58s-65s)."
+    },
+    {
+      "blueprint_id": "T3_ARCHITECTURAL_DOLLHOUSE_SILENCE_VACUUM",
+      "inspired_by": "LEMMiNO (5u7euN1HTuU 01:15-01:35) + IMPERIAL (Nz7BoIlLdAc 02:55-03:15)",
+      "target_long_styles": ["L02_DARK_FORENSIC_INVESTIGATION", "L06_EYEWITNESS_PRIMARY_LETTERS", "L08_24_HOURS_IN_ANCIENT_DAI_VIET"],
+      "sequence_spec": "Close-quarters interior anomaly (45s) -> camera pulls backward/upward revealing full palace/citadel spatial layout with crimson path highlight (50s-56s) -> 1.10s near-total acoustic silence vacuum -> obsidian_act_fade (0.40s) into 3.80s Zero-Box 'CHƯƠNG I' over dark slow-moving architectural footage -> cuts to Dó-paper primary chronicle desk where verbatim lines illuminate clause-by-clause."
+    },
+    {
+      "blueprint_id": "T4_MACRO_PHYSICS_COUNTER_QUESTION_PIVOT",
+      "inspired_by": "SandRhoman History (haU-nt6-c90) + HistoryMarche (2iY1DrjsdEk)",
+      "target_long_styles": ["L10_MILITARY_ENGINEERING_AUTOPSY", "L04_FALL_AND_RISE_DYNASTY_IMMERSION"],
+      "sequence_spec": "Battlefield weapon shock (44s) -> narrator poses sharp physical paradox ('Tại sao đạn hỏa mai nhà Thanh bắn xuyên ván gỗ nhưng lại tắt lịm trước tấm khiên rơm?') -> tactile metallic/wood J-cut into 100mm macro cross-section / physics rig (50s-62s) where force vectors and material layers reveal every 2.0s -> launches directly into Chapter I engineering breakdown."
+    }
+  ],
+  "automated_v12_qc_gates": {
+    "target_module": "sys/fx_warehouse/historical_visual_qc.py",
+    "hard_auto_fail_assertions": [
+      {
+        "gate_id": "GATE_F60_ZERO_STATIC_HOLD",
+        "metric": "max_frozen_run_sec_in_0_60s (consecutive 30fps frames with mean pixel L1 diff < 0.65/255)",
+        "pass_condition": "<= 0.50s (strictly 0 static PNG slides; rubric hard 0/100 fail if > 3.5s)",
+        "replaces_old_bug": "Catches tpad=stop_mode=clone static slides that previously hit 88.1% of 0s-75s"
+      },
+      {
+        "gate_id": "GATE_F15_SHOT_DENSITY",
+        "metric": "distinct_shots_in_0_15s",
+        "pass_condition": ">= 4 shots AND max_single_shot_0_15s <= 3.8s",
+        "replaces_old_bug": "Prevents slow 6-8s opening holds that caused 59% drop by 0:14"
+      },
+      {
+        "gate_id": "GATE_F60_VISUAL_EVENT_CADENCE",
+        "metric": "visual_events_in_0_60s (hard cuts + animated map/spotlight/canvas state shifts)",
+        "pass_condition": ">= 18 events (mean interval <= 3.33s, max gap <= 4.2s)",
+        "replaces_old_bug": "Ensures map and analytical thesis beats stay kinetic every 2.0s-3.5s"
+      },
+      {
+        "gate_id": "GATE_F60_CAMERA_ANGLE_DIVERSITY",
+        "metric": "adjacent_same_camera_slot_count AND macro_prop_inserts_0_60s",
+        "pass_condition": "adjacent_same_camera_slot_count == 0 AND macro_prop_inserts_0_60s >= 4 AND rear_silhouette_ratio <= 0.15",
+        "replaces_old_bug": "Eliminates repetitive back-of-head postcard syndrome"
+      },
+      {
+        "gate_id": "GATE_F60_ZERO_BOX_ZERO_SMOKE",
+        "metric": "rectangular_hud_boxes_count + smoke_mist_transitions_count",
+        "pass_condition": "== 0",
+        "replaces_old_bug": "Enforces ERR-20261122-01 & V12 Zero-Box cinema purity"
+      }
+    ]
+  }
+}

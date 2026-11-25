@@ -1,0 +1,527 @@
+{
+  "schema_version": "4.0",
+  "channel_id": "su_ke_lai",
+  "channel_name": "Sử Kể Lại",
+  "channel_handle": "@SuKeLaiVN",
+  "pattern_brief_ref": "sys/channels/su_ke_lai/viral_pattern_brief_v4.json",
+  "target_view_tier": "100K-1M+",
+  "invariants_enforced": {
+    "max_title_chars": 55,
+    "forbid_p1_p2_prefix_in_title": true,
+    "thumbnail_uppercase_words_range": [
+      2,
+      4
+    ],
+    "max_beat_0_hook_syllables": 16,
+    "forbid_obscure_geography_in_beat_0": true,
+    "forbid_pause_tag_in_beat_0": true,
+    "max_close_cta_syllables": 24,
+    "max_channel_bridge_syllables": 22,
+    "max_combined_outro_syllables": 38,
+    "short_attach_related_video": false
+  },
+  "episodes": [
+    {
+      "rank": 1,
+      "episode_id": "vn_su_ke_lai_ep07_viral_pilot_short",
+      "is_pilot_episode": true,
+      "fact_vault_path": "sys/runs/vn_su_ke_lai_ep07_viral_pilot_short/fact_vault.json",
+      "viral_archetype_id": "archetype_1_folk_saying_history_decoder",
+      "viral_archetype_label": "1. Giải mã câu nói dân gian / thành ngữ lịch sử",
+      "pacing_mode": "serialized_detail_short",
+      "target_duration_sec": "108-122s",
+      "target_beats": 20,
+      "youtube_title": "Vì Sao Dân Gian Có Câu Hăm Mốt Lê Lai Hăm Hai Lê Lợi?",
+      "youtube_title_char_count": 53,
+      "flow_thumbnail_text": "ÁO BÀO THẾ MẠNG",
+      "flow_thumbnail_word_count": 4,
+      "beat_0_hook_vi": "Vì sao dân Việt cúng giỗ Lê Lai trước vua Lê Lợi đúng một ngày?",
+      "beat_0_hook_syllables": 15,
+      "central_paradox_and_curiosity_gap": "Hàng triệu người Việt thuộc câu 'Hăm mốt Lê Lai, hăm hai Lê Lợi' nhưng Lê Lai hy sinh tại núi Chí Linh từ tháng 4/1419 — sớm hơn ngày vua Lê Thái Tổ băng hà (22/8/1433) tới 14 năm. Ngày 21 tháng 8 âm lịch chính là di chiếu đền ơn chưa từng có tiền lệ của Hoàng đế Lê Lợi.",
+      "primary_chronicle_citations": [
+        {
+          "source_name": "Đại Việt Sử Ký Toàn Thư — Bản Kỷ Thực Lục Quyển 10",
+          "historical_year": 1419,
+          "verified_fact": "Tháng 4 năm Kỷ Hợi (1419), quân Minh vây chặt núi Chí Linh; Lê Lợi hỏi ai dám đổi áo bắt chước Kỷ Tín thời Hán Cao Tổ, Lê Lai đứng ra nhận mặc áo bào vàng dẫn quân xung trận bị giặc bắt và xử cực hình."
+        },
+        {
+          "source_name": "Lam Sơn Thực Lục — Quyển 1 (Nguyễn Trãi)",
+          "historical_year": 1419,
+          "verified_fact": "Nghĩa quân hết lương hơn 10 ngày trên núi Chí Linh; Lê Lai khoác hoàng bào khấn trời đất rồi cưỡi voi dẫn 2 voi chiến và 500 quân cảm tử hô vang 'Chúa Lam Sơn ở đây', giúp Lê Lợi thoát vây."
+        },
+        {
+          "source_name": "Khâm Định Việt Sử Thông Giám Cương Mục — Chính Biên Quyển 13",
+          "historical_year": 1433,
+          "verified_fact": "Năm 1428 Lê Thái Tổ truy phong Lê Lai làm Đệ Nhất Công Thần (Thái Úy Phúc Quốc Công); trước khi băng hà ngày 22/8 âm lịch năm 1433, nhà vua dặn đời sau cúng giỗ Lê Lai vào ngày 21/8 âm lịch."
+        }
+      ],
+      "quarantined_folklore_report_only": [
+        "Giai thoại truyền miệng nói Lê Lai có khuôn mặt giống hệt Lê Lợi như hai giọt nước (report-only).",
+        "Truyền thuyết địa phương nói bầu trời Thanh Hóa đổ mưa máu 3 ngày 3 đêm sau khi Lê Lai tử tiết (report-only)."
+      ],
+      "vietnam_micro_bridge": "Mỗi dịp thu về ngày 21 và 22 tháng 8 âm lịch tại Việt Nam, câu ca 'Hăm mốt Lê Lai, hăm hai Lê Lợi' vang lên như một bản hợp đồng danh dự bằng máu được khắc thẳng vào lịch âm dân tộc suốt hơn 600 năm.",
+      "outro_close_cta_vi": "Theo bạn Lê Lai liều mình vì nghĩa lớn hay mưu sâu?",
+      "outro_close_cta_syllables": 12,
+      "outro_channel_bridge_vi": "Khám phá thêm những trang sử hào hùng trên Sử Kể Lại.",
+      "outro_channel_bridge_syllables": 12,
+      "outro_combined_syllables": 24,
+      "debate_pinned_comment_vi": "📌 [GÓC TRANH LUẬN SỬ KỂ LẠI]: Nhiều người cho rằng Lê Lai khoác áo bào vàng năm 1419 chỉ để đánh lạc hướng quân Minh trong vài giờ, nhưng chính sử chỉ ra cái chết của ông còn khiến tướng Minh tưởng Lê Lợi đã chết thật nên rút đại quân về Đông Quan! Theo bạn: (1) Lòng trung nghĩa tuyệt đối của Lê Lai hay (2) Đòn tâm lý đánh vào lòng tham công của tướng Minh mới là yếu tố cứu sống cuộc khởi nghĩa Lam Sơn? Bình luận số 1 hoặc 2 bên dưới!",
+      "vault_2_flow_visual_spec": {
+        "style_id": "su_ke_lai_35mm_live_action_v3",
+        "keyframe_anchor": "35mm Kodak Vision3 500T vertical frame: inside a dark bamboo tent on foggy Chí Linh mountain (1419), Lê Lợi handing a battle-worn golden-embroidered royal robe to stern general Lê Lai by oil torchlight; cut to Lê Lai in golden robe riding an armored war elephant leading 500 Lam Sơn warriors down muddy slopes into Ming iron spears.",
+        "heroic_banner_stamps": [
+          "NÚI CHÍ LINH 1419",
+          "ÁO BÀO THẾ MẠNG",
+          "500 QUÂN CẢM TỬ",
+          "DI CHIẾU ĐỀN ƠN"
+        ]
+      }
+    },
+    {
+      "rank": 2,
+      "episode_id": "vn_su_ke_lai_ep08_no_nhu_chua_chom_short",
+      "is_pilot_episode": false,
+      "viral_archetype_id": "archetype_1_folk_saying_history_decoder",
+      "viral_archetype_label": "1. Giải mã câu nói dân gian / thành ngữ lịch sử",
+      "pacing_mode": "viral_fast_loop_short",
+      "target_duration_sec": "58-68s",
+      "target_beats": 16,
+      "youtube_title": "Chúa Chổm Là Ai Mà Nợ Nhiều Nhất Lịch Sử Việt Nam?",
+      "youtube_title_char_count": 50,
+      "flow_thumbnail_text": "NỢ NHƯ CHÚA CHỔM",
+      "flow_thumbnail_word_count": 4,
+      "beat_0_hook_vi": "Chúa Chổm là ai mà mắc nợ đến mức thành câu cửa miệng ngàn năm?",
+      "beat_0_hook_syllables": 15,
+      "central_paradox_and_curiosity_gap": "Ai cũng dùng câu 'Nợ như Chúa Chổm' để chỉ người nợ nần chồng chất, nhưng 'Chúa Chổm' thực chất là hoàng tử Lê Duy Ninh — vị vua mở đầu thời Lê Trung Hưng (vua Lê Trang Tông, 1533-1548).",
+      "primary_chronicle_citations": [
+        {
+          "source_name": "Đại Việt Sử Ký Toàn Thư — Bản Kỷ Tục Biên Quyển 16",
+          "historical_year": 1533,
+          "verified_fact": "Năm Quý Tỵ (1533), An Thanh Hầu Nguyễn Kim tìm được hoàng tử Lê Duy Ninh (con vua Lê Chiêu Tông) đang lánh nạn sau khi Mạc Đăng Dung cướp ngôi nhà Lê năm 1527, bèn tôn lên làm vua tức Lê Trang Tông tại đất Ai Lao."
+        },
+        {
+          "source_name": "Khâm Định Việt Sử Thông Giám Cương Mục — Chính Biên Quyển 27",
+          "historical_year": 1533,
+          "verified_fact": "Lê Trang Tông lên ngôi khôi phục quốc thống nhà Lê (thời Lê Trung Hưng), thu phục lại vùng Thanh Hóa - Nghệ An từ tay nhà Mạc."
+        }
+      ],
+      "quarantined_folklore_report_only": [
+        "Dã sử dân gian kể thời còn lưu lạc ở Thăng Long tên gọi là Chổm, ông ăn cơm uống rượu chịu khắp các quán ven sông Hồng rồi khi làm vua phải ban lệnh 'Cấm chỉ đòi nợ' tại phố Cấm Chỉ Hà Nội (report-only — chi tiết tên phố Cấm Chỉ là giai thoại dân gian, cần phân biệt rõ với chính sử Lê Trang Tông)."
+      ],
+      "vietnam_micro_bridge": "Ngay giữa trung tâm quận Hoàn Kiếm (Hà Nội) ngày nay vẫn còn con ngõ nhỏ mang tên Cấm Chỉ — nơi người Hà Nội truyền tai nhau câu chuyện vị hoàng đế từng ăn chịu khắp kinh thành.",
+      "outro_close_cta_vi": "Theo bạn Chúa Chổm may mắn hay thực sự có chân mệnh?",
+      "outro_close_cta_syllables": 12,
+      "outro_channel_bridge_vi": "Giải mã tiếp những câu chuyện thâm cung trên Sử Kể Lại.",
+      "outro_channel_bridge_syllables": 12,
+      "outro_combined_syllables": 24,
+      "debate_pinned_comment_vi": "📌 [GÓC TRANH LUẬN SỬ KỂ LẠI]: Từ một hoàng tử lưu lạc phải ẩn danh giữa thời loạn Mạc Đăng Dung năm 1527 đến khi được Nguyễn Kim rước lên ngôi Hoàng đế Lê Trang Tông năm 1533: Theo bạn cuộc đổi đời của 'Chúa Chổm' là nhờ (1) Dòng máu chính thống nhà Hậu Lê hay (2) Bàn tay quân sự của danh tướng Nguyễn Kim? Bình luận 1 hoặc 2!",
+      "vault_2_flow_visual_spec": {
+        "style_id": "su_ke_lai_35mm_live_action_v3",
+        "keyframe_anchor": "35mm Kodak Vision3 500T vertical frame: a young exiled prince in worn indigo hemp clothes sitting at a rustic 16th-century Thăng Long riverside tavern surrounded by wooden tally debt slips; dramatic transition to the same man in golden imperial dragon robe crowned as Emperor Lê Trang Tông before kneeling general Nguyễn Kim.",
+        "heroic_banner_stamps": [
+          "HOÀNG TỬ LƯU LẠC",
+          "NỢ NHƯ CHÚA CHỔM",
+          "LÊ TRANG TÔNG 1533",
+          "KHÔI PHỤC NHÀ LÊ"
+        ]
+      }
+    },
+    {
+      "rank": 3,
+      "episode_id": "vn_su_ke_lai_ep09_tuong_binh_tay_son_short",
+      "is_pilot_episode": false,
+      "viral_archetype_id": "archetype_3_elite_unit_secret_weapon",
+      "viral_archetype_label": "3. Binh chủng tinh nhuệ & Vũ khí bí mật Đại Việt",
+      "pacing_mode": "viral_fast_loop_short",
+      "target_duration_sec": "60-72s",
+      "target_beats": 16,
+      "youtube_title": "Tượng Binh Tây Sơn: Binh Chủng Khiến Quân Thanh Vỡ Trận",
+      "youtube_title_char_count": 55,
+      "flow_thumbnail_text": "TƯỢNG BINH TÂY SƠN",
+      "flow_thumbnail_word_count": 4,
+      "beat_0_hook_vi": "Một trăm voi chiến Tây Sơn cõng đại bác nghiền nát kỵ binh ra sao?",
+      "beat_0_hook_syllables": 15,
+      "central_paradox_and_curiosity_gap": "Nhiều người nghĩ voi chiến chỉ dùng để húc đổ hàng rào, nhưng tượng binh Tây Sơn của vua Quang Trung năm 1789 thực chất là những 'xe tăng sống' bọc giáp da trâu, cõng đại bác trên lưng và đi kèm bộ binh cầm ống phóng lửa Hỏa hổ khiến chiến mã quân Thanh kinh hoàng quay đầu giẫm đạp lên nhau.",
+      "primary_chronicle_citations": [
+        {
+          "source_name": "Hoàng Lê Nhất Thống Chí — Hồi thứ 14",
+          "historical_year": 1789,
+          "verified_fact": "Rạng sáng mùng 5 Tết Kỷ Dậu (1789) tại đồn Ngọc Hồi, vua Quang Trung tung hơn 100 voi chiến chia làm hai cánh phối hợp cùng 600 tấm ván gỗ quấn rơm ướt chắn đạn và ống phun lửa hỏa hổ; ngựa quân Thanh thấy voi gầm và lửa khói liền hoảng loạn quay đầu giẫm đạp lên bộ binh."
+        },
+        {
+          "source_name": "Đại Nam Chính Biên Liệt Truyện — Sơ Tập Quyển 30 (Ngụy Tây Liệt Truyện)",
+          "historical_year": 1789,
+          "verified_fact": "Tượng binh Tây Sơn có quản tượng điều khiển cùng xạ thủ ngồi trên bành gỗ mang đại bác cỡ nhỏ hoặc súng hỏa mai, hỏa hổ phun lửa nhựa thông ở cự ly gần."
+        }
+      ],
+      "quarantined_folklore_report_only": [
+        "Giai thoại nói mỗi con voi Tây Sơn mặc giáp sắt nguyên khối nặng 2 tấn đúc từ phương Tây (report-only — thực tế dùng giáp da trâu nhiều lớp kết hợp bành gỗ cứng để giữ tốc độ xung phong)."
+      ],
+      "vietnam_micro_bridge": "Đứng dưới chân gò Đống Đa hay vùng Ngọc Hồi (Thanh Trì, Hà Nội) hôm nay, ít ai ngờ 237 năm trước mặt đất này từng rung chuyển dưới bước chân của hơn 100 cỗ 'xe tăng sống' cõng đại bác của vua Quang Trung.",
+      "outro_close_cta_vi": "Theo bạn tượng binh hay hỏa hổ mới làm quân Thanh vỡ trận?",
+      "outro_close_cta_syllables": 13,
+      "outro_channel_bridge_vi": "Xem tiếp những binh chủng huyền thoại trên Sử Kể Lại.",
+      "outro_channel_bridge_syllables": 11,
+      "outro_combined_syllables": 24,
+      "debate_pinned_comment_vi": "📌 [GIẢI PHẪU BINH CHỦNG ĐẠI VIỆT]: Tại trận Ngọc Hồi mùng 5 Tết Kỷ Dậu 1789, theo bạn vũ khí nào của Tây Sơn gây sát thương tâm lý khủng khiếp nhất cho 29 vạn quân Thanh: (1) Đội hình hơn 100 Tượng Binh cõng đại bác làm ngựa giặc hoảng loạn hay (2) Ống phóng lửa Hỏa Hổ phun nhựa thông thiêu rụi chiến lũy? Chọn 1 hay 2?",
+      "vault_2_flow_visual_spec": {
+        "style_id": "su_ke_lai_35mm_live_action_v3",
+        "keyframe_anchor": "35mm Kodak Vision3 500T vertical low-angle hero shot: a massive armored Tây Sơn war elephant charging through dawn smoke at Ngọc Hồi (1789) with a wooden howdah mounting a bronze swivel cannon and warriors wielding blazing bamboo fire-lances (hỏa hổ), Qing cavalry horses rearing in terror.",
+        "heroic_banner_stamps": [
+          "100 VOI CHIẾN 1789",
+          "ĐẠI BÁC TRÊN LƯNG",
+          "HỎA HỔ PHUN LỬA",
+          "NGỌC HỒI VỠ TRẬN"
+        ]
+      }
+    },
+    {
+      "rank": 4,
+      "episode_id": "vn_su_ke_lai_ep10_cam_tu_sat_that_short",
+      "is_pilot_episode": false,
+      "viral_archetype_id": "archetype_3_elite_unit_secret_weapon",
+      "viral_archetype_label": "3. Binh chủng tinh nhuệ & Vũ khí bí mật Đại Việt",
+      "pacing_mode": "viral_fast_loop_short",
+      "target_duration_sec": "58-68s",
+      "target_beats": 15,
+      "youtube_title": "Đội Quân Xăm Chữ Sát Thát Khiến Kỵ Binh Nguyên Khiếp Sợ",
+      "youtube_title_char_count": 55,
+      "flow_thumbnail_text": "CẢM TỬ SÁT THÁT",
+      "flow_thumbnail_word_count": 4,
+      "beat_0_hook_vi": "Hai chữ Sát Thát xăm bằng mực đen khiến kỵ binh Mông Cổ khiếp vía.",
+      "beat_0_hook_syllables": 15,
+      "central_paradox_and_curiosity_gap": "Xăm hai chữ 'Sát Thát' (Giết giặc Mông - Nguyên) lên cánh tay năm 1285 đồng nghĩa với việc nếu bị bắt sống sẽ lập tức bị giặc lột da xử tử — nhưng hàng vạn cấm quân Thánh Dực Dũng Nghĩa nhà Trần đã tự nguyện khắc bản án tử ấy lên da thịt để cắt đứt hoàn toàn đường lùi.",
+      "primary_chronicle_citations": [
+        {
+          "source_name": "Đại Việt Sử Ký Toàn Thư — Bản Kỷ Quyển 5",
+          "historical_year": 1285,
+          "verified_fact": "Năm Ất Dậu (1285), trước cuộc xâm lược lần thứ hai của 50 vạn quân Nguyên do Thoát Hoan chỉ huy, vua Trần Nhân Tông và Hưng Đạo Vương duyệt binh ở bến Đông Bộ Đầu; tướng sĩ nhà Trần đều thích hai chữ 'Sát Thát' vào cánh tay để thề quyết tử."
+        },
+        {
+          "source_name": "An Nam Chí Lược — Lê Tắc & Binh Thư Yếu Lược",
+          "historical_year": 1285,
+          "verified_fact": "Cấm quân nhà Trần (tiêu biểu là quân Thánh Dực, Thiên Thuộc, Thiên Cương) tinh thông võ nghệ, sử dụng trường đao chém chân ngựa và cung nỏ tầm gần đánh gãy đội hình kỵ binh Nguyên."
+        }
+      ],
+      "quarantined_folklore_report_only": [
+        "Giai thoại mạng nói lính Sát Thát uống thuốc thần tăng lực gấp 5 lần người thường trước khi ra trận (report-only — sức mạnh thực tế đến từ kỷ luật cấm quân, kỹ thuật chém chân ngựa và lời thề không đầu hàng)."
+      ],
+      "vietnam_micro_bridge": "Nếu đi qua bến Đông Bộ Đầu (nay thuộc khu vực dốc Hàng Than — cầu Long Biên, Hà Nội), đó chính là nơi hơn 740 năm trước hàng vạn chiến binh Đại Việt từng châm kim mực đen khắc hai chữ 'Sát Thát' lên cánh tay.",
+      "outro_close_cta_vi": "Theo bạn khí phách Sát Thát hay mưu Trần Hưng Đạo quyết định?",
+      "outro_close_cta_syllables": 13,
+      "outro_channel_bridge_vi": "Khám phá tiếp các đội quân tinh nhuệ trên Sử Kể Lại.",
+      "outro_channel_bridge_syllables": 12,
+      "outro_combined_syllables": 25,
+      "debate_pinned_comment_vi": "📌 [HÀO KHÍ ĐÔNG A 1285]: Biết chắc nếu bị bắt với hai chữ 'Sát Thát' trên cánh tay sẽ bị giặc Nguyên hành hình tàn khốc, nhưng toàn quân nhà Trần vẫn tự nguyện xăm lên da thịt! Theo bạn, sức mạnh nào giúp Đại Việt 3 lần đánh bại đế chế Mông - Nguyên: (1) Tinh thần quyết tử 'Sát Thát' của toàn quân toàn dân hay (2) Nghệ thuật 'vườn không nhà trống' của Hưng Đạo Đại Vương? Bình luận 1 hoặc 2!",
+      "vault_2_flow_visual_spec": {
+        "style_id": "su_ke_lai_35mm_live_action_v3",
+        "keyframe_anchor": "35mm Kodak Vision3 500T tight action macro & low-angle hero shot: torchlit Đông Bộ Đầu riverbank in 1285, a fierce Trần Dynasty Thánh Dực warrior in bronze-lamellar armor clenching his muscular forearm as a bone needle dips in black ink, surrounded by thousands of raised spears under crimson standards.",
+        "heroic_banner_stamps": [
+          "ĐÔNG BỘ ĐẦU 1285",
+          "CẤM QUÂN NHÀ TRẦN",
+          "LỜI THỀ SÁT THÁT",
+          "CHÉM KỴ BINH NGUYÊN"
+        ]
+      }
+    },
+    {
+      "rank": 5,
+      "episode_id": "vn_su_ke_lai_ep11_hoang_de_cam_guom_short",
+      "is_pilot_episode": false,
+      "viral_archetype_id": "archetype_2_commander_emperor_1v1_ranking",
+      "viral_archetype_label": "2. Xếp hạng / Đối chiếu Hoàng đế & Danh tướng 1v1",
+      "pacing_mode": "serialized_detail_short",
+      "target_duration_sec": "115-135s",
+      "target_beats": 20,
+      "youtube_title": "3 Vị Hoàng Đế Việt Nam Trực Tiếp Cầm Gươm Xung Trận",
+      "youtube_title_char_count": 51,
+      "flow_thumbnail_text": "HOÀNG ĐẾ RA TRẬN",
+      "flow_thumbnail_word_count": 4,
+      "beat_0_hook_vi": "Ba vị vua Việt Nam nào không ngồi ngai vàng mà trực tiếp chém giặc?",
+      "beat_0_hook_syllables": 15,
+      "central_paradox_and_curiosity_gap": "Trong lịch sử phong kiến thế giới, đa số hoàng đế ngồi ở hậu phương điều binh khiển tướng; nhưng lịch sử Đại Việt có 3 vị Hoàng đế đích thân khoác giáp, cưỡi voi hoặc chiến mã lao vào tuyến lửa đầu tiên khiến tướng giặc kinh hồn bạt vía.",
+      "primary_chronicle_citations": [
+        {
+          "source_name": "Đại Việt Sử Ký Toàn Thư — Bản Kỷ Quyển 1 (Kỷ Nhà Tiền Lê)",
+          "historical_year": 981,
+          "verified_fact": "Vị thứ nhất: Vua Lê Đại Hành (Lê Hoàn) năm 981 trực tiếp cầm quân phá quân Tống ở Bạch Đằng và Tây Kết, chém tướng Tống là Hầu Nhân Bảo ngay giữa trận tiền."
+        },
+        {
+          "source_name": "Đại Việt Sử Ký Toàn Thư — Bản Kỷ Thực Lục Quyển 10 (Kỷ Nhà Lê)",
+          "historical_year": 1427,
+          "verified_fact": "Vị thứ hai: Vua Lê Thái Tổ (Lê Lợi) suốt 10 năm khởi nghĩa Lam Sơn (1418-1427) trực tiếp dẫn quân trải qua hàng chục trận vây hãm sinh tử từ Chí Linh đến Chi Lăng - Xương Giang."
+        },
+        {
+          "source_name": "Hoàng Lê Nhất Thống Chí — Hồi thứ 14",
+          "historical_year": 1789,
+          "verified_fact": "Vị thứ ba: Hoàng đế Quang Trung (Nguyễn Huệ) mùng 5 Tết Kỷ Dậu 1789 quấn khăn vàng, cưỡi voi chiến đốc thúc đại quân đánh sập đồn Ngọc Hồi; khi tiến vào Thăng Long tấm áo bào đỏ đã sạm đen như mực vì khói thuốc súng."
+        }
+      ],
+      "quarantined_folklore_report_only": [
+        "Giai thoại nói vua Quang Trung dùng đôi song đao nặng 80 cân chém gãy pháo đồng quân Thanh (report-only — chính sử ghi nhận nhà vua cưỡi voi chỉ huy ở tuyến đầu tới mức áo bào sạm đen khói súng)."
+      ],
+      "vietnam_micro_bridge": "Hình ảnh tấm áo bào đỏ sạm đen khói thuốc súng của vua Quang Trung khi tiến vào thành Thăng Long trưa mùng 5 Tết đã trở thành biểu tượng bất tử trong câu thơ của công chúa Lê Ngọc Hân: 'Mà nay áo vải cờ đào / Giúp dân dựng nước xiết bao công trình'.",
+      "outro_close_cta_vi": "Trong ba vị hoàng đế ấy, bạn kính phục bản lĩnh ai nhất?",
+      "outro_close_cta_syllables": 13,
+      "outro_channel_bridge_vi": "Xem tiếp những bậc đế vương Đại Việt trên Sử Kể Lại.",
+      "outro_channel_bridge_syllables": 12,
+      "outro_combined_syllables": 25,
+      "debate_pinned_comment_vi": "📌 [BÌNH CHỌN HOÀNG ĐẾ CHIẾN TRƯỜNG]: Giữa (1) Vua Lê Đại Hành chém tướng Tống năm 981, (2) Vua Lê Thái Tổ 10 năm nằm gai nếm mật đánh đuổi giặc Minh, và (3) Hoàng đế Quang Trung cưỡi voi xung trận áo bào sạm đen khói súng năm 1789 — theo bạn vị Hoàng đế nào có chiến công trực tiếp trên chiến trường ấn tượng nhất? Bình luận 1, 2 hoặc 3!",
+      "vault_2_flow_visual_spec": {
+        "style_id": "su_ke_lai_35mm_live_action_v3",
+        "keyframe_anchor": "35mm Kodak Vision3 500T epic triptych-free sequential vertical cinema: (1) Emperor Lê Hoàn in 10th-century bronze scale armor on a war boat in 981; (2) Lê Lợi raising his iron sword in monsoon rain at Chi Lăng 1427; (3) Emperor Quang Trung atop a war elephant in 1789 with his crimson royal robe blackened by cannon smoke.",
+        "heroic_banner_stamps": [
+          "LÊ ĐẠI HÀNH 981",
+          "LÊ THÁI TỔ 1427",
+          "QUANG TRUNG 1789",
+          "ÁO BÀO SẠM KHÓI"
+        ]
+      }
+    },
+    {
+      "rank": 6,
+      "episode_id": "vn_su_ke_lai_ep12_danh_tuong_bat_bai_short",
+      "is_pilot_episode": false,
+      "viral_archetype_id": "archetype_2_commander_emperor_1v1_ranking",
+      "viral_archetype_label": "2. Xếp hạng / Đối chiếu Hoàng đế & Danh tướng 1v1",
+      "pacing_mode": "serialized_detail_short",
+      "target_duration_sec": "115-135s",
+      "target_beats": 20,
+      "youtube_title": "3 Danh Tướng Đại Việt Chưa Từng Thua Một Trận Lớn Nào",
+      "youtube_title_char_count": 53,
+      "flow_thumbnail_text": "DANH TƯỚNG BẤT BẠI",
+      "flow_thumbnail_word_count": 4,
+      "beat_0_hook_vi": "Suốt ngàn năm lịch sử, chỉ có ba danh tướng Việt chưa từng bại trận.",
+      "beat_0_hook_syllables": 15,
+      "central_paradox_and_curiosity_gap": "Thắng một trận lớn đã khó, nhưng giữ kỷ lục bất bại trong mọi chiến dịch quyết chiến chiến lược trước các siêu cường phương Bắc và khu vực thì suốt 1.000 năm phong kiến Đại Việt nổi bật nhất là 3 bộ óc quân sự kiệt xuất này.",
+      "primary_chronicle_citations": [
+        {
+          "source_name": "Đại Việt Sử Ký Toàn Thư — Ngoại Kỷ Quyển 5",
+          "historical_year": 938,
+          "verified_fact": "Danh tướng thứ nhất: Tiền Ngô Vương (Ngô Quyền) — đánh bại Kiều Công Tiễn và hủy diệt toàn bộ hạm đội Nam Hán của Lưu Hoằng Thao trong một con nước thủy triều Bạch Đằng năm 938, chấm dứt 1.000 năm Bắc thuộc."
+        },
+        {
+          "source_name": "Đại Việt Sử Ký Toàn Thư — Bản Kỷ Quyển 5 & Quyển 6",
+          "historical_year": 1288,
+          "verified_fact": "Danh tướng thứ hai: Quốc Công Tiết Chế Hưng Đạo Đại Vương (Trần Quốc Tuấn) — tổng chỉ huy hai cuộc kháng chiến 1285 và 1287-1288 đánh tan 50 vạn quân Nguyên và hạm đội Ô Mã Nhi tại Bạch Đằng 1288."
+        },
+        {
+          "source_name": "Đại Nam Chính Biên Liệt Truyện — Sơ Tập Quyển 30",
+          "historical_year": 1789,
+          "verified_fact": "Danh tướng thứ ba: Bắc Bình Vương / Hoàng đế Quang Trung (Nguyễn Huệ) — cầm quân từ năm 18 tuổi, toàn thắng từ Phú Yên (1775), Rạch Gầm - Xoài Mút (1785, diệt 5 vạn quân Xiêm) đến Ngọc Hồi - Đống Đa (1789, phá 29 vạn quân Thanh), chưa từng thua một trận nào suốt cuộc đời."
+        }
+      ],
+      "quarantined_folklore_report_only": [
+        "Các bảng xếp hạng không chính thức trên mạng gán tỷ lệ thắng 100/100 trận nhỏ lẻ mà không dẫn nguồn chính sử (report-only — chỉ tính các chiến dịch lớn được ghi chép rõ trong Toàn Thư và Liệt Truyện)."
+      ],
+      "vietnam_micro_bridge": "Tên của cả ba vị danh tướng bất bại này — Ngô Quyền, Trần Hưng Đạo, Quang Trung — ngày nay luôn là ba trục đường trung tâm sầm uất bậc nhất tại Hà Nội, TP.HCM và hầu hết các thành phố lớn khắp Việt Nam.",
+      "outro_close_cta_vi": "Giữa ba danh tướng bất bại này, ai là kỳ tài số một?",
+      "outro_close_cta_syllables": 13,
+      "outro_channel_bridge_vi": "Cùng bình luận và khám phá tiếp trên kênh Sử Kể Lại.",
+      "outro_channel_bridge_syllables": 12,
+      "outro_combined_syllables": 25,
+      "debate_pinned_comment_vi": "📌 [ĐỐI CHIẾU THIÊN TÀI QUÂN SỰ]: Nếu xét về nghệ thuật cầm quân, bạn đánh giá cao trường phái nào nhất: (1) Ngô Quyền — một đòn Bạch Đằng định đoạt 1.000 năm độc lập, (2) Trần Hưng Đạo — lấy nhu thắng cương đánh gãy đế chế Mông - Nguyên, hay (3) Quang Trung Nguyễn Huệ — bách chiến bách thắng với tốc độ hành quân thần tốc? Chọn 1, 2 hay 3?",
+      "vault_2_flow_visual_spec": {
+        "style_id": "su_ke_lai_35mm_live_action_v3",
+        "keyframe_anchor": "35mm Kodak Vision3 500T vertical cinema: Ngô Quyền standing on the prow of a Đại Việt command galley pointing his bronze sword toward iron-tipped Bạch Đằng stakes in 938; Trần Quốc Tuấn studying bamboo tactical scrolls by river mist in 1288; Nguyễn Huệ on horseback leading torchlit columns in 1789.",
+        "heroic_banner_stamps": [
+          "NGÔ QUYỀN 938",
+          "TRẦN HƯNG ĐẠO 1288",
+          "NGUYỄN HUỆ 1789",
+          "BÁCH CHIẾN BÁCH THẮNG"
+        ]
+      }
+    },
+    {
+      "rank": 7,
+      "episode_id": "vn_su_ke_lai_ep13_cu_lua_ha_hoi_1789_short",
+      "is_pilot_episode": false,
+      "viral_archetype_id": "archetype_4_life_or_death_turning_point",
+      "viral_archetype_label": "4. Khoảnh khắc sinh tử / Nghi án lịch sử",
+      "pacing_mode": "viral_fast_loop_short",
+      "target_duration_sec": "56-68s",
+      "target_beats": 15,
+      "youtube_title": "Cú Lừa Đêm Mùng 3 Tết Khiến Đồn Quân Thanh Hàng Trắng",
+      "youtube_title_char_count": 53,
+      "flow_thumbnail_text": "CÚ LỪA HÀ HỒI",
+      "flow_thumbnail_word_count": 4,
+      "beat_0_hook_vi": "Không bắn một mũi tên, vua Quang Trung lấy trọn đồn giặc chỉ trong đêm.",
+      "beat_0_hook_syllables": 15,
+      "central_paradox_and_curiosity_gap": "Làm sao hạ gục một đồn tiền tiêu kiên cố cách Thăng Long chỉ 20 km mà không nổ một phát súng để đồn Ngọc Hồi kế bên không kịp nghe tiếng động? Nửa đêm mùng 3 Tết Kỷ Dậu (1789), vua Quang Trung đã dùng 'vũ khí âm thanh' từ hàng vạn chiếc loa truyền tiếng thét.",
+      "primary_chronicle_citations": [
+        {
+          "source_name": "Hoàng Lê Nhất Thống Chí — Hồi thứ 14",
+          "historical_year": 1789,
+          "verified_fact": "Nửa đêm mùng 3 tháng Giêng năm Kỷ Dậu (1789), vua Quang Trung bí mật vây kín đồn Hà Hồi (Thường Tín), sai bắc loa gọi hàng; hàng vạn quân sĩ bốn bề cùng dạ ran khiến tiếng vang rung động đất trời như có hàng chục vạn quân, quân Thanh trong đồn rụng rời buông vũ khí xin hàng, Tây Sơn thu toàn bộ quân lương và khí giới mà không tốn một mũi tên."
+        },
+        {
+          "source_name": "Khâm Định Việt Sử Thông Giám Cương Mục — Chính Biên Quyển 47",
+          "historical_year": 1789,
+          "verified_fact": "Quân Tây Sơn bắt sống toàn bộ lính tuần tiễu của đồn Hà Hồi và Ngọc Hồi đi do thám nên Tôn Sĩ Nghị ở Thăng Long hoàn toàn mù thông tin cho tới khi đồn Hà Hồi thất thủ."
+        }
+      ],
+      "quarantined_folklore_report_only": [
+        "Giai thoại nói quân Tây Sơn dùng 10.000 trống đồng cổ đặt trên ngọn cây quanh đồn Hà Hồi (report-only — Hoàng Lê Nhất Thống Chí ghi rõ là bắc loa truyền gọi và hàng vạn quân sĩ đồng thanh dạ ran)."
+      ],
+      "vietnam_micro_bridge": "Làng Hà Hồi (huyện Thường Tín, ngay cửa ngõ phía Nam thủ đô Hà Nội dọc Quốc lộ 1A ngày nay) chỉ cách Hồ Gươm khoảng 20 cây số — nơi 237 năm trước từng diễn ra trận tâm lý chiến không đổ máu kinh điển nhất lịch sử.",
+      "outro_close_cta_vi": "Theo bạn đồn Hà Hồi sụp đổ vì tiếng thét hay tốc độ?",
+      "outro_close_cta_syllables": 13,
+      "outro_channel_bridge_vi": "Giải mã trọn vẹn chiến dịch Kỷ Dậu trên Sử Kể Lại.",
+      "outro_channel_bridge_syllables": 12,
+      "outro_combined_syllables": 25,
+      "debate_pinned_comment_vi": "📌 [ĐÒN TÂM LÝ CHIẾN ĐÊM MÙNG 3 TẾT]: Không tốn một mũi tên mà thu trọn đồn Hà Hồi cùng toàn bộ lương thảo của quân Thanh! Theo bạn điều gì khiến tướng sĩ nhà Thanh sụp đổ tinh thần nhanh đến vậy: (1) Hiệu ứng âm thanh hàng vạn quân đồng thanh dạ ran giữa đêm tối hay (2) Việc quân Tây Sơn xuất hiện sớm hơn dự tính của Tôn Sĩ Nghị cả chục ngày? Chọn 1 hay 2?",
+      "vault_2_flow_visual_spec": {
+        "style_id": "su_ke_lai_35mm_live_action_v3",
+        "keyframe_anchor": "35mm Kodak Vision3 500T night chiaroscuro cinema: midnight of Lunar New Year 1789 outside Hà Hồi stockade, thousands of Tây Sơn torches igniting simultaneously in a complete 360-degree ring through winter mist as bamboo megaphones amplify a thunderous roar; terrified Qing soldiers inside dropping their muskets.",
+        "heroic_banner_stamps": [
+          "ĐÊM MÙNG 3 TẾT",
+          "VÂY KÍN HÀ HỒI",
+          "TIẾNG THÉT VẠN QUÂN",
+          "HÀNG TRẮNG TRONG ĐÊM"
+        ]
+      }
+    },
+    {
+      "rank": 8,
+      "episode_id": "vn_su_ke_lai_ep14_nghi_an_ho_quy_ly_short",
+      "is_pilot_episode": false,
+      "viral_archetype_id": "archetype_4_life_or_death_turning_point",
+      "viral_archetype_label": "4. Khoảnh khắc sinh tử / Nghi án lịch sử",
+      "pacing_mode": "serialized_detail_short",
+      "target_duration_sec": "110-125s",
+      "target_beats": 20,
+      "youtube_title": "Có Súng Thần Cơ Và Thành Đá, Vì Sao Hồ Quý Ly Vẫn Thua?",
+      "youtube_title_char_count": 55,
+      "flow_thumbnail_text": "BÍ MẬT THÀNH ĐÁ",
+      "flow_thumbnail_word_count": 4,
+      "beat_0_hook_vi": "Sở hữu vũ khí tối tân nhất thế kỷ mười lăm, sao nhà Hồ vẫn sập?",
+      "beat_0_hook_syllables": 16,
+      "central_paradox_and_curiosity_gap": "Nhà Hồ (1400-1407) sở hữu thành đá Tây Đô ghép từ những khối đá nặng hàng chục tấn, súng thần cơ, thuyền chiến Cổ Lâu hai tầng và quân số đông đảo bậc nhất lịch sử — vậy tại sao chỉ trong vài tháng năm 1406-1407 lại sụp đổ trước quân Minh của Trương Phụ?",
+      "primary_chronicle_citations": [
+        {
+          "source_name": "Đại Việt Sử Ký Toàn Thư — Bản Kỷ Quyển 8",
+          "historical_year": 1405,
+          "verified_fact": "Năm Ất Dậu (1405), Hồ Quý Ly họp triều thần bàn kế chống quân Minh; Tả Tướng Quốc Hồ Nguyên Trừng (người chế tạo súng thần cơ và thuyền Cổ Lâu) đã nói câu nổi tiếng: 'Thần không sợ đánh, chỉ sợ lòng dân không theo mà thôi'."
+        },
+        {
+          "source_name": "Đại Việt Sử Ký Toàn Thư — Bản Kỷ Quyển 9 & Khâm Định Việt Sử Thông Giám Cương Mục Quyển 12",
+          "historical_year": 1407,
+          "verified_fact": "Hồ Quý Ly xây thành đá Tây Đô (Vĩnh Lộc, Thanh Hóa) chỉ trong 3 tháng năm 1397, phát hành tiền giấy Thông Bảo Hội Sao và bố trí phòng tuyến Đa Bang dài hàng trăm dặm nhưng chiến thuật phòng ngự bị động cộng với việc mất lòng dân sau vụ sát hại tôn thất nhà Trần khiến đại quân tan rã năm 1407."
+        }
+      ],
+      "quarantined_folklore_report_only": [
+        "Giai thoại mạng nói súng thần cơ của Hồ Nguyên Trừng bắn xa 5 km như pháo hiện đại (report-only — tầm bắn thực tế của hỏa pháo đầu thế kỷ 15 khoảng vài trăm mét nhưng có kỹ thuật nạp thuốc và quy chuẩn đúc vượt trội đương thời)."
+      ],
+      "vietnam_micro_bridge": "Thành Nhà Hồ tại huyện Vĩnh Lộc (Thanh Hóa) ngày nay là Di sản Văn hóa Thế giới UNESCO với những khối đá xanh nặng từ 10 đến 20 tấn ghép khít không cần chất kết dính vẫn đứng vững sau hơn 620 năm.",
+      "outro_close_cta_vi": "Theo bạn nhà Hồ thất bại vì lòng dân hay sai lầm quân sự?",
+      "outro_close_cta_syllables": 14,
+      "outro_channel_bridge_vi": "Khám phá thêm các nghi án lịch sử trên Sử Kể Lại.",
+      "outro_channel_bridge_syllables": 12,
+      "outro_combined_syllables": 26,
+      "debate_pinned_comment_vi": "📌 [NGHI ÁN LỊCH SỬ NHÀ HỒ 1407]: Sở hữu thành đá Tây Đô kiên cố, súng Thần Cơ của Hồ Nguyên Trừng và tiền giấy đi trước thời đại, nhưng nhà Hồ vẫn thất bại đau đớn năm 1407! Theo bạn nguyên nhân cốt lõi là: (1) Đánh mất lòng dân như câu cảnh báo của Hồ Nguyên Trừng ('chỉ sợ lòng dân không theo') hay (2) Sai lầm chiến thuật dàn quân phòng thủ thụ động dọc bờ sông? Bình luận 1 hoặc 2!",
+      "vault_2_flow_visual_spec": {
+        "style_id": "su_ke_lai_35mm_live_action_v3",
+        "keyframe_anchor": "35mm Kodak Vision3 500T vertical cinema: massive 20-ton limestone blocks of Tây Đô Citadel (Thành Nhà Hồ) under stormy 1406 skies; Hồ Nguyên Trừng inspecting a newly cast bronze Thần Cơ cannon glowing with embers; contrast with silent, empty defensive ramparts at Đa Bang.",
+        "heroic_banner_stamps": [
+          "THÀNH ĐÁ TÂY ĐÔ",
+          "SÚNG THẦN CƠ 1405",
+          "LÒNG DÂN KHÔNG THEO",
+          "BÀI HỌC NHÀ HỒ"
+        ]
+      }
+    },
+    {
+      "rank": 9,
+      "episode_id": "vn_su_ke_lai_ep15_bi_kich_nguyen_trai_short",
+      "is_pilot_episode": false,
+      "viral_archetype_id": "archetype_5_tragic_destiny_after_victory",
+      "viral_archetype_label": "5. Số phận bi tráng sau chiến thắng",
+      "pacing_mode": "serialized_detail_short",
+      "target_duration_sec": "115-135s",
+      "target_beats": 20,
+      "youtube_title": "Số Phận Bi Tráng Của Danh Thần Lam Sơn Sau Chiến Thắng",
+      "youtube_title_char_count": 54,
+      "flow_thumbnail_text": "NỖI OAN CÔNG THẦN",
+      "flow_thumbnail_word_count": 4,
+      "beat_0_hook_vi": "Giúp vua đánh đuổi giặc Minh, vì sao công thần lại chịu kết cục bi thương?",
+      "beat_0_hook_syllables": 16,
+      "central_paradox_and_curiosity_gap": "Sau 10 năm đồng cam cộng khổ viết nên Bình Ngô Đại Cáo năm 1428, vì sao những khai quốc công thần kiệt xuất nhất của khởi nghĩa Lam Sơn như Tả Tướng Quốc Trần Nguyên Hãn và Ức Trai Nguyễn Trãi lại lần lượt rơi vào vòng xoáy nghi kỵ và đại án Lệ Chi Viên (1442)?",
+      "primary_chronicle_citations": [
+        {
+          "source_name": "Đại Việt Sử Ký Toàn Thư — Bản Kỷ Thực Lục Quyển 10",
+          "historical_year": 1429,
+          "verified_fact": "Năm Kỷ Dậu (1429), Tả Tướng Quốc Trần Nguyên Hãn (người chỉ huy trận Xương Giang 1427) dù đã xin về hưu ở Sơn Đông nhưng bị kẻ xấu vu cáo mưu phản; khi thuyền áp giải về kinh đến bến xã Sơn Đông, ông ngửa mặt khấn trời rồi nhảy xuống sông tự vẫn."
+        },
+        {
+          "source_name": "Đại Việt Sử Ký Toàn Thư — Bản Kỷ Thực Lục Quyển 11",
+          "historical_year": 1442,
+          "verified_fact": "Tháng 8 năm Nhâm Tuất (1442), vua Lê Thái Tông đột ngột băng hà tại Lệ Chi Viên (Gia Bình, Bắc Ninh); triều đình khép Nguyễn Trãi và Nguyễn Thị Lộ vào án tru di tam tộc. Đến tháng 7 năm Giáp Thân (1464), vua Lê Thánh Tông chính thức xuống chiếu minh oan cho Nguyễn Trãi và Trần Nguyên Hãn, ca ngợi 'Ức Trai tâm thượng quang khuê tảo'."
+        }
+      ],
+      "quarantined_folklore_report_only": [
+        "Truyền thuyết dân gian về rắn thần báo oán ở Lệ Chi Viên (report-only — đây là truyền thuyết dân gian hóa nhằm lý giải nỗi oan khuất của Nguyễn Trãi, cần tách biệt rõ khỏi sử liệu chính trị cung đình thời Lê Sơ)."
+      ],
+      "vietnam_micro_bridge": "Đền thờ Nguyễn Trãi tại khu di tích Côn Sơn (Chí Linh, Hải Dương) và khu tưởng niệm Lệ Chi Viên (Gia Bình, Bắc Ninh) ngày nay vẫn đón hàng vạn người Việt đến dâng hương tưởng nhớ vị danh nhân văn hóa thế giới và lời minh oan 'Ức Trai tâm thượng quang khuê tảo'.",
+      "outro_close_cta_vi": "Theo bạn bi kịch công thần là quy luật hay nỗi đau lịch sử?",
+      "outro_close_cta_syllables": 14,
+      "outro_channel_bridge_vi": "Xem tiếp những góc khuất triều đại trên Sử Kể Lại.",
+      "outro_channel_bridge_syllables": 11,
+      "outro_combined_syllables": 25,
+      "debate_pinned_comment_vi": "📌 [SUY NGẪM LỊCH SỬ]: Năm 1464, vua Lê Thánh Tông đã chính thức rửa sạch nỗi oan cho Nguyễn Trãi và Trần Nguyên Hãn với câu nói bất hủ: 'Ức Trai tâm thượng quang khuê tảo' (Lòng Ức Trai sáng tựa sao Khuê). Theo bạn, bi kịch của các khai quốc công thần thời Lê Sơ bắt nguồn từ: (1) Sự xung đột quyền lực trong triều đình sau khi hòa bình lập lại hay (2) Tính cách cương trực không chịu thỏa hiệp của các bậc hiền tài? Chia sẻ suy nghĩ của bạn!",
+      "vault_2_flow_visual_spec": {
+        "style_id": "su_ke_lai_35mm_live_action_v3",
+        "keyframe_anchor": "35mm Kodak Vision3 500T dramatic historical cinema: scholar-strategist Nguyễn Trãi in dark indigo literati robes sitting alone under pine trees at Côn Sơn by candlelight writing on bamboo paper; later Emperor Lê Thánh Tông in 1464 unrolling an imperial golden decree exonerating the founding heroes.",
+        "heroic_banner_stamps": [
+          "KHAI QUỐC CÔNG THẦN",
+          "BI KỊCH SAU CHIẾN THẮNG",
+          "LỆ CHI VIÊN 1442",
+          "SÁNG TỰA SAO KHUÊ"
+        ]
+      }
+    },
+    {
+      "rank": 10,
+      "episode_id": "vn_su_ke_lai_ep16_tran_binh_trong_1285_short",
+      "is_pilot_episode": false,
+      "viral_archetype_id": "archetype_5_tragic_destiny_after_victory",
+      "viral_archetype_label": "5. Số phận bi tráng sau chiến thắng",
+      "pacing_mode": "viral_fast_loop_short",
+      "target_duration_sec": "56-68s",
+      "target_beats": 15,
+      "youtube_title": "Câu Nói Bất Hủ Của Trần Bình Trọng Trước Giặc Nguyên",
+      "youtube_title_char_count": 52,
+      "flow_thumbnail_text": "LÀM MA NƯỚC NAM",
+      "flow_thumbnail_word_count": 4,
+      "beat_0_hook_vi": "Bị giặc dụ phong vương đất Bắc, danh tướng nhà Trần đáp trả câu gì?",
+      "beat_0_hook_syllables": 15,
+      "central_paradox_and_curiosity_gap": "Tháng 2 năm 1285 tại bãi Đà Mạc (Thiên Mạc), chỉ với một cánh quân nhỏ cầm chân đại quân truy kích của Thoát Hoan để hai vua Trần rút lui an toàn, danh tướng 26 tuổi Trần Bình Trọng bị bắt sống, tuyệt thực và để lại câu nói chấn động ngàn thu.",
+      "primary_chronicle_citations": [
+        {
+          "source_name": "Đại Việt Sử Ký Toàn Thư — Bản Kỷ Quyển 5",
+          "historical_year": 1285,
+          "verified_fact": "Tháng 2 năm Ất Dậu (1285), Bảo Nghĩa Hầu Trần Bình Trọng (dòng dõi vua Lê Đại Hành, lấy công chúa Thụy Bảo được ban quốc tính họ Trần) giao chiến với quân Nguyên ở bãi Đà Mạc để bảo vệ xa giá hai vua Trần; bị bắt sống, ông tuyệt thực không ăn, khi giặc hỏi 'Có muốn làm vương đất Bắc không?', ông thét lớn: 'Ta thà làm ma nước Nam, chứ không thèm làm vương đất Bắc!' rồi bị giặc giết ngày 21 tháng Giêng âm lịch năm Ất Dậu (tháng 2/1285), hưởng dương 26 tuổi; vua Trần truy phong Bảo Nghĩa Vương."
+        }
+      ],
+      "quarantined_folklore_report_only": [
+        "Giai thoại nói Trần Bình Trọng chỉ có đúng 30 kỵ binh giữ bãi Đà Mạc suốt 7 ngày (report-only — Toàn Thư ghi ông chỉ huy quân hậu vệ quyết chiến ở bãi Đà Mạc đến khi sa vào vòng vây)."
+      ],
+      "vietnam_micro_bridge": "Bãi Đà Mạc (nay thuộc vùng bãi Màn Trầu, xã Châu Sơn, huyện Khoái Châu, tỉnh Hưng Yên bên bờ sông Hồng) cách trung tâm Hà Nội chỉ khoảng 30 km xuôi dòng — nơi chàng tướng quân 26 tuổi đã tạc câu tuyên ngôn khí phách nhất lịch sử Việt Nam.",
+      "outro_close_cta_vi": "Câu nói của Trần Bình Trọng gợi cho bạn suy ngẫm điều gì?",
+      "outro_close_cta_syllables": 13,
+      "outro_channel_bridge_vi": "Khám phá tiếp hào khí Đông A bất diệt trên Sử Kể Lại.",
+      "outro_channel_bridge_syllables": 13,
+      "outro_combined_syllables": 26,
+      "debate_pinned_comment_vi": "📌 [KHÍ PHÁCH ĐẠI VIỆT 1285]: Khi hy sinh ở bãi Đà Mạc ngày 21 tháng Giêng năm Ất Dậu (1285) với câu nói 'Ta thà làm ma nước Nam, chứ không thèm làm vương đất Bắc', Bảo Nghĩa Vương Trần Bình Trọng mới chỉ 26 tuổi! Theo bạn, trận chặn hậu sinh tử của ông ở bãi Đà Mạc có ý nghĩa quyết định thế nào đối với việc bảo toàn đầu não nhà Trần để làm nên đại thắng Chương Dương - Hàm Tử 3 tháng sau? Để lại bình luận của bạn!",
+      "vault_2_flow_visual_spec": {
+        "style_id": "su_ke_lai_35mm_live_action_v3",
+        "keyframe_anchor": "35mm Kodak Vision3 500T vertical low-angle hero portrait: 26-year-old general Trần Bình Trọng in battle-scarred Trần Dynasty bronze lamellar armor standing defiant and unbowed amidst smoky Đà Mạc riverbank (1285), surrounded by Mongol iron spears, fierce unbroken gaze.",
+        "heroic_banner_stamps": [
+          "BÃI ĐÀ MẠC 1285",
+          "CHẶN ĐẠI QUÂN NGUYÊN",
+          "TUỔI 26 BẤT KHUẤT",
+          "LÀM MA NƯỚC NAM"
+        ]
+      }
+    }
+  ]
+}
