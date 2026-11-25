@@ -78,22 +78,80 @@ def get_gpu_vram_mb(budget_ratio: float = 0.90) -> int | None:
     return None
 
 
+def get_host_ram_total_mb() -> int | None:
+    """Return total host system RAM in MiB from `/proc/meminfo`, or None if unavailable."""
+    try:
+        with open("/proc/meminfo", encoding="utf-8") as fh:
+            for line in fh:
+                if line.startswith("MemTotal:"):
+                    parts = line.split()
+                    if len(parts) >= 2 and parts[1].isdigit():
+                        return max(256, int(parts[1]) // 1024)
+    except OSError:
+        pass
+    return None
+
+
+def get_host_ram_available_mb() -> int | None:
+    """Return currently available host RAM (`MemAvailable`) in MiB from `/proc/meminfo`."""
+    try:
+        with open("/proc/meminfo", encoding="utf-8") as fh:
+            for line in fh:
+                if line.startswith("MemAvailable:"):
+                    parts = line.split()
+                    if len(parts) >= 2 and parts[1].isdigit():
+                        return max(0, int(parts[1]) // 1024)
+    except OSError:
+        pass
+    return None
+
+
 def compute_optimal_browser_slots(
     budget_ratio: float = 0.90,
     per_browser_vram_mb: int = 110,
     xorg_reserve_mb: int = 180,
+    ram_total_mb: int | None = None,
+    cpu_threads: int | None = None,
 ) -> int:
-    """Compute optimal concurrency slots based on GPU VRAM and display server overhead."""
+    """Compute optimal concurrency slots bounded by GPU VRAM, host RAM, and CPU threads."""
     env_max = os.environ.get("VP_MAX_CHROME_INSTANCES")
     if env_max is not None and env_max.strip() != "":
         try:
             return max(1, int(env_max))
         except ValueError:
             pass
+
     vram_mb = get_gpu_vram_mb(budget_ratio=budget_ratio)
     if vram_mb is not None:
-        return max(8, min(16, (vram_mb - xorg_reserve_mb) // per_browser_vram_mb))
-    return 8
+        vram_slots = max(8, min(16, (vram_mb - xorg_reserve_mb) // per_browser_vram_mb))
+    else:
+        vram_slots = 8
+
+    eff_ram = ram_total_mb if ram_total_mb is not None else get_host_ram_total_mb()
+    if eff_ram is not None:
+        ram_budget_slots = max(2, (eff_ram - 7168) // 900)
+        if eff_ram <= 16800:
+            ram_cap = 4
+        elif eff_ram <= 32768:
+            ram_cap = 6
+        else:
+            ram_cap = 16
+        ram_slots = min(ram_cap, ram_budget_slots)
+    else:
+        ram_slots = 16
+
+    eff_cpu = cpu_threads if cpu_threads is not None else os.cpu_count()
+    if eff_cpu is not None:
+        if eff_cpu <= 8:
+            cpu_slots = 4
+        elif eff_cpu <= 16:
+            cpu_slots = 6
+        else:
+            cpu_slots = 16
+    else:
+        cpu_slots = 16
+
+    return max(2, min(vram_slots, ram_slots, cpu_slots))
 
 
 DEFAULT_MAX_GLOBAL_BROWSERS = compute_optimal_browser_slots()
@@ -120,6 +178,7 @@ def detect_local_gpu_display(env: dict[str, str] | None = None) -> tuple[bool, d
                     pass
         base_env.setdefault("__NV_PRIME_RENDER_OFFLOAD", "1")
         base_env.setdefault("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
+    base_env.setdefault("MALLOC_ARENA_MAX", "2")
     return has_display, base_env
 
 
@@ -164,11 +223,18 @@ def build_optimized_chrome_launch(
         "--disable-translate",
         "--disable-default-apps",
         "--host-resolver-rules=MAP edgedl.me.gvt1.com ~NOTFOUND, MAP *.gvt1.com ~NOTFOUND",
-        "--disable-features=CalculateNativeWinOcclusion,IntensiveWakeUpThrottling,AutomaticTabDiscarding,MemorySaverMode,OptimizationGuideModelDownloading,OptimizationGuideOnDeviceModel,OptimizationHints,OptimizationHintsFetching,OptimizationTargetPrediction,Translate",
+        "--disable-features=CalculateNativeWinOcclusion,IntensiveWakeUpThrottling,AutomaticTabDiscarding,MemorySaverMode,OptimizationGuideModelDownloading,OptimizationGuideOnDeviceModel,OptimizationHints,OptimizationHintsFetching,OptimizationTargetPrediction,Translate,AudioServiceOutOfProcess,SpareRendererForSitePerProcess,BackForwardCache,Prerender2,MediaRouter,DialMediaRouteProvider,AutofillServerCommunication,CertificateTransparencyComponentUpdater,InterestFeedContentSuggestions",
         "--disable-background-timer-throttling",
         "--disable-backgrounding-occluded-windows",
         "--disable-renderer-backgrounding",
         "--disable-hang-monitor",
+        "--disable-background-networking",
+        "--disable-breakpad",
+        "--disable-domain-reliability",
+        "--disable-client-side-phishing-detection",
+        "--no-pings",
+        "--metrics-recording-only",
+        "--safebrowsing-disable-auto-update",
         "--window-size=800,600",
         "--num-raster-threads=2",
         "--disk-cache-size=67108864",
@@ -197,6 +263,9 @@ def build_optimized_chrome_launch(
             "--headless=new",
             "--hide-scrollbars",
             "--mute-audio",
+            "--alsa-output-device=null",
+            "--renderer-process-limit=2",
+            "--js-flags=--max-old-space-size=384",
         ])
         if has_display:
             cmd.append("--ozone-platform=x11")
@@ -395,6 +464,93 @@ class JobExecutionLock(_FlockHandle):
             base / f"job_{safe_id}.lock",
             metadata={"job_id": job_id},
         )
+
+
+class GlobalFlowProductionLock(_FlockHandle):
+    """Host-wide exclusive lock preventing concurrent heavy Flow Chrome pools from causing OOM."""
+
+    LOCK_FILENAME = "global_flow_production.lock"
+    ENV_OWNER_KEY = "VP_FLOW_LOCK_OWNER_PID"
+
+    def __init__(self, job_id: str = "", stage: str = "", locks_dir: Path | None = None):
+        base = ensure_locks_dir(locks_dir)
+        self.job_id = job_id
+        self.stage = stage
+        self._reentrant_noop = False
+        super().__init__(
+            base / self.LOCK_FILENAME,
+            metadata={"job_id": job_id, "stage": stage},
+        )
+
+    def read_holder(self) -> dict[str, Any]:
+        """Non-destructively read metadata of the process currently holding the global Flow lock."""
+        if not self.lock_path.is_file():
+            return {}
+        try:
+            raw = self.lock_path.read_text(encoding="utf-8").strip()
+            if raw:
+                parsed = json.loads(raw.splitlines()[0])
+                if isinstance(parsed, dict):
+                    return parsed
+        except Exception:
+            pass
+        return {}
+
+    def try_acquire(self) -> bool:
+        my_pid = str(os.getpid())
+        if os.environ.get(self.ENV_OWNER_KEY) == my_pid and self._fh is None:
+            self._reentrant_noop = True
+            return True
+        ok = super().try_acquire()
+        if ok:
+            os.environ[self.ENV_OWNER_KEY] = my_pid
+        return ok
+
+    def acquire_patiently(
+        self,
+        timeout: float = 7200.0,
+        poll_interval: float = 4.0,
+        on_wait: Any = None,
+    ) -> bool:
+        """Wait until any other active Flow job finishes, invoking `on_wait(holder_dict, waited_sec)`."""
+        t0 = time.monotonic()
+        deadline = t0 + max(0.0, timeout)
+        last_notify = -999.0
+        while True:
+            if self.try_acquire():
+                return True
+            now = time.monotonic()
+            if now >= deadline:
+                return False
+            waited = now - t0
+            if on_wait is not None and (waited - last_notify) >= 12.0:
+                last_notify = waited
+                try:
+                    on_wait(self.read_holder(), round(waited, 1))
+                except Exception:
+                    pass
+            time.sleep(min(poll_interval, max(0.05, deadline - now)))
+
+    def release(self) -> None:
+        if self._reentrant_noop:
+            self._reentrant_noop = False
+            return
+        had_fh = self._fh is not None
+        super().release()
+        if had_fh and os.environ.get(self.ENV_OWNER_KEY) == str(os.getpid()):
+            os.environ.pop(self.ENV_OWNER_KEY, None)
+
+    def __enter__(self) -> GlobalFlowProductionLock:
+        if not self.acquire_patiently():
+            raise TimeoutError(f"Timed out waiting for {self.__class__.__name__} ({self.lock_path})")
+        return self
+
+
+class GlobalRenderIoLock(GlobalFlowProductionLock):
+    """Host-wide exclusive lock serializing Colab T4 chunk download & FFmpeg disk muxing to prevent SATA I/O thrash."""
+
+    LOCK_FILENAME = "global_render_io.lock"
+    ENV_OWNER_KEY = "VP_RENDER_LOCK_OWNER_PID"
 
 
 def stagger_cross_process_action(

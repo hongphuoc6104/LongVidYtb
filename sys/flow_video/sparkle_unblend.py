@@ -215,6 +215,24 @@ def clean_omni_video_sparkle_mp4(mp4_path: str | Path) -> bool:
     frames = np.frombuffer(raw_bytes, dtype=np.uint8).reshape(-1, h, w, 3).copy()
     alpha = _decode_alpha_vid_56()[None, ...]  # (1, 56, 56, 1)
     y0, y1, x0, x1 = h - 148, h - 92, w - 148, w - 92
+
+    # Guard: only unblend when a bright white Omni Flash corner star is actually present.
+    # Veo 3.1 Lite clips lack this star (they only carry a small corner "Veo" text mark);
+    # blindly subtracting 255*alpha on non-starred clips carves a dark 4-pointed diamond scar.
+    sample_idx = np.linspace(0, len(frames) - 1, min(len(frames), 16), dtype=int)
+    mean_patch_gray = frames[sample_idx, y0:y1, x0:x1, :].astype(np.float64).mean(axis=(0, 3))
+    alpha_2d = alpha[0, ..., 0]
+    star_diff = float(mean_patch_gray[alpha_2d > 0.15].mean() - mean_patch_gray[alpha_2d < 0.01].mean())
+    if float(np.std(mean_patch_gray)) < 1e-6:
+        star_corr = 0.0
+    else:
+        star_corr = float(np.corrcoef(mean_patch_gray.ravel(), alpha_2d.ravel())[0, 1])
+    if star_diff < 20.0 or star_corr < 0.45:
+        sidecar_obj["sparkle_unblended"] = True
+        sidecar_obj["sparkle_detected"] = False
+        sidecar.write_text(json.dumps(sidecar_obj, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        return False
+
     patch = frames[:, y0:y1, x0:x1, :].astype(np.float64)
     unblended = np.clip(np.round((patch - 255.0 * alpha) / np.maximum(0.25, 1.0 - alpha)), 0.0, 255.0)
     frames[:, y0:y1, x0:x1, :] = unblended.astype(np.uint8)

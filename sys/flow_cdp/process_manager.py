@@ -33,9 +33,28 @@ from typing import Any, Iterator
 
 from .resource_locks import (
     build_optimized_chrome_launch,
+    get_host_ram_available_mb,
     is_port_locked_by_another_process,
     stagger_cross_process_action,
 )
+
+
+def _isolate_worker_process_priority(
+    pid: int,
+    *,
+    oom_score_adj: int = 500,
+    nice_level: int = 5,
+) -> None:
+    """Protect desktop/IDE stability by raising headless worker OOM score and lowering CPU priority."""
+    try:
+        Path(f"/proc/{int(pid)}/oom_score_adj").write_text(f"{int(oom_score_adj)}\n", encoding="utf-8")
+    except OSError:
+        pass
+    try:
+        if hasattr(os, "setpriority") and hasattr(os, "PRIO_PROCESS"):
+            os.setpriority(os.PRIO_PROCESS, int(pid), int(nice_level))
+    except OSError:
+        pass
 
 logger = logging.getLogger("flow_cdp.process_manager")
 
@@ -444,6 +463,34 @@ class ProcessGroupManager:
             pass
         return reaped_count
 
+    def _wait_for_memory_headroom(
+        self,
+        min_available_mb: int = 2048,
+        max_wait_sec: float = 30.0,
+    ) -> None:
+        """Pause briefly before spawning Chrome if host MemAvailable is critically low."""
+        avail = get_host_ram_available_mb()
+        if avail is None or avail >= min_available_mb:
+            return
+        try:
+            self.clean_orphans_from_registry(force_all=False)
+        except Exception:
+            pass
+        deadline = time.monotonic() + max(0.0, max_wait_sec)
+        logged = False
+        while time.monotonic() < deadline:
+            avail = get_host_ram_available_mb()
+            if avail is None or avail >= min_available_mb:
+                return
+            if not logged:
+                logger.warning(
+                    "ProcessGroupManager: MemAvailable=%d MiB < %d MiB; pausing Chrome spawn to protect desktop stability...",
+                    avail,
+                    min_available_mb,
+                )
+                logged = True
+            time.sleep(2.0)
+
     def launch(
         self,
         profile_cfg: dict[str, Any],
@@ -478,6 +525,8 @@ class ProcessGroupManager:
         prof_name = profile_cfg.get("directory") or profile_cfg.get("profile_dir", "Profile 1")
         binary = chrome_bin or detect_chrome_binary()
 
+        self._wait_for_memory_headroom()
+
         # Clean stale locks before launch and stagger cross-process browser spawns by >= 3.2s + jitter
         clean_singleton_locks(target_dir, prof_name)
         stagger_cross_process_action("chrome_launch", min_interval_sec=3.2, jitter_sec=0.6)
@@ -508,6 +557,7 @@ class ProcessGroupManager:
                 stderr=subprocess.DEVNULL,
                 start_new_session=True,  # Crucial: PGID == PID
             )
+            _isolate_worker_process_priority(proc.pid, oom_score_adj=500 if headless else 250, nice_level=5)
         except Exception as e:
             logger.error("ProcessGroupManager: Failed to spawn Chrome on port %d: %s", port, e)
             return False

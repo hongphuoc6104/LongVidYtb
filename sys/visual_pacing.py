@@ -22,7 +22,7 @@ def check_see_say_beat_density(
     """
     total_beats = sum(len(sc.get('images', [])) for sc in scenes)
     total_duration = scenes[-1]['end'] - scenes[0]['start'] if scenes and 'end' in scenes[-1] and 'start' in scenes[0] else 0.0
-    is_flow_video_short = format_profile in ('serialized_detail_short', 'short_9x16_flow_video')
+    is_flow_video_short = format_profile in ('serialized_detail_short', 'viral_fast_loop_short', 'short_9x16_flow_video')
     is_explicit_short = bool(format_profile and format_profile.startswith('short') and not is_flow_video_short)
     is_long_explainer = (
         format_profile in ('long_16x9', 'long_16x9_high_density', 'long_16x9_narrative_adaptive')

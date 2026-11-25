@@ -297,7 +297,7 @@ class ColabPoolManager:
                 if elapsed < self.stagger_seconds and self._last_allocation_at > 0:
                     time.sleep(self.stagger_seconds - elapsed)
                 self._last_allocation_at = time.time()
-            self.run_account_cmd(acc, ["new", "-s", sess, "--gpu", "T4"], timeout=180, check=True)
+            self.run_account_cmd(acc, ["new", "-s", sess, "--gpu", "T4"], timeout=285, check=True)
             worker.render_runtime_ready = False
             worker.tts_runtime_ready = False
 

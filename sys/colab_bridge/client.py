@@ -367,7 +367,8 @@ class Client:
                 from .scheduler import RuntimeScheduler
 
                 RuntimeScheduler(self.root, store=budgets.path.parent).allocation_turn()
-                result = self.call("new", "-s", self.session, "--gpu", "T4", timeout=120)
+                new_timeout = int(self.cfg.get("new_timeout", 285))
+                result = self.call("new", "-s", self.session, "--gpu", "T4", timeout=new_timeout)
                 output = self.exec(
                     "import subprocess, json\ngpu = subprocess.check_output(['nvidia-smi', '--query-gpu=name', '--format=csv,noheader'], text=True).strip()\nprint('VP_GPU=' + json.dumps(gpu))"
                 )

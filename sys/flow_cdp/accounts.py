@@ -19,6 +19,10 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
+_SYS_DIR = Path(__file__).resolve().parents[1]
+if str(_SYS_DIR) not in sys.path:
+    sys.path.insert(0, str(_SYS_DIR))
+
 logger = logging.getLogger("flow_cdp.accounts")
 
 STORE = Path.home() / ".config/video-pilot/flow"
@@ -249,7 +253,10 @@ def stop_profile(profile_entry: dict[str, Any]) -> None:
 
 def stop_profile_by_port(port: int) -> bool:
     """Terminate Chrome process for a specific remote debugging port and clean its locks."""
-    from .process_manager import get_process_manager
+    try:
+        from .process_manager import get_process_manager
+    except ImportError:
+        from flow_cdp.process_manager import get_process_manager
     return get_process_manager().terminate_by_port(port)
 
 
@@ -257,7 +264,10 @@ def stop_all(profiles: list[dict[str, Any]] | None = None) -> list[str]:
     """Stop all configured or passed profiles."""
     d = registry()
     entries = profiles or d.get("profiles", [])
-    from .process_manager import get_process_manager
+    try:
+        from .process_manager import get_process_manager
+    except ImportError:
+        from flow_cdp.process_manager import get_process_manager
     pm = get_process_manager()
     stopped = []
     for p in entries:

@@ -49,10 +49,22 @@ def main():
     except OSError:
         pass
     import colab_cli.auth as auth
+    import colab_cli.client as colab_client
     import colab_cli.common as common
     from colab_cli.common import state
 
     common.setup_logging = lambda *a, **kw: None
+    if args and args[0] == "new":
+        assign_timeout = float(os.environ.get("VP_COLAB_ASSIGN_HTTP_TIMEOUT", "270"))
+        orig_issue_request = colab_client.Client._issue_request
+
+        def _issue_request_with_assign_timeout(self, endpoint, method="GET", *a, **kw):
+            if method == "POST" and "/tun/m/assign" in str(endpoint) and "timeout" not in kw:
+                kw["timeout"] = assign_timeout
+            return orig_issue_request(self, endpoint, method=method, *a, **kw)
+
+        colab_client.Client._issue_request = _issue_request_with_assign_timeout
+
     from colab_cli.cli import main as run
     from colab_cli.history import HistoryLogger
 

@@ -99,33 +99,68 @@ CAMERA_MOVES: dict[str, dict[str, str]] = {
 EXIT_SEAMS: dict[str, dict[str, str]] = {
     "leaves_wipe": {
         "seam_color": "green",
-        "start_image_setup": "Dense natural foliage or tall grass blades near the travel edge of the frame.",
-        "final_second_sentence": "In the final second, the camera sweeps closely past dense foreground leaves at the frame edge until soft foliage fills the lens.",
+        "start_image_setup": (
+            "3D foreground bamboo stalks, reed blades, or lush canopy foliage framing the travel edge "
+            "for deep optical parallax while keeping the midground hero subject razor-sharp."
+        ),
+        "final_second_sentence": (
+            "In the final second, the camera executes a crisp 3D foreground bamboo and foliage parallax sweep "
+            "across the frame edge while keeping the hero subject clean and sharp."
+        ),
     },
     "dark_opening": {
         "seam_color": "black",
-        "start_image_setup": "A natural dark doorway, hatch, tunnel mouth, or shadow recess along the travel path.",
-        "final_second_sentence": "In the final second, the camera glides forward into {prop} until clean shadow darkness fills the entire frame.",
+        "start_image_setup": (
+            "A deep Caravaggio-lit timber archway, fortress gate shadow recess, or dark architectural threshold "
+            "along the travel path."
+        ),
+        "final_second_sentence": (
+            "In the final second, the camera glides smoothly past {prop} into a deep Caravaggio torchlit "
+            "shadow archway pass at the frame edge."
+        ),
     },
     "white_flash": {
         "seam_color": "white",
-        "start_image_setup": "A bright localized light source (furnace glow, sunlit opening, surgical lamp, specular reflection) near the edge.",
-        "final_second_sentence": "In the final second, the camera pushes toward {prop} until clean luminous light fills the entire frame.",
+        "start_image_setup": (
+            "A warm golden anamorphic sunbeam or flickering pitch-torch light source near the upper frame edge "
+            "casting crisp directional specular highlights."
+        ),
+        "final_second_sentence": (
+            "In the final second, a warm golden anamorphic sunbeam and torch flare sweeps diagonally across "
+            "the lens near {prop} without washing out the hero subject."
+        ),
     },
     "dust_smoke_cloud": {
         "seam_color": "grey",
-        "start_image_setup": "Thin drifting mist, dust, or steam already visible in the scene along the camera trajectory.",
-        "final_second_sentence": "In the final second, the camera glides through drifting mist and haze until soft atmospheric vapor fills the frame.",
+        "start_image_setup": (
+            "A subtle translucent wisp of warm torch embers and fine golden dust parallax near the outer frame edge "
+            "while keeping the hero subject and face razor-sharp in clear air."
+        ),
+        "final_second_sentence": (
+            "In the final second, the camera glides past a thin wisp of warm torch embers at the frame edge "
+            "while keeping the main subject in crisp focus."
+        ),
     },
     "edge_pass": {
         "seam_color": "neutral",
-        "start_image_setup": "A clean architectural pillar, bulkhead edge, or foreground panel placed along the camera travel edge.",
-        "final_second_sentence": "In the final second, the camera sweeps smoothly past {prop} so its clean matte surface crosses the full frame.",
+        "start_image_setup": (
+            "A Kurosawa-style foreground architectural timber pillar, fluttering silk war-banner edge, or weathered "
+            "shield edge placed cleanly along the camera travel edge."
+        ),
+        "final_second_sentence": (
+            "In the final second, the camera sweeps smoothly past {prop} as a Kurosawa foreground pillar, "
+            "silk war-banner, or shield edge wipe before clearing cleanly."
+        ),
     },
     "final_hold": {
         "seam_color": "none",
-        "start_image_setup": "Clean, balanced hero framing centered with ample breathing headroom.",
-        "final_second_sentence": "In the final two seconds, the camera decelerates to a complete stop and holds rock-steady on the final composition.",
+        "start_image_setup": (
+            "Clean, balanced hero framing centered with ample breathing headroom and crisp optical separation."
+        ),
+        "final_second_sentence": (
+            "In the final two seconds, the camera decelerates to a steady hold with a shallow-DoF anamorphic "
+            "rack-focus settle onto the hero subject."
+        ),
     },
 }
 
@@ -200,8 +235,19 @@ def get_channel_motion_policy(channel_id: str) -> dict[str, Any]:
     }
 
 
-def _timecodes_for_clip(clip_duration_sec: int, is_final_hold: bool) -> tuple[str, str]:
+def _timecodes_for_clip(
+    clip_duration_sec: int,
+    is_final_hold: bool,
+    *,
+    viral_v7: bool = False,
+) -> tuple[str, str]:
     d = int(clip_duration_sec)
+    if viral_v7:
+        if d <= 4:
+            return ("0-2.6s", "2.6-4s") if is_final_hold else ("0-2.8s", "2.8-4s")
+        if d <= 6:
+            return ("0-4.2s", "4.2-6s") if is_final_hold else ("0-4.4s", "4.4-6s")
+        return ("0-4.5s", "4.5-6s") if is_final_hold else ("0-5.2s", "5.2-6.5s")
     if d <= 4:
         return ("0-3s", "3-4s") if is_final_hold else ("0-3.2s", "3.2-4s")
     if d <= 6:
@@ -243,13 +289,15 @@ def build_timecoded_video_prompt(
     anti_symbol_surfaces: str = "masts, hulls, buildings, walls, and uniforms",
     lens_spec: str = "wide 28mm lens",
     scene_type: str = "live_action",
+    diegetic_audio_cue: str = "",
+    viral_v7: bool = False,
 ) -> str:
     """Build a low-risk timecoded video prompt calibrated for Veo 3.1 Lite or Omni 1.2 Flash."""
     move_key = camera_move if camera_move in CAMERA_MOVES else "push_in"
     move_spec = CAMERA_MOVES[move_key]
     pacing = BEAT_PACING_ENERGY.get(beat_role, BEAT_PACING_ENERGY["context"])
     is_final = exit_seam == "final_hold"
-    t_main, t_end = _timecodes_for_clip(clip_duration_sec, is_final)
+    t_main, t_end = _timecodes_for_clip(clip_duration_sec, is_final, viral_v7=viral_v7)
     is_veo_lite = "lite" in (model or "").lower()
     active_lens = (lens_spec or "wide 28mm lens").strip()
 
@@ -289,11 +337,24 @@ def build_timecoded_video_prompt(
         prop_val = seam_prop or ("dark architectural opening" if exit_seam == "dark_opening" else "foreground pillar edge")
         end_sentence = seam_spec["final_second_sentence"].format(prop=prop_val)
 
-    person_clause = (
-        "The person stays calm and almost still with a closed mouth, hands resting naturally; only the camera moves."
-        if has_person
-        else ""
-    )
+    foley_clause = str(diegetic_audio_cue or "").strip()
+    if foley_clause:
+        person_clause = (
+            "People perform dynamic physical action with closed mouths and no spoken dialogue; only natural action and camera movement."
+            if has_person
+            else ""
+        )
+        audio_tail = (
+            "Dynamic physical action with closed mouths and no spoken dialogue or background music; "
+            f"synchronized diegetic sound: {foley_clause.rstrip('.')}."
+        )
+    else:
+        person_clause = (
+            "The person stays calm and almost still with a closed mouth, hands resting naturally; only the camera moves."
+            if has_person
+            else ""
+        )
+        audio_tail = "silent visual storytelling, no talking, no lip movement, no speech, no music, quiet ambient room texture only."
 
     if is_veo_lite:
         prompt = (
@@ -302,13 +363,14 @@ def build_timecoded_video_prompt(
             f"[{t_end}] {end_sentence} Single unbroken continuous shot staying strictly in {setting}, {style_cue}, "
             f"light natural motion blur only on fast movement. {person_clause} "
             f"Plain unmarked {anti_symbol_surfaces} with zero flags, insignia, letters, logos, or numbers; "
-            f"silent visual storytelling, no talking, no lip movement, no speech, no music, quiet ambient room texture only."
+            f"{audio_tail}"
         )
     else:
+        non_lite_tail = audio_tail if foley_clause else "silent visual storytelling, no talking, no lip movement."
         prompt = (
             f"[{t_main}] {cam_sentence}, {pacing['speed']} pace ({pacing['easing']}), {secondary_motion}. "
             f"[{t_end}] {end_sentence} One continuous shot, {style_cue}. {person_clause} "
-            "Plain unmarked surfaces, silent visual storytelling, no talking, no lip movement."
+            f"Plain unmarked surfaces, {non_lite_tail}"
         )
 
     return re.sub(r"\s{2,}", " ", prompt).strip()

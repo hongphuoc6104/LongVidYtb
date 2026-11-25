@@ -24,6 +24,8 @@ _TALKING_KEYWORDS = (
     "without dialogue",
     "no speech",
     "silent storytelling",
+    "no spoken dialogue",
+    "no spoken words",
 )
 
 

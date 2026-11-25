@@ -334,11 +334,14 @@ class ProfileLifecycleManager:
 
 
 def stop_all_profiles(force_all: bool = True) -> list[int]:
-    """Terminate all running Flow Chrome instances and reap orphan processes across 9222..9269 and 9270+."""
+    """Terminate Flow Chrome instances; when `force_all=False`, preserve live foreign processes."""
     from . import accounts
     from .process_manager import get_process_manager
 
     pm = get_process_manager()
+    if not force_all:
+        return pm.terminate_all(include_foreign_live_owners=False)
+
     reg = accounts.registry()
     all_ports = set(range(9222, 9270))
     for p in reg.get("profiles", []):
@@ -351,5 +354,5 @@ def stop_all_profiles(force_all: bool = True) -> list[int]:
                 pm.terminate_by_port(port)
             except Exception:
                 pass
-    return pm.terminate_all()
+    return pm.terminate_all(include_foreign_live_owners=True)
 

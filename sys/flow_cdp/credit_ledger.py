@@ -324,12 +324,14 @@ class CreditLedger:
             with self._locked_store() as data:
                 entry = data.get("profiles", {}).get(pid, {})
                 remaining = int(entry.get("credits_remaining", 0))
+                ptier = int(entry.get("paygate_tier") or 0)
                 last_used = float(entry.get("last_used_at", 0.0))
 
-            # Sort key: (-remaining, last_used) to prioritize accounts with highest credits
-            eligible_items.append((0, remaining, last_used, p))
+            # Prioritize Ultra accounts (remaining >= 5000 or paygate_tier >= 2), then highest credits, then LRU
+            ultra_pri = 0 if (remaining >= 5000 or ptier >= 2) else 1
+            eligible_items.append((ultra_pri, remaining, last_used, p))
 
-        eligible_items.sort(key=lambda x: (-x[1], x[2]))
+        eligible_items.sort(key=lambda x: (x[0], -x[1], x[2]))
         return [item[3] for item in eligible_items]
 
     def pick_for_image_task(

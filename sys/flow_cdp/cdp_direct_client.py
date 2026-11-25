@@ -1199,6 +1199,13 @@ class DirectCDPProfileSession:
 
             await self._ensure_mint_captcha_guard()
             await asyncio.to_thread(stagger_cross_process_action, "flow_rpc_submit", 2.5, 0.4)
+        if (
+            rpcid in (flow_rpc.RPC_GEN_VIDEO_START_FRAME, flow_rpc.RPC_GEN_VIDEO_START_END_FRAMES)
+            and "PYTEST_CURRENT_TEST" not in os.environ
+        ):
+            from .resource_locks import stagger_cross_process_action
+
+            await asyncio.to_thread(stagger_cross_process_action, "flow_video_rpc_submit", 4.2, 0.8)
         source_path_override = f"/project/{self.project_id}" if self.project_id else "/"
         js_code = f"""
         (async () => {{
@@ -1373,9 +1380,9 @@ class DirectCDPProfileSession:
 
         uploaded = flow_rpc.read_uploaded_image(payload)
         sidecar = path_obj.with_suffix(".json")
-        if sidecar.is_file() and uploaded.media_id and self.name:
+        if uploaded.media_id and self.name:
             try:
-                sdata = json.loads(sidecar.read_text(encoding="utf-8"))
+                sdata = json.loads(sidecar.read_text(encoding="utf-8")) if sidecar.is_file() else {}
                 if isinstance(sdata, dict):
                     pmap = sdata.get("profile_media_ids")
                     if not isinstance(pmap, dict):
@@ -1561,15 +1568,15 @@ class DirectCDPProfileSession:
             else:
                 last_media_id = last_str
 
-        await asyncio.sleep(2.5 if did_upload else 1.2)
+        await asyncio.sleep(1.0 if did_upload else 0.5)
         if did_upload and "PYTEST_CURRENT_TEST" not in os.environ:
             for mx, my in ((240, 260), (510, 340), (680, 410)):
                 try:
                     await self.call("Input.dispatchMouseEvent", {"type": "mouseMoved", "x": mx, "y": my})
                 except Exception:
                     pass
-                await asyncio.sleep(0.25)
-            await asyncio.sleep(6.0)
+                await asyncio.sleep(0.2)
+            await asyncio.sleep(1.8)
         catalog = await self._get_model_catalog()
         resolved_model = flow_rpc.resolve_video_model(
             model,
