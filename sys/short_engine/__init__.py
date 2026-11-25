@@ -38,6 +38,15 @@ MIN_OVERLAY_FONT_SIZE = 132
 MAX_OVERLAY_WORDS = 4
 
 
+def is_viral_v7_spec(short_spec: dict[str, Any] | None) -> bool:
+    """Return True when opt-in V7 Model-Twin viral protocol is enabled on `short_spec`."""
+    if not isinstance(short_spec, dict):
+        return False
+    return bool(short_spec.get("viral_v7")) or (
+        str(short_spec.get("viral_protocol") or "").strip().lower() == "su_ke_lai_viral_v7_model_twin"
+    )
+
+
 def text_tail(txt: str, limit: int = 600) -> str:
     """Return trailing characters of long log output for concise error messages."""
     return txt[-limit:] if len(txt) > limit else txt
@@ -119,13 +128,15 @@ def select_idle_colab_accounts(
             idle.append(acc)
 
     preferred_order = {
-        "account-12": 0,
-        "account-01": 1,
-        "account-02": 2,
-        "account-18": 3,
-        "account-19": 4,
-        "account-13": 5,
-        "account-17": 6,
+        "account-04": 0,
+        "account-05": 1,
+        "account-20": 2,
+        "account-03": 3,
+        "account-01": 4,
+        "account-02": 5,
+        "account-08": 6,
+        "account-10": 7,
+        "account-18": 8,
     }
     idle.sort(key=lambda a: (preferred_order.get(a, 50), a))
 

@@ -12,10 +12,10 @@ from typing import Any
 
 import numpy as np
 from flow_cdp import stop_all_profiles
-from flow_cdp.multi_profile_manager import MultiProfileManager
+from flow_cdp.cdp_direct_client import get_all_configured_profiles
 from flow_cdp.persistent_pool import PersistentWorkerPool
 from flow_cdp.process_manager import get_process_manager
-from flow_cdp.resource_locks import DEFAULT_MAX_GLOBAL_BROWSERS
+from flow_cdp.resource_locks import DEFAULT_MAX_GLOBAL_BROWSERS, GlobalFlowProductionLock
 from flow_video.chain_planner import build_dual_model_chain_spec
 from flow_video.models import ChainMode, ScenePairSpec, VideoChainSpec
 from flow_video.orchestrator import FlowVideoChainOrchestrator
@@ -38,10 +38,13 @@ YT_MAX_THUMB_BYTES = 1_950_000
 MAX_THUMB_LIMIT_BYTES = 2_000_000
 
 
-def resolve_worker_count(raw_value: str | int) -> int:
+def resolve_worker_count(raw_value: str | int, *, stage: str = "image") -> int:
     """Resolve `auto` or numeric worker count cleanly within hardware limits."""
     if isinstance(raw_value, str) and raw_value.strip().lower() == "auto":
-        return min(10, max(6, int(DEFAULT_MAX_GLOBAL_BROWSERS)))
+        max_slots = max(2, int(DEFAULT_MAX_GLOBAL_BROWSERS))
+        if str(stage).strip().lower() == "video":
+            return 2 if max_slots <= 4 else min(3, max_slots)
+        return 3 if max_slots <= 4 else min(6, max(4, max_slots))
     return max(1, int(raw_value))
 
 
@@ -200,15 +203,37 @@ def _export_yt_safe_thumbnail(master_png: Path, yt_png: Path) -> Path:
 
 
 def _cleanup_all_chrome() -> None:
+    """Clean up Chrome instances owned by this process + dead-owner orphans only."""
     for fn in (
-        lambda: MultiProfileManager().stop_all_profiles(),
-        lambda: stop_all_profiles(force_all=True),
-        lambda: get_process_manager().terminate_all(),
+        lambda: get_process_manager().terminate_all(include_foreign_live_owners=False),
+        lambda: stop_all_profiles(force_all=False),
     ):
         try:
             fn()
         except Exception as exc:
             logger.warning("Chrome teardown warning: %s", exc)
+
+
+def _try_rescue_staged_asset(
+    raw_path: Path,
+    final_path: Path,
+    target_size: tuple[int, int],
+    overscan: float,
+) -> bool:
+    """Post-process an interrupted staging asset if it is already valid on disk."""
+    if not raw_path.is_file() or raw_path.stat().st_size <= 30_000:
+        return False
+    try:
+        _postprocess_frame(raw_path, final_path, target_size, overscan)
+        raw_sc = raw_path.with_suffix(".json")
+        if raw_sc.is_file():
+            shutil.copy2(raw_sc, final_path.with_suffix(".json"))
+        if _valid_png(final_path, target_size, require_rgb=True):
+            logger.info("Rescued staged raw asset %s -> %s", raw_path.name, final_path.name)
+            return True
+    except Exception as exc:
+        logger.debug("Could not rescue staged raw asset %s: %s", raw_path.name, exc)
+    return False
 
 
 def _resolve_1hop_parent_map(beats: list[dict[str, Any]]) -> dict[str, str | None]:
@@ -236,6 +261,59 @@ def _resolve_1hop_parent_map(beats: list[dict[str, Any]]) -> dict[str, str | Non
     return parent_map
 
 
+def _ordered_stage_a_profiles(
+    profiles: list[dict[str, Any]] | None = None,
+    credits_path: Path | None = None,
+) -> list[dict[str, Any]]:
+    """Order Flow profiles, honoring VP_FLOW_PROFILES override and Ultra 25k priority first."""
+    base = [dict(p) for p in (profiles if profiles is not None else get_all_configured_profiles())]
+    env_raw = os.environ.get("VP_FLOW_PROFILES", "").strip()
+    if env_raw:
+        requested = [x.strip() for x in env_raw.split(",") if x.strip()]
+        if requested:
+            by_name = {str(p.get("name") or p.get("id") or ""): p for p in base}
+            filtered = [by_name[name] for name in requested if name in by_name]
+            if filtered:
+                return filtered
+
+    c_path = credits_path or (Path.home() / ".config" / "video-pilot" / "flow" / "credits.json")
+    credits_map: dict[str, dict[str, Any]] = {}
+    if c_path.is_file():
+        try:
+            credits_map = json.loads(c_path.read_text(encoding="utf-8")).get("profiles") or {}
+        except Exception:
+            credits_map = {}
+
+    now = time.time()
+
+    def _sort_key(item: tuple[int, dict[str, Any]]) -> tuple[int, int, int, int]:
+        idx, prof = item
+        pid = str(prof.get("name") or prof.get("id") or "")
+        info = credits_map.get(pid) or {}
+        last_used = float(info.get("last_used_at") or 0.0)
+        cooldown_until = float(info.get("cooldown_until") or 0.0)
+        credits_rem = int(info.get("credits_remaining") or 0)
+        ptier = int(info.get("paygate_tier") or 0)
+        age = max(0.0, now - last_used) if last_used > 0.0 else 0.0
+        if (credits_rem >= 5000 or ptier >= 2) and credits_rem > 0 and cooldown_until <= now:
+            # Tier -1: Google AI Ultra 25k+ pools prioritized first
+            return (-1, 0, -credits_rem, idx)
+        ready_funded = last_used > 0.0 and credits_rem > 0 and cooldown_until <= now
+        if ready_funded and 2700.0 <= age <= 172800.0:
+            # Tier 0 (Goldilocks): warm auth (<= 48h) + rested past rolling-hour (>= 45m).
+            return (0, 0, -credits_rem, idx)
+        if ready_funded and age < 2700.0:
+            return (1, 0, -credits_rem, idx)
+        if ready_funded:
+            # Tier 2: older verified funded accounts, least-stale first.
+            return (2, int(age), -credits_rem, idx)
+        if last_used > 0.0:
+            return (3, int(max(0.0, cooldown_until - now)), -credits_rem, idx)
+        return (4, 0, -credits_rem, idx)
+
+    return [p for _, p in sorted(enumerate(base), key=_sort_key)]
+
+
 def run_flow_stage_a(
     short_spec: dict[str, Any],
     spec_dir: Path,
@@ -251,12 +329,19 @@ def run_flow_stage_a(
     frames_dir.mkdir(parents=True, exist_ok=True)
     staging_dir.mkdir(parents=True, exist_ok=True)
 
+    logger.info("[STUDIO_STAGE 1/3] Starting Flow Stage A BELUGA (%d beats, max_workers=%d)", len(beats), max_workers)
     parent_map = _resolve_1hop_parent_map(beats)
-    pending_ids = {
-        f"short_beat_{int(b['beat_index']):02d}"
-        for b in beats
-        if not _valid_png(frames_dir / f"beat_{int(b['beat_index']):02d}.png", (1080, 1920), require_rgb=True)
-    }
+    pending_ids: set[str] = set()
+    for b in beats:
+        idx = int(b["beat_index"])
+        tid = f"short_beat_{idx:02d}"
+        final_png = frames_dir / f"beat_{idx:02d}.png"
+        if _valid_png(final_png, (1080, 1920), require_rgb=True):
+            continue
+        if _try_rescue_staged_asset(staging_dir / f"{tid}.jpg", final_png, (1080, 1920), STORY_OVERSCAN):
+            continue
+        pending_ids.add(tid)
+
     jobs: list[dict[str, Any]] = []
     for b in beats:
         idx = int(b["beat_index"])
@@ -291,64 +376,91 @@ def run_flow_stage_a(
     thumb_yt = spec_dir / "thumbnail_9x16.png"
     thumb_ok = _valid_png(thumb_yt, (1080, 1920), require_rgb=False) and thumb_yt.stat().st_size < MAX_THUMB_LIMIT_BYTES
     if not thumb_ok and not _valid_png(thumb_master, (1080, 1920), require_rgb=True):
-        jobs.append({
-            "id": "short_thumb_9x16",
-            "prompt": short_spec["thumbnail_spec"]["prompt"],
-            "raw_path": staging_dir / "short_thumb_9x16.jpg",
-            "final_path": thumb_master,
-            "target_size": (1080, 1920),
-            "overscan": THUMB_OVERSCAN,
-            "based_on": None,
-            "baseMediaId": None,
-            "pinned_profile": None,
-            "priority": 0,
-        })
+        if not _try_rescue_staged_asset(
+            staging_dir / "short_thumb_9x16.jpg", thumb_master, (1080, 1920), THUMB_OVERSCAN
+        ):
+            jobs.append({
+                "id": "short_thumb_9x16",
+                "prompt": short_spec["thumbnail_spec"]["prompt"],
+                "raw_path": staging_dir / "short_thumb_9x16.jpg",
+                "final_path": thumb_master,
+                "target_size": (1080, 1920),
+                "overscan": THUMB_OVERSCAN,
+                "based_on": None,
+                "baseMediaId": None,
+                "pinned_profile": None,
+                "priority": 0,
+            })
 
     if jobs:
-        pool = PersistentWorkerPool(
-            target_workers=min(max_workers, len(jobs)),
-            headless=True,
-            default_out_dir=staging_dir,
-            enforce_os_locks=True,
-            max_global_browsers=max(max_workers, int(DEFAULT_MAX_GLOBAL_BROWSERS)),
-            min_credits_required=0,
-            cooldown_seconds=120.0,
-            pacing_seconds=2.0,
-            stagger_seconds=0.4,
-            enable_rpc_batching=True,
-            max_rpc_batch_size=4,
+        job_id_str = str(short_spec.get("job_id") or spec_dir.name)
+        flow_lock = GlobalFlowProductionLock(job_id=job_id_str, stage="stage_a")
+        acquired = flow_lock.acquire_patiently(
+            timeout=7200.0,
+            poll_interval=4.0,
+            on_wait=lambda holder, waited: logger.info(
+                "[RESOURCE_GUARD] Waiting for active Flow job %s (pid=%s, stage=%s, waited=%.1fs)...",
+                holder.get("job_id", "unknown"),
+                holder.get("pid", "?"),
+                holder.get("stage", "?"),
+                waited,
+            ),
         )
+        if not acquired:
+            raise TimeoutError("Timed out waiting for GlobalFlowProductionLock in Stage A")
+        ordered_profiles = _ordered_stage_a_profiles()
+        eff_workers = min(max_workers, len(jobs), max(1, len(ordered_profiles)))
         try:
-            pool.start()
-            for j in jobs:
-                j["raw_path"].unlink(missing_ok=True)
-                payload: dict[str, Any] = {
-                    "id": j["id"],
-                    "type": "image",
-                    "model": "BELUGA",
-                    "credit_cost": 0,
-                    "credit_reason": "image",
-                    "prompt": j["prompt"],
-                    "aspect": "9:16",
-                    "ratio": "9:16",
-                    "output_path": str(j["raw_path"]),
-                }
-                if j.get("based_on"):
-                    payload["based_on"] = j["based_on"]
-                elif j.get("baseMediaId") and j.get("pinned_profile"):
-                    payload["baseMediaId"] = j["baseMediaId"]
-                    payload["pinned_profile"] = j["pinned_profile"]
-                pool.submit_task(payload, priority=j["priority"])
-            if not pool.wait_completion(timeout=2400.0):
-                raise RuntimeError("Stage A PersistentWorkerPool timed out")
-        finally:
+            pool = PersistentWorkerPool(
+                profiles=ordered_profiles,
+                target_workers=eff_workers,
+                headless=True,
+                default_out_dir=staging_dir,
+                enforce_os_locks=True,
+                max_global_browsers=max(min(eff_workers + 2, 6), int(DEFAULT_MAX_GLOBAL_BROWSERS)),
+                min_credits_required=0,
+                cooldown_seconds=600.0,
+                pacing_seconds=2.0,
+                stagger_seconds=3.2,
+                enable_rpc_batching=True,
+                max_rpc_batch_size=4,
+            )
             try:
-                pool.shutdown()
+                pool.start()
+                for j in jobs:
+                    j["raw_path"].unlink(missing_ok=True)
+                    payload: dict[str, Any] = {
+                        "id": j["id"],
+                        "type": "image",
+                        "model": "BELUGA",
+                        "credit_cost": 0,
+                        "credit_reason": "image",
+                        "prompt": j["prompt"],
+                        "aspect": "9:16",
+                        "ratio": "9:16",
+                        "output_path": str(j["raw_path"]),
+                    }
+                    if j.get("based_on"):
+                        payload["based_on"] = j["based_on"]
+                    elif j.get("baseMediaId") and j.get("pinned_profile"):
+                        payload["baseMediaId"] = j["baseMediaId"]
+                        payload["pinned_profile"] = j["pinned_profile"]
+                    pool.submit_task(payload, priority=j["priority"])
+                if not pool.wait_completion(timeout=2400.0):
+                    raise RuntimeError("Stage A PersistentWorkerPool timed out")
             finally:
-                _cleanup_all_chrome()
+                try:
+                    pool.shutdown()
+                finally:
+                    _cleanup_all_chrome()
+        finally:
+            flow_lock.release()
 
         for j in jobs:
             _postprocess_frame(j["raw_path"], j["final_path"], j["target_size"], j["overscan"])
+            raw_sc = j["raw_path"].with_suffix(".json")
+            if raw_sc.is_file():
+                shutil.copy2(raw_sc, j["final_path"].with_suffix(".json"))
 
     if thumb_master.is_file() and (not thumb_yt.is_file() or thumb_yt.stat().st_size >= MAX_THUMB_LIMIT_BYTES):
         _export_yt_safe_thumbnail(thumb_master, thumb_yt)
@@ -436,11 +548,14 @@ def run_flow_stage_b(
     filtered_pairs: list[ScenePairSpec] = []
     idx_by_bid: dict[str, int] = {}
     idx_by_cid: dict[str, int] = {}
-    for seq_i, b in enumerate(flow_beats):
+    for b in flow_beats:
         bid = str(b["beat_id"])
         orig_i = int(b["beat_index"])
+        existing_clip = clips_dir / f"clip_{orig_i:02d}.mp4"
+        if existing_clip.is_file() and existing_clip.stat().st_size > 200_000:
+            continue
         idx_by_bid[bid] = orig_i
-        idx_by_cid[f"clip_{seq_i:03d}_{bid}"] = orig_i
+        idx_by_cid[f"clip_{len(filtered_pairs):03d}_{bid}"] = orig_i
         sp = copy.deepcopy(pair_by_id.get(bid) or ScenePairSpec(id=bid, start_image_path=img_map[bid]))
         sp.target_duration = float(b.get("duration_sec") or b.get("duration") or 5.0)
         sp.motion_prompt = str(b.get("motion_prompt") or sp.motion_prompt)
@@ -454,6 +569,15 @@ def run_flow_stage_b(
             sp.end_image_path = None
         filtered_pairs.append(sp)
 
+    if not filtered_pairs:
+        return {
+            "status": "completed",
+            "elapsed_sec": round(time.monotonic() - t0, 2),
+            "clips_count": len(flow_beats),
+            "total_credit_cost": 0,
+            "credits_deducted": {},
+        }
+
     chain_spec = VideoChainSpec(
         job_id=str(short_spec["job_id"]),
         mode=ChainMode.SCENE_PAIRS,
@@ -464,9 +588,11 @@ def run_flow_stage_b(
         overscan_crop=1.0,
         auto_fallback_zero_credit=False,
         keep_veo_audio=False,
+        no_talking_prompt_guard=not bool(short_spec.get("veo_native_foley")),
         scene_pairs=filtered_pairs,
     )
 
+    logger.info("[STUDIO_STAGE 2/3] Starting Flow Stage B Video (%d flow beats, max_workers=%d)", len(filtered_pairs), max_workers)
     orch = FlowVideoChainOrchestrator(
         spec=chain_spec,
         work_dir=flow_work,
@@ -479,10 +605,27 @@ def run_flow_stage_b(
         reuse_warm_sessions=True,
         skip_denied_tier0_lite=True,
     )
+    flow_lock = GlobalFlowProductionLock(job_id=str(short_spec.get("job_id") or spec_dir.name), stage="stage_b")
+    acquired = flow_lock.acquire_patiently(
+        timeout=7200.0,
+        poll_interval=4.0,
+        on_wait=lambda holder, waited: logger.info(
+            "[RESOURCE_GUARD] Waiting for active Flow job %s (pid=%s, stage=%s, waited=%.1fs)...",
+            holder.get("job_id", "unknown"),
+            holder.get("pid", "?"),
+            holder.get("stage", "?"),
+            waited,
+        ),
+    )
+    if not acquired:
+        raise TimeoutError("Timed out waiting for GlobalFlowProductionLock in Stage B")
     try:
-        report = orch.run()
+        try:
+            report = orch.run()
+        finally:
+            _cleanup_all_chrome()
     finally:
-        _cleanup_all_chrome()
+        flow_lock.release()
 
     for c in report.get("clips", []):
         cid = str(c["clip_id"])
@@ -497,6 +640,19 @@ def run_flow_stage_b(
         dst = clips_dir / f"clip_{orig_idx:02d}.mp4"
         if cp.resolve() != dst.resolve():
             shutil.copy2(cp, dst)
+
+    missing_or_invalid: list[str] = []
+    for b in flow_beats:
+        orig_i = int(b["beat_index"])
+        clip_path = clips_dir / f"clip_{orig_i:02d}.mp4"
+        if not clip_path.is_file() or clip_path.stat().st_size <= 200_000:
+            size = clip_path.stat().st_size if clip_path.is_file() else 0
+            missing_or_invalid.append(f"{clip_path.name} ({size}B)")
+    if missing_or_invalid:
+        raise RuntimeError(
+            "Flow Stage B completed without valid >200KB clips for beats: "
+            + ", ".join(missing_or_invalid)
+        )
 
     return {
         "status": "completed",
