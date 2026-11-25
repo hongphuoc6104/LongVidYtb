@@ -1,0 +1,902 @@
+{
+  "schema_version": "12.0.0",
+  "document_id": "su_ke_lai_v12_10_long_distinct_documentary_architectures",
+  "thread_owner": "style-grammar-long (Thread 2C)",
+  "channel_id": "su_ke_lai",
+  "channel_name": "Sử Kể Lại",
+  "channel_handle": "@SuKeLaiVN",
+  "format_profile": "long_16x9",
+  "created_at": "2026-11-25T11:00:00+07:00",
+  "strict_compliance_locks": {
+    "precedence_chain": [
+      "AGENTS.md",
+      ".agents/rules/gpu-headless-chrome.md",
+      "PLAYBOOK.md (ERR-20261122-01, ERR-20261109-01, ERR-20261109-02, ERR-20261108-03, ERR-20261108-02)",
+      ".agents/skills/vp-visual-fx/SKILL.md",
+      ".agents/skills/vp-flow-cdp/SKILL.md"
+    ],
+    "allowed_flow_models": {
+      "image_0c": "BELUGA (Nano Banana 2.1 via ogiZ0b batched 2-4 prompts, 0 credits)",
+      "video_seam_10c": "veo_3_1_lite (veo_3_1_i2v_s_lite via eb1hJf, start_frame only, 10 credits flat @ 8s 720p 16:9)",
+      "video_framelink_16c": "macaron_cookie (macaron_cookie_i2v_fl_8s Omni 1.2 Flash via nprQif, start_end_frames, ~16 credits avg [12-20c] @ 8s 720p 16:9)"
+    },
+    "retired_or_banned_flow_models": [
+      "veo_extend (retired 2026-11-05)",
+      "veo_3_1_fast (retire before 2026-12-05)",
+      "veo_3_1_quality (retire before 2026-12-05)",
+      "omni_1_1 / abra (retire before 2026-12-05)"
+    ],
+    "render_and_audio_invariants": {
+      "renderer": "ColabPoolDispatcher Tesla T4 FFmpeg h264_nvenc + PyTorch CUDA float32 grid_sample (/dev/shm sharded <28MB ZIP_STORED)",
+      "forbid_remotion_chromium_cpu": true,
+      "ffmpeg_video_trim_order": "tpad=stop_mode=clone:stop_duration=1.5,fps=30,settb=1/30,trim=end_frame={rf},setpts=PTS-STARTPTS",
+      "forbid_vf_zoompan_15hz_integer_jitter": true,
+      "forbid_whip_slide_xfade_on_long": true,
+      "forbid_smoke_fog_transitions": [
+        "river_mist_map_dive",
+        "dust_smoke_cloud",
+        "procedural_fog_wipe",
+        "procedural_mist_wipe"
+      ],
+      "forbid_boxed_huds_and_vs_plaques": [
+        "render_prestige_dateline_png",
+        "render_v7_stat_versus_png",
+        "render_v7_hook_headline_png",
+        "dark_rectangular_pills",
+        "left_vertical_accent_bars",
+        "1px_gold_card_borders"
+      ],
+      "voice_lock": "VietNarrator_su_ke_lai (OmniVoice Studio V3 human clone; NEVER vi-VN-NamMinhNeural)",
+      "loudness_lock": "-11.0 LUFS / <= -1.0 dBTP via encode_calibrated_m4a + lossless -c:v copy -map_chapters 0 remux",
+      "watermark_lock": "sys/channels/su_ke_lai/assets/watermark_150x150.png at W-w-36:H-h-36 (100x100 @ 1080p, 150x150 @ 1440p) with bottom-right delogo",
+      "youtube_title_max_chars": 55,
+      "thumbnail_lock": "Flow-native 16:9 BELUGA poster with 2-4 uppercase Vietnamese words drawn in-scene (< 2MB, zero PIL/HTML text overlay)"
+    }
+  },
+  "v10_failure_autopsy_why_all_10_longs_failed_in_15s": {
+    "user_verdict_verbatim": [
+      "như slide, tôi chỉ xem 15s đầu là chán rồi nên tất cả video đều rớt",
+      "cái nền và thẻ này nhìn quá AI nó không chuyên nghiệp... tôi ghét nhất là cái thẻ đè lên video không thay đổi gì để như AI edit",
+      "cái bản đồ xong diễn chiến thuật cái nhịp nó hơi nhanh chưa kịp xem cái gì hết, và chữ quá nhỏ quá nhiều, chữ càng ít càng to, nhịp chậm lại một chút mới xem kịp",
+      "kiểu nó không khác nhau về hình ảnh hay cách tạo video mà nó khác nội dung... cách dựng video dựng cảnh, góc quay, phân tích, bình luận, cho video dài và video ngắn mà bạn làm chả thấy khác gì mấy"
+    ],
+    "four_structural_root_causes": [
+      {
+        "defect_id": "DEFECT_01_STATIC_SLIDESHOW_OPENING",
+        "where_in_code": "sys/fx_warehouse/history_styles_10x10.py:2348-2383 & sys/tools/produce_vn_dual_mode.py:2921-3042",
+        "mechanism": "CO_PHASE_1_VISCERAL_HOOK scheduled [6.0s, 6.0s, 6.0s] beats backed almost entirely by static PNGs locked with scale=1920:1080:flags=lanczos (0px internal motion). Viewers saw only 2.5 frozen AI paintings across the entire 0-15s bounce window.",
+        "v12_cure": "Mandatory First-60s Living Cold Open: 100% continuous living motion (12-18 native 16:9 Flow video clips sliced into 18-24 multi-angle cuts of 1.8s-3.2s + 1-2 8.0-10.0s 30fps bespoke visual breakdowns/maps). ZERO static held PNGs in 0-60s (hard auto-fail gate)."
+      },
+      {
+        "defect_id": "DEFECT_02_CHEAP_DARK_BOX_AND_VS_PLAQUES",
+        "where_in_code": "sys/short_engine/render_single_pass.py:321-346, 512-599 & sys/fx_warehouse/hud_widgets.py:77-438",
+        "mechanism": "Dark semi-transparent rectangular pills with left gold accent bars ('NỬA ĐÊM 06/08/1442 | 48 GIỜ BƯNG BÍT TIN DỮ') and arcade red 'VS' plaques ('ĐÚNG 10 NGÀY [VS] TRU DI 3 HỌ') were composited statically onto unchanging backgrounds.",
+        "v12_cure": "100% Abolition of Boxed HUDs. Replace every date, stat contrast, quote, and commentary point with either (a) Giant 1-3 word Boxless Cinema Typography (>=66-96px, #FFF5D6) anchored in open sky/shadow negative space, or (b) Dedicated 30fps Documentary Cutaway Rigs (Split-Screen Visual Contrast, Darkroom Folio Spotlight, Overhead Evidence Board)."
+      },
+      {
+        "defect_id": "DEFECT_03_MICRO_TEXT_FAST_CLUTTERED_MAPS",
+        "where_in_code": "sys/fx_warehouse/tactical_battle_map_v8.py:1466, 2044, 2181-2459",
+        "mechanism": "Maps flashed in 3.4s-4.8s with 7+ tiny 14-21px labels, top 3-line headers, left elevation bars, bottom troop gauges, and wrong fallback battle presets (L04/L07/L08 falling back to Bạch Đằng/Như Nguyệt/Chi Lăng labels).",
+        "v12_cure": "tactical_battle_map_v9 Slow Giant-Type Standard: 8.0s-12.0s deliberate 3-phase choreography, >=64px-84px (5.9%-7.8% canvas H) typography, 1-3 words per label, max 2 simultaneous labels on screen, 0 side/bottom gauges, strict campaign-specific coordinate validation."
+      },
+      {
+        "defect_id": "DEFECT_04_COOKIE_CUTTER_10_LONG_HOMOGENEITY",
+        "where_in_code": "sys/fx_warehouse/history_styles_10x10.py:2328-2735 (build_long_style_blueprint)",
+        "mechanism": "All 10 Longs (L01..L10) executed the exact same 75s 3-phase intro + 6 uniform 3-chain chapters + 5-slot front-facing portrait camera loop, changing only prompt adjectives and color LUTs.",
+        "v12_cure": "10 Structurally Distinct Documentary Filmmaking Engines: each L01..L10 has its own chaptering topology, ASL pacing curve, lens/angle coverage grammar, bespoke 0-60s Cold Open choreography, and dedicated 30fps CUDA analytical rig."
+      }
+    ]
+  },
+  "v12_anti_slideshow_long_cinema_engine_architecture": {
+    "engine_id": "su_ke_lai_long_v12_anti_slideshow_cinema_engine",
+    "target_runtime_sec_range": [510, 780],
+    "sweet_spot_runtime_sec_range": [620, 720],
+    "master_canvas_options": {
+      "hd_1080p": {
+        "canvas": "1920x1080@30fps",
+        "optional_anamorphic_crop": "1920x852 active (2.25:1 / 2.39:1 pure black cinema bars, 0 bar text) for theatrical styles L01/L04/L07; full-frame 1920x1080 edge-to-edge for War-Room/Forensic/24h styles L02/L03/L05/L06/L08/L09/L10",
+        "watermark_px": 100,
+        "watermark_pos": "W-w-36:H-h-36"
+      },
+      "qhd_2k": {
+        "canvas": "2560x1440@30fps",
+        "watermark_px": 150,
+        "watermark_pos": "W-w-48:H-h-48"
+      }
+    },
+    "zone_1_mandatory_first_60s_living_cold_open": {
+      "window_sec": [0.0, 60.0],
+      "hard_invariants": {
+        "static_held_png_count_allowed": 0,
+        "max_single_shot_hold_0_15s_sec": 2.8,
+        "max_single_shot_hold_15_60s_sec": 3.5,
+        "living_flow_16x9_clips_required_range": [12, 18],
+        "multi_angle_cuts_in_0_60s_range": [18, 25],
+        "bespoke_30fps_breakdown_or_map_required": 1,
+        "bespoke_breakdown_duration_sec_range": [8.0, 10.5],
+        "dark_pill_or_vs_box_overlays_allowed": 0
+      },
+      "three_micro_stages": [
+        {
+          "stage_id": "CO_01_15S_VISCERAL_IGNITER",
+          "window_sec": [0.0, 15.0],
+          "living_clips_used": "5-7 native 16:9 Flow clips (veo_3_1_lite 10c Seam + macaron_cookie Frame-Link) cut into 6-7 rapid shots (ASL 2.1s-2.5s)",
+          "mandatory_shot_grammar": "Shot 1 (0.0-2.0s): Extreme Macro Tactile Anomaly in motion (no face!) + +6dB sub-impact -> Shot 2 (2.0-4.2s): 85mm Reaction Micro-Acting (eyes/hands in chiaroscuro) -> Shot 3 (4.2-6.6s): 50mm OTS Spatial Threat -> Shot 4 (6.6-9.0s): Kinetic Action Consequence -> Shot 5 (9.0-11.8s): Visual Paradox Contrast Cut -> Shot 6 (11.8-15.0s): Wide Scale Reveal + 2-3 Word Giant Boxless Hook Type (#FFF5D6, >=84px) in negative space.",
+          "anti_slideshow_mechanism": "100% real 3D parallax, fire/water/cloth physics, and rapid 2.2s multi-angle cutting eliminate any frozen frame in the 15s bounce window."
+        },
+        {
+          "stage_id": "CO_02_STAKES_AND_BESPOKE_VISUAL_BREAKDOWN",
+          "window_sec": [15.0, 44.0],
+          "living_clips_used": "5-7 native 16:9 Flow clips (19.0s-21.0s across 6-8 cuts) + 1 Bespoke 30fps Visual Breakdown / Slow Giant-Type Map (8.0s-10.0s)",
+          "mandatory_shot_grammar": "Escalate the impossible historical asymmetry through multi-angle living shots, then execute a zero-smoke geometric match-cut (map_camera_zoom_match 0.55s or tabletop camera dive) into an 8.0-10.0s 30fps bespoke animated diagram (tactical_battle_map_v9, Forensic Floorplan Timeline, or Weapon Cross-Section).",
+          "anti_slideshow_mechanism": "Seamless transition from live-action 35mm physics into deterministic 30fps vector/relief motion with Giant 1-3 word labels."
+        },
+        {
+          "stage_id": "CO_03_CENTRAL_THESIS_VACUUM_LAUNCH",
+          "window_sec": [44.0, 60.0],
+          "living_clips_used": "3-4 native 16:9 Flow clips (2-Frame Continuous Chain via macaron_cookie Frame-Link, 5-6 cuts)",
+          "mandatory_shot_grammar": "Strip away textbook hindsight, plant the Central Unanswered Investigation Question, drop BGM -26dB for a 0.65s acoustic silence vacuum at t=58.8s, and launch Act/Chapter I at t=60.0s.",
+          "anti_slideshow_mechanism": "Continuous 2-frame camera momentum carries viewer across the 60s threshold into Act I without dead title-slide throat-clearing."
+        }
+      ]
+    },
+    "zone_2_four_engine_body_motion_matrix_1m_to_13m": {
+      "core_rule": "From 1m00s to 13m00s, NO frame may sit static (`0px` velocity) for > 0.5s, AND FFmpeg integer-truncating `vf_zoompan` is 100% forbidden (`ERR-20261109-01`). Every second of the body is driven by one of 4 continuous 30fps motion engines:",
+      "engines": [
+        {
+          "engine_code": "M1_LIVING_FLOW_CHAINS",
+          "name": "Native 16:9 Living Flow Cinema Sequences (Dual-Model Router)",
+          "body_screen_share_pct_range": [38, 62],
+          "technical_spec": "Groups 2-5 same-location beats (10s-26s) into 2-Frame Continuous Chains (`macaron_cookie` Frame-Link `nprQif` when cast & lighting match) or Multi-Angle Seam Cuts (`veo_3_1_lite` 10c `eb1hJf` when angle/cast/scale jumps). Clips clamped to clean `0.00-6.50s` clear-air window and bridged via `0.0s` intra-clip cut, `seam_chain_bridge` (`0.28s`), or `hard_cut_j_cut` (`-0.22s` audio lead). Zero smoke/mist transitions."
+        },
+        {
+          "engine_code": "M2_SLOW_GIANT_MAP_V9",
+          "name": "Slow-Readable Giant-Type 30fps GIS Cartography (`tactical_battle_map_v9`)",
+          "body_screen_share_pct_range": [8, 34],
+          "technical_spec": "8.0s-12.0s per map sequence at native 30fps (`fps=30,settb=1/30` before `trim`). Phase 1 (`0.0-2.5s`): clean shaded topographic/bathymetric terrain + 1 giant geographic anchor (`>=72px`). Phase 2 (`2.5-6.0s`): bold faction unit blocks + max 2 simultaneous labels (`1-3` words max, `>=64px` = `5.9%` of 1080p H, zero side/bottom bars). Phase 3 (`6.0-10.5s`): slow cubic-eased directional maneuver arrow + `map_camera_zoom_match` (`0.55s`, `1.0x -> 2.4x` optical dive) into ground-level 35mm shot. Regional East Sea maps explicitly anchor `HOÀNG SA` & `TRƯỜNG SA`."
+        },
+        {
+          "engine_code": "M3_CUDA_MULTIPLANE_ANALYSIS_RIGS",
+          "name": "6 Bespoke 30fps Colab T4 CUDA Documentary Analysis Rigs (Zero-Box)",
+          "body_screen_share_pct_range": [14, 28],
+          "technical_spec": "Rendered on Tesla T4 GPU via PyTorch `torch.float32` `F.grid_sample(..., mode='bilinear', align_corners=True)` (`0.000px` sub-pixel smoothness, zero 15Hz jitter) + procedural vector/compositing layers:",
+          "six_rigs": {
+            "RIG_A_PROGRESSIVE_SPOTLIGHT": "Smoothly dims 75% of scene to 36% luma over 0.45s while gliding a soft Gaussian spotlight cone + `1.00->1.07x` sub-pixel push onto a physical anomaly or tactical chokepoint with 1-3 word Giant Boxless label.",
+            "RIG_B_SPLIT_SCREEN_CONTRAST": "Replaces cheesy `[VS]` cards: divides 1920x1080 canvas via a `2px` antique-gold razor line (50/50 vertical or 18-deg diagonal) with counter-drifting `float32` motion on Left vs Right planes (e.g., Popular Myth vs Chronicle Reality; Commander A vs Commander B; 10-Day Trial vs 22-Year Exoneration) and Giant `72px` boxless headers in negative space.",
+            "RIG_C_EVIDENCE_TABLETOP_BOARD": "LEMMiNO/Fern dark-slate overhead camera rig (`orbital_tilt_down` + lateral `float32` glide) tracking across physical primary artifacts, wax seals, suspect portraits, and timeline pins — crossing out falsified hypotheses in real time.",
+            "RIG_D_PRIMARY_FOLIO_SPOTLIGHT": "Vox/Voices-of-the-Past archival darkroom rig gliding across mulberry-paper/woodblock chronicle folios (*ĐVSKTT*, *Quân Trung Từ Mệnh Tập*, *Minh Thực Lục*), illuminating a single verbatim excerpt with `4.5s-5.5s` 100%-opacity boxless ivory-gold serif (`#FFF5D6`) reading comfort (`ERR-20261122-01` Rule C).",
+            "RIG_E_WEAPON_PHYSICS_CROSS_SECTION": "SandRhoman/Jared-Owen 30fps technical schematic rig animating material layers, `15°-75°` stake leverage vectors, tidal drop meters, or ballistic impact penetration alongside macro metallurgy plates.",
+            "RIG_F_SYNCHRONIZED_CANH_GIO_CLOCK": "RealTimeHistory/Operations-Room boxless dual-clock (`Giờ Mão · 05:30` / `T - 03 GIỜ`) + 3-panel simultaneous theater cross-cut rig showing parallel unit positions at the exact same minute."
+          }
+        },
+        {
+          "engine_code": "M4_RAPID_MULTI_ANGLE_BELUGA_COVERAGE",
+          "name": "Rapid 2.2s-3.2s Multi-Angle Action-Reaction BELUGA CUDA Progressions",
+          "body_screen_share_pct_range": [12, 24],
+          "technical_spec": "Eliminates lone 6s frozen BELUGA images forever. Every non-Flow narrative beat (`6.5s-9.5s`) is decomposed into a mandatory 3-to-4-shot Filmmaker Coverage Quartet (`2.2s-3.0s` per shot): `[1] Wide Establishing (24mm)` -> `[2] Medium OTS / Dirty-Single Blocking (50mm)` -> `[3] Extreme Macro Tactile Prop/Hands Insert (85-100mm, ZERO face!)` -> `[4] Micro-Reaction / Consequence Close-Up (85mm)`. Each shot is animated on Colab T4 CUDA via sub-pixel `float32` `grid_sample` (`z: 1.02->1.065` cubic ease + 2-layer depth-map parallax `parallax_amp=0.018` + live `kodak_35mm_grain`), joined by `0.18s` optical `xfade=fade` or `-0.22s` J-cut foley."
+        }
+      ]
+    },
+    "mandatory_6_class_shot_coverage_law": {
+      "rule": "No two adjacent shots in any Long episode may share the same shot class and focal length. Every chapter must include at least 2 Class-3 Extreme Macro Tactile Inserts (zero face).",
+      "classes": [
+        "C1_WIDE_GEOGRAPHY_ESTABLISHING (24mm-28mm aerial, pass, river estuary, citadel horizon)",
+        "C2_MEDIUM_OTS_SPATIAL_BLOCKING (50mm over-the-shoulder / dirty single framing tension between two forces or witnesses)",
+        "C3_EXTREME_MACRO_TACTILE_INSERT (85mm-100mm hands, seal, blade edge, wet straw, oar in mud, brush on Dó paper, burning fuse — ZERO human face)",
+        "C4_GODS_EYE_FORMATION_GEOMETRY (High-angle overhead formation, stake grid, courtyard, or shipbuilding berth)",
+        "C5_REACTION_MICRO_ACTING (85mm weathered eyes in torchlight, trembling breath, knuckles clenching hilt — lips strictly closed)",
+        "C6_ENVIRONMENTAL_SENSORY_BROLL (35mm-50mm monsoon rain on palace tiles, ebbing river tide exposing stakes, dawn wind over blank silk pennants)"
+      ]
+    }
+  },
+  "ultra_credit_and_ip_pacing_master_budget": {
+    "verified_pool_inventory": {
+      "four_google_ai_ultra_accounts": [
+        {"account_alias": "thue2127", "profile_id": "profile_22", "paygate_tier": 2, "recorded_credits": 25459},
+        {"account_alias": "admin6104", "profile_id": "profile_en01", "paygate_tier": 2, "recorded_credits": 25050},
+        {"account_alias": "phuocnguyencoc4", "profile_id": "profile_18", "paygate_tier": 2, "recorded_credits": 24849},
+        {"account_alias": "tiktokbeeby", "profile_id": "profile_en03", "paygate_tier": 2, "recorded_credits": 24518}
+      ],
+      "ultra_4_subtotal_credits": 99876,
+      "additional_authenticated_pool_credits": 18169,
+      "total_ledger_credits": 118045,
+      "active_colab_t4_gpu_accounts": 8
+    },
+    "host_ip_rate_limit_invariants": {
+      "max_concurrent_video_chrome_workers": 3,
+      "max_total_host_chrome_browsers": 4,
+      "chrome_launch_stagger_sec": "3.2s + 0.6s jitter (--headless=new --ozone-platform=x11 --force-gpu-mem-available-mb=1843)",
+      "video_rpc_pacer_sec": "4.2s + 0.8s jitter (~12-14 eb1hJf/nprQif submits/min)",
+      "image_rpc_pacer_sec": "1.55s + 0.35s jitter (ogiZ0b batched 2-4 prompts = ~90-120 BELUGA frames/min)",
+      "rolling_60min_host_ip_video_cap": 55,
+      "inter_wave_quiet_breather_min": 15,
+      "architectural_insight": "By engineering every single Long episode (`L01..L10`) to require strictly `38..54` living Flow 16:9 clips (`<= 55` clips/rolling hour!), 100% of a Long episode's living cinema generates in ONE uninterrupted ~18-24 minute Flow wave on a single host IP with ZERO Error 7/8 triggers, overlapping BELUGA 0c coverage + Colab T4 NVENC rendering during the 15-minute breather!"
+    },
+    "ten_long_episodes_aggregate_rollup": {
+      "total_long_episodes": 10,
+      "total_living_flow_16x9_clips": 466,
+      "total_cold_open_living_clips": 146,
+      "total_body_living_clips": 320,
+      "total_veo_3_1_lite_10c_clips": 302,
+      "total_macaron_cookie_16c_clips": 164,
+      "total_flow_credits_10_longs": 5644,
+      "pct_of_ultra_4_credits_used": 5.65,
+      "remaining_ultra_credits_for_shorts_and_future_waves": 94232,
+      "total_beluga_0c_frames_10_longs": 1240,
+      "total_tactical_maps_v9_10_longs": 37,
+      "total_cuda_analysis_rigs_10_longs": 76,
+      "estimated_wall_clock_10_longs_hours": 5.5
+    }
+  },
+  "ten_distinct_long_documentary_architectures": [
+    {
+      "style_id": "L01_EPIC_CAMPAIGN_CHRONICLE",
+      "short_code": "L01",
+      "archetype_name_vi": "Điện Ảnh Chiến Dịch Đa Mặt Trận IMAX 35mm",
+      "archetype_name_en": "IMAX Anamorphic Multi-Front Campaign Docudrama",
+      "reference_filmmaking_twins": ["Epic History TV (Marshal/Crusades)", "Netflix Rise of Empires: Ottoman", "Battlecry"],
+      "structural_topology": {
+        "target_duration_sec": 680,
+        "duration_range_sec": [600, 760],
+        "chaptering_model": "Living Cold Open (60s) + 7 Escalating Operational Acts with Netflix In-Scene Full-Brightness Cinema Titles (3.5s overlay on moving opening shot, 0 card pause)",
+        "pacing_curve": "Sweeping 3.2s anamorphic chains in Acts I-II -> 2.6s operational maneuver cuts in Acts III-IV -> 1.9s-2.3s rapid combined-arms shock cuts in Acts V-VI -> 3.8s solemn legacy epilogue in Act VII",
+        "target_wpm": 152,
+        "average_shot_length_sec": {
+          "cold_open_0_15s": 2.1,
+          "cold_open_15_60s": 2.8,
+          "body_overall": 3.1
+        }
+      },
+      "visual_screen_share_pct": {
+        "living_flow_16x9_cinema": 56,
+        "slow_giant_map_v9": 16,
+        "cuda_multiplane_analysis_rigs": 12,
+        "rapid_multi_angle_beluga_coverage": 16
+      },
+      "camera_and_staging_grammar": {
+        "aspect_framing": "2.39:1 Anamorphic Letterbox inside 1920x1080 (pure cinema-black bars, zero bar text)",
+        "primary_lenses": ["24mm Anamorphic Aerial/River Horizon", "50mm OTS Field Command", "85mm Mud-and-Iron Combat Collision", "100mm Macro Arrow/Shield/Stake Impact"],
+        "color_science": "golden_dawn_1789 / kodak_500t_torch_battle (luminous highlights, gamma <= 0.85, zero muddy haze)",
+        "signature_progression": "24mm Theater Establishing -> 50mm OTS General Signaling -> 100mm Macro Bowstring/Oar Release -> 35mm Tracking Vanguard Impact"
+      },
+      "first_60s_living_cold_open_choreography": {
+        "living_flow_clips": 16,
+        "bespoke_30fps_breakdown": "9.0s tactical_battle_map_v9 2-Prong Invasion Funnel (`19.0s-28.0s`)",
+        "total_cuts": 22,
+        "static_png_count": 0,
+        "sequence_blueprint": "0.0-15.0s (7 living cuts): Opens mid-collision as burning reed rafts slam into multi-decked enemy warships -> 85mm commander eyes in torch glare -> 100mm ironwood stake ripping oak planks -> giant boxless '10 VẠN ĐẠI QUÂN' in open sky. 15.0-44.0s: 5 living defensive trench cuts diving via map_camera_zoom_match (0.55s) into a 9.0s Giant-Type Như Nguyệt River Chokepoint Map ('SÔNG NHƯ NGUYỆT' + 'QUÁCH QUỲ 10 VẠN'). 44.0-60.0s: 4-clip Frame-Link chain along dark river ramparts ending on 0.65s drum silence vacuum."
+      },
+      "signature_30fps_analytical_rigs": [
+        "RIG_A_PROGRESSIVE_SPOTLIGHT (isolating vulnerable enemy pontoon/supply flank before night raid)",
+        "RIG_B_SPLIT_SCREEN_CONTRAST (Song Trebuchet Battery vs Đại Việt Multi-Tiered Bamboo-Earth Rampart)"
+      ],
+      "vn_analytical_commentary_mode": "Strategic-operatic historian dissecting how Đại Việt turned asymmetric numbers into geographical encirclement; authoritative chest resonance with sharp causal counter-questions every 150s.",
+      "flagship_dai_viet_episode": {
+        "youtube_title": "Phòng Tuyến Như Nguyệt 1077: Đòn Bẻ Gãy 10 Vạn Tống",
+        "thumbnail_hook": "CHIẾN LŨY NHƯ NGUYỆT",
+        "primary_sources": ["Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.3)", "Tống Sử", "Việt Sử Lược"]
+      },
+      "episode_asset_and_credit_budget": {
+        "living_flow_clips_total": 54,
+        "cold_open_clips": 16,
+        "body_clips": 38,
+        "veo_3_1_lite_10c_clips": 34,
+        "macaron_cookie_16c_clips": 20,
+        "flow_credits_total": 660,
+        "beluga_0c_frames_total": 136,
+        "beluga_flow_keyframes": 74,
+        "beluga_multi_angle_inserts": 62,
+        "tactical_maps_v9_count": 4,
+        "cuda_analysis_rigs_count": 6,
+        "flow_wave_wall_clock_min": 23.0,
+        "colab_t4_nvenc_render_min": 8.5
+      }
+    },
+    {
+      "style_id": "L02_DARK_FORENSIC_INVESTIGATION",
+      "short_code": "L02",
+      "archetype_name_vi": "Điều Tra Pháp Y Hiện Trường & Bảng Loại Trừ Giả Thuyết",
+      "archetype_name_en": "Cold-Case Crime-Scene Spatial Reconstruction & Hypothesis Elimination",
+      "reference_filmmaking_twins": ["LEMMiNO (Jack the Ripper / Book Depository)", "Fern", "IMPERIAL (@IMPERIALYT)"],
+      "structural_topology": {
+        "target_duration_sec": 660,
+        "duration_range_sec": [570, 750],
+        "chaptering_model": "Living Crime-Scene Cold Open (60s) + Incident Timeline Reconstruction + 3 Numbered Suspect/Hypothesis Rooms (returning to Overhead Evidence Board after each to falsify/cross out) + Surviving Exoneration Verdict",
+        "pacing_curve": "Tense 2.2s noir cold-open -> deliberate 3.3s creeping architectural reconstruction -> rapid 2.4s contradiction montage during Hypothesis Falsification -> 4.8s stillness on verbatim exoneration edict",
+        "target_wpm": 144,
+        "average_shot_length_sec": {
+          "cold_open_0_15s": 2.2,
+          "cold_open_15_60s": 2.9,
+          "body_overall": 3.2
+        }
+      },
+      "visual_screen_share_pct": {
+        "living_flow_16x9_cinema": 48,
+        "slow_giant_map_v9": 8,
+        "cuda_multiplane_analysis_rigs": 26,
+        "rapid_multi_angle_beluga_coverage": 18
+      },
+      "camera_and_staging_grammar": {
+        "aspect_framing": "Full-Frame 16:9 (1920x1080) Dark Prestige Noir",
+        "primary_lenses": ["35mm Creeping Corridor Dolly", "85mm Half-Shadow Witness OTS", "100mm Extreme Forensic Clue Macro", "Overhead 90-deg Evidence Tabletop"],
+        "color_science": "imperial_torch_amber + noir_silver_dossier (single beeswax candle key + cold moonlight rim, crisp shadow detail, zero fog)",
+        "signature_progression": "35mm Sealed Pavilion Exterior in Rain -> 100mm Macro Spilled Tea / Cinnabar Seal -> 50mm Shadowed Scribe OTS -> 30fps Overhead Evidence Board Hypothesis Cross-Out"
+      },
+      "first_60s_living_cold_open_choreography": {
+        "living_flow_clips": 14,
+        "bespoke_30fps_breakdown": "10.0s Architectural Crime-Scene & Travel-Time Feasibility Rig (`22.0s-32.0s`)",
+        "total_cuts": 20,
+        "static_png_count": 0,
+        "sequence_blueprint": "0.0-15.0s (6 living noir cuts): 100mm beeswax candle flame snuffing out beside a jade cup -> hurried silk boots across wet courtyard brick -> imperial palanquin sealed at midnight -> 85mm trembling court historian brush -> boxless '48 GIỜ BƯNG BÍT'. 15.0-45.0s: 5 living corridor cuts pulling upward into a 10.0s 30fps Architectural Pavilion & Côn Sơn–Lệ Chi Viên Timeline Rig showing the 10-day rush to execute 3 clans. 45.0-60.0s: 3 slow-push candlelight clips isolating the central forensic question."
+      },
+      "signature_30fps_analytical_rigs": [
+        "RIG_C_EVIDENCE_TABLETOP_BOARD (persistent 4-hypothesis board crossing out disproven court cover stories)",
+        "RIG_D_PRIMARY_FOLIO_SPOTLIGHT (comparing 1442 execution record vs 1464 Quang Thuận exoneration edict)",
+        "RIG_B_SPLIT_SCREEN_CONTRAST (10 Days to Execute 3 Clans vs 22 Years to Exonerate — zero red VS box!)"
+      ],
+      "vn_analytical_commentary_mode": "Razor-sharp investigative prosecutor cross-examining timeline gaps, physical travel speeds, *cui bono* court factions, and conflicting chronicle entries.",
+      "flagship_dai_viet_episode": {
+        "youtube_title": "Án Lệ Chi Viên 1442: Giải Phẫu Hồ Sơ Đêm Định Mệnh",
+        "thumbnail_hook": "ÁN LỆ CHI VIÊN",
+        "primary_sources": ["Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.11 & Q.12)", "Ức Trai Thi Tập", "Khâm Định Việt Sử Thông Giám Cương Mục"]
+      },
+      "episode_asset_and_credit_budget": {
+        "living_flow_clips_total": 44,
+        "cold_open_clips": 14,
+        "body_clips": 30,
+        "veo_3_1_lite_10c_clips": 30,
+        "macaron_cookie_16c_clips": 14,
+        "flow_credits_total": 524,
+        "beluga_0c_frames_total": 124,
+        "beluga_flow_keyframes": 58,
+        "beluga_multi_angle_inserts": 66,
+        "tactical_maps_v9_count": 2,
+        "cuda_analysis_rigs_count": 10,
+        "flow_wave_wall_clock_min": 19.0,
+        "colab_t4_nvenc_render_min": 8.0
+      }
+    },
+    {
+      "style_id": "L03_GRAND_STRATEGY_WAR_ROOM",
+      "short_code": "L03",
+      "archetype_name_vi": "Phòng Tác Chiến Bản Đồ Khổng Lồ & Giải Phẫu Hậu Cần",
+      "archetype_name_en": "Operations-Room Top-Down Cartographic Spine & Logistics War Room",
+      "reference_filmmaking_twins": ["The Operations Room", "HistoryMarche", "Kings and Generals"],
+      "structural_topology": {
+        "target_duration_sec": 690,
+        "duration_range_sec": [580, 780],
+        "chaptering_model": "Map-First Spine Architecture: The 30fps Giant-Type Operational Map IS the primary stage (7 extended 10-12s map chapters), diving via `map_camera_zoom_match` (1.0x->2.4x) into 35mm ground-truth live-action tactical windows whenever arrows collide or convoys burn",
+        "pacing_curve": "Deliberate 9-12s readable map maneuvers alternating rhythmically with crisp 2.4s-2.8s 4-shot live-action ground-truth strikes",
+        "target_wpm": 154,
+        "average_shot_length_sec": {
+          "cold_open_0_15s": 2.3,
+          "cold_open_15_60s": 3.1,
+          "body_overall": 3.4
+        }
+      },
+      "visual_screen_share_pct": {
+        "living_flow_16x9_cinema": 42,
+        "slow_giant_map_v9": 32,
+        "cuda_multiplane_analysis_rigs": 12,
+        "rapid_multi_angle_beluga_coverage": 14
+      },
+      "camera_and_staging_grammar": {
+        "aspect_framing": "Full-Frame 16:9 (1920x1080) Crisp Topographic & Elevated Field Optics",
+        "primary_lenses": ["GIS-v9 Ortho/Tilted Shaded Relief", "24mm Elevated Canyon/Estuary Overlook", "50mm Command Tent Tally-Stick Plotting", "85mm Burning Grain Barge / Mud Wagon Wheel Macro"],
+        "color_science": "obsidian_war_room & imperial_parchment cartography paired with river_mist_teal_gold clear-air 35mm footage",
+        "signature_progression": "10s Giant-Label Map Pincer Closure -> White Geometric Target Zoom Box (Operations Room style) -> 0.55s map_camera_zoom_match -> 3 Living 35mm Ground-Impact Cuts -> Pull Back to Updated Map Tally"
+      },
+      "first_60s_living_cold_open_choreography": {
+        "living_flow_clips": 12,
+        "bespoke_30fps_breakdown": "Two 8.5s tactical_battle_map_v9 sequences (`14.0s-22.5s` Supply Severing & `38.0s-46.5s` Estuary Trap)",
+        "total_cuts": 19,
+        "static_png_count": 0,
+        "sequence_blueprint": "0.0-14.0s (6 living cuts): Grain junks burning at Vân Đồn sea-mouth -> Mongol horseman Ration bag empty -> Ô Mã Nhi scanning riverbanks. 14.0-22.5s: Slow Giant-Type Map #1 ('CẮT LƯƠNG VÂN ĐỒN' — 17 vạn thạch lost). 22.5-38.0s: 4 living 35mm decoy-boat & stake-driving shots. 38.0-46.5s: Slow Giant-Type Map #2 ('BẪY TRIỀU BẠCH ĐẰNG'). 46.5-60.0s: 2-clip Frame-Link command bluff overlooking the river mouth."
+      },
+      "signature_30fps_analytical_rigs": [
+        "RIG_A_PROGRESSIVE_SPOTLIGHT (The Operations Room 65%-dimmed Selective Target Zoom-Box on map sectors)",
+        "RIG_B_SPLIT_SCREEN_CONTRAST (Daily Rice Consumption of 500,000 Troops vs Scorched-Earth Empty Granaries)"
+      ],
+      "vn_analytical_commentary_mode": "Unsentimental general-staff strategist: calculates march kilometers/day, grain tons/week, tidal drop meters/hour, and command-and-control blind spots.",
+      "flagship_dai_viet_episode": {
+        "youtube_title": "Sa Bàn Bạch Đằng 1288: Cắt Lương Phá 600 Thuyền Nguyên",
+        "thumbnail_hook": "SA BÀN BẠCH ĐẰNG",
+        "primary_sources": ["Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.5)", "Nguyên Sử", "An Nam Chí Lược"]
+      },
+      "episode_asset_and_credit_budget": {
+        "living_flow_clips_total": 40,
+        "cold_open_clips": 12,
+        "body_clips": 28,
+        "veo_3_1_lite_10c_clips": 28,
+        "macaron_cookie_16c_clips": 12,
+        "flow_credits_total": 472,
+        "beluga_0c_frames_total": 108,
+        "beluga_flow_keyframes": 52,
+        "beluga_multi_angle_inserts": 56,
+        "tactical_maps_v9_count": 8,
+        "cuda_analysis_rigs_count": 6,
+        "flow_wave_wall_clock_min": 17.5,
+        "colab_t4_nvenc_render_min": 8.5
+      }
+    },
+    {
+      "style_id": "L04_FALL_AND_RISE_DYNASTY_IMMERSION",
+      "short_code": "L04",
+      "archetype_name_vi": "Sử Thi Văn Minh Cú Máy Dài & Đối Chiếu Phế Tích – Hoàng Kim",
+      "archetype_name_en": "Long-Take Civilizational Immersion & Ruin-to-Glory Time-Morph",
+      "reference_filmmaking_twins": ["Fall of Civilizations (@FallofCivilizations)", "BBC Civilisations", "Terrence Malick Historical Poetics"],
+      "structural_topology": {
+        "target_duration_sec": 730,
+        "duration_range_sec": [620, 780],
+        "chaptering_model": "Present-Day Silent Ruin Cold Open (60s, igniting backward into peak imperial glory) + 5 Monumental Civilizational Movements (`3.80s` minimalist CHƯƠNG I..V cards + `3` 100% text-free atmospheric breathing vistas)",
+        "pacing_curve": "Hypnotic unbroken `4.0s-5.4s` 2-Frame & 3-Frame `macaron_cookie` gliding tracking chains (highest Frame-Link ratio of all 10 styles!), punctuated by `2.6s` artisan/ritual macro triplets and `5.0s` royal edict recitations",
+        "target_wpm": 136,
+        "average_shot_length_sec": {
+          "cold_open_0_15s": 2.5,
+          "cold_open_15_60s": 3.4,
+          "body_overall": 3.9
+        }
+      },
+      "visual_screen_share_pct": {
+        "living_flow_16x9_cinema": 60,
+        "slow_giant_map_v9": 10,
+        "cuda_multiplane_analysis_rigs": 16,
+        "rapid_multi_angle_beluga_coverage": 14
+      },
+      "camera_and_staging_grammar": {
+        "aspect_framing": "2.39:1 Theatrical Letterbox (1920x852 active window inside 1920x1080)",
+        "primary_lenses": ["35mm Lateral Gliding Steadicam", "28mm Monumental Palace/Delta Horizon", "85mm Carved Stone Stele & Glazed Ceramic Macro", "50mm Imperial Ceremony Tracking"],
+        "color_science": "Warm sunset lacquer & golden alluvial sunlight contrasting against cool mossy limestone ruins",
+        "signature_progression": "Weathered Mossy Stone Dragon Steps Today -> Frame-Link Time-Morph -> Newly Gilded 1010 Imperial Dragon Barge Arriving at Đại La -> 85mm Macro Chisel Carving Stele"
+      },
+      "first_60s_living_cold_open_choreography": {
+        "living_flow_clips": 13,
+        "bespoke_30fps_breakdown": "8.5s Ruin-to-Glory Time-Lapse & Red River Basin Shift Map (`24.0s-32.5s`)",
+        "total_cuts": 18,
+        "static_png_count": 0,
+        "sequence_blueprint": "0.0-15.0s (6 living cuts): Monsoon rain dripping off weathered stone dragon ruins -> Frame-Link morph igniting directly into bustling 11th-century gilded palace eaves -> imperial dragon fleet rowing out of Hoa Lư limestone cliffs. 15.0-44.0s: 4 gliding living shots + 8.5s 30fps Hoa Lư Mountain Fortress vs Thăng Long Delta Basin Relief Map ('HOA LƯ' -> 'THĂNG LONG 1010'). 44.0-60.0s: 3 unbroken Frame-Link shots of Lý Công Uẩn unrolling Thiên Đô Chiếu at dawn."
+      },
+      "signature_30fps_analytical_rigs": [
+        "RIG_D_PRIMARY_FOLIO_SPOTLIGHT (solemn boxless antique-gold recitation of *Chiếu Dời Đô* / royal stelae)",
+        "RIG_B_SPLIT_SCREEN_CONTRAST (Cramped Flooded Hoa Lư Karst Valley vs Open Navigating Red River Hub)"
+      ],
+      "vn_analytical_commentary_mode": "Deeply evocative civilizational storyteller weaving geography, architecture, state institutions, climate, and surviving stone inscriptions into a grand historical arc.",
+      "flagship_dai_viet_episode": {
+        "youtube_title": "Chiếu Dời Đô 1010: Đêm Rời Hoa Lư Mở Cõi Ngàn Năm",
+        "thumbnail_hook": "THĂNG LONG 1010",
+        "primary_sources": ["Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.2)", "Thiên Đô Chiếu (Lý Thái Tổ)", "Khảo cổ Hoàng Thành Thăng Long"]
+      },
+      "episode_asset_and_credit_budget": {
+        "living_flow_clips_total": 48,
+        "cold_open_clips": 13,
+        "body_clips": 35,
+        "veo_3_1_lite_10c_clips": 24,
+        "macaron_cookie_16c_clips": 24,
+        "flow_credits_total": 624,
+        "beluga_0c_frames_total": 118,
+        "beluga_flow_keyframes": 72,
+        "beluga_multi_angle_inserts": 46,
+        "tactical_maps_v9_count": 3,
+        "cuda_analysis_rigs_count": 6,
+        "flow_wave_wall_clock_min": 21.0,
+        "colab_t4_nvenc_render_min": 9.0
+      }
+    },
+    {
+      "style_id": "L05_REALTIME_COUNTDOWN_CHRONICLE",
+      "short_code": "L05",
+      "archetype_name_vi": "Phim Tài Liệu Đếm Ngược Từng Khắc Đồng Hồ Sinh Tử",
+      "archetype_name_en": "Synchronized T-Minus Tick-Clock Cross-Cut Thriller",
+      "reference_filmmaking_twins": ["Real Time History", "Christopher Nolan Dunkirk Cross-Cutting", "The Operations Room Realtime"],
+      "structural_topology": {
+        "target_duration_sec": 640,
+        "duration_range_sec": [530, 720],
+        "chaptering_model": "Flash-Forward `T-00:00:10` Cold Open + 8 Hard-Cut `T-Minus` Chronological Checkpoints (`T-120h -> T-48h -> T-24h -> T-12h -> T-04h -> T-01h -> T-00:00 -> T+03h`), cross-cutting continuously across 3 simultaneous locations (Attacking Column / Enemy HQ / Physical Timekeeper)",
+        "pacing_curve": "Fastest kinetic rhythm of all 10 Longs: relentless ticking ostinato accelerating from `3.0s` ASL at `T-120h` down to `1.8s-2.2s` cross-cuts at `T-00:00 Zero Hour`",
+        "target_wpm": 158,
+        "average_shot_length_sec": {
+          "cold_open_0_15s": 1.9,
+          "cold_open_15_60s": 2.6,
+          "body_overall": 2.7
+        }
+      },
+      "visual_screen_share_pct": {
+        "living_flow_16x9_cinema": 54,
+        "slow_giant_map_v9": 18,
+        "cuda_multiplane_analysis_rigs": 14,
+        "rapid_multi_angle_beluga_coverage": 14
+      },
+      "camera_and_staging_grammar": {
+        "aspect_framing": "Full-Frame 16:9 (1920x1080) High-Contrast Solar/Lunar Time Progression",
+        "primary_lenses": ["28mm Urgent Handheld-Style Tracking", "85mm Physical Clock/Tide/Fuse Macro", "50mm Simultaneous Camp Cross-Cut", "GIS-v9 Synchronized Vector Map"],
+        "color_science": "Strict solar progression across runtime: pitch-indigo `Canh Tư (02:00)` -> steel-blue pre-dawn `Giờ Mão (05:15)` -> fiery gunpowder orange `06:00` -> crisp golden noon `Giờ Ngọ (11:30)`",
+        "signature_progression": "85mm Water-Clock Drip / Dropping Tide Mark -> 28mm Tây Sơn 3-Man Hammock Forced March -> Hard J-Cut to Unaware Qing Banquet Lanterns -> Boxless `T - 18 GIỜ` Timestamp Tick"
+      },
+      "first_60s_living_cold_open_choreography": {
+        "living_flow_clips": 18,
+        "bespoke_30fps_breakdown": "9.0s Zero-Hour Rewind & 5-Column Synchronized Clock Map (`26.0s-35.0s`)",
+        "total_cuts": 25,
+        "static_png_count": 0,
+        "sequence_blueprint": "0.0-15.0s (8 rapid living cuts, 1.85s avg!): Starts at `T - 00:00:10` Canh Tư Mồng 5 Tết — burning cannon fuse hissing -> wet-straw wooden shield slammed into mud -> war elephant charging through palisade -> bronze gong impact -> optical rapid-rewind across timestamps back to `ĐÊM 30 TẾT (T - 120 GIỜ)`. 15.0-45.0s: 6 living forced-march cuts + 9.0s 30fps 5-Column Synchronized Countdown Map ('TAM ĐIỆP -> THĂNG LONG'). 45.0-60.0s: 4 living night-river crossing shots locking the ticking clock."
+      },
+      "signature_30fps_analytical_rigs": [
+        "RIG_F_SYNCHRONIZED_CANH_GIO_CLOCK (Zero-Box dual timestamp `CANH TƯ · 02:15 | T - 03 GIỜ 45 PHÚT` + 3-front simultaneous status split)",
+        "RIG_A_PROGRESSIVE_SPOTLIGHT (isolating hidden scout capture that kept Thăng Long completely blind)"
+      ],
+      "vn_analytical_commentary_mode": "Breathless, present-tense operational thriller narrator: speaks in exact hours, distances remaining, wind shifts, and split-second command windows.",
+      "flagship_dai_viet_episode": {
+        "youtube_title": "120 Giờ Thần Tốc Tết 1789: Đếm Ngược Phá 29 Vạn Thanh",
+        "thumbnail_hook": "120 GIỜ TẾT 1789",
+        "primary_sources": ["Hoàng Lê Nhất Thống Chí (Hồi 14)", "Đại Nam Chính Biên Liệt Truyện", "Thanh Thực Lục"]
+      },
+      "episode_asset_and_credit_budget": {
+        "living_flow_clips_total": 52,
+        "cold_open_clips": 18,
+        "body_clips": 34,
+        "veo_3_1_lite_10c_clips": 38,
+        "macaron_cookie_16c_clips": 14,
+        "flow_credits_total": 604,
+        "beluga_0c_frames_total": 134,
+        "beluga_flow_keyframes": 66,
+        "beluga_multi_angle_inserts": 68,
+        "tactical_maps_v9_count": 4,
+        "cuda_analysis_rigs_count": 8,
+        "flow_wave_wall_clock_min": 22.0,
+        "colab_t4_nvenc_render_min": 8.0
+      }
+    },
+    {
+      "style_id": "L06_EYEWITNESS_PRIMARY_LETTERS",
+      "short_code": "L06",
+      "archetype_name_vi": "Bàn Văn Khố Mật Thư & Đối Chất Sử Liệu Hai Chiến Tuyến",
+      "archetype_name_en": "Investigative Archive Desk & Dual-Side Verbatim Letters Cinema",
+      "reference_filmmaking_twins": ["Voices of the Past (@VoicesofthePast)", "Johnny Harris Document Desk", "Vox Darkroom"],
+      "structural_topology": {
+        "target_duration_sec": 650,
+        "duration_range_sec": [540, 740],
+        "chaptering_model": "6 Epistolary Duels (Rashomon Dual-Perspective Structure): Every chapter pairs a verbatim Đại Việt dispatch (*Quân Trung Từ Mệnh Tập*, *Hịch Tướng Sĩ*) directly against the opposing side's own secret court memorial (*Minh Thực Lục*, *Nguyên Sử*, *Tống Sử*), exposing what each commander knew, feared, and hid",
+        "pacing_curve": "Intimate `3.0s` chamber & battlefield cuts alternating with `4.8s-5.4s` 30fps Darkroom Folio Progressive Highlighter holds for effortless Vietnamese reading",
+        "target_wpm": 142,
+        "average_shot_length_sec": {
+          "cold_open_0_15s": 2.3,
+          "cold_open_15_60s": 3.0,
+          "body_overall": 3.4
+        }
+      },
+      "visual_screen_share_pct": {
+        "living_flow_16x9_cinema": 46,
+        "slow_giant_map_v9": 8,
+        "cuda_multiplane_analysis_rigs": 28,
+        "rapid_multi_angle_beluga_coverage": 18
+      },
+      "camera_and_staging_grammar": {
+        "aspect_framing": "Full-Frame 16:9 (1920x1080) Warm Mulberry-Ink vs Cold Besieged Rampart Contrast",
+        "primary_lenses": ["85mm Macro Sable Brush, Inkstone & Cinnabar Seal", "50mm Oil-Lamp Desk & Envoy OTS", "35mm Gritty Siege/Battlefield Reality Check", "30fps Overhead Darkroom Manuscript Glide"],
+        "color_science": "Warm tungsten oil-lamp amber (`3000K`) for Đại Việt command desk vs cold desaturated siege grey (`5800K`) inside enemy walls",
+        "signature_progression": "85mm Brush Writing Fatal Clause on Dó Paper -> Arrow-Attached Letter Shot Over City Wall -> 50mm Besieged Enemy General Reading with Trembling Hands -> Darkroom Folio Rig Highlighting Verbatim Sentence"
+      },
+      "first_60s_living_cold_open_choreography": {
+        "living_flow_clips": 14,
+        "bespoke_30fps_breakdown": "10.0s Vox-Style Darkroom Manuscript Progressive Spotlight Reveal (`21.0s-31.0s`)",
+        "total_cuts": 19,
+        "static_png_count": 0,
+        "sequence_blueprint": "0.0-15.0s (6 living cuts): Rain-soaked arrow thuds into Đông Quan wooden gatepost carrying a wax-sealed竹 tube -> Ming soldiers pry open silk letter -> General Vương Thông's eyes freeze in candlelight -> 85mm Nguyễn Trãi calmly grinding ink at Bồ Đề tower. 15.0-44.0s: 4 living siege starvation shots + 10.0s 30fps Darkroom Folio Spotlight illuminating the exact surviving 1427 sentence + Ming Thực Lục casualty confession. 44.0-60.0s: 4 living shots of Liễu Thăng's captured seal arriving at the city moat."
+      },
+      "signature_30fps_analytical_rigs": [
+        "RIG_D_PRIMARY_FOLIO_SPOTLIGHT (flagship rig: 30fps camera glide over historical folio with warm progressive line highlight + `4.8s` boxless Vietnamese translation)",
+        "RIG_B_SPLIT_SCREEN_CONTRAST (Public Imperial Boast vs Secret *Minh Thực Lục* Despair Dispatch)"
+      ],
+      "vn_analytical_commentary_mode": "Literary-psychological analyst unpacking subtext, diplomatic traps, face-saving exit ramps, and ironic confessions hidden inside 600-year-old letters.",
+      "flagship_dai_viet_episode": {
+        "youtube_title": "Thư Nguyễn Trãi Đánh Gục 10 Vạn Quân Minh Không Đổ Máu",
+        "thumbnail_hook": "BÚT CHIẾN ĐÔNG QUAN",
+        "primary_sources": ["Quân Trung Từ Mệnh Tập (Nguyễn Trãi)", "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.10)", "Minh Thực Lục"]
+      },
+      "episode_asset_and_credit_budget": {
+        "living_flow_clips_total": 44,
+        "cold_open_clips": 14,
+        "body_clips": 30,
+        "veo_3_1_lite_10c_clips": 28,
+        "macaron_cookie_16c_clips": 16,
+        "flow_credits_total": 536,
+        "beluga_0c_frames_total": 122,
+        "beluga_flow_keyframes": 60,
+        "beluga_multi_angle_inserts": 62,
+        "tactical_maps_v9_count": 2,
+        "cuda_analysis_rigs_count": 10,
+        "flow_wave_wall_clock_min": 19.0,
+        "colab_t4_nvenc_render_min": 8.0
+      }
+    },
+    {
+      "style_id": "L07_BIOGRAPHY_OF_IRON_MINDS",
+      "short_code": "L07",
+      "archetype_name_vi": "Chân Dung Tâm Lý Chiến & Đêm Đen Độc Đạo Của Bậc Kỳ Tài",
+      "archetype_name_en": "HBO Psychological Crucible & 1v1 Mind-Game Portrait",
+      "reference_filmmaking_twins": ["HBO Historical Docudrama", "MagnatesMedia (Visual Character Tension)", "Biographics"],
+      "structural_topology": {
+        "target_duration_sec": 670,
+        "duration_range_sec": [560, 760],
+        "chaptering_model": "In-Media-Res Darkest-Hour Cold Open (60s) -> Rewind to Formative Wound -> Unorthodox Rise -> The Impossible Moral/Political Dilemma Fork -> Strategic Masterstroke -> Tragic/Immortal Verdict",
+        "pacing_curve": "Intimate `2.8s-3.5s` psychological character-study cuts with strong micro-acting reaction holds, surging to `2.2s` during political coups or decisive battlefield gambles",
+        "target_wpm": 148,
+        "average_shot_length_sec": {
+          "cold_open_0_15s": 2.2,
+          "cold_open_15_60s": 2.9,
+          "body_overall": 3.2
+        }
+      },
+      "visual_screen_share_pct": {
+        "living_flow_16x9_cinema": 56,
+        "slow_giant_map_v9": 8,
+        "cuda_multiplane_analysis_rigs": 18,
+        "rapid_multi_angle_beluga_coverage": 18
+      },
+      "camera_and_staging_grammar": {
+        "aspect_framing": "2.39:1 Prestige Anamorphic Portrait Framing (1920x852 active inside 1920x1080)",
+        "primary_lenses": ["85mm Intimate Eye-Level Psychological Close-Up", "50mm Symmetric 1v1 Confrontation", "100mm Hands/Token/Paper Money/Sword Macro", "35mm Solitary Rampart Silhouette"],
+        "color_science": "Bipolar crimson-gold torchlight vs cold slate-cobalt rain (`duel_bipolar_crimson_cobalt`) mirroring internal moral conflict",
+        "signature_progression": "85mm Solitary Eyes in Torchlight -> 100mm Knuckles Clenching Father's Testament -> 50mm Symmetric 1v1 Council Standoff -> Decision-Tree Fork Rig"
+      },
+      "first_60s_living_cold_open_choreography": {
+        "living_flow_clips": 15,
+        "bespoke_30fps_breakdown": "8.5s Moral/Strategic Dilemma Decision-Fork Rig (`25.0s-33.5s`)",
+        "total_cuts": 21,
+        "static_png_count": 0,
+        "sequence_blueprint": "0.0-15.0s (7 living cuts): 1407 Cao Vọng mountain rain — iron chains clanking -> Hồ Quý Ly's defiant gaze -> cut back 7 years to massive limestone blocks hoisted at Tây Đô citadel & Thông Bảo Hội Sao paper notes printed -> boxless 'CẢI CÁCH HAY MẤT NƯỚC?'. 15.0-44.0s: 5 living court/arsenal cuts + 8.5s 30fps Dilemma Fork Rig contrasting Radical State Modernization vs Aristocratic & Popular Alienation. 44.0-60.0s: 3 Frame-Link shots on Đa Bang fortress ramparts as 200,000 Ming troops approach."
+      },
+      "signature_30fps_analytical_rigs": [
+        "RIG_B_SPLIT_SCREEN_CONTRAST (Museum Diptych 1v1 Portrait & Doctrine Contrast with `2px` bronze hairline)",
+        "RIG_C_EVIDENCE_TABLETOP_BOARD (Decision-Tree Consequence Fork showing both lethal options facing the protagonist)"
+      ],
+      "vn_analytical_commentary_mode": "Nuanced, psychologically penetrating biographer: refuses simplistic hero/villain labels, weighing visionary genius against fatal blind spots and human cost.",
+      "flagship_dai_viet_episode": {
+        "youtube_title": "Hồ Quý Ly 1400: Nhà Cải Cách Lớn Hay Bi Kịch Mất Nước?",
+        "thumbnail_hook": "HỒ QUÝ LY 1400",
+        "primary_sources": ["Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.8)", "Minh Thực Lục", "Việt Sử Tiêu Án"]
+      },
+      "episode_asset_and_credit_budget": {
+        "living_flow_clips_total": 48,
+        "cold_open_clips": 15,
+        "body_clips": 33,
+        "veo_3_1_lite_10c_clips": 30,
+        "macaron_cookie_16c_clips": 18,
+        "flow_credits_total": 588,
+        "beluga_0c_frames_total": 126,
+        "beluga_flow_keyframes": 66,
+        "beluga_multi_angle_inserts": 60,
+        "tactical_maps_v9_count": 2,
+        "cuda_analysis_rigs_count": 7,
+        "flow_wave_wall_clock_min": 20.5,
+        "colab_t4_nvenc_render_min": 8.5
+      }
+    },
+    {
+      "style_id": "L08_24_HOURS_IN_ANCIENT_DAI_VIET",
+      "short_code": "L08",
+      "archetype_name_vi": "Du Hành Thực Địa 24 Giờ Sống Giữa Kinh Đô & Doanh Trại Cổ",
+      "archetype_name_en": "Ground-Level Continuous Tracking 24-Hour Living World Chronicle",
+      "reference_filmmaking_twins": ["Invicta (24 Hours in Ancient Rome)", "toldinstone (@Toldinstone)", "1917 One-Shot Street Immersion"],
+      "structural_topology": {
+        "target_duration_sec": 660,
+        "duration_range_sec": [540, 740],
+        "chaptering_model": "6 Diurnal `Canh-Giờ` Chapters (`04:30 Giờ Mão` -> `08:00 Giờ Thìn` -> `12:00 Giờ Ngọ` -> `15:00 Giờ Mùi` -> `18:30 Giờ Dậu` -> `22:30 Giờ Hợi`) following 3 ordinary historical archetypes (a river boatman, a weapon-guild smith, and a Cấm Quân gate guard) across one continuous 24-hour cycle",
+        "pacing_curve": "Fluid `3.2s-4.0s` eye-level forward tracking chains (`tracking_alongside` / `dolly_push_focal`) interleaved with crisp `2.3s` tactile craft/food/coin macro inserts",
+        "target_wpm": 144,
+        "average_shot_length_sec": {
+          "cold_open_0_15s": 2.3,
+          "cold_open_15_60s": 3.0,
+          "body_overall": 3.3
+        }
+      },
+      "visual_screen_share_pct": {
+        "living_flow_16x9_cinema": 58,
+        "slow_giant_map_v9": 8,
+        "cuda_multiplane_analysis_rigs": 14,
+        "rapid_multi_angle_beluga_coverage": 20
+      },
+      "camera_and_staging_grammar": {
+        "aspect_framing": "Full-Frame 16:9 (1920x1080) Immersive Eye-Level Steadicam Worldbuilding",
+        "primary_lenses": ["28mm Eye-Level Street/Wharf Walk-Through", "35mm Workshop/Market Lateral Track", "85mm Tactile Craft, Coin, Ceramic & Ration Macro", "Isometric Urban Ward Map"],
+        "color_science": "Natural diurnal sun arc: misty rose-gold dawn -> crisp midday market sunlight -> warm oil-lantern twilight -> deep indigo night-watch",
+        "signature_progression": "28mm Walking Through Unbolted Đại Hưng Gate -> 35mm Tracking Past Tô Lịch Silk & Ceramic Boats -> 85mm Copper Cash Counted in Calloused Palm -> Isometric 3-Ring Citadel Cutaway"
+      },
+      "first_60s_living_cold_open_choreography": {
+        "living_flow_clips": 15,
+        "bespoke_30fps_breakdown": "9.0s Isometric Thăng Long 3-Ring Citadel & 61-Ward Spatial Cutaway (`24.0s-33.0s`)",
+        "total_cuts": 20,
+        "static_png_count": 0,
+        "sequence_blueprint": "0.0-15.0s (6 living sensory cuts): Massive bronze morning drum struck -> heavy ironwood bolt slid open at Đại Hưng gate -> camera glides forward at eye level into bustling 13th-century Giang Khẩu river wharf -> blacksmith hammer showering sparks -> steaming rice basket opened. 15.0-44.0s: 5 living street-level tracking cuts + 9.0s 30fps Isometric Thăng Long 3-Ring Citadel Map ('KINH THÀNH -> HOÀNG THÀNH -> CẤM THÀNH'). 44.0-60.0s: 4 living Frame-Link cuts following a royal messenger from commoner market into palace gates."
+      },
+      "signature_30fps_analytical_rigs": [
+        "RIG_F_SYNCHRONIZED_CANH_GIO_CLOCK (diurnal sundial/watch-drum horizon tracking `GIỜ MÃO 05:00` through `CANH BA 23:00`)",
+        "RIG_E_WEAPON_PHYSICS_CROSS_SECTION (adapted for Ancient Urban Architecture / `Ngụ binh ư nông` Daily Ration & Coin Purchasing-Power Breakdown)"
+      ],
+      "vn_analytical_commentary_mode": "Vivid sensory anthropologist & social historian: grounds grand dynastic strength in what ordinary Vietnamese ate, forged, traded, wore, and heard every day.",
+      "flagship_dai_viet_episode": {
+        "youtube_title": "24 Giờ Sống Giữa Kinh Thành Thăng Long Thời Nhà Trần",
+        "thumbnail_hook": "24 GIỜ THĂNG LONG",
+        "primary_sources": ["An Nam Chí Lược", "Đại Việt Sử Ký Toàn Thư", "Dư Địa Chí (Nguyễn Trãi)"]
+      },
+      "episode_asset_and_credit_budget": {
+        "living_flow_clips_total": 48,
+        "cold_open_clips": 15,
+        "body_clips": 33,
+        "veo_3_1_lite_10c_clips": 28,
+        "macaron_cookie_16c_clips": 20,
+        "flow_credits_total": 600,
+        "beluga_0c_frames_total": 130,
+        "beluga_flow_keyframes": 68,
+        "beluga_multi_angle_inserts": 62,
+        "tactical_maps_v9_count": 2,
+        "cuda_analysis_rigs_count": 6,
+        "flow_wave_wall_clock_min": 21.0,
+        "colab_t4_nvenc_render_min": 8.5
+      }
+    },
+    {
+      "style_id": "L09_GEOPOLITICAL_CHESSBOARD",
+      "short_code": "L09",
+      "archetype_name_vi": "Bàn Cờ Địa Chính Trị & Định Luật Núi Sông Biển Lớn Ngàn Năm",
+      "archetype_name_en": "3D Topographic Layer-Stacking & 1,000-Year Geographic Determinism",
+      "reference_filmmaking_twins": ["RealLifeLore", "CaspianReport", "Johnny Harris Terrain/Globe Breakdowns"],
+      "structural_topology": {
+        "target_duration_sec": 680,
+        "duration_range_sec": [560, 780],
+        "chaptering_model": "6 Cumulative Geographic Constraint Layers (Macro-Historical Synthesis across 1,000 years rather than a single day): Northern Karst Arcs -> Red River Tidal Delta -> Monsoon & Disease Ceiling -> Biển Đông Maritime Trade + Hoàng Sa & Trường Sa Sovereignty Shield -> Central Mountain Passes -> The Eternal Strategic Equation",
+        "pacing_curve": "Alternates slow, awe-inspiring `9.5s-12.0s` Progressive GIS Layer-Stacking animations with visceral `2.4s-2.8s` ground-reality sequences showing invading empires breaking against mud, karst cliffs, and tides",
+        "target_wpm": 152,
+        "average_shot_length_sec": {
+          "cold_open_0_15s": 2.3,
+          "cold_open_15_60s": 3.1,
+          "body_overall": 3.4
+        }
+      },
+      "visual_screen_share_pct": {
+        "living_flow_16x9_cinema": 40,
+        "slow_giant_map_v9": 34,
+        "cuda_multiplane_analysis_rigs": 14,
+        "rapid_multi_angle_beluga_coverage": 12
+      },
+      "camera_and_staging_grammar": {
+        "aspect_framing": "Full-Frame 16:9 (1920x1080) High-Altitude Aerial & Shaded-Relief Cartographic Cinema",
+        "primary_lenses": ["GIS-v9 Multi-Layer Relief & Bathymetry", "24mm Sweeping Karst Canyon & River Estuary Aerial", "35mm Monsoon Mud & Mountain Pass Bottleneck", "50mm Maritime Port & Island Watch"],
+        "color_science": "Crisp high-clarity topographic relief (`obsidian_war_room` + emerald-jade river channels) paired with clear-air 24mm aerials",
+        "signature_progression": "Bare Shaded Elevation Map -> Animate Limestone Mountain Wall Layer -> Zoom Match Into Real 24mm Chi Lăng Cliffs -> Cross-Century Pin Overlay (981 · 1077 · 1285 · 1427)"
+      },
+      "first_60s_living_cold_open_choreography": {
+        "living_flow_clips": 13,
+        "bespoke_30fps_breakdown": "Two 8.5s Progressive Terrain Layer-Stack Maps (`13.0s-21.5s` Northern Karst Funnel & `37.0s-45.5s` Biển Đông + Estuarine Shield)",
+        "total_cuts": 19,
+        "static_png_count": 0,
+        "sequence_blueprint": "0.0-13.0s (6 living aerial & ground cuts): Heavy northern cavalry bogged down in monsoon delta mud -> warships stranded on tidal shoals -> narrow limestone canyon walls towering above wagons. 13.0-21.5s: Progressive GIS Map #1 stacking northern mountain arcs forcing armies into `ẢI CHI LĂNG`. 21.5-37.0s: 4 living cuts across eras (Song halberds, Mongol horses, Ming cannon wagons all hitting the same mud). 37.0-45.5s: Regional GIS Map #2 anchoring Red River delta, Vân Đồn, `HOÀNG SA` & `TRƯỜNG SA`. 45.0-60.0s: 3 sweeping aerial Frame-Link shots posing the 1,000-year geographic question."
+      },
+      "signature_30fps_analytical_rigs": [
+        "RIG_A_PROGRESSIVE_SPOTLIGHT (Cross-Century Multi-Campaign Chokepoint Overlay pinning 938, 981, 1288 on the exact same river shelf)",
+        "RIG_B_SPLIT_SCREEN_CONTRAST (Flat Northern Steppe Cavalry Doctrine vs Tropical River-Karst Compartment Warfare)"
+      ],
+      "vn_analytical_commentary_mode": "Big-picture geopolitical strategist connecting topography, hydrology, monsoon climate, and maritime sovereignty into timeless strategic laws.",
+      "flagship_dai_viet_episode": {
+        "youtube_title": "Vì Sao 5 Đế Chế Đều Gãy Gục Trước Địa Hình Đại Việt?",
+        "thumbnail_hook": "BÀN CỜ ĐẠI VIỆT",
+        "primary_sources": ["Dư Địa Chí (Nguyễn Trãi)", "Đại Việt Sử Ký Toàn Thư", "Phủ Biên Tạp Lục (Lê Quý Đôn)"]
+      },
+      "episode_asset_and_credit_budget": {
+        "living_flow_clips_total": 40,
+        "cold_open_clips": 13,
+        "body_clips": 27,
+        "veo_3_1_lite_10c_clips": 28,
+        "macaron_cookie_16c_clips": 12,
+        "flow_credits_total": 472,
+        "beluga_0c_frames_total": 112,
+        "beluga_flow_keyframes": 52,
+        "beluga_multi_angle_inserts": 60,
+        "tactical_maps_v9_count": 8,
+        "cuda_analysis_rigs_count": 7,
+        "flow_wave_wall_clock_min": 17.5,
+        "colab_t4_nvenc_render_min": 8.5
+      }
+    },
+    {
+      "style_id": "L10_MILITARY_ENGINEERING_AUTOPSY",
+      "short_code": "L10",
+      "archetype_name_vi": "Giải Phẫu Vật Lý Quân Giới, Công Sự & Kinh Tế Ngụ Binh",
+      "archetype_name_en": "Macro Metallurgy, Weapon Physics Cross-Section & Defense Economics Autopsy",
+      "reference_filmmaking_twins": ["SandRhoman History", "Perun (Defense Economics)", "Cleo Abram / Jared Owen Physics Cutaways"],
+      "structural_topology": {
+        "target_duration_sec": 700,
+        "duration_range_sec": [580, 780],
+        "chaptering_model": "6 Engineering Stress-Test Modules: `[1] The Asymmetric Physics Problem` -> `[2] Material & Resource Constraints` -> `[3] Foundry Metallurgy & Structural Design` -> `[4] 30fps Kinetic Mechanics Test` -> `[5] Mobilization Economics (Ngụ binh ư nông)` -> `[6] Live Battlefield Proof vs Empire`",
+        "pacing_curve": "Crisp `2.4s-2.9s` macro foundry/physics cuts alternating with `8.5s-10.5s` 30fps procedural cross-section schematics and `3.0s` live battlefield stress-test chains",
+        "target_wpm": 154,
+        "average_shot_length_sec": {
+          "cold_open_0_15s": 2.1,
+          "cold_open_15_60s": 2.8,
+          "body_overall": 3.0
+        }
+      },
+      "visual_screen_share_pct": {
+        "living_flow_16x9_cinema": 46,
+        "slow_giant_map_v9": 10,
+        "cuda_multiplane_analysis_rigs": 24,
+        "rapid_multi_angle_beluga_coverage": 20
+      },
+      "camera_and_staging_grammar": {
+        "aspect_framing": "Full-Frame 16:9 (1920x1080) Ultra-Crisp Macro Materiality & Technical Blueprint Precision",
+        "primary_lenses": ["100mm Extreme Metallurgy / Wood-Grain / Gunpowder Macro (30%+ of all shots!)", "85mm Ballistic Impact Test Close-Up", "50mm Crew Reloading / Artisan Forge Drill", "28mm Shipyard / Citadel Construction Scale"],
+        "color_science": "macro_metallurgy_crisp (molten forge orange & bronze specular highlights against clean slate shadows, high micro-contrast)",
+        "signature_progression": "100mm Molten Bronze Poured into Breech Mold -> 30fps Animated Cross-Section Vector Schematic -> 85mm Ballistic Penetration into Oak Shield -> 28mm Massed Battery Firing on Rampart"
+      },
+      "first_60s_living_cold_open_choreography": {
+        "living_flow_clips": 16,
+        "bespoke_30fps_breakdown": "9.5s 30fps Weapon/Fortification Cross-Section Physics Rig (`21.0s-30.5s`)",
+        "total_cuts": 22,
+        "static_png_count": 0,
+        "sequence_blueprint": "0.0-15.0s (7 rapid living macro cuts): Lead cannonball slams into soaked wet-straw wooden shield and stops dead -> sparks fly off forged iron stake cap -> bronze *Thần Cơ* cannon barrel roaring -> 100mm wood fibers absorbing kinetic energy -> boxless 'KỸ THUẬT PHÁ ĐẠI QUÂN'. 15.0-44.0s: 5 living foundry & shipyard shots + 9.5s 30fps Animated Physics Cross-Section Rig showing kinetic energy dissipation / `15°` stake hull-shearing leverage. 44.0-60.0s: 4 living shots linking village rice paddies directly to 200,000 mobilized citizen-soldiers."
+      },
+      "signature_30fps_analytical_rigs": [
+        "RIG_E_WEAPON_PHYSICS_CROSS_SECTION (flagship rig: 30fps vector cross-section of *Súng Thần Cơ*, *Cọc Lim Bịt Sắt*, *Mộc Bài Rơm Ướt*, *Thành Đá Tây Đô*, or *Lũy Thầy*)",
+        "RIG_B_SPLIT_SCREEN_CONTRAST (Standing Mercenary Army Cost vs *Ngụ Binh Ư Nông* Peacetime-Farmer / Wartime-Soldier Economics)"
+      ],
+      "vn_analytical_commentary_mode": "First-principles military engineer & defense economist: explains *how* things physically work (metallurgy, angles, friction, supply calories, fiscal math) in vivid, accessible spoken Vietnamese.",
+      "flagship_dai_viet_episode": {
+        "youtube_title": "Súng Thần Cơ & Ngụ Binh: Công Nghệ Quân Sự Đại Việt",
+        "thumbnail_hook": "VŨ KHÍ ĐẠI VIỆT",
+        "primary_sources": ["Minh Sử (Q.92 Binh Chí)", "Đại Việt Sử Ký Toàn Thư", "Hổ Trướng Khu Cơ (Đào Duy Từ)"]
+      },
+      "episode_asset_and_credit_budget": {
+        "living_flow_clips_total": 48,
+        "cold_open_clips": 16,
+        "body_clips": 32,
+        "veo_3_1_lite_10c_clips": 34,
+        "macaron_cookie_16c_clips": 14,
+        "flow_credits_total": 564,
+        "beluga_0c_frames_total": 130,
+        "beluga_flow_keyframes": 62,
+        "beluga_multi_angle_inserts": 68,
+        "tactical_maps_v9_count": 2,
+        "cuda_analysis_rigs_count": 10,
+        "flow_wave_wall_clock_min": 20.5,
+        "colab_t4_nvenc_render_min": 8.5
+      }
+    }
+  ],
+  "hard_v12_long_qc_auto_fail_gates": [
+    {
+      "gate_id": "GATE_L12_01_ZERO_STATIC_FIRST_60S",
+      "metric": "Count of static PNG segments in [0.0s, 60.0s] or any single shot > 3.5s in [0.0s, 60.0s]",
+      "pass_condition": "static_png_count_0_60s == 0 AND max_shot_dur_0_15s <= 2.8s AND max_shot_dur_15_60s <= 3.5s AND living_flow_clips_0_60s >= 12",
+      "failure_penalty": "0/100 AUTO-FAIL"
+    },
+    {
+      "gate_id": "GATE_L12_02_ZERO_FROZEN_BODY_SLIDES",
+      "metric": "Any body frame window >= 0.5s with 0.0px optical motion (excluding intentional 0.4s black dip) or single BELUGA image held > 3.2s without angle cut or CUDA rig",
+      "pass_condition": "frozen_windows_count == 0 AND max_single_beluga_shot_sec <= 3.2s AND vf_zoompan_used == False",
+      "failure_penalty": "0/100 AUTO-FAIL"
+    },
+    {
+      "gate_id": "GATE_L12_03_ZERO_BOX_AND_VS_CARDS",
+      "metric": "Presence of dark rectangular pills, 1px borders, left vertical accent bars, or red VS plaques",
+      "pass_condition": "boxed_hud_count == 0 AND vs_plaque_count == 0",
+      "failure_penalty": "0/100 AUTO-FAIL"
+    },
+    {
+      "gate_id": "GATE_L12_04_SLOW_GIANT_MAP_V9",
+      "metric": "Map sequence duration, minimum label font height %, max words/label, max simultaneous labels",
+      "pass_condition": "map_dur_sec in [8.0, 12.0] AND min_font_height_pct >= 5.5 AND max_words_per_label <= 3 AND max_simultaneous_labels <= 2",
+      "failure_penalty": "0/100 AUTO-FAIL"
+    },
+    {
+      "gate_id": "GATE_L12_05_STYLE_STRUCTURAL_DIVERGENCE",
+      "metric": "Pairwise structural distance across L01..L10 (chapter topology, screen-share vector, ASL, signature CUDA rig, lens ratio)",
+      "pass_condition": "L1 visual-mix + rig divergence >= 25 percentage points vs generic baseline; >= 2 Class-3 Macro Tactile Inserts per chapter",
+      "failure_penalty": "0/100 AUTO-FAIL"
+    },
+    {
+      "gate_id": "GATE_L12_06_TECHNICAL_AUDIO_NVENC_WATERMARK",
+      "metric": "Colab T4 h264_nvenc, fps=30 before trim (av_drift <= 0.05s), VietNarrator_su_ke_lai -11.0 LUFS / <= -1.0 dBTP, W-w-36:H-h-36 logo",
+      "pass_condition": "encoder == 'h264_nvenc' AND av_drift_sec <= 0.05 AND -11.7 <= lufs <= -10.5 AND true_peak_dbtp <= -1.0 AND watermark_ncc >= 0.98",
+      "failure_penalty": "0/100 AUTO-FAIL"
+    }
+  ]
+}
