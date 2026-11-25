@@ -1,0 +1,467 @@
+{
+  "schema_version": "1.0",
+  "vault_type": "notebook_1_long_pattern_vault",
+  "pattern_id": "su_ke_lai_long_viral_v1",
+  "channel_id": "su_ke_lai",
+  "channel_name": "Sử Kể Lại",
+  "channel_handle": "@SuKeLaiVN",
+  "youtube_channel_id": "UCrLlAXwHQlxkDPFN3aW66PA",
+  "format_profile": "long_16x9",
+  "generated_at": "2026-11-22T18:10:00+07:00",
+  "source_reports": [
+    "sys/channels/analytics_su_ke_lai/long_competitor_benchmark_2026.json",
+    "sys/channels/analytics_su_ke_lai/su_ke_lai_existing_long_audit.json",
+    "sys/channels/su_ke_lai/notebooklm_long_viral_sources_pack.md",
+    "sys/runs/vn_su_ke_lai_long_viral_ep01_demo/fact_vault.json"
+  ],
+  "structure_only_compliance": {
+    "zero_copied_phrasing": true,
+    "folklore_quarantined_in_report_only": true,
+    "primary_chronicle_min_facts_long": 12,
+    "banned_cta_words": [
+      "like",
+      "share",
+      "subscribe",
+      "đăng ký",
+      "nhấn chuông",
+      "bấm chuông"
+    ],
+    "youtube_title_max_chars": 55,
+    "forbid_serialized_prefix_in_title": true,
+    "forbidden_title_prefixes": [
+      "P1",
+      "P2",
+      "P3",
+      "Tập 1",
+      "Tập 2",
+      "Phần 1",
+      "Phần 2",
+      "Tóm tắt:"
+    ],
+    "visual_style_lock": "su_ke_lai_35mm_live_action_v3_clear_air_v4_1",
+    "forbid_blanket_mist_and_smoke_spam": true,
+    "forbid_modern_five_pointed_star_flags": true
+  },
+  "empirical_competitor_corpus_2026": {
+    "source_file": "sys/channels/analytics_su_ke_lai/long_competitor_benchmark_2026.json",
+    "total_long_videos": 15,
+    "channels_covered": 5,
+    "clean_vietnamese_transcripts": 15,
+    "manual_human_vi_subtitles": 3,
+    "combined_views": 20457377,
+    "average_views": 1363825.1,
+    "median_views": 713921,
+    "view_range": [
+      231024,
+      5829910
+    ],
+    "duration_range_sec": [
+      595,
+      1262
+    ],
+    "average_duration_sec": 882.9,
+    "median_duration_sec": 822,
+    "explainer_cohort_12_avg_views": 1614116.2,
+    "explainer_cohort_12_avg_syllables_per_sec": 3.76,
+    "explainer_cohort_12_avg_75s_reset_coverage_pct": 97.2,
+    "cinema_contrast_cohort_3_avg_views": 362661,
+    "cinema_contrast_cohort_3_avg_like_to_view_pct": 2.738,
+    "cinema_contrast_cohort_3_avg_comment_to_view_pct": 0.1516,
+    "two_choice_debate_endings_in_competitors": 0,
+    "competitors_using_banned_cta_boilerplate": 3,
+    "channel_benchmarks": [
+      {
+        "channel_name": "EZ Sử",
+        "channel_id": "UCpaQwg8wZRAkFJe3mo1VKSA",
+        "sample_count": 3,
+        "combined_views": 8582681,
+        "avg_views": 2860893.7,
+        "avg_duration_sec": 763,
+        "avg_like_to_view_pct": 0.946,
+        "avg_comment_to_view_pct": 0.0503,
+        "avg_syllables_per_sec": 3.52,
+        "visual_mix_pct": {
+          "tactical_map": 68,
+          "cutaway_archival": 22,
+          "cinema_35mm": 10
+        },
+        "top_video_ids": [
+          "CD8sKixEDsI",
+          "RH7i8Fd__h4",
+          "TqRWvdXrQ-Y"
+        ]
+      },
+      {
+        "channel_name": "Dòng Máu Việt",
+        "channel_id": "UCpXhSnIKT-oxLAU4B-76GRg",
+        "sample_count": 3,
+        "combined_views": 5321670,
+        "avg_views": 1773890,
+        "avg_duration_sec": 873.3,
+        "avg_like_to_view_pct": 0.807,
+        "avg_comment_to_view_pct": 0.0747,
+        "avg_syllables_per_sec": 4.03,
+        "visual_mix_pct": {
+          "tactical_map": 22,
+          "cutaway_archival": 52,
+          "cinema_35mm": 27
+        },
+        "top_video_ids": [
+          "v0RTMz6_OcQ",
+          "G3mfatxejS8",
+          "ctlf5bEK988"
+        ]
+      },
+      {
+        "channel_name": "CD Media - Quân Sự",
+        "channel_id": "UC35gdWUdW1hzgS02Oz8kMUQ",
+        "sample_count": 3,
+        "combined_views": 4450297,
+        "avg_views": 1483432.3,
+        "avg_duration_sec": 1121.3,
+        "avg_like_to_view_pct": 0.628,
+        "avg_comment_to_view_pct": 0.0843,
+        "avg_syllables_per_sec": 3.73,
+        "visual_mix_pct": {
+          "tactical_map": 45,
+          "cutaway_archival": 28,
+          "cinema_35mm": 27
+        },
+        "top_video_ids": [
+          "u9Dz4SbA5LU",
+          "Gyjn8cwhR68",
+          "dGga5x2RJr8"
+        ]
+      },
+      {
+        "channel_name": "Việt Sử Kiêu Hùng",
+        "channel_id": "UCUSY8cBaPNAif3SeztpRK5Q",
+        "sample_count": 3,
+        "combined_views": 1087983,
+        "avg_views": 362661,
+        "avg_duration_sec": 842.7,
+        "avg_like_to_view_pct": 2.738,
+        "avg_comment_to_view_pct": 0.1516,
+        "avg_syllables_per_sec": 1.47,
+        "visual_mix_pct": {
+          "tactical_map": 10,
+          "cutaway_archival": 7,
+          "cinema_35mm": 83
+        },
+        "top_video_ids": [
+          "3kCGQ5fzhwI",
+          "qQ0cNjo1KYc",
+          "lnxd_dNSV7E"
+        ]
+      },
+      {
+        "channel_name": "Sử Lược - Tóm Tắt Lịch Sử",
+        "channel_id": "UCJDueHzfSEXmgMhmKIa9esQ",
+        "sample_count": 3,
+        "combined_views": 1014746,
+        "avg_views": 338248.7,
+        "avg_duration_sec": 814,
+        "avg_like_to_view_pct": 0.637,
+        "avg_comment_to_view_pct": 0.0825,
+        "avg_syllables_per_sec": 3.77,
+        "visual_mix_pct": {
+          "tactical_map": 67,
+          "cutaway_archival": 23,
+          "cinema_35mm": 10
+        },
+        "top_video_ids": [
+          "wxtAEPzysv0",
+          "L82fIsk0ysA",
+          "QPwbQUZRMFo"
+        ]
+      }
+    ]
+  },
+  "su_ke_lai_channel_audit_baseline": {
+    "source_file": "sys/channels/analytics_su_ke_lai/su_ke_lai_existing_long_audit.json",
+    "subscribers_current": 51,
+    "ypp_eligible_watch_hours_settled": 2.0,
+    "raw_long_watch_hours_accrued": 5.2,
+    "published_longs_count": 5,
+    "combined_long_views_live": 113,
+    "combined_long_impressions": 739,
+    "audience_core_profile": {
+      "male_pct": 76.1,
+      "age_35_44_pct": 26.7,
+      "age_35_plus_pct": 74.1,
+      "vietnam_pct": 96.6,
+      "long_big_screen_watch_time_pct": 73.8,
+      "long_tv_pct": 42.2,
+      "tv_co_viewing_ratio": 1.42,
+      "long_desktop_pct": 31.6
+    },
+    "critical_ab_proof": {
+      "winner_ep04_nhu_nguyet": {
+        "video_id": "7ht-AqW1ZmU",
+        "duration_label": "09:43",
+        "views": 52,
+        "ctr_pct": 3.9,
+        "apv_pct": 60.0,
+        "avd_label": "5:55",
+        "retention_at_0_29_pct": 80,
+        "retention_at_end_pct": 54,
+        "watch_hours_per_view": 0.0878,
+        "watch_hours_share_of_all_longs_pct": 82.7,
+        "lesson": "Male 35-44 TV/Desktop viewers deeply retain 10m 35mm military battle documentaries (60% APV); bottleneck was purely 3.9% academic title CTR and 01:41 AM publish time."
+      },
+      "loser_ep05_chieu_doi_do": {
+        "video_id": "wo4lyBAeqvI",
+        "duration_label": "09:18",
+        "views": 35,
+        "ctr_pct": 2.9,
+        "apv_pct": 23.0,
+        "avd_label": "2:10",
+        "retention_at_0_28_pct": 38,
+        "retention_at_4_02_pct": 7,
+        "watch_hours_per_view": 0.0156,
+        "lesson": "Dry policy/geography essay title + zero 30s motion hook + no 60-90s conflict resets yielded 5.6x less watch time per view than EP04."
+      }
+    },
+    "five_root_causes_fixed": [
+      "RC1: Replace academic textbook titles (~3.3% CTR) with <= 55 char curiosity-gap tactical titles targeting >= 6.5%-9.0% CTR.",
+      "RC2: Replace static 240-image openings with a mandatory 0-30s Cold-Open Motion Hook (<= 24 syl Sentence 1 + 3-4 Flow motion clips or 2.5D parallax).",
+      "RC3: Enforce 60-90s Retention Resets (micro-cliffhanger + Hybrid Visual Triad switch) at every chapter boundary.",
+      "RC4: Build 1:1 Topic-Matched Long Documentaries for winning Short clusters (Rạch Gầm 1785 18.2K Shorts wave first) and bridge via pinned comment, description, and selective topic-matched linking.",
+      "RC5: Eliminate 01:00-04:00 AM dead-zone uploads and sub-5m runtimes; lock 10m-14m runtimes scheduled Thu & Sun 19:30 GMT+7 for Big-Screen evening TV/Desktop co-viewing."
+    ],
+    "reusable_on_disk_warehouse": {
+      "total_directories": 21,
+      "total_size_mb": 3335.7,
+      "total_frames_png": 764,
+      "native_16x9_frames": 480,
+      "vertical_9x16_frames": 284,
+      "total_flow_clips_mp4": 179,
+      "total_flow_clips_duration_min": 22.73,
+      "total_omnivoice_wavs": 21,
+      "total_omnivoice_duration_min": 48.57
+    }
+  },
+  "cold_open_30s_hook_formulas": [
+    {
+      "formula_id": "LONG_HOOK_1_MYTH_BUSTER_PARADOX",
+      "benchmark_ref": "CD Media dGga5x2RJr8 (714K, 2026 ancient warfare breakout)",
+      "opening_sentence_max_syllables": 24,
+      "cold_open_window_sec": "0-30s (95-125 syllables, zero greeting, zero [pause:...])",
+      "template_vi": "Nhiều người tưởng [niềm tin quen thuộc], nhưng chính sử [triều đại/năm] lại chứng minh điều hoàn toàn ngược lại.",
+      "example_rach_gam_vi": "Nhiều người tưởng trận Rạch Gầm thắng nhờ bãi cọc gỗ, nhưng đáy sông Tiền không hề có một cây cọc nào.",
+      "example_syllables": 22
+    },
+    {
+      "formula_id": "LONG_HOOK_2_SECOND_PERSON_BATTLEFIELD_POV",
+      "benchmark_ref": "CD Media Gyjn8cwhR68 (1.71M views, 2,300 comments)",
+      "opening_sentence_max_syllables": 24,
+      "cold_open_window_sec": "0-30s (95-125 syllables, zero greeting, zero [pause:...])",
+      "template_vi": "Nếu đứng trên [vị trí sinh tử] với [tương quan áp đảo], bạn sẽ đánh thẳng hay lùi lại để sống sót?",
+      "example_rach_gam_vi": "Trước năm vạn quân Xiêm và ba trăm chiến thuyền, hai vạn quân Tây Sơn làm sao thắng chỉ trong một buổi sáng?",
+      "example_syllables": 23
+    },
+    {
+      "formula_id": "LONG_HOOK_3_CHRONICLE_VERBATIM_SHOCK_QUOTE",
+      "benchmark_ref": "Dòng Máu Việt G3mfatxejS8 (1.14M views) & ctlf5bEK988 (1.14M views)",
+      "opening_sentence_max_syllables": 24,
+      "cold_open_window_sec": "0-30s (95-125 syllables, zero greeting, zero [pause:...])",
+      "template_vi": "Chính quốc sử của [đối thủ] phải thừa nhận: sau [trận đánh], [kẻ địch] sợ [quân Đại Việt] như sợ cọp.",
+      "example_rach_gam_vi": "Chính sử triều Nguyễn từng ghi: sau một sáng ở Tiền Giang, người Xiêm nghe tên Tây Sơn đều sợ như sợ cọp.",
+      "example_syllables": 23
+    },
+    {
+      "formula_id": "LONG_HOOK_4_TICKING_CLOCK_FAILURE_DILEMMA",
+      "benchmark_ref": "Sử Lược L82fIsk0ysA & EZ Sử CD8sKixEDsI (5.83M views)",
+      "opening_sentence_max_syllables": 24,
+      "cold_open_window_sec": "0-30s (95-125 syllables, zero greeting, zero [pause:...])",
+      "template_vi": "Chỉ cần nổ súng sớm [đơn vị thời gian nhỏ], toàn bộ cái bẫy [quy mô lớn] sẽ lập tức tan vỡ.",
+      "example_rach_gam_vi": "Chỉ cần một khẩu pháo nổ sớm mười lăm phút, toàn bộ cái bẫy diệt năm vạn quân Xiêm sẽ lập tức tan vỡ.",
+      "example_syllables": 24
+    }
+  ],
+  "ten_chapter_documentary_spine": {
+    "target_duration_sec": "570-750s (9m30s-12m30s core; up to 840s / 14m00s for flagship deep-dives)",
+    "core_sentences_total": 120,
+    "visual_beats_total": 240,
+    "clause_split_ratio": {
+      "sub_beat_a_pct": 48,
+      "sub_beat_b_pct": 52
+    },
+    "target_speech_cadence_syl_per_sec": "3.80-4.15 (VietNarrator_su_ke_lai @ 1.30x)",
+    "retention_reset_interval_sec": "60-90s",
+    "hybrid_visual_triad_mix_pct": {
+      "cinema_35mm_clear_air_live_action": 50,
+      "dark_tactical_war_table_map": 30,
+      "weapon_fortress_chronicle_cutaway": 20
+    },
+    "chapters": [
+      {
+        "chapter_index": 1,
+        "window_sec": "0:00-1:05",
+        "sentences": 12,
+        "beats": 24,
+        "role": "Cold-Open 30s Paradox Hook + Strategic Stakes",
+        "visual_lead": "35mm Flow Motion Clips (0-30s) -> Dark Tactical Map Zoom (30-65s)",
+        "retention_reset_at_end": "Pose the impossible numerical/geographic paradox driving viewers into Chapter 2."
+      },
+      {
+        "chapter_index": 2,
+        "window_sec": "1:05-2:15",
+        "sentences": 12,
+        "beats": 24,
+        "role": "Opening Storm & Unsung Defensive Hinge (e.g., Trương Văn Đa at Mỹ Tho)",
+        "visual_lead": "Dark Tactical Map + 35mm Cinema",
+        "retention_reset_at_end": "Reveal why the apparent retreat actually trapped the enemy into building a static fort."
+      },
+      {
+        "chapter_index": 3,
+        "window_sec": "2:15-3:30",
+        "sentences": 12,
+        "beats": 24,
+        "role": "Commander Psychology & Enemy Arrogance Diagnosis",
+        "visual_lead": "35mm Character Chiaroscuro + Chronicle Quote Cutaway",
+        "retention_reset_at_end": "Introduce the ally's ignored warning and the 10-day deception plan."
+      },
+      {
+        "chapter_index": 4,
+        "window_sec": "3:30-4:45",
+        "sentences": 12,
+        "beats": 24,
+        "role": "Psychological Bait & The Decisive Deception (e.g., 10 Days Feigned Defeat + Gold/Silk Boat)",
+        "visual_lead": "35mm Cinema + Tactical Cutaway",
+        "retention_reset_at_end": "Enemy fleet leaves the fort — pivot to the engineering impossibility of trapping 300 ships on a 1km-wide river."
+      },
+      {
+        "chapter_index": 5,
+        "window_sec": "4:45-6:00",
+        "sentences": 12,
+        "beats": 24,
+        "role": "Midpoint Strategic Pivot: Terrain Chokepoint & Myth-Busting Hydrology (Cù lao Thới Sơn)",
+        "visual_lead": "Dark Tactical Map (gis_map_baker) + Top-Down 35mm River View",
+        "retention_reset_at_end": "Midpoint cliffhanger: chokepoint exists, but how do you fire hundred-kg bronze cannons from tidal mud?"
+      },
+      {
+        "chapter_index": 6,
+        "window_sec": "6:00-7:15",
+        "sentences": 12,
+        "beats": 24,
+        "role": "Military Engineering & Secret Weapon Teardown (Mud Cannon Platforms + Recoil Locks)",
+        "visual_lead": "Weapon/Engineering Cutaway + 35mm Close-Ups",
+        "retention_reset_at_end": "Trap is armed, yet 1 single premature shot ruins everything — transition to the tide clock."
+      },
+      {
+        "chapter_index": 7,
+        "window_sec": "7:15-8:30",
+        "sentences": 12,
+        "beats": 24,
+        "role": "The Hydrological Clock & 15-Minute Breath-Hold Discipline (Con Nước Ròng + [pause:500ms])",
+        "visual_lead": "35mm Tense Chiaroscuro + Tide Vector Map",
+        "retention_reset_at_end": "Ship #300 crosses Rạch Gầm -> silence_vacuum heartbeat -> signal flare erupts."
+      },
+      {
+        "chapter_index": 8,
+        "window_sec": "8:30-9:45",
+        "sentences": 12,
+        "beats": 24,
+        "role": "Climax Chain Reaction (150m Direct Cannon Fire -> Wooden Cork Domino -> Dầu Rái Fire Ships)",
+        "visual_lead": "35mm Clear-Air Battle Cinema + Physics Cutaway (Oil-on-Water)",
+        "retention_reset_at_end": "300 warships burn in 1 watch-hour — pivot to the shocking survival & escape of enemy leaders."
+      },
+      {
+        "chapter_index": 9,
+        "window_sec": "9:45-11:00",
+        "sentences": 12,
+        "beats": 24,
+        "role": "Aftermath, Marshland Retreat & Foreign Chronicle Verdict (Vọng Các, Thổ Chu, 'Sợ như sợ cọp')",
+        "visual_lead": "35mm Dramatic Aftermath + Regional Map",
+        "retention_reset_at_end": "Land the decades-long geopolitical shift protecting southern Đại Việt."
+      },
+      {
+        "chapter_index": 10,
+        "window_sec": "11:00-12:00",
+        "sentences": 12,
+        "beats": 24,
+        "role": "Strategic Synthesis, Brand Anchor & 2-Choice Polarizing Debate Outro",
+        "visual_lead": "35mm Dawn Landscape + Subtle Chapter/Debate Summary",
+        "retention_reset_at_end": "Sync verbatim with @SuKeLaiVN Pinned Comment 2-choice debate question (zero banned CTA words)."
+      }
+    ]
+  },
+  "three_cost_saving_production_tiers": [
+    {
+      "tier_id": "TIER_1_ZERO_CREDIT_SUPERCUT_FX_WAREHOUSE",
+      "label": "Tier 1 — Zero-Credit Supercut & FX Warehouse",
+      "flow_credit_cost": 0,
+      "target_resolution": "2560x1440@30fps (Colab T4 h264_nvenc) or 640x360@30fps Demo",
+      "mechanism": "Re-orchestrate verified 2K 35mm Clear-Air keyframes & Flow video clips from completed Short clusters on disk (Rạch Gầm P1-P6: 140 PNGs + 84 clips; EP07-EP12: 120 PNGs + 71 clips; EP04-EP05: 480 native 16:9 PNGs) + sys/fx_warehouse/ (camera_vfx.py 2.5D parallax, gis_map_baker.py dark tactical maps, hud_widgets.py chapter cards, audio_sfx_bgm.py heroic score) + connecting VietNarrator_su_ke_lai OmniVoice narration.",
+      "anti_black_bar_rule": "Never output raw black vertical pillars on 16:9; apply smart 16:9 center-crop Lanczos framing or split-frame warroom HUD layout."
+    },
+    {
+      "tier_id": "TIER_2_ZERO_VIDEO_CREDIT_BELUGA_SPARSE_HOOK",
+      "label": "Tier 2 — Zero-Video-Credit BELUGA images_only + Sparse 30s Hook Clips",
+      "flow_credit_cost_range": [
+        0,
+        40
+      ],
+      "target_resolution": "2560x1440@30fps (Colab T4 h264_nvenc)",
+      "mechanism": "Generate 240 native 16:9 BELUGA frames (0 video credits) rendered with static Lanczos scaling + xfade=fade:duration=0.18 (strictly obeying ERR-20261109-01 zero zoompan jitter), plus optional 3-4 Veo 3.1 Lite (10c flat Seam Mode) clips ONLY in the first 30s Cold Open Hook (30-40 credits total, ~98% savings vs full video)."
+    },
+    {
+      "tier_id": "TIER_3_FAST_360P_DEMO_PREVIEW",
+      "label": "Tier 3 — Fast 360p (640x360@30fps) Demo Preview Mode",
+      "flow_credit_cost": 0,
+      "target_resolution": "640x360@30fps (h264, 48000Hz stereo -11.0 LUFS, FFMETADATA1 chapters)",
+      "tool_path": "sys/tools/build_su_ke_lai_long_360p_demo.py",
+      "mechanism": "Rapid local 360p preview build (--mode reuse_zero_credit default, or --mode flow_360_sparse_hook blueprint) to verify Cold-Open Hook, voice cadence, chapter progression, tactical HUDs, and -11.0 LUFS audio BEFORE committing any Flow credits or Colab T4 2K render."
+    }
+  ],
+  "short_to_long_funnel_and_ypp_4000h_plan": {
+    "ypp_goal": {
+      "subscribers_target": 1000,
+      "public_watch_hours_target": 4000,
+      "current_settled_watch_hours": 2.0,
+      "views_needed_at_12m_50pct_apv": 40000,
+      "watch_hours_per_10k_views_at_12m_50pct_apv": 1000.0,
+      "views_needed_at_10m_45_to_55pct_apv": [
+        43637,
+        53334
+      ]
+    },
+    "cadence_and_slots_gmt7": {
+      "long_16x9_cadence": "2 Long documentaries / week",
+      "long_publish_slots_gmt7": [
+        "Thursday 19:30 GMT+7",
+        "Sunday 19:30 GMT+7"
+      ],
+      "shorts_9x16_cadence": "3 Shorts / day (07:00, 11:30, 19:30 GMT+7)",
+      "projected_weeks_to_4000h": {
+        "breakout_scenario": 5,
+        "base_scenario": 8,
+        "conservative_scenario": 12
+      },
+      "weeks_1_to_3_credit_burn": "0 Flow credits using Tier 1 on-disk Supercut clusters (Rạch Gầm, Tây Sơn, Nhà Trần, Lam Sơn, Hoàng Đế & Danh Tướng)."
+    },
+    "short_to_long_bridge_rules": {
+      "rule": "Match every winning Short cluster 1:1 with a Long 16:9 documentary covering the exact same campaign.",
+      "conversion_target_pct": "1.5%-3.0% of topic-matched Shorts viewers clicking into Long via pinned comment link, description bridge, and selective topic-matched Related Video linking once the matching Long is published.",
+      "channel_lock_note": "Respect publish_policy.short_attach_related_video=false on unmatched Shorts; enable selective topic-matched linking only on explicit user approval when the 1:1 Long is live."
+    }
+  },
+  "two_choice_debate_outro_and_pinned_comment": {
+    "target_comment_to_view_pct": ">= 0.15%",
+    "target_like_to_view_pct": ">= 1.80%",
+    "zero_banned_cta_words": true,
+    "outro_templates_vi": [
+      {
+        "template_id": "LONG_DEBATE_1_DECISIVE_FACTOR",
+        "spoken_outro_vi": "Theo góc nhìn của bạn, mắt xích quyết định chiến thắng Rạch Gầm – Xoài Mút là đòn tâm lý chiến dâng vàng lụa của Nguyễn Huệ, hay bàn đạp Mỹ Tho do Trương Văn Đa kiên cường giữ lại? Hãy để lại nhận định của bạn cùng Sử Kể Lại.",
+        "pinned_comment_vi": "📌 [GÓC PHÂN TÍCH SỬ KỂ LẠI]: Trong đại thắng Rạch Gầm – Xoài Mút 1785, theo bạn nước cờ nào mang tính quyết định nhất? (A) Đòn tâm lý chiến 10 ngày giả thua và rương vàng lụa của Nguyễn Huệ, hay (B) Quyết định rút về giữ chặt căn cứ Mỹ Tho của Phò mã Trương Văn Đa? Mời bạn chọn A hoặc B và chia sẻ góc nhìn bên dưới!"
+      },
+      {
+        "template_id": "LONG_DEBATE_2_TERRAIN_VS_DISCIPLINE",
+        "spoken_outro_vi": "Giữa địa hình cổ chai cù lao Thới Sơn và kỷ luật nín thở mười lăm phút không nổ súng sớm, bạn đánh giá yếu tố nào khó tái lập nhất trong lịch sử quân sự? Cùng bàn luận dưới phần bình luận với Sử Kể Lại.",
+        "pinned_comment_vi": "📌 [TRANH LUẬN QUÂN SỰ — SỬ KỂ LẠI]: Giữa hai yếu tố làm nên chiến thắng 1 canh giờ trên sông Tiền: (A) Kỹ thuật công binh đặt đại bác trên bùn và hỏa thuyền dầu rái, hay (B) Kỷ luật thép nín thở 15 phút chờ chiếc thuyền thứ 300? Theo bạn đâu mới là đỉnh cao cầm quân của Nguyễn Huệ?"
+      }
+    ]
+  }
+}

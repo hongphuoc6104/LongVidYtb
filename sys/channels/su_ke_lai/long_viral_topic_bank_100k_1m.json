@@ -1,0 +1,1015 @@
+{
+  "schema_version": "4.3",
+  "protocol_id": "su_ke_lai_long_viral_v1",
+  "channel_id": "su_ke_lai",
+  "channel_name": "Sử Kể Lại",
+  "channel_handle": "@SuKeLaiVN",
+  "target_audience": {
+    "core_demographic": "76.1% Male, 26.7% age 35-44 (74.1% age 35+), 96.6% Vietnam; Long watch time is 73.8% Big-Screen (42.2% TV with 1.42x co-viewing + 31.6% Desktop)",
+    "ypp_goal": "4,000 public watch hours (365d) + 1,000 subscribers",
+    "publish_schedule_gmt7": "2 Long videos/week (Thu & Sun 19:30 GMT+7, strictly avoiding 01:41-03:53 AM dead-zone uploads) + 3 Shorts/day (07:00, 11:30, 19:30 GMT+7)",
+    "empirical_retention_proof": "EP04 Như Nguyệt 1077 (7ht-AqW1ZmU, 9m43s) proved 60% APV (5m55s AVD, 80% held at 0:29, 54% end retention), generating 82.7% of total channel Long watch time — confirming tactical battle narratives retain Big-Screen viewers when paired with >=6.5% CTR curiosity titles instead of dry textbook titles (3.9% CTR).",
+    "watch_hour_acceleration_strategy": "Combine 5 Tier 1 Zero-Credit Supercut Long Documentaries (reusing verified 35mm Clear-Air assets already on disk — 764 PNG frames, 179 Flow clips [22.73m], 21 OmniVoice WAVs [48.57m] at 0 Flow credits) + 3 Tier 2 Zero-Video-Credit BELUGA + 30s Hook Flagship Chronicles + 2 Tier 3 360p Fast Demo First Flagships. At 10m-14m runtime and 46%-52% APV, every 10,000 Long views generates 843 to 1,213 public watch hours — clearing 4,000 watch hours in ~40,000 combined Long views (5-12 weeks, with Weeks 1-3 at 0 Flow credits)."
+  },
+  "pattern_brief_ref": "sys/channels/su_ke_lai/long_viral_pattern_brief_v1.json",
+  "sources_pack_ref": "sys/channels/su_ke_lai/notebooklm_long_viral_sources_pack.md",
+  "short_topic_bank_ref": "sys/channels/su_ke_lai/viral_topic_bank_100k_1m.json",
+  "invariants_enforced": {
+    "format_profile": "long_16x9",
+    "runtime_range_sec": [
+      600,
+      840
+    ],
+    "max_title_chars": 55,
+    "forbid_p1_p2_prefix_in_title": true,
+    "thumbnail_uppercase_words_range": [
+      2,
+      4
+    ],
+    "max_b00_cold_open_hook_syllables": 24,
+    "forbid_pause_tag_in_b00": true,
+    "chapters_per_episode": 10,
+    "retention_reset_cadence_sec": [
+      60,
+      90
+    ],
+    "audio_master_lufs": -11.0,
+    "audio_master_true_peak_dbtp": -1.0,
+    "voice_profile": "VietNarrator_su_ke_lai",
+    "visual_style_lock": "su_ke_lai_35mm_live_action_v3 + Clear-Air V4.1",
+    "zero_banned_cta_words": true,
+    "demo_preview_spec": "640x360@30fps (0 Flow credits via sys/tools/build_su_ke_lai_long_360p_demo.py)"
+  },
+  "cost_saving_tier_matrix": {
+    "Tier 1 Zero-Credit Supercut": {
+      "flow_credits_budget": "0 credits",
+      "description": "Re-orchestrates verified 2K 35mm Clear-Air PNG frames, Flow video clips, and OmniVoice audio stems already on disk from completed Short arcs + sys/fx_warehouse/ 2.5D parallax camera, tactical chapter stamps, and connecting VietNarrator_su_ke_lai narration."
+    },
+    "Tier 2 Zero-Video-Credit BELUGA + 30s Hook": {
+      "flow_credits_budget": "0 to 40 credits",
+      "description": "240 BELUGA 16:9 frames (0 video credits) rendered via static Lanczos + xfade=fade (ERR-20261109-01 zero jitter), with optional 3-4 Flow motion clips spent strictly inside the 0-30s Cold-Open Hook to maximize early retention."
+    },
+    "Tier 3 360p Fast Demo First": {
+      "flow_credits_budget": "0 credits for 360p preview (greenlight to Tier 2 only after pacing/retention approval)",
+      "description": "Builds a rapid 640x360@30fps Long structural demo via sys/tools/build_su_ke_lai_long_360p_demo.py using existing style-matched on-disk clips/frames + FX Warehouse HUDs to validate Cold-Open Hook, 10-chapter resets, and voice cadence before spending any 2K render or Flow budget."
+    }
+  },
+  "episodes": [
+    {
+      "rank": 1,
+      "episode_id": "vn_su_ke_lai_long_viral_ep01_rach_gam_1785_supercut",
+      "production_category": "Zero-Credit Supercut Documentary",
+      "pillar_id": "pillar_4_military_deception_trap",
+      "pillar_label": "4. Khoảnh khắc sinh tử & Cú lừa quân sự kinh điển",
+      "youtube_title": "Rạch Gầm 1785: Bẫy Thủy Chiến Xóa Sổ 5 Vạn Quân Xiêm",
+      "youtube_title_char_count": 52,
+      "thumbnail_text": "BẪY SÔNG RẠCH GẦM",
+      "thumbnail_word_count": 4,
+      "target_duration_sec": 720,
+      "expected_apv_pct": 50.0,
+      "estimated_watch_hours_per_10k_views": 1000.0,
+      "cost_saving_tier": "Tier 1 Zero-Credit Supercut",
+      "estimated_flow_credits": 0,
+      "reusable_on_disk_assets": [
+        "video/vn_su_ke_lai_ep06_p1_cu_lua_vang_lua_tra_tan_1785_short/frames",
+        "video/vn_su_ke_lai_ep06_p1_cu_lua_vang_lua_tra_tan_1785_short/clips",
+        "video/vn_su_ke_lai_ep06_p1_cu_lua_vang_lua_tra_tan_1785_short/narration_master.wav",
+        "video/vn_su_ke_lai_ep06_p2_co_chai_thoi_son_phao_bun_1785_short/frames",
+        "video/vn_su_ke_lai_ep06_p2_co_chai_thoi_son_phao_bun_1785_short/clips",
+        "video/vn_su_ke_lai_ep06_p2_co_chai_thoi_son_phao_bun_1785_short/narration_master.wav",
+        "video/vn_su_ke_lai_ep06_p3_con_nuoc_rong_1_khac_1785_short/frames",
+        "video/vn_su_ke_lai_ep06_p3_con_nuoc_rong_1_khac_1785_short/clips",
+        "video/vn_su_ke_lai_ep06_p3_con_nuoc_rong_1_khac_1785_short/narration_master.wav",
+        "video/vn_su_ke_lai_ep06_p4_hoa_thuyen_dai_bac_150m_1785_short/frames",
+        "video/vn_su_ke_lai_ep06_p4_hoa_thuyen_dai_bac_150m_1785_short/clips",
+        "video/vn_su_ke_lai_ep06_p4_hoa_thuyen_dai_bac_150m_1785_short/narration_master.wav",
+        "video/vn_su_ke_lai_ep06_p5_dao_thoat_so_tay_son_1785_short/frames",
+        "video/vn_su_ke_lai_ep06_p5_dao_thoat_so_tay_son_1785_short/clips",
+        "video/vn_su_ke_lai_ep06_p5_dao_thoat_so_tay_son_1785_short/narration_master.wav",
+        "video/vn_su_ke_lai_ep06_p6_truong_van_da_giu_my_tho_1785_short/frames",
+        "video/vn_su_ke_lai_ep06_p6_truong_van_da_giu_my_tho_1785_short/clips",
+        "video/vn_su_ke_lai_ep06_p6_truong_van_da_giu_my_tho_1785_short/narration_master.wav",
+        "video/vn_su_ke_lai_ep06_rach_gam_xoai_mut_1785_short/frames",
+        "video/vn_su_ke_lai_ep06_rach_gam_xoai_mut_1785_short/clips"
+      ],
+      "b00_cold_open_hook": "Chỉ cần một con nước ròng, Nguyễn Huệ xóa sổ năm vạn quân Xiêm ngay trên sông Tiền ra sao?",
+      "b00_cold_open_hook_syllables": 20,
+      "10_chapter_titles_and_retention_resets": [
+        {
+          "chapter_number": 1,
+          "timestamp_target": "00:00",
+          "chapter_title": "Thế Cờ Sinh Tử Cuối Năm 1784 Ở Gia Định",
+          "retention_reset_hook": "Khi hai vạn thủy quân và ba vạn bộ binh Xiêm tràn vào miền Tây, vì sao Nguyễn Huệ lại lệnh cho quân giữ Mỹ Tho lùi sâu thay vì đánh ngay?"
+        },
+        {
+          "chapter_number": 2,
+          "timestamp_target": "01:12",
+          "chapter_title": "Nước Cờ Rút Lui Của Trương Văn Đa Tại Mỹ Tho",
+          "retention_reset_hook": "Trương Văn Đa vừa kéo giãn tuyến tiếp tế của giặc, nhưng một mồi nhử tinh vi hơn nữa đang được Nguyễn Huệ thả thẳng vào dinh tướng Xiêm."
+        },
+        {
+          "chapter_number": 3,
+          "timestamp_target": "02:24",
+          "chapter_title": "Cú Lừa Vàng Lụa Và Đòn Tâm Lý Tại Đồn Trà Tân",
+          "retention_reset_hook": "Chiêu Tăng tin chắc quân Tây Sơn đã sợ hãi cầu hòa, mà không ngờ mình vừa bước vào một hành lang tử thần rộng chưa đầy hai cây số."
+        },
+        {
+          "chapter_number": 4,
+          "timestamp_target": "03:36",
+          "chapter_title": "Giải Phẫu Địa Hình Cổ Chai Rạch Gầm – Xoài Mút",
+          "retention_reset_hook": "Khúc sông có cù lao Thới Sơn chắn giữa biến hạm đội đông gấp đôi thành con mồi mắc kẹt — nhưng làm sao đặt đại bác trên nền bùn lầy?"
+        },
+        {
+          "chapter_number": 5,
+          "timestamp_target": "04:48",
+          "chapter_title": "Trận Địa Pháo Trên Bùn Và Hai Gọng Kìm Thủy Binh",
+          "retention_reset_hook": "Toàn bộ đại bác và thuyền chiến đã nín thở chờ sẵn trong rạch nhỏ, song cả chiến dịch chỉ còn sống chết vào một biến số duy nhất của tự nhiên."
+        },
+        {
+          "chapter_number": 6,
+          "timestamp_target": "06:00",
+          "chapter_title": "Canh Bạc Con Nước Ròng Canh Năm Đêm 19 Tháng Giêng",
+          "retention_reset_hook": "Chỉ cần phát lệnh sớm hoặc trễ một khắc, dòng nước sẽ cứu hạm đội Xiêm — đúng lúc mặt sông đổi chiều, phát pháo lệnh đầu tiên xé toạc màn đêm."
+        },
+        {
+          "chapter_number": 7,
+          "timestamp_target": "07:12",
+          "chapter_title": "Khóa Đầu Chặn Đuôi: 300 Chiến Thuyền Mắc Cạn",
+          "retention_reset_hook": "Thủy quân Xiêm mất quyền điều khiển khi hai cửa rạch bị khóa cứng, và đòn hỏa công khủng khiếp nhất lập tức trút xuống từ cự ly 150 mét."
+        },
+        {
+          "chapter_number": 8,
+          "timestamp_target": "08:24",
+          "chapter_title": "Hỏa Thuyền Dầu Rái Và Pháo Bắn Ngang Sườn",
+          "retention_reset_hook": "Chỉ trong một buổi sáng, khúc sông Tiền rực lửa nhấn chìm ba trăm chiến thuyền — chuyện gì xảy ra với hai viên tướng Xiêm trên đường tháo chạy?"
+        },
+        {
+          "chapter_number": 9,
+          "timestamp_target": "09:36",
+          "chapter_title": "Cuộc Đào Thoát Đẫm Máu Và Nỗi Sợ Tây Sơn Như Sợ Cọp",
+          "retention_reset_hook": "Chiêu Tăng và Chiêu Sương chỉ còn vài nghìn tàn quân luồn rừng về nước, nhưng dư chấn của trận đánh này đã thay đổi cục diện Đông Nam Á suốt nửa thế kỷ."
+        },
+        {
+          "chapter_number": 10,
+          "timestamp_target": "10:48",
+          "chapter_title": "Tầm Vóc Chiến Lược Và Câu Hỏi Lịch Sử Còn Để Ngỏ",
+          "retention_reset_hook": "Đặt lên bàn cân toàn bộ chiến dịch 1785, yếu tố nào mới thực sự là đòn kết liễu năm vạn quân Xiêm?"
+        }
+      ],
+      "debate_question_2_choice": "Theo bạn, yếu tố quyết định chiến thắng Rạch Gầm – Xoài Mút 1785 là (A) Đòn tâm lý đánh lừa khiến tướng Xiêm chủ quan hay (B) Nghệ thuật chọn địa hình cổ chai và canh chuẩn con nước ròng của Nguyễn Huệ? Chia sẻ góc nhìn của bạn bên dưới nhé.",
+      "primary_chronicle_citations": [
+        "Đại Nam Thực Lục Tiền Biên & Chính Biên Đệ Nhất Kỷ (1785)",
+        "Khâm Định Việt Sử Thông Giám Cương Mục — Chính Biên Quyển 46",
+        "Hoàng Lê Nhất Thống Chí — Hồi thứ 4 & 5"
+      ],
+      "clear_air_v4_1_visual_lock": "crisp optical clarity, deep-focus 35mm anamorphic depth, dramatic directional sunlight or warm Caravaggio torchlight chiaroscuro, rich tactile armor and terrain detail (reusing 140 verified 2K Clear-Air PNGs + 84 Flow clips from ep06_p1..p6)"
+    },
+    {
+      "rank": 2,
+      "episode_id": "vn_su_ke_lai_long_viral_ep02_tay_son_ky_dau_1789_supercut",
+      "production_category": "Zero-Credit Supercut Documentary",
+      "pillar_id": "pillar_2_elite_unit_secret_weapon",
+      "pillar_label": "2. Binh chủng tinh nhuệ & Vũ khí bí mật Đại Việt",
+      "youtube_title": "Tết Kỷ Dậu 1789: Vũ Khí Khiến 29 Vạn Quân Thanh Sụp Đổ",
+      "youtube_title_char_count": 54,
+      "thumbnail_text": "TƯỢNG BINH KỶ DẬU",
+      "thumbnail_word_count": 4,
+      "target_duration_sec": 750,
+      "expected_apv_pct": 49.0,
+      "estimated_watch_hours_per_10k_views": 1020.8,
+      "cost_saving_tier": "Tier 1 Zero-Credit Supercut",
+      "estimated_flow_credits": 0,
+      "reusable_on_disk_assets": [
+        "video/vn_su_ke_lai_ep07_tuong_binh_hoa_ho_tay_son_1789_short/frames",
+        "video/vn_su_ke_lai_ep07_tuong_binh_hoa_ho_tay_son_1789_short/clips",
+        "video/vn_su_ke_lai_ep07_tuong_binh_hoa_ho_tay_son_1789_short/audio_master.wav",
+        "video/vn_su_ke_lai_ep13_cu_lua_ha_hoi_1789_short/audio_master.wav",
+        "video/vn_su_ke_lai_ep13_cu_lua_ha_hoi_1789_short/narration_master.wav",
+        "video/vn_su_ke_lai_ep06_p4_hoa_thuyen_dai_bac_150m_1785_short/frames",
+        "video/vn_su_ke_lai_ep06_p5_dao_thoat_so_tay_son_1785_short/clips"
+      ],
+      "b00_cold_open_hook": "Làm sao vua Quang Trung nghiền nát hai mươi chín vạn quân Thanh chỉ trong đúng năm ngày Tết?",
+      "b00_cold_open_hook_syllables": 19,
+      "10_chapter_titles_and_retention_resets": [
+        {
+          "chapter_number": 1,
+          "timestamp_target": "00:00",
+          "chapter_title": "Thăng Long Rơi Vào Tay 29 Vạn Quân Thanh Cuối Năm 1788",
+          "retention_reset_hook": "Khi Tôn Sĩ Nghị đang ung dung hẹn ăn Tết xong mới nam tiến, một quyết định ở Phú Xuân đã biến mọi tính toán của nhà Thanh thành tro bụi."
+        },
+        {
+          "chapter_number": 2,
+          "timestamp_target": "01:15",
+          "chapter_title": "Lên Ngôi Tại Núi Bân Và Lời Hẹn Ăn Tết Mùng 7",
+          "retention_reset_hook": "Từ Phú Xuân ra Thăng Long dài hàng trăm cây số đường núi, quân Tây Sơn làm thế nào để hành quân gấp ba lần tốc độ bình thường?"
+        },
+        {
+          "chapter_number": 3,
+          "timestamp_target": "02:30",
+          "chapter_title": "Hậu Cần Thần Tốc: Ba Người Một Cáng Và Lệnh Bịt Mắt Địch",
+          "retention_reset_hook": "Tây Sơn đã áp sát cửa ngõ Thăng Long mà Tôn Sĩ Nghị hoàn toàn mù thông tin — nhưng trước mặt họ là hệ thống đồn tiền tiêu dày đặc."
+        },
+        {
+          "chapter_number": 4,
+          "timestamp_target": "03:45",
+          "chapter_title": "Đêm 30 Tết Vượt Sông Gián Khẩu Bắt Sống Lính Do Thám",
+          "retention_reset_hook": "Giờ đây chỉ cách đồn Hà Hồi một canh giờ hành quân, làm sao hạ đồn mà không nổ một phát súng đánh động đồn Ngọc Hồi?"
+        },
+        {
+          "chapter_number": 5,
+          "timestamp_target": "05:00",
+          "chapter_title": "Cú Lừa Âm Thanh Đêm Mùng 3 Tết Tại Đồn Hà Hồi",
+          "retention_reset_hook": "Hà Hồi hàng trắng không tốn một mũi tên, nhưng rạng sáng mùng 5 Tết tại Ngọc Hồi mới là pháo đài thép thực sự của Hứa Thế Hanh."
+        },
+        {
+          "chapter_number": 6,
+          "timestamp_target": "06:15",
+          "chapter_title": "Giải Phẫu 100 Cỗ Xe Tăng Sống: Tượng Binh Tây Sơn",
+          "retention_reset_hook": "Hơn một trăm voi chiến bọc giáp cõng đại bác xung phong không chỉ phá rào gỗ, mà còn đi kèm một thứ vũ khí phun lửa cận chiến chết người."
+        },
+        {
+          "chapter_number": 7,
+          "timestamp_target": "07:30",
+          "chapter_title": "Hỏa Hổ Phun Lửa Và Đội Hình 600 Tấm Ván Rơm Ướt",
+          "retention_reset_hook": "Khói đạn mù mịt khiến bộ binh Thanh không kịp nạp thuốc súng, đúng lúc đó cánh quân Đô đốc Long bất ngờ giáng đòn từ hướng Đống Đa."
+        },
+        {
+          "chapter_number": 8,
+          "timestamp_target": "08:45",
+          "chapter_title": "Đồn Khương Thượng Bùng Cháy Và Cầu Phao Sông Hồng Sập",
+          "retention_reset_hook": "Nghe tin Ngọc Hồi và Đống Đa cùng vỡ trận, Tôn Sĩ Nghị không kịp đóng yên ngựa tháo chạy — để lại cảnh tượng chấn động bên bờ sông Nhị."
+        },
+        {
+          "chapter_number": 9,
+          "timestamp_target": "10:00",
+          "chapter_title": "Trưa Mùng 5 Tết: Tấm Áo Bào Đỏ Sạm Đen Khói Súng",
+          "retention_reset_hook": "Đại thắng đã định đoạt chỉ trong năm ngày, nhưng bài toán ngoại giao ngay sau chiến thắng với hoàng đế Càn Long mới thực sự gay cấn."
+        },
+        {
+          "chapter_number": 10,
+          "timestamp_target": "11:15",
+          "chapter_title": "Di Sản Quân Sự Kỷ Dậu Và Câu Hỏi Cho Người Yêu Sử",
+          "retention_reset_hook": "Nhìn lại toàn bộ cỗ máy chiến tranh Tây Sơn năm 1789, đâu là nhân tố làm nên tốc độ hủy diệt chưa từng có này?"
+        }
+      ],
+      "debate_question_2_choice": "Theo bạn, nhân tố quyết định chiến thắng Ngọc Hồi – Đống Đa 1789 là (A) Hệ thống vũ khí hiệp đồng Tượng binh + Hỏa hổ + ván rơm ướt hay (B) Tốc độ hành quân thần tốc và đòn tâm lý chiến đêm mùng 3 Tết? Để lại lựa chọn A hoặc B bên dưới nhé.",
+      "primary_chronicle_citations": [
+        "Hoàng Lê Nhất Thống Chí — Hồi thứ 14",
+        "Đại Nam Chính Biên Liệt Truyện — Sơ Tập Quyển 30",
+        "Khâm Định Việt Sử Thông Giám Cương Mục — Chính Biên Quyển 47"
+      ],
+      "clear_air_v4_1_visual_lock": "crisp optical clarity, deep-focus 35mm anamorphic depth, warm Caravaggio torchlight & dawn chiaroscuro (reusing EP07 20 PNGs + 12 Flow clips + EP07/EP13 OmniVoice WAVs + EP06 Tây Sơn assets)"
+    },
+    {
+      "rank": 3,
+      "episode_id": "vn_su_ke_lai_long_viral_ep03_hao_khi_dong_a_1285_supercut",
+      "production_category": "Zero-Credit Supercut Documentary",
+      "pillar_id": "pillar_2_elite_unit_secret_weapon",
+      "pillar_label": "2. Binh chủng tinh nhuệ & Vũ khí bí mật Đại Việt",
+      "youtube_title": "Hào Khí Đông A 1285: Vì Sao Kỵ Binh Mông Cổ Thất Bại?",
+      "youtube_title_char_count": 53,
+      "thumbnail_text": "CẢM TỬ SÁT THÁT",
+      "thumbnail_word_count": 4,
+      "target_duration_sec": 720,
+      "expected_apv_pct": 48.0,
+      "estimated_watch_hours_per_10k_views": 960.0,
+      "cost_saving_tier": "Tier 1 Zero-Credit Supercut",
+      "estimated_flow_credits": 0,
+      "reusable_on_disk_assets": [
+        "video/vn_su_ke_lai_ep10_cam_tu_sat_that_1285_short/frames",
+        "video/vn_su_ke_lai_ep10_cam_tu_sat_that_1285_short/clips",
+        "video/vn_su_ke_lai_ep10_cam_tu_sat_that_1285_short/audio_master.wav",
+        "video/vn_su_ke_lai_ep15_tran_binh_trong_1285_short/audio_master.wav",
+        "video/vn_su_ke_lai_ep15_tran_binh_trong_1285_short/narration_master.wav",
+        "video/vn_su_ke_lai_ep12_3_danh_tuong_bat_bai_short/frames",
+        "video/vn_su_ke_lai_ep12_3_danh_tuong_bat_bai_short/clips"
+      ],
+      "b00_cold_open_hook": "Vó ngựa Mông Cổ từng đạp bằng cả Á Âu, vì sao lại gục ngã trước cấm quân nhà Trần?",
+      "b00_cold_open_hook_syllables": 20,
+      "10_chapter_titles_and_retention_resets": [
+        {
+          "chapter_number": 1,
+          "timestamp_target": "00:00",
+          "chapter_title": "Bão Táp 50 Vạn Quân Nguyên Tràn Xuống Đại Việt Năm 1285",
+          "retention_reset_hook": "Đế chế hùng mạnh nhất thế kỷ mười ba tung hai gọng kìm khổng lồ — nhưng trước giờ khai chiến, nhà Trần làm một nghi lễ khiến toàn quân cắt đứt đường lùi."
+        },
+        {
+          "chapter_number": 2,
+          "timestamp_target": "01:12",
+          "chapter_title": "Hội Nghị Diên Hồng Và Mực Đen Xăm Hai Chữ Sát Thát",
+          "retention_reset_hook": "Xăm chữ Sát Thát lên tay là tự ký bản án tử nếu bị bắt sống — song sức mạnh của cấm quân Thánh Dực không chỉ nằm ở ý chí."
+        },
+        {
+          "chapter_number": 3,
+          "timestamp_target": "02:24",
+          "chapter_title": "Giải Phẫu Cấm Quân Thánh Dực Và Chiến Thuật Chém Chân Ngựa",
+          "retention_reset_hook": "Dù tinh nhuệ đến đâu, đối đầu trực diện ở thế yếu vẫn là tự sát — nên Hưng Đạo Vương đã đưa ra quyết định đau đớn nhất: bỏ trống Thăng Long."
+        },
+        {
+          "chapter_number": 4,
+          "timestamp_target": "03:36",
+          "chapter_title": "Kế Vườn Không Nhà Trống Và Cú Sốc Lương Thảo Của Thoát Hoan",
+          "retention_reset_hook": "Trên đường hộ giá hai vua Trần rút lui khỏi vòng vây truy kích, một vị tướng trẻ 26 tuổi đã nhận nhiệm vụ chặn hậu sống còn tại bãi Đà Mạc."
+        },
+        {
+          "chapter_number": 5,
+          "timestamp_target": "04:48",
+          "chapter_title": "Trần Bình Trọng Tại Bãi Đà Mạc Và Lời Tuyên Ngôn Bất Hủ",
+          "retention_reset_hook": "Sự hy sinh của Trần Bình Trọng giữ trọn đầu não kháng chiến — nhưng lúc khó khăn nhất, vua Trần Nhân Tông còn tung thêm một nghi binh hiểm hóc."
+        },
+        {
+          "chapter_number": 6,
+          "timestamp_target": "06:00",
+          "chapter_title": "Hai Tháng Đẫm Máu Và Thời Điểm Quân Nguyên Cạn Sức",
+          "retention_reset_hook": "Nắng nóng mùa hè, dịch bệnh và kho lương trống rỗng biến năm mươi vạn kỵ binh thành gánh nặng — thời cơ phản công chiến lược cuối cùng đã điểm."
+        },
+        {
+          "chapter_number": 7,
+          "timestamp_target": "07:12",
+          "chapter_title": "Phản Công Tây Kết, Hàm Tử Và Đòn Chặn Cánh Quân Toa Đô",
+          "retention_reset_hook": "Gọng kìm phía Nam của Toa Đô vừa bị bẻ gãy, mũi chủ lực nhà Trần lập tức hướng thẳng về cửa ngõ kinh thành: bến Chương Dương."
+        },
+        {
+          "chapter_number": 8,
+          "timestamp_target": "08:24",
+          "chapter_title": "Chương Dương Độ Và Ngày Thu Hồi Kinh Đô Thăng Long",
+          "retention_reset_hook": "Thăng Long được giải phóng, nhưng Thoát Hoan vẫn cố mở đường máu vượt sông Hồng rút về phương Bắc — chờ sẵn y là cái bẫy ở Vạn Kiếp."
+        },
+        {
+          "chapter_number": 9,
+          "timestamp_target": "09:36",
+          "chapter_title": "Thoát Hoan Chui Ống Đồng Và Cái Kết Của Chiến Dịch 1285",
+          "retention_reset_hook": "Đế chế Nguyên – Mông chịu thất bại thảm hại nhất phương Nam, nhưng Hốt Tất Liệt chưa bao giờ chấp nhận dừng lại ở lần thứ hai."
+        },
+        {
+          "chapter_number": 10,
+          "timestamp_target": "10:48",
+          "chapter_title": "Bí Mật Thực Sự Của Hào Khí Đông A Suốt 740 Năm",
+          "retention_reset_hook": "Đứng trước đế chế lớn nhất hành tinh lúc bấy giờ, đâu mới là vũ khí cốt lõi giúp Đại Việt đứng vững?"
+        }
+      ],
+      "debate_question_2_choice": "Theo bạn, điều gì đã bẻ gãy kỵ binh Mông – Nguyên năm 1285: (A) Tinh thần quyết tử 'Sát Thát' và khí phách như Trần Bình Trọng hay (B) Chiến lược 'vườn không nhà trống' đánh thẳng vào tử huyệt hậu cần của Trần Hưng Đạo? Bình luận A hoặc B nhé.",
+      "primary_chronicle_citations": [
+        "Đại Việt Sử Ký Toàn Thư — Bản Kỷ Quyển 5 (1285)",
+        "An Nam Chí Lược — Lê Tắc",
+        "Binh Thư Yếu Lược"
+      ],
+      "clear_air_v4_1_visual_lock": "crisp optical clarity, deep-focus 35mm anamorphic depth, torchlit Đông Bộ Đầu & Red River daylight chiaroscuro (reusing EP10 20 PNGs + 12 Flow clips + EP10/EP15 WAVs + EP12 Trần Hưng Đạo clips)"
+    },
+    {
+      "rank": 4,
+      "episode_id": "vn_su_ke_lai_long_viral_ep04_lam_son_le_lai_nguyen_trai_supercut",
+      "production_category": "Zero-Credit Supercut Documentary",
+      "pillar_id": "pillar_5_tragic_destiny_after_victory",
+      "pillar_label": "5. Số phận & Góc khuất sau chiến thắng",
+      "youtube_title": "Lam Sơn 1418–1442: Từ Áo Bào Lê Lai Đến Án Lệ Chi Viên",
+      "youtube_title_char_count": 54,
+      "thumbnail_text": "CÔNG THẦN LAM SƠN",
+      "thumbnail_word_count": 4,
+      "target_duration_sec": 780,
+      "expected_apv_pct": 48.0,
+      "estimated_watch_hours_per_10k_views": 1040.0,
+      "cost_saving_tier": "Tier 1 Zero-Credit Supercut",
+      "estimated_flow_credits": 0,
+      "reusable_on_disk_assets": [
+        "video/vn_su_ke_lai_ep08_ham_mot_le_lai_ham_hai_le_loi_1419_short/frames",
+        "video/vn_su_ke_lai_ep08_ham_mot_le_lai_ham_hai_le_loi_1419_short/clips",
+        "video/vn_su_ke_lai_ep08_ham_mot_le_lai_ham_hai_le_loi_1419_short/audio_master.wav",
+        "video/vn_su_ke_lai_ep16_bi_kich_nguyen_trai_1442_short/audio_master.wav",
+        "video/vn_su_ke_lai_ep16_bi_kich_nguyen_trai_1442_short/narration_master.wav",
+        "video/vn_su_ke_lai_ep09_3_hoang_de_cam_guom_xung_tran_short/frames",
+        "video/vn_su_ke_lai_ep09_3_hoang_de_cam_guom_xung_tran_short/clips"
+      ],
+      "b00_cold_open_hook": "Từ cú thế mạng cứu chúa trên núi Chí Linh đến nỗi oan tru di, Lam Sơn đã trả cái giá nào?",
+      "b00_cold_open_hook_syllables": 22,
+      "10_chapter_titles_and_retention_resets": [
+        {
+          "chapter_number": 1,
+          "timestamp_target": "00:00",
+          "chapter_title": "Hội Thề Lũng Nhai 1416 Và Khởi Nghĩa Trong Bóng Tối",
+          "retention_reset_hook": "Mười chín người anh em cắt máu ăn thề đánh đuổi giặc Minh, nhưng chỉ một năm sau khởi nghĩa, cả bộ chỉ huy đã bị dồn vào đường cùng trên núi Chí Linh."
+        },
+        {
+          "chapter_number": 2,
+          "timestamp_target": "01:18",
+          "chapter_title": "Mười Ngày Hết Lương Trên Núi Chí Linh Tháng 4 Năm 1419",
+          "retention_reset_hook": "Khi quân Minh xiết chặt vòng vây cuối cùng, Lê Lợi đưa ra một câu hỏi chết lặng khiến cả doanh trại im phăng phắc."
+        },
+        {
+          "chapter_number": 3,
+          "timestamp_target": "02:36",
+          "chapter_title": "Hăm Mốt Lê Lai: Khoảnh Khắc Khoác Hoàng Bào Cưỡi Voi",
+          "retention_reset_hook": "Lê Lai hy sinh để đánh lừa tướng Minh rút quân, mở ra cơ hội sống sót — nhưng vì sao phải mất thêm tám năm gian khổ nữa Lam Sơn mới lật ngược thế cờ?"
+        },
+        {
+          "chapter_number": 4,
+          "timestamp_target": "03:54",
+          "chapter_title": "Bình Ngô Sách Của Nguyễn Trãi: Đánh Vào Lòng Người",
+          "retention_reset_hook": "Từ thế phòng ngự bị động ở Thanh Hóa, một nước cờ táo bạo tiến vào Nghệ An đã xoay chuyển toàn bộ cục diện mười năm kháng chiến."
+        },
+        {
+          "chapter_number": 5,
+          "timestamp_target": "05:12",
+          "chapter_title": "Tốt Động – Chúc Động Và Đại Thắng Chi Lăng – Xương Giang",
+          "retention_reset_hook": "Quân Minh tan rã và Vương Thông phải xin hàng năm 1427, nhưng ánh hào quang của Bình Ngô Đại Cáo vừa lắng xuống thì mây đen cung đình đã kéo tới."
+        },
+        {
+          "chapter_number": 6,
+          "timestamp_target": "06:30",
+          "chapter_title": "Di Chiếu Ngày 21 Tháng 8 Và Bản Hợp Đồng Danh Dự Của Lê Lợi",
+          "retention_reset_hook": "Vua Lê Thái Tổ khắc tên Lê Lai vào lịch âm dân tộc trước khi băng hà, nhưng số phận của các công thần còn sống lại rẽ sang một ngã rẽ nghiệt ngã."
+        },
+        {
+          "chapter_number": 7,
+          "timestamp_target": "07:48",
+          "chapter_title": "Cái Chết Của Trần Nguyên Hãn Và Vòng Xoáy Nghi Kỵ Hậu Chiến",
+          "retention_reset_hook": "Tả Tướng Quốc Trần Nguyên Hãn gieo mình xuống sông năm 1429 chỉ là màn dạo đầu cho nỗi oan lớn nhất lịch sử phong kiến Việt Nam."
+        },
+        {
+          "chapter_number": 8,
+          "timestamp_target": "09:06",
+          "chapter_title": "Đêm Định Mệnh Tại Lệ Chi Viên Tháng 8 Năm 1442",
+          "retention_reset_hook": "Cái chết đột ngột của vua Lê Thái Tông kéo Nguyễn Trãi vào thảm án tru di tam tộc — mất bao lâu để chính sử rửa sạch nỗi oan này?"
+        },
+        {
+          "chapter_number": 9,
+          "timestamp_target": "10:24",
+          "chapter_title": "Chiếu Minh Oan Năm 1464: Ức Trai Tâm Thượng Quang Khuê Tảo",
+          "retention_reset_hook": "Hai mươi hai năm sau thảm án, vua Lê Thánh Tông chính thức khôi phục danh dự cho Nguyễn Trãi và Trần Nguyên Hãn, khép lại một vết thương triều đại."
+        },
+        {
+          "chapter_number": 10,
+          "timestamp_target": "11:42",
+          "chapter_title": "Hai Mặt Của Chiến Thắng: Trung Nghĩa Và Quyền Lực",
+          "retention_reset_hook": "Nhìn trọn vẹn hành trình từ núi Chí Linh 1419 đến Lệ Chi Viên 1442, bạn nhìn nhận bi kịch khai quốc công thần thế nào?"
+        }
+      ],
+      "debate_question_2_choice": "Theo bạn, bi kịch của các khai quốc công thần nhà Lê Sơ bắt nguồn chủ yếu từ (A) Quy luật xung đột quyền lực không tránh khỏi khi chuyển từ thời chiến sang thời bình hay (B) Sự đấu đá phe phái cung đình và tính cương trực không thỏa hiệp của bậc hiền tài? Chọn A hoặc B nhé.",
+      "primary_chronicle_citations": [
+        "Đại Việt Sử Ký Toàn Thư — Bản Kỷ Thực Lục Quyển 10 & 11 (1419, 1429, 1433, 1442, 1464)",
+        "Lam Sơn Thực Lục — Quyển 1 (Nguyễn Trãi)",
+        "Khâm Định Việt Sử Thông Giám Cương Mục — Chính Biên Quyển 13 & 17"
+      ],
+      "clear_air_v4_1_visual_lock": "crisp optical clarity, deep-focus 35mm anamorphic depth, Chí Linh mountain dawn & Côn Sơn torchlit chiaroscuro (reusing EP08 20 PNGs + 12 Flow clips + EP08/EP16 WAVs + EP09 Lê Lợi assets)"
+    },
+    {
+      "rank": 5,
+      "episode_id": "vn_su_ke_lai_long_viral_ep05_hoang_de_danh_tuong_bat_bai_supercut",
+      "production_category": "Zero-Credit Supercut Documentary",
+      "pillar_id": "pillar_3_commander_emperor_ranking",
+      "pillar_label": "3. Xếp hạng / Đối chiếu Danh tướng & Hoàng đế",
+      "youtube_title": "Những Vị Vua Cầm Gươm & 3 Danh Tướng Bất Bại Đại Việt",
+      "youtube_title_char_count": 53,
+      "thumbnail_text": "BẤT BẠI NGÀN NĂM",
+      "thumbnail_word_count": 4,
+      "target_duration_sec": 810,
+      "expected_apv_pct": 51.0,
+      "estimated_watch_hours_per_10k_views": 1147.5,
+      "cost_saving_tier": "Tier 1 Zero-Credit Supercut",
+      "estimated_flow_credits": 0,
+      "reusable_on_disk_assets": [
+        "video/vn_su_ke_lai_ep09_3_hoang_de_cam_guom_xung_tran_short/frames",
+        "video/vn_su_ke_lai_ep09_3_hoang_de_cam_guom_xung_tran_short/clips",
+        "video/vn_su_ke_lai_ep09_3_hoang_de_cam_guom_xung_tran_short/audio_master.wav",
+        "video/vn_su_ke_lai_ep12_3_danh_tuong_bat_bai_short/frames",
+        "video/vn_su_ke_lai_ep12_3_danh_tuong_bat_bai_short/clips",
+        "video/vn_su_ke_lai_ep12_3_danh_tuong_bat_bai_short/audio_master.wav",
+        "video/vn_su_ke_lai_ep04_nhu_nguyet_1077_short/frames",
+        "video/vn_su_ke_lai_ep04_nhu_nguyet_1077_short/clips"
+      ],
+      "b00_cold_open_hook": "Suốt ngàn năm giữ nước, điều gì giúp ba danh tướng Đại Việt lập kỷ lục chưa từng thua một trận nào?",
+      "b00_cold_open_hook_syllables": 22,
+      "10_chapter_titles_and_retention_resets": [
+        {
+          "chapter_number": 1,
+          "timestamp_target": "00:00",
+          "chapter_title": "Tiêu Chuẩn Khắc Nghiệt Để Đứng Vào Hàng Bất Bại Trong Chính Sử",
+          "retention_reset_hook": "Không tính giai thoại truyền miệng, khi lọc nghiêm ngặt theo Đại Việt Sử Ký Toàn Thư, nhân vật đầu tiên mở ra kỷ nguyên độc lập đã chọn một ván cờ liều lĩnh chưa từng thấy."
+        },
+        {
+          "chapter_number": 2,
+          "timestamp_target": "01:21",
+          "chapter_title": "Ngô Quyền 938: Một Con Nước Định Đoạt 1.000 Năm Độc Lập",
+          "retention_reset_hook": "Ngô Quyền phá tan hạm đội Nam Hán chỉ trong một ngày, nhưng bốn mươi ba năm sau, một vị vua Tiền Lê còn đích thân cầm gươm chém tướng Tống ngay trên sông."
+        },
+        {
+          "chapter_number": 3,
+          "timestamp_target": "02:42",
+          "chapter_title": "Hoàng Đế Lê Đại Hành 981: Trực Tiếp Xung Trận Chém Hầu Nhân Bảo",
+          "retention_reset_hook": "Nếu Ngô Quyền và Lê Hoàn thắng bằng đòn quyết chiến ngắn ngày, thì người thứ ba trong bảng đối chiếu phải đối mặt với đế chế mạnh nhất hành tinh."
+        },
+        {
+          "chapter_number": 4,
+          "timestamp_target": "04:03",
+          "chapter_title": "Trần Hưng Đạo 1285–1288: Nghệ Thuật Lấy Nhu Thắng Cương",
+          "retention_reset_hook": "Hưng Đạo Vương thắng bằng tầm nhìn toàn cục kéo dài nhiều năm, còn vị hoàng đế tiếp theo lại mất đúng mười năm nằm gai nếm mật giữa rừng sâu."
+        },
+        {
+          "chapter_number": 5,
+          "timestamp_target": "05:24",
+          "chapter_title": "Lê Thái Tổ 1418–1427: Bản Lĩnh Vua Chiến Trường Qua Mười Năm Lửa Đạn",
+          "retention_reset_hook": "Lê Lợi không thắng mọi trận nhỏ nhưng thắng tuyệt đối cuộc chiến — song nhân vật cuối cùng trong lịch sử Đại Việt lại chưa từng thua dù chỉ một trận."
+        },
+        {
+          "chapter_number": 6,
+          "timestamp_target": "06:45",
+          "chapter_title": "Quang Trung Nguyễn Huệ: Cầm Quân Từ Tuổi 18 Đến Áo Bào Sạm Khói",
+          "retention_reset_hook": "Đặt cả các vị vua chiến trường và ba danh tướng bất bại lên cùng một bàn cờ, trường phái quân sự nào khó bị hóa giải nhất?"
+        },
+        {
+          "chapter_number": 7,
+          "timestamp_target": "08:06",
+          "chapter_title": "So Kè Địa Hình & Thủy Chiến: Bạch Đằng 938 vs Bạch Đằng 1288 vs Rạch Gầm",
+          "retention_reset_hook": "Thủy chiến chỉ là một nửa bức tranh — yếu tố còn lại khiến kẻ thù hùng mạnh gấp năm lần phải sụp đổ nằm ở tâm lý và tốc độ."
+        },
+        {
+          "chapter_number": 8,
+          "timestamp_target": "09:27",
+          "chapter_title": "So Kè Đòn Tâm Lý & Tốc Độ Hành Quân Qua Ba Thời Đại",
+          "retention_reset_hook": "Điểm chung đáng kinh ngạc giữa những bậc kỳ tài cách nhau hàng trăm năm này không nằm ở quân số hay vũ khí."
+        },
+        {
+          "chapter_number": 9,
+          "timestamp_target": "10:48",
+          "chapter_title": "Bốn Nguyên Lý Bất Biến Của Nghệ Thuật Quân Sự Đại Việt",
+          "retention_reset_hook": "Từ bốn nguyên lý cốt lõi ấy, câu hỏi tranh luận lớn nhất của mọi người yêu sử Việt vẫn chưa bao giờ ngã ngũ."
+        },
+        {
+          "chapter_number": 10,
+          "timestamp_target": "12:09",
+          "chapter_title": "Đối Chiếu Cuối Cùng: Thiên Tài Trường Phái Nào Đỉnh Cao Nhất?",
+          "retention_reset_hook": "Nếu chỉ được chọn một trường phái cầm quân xuất sắc nhất lịch sử Đại Việt, bạn sẽ đặt phiếu cho ai?"
+        }
+      ],
+      "debate_question_2_choice": "Nếu đối chiếu hai đỉnh cao bất bại trong lịch sử quân sự Việt Nam, bạn đánh giá trường phái nào toàn diện hơn: (A) Trần Hưng Đạo — đại chiến lược lấy nhu thắng cương đánh bại siêu cường Mông – Nguyên hay (B) Quang Trung Nguyễn Huệ — bách chiến bách thắng với tốc độ hành quân và hỏa lực hiệp đồng? Chọn A hoặc B nhé.",
+      "primary_chronicle_citations": [
+        "Đại Việt Sử Ký Toàn Thư — Ngoại Kỷ Quyển 5, Bản Kỷ Quyển 1, 5, 6, 10",
+        "Hoàng Lê Nhất Thống Chí — Hồi thứ 14",
+        "Đại Nam Chính Biên Liệt Truyện — Sơ Tập Quyển 30"
+      ],
+      "clear_air_v4_1_visual_lock": "crisp optical clarity, deep-focus 35mm anamorphic depth, dramatic historical sunlight & torchlight chiaroscuro (reusing EP09 20 PNGs + 12 clips + EP12 20 PNGs + 11 clips + EP04 12 PNGs + 12 clips)"
+    },
+    {
+      "rank": 6,
+      "episode_id": "vn_su_ke_lai_long_viral_ep06_nha_ho_sung_than_co_1407",
+      "production_category": "Flagship Deep-Dive Chronicle",
+      "pillar_id": "pillar_4_military_deception_trap",
+      "pillar_label": "4. Khoảnh khắc sinh tử & Nghi án lịch sử",
+      "youtube_title": "Súng Thần Cơ & Thành Đá Tây Đô: Vì Sao Nhà Hồ Vẫn Sập?",
+      "youtube_title_char_count": 54,
+      "thumbnail_text": "BÍ MẬT THÀNH ĐÁ",
+      "thumbnail_word_count": 4,
+      "target_duration_sec": 690,
+      "expected_apv_pct": 47.0,
+      "estimated_watch_hours_per_10k_views": 900.8,
+      "cost_saving_tier": "Tier 2 Zero-Video-Credit BELUGA + 30s Hook",
+      "estimated_flow_credits": 30,
+      "reusable_on_disk_assets": [
+        "video/vn_su_ke_lai_ep14_nghi_an_ho_quy_ly_1407_short/audio_master.wav",
+        "video/vn_su_ke_lai_ep14_nghi_an_ho_quy_ly_1407_short/narration_master.wav",
+        "video/vn_su_ke_lai_ep08_ham_mot_le_lai_ham_hai_le_loi_1419_short/frames"
+      ],
+      "b00_cold_open_hook": "Sở hữu súng thần cơ và thành đá kiên cố bậc nhất, vì sao nhà Hồ vẫn sụp đổ chỉ sau bảy tháng?",
+      "b00_cold_open_hook_syllables": 23,
+      "10_chapter_titles_and_retention_resets": [
+        {
+          "chapter_number": 1,
+          "timestamp_target": "00:00",
+          "chapter_title": "Nghịch Lý Năm 1407: Cường Quốc Hỏa Khí Gục Ngã Trong Nửa Năm",
+          "retention_reset_hook": "Nhà Hồ có quân đội đông đảo, công trình đá đồ sộ và kỹ thuật đúc pháo khiến cả nhà Minh phải thèm muốn — vậy vết nứt chết người bắt đầu từ đâu?"
+        },
+        {
+          "chapter_number": 2,
+          "timestamp_target": "01:09",
+          "chapter_title": "Thành Đá Tây Đô: Kỳ Tích Xây Trong 3 Tháng Năm 1397",
+          "retention_reset_hook": "Những khối đá xanh nặng hai mươi tấn dựng nên một pháo đài bất khả xâm phạm, nhưng cái giá để xây nó lại tạo ra làn sóng oán thán âm ỉ."
+        },
+        {
+          "chapter_number": 3,
+          "timestamp_target": "02:18",
+          "chapter_title": "Cải Cách Đi Trước Thời Đại: Tiền Giấy Và Hạn Điền",
+          "retention_reset_hook": "Hồ Quý Ly cải cách táo bạo kinh tế và giáo dục, song con trai trưởng của ông lại chế tạo ra thứ vũ khí đáng sợ nhất Đông Nam Á thế kỷ 15."
+        },
+        {
+          "chapter_number": 4,
+          "timestamp_target": "03:27",
+          "chapter_title": "Hồ Nguyên Trừng: Súng Thần Cơ Và Chiến Thuyền Cổ Lâu Hai Tầng",
+          "retention_reset_hook": "Chính người tạo ra siêu vũ khí ấy lại buông một câu cảnh báo lạnh sống lưng ngay trong buổi họp triều đình năm 1405."
+        },
+        {
+          "chapter_number": 5,
+          "timestamp_target": "04:36",
+          "chapter_title": "Câu Nói Tiên Tri Năm 1405: Chỉ Sợ Lòng Dân Không Theo",
+          "retention_reset_hook": "Vết thương phế truất nhà Trần chưa kịp lành thì hai mươi vạn quân Minh của Trương Phụ đã mượn cớ 'Phù Trần diệt Hồ' tràn xuống biên giới."
+        },
+        {
+          "chapter_number": 6,
+          "timestamp_target": "05:45",
+          "chapter_title": "Phòng Tuyến Đa Bang Dài Hàng Trăm Dặm Và Tử Huyệt Bị Động",
+          "retention_reset_hook": "Thay vì đánh du kích tiêu hao như nhà Trần năm xưa, nhà Hồ dàn mỏng quân giữ thành — và Trương Phụ đã nhìn ra điểm yếu chí mạng."
+        },
+        {
+          "chapter_number": 7,
+          "timestamp_target": "06:54",
+          "chapter_title": "Thành Đa Bang Thất Thủ Và Sai Lầm Phản Công Bằng Tượng Binh",
+          "retention_reset_hook": "Khi quân Minh dùng hình vẽ sư tử phủ lên ngựa và hỏa tiễn làm rối loạn đội voi chiến, toàn bộ tuyến phòng thủ sông Hồng lập tức vỡ vụn."
+        },
+        {
+          "chapter_number": 8,
+          "timestamp_target": "08:03",
+          "chapter_title": "Trận Thủy Chiến Mộc Phàm Giang Và Bước Đường Cùng",
+          "retention_reset_hook": "Quân nhà Hồ rút dần về Thanh Hóa rồi Hà Tĩnh, nơi thành đá Tây Đô kiên cố cuối cùng thậm chí không kịp phát huy tác dụng."
+        },
+        {
+          "chapter_number": 9,
+          "timestamp_target": "09:12",
+          "chapter_title": "Cửa Biển Kỳ La 1407 Và Số Phận Bất Ngờ Của Hồ Nguyên Trừng",
+          "retention_reset_hook": "Cha con Hồ Quý Ly bị bắt giải về phương Bắc, nhưng chính tài đúc súng của Hồ Nguyên Trừng lại khiến hoàng đế nhà Minh phải trọng dụng."
+        },
+        {
+          "chapter_number": 10,
+          "timestamp_target": "10:21",
+          "chapter_title": "Bài Học Lịch Sử Đắt Giá Về Lòng Dân Và Chiến Lược",
+          "retention_reset_hook": "Nhìn lại thất bại chớp nhoáng năm 1407, bạn đồng ý với lời cảnh báo của Hồ Nguyên Trừng hay cho rằng sai lầm nằm trên sa bàn quân sự?"
+        }
+      ],
+      "debate_question_2_choice": "Theo bạn, nguyên nhân cốt lõi khiến nhà Hồ sụp đổ năm 1407 dù sở hữu súng thần cơ và thành đá Tây Đô là (A) Đánh mất lòng dân như lời Hồ Nguyên Trừng cảnh báo hay (B) Sai lầm chiến thuật phòng ngự bị động dàn quân giữ thành Đa Bang? Bình luận A hoặc B nhé.",
+      "primary_chronicle_citations": [
+        "Đại Việt Sử Ký Toàn Thư — Bản Kỷ Quyển 8 & Quyển 9 (1397-1407)",
+        "Khâm Định Việt Sử Thông Giám Cương Mục — Chính Biên Quyển 12"
+      ],
+      "clear_air_v4_1_visual_lock": "crisp optical clarity, deep-focus 35mm anamorphic depth, 240 BELUGA 16:9 static Lanczos frames + 3 Flow 30s Cold-Open clips (30 credits max)"
+    },
+    {
+      "rank": 7,
+      "episode_id": "vn_su_ke_lai_long_viral_ep07_chua_chom_le_mac_1533",
+      "production_category": "Flagship Deep-Dive Chronicle",
+      "pillar_id": "pillar_1_folk_saying_history_decoder",
+      "pillar_label": "1. Giải mã câu nói / thành ngữ lịch sử quen thuộc",
+      "youtube_title": "Từ Nợ Như Chúa Chổm Đến Trăm Năm Nội Chiến Lê - Mạc",
+      "youtube_title_char_count": 51,
+      "thumbnail_text": "NỢ NHƯ CHÚA CHỔM",
+      "thumbnail_word_count": 4,
+      "target_duration_sec": 660,
+      "expected_apv_pct": 46.0,
+      "estimated_watch_hours_per_10k_views": 843.3,
+      "cost_saving_tier": "Tier 2 Zero-Video-Credit BELUGA + 30s Hook",
+      "estimated_flow_credits": 20,
+      "reusable_on_disk_assets": [
+        "video/vn_su_ke_lai_ep11_no_nhu_chua_chom_1533_short/frames",
+        "video/vn_su_ke_lai_ep11_no_nhu_chua_chom_1533_short/clips",
+        "video/vn_su_ke_lai_ep11_no_nhu_chua_chom_1533_short/audio_master.wav"
+      ],
+      "b00_cold_open_hook": "Ít ai biết nhân vật sau câu nợ như Chúa Chổm lại mở màn cho cuộc nội chiến kéo dài hơn trăm năm.",
+      "b00_cold_open_hook_syllables": 23,
+      "10_chapter_titles_and_retention_resets": [
+        {
+          "chapter_number": 1,
+          "timestamp_target": "00:00",
+          "chapter_title": "Sự Thật Đằng Sau Câu Cửa Miệng Nợ Như Chúa Chổm",
+          "retention_reset_hook": "Hầu hết người Việt chỉ nhớ giai thoại ăn chịu ở phố Cấm Chỉ, mà ít ai biết thân phận thực sự của ông gắn liền với ngày sụp đổ của triều Lê Sơ."
+        },
+        {
+          "chapter_number": 2,
+          "timestamp_target": "01:06",
+          "chapter_title": "Biến Cố Năm 1527: Mạc Đăng Dung Lên Ngôi Tại Thăng Long",
+          "retention_reset_hook": "Khi nhà Mạc tiếp quản Bắc Bộ, các hoàng tử họ Lê phải đổi họ ẩn danh trốn vào dân gian — trong đó có một cậu bé tên Lê Duy Ninh."
+        },
+        {
+          "chapter_number": 3,
+          "timestamp_target": "02:12",
+          "chapter_title": "Chính Sử vs Dã Sử: Phân Tách Giai Thoại Phố Cấm Chỉ",
+          "retention_reset_hook": "Gạt lớp màn truyền thuyết sang một bên, ai là người đã vượt rừng sang tận Ai Lao để tìm ra hoàng tử lưu lạc này?"
+        },
+        {
+          "chapter_number": 4,
+          "timestamp_target": "03:18",
+          "chapter_title": "An Thanh Hầu Nguyễn Kim Và Lời Thề Phù Lê Diệt Mạc",
+          "retention_reset_hook": "Nguyễn Kim cần một ngọn cờ chính thống để quy tụ hào kiệt thiên hạ — và lễ đăng cơ năm 1533 lập tức chia đôi giang sơn Đại Việt."
+        },
+        {
+          "chapter_number": 5,
+          "timestamp_target": "04:24",
+          "chapter_title": "Năm 1533: Lê Trang Tông Lên Ngôi Mở Ra Thời Lê Trung Hưng",
+          "retention_reset_hook": "Hai triều đình Nam Triều và Bắc Triều chính thức hình thành, châm ngòi cho cuộc chiến đẫm máu kéo dài suốt sáu mươi năm."
+        },
+        {
+          "chapter_number": 6,
+          "timestamp_target": "05:30",
+          "chapter_title": "Bàn Cờ Nam – Bắc Triều: Thanh Hóa Đối Đầu Thăng Long",
+          "retention_reset_hook": "Quân Nam Triều từng bước thu phục Thanh – Nghệ, nhưng một vụ đầu độc bất ngờ năm 1545 đã đẩy quyền lực sang tay một nhân vật khác."
+        },
+        {
+          "chapter_number": 7,
+          "timestamp_target": "06:36",
+          "chapter_title": "Cái Chết Của Nguyễn Kim Và Sự Trỗi Dậy Của Trịnh Kiểm",
+          "retention_reset_hook": "Từ khoảnh khắc con rể Trịnh Kiểm nắm binh quyền, vị vua 'Chúa Chổm' nhận ra ngai vàng nhà Lê không còn thuộc trọn về mình."
+        },
+        {
+          "chapter_number": 8,
+          "timestamp_target": "07:42",
+          "chapter_title": "Mầm Mống Trịnh – Nguyễn Phân Tranh Từ Lời Khuyên Hoành Sơn Nhất Đái",
+          "retention_reset_hook": "Nguyễn Hoàng xin vào trấn thủ Thuận Hóa năm 1558 để giữ mạng, vô tình đặt nền móng cho hai trăm năm Đàng Trong – Đàng Ngoài."
+        },
+        {
+          "chapter_number": 9,
+          "timestamp_target": "08:48",
+          "chapter_title": "Năm 1592: Nhà Lê Trở Lại Thăng Long Nhưng Quyền Lực Đã Đổi Chủ",
+          "retention_reset_hook": "Nhà Mạc rút lên Cao Bằng, nhưng chế độ 'Vua Lê – Chúa Trịnh' vừa mở ra một chương phức tạp chưa từng có trong lịch sử."
+        },
+        {
+          "chapter_number": 10,
+          "timestamp_target": "09:54",
+          "chapter_title": "Từ Một Hoàng Tử Lưu Lạc Đến Cục Diện Ba Thế Kỷ",
+          "retention_reset_hook": "Nhìn lại bước ngoặt năm 1533, cuộc đổi đời của Lê Trang Tông đến từ dòng máu chính thống hay bàn tay chính trị của Nguyễn Kim?"
+        }
+      ],
+      "debate_question_2_choice": "Theo bạn, yếu tố nào thực sự dựng nên triều Lê Trung Hưng năm 1533: (A) Sức mạnh danh nghĩa dòng máu chính thống của vua Lê Trang Tông hay (B) Tài tổ chức quân sự và ngoại giao của An Thanh Hầu Nguyễn Kim? Chọn A hoặc B bên dưới nhé.",
+      "primary_chronicle_citations": [
+        "Đại Việt Sử Ký Toàn Thư — Bản Kỷ Tục Biên Quyển 16 (1527-1548)",
+        "Khâm Định Việt Sử Thông Giám Cương Mục — Chính Biên Quyển 27"
+      ],
+      "clear_air_v4_1_visual_lock": "crisp optical clarity, deep-focus 35mm anamorphic depth, 16th-century Thăng Long & Thanh Hóa palette (reusing EP11 20 PNGs + 12 clips + BELUGA 16:9 frames + 2 optional hook clips)"
+    },
+    {
+      "rank": 8,
+      "episode_id": "vn_su_ke_lai_long_viral_ep08_chi_lang_xuong_giang_1427",
+      "production_category": "Flagship Deep-Dive Chronicle",
+      "pillar_id": "pillar_4_military_deception_trap",
+      "pillar_label": "4. Khoảnh khắc sinh tử & Cú lừa quân sự kinh điển",
+      "youtube_title": "Chi Lăng 1427: 10 Ngày Xóa Sổ 10 Vạn Viện Binh Minh",
+      "youtube_title_char_count": 51,
+      "thumbnail_text": "CỬA TỬ CHI LĂNG",
+      "thumbnail_word_count": 4,
+      "target_duration_sec": 780,
+      "expected_apv_pct": 50.0,
+      "estimated_watch_hours_per_10k_views": 1083.3,
+      "cost_saving_tier": "Tier 2 Zero-Video-Credit BELUGA + 30s Hook",
+      "estimated_flow_credits": 40,
+      "reusable_on_disk_assets": [
+        "video/vn_su_ke_lai_ep08_ham_mot_le_lai_ham_hai_le_loi_1419_short/frames",
+        "video/vn_su_ke_lai_ep08_ham_mot_le_lai_ham_hai_le_loi_1419_short/clips",
+        "video/vn_su_ke_lai_ep09_3_hoang_de_cam_guom_xung_tran_short/frames",
+        "video/vn_su_ke_lai_ep09_3_hoang_de_cam_guom_xung_tran_short/clips"
+      ],
+      "b00_cold_open_hook": "Chỉ bằng một đội quân giả thua rút chạy, nghĩa quân Lam Sơn đã chém đầu Liễu Thăng ở ải Chi Lăng ra sao?",
+      "b00_cold_open_hook_syllables": 24,
+      "10_chapter_titles_and_retention_resets": [
+        {
+          "chapter_number": 1,
+          "timestamp_target": "00:00",
+          "chapter_title": "Mùa Thu 1427: 15 Vạn Viện Binh Minh Chia Hai Đạo Cứu Đông Quan",
+          "retention_reset_hook": "Khi Vương Thông cố thủ Đông Quan chờ cứu viện, Lê Lợi đứng trước lựa chọn sống còn: đánh thành trước hay chặn viện binh trước?"
+        },
+        {
+          "chapter_number": 2,
+          "timestamp_target": "01:18",
+          "chapter_title": "Chiến Lược Vây Thành Diệt Viện Của Bộ Chỉ Huy Lam Sơn",
+          "retention_reset_hook": "Phán đoán đúng mũi chủ lực nằm ở cánh quân Liễu Thăng, Lê Lợi đã chọn một thung lũng đá vôi hình lòng chảo để làm mồ chôn tướng Minh."
+        },
+        {
+          "chapter_number": 3,
+          "timestamp_target": "02:36",
+          "chapter_title": "Giải Phẫu Cửa Ải Chi Lăng: Vách Đá Dựng Đứng Và Đầm Lầy Mã Yên",
+          "retention_reset_hook": "Địa hình đã hoàn hảo, nhưng làm sao khiến một lão tướng dày dạn như Liễu Thăng tự mình tách khỏi đại quân lao vào bẫy?"
+        },
+        {
+          "chapter_number": 4,
+          "timestamp_target": "03:54",
+          "chapter_title": "Màn Kịch Giả Thua Liên Tiếp Của Trần Lựu Từ Pha Lũy Đến Chi Lăng",
+          "retention_reset_hook": "Thấy quân Lam Sơn thua chạy liểng xiểng năm trận liền, Liễu Thăng bỏ ngoài tai lời can ngăn của cấp dưới và thúc trăm kỵ binh lao thẳng vào ải."
+        },
+        {
+          "chapter_number": 5,
+          "timestamp_target": "05:12",
+          "chapter_title": "Ngày 10 Tháng 10 Năm 1427: Pháo Lệnh Nổ Trên Núi Mã Yên",
+          "retention_reset_hook": "Liễu Thăng tử trận ngay dưới chân núi Mã Yên, nhưng phía sau ông vẫn còn gần mười vạn quân Minh của Lương Minh đang tràn xuống."
+        },
+        {
+          "chapter_number": 6,
+          "timestamp_target": "06:30",
+          "chapter_title": "Liên Hoàn Phục Kích Cần Trạm Và Phố Cát: Bẻ Gãy Đạo Chủ Lực",
+          "retention_reset_hook": "Tướng Minh thứ hai là Lương Minh tiếp tục tử trận, Lý Khánh tự vẫn — tàn quân dồn hết hy vọng vào một pháo đài duy nhất phía trước: thành Xương Giang."
+        },
+        {
+          "chapter_number": 7,
+          "timestamp_target": "07:48",
+          "chapter_title": "Cú Sốc Tại Xương Giang: Thành Đã Bị Trần Nguyên Hãn Hạ Trước 10 Ngày",
+          "retention_reset_hook": "Không còn nơi trú ẩn, năm vạn quân Minh bị bao vây giữa đồng trống Xương Giang — và đòn tổng công kích cuối cùng đã khép lại vòng vây."
+        },
+        {
+          "chapter_number": 8,
+          "timestamp_target": "09:06",
+          "chapter_title": "Ngày 3 Tháng 11: Hủy Diệt Toàn Bộ Đạo Quân Viện Binh",
+          "retention_reset_hook": "Cánh quân Liễu Thăng đã bị xóa sổ hoàn toàn, nhưng đạo thứ hai của Mộc Thạnh vẫn đang đóng ở biên giới — Nguyễn Trãi xử lý bằng cách nào mà không tốn một giọt máu?"
+        },
+        {
+          "chapter_number": 9,
+          "timestamp_target": "10:24",
+          "chapter_title": "Gửi Ấn Tín Liễu Thăng Dọa Mộc Thạnh Và Hội Thề Đông Quan",
+          "retention_reset_hook": "Mộc Thạnh vừa nhìn thấy ấn tín Liễu Thăng liền bỏ chạy tán loạn, Vương Thông xin hàng — chấm dứt vĩnh viễn hai mươi năm đô hộ của nhà Minh."
+        },
+        {
+          "chapter_number": 10,
+          "timestamp_target": "11:42",
+          "chapter_title": "Bình Ngô Đại Cáo Và Đỉnh Cao Nghệ Thuật Vây Thành Diệt Viện",
+          "retention_reset_hook": "Đặt cả chiến dịch Chi Lăng – Xương Giang lên bàn phân tích, nước cờ nào mới là bước ngoặt táo bạo nhất?"
+        }
+      ],
+      "debate_question_2_choice": "Theo bạn, nước cờ xuất sắc nhất trong chiến dịch Chi Lăng – Xương Giang 1427 là (A) Kế giả thua nhử Liễu Thăng vào đầm lầy Mã Yên hay (B) Quyết định hạ trước thành Xương Giang 10 ngày để triệt đường rút của viện binh Minh? Chọn A hoặc B nhé.",
+      "primary_chronicle_citations": [
+        "Đại Việt Sử Ký Toàn Thư — Bản Kỷ Thực Lục Quyển 10 (1427)",
+        "Lam Sơn Thực Lục — Quyển 2 & 3",
+        "Khâm Định Việt Sử Thông Giám Cương Mục — Chính Biên Quyển 14"
+      ],
+      "clear_air_v4_1_visual_lock": "crisp optical clarity, deep-focus 35mm anamorphic depth, Chi Lăng limestone canyon & Xương Giang fortress daylight/torchlight (240 BELUGA 16:9 frames + 4 Flow 30s Cold-Open clips)"
+    },
+    {
+      "rank": 9,
+      "episode_id": "vn_su_ke_lai_long_viral_ep09_bach_dang_1288_o_ma_nhi",
+      "production_category": "Flagship Deep-Dive Chronicle",
+      "pillar_id": "pillar_4_military_deception_trap",
+      "pillar_label": "4. Khoảnh khắc sinh tử & Cú lừa quân sự kinh điển",
+      "youtube_title": "Bạch Đằng 1288: Cạm Bẫy Bắt Sống Hạm Đội Ô Mã Nhi",
+      "youtube_title_char_count": 49,
+      "thumbnail_text": "BẪY CỌC BẠCH ĐẰNG",
+      "thumbnail_word_count": 4,
+      "target_duration_sec": 840,
+      "expected_apv_pct": 52.0,
+      "estimated_watch_hours_per_10k_views": 1213.3,
+      "cost_saving_tier": "Tier 3 360p Fast Demo First",
+      "estimated_flow_credits": 0,
+      "reusable_on_disk_assets": [
+        "video/vn_su_ke_lai_ep10_cam_tu_sat_that_1285_short/frames",
+        "video/vn_su_ke_lai_ep10_cam_tu_sat_that_1285_short/clips",
+        "video/vn_su_ke_lai_ep12_3_danh_tuong_bat_bai_short/frames",
+        "video/vn_su_ke_lai_ep12_3_danh_tuong_bat_bai_short/clips"
+      ],
+      "b00_cold_open_hook": "Quân Nguyên biết rõ bài cọc gỗ năm xưa, nhưng vì sao Ô Mã Nhi vẫn lao thẳng vào cửa tử Bạch Đằng?",
+      "b00_cold_open_hook_syllables": 23,
+      "10_chapter_titles_and_retention_resets": [
+        {
+          "chapter_number": 1,
+          "timestamp_target": "00:00",
+          "chapter_title": "Lần Xâm Lược Thứ Ba 1287: Đòn Rút Kinh Nghiệm Của Hốt Tất Liệt",
+          "retention_reset_hook": "Thất bại năm 1285 vì thiếu lương, lần này quân Nguyên cử Trương Văn Hổ chở hàng chục vạn thạch gạo bằng đường biển — nhưng Trần Khánh Dư đã đón lõng ở Vân Đồn."
+        },
+        {
+          "chapter_number": 2,
+          "timestamp_target": "01:24",
+          "chapter_title": "Trận Vân Đồn: Đốt Sạch Hạm Đội Lương Thảo Của Trương Văn Hổ",
+          "retention_reset_hook": "Mất sạch lương ăn giữa kinh thành Thăng Long trống rỗng, Thoát Hoan buộc phải ra lệnh rút quân bằng cả đường bộ lẫn đường thủy."
+        },
+        {
+          "chapter_number": 3,
+          "timestamp_target": "02:48",
+          "chapter_title": "Bàn Cờ Ép Đường Rút: Buộc Ô Mã Nhi Đi Đúng Sông Bạch Đằng",
+          "retention_reset_hook": "Hưng Đạo Vương không ngồi chờ may rủi — ông cho đánh sập cầu, phá đường bộ để dồn hạm đội bốn trăm chiến thuyền vào đúng nhánh sông đã định."
+        },
+        {
+          "chapter_number": 4,
+          "timestamp_target": "04:12",
+          "chapter_title": "Kỹ Thuật Trận Địa Cọc Lim 1288: Khác Gì Ngô Quyền Năm 938?",
+          "retention_reset_hook": "Thay vì đóng một hàng chắn ngang dòng chính, cọc gỗ năm 1288 được đóng chéo ở các lạch phụ và nhánh sông Chanh — vì sao lại bố trí kỳ lạ như vậy?"
+        },
+        {
+          "chapter_number": 5,
+          "timestamp_target": "05:36",
+          "chapter_title": "Phối Hợp Thủy Bộ Liên Hoàn: Tràng Kênh, Yên Hưng Và Sông Giá",
+          "retention_reset_hook": "Hai bên bờ sông đầy vách đá và rừng sú vẹt đã giấu kín đại quân nhà Trần — chỉ còn chờ bình minh ngày mùng 8 tháng 3 âm lịch năm 1288."
+        },
+        {
+          "chapter_number": 6,
+          "timestamp_target": "07:00",
+          "chapter_title": "Bình Minh 9 Tháng 4 Năm 1288: Đội Thuyền Nhỏ Khiêu Chiến Nhử Địch",
+          "retention_reset_hook": "Ô Mã Nhi hăm hở tung hạm đội đuổi theo cánh quân nghi binh của Nguyễn Khoái ngay lúc con nước triều bắt đầu đạt đỉnh."
+        },
+        {
+          "chapter_number": 7,
+          "timestamp_target": "08:24",
+          "chapter_title": "Nước Triều Rút Gấp Và Tiếng Hò Xung Trận Từ Rừng Đước",
+          "retention_reset_hook": "Khi đội thuyền nhà Trần bất ngờ quay đầu đánh chặn phía trước, hạm đội nặng nề của giặc bị dòng nước kéo thẳng vào bãi cọc ngầm đang lộ mũi."
+        },
+        {
+          "chapter_number": 8,
+          "timestamp_target": "09:48",
+          "chapter_title": "Bè Lửa Càn Quét Và Khoảnh Khắc Bắt Sống Ô Mã Nhi, Phàn Tiếp",
+          "retention_reset_hook": "Hơn bốn trăm chiến thuyền bị đốt hoặc thu giữ, toàn bộ bộ chỉ huy thủy quân Nguyên bị bắt sống — còn đạo quân bộ của Thoát Hoan có thoát nổi không?"
+        },
+        {
+          "chapter_number": 9,
+          "timestamp_target": "11:12",
+          "chapter_title": "Thoát Hoan Trốn Về Qua Nội Bàng Và Lời Thề Không Nam Tiến Nữa",
+          "retention_reset_hook": "Ba lần thắng siêu cường Mông – Nguyên đã khép lại, để lại lời răn bất hủ của Hưng Đạo Đại Vương về sức dân trước khi ông qua đời."
+        },
+        {
+          "chapter_number": 10,
+          "timestamp_target": "12:36",
+          "chapter_title": "Bạch Đằng 1288: Đỉnh Cao Chiến Tranh Nhân Dân Đại Việt",
+          "retention_reset_hook": "Nhìn lại toàn bộ chiến dịch 1287–1288, đòn đánh nào mới thực sự kết liễu tham vọng của đế chế Mông – Nguyên?"
+        }
+      ],
+      "debate_question_2_choice": "Theo bạn, đòn quyết định thắng lợi năm 1288 là (A) Trận Vân Đồn của Trần Khánh Dư cắt đứt toàn bộ đường lương hay (B) Bẫy cọc thủy triều Bạch Đằng của Trần Hưng Đạo xóa sổ hạm đội Ô Mã Nhi? Bình luận A hoặc B nhé.",
+      "primary_chronicle_citations": [
+        "Đại Việt Sử Ký Toàn Thư — Bản Kỷ Quyển 5 (1287-1288)",
+        "Khâm Định Việt Sử Thông Giám Cương Mục — Chính Biên Quyển 8",
+        "Bạch Đằng Giang Phú — Trương Hán Siêu"
+      ],
+      "clear_air_v4_1_visual_lock": "crisp optical clarity, deep-focus 35mm anamorphic depth — build 640x360@30fps 0-credit demo first via build_su_ke_lai_long_360p_demo.py using EP10/EP12 Trần assets + FX Warehouse tidal HUD before greenlighting 2K"
+    },
+    {
+      "rank": 10,
+      "episode_id": "vn_su_ke_lai_long_viral_ep10_bac_phat_ung_chau_1075",
+      "production_category": "Flagship Deep-Dive Chronicle",
+      "pillar_id": "pillar_3_commander_emperor_ranking",
+      "pillar_label": "3. Xếp hạng / Đối chiếu Danh tướng & Hoàng đế",
+      "youtube_title": "Bắc Phạt 1075: Đòn Phủ Đầu Táo Bạo Của Lý Thường Kiệt",
+      "youtube_title_char_count": 53,
+      "thumbnail_text": "ĐÒN PHỦ ĐẦU 1075",
+      "thumbnail_word_count": 4,
+      "target_duration_sec": 720,
+      "expected_apv_pct": 49.0,
+      "estimated_watch_hours_per_10k_views": 980.0,
+      "cost_saving_tier": "Tier 3 360p Fast Demo First",
+      "estimated_flow_credits": 0,
+      "reusable_on_disk_assets": [
+        "video/vn_su_ke_lai_ep04_nhu_nguyet_1077_short/frames",
+        "video/vn_su_ke_lai_ep04_nhu_nguyet_1077_short/clips",
+        "video/vn_su_ke_lai_ep04_nhu_nguyet_1077_short/narration_master.wav",
+        "video/vn_su_ke_lai_ep04_nhu_nguyet_1077_long/narration_master.wav",
+        "video/vn_su_ke_lai_ep05_chieu_doi_do_1010_long/frames"
+      ],
+      "b00_cold_open_hook": "Trước khi mười vạn quân Tống kịp tràn qua biên giới, Lý Thường Kiệt đã ra một nước cờ táo bạo đến khó tin.",
+      "b00_cold_open_hook_syllables": 24,
+      "10_chapter_titles_and_retention_resets": [
+        {
+          "chapter_number": 1,
+          "timestamp_target": "00:00",
+          "chapter_title": "Âm Mưu Nam Tiến Của Vương An Thạch Năm 1075",
+          "retention_reset_hook": "Nhà Tống đã tích trữ lương thảo, vũ khí dày đặc ở ba căn cứ Khâm, Liêm, Ung sát biên giới — nhưng thay vì chờ giặc đến, Đại Việt chọn một triết lý ngược hoàn toàn."
+        },
+        {
+          "chapter_number": 2,
+          "timestamp_target": "01:12",
+          "chapter_title": "Tiên Phát Chế Nhân: Ngồi Yên Đợi Giặc Không Bằng Đánh Trước",
+          "retention_reset_hook": "Đem mười vạn quân vượt biên giới đánh thẳng vào hậu cứ của một đế chế lớn gấp mười lần — Lý Thường Kiệt đã tính toán đường tiến quân ra sao?"
+        },
+        {
+          "chapter_number": 3,
+          "timestamp_target": "02:24",
+          "chapter_title": "Hai Mũi Tiến Công Bí Mật: Thủy Binh Vượt Biển Và Bộ Binh Tông Đản",
+          "retention_reset_hook": "Cả châu Khâm lẫn châu Liêm đều sụp đổ chỉ trong vài ngày vì yếu tố bất ngờ tuyệt đối — nhưng pháo đài cứng rắn nhất vẫn nằm sâu trong đất liền: thành Ung Châu."
+        },
+        {
+          "chapter_number": 4,
+          "timestamp_target": "03:36",
+          "chapter_title": "Phạt Tống Lộ Bố Văn: Vũ Khí Tâm Lý Chiến Đi Trước Đạo Quân",
+          "retention_reset_hook": "Dân chúng phương Bắc không chống đối mà còn mở đường, nhưng tướng giữ thành Ung Châu là Tô Giám lại thề tử thủ đến viên gạch cuối cùng."
+        },
+        {
+          "chapter_number": 5,
+          "timestamp_target": "04:48",
+          "chapter_title": "42 Ngày Vây Hãm Pháo Đài Ung Châu Và Trận Chiến Hỏa Khí",
+          "retention_reset_hook": "Tường thành cao ngất khiến thang mây và tên lửa đều bị đẩy lùi suốt hơn một tháng — đúng lúc viện binh Tống đang rầm rập kéo tới từ phía Bắc."
+        },
+        {
+          "chapter_number": 6,
+          "timestamp_target": "06:00",
+          "chapter_title": "Kế Đắp Đồi Đất Thổ Sơn Và Chiến Thuật Đánh Sập Tường Thành",
+          "retention_reset_hook": "Quân Đại Việt đổ hàng vạn bao đất dựng thành ngọn đồi cao ngang mặt thành, mở đường tràn vào Ung Châu đúng ngày thứ 42."
+        },
+        {
+          "chapter_number": 7,
+          "timestamp_target": "07:12",
+          "chapter_title": "Phá Hủy Kho Lương Chiến Lược Và Rút Quân Thần Tốc Về Nước",
+          "retention_reset_hook": "Nhiều người thắc mắc vì sao thắng lớn như vậy mà Lý Thường Kiệt lại chủ động rút toàn quân về nước ngay sau khi hạ thành?"
+        },
+        {
+          "chapter_number": 8,
+          "timestamp_target": "08:24",
+          "chapter_title": "Chuyển Hóa Thắng Lợi Thành Phòng Tuyến Thép Sông Như Nguyệt",
+          "retention_reset_hook": "Hơn một năm sau, Quách Quỳ mới gượng dậy kéo mười vạn quân sang trả đũa — và rơi thẳng vào chiến lũy tre 100 cây số đã đợi sẵn."
+        },
+        {
+          "chapter_number": 9,
+          "timestamp_target": "09:36",
+          "chapter_title": "Nam Quốc Sơn Hà Và Bản Hiệp Định Hòa Bình Trong Thế Thắng",
+          "retention_reset_hook": "Vừa đánh phủ đầu trên đất địch, vừa phòng ngự bất khả xâm phạm trên đất mình, Lý Thường Kiệt đã tạo nên chuẩn mực chiến lược độc nhất vô nhị."
+        },
+        {
+          "chapter_number": 10,
+          "timestamp_target": "10:48",
+          "chapter_title": "Di Sản Tiên Phát Chế Nhân Sau Hơn 950 Năm",
+          "retention_reset_hook": "Nhìn trọn vẹn hai giai đoạn 1075 và 1077, quyết định nào của Lý Thường Kiệt mới là nước cờ định đoạt cục diện?"
+        }
+      ],
+      "debate_question_2_choice": "Theo bạn, bước ngoặt giúp nhà Lý giữ vững độc lập trước nhà Tống là (A) Đòn phủ đầu táo bạo Bắc phạt Ung Châu 1075 hay (B) Phòng tuyến sông Như Nguyệt và bài thơ Nam Quốc Sơn Hà năm 1077? Bình luận A hoặc B nhé.",
+      "primary_chronicle_citations": [
+        "Đại Việt Sử Ký Toàn Thư — Bản Kỷ Quyển 3 (1075-1077)",
+        "Khâm Định Việt Sử Thông Giám Cương Mục — Chính Biên Quyển 3",
+        "Việt Sử Lược — Quyển Trung"
+      ],
+      "clear_air_v4_1_visual_lock": "crisp optical clarity, deep-focus 35mm anamorphic depth — build 640x360@30fps 0-credit demo first via build_su_ke_lai_long_360p_demo.py using EP04 Như Nguyệt clips + EP05 Lý Dynasty 16:9 frames before greenlighting 2K"
+    }
+  ]
+}

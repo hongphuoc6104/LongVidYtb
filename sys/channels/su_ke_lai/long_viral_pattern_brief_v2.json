@@ -1,0 +1,303 @@
+{
+  "schema_version": "2.0",
+  "vault_type": "notebook_1_long_pattern_vault",
+  "pattern_id": "su_ke_lai_long_v5_story_emphasis",
+  "supersedes": "su_ke_lai_long_viral_v1",
+  "channel_id": "su_ke_lai",
+  "channel_name": "Sử Kể Lại",
+  "channel_handle": "@SuKeLaiVN",
+  "youtube_channel_id": "UCrLlAXwHQlxkDPFN3aW66PA",
+  "format_profile": "long_16x9",
+  "generated_at": "2026-11-22T18:56:00+07:00",
+  "source_reports": [
+    "sys/channels/analytics_su_ke_lai/trending_30d_vn_long_oct_nov_2026.json",
+    "sys/channels/analytics_su_ke_lai/trending_30d_global_long_oct_nov_2026.json",
+    "sys/channels/analytics_su_ke_lai/long_visual_vfx_story_formula_v2.json",
+    "sys/channels/analytics_su_ke_lai/long_competitor_benchmark_2026.json",
+    "sys/channels/analytics_su_ke_lai/su_ke_lai_existing_long_audit.json",
+    "sys/channels/su_ke_lai/notebooklm_long_viral_sources_pack.md",
+    "sys/fx_warehouse/su_ke_lai_long_v5_fx.py",
+    "sys/runs/vn_su_ke_lai_long_viral_ep01_demo/fact_vault.json"
+  ],
+  "structure_only_compliance": {
+    "zero_copied_phrasing": true,
+    "folklore_quarantined_in_report_only": true,
+    "primary_chronicle_min_facts_long": 12,
+    "ep01_fact_vault_validated": {
+      "vault_path": "sys/runs/vn_su_ke_lai_long_viral_ep01_demo/fact_vault.json",
+      "valid": true,
+      "verified_fact_count": 20,
+      "report_only_count": 5,
+      "errors": [],
+      "warnings": []
+    },
+    "banned_cta_words": [
+      "like",
+      "share",
+      "subscribe",
+      "đăng ký",
+      "nhấn chuông",
+      "bấm chuông"
+    ],
+    "youtube_title_max_chars": 55,
+    "forbid_serialized_prefix_in_title": true,
+    "forbidden_title_prefixes": [
+      "P1",
+      "P2",
+      "P3",
+      "Tập 1",
+      "Tập 2",
+      "Phần 1",
+      "Phần 2",
+      "Tóm tắt:"
+    ],
+    "visual_style_lock": "su_ke_lai_35mm_live_action_v3_clear_air_v4_1_plus_v5_story_emphasis",
+    "forbid_blanket_mist_and_smoke_spam": true,
+    "forbid_modern_five_pointed_star_flags": true,
+    "forbid_uniform_flat_crossfades": true,
+    "forbid_center_cropped_9x16_reuse": true,
+    "flow_model_deprecation_lock": {
+      "allowed_active_models": [
+        "BELUGA (Nano Banana 2.1, 0 video credits)",
+        "veo_3_1_i2v_s_lite (10c flat Seam Mode)",
+        "macaron_cookie_i2v_fl_8s (Omni 1.2 Flash Frame-Link)"
+      ],
+      "forbidden_retired_or_retiring_models": [
+        "veo_extend (retired 2026-11-05)",
+        "veo_3_1_fast (retiring 2026-12-05)",
+        "veo_3_1_quality (retiring 2026-12-05)",
+        "omni_1_1 (retiring 2026-12-05)"
+      ]
+    }
+  },
+  "oct_nov_2026_trending_corpus_v2": {
+    "analysis_window": "2026-10-03 to 2026-11-21 (Priority Last 30 Days: 2026-10-22 to 2026-11-21)",
+    "combined_curated_videos": 32,
+    "combined_visually_inspected_standouts": 12,
+    "combined_keyframes_inspected": 384,
+    "vn_30d_cohort": {
+      "source_file": "sys/channels/analytics_su_ke_lai/trending_30d_vn_long_oct_nov_2026.json",
+      "video_count": 17,
+      "distinct_active_channels": 11,
+      "channel_brands": 10,
+      "keyframes_inspected": 216,
+      "median_duration_sec": 1257,
+      "median_views_per_day": 10624.4,
+      "mean_views_per_day": 26752.3,
+      "top_leaders": [
+        {
+          "channel": "BATTLECRY - NGƯỜI KỂ SỬ",
+          "video_id": "LbGjLmiz4MM",
+          "views_per_day": 139143.0,
+          "signature": "War-room 60/40 split timeline + sniper reticle target metaphor + 945-dot / proportional area shock"
+        },
+        {
+          "channel": "CLD Studio",
+          "video_id": "w5W-oD5IPm8",
+          "views": 1284199,
+          "views_per_day": 58372.7,
+          "signature": "Crimson/navy animated vector maps + 60% dimmed gold bounding-box spotlight callouts + archival calendar + 8 chapters"
+        },
+        {
+          "channel": "Vệ Quốc Quân",
+          "video_id": "0JCi-VNodtw",
+          "views_per_day": 56948.0,
+          "signature": "International validation & declassified CIA dossier hooks"
+        },
+        {
+          "channel": "CD Media - Quân Sự",
+          "video_id": "H6QSWNJMQss",
+          "views": 635081,
+          "views_per_day": 42338.7,
+          "signature": "Satellite 5-stage Mission Roadmap at 0:54 + 13-18 cuts/min modern-vs-archival contrast"
+        },
+        {
+          "channel": "Chuyện Có Lý",
+          "video_id": "FraUmjAqJFk",
+          "views_per_day": 10624.4,
+          "signature": "13-chapter myth-vs-truth visual stamps + primary-source cutouts"
+        },
+        {
+          "channel": "Tám Kể Sử",
+          "video_id": "h0PF3TRN0YY",
+          "views_per_day": 9792.4,
+          "signature": "17.3 cuts/min intro + Polaroid commander quote cards + Biển Đông maps with Hoàng Sa/Trường Sa"
+        },
+        {
+          "channel": "Hồn Thiêng Sử Việt",
+          "video_id": "Gh8rG9Bix9A",
+          "views_per_day": 9538.7,
+          "signature": "Pure AI war film proving varied camera grammar + recurring protagonist face, yet trailing tactical-proof docs by 6x-14x"
+        }
+      ],
+      "legacy_staleness_alert": "Dòng Máu Việt (96d inactive), Sử Lược (105d inactive), and EZ Sử (82d inactive) have stalled on Long 16:9."
+    },
+    "global_30d_cohort": {
+      "source_file": "sys/channels/analytics_su_ke_lai/trending_30d_global_long_oct_nov_2026.json",
+      "video_count": 15,
+      "distinct_channels": 13,
+      "combined_views": 35890488,
+      "avg_views_per_day": 196000.8,
+      "median_views_per_day": 69839.0,
+      "median_duration_sec": 1184,
+      "avg_chapters_when_used": 10.2,
+      "median_narration_wpm": 154.5,
+      "keyframes_inspected": 168,
+      "top_leaders": [
+        {
+          "channel": "Yarnhub",
+          "video_id": "ZCMIlZ2-eIU",
+          "views_per_day": 915489.3,
+          "signature": "Non-repeating camera ladder + 16:9 ambush split-screen + armored spec dossier + optical reticle POV"
+        },
+        {
+          "channel": "RealLifeLore",
+          "video_id": "OshGmNgfoIs",
+          "views_per_day": 278271.0,
+          "signature": "Satellite/terrain geopolitical storytelling & dramatic scale callouts"
+        },
+        {
+          "channel": "Epic History TV",
+          "video_id": "JhVc-bbn2p0",
+          "views_per_day": 258085.3,
+          "signature": "75% dark-vignette battle spotlight + animated relief territory maps + 2.5D painting parallax"
+        },
+        {
+          "channel": "Fern",
+          "video_id": "kp0jkUqVuok",
+          "views_per_day": 204715.8,
+          "signature": "2.3-3.1s intro ASL + overhead spotlight cone + submarine quantity shock matrix + dark-slate tactical maps"
+        },
+        {
+          "channel": "Johnny Harris",
+          "video_id": "20CgG5pUv9Q",
+          "views_per_day": 191819.5,
+          "signature": "Tactile map zooms + archival evidence staging across 8 chapters"
+        },
+        {
+          "channel": "SandRhoman History",
+          "video_id": "haU-nt6-c90",
+          "views_per_day": 86384.3,
+          "signature": "1v1 warrior/commander side-by-side contrast + tilted 3D war-table + zoomed formation inset"
+        },
+        {
+          "channel": "Kings and Generals",
+          "video_id": "BTs75T-Ree8",
+          "views_per_day": 44141.6,
+          "signature": "3D tilted topographic battle maps + floating commander medallions + persistent top-left chapter & top-right live counter"
+        },
+        {
+          "channel": "The Operations Room",
+          "video_id": "EU-nV5FxKf0",
+          "views_per_day": 9073.6,
+          "signature": "65%-dimmed glowing target zoom-box transition + corner archival PiP + volumetric smoke"
+        }
+      ]
+    }
+  },
+  "v5_five_dimension_story_emphasis_contract": {
+    "formula_ssot": "sys/channels/analytics_su_ke_lai/long_visual_vfx_story_formula_v2.json",
+    "fx_engine_ssot": "sys/fx_warehouse/su_ke_lai_long_v5_fx.py",
+    "visual_composition_mix_pct": {
+      "clear_air_35mm_live_action_cinema": 65,
+      "bespoke_tactical_info_design_and_vfx": 35
+    },
+    "dimension_1_camera_grammar": {
+      "modes": [
+        "isometric_map_flyover",
+        "dolly_push_focal",
+        "low_angle_heroic_pan",
+        "macro_evidence_pan",
+        "tactical_split_perspective"
+      ],
+      "engine_fn": "render_camera_motion_clip + select_non_repeating_camera_mode",
+      "non_repeating_consecutive_angles": true,
+      "asl_sec": {
+        "hook_0_90s": [3.0, 4.5],
+        "strategic_setup": [4.5, 6.0],
+        "climax": [2.8, 4.0]
+      }
+    },
+    "dimension_2_character_staging": {
+      "engine_fns": [
+        "render_character_dossier_clip",
+        "render_commander_vs_clip"
+      ],
+      "dossier_spec": "1.2s live motion -> freeze-frame -> 68% outer dark dim + golden/crimson rim-lit spotlight portrait + armored role/rank/force/trait card",
+      "vs_faceoff_spec": "16:9 diagonal slash face-off (e.g., NGUYỄN HUỆ 20.000 vs CHIÊU TĂNG 50.000 with animated 1 : 2.5 force ratio bars)"
+    },
+    "dimension_3_story_emphasis_proof_beats": {
+      "cadence_sec": [12, 20],
+      "devices": {
+        "3A_spotlight_reticle_callout": "render_story_spotlight_clip — 70% dark-vignette dim + glowing gold target box / sniper reticle + leader callout arrow onto exact narrated object",
+        "3B_warroom_split_timeline": "Left 60% animated tactical map + Right 40% voice-synced operational timeline ('KẾ HOẠCH TÁC CHIẾN') + 0:50-1:05 Mission Roadmap",
+        "3C_quantity_shock_matrix": "Nested proportional force squares / 300-ship dot grid / 50.000 -> 300 live survival drop / hero-number dark slate",
+        "3D_primary_chronicle_card": "render_chronicle_evidence_clip — ĐẠI NAM THỰC LỤC / HOÀNG LÊ NHẤT THỐNG CHÍ parchment card with crimson/gold animated keyword highlight"
+      }
+    },
+    "dimension_4_tactical_warmap_vfx": {
+      "engine_fn": "render_tactical_warmap_clip",
+      "four_layers": [
+        "1. Dark-slate & bronze topographic relief base (with explicit HOÀNG SA / TRƯỜNG SA markers on Biển Đông maps)",
+        "2. Animated river/terrain currents & atmospheric lighting/smoke depth",
+        "3. Moving blue/red faction vector arrows, ballistic tracers & pulsing pincer/explosion rings",
+        "4. Persistent top-left chapter/sector badge + top-right live ticking survival/strike counter HUD (50.000 -> 300)"
+      ]
+    },
+    "dimension_5_story_transitions_and_sfx": {
+      "engine_fns": [
+        "render_story_transition",
+        "synthesize_v5_sfx_cue",
+        "synthesize_v5_sfx_track"
+      ],
+      "transitions": [
+        "zoom_through_map",
+        "tactical_shutter_slash",
+        "whip_pan_whoosh",
+        "heartbeat_blackout_slam (0.35s pitch-black tension cut before ambush climax)"
+      ],
+      "procedural_sfx_format": "48000 Hz stereo WAV mixed cleanly with VietNarrator_su_ke_lai @ 1.30x + heroic BGM to -11.0 LUFS (+/- 0.5 LU) / <= -1.0 dBTP"
+    }
+  },
+  "cold_open_and_chapter_spine_v5": {
+    "target_duration_sec": "600-840s (10m-14m core; scalable to 18-22m deep tactical chronicles)",
+    "explicit_chapters": "8-10 FFMETADATA1 chapters (10-chapter / 120-sentence / 240-beat backbone preserved for core 10-13m episodes)",
+    "speech_cadence_syl_per_sec": "3.80-4.15 (VietNarrator_su_ke_lai @ 1.30x)",
+    "opening_0_to_90s_blueprint": [
+      "0:00-0:15 — Cold-Open Paradox Sentence 1 (<= 24 syl, zero pause, zero greeting) + Target/Trap Visual Metaphor or 35mm Flow motion clip (ASL 3.0-4.0s)",
+      "0:15-0:30 — Asymmetric Stakes & Force Shock (e.g., 20.000 vs 50.000 / 300 ships; hold >= 75% viewers past 0:30)",
+      "0:30-0:50 — Zoom-Through-Map Bridge (isometric_map_flyover -> zoom_through_map -> ground/river combat)",
+      "0:50-1:05 — Satellite/Tactical Mission Roadmap showing the campaign's key stages so viewers anticipate the ambush climax",
+      "1:05-1:30 — First Character Dossier Freeze-Frame Spotlight (render_character_dossier_clip) or 1v1 Commander VS Face-Off (render_commander_vs_clip)"
+    ],
+    "chapter_boundary_retention_reset": "Every 60-90s chapter pivot combines: (1) spoken micro-cliffhanger, (2) Story-Driven Transition + 48kHz SFX hit (tactical_shutter_slash / zoom_through_map / heartbeat_blackout_slam), and (3) visual mode shift across the 65% Cinema / 35% Tactical VFX ratio.",
+    "pre_climax_blackout_lock": "Before the decisive ambush/battle eruption, trigger [pause:450-550ms] + heartbeat_blackout_slam (0.35s pitch-black cut + double sub-bass heartbeat) -> warmap_cannon_volley + 35mm climax sequence at 2.8-4.0s ASL."
+  },
+  "cost_saving_production_tiers_v5": [
+    {
+      "tier_id": "TIER_1_ZERO_CREDIT_V5_SUPERCUT",
+      "flow_credit_cost": 0,
+      "description": "Re-orchestrate verified on-disk 35mm Clear-Air PNGs, Flow clips, and OmniVoice WAV stems through `sys/fx_warehouse/su_ke_lai_long_v5_fx.py` (5 camera modes, dossiers, VS face-offs, spotlights, 4-layer war-maps, chronicle cards, 4 story transitions + 48kHz SFX) — zero static 9:16 crop flatness."
+    },
+    {
+      "tier_id": "TIER_2_BELUGA_16X9_SPARSE_HOOK_PLUS_V5_FX",
+      "flow_credit_cost_range": [0, 40],
+      "description": "Generate native 16:9 BELUGA 35mm Clear-Air frames (0 video credits) + optional 3-4 Veo 3.1 Lite (10c Seam Mode) clips strictly in 0-30s Cold Open, elevated with >= 35% V5.0 bespoke tactical war-maps, spotlight reticles, dossiers, chronicle cards, and story-driven transitions (replacing uniform flat xfade=fade)."
+    },
+    {
+      "tier_id": "TIER_3_V5_360P_STORY_EMPHASIS_DEMO_GATE",
+      "flow_credit_cost": 0,
+      "resolution": "640x360@30fps",
+      "description": "Mandatory Gate 0 local preview verifying all 5 V5.0 visual/VFX dimensions, 10 QA frames, side-by-side V1-vs-V2 contrast, FFMETADATA1 chapters, .srt, bottom-right watermark (W-w-12:H-h-12), and -11.0 LUFS / -1.0 dBTP 48kHz audio BEFORE Colab T4 2K (`2560x1440`) render."
+    }
+  ],
+  "outro_debate_and_publish_lock": {
+    "publish_slots_gmt7": [
+      "Thursday 19:30 GMT+7",
+      "Sunday 19:30 GMT+7"
+    ],
+    "avoid_dead_zone_gmt7": "01:00-04:00 AM",
+    "target_comment_to_view_pct": ">= 0.15%",
+    "two_choice_debate_outro": "Final 15% closes the historical loop, reinforces Sử Kể Lại naturally, and presents a 2-choice polarizing historical judgment synced verbatim with @SuKeLaiVN Pinned Comment (zero banned CTA words)."
+  }
+}
