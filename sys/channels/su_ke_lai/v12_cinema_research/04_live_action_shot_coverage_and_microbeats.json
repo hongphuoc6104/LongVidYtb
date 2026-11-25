@@ -1,0 +1,406 @@
+{
+  "meta": {
+    "thread_id": "1D",
+    "title": "Live-Action Historical Coverage & Micro-Detail Bible",
+    "version": "V12.0",
+    "created": "2026-11-25",
+    "channel_id": "su_ke_lai",
+    "references_studied": [
+      "Netflix Rise of Empires: Ottoman S1 Trailer (NRuOTkSgDbs)",
+      "Yarnhub — When Rangers Scaled Cliffs on D-Day (hInKZw88DaM)",
+      "Epic History TV — Alexander's Speech That Crushed a Mutiny (2Ih1ffiuwj0)",
+      "Visual grammar analysis: sys/channels/su_ke_lai/playbook/visual.md",
+      "Style registry analysis: sys/fx_warehouse/history_styles_10x10.py (S01..S10, L01..L10)",
+      "Flow pipeline analysis: sys/short_engine/flow_stage.py"
+    ]
+  },
+
+  "diagnosis_current_system_gaps": {
+    "summary": "The existing 5-shot rotation matrix (visual.md §4) and all 20 style camera_rotation_overrides default to 5 primary scales: Wide Establishing, Medium OTS, Tight Action Macro, Atmospheric Landscape, Low-Angle Hero. While varied on paper, they produce repetitive medium/wide front-facing character compositions because: (1) 'Tight Action Macro' at 85mm still frames the subject's upper body/face rather than zero-face prop inserts, (2) no OTS dirty-single with foreground obstruction generating spatial tension, (3) no ground-level boot/mud POV below knee height, (4) no high-angle God's-eye overhead formation geometry, (5) no micro-reaction eye/hand close-ups in extreme shallow DoF, (6) no environmental sensory B-roll without any human subject.",
+    "root_causes": [
+      "All 5 camera slots include human subjects — zero dedicated prop-only or environment-only slots",
+      "Prompt Block 2 always specifies 'Primary Subject & Action' with a named human actor, which guides AI to center a person in every frame",
+      "Macro slot (85mm-100mm) says 'Hands stringing crossbow' but consistently generates a medium-tight shot including face + torso",
+      "No prompt vocabulary for overhead/bird's-eye perpendicular-down geometry",
+      "No prompt vocabulary for foreground-obstructed OTS compositions where we see THROUGH/PAST an object",
+      "No dedicated 'environment-only sensory beat' in any style's narrative_beat_roles",
+      "flow_stage.py only classifies beats as flow_video vs 2k_native_kenburns — no asset_mode distinction for insert-only micro beats"
+    ]
+  },
+
+  "missing_shot_classes": {
+    "class_01_extreme_macro_tactile_prop_insert": {
+      "code": "MACRO_PROP",
+      "description": "Extreme macro close-up of a physical prop or action element with ZERO human face visible. The subject is a THING, not a person: a hand gripping a seal, ink dripping onto parchment, mud squeezing through fingers around an ironwood stake, fire licking bamboo, rope fibers straining under tension, rain droplets hitting lacquered armor plates.",
+      "lens_spec": "100mm–135mm macro, f/2.0–f/2.8, focus distance 30–60cm",
+      "composition_rule": "Subject fills 60-80% of frame. Human skin (hand, fingers, forearm) may appear but face is NEVER in frame. Background is 100% bokeh blur.",
+      "camera_move": "ultra_slow_push_in (0.3cm/s drift), or static with rack_focus",
+      "duration_sec": {"short_9x16": 2.0, "long_16x9": 3.5},
+      "reference_examples": [
+        "Rise of Empires: candlelight reflecting on wet ink as treaty is signed (frame row 3)",
+        "Band of Brothers: muddy hand pulling grenade pin",
+        "The Last Kingdom: extreme close-up of sword being drawn from leather scabbard"
+      ],
+      "beluga_prompt_template": "{period_prop} in extreme 100mm macro close-up, shallow depth of field, only the object and immediate tactile surface visible, NO human face, {lighting_key}, crisp fine detail of {material_texture}, natural film grain, 35mm Kodak Vision3 500T, no text, no captions, no watermarks",
+      "veo_motion_template": "Ultra-slow 0.3cm/s push-in toward {prop}, subtle {material_interaction} micro-movement, shallow rack focus drift, steady macro tracking",
+      "su_ke_lai_examples": [
+        "Ironwood stake tip being sharpened, curling wood shavings falling, muddy calloused fingers gripping the charred wood",
+        "Cinnabar seal pressing into hot wax on a bamboo-paper imperial edict, red wax spreading under pressure",
+        "Bronze crossbow trigger mechanism being loaded, iron bolt clicking into bamboo groove",
+        "Torch flame igniting pitch-soaked fire raft ropes, sparks scattering across wet river mud",
+        "Rain streaming down lacquered iron lamellar armor plates, droplets pooling in plate valleys"
+      ]
+    },
+
+    "class_02_ots_dirty_single": {
+      "code": "OTS_DIRTY",
+      "description": "Over-the-shoulder shot where camera is positioned behind one character, showing them partially in soft-focus foreground (shoulder, ear, hair, helmet edge) while the second character or scene unfolds in sharp focus beyond. Creates spatial tension, psychological weight, and shot/reverse-shot readiness.",
+      "lens_spec": "50mm–85mm, f/2.8–f/4.0, two-plane focus",
+      "composition_rule": "Foreground character occupies 25-35% of frame edge (shoulder/head in soft blur). Background subject/scene in sharp focus occupies center-right 65-75%. Foreground shoulder creates a natural dark vignette on one edge.",
+      "camera_move": "static or very slow truck_lateral (1cm/s), occasionally slow push_in past foreground shoulder",
+      "duration_sec": {"short_9x16": 2.5, "long_16x9": 4.0},
+      "reference_examples": [
+        "Rise of Empires: Mehmed in foreground blur watching Constantinople walls (frame row 2, col 3-4)",
+        "Saving Private Ryan: OTS past helmet watching beach assault",
+        "Game of Thrones: OTS past Tyrion's shoulder watching Jon Snow"
+      ],
+      "beluga_prompt_template": "Over-the-shoulder shot from behind {foreground_character}'s {body_part_visible} in soft bokeh foreground, sharp focus on {background_subject} in the middle distance, {lighting_key}, 50mm-85mm cinema lens, 35mm Kodak Vision3 500T film, spatial depth tension, {environment_detail}, no text, no captions",
+      "veo_motion_template": "Slow push-in past {foreground_character}'s shoulder, drifting focus toward {background_subject}, subtle foreground parallax separation",
+      "su_ke_lai_examples": [
+        "OTS past Lý Thường Kiệt's armored shoulder watching Song war junks approaching on the river at dawn",
+        "OTS past a scout's bamboo hat watching enemy torchlight procession through mountain pass at night",
+        "OTS past a kneeling crossbow soldier's hemp-wrapped shoulder aiming across rain-swept estuary"
+      ]
+    },
+
+    "class_03_ground_level_boots_in_mud": {
+      "code": "GROUND_MUD",
+      "description": "Camera positioned at ground level (0–30cm from mud/dirt/water surface), shooting upward or along the ground plane. Boots, hooves, oar tips, and terrain texture dominate the foreground with subjects towering above. Creates visceral scale, immersion in physical conditions, and a soldier's-eye perspective of approaching threat.",
+      "lens_spec": "24mm–28mm ultra-wide, f/4.0–f/5.6, deep focus from 30cm to infinity",
+      "composition_rule": "Camera at ankle height. Foreground is 40% mud/water/terrain texture. Middle-ground shows boots/hooves/stakes. Background shows towering figures, sky, or approaching army silhouettes. Strong perspective exaggeration.",
+      "camera_move": "low_tracking_alongside (following marching boots), or static with figures walking OVER camera",
+      "duration_sec": {"short_9x16": 2.2, "long_16x9": 3.0},
+      "reference_examples": [
+        "Yarnhub D-Day: ground-level explosion impact spraying debris toward camera (frame row 1, col 1-2)",
+        "Gladiator: sandal-level tracking through Colosseum tunnel",
+        "1917: ground-level tracking through mud trenches"
+      ],
+      "beluga_prompt_template": "Ground-level 24mm ultra-wide shot at ankle height, camera pressed into {terrain_surface}, {foreground_element} dominates lower 40% of frame, {background_subject} towering above against {sky_condition}, deep-focus cinematic depth, 35mm Kodak Vision3 500T, dramatic perspective exaggeration, no text, no captions",
+      "veo_motion_template": "Low ground-level tracking alongside {movement_subject}, mud/water splashing near lens, parallax between terrain foreground and towering background figures",
+      "su_ke_lai_examples": [
+        "Ground-level through Red River Delta mud, iron-tipped ironwood stakes protruding upward, distant Song war junks silhouetted against dawn sky",
+        "Ankle-height behind marching Đại Việt infantry boots in monsoon mud, puddles reflecting torchlight",
+        "Ground-level along river bank, oar tips slicing dark water in foreground, flat-bottomed war galley hull towering above"
+      ]
+    },
+
+    "class_04_high_angle_gods_eye": {
+      "code": "GODS_EYE",
+      "description": "Direct overhead (70°–90° perpendicular-down) shot showing formation geometry, terrain layout, and spatial relationships from a bird's-eye / God's-eye perspective. Removes horizon line entirely. Subjects appear as geometric patterns against terrain texture.",
+      "lens_spec": "35mm–50mm, orthographic / bird's-eye perspective, deep focus",
+      "composition_rule": "No horizon visible. Ground fills 100% of frame. Subjects seen from directly above as geometric formations or solitary figures against terrain canvas. Strong geometric patterns (circles, lines, triangles of troop formations).",
+      "camera_move": "slow_crane_descend or static_overhead, occasionally slow_orbit around center point",
+      "duration_sec": {"short_9x16": 2.5, "long_16x9": 5.0},
+      "reference_examples": [
+        "Rise of Empires: God's-eye Constantinople fortification layout (frame row 4, col 1)",
+        "Lord of the Rings: overhead Helm's Deep approach",
+        "Game of Thrones: overhead Battle of Winterfell troop geometry"
+      ],
+      "beluga_prompt_template": "Bird's-eye perpendicular overhead shot looking straight down at {formation_or_scene}, {terrain_texture} fills entire frame, NO horizon visible, geometric {pattern_description}, {lighting_key}, deep-focus 35mm cinema lens, 35mm Kodak Vision3 500T, historical docudrama, no text, no captions",
+      "veo_motion_template": "Slow descending crane from high overhead, revealing geometric {formation_pattern}, gradual zoom toward tactical center point",
+      "su_ke_lai_examples": [
+        "Overhead: ironwood stake field geometry in Bạch Đằng river bed at low tide, stakes forming defensive grid pattern",
+        "Overhead: Đại Việt infantry square formation from directly above, circular shield-wall against muddy terrain",
+        "Overhead: river battle from God's-eye, oar wakes forming V-patterns on dark water surface, burning fire rafts drifting downstream"
+      ]
+    },
+
+    "class_05_reaction_micro_acting": {
+      "code": "REACTION_MICRO",
+      "description": "Extreme close-up (ECU) of micro-facial reactions: eyes widening in torchlight, jaw clenching, bead of sweat rolling down temple, trembling exhale visible in cold air, hand clenching sword hilt until knuckles whiten. The subject IS the emotion, not the action.",
+      "lens_spec": "85mm–135mm, f/1.4–f/2.0, razor-thin DoF plane on eyes or hands",
+      "composition_rule": "Face fills 80-100% of frame. Eyes occupy upper 1/3 rule line. Only eyes-to-chin visible (forehead may be cropped). Background is 100% warm/cold bokeh. Lighting creates catchlights in eyes.",
+      "camera_move": "static or ultra_slow_push_in (barely perceptible drift toward eyes)",
+      "duration_sec": {"short_9x16": 1.5, "long_16x9": 2.5},
+      "reference_examples": [
+        "Rise of Empires: Mehmed's face in candlelight close-up showing determination (frame row 2, col 3-5)",
+        "Yarnhub: soldier's face micro-expressions before cliff assault (frame row 2, col 4-5)",
+        "Schindler's List: Amon Goeth's eye twitching in extreme close-up"
+      ],
+      "beluga_prompt_template": "Extreme close-up 135mm portrait of {character_description}'s {emotion_visible} expression, eyes filling upper third, {lighting_catchlight_detail}, razor-thin depth of field on the iris, warm {bokeh_color} bokeh background, {micro_detail}, 35mm Kodak Vision3 500T, intimate cinematic portrait, no text, no captions",
+      "veo_motion_template": "Near-static frame with barely perceptible 0.2cm/s push toward {character}'s eyes, subtle {micro_movement} visible, breathing rhythm in chest/shoulders",
+      "su_ke_lai_examples": [
+        "ECU: Commander's eyes reflecting torchlight as he receives the invasion report, jaw muscles tensing imperceptibly",
+        "ECU: Soldier's trembling exhale visible in pre-dawn cold air, pupils dilating as war drums begin",
+        "ECU: Weathered river pilot's eyes scanning the tide mark, sweat bead rolling down temple, hand grip tightening on tiller"
+      ]
+    },
+
+    "class_06_environmental_sensory_broll": {
+      "code": "ENV_SENSORY",
+      "description": "Pure environmental shot with ZERO human subjects. The environment IS the subject: rain drumming on terracotta roof tiles, river current swirling around submerged stakes, smoke curling from an abandoned campfire, wind rippling through a bamboo grove, dawn light crawling across a silent battlefield aftermath. Provides breathing room, temporal transition, and sensory texture between dialogue/action beats.",
+      "lens_spec": "35mm–85mm, f/2.8–f/5.6, selective focus on environmental detail",
+      "composition_rule": "No human figure in frame. Environmental element fills 70-100% of composition. Movement comes from natural forces: water, wind, fire, light. Strong texture emphasis.",
+      "camera_move": "static_hold (3-5s), or slow_tilt_up revealing sky, or slow_tracking across surface",
+      "duration_sec": {"short_9x16": 2.0, "long_16x9": 4.0},
+      "reference_examples": [
+        "Rise of Empires: empty battlefield with fog and silhouette fortifications (frame row 1, col 1)",
+        "Yarnhub: dark cliff silhouette against pre-dawn sky (frame row 5, col 1-3)",
+        "Band of Brothers: rain on empty foxhole, slow tilt up to grey sky"
+      ],
+      "beluga_prompt_template": "{environmental_element} in intimate detail, NO human figures visible, {natural_force} creates organic movement, {lighting_key}, {texture_emphasis}, contemplative atmosphere, 35mm Kodak Vision3 500T, historical docudrama environmental B-roll, no text, no captions",
+      "veo_motion_template": "Static hold with natural {element_movement}, {atmospheric_micro_detail}, slow organic rhythm, ambient environmental sound implied",
+      "su_ke_lai_examples": [
+        "Rain streaming down curved terracotta roof tiles of Đại La citadel at night, droplets splashing in ceramic gutter",
+        "River current swirling around half-submerged ironwood stakes at sunrise, golden light refracting through dark water eddies",
+        "Smoke curling from dying embers of an abandoned campfire at dawn, bamboo chopsticks and an overturned rice bowl in the ashes",
+        "Wind rippling a weathered Đại Việt silk battle banner on a bamboo pole, frayed edges catching last light",
+        "Morning mist lifting from a still rice paddy surface, revealing a distant row of watchtower silhouettes"
+      ]
+    }
+  },
+
+  "multi_shot_scene_coverage_formulas": {
+    "formula_A_tactical_command_sequence": {
+      "name": "Command Decision Sequence",
+      "purpose": "Cover a commander receiving intelligence and making a tactical decision",
+      "shot_sequence": [
+        {"slot": 1, "class": "GODS_EYE", "duration_sec": 3.0, "desc": "Overhead: troop/terrain layout establishing the problem"},
+        {"slot": 2, "class": "OTS_DIRTY", "duration_sec": 2.5, "desc": "OTS past scout/messenger's shoulder to commander receiving report"},
+        {"slot": 3, "class": "REACTION_MICRO", "duration_sec": 1.5, "desc": "ECU commander's eyes processing the intelligence"},
+        {"slot": 4, "class": "MACRO_PROP", "duration_sec": 2.0, "desc": "Extreme macro: commander's hand pressing seal onto deployment order / drawing sword"}
+      ],
+      "total_duration_sec": 9.0,
+      "narrative_function": "Establishing → Blocking → Reaction → Consequence"
+    },
+
+    "formula_B_ambush_eruption_sequence": {
+      "name": "Ambush Eruption Sequence",
+      "purpose": "Cover the moment before and during a surprise attack",
+      "shot_sequence": [
+        {"slot": 1, "class": "ENV_SENSORY", "duration_sec": 2.5, "desc": "Environmental: eerie calm — river surface, rustling bamboo, pre-dawn silence"},
+        {"slot": 2, "class": "GROUND_MUD", "duration_sec": 2.0, "desc": "Ground-level: boots/hooves suddenly breaking into motion"},
+        {"slot": 3, "class": "MACRO_PROP", "duration_sec": 1.5, "desc": "Macro: bowstring releasing / crossbow trigger snapping"},
+        {"slot": 4, "class": "REACTION_MICRO", "duration_sec": 1.5, "desc": "ECU: enemy soldier's face registering shock / arrow impact"},
+        {"slot": 5, "class": "GODS_EYE", "duration_sec": 3.0, "desc": "God's-eye: full ambush geometry revealed from above"}
+      ],
+      "total_duration_sec": 10.5,
+      "narrative_function": "Establishing → Blocking → Tactile Insert → Consequence → Analytical Cut"
+    },
+
+    "formula_C_evidence_investigation_sequence": {
+      "name": "Forensic Evidence Sequence",
+      "purpose": "Cover the discovery and analysis of historical evidence/artifact",
+      "shot_sequence": [
+        {"slot": 1, "class": "OTS_DIRTY", "duration_sec": 3.0, "desc": "OTS past scholar's shoulder: approaching chronicle/artifact on evidence surface"},
+        {"slot": 2, "class": "MACRO_PROP", "duration_sec": 3.5, "desc": "Extreme macro: ink text on parchment, seal impression, bronze inscription detail"},
+        {"slot": 3, "class": "REACTION_MICRO", "duration_sec": 2.0, "desc": "ECU: scholar's eyes widening as contradiction/discovery registers"},
+        {"slot": 4, "class": "ENV_SENSORY", "duration_sec": 2.0, "desc": "Environmental: candle flame flickering, rain on archive roof — contemplative pause"}
+      ],
+      "total_duration_sec": 10.5,
+      "narrative_function": "Spatial Context → Tactile Evidence → Emotional Impact → Breathing Beat"
+    },
+
+    "formula_D_battle_impact_sequence": {
+      "name": "Battle Impact Sequence",
+      "purpose": "Cover the climactic moment of physical combat",
+      "shot_sequence": [
+        {"slot": 1, "class": "GROUND_MUD", "duration_sec": 2.0, "desc": "Ground-level: charging feet, hooves, mud spray"},
+        {"slot": 2, "class": "OTS_DIRTY", "duration_sec": 2.0, "desc": "OTS: defender's perspective of incoming charge"},
+        {"slot": 3, "class": "MACRO_PROP", "duration_sec": 1.5, "desc": "Macro: weapon impact — stake piercing hull, sword slicing bamboo shield"},
+        {"slot": 4, "class": "REACTION_MICRO", "duration_sec": 1.5, "desc": "ECU: victorious/defeated combatant's face in aftermath"},
+        {"slot": 5, "class": "GODS_EYE", "duration_sec": 3.0, "desc": "God's-eye: aftermath geometry — bodies, broken formations, burning ships"}
+      ],
+      "total_duration_sec": 10.0,
+      "narrative_function": "Ground-Level Chaos → Spatial Tension → Tactile Impact → Human Cost → Strategic Consequence"
+    },
+
+    "formula_E_temporal_transition_sequence": {
+      "name": "Time-Passage Sensory Bridge",
+      "purpose": "Cover the passage of time between narrative phases without narration",
+      "shot_sequence": [
+        {"slot": 1, "class": "ENV_SENSORY", "duration_sec": 3.0, "desc": "Environmental: sunset/sunrise/seasonal change on landscape"},
+        {"slot": 2, "class": "MACRO_PROP", "duration_sec": 2.0, "desc": "Macro: candle burning down / water level changing / rust forming on weapon"},
+        {"slot": 3, "class": "ENV_SENSORY", "duration_sec": 2.5, "desc": "Environmental: new time period — different light, weather, or season"}
+      ],
+      "total_duration_sec": 7.5,
+      "narrative_function": "Breathing Beat → Physical Time Marker → New Temporal Context"
+    },
+
+    "formula_F_psychological_duel_sequence": {
+      "name": "Commander Psychological Duel",
+      "purpose": "Cover two commanders' opposing decisions in rapid cross-cut",
+      "shot_sequence": [
+        {"slot": 1, "class": "REACTION_MICRO", "duration_sec": 2.0, "desc": "ECU Commander A: calculating expression, warm torchlight"},
+        {"slot": 2, "class": "MACRO_PROP", "duration_sec": 1.5, "desc": "Macro: Commander A's hand moving token/writing order"},
+        {"slot": 3, "class": "REACTION_MICRO", "duration_sec": 2.0, "desc": "ECU Commander B: cold moonlight, different lighting temperature"},
+        {"slot": 4, "class": "MACRO_PROP", "duration_sec": 1.5, "desc": "Macro: Commander B's hand drawing sword / slamming table"},
+        {"slot": 5, "class": "OTS_DIRTY", "duration_sec": 2.5, "desc": "OTS: one commander through the other's blur — psychological collision"},
+        {"slot": 6, "class": "GODS_EYE", "duration_sec": 3.0, "desc": "God's-eye: their opposing army formations on the terrain between them"}
+      ],
+      "total_duration_sec": 12.5,
+      "narrative_function": "Intimate A → Tactile A → Counter B → Tactile B → Spatial Confrontation → Strategic Overview"
+    }
+  },
+
+  "expanded_camera_rotation_12_slot": {
+    "description": "Expanded 12-slot camera rotation matrix replacing the original 5-slot system. Rotate continuously so no two adjacent cuts share the same class code.",
+    "slots": [
+      {"slot": 1, "class": "GODS_EYE", "shot_type": "God's-Eye Overhead Formation", "lens": "35mm–50mm orthographic", "angle": "70°–90° perpendicular-down", "move": "slow_crane_descend", "function": "Terrain geometry, troop formation patterns, strategic overview"},
+      {"slot": 2, "class": "OTS_DIRTY", "shot_type": "Over-The-Shoulder Dirty Single", "lens": "50mm–85mm", "angle": "shoulder-height behind subject", "move": "static or slow_truck_lateral", "function": "Spatial tension, psychological weight, scene layering"},
+      {"slot": 3, "class": "MACRO_PROP", "shot_type": "Extreme Macro Tactile Prop Insert", "lens": "100mm–135mm macro", "angle": "table/hand-level", "move": "ultra_slow_push_in", "function": "Zero-face physical detail, tactile texture, action consequence"},
+      {"slot": 4, "class": "WIDE_ESTABLISHING", "shot_type": "Wide Establishing", "lens": "24mm–35mm anamorphic", "angle": "elevated or horizon", "move": "crane_up or dolly_push", "function": "Geography, army scale, environmental context"},
+      {"slot": 5, "class": "REACTION_MICRO", "shot_type": "Reaction Micro-Acting ECU", "lens": "85mm–135mm", "angle": "eye-level extreme close", "move": "near-static", "function": "Emotional processing, decision weight, human cost"},
+      {"slot": 6, "class": "GROUND_MUD", "shot_type": "Ground-Level Boots-in-Mud POV", "lens": "24mm–28mm ultra-wide", "angle": "0–30cm from ground", "move": "low_tracking_alongside", "function": "Physical immersion, scale exaggeration, threat approach"},
+      {"slot": 7, "class": "MEDIUM_COMMAND", "shot_type": "Medium Command/Blocking", "lens": "50mm", "angle": "shoulder-height", "move": "tracking_alongside", "function": "Tactical dialogue, troop coordination, spatial blocking"},
+      {"slot": 8, "class": "ENV_SENSORY", "shot_type": "Environmental Sensory B-Roll", "lens": "35mm–85mm", "angle": "varies", "move": "static_hold or slow_tilt", "function": "Breathing beat, temporal transition, atmospheric texture"},
+      {"slot": 9, "class": "LOW_HERO", "shot_type": "Low-Angle Hero", "lens": "28mm–35mm", "angle": "looking upward", "move": "push_in", "function": "Commander authority, standard-bearer, dramatic sky framing"},
+      {"slot": 10, "class": "ATMOSPHERIC", "shot_type": "Atmospheric Landscape", "lens": "35mm–50mm", "angle": "eye-level wide", "move": "orbit or pull_back", "function": "Weather, time passage, strategic aftermath"},
+      {"slot": 11, "class": "TIGHT_ACTION", "shot_type": "Tight Action Detail", "lens": "85mm", "angle": "action-level", "move": "tracking_alongside", "function": "Combat impact, weapon clash, physical struggle"},
+      {"slot": 12, "class": "SILHOUETTE_SCALE", "shot_type": "Silhouette Scale Shot", "lens": "135mm telephoto compressed", "angle": "low or horizon backlit", "move": "static_hold", "function": "Epic scale compression, army-against-sky, fortress profile"}
+    ],
+    "rotation_rule": "Never repeat the same class code in adjacent beats. Minimum 3 different class codes in any 5-consecutive-beat window. MACRO_PROP and ENV_SENSORY must each appear at least once per 8-beat sequence."
+  },
+
+  "prompt_template_library": {
+    "MACRO_PROP_templates": {
+      "weapon_mechanism": "Extreme 100mm macro close-up of {weapon_mechanism}, only iron/bronze/wood mechanism visible, NO human face, calloused fingers {interaction_verb} in lower frame edge, shallow f/2.0 depth of field, {lighting_key}, crisp metallurgical surface detail, natural film grain, {film_lock}",
+      "document_artifact": "Extreme 100mm macro close-up of {document_type} on {surface}, brush ink / cinnabar seal detail visible at thread level, NO human face, weathered fingertip touching {specific_detail} at frame edge, candlelight catchlight on wet ink, {film_lock}",
+      "environmental_prop": "Extreme 85mm macro close-up of {environmental_element}, {material_texture} fills 80% of frame, {natural_force} creating micro-movement, NO human subject, {lighting_key}, {film_lock}",
+      "consequence_impact": "Extreme 100mm macro close-up of {impact_result}, {material_deformation} visible at grain level, {debris_or_liquid} in motion, shallow depth of field, {lighting_key}, {film_lock}"
+    },
+    "OTS_DIRTY_templates": {
+      "command_tension": "Over-the-shoulder shot from behind {foreground_char}'s {armor_detail} shoulder in soft bokeh, sharp focus on {background_scene} beyond, 50mm cinema lens, two-plane depth separation, {lighting_key}, spatial command tension, {film_lock}",
+      "threat_approach": "Dirty single past {foreground_char}'s weathered {headgear} in dark foreground blur, sharp focus on approaching {threat_description} in middle distance, 85mm lens, {lighting_key}, {film_lock}",
+      "witness_pov": "Over-the-shoulder past {witness_char}'s hemp-clad shoulder, sharp focus on {event_unfolding} in the courtyard/river beyond, 50mm natural perspective, {lighting_key}, {film_lock}"
+    },
+    "GROUND_MUD_templates": {
+      "march_tracking": "Ground-level 24mm ultra-wide shot at ankle height, camera pressed into {terrain}, muddy {footwear_type} marching through lower 40% of frame, {background_formation} towering above against {sky}, deep-focus perspective exaggeration, {film_lock}",
+      "river_surface": "Water-level 24mm shot barely above {river_name} surface, oar blades cutting dark water in extreme foreground, {vessel_type} hull towering above, {sky_condition}, {film_lock}",
+      "aftermath_ground": "Ground-level 28mm shot through battlefield debris, broken {weapons_shields} in extreme foreground, {aftermath_scene} in background, {lighting_key}, {film_lock}"
+    },
+    "GODS_EYE_templates": {
+      "formation_geometry": "Bird's-eye perpendicular overhead shot looking straight down at {formation_type} on {terrain_texture}, NO horizon visible, geometric {pattern} of troops/stakes/ships, {lighting_key}, deep-focus 35mm cinema lens, {film_lock}",
+      "river_tactical": "God's-eye perpendicular-down shot of {river_name} estuary, stake field / ship positions visible as geometric patterns on dark water, {lighting_key}, topographic military geography, {film_lock}",
+      "aftermath_overhead": "Bird's-eye overhead shot of {aftermath_scene}, fallen combatants forming {pattern} on {terrain}, burning {debris} creating smoke trails visible from above, {film_lock}"
+    },
+    "REACTION_MICRO_templates": {
+      "decision_weight": "Extreme close-up 135mm portrait filling frame with {character}'s face from forehead to chin, {emotion} visible in eyes, {lighting_catchlight} creating iris catchlights, razor-thin depth of field, warm {bokeh_color} bokeh, {micro_detail}, {film_lock}",
+      "shock_register": "Extreme close-up of {character}'s widening eyes, pupils dilating, {physical_micro_reaction}, {lighting_key} casting sharp shadow across bridge of nose, 135mm f/1.4, {film_lock}",
+      "resolve_harden": "Extreme close-up of {character}'s jaw clenching, lips pressing together, {hand_detail} tightening on {object}, {lighting_key}, 100mm f/2.0, {film_lock}"
+    },
+    "ENV_SENSORY_templates": {
+      "weather_texture": "{weather_element} on {architectural_surface}, NO human figures, {natural_movement} creating organic rhythm, {lighting_key}, contemplative atmosphere, 50mm selective focus on texture, {film_lock}",
+      "water_current": "{water_body} current detail, {submerged_elements} partially visible, NO human subject, {light_on_water}, slow organic movement, 85mm selective focus, {film_lock}",
+      "fire_smoke": "{fire_source} in final stages, {smoke_behavior}, {debris_in_ash}, NO human figures, {time_of_day} lighting, contemplative post-action atmosphere, {film_lock}",
+      "dawn_dusk_passage": "{sky_condition} at {time}, {landscape_silhouette} visible against {light_direction}, NO human figures, environmental time-passage marker, {film_lock}"
+    }
+  },
+
+  "short_9x16_coverage_budget": {
+    "total_beats": 20,
+    "recommended_class_distribution": {
+      "WIDE_ESTABLISHING": 3,
+      "MEDIUM_COMMAND": 3,
+      "TIGHT_ACTION": 2,
+      "MACRO_PROP": 3,
+      "OTS_DIRTY": 2,
+      "GROUND_MUD": 1,
+      "GODS_EYE": 1,
+      "REACTION_MICRO": 2,
+      "ENV_SENSORY": 1,
+      "LOW_HERO": 1,
+      "ATMOSPHERIC": 1
+    },
+    "coverage_rule": "Every 20-beat Short MUST include >=2 MACRO_PROP, >=1 OTS_DIRTY, >=1 GROUND_MUD or GODS_EYE, >=1 REACTION_MICRO, >=1 ENV_SENSORY. At least 30% of beats must be non-human-centered (MACRO_PROP + ENV_SENSORY + GODS_EYE)."
+  },
+
+  "long_16x9_coverage_budget": {
+    "description": "For 8m30s–13m Long at ~240–350 BELUGA images",
+    "per_chapter_formula": {
+      "cold_open_60s": {"total_beats": 18, "MACRO_PROP": 3, "OTS_DIRTY": 2, "GROUND_MUD": 1, "GODS_EYE": 1, "REACTION_MICRO": 2, "ENV_SENSORY": 2},
+      "body_chapter_avg": {"total_beats": 35, "MACRO_PROP": 5, "OTS_DIRTY": 3, "GROUND_MUD": 2, "GODS_EYE": 2, "REACTION_MICRO": 3, "ENV_SENSORY": 3},
+      "climax_chapter": {"total_beats": 40, "MACRO_PROP": 6, "OTS_DIRTY": 4, "GROUND_MUD": 3, "GODS_EYE": 2, "REACTION_MICRO": 4, "ENV_SENSORY": 2},
+      "epilogue_chapter": {"total_beats": 20, "MACRO_PROP": 3, "OTS_DIRTY": 2, "GROUND_MUD": 1, "GODS_EYE": 1, "REACTION_MICRO": 2, "ENV_SENSORY": 3}
+    },
+    "coverage_rule": "Every Long episode MUST include >=15% MACRO_PROP beats, >=8% OTS_DIRTY beats, >=5% GROUND_MUD+GODS_EYE beats, >=8% REACTION_MICRO beats, >=6% ENV_SENSORY beats. No chapter may have zero instances of any missing shot class."
+  },
+
+  "veo_3_1_lite_motion_guidance": {
+    "MACRO_PROP": {
+      "motion_speed": "ultra_slow",
+      "motion_distance_cm": "0.5–2.0",
+      "motion_type": "push_in or rack_focus",
+      "object_micro_motion": "Required: dripping, flickering, vibrating, sliding",
+      "prompt_suffix": ", ultra-slow 0.3cm/s macro push-in, subtle object micro-movement, steady macro tracking"
+    },
+    "OTS_DIRTY": {
+      "motion_speed": "slow",
+      "motion_distance_cm": "3.0–8.0",
+      "motion_type": "push_in past foreground shoulder or slow truck_lateral",
+      "parallax": "Required: foreground blur shifts relative to sharp background",
+      "prompt_suffix": ", slow push-in past foreground shoulder, foreground-background parallax depth, steady cinematic tracking"
+    },
+    "GROUND_MUD": {
+      "motion_speed": "medium",
+      "motion_distance_cm": "10.0–25.0",
+      "motion_type": "low_tracking_alongside at boot speed",
+      "terrain_interaction": "Required: mud splashing, water rippling, debris shifting near lens",
+      "prompt_suffix": ", ground-level tracking alongside marching boots, terrain particles near lens, strong low-angle perspective"
+    },
+    "GODS_EYE": {
+      "motion_speed": "slow",
+      "motion_distance_cm": "5.0–15.0 (vertical descent)",
+      "motion_type": "slow_crane_descend or slow_orbit",
+      "geometric_emphasis": "Required: formations must read as geometric patterns from above",
+      "prompt_suffix": ", slow descending crane from overhead, geometric formation patterns visible, perpendicular-down perspective"
+    },
+    "REACTION_MICRO": {
+      "motion_speed": "near_static",
+      "motion_distance_cm": "0.2–1.0",
+      "motion_type": "barely_perceptible_push_in toward eyes",
+      "breathing_motion": "Required: subject's chest/shoulder breathing movement visible",
+      "prompt_suffix": ", near-static frame with barely perceptible drift toward eyes, subject breathing rhythm visible, intimate cinematic portrait"
+    },
+    "ENV_SENSORY": {
+      "motion_speed": "static_to_slow",
+      "motion_distance_cm": "0–5.0",
+      "motion_type": "static_hold or slow_tilt_up",
+      "natural_motion": "Required: wind, water, fire, light must provide frame movement",
+      "prompt_suffix": ", static contemplative hold, natural environmental movement only, atmospheric breathing beat"
+    }
+  },
+
+  "macaron_cookie_omni_frame_link_guidance": {
+    "description": "For Long 16x9 2-Frame Continuous Chains using macaron_cookie Omni 1.2 Flash Frame-Link",
+    "coverage_chain_patterns": [
+      {
+        "chain_id": "command_decision_chain",
+        "frames": ["OTS_DIRTY → REACTION_MICRO", "REACTION_MICRO → MACRO_PROP", "MACRO_PROP → WIDE_ESTABLISHING"],
+        "frame_link_prompt": "Smooth cinematic continuity from {frame_A_description} to {frame_B_description}, maintaining consistent lighting temperature and character position across cut"
+      },
+      {
+        "chain_id": "battle_impact_chain",
+        "frames": ["GROUND_MUD → TIGHT_ACTION", "TIGHT_ACTION → MACRO_PROP", "MACRO_PROP → GODS_EYE"],
+        "frame_link_prompt": "Continuous escalating action from ground-level chaos through impact to overhead aftermath, maintaining spatial geography across cuts"
+      },
+      {
+        "chain_id": "investigation_chain",
+        "frames": ["OTS_DIRTY → MACRO_PROP", "MACRO_PROP → REACTION_MICRO", "REACTION_MICRO → ENV_SENSORY"],
+        "frame_link_prompt": "Progressive forensic discovery from spatial approach through evidence detail to emotional reaction, closing on contemplative environmental pause"
+      }
+    ]
+  },
+
+  "quality_gates": {
+    "shot_class_validation": {
+      "MACRO_PROP": "ffprobe verify: subject fills >=60% of frame area, no face detected in center 50% crop",
+      "OTS_DIRTY": "verify foreground blur occupies 25-35% of frame edge, background subject in sharp focus",
+      "GROUND_MUD": "verify camera height perspective: horizon line in upper 15% of frame or absent",
+      "GODS_EYE": "verify: no horizon line visible, ground fills 100% of frame",
+      "REACTION_MICRO": "verify: face fills >=70% of frame, eyes in upper third",
+      "ENV_SENSORY": "verify: no human figure detected anywhere in frame"
+    },
+    "coverage_audit_per_video": "Before render, run coverage audit: count instances of each class code. Reject any video spec where MACRO_PROP < 2 or ENV_SENSORY < 1 or (OTS_DIRTY + GROUND_MUD + GODS_EYE) < 2."
+  }
+}

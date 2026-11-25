@@ -1,0 +1,476 @@
+{
+  "meta": {
+    "thread_id": "1C",
+    "title": "Minimalist Giant-Type Tactical Map & Slow Maneuver Forensics (tactical_battle_map_v9 Specification)",
+    "version": "V12.0",
+    "engine_target": "sys/fx_warehouse/tactical_battle_map_v9.py (and drop-in V9 mode in tactical_battle_map_v8.py)",
+    "created_at": "2026-11-25",
+    "channel_id": "su_ke_lai",
+    "user_critique_verbatim": "cái bản đồ xong diễn chiến thuật cái nhịp nó hơi nhanh chưa kịp xem cái gì hết, và chữ quá nhỏ quá nhiều, chữ càng ít càng to, nhịp chậm lại một chút mới xem kịp.",
+    "defect_screenshot_inspected": "/home/hongphuoc6104/.gemini/antigravity/brain/252bc777-531f-427f-a88f-01bbddc34590/.user_uploaded/media_1795577641961_154afc27.jpg",
+    "v8_engine_audited_readonly": "/home/hongphuoc6104/Desktop/vp-agent-core/sys/fx_warehouse/tactical_battle_map_v8.py",
+    "forensic_contact_sheets_saved": [
+      {
+        "path": "/home/hongphuoc6104/.gemini/antigravity/brain/5b098b0c-1bb1-48f6-aa72-0b14d30c6cb9/map_forensics_01_4channel_benchmarks.png",
+        "caption_10w": "16 real 1fps map frames across 4 benchmark channels"
+      },
+      {
+        "path": "/home/hongphuoc6104/.gemini/antigravity/brain/5b098b0c-1bb1-48f6-aa72-0b14d30c6cb9/map_forensics_02_v8_defect_vs_v9_9x16.png",
+        "caption_10w": "V8 23-string clutter defect vs V9 giant-type 9x16"
+      },
+      {
+        "path": "/home/hongphuoc6104/.gemini/antigravity/brain/5b098b0c-1bb1-48f6-aa72-0b14d30c6cb9/map_forensics_03_v9_3act_dual_format.png",
+        "caption_10w": "V9 slow 3-act tactical map on 16x9 and 9x16"
+      }
+    ]
+  },
+  "v8_defect_autopsy": {
+    "source_preset": "chi_lang_1427 (sys/fx_warehouse/tactical_battle_map_v8.py:472-623)",
+    "measured_failures": {
+      "simultaneous_text_strings_on_screen": 23,
+      "simultaneous_word_count_on_screen": 94,
+      "typography_scale_failure": {
+        "ui_scale_9x16_1440x2560": 1.3333,
+        "ui_scale_16x9_1920x1080": 1.0,
+        "unit_badge_px_9x16": 29,
+        "unit_badge_pct_height_9x16": 1.13,
+        "callout_head_px_9x16": 32,
+        "callout_head_pct_height_9x16": 1.25,
+        "callout_sub_px_9x16": 23,
+        "callout_sub_pct_height_9x16": 0.9,
+        "phase_subheader_px_9x16": 21,
+        "phase_subheader_pct_height_9x16": 0.82,
+        "side_tide_gauge_px_9x16": 19,
+        "side_tide_gauge_pct_height_9x16": 0.74,
+        "bottom_force_bar_px_9x16": 21,
+        "bottom_force_bar_pct_height_9x16": 0.82
+      },
+      "chrome_clutter_failure": [
+        "Top 3-line header stack: date_stamp ('10/10/1427 • QUỶ MÔN QUAN → NÚI MÃ YÊN') + title_vi + 15-word phase_label ('PHA I • TRẦN LỰU 5 LẦN GIẢ BẠI NHỬ KỴ BINH QUA QUỶ MÔN QUAN') + top-right compass rose",
+        "Left vertical gorge/tide gauge ('ĐỘ SÂU LỌT ẢI CHI LĂNG / CỬA ẢI BẮC / -0.6m / KHÓA HẺM NÚI') at x=40*sc, y=0.56*H",
+        "Bottom force-ratio progress bar ('ĐẠI VIỆT (LAM SƠN) 3 VẠN PHỤC BINH vs VIỆN BINH NHÀ MINH 10 VẠN • LIỄU THĂNG') at H-185*sc",
+        "4 two-line callout pins with dotted hairlines + 5 multi-word unit badges rendered simultaneously from t_norm <= 0.20"
+      ],
+      "safe_zone_collision_failure": {
+        "ass_subtitle_spec_9x16": "Noto Sans 132px, Outline 8, Shadow 5, MarginV=470 on 1440x2560 (sys/short_engine/audio_epic.py:906)",
+        "subtitle_y_px_band_9x16": [1760, 2110],
+        "subtitle_y_pct_band_9x16": [68.75, 82.42],
+        "collision_observed": "V8 set bot_safe = 0.815*H (2086px), placing 'NÚI MÃ YÊN / ĐẦM LẦY PHỤC KÍCH' (uv=0.52,0.73) directly underneath burned-in subtitle 'hẻm núi đá vôi dài'"
+      },
+      "pacing_and_motion_failure": {
+        "default_duration_sec": 4.8,
+        "zoom_match_tail_eaten_sec": 0.5,
+        "effective_readable_maneuver_sec": 2.4,
+        "premature_hud_dimming": "compute_map_camera_zoom_state (L1494) attenuated hud_opacity = clamp(1.0 - u_zm * 1.45), fading header text to unreadable dim brown-gray",
+        "high_frequency_jitter": "Shockwave starburst sin(elapsed*18.0) (L1920) and damaged unit wobble sin(t_norm*20.0) (L2067) created frantic visual buzz instead of deliberate war-room authority"
+      }
+    }
+  },
+  "empirical_benchmark_forensics": {
+    "extraction_method": "yt-dlp + ffmpeg 1fps frame extraction across 14 downloaded map segments + 2 full global mid-video 4x3 grids (16 videos total, all raw .mp4/.ts cleaned after frame inspection)",
+    "channels_inspected": [
+      {
+        "channel": "The Operations Room",
+        "videos_inspected": [
+          {"video_id": "bJ5IeOR0A2M", "title": "The Battle of the Reichstag 1945 - Animated", "views": 2096226, "window_inspected": "04:00-04:54 (54f @ 1fps)"},
+          {"video_id": "HhVaI38dvco", "title": "Guadalcanal - The Battle of Alligator Creek, 1942 - Animated", "views": 2472230, "window_inspected": "05:30-06:20 (50f @ 1fps)"},
+          {"video_id": "UoynTOzLD28", "title": "Battle of the Bulge, Animated - Part 1", "views": 1983391, "window_inspected": "05:00-05:53 (53f @ 1fps)"},
+          {"video_id": "79F_Mu4-oQk", "title": "Battle of the Philippine Sea (1/2) - Animated", "views": 4078688, "window_inspected": "03:00-03:24 (14f @ 1fps)"}
+        ],
+        "empirical_metrics": {
+          "persistent_top_headers": 0,
+          "side_elevation_or_tide_gauges": 0,
+          "bottom_troop_ratio_bars": 0,
+          "active_labels_during_maneuver": "0 to 2 labels maximum (e.g. 'MOLTKE BRIDGE' + 'MINISTRY OF THE INTERIOR'; 'SOLOMON ISLANDERS'; '1ST MF' vs '5TH FLEET')",
+          "words_per_label": "1 to 3 uppercase words (never 2-line descriptive subcaptions)",
+          "terrain_lock_before_motion_sec": "3.0s to 6.0s bare river/coastline/forest framing box before units advance",
+          "single_maneuver_duration_sec": "10.0s to 18.0s per bridge/river/naval advance"
+        }
+      },
+      {
+        "channel": "Kings and Generals",
+        "videos_inspected": [
+          {"video_id": "rn85RHrShrI", "title": "Battle of Manzikert 1071 - Documentary", "views": 1607694, "window_inspected": "06:00-06:46 (46f @ 1fps)"},
+          {"video_id": "TrqlSSA2xUc", "title": "Battle of Hong Kong 1941 - Pacific War Documentary", "views": 539014, "window_inspected": "06:00-06:54 (54f @ 1fps)"},
+          {"video_id": "FHtJgiMrm64", "title": "Battle of Shiloh 1862 - Documentary", "views": 264740, "window_inspected": "07:00-07:49 (49f @ 1fps)"}
+        ],
+        "empirical_metrics": {
+          "persistent_top_headers": "Corner year stamp only ('1071' or '1940-1941', 1 token in top-right); zero multi-line phase sentences",
+          "side_elevation_or_tide_gauges": 0,
+          "bottom_troop_ratio_bars": 0,
+          "temporal_separation_law": "In TrqlSSA2xUc (+00s..+06s), giant formation title '23rd Army' renders at 9.5% canvas height for 6.0s, then FADES OUT COMPLETELY at +09s before the single thick crimson attack arrow advances from +12s to +24s (12.0s) with only 'Castle Peak Road' (3 words) visible",
+          "commander_identification": "Bold faction emblem/crest + 1-2 word commander surname ('ROMANOS', 'ALP ARSLAN', 'GRANT')",
+          "single_maneuver_duration_sec": "8.0s to 12.0s per arrow or vanguard split"
+        }
+      },
+      {
+        "channel": "Epic History TV",
+        "videos_inspected": [
+          {"video_id": "dCt7NYI4_00", "title": "The Battle of Waterloo", "views": 1100000, "window_inspected": "07:00-07:54 (54f @ 1fps)"},
+          {"video_id": "gqIXlEhXmrg", "title": "England's Greatest Naval Disaster - Medway Raid 1667", "views": 1300000, "window_inspected": "09:00-09:51 (51f @ 1fps)"},
+          {"video_id": "JhVc-bbn2p0", "title": "The First Crusade", "views": 1200000, "window_inspected": "06:00-06:48 (48f @ 1fps)"}
+        ],
+        "empirical_metrics": {
+          "persistent_top_headers": "Minimal corner clock ('12:30') or zero chrome",
+          "side_elevation_or_tide_gauges": 0,
+          "bottom_troop_ratio_bars": 0,
+          "active_labels_during_maneuver": "1 focal stronghold/ship name ('HOUGOUMONT' 1 word held 15s; 'Royal Charles' 2 words; 'Rhineland' 1 word)",
+          "spotlight_focus_technique": "Peripheral dark vignette dims non-active map edges by 35%-55% during ambush/clash ('Civetot 1096', 'Rhineland') so eye locks onto 1 focal point without leader-line clutter",
+          "single_maneuver_duration_sec": "9.0s to 15.0s per tactical engagement or route march"
+        }
+      },
+      {
+        "channel": "Johnny Harris",
+        "videos_inspected": [
+          {"video_id": "czQrU0OPIR8", "title": "The Worst War You Never Learned About, Mapped", "views": 11287938, "window_inspected": "02:40-03:33 (53f @ 1fps)"},
+          {"video_id": "WpQQOQ__1ok", "title": "Why everyone's mad about China's new map", "views": 4326914, "window_inspected": "06:00-07:00 (60f @ 1fps)"},
+          {"video_id": "x-XdOaZPhBw", "title": "Why This Island Could Trigger World War 3", "views": 4529926, "window_inspected": "03:20-04:13 (53f @ 1fps)"}
+        ],
+        "empirical_metrics": {
+          "giant_theater_title_scale": "8.0% to 9.2% of canvas height ('BOSNIAN WAR' centered, 2 uppercase words)",
+          "high_contrast_zone_blocking": "Bold saturated crimson vs cobalt territory/corridor fills over desaturated warm parchment or dark slate terrain (>= 70% calm negative space)",
+          "active_labels_during_maneuver": "1 to 3 ultra-crisp uppercase labels ('TRUMAN', 'VIET MINH', 'LINE OF ACTUAL CONTROL'), zero sublines",
+          "camera_choreography": "Slow continuous smooth ease-in-out glide (6.0s-10.0s) along border/strait with zero HUD bars"
+        }
+      }
+    ],
+    "bonus_vertical_9x16_benchmark": {
+      "channel": "HistoryMarche (@HistoryMarche Shorts)",
+      "video_id": "wFIjDbrd5RM",
+      "title": "Was Rome close to disintegration after the defeat at Edessa in 260 AD?",
+      "views": 1100000,
+      "key_finding": "Vertical 9:16 map places ALL unit crests ('SHAPUR I', 'VALERIAN') and clash stamps ('Battle of Barbalissos 252 AD') inside y_norm = [0.22, 0.66], leaving bottom 32% completely open for captions and Shorts UI; holds each maneuver phase for 6s-8s."
+    }
+  },
+  "v9_architecture_specification": {
+    "module_path": "sys/fx_warehouse/tactical_battle_map_v9.py",
+    "engine_version": "9.0.0",
+    "backward_compatibility": "Exports identical public entrypoints (`render_tactical_map_frame`, `bake_tactical_map_mp4`, `get_tactical_map_preset`, `list_tactical_map_presets`, `compute_map_camera_zoom_state`) plus `validate_v9_minimalist_map_spec(spec)` for `historical_visual_qc.py`.",
+    "strict_abolitions_from_v8": {
+      "remove_top_date_stamp_subheader": true,
+      "remove_top_15word_phase_subheader": true,
+      "remove_persistent_top_header_stack": true,
+      "remove_top_right_compass_rose": true,
+      "remove_side_tide_and_elevation_gauge_bar": true,
+      "remove_bottom_troop_force_ratio_progress_bar": true,
+      "remove_callout_second_line_subcaptions": true,
+      "remove_crisscross_dotted_leader_lines": true,
+      "remove_high_frequency_sine_jitter": true,
+      "remove_premature_hud_opacity_dimming": true,
+      "enforce_zero_smoke_err_20261122_01": true
+    },
+    "minimalism_budget_hard_caps": {
+      "max_words_per_label": 3,
+      "recommended_words_per_label": "1 to 2 words (e.g. 'LIỄU THĂNG', 'TRẦN LỰU', 'BẪY MÃ YÊN', 'SẬP CỌC LIM')",
+      "max_chars_per_label": 16,
+      "max_lines_per_label": 1,
+      "max_simultaneous_labels_any_frame": 2,
+      "max_active_unit_blocks_any_frame": 3,
+      "max_active_arrows_any_frame": 3,
+      "min_negative_terrain_space_ratio": 0.72
+    },
+    "typography_scale_contract": {
+      "font_family_primary": "sys/assets/fonts/su_ke_lai/BeVietnamPro-ExtraBold.ttf",
+      "font_fallback_chain": [
+        "/usr/share/fonts/truetype/noto/NotoSans-Bold.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+      ],
+      "case_transform": "UPPERCASE_NFC_VIETNAMESE",
+      "no_shrink_below_floor_rule": "Never auto-shrink font below 5.0% of canvas height (`>= 128px` on `1440x2560`, `>= 54px` on `1920x1080`). Specs with >3 words or >16 chars fail validation instead of shrinking font!",
+      "rendering_treatment": "100% Zero-Box Cinema Typography: crisp thick dark woodblock/obsidian outline (`stroke_width = round(0.068 * font_px)`) + soft Gaussian optical drop-scrim (`alpha=160, blur_radius=0.35*font_px`), ZERO rectangular boxes, ZERO pills, ZERO side stripes.",
+      "portrait_9x16_1440x2560": {
+        "canvas_width_px": 1440,
+        "canvas_height_px": 2560,
+        "tier_1_act_headline_stamp": {
+          "role": "Phase 1 Theater Stamp ('CHI LĂNG 1427') & Phase 3 Impact Verdict ('BẪY MÃ YÊN')",
+          "font_px": 148,
+          "pct_of_canvas_height": 5.78,
+          "pct_of_canvas_width": 10.28,
+          "stroke_px": 10,
+          "max_text_width_px": 1240,
+          "anchor_y_px": 332,
+          "anchor_y_pct": 12.97
+        },
+        "tier_2_unit_and_terrain_giant_label": {
+          "role": "Phase 1 Focal Landmark ('ẢI HIỂM ĐỊA') & Phase 2 Commander/Force Name ('LIỄU THĂNG', 'TRẦN LỰU')",
+          "font_px": 132,
+          "pct_of_canvas_height": 5.16,
+          "pct_of_canvas_width": 9.17,
+          "stroke_px": 9,
+          "max_text_width_px": 1180
+        },
+        "hard_minimum_floor_px": 128,
+        "hard_minimum_floor_pct_height": 5.0
+      },
+      "landscape_16x9_1920x1080": {
+        "canvas_width_px": 1920,
+        "canvas_height_px": 1080,
+        "tier_1_act_headline_stamp": {
+          "role": "Phase 1 Theater Stamp ('BẠCH ĐẰNG 1288') & Phase 3 Impact Verdict ('SẬP CỌC LIM')",
+          "font_px": 90,
+          "pct_of_canvas_height": 8.33,
+          "pct_of_canvas_width": 4.69,
+          "stroke_px": 6,
+          "max_text_width_px": 1380,
+          "anchor_y_px": 146,
+          "anchor_y_pct": 13.52
+        },
+        "tier_2_unit_and_terrain_giant_label": {
+          "role": "Phase 1 Focal Landmark ('SÔNG BẠCH ĐẰNG') & Phase 2 Commander/Force Name ('Ô MÃ NHI', 'NGUYỄN KHOÁI')",
+          "font_px": 68,
+          "pct_of_canvas_height": 6.3,
+          "pct_of_canvas_width": 3.54,
+          "stroke_px": 5,
+          "max_text_width_px": 1120
+        },
+        "hard_minimum_floor_px": 56,
+        "hard_minimum_floor_pct_height": 5.19
+      },
+      "isotropic_scaling_formulas": {
+        "portrait_any_res": {
+          "tier_1_px": "round(height * 0.0578)",
+          "tier_2_px": "max(round(height * 0.0500), round(height * 0.0516))"
+        },
+        "landscape_any_res": {
+          "tier_1_px": "round(height * 0.0833)",
+          "tier_2_px": "max(round(height * 0.0519), round(height * 0.0630))"
+        }
+      }
+    },
+    "tactical_glyph_scale_upgrade": {
+      "unit_block_9x16_1440x2560_px": [136, 84],
+      "unit_block_9x16_pct_width": 9.44,
+      "unit_block_16x9_1920x1080_px": [110, 68],
+      "unit_block_16x9_pct_height": 6.3,
+      "unit_border_px": "max(4, round(block_w * 0.045))",
+      "maneuver_arrow_shaft_px_9x16": 38,
+      "maneuver_arrow_head_px_9x16": 86,
+      "maneuver_arrow_shaft_px_16x9": 31,
+      "maneuver_arrow_head_px_16x9": 70,
+      "scale_increase_vs_v8": "2.1x wider unit blocks (4.4x area) and 2.2x thicker maneuver arrows so tactical geometry reads instantly without squinting"
+    },
+    "safe_zones_and_viewport_projection": {
+      "portrait_9x16_1440x2560": {
+        "projector_center_xy_norm": [0.48, 0.415],
+        "projector_base_px_formula": "min(width * 0.92, height * 0.54)",
+        "safe_label_bbox_px": {"x_min": 64, "y_min": 150, "x_max": 1210, "y_max": 1700},
+        "safe_label_bbox_norm": {"x_min": 0.044, "y_min": 0.059, "x_max": 0.84, "y_max": 0.664},
+        "excluded_zones": [
+          {"name": "top_status_bar", "px": [0, 0, 1440, 140], "reason": "Mobile OS clock/notch & YouTube Shorts search bar"},
+          {"name": "right_shorts_engagement_rail", "px": [1215, 1180, 1440, 2320], "reason": "YouTube Shorts Like/Comment/Share/Remix icon stack"},
+          {"name": "burned_in_ass_subtitle_band", "px": [0, 1740, 1440, 2120], "reason": "132px Noto Sans kinetic VietSub at MarginV=470 (y=1760..2090px)"},
+          {"name": "shorts_bottom_metadata_and_watermark", "px": [0, 2120, 1440, 2560], "reason": "Channel handle/title + bottom-right W-w-36:H-h-36 150x150 logo at [1254..1404, 2374..2524]"}
+        ]
+      },
+      "landscape_16x9_1920x1080": {
+        "projector_center_xy_norm": [0.5, 0.47],
+        "projector_base_px_formula": "min(width * 0.68, height * 0.82)",
+        "safe_label_bbox_px": {"x_min": 96, "y_min": 72, "x_max": 1740, "y_max": 830},
+        "safe_label_bbox_norm": {"x_min": 0.05, "y_min": 0.067, "x_max": 0.906, "y_max": 0.769},
+        "southern_unit_label_placement_rule": "Whenever a unit block sits at screen y > 0.60*H on 16:9, anchor its giant label ABOVE (`cy - bh*1.25`) or LATERALLY (`cx +/- (bw*0.75 + tw*0.5 + 28)`), NEVER below the block, guaranteeing >= 50px clearance above the y=880px subtitle zone",
+        "excluded_zones": [
+          {"name": "long_subtitle_safe_band", "px": [240, 860, 1680, 1040], "reason": "YouTube CC / burned-in Long subtitles"},
+          {"name": "bottom_right_channel_watermark", "px": [1748, 908, 1920, 1080], "reason": "Mandatory W-w-36:H-h-36 100x100/150x150 channel logo + 36px padding"}
+        ]
+      }
+    },
+    "slow_3_act_choreography_timeline": {
+      "allowed_total_duration_sec": {
+        "minimum_gate_sec": 6.0,
+        "short_single_beat_mode_sec": [6.2, 6.75],
+        "short_two_beat_seamless_split_mode_sec": [7.5, 10.5],
+        "long_16x9_standard_mode_sec": [8.0, 12.0],
+        "default_duration_sec": 9.0
+      },
+      "acts": [
+        {
+          "act_index": 1,
+          "act_id": "PHASE_1_TERRAIN_LOCK",
+          "canonical_window_sec_on_9s": [0.0, 2.5],
+          "normalized_t_window": [0.0, 0.28],
+          "camera_behavior": "Calm overhead terrain lock (`zoom: 1.00 -> 1.03`, subtle ease-out settle) with peripheral spotlight vignette (`18%`) framing the river/gorge bottleneck.",
+          "visual_elements_active": "Sculpted DEM hillshade + flowing river bathymetry + fortress/pass marker ONLY. Zero moving units, zero arrows.",
+          "labels_active": "Max 2 labels: Tier-1 Theater Stamp at top-center (e.g. 'CHI LĂNG 1427', fade-in 0.22s, full 100% hold 0.22s..2.25s, clean fade-out 2.25s..2.55s) + optional 1 Tier-2 Focal Terrain Pin ('ẢI HIỂM ĐỊA').",
+          "cognitive_purpose": "Viewer's eye locks onto geography (mountain walls, river bend, choke point) before any troop motion begins — replicating Operations Room & Kings and Generals."
+        },
+        {
+          "act_index": 2,
+          "act_id": "PHASE_2_BOLD_UNIT_DEPLOY",
+          "canonical_window_sec_on_9s": [2.5, 5.5],
+          "normalized_t_window": [0.28, 0.61],
+          "camera_behavior": "Ultra-smooth ease-in-out drift (`zoom: 1.03 -> 1.08`) tracking between opposing vanguard positions.",
+          "visual_elements_active": "1 to 2 giant rotated faction blocks (`136x84px` on 9:16, `110x68px` on 16:9) materialize with crisp 0.25s scale-settle (`1.12x -> 1.00x`) and advance deliberately along initial approach waypoints (`t_norm = 0.30..0.60`); submerged stakes begin emerging if tidal.",
+          "labels_active": "Phase 1 headline is 100% GONE. ONLY 1-2 Tier-2 Giant Commander/Force Labels ('LIỄU THĂNG' + 'TRẦN LỰU', 1-2 words each) ride upright above/beside their blocks at 100% opacity (`2.70s..5.30s`), then cross-fade out cleanly at `5.30s..5.60s` so arrows never collide with text!",
+          "cognitive_purpose": "Viewer effortlessly reads WHO is fighting and WHERE each force stands without competing arrows or titles."
+        },
+        {
+          "act_index": 3,
+          "act_id": "PHASE_3_SLOW_MANEUVER_AND_IMPACT",
+          "canonical_window_sec_on_9s": [5.5, 9.0],
+          "normalized_t_window": [0.61, 1.0],
+          "camera_behavior": "Deliberate push into ambush kill-zone (`zoom: 1.08 -> 1.16` normal, or optional final-0.55s `map_camera_zoom_match` `1.16 -> 2.35` on Long boundary cuts).",
+          "visual_elements_active": "Slow sculpted Bezier/Catmull-Rom maneuver arrows (`shaft=38px` on 9:16 / `31px` on 16:9) glide across `2.8s-3.6s` (`t_norm = 0.61..0.90`), converging on enemy block; concentric crimson/gold shockwave rings (`2` calm smooth waves, zero high-freq jitter) trigger at `t_norm = 0.78` (`~7.0s`) and hold cleanly to `9.0s`.",
+          "labels_active": "Unit name labels are cleared; SINGLE Tier-1 Giant Impact Stamp ('BẪY MÃ YÊN' / 'SẬP CỌC LIM', 2-3 words) locks at top-center at 100% contrast from `5.75s` to `8.75s` (`>= 3.0s` full-opacity hold).",
+          "cognitive_purpose": "Viewer watches the feigned retreat, flanking pincer, and trap closure unfold at human comprehension speed, reinforced by 1 giant verdict phrase."
+        }
+      ],
+      "short_visual_pacing_integration_rule": "In `sys/visual_pacing.py`, `short_9x16_flow_video` enforces `body_max = 6.80s` per individual beat. Therefore, V9 supports two sanctioned Short integration patterns: (A) Single-beat Short map (`duration_sec = 6.4s..6.75s`: Act 1 `0-1.8s`, Act 2 `1.8-4.1s`, Act 3 `4.1-6.6s`), OR (B) Preferred Two-Beat Continuous Map (`duration_sec = 8.4s..10.0s` baked once at 30fps and split losslessly at narration beat boundary `t_split` across two adjacent `scene_map` beats joined with `hard_cut` 0.0s overlap — giving 9.0s uninterrupted slow map viewing while keeping per-beat hold `4.2s..5.0s <= 6.80s`)."
+    }
+  },
+  "v9_presets_catalog": {
+    "bach_dang_1288": {
+      "preset_id": "bach_dang_1288",
+      "theme": "obsidian_war_room",
+      "default_duration_sec": 9.5,
+      "zoom_target_uv": [0.58, 0.54],
+      "act_1_terrain_lock": {
+        "theater_stamp": "BẠCH ĐẰNG 1288",
+        "landmark_pin": {"uv": [0.58, 0.54], "label": "CỬA BẠCH ĐẰNG"}
+      },
+      "act_2_units": [
+        {"faction": "enemy", "unit_type": "galley", "label": "Ô MÃ NHI", "waypoints": [[0.14, 0.27], [0.36, 0.39], [0.55, 0.52]]},
+        {"faction": "dai_viet", "unit_type": "galley", "label": "NHÀ TRẦN", "waypoints": [[0.48, 0.25], [0.52, 0.38], [0.56, 0.47]]}
+      ],
+      "act_3_maneuver": {
+        "impact_stamp": "SẬP BẪY CỌC",
+        "arrows": [
+          {"faction": "enemy", "points": [[0.16, 0.28], [0.38, 0.41], [0.55, 0.52]], "t_start": 0.61, "t_end": 0.84},
+          {"faction": "dai_viet", "points": [[0.45, 0.22], [0.51, 0.36], [0.56, 0.49]], "t_start": 0.66, "t_end": 0.91},
+          {"faction": "dai_viet", "points": [[0.20, 0.48], [0.38, 0.47], [0.52, 0.53]], "t_start": 0.68, "t_end": 0.92}
+        ],
+        "impact_ring_uv": [0.58, 0.54],
+        "impact_trigger_t": 0.78
+      }
+    },
+    "chi_lang_1427": {
+      "preset_id": "chi_lang_1427",
+      "theme": "imperial_parchment",
+      "default_duration_sec": 9.0,
+      "zoom_target_uv": [0.52, 0.69],
+      "act_1_terrain_lock": {
+        "theater_stamp": "CHI LĂNG 1427",
+        "landmark_pin": {"uv": [0.49, 0.46], "label": "ẢI HIỂM ĐỊA"}
+      },
+      "act_2_units": [
+        {"faction": "enemy", "unit_type": "cavalry", "label": "LIỄU THĂNG", "waypoints": [[0.50, 0.16], [0.48, 0.40], [0.52, 0.69]]},
+        {"faction": "dai_viet", "unit_type": "cavalry", "label": "TRẦN LỰU", "waypoints": [[0.49, 0.32], [0.49, 0.52], [0.53, 0.74]]}
+      ],
+      "act_3_maneuver": {
+        "impact_stamp": "BẪY MÃ YÊN",
+        "arrows": [
+          {"faction": "enemy", "points": [[0.50, 0.18], [0.48, 0.44], [0.52, 0.67]], "t_start": 0.61, "t_end": 0.84},
+          {"faction": "dai_viet", "points": [[0.29, 0.54], [0.40, 0.63], [0.49, 0.68]], "t_start": 0.66, "t_end": 0.91},
+          {"faction": "dai_viet", "points": [[0.71, 0.54], [0.61, 0.63], [0.55, 0.68]], "t_start": 0.66, "t_end": 0.91}
+        ],
+        "impact_ring_uv": [0.52, 0.69],
+        "impact_trigger_t": 0.78
+      }
+    },
+    "ngoc_hoi_dong_da_1789": {
+      "preset_id": "ngoc_hoi_dong_da_1789",
+      "theme": "obsidian_war_room",
+      "default_duration_sec": 9.5,
+      "zoom_target_uv": [0.52, 0.56],
+      "act_1_terrain_lock": {
+        "theater_stamp": "TẾT KỶ DẬU",
+        "landmark_pin": {"uv": [0.52, 0.56], "label": "ĐỒN NGỌC HỒI"}
+      },
+      "act_2_units": [
+        {"faction": "dai_viet", "unit_type": "elephant", "label": "QUANG TRUNG", "waypoints": [[0.47, 0.76], [0.50, 0.66], [0.52, 0.57]]},
+        {"faction": "enemy", "unit_type": "infantry", "label": "QUÂN THANH", "waypoints": [[0.52, 0.44], [0.52, 0.52], [0.52, 0.54]]}
+      ],
+      "act_3_maneuver": {
+        "impact_stamp": "PHÁ NGỌC HỒI",
+        "arrows": [
+          {"faction": "dai_viet", "points": [[0.46, 0.78], [0.50, 0.67], [0.52, 0.57]], "t_start": 0.61, "t_end": 0.88},
+          {"faction": "dai_viet", "points": [[0.42, 0.75], [0.30, 0.56], [0.36, 0.36]], "t_start": 0.64, "t_end": 0.90},
+          {"faction": "dai_viet", "points": [[0.50, 0.72], [0.61, 0.60], [0.56, 0.54]], "t_start": 0.66, "t_end": 0.91}
+        ],
+        "impact_ring_uv": [0.52, 0.56],
+        "impact_trigger_t": 0.79
+      }
+    },
+    "ung_chau_nhu_nguyet_1075_1077": {
+      "preset_id": "ung_chau_nhu_nguyet_1075_1077",
+      "theme": "imperial_parchment",
+      "default_duration_sec": 9.5,
+      "zoom_target_uv": [0.46, 0.64],
+      "act_1_terrain_lock": {
+        "theater_stamp": "NHƯ NGUYỆT 1077",
+        "landmark_pin": {"uv": [0.46, 0.64], "label": "LŨY SÔNG CẦU"}
+      },
+      "act_2_units": [
+        {"faction": "enemy", "unit_type": "infantry", "label": "QUÁCH QUỲ", "waypoints": [[0.44, 0.28], [0.42, 0.46], [0.45, 0.60]]},
+        {"faction": "dai_viet", "unit_type": "infantry", "label": "LÝ THƯỜNG KIỆT", "waypoints": [[0.46, 0.70], [0.46, 0.66], [0.46, 0.64]]}
+      ],
+      "act_3_maneuver": {
+        "impact_stamp": "CHẶN ĐỨNG TỐNG",
+        "arrows": [
+          {"faction": "enemy", "points": [[0.44, 0.28], [0.42, 0.46], [0.45, 0.60]], "t_start": 0.61, "t_end": 0.83},
+          {"faction": "dai_viet", "points": [[0.34, 0.69], [0.40, 0.63], [0.44, 0.59]], "t_start": 0.68, "t_end": 0.92},
+          {"faction": "dai_viet", "points": [[0.58, 0.69], [0.52, 0.63], [0.48, 0.59]], "t_start": 0.68, "t_end": 0.92}
+        ],
+        "impact_ring_uv": [0.46, 0.62],
+        "impact_trigger_t": 0.79
+      }
+    },
+    "rach_gam_xoai_mut_1785": {
+      "preset_id": "rach_gam_xoai_mut_1785",
+      "theme": "obsidian_war_room",
+      "default_duration_sec": 9.0,
+      "zoom_target_uv": [0.52, 0.48],
+      "act_1_terrain_lock": {
+        "theater_stamp": "RẠCH GẦM 1785",
+        "landmark_pin": {"uv": [0.52, 0.48], "label": "SÔNG TIỀN"}
+      },
+      "act_2_units": [
+        {"faction": "enemy", "unit_type": "galley", "label": "QUÂN XIÊM", "waypoints": [[0.18, 0.50], [0.38, 0.48], [0.54, 0.47]]},
+        {"faction": "dai_viet", "unit_type": "galley", "label": "NGUYỄN HUỆ", "waypoints": [[0.34, 0.28], [0.36, 0.44], [0.46, 0.47]]}
+      ],
+      "act_3_maneuver": {
+        "impact_stamp": "TÚI LỬA 7KM",
+        "arrows": [
+          {"faction": "enemy", "points": [[0.18, 0.50], [0.38, 0.48], [0.54, 0.47]], "t_start": 0.61, "t_end": 0.83},
+          {"faction": "dai_viet", "points": [[0.33, 0.24], [0.36, 0.42], [0.46, 0.47]], "t_start": 0.66, "t_end": 0.91},
+          {"faction": "dai_viet", "points": [[0.69, 0.24], [0.66, 0.42], [0.58, 0.47]], "t_start": 0.66, "t_end": 0.91}
+        ],
+        "impact_ring_uv": [0.52, 0.47],
+        "impact_trigger_t": 0.78
+      }
+    }
+  },
+  "automated_qc_and_test_gates": {
+    "historical_visual_qc_gates": [
+      {
+        "gate_id": "V9_MAP_DURATION_FLOOR",
+        "rule": "duration_sec >= 6.0 (recommended 6.4s-10.0s Short, 8.0s-12.0s Long)",
+        "auto_fail_score": 0
+      },
+      {
+        "gate_id": "V9_MAP_FONT_HEIGHT_FLOOR",
+        "rule": "Every rendered text element must have font_px >= 0.05 * canvas_height (>= 128px on 1440x2560, >= 54px on 1920x1080)",
+        "auto_fail_score": 0
+      },
+      {
+        "gate_id": "V9_MAP_WORD_AND_SIMULTANEITY_CAP",
+        "rule": "len(label.split()) <= 3, '\\n' not in label, and simultaneous_visible_labels(t_norm) <= 2 for all t_norm in [0.0, 1.0]",
+        "auto_fail_score": 0
+      },
+      {
+        "gate_id": "V9_MAP_ZERO_HUD_CHROME",
+        "rule": "show_tide_bar == False, show_force_ratio_bar == False, show_phase_subheader == False, show_compass == False, zero_smoke_enforced == True",
+        "auto_fail_score": 0
+      },
+      {
+        "gate_id": "V9_MAP_SAFE_ZONE_LOCK",
+        "rule": "9x16 text bbox stays within x=[64..1210], y=[150..1700]; 16x9 text bbox stays within x=[96..1740], y=[72..830], zero intersection with subtitle band or W-w-36:H-h-36 watermark",
+        "auto_fail_score": 0
+      }
+    ],
+    "wave_2_implementation_checklist": [
+      "Create `sys/fx_warehouse/tactical_battle_map_v9.py` (reusing cached `_get_or_build_master_plate`, `_composite_water_and_ripples`, `_draw_stake_beds`, `_draw_fortresses` from V8 while replacing HUD/unit/arrow/label/timeline layers with the V9 3-Act Giant-Type engine).",
+      "Re-export V9 defaults or route `tactical_battle_map_v8.py` to V9 minimalist mode by default (`engine_mode='v9_minimalist_giant'`) so existing callers in `flow_stage.py`, `produce_serialized_short.py`, and `produce_vn_dual_mode.py` upgrade automatically.",
+      "Update `sys/tests/test_tactical_battle_map_v8.py` (L50 callout count assertion, L121-131 `duration_sec=4.8` default, L197+ bake tests) and add `sys/tests/test_tactical_battle_map_v9.py` asserting font >= 5% height, <= 3 words/label, <= 2 simultaneous labels, 0 side/bottom bars, and safe-zone compliance."
+    ]
+  }
+}

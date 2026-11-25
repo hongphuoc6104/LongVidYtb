@@ -1,0 +1,370 @@
+{
+  "schema_version": "v12_short_viral_editing_bible_1.0.0",
+  "thread_id": "2A_short_viral_frames",
+  "owner_agent": "short-viral-frames",
+  "channel_id": "su_ke_lai",
+  "generated_at_utc": "2026-11-25T04:00:00Z",
+  "visual_evidence_artifacts": {
+    "global_vn_keyframes_contact_sheet": "/home/hongphuoc6104/.gemini/antigravity/brain/47204090-da6e-44e0-b4be-80d7be366744/v12_global_vn_viral_shorts_keyframes.png",
+    "local_self_audit_05s_contact_sheet": "/home/hongphuoc6104/.gemini/antigravity/brain/47204090-da6e-44e0-b4be-80d7be366744/v12_local_short_05s_self_audit.png",
+    "additional_inspected_reference_grids": [
+      "sys/runs/su_de_hieu_study/v2_work/frames/sheets/sheet_001.jpg",
+      "sys/channels/analytics_su_ke_lai/trending_30d_frames_vn/zzTysentMxw_cdmedia_truongson_tank_intro_90s.jpg",
+      "sys/channels/analytics_su_ke_lai/trending_30d_frames_vn/LbGjLmiz4MM_battlecry_vonguyengiap_intro_90s.jpg",
+      "sys/channels/analytics_su_ke_lai/trending_30d_frames_global/fern_nato_russia_intro_0m00s_1m15s_4x4.jpg",
+      "sys/channels/analytics_su_ke_lai/trending_30d_frames_global/yarnhub_tigers_stalin_intro_0m00s_1m15s_4x4.jpg"
+    ],
+    "local_mp4_self_audit_sources": [
+      {
+        "path": "video/vn_su_ke_lai_ep25_chi_lang_chem_lieu_thang_1427_short/final_short_2k.mp4",
+        "duration_sec": 101.63,
+        "inspected_windows_2fps_05s": ["0.0-17.5s", "18.0-35.5s", "36.0-53.5s"]
+      },
+      {
+        "path": "video/vn_su_ke_lai_ep16_bi_kich_nguyen_trai_1442_short/vn_su_ke_lai_ep16_bi_kich_nguyen_trai_1442_short.mp4",
+        "duration_sec": 100.03,
+        "inspected_windows_2fps_05s": ["0.0-17.5s"]
+      }
+    ],
+    "empirical_telemetry_corpora": {
+      "global_shorts_corpus_count": 12,
+      "global_shorts_total_views": 56740000,
+      "vn_shorts_corpus_count": 10,
+      "vn_shorts_total_views": 9970761,
+      "multilang_benchmark_indexed_videos": 275
+    }
+  },
+  "creators_deconstructed": [
+    {
+      "creator": "Cleo Abram",
+      "region": "GLOBAL",
+      "samples": [
+        {"video_id": "kCD532ylVGc", "views": 4200000, "title": "They Found Something In King Tut's Tomb"},
+        {"video_id": "ZUirpasicHQ", "views": 1100000, "title": "Your Map Shows Antarctica Wrong"}
+      ],
+      "observed_visual_mechanics": {
+        "hook_0_2s": "Opens immediately on a spatial/architectural anomaly (3D King Tut tomb cutaway with glowing '?' inside hidden chamber; crimson/blue inverted polar map) — ZERO dark rectangular text banner.",
+        "shot_alternation": "Alternates expressive human close-up gesturing to camera <-> isolated 3D artifact on pure black ('QUEEN NEFERTITI' floating yellow type, zero box) <-> custom physics/cross-section animation ('MICROGRAVITY SURVEY DATA' wavy field lines, bathymetric terrain slice).",
+        "subtitle_style": "1-3 words max per card ('GRAVITY!', 'LOOK AT THIS', 'THAT PLUMMETS'), small crisp white uppercase sans-serif with soft optical shadow, ZERO box, parked cleanly at y=76-80% with zero prop collision."
+      }
+    },
+    {
+      "creator": "Johnny Harris",
+      "region": "GLOBAL",
+      "samples": [
+        {"video_id": "jZm9btwgav0", "views": 78000, "title": "How the Nile created a civilization"},
+        {"video_id": "fkoyGkCfwi4", "views": 340000, "title": "I pushed Google Docs to its limit"}
+      ],
+      "observed_visual_mechanics": {
+        "hook_0_2s": "Opens on animated satellite river flood plume (pure physical geography motion, zero opaque banner).",
+        "shot_alternation": "Live-action on-location motion (walking desert cliff) <-> slow readable overhead satellite topographic zoom with single green radar ping <-> textured archival parchment map with mineral element tiles (K, Mg) integrated natively into map surface.",
+        "subtitle_style": "Minimalist borderless crisp white lower-third text at y=78-82%, subtle drop shadow, zero opaque background card, ultra-low footprint."
+      }
+    },
+    {
+      "creator": "Zack D. Films & History Bypass & Yarnhub & Fern (Global 3D / Historical Live-Action)",
+      "region": "GLOBAL",
+      "samples": [
+        {"video_id": "FbJsxhgeDyU", "creator": "Zack D. Films", "views": 1100000, "title": "How Electricity Reveals Hidden Fingerprints"},
+        {"video_id": "uLhBzOMMSgo", "creator": "History Bypass", "views": 122000, "title": "Dad Would Be Proud"},
+        {"video_id": "VbdQXgapio8", "creator": "Yarnhub", "views": 6340718, "title": "When A Gunner Jumped Without a Parachute"},
+        {"video_id": "6hlx-Is5Pas", "creator": "The AI Historian", "views": 15666589, "title": "Men had to Duel to Sleep with this Queen"}
+      ],
+      "observed_visual_mechanics": {
+        "hook_0_2s": "Zack D. Films opens directly on extreme macro fingertips/tool interaction (brass bullet casing, tweezers, magazine loading — ZERO face for 3 consecutive shots!) before cutting to expressive human reaction. Yarnhub opens with rolling tank + pure boxless open-sky date ('JULY 22, 1944') and uses vertical split-screen (hunter vs hidden prey) with zero VS box.",
+        "shot_alternation": "Yarnhub runs 17.2 cuts/min (2.06s median shot, 42.5 visual events/min, 94% SFX-on-cut sync) alternating Wide Armor <-> Split-Screen <-> POV Viewport Slot <-> Tight Interior Reaction <-> Optical Sight Macro. Fern holds ultra-clean 2-color maps for 10-15s with only 2 flags and 3 huge white arrows.",
+        "subtitle_style": "Zack D. Films: 2-3 words max ('would leave', 'the bullet casing', 'the round'), pure clean white sans-serif with subtle shadow at y=70-74%, zero box, never obstructing hands or mechanism."
+      }
+    },
+    {
+      "creator": "Top Vietnamese History Shorts (CD Media Quân Sự, Sử Lược, Dòng Máu Việt, Battlecry VN, Sử Dễ Hiểu)",
+      "region": "VIETNAM",
+      "samples": [
+        {"video_id": "XN05y-9LIKE", "creator": "CD Media - Quân Sự", "views": 484000, "title": "Voltigeurs: Napoleonic Skirmishers"},
+        {"video_id": "ExCXVuwM58E", "creator": "Sử Lược", "views": 213819, "title": "3 Times the U.S. Considered Using Nuclear Weapons in Vietnam"},
+        {"video_id": "n9oZSIRTLUo", "creator": "Dòng Máu Việt", "views": 3611682, "title": "VN History Heroic Short"},
+        {"video_id": "UQrgEvoyGgo", "creator": "Dòng Máu Việt", "views": 276315, "title": "1418 Lê Lai POV (39.5x views vs @SuKeLaiVN topic twin)"}
+      ],
+      "observed_visual_mechanics": {
+        "hook_0_2s": "Sử Lược opens with giant bold 2-line question + massive hazard symbol directly on Vietnam satellite map (zero pill box); Dòng Máu Việt opens with +6.8 dB sonic peak + immediate high-contrast archival proof ('NHẬT KÝ TRONG TÙ'); Battlecry uses clean obsidian full-screen date beat ('1967') & boxless giant white title ('OSCAR 8') over live footage.",
+        "shot_alternation": "VN viral median (N=10, 9.97M views): 43.6 combined visual events/min (18.32 cuts/min, 1.88s median shot + 17.90 sub-beat impulses/min), 85.0% SFX-on-cut alignment (+5.78 dB spike), 242.8 WPM (4.04 syl/s). CD Media uses clean 2-panel stacked battle painting cutaways; Sử Dễ Hiểu isolates analytical evidence on clean textured paper boards (never slapping dark boxes over faces).",
+        "subtitle_style": "High-luminance white or warm yellow (#FFD83B) with thick dark stroke; Sử Lược loops visually back to opening map frame on final 'Vậy theo bạn...' debate question."
+      }
+    }
+  ],
+  "local_su_ke_lai_self_audit_defects": [
+    {
+      "defect_id": "DEFECT_01_DEAD_STATIC_HOOK",
+      "evidence": "ep25_chi_lang_1427_short (0.0s-3.5s) holds one wide distant valley shot for 3.5s with generic yellow top title '10 VẠN QUÂN MINH'; ep16_nguyen_trai_1442_short (3.0s-4.0s) pans off the actor onto 1.5s of empty wooden window frame.",
+      "root_cause": "Single slow wide establishing shot at B00 with no extreme macro anomaly, no physical foreground motion, and uncontrolled pan drift.",
+      "v12_fix": "Mandate 0.0-2.0s kinetic physical action or extreme macro prop anomaly (sub-shot A 0.0-1.1s + sub-shot B 1.1-2.2s) paired with t=0.04s +8 dB sonic transient and ZERO dark text banners."
+    },
+    {
+      "defect_id": "DEFECT_02_FROZEN_5S_SLIDESHOW_HOLDS",
+      "evidence": "ep25 holds identical static PNG frames for 5.5s (04.0-09.0s overhead army), 4.5s (22.5-26.5s elephant ambush), 4.5s (44.5-48.5s horseman at gate); ep16 holds 5.5s static army (04.5-09.5s) and 5.5s static sitting scholar (10.0-15.0s).",
+      "root_cause": "hybrid_2k static PNGs held across entire 4.5-5.5s beats with negligible 1.09x crop drift and zero intra-beat cutaway or macro insert.",
+      "v12_fix": "Hard ceiling <= 2.5s on any unchanged shot scale on Shorts; replace 5s static sitting-scholar shots with 3-shot micro-sequence (Medium 1.8s -> Extreme Macro Brush/Seal Insert 1.4s -> Reaction Close-up 1.6s)."
+    },
+    {
+      "defect_id": "DEFECT_03_ZERO_MACRO_AND_REPETITIVE_SYMMETRIC_MEDIUMS",
+      "evidence": "Across 0.0-54.0s of ep25, 100% of shots are wide landscapes or dead-center front-facing commanders (14.0-17.0s Lê Lợi/Nguyễn Trãi, 32.5-34.0s Liễu Thăng, 44.5-48.5s Trần Lưu); 0 macro inserts, 0 slow readable maps, 0 visual proof cutaways.",
+      "root_cause": "Prompt matrix over-indexes on front-facing wide/medium blocking and omits tactile macro inserts, OTS angles, and dedicated clean evidence/map cutaways.",
+      "v12_fix": "Enforce strict 5-modality rotation across every Short: >= 20% extreme macro tactile inserts (zero face), >= 20% reaction/OTS close-ups, 1 dedicated slow giant-text tactical map (5.0-6.5s), >= 1 clean visual proof cutaway (parchment/chronicle/split-screen)."
+    },
+    {
+      "defect_id": "DEFECT_04_TRANSITION_ARTIFACTS_AND_DEAD_BLACK_FRAME",
+      "evidence": "ep25 17.5-18.5s shows a 35mm film-sprocket code strip ('34110L 6 16 16...') slicing vertically across the frame; 11.0-11.5s & 53.0-53.5s slap fake giant fern/bamboo leaves over subtitles; 44.0s hits a dead full-black frame.",
+      "root_cause": "Legacy leaves_wipe / edge_pass Veo seam artifacts and uncalibrated fadeblack duration.",
+      "v12_fix": "Ban fake foreground leaf overlays, ban film-border artifacts, replace slow fadeblack with crisp 1-2f hard cuts (75-82%) + 4-6f whip/zoom/luma pivots (10-15%) + deliberate 6-8f act black-dips (<= 8%)."
+    },
+    {
+      "defect_id": "DEFECT_05_SPELLED_OUT_NUMBER_SUBTITLES_AND_LOW_CONTRAST_RED",
+      "evidence": "ep25 04.0-05.5s burns 3 separate subtitle cards ('Cuối năm một' / 'nghìn bốn trăm' / 'hai mươi bảy') just to show '1427' (repeated in ep16 for '1427' and '1428'); ep25 02.5s & 30.5s render dark crimson red text over dark foliage (unreadable); ep16 12.0-14.5s puts subtitles directly across the scholar's hands/desk.",
+      "root_cause": "ASS subtitle generator consumes raw TTS phonetic digits instead of normalized display numerals, uses low-luminance red accent on dark backgrounds, and lacks prop/map safe-zone shifting.",
+      "v12_fix": "Add TTS-to-Display numeral normalizer ('một nghìn bốn trăm hai mươi bảy' -> '1427'), ban dark crimson subtitle fill (use pure white #F8FAFC + warm gold #FFE066 emphasis >= 10:1 contrast), enforce 1-3 words/card with dynamic prop/map collision avoidance."
+    },
+    {
+      "defect_id": "DEFECT_06_GENERIC_TEMPLATE_OUTRO_BRIDGE",
+      "evidence": "ep05 ends with boilerplate ad-first phrasing ('Xem ngay tập đầy đủ trên Sử Kể Lại để giải mã bản đồ Thăng Long. Theo bạn...'); ep25 ends with vague 'Chọn và xem tiếp trên Sử Kể Lại.'",
+      "root_cause": "Bridge announces 'watch full episode' before closing or opening a specific sequel narrative hook.",
+      "v12_fix": "Deploy V12 3-Beat 'Analytical Verdict -> Specific Unanswered Sequel / 2-Choice Dilemma -> Natural Curiosity Bridge + Opening Visual Rhyme' in final 15% (<= 38 syllables, zero boilerplate, zero 'like/share/subscribe')."
+    }
+  ],
+  "v12_frame_0_to_2s_visual_hook_patterns": {
+    "hard_bans": [
+      "ZERO dark semi-transparent rectangular text banners or rounded pills",
+      "ZERO gold-bordered plaques or 'VS' arcade badges",
+      "ZERO static wide landscape held unchanged > 1.5s at t=0.0s",
+      "ZERO greeting, channel logo bumper, or episode numbering (P1/P2/Tập 1)",
+      "ZERO [pause:...] inside B00 hook (<= 16-18 Vietnamese syllables)"
+    ],
+    "audio_ignition_contract": {
+      "onset_sec": 0.04,
+      "transient_lift_db_above_body": {"min": 7.0, "target": 9.5, "max": 12.0},
+      "allowed_timbres": [
+        "1785/medieval bronze war-drum sub-thump (50-90 Hz)",
+        "forged steel blade/ironwood impact",
+        "water-tide rush / torch ignition whoosh",
+        "wax/woodblock chronicle seal slam"
+      ],
+      "banned_timbres": ["electronic radar ping", "sci-fi laser zap", "quiet 0.5s fade-in"]
+    },
+    "five_proven_boxless_hook_patterns": [
+      {
+        "pattern_id": "HOOK_01_EXTREME_MACRO_ANOMALY",
+        "reference_masters": ["Zack D. Films (FbJsxhgeDyU 1.1M)", "Simple History (1.1M)"],
+        "timing_0_2s": "0.0-1.1s extreme 85mm macro of an unusual physical object in motion (e.g., sharpened charred ironwood stake emerging from dark river mud, gloved hand loading wooden gas-seal wad into bronze cannon) -> 1.1-2.2s snap hard-cut to sudden wide consequence or shocked eyes.",
+        "text_overlay_rule": "ZERO top banner; pure 1-3 word clean white/gold subtitle at y=76%.",
+        "best_for_su_ke_lai_styles": ["S06_ANCIENT_TECH_WEAPON_LAB", "S08_MICRO_HISTORY_ORDINARY_EYES", "S02_POV_TIME_TRAVEL_SURVIVAL"]
+      },
+      {
+        "pattern_id": "HOOK_02_SPATIAL_CUTAWAY_OR_GIANT_MAP_PARADOX",
+        "reference_masters": ["Cleo Abram (kCD532ylVGc 4.2M, ZUirpasicHQ 1.1M)", "Sử Lược (ExCXVuwM58E 213K)", "Knowledgia (11.0M)"],
+        "timing_0_2s": "0.0-2.0s animated high-contrast minimalist terrain/architectural cutaway with ONE bold visual symbol (crimson pincer choke point, glowing '?' inside hidden fortress chamber, or massive size asymmetry) + giant boxless 2-3 word title embedded cleanly in open sky/sea negative space.",
+        "text_overlay_rule": "Boxless giant typography (>= 6.5% frame height, <= 3 words) integrated directly into clean map/canvas negative space — zero dark rectangle behind text.",
+        "best_for_su_ke_lai_styles": ["S03_TACTICAL_MAP_BLITZ", "S09_DOMINO_BUTTERFLY_WHAT_IF"]
+      },
+      {
+        "pattern_id": "HOOK_03_VERTICAL_SPLIT_VISUAL_CONTRAST",
+        "reference_masters": ["Yarnhub (5.49M intro 00:10)", "CD Media Quân Sự (XN05y-9LIKE 484K)"],
+        "timing_0_2s": "0.0-2.0s crisp 2px matte-bronze horizontal or vertical split-screen showing simultaneous paradox (top: 100,000 arrogant cavalry marching in bright sun; bottom: 10,000 silent ambushers gripping spears in dark swamp grass) — ZERO 'VS' circle or dark stat box!",
+        "text_overlay_rule": "Zero VS plaque; optional 1-2 word boxless floating contrast label directly over natural shadow area ('10 VẠN' vs '1 VẠN', >= 6% height, optical shadow only).",
+        "best_for_su_ke_lai_styles": ["S05_MYTH_VS_CHRONICLE_SPLIT", "S07_COMMANDER_PSYCHOLOGY_DUEL"]
+      },
+      {
+        "pattern_id": "HOOK_04_MID_MOTION_CINEMA_IN_MEDIAS_RES",
+        "reference_masters": ["Yarnhub (VbdQXgapio8 6.34M)", "Johnny Harris (jZm9btwgav0)", "The AI Historian (15.67M)"],
+        "timing_0_2s": "0.0-1.4s living Flow 9:16 video already at peak kinetic velocity (war-elephant bursting through dawn smoke, fire-raft colliding with wooden prow, galloping horse kicking mud into lens) -> 1.4-2.2s hard cut to tight commander/soldier reaction close-up.",
+        "text_overlay_rule": "Pure unobstructed cinema; optional subtle boxless open-sky date ('1427', <= 5.5% height) with zero box/border.",
+        "best_for_su_ke_lai_styles": ["S01_PRESTIGE_BATTLE_CINEMA", "S10_EASTERN_INK_TO_35MM_LEGEND"]
+      },
+      {
+        "pattern_id": "HOOK_05_CLEAN_ARTIFACT_EVIDENCE_BOARD",
+        "reference_masters": ["Sử Dễ Hiểu (sheet_001.jpg)", "Dòng Máu Việt (n9oZSIRTLUo 3.61M)", "Battlecry VN (LbGjLmiz4MM)"],
+        "timing_0_2s": "0.0-1.8s dedicated full-bleed textured aged Dó-parchment or smoked-obsidian evidence tabletop showing ONE physical chronicle folio / royal edict / cinnabar seal sliding into focus with giant bold 2-word year ('1442') -> 1.8s crisp cut into torchlit 35mm palace interior.",
+        "text_overlay_rule": "Analytical typography lives on its OWN dedicated tactile paper/obsidian cutaway — never pasted as a translucent gray pill over dark live faces.",
+        "best_for_su_ke_lai_styles": ["S04_FORENSIC_MYSTERY_DOSSIER", "S05_MYTH_VS_CHRONICLE_SPLIT"]
+      }
+    ]
+  },
+  "v12_shot_duration_curve_48_58s": {
+    "target_duration_sec": {"min": 48.0, "sweet_spot": 54.0, "max": 58.0},
+    "total_visual_shots": {"min": 18, "target": 22, "max": 26},
+    "target_cuts_per_min": {"min": 18.0, "target": 22.0, "max": 28.0},
+    "target_visual_events_per_min": {"min": 26.0, "target": 32.0, "max": 38.0},
+    "hard_max_unchanged_static_hold_sec": 2.5,
+    "mode_b_scaling_note": "For Mode B serialized Shorts (85-115s), repeat the Body Escalation + Modality Switch cycle twice (28-36 shots total) while keeping the exact same 0-2s hook intensity, <=2.5s static hold cap, and 5.0-6.5s slow giant-text map breath.",
+    "transition_budget_pct": {
+      "hard_cut_1_2f": "75-82%",
+      "kinetic_pivot_whip_or_zoom_or_luma_4_6f": "10-15%",
+      "deliberate_chapter_black_dip_6_8f": "5-10%",
+      "banned_transitions": ["fake_fern_leaf_wipe", "35mm_film_sprocket_border_wipe", "procedural_smoke_fog_wipe", "uniform_slow_crossfade_every_beat"]
+    },
+    "five_visual_modalities_mix": {
+      "macro_tactile_insert": {"share_pct": "20-25%", "shot_dur_sec": "1.2-2.2s", "examples": ["mud swallowing iron hoof", "hand clenching sword hilt", "brush writing Chinese/Nôm characters on Dó paper", "spark hitting touch-hole powder", "wax seal slamming edict"]},
+      "human_reaction_micro_acting": {"share_pct": "20-25%", "shot_dur_sec": "1.6-2.6s", "examples": ["eyes widening in torchlight", "OTS commander watching river tide", "breath fogging cold night air", "trembling courier hands"]},
+      "kinetic_wide_action": {"share_pct": "20-25%", "shot_dur_sec": "2.2-3.2s", "examples": ["living Flow 9:16 cavalry charge", "fire-rafts drifting into wooden fleet", "ambush rising from bamboo ridge"]},
+      "slow_giant_text_map": {"share_pct": "10-15%", "shot_dur_sec": "5.0-6.5s", "examples": ["1 continuous slow readable 2-color terrain map per Short: 0-2.0s terrain lock -> 2.0-4.2s bold unit advance -> 4.2-6.2s ambush pincer snap; MAX 1-2 giant labels >= 5.5% height"]},
+      "visual_proof_cutaway": {"share_pct": "15-20%", "shot_dur_sec": "2.2-3.5s", "examples": ["full-bleed Dó-paper primary chronicle quote with cinnabar seal", "2px bronze straight-seam split comparison", "3D/2.5D weapon cross-section on clean obsidian"]}
+    },
+    "second_by_second_curve": [
+      {
+        "phase": "PHASE_1_VISUAL_HOOK",
+        "window_sec": "0.0-2.2s",
+        "shots": 2,
+        "shot_durations_sec": [1.1, 1.1],
+        "modality_sequence": ["macro_tactile_insert OR spatial_anomaly_hook", "human_reaction_micro_acting OR kinetic_wide_action"],
+        "voice_wpm_target": "248-260 WPM (4.15-4.35 syl/s)",
+        "audio_cue": "t=0.04s +8 to +11 dB sonic transient; zero fade-in.",
+        "editorial_goal": "Stop scroll purely via motion/anomaly + 16-18 syllable paradox; zero dark banner."
+      },
+      {
+        "phase": "PHASE_2_STAKES_AND_CONSTRAINT",
+        "window_sec": "2.2-12.0s",
+        "shots": 4,
+        "shot_durations_sec": [2.4, 2.2, 1.8, 3.4],
+        "modality_sequence": ["kinetic_wide_action", "visual_proof_cutaway (split contrast or chronicle stat on clean canvas)", "macro_tactile_insert", "human_reaction_micro_acting (OTS)"],
+        "voice_wpm_target": "238-248 WPM",
+        "audio_cue": "Crisp hard-cut SFX transients (+4.5 to +6 dB) on 3/4 cuts.",
+        "editorial_goal": "Prove why the obvious strategy fails (physical/numerical asymmetry)."
+      },
+      {
+        "phase": "PHASE_3_SLOW_GIANT_TEXT_MAP_OR_MECHANISM",
+        "window_sec": "12.0-22.0s",
+        "shots": 3,
+        "shot_durations_sec": [5.5, 2.0, 2.5],
+        "modality_sequence": ["slow_giant_text_map (5.0-6.0s uninterrupted 3-phase tactical reveal)", "macro_tactile_insert (zoom-through from map to physical terrain/weapon)", "human_reaction_micro_acting"],
+        "voice_wpm_target": "225-238 WPM (deliberate analytical clarity)",
+        "audio_cue": "5f zoom-through whoosh entering & exiting map; subtle parchment/wind bed.",
+        "editorial_goal": "Give the brain 1 crystal-clear, unhurried mental model viewers can actually read on a phone."
+      },
+      {
+        "phase": "PHASE_4_ESCALATION_AND_40PCT_CLIFF_BREAKER",
+        "window_sec": "22.0-36.0s",
+        "shots": 6,
+        "shot_durations_sec": [2.6, 1.6, 2.4, 1.5, 2.8, 3.1],
+        "modality_sequence": ["visual_proof_cutaway (primary chronicle / weapon anatomy)", "macro_tactile_insert", "kinetic_wide_action", "human_reaction_micro_acting (tight eyes)", "macro_tactile_insert (trigger/signal)", "kinetic_wide_action (trap closing)"],
+        "voice_wpm_target": "248-262 WPM (accelerating urgency)",
+        "audio_cue": "Rising drum pulse + 85%+ SFX-on-cut alignment.",
+        "editorial_goal": "Shatter the 40% retention cliff (~24s) by switching visual modality and tightening shot durations from 2.6s down to 1.5s."
+      },
+      {
+        "phase": "PHASE_5_SILENCE_VACUUM_AND_CLIMAX",
+        "window_sec": "36.0-45.5s",
+        "shots": 4,
+        "shot_durations_sec": [1.4, 2.6, 2.5, 3.0],
+        "modality_sequence": ["macro_tactile_insert (pre-impact breath/spark during 320ms silence_vacuum)", "kinetic_wide_action (explosive climax after 6f luma_flash)", "human_reaction_micro_acting (enemy shock)", "visual_proof_cutaway (primary chronicle confirmation)"],
+        "voice_wpm_target": "320ms silence_vacuum -> 240 WPM resonant climax_heroic",
+        "audio_cue": "Drop BGM to -42 dBFS for 280-400ms (solo heartbeat/breath) -> ignite climax with +7 dB taiko/cannon/brass.",
+        "editorial_goal": "Deliver visceral cinematic payoff backed by verified primary chronicle proof."
+      },
+      {
+        "phase": "PHASE_6_FINAL_15PCT_VERDICT_AND_LONG_BRIDGE",
+        "window_sec": "45.5-54.0s (last 15%)",
+        "shots": 3,
+        "shot_durations_sec": [3.0, 3.2, 2.3],
+        "modality_sequence": ["kinetic_wide_action (aftermath breathing shot)", "human_reaction_micro_acting OR visual_proof_cutaway (unopened sequel detail)", "opening_motif_visual_rhyme (seamless loop frame)"],
+        "voice_wpm_target": "218-230 WPM (reflective authority)",
+        "audio_cue": "Warm resonant pentatonic/cello resolution; zero abrupt music cliff.",
+        "editorial_goal": "Land analytical verdict + specific curiosity/debate bridge to Long episode on Sử Kể Lại + visual loop rhyme."
+      }
+    ]
+  },
+  "v12_clean_subtitle_specification": {
+    "max_words_per_card": {"min": 1, "ideal": 2, "hard_max": 3},
+    "min_card_duration_sec": 0.40,
+    "max_lines": 1,
+    "numeric_display_normalization_rule": {
+      "mandate": "ALWAYS decouple TTS phonetic spelling from on-screen ASS display text. Convert spoken Vietnamese years/numbers into compact Arabic numerals before phrase grouping.",
+      "examples": [
+        {"tts_spoken": "năm một nghìn bốn trăm hai mươi bảy", "bad_v10_sub": ["năm một", "nghìn bốn trăm", "hai mươi bảy"], "v12_clean_sub": "năm 1427"},
+        {"tts_spoken": "mười vạn quân Minh", "v12_clean_sub": "10 VẠN QUÂN"},
+        {"tts_spoken": "ba trăm chiến thuyền", "v12_clean_sub": "300 CHIẾN THUYỀN"}
+      ]
+    },
+    "typography_and_color_contract": {
+      "font_family": "Be Vietnam Pro ExtraBold (fallback: NotoSans-Bold)",
+      "font_size_1080x1920": "78-88px (104-118px on 1440x2560 2K — ~4.2-4.6% frame height, clean & crisp, never bloated)",
+      "base_text_color_hex": "#F8FAFC (Pure Crisp White) or #FFF8EA (Warm Ivory)",
+      "emphasis_power_word_color_hex": "#FFE066 (Luminous Warm Gold — contrast ratio >= 10:1 over shadow)",
+      "banned_colors": ["#D92D20 / dark crimson red fill over dark scenes (failed contrast audit in ep25 02.5s & 30.5s)", "neon cyan/magenta"],
+      "background_box": "STRICTLY NONE (BorderStyle=1 outline + soft Gaussian drop shadow ONLY; zero BorderStyle=3 opaque box or pill)",
+      "outline_and_shadow_1080p": {"outline_px": 4.5, "outline_color": "#0D0B0A", "shadow_offset_px": 3, "shadow_alpha": 0.65},
+      "animation": "Subtle 70ms ease-out scale pop 1.05x -> 1.00x on card entry (or per-word gold color highlight on 1 power word per 2-3 cards); zero jarring bounce."
+    },
+    "collision_free_safe_zones_9x16": {
+      "youtube_shorts_ui_exclusion": {"bottom_chrome_y_pct": "82-100%", "right_action_rail_x_pct": "84-100%", "top_status_bar_y_pct": "0-10%"},
+      "primary_live_action_subtitle_band": {"y_pct": "74-80%", "x_pct": "8-82%", "margin_v_2k_2560": 540},
+      "dynamic_avoidance_rules": [
+        {"scene_modality": "slow_giant_text_map", "map_focus_band_y_pct": "20-70%", "subtitle_band_y_pct": "76-81%", "rule": "Map labels strictly locked inside y=20-68%; subtitle stays compact 1-line at y=77-80% with >= 6% vertical clearance."},
+        {"scene_modality": "macro_tactile_insert_low_prop", "prop_band_y_pct": "55-88%", "subtitle_band_y_pct": "16-21%", "rule": "When hands/desk/scroll occupy bottom third (like ep16 scholar desk), shift subtitle cleanly into top open negative space (y=16-21%)."},
+        {"scene_modality": "visual_proof_cutaway", "card_band_y_pct": "24-72%", "subtitle_band_y_pct": "76-81%", "rule": "Never overlap primary chronicle quote lines or diagram labels; verify subtitle_prop_overlap_ratio == 0.0."}
+      ]
+    }
+  },
+  "v12_final_15pct_natural_long_bridge": {
+    "runtime_window": "Final 15% of Short (7.5-9.0s on 50-58s Short; 13-16s on 95-105s Mode B Short)",
+    "linter_constraints": {
+      "max_combined_outro_syllables": 38,
+      "banned_phrases": ["like", "share", "subscribe", "đăng ký", "nhấn chuông", "bấm theo dõi", "xem ngay tập đầy đủ", "đừng quên"],
+      "required_elements": ["parent_long_id linkage", "sharp analytical verdict", "natural curiosity cliffhanger OR 2-choice debate question", "explicit channel name 'Sử Kể Lại'"]
+    },
+    "three_beat_bridge_architecture": [
+      {
+        "beat": "1_ANALYTICAL_VERDICT (85-90%)",
+        "syllable_budget": "10-14 syllables",
+        "function": "Deliver a sharp, opinionated historical takeaway instead of summarizing the plot."
+      },
+      {
+        "beat": "2_CURIOSITY_CLIFFHANGER_OR_DEBATE (90-96%)",
+        "syllable_budget": "12-15 syllables",
+        "function": "Open a specific sequel mystery (the hidden consequence 10 days later) OR pose a tight 2-choice strategic dilemma that sparks comments."
+      },
+      {
+        "beat": "3_NATURAL_CHANNEL_BRIDGE_PLUS_LOOP (96-100%)",
+        "syllable_budget": "8-12 syllables",
+        "function": "Name 'Sử Kể Lại' as the archive holding that exact deeper breakdown + cut to 0.5s visual rhyme of Beat 0 opening frame."
+      }
+    ],
+    "five_ready_to_use_vn_bridge_templates": [
+      {
+        "type": "Unopened Sequel Cliffhanger (Forensic / Campaign)",
+        "example_vi": "Mười ngày sau, một bức mật thư đã khuất phục cả Đông Quan. Trọn ván cờ 1427 nằm trên Sử Kể Lại.",
+        "syllables": 24,
+        "why_it_works": "Feels like turning the page of a thriller rather than an ad; viewers click Sử Kể Lại to see that exact secret letter."
+      },
+      {
+        "type": "2-Choice Strategic Debate + Channel Anchor",
+        "example_vi": "Theo bạn, Liễu Thăng chết vì địa hình hay vì quá kiêu ngạo? Bản giải phẫu ải Chi Lăng đã lên Sử Kể Lại.",
+        "syllables": 26,
+        "why_it_works": "Triggers instant comment debate while viewers replay, and positions the Long video as a deeper surgical analysis."
+      },
+      {
+        "type": "Hidden Consequence Twist (Tragedy / Court Mystery)",
+        "example_vi": "Nhưng phải 22 năm sau, bản án oan mới lộ hung thủ thật. Hồ sơ đêm 1442 đã có trên Sử Kể Lại.",
+        "syllables": 25,
+        "why_it_works": "Creates an unresolved 22-year mystery loop that forces click-through to L02 Forensic Long."
+      },
+      {
+        "type": "Engineering Counter-Intuitive Follow-up (Weapon Lab)",
+        "example_vi": "Thế nhưng chính khẩu pháo này lại từng khiến nhà Hồ mất nước. Giải mã đầy đủ nằm ngay trên Sử Kể Lại.",
+        "syllables": 25,
+        "why_it_works": "Ends on a stunning paradox about the same weapon, seamlessly pulling viewers into L10 Engineering Autopsy."
+      },
+      {
+        "type": "Counterfactual Hinge + Pinned Comment Flywheel",
+        "example_vi": "Chỉ cần chậm một con nước, bản đồ Đại Việt đã khác. Xem toàn cảnh trận thủy chiến 1288 trên Sử Kể Lại.",
+        "syllables": 25,
+        "why_it_works": "Anchors high-stakes counterfactual emotion + matches pinned comment 2-choice debate."
+      }
+    ]
+  },
+  "v12_automated_qa_gates_for_shorts": [
+    {"gate": "zero_dark_banner_or_vs_box_hook", "threshold": "0 rectangular dark pills / gold plaques / VS badges across 0.0-58.0s", "auto_fail": true},
+    {"gate": "max_unchanged_shot_hold_sec", "threshold": "<= 2.5s on static/unchanged scale; <= 3.5s on living Flow motion (except 5.0-6.5s slow giant-text map)", "auto_fail": true},
+    {"gate": "macro_tactile_insert_floor", "threshold": ">= 4 distinct extreme macro inserts per 48-58s Short (>= 20% of shots)", "auto_fail": true},
+    {"gate": "subtitle_word_and_numeral_cleanliness", "threshold": "1-3 words/card, >= 0.40s duration, 0 spelled-out 4-digit years, 0 low-contrast crimson fill, 0 prop/map collisions", "auto_fail": true},
+    {"gate": "hook_0_2s_motion_and_sonic_ignition", "threshold": "t=0.04s transient >= +7 dB over body RMS + visible visual delta within first 1.5s", "auto_fail": true},
+    {"gate": "final_15pct_natural_bridge_linter", "threshold": "Passes cta_tone_linter.py + <= 38 syllables + zero generic 'Xem ngay tập đầy đủ' opener", "auto_fail": true}
+  ]
+}
