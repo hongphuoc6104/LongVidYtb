@@ -1,0 +1,1297 @@
+{
+  "schema_version": "8.0",
+  "vault_id": "su_ke_lai_v8_10x10_packaging_vault",
+  "channel_id": "su_ke_lai",
+  "channel_handle": "@SuKeLaiVN",
+  "created_at": "2026-11-25",
+  "total_styles": 20,
+  "total_entries": 100,
+  "invariants": {
+    "max_title_chars": 55,
+    "forbid_p1_p2_prefix_in_title": true,
+    "thumbnail_uppercase_words_range": [
+      2,
+      4
+    ],
+    "zero_clickbait_lies": true,
+    "primary_history_grounded": true
+  },
+  "styles": {
+    "S01_PRESTIGE_BATTLE_CINEMA": {
+      "format": "short_9x16",
+      "world_twins": [
+        "@AIHistorianOfficial",
+        "@ChloeVSHistory"
+      ],
+      "entries": [
+        {
+          "id": "S01_01",
+          "youtube_title": "Vì Sao Ô Mã Nhi Sa Bẫy Cọc Bạch Đằng Năm 1288?",
+          "title_char_count": 46,
+          "flow_thumbnail_hook": "BẪY TRIỀU BẠCH ĐẰNG",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Trần (1288)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.5) & Nguyên Sử",
+          "verified_fact_anchor": "Trần Quốc Tuấn đóng cọc gỗ nhọn dưới lòng sông Bạch Đằng, dụ hạm đội Ô Mã Nhi tiến vào lúc nước triều lên rồi phản công khi nước rút ngày 09/04/1288.",
+          "ctr_trigger_angle": "Tactical paradox: why an experienced naval commander fell into a tidal trap"
+        },
+        {
+          "id": "S01_02",
+          "youtube_title": "Trận Rạch Gầm 1785: 1 Đêm Xóa Sổ 5 Vạn Quân Xiêm",
+          "title_char_count": 48,
+          "flow_thumbnail_hook": "ĐÊM ĐỎ RẠCH GẦM",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Tây Sơn (1785)",
+          "primary_source": "Đại Nam Thực Lục Tiền Biên & Gia Định Thành Thông Chí",
+          "verified_fact_anchor": "Đêm 19/01/1785 (mùng 10 tháng Chạp Giáp Thìn), Nguyễn Huệ dùng pháo đặt trên cù lao Thới Sơn và thủy binh khóa hai đầu Rạch Gầm - Xoài Mút đánh tan 5 vạn quân Xiêm.",
+          "ctr_trigger_angle": "Asymmetric compression: 1 night annihilation of 50,000 invading troops"
+        },
+        {
+          "id": "S01_03",
+          "youtube_title": "10 Vạn Quân Thanh Tan Tác Ở Ngọc Hồi Mùng 5 Tết 1789",
+          "title_char_count": 52,
+          "flow_thumbnail_hook": "MÙNG 5 ĐẠI PHÁ",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Tây Sơn (1789)",
+          "primary_source": "Hoàng Lê Nhất Thống Chí (Hồi 14) & Thanh Thực Lục",
+          "verified_fact_anchor": "Rạng sáng mùng 5 Tết Kỷ Dậu (30/01/1789), Quang Trung chỉ huy voi chiến, mộc bài rơm ướt và hỏa hổ hạ đồn Ngọc Hồi, cùng cánh quân Đô đốc Long đánh đồn Đống Đa.",
+          "ctr_trigger_angle": "Holiday ambush shock + massive numerical asymmetry"
+        },
+        {
+          "id": "S01_04",
+          "youtube_title": "Lý Thường Kiệt Đánh Phủ Đầu Ung Châu Năm 1075 Ra Sao?",
+          "title_char_count": 53,
+          "flow_thumbnail_hook": "ĐÁNH TRƯỚC GIỮ NƯỚC",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Lý (1075)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.3) & Tống Sử",
+          "verified_fact_anchor": "Cuối năm 1075, Lý Thường Kiệt chia thủy bộ tiến đánh Khâm Châu, Liêm Châu rồi vây hạ thành Ung Châu sau 42 ngày nhằm phá căn cứ xuất phát của nhà Tống.",
+          "ctr_trigger_angle": "Preemptive strike doctrine ('Tiên phát chế nhân')"
+        },
+        {
+          "id": "S01_05",
+          "youtube_title": "Trận Tốt Động 1426: 6 Vạn Quân Minh Sụp Đổ Trong Mưa",
+          "title_char_count": 52,
+          "flow_thumbnail_hook": "BẪY BÙN TỐT ĐỘNG",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Khởi nghĩa Lam Sơn (1426)",
+          "primary_source": "Lam Sơn Thực Lục & Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.10)",
+          "verified_fact_anchor": "Tháng 11/1426, Vương Thông dẫn hơn 5–6 vạn quân Minh tiến ra Tốt Động - Chúc Động, gặp mưa lớn đường lầy bị quân Lam Sơn phục kích đại bại.",
+          "ctr_trigger_angle": "Weather + terrain equalizer against superior heavy infantry"
+        }
+      ]
+    },
+    "S02_POV_TIME_TRAVEL_SURVIVAL": {
+      "format": "short_9x16",
+      "world_twins": [
+        "@SimpleHistory POV",
+        "@DongMauViet"
+      ],
+      "entries": [
+        {
+          "id": "S02_01",
+          "youtube_title": "Bạn Là Lính Thuyền Lương Nguyên Tại Vân Đồn Năm 1288",
+          "title_char_count": 52,
+          "flow_thumbnail_hook": "CHÁY CỬA VÂN ĐỒN",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Trần (1288)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.5) & Nguyên Sử",
+          "verified_fact_anchor": "Trần Khánh Dư mai phục tại cửa biển Vân Đồn (Quảng Ninh), đánh đắm và đốt sạch đoàn thuyền lương của Trương Văn Hổ, khiến đại quân Thoát Hoan thiếu đói.",
+          "ctr_trigger_angle": "2nd-person survival POV inside a burning supply convoy"
+        },
+        {
+          "id": "S02_02",
+          "youtube_title": "Bạn Là Lính Trịnh Đánh Lũy Thầy Quảng Bình Năm 1630",
+          "title_char_count": 51,
+          "flow_thumbnail_hook": "TỬ ĐỊA LŨY THẦY",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Trịnh - Nguyễn (1630)",
+          "primary_source": "Đại Nam Thực Lục Tiền Biên & Việt Sử Tiêu Án",
+          "verified_fact_anchor": "Lũy Trường Dục và Lũy Nhật Lệ (Lũy Thầy) do Đào Duy Từ thiết kế cao hơn 6m, dài hàng chục km với hỏa lực đại bác khiến quân Trịnh nhiều lần công thành thất bại.",
+          "ctr_trigger_angle": "2nd-person siege survival against an impenetrable fortification"
+        },
+        {
+          "id": "S02_03",
+          "youtube_title": "Đêm Giao Thừa 1789: Bạn Hành Quân Cùng Quang Trung",
+          "title_char_count": 50,
+          "flow_thumbnail_hook": "HÀNH QUÂN XUYÊN TẾT",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Tây Sơn (1789)",
+          "primary_source": "Hoàng Lê Nhất Thống Chí (Hồi 14)",
+          "verified_fact_anchor": "Quân Tây Sơn ăn Tết trước từ 20 tháng Chạp, chia đội 3 người thay nhau khiêng cáng hành quân liên tục ngày đêm từ Nghệ An ra Tam Điệp - Thăng Long.",
+          "ctr_trigger_angle": "Visceral endurance POV during the famous forced march"
+        },
+        {
+          "id": "S02_04",
+          "youtube_title": "Bạn Là Lính Giữ Thành Đa Bang Năm 1406 Trước Quân Minh",
+          "title_char_count": 54,
+          "flow_thumbnail_hook": "THÀNH ĐA BANG 1406",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Hồ (1406–1407)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.8) & Minh Thực Lục",
+          "verified_fact_anchor": "Thành Đa Bang (Ba Vì) là tuyến phòng thủ then chốt của nhà Hồ với hào sâu, chông tre và tượng binh, nhưng bị quân Minh dùng hỏa tiễn đánh ngựa/voi phá vỡ đầu năm 1407.",
+          "ctr_trigger_angle": "High-stakes defensive POV facing early Ming firearms"
+        },
+        {
+          "id": "S02_05",
+          "youtube_title": "Lạc Vào Trận Mưa Tên Phòng Tuyến Như Nguyệt Năm 1077",
+          "title_char_count": 52,
+          "flow_thumbnail_hook": "CHIẾN HÀO NHƯ NGUYỆT",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Lý (1077)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.3) & Tống Sử",
+          "verified_fact_anchor": "Phòng tuyến sông Như Nguyệt dài hàng trăm dặm đắp lũy đất đóng cọc tre dày đặc, chặn đứng 10 vạn quân Quách Quỳ suốt nhiều tháng đầu năm 1077.",
+          "ctr_trigger_angle": "Trench-warfare survival immersion on the Cau River"
+        }
+      ]
+    },
+    "S03_TACTICAL_MAP_BLITZ": {
+      "format": "short_9x16",
+      "world_twins": [
+        "@Eastory",
+        "@HistoryMarche"
+      ],
+      "entries": [
+        {
+          "id": "S03_01",
+          "youtube_title": "3 Mũi Khóa Chặt Quân Thoát Hoan Ở Vạn Kiếp 1285",
+          "title_char_count": 47,
+          "flow_thumbnail_hook": "VÂY ÉP VẠN KIẾP",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Trần (1285)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.5)",
+          "verified_fact_anchor": "Tháng 5–6/1285, sau thắng lợi Hàm Tử và Chương Dương, quân Trần phản công dồn đại quân Thoát Hoan rút chạy qua Vạn Kiếp và Sông Cầu lên biên giới.",
+          "ctr_trigger_angle": "Rapid GIS encirclement maneuver breakdown"
+        },
+        {
+          "id": "S03_02",
+          "youtube_title": "Chiến Thuật Vây Điểm Diệt Viện Ở Chi Lăng Năm 1427",
+          "title_char_count": 50,
+          "flow_thumbnail_hook": "TỬ ĐỊA CHI LĂNG",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Khởi nghĩa Lam Sơn (1427)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.10) & Bình Ngô Đại Cáo",
+          "verified_fact_anchor": "Lê Lợi và Nguyễn Trãi bỏ thành Đông Quan không đánh gấp, dồn chủ lực lên ải Chi Lăng tiêu diệt 10 vạn viện binh Liễu Thăng ngày 10/10/1427.",
+          "ctr_trigger_angle": "Classic 'besiege the point, annihilate the reinforcement' map logic"
+        },
+        {
+          "id": "S03_03",
+          "youtube_title": "Vì Sao Quân Nguyên Đều Thất Bại Ở Bạch Đằng 1288?",
+          "title_char_count": 49,
+          "flow_thumbnail_hook": "SA BÀN BẠCH ĐẰNG",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Trần (1288)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.5) & An Nam Chí Lược",
+          "verified_fact_anchor": "Cửa sông Bạch Đằng có biên độ thủy triều 3–4m cùng các nhánh sông Chanh, sông Kênh cho phép phục binh giấu thuyền rồi khép gọng kìm khi nước rút.",
+          "ctr_trigger_angle": "Hydrographic & geographic determinism on tactical map"
+        },
+        {
+          "id": "S03_04",
+          "youtube_title": "Bản Đồ Thần Tốc 5 Ngày Phá Thành Thăng Long Tết 1789",
+          "title_char_count": 52,
+          "flow_thumbnail_hook": "5 NGÀY ĐỔI NGÔI",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Tây Sơn (1789)",
+          "primary_source": "Hoàng Lê Nhất Thống Chí (Hồi 14)",
+          "verified_fact_anchor": "Quang Trung chia 5 đạo quân từ Tam Điệp đêm 30 Tết: đạo chủ lực đánh Gián Khẩu - Hà Hồi - Ngọc Hồi, các đạo Đô đốc Bảo, Đô đốc Long, Đô đốc Tuyết, Đô đốc Lộc hợp vây.",
+          "ctr_trigger_angle": "5-column synchronized operational map blitz"
+        },
+        {
+          "id": "S03_05",
+          "youtube_title": "Cách Đinh Bộ Lĩnh Dẹp Loạn 12 Sứ Quân Trong 2 Năm",
+          "title_char_count": 49,
+          "flow_thumbnail_hook": "THỐNG NHẤT 12 SỨ",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Đinh (966–968)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.1) & Việt Sử Lược",
+          "verified_fact_anchor": "Từ năm 966 đến 968, Đinh Bộ Lĩnh kết hợp liên minh với Trần Lãm, thu phục Phạm Bạch Hổ và lần lượt đánh dẹp các sứ quân cát cứ, lập nước Đại Cồ Việt năm 968.",
+          "ctr_trigger_angle": "Rapid territorial consolidation map from fragmentation to empire"
+        }
+      ]
+    },
+    "S04_FORENSIC_MYSTERY_DOSSIER": {
+      "format": "short_9x16",
+      "world_twins": [
+        "@Fern-tv",
+        "@Lemmino"
+      ],
+      "entries": [
+        {
+          "id": "S04_01",
+          "youtube_title": "Giải Mã Cái Chết Đột Ngột Của Vua Lê Thái Tông Năm 1442",
+          "title_char_count": 55,
+          "flow_thumbnail_hook": "ÁN LỆ CHI VIÊN",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Hậu Lê (1442)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.11)",
+          "verified_fact_anchor": "Ngày 04/08 âm lịch năm 1442, vua Lê Thái Tông ngự giá qua Lệ Chi Viên (Gia Định, Bắc Ninh) thăm Nguyễn Trãi rồi đột ngột băng hà, dẫn tới vụ án tru di tam tộc.",
+          "ctr_trigger_angle": "Cold-case royal death timeline forensics"
+        },
+        {
+          "id": "S04_02",
+          "youtube_title": "Bí Ẩn Cái Chết Của Vua Đinh Tiên Hoàng Năm 979",
+          "title_char_count": 46,
+          "flow_thumbnail_hook": "ÁN MẠNG ĐỖ THÍCH",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Đinh (979)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.1) & Khâm Định Việt Sử",
+          "verified_fact_anchor": "Tháng 10/979, Đinh Tiên Hoàng và Nam Việt Vương Đinh Liễn bị sát hại trong cung ban đêm; chính sử ghi tên chi hậu nội nhân Đỗ Thích là hung thủ bị xử tử sau 3 ngày.",
+          "ctr_trigger_angle": "Palace assassination dossier & historical motives"
+        },
+        {
+          "id": "S04_03",
+          "youtube_title": "Vì Sao Vua Quang Trung Băng Hà Đột Ngột Ở Tuổi 39?",
+          "title_char_count": 50,
+          "flow_thumbnail_hook": "BỆNH ÁN QUANG TRUNG",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Tây Sơn (1792)",
+          "primary_source": "Đại Nam Chính Biên Liệt Truyện & Hoàng Lê Nhất Thống Chí",
+          "verified_fact_anchor": "Tháng 9/1792, Hoàng đế Quang Trung qua đời tại Phú Xuân ở tuổi 39 sau cơn bạo bệnh đột ngột ('huyết vựng' / xuất huyết não theo mô tả triệu chứng trong sử liệu).",
+          "ctr_trigger_angle": "Medical-historical autopsy of a sudden imperial death"
+        },
+        {
+          "id": "S04_04",
+          "youtube_title": "Vụ Án Thái Sư Trần Thủ Độ Và Cuộc Chuyển Giao Lý - Trần",
+          "title_char_count": 55,
+          "flow_thumbnail_hook": "MẬT ÁN LÝ TRẦN",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Chuyển giao Lý - Trần (1225)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.4 & Q.5)",
+          "verified_fact_anchor": "Cuối năm 1225, dưới sự sắp đặt của Trần Thủ Độ, Lý Chiêu Hoàng nhường ngôi cho chồng là Trần Cảnh (Trần Thái Tông), mở đầu triều Trần kéo dài 175 năm.",
+          "ctr_trigger_angle": "Bloodless vs ruthless dynastic transition dossier"
+        },
+        {
+          "id": "S04_05",
+          "youtube_title": "Hồ Sơ Huyền Trân Công Chúa: Hôn Nhân Đổi Hai Châu",
+          "title_char_count": 49,
+          "flow_thumbnail_hook": "SÍNH LỄ HAI CHÂU",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Trần (1306)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.6)",
+          "verified_fact_anchor": "Năm 1306, Huyền Trân Công chúa kết hôn với vua Chiêm Thành Chế Mân, đổi lấy hai châu Ô và Lý (nay thuộc Quảng Trị - Thừa Thiên Huế).",
+          "ctr_trigger_angle": "Geopolitical marriage dossier & rescue mission"
+        }
+      ]
+    },
+    "S05_MYTH_VS_CHRONICLE_SPLIT": {
+      "format": "short_9x16",
+      "world_twins": [
+        "@HistoryBypass"
+      ],
+      "entries": [
+        {
+          "id": "S05_01",
+          "youtube_title": "Chính Sử Nói Gì Về Vụ Án Hăm Mốt Lê Lai Hăm Hai Lê Lợi?",
+          "title_char_count": 55,
+          "flow_thumbnail_hook": "CHÍNH SỬ LÊ LAI",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Khởi nghĩa Lam Sơn (1419–1433)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.10) & Lam Sơn Thực Lục",
+          "verified_fact_anchor": "Lê Lai hy sinh tháng 4/1419 tại Chí Linh, trước khi Lê Lợi băng hà (22/8/1433) tới 14 năm; ngày giỗ 21/8 là theo di chiếu đền ơn của Lê Thái Tổ.",
+          "ctr_trigger_angle": "Debunking the 1-day-apart death myth with chronicle dates"
+        },
+        {
+          "id": "S05_02",
+          "youtube_title": "Sự Thật Đằng Sau Câu Nói Nợ Như Chúa Chổm Trong Sử Việt",
+          "title_char_count": 55,
+          "flow_thumbnail_hook": "CHÚA CHỔM LÀ VUA",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Lê Trung Hưng (1533)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Tục Biên Q.16)",
+          "verified_fact_anchor": "'Chúa Chổm' gắn với hoàng tử Lê Duy Ninh được Nguyễn Kim rước lên ngôi Lê Trang Tông năm 1533 tại Ai Lao, mở đầu thời Lê Trung Hưng.",
+          "ctr_trigger_angle": "Folk idiom vs verified imperial chronicle identity"
+        },
+        {
+          "id": "S05_03",
+          "youtube_title": "Sự Thật Thành Cổ Loa Và Nỏ Thần Trong Chính Sử",
+          "title_char_count": 46,
+          "flow_thumbnail_hook": "GIẢI MÃ CỔ LOA",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Âu Lạc (~TK 3–2 TCN)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Ngoại Kỷ Q.1) & Sử Ký Tư Mã Thiên",
+          "verified_fact_anchor": "Thành Cổ Loa là công trình thành lũy xoáy ốc kết hợp hào nước có thật về khảo cổ; chi tiết 'nỏ thần móng rùa' được sử gia tách rõ là phần truyền thuyết.",
+          "ctr_trigger_angle": "Archaeological reality vs mythological overlay"
+        },
+        {
+          "id": "S05_04",
+          "youtube_title": "Dương Vân Nga Trao Áo Long Bào: Chính Sử Nói Gì?",
+          "title_char_count": 48,
+          "flow_thumbnail_hook": "ÁO BÀO NĂM 980",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Tiền Lê (980)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.1) & Việt Sử Lược",
+          "verified_fact_anchor": "Năm 980 trước nguy cơ quân Tống xâm lược và vua Đinh Toàn còn nhỏ (6 tuổi), Thái hậu Dương Vân Nga cùng triều thần trao áo long bào tôn Thập đạo tướng quân Lê Hoàn lên ngôi.",
+          "ctr_trigger_angle": "Challenging moralistic judgment with 980 geopolitical survival"
+        },
+        {
+          "id": "S05_05",
+          "youtube_title": "Bài Thơ Nam Quốc Sơn Hà Ra Đời Đêm Nào Năm 1077?",
+          "title_char_count": 48,
+          "flow_thumbnail_hook": "THƠ THẦN NHƯ NGUYỆT",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Lý (1077)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.3) & Lĩnh Nam Chích Quái",
+          "verified_fact_anchor": "Chính sử chép giữa thế trận giằng co tại sông Như Nguyệt năm 1077, bài thơ 'Nam quốc sơn hà' vang lên từ đền Trương Hống - Trương Hát, chấn hưng sĩ khí quân Lý.",
+          "ctr_trigger_angle": "Psychological warfare origin behind the legendary poem"
+        }
+      ]
+    },
+    "S06_ANCIENT_TECH_WEAPON_LAB": {
+      "format": "short_9x16",
+      "world_twins": [
+        "@Yarnhub",
+        "@Invicta"
+      ],
+      "entries": [
+        {
+          "id": "S06_01",
+          "youtube_title": "Súng Thần Cơ Hồ Nguyên Trừng: Vũ Khí Khiến Nhà Minh Sợ",
+          "title_char_count": 54,
+          "flow_thumbnail_hook": "SÚNG THẦN CƠ 1407",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Hồ (1400–1407)",
+          "primary_source": "Minh Sử & Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.8)",
+          "verified_fact_anchor": "Hồ Nguyên Trừng chế tạo Thần Cơ Thương Pháo; sau khi bị bắt sang nhà Minh, ông được trọng dụng lập Thần Cơ Doanh và triều Minh tế ông làm Hỏa Khí Chi Thần.",
+          "ctr_trigger_angle": "Macro metallurgy & gunpowder engineering pride"
+        },
+        {
+          "id": "S06_02",
+          "youtube_title": "Cấu Tạo Cọc Gỗ Lim Bạch Đằng Đâm Thủng Thuyền Đáy Phẳng",
+          "title_char_count": 55,
+          "flow_thumbnail_hook": "CỌC LIM BỊT SẮT",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Ngô / Trần (938 & 1288)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư & Khảo cổ bãi cọc Yên Giang",
+          "verified_fact_anchor": "Cọc gỗ lim dài 2.6–3.2m, vót nhọn đầu cắm nghiêng khoảng 15 độ ngược dòng nước rút, tạo đòn bẩy xé toạc đáy thuyền chiến khi thủy triều hạ.",
+          "ctr_trigger_angle": "Structural physics & hydrodynamic angle breakdown"
+        },
+        {
+          "id": "S06_03",
+          "youtube_title": "Hỏa Hổ Tây Sơn: Vũ Khí Phun Lửa 900 Độ Năm 1789",
+          "title_char_count": 47,
+          "flow_thumbnail_hook": "HỎA HỔ TÂY SƠN",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Tây Sơn (1789)",
+          "primary_source": "Hoàng Lê Nhất Thống Chí & Thanh Thực Lục",
+          "verified_fact_anchor": "Hỏa hổ là ống hỏa khí cầm tay bắn chất cháy nhựa thông và lưu huỳnh ở cự ly gần, gây hỏa hoạn và hoảng loạn trong trận công phá Ngọc Hồi - Đống Đa.",
+          "ctr_trigger_angle": "Ancient flamethrower chemistry & shock-troop tactics"
+        },
+        {
+          "id": "S06_04",
+          "youtube_title": "Nỏ Liên Châu Cổ Loa Bắn Nhiều Mũi Tên Cùng Lúc Ra Sao?",
+          "title_char_count": 54,
+          "flow_thumbnail_hook": "NỎ LIÊN CHÂU 3D",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Âu Lạc (~TK 3–2 TCN)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Ngoại Kỷ Q.1) & Di chỉ Cổ Loa",
+          "verified_fact_anchor": "Khai quật Cổ Loa phát hiện hàng vạn mũi tên đồng ba cạnh sắc bén cùng lẫy nỏ đồng tinh xảo, chứng minh kỹ thuật chế tạo nỏ tầm xa quy mô lớn thời Âu Lạc.",
+          "ctr_trigger_angle": "Ballistic trigger mechanics & bronze arrowhead forensics"
+        },
+        {
+          "id": "S06_05",
+          "youtube_title": "Lũy Thầy Đào Duy Từ: Tường Thành Chặn Đứng Quân Trịnh",
+          "title_char_count": 53,
+          "flow_thumbnail_hook": "CÔNG TRÌNH LŨY THẦY",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Chúa Nguyễn (1630)",
+          "primary_source": "Đại Nam Thực Lục Tiền Biên",
+          "verified_fact_anchor": "Lũy Thầy kết hợp địa hình đồi núi và cửa biển Nhật Lệ, đắp đất nện chắc gia cố gỗ lim và ụ pháo tầng bậc, đứng vững suốt các cuộc Nam tiến của chúa Trịnh.",
+          "ctr_trigger_angle": "Civil-military fortification engineering autopsy"
+        }
+      ]
+    },
+    "S07_COMMANDER_PSYCHOLOGY_DUEL": {
+      "format": "short_9x16",
+      "world_twins": [
+        "@KingsandGenerals"
+      ],
+      "entries": [
+        {
+          "id": "S07_01",
+          "youtube_title": "Đấu Trí 1427: Nguyễn Trãi Bức Hàng 10 Vạn Quân Minh",
+          "title_char_count": 51,
+          "flow_thumbnail_hook": "ĐẤU TRÍ ĐÔNG QUAN",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Khởi nghĩa Lam Sơn (1427)",
+          "primary_source": "Quân Trung Từ Mệnh Tập & Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.10)",
+          "verified_fact_anchor": "Bằng hàng chục bức thư tâm lý gửi vào thành Đông Quan sau chiến thắng Chi Lăng, Nguyễn Trãi thuyết phục Vương Thông mở cửa thành hội thề đầu hàng năm 1427.",
+          "ctr_trigger_angle": "1v1 psychological breakdown of a siege surrender"
+        },
+        {
+          "id": "S07_02",
+          "youtube_title": "Trần Hưng Đạo Đấu Trí Thoát Hoan: Vườn Không Nhà Trống",
+          "title_char_count": 54,
+          "flow_thumbnail_hook": "VƯỜN KHÔNG NHÀ TRỐNG",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Trần (1285)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.5) & Nguyên Sử",
+          "verified_fact_anchor": "Trần Quốc Tuấn chủ động bỏ kinh thành Thăng Long trống rỗng lương thảo, kéo quân Nguyên vào vùng nóng ẩm thiếu tiếp tế trước khi phản công vào mùa hè 1285.",
+          "ctr_trigger_angle": "Trading space for time & logistics starvation duel"
+        },
+        {
+          "id": "S07_03",
+          "youtube_title": "Lý Thường Kiệt Đấu Trí Quách Quỳ Trên Sông Như Nguyệt",
+          "title_char_count": 53,
+          "flow_thumbnail_hook": "PHÒNG TUYẾN NHƯ NGUYỆT",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Lý (1077)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.3) & Tống Sử",
+          "verified_fact_anchor": "Sau khi đẩy lùi các đợt vượt sông của Quách Quỳ và đánh bại cánh quân Yên Đạt, Lý Thường Kiệt chủ động đề nghị giảng hòa giữ thể diện cho Tống để rút quân an toàn.",
+          "ctr_trigger_angle": "Victory through tactical stalemate + diplomatic exit ramp"
+        },
+        {
+          "id": "S07_04",
+          "youtube_title": "Nguyễn Huệ Đấu Trí Tôn Sĩ Nghị: Đòn Tâm Lý Đón Tết Sớm",
+          "title_char_count": 54,
+          "flow_thumbnail_hook": "ĐÒN TÂM LÝ 1789",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Tây Sơn (1789)",
+          "primary_source": "Hoàng Lê Nhất Thống Chí (Hồi 14)",
+          "verified_fact_anchor": "Nguyễn Huệ sai người dâng biểu xin hàng giả vờ sợ hãi khiến Tôn Sĩ Nghị chủ quan buông lỏng phòng bị ăn Tết, ngay lúc quân Tây Sơn đang tiến sát Thăng Long.",
+          "ctr_trigger_angle": "Deception operation exploiting enemy arrogance"
+        },
+        {
+          "id": "S07_05",
+          "youtube_title": "Quang Trung Đấu Trí Càn Long: Nước Cờ Giả Vương 1790",
+          "title_char_count": 52,
+          "flow_thumbnail_hook": "NƯỚC CỜ GIẢ VƯƠNG",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Tây Sơn (1790)",
+          "primary_source": "Đại Nam Chính Biên Liệt Truyện & Thanh Thực Lục",
+          "verified_fact_anchor": "Năm 1790, Phạm Công Trị đóng giả vua Quang Trung sang dự bát tuần đại thọ Càn Long ở Nhiệt Hà, giúp Đại Việt giữ hòa bình phương Bắc mà vua không phải rời nước.",
+          "ctr_trigger_angle": "High-stakes imperial diplomatic deception"
+        }
+      ]
+    },
+    "S08_MICRO_HISTORY_ORDINARY_EYES": {
+      "format": "short_9x16",
+      "world_twins": [
+        "@VoicesofthePast",
+        "@Toldinstone"
+      ],
+      "entries": [
+        {
+          "id": "S08_01",
+          "youtube_title": "Đêm Cắm Cọc 1288 Qua Đôi Mắt Người Lính Đóng Cọc",
+          "title_char_count": 48,
+          "flow_thumbnail_hook": "NGƯỜI CẮM CỌC 1288",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Trần (1288)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.5) & Khảo cổ Yên Giang",
+          "verified_fact_anchor": "Hàng trăm cây cọc gỗ lim được quân dân Trần dựng giữa bùn lầy nước lạnh cửa sông Bạch Đằng trước khi thủy triều dâng che khuất mũi nhọn.",
+          "ctr_trigger_angle": "Human-scale labor & grit behind a famous victory"
+        },
+        {
+          "id": "S08_02",
+          "youtube_title": "3 Người Thay Nhau Cáng: Bí Mật Tốc Độ Hành Quân Tây Sơn",
+          "title_char_count": 55,
+          "flow_thumbnail_hook": "CÁNG 3 NGƯỜI 1789",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Tây Sơn (1789)",
+          "primary_source": "Hoàng Lê Nhất Thống Chí (Hồi 14)",
+          "verified_fact_anchor": "Để giữ tốc độ hành quân thần tốc mùa đông 1788–1789, quân Tây Sơn tổ chức kíp 3 người: 2 người thay nhau khiêng 1 người ngủ trên võng ngay khi đang đi.",
+          "ctr_trigger_angle": "Ordinary soldier stamina & logistics ingenuity"
+        },
+        {
+          "id": "S08_03",
+          "youtube_title": "Người Lính Gác Cửa Ô Thăng Long Đêm Vua Lý Dời Đô 1010",
+          "title_char_count": 54,
+          "flow_thumbnail_hook": "ĐÊM RỜI HOA LƯ",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Lý (1010)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.2) & Chiếu Dời Đô",
+          "verified_fact_anchor": "Mùa thu năm Canh Tuất 1010, vua Lý Thái Tổ rời kinh đô Hoa Lư chật hẹp chuyển ra thành Đại La, đổi tên thành Thăng Long.",
+          "ctr_trigger_angle": "Intimate eye-level witness to the birth of a 1,000-year capital"
+        },
+        {
+          "id": "S08_04",
+          "youtube_title": "Phu Vận Lương Lam Sơn Đói Rét Giữa Núi Chí Linh 1419",
+          "title_char_count": 52,
+          "flow_thumbnail_hook": "ĐÊM CHÍ LINH 1419",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Khởi nghĩa Lam Sơn (1419)",
+          "primary_source": "Lam Sơn Thực Lục (Quyển 1)",
+          "verified_fact_anchor": "Trên núi Chí Linh năm 1419, nghĩa quân Lam Sơn hết lương hơn 10 ngày phải ăn rau rừng, giết ngựa chiến cầm cự giữa vòng vây quân Minh.",
+          "ctr_trigger_angle": "Raw survival portrait of the darkest winter of Lam Son"
+        },
+        {
+          "id": "S08_05",
+          "youtube_title": "Thợ Đúc Đồng Thời Trần Đúc Vũ Khí Đánh Nguyên Mông",
+          "title_char_count": 50,
+          "flow_thumbnail_hook": "LÒ RÈN ĐẠI VIỆT",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Trần (1285–1288)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.5) & An Nam Chí Lược",
+          "verified_fact_anchor": "Sau hội nghị Bình Than và Diên Hồng, các làng nghề rèn đúc Đại Việt chạy hết công suất chế tạo mũi giáo, mũi tên và thuyền chiến cho quân dân nhà Trần.",
+          "ctr_trigger_angle": "Homefront artisan perspective during total mobilization"
+        }
+      ]
+    },
+    "S09_DOMINO_BUTTERFLY_WHAT_IF": {
+      "format": "short_9x16",
+      "world_twins": [
+        "@RealLifeLore",
+        "@AlternateHistoryHub"
+      ],
+      "entries": [
+        {
+          "id": "S09_01",
+          "youtube_title": "Nếu Vua Trần Hàng Hốt Tất Liệt Năm 1285 Thì Sao?",
+          "title_char_count": 48,
+          "flow_thumbnail_hook": "NẾU HÀNG NĂM 1285",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Trần (1285)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.5) & Nguyên Sử",
+          "verified_fact_anchor": "Năm 1285, một bộ phận tông thất như Trần Ích Tắc đầu hàng nhà Nguyên, trong khi vua Trần Nhân Tông và các bô lão Diên Hồng đồng thanh quyết đánh.",
+          "ctr_trigger_angle": "Counterfactual hinge grounded in the real Dien Hong choice"
+        },
+        {
+          "id": "S09_02",
+          "youtube_title": "Nếu Lê Lợi Không Thoát Vây Núi Chí Linh Năm 1419",
+          "title_char_count": 48,
+          "flow_thumbnail_hook": "NẾU VÂY CHÍ LINH",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Khởi nghĩa Lam Sơn (1419)",
+          "primary_source": "Lam Sơn Thực Lục (Q.1) & Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.10)",
+          "verified_fact_anchor": "Nếu không có màn thế mạng của Lê Lai tháng 4/1419, bộ chỉ huy Lam Sơn có nguy cơ tan rã ngay trong năm thứ hai khởi nghĩa.",
+          "ctr_trigger_angle": "Butterfly effect of one man's sacrifice at Chi Linh"
+        },
+        {
+          "id": "S09_03",
+          "youtube_title": "Nếu Nguyễn Huệ Không Ra Bắc Mùa Xuân Năm 1789",
+          "title_char_count": 45,
+          "flow_thumbnail_hook": "NẾU MÙA XUÂN 1789",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Tây Sơn (1789)",
+          "primary_source": "Hoàng Lê Nhất Thống Chí (Hồi 14)",
+          "verified_fact_anchor": "Tháng 11/1788, Ngô Văn Sở rút về phòng tuyến Tam Điệp - Biện Sơn bảo toàn lực lượng chờ Nguyễn Huệ lên ngôi Hoàng đế Quang Trung và xuất quân ra Bắc.",
+          "ctr_trigger_angle": "Strategic hinge: Tam Diep defense vs northern occupation"
+        },
+        {
+          "id": "S09_04",
+          "youtube_title": "Nếu Thủy Triều Bạch Đằng 938 Rút Chậm Chỉ 1 Giờ",
+          "title_char_count": 47,
+          "flow_thumbnail_hook": "NẾU TRIỀU CHẬM 1H",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Ngô (938)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Ngoại Kỷ Q.5)",
+          "verified_fact_anchor": "Ngô Quyền dụ Lưu Hoằng Tháo tiến vào cửa Bạch Đằng lúc nước triều đang lên che kín bãi cọc; toàn bộ chiến thắng phụ thuộc chính xác vào nhịp triều rút.",
+          "ctr_trigger_angle": "60-minute tidal window that ended 1,000 years of domination"
+        },
+        {
+          "id": "S09_05",
+          "youtube_title": "Nếu Hồ Quý Ly Giữ Được Thành Đa Bang Năm 1406",
+          "title_char_count": 45,
+          "flow_thumbnail_hook": "NẾU GIỮ ĐA BANG",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Hồ (1406–1407)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.8) & Minh Sử",
+          "verified_fact_anchor": "Thành Đa Bang là tuyến phòng thủ sông Hồng then chốt; khi Đa Bang thất thủ đầu năm 1407, quân Minh tràn thẳng xuống Đông Đô và Tây Đô.",
+          "ctr_trigger_angle": "Domino collapse from one breached fortress wall"
+        }
+      ]
+    },
+    "S10_EASTERN_INK_TO_35MM_LEGEND": {
+      "format": "short_9x16",
+      "world_twins": [
+        "Bilibili 国风",
+        "@BattlecryVN"
+      ],
+      "entries": [
+        {
+          "id": "S10_01",
+          "youtube_title": "Ngô Quyền 938: Trận Cọc Sắt Kết Thúc 1000 Năm Bắc Thuộc",
+          "title_char_count": 55,
+          "flow_thumbnail_hook": "BẠCH ĐẰNG NĂM 938",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Ngô (938)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Ngoại Kỷ Q.5)",
+          "verified_fact_anchor": "Năm Mậu Tuất 938, Ngô Quyền đánh tan quân Nam Hán trên sông Bạch Đằng, giết Lưu Hoằng Tháo, mở ra kỷ nguyên độc lập tự chủ lâu dài.",
+          "ctr_trigger_angle": "Epic bronze-scroll-to-cinema ignition of national independence"
+        },
+        {
+          "id": "S10_02",
+          "youtube_title": "Hai Bà Trưng Năm 40: Tiếng Trống Đồng Mê Linh",
+          "title_char_count": 45,
+          "flow_thumbnail_hook": "TRỐNG ĐỒNG MÊ LINH",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Trưng Vương (40–43)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Ngoại Kỷ Q.3) & Hậu Hán Thư",
+          "verified_fact_anchor": "Mùa xuân năm Canh Tý (40), Trưng Trắc và Trưng Nhị dựng cờ khởi nghĩa ở Mê Linh, thu phục 65 thành Giao Chỉ, Cửu Chân, Nhật Nam, Hợp Phố.",
+          "ctr_trigger_angle": "Dong Son bronze drum heritage igniting into living cinema"
+        },
+        {
+          "id": "S10_03",
+          "youtube_title": "Lý Nam Đế 544: Khai Sinh Nước Vạn Xuân Độc Lập",
+          "title_char_count": 46,
+          "flow_thumbnail_hook": "VẠN XUÂN NĂM 544",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Tiền Lý (544)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Ngoại Kỷ Q.4)",
+          "verified_fact_anchor": "Tháng Giêng năm Giáp Tý (544), Lý Bí xưng Nam Việt Đế, đặt niên hiệu Thiên Đức, đặt tên nước là Vạn Xuân mong xã tắc truyền muôn đời.",
+          "ctr_trigger_angle": "First imperial proclamation of 'Van Xuan' (Ten Thousand Springs)"
+        },
+        {
+          "id": "S10_04",
+          "youtube_title": "Trần Bình Trọng 1285: Câu Nói Thà Làm Quỷ Nước Nam",
+          "title_char_count": 50,
+          "flow_thumbnail_hook": "THÀ LÀM QUỶ NAM",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Trần (1285)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.5)",
+          "verified_fact_anchor": "Tháng 2/1285 tại trận Thiên Mạc, Bảo Nghĩa Vương Trần Bình Trọng bị bắt; khi giặc dụ phong vương đất Bắc, ông khẳng khái đáp 'Ta thà làm quỷ nước Nam chứ không thèm làm vương đất Bắc'.",
+          "ctr_trigger_angle": "Iconic ink-calligraphy oath igniting into defiant 35mm cinema"
+        },
+        {
+          "id": "S10_05",
+          "youtube_title": "Yết Kiêu: Người Lính Đục Thủng Chiến Thuyền Nguyên",
+          "title_char_count": 50,
+          "flow_thumbnail_hook": "CHIẾN BINH ĐÁY SÔNG",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Trần (1285–1288)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.5) & Đại Nam Nhất Thống Chí",
+          "verified_fact_anchor": "Yết Kiêu (Phạm Hữu Thế) là gia tướng thân cận của Trần Hưng Đạo, nổi tiếng với tài bơi lặn phi thường và chiến công thủy chiến chống quân Nguyên.",
+          "ctr_trigger_angle": "Underwater stealth legend rendered from ink scroll to cinema"
+        }
+      ]
+    },
+    "L01_EPIC_CAMPAIGN_CHRONICLE": {
+      "format": "long_16x9",
+      "world_twins": [
+        "@Epichistorytv"
+      ],
+      "entries": [
+        {
+          "id": "L01_01",
+          "youtube_title": "Phòng Tuyến Như Nguyệt 1077: Cuộc Phản Công Đại Việt",
+          "title_char_count": 52,
+          "flow_thumbnail_hook": "CHIẾN LŨY NHƯ NGUYỆT",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Lý (1075–1077)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.3) & Tống Sử",
+          "verified_fact_anchor": "Toàn cảnh cuộc chiến 1075–1077 từ đòn đánh phủ đầu Ung Châu đến phòng tuyến 100km trên sông Như Nguyệt và cuộc phản công đêm làm tan rã quân Tống.",
+          "ctr_trigger_angle": "IMAX 6-chapter campaign sweep from preemptive strike to river victory"
+        },
+        {
+          "id": "L01_02",
+          "youtube_title": "Đại Phá Ngọc Hồi Đống Đa 1789: 5 Ngày Thần Tốc Đổi Vận",
+          "title_char_count": 54,
+          "flow_thumbnail_hook": "ĐẠI PHÁ TẾT 1789",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Tây Sơn (1788–1789)",
+          "primary_source": "Hoàng Lê Nhất Thống Chí (Hồi 14) & Thanh Thực Lục",
+          "verified_fact_anchor": "Từ cuộc rút lui chiến lược về Tam Điệp đến lễ đăng quang Phú Xuân và 5 ngày đêm đại phá 29 vạn quân Thanh đầu xuân Kỷ Dậu 1789.",
+          "ctr_trigger_angle": "Flagship military epic with combined-arms shock tactics"
+        },
+        {
+          "id": "L01_03",
+          "youtube_title": "Rạch Gầm Xoài Mút 1785: Bẫy Thủy Chiến Diệt 5 Vạn Xiêm",
+          "title_char_count": 54,
+          "flow_thumbnail_hook": "BẪY SÔNG RẠCH GẦM",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Tây Sơn (1784–1785)",
+          "primary_source": "Đại Nam Thực Lục Tiền Biên & Gia Định Thành Thông Chí",
+          "verified_fact_anchor": "Nguyễn Huệ dùng kế nhử địch của Trương Văn Đa tại Mỹ Tho và Trà Tân, ép hạm đội Xiêm vào khúc sông Rạch Gầm - Xoài Mút lúc nước ròng.",
+          "ctr_trigger_angle": "Naval ambush masterclass on the Mekong delta"
+        },
+        {
+          "id": "L01_04",
+          "youtube_title": "Chi Lăng Xương Giang 1427: Trận Quyết Chiến Giải Phóng",
+          "title_char_count": 54,
+          "flow_thumbnail_hook": "QUYẾT CHIẾN CHI LĂNG",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Khởi nghĩa Lam Sơn (1427)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.10) & Bình Ngô Đại Cáo",
+          "verified_fact_anchor": "Tháng 10/1427, quân Lam Sơn phục kích giết Liễu Thăng ở núi Mã Yên (Chi Lăng), đánh tan Mộc Thạnh ở Lãnh Câu và hạ thành Xương Giang.",
+          "ctr_trigger_angle": "Multi-front annihilation campaign that ended 20 years of Ming rule"
+        },
+        {
+          "id": "L01_05",
+          "youtube_title": "Bạch Đằng 1288: Cái Kết Của Đế Chế Nguyên Mông",
+          "title_char_count": 46,
+          "flow_thumbnail_hook": "ĐẠI CHIẾN BẠCH ĐẰNG",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Trần (1287–1288)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.5) & Nguyên Sử",
+          "verified_fact_anchor": "Từ trận đốt đoàn thuyền lương Vân Đồn đến cái bẫy cọc gỗ trên sông Bạch Đằng ngày 09/04/1288, bắt sống Ô Mã Nhi và Phàn Tiếp.",
+          "ctr_trigger_angle": "Grand finale of 3 Mongol invasions in 30 years"
+        }
+      ]
+    },
+    "L02_DARK_FORENSIC_INVESTIGATION": {
+      "format": "long_16x9",
+      "world_twins": [
+        "@Fern-tv",
+        "@Lemmino",
+        "@Imperial_History"
+      ],
+      "entries": [
+        {
+          "id": "L02_01",
+          "youtube_title": "Án Lệ Chi Viên 1442: Giải Mã Cái Chết Lê Thái Tông",
+          "title_char_count": 50,
+          "flow_thumbnail_hook": "LỆ CHI VIÊN 1442",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Hậu Lê (1442–1464)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.11 & Q.12)",
+          "verified_fact_anchor": "Đối chiếu từng mốc giờ trong chính sử về chuyến ngự giá Côn Sơn - Lệ Chi Viên 1442, bản án chu di tam tộc Nguyễn Trãi và chiếu minh oan năm 1464 của Lê Thánh Tông.",
+          "ctr_trigger_angle": "Hypothesis-elimination forensic dossier of Vietnam's most famous tragedy"
+        },
+        {
+          "id": "L02_02",
+          "youtube_title": "Án Mạng 979: Ai Thực Sự Sát Hại Đinh Tiên Hoàng?",
+          "title_char_count": 48,
+          "flow_thumbnail_hook": "ÁN MẠNG NĂM 979",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Đinh (979)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.1) & Việt Sử Lược",
+          "verified_fact_anchor": "Phân tích bối cảnh tranh chấp ngôi thái tử giữa Đinh Liễn và Đinh Hạng Lang, cùng đêm ám sát tại cung Hoa Lư năm 979.",
+          "ctr_trigger_angle": "Forensic palace intrigue behind the fall of the Dinh dynasty"
+        },
+        {
+          "id": "L02_03",
+          "youtube_title": "Giải Mã Cuộc Chuyển Giao Quyền Lực Lý Trần 1225",
+          "title_char_count": 47,
+          "flow_thumbnail_hook": "CHUYỂN GIAO LÝ TRẦN",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Lý - Trần (1224–1226)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.4 & Q.5)",
+          "verified_fact_anchor": "Cách họ Trần từng bước nắm binh quyền cuối triều Lý Huệ Tông rồi thực hiện cuộc nhường ngôi năm 1225 giữa hai đứa trẻ 7–8 tuổi.",
+          "ctr_trigger_angle": "Cold political anatomy of a dynastic takeover"
+        },
+        {
+          "id": "L02_04",
+          "youtube_title": "Cái Chết Bí Ẩn Của Hoàng Đế Quang Trung Năm 1792",
+          "title_char_count": 48,
+          "flow_thumbnail_hook": "HỒ SƠ NĂM 1792",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Tây Sơn (1792)",
+          "primary_source": "Đại Nam Chính Biên Liệt Truyện & Hoàng Lê Nhất Thống Chí",
+          "verified_fact_anchor": "Kiểm chứng các giả thuyết sử liệu xung quanh cơn bạo bệnh tháng 9/1792 của Quang Trung và hệ quả sụp đổ nhanh chóng của triều Tây Sơn.",
+          "ctr_trigger_angle": "Forensic investigation into an empire's sudden turning point"
+        },
+        {
+          "id": "L02_05",
+          "youtube_title": "Vụ Án Thái Úy Trần Nguyên Hãn Và Nỗi Oan Công Thần 1429",
+          "title_char_count": 55,
+          "flow_thumbnail_hook": "OAN ÁN CÔNG THẦN",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Hậu Lê (1429)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.10)",
+          "verified_fact_anchor": "Tướng quân Trần Nguyên Hãn sau khi góp công lớn bình Ngô về hưu tại Sơn Đông vẫn bị nghi kỵ và tự vẫn trên sông Lô năm 1429 trước khi được giải oan đời sau.",
+          "ctr_trigger_angle": "Dark political paranoia in a newly founded dynasty"
+        }
+      ]
+    },
+    "L03_GRAND_STRATEGY_WAR_ROOM": {
+      "format": "long_16x9",
+      "world_twins": [
+        "@KingsandGenerals",
+        "@HistoryMarche"
+      ],
+      "entries": [
+        {
+          "id": "L03_01",
+          "youtube_title": "Sa Bàn Bạch Đằng 1288: Đánh Bại Hạm Đội Nguyên Mông",
+          "title_char_count": 51,
+          "flow_thumbnail_hook": "SA BÀN CHIẾN LƯỢC",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Trần (1288)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.5) & Nguyên Sử",
+          "verified_fact_anchor": "Phân tích toàn bộ thế trận liên hoàn: cắt lương ở Vân Đồn, nhử địch rút theo đường thủy sông Bạch Đằng và khóa chặt cửa biển.",
+          "ctr_trigger_angle": "Multi-phase GIS war-room analysis of logistics + naval trap"
+        },
+        {
+          "id": "L03_02",
+          "youtube_title": "Kháng Chiến 1285: Chiến Lược Vườn Không Nhà Trống",
+          "title_char_count": 49,
+          "flow_thumbnail_hook": "CHIẾN LƯỢC NĂM 1285",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Trần (1285)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.5)",
+          "verified_fact_anchor": "Cách nhà Trần rút lui chiến lược qua nhiều tuyến từ biên giới về Thiên Trường, Trường Yên rồi phản công đồng loạt Hàm Tử - Chương Dương - Tây Kết.",
+          "ctr_trigger_angle": "Operational defense-in-depth & counter-offensive choreography"
+        },
+        {
+          "id": "L03_03",
+          "youtube_title": "Chiến Dịch 1075: Đòn Đánh Phủ Đầu Vào Đất Tống",
+          "title_char_count": 46,
+          "flow_thumbnail_hook": "TIÊN PHÁT CHẾ NHÂN",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Lý (1075)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.3) & Tống Sử",
+          "verified_fact_anchor": "Lý Thường Kiệt và Tông Đản phối hợp thủy bộ đánh phá 3 châu Khâm, Liêm, Ung, phá hủy kho lương thảo và làm chậm cuộc xâm lược của Vương An Thạch.",
+          "ctr_trigger_angle": "Combined-arms preemptive campaign war-room"
+        },
+        {
+          "id": "L03_04",
+          "youtube_title": "Bình Ngô 1418-1427: Từ Núi Chí Linh Đến Đông Quan",
+          "title_char_count": 49,
+          "flow_thumbnail_hook": "CHIẾN LƯỢC LAM SƠN",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Khởi nghĩa Lam Sơn (1418–1427)",
+          "primary_source": "Lam Sơn Thực Lục & Bình Ngô Đại Cáo",
+          "verified_fact_anchor": "Bước ngoặt chiến lược của Nguyễn Chích chuyển hướng từ rừng núi Thanh Hóa vào Nghệ An lập căn cứ hậu phương vững chắc trước khi Bắc tiến.",
+          "ctr_trigger_angle": "10-year grand strategy pivot from guerrilla survival to siege warfare"
+        },
+        {
+          "id": "L03_05",
+          "youtube_title": "Hành Quân Tây Sơn 1789: Nghệ Thuật Tiếp Vận Và Tốc Độ",
+          "title_char_count": 53,
+          "flow_thumbnail_hook": "HẬU CẦN THẦN TỐC",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Tây Sơn (1789)",
+          "primary_source": "Hoàng Lê Nhất Thống Chí (Hồi 14)",
+          "verified_fact_anchor": "Giải phẫu bài toán tiếp vận 10 vạn quân vượt hàng trăm km giữa mùa đông giá rét trong vòng hơn một tháng bằng tuyển quân Nghệ An và cáng 3 người.",
+          "ctr_trigger_angle": "Logistics math behind an 'impossible' forced march"
+        }
+      ]
+    },
+    "L04_FALL_AND_RISE_DYNASTY_IMMERSION": {
+      "format": "long_16x9",
+      "world_twins": [
+        "@FallofCivilizations"
+      ],
+      "entries": [
+        {
+          "id": "L04_01",
+          "youtube_title": "Chiếu Dời Đô 1010: Đêm Cuối Hoa Lư Bình Minh Thăng Long",
+          "title_char_count": 55,
+          "flow_thumbnail_hook": "CHIẾU DỜI ĐÔ 1010",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Lý (1010)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.2) & Chiếu Dời Đô",
+          "verified_fact_anchor": "Vua Lý Công Uẩn từ biệt thung lũng đá vôi Hoa Lư, viết Thiên Đô Chiếu mở ra kỷ nguyên văn minh sông Hồng tại Thăng Long.",
+          "ctr_trigger_angle": "Atmospheric civilizational pivot from fortress valley to imperial delta"
+        },
+        {
+          "id": "L04_02",
+          "youtube_title": "Sự Sụp Đổ Của Vương Triều Hồ Quý Ly Năm 1407",
+          "title_char_count": 44,
+          "flow_thumbnail_hook": "VƯƠNG TRIỀU NHÀ HỒ",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Hồ (1400–1407)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.8) & Minh Sử",
+          "verified_fact_anchor": "7 năm ngắn ngủi của nhà Hồ với hàng loạt cải cách táo bạo (tiền giấy, hạn điền, thành đá Tây Đô) nhưng mất lòng dân trước cuộc xâm lăng 20 vạn quân Minh.",
+          "ctr_trigger_angle": "Tragic fall of a visionary yet alienated dynasty"
+        },
+        {
+          "id": "L04_03",
+          "youtube_title": "Hào Khí Đông A: Đỉnh Cao Vương Triều Nhà Trần",
+          "title_char_count": 45,
+          "flow_thumbnail_hook": "HÀO KHÍ ĐÔNG A",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Trần (1225–1400)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.5) & Hịch Tướng Sĩ",
+          "verified_fact_anchor": "Sự kết hợp giữa tinh thần Phật giáo Trúc Lâm, đoàn kết vương hầu và sức mạnh quân dân tạo nên triều đại 3 lần đánh bại đế chế Nguyên Mông.",
+          "ctr_trigger_angle": "Cultural + spiritual + martial portrait of Vietnam's golden era"
+        },
+        {
+          "id": "L04_04",
+          "youtube_title": "Lê Thánh Tông Và Kỷ Nguyên Hồng Đức Thịnh Trị Nhất",
+          "title_char_count": 50,
+          "flow_thumbnail_hook": "KỶ NGUYÊN HỒNG ĐỨC",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Hậu Lê (1460–1497)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.12 & Q.13)",
+          "verified_fact_anchor": "38 năm trị vì của vua Lê Thánh Tông với Bộ luật Hồng Đức, bản đồ Hồng Đức, mở rộng khoa cử và đưa Đại Việt thành cường quốc Đông Nam Á.",
+          "ctr_trigger_angle": "Rise of institutional law, meritocracy, and imperial zenith"
+        },
+        {
+          "id": "L04_05",
+          "youtube_title": "Trịnh Nguyễn Phân Tranh: 200 Năm Chia Cắt Đôi Bờ",
+          "title_char_count": 48,
+          "flow_thumbnail_hook": "SÔNG GIANH 200 NĂM",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Trịnh - Nguyễn (1627–1775)",
+          "primary_source": "Đại Nam Thực Lục Tiền Biên & ĐVSKTT Tục Biên",
+          "verified_fact_anchor": "7 cuộc chiến kéo dài gần nửa thế kỷ bên bờ sông Gianh và gần 200 năm chia cắt Đàng Ngoài - Đàng Trong trước khi Tây Sơn thống nhất.",
+          "ctr_trigger_angle": "Atmospheric portrait of a 200-year divided nation"
+        }
+      ]
+    },
+    "L05_REALTIME_COUNTDOWN_CHRONICLE": {
+      "format": "long_16x9",
+      "world_twins": [
+        "@RealTimeHistory",
+        "@OperationsRoom"
+      ],
+      "entries": [
+        {
+          "id": "L05_01",
+          "youtube_title": "5 Ngày Đêm Thần Tốc Tết Kỷ Dậu 1789: Đếm Ngược Từng Giờ",
+          "title_char_count": 55,
+          "flow_thumbnail_hook": "5 NGÀY TẾT 1789",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Tây Sơn (1789)",
+          "primary_source": "Hoàng Lê Nhất Thống Chí (Hồi 14)",
+          "verified_fact_anchor": "Bám sát từng mốc ngày từ đêm 30 Tết qua Gián Khẩu, mùng 3 hạ Hà Hồi, đến rạng sáng mùng 5 công phá Ngọc Hồi - Đống Đa tiến vào Thăng Long.",
+          "ctr_trigger_angle": "Hour-by-hour real-time military countdown thriller"
+        },
+        {
+          "id": "L05_02",
+          "youtube_title": "24 Giờ Quyết Định Trên Sông Bạch Đằng Mùa Xuân 1288",
+          "title_char_count": 51,
+          "flow_thumbnail_hook": "24 GIỜ BẠCH ĐẰNG",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Trần (1288)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.5)",
+          "verified_fact_anchor": "Diễn biến từng canh giờ ngày 09/04/1288: từ khi hạm đội Ô Mã Nhi lọt vào cửa sông lúc triều lên đến cuộc phản công quyết định khi nước rút.",
+          "ctr_trigger_angle": "Tidal clock ticking down to total naval entrapment"
+        },
+        {
+          "id": "L05_03",
+          "youtube_title": "10 Ngày Đói Rét Tuyệt Vọng Tại Núi Chí Linh Năm 1419",
+          "title_char_count": 52,
+          "flow_thumbnail_hook": "10 NGÀY CHÍ LINH",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Khởi nghĩa Lam Sơn (1419)",
+          "primary_source": "Lam Sơn Thực Lục (Quyển 1)",
+          "verified_fact_anchor": "Tái hiện 10 ngày cạn kiệt lương thảo giữa vòng vây quân Minh trên đỉnh Chí Linh cho đến quyết định đổi áo bào của Lê Lai.",
+          "ctr_trigger_angle": "Claustrophobic day-by-day survival countdown"
+        },
+        {
+          "id": "L05_04",
+          "youtube_title": "48 Giờ Đêm Trừ Tịch Phá Đồn Hà Hồi Ngọc Hồi 1789",
+          "title_char_count": 48,
+          "flow_thumbnail_hook": "48 GIỜ ĐÊM TẾT",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Tây Sơn (1789)",
+          "primary_source": "Hoàng Lê Nhất Thống Chí (Hồi 14)",
+          "verified_fact_anchor": "48 giờ cao điểm từ mùng 3 đến mùng 5 Tết 1789 khi cánh quân Quang Trung bẻ gãy hai phòng tuyến kiên cố nhất phía Nam Thăng Long.",
+          "ctr_trigger_angle": "High-tempo 48-hour assault clock"
+        },
+        {
+          "id": "L05_05",
+          "youtube_title": "Những Ngày Cuối Thành Đông Quan Trước Giờ Đầu Hàng 1427",
+          "title_char_count": 55,
+          "flow_thumbnail_hook": "ĐẾM NGƯỢC ĐÔNG QUAN",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Khởi nghĩa Lam Sơn (1427)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.10) & Quân Trung Từ Mệnh Tập",
+          "verified_fact_anchor": "Những ngày căng thẳng cuối năm 1427 bên trong thành Đông Quan khi viện binh Liễu Thăng bị diệt và Vương Thông buộc phải mở cửa hội thề.",
+          "ctr_trigger_angle": "Ticking siege clock toward historic peaceful surrender"
+        }
+      ]
+    },
+    "L06_EYEWITNESS_PRIMARY_LETTERS": {
+      "format": "long_16x9",
+      "world_twins": [
+        "@VoicesofthePast"
+      ],
+      "entries": [
+        {
+          "id": "L06_01",
+          "youtube_title": "Thư Nguyễn Trãi Gửi Vương Thông: Ngòi Bút Đánh Thành",
+          "title_char_count": 52,
+          "flow_thumbnail_hook": "QUÂN TRUNG TỪ MỆNH",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Khởi nghĩa Lam Sơn (1426–1427)",
+          "primary_source": "Quân Trung Từ Mệnh Tập (Nguyễn Trãi)",
+          "verified_fact_anchor": "Đọc và phân tích những bức thư gốc trong Quân Trung Từ Mệnh Tập mà Nguyễn Trãi viết nhân danh Lê Lợi gửi các tướng Minh Vương Thông, Phương Chính.",
+          "ctr_trigger_angle": "Verbatim primary dispatches that broke an occupying army's will"
+        },
+        {
+          "id": "L06_02",
+          "youtube_title": "Sử Nhà Minh Kể Gì Về Cuộc Kháng Chiến Của Lê Lợi?",
+          "title_char_count": 49,
+          "flow_thumbnail_hook": "SỬ MINH VIẾT GÌ",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Minh - Lam Sơn (1418–1427)",
+          "primary_source": "Minh Thực Lục & Minh Sử",
+          "verified_fact_anchor": "Soi chiếu các tấu sớ và ghi chép chính thức của triều đình nhà Minh thừa nhận sự sa lầy, tốn kém và thất bại quân sự tại Giao Chỉ.",
+          "ctr_trigger_angle": "Reading history through the enemy's own secret archives"
+        },
+        {
+          "id": "L06_03",
+          "youtube_title": "An Nam Chí Lược: Góc Nhìn Đối Thủ Về Đại Việt",
+          "title_char_count": 45,
+          "flow_thumbnail_hook": "THƯ TỊCH ĐỐI PHƯƠNG",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Trần (TK 13–14)",
+          "primary_source": "An Nam Chí Lược (Lê Tắc)",
+          "verified_fact_anchor": "Những ghi chép hiếm hoi về phong tục, quân đội, địa lý và con người Đại Việt thế kỷ 13 qua lăng kính bộ sử do Lê Tắc biên soạn ở phương Bắc.",
+          "ctr_trigger_angle": "Unfiltered eyewitness chronicle from the opposing side"
+        },
+        {
+          "id": "L06_04",
+          "youtube_title": "Sứ Bộ Nhà Trần Sang Nhà Nguyên: Bản Lĩnh Ngoại Giao",
+          "title_char_count": 51,
+          "flow_thumbnail_hook": "SỨ THẦN ĐẠI VIỆT",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Trần (1285–1290)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.5) & Nguyên Sử",
+          "verified_fact_anchor": "Đối thoại căng thẳng giữa các sứ thần Đại Việt (Lê Phụ Trần, Trần Khắc Chung, Nguyễn Nghĩa Lập) trước triều đình Hốt Tất Liệt.",
+          "ctr_trigger_angle": "Diplomatic word-duels recorded in primary imperial transcripts"
+        },
+        {
+          "id": "L06_05",
+          "youtube_title": "Hịch Tướng Sĩ Và Bình Ngô Đại Cáo: Tiếng Gọi Non Sông",
+          "title_char_count": 53,
+          "flow_thumbnail_hook": "HỊCH TƯỚNG SĨ 1285",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Trần (1285) & Hậu Lê (1428)",
+          "primary_source": "Hịch Tướng Sĩ & Bình Ngô Đại Cáo",
+          "verified_fact_anchor": "Giải phẫu hai áng thiên cổ hùng văn của dân tộc: một bản kêu gọi quyết tử trước giờ xuất trận, một bản tuyên ngôn độc lập sau ngày toàn thắng.",
+          "ctr_trigger_angle": "Primary-source voice & literary power that mobilized a nation"
+        }
+      ]
+    },
+    "L07_BIOGRAPHY_OF_IRON_MINDS": {
+      "format": "long_16x9",
+      "world_twins": [
+        "@Biographics",
+        "HBO Docudrama"
+      ],
+      "entries": [
+        {
+          "id": "L07_01",
+          "youtube_title": "Hồ Quý Ly 1400: Nhà Cải Cách Táo Bạo Hay Kẻ Cướp Ngôi?",
+          "title_char_count": 54,
+          "flow_thumbnail_hook": "HỒ QUÝ LY 1400",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Cuối Trần - Hồ (1370–1407)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.8)",
+          "verified_fact_anchor": "Chân dung tâm lý nhân vật gây tranh cãi nhất sử Việt: phát hành tiền giấy Thông Bảo Hội Sao, dịch kinh sách ra chữ Nôm, nhưng thất bại vì mất chính danh.",
+          "ctr_trigger_angle": "Morally complex psychological portrait of a tragic reformer"
+        },
+        {
+          "id": "L07_02",
+          "youtube_title": "Trần Thủ Độ: Bàn Tay Thép Dựng Nên Triều Đại Nhà Trần",
+          "title_char_count": 53,
+          "flow_thumbnail_hook": "TRẦN THỦ ĐỘ 1225",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Trần (1225–1264)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.4 & Q.5)",
+          "verified_fact_anchor": "Từ người dựng ngôi cho họ Trần đến câu nói nổi tiếng 'Đầu thần chưa rơi xuống đất, xin bệ hạ đừng lo' trước cuộc xâm lược Nguyên Mông 1258.",
+          "ctr_trigger_angle": "Iron-willed strategist balancing ruthless power & fierce patriotism"
+        },
+        {
+          "id": "L07_03",
+          "youtube_title": "Đào Duy Từ: Bộ Óc Chiến Lược Dựng Cơ Đồ Đàng Trong",
+          "title_char_count": 50,
+          "flow_thumbnail_hook": "ĐÀO DUY TỪ 1630",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Chúa Nguyễn (1627–1634)",
+          "primary_source": "Đại Nam Thực Lục Tiền Biên",
+          "verified_fact_anchor": "Bị cấm thi ở Đàng Ngoài vì xuất thân con nhà xướng ca, Đào Duy Từ vào Nam phò chúa Sãi Nguyễn Phúc Nguyên, thiết kế Lũy Thầy giữ vững Đàng Trong.",
+          "ctr_trigger_angle": "Underdog genius rejected by one court, shaping history for another"
+        },
+        {
+          "id": "L07_04",
+          "youtube_title": "Lý Thường Kiệt: Vị Tướng Cả Đời Không Biết Đến Thất Bại",
+          "title_char_count": 55,
+          "flow_thumbnail_hook": "LÝ THƯỜNG KIỆT 1077",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Lý (1019–1105)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.3) & Việt Điện U Linh",
+          "verified_fact_anchor": "Cuộc đời hơn 80 năm của Thái úy Lý Thường Kiệt: bình Chiêm, phá Tống, đánh Ung Châu, giữ vững biên cương Đại Việt suốt nửa thế kỷ.",
+          "ctr_trigger_angle": "Biography of an undefeated master of preemptive strategy"
+        },
+        {
+          "id": "L07_05",
+          "youtube_title": "Trần Quốc Tuấn: Nỗi Đau Gia Tộc Và Lựa Chọn Giữ Nước",
+          "title_char_count": 52,
+          "flow_thumbnail_hook": "TRẦN HƯNG ĐẠO 1285",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Trần (1228–1300)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.5)",
+          "verified_fact_anchor": "Gạt bỏ mối hiềm khích sâu nặng giữa cha là Trần Liễu và hoàng thất để chủ động gội đầu cho Trần Quang Khải, giữ trọn khối đoàn kết đánh giặc.",
+          "ctr_trigger_angle": "Inner moral crucible of Vietnam's greatest military mind"
+        }
+      ]
+    },
+    "L08_24_HOURS_IN_ANCIENT_DAI_VIET": {
+      "format": "long_16x9",
+      "world_twins": [
+        "@Toldinstone",
+        "@Invicta"
+      ],
+      "entries": [
+        {
+          "id": "L08_01",
+          "youtube_title": "24 Giờ Sống Giữa Kinh Thành Thăng Long Thời Nhà Trần",
+          "title_char_count": 52,
+          "flow_thumbnail_hook": "24H THĂNG LONG TRẦN",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Trần (TK 13–14)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư & An Nam Chí Lược",
+          "verified_fact_anchor": "Tái hiện nhịp sống 24 giờ qua 61 phường nghề, bến sông Tô Lịch, trống cầm canh hoàng thành và sinh hoạt dân gian Thăng Long thế kỷ 13.",
+          "ctr_trigger_angle": "Immersive time-travel worldbuilding across an ancient capital"
+        },
+        {
+          "id": "L08_02",
+          "youtube_title": "Một Ngày Trong Doanh Trại Quân Đội Nhà Lý Thế Kỷ 11",
+          "title_char_count": 51,
+          "flow_thumbnail_hook": "DOANH TRẠI NHÀ LÝ",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Lý (TK 11)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.2 & Q.3)",
+          "verified_fact_anchor": "Chế độ Cấm quân, Sương quân, luyện tập cung nỏ, cưỡi voi và khẩu phần sinh hoạt của người lính Đại Việt thời Lý.",
+          "ctr_trigger_angle": "Day-in-the-life military camp immersion"
+        },
+        {
+          "id": "L08_03",
+          "youtube_title": "24 Giờ Trong Trường Thi Hội Thời Hồng Đức Thế Kỷ 15",
+          "title_char_count": 51,
+          "flow_thumbnail_hook": "THI HỘI HỒNG ĐỨC",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Hậu Lê (TK 15)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.12 & Q.13)",
+          "verified_fact_anchor": "Quy trình lều chõng, 4 trường thi kinh nghĩa - chiếu chế - thơ phú - văn sách, cùng lễ xướng danh vinh quy bái tổ thời Lê Thánh Tông.",
+          "ctr_trigger_angle": "High-pressure ancient imperial exam worldbuilding"
+        },
+        {
+          "id": "L08_04",
+          "youtube_title": "Một Ngày Tại Thương Cảng Vân Đồn Sầm Uất Thời Lý Trần",
+          "title_char_count": 53,
+          "flow_thumbnail_hook": "THƯƠNG CẢNG VÂN ĐỒN",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Lý - Trần (TK 12–14)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư & Lịch Triều Hiến Chương Loại Chí",
+          "verified_fact_anchor": "Thương cảng Vân Đồn lập năm 1149, nơi giao thương tấp nập gốm sứ Chu Đậu, tơ lụa với thương thuyền Trảo Oa, Xiêm La, Tống - Nguyên.",
+          "ctr_trigger_angle": "Maritime silk-road port immersion in medieval Vietnam"
+        },
+        {
+          "id": "L08_05",
+          "youtube_title": "24 Giờ Sống Trong Phố Hiến Thế Kỷ 17: Đô Thị Thứ Nhì",
+          "title_char_count": 52,
+          "flow_thumbnail_hook": "PHỐ HIẾN TK 17",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Lê Trung Hưng (TK 17)",
+          "primary_source": "Vân Đài Loại Ngữ & Thương điếm Hà Lan - Anh thế kỷ 17",
+          "verified_fact_anchor": "Thứ nhất Kinh Kỳ, thứ nhì Phố Hiến: nơi thương điếm Hà Lan, Anh, Nhật, Hoa cùng hội tụ buôn bán tơ lụa, gốm sứ bên bờ sông Hồng.",
+          "ctr_trigger_angle": "Cosmopolitan 17th-century river-port daily life"
+        }
+      ]
+    },
+    "L09_GEOPOLITICAL_CHESSBOARD": {
+      "format": "long_16x9",
+      "world_twins": [
+        "@CaspianReport",
+        "@Knowledgia"
+      ],
+      "entries": [
+        {
+          "id": "L09_01",
+          "youtube_title": "Địa Chính Trị Đại Việt: Vì Sao Phải Giữ Sông Hồng?",
+          "title_char_count": 50,
+          "flow_thumbnail_hook": "BÀN CỜ SÔNG HỒNG",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Xuyên suốt 1000 năm",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư & Dư Địa Chí (Nguyễn Trãi)",
+          "verified_fact_anchor": "Hệ thống sông Hồng - sông Thái Bình nối liền cửa biển Bạch Đằng với Thăng Long tạo thành mạch máu kinh tế lẫn phòng tuyến tự nhiên suốt 10 thế kỷ.",
+          "ctr_trigger_angle": "Geographic determinism of Vietnam's northern river delta"
+        },
+        {
+          "id": "L09_02",
+          "youtube_title": "Ải Chi Lăng: Cửa Ải Quyết Định Vận Mệnh Phương Bắc",
+          "title_char_count": 50,
+          "flow_thumbnail_hook": "YẾT HẦU CHI LĂNG",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Lý - Trần - Lê (TK 11–15)",
+          "primary_source": "Dư Địa Chí & Đại Việt Sử Ký Toàn Thư",
+          "verified_fact_anchor": "Thung lũng hẹp dài 4km giữa hai dãy núi đá vôi Cai Kinh và Bảo Đài là nút cổ chai buộc mọi đạo quân tiến từ Lạng Sơn xuống đồng bằng phải đi qua.",
+          "ctr_trigger_angle": "1,000-year chokepoint geography of northern invasions"
+        },
+        {
+          "id": "L09_03",
+          "youtube_title": "Hành Trình Nam Tiến Và Thế Đứng Hình Chữ S Của Đại Việt",
+          "title_char_count": 55,
+          "flow_thumbnail_hook": "ĐỊA THẾ CHỮ S",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Lý đến Nguyễn (TK 11–19)",
+          "primary_source": "Đại Nam Thực Lục & Phủ Biên Tạp Lục",
+          "verified_fact_anchor": "Quá trình mở cõi qua các thế kỷ từ châu Ô - Lý đến Thuận Quảng, Phú Yên và đồng bằng sông Cửu Long định hình lãnh thổ Việt Nam.",
+          "ctr_trigger_angle": "Macro-historical geopolitical expansion across 800 years"
+        },
+        {
+          "id": "L09_04",
+          "youtube_title": "Con Đường Gốm Sứ Biển Đông: Quyền Lực Hàng Hải Đại Việt",
+          "title_char_count": 55,
+          "flow_thumbnail_hook": "BIỂN ĐÔNG ĐẠI VIỆT",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Lý - Trần - Lê (TK 12–17)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư & Vân Đài Loại Ngữ",
+          "verified_fact_anchor": "Gốm Chu Đậu và các thương cảng Vân Đồn, Hội An giúp Đại Việt kết nối trực tiếp vào mạng lưới thương mại hàng hải châu Á.",
+          "ctr_trigger_angle": "Reframing Vietnam as a maritime trade & naval power"
+        },
+        {
+          "id": "L09_05",
+          "youtube_title": "Vì Sao Thăng Long Được Chọn Làm Kinh Đô Ngàn Năm?",
+          "title_char_count": 49,
+          "flow_thumbnail_hook": "THẾ ĐẤT THĂNG LONG",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Lý - Nay (1010+)",
+          "primary_source": "Chiếu Dời Đô (1010) & Dư Địa Chí",
+          "verified_fact_anchor": "Thế đất 'rồng cuộn hổ ngồi', giao điểm thủy bộ Bắc Bộ và trung tâm đồng bằng châu thổ khiến Thăng Long giữ vai trò trái tim quốc gia suốt ngàn năm.",
+          "ctr_trigger_angle": "Geopolitical & hydrological logic behind Hanoi's 1,000-year primacy"
+        }
+      ]
+    },
+    "L10_MILITARY_ENGINEERING_AUTOPSY": {
+      "format": "long_16x9",
+      "world_twins": [
+        "@Perun",
+        "@SandRhomanHistory"
+      ],
+      "entries": [
+        {
+          "id": "L10_01",
+          "youtube_title": "Ngụ Binh Ư Nông: Bí Quyết Giữ Nước Của Nhà Lý Trần",
+          "title_char_count": 50,
+          "flow_thumbnail_hook": "NGỤ BINH Ư NÔNG",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Lý - Trần (TK 11–14)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư & Lịch Triều Hiến Chương Loại Chí (Binh Chế Chí)",
+          "verified_fact_anchor": "Chế độ luân phiên binh sĩ về làm ruộng thời bình và tổng động viên nhanh thời chiến giúp quốc gia nhỏ duy trì nông nghiệp mà vẫn có quân dự bị khổng lồ.",
+          "ctr_trigger_angle": "Military mobilization economics & manpower scaling autopsy"
+        },
+        {
+          "id": "L10_02",
+          "youtube_title": "Giải Phẫu Công Nghệ Hỏa Khí Đại Việt Thế Kỷ 15 - 18",
+          "title_char_count": 51,
+          "flow_thumbnail_hook": "HỎA KHÍ ĐẠI VIỆT",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Hồ - Lê - Tây Sơn (TK 15–18)",
+          "primary_source": "Minh Sử, ĐVSKTT & Hoàng Lê Nhất Thống Chí",
+          "verified_fact_anchor": "Lịch sử phát triển súng hỏa mai, thần cơ thương pháo, hỏa hổ và hỏa cầu của quân đội Việt Nam trong 4 thế kỷ.",
+          "ctr_trigger_angle": "400-year evolution of Vietnamese gunpowder engineering"
+        },
+        {
+          "id": "L10_03",
+          "youtube_title": "Chiến Thuyền Mông Cổ Và Cách Thủy Quân Đại Việt Bẻ Gãy",
+          "title_char_count": 54,
+          "flow_thumbnail_hook": "THỦY QUÂN ĐẠI VIỆT",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Trần (1285–1288)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.5) & Nguyên Sử",
+          "verified_fact_anchor": "So sánh thiết kế thuyền chiến nhẹ, cơ động của thủy quân nhà Trần với hạm đội chiến thuyền lớn nặng nề của Ô Mã Nhi trên sông hẹp.",
+          "ctr_trigger_angle": "Naval architecture comparison & riverine maneuverability"
+        },
+        {
+          "id": "L10_04",
+          "youtube_title": "Thành Nhà Hồ 1397: Kỳ Tích Ghép Đá Trong 3 Tháng",
+          "title_char_count": 48,
+          "flow_thumbnail_hook": "THÀNH ĐÁ NHÀ HỒ",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Nhà Hồ (1397)",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư (Bản Kỷ Q.8)",
+          "verified_fact_anchor": "Những khối đá xanh nặng 10–26 tấn được khai thác và ghép khít không cần vôi vữa tại Tây Đô (Thanh Hóa) chỉ trong 3 tháng đầu năm 1397.",
+          "ctr_trigger_angle": "Megalithic construction logistics & stone-interlocking physics"
+        },
+        {
+          "id": "L10_05",
+          "youtube_title": "Tượng Binh Đại Việt: Cỗ Xe Tăng Sống Thời Cổ Đại",
+          "title_char_count": 48,
+          "flow_thumbnail_hook": "TƯỢNG BINH ĐẠI VIỆT",
+          "thumbnail_word_count": 4,
+          "dynasty_era": "Trưng Vương - Tây Sơn",
+          "primary_source": "Đại Việt Sử Ký Toàn Thư & Hoàng Lê Nhất Thống Chí",
+          "verified_fact_anchor": "Cách huấn luyện, bọc giáp, gắn đại bác trên lưng voi chiến Đại Việt và điểm yếu chí tử trước hỏa tiễn nếu thiếu bộ binh bảo vệ sườn.",
+          "ctr_trigger_angle": "Combined-arms armor mechanics & battlefield failure modes"
+        }
+      ]
+    }
+  }
+}
