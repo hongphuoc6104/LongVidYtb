@@ -1,0 +1,399 @@
+{
+  "schema_version": "12.0",
+  "document_id": "10_ultra_credit_and_throughput_plan",
+  "thread": "3B",
+  "author_agent": "infra-credit-planner",
+  "generated_at_utc": "2026-11-25T03:56:00Z",
+  "snapshot_epoch": 1795578717.7,
+  "read_only_audit_sources": [
+    "sys/flow_cdp/credit_ledger.py",
+    "sys/flow_cdp/browser-profiles.json",
+    "sys/flow_cdp/cdp_direct_client.py",
+    "sys/flow_cdp/flow_rpc.py",
+    "sys/flow_cdp/resource_locks.py",
+    "sys/flow_video/orchestrator.py",
+    "sys/flow_video/chain_planner.py",
+    "sys/short_engine/__init__.py",
+    "sys/short_engine/flow_stage.py",
+    "sys/short_engine/audio_epic.py",
+    "sys/short_engine/render_single_pass.py",
+    "sys/tools/produce_serialized_short.py",
+    "sys/tools/produce_su_ke_lai_long_m1.py",
+    "sys/tools/produce_vn_dual_mode.py",
+    "sys/tools/synthesize_vn_long_omnivoice.py",
+    "sys/assets/voices/ch_su_ke_lai/profile.json",
+    "sys/account_budget.py",
+    "sys/colab_bridge/accounts.py",
+    "sys/colab_bridge/pool_manager.py",
+    "sys/colab_bridge/parallel_audio.py",
+    "sys/colab_bridge/client.py",
+    "sys/colab_bridge/flow_video_worker.py",
+    "PLAYBOOK.md",
+    ".agents/rules/gpu-headless-chrome.md",
+    ".agents/skills/vp-flow-cdp/SKILL.md",
+    ".agents/skills/vp-colab-bridge/SKILL.md",
+    "~/.config/video-pilot/flow/credits.json",
+    "~/.config/video-pilot/flow/profiles.json",
+    "~/.config/video-pilot/flow/unauthenticated_profiles.json",
+    "~/.config/video-pilot/colab/accounts.json",
+    "~/.config/video-pilot/management/accounts.json",
+    "~/.config/video-pilot/management/colab-health.json",
+    "~/.config/video-pilot/management/budgets.json"
+  ],
+  "host_hardware_limits": {
+    "mem_total_mib": 15934,
+    "mem_available_mib_at_audit": 9676,
+    "swap_total_mib": 12287,
+    "cpu_threads": 8,
+    "gpu": "NVIDIA Quadro P620 (2048 MiB VRAM)",
+    "gpu_90pct_vram_mb": 1843,
+    "dev_shm_size": "7.8 GiB tmpfs",
+    "computed_max_global_browsers": 4,
+    "flow_stage_auto_img_workers": 3,
+    "flow_stage_auto_vid_workers": 2,
+    "rule_vid_workers_cap_note": "gpu-headless-chrome.md cites --vid-workers auto = 3 (for >4-slot hosts), while flow_stage.py:45-47 caps stage='video' at 2 and stage='image' at 3 when DEFAULT_MAX_GLOBAL_BROWSERS <= 4 (16 GiB / 8T host)."
+  },
+  "flow_credit_audit": {
+    "baseline_note": "Brief referenced ~101,130 Ultra credits prior to V10/V11 Short (S01..S10) and Long (L01 7 clips) deductions. Live ~/.config/video-pilot/flow/credits.json now records 99,876 Ultra remaining (99,924 subscription_credits) + 14,179 across the 36 pool profiles = 114,055 credits across all 40 configured profiles (plus 3,990 in 4 legacy/unmapped keys: prof_1=990, prof_a=1000, profile_en04=1000, null=1000).",
+    "summary_totals": {
+      "configured_profiles_total": 40,
+      "ultra_accounts_count": 4,
+      "ultra_credits_remaining": 99876,
+      "ultra_credits_immediately_ready": 74826,
+      "ultra_credits_in_no_at_token_cooldown": 25050,
+      "pool_36_profiles_count": 36,
+      "pool_36_credits_remaining": 14179,
+      "pool_36_auth_video_ready_count": 14,
+      "pool_36_auth_video_ready_credits": 6588,
+      "pool_36_auth_no_at_token_count": 1,
+      "pool_36_auth_no_at_token_credits": 364,
+      "pool_36_auth_zero_credit_beluga_specialists_count": 7,
+      "pool_36_auth_zero_credit_residual_credits": 18,
+      "pool_36_unauthenticated_count": 14,
+      "pool_36_unauthenticated_credits": 7209,
+      "combined_40_profile_credits": 114055,
+      "immediately_usable_authenticated_credits": 81414,
+      "total_authenticated_credits_after_cooldown": 106828
+    },
+    "ultra_accounts": [
+      {
+        "profile_id": "profile_22",
+        "email": "thue2127@gmail.com",
+        "chrome_directory": "Profile 53",
+        "user_data_dir": "/home/hongphuoc6104/.config/google-chrome-cdp-profile53",
+        "cdp_port": 9270,
+        "paygate_tier": 2,
+        "credits_remaining": 25459,
+        "subscription_credits": 25483,
+        "expiry_epoch": 1797624671,
+        "expiry_utc": "2026-12-18T20:11:11+00:00",
+        "status": "active",
+        "tier_role": "video_and_image",
+        "in_unauthenticated_file": false,
+        "cooldown_remaining_sec": 0.0,
+        "ready_now": true
+      },
+      {
+        "profile_id": "profile_en01",
+        "email": "admin6104@gmail.com",
+        "chrome_directory": "Default",
+        "user_data_dir": "/home/hongphuoc6104/.config/google-chrome-cdp-en01",
+        "cdp_port": 9251,
+        "paygate_tier": 2,
+        "credits_remaining": 25050,
+        "subscription_credits": 25050,
+        "expiry_epoch": 1798131052,
+        "expiry_utc": "2026-12-24T16:50:52+00:00",
+        "status": "active",
+        "tier_role": "video_and_image",
+        "in_unauthenticated_file": false,
+        "cooldown_remaining_sec": 17695.4,
+        "cooldown_reason": "NO_AT_TOKEN",
+        "ready_now": false,
+        "recovery_action": "Wait ~4.9h for 24h NO_AT_TOKEN cooldown expiry or re-login/refresh Flow tab on port 9251 and clear_cooldown('profile_en01')."
+      },
+      {
+        "profile_id": "profile_18",
+        "email": "phuocnguyencoc4@gmail.com",
+        "chrome_directory": "Profile 22",
+        "user_data_dir": "/home/hongphuoc6104/.config/google-chrome-cdp-profile22",
+        "cdp_port": 9239,
+        "paygate_tier": 2,
+        "credits_remaining": 24849,
+        "subscription_credits": 24849,
+        "expiry_epoch": 1798138117,
+        "expiry_utc": "2026-12-24T18:48:37+00:00",
+        "status": "active",
+        "tier_role": "video_and_image",
+        "in_unauthenticated_file": false,
+        "cooldown_remaining_sec": 0.0,
+        "prior_cooldown_note": "Previous Error 8 (TOO_MUCH_TRAFFIC) cooldown expired cleanly.",
+        "ready_now": true
+      },
+      {
+        "profile_id": "profile_en03",
+        "email": "tiktokbeeby@gmail.com",
+        "chrome_directory": "Profile 12",
+        "user_data_dir": "/home/hongphuoc6104/.config/google-chrome-cdp-en03",
+        "cdp_port": 9253,
+        "paygate_tier": 2,
+        "credits_remaining": 24518,
+        "subscription_credits": 24542,
+        "expiry_epoch": 1798131052,
+        "expiry_utc": "2026-12-24T16:50:52+00:00",
+        "status": "active",
+        "tier_role": "video_and_image",
+        "in_unauthenticated_file": false,
+        "cooldown_remaining_sec": 0.0,
+        "ready_now": true
+      }
+    ],
+    "pool_36_breakdown": {
+      "authenticated_video_ready_14": [
+        {"profile_id": "profile_en18", "port": 9268, "dir": "Profile 40", "email": "baokhanh010204@gmail.com", "credits": 1544, "paygate_tier": 1},
+        {"profile_id": "profile_en15", "port": 9265, "dir": "Profile 37", "email": "kimphuongbo83@gmail.com", "credits": 1050, "paygate_tier": 1},
+        {"profile_id": "profile_11", "port": 9232, "dir": "Profile 24", "email": "bkphuong83@gmail.com", "credits": 974, "paygate_tier": 1},
+        {"profile_id": "profile_6", "port": 9227, "dir": "Profile 7", "email": "thocutewa891@gmail.com", "credits": 900, "paygate_tier": 1},
+        {"profile_id": "profile_en19", "port": 9269, "dir": "Profile 41", "email": "aiplus539@gmail.com", "credits": 848, "paygate_tier": 1},
+        {"profile_id": "profile_en02", "port": 9252, "dir": "Profile 9", "email": "aiplus3979@gmail.com", "credits": 636, "paygate_tier": 1},
+        {"profile_id": "profile_19", "port": 9240, "dir": "Profile 23", "email": "anhanhnhat789@gmail.com", "credits": 164, "paygate_tier": 1},
+        {"profile_id": "profile_en10", "port": 9260, "dir": "Profile 32", "email": "clonephuocng2@gmail.com", "credits": 155, "paygate_tier": 1},
+        {"profile_id": "profile_9", "port": 9230, "dir": "Profile 15", "email": "phuocnguyendb010204@gmail.com", "credits": 105, "paygate_tier": 1},
+        {"profile_id": "profile_en08", "port": 9258, "dir": "Profile 30", "email": "chloemery120407@gmail.com", "credits": 54, "paygate_tier": 1},
+        {"profile_id": "profile_16", "port": 9237, "dir": "Profile 18", "email": "phuocnguyencoc2@gmail.com", "credits": 50, "paygate_tier": 3},
+        {"profile_id": "profile_en14", "port": 9264, "dir": "Profile 36", "email": "phuocnguyencoc6@gmail.com", "credits": 50, "paygate_tier": 3},
+        {"profile_id": "profile_en17", "port": 9267, "dir": "Profile 39", "email": "thiha060174@gmail.com", "credits": 47, "paygate_tier": 1},
+        {"profile_id": "profile_en11", "port": 9261, "dir": "Profile 33", "email": "aiplus248@gmail.com", "credits": 11, "paygate_tier": 0}
+      ],
+      "authenticated_cooldown_1": [
+        {"profile_id": "profile_en09", "port": 9259, "dir": "Profile 31", "email": "tangcheba123@gmail.com", "credits": 364, "paygate_tier": 1, "cooldown_remaining_sec": 48608.3, "reason": "NO_AT_TOKEN"}
+      ],
+      "authenticated_zero_credit_beluga_specialists_7": [
+        {"profile_id": "profile_5", "port": 9226, "dir": "Default", "email": "phuocnguyencoc1@gmail.com", "credits": 0, "status": "exhausted"},
+        {"profile_id": "profile_8", "port": 9229, "dir": "Profile 5", "email": "", "credits": 0, "status": "exhausted"},
+        {"profile_id": "profile_10", "port": 9231, "dir": "Profile 6", "email": "ad8410552@gmail.com", "credits": 0, "status": "exhausted"},
+        {"profile_id": "profile_en05", "port": 9255, "dir": "Profile 27", "email": "bop954499@gmail.com", "credits": 2, "status": "active"},
+        {"profile_id": "profile_en07", "port": 9257, "dir": "Profile 29", "email": "hongphuocng2@gmail.com", "credits": 6, "status": "active"},
+        {"profile_id": "profile_en13", "port": 9263, "dir": "Profile 35", "email": "phuocnguyencoc10@gmail.com", "credits": 6, "status": "active"},
+        {"profile_id": "profile_en16", "port": 9266, "dir": "Profile 38", "email": "mutoquamini@gmail.com", "credits": 4, "status": "active"}
+      ],
+      "unauthenticated_quarantined_14": [
+        {"profile_id": "profile_1", "port": 9225, "dir": "Profile 1", "email": "phuocnguyen010204@gmail.com", "credits": 0},
+        {"profile_id": "profile_2", "port": 9223, "dir": "Profile 2", "email": "byng060104@gmail.com", "credits": 1050},
+        {"profile_id": "profile_3", "port": 9224, "dir": "Profile 3", "email": "phuocnguyen010205@gmail.com", "credits": 97},
+        {"profile_id": "profile_4", "port": 9222, "dir": "Profile 4", "email": "byng06012004@gmail.com", "credits": 0},
+        {"profile_id": "profile_7", "port": 9228, "dir": "Profile 11", "email": "phuocnguyenne01@gmail.com", "credits": 848},
+        {"profile_id": "profile_12", "port": 9233, "dir": "Profile 13", "email": "bidennguyen1@gmail.com", "credits": 50},
+        {"profile_id": "profile_13", "port": 9234, "dir": "Profile 14", "email": "bongbi2111@gmail.com", "credits": 2},
+        {"profile_id": "profile_14", "port": 9235, "dir": "Profile 16", "email": "phuocnguyencoc5@gmail.com", "credits": 50, "paygate_tier": 3},
+        {"profile_id": "profile_15", "port": 9236, "dir": "Profile 17", "email": "nnhpai03@gmail.com", "credits": 1050},
+        {"profile_id": "profile_17", "port": 9238, "dir": "Profile 19", "email": "phuocnguyencoc3@gmail.com", "credits": 1050},
+        {"profile_id": "profile_20", "port": 9241, "dir": "Profile 8", "email": "hongphuocng1@gmail.com", "credits": 1040},
+        {"profile_id": "profile_21", "port": 9242, "dir": "Profile 25", "email": "chimdadahahaha@gmail.com", "credits": 52},
+        {"profile_id": "profile_en06", "port": 9256, "dir": "Profile 28", "email": "nnhpai02@gmail.com", "credits": 870},
+        {"profile_id": "profile_en12", "port": 9262, "dir": "Profile 34", "email": "clonephuocng1@gmail.com", "credits": 1050}
+      ],
+      "browser_profiles_json_issue": "sys/flow_cdp/browser-profiles.json lists 40 priority directory names matching profiles.json, but 'Default' appears twice (for profile_5 and profile_en01 across separate user_data_dirs) and is not sufficient by itself without user_data_dir."
+    }
+  },
+  "colab_t4_pool_audit": {
+    "registered_accounts": 20,
+    "unique_google_identities": 15,
+    "duplicate_aliases_excluded_by_pool_manager": {
+      "account-06": "account-03 (byng06012004@gmail.com)",
+      "account-07": "account-04 (admin6104@gmail.com)",
+      "account-09": "account-01 (hongphuocng1@gmail.com)",
+      "account-11": "account-02 (ad8410552@gmail.com)",
+      "account-14": "account-05 (aiplus3979@gmail.com)"
+    },
+    "unregistered_directory": "account-21 (no token.json)",
+    "active_8_production_accounts": [
+      {"id": "account-01", "email": "hongphuocng1@gmail.com", "avail_sec": 17760.0, "used_sec": 0.0, "reset_in_hours": 21.18, "blocks": [], "health_state": "authenticated_idle"},
+      {"id": "account-04", "email": "admin6104@gmail.com", "avail_sec": 16759.4, "used_sec": 1120.6, "reset_in_hours": 12.11, "blocks": [], "health_state": "authenticated_idle"},
+      {"id": "account-17", "email": "byng060104@gmail.com", "avail_sec": 13392.1, "used_sec": 4367.9, "reset_in_hours": 13.12, "blocks": [], "health_state": "authenticated_idle"},
+      {"id": "account-12", "email": "bidennguyen1@gmail.com", "avail_sec": 12121.8, "used_sec": 5818.2, "reset_in_hours": 11.47, "blocks": [], "health_state": "assignment_unmapped_in_older_probe_recently_released_ok"},
+      {"id": "account-18", "email": "phuocnguyen010205@gmail.com", "avail_sec": 10860.3, "used_sec": 6959.7, "reset_in_hours": 10.88, "blocks": [], "health_state": "authenticated_idle"},
+      {"id": "account-19", "email": "phuocnguyencoc1@gmail.com", "avail_sec": 10768.5, "used_sec": 7051.5, "reset_in_hours": 15.77, "blocks": [], "health_state": "authenticated_idle"},
+      {"id": "account-05", "email": "aiplus3979@gmail.com", "avail_sec": 10250.4, "used_sec": 7389.6, "reset_in_hours": 12.10, "blocks": [], "health_state": "authenticated_idle"},
+      {"id": "account-20", "email": "thocutewa891@gmail.com", "avail_sec": 9967.7, "used_sec": 7972.3, "reset_in_hours": 0.18, "blocks": [], "health_state": "assignment_unmapped_in_older_probe_recently_released_ok"}
+    ],
+    "hot_spare_9th_account": {
+      "id": "account-08",
+      "email": "phuocnguyendb010204@gmail.com",
+      "avail_sec": 18000.0,
+      "used_sec": 0.0,
+      "reset_in_hours": 19.55,
+      "blocks": [],
+      "health_state": "authenticated_idle"
+    },
+    "exhausted_window_accounts_3": [
+      {"id": "account-10", "email": "bongbi2111@gmail.com", "avail_sec": 0.0, "used_sec": 45588.4, "reset_in_hours": 2.48},
+      {"id": "account-13", "email": "tiktokbeeby@gmail.com", "avail_sec": 0.0, "used_sec": 37590.2, "reset_in_hours": 4.70},
+      {"id": "account-02", "email": "ad8410552@gmail.com", "avail_sec": 0.0, "used_sec": 32015.2, "reset_in_hours": 6.25, "stale_local_session": "vp-r1-vn_su_ke_lai_ep2"}
+    ],
+    "blocked_accounts_3": [
+      {"id": "account-03", "email": "byng06012004@gmail.com", "avail_sec": 17820.0, "block_error": "429"},
+      {"id": "account-15", "email": "phuocnguyenne01@gmail.com", "avail_sec": 17760.0, "block_error": "503"},
+      {"id": "account-16", "email": "phuocnguyen010204@gmail.com", "avail_sec": 17100.0, "block_error": "503"}
+    ],
+    "total_healthy_available_seconds": 119880.2,
+    "total_healthy_available_hours": 33.30,
+    "active_8_available_seconds": 101880.2,
+    "active_8_available_hours": 28.30
+  },
+  "flow_model_costs_and_pacing": {
+    "models": {
+      "BELUGA": {"rpc": "ogiZ0b", "batch_size": "1-4 prompts", "credit_cost": 0, "use_case": "All 9:16 and 16:9 keyframes, macro inserts, OTS/POV coverage frames, thumbnails"},
+      "veo_3_1_lite": {"rpc": "eb1hJf", "mode": "Seam (start-frame only)", "credit_cost": {"4s": 10, "6s": 10, "8s": 10}, "use_case": "Action cuts, cast/lighting transitions, dynamic camera reveals"},
+      "macaron_cookie": {"rpc": "nprQif (Frame-Link) / eb1hJf (Seam)", "alias": "omni_flash (Omni 1.2 Flash)", "credit_cost": {"4s": 12, "6s": 18, "8s": 24, "10s": 30}, "use_case": "Continuous identical-cast/lighting transitions and Seam failover if veo_3_1_lite hits >=2 traffic blocks"}
+    },
+    "deprecated_retire_before_2026_12_05": ["veo_3_1_fast", "veo_3_1_quality", "omni_1_1 (abra)"],
+    "anti_ban_pacing_rules": {
+      "max_host_browsers": 4,
+      "chrome_launch_stagger_sec": "3.2s + 0..0.6s jitter",
+      "flow_rpc_submit_stagger_sec": "1.55s + 0..0.35s rule (2.5s + 0..0.4s actual in cdp_direct_client.py)",
+      "flow_video_rpc_submit_stagger_sec": "4.2s + 0..0.8s jitter (~12-14 video RPCs/min host-wide)",
+      "host_ip_rolling_hour_cap": "<= 55 video clips per rolling 60 minutes across eb1hJf + nprQif combined, followed by 10-15 min breather",
+      "error_7_8_recovery": "Keep Chrome alive, call _refresh_recaptcha_session in-place, cooldown 8.0s (fresh) / 30.0s (exhausted rotation), persist frames/beat_XX.json profile_media_ids, failover veo_3_1_lite -> omni_flash Seam after >=2 traffic blocks",
+      "stage_a_profile_isolation_fix": "Recommended: Override or filter Stage A BELUGA workers to the 7 authenticated zero-credit profiles (profile_5, profile_8, profile_10, profile_en05, profile_en07, profile_en13, profile_en16) so Ultra accounts stay untouched/unthrottled before Stage B."
+    }
+  },
+  "v12_production_budget_and_schedule": {
+    "per_short_s01_to_s10": {
+      "duration_sec_range": "48-88s",
+      "beats_per_short": 20,
+      "beluga_0c_frames_per_short": {
+        "anchor_and_beat_frames": 20,
+        "extra_macro_ots_pov_coverage_frames": 6,
+        "flow_native_thumbnail": 1,
+        "total_beluga_frames": 27,
+        "credit_cost": 0,
+        "ogiZ0b_batches_at_4_prompts": 7,
+        "wall_time_min": 3.0
+      },
+      "living_video_clips_per_short": {
+        "recommended_living_clips": 16,
+        "veo_3_1_lite_seam_clips_at_10c": 10,
+        "macaron_cookie_fl_6s_clips_at_18c": 6,
+        "bespoke_slow_giant_map_or_cutaway_beats": 4,
+        "credits_per_short": 208,
+        "max_full_video_20_clips_credits": 264,
+        "wall_time_min_at_12_clips_per_min_submit_plus_poll": 20
+      },
+      "totals_for_10_shorts": {
+        "beluga_frames": 270,
+        "living_video_clips": 160,
+        "credits_nominal": 2080,
+        "credits_with_25pct_retry_buffer": 2600,
+        "ip_hour_waves_needed": 3,
+        "flow_video_wall_time_hours": 3.5
+      }
+    },
+    "per_long_l01_to_l10": {
+      "duration_sec_range": "510-780s (8m30s-13m00s)",
+      "cold_open_first_60s": "100% continuous motion (14-18 living Flow 16:9 clips, zero static PNG > 3.5s)",
+      "multi_beat_clip_coverage_ratio": "2-beat (0->3.3s + 3.3->6.6s) and 3-beat (0->2.2s + 2.2->4.4s + 4.4->6.6s) M1 windows cover 110-125 narrative beats using 55 living 8s Flow clips",
+      "beluga_0c_frames_per_long": {
+        "primary_scene_keyframes": 100,
+        "extra_multi_angle_macro_ots_pov_frames": 40,
+        "flow_native_16x9_thumbnail": 1,
+        "total_beluga_frames": 141,
+        "credit_cost": 0,
+        "ogiZ0b_batches_at_4_prompts": 36,
+        "wall_time_min": 3.5
+      },
+      "living_video_clips_per_long": {
+        "recommended_living_clips": 55,
+        "cold_open_living_clips": 15,
+        "body_and_climax_living_clips": 40,
+        "veo_3_1_lite_seam_clips_8s_at_10c": 35,
+        "macaron_cookie_fl_8s_clips_at_24c": 20,
+        "bespoke_slow_giant_map_and_evidence_board_beats": "18-24 beats (6-12s each)",
+        "credits_per_long": 830,
+        "stretch_80_clips_credits_per_long": 1220,
+        "ip_hour_waves_per_long": 1
+      },
+      "totals_for_10_longs": {
+        "beluga_frames": 1410,
+        "living_video_clips": 550,
+        "credits_nominal": 8300,
+        "credits_with_25pct_retry_buffer": 10375,
+        "ip_hour_waves_needed": 10,
+        "flow_video_wall_time_hours": 12.5
+      }
+    },
+    "combined_20_episode_v12_totals": {
+      "total_beluga_0c_frames": 1680,
+      "total_living_video_clips": 710,
+      "total_credits_nominal": 10380,
+      "total_credits_with_25pct_buffer": 12975,
+      "pct_of_99876_ultra_pool": 12.99,
+      "pct_of_74826_immediately_ready_ultra": 17.34,
+      "remaining_ultra_credit_headroom": 86901,
+      "total_ip_hour_waves": 13,
+      "total_flow_video_wall_time_hours": 16.0,
+      "binding_constraint": "Host-IP 55-clips/rolling-hour cap (NOT Ultra credits, which have ~8x surplus)."
+    },
+    "colab_t4_parallelization_schedule": {
+      "voice_lock": {
+        "profile": "VietNarrator_su_ke_lai",
+        "path": "sys/assets/voices/ch_su_ke_lai/profile.json",
+        "base_omnivoice_speed": 1.12,
+        "atempo_factor": 1.161,
+        "effective_speed": 1.30,
+        "inter_beat_gap_sec": 0.12,
+        "loudness_target": "-11.0 LUFS / <= -1.0 dBTP (post-AAC encode_calibrated_m4a)"
+      },
+      "omnivoice_parallelism": {
+        "shorts": "3 T4 workers per Short (--colab-tts-workers 3) overlapped with Stage A BELUGA (~90-120s/Short); 2 Shorts can overlap across 6 accounts = ~6 GPU-min/Short (60 GPU-min total).",
+        "longs": "4 T4 workers per Long (25-30 sentence groups per VM, batch_size=8, num_step=32 FP16) = ~3.0-3.5 min wall time/Long (~14 GPU-min/Long, 140 GPU-min total). Execute during 10-15 min Flow IP breathers."
+      },
+      "nvenc_render_parallelism": {
+        "shorts": "4 T4 workers per Short (single_pass 4 chunks, 0 overhang, 1440x2560@30fps, -bf 0 -g 30 -b:v 10M -preset p4) + <2s local lossless concat. ~3 min/Short (~12 GPU-min/Short, 120 GPU-min total).",
+        "longs_fleet_mode": "Pre-grade static/map frames once + tpad=stop_mode=clone; shard overflow media bundles <28 MB (ZIP_STORED); enforce fps=30,settb=1/30 BEFORE trim=end_frame={rf}; serialize download/calibrated-AAC remux under GlobalRenderIoLock. Dispatch 4-8 Longs simultaneously (1 Long per T4 VM using 3 internal NVENC streams on /dev/shm, ~10-11 min wall time for up to 8 Longs in parallel!).",
+        "longs_8shard_m1_mode": "Alternatively for single-episode priority rush: produce_su_ke_lai_long_m1.py --total-shards 8 across all 8 T4 VMs (~3.0 min render + lossless concat)."
+      },
+      "total_colab_t4_compute": {
+        "shorts_gpu_minutes": 180,
+        "longs_gpu_minutes": 260,
+        "total_gpu_minutes": 440,
+        "total_gpu_hours": 7.33,
+        "pct_of_active_8_available_hours": 25.9,
+        "pct_of_healthy_9_available_hours": 22.0
+      }
+    },
+    "phased_execution_waves": [
+      {
+        "wave": "Wave 0 — Pre-Flight Hygiene & Stage A Specialist Routing (15m)",
+        "actions": [
+          "Reconcile account-12 & account-20 via colab_bridge reconcile; keep account-03/15/16 excluded (429/503) and account-02/10/13 parked until 24h reset.",
+          "Optionally refresh Flow tab on profile_en01 (admin6104, port 9251) to clear NO_AT_TOKEN and unlock +25,050 credits (already 74,826 Ultra ready without it).",
+          "Pin Stage A BELUGA 0c generation to the 7 authenticated zero-credit profiles (profile_5, profile_8, profile_10, profile_en05, profile_en07, profile_en13, profile_en16) so Ultra accounts stay pristine for Stage B."
+        ]
+      },
+      {
+        "wave": "Wave 1 — S01..S10 Full Production (3 Flow IP Waves, ~3.5-4.0h)",
+        "actions": [
+          "Wave 1A (Hour 1): Stage A BELUGA (S01..S04, 108 frames, 0c) || Colab OmniVoice TTS (accounts 01,04,05,17,18,19) -> Stage B Video (S01..S03 = 48 clips, ~740c) -> Breather 12m (Colab T4 single_pass NVENC render S01..S03).",
+          "Wave 1B (Hour 2): Stage A BELUGA (S05..S07, 81 frames, 0c) || OmniVoice TTS -> Stage B Video (S04..S06 = 48 clips) -> Breather 12m (Colab T4 NVENC render S04..S06).",
+          "Wave 1C (Hour 3-4): Stage A BELUGA (S08..S10, 81 frames, 0c) || OmniVoice TTS -> Stage B Video (S07..S10 = 64 clips split 55+9 across breather) -> Colab T4 NVENC render S07..S10."
+        ]
+      },
+      {
+        "wave": "Wave 2 — L01..L05 Long Batch (5 Flow IP Waves, ~6.0-6.5h)",
+        "actions": [
+          "Run Stage A BELUGA (~705 frames for L01..L05, 0c) across 3 zero-credit workers + Colab T4 OmniVoice TTS (4 workers/Long) during breathers.",
+          "Run 1 Long/hour Stage B Flow Video wave (55 living 16:9 clips/wave, ~830c/Long) with 12m breather between waves.",
+          "Overlap Colab T4 NVENC render of L01..L05 concurrently across 5 T4 accounts (<28MB ZIP_STORED shards, fps=30 before trim=end_frame, calibrated AAC <= -1.0 dBTP)."
+        ]
+      },
+      {
+        "wave": "Wave 3 — L06..L10 Long Batch (5 Flow IP Waves, ~6.0-6.5h)",
+        "actions": [
+          "Repeat 1 Long/hour Stage B wave (L06..L10, 55 clips each = 275 clips) rotating across profile_22, profile_18, profile_en03 (and profile_en01 once NO_AT_TOKEN clears) + 14 authenticated Standard/Pro fallback profiles.",
+          "Render L06..L10 concurrently across 5 T4 accounts (account-10/13/02 also reset by Wave 3 if extra slots needed), verify all 20 MP4s with ffprobe + ebur128 + frame extraction, then run ./pipeline colab teardown && ./pipeline flow stop."
+        ]
+      }
+    ]
+  }
+}
