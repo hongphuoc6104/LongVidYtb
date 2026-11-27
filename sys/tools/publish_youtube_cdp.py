@@ -39,8 +39,12 @@ for _p in (str(REPO_ROOT), str(SYS_DIR)):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-from sys.flow_cdp.process_manager import ProcessGroupManager, is_port_listening
-from sys.flow_cdp.resource_locks import ProfilePortLock
+try:
+    from flow_cdp.process_manager import ProcessGroupManager, is_port_listening
+    from flow_cdp.resource_locks import ProfilePortLock
+except ImportError:
+    from sys.flow_cdp.process_manager import ProcessGroupManager, is_port_listening
+    from sys.flow_cdp.resource_locks import ProfilePortLock
 
 try:
     from tools.review_queue_manager import check_publish_permission, set_review_decision
@@ -61,6 +65,37 @@ SISTER_CHANNEL_FORBIDDEN_TOKENS: tuple[str, ...] = (
     "luật ngầm đám đông",
     "first principles ink",
 )
+
+DEFAULT_SU_KE_LAI_PLAYLIST: str = "Sử Kể Lại — Hồ Sơ Chiến Dịch & Bí Ẩn Đại Việt"
+DEAD_PRIVATE_VIDEO_IDS: tuple[str, ...] = (
+    "y5VeObQ7u1E",
+    "o_3FRlZ87wE",
+    "CbeJM6jT4ag",
+)
+
+
+def clean_dead_links_from_description(
+    description: str,
+    dead_ids: tuple[str, ...] | list[str] = DEAD_PRIVATE_VIDEO_IDS,
+) -> tuple[str, list[str]]:
+    """Remove lines or inline URLs referencing dead/Private video IDs from a YouTube description."""
+    raw = str(description or "")
+    if not raw:
+        return "", []
+    targets = [str(d).strip() for d in dead_ids if str(d).strip()]
+    removed: list[str] = []
+    kept_lines: list[str] = []
+    for line in raw.splitlines():
+        matched_ids = [did for did in targets if did in line]
+        if matched_ids:
+            for did in matched_ids:
+                if did not in removed:
+                    removed.append(did)
+            continue
+        kept_lines.append(line)
+    cleaned = "\n".join(kept_lines)
+    cleaned = re.sub(r"\n{3,}", "\n\n", cleaned).strip()
+    return cleaned, removed
 
 
 def validate_no_sister_channel_leak(channel_id: str | None, *texts: str | None) -> None:
@@ -564,8 +599,10 @@ class YouTubeCDPClient:
         language: Optional[str] = None,
         category: Optional[str] = None,
         altered_content: str = "unset",
+        notify_subscribers: Optional[bool] = None,
+        playlist_name: Optional[str] = None,
     ) -> None:
-        """Set title, description, audience settings, altered-content disclosure, tags, language, and category."""
+        """Set title, description, playlist, audience settings, altered-content disclosure, notify-subscribers, tags, language, and category."""
         logger.info("Filling title: %s", title)
         title_res = await self.evaluate(f"""
             (() => {{
@@ -599,6 +636,12 @@ class YouTubeCDPClient:
         """)
         logger.info("Description set preview: %s...", desc_res)
 
+        if playlist_name:
+            try:
+                await self.ensure_and_select_playlist(playlist_name)
+            except Exception as pl_err:
+                logger.warning("Playlist assignment (%s) encountered error: %s", playlist_name, pl_err)
+
         logger.info("Setting audience: Not made for kids (MFK=False)...")
         radio_name = "VIDEO_MADE_FOR_KIDS_MFK" if is_kids else "VIDEO_MADE_FOR_KIDS_NOT_MFK"
         await self.evaluate(f"""
@@ -609,31 +652,16 @@ class YouTubeCDPClient:
         """)
         await asyncio.sleep(1.0)
 
-        # Expand 'Hiển thị thêm' / 'Show more' if tags, language, category, or altered content need to be set
+        # Expand 'Hiển thị thêm' / 'Hiện thêm' / 'Show more' if tags, language, category, altered content, or notify_subscribers need to be set
         clean_tags = format_and_truncate_tags(tags, max_chars=480)
-        if clean_tags or language or category or altered_content in ("yes", "no"):
-            await self.evaluate("""
-                (() => {
-                    const tagBox = document.querySelector('#tags-container') || document.querySelector('input#text-input[aria-label*="Tags"]');
-                    if (tagBox && tagBox.offsetParent !== null) return 'ALREADY_EXPANDED';
-                    const toggleBtn = document.querySelector('ytcp-uploads-video-details #toggle-button') ||
-                                      document.querySelector('#toggle-button') ||
-                                      document.querySelector('ytcp-button#toggle-button') ||
-                                      Array.from(document.querySelectorAll('ytcp-button, button')).find(b => {
-                                          const txt = (b.innerText || '').toLowerCase();
-                                          return txt.includes('hiển thị thêm') || txt.includes('show more');
-                                      });
-                    if (toggleBtn) {
-                        toggleBtn.click();
-                        return 'TOGGLED';
-                    }
-                    return null;
-                })()
-            """)
-            await asyncio.sleep(1.0)
+        if clean_tags or language or category or altered_content in ("yes", "no") or notify_subscribers is not None:
+            await self.expand_show_more_details()
 
         if altered_content in ("yes", "no"):
             await self.set_altered_content_disclosure(altered_content)
+
+        if notify_subscribers is not None:
+            await self.set_notify_subscribers(bool(notify_subscribers))
 
         # Tags handling
         if clean_tags:
@@ -735,6 +763,723 @@ class YouTubeCDPClient:
         logger.info("Altered content disclosure (%s): %s", norm, res)
         await asyncio.sleep(0.5)
         return res if isinstance(res, dict) else {"applied": False}
+
+    async def expand_show_more_details(self) -> bool:
+        """Expand 'Show more' / 'Hiện thêm' / 'Hiển thị thêm' (#toggle-button) in Details or /edit."""
+        res = await self.evaluate("""
+            (() => {
+                const tagBox = document.querySelector('#tags-container') ||
+                               document.querySelector('#notify-subscribers') ||
+                               document.querySelector('ytcp-checkbox-lit#notify-subscribers') ||
+                               document.querySelector('input#text-input[aria-label*="Tags"]');
+                if (tagBox) {
+                    const r = tagBox.getBoundingClientRect ? tagBox.getBoundingClientRect() : null;
+                    if (tagBox.offsetParent !== null || (r && r.width > 0 && r.height > 0)) {
+                        return 'ALREADY_EXPANDED';
+                    }
+                }
+                const nodes = [];
+                function walk(root, depth = 0) {
+                    if (!root || depth > 28) return;
+                    if (root.nodeType === 1) {
+                        nodes.push(root);
+                        if (root.shadowRoot) walk(root.shadowRoot, depth + 1);
+                    }
+                    for (const c of root.children || []) walk(c, depth + 1);
+                }
+                walk(document.body);
+
+                let toggleBtn = document.querySelector('ytcp-uploads-video-details #toggle-button') ||
+                                document.querySelector('ytcp-video-metadata-editor #toggle-button') ||
+                                document.querySelector('#toggle-button') ||
+                                document.querySelector('ytcp-button#toggle-button');
+                if (!toggleBtn) {
+                    toggleBtn = nodes.find(b => {
+                        if (!b.matches || !b.matches('ytcp-button, button, [role="button"], #toggle-button')) return false;
+                        const raw = (b.innerText || b.textContent || b.getAttribute('aria-label') || '');
+                        const txt = (raw.normalize ? raw.normalize('NFC') : raw).trim().toLowerCase();
+                        if (txt.includes('ẩn bớt') || txt.includes('hiển thị bớt') || txt.includes('show less')) return false;
+                        return b.id === 'toggle-button' ||
+                               txt.includes('hiển thị thêm') ||
+                               txt.includes('hiện thêm') ||
+                               txt.includes('show more');
+                    });
+                }
+                if (toggleBtn) {
+                    toggleBtn.scrollIntoView({ behavior: 'instant', block: 'center' });
+                    toggleBtn.click();
+                    return 'TOGGLED';
+                }
+                return null;
+            })()
+        """)
+        if res == "TOGGLED":
+            await asyncio.sleep(1.0)
+        return bool(res)
+
+    async def set_notify_subscribers(self, enabled: bool = False) -> dict[str, Any]:
+        """Set 'Publish to subscriptions feed and notify subscribers' checkbox state (True=checked, False=unchecked)."""
+        target_state = bool(enabled)
+        await self.expand_show_more_details()
+        target_js = "true" if target_state else "false"
+        res = await self.evaluate(f"""
+            (() => {{
+                const TARGET = {target_js};
+                const phrases = [
+                    'publish to subscriptions feed and notify subscribers',
+                    'notify subscribers',
+                    'xuất bản lên nguồn cấp dữ liệu nội dung đăng ký và thông báo cho người đăng ký',
+                    'thông báo cho người đăng ký',
+                    'nguồn cấp dữ liệu nội dung đăng ký'
+                ];
+                const norm = (s) => ((s || '').normalize ? (s || '').normalize('NFC') : (s || ''))
+                    .replace(/\\s+/g, ' ').trim().toLowerCase();
+
+                const nodes = [];
+                function walk(root, depth = 0) {{
+                    if (!root || depth > 36) return;
+                    if (root.nodeType === 1) {{
+                        nodes.push(root);
+                        if (root.shadowRoot) walk(root.shadowRoot, depth + 1);
+                    }}
+                    for (const c of root.children || []) walk(c, depth + 1);
+                }}
+                walk(document.body);
+
+                function resolveCheckboxHost(el) {{
+                    if (!el) return null;
+                    const tag = (el.tagName || '').toUpperCase();
+                    if (tag === 'YTCP-CHECKBOX-LIT' || tag === 'TP-YT-PAPER-CHECKBOX' || el.getAttribute('role') === 'checkbox' || (tag === 'INPUT' && el.type === 'checkbox')) {{
+                        return el;
+                    }}
+                    const inner = el.querySelector && el.querySelector('ytcp-checkbox-lit, tp-yt-paper-checkbox, [role="checkbox"], input[type="checkbox"]');
+                    if (inner) return inner;
+                    if (el.shadowRoot) {{
+                        const sInner = el.shadowRoot.querySelector('ytcp-checkbox-lit, tp-yt-paper-checkbox, [role="checkbox"], input[type="checkbox"]');
+                        if (sInner) return sInner;
+                    }}
+                    return el;
+                }}
+
+                function readChecked(cb) {{
+                    if (!cb) return null;
+                    if (typeof cb.checked === 'boolean') return cb.checked;
+                    const aria = cb.getAttribute && cb.getAttribute('aria-checked');
+                    if (aria === 'true') return true;
+                    if (aria === 'false') return false;
+                    if (cb.hasAttribute && cb.hasAttribute('checked')) return true;
+                    const roots = [cb, cb.shadowRoot].filter(Boolean);
+                    for (const r of roots) {{
+                        if (!r.querySelector) continue;
+                        const innerChecked = r.querySelector('[aria-checked="true"], input[type="checkbox"]:checked, #checkbox.checked, div.checked');
+                        if (innerChecked) return true;
+                        const innerUnchecked = r.querySelector('[aria-checked="false"], #checkbox:not(.checked)');
+                        if (innerUnchecked) {{
+                            const inp = r.querySelector('input[type="checkbox"]');
+                            if (inp && typeof inp.checked === 'boolean') return inp.checked;
+                            return false;
+                        }}
+                    }}
+                    return false;
+                }}
+
+                function readDisabled(cb) {{
+                    if (!cb) return false;
+                    if (cb.disabled === true) return true;
+                    if (cb.hasAttribute && cb.hasAttribute('disabled')) return true;
+                    if (cb.getAttribute && cb.getAttribute('aria-disabled') === 'true') return true;
+                    const roots = [cb, cb.shadowRoot].filter(Boolean);
+                    for (const r of roots) {{
+                        if (!r.querySelector) continue;
+                        const d = r.querySelector('[aria-disabled="true"], input:disabled, #checkbox[disabled]');
+                        if (d) return true;
+                    }}
+                    return false;
+                }}
+
+                let matchedEl = document.querySelector('ytcp-checkbox-lit#notify-subscribers') ||
+                                document.querySelector('tp-yt-paper-checkbox#notify-subscribers') ||
+                                document.querySelector('#notify-subscribers ytcp-checkbox-lit') ||
+                                document.querySelector('#notify-subscribers tp-yt-paper-checkbox') ||
+                                document.querySelector('#notify-subscribers');
+                let matchedBy = matchedEl ? 'direct_id' : null;
+
+                if (!matchedEl) {{
+                    matchedEl = nodes.find(el => {{
+                        const id = (el.id || '').toLowerCase();
+                        return id === 'notify-subscribers' || id.includes('notify-subscribers');
+                    }});
+                    if (matchedEl) matchedBy = 'shadow_id';
+                }}
+
+                if (!matchedEl) {{
+                    for (const el of nodes) {{
+                        if (!el.matches || !el.matches('ytcp-checkbox-lit, tp-yt-paper-checkbox, [role="checkbox"], ytcp-form-checkbox, label, .checkbox-container')) {{
+                            continue;
+                        }}
+                        const ownTxt = norm(el.innerText || el.textContent || el.getAttribute('aria-label') || '');
+                        const parentTxt = el.parentElement ? norm(el.parentElement.innerText || el.parentElement.textContent || '') : '';
+                        const combined = ownTxt + ' ' + parentTxt;
+                        if (phrases.some(p => combined.includes(p)) && combined.length < 450) {{
+                            matchedEl = el;
+                            matchedBy = 'text_match';
+                            break;
+                        }}
+                    }}
+                }}
+
+                const cb = resolveCheckboxHost(matchedEl);
+                if (!cb) {{
+                    return {{ applied: false, changed: false, reason: 'notify_subscribers_checkbox_not_found' }};
+                }}
+
+                cb.scrollIntoView({{ behavior: 'instant', block: 'center' }});
+                const beforeChecked = Boolean(readChecked(cb));
+                const isDisabled = readDisabled(cb) || readDisabled(matchedEl);
+
+                if (beforeChecked === TARGET) {{
+                    return {{
+                        applied: true,
+                        changed: false,
+                        previous: beforeChecked,
+                        checked: beforeChecked,
+                        target: TARGET,
+                        locked: isDisabled,
+                        matched_by: matchedBy,
+                    }};
+                }}
+
+                if (isDisabled) {{
+                    return {{
+                        applied: false,
+                        changed: false,
+                        previous: beforeChecked,
+                        checked: beforeChecked,
+                        target: TARGET,
+                        locked: true,
+                        reason: 'checkbox_disabled_or_already_published',
+                        matched_by: matchedBy,
+                    }};
+                }}
+
+                const clickCandidates = [];
+                if (cb.shadowRoot) {{
+                    const sTarget = cb.shadowRoot.querySelector('#checkbox, [role="checkbox"], input[type="checkbox"], .checkbox');
+                    if (sTarget) clickCandidates.push(sTarget);
+                }}
+                if (cb.querySelector) {{
+                    const lTarget = cb.querySelector('#checkbox, [role="checkbox"], input[type="checkbox"], .checkbox');
+                    if (lTarget) clickCandidates.push(lTarget);
+                }}
+                clickCandidates.push(cb);
+                if (matchedEl && matchedEl !== cb) clickCandidates.push(matchedEl);
+
+                let afterChecked = beforeChecked;
+                for (const targetNode of clickCandidates) {{
+                    try {{
+                        targetNode.click();
+                    }} catch (e) {{}}
+                    afterChecked = Boolean(readChecked(cb));
+                    if (afterChecked === TARGET) break;
+                }}
+
+                return {{
+                    applied: afterChecked === TARGET,
+                    changed: afterChecked !== beforeChecked,
+                    previous: beforeChecked,
+                    checked: afterChecked,
+                    target: TARGET,
+                    locked: false,
+                    matched_by: matchedBy,
+                }};
+            }})()
+        """)
+        logger.info("set_notify_subscribers(enabled=%s) -> %s", target_state, res)
+        await asyncio.sleep(0.5)
+        return res if isinstance(res, dict) else {"applied": False, "changed": False}
+
+    async def ensure_and_select_playlist(
+        self,
+        playlist_title: str = DEFAULT_SU_KE_LAI_PLAYLIST,
+    ) -> dict[str, Any]:
+        """Select playlist in Details (ytcp-video-metadata-playlists), creating it in Studio if missing."""
+        target_name = str(playlist_title or DEFAULT_SU_KE_LAI_PLAYLIST).strip()
+        if not target_name:
+            return {"applied": False, "reason": "empty_playlist_title"}
+
+        logger.info("Ensuring & selecting playlist: %r...", target_name)
+        target_json = json.dumps(target_name, ensure_ascii=False)
+
+        # 1. Check if already selected on trigger and click trigger to open ytcp-playlist-dialog
+        open_res = await self.evaluate(f"""
+            (() => {{
+                const TARGET = {target_json};
+                const norm = (s) => ((s || '').normalize ? (s || '').normalize('NFC') : (s || ''))
+                    .replace(/\\s+/g, ' ').trim().toLowerCase();
+                const tNorm = norm(TARGET);
+                const comp = document.querySelector('ytcp-video-metadata-playlists') ||
+                             document.querySelector('#playlists') ||
+                             document.querySelector('[id*="playlist"]');
+                if (!comp) return {{ opened: false, reason: 'playlists_component_not_found' }};
+                comp.scrollIntoView({{ behavior: 'instant', block: 'center' }});
+                const currentTxt = norm(comp.innerText || comp.textContent || '');
+                const alreadySelected = Boolean(tNorm && currentTxt.includes(tNorm));
+                const trigger = comp.querySelector('#select-button, ytcp-text-dropdown-trigger, ytcp-dropdown-trigger, #trigger, [role="button"], button') || comp;
+                trigger.click();
+                return {{ opened: true, already_selected: alreadySelected, trigger_text: (comp.innerText || '').trim().slice(0, 120) }};
+            }})()
+        """)
+        if not (isinstance(open_res, dict) and open_res.get("opened")):
+            logger.warning("Could not open playlist dropdown: %s", open_res)
+            return {"applied": False, "created": False, "playlist_title": target_name, "detail": open_res}
+
+        # Wait up to 4.5s for ytcp-playlist-dialog to render
+        for _ in range(9):
+            await asyncio.sleep(0.5)
+            dlg_open = await self.evaluate("""
+                Boolean(
+                    document.querySelector('ytcp-playlist-dialog') ||
+                    document.querySelector('tp-yt-paper-dialog ytcp-checkbox-group') ||
+                    document.querySelector('#new-playlist-button')
+                )
+            """)
+            if dlg_open:
+                break
+
+        # 2. Search for matching playlist checkbox inside ytcp-playlist-dialog
+        select_js = f"""
+            (() => {{
+                const TARGET = {target_json};
+                const norm = (s) => ((s || '').normalize ? (s || '').normalize('NFC') : (s || ''))
+                    .replace(/\\s+/g, ' ').trim().toLowerCase();
+                const tNorm = norm(TARGET);
+                const tPrefix = tNorm.split(/[—–-]/)[0].trim();
+
+                const dlg = document.querySelector('ytcp-playlist-dialog') ||
+                            Array.from(document.querySelectorAll('tp-yt-paper-dialog, ytcp-dialog')).find(d => {{
+                                const txt = norm(d.innerText || '');
+                                return txt.includes('danh sách phát') || txt.includes('playlist');
+                            }}) || document;
+
+                const items = Array.from(dlg.querySelectorAll(
+                    'ytcp-ve, li, label, ytcp-checkbox-lit, tp-yt-paper-checkbox, .playlist-item'
+                ));
+                for (const item of items) {{
+                    const txt = norm(item.innerText || item.textContent || '');
+                    if (!txt || txt.length > 180) continue;
+                    if (txt === tNorm || txt.includes(tNorm) || (tPrefix.length >= 10 && txt.includes(tPrefix))) {{
+                        const cb = (item.matches && item.matches('ytcp-checkbox-lit, tp-yt-paper-checkbox, [role="checkbox"]'))
+                            ? item
+                            : (item.querySelector('ytcp-checkbox-lit, tp-yt-paper-checkbox, [role="checkbox"], input[type="checkbox"]') || item);
+                        const isChecked = cb.checked === true ||
+                                          cb.getAttribute('aria-checked') === 'true' ||
+                                          cb.hasAttribute('checked') ||
+                                          Boolean(cb.querySelector && cb.querySelector('[aria-checked="true"], input:checked, #checkbox.checked')) ||
+                                          Boolean(cb.shadowRoot && cb.shadowRoot.querySelector('[aria-checked="true"], input:checked, #checkbox.checked'));
+                        if (!isChecked) {{
+                            const clickTarget = (cb.shadowRoot && cb.shadowRoot.querySelector('#checkbox, [role="checkbox"], input')) ||
+                                                (cb.querySelector && cb.querySelector('#checkbox, [role="checkbox"], input')) ||
+                                                cb;
+                            clickTarget.click();
+                        }}
+                        return {{ found: true, was_checked: isChecked, matched_text: txt.slice(0, 120) }};
+                    }}
+                }}
+                return {{ found: false, item_count: items.length }};
+            }})()
+        """
+        pick_res = await self.evaluate(select_js)
+        created = False
+
+        if not (isinstance(pick_res, dict) and pick_res.get("found")):
+            logger.info("Playlist %r not found in dialog (%s); creating new playlist in Studio...", target_name, pick_res)
+            clicked_new = await self.evaluate("""
+                (() => {
+                    const dlg = document.querySelector('ytcp-playlist-dialog') || document;
+                    const newBtn = dlg.querySelector('#new-playlist-button') ||
+                                   dlg.querySelector('ytcp-button#new-playlist-button') ||
+                                   Array.from(dlg.querySelectorAll('ytcp-button, button, tp-yt-paper-item')).find(b => {
+                                       const t = (b.innerText || b.textContent || '').trim().toLowerCase();
+                                       return t.includes('danh sách phát mới') || t.includes('new playlist');
+                                   });
+                    if (newBtn) {
+                        newBtn.click();
+                        return true;
+                    }
+                    return false;
+                })()
+            """)
+            if clicked_new:
+                await asyncio.sleep(1.0)
+                # Click dropdown submenu item "Danh sách phát mới" / "New playlist" if a paper-menu opened
+                await self.evaluate("""
+                    (() => {
+                        const items = Array.from(document.querySelectorAll('tp-yt-paper-item, ytcp-text-menu-item, [role="menuitem"]'));
+                        const match = items.find(it => {
+                            const r = it.getBoundingClientRect ? it.getBoundingClientRect() : null;
+                            if (!r || r.width <= 0 || r.height <= 0) return false;
+                            const t = (it.innerText || it.textContent || '').trim().toLowerCase();
+                            return t.includes('danh sách phát mới') || t.includes('new playlist');
+                        });
+                        if (match) match.click();
+                    })()
+                """)
+                await asyncio.sleep(1.2)
+
+                # Fill playlist title in creation dialog/form and click Create / Tạo
+                create_res = await self.evaluate(f"""
+                    (() => {{
+                        const TITLE = {target_json};
+                        const createDlg = document.querySelector('ytcp-playlist-creation-dialog') ||
+                                          document.querySelector('ytcp-create-playlist-dialog') ||
+                                          document.querySelector('#create-playlist-form') ||
+                                          Array.from(document.querySelectorAll('tp-yt-paper-dialog, ytcp-dialog')).find(d => {{
+                                              const t = (d.innerText || '').toLowerCase();
+                                              return (t.includes('tạo danh sách phát') || t.includes('create playlist') || t.includes('danh sách phát mới')) &&
+                                                     !d.matches('ytcp-uploads-dialog');
+                                          }}) ||
+                                          document.querySelector('ytcp-playlist-dialog');
+                        if (!createDlg) return {{ created: false, reason: 'no_create_dialog' }};
+
+                        const box = createDlg.querySelector('#title-textarea #textbox') ||
+                                    createDlg.querySelector('#create-playlist-form #textbox') ||
+                                    createDlg.querySelector('#textbox[contenteditable="true"]') ||
+                                    createDlg.querySelector('input#text-input, input[type="text"], textarea');
+                        if (!box) return {{ created: false, reason: 'no_title_input' }};
+
+                        box.focus();
+                        try {{
+                            document.execCommand('selectAll', false, null);
+                            document.execCommand('delete', false, null);
+                            document.execCommand('insertText', false, TITLE);
+                        }} catch (e) {{}}
+                        if (box.value !== undefined && box.value !== TITLE) {{
+                            box.value = TITLE;
+                        }} else if (box.isContentEditable && !(box.innerText || '').trim()) {{
+                            box.textContent = TITLE;
+                        }}
+                        box.dispatchEvent(new Event('input', {{ bubbles: true, composed: true }}));
+                        box.dispatchEvent(new Event('change', {{ bubbles: true, composed: true }}));
+
+                        const createBtn = createDlg.querySelector('#create-button') ||
+                                          createDlg.querySelector('ytcp-button#create-button') ||
+                                          Array.from(createDlg.querySelectorAll('ytcp-button, button')).find(b => {{
+                                              const t = (b.innerText || b.textContent || '').trim().toLowerCase();
+                                              return t === 'tạo' || t === 'create';
+                                          }});
+                        if (createBtn) {{
+                            createBtn.click();
+                            return {{ created: true }};
+                        }}
+                        return {{ created: false, reason: 'no_create_button' }};
+                    }})()
+                """)
+                logger.info("Create playlist dialog result: %s", create_res)
+                if isinstance(create_res, dict) and create_res.get("created"):
+                    created = True
+                    await asyncio.sleep(2.2)
+                    pick_res = await self.evaluate(select_js)
+
+        # 3. Click Done / Xong on ytcp-playlist-dialog
+        await self.evaluate("""
+            (() => {
+                const dlg = document.querySelector('ytcp-playlist-dialog') || document;
+                const doneBtn = dlg.querySelector('ytcp-playlist-dialog #done-button') ||
+                                dlg.querySelector('ytcp-button#done-button') ||
+                                Array.from(dlg.querySelectorAll('ytcp-button, button')).find(b => {
+                                    const t = (b.innerText || b.textContent || '').trim().toLowerCase();
+                                    return t === 'xong' || t === 'done';
+                                });
+                if (doneBtn) {
+                    doneBtn.click();
+                }
+            })()
+        """)
+        await asyncio.sleep(0.8)
+        applied = bool((isinstance(pick_res, dict) and pick_res.get("found")) or created or open_res.get("already_selected"))
+        return {
+            "applied": applied,
+            "created": created,
+            "playlist_title": target_name,
+            "pick_result": pick_res,
+        }
+
+    select_or_create_playlist = ensure_and_select_playlist
+
+    async def attach_endscreen_template(
+        self,
+        video_url_or_id: Optional[str] = None,
+        template_preference: str = "two_elements",
+    ) -> dict[str, Any]:
+        """Attach 2-element End Screen template (Best for viewer + Most recent upload / Subscribe) in Video Elements or /video/<VID>/edit."""
+        if video_url_or_id:
+            vid_id = str(video_url_or_id).strip()
+            if "v=" in vid_id:
+                vid_id = vid_id.split("v=")[1].split("&")[0]
+            elif "/" in vid_id:
+                vid_id = vid_id.rstrip("/").split("/")[-1].split("?")[0]
+            cur_url = str(await self.evaluate("window.location.href") or "")
+            if vid_id and f"/video/{vid_id}/edit" not in cur_url:
+                edit_url = f"https://studio.youtube.com/video/{vid_id}/edit"
+                logger.info("Navigating to %s for End Screen attachment...", edit_url)
+                await self.call("Page.navigate", {"url": edit_url})
+                await asyncio.sleep(3.5)
+                await self.dismiss_studio_interstitials()
+
+        # 1. Click #endscreens-button / #endscreen-editor-link on Video Elements or /edit right rail
+        clicked_open = await self.evaluate("""
+            (() => {
+                let btn = document.querySelector('#endscreens-button') ||
+                          document.querySelector('ytcp-button#endscreens-button') ||
+                          document.querySelector('#endscreen-editor-link') ||
+                          document.querySelector('a#endscreen-editor-link') ||
+                          document.querySelector('[test-id="endscreens-button"]');
+                if (!btn) {
+                    const rows = Array.from(document.querySelectorAll(
+                        'ytcp-video-elements-row, ytcp-elements-row, .element-row, ytcp-form-select, [role="row"]'
+                    ));
+                    const esRow = rows.find(r => {
+                        const t = (r.innerText || r.textContent || '').toLowerCase();
+                        return t.includes('màn hình kết thúc') || t.includes('end screen');
+                    });
+                    if (esRow) {
+                        btn = esRow.querySelector('#endscreens-button, #add-button, #edit-button, ytcp-button, button, a') || esRow;
+                    }
+                }
+                if (!btn) {
+                    btn = Array.from(document.querySelectorAll('ytcp-button, button, a, [role="button"]')).find(el => {
+                        const t = (el.innerText || el.textContent || el.getAttribute('aria-label') || '').trim().toLowerCase();
+                        return t === 'màn hình kết thúc' || t === 'end screen' || t.includes('màn hình kết thúc');
+                    });
+                }
+                if (btn) {
+                    btn.scrollIntoView({ behavior: 'instant', block: 'center' });
+                    btn.click();
+                    return true;
+                }
+                return false;
+            })()
+        """)
+        if not clicked_open:
+            logger.warning("End Screen trigger button (#endscreens-button) not found.")
+            return {"applied": False, "saved": False, "reason": "endscreens_button_not_found"}
+
+        # 2. Wait up to 8s for ytve-endscreen-editor-modal to mount
+        modal_ready = False
+        for _ in range(16):
+            await asyncio.sleep(0.5)
+            modal_ready = bool(
+                await self.evaluate("""
+                    Boolean(
+                        document.querySelector('ytve-endscreen-editor-modal') ||
+                        document.querySelector('ytve-endscreen-template-picker') ||
+                        document.querySelector('ytve-endscreen-editor-options-panel') ||
+                        document.querySelector('ytve-modal-host #save-button')
+                    )
+                """)
+            )
+            if modal_ready:
+                break
+
+        if not modal_ready:
+            logger.warning("End Screen editor modal did not open within 8s.")
+            return {"applied": False, "saved": False, "reason": "endscreen_modal_not_opened"}
+
+        await asyncio.sleep(1.0)
+
+        # 3. Apply 2-element template (2 videos: Best for viewer + Most recent upload, or 1 video + 1 subscribe)
+        template_res = await self.evaluate("""
+            (() => {
+                const modal = document.querySelector('ytve-endscreen-editor-modal') ||
+                              document.querySelector('ytve-modal-host') ||
+                              document;
+                const nodes = [];
+                function walk(root, depth = 0) {
+                    if (!root || depth > 28) return;
+                    if (root.nodeType === 1) {
+                        nodes.push(root);
+                        if (root.shadowRoot) walk(root.shadowRoot, depth + 1);
+                    }
+                    for (const c of root.children || []) walk(c, depth + 1);
+                }
+                walk(modal);
+
+                // Prefer 2-video or 1-video+1-subscribe template cards inside ytve-endscreen-template-picker
+                // Strictly exclude 'Import from video' / 'Nhập từ video' buttons!
+                const cards = nodes.filter(el => {
+                    if (!el.matches) return false;
+                    if (el.matches('ytve-endscreen-template-preview, .template-preview, .card, [role="button"]')) {
+                        const txt = (el.innerText || el.textContent || el.getAttribute('aria-label') || '').trim().toLowerCase();
+                        if (txt.includes('nhập') || txt.includes('import')) return false;
+                        return txt.includes('2 video') ||
+                               txt.includes('1 video') ||
+                               (el.closest('ytve-endscreen-template-picker') !== null && !el.matches('ytcp-button, button'));
+                    }
+                    return false;
+                });
+
+                const oneVidSubCard = cards.find(c => {
+                    const t = (c.innerText || c.textContent || c.getAttribute('aria-label') || '').toLowerCase();
+                    return t.includes('1 video') && (t.includes('đăng ký') || t.includes('subscribe'));
+                });
+                const twoVidCard = cards.find(c => {
+                    const t = (c.innerText || c.textContent || c.getAttribute('aria-label') || '').toLowerCase();
+                    return t.includes('2 video');
+                });
+                const chosenCard = twoVidCard || oneVidSubCard || cards[0] || null;
+                if (chosenCard) {
+                    chosenCard.scrollIntoView({ behavior: 'instant', block: 'center' });
+                    const inner = chosenCard.querySelector('.template-preview, button, [role="button"]') || chosenCard;
+                    inner.click();
+                    return { method: 'template_card', label: (chosenCard.innerText || chosenCard.getAttribute('aria-label') || 'template').trim().slice(0, 80) };
+                }
+
+                // Fallback: click + Element / + Thành phần (#add-element-button) and pick Video
+                const addBtn = nodes.find(el => {
+                    if (!el.matches || !el.matches('ytcp-button, button, #add-element-button')) return false;
+                    const t = (el.innerText || el.textContent || el.getAttribute('aria-label') || '').toLowerCase();
+                    return el.id === 'add-element-button' || t.includes('thành phần') || t.includes('element');
+                });
+                if (addBtn) {
+                    addBtn.click();
+                    return { method: 'add_element_button_clicked' };
+                }
+                return { method: 'existing_or_none', card_count: cards.length };
+            })()
+        """)
+        logger.info("End screen template selection step: %s", template_res)
+        await asyncio.sleep(1.0)
+
+        if isinstance(template_res, dict) and template_res.get("method") == "add_element_button_clicked":
+            # Select 'Video' from the element menu
+            await self.evaluate("""
+                (() => {
+                    const items = Array.from(document.querySelectorAll('tp-yt-paper-item, ytcp-text-menu-item, [role="menuitem"]'));
+                    const vidItem = items.find(it => {
+                        const t = (it.innerText || it.textContent || '').trim().toLowerCase();
+                        return t === 'video' || t.startsWith('video') || it.getAttribute('test-id') === 'VIDEO';
+                    });
+                    if (vidItem) vidItem.click();
+                })()
+            """)
+            await asyncio.sleep(1.0)
+
+        # Ensure every video element on the endscreen canvas has a valid auto-resolved video type (BEST_FOR_VIEWER or MOST_RECENT_UPLOAD)
+        # so no element is left in the invalid empty "Choose specific video" state
+        await self.evaluate("""
+            (() => {
+                const modal = document.querySelector('ytve-endscreen-editor-modal') || document;
+                const elBoxes = Array.from(modal.querySelectorAll(
+                    'ytve-endscreen-element-box, .endscreen-element, ytve-endscreen-editor-timeline-row'
+                ));
+                const pickRadio = (preferMostRecent) => {
+                    const radios = Array.from(modal.querySelectorAll('tp-yt-paper-radio-button, [role="radio"]'));
+                    const best = radios.find(r => {
+                        const t = (r.innerText || r.textContent || '').toLowerCase();
+                        return r.getAttribute('name') === 'BEST_FOR_VIEWER' ||
+                               t.includes('phù hợp nhất với người xem') ||
+                               t.includes('best for viewer');
+                    });
+                    const recent = radios.find(r => {
+                        const t = (r.innerText || r.textContent || '').toLowerCase();
+                        return r.getAttribute('name') === 'MOST_RECENT_UPLOAD' ||
+                               t.includes('tải lên gần đây nhất') ||
+                               t.includes('most recent upload');
+                    });
+                    const target = preferMostRecent ? (recent || best) : (best || recent);
+                    if (target && target.getAttribute('aria-checked') !== 'true') {
+                        target.click();
+                    }
+                };
+                if (elBoxes.length > 0) {
+                    elBoxes.forEach((box, idx) => {
+                        try { box.click(); } catch (e) {}
+                        pickRadio(idx % 2 === 1);
+                    });
+                } else {
+                    pickRadio(false);
+                }
+            })()
+        """)
+        await asyncio.sleep(0.8)
+
+        # 4. Click #save-button inside ytve-endscreen-editor-modal (verifying >= 1 element exists if disabled)
+        save_res = await self.evaluate("""
+            (() => {
+                const modal = document.querySelector('ytve-endscreen-editor-modal') ||
+                              document.querySelector('ytve-modal-host') ||
+                              document.querySelector('ytcp-dialog') ||
+                              document;
+                const elCount = modal.querySelectorAll(
+                    'ytve-endscreen-element-box, .endscreen-element, ytve-endscreen-editor-timeline-row, [test-id*="element"]'
+                ).length;
+                const saveBtn = modal.querySelector('ytve-endscreen-editor-modal #save-button') ||
+                                modal.querySelector('ytve-modal-host #save-button') ||
+                                modal.querySelector('#save-button') ||
+                                Array.from(modal.querySelectorAll('ytcp-button, button')).find(b => {
+                                    if (b.id === 'next-button' || b.id === 'save') return false;
+                                    const t = (b.innerText || b.textContent || '').trim().toLowerCase();
+                                    return t === 'lưu' || t === 'save';
+                                });
+                if (!saveBtn) return { clicked: false, reason: 'no_save_button', element_count: elCount };
+                const disabled = saveBtn.hasAttribute('disabled') || saveBtn.getAttribute('aria-disabled') === 'true';
+                if (disabled) {
+                    return {
+                        clicked: false,
+                        disabled: true,
+                        has_elements: elCount >= 1,
+                        element_count: elCount,
+                        reason: elCount >= 1 ? 'already_saved_or_unchanged' : 'disabled_with_zero_elements',
+                    };
+                }
+                saveBtn.click();
+                return { clicked: true, element_count: elCount };
+            })()
+        """)
+        logger.info("End screen #save-button result: %s", save_res)
+        saved = bool(isinstance(save_res, dict) and save_res.get("clicked"))
+        already_saved = bool(
+            isinstance(save_res, dict)
+            and save_res.get("disabled")
+            and (save_res.get("has_elements") or (isinstance(template_res, dict) and template_res.get("method") == "template_card"))
+        )
+
+        # Wait up to 6s for modal to close; if still open (e.g. already_saved), close cleanly via #discard-button / #close-button
+        for _ in range(12):
+            await asyncio.sleep(0.5)
+            still_open = await self.evaluate("""
+                (() => {
+                    const m = document.querySelector('ytve-endscreen-editor-modal');
+                    if (!m) return false;
+                    const r = m.getBoundingClientRect ? m.getBoundingClientRect() : null;
+                    return Boolean(m.offsetParent !== null || (r && r.width > 0 && r.height > 0));
+                })()
+            """)
+            if not still_open:
+                break
+        else:
+            await self.evaluate("""
+                (() => {
+                    const m = document.querySelector('ytve-endscreen-editor-modal') || document;
+                    const closeBtn = m.querySelector('#discard-button, #close-button, #cancel-button, button[aria-label*="Đóng"], button[aria-label*="Close"]');
+                    if (closeBtn) {
+                        const inner = closeBtn.querySelector('button') || closeBtn;
+                        inner.click();
+                        if (inner !== closeBtn) closeBtn.click();
+                    }
+                })()
+            """)
+            await self.call("Input.dispatchKeyEvent", {"type": "rawKeyDown", "windowsVirtualKeyCode": 27, "key": "Escape", "code": "Escape"})
+            await self.call("Input.dispatchKeyEvent", {"type": "keyUp", "windowsVirtualKeyCode": 27, "key": "Escape", "code": "Escape"})
+            await asyncio.sleep(0.5)
+
+        return {
+            "applied": bool(saved or already_saved),
+            "saved": saved,
+            "already_saved": already_saved,
+            "template": template_res,
+            "preference": template_preference,
+        }
 
     async def _select_studio_dropdown_option(
         self,
@@ -1954,6 +2699,7 @@ class YouTubeCDPClient:
         res = await self.evaluate("""
             (() => {
                 const selectors = [
+                    'ytcp-video-metadata-related-video',
                     'ytcp-video-metadata-editor-advanced #related-video-picker',
                     'ytcp-video-metadata-editor-sidepanel #related-video',
                     '#linked-video-editor-link',
@@ -1965,7 +2711,7 @@ class YouTubeCDPClient:
                     const el = document.querySelector(sel);
                     if (el) {
                         el.scrollIntoView({ behavior: 'instant', block: 'center' });
-                        const btn = el.querySelector('.container, ytcp-button, button, #trigger, .edit-button') || el;
+                        const btn = el.querySelector('.container, ytcp-button, button, #trigger, .dropdown-trigger, .edit-button') || el;
                         btn.click();
                         return true;
                     }
@@ -2576,6 +3322,670 @@ class YouTubeCDPClient:
 
         logger.warning("Could not click save button for thumbnail or save was not enabled.")
         return {"success": False, "video_id": vid_id, "error": "save_button_not_clicked"}
+
+    async def _click_editor_save_and_wait(self, max_wait_sec: float = 20.0) -> bool:
+        """Click #save on /video/<VID>/edit, dismiss any precheck confirmation dialog, and wait for persistence."""
+        clicked = False
+        steps = max(4, int(max_wait_sec * 2))
+        for _ in range(steps):
+            save_info = await self.evaluate("""
+                (() => {
+                    const saveBtn = document.querySelector('ytcp-button#save, #save-button, ytcp-video-metadata-editor #save');
+                    if (!saveBtn) return { found: false };
+                    const disabled = saveBtn.hasAttribute('disabled') || saveBtn.getAttribute('aria-disabled') === 'true';
+                    const inner = saveBtn.querySelector('button') || saveBtn;
+                    if (!disabled && !inner.disabled) {
+                        inner.click();
+                        return { found: true, clicked: true };
+                    }
+                    return { found: true, clicked: false, disabled: true };
+                })()
+            """)
+            if isinstance(save_info, dict) and save_info.get("clicked"):
+                clicked = True
+                break
+            await asyncio.sleep(0.5)
+
+        if not clicked:
+            return False
+
+        for _ in range(int(max_wait_sec)):
+            await asyncio.sleep(1.0)
+            # Click any precheck / confirmation dialog ('Vẫn lưu', 'Save anyway', 'Vẫn lên lịch')
+            await self.evaluate("""
+                (() => {
+                    const targets = ['vẫn lưu', 'save anyway', 'vẫn lên lịch', 'schedule anyway', 'vẫn xuất bản', 'publish anyway'];
+                    const dlgs = Array.from(document.querySelectorAll('ytcp-confirmation-dialog, ytcp-prechecks-warning-dialog, tp-yt-paper-dialog, ytcp-dialog'));
+                    for (const d of dlgs) {
+                        const r = d.getBoundingClientRect ? d.getBoundingClientRect() : null;
+                        if (!r || r.width <= 0 || r.height <= 0) continue;
+                        const btns = Array.from(d.querySelectorAll('ytcp-button, button, #confirm-button, #secondary-action-button'));
+                        for (const b of btns) {
+                            const txt = (b.innerText || b.textContent || '').trim().toLowerCase();
+                            if (targets.includes(txt) || b.id === 'confirm-button') {
+                                const inner = b.querySelector('button') || b;
+                                inner.click();
+                                if (inner !== b) b.click();
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                })()
+            """)
+            is_clean = await self.evaluate("""
+                (() => {
+                    const saveBtn = document.querySelector('ytcp-button#save, #save-button, ytcp-video-metadata-editor #save');
+                    return saveBtn ? (saveBtn.hasAttribute('disabled') || saveBtn.getAttribute('aria-disabled') === 'true') : true;
+                })()
+            """)
+            if is_clean:
+                break
+        await asyncio.sleep(1.0)
+        return True
+
+    async def attach_related_video_existing_short(
+        self,
+        short_vid: str,
+        target_long_vid_or_title: str,
+        *,
+        target_title: Optional[str] = None,
+        navigate_if_needed: bool = True,
+        save_changes: bool = True,
+        screenshot_path: Optional[str | Path] = None,
+    ) -> dict[str, Any]:
+        """Open /video/<SHORT_VID>/edit on an existing Scheduled/Public Short and link ytcp-video-metadata-related-video to parent Long."""
+        short_id = str(short_vid or "").strip().rstrip("/").split("/")[-1].split("?")[0]
+        if "v=" in short_id:
+            short_id = short_id.split("v=")[1].split("&")[0]
+        raw_target = str(target_long_vid_or_title or "").strip()
+        if not short_id or not raw_target:
+            return {"success": False, "linked_via_cdp": False, "short_id": short_id, "reason": "missing_short_or_target"}
+
+        # Extract 11-char video ID if raw_target is a URL or ID
+        target_id = raw_target.rstrip("/").split("/")[-1].split("?")[0]
+        if "v=" in target_id:
+            target_id = target_id.split("v=")[1].split("&")[0]
+        is_vid_id = bool(re.match(r"^[A-Za-z0-9_-]{11}$", target_id))
+        resolved_title = target_title or (fetch_youtube_title(target_id) if is_vid_id else raw_target)
+        if not resolved_title and not is_vid_id:
+            resolved_title = raw_target
+
+        edit_url = f"https://studio.youtube.com/video/{short_id}/edit"
+        if navigate_if_needed:
+            cur_url = str(await self.evaluate("window.location.href") or "")
+            if f"/video/{short_id}/edit" not in cur_url:
+                logger.info("Navigating to Short /edit for Related Video linking: %s (target=%r, title=%r)", edit_url, raw_target, resolved_title)
+                await self.call("Page.navigate", {"url": edit_url})
+                await asyncio.sleep(3.5)
+                await self.dismiss_studio_interstitials()
+
+        # Wait up to 12s for Short metadata editor to hydrate
+        for _ in range(24):
+            has_editor = await self.evaluate("""
+                Boolean(
+                    document.querySelector('ytcp-video-metadata-related-video') ||
+                    document.querySelector('#linked-video-editor-link') ||
+                    document.querySelector('ytcp-shorts-content-links-picker') ||
+                    document.querySelector('#title-textarea #textbox')
+                )
+            """)
+            if has_editor:
+                break
+            await asyncio.sleep(0.5)
+
+        # Pre-check existing linked related video text for idempotency or re-link clearing
+        existing_link_text = str(
+            await self.evaluate("""
+                (() => {
+                    const el = document.querySelector('ytcp-video-metadata-related-video .dropdown-trigger-text') ||
+                               document.querySelector('#linked-video-editor-link .dropdown-trigger-text') ||
+                               document.querySelector('ytcp-shorts-content-links-picker .dropdown-trigger-text');
+                    return el ? (el.innerText || el.textContent || '').replace(/\\s+/g, ' ').trim() : '';
+                })()
+            """)
+            or ""
+        )
+        if existing_link_text and existing_link_text.lower() not in ("không có", "none", "chọn", "select"):
+            rt_low = (resolved_title or "").lower().strip()
+            rt_prefix = rt_low.split(":")[0].strip() if rt_low else ""
+            ex_low = existing_link_text.lower()
+            already_matches = bool(
+                (rt_low and (rt_low in ex_low or ex_low in rt_low))
+                or (rt_prefix and len(rt_prefix) >= 6 and rt_prefix in ex_low)
+                or (is_vid_id and target_id.lower() in ex_low)
+            )
+            if already_matches:
+                logger.info("Short %s is already linked to %r; returning idempotent success.", short_id, existing_link_text)
+                if screenshot_path:
+                    await self.capture_screenshot(screenshot_path)
+                return {
+                    "success": True,
+                    "linked_via_cdp": True,
+                    "already_linked": True,
+                    "short_id": short_id,
+                    "target_id": target_id if is_vid_id else None,
+                    "target_title": resolved_title,
+                    "selected_text": existing_link_text,
+                    "saved": False,
+                    "screenshot_path": str(screenshot_path) if screenshot_path else None,
+                }
+            # Different video currently linked -> click clear (#right-icon) or edit (#edit-icon) first
+            logger.info("Short %s currently linked to different video %r; clearing before re-linking...", short_id, existing_link_text)
+            await self.evaluate("""
+                (() => {
+                    const clearBtn = document.querySelector(
+                        'ytcp-video-metadata-related-video #right-icon, #linked-video-editor-link #right-icon, ytcp-shorts-content-links-picker #right-icon'
+                    );
+                    if (clearBtn) clearBtn.click();
+                })()
+            """)
+            await asyncio.sleep(1.2)
+
+        # Open Related Video picker (ytcp-video-metadata-related-video / Video liên quan)
+        opened = False
+        tier3_detected = False
+        for _ in range(4):
+            click_open = await self.evaluate("""
+                (() => {
+                    const selectors = [
+                        'ytcp-video-metadata-related-video',
+                        '#linked-video-editor-link',
+                        'ytcp-shorts-content-links-picker',
+                        'ytcp-linked-video-editor',
+                        'ytcp-video-metadata-editor-sidepanel #related-video',
+                        'ytcp-video-metadata-editor-advanced #related-video-picker',
+                    ];
+                    for (const sel of selectors) {
+                        const el = document.querySelector(sel);
+                        if (el) {
+                            el.scrollIntoView({ behavior: 'instant', block: 'center' });
+                            const btn = el.querySelector('#select-button, .dropdown-trigger, #trigger, .container, ytcp-button, button, #edit-icon') || el;
+                            btn.click();
+                            return { clicked: true, selector: sel };
+                        }
+                    }
+                    const fallback = Array.from(document.querySelectorAll('ytcp-button, button, div[role="button"], ytcp-form-select')).find(b => {
+                        const t = (b.innerText || b.textContent || b.getAttribute('aria-label') || '').toLowerCase();
+                        return t.includes('video liên quan') || t.includes('related video');
+                    });
+                    if (fallback) {
+                        fallback.scrollIntoView({ behavior: 'instant', block: 'center' });
+                        fallback.click();
+                        return { clicked: true, selector: 'text_fallback' };
+                    }
+                    return { clicked: false };
+                })()
+            """)
+            await asyncio.sleep(1.8)
+            diag = await self.check_trust_tiers_dialog()
+            if diag.get("detected"):
+                tier3_detected = True
+                break
+            dlg_ready = await self.evaluate("""
+                Boolean(
+                    document.querySelector('ytcp-video-pick-dialog') ||
+                    document.querySelector('ytcp-entity-picker-dialog') ||
+                    document.querySelectorAll('ytcp-video-pick-dialog ytcp-entity-card, ytcp-entity-card, ytcp-video-row').length > 0
+                )
+            """)
+            if dlg_ready or (isinstance(click_open, dict) and click_open.get("clicked")):
+                opened = True
+                if dlg_ready:
+                    break
+
+        if tier3_detected:
+            await self.dismiss_trust_tiers_dialog()
+            handle = self.resolve_channel_handle(short_id) or "@SuKeLaiVN"
+            applied = await self.apply_clickable_handle_fallback(
+                target_title=resolved_title or "Video chính trên kênh",
+                handle=handle,
+            )
+            return {
+                "success": False,
+                "linked_via_cdp": False,
+                "tier3_verification_required": True,
+                "clickable_handle_fallback_applied": applied,
+                "short_id": short_id,
+                "target": raw_target,
+            }
+
+        if not opened:
+            return {
+                "success": False,
+                "linked_via_cdp": False,
+                "short_id": short_id,
+                "target": raw_target,
+                "reason": "related_video_picker_not_found",
+            }
+
+        # Type search query if resolved_title is available, then select matching card
+        search_queries = []
+        if resolved_title:
+            search_queries.append(resolved_title.split(":")[0].strip())
+        if is_vid_id:
+            search_queries.append(target_id)
+        search_queries.append("")  # fallback to unfiltered card list
+
+        picked_res: dict[str, Any] = {"ok": False}
+        for sq in search_queries:
+            if sq:
+                await self.evaluate(f"""
+                    (() => {{
+                        const q = {json.dumps(sq, ensure_ascii=False)};
+                        const dlg = document.querySelector('ytcp-video-pick-dialog, ytcp-entity-picker-dialog') || document;
+                        const inp = dlg.querySelector('input#search-input, input[type="text"], input');
+                        if (inp) {{
+                            inp.focus();
+                            inp.value = '';
+                            inp.dispatchEvent(new Event('input', {{ bubbles: true, composed: true }}));
+                            inp.value = q;
+                            inp.dispatchEvent(new Event('input', {{ bubbles: true, composed: true }}));
+                            inp.dispatchEvent(new Event('change', {{ bubbles: true, composed: true }}));
+                        }}
+                    }})()
+                """)
+                await asyncio.sleep(1.5)
+            else:
+                await self.evaluate("""
+                    (() => {
+                        const dlg = document.querySelector('ytcp-video-pick-dialog, ytcp-entity-picker-dialog');
+                        const inp = dlg ? dlg.querySelector('input#search-input, input[type="text"], input') : null;
+                        if (inp && inp.value) {
+                            inp.focus();
+                            inp.value = '';
+                            inp.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+                        }
+                    })()
+                """)
+                await asyncio.sleep(1.0)
+
+            picked_res = await self.evaluate(f"""
+                (() => {{
+                    const qId = {json.dumps(target_id if is_vid_id else "", ensure_ascii=False)};
+                    const curShort = {json.dumps(short_id, ensure_ascii=False)};
+                    const qTitle = {json.dumps((resolved_title or "").lower().strip(), ensure_ascii=False)};
+                    const qPrefix = qTitle ? qTitle.split(/[:,-]/)[0].trim() : '';
+
+                    const cards = Array.from(document.querySelectorAll(
+                        'ytcp-video-pick-dialog ytcp-entity-card, ytcp-entity-card, ' +
+                        'ytcp-entity-picker-dialog ytcp-entity-picker-item, ytcp-video-pick-dialog ytcp-video-row'
+                    ));
+                    if (cards.length === 0) return {{ ok: false, reason: 'no_cards' }};
+
+                    const pool = cards.filter(c => {{
+                        const h = c.innerHTML || '';
+                        const t = (c.innerText || '').toLowerCase();
+                        return !(curShort && (h.includes(curShort) || t.includes(curShort)));
+                    }});
+                    const candidates = pool.length > 0 ? pool : cards;
+
+                    let match = null;
+                    if (qId) {{
+                        match = candidates.find(c => (c.innerHTML || '').includes(qId) || (c.getAttribute('aria-label') || '').includes(qId));
+                    }}
+                    if (!match && qTitle) {{
+                        match = candidates.find(c => {{
+                            const t = (c.innerText || '').toLowerCase();
+                            const a = (c.getAttribute('aria-label') || '').toLowerCase();
+                            return t.includes(qTitle) || a.includes(qTitle);
+                        }});
+                    }}
+                    if (!match && qPrefix && qPrefix.length >= 5) {{
+                        match = candidates.find(c => {{
+                            const t = (c.innerText || '').toLowerCase();
+                            const a = (c.getAttribute('aria-label') || '').toLowerCase();
+                            return t.includes(qPrefix) || a.includes(qPrefix);
+                        }});
+                    }}
+                    if (!match && !qId && !qTitle) {{
+                        match = candidates.find(c => !((c.innerText || '').toLowerCase().includes('#shorts'))) || candidates[0];
+                    }}
+                    if (match) {{
+                        match.scrollIntoView({{ behavior: 'instant', block: 'center' }});
+                        match.click();
+                        return {{ ok: true, matched_text: (match.innerText || '').replace(/\\s+/g, ' ').trim().slice(0, 120) }};
+                    }}
+                    return {{ ok: false, card_count: candidates.length }};
+                }})()
+            """) or {"ok": False}
+            if picked_res.get("ok"):
+                break
+
+        await asyncio.sleep(1.2)
+        saved = False
+        if picked_res.get("ok") and save_changes:
+            saved = await self._click_editor_save_and_wait()
+
+        after_linked = await self.evaluate("""
+            (() => {
+                const el = document.querySelector('ytcp-video-metadata-related-video .dropdown-trigger-text') ||
+                           document.querySelector('#linked-video-editor-link .dropdown-trigger-text') ||
+                           document.querySelector('ytcp-shorts-content-links-picker .dropdown-trigger-text') ||
+                           document.querySelector('ytcp-video-metadata-related-video');
+                return el ? (el.innerText || el.textContent || '').replace(/\\s+/g, ' ').trim() : '';
+            })()
+        """)
+        if screenshot_path:
+            await self.capture_screenshot(screenshot_path)
+
+        ok = bool(picked_res.get("ok") and (saved or not save_changes))
+        return {
+            "success": ok,
+            "linked_via_cdp": ok,
+            "short_id": short_id,
+            "target_id": target_id if is_vid_id else None,
+            "target_title": resolved_title,
+            "picked": picked_res,
+            "selected_text": after_linked,
+            "saved": saved,
+            "screenshot_path": str(screenshot_path) if screenshot_path else None,
+        }
+
+    async def update_existing_video_studio_settings(
+        self,
+        video_url_or_id: str,
+        *,
+        notify_subscribers: Optional[bool] = False,
+        title: Optional[str] = None,
+        description: Optional[str] = None,
+        clean_dead_links: Optional[list[str] | tuple[str, ...]] = None,
+        thumbnail_path: Optional[str | Path] = None,
+        strict_thumbnail: bool = False,
+        playlist_name: Optional[str] = None,
+        attach_endscreen: bool = False,
+        related_video: Optional[str] = None,
+        visibility: Optional[str] = None,
+        tags: Optional[str | list[str]] = None,
+        language: Optional[str] = None,
+        category: Optional[str] = None,
+        altered_content: str = "unset",
+        subtitles_path: Optional[str | Path] = None,
+        screenshot_path: Optional[str | Path] = None,
+    ) -> dict[str, Any]:
+        """In-place /video/<VID>/edit updater: expands Show More (#toggle-button), unchecks Notify Subscribers, updates title/desc/thumb/playlist/endscreen/related-video/visibility, and clicks #save."""
+        vid_id = str(video_url_or_id or "").strip()
+        if "v=" in vid_id:
+            vid_id = vid_id.split("v=")[1].split("&")[0]
+        elif "/" in vid_id:
+            vid_id = vid_id.rstrip("/").split("/")[-1].split("?")[0]
+        if not vid_id:
+            raise ValueError(f"Invalid video_url_or_id: {video_url_or_id!r}")
+
+        edit_url = f"https://studio.youtube.com/video/{vid_id}/edit"
+        logger.info("Navigating to %s for in-place Studio settings update...", edit_url)
+        await self.call("Page.navigate", {"url": edit_url})
+        await asyncio.sleep(3.5)
+        await self.dismiss_studio_interstitials()
+
+        # Wait up to 15s for editor hydration
+        for _ in range(30):
+            has_editor = await self.evaluate("""
+                (() => {
+                    const el = document.querySelector('#title-textarea #textbox') ||
+                               document.querySelector('ytcp-video-metadata-editor');
+                    return Boolean(el);
+                })()
+            """)
+            if has_editor:
+                break
+            await asyncio.sleep(0.5)
+
+        report: dict[str, Any] = {
+            "video_id": vid_id,
+            "edit_url": edit_url,
+            "changes": {},
+        }
+
+        # 1. Title update
+        if title is not None and str(title).strip():
+            clean_title = str(title).strip()
+            if len(clean_title) > 55:
+                raise ValueError(f"TITLE_EXCEEDS_55_CHARS: len={len(clean_title)} title={clean_title!r}")
+            t_res = await self.evaluate(f"""
+                (() => {{
+                    const el = document.querySelector('#title-textarea #textbox') ||
+                               document.querySelector('#textbox[contenteditable="true"]');
+                    if (!el) return {{ updated: false, reason: 'no_title_textbox' }};
+                    const cur = (el.innerText || '').trim();
+                    if (cur === {json.dumps(clean_title, ensure_ascii=False)}) {{
+                        return {{ updated: false, unchanged: true, title: cur }};
+                    }}
+                    el.focus();
+                    document.execCommand('selectAll', false, null);
+                    document.execCommand('delete', false, null);
+                    document.execCommand('insertText', false, {json.dumps(clean_title, ensure_ascii=False)});
+                    el.dispatchEvent(new Event('input', {{ bubbles: true, composed: true }}));
+                    el.dispatchEvent(new Event('change', {{ bubbles: true, composed: true }}));
+                    return {{ updated: true, previous: cur, title: (el.innerText || '').trim() }};
+                }})()
+            """)
+            report["changes"]["title"] = t_res
+
+        # 2. Description update and/or dead Private link cleaning
+        if description is not None or clean_dead_links:
+            current_desc = description
+            if current_desc is None:
+                current_desc = str(
+                    await self.evaluate("""
+                        (() => {
+                            const el = document.querySelector('#description-textarea #textbox');
+                            return el ? (el.innerText || '') : '';
+                        })()
+                    """)
+                    or ""
+                )
+            removed_dead_ids: list[str] = []
+            if clean_dead_links:
+                current_desc, removed_dead_ids = clean_dead_links_from_description(current_desc, clean_dead_links)
+            d_res = await self.evaluate(f"""
+                (() => {{
+                    const el = document.querySelector('#description-textarea #textbox');
+                    if (!el) return {{ updated: false, reason: 'no_description_textbox' }};
+                    const targetDesc = {json.dumps(current_desc, ensure_ascii=False)};
+                    const cur = (el.innerText || '').trim();
+                    if (cur === targetDesc.trim()) {{
+                        return {{ updated: false, unchanged: true, length: cur.length }};
+                    }}
+                    el.focus();
+                    document.execCommand('selectAll', false, null);
+                    document.execCommand('delete', false, null);
+                    document.execCommand('insertText', false, targetDesc);
+                    el.dispatchEvent(new Event('input', {{ bubbles: true, composed: true }}));
+                    el.dispatchEvent(new Event('change', {{ bubbles: true, composed: true }}));
+                    return {{ updated: true, length: (el.innerText || '').length }};
+                }})()
+            """)
+            if isinstance(d_res, dict):
+                d_res["removed_dead_ids"] = removed_dead_ids
+            report["changes"]["description"] = d_res
+
+        # 3. Custom Thumbnail (< 2MB)
+        if thumbnail_path:
+            thumb_ok = await self.upload_thumbnail(thumbnail_path, strict_thumbnail=strict_thumbnail)
+            report["changes"]["thumbnail_uploaded"] = thumb_ok
+
+        # 4. Playlist selection / creation
+        if playlist_name:
+            pl_res = await self.ensure_and_select_playlist(playlist_name)
+            report["changes"]["playlist"] = pl_res
+
+        # 5. Notify subscribers checkbox + tags/language/altered_content (inside Show more / #toggle-button)
+        if notify_subscribers is not None or tags or language or category or altered_content in ("yes", "no"):
+            await self.expand_show_more_details()
+        if notify_subscribers is not None:
+            notify_res = await self.set_notify_subscribers(bool(notify_subscribers))
+            report["changes"]["notify_subscribers"] = notify_res
+        if altered_content in ("yes", "no"):
+            alt_res = await self.set_altered_content_disclosure(altered_content)
+            report["changes"]["altered_content"] = alt_res
+        if tags:
+            clean_tags = format_and_truncate_tags(tags, max_chars=480)
+            existing_chips = int(
+                await self.evaluate("document.querySelectorAll('#tags-container ytcp-chip').length") or 0
+            )
+            if clean_tags and existing_chips == 0:
+                tags_csv = ",".join(clean_tags) + ","
+                await self.evaluate(f"""
+                    (() => {{
+                        const container = document.querySelector('#tags-container') ||
+                                          document.querySelector('ytcp-form-input-container#tags-container');
+                        if (!container) return false;
+                        container.scrollIntoView({{ behavior: 'instant', block: 'center' }});
+                        const input = container.querySelector('input#text-input, input');
+                        if (!input) return false;
+                        input.focus();
+                        document.execCommand('insertText', false, {json.dumps(tags_csv, ensure_ascii=False)});
+                        input.dispatchEvent(new Event('input', {{ bubbles: true, composed: true }}));
+                        return true;
+                    }})()
+                """)
+                await self.call("Input.dispatchKeyEvent", {"type": "rawKeyDown", "windowsVirtualKeyCode": 13, "key": "Enter", "code": "Enter"})
+                await self.call("Input.dispatchKeyEvent", {"type": "keyUp", "windowsVirtualKeyCode": 13, "key": "Enter", "code": "Enter"})
+                await asyncio.sleep(0.5)
+                after_chips = int(
+                    await self.evaluate("document.querySelectorAll('#tags-container ytcp-chip').length") or 0
+                )
+                report["changes"]["tags_chip_count"] = after_chips
+        if language:
+            cur_lang = str(
+                await self.evaluate("""
+                    (() => {
+                        const el = document.querySelector('#language-input') ||
+                                   document.querySelector('ytcp-text-dropdown-select#language-input');
+                        return el ? (el.innerText || el.textContent || '').trim().toLowerCase() : '';
+                    })()
+                """)
+                or ""
+            )
+            if not cur_lang or "chọn" in cur_lang or "select" in cur_lang:
+                lang_ok = await self._select_studio_dropdown_option(
+                    ['#language-input', 'ytcp-form-language-input', 'ytcp-text-dropdown-select#language-input'],
+                    language,
+                )
+                report["changes"]["language_selected"] = lang_ok
+        if category:
+            cur_cat = str(
+                await self.evaluate("""
+                    (() => {
+                        const el = document.querySelector('#category') ||
+                                   document.querySelector('ytcp-text-dropdown-select#category');
+                        return el ? (el.innerText || el.textContent || '').trim().toLowerCase() : '';
+                    })()
+                """)
+                or ""
+            )
+            if not cur_cat or "chọn" in cur_cat or "select" in cur_cat:
+                cat_ok = await self._select_studio_dropdown_option(
+                    ['#category', 'ytcp-video-metadata-category', 'ytcp-text-dropdown-select#category'],
+                    category,
+                )
+                report["changes"]["category_selected"] = cat_ok
+
+        # 6. Short Related Video (if requested)
+        if related_video:
+            rel_res = await self.attach_related_video_existing_short(
+                vid_id,
+                related_video,
+                navigate_if_needed=False,
+                save_changes=False,
+            )
+            report["changes"]["related_video"] = rel_res
+
+        # 7. Visibility switch (PRIVATE / UNLISTED / PUBLIC) if requested
+        if visibility:
+            vis_norm = visibility.strip().upper()
+            vis_res = await self.evaluate("""
+                (() => {
+                    const trigger = document.querySelector('ytcp-video-metadata-visibility #select-button') ||
+                                    document.querySelector('#visibility-button') ||
+                                    document.querySelector('ytcp-video-metadata-visibility ytcp-dropdown-trigger') ||
+                                    document.querySelector('ytcp-video-metadata-visibility #trigger') ||
+                                    document.querySelector('ytcp-video-metadata-visibility');
+                    if (!trigger) return { opened: false };
+                    trigger.scrollIntoView({ behavior: 'instant', block: 'center' });
+                    const btn = trigger.querySelector('#select-button, button, #trigger, .dropdown-trigger') || trigger;
+                    btn.click();
+                    return { opened: true };
+                })()
+            """)
+            if isinstance(vis_res, dict) and vis_res.get("opened"):
+                await asyncio.sleep(1.0)
+                await self.evaluate("""
+                    (() => {
+                        const firstExpand = document.querySelector('#first-container-expand-button') ||
+                                            document.querySelector('#first-container tp-yt-paper-radio-button') ||
+                                            document.querySelector('tp-yt-paper-radio-button[name="FIRST_CONTAINER"]');
+                        if (firstExpand) firstExpand.click();
+                    })()
+                """)
+                await asyncio.sleep(0.6)
+                set_r = await self.evaluate(f"""
+                    (() => {{
+                        const radio = document.querySelector('tp-yt-paper-radio-button[name="{vis_norm}"]');
+                        if (!radio) return {{ ok: false, reason: 'radio_not_found' }};
+                        radio.scrollIntoView({{ behavior: 'instant', block: 'center' }});
+                        radio.click();
+                        const inner = radio.querySelector('#radioContainer, #offRadio');
+                        if (inner) inner.click();
+                        return {{ ok: true, visibility: '{vis_norm}' }};
+                    }})()
+                """)
+                if not (isinstance(set_r, dict) and set_r.get("ok")):
+                    await asyncio.sleep(0.6)
+                    set_r = await self.evaluate(f"""
+                        (() => {{
+                            const radio = document.querySelector('tp-yt-paper-radio-button[name="{vis_norm}"]');
+                            if (!radio) return {{ ok: false, reason: 'radio_still_not_found' }};
+                            radio.click();
+                            const inner = radio.querySelector('#radioContainer, #offRadio');
+                            if (inner) inner.click();
+                            return {{ ok: true, visibility: '{vis_norm}' }};
+                        }})()
+                    """)
+                await asyncio.sleep(0.5)
+                await self.evaluate("""
+                    (() => {
+                        const popup = document.querySelector('ytcp-video-visibility-edit-popup') ||
+                                      document.querySelector('tp-yt-iron-dropdown[aria-hidden="false"]') ||
+                                      document;
+                        const doneBtn = popup.querySelector('#save-button, ytcp-button#save-button') ||
+                                        Array.from(popup.querySelectorAll('ytcp-button, button')).find(b => {
+                                            const t = (b.innerText || b.textContent || '').trim().toLowerCase();
+                                            return t === 'xong' || t === 'done';
+                                        });
+                        if (doneBtn) {
+                            doneBtn.click();
+                        }
+                    })()
+                """)
+                await asyncio.sleep(1.0)
+                report["changes"]["visibility"] = set_r
+
+        # 8. Save dirty /edit Details BEFORE opening End Screen modal so Studio never drops unsaved edits
+        saved_details = await self._click_editor_save_and_wait()
+
+        # 9. Attach subtitles if missing and subtitles_path provided
+        if subtitles_path and Path(subtitles_path).is_file():
+            sub_ok = await self.attach_subtitles_post_publish(vid_id, Path(subtitles_path).resolve())
+            report["changes"]["subtitles_uploaded"] = sub_ok
+
+        # 10. Attach 2-element End Screen template (saves inside its own modal)
+        if attach_endscreen:
+            es_res = await self.attach_endscreen_template(video_url_or_id=None)
+            report["changes"]["endscreen"] = es_res
+
+        # 10. Click main editor #save again if any post-modal state is dirty
+        saved_after = await self._click_editor_save_and_wait(max_wait_sec=4.0) if not saved_details else False
+        saved = bool(saved_details or saved_after)
+        report["saved"] = saved
+
+        if screenshot_path:
+            await self.capture_screenshot(screenshot_path)
+            report["screenshot_path"] = str(screenshot_path)
+
+        report["success"] = True
+        return report
 
     async def post_and_pin_comment(
         self,
@@ -3253,12 +4663,17 @@ class YouTubeCDPClient:
                         if (!rect || rect.width <= 0 || rect.height <= 0) continue;
                         const style = window.getComputedStyle(el);
                         if (style.visibility === 'hidden' || style.display === 'none') continue;
-                        const txt = (el.innerText || el.textContent || el.getAttribute('aria-label') || '').trim().toLowerCase();
-                        if (targets.includes(txt) && (insideDialog(el) || fallbackConfirm.length > 0)) {
+                        const rawTxt = (el.innerText || el.textContent || el.getAttribute('aria-label') || '');
+                        const txt = (rawTxt.normalize ? rawTxt.normalize('NFC') : rawTxt).replace(/\\s+/g, ' ').trim().toLowerCase();
+                        const isPrecheckSecondary = Boolean(
+                            el.id === 'secondary-action-button' &&
+                            el.closest && el.closest('ytcp-prechecks-warning-dialog, ytcp-uploads-still-checking-dialog')
+                        );
+                        if ((targets.includes(txt) || isPrecheckSecondary) && (insideDialog(el) || fallbackConfirm.length > 0)) {
                             const innerBtn = (el.shadowRoot && el.shadowRoot.querySelector('button')) || el.querySelector('button') || el;
                             innerBtn.click();
                             if (innerBtn !== el) el.click();
-                            return txt;
+                            return txt || 'secondary-action-button';
                         }
                     }
                     return null;
@@ -3605,10 +5020,23 @@ class YouTubeCDPClient:
 
 
 def is_short_related_video_disabled(channel_id: Optional[str]) -> bool:
-    """Return True if channel production lock or channel map disables Short Related Video links."""
+    """Return True if channel playbook, production lock, or channel map disables Short Related Video links.
+
+    Precedence: `sys/channels/<ch>/playbook/overview.md` > `channel_v2_production_lock.json` > `youtube_channel_map.json`.
+    """
     if not channel_id:
         return False
     ch_norm = str(channel_id).strip().replace("-", "_")
+    overview_file = REPO_ROOT / "sys" / "channels" / ch_norm / "playbook" / "overview.md"
+    if overview_file.exists():
+        try:
+            ov_text = overview_file.read_text(encoding="utf-8")
+            if re.search(r"short_attach_related_video\s*:\s*true\b", ov_text, re.IGNORECASE):
+                return False
+            if re.search(r"short_attach_related_video\s*:\s*false\b", ov_text, re.IGNORECASE):
+                return True
+        except Exception as exc:
+            logger.warning("Could not read publish_policy from %s: %s", overview_file, exc)
     lock_file = REPO_ROOT / "sys" / "channels" / ch_norm / "channel_v2_production_lock.json"
     if lock_file.exists():
         try:
@@ -3654,8 +5082,15 @@ async def publish_single_video(
     pinned_comment: Optional[str] = None,
     comment_screenshot_path: Optional[str | Path] = None,
     altered_content: str = "unset",
+    notify_subscribers: Optional[bool] = None,
+    no_notify_subscribers: bool = False,
+    playlist_name: Optional[str] = None,
+    attach_endscreen: bool = False,
 ) -> dict[str, Any]:
     """Execute end-to-end publish flow for a single video."""
+    effective_notify_subscribers: Optional[bool] = (
+        False if no_notify_subscribers else notify_subscribers
+    )
     # Mandatory Video Review & Approval Gate
     effective_job_id = job_id
     if not effective_job_id and video_path:
@@ -3742,6 +5177,20 @@ async def publish_single_video(
             altered_content=altered_content,
         )
 
+        playlist_result: Optional[dict[str, Any]] = None
+        if playlist_name:
+            try:
+                playlist_result = await client.ensure_and_select_playlist(playlist_name)
+            except Exception as pl_err:
+                logger.warning("Playlist assignment (%s) failed during wizard: %s", playlist_name, pl_err)
+
+        notify_result: Optional[dict[str, Any]] = None
+        if effective_notify_subscribers is not None:
+            try:
+                notify_result = await client.set_notify_subscribers(bool(effective_notify_subscribers))
+            except Exception as ns_err:
+                logger.warning("set_notify_subscribers(%s) failed during wizard: %s", effective_notify_subscribers, ns_err)
+
         # Step 6: Custom Thumbnail (Long 16:9 & Short 9:16)
         thumbnail_status = False
         if thumbnail_path:
@@ -3788,6 +5237,13 @@ async def publish_single_video(
                     logger.warning("Could not attach subtitles on elements step (continuing publish): %s", sub_err)
             else:
                 logger.warning("Subtitles path provided but file not found: %s", subtitles_path)
+
+        endscreen_result: Optional[dict[str, Any]] = None
+        if attach_endscreen and not is_short:
+            try:
+                endscreen_result = await client.attach_endscreen_template(video_url_or_id=None)
+            except Exception as es_err:
+                logger.warning("Could not attach endscreen on elements step (continuing publish): %s", es_err)
 
         related_linked = False
         if is_short and related_video_url:
@@ -4043,6 +5499,10 @@ async def publish_single_video(
             "oembed_pending_processing": oembed_pending,
             "edit_verification": edit_verification,
             "pinned_comment": pinned_comment_result,
+            "notify_subscribers": effective_notify_subscribers,
+            "notify_subscribers_result": notify_result,
+            "playlist_result": playlist_result,
+            "endscreen_result": endscreen_result,
         }
     finally:
         await client.close()
@@ -4172,6 +5632,41 @@ def main():
         default="unset",
         help="YouTube Studio altered/synthetic content disclosure radio (`yes` for AI/35mm channels, `no`, or `unset`).",
     )
+    parser.add_argument(
+        "--no-notify-subscribers",
+        action="store_true",
+        help="Uncheck 'Publish to subscriptions feed and notify subscribers' (automatically unchecked for long_16x9 uploads when passed or in-place via --video-id).",
+    )
+    parser.add_argument(
+        "--notify-subscribers",
+        action="store_true",
+        help="Explicitly keep 'Publish to subscriptions feed and notify subscribers' checked.",
+    )
+    parser.add_argument(
+        "--playlist",
+        default=None,
+        help="Assign video to playlist in Details (creates playlist if missing; e.g. 'Sử Kể Lại — Hồ Sơ Chiến Dịch & Bí Ẩn Đại Việt').",
+    )
+    parser.add_argument(
+        "--attach-endscreen",
+        action="store_true",
+        help="Attach 2-element End Screen template (Best for viewer + Most recent upload / Subscribe) on Long videos.",
+    )
+    parser.add_argument(
+        "--set-related-video",
+        default=None,
+        help="Retroactively link Related Video on an existing Short (/video/<SHORT_VID>/edit) to parent Long video ID or title.",
+    )
+    parser.add_argument(
+        "--update-studio-settings",
+        action="store_true",
+        help="Run in-place /video/<VID>/edit settings update (--no-notify-subscribers, --playlist, --attach-endscreen, --title, --description, --clean-dead-links).",
+    )
+    parser.add_argument(
+        "--clean-dead-links",
+        action="store_true",
+        help="Remove dead Private video links (y5VeObQ7u1E, o_3FRlZ87wE, CbeJM6jT4ag) from video description.",
+    )
 
     args = parser.parse_args()
 
@@ -4203,13 +5698,36 @@ def main():
     if args.no_pin_comment:
         pinned_comment = None
 
+    if args.clean_dead_links and description:
+        description, _ = clean_dead_links_from_description(description)
+
     validate_no_sister_channel_leak(args.channel, description, pinned_comment)
+
+    in_place_edit_requested = bool(
+        args.update_studio_settings
+        or args.set_related_video
+        or (
+            not args.video
+            and (args.video_url or args.video_id)
+            and (
+                args.no_notify_subscribers
+                or args.notify_subscribers
+                or args.playlist
+                or args.attach_endscreen
+                or args.clean_dead_links
+                or args.title
+                or args.description
+                or args.metadata
+            )
+        )
+    )
 
     retroactive_mode = bool(
         args.update_thumbnail
         or args.attach_subtitles
         or args.post_pinned_comment
         or args.clear_related_video
+        or in_place_edit_requested
     )
 
     if not title and not retroactive_mode:
@@ -4361,6 +5879,70 @@ def main():
         print(json.dumps(clr_res, indent=2, ensure_ascii=False))
         sys.exit(0 if (isinstance(clr_res, dict) and clr_res.get("success")) else 1)
 
+    if args.set_related_video and not args.update_studio_settings:
+        target_video = args.video_url or args.video_id
+        if not target_video:
+            parser.error("--set-related-video requires --video-url or --video-id")
+        if not profile_cfg:
+            parser.error("--set-related-video requires a valid --channel or --profile")
+
+        async def _run_set_related():
+            c = YouTubeCDPClient(profile_cfg, headless=args.headless)
+            try:
+                await c.connect()
+                res = await c.attach_related_video_existing_short(
+                    target_video,
+                    args.set_related_video,
+                    screenshot_path=getattr(args, "edit_screenshot", None) or args.screenshot,
+                )
+                return res
+            finally:
+                await c.close()
+                c.terminate_browser()
+
+        rel_res = asyncio.run(_run_set_related())
+        print(json.dumps(rel_res, indent=2, ensure_ascii=False))
+        sys.exit(0 if (isinstance(rel_res, dict) and rel_res.get("success")) else 1)
+
+    if in_place_edit_requested:
+        target_video = args.video_url or args.video_id
+        if not target_video:
+            parser.error("In-place Studio settings update requires --video-url or --video-id")
+        if not profile_cfg:
+            parser.error("In-place Studio settings update requires a valid --channel or --profile")
+
+        notify_opt: Optional[bool] = None
+        if args.no_notify_subscribers:
+            notify_opt = False
+        elif args.notify_subscribers:
+            notify_opt = True
+
+        async def _run_in_place_settings():
+            c = YouTubeCDPClient(profile_cfg, headless=args.headless)
+            try:
+                await c.connect()
+                res = await c.update_existing_video_studio_settings(
+                    target_video,
+                    notify_subscribers=notify_opt,
+                    title=title if (args.title or args.metadata) else None,
+                    description=description if (args.description or args.metadata) else None,
+                    clean_dead_links=DEAD_PRIVATE_VIDEO_IDS if args.clean_dead_links else None,
+                    thumbnail_path=args.thumbnail,
+                    strict_thumbnail=args.strict_thumbnail,
+                    playlist_name=args.playlist,
+                    attach_endscreen=args.attach_endscreen,
+                    related_video=args.set_related_video or args.related_video,
+                    screenshot_path=getattr(args, "edit_screenshot", None) or args.screenshot,
+                )
+                return res
+            finally:
+                await c.close()
+                c.terminate_browser()
+
+        settings_res = asyncio.run(_run_in_place_settings())
+        print(json.dumps(settings_res, indent=2, ensure_ascii=False))
+        sys.exit(0 if (isinstance(settings_res, dict) and settings_res.get("success")) else 1)
+
     effective_related_video = args.related_video
     if args.short and args.channel and is_short_related_video_disabled(args.channel):
         if effective_related_video:
@@ -4370,6 +5952,19 @@ def main():
                 effective_related_video,
             )
         effective_related_video = None
+
+    # For long_16x9 uploads, default notify_subscribers to False when --no-notify-subscribers is passed
+    upload_notify_subscribers: Optional[bool] = None
+    if args.no_notify_subscribers:
+        upload_notify_subscribers = False
+    elif args.notify_subscribers:
+        upload_notify_subscribers = True
+    elif not args.short and str(args.channel or "").strip().replace("-", "_") == "su_ke_lai":
+        upload_notify_subscribers = False
+
+    upload_playlist = args.playlist
+    if not upload_playlist and not args.short and str(args.channel or "").strip().replace("-", "_") == "su_ke_lai":
+        upload_playlist = DEFAULT_SU_KE_LAI_PLAYLIST
 
     result = asyncio.run(
         publish_single_video(
@@ -4395,6 +5990,10 @@ def main():
             pinned_comment=pinned_comment,
             comment_screenshot_path=getattr(args, "comment_screenshot", None),
             altered_content=altered_content,
+            notify_subscribers=upload_notify_subscribers,
+            no_notify_subscribers=bool(args.no_notify_subscribers),
+            playlist_name=upload_playlist,
+            attach_endscreen=bool(args.attach_endscreen or (not args.short and str(args.channel or "").strip().replace("-", "_") == "su_ke_lai")),
         )
     )
 
