@@ -13,17 +13,21 @@ if str(SYS_DIR) not in sys.path:
 
 
 def test_ban_do_quyen_luc_v3_skill_and_routing_index() -> None:
-    """Verify vp-channel-ban-do-quyen-luc skill isolates channel specs without overriding shared workflows."""
-    skill_dir = ROOT_DIR / ".agents" / "skills" / "vp-channel-ban-do-quyen-luc"
-    skill_md = skill_dir / "SKILL.md"
-    visual_ref = skill_dir / "references" / "visual-grammar-4styles.md"
-    pacing_ref = skill_dir / "references" / "pacing-and-script-rules.md"
+    """Verify ban_do_quyen_luc 3-pillar data playbook and consolidated registry isolation."""
+    registry_skill = ROOT_DIR / ".agents" / "skills" / "vp-channel-registry" / "SKILL.md"
+    legacy_skill_dir = ROOT_DIR / ".agents" / "skills" / "vp-channel-ban-do-quyen-luc"
+    pb_dir = SYS_DIR / "channels" / "ban_do_quyen_luc" / "playbook"
+    skill_md = pb_dir / "overview.md"
+    content_ref = pb_dir / "content.md"
+    visual_ref = pb_dir / "visual.md"
+    pacing_ref = pb_dir / "pacing.md"
 
-    for path in (skill_md, visual_ref, pacing_ref):
-        assert path.is_file(), f"Missing skill file: {path}"
+    assert registry_skill.is_file(), f"Missing consolidated registry skill: {registry_skill}"
+    assert not legacy_skill_dir.exists(), f"Per-channel skill should be retired: {legacy_skill_dir}"
+    for path in (skill_md, content_ref, visual_ref, pacing_ref):
+        assert path.is_file(), f"Missing playbook file: {path}"
 
     skill_text = skill_md.read_text(encoding="utf-8")
-    assert "name: vp-channel-ban-do-quyen-luc" in skill_text
     assert "ban_do_quyen_luc_4styles_photoreal_v3" in skill_text
     assert "VietNarrator_ban_do_quyen_luc" in skill_text
     assert "Bảng Ghép Nối Quy Trình Dùng Chung" in skill_text
@@ -32,8 +36,8 @@ def test_ban_do_quyen_luc_v3_skill_and_routing_index() -> None:
     assert "CACH_2_SPLIT_COMPARE" in skill_text
     assert "CACH_3_DOSSIER_LIST" in skill_text
     assert "CACH_4_CINEMATIC_PACING" in skill_text
-    assert "references/visual-grammar-4styles.md" in skill_text
-    assert "references/pacing-and-script-rules.md" in skill_text
+    assert "(visual.md)" in skill_text
+    assert "(pacing.md)" in skill_text
 
     visual_text = visual_ref.read_text(encoding="utf-8")
     assert "ban_do_quyen_luc_4styles_photoreal_v3" in visual_text
@@ -50,11 +54,13 @@ def test_ban_do_quyen_luc_v3_skill_and_routing_index() -> None:
     prod_skill = (ROOT_DIR / ".agents" / "skills" / "vp-production" / "SKILL.md").read_text(encoding="utf-8")
     plan_text = (SYS_DIR / "channels" / "ban_do_quyen_luc" / "PLAN.md").read_text(encoding="utf-8")
 
-    assert "vp-channel-ban-do-quyen-luc" in root_index
-    assert "vp-channel-ban-do-quyen-luc" in docs_index
+    assert "vp-channel-registry" in root_index
+    assert "ban_do_quyen_luc/playbook/overview.md" in root_index
+    assert "vp-channel-registry" in docs_index
+    assert "ban_do_quyen_luc/playbook/overview.md" in docs_index
     assert "vp-channel-ban-do-quyen-luc" not in prod_skill
     assert "ban_do_quyen_luc" not in prod_skill
-    assert ".agents/skills/vp-channel-ban-do-quyen-luc/SKILL.md" in plan_text
+    assert "playbook/overview.md" in plan_text
 
 
 def test_ban_do_quyen_luc_v3_production_lock_and_formulas() -> None:

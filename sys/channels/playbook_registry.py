@@ -473,6 +473,38 @@ def populate_all_channel_playbooks(
 
 WORKFLOW_CATALOG: tuple[dict[str, Any], ...] = (
     {
+        "id": "reborn_long",
+        "name": "Reborn V11.5 Long Documentary (10m 6-Act Cinema + Character Lock + 6-GPU Kodak 2383)",
+        "script_path": ".agents/skills/vp-production/scripts/wf_reborn_long.py",
+        "default_args": {
+            "channel": "su_ke_lai",
+            "topic": "<topic>",
+            "job": "",
+            "target_duration_sec": 600,
+            "colab_workers": 6,
+            "color_grade": "kodak_2383_anti_ai",
+            "render": True,
+            "publish": False,
+        },
+        "run_workflow_example": (
+            'run_workflow(ScriptPath=".agents/skills/vp-production/scripts/wf_reborn_long.py", '
+            'Description="Produce V11.5 Reborn Long 10m Documentary", '
+            'Args={"channel": "su_ke_lai", "topic": "<topic>", "target_duration_sec": 600, '
+            '"colab_workers": 6, "color_grade": "kodak_2383_anti_ai", "render": True, "publish": False})'
+        ),
+        "chat_prompt_vi": (
+            "/run-workflow Chạy .agents/skills/vp-production/scripts/wf_reborn_long.py với "
+            "args={'channel': 'su_ke_lai', 'topic': '<chủ đề>', 'target_duration_sec': 600, "
+            "'colab_workers': 6, 'color_grade': 'kodak_2383_anti_ai', 'render': True, 'publish': False}"
+        ),
+        "summary_vi": (
+            "Sản xuất trọn gói phim tài liệu Long 16:9 dài ~10 phút chuẩn V11.5: "
+            "Fact Vault >=24 sử liệu + Character Bible khóa mặt/giáp + OmniVoice 1.30x 5-stem "
+            "song song Flow Omni 1.2 Flash + 6-shard Anti-AI/Motion-Police tự re-roll + "
+            "render 6-GPU Colab T4 Kodak 2383 + tùy chọn đăng YouTube Studio."
+        ),
+    },
+    {
         "id": "series_shorts",
         "name": "Series-First Short V4 (Find Series -> 3-5 Connected 20-Beat Scripts -> Batch Render Later)",
         "script_path": ".agents/skills/vp-production/scripts/wf_series_shorts.py",
@@ -508,7 +540,7 @@ WORKFLOW_CATALOG: tuple[dict[str, Any], ...] = (
 
 
 def get_workflows_catalog(repo_root: Path | None = None) -> list[dict[str, Any]]:
-    """Return metadata and filesystem readiness for the 4 turnkey `/run-workflow` scripts."""
+    """Return metadata and filesystem readiness for the turnkey `/run-workflow` scripts."""
     root = Path(repo_root) if repo_root is not None else SYS_DIR.parent
     out: list[dict[str, Any]] = []
     for item in WORKFLOW_CATALOG:

@@ -1,6 +1,6 @@
-# Pacing & Script Rules — Sử Kể Lại (v3 / V4 Viral Breakout `su_ke_lai_viral_v4`, V6.0 Prestige Cohesion, V7.0 Zero-Box Breathing Cinema, V8.0 Seamless 2-Frame Continuous Chain `su_ke_lai_long_v8_continuous_chain` & V4 (`V9.1`) Gold Standard 9–15m Analytical Mẫu M1 IMAX `su_ke_lai_long_v9_1_m1_v4_gold_standard`)
+# Pacing & Script Rules — Sử Kể Lại (Active Flagship V11.5 Reborn Anti-AI Omni Cinema `su_ke_lai_reborn_v11_omni_cinema` + V4 Viral Short `su_ke_lai_viral_v4`, V6.0/V7.0/V8.0/V9.1/V9.2/V12)
 
-Reference contract for zero-filler Vietnamese spoken narration, clause-level sub-beat splitting (`Long 16:9`), `12`-beat `Short 9:16` spin-off arcs, the **V4 Viral Breakout Protocol (`su_ke_lai_viral_v4`, Target 100K–1M+ Views)** across **Mode A+ (`viral_fast_loop_short`, `54–72s`, `15–16` beats)** and **Mode B (`serialized_detail_short`, `105–145s`, `20–24` beats)**, the **V6.0 Prestige Documentary Cohesion Architecture (`su_ke_lai_long_v6_prestige_cohesion`, `10m–14m`)**, the **V7.0 Zero-Box Pure Cinema Typography & Breathing `4.5s–5.5s` Shot Pacing Foundation (`su_ke_lai_long_v7_zero_box_breathing_cinema`)**, the **V8.0 Seamless 2-Frame Continuous Chain & Zero-Box Prestige Cinema Lock (`su_ke_lai_long_v8_continuous_chain`, superseding V7.0's `river_mist_map_dive` smoke wipes, per-beat camera resets, and tight text-hold windows)**, and the active **V4 (`V9.1`) Gold Standard 9–15 Minute Analytical Military History & Minimalist Mẫu M1 IMAX Visual Lock (`su_ke_lai_long_v9_1_m1_v4_gold_standard`, superseding V9.0 draft — full specification in [long-9-15m-analytical-content-skill.md](content.md))**.
+Reference contract for the **Active Flagship V11.5 Reborn Anti-AI Investigative & Hero-POV Omni Cinema (`su_ke_lai_reborn_v11_omni_cinema`, `REBORN_PIPELINE_VERSION = "11.5.0"`, `8m30s–11m30s`, `6` Acts, `~85–95` beats, `./vp long-reborn`, 1-call `wf_reborn_long.py` via `./vp workflows`)**, zero-filler Vietnamese spoken narration, clause-level sub-beat splitting (`Long 16:9`), `12`-beat `Short 9:16` spin-off arcs, the **V4 Viral Breakout Protocol (`su_ke_lai_viral_v4`, Target 100K–1M+ Views)** across **Mode A+ (`viral_fast_loop_short`, `54–72s`, `15–16` beats)** and **Mode B (`serialized_detail_short`, `105–145s`, `20–24` beats)**, the **V6.0 Prestige Documentary Cohesion Architecture (`su_ke_lai_long_v6_prestige_cohesion`, `10m–14m`)**, the **V7.0 Zero-Box Pure Cinema Typography & Breathing `4.5s–5.5s` Shot Pacing Foundation (`su_ke_lai_long_v7_zero_box_breathing_cinema`)**, the **V8.0 Seamless 2-Frame Continuous Chain & Zero-Box Prestige Cinema Lock (`su_ke_lai_long_v8_continuous_chain`)**, and legacy **V4 (`V9.1`) Gold Standard (`su_ke_lai_long_v9_1_m1_v4_gold_standard`)** (see [content.md](content.md)).
 
 ## 1. Zero-Filler 12-Sentence-Per-Chapter Structure (`Long 16:9`)
 
@@ -235,5 +235,99 @@ Permanent turnkey CLI tool `sys/tools/produce_su_ke_lai_long_m1.py` (`M1_FLEX_EN
    - **`--keyword-density <float 0.15..0.30>`** (default `0.22`): Enforces `~18–28%` single-line verbatim emphasis keywords (`>= 70–72%` text-free pure cinema, **never on the first beat of any chapter `beat_*0`**, `top_word == ""`, compact `66px@1080p / 88px@1440p` `#FFF5D6`).
    - **`--resolution {1080p,1440p,360p}`**, **`--total-shards <int>`** (default `8`), **`--stage {build-timeline,render-shard,assemble,full-cc-srt,validate-flex-spec}`**, with permanent safety locks (`0%` Pillow cartoon maps, `0%` whip-slides, `0` black-bar text, `100%` moving `.mp4` verification).
 
+## 9. V12 Anti-Slideshow First-60s Living Cold Open & `tactical_battle_map_v9` Pacing (`su_ke_lai_long_v12_living_cinema`)
+
+Grounds `0.0s–60.0s` of Long `16:9` against empirical frame forensics (`Fern`, `IMPERIAL`, `LEMMiNO`, `MagnatesMedia`, `Yarnhub`, `The Operations Room`, `Epic History TV`) to permanently eliminate the `1fps` static-PNG slideshow root cause:
+
+1. **Zero Static PNG Holds in `0–60s` & Dual-Clock Motion Law**:
+   - **`0` static PNG holds in `0–60s`** (`living_or_procedural_30fps_coverage_0_60s == 1.00`): `100%` of `0.0s–60.0s` MUST run native `16:9` living Flow `.mp4` clips (`veo_3_1_lite` `10c` Seam + `macaron_cookie` `8s` Frame-Link, trimmed `2.5s–4.2s` at `fps=30` before `trim=end_frame`) or animated `30fps` GPU maps/spotlights.
+   - **Dual-Clock Law**: (a) **Camera Cut Clock (`ASL_cut`)**: cut on physical motion peak every `2.3s–3.8s` in `0s–15s` and `2.5s–4.2s` in `15s–60s` (`75–85%` crisp `hard_cut_j_cut` with `-0.18s..-0.24s` audio lead, never uniform `xfade=fade`). (b) **Intra-Shot Visual Event Clock (`ASL_event`)**: during `6.0s–12.0s` continuous map glides or analytical stages, fire a discrete visual event every `2.0s–3.2s` (`>= 18` total visual events in `0–60s`).
+   - **Post-60s Anti-Jitter Parallax**: `vf_zoompan` remains permanently banned (`ERR-20261109-01`). Any BELUGA still after `60s` MUST use `float32` `cv2.warpAffine(..., flags=cv2.INTER_LANCZOS4)` 2–3 plane 2.5D depth parallax (`0.000px` jitter).
+2. **Mandatory First-60s 3-Phase Engineering Contract**:
+   - **`0.0s–15.0s` (Survival Gate)**: `4–5` living `16:9` Flow shots (`ASL = 2.8s–3.5s`, hard ceiling `<= 3.8s`), `0.0s` static freeze. `Beat 0` `<= 20–24` syl (`3.95–4.15 syl/s`), zero `[pause:...]`, zero greeting, `+5 dB` organic sub-boom at `t=0.05s`. Must include `1` in-media-res wide/ground action + `>= 1` `100mm` zero-face `MACRO_PROP` + `1` spatial/`16:9` vertical split-screen (`2px` `#C49A52` divider, zero `VS` badge) + `1` OTS/POV/reaction cut.
+   - **`15.0s–48.0s` (Spatial Lock & Escalation)**: `1` slow giant-type `tactical_battle_map_v9` (`8.0s–9.5s`, continuous terrain glide + `3` discrete events @ `~2.8s`) + `7–8` living `16:9` multi-angle Flow shots (`ASL = 3.0s–3.8s`, hard ceiling `<= 4.2s`).
+   - **`48.0s–68.0s` (Thesis Pivot -> `CHƯƠNG I`)**: Execute style-matched blueprint (`T1_OBSIDIAN_VOLUMETRIC_SPOTLIGHT`, `T2_SPOTLIGHT_MAP_ZOOM_THROUGH`, `T3_ARCHITECTURAL_PULLBACK_VACUUM`, or `T4_MACRO_PHYSICS_COUNTER_PIVOT`) -> `0.80s–1.20s` silence vacuum -> `CHƯƠNG I` (`>= 3.10s` Zero-Box title over living footage).
+3. **`tactical_battle_map_v9` `visual_pacing.py` Integration (`6.0s–12.0s`)**:
+   - **Long `16:9`**: `8.5s–11.4s` single continuous 3-Act map clip (`visual_pacing.py` `body_max = 11.50s`).
+   - **Short `9:16`**: Either **Single-Beat (`6.4s–6.75s`)** or **Two-Beat Continuous Split (`8.4s–10.0s`)** — bake one `9.0s` `30fps` V9 MP4 (`270` frames) and slice losslessly across 2 beats with `0.0s` overlap (`visual_pacing.py` `body_max = 6.80s` per beat).
+4. **Hard Auto-Fail Gates (`historical_visual_qc.py`)**:
+   - `GATE_F60_ZERO_STATIC_HOLD`: Longest contiguous run with frame diff `< 0.65/255` in `0–60s` `<= 0.50s` (`15` frames; `> 3.5s` = `0/100` `AF-03` auto-fail).
+   - `GATE_F15_SHOT_DENSITY`: `scdet(threshold=10.0)` detects `>= 4` cuts in `0–15s`, `max_shot_duration_0_15s <= 3.8s`.
+   - `GATE_F60_VISUAL_EVENT_CADENCE`: `visual_events_0_60s >= 18` (`max_event_gap <= 4.2s`).
+   - `GATE_F60_COVERAGE_DIVERSITY`: `living_or_procedural_30fps_coverage_0_60s == 1.00`, `macro_prop_inserts_0_60s >= 4`, `adjacent_duplicate_camera_slots == 0`, `rear_silhouette_ratio_0_30s <= 0.15`.
+   - `GATE_F60_ZERO_BOX_ZERO_SMOKE`: `0` rectangular HUD pills/stripes/`VS` plaques and `0` `dust_smoke_cloud` / `river_mist_map_dive` transitions.
+
+## 10. Active Flagship V11.5 Reborn Anti-AI Omni Cinema Pacing, Fluent 1.30x Voice Lock, 6-GPU T4 Render & `wf_reborn_long.py` Gate (`su_ke_lai_reborn_v11_omni_cinema`)
+
+Permanently locked flagship Long `16:9` pacing, audio, and multi-GPU execution architecture (`REBORN_PIPELINE_VERSION = "11.5.0"`, `./vp long-reborn` -> `sys/tools/produce_reborn_long_pilot.py` + `sys/fx_warehouse/reborn_long_cinema.py`, 1-call `run_workflow` `.agents/skills/vp-production/scripts/wf_reborn_long.py` via `./vp workflows`, `[ERR-20261125-03]`) verified on `vn_su_ke_lai_reborn_pilot` and full 10m09s `vn_su_ke_lai_bach_dang_938_reborn_full`:
+
+1. **Episode Geometry & Zero Shorts-Funnel Packaging**:
+   - **`8m30s–11m30s`** (`510s–690s`), **`6` Acts (`CHƯƠNG I..VI`)**, **`~85–95` beats** engineered for Cold-Browse paradox retention (`youtube_title <= 55` chars, Flow-native poster `2–4` uppercase words `< 2MB`, zero reliance on a Shorts funnel).
+2. **Fluent `VietNarrator_su_ke_lai` 1.30x Voice Lock (Strict Ban on `atempo < 1.08`)**:
+   - Synthesize via Colab T4 OmniVoice (`VietNarrator_su_ke_lai`, `sys/assets/voices/ch_su_ke_lai/profile.json` EQ, `±1.2 dB` consistent vocal presence) locked to **`omni_speed=1.12` + `atempo=1.14..1.16`** = **`4.2–4.5 syl/s`** crisp fluent Vietnamese storytelling.
+   - **Strict Permanent Ban on `atempo < 1.08`**: Never slow utterances below `atempo=1.08` (eliminates `<1.0` robotic stutter/drag).
+   - **Unbroken Smooth Vietnamese Prose**: Zero 2-word chopped fragment sentences and zero `—` em-dash stutters inside TTS lines; write complete, natural spoken clauses that flow effortlessly across beats.
+3. **Dynamic Acoustic Breathing & 5-Stem Cinema Mix**:
+   - **Cold-Open Foley Lead-In**: Open every episode with **`2.5–3.2s` non-verbal environmental foley** (river wind, oar creak, distant war drum, steel forge) before Beat 0 narration starts.
+   - **Dead-Silence & SFX Solo Drops**: Choreograph **`3–5` deliberate dead-silence/SFX drops** per full episode (`pre_silence_sec` / `post_sfx_hold_sec` `0.3s–2.2s`) where narration stops completely so diegetic impact/drum/water foley carries the dramatic turn, coupled with **`-0.24s` J-cut audio pre-laps**.
+   - **Master Loudness Lock**: 5-stem cinema mix (`narration + diegetic_sfx + silence_bed + bgm_tension + room_tone`) mastered to **`-11.0 LUFS / <= -1.0 dBTP` @ `48000Hz` stereo**.
+4. **1.0x Omni 1.2 Flash Variable-Duration Cadence, Character Lock, Anti-AI Gate & 6-GPU Parallel T4 Render**:
+   - Route visual pacing across the 3-pillar mix (**`~60%`** `@Yarnhub` Hero-POV moving cinema locked to Stage A0 `character_roster` `reference_media_ids` + **`~22%`** Google Flow Aerial/Split-Waterline Tactical Cinema with seekbar-safe `y <= 0.72*H` RGBA elbow callouts, `0` OpenCV blob maps + **`~18%`** `@LEMMiNO` Zero-Box optical spotlight forensic reveals, `0` rectangles/`0` stripes).
+   - Match each moving clip duration natively via **Omni 1.2 Flash (`macaron_cookie_i2v[_fl]_{4s|6s|8s|10s}`)** at **`1.0x` real-time speed**.
+   - Every moving clip MUST clear programmatic `ANTI_AI_QA_RULES` / `audit_color_continuity()` plus the **6-frame temporal strip `motion-police` audit (`0%, 20%, 40%, 60%, 80%, 95%`)** (zero modern flags on ancient boats, zero plastic CGI/clone crowds, zero floating oars/180° flips) with surgical re-roll or `clean_window_sec` cap.
+   - Render via **`--colab-render-workers 6 --color-grade kodak_2383_anti_ai`** (6 parallel Colab T4 GPUs encoding independent `/dev/shm` `h264_nvenc` Act-chunks with unified Kodak 2383 35mm Lab harmony + fine grain -> lossless local `ffmpeg -f concat -c:v copy -c:a copy` mux -> guaranteed `colab stop`), orchestrated end-to-end in 1 call via **`.agents/skills/vp-production/scripts/wf_reborn_long.py`** (`./vp workflows`).
 
 > **Core Visual & FX Skill:** [vp-visual-fx](../../../../.agents/skills/vp-visual-fx/SKILL.md)
+
+---
+
+## V12.6 Empirical Short Sweet-Spot: `95s–110s` (`20–22` beats) + Open Macro-Cliffhanger
+
+> [!IMPORTANT]
+> **V12.6 Pacing Rule (2026-11-27, Empirical from live channel analytics):** All new Shorts for `@SuKeLaiVN` MUST target **`95s–110s` (`20–22` beats, `~4.5–5.5s/beat`)** — NOT the previously used `128.5s–145.5s` range of V12 `S01..S10`.
+
+### Evidence Base
+
+Channel analytics (`yt_studio_deep_analytics_latest.json`, 2026-11-27) confirm:
+- **7/7 Shorts achieving `>10,000 views`** on `@SuKeLaiVN` are all in the `95s–104s` range.
+- Current `V12 S01..S10` batch runs `128.5s–145.5s` — **22–36% too long** vs. the empirical viral sweet-spot.
+- Competitor benchmark: `Dòng Máu Việt` viral hits (`761K–3.59M` views) cluster at `95s–125s`; `CD Media - Quân Sự` (`456K–772K` views) cluster at `51–74s` (Mode A+) or `95–118s` (Mode B).
+
+### New Hard Duration Contract (`V12.6` and beyond)
+
+| Short Mode | Duration | Beats | Beat Pacing | Use Case |
+|---|---|---|---|---|
+| **Mode A+** (viral fast loop) | `54–74s` | `15–16` beats | `~3.8s/beat` | Secret weapons, elite units, folk sayings |
+| **Mode B Standard** ⭐ | **`95s–110s`** | **`20–22` beats** | **`~4.5–5.5s/beat`** | **Default for heroic chronicles, rankings, campaigns** |
+| Mode B Extended | `111s–125s` | `23–24` beats | `~4.8s/beat` | Only when narrative requires (pre-approved) |
+| **BANNED** | `>125s` | `>25` beats | — | Retired for all new V12.6+ productions |
+
+### Open Macro-Cliffhanger Rule (Final 15% = Last `~15–17s`)
+
+Every Short (`95s–110s` Mode B Standard) MUST implement the **Open Macro-Cliffhanger** in the final **`15%` of runtime** (`~15–17s` of a `110s` Short):
+
+1. **`85%` mark (beat `B17` of 20):** Fully resolve the Short's **micro-question** (the specific tactical detail, weapon physics, or folk-saying origin the Short promised in `B00`). The viewer feels complete closure on the micro-topic.
+
+2. **`85%–92%` mark (beat `B18`):** Open a **macro-question** — something bigger and unanswered that the Short's micro-answer reveals. This must be a genuine historical mystery grounded in primary chronicles that cannot be answered in the Short's remaining time. Examples:
+   - *"Nhưng vì sao Nguyễn Huệ năm 32 tuổi (1753–1785) tính chuẩn được khoảnh khắc nước ròng đổ xiết lúc Canh Năm (~03:00–05:00 rạng sáng 19/01/1785)?"*
+   - *"Thế nhưng sau lễ đăng cơ năm 1533 tại Ai Lao, món nợ quyền lực nào mới thực sự trói chặt ngai vàng Lê Trang Tông suốt 244 năm?"*
+
+3. **`92%–100%` mark (beats `B19`–`B20`, final `~8–10s`):** Deliver the **Related Video pill CTA** — point the viewer's eyes down to the Related Video pill linking to the parent Long (`parent_long_id`) WITHOUT spoiling the Long's macro-answer. Formula:
+   - Spoken: `"[Toàn bộ hồ sơ đầy đủ nằm trong bản tài liệu dài ngay bên dưới, mời bạn xem trọn vẹn.]"` (`20` syllables, strictly `<= 22` syllables, natural spoken Vietnamese, zero "like/share/subscribe")
+   - Visual: Related Video pill MUST be visible and tapped by host gesture or on-screen callout in the final `8s`
+
+### Anti-Cannibalization Gate
+
+**CẤM giải quyết macro-answer của Long trong Short.** The Short's `B00`–`B16` resolves ONE micro-detail (a tactic, a weapon physics fact, a folk-saying etymology layer). The macro-answer (the full strategic significance, the full biographical mystery, the definitive ranking verdict) is **always reserved for the parent Long**.
+
+Short topics that prematurely resolve the parent Long's macro-answer (`Topic Cannibalization`) violate this **V12.6 editorial & QA verifier rule** (enforced during script review & QA verification; note that `sys/tools/cta_tone_linter.py` validates syllable budgets, placement windows, and banned CTA phrases only, and does not emit an automated cannibalization error code).
+
+### Implementation Checklist
+
+- [ ] `target_duration_sec` in Short spec: `95.0–110.0`
+- [ ] `beat_count` in Short spec: `20–22`
+- [ ] `beats[final_15pct_start_beat]` has `cliffhanger_mode: "open_macro"` and `related_video_pill: true`
+- [ ] `parent_long_id` populated with the correct Long job_id
+- [ ] `short_attach_related_video: true` in channel overview.md
+- [ ] CTA spoken text `<= 22 syllables`, zero banned words (`like/share/subscribe/đăng ký`)
+- [ ] `cta_tone_linter.py` passes (`0` banned CTAs, `bridge <= 22` syl, `close <= 24` syl, combined outro `<= 38` syl) AND V12.6 editorial/QA verifier confirms zero macro-answer cannibalization of the parent Long

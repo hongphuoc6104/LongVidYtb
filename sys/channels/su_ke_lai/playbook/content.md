@@ -1,4 +1,44 @@
-# V4 (`V9.1`) Gold Standard & V9.2 `M1-Flex` Turnkey Engine — 9–15 Minute Analytical Military History & Minimalist Mẫu M1 IMAX Visual Lock (`su_ke_lai_long_v9_1_m1_v4_gold_standard` & `su_ke_lai_long_v9_2_m1_flex_engine`)
+# Active Flagship V11.5 Reborn Anti-AI Omni Cinema (`su_ke_lai_reborn_v11_omni_cinema`) & Analytical Military History Content Playbook
+
+> **Active Flagship Long `16:9` Lock**: **V11.5 Reborn Anti-AI Investigative & Hero-POV Omni Cinema (`su_ke_lai_reborn_v11_omni_cinema`, `REBORN_PIPELINE_VERSION = "11.5.0"`)** via **`./vp long-reborn`** (`sys/tools/produce_reborn_long_pilot.py` + `sys/fx_warehouse/reborn_long_cinema.py`) and 1-call `run_workflow` **`.agents/skills/vp-production/scripts/wf_reborn_long.py`** (`./vp workflows`) is the active flagship Long `16:9` workflow for **Sử Kể Lại** (`su_ke_lai`, `@SuKeLaiVN`), superseding static V10 slideshows, OpenCV blob maps, `<1.0` `atempo` stuttering voice, un-anchored character faces, and legacy V9.1/V9.2 templates (retained below as companion analytical/vault references).
+
+## 0A. V11.5 Reborn Anti-AI Investigative & Hero-POV Omni Cinema Standard (`8m30s–11m30s`, `6` Acts, `~85–95` Beats)
+
+Codified from the user-approved pilot (`vn_su_ke_lai_reborn_pilot`), full 10m09s episode (`vn_su_ke_lai_bach_dang_938_reborn_full`), and `[ERR-20261125-03]`:
+
+1. **Zero Shorts-Funnel Dependency & Cold-Browse Paradox Packaging**:
+   - Engineered to stand 100% independently on YouTube Home/Browse/Suggested (`Male 25–45`, TV/Desktop) with zero reliance on Shorts traffic.
+   - `youtube_title <= 55` chars (zero `P1/P2/Tập/Phần` prefix) opening a sharp tactical/engineering paradox + Flow-native `16:9` poster with **`2–4` uppercase Vietnamese words** drawn natively (`< 2MB`, zero PIL/HTML overlay).
+2. **Canonical `character_roster` (Character Bible) & Top-Level V11.5 `full_spec.json` Schema**:
+   - Define top-level `character_roster` (`CharacterAnchorSpec`: `{character_id, name_vi, faction, dynasty_era, face_and_age_dna, armor_and_wardrobe_lock, signature_props, color_palette_hex, anti_anachronism_bans}`), top-level `color_grade: "kodak_2383_anti_ai"`, and per-beat `character_ids: [...]` + optional `act_palette` preset.
+   - Stage A0 (`--stage anchors` / `harvest_character_anchors()`) locks every recurring hero/antagonist/troop archetype via canonical `16:9` turnaround anchors (`character_anchors/<character_id>.png` + `anchor_manifest.json`) injected via `reference_media_ids` across all 6 Acts, explicitly banning anachronistic modern red/yellow star flags on historical vessels.
+3. **6-Act Investigative & Hero-POV Narrative Spine (`~85–95` Beats, `8m30s–11m30s`)**:
+   - **Act I (`CHƯƠNG I`, Cold-Open Foley `2.5–3.2s` + Paradox Hook)**: Open with `2.5–3.2s` pure diegetic environmental foley before Beat 0, then strike with an impossible numerical/tactical paradox (`<= 24` syl, zero `[pause:...]`).
+   - **Act II (`CHƯƠNG II`, Antagonist Stakes & Dual-POV Threat)**: Establish both hero and enemy commander POVs, strategic arrogance, and why conventional defense meant annihilation.
+   - **Act III (`CHƯƠNG III`, Hidden Engineering & Terrain Blueprint)**: Dissect physical/hydrological/logistics mechanics using Google Flow Aerial/Split-Waterline Tactical Cinema + `@LEMMiNO` Zero-Box forensic chronicle proofs.
+   - **Act IV (`CHƯƠNG IV`, Bait, Timing Clock & Split-Waterline Tension)**: Escalate real-time tactical movement (feigned retreat / tide clock / ambush trigger) with seekbar-safe (`y <= 0.72*H`) transparent RGBA elbow callouts (`0` OpenCV blob maps).
+   - **Act V (`CHƯƠNG V`, Dead-Silence Drop & Multi-Front Climax)**: Hard silence drop + diegetic war-drum/impact solo → full `@Yarnhub` 1st/3rd-person Hero-POV combined-arms climax.
+   - **Act VI (`CHƯƠNG VI`, Strategic Aftermath, Chronicle Proof & 2-Choice Debate)**: Primary-chronicle verification (`Đại Việt Sử Ký Toàn Thư`, `Đại Nam Thực Lục`, `Hoàng Lê Nhất Thống Chí`, `--min-facts 24`, `0` `report_only_claims` leaks) + polarizing 2-choice historical judgment outro mirrored verbatim in `@SuKeLaiVN` pinned comment (never *"like/share/subscribe/đăng ký/nhấn chuông"*).
+4. **3-Pillar Visual Choreography, Omni 1.2 Flash (`1.0x`) & Master Kodak 2383 35mm Grade**:
+   - **`~60%`** `@Yarnhub` 1st/3rd-person Hero-POV 35mm Clear-Air moving cinema (`su_ke_lai_35mm_live_action_v3`).
+   - **`~22%`** Google Flow `16:9` Aerial/Flycam & Split-Waterline Tactical Cinema + seekbar-safe (`y <= 0.72*H`) transparent RGBA elbow callouts (**`0` OpenCV blob maps**).
+   - **`~18%`** `@LEMMiNO` Zero-Box optical spotlight forensic/chronicle reveals (**`0` rectangles, `0` left accent stripes**, `0.18 <= y <= 0.72`).
+   - Route all moving shots natively via **Omni 1.2 Flash (`macaron_cookie_i2v[_fl]_{4s|6s|8s|10s}`)** at **`1.0x` real-time cadence**, harmonized by `--color-grade kodak_2383_anti_ai` (`match_frame_to_act_palette()` + `build_35mm_anti_ai_grade_filter()`).
+5. **Fluent `VietNarrator_su_ke_lai` 1.30x Voice Lock & Acoustic Breathing**:
+   - Colab T4 OmniVoice at **`omni_speed=1.12` + `atempo=1.14..1.16`** (`4.2–4.5 syl/s`); **strict ban on `atempo < 1.08`**.
+   - Unbroken smooth Vietnamese spoken sentences (`0` 2-word fragment chops, `0` `—` dash pauses), **`2.5–3.2s` non-verbal Cold-Open foley**, **`3–5` dead-silence/SFX drops** per full episode, `-0.24s` J-cut pre-laps, 5-stem mix mastered to **`-11.0 LUFS / <= -1.0 dBTP` @ `48000Hz` stereo**.
+6. **Hard Anti-AI + 6-Frame `motion-police` Audit, 6-GPU T4 Render & Turnkey Workflows**:
+   - Every spec & moving clip passes `ANTI_AI_QA_RULES` / `validate_beat_anti_ai_contract()` / `audit_color_continuity()` (`--strict-anti-ai`) plus **6-frame temporal strip `motion-police` audit (`0%, 20%, 40%, 60%, 80%, 95%`)** with surgical re-roll or `clean_window_sec` cap before **6-GPU parallel Colab T4 `/dev/shm` `h264_nvenc`** render (`--colab-render-workers 6` + lossless `concat` + mandatory `colab stop`).
+   - Execute via CLI or 1-call `run_workflow` (`.agents/skills/vp-production/scripts/wf_reborn_long.py`, listed in `./vp workflows`; `Args`: `channel="su_ke_lai"`, `topic`, `job=""`, `target_duration_sec=600`, `colab_workers=6`, `color_grade="kodak_2383_anti_ai"`, `render=True`, `publish=False`, `max_reroll_rounds=3`, `chunk_size=13`, `visibility="PUBLIC"`):
+     ```bash
+     ./vp long-reborn --spec sys/runs/<job_id>/full_spec.json --out-dir video/<job_id> --stage validate --strict-anti-ai
+     ./vp long-reborn --spec sys/runs/<job_id>/full_spec.json --out-dir video/<job_id> --stage anchors
+     ./vp long-reborn --spec sys/runs/<job_id>/full_spec.json --out-dir video/<job_id> --stage render --colab-render-workers 6 --color-grade kodak_2383_anti_ai
+     ```
+
+---
+
+## Legacy Companion Reference: V4 (`V9.1`) Gold Standard & V9.2 `M1-Flex` Turnkey Engine (`su_ke_lai_long_v9_1_m1_v4_gold_standard` & `su_ke_lai_long_v9_2_m1_flex_engine`)
 
 Permanently locked, user-approved production architecture, NotebookLM 3-Vault deep-extraction protocol, **Mẫu M1 V4 (`V9.1`) Minimalist IMAX `2.39:1` Gold Standard**, and **V9.2 Parameterized `M1-Flex` Turnkey Engine (`sys/tools/produce_su_ke_lai_long_m1.py` — "Tựa Tựa Khuôn, Không Phải Y Đúc")** specification for **Sử Kể Lại** (`su_ke_lai`, `@SuKeLaiVN`) flagship **`9–15` minute (`540s–900s`, sweet spot `~10–12m`, `6–12` Chapters [default `10`], `60–120` beats [default `100`])** Long `16:9` military-history documentaries.
 
@@ -305,6 +345,46 @@ PYTHONPATH=sys sys/.venv/bin/python sys/tools/produce_su_ke_lai_long_m1.py \
 PYTHONPATH=sys sys/.venv/bin/python sys/tools/produce_su_ke_lai_long_m1.py \
   --stage full-cc-srt --job-dir sys/runs/<job_id>
 ```
+
+---
+
+## 7. V12 7-Mode Vietnamese Analytical Commentary & 100-Point Masterpiece Rubric (`su_ke_lai_v12_analytical_commentary`)
+
+> **Core Rule:** Every spoken sentence MUST accomplish at least one of: (1) **Giải phẫu cơ chế ẩn** (why it worked physically/tactically, not just what happened), (2) **Phán xét lịch sử sắc bén** (opinionated thesis grounded in primary chronicles), or (3) **Khoan sâu vào giác quan vi mô** (concrete sensory detail). Pure Wikipedia-style event summaries are dead sentences.
+
+### 7.1 The 7 Vietnamese Analytical Sentence Modes (`M1`–`M7`)
+
+| Mode | Vietnamese Name | Structural Formula & Purpose | Linter & Quantitative Gate |
+| :--- | :--- | :--- | :--- |
+| **`M1`** | **Giải Phẫu Cơ Chế Ẩn** (*Hidden Mechanics*) | `[Action X] -> [Physical/Tactical Mechanism Y] -> [Battle Consequence Z]` | `<= 25` syl; ban *"bí mật nằm ở"*, *"ít ai biết rằng"*; `fact_vault.json` grounded |
+| **`M2`** | **Phán Xét Chiến Lược Sắc Bén** (*Sharp Verdict*) | `[Commander/Decision] [strong verdict verb] vì [specific strategic reason], không phải vì [common myth]` | Ban *"đánh giá công bằng thì"*, *"nói đi cũng phải nói lại"*, *"sự thật mất lòng"* |
+| **`M3`** | **Zoom Vi Giác Quan** (*Sensory Micro-Detail*) | Specific smell, sound, temperature, weight, or texture at exact hour/place | `<= 20` syl; zero generic adjectives (*"hùng tráng"*, *"bi thương"*, *"oai phong"*) |
+| **`M4`** | **Phản Vấn Sắc Bén** (*Sharp Counter-Question*) | `Nhưng [common-logic question]? [Counter-intuitive physical/tactical answer]` | Question `<= 16` syl; zero `[pause:...]` at `B00`; paired with `M1` at every `60–90s` Retention Reset |
+| **`M5`** | **Cầu Nối Hiện Đại Việt Nam** (*VN Micro-Bridge*) | `[Historical metric]` = `[familiar modern Vietnamese analog]` | Use `km`, `kg`, `giờ đi xe` only; **never** USD, feet, or inches |
+| **`M6`** | **Phán Quyết Lịch Sử Đáng Nhớ** (*Memorable Verdict*) | `[Subject] [irony/tragedy/triumph verb] — [<= 5-word eternal verdict]` | `<= 20` syl; **chapter end or video end ONLY**; zero *"like/share/subscribe/đăng ký/nhấn chuông"* |
+| **`M7`** | **Miêu Tả Phim Ngôn Ngữ** (*Cinematic Description*) | `Góc [camera framing] bắt [concrete action] — [light/time] — [meaning]` | Concrete visual nouns; ban *"hùng tráng"*, *"bi tráng"* |
+
+### 7.2 Mode Rotation Rules
+- **Minimum `4` of `7` modes** per 10-beat chapter (`>= 30%` `M1` for top `D1-C1` score, `>= 15%` `M3` for top `D3-C3` score).
+- **Never repeat the same mode** in two consecutive beats.
+- **`M6` placement lock**: Use `M6` strictly at the end of a chapter or the end of the episode.
+- **Mandatory `M4 -> M1` Retention Reset**: Every `60–90s` MUST execute `[WHY_NOT, M4 <= 16 syl] -> [CONSTRAINT, M1] -> [SOLUTION, M1/M7]`.
+
+### 7.3 V12 Masterpiece Evaluation Rubric (100 Points + 4 Auto-Fail Gates)
+
+| Gate / Dimension | Criterion & Threshold | Points / Verdict |
+| :--- | :--- | :--- |
+| **`AF-01` Zero-Box Gate** | Any dark pill, `ImageDraw.rectangle`/`rounded_rectangle` behind text, `VS` badge, Kahoot card, or opaque CAD modal | **`0/100 AUTO-FAIL`** |
+| **`AF-02` Map Readability Gate** | Map label `< 5.0%` frame height, `> 3` words, or map hold `< 6.0s` | **`0/100 AUTO-FAIL`** |
+| **`AF-03` First-60s Living Gate** | Any static PNG/BELUGA frame held `> 3.5s` in `0–60s` (`Long 16:9` engine build gate `<= 0.50s`) | **`0/100 AUTO-FAIL`** |
+| **`AF-04` Coverage Diversity Gate** | `0` `MACRO_PROP` inserts in a 10-beat chapter, OR `3` consecutive beats sharing the same camera angle/scale | **`0/100 AUTO-FAIL`** |
+| **`D1` Analytical Depth** | `M1` density (`>= 30%`), `M2+M6` opinionated thesis (`>= 2`/ep), `>= 3` 3-step Retention Resets | **`30 pts`** |
+| **`D2` Transitions & Pacing** | `>= 4` transition types (`0` smoke/whip-slide) + 5-Act pacing arc (`3.2–4.2s` -> `4.5–6.0s` -> `3.5–4.5s` -> `2.8–3.8s` -> `5.5–7.0s`) | **`20 pts`** |
+| **`D3` VN Expression & Voice** | `stddev >= 2.0`, `0` clichés, `>= 4` modes/10 beats, `cadence_checker` PASS, `>= 15%` `M3` | **`20 pts`** |
+| **`D4` Visual Quality** | Zero-Box purity (`20–25%` keywords), 12-slot rotation + `>= 2` macro/chapter, Kodak Vision3 500T LUT + `1.5–2.5%` grain | **`20 pts`** |
+| **`D5` Academic Grounding** | `>= 24` verified facts (Long) / `>= 12` (Short), `0` `REPORT_ONLY_LEAKAGE`, Dó-paper plate or `<= 6%` margin provenance | **`10 pts`** |
+
+- **Publish Thresholds**: `95–100` **V12 Masterpiece** · `88–94` **Prestige** · `75–87` **Solid (Minimum Publish Floor)** · `< 75` **Rework / Reject**.
 
 
 > **Core Visual & FX Skill:** [vp-visual-fx](../../../../.agents/skills/vp-visual-fx/SKILL.md)
