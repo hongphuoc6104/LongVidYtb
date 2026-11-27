@@ -2,13 +2,15 @@
 
 from __future__ import annotations
 
+import copy
 import shutil
 from pathlib import Path
+from unittest.mock import MagicMock, patch
 
 import cv2
+import fx_warehouse.geo_empire_clash_3d as geo_mod
 import numpy as np
 import pytest
-
 from fx_warehouse.geo_empire_clash_3d import (
     ENGINE_VERSION,
     FACTION_PALETTES,
@@ -19,19 +21,23 @@ from fx_warehouse.geo_empire_clash_3d import (
     _draw_compass,
     _draw_faction_token,
     _draw_shockwave_ring,
+    _draw_sovereignty_labels,
     _draw_territory_tint,
     _draw_tidal_physics,
     _ease_in_out_cubic,
     _generate_procedural_terrain,
     _lerp,
+    _load_gis_terrain_canvas,
     _resolve_scene_spec,
     _sample_spline_at,
+    build_geo_empire_nvenc_cmd,
     get_geo_empire_preset,
+    has_nvenc_encoder,
     list_geo_empire_presets,
     render_geo_empire_clash_frame,
+    render_geo_empire_clash_frame_sequence,
     render_geo_empire_clash_mp4,
 )
-
 
 # ---------------------------------------------------------------------------
 # Constants / Fixtures
@@ -446,85 +452,202 @@ class TestFrameRendering:
 
 
 # ---------------------------------------------------------------------------
-# Integration Tests: MP4 Rendering
+# Integration Tests: Frame Sequence & NVENC MP4 Pipeline
 # ---------------------------------------------------------------------------
-class TestMP4Rendering:
-    @pytest.mark.skipif(not shutil.which("ffmpeg"), reason="ffmpeg not installed")
-    def test_render_mp4_basic(self):
-        out = TMP_DIR / "test_basic.mp4"
-        result = render_geo_empire_clash_mp4(
-            "bach_dang_938_ngo_quyen", out,
-            width=320, height=180, fps=10, duration_sec=0.5,
+class TestFrameSequenceAndNVENC:
+    def test_render_frame_sequence_jpeg_q92(self):
+        seq_dir = TMP_DIR / "seq_jpg"
+        result = render_geo_empire_clash_frame_sequence(
+            "bach_dang_938_ngo_quyen",
+            seq_dir,
+            width=320,
+            height=180,
+            fps=10,
+            duration_sec=0.5,
+            jpeg_quality=92,
+            fmt="jpg",
         )
-        assert Path(result["path"]).is_file()
+        assert result["n_frames"] == 5
         assert result["width"] == 320
         assert result["height"] == 180
-        assert result["fps"] == 10
         assert result["preset_id"] == "bach_dang_938_ngo_quyen"
-        assert result["engine_version"] == ENGINE_VERSION
-        assert Path(result["path"]).stat().st_size > 500
+        assert len(result["frame_paths"]) == 5
+        for fp in result["frame_paths"]:
+            p = Path(fp)
+            assert p.is_file()
+            assert p.stat().st_size > 1000
 
-    @pytest.mark.skipif(not shutil.which("ffmpeg"), reason="ffmpeg not installed")
-    def test_render_mp4_all_presets(self):
-        for pid in PRESET_IDS:
-            out = TMP_DIR / f"test_{pid}.mp4"
-            result = render_geo_empire_clash_mp4(
-                pid, out,
-                width=320, height=180, fps=10, duration_sec=0.3,
-            )
-            assert Path(result["path"]).is_file()
-            assert Path(result["path"]).stat().st_size > 200
-
-    @pytest.mark.skipif(not shutil.which("ffmpeg"), reason="ffmpeg not installed")
-    def test_render_mp4_even_dimensions(self):
-        """Odd dimensions should be rounded down to even."""
-        out = TMP_DIR / "test_odd.mp4"
-        result = render_geo_empire_clash_mp4(
-            "bach_dang_938_ngo_quyen", out,
-            width=321, height=181, fps=10, duration_sec=0.3,
+    def test_render_frame_sequence_even_dimensions(self):
+        seq_dir = TMP_DIR / "seq_even"
+        result = render_geo_empire_clash_frame_sequence(
+            "bach_dang_938_tide_ebbing",
+            seq_dir,
+            width=321,
+            height=181,
+            fps=10,
+            duration_sec=0.3,
         )
         assert result["width"] == 320
         assert result["height"] == 180
 
-    @pytest.mark.skipif(not shutil.which("ffmpeg"), reason="ffmpeg not installed")
-    def test_render_mp4_custom_spec(self):
-        custom = {
-            "terrain": {"rivers": [], "ridges": []},
-            "phases": [{"t_max": 1.0, "label": "TEST"}],
+    def test_nvenc_cmd_builder_zero_cpu_fallback(self):
+        cmd = build_geo_empire_nvenc_cmd("out.mp4", 1920, 1080, 30, crf=18)
+        assert "h264_nvenc" in cmd
+        assert "-preset" in cmd
+        assert cmd[cmd.index("-preset") + 1] == "p4"
+        assert "yuv420p" in cmd
+
+    def test_render_mp4_rejects_missing_nvenc(self):
+        if has_nvenc_encoder():
+            out = TMP_DIR / "real_nvenc.mp4"
+            res = render_geo_empire_clash_mp4(
+                "bach_dang_938_ngo_quyen", out, width=320, height=180, fps=10, duration_sec=0.3
+            )
+            assert Path(res["path"]).is_file()
+            assert res["encoder"] == "h264_nvenc"
+        else:
+            with pytest.raises(RuntimeError, match="h264_nvenc"):
+                render_geo_empire_clash_mp4(
+                    "bach_dang_938_ngo_quyen",
+                    TMP_DIR / "no_cpu_fallback.mp4",
+                    width=320,
+                    height=180,
+                    fps=10,
+                    duration_sec=0.3,
+                )
+
+    def test_render_mp4_nvenc_pipe_mocked(self):
+        out = TMP_DIR / "mocked_nvenc.mp4"
+
+        def _fake_popen(cmd, stdin=None, stderr=None):
+            assert "h264_nvenc" in cmd
+            out.write_bytes(b"\x00\x00\x00\x18ftypmp42mocked_nvenc_stream")
+            proc = MagicMock()
+            proc.stdin = MagicMock()
+            proc.stderr = MagicMock()
+            proc.stderr.read.return_value = b""
+            proc.wait.return_value = 0
+            return proc
+
+        with (
+            patch("fx_warehouse.geo_empire_clash_3d.shutil.which", return_value="/usr/bin/ffmpeg"),
+            patch("fx_warehouse.geo_empire_clash_3d.has_nvenc_encoder", return_value=True),
+            patch("fx_warehouse.geo_empire_clash_3d.subprocess.Popen", side_effect=_fake_popen),
+        ):
+            res = render_geo_empire_clash_mp4(
+                "bach_dang_938_ngo_quyen",
+                out,
+                width=320,
+                height=180,
+                fps=10,
+                duration_sec=0.3,
+            )
+        assert res["encoder"] == "h264_nvenc"
+        assert res["width"] == 320
+        assert res["height"] == 180
+        assert res["n_frames"] == 3
+
+
+# ---------------------------------------------------------------------------
+# QA Audit & V7 Law A Contract Guards
+# ---------------------------------------------------------------------------
+class TestCompassAndContracts:
+    def test_compass_bottom_left_clear_of_bottom_right_logo(self):
+        canvas = np.zeros((1080, 1920, 3), dtype=np.uint8)
+        result = _draw_compass(canvas)
+        assert result.shape == (1080, 1920, 3)
+        # Bottom-left must be modified
+        assert np.any(result[800:, :300] > 0)
+        # Bottom-right [W-200:W, H-200:H] must be 100% untouched for W-w-36:H-h-36 logo
+        assert np.all(result[880:, 1720:] == 0)
+
+    def test_sovereignty_labels_render_on_frame_and_respect_flag(self):
+        cam = PerspectiveCamera3D(3840, 2160, 640, 360)
+        blank = np.zeros((360, 640, 3), dtype=np.uint8)
+        spec_on = get_geo_empire_preset("bach_dang_938_ngo_quyen")
+        spec_on["sovereignty_markers"] = True
+        out_on = _draw_sovereignty_labels(blank, spec_on, cam, 0.55, 0.45, 38.0, 2.0)
+        assert not np.array_equal(blank, out_on)
+        # Bottom-right watermark corner remains clear
+        assert np.all(out_on[290:, 540:] == 0)
+
+        spec_off = copy.deepcopy(spec_on)
+        spec_off["sovereignty_markers"] = False
+        out_off = _draw_sovereignty_labels(blank, spec_off, cam, 0.55, 0.45, 38.0, 2.0)
+        assert np.array_equal(blank, out_off)
+
+    def test_gis_terrain_and_offline_fallback(self):
+        gis_plate = _load_gis_terrain_canvas(640, 360, gis_bbox="bach_dang", use_gis=True)
+        assert gis_plate.shape == (360, 640, 3)
+        assert gis_plate.dtype == np.uint8
+        assert gis_plate.mean() > 15.0
+
+        proc_plate = _load_gis_terrain_canvas(640, 360, gis_bbox="bach_dang", use_gis=False)
+        assert proc_plate.shape == (360, 640, 3)
+        assert not np.array_equal(gis_plate, proc_plate)
+
+    def test_pilot_stage_aliases_and_spatial_ops_dict(self):
+        aliases = [
+            "bach_dang_estuary_quang_ninh_938",
+            "bach_dang_938_han_fleet_route",
+            "bach_dang_938_stake_field_submerged",
+            "bach_dang_938_tide_ebbing",
+            "bach_dang_938_full_trap_revealed",
+        ]
+        for alias in aliases:
+            spec = get_geo_empire_preset(alias)
+            assert spec["preset_id"] == alias
+        pilot_ops = {
+            "preset": "bach_dang_938_ngo_quyen",
+            "camera_pitch_deg": 38,
+            "camera_fly_in": {"start_zoom": 1.2, "end_zoom": 2.6},
+            "sovereignty_markers": True,
+            "tactical_callouts": [{"label": "BACH DANG", "description": "CUA BIEN 938"}],
         }
-        out = TMP_DIR / "test_custom.mp4"
-        result = render_geo_empire_clash_mp4(
-            custom, out,
-            width=320, height=180, fps=10, duration_sec=0.3,
-        )
-        assert Path(result["path"]).is_file()
+        f = render_geo_empire_clash_frame(pilot_ops, 0.5, 320, 180)
+        assert f.shape == (180, 320, 3)
 
-    @pytest.mark.skipif(not shutil.which("ffmpeg"), reason="ffmpeg not installed")
-    def test_render_1920x1080_4s(self):
-        """Render a quick 4s test at full resolution to verify real output."""
-        out = TMP_DIR / "test_full_4s.mp4"
-        result = render_geo_empire_clash_mp4(
-            "bach_dang_938_ngo_quyen", out,
-            width=640, height=360, fps=15, duration_sec=1.0,
-        )
-        assert Path(result["path"]).is_file()
-        fsize = Path(result["path"]).stat().st_size
-        assert fsize > 2000, f"MP4 too small: {fsize} bytes"
+    def test_dai_viet_dong_son_token_true_vermilion_bgr(self):
+        canvas_bgr = np.zeros((160, 160, 3), dtype=np.uint8)
+        out_bgr = _draw_faction_token(canvas_bgr, 80, 80, 32, "dai_viet", "NGÔ QUYỀN")
+        out_rgb = cv2.cvtColor(out_bgr, cv2.COLOR_BGR2RGB)
+        # Ring around center must be warm vermilion-gold (R > B)
+        sample_patch = out_rgb[60:100, 60:100]
+        assert float(sample_patch[..., 0].mean()) > float(sample_patch[..., 2].mean())
 
+    def test_source_zero_rectangles_zero_cpu_encoder(self):
+        src = Path(geo_mod.__file__).read_text(encoding="utf-8")
+        assert "cv2.rectangle" not in src
+        assert "rounded_rectangle" not in src
+        assert "lib" + "x264" not in src
 
-# ---------------------------------------------------------------------------
-# Misc
-# ---------------------------------------------------------------------------
-class TestCompass:
-    def test_compass_shape(self):
-        canvas = np.zeros((180, 320, 3), dtype=np.uint8)
-        result = _draw_compass(canvas)
-        assert result.shape == (180, 320, 3)
+    def test_spelling_luu_hoang_thao_consistent(self):
+        src = Path(geo_mod.__file__).read_text(encoding="utf-8")
+        assert "HOẰNG THÁO" not in src
+        assert "Hoằng Tháo" not in src
+        spec = get_geo_empire_preset("bach_dang_938_ngo_quyen")
+        assert "HOẰNG THAO" in spec["factions"]["right_name"]
+        assert "LƯU HOẰNG THAO" in spec["factions"]["right_stat_start"]
 
-    def test_compass_modifies_canvas(self):
-        canvas = np.zeros((180, 320, 3), dtype=np.uint8)
-        result = _draw_compass(canvas)
-        assert not np.array_equal(canvas, result)
+    def test_callout_collision_avoidance_hud_and_sovereignty(self):
+        cam = PerspectiveCamera3D(3840, 2160, 1920, 1080)
+        spec = get_geo_empire_preset("bach_dang_938_ngo_quyen")
+        spec["sovereignty_markers"] = True
+        # Deliberately hostile callout offsets aiming at top-left HUD, sovereignty zone, and stake bed
+        hostile_callouts = [
+            {"uv": (0.35, 0.38), "label": "DÃY ĐẢO ĐÁ VÔI", "sub": "QUẢNG NINH 938 SCN", "offset": (-0.20, -0.35)},
+            {"uv": (0.64, 0.46), "label": "1 • VỊNH BẮC BỘ", "sub": "CỬA NGÕ HẠM ĐỘI NAM HÁN", "offset": (0.20, -0.05)},
+            {"uv": (0.52, 0.50), "label": "3 • CỌC SẮT LỘ MŨI NHỌN", "sub": "+50 CỌC MỖI PHÚT", "offset": (0.02, 0.0)},
+        ]
+        blank = np.zeros((1080, 1920, 3), dtype=np.uint8)
+        drawn = geo_mod._draw_callout_arcs(blank, hostile_callouts, cam, 0.52, 0.48, 38.0, 2.2, 0.5, spec=spec)
+        # Top faction HUD band [0:155, :] must remain clear of callout text (allowing only soft scrim < 15)
+        assert int(drawn[:155, :].max()) < 15
+        # Right-edge sovereignty label zone [240:540, 1580:1920] must remain clear of callout text
+        assert int(drawn[240:540, 1580:1920].max()) < 15
+
+    def test_bach_dang_z12_gis_preset(self):
+        assert geo_mod._GIS_BBOX_PRESETS["bach_dang"]["zoom_tile"] == 12
 
 
 class TestEngineVersion:

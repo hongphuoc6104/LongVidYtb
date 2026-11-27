@@ -31,7 +31,7 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 # ---------------------------------------------------------------------------
 # Constants & Paths
 # ---------------------------------------------------------------------------
-ENGINE_VERSION = "1.1.0"
+ENGINE_VERSION = "1.2.0"
 SYS_DIR = Path(__file__).resolve().parents[1]
 ASSETS_DIR = SYS_DIR / "assets"
 
@@ -232,6 +232,38 @@ def _get_font(
     return fnt
 
 
+def _composite_feathered_scrim(
+    pil_img: Image.Image,
+    x0: int,
+    y0: int,
+    content_w: int,
+    content_h: int,
+    alpha_max: int = 135,
+) -> Image.Image:
+    """Composite a 100% seamless Gaussian-feathered shadow cloud (zero clipped edges)."""
+    blur_r = max(8, int(content_h * 0.45))
+    margin = blur_r * 3
+    patch_w = max(8, content_w + margin * 2)
+    patch_h = max(8, content_h + margin * 2)
+
+    mask = Image.new("L", (patch_w, patch_h), 0)
+    ImageDraw.Draw(mask).ellipse(
+        [margin, margin, margin + content_w, margin + content_h],
+        fill=int(_clamp(alpha_max, 0, 255)),
+    )
+    mask = mask.filter(ImageFilter.GaussianBlur(radius=blur_r))
+
+    overlay = Image.new("RGBA", pil_img.size, (0, 0, 0, 0))
+    scrim_rgba = Image.merge("RGBA", (
+        Image.new("L", (patch_w, patch_h), 6),
+        Image.new("L", (patch_w, patch_h), 8),
+        Image.new("L", (patch_w, patch_h), 12),
+        mask,
+    ))
+    overlay.paste(scrim_rgba, (int(x0 - margin), int(y0 - margin)))
+    return Image.alpha_composite(pil_img.convert("RGBA"), overlay).convert("RGB")
+
+
 # ---------------------------------------------------------------------------
 # 3D Perspective Camera (cv2.warpPerspective float32 homography)
 # ---------------------------------------------------------------------------
@@ -387,17 +419,24 @@ def _generate_procedural_terrain(
         terrain += noise_up * amp
     terrain = (terrain - terrain.min()) / max(1e-6, terrain.max() - terrain.min())
 
-    # Apply ridges
-    for ridge in (ridges or []):
-        pts = ridge.get("points", [])
-        height_val = ridge.get("height", 0.6)
-        sigma = ridge.get("sigma", 0.08)
-        ridge_mask = np.zeros((h, w), dtype=np.float32)
-        for px, py in pts:
-            yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
-            dist = np.sqrt(((xx / w - px) ** 2) + ((yy / h - py) ** 2))
-            ridge_mask = np.maximum(ridge_mask, np.exp(-dist ** 2 / (2.0 * sigma ** 2)))
-        terrain = np.clip(terrain + ridge_mask * height_val * 0.4, 0, 1)
+    # Apply ridges (fast coarse grid + bicubic upscale)
+    if ridges:
+        gh = max(16, h // 4)
+        gw = max(16, w // 4)
+        yy, xx = np.mgrid[0:gh, 0:gw].astype(np.float32)
+        xx_n = xx / float(gw)
+        yy_n = yy / float(gh)
+        for ridge in ridges:
+            pts = ridge.get("points", [])
+            height_val = float(ridge.get("height", 0.6))
+            sigma = float(ridge.get("sigma", 0.08))
+            ridge_low = np.zeros((gh, gw), dtype=np.float32)
+            inv_2s2 = 1.0 / max(1e-6, 2.0 * sigma * sigma)
+            for px, py in pts:
+                d2 = (xx_n - float(px)) ** 2 + (yy_n - float(py)) ** 2
+                ridge_low = np.maximum(ridge_low, np.exp(-d2 * inv_2s2))
+            ridge_up = cv2.resize(ridge_low, (w, h), interpolation=cv2.INTER_CUBIC)
+            terrain = np.clip(terrain + ridge_up * height_val * 0.4, 0, 1)
 
     # Colorize terrain
     # Dark green lowlands -> brown hills -> gray-white peaks
@@ -449,24 +488,124 @@ def _generate_procedural_terrain(
     return np.clip(canvas * 255, 0, 255).astype(np.uint8)
 
 
-# GIS bbox presets for real ESRI relief terrain
+# GIS bbox presets for real WGS84 / ESRI World Imagery + Hillshade relief terrain
 _GIS_BBOX_PRESETS: dict[str, dict[str, Any]] = {
     "bach_dang": {
         "lon_min": 106.55, "lat_min": 20.75,
         "lon_max": 107.05, "lat_max": 21.05,
-        "region_key": "bach_dang_estuary",
+        "zoom_tile": 12,
+        "region_key": "bach_dang_estuary_z12",
     },
     "nhu_nguyet": {
         "lon_min": 105.90, "lat_min": 21.10,
         "lon_max": 106.40, "lat_max": 21.45,
-        "region_key": "nhu_nguyet_river",
+        "zoom_tile": 12,
+        "region_key": "nhu_nguyet_river_z12",
     },
     "northern_dai_viet": {
         "lon_min": 104.5, "lat_min": 18.5,
         "lon_max": 110.0, "lat_max": 23.5,
+        "zoom_tile": 7,
+        "prebaked_key": "east_asia_vietnam",
         "region_key": "northern_dai_viet",
     },
+    "east_asia_vietnam": {
+        "lon_min": 104.0, "lat_min": 8.0,
+        "lon_max": 116.5, "lat_max": 23.5,
+        "zoom_tile": 6,
+        "prebaked_key": "east_asia_vietnam",
+        "region_key": "east_asia_vietnam",
+    },
 }
+
+_TERRAIN_CANVAS_CACHE: dict[tuple[Any, ...], np.ndarray] = {}
+
+
+def _demodernize_esri_relief(imagery_rgb: np.ndarray, hillshade_rgb: np.ndarray) -> np.ndarray:
+    """Fuse z=12 ESRI World Imagery + Hillshade into a de-modernized Ancient Vietnam relief plate.
+
+    Detects BOTH clear coastal sea and silty/turbid estuary channels (Bạch Đằng / Sông Chanh)
+    via local texture smoothness + hillshade flatness + connected-component hydrography cleanup,
+    rendering crisp deep obsidian-navy water against warm olive-parchment 3D karst relief
+    (zero modern urban grids, zero harsh yellow Sobel contour blobs).
+    Returns RGB uint8 array of shape (H, W, 3).
+    """
+    h, w = imagery_rgb.shape[:2]
+    img_f = imagery_rgb.astype(np.float32) / 255.0
+    hs_l = hillshade_rgb.astype(np.float32).mean(axis=-1) / 255.0
+
+    r_ch, g_ch, b_ch = img_f[..., 0], img_f[..., 1], img_f[..., 2]
+    lum = 0.299 * r_ch + 0.587 * g_ch + 0.114 * b_ch
+
+    # 1. Local texture smoothness (estuary/sea water is smooth; urban/forest/karst is textured)
+    s_l = max(1.5, w / 720.0)
+    blur_l = cv2.GaussianBlur(lum, (0, 0), sigmaX=s_l)
+    local_std = np.sqrt(
+        np.maximum(cv2.GaussianBlur((lum - blur_l) ** 2, (0, 0), sigmaX=s_l * 1.4), 0.0)
+    )
+
+    # 2. Hillshade flatness (water is completely flat; karsts/ridges have steep slope gradients)
+    hs_grad = np.hypot(
+        cv2.Sobel(hs_l, cv2.CV_32F, 1, 0, ksize=3),
+        cv2.Sobel(hs_l, cv2.CV_32F, 0, 1, ksize=3),
+    )
+    hs_flat = (hs_l > 0.94) & (hs_grad < 0.03)
+
+    # 3. Clear coastal sea + silty/turbid river channel detection
+    clear_water = (b_ch + 0.40 * g_ch - 1.12 * r_ch) > 0.03
+    silty_water = (
+        (local_std < 0.029)
+        & (lum > 0.18)
+        & (lum < 0.62)
+        & ((r_ch - g_ch) < 0.05)
+        & ((r_ch - b_ch) < 0.14)
+    )
+    raw_water = (hs_flat & (clear_water | silty_water)).astype(np.uint8) * 255
+
+    # Morphological cleanup + connected-component filter to keep continuous river/sea channels
+    k_o_sz = max(3, int(round(w / 360.0)) | 1)
+    k_c_sz = max(5, int(round(w / 135.0)) | 1)
+    clean_water = cv2.morphologyEx(
+        raw_water, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k_o_sz, k_o_sz))
+    )
+    clean_water = cv2.morphologyEx(
+        clean_water, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k_c_sz, k_c_sz))
+    )
+
+    num_labels, labels, stats, _ = cv2.connectedComponentsWithStats(clean_water, connectivity=8)
+    min_area = max(300, int(h * w * 0.0028))
+    major_water = np.zeros_like(clean_water)
+    for lbl in range(1, num_labels):
+        if stats[lbl, cv2.CC_STAT_AREA] >= min_area:
+            major_water[labels == lbl] = 255
+    water_mask = cv2.GaussianBlur(
+        major_water.astype(np.float32) / 255.0, (0, 0), sigmaX=max(1.2, w / 1050.0)
+    )
+
+    # 4. De-modernized ancient parchment-olive land driven by crisp z=12 karst hillshade
+    img_ancient = cv2.GaussianBlur(img_f, (0, 0), sigmaX=max(3.5, w / 230.0))
+    veg = np.clip((img_ancient[..., 1] - img_ancient[..., 0]) * 3.0 + 0.35, 0.0, 1.0)
+    hs_relief = np.clip((hs_l - 0.52) / 0.46, 0.0, 1.0)
+    hs_detail = hs_l - cv2.GaussianBlur(hs_l, (0, 0), sigmaX=max(4.0, w / 180.0))
+    shade = np.clip(0.55 + 0.42 * (hs_relief - 0.85) + 1.55 * hs_detail, 0.12, 1.0)
+
+    land_r = np.clip(0.26 + 0.36 * shade - 0.06 * veg, 0.0, 1.0)
+    land_g = np.clip(0.28 + 0.33 * shade + 0.03 * veg, 0.0, 1.0)
+    land_b = np.clip(0.19 + 0.21 * shade - 0.04 * veg, 0.0, 1.0)
+    land_rgb = np.stack([land_r, land_g, land_b], axis=-1)
+
+    # 5. Deep tactical obsidian-navy river & sea bathymetry with smooth coastal shoal gradient
+    shoal = cv2.GaussianBlur(1.0 - water_mask, (0, 0), sigmaX=max(5.0, w / 115.0)) * water_mask
+    water_r = np.clip(0.032 + 0.068 * shoal, 0.0, 1.0)
+    water_g = np.clip(0.082 + 0.122 * shoal, 0.0, 1.0)
+    water_b = np.clip(0.155 + 0.150 * shoal, 0.0, 1.0)
+    water_rgb = np.stack([water_r, water_g, water_b], axis=-1)
+
+    # Subtle dark bank occlusion at water-land shoreline (zero harsh yellow halo)
+    bank_edge = np.clip(water_mask * (1.0 - water_mask) * 4.0, 0.0, 1.0)[..., None]
+    wm = water_mask[..., None]
+    fused = (land_rgb * (1.0 - wm) + water_rgb * wm) * (1.0 - 0.24 * bank_edge)
+    return np.clip(np.round(fused * 255.0), 0, 255).astype(np.uint8)
 
 
 def _load_gis_terrain_canvas(
@@ -475,50 +614,97 @@ def _load_gis_terrain_canvas(
     gis_bbox: dict[str, Any] | str | None = None,
     terrain_cfg: dict[str, Any] | None = None,
     seed: int = 42,
+    use_gis: bool = True,
 ) -> np.ndarray:
-    """Load real ESRI relief terrain via gis_map_baker, falling back to procedural.
+    """Load real WGS84/ESRI relief terrain via fx_warehouse.gis_map_baker.
 
     Priority:
-      1. If gis_map_baker + prebaked .npz available → colorize_relief_plate (real GIS).
-      2. Else → _generate_procedural_terrain (offline test fallback).
+      1. Real ESRI World Imagery + World Hillshade tiles (or prebaked .npz) via gis_map_baker.
+      2. Offline test fallback: _generate_procedural_terrain when use_gis=False or unavailable.
     """
-    if gis_bbox is not None:
-        bbox = _GIS_BBOX_PRESETS.get(gis_bbox) if isinstance(gis_bbox, str) else dict(gis_bbox)
-        if bbox:
-            try:
-                from fx_warehouse.gis_map_baker import (  # noqa: F811
-                    bake_region,
-                    colorize_relief_plate,
-                    load_prebaked_region,
+    bbox_key = ""
+    bbox: dict[str, Any] | None = None
+    if use_gis and gis_bbox is not None:
+        if isinstance(gis_bbox, str):
+            bbox_key = gis_bbox
+            bbox = _GIS_BBOX_PRESETS.get(gis_bbox)
+        elif isinstance(gis_bbox, dict):
+            bbox = dict(gis_bbox)
+            bbox_key = str(bbox.get("region_key", (
+                bbox.get("lon_min"), bbox.get("lat_min"),
+                bbox.get("lon_max"), bbox.get("lat_max"),
+            )))
+
+    cache_key = (
+        bbox_key if bbox else f"proc:{repr(terrain_cfg)}",
+        int(width),
+        int(height),
+        int(seed),
+        bool(use_gis),
+    )
+    if cache_key in _TERRAIN_CANVAS_CACHE:
+        return _TERRAIN_CANVAS_CACHE[cache_key].copy()
+
+    if use_gis and bbox:
+        try:
+            from fx_warehouse.gis_map_baker import (
+                ESRI_HILLSHADE_URL,
+                ESRI_IMAGERY_URL,
+                colorize_relief_plate,
+                compute_isotropic_merc_bounds,
+                load_prebaked_region,
+                lonlat_to_region_norm,
+                stitch_esri_tiles,
+            )
+
+            prebaked_key = bbox.get("prebaked_key")
+            if prebaked_key:
+                npz_data = load_prebaked_region(str(prebaked_key), auto_bake=False)
+                full_plate = colorize_relief_plate(npz_data, territories_dict={"VNM": "amber"}, alpha=0.55)
+                ph, pw = full_plate.shape[:2]
+                u0, v1 = lonlat_to_region_norm(float(bbox["lon_min"]), float(bbox["lat_min"]), npz_data["meta"])
+                u1, v0 = lonlat_to_region_norm(float(bbox["lon_max"]), float(bbox["lat_max"]), npz_data["meta"])
+                x0 = max(0, min(pw - 2, int(u0 * pw)))
+                x1 = max(x0 + 2, min(pw, int(u1 * pw)))
+                y0 = max(0, min(ph - 2, int(v0 * ph)))
+                y1 = max(y0 + 2, min(ph, int(v1 * ph)))
+                cropped = full_plate[y0:y1, x0:x1]
+                plate = cv2.resize(cropped, (width, height), interpolation=cv2.INTER_LANCZOS4)
+            else:
+                z_tile = int(bbox.get("zoom_tile", 12))
+                # Stitch at crisp 2560x1440 tile grid then upscale Lanczos if canvas is 4K
+                stitch_w = min(int(width), 2560)
+                stitch_h = min(int(height), 1440)
+                mb = compute_isotropic_merc_bounds(
+                    float(bbox["lon_min"]), float(bbox["lon_max"]),
+                    float(bbox["lat_min"]), float(bbox["lat_max"]),
+                    stitch_w, stitch_h,
                 )
-                rk = bbox.get("region_key", "custom_geo_empire")
-                bake_region(
-                    rk,
-                    lon_min=bbox.get("lon_min"),
-                    lon_max=bbox.get("lon_max"),
-                    lat_min=bbox.get("lat_min"),
-                    lat_max=bbox.get("lat_max"),
-                    width=width,
-                    height=height,
-                )
-                npz_data = load_prebaked_region(rk)
-                plate = colorize_relief_plate(npz_data)
-                # Resize to target canvas dimensions
+                imagery_rgb = stitch_esri_tiles("esri_world_imagery", ESRI_IMAGERY_URL, mb, z_tile, stitch_w, stitch_h)
+                hillshade_rgb = stitch_esri_tiles("esri_world_hillshade", ESRI_HILLSHADE_URL, mb, z_tile, stitch_w, stitch_h)
+                plate = _demodernize_esri_relief(imagery_rgb, hillshade_rgb)
                 if plate.shape[:2] != (height, width):
                     plate = cv2.resize(plate, (width, height), interpolation=cv2.INTER_LANCZOS4)
-                return plate
-            except Exception:
-                pass  # Fallback to procedural
 
-    # Offline fallback: procedural terrain
+            if len(_TERRAIN_CANVAS_CACHE) > 16:
+                _TERRAIN_CANVAS_CACHE.clear()
+            _TERRAIN_CANVAS_CACHE[cache_key] = plate
+            return plate.copy()
+        except Exception:
+            pass  # Offline test fallback to procedural terrain
+
     cfg = terrain_cfg or {}
-    return _generate_procedural_terrain(
+    proc_plate = _generate_procedural_terrain(
         width, height,
         rivers=cfg.get("rivers"),
         ridges=cfg.get("ridges"),
         sea_region=cfg.get("sea_region"),
         seed=seed,
     )
+    if len(_TERRAIN_CANVAS_CACHE) > 16:
+        _TERRAIN_CANVAS_CACHE.clear()
+    _TERRAIN_CANVAS_CACHE[cache_key] = proc_plate
+    return proc_plate.copy()
 
 
 # ---------------------------------------------------------------------------
@@ -529,61 +715,67 @@ def _draw_territory_tint(
     territory_polygons: list[dict[str, Any]],
     t_norm: float,
 ) -> np.ndarray:
-    """Apply animated territory control tint + luminous frontline wave."""
+    """Apply animated territory control tint + organic curved luminous frontline wave."""
+    if not territory_polygons:
+        return canvas
     h, w = canvas.shape[:2]
     out = canvas.astype(np.float32) / 255.0
+
+    # Compute smooth masks on 1/4-scale grid then bilinear-upscale (40x faster, sub-pixel smooth)
+    gh = max(16, h // 4)
+    gw = max(16, w // 4)
+    yy_n = np.linspace(0.0, 1.0, gh, dtype=np.float32)[:, None]
+    xx_n = np.linspace(0.0, 1.0, gw, dtype=np.float32)[None, :]
 
     for terr in territory_polygons:
         faction = terr.get("faction", "dai_viet")
         palette = FACTION_PALETTES.get(faction, FACTION_PALETTES["dai_viet"])
-        region = terr.get("region", {})  # x0,y0,x1,y1 normalized
-        advance = _clamp(terr.get("advance_start", 0.3) +
-                         (terr.get("advance_end", 0.7) - terr.get("advance_start", 0.3)) *
-                         _ease_in_out_cubic(t_norm))
+        region = terr.get("region", {})
+        adv_s = float(terr.get("advance_start", 0.3))
+        adv_e = float(terr.get("advance_end", 0.7))
+        advance = _clamp(adv_s + (adv_e - adv_s) * _ease_in_out_cubic(t_norm))
 
-        x0 = int(region.get("x0", 0.0) * w)
-        y0 = int(region.get("y0", 0.0) * h)
-        x1 = int(region.get("x1", 0.5) * w)
-        y1 = int(region.get("y1", 1.0) * h)
+        rx0 = float(region.get("x0", 0.0))
+        ry0 = float(region.get("y0", 0.0))
+        rx1 = float(region.get("x1", 0.5))
+        ry1 = float(region.get("y1", 1.0))
 
-        # Territory tint mask
-        tint_mask = np.zeros((h, w), dtype=np.float32)
-        tint_mask[max(0, y0):min(h, y1), max(0, x0):min(w, x1)] = 1.0
-        tint_mask = cv2.GaussianBlur(tint_mask, (0, 0), sigmaX=w * 0.02)
+        # Organic curved frontline wave along Y (MapEmpirex style, zero straight box edge)
+        wave_offset = 0.016 * np.sin(yy_n * math.pi * 2.6 + float(t_norm) * 4.0)
+        front_x = rx0 + (rx1 - rx0) * advance + wave_offset
 
-        # Advance-dependent coverage
-        advance_x = x0 + int((x1 - x0) * advance)
-        advance_mask = np.zeros((h, w), dtype=np.float32)
-        advance_mask[max(0, y0):min(h, y1), max(0, x0):min(w, advance_x)] = 1.0
-        advance_mask = cv2.GaussianBlur(advance_mask, (0, 0), sigmaX=w * 0.015)
+        # Smooth sigmoid transition at region bounds and advancing frontline
+        feather = 0.022
+        in_y = (1.0 / (1.0 + np.exp(-(yy_n - ry0) / feather))) * (
+            1.0 / (1.0 + np.exp(-(ry1 - yy_n) / feather))
+        )
+        in_x_left = 1.0 / (1.0 + np.exp(-(xx_n - rx0) / feather))
+        in_front = 1.0 / (1.0 + np.exp(-(front_x - xx_n) / 0.016))
 
-        combined = tint_mask * advance_mask
+        combined_low = (in_y * in_x_left * in_front).astype(np.float32)
+        combined = cv2.resize(combined_low, (w, h), interpolation=cv2.INTER_LINEAR)
 
-        # Apply color tint
         tint_color = np.array(palette["primary"], dtype=np.float32) / 255.0
         tint_strength = 0.25
-        for c in range(3):
-            out[..., c] = out[..., c] * (1.0 - combined * tint_strength) + \
-                          tint_color[c] * combined * tint_strength
+        out = out * (1.0 - combined[..., None] * tint_strength) + (
+            tint_color[None, None, :] * (combined[..., None] * tint_strength)
+        )
 
-        # Luminous frontline edge glow
+        # Luminous pulsing frontline wave ribbon along front_x
         glow_color = np.array(palette["glow"], dtype=np.float32) / 255.0
-        edge_width = max(3, int(w * 0.006))
-        edge_col = max(0, min(w - 1, advance_x))
-        glow_strip = np.zeros((h, w), dtype=np.float32)
-        left = max(0, edge_col - edge_width)
-        right = min(w, edge_col + edge_width)
-        glow_strip[max(0, y0):min(h, y1), left:right] = 1.0
-        glow_strip = cv2.GaussianBlur(glow_strip, (0, 0), sigmaX=edge_width * 0.8)
-        # Pulsing glow
-        pulse = 0.6 + 0.4 * math.sin(t_norm * math.pi * 6.0)
-        for c in range(3):
-            out[..., c] = np.clip(
-                out[..., c] + glow_strip * glow_color[c] * pulse * 0.7,
-                0, 1
-            )
+        edge_sigma = 0.0075
+        glow_low = (
+            in_y * np.exp(-((xx_n - front_x) ** 2) / (2.0 * edge_sigma * edge_sigma))
+        ).astype(np.float32)
+        glow_strip = cv2.resize(glow_low, (w, h), interpolation=cv2.INTER_LINEAR)
+        pulse = 0.65 + 0.35 * math.sin(float(t_norm) * math.pi * 6.0)
+        out = np.clip(
+            out + glow_strip[..., None] * glow_color[None, None, :] * (pulse * 0.72),
+            0.0,
+            1.0,
+        )
 
-    return np.clip(out * 255, 0, 255).astype(np.uint8)
+    return np.clip(out * 255.0, 0, 255).astype(np.uint8)
 
 
 # ---------------------------------------------------------------------------
@@ -594,76 +786,166 @@ def _draw_tidal_physics(
     tidal_spec: dict[str, Any] | None,
     t_norm: float,
 ) -> np.ndarray:
-    """Render tidal ebb revealing submerged stake traps."""
+    """Render tidal ebb shoal exposure and submerged iron-tipped stake traps (RGB canvas).
+
+    Zero solid rectangular bars/boxes (V7 Law A).
+    """
     if not tidal_spec or not tidal_spec.get("enabled"):
         return canvas
 
     h, w = canvas.shape[:2]
     out = canvas.copy()
 
-    start_m = tidal_spec.get("start_m", 1.4)
-    end_m = tidal_spec.get("end_m", -3.8)
-    threshold_m = tidal_spec.get("stake_threshold_m", -1.2)
+    start_m = float(tidal_spec.get("start_m", 1.4))
+    end_m = float(tidal_spec.get("end_m", -3.8))
+    threshold_m = float(tidal_spec.get("stake_threshold_m", -1.2))
     current_m = _lerp(start_m, end_m, _ease_in_out_cubic(t_norm))
+    ebb_frac = _clamp((start_m - current_m) / max(0.1, start_m - end_m))
 
-    # Stake trap visualization
     stake_beds = tidal_spec.get("stake_beds", [])
-    if current_m < threshold_m:
-        reveal_progress = _clamp((threshold_m - current_m) / max(0.1, threshold_m - end_m))
+    # Subtle muddy shoal exposure halo along stake beds as tide recedes
+    if ebb_frac > 0.05 and stake_beds:
+        gh, gw = max(16, h // 4), max(16, w // 4)
+        shoal_low = np.zeros((gh, gw), dtype=np.float32)
         for bed in stake_beds:
             p0 = bed.get("p0", (0.4, 0.5))
             p1 = bed.get("p1", (0.6, 0.5))
-            rows = bed.get("rows", 3)
-            count = bed.get("count", 8)
+            cv2.line(
+                shoal_low,
+                (int(p0[0] * gw), int(p0[1] * gh)),
+                (int(p1[0] * gw), int(p1[1] * gh)),
+                1.0,
+                max(3, int(gh * 0.045)),
+                cv2.LINE_AA,
+            )
+        shoal_low = cv2.GaussianBlur(shoal_low, (0, 0), sigmaX=max(2.0, gw * 0.015))
+        shoal_mask = cv2.resize(shoal_low, (w, h), interpolation=cv2.INTER_LINEAR)
+        mud_rgb = np.array([78.0, 62.0, 42.0], dtype=np.float32)
+        alpha_m = (shoal_mask * ebb_frac * 0.38)[..., None]
+        out = np.clip(out.astype(np.float32) * (1.0 - alpha_m) + mud_rgb * alpha_m, 0, 255).astype(np.uint8)
+
+    # Iron-tipped wooden stake field visualization
+    show_xray = bool(tidal_spec.get("submerged_xray", False))
+    if current_m < threshold_m or show_xray:
+        if current_m < threshold_m:
+            reveal_progress = _clamp((threshold_m - current_m) / max(0.1, threshold_m - end_m))
+        else:
+            reveal_progress = 0.45
+        for bed in stake_beds:
+            p0 = bed.get("p0", (0.4, 0.5))
+            p1 = bed.get("p1", (0.6, 0.5))
+            rows = int(bed.get("rows", 3))
+            count = int(bed.get("count", 8))
             for row in range(rows):
                 for col in range(count):
                     frac_x = col / max(1, count - 1)
-                    frac_y = row / max(1, rows - 1) * 0.03
+                    frac_y = (row / max(1, rows - 1) - 0.5) * 0.032
                     sx = int(_lerp(p0[0], p1[0], frac_x) * w)
                     sy = int((_lerp(p0[1], p1[1], frac_x) + frac_y) * h)
-                    # Iron-tipped stake: dark brown with iron tip
                     if 0 <= sx < w and 0 <= sy < h:
-                        stake_len = max(3, int(h * 0.012 * reveal_progress))
-                        cv2.line(
-                            out,
-                            (sx, sy),
-                            (sx, sy - stake_len),
-                            (60, 40, 25),
-                            max(1, int(w * 0.0015)),
-                            cv2.LINE_AA,
-                        )
-                        # Iron tip
-                        cv2.circle(out, (sx, sy - stake_len), max(1, int(w * 0.002)),
-                                   (140, 130, 120), -1, cv2.LINE_AA)
+                        stake_len = max(6, int(h * 0.017 * (0.35 + 0.65 * reveal_progress)))
+                        base_hw = max(2, int(w * 0.0014))
+                        mid_hw = max(1, int(w * 0.00095))
+                        lean_x = max(1, int(stake_len * 0.22))
+                        tip_x = sx + lean_x
+                        tip_y = sy - stake_len
+                        collar_y = sy - int(stake_len * 0.62)
+                        collar_x = sx + int(lean_x * 0.62)
 
-    # Tidal level indicator bar (bottom-left HUD)
-    bar_x = int(w * 0.03)
-    bar_y = int(h * 0.75)
-    bar_w_px = int(w * 0.015)
-    bar_h_px = int(h * 0.18)
-    # Background
-    cv2.rectangle(out, (bar_x, bar_y), (bar_x + bar_w_px, bar_y + bar_h_px),
-                  (20, 25, 35), -1)
-    cv2.rectangle(out, (bar_x, bar_y), (bar_x + bar_w_px, bar_y + bar_h_px),
-                  (100, 110, 130), 1, cv2.LINE_AA)
-    # Water level fill
-    level_frac = _clamp((current_m - end_m) / max(0.1, start_m - end_m))
-    fill_top = bar_y + bar_h_px - int(bar_h_px * level_frac)
-    water_color = (60, 100, 140) if current_m > 0 else (40, 70, 100)
-    cv2.rectangle(out, (bar_x + 1, fill_top), (bar_x + bar_w_px - 1, bar_y + bar_h_px - 1),
-                  water_color, -1)
-    # Threshold line
-    thresh_frac = _clamp((threshold_m - end_m) / max(0.1, start_m - end_m))
-    thresh_y = bar_y + bar_h_px - int(bar_h_px * thresh_frac)
-    cv2.line(out, (bar_x - 4, thresh_y), (bar_x + bar_w_px + 4, thresh_y),
-             (220, 80, 60), 1, cv2.LINE_AA)
+                        # Thin elliptical water-runoff foam ripple at stake base
+                        rip_rx = max(3, int(w * 0.0030 * (0.65 + 0.35 * reveal_progress)))
+                        rip_ry = max(2, int(rip_rx * 0.45))
+                        cv2.ellipse(
+                            out, (sx, sy + 1), (rip_rx, rip_ry), 0, 0, 360,
+                            (95, 138, 168), max(1, int(w * 0.0005)), cv2.LINE_AA,
+                        )
+
+                        # Cast dark water shadow behind stake
+                        sh_pts = np.array([
+                            [sx - base_hw, sy],
+                            [sx + base_hw, sy],
+                            [sx - int(stake_len * 0.55), sy + int(stake_len * 0.28)],
+                        ], dtype=np.int32)
+                        cv2.fillPoly(out, [sh_pts], (14, 24, 34), cv2.LINE_AA)
+
+                        # Tapered charred ironwood log body (RGB dark umber + ochre wood rim)
+                        wood_pts = np.array([
+                            [sx - base_hw, sy],
+                            [sx + base_hw, sy],
+                            [collar_x + mid_hw, collar_y],
+                            [collar_x - mid_hw, collar_y],
+                        ], dtype=np.int32)
+                        cv2.fillPoly(out, [wood_pts], (66, 42, 24), cv2.LINE_AA)
+                        cv2.line(
+                            out, (sx + base_hw, sy), (collar_x + mid_hw, collar_y),
+                            (118, 82, 48), max(1, int(w * 0.0004)), cv2.LINE_AA,
+                        )
+
+                        # Sharp tapered forged-iron triangular spearhead tip (zero round dots!)
+                        iron_pts = np.array([
+                            [collar_x - mid_hw - 1, collar_y + 1],
+                            [collar_x + mid_hw + 1, collar_y + 1],
+                            [tip_x, tip_y],
+                        ], dtype=np.int32)
+                        cv2.fillPoly(out, [iron_pts], (178, 188, 198), cv2.LINE_AA)
+                        # Razor steel specular glint along leading edge
+                        cv2.line(
+                            out, (collar_x + mid_hw, collar_y), (tip_x, tip_y),
+                            (242, 246, 250), max(1, int(w * 0.0005)), cv2.LINE_AA,
+                        )
 
     return out
+
+
+def _draw_tidal_hud(
+    canvas: np.ndarray,
+    tidal_spec: dict[str, Any] | None,
+    t_norm: float,
+) -> np.ndarray:
+    """Draw floating tidal elevation & stake emergence readout (BGR canvas, zero boxes)."""
+    if not tidal_spec or not tidal_spec.get("enabled"):
+        return canvas
+
+    h, w = canvas.shape[:2]
+    start_m = float(tidal_spec.get("start_m", 1.4))
+    end_m = float(tidal_spec.get("end_m", -3.8))
+    threshold_m = float(tidal_spec.get("stake_threshold_m", -1.2))
+    current_m = _lerp(start_m, end_m, _ease_in_out_cubic(t_norm))
+
+    sign = "+" if current_m >= 0 else ""
+    state_txt = "CỌC SẮT ĐÃ LỘ" if current_m < threshold_m else "TRIỀU ĐANG RÚT"
+    readout = f"MỰC NƯỚC {sign}{current_m:.1f}M • {state_txt}"
+
+    pil_img = Image.fromarray(cv2.cvtColor(canvas, cv2.COLOR_BGR2RGB))
+    font_size = max(11, int(h * 0.017))
+    fnt = _get_font(font_size, condensed=True)
+    draw = ImageDraw.Draw(pil_img)
+    bbox = draw.textbbox((0, 0), readout, font=fnt)
+    tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
+
+    tx = int(w * 0.04)
+    ty = int(h * 0.78)
+
+    # Seamless feathered Gaussian shadow scrim (zero clipped edges)
+    pad = max(6, int(h * 0.008))
+    pil_img = _composite_feathered_scrim(
+        pil_img, tx - pad, ty - pad // 2, tw + pad * 2, th + pad, alpha_max=145
+    )
+    draw = ImageDraw.Draw(pil_img)
+
+    txt_color = (245, 195, 110) if current_m < threshold_m else (175, 215, 235)
+    draw.text((tx + 1, ty + 1), readout, fill=(0, 0, 0), font=fnt)
+    draw.text((tx, ty), readout, fill=txt_color, font=fnt)
+    return cv2.cvtColor(np.array(pil_img), cv2.COLOR_RGB2BGR)
 
 
 # ---------------------------------------------------------------------------
 # Faction Shield / Heraldic Token Rendering
 # ---------------------------------------------------------------------------
+def _rgb_to_bgr(c: tuple[int, int, int]) -> tuple[int, int, int]:
+    return (int(c[2]), int(c[1]), int(c[0]))
+
+
 def _draw_faction_token(
     canvas: np.ndarray,
     cx: int,
@@ -674,7 +956,7 @@ def _draw_faction_token(
     damaged: bool = False,
     pulse_phase: float = 0.0,
 ) -> np.ndarray:
-    """Draw a crisp circular heraldic faction token with emblem and badge text."""
+    """Draw a crisp circular heraldic faction token with Đông Sơn / period emblem (BGR canvas)."""
     out = canvas.copy()
     palette = FACTION_PALETTES.get(faction, FACTION_PALETTES["dai_viet"])
 
@@ -682,51 +964,47 @@ def _draw_faction_token(
     glow_r = int(radius * 1.4)
     glow_alpha = 0.3 + 0.15 * math.sin(pulse_phase * math.pi * 2.0)
     overlay = out.copy()
-    cv2.circle(overlay, (cx, cy), glow_r, palette["glow"], -1, cv2.LINE_AA)
+    cv2.circle(overlay, (cx, cy), glow_r, _rgb_to_bgr(palette["glow"]), -1, cv2.LINE_AA)
     cv2.addWeighted(overlay, glow_alpha, out, 1.0 - glow_alpha, 0, out)
 
     # Shield body (filled circle)
-    body_color = palette["primary"] if not damaged else (80, 30, 30)
-    cv2.circle(out, (cx, cy), radius, body_color, -1, cv2.LINE_AA)
+    body_bgr = _rgb_to_bgr(palette["primary"]) if not damaged else (30, 30, 85)
+    cv2.circle(out, (cx, cy), radius, body_bgr, -1, cv2.LINE_AA)
 
     # Shield rim
     rim_thickness = max(2, int(radius * 0.12))
-    cv2.circle(out, (cx, cy), radius, palette["shield_rim"], rim_thickness, cv2.LINE_AA)
+    cv2.circle(out, (cx, cy), radius, _rgb_to_bgr(palette["shield_rim"]), rim_thickness, cv2.LINE_AA)
 
-    # Inner emblem circle
-    inner_r = int(radius * 0.55)
-    cv2.circle(out, (cx, cy), inner_r, palette["secondary"], max(1, int(radius * 0.06)), cv2.LINE_AA)
+    # Inner war-drum / heraldic ring
+    inner_r = max(3, int(radius * 0.62))
+    cv2.circle(out, (cx, cy), inner_r, _rgb_to_bgr(palette["secondary"]), max(1, int(radius * 0.06)), cv2.LINE_AA)
 
-    # Simple emblem symbol: Đông Sơn bronze drum sunburst for Đại Việt, cross for enemy
-    emblem_color = palette["emblem_fg"]
-    sym_r = int(inner_r * 0.5)
+    # Period-accurate emblem: Đông Sơn bronze drum concentric sunburst for Đại Việt
+    emblem_bgr = _rgb_to_bgr(palette["emblem_fg"])
+    sym_r = max(2, int(inner_r * 0.78))
     if faction == "dai_viet":
-        # Đông Sơn bronze drum concentric sunburst (period-accurate, not modern star)
-        # Concentric circle (war drum ring)
-        cv2.circle(out, (cx, cy), int(sym_r * 0.8), emblem_color,
-                   max(1, int(radius * 0.04)), cv2.LINE_AA)
-        cv2.circle(out, (cx, cy), int(sym_r * 0.35), emblem_color,
-                   max(1, int(radius * 0.03)), cv2.LINE_AA)
-        # Radial sunburst spokes (12 rays like Đông Sơn bronze drum)
+        # Concentric Đông Sơn bronze drum tympanum rings + 12 radial sunburst rays
+        cv2.circle(out, (cx, cy), sym_r, emblem_bgr, max(1, int(radius * 0.04)), cv2.LINE_AA)
+        core_r = max(1, int(sym_r * 0.36))
+        cv2.circle(out, (cx, cy), core_r, emblem_bgr, -1, cv2.LINE_AA)
         n_rays = 12
         for i in range(n_rays):
             ang = i * 2.0 * math.pi / n_rays - math.pi / 2.0
-            inner_pt = (int(cx + sym_r * 0.35 * math.cos(ang)),
-                        int(cy + sym_r * 0.35 * math.sin(ang)))
-            outer_pt = (int(cx + sym_r * 0.8 * math.cos(ang)),
-                        int(cy + sym_r * 0.8 * math.sin(ang)))
-            cv2.line(out, inner_pt, outer_pt, emblem_color,
-                     max(1, int(radius * 0.03)), cv2.LINE_AA)
-        # Center dot
-        cv2.circle(out, (cx, cy), max(2, int(sym_r * 0.12)), emblem_color, -1, cv2.LINE_AA)
+            inner_pt = (int(round(cx + core_r * math.cos(ang))),
+                        int(round(cy + core_r * math.sin(ang))))
+            outer_pt = (int(round(cx + sym_r * 0.92 * math.cos(ang))),
+                        int(round(cy + sym_r * 0.92 * math.sin(ang))))
+            cv2.line(out, inner_pt, outer_pt, emblem_bgr,
+                     max(1, int(radius * 0.04)), cv2.LINE_AA)
     else:
-        # Cross/sword pattern for enemy factions
-        cv2.line(out, (cx - sym_r, cy), (cx + sym_r, cy), emblem_color,
+        # Imperial northern iron halberd / crossed-lance crest for Northern dynasties
+        s_len = max(2, int(sym_r * 0.75))
+        cv2.line(out, (cx - s_len, cy), (cx + s_len, cy), emblem_bgr,
                  max(1, int(radius * 0.08)), cv2.LINE_AA)
-        cv2.line(out, (cx, cy - sym_r), (cx, cy + sym_r), emblem_color,
+        cv2.line(out, (cx, cy - s_len), (cx, cy + s_len), emblem_bgr,
                  max(1, int(radius * 0.08)), cv2.LINE_AA)
 
-    # Badge text below token
+    # Floating badge text below token (soft shadow, zero rectangular box)
     if badge_text:
         font_size = max(10, int(radius * 0.42))
         pil_img = Image.fromarray(cv2.cvtColor(out, cv2.COLOR_BGR2RGB))
@@ -736,10 +1014,8 @@ def _draw_faction_token(
         tw = bbox[2] - bbox[0]
         tx = cx - tw // 2
         ty = cy + radius + max(4, int(radius * 0.15))
-        # Shadow
         draw.text((tx + 1, ty + 1), badge_text, fill=(0, 0, 0), font=fnt)
-        # Text
-        text_color = (255, 200, 100) if not damaged else (200, 60, 50)
+        text_color = (255, 200, 100) if not damaged else (220, 75, 60)
         draw.text((tx, ty), badge_text, fill=text_color, font=fnt)
         out = cv2.cvtColor(np.array(pil_img), cv2.COLOR_RGB2BGR)
 
@@ -818,26 +1094,20 @@ def _draw_troop_counter(
     bar_margin = int(w * 0.08)
     bar_width = w - 2 * bar_margin
 
-    # Soft Gaussian scrim behind HUD text (zero solid rectangles)
-    scrim_overlay = Image.new("RGBA", pil_img.size, (0, 0, 0, 0))
-    scrim_draw = ImageDraw.Draw(scrim_overlay)
-    scrim_h = int(h * 0.065)
-    for _sy in range(bar_y - 4, bar_y + scrim_h):
-        alpha_v = max(0, min(100, int(90 * (1.0 - abs(_sy - (bar_y + scrim_h // 2)) / (scrim_h * 0.6)))))
-        scrim_draw.line([(bar_margin - 10, _sy), (bar_margin + bar_width + 10, _sy)],
-                        fill=(5, 5, 10, alpha_v))
-    pil_img = Image.alpha_composite(pil_img.convert("RGBA"), scrim_overlay).convert("RGB")
-    draw = ImageDraw.Draw(pil_img)
+    # Seamless feathered Gaussian scrim behind left & right floating HUD labels
+    scrim_h = max(18, int(h * 0.068))
+    scrim_w_side = max(40, int(w * 0.28))
+    pil_img = _composite_feathered_scrim(
+        pil_img, bar_margin - 8, bar_y, scrim_w_side, scrim_h, alpha_max=145
+    )
+    pil_img = _composite_feathered_scrim(
+        pil_img, bar_margin + bar_width - scrim_w_side + 8, bar_y, scrim_w_side, scrim_h, alpha_max=145
+    )
 
-    # Power ratio thin line (1px, not a bar)
+    # Subtle glowing momentum balance dot (zero HP bar!)
     split_x = bar_margin + int(bar_width * ratio)
     cv2_img = cv2.cvtColor(np.array(pil_img), cv2.COLOR_RGB2BGR)
-    cv2.line(cv2_img, (bar_margin, bar_y + 2), (split_x, bar_y + 2),
-             (28, 36, 172), 2, cv2.LINE_AA)
-    cv2.line(cv2_img, (split_x, bar_y + 2), (bar_margin + bar_width, bar_y + 2),
-             (88, 66, 40), 2, cv2.LINE_AA)
-    # Small dot at split
-    cv2.circle(cv2_img, (split_x, bar_y + 2), 4, (200, 190, 170), -1, cv2.LINE_AA)
+    cv2.circle(cv2_img, (split_x, bar_y + 4), 3, (120, 190, 240), -1, cv2.LINE_AA)
 
     pil_img = Image.fromarray(cv2.cvtColor(cv2_img, cv2.COLOR_BGR2RGB))
     draw = ImageDraw.Draw(pil_img)
@@ -907,26 +1177,16 @@ def _draw_phase_label(
     tx = (w - tw) // 2
     ty = h - int(h * 0.065)
 
-    # Soft Gaussian scrim (zero solid rectangular borders)
-    scrim_pad = int(h * 0.012)
-    scrim_w = tw + scrim_pad * 4
-    scrim_h_px = (bbox[3] - bbox[1]) + scrim_pad * 2
-    scrim_img = Image.new("L", (scrim_w, scrim_h_px), 0)
-    scrim_draw_tmp = ImageDraw.Draw(scrim_img)
-    scrim_draw_tmp.ellipse(
-        [0, 0, scrim_w, scrim_h_px],
-        fill=140,
+    # Seamless feathered Gaussian scrim (zero clipped borders)
+    scrim_pad = max(6, int(h * 0.01))
+    pil_img = _composite_feathered_scrim(
+        pil_img,
+        tx - scrim_pad * 2,
+        ty - scrim_pad // 2,
+        tw + scrim_pad * 4,
+        (bbox[3] - bbox[1]) + scrim_pad,
+        alpha_max=155,
     )
-    scrim_img = scrim_img.filter(ImageFilter.GaussianBlur(radius=max(3, scrim_pad)))
-    overlay_img = Image.new("RGBA", pil_img.size, (0, 0, 0, 0))
-    scrim_rgba = Image.merge("RGBA", (
-        Image.new("L", scrim_img.size, 10),
-        Image.new("L", scrim_img.size, 10),
-        Image.new("L", scrim_img.size, 15),
-        scrim_img,
-    ))
-    overlay_img.paste(scrim_rgba, (tx - scrim_pad * 2, ty - scrim_pad))
-    pil_img = Image.alpha_composite(pil_img.convert("RGBA"), overlay_img).convert("RGB")
     draw = ImageDraw.Draw(pil_img)
 
     # Text
@@ -995,6 +1255,20 @@ def _draw_title_card(
 # ---------------------------------------------------------------------------
 # Callout Arcs
 # ---------------------------------------------------------------------------
+def _boxes_overlap(
+    a: tuple[int, int, int, int],
+    b: tuple[int, int, int, int],
+    margin: int = 8,
+) -> bool:
+    """Return True if two (x0, y0, x1, y1) axis-aligned bounding boxes overlap within margin."""
+    return not (
+        a[2] + margin <= b[0]
+        or b[2] + margin <= a[0]
+        or a[3] + margin <= b[1]
+        or b[3] + margin <= a[1]
+    )
+
+
 def _draw_callout_arcs(
     canvas: np.ndarray,
     callouts: list[dict[str, Any]],
@@ -1004,55 +1278,174 @@ def _draw_callout_arcs(
     pitch_deg: float,
     zoom: float,
     t_norm: float,
+    spec: dict[str, Any] | None = None,
 ) -> np.ndarray:
-    """Draw clean range/width callout arcs with labels (zero rectangular boxes)."""
+    """Draw clean collision-free range/width callout arcs with labels (zero boxes).
+
+    Enforces strict clearance against:
+    - Top faction HUD (`y >= 0.175 * h`)
+    - Bottom phase HUD (`y <= 0.84 * h`)
+    - Bottom-left compass/tidal readout & bottom-right watermark zone
+    - Right-edge `QĐ. HOÀNG SA` / `QĐ. TRƯỜNG SA` sovereignty beacons (>= 240px clear)
+    - Projected stake beds (auto-elevates callout cleanly above stake field)
+    - Previously placed callout labels (zero label-on-label overlap)
+    """
+    if not callouts:
+        return canvas
     out = canvas.copy()
     h, w = canvas.shape[:2]
+    spec_d = spec or {}
+
+    # Build forbidden AABB zones in screen pixel space
+    forbidden: list[tuple[int, int, int, int]] = [
+        (0, 0, w, int(h * 0.175)),                            # Top faction header HUD
+        (0, int(h * 0.84), w, h),                             # Bottom phase HUD
+        (0, int(h * 0.72), int(w * 0.34), h),                 # Bottom-left compass + tidal HUD
+        (max(0, w - 240), max(0, h - 240), w, h),             # Bottom-right logo zone
+    ]
+
+    # Reserve right-side sovereignty corridor when sovereignty markers are active
+    sov_flag = spec_d.get("sovereignty_markers")
+    terrain_cfg = spec_d.get("terrain", {})
+    sov_active = sov_flag is True or (
+        sov_flag is None
+        and (
+            bool(terrain_cfg.get("sea_region"))
+            or spec_d.get("gis_bbox") in ("east_asia_vietnam", "northern_dai_viet")
+        )
+    )
+    if sov_active:
+        # >= 240px clearance left of right-edge sovereignty beacons (x=0.895*w -> forbid x >= w - 460)
+        sov_left = max(int(w * 0.68), w - int(max(320, w * 0.28)))
+        forbidden.append((sov_left, int(h * 0.19), w, int(h * 0.56)))
+
+    # Reserve projected stake-bed bounding boxes so labels never sit on top of stakes
+    tidal_cfg = spec_d.get("tidal") or {}
+    if tidal_cfg.get("enabled"):
+        for bed in tidal_cfg.get("stake_beds", []):
+            p0 = bed.get("p0", (0.4, 0.5))
+            p1 = bed.get("p1", (0.6, 0.5))
+            xs_b: list[float] = []
+            ys_b: list[float] = []
+            for u_p in (p0[0], (p0[0] + p1[0]) * 0.5, p1[0]):
+                for dy in (-0.025, 0.025):
+                    v_p = _lerp(p0[1], p1[1], 0.5) + dy
+                    px, py = camera.project_point(u_p, v_p, cam_cx, cam_cy, pitch_deg, zoom)
+                    xs_b.append(px)
+                    ys_b.append(py)
+            if xs_b and ys_b:
+                pad_x = max(18, int(w * 0.018))
+                pad_y = max(28, int(h * 0.042))
+                forbidden.append((
+                    int(min(xs_b)) - pad_x,
+                    int(min(ys_b)) - pad_y,
+                    int(max(xs_b)) + pad_x,
+                    int(max(ys_b)) + pad_y,
+                ))
+
+    placed: list[tuple[int, int, int, int]] = []
+    lbl_size = max(11, int(h * 0.018))
+    sub_size = max(9, lbl_size - 4)
+    lbl_fnt = _get_font(lbl_size, condensed=True)
+    sub_fnt = _get_font(sub_size, condensed=True)
+    safe_margin_x = max(18, int(w * 0.022))
+    safe_top = int(h * 0.185)
+    safe_bot = int(h * 0.825)
 
     for callout in callouts:
-        t_appear = callout.get("t_appear", 0.0)
+        t_appear = float(callout.get("t_appear", 0.0))
         if t_norm < t_appear:
             continue
         fade = _clamp((t_norm - t_appear) / 0.08)
 
         uv = callout.get("uv", (0.5, 0.5))
-        label = callout.get("label", "")
-        sub = callout.get("sub", "")
+        label = str(callout.get("label", ""))
+        sub = str(callout.get("sub", ""))
         offset = callout.get("offset", (0.1, -0.05))
 
-        # Project to screen
         sx, sy = camera.project_point(uv[0], uv[1], cam_cx, cam_cy, pitch_deg, zoom)
         if not (0 <= sx < w and 0 <= sy < h):
             continue
 
-        ex = sx + offset[0] * w
-        ey = sy + offset[1] * h
+        # Measure exact label+sub bounding box
+        tmp_draw = ImageDraw.Draw(Image.new("RGB", (16, 16)))
+        if label:
+            l_bb = tmp_draw.textbbox((0, 0), label, font=lbl_fnt)
+            lw, lh = l_bb[2] - l_bb[0], l_bb[3] - l_bb[1]
+        else:
+            lw, lh = 0, 0
+        if sub:
+            s_bb = tmp_draw.textbbox((0, 0), sub, font=sub_fnt)
+            sw_p, sh_p = s_bb[2] - s_bb[0], s_bb[3] - s_bb[1]
+        else:
+            sw_p, sh_p = 0, 0
 
-        # Leader line (arc)
-        alpha = fade * 0.8
-        line_color = (int(200 * alpha), int(190 * alpha), int(170 * alpha))
-        cv2.line(out, (int(sx), int(sy)), (int(ex), int(ey)),
-                 line_color, 1, cv2.LINE_AA)
-        # Dot at anchor
-        cv2.circle(out, (int(sx), int(sy)), max(3, int(w * 0.003)),
-                   (int(255 * alpha), int(220 * alpha), int(140 * alpha)),
-                   -1, cv2.LINE_AA)
+        box_w = max(lw, sw_p) + 12
+        box_h = lh + (sh_p + 6 if sub else 0) + 8
 
-        # Label text
+        # Requested endpoint -> top-left of text block
+        req_tx = int(sx + float(offset[0]) * w) + 4
+        req_ty = int(sy + float(offset[1]) * h) - lbl_size - 2
+
+        # Candidate search: requested first, then cleanly pushed clear of top HUD, sovereignty, stakes
+        candidates: list[tuple[int, int]] = [(req_tx, req_ty)]
+        # Push directly above stakes / anchor, left of sovereignty, below top HUD
+        clamped_y = max(safe_top, min(safe_bot - box_h, req_ty))
+        clamped_x = max(safe_margin_x, min(w - box_w - safe_margin_x, req_tx))
+        candidates.append((clamped_x, clamped_y))
+        for dy_frac in (-0.14, -0.20, 0.12, -0.26, 0.18, 0.0, -0.08, 0.08):
+            for dx_frac in (0.0, -0.18, -0.28, 0.12, -0.10, 0.22, -0.36):
+                cx_c = int(sx + dx_frac * w) - (box_w // 2 if dx_frac <= 0 else 0)
+                cy_c = int(sy + dy_frac * h) - box_h // 2
+                cx_c = max(safe_margin_x, min(w - box_w - safe_margin_x, cx_c))
+                cy_c = max(safe_top, min(safe_bot - box_h, cy_c))
+                candidates.append((cx_c, cy_c))
+
+        best_tx, best_ty = clamped_x, clamped_y
+        for cx_c, cy_c in candidates:
+            if cx_c < safe_margin_x or cx_c + box_w > w - safe_margin_x:
+                continue
+            if cy_c < safe_top or cy_c + box_h > safe_bot:
+                continue
+            cand_box = (cx_c, cy_c, cx_c + box_w, cy_c + box_h)
+            if any(_boxes_overlap(cand_box, fb, margin=12) for fb in forbidden):
+                continue
+            if any(_boxes_overlap(cand_box, pb, margin=14) for pb in placed):
+                continue
+            best_tx, best_ty = cx_c, cy_c
+            break
+
+        placed.append((best_tx, best_ty, best_tx + box_w, best_ty + box_h))
+
+        # Leader line terminates cleanly at nearest left/right edge of text block
+        ex = best_tx - 6 if best_tx > sx else best_tx + box_w + 2
+        ey = best_ty + lh // 2 + 2
+
+        alpha = fade * 0.85
+        line_bgr = (int(175 * alpha), int(200 * alpha), int(220 * alpha))
+        cv2.line(out, (int(sx), int(sy)), (int(ex), int(ey)), line_bgr, 1, cv2.LINE_AA)
+        cv2.circle(
+            out,
+            (int(sx), int(sy)),
+            max(3, int(w * 0.0028)),
+            (int(120 * alpha), int(205 * alpha), int(245 * alpha)),
+            -1,
+            cv2.LINE_AA,
+        )
+
         if label:
             pil_img = Image.fromarray(cv2.cvtColor(out, cv2.COLOR_BGR2RGB))
+            pil_img = _composite_feathered_scrim(
+                pil_img, best_tx - 6, best_ty - 4, box_w + 4, box_h + 2, alpha_max=int(130 * fade)
+            )
             draw = ImageDraw.Draw(pil_img)
-            lbl_size = max(11, int(h * 0.018))
-            lbl_fnt = _get_font(lbl_size, condensed=True)
-            lbl_color = (int(250 * fade), int(240 * fade), int(220 * fade))
-            draw.text((int(ex) + 4, int(ey) - lbl_size - 2), label,
-                      fill=lbl_color, font=lbl_fnt)
+            lbl_color = (int(250 * fade), int(242 * fade), int(224 * fade))
+            draw.text((best_tx + 1, best_ty + 1), label, fill=(0, 0, 0), font=lbl_fnt)
+            draw.text((best_tx, best_ty), label, fill=lbl_color, font=lbl_fnt)
             if sub:
-                sub_size = max(9, lbl_size - 4)
-                sub_fnt = _get_font(sub_size, condensed=True)
-                sub_color = (int(200 * fade), int(190 * fade), int(160 * fade))
-                draw.text((int(ex) + 4, int(ey) + 2), sub,
-                          fill=sub_color, font=sub_fnt)
+                sub_color = (int(215 * fade), int(198 * fade), int(162 * fade))
+                draw.text((best_tx + 1, best_ty + lh + 5), sub, fill=(0, 0, 0), font=sub_fnt)
+                draw.text((best_tx, best_ty + lh + 4), sub, fill=sub_color, font=sub_fnt)
             out = cv2.cvtColor(np.array(pil_img), cv2.COLOR_RGB2BGR)
 
     return out
@@ -1070,82 +1463,76 @@ def _draw_sovereignty_labels(
     pitch_deg: float,
     zoom: float,
 ) -> np.ndarray:
-    """Render HOÀNG SA / TRƯỜNG SA sovereignty markers when sea region is in frame.
+    """Render QĐ. HOÀNG SA / QĐ. TRƯỜNG SA sovereignty markers when active or sea in view.
 
-    Active when spec contains 'sovereignty_markers': True, or when the terrain
-    includes a sea_region indicating regional Vietnam sea is visible.
+    Guaranteed visible inside safe screen bounds (never clipped off-screen and never
+    overlapping bottom-right W-w-36:H-h-36 watermark zone). Zero rectangular boxes.
     """
-    if not spec.get("sovereignty_markers", True):
+    sov_flag = spec.get("sovereignty_markers")
+    if sov_flag is False:
         return canvas
 
-    # Only render if terrain has a sea region (indicating regional sea is visible)
     terrain_cfg = spec.get("terrain", {})
     sea = terrain_cfg.get("sea_region")
-    if not sea:
+    gis_bbox = spec.get("gis_bbox")
+    if sov_flag is None and not sea and gis_bbox not in ("east_asia_vietnam", "northern_dai_viet"):
         return canvas
 
     h, w = canvas.shape[:2]
     out = canvas.copy()
+    sov_size = max(10, int(h * 0.016))
+    sub_size = max(9, sov_size - 3)
+    sov_fnt = _get_font(sov_size, condensed=True)
+    sub_fnt = _get_font(sub_size, condensed=True)
 
-    for label_info in SOVEREIGNTY_LABELS:
-        text = label_info["text"]
-        # Map sovereignty label coords to approximate canvas UV.
-        # Use sea region's center area and offset for each label.
-        # Hoang Sa is in upper-right sea, Truong Sa in lower-right sea.
-        sea_x0 = sea.get("x0", 0.75)
-        sea_y0 = sea.get("y0", 0.0)
-        sea_x1 = sea.get("x1", 1.0)
-        sea_y1 = sea.get("y1", 1.0)
+    sea_x0 = float(sea.get("x0", 0.75)) if isinstance(sea, dict) else 0.78
+    sea_y0 = float(sea.get("y0", 0.0)) if isinstance(sea, dict) else 0.0
+    sea_x1 = float(sea.get("x1", 1.0)) if isinstance(sea, dict) else 1.0
+    sea_y1 = float(sea.get("y1", 1.0)) if isinstance(sea, dict) else 1.0
 
-        if text == "HOÀNG SA":
-            uv_x = (sea_x0 + sea_x1) * 0.5
-            uv_y = sea_y0 + (sea_y1 - sea_y0) * 0.3
-        else:  # TRƯỜNG SA
-            uv_x = (sea_x0 + sea_x1) * 0.5
-            uv_y = sea_y0 + (sea_y1 - sea_y0) * 0.65
+    anchors = (
+        ("QĐ. HOÀNG SA", "VIỆT NAM", (sea_x0 + sea_x1) * 0.5, sea_y0 + (sea_y1 - sea_y0) * 0.28, int(h * 0.27)),
+        ("QĐ. TRƯỜNG SA", "VIỆT NAM", (sea_x0 + sea_x1) * 0.5, sea_y0 + (sea_y1 - sea_y0) * 0.62, int(h * 0.41)),
+    )
 
-        # Project to screen
-        sx, sy = camera.project_point(uv_x, uv_y, cam_cx, cam_cy, pitch_deg, zoom)
-        if not (-20 <= sx < w + 20 and -20 <= sy < h + 20):
-            continue
+    for idx, (main_txt, sub_txt, _uv_x, _uv_y, fallback_sy) in enumerate(anchors):
+        # Always park cleanly along right-hand East Sea corridor (above bottom-right logo,
+        # clear of central battlefront and callout labels)
+        sx = int(w * 0.895)
+        sy = fallback_sy + idx * max(4, int(h * 0.01))
 
-        # Render sovereignty text with crosshair marker
-        pil_img = Image.fromarray(cv2.cvtColor(out, cv2.COLOR_BGR2RGB))
-        draw = ImageDraw.Draw(pil_img)
-
-        sov_size = max(10, int(h * 0.015))
-        sov_fnt = _get_font(sov_size, condensed=True)
-        sov_bbox = draw.textbbox((0, 0), text, font=sov_fnt)
-        tw = sov_bbox[2] - sov_bbox[0]
-
-        tx = int(sx) - tw // 2
-        ty = int(sy) - sov_size // 2
-
-        # Crosshair marker
         marker_r = max(4, int(h * 0.006))
-        cv2.circle(out, (int(sx), int(sy)), marker_r, (200, 180, 100), 1, cv2.LINE_AA)
-        cv2.line(out, (int(sx) - marker_r - 2, int(sy)), (int(sx) + marker_r + 2, int(sy)),
-                 (200, 180, 100), 1, cv2.LINE_AA)
-        cv2.line(out, (int(sx), int(sy) - marker_r - 2), (int(sx), int(sy) + marker_r + 2),
-                 (200, 180, 100), 1, cv2.LINE_AA)
+        # BGR warm antique gold crosshair
+        gold_bgr = (105, 195, 238)
+        cv2.circle(out, (sx, sy), marker_r, gold_bgr, 1, cv2.LINE_AA)
+        cv2.circle(out, (sx, sy), max(1, marker_r // 3), gold_bgr, -1, cv2.LINE_AA)
+        cv2.line(out, (sx - marker_r - 3, sy), (sx + marker_r + 3, sy), gold_bgr, 1, cv2.LINE_AA)
+        cv2.line(out, (sx, sy - marker_r - 3), (sx, sy + marker_r + 3), gold_bgr, 1, cv2.LINE_AA)
 
-        # Text below crosshair
         pil_img = Image.fromarray(cv2.cvtColor(out, cv2.COLOR_BGR2RGB))
         draw = ImageDraw.Draw(pil_img)
-        label_y = int(sy) + marker_r + 3
-        # Shadow
-        draw.text((tx + 1, label_y + 1), text, fill=(0, 0, 0), font=sov_fnt)
-        # Main text — golden sovereignty color
-        draw.text((tx, label_y), text, fill=(220, 190, 100), font=sov_fnt)
-        # "QĐ." prefix below
-        qd_text = f"QĐ. {text}"
-        qd_bbox = draw.textbbox((0, 0), qd_text, font=sov_fnt)
-        qd_w = qd_bbox[2] - qd_bbox[0]
-        qd_x = int(sx) - qd_w // 2
-        draw.text((qd_x + 1, label_y + sov_size + 2), qd_text,
-                  fill=(0, 0, 0), font=sov_fnt)
-        draw.text((qd_x, label_y + sov_size + 1), qd_text,
-                  fill=(180, 160, 90), font=sov_fnt)
+        m_bbox = draw.textbbox((0, 0), main_txt, font=sov_fnt)
+        mw, mh = m_bbox[2] - m_bbox[0], m_bbox[3] - m_bbox[1]
+        s_bbox = draw.textbbox((0, 0), sub_txt, font=sub_fnt)
+        sw_px = s_bbox[2] - s_bbox[0]
+
+        tx = min(w - mw - 14, max(12, sx - mw // 2))
+        label_y = sy + marker_r + 4
+
+        # Seamless feathered Gaussian shadow scrim under sovereignty text (zero boxes)
+        pad = max(5, int(h * 0.006))
+        scrim_w = max(mw, sw_px) + pad * 2
+        scrim_h_px = mh + sub_size + pad + 4
+        pil_img = _composite_feathered_scrim(
+            pil_img, tx - pad, label_y - pad // 2, scrim_w, scrim_h_px, alpha_max=145
+        )
+        draw = ImageDraw.Draw(pil_img)
+
+        draw.text((tx + 1, label_y + 1), main_txt, fill=(0, 0, 0), font=sov_fnt)
+        draw.text((tx, label_y), main_txt, fill=(242, 206, 118), font=sov_fnt)
+        sx_sub = min(w - sw_px - 14, max(12, sx - sw_px // 2))
+        draw.text((sx_sub + 1, label_y + mh + 4), sub_txt, fill=(0, 0, 0), font=sub_fnt)
+        draw.text((sx_sub, label_y + mh + 3), sub_txt, fill=(198, 176, 112), font=sub_fnt)
 
         out = cv2.cvtColor(np.array(pil_img), cv2.COLOR_RGB2BGR)
 
@@ -1192,10 +1579,10 @@ def _build_presets() -> dict[str, dict[str, Any]]:
         "bach_dang_938_ngo_quyen": {
             "preset_id": "bach_dang_938_ngo_quyen",
             "title_vi": "ĐẠI CHIẾN BẠCH ĐẰNG 938",
-            "subtitle_vi": "CỌC GỖ BỌC SẮT ĐẠI PHÁ HOẰNG THÁO",
+            "subtitle_vi": "CỌC GỖ BỌC SẮT ĐẠI PHÁ HOẰNG THAO",
             "year": 938,
             "date_stamp": "MÙA ĐÔNG 938 • CỬA SÔNG BẠCH ĐẰNG",
-            "summary_vi": "Ngô Quyền dàn trận cọc gỗ bọc sắt tại cửa sông Bạch Đằng, nhử chiến thuyền Lưu Hoằng Tháo lúc triều cường vào sâu, đợi triều rút mắc cọc rồi tung quân đánh tiêu diệt gọn.",
+            "summary_vi": "Ngô Quyền dàn trận cọc gỗ bọc sắt tại cửa sông Bạch Đằng, nhử chiến thuyền Lưu Hoằng Thao lúc triều cường vào sâu, đợi triều rút mắc cọc rồi tung quân đánh tiêu diệt gọn.",
             "seed": 938,
             "canvas_size": (3840, 2160),
             "gis_bbox": "bach_dang",
@@ -1217,10 +1604,10 @@ def _build_presets() -> dict[str, dict[str, Any]]:
             },
             "factions": {
                 "left_name": "ĐẠI VIỆT (NGÔ QUYỀN)",
-                "right_name": "NAM HÁN (HOẰNG THÁO)",
+                "right_name": "NAM HÁN (HOẰNG THAO)",
                 "left_stat_start": "THUỶ QUÂN NGÔ QUYỀN",
-                "left_stat_end": "TOÀN THẮNG • HOẰNG THÁO TỬ TRẬN",
-                "right_stat_start": "CHIẾN THUYỀN LƯU HOẰNG THÁO",
+                "left_stat_end": "TOÀN THẮNG • HOẰNG THAO TỬ TRẬN",
+                "right_stat_start": "CHIẾN THUYỀN LƯU HOẰNG THAO",
                 "right_stat_end": "HẠM ĐỘI BỊ ĐẮM GỌN",
                 "ratio_start": 0.45,
                 "ratio_end": 0.88,
@@ -1228,7 +1615,7 @@ def _build_presets() -> dict[str, dict[str, Any]]:
             "phases": [
                 {"t_max": 0.35, "label": "PHA I • NGÔ QUYỀN NHỬ THUYỀN NAM HÁN VÀO CỬA SÔNG LÚC TRIỀU CƯỜNG"},
                 {"t_max": 0.70, "label": "PHA II • TRIỀU RÚT LỘ BÃI CỌC SẮT — THUYỀN ĐỊCH MẮC CỌC"},
-                {"t_max": 1.01, "label": "PHA III • TUNG QUÂN ĐÁNH ĐẮM TOÀN BỘ — HOẰNG THÁO TỬ TRẬN"},
+                {"t_max": 1.01, "label": "PHA III • TUNG QUÂN ĐÁNH ĐẮM TOÀN BỘ — HOẰNG THAO TỬ TRẬN"},
             ],
             "tidal": {
                 "enabled": True,
@@ -1249,7 +1636,7 @@ def _build_presets() -> dict[str, dict[str, Any]]:
                 {"faction": "dai_viet", "badge": "NGÔ QUYỀN",
                  "waypoints": [(0.35, 0.45), (0.45, 0.48), (0.55, 0.50)],
                  "t_start": 0.0, "t_end": 0.75},
-                {"faction": "southern_han", "badge": "HOẰNG THÁO",
+                {"faction": "southern_han", "badge": "HOẰNG THAO",
                  "badge_damaged": "TỬ TRẬN", "damage_t": 0.65,
                  "waypoints": [(0.85, 0.40), (0.70, 0.48), (0.55, 0.52)],
                  "t_start": 0.05, "t_end": 0.70},
@@ -1365,6 +1752,8 @@ def _build_presets() -> dict[str, dict[str, Any]]:
             "summary_vi": "Lý Thường Kiệt dựng phòng tuyến cọc gỗ sông Như Nguyệt chặn đứng 10 vạn quân Quách Quỳ, đêm vượt sông tập kích đại phá quân Tống.",
             "seed": 1077,
             "canvas_size": (3840, 2160),
+            "gis_bbox": "nhu_nguyet",
+            "sovereignty_markers": False,
             "camera": {
                 "start": {"cx": 0.45, "cy": 0.38, "pitch": 35.0, "zoom": 1.5},
                 "end": {"cx": 0.48, "cy": 0.60, "pitch": 42.0, "zoom": 2.4},
@@ -1435,6 +1824,79 @@ def _build_presets() -> dict[str, dict[str, Any]]:
 
 GEO_EMPIRE_PRESETS: dict[str, dict[str, Any]] = _build_presets()
 
+# Sub-stage aliases used by pilot_spec.json beats (all resolve cleanly onto canonical presets)
+_PRESET_STAGE_OVERRIDES: dict[str, dict[str, Any]] = {
+    "bach_dang_estuary_quang_ninh_938": {
+        "base_preset": "bach_dang_938_ngo_quyen",
+        "sovereignty_markers": True,
+        "camera": {
+            "start": {"cx": 0.62, "cy": 0.44, "pitch": 34.0, "zoom": 1.35},
+            "end": {"cx": 0.52, "cy": 0.50, "pitch": 42.0, "zoom": 2.45},
+        },
+    },
+    "bach_dang_938_han_fleet_route": {
+        "base_preset": "bach_dang_938_ngo_quyen",
+        "sovereignty_markers": True,
+        "camera": {
+            "start": {"cx": 0.68, "cy": 0.45, "pitch": 33.0, "zoom": 1.55},
+            "end": {"cx": 0.54, "cy": 0.50, "pitch": 43.0, "zoom": 2.35},
+        },
+        "tidal": {
+            "enabled": True,
+            "start_m": 2.8,
+            "end_m": 2.2,
+            "stake_threshold_m": -0.5,
+            "stake_beds": [{"p0": (0.45, 0.48), "p1": (0.60, 0.52), "rows": 3, "count": 10}],
+        },
+    },
+    "bach_dang_938_stake_field_submerged": {
+        "base_preset": "bach_dang_938_ngo_quyen",
+        "sovereignty_markers": False,
+        "camera": {
+            "start": {"cx": 0.54, "cy": 0.48, "pitch": 38.0, "zoom": 2.1},
+            "end": {"cx": 0.52, "cy": 0.51, "pitch": 46.0, "zoom": 2.75},
+        },
+        "tidal": {
+            "enabled": True,
+            "start_m": 3.0,
+            "end_m": 2.4,
+            "stake_threshold_m": 0.0,
+            "submerged_xray": True,
+            "stake_beds": [{"p0": (0.44, 0.48), "p1": (0.60, 0.52), "rows": 3, "count": 12}],
+        },
+    },
+    "bach_dang_938_tide_ebbing": {
+        "base_preset": "bach_dang_938_ngo_quyen",
+        "sovereignty_markers": False,
+        "camera": {
+            "start": {"cx": 0.53, "cy": 0.49, "pitch": 40.0, "zoom": 2.2},
+            "end": {"cx": 0.51, "cy": 0.51, "pitch": 47.0, "zoom": 2.85},
+        },
+        "tidal": {
+            "enabled": True,
+            "start_m": 0.8,
+            "end_m": -2.8,
+            "stake_threshold_m": 0.2,
+            "stake_beds": [{"p0": (0.44, 0.48), "p1": (0.60, 0.52), "rows": 3, "count": 12}],
+        },
+    },
+    "bach_dang_938_full_trap_revealed": {
+        "base_preset": "bach_dang_938_ngo_quyen",
+        "sovereignty_markers": False,
+        "camera": {
+            "start": {"cx": 0.52, "cy": 0.50, "pitch": 42.0, "zoom": 2.5},
+            "end": {"cx": 0.50, "cy": 0.50, "pitch": 48.0, "zoom": 2.1},
+        },
+        "tidal": {
+            "enabled": True,
+            "start_m": -2.6,
+            "end_m": -3.6,
+            "stake_threshold_m": -0.5,
+            "stake_beds": [{"p0": (0.44, 0.48), "p1": (0.60, 0.52), "rows": 3, "count": 12}],
+        },
+    },
+}
+
 
 def list_geo_empire_presets() -> list[dict[str, Any]]:
     """Return metadata for all built-in presets."""
@@ -1451,25 +1913,69 @@ def list_geo_empire_presets() -> list[dict[str, Any]]:
 
 
 def get_geo_empire_preset(preset_id: str) -> dict[str, Any]:
-    """Return a deep copy of a named preset."""
+    """Return a deep copy of a named preset (including pilot stage aliases)."""
     key = str(preset_id).strip().lower()
-    if key not in GEO_EMPIRE_PRESETS:
-        valid = ", ".join(sorted(GEO_EMPIRE_PRESETS))
-        raise KeyError(f"Unknown preset '{preset_id}'. Valid: {valid}")
-    return copy.deepcopy(GEO_EMPIRE_PRESETS[key])
+    if key in GEO_EMPIRE_PRESETS:
+        return copy.deepcopy(GEO_EMPIRE_PRESETS[key])
+    if key in _PRESET_STAGE_OVERRIDES:
+        ov = copy.deepcopy(_PRESET_STAGE_OVERRIDES[key])
+        base_spec = copy.deepcopy(GEO_EMPIRE_PRESETS[ov.pop("base_preset")])
+        base_spec.update(ov)
+        base_spec["preset_id"] = key
+        return base_spec
+    valid = ", ".join(sorted(GEO_EMPIRE_PRESETS))
+    raise KeyError(f"Unknown preset '{preset_id}'. Valid: {valid}")
 
 
 # ---------------------------------------------------------------------------
 # Scene Spec Resolution
 # ---------------------------------------------------------------------------
 def _resolve_scene_spec(scene_spec: str | dict[str, Any]) -> dict[str, Any]:
-    """Normalize a preset name or custom dict into a full scene spec."""
+    """Normalize a preset name, stage alias, or spatial_terrain_ops dict into a full spec."""
     if isinstance(scene_spec, str):
         return get_geo_empire_preset(scene_spec)
     spec = copy.deepcopy(scene_spec)
-    base = spec.get("base_preset") or spec.get("preset_id")
-    if base and str(base) in GEO_EMPIRE_PRESETS and "terrain" not in spec:
-        preset = get_geo_empire_preset(str(base))
+    base = (
+        spec.get("base_preset")
+        or spec.get("preset")
+        or spec.get("preset_id")
+        or spec.get("region_key")
+    )
+    base_key = str(base).strip().lower() if base else ""
+    if base_key and (base_key in GEO_EMPIRE_PRESETS or base_key in _PRESET_STAGE_OVERRIDES) and "terrain" not in spec:
+        preset = get_geo_empire_preset(base_key)
+        # Map optional pilot_spec spatial_terrain_ops overrides
+        if "camera_fly_in" in spec or "camera_pitch_deg" in spec:
+            fly = spec.get("camera_fly_in", {})
+            p_deg = float(spec.get("camera_pitch_deg", preset["camera"]["start"]["pitch"]))
+            preset["camera"] = {
+                "start": {
+                    "cx": preset["camera"]["start"]["cx"],
+                    "cy": preset["camera"]["start"]["cy"],
+                    "pitch": max(28.0, p_deg - 4.0),
+                    "zoom": float(fly.get("start_zoom", preset["camera"]["start"]["zoom"])),
+                },
+                "end": {
+                    "cx": preset["camera"]["end"]["cx"],
+                    "cy": preset["camera"]["end"]["cy"],
+                    "pitch": min(52.0, p_deg + 6.0),
+                    "zoom": float(fly.get("end_zoom", preset["camera"]["end"]["zoom"])),
+                },
+            }
+        if "tactical_callouts" in spec and "callouts" not in spec:
+            mapped_callouts: list[dict[str, Any]] = []
+            default_uvs = [(0.52, 0.50), (0.38, 0.34), (0.72, 0.44)]
+            for idx, tc in enumerate(spec["tactical_callouts"]):
+                uv = tc.get("uv", default_uvs[idx % len(default_uvs)])
+                mapped_callouts.append({
+                    "uv": uv,
+                    "label": str(tc.get("label", "")),
+                    "sub": str(tc.get("description", tc.get("sub", ""))),
+                    "offset": tc.get("offset", (0.10, -0.06 if idx % 2 == 0 else 0.06)),
+                    "t_appear": float(tc.get("t_appear", idx * 0.08)),
+                })
+            if mapped_callouts:
+                spec["callouts"] = mapped_callouts
         preset.update(spec)
         return preset
     # Defaults for fully custom specs
@@ -1517,26 +2023,27 @@ def render_geo_empire_clash_frame(
 
     canvas_w, canvas_h = spec.get("canvas_size", (3840, 2160))
 
-    # 1. Load terrain: real GIS ESRI relief if available, else procedural fallback
+    # 1. Load terrain (RGB): real GIS ESRI relief via gis_map_baker, procedural offline fallback
     terrain_cfg = spec.get("terrain", {})
     terrain_canvas = _load_gis_terrain_canvas(
         canvas_w, canvas_h,
         gis_bbox=spec.get("gis_bbox"),
         terrain_cfg=terrain_cfg,
         seed=spec.get("seed", 42),
+        use_gis=bool(spec.get("use_gis", True)),
     )
 
-    # 2. Apply territory tints + frontline glow
+    # 2. Apply territory tints + frontline glow (RGB)
     terrain_canvas = _draw_territory_tint(
         terrain_canvas, spec.get("territories", []), t
     )
 
-    # 3. Apply tidal physics + stake traps
+    # 3. Apply tidal physics + emerging stake traps (RGB)
     terrain_canvas = _draw_tidal_physics(
         terrain_canvas, spec.get("tidal"), t
     )
 
-    # 4. 3D Perspective camera warp
+    # 4. 3D Perspective camera warp (float32 sub-pixel homography)
     cam_spec = spec.get("camera", {})
     cam_start = cam_spec.get("start", {"cx": 0.5, "cy": 0.4, "pitch": 32.0, "zoom": 1.5})
     cam_end = cam_spec.get("end", {"cx": 0.5, "cy": 0.55, "pitch": 45.0, "zoom": 2.5})
@@ -1548,9 +2055,10 @@ def render_geo_empire_clash_frame(
     zoom = _lerp(cam_start["zoom"], cam_end["zoom"], ease_t)
 
     camera = PerspectiveCamera3D(canvas_w, canvas_h, width, height)
-    frame = camera.warp_canvas(terrain_canvas, cam_cx, cam_cy, pitch, zoom)
+    warped_rgb = camera.warp_canvas(terrain_canvas, cam_cx, cam_cy, pitch, zoom)
+    frame = cv2.cvtColor(warped_rgb, cv2.COLOR_RGB2BGR)
 
-    # 5. Draw faction unit tokens
+    # 5. Draw circular heraldic faction unit tokens (Đông Sơn drum sunburst for Đại Việt)
     for unit in spec.get("units", []):
         t_start = unit.get("t_start", 0.0)
         t_end = unit.get("t_end", 1.0)
@@ -1564,7 +2072,6 @@ def render_geo_empire_clash_frame(
             smooth_wps = waypoints
         pos, _heading = _sample_spline_at(smooth_wps, unit_progress)
 
-        # Project to screen
         sx, sy = camera.project_point(pos[0], pos[1], cam_cx, cam_cy, pitch, zoom)
         if not (-50 <= sx < width + 50 and -50 <= sy < height + 50):
             continue
@@ -1598,27 +2105,148 @@ def render_geo_empire_clash_frame(
                 max_r, color=color_bgr,
             )
 
-    # 7. Draw callout arcs
+    # 7. Draw collision-free callout arcs (zero rectangular boxes)
     frame = _draw_callout_arcs(
         frame, spec.get("callouts", []),
         camera, cam_cx, cam_cy, pitch, zoom, t,
+        spec=spec,
     )
 
-    # 8. HUD overlays
+    # 8. Floating HUD overlays over soft Gaussian shadows (compass at bottom-left)
     frame = _draw_troop_counter(frame, spec, t)
+    frame = _draw_tidal_hud(frame, spec.get("tidal"), t)
     frame = _draw_phase_label(frame, spec, t)
     frame = _draw_title_card(frame, spec, t)
     frame = _draw_compass(frame)
 
-    # 9. Sovereignty labels (HOÀNG SA / TRƯỜNG SA) when sea region in view
+    # 9. Sovereignty labels (QĐ. HOÀNG SA / QĐ. TRƯỜNG SA) when active / regional sea in view
     frame = _draw_sovereignty_labels(frame, spec, camera, cam_cx, cam_cy, pitch, zoom)
 
-    # Convert BGR to RGB for output
+    # Convert BGR back to RGB for callers
     return cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
 
 # ---------------------------------------------------------------------------
-# Public API: render_geo_empire_clash_mp4
+# Frame-Sequence & Colab T4 h264_nvenc Render Pipeline (ZERO local CPU fallback)
+# ---------------------------------------------------------------------------
+@lru_cache(maxsize=4)
+def has_nvenc_encoder(ffmpeg_bin: str | None = None) -> bool:
+    """Return True iff the active ffmpeg binary exposes hardware h264_nvenc."""
+    ff = ffmpeg_bin or shutil.which("ffmpeg")
+    if not ff:
+        return False
+    try:
+        res = subprocess.run(
+            [ff, "-hide_banner", "-encoders"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=False,
+        )
+        return "h264_nvenc" in (res.stdout or "")
+    except Exception:
+        return False
+
+
+def build_geo_empire_nvenc_cmd(
+    out_mp4_path: str | Path,
+    width: int = 1920,
+    height: int = 1080,
+    fps: int = 30,
+    *,
+    input_frames_pattern: str | None = None,
+    crf: int = 18,
+    ffmpeg_bin: str | None = None,
+) -> list[str]:
+    """Build FFmpeg Colab Tesla T4 h264_nvenc command (sole encoder per AGENTS.md)."""
+    ff = ffmpeg_bin or shutil.which("ffmpeg") or "ffmpeg"
+    w = int(width) - (int(width) % 2)
+    h = int(height) - (int(height) % 2)
+    fps_i = max(1, int(fps))
+
+    cmd = [ff, "-y", "-hide_banner", "-loglevel", "error"]
+    if input_frames_pattern:
+        cmd.extend(["-framerate", str(fps_i), "-i", str(input_frames_pattern)])
+    else:
+        cmd.extend([
+            "-f", "rawvideo",
+            "-pix_fmt", "rgb24",
+            "-s", f"{w}x{h}",
+            "-r", str(fps_i),
+            "-i", "-",
+        ])
+    cmd.extend([
+        "-an",
+        "-c:v", "h264_nvenc",
+        "-preset", "p4",
+        "-cq", str(int(crf)),
+        "-b:v", "10M",
+        "-pix_fmt", "yuv420p",
+        "-movflags", "+faststart",
+        str(out_mp4_path),
+    ])
+    return cmd
+
+
+def render_geo_empire_clash_frame_sequence(
+    scene_spec: str | dict[str, Any],
+    out_dir: str | Path,
+    width: int = 1920,
+    height: int = 1080,
+    fps: int = 30,
+    *,
+    duration_sec: float = 4.8,
+    jpeg_quality: int = 92,
+    fmt: str = "jpg",
+) -> dict[str, Any]:
+    """Render 3D geo-empire clash frames as a Q92 JPEG/PNG sequence for Colab T4 h264_nvenc.
+
+    Produces `frame_0000.jpg` .. `frame_NNNN.jpg` inside `out_dir` with zero local CPU
+    video encoding.
+    """
+    seq_dir = Path(out_dir)
+    seq_dir.mkdir(parents=True, exist_ok=True)
+
+    w = int(width) - (int(width) % 2)
+    h = int(height) - (int(height) % 2)
+    fps_i = max(1, int(fps))
+    dur_f = max(0.2, float(duration_sec))
+    n_frames = max(2, int(round(dur_f * fps_i)))
+    ext = "png" if str(fmt).lower().lstrip(".") == "png" else "jpg"
+
+    spec = _resolve_scene_spec(scene_spec)
+    frame_paths: list[str] = []
+
+    encode_params = (
+        [cv2.IMWRITE_JPEG_QUALITY, int(_clamp(jpeg_quality, 50, 100))]
+        if ext == "jpg"
+        else []
+    )
+
+    for i in range(n_frames):
+        t_norm = i / float(max(1, n_frames - 1))
+        frame_rgb = render_geo_empire_clash_frame(spec, t_norm, w, h)
+        frame_bgr = cv2.cvtColor(frame_rgb, cv2.COLOR_RGB2BGR)
+        fpath = seq_dir / f"frame_{i:04d}.{ext}"
+        cv2.imwrite(str(fpath), frame_bgr, encode_params)
+        frame_paths.append(str(fpath))
+
+    return {
+        "frames_dir": str(seq_dir),
+        "frame_pattern": str(seq_dir / f"frame_%04d.{ext}"),
+        "frame_paths": frame_paths,
+        "width": w,
+        "height": h,
+        "fps": fps_i,
+        "duration_sec": dur_f,
+        "n_frames": n_frames,
+        "preset_id": spec.get("preset_id", "custom"),
+        "engine_version": ENGINE_VERSION,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Public API: render_geo_empire_clash_mp4 (Colab T4 h264_nvenc ONLY)
 # ---------------------------------------------------------------------------
 def render_geo_empire_clash_mp4(
     scene_spec: str | dict[str, Any],
@@ -1630,30 +2258,24 @@ def render_geo_empire_clash_mp4(
     duration_sec: float = 4.8,
     crf: int = 18,
 ) -> dict[str, Any]:
-    """Render a 3D perspective geo-terrain & faction clash animation to MP4.
+    """Render a 3D perspective geo-terrain & faction clash animation to MP4 via h264_nvenc.
 
-    Args:
-        scene_spec: Preset name string (e.g. 'bach_dang_938_ngo_quyen') or
-                    custom scene spec dict.
-        out_mp4_path: Output .mp4 file path.
-        width: Output width (default 1920). Must be even.
-        height: Output height (default 1080). Must be even.
-        fps: Frame rate (default 30).
-        duration_sec: Clip duration in seconds (default 4.8).
-        crf: H.264 CRF quality (default 18, lower = higher quality).
-
-    Returns:
-        dict with keys: path, width, height, fps, duration_sec, n_frames,
-        preset_id, engine_version.
+    Per AGENTS.md §2, Colab Tesla T4 `FFmpeg h264_nvenc` is the sole video encoder
+    (zero local CPU software encoder fallback). On hosts without `h264_nvenc`, callers
+    should stage frames via `render_geo_empire_clash_frame_sequence()` and encode on Colab T4.
     """
     ffmpeg_bin = shutil.which("ffmpeg")
     if not ffmpeg_bin:
         raise RuntimeError("ffmpeg binary not found in PATH")
+    if not has_nvenc_encoder(ffmpeg_bin):
+        raise RuntimeError(
+            "h264_nvenc hardware encoder unavailable on this host; per AGENTS.md use "
+            "render_geo_empire_clash_frame_sequence() locally and encode on Colab T4 h264_nvenc."
+        )
 
     out_path = Path(out_mp4_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
-    # Enforce even dimensions for yuv420p
     w = int(width) - (int(width) % 2)
     h = int(height) - (int(height) % 2)
     fps_i = max(1, int(fps))
@@ -1661,25 +2283,9 @@ def render_geo_empire_clash_mp4(
     n_frames = max(2, int(round(dur_f * fps_i)))
 
     spec = _resolve_scene_spec(scene_spec)
-
-    cmd = [
-        ffmpeg_bin,
-        "-y",
-        "-hide_banner",
-        "-loglevel", "error",
-        "-f", "rawvideo",
-        "-pix_fmt", "rgb24",
-        "-s", f"{w}x{h}",
-        "-r", str(fps_i),
-        "-i", "-",
-        "-an",
-        "-c:v", "libx264",
-        "-preset", "ultrafast",
-        "-crf", str(int(crf)),
-        "-pix_fmt", "yuv420p",
-        "-movflags", "+faststart",
-        str(out_path),
-    ]
+    cmd = build_geo_empire_nvenc_cmd(
+        out_path, w, h, fps_i, crf=crf, ffmpeg_bin=ffmpeg_bin,
+    )
 
     proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
     assert proc.stdin is not None
@@ -1698,7 +2304,7 @@ def render_geo_empire_clash_mp4(
 
     if ret != 0 or not out_path.is_file() or out_path.stat().st_size == 0:
         err_msg = stderr_bytes.decode("utf-8", errors="replace").strip()
-        raise RuntimeError(f"render_geo_empire_clash_mp4 failed (exit {ret}): {err_msg}")
+        raise RuntimeError(f"render_geo_empire_clash_mp4 (h264_nvenc) failed (exit {ret}): {err_msg}")
 
     return {
         "path": str(out_path),
@@ -1707,6 +2313,7 @@ def render_geo_empire_clash_mp4(
         "fps": fps_i,
         "duration_sec": dur_f,
         "n_frames": n_frames,
+        "encoder": "h264_nvenc",
         "preset_id": spec.get("preset_id", "custom"),
         "engine_version": ENGINE_VERSION,
     }
