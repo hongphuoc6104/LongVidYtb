@@ -6,6 +6,7 @@ import json
 import logging
 import os
 import shutil
+import subprocess
 import time
 from pathlib import Path
 from typing import Any
@@ -13,6 +14,7 @@ from typing import Any
 import numpy as np
 from flow_cdp import stop_all_profiles
 from flow_cdp.cdp_direct_client import get_all_configured_profiles
+from flow_cdp.credit_ledger import CreditLedger
 from flow_cdp.persistent_pool import PersistentWorkerPool
 from flow_cdp.process_manager import get_process_manager
 from flow_cdp.resource_locks import DEFAULT_MAX_GLOBAL_BROWSERS, GlobalFlowProductionLock
@@ -75,12 +77,15 @@ def classify_hybrid_beats(
         prev_tmode = str(beats[idx - 1].get("transition_mode") or "") if idx > 0 else ""
         curr_tmode = str(beat.get("transition_mode") or "")
         is_frame_link_pair = curr_tmode == "frame_link" or prev_tmode == "frame_link"
+        has_oner_group = bool(str(beat.get("oner_group_id") or "").strip())
         override = str(beat.get("asset_mode_override") or "").strip()
 
         if is_frame_link_pair:
             asset_mode = "flow_video"
         elif override in VALID_ASSET_MODES:
             asset_mode = override
+        elif has_oner_group:
+            asset_mode = "flow_video"
         else:
             beat_role = str(beat.get("beat_role") or beat.get("role") or "")
             scene_type = str(beat.get("scene_type") or "live_action")
@@ -314,6 +319,47 @@ def _ordered_stage_a_profiles(
     return [p for _, p in sorted(enumerate(base), key=_sort_key)]
 
 
+def _resolve_stage_a_beluga_profiles(
+    profiles: list[dict[str, Any]] | None = None,
+    credits_path: Path | None = None,
+) -> list[dict[str, Any]]:
+    """Order Stage A 0c BELUGA profiles using zero-credit specialists first, leaving Ultra 25k fresh for Stage B."""
+    base = [dict(p) for p in (profiles if profiles is not None else get_all_configured_profiles())]
+    env_raw = os.environ.get("VP_FLOW_PROFILES", "").strip()
+    if env_raw:
+        requested = [x.strip() for x in env_raw.split(",") if x.strip()]
+        if requested:
+            by_name = {str(p.get("name") or p.get("id") or ""): p for p in base}
+            filtered = [by_name[name] for name in requested if name in by_name]
+            if filtered:
+                return filtered
+
+    try:
+        ledger = CreditLedger(path=credits_path)
+        selector = getattr(ledger, "select_beluga_zero_credit_specialists", None)
+        if callable(selector):
+            specialist_ids = selector(profiles=base)
+            if specialist_ids:
+                by_id = {str(p.get("id") or p.get("name") or ""): p for p in base}
+                by_name = {str(p.get("name") or p.get("id") or ""): p for p in base}
+                ordered: list[dict[str, Any]] = []
+                seen: set[str] = set()
+                for pid in specialist_ids:
+                    pid_str = str(pid).strip()
+                    if not pid_str or pid_str in seen:
+                        continue
+                    prof = by_id.get(pid_str) or by_name.get(pid_str)
+                    if prof is not None:
+                        ordered.append(prof)
+                        seen.add(pid_str)
+                if ordered:
+                    return ordered
+    except Exception as exc:
+        logger.warning("BELUGA specialist routing unavailable, falling back to configured profiles: %s", exc)
+
+    return _ordered_stage_a_profiles(profiles=base, credits_path=credits_path)
+
+
 def run_flow_stage_a(
     short_spec: dict[str, Any],
     spec_dir: Path,
@@ -397,7 +443,7 @@ def run_flow_stage_a(
         flow_lock = GlobalFlowProductionLock(job_id=job_id_str, stage="stage_a")
         acquired = flow_lock.acquire_patiently(
             timeout=7200.0,
-            poll_interval=4.0,
+            poll_interval=0.75,
             on_wait=lambda holder, waited: logger.info(
                 "[RESOURCE_GUARD] Waiting for active Flow job %s (pid=%s, stage=%s, waited=%.1fs)...",
                 holder.get("job_id", "unknown"),
@@ -408,7 +454,7 @@ def run_flow_stage_a(
         )
         if not acquired:
             raise TimeoutError("Timed out waiting for GlobalFlowProductionLock in Stage A")
-        ordered_profiles = _ordered_stage_a_profiles()
+        ordered_profiles = _resolve_stage_a_beluga_profiles()
         eff_workers = min(max_workers, len(jobs), max(1, len(ordered_profiles)))
         try:
             pool = PersistentWorkerPool(
@@ -419,7 +465,7 @@ def run_flow_stage_a(
                 enforce_os_locks=True,
                 max_global_browsers=max(min(eff_workers + 2, 6), int(DEFAULT_MAX_GLOBAL_BROWSERS)),
                 min_credits_required=0,
-                cooldown_seconds=600.0,
+                cooldown_seconds=float(os.environ.get("VP_STAGE_A_COOLDOWN_SEC", "25.0")),
                 pacing_seconds=2.0,
                 stagger_seconds=3.2,
                 enable_rpc_batching=True,
@@ -473,10 +519,165 @@ def run_flow_stage_a(
     }
 
 
+OMNI12_VALID_DURATIONS = (4, 6, 8, 10)
+
+
+def _is_v12_omni12_spec(short_spec: dict[str, Any]) -> bool:
+    """Return True when V12 Omni 1.2 Flash variable gearbox is enabled on `short_spec`."""
+    if bool(short_spec.get("v12_omni12_gearbox")):
+        return True
+    schema_ver = str(short_spec.get("schema_version") or "").strip().lower()
+    return schema_ver.startswith("v12") or schema_ver.startswith("12.")
+
+
+def _is_omni12_model_name(model: str) -> bool:
+    low = (model or "").strip().lower()
+    return any(tok in low for tok in ("omni", "macaron")) and not any(tok in low for tok in ("1_1", "1.1", "abra"))
+
+
+def _resolve_beat_duration_sec(beat: dict[str, Any]) -> float:
+    raw = beat.get("duration_sec")
+    if raw is None:
+        raw = beat.get("duration")
+    if raw is None:
+        start = beat.get("start_sec")
+        end = beat.get("end_sec")
+        if start is not None and end is not None:
+            raw = max(0.5, float(end) - float(start))
+    return float(raw) if raw is not None else 5.0
+
+
+def _select_omni12_gearbox_duration(duration_sec: float) -> int:
+    """Map beat duration (sec) to Omni 1.2 Flash variable gearbox {4, 6, 8, 10}."""
+    if duration_sec <= 4.2:
+        return 4
+    if duration_sec <= 6.2:
+        return 6
+    if duration_sec <= 8.2:
+        return 8
+    return 10
+
+
+def _explicit_clip_duration_sec(beat: dict[str, Any]) -> int | None:
+    """Read an explicit per-beat `clip_duration_sec` / `duration_seconds` override in {4, 6, 8, 10}."""
+    raw = beat.get("clip_duration_sec")
+    if raw is None:
+        raw = beat.get("duration_seconds")
+    if raw is None:
+        return None
+    try:
+        val = int(round(float(raw)))
+    except (TypeError, ValueError):
+        return None
+    return val if val in OMNI12_VALID_DURATIONS else None
+
+
+def _resolve_stage_b_beat_model_and_duration(
+    beat: dict[str, Any],
+    *,
+    is_v12_spec: bool,
+) -> tuple[str, int | None]:
+    """Resolve Stage B video model and optional explicit {4, 6, 8, 10}s clip duration for a beat."""
+    raw_vm = str(beat.get("video_model") or "").strip()
+    explicit_dur = _explicit_clip_duration_sec(beat)
+    beat_dur = _resolve_beat_duration_sec(beat)
+
+    if raw_vm:
+        if _is_omni12_model_name(raw_vm):
+            chosen_dur = explicit_dur if explicit_dur is not None else _select_omni12_gearbox_duration(beat_dur)
+            return ("omni_flash", chosen_dur)
+        return (raw_vm, explicit_dur)
+
+    if is_v12_spec:
+        chosen_dur = explicit_dur if explicit_dur is not None else _select_omni12_gearbox_duration(beat_dur)
+        return ("omni_flash", chosen_dur)
+
+    return ("veo_3_1_lite", explicit_dur)
+
+
+def _probe_mp4_duration_sec(mp4_path: Path) -> float:
+    """Probe MP4 container duration in seconds via ffprobe."""
+    try:
+        res = subprocess.run(
+            [
+                "ffprobe",
+                "-v",
+                "error",
+                "-show_entries",
+                "format=duration",
+                "-of",
+                "default=nw=1:nk=1",
+                str(mp4_path),
+            ],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        return max(0.0, float((res.stdout or "").strip() or "0"))
+    except Exception:
+        return 0.0
+
+
+def _split_oner_clip_mp4(
+    src_mp4: Path,
+    split_sec: float,
+    dst_first: Path,
+    dst_second: Path,
+) -> None:
+    """Split a generated 10s unbroken oner MP4 frame-accurately at `t = split_sec` into 2 beat clips."""
+    if not src_mp4.is_file():
+        raise FileNotFoundError(f"Missing 10s oner source clip to split: {src_mp4}")
+
+    src_dur = _probe_mp4_duration_sec(src_mp4)
+    raw_split = max(0.5, float(split_sec))
+    safe_split = min(raw_split, max(0.5, src_dur - 0.5)) if src_dur > 1.0 else raw_split
+
+    dst_first.parent.mkdir(parents=True, exist_ok=True)
+    dst_second.parent.mkdir(parents=True, exist_ok=True)
+    tmp_first = dst_first.with_suffix(".tmp.mp4")
+    tmp_second = dst_second.with_suffix(".tmp.mp4")
+
+    common_out = [
+        "-map", "0:v:0",
+        "-map", "0:a?",
+        "-c:v", "libx264",
+        "-preset", "veryfast",
+        "-crf", "15",
+        "-pix_fmt", "yuv420p",
+        "-c:a", "aac",
+        "-b:a", "192k",
+        "-movflags", "+faststart",
+    ]
+    cmds = [
+        (
+            ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-i", str(src_mp4), "-t", f"{safe_split:.6f}", *common_out, str(tmp_first)],
+            tmp_first,
+            dst_first,
+        ),
+        (
+            ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-i", str(src_mp4), "-ss", f"{safe_split:.6f}", *common_out, str(tmp_second)],
+            tmp_second,
+            dst_second,
+        ),
+    ]
+    try:
+        for cmd, tmp_p, final_p in cmds:
+            proc = subprocess.run(cmd, capture_output=True, text=True)
+            if proc.returncode != 0:
+                raise RuntimeError(
+                    f"FFmpeg oner split failed for {src_mp4.name} -> {final_p.name}: {(proc.stderr or proc.stdout)[-400:]}"
+                )
+            os.replace(tmp_p, final_p)
+    finally:
+        tmp_first.unlink(missing_ok=True)
+        tmp_second.unlink(missing_ok=True)
+
+
 def _build_scene_map_from_spec(short_spec: dict[str, Any], spec_dir: Path) -> SceneMap:
     smap_path = spec_dir / "scene_map.json"
     if smap_path.is_file():
         return SceneMap.from_json_file(smap_path)
+    default_model = "omni_flash" if _is_v12_omni12_spec(short_spec) else "veo_3_1_lite"
     entries = [
         SceneMapEntry(
             scene_id=str(b["beat_id"]),
@@ -489,7 +690,7 @@ def _build_scene_map_from_spec(short_spec: dict[str, Any], spec_dir: Path) -> Sc
             camera_move=str(b.get("camera_move", "push_in")),
             exit_seam=str(b.get("exit_seam", "dark_opening")),
             transition_mode=str(b.get("transition_mode", "seam")),
-            video_model=str(b.get("video_model", "veo_3_1_lite")),
+            video_model=str(b.get("video_model") or default_model),
             beat_role=str(b.get("beat_role") or b.get("role") or "context"),
             lighting_key=str(b.get("lighting_key", "daylight")),
             person_count=int(b.get("person_count", 0)),
@@ -516,6 +717,7 @@ def run_flow_stage_b(
 ) -> dict[str, Any]:
     """Generate Flow video clips ONLY for beats classified as `flow_video`."""
     t0 = time.monotonic()
+    is_v12_spec = _is_v12_omni12_spec(short_spec)
     classified = classify_hybrid_beats(short_spec, visual_mode=visual_mode)
     flow_beats = [b for b in classified if b["asset_mode"] == "flow_video"]
     clips_dir = spec_dir / "clips"
@@ -546,27 +748,121 @@ def run_flow_stage_b(
     pair_by_id = {sp.id: sp for sp in full_chain.scene_pairs}
 
     filtered_pairs: list[ScenePairSpec] = []
-    idx_by_bid: dict[str, int] = {}
-    idx_by_cid: dict[str, int] = {}
-    for b in flow_beats:
-        bid = str(b["beat_id"])
-        orig_i = int(b["beat_index"])
+    target_by_pair_id: dict[str, dict[str, Any]] = {}
+    target_by_cid: dict[str, dict[str, Any]] = {}
+    oner_pairs_planned = 0
+
+    pos = 0
+    while pos < len(flow_beats):
+        b1 = flow_beats[pos]
+        g1 = str(b1.get("oner_group_id") or "").strip()
+        is_oner_pair = (
+            bool(g1)
+            and (pos + 1 < len(flow_beats))
+            and str(flow_beats[pos + 1].get("oner_group_id") or "").strip() == g1
+        )
+
+        if is_oner_pair:
+            b2 = flow_beats[pos + 1]
+            pos += 2
+            bid1, bid2 = str(b1["beat_id"]), str(b2["beat_id"])
+            idx1, idx2 = int(b1["beat_index"]), int(b2["beat_index"])
+            clip1 = clips_dir / f"clip_{idx1:02d}.mp4"
+            clip2 = clips_dir / f"clip_{idx2:02d}.mp4"
+            if (
+                clip1.is_file()
+                and clip1.stat().st_size > 200_000
+                and clip2.is_file()
+                and clip2.stat().st_size > 200_000
+            ):
+                continue
+
+            dur1 = _resolve_beat_duration_sec(b1)
+            dur2 = _resolve_beat_duration_sec(b2)
+            pair_id = f"{bid1}_{bid2}_oner"
+            p1 = str(b1.get("motion_prompt") or (pair_by_id[bid1].motion_prompt if bid1 in pair_by_id else "")).strip()
+            p2 = str(b2.get("motion_prompt") or (pair_by_id[bid2].motion_prompt if bid2 in pair_by_id else "")).strip()
+            if p1 and p2 and p2 != p1:
+                combined_prompt = f"{p1} Continuing unbroken into: {p2}"
+            else:
+                combined_prompt = p1 or p2 or "continuous unbroken 10s Steadicam shot"
+
+            sp = copy.deepcopy(pair_by_id.get(bid1) or ScenePairSpec(id=pair_id, start_image_path=img_map[bid1]))
+            sp.id = pair_id
+            sp.start_image_path = img_map[bid1]
+            sp.motion_prompt = combined_prompt
+            sp.video_model = "omni_flash"
+            sp.target_duration = round(dur1 + dur2, 4)
+            sp.clip_duration_sec = 10  # type: ignore[attr-defined]
+
+            explicit_end_bid = str(b2.get("end_beat_id") or b1.get("end_beat_id") or "").strip()
+            lk1 = str(b1.get("lighting_key") or "").strip().lower()
+            lk2 = str(b2.get("lighting_key") or "").strip().lower()
+            both_frame_link_same_lighting = (
+                str(b1.get("transition_mode") or "").strip().lower() == "frame_link"
+                and str(b2.get("transition_mode") or "").strip().lower() == "frame_link"
+                and lk1 == lk2
+            )
+            if explicit_end_bid and explicit_end_bid in img_map:
+                sp.transition_mode = "frame_link"
+                sp.end_image_path = img_map[explicit_end_bid]
+            elif both_frame_link_same_lighting and bid2 in img_map:
+                # Only link b1 -> img_map[bid2] inside a same-lighting oner pair; NEVER cross into nxt_bid (b3).
+                sp.transition_mode = "frame_link"
+                sp.end_image_path = img_map[bid2]
+            else:
+                sp.transition_mode = "seam"
+                sp.end_image_path = None
+                sp.end_image_prompt = None
+
+            target_meta: dict[str, Any] = {
+                "kind": "oner_pair",
+                "beat_indices": (idx1, idx2),
+                "split_sec": dur1,
+                "oner_group_id": g1,
+            }
+            cid = f"clip_{len(filtered_pairs):03d}_{pair_id}"
+            target_by_pair_id[pair_id] = target_meta
+            target_by_cid[cid] = target_meta
+            filtered_pairs.append(sp)
+            oner_pairs_planned += 1
+            continue
+
+        pos += 1
+        bid = str(b1["beat_id"])
+        orig_i = int(b1["beat_index"])
         existing_clip = clips_dir / f"clip_{orig_i:02d}.mp4"
         if existing_clip.is_file() and existing_clip.stat().st_size > 200_000:
             continue
-        idx_by_bid[bid] = orig_i
-        idx_by_cid[f"clip_{len(filtered_pairs):03d}_{bid}"] = orig_i
+
+        resolved_model, resolved_dur = _resolve_stage_b_beat_model_and_duration(b1, is_v12_spec=is_v12_spec)
+        beat_dur = _resolve_beat_duration_sec(b1)
         sp = copy.deepcopy(pair_by_id.get(bid) or ScenePairSpec(id=bid, start_image_path=img_map[bid]))
-        sp.target_duration = float(b.get("duration_sec") or b.get("duration") or 5.0)
-        sp.motion_prompt = str(b.get("motion_prompt") or sp.motion_prompt)
-        sp.video_model = str(b.get("video_model") or "veo_3_1_lite")
-        sp.transition_mode = str(b.get("transition_mode") or "seam")
-        if sp.transition_mode == "frame_link" and "lite" not in sp.video_model.lower():
-            end_bid = b.get("end_beat_id")
-            if end_bid and end_bid in img_map:
-                sp.end_image_path = img_map[end_bid]
+        sp.target_duration = beat_dur
+        sp.motion_prompt = str(b1.get("motion_prompt") or sp.motion_prompt)
+        sp.video_model = resolved_model
+        raw_tmode = str(b1.get("transition_mode") or "seam").strip().lower()
+        if resolved_dur is not None:
+            sp.clip_duration_sec = resolved_dur  # type: ignore[attr-defined]
+        end_bid = str(b1.get("end_beat_id") or "").strip()
+        if (
+            raw_tmode == "frame_link"
+            and "lite" not in sp.video_model.lower()
+            and end_bid
+            and end_bid in img_map
+        ):
+            sp.transition_mode = "frame_link"
+            sp.end_image_path = img_map[end_bid]
         else:
+            # Never auto-link incompatible next beats across scene cuts via START_END_FRAMES.
+            sp.transition_mode = "seam"
             sp.end_image_path = None
+            sp.end_image_prompt = None
+
+        target_meta = {"kind": "single", "beat_index": orig_i}
+        cid = f"clip_{len(filtered_pairs):03d}_{bid}"
+        target_by_pair_id[bid] = target_meta
+        target_by_cid[cid] = target_meta
         filtered_pairs.append(sp)
 
     if not filtered_pairs:
@@ -578,12 +874,17 @@ def run_flow_stage_b(
             "credits_deducted": {},
         }
 
+    chain_video_model = (
+        "omni_flash"
+        if (is_v12_spec or any(_is_omni12_model_name(sp.video_model or "") for sp in filtered_pairs))
+        else full_chain.video_model
+    )
     chain_spec = VideoChainSpec(
         job_id=str(short_spec["job_id"]),
         mode=ChainMode.SCENE_PAIRS,
         channel_id=str(short_spec["channel_id"]),
         aspect="9:16",
-        video_model=full_chain.video_model,
+        video_model=chain_video_model,
         duration_seconds=6,
         overscan_crop=1.0,
         auto_fallback_zero_credit=False,
@@ -592,7 +893,13 @@ def run_flow_stage_b(
         scene_pairs=filtered_pairs,
     )
 
-    logger.info("[STUDIO_STAGE 2/3] Starting Flow Stage B Video (%d flow beats, max_workers=%d)", len(filtered_pairs), max_workers)
+    logger.info(
+        "[STUDIO_STAGE 2/3] Starting Flow Stage B Video (%d tasks covering %d flow beats, %d 10s oners, max_workers=%d)",
+        len(filtered_pairs),
+        len(flow_beats),
+        oner_pairs_planned,
+        max_workers,
+    )
     orch = FlowVideoChainOrchestrator(
         spec=chain_spec,
         work_dir=flow_work,
@@ -608,7 +915,7 @@ def run_flow_stage_b(
     flow_lock = GlobalFlowProductionLock(job_id=str(short_spec.get("job_id") or spec_dir.name), stage="stage_b")
     acquired = flow_lock.acquire_patiently(
         timeout=7200.0,
-        poll_interval=4.0,
+        poll_interval=0.75,
         on_wait=lambda holder, waited: logger.info(
             "[RESOURCE_GUARD] Waiting for active Flow job %s (pid=%s, stage=%s, waited=%.1fs)...",
             holder.get("job_id", "unknown"),
@@ -629,17 +936,29 @@ def run_flow_stage_b(
 
     for c in report.get("clips", []):
         cid = str(c["clip_id"])
-        orig_idx = idx_by_cid.get(cid)
-        if orig_idx is None:
-            orig_idx = idx_by_bid.get(cid)
-        if orig_idx is None:
-            orig_idx = idx_by_bid.get(cid.rsplit("_", 1)[-1])
-        if orig_idx is None:
+        target = target_by_cid.get(cid)
+        if target is None:
+            target = target_by_pair_id.get(cid)
+        if target is None and cid.startswith("clip_") and len(cid.split("_", 2)) == 3:
+            target = target_by_pair_id.get(cid.split("_", 2)[2])
+        if target is None:
+            target = target_by_pair_id.get(cid.rsplit("_", 1)[-1])
+        if target is None:
             raise KeyError(f"Unable to map orchestrator clip_id {cid!r} back to beat index")
         cp = Path(c["output_mp4_path"])
-        dst = clips_dir / f"clip_{orig_idx:02d}.mp4"
-        if cp.resolve() != dst.resolve():
-            shutil.copy2(cp, dst)
+        if target["kind"] == "oner_pair":
+            idx1, idx2 = target["beat_indices"]
+            _split_oner_clip_mp4(
+                cp,
+                float(target["split_sec"]),
+                clips_dir / f"clip_{idx1:02d}.mp4",
+                clips_dir / f"clip_{idx2:02d}.mp4",
+            )
+        else:
+            orig_idx = int(target["beat_index"])
+            dst = clips_dir / f"clip_{orig_idx:02d}.mp4"
+            if cp.resolve() != dst.resolve():
+                shutil.copy2(cp, dst)
 
     missing_or_invalid: list[str] = []
     for b in flow_beats:
@@ -658,6 +977,7 @@ def run_flow_stage_b(
         "status": "completed",
         "elapsed_sec": round(time.monotonic() - t0, 2),
         "clips_count": len(filtered_pairs),
+        "oner_pairs_split": oner_pairs_planned,
         "total_credit_cost": report.get("total_credit_cost", 0),
         "credits_deducted": report.get("credits_deducted", {}),
     }
