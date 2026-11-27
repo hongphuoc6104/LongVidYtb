@@ -467,27 +467,47 @@ class JobExecutionLock(_FlockHandle):
 
 
 class GlobalFlowProductionLock(_FlockHandle):
-    """Host-wide exclusive lock preventing concurrent heavy Flow Chrome pools from causing OOM."""
+    """Host-wide counting lock capping concurrent Flow Chrome pools while `GlobalBrowserSlot` caps total browsers."""
 
     LOCK_FILENAME = "global_flow_production.lock"
     ENV_OWNER_KEY = "VP_FLOW_LOCK_OWNER_PID"
+    ENV_MAX_SLOTS_KEY = "VP_FLOW_LOCK_SLOTS"
+    MAX_SLOTS = 6
 
-    def __init__(self, job_id: str = "", stage: str = "", locks_dir: Path | None = None):
+    def __init__(
+        self,
+        job_id: str = "",
+        stage: str = "",
+        locks_dir: Path | None = None,
+        max_slots: int | None = None,
+    ):
         base = ensure_locks_dir(locks_dir)
+        self.base_dir = base
         self.job_id = job_id
         self.stage = stage
+        env_slots = os.environ.get(self.ENV_MAX_SLOTS_KEY, "").strip()
+        default_slots = int(env_slots) if env_slots.isdigit() else self.MAX_SLOTS
+        self.max_slots = max(1, int(max_slots if max_slots is not None else default_slots))
+        self.slot_index: int | None = None
         self._reentrant_noop = False
         super().__init__(
             base / self.LOCK_FILENAME,
             metadata={"job_id": job_id, "stage": stage},
         )
 
+    def _slot_path(self, idx: int) -> Path:
+        if idx <= 0:
+            return self.base_dir / self.LOCK_FILENAME
+        stem = self.LOCK_FILENAME[:-5] if self.LOCK_FILENAME.endswith(".lock") else self.LOCK_FILENAME
+        return self.base_dir / f"{stem}_slot_{idx:02d}.lock"
+
     def read_holder(self) -> dict[str, Any]:
-        """Non-destructively read metadata of the process currently holding the global Flow lock."""
-        if not self.lock_path.is_file():
+        """Non-destructively read metadata of the process holding slot 0 (or active slot)."""
+        target = self.lock_path if self._fh is not None else self._slot_path(0)
+        if not target.is_file():
             return {}
         try:
-            raw = self.lock_path.read_text(encoding="utf-8").strip()
+            raw = target.read_text(encoding="utf-8").strip()
             if raw:
                 parsed = json.loads(raw.splitlines()[0])
                 if isinstance(parsed, dict):
@@ -501,10 +521,14 @@ class GlobalFlowProductionLock(_FlockHandle):
         if os.environ.get(self.ENV_OWNER_KEY) == my_pid and self._fh is None:
             self._reentrant_noop = True
             return True
-        ok = super().try_acquire()
-        if ok:
-            os.environ[self.ENV_OWNER_KEY] = my_pid
-        return ok
+        for idx in range(self.max_slots):
+            self.lock_path = self._slot_path(idx)
+            if super().try_acquire():
+                self.slot_index = idx
+                os.environ[self.ENV_OWNER_KEY] = my_pid
+                return True
+        self.lock_path = self._slot_path(0)
+        return False
 
     def acquire_patiently(
         self,
@@ -512,7 +536,7 @@ class GlobalFlowProductionLock(_FlockHandle):
         poll_interval: float = 4.0,
         on_wait: Any = None,
     ) -> bool:
-        """Wait until any other active Flow job finishes, invoking `on_wait(holder_dict, waited_sec)`."""
+        """Wait until any slot becomes free, invoking `on_wait(holder_dict, waited_sec)`."""
         t0 = time.monotonic()
         deadline = t0 + max(0.0, timeout)
         last_notify = -999.0
@@ -537,6 +561,7 @@ class GlobalFlowProductionLock(_FlockHandle):
             return
         had_fh = self._fh is not None
         super().release()
+        self.slot_index = None
         if had_fh and os.environ.get(self.ENV_OWNER_KEY) == str(os.getpid()):
             os.environ.pop(self.ENV_OWNER_KEY, None)
 
@@ -551,6 +576,106 @@ class GlobalRenderIoLock(GlobalFlowProductionLock):
 
     LOCK_FILENAME = "global_render_io.lock"
     ENV_OWNER_KEY = "VP_RENDER_LOCK_OWNER_PID"
+    MAX_SLOTS = 1
+
+
+DEFAULT_MAX_LOCAL_CPU_ENCODE_SLOTS = 1
+DEFAULT_LOCAL_CPU_THREADS = 2
+
+
+def apply_low_priority_cpu_clamp(max_threads: int = DEFAULT_LOCAL_CPU_THREADS) -> None:
+    """Clamp OpenMP/BLAS/OpenCV thread pools and lower OS scheduling priority to prevent UI lag."""
+    t_str = str(max(1, int(max_threads)))
+    for env_key in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS"):
+        os.environ.setdefault(env_key, t_str)
+    try:
+        import cv2  # type: ignore
+
+        cv2.setNumThreads(max(1, int(max_threads)))
+    except Exception:
+        pass
+    if hasattr(os, "nice"):
+        try:
+            cur_nice = os.nice(0)
+            if cur_nice < 10:
+                os.nice(10 - cur_nice)
+        except OSError:
+            pass
+
+
+def _nice_child_15() -> None:
+    """`preexec_fn` helper setting background nice=15 on local auxiliary FFmpeg subprocesses."""
+    if hasattr(os, "nice"):
+        try:
+            cur = os.nice(0)
+            if cur < 15:
+                os.nice(15 - cur)
+        except OSError:
+            pass
+
+
+class LocalCpuEncodeSlot:
+    """Cross-process kernel semaphore capping concurrent local CPU video/map/rig pre-bakers.
+
+    Prevents multi-agent / `ProcessPoolExecutor` `libx264` storms (`load average > 70` on 8T hosts)
+    by serializing local auxiliary pre-bakes (`max_slots=1` default, override via
+    `VP_MAX_LOCAL_CPU_ENCODE_SLOTS`) and clamping thread pools to `<= 2` threads (`< 25%` CPU).
+    """
+
+    def __init__(
+        self,
+        max_slots: int | None = None,
+        owner_tag: str = "",
+        locks_dir: Path | None = None,
+    ):
+        env_max = os.environ.get("VP_MAX_LOCAL_CPU_ENCODE_SLOTS")
+        resolved_max = int(env_max) if (env_max and env_max.isdigit()) else DEFAULT_MAX_LOCAL_CPU_ENCODE_SLOTS
+        self.max_slots = max(1, int(max_slots if max_slots is not None else resolved_max))
+        self.owner_tag = owner_tag
+        self.locks_dir = ensure_locks_dir(locks_dir)
+        self.slot_index: int | None = None
+        self._handle: _FlockHandle | None = None
+
+    @property
+    def acquired(self) -> bool:
+        return self._handle is not None and self._handle.acquired
+
+    def try_acquire(self) -> bool:
+        if self.acquired:
+            return True
+        for idx in range(self.max_slots):
+            h = _FlockHandle(
+                self.locks_dir / f"local_cpu_encode_slot_{idx:02d}.lock",
+                metadata={"slot": idx, "owner": self.owner_tag},
+            )
+            if h.try_acquire():
+                self._handle = h
+                self.slot_index = idx
+                return True
+        return False
+
+    def acquire(self, timeout: float = 1800.0, poll_interval: float = 0.5) -> bool:
+        deadline = time.monotonic() + max(0.0, timeout)
+        while True:
+            if self.try_acquire():
+                return True
+            if time.monotonic() >= deadline:
+                return False
+            time.sleep(min(poll_interval, max(0.05, deadline - time.monotonic())))
+
+    def release(self) -> None:
+        if self._handle is not None:
+            self._handle.release()
+            self._handle = None
+        self.slot_index = None
+
+    def __enter__(self) -> LocalCpuEncodeSlot:
+        if not self.acquire():
+            raise TimeoutError(f"Timed out waiting for LocalCpuEncodeSlot ({self.max_slots} slots)")
+        return self
+
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
+        self.release()
 
 
 def stagger_cross_process_action(
@@ -687,6 +812,35 @@ def mark_profile_unauthenticated(
             tmp_p = target_file.with_suffix(".tmp")
             tmp_p.write_text(json.dumps(data, indent=2), encoding="utf-8")
             tmp_p.replace(target_file)
+            fcntl.flock(lfh.fileno(), fcntl.LOCK_UN)
+    except OSError:
+        pass
+
+
+def clear_profile_unauthenticated(
+    profile_name: str,
+    locks_dir: Path | None = None,
+) -> None:
+    """Clear a stale unauthenticated cache entry after live RPC/session verification succeeds."""
+    if not profile_name:
+        return
+    base = ensure_locks_dir(locks_dir)
+    target_file = base / UNAUTHENTICATED_FILE_NAME
+    if not target_file.is_file():
+        return
+    lock_file = base / f"{UNAUTHENTICATED_FILE_NAME}.lock"
+    try:
+        with open(lock_file, "a+", encoding="utf-8") as lfh:
+            fcntl.flock(lfh.fileno(), fcntl.LOCK_EX)
+            try:
+                data = json.loads(target_file.read_text(encoding="utf-8"))
+            except Exception:
+                data = {}
+            if isinstance(data, dict) and str(profile_name) in data:
+                data.pop(str(profile_name), None)
+                tmp_p = target_file.with_suffix(".tmp")
+                tmp_p.write_text(json.dumps(data, indent=2), encoding="utf-8")
+                tmp_p.replace(target_file)
             fcntl.flock(lfh.fileno(), fcntl.LOCK_UN)
     except OSError:
         pass

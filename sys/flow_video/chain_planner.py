@@ -15,6 +15,7 @@ from sys.flow_video.models import (
 from typing import Any
 
 SILENT_PROMPT_SUFFIX = ", silent visual storytelling, no talking, no lip movement"
+VALID_EXPLICIT_CLIP_DURATIONS = (4, 6, 8, 10)
 
 _TALKING_KEYWORDS = (
     "no talking",
@@ -27,6 +28,20 @@ _TALKING_KEYWORDS = (
     "no spoken dialogue",
     "no spoken words",
 )
+
+
+def _extract_explicit_clip_duration(spec_obj: Any) -> int | None:
+    """Return an explicit {4, 6, 8, 10} duration override attached to a spec object, if valid."""
+    raw = getattr(spec_obj, "clip_duration_sec", None)
+    if raw is None:
+        raw = getattr(spec_obj, "duration_seconds", None)
+    if raw is None:
+        return None
+    try:
+        cand = int(round(float(raw)))
+    except (TypeError, ValueError):
+        return None
+    return cand if cand in VALID_EXPLICIT_CLIP_DURATIONS else None
 
 
 def select_clip_duration_and_credits(
@@ -160,15 +175,28 @@ def build_daisy_chain_tasks(
         raw_prompt = kf_start.motion_prompt or "smooth cinematic transition"
         final_prompt = apply_prompt_guard(raw_prompt, no_talking_prompt_guard)
 
-        target_sec = float(getattr(kf_start, "target_duration", None) or duration_seconds)
-        has_end = bool(kf_end.image_path)
-        clip_dur, clip_cost = select_clip_duration_and_credits(
-            target_sec=target_sec,
-            video_model=video_model,
-            has_end_frame=has_end,
-            default_duration_sec=duration_seconds,
-            auto_duration=auto_duration,
+        explicit_dur = _extract_explicit_clip_duration(kf_start)
+        target_sec = float(
+            getattr(kf_start, "target_duration", None)
+            or (explicit_dur if explicit_dur is not None else duration_seconds)
         )
+        has_end = bool(kf_end.image_path)
+        if explicit_dur is not None:
+            clip_dur, clip_cost = select_clip_duration_and_credits(
+                target_sec=float(explicit_dur),
+                video_model=video_model,
+                has_end_frame=has_end,
+                default_duration_sec=explicit_dur,
+                auto_duration=False,
+            )
+        else:
+            clip_dur, clip_cost = select_clip_duration_and_credits(
+                target_sec=target_sec,
+                video_model=video_model,
+                has_end_frame=has_end,
+                default_duration_sec=duration_seconds,
+                auto_duration=auto_duration,
+            )
 
         task = VideoClipTask(
             clip_id=clip_id,
@@ -221,16 +249,30 @@ def build_scene_pair_tasks(
         t_mode = str(getattr(sp, "transition_mode", "frame_link") or "frame_link")
         is_seam_or_lite = ("lite" in clip_model.lower()) or t_mode in ("seam", "soft_fade")
 
-        target_sec = float(sp.target_duration) if sp.target_duration is not None else float(duration_seconds)
+        explicit_dur = _extract_explicit_clip_duration(sp)
+        target_sec = (
+            float(sp.target_duration)
+            if sp.target_duration is not None
+            else float(explicit_dur if explicit_dur is not None else duration_seconds)
+        )
         end_frame_path = None if is_seam_or_lite else sp.end_image_path
         has_end = bool(end_frame_path or (not is_seam_or_lite and sp.end_image_prompt))
-        clip_dur, clip_cost = select_clip_duration_and_credits(
-            target_sec=target_sec,
-            video_model=clip_model,
-            has_end_frame=has_end,
-            default_duration_sec=duration_seconds,
-            auto_duration=auto_duration,
-        )
+        if explicit_dur is not None:
+            clip_dur, clip_cost = select_clip_duration_and_credits(
+                target_sec=float(explicit_dur),
+                video_model=clip_model,
+                has_end_frame=has_end,
+                default_duration_sec=explicit_dur,
+                auto_duration=False,
+            )
+        else:
+            clip_dur, clip_cost = select_clip_duration_and_credits(
+                target_sec=target_sec,
+                video_model=clip_model,
+                has_end_frame=has_end,
+                default_duration_sec=duration_seconds,
+                auto_duration=auto_duration,
+            )
 
         task = VideoClipTask(
             clip_id=clip_id,
@@ -452,6 +494,7 @@ def build_chain_tasks(
 # Aliases
 build_daisy_chain_specs = build_daisy_chain_tasks
 build_scene_pair_specs = build_scene_pair_tasks
+plan_tasks = build_chain_tasks
 
 
 @dataclass

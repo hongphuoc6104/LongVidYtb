@@ -348,13 +348,20 @@ class FlowVideoChainOrchestrator:
             logger.debug("Could not sanitize prominent-people frame %s: %s", src, exc)
             return str(src_path)
 
-    def _downgrade_task_to_omni_seam(self, task: VideoClipTask) -> None:
-        """Convert a `veo_3_1_lite` task to Seam `omni_flash` (`end_frame_path=None`, 18c for 6s)."""
-        task.video_model = "omni_flash"
-        if getattr(task, "transition_mode", "seam") != "frame_link":
+    def _downgrade_task_to_omni_seam(
+        self, task: VideoClipTask, *, force_seam: bool = False
+    ) -> None:
+        """Convert a `veo_3_1_lite` or blocked `nprQif` Frame-Link task to Seam (`eb1hJf`, `end_frame_path=None`)."""
+        cur_model = str(getattr(task, "video_model", "") or "")
+        if "_i2v_fl_" in cur_model:
+            task.video_model = cur_model.replace("_i2v_fl_", "_i2v_")
+        else:
+            task.video_model = "omni_flash"
+        if force_seam or getattr(task, "transition_mode", "seam") != "frame_link":
             task.end_frame_path = None
+            task.transition_mode = "seam"
         task.credit_cost = self._credit_cost_for_model(
-            "omni_flash", int(round(task.duration_sec))
+            task.video_model, int(round(task.duration_sec))
         )
 
     def _maybe_preroute_tier0_veo_lite(
@@ -1678,7 +1685,8 @@ class FlowVideoChainOrchestrator:
                                 c_meta = ledger_snap.get(cname) if isinstance(ledger_snap, dict) else {}
                                 c_rem = int((c_meta or {}).get("credits_remaining") or 0)
                                 p_tier = self._get_profile_paygate_tier(cand, ledger_snap)
-                                ultra_rank = 0 if (c_rem >= 5000 or p_tier >= 2) else 1
+                                dispersion_pool = os.environ.get("VP_FLOW_DISPERSION_POOL", "").strip().lower() in ("1", "true", "yes")
+                                ultra_rank = 0 if dispersion_pool else (0 if (c_rem >= 5000 or p_tier >= 2) else 1)
                                 tier_rank = -p_tier if lite else 0
                                 clip_cnt = self._profile_clip_counts.get(cname, 0)
                                 last_sub = round(self._profile_last_submit_at.get(cname, 0.0), 3)
@@ -1861,15 +1869,18 @@ class FlowVideoChainOrchestrator:
                                 attempts = max(0, attempts - 1)  # Do not burn attempt budget on temporary provider rate limit
                                 if (
                                     ("TOO_MUCH_TRAFFIC" in exc_str or "PUBLIC_ERROR_UNUSUAL_ACTIVITY" in exc_str)
-                                    and "lite" in active_model_name.lower()
+                                    and (
+                                        "lite" in active_model_name.lower()
+                                        or bool(getattr(task, "end_frame_path", None))
+                                    )
                                 ):
                                     task_traffic_hits = getattr(task, "_traffic_hits", 0) + 1
                                     task._traffic_hits = task_traffic_hits
                                     if task_traffic_hits >= 2:
-                                        self._downgrade_task_to_omni_seam(task)
+                                        self._downgrade_task_to_omni_seam(task, force_seam=True)
                                         logger.warning(
                                             f"[TRAFFIC_MODEL_FAILOVER] Clip {task.clip_id} hit {task_traffic_hits} "
-                                            f"traffic blocks on {active_model_name}; switching to omni_flash "
+                                            f"traffic blocks on {active_model_name}; switching to {task.video_model} "
                                             f"(Seam start-frame only, {task.credit_cost}c) on separate backend queue."
                                         )
                             elif any(

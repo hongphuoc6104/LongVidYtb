@@ -617,6 +617,25 @@ else:
             l1.release()
             self.assertNotIn(GlobalFlowProductionLock.ENV_OWNER_KEY, os.environ)
 
+            # Verify MAX_SLOTS=6 default + VP_FLOW_LOCK_SLOTS env override + unauth clear
+            from flow_cdp.resource_locks import (
+                clear_profile_unauthenticated,
+                is_profile_unauthenticated,
+                mark_profile_unauthenticated,
+            )
+
+            self.assertEqual(GlobalFlowProductionLock(locks_dir=locks_dir).max_slots, 6)
+            os.environ[GlobalFlowProductionLock.ENV_MAX_SLOTS_KEY] = "8"
+            try:
+                self.assertEqual(GlobalFlowProductionLock(locks_dir=locks_dir).max_slots, 8)
+            finally:
+                os.environ.pop(GlobalFlowProductionLock.ENV_MAX_SLOTS_KEY, None)
+
+            mark_profile_unauthenticated("profile_test_22", locks_dir=locks_dir)
+            self.assertTrue(is_profile_unauthenticated("profile_test_22", locks_dir=locks_dir))
+            clear_profile_unauthenticated("profile_test_22", locks_dir=locks_dir)
+            self.assertFalse(is_profile_unauthenticated("profile_test_22", locks_dir=locks_dir))
+
 
 if __name__ == "__main__":
     unittest.main()

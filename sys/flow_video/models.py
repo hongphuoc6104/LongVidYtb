@@ -59,6 +59,8 @@ class ScenePairSpec:
     transition_mode: str = "frame_link"  # "frame_link" | "seam" | "soft_fade"
     exit_seam: str | None = None
     seam_dissolve_sec: float = 0.0
+    clip_duration_sec: int | None = None
+    oner_group_id: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -68,6 +70,8 @@ class ScenePairSpec:
         target_dur = data.get("target_duration")
         if target_dur is None:
             target_dur = data.get("target_duration_sec")
+        raw_clip_dur = data.get("clip_duration_sec")
+        raw_oner = data.get("oner_group_id")
         return cls(
             id=str(data["id"]),
             start_image_path=data.get("start_image_path"),
@@ -83,6 +87,8 @@ class ScenePairSpec:
             transition_mode=str(data.get("transition_mode", "frame_link")),
             exit_seam=data.get("exit_seam"),
             seam_dissolve_sec=float(data.get("seam_dissolve_sec", 0.0)),
+            clip_duration_sec=int(raw_clip_dur) if raw_clip_dur is not None else None,
+            oner_group_id=str(raw_oner) if raw_oner is not None else None,
         )
 
 

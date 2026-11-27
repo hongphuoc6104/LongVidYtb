@@ -49,6 +49,40 @@ DEFAULT_CREDITS_PATH = Path(
 )
 
 
+def _load_unauthenticated_profile_ids(path: Path, now: float) -> set[str]:
+    """Load currently quarantined/unauthenticated profile IDs from a JSON store."""
+    if not path.is_file():
+        return set()
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        logger.warning("Failed to parse unauthenticated profiles file %s: %s", path, exc)
+        return set()
+
+    if isinstance(raw, list):
+        return {str(item).strip() for item in raw if str(item).strip()}
+
+    if not isinstance(raw, dict):
+        return set()
+
+    if isinstance(raw.get("profiles"), list):
+        return {str(item).strip() for item in raw["profiles"] if str(item).strip()}
+
+    unauth: set[str] = set()
+    for pid, meta in raw.items():
+        pid_str = str(pid).strip()
+        if not pid_str:
+            continue
+        if isinstance(meta, dict):
+            marked_at = float(meta.get("marked_at") or 0.0)
+            ttl_sec = float(meta.get("ttl_sec") or 86400.0)
+            if now < marked_at + ttl_sec:
+                unauth.add(pid_str)
+        elif bool(meta):
+            unauth.add(pid_str)
+    return unauth
+
+
 class CreditLedger:
     """Multiprocess-safe and thread-safe credit ledger for Flow CDP profiles."""
 
@@ -502,6 +536,113 @@ class CreditLedger:
         candidates.sort(key=lambda x: (-x[0], x[1]))
         return candidates[0][2]
 
+    def select_beluga_zero_credit_specialists(
+        self,
+        max_credit_threshold: int = 9,
+        profiles: list[dict[str, Any] | str] | None = None,
+        unauthenticated_profiles_path: Path | str | None = None,
+        locks_dir: Path | str | None = None,
+    ) -> list[str]:
+        """Return authenticated profiles ordered for 0-credit BELUGA image harvesting.
+
+        Ordering tiers:
+        1. Low/zero-credit specialists (`0 <= balance <= max_credit_threshold`, `paygate_tier != 2`)
+        2. Regular pool profiles (`balance > max_credit_threshold`, `paygate_tier != 2`)
+        3. Ultra profiles (`paygate_tier == 2`) LAST so 25k-credit video accounts stay unthrottled
+
+        Filters out unverified (`last_used_at <= 0`), `auth_expired`, quarantined
+        (`unauthenticated_profiles.json`), and actively cooled-down profiles.
+        Within each tier, sorts by lowest balance first, then oldest `last_used_at` (LRU).
+        """
+        now = time.time()
+        unauth_path = (
+            Path(unauthenticated_profiles_path).expanduser().resolve()
+            if unauthenticated_profiles_path is not None
+            else self.path.parent / "unauthenticated_profiles.json"
+        )
+        unauth_ids = _load_unauthenticated_profile_ids(unauth_path, now)
+
+        default_live_credits = (Path.home() / ".config/video-pilot/flow/credits.json").resolve()
+        resolved_locks_dir = Path(locks_dir).expanduser().resolve() if locks_dir is not None else None
+        check_locks_unauth = resolved_locks_dir is not None or self.path == default_live_credits
+        is_lock_unauth = None
+        if check_locks_unauth:
+            from .resource_locks import is_profile_unauthenticated
+
+            is_lock_unauth = is_profile_unauthenticated
+
+        ranked: list[tuple[int, int, float, str]] = []
+        with self._locked_store() as data:
+            store_profiles = data.get("profiles", {})
+            if profiles is not None:
+                target_ids: list[str] = []
+                seen_ids: set[str] = set()
+                for item in profiles:
+                    if isinstance(item, dict):
+                        if item.get("enabled") is False:
+                            continue
+                        pid = str(item.get("id") or item.get("name") or "").strip()
+                    else:
+                        pid = str(item).strip()
+                    if not pid or pid == "null" or pid in seen_ids:
+                        continue
+                    seen_ids.add(pid)
+                    target_ids.append(pid)
+            else:
+                target_ids = [
+                    str(pid).strip()
+                    for pid in store_profiles.keys()
+                    if str(pid).strip() and str(pid).strip() != "null"
+                ]
+
+            for pid in target_ids:
+                entry = store_profiles.get(pid)
+                if not isinstance(entry, dict):
+                    continue
+                if pid in unauth_ids:
+                    continue
+                if is_lock_unauth is not None and is_lock_unauth(pid, locks_dir=resolved_locks_dir):
+                    continue
+
+                status = str(entry.get("status", "active"))
+                if status == "auth_expired":
+                    continue
+
+                last_used = float(entry.get("last_used_at") or 0.0)
+                if last_used <= 0.0:
+                    continue
+
+                if float(entry.get("cooldown_until") or 0.0) > now:
+                    continue
+                if float(entry.get("quarantine_until") or 0.0) > now:
+                    continue
+
+                expiry = entry.get("expiry_epoch")
+                if expiry is not None and now >= float(expiry):
+                    sub_credits = int(entry.get("subscription_credits") or 1000)
+                    entry["credits_remaining"] = sub_credits
+                    entry["status"] = "active"
+                    entry["exhausted_reason"] = None
+                    entry["expiry_epoch"] = None
+                    entry["tier_role"] = compute_tier_role(sub_credits, "active")
+
+                balance = int(entry.get("credits_remaining", 0))
+                if balance < 0:
+                    continue
+                ptier = int(entry.get("paygate_tier") or 0)
+
+                if ptier == 2:
+                    tier = 2
+                elif 0 <= balance <= max_credit_threshold:
+                    tier = 0
+                else:
+                    tier = 1
+
+                ranked.append((tier, balance, last_used, pid))
+
+        ranked.sort(key=lambda item: (item[0], item[1], item[2], item[3]))
+        return [item[3] for item in ranked]
+
     def deduct_credits(
         self,
         profile_id: str,
@@ -789,3 +930,19 @@ def get_credit_ledger(path: Path | str | None = None) -> CreditLedger:
         if _DEFAULT_LEDGER is None:
             _DEFAULT_LEDGER = CreditLedger()
         return _DEFAULT_LEDGER
+
+
+def select_beluga_zero_credit_specialists(
+    max_credit_threshold: int = 9,
+    ledger_path: Path | str | None = None,
+    profiles: list[dict[str, Any] | str] | None = None,
+    unauthenticated_profiles_path: Path | str | None = None,
+    locks_dir: Path | str | None = None,
+) -> list[str]:
+    """Module-level convenience helper for BELUGA 0-credit specialist routing."""
+    return get_credit_ledger(path=ledger_path).select_beluga_zero_credit_specialists(
+        max_credit_threshold=max_credit_threshold,
+        profiles=profiles,
+        unauthenticated_profiles_path=unauthenticated_profiles_path,
+        locks_dir=locks_dir,
+    )

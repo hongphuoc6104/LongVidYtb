@@ -20,14 +20,21 @@ SYS_DIR = Path(__file__).resolve().parents[1]
 if str(SYS_DIR) not in sys.path:
     sys.path.insert(0, str(SYS_DIR))
 
+from flow_cdp.flow_rpc import resolve_video_model  # noqa: E402
+
 from .motion_library import (  # noqa: E402
     CAMERA_MOVES,
     EXIT_SEAMS,
+    _timecodes_for_clip,
     apply_positive_framing,
     build_timecoded_video_prompt,
     get_channel_lens_spec,
     get_channel_motion_policy,
+    is_omni12_model,
 )
+
+_TIME_RANGE_RE = re.compile(r"^\s*(\d+(?:\.\d+)?)\s*[-–]\s*(\d+(?:\.\d+)?)\s*s?\s*$", re.IGNORECASE)
+_OMNI12_CREDIT_BY_DUR: dict[int, int] = {4: 12, 6: 18, 8: 24, 10: 30}
 
 
 @dataclass
@@ -55,12 +62,16 @@ class SceneMapEntry:
     same_world_continuous: bool = False
     scene_type: str = "live_action"  # "live_action" | "tactical_sand_table"
     delivery_mode: str = "narrative_cinema"
+    clip_duration_sec: int | None = None
+    oner_group_id: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> SceneMapEntry:
+        raw_clip_dur = data.get("clip_duration_sec")
+        raw_oner = data.get("oner_group_id")
         return cls(
             scene_id=str(data["scene_id"]),
             time_range=str(data.get("time_range", "0-8s")),
@@ -85,6 +96,8 @@ class SceneMapEntry:
             same_world_continuous=bool(data.get("same_world_continuous", False)),
             scene_type=str(data.get("scene_type") or "live_action"),
             delivery_mode=str(data.get("delivery_mode") or "narrative_cinema"),
+            clip_duration_sec=int(raw_clip_dur) if raw_clip_dur is not None else None,
+            oner_group_id=str(raw_oner) if raw_oner is not None else None,
         )
 
 
@@ -168,6 +181,77 @@ def _casts_compatible_for_frame_link(scene_a: SceneMapEntry, scene_b: SceneMapEn
     return scene_a.scene_id in scene_b.reference_scene_ids or (sig_a == sig_b and sig_a.startswith("ref:"))
 
 
+def _parse_time_range_duration_sec(time_range: str) -> float | None:
+    """Parse `start-end` seconds from a `SceneMapEntry.time_range` string (e.g. `'3.8-9.4s'`)."""
+    m = _TIME_RANGE_RE.match(time_range or "")
+    if not m:
+        return None
+    start_s = float(m.group(1))
+    end_s = float(m.group(2))
+    if end_s <= start_s:
+        return None
+    return round(end_s - start_s, 3)
+
+
+def _omni12_credit_cost(clip_duration_sec: int) -> int:
+    """Return exact Omni 1.2 Flash (`macaron_cookie`) credit cost for 4s/6s/8s/10s."""
+    d = int(clip_duration_sec)
+    if d >= 10:
+        return _OMNI12_CREDIT_BY_DUR[10]
+    if d >= 8:
+        return _OMNI12_CREDIT_BY_DUR[8]
+    if d >= 6:
+        return _OMNI12_CREDIT_BY_DUR[6]
+    return _OMNI12_CREDIT_BY_DUR[4]
+
+
+def plan_omni12_variable_gearbox(
+    target_sec: float,
+    *,
+    shot_class: str = "",
+    has_end_frame: bool = False,
+    is_multi_beat_oner: bool = False,
+    prefer_omni12: bool = True,
+) -> dict[str, Any]:
+    """Select Omni 1.2 Flash (`macaron_cookie`) variable duration (`4|6|8|10`), RPC key, credits & timecodes."""
+    dur_target = float(target_sec)
+    if is_multi_beat_oner or dur_target > 8.2:
+        clip_dur = 10
+    elif dur_target <= 4.2:
+        clip_dur = 4
+    elif dur_target <= 6.2:
+        clip_dur = 6
+    else:
+        clip_dur = 8
+
+    use_omni12 = bool(prefer_omni12 or is_multi_beat_oner or clip_dur == 10 or has_end_frame)
+    if use_omni12:
+        video_model = "omni_flash"
+        credit_cost = _OMNI12_CREDIT_BY_DUR[clip_dur]
+    else:
+        video_model = "veo_3_1_lite"
+        credit_cost = 10
+
+    resolved_rpc_key = resolve_video_model(
+        video_model,
+        duration_seconds=clip_dur,
+        has_start_frame=True,
+        has_end_frame=bool(has_end_frame and use_omni12),
+    )
+    timecode_phases = _timecodes_for_clip(clip_dur, is_final_hold=False, model=video_model)
+
+    return {
+        "video_model": video_model,
+        "resolved_rpc_key": resolved_rpc_key,
+        "clip_duration_sec": clip_dur,
+        "credit_cost": credit_cost,
+        "timecode_phases": timecode_phases,
+        "transition_mode": "frame_link" if (has_end_frame and use_omni12) else "seam",
+        "shot_class": (shot_class or "").strip(),
+        "is_multi_beat_oner": bool(is_multi_beat_oner),
+    }
+
+
 def route_pair_transition_mode(
     scene_a: SceneMapEntry,
     scene_b: SceneMapEntry | None,
@@ -197,21 +281,88 @@ def route_pair_transition_mode(
 def apply_auto_routing(
     scene_map: SceneMap,
     prefer_credit_saving: bool = True,
+    omni12_variable_mode: bool = False,
 ) -> SceneMap:
-    """Populate `transition_mode`, `video_model`, and safe `exit_seam` for every scene in place."""
+    """Populate `transition_mode`, `video_model`, and safe `exit_seam` (plus `clip_duration_sec` in V12 mode)."""
     policy = get_channel_motion_policy(scene_map.channel_id)
     n = len(scene_map.scenes)
+
+    if not omni12_variable_mode:
+        for idx, sc in enumerate(scene_map.scenes):
+            nxt = scene_map.scenes[idx + 1] if idx + 1 < n else None
+            if nxt is None:
+                sc.exit_seam = "final_hold"
+                sc.seam_color = "none"
+            mode, model = route_pair_transition_mode(
+                sc, nxt, scene_map.channel_id, prefer_credit_saving=prefer_credit_saving
+            )
+            sc.transition_mode = mode
+            sc.video_model = model
+            if not policy["allow_exit_seams"] and sc.exit_seam != "final_hold":
+                sc.exit_seam = "final_hold"
+                sc.seam_color = "none"
+        return scene_map
+
+    oner_counts: dict[str, int] = {}
+    for sc in scene_map.scenes:
+        gid = (sc.oner_group_id or "").strip()
+        if gid:
+            oner_counts[gid] = oner_counts.get(gid, 0) + 1
+
     for idx, sc in enumerate(scene_map.scenes):
         nxt = scene_map.scenes[idx + 1] if idx + 1 < n else None
         if nxt is None:
             sc.exit_seam = "final_hold"
             sc.seam_color = "none"
-        mode, model = route_pair_transition_mode(sc, nxt, scene_map.channel_id, prefer_credit_saving=prefer_credit_saving)
-        sc.transition_mode = mode
-        sc.video_model = model
-        if not policy["allow_exit_seams"] and sc.exit_seam != "final_hold":
-            sc.exit_seam = "final_hold"
-            sc.seam_color = "none"
+
+        gid = (sc.oner_group_id or "").strip()
+        is_multi_beat_oner = bool(gid and oner_counts.get(gid, 0) >= 2)
+        same_oner_next = bool(gid and nxt is not None and gid == (nxt.oner_group_id or "").strip())
+
+        if not policy["allow_exit_seams"]:
+            transition_mode = "soft_fade"
+            has_end_frame = False
+            if sc.exit_seam != "final_hold":
+                sc.exit_seam = "final_hold"
+                sc.seam_color = "none"
+        elif nxt is not None and sc.exit_seam != "final_hold":
+            same_light = (sc.lighting_key or "").lower() == (nxt.lighting_key or "").lower()
+            cast_ok = _casts_compatible_for_frame_link(sc, nxt)
+            want_fl = (
+                sc.same_world_continuous
+                or nxt.same_world_continuous
+                or same_oner_next
+                or (not prefer_credit_saving)
+            )
+            if want_fl and cast_ok and same_light:
+                transition_mode = "frame_link"
+                has_end_frame = True
+            else:
+                transition_mode = policy["default_transition_mode"]
+                has_end_frame = False
+        else:
+            transition_mode = policy["default_transition_mode"]
+            has_end_frame = False
+
+        parsed_dur = _parse_time_range_duration_sec(sc.time_range)
+        if sc.clip_duration_sec is not None:
+            target_sec = float(sc.clip_duration_sec)
+        elif parsed_dur is not None:
+            target_sec = parsed_dur
+        else:
+            target_sec = float(scene_map.clip_duration_sec)
+
+        gear = plan_omni12_variable_gearbox(
+            target_sec,
+            shot_class=str(getattr(sc, "shot_class", "") or ""),
+            has_end_frame=has_end_frame,
+            is_multi_beat_oner=is_multi_beat_oner,
+            prefer_omni12=True,
+        )
+        sc.transition_mode = transition_mode
+        sc.video_model = str(gear["video_model"])
+        sc.clip_duration_sec = int(gear["clip_duration_sec"])
+
     return scene_map
 
 
@@ -274,7 +425,9 @@ def validate_scene_map(scene_map: SceneMap) -> dict[str, Any]:
     seen_ids: set[str] = set()
     veo_lite_clips = 0
     omni_clips = 0
-    omni_clip_cost = 24 if scene_map.clip_duration_sec >= 8 else (18 if scene_map.clip_duration_sec >= 6 else 12)
+    omni_clip_cost = _omni12_credit_cost(scene_map.clip_duration_sec)
+    total_credits = 0
+    all_omni_credits = 0
 
     for idx, sc in enumerate(scenes):
         is_last = idx == len(scenes) - 1
@@ -324,14 +477,16 @@ def validate_scene_map(scene_map: SceneMap) -> dict[str, Any]:
                     f"FRAME_LINK_LIGHTING_SHIFT: {sc.scene_id} ({sc.lighting_key}) -> {scenes[idx + 1].scene_id} ({scenes[idx + 1].lighting_key})"
                 )
 
+        sc_dur = int(sc.clip_duration_sec) if sc.clip_duration_sec is not None else int(scene_map.clip_duration_sec)
+        sc_omni_cost = _omni12_credit_cost(sc_dur)
+        all_omni_credits += sc_omni_cost if sc.clip_duration_sec is not None else omni_clip_cost
         if "lite" in sc.video_model.lower():
             veo_lite_clips += 1
+            total_credits += 10
         else:
             omni_clips += 1
+            total_credits += sc_omni_cost
         seen_ids.add(sc.scene_id)
-
-    total_credits = veo_lite_clips * 10 + omni_clips * omni_clip_cost
-    all_omni_credits = len(scenes) * omni_clip_cost
     return {
         "valid": len(errors) == 0,
         "errors": errors,
@@ -395,6 +550,10 @@ def compile_scene_image_prompts(
             parts.append(
                 f"Block B Small Group: {sc.cast_spec}, grouped naturally inside one third of the frame with calm closed-mouth poses so clear camera travel space stays open."
             )
+        elif is_omni12_model(sc.video_model):
+            parts.append(
+                f"Block B Single Subject Framing: {sc.cast_spec}, positioned in the left or right third at mid-distance with grounded physical posture, active tactile hand engagement, and closed mouth ready for continuous cinematic motion."
+            )
         else:
             parts.append(
                 f"Block B Single Subject Framing: {sc.cast_spec}, positioned in the left or right third at mid-distance turned slightly across or away from camera, calm closed-mouth pose with relaxed hands so only the camera moves."
@@ -423,6 +582,8 @@ def compile_scene_image_prompts(
             "camera_move": sc.camera_move,
             "transition_mode": sc.transition_mode,
             "video_model": sc.video_model,
+            "clip_duration_sec": sc.clip_duration_sec,
+            "oner_group_id": sc.oner_group_id,
             "image_prompt": prompt_txt,
         })
     return compiled
@@ -454,12 +615,15 @@ def compile_scene_video_prompts(scene_map: SceneMap) -> list[dict[str, Any]]:
                 anti_surfaces = "timber fortifications, walls, banners, shields, and plain tunics"
             else:
                 anti_surfaces = "masts, hulls, buildings, walls, and uniforms"
+        effective_clip_dur = (
+            int(sc.clip_duration_sec) if sc.clip_duration_sec is not None else int(scene_map.clip_duration_sec)
+        )
         prompt = build_timecoded_video_prompt(
             camera_move=sc.camera_move,
             hero_subject=sc.hero_subject,
             setting=sc.location,
             model=sc.video_model,
-            clip_duration_sec=scene_map.clip_duration_sec,
+            clip_duration_sec=effective_clip_dur,
             transition_mode=sc.transition_mode,
             exit_seam=sc.exit_seam,
             seam_prop=sc.seam_prop,
@@ -472,13 +636,15 @@ def compile_scene_video_prompts(scene_map: SceneMap) -> list[dict[str, Any]]:
             anti_symbol_surfaces=anti_surfaces,
             lens_spec=lens_spec,
             scene_type=sc.scene_type,
+            shot_class=str(getattr(sc, "shot_class", "") or ""),
         )
         out.append({
             "scene_id": sc.scene_id,
             "video_model": sc.video_model,
             "transition_mode": sc.transition_mode,
             "exit_seam": sc.exit_seam,
-            "clip_duration_sec": scene_map.clip_duration_sec,
+            "clip_duration_sec": effective_clip_dur,
+            "oner_group_id": sc.oner_group_id,
             "video_prompt": prompt,
         })
     return out

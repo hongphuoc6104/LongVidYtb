@@ -1608,6 +1608,9 @@ class DirectCDPProfileSession:
                     timeout=180.0,
                 )
                 sub_payload = flow_rpc.first_payload(out.get("text", ""), rpcid)
+                from .resource_locks import clear_profile_unauthenticated
+
+                clear_profile_unauthenticated(self.name)
                 break
             except Exception as ex:
                 ex_s = str(ex)

@@ -20,6 +20,9 @@ if str(SYS_DIR) not in sys.path:
     sys.path.insert(0, str(SYS_DIR))
 
 from fx_warehouse.archetypes import get_channel_archetype  # noqa: E402
+from fx_warehouse.v12_action_plausibility_guard import (  # noqa: E402
+    sanitize_action_and_gesture_prompt,
+)
 
 CAMERA_MOVES: dict[str, dict[str, str]] = {
     "push_in": {
@@ -235,13 +238,36 @@ def get_channel_motion_policy(channel_id: str) -> dict[str, Any]:
     }
 
 
+def is_omni12_model(model: str | None) -> bool:
+    """Return True when `model` targets Omni 1.2 Flash (`omni` / `macaron` and NOT `lite`)."""
+    m_low = (model or "").strip().lower()
+    return ("omni" in m_low or "macaron" in m_low) and "lite" not in m_low
+
+
 def _timecodes_for_clip(
     clip_duration_sec: int,
-    is_final_hold: bool,
+    is_final_hold: bool = False,
     *,
     viral_v7: bool = False,
-) -> tuple[str, str]:
+    model: str = "omni_flash",
+) -> tuple[str, ...]:
+    """Return timecode phase brackets calibrated for Omni 1.2 Flash (`4/6/8/10s`) or Veo 3.1 Lite."""
     d = int(clip_duration_sec)
+    is_lite = "lite" in (model or "").lower()
+    use_omni12 = is_omni12_model(model) or d > 8
+
+    if use_omni12 and not is_lite:
+        if d <= 4:
+            return ("0-2.6s", "2.6-4.0s")
+        if d <= 6:
+            return ("0-4.0s", "4.0-6.0s")
+        if d <= 8:
+            return ("0-5.4s", "5.4-8.0s")
+        return ("0-3.4s", "3.4-7.0s", "7.0-10.0s")
+
+    if d > 8:
+        return ("0-3.4s", "3.4-7.0s", "7.0-10.0s")
+
     if viral_v7:
         if d <= 4:
             return ("0-2.6s", "2.6-4s") if is_final_hold else ("0-2.8s", "2.8-4s")
@@ -271,6 +297,51 @@ def _normalize_tabletop_camera_sentence(cam_sentence: str) -> str:
     return out
 
 
+def _omni12_choreography_lead(clip_duration_sec: int, shot_class: str = "") -> str:
+    """Return duration-calibrated physical choreography lead for Omni 1.2 Flash."""
+    d = int(clip_duration_sec)
+    sc_up = (shot_class or "").strip().upper()
+    if d <= 4:
+        if sc_up in ("MACRO_PROP", "REACTION_MICRO"):
+            return f"Measured tactile micro-motion and crisp optical focus ({sc_up.lower()})"
+        return "Measured tactile micro-motion and crisp optical focus"
+    if d <= 6:
+        if sc_up == "OTS_DIRTY":
+            return "Medium dirty-OTS framing and grounded physical blocking"
+        return "Medium OTS and grounded physical blocking"
+    return "Two-stage spatial choreography"
+
+
+def _omni12_physical_action_clause(has_person: bool, scene_type: str) -> str:
+    """Build grounded physical human & prop action directive (zero wax-statue stillness)."""
+    if scene_type == "tactical_sand_table":
+        return (
+            "Practical tabletop physics where carved wooden blocks, sculpted wet clay relief, "
+            "and warm oil-lamp shadows respond naturally as camera and scene move together cinematically."
+        )
+    if has_person:
+        return (
+            "Natural, grounded single-action physical motion with closed mouths (zero lip-flap, zero speech), "
+            "anatomically natural five-fingered hands, real gravity and weight, "
+            "one continuous unbroken camera take with zero internal cuts, and zero mid-clip prop morphing."
+        )
+    return (
+        "Grounded physical prop and environmental dynamics with real gravity and natural surface weight, "
+        "one continuous unbroken camera take with zero internal cuts, and zero mid-clip prop morphing."
+    )
+
+
+def _finalize_timecoded_video_prompt(prompt: str, *, shot_class: str = "") -> str:
+    """Normalize whitespace and apply V12 action/gesture/physics plausibility guard."""
+    normalized = re.sub(r"\s{2,}", " ", prompt).strip()
+    guarded = sanitize_action_and_gesture_prompt(
+        normalized,
+        mode="video",
+        shot_class=shot_class,
+    )
+    return str(guarded["sanitized_prompt"])
+
+
 def build_timecoded_video_prompt(
     camera_move: str,
     hero_subject: str,
@@ -291,16 +362,94 @@ def build_timecoded_video_prompt(
     scene_type: str = "live_action",
     diegetic_audio_cue: str = "",
     viral_v7: bool = False,
+    shot_class: str = "",
 ) -> str:
     """Build a low-risk timecoded video prompt calibrated for Veo 3.1 Lite or Omni 1.2 Flash."""
     move_key = camera_move if camera_move in CAMERA_MOVES else "push_in"
     move_spec = CAMERA_MOVES[move_key]
     pacing = BEAT_PACING_ENERGY.get(beat_role, BEAT_PACING_ENERGY["context"])
     is_final = exit_seam == "final_hold"
-    t_main, t_end = _timecodes_for_clip(clip_duration_sec, is_final, viral_v7=viral_v7)
+    phases = _timecodes_for_clip(clip_duration_sec, is_final, viral_v7=viral_v7, model=model)
     is_veo_lite = "lite" in (model or "").lower()
+    is_omni12 = is_omni12_model(model)
     active_lens = (lens_spec or "wide 28mm lens").strip()
+    foley_clause = str(diegetic_audio_cue or "").strip()
 
+    if is_omni12:
+        is_frame_link = bool(transition_mode == "frame_link" and next_subject and next_location and not is_final)
+        if is_frame_link:
+            cam_sentence = move_spec["frame_link_template"].format(
+                subject=hero_subject,
+                setting=setting,
+                next_subject=next_subject,
+                next_setting=next_location,
+            )
+        else:
+            cam_sentence = move_spec["camera_template"].format(subject=hero_subject, setting=setting)
+        if active_lens != "wide 28mm lens":
+            cam_sentence = cam_sentence.replace("wide 28mm lens", active_lens)
+        if scene_type == "tactical_sand_table":
+            cam_sentence = _normalize_tabletop_camera_sentence(cam_sentence)
+
+        seam_spec = EXIT_SEAMS.get(exit_seam if exit_seam in EXIT_SEAMS else "dark_opening", EXIT_SEAMS["dark_opening"])
+        if transition_mode == "soft_fade" and not is_final:
+            end_sentence = (
+                f"In the final phase, the camera continues its gentle {move_spec['label'].lower()} glide cleanly without abrupt motion."
+            )
+        else:
+            prop_val = seam_prop or ("dark architectural opening" if exit_seam == "dark_opening" else "foreground pillar edge")
+            end_sentence = seam_spec["final_second_sentence"].format(prop=prop_val)
+
+        action_clause = _omni12_physical_action_clause(has_person=has_person, scene_type=scene_type)
+        if foley_clause:
+            omni_audio_tail = (
+                "Closed mouths with no talking, no lip movement, and no background music; "
+                f"synchronized diegetic sound: {foley_clause.rstrip('.')}."
+            )
+        else:
+            omni_audio_tail = "Silent visual storytelling, no talking, no lip movement, no music."
+
+        if len(phases) == 3:
+            t_open, t_mid, t_arrive = phases
+            if is_frame_link:
+                prompt = (
+                    f"[{t_open}] Opening physical action and foreground pass on {hero_subject} in {setting}, "
+                    f"{pacing['speed']} pace ({pacing['easing']}), {secondary_motion}. "
+                    f"[{t_mid}] Continuous Steadicam and Frame-Link evolution: {cam_sentence}. "
+                    f"[{t_arrive}] Dramatic arrival and shallow-DoF optical settle onto {next_subject} in {next_location}. "
+                    f"One unbroken 10-second continuous long take, {style_cue}. {action_clause} "
+                    f"Plain unmarked {anti_symbol_surfaces}, {omni_audio_tail}"
+                )
+            else:
+                prompt = (
+                    f"[{t_open}] Opening physical action and foreground pass as {cam_sentence}, "
+                    f"{pacing['speed']} pace ({pacing['easing']}), {secondary_motion}. "
+                    f"[{t_mid}] Continuous Steadicam/crane choreography tracking physical momentum across {setting}. "
+                    f"[{t_arrive}] Dramatic arrival and optical settle: {end_sentence} "
+                    f"One unbroken 10-second continuous long take, {style_cue}. {action_clause} "
+                    f"Plain unmarked {anti_symbol_surfaces}, {omni_audio_tail}"
+                )
+            return _finalize_timecoded_video_prompt(prompt, shot_class=shot_class)
+
+        t_main, t_end = phases[0], phases[1]
+        choreo_lead = _omni12_choreography_lead(clip_duration_sec, shot_class=shot_class)
+        if is_frame_link:
+            prompt = (
+                f"[{t_main}] {choreo_lead}: first frame opens on {hero_subject} in {setting} and flows toward {next_subject}. "
+                f"{cam_sentence}, {pacing['speed']} pace with {pacing['easing']}, {secondary_motion}. "
+                f"[{t_end}] Settles cleanly into {next_subject} in {next_location} with crisp optical depth. "
+                f"One unbroken continuous shot, {style_cue}. {action_clause} "
+                f"Plain unmarked {anti_symbol_surfaces}, {omni_audio_tail}"
+            )
+        else:
+            prompt = (
+                f"[{t_main}] {choreo_lead}: {cam_sentence}, {pacing['speed']} pace ({pacing['easing']}), {secondary_motion}. "
+                f"[{t_end}] {end_sentence} One unbroken continuous shot, {style_cue}. {action_clause} "
+                f"Plain unmarked {anti_symbol_surfaces}, {omni_audio_tail}"
+            )
+        return _finalize_timecoded_video_prompt(prompt, shot_class=shot_class)
+
+    t_main, t_end = phases[0], phases[-1]
     if transition_mode == "frame_link" and not is_veo_lite and next_subject and next_location and not is_final:
         cam_sentence = move_spec["frame_link_template"].format(
             subject=hero_subject,
@@ -321,7 +470,7 @@ def build_timecoded_video_prompt(
             f"[{t_end}] Settles smoothly into the target composition. One unbroken continuous shot, "
             f"{style_cue}. {person_clause} Silent visual storytelling, no talking, no lip movement, no music."
         )
-        return re.sub(r"\s{2,}", " ", prompt).strip()
+        return _finalize_timecoded_video_prompt(prompt, shot_class=shot_class)
 
     cam_sentence = move_spec["camera_template"].format(subject=hero_subject, setting=setting)
     if active_lens != "wide 28mm lens":
@@ -337,7 +486,6 @@ def build_timecoded_video_prompt(
         prop_val = seam_prop or ("dark architectural opening" if exit_seam == "dark_opening" else "foreground pillar edge")
         end_sentence = seam_spec["final_second_sentence"].format(prop=prop_val)
 
-    foley_clause = str(diegetic_audio_cue or "").strip()
     if foley_clause:
         person_clause = (
             "People perform dynamic physical action with closed mouths and no spoken dialogue; only natural action and camera movement."
@@ -373,4 +521,4 @@ def build_timecoded_video_prompt(
             f"Plain unmarked surfaces, {non_lite_tail}"
         )
 
-    return re.sub(r"\s{2,}", " ", prompt).strip()
+    return _finalize_timecoded_video_prompt(prompt, shot_class=shot_class)

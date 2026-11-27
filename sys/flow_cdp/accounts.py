@@ -646,10 +646,15 @@ async def _evaluate_credits_fallback(sess: Any) -> dict[str, Any]:
 
 async def _scan_single_profile(profile_cfg: dict[str, Any], ledger: Any) -> dict[str, Any]:
     from .cdp_direct_client import DirectCDPProfileSession
+    from .resource_locks import clear_profile_unauthenticated, mark_profile_unauthenticated
     pid = profile_cfg.get("id") or profile_cfg.get("name")
     sess = DirectCDPProfileSession(profile_cfg)
     try:
         await sess.connect()
+        has_at = await sess.evaluate("Boolean(window.WIZ_global_data && window.WIZ_global_data.SNlM0e)")
+        if not has_at:
+            mark_profile_unauthenticated(str(pid))
+            raise RuntimeError(f"Profile {pid} hasAt=False (not signed in on Flow)")
         res = None
         if hasattr(sess, "query_credits"):
             res = await sess.query_credits()
@@ -661,6 +666,7 @@ async def _scan_single_profile(profile_cfg: dict[str, Any], ledger: Any) -> dict
                 pass
         if res is None:
             res = await _evaluate_credits_fallback(sess)
+        clear_profile_unauthenticated(str(pid))
 
         remaining = 1000
         sub = 1000
