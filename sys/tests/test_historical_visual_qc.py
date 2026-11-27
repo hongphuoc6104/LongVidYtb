@@ -22,18 +22,29 @@ Validates:
 from __future__ import annotations
 
 import json
+import shutil
+import subprocess
 from pathlib import Path
 
 import numpy as np
 from fx_warehouse.historical_visual_qc import (
     HISTORICAL_ANACHRONISM_CATALOG,
     MAX_THUMBNAIL_BYTES,
+    V12_GATE_ANTI_SLIDESHOW_60S,
+    V12_GATE_LIVE_COVERAGE,
+    V12_GATE_SLOW_GIANT_MAP,
+    V12_GATE_ZERO_BOX_HUD,
     audit_and_sanitize_historical_prompt,
+    audit_anti_slideshow_first60s_gate,
     audit_full_episode_visual_readiness,
+    audit_live_coverage_diversity_gate,
     audit_rendered_2k_frame,
+    audit_slow_giant_map_v9_gate,
     audit_sub_cut_crop_geometry,
+    audit_v12_hard_gates,
+    audit_zero_box_hud_gate,
 )
-from PIL import Image
+from PIL import Image, ImageDraw
 
 
 def _make_crisp_cinema_image(
@@ -405,9 +416,10 @@ def test_full_episode_readiness_short_and_long_specs(tmp_path: Path) -> None:
         "beats": [
             {
                 "beat_id": "B00",
+                "shot_class": "MACRO_PROP",
                 "prompt": (
-                    "Trần Dynasty vanguard commander in dark lacquered lamellar armor gripping an "
-                    "iron-tipped spear on a wooden river galley, Shot on 35mm Kodak Vision3 500T film, "
+                    "Extreme 100mm macro close-up of Trần Dynasty ironwood river stake and lacquered "
+                    "lamellar armor plate, no human face, Shot on 35mm Kodak Vision3 500T film, "
                     "crisp optical clarity, no text, no watermarks."
                 ),
                 "sub_cut_ratio": 0.48,
@@ -439,9 +451,12 @@ def test_full_episode_readiness_short_and_long_specs(tmp_path: Path) -> None:
             "beats": [
                 {
                     "beat_id": "CO_01",
+                    "shot_class": "MACRO_PROP",
+                    "motion_engine": "flow_video",
+                    "duration_sec": 3.2,
                     "prompt": (
-                        "Emperor Quang Trung in crimson cloth war tunic and lacquered leather cuirass "
-                        "atop an armored war elephant, bronze cannons gleaming, Shot on 35mm Kodak Vision3 "
+                        "100mm macro close-up of bronze cannon fuse and lacquered leather cuirass "
+                        "of Emperor Quang Trung, no human face, Shot on 35mm Kodak Vision3 "
                         "500T film, crisp optical clarity, no text."
                     ),
                 }
@@ -453,11 +468,14 @@ def test_full_episode_readiness_short_and_long_specs(tmp_path: Path) -> None:
                 "beats": [
                     {
                         "beat_id": "B_QING_01",
+                        "shot_class": "OTS_DIRTY",
+                        "motion_engine": "flow_video",
+                        "duration_sec": 3.4,
                         "hero_subject": "Qing commander Tôn Sĩ Nghị and Manchu bannermen",
                         "prompt": (
-                            "Qing general Tôn Sĩ Nghị and Eight Banners troops with shaved-forehead Qing queue "
-                            "in iron-studded dingjia brigandine armor inside Thăng Long camp, Shot on 35mm film, "
-                            "crisp optical clarity, no text."
+                            "Over-the-shoulder shot of Qing general Tôn Sĩ Nghị and Eight Banners troops "
+                            "with shaved-forehead Qing queue in iron-studded dingjia brigandine armor "
+                            "inside Thăng Long camp, Shot on 35mm film, crisp optical clarity, no text."
                         ),
                     }
                 ],
@@ -499,17 +517,425 @@ def test_full_episode_readiness_short_and_long_specs(tmp_path: Path) -> None:
     assert len(rep_bad["blocking_issues"]) >= 3
 
 
-def test_real_v7_bach_dang_1288_episode_passes_readiness_if_present() -> None:
-    repo_root = Path(__file__).resolve().parents[2]
-    v7_dir = repo_root / "video" / "vn_su_ke_lai_v7_bach_dang_1288_short"
-    if not (v7_dir / "short_spec.json").is_file():
-        assert not v7_dir.is_file()
-        return
+# ---------------------------------------------------------------------------
+# 5. V12 Hard Auto-Fail Gates (Gate A..Gate D) — Active FAIL & PASS Tests
+# ---------------------------------------------------------------------------
 
-    report = audit_full_episode_visual_readiness(v7_dir)
-    assert report["passed"] is True, f"Unexpected blocking issues: {report['blocking_issues']}"
-    assert report["summary"]["total_beats"] == 20
-    assert report["summary"]["prompt_violations_count"] == 0
-    assert report["summary"]["crop_violations_count"] == 0
-    assert report["summary"]["frame_failures_count"] == 0
-    assert report["summary"]["thumbnail_failures_count"] == 0
+
+def _ffmpeg_bin() -> str:
+    for cand in ("ffmpeg", "/home/hongphuoc6104/.local/bin/ffmpeg", "/usr/bin/ffmpeg"):
+        found = shutil.which(cand)
+        if found:
+            return found
+    raise RuntimeError("ffmpeg not found in environment")
+
+
+def _render_synthetic_dark_pill_and_vs_frame(
+    width: int = 1080,
+    height: int = 1920,
+    *,
+    draw_dark_pill: bool = False,
+    draw_gold_stripe: bool = False,
+    draw_red_vs: bool = False,
+) -> Image.Image:
+    """Synthesize a live-video cinema frame optionally stamped with banned V7 dark pills / red VS plaques."""
+    im = _make_crisp_cinema_image(width, height, seed=99)
+    draw = ImageDraw.Draw(im)
+
+    if draw_dark_pill:
+        # Mimic render_prestige_dateline_png / render_v7_stat_versus_png dark obsidian banner
+        x0, y0, x1, y1 = int(width * 0.08), int(height * 0.16), int(width * 0.92), int(height * 0.27)
+        draw.rounded_rectangle([x0, y0, x1, y1], radius=16, fill=(10, 14, 22))
+        if draw_gold_stripe:
+            draw.rounded_rectangle([x0, y0, x1, y1], radius=16, outline=(232, 190, 88), width=4)
+            draw.rectangle([x0, y0 + 10, x0 + 10, y1 - 10], fill=(232, 190, 88))
+        # Draw crisp bright headline bar/glyph blocks inside the dark slab
+        for bx in range(x0 + 60, x1 - 80, 44):
+            draw.rectangle([bx, y0 + 48, bx + 22, y0 + 96], fill=(248, 240, 220))
+
+    if draw_red_vs:
+        # Mimic render_v7_stat_versus_png crimson VS plaque with gold rim & white "VS" strokes
+        cx, cy = width // 2, int(height * 0.45)
+        rx0, ry0, rx1, ry1 = cx - 72, cy - 48, cx + 72, cy + 48
+        draw.rounded_rectangle([rx0, ry0, rx1, ry1], radius=14, fill=(198, 44, 34), outline=(255, 216, 102), width=4)
+        # Draw bold white "VS" glyph geometry
+        draw.line([(cx - 42, cy - 22), (cx - 20, cy + 22), (cx + 2, cy - 22)], fill=(255, 250, 240), width=10)
+        draw.rectangle([cx + 14, cy - 22, cx + 44, cy - 12], fill=(255, 250, 240))
+        draw.rectangle([cx + 14, cy - 4, cx + 44, cy + 6], fill=(255, 250, 240))
+        draw.rectangle([cx + 14, cy + 12, cx + 44, cy + 22], fill=(255, 250, 240))
+
+    return im
+
+
+def test_gate_a_zero_box_hud_rejects_spec_boxes_and_rendered_dark_pill_and_vs(tmp_path: Path) -> None:
+    # FAIL Case 1: Spec requesting v7_stat_versus with VS badge and rounded_rectangle dark banner
+    bad_spec = {
+        "job_id": "bad_v7_hud_short",
+        "overlay_mode": "v7_boxed",
+        "hud_stamps": [
+            {"kind": "v7_stat_versus", "vs_badge": True, "text": "10 NGÀY VS TRU DI 3 HỌ"},
+            {"kind": "prestige_dateline", "shape": "rounded_rectangle", "left_stripe": True},
+        ],
+    }
+    res_spec_fail = audit_zero_box_hud_gate(bad_spec)
+    assert res_spec_fail["gate_id"] == V12_GATE_ZERO_BOX_HUD
+    assert res_spec_fail["passed"] is False
+    assert "FORBIDDEN_VS_BADGE_HUD" in res_spec_fail["issues"]
+    assert "FORBIDDEN_ROUNDED_RECTANGLE_BANNER" in res_spec_fail["issues"]
+
+    # FAIL Case 2: Rendered RGB frame with dark horizontal pill slab + gold border over live video
+    pill_png = tmp_path / "defect_dark_pill.png"
+    _render_synthetic_dark_pill_and_vs_frame(draw_dark_pill=True, draw_gold_stripe=True).save(pill_png)
+    res_pill = audit_zero_box_hud_gate(frame_paths=[pill_png])
+    assert res_pill["passed"] is False
+    assert "DARK_HORIZONTAL_PILL_SLAB_DETECTED" in res_pill["issues"]
+
+    # FAIL Case 3: Rendered RGB frame with red "VS" plaque over live video
+    vs_png = tmp_path / "defect_red_vs.png"
+    _render_synthetic_dark_pill_and_vs_frame(draw_red_vs=True).save(vs_png)
+    res_vs = audit_zero_box_hud_gate(frame_paths=[vs_png])
+    assert res_vs["passed"] is False
+    assert "RED_VS_PLAQUE_DETECTED" in res_vs["issues"]
+
+    # FAIL Case 4: Standalone RGBA dark boxed HUD PNG (cropped banner like render_prestige_dateline_png)
+    rgba_box = Image.new("RGBA", (960, 140), (0, 0, 0, 0))
+    d4 = ImageDraw.Draw(rgba_box)
+    d4.rounded_rectangle([20, 12, 940, 128], radius=12, fill=(10, 14, 22, 220), outline=(232, 190, 88, 230), width=3)
+    d4.rectangle([80, 48, 420, 88], fill=(248, 244, 232, 255))
+    rgba_path = tmp_path / "rgba_boxed_hud.png"
+    rgba_box.save(rgba_path)
+    res_rgba = audit_zero_box_hud_gate(frame_paths=[rgba_path])
+    assert res_rgba["passed"] is False
+    assert "DARK_BOX_HUD_OVERLAY_DETECTED" in res_rgba["issues"]
+
+    # PASS Case: Pure cinema / zero-box spec + clean crisp frame without boxes or VS plaques
+    clean_frame = tmp_path / "clean_cinema.jpg"
+    _make_crisp_cinema_image(1080, 1920, seed=11).save(clean_frame, quality=92)
+    clean_spec = {
+        "job_id": "clean_v12_short",
+        "overlay_mode": "pure_cinema",
+        "hud_stamps": [
+            {"kind": "chronicle_stamp", "text": "BẠCH ĐẰNG 1288"},
+        ],
+    }
+    res_pass = audit_zero_box_hud_gate(clean_spec, frame_paths=[clean_frame])
+    assert res_pass["passed"] is True
+    assert res_pass["issues"] == []
+
+
+def test_gate_b_slow_giant_map_v9_rejects_tiny_cluttered_fast_maps_and_passes_v9(tmp_path: Path) -> None:
+    # FAIL Case 1: V8 anti-example (tiny font <5% H, >3 words/label, >2 simultaneous, side gauge, bottom bar, 4.8s)
+    bad_v8_map_spec = {
+        "format_profile": "short_9x16",
+        "resolution": "1440x2560",
+        "tactical_map_sequences": [
+            {
+                "map_id": "V8_CHI_LANG_DEFECT",
+                "duration_sec": 4.8,
+                "font_px": 29,  # 29/2560 = 1.13% << 5.0%
+                "show_tide_bar": True,
+                "show_force_ratio_bar": True,
+                "phase_label": "PHA I TRẦN LỰU 5 LẦN GIẢ BẠI NHỬ KỴ BINH QUA QUỶ MÔN QUAN",
+                "callouts": [
+                    {"label": "VÁCH ĐÁ CAI KINH", "sub": "NÚI ĐÁ DỰNG ĐỨNG", "t_appear": 0.0, "t_disappear": 1.0},
+                    {"label": "1 VẠN KỴ LIỄU THĂNG", "t_appear": 0.0, "t_disappear": 1.0},
+                    {"label": "NÚI MÃ YÊN", "t_appear": 0.0, "t_disappear": 1.0},
+                ],
+            }
+        ],
+    }
+    res_fail = audit_slow_giant_map_v9_gate(bad_v8_map_spec, format_profile="short_9x16")
+    assert res_fail["gate_id"] == V12_GATE_SLOW_GIANT_MAP
+    assert res_fail["passed"] is False
+    for expected_issue in (
+        "MAP_FONT_HEIGHT_BELOW_5PCT",
+        "MAP_LABEL_EXCEEDS_3_WORDS",
+        "MAP_TOO_MANY_SIMULTANEOUS_LABELS",
+        "MAP_SIDE_GAUGE_FORBIDDEN",
+        "MAP_BOTTOM_TROOP_BAR_FORBIDDEN",
+        "MAP_DURATION_BELOW_6S",
+    ):
+        assert expected_issue in res_fail["issues"]
+
+    # FAIL Case 2: Rendered map PNG containing a bottom split force-ratio bar
+    bad_map_img = Image.new("RGB", (1080, 1920), (32, 36, 42))
+    md = ImageDraw.Draw(bad_map_img)
+    # Draw V8 bottom red-vs-gold troop ratio bar
+    md.rectangle([100, 1660, 540, 1710], fill=(190, 42, 36))
+    md.rectangle([540, 1660, 980, 1710], fill=(224, 184, 82))
+    bad_map_png = tmp_path / "bad_map_with_bar.png"
+    bad_map_img.save(bad_map_png)
+    res_bar = audit_slow_giant_map_v9_gate(frame_paths=[bad_map_png])
+    assert res_bar["passed"] is False
+    assert "MAP_BOTTOM_TROOP_BAR_CHROME_DETECTED" in res_bar["issues"]
+
+    # PASS Case 1: Clean V9 Slow Giant Map on Long 16:9 (9.0s, >=5% H, <=3 words, <=2 simultaneous, 0 bars)
+    good_v9_long = {
+        "format_profile": "long_16x9",
+        "resolution": "1920x1080",
+        "tactical_map_sequences": [
+            {
+                "map_id": "V9_CHI_LANG",
+                "duration_sec": 9.0,
+                "map_font_height_ratio": 0.062,
+                "show_tide_bar": False,
+                "show_force_ratio_bar": False,
+                "act_1_terrain_lock": {
+                    "theater_stamp": "CHI LĂNG 1427",
+                    "landmark_pin": {"label": "ẢI HIỂM ĐỊA"},
+                },
+                "act_2_units": [
+                    {"label": "LIỄU THĂNG"},
+                    {"label": "TRẦN LỰU"},
+                ],
+                "act_3_maneuver": {
+                    "impact_stamp": "BẪY MÃ YÊN",
+                },
+            }
+        ],
+    }
+    res_pass_long = audit_slow_giant_map_v9_gate(good_v9_long, format_profile="long_16x9")
+    assert res_pass_long["passed"] is True
+    assert res_pass_long["issues"] == []
+
+    # PASS Case 2: Seamless 2-beat Short split totaling 6.6s (>= 6.0s)
+    good_v9_short_split = {
+        "format_profile": "short_9x16",
+        "resolution": "1440x2560",
+        "tactical_map_sequences": [
+            {
+                "map_id": "MAP_SPLIT_A",
+                "split_group_id": "chi_lang_pair",
+                "duration_sec": 3.2,
+                "font_px": 144,  # 144/2560 = 5.625% >= 5.0%
+                "show_tide_bar": False,
+                "show_force_ratio_bar": False,
+                "labels": [{"label": "CHI LĂNG 1427", "t_appear": 0.0, "t_disappear": 1.0}],
+            },
+            {
+                "map_id": "MAP_SPLIT_B",
+                "split_group_id": "chi_lang_pair",
+                "duration_sec": 3.4,
+                "font_px": 144,
+                "show_tide_bar": False,
+                "show_force_ratio_bar": False,
+                "labels": [
+                    {"label": "LIỄU THĂNG", "t_appear": 0.0, "t_disappear": 0.5},
+                    {"label": "BẪY MÃ YÊN", "t_appear": 0.5, "t_disappear": 1.0},
+                ],
+            },
+        ],
+    }
+    res_pass_split = audit_slow_giant_map_v9_gate(good_v9_short_split, format_profile="short_9x16")
+    assert res_pass_split["passed"] is True
+    assert res_pass_split["issues"] == []
+
+
+def test_gate_c_anti_slideshow_first60s_catches_real_frozen_mp4_and_static_specs(tmp_path: Path) -> None:
+    ffmpeg = _ffmpeg_bin()
+
+    # 1. Real synthetic frozen 15s Long MP4 (static PNG held for 15s -> must FAIL freezedetect=n=-50dB:d=3.5!)
+    static_img = tmp_path / "frozen_slide.png"
+    _make_crisp_cinema_image(640, 360, seed=5).save(static_img)
+    frozen_mp4 = tmp_path / "frozen_15s_long.mp4"
+    proc_freeze = subprocess.run(
+        [
+            ffmpeg, "-hide_banner", "-loglevel", "error", "-y",
+            "-loop", "1", "-i", str(static_img),
+            "-t", "15", "-r", "15", "-pix_fmt", "yuv420p", "-c:v", "libx264", "-preset", "ultrafast",
+            str(frozen_mp4),
+        ],
+        capture_output=True,
+        check=False,
+    )
+    assert proc_freeze.returncode == 0 and frozen_mp4.is_file()
+
+    res_frozen_mp4 = audit_anti_slideshow_first60s_gate(video_path=frozen_mp4, format_profile="long_16x9")
+    assert res_frozen_mp4["gate_id"] == V12_GATE_ANTI_SLIDESHOW_60S
+    assert res_frozen_mp4["passed"] is False
+    assert "SLIDESHOW_FREEZE_DETECTED_FIRST60S" in res_frozen_mp4["issues"]
+    assert res_frozen_mp4["freezedetect"]["ffmpeg_filter"] == "freezedetect=n=-50dB:d=3.5"
+    assert len(res_frozen_mp4["freezedetect"]["freeze_events"]) >= 1
+
+    # 2. Real synthetic continuously-moving 15s Long MP4 (0 freezes -> must PASS!)
+    moving_mp4 = tmp_path / "moving_15s_long.mp4"
+    proc_move = subprocess.run(
+        [
+            ffmpeg, "-hide_banner", "-loglevel", "error", "-y",
+            "-f", "lavfi", "-i", "testsrc2=size=640x360:rate=15:duration=15",
+            "-pix_fmt", "yuv420p", "-c:v", "libx264", "-preset", "ultrafast",
+            str(moving_mp4),
+        ],
+        capture_output=True,
+        check=False,
+    )
+    assert proc_move.returncode == 0 and moving_mp4.is_file()
+
+    res_moving_mp4 = audit_anti_slideshow_first60s_gate(video_path=moving_mp4, format_profile="long_16x9")
+    assert res_moving_mp4["passed"] is True
+    assert res_moving_mp4["freezedetect"]["freeze_events"] == []
+
+    # 3. Failing Long spec: static PNG hold in 0-60s AND 0-15s ASL > 3.8s (5.5s/beat)
+    bad_long_spec = {
+        "format_profile": "long_16x9",
+        "cold_open": {
+            "beats": [
+                {"beat_id": "CO_01", "duration_sec": 5.5, "asset_mode": "static_png"},
+                {"beat_id": "CO_02", "duration_sec": 5.5, "asset_mode": "tpad_clone"},
+                {"beat_id": "CO_03", "duration_sec": 5.5, "motion_engine": "flow_video"},
+            ]
+        },
+    }
+    res_spec_fail = audit_anti_slideshow_first60s_gate(bad_long_spec, format_profile="long_16x9")
+    assert res_spec_fail["passed"] is False
+    assert "STATIC_PNG_HOLD_IN_FIRST60S" in res_spec_fail["issues"]
+    assert "FIRST15S_ASL_EXCEEDS_3_8S" in res_spec_fail["issues"]
+
+    # 4. Passing Long spec: 5 living beats in 0-15s (ASL 3.0s <= 3.8s) and 0 static PNG holds
+    good_long_spec = {
+        "format_profile": "long_16x9",
+        "cold_open": {
+            "beats": [
+                {"beat_id": f"CO_{i:02d}", "duration_sec": 3.0, "motion_engine": "flow_video"}
+                for i in range(6)
+            ]
+        },
+    }
+    res_spec_pass = audit_anti_slideshow_first60s_gate(good_long_spec, video_path=moving_mp4, format_profile="long_16x9")
+    assert res_spec_pass["passed"] is True
+    assert res_spec_pass["asl_0_15s"] == 3.0
+    assert res_spec_pass["static_png_beats_0_60s"] == []
+
+
+def test_gate_d_live_coverage_diversity_enforces_ratios_and_portrait_streak() -> None:
+    # FAIL Case 1: Short with < 30% non-portrait AND 4 consecutive portraits
+    bad_short = {
+        "format_profile": "short_9x16",
+        "beats": [
+            {"beat_id": "B00", "shot_class": "MEDIUM_PORTRAIT"},
+            {"beat_id": "B01", "shot_class": "WIDE_PORTRAIT"},
+            {"beat_id": "B02", "shot_class": "BACK_PORTRAIT"},
+            {"beat_id": "B03", "shot_class": "FRONT_PORTRAIT"},
+            {"beat_id": "B04", "shot_class": "MACRO_PROP"},  # Only 1/5 = 20% < 30%
+        ],
+    }
+    r_bad_short = audit_live_coverage_diversity_gate(bad_short, format_profile="short_9x16")
+    assert r_bad_short["gate_id"] == V12_GATE_LIVE_COVERAGE
+    assert r_bad_short["passed"] is False
+    assert "SHORT_NON_PORTRAIT_COVERAGE_BELOW_30PCT" in r_bad_short["issues"]
+    assert "CONSECUTIVE_PORTRAIT_STREAK_GTE_3" in r_bad_short["issues"]
+    assert r_bad_short["max_consecutive_portrait_run"] == 4
+
+    # FAIL Case 2: Long with < 15% MACRO_PROP (only 1/10 = 10%)
+    bad_long = {
+        "format_profile": "long_16x9",
+        "beats": [
+            {"beat_id": "L00", "shot_class": "MACRO_PROP"},
+            {"beat_id": "L01", "shot_class": "MEDIUM_PORTRAIT"},
+            {"beat_id": "L02", "shot_class": "OTS_DIRTY"},
+            {"beat_id": "L03", "shot_class": "WIDE_PORTRAIT"},
+            {"beat_id": "L04", "shot_class": "GROUND_MUD"},
+            {"beat_id": "L05", "shot_class": "MEDIUM_PORTRAIT"},
+            {"beat_id": "L06", "shot_class": "GODS_EYE"},
+            {"beat_id": "L07", "shot_class": "WIDE_PORTRAIT"},
+            {"beat_id": "L08", "shot_class": "ENV_SENSORY"},
+            {"beat_id": "L09", "shot_class": "EDITORIAL_STAGE_CUTAWAY"},
+        ],
+    }
+    r_bad_long = audit_live_coverage_diversity_gate(bad_long, format_profile="long_16x9")
+    assert r_bad_long["passed"] is False
+    assert "LONG_MACRO_PROP_COVERAGE_BELOW_15PCT" in r_bad_long["issues"]
+
+    # PASS Case 1: Short with 50% non-portrait coverage and max 2 consecutive portraits
+    good_short = {
+        "format_profile": "short_9x16",
+        "beats": [
+            {"beat_id": "B00", "shot_class": "MACRO_PROP"},
+            {"beat_id": "B01", "shot_class": "MEDIUM_PORTRAIT"},
+            {"beat_id": "B02", "shot_class": "OTS_DIRTY"},
+            {"beat_id": "B03", "shot_class": "WIDE_PORTRAIT"},
+            {"beat_id": "B04", "shot_class": "GROUND_MUD"},
+            {"beat_id": "B05", "shot_class": "GODS_EYE"},
+            {"beat_id": "B06", "shot_class": "MEDIUM_PORTRAIT"},
+            {"beat_id": "B07", "shot_class": "ENV_SENSORY"},
+        ],
+    }
+    r_good_short = audit_live_coverage_diversity_gate(good_short, format_profile="short_9x16")
+    assert r_good_short["passed"] is True
+    assert r_good_short["non_portrait_ratio"] >= 0.30
+    assert r_good_short["max_consecutive_portrait_run"] <= 2
+
+    # PASS Case 2: Long with 25% MACRO_PROP (>= 15%) and zero >= 3 portrait streaks
+    good_long = {
+        "format_profile": "long_16x9",
+        "beats": [
+            {"beat_id": "L00", "shot_class": "MACRO_PROP"},
+            {"beat_id": "L01", "shot_class": "WIDE_PORTRAIT"},
+            {"beat_id": "L02", "shot_class": "OTS_DIRTY"},
+            {"beat_id": "L03", "shot_class": "MACRO_PROP"},
+            {"beat_id": "L04", "shot_class": "GROUND_MUD"},
+            {"beat_id": "L05", "shot_class": "MEDIUM_PORTRAIT"},
+            {"beat_id": "L06", "shot_class": "GODS_EYE"},
+            {"beat_id": "L07", "shot_class": "EDITORIAL_STAGE_CUTAWAY"},
+        ],
+    }
+    r_good_long = audit_live_coverage_diversity_gate(good_long, format_profile="long_16x9")
+    assert r_good_long["passed"] is True
+    assert r_good_long["macro_prop_ratio"] == 0.25
+
+
+def test_unified_audit_v12_hard_gates_aggregates_all_4_gates(tmp_path: Path) -> None:
+    pill_png = tmp_path / "pill.png"
+    _render_synthetic_dark_pill_and_vs_frame(draw_dark_pill=True, draw_gold_stripe=True, draw_red_vs=True).save(pill_png)
+
+    combined_bad = {
+        "format_profile": "long_16x9",
+        "resolution": "1920x1080",
+        "hud_stamps": [{"kind": "v7_stat_versus", "vs_badge": True}],
+        "tactical_map_sequences": [{"map_id": "M0", "duration_sec": 3.5, "font_px": 20, "show_tide_bar": True}],
+        "cold_open": {
+            "beats": [
+                {"beat_id": "CO_01", "duration_sec": 6.0, "asset_mode": "static_png", "shot_class": "MEDIUM_PORTRAIT"},
+                {"beat_id": "CO_02", "duration_sec": 6.0, "asset_mode": "static_png", "shot_class": "WIDE_PORTRAIT"},
+                {"beat_id": "CO_03", "duration_sec": 6.0, "asset_mode": "static_png", "shot_class": "BACK_PORTRAIT"},
+            ]
+        },
+    }
+    rep = audit_v12_hard_gates(combined_bad, frame_paths=[pill_png], format_profile="long_16x9")
+    assert rep["passed"] is False
+    assert rep["auto_fail_triggered"] is True
+    assert set(rep["failed_gates"]) == {
+        V12_GATE_ZERO_BOX_HUD,
+        V12_GATE_SLOW_GIANT_MAP,
+        V12_GATE_ANTI_SLIDESHOW_60S,
+        V12_GATE_LIVE_COVERAGE,
+    }
+
+
+def test_gate_a_zero_box_hud_does_not_false_positive_on_do_paper_folio_rig(tmp_path: Path) -> None:
+    """RIG_D_FOLIO_HIGHLIGHT places a warm Dó-paper sheet below a pure dark obsidian margin (bright_ratio == 0.0)."""
+    im = Image.new("RGB", (1440, 2560), (10, 12, 16))
+    draw = ImageDraw.Draw(im)
+    # Warm parchment Dó-paper folio starting at y=160 (gold-ish top edge touching empty dark obsidian [0..160])
+    draw.rectangle([108, 160, 1380, 1410], fill=(214, 198, 162))
+    draw.rectangle([216, 740, 1270, 845], fill=(252, 224, 118))
+    folio_png = tmp_path / "rig_d_folio_highlight.png"
+    im.save(folio_png)
+
+    res = audit_zero_box_hud_gate(frame_paths=[folio_png])
+    assert res["passed"] is True
+    assert res["issues"] == []
+
+    # Tilted 45-degree NATO military diamond unit counter on tan topographic map must NOT trigger RED_VS_PLAQUE_DETECTED
+    nato_im = Image.new("RGB", (1440, 2560), (168, 152, 118))
+    nd = ImageDraw.Draw(nato_im)
+    nd.polygon([(720, 1160), (820, 1230), (720, 1300), (620, 1230)], fill=(182, 36, 28), outline=(235, 205, 120))
+    nd.line([(665, 1205), (775, 1255)], fill=(248, 244, 232), width=5)
+    nd.line([(665, 1255), (775, 1205)], fill=(248, 244, 232), width=5)
+    nato_png = tmp_path / "v9_nato_diamond_unit.png"
+    nato_im.save(nato_png)
+    res_nato = audit_zero_box_hud_gate(frame_paths=[nato_png])
+    assert res_nato["passed"] is True
+    assert res_nato["issues"] == []
+
+
