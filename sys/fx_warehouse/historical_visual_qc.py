@@ -1311,6 +1311,22 @@ def audit_full_episode_visual_readiness(spec_path: Path) -> dict[str, Any]:
     frame_failures_count = sum(1 for a in frame_audits if not a["passed"])
     thumbnail_failures_count = sum(1 for a in thumbnail_audits if not a["passed"])
 
+    # 5. V12 4 Hard Auto-Fail Gates (spec + discovered frames + rendered MP4 if present)
+    video_candidates = sorted(
+        p for p in episode_dir.glob("*.mp4") if p.is_file() and "_raw" not in p.stem.lower()
+    )
+    primary_video = video_candidates[0] if video_candidates else None
+    v12_gates_report = audit_v12_hard_gates(
+        spec=spec,
+        format_profile=format_profile,
+        frame_paths=story_frames,
+        video_path=primary_video,
+    )
+    if not v12_gates_report["passed"]:
+        for issue in v12_gates_report["blocking_issues"]:
+            if issue not in blocking_issues:
+                blocking_issues.append(issue)
+
     passed = len(blocking_issues) == 0
     return {
         "passed": passed,
@@ -1331,8 +1347,11 @@ def audit_full_episode_visual_readiness(spec_path: Path) -> dict[str, Any]:
             "frame_failures_count": frame_failures_count,
             "thumbnails_audited": len(thumbnail_audits),
             "thumbnail_failures_count": thumbnail_failures_count,
-            "rendered_assets_present": bool(frame_audits or thumbnail_audits),
+            "rendered_assets_present": bool(frame_audits or thumbnail_audits or primary_video),
+            "v12_gates_passed": v12_gates_report["passed"],
+            "v12_failed_gates": v12_gates_report["failed_gates"],
         },
+        "v12_hard_gates": v12_gates_report,
         "thumbnail_prompt_audit": thumbnail_prompt_audit,
         "prompt_audits": prompt_audits,
         "crop_audits": crop_audits,
@@ -1342,14 +1361,1768 @@ def audit_full_episode_visual_readiness(spec_path: Path) -> dict[str, Any]:
     }
 
 
+# ---------------------------------------------------------------------------
+# V12 4 Hard Auto-Fail Visual QC Gates
+# ---------------------------------------------------------------------------
+
+V12_GATE_ZERO_BOX_HUD: str = "ZERO_BOX_HUD_GATE"
+V12_GATE_SLOW_GIANT_MAP: str = "SLOW_GIANT_MAP_V9_GATE"
+V12_GATE_ANTI_SLIDESHOW_60S: str = "ANTI_SLIDESHOW_FIRST60S_GATE"
+V12_GATE_LIVE_COVERAGE: str = "LIVE_COVERAGE_DIVERSITY_GATE"
+
+# Gate A thresholds & forbidden boxed HUD / VS badge catalog
+FORBIDDEN_BOXED_HUD_KINDS: frozenset[str] = frozenset(
+    {
+        "v7_stat_versus",
+        "v7_hook_headline",
+        "prestige_dateline",
+        "stat_versus",
+        "vs_badge",
+        "vs_card",
+        "versus_card",
+        "pill_badge",
+        "dark_pill",
+        "dark_banner",
+        "rounded_rectangle",
+        "boxed_hud",
+        "kahoot_quiz",
+        "quiz_box",
+        "hp_bar",
+        "health_bar",
+        "cad_modal",
+        "sniper_reticle",
+        "sniper_crosshair",
+        "pov_survival_gauge",
+        "myth_vs_chronicle_split",
+        "commander_duel_1v1",
+        "forensic_evidence_stamp_boxed",
+        "weapon_engineering_spec_boxed",
+        "counterfactual_branch_stamp_boxed",
+    }
+)
+FORBIDDEN_OVERLAY_MODES: frozenset[str] = frozenset(
+    {"legacy", "v7_boxed", "boxed", "hud_boxes", "v7_legacy"}
+)
+
+# Gate B thresholds (tactical_battle_map_v9)
+MIN_MAP_FONT_HEIGHT_RATIO: float = 0.050
+MAX_MAP_WORDS_PER_LABEL: int = 3
+MAX_MAP_SIMULTANEOUS_LABELS: int = 2
+MIN_MAP_DURATION_SEC: float = 6.0
+
+# Gate C thresholds (Long 0-60s anti-slideshow)
+FIRST_15S_MAX_ASL_SEC: float = 3.8
+FIRST_60S_FREEZE_DURATION_SEC: float = 3.5
+FIRST_60S_FREEZE_NOISE_DB: str = "-50dB"
+FIRST_60S_WINDOW_SEC: float = 60.0
+
+STATIC_HOLD_MODES: frozenset[str] = frozenset(
+    {
+        "static",
+        "static_png",
+        "static_image",
+        "static_jpg",
+        "static_hold",
+        "tpad_clone",
+        "tpad_stop_clone",
+        "beluga_static",
+        "slideshow",
+        "still",
+        "still_image",
+        "png_hold",
+    }
+)
+ANIMATED_MOTION_MODES: frozenset[str] = frozenset(
+    {
+        "flow_video",
+        "living_clip",
+        "veo",
+        "veo_3_1_lite",
+        "omni",
+        "omni_1_2_flash",
+        "macaron_cookie",
+        "tactical_map_v9",
+        "tactical_battle_map_v9",
+        "gis_map",
+        "tactical_map",
+        "analytical_rig",
+        "rig_a",
+        "rig_b",
+        "rig_c",
+        "rig_d",
+        "rig_e",
+        "rig_f",
+        "parallax_30fps",
+        "multiplane_parallax",
+        "gpu_parallax",
+        "editorial_stage_cutaway",
+        "mp4",
+    }
+)
+
+# Gate D thresholds & shot-class taxonomy
+NON_PORTRAIT_SHOT_CLASSES: frozenset[str] = frozenset(
+    {
+        "MACRO_PROP",
+        "OTS_DIRTY",
+        "GROUND_MUD",
+        "GODS_EYE",
+        "ENV_SENSORY",
+        "EDITORIAL_STAGE_CUTAWAY",
+    }
+)
+PORTRAIT_FRONT_BACK_CLASSES: frozenset[str] = frozenset(
+    {
+        "WIDE_PORTRAIT",
+        "MEDIUM_PORTRAIT",
+        "FRONT_PORTRAIT",
+        "BACK_PORTRAIT",
+        "HERO_PORTRAIT",
+        "MEDIUM_FRONT",
+        "MEDIUM_BACK",
+        "WIDE_FRONT",
+        "WIDE_BACK",
+        "REAR_SILHOUETTE",
+        "BACK_OF_HEAD",
+        "PORTRAIT",
+        "LOW_ANGLE_HERO",
+        "WIDE_ESTABLISHING",
+        "MEDIUM_TWO_SHOT",
+        "ESTABLISHING_WIDE",
+    }
+)
+SHORT_MIN_NON_PORTRAIT_RATIO: float = 0.30
+LONG_MIN_MACRO_PROP_RATIO: float = 0.15
+MAX_CONSECUTIVE_PORTRAIT_RUN: int = 2  # >= 3 consecutive portrait shots is banned
+
+
+def _resolve_ffmpeg_bin() -> str | None:
+    for cand in ("ffmpeg", "/home/hongphuoc6104/.local/bin/ffmpeg", "/usr/bin/ffmpeg"):
+        found = shutil.which(cand)
+        if found:
+            return found
+    return None
+
+
+def _resolve_ffprobe_bin() -> str | None:
+    for cand in ("ffprobe", "/home/hongphuoc6104/.local/bin/ffprobe", "/usr/bin/ffprobe"):
+        found = shutil.which(cand)
+        if found:
+            return found
+    return None
+
+
+def _probe_media_duration(media_path: Path) -> float | None:
+    ffprobe = _resolve_ffprobe_bin()
+    if not ffprobe or not media_path.is_file():
+        return None
+    try:
+        proc = subprocess.run(
+            [
+                ffprobe,
+                "-v",
+                "error",
+                "-show_entries",
+                "format=duration",
+                "-of",
+                "default=noprint_wrappers=1:nokey=1",
+                str(media_path),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=20,
+            check=False,
+        )
+        if proc.returncode == 0 and proc.stdout.strip():
+            return float(proc.stdout.strip())
+    except Exception:
+        return None
+    return None
+
+
+def _sample_video_frames(video_path: Path, max_frames: int = 8, max_window_sec: float = 60.0) -> list[tuple[float, Image.Image]]:
+    """Extract up to `max_frames` RGB frames from an MP4 file for pixel inspection."""
+    ffmpeg = _resolve_ffmpeg_bin()
+    if not ffmpeg or not video_path.is_file():
+        return []
+    dur = _probe_media_duration(video_path) or 10.0
+    span = max(0.5, min(dur, max_window_sec))
+    count = max(1, min(max_frames, int(round(span))))
+    timestamps = [round((span * (i + 0.5)) / count, 3) for i in range(count)]
+
+    sampled: list[tuple[float, Image.Image]] = []
+    with tempfile.TemporaryDirectory(prefix="v12_qc_frames_") as tmpdir:
+        tmp = Path(tmpdir)
+        for idx, ts in enumerate(timestamps):
+            out_png = tmp / f"f_{idx:02d}.png"
+            proc = subprocess.run(
+                [
+                    ffmpeg,
+                    "-hide_banner",
+                    "-loglevel",
+                    "error",
+                    "-ss",
+                    f"{ts:.3f}",
+                    "-i",
+                    str(video_path),
+                    "-frames:v",
+                    "1",
+                    "-y",
+                    str(out_png),
+                ],
+                capture_output=True,
+                timeout=20,
+                check=False,
+            )
+            if proc.returncode == 0 and out_png.is_file():
+                with Image.open(out_png) as im:
+                    sampled.append((ts, im.copy()))
+    return sampled
+
+
+def _morph_close_1d_horizontal(mask: np.ndarray, radius: int) -> np.ndarray:
+    """Fast 1D horizontal morphological closing (dilate then erode) on a 2D boolean mask."""
+    if radius <= 0 or mask.size == 0:
+        return mask
+    h, w = mask.shape
+    k = 2 * radius + 1
+    if w <= k:
+        return mask
+
+    # Dilate via horizontal sliding sum > 0
+    padded = np.pad(mask.astype(np.int32), ((0, 0), (radius, radius)), mode="edge")
+    cs = np.cumsum(padded, axis=1)
+    cs = np.pad(cs, ((0, 0), (1, 0)), mode="constant", constant_values=0)
+    dilated = (cs[:, k:] - cs[:, :-k]) > 0
+
+    # Erode via horizontal sliding sum == k
+    padded2 = np.pad(dilated.astype(np.int32), ((0, 0), (radius, radius)), mode="edge")
+    cs2 = np.cumsum(padded2, axis=1)
+    cs2 = np.pad(cs2, ((0, 0), (1, 0)), mode="constant", constant_values=0)
+    eroded = (cs2[:, k:] - cs2[:, :-k]) == k
+    return eroded
+
+
+def _find_connected_bboxes(mask: np.ndarray, min_pixels: int = 100) -> list[tuple[int, int, int, int, int]]:
+    """Find axis-aligned bounding boxes (x0, y0, x1, y1, pixel_count) of 4-connected regions."""
+    h, w = mask.shape
+    visited = np.zeros((h, w), dtype=bool)
+    ys, xs = np.nonzero(mask)
+    bboxes: list[tuple[int, int, int, int, int]] = []
+    for y0, x0 in zip(ys.tolist(), xs.tolist(), strict=True):
+        if visited[y0, x0]:
+            continue
+        stack = [(y0, x0)]
+        visited[y0, x0] = True
+        min_x = max_x = x0
+        min_y = max_y = y0
+        count = 0
+        while stack:
+            cy, cx = stack.pop()
+            count += 1
+            if cx < min_x:
+                min_x = cx
+            if cx > max_x:
+                max_x = cx
+            if cy < min_y:
+                min_y = cy
+            if cy > max_y:
+                max_y = cy
+            for ny, nx in ((cy - 1, cx), (cy + 1, cx), (cy, cx - 1), (cy, cx + 1)):
+                if 0 <= ny < h and 0 <= nx < w and mask[ny, nx] and not visited[ny, nx]:
+                    visited[ny, nx] = True
+                    stack.append((ny, nx))
+        if count >= min_pixels:
+            bboxes.append((min_x, min_y, max_x + 1, max_y + 1, count))
+    return bboxes
+
+
+def _inspect_image_for_boxed_hud_or_vs(
+    image: Image.Image | Path,
+    *,
+    label: str = "frame",
+) -> dict[str, Any]:
+    """Pixel-level Gate A detector for dark horizontal pill slabs and red 'VS' plaques."""
+    if isinstance(image, (str, Path)):
+        p = Path(image)
+        if not p.is_file():
+            return {"passed": False, "label": label, "issues": ["FILE_NOT_FOUND"], "detections": []}
+        with Image.open(p) as im:
+            img = im.copy()
+    else:
+        img = image
+
+    issues: list[str] = []
+    detections: list[dict[str, Any]] = []
+
+    orig_w, orig_h = img.size
+    has_alpha = img.mode in ("RGBA", "LA")
+    if has_alpha:
+        rgba = img.convert("RGBA")
+        alpha_arr = np.asarray(rgba, dtype=np.float32)[:, :, 3]
+        transparent_frac = float(np.mean(alpha_arr < 245.0))
+    else:
+        rgba = None
+        transparent_frac = 0.0
+
+    # Case 1: Standalone RGBA overlay PNG (cropped HUD card OR full-frame transparent overlay)
+    if rgba is not None and transparent_frac >= 0.05:
+        arr4 = np.asarray(rgba, dtype=np.float32)
+        r4, g4, b4, a4 = arr4[:, :, 0], arr4[:, :, 1], arr4[:, :, 2], arr4[:, :, 3]
+        luma4 = 0.299 * r4 + 0.587 * g4 + 0.114 * b4
+        is_gold4 = (a4 >= 120) & (r4 >= 165) & (g4 >= 125) & (b4 <= 135) & ((r4 - b4) >= 48)
+        dark_opaque = (a4 >= 130.0) & (luma4 <= 48.0)
+
+        ys, xs = np.nonzero(dark_opaque)
+        if ys.size >= 400:
+            by0, by1 = int(ys.min()), int(ys.max()) + 1
+            bx0, bx1 = int(xs.min()), int(xs.max()) + 1
+            bw, bh = bx1 - bx0, by1 - by0
+            fill_density = float(dark_opaque[by0:by1, bx0:bx1].mean())
+            opaque_fill_density = float((a4[by0:by1, bx0:bx1] >= 130.0).mean())
+            gold_present = bool(np.sum(is_gold4[max(0, by0 - 4) : min(orig_h, by1 + 4), max(0, bx0 - 4) : min(orig_w, bx1 + 4)]) >= max(24, int(0.08 * (bw + bh))))
+            is_wide_slab = bw >= max(120, int(orig_w * 0.20)) and bh >= max(24, int(orig_h * 0.03))
+            if is_wide_slab and (
+                (fill_density >= 0.48 and opaque_fill_density >= 0.72)
+                or (fill_density >= 0.35 and gold_present)
+            ):
+                issues.append("DARK_BOX_HUD_OVERLAY_DETECTED")
+                detections.append(
+                    {
+                        "type": "rgba_dark_box_slab",
+                        "bbox": [bx0, by0, bx1, by1],
+                        "dark_fill_density": round(fill_density, 3),
+                        "opaque_fill_density": round(opaque_fill_density, 3),
+                        "gold_accent": gold_present,
+                    }
+                )
+
+        # Red VS plaque on RGBA overlay
+        red_opaque = (a4 >= 140.0) & (r4 >= 145.0) & (g4 <= 85.0) & (b4 <= 80.0) & ((r4 - g4) >= 75.0) & ((r4 - b4) >= 75.0)
+        if int(red_opaque.sum()) >= 160:
+            rys, rxs = np.nonzero(red_opaque)
+            ry0, ry1 = int(rys.min()), int(rys.max()) + 1
+            rx0, rx1 = int(rxs.min()), int(rxs.max()) + 1
+            rbw, rbh = rx1 - rx0, ry1 - ry0
+            bright_in_red = float(((a4[ry0:ry1, rx0:rx1] >= 140.0) & (luma4[ry0:ry1, rx0:rx1] >= 170.0)).mean())
+            red_fill = float(red_opaque[ry0:ry1, rx0:rx1].mean())
+            if rbw >= 24 and rbh >= 18 and red_fill >= 0.32 and bright_in_red >= 0.025:
+                issues.append("RED_VS_PLAQUE_DETECTED")
+                detections.append(
+                    {
+                        "type": "rgba_red_vs_plaque",
+                        "bbox": [rx0, ry0, rx1, ry1],
+                        "red_fill_density": round(red_fill, 3),
+                        "bright_letter_ratio": round(bright_in_red, 3),
+                    }
+                )
+
+        return {
+            "passed": len(issues) == 0,
+            "label": label,
+            "mode": "rgba_overlay",
+            "issues": sorted(set(issues)),
+            "detections": detections,
+        }
+
+    # Case 2: Composited RGB live frame (or opaque HUD frame)
+    rgb = img.convert("RGB")
+    target_w = min(orig_w, 640)
+    scale = target_w / float(max(1, orig_w))
+    target_h = max(64, int(round(orig_h * scale)))
+    if target_w != orig_w:
+        rgb_small = rgb.resize((target_w, target_h), Image.Resampling.BILINEAR)
+    else:
+        rgb_small = rgb
+
+    arr = np.asarray(rgb_small, dtype=np.float32)
+    h, w, _ = arr.shape
+    r, g, b = arr[:, :, 0], arr[:, :, 1], arr[:, :, 2]
+    luma = 0.299 * r + 0.587 * g + 0.114 * b
+
+    is_dark = luma <= 48.0
+    is_gold = (r >= 165.0) & (g >= 125.0) & (b <= 135.0) & ((r - b) >= 48.0) & ((g - b) >= 28.0)
+    is_red = (r >= 145.0) & (g <= 85.0) & (b <= 80.0) & ((r - g) >= 75.0) & ((r - b) >= 75.0)
+
+    # 2A: Dark horizontal pill slab / boxed banner detection
+    closed_dark = _morph_close_1d_horizontal(is_dark, radius=max(6, int(round(w * 0.028))))
+    y_min_scan = max(2, int(round(h * 0.02)))
+    y_max_scan = min(h - 3, int(round(h * 0.96)))
+
+    row_spans: dict[int, tuple[int, int]] = {}
+    min_slab_w = max(80, int(round(w * 0.28)))
+    for y in range(y_min_scan, y_max_scan):
+        row = closed_dark[y]
+        if int(row.sum()) < min_slab_w:
+            continue
+        # Longest contiguous True run in this row
+        padded = np.concatenate(([False], row, [False]))
+        diffs = np.diff(padded.astype(np.int8))
+        starts = np.nonzero(diffs == 1)[0]
+        ends = np.nonzero(diffs == -1)[0]
+        if starts.size == 0:
+            continue
+        lengths = ends - starts
+        best_i = int(np.argmax(lengths))
+        if int(lengths[best_i]) >= min_slab_w:
+            row_spans[y] = (int(starts[best_i]), int(ends[best_i]))
+
+    # Group contiguous rows with overlapping spans into vertical candidate slabs
+    sorted_ys = sorted(row_spans)
+    bands: list[list[int]] = []
+    for y in sorted_ys:
+        if not bands or y > bands[-1][-1] + 2:
+            bands.append([y])
+        else:
+            bands[-1].append(y)
+
+    for band in bands:
+        y0, y1 = band[0], band[-1] + 1
+        bh = y1 - y0
+        if bh < max(12, int(round(h * 0.028))) or bh > int(round(h * 0.32)):
+            continue
+        xs0 = [row_spans[y][0] for y in band]
+        xs1 = [row_spans[y][1] for y in band]
+        x0 = int(np.median(xs0))
+        x1 = int(np.median(xs1))
+        bw = x1 - x0
+        if bw < min_slab_w:
+            continue
+
+        patch_luma = luma[y0:y1, x0:x1]
+        dark_mask = patch_luma <= 48.0
+        dark_ratio = float(dark_mask.mean())
+        if dark_ratio < 0.50:
+            continue
+
+        dark_vals = patch_luma[dark_mask]
+        dark_p25, dark_med, dark_p75 = (float(v) for v in np.percentile(dark_vals, [25, 50, 75]))
+        dark_iqr = dark_p75 - dark_p25
+        if dark_iqr > 16.0:
+            continue
+
+        bright_ratio = float((patch_luma >= 145.0).mean())
+
+        # Proof 1: Gold border hairline or left vertical gold stripe (classic V7 pill/box;
+        # requires inner bright lettering so empty dark obsidian margins above warm Dó-paper folios never false-positive)
+        top_rim = is_gold[max(0, y0 - 3) : min(h, y0 + 3), x0:x1]
+        bot_rim = is_gold[max(0, y1 - 3) : min(h, y1 + 3), x0:x1]
+        left_edge = is_gold[y0:y1, max(0, x0 - 4) : min(w, x0 + 6)]
+        gold_border_proof = bright_ratio >= 0.005 and (
+            (top_rim.size > 0 and float(top_rim.any(axis=0).mean()) >= 0.12)
+            or (bot_rim.size > 0 and float(bot_rim.any(axis=0).mean()) >= 0.12)
+            or (left_edge.size > 0 and float(left_edge.any(axis=1).mean()) >= 0.42)
+        )
+
+        # Proof 2: Floating rectangular dark slab over brighter/textured video with lettering
+        above_band = luma[max(0, y0 - 6) : max(1, y0 - 1), x0:x1]
+        below_band = luma[min(h - 1, y1 + 1) : min(h, y1 + 6), x0:x1]
+        above_step = (float(np.mean(above_band)) - dark_med) if above_band.size else 0.0
+        below_step = (float(np.mean(below_band)) - dark_med) if below_band.size else 0.0
+        sharp_floating_proof = (
+            above_step >= 18.0
+            and below_step >= 18.0
+            and dark_ratio >= 0.72
+            and bright_ratio >= 0.006
+            and dark_iqr <= 10.0
+        )
+
+        if gold_border_proof or sharp_floating_proof:
+            issues.append("DARK_HORIZONTAL_PILL_SLAB_DETECTED")
+            detections.append(
+                {
+                    "type": "dark_horizontal_pill_slab",
+                    "bbox_scaled": [x0, y0, x1, y1],
+                    "bbox_px": [
+                        int(round(x0 / scale)),
+                        int(round(y0 / scale)),
+                        int(round(x1 / scale)),
+                        int(round(y1 / scale)),
+                    ],
+                    "dark_ratio": round(dark_ratio, 3),
+                    "dark_iqr": round(dark_iqr, 2),
+                    "bright_ratio": round(bright_ratio, 4),
+                    "gold_border_proof": gold_border_proof,
+                    "sharp_floating_proof": sharp_floating_proof,
+                }
+            )
+            break
+
+    # 2B: Red "VS" plaque detection over live video
+    closed_red = _morph_close_1d_horizontal(is_red, radius=max(3, int(round(w * 0.012))))
+    red_bboxes = _find_connected_bboxes(closed_red, min_pixels=max(80, int(round(w * h * 0.0004))))
+    for rx0, ry0, rx1, ry1, _cnt in red_bboxes:
+        rbw, rbh = rx1 - rx0, ry1 - ry0
+        if not (max(14, int(w * 0.025)) <= rbw <= int(w * 0.28)):
+            continue
+        if not (max(12, int(h * 0.018)) <= rbh <= int(h * 0.18)):
+            continue
+        aspect = rbw / float(max(1, rbh))
+        if not (0.50 <= aspect <= 3.5):
+            continue
+        sub_red = is_red[ry0:ry1, rx0:rx1]
+        sub_luma = luma[ry0:ry1, rx0:rx1]
+        sub_gold = is_gold[ry0:ry1, rx0:rx1]
+        red_frac = float(sub_red.mean())
+        bright_letter_frac = float((sub_luma >= 168.0).mean())
+        solid_plaque_frac = float((sub_red | (sub_luma >= 168.0) | sub_gold).mean())
+        ch, cw = max(2, rbh // 4), max(2, rbw // 4)
+        sub_solid_mask = sub_red | (sub_luma >= 168.0)
+        corner_fills = (
+            float(sub_solid_mask[:ch, :cw].mean()),
+            float(sub_solid_mask[:ch, -cw:].mean()),
+            float(sub_solid_mask[-ch:, :cw].mean()),
+            float(sub_solid_mask[-ch:, -cw:].mean()),
+        )
+        # Axis-aligned rounded-rect VS plaques fill all 4 outer quadrants (>=0.65), unlike tilted NATO map diamonds
+        if red_frac >= 0.34 and bright_letter_frac >= 0.025 and solid_plaque_frac >= 0.60 and min(corner_fills) >= 0.65:
+            issues.append("RED_VS_PLAQUE_DETECTED")
+            detections.append(
+                {
+                    "type": "red_vs_plaque",
+                    "bbox_scaled": [rx0, ry0, rx1, ry1],
+                    "bbox_px": [
+                        int(round(rx0 / scale)),
+                        int(round(ry0 / scale)),
+                        int(round(rx1 / scale)),
+                        int(round(ry1 / scale)),
+                    ],
+                    "red_frac": round(red_frac, 3),
+                    "bright_letter_frac": round(bright_letter_frac, 3),
+                    "solid_plaque_frac": round(solid_plaque_frac, 3),
+                }
+            )
+            break
+
+    return {
+        "passed": len(issues) == 0,
+        "label": label,
+        "mode": "composited_rgb",
+        "issues": sorted(set(issues)),
+        "detections": detections,
+    }
+
+
+def _collect_spec_hud_entries(spec: dict[str, Any]) -> list[tuple[str, Any]]:
+    entries: list[tuple[str, Any]] = []
+    for key in ("hud_stamps", "overlays", "hud_overlays", "style_hud_stamps", "graphics", "cards"):
+        val = spec.get(key)
+        if isinstance(val, list):
+            for idx, item in enumerate(val):
+                entries.append((f"{key}[{idx}]", item))
+        elif isinstance(val, dict):
+            entries.append((key, val))
+
+    for beat in _extract_episode_beats(spec):
+        bid = str(beat.get("beat_id") or beat.get("id") or "beat")
+        for key in ("hud", "hud_stamp", "hud_stamps", "overlay", "overlays", "card", "stat_card", "vs_card"):
+            val = beat.get(key)
+            if isinstance(val, list):
+                for idx, item in enumerate(val):
+                    entries.append((f"{bid}.{key}[{idx}]", item))
+            elif val:
+                entries.append((f"{bid}.{key}", val))
+    return entries
+
+
+def audit_zero_box_hud_gate(
+    spec: dict[str, Any] | None = None,
+    *,
+    frame_paths: list[Path | str] | None = None,
+    video_path: Path | str | None = None,
+) -> dict[str, Any]:
+    """V12 Gate A (`ZERO_BOX_HUD_GATE`): Reject dark boxed HUDs/VS badges in specs & renders."""
+    violations: list[dict[str, Any]] = []
+    issues: list[str] = []
+
+    if isinstance(spec, dict):
+        # 1. Top-level overlay mode check
+        for mode_key in ("overlay_mode", "hud_mode", "v7_hud_mode"):
+            m_val = str(spec.get(mode_key) or "").strip().lower()
+            if m_val in FORBIDDEN_OVERLAY_MODES:
+                issues.append("FORBIDDEN_BOXED_OVERLAY_MODE")
+                violations.append({"source": mode_key, "code": "FORBIDDEN_BOXED_OVERLAY_MODE", "value": m_val})
+
+        # 2. Inspect all HUD stamp / overlay definitions
+        for loc, item in _collect_spec_hud_entries(spec):
+            if isinstance(item, str):
+                low = item.strip().lower()
+                if low in FORBIDDEN_BOXED_HUD_KINDS or "rounded_rectangle" in low or "vs_badge" in low:
+                    issues.append("FORBIDDEN_BOXED_HUD_SPEC")
+                    violations.append({"source": loc, "code": "FORBIDDEN_BOXED_HUD_SPEC", "value": item})
+                continue
+            if not isinstance(item, dict):
+                continue
+
+            kind = str(
+                item.get("kind")
+                or item.get("type")
+                or item.get("widget")
+                or item.get("template")
+                or item.get("style")
+                or ""
+            ).strip().lower()
+            shape = str(item.get("shape") or item.get("container") or item.get("bg_shape") or "").strip().lower()
+
+            if kind in FORBIDDEN_BOXED_HUD_KINDS:
+                code = "FORBIDDEN_VS_BADGE_HUD" if "vs" in kind or "versus" in kind else "FORBIDDEN_BOXED_HUD_KIND"
+                issues.append(code)
+                violations.append({"source": loc, "code": code, "kind": kind})
+
+            if shape in {"rounded_rectangle", "rectangle", "dark_pill", "pill", "box", "dark_banner", "banner_box"}:
+                issues.append("FORBIDDEN_ROUNDED_RECTANGLE_BANNER")
+                violations.append({"source": loc, "code": "FORBIDDEN_ROUNDED_RECTANGLE_BANNER", "shape": shape})
+
+            # Explicit VS badge or dark box flags
+            has_vs = bool(
+                item.get("vs_badge")
+                or item.get("has_vs_badge")
+                or item.get("show_vs_badge")
+                or item.get("versus")
+                or str(item.get("mode") or "").strip().lower() in {"vs", "versus", "stat_versus"}
+                or str(item.get("badge_text") or item.get("center_badge") or "").strip().upper() == "VS"
+            )
+            if has_vs:
+                issues.append("FORBIDDEN_VS_BADGE_HUD")
+                violations.append({"source": loc, "code": "FORBIDDEN_VS_BADGE_HUD", "detail": "VS badge requested"})
+
+            has_box = bool(
+                item.get("rounded_rectangle")
+                or item.get("draw_box")
+                or item.get("opaque_box")
+                or item.get("background_box")
+                or item.get("box_bg")
+                or item.get("box_fill")
+                or item.get("dark_banner")
+                or item.get("left_stripe")
+            )
+            if has_box:
+                issues.append("FORBIDDEN_BOX_CONTAINER_FLAG")
+                violations.append({"source": loc, "code": "FORBIDDEN_BOX_CONTAINER_FLAG", "kind": kind or "custom"})
+
+            # Check pill bracket badges like '[SỬ LIỆU CHÍNH THỐNG]'
+            combined_txt = " ".join(
+                str(item.get(k) or "") for k in ("text", "title", "label", "badge", "header", "subtitle")
+            )
+            if "[sử liệu chính thống]" in combined_txt.lower():
+                issues.append("FORBIDDEN_PILL_BADGE_TEXT")
+                violations.append({"source": loc, "code": "FORBIDDEN_PILL_BADGE_TEXT", "text": combined_txt[:80]})
+
+    # 3. Inspect rendered frames / overlay PNGs
+    frame_results: list[dict[str, Any]] = []
+    for fp in frame_paths or []:
+        p = Path(fp)
+        res = _inspect_image_for_boxed_hud_or_vs(p, label=p.name)
+        frame_results.append(res)
+        if not res["passed"]:
+            for iss in res["issues"]:
+                issues.append(iss)
+                violations.append({"source": str(p), "code": iss, "detections": res["detections"]})
+
+    # 4. Inspect sampled frames from rendered MP4
+    video_frame_results: list[dict[str, Any]] = []
+    if video_path is not None:
+        vp = Path(video_path)
+        if vp.is_file():
+            for ts, frame_im in _sample_video_frames(vp, max_frames=8, max_window_sec=60.0):
+                res = _inspect_image_for_boxed_hud_or_vs(frame_im, label=f"{vp.name}@{ts:.2f}s")
+                res["timestamp_sec"] = ts
+                video_frame_results.append(res)
+                if not res["passed"]:
+                    for iss in res["issues"]:
+                        issues.append(iss)
+                        violations.append(
+                            {"source": f"{vp.name}@{ts:.2f}s", "code": iss, "detections": res["detections"]}
+                        )
+
+    dedup_issues = sorted(set(issues))
+    return {
+        "gate_id": V12_GATE_ZERO_BOX_HUD,
+        "passed": len(dedup_issues) == 0,
+        "issues": dedup_issues,
+        "violations": violations,
+        "frames_checked": len(frame_results),
+        "video_frames_checked": len(video_frame_results),
+        "frame_results": frame_results,
+        "video_frame_results": video_frame_results,
+    }
+
+
+# --- Gate B: SLOW_GIANT_MAP_V9_GATE ---
+
+def _count_map_label_words(text: str) -> int:
+    tokens = [t for t in str(text or "").strip().split() if re.search(r"[0-9A-Za-zÀ-ỹ]", t)]
+    return len(tokens)
+
+
+def _extract_map_sequences(spec: dict[str, Any]) -> tuple[list[dict[str, Any]], int, int]:
+    """Extract tactical map sequence dicts and canvas (width, height) from a spec or raw map dict."""
+    res_str = str(spec.get("resolution") or "").lower()
+    fmt_raw = str(spec.get("format_profile") or spec.get("aspect_ratio") or "").lower()
+    is_long = "16x9" in fmt_raw or "16:9" in fmt_raw or "long" in fmt_raw or (
+        isinstance(spec.get("chapters"), list) and len(spec.get("chapters", [])) > 0
+    )
+    if "x" in res_str:
+        parts = res_str.split("x", 1)
+        default_w, default_h = int(parts[0]), int(parts[1])
+    elif isinstance(spec.get("width"), int) and isinstance(spec.get("height"), int):
+        default_w, default_h = int(spec["width"]), int(spec["height"])
+    else:
+        default_w, default_h = (1920, 1080) if is_long else (1440, 2560)
+
+    maps: list[dict[str, Any]] = []
+
+    # Direct single-map config dict passed by caller
+    if any(
+        k in spec
+        for k in (
+            "preset_id",
+            "campaign_preset",
+            "act_1_terrain_lock",
+            "map_font_height_ratio",
+            "callouts",
+            "show_tide_bar",
+            "show_force_ratio_bar",
+        )
+    ) and not any(k in spec for k in ("beats", "chapters", "tactical_map_sequences", "tactical_battle_maps")):
+        maps.append(dict(spec))
+        return maps, default_w, default_h
+
+    for list_key in ("tactical_map_sequences", "tactical_battle_maps", "map_sequences", "tactical_maps"):
+        items = spec.get(list_key)
+        if isinstance(items, list):
+            for idx, m in enumerate(items):
+                if isinstance(m, dict):
+                    rec = dict(m)
+                    rec.setdefault("map_id", f"{list_key}_{idx}")
+                    maps.append(rec)
+
+    # Also inspect beats that represent GIS/tactical maps
+    seen_beat_ids = {str(m.get("beat_id")) for m in maps if m.get("beat_id")}
+    for b in _extract_episode_beats(spec):
+        bid = str(b.get("beat_id") or b.get("id") or "")
+        st = str(b.get("scene_type") or b.get("beat_type") or b.get("kind") or b.get("asset_mode") or "").lower()
+        nested = b.get("tactical_map") or b.get("map_spec")
+        is_map_beat = isinstance(nested, dict) or st in {
+            "gis_map",
+            "tactical_map",
+            "tactical_battle_map",
+            "tactical_battle_map_v8",
+            "tactical_battle_map_v9",
+            "scene_map",
+            "map",
+        }
+        if is_map_beat and bid not in seen_beat_ids:
+            merged = dict(nested) if isinstance(nested, dict) else {}
+            for k in (
+                "beat_id",
+                "duration_sec",
+                "start_sec",
+                "end_sec",
+                "map_id",
+                "map_group_id",
+                "split_group_id",
+                "seamless_split",
+                "seamless_split_group",
+                "campaign_preset",
+                "preset_id",
+                "map_font_height_ratio",
+                "font_px",
+                "label_font_px",
+                "max_words_per_label",
+                "max_simultaneous_labels",
+                "show_tide_bar",
+                "show_side_gauge",
+                "show_force_ratio_bar",
+                "bottom_troop_bar",
+                "labels",
+                "callouts",
+                "units",
+                "act_1_terrain_lock",
+                "act_2_units",
+                "act_3_maneuver",
+                "transition_to_next",
+                "transition_mode",
+                "height",
+                "width",
+            ):
+                if k in b and k not in merged:
+                    merged[k] = b[k]
+            merged.setdefault("map_id", bid or f"map_beat_{len(maps)}")
+            maps.append(merged)
+
+    return maps, default_w, default_h
+
+
+def _inspect_map_frame_for_banned_chrome(image: Image.Image | Path, label: str = "map_frame") -> dict[str, Any]:
+    """Detect V8 side tide/gorge gauges and bottom split force-ratio bars on rendered map frames."""
+    if isinstance(image, (str, Path)):
+        p = Path(image)
+        if not p.is_file():
+            return {"passed": False, "label": label, "issues": ["FILE_NOT_FOUND"]}
+        with Image.open(p) as im:
+            rgb = im.convert("RGB")
+    else:
+        rgb = image.convert("RGB")
+
+    w0, h0 = rgb.size
+    tw = min(w0, 640)
+    th = max(64, int(round(h0 * tw / float(max(1, w0)))))
+    arr = np.asarray(rgb.resize((tw, th), Image.Resampling.BILINEAR), dtype=np.float32)
+    r, g, b = arr[:, :, 0], arr[:, :, 1], arr[:, :, 2]
+    luma = 0.299 * r + 0.587 * g + 0.114 * b
+
+    issues: list[str] = []
+
+    # 1. Left-rail vertical side gauge bar (narrow tall dark rail with bright accent meniscus)
+    left_zone = arr[int(th * 0.30) : int(th * 0.80), int(tw * 0.01) : int(tw * 0.14)]
+    if left_zone.size > 0:
+        lz_luma = luma[int(th * 0.30) : int(th * 0.80), int(tw * 0.01) : int(tw * 0.14)]
+        # Look for a narrow vertical track (width 4..28px) that is consistently dark or cyan/amber framed
+        col_dark_frac = (lz_luma <= 42.0).mean(axis=0)
+        lz_cyan = ((left_zone[:, :, 2] - left_zone[:, :, 0]) >= 35.0) & (left_zone[:, :, 1] >= 90.0)
+        lz_gold = (left_zone[:, :, 0] >= 165.0) & (left_zone[:, :, 1] >= 125.0) & (left_zone[:, :, 2] <= 130.0)
+        col_accent = (lz_cyan | lz_gold).mean(axis=0)
+        dark_cols = int(np.sum(col_dark_frac >= 0.65))
+        accent_cols = int(np.sum(col_accent >= 0.20))
+        if 2 <= dark_cols <= int(tw * 0.07) and accent_cols >= 2:
+            issues.append("MAP_SIDE_GAUGE_CHROME_DETECTED")
+
+    # 2. Bottom horizontal split force-ratio bar (wide crimson + contrasting gold/blue bar near bottom)
+    bot_y0, bot_y1 = int(th * 0.78), int(th * 0.96)
+    bot_x0, bot_x1 = int(tw * 0.08), int(tw * 0.92)
+    bot_r = r[bot_y0:bot_y1, bot_x0:bot_x1]
+    bot_g = g[bot_y0:bot_y1, bot_x0:bot_x1]
+    bot_b = b[bot_y0:bot_y1, bot_x0:bot_x1]
+    is_red_bar = (bot_r >= 140.0) & (bot_g <= 90.0) & (bot_b <= 90.0) & ((bot_r - bot_g) >= 65.0)
+    is_gold_or_blue = (
+        ((bot_r >= 170.0) & (bot_g >= 130.0) & (bot_b <= 125.0) & ((bot_r - bot_b) >= 50.0))
+        | ((bot_b >= 125.0) & (bot_r <= 95.0) & ((bot_b - bot_r) >= 40.0))
+    )
+    row_red_frac = is_red_bar.mean(axis=1)
+    row_other_frac = is_gold_or_blue.mean(axis=1)
+    split_bar_rows = int(np.sum((row_red_frac >= 0.15) & (row_other_frac >= 0.15) & ((row_red_frac + row_other_frac) >= 0.45)))
+    if split_bar_rows >= max(4, int(th * 0.008)):
+        issues.append("MAP_BOTTOM_TROOP_BAR_CHROME_DETECTED")
+
+    return {"passed": len(issues) == 0, "label": label, "issues": issues}
+
+
+def audit_slow_giant_map_v9_gate(
+    spec: dict[str, Any] | None = None,
+    *,
+    format_profile: str | None = None,
+    video_paths: list[Path | str] | None = None,
+    frame_paths: list[Path | str] | None = None,
+) -> dict[str, Any]:
+    """V12 Gate B (`SLOW_GIANT_MAP_V9_GATE`): Font >= 5% H, <= 3 words, <= 2 simultaneous, 0 bars, >= 6s."""
+    issues: list[str] = []
+    violations: list[dict[str, Any]] = []
+    map_audits: list[dict[str, Any]] = []
+
+    is_short = False
+    if format_profile:
+        is_short = "short" in format_profile.lower() or "9x16" in format_profile.lower()
+    elif isinstance(spec, dict):
+        fmt_raw = str(spec.get("format_profile") or spec.get("aspect_ratio") or "").lower()
+        is_short = "short" in fmt_raw or "9x16" in fmt_raw or (
+            not ("long" in fmt_raw or "16x9" in fmt_raw or spec.get("chapters"))
+        )
+
+    if isinstance(spec, dict):
+        maps, default_w, default_h = _extract_map_sequences(spec)
+
+        # Group Short seamless 2-beat splits for combined >= 6.0s duration validation
+        split_groups: dict[str, list[dict[str, Any]]] = {}
+        for idx, m in enumerate(maps):
+            gid = str(
+                m.get("split_group_id")
+                or m.get("map_group_id")
+                or m.get("seamless_split_group")
+                or ""
+            ).strip()
+            if gid:
+                split_groups.setdefault(gid, []).append(m)
+            elif is_short and m.get("seamless_split"):
+                # Pair with previous seamless_split map if same preset or adjacent
+                pair_key = f"__auto_pair_{m.get('campaign_preset') or m.get('preset_id') or idx // 2}"
+                split_groups.setdefault(pair_key, []).append(m)
+
+        for idx, m in enumerate(maps):
+            mid = str(m.get("map_id") or m.get("beat_id") or m.get("preset_id") or f"MAP_{idx:02d}")
+            mh = int(m.get("height") or default_h)
+            m_issues: list[str] = []
+
+            # 1. Font height ratio >= 0.050 (>= 5.0% H)
+            ratios: list[float] = []
+            if m.get("map_font_height_ratio") is not None:
+                ratios.append(float(m["map_font_height_ratio"]))
+            for fk in (
+                "font_px",
+                "primary_font_px",
+                "label_font_px",
+                "title_font_px",
+                "unit_font_px",
+                "callout_font_px",
+                "stamp_font_px",
+                "font_size_px",
+                "min_font_px",
+            ):
+                if m.get(fk) is not None:
+                    ratios.append(float(m[fk]) / float(max(1, mh)))
+
+            engine_mode = str(m.get("engine_mode") or m.get("map_version") or m.get("version") or "").lower()
+            if engine_mode in {"v8", "v8_legacy", "tactical_battle_map_v8_legacy"} and not ratios:
+                m_issues.append("LEGACY_V8_TINY_MAP_ENGINE")
+                violations.append({"map_id": mid, "code": "LEGACY_V8_TINY_MAP_ENGINE", "engine_mode": engine_mode})
+
+            min_font_ratio = min(ratios) if ratios else None
+            if min_font_ratio is not None and min_font_ratio < MIN_MAP_FONT_HEIGHT_RATIO - 1e-6:
+                m_issues.append("MAP_FONT_HEIGHT_BELOW_5PCT")
+                violations.append(
+                    {
+                        "map_id": mid,
+                        "code": "MAP_FONT_HEIGHT_BELOW_5PCT",
+                        "observed_ratio": round(min_font_ratio, 4),
+                        "required_min": MIN_MAP_FONT_HEIGHT_RATIO,
+                    }
+                )
+
+            # 2. Label word count <= 3 & zero multiline/sub captions
+            label_texts: list[str] = []
+            staged_intervals: list[tuple[float, float]] = []
+
+            def _add_label(
+                txt: Any,
+                t0: float = 0.0,
+                t1: float = 1.0,
+                *,
+                source: str = "label",
+                _mid: str = mid,
+                _labels: list[str] = label_texts,
+                _intervals: list[tuple[float, float]] = staged_intervals,
+                _issues: list[str] = m_issues,
+            ) -> None:
+                s = str(txt or "").strip()
+                if not s:
+                    return
+                _labels.append(s)
+                _intervals.append((t0, t1))
+                if "\n" in s:
+                    _issues.append("MAP_LABEL_MULTILINE_FORBIDDEN")
+                    violations.append({"map_id": _mid, "code": "MAP_LABEL_MULTILINE_FORBIDDEN", "source": source, "label": s})
+                wc = _count_map_label_words(s)
+                if wc > MAX_MAP_WORDS_PER_LABEL:
+                    _issues.append("MAP_LABEL_EXCEEDS_3_WORDS")
+                    violations.append(
+                        {
+                            "map_id": _mid,
+                            "code": "MAP_LABEL_EXCEEDS_3_WORDS",
+                            "source": source,
+                            "label": s,
+                            "word_count": wc,
+                        }
+                    )
+
+            # V9 3-act structured schema
+            act1 = m.get("act_1_terrain_lock")
+            if isinstance(act1, dict):
+                _add_label(act1.get("theater_stamp"), 0.0, 0.28, source="act_1.theater_stamp")
+                pin = act1.get("landmark_pin")
+                if isinstance(pin, dict):
+                    _add_label(pin.get("label"), 0.0, 0.28, source="act_1.landmark_pin")
+            act2 = m.get("act_2_units")
+            if isinstance(act2, list):
+                for u_i, u in enumerate(act2):
+                    if isinstance(u, dict):
+                        _add_label(u.get("label") or u.get("badge"), 0.28, 0.61, source=f"act_2_units[{u_i}]")
+            act3 = m.get("act_3_maneuver")
+            if isinstance(act3, dict):
+                _add_label(act3.get("impact_stamp"), 0.61, 1.0, source="act_3.impact_stamp")
+
+            # Generic lists: labels, callouts, units
+            for list_field in ("labels", "callouts", "units"):
+                arr_items = m.get(list_field)
+                if not isinstance(arr_items, list):
+                    continue
+                for item_i, item in enumerate(arr_items):
+                    if isinstance(item, str):
+                        _add_label(item, 0.0, 1.0, source=f"{list_field}[{item_i}]")
+                    elif isinstance(item, dict):
+                        t0 = float(item.get("t_appear") if item.get("t_appear") is not None else item.get("t_start", 0.0))
+                        t1 = float(item.get("t_disappear") if item.get("t_disappear") is not None else item.get("t_end", 1.0))
+                        txt = item.get("label") or item.get("text") or item.get("badge") or item.get("name") or ""
+                        _add_label(txt, t0, t1, source=f"{list_field}[{item_i}]")
+                        sub = str(item.get("sub") or item.get("subtitle") or "").strip()
+                        if sub:
+                            m_issues.append("MAP_CALLOUT_SUBLINE_FORBIDDEN")
+                            violations.append(
+                                {
+                                    "map_id": mid,
+                                    "code": "MAP_CALLOUT_SUBLINE_FORBIDDEN",
+                                    "source": f"{list_field}[{item_i}].sub",
+                                    "sub": sub,
+                                }
+                            )
+
+            for top_lbl_key in ("theater_stamp", "impact_stamp", "phase_label"):
+                if m.get(top_lbl_key):
+                    if top_lbl_key == "phase_label":
+                        m_issues.append("MAP_PHASE_SUBHEADER_FORBIDDEN")
+                        violations.append({"map_id": mid, "code": "MAP_PHASE_SUBHEADER_FORBIDDEN", "phase_label": m[top_lbl_key]})
+                    else:
+                        _add_label(m[top_lbl_key], 0.0, 0.30 if top_lbl_key == "theater_stamp" else 0.70, source=top_lbl_key)
+
+            if m.get("max_words_per_label") is not None and int(m["max_words_per_label"]) > MAX_MAP_WORDS_PER_LABEL:
+                m_issues.append("MAP_LABEL_EXCEEDS_3_WORDS")
+                violations.append(
+                    {
+                        "map_id": mid,
+                        "code": "MAP_LABEL_EXCEEDS_3_WORDS",
+                        "declared_max_words": int(m["max_words_per_label"]),
+                    }
+                )
+
+            # 3. Simultaneous labels <= 2
+            peak_simultaneous = 0
+            if staged_intervals:
+                sample_pts = sorted(
+                    {round(i / 40.0, 4) for i in range(41)}
+                    | {round(t0 + 1e-4, 5) for t0, _t1 in staged_intervals}
+                )
+                for pt in sample_pts:
+                    active = sum(1 for t0, t1 in staged_intervals if t0 <= pt < t1 or (pt == 1.0 and t1 >= 1.0 and t0 < 1.0))
+                    if active > peak_simultaneous:
+                        peak_simultaneous = active
+
+            declared_sim = m.get("max_simultaneous_labels")
+            if declared_sim is not None:
+                peak_simultaneous = max(peak_simultaneous, int(declared_sim))
+
+            if peak_simultaneous > MAX_MAP_SIMULTANEOUS_LABELS:
+                m_issues.append("MAP_TOO_MANY_SIMULTANEOUS_LABELS")
+                violations.append(
+                    {
+                        "map_id": mid,
+                        "code": "MAP_TOO_MANY_SIMULTANEOUS_LABELS",
+                        "peak_simultaneous": peak_simultaneous,
+                        "allowed_max": MAX_MAP_SIMULTANEOUS_LABELS,
+                    }
+                )
+
+            # 4. Zero side gauges & zero bottom troop bars
+            has_side_gauge = bool(
+                m.get("show_tide_bar")
+                or m.get("show_side_gauge")
+                or m.get("side_gauge")
+                or m.get("tide_gauge")
+                or m.get("elevation_gauge")
+                or m.get("show_gorge_gauge")
+                or int(m.get("side_gauges_count") or 0) > 0
+            )
+            if has_side_gauge:
+                m_issues.append("MAP_SIDE_GAUGE_FORBIDDEN")
+                violations.append({"map_id": mid, "code": "MAP_SIDE_GAUGE_FORBIDDEN"})
+
+            has_bottom_bar = bool(
+                m.get("show_force_ratio_bar")
+                or m.get("bottom_troop_bar")
+                or m.get("force_ratio_bar")
+                or m.get("bottom_force_bar")
+                or m.get("show_troop_bar")
+                or m.get("troop_ratio_bar")
+                or int(m.get("bottom_bars_count") or 0) > 0
+            )
+            if has_bottom_bar:
+                m_issues.append("MAP_BOTTOM_TROOP_BAR_FORBIDDEN")
+                violations.append({"map_id": mid, "code": "MAP_BOTTOM_TROOP_BAR_FORBIDDEN"})
+
+            if m.get("show_phase_subheader"):
+                m_issues.append("MAP_PHASE_SUBHEADER_FORBIDDEN")
+                violations.append({"map_id": mid, "code": "MAP_PHASE_SUBHEADER_FORBIDDEN"})
+
+            # 5. Duration >= 6.0s (or seamless 2-beat split totaling >= 6.0s on Shorts)
+            dur = m.get("duration_sec")
+            if dur is None and m.get("end_sec") is not None and m.get("start_sec") is not None:
+                dur = float(m["end_sec"]) - float(m["start_sec"])
+            effective_dur = float(dur) if dur is not None else None
+
+            if effective_dur is not None:
+                # Check if part of a Short 2-beat seamless split group
+                gid = str(
+                    m.get("split_group_id")
+                    or m.get("map_group_id")
+                    or m.get("seamless_split_group")
+                    or ""
+                ).strip()
+                if not gid and is_short and m.get("seamless_split"):
+                    gid = f"__auto_pair_{m.get('campaign_preset') or m.get('preset_id') or idx // 2}"
+                if is_short and gid and gid in split_groups and len(split_groups[gid]) == 2:
+                    group_total = sum(
+                        float(
+                            gm.get("duration_sec")
+                            if gm.get("duration_sec") is not None
+                            else (float(gm.get("end_sec", 0.0)) - float(gm.get("start_sec", 0.0)))
+                        )
+                        for gm in split_groups[gid]
+                    )
+                    if group_total < MIN_MAP_DURATION_SEC - 1e-6:
+                        m_issues.append("MAP_DURATION_BELOW_6S")
+                        violations.append(
+                            {
+                                "map_id": mid,
+                                "code": "MAP_DURATION_BELOW_6S",
+                                "split_group_id": gid,
+                                "combined_duration_sec": round(group_total, 3),
+                                "required_min": MIN_MAP_DURATION_SEC,
+                            }
+                        )
+                elif effective_dur < MIN_MAP_DURATION_SEC - 1e-6:
+                    m_issues.append("MAP_DURATION_BELOW_6S")
+                    violations.append(
+                        {
+                            "map_id": mid,
+                            "code": "MAP_DURATION_BELOW_6S",
+                            "duration_sec": round(effective_dur, 3),
+                            "required_min": MIN_MAP_DURATION_SEC,
+                        }
+                    )
+
+            dedup_m = sorted(set(m_issues))
+            issues.extend(dedup_m)
+            map_audits.append(
+                {
+                    "map_id": mid,
+                    "passed": len(dedup_m) == 0,
+                    "min_font_height_ratio": round(min_font_ratio, 4) if min_font_ratio is not None else None,
+                    "peak_simultaneous_labels": peak_simultaneous,
+                    "duration_sec": effective_dur,
+                    "issues": dedup_m,
+                }
+            )
+
+    # 6. Audit rendered map MP4s (duration >= 6.0s + mid-frame chrome check)
+    media_audits: list[dict[str, Any]] = []
+    if video_paths:
+        probed_durs: list[tuple[Path, float | None]] = []
+        for vp_raw in video_paths:
+            vp = Path(vp_raw)
+            dur = _probe_media_duration(vp)
+            probed_durs.append((vp, dur))
+        # On Shorts with exactly 2 split map clips, combined >= 6.0s passes
+        combined_short_split = (
+            is_short
+            and len(probed_durs) == 2
+            and all(d is not None for _, d in probed_durs)
+            and sum(float(d or 0.0) for _, d in probed_durs) >= MIN_MAP_DURATION_SEC - 1e-3
+        )
+        for vp, dur in probed_durs:
+            v_issues: list[str] = []
+            if not vp.is_file():
+                v_issues.append("MAP_VIDEO_NOT_FOUND")
+            elif dur is not None and dur < MIN_MAP_DURATION_SEC - 1e-3 and not combined_short_split:
+                v_issues.append("MAP_VIDEO_DURATION_BELOW_6S")
+                violations.append(
+                    {"source": str(vp), "code": "MAP_VIDEO_DURATION_BELOW_6S", "duration_sec": round(dur, 3)}
+                )
+            for ts, fim in _sample_video_frames(vp, max_frames=3, max_window_sec=dur or 10.0):
+                cr = _inspect_map_frame_for_banned_chrome(fim, label=f"{vp.name}@{ts:.2f}s")
+                if not cr["passed"]:
+                    v_issues.extend(cr["issues"])
+                    for iss in cr["issues"]:
+                        violations.append({"source": f"{vp.name}@{ts:.2f}s", "code": iss})
+            dedup_v = sorted(set(v_issues))
+            issues.extend(dedup_v)
+            media_audits.append({"path": str(vp), "duration_sec": dur, "passed": len(dedup_v) == 0, "issues": dedup_v})
+
+    # 7. Audit rendered map PNGs
+    for fp_raw in frame_paths or []:
+        fp = Path(fp_raw)
+        cr = _inspect_map_frame_for_banned_chrome(fp, label=fp.name)
+        media_audits.append(cr)
+        if not cr["passed"]:
+            issues.extend(cr["issues"])
+            for iss in cr["issues"]:
+                violations.append({"source": str(fp), "code": iss})
+
+    dedup_all = sorted(set(issues))
+    return {
+        "gate_id": V12_GATE_SLOW_GIANT_MAP,
+        "passed": len(dedup_all) == 0,
+        "format": "short_9x16" if is_short else "long_16x9",
+        "maps_audited": len(map_audits),
+        "media_audited": len(media_audits),
+        "issues": dedup_all,
+        "violations": violations,
+        "map_audits": map_audits,
+        "media_audits": media_audits,
+    }
+
+
+# --- Gate C: ANTI_SLIDESHOW_FIRST60S_GATE ---
+
+def _run_ffmpeg_freezedetect_first60s(
+    video_path: Path,
+    *,
+    noise_db: str = FIRST_60S_FREEZE_NOISE_DB,
+    min_freeze_sec: float = FIRST_60S_FREEZE_DURATION_SEC,
+    window_sec: float = FIRST_60S_WINDOW_SEC,
+) -> dict[str, Any]:
+    """Run `ffmpeg freezedetect=n=-50dB:d=3.5` on `0.0s-60.0s` of a rendered Long MP4."""
+    ffmpeg = _resolve_ffmpeg_bin()
+    if not video_path.is_file():
+        return {"ok": False, "error": "VIDEO_NOT_FOUND", "freeze_events": [], "ffmpeg_filter": ""}
+    if not ffmpeg:
+        return {"ok": False, "error": "FFMPEG_NOT_AVAILABLE", "freeze_events": [], "ffmpeg_filter": ""}
+
+    vf_expr = f"freezedetect=n={noise_db}:d={min_freeze_sec}"
+    cmd = [
+        ffmpeg,
+        "-hide_banner",
+        "-nostats",
+        "-t",
+        f"{window_sec:.2f}",
+        "-i",
+        str(video_path),
+        "-vf",
+        vf_expr,
+        "-f",
+        "null",
+        "-",
+    ]
+    proc = subprocess.run(cmd, capture_output=True, text=True, timeout=120, check=False)
+    stderr = proc.stderr or ""
+    vid_dur = _probe_media_duration(video_path) or window_sec
+    effective_end = min(window_sec, vid_dur)
+
+    events: list[dict[str, float]] = []
+    pending_start: float | None = None
+    for line in stderr.splitlines():
+        m_start = re.search(r"freeze_start:\s*([0-9]+(?:\.[0-9]+)?)", line)
+        if m_start:
+            pending_start = float(m_start.group(1))
+            continue
+        m_end = re.search(r"freeze_end:\s*([0-9]+(?:\.[0-9]+)?)", line)
+        if m_end:
+            f_end = float(m_end.group(1))
+            f_start = pending_start if pending_start is not None else max(0.0, f_end - min_freeze_sec)
+            events.append({"start_sec": round(f_start, 3), "end_sec": round(f_end, 3), "duration_sec": round(max(0.0, f_end - f_start), 3)})
+            pending_start = None
+            continue
+        m_dur = re.search(r"freeze_duration:\s*([0-9]+(?:\.[0-9]+)?)", line)
+        if m_dur and events:
+            events[-1]["duration_sec"] = round(float(m_dur.group(1)), 3)
+
+    # Handle freeze running all the way to EOF / 60s trim cutoff
+    if pending_start is not None:
+        dur_tail = max(0.0, effective_end - pending_start)
+        if dur_tail >= min_freeze_sec - 0.15:
+            events.append(
+                {
+                    "start_sec": round(pending_start, 3),
+                    "end_sec": round(effective_end, 3),
+                    "duration_sec": round(dur_tail, 3),
+                }
+            )
+
+    return {
+        "ok": proc.returncode == 0,
+        "returncode": proc.returncode,
+        "ffmpeg_filter": vf_expr,
+        "window_sec": effective_end,
+        "freeze_events": events,
+    }
+
+
+def _beat_is_static_png_hold(beat: dict[str, Any]) -> bool:
+    """Return True if beat metadata indicates a static PNG/image hold (no 30fps motion)."""
+    if beat.get("is_static") or beat.get("static_hold") or beat.get("tpad_clone"):
+        return True
+    for key in ("asset_mode", "render_mode", "source_type", "media_type", "motion_engine", "engine"):
+        val = str(beat.get(key) or "").strip().lower()
+        if val in STATIC_HOLD_MODES:
+            return True
+    # Check image file path without a real 30fps motion engine
+    motion_val = str(
+        beat.get("motion_engine")
+        or beat.get("render_mode")
+        or beat.get("asset_mode")
+        or beat.get("source_type")
+        or ""
+    ).strip().lower()
+    if motion_val in ANIMATED_MOTION_MODES:
+        return False
+    for path_key in ("asset_path", "media_path", "source_path", "image_path"):
+        p_val = str(beat.get(path_key) or "").strip().lower()
+        if p_val.endswith((".png", ".jpg", ".jpeg", ".webp")):
+            return True
+    return False
+
+
+def audit_anti_slideshow_first60s_gate(
+    spec: dict[str, Any] | None = None,
+    *,
+    video_path: Path | str | None = None,
+    format_profile: str | None = None,
+) -> dict[str, Any]:
+    """V12 Gate C (`ANTI_SLIDESHOW_FIRST60S_GATE`): Zero slideshow freezes/PNG holds in Long 0-60s + 0-15s ASL <= 3.8s."""
+    # Determine whether this is Long format
+    is_long = False
+    if format_profile:
+        fl = format_profile.lower()
+        is_long = "long" in fl or "16x9" in fl or "16:9" in fl
+    elif isinstance(spec, dict):
+        fl = str(spec.get("format_profile") or spec.get("aspect_ratio") or "").lower()
+        is_long = (
+            "long" in fl
+            or "16x9" in fl
+            or "16:9" in fl
+            or (isinstance(spec.get("chapters"), list) and len(spec.get("chapters", [])) > 0)
+            or spec.get("cold_open") is not None
+        )
+    elif video_path is not None:
+        is_long = True
+
+    if not is_long:
+        return {
+            "gate_id": V12_GATE_ANTI_SLIDESHOW_60S,
+            "passed": True,
+            "skipped": True,
+            "reason": "SHORT_FORMAT_EXEMPT",
+            "issues": [],
+            "violations": [],
+        }
+
+    issues: list[str] = []
+    violations: list[dict[str, Any]] = []
+    asl_0_15s: float | None = None
+    static_png_beats_0_60s: list[str] = []
+    first15s_beat_count = 0
+    first60s_beat_count = 0
+
+    if isinstance(spec, dict):
+        if str(spec.get("fx_mode") or "").strip().lower() == "static":
+            issues.append("LONG_STATIC_FX_MODE_FORBIDDEN")
+            violations.append({"source": "spec.fx_mode", "code": "LONG_STATIC_FX_MODE_FORBIDDEN"})
+        if int(spec.get("cold_open_static_holds") or 0) > 0 or int(spec.get("first_60s_static_png_count") or 0) > 0:
+            issues.append("STATIC_PNG_HOLD_IN_FIRST60S")
+            violations.append({"source": "spec", "code": "STATIC_PNG_HOLD_IN_FIRST60S"})
+
+        beats = _extract_episode_beats(spec)
+        cursor = 0.0
+        first15_durs: list[float] = []
+        for b in beats:
+            bid = str(b.get("beat_id") or b.get("id") or "beat")
+            if b.get("start_sec") is not None and b.get("end_sec") is not None:
+                t0 = float(b["start_sec"])
+                t1 = float(b["end_sec"])
+                dur = max(0.0, t1 - t0)
+                cursor = max(cursor, t1)
+            elif b.get("duration_sec") is not None:
+                dur = float(b["duration_sec"])
+                t0 = cursor
+                t1 = cursor + dur
+                cursor = t1
+            else:
+                # No explicit timing on beat; treat within 0-60s only for static check
+                t0 = cursor
+                dur = 0.0
+                t1 = cursor
+
+            in_first60 = t0 < FIRST_60S_WINDOW_SEC - 1e-6
+            in_first15 = t0 < 15.0 - 1e-6
+
+            if in_first60:
+                first60s_beat_count += 1
+                if _beat_is_static_png_hold(b):
+                    static_png_beats_0_60s.append(bid)
+                    issues.append("STATIC_PNG_HOLD_IN_FIRST60S")
+                    violations.append(
+                        {
+                            "beat_id": bid,
+                            "code": "STATIC_PNG_HOLD_IN_FIRST60S",
+                            "t_start": round(t0, 2),
+                            "duration_sec": round(dur, 2),
+                        }
+                    )
+
+            if in_first15 and dur > 0.0:
+                first15s_beat_count += 1
+                first15_durs.append(dur)
+
+        if first15_durs:
+            asl_0_15s = round(sum(first15_durs) / len(first15_durs), 3)
+            if asl_0_15s > FIRST_15S_MAX_ASL_SEC + 1e-6:
+                issues.append("FIRST15S_ASL_EXCEEDS_3_8S")
+                violations.append(
+                    {
+                        "code": "FIRST15S_ASL_EXCEEDS_3_8S",
+                        "observed_asl_sec": asl_0_15s,
+                        "max_allowed_asl_sec": FIRST_15S_MAX_ASL_SEC,
+                        "beats_in_0_15s": len(first15_durs),
+                    }
+                )
+
+    # Real FFmpeg freezedetect=n=-50dB:d=3.5 on 0.0s-60.0s of rendered Long MP4
+    freezedetect_report: dict[str, Any] | None = None
+    if video_path is not None:
+        vp = Path(video_path)
+        freezedetect_report = _run_ffmpeg_freezedetect_first60s(vp)
+        if not freezedetect_report.get("ok"):
+            issues.append(f"FREEZEDETECT_ERROR:{freezedetect_report.get('error', 'FAILED')}")
+            violations.append({"source": str(vp), "code": "FREEZEDETECT_ERROR", "detail": freezedetect_report})
+        elif freezedetect_report.get("freeze_events"):
+            issues.append("SLIDESHOW_FREEZE_DETECTED_FIRST60S")
+            for ev in freezedetect_report["freeze_events"]:
+                violations.append(
+                    {
+                        "source": str(vp),
+                        "code": "SLIDESHOW_FREEZE_DETECTED_FIRST60S",
+                        "start_sec": ev["start_sec"],
+                        "end_sec": ev["end_sec"],
+                        "duration_sec": ev["duration_sec"],
+                    }
+                )
+
+    dedup = sorted(set(issues))
+    return {
+        "gate_id": V12_GATE_ANTI_SLIDESHOW_60S,
+        "passed": len(dedup) == 0,
+        "skipped": False,
+        "asl_0_15s": asl_0_15s,
+        "first15s_beat_count": first15s_beat_count,
+        "first60s_beat_count": first60s_beat_count,
+        "static_png_beats_0_60s": static_png_beats_0_60s,
+        "freezedetect": freezedetect_report,
+        "issues": dedup,
+        "violations": violations,
+    }
+
+
+# --- Gate D: LIVE_COVERAGE_DIVERSITY_GATE ---
+
+_SHOT_CLASS_ALIASES: dict[str, str] = {
+    "MACRO_PROP": "MACRO_PROP",
+    "MACRO_TACTILE": "MACRO_PROP",
+    "TIGHT_ACTION_MACRO": "MACRO_PROP",
+    "MACRO_INSERT": "MACRO_PROP",
+    "PROP_MACRO": "MACRO_PROP",
+    "EXTREME_MACRO": "MACRO_PROP",
+    "OTS_DIRTY": "OTS_DIRTY",
+    "OVER_THE_SHOULDER": "OTS_DIRTY",
+    "OTS": "OTS_DIRTY",
+    "DIRTY_SINGLE": "OTS_DIRTY",
+    "MEDIUM_OTS": "OTS_DIRTY",
+    "GROUND_MUD": "GROUND_MUD",
+    "GROUND_LEVEL": "GROUND_MUD",
+    "BOOTS_IN_MUD": "GROUND_MUD",
+    "ANKLE_HEIGHT": "GROUND_MUD",
+    "GODS_EYE": "GODS_EYE",
+    "BIRDS_EYE": "GODS_EYE",
+    "OVERHEAD": "GODS_EYE",
+    "TOP_DOWN": "GODS_EYE",
+    "ENV_SENSORY": "ENV_SENSORY",
+    "ENVIRONMENTAL_BROLL": "ENV_SENSORY",
+    "SENSORY_BROLL": "ENV_SENSORY",
+    "ENVIRONMENT_ONLY": "ENV_SENSORY",
+    "ATMOSPHERIC_LANDSCAPE": "ENV_SENSORY",
+    "EDITORIAL_STAGE_CUTAWAY": "EDITORIAL_STAGE_CUTAWAY",
+    "ANALYTICAL_RIG": "EDITORIAL_STAGE_CUTAWAY",
+    "OBSIDIAN_STAGE": "EDITORIAL_STAGE_CUTAWAY",
+    "DO_PAPER_RIG": "EDITORIAL_STAGE_CUTAWAY",
+    "CHRONICLE_PLATE": "EDITORIAL_STAGE_CUTAWAY",
+    "RIG_A": "EDITORIAL_STAGE_CUTAWAY",
+    "RIG_B": "EDITORIAL_STAGE_CUTAWAY",
+    "RIG_C": "EDITORIAL_STAGE_CUTAWAY",
+    "RIG_D": "EDITORIAL_STAGE_CUTAWAY",
+    "RIG_E": "EDITORIAL_STAGE_CUTAWAY",
+    "RIG_F": "EDITORIAL_STAGE_CUTAWAY",
+    "REACTION_MICRO": "REACTION_MICRO",
+    "ECU_EYES": "REACTION_MICRO",
+    "MICRO_REACTION": "REACTION_MICRO",
+    "TACTICAL_MAP": "TACTICAL_MAP",
+    "GIS_MAP": "TACTICAL_MAP",
+    "MAP_V9": "TACTICAL_MAP",
+    "TACTICAL_MAP_V9": "TACTICAL_MAP",
+}
+
+
+def classify_beat_shot_class(beat: dict[str, Any]) -> str:
+    """Resolve canonical V12 shot class from explicit beat metadata or visual prompt text."""
+    for key in ("shot_class", "coverage_class", "camera_shot_class", "shot_type", "camera_slot", "shot_category"):
+        raw = str(beat.get(key) or "").strip()
+        if raw:
+            norm = re.sub(r"[\s\-/]+", "_", _strip_diacritics(raw).upper()).strip("_")
+            if norm in _SHOT_CLASS_ALIASES:
+                return _SHOT_CLASS_ALIASES[norm]
+            if norm in NON_PORTRAIT_SHOT_CLASSES or norm in PORTRAIT_FRONT_BACK_CLASSES:
+                return norm
+
+    st = str(beat.get("scene_type") or beat.get("beat_type") or beat.get("kind") or "").strip().lower()
+    if st in {"gis_map", "tactical_map", "tactical_battle_map", "tactical_battle_map_v9", "scene_map", "map"}:
+        return "TACTICAL_MAP"
+    if st in {"chapter_card", "title_card"}:
+        return "CHAPTER_CARD"
+    if st in {"analytical_rig", "editorial_stage", "chronicle_plate", "editorial_stage_cutaway"}:
+        return "EDITORIAL_STAGE_CUTAWAY"
+
+    prompt_low = str(
+        beat.get("visual_prompt") or beat.get("prompt") or beat.get("image_prompt") or ""
+    ).lower()
+
+    if any(
+        kw in prompt_low
+        for kw in (
+            "100mm macro",
+            "135mm macro",
+            "extreme macro",
+            "macro close-up",
+            "macro insert",
+            "no human face",
+            "zero-face",
+            "zero face",
+            "cinnabar seal",
+            "trigger mechanism",
+            "wood shavings",
+            "close-up of hands",
+            "muddy calloused fingers",
+        )
+    ):
+        return "MACRO_PROP"
+    if any(kw in prompt_low for kw in ("over-the-shoulder", "over the shoulder", "ots ", "past shoulder", "behind shoulder")):
+        return "OTS_DIRTY"
+    if any(kw in prompt_low for kw in ("ground-level", "ground level", "ankle height", "boots in mud", "boot-level", "hooves")):
+        return "GROUND_MUD"
+    if any(kw in prompt_low for kw in ("god's-eye", "gods eye", "bird's-eye", "birds eye", "perpendicular overhead", "looking straight down", "directly overhead")):
+        return "GODS_EYE"
+    if any(kw in prompt_low for kw in ("no human figures", "zero human", "environmental b-roll", "empty battlefield", "rain streaming down", "terracotta roof", "river current swirling")):
+        return "ENV_SENSORY"
+    if any(kw in prompt_low for kw in ("obsidian spotlight", "editorial stage", "analytical canvas", "parchment plate", "dỏ paper", "dó paper", "cross-section rig")):
+        return "EDITORIAL_STAGE_CUTAWAY"
+    if any(kw in prompt_low for kw in ("extreme close-up", "ecu ", "eyes filling", "razor-thin depth of field on the iris", "jaw clenching", "bead of sweat")):
+        return "REACTION_MICRO"
+    if any(kw in prompt_low for kw in ("rear silhouette", "from behind", "back of head", "back view")):
+        return "BACK_PORTRAIT"
+    if any(kw in prompt_low for kw in ("wide shot", "wide establishing", "wide 35mm", "wide 28mm")):
+        return "WIDE_PORTRAIT"
+    return "MEDIUM_PORTRAIT"
+
+
+def audit_live_coverage_diversity_gate(
+    spec: dict[str, Any] | None = None,
+    *,
+    beats: list[dict[str, Any]] | None = None,
+    format_profile: str | None = None,
+) -> dict[str, Any]:
+    """V12 Gate D (`LIVE_COVERAGE_DIVERSITY_GATE`): Enforce non-portrait/macro ratios and ban >=3 consecutive portraits."""
+    if format_profile:
+        is_long = "long" in format_profile.lower() or "16x9" in format_profile.lower() or "16:9" in format_profile.lower()
+    elif isinstance(spec, dict):
+        fl = str(spec.get("format_profile") or spec.get("aspect_ratio") or "").lower()
+        is_long = (
+            "long" in fl
+            or "16x9" in fl
+            or "16:9" in fl
+            or (isinstance(spec.get("chapters"), list) and len(spec.get("chapters", [])) > 0)
+        )
+    else:
+        is_long = False
+
+    raw_beats = list(beats) if beats is not None else (_extract_episode_beats(spec) if isinstance(spec, dict) else [])
+
+    classified: list[dict[str, Any]] = []
+    live_beats: list[dict[str, Any]] = []
+    for idx, b in enumerate(raw_beats):
+        if not isinstance(b, dict):
+            continue
+        bid = str(b.get("beat_id") or b.get("id") or f"B{idx:02d}")
+        scls = classify_beat_shot_class(b)
+        rec = {"beat_id": bid, "shot_class": scls}
+        classified.append(rec)
+        if scls not in {"TACTICAL_MAP", "CHAPTER_CARD"}:
+            live_beats.append(rec)
+
+    issues: list[str] = []
+    violations: list[dict[str, Any]] = []
+    total_live = len(live_beats)
+
+    if total_live == 0:
+        return {
+            "gate_id": V12_GATE_LIVE_COVERAGE,
+            "passed": True,
+            "format": "long_16x9" if is_long else "short_9x16",
+            "total_live_beats": 0,
+            "non_portrait_ratio": 0.0,
+            "macro_prop_ratio": 0.0,
+            "max_consecutive_portrait_run": 0,
+            "shot_class_counts": {},
+            "issues": [],
+            "violations": [],
+        }
+
+    counts: dict[str, int] = {}
+    for rec in live_beats:
+        counts[rec["shot_class"]] = counts.get(rec["shot_class"], 0) + 1
+
+    non_portrait_count = sum(1 for rec in live_beats if rec["shot_class"] in NON_PORTRAIT_SHOT_CLASSES)
+    macro_prop_count = counts.get("MACRO_PROP", 0)
+    non_portrait_ratio = round(non_portrait_count / float(total_live), 4)
+    macro_prop_ratio = round(macro_prop_count / float(total_live), 4)
+
+    # 1. Format-specific non-portrait / macro coverage floor
+    if is_long:
+        if macro_prop_ratio < LONG_MIN_MACRO_PROP_RATIO - 1e-6:
+            issues.append("LONG_MACRO_PROP_COVERAGE_BELOW_15PCT")
+            violations.append(
+                {
+                    "code": "LONG_MACRO_PROP_COVERAGE_BELOW_15PCT",
+                    "observed_ratio": macro_prop_ratio,
+                    "required_min": LONG_MIN_MACRO_PROP_RATIO,
+                    "macro_prop_count": macro_prop_count,
+                    "total_live_beats": total_live,
+                }
+            )
+    else:
+        if non_portrait_ratio < SHORT_MIN_NON_PORTRAIT_RATIO - 1e-6:
+            issues.append("SHORT_NON_PORTRAIT_COVERAGE_BELOW_30PCT")
+            violations.append(
+                {
+                    "code": "SHORT_NON_PORTRAIT_COVERAGE_BELOW_30PCT",
+                    "observed_ratio": non_portrait_ratio,
+                    "required_min": SHORT_MIN_NON_PORTRAIT_RATIO,
+                    "non_portrait_count": non_portrait_count,
+                    "total_live_beats": total_live,
+                }
+            )
+
+    # 2. Ban >= 3 consecutive medium/wide front-or-back portrait shots
+    max_run = 0
+    curr_run: list[str] = []
+    offending_runs: list[list[str]] = []
+    for rec in classified:
+        if rec["shot_class"] in PORTRAIT_FRONT_BACK_CLASSES:
+            curr_run.append(rec["beat_id"])
+            if len(curr_run) > max_run:
+                max_run = len(curr_run)
+        else:
+            if len(curr_run) > MAX_CONSECUTIVE_PORTRAIT_RUN:
+                offending_runs.append(list(curr_run))
+            curr_run = []
+    if len(curr_run) > MAX_CONSECUTIVE_PORTRAIT_RUN:
+        offending_runs.append(list(curr_run))
+
+    if offending_runs:
+        issues.append("CONSECUTIVE_PORTRAIT_STREAK_GTE_3")
+        for run in offending_runs:
+            violations.append(
+                {
+                    "code": "CONSECUTIVE_PORTRAIT_STREAK_GTE_3",
+                    "streak_length": len(run),
+                    "beat_ids": run,
+                }
+            )
+
+    dedup = sorted(set(issues))
+    return {
+        "gate_id": V12_GATE_LIVE_COVERAGE,
+        "passed": len(dedup) == 0,
+        "format": "long_16x9" if is_long else "short_9x16",
+        "total_live_beats": total_live,
+        "non_portrait_ratio": non_portrait_ratio,
+        "macro_prop_ratio": macro_prop_ratio,
+        "max_consecutive_portrait_run": max_run,
+        "offending_portrait_runs": offending_runs,
+        "shot_class_counts": counts,
+        "issues": dedup,
+        "violations": violations,
+    }
+
+
+def audit_v12_hard_gates(
+    spec: dict[str, Any] | None = None,
+    *,
+    spec_path: Path | str | None = None,
+    format_profile: str | None = None,
+    frame_paths: list[Path | str] | None = None,
+    video_path: Path | str | None = None,
+    map_video_paths: list[Path | str] | None = None,
+    map_frame_paths: list[Path | str] | None = None,
+) -> dict[str, Any]:
+    """Run all 4 V12 Hard Auto-Fail Visual QC Gates (Gate A..Gate D) on spec + rendered media."""
+    loaded_spec = spec
+    if loaded_spec is None and spec_path is not None:
+        _ep_dir, sf = _discover_spec_file(Path(spec_path))
+        if sf is not None and sf.is_file():
+            loaded_spec = json.loads(sf.read_text(encoding="utf-8"))
+
+    gate_a = audit_zero_box_hud_gate(loaded_spec, frame_paths=frame_paths, video_path=video_path)
+    gate_b = audit_slow_giant_map_v9_gate(
+        loaded_spec,
+        format_profile=format_profile,
+        video_paths=map_video_paths,
+        frame_paths=map_frame_paths,
+    )
+    gate_c = audit_anti_slideshow_first60s_gate(
+        loaded_spec,
+        video_path=video_path,
+        format_profile=format_profile,
+    )
+    gate_d = audit_live_coverage_diversity_gate(
+        loaded_spec,
+        format_profile=format_profile,
+    )
+
+    gates = {
+        V12_GATE_ZERO_BOX_HUD: gate_a,
+        V12_GATE_SLOW_GIANT_MAP: gate_b,
+        V12_GATE_ANTI_SLIDESHOW_60S: gate_c,
+        V12_GATE_LIVE_COVERAGE: gate_d,
+    }
+    failed_gates = [gid for gid, rep in gates.items() if not rep["passed"]]
+    blocking_issues: list[str] = []
+    for gid, rep in gates.items():
+        if not rep["passed"]:
+            for iss in rep.get("issues", []):
+                blocking_issues.append(f"{gid}:{iss}")
+
+    return {
+        "passed": len(failed_gates) == 0,
+        "auto_fail_triggered": len(failed_gates) > 0,
+        "failed_gates": failed_gates,
+        "gates": gates,
+        "blocking_issues": blocking_issues,
+    }
+
+
 __all__ = [
+    "FIRST_15S_MAX_ASL_SEC",
+    "FIRST_60S_FREEZE_DURATION_SEC",
+    "FORBIDDEN_BOXED_HUD_KINDS",
     "HISTORICAL_ANACHRONISM_CATALOG",
+    "LONG_MIN_MACRO_PROP_RATIO",
+    "MAX_MAP_SIMULTANEOUS_LABELS",
+    "MAX_MAP_WORDS_PER_LABEL",
     "MAX_THUMBNAIL_BYTES",
     "MIN_DYNAMIC_RANGE_P95_P5",
+    "MIN_MAP_DURATION_SEC",
+    "MIN_MAP_FONT_HEIGHT_RATIO",
+    "NON_PORTRAIT_SHOT_CLASSES",
+    "PORTRAIT_FRONT_BACK_CLASSES",
+    "SHORT_MIN_NON_PORTRAIT_RATIO",
+    "V12_GATE_ANTI_SLIDESHOW_60S",
+    "V12_GATE_LIVE_COVERAGE",
+    "V12_GATE_SLOW_GIANT_MAP",
+    "V12_GATE_ZERO_BOX_HUD",
     "audit_and_sanitize_historical_prompt",
+    "audit_anti_slideshow_first60s_gate",
     "audit_full_episode_visual_readiness",
+    "audit_live_coverage_diversity_gate",
     "audit_rendered_2k_frame",
+    "audit_slow_giant_map_v9_gate",
     "audit_sub_cut_crop_geometry",
+    "audit_v12_hard_gates",
+    "audit_zero_box_hud_gate",
+    "classify_beat_shot_class",
     "normalize_faction",
     "resolve_dynasty_era",
 ]
