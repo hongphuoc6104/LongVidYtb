@@ -290,3 +290,7 @@ desktop.ini
 /sys/tools/produce_chanh_niem_ke_chronicle.py
 /sys/tools/studio_director_v7.py
 /sys/tools/vp_fleet_manager.py
+/sys/channels/su_ke_lai/v12_specs
+/sys/channels/su_ke_lai/v12_specs/
+/sys/tools/build_v12_20_specs.py
+/sys/tools/produce_v12_long_cinema.py
